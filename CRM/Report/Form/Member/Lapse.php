@@ -183,7 +183,7 @@ class CRM_Report_Form_Member_Lapse extends CRM_Report_Form {
         }
       }
     }
-    $this->_select = "SELECT " . implode(', ', $select) . " ";
+    $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
   static function formRule($fields, $files, $self) {
@@ -271,10 +271,10 @@ class CRM_Report_Form_Member_Lapse extends CRM_Report_Form {
     }
     else {
       if (!CRM_Utils_Array::arrayKeyExists('end_date', $clauses)) {
-        $this->_where = "WHERE end_date < '" . date('Y-m-d') . "' AND " . implode(' AND ', $clauses);
+        $this->_where = "WHERE end_date < '" . date('Y-m-d') . "' AND " . CRM_Utils_Array::implode(' AND ', $clauses);
       }
       else {
-        $this->_where = "WHERE " . implode(' AND ', $clauses);
+        $this->_where = "WHERE " . CRM_Utils_Array::implode(' AND ', $clauses);
       }
     }
 

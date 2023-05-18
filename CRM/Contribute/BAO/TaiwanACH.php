@@ -399,7 +399,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
         }
       }
       if ($isError) {
-         return CRM_Core_Error::statusBounce(implode('<br/>', $messages));
+         return CRM_Core_Error::statusBounce(CRM_Utils_Array::implode('<br/>', $messages));
       }
       unset($table['check_results']);
 
@@ -412,7 +412,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
         $log->entity_table = self::POST_VERIFY_ENTITY;
       }
       $log->entity_id = $params['date'];
-      $log->data = implode(',', $recurringIds);
+      $log->data = CRM_Utils_Array::implode(',', $recurringIds);
       $log->modified_date = $params['date'].'120000';
       $session = CRM_Core_Session::singleton();
       $log->modified_id = $session->get('userID');
@@ -494,14 +494,14 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
         }
       }
       if ($isError) {
-         return CRM_Core_Error::statusBounce(implode('<br/>', $messages));
+         return CRM_Core_Error::statusBounce(CRM_Utils_Array::implode('<br/>', $messages));
       }
       unset($table['check_results']);
 
       $log = new CRM_Core_DAO_Log();
       $log->entity_table = self::TRANS_ENTITY;
       $log->entity_id = $params['transact_id'];
-      $log->data = implode(',', $params['contribution_ids']);
+      $log->data = CRM_Utils_Array::implode(',', $params['contribution_ids']);
       $log->modified_date = date('Ymd', strtotime($params['transact_date'])).str_pad($params['transact_id'], 6, '0', STR_PAD_LEFT);
       $session = CRM_Core_Session::singleton();
       $log->modified_id = $session->get('userID');
@@ -537,9 +537,9 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     // arrange txt
     $txt = '';
     foreach ($table as $row) {
-      $lines[] = implode('',$row);
+      $lines[] = CRM_Utils_Array::implode('',$row);
     }
-    $txt = implode("\r\n", $lines);
+    $txt = CRM_Utils_Array::implode("\r\n", $lines);
 
     // export file
     $config = CRM_Core_Config::singleton();
@@ -1042,7 +1042,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
 
     }
     if ($isError) {
-       return CRM_Core_Error::statusBounce(implode('<br/>', $messages));
+       return CRM_Core_Error::statusBounce(CRM_Utils_Array::implode('<br/>', $messages));
     }
 
     $result = array(
@@ -1201,7 +1201,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       $messages[] = ts("Status of recurring: %1 should be 'pending'.", array(1 => $recurId));
     }
     if ($isError) {
-       return CRM_Core_Error::statusBounce(implode('<br/>', $messages));
+       return CRM_Core_Error::statusBounce(CRM_Utils_Array::implode('<br/>', $messages));
     }
     if ($isPreview) {
       return $result;

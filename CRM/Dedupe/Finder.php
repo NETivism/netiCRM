@@ -276,7 +276,7 @@ class CRM_Dedupe_Finder {
       $methods = array_keys($methods);
       sort($methods);
       if ($methods) {
-        $flat['preferred_communication_method'] = CRM_Core_DAO::VALUE_SEPARATOR . implode(CRM_Core_DAO::VALUE_SEPARATOR, $methods) . CRM_Core_DAO::VALUE_SEPARATOR;
+        $flat['preferred_communication_method'] = CRM_Core_DAO::VALUE_SEPARATOR . CRM_Utils_Array::implode(CRM_Core_DAO::VALUE_SEPARATOR, $methods) . CRM_Core_DAO::VALUE_SEPARATOR;
       }
     }
 

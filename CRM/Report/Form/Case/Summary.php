@@ -164,7 +164,7 @@ class CRM_Report_Form_Case_Summary extends CRM_Report_Form {
       }
     }
 
-    $this->_select = "SELECT " . implode(', ', $select) . " ";
+    $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
   static function formRule($fields, $files, $self) {
@@ -246,7 +246,7 @@ inner join civicrm_contact $c2 on ${c2}.id=${ccc}.contact_id
       $this->_where = "WHERE ( 1 ) ";
     }
     else {
-      $this->_where = "WHERE " . implode(' AND ', $clauses);
+      $this->_where = "WHERE " . CRM_Utils_Array::implode(' AND ', $clauses);
     }
   }
 

@@ -267,7 +267,7 @@ WHERE  v.option_group_id = g.id
           $newValue[] = CRM_Core_DAO::singleValueQuery($query, $p);
           $newValue = str_replace(',', '_', $newValue);
         }
-        $params[$value['newName']] = implode(', ', $newValue);
+        $params[$value['newName']] = CRM_Utils_Array::implode(', ', $newValue);
       }
     }
   }

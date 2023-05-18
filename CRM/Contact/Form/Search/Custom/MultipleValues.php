@@ -147,7 +147,7 @@ contact_a.sort_name    as sort_name,
         $customClauses[] = "{$tableName}.{$fieldName} as custom_{$fieldID}";
       }
     }
-    $selectClause .= implode(',', $customClauses);
+    $selectClause .= CRM_Utils_Array::implode(',', $customClauses);
 
     return $this->sql($selectClause,
       $offset, $rowcount, $sort,
@@ -163,7 +163,7 @@ contact_a.sort_name    as sort_name,
       foreach ($this->_tables as $tableName => $fields) {
         $customFrom[] = " INNER JOIN $tableName ON {$tableName}.entity_id = contact_a.id ";
       }
-      $from .= implode(' ', $customFrom);
+      $from .= CRM_Utils_Array::implode(' ', $customFrom);
     }
 
     // This prevents duplicate rows when contacts have more than one tag any you select "any tag"
@@ -219,7 +219,7 @@ contact_a.sort_name    as sort_name,
 
     $where = '( 1 )';
     if (!empty($clause)) {
-      $where .= ' AND ' . implode(' AND ', $clause);
+      $where .= ' AND ' . CRM_Utils_Array::implode(' AND ', $clause);
     }
 
     return $this->whereClause($where, $params);
@@ -257,7 +257,7 @@ contact_a.sort_name    as sort_name,
         foreach ($valueSeparatedArray as $val) {
           $customVal[] = $values[$val];
         }
-        $row["custom_{$fieldID}"] = implode(', ', $customVal);
+        $row["custom_{$fieldID}"] = CRM_Utils_Array::implode(', ', $customVal);
       }
       elseif (in_array($values['attributes']['html_type'],
           array('Multi-Select State/Province', 'Select State/Province')
@@ -267,7 +267,7 @@ contact_a.sort_name    as sort_name,
         foreach ($valueSeparatedArray as $val) {
           $customVal[] = $stateName[$val];
         }
-        $row["custom_{$fieldID}"] = implode(', ', $customVal);
+        $row["custom_{$fieldID}"] = CRM_Utils_Array::implode(', ', $customVal);
       }
       elseif (in_array($values['attributes']['html_type'],
           array('Multi-Select Country', 'Select Country')
@@ -279,7 +279,7 @@ contact_a.sort_name    as sort_name,
         foreach ($valueSeparatedArray as $val) {
           $customVal[] = $countryNames[$val];
         }
-        $row["custom_{$fieldID}"] = implode(', ', $customVal);
+        $row["custom_{$fieldID}"] = CRM_Utils_Array::implode(', ', $customVal);
       }
     }
   }

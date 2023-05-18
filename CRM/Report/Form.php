@@ -927,10 +927,10 @@ class CRM_Report_Form extends CRM_Core_Form {
 
           if (!empty($clauses)) {
             if ($op == 'bw') {
-              $clause = implode(' AND ', $clauses);
+              $clause = CRM_Utils_Array::implode(' AND ', $clauses);
             }
             else {
-              $clause = implode(' OR ', $clauses);
+              $clause = CRM_Utils_Array::implode(' OR ', $clauses);
             }
           }
         }
@@ -955,11 +955,11 @@ class CRM_Report_Form extends CRM_Core_Form {
         if ($value !== NULL && is_array($value) && count($value) > 0) {
           $sqlOP = self::getSQLOperator($op);
           if (CRM_Utils_Array::value('type', $field) == CRM_Utils_Type::T_STRING) {
-            $clause = "( {$field['dbAlias']} $sqlOP ( '" . implode("' , '", $value) . "') )";
+            $clause = "( {$field['dbAlias']} $sqlOP ( '" . CRM_Utils_Array::implode("' , '", $value) . "') )";
           }
           else {
             // for numerical values
-            $clause = "( {$field['dbAlias']} $sqlOP (" . implode(', ', $value) . ") )";
+            $clause = "( {$field['dbAlias']} $sqlOP (" . CRM_Utils_Array::implode(', ', $value) . ") )";
           }
         }
         break;
@@ -968,7 +968,7 @@ class CRM_Report_Form extends CRM_Core_Form {
         // mhas == multiple has
         if ($value !== NULL && count($value) > 0) {
           $sqlOP = self::getSQLOperator($op);
-          $clause = "{$field['dbAlias']} REGEXP '[[:<:]]" . implode('|', $value) . "[[:>:]]'";
+          $clause = "{$field['dbAlias']} REGEXP '[[:<:]]" . CRM_Utils_Array::implode('|', $value) . "[[:>:]]'";
         }
         break;
 
@@ -1052,7 +1052,7 @@ class CRM_Report_Form extends CRM_Core_Form {
     }
 
     if (!empty($clauses)) {
-      return implode(' AND ', $clauses);
+      return CRM_Utils_Array::implode(' AND ', $clauses);
     }
 
     return NULL;
@@ -1076,7 +1076,7 @@ class CRM_Report_Form extends CRM_Core_Form {
     }
 
     if (!empty($clauses)) {
-      return implode(' - ', $clauses);
+      return CRM_Utils_Array::implode(' - ', $clauses);
     }
 
     return NULL;
@@ -1125,16 +1125,16 @@ class CRM_Report_Form extends CRM_Core_Form {
 
     // skip for type date and ContactReference since date format is already handled
     $query = " 
-SELECT cg.table_name, cf." . implode(", cf.", $customFieldCols) . ", ov.value, ov.label
+SELECT cg.table_name, cf." . CRM_Utils_Array::implode(", cf.", $customFieldCols) . ", ov.value, ov.label
 FROM  civicrm_custom_field cf      
 INNER JOIN civicrm_custom_group cg ON cg.id = cf.custom_group_id        
 LEFT JOIN civicrm_option_value ov ON cf.option_group_id = ov.option_group_id
-WHERE cg.extends IN ('" . implode("','", $this->_customGroupExtends) . "') AND 
+WHERE cg.extends IN ('" . CRM_Utils_Array::implode("','", $this->_customGroupExtends) . "') AND 
       cg.is_active = 1 AND 
       cf.is_active = 1 AND
       cf.is_searchable = 1 AND
       cf.data_type   NOT IN ('ContactReference', 'Date') AND
-      cf.id IN (" . implode(",", $customFieldIds) . ")";
+      cf.id IN (" . CRM_Utils_Array::implode(",", $customFieldIds) . ")";
 
     $dao = CRM_Core_DAO::executeQuery($query);
     while ($dao->fetch()) {
@@ -1222,7 +1222,7 @@ WHERE cg.extends IN ('" . implode("','", $this->_customGroupExtends) . "') AND
                     $customData[] = CRM_Core_PseudoConstant::country($val, FALSE);
                   }
                 }
-                $retValue = implode(', ', $customData);
+                $retValue = CRM_Utils_Array::implode(', ', $customData);
                 break;
 
               case 'Select Country':
@@ -1241,7 +1241,7 @@ WHERE cg.extends IN ('" . implode("','", $this->_customGroupExtends) . "') AND
                         $customData[] = CRM_Core_PseudoConstant::stateProvince($val, FALSE);
                       }
                     }
-                    $retValue = implode(', ', $customData);
+                    $retValue = CRM_Utils_Array::implode(', ', $customData);
                     break;
 
                   case 'Select':
@@ -1260,7 +1260,7 @@ WHERE cg.extends IN ('" . implode("','", $this->_customGroupExtends) . "') AND
                             $customData[] = $fieldValueMap[$customField['option_group_id']][$val];
                           }
                         }
-                        $retValue = implode(', ', $customData);
+                        $retValue = CRM_Utils_Array::implode(', ', $customData);
                         break;
 
                       default:
@@ -1503,7 +1503,7 @@ WHERE cg.extends IN ('" . implode("','", $this->_customGroupExtends) . "') AND
                   }
                 }
 
-                $this->_select = "SELECT " . implode(', ', $select) . " ";
+                $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
               }
 
               function selectClause(&$tableName, $tableKey, &$fieldName, &$field) {
@@ -1552,7 +1552,7 @@ WHERE cg.extends IN ('" . implode("','", $this->_customGroupExtends) . "') AND
                   $this->_having = "";
                 }
                 else {
-                  $this->_where = "WHERE " . implode(' AND ', $whereClauses);
+                  $this->_where = "WHERE " . CRM_Utils_Array::implode(' AND ', $whereClauses);
                 }
 
                 if ($this->_aclWhere) {
@@ -1561,7 +1561,7 @@ WHERE cg.extends IN ('" . implode("','", $this->_customGroupExtends) . "') AND
 
                 if (!empty($havingClauses)) {
                   // use this clause to construct group by clause.
-                  $this->_having = "HAVING " . implode(' AND ', $havingClauses);
+                  $this->_having = "HAVING " . CRM_Utils_Array::implode(' AND ', $havingClauses);
                 }
               }
 
@@ -1740,7 +1740,7 @@ WHERE cg.extends IN ('" . implode("','", $this->_customGroupExtends) . "') AND
                     }
                   }
                   $statistics['groups'][] = array('title' => ts('Grouping(s)'),
-                    'value' => implode(' & ', $combinations),
+                    'value' => CRM_Utils_Array::implode(' & ', $combinations),
                   );
                 }
               }
@@ -1795,7 +1795,7 @@ WHERE cg.extends IN ('" . implode("','", $this->_customGroupExtends) . "') AND
                               }
                             }
                             $pair[$op] = (count($val) == 1) ? ts('Is') : $pair[$op];
-                            $val = implode(', ', $val);
+                            $val = CRM_Utils_Array::implode(', ', $val);
                             $value = "{$pair[$op]} " . $val;
                           }
                           elseif ($val) {
@@ -1965,7 +1965,7 @@ WHERE cg.extends IN ('" . implode("','", $this->_customGroupExtends) . "') AND
                 CRM_Contact_BAO_GroupContactCache::check($smartGroups);
 
                 if (!empty($smartGroups)) {
-                  $smartGroups = implode(',', $smartGroups);
+                  $smartGroups = CRM_Utils_Array::implode(',', $smartGroups);
                   $smartGroupQuery = " UNION DISTINCT 
                   SELECT DISTINCT smartgroup_contact.contact_id                                    
                   FROM civicrm_group_contact_cache smartgroup_contact        
@@ -2007,7 +2007,7 @@ SELECT cg.table_name, cg.title, cg.extends, cf.id as cf_id, cf.label,
        cf.column_name, cf.data_type, cf.html_type, cf.option_group_id, cf.time_format
 FROM   civicrm_custom_group cg 
 INNER  JOIN civicrm_custom_field cf ON cg.id = cf.custom_group_id
-WHERE cg.extends IN ('" . implode("','", $this->_customGroupExtends) . "') AND 
+WHERE cg.extends IN ('" . CRM_Utils_Array::implode("','", $this->_customGroupExtends) . "') AND 
       cg.is_active = 1 AND 
       cf.is_active = 1 AND 
       cf.is_searchable = 1

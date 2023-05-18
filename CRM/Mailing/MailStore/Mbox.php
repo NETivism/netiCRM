@@ -51,8 +51,8 @@ class CRM_Mailing_MailStore_Mbox extends CRM_Mailing_MailStore {
 
     $this->_leftToProcess = count($this->_transport->listMessages());
 
-    $this->_ignored = $this->maildir(implode(DIRECTORY_SEPARATOR, array('CiviMail.ignored', date('Y'), date('m'), date('d'))));
-    $this->_processed = $this->maildir(implode(DIRECTORY_SEPARATOR, array('CiviMail.processed', date('Y'), date('m'), date('d'))));
+    $this->_ignored = $this->maildir(CRM_Utils_Array::implode(DIRECTORY_SEPARATOR, array('CiviMail.ignored', date('Y'), date('m'), date('d'))));
+    $this->_processed = $this->maildir(CRM_Utils_Array::implode(DIRECTORY_SEPARATOR, array('CiviMail.processed', date('Y'), date('m'), date('d'))));
   }
 
   /**

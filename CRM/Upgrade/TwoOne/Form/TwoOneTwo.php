@@ -104,7 +104,7 @@ class CRM_Upgrade_TwoOne_Form_TwoOneTwo extends CRM_Upgrade_Form {
   function upgrade() {
     $currentDir = dirname(__FILE__);
 
-    $sqlFile = implode(DIRECTORY_SEPARATOR,
+    $sqlFile = CRM_Utils_Array::implode(DIRECTORY_SEPARATOR,
       array($currentDir, '../sql', 'two_one_two.mysql')
     );
     $this->source($sqlFile);

@@ -362,7 +362,7 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
       }
       else {
         $gids = $this->_profileIds;
-        $gidString = implode(',', $this->_profileIds);
+        $gidString = CRM_Utils_Array::implode(',', $this->_profileIds);
       }
 
       $map = 0;

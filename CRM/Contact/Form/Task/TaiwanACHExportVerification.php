@@ -27,7 +27,7 @@ class CRM_Contact_Form_Task_TaiwanACHExportVerification extends CRM_Contact_Form
       if (!empty($notUnverified)) {
         $msgs[] = ts('All selected recurrings must be unverified. There are %1 recurrings not unverified.', array(1 => count($notUnverified)));
       }
-      $msg = implode('<br/>', $msgs);
+      $msg = CRM_Utils_Array::implode('<br/>', $msgs);
        return CRM_Core_Error::statusBounce($msg);
     }
 

@@ -145,7 +145,7 @@ class CRM_Report_Form_Contact_Log extends CRM_Report_Form {
       }
     }
 
-    $this->_select = "SELECT " . implode(', ', $select) . " ";
+    $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
   static function formRule($fields, $files, $self) {
@@ -196,7 +196,7 @@ class CRM_Report_Form_Contact_Log extends CRM_Report_Form {
     }
 
     $clauses[] = "({$this->_aliases['civicrm_log']}.entity_table <> 'civicrm_domain')";
-    $this->_where = "WHERE " . implode(' AND ', $clauses);
+    $this->_where = "WHERE " . CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
   function orderBy() {

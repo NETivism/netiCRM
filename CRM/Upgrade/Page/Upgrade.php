@@ -154,7 +154,7 @@ class CRM_Upgrade_Page_Upgrade extends CRM_Core_Page {
           }
 
           if (!empty($subTypeTemplates)) {
-            $subTypeTemplates = implode(',', $subTypeTemplates);
+            $subTypeTemplates = CRM_Utils_Array::implode(',', $subTypeTemplates);
             $message .= '<br />' . ts('You are using custom template for contact subtypes: %1.', array(1 => $subTypeTemplates)) . '<br />' . ts('You need to move these subtype templates to the SubType directory in %1 and %2 respectively.', array(1 => 'CRM/Contact/Form/Edit', 2 => 'CRM/Contact/Page/View'));
           }
         }
@@ -164,7 +164,7 @@ class CRM_Upgrade_Page_Upgrade extends CRM_Core_Page {
         $sql = "
 SELECT  count( id ) as statusCount 
   FROM  civicrm_membership_status 
- WHERE  name IN ( '" . implode("' , '", $statuses) . "' ) ";
+ WHERE  name IN ( '" . CRM_Utils_Array::implode("' , '", $statuses) . "' ) ";
         $count = CRM_Core_DAO::singleValueQuery($sql);
         if ($count < count($statuses)) {
           $message .= '<br />' . ts("One or more Membership Status Rules was disabled during the upgrade because it did not match a recognized status name. if custom membership status rules were added to this site - review the disabled statuses and re-enable any that are still needed (Administer > CiviMember > Membership Status Rules).");
@@ -469,7 +469,7 @@ SELECT  count( id ) as statusCount
     if ($config->userFramework == 'Drupal') {
       $roles = user_roles(FALSE, 'access CiviEvent');
       if (!empty($roles)) {
-        db_query('UPDATE {permission} SET perm = CONCAT( perm, \', edit all events\') WHERE rid IN (' . implode(',', array_keys($roles)) . ')');
+        db_query('UPDATE {permission} SET perm = CONCAT( perm, \', edit all events\') WHERE rid IN (' . CRM_Utils_Array::implode(',', array_keys($roles)) . ')');
       }
     }
 

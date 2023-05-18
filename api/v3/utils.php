@@ -111,7 +111,7 @@ function civicrm_api3_verify_mandatory($params, $daoName = NULL, $keys = array(
         }
       }
       if (empty($match) && !empty($optionset)) {
-        $unmatched[] = "one of (" . implode(", ", $optionset) . ")";
+        $unmatched[] = "one of (" . CRM_Utils_Array::implode(", ", $optionset) . ")";
       }
     }
     else {
@@ -125,7 +125,7 @@ function civicrm_api3_verify_mandatory($params, $daoName = NULL, $keys = array(
     }
   }
   if (!empty($unmatched)) {
-    throw new API_Exception("Mandatory key(s) missing from params array: " . implode(", ", $unmatched), "mandatory_missing",array("fields"=>$unmatched));
+    throw new API_Exception("Mandatory key(s) missing from params array: " . CRM_Utils_Array::implode(", ", $unmatched), "mandatory_missing",array("fields"=>$unmatched));
   }
 }
 
@@ -498,7 +498,7 @@ function _civicrm_api3_dao_set_filter(&$dao, $params, $unique = TRUE, $entity) {
 
   //accept filters like filter.activity_date_time_high
   // std is now 'filters' => ..
-  if (strstr(implode(',', array_keys($params)), 'filter')) {
+  if (strstr(CRM_Utils_Array::implode(',', array_keys($params)), 'filter')) {
     if (isset($params['filters']) && is_array($params['filters'])) {
       foreach ($params['filters'] as $paramkey => $paramvalue) {
         _civicrm_api3_apply_filters_to_dao($paramkey, $paramvalue, $dao);
@@ -552,7 +552,7 @@ function _civicrm_api3_dao_set_filter(&$dao, $params, $unique = TRUE, $entity) {
                 throw new exception("invalid criteria for $operator");
               }
               $escapedCriteria = array_map(array('CRM_Core_DAO', 'escapeString'), $criteria);
-              $dao->whereAdd(sprintf('%s %s ("%s")', $fieldName, $operator, implode('", "', $escapedCriteria)));
+              $dao->whereAdd(sprintf('%s %s ("%s")', $fieldName, $operator, CRM_Utils_Array::implode('", "', $escapedCriteria)));
               break;
 
             // binary operators
@@ -906,7 +906,7 @@ function _civicrm_api3_check_required_fields($params, $daoName, $return = FALSE)
       return $missing;
     }
     else {
-      return civicrm_api3_create_error(ts("Required fields " . implode(',', $missing) . " for $daoName are not present"));
+      return civicrm_api3_create_error(ts("Required fields " . CRM_Utils_Array::implode(',', $missing) . " for $daoName are not present"));
     }
   }
 

@@ -311,6 +311,22 @@ class CRM_Utils_Array {
   }
 
   /**
+   * Strict type version of implode
+   *
+   * During php 8, null given args will throw fatal error, use this for safer replacement
+   *
+   * @param string $separator
+   * @param array $array
+   * @return string
+   */
+  public static function implode($separator, $array) {
+    if (!is_array($array)) {
+      return '';
+    }
+    return implode($separator, $array);
+  }
+
+  /**
    * look up property from given lookup, and padding to defaults
    *
    * Use one array value to search another array's value. Then padding retrieved value back to original array

@@ -48,8 +48,8 @@ class CRM_Mailing_MailStore_Localdir extends CRM_Mailing_MailStore {
   function __construct($dir) {
     $this->_dir = $dir;
 
-    $this->_ignored = $this->maildir(implode(DIRECTORY_SEPARATOR, array('CiviMail.ignored', date('Y'), date('m'), date('d'))));
-    $this->_processed = $this->maildir(implode(DIRECTORY_SEPARATOR, array('CiviMail.processed', date('Y'), date('m'), date('d'))));
+    $this->_ignored = $this->maildir(CRM_Utils_Array::implode(DIRECTORY_SEPARATOR, array('CiviMail.ignored', date('Y'), date('m'), date('d'))));
+    $this->_processed = $this->maildir(CRM_Utils_Array::implode(DIRECTORY_SEPARATOR, array('CiviMail.processed', date('Y'), date('m'), date('d'))));
   }
 
   /**

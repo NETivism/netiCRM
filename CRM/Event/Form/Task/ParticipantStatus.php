@@ -60,7 +60,7 @@ class CRM_Event_Form_Task_ParticipantStatus extends CRM_Event_Form_Task_Batch {
       $notifyingStatuses[$k] = ts($v);
     }
     $this->assign('notifyingStatusesIds', json_encode(array_keys($notifyingStatuses)));
-    $this->assign('notifyingStatuses', implode(', ', $notifyingStatuses));
+    $this->assign('notifyingStatuses', CRM_Utils_Array::implode(', ', $notifyingStatuses));
 
     parent::buildQuickForm();
   }

@@ -86,7 +86,7 @@ class CRM_Core_BAO_Tag extends CRM_Core_DAO_Tag {
     }
 
     if (!empty($whereClause)) {
-      $sql .= " WHERE " . implode(' AND ', $whereClause);
+      $sql .= " WHERE " . CRM_Utils_Array::implode(' AND ', $whereClause);
     }
 
     $sql .= " ORDER BY parent_id,name";
@@ -402,7 +402,7 @@ class CRM_Core_BAO_Tag extends CRM_Core_DAO_Tag {
 
     $parentClause = '';
     if (!empty($tagSets)) {
-      $parentClause = ' WHERE ( parent_id IS NULL ) OR ( parent_id NOT IN ( ' . implode(',', $tagSets) . ' ) )';
+      $parentClause = ' WHERE ( parent_id IS NULL ) OR ( parent_id NOT IN ( ' . CRM_Utils_Array::implode(',', $tagSets) . ' ) )';
     }
 
     // get that tags that don't have tagset as parent

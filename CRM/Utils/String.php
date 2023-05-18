@@ -444,7 +444,7 @@ class CRM_Utils_String {
     static $_purifier;
     if (is_array($allowed_tags)) {
       // $allowed_tags is Array
-      $hash = md5(implode('', $allowed_tags));
+      $hash = md5(CRM_Utils_Array::implode('', $allowed_tags));
     }
     else {
       // $allowed_tags is String 

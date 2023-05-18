@@ -348,7 +348,7 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
         foreach ($val as $vals) {
           $temp[] = $comm[$vals];
         }
-        $row['preferred_communication_method'] = implode(', ', $temp);
+        $row['preferred_communication_method'] = CRM_Utils_Array::implode(', ', $temp);
       }
       $row['id'] = $id;
       $formatted = CRM_Utils_Address::format($row, 'mailing_format', FALSE, TRUE, $individualFormat, $tokenFields);
@@ -455,7 +455,7 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
           break;
         }
         // collapse the tree to summarize
-        $family = trim(implode(" , ", $sort_names));
+        $family = trim(CRM_Utils_Array::implode(" , ", $sort_names));
         if ($count) {
           $processedNames .= " , " . $family;
         }

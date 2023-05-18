@@ -197,17 +197,17 @@ class CRM_Contact_Form_Search_Custom_EmployerListing implements CRM_Contact_Form
       }
 
       if (!empty($contactIDs)) {
-        $contactIDs = implode(', ', $contactIDs);
+        $contactIDs = CRM_Utils_Array::implode(', ', $contactIDs);
         $clauses[] = "contact.id IN ( $contactIDs )";
       }
     }
 
-    return implode(' AND ', $clauses);
+    return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
   function having($includeContactIDs = FALSE) {
     $clauses = array();
-    return implode(' AND ', $clauses);
+    return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
   /* 

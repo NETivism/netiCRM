@@ -112,7 +112,7 @@ class CRM_Core_BAO_Website extends CRM_Core_DAO_Website {
    * @static
    */
   static function del($ids) {
-    $query = 'DELETE FROM civicrm_website WHERE id IN ( ' . implode(',', $ids) . ')';
+    $query = 'DELETE FROM civicrm_website WHERE id IN ( ' . CRM_Utils_Array::implode(',', $ids) . ')';
     CRM_Core_DAO::executeQuery($query);
   }
 

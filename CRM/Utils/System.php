@@ -123,7 +123,7 @@ class CRM_Utils_System {
       }
     }
     $querystring = array_merge($querystring, array_unique($arrays));
-    return implode('&', $querystring) . (!empty($querystring) ? '&' : '') . $urlVar . '=';
+    return CRM_Utils_Array::implode('&', $querystring) . (!empty($querystring) ? '&' : '') . $urlVar . '=';
   }
 
   /**
@@ -834,7 +834,7 @@ class CRM_Utils_System {
     static $version;
 
     if (!$version) {
-      $verFile = implode(DIRECTORY_SEPARATOR,
+      $verFile = CRM_Utils_Array::implode(DIRECTORY_SEPARATOR,
         array(dirname(__FILE__), '..', '..', 'civicrm-version.txt')
       );
       if (file_exists($verFile)) {
@@ -844,7 +844,7 @@ class CRM_Utils_System {
       }
       else {
         // svn installs don't have version.txt by default. In that case version.xml should help -
-        $verFile = implode(DIRECTORY_SEPARATOR,
+        $verFile = CRM_Utils_Array::implode(DIRECTORY_SEPARATOR,
           array(dirname(__FILE__), '..', '..', 'xml', 'version.xml')
         );
         if (file_exists($verFile)) {
@@ -990,7 +990,7 @@ class CRM_Utils_System {
       $patterns[] = trim(CRM_Core_Config::singleton()->trustedHostsPatterns);
     }
     if (!empty($patterns)) {
-      return trim(implode("\n", $patterns));
+      return trim(CRM_Utils_Array::implode("\n", $patterns));
     }
     return '';
   }

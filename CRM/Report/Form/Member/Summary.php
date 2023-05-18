@@ -253,7 +253,7 @@ class CRM_Report_Form_Member_Summary extends CRM_Report_Form {
       unset($select['joinDate']);
       unset($this->_columnHeaders["civicrm_membership_member_join_date"]);
     }
-    $this->_select = "SELECT " . implode(', ', $select) . " ";
+    $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
   function from() {
@@ -305,7 +305,7 @@ class CRM_Report_Form_Member_Summary extends CRM_Report_Form {
     }
 
     if (!empty($clauses)) {
-      $this->_where = "WHERE {$this->_aliases['civicrm_membership']}.is_test = 0 AND " . implode(' AND ', $clauses);
+      $this->_where = "WHERE {$this->_aliases['civicrm_membership']}.is_test = 0 AND " . CRM_Utils_Array::implode(' AND ', $clauses);
     }
     else {
       $this->_where = "WHERE {$this->_aliases['civicrm_membership']}.is_test = 0";
@@ -346,7 +346,7 @@ class CRM_Report_Form_Member_Summary extends CRM_Report_Form {
       }
 
       $this->_rollup = ' WITH ROLLUP';
-      $this->_groupBy = 'GROUP BY ' . implode(', ', $groupBy) . " {$this->_rollup} ";
+      $this->_groupBy = 'GROUP BY ' . CRM_Utils_Array::implode(', ', $groupBy) . " {$this->_rollup} ";
     }
     else {
       $this->_groupBy = "GROUP BY {$this->_aliases['civicrm_membership']}.join_date";
@@ -518,7 +518,7 @@ class CRM_Report_Form_Member_Summary extends CRM_Report_Form {
         }
         $statusUrl = '';
         if (!empty($this->_params['status_id_value'])) {
-          $statusUrl = "&sid_op=in&sid_value=" . implode(",", $this->_params['status_id_value']);
+          $statusUrl = "&sid_op=in&sid_value=" . CRM_Utils_Array::implode(",", $this->_params['status_id_value']);
         }
         $url = CRM_Report_Utils_Report::getNextUrl('member/detail',
           "reset=1&force=1&join_date_from={$dateStart}&join_date_to={$dateEnd}{$typeUrl}{$statusUrl}",
@@ -538,7 +538,7 @@ class CRM_Report_Form_Member_Summary extends CRM_Report_Form {
           foreach ($value as $key => $id) {
             $value[$key] = CRM_Member_PseudoConstant::membershipType($id, FALSE);
           }
-          $rows[$rowNum]['civicrm_membership_membership_type_id'] = implode(' , ', $value);
+          $rows[$rowNum]['civicrm_membership_membership_type_id'] = CRM_Utils_Array::implode(' , ', $value);
         }
         $entryFound = TRUE;
       }

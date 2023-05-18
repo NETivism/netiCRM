@@ -60,7 +60,7 @@ class CRM_Mailing_Event_BAO_Transactional extends CRM_Mailing_Event_DAO_Transact
     $select[] = "SELECT 'trackableurlopen' as act, $ec.time_stamp, mu.url as detail, '' as additional FROM $ec INNER JOIN $et ON $et.event_queue_id = $ec.event_queue_id INNER JOIN civicrm_mailing_trackable_url mu ON mu.id = $ec.trackable_url_id WHERE $et.activity_id = %1";
     $select[] = "SELECT 'unsubscribe' as act, $eu.time_stamp, $eu.org_unsubscribe as detail, '' as additional FROM $eu INNER JOIN $et ON $et.event_queue_id = $eu.event_queue_id WHERE $et.activity_id = %1";
 
-    $sql = implode("\nUNION\n", $select);
+    $sql = CRM_Utils_Array::implode("\nUNION\n", $select);
     $sql .= "\nORDER BY time_stamp ASC";
     $dao = CRM_Core_DAO::executeQuery($sql, array(
       1 => array($activityId, 'Positive'),

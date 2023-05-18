@@ -333,7 +333,7 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
             $types[] = $allTypes[$type];
             $tsTypes[] = ts($allTypes[$type]);
           }
-          $values[$object->id]['group_type'] = implode(', ', $tsTypes);
+          $values[$object->id]['group_type'] = CRM_Utils_Array::implode(', ', $tsTypes);
         }
         $values[$object->id]['action'] = CRM_Core_Action::formLink($newLinks,
           $action,
@@ -403,7 +403,7 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
       $types = array_keys($groupType);
       if (!empty($types)) {
         $clauses[] = 'groups.group_type LIKE %2';
-        $typeString = CRM_Core_DAO::VALUE_SEPARATOR . implode(CRM_Core_DAO::VALUE_SEPARATOR, $types) . CRM_Core_DAO::VALUE_SEPARATOR;
+        $typeString = CRM_Core_DAO::VALUE_SEPARATOR . CRM_Utils_Array::implode(CRM_Core_DAO::VALUE_SEPARATOR, $types) . CRM_Core_DAO::VALUE_SEPARATOR;
         $params[2] = array($typeString, 'String', TRUE);
       }
     }
@@ -468,7 +468,7 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
       $clauses[] = 'groups.is_hidden = 0';
     }
 
-    return implode(' AND ', $clauses);
+    return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
   function pager($whereClause, $whereParams) {

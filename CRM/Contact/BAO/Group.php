@@ -264,7 +264,7 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group {
           $dao->whereAdd($k . ' LIKE "' . CRM_Core_DAO::escapeString($v) . '"');
         }
         elseif (is_array($v)) {
-          $dao->whereAdd($k . ' IN (' . implode(',', $v) . ')');
+          $dao->whereAdd($k . ' IN (' . CRM_Utils_Array::implode(',', $v) . ')');
         }
         else {
           $dao->$k = $v;
@@ -274,7 +274,7 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group {
     // return only specific fields if returnproperties are sent
     if (!empty($returnProperties)) {
       $dao->selectAdd();
-      $dao->selectAdd(implode(',', $returnProperties));
+      $dao->selectAdd(CRM_Utils_Array::implode(',', $returnProperties));
     }
     $dao->find();
 
@@ -362,7 +362,7 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group {
     // convert params if array type
     if (isset($params['group_type'])) {
       if (is_array($params['group_type'])) {
-        $params['group_type'] = CRM_Core_DAO::VALUE_SEPARATOR . implode(CRM_Core_DAO::VALUE_SEPARATOR,
+        $params['group_type'] = CRM_Core_DAO::VALUE_SEPARATOR . CRM_Utils_Array::implode(CRM_Core_DAO::VALUE_SEPARATOR,
           array_keys($params['group_type'])
         ) . CRM_Core_DAO::VALUE_SEPARATOR;
       }

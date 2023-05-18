@@ -117,7 +117,7 @@ class CRM_Case_Form_Task extends CRM_Core_Form {
     }
 
     if (!empty($ids)) {
-      $form->_componentClause = ' civicrm_case.id IN ( ' . implode(',', $ids) . ' ) ';
+      $form->_componentClause = ' civicrm_case.id IN ( ' . CRM_Utils_Array::implode(',', $ids) . ' ) ';
       $form->assign('totalSelectedCases', count($ids));
     }
 

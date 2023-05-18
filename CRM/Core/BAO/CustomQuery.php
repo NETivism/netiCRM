@@ -147,7 +147,7 @@ class CRM_Core_BAO_CustomQuery {
 
     // initialize the field array
     $tmpArray = array_keys($this->_ids);
-    $idString = implode(',', $tmpArray);
+    $idString = CRM_Utils_Array::implode(',', $tmpArray);
     $query = "
 SELECT f.id, f.label, f.data_type,
        f.html_type, f.is_search_range,
@@ -390,7 +390,7 @@ SELECT label, value
                 //if user check only 'CiviCRM_OP_OR' check box
                 //of custom checkbox field, then ignore this field.
                 if (!empty($sqlValue)) {
-                  $whereQuery = implode($sqlOP, $sqlValue);
+                  $whereQuery = CRM_Utils_Array::implode($sqlOP, $sqlValue);
 
                   if ($isExclude) {
                     $whereQuery .= ' OR NULLIF(' . $sql . ", '') IS NULL";
@@ -418,7 +418,7 @@ SELECT label, value
                 //if user select only 'CiviCRM_OP_OR' value
                 //of custom multi select field, then ignore this field.
                 if (!empty($sqlValue)) {
-                  $this->_where[$grouping][] = ' ( ' . implode($sqlOP, $sqlValue) . ' ) ';
+                  $this->_where[$grouping][] = ' ( ' . CRM_Utils_Array::implode($sqlOP, $sqlValue) . ' ) ';
                   $this->_qill[$grouping][] = "$field[label] $op $qillValue ( $sqlOPlabel )";
                 }
               }
@@ -586,7 +586,7 @@ SELECT label, value
               //if user select only 'CiviCRM_OP_OR' value
               //of custom multi select field, then ignore this field.
               if (!empty($sqlValue)) {
-                $this->_where[$grouping][] = " ( " . implode($sqlOP, $sqlValue) . " ) ";
+                $this->_where[$grouping][] = " ( " . CRM_Utils_Array::implode($sqlOP, $sqlValue) . " ) ";
                 $this->_qill[$grouping][] = "$field[label] $op $qillValue ( $sqlOPlabel )";
               }
             }
@@ -615,16 +615,16 @@ SELECT label, value
       $clauses = array();
       foreach ($this->_where as $grouping => $values) {
         if (!empty($values)) {
-          $clauses[] = ' ( ' . implode(' AND ', $values) . ' ) ';
+          $clauses[] = ' ( ' . CRM_Utils_Array::implode(' AND ', $values) . ' ) ';
         }
       }
       if (!empty($clauses)) {
-        $whereStr = ' ( ' . implode(' OR ', $clauses) . ' ) ';
+        $whereStr = ' ( ' . CRM_Utils_Array::implode(' OR ', $clauses) . ' ) ';
       }
     }
 
-    return array(implode(' , ', $this->_select),
-      implode(' ', $this->_tables),
+    return array(CRM_Utils_Array::implode(' , ', $this->_select),
+      CRM_Utils_Array::implode(' ', $this->_tables),
       $whereStr,
     );
   }
@@ -656,7 +656,7 @@ SELECT label, value
     }
 
     if (!empty($qill)) {
-      $this->_qill[$grouping][] = $label . ' - ' . implode(' ' . ts('and') . ' ', $qill);
+      $this->_qill[$grouping][] = $label . ' - ' . CRM_Utils_Array::implode(' ' . ts('and') . ' ', $qill);
     }
   }
 }

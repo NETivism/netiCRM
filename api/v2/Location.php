@@ -179,7 +179,7 @@ function civicrm_location_update($params) {
     }
   }
   if (!empty($invalidTypes)) {
-    return civicrm_create_error(ts("Invalid Location Type(s) : %1", array(1 => implode(', ', $invalidTypes))));
+    return civicrm_create_error(ts("Invalid Location Type(s) : %1", array(1 => CRM_Utils_Array::implode(', ', $invalidTypes))));
   }
 
   //allow to swap locations.
@@ -203,7 +203,7 @@ function civicrm_location_update($params) {
 
   if (CRM_Utils_System::isNull($locations)) {
     return civicrm_create_error(ts("Invalid Location Type(s) : %1",
-        array(1 => implode(', ', CRM_Utils_Array::value('location_type', $params)))
+        array(1 => CRM_Utils_Array::implode(', ', CRM_Utils_Array::value('location_type', $params)))
       ));
   }
 

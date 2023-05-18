@@ -572,7 +572,7 @@ class CRM_Core_PseudoConstant {
       }
 
       if (count($componentIds)) {
-        $componentIds = implode(',', $componentIds);
+        $componentIds = CRM_Utils_Array::implode(',', $componentIds);
         $componentClause = " ($componentClause OR v.component_id IN ($componentIds))";
       }
       $condition = $condition . ' AND ' . $componentClause;
@@ -833,7 +833,7 @@ class CRM_Core_PseudoConstant {
           $limitIds = array_merge($limitIds, array_keys($countryIsoCodes, $code));
         }
         if (!empty($limitIds)) {
-          $whereClause = 'country_id IN (' . implode(', ', $limitIds) . ')';
+          $whereClause = 'country_id IN (' . CRM_Utils_Array::implode(', ', $limitIds) . ')';
         }
         else {
           $whereClause = FALSE;
@@ -901,7 +901,7 @@ WHERE  id = %1";
           }
         }
         if (!empty($limitIds)) {
-          $whereClause = 'country_id IN (' . implode(', ', $limitIds) . ')';
+          $whereClause = 'country_id IN (' . CRM_Utils_Array::implode(', ', $limitIds) . ')';
         }
       }
       self::populate(self::$stateProvinceAbbreviation, 'CRM_Core_DAO_StateProvince', TRUE, 'abbreviation', 'is_active', $whereClause);
@@ -955,7 +955,7 @@ WHERE  id = %1";
       }
 
       if (count($limitCodes)) {
-        $whereClause = "iso_code IN ('" . implode("', '", $limitCodes) . "')";
+        $whereClause = "iso_code IN ('" . CRM_Utils_Array::implode("', '", $limitCodes) . "')";
       }
       else {
         $whereClause = NULL;

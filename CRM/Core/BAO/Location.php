@@ -371,7 +371,7 @@ WHERE e.id = %1";
         if (count($primaryLocBlockIds[$name]) > 1) {
           // keep only single block as primary.
           $primaryId = array_pop($primaryLocBlockIds[$name]);
-          $resetIds = "(" . implode(',', $primaryLocBlockIds[$name]) . ")";
+          $resetIds = "(" . CRM_Utils_Array::implode(',', $primaryLocBlockIds[$name]) . ")";
           // reset all primary except one.
           CRM_Core_DAO::executeQuery("UPDATE civicrm_$name SET is_primary = 0 WHERE id IN $resetIds");
         }
@@ -418,7 +418,7 @@ WHERE e.id = %1";
         $keep = array_pop($addr['billing']);
       }
       unset($addr['billing'][$keepId]);
-      $restIds = "(" . implode(',', array_keys($addr['billing'])) . ")";
+      $restIds = "(" . CRM_Utils_Array::implode(',', array_keys($addr['billing'])) . ")";
       CRM_Core_DAO::executeQuery("UPDATE civicrm_address SET is_billing = 0 WHERE id IN $restIds");
     }
     elseif (count($addr['billing']) == 0 && count($addr['nonbilling']) > 0) {

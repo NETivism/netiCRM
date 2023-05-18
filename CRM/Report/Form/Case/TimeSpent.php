@@ -195,7 +195,7 @@ class CRM_Report_Form_Case_TimeSpent extends CRM_Report_Form {
       }
     }
 
-    $this->_select = "SELECT " . implode(', ', $select) . " ";
+    $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
   function from() {
@@ -262,7 +262,7 @@ class CRM_Report_Form_Case_TimeSpent extends CRM_Report_Form {
       $this->_where .= " ";
     }
     else {
-      $this->_where .= " AND " . implode(' AND ', $clauses);
+      $this->_where .= " AND " . CRM_Utils_Array::implode(' AND ', $clauses);
     }
   }
 

@@ -268,11 +268,11 @@ SUM(contribution2_total_amount_sum)   as contribution2_total_amount_sum';
     }
 
     if (count($uni) >= 1) {
-      $select[] = "CONCAT_WS('_', {$append}" . implode(', ', $uni) . ") AS uni";
+      $select[] = "CONCAT_WS('_', {$append}" . CRM_Utils_Array::implode(', ', $uni) . ") AS uni";
       $this->_columnHeaders["uni"] = array('no_display' => TRUE);
     }
 
-    $this->_select = "SELECT " . implode(', ', $select) . " ";
+    $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
   function groupBy($tableCol = FALSE) {
@@ -295,7 +295,7 @@ SUM(contribution2_total_amount_sum)   as contribution2_total_amount_sum';
         }
       }
 
-      $this->_groupBy = "GROUP BY " . implode(', ', $this->_groupBy);
+      $this->_groupBy = "GROUP BY " . CRM_Utils_Array::implode(', ', $this->_groupBy);
     }
   }
 
@@ -336,7 +336,7 @@ INNER JOIN civicrm_contact {$this->_aliases['civicrm_contact']} ON {$this->_alia
       $contriCol = "contact_id";
     }
 
-    $IN = implode(",", $this->_params['contribution_status_id_value']);
+    $IN = CRM_Utils_Array::implode(",", $this->_params['contribution_status_id_value']);
 
     $contriStatus1 = ($IN != NULL) ? " AND contribution1.contribution_status_id IN ( {$IN} ) " : " ";
     $contriStatus2 = ($IN != NULL) ? " AND contribution2.contribution_status_id IN ( {$IN} ) " : " ";
@@ -394,7 +394,7 @@ LEFT  JOIN (
       $this->_where = "WHERE ( 1 ) ";
     }
     else {
-      $this->_where = "WHERE " . implode(' AND ', $clauses);
+      $this->_where = "WHERE " . CRM_Utils_Array::implode(' AND ', $clauses);
     }
   }
 
@@ -445,13 +445,13 @@ LEFT  JOIN (
             }
           }
           if (!$found) {
-            $erorrGrps = implode(',', $invlidGroups);
+            $erorrGrps = CRM_Utils_Array::implode(',', $invlidGroups);
             $tempErrors[] = ts("Do not select field %1 with Group by %2.", array(1 => $idMapping[$fld_id], 2 => $erorrGrps));
           }
         }
       }
       if (!empty($tempErrors)) {
-        $errors['fields'] = implode("<br>", $tempErrors);
+        $errors['fields'] = CRM_Utils_Array::implode("<br>", $tempErrors);
       }
     }
 

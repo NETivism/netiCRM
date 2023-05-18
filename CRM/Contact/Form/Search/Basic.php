@@ -109,7 +109,7 @@ class CRM_Contact_Form_Search_Basic extends CRM_Contact_Form_Search {
           $groupIds[] = $groupId;
         }
 
-        $this->assign('groupIds', implode(',', $groupIds));
+        $this->assign('groupIds', CRM_Utils_Array::implode(',', $groupIds));
         $this->assign('groupNames', $groupNames);
       }
       else {

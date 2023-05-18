@@ -124,7 +124,7 @@ class CRM_Mailing_Event_BAO_Resubscribe {
                 SELECT      $mg.entity_table as entity_table,
                             $mg.entity_id as entity_id
                 FROM        $mg
-                WHERE       $mg.mailing_id IN (" . implode(', ', $mailings) . ")
+                WHERE       $mg.mailing_id IN (" . CRM_Utils_Array::implode(', ', $mailings) . ")
                     AND     $mg.group_type = 'Include'");
 
       $mailings = array();
@@ -154,7 +154,7 @@ class CRM_Mailing_Event_BAO_Resubscribe {
             FROM        $group
             LEFT JOIN   $gc
                 ON      $gc.group_id = $group.id
-            WHERE       $group.id IN (" . implode(', ', $group_ids) . ")
+            WHERE       $group.id IN (" . CRM_Utils_Array::implode(', ', $group_ids) . ")
                 AND     ($group.saved_search_id is not null
                             OR  ($gc.contact_id = $contact_id
                                 AND $gc.status = 'Removed')

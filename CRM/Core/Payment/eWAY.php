@@ -490,7 +490,7 @@ class CRM_Core_Payment_eWAY extends CRM_Core_Payment {
     }
 
     if (!empty($errorMsg)) {
-      return implode('<p>', $errorMsg);
+      return CRM_Utils_Array::implode('<p>', $errorMsg);
     }
     else {
       return NULL;

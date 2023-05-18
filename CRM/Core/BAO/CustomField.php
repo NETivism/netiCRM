@@ -180,7 +180,7 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
 
       if (!empty($defaultArray)) {
         // also add the seperator before and after the value per new conventio (CRM-1604)
-        $params['default_value'] = CRM_Core_BAO_CustomOption::VALUE_SEPERATOR . implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, $defaultArray) . CRM_Core_BAO_CustomOption::VALUE_SEPERATOR;
+        $params['default_value'] = CRM_Core_BAO_CustomOption::VALUE_SEPERATOR . CRM_Utils_Array::implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, $defaultArray) . CRM_Core_BAO_CustomOption::VALUE_SEPERATOR;
       }
     }
     else {
@@ -416,12 +416,12 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
     }
 
     if (is_array($customDataType)) {
-      $cacheKey = implode('_', $customDataType);
+      $cacheKey = CRM_Utils_Array::implode('_', $customDataType);
     }
     else {
       $cacheKey = $customDataType;
     }
-    $cacheKey .= is_array($customDataSubType) ? ('_' . implode('_', $customDataSubType)) : '_'.$customDataSubType.'_0';
+    $cacheKey .= is_array($customDataSubType) ? ('_' . CRM_Utils_Array::implode('_', $customDataSubType)) : '_'.$customDataSubType.'_0';
     $cacheKey .= $customDataSubName ? "{$customDataSubName}_" : "_0";
     $cacheKey .= $showAll ? "_1" : "_0";
     $cacheKey .= $inline ? "_1_" : "_0_";
@@ -1152,10 +1152,10 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
                 $returnValue[] = '';
               }
             }
-            $display = implode(',', $returnValue);
+            $display = CRM_Utils_Array::implode(',', $returnValue);
           }
           else {
-            $display = implode(', ', $v);
+            $display = CRM_Utils_Array::implode(', ', $v);
           }
         }
         break;
@@ -1518,7 +1518,7 @@ SELECT id
         // Note that only during merge this is not an array,
         // and you can directly use value, CRM-4385
         if (is_array($value)) {
-          $value = CRM_Core_BAO_CustomOption::VALUE_SEPERATOR . implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
+          $value = CRM_Core_BAO_CustomOption::VALUE_SEPERATOR . CRM_Utils_Array::implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
             array_values($value)
           ) . CRM_Core_BAO_CustomOption::VALUE_SEPERATOR;
         }
@@ -1823,7 +1823,7 @@ AND    cf.id = %1";
       //support for single as well as array format.
       if (!empty($includeFieldIds)) {
         if (is_array($includeFieldIds)) {
-          $includeFieldIds = implode(',', $includeFieldIds);
+          $includeFieldIds = CRM_Utils_Array::implode(',', $includeFieldIds);
         }
         $whereClause .= "OR f.id IN ( $includeFieldIds )";
       }
@@ -2053,7 +2053,7 @@ WHERE      ( f.label = %1 OR f.name = %1 )
    */
   static function getNameFromID($ids) {
     if (is_array($ids)) {
-      $ids = implode(',', $ids);
+      $ids = CRM_Utils_Array::implode(',', $ids);
     }
     $sql = "
 SELECT     f.id, f.name AS field_name, f.label AS field_label, g.name AS group_name, g.title AS group_title

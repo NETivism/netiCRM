@@ -84,7 +84,7 @@ class CRM_UF_Form_Group extends CRM_Core_Form {
       CRM_Utils_System::setTitle(ts('Profile Settings') . " - $title");
     }
     elseif ($this->_action & (CRM_Core_Action::DISABLE | CRM_Core_Action::DELETE)) {
-      $ufGroup['module'] = implode(' , ', CRM_Core_BAO_UFGroup::getUFJoinRecord($this->_id, TRUE));
+      $ufGroup['module'] = CRM_Utils_Array::implode(' , ', CRM_Core_BAO_UFGroup::getUFJoinRecord($this->_id, TRUE));
       $status = 0;
       $status = CRM_Core_BAO_UFGroup::usedByModule($this->_id);
       if ($this->_action & (CRM_Core_Action::DISABLE)) {

@@ -327,7 +327,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
 
     // missing required dedupe fields, fail
     if ($errorRequired && !$this->_updateWithId) {
-      $errorMessage = ts('Missing required fields:') . implode(' '.ts('and').' ', $missingNames);
+      $errorMessage = ts('Missing required fields:') . CRM_Utils_Array::implode(' '.ts('and').' ', $missingNames);
       array_unshift($values, $errorMessage);
       $importRecordParams = array($statusFieldName => CRM_Import_Parser::ERROR, "${statusFieldName}Msg" => $errorMessage);
       $this->updateImportStatus($values[count($values) - 1], $importRecordParams);
@@ -1060,7 +1060,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
           );
         }
 
-        $url_string = implode("\n", $urls);
+        $url_string = CRM_Utils_Array::implode("\n", $urls);
 
         // If we duplicate more than one record, skip no matter what
         if (count($cids) > 1) {

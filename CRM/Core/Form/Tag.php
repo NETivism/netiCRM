@@ -161,7 +161,7 @@ class CRM_Core_Form_Tag {
         }
 
         if (!empty($insertValues)) {
-          $insertSQL = 'INSERT INTO civicrm_entity_tag ( tag_id, entity_id, entity_table ) VALUES ' . implode(', ', $insertValues) . ';';
+          $insertSQL = 'INSERT INTO civicrm_entity_tag ( tag_id, entity_id, entity_table ) VALUES ' . CRM_Utils_Array::implode(', ', $insertValues) . ';';
           CRM_Core_DAO::executeQuery($insertSQL);
         }
       }

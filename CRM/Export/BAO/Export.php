@@ -421,7 +421,7 @@ class CRM_Export_BAO_Export {
         }
         elseif ($exportMode == CRM_Export_Form_Select::ACTIVITY_EXPORT) {
           $query = "SELECT source_contact_id FROM civicrm_activity
-                              WHERE id IN ( " . implode(',', $ids) . ")";
+                              WHERE id IN ( " . CRM_Utils_Array::implode(',', $ids) . ")";
           $dao = CRM_Core_DAO::executeQuery($query);
           while ($dao->fetch()) {
             $relIDs[] = $dao->source_contact_id;
@@ -461,7 +461,7 @@ class CRM_Export_BAO_Export {
           $relationshipJoin = " INNER JOIN $componentTable ctTable ON ctTable.contact_id = {$contactA}";
         }
         else {
-          $relID = implode(',', $relIDs);
+          $relID = CRM_Utils_Array::implode(',', $relIDs);
           $relationshipClause = " AND crel.{$contactA} IN ( {$relID} )";
         }
         $relTempName = CRM_Core_DAO::createTempTableName('civicrm_relationship_temp', FALSE);
@@ -527,7 +527,7 @@ class CRM_Export_BAO_Export {
       }
       if (count($ids) < 1000) {
         $field = preg_replace('/ IN.+$/', '', $componentClause);
-        $orderBy = " ORDER BY FIELD($field,".implode(',', $ids).") ";
+        $orderBy = " ORDER BY FIELD($field,".CRM_Utils_Array::implode(',', $ids).") ";
       }
     }
 
@@ -803,7 +803,7 @@ class CRM_Export_BAO_Export {
               foreach (explode(self::VALUE_SEPARATOR, $dao->$field) as $k => $v) {
                 $viewRoles[] = $participantRoles[$v];
               }
-              $fieldValue = implode(self::DISPLAY_SEPARATOR, $viewRoles);
+              $fieldValue = CRM_Utils_Array::implode(self::DISPLAY_SEPARATOR, $viewRoles);
             }
           }
           elseif ($field == 'master_address_belongs_to') {
@@ -1181,7 +1181,7 @@ class CRM_Export_BAO_Export {
           $exportTempTableSelectFields[] = "{$exportTempTable}.{$fieldName}";
         }
       }
-      $exportTempTableSelectColumns = implode(', ', $exportTempTableSelectFields);
+      $exportTempTableSelectColumns = CRM_Utils_Array::implode(', ', $exportTempTableSelectFields);
       $tempTableName = 'new_export_temp_table';
       $sql = "CREATE TEMPORARY TABLE $tempTableName SELECT $exportTempTableSelectColumns $componentColumns FROM $csResultTempTable csResultTable INNER JOIN $exportTempTable ON csResultTable.contact_id = $exportTempTable.contact_id";
       CRM_Core_DAO::executeQuery($sql);
@@ -1561,12 +1561,12 @@ FROM   $tableName
           $valueString[] = "'" . CRM_Core_DAO::escapeString($value) . "'";
         }
       }
-      $sqlClause[] = '(' . implode(',', $valueString) . ')';
+      $sqlClause[] = '(' . CRM_Utils_Array::implode(',', $valueString) . ')';
     }
 
-    $sqlColumnString = '(id, ' . implode(',', $sqlColumnsKeys) . ')';
+    $sqlColumnString = '(id, ' . CRM_Utils_Array::implode(',', $sqlColumnsKeys) . ')';
 
-    $sqlValueString = implode(",\n", $sqlClause);
+    $sqlValueString = CRM_Utils_Array::implode(",\n", $sqlClause);
 
     $sql = "
 INSERT INTO $tableName $sqlColumnString
@@ -1588,7 +1588,7 @@ VALUES $sqlValueString
 CREATE TABLE {$exportTempTable} ( 
      id int unsigned NOT NULL AUTO_INCREMENT,
 ";
-    $sql .= implode(",\n", array_values($sqlColumns));
+    $sql .= CRM_Utils_Array::implode(",\n", array_values($sqlColumns));
 
     $sql .= ",
   PRIMARY KEY ( id )
@@ -1686,7 +1686,7 @@ ORDER BY  r1.id
         $deleteIDs[] = $copyID;
       }
 
-      $addresseeString = implode(', ', $masterAddressee);
+      $addresseeString = CRM_Utils_Array::implode(', ', $masterAddressee);
       if ($mergeLastName) {
         $addresseeString = str_replace(" " . $lastName . ",", ",", $addresseeString);
       }
@@ -1702,7 +1702,7 @@ WHERE  id = %2
       CRM_Core_DAO::executeQuery($sql, $params);
 
       // delete all copies
-      $deleteIDString = implode(',', $deleteIDs);
+      $deleteIDString = CRM_Utils_Array::implode(',', $deleteIDs);
       $sql = "
 DELETE FROM $tableName
 WHERE  id IN ( $deleteIDString )
@@ -1795,7 +1795,7 @@ DROP  $drop";
         unset($headerRows[$key]);
       }
     }
-    $query .= implode(",\n", $clause);
+    $query .= CRM_Utils_Array::implode(",\n", $clause);
     $query .= " WHERE {$replaced['civicrm_primary_id']} != ''";
 
     CRM_Core_DAO::executeQuery($query);
@@ -1805,7 +1805,7 @@ DROP  $drop";
     foreach ($replaced as $householdColumns) {
       $dropClause[] = " DROP $householdColumns ";
     }
-    $dropQuery .= implode(",\n", $dropClause);
+    $dropQuery .= CRM_Utils_Array::implode(",\n", $dropClause);
 
     CRM_Core_DAO::executeQuery($dropQuery);
 
@@ -1846,7 +1846,7 @@ GROUP BY civicrm_primary_id ";
         if (strstr($fieldValue, self::VALUE_SEPARATOR)){
           $fieldValue = trim($dao->$column, self::VALUE_SEPARATOR);
           $fieldValue = explode(self::VALUE_SEPARATOR, $fieldValue);
-          $fieldValue = implode(self::DISPLAY_SEPARATOR, $fieldValue);
+          $fieldValue = CRM_Utils_Array::implode(self::DISPLAY_SEPARATOR, $fieldValue);
         }
         if(strlen($fieldValue) < 15){
           $row[$column] = CRM_Utils_String::toNumber($fieldValue);
@@ -1884,7 +1884,7 @@ GROUP BY civicrm_primary_id ";
           if (strstr($fieldValue, self::VALUE_SEPARATOR)){
             $fieldValue = trim($dao->$column, self::VALUE_SEPARATOR);
             $fieldValue = explode(self::VALUE_SEPARATOR, $fieldValue);
-            $fieldValue = implode(self::DISPLAY_SEPARATOR, $fieldValue);
+            $fieldValue = CRM_Utils_Array::implode(self::DISPLAY_SEPARATOR, $fieldValue);
           }
           if(strlen($fieldValue) < 15){
             $row[$column] = CRM_Utils_String::toNumber($fieldValue);
@@ -1951,7 +1951,7 @@ GROUP BY civicrm_primary_id ";
           if (strstr($fieldValue, self::VALUE_SEPARATOR)){
             $fieldValue = trim($dao->$column, self::VALUE_SEPARATOR);
             $fieldValue = explode(self::VALUE_SEPARATOR, $fieldValue);
-            $fieldValue = implode(self::DISPLAY_SEPARATOR, $fieldValue);
+            $fieldValue = CRM_Utils_Array::implode(self::DISPLAY_SEPARATOR, $fieldValue);
           }
           if(strlen($fieldValue) < 15){
             $row[$column] = CRM_Utils_String::toNumber($fieldValue);
@@ -1979,7 +1979,7 @@ GROUP BY civicrm_primary_id ";
       $split = explode('-', $header);
       if ($relationTypeName = CRM_Utils_Array::value($split[0], $contactRelationshipTypes)) {
         $split[0] = $relationTypeName;
-        $header = implode('-', $split);
+        $header = CRM_Utils_Array::implode('-', $split);
       }
     }
   }

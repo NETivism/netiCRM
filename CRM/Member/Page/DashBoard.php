@@ -113,7 +113,7 @@ class CRM_Member_Page_DashBoard extends CRM_Core_Page {
     }
     require_once "CRM/Member/BAO/MembershipStatus.php";
     $status = CRM_Member_BAO_MembershipStatus::getMembershipStatusCurrent();
-    $status = implode(',', $status);
+    $status = CRM_Utils_Array::implode(',', $status);
 
     foreach ($membershipSummary as $typeID => $details) {
       foreach ($details as $key => $value) {

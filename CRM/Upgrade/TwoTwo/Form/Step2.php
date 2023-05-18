@@ -42,7 +42,7 @@ class CRM_Upgrade_TwoTwo_Form_Step2 extends CRM_Upgrade_Form {
   }
 
   function upgrade() {
-    $sqlFile = implode(DIRECTORY_SEPARATOR,
+    $sqlFile = CRM_Utils_Array::implode(DIRECTORY_SEPARATOR,
       array(dirname(__FILE__), '..', '..',
         'Incremental', 'sql', '2.2.alpha1.mysql',
       )

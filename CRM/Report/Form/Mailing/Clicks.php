@@ -180,7 +180,7 @@ class CRM_Report_Form_Mailing_Clicks extends CRM_Report_Form {
       $this->_columnHeaders["civicrm_mailing_click_count"]['title'] = ts('Click Count');
     }
 
-    $this->_select = "SELECT " . implode(', ', $select) . " ";
+    $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
     //print_r($this->_select);
   }
 
@@ -256,7 +256,7 @@ class CRM_Report_Form_Mailing_Clicks extends CRM_Report_Form {
       $this->_where = "WHERE ( 1 )";
     }
     else {
-      $this->_where = "WHERE " . implode(' AND ', $clauses);
+      $this->_where = "WHERE " . CRM_Utils_Array::implode(' AND ', $clauses);
     }
 
     if ($this->_aclWhere) {

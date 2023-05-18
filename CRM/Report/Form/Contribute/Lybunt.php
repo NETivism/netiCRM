@@ -197,7 +197,7 @@ class CRM_Report_Form_Contribute_Lybunt extends CRM_Report_Form {
       }
     }
 
-    $this->_select = "SELECT  " . implode(', ', $select) . " ";
+    $this->_select = "SELECT  " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
   function from() {
@@ -264,7 +264,7 @@ class CRM_Report_Form_Contribute_Lybunt extends CRM_Report_Form {
       $this->_where = "WHERE {$this->_aliases['civicrm_contribution']}.is_test = 0 ";
     }
     else {
-      $this->_where = "WHERE {$this->_aliases['civicrm_contribution']}.is_test = 0  AND " . implode(' AND ', $clauses);
+      $this->_where = "WHERE {$this->_aliases['civicrm_contribution']}.is_test = 0  AND " . CRM_Utils_Array::implode(' AND ', $clauses);
     }
 
     if ($this->_aclWhere) {
@@ -328,7 +328,7 @@ class CRM_Report_Form_Contribute_Lybunt extends CRM_Report_Form {
         $sql = "{$this->_select} {$this->_from} {$this->_where} {$this->_groupBy}";
       }
       else {
-        $sql = "{$this->_select} {$this->_from} WHERE {$this->_aliases['civicrm_contact']}.id IN (" . implode(',', $contactIds) . ") AND {$this->_aliases['civicrm_contribution']}.is_test = 0 {$this->_statusClause} {$this->_groupBy} ";
+        $sql = "{$this->_select} {$this->_from} WHERE {$this->_aliases['civicrm_contact']}.id IN (" . CRM_Utils_Array::implode(',', $contactIds) . ") AND {$this->_aliases['civicrm_contribution']}.is_test = 0 {$this->_statusClause} {$this->_groupBy} ";
       }
 
       $dao = CRM_Core_DAO::executeQuery($sql);

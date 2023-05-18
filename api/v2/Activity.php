@@ -307,7 +307,7 @@ function _civicrm_activity_check_params(&$params, $addMode = FALSE) {
     $sql = '
 SELECT  count(*) 
   FROM  civicrm_contact 
- WHERE  id IN (' . implode(', ', $valueIds) . ' )';
+ WHERE  id IN (' . CRM_Utils_Array::implode(', ', $valueIds) . ' )';
     if (count($valueIds) != CRM_Core_DAO::singleValueQuery($sql)) {
       return civicrm_create_error(ts('Invalid %1 Contact Id', array(1 => ucfirst($key))));
     }

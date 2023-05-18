@@ -141,8 +141,8 @@ class CRM_Core_Permission_Drupal {
       }
       else {
         $clauses = array();
-        $groups = implode(', ', self::$_editPermissionedGroups);
-        $clauses[] = ' ( civicrm_group_contact.group_id IN ( ' . implode(', ', array_keys(self::$_editPermissionedGroups)) . " ) ) ";
+        $groups = CRM_Utils_Array::implode(', ', self::$_editPermissionedGroups);
+        $clauses[] = ' ( civicrm_group_contact.group_id IN ( ' . CRM_Utils_Array::implode(', ', array_keys(self::$_editPermissionedGroups)) . " ) ) ";
         $tables['civicrm_group_contact'] = 1;
         $whereTables['civicrm_group_contact'] = 1;
 
@@ -163,7 +163,7 @@ class CRM_Core_Permission_Drupal {
             }
           }
         }
-        $clause = ' ( ' . implode(' OR ', $clauses) . ' ) ';
+        $clause = ' ( ' . CRM_Utils_Array::implode(' OR ', $clauses) . ' ) ';
       }
     }
     else {
@@ -175,8 +175,8 @@ class CRM_Core_Permission_Drupal {
       }
       else {
         $clauses = array();
-        $groups = implode(', ', self::$_viewPermissionedGroups);
-        $clauses[] = ' ( civicrm_group_contact.group_id IN (' . implode(', ', array_keys(self::$_viewPermissionedGroups)) . " ) ) ";
+        $groups = CRM_Utils_Array::implode(', ', self::$_viewPermissionedGroups);
+        $clauses[] = ' ( civicrm_group_contact.group_id IN (' . CRM_Utils_Array::implode(', ', array_keys(self::$_viewPermissionedGroups)) . " ) ) ";
         $tables['civicrm_group_contact'] = 1;
         $whereTables['civicrm_group_contact'] = 1;
 
@@ -198,7 +198,7 @@ class CRM_Core_Permission_Drupal {
             }
           }
         }
-        $clause = ' ( ' . implode(' OR ', $clauses) . ' ) ';
+        $clause = ' ( ' . CRM_Utils_Array::implode(' OR ', $clauses) . ' ) ';
       }
     }
 

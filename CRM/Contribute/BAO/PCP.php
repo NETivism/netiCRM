@@ -187,7 +187,7 @@ WHERE  civicrm_pcp.contact_id = civicrm_contact.id
 
     $excludePageClause = NULL;
     if (!empty($contactPCPPages)) {
-      $excludePageClause = " AND pg.id NOT IN ( " . implode(',', $contactPCPPages) . ") ";
+      $excludePageClause = " AND pg.id NOT IN ( " . CRM_Utils_Array::implode(',', $contactPCPPages) . ") ";
     }
 
     $query = "

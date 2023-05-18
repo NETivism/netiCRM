@@ -587,7 +587,7 @@ function _civicrm_duplicate_formatted_contact(&$params,
     );
 
     if (!empty($ids)) {
-      $ids = implode(',', $ids);
+      $ids = CRM_Utils_Array::implode(',', $ids);
       $error = CRM_Core_Error::createError("Found matching contacts: $ids",
         CRM_Core_Error::DUPLICATE_CONTACT,
         'Fatal', $ids
@@ -721,9 +721,9 @@ function _civicrm_check_required_fields(&$params, $daoName, $throwException = FA
 
   if (!empty($missing)) {
     if ($throwException) {
-      throw new Exception("Required fields " . implode(',', $missing) . " for $daoName are not found");
+      throw new Exception("Required fields " . CRM_Utils_Array::implode(',', $missing) . " for $daoName are not found");
     }
-    return civicrm_create_error(ts("Required fields " . implode(',', $missing) . " for $daoName are not found"));
+    return civicrm_create_error(ts("Required fields " . CRM_Utils_Array::implode(',', $missing) . " for $daoName are not found"));
   }
 
   return TRUE;
@@ -827,7 +827,7 @@ function _civicrm_participant_formatted_param(&$params, &$values, $create = FALS
             $participantRoles[$k] = $v;
           }
         }
-        $values['role_id'] = implode(CRM_Core_DAO::VALUE_SEPARATOR, $participantRoles);
+        $values['role_id'] = CRM_Utils_Array::implode(CRM_Core_DAO::VALUE_SEPARATOR, $participantRoles);
         unset($values[$key]);
         break;
 

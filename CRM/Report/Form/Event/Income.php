@@ -72,7 +72,7 @@ class CRM_Report_Form_Event_Income extends CRM_Report_Form {
 
     $this->assign('events', $eventIDs);
 
-    $eventID = implode(',', $eventIDs);
+    $eventID = CRM_Utils_Array::implode(',', $eventIDs);
 
     $participantStatus = CRM_Event_PseudoConstant::participantStatus(NULL, "is_counted = 1", 'label');
     $participantRole = CRM_Event_PseudoConstant::participantRole();
@@ -94,8 +94,8 @@ class CRM_Report_Form_Event_Income extends CRM_Report_Form {
       $activeParticipantStatusIDArray[] = $id;
       $activeParticipantStatusLabelArray[] = $label;
     }
-    $activeParticipantStatus = implode(',', $activeParticipantStatusIDArray);
-    $activeparticipnatStutusLabel = implode(', ', $activeParticipantStatusLabelArray);
+    $activeParticipantStatus = CRM_Utils_Array::implode(',', $activeParticipantStatusIDArray);
+    $activeparticipnatStutusLabel = CRM_Utils_Array::implode(', ', $activeParticipantStatusLabelArray);
     $activeParticipantClause = " AND civicrm_participant.status_id IN ( $activeParticipantStatus ) ";
 
     $sql = "

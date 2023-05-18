@@ -431,7 +431,7 @@ class CRM_Core_Payment_PayflowPro extends CRM_Core_Payment {
     }
 
     if (!empty($errorMsg)) {
-      return implode('<p>', $errorMsg);
+      return CRM_Utils_Array::implode('<p>', $errorMsg);
     }
     else {
       return NULL;
@@ -445,7 +445,7 @@ class CRM_Core_Payment_PayflowPro extends CRM_Core_Payment {
     foreach ($payflow_query_array as $key => $value) {
       $payflow_query[] = $key . '[' . strlen($value) . ']=' . $value;
     }
-    $payflow_query = implode('&', $payflow_query);
+    $payflow_query = CRM_Utils_Array::implode('&', $payflow_query);
 
     return $payflow_query;
   }

@@ -58,7 +58,7 @@ class CRM_Core_Payment_TaiwanACH extends CRM_Core_Payment {
 
 
     if (!empty($error)) {
-      return implode('<br>', $error);
+      return CRM_Utils_Array::implode('<br>', $error);
     }
     else {
       return NULL;

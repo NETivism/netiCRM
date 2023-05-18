@@ -51,7 +51,7 @@ class CRM_Core_Invoke {
     CRM_Utils_System::civiBeforeInvoke($args);
 
     // get the menu items
-    $path = implode('/', $args);
+    $path = CRM_Utils_Array::implode('/', $args);
     $item = CRM_Core_Menu::get($path);
 
     // we should try to compute menus, if item is empty and stay on the same page,

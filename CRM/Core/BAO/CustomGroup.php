@@ -104,7 +104,7 @@ class CRM_Core_BAO_CustomGroup extends CRM_Core_DAO_CustomGroup {
       $extendsChildType = 'null';
     }
     elseif (!CRM_Utils_System::isNull($extendsChildType)) {
-      $extendsChildType = implode(CRM_Core_DAO::VALUE_SEPARATOR, $extendsChildType);
+      $extendsChildType = CRM_Utils_Array::implode(CRM_Core_DAO::VALUE_SEPARATOR, $extendsChildType);
       if (CRM_Utils_Array::value(0, $params['extends']) == 'Relationship') {
         $extendsChildType = str_replace(array('_a_b', '_b_a'), array('', ''), $extendsChildType);
       }
@@ -346,7 +346,7 @@ class CRM_Core_BAO_CustomGroup extends CRM_Core_DAO_CustomGroup {
         $select[] = "{$tableName}.{$columnName} as {$tableName}_{$columnName}";
       }
     }
-    $strSelect = "SELECT " . implode(', ', $select);
+    $strSelect = "SELECT " . CRM_Utils_Array::implode(', ', $select);
 
     // from, where, order by
     $strFrom = "
@@ -375,7 +375,7 @@ LEFT JOIN civicrm_custom_field ON (civicrm_custom_field.custom_group_id = civicr
         }
       }
       if(!empty($subTypeClauses)) {
-        $subTypeClause = '(' .  implode(' OR ', $subTypeClauses) . ')';
+        $subTypeClause = '(' .  CRM_Utils_Array::implode(' OR ', $subTypeClauses) . ')';
         if (!$onlySubType) {
           $subTypeClause = '(' . $subTypeClause . '  OR civicrm_custom_group.extends_entity_column_value IS NULL )';
         }
@@ -539,7 +539,7 @@ ORDER BY civicrm_custom_group.weight,
 
       if ($entityID) {
         $groupTree['info']['where'] = $where;
-        $select = implode(', ', $select);
+        $select = CRM_Utils_Array::implode(', ', $select);
 
         // this is a hack to find a table that has some values for this
         // entityID to make the below LEFT JOIN work (CRM-2518)
@@ -793,7 +793,7 @@ SELECT $select
         $s[] = "{$tableName}.{$columnName} as {$tableName}_{$columnName}";
       }
     }
-    $select = 'SELECT ' . implode(', ', $s);
+    $select = 'SELECT ' . CRM_Utils_Array::implode(', ', $s);
     $params = array();
     // from, where, order by
     $from = " FROM civicrm_custom_field, civicrm_custom_group";
@@ -814,11 +814,11 @@ SELECT $select
       foreach ($extends as $e) {
         $clause[] = "civicrm_custom_group.extends = '$e'";
       }
-      $where .= " AND ( " . implode(' OR ', $clause) . " ) ";
+      $where .= " AND ( " . CRM_Utils_Array::implode(' OR ', $clause) . " ) ";
 
       //include case activities customdata if case is enabled
       if (in_array('Activity', $extends)) {
-        $extendValues = implode(',', array_keys(CRM_Core_PseudoConstant::activityType(TRUE, TRUE)));
+        $extendValues = CRM_Utils_Array::implode(',', array_keys(CRM_Core_PseudoConstant::activityType(TRUE, TRUE)));
         $where .= " AND ( civicrm_custom_group.extends_entity_column_value IS NULL OR REPLACE( civicrm_custom_group.extends_entity_column_value, %2, ' ') IN ($extendValues) ) ";
         $params[2] = array(CRM_Core_DAO::VALUE_SEPARATOR, 'String');
       }
@@ -1262,7 +1262,7 @@ SELECT $select
           case 'CheckBox':
             if (!empty($v)) {
               $customValue = array_keys($v);
-              $groupTree[$groupID]['fields'][$fieldId]['customValue']['data'] = CRM_Core_DAO::VALUE_SEPARATOR . implode(CRM_Core_DAO::VALUE_SEPARATOR, $customValue) . CRM_Core_DAO::VALUE_SEPARATOR;
+              $groupTree[$groupID]['fields'][$fieldId]['customValue']['data'] = CRM_Core_DAO::VALUE_SEPARATOR . CRM_Utils_Array::implode(CRM_Core_DAO::VALUE_SEPARATOR, $customValue) . CRM_Core_DAO::VALUE_SEPARATOR;
             }
             else {
               $groupTree[$groupID]['fields'][$fieldId]['customValue']['data'] = NULL;
@@ -1275,7 +1275,7 @@ SELECT $select
             //added for Multi-Select
           case 'Multi-Select':
             if (!empty($v)) {
-              $groupTree[$groupID]['fields'][$fieldId]['customValue']['data'] = CRM_Core_DAO::VALUE_SEPARATOR . implode(CRM_Core_DAO::VALUE_SEPARATOR, $v) . CRM_Core_DAO::VALUE_SEPARATOR;
+              $groupTree[$groupID]['fields'][$fieldId]['customValue']['data'] = CRM_Core_DAO::VALUE_SEPARATOR . CRM_Utils_Array::implode(CRM_Core_DAO::VALUE_SEPARATOR, $v) . CRM_Core_DAO::VALUE_SEPARATOR;
             }
             else {
               $groupTree[$groupID]['fields'][$fieldId]['customValue']['data'] = NULL;
@@ -1957,7 +1957,7 @@ SELECT IF( EXISTS(SELECT name FROM civicrm_contact_type WHERE name like %1), 1, 
     }
 
     $groupLabels = array();
-    $fIds = "(" . implode(',', $fieldIds) . ")";
+    $fIds = "(" . CRM_Utils_Array::implode(',', $fieldIds) . ")";
 
     $query = "
 SELECT  civicrm_custom_group.id as groupID, civicrm_custom_group.title as groupTitle,

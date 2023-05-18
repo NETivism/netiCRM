@@ -103,7 +103,7 @@ PRIMARY KEY (id)
     foreach($this->_queryColumns as $k => $v){
       $select[] = $k.' as '.$v;
     }
-    $select = implode(", \n" , $select);
+    $select = CRM_Utils_Array::implode(", \n" , $select);
     $from = $this->tempFrom();
     $where = $this->tempWhere();
     $having = $this->tempHaving();
@@ -135,7 +135,7 @@ ORDER BY r1.start_date ASC, r2.start_date ASC
           $values[] = 'NULL';
         }
       }
-      $values = implode(', ' , $values);
+      $values = CRM_Utils_Array::implode(', ' , $values);
       $sql = "REPLACE INTO {$this->_tableName} VALUES ($values)";
       CRM_Core_DAO::executeQuery($sql, CRM_Core_DAO::$_nullArray);
       $this->_filled = TRUE;
@@ -344,7 +344,7 @@ ORDER BY r1.start_date ASC, r2.start_date ASC
         }
       }
 
-      $sql = implode(' AND ', $clauses);
+      $sql = CRM_Utils_Array::implode(' AND ', $clauses);
     }
     else {
       $sql = ' ( 1 ) ';
@@ -366,7 +366,7 @@ ORDER BY r1.start_date ASC, r2.start_date ASC
     }
 
     if (!empty($contactIDs)) {
-      $contactIDs = implode(', ', $contactIDs);
+      $contactIDs = CRM_Utils_Array::implode(', ', $contactIDs);
       $sql .= " AND contact_a.id IN ( $contactIDs )";
     }
   }
@@ -414,7 +414,7 @@ ORDER BY r1.start_date ASC, r2.start_date ASC
         }
       }
     }
-    $summary['search_criteria']['value'] = '<ul><li>'.implode('</li><li>', $values).'</li></ul>';
+    $summary['search_criteria']['value'] = '<ul><li>'.CRM_Utils_Array::implode('</li><li>', $values).'</li></ul>';
 
     return $summary;
   }

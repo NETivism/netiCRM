@@ -484,7 +484,7 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
       if ($this->_action & CRM_Core_Action::VIEW) {
         $defaults['details'] = CRM_Utils_String::htmlPurifier($defaults['details'], CRM_Utils_String::ALLOWED_TAGS);
         
-        $url = CRM_Utils_System::url(implode("/", $this->_urlPath), "reset=1&id={$this->_activityId}&action=view&cid={$this->_values['source_contact_id']}");
+        $url = CRM_Utils_System::url(CRM_Utils_Array::implode("/", $this->_urlPath), "reset=1&id={$this->_activityId}&action=view&cid={$this->_values['source_contact_id']}");
         $activityTName = CRM_Core_OptionGroup::values('activity_type', FALSE, FALSE, FALSE, 'AND v.value = ' . $this->_activityTypeId, 'name');
         $recentTitle = CRM_Utils_Array::value('subject', $defaults, ts('(no subject)')) . ' - '.$defaults['source_contact']. ' (' . ts($activityTName[$this->_activityTypeId]) . ')';
         CRM_Utils_Recent::add($recentTitle,
@@ -619,7 +619,7 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
         $withDisplayName = self::_getDisplayNameById($contactId);
         $withArray[] = "\"$withDisplayName\" ";
       }
-      $this->assign('with', implode(', ', $withArray));
+      $this->assign('with', CRM_Utils_Array::implode(', ', $withArray));
     }
 
     if ($this->_cdType) {
@@ -865,7 +865,7 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
       }
       if (!empty($nullAssignee)) {
         $errors["assignee_contact_id"] = ts('Assignee Contact(s) "%1" does not exist.<br/>',
-          array(1 => implode(", ", $nullAssignee))
+          array(1 => CRM_Utils_Array::implode(", ", $nullAssignee))
         );
       }
     }
@@ -877,7 +877,7 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
       }
       if (!empty($nullTarget)) {
         $errors["target_contact_id"] = ts('Target Contact(s) "%1" does not exist.',
-          array(1 => implode(", ", $nullTarget))
+          array(1 => CRM_Utils_Array::implode(", ", $nullTarget))
         );
       }
     }

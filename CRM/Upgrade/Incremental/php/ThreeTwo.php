@@ -243,7 +243,7 @@ class CRM_Upgrade_Incremental_php_ThreeTwo {
       $sql = '
 UPDATE  civicrm_membership_status 
    SET  is_active = 0 
- WHERE  id NOT IN ( ' . implode(',', $statusIds) . ' )';
+ WHERE  id NOT IN ( ' . CRM_Utils_Array::implode(',', $statusIds) . ' )';
       CRM_Core_DAO::executeQuery($sql);
     }
   }

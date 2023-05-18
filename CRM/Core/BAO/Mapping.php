@@ -859,7 +859,7 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
           $seen[$key] = 1;
         }
       }
-      $js .= implode(', ', $elements);
+      $js .= CRM_Utils_Array::implode(', ', $elements);
       $js .= "]";
       $js .= "
                 for(var i=0;i<nullArray.length;i++) {
@@ -880,7 +880,7 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
           $seen[$key] = 1;
         }
       }
-      $js .= implode(', ', $elements);
+      $js .= CRM_Utils_Array::implode(', ', $elements);
       $js .= "]";
       $js .= "
                 for(var i=0;i<noneArray.length;i++) {

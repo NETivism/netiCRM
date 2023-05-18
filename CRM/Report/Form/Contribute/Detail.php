@@ -282,7 +282,7 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
       }
     }
 
-    $this->_select = "SELECT " . implode(', ', $select) . " ";
+    $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
   function from() {

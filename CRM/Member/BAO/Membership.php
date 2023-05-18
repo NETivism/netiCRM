@@ -584,7 +584,7 @@ INNER JOIN  civicrm_membership_type type ON ( type.id = membership.membership_ty
     $subject = ts('Deleted Member(s): %1', array(1 => $id));
     if (!empty($relatedContributions)) {
       $membership->contributions = $relatedContributions;
-      $line = ts('Contribution ID').' '.implode(',', $relatedContributions);
+      $line = ts('Contribution ID').' '.CRM_Utils_Array::implode(',', $relatedContributions);
       $subject .= ts('%1 reserved', array(1 => $line));
     }
     $statusId = CRM_Core_OptionGroup::getValue('activity_status', 'Completed', 'name');
@@ -1194,7 +1194,7 @@ AND civicrm_membership.is_test = %2";
           $message[] = $error;
         }
       }
-      $message = ts("Payment Processor Error message") . ": " . implode('<br/>', $message);
+      $message = ts("Payment Processor Error message") . ": " . CRM_Utils_Array::implode('<br/>', $message);
       $session = CRM_Core_Session::singleton();
       $session->setStatus($message);
       CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/contribute/transact',
@@ -1820,7 +1820,7 @@ WHERE  civicrm_membership.contact_id = civicrm_contact.id
   static function &buildMembershipTypeValues(&$form, $membershipTypeID = NULL) {
     $whereClause = NULL;
     if (is_array($membershipTypeID)) {
-      $allIDs = implode(',', $membershipTypeID);
+      $allIDs = CRM_Utils_Array::implode(',', $membershipTypeID);
       $whereClause = "WHERE id IN ( $allIDs )";
     }
     elseif (is_numeric($membershipTypeID) &&

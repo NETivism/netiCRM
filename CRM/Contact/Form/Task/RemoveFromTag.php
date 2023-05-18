@@ -135,7 +135,7 @@ class CRM_Contact_Form_Task_RemoveFromTag extends CRM_Contact_Form_Task {
 
       list($total, $removed, $notRemoved) = CRM_Core_BAO_EntityTag::removeEntitiesFromTag($this->_contactIds, $key);
       $status = array(
-        'Contact(s) tagged as: ' . implode(',', $this->_name),
+        'Contact(s) tagged as: ' . CRM_Utils_Array::implode(',', $this->_name),
         'Total Selected Contact(s): ' . $total,
       );
     }

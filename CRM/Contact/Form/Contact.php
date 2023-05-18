@@ -718,7 +718,7 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
         if (!empty($invalidStreetNumbers)) {
           $first = $invalidStreetNumbers[0];
           foreach ($invalidStreetNumbers as & $num) $num = CRM_Contact_Form_Contact::ordinalNumber($num);
-          $errors["address[$first][street_number]"] = ts('The street number you entered for the %1 address block(s) is not in an expected format. Street numbers may include numeric digit(s) followed by other characters. You can still enter the complete street address (unparsed) by clicking "Edit Complete Street Address".', array(1 => implode(', ', $invalidStreetNumbers)));
+          $errors["address[$first][street_number]"] = ts('The street number you entered for the %1 address block(s) is not in an expected format. Street numbers may include numeric digit(s) followed by other characters. You can still enter the complete street address (unparsed) by clicking "Edit Complete Street Address".', array(1 => CRM_Utils_Array::implode(', ', $invalidStreetNumbers)));
         }
       }
     }
@@ -1295,7 +1295,7 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
 
     if (!empty($parseFails)) {
       $statusMsg = ts("Complete street address(es) have been saved. However we were unable to split the address in the %1 address block(s) into address elements (street number, street name, street unit) due to an unrecognized address format. You can set the address elements manually by clicking 'Edit Address Elements' next to the Street Address field while in edit mode.",
-        array(1 => implode(', ', $parseFails))
+        array(1 => CRM_Utils_Array::implode(', ', $parseFails))
       );
     }
 

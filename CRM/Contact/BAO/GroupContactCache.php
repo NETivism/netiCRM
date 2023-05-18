@@ -58,7 +58,7 @@ class CRM_Contact_BAO_GroupContactCache extends CRM_Contact_DAO_GroupContactCach
     // note escapeString is a must here and we can't send the imploded value as second arguement to
     // the executeQuery(), since that would put single quote around the string and such a string
     // of comma separated integers would not work.
-    $groupID = CRM_Core_DAO::escapeString(implode(', ', $groupID));
+    $groupID = CRM_Core_DAO::escapeString(CRM_Utils_Array::implode(', ', $groupID));
 
     $config = CRM_Core_Config::singleton();
     $smartGroupCacheTimeout = self::smartGroupCacheTimeout();
@@ -131,7 +131,7 @@ WHERE      g.id IN ( {$groupID} ) AND g.saved_search_id IS NOT NULL AND
     while (!empty($values)) {
       $processed = TRUE;
       $input = array_splice($values, 0, CRM_Core_DAO::BULK_INSERT_COUNT);
-      $str = implode(',', $input);
+      $str = CRM_Utils_Array::implode(',', $input);
       $sql = "INSERT IGNORE INTO civicrm_group_contact_cache (group_id,contact_id) VALUES $str;";
       CRM_Core_DAO::executeQuery($sql);
     }
@@ -202,7 +202,7 @@ SET    cache_date = null
   SET    cache_date = null
   WHERE  id IN ( %1 )
   ";
-        $groupIDs = implode(', ', $ids);
+        $groupIDs = CRM_Utils_Array::implode(', ', $ids);
         $params = array(1 => array($groupIDs, 'String'));
       }
     }
@@ -217,7 +217,7 @@ UPDATE civicrm_group g
 SET    cache_date = null
 WHERE  id IN ( %1 )
 ";
-      $groupIDs = implode(', ', $groupID);
+      $groupIDs = CRM_Utils_Array::implode(', ', $groupID);
       $params = array(1 => array($groupIDs, 'String'));
     }
     else {
@@ -391,7 +391,7 @@ WHERE  id = %1
       $now = 'null';
     }
 
-    $groupIDs = implode(',', $groupIDs);
+    $groupIDs = CRM_Utils_Array::implode(',', $groupIDs);
     $sql = "
   UPDATE civicrm_group
   SET    cache_date = $now
@@ -428,7 +428,7 @@ WHERE  id = %1
       // note escapeString is a must here and we can't send the imploded value as second arguement to
       // the executeQuery(), since that would put single quote around the string and such a string
       // of comma separated integers would not work.
-      $groupIDString = CRM_Core_DAO::escapeString(implode(', ', $groupIDs));
+      $groupIDString = CRM_Core_DAO::escapeString(CRM_Utils_Array::implode(', ', $groupIDs));
 
       $groupIDClause = "AND (g.id IN ( {$groupIDString} ))";
     }
@@ -526,7 +526,7 @@ AND     ( g.cache_date IS NULL OR
       $hiddenClause = ' AND (g.is_hidden = 0 OR g.is_hidden IS NULL) ';
     }
 
-    $contactIDString = CRM_Core_DAO::escapeString(implode(', ', $contactIDs));
+    $contactIDString = CRM_Core_DAO::escapeString(CRM_Utils_Array::implode(', ', $contactIDs));
     $sql = "
 SELECT     gc.group_id, gc.contact_id, g.title, g.children, g.description
 FROM       civicrm_group_contact_cache gc
@@ -545,7 +545,7 @@ ORDER BY   gc.contact_id, g.children
         $prevContactID &&
         $prevContactID != $dao->contact_id
       ) {
-        $contactGroup[$prevContactID]['groupTitle'] = implode(', ', $contactGroup[$prevContactID]['groupTitle']);
+        $contactGroup[$prevContactID]['groupTitle'] = CRM_Utils_Array::implode(', ', $contactGroup[$prevContactID]['groupTitle']);
       }
       $prevContactID = $dao->contact_id;
       if (!CRM_Utils_Array::arrayKeyExists($dao->contact_id, $contactGroup)) {
@@ -564,7 +564,7 @@ ORDER BY   gc.contact_id, g.children
     }
 
     if ($prevContactID) {
-      $contactGroup[$prevContactID]['groupTitle'] = implode(', ', $contactGroup[$prevContactID]['groupTitle']);
+      $contactGroup[$prevContactID]['groupTitle'] = CRM_Utils_Array::implode(', ', $contactGroup[$prevContactID]['groupTitle']);
     }
 
     if (is_numeric($contactID)) {

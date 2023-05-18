@@ -415,7 +415,7 @@ class CRM_Case_Form_CaseView extends CRM_Core_Form {
         $tags[$tid] = $allTags[$tid];
       }
 
-      $this->assign('tags', implode(', ', array_filter($tags)));
+      $this->assign('tags', CRM_Utils_Array::implode(', ', array_filter($tags)));
       $this->assign('showTags', TRUE);
     }
     else {

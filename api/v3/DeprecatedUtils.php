@@ -175,7 +175,7 @@ function _civicrm_api3_deprecated_participant_formatted_param($params, &$values,
           }
         }
         require_once 'CRM/Core/DAO.php';
-        $values['role_id'] = implode(CRM_Core_DAO::VALUE_SEPARATOR, $participantRoles);
+        $values['role_id'] = CRM_Utils_Array::implode(CRM_Core_DAO::VALUE_SEPARATOR, $participantRoles);
         unset($values[$key]);
         break;
 
@@ -1104,7 +1104,7 @@ function _civicrm_api3_deprecated_duplicate_formatted_contact($params) {
     $ids = CRM_Dedupe_Finder::dupesByParams($dedupeParams, $params['contact_type'], 'Strict');
 
     if (!empty($ids)) {
-      $ids = implode(',', $ids);
+      $ids = CRM_Utils_Array::implode(',', $ids);
       $error = CRM_Core_Error::createError("Found matching contacts: $ids",
         CRM_Core_Error::DUPLICATE_CONTACT,
         'Fatal', $ids
@@ -1428,7 +1428,7 @@ function _civicrm_api3_deprecated_contact_check_custom_params($params, $csType =
 
         $errorMsg = "Invalid Custom Field Contact Type: {$params['contact_type']}";
         if (!empty($csType)) {
-          $errorMsg .= " or Mismatched SubType: " . implode(', ', (array)$csType);
+          $errorMsg .= " or Mismatched SubType: " . CRM_Utils_Array::implode(', ', (array)$csType);
         }
         return civicrm_api3_create_error($errorMsg);
       }
@@ -1466,7 +1466,7 @@ function _civicrm_api3_deprecated_contact_check_params(&$params, $dupeCheck = TR
 
     if ($csType = CRM_Utils_Array::value('contact_sub_type', $params)) {
       if (!(CRM_Contact_BAO_ContactType::isExtendsContactType($csType, $params['contact_type']))) {
-        return civicrm_api3_create_error("Invalid or Mismatched Contact SubType: " . implode(', ', (array)$csType));
+        return civicrm_api3_create_error("Invalid or Mismatched Contact SubType: " . CRM_Utils_Array::implode(', ', (array)$csType));
       }
     }
 
@@ -1513,7 +1513,7 @@ function _civicrm_api3_deprecated_contact_check_params(&$params, $dupeCheck = TR
       $dedupeParams['check_permission'] = $params['check_permission'];
     }
 
-    $ids = implode(',', CRM_Dedupe_Finder::dupesByParams($dedupeParams, $params['contact_type'], 'Strict', array(), $dedupeRuleGroupID));
+    $ids = CRM_Utils_Array::implode(',', CRM_Dedupe_Finder::dupesByParams($dedupeParams, $params['contact_type'], 'Strict', array(), $dedupeRuleGroupID));
 
     if ($ids != NULL) {
       if ($dupeErrorArray) {

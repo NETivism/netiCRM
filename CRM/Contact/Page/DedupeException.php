@@ -67,7 +67,7 @@ class CRM_Contact_Page_DedupeException extends CRM_Core_Page {
     }
     //get the dupe contacts display names.
     if (!empty($dedupeExceptions)) {
-      $sql = 'select id, display_name from civicrm_contact where id IN ( ' . implode(', ', $contactIds) . ' )';
+      $sql = 'select id, display_name from civicrm_contact where id IN ( ' . CRM_Utils_Array::implode(', ', $contactIds) . ' )';
       $contact = CRM_Core_DAO::executeQuery($sql);
       $displayNames = array();
       while ($contact->fetch()) {

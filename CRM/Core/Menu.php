@@ -187,7 +187,7 @@ class CRM_Core_Menu {
     $args = explode('/', $path);
     while (!self::isArrayTrue($fieldsPresent) && !empty($args)) {
       array_pop($args);
-      $parentPath = implode('/', $args);
+      $parentPath = CRM_Utils_Array::implode('/', $args);
 
       foreach ($fieldsToPropagate as $field) {
         if (!$fieldsPresent[$field]) {
@@ -214,7 +214,7 @@ class CRM_Core_Menu {
         );
       }
     }
-    CRM_Core_Error::fatal("'$path': " . implode(', ', $messages));
+    CRM_Core_Error::fatal("'$path': " . CRM_Utils_Array::implode(', ', $messages));
   }
 
   /**
@@ -492,7 +492,7 @@ class CRM_Core_Menu {
       if (empty($pathElements)) {
         return array(NULL, NULL);
       }
-      $newPath = implode('/', $pathElements);
+      $newPath = CRM_Utils_Array::implode('/', $pathElements);
 
       return self::getReturnUrl($menu, $newPath);
     }
@@ -550,13 +550,13 @@ class CRM_Core_Menu {
 
     $elements = array();
     while (!empty($args)) {
-      $string = implode('/', $args);
+      $string = CRM_Utils_Array::implode('/', $args);
       $string = CRM_Core_DAO::escapeString($string);
       $elements[] = "'{$string}'";
       array_pop($args);
     }
 
-    $queryString = implode(', ', $elements);
+    $queryString = CRM_Utils_Array::implode(', ', $elements);
     $domainID = CRM_Core_Config::domainID();
     $domainWhereClause = " AND domain_id = $domainID ";
     if ($path == 'civicrm/upgrade' &&

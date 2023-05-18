@@ -270,7 +270,7 @@ function _civicrm_api_loadEntity($entity, $version = 3) {
   $loaded_files = array(); // array($relativeFilePath => TRUE)
   $include_dirs = array_unique(explode(PATH_SEPARATOR, get_include_path()));
   foreach ($include_dirs as $include_dir) {
-    $action_dir = implode(DIRECTORY_SEPARATOR, array($include_dir, 'api', "v{$version}", $camelName));
+    $action_dir = CRM_Utils_Array::implode(DIRECTORY_SEPARATOR, array($include_dir, 'api', "v{$version}", $camelName));
     if (! is_dir($action_dir)) {
       continue;
     }
@@ -385,7 +385,7 @@ function _civicrm_api_get_camel_name($entity, $version = NULL) {
   if ($fragments[0] === 'Uf') {
     $fragments[0] = 'UF';
   }
-  return implode('', $fragments);
+  return CRM_Utils_Array::implode('', $fragments);
 }
 
 function _civicrm_api_get_constant_camel_name($name) {
@@ -401,7 +401,7 @@ function _civicrm_api_get_constant_camel_name($name) {
     }
   }
 
-  $_map[$name] = implode('', $fragments);
+  $_map[$name] = CRM_Utils_Array::implode('', $fragments);
   return $_map[$name];
 }
 

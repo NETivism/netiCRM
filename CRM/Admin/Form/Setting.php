@@ -132,7 +132,7 @@ class CRM_Admin_Form_Setting extends CRM_Core_Form {
       $config = new CRM_Core_DAO_Preferences();
       $config->domain_id = CRM_Core_Config::domainID();
       $config->find(TRUE);
-      $config->contact_autocomplete_options = CRM_Core_DAO::VALUE_SEPARATOR . implode(CRM_Core_DAO::VALUE_SEPARATOR,
+      $config->contact_autocomplete_options = CRM_Core_DAO::VALUE_SEPARATOR . CRM_Utils_Array::implode(CRM_Core_DAO::VALUE_SEPARATOR,
         array_keys($params['autocompleteContactSearch'])
       ) . CRM_Core_DAO::VALUE_SEPARATOR;
       $config->save();

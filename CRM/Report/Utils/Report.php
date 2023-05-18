@@ -51,7 +51,7 @@ class CRM_Report_Utils_Report {
 
       // put rest of arguement back in the form of url, which is how value
       // is stored in option value table
-      $optionVal = implode('/', $args);
+      $optionVal = CRM_Utils_Array::implode('/', $args);
     }
     return $optionVal;
   }
@@ -274,7 +274,7 @@ WHERE  inst.report_id = %1";
       CRM_Utils_Array::value(2, $arg) == 'instance'
     ) {
       unset($arg[0], $arg[1], $arg[2]);
-      $path = trim(CRM_Utils_Type::escape(implode('/', $arg), 'String'), '/');
+      $path = trim(CRM_Utils_Type::escape(CRM_Utils_Array::implode('/', $arg), 'String'), '/');
       return $path;
     }
   }

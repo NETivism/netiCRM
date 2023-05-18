@@ -336,7 +336,7 @@ class CRM_Mailing_Page_Browse extends CRM_Core_Page {
       $clauses[] = "name LIKE '" . strtolower(CRM_Core_DAO::escapeWildCardString($this->_sortByCharacter)) . "%'";
     }
 
-    return implode(' AND ', $clauses);
+    return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 }
 

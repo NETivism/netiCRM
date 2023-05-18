@@ -51,7 +51,7 @@ class CRM_Contact_Form_Search_Custom_LegalId implements CRM_Contact_Form_Search_
       $clauses[] = "cc.display_name like '%{$name}%'";
     }
 
-    return !empty($clauses) ? implode(' AND ', $clauses) : '(1)';
+    return !empty($clauses) ? CRM_Utils_Array::implode(' AND ', $clauses) : '(1)';
   }
 
   function &columns() {

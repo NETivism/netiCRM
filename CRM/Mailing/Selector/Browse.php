@@ -364,7 +364,7 @@ LEFT JOIN  civicrm_contact scheduledContact ON ( $mailing.scheduled_id = schedul
       if ($this->_parent->_archived) {
         $pageTypes[] = 'archived';
       }
-      $opString = implode('.', $pageTypes);
+      $opString = CRM_Utils_Array::implode('.', $pageTypes);
 
       foreach ($rows as $key => $row) {
         $actionMask = NULL;
@@ -512,8 +512,8 @@ LEFT JOIN  civicrm_contact scheduledContact ON ( $mailing.scheduled_id = schedul
     if (!empty($dateClause1)) {
       $dateClause1[] = "civicrm_mailing_job.status IN ('Complete', 'Running')";
       $dateClause2[] = "civicrm_mailing_job.status IN ('Scheduled')";
-      $dateClause1 = implode(' AND ', $dateClause1);
-      $dateClause2 = implode(' AND ', $dateClause2);
+      $dateClause1 = CRM_Utils_Array::implode(' AND ', $dateClause1);
+      $dateClause2 = CRM_Utils_Array::implode(' AND ', $dateClause2);
       $clauses[] = "( ({$dateClause1}) OR ({$dateClause2}) )";
     }
 
@@ -571,7 +571,7 @@ LEFT JOIN  civicrm_contact scheduledContact ON ( $mailing.scheduled_id = schedul
       return 1;
     }
 
-    return implode(' AND ', $clauses);
+    return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
   function pagerAtoZ() {

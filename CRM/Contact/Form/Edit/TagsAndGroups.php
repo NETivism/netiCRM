@@ -97,7 +97,7 @@ class CRM_Contact_Form_Edit_TagsandGroups {
         else {
           $group = &CRM_Core_PseudoConstant::group();
         }
-        $ids = implode(',', array_keys($group));
+        $ids = CRM_Utils_Array::implode(',', array_keys($group));
         $ids = 'IN (' . $ids . ')';
       }
 

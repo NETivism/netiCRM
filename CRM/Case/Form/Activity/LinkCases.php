@@ -58,7 +58,7 @@ class CRM_Case_Form_Activity_LinkCases {
     if (is_array($relatedCases) && !empty($relatedCases)) {
       $excludeCaseIds = array_merge($excludeCaseIds, array_keys($relatedCases));
     }
-    $form->assign('excludeCaseIds', implode(',', $excludeCaseIds));
+    $form->assign('excludeCaseIds', CRM_Utils_Array::implode(',', $excludeCaseIds));
   }
 
   /**

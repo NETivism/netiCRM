@@ -317,7 +317,7 @@ class CRM_Core_Extensions {
    */
   public function classToPath($clazz) {
     $elements = explode('_', $clazz);
-    $key = implode('.', $elements);
+    $key = CRM_Utils_Array::implode('.', $elements);
     return $this->keyToPath($key);
   }
 
@@ -334,7 +334,7 @@ class CRM_Core_Extensions {
     $path = $this->classToPath($clazz);
     $pathElm = explode(DIRECTORY_SEPARATOR, $path);
     array_pop($pathElm);
-    return implode(DIRECTORY_SEPARATOR, $pathElm) . DIRECTORY_SEPARATOR . self::EXT_TEMPLATES_DIRNAME;
+    return CRM_Utils_Array::implode(DIRECTORY_SEPARATOR, $pathElm) . DIRECTORY_SEPARATOR . self::EXT_TEMPLATES_DIRNAME;
   }
 
   /**

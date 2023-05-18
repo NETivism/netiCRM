@@ -285,9 +285,9 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
           }
         }
       }
-      $m = implode($newLineOperators['br']['oper'], $messages);
+      $m = CRM_Utils_Array::implode($newLineOperators['br']['oper'], $messages);
     }
-    $message = implode($newLineOperators['p']['oper'], $htmlMsg);
+    $message = CRM_Utils_Array::implode($newLineOperators['p']['oper'], $htmlMsg);
     $message = CRM_Utils_String::htmlPurifier($message);
   }
 }

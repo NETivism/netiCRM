@@ -152,12 +152,12 @@ class CRM_Utils_REST {
         return 'Request rate limit reached. Last hit: '.round($interval, 2).' seconds ago. Usage: '.$dao->value;
       }
       $dao->timestamp = microtime(true);
-      $dao->value = implode('-', $args);
+      $dao->value = CRM_Utils_Array::implode('-', $args);
       $dao->update();
     }
     else {
       $dao->timestamp = microtime(true);
-      $dao->value = implode('-', $args);
+      $dao->value = CRM_Utils_Array::implode('-', $args);
       $dao->insert();
     }
     return array();
@@ -484,7 +484,7 @@ class CRM_Utils_REST {
       // an id is always positive
       $smarty->assign('id', (int)$_GET['id']);
     }
-    $pos = strpos(implode(array_keys($_GET)), '<');
+    $pos = strpos(CRM_Utils_Array::implode(array_keys($_GET)), '<');
 
     if ($pos !== FALSE) {
       die("SECURITY FATAL: one of the param names contains &lt;");

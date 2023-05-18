@@ -59,7 +59,7 @@ class CRM_Admin_Form_Persistent extends CRM_Core_Form {
       $params = array('id' => $this->_indexID);
       CRM_Core_BAO_Persistent::retrieve($params, $defaults);
       if (CRM_Utils_Array::value('is_config', $defaults) == 1) {
-        $defaults['data'] = implode(',', $defaults['data']);
+        $defaults['data'] = CRM_Utils_Array::implode(',', $defaults['data']);
       }
     }
     return $defaults;

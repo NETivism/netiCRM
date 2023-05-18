@@ -251,7 +251,7 @@ class CRM_Report_Form_ActivitySummary extends CRM_Report_Form {
       }
     }
 
-    $this->_select = "SELECT " . implode(', ', $select) . " ";
+    $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
   function from() {
@@ -336,7 +336,7 @@ class CRM_Report_Form_ActivitySummary extends CRM_Report_Form {
       $this->_where .= " ";
     }
     else {
-      $this->_where .= " AND " . implode(' AND ', $clauses);
+      $this->_where .= " AND " . CRM_Utils_Array::implode(' AND ', $clauses);
     }
 
     if ($this->_aclWhere) {
@@ -377,7 +377,7 @@ class CRM_Report_Form_ActivitySummary extends CRM_Report_Form {
         }
       }
 
-      $this->_groupBy = "GROUP BY " . implode(', ', $this->_groupBy) . " {$this->_rollup} ";
+      $this->_groupBy = "GROUP BY " . CRM_Utils_Array::implode(', ', $this->_groupBy) . " {$this->_rollup} ";
     }
     else {
       $this->_groupBy = "GROUP BY {$this->_aliases['civicrm_contact']}.id ";
@@ -479,7 +479,7 @@ class CRM_Report_Form_ActivitySummary extends CRM_Report_Form {
             $value[$key] = $activityType[$id];
           }
 
-          $rows[$rowNum]['civicrm_activity_activity_type_id'] = implode(' , ', $value);
+          $rows[$rowNum]['civicrm_activity_activity_type_id'] = CRM_Utils_Array::implode(' , ', $value);
           $entryFound = TRUE;
         }
       }

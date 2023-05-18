@@ -326,7 +326,7 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
         $optionKey = key($customOption);
         $count = CRM_Utils_Array::value('count', $customOption[$optionKey], '');
         $max_value = CRM_Utils_Array::value('max_value', $customOption[$optionKey], '');
-        $priceVal = implode($seperator, array($customOption[$optionKey][$valueFieldName], $count, $max_value));
+        $priceVal = CRM_Utils_Array::implode($seperator, array($customOption[$optionKey][$valueFieldName], $count, $max_value));
 
         //check for label.
         if (CRM_Utils_Array::value('label', $fieldOptions[$optionKey])) {
@@ -370,7 +370,7 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
           }
           $count = CRM_Utils_Array::value('count', $opt, '');
           $max_value = CRM_Utils_Array::value('max_value', $opt, '');
-          $priceVal = implode($seperator, array($opt[$valueFieldName], $count, $max_value));
+          $priceVal = CRM_Utils_Array::implode($seperator, array($opt[$valueFieldName], $count, $max_value));
 
           $choice[$opId] = $qf->createElement('radio', NULL, '', $opt['label'], $opt['id'],
             array('price' => json_encode(array($elementName, $priceVal)))
@@ -420,7 +420,7 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
         foreach ($customOption as $opt) {
           $count = CRM_Utils_Array::value('count', $opt, '');
           $max_value = CRM_Utils_Array::value('max_value', $opt, '');
-          $priceVal[$opt['id']] = implode($seperator, array($opt[$valueFieldName], $count, $max_value));
+          $priceVal[$opt['id']] = CRM_Utils_Array::implode($seperator, array($opt[$valueFieldName], $count, $max_value));
 
           if ($field->is_display_amounts) {
             $opt['label'] .= ' - ';
@@ -444,7 +444,7 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
         // CRM-6902
         $button = substr($qf->controller->getButtonName(), -4);
         if (!empty($freezeOptions) && $button != 'skip') {
-          $qf->addRule($elementName, ts('Invalid value for field(s)'), 'regex', "/" . implode('|', $allowedOptions) . "/");
+          $qf->addRule($elementName, ts('Invalid value for field(s)'), 'regex', "/" . CRM_Utils_Array::implode('|', $allowedOptions) . "/");
         }
         break;
 
@@ -454,7 +454,7 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
         foreach ($customOption as $opId => $opt) {
           $count = CRM_Utils_Array::value('count', $opt, '');
           $max_value = CRM_Utils_Array::value('max_value', $opt, '');
-          $priceVal = implode($seperator, array($opt[$valueFieldName], $count, $max_value));
+          $priceVal = CRM_Utils_Array::implode($seperator, array($opt[$valueFieldName], $count, $max_value));
 
           if ($field->is_display_amounts) {
             $opt['label'] .= ' - ';
@@ -624,7 +624,7 @@ WHERE
       $sql = "
 SELECT  id, html_type 
 FROM  civicrm_price_field 
-WHERE  id IN (" . implode(',', array_keys($priceFields)) . ')';
+WHERE  id IN (" . CRM_Utils_Array::implode(',', array_keys($priceFields)) . ')';
       $fieldDAO = CRM_Core_DAO::executeQuery($sql);
       $htmlTypes = array();
       while ($fieldDAO->fetch()) {
@@ -677,7 +677,7 @@ WHERE  id IN (" . implode(',', array_keys($priceFields)) . ')';
       $where = " (1) ";
     }
     else {
-      $where = ' '. implode(' AND ', $where).' ';
+      $where = ' '. CRM_Utils_Array::implode(' AND ', $where).' ';
     }
     $label = "";
     if (strstr($where, 'entity_id')) {
@@ -729,7 +729,7 @@ ORDER BY ce.entity_id DESC, cf.id, cf.weight, cv.weight ASC
     }
     foreach($levels as $label => &$lev) {
       if (is_array($lev) && count($lev) > 1) {
-        $commaSeperated = implode(',', $levelAll[$label]);
+        $commaSeperated = CRM_Utils_Array::implode(',', $levelAll[$label]);
         $lev['priceset:'.$commaSeperated] = $label.' ('.ts('All').')';
       }
     }

@@ -245,13 +245,13 @@ class CRM_Core_BAO_File extends CRM_Core_DAO_File {
     }
 
     if (!empty($cefIDs)) {
-      $cefIDs = implode(',', $cefIDs);
+      $cefIDs = CRM_Utils_Array::implode(',', $cefIDs);
       $sql = "DELETE FROM civicrm_entity_file where id IN ( $cefIDs )";
       CRM_Core_DAO::executeQuery($sql);
     }
 
     if (!empty($cfIDs)) {
-      $cfIDs = implode(',', $cfIDs);
+      $cfIDs = CRM_Utils_Array::implode(',', $cfIDs);
       $sql = "DELETE FROM civicrm_file where id IN ( $cfIDs )";
       CRM_Core_DAO::executeQuery($sql);
     }
@@ -386,7 +386,7 @@ AND       CEF.entity_id    = %2";
           $currentAttachmentURL[] = $attach['href'];
         }
       }
-      return implode(' ', $currentAttachmentURL);
+      return CRM_Utils_Array::implode(' ', $currentAttachmentURL);
     }
     return NULL;
   }

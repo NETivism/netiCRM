@@ -459,7 +459,7 @@ SELECT civicrm_custom_group.name as name,
        civicrm_custom_group.id as id,
        extends_entity_column_value as value
   FROM civicrm_custom_group
- WHERE ( extends_entity_column_value REGEXP '[[:<:]]" . implode('[[:>:]]|[[:<:]]', array_keys($roleIds)) . "[[:>:]]' 
+ WHERE ( extends_entity_column_value REGEXP '[[:<:]]" . CRM_Utils_Array::implode('[[:>:]]|[[:<:]]', array_keys($roleIds)) . "[[:>:]]' 
     OR extends_entity_column_value IS NULL )
    AND extends_entity_column_id = '{$this->_roleCustomDataTypeID}' 
    AND extends = 'Participant'
@@ -1310,7 +1310,7 @@ cj(function() {
       // add participant record
       $participants = array();
       if (CRM_Utils_Array::value('participant_role_id', $this->_params) && is_array($this->_params['participant_role_id'])) {
-        $this->_params['participant_role_id'] = implode(CRM_Core_DAO::VALUE_SEPARATOR,
+        $this->_params['participant_role_id'] = CRM_Utils_Array::implode(CRM_Core_DAO::VALUE_SEPARATOR,
           array_keys($this->_params['participant_role_id'])
         );
       }
@@ -1345,7 +1345,7 @@ cj(function() {
           }
           require_once 'CRM/Core/DAO.php';
           $seperator = CRM_Core_DAO::VALUE_SEPARATOR;
-          $params['role_id'] = implode($seperator, $rolesIDS);
+          $params['role_id'] = CRM_Utils_Array::implode($seperator, $rolesIDS);
         }
         else {
           $params['role_id'] = 'NULL';
@@ -1363,8 +1363,8 @@ cj(function() {
             }
             require_once 'CRM/Core/DAO.php';
             $seperator = CRM_Core_DAO::VALUE_SEPARATOR;
-            $commonParams['role_id'] = implode($seperator, $rolesIDS);
-            $commonParams['participant_role_id'] = implode($seperator, $rolesIDS);
+            $commonParams['role_id'] = CRM_Utils_Array::implode($seperator, $rolesIDS);
+            $commonParams['participant_role_id'] = CRM_Utils_Array::implode($seperator, $rolesIDS);
           }
           else {
             $commonParams['role_id'] = 'NULL';
@@ -1519,7 +1519,7 @@ cj(function() {
         foreach (array_keys($params['role_id']) as $roleId) {
           $selectedRoles[] = $role[$roleId];
         }
-        $event['participant_role'] = implode(', ', $selectedRoles);
+        $event['participant_role'] = CRM_Utils_Array::implode(', ', $selectedRoles);
       }
       else {
         $event['participant_role'] = $role[$params['role_id']];

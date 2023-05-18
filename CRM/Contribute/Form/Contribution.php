@@ -903,7 +903,7 @@ WHERE  contribution_id = {$this->_id}
       TRUE, array('onChange' => "buildCustomData( 'Contribution', this.value );")
     );
     $deductibleType = CRM_Contribute_PseudoConstant::contributionType(NULL, 'is_deductible');
-    $this->assign('deductible_type_ids', implode(',', array_keys($deductibleType)));
+    $this->assign('deductible_type_ids', CRM_Utils_Array::implode(',', array_keys($deductibleType)));
     if ($this->_online) {
       // $element->freeze( );
     }

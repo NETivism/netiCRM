@@ -325,7 +325,7 @@ class CRM_Report_Form_Mailing_Summary extends CRM_Report_Form {
       }
     }
 
-    $this->_select = "SELECT " . implode(', ', $select) . " ";
+    $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
     //print_r($this->_select);
   }
 
@@ -394,7 +394,7 @@ class CRM_Report_Form_Mailing_Summary extends CRM_Report_Form {
       $this->_where = "WHERE ( 1 )";
     }
     else {
-      $this->_where = "WHERE " . implode(' AND ', $clauses);
+      $this->_where = "WHERE " . CRM_Utils_Array::implode(' AND ', $clauses);
     }
 
     // if ( $this->_aclWhere ) {
@@ -454,7 +454,7 @@ class CRM_Report_Form_Mailing_Summary extends CRM_Report_Form {
     }
 
     if ($isError) {
-      $errors['_qf_default'] = ts("For Chart view, please select at least one field from %1.", array('%1' => implode(', ', $criterias)));
+      $errors['_qf_default'] = ts("For Chart view, please select at least one field from %1.", array('%1' => CRM_Utils_Array::implode(', ', $criterias)));
     }
 
     return $errors;

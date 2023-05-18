@@ -69,7 +69,7 @@ AND {$this->getTypeColumn()} = %2
 EOS;
 
     return array(
-      'name' => implode(':', array('sql', $this->getReferenceTable(), $this->getReferenceKey())),
+      'name' => CRM_Utils_Array::implode(':', array('sql', $this->getReferenceTable(), $this->getReferenceKey())),
       'type' => get_class($this),
       'table' => $this->getReferenceTable(),
       'key' => $this->getReferenceKey(),

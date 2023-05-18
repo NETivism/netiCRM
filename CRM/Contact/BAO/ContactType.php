@@ -161,7 +161,7 @@ WHERE  parent_id IS NULL
 
     $argString = $all ? 'CRM_CT_STI_1_' : 'CRM_CT_STI_0_';
     if (!empty($contactType)) {
-      $argString .= implode("_", $contactType);
+      $argString .= CRM_Utils_Array::implode("_", $contactType);
     }
 
     if ((!CRM_Utils_Array::arrayKeyExists($argString, $_cache)) || $ignoreCache) {
@@ -172,7 +172,7 @@ WHERE  parent_id IS NULL
 
         $ctWHERE = '';
         if (!empty($contactType)) {
-          $ctWHERE = " AND parent.name IN ('" . implode("','", $contactType) . "')";
+          $ctWHERE = " AND parent.name IN ('" . CRM_Utils_Array::implode("','", $contactType) . "')";
         }
 
         $sql = "
@@ -438,7 +438,7 @@ AND   ( p.is_active = 1 OR p.id IS NULL )
       $subType = array($subType);
       $isArray = FALSE;
     }
-    $argString = implode("_", $subType);
+    $argString = CRM_Utils_Array::implode("_", $subType);
 
     if (!CRM_Utils_Array::arrayKeyExists($argString, $_cache)) {
       $_cache[$argString] = array();
@@ -447,7 +447,7 @@ AND   ( p.is_active = 1 OR p.id IS NULL )
 SELECT subtype.name as contact_subtype, type.name as contact_type 
 FROM   civicrm_contact_type subtype
 INNER JOIN civicrm_contact_type type ON ( subtype.parent_id = type.id )
-WHERE  subtype.name IN ('" . implode("','", $subType) . "' )";
+WHERE  subtype.name IN ('" . CRM_Utils_Array::implode("','", $subType) . "' )";
       $dao = CRM_Core_DAO::executeQuery($sql);
       while ($dao->fetch()) {
         if (!$isArray) {

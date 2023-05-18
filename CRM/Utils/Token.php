@@ -410,7 +410,7 @@ class CRM_Utils_Token {
 
       case 'group':
         $groups = $mailing ? $mailing->getGroupNames() : array('Mailing Groups');
-        $value = implode(', ', $groups);
+        $value = CRM_Utils_Array::implode(', ', $groups);
         break;
 
       case 'subject':
@@ -808,7 +808,7 @@ class CRM_Utils_Token {
 
         $publicGroup = CRM_Core_PseudoConstant::publicGroup();
         $availableGroup = array_intersect_key($groups, $publicGroup);
-        $value = implode(', ', $availableGroup);
+        $value = CRM_Utils_Array::implode(', ', $availableGroup);
         self::token_replace('unsubscribe', 'group', $value, $str);
       }
     }
@@ -836,7 +836,7 @@ class CRM_Utils_Token {
       if (!empty($groups)) {
         $publicGroup = CRM_Core_PseudoConstant::publicGroup();
         $availableGroup = array_intersect_key($groups, $publicGroup);
-        $value = implode(', ', $availableGroup);
+        $value = CRM_Utils_Array::implode(', ', $availableGroup);
         self::token_replace('resubscribe', 'group', $value, $str);
       }
     }
@@ -1114,7 +1114,7 @@ class CRM_Utils_Token {
               $result[$val] = $pcm[$val];
             }
           }
-          $contactDetails[$contactID]['preferred_communication_method'] = implode(', ', $result);
+          $contactDetails[$contactID]['preferred_communication_method'] = CRM_Utils_Array::implode(', ', $result);
         }
 
         foreach ($custom as $cfID) {

@@ -52,7 +52,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
 
 
     if (!empty($error)) {
-      return implode('<br>', $error);
+      return CRM_Utils_Array::implode('<br>', $error);
     }
     else {
       return NULL;
@@ -718,7 +718,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
         }
       }
       if (!empty($amountLevel)) {
-        $params['contribution']['amount_level'] = CRM_Core_BAO_CustomOption::VALUE_SEPERATOR.implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, $amountLevel).CRM_Core_BAO_CustomOption::VALUE_SEPERATOR;
+        $params['contribution']['amount_level'] = CRM_Core_BAO_CustomOption::VALUE_SEPERATOR.CRM_Utils_Array::implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, $amountLevel).CRM_Core_BAO_CustomOption::VALUE_SEPERATOR;
       }
     }
 

@@ -214,7 +214,7 @@ class CRM_Contact_Form_Task_AddToGroup extends CRM_Contact_Form_Task {
       $groupParams['description'] = $params['description'];
       $groupParams['visibility'] = "User and User Admin Only";
       if (is_array($params['group_type'])) {
-        $groupParams['group_type'] = CRM_Core_DAO::VALUE_SEPARATOR . implode(CRM_Core_DAO::VALUE_SEPARATOR,
+        $groupParams['group_type'] = CRM_Core_DAO::VALUE_SEPARATOR . CRM_Utils_Array::implode(CRM_Core_DAO::VALUE_SEPARATOR,
           array_keys($params['group_type'])
         ) . CRM_Core_DAO::VALUE_SEPARATOR;
       }
@@ -246,7 +246,7 @@ class CRM_Contact_Form_Task_AddToGroup extends CRM_Contact_Form_Task {
     if ($notAdded) {
       $status[] = ts('Total Contact(s) already in group: %1', array(1 => $notAdded));
     }
-    $status = implode('<br/>', $status);
+    $status = CRM_Utils_Array::implode('<br/>', $status);
     CRM_Core_Session::setStatus($status);
   }
   //end of function

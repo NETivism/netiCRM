@@ -160,7 +160,7 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
       }
       elseif ($field == 'entity_id') {
         if(is_array($value)){
-          $where[] = "e.entity_id in (".implode(',', $value).")";
+          $where[] = "e.entity_id in (".CRM_Utils_Array::implode(',', $value).")";
         }else{
           $where[] = "e.entity_id = %2";
           $args[2] =  array($value, 'Integer');
@@ -194,7 +194,7 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
     if (empty($where)) {
       $where[] = ' (1) ';
     }
-    $sql .= implode(' AND ', $where);
+    $sql .= CRM_Utils_Array::implode(' AND ', $where);
     $sql .= " ORDER BY cc.id DESC, e.entity_table, e.entity_id ASC ";
     if (isset($filter['offset']) && !empty($filter['limit'])) {
       $sql .= " LIMIT {$filter['offset']}, {$filter['limit']} ";
@@ -221,7 +221,7 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
   static function getCouponUsed($ids) {
     $result = array_fill_keys($ids, 0);
     if (!empty($ids)) {
-      $couponIds = implode(',', $ids);
+      $couponIds = CRM_Utils_Array::implode(',', $ids);
       $sql = "SELECT c.id, COUNT(*) as `count` FROM civicrm_coupon c INNER JOIN civicrm_coupon_track ct ON ct.coupon_id = c.id WHERE ct.used_date IS NOT NULL AND ct.coupon_id IN({$couponIds}) GROUP BY ct.coupon_id";
       $dao = CRM_Core_DAO::executeQuery($sql);
       while($dao->fetch()) {
@@ -239,7 +239,7 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
       if (!strstr($field, '.')) {
         $field = 'ct.'.$field;
       }
-      $couponIds = implode(',', $ids);
+      $couponIds = CRM_Utils_Array::implode(',', $ids);
       $sql = "SELECT c.*, ct.id as coupon_track_id, ct.*, contact.sort_name, contrib.total_amount, ct.used_date FROM civicrm_coupon c INNER JOIN civicrm_coupon_track ct ON ct.coupon_id = c.id INNER JOIN civicrm_contact contact ON ct.contact_id = contact.id INNER JOIN civicrm_contribution contrib ON contrib.id = ct.contribution_id WHERE ct.used_date IS NOT NULL AND {$field} IN({$couponIds}) ORDER BY ct.used_date DESC";
       return CRM_Core_DAO::executeQuery($sql);
     }
@@ -256,9 +256,9 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
     if (empty($ids) || empty($contactIds)) {
       return;
     }
-    $couponIds = implode(',', $ids);
+    $couponIds = CRM_Utils_Array::implode(',', $ids);
     if (!empty($contactIds) && is_array($contactIds)) {
-      $contactIdsWhere = ' AND ct.contact_id IN('.implode(',', $contactIds).')';
+      $contactIdsWhere = ' AND ct.contact_id IN('.CRM_Utils_Array::implode(',', $contactIds).')';
     }
 
     $sql = "SELECT c.*, ct.id as coupon_track_id, ct.*, contrib.total_amount, ct.used_date, contrib.contribution_status_id FROM civicrm_coupon c INNER JOIN civicrm_coupon_track ct ON ct.coupon_id = c.id INNER JOIN civicrm_contribution contrib ON contrib.id = ct.contribution_id WHERE ct.used_date IS NOT NULL AND ct.coupon_id IN({$couponIds}) {$contactIdsWhere} ORDER BY ct.used_date DESC";
@@ -410,7 +410,7 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
         }
 
         if(!empty($usedOptionsCount)){
-          $usedOptionsCountText = implode(',', array_keys($usedOptionsCount));
+          $usedOptionsCountText = CRM_Utils_Array::implode(',', array_keys($usedOptionsCount));
           $additionalVerify = array('civicrm_price_field_value' => $usedOptionsCountText);
         }
       }

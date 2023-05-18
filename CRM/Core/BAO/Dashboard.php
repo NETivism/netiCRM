@@ -126,7 +126,7 @@ class CRM_Core_BAO_Dashboard extends CRM_Core_DAO_Dashboard {
       }
 
       if (!empty($defaultDashlets)) {
-        $valuesString = implode(',', $valuesArray);
+        $valuesString = CRM_Utils_Array::implode(',', $valuesArray);
         $query = "
                     INSERT INTO civicrm_dashboard_contact ( dashboard_id, contact_id )
                     VALUES {$valuesString}";
@@ -320,7 +320,7 @@ class CRM_Core_BAO_Dashboard extends CRM_Core_DAO_Dashboard {
       // we need to disable widget that removed
       $updateQuery = " UPDATE civicrm_dashboard_contact 
                                SET is_active = 0
-                               WHERE dashboard_id NOT IN  ( " . implode(',', $dashletIDs) . ") AND contact_id = {$contactID}";
+                               WHERE dashboard_id NOT IN  ( " . CRM_Utils_Array::implode(',', $dashletIDs) . ") AND contact_id = {$contactID}";
     }
     else {
       // this means all widgets are disabled
@@ -365,7 +365,7 @@ class CRM_Core_BAO_Dashboard extends CRM_Core_DAO_Dashboard {
     }
 
     if (is_array($params['permission'])) {
-      $params['permission'] = implode(',', $params['permission']);
+      $params['permission'] = CRM_Utils_Array::implode(',', $params['permission']);
     }
     $dashlet->copyValues($params);
 
@@ -414,7 +414,7 @@ class CRM_Core_BAO_Dashboard extends CRM_Core_DAO_Dashboard {
         $valuesArray[] = " ( {$dashlet->id}, {$contactID} )";
       }
 
-      $valuesString = implode(',', $valuesArray);
+      $valuesString = CRM_Utils_Array::implode(',', $valuesArray);
       $query = "
                   INSERT INTO civicrm_dashboard_contact ( dashboard_id, contact_id )
                   VALUES {$valuesString}";

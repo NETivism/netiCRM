@@ -509,7 +509,7 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
           $resultStats['skipped'][] = array(
             'main_id' => $mainId,
             'other_id' => $otherId,
-            'reason' => array("Contact id ".implode(",", $deleted).' is/were deleted.'),
+            'reason' => array("Contact id ".CRM_Utils_Array::implode(",", $deleted).' is/were deleted.'),
           );
           continue;
         }
@@ -740,7 +740,7 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
       if (CRM_Utils_array::value('preferred_communication_method', $contact)){
       // api 3 returns pref_comm_method as an array, which breaks the lookup; so we reconstruct
       $prefCommList = is_array($specialValues[$moniker]['preferred_communication_method']) ?
-        implode(CRM_Core_DAO::VALUE_SEPARATOR, $specialValues[$moniker]['preferred_communication_method']) :
+        CRM_Utils_Array::implode(CRM_Core_DAO::VALUE_SEPARATOR, $specialValues[$moniker]['preferred_communication_method']) :
         $specialValues[$moniker]['preferred_communication_method'];
         $specialValues[$moniker]['preferred_communication_method'] = CRM_Core_DAO::VALUE_SEPARATOR . $prefCommList . CRM_Core_DAO::VALUE_SEPARATOR;
       }
@@ -820,7 +820,7 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
             else {
               $commuArray = array_merge($main[$field], array_diff($other[$field], $main[$field]));
             }
-            $value = CRM_Core_BAO_CustomOption::VALUE_SEPERATOR . implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, $commuArray) . CRM_Core_BAO_CustomOption::VALUE_SEPERATOR;
+            $value = CRM_Core_BAO_CustomOption::VALUE_SEPERATOR . CRM_Utils_Array::implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, $commuArray) . CRM_Core_BAO_CustomOption::VALUE_SEPERATOR;
           }
           $elements[] = array('advcheckbox', "move_$field", NULL, NULL, NULL, $value);
           $migrationInfo["move_$field"] = $value;
@@ -1318,7 +1318,7 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
                 //for checkbox and m-select format w/ VALUE_SEPARATOR
                 if (in_array($htmlType, array(
                   'CheckBox', 'Multi-Select', 'AdvMulti-Select'))) {
-                  $submitted[$key] = CRM_Core_DAO::VALUE_SEPARATOR . implode(CRM_Core_DAO::VALUE_SEPARATOR,
+                  $submitted[$key] = CRM_Core_DAO::VALUE_SEPARATOR . CRM_Utils_Array::implode(CRM_Core_DAO::VALUE_SEPARATOR,
                     $mergeValue
                   ) . CRM_Core_DAO::VALUE_SEPARATOR;
                 }

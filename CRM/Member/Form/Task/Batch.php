@@ -92,7 +92,7 @@ class CRM_Member_Form_Task_Batch extends CRM_Member_Form_Task {
     //get the read only field data.$returnProperties = array('sort_name' => 1);
     $contactDetails = CRM_Contact_BAO_Contact_Utils::contactDetails($this->_memberIds, 'CiviMember', $returnProperties);
     $membershipDAO = new CRM_Member_DAO_Membership();
-    $membershipDAO->whereAdd("id IN (".implode(',', $this->_memberIds).")");
+    $membershipDAO->whereAdd("id IN (".CRM_Utils_Array::implode(',', $this->_memberIds).")");
     $membershipDAO->selectAdd(); // clear *
     $membershipDAO->selectAdd('id as membership_id');
     $membershipDAO->find();

@@ -275,7 +275,7 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
       $profileIds = $id;
     }
 
-    $gids = implode(',', $profileIds);
+    $gids = CRM_Utils_Array::implode(',', $profileIds);
     $params = array();
     if ($restrict) {
       $query = "SELECT g.* from civicrm_uf_group g, civicrm_uf_join j 
@@ -328,7 +328,7 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
           $clause[] = 'visibility = "Public Pages and Listings"';
         }
         if (!empty($clause)) {
-          $where .= ' AND ( ' . implode(' OR ', $clause) . ' ) ';
+          $where .= ' AND ( ' . CRM_Utils_Array::implode(' OR ', $clause) . ' ) ';
         }
       }
 
@@ -481,7 +481,7 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
 
     if (empty($fields) && !$validGroup) {
        return CRM_Core_Error::statusBounce(ts('The requested Profile (gid=%1) is disabled OR it is not configured to be used for \'Profile\' listings in its Settings OR there is no Profile with that ID OR you do not have permission to access this profile. Please contact the site administrator if you need assistance.',
-          array(1 => implode(',', $profileIds))
+          array(1 => CRM_Utils_Array::implode(',', $profileIds))
         ));
     }
     return $fields;
@@ -707,7 +707,7 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
     $dedupeParams['check_permission'] = CRM_Utils_Array::value('check_permission', $params, TRUE);
     $ids = CRM_Dedupe_Finder::dupesByParams($dedupeParams, $contactType, 'Fuzzy', array($id));
     if (!empty($ids)) {
-      return implode(',', $ids);
+      return CRM_Utils_Array::implode(',', $ids);
     }
     else {
       return NULL;
@@ -833,7 +833,7 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
             }
           }
           $params[$index] = $details->$name;
-          $values[$index] = implode(",", $compref);
+          $values[$index] = CRM_Utils_Array::implode(",", $compref);
         }
         elseif ($name === 'preferred_language') {
           $languages = CRM_Core_PseudoConstant::languages();
@@ -851,8 +851,8 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
               }
             }
           }
-          $values[$index] = implode(', ', $title);
-          $params[$index] = implode(',', $ids);
+          $values[$index] = CRM_Utils_Array::implode(', ', $title);
+          $params[$index] = CRM_Utils_Array::implode(',', $ids);
         }
         elseif ($name == 'tag') {
           require_once 'CRM/Core/BAO/EntityTag.php';
@@ -862,8 +862,8 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
           foreach ($entityTags as $tagId) {
             $title[] = $allTags[$tagId];
           }
-          $values[$index] = implode(', ', $title);
-          $params[$index] = implode(',', $entityTags);
+          $values[$index] = CRM_Utils_Array::implode(', ', $title);
+          $params[$index] = CRM_Utils_Array::implode(',', $entityTags);
         }
         elseif (CRM_Utils_Array::arrayKeyExists($name, $studentFields)) {
           require_once 'CRM/Core/OptionGroup.php';
@@ -1135,7 +1135,7 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
             foreach ($eachMultiValue as $key => $valueLabel) {
               $links[] = '<a href="' . $url[$key] . '">' . $valueLabel . '</a>';
             }
-            $values[$index] = implode(', ', $links);
+            $values[$index] = CRM_Utils_Array::implode(', ', $links);
           }
           else {
             $values[$index] = '<a href="' . $url . '">' . $values[$index] . '</a>';
@@ -2540,7 +2540,7 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
           if ($customFieldID = CRM_Core_BAO_CustomField::getKeyID($key)) {
             //fix checkbox
             if ($customFields[$customFieldID]['html_type'] == 'CheckBox') {
-              $value = implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, array_keys($value));
+              $value = CRM_Utils_Array::implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, array_keys($value));
             }
             // fix the date field
             if ($customFields[$customFieldID]['data_type'] == 'Date') {
@@ -2654,9 +2654,9 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
     }
 
     // Build String to store group types and group subtypes
-    $groupTypeString = implode(',', $gTypes);
+    $groupTypeString = CRM_Utils_Array::implode(',', $gTypes);
     if (!empty($gTypeValues)) {
-      $groupTypeString .= CRM_Core_DAO::VALUE_SEPARATOR . implode(',', $gTypeValues);
+      $groupTypeString .= CRM_Core_DAO::VALUE_SEPARATOR . CRM_Utils_Array::implode(',', $gTypeValues);
     }
 
     return CRM_Core_DAO::setFieldValue('CRM_Core_DAO_UFGroup', $gId, 'group_type', $groupTypeString);
@@ -2809,7 +2809,7 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
       }
     }
     if (!empty($profileNames)) {
-      $whereClause = 'name IN ( ' . implode(',', $profileNames) . ' ) AND is_reserved = 1';
+      $whereClause = 'name IN ( ' . CRM_Utils_Array::implode(',', $profileNames) . ' ) AND is_reserved = 1';
     }
     else {
       $whereClause = 'is_reserved = 1';
@@ -2821,7 +2821,7 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
     while ($dao->fetch()) {
       $key = $dao->id;
       if ($extraProfiles) {
-        $key .= ',' . implode(',', $extraProfiles);
+        $key .= ',' . CRM_Utils_Array::implode(',', $extraProfiles);
       }
       $reservedProfiles[$key] = $dao->title;
     }

@@ -112,7 +112,7 @@ class CRM_Core_BAO_Navigation extends CRM_Core_DAO_Navigation {
     }
 
     if (is_array($params['permission'])) {
-      $params['permission'] = implode(',', $params['permission']);
+      $params['permission'] = CRM_Utils_Array::implode(',', $params['permission']);
     }
 
     $navigation->copyValues($params);

@@ -197,7 +197,7 @@ class CRM_Case_XMLProcessor_Report extends CRM_Case_XMLProcessor {
       $map[$aType['id']] = $aType;
     }
 
-    $activityTypeIDs = implode(',', array_keys($map));
+    $activityTypeIDs = CRM_Utils_Array::implode(',', array_keys($map));
     $query = "
 SELECT a.*, c.id as caseID
 FROM   civicrm_activity a,
@@ -359,7 +359,7 @@ WHERE      a.id = %1
         }
 
         $activity['fields'][] = array('label' => $label,
-          'value' => implode('; ', $targetRedacted),
+          'value' => CRM_Utils_Array::implode('; ', $targetRedacted),
           'type' => 'String',
         );
       }
@@ -427,7 +427,7 @@ WHERE      a.id = %1
         );
         $assignee = $this->redact($assignee);
       }
-      $assigneeContacts = implode(', ', $assignee_contact_names);
+      $assigneeContacts = CRM_Utils_Array::implode(', ', $assignee_contact_names);
       $activity['fields'][] = array('label' => 'Assigned To',
         'value' => $assigneeContacts,
         'type' => 'String',
@@ -603,7 +603,7 @@ SELECT label, value
       }
 
       foreach ($sql as $tableName => $values) {
-        $columnNames = implode(',', $values);
+        $columnNames = CRM_Utils_Array::implode(',', $values);
         $sql[$tableName] = "
 SELECT '{$groupTitle[$tableName]}' as groupTitle, $columnNames
 FROM   $tableName

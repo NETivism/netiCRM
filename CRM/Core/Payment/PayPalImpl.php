@@ -376,7 +376,7 @@ class CRM_Core_Payment_PayPalImpl extends CRM_Core_Payment {
     }
 
     if (!empty($error)) {
-      return implode('<p>', $error);
+      return CRM_Utils_Array::implode('<p>', $error);
     }
     else {
       return NULL;
@@ -574,7 +574,7 @@ class CRM_Core_Payment_PayPalImpl extends CRM_Core_Payment {
     }
 
     //NVPRequest for submitting to server
-    $nvpreq = implode('&', $p);
+    $nvpreq = CRM_Utils_Array::implode('&', $p);
 
     //setting the nvpreq as POST FIELD to curl
     curl_setopt($ch, CURLOPT_POSTFIELDS, $nvpreq);

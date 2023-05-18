@@ -54,7 +54,7 @@ class CRM_Case_XMLProcessor {
         $config->customTemplateDir
       ) {
         // check if the file exists in the custom templates directory
-        $fileName = implode(DIRECTORY_SEPARATOR,
+        $fileName = CRM_Utils_Array::implode(DIRECTORY_SEPARATOR,
           array($config->customTemplateDir,
             'CRM',
             'Case',
@@ -69,7 +69,7 @@ class CRM_Case_XMLProcessor {
         !file_exists($fileName)
       ) {
         // check if file exists locally
-        $fileName = implode(DIRECTORY_SEPARATOR,
+        $fileName = CRM_Utils_Array::implode(DIRECTORY_SEPARATOR,
           array(dirname(__FILE__),
             'xml',
             'configuration',

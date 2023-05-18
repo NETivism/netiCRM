@@ -85,7 +85,7 @@ function civicrm_api3_custom_value_create($params) {
   $sp = CRM_Core_DAO::VALUE_SEPARATOR;
   foreach ($params as $id => $param) {
     if (is_array($param)) {
-      $param = $sp . implode($sp, $param) . $sp;
+      $param = $sp . CRM_Utils_Array::implode($sp, $param) . $sp;
     }
     list($c, $id) = CRM_Utils_System::explode('_', $id, 2);
     if ($c != 'custom') {

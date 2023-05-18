@@ -769,7 +769,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
       }
     }
     if (!empty($importTables)) {
-      $importTable = implode(',', $importTables);
+      $importTable = CRM_Utils_Array::implode(',', $importTables);
       // drop leftover import temporary tables
       CRM_Core_DAO::executeQuery("DROP TABLE $importTable");
     }

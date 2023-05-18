@@ -278,7 +278,7 @@ class CRM_Utils_Mail {
 
   static function logger(&$to, &$headers, &$message) {
     if (is_array($to)) {
-      $toString = implode(', ', $to);
+      $toString = CRM_Utils_Array::implode(', ', $to);
       $fileName = $to[0];
     }
     else {
@@ -458,7 +458,7 @@ class CRM_Utils_Mail {
         }
         $explains = $checkResult->getMessages();
         if (!empty($explains)) {
-          return implode("\n", $explains);
+          return CRM_Utils_Array::implode("\n", $explains);
         }
         switch($result) {
           case SPFLib\Check\Result::CODE_NONE:

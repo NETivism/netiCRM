@@ -191,7 +191,7 @@ function civicrm_event_search(&$params) {
   $event = array();
   if (!empty($returnProperties)) {
     $eventDAO->selectAdd();
-    $eventDAO->selectAdd(implode(',', $returnProperties));
+    $eventDAO->selectAdd(CRM_Utils_Array::implode(',', $returnProperties));
   }
   $eventDAO->whereAdd('( is_template IS NULL ) OR ( is_template = 0 )');
   if ($isCurrent) {

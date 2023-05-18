@@ -345,12 +345,12 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
 
     foreach ($this->_component as $val) {
       if (CRM_Utils_Array::value($val, $select)) {
-        $this->_selectComponent[$val] = "SELECT " . implode(', ', $select[$val]) . " ";
+        $this->_selectComponent[$val] = "SELECT " . CRM_Utils_Array::implode(', ', $select[$val]) . " ";
         unset($select[$val]);
       }
     }
 
-    $this->_select = "SELECT " . implode(', ', $select) . " ";
+    $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
   function buildQuickForm() {
@@ -496,7 +496,7 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
       $this->_where = "WHERE ( 1 ) ";
     }
     else {
-      $this->_where = "WHERE " . implode(' AND ', $clauses);
+      $this->_where = "WHERE " . CRM_Utils_Array::implode(' AND ', $clauses);
     }
 
     if ($this->_aclWhere) {
@@ -507,7 +507,7 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
   }
 
   function clauseComponent() {
-    $selectedContacts = implode(',', $this->_contactSelected);
+    $selectedContacts = CRM_Utils_Array::implode(',', $this->_contactSelected);
     $contribution = $membership = $participant = NULL;
     $eligibleResult = $rows = $tempArray = array();
     foreach ($this->_component as $val) {
@@ -816,7 +816,7 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
               foreach ($roles as $role) {
                 $value[$role] = CRM_Event_PseudoConstant::participantRole($role, FALSE);
               }
-              $componentRows[$contactID][$component][$rowNum]['civicrm_participant_role_id'] = implode(', ', $value);
+              $componentRows[$contactID][$component][$rowNum]['civicrm_participant_role_id'] = CRM_Utils_Array::implode(', ', $value);
             }
 
             $entryFound = TRUE;

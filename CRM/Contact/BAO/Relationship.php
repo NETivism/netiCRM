@@ -1191,7 +1191,7 @@ SELECT relationship_type_id, relationship_direction
    *
    */
   static function getCurrentEmployer($contactIds) {
-    $contacts = implode(',', $contactIds);
+    $contacts = CRM_Utils_Array::implode(',', $contactIds);
 
     $query = "
 SELECT organization_name, id, employer_id 

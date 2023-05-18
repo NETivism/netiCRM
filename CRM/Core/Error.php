@@ -103,7 +103,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
       foreach ($errors as $e) {
         $message[] = $e['code'] . ':' . $e['message'];
       }
-      $message = implode($separator, $message);
+      $message = CRM_Utils_Array::implode($separator, $message);
       return $message;
     }
     return NULL;
@@ -428,7 +428,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
 
     $msgs = array();
     foreach ($backTrace as $trace) {
-      $msgs[] = implode(', ',
+      $msgs[] = CRM_Utils_Array::implode(', ',
         array(CRM_Utils_Array::value('file', $trace),
           CRM_Utils_Array::value('function', $trace),
           CRM_Utils_Array::value('line', $trace),
@@ -436,7 +436,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
       );
     }
 
-    $message = "\n".implode("\n", $msgs);
+    $message = "\n".CRM_Utils_Array::implode("\n", $msgs);
     if ($log) {
       CRM_Core_Error::debug_var($msg, $message, FALSE, TRUE);
     }

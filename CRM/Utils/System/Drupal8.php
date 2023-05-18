@@ -510,7 +510,7 @@ class CRM_Utils_System_Drupal8 {
     array_pop($paths);
 
     while (count($paths)) {
-      $candidate = implode('/', $paths);
+      $candidate = CRM_Utils_Array::implode('/', $paths);
       if (file_exists($candidate . "/core/includes/bootstrap.inc")) {
         return $candidate;
       }
@@ -698,7 +698,7 @@ class CRM_Utils_System_Drupal8 {
 
     // Create a route name by replacing the forward slashes in the path with
     // underscores, civicrm/contact/search => civicrm.civicrm_contact_search.
-    $processed['route_name'] = 'civicrm.' . implode('_', explode('/', $url['path']));
+    $processed['route_name'] = 'civicrm.' . CRM_Utils_Array::implode('_', explode('/', $url['path']));
 
     // Turn the query string (if it exists) into an associative array.
     if (!empty($url['query'])) {
@@ -798,7 +798,7 @@ class CRM_Utils_System_Drupal8 {
                 $hostKey = array_search($parseUrl['host'], $urlParts);
                 $ufUrlParts = parse_url(CIVICRM_UF_BASEURL);
                 $urlParts[$hostKey] = $ufUrlParts['host'];
-                $url = implode('/', $urlParts);
+                $url = CRM_Utils_Array::implode('/', $urlParts);
               }
             }
           }

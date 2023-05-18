@@ -248,7 +248,7 @@ where (cg.extends='Contact' OR cg.extends='Individual' OR cg.extends_entity_colu
       }
     }
 
-    $this->_select = "SELECT " . implode(', ', $select) . " ";
+    $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
   static function formRule($fields, $files, $self) {
@@ -339,7 +339,7 @@ where (cg.extends='Contact' OR cg.extends='Individual' OR cg.extends_entity_colu
     $clauses[] = "(({$this->_aliases['civicrm_activity']}.is_deleted = 0) OR ({$this->_aliases['civicrm_activity']}.is_deleted Is Null))";
     $clauses[] = "(({$this->_aliases['civicrm_activity']}.is_current_revision = 1) OR ({$this->_aliases['civicrm_activity']}.is_deleted Is Null))";
 
-    $this->_where = "WHERE " . implode(' AND ', $clauses);
+    $this->_where = "WHERE " . CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
   function groupBy() {

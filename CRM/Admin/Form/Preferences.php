@@ -164,7 +164,7 @@ class CRM_Admin_Form_Preferences extends CRM_Core_Form {
       if (CRM_Utils_Array::value($name, $this->_params) &&
         is_array($this->_params[$name])
       ) {
-        $this->_config->$name = CRM_Core_BAO_CustomOption::VALUE_SEPERATOR . implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
+        $this->_config->$name = CRM_Core_BAO_CustomOption::VALUE_SEPERATOR . CRM_Utils_Array::implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
           array_keys($this->_params[$name])
         ) . CRM_Core_BAO_CustomOption::VALUE_SEPERATOR;
       }

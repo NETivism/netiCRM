@@ -195,7 +195,7 @@ class CRM_Report_Form_Pledge_Summary extends CRM_Report_Form {
       }
     }
 
-    $this->_select = "SELECT DISTINCT " . implode(', ', $select);
+    $this->_select = "SELECT DISTINCT " . CRM_Utils_Array::implode(', ', $select);
   }
 
   function from() {
@@ -269,7 +269,7 @@ class CRM_Report_Form_Pledge_Summary extends CRM_Report_Form {
     }
     else {
       $this->_where = "WHERE  ({$this->_aliases['civicrm_pledge']}.is_test=0 )  AND 
-                                      " . implode(' AND ', $clauses);
+                                      " . CRM_Utils_Array::implode(' AND ', $clauses);
     }
 
     if ($this->_aclWhere) {

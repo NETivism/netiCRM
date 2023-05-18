@@ -270,7 +270,7 @@ class CRM_Contact_Form_Task_AnnualReceiptEmail_MailingOption extends CRM_Contact
     $subject = array();
     $subject[] = $workflow['msg_title'].'-'.$searchOption['year'];
     if (is_array($searchOption['contribution_type_id']) && array_search(0, $searchOption['contribution_type_id']) !== FALSE) {
-      $subject[] = ts('Contribution Types').':'.implode(',', $searchOption['contribution_type_id']);
+      $subject[] = ts('Contribution Types').':'.CRM_Utils_Array::implode(',', $searchOption['contribution_type_id']);
     }
     if (!empty($searchOption['is_recur'])) {
       $subject[] = $searchOption['is_recur'] > 0 ? ts('Recurring Contribution') : ts('Non-Recurring Contribution');
@@ -278,7 +278,7 @@ class CRM_Contact_Form_Task_AnnualReceiptEmail_MailingOption extends CRM_Contact
     $activityParams = array(
       'assignee_contact_id' => $contactId,
       'activity_type_id' => $activityTypeId,
-      'subject' => implode(' ', $subject),
+      'subject' => CRM_Utils_Array::implode(' ', $subject),
       'activity_date_time' => date('YmdHis'),
       'is_test' => 0,
       'status_id' => $activityStatusId,

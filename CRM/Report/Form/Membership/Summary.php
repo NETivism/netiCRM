@@ -169,7 +169,7 @@ class CRM_Report_Form_Membership_Summary extends CRM_Report_Form {
         }
       }
     }
-    $this->_select = "SELECT " . implode(', ', $select) . " ";
+    $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
   static function formRule($fields, $files, $self) {
@@ -241,7 +241,7 @@ LEFT  JOIN civicrm_contribution  {$this->_aliases['civicrm_contribution']}
       $this->_where = "WHERE ( 1 ) ";
     }
     else {
-      $this->_where = "WHERE " . implode(' AND ', $clauses);
+      $this->_where = "WHERE " . CRM_Utils_Array::implode(' AND ', $clauses);
     }
   }
 
@@ -273,7 +273,7 @@ LEFT  JOIN civicrm_contribution  {$this->_aliases['civicrm_contribution']}
       ) {
         $this->_rollup = " WITH ROLLUP";
       }
-      $this->_groupBy = "GROUP BY " . implode(', ', $this->_groupBy) . " {$this->_rollup} ";
+      $this->_groupBy = "GROUP BY " . CRM_Utils_Array::implode(', ', $this->_groupBy) . " {$this->_rollup} ";
     }
     else {
       $this->_groupBy = "GROUP BY contact.id";

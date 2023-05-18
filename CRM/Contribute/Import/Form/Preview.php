@@ -239,7 +239,7 @@ class CRM_Contribute_Import_Form_Preview extends CRM_Core_Form {
       $config = CRM_Core_Config::singleton();
       $errorFile = $config->uploadDir . "sqlImport.error.log";
       if ($fd = fopen($errorFile, 'w')) {
-        fwrite($fd, implode('\n', $errorMessage));
+        fwrite($fd, CRM_Utils_Array::implode('\n', $errorMessage));
       }
       fclose($fd);
 

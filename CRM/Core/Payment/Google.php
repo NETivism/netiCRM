@@ -106,7 +106,7 @@ class CRM_Core_Payment_Google extends CRM_Core_Payment {
     }
 
     if (!empty($error)) {
-      return implode('<p>', $error);
+      return CRM_Utils_Array::implode('<p>', $error);
     }
     else {
       return NULL;
@@ -287,14 +287,14 @@ class CRM_Core_Payment_Google extends CRM_Core_Payment {
     if (CRM_Utils_Array::arrayKeyExists('notification-types', $searchParams)) {
       $xml .= '
 <notification-types>
-<notification-type>' . implode($searchParams['notification-types'], '</notification-type>
+<notification-type>' . CRM_Utils_Array::implode($searchParams['notification-types'], '</notification-type>
 <notification-type>') . '</notification-type>
 </notification-types>';
     }
     if (CRM_Utils_Array::arrayKeyExists('order-numbers', $searchParams)) {
       $xml .= '
 <order-numbers>
-<google-order-number>' . implode($searchParams['order-numbers'], '</google-order-number>
+<google-order-number>' . CRM_Utils_Array::implode($searchParams['order-numbers'], '</google-order-number>
 <google-order-number>') . '</google-order-number>
 </order-numbers>';
     }

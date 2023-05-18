@@ -145,7 +145,7 @@ class CRM_Report_Form_Walklist extends CRM_Report_Form {
       }
     }
 
-    $this->_select = "SELECT " . implode(",\n", $select) . " ";
+    $this->_select = "SELECT " . CRM_Utils_Array::implode(",\n", $select) . " ";
   }
 
   function from() {
@@ -204,7 +204,7 @@ FROM       civicrm_contact {$this->_aliases['civicrm_contact']} {$this->_aclFrom
       $this->_where = "WHERE ( 1 ) ";
     }
     else {
-      $this->_where = "WHERE " . implode(' AND ', $clauses);
+      $this->_where = "WHERE " . CRM_Utils_Array::implode(' AND ', $clauses);
     }
 
     if ($this->_aclWhere) {
@@ -221,7 +221,7 @@ FROM       civicrm_contact {$this->_aliases['civicrm_contact']} {$this->_aclFrom
         }
       }
     }
-    $this->_orderBy = "ORDER BY " . implode(', ', $this->_orderBy) . " ";
+    $this->_orderBy = "ORDER BY " . CRM_Utils_Array::implode(', ', $this->_orderBy) . " ";
   }
 
   function postProcess() {

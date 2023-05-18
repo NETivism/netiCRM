@@ -90,7 +90,7 @@ class CRM_Event_Form_Task_Batch extends CRM_Event_Form_Task {
     $returnProperties = array('sort_name' => 1);
     $contactDetails = CRM_Contact_BAO_Contact_Utils::contactDetails($this->_participantIds, 'CiviEvent', $returnProperties);
     $participantDAO = new CRM_Event_DAO_Participant();
-    $participantDAO->whereAdd("id IN (".implode(',', $this->_participantIds).")");
+    $participantDAO->whereAdd("id IN (".CRM_Utils_Array::implode(',', $this->_participantIds).")");
     $participantDAO->selectAdd(); // clear *
     $participantDAO->selectAdd('id as participant_id');
     $participantDAO->find();
@@ -286,7 +286,7 @@ class CRM_Event_Form_Task_Batch extends CRM_Event_Form_Task {
         if ($value['participant_role_id']) {
           $participantRoles = CRM_Event_PseudoConstant::participantRole();
           if (is_array($value['participant_role_id'])) {
-            $value['role_id'] = implode(CRM_Core_DAO::VALUE_SEPARATOR, array_keys($value['participant_role_id']));
+            $value['role_id'] = CRM_Utils_Array::implode(CRM_Core_DAO::VALUE_SEPARATOR, array_keys($value['participant_role_id']));
           }
           else {
             $value['role_id'] = $value['participant_role_id'];

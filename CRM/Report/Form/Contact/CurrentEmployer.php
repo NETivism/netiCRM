@@ -183,7 +183,7 @@ class CRM_Report_Form_Contact_CurrentEmployer extends CRM_Report_Form {
       }
     }
 
-    $this->_select = "SELECT " . implode(', ', $select) . " ";
+    $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
   function from() {
@@ -244,7 +244,7 @@ FROM civicrm_contact {$this->_aliases['civicrm_contact']}
       $this->_where = "WHERE {$this->_aliases['civicrm_contact']}.employer_id!='null' ";
     }
     else {
-      $this->_where = "WHERE ({$this->_aliases['civicrm_contact']}.employer_id!='null') AND " . implode(' AND ', $clauses);
+      $this->_where = "WHERE ({$this->_aliases['civicrm_contact']}.employer_id!='null') AND " . CRM_Utils_Array::implode(' AND ', $clauses);
     }
 
     if ($this->_aclWhere) {

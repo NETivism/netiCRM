@@ -98,7 +98,7 @@ function civicrm_relationship_create(&$params) {
   }
   CRM_Contact_BAO_Relationship::relatedMemberships($params['contact_id_a'], $values, $ids, $action);
 
-  return civicrm_create_success(array('id' => implode(',', $relationshipBAO[4])));
+  return civicrm_create_success(array('id' => CRM_Utils_Array::implode(',', $relationshipBAO[4])));
 }
 
 /**

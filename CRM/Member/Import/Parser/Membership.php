@@ -615,10 +615,10 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
         }
         if (!empty($dispArray)) {
           if ($doCreateContact) {
-            $errDisp = ts('Missing required contact matching fields.')." - ".implode('|', $dispArray);
+            $errDisp = ts('Missing required contact matching fields.')." - ".CRM_Utils_Array::implode('|', $dispArray);
           }
           else {
-            $errDisp = "No matching Contact found for (" . implode('|', $dispArray) . ")";
+            $errDisp = "No matching Contact found for (" . CRM_Utils_Array::implode('|', $dispArray) . ")";
           }
           $doCreateContact = FALSE;
         }

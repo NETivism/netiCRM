@@ -181,7 +181,7 @@ class CRM_Report_Form_Event_IncomeCountSummary extends CRM_Report_Form {
       }
     }
 
-    $this->_select = "SELECT " . implode(', ', $select);
+    $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select);
   }
 
   function from() {
@@ -223,7 +223,7 @@ class CRM_Report_Form_Event_IncomeCountSummary extends CRM_Report_Form {
             }
           }
           if (!empty($this->_params['id_value'])) {
-            $participant = implode(', ', $this->_params['id_value']);
+            $participant = CRM_Utils_Array::implode(', ', $this->_params['id_value']);
             $this->_participantWhere = " AND civicrm_participant.event_id IN ( {$participant} ) ";
           }
 
@@ -234,7 +234,7 @@ class CRM_Report_Form_Event_IncomeCountSummary extends CRM_Report_Form {
       }
     }
     $clauses[] = "({$this->_aliases['civicrm_event']}.is_template IS NULL OR {$this->_aliases['civicrm_event']}.is_template = 0)";
-    $this->_where = "WHERE  " . implode(' AND ', $clauses);
+    $this->_where = "WHERE  " . CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
   function statistics(&$rows) {

@@ -714,7 +714,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
       $couponDAO = CRM_Coupon_BAO_Coupon::getCouponList($params);
       if (!empty($couponDAO->N)) {
         $form->_feeBlock['coupon'] = 1;
-        $form->assign('activePriceOptionIds', implode(',', $activeOptionIds));
+        $form->assign('activePriceOptionIds', CRM_Utils_Array::implode(',', $activeOptionIds));
       }
 
       $form->addGroup($elements, 'amount', ts('Event Fee(s)'), '<br />');

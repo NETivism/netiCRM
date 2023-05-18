@@ -50,7 +50,7 @@ class CRM_Contribute_Form_Task_SearchTaskHookSample extends CRM_Contribute_Form_
     parent::preProcess();
     $rows = array();
     // display name and contribution details of all selected contacts
-    $contribIDs = implode(',', $this->_contributionIds);
+    $contribIDs = CRM_Utils_Array::implode(',', $this->_contributionIds);
 
     $query = "
     SELECT co.total_amount as amount,

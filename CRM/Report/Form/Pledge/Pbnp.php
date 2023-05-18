@@ -171,7 +171,7 @@ class CRM_Report_Form_Pledge_Pbnp extends CRM_Report_Form {
         }
       }
     }
-    $this->_select = "SELECT " . implode(', ', $select) . " ";
+    $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
   function from() {
@@ -185,7 +185,7 @@ class CRM_Report_Form_Pledge_Pbnp extends CRM_Report_Form {
       }
     }
 
-    $statusIds = implode(', ', $unpaidStatus);
+    $statusIds = CRM_Utils_Array::implode(', ', $unpaidStatus);
 
     $this->_from = "
         FROM civicrm_contact {$this->_aliases['civicrm_contact']} {$this->_aclFrom}

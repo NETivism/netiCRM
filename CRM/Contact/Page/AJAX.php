@@ -74,8 +74,8 @@ class CRM_Contact_Page_AJAX {
       }
     }
 
-    $select = implode(', ', $select);
-    $from = implode(' ', $from);
+    $select = CRM_Utils_Array::implode(', ', $select);
+    $from = CRM_Utils_Array::implode(' ', $from);
     if (CRM_Utils_Array::value('limit', $_GET)) {
       $limit = CRM_Utils_Type::escape($_GET['limit'], 'Positive');
     }
@@ -141,7 +141,7 @@ class CRM_Contact_Page_AJAX {
       $whereClauses[] = "$field LIKE '$phoneSearch'";
     }
 
-    $whereClause = ' WHERE ( '.implode(" OR ", $whereClauses).' ) '.$where;
+    $whereClause = ' WHERE ( '.CRM_Utils_Array::implode(" OR ", $whereClauses).' ) '.$where;
 
     $additionalFrom = '';
     if ($relType) {
@@ -700,7 +700,7 @@ WHERE sort_name LIKE '%$name%'";
               }
             }
             if (!empty($cids)) {
-              $queryString = " cc.id IN (".implode(',', $cids).")";
+              $queryString = " cc.id IN (".CRM_Utils_Array::implode(',', $cids).")";
             }
           }
         }

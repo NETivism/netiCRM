@@ -833,7 +833,7 @@ FROM   civicrm_domain
     // return only specific fields if returnproperties are sent
     if (!empty($returnProperities)) {
       $object->selectAdd();
-      $object->selectAdd(implode(',', $returnProperities));
+      $object->selectAdd(CRM_Utils_Array::implode(',', $returnProperities));
     }
 
     if ($object->find(TRUE)) {
@@ -1113,7 +1113,7 @@ FROM   civicrm_domain
       return $contactIDs;
     }
 
-    $IDs = implode(',', $componentIDs);
+    $IDs = CRM_Utils_Array::implode(',', $componentIDs);
     $query = "
 SELECT contact_id
   FROM $tableName
@@ -1151,7 +1151,7 @@ SELECT contact_id
     if (!empty($returnProperities)) {
       $object->selectAdd();
       $object->selectAdd('id');
-      $object->selectAdd(implode(',', $returnProperities));
+      $object->selectAdd(CRM_Utils_Array::implode(',', $returnProperities));
     }
 
     $object->find();

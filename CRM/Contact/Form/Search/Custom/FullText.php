@@ -365,7 +365,7 @@ $sqlStatement
           continue;
         }
 
-        $whereClause = implode(' OR ', $clauses);
+        $whereClause = CRM_Utils_Array::implode(' OR ', $clauses);
 
         //resolve conflict between entity tables.
         if ($tableName == 'civicrm_note' &&
@@ -745,7 +745,7 @@ WHERE      c.sort_name LIKE {$this->_text}
         foreach ($participantRole as $k => $v) {
           $viewRoles[] = $roleIds[$v];
         }
-        $row['participant_role'] = implode(', ', $viewRoles);
+        $row['participant_role'] = CRM_Utils_Array::implode(', ', $viewRoles);
       }
       $summary[$dao->table_name][] = $row;
     }

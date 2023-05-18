@@ -322,7 +322,7 @@ function _civicrm_pledgepayment_check_params(&$params) {
     $duplicates = array( );
     $result = CRM_Pledge_BAO_Pledge::checkDuplicate( $params,$duplicates ); 
     if ( $result ) {
-        $d = implode( ', ', $duplicates );
+        $d = CRM_Utils_Array::implode( ', ', $duplicates );
         $error = CRM_Core_Error::createError( "Duplicate error - existing pledge record(s) have a matching Transaction ID or Invoice ID. pledge record ID(s) are: $d", CRM_Core_Error::DUPLICATE_pledge, 'Fatal', $d);
         return civicrm_create_error( $error->pop( ),
                                      $d );

@@ -352,7 +352,7 @@ class CRM_Pledge_BAO_Pledge extends CRM_Pledge_DAO_Pledge {
       $where[] = "create_date <= '" . CRM_Utils_Type::escape($endDate, 'Timestamp') . "'";
     }
 
-    $whereCond = implode(' AND ', $where);
+    $whereCond = CRM_Utils_Array::implode(' AND ', $where);
 
     $query = "
 SELECT sum( amount ) as pledge_amount, count( id ) as pledge_count
@@ -411,7 +411,7 @@ WHERE  $whereCond AND is_test=0
       $where[] = " $queryDate <= '" . CRM_Utils_Type::escape($endDate, 'Timestamp') . "'";
     }
 
-    $whereCond = implode(' AND ', $where);
+    $whereCond = CRM_Utils_Array::implode(' AND ', $where);
 
     $query = "
 SELECT $select
@@ -764,7 +764,7 @@ WHERE  $whereCond
       return $pledgeDetails;
     }
 
-    $statusClause = " IN (" . implode(',', $status) . ")";
+    $statusClause = " IN (" . CRM_Utils_Array::implode(',', $status) . ")";
 
     $query = "
 SELECT civicrm_pledge.id id

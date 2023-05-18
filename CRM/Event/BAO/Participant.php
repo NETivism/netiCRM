@@ -393,7 +393,7 @@ class CRM_Event_BAO_Participant extends CRM_Event_DAO_Participant {
         $roleOr[] = "FIND_IN_SET('{$roleId}' , pp.role_ids)";
       }
       if (!empty($roleOr)) {
-        $where[] = " (".implode(' OR ', $roleOr).") ";
+        $where[] = " (".CRM_Utils_Array::implode(' OR ', $roleOr).") ";
       }
     }
 
@@ -403,7 +403,7 @@ class CRM_Event_BAO_Participant extends CRM_Event_DAO_Participant {
     if ($includeWaitingList && $onWaitlistStatusId) {
 
       //build the where clause.
-      $whereClause = ' WHERE ' . implode(' AND ', $where);
+      $whereClause = ' WHERE ' . CRM_Utils_Array::implode(' AND ', $where);
       $whereClause .= " AND participant.status_id = $onWaitlistStatusId ";
       $whereClause .= " AND contact.is_deleted = 0 ";
 
@@ -436,9 +436,9 @@ class CRM_Event_BAO_Participant extends CRM_Event_DAO_Participant {
     }
 
     //consider only counted participants.
-    $where[] = ' participant.status_id IN ( ' . implode(', ', array_keys($countedStatuses)) . ' ) ';
+    $where[] = ' participant.status_id IN ( ' . CRM_Utils_Array::implode(', ', array_keys($countedStatuses)) . ' ) ';
     $where[] = ' contact.is_deleted = 0 ';
-    $whereClause = ' WHERE ' . implode(' AND ', $where);
+    $whereClause = ' WHERE ' . CRM_Utils_Array::implode(' AND ', $where);
 
     $query = "
     SELECT  participant.id id,
@@ -538,7 +538,7 @@ SELECT  event.event_full_text,
     }
     $statusIdClause = NULL;
     if (!empty($allStatusIds)) {
-      $statusIdClause = ' AND participant.status_id IN ( ' . implode(', ', array_values($allStatusIds)) . ')';
+      $statusIdClause = ' AND participant.status_id IN ( ' . CRM_Utils_Array::implode(', ', array_values($allStatusIds)) . ')';
     }
 
     $isTestClause = NULL;
@@ -548,7 +548,7 @@ SELECT  event.event_full_text,
 
     $skipParticipantClause = NULL;
     if (is_array($skipParticipantIds) && !empty($skipParticipantIds)) {
-      $skipParticipantClause = ' AND participant.id NOT IN ( ' . implode(', ', $skipParticipantIds) . ')';
+      $skipParticipantClause = ' AND participant.id NOT IN ( ' . CRM_Utils_Array::implode(', ', $skipParticipantIds) . ')';
     }
 
     $sql = "
@@ -604,7 +604,7 @@ INNER JOIN  civicrm_contact ct ON ( ct.id = participant.contact_id ) AND ( ct.is
     }
 
     $positiveStatuses = CRM_Event_PseudoConstant::participantStatus(NULL, "class = 'Positive'");
-    $statusIds = "(" . implode(',', array_keys($positiveStatuses)) . ")";
+    $statusIds = "(" . CRM_Utils_Array::implode(',', array_keys($positiveStatuses)) . ")";
 
     $query = "
   SELECT  count(participant.id) as registered,
@@ -908,7 +908,7 @@ WHERE  civicrm_participant.id = {$participantId}
     $subject = ts('Deleted Participation(s): %1', array(1 => $id));
     if (!empty($relatedContributions)) {
       $participant->contributions = $relatedContributions;
-      $line = ts('Contribution ID').' '.implode(',', $relatedContributions);
+      $line = ts('Contribution ID').' '.CRM_Utils_Array::implode(',', $relatedContributions);
       $subject .= ts('%1 reserved', array(1 => $line));
     }
     $statusId = CRM_Core_OptionGroup::getValue('activity_status', 'Completed', 'name');
@@ -964,7 +964,7 @@ WHERE  civicrm_participant.id = {$participantId}
       return FALSE;
     }
 
-    $clause = implode(' AND ', $clause);
+    $clause = CRM_Utils_Array::implode(' AND ', $clause);
 
     $query = "SELECT id FROM civicrm_participant WHERE $clause";
     $dao = &CRM_Core_DAO::executeQuery($query, $input);
@@ -994,7 +994,7 @@ WHERE  civicrm_participant.id = {$participantId}
     if ((substr($eventLevel, 0, 1) == CRM_Core_BAO_CustomOption::VALUE_SEPERATOR) &&
       (substr($eventLevel, -1, 1) == CRM_Core_BAO_CustomOption::VALUE_SEPERATOR)
     ) {
-      $eventLevel = implode(', ', explode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
+      $eventLevel = CRM_Utils_Array::implode(', ', explode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
           substr($eventLevel, 1, -1)
         ));
       if ($pos = strrpos($eventLevel, "(multiple participants)", 0)) {
@@ -1002,12 +1002,12 @@ WHERE  civicrm_participant.id = {$participantId}
       }
     }
     elseif ((substr($eventLevel, 0, 1) == CRM_Core_BAO_CustomOption::VALUE_SEPERATOR)) {
-      $eventLevel = implode(', ', explode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
+      $eventLevel = CRM_Utils_Array::implode(', ', explode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
           substr($eventLevel, 0, 1)
         ));
     }
     elseif ((substr($eventLevel, -1, 1) == CRM_Core_BAO_CustomOption::VALUE_SEPERATOR)) {
-      $eventLevel = implode(', ', explode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
+      $eventLevel = CRM_Utils_Array::implode(', ', explode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
           substr($eventLevel, 0, -1)
         ));
     }
@@ -1094,7 +1094,7 @@ INNER JOIN civicrm_price_field field ON ( field.id = lineItem.price_field_id )
 INNER JOIN civicrm_price_field_value value ON ( value.id = lineItem.price_field_value_id ) 
 ";
     }
-    $where = 'WHERE participant.id IN ( ' . implode(', ', $participantIds) . ' )';
+    $where = 'WHERE participant.id IN ( ' . CRM_Utils_Array::implode(', ', $participantIds) . ' )';
     $query = "$select $from  $where";
 
     $feeInfo = CRM_Core_DAO::executeQuery($query);
@@ -1173,7 +1173,7 @@ INNER JOIN civicrm_price_field_value value ON ( value.id = lineItem.price_field_
     $cascadeAdditionalIds = self::getValidAdditionalIds($participantID, $oldStatusID, $newStatusID);
 
     if (!empty($cascadeAdditionalIds)) {
-      $cascadeAdditionalIds = implode(',', $cascadeAdditionalIds);
+      $cascadeAdditionalIds = CRM_Utils_Array::implode(',', $cascadeAdditionalIds);
       $query = "UPDATE civicrm_participant cp SET cp.status_id = %1 WHERE  cp.id IN ({$cascadeAdditionalIds})";
       $params = array(1 => array($newStatusID, 'Integer'));
       $dao = CRM_Core_DAO::executeQuery($query, $params);
@@ -1206,7 +1206,7 @@ INNER JOIN civicrm_price_field_value value ON ( value.id = lineItem.price_field_
       $setClause .= ", register_date = NOW()";
     }
 
-    $participantIdClause = "( " . implode(',', $participantIds) . " )";
+    $participantIdClause = "( " . CRM_Utils_Array::implode(',', $participantIds) . " )";
 
     $query = "
 UPDATE  civicrm_participant 
@@ -1274,7 +1274,7 @@ UPDATE  civicrm_participant
     );
 
     //first thing is pull all necessory data from db.
-    $participantIdClause = "(" . implode(',', $allParticipantIds) . ")";
+    $participantIdClause = "(" . CRM_Utils_Array::implode(',', $allParticipantIds) . ")";
 
     //get all participants data.
     $query = "SELECT * FROM civicrm_participant WHERE id IN {$participantIdClause}";
@@ -1787,7 +1787,7 @@ UPDATE  civicrm_participant
 INNER JOIN  civicrm_price_field_value value ON ( value.id = line.price_field_value_id )
 INNER JOIN  civicrm_price_field field ON ( value.price_field_id = field.id )   
      WHERE  line.entity_table = 'civicrm_participant'
-       AND  line.entity_id IN (" . implode(', ', $participantIds) . ' )';
+       AND  line.entity_id IN (" . CRM_Utils_Array::implode(', ', $participantIds) . ' )';
 
     $lineItem = CRM_Core_DAO::executeQuery($sql);
     $countDetails = $participantCount = array();
@@ -1845,7 +1845,7 @@ INNER JOIN  civicrm_price_field field ON ( value.price_field_id = field.id )
         "action=update&reset=1&id={$value}&cid={$details['cid']}"
       );
       $links[] = "<td><a href='{$viewUrl}'>" . $details['name'] . "</a></td><td></td><td><a href='{$editUrl}'>" . ts('Edit') . "</a></td>";
-      $links = "<table><tr>" . implode("</tr><tr>", $links) . "</tr></table>";
+      $links = "<table><tr>" . CRM_Utils_Array::implode("</tr><tr>", $links) . "</tr></table>";
       return $links;
     }
   }
@@ -1883,7 +1883,7 @@ INNER JOIN  civicrm_price_field field ON ( value.price_field_id = field.id )
         $roleOr[] = "FIND_IN_SET('{$roleId}' , pp.role_ids)";
       }
       if (!empty($roleOr)) {
-        $roleWhere = " AND (".implode(' OR ', $roleOr).") ";
+        $roleWhere = " AND (".CRM_Utils_Array::implode(' OR ', $roleOr).") ";
       }
     }
     $sql = "SELECT cp.id, cp.status_id

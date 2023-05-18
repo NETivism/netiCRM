@@ -224,7 +224,7 @@ class CRM_Event_Form_ParticipantView extends CRM_Core_Form {
     foreach (explode($sep, $values[$participantID]['role_id']) as $k => $v) {
       $viewRoles[] = $participantRoles[$v];
     }
-    $values[$participantID]['role_id'] = implode(', ', $viewRoles);
+    $values[$participantID]['role_id'] = CRM_Utils_Array::implode(', ', $viewRoles);
     $this->assign('role', $values[$participantID]['role_id']);
     // add Participant to Recent Items
     CRM_Utils_Recent::add($title,

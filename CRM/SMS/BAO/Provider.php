@@ -75,7 +75,7 @@ class CRM_SMS_BAO_Provider extends CRM_SMS_DAO_Provider {
       }
     }
     if ($selectArr && is_array($selectArr)) {
-      $select = implode(',', $selectArr);
+      $select = CRM_Utils_Array::implode(',', $selectArr);
       $dao->selectAdd($select);
     }
     $dao->whereAdd("(domain_id = " . CRM_Core_Config::domainID() . " OR domain_id IS NULL)");

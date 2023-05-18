@@ -181,7 +181,7 @@ class CRM_Utils_Mail_Incoming {
     foreach ($addresses as $address) {
       $fa[] = self::formatAddress($address);
     }
-    return implode(', ', $fa);
+    return CRM_Utils_Array::implode(', ', $fa);
   }
 
   function formatAddress($address) {

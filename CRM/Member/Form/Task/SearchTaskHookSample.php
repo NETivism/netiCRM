@@ -50,7 +50,7 @@ class CRM_Member_Form_Task_SearchTaskHookSample extends CRM_Member_Form_Task {
     parent::preProcess();
     $rows = array();
     // display name and membership details of all selected contacts
-    $memberIDs = implode(',', $this->_memberIds);
+    $memberIDs = CRM_Utils_Array::implode(',', $this->_memberIds);
 
     $query = "
     SELECT mem.start_date  as start_date,

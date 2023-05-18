@@ -671,7 +671,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
           $errorMsg[] = "$labels[$k] $v";
         }
       }
-      $errorMsg = implode(' AND ', $errorMsg);
+      $errorMsg = CRM_Utils_Array::implode(' AND ', $errorMsg);
       $importRecordParams = array($statusFieldName => CRM_Contribute_Import_Parser::ERROR, "${statusFieldName}Msg" => "Matching Contribution record not found for " . $errorMsg . ". Row was skipped.");
       $this->updateImportStatus($values[count($values) - 1], $importRecordParams);
       array_unshift($values, $importRecordParams[$statusFieldName.'Msg']);
@@ -745,10 +745,10 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
         }
         if (!empty($dispArray)) {
           if ($doCreateContact) {
-            $errDisp = ts('Missing required contact matching fields.')." - ".implode('|', $dispArray);
+            $errDisp = ts('Missing required contact matching fields.')." - ".CRM_Utils_Array::implode('|', $dispArray);
           }
           else {
-            $errDisp = ts("No matching results for "). ":" . implode('|', $dispArray) . "";
+            $errDisp = ts("No matching results for "). ":" . CRM_Utils_Array::implode('|', $dispArray) . "";
           }
           $doCreateContact = FALSE;
         }

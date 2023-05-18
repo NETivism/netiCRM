@@ -252,7 +252,7 @@ SET    version = '$version'
 
   function getRevisionSequence() {
     $revList = array();
-    $sqlDir = implode(DIRECTORY_SEPARATOR,
+    $sqlDir = CRM_Utils_Array::implode(DIRECTORY_SEPARATOR,
       array(dirname(__FILE__), 'Incremental', 'sql')
     );
     $sqlFiles = scandir($sqlDir);
@@ -289,7 +289,7 @@ SET    version = '$version'
   }
 
   function processSQL($rev) {
-    $sqlFile = implode(DIRECTORY_SEPARATOR,
+    $sqlFile = CRM_Utils_Array::implode(DIRECTORY_SEPARATOR,
       array(dirname(__FILE__), 'Incremental',
         'sql', $rev . '.mysql',
       )

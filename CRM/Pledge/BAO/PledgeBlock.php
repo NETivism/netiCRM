@@ -130,7 +130,7 @@ class CRM_Pledge_BAO_PledgeBlock extends CRM_Pledge_DAO_PledgeBlock {
 
       $freqUnits = $newFreqUnits;
       if (is_array($freqUnits) && !empty($freqUnits)) {
-        $freqUnits = implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, array_keys($freqUnits));
+        $freqUnits = CRM_Utils_Array::implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, array_keys($freqUnits));
         $pledgeBlock->pledge_frequency_unit = $freqUnits;
       }
       else {

@@ -239,7 +239,7 @@ class CRM_Report_Form_Contact_Relationship extends CRM_Report_Form {
       }
     }
 
-    $this->_select = "SELECT " . implode(', ', $select) . " ";
+    $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
   function from() {
@@ -385,7 +385,7 @@ class CRM_Report_Form_Contact_Relationship extends CRM_Report_Form {
       $this->_having = '';
     }
     else {
-      $this->_where = 'WHERE ' . implode(' AND ', $whereClauses);
+      $this->_where = 'WHERE ' . CRM_Utils_Array::implode(' AND ', $whereClauses);
     }
 
     if ($this->_aclWhere) {
@@ -394,7 +394,7 @@ class CRM_Report_Form_Contact_Relationship extends CRM_Report_Form {
 
     if (!empty($havingClauses)) {
       // use this clause to construct group by clause.
-      $this->_having = 'HAVING ' . implode(' AND ', $havingClauses);
+      $this->_having = 'HAVING ' . CRM_Utils_Array::implode(' AND ', $havingClauses);
     }
   }
 
@@ -444,7 +444,7 @@ class CRM_Report_Form_Contact_Relationship extends CRM_Report_Form {
     }
 
     if (!empty($groupBy)) {
-      $this->_groupBy = " GROUP BY  " . implode(', ', $groupBy) . " ,  {$this->_aliases['civicrm_relationship']}.id ";
+      $this->_groupBy = " GROUP BY  " . CRM_Utils_Array::implode(', ', $groupBy) . " ,  {$this->_aliases['civicrm_relationship']}.id ";
     }
     else {
       $this->_groupBy = " GROUP BY {$this->_aliases['civicrm_relationship']}.id ";
@@ -472,7 +472,7 @@ class CRM_Report_Form_Contact_Relationship extends CRM_Report_Form {
 
     if (!empty($relType)) {
       // store its old value, CRM-5837
-      $this->_params['relationship_type_id_value'] = implode('_', $relType);
+      $this->_params['relationship_type_id_value'] = CRM_Utils_Array::implode('_', $relType);
     }
     $this->endPostProcess($rows);
   }

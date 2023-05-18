@@ -118,7 +118,7 @@ INNER JOIN civicrm_contribution contribution ON contact_a.id = contribution.cont
       $where[] = "contribution.receipt_date >= '$start' AND contribution.receipt_date <= '$end'";
     }
 
-    $where = implode(' AND ', $where);
+    $where = CRM_Utils_Array::implode(' AND ', $where);
     $where = $this->whereClause($where, $params);
     return $where;
   }

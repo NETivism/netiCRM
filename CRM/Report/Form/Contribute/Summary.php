@@ -366,7 +366,7 @@ class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
       }
     }
 
-    $this->_select = "SELECT " . implode(', ', $select) . " ";
+    $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
   static function formRule($fields, $files, $self) {
@@ -390,7 +390,7 @@ class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
         }
       }
       if (!empty($grouping)) {
-        $temp = 'and ' . implode(', ', $grouping);
+        $temp = 'and ' . CRM_Utils_Array::implode(', ', $grouping);
         $errors['fields'] = ts("Please do not use combination of Receive Date %1", array(1 => $temp));
       }
     }
@@ -473,7 +473,7 @@ class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
       ) {
         $this->_rollup = " WITH ROLLUP";
       }
-      $this->_groupBy = "GROUP BY " . implode(', ', $groupBy) . " {$this->_rollup} ";
+      $this->_groupBy = "GROUP BY " . CRM_Utils_Array::implode(', ', $groupBy) . " {$this->_rollup} ";
     }
     else {
       $this->_groupBy = "GROUP BY {$this->_aliases['civicrm_contact']}.id";
@@ -589,7 +589,7 @@ class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
         $query = "reset=1&force=1&receive_date_from={$dateStart}&receive_date_to={$dateEnd}";
         if (!empty($this->_params['contribution_status_id_op']) && !empty($this->_params['contribution_status_id_value'])) {
           if (is_array($this->_params['contribution_status_id_value'])) {
-            $status_id_value = implode(',', $this->_params['contribution_status_id_value']);
+            $status_id_value = CRM_Utils_Array::implode(',', $this->_params['contribution_status_id_value']);
           }
           else {
             $status_id_value = $this->_params['contribution_status_id_value'];

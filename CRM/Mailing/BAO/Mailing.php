@@ -611,7 +611,7 @@ ORDER BY   i.contact_id, i.email_id
         while($dao->fetch()) {
           $ids[] = $dao->id;
         }
-        $sql = "DELETE FROM civicrm_mailing_recipients WHERE mailing_id = %1 AND id IN(".implode(',', $ids).")";
+        $sql = "DELETE FROM civicrm_mailing_recipients WHERE mailing_id = %1 AND id IN(".CRM_Utils_Array::implode(',', $ids).")";
         CRM_Core_DAO::executeQuery($sql, $params);
       }
     }
@@ -708,7 +708,7 @@ ORDER BY   i.contact_id, i.email_id
 
       require_once 'CRM/Utils/Hook.php';
       CRM_Utils_Hook::tokens($_categories);
-      $_categoryString = implode('|', array_keys($_categories));
+      $_categoryString = CRM_Utils_Array::implode('|', array_keys($_categories));
     }
 
     $funcStruct = array('type' => NULL, 'token' => $token);
@@ -1106,7 +1106,7 @@ AND civicrm_contact.is_opt_out =0";
     else {
       foreach ($fields as $field) {
         if (!CRM_Utils_Array::arrayKeyExists($field, $headers)) {
-          $headers[$field] = '<' . implode($config->verpSeparator,
+          $headers[$field] = '<' . CRM_Utils_Array::implode($config->verpSeparator,
               array(
                 $localpart . $prefix,
                 $job_id,
@@ -1155,7 +1155,7 @@ AND civicrm_contact.is_opt_out =0";
     $emailDomain = CRM_Core_BAO_MailSettings::defaultDomain();
 
     foreach ($verpTokens as $key => $value) {
-      $verp[$key] = implode($config->verpSeparator,
+      $verp[$key] = CRM_Utils_Array::implode($config->verpSeparator,
         array(
           $localpart . $value,
           $job_id,
@@ -1550,7 +1550,7 @@ AND civicrm_contact.is_opt_out =0";
       }
       elseif ($token == 'group') {
         $groups = $this->getGroupNames();
-        $data = implode(', ', $groups);
+        $data = CRM_Utils_Array::implode(', ', $groups);
       }
     }
     else {
@@ -1861,7 +1861,7 @@ AND civicrm_contact.is_opt_out =0";
                                                 {$t['component']}.id
                         WHERE           {$t['mailing']}.id = $mailing_id";
     }
-    $q = '(' . implode(') UNION (', $query) . ')';
+    $q = '(' . CRM_Utils_Array::implode(') UNION (', $query) . ')';
     $mailing->query($q);
 
     $report['component'] = array();
@@ -2227,7 +2227,7 @@ AND civicrm_contact.is_opt_out =0";
 
     $mailingIDs = self::mailingACLIDs();
     if (!empty($mailingIDs)) {
-      $mailingIDs = implode(',', $mailingIDs);
+      $mailingIDs = CRM_Utils_Array::implode(',', $mailingIDs);
       $tableName = !$alias ? self::getTableName() : $alias;
       $mailingACL = " $tableName.id IN ( $mailingIDs ) ";
     }
@@ -2242,7 +2242,7 @@ AND civicrm_contact.is_opt_out =0";
       $where = ' ( m.is_hidden = 0 )';
     }
     elseif (!empty($groups)) {
-      $groupIDs = implode(',', array_keys($groups));
+      $groupIDs = CRM_Utils_Array::implode(',', array_keys($groups));
       $where = "( ( g.entity_table = 'civicrm_group' AND g.entity_id IN ( $groupIDs ) ) OR   ( g.entity_table IS NULL AND g.entity_id IS NULL ) ) AND ( m.is_hidden = 0 ) ";
     }
 
@@ -2531,7 +2531,7 @@ LEFT JOIN civicrm_mailing_group g ON g.mailing_id   = m.id
               $result[$val] = $pcm[$val];
             }
           }
-          $contactDetails[$contactID]['preferred_communication_method'] = implode(', ', $result);
+          $contactDetails[$contactID]['preferred_communication_method'] = CRM_Utils_Array::implode(', ', $result);
         }
 
         foreach ($custom as $cfID) {
@@ -2583,7 +2583,7 @@ LEFT JOIN civicrm_mailing_group g ON g.mailing_id   = m.id
     $from[] = "LEFT JOIN $eu as unsubscribe ON unsubscribe.event_queue_id = $eq.id AND unsubscribe.org_unsubscribe = 0";
     $from[] = "LEFT JOIN $eu as optout ON optout.event_queue_id = $eq.id AND optout.org_unsubscribe = 1";
     $select = "SELECT $eq.contact_id, COUNT($ed.time_stamp) as delivered, COUNT($eo.time_stamp) as opened, COUNT($ec.time_stamp) as clicks, COUNT($eb.time_stamp) as bounce, COUNT(unsubscribe.time_stamp) as unsubscribe, COUNT(optout.time_stamp)  as optout";
-    $from  = "\n FROM $eq ".implode(" ", $from);
+    $from  = "\n FROM $eq ".CRM_Utils_Array::implode(" ", $from);
     $where = "\n WHERE $eq.contact_id = %1 AND $job.mailing_id = %2 AND $job.is_test = 0";
     $groupBy = "\n GROUP BY $eq.contact_id";
     $dao = CRM_Core_DAO::executeQuery($select . $from . $where . $groupBy, array(

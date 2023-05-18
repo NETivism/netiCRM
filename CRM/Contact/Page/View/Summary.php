@@ -215,7 +215,7 @@ class CRM_Contact_Page_View_Summary extends CRM_Contact_Page_View {
         $tagUrl = CRM_Utils_System::url('civicrm/contact/search','reset=1&force=1&tid=' . $key);
         $contactTagsHtml[] = '<a href="' . $tagUrl . '">' . $value . '</a>';
       }
-      $defaults['contactTag'] = implode( ', ', $contactTagsHtml );
+      $defaults['contactTag'] = CRM_Utils_Array::implode( ', ', $contactTagsHtml );
     }
 
     $defaults['privacy_values'] = CRM_Core_SelectValues::privacy();

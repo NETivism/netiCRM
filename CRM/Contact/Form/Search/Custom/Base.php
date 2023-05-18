@@ -106,7 +106,7 @@ class CRM_Contact_Form_Search_Custom_Base {
     }
 
     if (!empty($contactIDs)) {
-      $contactIDs = implode(', ', $contactIDs);
+      $contactIDs = CRM_Utils_Array::implode(', ', $contactIDs);
       $sql .= " AND contact_a.id IN ( $contactIDs )";
     }
   }

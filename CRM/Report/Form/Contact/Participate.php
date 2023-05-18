@@ -223,7 +223,7 @@ class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
     }
     $select[] = "COUNT({$this->_aliases['civicrm_participant']}.id) as participant_count";
     $this->_columnHeaders["participant_count"]['title'] = ts('Count');
-    $this->_select = "SELECT " . implode(', ', $select) . " ";
+    $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
   static function formRule($fields, $files, $self) {
@@ -268,7 +268,7 @@ class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
             if ($fieldName == 'rid') {
               $value = CRM_Utils_Array::value("{$fieldName}_value", $this->_params);
               if (!empty($value)) {
-                $clause = "( {$field['dbAlias']} REGEXP '[[:<:]]" . implode('[[:>:]]|[[:<:]]', $value) . "[[:>:]]' )";
+                $clause = "( {$field['dbAlias']} REGEXP '[[:<:]]" . CRM_Utils_Array::implode('[[:>:]]|[[:<:]]', $value) . "[[:>:]]' )";
               }
               $op = NULL;
             }
@@ -297,7 +297,7 @@ class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
       $this->_where = "WHERE {$this->_aliases['civicrm_participant']}.is_test = 0 ";
     }
     else {
-      $this->_where = "WHERE {$this->_aliases['civicrm_participant']}.is_test = 0 AND " . implode(' AND ', $clauses);
+      $this->_where = "WHERE {$this->_aliases['civicrm_participant']}.is_test = 0 AND " . CRM_Utils_Array::implode(' AND ', $clauses);
     }
     if ($this->_aclWhere) {
       $this->_where .= " AND {$this->_aclWhere} ";
@@ -439,7 +439,7 @@ class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
           foreach ($roles as $role) {
             $value[$role] = CRM_Event_PseudoConstant::participantRole($role, FALSE);
           }
-          $rows[$rowNum]['civicrm_participant_role_id'] = implode(', ', $value);
+          $rows[$rowNum]['civicrm_participant_role_id'] = CRM_Utils_Array::implode(', ', $value);
         }
         $entryFound = TRUE;
       }

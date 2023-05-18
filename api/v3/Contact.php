@@ -320,7 +320,7 @@ function _civicrm_api3_contact_check_params( &$params, $dupeCheck = true, $dupeE
 
   if (CRM_Utils_Array::value('contact_sub_type', $params) && CRM_Utils_Array::value('contact_type', $params)) {
       if (!(CRM_Contact_BAO_ContactType::isExtendsContactType($params['contact_sub_type'], $params['contact_type']))) {
-        return civicrm_api3_create_error("Invalid or Mismatched Contact SubType: " . implode(', ', (array)$params['contact_sub_type']));
+        return civicrm_api3_create_error("Invalid or Mismatched Contact SubType: " . CRM_Utils_Array::implode(', ', (array)$params['contact_sub_type']));
       }
     }
 
@@ -339,7 +339,7 @@ function _civicrm_api3_contact_check_params( &$params, $dupeCheck = true, $dupeE
     $ids = CRM_Dedupe_Finder::dupesByParams($dedupeParams, $params['contact_type'], 'Strict', array());
 
     if (count($ids) >0) {
-      throw new API_Exception("Found matching contacts: ". implode(',',$ids),"duplicate",array("ids"=>$ids));
+      throw new API_Exception("Found matching contacts: ". CRM_Utils_Array::implode(',',$ids),"duplicate",array("ids"=>$ids));
     }
   }
 
@@ -601,18 +601,18 @@ function civicrm_api3_contact_getquick($params) {
 
   $config = CRM_Core_Config::singleton();
   $as  = $select;
-  $select = implode(', ', $select);
+  $select = CRM_Utils_Array::implode(', ', $select);
   if (!empty($select)) {
     $select = ", $select";
   }
-  $actualSelectElements = implode(', ', $actualSelectElements);
+  $actualSelectElements = CRM_Utils_Array::implode(', ', $actualSelectElements);
   $selectAliases = $from;
   unset($selectAliases['address']);
-  $selectAliases = implode(', ', array_keys($selectAliases));
+  $selectAliases = CRM_Utils_Array::implode(', ', array_keys($selectAliases));
   if (!empty($selectAliases)) {
     $selectAliases = ", $selectAliases";
   }
-  $from = implode(' ', $from);
+  $from = CRM_Utils_Array::implode(' ', $from);
   $limit = CRM_Utils_Array::value('limit', $params, 10);
 
   // add acl clause here

@@ -113,7 +113,7 @@ class CRM_Report_Form_Event_Summary extends CRM_Report_Form {
       }
     }
 
-    $this->_select = "SELECT " . implode(', ', $select);
+    $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select);
   }
 
   function from() {
@@ -148,7 +148,7 @@ class CRM_Report_Form_Event_Summary extends CRM_Report_Form {
             }
           }
           if (!empty($this->_params['id_value'])) {
-            $participant = implode(', ', $this->_params['id_value']);
+            $participant = CRM_Utils_Array::implode(', ', $this->_params['id_value']);
             $this->_participantWhere = " AND civicrm_participant.event_id IN ( {$participant} ) ";
           }
 
@@ -159,7 +159,7 @@ class CRM_Report_Form_Event_Summary extends CRM_Report_Form {
       }
     }
     $clauses[] = "({$this->_aliases['civicrm_event']}.is_template IS NULL OR {$this->_aliases['civicrm_event']}.is_template = 0)";
-    $this->_where = "WHERE  " . implode(' AND ', $clauses);
+    $this->_where = "WHERE  " . CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
   function groupBy() {
@@ -246,10 +246,10 @@ class CRM_Report_Form_Event_Summary extends CRM_Report_Form {
     $statusType2 = CRM_Event_PseudoConstant::participantStatus(NULL, "is_counted = 0", 'label');
 
     //make column header for participant status  Registered/Attended
-    $type1_header = implode('/', $statusType1);
+    $type1_header = CRM_Utils_Array::implode('/', $statusType1);
 
     //make column header for participant status No-show/Cancelled/Pending
-    $type2_header = implode('/', $statusType2);
+    $type2_header = CRM_Utils_Array::implode('/', $statusType2);
 
     $this->_columnHeaders['statusType1'] = array('title' => $type1_header,
       'type' => CRM_Utils_Type::T_INT,

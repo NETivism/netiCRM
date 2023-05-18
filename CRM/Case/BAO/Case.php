@@ -1106,7 +1106,7 @@ WHERE civicrm_relationship.relationship_type_id = civicrm_relationship_type.id A
         }
         $targetContactUrls[] = $name;
       }
-      $values[$dao->id]['with_contacts'] = implode('; ', $targetContactUrls);
+      $values[$dao->id]['with_contacts'] = CRM_Utils_Array::implode('; ', $targetContactUrls);
 
       $values[$dao->id]['display_date'] = CRM_Utils_Date::customFormat($dao->display_date);
       $values[$dao->id]['status'] = $activityStatus[$dao->status];
@@ -1495,8 +1495,8 @@ AND        ca.is_deleted = 0";
     $session = CRM_Core_Session::singleton();
     $userID = $session->get('userID');
 
-    $caseID = implode(',', $cases['case_id']);
-    $contactID = implode(',', $cases['contact_id']);
+    $caseID = CRM_Utils_Array::implode(',', $cases['case_id']);
+    $contactID = CRM_Utils_Array::implode(',', $cases['contact_id']);
 
     $condition = "
 AND civicrm_case_contact.contact_id IN( {$contactID} ) 
@@ -1700,7 +1700,7 @@ AND civicrm_case.is_deleted     = {$cases['case_deleted']}";
 
     $queryParam = array();
     if (is_array($relationshipId)) {
-      $relationshipId = implode(',', $relationshipId);
+      $relationshipId = CRM_Utils_Array::implode(',', $relationshipId);
       $relationshipClause = " civicrm_relationship.id IN ($relationshipId)";
     }
     else {
@@ -1835,7 +1835,7 @@ WHERE civicrm_case.id = %2";
     if (is_array($excludeCaseIds) &&
       !CRM_Utils_System::isNull($excludeCaseIds)
     ) {
-      $where[] = ' ( ca.id NOT IN ( ' . implode(',', $excludeCaseIds) . ' ) ) ';
+      $where[] = ' ( ca.id NOT IN ( ' . CRM_Utils_Array::implode(',', $excludeCaseIds) . ' ) ) ';
     }
     if ($excludeDeleted) {
       $where[] = ' ( ca.is_deleted = 0 OR ca.is_deleted IS NULL ) ';
@@ -1849,7 +1849,7 @@ WHERE civicrm_case.id = %2";
       $session = CRM_Core_Session::singleton();
       $filterCases = CRM_Case_BAO_Case::getCases(FALSE, $session->get('userID'));
     }
-    $whereClause = implode(' AND ', $where);
+    $whereClause = CRM_Utils_Array::implode(' AND ', $where);
 
     $limitClause = '';
     if ($limit = CRM_Utils_Array::value('limit', $params)) {
@@ -1907,12 +1907,12 @@ INNER JOIN  civicrm_option_value ov ON (ca.case_type_id=ov.value AND ov.option_g
       if (empty($accessibleCaseIds)) {
         return 0;
       }
-      $whereConditions[] = "( civicrm_case.id in (" . implode(',', $accessibleCaseIds) . ") )";
+      $whereConditions[] = "( civicrm_case.id in (" . CRM_Utils_Array::implode(',', $accessibleCaseIds) . ") )";
     }
 
     $whereClause = '';
     if (!empty($whereConditions)) {
-      $whereClause = "WHERE " . implode(' AND ', $whereConditions);
+      $whereClause = "WHERE " . CRM_Utils_Array::implode(' AND ', $whereConditions);
     }
 
     $query = "       
@@ -2022,7 +2022,7 @@ INNER JOIN  civicrm_activity relAct           ON (relCaseAct.activity_id = relAc
       return $relatedCases;
     }
 
-    $whereClause = 'relCase.id IN ( ' . implode(',', $relatedCaseIds) . ' )';
+    $whereClause = 'relCase.id IN ( ' . CRM_Utils_Array::implode(',', $relatedCaseIds) . ' )';
     if ($excludeDeleted) {
       $whereClause .= " AND ( relCase.is_deleted = 0 OR relCase.is_deleted IS NULL )";
     }
@@ -2202,7 +2202,7 @@ INNER JOIN  civicrm_contact      client         ON ( client.id = relCaseContact.
 SELECT  id
   FROM  civicrm_activity 
  WHERE  activity_type_id = $openCaseType 
-   AND  id IN ( " . implode(',', array_values($otherActivityIds)) . ');';
+   AND  id IN ( " . CRM_Utils_Array::implode(',', array_values($otherActivityIds)) . ');';
           $dao = CRM_Core_DAO::executeQuery($sql);
           while ($dao->fetch()) {
             $singletonActivityIds[] = $dao->id;
@@ -2359,7 +2359,7 @@ SELECT  id
         if (!empty($otherRelationshipIds)) {
           $sql = 'UPDATE  civicrm_relationship 
                                SET  end_date = CURDATE() 
-                             WHERE  id IN ( ' . implode(',', $otherRelationshipIds) . ')';
+                             WHERE  id IN ( ' . CRM_Utils_Array::implode(',', $otherRelationshipIds) . ')';
           CRM_Core_DAO::executeQuery($sql);
         }
       }
@@ -2398,7 +2398,7 @@ SELECT  id
           $sql = '
 SELECT id, subject, activity_date_time, activity_type_id
 FROM civicrm_activity
-WHERE id IN (' . implode(',', $copiedActivityIds) . ')';
+WHERE id IN (' . CRM_Utils_Array::implode(',', $copiedActivityIds) . ')';
           $dao = CRM_Core_DAO::executeQuery($sql);
           while ($dao->fetch()) {
             $mergeActSubjectDetails .= "{$dao->activity_date_time} :: {$activityTypes[$dao->activity_type_id]}";

@@ -137,7 +137,7 @@ class CRM_Contact_BAO_Contact extends CRM_Contact_DAO_Contact {
 
       $prefComm = $newPref;
       if (is_array($prefComm) && !empty($prefComm)) {
-        $prefComm = CRM_Core_BAO_CustomOption::VALUE_SEPERATOR . implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, array_keys($prefComm)) . CRM_Core_BAO_CustomOption::VALUE_SEPERATOR;
+        $prefComm = CRM_Core_BAO_CustomOption::VALUE_SEPERATOR . CRM_Utils_Array::implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, array_keys($prefComm)) . CRM_Core_BAO_CustomOption::VALUE_SEPERATOR;
         $contact->preferred_communication_method = $prefComm;
       }
       else {
@@ -1608,7 +1608,7 @@ ORDER BY civicrm_email.is_primary DESC";
       $specialFields = array('educational_interest', 'college_type', 'college_interest', 'test_tutoring');
       foreach ($specialFields as $field) {
         if ($params[$field]) {
-          $params[$field] = implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, array_keys($params[$field]));
+          $params[$field] = CRM_Utils_Array::implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, array_keys($params[$field]));
         }
       }
 
@@ -1989,7 +1989,7 @@ INNER JOIN civicrm_email    ON ( civicrm_contact.id = civicrm_email.contact_id )
       if (!empty($groups)) {
         $query .= "
 INNER JOIN civicrm_group_contact gc ON 
-(civicrm_contact.id = gc.contact_id AND gc.status = 'Added' AND gc.group_id IN (" . implode(',', $groups) . "))";
+(civicrm_contact.id = gc.contact_id AND gc.status = 'Added' AND gc.group_id IN (" . CRM_Utils_Array::implode(',', $groups) . "))";
       }
     }
 
@@ -2386,7 +2386,7 @@ UNION
     }
 
     if (!empty($updateQueryString)) {
-      $updateQueryString = implode(',', $updateQueryString);
+      $updateQueryString = CRM_Utils_Array::implode(',', $updateQueryString);
       $queryString = "UPDATE civicrm_contact SET {$updateQueryString} WHERE id = {$contact->id}";
       CRM_Core_DAO::executeQuery($queryString);
     }
@@ -2429,7 +2429,7 @@ UNION
           }
         }
         if (!empty($conditions)) {
-          $blockDAO->whereAdd(implode(" $condOperator ", $conditions));
+          $blockDAO->whereAdd(CRM_Utils_Array::implode(" $condOperator ", $conditions));
         }
       }
 

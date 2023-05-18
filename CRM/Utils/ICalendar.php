@@ -60,7 +60,7 @@ class CRM_Utils_ICalendar {
     $text = strip_tags($text);
     $text = str_replace(",", "\,", $text);
     $text = str_replace(";", "\;", $text);
-    $text = implode("\n ", CRM_Utils_ICalendar::mb_str_split($text, 20));
+    $text = CRM_Utils_Array::implode("\n ", CRM_Utils_ICalendar::mb_str_split($text, 20));
     return $text;
   }
 

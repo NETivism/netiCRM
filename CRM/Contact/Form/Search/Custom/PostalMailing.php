@@ -104,7 +104,7 @@ LEFT JOIN civicrm_state_province state_province ON  state_province.id = address.
     $clause[] = "contact_a.contact_type IN ('Individual','Household')";
 
     if (!empty($clause)) {
-      $where = implode(' AND ', $clause);
+      $where = CRM_Utils_Array::implode(' AND ', $clause);
     }
 
     return $this->whereClause($where, $params);

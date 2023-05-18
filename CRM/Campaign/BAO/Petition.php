@@ -489,7 +489,7 @@ WHERE 	a.source_record_id = " . $surveyId . "
         $localpart = CRM_Core_BAO_MailSettings::defaultLocalpart();
 
         require_once 'CRM/Utils/Verp.php';
-        $replyTo = implode($config->verpSeparator,
+        $replyTo = CRM_Utils_Array::implode($config->verpSeparator,
           array($localpart . 'c',
             $se->contact_id,
             $se->id,

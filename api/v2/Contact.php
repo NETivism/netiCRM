@@ -613,7 +613,7 @@ function civicrm_contact_check_params(&$params,
 
     if ($csType = CRM_Utils_Array::value('contact_sub_type', $params)) {
       if (!(CRM_Contact_BAO_ContactType::isExtendsContactType($csType, $params['contact_type']))) {
-        return civicrm_create_error("Invalid or Mismatched Contact SubType: " . implode(', ', (array)$csType));
+        return civicrm_create_error("Invalid or Mismatched Contact SubType: " . CRM_Utils_Array::implode(', ', (array)$csType));
       }
     }
 
@@ -660,7 +660,7 @@ function civicrm_contact_check_params(&$params,
       $dedupeParams['check_permission'] = $params['check_permission'];
     }
 
-    $ids = implode(',',
+    $ids = CRM_Utils_Array::implode(',',
       CRM_Dedupe_Finder::dupesByParams($dedupeParams,
         $params['contact_type'],
         'Strict',
@@ -845,7 +845,7 @@ function civicrm_contact_check_custom_params($params, $csType = NULL) {
 
         $errorMsg = ts("Invalid Custom Field Contact Type: {$params['contact_type']}");
         if ($csType) {
-          $errorMsg .= ts(" or Mismatched SubType: " . implode(', ', (array)$csType));
+          $errorMsg .= ts(" or Mismatched SubType: " . CRM_Utils_Array::implode(', ', (array)$csType));
         }
         return civicrm_create_error($errorMsg);
       }

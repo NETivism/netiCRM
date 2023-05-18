@@ -156,7 +156,7 @@ class CRM_Core_Report_Excel {
                 }
               }
 
-              $str = implode($seperator, $strArray);
+              $str = CRM_Utils_Array::implode($seperator, $strArray);
               $value = &$str;
             }
 

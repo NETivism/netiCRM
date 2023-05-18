@@ -233,7 +233,7 @@ class CRM_Core_I18n_Schema {
 
     // update civicrm_domain.locales
     $locales[] = $locale;
-    $domain->locales = implode(CRM_Core_DAO::VALUE_SEPARATOR, $locales);
+    $domain->locales = CRM_Utils_Array::implode(CRM_Core_DAO::VALUE_SEPARATOR, $locales);
     $domain->save();
   }
 
@@ -361,7 +361,7 @@ class CRM_Core_I18n_Schema {
           $index['field'][$i] = "{$col}_{$locale}";
         }
       }
-      $cols = implode(', ', $index['field']);
+      $cols = CRM_Utils_Array::implode(', ', $index['field']);
       $name = $index['name'];
       if ($locale) {
         $name .= '_' . $locale;
@@ -410,7 +410,7 @@ class CRM_Core_I18n_Schema {
       $individualNamesTrigger[] = "IF NEW.sort_name_{$loc}    = '' THEN SET NEW.sort_name_{$loc}    = @email; END IF;";
     }
 
-    $beforeUpdateNamesTrigger = implode(' ', $namesTrigger) . implode(' ', $individualNamesTrigger);
+    $beforeUpdateNamesTrigger = CRM_Utils_Array::implode(' ', $namesTrigger) . CRM_Utils_Array::implode(' ', $individualNamesTrigger);
     // ...for UPDATE it's a separate trigger, for INSERT it has to be merged into the below, general one
     $queries[] = "DROP TRIGGER IF EXISTS civicrm_contact_before_update";
     $queries[] = "CREATE TRIGGER civicrm_contact_before_update BEFORE UPDATE ON civicrm_contact FOR EACH ROW BEGIN " . $beforeUpdateNamesTrigger . ' END';
@@ -450,7 +450,7 @@ class CRM_Core_I18n_Schema {
       }
       $trigger[] = 'END';
 
-      $queries[] = implode(' ', $trigger);
+      $queries[] = CRM_Utils_Array::implode(' ', $trigger);
     }
     return $queries;
   }
@@ -481,7 +481,7 @@ class CRM_Core_I18n_Schema {
     foreach ($columns[$table] as $column => $_) {
       $cols[] = "{$column}_{$locale} {$column}";
     }
-    return "CREATE OR REPLACE VIEW {$table}_{$locale} AS SELECT " . implode(', ', $cols) . " FROM {$table}";
+    return "CREATE OR REPLACE VIEW {$table}_{$locale} AS SELECT " . CRM_Utils_Array::implode(', ', $cols) . " FROM {$table}";
   }
 }
 

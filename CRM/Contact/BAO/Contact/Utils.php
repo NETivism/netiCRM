@@ -105,7 +105,7 @@ class CRM_Contact_BAO_Contact_Utils {
       return FALSE;
     }
 
-    $idString = implode(',', $contactIds);
+    $idString = CRM_Utils_Array::implode(',', $contactIds);
     $query = "
 SELECT count( DISTINCT contact_type )
 FROM   civicrm_contact
@@ -629,7 +629,7 @@ UPDATE civicrm_contact
    SELECT  c.id, c.display_name, c.contact_type, ce.email 
      FROM  civicrm_contact c 
 LEFT JOIN  civicrm_email ce ON ( ce.contact_id=c.id AND ce.is_primary = 1 )
-    WHERE  c.id IN  (' . implode(',', $contactIDs) . ' ) LIMIT 20';
+    WHERE  c.id IN  (' . CRM_Utils_Array::implode(',', $contactIDs) . ' ) LIMIT 20';
 
     $dao = CRM_Core_DAO::executeQuery($query);
 
@@ -755,9 +755,9 @@ LEFT JOIN  civicrm_email ce ON ( ce.contact_id=c.id AND ce.is_primary = 1 )
 
     //finally retrieve contact details.
     if (!empty($select) && !empty($from)) {
-      $fromClause = implode(' ', $from);
-      $selectClause = implode(', ', $select);
-      $whereClause = "{$compTable}.id IN (" . implode(',', $componentIds) . ')';
+      $fromClause = CRM_Utils_Array::implode(' ', $from);
+      $selectClause = CRM_Utils_Array::implode(', ', $select);
+      $whereClause = "{$compTable}.id IN (" . CRM_Utils_Array::implode(',', $componentIds) . ')';
 
       $query = "
   SELECT  contact.id as contactId, $compTable.id as componentId, $selectClause 
@@ -851,7 +851,7 @@ Group By  componentId";
       $query = 'SELECT ca.id, cc.display_name, cc.id as cid, cc.is_deleted
                       FROM civicrm_contact cc
                            INNER JOIN civicrm_address ca ON cc.id = ca.contact_id
-                      WHERE ca.id IN  ( ' . implode(',', $masterAddressIds) . ')';
+                      WHERE ca.id IN  ( ' . CRM_Utils_Array::implode(',', $masterAddressIds) . ')';
       $dao = CRM_Core_DAO::executeQuery($query);
 
       while ($dao->fetch()) {

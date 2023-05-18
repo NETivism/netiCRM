@@ -802,7 +802,7 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
       $streetUnitFormats = array('APT', 'APP', 'SUITE', 'BUREAU', 'UNIT');
     }
 
-    $streetUnitPreg = '/(' . implode('\s|\s', $streetUnitFormats) . ')(.+)?/i';
+    $streetUnitPreg = '/(' . CRM_Utils_Array::implode('\s|\s', $streetUnitFormats) . ')(.+)?/i';
     $matches = array();
     if (preg_match($streetUnitPreg, $streetAddress, $matches)) {
       $parseFields['street_unit'] = $matches[0];
@@ -1009,7 +1009,7 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
     }
 
     if (!empty($deleteStatus)) {
-      $statusMessage = implode('<br/>', $deleteStatus) . '<br/>';
+      $statusMessage = CRM_Utils_Array::implode('<br/>', $deleteStatus) . '<br/>';
     }
 
     if (!$returnStatus) {

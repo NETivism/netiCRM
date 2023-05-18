@@ -191,7 +191,7 @@ class CRM_Report_Form_Contribute_OrganizationSummary extends CRM_Report_Form {
         }
       }
     }
-    $this->_select = "SELECT " . implode(', ', $select) . " ";
+    $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
   function from() {
@@ -262,7 +262,7 @@ class CRM_Report_Form_Contribute_OrganizationSummary extends CRM_Report_Form {
       $this->_where = "WHERE ( 1 )";
     }
     else {
-      $this->_where = "WHERE " . implode(' AND ', $clauses);
+      $this->_where = "WHERE " . CRM_Utils_Array::implode(' AND ', $clauses);
     }
 
     if ($this->_aclWhere) {

@@ -230,7 +230,7 @@ class CRM_Report_Form_Grant extends CRM_Report_Form {
       }
     }
 
-    $this->_select = "SELECT " . implode(', ', $select) . " ";
+    $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
   function from() {
@@ -276,7 +276,7 @@ class CRM_Report_Form_Grant extends CRM_Report_Form {
           }
           if (!empty($clause)) {
             $clauses[] = $clause;
-            $this->_where = "WHERE " . implode(' AND ', $clauses);
+            $this->_where = "WHERE " . CRM_Utils_Array::implode(' AND ', $clauses);
           }
         }
       }
@@ -300,7 +300,7 @@ class CRM_Report_Form_Grant extends CRM_Report_Form {
       }
     }
     if (!empty($this->_groupBy)) {
-      $this->_groupBy = "ORDER BY " . implode(', ', $this->_groupBy) . ", {$this->_aliases['civicrm_contact']}.sort_name";
+      $this->_groupBy = "ORDER BY " . CRM_Utils_Array::implode(', ', $this->_groupBy) . ", {$this->_aliases['civicrm_contact']}.sort_name";
     }
   }
 
