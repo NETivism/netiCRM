@@ -144,13 +144,17 @@ class CRM_Utils_Money {
    * @return string
    */
   protected static function formatNumericByFormat($amount, $valueFormat) {
-    if (is_numeric($amount) && function_exists('money_format')) {
-      $lc = setlocale(LC_MONETARY, 0);
-      setlocale(LC_MONETARY, 'en_US.utf8', 'en_US', 'en_US.utf8', 'en_US', 'C');
-      $amount = money_format($valueFormat, $amount);
-      setlocale(LC_MONETARY, $lc);
+    $formatted = $amount;
+    switch($valueFormat) {
+      case '%!i':
+        $formatted = number_format($amount, 2);
+        break;
+      case '%!.0n':
+      default:
+        $formatted = number_format($amount, 0);
+        break;
     }
-    return $amount;
+    return $formatted;
   }
 
 

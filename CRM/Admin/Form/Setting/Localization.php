@@ -109,7 +109,10 @@ class CRM_Admin_Form_Setting_Localization extends CRM_Admin_Form_Setting {
     $this->addElement('text', 'monetaryThousandSeparator', ts('Thousands Separator'), array('size' => 2));
     $this->addElement('text', 'monetaryDecimalPoint', ts('Decimal Delimiter'), array('size' => 2));
     $this->addElement('text', 'moneyformat', ts('Monetary Amount Display'));
-    $this->addElement('text', 'moneyvalueformat', ts('Monetary Value Display'));
+    $this->addSelect('moneyvalueformat', ts('Monetary Value Display'), array(
+      '%!.0n' => '1,234 :'. ts('Commas for thousands, no decimal places.'),
+      '%!i' => '1,234.56 :'.ts('Commas for thousands, two decimal places.'),
+    ));
 
     $country = array();
     CRM_Core_PseudoConstant::populate($country, 'CRM_Core_DAO_Country', TRUE, 'name', 'is_active');
