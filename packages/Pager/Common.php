@@ -1021,13 +1021,6 @@ class Pager_Common
             $this->_recursive_urldecode($this->_extraVars);
             $qs = array_merge($qs, $this->_extraVars);
         }
-        if (count($qs)
-            && function_exists('get_magic_quotes_gpc')
-            && -1 == version_compare(PHP_VERSION, '5.2.99')
-            && get_magic_quotes_gpc()
-        ) {
-            $this->_recursive_stripslashes($qs);
-        }
         return $qs;
     }
 

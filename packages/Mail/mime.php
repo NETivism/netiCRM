@@ -481,15 +481,7 @@ class Mail_mime
             return $err;
         }
 
-        // Temporarily reset magic_quotes_runtime and read file contents
-        if ($magic_quote_setting = get_magic_quotes_runtime()) {
-            @ini_set('magic_quotes_runtime', 0);
-        }
         $cont = file_get_contents($file_name);
-        if ($magic_quote_setting) {
-            @ini_set('magic_quotes_runtime', $magic_quote_setting);
-        }
-
         return $cont;
     }
 
@@ -761,11 +753,6 @@ class Mail_mime
             return $err;
         }
 
-        // Temporarily reset magic_quotes_runtime and read file contents
-        if ($magic_quote_setting = get_magic_quotes_runtime()) {
-            @ini_set('magic_quotes_runtime', 0);
-        }
-
         if (!($fh = fopen($filename, 'ab'))) {
             $err = PEAR::raiseError('Unable to open file: ' . $filename);
             return $err;
@@ -807,11 +794,6 @@ class Mail_mime
         if (file_exists($filename) && !is_writable($filename)) {
             $err = PEAR::raiseError('File is not writable: ' . $filename);
             return $err;
-        }
-
-        // Temporarily reset magic_quotes_runtime and read file contents
-        if ($magic_quote_setting = get_magic_quotes_runtime()) {
-            @ini_set('magic_quotes_runtime', 0);
         }
 
         if (!($fh = fopen($filename, 'ab'))) {
