@@ -124,33 +124,40 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
     return FALSE;
   }
 
-  function processContribution($jsonString) {
+  function processContribution($jsonString, &$contributionResult, $contributionRecurId = NULL) {
     $params = self::formatParams($jsonString);
     $locationType = CRM_Core_PseudoConstant::locationType(FALSE, 'name');
     $config = CRM_Core_Config::singleton();
-
     if (empty($params)) {
-      return;
+      $contributionResult['status'] = " params is empty";
+      // return;
     }
     if (empty($params['contribution']['trxn_id'])) {
-      return;
+      $contributionResult['status'] = "Contribution trxn_id is empty.";
+      // return;
     }
     if (empty($params['contribution']['contribution_status_id'])) {
-      return;
+      $contributionResult['status'] = "Contribution contribution_status_id is empty.";
+      // return;
     }
 
     $contributionPageId = $this->_paymentProcessor['user_name'];
     if (empty($contributionPageId)) {
-      return;
+      $contributionResult['status'] = "Contribution page id is empty.";
+      // return;
     }
 
     // first, check if contribution exists
-    $currentContributionId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $params['contribution']['trxn_id'], 'id', 'trxn_id');
-    if ($currentContributionId) {
-      // update status and payment only
-      $ids = CRM_Contribute_BAO_Contribution::buildIds($currentContributionId, 'ipn');
-      $this->processIPN($ids, $params['contribution']);
-      return $currentContributionId;
+    if ( $params['contribution']) {
+      $currentContributionId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $params['contribution']['trxn_id'], 'id', 'trxn_id');
+      if ($currentContributionId) {
+        // update status and payment only
+        $ids = CRM_Contribute_BAO_Contribution::buildIds($currentContributionId, 'ipn');
+        $this->processIPN($ids, $params['contribution']);
+        $contributionResult['status'] = "Contribution exists, retrun currentContributionId.";
+        $contributionResult['contributionId'] = $currentContributionId;
+        return $currentContributionId;
+      }
     }
 
     // not exists contribution, check contact first
@@ -285,6 +292,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
 
     // process recurring or contribution
     if ($contactId) {
+      $contributionResult['contactId']  = $contactId;
       // create additional contact if needed
       $backerRelationTypeId = $config->backerFounderRelationship;
       if (!empty($params['additional']['first_name']) && !empty($params['additional']['address']) && !empty($backerRelationTypeId)) {
@@ -396,7 +404,10 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
         else {
           $recur['invoice_id'] = md5(uniqid(rand(), TRUE));
         }
-        civicrm_api('ContributionRecur', 'create', $recur);
+        $recur['version'] = "3";
+        $recurResult = civicrm_api('ContributionRecur', 'create', $recur);
+        $contributionResult['recur_contribution_id']  = $recurResult['id'];
+        $contributionResult['status'] = "ContributionRecur ID already created.";
       }
 
       // create a pending contribution then trigger ipn
@@ -415,6 +426,9 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
             $contrib['invoice_id'] = $contrib['invoice_id'].'_'.$this->_delivery;
           }
           $contrib['version'] = 3;
+          if ($contributionRecurId) {
+            $contrib['contribution_recur_id'] = $contributionRecurId;
+          }
           $result = civicrm_api('contribution', 'create', $contrib);
           if ($result['id']) {
             $currentContributionId = $result['id'];
@@ -422,7 +436,9 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
             $contrib['id'] = $result['id'];
             $ids = CRM_Contribute_BAO_Contribution::buildIds($contrib['id'], 'ipn');
             $this->processIPN($ids, $params['contribution']);
-            return $currentContributionId;
+            $contributionResult['status'] = "Get currentContributionId.";
+            $contributionResult['contributionId'] = $currentContributionId;
+            // return $currentContributionId;
           }
         }
       }
