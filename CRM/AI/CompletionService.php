@@ -42,7 +42,7 @@ abstract class CRM_AI_CompletionService {
    * @param array $params(reference)
    * @return void
    */
-  abstract private function formatParams(&$params);
+  abstract protected function formatParams(&$params);
 
   /**
    * Format response before saving to CRM_AI_DAO_AICompletion
@@ -50,7 +50,7 @@ abstract class CRM_AI_CompletionService {
    * @param string $responseString
    * @return array
    */
-  abstract private function formatResponse($responseString);
+  abstract protected function formatResponse($responseString);
 
   /**
    * Low level function to determine if result in response is an error.
@@ -58,5 +58,5 @@ abstract class CRM_AI_CompletionService {
    * @param array $response
    * @return boolean
    */
-  abstract private function isError($response);
+  abstract protected function isError($response);
 }

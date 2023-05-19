@@ -8,7 +8,17 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
     COMPLETION_MODEL = 'gpt-3.5-turbo',
     // default max tokens base on model
     COMPLETION_MAX_TOKEN = 4096,
-
+    
+  // Action:
+    ChatCompletion = 1,
+    GetToken = 2;
+  
+  /**
+   * What action is execute now
+   * 
+   * @var int
+   */
+  private static $_action;
 
   /**
    * Max tokens user define which should use base service model max token
@@ -22,7 +32,7 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
    *
    * @var CRM_AI_Completion
    */
-  private $_serviceProvider;
+  public $_serviceProvider;
 
   /**
    * We only need one instance of this object. So we use the singleton
@@ -57,12 +67,43 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
    *
    * @return array
    */
-  public static function chat() {
-    // validate format
-    // create db record
-    // send request via $_serviceProvider
-    // update response into same db row
-    // return result
+  public static function chat($params = NULL) {
+    // Prepare follow parameters will be used.
+    self::$_action = self::ChatCompletion;
+    $defaults = [];
+    $params = $params ? $params : $_POST;
+    $args = self::retrieve($params, $defaults);
+    if (!isset($params['prompt'])) {
+      $missingParams = [];
+      if (!isset($requestData['prompt'])) {
+          $missingParams[] = 'prompt';
+      }
+      throw new Exception('Missing required parameters: ' . implode(', ', $missingParams));
+    }
+
+    // Validate request parameters
+    $requestData = [
+      'prompt' => $args['prompt'] ? $args['prompt'] : null,
+    ];
+    $requestData['action'] = self::$_action;
+    
+    // Create or update db record
+    extract($requestData);
+    $data = array_merge($requestData, [
+      'date' => date('Y-m-d H:i:s'),
+      'status' => 2, // Default status is 2 (didn't get response)
+    ]);
+    self::create($data);
+
+    // Send request to OpenAI API
+    $responseData = CRM_AI_BAO_AICompletion::getCompletion($requestData, $model, $maxToken);
+
+    // Save response data to db record
+    $data = array_merge($data, $responseData);
+    self::create($responseData);
+
+    // Return result
+    return $responseData;
   }
 
   /**
@@ -101,7 +142,7 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
    *
    * @return void
    */
-  public static function create() {
+  public static function create(&$data) {
   }
 
   /**
@@ -117,7 +158,13 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
     if (empty($serviceProvider)) {
       $serviceProvider = self::COMPLETION_SERVICE;
     }
-    $className = 'CRM_AI_Completion_'.$serviceProvider;
+    if (empty($model)) {
+      $model = self::COMPLETION_MODEL;
+    }
+    if (empty($maxToken)) {
+      $maxToken = self::COMPLETION_MAX_TOKEN;
+    }
+    $className = 'CRM_AI_CompletionService_'.$serviceProvider;
     if (class_exists($className)) {
       $this->_serviceProvider = new $className();
       $this->_serviceProvider->setModel($model);
@@ -133,7 +180,7 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
    * @return FALSE|array
    *  The return array should be compatible for function create
    */
-  public static function getCompletion($dao, $model = NULL, $maxToken = NULL) {
+  public static function getCompletion($params, $model = NULL, $maxToken = NULL) {
     if (empty($model)) {
       $model = self::COMPLETION_MODEL;
     }
@@ -141,7 +188,8 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
       $maxToken = self::COMPLETION_MAX_TOKEN;
     }
     $completion = self::singleton(self::COMPLETION_SERVICE, $model, $maxToken);
-    $result = $completion->_serviceProvider->request();
+    $result = $completion->_serviceProvider->request($params);
     // format result
+    return $result;
   }
 }
