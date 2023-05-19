@@ -88,7 +88,7 @@
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2009 The Authors
  * @license    http://opensource.org/licenses/bsd-license.php New BSD License
- * @version    Release: 1.10.0
+ * @version    Release: @package_version@
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 1.3.3
  *
@@ -386,5 +386,3 @@ class PEAR_Exception extends Exception
         return $causeMsg . $this->getTraceAsString();
     }
 }
-
-?>

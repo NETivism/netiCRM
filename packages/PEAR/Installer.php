@@ -12,7 +12,6 @@
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2009 The Authors
  * @license    http://opensource.org/licenses/bsd-license.php New BSD License
- * @version    CVS: $Id: Installer.php 287446 2009-08-18 11:45:05Z dufuz $
  * @link       http://pear.php.net/package/PEAR
  * @since      File available since Release 0.1
  */
@@ -36,7 +35,7 @@ define('PEAR_INSTALLER_NOBINARY', -240);
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2009 The Authors
  * @license    http://opensource.org/licenses/bsd-license.php New BSD License
- * @version    Release: 1.9.0
+ * @version    Release: @package_version@
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 0.1
  */
@@ -116,9 +115,9 @@ class PEAR_Installer extends PEAR_Downloader
      *
      * @access public
      */
-    function PEAR_Installer(&$ui)
+    function __construct(&$ui)
     {
-        parent::PEAR_Common();
+        parent::__construct($ui, array(), null);
         $this->setFrontendObject($ui);
         $this->debug = $this->config->get('verbose');
     }
@@ -226,7 +225,7 @@ class PEAR_Installer extends PEAR_Downloader
                 $os = new OS_Guess();
             }
 
-            if (strlen($atts['platform']) && $atts['platform']{0} == '!') {
+            if (strlen($atts['platform']) && $atts['platform'][0] == '!') {
                 $negate   = true;
                 $platform = substr($atts['platform'], 1);
             } else {
@@ -324,8 +323,9 @@ class PEAR_Installer extends PEAR_Downloader
                 }
 
                 if (!@copy($orig_file, $dest_file)) {
-                    return $this->raiseError("failed to write $dest_file: $php_errormsg",
-                                             PEAR_INSTALLER_FAILED);
+                    return $this->raiseError(
+                        "failed to write $dest_file: " . error_get_last()["message"],
+                        PEAR_INSTALLER_FAILED);
                 }
 
                 $this->log(3, "+ cp $orig_file $dest_file");
@@ -400,13 +400,15 @@ class PEAR_Installer extends PEAR_Downloader
 
                 $wp = @fopen($dest_file, "wb");
                 if (!is_resource($wp)) {
-                    return $this->raiseError("failed to create $dest_file: $php_errormsg",
-                                             PEAR_INSTALLER_FAILED);
+                    return $this->raiseError(
+                        "failed to create $dest_file: " . error_get_last()["message"],
+                        PEAR_INSTALLER_FAILED);
                 }
 
                 if (@fwrite($wp, $contents) === false) {
-                    return $this->raiseError("failed writing to $dest_file: $php_errormsg",
-                                             PEAR_INSTALLER_FAILED);
+                    return $this->raiseError(
+                        "failed writing to $dest_file: " . error_get_last()["message"],
+                        PEAR_INSTALLER_FAILED);
                 }
 
                 fclose($wp);
@@ -453,7 +455,8 @@ class PEAR_Installer extends PEAR_Downloader
                     $this->addFileOperation("chmod", array($mode, $dest_file));
                     if (!@chmod($dest_file, $mode)) {
                         if (!isset($options['soft'])) {
-                            $this->log(0, "failed to change mode of $dest_file: $php_errormsg");
+                            $this->log(0, "failed to change mode of $dest_file: " .
+                                          error_get_last()["message"]);
                         }
                     }
                 }
@@ -563,8 +566,9 @@ class PEAR_Installer extends PEAR_Downloader
                 }
 
                 if (!@copy($orig_file, $dest_file)) {
-                    return $this->raiseError("failed to write $dest_file: $php_errormsg",
-                                             PEAR_INSTALLER_FAILED);
+                    return $this->raiseError(
+                        "failed to write $dest_file: " . error_get_last()["message"],
+                        PEAR_INSTALLER_FAILED);
                 }
 
                 $this->log(3, "+ cp $orig_file $dest_file");
@@ -606,13 +610,15 @@ class PEAR_Installer extends PEAR_Downloader
 
                     $wp = @fopen($dest_file, "wb");
                     if (!is_resource($wp)) {
-                        return $this->raiseError("failed to create $dest_file: $php_errormsg",
-                                                 PEAR_INSTALLER_FAILED);
+                        return $this->raiseError(
+                            "failed to create $dest_file: " . error_get_last()["message"],
+                            PEAR_INSTALLER_FAILED);
                     }
 
                     if (fwrite($wp, $contents) === false) {
-                        return $this->raiseError("failed writing to $dest_file: $php_errormsg",
-                                                 PEAR_INSTALLER_FAILED);
+                        return $this->raiseError(
+                            "failed writing to $dest_file: " . error_get_last()["message"],
+                            PEAR_INSTALLER_FAILED);
                     }
 
                     fclose($wp);
@@ -668,7 +674,8 @@ class PEAR_Installer extends PEAR_Downloader
                     $this->addFileOperation("chmod", array($mode, $dest_file));
                     if (!@chmod($dest_file, $mode)) {
                         if (!isset($options['soft'])) {
-                            $this->log(0, "failed to change mode of $dest_file: $php_errormsg");
+                            $this->log(0, "failed to change mode of $dest_file: " .
+                                          error_get_last()["message"]);
                         }
                     }
                 }
@@ -754,11 +761,9 @@ class PEAR_Installer extends PEAR_Downloader
 
     function commitFileTransaction()
     {
-        $n = count($this->file_operations);
-        $this->log(2, "about to commit $n file operations");
         // {{{ first, check permissions and such manually
         $errors = array();
-        foreach ($this->file_operations as $tr) {
+        foreach ($this->file_operations as $key => $tr) {
             list($type, $data) = $tr;
             switch ($type) {
                 case 'rename':
@@ -795,12 +800,37 @@ class PEAR_Installer extends PEAR_Downloader
                                 fclose($fp);
                             }
                         }
+
+                        /* Verify we are not deleting a file owned by another package
+                         * This can happen when a file moves from package A to B in
+                         * an upgrade ala http://pear.php.net/17986
+                         */
+                        $info = array(
+                            'package' => strtolower($this->pkginfo->getName()),
+                            'channel' => strtolower($this->pkginfo->getChannel()),
+                        );
+                        $result = $this->_registry->checkFileMap($data[0], $info, '1.1');
+                        if (is_array($result)) {
+                            $res = array_diff($result, $info);
+                            if (!empty($res)) {
+                                $new = $this->_registry->getPackage($result[1], $result[0]);
+                                $this->file_operations[$key] = false;
+                                $pkginfoName = $this->pkginfo->getName();
+                                $newChannel  = $new->getChannel();
+                                $newPackage  = $new->getName();
+                                $this->log(3, "file $data[0] was scheduled for removal from $pkginfoName but is owned by $newChannel/$newPackage, removal has been cancelled.");
+                            }
+                        }
                     }
                     break;
             }
 
         }
         // }}}
+
+        $n = count($this->file_operations);
+        $this->log(2, "about to commit $n file operations for " . $this->pkginfo->getName());
+
         $m = count($errors);
         if ($m > 0) {
             foreach ($errors as $error) {
@@ -832,7 +862,7 @@ class PEAR_Installer extends PEAR_Downloader
 
                     if (!@copy($data[0], $data[0] . '.bak')) {
                         $this->log(1, 'Could not copy ' . $data[0] . ' to ' . $data[0] .
-                            '.bak ' . $php_errormsg);
+                            '.bak ' . error_get_last()["message"]);
                         return false;
                     }
                     $this->log(3, "+ backup $data[0] to $data[0].bak");
@@ -867,7 +897,7 @@ class PEAR_Installer extends PEAR_Downloader
                     $perms = @fileperms($data[0]);
                     if (!@copy($data[0], $data[1])) {
                         $this->log(1, 'Could not rename ' . $data[0] . ' to ' . $data[1] .
-                            ' ' . $php_errormsg);
+                            ' ' . error_get_last()["message"]);
                         return false;
                     }
 
@@ -879,7 +909,7 @@ class PEAR_Installer extends PEAR_Downloader
                 case 'chmod':
                     if (!@chmod($data[1], $data[0])) {
                         $this->log(1, 'Could not chmod ' . $data[1] . ' to ' .
-                            decoct($data[0]) . ' ' . $php_errormsg);
+                            decoct($data[0]) . ' ' . error_get_last()["message"]);
                         return false;
                     }
 
@@ -890,7 +920,7 @@ class PEAR_Installer extends PEAR_Downloader
                     if (file_exists($data[0])) {
                         if (!@unlink($data[0])) {
                             $this->log(1, 'Could not delete ' . $data[0] . ' ' .
-                                $php_errormsg);
+                                error_get_last()["message"]);
                             return false;
                         }
                         $this->log(3, "+ rm $data[0]");
@@ -912,7 +942,7 @@ class PEAR_Installer extends PEAR_Downloader
                             closedir($testme);
                             if (!@rmdir($data[0])) {
                                 $this->log(1, 'Could not rmdir ' . $data[0] . ' ' .
-                                    $php_errormsg);
+                                    error_get_last()["message"]);
                                 return false;
                             }
                             $this->log(3, "+ rmdir $data[0]");
@@ -998,63 +1028,12 @@ class PEAR_Installer extends PEAR_Downloader
     }
 
     // }}}
-    // {{{ download()
-
-    /**
-     * Download any files and their dependencies, if necessary
-     *
-     * @param array a mixed list of package names, local files, or package.xml
-     * @param PEAR_Config
-     * @param array options from the command line
-     * @param array this is the array that will be populated with packages to
-     *              install.  Format of each entry:
-     *
-     * <code>
-     * array('pkg' => 'package_name', 'file' => '/path/to/local/file',
-     *    'info' => array() // parsed package.xml
-     * );
-     * </code>
-     * @param array this will be populated with any error messages
-     * @param false private recursion variable
-     * @param false private recursion variable
-     * @param false private recursion variable
-     * @deprecated in favor of PEAR_Downloader
-     */
-    function download($packages, $options, &$config, &$installpackages,
-                      &$errors, $installed = false, $willinstall = false, $state = false)
-    {
-        // trickiness: initialize here
-        parent::PEAR_Downloader($this->ui, $options, $config);
-        $ret             = parent::download($packages);
-        $errors          = $this->getErrorMsgs();
-        $installpackages = $this->getDownloadedPackages();
-        trigger_error("PEAR Warning: PEAR_Installer::download() is deprecated " .
-                      "in favor of PEAR_Downloader class", E_USER_WARNING);
-        return $ret;
-    }
-
-    // }}}
     // {{{ _parsePackageXml()
 
-    function _parsePackageXml(&$descfile, &$tmpdir)
+    function _parsePackageXml(&$descfile)
     {
-        if (substr($descfile, -4) == '.xml') {
-            $tmpdir = false;
-        } else {
-            // {{{ Decompress pack in tmp dir -------------------------------------
-
-            // To allow relative package file names
-            $descfile = realpath($descfile);
-
-            if (PEAR::isError($tmpdir = System::mktemp('-d'))) {
-                return $tmpdir;
-            }
-            $this->log(3, '+ tmp dir created at ' . $tmpdir);
-            // }}}
-        }
-
         // Parse xml file -----------------------------------------------
-        $pkg = new PEAR_PackageFile($this->config, $this->debug, $tmpdir);
+        $pkg = new PEAR_PackageFile($this->config, $this->debug);
         PEAR::staticPushErrorHandling(PEAR_ERROR_RETURN);
         $p = &$pkg->fromAnyFile($descfile, PEAR_VALIDATE_INSTALLING);
         PEAR::staticPopErrorHandling();
@@ -1135,17 +1114,20 @@ class PEAR_Installer extends PEAR_Downloader
             $pkg      = $pkgfile->getPackageFile();
             $pkgfile  = $pkg->getArchiveFile();
             $descfile = $pkg->getPackageFile();
-            $tmpdir   = dirname($descfile);
         } else {
             $descfile = $pkgfile;
-            $tmpdir   = '';
-            $pkg      = $this->_parsePackageXml($descfile, $tmpdir);
+            $pkg      = $this->_parsePackageXml($descfile);
             if (PEAR::isError($pkg)) {
                 return $pkg;
             }
         }
 
+        $tmpdir = dirname($descfile);
         if (realpath($descfile) != realpath($pkgfile)) {
+            // Use the temp_dir since $descfile can contain the download dir path
+            $tmpdir = $this->config->get('temp_dir', null, 'pear.php.net');
+            $tmpdir = System::mktemp('-d -t "' . $tmpdir . '"');
+
             $tar = new Archive_Tar($pkgfile);
             if (!$tar->extract($tmpdir)) {
                 return $this->raiseError("unable to unpack $pkgfile");
@@ -1154,15 +1136,6 @@ class PEAR_Installer extends PEAR_Downloader
 
         $pkgname = $pkg->getName();
         $channel = $pkg->getChannel();
-        if (isset($this->_options['packagingroot'])) {
-            $regdir = $this->_prependPath(
-                $this->config->get('php_dir', null, 'pear.php.net'),
-                $this->_options['packagingroot']);
-
-            $packrootphp_dir = $this->_prependPath(
-                $this->config->get('php_dir', null, $channel),
-                $this->_options['packagingroot']);
-        }
 
         if (isset($options['installroot'])) {
             $this->config->setInstallRoot($options['installroot']);
@@ -1174,7 +1147,21 @@ class PEAR_Installer extends PEAR_Downloader
             $this->config->setInstallRoot(false);
             $this->_registry = &$this->config->getRegistry();
             if (isset($this->_options['packagingroot'])) {
-                $installregistry = new PEAR_Registry($regdir);
+                $regdir = $this->_prependPath(
+                    $this->config->get('php_dir', null, 'pear.php.net'),
+                    $this->_options['packagingroot']);
+
+                $metadata_dir = $this->config->get('metadata_dir', null, 'pear.php.net');
+                if ($metadata_dir) {
+                    $metadata_dir = $this->_prependPath(
+                        $metadata_dir,
+                        $this->_options['packagingroot']);
+                }
+                $packrootphp_dir = $this->_prependPath(
+                    $this->config->get('php_dir', null, $channel),
+                    $this->_options['packagingroot']);
+
+                $installregistry = new PEAR_Registry($regdir, false, false, $metadata_dir);
                 if (!$installregistry->channelExists($channel, true)) {
                     // we need to fake a channel-discover of this channel
                     $chanobj = $this->_registry->getChannel($channel, true);
@@ -1307,32 +1294,24 @@ class PEAR_Installer extends PEAR_Downloader
 
         $this->startFileTransaction();
 
+        $usechannel = $channel;
+        if ($channel == 'pecl.php.net') {
+            $test = $installregistry->packageExists($pkgname, $channel);
+            if (!$test) {
+                $test = $installregistry->packageExists($pkgname, 'pear.php.net');
+                $usechannel = 'pear.php.net';
+            }
+        } else {
+            $test = $installregistry->packageExists($pkgname, $channel);
+        }
+
         if (empty($options['upgrade']) && empty($options['soft'])) {
             // checks to do only when installing new packages
-            if ($channel == 'pecl.php.net') {
-                $test = $installregistry->packageExists($pkgname, $channel);
-                if (!$test) {
-                    $test = $installregistry->packageExists($pkgname, 'pear.php.net');
-                }
-            } else {
-                $test = $installregistry->packageExists($pkgname, $channel);
-            }
-
             if (empty($options['force']) && $test) {
                 return $this->raiseError("$channel/$pkgname is already installed");
             }
         } else {
-            $usechannel = $channel;
-            if ($channel == 'pecl.php.net') {
-                $test = $installregistry->packageExists($pkgname, $channel);
-                if (!$test) {
-                    $test = $installregistry->packageExists($pkgname, 'pear.php.net');
-                    $usechannel = 'pear.php.net';
-                }
-            } else {
-                $test = $installregistry->packageExists($pkgname, $channel);
-            }
-
+            // Upgrade
             if ($test) {
                 $v1 = $installregistry->packageInfo($pkgname, 'version', $usechannel);
                 $v2 = $pkg->getVersion();
@@ -1340,22 +1319,23 @@ class PEAR_Installer extends PEAR_Downloader
                 if (empty($options['force']) && !version_compare("$v2", "$v1", 'gt')) {
                     return $this->raiseError("upgrade to a newer version ($v2 is not newer than $v1)");
                 }
+            }
+        }
 
-                if (empty($options['register-only'])) {
-                    // when upgrading, remove old release's files first:
-                    if (PEAR::isError($err = $this->_deletePackageFiles($pkgname, $usechannel,
-                          true))) {
-                        if (!isset($options['ignore-errors'])) {
-                            return $this->raiseError($err);
-                        }
-
-                        if (!isset($options['soft'])) {
-                            $this->log(0, 'WARNING: ' . $err->getMessage());
-                        }
-                    } else {
-                        $backedup = $err;
-                    }
+        // Do cleanups for upgrade and install, remove old release's files first
+        if ($test && empty($options['register-only'])) {
+            // when upgrading, remove old release's files first:
+            if (PEAR::isError($err = $this->_deletePackageFiles($pkgname, $usechannel,
+                  true))) {
+                if (!isset($options['ignore-errors'])) {
+                    return $this->raiseError($err);
                 }
+
+                if (!isset($options['soft'])) {
+                    $this->log(0, 'WARNING: ' . $err->getMessage());
+                }
+            } else {
+                $backedup = $err;
             }
         }
 
@@ -1373,9 +1353,8 @@ class PEAR_Installer extends PEAR_Downloader
             }
         }
 
-        $tmp_path = dirname($descfile);
         if (substr($pkgfile, -4) != '.xml') {
-            $tmp_path .= DIRECTORY_SEPARATOR . $pkgname . '-' . $pkg->getVersion();
+            $tmpdir .= DIRECTORY_SEPARATOR . $pkgname . '-' . $pkg->getVersion();
         }
 
         $this->configSet('default_channel', $channel);
@@ -1401,9 +1380,9 @@ class PEAR_Installer extends PEAR_Downloader
         foreach ($filelist as $file => $atts) {
             $this->expectError(PEAR_INSTALLER_FAILED);
             if ($pkg->getPackagexmlVersion() == '1.0') {
-                $res = $this->_installFile($file, $atts, $tmp_path, $options);
+                $res = $this->_installFile($file, $atts, $tmpdir, $options);
             } else {
-                $res = $this->_installFile2($pkg, $file, $atts, $tmp_path, $options);
+                $res = $this->_installFile2($pkg, $file, $atts, $tmpdir, $options);
             }
             $this->popExpect();
 
@@ -1432,8 +1411,9 @@ class PEAR_Installer extends PEAR_Downloader
 
         // {{{ compile and install source files
         if ($this->source_files > 0 && empty($options['nobuild'])) {
+            $configureoptions = empty($options['configureoptions']) ? '' : $options['configureoptions'];
             if (PEAR::isError($err =
-                  $this->_compileSourceFiles($savechannel, $pkg))) {
+                  $this->_compileSourceFiles($savechannel, $pkg, $configureoptions))) {
                 return $err;
             }
         }
@@ -1530,12 +1510,13 @@ class PEAR_Installer extends PEAR_Downloader
     /**
      * @param string
      * @param PEAR_PackageFile_v1|PEAR_PackageFile_v2
+     * @param mixed[] $configureoptions
      */
-    function _compileSourceFiles($savechannel, &$filelist)
+    function _compileSourceFiles($savechannel, &$filelist, $configureoptions)
     {
         require_once 'PEAR/Builder.php';
         $this->log(1, "$this->source_files source files, building");
-        $bob = new PEAR_Builder($this->ui);
+        $bob = new PEAR_Builder($configureoptions, $this->ui);
         $bob->debug = $this->debug;
         $built = $bob->build($filelist, array(&$this, '_buildCallback'));
         if (PEAR::isError($built)) {
@@ -1548,11 +1529,11 @@ class PEAR_Installer extends PEAR_Downloader
         foreach ($built as $ext) {
             $bn = basename($ext['file']);
             list($_ext_name, $_ext_suff) = explode('.', $bn);
-            if ($_ext_suff == '.so' || $_ext_suff == '.dll') {
+            if ($_ext_suff == 'so' || $_ext_suff == 'dll') {
                 if (extension_loaded($_ext_name)) {
-                    $this->raiseError("Extension '$_ext_name' already loaded. " .
-                                      'Please unload it in your php.ini file ' .
-                                      'prior to install or upgrade');
+                    return $this->raiseError("Extension '$_ext_name' already loaded. " .
+                                            'Please unload it in your php.ini file ' .
+                                            'prior to install or upgrade');
                 }
                 $role = 'ext';
             } else {
@@ -1582,7 +1563,9 @@ class PEAR_Installer extends PEAR_Downloader
                 }
 
                 if (!@copy($ext['file'], $copyto)) {
-                    return $this->raiseError("failed to write $copyto ($php_errormsg)", PEAR_INSTALLER_FAILED);
+                    return $this->raiseError(
+                        "failed to write $copyto (" . error_get_last()["message"] . ")",
+                        PEAR_INSTALLER_FAILED);
                 }
 
                 $this->log(3, "+ cp $ext[file] $copyto");
@@ -1591,7 +1574,8 @@ class PEAR_Installer extends PEAR_Downloader
                     $mode = 0666 & ~(int)octdec($this->config->get('umask'));
                     $this->addFileOperation('chmod', array($mode, $copyto));
                     if (!@chmod($copyto, $mode)) {
-                        $this->log(0, "failed to change mode of $copyto ($php_errormsg)");
+                        $this->log(0, "failed to change mode of $copyto (" .
+                                      error_get_last()["message"] . ")");
                     }
                 }
             }
