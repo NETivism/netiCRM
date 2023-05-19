@@ -154,7 +154,7 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
    * @return array
    */
   protected function formatResponse($responseString) {
-    $response = json_decode($responseString);
+    $response = json_decode($responseString, TRUE);
     $responseData = [
       'response' => $response,
       'used_token' => [
