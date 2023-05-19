@@ -483,7 +483,7 @@ function _civicrm_api3_get_using_query_object($entity, $params, $additional_opti
 /*
  * Function transfers the filters being passed into the DAO onto the params object
  */
-function _civicrm_api3_dao_set_filter(&$dao, $params, $unique = TRUE, $entity) {
+function _civicrm_api3_dao_set_filter(&$dao, $params, $unique, $entity) {
   $entity = substr($dao->__table, 8);
 
   $allfields = _civicrm_api3_build_fields_array($dao, $unique);

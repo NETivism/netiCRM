@@ -244,7 +244,7 @@ function civicrm_entity_file_create(&$fileID, &$entityID, $entity_table = 'civic
  *
  * @access public
  */
-function civicrm_file_by_entity_add($name, $entityID, $entityTable = 'civicrm_contact', $params) {
+function civicrm_file_by_entity_add($name, $entityID, $entityTable, $params) {
   require_once 'CRM/Core/BAO/File.php';
   CRM_Core_BAO_File::filePostProcess($name, NULL, $entityTable, $entityID, NULL, FALSE, $params);
 }
