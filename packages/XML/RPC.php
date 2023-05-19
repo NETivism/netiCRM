@@ -723,7 +723,7 @@ class XML_RPC_Client extends XML_RPC_Base {
      *
      * @return void
      */
-    function XML_RPC_Client($path, $server, $port = 0,
+    function __construct($path, $server, $port = 0,
                             $proxy = '', $proxy_port = 0,
                             $proxy_user = '', $proxy_pass = '')
     {
@@ -1056,7 +1056,7 @@ class XML_RPC_Response extends XML_RPC_Base
     /**
      * @return void
      */
-    function XML_RPC_Response($val, $fcode = 0, $fstr = '')
+    function __construct($val, $fcode = 0, $fstr = '')
     {
         if ($fcode != 0) {
             $this->fn = $fcode;
@@ -1579,7 +1579,7 @@ class XML_RPC_Value extends XML_RPC_Base
     /**
      * @return void
      */
-    function XML_RPC_Value($val = -1, $type = '')
+    function __construct($val = -1, $type = '')
     {
         $this->me = array();
         $this->mytype = 0;
