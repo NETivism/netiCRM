@@ -56,7 +56,6 @@ $GLOBALS['HTML_QUICKFORM_ELEMENT_TYPES'] =
             'number'          =>array('HTML/QuickForm/number.php','HTML_QuickForm_number'),
             'textarea'      =>array('HTML/QuickForm/textarea.php','HTML_QuickForm_textarea'),
             'ckeditor'      =>array('HTML/QuickForm/ckeditor.php','HTML_QuickForm_CKEditor'),
-            'tinymce'       =>array('HTML/QuickForm/tinymce.php','HTML_QuickForm_TinyMCE'),
             'joomlaeditor'  =>array('HTML/QuickForm/joomlaeditor.php','HTML_QuickForm_JoomlaEditor'),
             'link'          =>array('HTML/QuickForm/link.php','HTML_QuickForm_link'),
             'advcheckbox'   =>array('HTML/QuickForm/advcheckbox.php','HTML_QuickForm_advcheckbox'),

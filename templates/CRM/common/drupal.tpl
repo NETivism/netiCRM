@@ -34,10 +34,7 @@
 {/if}
 
 {* temporary hack to fix wysiysg editor failure if js compression is on *}
-{if $defaultWysiwygEditor eq 1}
-    <script type="text/javascript" src="{$config->resourceBase}packages/tinymce/jscripts/tiny_mce/jquery.tinymce.js"></script>
-    <script type="text/javascript" src="{$config->resourceBase}packages/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
-{elseif $defaultWysiwygEditor eq 2}
+{if $defaultWysiwygEditor eq 2}
    {* we will put this javascript include into quickform *}
    {* quickform can easily override by other modules *}
 {/if}

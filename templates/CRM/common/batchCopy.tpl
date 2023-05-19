@@ -64,12 +64,6 @@ function copyValues(fieldName, source)
                     }
                 }
             }
-        } else if ( document.getElementById(source).getAttribute("class") == "tinymce" ) {
-            if ( editor == "tinymce" ) {
-                for ( k=0; k<cId.length; k++ ) {
-                    cj( '#field_' + cId[k] + '_' + fieldName ).html( cj('#'+ source).html( ) );
-                }
-            }
         } else {
             for ( k=0; k<cId.length; k++ ) {
                 document.getElementById("field_"+cId[k]+"_"+fieldName).value = document.getElementById(source).value;
