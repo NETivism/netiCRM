@@ -1346,7 +1346,6 @@ WHERE cg.extends IN ('" . CRM_Utils_Array::implode("','", $this->_customGroupExt
 
                 // allow building charts if any
                 if (!empty($this->_params['charts']) && !empty($rows)) {
-                  require_once 'CRM/Utils/OpenFlashChart.php';
                   $this->buildChart($rows);
                   $this->assign('chartEnabled', TRUE);
                 }

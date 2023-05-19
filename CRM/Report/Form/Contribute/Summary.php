@@ -533,11 +533,9 @@ class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
       if (CRM_Utils_Array::value('receive_date', $this->_params['group_bys'])) {
 
         // build the chart.
-        require_once 'CRM/Utils/OpenFlashChart.php';
         $config = CRM_Core_Config::Singleton();
         $graphRows['xname'] = $this->_interval;
         $graphRows['yname'] = "Amount ({$config->defaultCurrency})";
-        CRM_Utils_OpenFlashChart::chart($graphRows, $this->_params['charts'], $this->_interval);
         $this->assign('chartType', $this->_params['charts']);
       }
     }
