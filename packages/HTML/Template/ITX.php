@@ -788,7 +788,6 @@ class HTML_Template_ITX extends HTML_Template_IT
         foreach($this->blocklist as $blockname => $content) {
             reset($this->blockvariables[$blockname]);
             foreach($this->blockvariables[$blockname] as $varname => $val) {
-            {
                 if ($variable == $varname) {
                     $parents[] = $blockname;
                 }
@@ -829,4 +828,3 @@ class HTML_Template_ITX extends HTML_Template_IT
     } // end func warning
 
 } // end class HTML_Template_ITX
-?>

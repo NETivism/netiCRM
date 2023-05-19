@@ -702,7 +702,7 @@ class rcube_html2text
             }
         }
 
-        return implode($chunks);
+        return implode('', $chunks);
     }
 
     /**

@@ -750,7 +750,7 @@ class Converter
                 '/' => '+'
             );
 
-            $converted = implode($array);
+            $converted = implode('', $array);
 
             $_keys = array_keys($schemes);
             $_values = array_values($schemes);
@@ -765,7 +765,7 @@ class Converter
             // Sort again and implode
             $array = str_split($converted);
             asort($array);
-            $converted = implode($array);
+            $converted = implode('', $array);
 
             if (preg_match('/(?:\({2,}\+{2,}:{2,})|(?:\({2,}\+{2,}:+)|(?:\({3,}\++:{2,})/', $converted)) {
                 $monitor->centrifuge['converted'] = $converted;
