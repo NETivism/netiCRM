@@ -2,6 +2,7 @@
   'use strict';
 
   // Endpoint
+  // TODO: Need to change to real endpoint, refer to CRM/AI/Page/AJAX.php
   var endpoint = {
     getTemplateList: '/api/getTemplateList',
     getDefaultTemplate: '/api/getDefaultTemplate',
