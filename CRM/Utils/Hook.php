@@ -933,13 +933,13 @@ class CRM_Utils_Hook {
    *
    * @param $contributionId
    */
-  static function alterAPIResponse($response, &$object, $provider, $apiType = ''){
+  static function alterTapPayResponse($response, &$object, $provider = 'TapPay', $apiType = ''){
     $config = CRM_Core_Config::singleton();
     require_once (str_replace('_', DIRECTORY_SEPARATOR, $config->userHookClass) . '.php');
     $null = &CRM_Core_DAO::$_nullObject;
 
     return call_user_func_array(array($config->userHookClass, 'invoke'), array(
-      4, &$response, &$object, &$provider, &$apiType, &$null, 'civicrm_alterAPIResponse'
+      4, &$response, &$object, &$provider, &$apiType, &$null, 'civicrm_alterTapPayResponse'
     ));
   }
 
