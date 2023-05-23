@@ -121,7 +121,8 @@ class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
       if (array_key_exists($key, $params)) {
         // Check if the required field is empty
         if ($key != 'id' && $field['required'] && empty($params[$key])) {
-          throw new Exception("$key is a required field.");
+          CRM_Core_Error::debug_log_message("$key is a required field in Track Ajax.");
+          CRM_Utils_System::civiExit();
         }
         // Validate the type of the parameter
         switch ($field['type']) {
