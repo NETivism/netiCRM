@@ -116,6 +116,28 @@ class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
     $params = (array) $json;
     $params = array_intersect_key($params, $fields);
     $params = array_filter($params);
+    foreach ($fields as $key => $field) {
+      // Check if the key exists in $params array
+      if (array_key_exists($key, $params)) {
+        // Check if the required field is empty
+        if ($key != 'id' && $field['required'] && empty($params[$key])) {
+          throw new Exception("$key is a required field.");
+        }
+        // Validate the type of the parameter
+        switch ($field['type']) {
+          case CRM_Utils_Type::T_INT:
+            CRM_Utils_Type::validate($params[$key], 'Integer');
+            break;
+          case CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME:
+            CRM_Utils_Type::validate($params[$key], 'Date');
+            break;
+          case CRM_Utils_Type::T_STRING:
+          default:
+            CRM_Utils_Type::validate($params[$key], 'String');
+            break;
+        }
+      }
+    }
     $track = CRM_Core_BAO_Track::add($params);
     CRM_Utils_System::civiExit();
   }
