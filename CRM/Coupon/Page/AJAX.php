@@ -38,7 +38,6 @@
  */
 class CRM_Coupon_Page_AJAX {
   static function validEventFromCode(){
-    $json = '{}';
     $code = CRM_Utils_Request::retrieve('code', 'Text', $object, False, '', 'Post');
     $event_id = CRM_Utils_Request::retrieve('event_id', 'Positive', $object, False, '', 'Post');
     if(empty($event_id)){
@@ -68,7 +67,14 @@ class CRM_Coupon_Page_AJAX {
         }
       }
     }
-    echo $json;
+    if ($json) {
+      echo $json;
+    }
+    else {
+      $json = json_encode(array('error' => ts('The coupon is not valid.')));
+      echo $json;
+      http_response_code(400);
+    }
     CRM_Utils_System::civiExit();
   }
 
