@@ -38,6 +38,7 @@
  */
 class CRM_Coupon_Page_AJAX {
   static function validEventFromCode(){
+    $json = '{}';
     $code = CRM_Utils_Request::retrieve('code', 'Text', $object, False, '', 'Post');
     $event_id = CRM_Utils_Request::retrieve('event_id', 'Positive', $object, False, '', 'Post');
     if(empty($event_id)){
@@ -51,7 +52,7 @@ class CRM_Coupon_Page_AJAX {
       $activeOptionIds = explode(',', $activeOptionIdsText);
     }
 
-    if (!empty($event_id)) {
+    if (!empty($event_id) && CRM_Utils_Rule::positiveInteger($event_id)) {
       $coupon = CRM_Coupon_BAO_Coupon::validEventFromCode($code, $event_id);
       if($coupon){
         // this coupon doesn't specify any event, check price field value
@@ -67,9 +68,7 @@ class CRM_Coupon_Page_AJAX {
         }
       }
     }
-    if ($json) {
-      echo $json;
-    }
+    echo $json;
     CRM_Utils_System::civiExit();
   }
 
