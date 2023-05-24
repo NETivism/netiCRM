@@ -114,29 +114,31 @@ class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
     $track = new CRM_Core_BAO_Track();
     $fields = $track->fields();
     $params = (array) $json;
-    $params = array_intersect_key($params, $fields);
     $params = array_filter($params);
-    foreach ($fields as $key => $field) {
-      // Check if the key exists in $params array
-      if (array_key_exists($key, $params)) {
-        // Check if the required field is empty
-        if ($key != 'id' && $field['required'] && empty($params[$key])) {
-          CRM_Core_Error::debug_log_message("$key is a required field in Track Ajax.");
-          CRM_Utils_System::civiExit();
-        }
-        // Validate the type of the parameter
+    foreach($params as $key => $value) {
+      if (isset($fields[$key])) {
+        $field = $fields[$key];
         switch ($field['type']) {
           case CRM_Utils_Type::T_INT:
-            CRM_Utils_Type::validate($params[$key], 'Integer');
+            if (!CRM_Utils_Type::validate($value, 'Integer', FALSE)) {
+              unset($params[$key]);
+            }
             break;
           case CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME:
-            CRM_Utils_Type::validate($params[$key], 'Date');
+            if (!CRM_Utils_Type::validate($value, 'Date', FALSE)) {
+              unset($params[$key]);
+            }
             break;
           case CRM_Utils_Type::T_STRING:
           default:
-            CRM_Utils_Type::validate($params[$key], 'String');
+            if (!CRM_Utils_Type::validate($value, 'String', FALSE)) {
+              unset($params[$key]);
+            }
             break;
         }
+      }
+      else {
+        unset($params[$key]);
       }
     }
     $track = CRM_Core_BAO_Track::add($params);
