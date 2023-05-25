@@ -173,7 +173,10 @@ Alternatively you can get a version of CiviCRM that matches your PHP version
 
     foreach ($tables as $table) {
       $base = $table['base'] . $table['objectName'];
-      if (!array_key_exists($table['objectName'], $dao)) {
+      if ($table['className'] === 'CRM_Mailing_DAO_Group') {
+        $allDAO .= "\n//NAMESPACE ERROR: " . $table['objectName'] . " already used . " . str_replace('/', '_', $base) . " ignored.";
+      }
+      elseif (!array_key_exists($table['objectName'], $dao)) {
         $dao[$table['objectName']] = str_replace('/', '_', $base);
         $allDAO .= "\n\$dao['" . $table['objectName'] . "'] = '" . str_replace('/', '_', $base) . "';";
       }

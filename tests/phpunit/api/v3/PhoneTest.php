@@ -14,10 +14,15 @@ class api_v3_PhoneTest extends CiviUnitTestCase {
   protected $_apiversion;
   protected $_contactID;
   protected $_locationType;
-  protected $_params; function setUp() {
+  protected $_params;
+  protected static $initialized = FALSE;
+
+  /**
+   * @before
+   */
+  function setUpTest() {
     $this->_apiversion = 3;
     parent::setUp();
-
     $this->_contactID    = $this->organizationCreate();
     $loc                 = $this->locationTypeCreate();
     $this->_locationType = $loc->id;
@@ -32,9 +37,12 @@ class api_v3_PhoneTest extends CiviUnitTestCase {
     );
   }
 
-  function tearDown() {
+  /**
+   * @after
+   */
+  function tearDownTest() {
     $this->locationTypeDelete($this->_locationType);
-    $this->contactDelete($this->_contactID);
+    // $this->contactDelete($this->_contactID);
   }
 
   /**
@@ -52,6 +60,7 @@ class api_v3_PhoneTest extends CiviUnitTestCase {
    * @response_body {$response_body}
    *
    * @docmaker_end
+   * @group CItesting
    */
   public function testCreatePhone() {
 
@@ -86,11 +95,11 @@ class api_v3_PhoneTest extends CiviUnitTestCase {
    * @response_body {$response_body}
    *
    * @docmaker_end
+   * @group CItesting
    */
   public function testDeletePhone() {
     //create one
     $create = civicrm_api('phone', 'create', $this->_params);
-
     $this->assertAPISuccess($create, 'In line ' . __LINE__);
 
     $result = civicrm_api('phone', 'delete', array('id' => $create['id'], 'version' => 3));
@@ -159,6 +168,7 @@ class api_v3_PhoneTest extends CiviUnitTestCase {
    * @response_body {$response_body}
    *
    * @docmaker_end
+   * @group CItesting
    */
   public function testGetPhone() {
     $phone = civicrm_api('phone', 'create', $this->_params);
@@ -343,6 +353,7 @@ class api_v3_PhoneTest extends CiviUnitTestCase {
    * @response_body {$response_body}
    *
    * @docmaker_end
+   * @group CItesting
    */
   public function testUpdatePhone() {
     $params = $this->_params;

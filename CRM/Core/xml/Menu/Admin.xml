@@ -173,6 +173,11 @@
      <page_callback>CRM_Admin_Form_Setting_Search</page_callback>
   </item>
   <item>
+     <path>civicrm/admin/setting/security</path>
+     <title>Website Security Settings</title>
+     <page_callback>CRM_Admin_Form_Setting_Security</page_callback>
+  </item>
+  <item>
      <path>civicrm/admin/setting/misc</path>
      <title>Miscellaneous</title>
      <page_callback>CRM_Admin_Form_Setting_Miscellaneous</page_callback>

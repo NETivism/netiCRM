@@ -35,7 +35,10 @@ class CRM_Core_Payment_LinePayTest extends CiviUnitTestCase {
     );
   }
 
-  function setUp() {
+  /**
+   * @before
+   */
+  function setUpTest() {
     parent::setUp();
 
     $this->_is_test = 1;
@@ -116,7 +119,10 @@ class CRM_Core_Payment_LinePayTest extends CiviUnitTestCase {
     }
   }
 
-  function tearDown() {
+  /**
+   * @after
+   */
+  function tearDownTest() {
     $this->_processor = NULL;
   }
 

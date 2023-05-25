@@ -14,7 +14,10 @@ class api_v3_GetOptionsTest extends CiviUnitTestCase {
   protected $_apiversion = 3;
   protected $_params;
 
-  function setUp() {
+  /**
+   * @before
+   */
+  function setUpTest() {
     parent::setUp();
 
     global $tsLocale;
@@ -31,7 +34,10 @@ class api_v3_GetOptionsTest extends CiviUnitTestCase {
     );
   }
 
-  function tearDown() {
+  /**
+   * @after
+   */
+  function tearDownTest() {
   }
 
   /**
