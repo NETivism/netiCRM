@@ -83,9 +83,6 @@ class CRM_Admin_Form_Setting_Miscellaneous extends CRM_Admin_Form_Setting {
       $this->addYesNo('versionCheck', ts('Version Check & Statistics Reporting'));
       $this->assign('admin', TRUE);
       $this->addTextfield('docURLBase', ts('Documentation URL Base Path'));
-      $this->addTextarea('trustedHostsPatterns', ts('Trusted Host Settings'), array(
-        'placeholder' => ts('Example').":".$_SERVER['HTTP_HOST']
-      ));
     }
     else {
       $this->assign('admin', FALSE);

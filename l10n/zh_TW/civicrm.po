@@ -5,6 +5,7 @@
 # Charles Chuang, 2022
 # CHUNLIAN WU <susanna@netivism.com.tw>, 2017
 # Fuyuan Cheng <gloomcheng@gmail.com>, 2013-2015
+# Harry Lin <harry@netivism.com.tw>, 2023
 # IreneLin, 2013
 # IreneLin, 2013
 # jimyhuang <jimmy@netivism.com.tw>, 2013,2015-2023
@@ -18,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: CC Chu <poliphilonet@gmail.com>, 2020-2023\n"
+"Last-Translator: Harry Lin <harry@netivism.com.tw>, 2023\n"
 "Language-Team: Chinese (Taiwan) (http://app.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49199,3 +49200,41 @@ msgid ""
 "host, please add your domain into the <a href=\"%2\">trusted host "
 "setting</a>."
 msgstr "目前主機 「%1」 不在「信任主機設定」中。 如果您確定這是正確的主機，請將您的網域新增到「<a href=\"%2\">信任主機設定</a>」中。"
+
+# templates/CRM/Contribute/Form/ContributionView.tpl
+msgid "Please pay attention to protect credit card information."
+msgstr "請妥善注重客戶隱私，保護好信用卡相關資訊。"
+
+# templates/CRM/Contribute/Form/ContributionView.tpl
+msgid "Click to show details"
+msgstr "點擊顯示詳情"
+
+# CRM/Admin/Form/Setting/Security.php
+msgid "Settings - Website Security"
+msgstr "設定 - 網站安全性"
+
+# templates/CRM/Admin/Page/Setting.tpl
+msgid "Website Security Settings"
+msgstr "網站安全性設定"
+
+# templates/CRM/Admin/Page/Setting.tpl
+msgid ""
+"Global website security settings. eg. CSP, trusted hosts, export encrypt... "
+"etc."
+msgstr "全域網站安全性設定，例如：CSP、受信任的主機、匯出加密...等。"
+
+#: CRM/Admin/Form/Setting/Security.php
+msgid "Content Security Policy"
+msgstr "內容安全策略"
+
+#: CRM/Admin/Form/Setting/Security.php
+msgid "Exclude path"
+msgstr "排除路徑"
+
+#: templates/CRM/Admin/Form/Setting/Security.tpl
+msgid "Content Security Policy will restrict embed media on your CRM system."
+msgstr "內容安全策略將限制在您的 CRM 系統中嵌入媒體。"
+
+#: templates/CRM/Admin/Form/Setting/Security.tpl
+msgid "You can enter one path per line, and use \"*\" as a wildcard character."
+msgstr "您可以每行輸入一個路徑，並使用「*」作為萬用字元。"

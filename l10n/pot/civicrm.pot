@@ -46058,7 +46058,7 @@ msgid "Are you sure you want to make this mailing public?"
 msgstr ""
 
 msgid "Are you sure you want to un-publish this mailing from public?"
-msgstr "" 
+msgstr ""
 
 # CRM/Admin/Form/Setting/Receipt.php
 msgid "The stamp of organization."
@@ -46310,7 +46310,7 @@ msgid "run every %1 minutes"
 msgstr ""
 
 msgid "Taipa"
-msgstr "" 
+msgstr ""
 
 msgid "Coloane"
 msgstr ""
@@ -47028,25 +47028,25 @@ msgid "Total recipients number is calculated by these conditions."
 msgstr ""
 
 msgid "Recipients still alive."
-msgstr "" 
+msgstr ""
 
 msgid "Recipients still subscribing selected group."
-msgstr "" 
+msgstr ""
 
 msgid "Recipients does not opt-out site-wide message."
-msgstr "" 
+msgstr ""
 
 msgid "\"Do Not Mail\" not checked in recipients privacy option."
-msgstr "" 
+msgstr ""
 
 msgid "Email address did not \"On Hold\" by bounced record."
-msgstr "" 
+msgstr ""
 
 msgid "Recipient list and total recipients number will be re-calculated base on contact privacy and subscribing data when mailing start."
-msgstr "" 
+msgstr ""
 
 msgid "Once mailing job start, the recipients list will be freezed."
-msgstr "" 
+msgstr ""
 
 msgid "Email will include event check in code."
 msgstr ""
@@ -48773,4 +48773,40 @@ msgstr ""
 
 #: CRM/Core/Config.php
 msgid "Current host \"%1\" doesn't in Trusted Host. If you are sure it's correct host, please add your domain into the <a href=\"%2\">trusted host setting</a>."
+msgstr ""
+
+# templates/CRM/Contribute/Form/ContributionView.tpl
+msgid "Please pay attention to protect credit card information."
+msgstr ""
+
+# templates/CRM/Contribute/Form/ContributionView.tpl
+msgid "Click to show details"
+msgstr ""
+
+# CRM/Admin/Form/Setting/Security.php
+msgid "Settings - Website Security"
+msgstr ""
+
+# templates/CRM/Admin/Page/Setting.tpl
+msgid "Website Security Settings"
+msgstr ""
+
+# templates/CRM/Admin/Page/Setting.tpl
+msgid "Global website security settings. eg. CSP, trusted hosts, export encrypt... etc."
+msgstr ""
+
+#: CRM/Admin/Form/Setting/Security.php
+msgid "Content Security Policy"
+msgstr ""
+
+#: CRM/Admin/Form/Setting/Security.php
+msgid "Exclude path"
+msgstr ""
+
+#: templates/CRM/Admin/Form/Setting/Security.tpl
+msgid "Content Security Policy will restrict embed media on your CRM system."
+msgstr ""
+
+#: templates/CRM/Admin/Form/Setting/Security.tpl
+msgid "You can enter one path per line, and use \"*\" as a wildcard character."
 msgstr ""

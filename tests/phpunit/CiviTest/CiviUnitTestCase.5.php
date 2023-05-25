@@ -1208,10 +1208,7 @@ class CiviUnitTestCase extends PHPUnit_Framework_TestCase {
         'description' => 'New Test Group Created',
         'is_active' => 1,
         'visibility' => 'Public Pages',
-        'group_type' => array(
-          '1' => 1,
-          '2' => 1,
-        ),
+        'group_type' => '1,2',
         'version' => API_LATEST_VERSION,
       );
     }
