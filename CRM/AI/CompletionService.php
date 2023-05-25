@@ -16,14 +16,14 @@ abstract class CRM_AI_CompletionService {
   abstract public function setModel($model);
 
   /**
-   * Abstract function for setting the max token
+   * Abstract function for setting the max tokens
    *
-   * Should set to max token when value not provided
+   * Should set to max tokens when value not provided
    *
-   * @param int $maxToken
+   * @param int $maxTokens
    * @return int the real token set on this function
    */
-  abstract public function setMaxToken($maxToken);
+  abstract public function setMaxTokens($maxTokens);
 
   /**
    * Sending request using service API

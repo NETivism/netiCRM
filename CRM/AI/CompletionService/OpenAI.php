@@ -2,8 +2,12 @@
 
 class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
 
-  CONST _endPointList = [
-    CRM_AI_BAO_AICompletion::ChatCompletion => 'https://api.openai.com/v1/chat/completions',
+  CONST END_POINT_LIST = [
+    CRM_AI_BAO_AICompletion::CHAT_COMPLETION => 'https://api.openai.com/v1/chat/completions',
+  ];
+
+  CONST MODEL_LIST = [
+    'gpt-3.5-turbo',
   ];
 
   /**
@@ -25,7 +29,7 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
    *
    * @var int
    */
-  private $_maxToken = 4096;
+  private $_maxTokens = NULL;
 
 
   /**
@@ -42,15 +46,20 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
   }
 
   /**
-   * Abstract function for setting the max token
+   * Abstract function for setting the max tokens
    *
-   * Should set to max token when value not provided
+   * Should set to max tokens when value not provided
    *
-   * @param int $maxToken
-   * @return int the real token set on this function
+   * @param int $maxTokens
+   * @return int the real tokens set on this function
    */
-  public function setMaxToken($maxToken) {
-    $this->_maxToken = $maxToken;
+  public function setMaxTokens($maxTokens) {
+    if ($maxTokens == CRM_AI_BAO_AICompletion::COMPLETION_MAX_TOKENS) {
+      $this->_maxTokens = NULL;
+    }
+    else {
+      $this->_maxTokens = $maxTokens;
+    }
   }
 
   /**
@@ -68,7 +77,7 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
     }
 
     // Set the API endpoint based on the action
-    $api_endpoint = self::_endPointList[$params['action']];
+    $api_endpoint = self::END_POINT_LIST[$params['action']];
 
     // Format the parameters for the request
     $jsonParams = $this->formatParams($params);
@@ -105,8 +114,9 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
   static private function fields($apiType, $is_required = FALSE) {
     $fields = array();
     switch($apiType){
-      case 'ChatCompletion':
-        $fields = explode(',', 'model*,messages*');
+      case 'CHAT_COMPLETION':
+        // Refs: https://platform.openai.com/docs/api-reference/chat/create
+        $fields = explode(',', 'model*,messages*,temperature,top_p,n,stream,stop,max_tokens,presence_penalty,frequency_penalty,logit_bias,user');
         break;
     }
     foreach ($fields as $key => &$value) {
@@ -127,7 +137,7 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
    * @return string json encoded string.
    */
   protected function formatParams(&$params) {
-    if ($params['action'] == CRM_AI_BAO_AICompletion::ChatCompletion) {
+    if ($params['action'] == CRM_AI_BAO_AICompletion::CHAT_COMPLETION) {
       if ($params['prompt'] && empty($params['messages'])) {
         $params['messages'] = [[
           'role' => 'user',
@@ -137,8 +147,11 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
       if (empty($params['model'])) {
         $params['model'] = $this->_model;
       }
+      if (empty($params['max_tokens']) && isset($this->_maxTokens)) {
+        $params['max_tokens'] = $this->_maxTokens;
+      }
     }
-    $fields = self::fields('ChatCompletion');
+    $fields = self::fields('CHAT_COMPLETION');
     foreach ($params as $key => $value) {
       if (!in_array($key, $fields)) {
         unset($params[$key]);
@@ -162,8 +175,17 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
         'completion_tokens' => $response['usage']['completion_tokens'],
         'total_tokens' => $response['usage']['total_tokens'],
       ],
-      'status' => 1, // Finished
     ];
+    if (isset($response['choices']) && count($response['choices']) == 1) {
+      $choice = reset($response['choices']);
+      $responseData['message'] = $choice['message']['content'];
+    }
+    if (isset($responseData['response']['error'])) {
+      $responseData['status'] = 4; // Failed
+    }
+    else {
+      $responseData['status'] = 1; // Finished
+    }
     return $responseData;
   }
 
