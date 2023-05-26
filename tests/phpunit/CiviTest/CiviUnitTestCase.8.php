@@ -595,6 +595,7 @@ class CiviUnitTestCase extends \PHPUnit\Framework\TestCase {
       'version' => $version,
       'sequential' => 1,
       'visibility' => 1,
+      'financial_type_id' => 1,
     );
 
 

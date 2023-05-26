@@ -30,6 +30,8 @@ steps:
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit api/v3/GetOptionsTest.php
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit --group CItesting api/v3/PhoneTest.php
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit --group CItesting api/v3/ParticipantTest.php
+    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit --group CItesting api/v3/ActivityTest.php
+    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit --group CItesting api/v3/MembershipTest.php
     - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/pages.js
     - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/event_register.js
     - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/import.js
@@ -64,6 +66,8 @@ steps:
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit api/v3/GetOptionsTest.php
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit --group CItesting api/v3/PhoneTest.php
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit --group CItesting api/v3/ParticipantTest.php
+    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit --group CItesting api/v3/ActivityTest.php
+    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit --group CItesting api/v3/MembershipTest.php
     - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/pages.js
     - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/event_register.js
     - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/import.js

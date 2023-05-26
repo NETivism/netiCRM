@@ -583,6 +583,7 @@ class CiviUnitTestCase extends PHPUnit_Framework_TestCase {
       'version' => $version,
       'sequential' => 1,
       'visibility' => 1,
+      'financial_type_id' => 1,
     );
 
 
