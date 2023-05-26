@@ -9,7 +9,6 @@
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2009 The Authors
  * @license    http://opensource.org/licenses/bsd-license.php New BSD License
- * @version    CVS: $Id: v2.php 276383 2009-02-24 23:39:37Z dufuz $
  * @link       http://pear.php.net/package/PEAR
  * @since      File available since Release 1.4.0a1
  */
@@ -23,7 +22,7 @@ require_once 'PEAR/ErrorStack.php';
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2009 The Authors
  * @license    http://opensource.org/licenses/bsd-license.php New BSD License
- * @version    Release: 1.9.0
+ * @version    Release: @package_version@
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 1.4.0a1
  */
@@ -129,7 +128,7 @@ class PEAR_PackageFile_v2
     /**
      * The constructor merely sets up the private error stack
      */
-    function PEAR_PackageFile_v2()
+    function __construct()
     {
         $this->_stack = new PEAR_ErrorStack('PEAR_PackageFile_v2', false, null);
         $this->_isValid = false;
@@ -415,12 +414,12 @@ class PEAR_PackageFile_v2
     function _unmatchedMaintainers($my, $yours)
     {
         if ($my) {
-            array_walk($my, function(&$i, $k){ $i = $i["handle"]; });
+            array_walk($my, function(&$i, $k) { $i = $i["handle"]; });
             $this->_stack->push(__FUNCTION__, 'error', array('handles' => $my),
                 'package.xml 2.0 has unmatched extra maintainers "%handles%"');
         }
         if ($yours) {
-            array_walk($yours, function(&$i, $k){ $i = $i["handle"]; });
+            array_walk($yours, function(&$i, $k) { $i = $i["handle"]; });
             $this->_stack->push(__FUNCTION__, 'error', array('handles' => $yours),
                 'package.xml 1.0 has unmatched extra maintainers "%handles%"');
         }
@@ -617,15 +616,14 @@ class PEAR_PackageFile_v2
                 $lastversion = isset($this->_packageInfo['_lastversion']) ?
                     $this->_packageInfo['_lastversion'] : null;
                 $task->init($raw, $atts, $lastversion);
-                $res = $task->startSession($this, $atts['installed_as']);
+                $res = $task->startSession($this, $atts['installed_as'], null);
                 if (!$res) {
                     continue; // skip this file
                 }
                 if (PEAR::isError($res)) {
                     return $res;
                 }
-                $assign = &$task;
-                $this->_scripts[] = &$assign;
+                $this->_scripts[] = $task;
             }
         }
         if (count($this->_scripts)) {
@@ -799,6 +797,10 @@ class PEAR_PackageFile_v2
     {
         unset($pinfo['old']);
         unset($pinfo['xsdversion']);
+        // If the changelog isn't an array then it was passed in as an empty tag
+        if (isset($pinfo['changelog']) && !is_array($pinfo['changelog'])) {
+          unset($pinfo['changelog']);
+        }
         $this->_incomplete = false;
         $this->_packageInfo = $pinfo;
     }
@@ -1173,6 +1175,9 @@ class PEAR_PackageFile_v2
                 $contents['dir']['file'] = array($contents['dir']['file']);
             }
             foreach ($contents['dir']['file'] as $file) {
+                if (!isset($file['attribs']['name'])) {
+                    continue;
+                }
                 $name = $file['attribs']['name'];
                 if (!$preserve) {
                     $file = $file['attribs'];
@@ -1654,7 +1659,7 @@ class PEAR_PackageFile_v2
                     if ($dtype == 'pearinstaller' && $nopearinstaller) {
                         continue;
                     }
-                    if (!isset($deps[0])) {
+                    if ((is_array($deps) && !isset($deps[0])) || !is_array($deps)) {
                         $deps = array($deps);
                     }
                     foreach ($deps as $dep) {
@@ -2032,7 +2037,7 @@ class PEAR_PackageFile_v2
         if (is_array($manip[$tag]) && !empty($manip[$tag]) && isset($manip[$tag][0])) {
             $manip[$tag][] = $contents;
         } else {
-            if (!count($manip[$tag])) {
+            if (is_array($manip[$tag]) && !count($manip[$tag])) {
                 $manip[$tag] = $contents;
             } else {
                 $manip[$tag] = array($manip[$tag]);

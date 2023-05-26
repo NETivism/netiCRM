@@ -161,14 +161,14 @@ class CRM_Report_Utils_Get {
     }
   }
 
-  function processChart(&$defaults) {
+  static function processChart(&$defaults) {
     $chartType = CRM_Utils_Array::value("charts", $_GET);
     if (in_array($chartType, array('barChart', 'pieChart'))) {
       $defaults["charts"] = $chartType;
     }
   }
 
-  function processFilter(&$fieldGrp, &$defaults) {
+  static function processFilter(&$fieldGrp, &$defaults) {
     // process only filters for now
     foreach ($fieldGrp as $tableName => $fields) {
       foreach ($fields as $fieldName => $field) {
@@ -192,7 +192,7 @@ class CRM_Report_Utils_Get {
   }
 
   //unset default filters
-  function unsetFilters(&$defaults) {
+  static function unsetFilters(&$defaults) {
     static $unsetFlag = TRUE;
     if ($unsetFlag) {
       foreach ($defaults as $field_name => $field_value) {
@@ -209,7 +209,7 @@ class CRM_Report_Utils_Get {
     }
   }
 
-  function processGroupBy(&$fieldGrp, &$defaults) {
+  static function processGroupBy(&$fieldGrp, &$defaults) {
     // process only group_bys for now
     $flag = FALSE;
 
@@ -223,7 +223,7 @@ class CRM_Report_Utils_Get {
               $flag = TRUE;
             }
             foreach ($groupBys as $gby) {
-              if (array_key_exists($gby, $fields)) {
+              if (CRM_Utils_Array::arrayKeyExists($gby, $fields)) {
                 $defaults['group_bys'][$gby] = 1;
               }
             }
@@ -233,7 +233,7 @@ class CRM_Report_Utils_Get {
     }
   }
 
-  function processFields(&$reportFields, &$defaults) {
+  static function processFields(&$reportFields, &$defaults) {
     //add filters from url
     if (is_array($reportFields)) {
       if ($urlFields = CRM_Utils_Array::value("fld", $_GET)) {
@@ -242,7 +242,7 @@ class CRM_Report_Utils_Get {
       if (!empty($urlFields)) {
         foreach ($reportFields as $tableName => $fields) {
           foreach ($urlFields as $fld) {
-            if (array_key_exists($fld, $fields)) {
+            if (CRM_Utils_Array::arrayKeyExists($fld, $fields)) {
               $defaults['fields'][$fld] = 1;
             }
           }

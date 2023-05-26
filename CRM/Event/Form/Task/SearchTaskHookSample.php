@@ -50,7 +50,7 @@ class CRM_Event_Form_Task_SearchTaskHookSample extends CRM_Event_Form_Task {
     parent::preProcess();
     $rows = array();
     // display name and participation details of participants
-    $participantIDs = implode(',', $this->_participantIds);
+    $participantIDs = CRM_Utils_Array::implode(',', $this->_participantIds);
 
     $query = "
      SELECT p.fee_amount as amount,

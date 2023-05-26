@@ -73,7 +73,7 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
    *
    * @return array  a table-keyed array of field-keyed arrays holding supported fields' titles
    */
-  function &supportedFields($requestedType) {
+  static function &supportedFields($requestedType) {
     static $fields = NULL;
     if (!$fields) {
       // this is needed, as we're piggy-backing importableFields() below
@@ -315,7 +315,7 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
     foreach ($tableQueries as $key => $query) {
       $table = explode(".", $key);
       $table = $table[0];
-      if (!array_key_exists($table, $tableCount)) {
+      if (!CRM_Utils_Array::arrayKeyExists($table, $tableCount)) {
         $query = "SELECT COUNT(*) FROM {$table}";
         $tableCount[$table] = CRM_Core_DAO::singleValueQuery($query);
       }
@@ -381,7 +381,7 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
    * @return (rule field => weight) array and threshold associated to rule group
    * @access public
    */
-  function dedupeRuleFieldsWeight($params) {
+  static function dedupeRuleFieldsWeight($params) {
     $rgBao = new CRM_Dedupe_BAO_RuleGroup();
     if (!empty($params['id'])) {
       $rgBao->id = $params['id'];

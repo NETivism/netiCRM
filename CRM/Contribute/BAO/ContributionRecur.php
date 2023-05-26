@@ -66,7 +66,7 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
     $duplicates = array();
     if (self::checkDuplicate($params, $duplicates)) {
       $error = &CRM_Core_Error::singleton();
-      $d = implode(', ', $duplicates);
+      $d = CRM_Utils_Array::implode(', ', $duplicates);
       $error->push(CRM_Core_Error::DUPLICATE_CONTRIBUTION,
         'Fatal',
         array($d),
@@ -149,7 +149,7 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
       return FALSE;
     }
 
-    $clause = implode(' OR ', $clause);
+    $clause = CRM_Utils_Array::implode(' OR ', $clause);
     if ($id) {
       $clause = "( $clause ) AND id != %3";
       $params[3] = array($id, 'Integer');
@@ -190,7 +190,7 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
    * @access public
    * static  */
   static function getCount(&$ids) {
-    $recurID = implode(',', $ids);
+    $recurID = CRM_Utils_Array::implode(',', $ids);
     $totalCount = array();
 
     $query = " 

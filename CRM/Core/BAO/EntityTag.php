@@ -244,11 +244,11 @@ class CRM_Core_BAO_EntityTag extends CRM_Core_DAO_EntityTag {
       $tagParams['entity_id'] = $entityID;
       $tagParams['tag_id'] = $key;
 
-      if (array_key_exists($key, $params) && !array_key_exists($key, $entityTag)) {
+      if (CRM_Utils_Array::arrayKeyExists($key, $params) && !CRM_Utils_Array::arrayKeyExists($key, $entityTag)) {
         // insert a new record
         CRM_Core_BAO_EntityTag::add($tagParams);
       }
-      elseif (!array_key_exists($key, $params) && array_key_exists($key, $entityTag)) {
+      elseif (!CRM_Utils_Array::arrayKeyExists($key, $params) && CRM_Utils_Array::arrayKeyExists($key, $entityTag)) {
         // delete a record for existing contact
         CRM_Core_BAO_EntityTag::del($tagParams);
       }
@@ -277,7 +277,7 @@ class CRM_Core_BAO_EntityTag extends CRM_Core_DAO_EntityTag {
   /**
    * Function to get contact tags
    */
-  function getContactTags($contactID, $count = FALSE) {
+  static function getContactTags($contactID, $count = FALSE) {
     $contactTags = array();
     if (!$count) {
       $select = "SELECT name, ct.id ";

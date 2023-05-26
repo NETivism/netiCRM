@@ -153,6 +153,12 @@ $having
         $sql .= "ORDER BY donation_amount desc";
       }
     }
+    else {
+      if(!empty($this->_formValues['top_contributors'])){
+        $top_amount = $this->_formValues['top_contributors'];
+        $sql .= "ORDER BY sum(contrib.total_amount) DESC LIMIT $top_amount ";
+      }
+    }
 
     if ($rowcount > 0 && $offset >= 0) {
       $sql .= " LIMIT $offset, $rowcount ";
@@ -199,12 +205,12 @@ civicrm_contact AS contact_a
       }
 
       if (!empty($contactIDs)) {
-        $contactIDs = implode(', ', $contactIDs);
+        $contactIDs = CRM_Utils_Array::implode(', ', $contactIDs);
         $clauses[] = "contact_a.id IN ( $contactIDs )";
       }
     }
 
-    return implode(' AND ', $clauses);
+    return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
   function having($includeContactIDs = FALSE) {
@@ -221,7 +227,7 @@ civicrm_contact AS contact_a
       $clauses[] = "sum(contrib.total_amount) <= $max";
     }
 
-    return implode(' AND ', $clauses);
+    return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
   /* 
@@ -248,4 +254,3 @@ civicrm_contact AS contact_a
     return NULL;
   }
 }
-

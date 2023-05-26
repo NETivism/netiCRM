@@ -183,7 +183,7 @@ class Mail_mime
 
         // Update build parameters
         if (!empty($params) && is_array($params)) {
-            while (list($key, $value) = each($params)) {
+            foreach ($params as $key => $value) {
                 $this->_build_params[$key] = $value;
             }
         }
@@ -481,15 +481,7 @@ class Mail_mime
             return $err;
         }
 
-        // Temporarily reset magic_quotes_runtime and read file contents
-        if ($magic_quote_setting = get_magic_quotes_runtime()) {
-            @ini_set('magic_quotes_runtime', 0);
-        }
         $cont = file_get_contents($file_name);
-        if ($magic_quote_setting) {
-            @ini_set('magic_quotes_runtime', $magic_quote_setting);
-        }
-
         return $cont;
     }
 
@@ -761,11 +753,6 @@ class Mail_mime
             return $err;
         }
 
-        // Temporarily reset magic_quotes_runtime and read file contents
-        if ($magic_quote_setting = get_magic_quotes_runtime()) {
-            @ini_set('magic_quotes_runtime', 0);
-        }
-
         if (!($fh = fopen($filename, 'ab'))) {
             $err = PEAR::raiseError('Unable to open file: ' . $filename);
             return $err;
@@ -809,11 +796,6 @@ class Mail_mime
             return $err;
         }
 
-        // Temporarily reset magic_quotes_runtime and read file contents
-        if ($magic_quote_setting = get_magic_quotes_runtime()) {
-            @ini_set('magic_quotes_runtime', 0);
-        }
-
         if (!($fh = fopen($filename, 'ab'))) {
             $err = PEAR::raiseError('Unable to open file: ' . $filename);
             return $err;
@@ -841,10 +823,8 @@ class Mail_mime
      */
     function &get($params = null, $filename = null, $skip_head = false)
     {
-        if (isset($params)) {
-            while (list($key, $value) = each($params)) {
-                $this->_build_params[$key] = $value;
-            }
+        if (!empty($params) && is_array($params)) {
+            $this->_build_params = array_merge($this->_build_params, $params);
         }
 
         if (count($this->_html_images) && isset($this->_htmlbody)) {
@@ -1268,7 +1248,7 @@ class Mail_mime
     function _encodeHeaders($input, $params = array())
     {
         $build_params = $this->_build_params;
-        foreach($params as $key => $value) {
+        foreach ($params as $key => $value) {
             $build_params[$key] = $value;
         }
 

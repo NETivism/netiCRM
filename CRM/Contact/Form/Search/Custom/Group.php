@@ -235,17 +235,17 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
           $smartGroup[$group->saved_search_id] = $group->id;
         }
       }
-      $includedGroups = implode(',', $allGroups);
+      $includedGroups = CRM_Utils_Array::implode(',', $allGroups);
 
       if (!empty($this->_includeGroups)) {
-        $iGroups = implode(',', $this->_includeGroups);
+        $iGroups = CRM_Utils_Array::implode(',', $this->_includeGroups);
       }
       else {
         //if no group selected search for all groups
         $iGroups = NULL;
       }
       if (is_array($this->_excludeGroups)) {
-        $xGroups = implode(',', $this->_excludeGroups);
+        $xGroups = CRM_Utils_Array::implode(',', $this->_excludeGroups);
       }
       else {
         $xGroups = 0;
@@ -375,17 +375,17 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
       while ($tag->fetch()) {
         $allTags[] = $tag->id;
       }
-      $includedTags = implode(',', $allTags);
+      $includedTags = CRM_Utils_Array::implode(',', $allTags);
 
       if (!empty($this->_includeTags)) {
-        $iTags = implode(',', $this->_includeTags);
+        $iTags = CRM_Utils_Array::implode(',', $this->_includeTags);
       }
       else {
         //if no group selected search for all groups
         $iTags = NULL;
       }
       if (is_array($this->_excludeTags)) {
-        $xTags = implode(',', $this->_excludeTags);
+        $xTags = CRM_Utils_Array::implode(',', $this->_excludeTags);
       }
       else {
         $xTags = 0;
@@ -701,10 +701,10 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
       }
 
       if (!empty($contactIDs)) {
-        $contactIDs = implode(', ', $contactIDs);
+        $contactIDs = CRM_Utils_Array::implode(', ', $contactIDs);
         $clauses[] = "contact_a.id IN ( $contactIDs )";
       }
-      $where = "{$this->_where} AND " . implode(' AND ', $clauses);
+      $where = "{$this->_where} AND " . CRM_Utils_Array::implode(' AND ', $clauses);
     }
     else {
       $where = $this->_where;

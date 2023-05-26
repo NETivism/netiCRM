@@ -50,7 +50,7 @@ class CRM_Utils_Cache_SerializeCache implements CRM_Utils_Cache_Interface {
   }
 
   function get($key) {
-    if (array_key_exists($key, $this->_cache)) {
+    if (CRM_Utils_Array::arrayKeyExists($key, $this->_cache)) {
       return $this->_cache[$key];
     }
 

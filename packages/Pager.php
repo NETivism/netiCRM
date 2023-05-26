@@ -138,7 +138,7 @@ class Pager
      *
      * @access public
      */
-    function Pager($options = array())
+    function __construct($options = array())
     {
             $msg = 'Pager constructor is deprecated.'
                   .' You must use the "Pager::factory($params)" method'

@@ -84,7 +84,7 @@ class CRM_Core_Config_Defaults {
     //
     $size = trim(ini_get('upload_max_filesize'));
     if ($size) {
-      $last = strtolower($size{strlen($size) - 1});
+      $last = strtolower($size[strlen($size) - 1]);
       $size = (int) $size;
       switch ($last) {
         // The 'G' modifier is available since PHP 5.1.0
@@ -111,7 +111,7 @@ class CRM_Core_Config_Defaults {
    *
    * @access public
    */
-  public function setValues(&$defaults, $formMode = FALSE) {
+  public static function setValues(&$defaults, $formMode = FALSE) {
     global $civicrm_root;
     $config = CRM_Core_Config::singleton();
 

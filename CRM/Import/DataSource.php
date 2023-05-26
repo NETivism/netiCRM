@@ -81,7 +81,7 @@ abstract class CRM_Import_DataSource {
     return empty($info['permissions']) || CRM_Core_Permission::check($info['permissions']);
   }
 
-  public function prepareImportTable($tableName, $statusFieldName = '_status', $primaryKeyName = '_id') {
+  public static function prepareImportTable($tableName, $statusFieldName = '_status', $primaryKeyName = '_id') {
     $alterQuery = "ALTER TABLE $tableName
       ADD COLUMN $statusFieldName INT DEFAULT 0 NOT NULL,
       ADD COLUMN ${statusFieldName}Msg TEXT,

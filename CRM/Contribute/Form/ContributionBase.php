@@ -252,7 +252,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
           if ($membership->contact_id != $this->_userID) {
             require_once 'CRM/Contact/BAO/Relationship.php';
             $employers = CRM_Contact_BAO_Relationship::getPermissionedEmployer($this->_userID);
-            if (array_key_exists($membership->contact_id, $employers)) {
+            if (CRM_Utils_Array::arrayKeyExists($membership->contact_id, $employers)) {
               $this->_membershipContactID = $membership->contact_id;
               $this->assign('membershipContactID', $this->_membershipContactID);
               $this->assign('membershipContactName', $employers[$this->_membershipContactID]['name']);
@@ -738,7 +738,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       if (CRM_Utils_Array::value($v, $this->_params)) {
         if ($v == 'frequency_unit' || $v == 'pledge_frequency_unit') {
           $frequencyUnits = CRM_Core_OptionGroup::values('recur_frequency_units');
-          if (array_key_exists($this->_params[$v], $frequencyUnits)) {
+          if (CRM_Utils_Array::arrayKeyExists($this->_params[$v], $frequencyUnits)) {
             // This is a bug for recurring unit translations. refs #4670
             $this->assign($v, ts($this->_params[$v]));
           }
@@ -899,7 +899,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
 
           list($prefixName, $index) = CRM_Utils_System::explode('-', $key, 2);
           if ($prefixName == 'state_province' || $prefixName == 'country') {
-            if (!array_key_exists($index, $stateCountryMap)) {
+            if (!CRM_Utils_Array::arrayKeyExists($index, $stateCountryMap)) {
               $stateCountryMap[$index] = array();
             }
             $stateCountryMap[$index][$prefixName] = $key;

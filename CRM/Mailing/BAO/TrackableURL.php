@@ -58,7 +58,7 @@ class CRM_Mailing_BAO_TrackableURL extends CRM_Mailing_DAO_TrackableURL {
 
     static $urlCache = array();
 
-    if (array_key_exists($url, $urlCache)) {
+    if (CRM_Utils_Array::arrayKeyExists($url, $urlCache)) {
       return $urlCache[$url] . "&qid=$queue_id";
     }
 

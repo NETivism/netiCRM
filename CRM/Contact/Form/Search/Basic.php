@@ -109,7 +109,7 @@ class CRM_Contact_Form_Search_Basic extends CRM_Contact_Form_Search {
           $groupIds[] = $groupId;
         }
 
-        $this->assign('groupIds', implode(',', $groupIds));
+        $this->assign('groupIds', CRM_Utils_Array::implode(',', $groupIds));
         $this->assign('groupNames', $groupNames);
       }
       else {
@@ -285,7 +285,7 @@ class CRM_Contact_Form_Search_Basic extends CRM_Contact_Form_Search {
    */
   static function formRule($fields) {
     // check actionName and if next, then do not repeat a search, since we are going to the next page
-    if (array_key_exists('_qf_Search_next', $fields)) {
+    if (CRM_Utils_Array::arrayKeyExists('_qf_Search_next', $fields)) {
       if (!CRM_Utils_Array::value('task', $fields)) {
         return array('task' => 'Please select a valid action.');
       }

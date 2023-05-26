@@ -68,7 +68,7 @@ class CRM_Mailing_BAO_Spool extends CRM_Mailing_DAO_Spool {
     foreach ($headers as $name => $value) {
       $headerStr[] = "$name: $value";
     }
-    $headerStr = implode("\n", $headerStr);
+    $headerStr = CRM_Utils_Array::implode("\n", $headerStr);
 
     $session = CRM_Core_Session::singleton();
 

@@ -33,7 +33,7 @@
  *
  */
 class CRM_Core_BAO_CustomValueTable {
-  function create(&$customParams) {
+  static function create(&$customParams) {
     if (empty($customParams) ||
       !is_array($customParams)
     ) {
@@ -55,7 +55,7 @@ class CRM_Core_BAO_CustomValueTable {
             $entityID = $field['entity_id'];
             $hookID = $field['custom_group_id'];
             $isMultiple = $field['is_multiple'];
-            if (array_key_exists('id', $field)) {
+            if (CRM_Utils_Array::arrayKeyExists('id', $field)) {
               $sqlOP = "UPDATE $tableName ";
               $where = " WHERE  id = %{$count}";
               $params[$count] = array($field['id'], 'Integer');
@@ -76,7 +76,7 @@ class CRM_Core_BAO_CustomValueTable {
             case 'StateProvince':
               $type = 'Integer';
               if (is_array($value)) {
-                $value = CRM_Core_BAO_CustomOption::VALUE_SEPERATOR . implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, $value) . CRM_Core_BAO_CustomOption::VALUE_SEPERATOR;
+                $value = CRM_Core_BAO_CustomOption::VALUE_SEPERATOR . CRM_Utils_Array::implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, $value) . CRM_Core_BAO_CustomOption::VALUE_SEPERATOR;
                 $type = 'String';
               }
               elseif (!is_numeric($value)) {
@@ -97,7 +97,7 @@ class CRM_Core_BAO_CustomValueTable {
                   }
                   $validStates[] = $states['state_province_id'];
                 }
-                $value = implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, $validStates);
+                $value = CRM_Utils_Array::implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, $validStates);
                 $type = 'String';
               }
               elseif (!$value) {
@@ -112,7 +112,7 @@ class CRM_Core_BAO_CustomValueTable {
             case 'Country':
               $type = 'Integer';
               if (is_array($value)) {
-                $value = CRM_Core_BAO_CustomOption::VALUE_SEPERATOR . implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, $value) . CRM_Core_BAO_CustomOption::VALUE_SEPERATOR;
+                $value = CRM_Core_BAO_CustomOption::VALUE_SEPERATOR . CRM_Utils_Array::implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, $value) . CRM_Core_BAO_CustomOption::VALUE_SEPERATOR;
                 $type = 'String';
               }
               elseif (!is_numeric($value)) {
@@ -132,7 +132,7 @@ class CRM_Core_BAO_CustomValueTable {
                   }
                   $validCountries[] = $countries['country_id'];
                 }
-                $value = implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, $validCountries);
+                $value = CRM_Utils_Array::implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, $validCountries);
                 $type = 'String';
               }
               elseif (!$value) {
@@ -211,15 +211,15 @@ class CRM_Core_BAO_CustomValueTable {
           foreach ($set as $n => $v) {
             $setClause[] = "$n = $v";
           }
-          $setClause = implode(',', $setClause);
+          $setClause = CRM_Utils_Array::implode(',', $setClause);
           if (!$where) {
             // do this only for insert
             $set['entity_id'] = "%{$count}";
             $params[$count] = array($entityID, 'Integer');
             $count++;
 
-            $fieldNames = implode(',', array_keys($set));
-            $fieldValues = implode(',', array_values($set));
+            $fieldNames = CRM_Utils_Array::implode(',', array_keys($set));
+            $fieldValues = CRM_Utils_Array::implode(',', array_values($set));
             $query = "$sqlOP ( $fieldNames ) VALUES ( $fieldValues )";
             // for multiple values we dont do on duplicate key update
             if (!$isMultiple) {
@@ -298,7 +298,7 @@ class CRM_Core_BAO_CustomValueTable {
     }
   }
 
-  function store(&$params, $entityTable, $entityID) {
+  static function store(&$params, $entityTable, $entityID) {
     $cvParams = array();
     foreach ($params as $fieldID => $param) {
       if (is_array($param)) {
@@ -324,11 +324,11 @@ class CRM_Core_BAO_CustomValueTable {
           if (CRM_Utils_Array::value('id', $customValue)) {
             $cvParam['id'] = $customValue['id'];
           }
-          if (!array_key_exists($customValue['table_name'], $cvParams)) {
+          if (!CRM_Utils_Array::arrayKeyExists($customValue['table_name'], $cvParams)) {
             $cvParams[$customValue['table_name']] = array();
           }
 
-          if (!array_key_exists($index, $cvParams[$customValue['table_name']])) {
+          if (!CRM_Utils_Array::arrayKeyExists($index, $cvParams[$customValue['table_name']])) {
             $cvParams[$customValue['table_name']][$index] = array();
           }
 
@@ -342,7 +342,7 @@ class CRM_Core_BAO_CustomValueTable {
     }
   }
 
-  function postProcess(&$params, &$customFields, $entityTable, $entityID, $customFieldExtends) {
+  static function postProcess(&$params, &$customFields, $entityTable, $entityID, $customFieldExtends) {
     require_once "CRM/Core/BAO/CustomField.php";
     $customData = CRM_Core_BAO_CustomField::postProcess($params,
       $customFields,
@@ -389,13 +389,13 @@ class CRM_Core_BAO_CustomValueTable {
     if ($fieldIDs &&
       is_array($fieldIDs)
     ) {
-      $fieldIDList = implode(',', $fieldIDs);
+      $fieldIDList = CRM_Utils_Array::implode(',', $fieldIDs);
       $cond[] = "cf.id IN ( $fieldIDList )";
     }
     if (empty($cond)) {
       $cond[] = "cg.extends IN ( 'Contact', 'Individual', 'Household', 'Organization' )";
     }
-    $cond = implode(' AND ', $cond);
+    $cond = CRM_Utils_Array::implode(' AND ', $cond);
 
     // first find all the fields that extend this type of entity
     $query = "
@@ -416,7 +416,7 @@ AND    $cond
     $select = $fields = $isMultiple = array();
 
     while ($dao->fetch()) {
-      if (!array_key_exists($dao->table_name, $select)) {
+      if (!CRM_Utils_Array::arrayKeyExists($dao->table_name, $select)) {
         $fields[$dao->table_name] = array();
         $select[$dao->table_name] = array();
       }
@@ -427,7 +427,7 @@ AND    $cond
 
     $result = array();
     foreach ($select as $tableName => $clauses) {
-      $query = "SELECT id, " . implode(', ', $clauses) . " FROM $tableName WHERE entity_id = $entityID";
+      $query = "SELECT id, " . CRM_Utils_Array::implode(', ', $clauses) . " FROM $tableName WHERE entity_id = $entityID";
       $dao = CRM_Core_DAO::executeQuery($query);
       while ($dao->fetch()) {
         foreach ($fields[$tableName] as $fieldID) {
@@ -480,7 +480,7 @@ AND    $cond
               array(1 => $fieldID)
             ));
         }
-        if (!array_key_exists($fieldID, $fieldValues)) {
+        if (!CRM_Utils_Array::arrayKeyExists($fieldID, $fieldValues)) {
           $fieldValues[$fieldID] = array();
         }
         $id = -1;
@@ -497,7 +497,7 @@ AND    $cond
     if(empty($keys)) {
       return CRM_Core_Error::createAPIError(ts('Set custom value without necessery keys'));
     }
-    $fieldIDList = implode(',', $keys);
+    $fieldIDList = CRM_Utils_Array::implode(',', $keys);
 
     // format it so that we can just use create
     $sql = "
@@ -530,11 +530,11 @@ AND    cf.id IN ( $fieldIDList )
           'is_multiple' => $dao->is_multiple,
         );
 
-        if (!array_key_exists($dao->table_name, $cvParams)) {
+        if (!CRM_Utils_Array::arrayKeyExists($dao->table_name, $cvParams)) {
           $cvParams[$dao->table_name] = array();
         }
 
-        if (!array_key_exists($fieldValue['id'], $cvParams[$dao->table_name])) {
+        if (!CRM_Utils_Array::arrayKeyExists($fieldValue['id'], $cvParams[$dao->table_name])) {
           $cvParams[$dao->table_name][$fieldValue['id']] = array();
         }
 
@@ -603,7 +603,7 @@ AND    cf.id IN ( $fieldIDList )
     }
     else {
       $entities = CRM_Core_SelectValues::customGroupExtends();
-      if (!array_key_exists($type, $entities)) {
+      if (!CRM_Utils_Array::arrayKeyExists($type, $entities)) {
         if (in_array($type, $entities)) {
           $type = $entities[$type];
           if (in_array($type, $default)) {
@@ -673,13 +673,13 @@ AND    cf.id IN ( $fieldIDList )
     if ($fieldIDs &&
       is_array($fieldIDs)
     ) {
-      $fieldIDList = implode(',', $fieldIDs);
+      $fieldIDList = CRM_Utils_Array::implode(',', $fieldIDs);
       $cond[] = "cf.id IN ( $fieldIDList )";
     }
     if (empty($cond)) {
       $cond[] = "cg.extends IN ( 'Contact', 'Individual', 'Household', 'Organization' )";
     }
-    $cond = implode(' AND ', $cond);
+    $cond = CRM_Utils_Array::implode(' AND ', $cond);
 
     // first find all the fields that extend this type of entity
     $query = "
@@ -700,7 +700,7 @@ AND    $cond
     $select = $fields = $isMultiple = array();
 
     while ($dao->fetch()) {
-      if (!array_key_exists($dao->table_name, $select)) {
+      if (!CRM_Utils_Array::arrayKeyExists($dao->table_name, $select)) {
         $fields[$dao->table_name] = array();
         $select[$dao->table_name] = array();
       }
@@ -710,9 +710,9 @@ AND    $cond
     }
 
     $result = array();
-    $ids = implode(',', $entityIDs);
+    $ids = CRM_Utils_Array::implode(',', $entityIDs);
     foreach ($select as $tableName => $clauses) {
-      $query = "SELECT entity_id, " . implode(', ', $clauses) . " FROM $tableName WHERE entity_id IN ({$ids})";
+      $query = "SELECT entity_id, " . CRM_Utils_Array::implode(', ', $clauses) . " FROM $tableName WHERE entity_id IN ({$ids})";
       $dao = CRM_Core_DAO::executeQuery($query);
       while ($dao->fetch()) {
         foreach ($fields[$tableName] as $fieldID) {

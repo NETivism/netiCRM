@@ -150,7 +150,7 @@ class CRM_Report_Form_ActivitySummary extends CRM_Report_Form {
     $select = array();
     $this->_columnHeaders = array();
     foreach ($this->_columns as $tableName => $table) {
-      if (array_key_exists('group_bys', $table)) {
+      if (CRM_Utils_Array::arrayKeyExists('group_bys', $table)) {
         foreach ($table['group_bys'] as $fieldName => $field) {
           if (CRM_Utils_Array::value($fieldName, $this->_params['group_bys'])) {
 
@@ -199,7 +199,7 @@ class CRM_Report_Form_ActivitySummary extends CRM_Report_Form {
           }
         }
       }
-      if (array_key_exists('fields', $table)) {
+      if (CRM_Utils_Array::arrayKeyExists('fields', $table)) {
         foreach ($table['fields'] as $fieldName => $field) {
           if (CRM_Utils_Array::value('required', $field) ||
             CRM_Utils_Array::value($fieldName, $this->_params['fields'])
@@ -251,7 +251,7 @@ class CRM_Report_Form_ActivitySummary extends CRM_Report_Form {
       }
     }
 
-    $this->_select = "SELECT " . implode(', ', $select) . " ";
+    $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
   function from() {
@@ -302,7 +302,7 @@ class CRM_Report_Form_ActivitySummary extends CRM_Report_Form {
 
     $clauses = array();
     foreach ($this->_columns as $tableName => $table) {
-      if (array_key_exists('filters', $table)) {
+      if (CRM_Utils_Array::arrayKeyExists('filters', $table)) {
 
         foreach ($table['filters'] as $fieldName => $field) {
           $clause = NULL;
@@ -336,7 +336,7 @@ class CRM_Report_Form_ActivitySummary extends CRM_Report_Form {
       $this->_where .= " ";
     }
     else {
-      $this->_where .= " AND " . implode(' AND ', $clauses);
+      $this->_where .= " AND " . CRM_Utils_Array::implode(' AND ', $clauses);
     }
 
     if ($this->_aclWhere) {
@@ -350,7 +350,7 @@ class CRM_Report_Form_ActivitySummary extends CRM_Report_Form {
       !empty($this->_params['group_bys'])
     ) {
       foreach ($this->_columns as $tableName => $table) {
-        if (array_key_exists('group_bys', $table)) {
+        if (CRM_Utils_Array::arrayKeyExists('group_bys', $table)) {
           foreach ($table['group_bys'] as $fieldName => $field) {
             if (CRM_Utils_Array::value($fieldName, $this->_params['group_bys'])) {
               if (CRM_Utils_Array::value('chart', $field)) {
@@ -377,14 +377,14 @@ class CRM_Report_Form_ActivitySummary extends CRM_Report_Form {
         }
       }
 
-      $this->_groupBy = "GROUP BY " . implode(', ', $this->_groupBy) . " {$this->_rollup} ";
+      $this->_groupBy = "GROUP BY " . CRM_Utils_Array::implode(', ', $this->_groupBy) . " {$this->_rollup} ";
     }
     else {
       $this->_groupBy = "GROUP BY {$this->_aliases['civicrm_contact']}.id ";
     }
   }
 
-  function formRule($fields, $files, $self) {
+  static function formRule($fields, $files, $self) {
     $errors = array();
     $contactFields = array('display_name', 'email', 'phone');
     if (CRM_Utils_Array::value('group_bys', $fields)) {
@@ -433,7 +433,7 @@ class CRM_Report_Form_ActivitySummary extends CRM_Report_Form {
     $onHover = ts('View Contact Summary for this Contact');
     foreach ($rows as $rowNum => $row) {
 
-      if (array_key_exists('civicrm_contact_display_name', $row) && $this->_outputMode != 'csv') {
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_contact_display_name', $row) && $this->_outputMode != 'csv') {
         if ($value = $row['civicrm_contact_id']) {
 
           if ($rowNum == 0) {
@@ -453,10 +453,10 @@ class CRM_Report_Form_ActivitySummary extends CRM_Report_Form {
           if ($flagContact == 1) {
             $rows[$rowNum]['civicrm_contact_display_name'] = "";
 
-            if (array_key_exists('civicrm_email_email', $row)) {
+            if (CRM_Utils_Array::arrayKeyExists('civicrm_email_email', $row)) {
               $rows[$rowNum]['civicrm_email_email'] = "";
             }
-            if (array_key_exists('civicrm_phone_phone', $row)) {
+            if (CRM_Utils_Array::arrayKeyExists('civicrm_phone_phone', $row)) {
               $rows[$rowNum]['civicrm_phone_phone'] = "";
             }
           }
@@ -471,7 +471,7 @@ class CRM_Report_Form_ActivitySummary extends CRM_Report_Form {
         }
       }
 
-      if (array_key_exists('civicrm_activity_activity_type_id', $row)) {
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_activity_activity_type_id', $row)) {
         if ($value = $row['civicrm_activity_activity_type_id']) {
 
           $value = explode(',', $value);
@@ -479,7 +479,7 @@ class CRM_Report_Form_ActivitySummary extends CRM_Report_Form {
             $value[$key] = $activityType[$id];
           }
 
-          $rows[$rowNum]['civicrm_activity_activity_type_id'] = implode(' , ', $value);
+          $rows[$rowNum]['civicrm_activity_activity_type_id'] = CRM_Utils_Array::implode(' , ', $value);
           $entryFound = TRUE;
         }
       }

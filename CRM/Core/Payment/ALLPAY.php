@@ -51,7 +51,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
    * @static
    *
    */
-  static function &singleton($mode = 'live', &$paymentProcessor, &$paymentForm = NULL) {
+  static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
     $processorName = $paymentProcessor['name'];
     if (self::$_singleton[$processorName] === NULL) {
       self::$_singleton[$processorName] = new CRM_Core_Payment_ALLPAY($mode, $paymentProcessor);
@@ -99,7 +99,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
     }
 
     if (!empty($error)) {
-      return implode('<p>', $error);
+      return CRM_Utils_Array::implode('<p>', $error);
     }
     else {
       return NULL;
@@ -556,7 +556,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
       $a[] = $k.'='.$v;
     }
     $a[] = 'HashIV='.$payment_processor['signature'];
-    $keystr = implode('&', $a);
+    $keystr = CRM_Utils_Array::implode('&', $a);
     $keystr = urlencode($keystr);
     $keystr = strtolower($keystr);
   
@@ -862,7 +862,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
         return $o->gwsr;
       }
       else {
-        return substr(md5(implode('', (array)$o)), 0, 8);
+        return substr(md5(CRM_Utils_Array::implode('', (array)$o)), 0, 8);
       }
     }
   }

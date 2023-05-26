@@ -154,7 +154,7 @@ class CRM_Admin_Form_Tag extends CRM_Admin_Form {
     if ($this->_action == CRM_Core_Action::ADD ||
       $this->_action == CRM_Core_Action::UPDATE
     ) {
-      $params['used_for'] = implode(",", $params['used_for']);
+      $params['used_for'] = CRM_Utils_Array::implode(",", $params['used_for']);
     }
 
     $params['is_tagset'] = 0;

@@ -333,7 +333,7 @@ class CRM_Mailing_Form_Test extends CRM_Core_Form {
       foreach ($testParams['emails'] as $key => $email) {
         $email = trim($email);
         $contactId = $emailId = NULL;
-        if (array_key_exists($email, $emailDetail)) {
+        if (CRM_Utils_Array::arrayKeyExists($email, $emailDetail)) {
           $emailId = $emailDetail[$email]['email_id'];
           $contactId = $emailDetail[$email]['contact_id'];
         }

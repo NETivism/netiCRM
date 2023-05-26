@@ -362,7 +362,7 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
     if ($output == CRM_Core_Selector_Controller::EXPORT) {
       $csvHeaders = array(ts('Contact Id'), ts('Contact Type'));
       foreach ($this->getColHeads($action, $output) as $column) {
-        if (array_key_exists('name', $column)) {
+        if (CRM_Utils_Array::arrayKeyExists('name', $column)) {
           $csvHeaders[] = $column['name'];
         }
       }
@@ -371,7 +371,7 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
     elseif ($output == CRM_Core_Selector_Controller::SCREEN) {
       $csvHeaders = array(ts('Name'));
       foreach ($this->getColHeads($action, $output) as $column) {
-        if (array_key_exists('name', $column) &&
+        if (CRM_Utils_Array::arrayKeyExists('name', $column) &&
           $column['name'] &&
           $column['name'] != ts('Name')
         ) {
@@ -660,7 +660,7 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
           $row[$property] = CRM_Core_BAO_CustomField::getDisplayValue($result->$property, $cfID, $this->_options, $result->contact_id);
         }
         elseif ($multipleSelectFields &&
-          array_key_exists($property, $multipleSelectFields)
+          CRM_Utils_Array::arrayKeyExists($property, $multipleSelectFields)
         ) {
           //fix to display student checkboxes
           $key = $property;
@@ -679,7 +679,7 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
           CRM_Core_OptionGroup::lookupValues($paramsNew, $name, FALSE);
           $row[$key] = $paramsNew[$key];
         }
-        elseif (isset($tmfFields) && $tmfFields && array_key_exists($property, $tmfFields)
+        elseif (isset($tmfFields) && $tmfFields && CRM_Utils_Array::arrayKeyExists($property, $tmfFields)
           || substr($property, 0, 12) == 'participant_'
         ) {
           if (substr($property, -3) == '_id') {
@@ -813,7 +813,7 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
         if ($config->includeNickNameInName) {
           $row['nick_name'] = !empty($result->nick_name) ? $result->nick_name : '';
         }
-        if (array_key_exists('id', $row)) {
+        if (CRM_Utils_Array::arrayKeyExists('id', $row)) {
           $row['id'] = $result->contact_id;
         }
       }

@@ -119,7 +119,7 @@ class CRM_Activity_Form_Task extends CRM_Core_Form {
     }
 
     if (!empty($ids)) {
-      $form->_componentClause = ' civicrm_activity.id IN ( ' . implode(',', $ids) . ' ) ';
+      $form->_componentClause = ' civicrm_activity.id IN ( ' . CRM_Utils_Array::implode(',', $ids) . ' ) ';
       $form->assign('totalSelectedActivities', count($ids));
     }
 
@@ -150,7 +150,7 @@ class CRM_Activity_Form_Task extends CRM_Core_Form {
    * since its used for things like send email
    */
   public function setContactIDs() {
-    $IDs = implode(',', $this->_activityHolderIds);
+    $IDs = CRM_Utils_Array::implode(',', $this->_activityHolderIds);
     $query = "
 SELECT source_contact_id
   FROM civicrm_activity

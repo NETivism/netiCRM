@@ -58,7 +58,7 @@ class CRM_Activity_BAO_ActivityTarget extends CRM_Activity_DAO_ActivityTarget {
    * @access public
    *
    */
-  public function create(&$params) {
+  public static function create(&$params) {
     require_once 'CRM/Activity/BAO/ActivityTarget.php';
     $target = new CRM_Activity_BAO_ActivityTarget();
 

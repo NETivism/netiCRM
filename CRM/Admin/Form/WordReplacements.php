@@ -204,7 +204,7 @@ class CRM_Admin_Form_WordReplacements extends CRM_Core_Form {
         CRM_Utils_Array::value($i, $params['old'])
       ) {
         if (CRM_Utils_Array::value($i, $params['enabled'])) {
-          if (is_array($params['cb']) && array_key_exists($i, $params['cb'])) {
+          if (is_array($params['cb']) && CRM_Utils_Array::arrayKeyExists($i, $params['cb'])) {
             $enabled['exactMatch'] += array($params['old'][$i] => $params['new'][$i]);
           }
           else {
@@ -212,7 +212,7 @@ class CRM_Admin_Form_WordReplacements extends CRM_Core_Form {
           }
         }
         else {
-          if (is_array($params['cb']) && array_key_exists($i, $params['cb'])) {
+          if (is_array($params['cb']) && CRM_Utils_Array::arrayKeyExists($i, $params['cb'])) {
             $disabled['exactMatch'] += array($params['old'][$i] => $params['new'][$i]);
           }
           else {

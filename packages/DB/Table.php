@@ -658,7 +658,7 @@ class DB_Table extends DB_Table_Base
         }
 
         if (is_null($this->backend)) {
-            $this->error =& DB_Table::throwError(DB_TABLE_ERR_NOT_DB_OBJECT);
+            $this->error =& $this->throwError(DB_TABLE_ERR_NOT_DB_OBJECT);
             return;
         }
         
@@ -667,7 +667,7 @@ class DB_Table extends DB_Table_Base
         if (is_null($table)) {
             // $table parameter not given => check $table class property
             if (is_null($this->table)) {
-                $this->error =& DB_Table::throwError(DB_TABLE_ERR_TABLE_NAME_MISSING);
+                $this->error =& $this->throwError(DB_TABLE_ERR_TABLE_NAME_MISSING);
                 return;
             }
         } else {
@@ -678,7 +678,7 @@ class DB_Table extends DB_Table_Base
         $phptype = $db->phptype;
         $dbsyntax = $db->dbsyntax;
         if (! DB_Table::supported($phptype, $dbsyntax)) {
-            $this->error =& DB_Table::throwError(
+            $this->error =& $this->throwError(
                 DB_TABLE_ERR_PHPTYPE,
                 "({$db->phptype})"
             );
@@ -1412,7 +1412,7 @@ class DB_Table extends DB_Table_Base
         if (   $GLOBALS['_DB_TABLE']['disable_length_check'] === false
             && strlen($seq_name) > 26
            ) {
-            return DB_Table::throwError(
+            return $this->throwError(
                 DB_TABLE_ERR_SEQ_STRLEN,
                 " ('$seq_name')"
             );

@@ -21,12 +21,12 @@ function civicrm_api3_generic_setValue($apiRequest) {
   return $fields;
   $fields = $fields['values'];
 
-  if (!array_key_exists($field, $fields)) {
+  if (!CRM_Utils_Array::arrayKeyExists($field, $fields)) {
     return civicrm_api3_create_error("Param 'field' ($field) is invalid. must be an existing field", array("error_code" => "invalid_field", "fields" => array_keys($fields)));
   }
 
   $def = $fields[$field];
-  if (array_key_exists('required', $def) && empty($value)) {
+  if (CRM_Utils_Array::arrayKeyExists('required', $def) && empty($value)) {
     return civicrm_api3_create_error(ts("This can't be empty, please provide a value"), array("error_code" => "required", "field" => $field));
   }
 
@@ -43,7 +43,7 @@ function civicrm_api3_generic_setValue($apiRequest) {
       if (!CRM_Utils_Rule::xssString($value)) {
         return civicrm_api3_create_error(ts('Illegal characters in input (potential scripting attack)'), array('error_code' => 'XSS'));
       }
-    if (array_key_exists('maxlength', $def)) {
+    if (CRM_Utils_Array::arrayKeyExists('maxlength', $def)) {
       $value = substr($value, 0, $def['maxlength']);
     }
     break;

@@ -139,7 +139,7 @@ function civicrm_contact_update(&$params, $create_new = FALSE) {
   );
 
   foreach ($change as $field => $changeAs) {
-    if (array_key_exists($field, $params)) {
+    if (CRM_Utils_Array::arrayKeyExists($field, $params)) {
       $params[$changeAs] = $params[$field];
       unset($params[$field]);
     }
@@ -254,7 +254,7 @@ function _civicrm_greeting_format_params(&$params) {
 
     // check if greetings are present in present
     foreach ($greetingParams as $greetingValues) {
-      if (array_key_exists("{$key}{$greeting}{$greetingValues}", $params)) {
+      if (CRM_Utils_Array::arrayKeyExists("{$key}{$greeting}{$greetingValues}", $params)) {
         $formatParams = TRUE;
         break;
       }
@@ -305,7 +305,7 @@ function _civicrm_greeting_format_params(&$params) {
 
     if ($greetingId) {
 
-      if (!array_key_exists($greetingId, $greetings)) {
+      if (!CRM_Utils_Array::arrayKeyExists($greetingId, $greetings)) {
         return civicrm_create_error(ts('Invalid %1 greeting Id', array(1 => $key)));
       }
 
@@ -333,13 +333,13 @@ function _civicrm_greeting_format_params(&$params) {
       "{$key}{$greeting}_custom"
     ) : FALSE;
 
-    if (array_key_exists("{$key}{$greeting}_id", $params) && empty($params["{$key}{$greeting}_id"])) {
+    if (CRM_Utils_Array::arrayKeyExists("{$key}{$greeting}_id", $params) && empty($params["{$key}{$greeting}_id"])) {
       $nullValue = TRUE;
     }
-    elseif (array_key_exists("{$key}{$greeting}", $params) && empty($params["{$key}{$greeting}"])) {
+    elseif (CRM_Utils_Array::arrayKeyExists("{$key}{$greeting}", $params) && empty($params["{$key}{$greeting}"])) {
       $nullValue = TRUE;
     }
-    elseif ($customValue && array_key_exists("{$key}{$greeting}_custom", $params)
+    elseif ($customValue && CRM_Utils_Array::arrayKeyExists("{$key}{$greeting}_custom", $params)
       && empty($params["{$key}{$greeting}_custom"])
     ) {
       $nullValue = TRUE;
@@ -347,7 +347,7 @@ function _civicrm_greeting_format_params(&$params) {
 
     $params["{$key}{$greeting}_id"] = $greetingId;
 
-    if (!$customValue && !$customGreeting && array_key_exists("{$key}{$greeting}_custom", $params)) {
+    if (!$customValue && !$customGreeting && CRM_Utils_Array::arrayKeyExists("{$key}{$greeting}_custom", $params)) {
       unset($params["{$key}{$greeting}_custom"]);
     }
 
@@ -601,7 +601,7 @@ function civicrm_contact_check_params(&$params,
       return civicrm_create_error('Input Parameters empty');
     }
 
-    if (!array_key_exists('contact_type', $params)) {
+    if (!CRM_Utils_Array::arrayKeyExists('contact_type', $params)) {
       return civicrm_create_error('Contact Type not specified');
     }
 
@@ -613,7 +613,7 @@ function civicrm_contact_check_params(&$params,
 
     if ($csType = CRM_Utils_Array::value('contact_sub_type', $params)) {
       if (!(CRM_Contact_BAO_ContactType::isExtendsContactType($csType, $params['contact_type']))) {
-        return civicrm_create_error("Invalid or Mismatched Contact SubType: " . implode(', ', (array)$csType));
+        return civicrm_create_error("Invalid or Mismatched Contact SubType: " . CRM_Utils_Array::implode(', ', (array)$csType));
       }
     }
 
@@ -660,7 +660,7 @@ function civicrm_contact_check_params(&$params,
       $dedupeParams['check_permission'] = $params['check_permission'];
     }
 
-    $ids = implode(',',
+    $ids = CRM_Utils_Array::implode(',',
       CRM_Dedupe_Finder::dupesByParams($dedupeParams,
         $params['contact_type'],
         'Strict',
@@ -841,11 +841,11 @@ function civicrm_contact_check_custom_params($params, $csType = NULL) {
       /* check if it's a valid custom field id */
 
 
-      if (!array_key_exists($customFieldID, $customFields)) {
+      if (!CRM_Utils_Array::arrayKeyExists($customFieldID, $customFields)) {
 
         $errorMsg = ts("Invalid Custom Field Contact Type: {$params['contact_type']}");
         if ($csType) {
-          $errorMsg .= ts(" or Mismatched SubType: " . implode(', ', (array)$csType));
+          $errorMsg .= ts(" or Mismatched SubType: " . CRM_Utils_Array::implode(', ', (array)$csType));
         }
         return civicrm_create_error($errorMsg);
       }

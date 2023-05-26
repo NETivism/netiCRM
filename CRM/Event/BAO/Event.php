@@ -537,7 +537,7 @@ LIMIT      0, 10
       $statusTypes = CRM_Event_PseudoConstant::participantStatus();
       $statusLabels = CRM_Event_PseudoConstant::participantStatus(NULL, NULL, 'label');
       foreach ($statusValues as $statusId => $statusValue) {
-        if (!array_key_exists($statusId, $statusTypes)) {
+        if (!CRM_Utils_Array::arrayKeyExists($statusId, $statusTypes)) {
           continue;
         }
         $class = $statusValue['class'];
@@ -563,10 +563,10 @@ LIMIT      0, 10
     $countedStatusANDRoles = array_merge($countedStatus, $countedRoles);
     $nonCountedStatusANDRoles = array_merge($nonCountedStatus, $nonCountedRoles);
 
-    $eventSummary['nonCountedRoles'] = implode('/', array_values($nonCountedRoles));
-    $eventSummary['nonCountedStatus'] = implode('/', array_values($nonCountedStatus));
-    $eventSummary['countedStatusANDRoles'] = implode('/', array_values($countedStatusANDRoles));
-    $eventSummary['nonCountedStatusANDRoles'] = implode('/', array_values($nonCountedStatusANDRoles));
+    $eventSummary['nonCountedRoles'] = CRM_Utils_Array::implode('/', array_values($nonCountedRoles));
+    $eventSummary['nonCountedStatus'] = CRM_Utils_Array::implode('/', array_values($nonCountedStatus));
+    $eventSummary['countedStatusANDRoles'] = CRM_Utils_Array::implode('/', array_values($countedStatusANDRoles));
+    $eventSummary['nonCountedStatusANDRoles'] = CRM_Utils_Array::implode('/', array_values($nonCountedStatusANDRoles));
 
     return $eventSummary;
   }
@@ -585,7 +585,7 @@ LIMIT      0, 10
    *
    * @return array array with count of participants for each event based on status/role
    */
-  function getParticipantCount($eventId,
+  static function getParticipantCount($eventId,
     $considerStatus = TRUE,
     $status = TRUE,
     $considerRole = TRUE,
@@ -607,7 +607,7 @@ LIMIT      0, 10
       if ($status) {
         $statusClause = 'IN';
       }
-      $status = implode(',', array_keys($statusTypes));
+      $status = CRM_Utils_Array::implode(',', array_keys($statusTypes));
       if (empty($status)) {
         $status = 0;
       }
@@ -620,7 +620,7 @@ LIMIT      0, 10
       if ($role) {
         $roleClause = 'IN';
       }
-      $roles = implode(',', array_keys($roleTypes));
+      $roles = CRM_Utils_Array::implode(',', array_keys($roleTypes));
       if (empty($roles)) {
         $roles = 0;
       }
@@ -629,7 +629,7 @@ LIMIT      0, 10
 
     $sqlClause = '';
     if (!empty($clause)) {
-      $sqlClause = ' ( ' . implode($operator, $clause) . ' )';
+      $sqlClause = ' ( ' . CRM_Utils_Array::implode($operator, $clause) . ' )';
     }
 
     return self::eventTotalSeats($eventId, $sqlClause);
@@ -968,9 +968,9 @@ WHERE civicrm_event.is_active = 1
       }
 
       foreach ($table as $tableName => $tableColumns) {
-        $insert = 'INSERT INTO ' . $tableName . ' (' . implode(', ', $tableColumns) . ') ';
+        $insert = 'INSERT INTO ' . $tableName . ' (' . CRM_Utils_Array::implode(', ', $tableColumns) . ') ';
         $tableColumns[0] = $copyEvent->id;
-        $select = 'SELECT ' . implode(', ', $tableColumns);
+        $select = 'SELECT ' . CRM_Utils_Array::implode(', ', $tableColumns);
         $from = ' FROM ' . $tableName;
         $where = " WHERE {$tableName}.entity_id = {$id}";
         $query = $insert . $select . $from . $where;
@@ -995,7 +995,7 @@ WHERE civicrm_event.is_active = 1
    */
   static function isMonetary($id) {
     static $isMonetary = array();
-    if (!array_key_exists($id, $isMonetary)) {
+    if (!CRM_Utils_Array::arrayKeyExists($id, $isMonetary)) {
       $isMonetary[$id] = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Event',
         $id,
         'is_monetary'
@@ -1011,7 +1011,7 @@ WHERE civicrm_event.is_active = 1
   static function usesPriceSet($id) {
     require_once 'CRM/Price/BAO/Set.php';
     static $usesPriceSet = array();
-    if (!array_key_exists($id, $usesPriceSet)) {
+    if (!CRM_Utils_Array::arrayKeyExists($id, $usesPriceSet)) {
       $usesPriceSet[$id] = CRM_Price_BAO_Set::getFor('civicrm_event', $id);
     }
     return $usesPriceSet[$id];
@@ -1219,7 +1219,7 @@ WHERE civicrm_event.is_active = 1
    * @return None
    * @access public
    */
-  function buildCustomDisplay($gid,
+  static function buildCustomDisplay($gid,
     $name,
     $cid,
     &$template,
@@ -1276,12 +1276,12 @@ WHERE civicrm_event.is_active = 1
           if (!empty($grpIds)) {
             //get the group titles.
             $grpTitles = array();
-            $query = 'SELECT title FROM civicrm_group where id IN ( ' . implode(',', $grpIds) . ' )';
+            $query = 'SELECT title FROM civicrm_group where id IN ( ' . CRM_Utils_Array::implode(',', $grpIds) . ' )';
             $grp = CRM_Core_DAO::executeQuery($query);
             while ($grp->fetch()) {
               $grpTitles[] = $grp->title;
             }
-            $values[$fields['group']['title']] = implode(', ', $grpTitles);
+            $values[$fields['group']['title']] = CRM_Utils_Array::implode(', ', $grpTitles);
             unset($fields['group']);
           }
         }
@@ -1327,7 +1327,7 @@ WHERE civicrm_event.is_active = 1
               unset($feeLevel[$key]);
             }
           }
-          $values[$fields['participant_fee_level']['title']] = implode(",", $feeLevel);
+          $values[$fields['participant_fee_level']['title']] = CRM_Utils_Array::implode(",", $feeLevel);
         }
 
         unset($values[$fields['participant_id']['title']]);
@@ -1360,7 +1360,7 @@ WHERE civicrm_event.is_active = 1
    * @return None
    * @access public
    */
-  function displayProfile(&$params, $gid, &$groupTitle, &$values) {
+  static function displayProfile(&$params, $gid, &$groupTitle, &$values) {
     if ($gid) {
       require_once 'CRM/Core/BAO/UFGroup.php';
       require_once 'CRM/Profile/Form.php';
@@ -1460,7 +1460,7 @@ WHERE civicrm_event.is_active = 1
               }
             }
           }
-          $values[$index] = implode(",", $compref);
+          $values[$index] = CRM_Utils_Array::implode(",", $compref);
         }
         elseif ($name == 'group') {
           require_once 'CRM/Contact/BAO/GroupContact.php';
@@ -1471,7 +1471,7 @@ WHERE civicrm_event.is_active = 1
               $title[] = $groups[$gId];
             }
           }
-          $values[$index] = implode(', ', $title);
+          $values[$index] = CRM_Utils_Array::implode(', ', $title);
         }
         elseif ($name == 'tag') {
           require_once 'CRM/Core/BAO/EntityTag.php';
@@ -1483,7 +1483,7 @@ WHERE civicrm_event.is_active = 1
               $title[] = $allTags[$tagId];
             }
           }
-          $values[$index] = implode(', ', $title);
+          $values[$index] = CRM_Utils_Array::implode(', ', $title);
         }
         elseif ('participant_role_id' == $name) {
           $roles = CRM_Event_PseudoConstant::participantRole();
@@ -1649,7 +1649,7 @@ WHERE  id = $cfID
    *@return array $customProfile array of Additional participant's info OR array of Ids.
    *@access public
    */
-  function buildCustomProfile($participantId,
+  static function buildCustomProfile($participantId,
     $values,
     $contactId = NULL,
     $isTest = FALSE,
@@ -1785,7 +1785,7 @@ ORDER BY sp.name, ca.city, ca.street_address ASC
         if ($dao->phone) {
           $contactInfo[] = $dao->phone;
         }
-        $title .= " - (".ts('Contact info').":".implode(',', $contactInfo).")";
+        $title .= " - (".ts('Contact info').":".CRM_Utils_Array::implode(',', $contactInfo).")";
       }
       $events[$dao->loc_block_id] = $title;
     }
@@ -1870,7 +1870,7 @@ WHERE  ce.loc_block_id = $locBlockId";
      * @return boolean $alreadyRegistered true/false
      * @access public
      */
-  function alreadyRegistered($params) {
+  static function alreadyRegistered($params) {
     $alreadyRegistered = FALSE;
     if (!CRM_Utils_Array::value('contact_id', $params)) {
       return $alreadyRegistered;
@@ -1886,7 +1886,7 @@ WHERE  ce.loc_block_id = $locBlockId";
     $participant->is_test = CRM_Utils_Array::value('is_test', $params, 0);
     $participant->selectAdd();
     $participant->selectAdd('status_id');
-    if ($participant->find(TRUE) && array_key_exists($participant->status_id, $statusTypes)) {
+    if ($participant->find(TRUE) && CRM_Utils_Array::arrayKeyExists($participant->status_id, $statusTypes)) {
       $alreadyRegistered = TRUE;
     }
 
@@ -2055,7 +2055,7 @@ WHERE  ce.loc_block_id = $locBlockId";
    * @access public
    * @static
    */
-  function eventTotalSeats($eventId, $extraWhereClause = NULL) {
+  static function eventTotalSeats($eventId, $extraWhereClause = NULL) {
     if (empty($eventId)) {
       return 0;
     }
@@ -2120,7 +2120,7 @@ LEFT  JOIN  civicrm_price_field_value value ON ( value.id = lineItem.price_field
     $templateObject->assign('share_google_calendar', 'http://www.google.com/calendar/event?'.http_build_query($gcal));
   }
 
-  function tokenize($contactId, $input) {
+  static function tokenize($contactId, $input) {
     $output = $input;
     $tokens = CRM_Utils_Token::getTokens($input);
     if (isset($tokens['contact'])) {

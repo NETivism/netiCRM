@@ -157,7 +157,7 @@ WHERE  option_group_id = %1";
       while ($dao->fetch()) {
         $reusedNames[] = $dao->label;
       }
-      $reusedNames = implode(', ', $reusedNames);
+      $reusedNames = CRM_Utils_Array::implode(', ', $reusedNames);
       $newTitle = ts('%1 - Multiple Choice Options',
         array(1 => $reusedNames)
       );

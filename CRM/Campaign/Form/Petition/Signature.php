@@ -470,7 +470,7 @@ class CRM_Campaign_Form_Petition_Signature extends CRM_Core_Form {
     $customActivityFields = CRM_Core_BAO_CustomField::getFields('Activity', FALSE, FALSE,
       $surveyInfo['activity_type_id']
     );
-    $customActivityFields = CRM_Utils_Array::crmArrayMerge($customActivityFields,
+    $customActivityFields = CRM_Utils_Array::arrayMerge($customActivityFields,
       CRM_Core_BAO_CustomField::getFields('Activity', FALSE, FALSE,
         NULL, NULL, TRUE
       )

@@ -92,7 +92,7 @@ class CRM_Member_Form_Task_Batch extends CRM_Member_Form_Task {
     //get the read only field data.$returnProperties = array('sort_name' => 1);
     $contactDetails = CRM_Contact_BAO_Contact_Utils::contactDetails($this->_memberIds, 'CiviMember', $returnProperties);
     $membershipDAO = new CRM_Member_DAO_Membership();
-    $membershipDAO->whereAdd("id IN (".implode(',', $this->_memberIds).")");
+    $membershipDAO->whereAdd("id IN (".CRM_Utils_Array::implode(',', $this->_memberIds).")");
     $membershipDAO->selectAdd(); // clear *
     $membershipDAO->selectAdd('id as membership_id');
     $membershipDAO->find();
@@ -257,7 +257,7 @@ class CRM_Member_Form_Task_Batch extends CRM_Member_Form_Task {
           // membership type custom data
           $customFields = CRM_Core_BAO_CustomField::getFields('Membership', FALSE, FALSE, $membership->membership_type_id);
 
-          $customFields = CRM_Utils_Array::crmArrayMerge($customFields,
+          $customFields = CRM_Utils_Array::arrayMerge($customFields,
             CRM_Core_BAO_CustomField::getFields('Membership',
               FALSE, FALSE, NULL, NULL, TRUE
             )

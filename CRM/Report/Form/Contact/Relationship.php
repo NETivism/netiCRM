@@ -219,7 +219,7 @@ class CRM_Report_Form_Contact_Relationship extends CRM_Report_Form {
   function select() {
     $select = $this->_columnHeaders = array();
     foreach ($this->_columns as $tableName => $table) {
-      if (array_key_exists('fields', $table)) {
+      if (CRM_Utils_Array::arrayKeyExists('fields', $table)) {
         foreach ($table['fields'] as $fieldName => $field) {
           if (CRM_Utils_Array::value('required', $field) ||
             CRM_Utils_Array::value($fieldName, $this->_params['fields'])
@@ -239,7 +239,7 @@ class CRM_Report_Form_Contact_Relationship extends CRM_Report_Form {
       }
     }
 
-    $this->_select = "SELECT " . implode(', ', $select) . " ";
+    $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
   function from() {
@@ -293,7 +293,7 @@ class CRM_Report_Form_Contact_Relationship extends CRM_Report_Form {
   function where() {
     $whereClauses = $havingClauses = array();
     foreach ($this->_columns as $tableName => $table) {
-      if (array_key_exists('filters', $table)) {
+      if (CRM_Utils_Array::arrayKeyExists('filters', $table)) {
         foreach ($table['filters'] as $fieldName => $field) {
 
           $clause = NULL;
@@ -385,7 +385,7 @@ class CRM_Report_Form_Contact_Relationship extends CRM_Report_Form {
       $this->_having = '';
     }
     else {
-      $this->_where = 'WHERE ' . implode(' AND ', $whereClauses);
+      $this->_where = 'WHERE ' . CRM_Utils_Array::implode(' AND ', $whereClauses);
     }
 
     if ($this->_aclWhere) {
@@ -394,7 +394,7 @@ class CRM_Report_Form_Contact_Relationship extends CRM_Report_Form {
 
     if (!empty($havingClauses)) {
       // use this clause to construct group by clause.
-      $this->_having = 'HAVING ' . implode(' AND ', $havingClauses);
+      $this->_having = 'HAVING ' . CRM_Utils_Array::implode(' AND ', $havingClauses);
     }
   }
 
@@ -444,7 +444,7 @@ class CRM_Report_Form_Contact_Relationship extends CRM_Report_Form {
     }
 
     if (!empty($groupBy)) {
-      $this->_groupBy = " GROUP BY  " . implode(', ', $groupBy) . " ,  {$this->_aliases['civicrm_relationship']}.id ";
+      $this->_groupBy = " GROUP BY  " . CRM_Utils_Array::implode(', ', $groupBy) . " ,  {$this->_aliases['civicrm_relationship']}.id ";
     }
     else {
       $this->_groupBy = " GROUP BY {$this->_aliases['civicrm_relationship']}.id ";
@@ -472,7 +472,7 @@ class CRM_Report_Form_Contact_Relationship extends CRM_Report_Form {
 
     if (!empty($relType)) {
       // store its old value, CRM-5837
-      $this->_params['relationship_type_id_value'] = implode('_', $relType);
+      $this->_params['relationship_type_id_value'] = CRM_Utils_Array::implode('_', $relType);
     }
     $this->endPostProcess($rows);
   }
@@ -484,22 +484,22 @@ class CRM_Report_Form_Contact_Relationship extends CRM_Report_Form {
     foreach ($rows as $rowNum => $row) {
 
       // handle country
-      if (array_key_exists('civicrm_address_country_id', $row)) {
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_address_country_id', $row)) {
         if ($value = $row['civicrm_address_country_id']) {
           $rows[$rowNum]['civicrm_address_country_id'] = CRM_Core_PseudoConstant::country($value, FALSE);
         }
         $entryFound = TRUE;
       }
 
-      if (array_key_exists('civicrm_address_state_province_id', $row)) {
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_address_state_province_id', $row)) {
         if ($value = $row['civicrm_address_state_province_id']) {
           $rows[$rowNum]['civicrm_address_state_province_id'] = CRM_Core_PseudoConstant::stateProvince($value, FALSE);
         }
         $entryFound = TRUE;
       }
 
-      if (array_key_exists('civicrm_contact_display_name_a', $row) &&
-        array_key_exists('civicrm_contact_id', $row)
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_contact_display_name_a', $row) &&
+        CRM_Utils_Array::arrayKeyExists('civicrm_contact_id', $row)
       ) {
         $url = CRM_Report_Utils_Report::getNextUrl('contact/detail',
           'reset=1&force=1&id_op=eq&id_value=' . $row['civicrm_contact_id'],
@@ -510,8 +510,8 @@ class CRM_Report_Form_Contact_Relationship extends CRM_Report_Form {
         $entryFound = TRUE;
       }
 
-      if (array_key_exists('civicrm_contact_b_display_name_b', $row) &&
-        array_key_exists('civicrm_contact_b_id', $row)
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_contact_b_display_name_b', $row) &&
+        CRM_Utils_Array::arrayKeyExists('civicrm_contact_b_id', $row)
       ) {
         $url = CRM_Report_Utils_Report::getNextUrl('contact/detail',
           'reset=1&force=1&id_op=eq&id_value=' . $row['civicrm_contact_b_id'],

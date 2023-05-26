@@ -51,7 +51,7 @@
 
 function civicrm_api3_location_type_create($params) {
   //set display_name equal to name if it's not defined
-  if (!array_key_exists('display_name', $params) && array_key_exists('name', $params)) {
+  if (!CRM_Utils_Array::arrayKeyExists('display_name', $params) && CRM_Utils_Array::arrayKeyExists('name', $params)) {
     $params['display_name'] = $params['name'];
   }
 

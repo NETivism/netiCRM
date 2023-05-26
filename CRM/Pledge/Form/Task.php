@@ -117,7 +117,7 @@ class CRM_Pledge_Form_Task extends CRM_Core_Form {
     }
 
     if (!empty($ids)) {
-      $form->_componentClause = ' civicrm_pledge.id IN ( ' . implode(',', $ids) . ' ) ';
+      $form->_componentClause = ' civicrm_pledge.id IN ( ' . CRM_Utils_Array::implode(',', $ids) . ' ) ';
       $form->assign('totalSelectedPledges', count($ids));
     }
 

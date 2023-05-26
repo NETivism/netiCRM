@@ -274,7 +274,7 @@ class CRM_Core_Block {
    * @return void
    * @access private
    */
-  private function setTemplateValues($id) {
+  private static function setTemplateValues($id) {
     switch ($id) {
       case self::CREATE_NEW:
         self::setTemplateShortcutValues();
@@ -323,7 +323,7 @@ class CRM_Core_Block {
    * @return void
    * @access private
    */
-  private function setTemplateShortcutValues() {
+  private static function setTemplateShortcutValues() {
     $config = CRM_Core_Config::singleton();
 
     static $shortCuts = array();
@@ -416,7 +416,7 @@ class CRM_Core_Block {
    * @return void
    * @access private
    */
-  private function setTemplateDashboardValues() {
+  private static function setTemplateDashboardValues() {
     static $dashboardLinks = array();
     if (CRM_Core_Permission::check('access Contact Dashboard')) {
       $dashboardLinks = array(array('path' => 'civicrm/user',
@@ -498,7 +498,7 @@ class CRM_Core_Block {
    * @return void
    * @access private
    */
-  private function setTemplateEventValues() {
+  private static function setTemplateEventValues() {
     $config = CRM_Core_Config::singleton();
 
     require_once 'CRM/Event/BAO/Event.php';
@@ -569,7 +569,7 @@ class CRM_Core_Block {
     // Suppress Recent Items block if it's empty - CRM-5188
     if ($id == self::RECENTLY_VIEWED) {
       $recent = self::getProperty($id, 'templateValues');
-      if (CRM_Utils_Array::crmIsEmptyArray($recent)) {
+      if (CRM_Utils_Array::isEmpty($recent)) {
         return NULL;
       }
     }

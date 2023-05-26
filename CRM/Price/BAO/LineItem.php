@@ -171,12 +171,12 @@ WHERE     %2.id = %1";
       return;
     }
 
-    $optionIDs = implode(',', array_keys($params["price_{$fid}"]));
+    $optionIDs = CRM_Utils_Array::implode(',', array_keys($params["price_{$fid}"]));
 
     //lets first check in fun parameter,
     //since user might modified w/ hooks.
     $options = array();
-    if (array_key_exists('options', $fields)) {
+    if (CRM_Utils_Array::arrayKeyExists('options', $fields)) {
       $options = $fields['options'];
     }
     else {
@@ -227,7 +227,7 @@ WHERE     %2.id = %1";
       $entityId = array($entityId);
     }
 
-    $query = "DELETE FROM civicrm_line_item where entity_id IN ('" . implode("','", $entityId) . "') AND entity_table = '$entityTable'";
+    $query = "DELETE FROM civicrm_line_item where entity_id IN ('" . CRM_Utils_Array::implode("','", $entityId) . "') AND entity_table = '$entityTable'";
     $dao = CRM_Core_DAO::executeQuery($query);
     return $result;
   }

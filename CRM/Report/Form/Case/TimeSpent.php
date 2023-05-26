@@ -160,7 +160,7 @@ class CRM_Report_Form_Case_TimeSpent extends CRM_Report_Form {
     $this->has_activity_type = FALSE;
 
     foreach ($this->_columns as $tableName => $table) {
-      if (array_key_exists('fields', $table)) {
+      if (CRM_Utils_Array::arrayKeyExists('fields', $table)) {
         foreach ($table['fields'] as $fieldName => $field) {
           if (CRM_Utils_Array::value('required', $field) ||
             (CRM_Utils_Array::value($fieldName, $this->_params['fields'])
@@ -195,7 +195,7 @@ class CRM_Report_Form_Case_TimeSpent extends CRM_Report_Form {
       }
     }
 
-    $this->_select = "SELECT " . implode(', ', $select) . " ";
+    $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
   function from() {
@@ -216,7 +216,7 @@ class CRM_Report_Form_Case_TimeSpent extends CRM_Report_Form {
                                 {$this->_aliases['civicrm_activity']}.is_test = 0";
     $clauses = array();
     foreach ($this->_columns as $tableName => $table) {
-      if (array_key_exists('filters', $table)) {
+      if (CRM_Utils_Array::arrayKeyExists('filters', $table)) {
 
         foreach ($table['filters'] as $fieldName => $field) {
           $clause = NULL;
@@ -262,7 +262,7 @@ class CRM_Report_Form_Case_TimeSpent extends CRM_Report_Form {
       $this->_where .= " ";
     }
     else {
-      $this->_where .= " AND " . implode(' AND ', $clauses);
+      $this->_where .= " AND " . CRM_Utils_Array::implode(' AND ', $clauses);
     }
   }
 
@@ -285,7 +285,7 @@ GROUP BY {$this->_aliases['civicrm_contact']}.id,
   static function formRule($fields, $files, $self) {
     $errors = array();
     if (!empty($fields['group_bys']) &&
-      (!array_key_exists('id', $fields['fields']) || !array_key_exists('activity_date_time', $fields['fields']) || !array_key_exists('duration', $fields['fields']))
+      (!CRM_Utils_Array::arrayKeyExists('id', $fields['fields']) || !CRM_Utils_Array::arrayKeyExists('activity_date_time', $fields['fields']) || !CRM_Utils_Array::arrayKeyExists('duration', $fields['fields']))
     ) {
       $errors['fields'] = ts('To view totals please select all of activity id, date and duration.');
     }
@@ -299,14 +299,14 @@ GROUP BY {$this->_aliases['civicrm_contact']}.id,
     $entryFound = FALSE;
     foreach ($rows as $rowNum => $row) {
 
-      if (array_key_exists('civicrm_activity_activity_type_id', $row)) {
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_activity_activity_type_id', $row)) {
         $entryFound = TRUE;
         if ($value = $row['civicrm_activity_activity_type_id']) {
           $rows[$rowNum]['civicrm_activity_activity_type_id'] = $this->activityTypes[$value];
         }
       }
 
-      if (array_key_exists('civicrm_activity_status_id', $row)) {
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_activity_status_id', $row)) {
         $entryFound = TRUE;
         if ($value = $row['civicrm_activity_status_id']) {
           $rows[$rowNum]['civicrm_activity_status_id'] = $this->activityStatuses[$value];
@@ -314,14 +314,14 @@ GROUP BY {$this->_aliases['civicrm_contact']}.id,
       }
 
       // The next two make it easier to make pivot tables after exporting to Excel
-      if (array_key_exists('civicrm_activity_duration', $row)) {
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_activity_duration', $row)) {
         $entryFound = TRUE;
         if ($row['civicrm_activity_duration'] == '') {
           $rows[$rowNum]['civicrm_activity_duration'] = '0';
         }
       }
 
-      if (array_key_exists('civicrm_case_activity_case_id', $row)) {
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_case_activity_case_id', $row)) {
         $entryFound = TRUE;
         if ($row['civicrm_case_activity_case_id'] == '') {
           $rows[$rowNum]['civicrm_case_activity_case_id'] = '0';

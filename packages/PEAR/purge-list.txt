@@ -1,0 +1,4 @@
+pear
+pecl
+peardev
+pearcmd.php

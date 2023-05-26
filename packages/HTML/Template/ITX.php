@@ -115,14 +115,14 @@ class HTML_Template_ITX extends HTML_Template_IT
     *
     * @see    HTML_Template_IT()
     */
-    function HTML_Template_ITX($root = '')
+    function __construct($root = '')
     {
 
         $this->checkblocknameRegExp = '@' . $this->blocknameRegExp . '@';
         $this->functionRegExp = '@' . $this->functionPrefix . '(' .
                                 $this->functionnameRegExp . ')\s*\(@sm';
 
-        $this->HTML_Template_IT($root);
+        parent::__construct($root);
     } // end func constructor
 
     function init()
@@ -279,7 +279,8 @@ class HTML_Template_ITX extends HTML_Template_IT
         } elseif (count($parents) > 1) {
 
             reset($parents);
-            while (list($k, $parent) = each($parents)) {
+            $msg = '';
+            foreach($parents as $k => $parent) {
                 $msg .= "$parent, ";
             }
             $msg = substr($parent, -2);
@@ -360,7 +361,7 @@ class HTML_Template_ITX extends HTML_Template_IT
             if (is_array($variables = $this->blockvariables[$block])) {
                 // search the value in the list of blockvariables
                 reset($variables);
-                while (list($k, $variable) = each($variables)) {
+                foreach($variables as $k => $variable) {
                     if ($k == $placeholder) {
                         $found = $block;
                         break;
@@ -372,7 +373,7 @@ class HTML_Template_ITX extends HTML_Template_IT
             // search all blocks and return the name of the first block that
             // contains the placeholder
             reset($this->blockvariables);
-            while (list($blockname, $variables) = each($this->blockvariables)){
+            foreach($this->blockvariables as $blockname => $variables) {
                 if (is_array($variables) && isset($variables[$placeholder])) {
                     $found = $blockname;
                     break;
@@ -392,7 +393,7 @@ class HTML_Template_ITX extends HTML_Template_IT
     function performCallback()
     {
         reset($this->functions);
-        while (list($func_id, $function) = each($this->functions)) {
+        foreach($this->functions as $func_id => $function) {
             if (isset($this->callback[$function['name']])) {
                 if ($this->callback[$function['name']]['expandParameters']) { 
                     $callFunction = 'call_user_func_array';
@@ -730,7 +731,7 @@ class HTML_Template_ITX extends HTML_Template_IT
         }
 
         reset($this->blockvariables[$block]);
-        while (list($varname, $val) = each($this->blockvariables[$block])) {
+        foreach($this->blockvariables[$block] as $varname => $val) {
             if (isset($variables[$varname])) {
                 unset($this->blockvariables[$block][$varname]);
             }
@@ -784,11 +785,9 @@ class HTML_Template_ITX extends HTML_Template_IT
     {
         $parents = array();
         reset($this->blocklist);
-        while (list($blockname, $content) = each($this->blocklist)) {
+        foreach($this->blocklist as $blockname => $content) {
             reset($this->blockvariables[$blockname]);
-            while (
-                list($varname, $val) = each($this->blockvariables[$blockname]))
-            {
+            foreach($this->blockvariables[$blockname] as $varname => $val) {
                 if ($variable == $varname) {
                     $parents[] = $blockname;
                 }
@@ -829,4 +828,3 @@ class HTML_Template_ITX extends HTML_Template_IT
     } // end func warning
 
 } // end class HTML_Template_ITX
-?>

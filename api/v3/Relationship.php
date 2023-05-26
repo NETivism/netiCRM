@@ -85,7 +85,7 @@ function civicrm_api3_relationship_create($params) {
   $relationID = $relationshipBAO[4][0];
   return civicrm_api3_create_success(array(
     $relationID => array('id' => $relationID,
-        'moreIDs' => implode(',', $relationshipBAO[4]),
+        'moreIDs' => CRM_Utils_Array::implode(',', $relationshipBAO[4]),
       )));
 }
 /*
@@ -229,7 +229,7 @@ function _civicrm_api3_relationship_format_params($params, &$values) {
           throw new Exception('Invalid Relationship Type');
         }
       case 'relationship_type_id':
-        if ($key == 'relationship_type_id' && !array_key_exists($value, $relationTypes)) {
+        if ($key == 'relationship_type_id' && !CRM_Utils_Array::arrayKeyExists($value, $relationTypes)) {
           throw new Exception("$key not a valid: $value");
         }
 
@@ -252,7 +252,7 @@ function _civicrm_api3_relationship_format_params($params, &$values) {
     }
   }
 
-  if (array_key_exists('note', $params)) {
+  if (CRM_Utils_Array::arrayKeyExists('note', $params)) {
     $values['note'] = $params['note'];
   }
   _civicrm_api3_custom_format_params($params, $values, 'Relationship');

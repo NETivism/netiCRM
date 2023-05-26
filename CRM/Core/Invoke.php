@@ -51,7 +51,7 @@ class CRM_Core_Invoke {
     CRM_Utils_System::civiBeforeInvoke($args);
 
     // get the menu items
-    $path = implode('/', $args);
+    $path = CRM_Utils_Array::implode('/', $args);
     $item = CRM_Core_Menu::get($path);
 
     // we should try to compute menus, if item is empty and stay on the same page,
@@ -62,7 +62,9 @@ class CRM_Core_Invoke {
     }
 
     if ($item) {
-      if (!array_key_exists('page_callback', $item)) {
+      CRM_Utils_System::setCSPHeader();
+
+      if (!CRM_Utils_Array::arrayKeyExists('page_callback', $item)) {
         CRM_Core_Error::debug('Bad item', $item);
         CRM_Core_Error::fatal(ts('Bad menu record in database'));
       }

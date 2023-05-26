@@ -287,7 +287,7 @@ class CRM_Contact_BAO_Relationship extends CRM_Contact_DAO_Relationship {
    *
    * @return array - array reference of all relationship types with context to current contact.
    */
-  function getContactRelationshipType($contactId = NULL, $contactSuffix, $relationshipId,
+  static function getContactRelationshipType($contactId, $contactSuffix, $relationshipId,
     $contactType = NULL, $all = FALSE, $column = 'label',
     $biDirectional = TRUE, $contactSubType = NULL, $onlySubTypeRelationTypes = FALSE
   ) {
@@ -964,7 +964,7 @@ LEFT JOIN  civicrm_country ON (civicrm_address.country_id = civicrm_country.id)
    * @return array - array reference of all relationship types with context to current contact type .
    *
    */
-  function getRelationType($targetContactType) {
+  static function getRelationType($targetContactType) {
     $relationshipType = array();
     $allRelationshipType = CRM_Core_PseudoConstant::relationshipType();
 
@@ -1090,7 +1090,7 @@ LEFT JOIN  civicrm_country ON (civicrm_address.country_id = civicrm_country.id)
     // done with 'values' array.
     // Finally add / edit / delete memberships for the related contacts
     foreach ($values as $cid => $details) {
-      if (!array_key_exists('memberships', $details)) {
+      if (!CRM_Utils_Array::arrayKeyExists('memberships', $details)) {
         continue;
       }
 
@@ -1191,7 +1191,7 @@ SELECT relationship_type_id, relationship_direction
    *
    */
   static function getCurrentEmployer($contactIds) {
-    $contacts = implode(',', $contactIds);
+    $contacts = CRM_Utils_Array::implode(',', $contactIds);
 
     $query = "
 SELECT organization_name, id, employer_id 

@@ -81,17 +81,17 @@ class CRM_Event_Import_Form_UploadFile extends CRM_Core_Form {
     $this->addElement('checkbox', 'skipColumnHeader', ts('First row contains column headers'));
 
     $duplicateOptions = array();
-    $duplicateOptions[] = HTML_QuickForm::createElement('radio',
+    $duplicateOptions[] = $this->createElement('radio',
       NULL, NULL, ts('Skip'), CRM_Event_Import_Parser::DUPLICATE_SKIP
     );
-    $duplicateOptions[] = HTML_QuickForm::createElement('radio',
+    $duplicateOptions[] = $this->createElement('radio',
       NULL, NULL, ts('Update'), CRM_Event_Import_Parser::DUPLICATE_UPDATE
     );
-    $duplicateOptions[] = HTML_QuickForm::createElement('radio',
+    $duplicateOptions[] = $this->createElement('radio',
       NULL, NULL, ts('No Duplicate Checking'), CRM_Event_Import_Parser::DUPLICATE_NOCHECK
     );
     // for contributions NOCHECK == SKIP
-    //      $duplicateOptions[] = HTML_QuickForm::createElement('radio',
+    //      $duplicateOptions[] = $this->createElement('radio',
     //          null, null, ts('No Duplicate Checking'), CRM_Contribute_Import_Parser::DUPLICATE_NOCHECK);
 
     $this->addGroup($duplicateOptions, 'onDuplicate',
@@ -121,17 +121,17 @@ class CRM_Event_Import_Form_UploadFile extends CRM_Core_Form {
     require_once 'CRM/Contact/BAO/ContactType.php';
     $contactOptions = array();
     if (CRM_Contact_BAO_ContactType::isActive('Individual')) {
-      $contactOptions[] = HTML_QuickForm::createElement('radio',
+      $contactOptions[] = $this->createElement('radio',
         NULL, NULL, ts('Individual'), CRM_Event_Import_Parser::CONTACT_INDIVIDUAL
       );
     }
     if (CRM_Contact_BAO_ContactType::isActive('Household')) {
-      $contactOptions[] = HTML_QuickForm::createElement('radio',
+      $contactOptions[] = $this->createElement('radio',
         NULL, NULL, ts('Household'), CRM_Event_Import_Parser::CONTACT_HOUSEHOLD
       );
     }
     if (CRM_Contact_BAO_ContactType::isActive('Organization')) {
-      $contactOptions[] = HTML_QuickForm::createElement('radio',
+      $contactOptions[] = $this->createElement('radio',
         NULL, NULL, ts('Organization'), CRM_Event_Import_Parser::CONTACT_ORGANIZATION
       );
     }

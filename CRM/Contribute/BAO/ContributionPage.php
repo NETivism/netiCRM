@@ -193,7 +193,7 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
       }
 
       // get the billing location type
-      if (!array_key_exists('related_contact', $values)) {
+      if (!CRM_Utils_Array::arrayKeyExists('related_contact', $values)) {
         $locationTypes = &CRM_Core_PseudoConstant::locationType();
         $billingLocationTypeId = array_search(ts('Billing'), $locationTypes);
       }
@@ -206,7 +206,7 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
       }
 
       require_once 'CRM/Contact/BAO/Contact/Location.php';
-      if (!array_key_exists('related_contact', $values)) {
+      if (!CRM_Utils_Array::arrayKeyExists('related_contact', $values)) {
         list($displayName, $email) = CRM_Contact_BAO_Contact_Location::getEmailDetails($contactID, FALSE, $billingLocationTypeId);
       }
       // get primary location email if no email exist( for billing location).
@@ -296,7 +296,7 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
       // cc to related contacts of contributor OR the one who
       // signs up. Is used for cases like - on behalf of
       // contribution / signup ..etc
-      if (array_key_exists('related_contact', $values)) {
+      if (CRM_Utils_Array::arrayKeyExists('related_contact', $values)) {
         list($ccDisplayName, $ccEmail) = CRM_Contact_BAO_Contact_Location::getEmailDetails($values['related_contact']);
         $ccMailId = "{$ccDisplayName} <{$ccEmail}>";
 
@@ -519,7 +519,7 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
    * @access public
    * @static
    */
-  function buildCustomDisplay($gid, $name, $cid, &$template, &$params) {
+  static function buildCustomDisplay($gid, $name, $cid, &$template, &$params) {
     if ($gid) {
       require_once 'CRM/Core/BAO/UFGroup.php';
       if (CRM_Core_BAO_UFGroup::filterUFGroups($gid, $cid)) {
@@ -699,11 +699,11 @@ WHERE entity_table = 'civicrm_contribution_page'
    * @return array $info info regarding all sections.
    * @access public
    */
-  function getSectionInfo($contribPageIds = array()) {
+  static function getSectionInfo($contribPageIds = array()) {
     $info = array();
     $whereClause = NULL;
     if (is_array($contribPageIds) && !empty($contribPageIds)) {
-      $whereClause = 'WHERE civicrm_contribution_page.id IN ( ' . implode(', ', $contribPageIds) . ' )';
+      $whereClause = 'WHERE civicrm_contribution_page.id IN ( ' . CRM_Utils_Array::implode(', ', $contribPageIds) . ' )';
     }
 
     $sections = array('settings',
@@ -804,7 +804,7 @@ LEFT JOIN  civicrm_premiums            ON ( civicrm_premiums.entity_id = civicrm
       }
       $label .= ts('Goal Recurring Amount');
       $whereClause[] = "r.contribution_status_id = 5"; // In Progress 
-      $where = implode(" AND ", $whereClause);
+      $where = CRM_Utils_Array::implode(" AND ", $whereClause);
       $sql = "SELECT SUM(amount) as `sum`, COUNT(id) as `count` FROM (SELECT r.id, r.amount FROM civicrm_contribution_recur r INNER JOIN civicrm_contribution c ON c.contribution_recur_id = r.id WHERE $where GROUP BY c.contribution_recur_id) rr";
       $goal = $page['goal_amount'];
     }
@@ -812,7 +812,7 @@ LEFT JOIN  civicrm_premiums            ON ( civicrm_premiums.entity_id = civicrm
     elseif (!empty($page['goal_amount']) && $page['goal_amount'] > 0) {
       $type = 'amount';
       $label = ts('Goal Amount');
-      $where = implode(" AND ", $whereClause);
+      $where = CRM_Utils_Array::implode(" AND ", $whereClause);
       $sql = "SELECT SUM(c.total_amount) as `sum`, COUNT(id) as `count` FROM civicrm_contribution c WHERE $where GROUP BY c.contribution_page_id";
       $goal = $page['goal_amount'];
     }
@@ -821,7 +821,7 @@ LEFT JOIN  civicrm_premiums            ON ( civicrm_premiums.entity_id = civicrm
       $type = 'recurring';
       $label = ts('Goal Subscription');
       $whereClause[] = "r.contribution_status_id not in (3,7)";
-      $where = implode(" AND ", $whereClause);
+      $where = CRM_Utils_Array::implode(" AND ", $whereClause);
       $sql = "SELECT SUM(subscription.total_amount) as `sum`, COUNT(subscription.id) as `count` FROM (SELECT c.total_amount, c.id FROM civicrm_contribution c INNER JOIN civicrm_contribution_recur r ON c.contribution_recur_id = r.id WHERE $where GROUP BY r.id) as subscription";
       $goal = $page['goal_recurring'];
     }
@@ -848,7 +848,7 @@ LEFT JOIN  civicrm_premiums            ON ( civicrm_premiums.entity_id = civicrm
     return array();
   }
 
-  function tokenize($contactId, $input, $contributionId = NULL) {
+  static function tokenize($contactId, $input, $contributionId = NULL) {
     $output = $input;
     $tokens = CRM_Utils_Token::getTokens($input);
     $contactParams = array('contact_id' => $contactId);

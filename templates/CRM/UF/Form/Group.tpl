@@ -35,7 +35,7 @@
  
     {if $action eq 8 or $action eq 64}
     {if $action eq 8}
-     <h2> {ts}Delete CiviCRM Profile{/ts}</h2>
+     <h2>{ts}Delete CiviCRM Profile{/ts}</h2>
     {/if}
             <div class="messages status">
                    
@@ -237,5 +237,5 @@ cj(function($) {
 
 {* include jscript to warn if unsaved form field changes *}
 {include file="CRM/common/formNavigate.tpl"}
-{include file="CRM/common/sidePanel.tpl" type="iframe" src="https://neticrm.tw/CRMDOC/Profile+Used+For" triggerText="Description of Used For" triggerIcon="zmdi-help-outline" width="400px" opened="true"}
+{include file="CRM/common/sidePanel.tpl" type="iframe" src="`$config->docURLBase`Profile+Used+For" triggerText="Description of Used For" triggerIcon="zmdi-help-outline" width="400px" opened="true"}
   {literal}

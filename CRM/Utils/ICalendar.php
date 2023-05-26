@@ -60,7 +60,7 @@ class CRM_Utils_ICalendar {
     $text = strip_tags($text);
     $text = str_replace(",", "\,", $text);
     $text = str_replace(";", "\;", $text);
-    $text = implode("\n ", CRM_Utils_ICalendar::mb_str_split($text, 20));
+    $text = CRM_Utils_Array::implode("\n ", CRM_Utils_ICalendar::mb_str_split($text, 20));
     return $text;
   }
 
@@ -115,7 +115,7 @@ class CRM_Utils_ICalendar {
    * @return void
    *
    */
-  function send($calendar, $content_type = 'text/calendar', $charset = 'us-ascii', $fileName = NULL, $disposition = NULL) {
+  static function send($calendar, $content_type = 'text/calendar', $charset = 'us-ascii', $fileName = NULL, $disposition = NULL) {
     require_once 'CRM/Core/Config.php';
     $config = CRM_Core_Config::singleton();
     $lang = $config->lcMessages;
@@ -131,7 +131,7 @@ class CRM_Utils_ICalendar {
     echo $calendar;
   }
 
-  function mb_str_split($str, $split_len = 1) {
+  static function mb_str_split($str, $split_len = 1) {
     if (!preg_match('/^[0-9]+$/', $split_len) || $split_len < 1) {
       return FALSE;
     }

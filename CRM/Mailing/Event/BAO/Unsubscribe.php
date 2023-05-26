@@ -181,7 +181,7 @@ class CRM_Mailing_Event_BAO_Unsubscribe extends CRM_Mailing_Event_DAO_Unsubscrib
                 SELECT      $mg.entity_table as entity_table,
                             $mg.entity_id as entity_id
                 FROM        $mg
-                WHERE       $mg.mailing_id IN (" . implode(', ', $mailings) . ")
+                WHERE       $mg.mailing_id IN (" . CRM_Utils_Array::implode(', ', $mailings) . ")
                     AND     $mg.group_type = 'Include'");
 
       $mailings = array();
@@ -215,7 +215,7 @@ class CRM_Mailing_Event_BAO_Unsubscribe extends CRM_Mailing_Event_DAO_Unsubscrib
 
     $baseGroupClause = '';
     if (!empty($base_group_ids)) {
-      $baseGroupClause = "OR  $group.id IN(" . implode(', ', $base_group_ids) . ")";
+      $baseGroupClause = "OR  $group.id IN(" . CRM_Utils_Array::implode(', ', $base_group_ids) . ")";
     }
     $do->query("
             SELECT      $group.id as group_id,
@@ -224,7 +224,7 @@ class CRM_Mailing_Event_BAO_Unsubscribe extends CRM_Mailing_Event_DAO_Unsubscrib
             FROM        $group
             LEFT JOIN   $gc
                 ON      $gc.group_id = $group.id
-            WHERE       $group.id IN (" . implode(', ', array_merge($group_ids, $base_group_ids)) . ")
+            WHERE       $group.id IN (" . CRM_Utils_Array::implode(', ', array_merge($group_ids, $base_group_ids)) . ")
                 AND     $group.is_hidden = 0
                 AND     ($group.saved_search_id is not null
                             OR  ($gc.contact_id = $contact_id
@@ -287,7 +287,7 @@ class CRM_Mailing_Event_BAO_Unsubscribe extends CRM_Mailing_Event_DAO_Unsubscrib
    * @access public
    * @static
    */
-  public static function send_unsub_response($queue_id, $groups, $is_domain = FALSE, $job) {
+  public static function send_unsub_response($queue_id, $groups, $is_domain, $job) {
     $config = CRM_Core_Config::singleton();
     $domain = CRM_Core_BAO_Domain::getDomain();
 

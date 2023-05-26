@@ -60,7 +60,7 @@ class CRM_Contact_Form_Task_TaiwanACHExport extends CRM_Contact_Form_Task {
 
     $messages = array_unique($messages);
     if ($this->_hasProblem) {
-      $message = implode('<br>', $messages);
+      $message = CRM_Utils_Array::implode('<br>', $messages);
        return CRM_Core_Error::statusBounce($message);
     }
     else if(!empty($messages)) {
@@ -107,7 +107,7 @@ class CRM_Contact_Form_Task_TaiwanACHExport extends CRM_Contact_Form_Task {
     $errors = array();
     if (!empty($fields['payment_type'])) {
       $paymentType = $fields['payment_type'];
-      $ids = implode(",", $self->_additionalIds);
+      $ids = CRM_Utils_Array::implode(",", $self->_additionalIds);
       $dao = CRM_Core_DAO::executeQuery("SELECT id FROM civicrm_contribution_taiwanach WHERE payment_type = %1 AND contribution_recur_id IN ($ids)", array(
         1 => array($paymentType, 'String'),
       ));

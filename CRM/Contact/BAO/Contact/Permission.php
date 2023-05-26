@@ -143,7 +143,7 @@ WHERE $permission
     while (!empty($values)) {
       $processed = TRUE;
       $input = array_splice($values, 0, self::NUM_CONTACTS_TO_INSERT);
-      $str = implode(',', $input);
+      $str = CRM_Utils_Array::implode(',', $input);
       $sql = "REPLACE INTO civicrm_acl_contact_cache ( user_id, contact_id, operation ) VALUES $str;";
       CRM_Core_DAO::executeQuery($sql);
     }
@@ -161,7 +161,7 @@ WHERE $permission
           // CRM-6181
           $wheres[] = "$alias.is_deleted = 0";
         }
-        return array(NULL, '(' . implode(' AND ', $wheres) . ')');
+        return array(NULL, '(' . CRM_Utils_Array::implode(' AND ', $wheres) . ')');
       }
       else {
         // CRM-6181
@@ -185,7 +185,7 @@ WHERE $permission
         $clauses[] = " INNER JOIN civicrm_acl_contact_cache aclContactCache_{$k} ON {$alias}.id = aclContactCache_{$k}.contact_id AND aclContactCache_{$k}.user_id = $contactID ";
       }
 
-      $fromClause = implode(" ", $clauses);
+      $fromClause = CRM_Utils_Array::implode(" ", $clauses);
       $whereClase = NULL;
     }
     else {

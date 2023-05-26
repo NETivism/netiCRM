@@ -51,7 +51,7 @@ class CRM_Core_Extensions_Report {
   }
 
   public function install() {
-    if (array_key_exists($this->ext->key, $this->customReports)) {
+    if (CRM_Utils_Array::arrayKeyExists($this->ext->key, $this->customReports)) {
       CRM_Core_Error::fatal('This report is already registered.');
     }
 
@@ -84,7 +84,7 @@ class CRM_Core_Extensions_Report {
 
   public function uninstall() {
 
-    //        if( !array_key_exists( $this->ext->key, $this->customReports ) ) {
+    //        if( !CRM_Utils_Array::arrayKeyExists( $this->ext->key, $this->customReports ) ) {
     //            CRM_Core_Error::fatal( 'This report is not registered.' );
     //        }
 

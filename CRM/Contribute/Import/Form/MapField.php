@@ -105,8 +105,11 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
    */
   public function defaultFromHeader($columnName, &$patterns) {
     if (!preg_match('/^[0-9a-z]$/i', $columnName)) {
-      $columnMatch = trim(preg_replace('/([\.\?\+\*\(\)\[\]\{\}])/', '\\\\$1', preg_replace('/\(.*\)/', '', $columnName)));
-      $matches = preg_grep('/^'.$columnMatch.'|\::('.$columnMatch.')\b/iu', $this->_mapperFields);
+      $columnMatch = trim(preg_replace('/([\.\?\+\*\(\)\[\]\{\}\/])/', '\\\\$1', preg_replace('/\(.*\)/', '', $columnName)));
+      // Find matching columns in the mapper fields array
+      $matches = preg_grep('/(^'.$columnMatch.'$)|(^\w+\::'.$columnMatch.'$)/iu', $this->_mapperFields);
+
+      // If there is exactly one match, mark the column as used and return its key
       if (count($matches) == 1) {
         $columnKey = key($matches);
         $this->_fieldUsed[$columnKey] = TRUE;
@@ -241,6 +244,9 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
         );
       }
       $this->_dedupeFields = CRM_Dedupe_BAO_Rule::dedupeRuleFieldsMapping($ruleParams);
+      if (!$dedupeFields || !is_array($dedupeFields)) {
+        $dedupeFields = array();
+      }
       $this->_dedupeFields = array_merge($dedupeFields, array('contribution_contact_id', 'external_identifier'));
       // correct sort_name / display_name problem
       $hasSortName = array_search('sort_name', $dedupeFields);
@@ -642,7 +648,7 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
     $errors = array();
     $fieldMessage = NULL;
 
-    if (!array_key_exists('savedMapping', $fields)) {
+    if (!CRM_Utils_Array::arrayKeyExists('savedMapping', $fields)) {
       $importKeys = array();
       foreach ($fields['mapper'] as $mapperPart) {
         $importKeys[] = $mapperPart[0];
@@ -679,7 +685,7 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
       unset($ruleFields['display_name']);
       $weightSum = 0;
       foreach ($importKeys as $key => $val) {
-        if (array_key_exists($val, $ruleFields)) {
+        if (CRM_Utils_Array::arrayKeyExists($val, $ruleFields)) {
           $weightSum += $ruleFields[$val];
         }
       }

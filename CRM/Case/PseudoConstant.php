@@ -186,10 +186,10 @@ class CRM_Case_PseudoConstant extends CRM_Core_PseudoConstant {
    *
    * @return array - array reference of all activty types.
    */
-  public static function activityType($indexName = TRUE, $all = FALSE) {
+  public static function caseActivityType($indexName = TRUE, $all = FALSE) {
     $cache = (int) $indexName . '_' . (int) $all;
 
-    if (!array_key_exists($cache, self::$activityTypeList)) {
+    if (!CRM_Utils_Array::arrayKeyExists($cache, self::$activityTypeList)) {
       self::$activityTypeList[$cache] = array();
 
       $query = "
@@ -246,7 +246,7 @@ class CRM_Case_PseudoConstant extends CRM_Core_PseudoConstant {
     }
 
     require_once ('CRM/Case/BAO/Case.php');
-    if (!array_key_exists($caseId, self::$caseTypePair) || empty(self::$caseTypePair[$caseId][$column])) {
+    if (!CRM_Utils_Array::arrayKeyExists($caseId, self::$caseTypePair) || empty(self::$caseTypePair[$caseId][$column])) {
       $caseTypes = self::caseType($column);
       $caseTypeIds = CRM_Core_DAO::getFieldValue('CRM_Case_DAO_Case',
         $caseId,

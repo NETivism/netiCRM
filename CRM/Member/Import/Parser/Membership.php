@@ -285,7 +285,7 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
             break;
 
           case 'membership_type_id':
-            if (!CRM_Utils_Array::crmInArray($val, CRM_Member_PseudoConstant::membershipType())) {
+            if (!CRM_Utils_Array::inArray($val, CRM_Member_PseudoConstant::membershipType())) {
               CRM_Import_Parser_Contact::addToErrorMsg('Membership Type', $errorMessage);
             }
             break;
@@ -293,10 +293,10 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
           case 'status_id':
             $statuses = CRM_Member_PseudoConstant::membershipStatus(NULL, NULL, 'name');
             $statusesLabel = CRM_Member_PseudoConstant::membershipStatus(NULL, NULL, 'label');
-            if (is_numeric($val) && !array_key_exists($val, $statuses)) {
+            if (is_numeric($val) && !CRM_Utils_Array::arrayKeyExists($val, $statuses)) {
               CRM_Import_Parser_Contact::addToErrorMsg('Membership Status', $errorMessage);
             }
-            elseif (!CRM_Utils_Array::crmInArray($val, $statues) && !CRM_Utils_Array::crmInArray($val, $statusesLabel)) {
+            elseif (!CRM_Utils_Array::inArray($val, $statues) && !CRM_Utils_Array::inArray($val, $statusesLabel)) {
               CRM_Import_Parser_Contact::addToErrorMsg('Membership Status', $errorMessage);
             }
             break;
@@ -595,11 +595,11 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
         $this->_importableContactFields['sort_name']['title'] = ts('Sort Name');
         foreach ($fieldsArray as $value) {
           if ($doCreateContact) {
-            if (!array_key_exists(trim($value), $params)) {
+            if (!CRM_Utils_Array::arrayKeyExists(trim($value), $params)) {
               $dispArray[] = $this->_importableContactFields[$value]['title'];
             }
           }
-          elseif (array_key_exists(trim($value), $params)) {
+          elseif (CRM_Utils_Array::arrayKeyExists(trim($value), $params)) {
             $paramValue = $params[trim($value)];
             if (is_array($paramValue)) {
               $dispArray[] = $params[trim($value)][0][trim($value)];
@@ -615,10 +615,10 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
         }
         if (!empty($dispArray)) {
           if ($doCreateContact) {
-            $errDisp = ts('Missing required contact matching fields.')." - ".implode('|', $dispArray);
+            $errDisp = ts('Missing required contact matching fields.')." - ".CRM_Utils_Array::implode('|', $dispArray);
           }
           else {
-            $errDisp = "No matching Contact found for (" . implode('|', $dispArray) . ")";
+            $errDisp = "No matching Contact found for (" . CRM_Utils_Array::implode('|', $dispArray) . ")";
           }
           $doCreateContact = FALSE;
         }

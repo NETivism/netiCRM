@@ -94,7 +94,6 @@ class api_v2_UFGroupTest extends CiviUnitTestCase {
       'text' => array('HTML/QuickForm/text.php', 'HTML_QuickForm_text'),
       'textarea' => array('HTML/QuickForm/textarea.php', 'HTML_QuickForm_textarea'),
       'fckeditor' => array('HTML/QuickForm/fckeditor.php', 'HTML_QuickForm_FCKEditor'),
-      'tinymce' => array('HTML/QuickForm/tinymce.php', 'HTML_QuickForm_TinyMCE'),
       'dojoeditor' => array('HTML/QuickForm/dojoeditor.php', 'HTML_QuickForm_dojoeditor'),
       'link' => array('HTML/QuickForm/link.php', 'HTML_QuickForm_link'),
       'advcheckbox' => array('HTML/QuickForm/advcheckbox.php', 'HTML_QuickForm_advcheckbox'),

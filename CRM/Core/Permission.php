@@ -141,7 +141,7 @@ class CRM_Core_Permission {
       return ' ( 0 ) ';
     }
     else {
-      return "{$prefix}id IN ( " . implode(',', $groups) . ' ) ';
+      return "{$prefix}id IN ( " . CRM_Utils_Array::implode(',', $groups) . ' ) ';
     }
   }
 
@@ -205,7 +205,7 @@ class CRM_Core_Permission {
       return ' ( 0 ) ';
     }
     else {
-      return "{$prefix}id IN ( " . implode(',', $groups) . ' ) ';
+      return "{$prefix}id IN ( " . CRM_Utils_Array::implode(',', $groups) . ' ) ';
     }
   }
 
@@ -239,7 +239,7 @@ class CRM_Core_Permission {
       return ' ( 0 ) ';
     }
     else {
-      return "{$prefix}id IN ( " . implode(',', $events) . ' ) ';
+      return "{$prefix}id IN ( " . CRM_Utils_Array::implode(',', $events) . ' ) ';
     }
   }
 
@@ -314,7 +314,7 @@ class CRM_Core_Permission {
   }
 
   static function checkMenuItem(&$item) {
-    if (!array_key_exists('access_callback', $item)) {
+    if (!CRM_Utils_Array::arrayKeyExists('access_callback', $item)) {
       CRM_Core_Error::backtrace();
       CRM_Core_Error::fatal();
     }

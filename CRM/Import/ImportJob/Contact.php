@@ -189,7 +189,7 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
           }
         }
       }
-      $mapperFields[] = implode(' - ', $header);
+      $mapperFields[] = CRM_Utils_Array::implode(' - ', $header);
 
       //set the respective mapper param array values.
       foreach ($mapperPeroperties as $mapperProKey => $mapperProVal) {

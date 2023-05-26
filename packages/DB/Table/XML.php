@@ -68,7 +68,7 @@ class DB_Table_XML
      * @return string XML opening tag
      * @access public
      */
-    function openTag($tag, &$indent)
+    static function openTag($tag, &$indent)
     {
         $old_indent = $indent;
         $indent = $indent . '   ';
@@ -85,7 +85,7 @@ class DB_Table_XML
      * @return string XML closing tag
      * @access public
      */
-    function closeTag($tag, &$indent)
+    static function closeTag($tag, &$indent)
     {
         $indent = substr($indent, 0, -3);
         return $indent . "</$tag>";
@@ -102,7 +102,7 @@ class DB_Table_XML
      * @return string single-line XML element
      * @access public
      */
-    function lineElement($tag, $text, $indent)
+    static function lineElement($tag, $text, $indent)
     {
         return $indent . "<$tag>$text</$tag>";
     }

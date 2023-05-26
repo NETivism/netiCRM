@@ -59,7 +59,7 @@ function civicrm_group_contact_get(&$params) {
     return civicrm_create_error(ts('input parameter should be an array'));
   }
 
-  if (!array_key_exists('contact_id', $params)) {
+  if (!CRM_Utils_Array::arrayKeyExists('contact_id', $params)) {
     return civicrm_create_error(ts('contact_id is a required field'));
   }
 

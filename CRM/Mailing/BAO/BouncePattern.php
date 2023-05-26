@@ -69,7 +69,7 @@ class CRM_Mailing_BAO_BouncePattern extends CRM_Mailing_DAO_BouncePattern {
         self::$_patterns[$type] = '{(' . $patterns[0] . ')}im';
       }
       else {
-        self::$_patterns[$type] = '{(' . implode(')|(', $patterns) . ')}im';
+        self::$_patterns[$type] = '{(' . CRM_Utils_Array::implode(')|(', $patterns) . ')}im';
       }
     }
   }

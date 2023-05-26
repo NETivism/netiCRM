@@ -254,7 +254,7 @@ class CRM_Core_Action {
         if (isset($link['class'])) {
           $className = $link['class'];
           if (is_array($className)) {
-            $className = implode(' ', $className);
+            $className = CRM_Utils_Array::implode(' ', $className);
           }
           $classes .= ' ' . strtolower($className);
         }

@@ -317,7 +317,7 @@ AND        cf.html_type IN ( 'Text', 'TextArea', 'RichTextEditor' )
 
     $dao = CRM_Core_DAO::executeQuery($sql);
     while ($dao->fetch()) {
-      if (!array_key_exists($dao->table_name,
+      if (!CRM_Utils_Array::arrayKeyExists($dao->table_name,
           $tables
         )) {
         $tables[$dao->table_name] = array('id' => 'entity_id',
@@ -365,7 +365,7 @@ $sqlStatement
           continue;
         }
 
-        $whereClause = implode(' OR ', $clauses);
+        $whereClause = CRM_Utils_Array::implode(' OR ', $clauses);
 
         //resolve conflict between entity tables.
         if ($tableName == 'civicrm_note' &&
@@ -745,7 +745,7 @@ WHERE      c.sort_name LIKE {$this->_text}
         foreach ($participantRole as $k => $v) {
           $viewRoles[] = $roleIds[$v];
         }
-        $row['participant_role'] = implode(', ', $viewRoles);
+        $row['participant_role'] = CRM_Utils_Array::implode(', ', $viewRoles);
       }
       $summary[$dao->table_name][] = $row;
     }

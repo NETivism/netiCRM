@@ -119,7 +119,7 @@ class CRM_Contribute_Import_Form_UploadFile extends CRM_Core_Form {
       if ($groupValues['is_default']) {
         $label .= ts('Default');
       }
-      $dedupeRule[$dedupegroup_id] = $label . ' - '.$groupValues['name'] . ' (' . implode(', ', $fields) .')';
+      $dedupeRule[$dedupegroup_id] = $label . ' - '.$groupValues['name'] . ' (' . CRM_Utils_Array::implode(', ', $fields) .')';
     }
     $this->add('select', 'dedupeRuleGroup', ts('Dedupe Rule of Contact'), $dedupeRule);
 

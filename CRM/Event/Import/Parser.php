@@ -209,7 +209,7 @@ abstract class CRM_Event_Import_Parser {
 
   abstract function init();
   function run($fileName,
-    $seperator = ',',
+    $seperator,
     &$mapper,
     $skipColumnHeader = FALSE,
     $mode = self::MODE_PREVIEW,
@@ -552,7 +552,7 @@ abstract class CRM_Event_Import_Parser {
 
       //$tempField = CRM_Contact_BAO_Contact::importableFields('Individual', null );
       $tempField = CRM_Contact_BAO_Contact::importableFields('All', NULL);
-      if (!array_key_exists($name, $tempField)) {
+      if (!CRM_Utils_Array::arrayKeyExists($name, $tempField)) {
         $this->_fields[$name] = new CRM_Event_Import_Field($name, $title, $type, $headerPattern, $dataPattern);
       }
       else {

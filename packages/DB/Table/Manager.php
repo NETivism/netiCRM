@@ -238,7 +238,7 @@ class DB_Table_Manager {
     * 
     */
 
-    function create(&$db, $table, $column_set, $index_set)
+    static function create(&$db, $table, $column_set, $index_set)
     {
         if (is_subclass_of($db, 'db_common')) {
             $backend = 'db';
@@ -355,12 +355,12 @@ class DB_Table_Manager {
             if ($type == 'primary') {
                 // SQLite does not support primary keys
                 if ($phptype == 'sqlite') {
-                    return DB_Table::throwError(DB_TABLE_ERR_DECLARE_PRIM_SQLITE);
+                    return DB_Table::throwDBError(DB_TABLE_ERR_DECLARE_PRIM_SQLITE);
                 }
                 $count_primary_keys++;
             }
             if ($count_primary_keys > 1) {
-                return DB_Table::throwError(DB_TABLE_ERR_DECLARE_PRIMARY);
+                return DB_Table::throwDBError(DB_TABLE_ERR_DECLARE_PRIMARY);
             }
 
             // create index entry
@@ -465,7 +465,7 @@ class DB_Table_Manager {
     * 
     */
 
-    function verify(&$db, $table, $column_set, $index_set)
+    static function verify(&$db, $table, $column_set, $index_set)
     {
         if (is_subclass_of($db, 'db_common')) {
             $backend = 'db';
@@ -492,7 +492,7 @@ class DB_Table_Manager {
         $tableInfo = $reverse->tableInfo($table, $table_info_mode);
         if (PEAR::isError($tableInfo)) {
             if ($tableInfo->getCode() == $table_info_error) {
-                return DB_Table::throwError(
+                return DB_Table::throwDBError(
                     DB_TABLE_ERR_VER_TABLE_MISSING,
                     "(table='$table')"
                 );
@@ -597,7 +597,7 @@ class DB_Table_Manager {
     * 
     */
 
-    function alter(&$db, $table, $column_set, $index_set)
+    static function alter(&$db, $table, $column_set, $index_set)
     {
         $phptype = $db->phptype;
 
@@ -845,7 +845,7 @@ class DB_Table_Manager {
     * 
     */
 
-    function tableExists(&$db, $table)
+    static function tableExists(&$db, $table)
     {
         if (is_subclass_of($db, 'db_common')) {
             $list = $db->getListOf('tables');
@@ -906,7 +906,7 @@ class DB_Table_Manager {
         // is it a recognized column type?
         $types = array_keys($map);
         if (! in_array($coltype, $types)) {
-            return DB_Table::throwError(
+            return DB_Table::throwDBError(
                 DB_TABLE_ERR_DECLARE_TYPE,
                 "('$coltype')"
             );
@@ -989,7 +989,7 @@ class DB_Table_Manager {
     */
 
     function getDeclareMDB2($coltype, $size = null, $scope = null,
-        $require = null, $default = null, &$max_scope)
+        $require = null, $default = null, &$max_scope = NULL)
     {
         // validate char/varchar/decimal type declaration
         $validation = DB_Table_Manager::_validateTypeDeclaration($coltype, $size,
@@ -1004,7 +1004,7 @@ class DB_Table_Manager {
         // is it a recognized column type?
         $types = array_keys($map);
         if (! in_array($coltype, $types)) {
-            return DB_Table::throwError(
+            return DB_Table::throwDBError(
                 DB_TABLE_ERR_DECLARE_TYPE,
                 "('$coltype')"
             );
@@ -1171,7 +1171,7 @@ class DB_Table_Manager {
         // validate char and varchar: does it have a size?
         if (($coltype == 'char' || $coltype == 'varchar') &&
             ($size < 1 || $size > 255) ) {
-            return DB_Table::throwError(
+            return DB_Table::throwDBError(
                 DB_TABLE_ERR_DECLARE_STRING,
                 "(size='$size')"
             );
@@ -1180,7 +1180,7 @@ class DB_Table_Manager {
         // validate decimal: does it have a size and scope?
         if ($coltype == 'decimal' &&
             ($size < 1 || $size > 255 || $scope < 0 || $scope > $size)) {
-            return DB_Table::throwError(
+            return DB_Table::throwDBError(
                 DB_TABLE_ERR_DECLARE_DECIMAL,
                 "(size='$size' scope='$scope')"
             );
@@ -1209,7 +1209,7 @@ class DB_Table_Manager {
         if (   $GLOBALS['_DB_TABLE']['disable_length_check'] === false
             && strlen($tablename) > 30
            ) {
-            return DB_Table::throwError(
+            return DB_Table::throwDBError(
                 DB_TABLE_ERR_TABLE_STRLEN,
                 " ('$tablename')"
             );
@@ -1241,7 +1241,7 @@ class DB_Table_Manager {
         );
 
         if ($reserved) {
-            return DB_Table::throwError(
+            return DB_Table::throwDBError(
                 DB_TABLE_ERR_DECLARE_COLNAME,
                 " ('$colname')"
             );
@@ -1251,7 +1251,7 @@ class DB_Table_Manager {
         if (   $GLOBALS['_DB_TABLE']['disable_length_check'] === false
             && strlen($colname) > 30
            ) {
-            return DB_Table::throwError(
+            return DB_Table::throwDBError(
                 DB_TABLE_ERR_DECLARE_STRLEN,
                 "('$colname')"
             );
@@ -1293,7 +1293,7 @@ class DB_Table_Manager {
                 return false;
 
             case 'verify':
-                return DB_Table::throwError(
+                return DB_Table::throwDBError(
                     DB_TABLE_ERR_VER_COLUMN_MISSING,
                     "(column='$colname')"
                 );
@@ -1325,7 +1325,7 @@ class DB_Table_Manager {
         // is it a recognized column type?
         $types = array_keys($map);
         if (!in_array($type, $types)) {
-            return DB_Table::throwError(
+            return DB_Table::throwDBError(
                 DB_TABLE_ERR_DECLARE_TYPE,
                 "('" . $type . "')"
             );
@@ -1393,7 +1393,7 @@ class DB_Table_Manager {
                 return false;
 
             case 'verify':
-                return DB_Table::throwError(
+                return DB_Table::throwDBError(
                     DB_TABLE_ERR_VER_COLUMN_TYPE,
                     "(column='$colname', type='$type')"
                 );
@@ -1470,7 +1470,7 @@ class DB_Table_Manager {
         );
 
         if ($reserved && !($type == 'primary' && $idxname == 'PRIMARY')) {
-            return DB_Table::throwError(
+            return DB_Table::throwDBError(
                 DB_TABLE_ERR_DECLARE_IDXNAME,
                 "('$idxname')"
             );
@@ -1478,7 +1478,7 @@ class DB_Table_Manager {
 
         // are there any columns for the index?
         if (! $cols) {
-            return DB_Table::throwError(
+            return DB_Table::throwDBError(
                 DB_TABLE_ERR_IDX_NO_COLS,
                 "('$idxname')"
             );
@@ -1491,14 +1491,14 @@ class DB_Table_Manager {
         foreach ($cols as $colname) {
 
             if (! in_array($colname, $valid_cols)) {
-                return DB_Table::throwError(
+                return DB_Table::throwDBError(
                     DB_TABLE_ERR_IDX_COL_UNDEF,
                     "'$idxname' ('$colname')"
                 );
             }
 
             if ($column_set[$colname]['type'] == 'clob') {
-                return DB_Table::throwError(
+                return DB_Table::throwDBError(
                     DB_TABLE_ERR_IDX_COL_CLOB,
                     "'$idxname' ('$colname')"
                 );
@@ -1524,7 +1524,7 @@ class DB_Table_Manager {
         if (   $GLOBALS['_DB_TABLE']['disable_length_check'] === false
             && strlen($newIdxName) > 30
            ) {
-            return DB_Table::throwError(
+            return DB_Table::throwDBError(
                 DB_TABLE_ERR_IDX_STRLEN,
                 "'$idxname' ('$newIdxName')"
             );
@@ -1532,7 +1532,7 @@ class DB_Table_Manager {
 
         // check index type
         if ($type != 'primary' && $type != 'unique' && $type != 'normal') {
-            return DB_Table::throwError(
+            return DB_Table::throwDBError(
                 DB_TABLE_ERR_IDX_TYPE,
                 "'$idxname' ('$type')"
             );
@@ -1557,7 +1557,7 @@ class DB_Table_Manager {
     * 
     */
 
-    function getIndexes(&$db, $table)
+    static function getIndexes(&$db, $table)
     {
         if (is_subclass_of($db, 'db_common')) {
             $backend = 'db';
@@ -1697,7 +1697,7 @@ class DB_Table_Manager {
         }
 
         if (!$index_found) {
-            return ($mode == 'alter') ? false : DB_Table::throwError(
+            return ($mode == 'alter') ? false : DB_Table::throwDBError(
                 DB_TABLE_ERR_VER_IDX_MISSING,
                 "'$idxname' ('$newIdxName')"
             );
@@ -1706,7 +1706,7 @@ class DB_Table_Manager {
         if (count($cols) > 0) {
             // string of column names
             $colstring = implode(', ', $cols);
-            return ($mode == 'alter') ? false : DB_Table::throwError(
+            return ($mode == 'alter') ? false : DB_Table::throwDBError(
                 DB_TABLE_ERR_VER_IDX_COL_MISSING,
                 "'$idxname' ($colstring)"
             );

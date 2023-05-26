@@ -59,8 +59,8 @@ class CRM_Dedupe_BAO_Rule extends CRM_Dedupe_DAO_Rule {
    */
   function sql() {
     if ($this->params &&
-      (!array_key_exists($this->rule_table, $this->params) ||
-        !array_key_exists($this->rule_field, $this->params[$this->rule_table])
+      (!CRM_Utils_Array::arrayKeyExists($this->rule_table, $this->params) ||
+        !CRM_Utils_Array::arrayKeyExists($this->rule_field, $this->params[$this->rule_table])
       )
     ) {
       // if params is present and doesn't have an entry for a field, don't construct the clause.
@@ -157,10 +157,10 @@ class CRM_Dedupe_BAO_Rule extends CRM_Dedupe_DAO_Rule {
     }
     else {
       if ($this->rule_length) {
-        $from = "{$this->rule_table} t1 JOIN {$this->rule_table} t2 ON (" . implode(' AND ', $on) . ")";
+        $from = "{$this->rule_table} t1 JOIN {$this->rule_table} t2 ON (" . CRM_Utils_Array::implode(' AND ', $on) . ")";
       }
       else {
-        $from = "{$this->rule_table} t1 JOIN {$this->rule_table} t2 USING (" . implode(', ', $using) . ")";
+        $from = "{$this->rule_table} t1 JOIN {$this->rule_table} t2 USING (" . CRM_Utils_Array::implode(', ', $using) . ")";
       }
     }
 
@@ -178,17 +178,17 @@ class CRM_Dedupe_BAO_Rule extends CRM_Dedupe_DAO_Rule {
         $where[] = "(t1.$id = {$cids[0]} OR t2.$id = {$cids[0]})";
       }
       else {
-        $where[] = "(t1.$id IN (" . implode(',', $cids) . ") OR t2.$id IN (" . implode(',', $cids) . "))";
+        $where[] = "(t1.$id IN (" . CRM_Utils_Array::implode(',', $cids) . ") OR t2.$id IN (" . CRM_Utils_Array::implode(',', $cids) . "))";
       }
     }
 
-    $sql = "SELECT $select FROM $from WHERE " . implode(' AND ', $where);
+    $sql = "SELECT $select FROM $from WHERE " . CRM_Utils_Array::implode(' AND ', $where);
     if (!empty($whereOr)) {
       if (!empty($where)) {
-        $sql .= " AND ( ".implode(' OR ', $whereOr)." )";
+        $sql .= " AND ( ".CRM_Utils_Array::implode(' OR ', $whereOr)." )";
       }
       else {
-        $sql .= " ( ".implode(' OR ', $whereOr)." )";
+        $sql .= " ( ".CRM_Utils_Array::implode(' OR ', $whereOr)." )";
       }
     }
     return $sql;

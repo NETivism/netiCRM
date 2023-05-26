@@ -181,7 +181,7 @@ class CRM_Utils_Mail_Incoming {
     foreach ($addresses as $address) {
       $fa[] = self::formatAddress($address);
     }
-    return implode(', ', $fa);
+    return CRM_Utils_Array::implode(', ', $fa);
   }
 
   function formatAddress($address) {
@@ -192,7 +192,7 @@ class CRM_Utils_Mail_Incoming {
     return $name . "<{$address->email}>";
   }
 
-  function &parse(&$file) {
+  static function &parse(&$file) {
 
     // check that the file exists and has some content
     if (!file_exists($file) ||
@@ -224,7 +224,7 @@ class CRM_Utils_Mail_Incoming {
     return $mailParams;
   }
 
-  function parseMailingObject(&$mail) {
+  static function parseMailingObject(&$mail) {
     require_once 'CRM/Core/Config.php';
     require_once 'api/v2/Activity.php';
     require_once 'api/v2/Contact.php';

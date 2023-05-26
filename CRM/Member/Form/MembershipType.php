@@ -428,8 +428,8 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form {
         if (!empty($relIds)) {
           $hasRelTypeVal = TRUE;
           require_once 'CRM/Core/DAO.php';
-          $params['relationship_type_id'] = implode(CRM_Core_DAO::VALUE_SEPARATOR, $relIds);
-          $params['relationship_direction'] = implode(CRM_Core_DAO::VALUE_SEPARATOR, $relDirection);
+          $params['relationship_type_id'] = CRM_Utils_Array::implode(CRM_Core_DAO::VALUE_SEPARATOR, $relIds);
+          $params['relationship_direction'] = CRM_Utils_Array::implode(CRM_Core_DAO::VALUE_SEPARATOR, $relDirection);
         }
       }
       if (!$hasRelTypeVal) {

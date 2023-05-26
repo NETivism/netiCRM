@@ -124,7 +124,7 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
     ) {
       $session = CRM_Core_Session::singleton();
       $allCases = CRM_Case_BAO_Case::getCases(TRUE, $session->get('userID'));
-      if (!array_key_exists($this->_caseId, $allCases)) {
+      if (!CRM_Utils_Array::arrayKeyExists($this->_caseId, $allCases)) {
         return CRM_Core_Error::statusBounce(ts('You are not authorized to access this page.'));
       }
     }
@@ -240,14 +240,14 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
     //get all clients.
     $clients = CRM_Case_BAO_Case::getContactNames($this->_caseId);
     if (isset($this->_activityId) && empty($_POST)) {
-      if (!CRM_Utils_Array::crmIsEmptyArray($this->_defaults['target_contact'])) {
+      if (!CRM_Utils_Array::isEmpty($this->_defaults['target_contact'])) {
         $targetContactValues = array_combine(array_unique($this->_defaults['target_contact']),
           explode(';', trim($this->_defaults['target_contact_value']))
         );
 
         //exclude all clients.
         foreach ($clients as $clientId => $vals) {
-          if (array_key_exists($clientId, $targetContactValues)) {
+          if (CRM_Utils_Array::arrayKeyExists($clientId, $targetContactValues)) {
             unset($targetContactValues[$clientId]);
           }
         }
@@ -313,7 +313,7 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
       $this->_encounterMedium = CRM_Core_DAO::getFieldValue('CRM_Activity_DAO_Activity', $this->_activityId,
         'medium_id'
       );
-      if (!array_key_exists($this->_encounterMedium, $encounterMediums)) {
+      if (!CRM_Utils_Array::arrayKeyExists($this->_encounterMedium, $encounterMediums)) {
         $encounterMediums[$this->_encounterMedium] = CRM_Core_OptionGroup::getLabel('encounter_medium',
           $this->_encounterMedium,
           FALSE
@@ -384,7 +384,7 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
       $activityCondition = " AND v.name IN ('Open Case', 'Change Case Type', 'Change Case Status', 'Change Case Start Date')";
       $caseAttributeActivities = CRM_Core_OptionGroup::values('activity_type', FALSE, FALSE, FALSE, $activityCondition);
 
-      if (!array_key_exists($this->_activityTypeId, $caseAttributeActivities)) {
+      if (!CRM_Utils_Array::arrayKeyExists($this->_activityTypeId, $caseAttributeActivities)) {
         $params = array('id' => $this->_activityId);
         $activityDelete = CRM_Activity_BAO_Activity::deleteActivity($params, TRUE);
         if ($activityDelete) {
@@ -469,7 +469,7 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
 
       // build custom data getFields array
       $customFields = CRM_Core_BAO_CustomField::getFields('Activity', FALSE, FALSE, $this->_activityTypeId);
-      $customFields = CRM_Utils_Array::crmArrayMerge($customFields,
+      $customFields = CRM_Utils_Array::arrayMerge($customFields,
         CRM_Core_BAO_CustomField::getFields('Activity', FALSE, FALSE,
           NULL, NULL, TRUE
         )
@@ -623,7 +623,7 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
     // create activity assignee records
     $assigneeParams = array('activity_id' => $activity->id);
 
-    if (!CRM_Utils_Array::crmIsEmptyArray($params['assignee_contact_id'])) {
+    if (!CRM_Utils_Array::isEmpty($params['assignee_contact_id'])) {
       //skip those assignee contacts which are already assigned
       //while sending a copy.CRM-4509.
       $activityAssigned = array_flip($params['assignee_contact_id']);
@@ -658,7 +658,7 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
     }
 
     foreach ($selectedContacts as $dnt => $val) {
-      if (array_key_exists($val, $params) && !CRM_Utils_array::crmIsEmptyArray($params[$val])) {
+      if (CRM_Utils_Array::arrayKeyExists($val, $params) && !CRM_Utils_array::crmIsEmptyArray($params[$val])) {
         if ($val == 'contact_check') {
           $mailStatus = ts("A copy of the activity has also been sent to selected contacts(s).");
         }
@@ -668,7 +668,7 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
         }
         //build an associative array with unique email addresses.
         foreach ($params[$val] as $id => $dnc) {
-          if (isset($id) && array_key_exists($id, $this->_relatedContacts)) {
+          if (isset($id) && CRM_Utils_Array::arrayKeyExists($id, $this->_relatedContacts)) {
             //if email already exists in array then append with ', ' another role only otherwise add it to array.
             if ($contactDetails = CRM_Utils_Array::value($this->_relatedContacts[$id]['email'], $mailToContacts)) {
               $caseRole = CRM_Utils_Array::value('role', $this->_relatedContacts[$id]);

@@ -130,7 +130,7 @@ class CRM_Contact_Form_Task_AddToTag extends CRM_Contact_Form_Task {
       $this->_tags[$key] = $value['name'];
     }
     // merge contact and taglist tags
-    $allTags = CRM_Utils_Array::crmArrayMerge($contactTags, $tagList);
+    $allTags = CRM_Utils_Array::arrayMerge($contactTags, $tagList);
 
     $this->_name = array();
     foreach ($allTags as $key => $dnc) {
@@ -139,7 +139,7 @@ class CRM_Contact_Form_Task_AddToTag extends CRM_Contact_Form_Task {
       list($total, $added, $notAdded) = CRM_Core_BAO_EntityTag::addEntitiesToTag($this->_contactIds, $key);
 
       $status = array(
-        'Contact(s) tagged as: ' . implode(',', $this->_name),
+        'Contact(s) tagged as: ' . CRM_Utils_Array::implode(',', $this->_name),
         'Total Selected Contact(s): ' . $total,
       );
     }

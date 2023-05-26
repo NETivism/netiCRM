@@ -189,7 +189,7 @@ class CRM_Contribute_Page_PCP extends CRM_Core_Page_Basic {
       }
 
       if (!empty($whereClause)) {
-        $whereClause = implode(" AND ", $whereClause);
+        $whereClause = CRM_Utils_Array::implode(" AND ", $whereClause);
       }
       else {
         $whereClause = " 1 ";

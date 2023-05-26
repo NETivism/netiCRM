@@ -238,7 +238,7 @@ UPDATE civicrm_dedupe_rule_group
         $ruleDao->save();
         $ruleDao->free();
 
-        if (!array_key_exists($table, $tables)) {
+        if (!CRM_Utils_Array::arrayKeyExists($table, $tables)) {
           $tables[$table] = array();
         }
         $tables[$table][] = $field;

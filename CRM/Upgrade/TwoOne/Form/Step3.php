@@ -44,7 +44,7 @@ class CRM_Upgrade_TwoOne_Form_Step3 extends CRM_Upgrade_Form {
   function upgrade() {
     $currentDir = dirname(__FILE__);
 
-    $sqlFile = implode(DIRECTORY_SEPARATOR,
+    $sqlFile = CRM_Utils_Array::implode(DIRECTORY_SEPARATOR,
       array($currentDir, '../sql', 'misc.mysql')
     );
     $this->source($sqlFile);
@@ -72,7 +72,7 @@ class CRM_Upgrade_TwoOne_Form_Step3 extends CRM_Upgrade_Form {
 
       if (count($types) >= 1) {
         $query = "UPDATE `civicrm_uf_group` SET group_type = %1 WHERE id = %2";
-        $params = array(1 => array(implode(',', $types), 'String'),
+        $params = array(1 => array(CRM_Utils_Array::implode(',', $types), 'String'),
           2 => array($ufGroup->id, 'Integer'),
         );
         CRM_Core_DAO::executeQuery($query, $params);

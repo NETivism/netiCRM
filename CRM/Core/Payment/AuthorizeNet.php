@@ -129,7 +129,7 @@ class CRM_Core_Payment_AuthorizeNet extends CRM_Core_Payment {
 
     curl_setopt($submit, CURLOPT_POST, TRUE);
     curl_setopt($submit, CURLOPT_RETURNTRANSFER, TRUE);
-    curl_setopt($submit, CURLOPT_POSTFIELDS, implode('&', $postFields));
+    curl_setopt($submit, CURLOPT_POSTFIELDS, CRM_Utils_Array::implode('&', $postFields));
 
     $response = curl_exec($submit);
 
@@ -547,7 +547,7 @@ class CRM_Core_Payment_AuthorizeNet extends CRM_Core_Payment {
     }
 
     if (!empty($error)) {
-      return implode('<p>', $error);
+      return CRM_Utils_Array::implode('<p>', $error);
     }
     else {
       return NULL;

@@ -114,7 +114,7 @@ class PCPBlock extends PHPUnit_Framework_Testcase
         }
         if ( $id = CRM_Utils_Array::value( 'pcpId', $params ) ){
             require_once 'CRM/Contribute/BAO/PCP.php';
-            CRM_Contribute_BAO_PCP::delete( $id );
+            CRM_Contribute_BAO_PCP::deleteById( $id );
         }
         if ( $resulProfile && $resultBlock ) {
             return true;

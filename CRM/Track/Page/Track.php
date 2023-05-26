@@ -100,7 +100,7 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
             $statusPending = CRM_Event_PseudoConstant::participantStatus( null, "class = 'Pending'" );
             $statusPositive = CRM_Event_PseudoConstant::participantStatus( null, "class = 'Positive'" );
             $statues = $statusPending+$statusPositive;
-            $sql = "SELECT SUM(fee_amount) FROM civicrm_participant WHERE id IN($dao->entity_ids) AND is_test = 0 AND status_id IN (".implode("," , array_keys($statues)).") GROUP BY is_test";
+            $sql = "SELECT SUM(fee_amount) FROM civicrm_participant WHERE id IN($dao->entity_ids) AND is_test = 0 AND status_id IN (".CRM_Utils_Array::implode("," , array_keys($statues)).") GROUP BY is_test";
             $totalAmount = CRM_Core_DAO::singleValueQuery($sql);
           break;
         }

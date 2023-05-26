@@ -284,7 +284,7 @@ class CRM_Core_BAO_UFField extends CRM_Core_DAO_UFField {
    * @static
    * @access public
    */
-  function delUFField($customFieldId) {
+  static function delUFField($customFieldId) {
     //find the profile id given custom field id
     $ufField = new CRM_Core_DAO_UFField();
     $ufField->field_name = "custom_" . $customFieldId;
@@ -306,7 +306,7 @@ class CRM_Core_BAO_UFField extends CRM_Core_DAO_UFField {
    * @static
    * @access public
    */
-  function setUFFieldStatus($customGroupId, $is_active) {
+  static function setUFFieldStatus($customGroupId, $is_active) {
     //find the profile id given custom group id
     $queryString = "SELECT civicrm_custom_field.id as custom_field_id
                         FROM   civicrm_custom_field, civicrm_custom_group
@@ -666,7 +666,7 @@ SELECT ufg.id as id
    *
    *@return boolean $result    true/false.
    */
-  function checkSearchableORInSelector($profileID) {
+  static function checkSearchableORInSelector($profileID) {
     $result = FALSE;
     if (!$profileID) {
       return $result;
@@ -694,7 +694,7 @@ SELECT  id
    *
    *@return void.
    */
-  function resetInSelectorANDSearchable($profileID) {
+  static function resetInSelectorANDSearchable($profileID) {
     if (!$profileID) {
       return;
     }

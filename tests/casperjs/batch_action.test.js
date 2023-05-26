@@ -85,11 +85,17 @@ casper.test.begin('Resurrectio test', function(test) {
     }, function fail() {
         test.assertExists("#user-login-form", 'Login form exist.');
     });
+
+    casper.run(function() {
+        test.done();
+    });
+});
+    
     
     /* 
      * Add to organization
      */
-
+casper.test.begin('Start testing...', function(test){
     /* add organization */
     casper.thenOpen(vars.baseURL + "civicrm/contact/add?reset=1&ct=Organization", function() {
         casper.echo('=====================================');

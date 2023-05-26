@@ -102,6 +102,9 @@ class CRM_Core_IDS {
       'civicrm/contribute/search' => [
         'html_message',
         'receipt_text',
+        'cancel_reason',
+        'contribution_source',
+        'amount_level',
       ],
       'civicrm/contact/view/contribution' => ['from_email_address'],
     ],
@@ -173,7 +176,7 @@ class CRM_Core_IDS {
    * @return boolean
    */
   public function check(&$args) {
-    $path = implode('/', $args);
+    $path = CRM_Utils_Array::implode('/', $args);
 
     // remove tracking parameters to prevent false positive
     $trackingG = array('fbclid', 'gclid', 'wbraid');

@@ -43,7 +43,7 @@
         <tr class="crm-activity-import-uploadfile-form-block-uploadFile">
           <td class="label">{$form.uploadFile.label}</td>
           <td class="html-adjust with-help-link">{$form.uploadFile.html}
-            <a class="help-link new-window-link" href="https://neticrm.tw/resources/2449" target="_blank">{ts}Imported tutorial and example file{/ts}</a>
+            <a class="help-link new-window-link" href="{$config->docURLBase}Prepare+Files+for+Importing+Activities" target="_blank">{ts}Imported tutorial and example file{/ts}</a>
             <div class="description">{ts}File format must be comma-separated-values (CSV).{/ts}</div>
         </tr>
         <tr><td class="label"></td><td>{ts 1=$uploadSize}Maximum Upload File Size: %1 MB{/ts}</td></tr>

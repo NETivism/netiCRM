@@ -242,7 +242,7 @@ class CRM_Utils_System_Drupal7 {
                 $hostKey            = array_search($parseUrl['host'], $urlParts);
                 $ufUrlParts         = parse_url(CIVICRM_UF_BASEURL);
                 $urlParts[$hostKey] = $ufUrlParts['host'];
-                $url                = implode('/', $urlParts);
+                $url                = CRM_Utils_Array::implode('/', $urlParts);
               }
             }
           }

@@ -342,7 +342,7 @@ WHERE c.receive_date > mm.time_stamp AND c.receive_date < DATE_ADD(mm.time_stamp
             $cc_and[] = $key . " = '$value'";
           }
         }
-        $cc_and = 'AND '.implode(' AND ', $cc_and);
+        $cc_and = 'AND '.CRM_Utils_Array::implode(' AND ', $cc_and);
 
       }
       $cc_where = "WHERE c.contribution_status_id = 1 AND c.is_test = 0 $cc_and";

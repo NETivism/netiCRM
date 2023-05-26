@@ -119,7 +119,7 @@ class CRM_Event_Form_Registration_ParticipantCancel extends CRM_Event_Form_Regis
     $statusMsg = NULL;
 
     // status class other than Negative should be able to cancel registration.
-    if (array_key_exists($this->_participantStatusId,
+    if (CRM_Utils_Array::arrayKeyExists($this->_participantStatusId,
         CRM_Event_PseudoConstant::participantStatus(NULL, "class != 'Negative'")
       )) {
       $cancelConfirm = ts('Are you sure you want to cancel your registration for this event?');

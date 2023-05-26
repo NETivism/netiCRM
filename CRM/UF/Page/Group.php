@@ -123,6 +123,13 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
           'title' => ts('Make a Copy of CiviCRM Profile Group'),
           'extra' => 'onclick = "return confirm(\'' . $copyExtra . '\');"',
         ),
+        CRM_Core_Action::REOPEN => array(
+          'name' => ts('Traffic Source'),
+          'title' => ts('Traffic Source'),
+          'url' => 'civicrm/track/report',
+          'qs' => 'reset=1&ptype=civicrm_uf_group&pid=%%id%%',
+          'uniqueName' => 'traffic_source',
+        ),
       );
     }
     return self::$_actionLinks;
@@ -314,12 +321,6 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
       $groupTypes = self::extractGroupTypes($value['group_type']);
       $groupComponents = array('Contribution', 'Membership', 'Activity', 'Participant');
 
-      // drop Create, Edit and View mode links if profile group_type is Contribution, Membership, Activities or Participant
-      $profileTypes = explode(',', $value['group_type']);
-
-      if (array_intersect($restrictType, $profileTypes) || $value['is_reserved']) {
-        $action -= CRM_Core_Action::ADD;
-      }
       $groupTypesString = '';
       if (!empty($groupTypes)) {
         $groupTypesStrings = array();
@@ -327,32 +328,43 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
           if (is_array($typeValues)) {
             if ($groupType == 'Participant') {
               foreach ($typeValues as $subType => $subTypeValues) {
-                $groupTypesStrings[] = $subType . '::' . implode(': ', $subTypeValues);
+                $groupTypesStrings[] = $subType . '::' . CRM_Utils_Array::implode(': ', $subTypeValues);
               }
             }
             else {
-              $groupTypesStrings[] = ts($groupType) . '::' . implode(': ', current($typeValues));
+              $groupTypesStrings[] = ts($groupType) . '::' . CRM_Utils_Array::implode(': ', current($typeValues));
             }
           }
           else {
             $groupTypesStrings[] = ts($groupType);
           }
         }
-        $groupTypesString = implode(', ', $groupTypesStrings);
+        $groupTypesString = CRM_Utils_Array::implode(', ', $groupTypesStrings);
       }
       $ufGroup[$id]['group_type'] = $groupTypesString;
+
+      // remove traffic source and embed profile when modules doesn't have profile
+      // drop Create, Edit and View mode links if profile group_type is Contribution, Membership, Activities or Participant
+      $ufJoinRecords = CRM_Core_BAO_UFGroup::getUFJoinRecord($id);
+      $profileTypes = explode(',', $value['group_type']);
+      if (!in_array('Profile', $ufJoinRecords) || array_intersect($restrictType, $profileTypes) || $value['is_reserved']) {
+        $action -= CRM_Core_Action::ADD;
+        $action -= CRM_Core_Action::REOPEN;
+      }
 
       $ufGroup[$id]['action'] = CRM_Core_Action::formLink(self::actionLinks(), $action,
         array('id' => $id)
       );
+
+
+      // Create module list, prevent duplicate string
       //get the "Used For" from uf_join
       $modules = CRM_Core_BAO_UFGroup::getUFJoinRecord($id, TRUE);
       foreach ($modules as $k => $v) {
         $modules[$k] = ts(str_replace("_", " ", $v));
       }
-      // remove duplicate string
       $modules = array_unique($modules);
-      $ufGroup[$id]['module'] = implode(',<br />', $modules);
+      $ufGroup[$id]['module'] = CRM_Utils_Array::implode(',<br />', $modules);
     }
 
     $this->assign('rows', $ufGroup);

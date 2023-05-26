@@ -62,7 +62,7 @@ function civicrm_tag_create(&$params) {
 
     civicrm_verify_mandatory($params, 'CRM_Core_DAO_Tag', array('name'));
 
-    if (!array_key_exists('used_for', $params)) {
+    if (!CRM_Utils_Array::arrayKeyExists('used_for', $params)) {
       $params['used_for'] = "civicrm_contact";
     }
 
@@ -149,7 +149,7 @@ function civicrm_tag_get($params) {
     'is_reserved', 'used_for',
   );
   foreach ($properties as $name) {
-    if (array_key_exists($name, $params)) {
+    if (CRM_Utils_Array::arrayKeyExists($name, $params)) {
       $tagBAO->$name = $params[$name];
     }
   }

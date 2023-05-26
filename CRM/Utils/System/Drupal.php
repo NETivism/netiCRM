@@ -721,7 +721,7 @@ class CRM_Utils_System_Drupal {
    * @access public
    *
    */
-  function url($path = NULL, $query = NULL, $absolute = FALSE,
+  static function url($path = NULL, $query = NULL, $absolute = FALSE,
     $fragment = NULL, $htmlize = TRUE,
     $frontend = FALSE
   ) {
@@ -1053,7 +1053,7 @@ class CRM_Utils_System_Drupal {
       // drupal_not_found will deliver page and exit
       // should also trigger civiExit
       drupal_not_found();
-      CRM_Core_System::civiExit();
+      CRM_Utils_System::civiExit();
     }
     return;
   }

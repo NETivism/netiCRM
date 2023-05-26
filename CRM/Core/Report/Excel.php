@@ -156,7 +156,7 @@ class CRM_Core_Report_Excel {
                 }
               }
 
-              $str = implode($seperator, $strArray);
+              $str = CRM_Utils_Array::implode($seperator, $strArray);
               $value = &$str;
             }
 
@@ -257,7 +257,7 @@ class CRM_Core_Report_Excel {
     return NULL;
   }
   
-  static function writeExportFile($type = 'excel', $fileName, &$header, &$rows, $download = TRUE) {
+  static function writeExportFile($type, $fileName, &$header, &$rows, $download = TRUE) {
     $config = CRM_Core_Config::singleton();
     $writer = self::singleton($type);
     if ($download) {

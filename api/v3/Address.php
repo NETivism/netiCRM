@@ -54,23 +54,23 @@ function civicrm_api3_address_create(&$params) {
    * if street_parsing, street_address has to be parsed into
    * separate parts
    */
-  if (array_key_exists('street_parsing', $params)) {
+  if (CRM_Utils_Array::arrayKeyExists('street_parsing', $params)) {
     if ($params['street_parsing'] == 1) {
-      if (array_key_exists('street_address', $params)) {
+      if (CRM_Utils_Array::arrayKeyExists('street_address', $params)) {
         if (!empty($params['street_address'])) {
           $parsedItems = CRM_Core_BAO_Address::parseStreetAddress(
             $params['street_address']
           );
-          if (array_key_exists('street_name', $parsedItems)) {
+          if (CRM_Utils_Array::arrayKeyExists('street_name', $parsedItems)) {
             $params['street_name'] = $parsedItems['street_name'];
           }
-          if (array_key_exists('street_unit', $parsedItems)) {
+          if (CRM_Utils_Array::arrayKeyExists('street_unit', $parsedItems)) {
             $params['street_unit'] = $parsedItems['street_unit'];
           }
-          if (array_key_exists('street_number', $parsedItems)) {
+          if (CRM_Utils_Array::arrayKeyExists('street_number', $parsedItems)) {
             $params['street_number'] = $parsedItems['street_number'];
           }
-          if (array_key_exists('street_number_suffix', $parsedItems)) {
+          if (CRM_Utils_Array::arrayKeyExists('street_number_suffix', $parsedItems)) {
             $params['street_number_suffix'] = $parsedItems['street_number_suffix'];
           }
         }

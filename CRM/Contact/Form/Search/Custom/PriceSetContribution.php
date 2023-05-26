@@ -112,7 +112,7 @@ ORDER BY l.entity_table, l.entity_id ASC
 
     foreach (array_keys($rows) as $entity) {
       if (is_array($rows[$entity])) {
-        $values = implode(',', $rows[$entity]);
+        $values = CRM_Utils_Array::implode(',', $rows[$entity]);
         list($entity_table, $entity_id, $contact_id) = explode('-', $entity);
       }
       $values .= " ,contact_id = '{$contact_id}', entity_table = '{$entity_table}', entity_id = $entity_id";
@@ -309,7 +309,7 @@ contact_a.display_name   as display_name";
       '<a href="'.CRM_Utils_System::url('civicrm/contact/view/contribution', "reset=1&id={$row['entity_id']}&cid={$row['contact_id']}&action=update").'" class="action-item" target="_blank">'.ts('Edit').'</a>',
     );                                      
     if(isset($row['action'])){
-      $row['action'] = implode('<br>', $action);
+      $row['action'] = CRM_Utils_Array::implode('<br>', $action);
     }
   } 
 }

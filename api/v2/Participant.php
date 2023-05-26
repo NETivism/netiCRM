@@ -179,7 +179,7 @@ function &civicrm_participant_search(&$params) {
   }
 
   // add is_test to the clause if not present
-  if (!array_key_exists('participant_test', $inputParams)) {
+  if (!CRM_Utils_Array::arrayKeyExists('participant_test', $inputParams)) {
     $inputParams['participant_test'] = 0;
   }
 

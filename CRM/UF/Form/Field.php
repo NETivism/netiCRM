@@ -128,7 +128,7 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
       $params = array('id' => $this->_gid);
       CRM_Core_BAO_UFGroup::retrieve($params, $groupInfo);
       $ufJoin = CRM_Core_BAO_UFGroup::getUFJoinRecord($this->_gid);
-      $groupInfo['usage'] = implode(',', array_unique($ufJoin));
+      $groupInfo['usage'] = CRM_Utils_Array::implode(',', array_unique($ufJoin));
       $this->_groupInfo = $groupInfo;
 
       $this->_title = $this->_groupInfo['title'];
@@ -345,7 +345,7 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
       //custom fields for sub type
       $subTypeFields = CRM_Core_BAO_CustomField::getFieldsForImport($name);
 
-      if (array_key_exists($val['parent'], $fields)) {
+      if (CRM_Utils_Array::arrayKeyExists($val['parent'], $fields)) {
         $fields[$name] = $fields[$val['parent']] + $subTypeFields;
       }
       else {
@@ -729,7 +729,7 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
         $groupType = 'null';
         $fieldsType = CRM_Core_BAO_UFGroup::calculateGroupType($this->_gid);
         if (!empty($fieldsType)) {
-          $groupType = implode(',', $fieldsType);
+          $groupType = CRM_Utils_Array::implode(',', $fieldsType);
         }
         //set group type
         CRM_Core_DAO::setFieldValue('CRM_Core_DAO_UFGroup', $this->_gid, 'group_type', $groupType);
@@ -793,7 +793,7 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
         $groupType = 'null';
         $fieldsType = CRM_Core_BAO_UFGroup::calculateGroupType($this->_gid);
         if (!empty($fieldsType)) {
-          $groupType = implode(',', $fieldsType);
+          $groupType = CRM_Utils_Array::implode(',', $fieldsType);
         }
         //set group type
         CRM_Core_DAO::setFieldValue('CRM_Core_DAO_UFGroup', $this->_gid, 'group_type', $groupType);

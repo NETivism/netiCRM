@@ -118,7 +118,7 @@ class HTML_QuickForm_xbutton extends HTML_QuickForm_element
     }
 
 
-    function onQuickFormEvent($event, $arg, $caller = null)
+    function onQuickFormEvent($event, $arg, &$caller)
     {
         if ('updateValue' != $event) {
             return parent::onQuickFormEvent($event, $arg, $caller);

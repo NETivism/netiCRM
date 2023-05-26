@@ -50,7 +50,7 @@ class CRM_Pledge_Form_Task_SearchTaskHookSample extends CRM_Pledge_Form_Task {
     parent::preProcess();
     $rows = array();
     // display name and pledge details of all selected contacts
-    $pledgeIDs = implode(',', $this->_pledgeIds);
+    $pledgeIDs = CRM_Utils_Array::implode(',', $this->_pledgeIds);
 
     $query = "
     SELECT plg.amount      as amount,

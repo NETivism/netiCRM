@@ -176,7 +176,7 @@ class {$table.className} extends CRM_Core_DAO {ldelim}
        * @access public
        * @return array
        */
-      function &fields( ) {ldelim}
+      static function &fields( ) {ldelim}
         if ( ! ( self::$_fields ) ) {ldelim}
           self::$_fields = array (
 {foreach from=$table.fields item=field}
@@ -248,7 +248,7 @@ class {$table.className} extends CRM_Core_DAO {ldelim}
        * @access public
        * @return string
        */
-      function getTableName( ) {ldelim}
+      static function getTableName( ) {ldelim}
         {if $table.localizable}
           global $dbLocale;
           return self::$_tableName . $dbLocale;
@@ -273,7 +273,7 @@ class {$table.className} extends CRM_Core_DAO {ldelim}
        * @access public
        * return array
        */
-       function &import( $prefix = false ) {ldelim}
+       static function &import( $prefix = false ) {ldelim}
             if ( ! ( self::$_import ) ) {ldelim}
                self::$_import = array ( );
                $fields =& self::fields( );
@@ -304,7 +304,7 @@ class {$table.className} extends CRM_Core_DAO {ldelim}
        * @access public
        * return array
        */
-       function &export( $prefix = false ) {ldelim}
+       static function &export( $prefix = false ) {ldelim}
             if ( ! ( self::$_export ) ) {ldelim}
                self::$_export = array ( );
                $fields =& self::fields( );

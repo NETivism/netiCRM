@@ -171,7 +171,7 @@ class Date_TimeZone
      * @access public
      * @return object Date_TimeZone the default time zone
      */
-    function getDefault()
+    static function getDefault()
     {
         return new Date_TimeZone($GLOBALS['_DATE_TIMEZONE_DEFAULT']);
     }
@@ -187,7 +187,7 @@ class Date_TimeZone
      * @access public
      * @param string $id the time zone id to use
      */
-    function setDefault($id)
+    static function setDefault($id)
     {
         if(Date_TimeZone::isValidID($id)) {
             $GLOBALS['_DATE_TIMEZONE_DEFAULT'] = $id;
@@ -206,7 +206,7 @@ class Date_TimeZone
      * @param string $id the id to test
      * @return boolean true if the supplied ID is valid
      */
-    function isValidID($id)
+    static function isValidID($id)
     {
         if(isset($GLOBALS['_DATE_TIMEZONE_DATA'][$id])) {
             return true;

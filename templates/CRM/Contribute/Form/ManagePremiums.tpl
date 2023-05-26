@@ -97,7 +97,7 @@
     <table class="form-layout-compressed">
       <tr class="crm-contribution-form-block-min_contribution">
         <td class="label">{$form.min_contribution.label}</td>
-        <td class="html-adjust">{ts}Min Contribution{/ts} {$form.min_contribution.html|crmMoney}</td>
+        <td class="html-adjust">{ts}Min Contribution{/ts} {$form.min_contribution.html}</td>
       </tr>
       <tr class="crm-contribution-form-block-calculate_mode">
         <td class="label"><label>{ts}Recurring Contribution{/ts} - {ts}Threshold{/ts} <span class="crm-marker">*</span></label></td>
@@ -109,7 +109,7 @@
                 <div class="min-contribution-recur hiddenElement">
                   <label class="mode-first hiddenElement">{ts}Min contribution of first time donation{/ts}</label>
                   <label class="mode-cumulative hiddenElement" >{ts}Grand Total of recurring amount{/ts}</label>
-                  {$form.min_contribution_recur.html|crmMoney}
+                  {$form.min_contribution_recur.html}
                 </div>
                 <div class="installments hiddenElement">
                   <div>{ts}When donor do specify installment, calculate total amount by: amount per installment x donor choose installments{/ts}</div>
@@ -136,13 +136,13 @@
     <table class="form-layout-compressed">
       <tr class="crm-contribution-form-block-price">
         <td class="label">{$form.price.label}</td>
-        <td class="html-adjust">{$form.price.html|crmMoney}<br />
+        <td class="html-adjust">{$form.price.html}<br />
       <span class="description">{ts}To estimate the cost of fundraising, please fill in the market price of this premium. The market price you filled in will not affect the total amount displayed on the contribution record and receipt.{/ts}</span>
         </td> 
       </tr>
       <tr class="crm-contribution-form-block-cost">
         <td class="label">{$form.cost.label}</td>
-        <td class="html-adjust">{$form.cost.html|crmMoney}<br />
+        <td class="html-adjust">{$form.cost.html}<br />
           <span class="description">{ts}You may optionally record the actual cost of this premium to your organization. This may be useful when evaluating net return for this incentive.{/ts}</span>
         </td>
       </tr>

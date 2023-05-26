@@ -56,7 +56,7 @@ class CRM_Contribute_Form_Payment_Main extends CRM_Contribute_Form_Payment {
     parent::preProcess();
     if(!$this->_pass){
       CRM_Utils_System::notFound();
-      CRM_Utils_Ssytem::civiExit();
+      CRM_Utils_System::civiExit();
     }
     else{
       $this->assign('ppType', FALSE);

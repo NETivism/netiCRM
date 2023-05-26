@@ -216,7 +216,7 @@ function _civicrm_api3_custom_field_validate_field($fieldName, $value, $fieldDet
         $value = array($value);
       }
 
-      $query = "SELECT count(*) FROM civicrm_country WHERE id IN (" . implode(',', $value) . ")";
+      $query = "SELECT count(*) FROM civicrm_country WHERE id IN (" . CRM_Utils_Array::implode(',', $value) . ")";
       if (CRM_Core_DAO::singleValueQuery($query) < count($value)) {
         $errors[$fieldName] = 'Invalid country(s) for ' . $fieldName;
       }
@@ -239,7 +239,7 @@ function _civicrm_api3_custom_field_validate_field($fieldName, $value, $fieldDet
       $query = "
 SELECT count(*) 
   FROM civicrm_state_province
- WHERE id IN ('" . implode("','", $value) . "')";
+ WHERE id IN ('" . CRM_Utils_Array::implode("','", $value) . "')";
       if (CRM_Core_DAO::singleValueQuery($query) < count($value)) {
         $errors[$fieldName] = 'Invalid State/Province for ' . $fieldName;
       }
@@ -262,7 +262,7 @@ SELECT count(*)
 
     $invalidOptions = array_diff($value, array_keys($options));
     if (!empty($invalidOptions)) {
-      $errors[$fieldName] = "Invalid option(s) for field '{$fieldName}': " . implode(',', $invalidOptions);
+      $errors[$fieldName] = "Invalid option(s) for field '{$fieldName}': " . CRM_Utils_Array::implode(',', $invalidOptions);
     }
   }
 

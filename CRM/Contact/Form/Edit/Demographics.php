@@ -52,7 +52,7 @@ class CRM_Contact_Form_Edit_Demographics {
     $genderOptions = array();
     $gender = CRM_Core_PseudoConstant::gender();
     foreach ($gender as $key => $var) {
-      $genderOptions[$key] = HTML_QuickForm::createElement('radio', NULL, ts('Gender'), $var, $key);
+      $genderOptions[$key] = $form->createElement('radio', NULL, ts('Gender'), $var, $key);
     }
     $form->addGroup($genderOptions, 'gender_id', ts('Gender'));
 
@@ -70,6 +70,6 @@ class CRM_Contact_Form_Edit_Demographics {
    *
    * @return None
    */
-  function setDefaultValues(&$form, &$defaults) {}
+  static function setDefaultValues(&$form, &$defaults) {}
 }
 

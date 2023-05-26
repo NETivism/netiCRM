@@ -613,14 +613,18 @@ abstract class CRM_Contribute_Import_Parser {
   }
 
   function setActiveFieldSoftCredit($elements) {
-    for ($i = 0; $i < count($elements); $i++) {
-      $this->_activeFields[$i]->_softCreditField = $elements[$i];
+    if ($elements && is_array($elements)) {
+      for ($i = 0; $i < count($elements); $i++) {
+        $this->_activeFields[$i]->_softCreditField = $elements[$i];
+      }
     }
   }
 
   function setActiveFieldPCP($elements) {
-    for ($i = 0; $i < count($elements); $i++) {
-      $this->_activeFields[$i]->_pcpField = $elements[$i];
+    if ($elements && is_array($elements)) {
+      for ($i = 0; $i < count($elements); $i++) {
+        $this->_activeFields[$i]->_pcpField = $elements[$i];
+      }
     }
   }
 
@@ -649,20 +653,26 @@ abstract class CRM_Contribute_Import_Parser {
   }
 
   function setActiveFieldLocationTypes($elements) {
-    for ($i = 0; $i < count($elements); $i++) {
-      $this->_activeFields[$i]->_hasLocationType = $elements[$i];
+    if ($elements && is_array($elements)) {
+      for ($i = 0; $i < count($elements); $i++) {
+        $this->_activeFields[$i]->_hasLocationType = $elements[$i];
+      }
     }
   }
 
   function setActiveFieldPhoneTypes($elements) {
-    for ($i = 0; $i < count($elements); $i++) {
-      $this->_activeFields[$i]->_phoneType = $elements[$i];
+    if ($elements && is_array($elements)) {
+      for ($i = 0; $i < count($elements); $i++) {
+        $this->_activeFields[$i]->_phoneType = $elements[$i];
+      }
     }
   }
 
   function setActiveFieldWebsiteTypes($elements) {
-    for ($i = 0; $i < count($elements); $i++) {
-      $this->_activeFields[$i]->_websiteType = $elements[$i];
+    if ($elements && is_array($elements)) {
+      for ($i = 0; $i < count($elements); $i++) {
+        $this->_activeFields[$i]->_websiteType = $elements[$i];
+      }
     }
   }
 
@@ -675,8 +685,10 @@ abstract class CRM_Contribute_Import_Parser {
    * @access public
    */
   function setActiveFieldImProviders($elements) {
-    for ($i = 0; $i < count($elements); $i++) {
-      $this->_activeFields[$i]->_imProvider = $elements[$i];
+    if ($elements && is_array($elements)) {
+      for ($i = 0; $i < count($elements); $i++) {
+        $this->_activeFields[$i]->_imProvider = $elements[$i];
+      }
     }
   }
 
@@ -811,7 +823,7 @@ abstract class CRM_Contribute_Import_Parser {
     }
     else {
       $tempField = CRM_Contact_BAO_Contact::importableFields('All', NULL);
-      if (!array_key_exists($name, $tempField)) {
+      if (!CRM_Utils_Array::arrayKeyExists($name, $tempField)) {
         $this->_fields[$name] = new CRM_Contribute_Import_Field($name, $title, $type, $headerPattern, $dataPattern, $hasLocationType);
       }
       else {

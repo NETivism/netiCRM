@@ -179,14 +179,14 @@ function _civicrm_api3_pledge_get_defaults() {
 function _civicrm_api3_pledge_format_params(&$values, $create = FALSE) {
 
   // probably most of the below can be removed.... just needs a little more review
-  if (array_key_exists('original_installment_amount', $values)) {
+  if (CRM_Utils_Array::arrayKeyExists('original_installment_amount', $values)) {
     $values['installment_amount'] = $values['original_installment_amount'];
     //it seems it will only create correctly with BOTH installment amount AND pledge_installment_amount set
     //pledge installment amount required for pledge payments
     $values['pledge_original_installment_amount'] = $values['original_installment_amount'];
   }
 
-  if (array_key_exists('pledge_original_installment_amount', $values)) {
+  if (CRM_Utils_Array::arrayKeyExists('pledge_original_installment_amount', $values)) {
     $values['installment_amount'] = $values['pledge_original_installment_amount'];
   }
 
@@ -204,7 +204,7 @@ function _civicrm_api3_pledge_format_params(&$values, $create = FALSE) {
       $values['status_id'] = array_search('Pending', $contributionStatus);
     }
   }
-  if (empty($values['scheduled_date']) && array_key_exists('start_date', $values)) {
+  if (empty($values['scheduled_date']) && CRM_Utils_Array::arrayKeyExists('start_date', $values)) {
     $values['scheduled_date'] = $values['start_date'];
   }
 }

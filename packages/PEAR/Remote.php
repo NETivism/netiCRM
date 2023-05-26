@@ -60,9 +60,9 @@ class PEAR_Remote extends PEAR
 
     // {{{ PEAR_Remote(config_object)
 
-    function PEAR_Remote(&$config)
+    function __construct(&$config)
     {
-        $this->PEAR();
+        parent::__construct();
         $this->config = &$config;
         $this->_registry = &$this->config->getRegistry();
     }
@@ -456,7 +456,7 @@ class PEAR_Remote extends PEAR
                     if ($is_continuous) {
                         reset($php_val);
                         $arr = array();
-                        while (list($k, $v) = each($php_val)) {
+                        foreach($php_val as $k => $v) {
                             $arr[$k] = $this->_encode($v);
                         }
                         $xmlrpcval->addArray($arr);
@@ -466,7 +466,7 @@ class PEAR_Remote extends PEAR
                 // fall though if not numerical and continuous
             case "object":
                 $arr = array();
-                while (list($k, $v) = each($php_val)) {
+                foreach($php_val as $k => $v) {
                     $arr[$k] = $this->_encode($v);
                 }
                 $xmlrpcval->addStruct($arr);

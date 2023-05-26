@@ -50,13 +50,13 @@ WHERE  n.child_group_id  = gc.id
 
     $tree = array();
     while ($dao->fetch()) {
-      if (!array_key_exists($dao->child, $tree)) {
+      if (!CRM_Utils_Array::arrayKeyExists($dao->child, $tree)) {
         $tree[$dao->child] = array('children' => array(),
           'parents' => array(),
         );
       }
 
-      if (!array_key_exists($dao->parent, $tree)) {
+      if (!CRM_Utils_Array::arrayKeyExists($dao->parent, $tree)) {
         $tree[$dao->parent] = array('children' => array(),
           'parents' => array(),
         );
@@ -80,8 +80,8 @@ SET    parents  = null,
 
     $values = array();
     foreach (array_keys($tree) as $id) {
-      $parents = implode(',', $tree[$id]['parents']);
-      $children = implode(',', $tree[$id]['children']);
+      $parents = CRM_Utils_Array::implode(',', $tree[$id]['parents']);
+      $children = CRM_Utils_Array::implode(',', $tree[$id]['children']);
       $parents = $parents == NULL ? 'null' : "'$parents'";
       $children = $children == NULL ? 'null' : "'$children'";
       $sql = "
@@ -202,7 +202,7 @@ WHERE  id = $id
           foreach ($tree[$id]['children'] as $child) {
             $children[] = "{_reference:'$child'}";
           }
-          $children = implode(',', $children);
+          $children = CRM_Utils_Array::implode(',', $children);
           $string .= ", children:[$children]";
           if (empty($tree[$id]['parents'])) {
             $string .= ", type:'rootGroup'";
@@ -221,7 +221,7 @@ WHERE  id = $id
       $values[] = "{ $string }";
     }
 
-    $items = implode(",\n", $values);
+    $items = CRM_Utils_Array::implode(",\n", $values);
     $json = "{
   identifier:'id',
   label:'name',

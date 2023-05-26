@@ -204,7 +204,7 @@ Class CRM_Campaign_BAO_Survey extends CRM_Campaign_DAO_Survey {
     }
 
     if (!empty($activityTypes)) {
-      $extendSubType = implode('[[:>:]]|[[:<:]]', array_keys($activityTypes));
+      $extendSubType = CRM_Utils_Array::implode('[[:>:]]|[[:<:]]', array_keys($activityTypes));
 
       $query = "SELECT cg.id, cg.name, cg.title, cg.extends_entity_column_value
                       FROM civicrm_custom_group cg
@@ -312,9 +312,9 @@ Class CRM_Campaign_BAO_Survey extends CRM_Campaign_DAO_Survey {
 
     //finally retrieve contact details.
     if (!empty($select) && !empty($from)) {
-      $fromClause = implode(' ', $from);
-      $selectClause = implode(', ', $select);
-      $whereClause = "contact.id IN (" . implode(',', $voterIds) . ')';
+      $fromClause = CRM_Utils_Array::implode(' ', $from);
+      $selectClause = CRM_Utils_Array::implode(', ', $select);
+      $whereClause = "contact.id IN (" . CRM_Utils_Array::implode(',', $voterIds) . ')';
 
       $query = "
   SELECT  contact.id as contactId, $selectClause 
@@ -361,7 +361,7 @@ Group By  contact.id";
 
     $whereClause = NULL;
     if (is_array($statusIds) && !empty($statusIds)) {
-      $whereClause = ' AND ( activity.status_id IN ( ' . implode(',', array_values($statusIds)) . ' ) )';
+      $whereClause = ' AND ( activity.status_id IN ( ' . CRM_Utils_Array::implode(',', array_values($statusIds)) . ' ) )';
     }
 
     if (!$interviewerId) {
@@ -369,7 +369,7 @@ Group By  contact.id";
       $interviewerId = $session->get('userID');
     }
 
-    $targetContactIds = ' ( ' . implode(',', $voterIds) . ' ) ';
+    $targetContactIds = ' ( ' . CRM_Utils_Array::implode(',', $voterIds) . ' ) ';
 
     $query = " 
     SELECT  activity.id, activity.status_id, 
@@ -414,14 +414,14 @@ INNER JOIN  civicrm_activity_assignment activityAssignment ON ( activityAssignme
 
     $where = array();
     if (is_array($statusIds) && !empty($statusIds)) {
-      $where[] = '( activity.status_id IN ( ' . implode(',', array_values($statusIds)) . ' ) )';
+      $where[] = '( activity.status_id IN ( ' . CRM_Utils_Array::implode(',', array_values($statusIds)) . ' ) )';
     }
     if ($interviewerId) {
       $where[] = "( activityAssignment.assignee_contact_id =  $interviewerId )";
     }
     $whereClause = NULL;
     if (!empty($where)) {
-      $whereClause = ' AND ( ' . implode(' AND ', $where) . ' )';
+      $whereClause = ' AND ( ' . CRM_Utils_Array::implode(' AND ', $where) . ' )';
     }
 
     $actTypeId = CRM_Core_DAO::getFieldValue('CRM_Campaign_DAO_Survey', $surveyId, 'activity_type_id');
@@ -481,7 +481,7 @@ INNER JOIN  civicrm_activity_assignment activityAssignment ON ( activityAssignme
       $cacheKey .= "_{$interviewerId}";
     }
     if (is_array($statusIds) && !empty($statusIds)) {
-      $cacheKey = "{$cacheKey}_" . implode('_', $statusIds);
+      $cacheKey = "{$cacheKey}_" . CRM_Utils_Array::implode('_', $statusIds);
     }
 
     static $contactIds = array();
@@ -537,7 +537,7 @@ INNER JOIN  civicrm_activity_assignment activityAssignment ON ( activityAssignme
       $activity->source_record_id
     ) {
       $surveyActTypes = self::getSurveyActivityType();
-      if (array_key_exists($activity->activity_type_id, $surveyActTypes)) {
+      if (CRM_Utils_Array::arrayKeyExists($activity->activity_type_id, $surveyActTypes)) {
         $isSurveyActivity = TRUE;
       }
     }

@@ -44,7 +44,7 @@ function smarty_modifier_replacecharbystar($str) {
   foreach ($str_array as $str2) {
     $return_array[] = _doAddStar($str2);
   }
-  $return = implode($glue, $return_array);
+  $return = CRM_Utils_Array::implode($glue, $return_array);
   return $return;
 }
 

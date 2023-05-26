@@ -493,12 +493,12 @@ class CiviUnitTestCase extends PHPUnit_Framework_TestCase {
   function individualCreate($params = NULL) {
     if ($params === NULL) {
       $params = array(
-        'first_name' => 'Test '.CRM_UTils_String::createRandom(5),
+        'first_name' => 'Test '.CRM_Utils_String::createRandom(5),
         'middle_name' => '',
         'last_name' => 'Unit',
         'prefix_id' => 3,
         'suffix_id' => 3,
-        'email' => 'api.test+'.CRM_UTils_String::createRandom(3).'@civicrm.test.org',
+        'email' => 'api.test+'.CRM_Utils_String::createRandom(3).'@civicrm.test.org',
         'contact_type' => 'Individual',
       );
     }
@@ -1208,10 +1208,7 @@ class CiviUnitTestCase extends PHPUnit_Framework_TestCase {
         'description' => 'New Test Group Created',
         'is_active' => 1,
         'visibility' => 'Public Pages',
-        'group_type' => array(
-          '1' => 1,
-          '2' => 1,
-        ),
+        'group_type' => '1,2',
         'version' => API_LATEST_VERSION,
       );
     }

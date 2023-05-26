@@ -1777,7 +1777,7 @@ class ezcMailImapTransport
      * @param bool $reverse
      * @return ezcMailImapSet
      */
-    public function sortFromOffset( $offset, $count = 0, $sortCriteria, $reverse = false )
+    public function sortFromOffset( $offset, $count, $sortCriteria, $reverse = false )
     {
         if ( $count < 0 )
         {

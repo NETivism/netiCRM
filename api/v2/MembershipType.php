@@ -121,7 +121,7 @@ function civicrm_membership_type_get(&$params) {
   $properties = array_keys($membershipTypeBAO->fields());
 
   foreach ($properties as $name) {
-    if (array_key_exists($name, $params)) {
+    if (CRM_Utils_Array::arrayKeyExists($name, $params)) {
       $membershipTypeBAO->$name = $params[$name];
     }
   }
@@ -169,7 +169,7 @@ function &civicrm_membership_type_update(&$params) {
     $fields = $membershipTypeBAO->fields();
 
     foreach ($fields as $name => $field) {
-      if (array_key_exists($field['name'], $params)) {
+      if (CRM_Utils_Array::arrayKeyExists($field['name'], $params)) {
         $membershipTypeBAO->{$field['name']} = $params[$field['name']];
       }
     }

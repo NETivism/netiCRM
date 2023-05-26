@@ -45,7 +45,7 @@ class CRM_Utils_Type {
    *
    * @access public
    */
-  function typeToString($type) {
+  static function typeToString($type) {
     switch ($type) {
       case 1:
         $string = 'Int';
@@ -188,7 +188,7 @@ class CRM_Utils_Type {
       case 'MysqlColumnName':
         if (CRM_Utils_Rule::mysqlColumnName($data)) {
           $parts = explode('.', $data);
-          $data = '`' . implode('`.`', $parts) . '`';
+          $data = '`' . CRM_Utils_Array::implode('`.`', $parts) . '`';
           return $data;
         }
         break;
@@ -200,6 +200,7 @@ class CRM_Utils_Type {
         break;
 
       case 'CommaSeperatedIntegers':
+      case 'CommaSeparatedIntegers':
       case 'CSInts':
         if (CRM_Utils_Rule::commaSeparatedIntegers($data)) {
           return $data;

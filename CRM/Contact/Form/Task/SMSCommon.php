@@ -105,7 +105,7 @@ LEFT JOIN civicrm_phone ON ( civicrm_contact.id = civicrm_phone.contact_id )
 WHERE civicrm_contact.id IN (%1) AND civicrm_phone.phone_type_id = %2
 ORDER BY civicrm_phone.is_primary DESC, phone_id ASC";
       $mobilePhoneResult = CRM_Core_DAO::executeQuery($mobilePhoneQuery, array(
-        1 => array(implode(',', $form->_contactIds), 'CommaSeperatedIntegers'),
+        1 => array(CRM_Utils_Array::implode(',', $form->_contactIds), 'CommaSeperatedIntegers'),
         2 => array($mobileTypeId, 'Integer'),
       ));
       while ($mobilePhoneResult->fetch()) {
@@ -141,7 +141,7 @@ ORDER BY civicrm_phone.is_primary DESC, phone_id ASC";
         foreach ($toArray as $key => $value) {
           $toArrayIdPhone[] = $value['id'];
         }
-        $toDefault = implode(', ', $toArrayIdPhone);
+        $toDefault = CRM_Utils_Array::implode(', ', $toArrayIdPhone);
         $defaults['to'] = $toDefault;
       }
       $form->setDefaults($defaults);
@@ -365,7 +365,7 @@ ORDER BY civicrm_phone.is_primary DESC, phone_id ASC";
     }
   }
 
-  public static function batchSend($contactDetails, $activityParams, $smsParams = array(), $contactIds) {
+  public static function batchSend($contactDetails, $activityParams, $smsParams, $contactIds) {
     global $civicrm_batch;
 
     if ($civicrm_batch) {

@@ -248,7 +248,7 @@ class CRM_Utils_Token {
       static $addressCache = array();
 
       $cache_key = $html ? 'address-html' : 'address-text';
-      if (array_key_exists($cache_key, $addressCache)) {
+      if (CRM_Utils_Array::arrayKeyExists($cache_key, $addressCache)) {
         return $addressCache[$cache_key];
       }
 
@@ -410,7 +410,7 @@ class CRM_Utils_Token {
 
       case 'group':
         $groups = $mailing ? $mailing->getGroupNames() : array('Mailing Groups');
-        $value = implode(', ', $groups);
+        $value = CRM_Utils_Array::implode(', ', $groups);
         break;
 
       case 'subject':
@@ -591,7 +591,7 @@ class CRM_Utils_Token {
     return $str;
   }
 
-  public function getContactTokenReplacement($token, &$contact, $html = FALSE,
+  public static function getContactTokenReplacement($token, &$contact, $html = FALSE,
     $returnBlankToken = FALSE, $escapeSmarty = FALSE
   ) {
     if (self::$_tokens['contact'] == NULL) {
@@ -686,7 +686,7 @@ class CRM_Utils_Token {
     return $str;
   }
 
-  public function getContributionTokenReplacement($token, &$contribution, $html = FALSE,
+  public static function getContributionTokenReplacement($token, &$contribution, $html = FALSE,
     $returnBlankToken = FALSE, $escapeSmarty = FALSE
   ) {
     if (self::$_tokens['contribution'] == NULL) {
@@ -753,7 +753,7 @@ class CRM_Utils_Token {
     return $str;
   }
 
-  public function getHookTokenReplacement($token, &$contact, $category, $html = FALSE, $escapeSmarty = FALSE) {
+  public static function getHookTokenReplacement($token, &$contact, $category, $html = FALSE, $escapeSmarty = FALSE) {
     $value = CRM_Utils_Array::value("{$category}.{$token}", $contact);
 
     if ($value &&
@@ -808,7 +808,7 @@ class CRM_Utils_Token {
 
         $publicGroup = CRM_Core_PseudoConstant::publicGroup();
         $availableGroup = array_intersect_key($groups, $publicGroup);
-        $value = implode(', ', $availableGroup);
+        $value = CRM_Utils_Array::implode(', ', $availableGroup);
         self::token_replace('unsubscribe', 'group', $value, $str);
       }
     }
@@ -836,7 +836,7 @@ class CRM_Utils_Token {
       if (!empty($groups)) {
         $publicGroup = CRM_Core_PseudoConstant::publicGroup();
         $availableGroup = array_intersect_key($groups, $publicGroup);
-        $value = implode(', ', $availableGroup);
+        $value = CRM_Utils_Array::implode(', ', $availableGroup);
         self::token_replace('resubscribe', 'group', $value, $str);
       }
     }
@@ -1096,9 +1096,9 @@ class CRM_Utils_Token {
     $contactDetails = &$details[0];
 
     foreach ($contactIDs as $key => $contactID) {
-      if (array_key_exists($contactID, $contactDetails)) {
+      if (CRM_Utils_Array::arrayKeyExists($contactID, $contactDetails)) {
         if (CRM_Utils_Array::value('preferred_communication_method', $returnProperties) == 1
-          && array_key_exists('preferred_communication_method', $contactDetails[$contactID])
+          && CRM_Utils_Array::arrayKeyExists('preferred_communication_method', $contactDetails[$contactID])
         ) {
           require_once 'CRM/Core/PseudoConstant.php';
           $pcm = CRM_Core_PseudoConstant::pcm();
@@ -1114,7 +1114,7 @@ class CRM_Utils_Token {
               $result[$val] = $pcm[$val];
             }
           }
-          $contactDetails[$contactID]['preferred_communication_method'] = implode(', ', $result);
+          $contactDetails[$contactID]['preferred_communication_method'] = CRM_Utils_Array::implode(', ', $result);
         }
 
         foreach ($custom as $cfID) {
@@ -1152,7 +1152,7 @@ class CRM_Utils_Token {
    *
    * @access public
    */
-  function replaceGreetingTokens(&$tokenString, $contactDetails = NULL, $contactId = NULL, $className = NULL) {
+  static function replaceGreetingTokens(&$tokenString, $contactDetails = NULL, $contactId = NULL, $className = NULL) {
     if (!$contactDetails && !$contactId) {
       return;
     }
@@ -1171,7 +1171,7 @@ class CRM_Utils_Token {
 
       // $greetingTokens not empty, means there are few tokens which are not evaluated, like custom data etc
       // so retrieve it from database
-      if (!empty($greetingTokens) && array_key_exists('contact', $greetingTokens)) {
+      if (!empty($greetingTokens) && CRM_Utils_Array::arrayKeyExists('contact', $greetingTokens)) {
         $greetingsReturnProperties = array_flip(CRM_Utils_Array::value('contact', $greetingTokens));
         $greetingsReturnProperties = array_fill_keys(array_keys($greetingsReturnProperties), 1);
         $contactParams = array('contact_id' => $contactId);

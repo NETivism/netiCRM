@@ -123,7 +123,7 @@ WHERE  {$this->_componentClause}";
       TRUE
     );
 
-    $contribIDs = implode(',', $this->_contributionIds);
+    $contribIDs = CRM_Utils_Array::implode(',', $this->_contributionIds);
     $query = "
 SELECT c.id            as contact_id,
        co.id           as contribution_id,
@@ -212,7 +212,7 @@ AND    co.id IN ( $contribIDs )";
     foreach ($fields as $name => $value) {
       if (strpos($name, 'trxn_id_') !== FALSE) {
         if ($fields[$name]) {
-          if (array_key_exists($value, $seen)) {
+          if (CRM_Utils_Array::arrayKeyExists($value, $seen)) {
             $errors[$name] = ts('Transaction ID\'s must be unique. Include the account number for checks.');
           }
           $seen[$value] = 1;
@@ -248,7 +248,7 @@ AND    co.id IN ( $contribIDs )";
     $transaction = new CRM_Core_Transaction();
 
     // get the missing pieces for each contribution
-    $contribIDs = implode(',', $this->_contributionIds);
+    $contribIDs = CRM_Utils_Array::implode(',', $this->_contributionIds);
     $details = self::getDetails($contribIDs);
 
     $template = CRM_Core_Smarty::singleton();

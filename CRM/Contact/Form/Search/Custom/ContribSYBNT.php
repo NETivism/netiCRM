@@ -117,7 +117,7 @@ class CRM_Contact_Form_Search_Custom_ContribSYBNT extends CRM_Contact_Form_Searc
       foreach ($this->_formValues['contribution_type_id'] as $type_id) {
         $contribution_type[] = $this->_contribution_type_id[$type_id];
       }
-      $qill[1]['contributionType'] = ts('Contribution Type').': '.implode(', ', $contribution_type);
+      $qill[1]['contributionType'] = ts('Contribution Type').': '.CRM_Utils_Array::implode(', ', $contribution_type);
     }
     else {
       $qill[1]['contributionType'] = ts('Contribution Type').': '.ts('All');
@@ -226,7 +226,7 @@ count(contrib_1.id) AS completed_count
 
     $contribution_type_ids = $this->_formValues['contribution_type_id'];
     if (!empty($contribution_type_ids)) {
-      $clauses[] = "contrib_1.contribution_type_id IN (".implode(",", $contribution_type_ids).")";
+      $clauses[] = "contrib_1.contribution_type_id IN (".CRM_Utils_Array::implode(",", $contribution_type_ids).")";
     }
 
     if ($this->exclude_start_date || $this->exclude_end_date) {
@@ -248,12 +248,12 @@ count(contrib_1.id) AS completed_count
       }
 
       if (!empty($contribution_type_ids)) {
-        $excludeClauses[] = "c.contribution_type_id IN (".implode(",", $contribution_type_ids).")";
+        $excludeClauses[] = "c.contribution_type_id IN (".CRM_Utils_Array::implode(",", $contribution_type_ids).")";
       }
 
       $excludeClause = NULL;
       if ($excludeClauses) {
-        $excludeClause = ' AND ' . implode(' AND ', $excludeClauses);
+        $excludeClause = ' AND ' . CRM_Utils_Array::implode(' AND ', $excludeClauses);
       }
 
       if ($excludeClause || $havingClause) {
@@ -272,7 +272,7 @@ GROUP BY contact.id
       $clauses[] = " NULLIF(xg.sum_total, 0) IS NULL ";
     }
 
-    return implode(' AND ', $clauses);
+    return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
   function having($includeContactIDs = FALSE) {
@@ -287,7 +287,7 @@ GROUP BY contact.id
       $clauses[] = "sum(contrib_1.total_amount) <= $max";
     }
 
-    return implode(' AND ', $clauses);
+    return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
   function &columns() {

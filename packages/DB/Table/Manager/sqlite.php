@@ -251,7 +251,7 @@ class DB_Table_Manager_sqlite {
     function dropConstraint($table, $name)
     {
         if (strtolower($name) == 'primary') {
-            return DB_Table::throwError(
+            return DB_Table::throwDBError(
                 DB_TABLE_ERR_ALTER_INDEX_IMPOS,
                 '(primary)'
             );
@@ -366,7 +366,7 @@ class DB_Table_Manager_sqlite {
             case 'change':
             case 'rename':
             default:
-                return DB_Table::throwError(DB_TABLE_ERR_ALTER_TABLE_IMPOS);
+                return DB_Table::throwDBError(DB_TABLE_ERR_ALTER_TABLE_IMPOS);
             }
         }
 

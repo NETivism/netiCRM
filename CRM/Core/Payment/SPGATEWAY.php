@@ -155,7 +155,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     }
 
     if (!empty($error)) {
-      return implode('<p>', $error);
+      return CRM_Utils_Array::implode('<p>', $error);
     }
     else {
       return NULL;
@@ -623,7 +623,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
       $resultMessage."<ul>";
       foreach ($diffContribution as $key => $value) {
         if ($key && is_array($value)) {
-          $resultMessage .= "<li><span>{$key}: </span>".implode(' ==> ', $value)."</li>";
+          $resultMessage .= "<li><span>{$key}: </span>".CRM_Utils_Array::implode(' ==> ', $value)."</li>";
         }
         else {
           $resultMessage .= "<li>{$value}</li>";
@@ -661,7 +661,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
           $updateDataArray[] = ts('Send SMS');
         }
       }
-      $updateData = implode(', ', $updateDataArray);
+      $updateData = CRM_Utils_Array::implode(', ', $updateDataArray);
       $form->set('sync_data_hint', ts('If the transaction is finished, it will update the follow data by this action: %1', $updateData));
     }
 

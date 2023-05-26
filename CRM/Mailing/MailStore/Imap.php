@@ -65,12 +65,12 @@ class CRM_Mailing_MailStore_Imap extends CRM_Mailing_MailStore {
     $this->_transport->authenticate($username, $password);
     $this->_transport->selectMailbox($folder);
 
-    $this->_ignored = implode($this->_transport->getHierarchyDelimiter(), array($folder, 'CiviMail', 'ignored'));
-    $this->_processed = implode($this->_transport->getHierarchyDelimiter(), array($folder, 'CiviMail', 'processed'));
+    $this->_ignored = CRM_Utils_Array::implode($this->_transport->getHierarchyDelimiter(), array($folder, 'CiviMail', 'ignored'));
+    $this->_processed = CRM_Utils_Array::implode($this->_transport->getHierarchyDelimiter(), array($folder, 'CiviMail', 'processed'));
     $boxes = $this->_transport->listMailboxes();
 
     if ($this->_debug) {
-      print 'mailboxes found: ' . implode(', ', $boxes) . "\n";
+      print 'mailboxes found: ' . CRM_Utils_Array::implode(', ', $boxes) . "\n";
     }
 
     if (!in_array(strtolower($this->_ignored), array_map('strtolower', $boxes))) {

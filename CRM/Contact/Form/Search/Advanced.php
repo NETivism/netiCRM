@@ -236,7 +236,7 @@ class CRM_Contact_Form_Search_Advanced extends CRM_Contact_Form_Search {
       $this->normalizeFormValues();
       // FIXME: couldn't figure out a good place to do this,
       // FIXME: so leaving this as a dependency for now
-      if (array_key_exists('contribution_amount_low', $this->_formValues)) {
+      if (CRM_Utils_Array::arrayKeyExists('contribution_amount_low', $this->_formValues)) {
         foreach (array('contribution_amount_low', 'contribution_amount_high') as $f) {
           $this->_formValues[$f] = CRM_Utils_Rule::cleanMoney($this->_formValues[$f]);
         }
@@ -275,13 +275,13 @@ class CRM_Contact_Form_Search_Advanced extends CRM_Contact_Form_Search {
 
     //search for civicase
     if (is_array($this->_formValues)) {
-      if (array_key_exists('case_owner', $this->_formValues) &&
+      if (CRM_Utils_Array::arrayKeyExists('case_owner', $this->_formValues) &&
         !$this->_formValues['case_owner'] &&
         !$this->_force
       ) {
         $this->_formValues['case_owner'] = 0;
       }
-      elseif (array_key_exists('case_owner', $this->_formValues)) {
+      elseif (CRM_Utils_Array::arrayKeyExists('case_owner', $this->_formValues)) {
         $this->_formValues['case_owner'] = 1;
       }
     }

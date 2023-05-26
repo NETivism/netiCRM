@@ -27,12 +27,13 @@ class api_v3_ActivityTest extends CiviUnitTestCase {
   protected $test_activity_type_value;
   public $_eNoticeCompliant = TRUE;
   /**
+   * @before
    *  Test setup for every test
    *
    *  Connect to the database, truncate the tables that will be used
    *  and redirect stdin to a temporary file
    */
-  public function setUp() {
+  public function setUpTest() {
     //  Connect to the database
     parent::setUp();
     $this->_apiversion = 3;
@@ -80,12 +81,13 @@ class api_v3_ActivityTest extends CiviUnitTestCase {
   }
 
   /**
+   * @after
    * Tears down the fixture, for example, closes a network connection.
    * This method is called after a test is executed.
    *
    * @access protected
    */
-  function tearDown() {
+  function tearDownTest() {
     civicrm_api('option_value', 'delete', array('version' => 3, 'id' => $this->test_activity_type_id));
   }
   /**
@@ -103,6 +105,7 @@ class api_v3_ActivityTest extends CiviUnitTestCase {
    * @response_body {$response_body}
    *
    * @docmaker_end
+   * @group CItesting
    */
   function testCreateActivity() {
 
@@ -112,7 +115,7 @@ class api_v3_ActivityTest extends CiviUnitTestCase {
     $this->assertAPISuccess($result, ' in line ' . __LINE__);
     $result = civicrm_api('activity', 'get', $this->_params);
     $this->assertAPISuccess($result, ' in line ' . __LINE__);
-    $this->assertEquals($result['values'][$result['id']]['source_contact_id'], 17, 'in line ' . __LINE__);
+    $this->assertEquals($result['values'][$result['id']]['source_contact_id'], $this->_individualId, 'in line ' . __LINE__);
     $this->assertEquals($result['values'][$result['id']]['duration'], 120, 'in line ' . __LINE__);
     $this->assertEquals($result['values'][$result['id']]['subject'], 'test activity type id', 'in line ' . __LINE__);
     $this->assertEquals($result['values'][$result['id']]['activity_date_time'], '2011-06-02 14:36:13', 'in line ' . __LINE__);
@@ -134,6 +137,7 @@ class api_v3_ActivityTest extends CiviUnitTestCase {
    * @response_body {$response_body}
    *
    * @docmaker_end
+   * @group CItesting
    */
   function testGetActivity() {
     $result_create = civicrm_api('activity', 'create', $this->_params);
@@ -163,6 +167,7 @@ class api_v3_ActivityTest extends CiviUnitTestCase {
    * @response_body {$response_body}
    *
    * @docmaker_end
+   * @group CItesting
    */
   function testUpdateActivity() {
     $activity = civicrm_api('activity', 'create', $this->_params);
@@ -202,6 +207,7 @@ class api_v3_ActivityTest extends CiviUnitTestCase {
    * @response_body {$response_body}
    *
    * @docmaker_end
+   * @group CItesting
    */
   public function testDeleteActivity() {
     $activity = civicrm_api('activity', 'create', $this->_params);

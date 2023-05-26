@@ -149,7 +149,7 @@ class CRM_Report_Form_Membership_Summary extends CRM_Report_Form {
     $select = array();
     $this->_columnHeaders = array();
     foreach ($this->_columns as $tableName => $table) {
-      if (array_key_exists('fields', $table)) {
+      if (CRM_Utils_Array::arrayKeyExists('fields', $table)) {
         foreach ($table['fields'] as $fieldName => $field) {
           if (CRM_Utils_Array::value('required', $field) ||
             CRM_Utils_Array::value($fieldName, $this->_params['fields'])
@@ -169,7 +169,7 @@ class CRM_Report_Form_Membership_Summary extends CRM_Report_Form {
         }
       }
     }
-    $this->_select = "SELECT " . implode(', ', $select) . " ";
+    $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
   static function formRule($fields, $files, $self) {
@@ -206,7 +206,7 @@ LEFT  JOIN civicrm_contribution  {$this->_aliases['civicrm_contribution']}
   function where() {
     $clauses = array();
     foreach ($this->_columns as $tableName => $table) {
-      if (array_key_exists('filters', $table)) {
+      if (CRM_Utils_Array::arrayKeyExists('filters', $table)) {
         foreach ($table['filters'] as $fieldName => $field) {
           $clause = NULL;
           if ($field['type'] & CRM_Utils_Type::T_DATE) {
@@ -241,7 +241,7 @@ LEFT  JOIN civicrm_contribution  {$this->_aliases['civicrm_contribution']}
       $this->_where = "WHERE ( 1 ) ";
     }
     else {
-      $this->_where = "WHERE " . implode(' AND ', $clauses);
+      $this->_where = "WHERE " . CRM_Utils_Array::implode(' AND ', $clauses);
     }
   }
 
@@ -259,7 +259,7 @@ LEFT  JOIN civicrm_contribution  {$this->_aliases['civicrm_contribution']}
       !empty($this->_params['group_bys'])
     ) {
       foreach ($this->_columns as $tableName => $table) {
-        if (array_key_exists('group_bys', $table)) {
+        if (CRM_Utils_Array::arrayKeyExists('group_bys', $table)) {
           foreach ($table['group_bys'] as $fieldName => $field) {
             if (CRM_Utils_Array::value($fieldName, $this->_params['group_bys'])) {
               $this->_groupBy[] = $field['dbAlias'];
@@ -273,7 +273,7 @@ LEFT  JOIN civicrm_contribution  {$this->_aliases['civicrm_contribution']}
       ) {
         $this->_rollup = " WITH ROLLUP";
       }
-      $this->_groupBy = "GROUP BY " . implode(', ', $this->_groupBy) . " {$this->_rollup} ";
+      $this->_groupBy = "GROUP BY " . CRM_Utils_Array::implode(', ', $this->_groupBy) . " {$this->_rollup} ";
     }
     else {
       $this->_groupBy = "GROUP BY contact.id";
@@ -310,7 +310,6 @@ LEFT  JOIN civicrm_contribution  {$this->_aliases['civicrm_contribution']}
         $row[$key] = $dao->$key;
       }
 
-      require_once 'CRM/Utils/OpenFlashChart.php';
       if (CRM_Utils_Array::value('charts', $this->_params) &&
         $row['civicrm_contribution_receive_date_subtotal']
       ) {
@@ -328,15 +327,12 @@ LEFT  JOIN civicrm_contribution  {$this->_aliases['civicrm_contribution']}
     $this->assign_by_ref('rows', $rows);
     $this->assign('statistics', $this->statistics($rows));
 
-    require_once 'CRM/Utils/OpenFlashChart.php';
     if (CRM_Utils_Array::value('charts', $this->_params)) {
       foreach (array('receive_date', $this->_interval, 'value') as $ignore) {
         unset($graphRows[$ignore][$count - 1]);
       }
 
       // build chart.
-      require_once 'CRM/Utils/OpenFlashChart.php';
-      CRM_Utils_OpenFlashChart::chart($graphRows, $this->_params['charts'], $this->_interval);
     }
     parent::endPostProcess();
   }
@@ -367,7 +363,7 @@ LEFT  JOIN civicrm_contribution  {$this->_aliases['civicrm_contribution']}
       }
 
       //handle the Membership Type Ids
-      if (array_key_exists('civicrm_membership_membership_type_id', $row)) {
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_membership_membership_type_id', $row)) {
         if ($value = $row['civicrm_membership_membership_type_id']) {
           $rows[$rowNum]['civicrm_membership_membership_type_id'] = CRM_Member_PseudoConstant::membershipType($value, FALSE);
         }
@@ -375,7 +371,7 @@ LEFT  JOIN civicrm_contribution  {$this->_aliases['civicrm_contribution']}
       }
 
       // handle state province
-      if (array_key_exists('civicrm_address_state_province_id', $row)) {
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_address_state_province_id', $row)) {
         if ($value = $row['civicrm_address_state_province_id']) {
           $rows[$rowNum]['civicrm_address_state_province_id'] = CRM_Core_PseudoConstant::stateProvinceAbbreviation($value, FALSE);
         }
@@ -383,7 +379,7 @@ LEFT  JOIN civicrm_contribution  {$this->_aliases['civicrm_contribution']}
       }
 
       // handle country
-      if (array_key_exists('civicrm_address_country_id', $row)) {
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_address_country_id', $row)) {
         if ($value = $row['civicrm_address_country_id']) {
           $rows[$rowNum]['civicrm_address_country_id'] = CRM_Core_PseudoConstant::country($value, FALSE);
         }
@@ -391,8 +387,8 @@ LEFT  JOIN civicrm_contribution  {$this->_aliases['civicrm_contribution']}
       }
 
       // convert display name to links
-      if (array_key_exists('civicrm_contact_display_name', $row) &&
-        array_key_exists('civicrm_contact_id', $row)
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_contact_display_name', $row) &&
+        CRM_Utils_Array::arrayKeyExists('civicrm_contact_id', $row)
       ) {
         $url = CRM_Utils_System::url('civicrm/report/member/detail',
           'reset=1&force=1&id_op=eq&id_value=' . $row['civicrm_contact_id']

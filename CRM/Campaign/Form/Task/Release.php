@@ -154,14 +154,14 @@ class CRM_Campaign_Form_Task_Release extends CRM_Campaign_Form_Task {
   function postProcess() {
     $deleteActivityIds = array();
     foreach ($this->_contactIds as $cid) {
-      if (array_key_exists($cid, $this->_surveyActivities)) {
+      if (CRM_Utils_Array::arrayKeyExists($cid, $this->_surveyActivities)) {
         $deleteActivityIds[] = $this->_surveyActivities[$cid]['activity_id'];
       }
     }
 
     //set survey activites as deleted = true.
     if (!empty($deleteActivityIds)) {
-      $query = 'UPDATE civicrm_activity SET is_deleted = 1 WHERE id IN ( ' . implode(', ', $deleteActivityIds) . ' )';
+      $query = 'UPDATE civicrm_activity SET is_deleted = 1 WHERE id IN ( ' . CRM_Utils_Array::implode(', ', $deleteActivityIds) . ' )';
       CRM_Core_DAO::executeQuery($query);
 
       $status = array(ts("%1 respondent(s) have been released.", array(1 => count($deleteActivityIds))));
@@ -170,7 +170,7 @@ class CRM_Campaign_Form_Task_Release extends CRM_Campaign_Form_Task {
           array(1 => (count($this->_contactIds) - count($deleteActivityIds)))
         );
       }
-      CRM_Core_Session::setStatus(implode('&nbsp;', $status));
+      CRM_Core_Session::setStatus(CRM_Utils_Array::implode('&nbsp;', $status));
     }
   }
 }

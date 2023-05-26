@@ -47,6 +47,12 @@ casper.test.begin('Resurrectio test', function(test) {
         test.assertExists("#user-login-form", 'Login form exist.');
     });
 
+    casper.run(function() {
+        test.done();
+    });
+});
+
+casper.test.begin('Start testing...', function(test){
     // to drupal user page
     casper.thenOpen(vars.baseURL + 'user', function() {
         // this.capture('user_page.png');

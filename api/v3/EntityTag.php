@@ -103,7 +103,7 @@ function civicrm_api3_entity_tag_display($params) {
   foreach ($values as $v) {
     $result[] = $tags[$v];
   }
-  return implode(',', $result);
+  return CRM_Utils_Array::implode(',', $result);
 }
 
 /**

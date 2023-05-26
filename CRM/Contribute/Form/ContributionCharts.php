@@ -66,7 +66,7 @@ class CRM_Contribute_Form_ContributionCharts extends CRM_Core_Form {
     $currentYear = date('Y');
     $years = array();
     if (!empty($this->_years)) {
-      if (!array_key_exists($currentYear, $this->_years)) {
+      if (!CRM_Utils_Array::arrayKeyExists($currentYear, $this->_years)) {
         $this->_years[$currentYear] = $currentYear;
         krsort($this->_years);
       }

@@ -144,7 +144,7 @@ class CRM_Import_DataSource_CSV extends CRM_Import_DataSource {
     $db->query("DROP TABLE IF EXISTS $table");
 
     $numColumns = count($columns);
-    $create = "CREATE TABLE $table (" . implode(' text, ', $columns) . " text) ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci";
+    $create = "CREATE TABLE $table (" . CRM_Utils_Array::implode(' text, ', $columns) . " text) ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci";
     $db->query($create);
 
     // the proper approach, but some MySQL installs do not have this enabled
@@ -175,7 +175,7 @@ class CRM_Import_DataSource_CSV extends CRM_Import_DataSource {
 
       $first = FALSE;
       $row = array_map(array('CRM_Core_DAO', 'escapeString'), $row);
-      $sql .= "('" . implode("', '", $row) . "')";
+      $sql .= "('" . CRM_Utils_Array::implode("', '", $row) . "')";
       $count++;
 
       if ($count >= self::NUM_ROWS_TO_INSERT && !empty($sql)) {

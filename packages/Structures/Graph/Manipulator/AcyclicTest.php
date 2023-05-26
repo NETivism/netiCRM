@@ -1,7 +1,7 @@
 <?php
 /* vim: set expandtab tabstop=4 shiftwidth=4 foldmethod=marker: */
 // +-----------------------------------------------------------------------------+
-// | Copyright (c) 2003 Sérgio Gonçalves Carvalho                                |
+// | Copyright (c) 2003 Sï¿½rgio Gonï¿½alves Carvalho                                |
 // +-----------------------------------------------------------------------------+
 // | This file is part of Structures_Graph.                                      |
 // |                                                                             |
@@ -20,7 +20,7 @@
 // | Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA                    |
 // | 02111-1307 USA                                                              |
 // +-----------------------------------------------------------------------------+
-// | Author: Sérgio Carvalho <sergio.carvalho@portugalmail.com>                  |
+// | Author: Sï¿½rgio Carvalho <sergio.carvalho@portugalmail.com>                  |
 // +-----------------------------------------------------------------------------+
 //
 /**
@@ -48,8 +48,8 @@ require_once 'Structures/Graph/Node.php';
  * DAG. The graph must be directed, or else it is considered cyclic, even when 
  * there are no arcs.
  *
- * @author		Sérgio Carvalho <sergio.carvalho@portugalmail.com> 
- * @copyright	(c) 2004 by Sérgio Carvalho
+ * @author		Sï¿½rgio Carvalho <sergio.carvalho@portugalmail.com> 
+ * @copyright	(c) 2004 by Sï¿½rgio Carvalho
  * @package Structures_Graph
  */
 class Structures_Graph_Manipulator_AcyclicTest {
@@ -77,7 +77,7 @@ class Structures_Graph_Manipulator_AcyclicTest {
     /**
     * @access   private
     */
-    function _isAcyclic(&$graph) {
+    static function _isAcyclic(&$graph) {
         // Mark every node as not visited
         $nodes =& $graph->getNodes();
         $nodeKeys = array_keys($nodes);
@@ -123,7 +123,7 @@ class Structures_Graph_Manipulator_AcyclicTest {
     * @return	boolean	 true iff graph is acyclic
     * @access	public
     */
-    function isAcyclic(&$graph) {
+    static function isAcyclic(&$graph) {
         // We only test graphs
         if (!is_a($graph, 'Structures_Graph')) return Pear::raiseError('Structures_Graph_Manipulator_AcyclicTest::isAcyclic received an object that is not a Structures_Graph', STRUCTURES_GRAPH_ERROR_GENERIC);
         if (!$graph->isDirected()) return false; // Only directed graphs may be acyclic

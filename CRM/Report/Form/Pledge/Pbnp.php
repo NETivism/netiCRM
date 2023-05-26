@@ -151,7 +151,7 @@ class CRM_Report_Form_Pledge_Pbnp extends CRM_Report_Form {
     $select = array();
     $this->_columnHeaders = array();
     foreach ($this->_columns as $tableName => $table) {
-      if (array_key_exists('fields', $table)) {
+      if (CRM_Utils_Array::arrayKeyExists('fields', $table)) {
         foreach ($table['fields'] as $fieldName => $field) {
           if (CRM_Utils_Array::value('required', $field) ||
             CRM_Utils_Array::value($fieldName, $this->_params['fields'])
@@ -171,7 +171,7 @@ class CRM_Report_Form_Pledge_Pbnp extends CRM_Report_Form {
         }
       }
     }
-    $this->_select = "SELECT " . implode(', ', $select) . " ";
+    $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
   function from() {
@@ -185,7 +185,7 @@ class CRM_Report_Form_Pledge_Pbnp extends CRM_Report_Form {
       }
     }
 
-    $statusIds = implode(', ', $unpaidStatus);
+    $statusIds = CRM_Utils_Array::implode(', ', $unpaidStatus);
 
     $this->_from = "
         FROM civicrm_contact {$this->_aliases['civicrm_contact']} {$this->_aclFrom}
@@ -238,7 +238,7 @@ class CRM_Report_Form_Pledge_Pbnp extends CRM_Report_Form {
     foreach ($rows as $rowNum => $row) {
       if (!empty($this->_noRepeats) && $this->_outputMode != 'csv') {
         // don't repeat contact details if its same as the previous row
-        if (array_key_exists('civicrm_contact_id', $row)) {
+        if (CRM_Utils_Array::arrayKeyExists('civicrm_contact_id', $row)) {
           if ($cid = $row['civicrm_contact_id']) {
             if ($rowNum == 0) {
               $prev_cid = $cid;
@@ -267,7 +267,7 @@ class CRM_Report_Form_Pledge_Pbnp extends CRM_Report_Form {
       }
 
       //handle the Contribution Type Ids
-      if (array_key_exists('civicrm_pledge_contribution_type_id', $row)) {
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_pledge_contribution_type_id', $row)) {
         if ($value = $row['civicrm_pledge_contribution_type_id']) {
           $rows[$rowNum]['civicrm_pledge_contribution_type_id'] = CRM_Contribute_PseudoConstant::contributionType($value);
         }
@@ -275,7 +275,7 @@ class CRM_Report_Form_Pledge_Pbnp extends CRM_Report_Form {
       }
 
       //handle the Status Ids
-      if (array_key_exists('civicrm_pledge_status_id', $row)) {
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_pledge_status_id', $row)) {
         if ($value = $row['civicrm_pledge_status_id']) {
           $rows[$rowNum]['civicrm_pledge_status_id'] = CRM_Core_OptionGroup::getLabel('contribution_status', $value);
         }
@@ -283,7 +283,7 @@ class CRM_Report_Form_Pledge_Pbnp extends CRM_Report_Form {
       }
 
       // handle state province
-      if (array_key_exists('civicrm_address_state_province_id', $row)) {
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_address_state_province_id', $row)) {
         if ($value = $row['civicrm_address_state_province_id']) {
           $rows[$rowNum]['civicrm_address_state_province_id'] = CRM_Core_PseudoConstant::stateProvinceAbbreviation($value, FALSE);
         }
@@ -291,7 +291,7 @@ class CRM_Report_Form_Pledge_Pbnp extends CRM_Report_Form {
       }
 
       // handle country
-      if (array_key_exists('civicrm_address_country_id', $row)) {
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_address_country_id', $row)) {
         if ($value = $row['civicrm_address_country_id']) {
           $rows[$rowNum]['civicrm_address_country_id'] = CRM_Core_PseudoConstant::country($value, FALSE);
         }
@@ -299,8 +299,8 @@ class CRM_Report_Form_Pledge_Pbnp extends CRM_Report_Form {
       }
 
       // convert display name to links
-      if (array_key_exists('civicrm_contact_display_name', $row) &&
-        array_key_exists('civicrm_contact_id', $row)
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_contact_display_name', $row) &&
+        CRM_Utils_Array::arrayKeyExists('civicrm_contact_id', $row)
       ) {
         $url = CRM_Report_Utils_Report::getNextUrl('pledge/summary',
           'reset=1&force=1&id_op=eq&id_value=' .

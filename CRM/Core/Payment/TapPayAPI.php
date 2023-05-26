@@ -91,7 +91,7 @@ class CRM_Core_Payment_TapPayAPI {
       }
     }
     if(!empty($missingRequired)) {
-      CRM_Core_Error::fatal('Required parameters missing: '.implode(',', $missingRequired));
+      CRM_Core_Error::fatal('Required parameters missing: '.CRM_Utils_Array::implode(',', $missingRequired));
     }
 
     // Format of amount
@@ -302,7 +302,7 @@ class CRM_Core_Payment_TapPayAPI {
     if($response->card_info && $response->card_info->token_status) {
       $tappay->token_status = $response->card_info->token_status;
     }
-    CRM_Utils_Hook::alterAPIResponse($response, $tappay, 'TapPay', $apiType);
+    CRM_Utils_Hook::alterTapPayResponse($response, $tappay, 'TapPay', $apiType);
     $tappay->save();
   }
 

@@ -336,7 +336,7 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
     if ($output == CRM_Core_Selector_Controller::EXPORT || $output == CRM_Core_Selector_Controller::SCREEN) {
       $csvHeaders = array(ts('Activity Type'), ts('Description'), ts('Activity Date'));
       foreach (self::_getColumnHeaders() as $column) {
-        if (array_key_exists('name', $column)) {
+        if (CRM_Utils_Array::arrayKeyExists('name', $column)) {
           $csvHeaders[] = $column['name'];
         }
       }

@@ -240,7 +240,7 @@ class CRM_ACL_BAO_ACL extends CRM_ACL_DAO_ACL {
                         AND     {$t['GroupContact']}.contact_id = $contact_id
                         AND     {$t['GroupContact']}.status     = 'Added'";
 
-    $union = '(' . implode(') UNION DISTINCT (', $query) . ')';
+    $union = '(' . CRM_Utils_Array::implode(') UNION DISTINCT (', $query) . ')';
 
     $dao->query($union);
 
@@ -295,10 +295,10 @@ class CRM_ACL_BAO_ACL extends CRM_ACL_DAO_ACL {
       }
     }
 
-    $allows = '(' . implode(' OR ', $allow) . ')';
-    $denies = '(' . implode(' OR ', $deny) . ')';
+    $allows = '(' . CRM_Utils_Array::implode(' OR ', $allow) . ')';
+    $denies = '(' . CRM_Utils_Array::implode(' OR ', $deny) . ')';
     if (!empty($override)) {
-      $denies = '(NOT (' . implode(' OR ', $override) . ") AND $denies)";
+      $denies = '(NOT (' . CRM_Utils_Array::implode(' OR ', $override) . ") AND $denies)";
     }
 
     return "($allows AND NOT $denies)";
@@ -674,7 +674,7 @@ SELECT $acl.*
     $acls = &CRM_ACL_BAO_Cache::build($contactID);
 
     $aclKeys = array_keys($acls);
-    $aclKeys = implode(',', $aclKeys);
+    $aclKeys = CRM_Utils_Array::implode(',', $aclKeys);
 
     if (empty($aclKeys)) {
       return FALSE;
@@ -706,7 +706,7 @@ SELECT count( a.id )
 
     if (!empty($acls)) {
       $aclKeys = array_keys($acls);
-      $aclKeys = implode(',', $aclKeys);
+      $aclKeys = CRM_Utils_Array::implode(',', $aclKeys);
 
       $query = "
 SELECT   a.operation, a.object_id
@@ -735,7 +735,7 @@ ORDER BY a.object_id
       }
 
       if (!empty($ids)) {
-        $ids = implode(',', $ids);
+        $ids = CRM_Utils_Array::implode(',', $ids);
         $query = "
 SELECT g.*
   FROM civicrm_group g
@@ -772,7 +772,7 @@ SELECT g.*
     }
 
     if (!empty($clauses)) {
-      $whereClause = ' ( ' . implode(' OR ', $clauses) . ' ) ';
+      $whereClause = ' ( ' . CRM_Utils_Array::implode(' OR ', $clauses) . ' ) ';
     }
 
     // call the hook to get additional whereClauses
@@ -807,7 +807,7 @@ SELECT g.*
 
     if (!empty($acls)) {
       $aclKeys = array_keys($acls);
-      $aclKeys = implode(',', $aclKeys);
+      $aclKeys = CRM_Utils_Array::implode(',', $aclKeys);
 
       $query = "
 SELECT   a.operation, a.object_id

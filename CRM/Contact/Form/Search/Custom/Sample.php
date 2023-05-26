@@ -143,7 +143,7 @@ LEFT JOIN civicrm_state_province state_province ON state_province.id = address.s
     }
 
     if (!empty($clause)) {
-      $where .= ' AND ' . implode(' AND ', $clause);
+      $where .= ' AND ' . CRM_Utils_Array::implode(' AND ', $clause);
     }
 
     return $this->whereClause($where, $params);

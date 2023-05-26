@@ -285,7 +285,7 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
 
         //allow pending status class walk registration wizard.
         require_once 'CRM/Core/PseudoConstant.php';
-        if (array_key_exists($participantValues[$this->_participantId]['status_id'],
+        if (CRM_Utils_Array::arrayKeyExists($participantValues[$this->_participantId]['status_id'],
             CRM_Event_PseudoConstant::participantStatus(NULL, "class = 'Pending'")
           )) {
           $this->_allowConfirmation = TRUE;
@@ -761,7 +761,7 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
 
           list($prefixName, $index) = CRM_Utils_System::explode('-', $key, 2);
           if ($prefixName == 'state_province' || $prefixName == 'country') {
-            if (!array_key_exists($index, $stateCountryMap)) {
+            if (!CRM_Utils_Array::arrayKeyExists($index, $stateCountryMap)) {
               $stateCountryMap[$index] = array();
             }
             $stateCountryMap[$index][$prefixName] = $key;
@@ -1220,7 +1220,7 @@ WHERE  v.option_group_id = g.id
      * @access public 
      */
 
-  public function getParticipantCount(&$form, $params, $skipCurrent = FALSE) {
+  public static function getParticipantCount(&$form, $params, $skipCurrent = FALSE) {
     $totalCount = 0;
     if (!is_array($params) || empty($params)) {
       return $totalCount;
@@ -1279,7 +1279,7 @@ WHERE  v.option_group_id = g.id
           $priceFieldId = substr($valKey, 6);
           if (!$priceFieldId ||
             !is_array($value) ||
-            !array_key_exists($priceFieldId, $priceSetFields)
+            !CRM_Utils_Array::arrayKeyExists($priceFieldId, $priceSetFields)
           ) {
             continue;
           }
@@ -1313,7 +1313,7 @@ WHERE  v.option_group_id = g.id
      * @access public 
      */
 
-  public function formatPriceSetParams(&$form, $params) {
+  public static function formatPriceSetParams(&$form, $params) {
     if (!is_array($params) || empty($params)) {
       return $params;
     }
@@ -1328,7 +1328,7 @@ WHERE  v.option_group_id = g.id
       $vals = array();
       if (strpos($key, 'price_') !== FALSE) {
         $fieldId = substr($key, 6);
-        if (!array_key_exists($fieldId, $priceSetDetails['fields']) ||
+        if (!CRM_Utils_Array::arrayKeyExists($fieldId, $priceSetDetails['fields']) ||
           is_array($value) ||
           !$value
         ) {
@@ -1357,7 +1357,7 @@ WHERE  v.option_group_id = g.id
      * @return array $optionsCount, array of each option w/ count total.
      * @access public 
      */
-  function getPriceSetOptionCount(&$form) {
+  static function getPriceSetOptionCount(&$form) {
     $params = $form->get('params');
     $priceSet = $form->get('priceSet');
     $priceSetId = $form->get('priceSetId');
@@ -1395,7 +1395,7 @@ WHERE  v.option_group_id = g.id
         $priceFieldId = substr($valKey, 6);
         if (!$priceFieldId ||
           !is_array($value) ||
-          !array_key_exists($priceFieldId, $priceSetFields)
+          !CRM_Utils_Array::arrayKeyExists($priceFieldId, $priceSetFields)
         ) {
           continue;
         }
@@ -1454,7 +1454,7 @@ WHERE  v.option_group_id = g.id
      * as well as user should select at least one price field option.
      *
      */
-  function validatePriceSet(&$form, $params) {
+  static function validatePriceSet(&$form, $params) {
     $errors = array();
     if (!is_array($params) || empty($params)) {
       return $errors;
@@ -1520,7 +1520,7 @@ WHERE  v.option_group_id = g.id
           if (!empty($value[$optId]) && $value[$optId] == TRUE) {
             $optVal = $value[$optId];
             $fieldCountName = $valKey.'_'.$optId.'_count';
-            $optCount = array_key_exists($fieldCountName, $values) ? $values[$fieldCountName] : $optVal;
+            $optCount = CRM_Utils_Array::arrayKeyExists($fieldCountName, $values) ? $values[$fieldCountName] : $optVal;
             $currentMaxValue = $options[$optId] * $optCount;
             $optionMaxValues[$priceFieldId][$optId] = $currentMaxValue + CRM_Utils_Array::value($optId, $optionMaxValues[$priceFieldId], 0);
           }
@@ -1618,7 +1618,7 @@ WHERE  v.option_group_id = g.id
     $subscribeGroupIds = CRM_Core_BAO_UFGroup::getDoubleOptInGroupIds($params, $contactID);
 
     foreach ($addToGroups as $k) {
-      if (array_key_exists($k, $subscribeGroupIds)) {
+      if (CRM_Utils_Array::arrayKeyExists($k, $subscribeGroupIds)) {
         unset($addToGroups[$k]);
       }
     }
@@ -1727,11 +1727,11 @@ WHERE  v.option_group_id = g.id
     }
 
     if (is_array($fields)) {
-      if (!array_key_exists('first_name', $fields)) {
+      if (!CRM_Utils_Array::arrayKeyExists('first_name', $fields)) {
         $nameFields = array('first_name', 'middle_name', 'last_name');
         foreach ($nameFields as $name) {
           $fields[$name] = 1;
-          if (array_key_exists("billing_$name", $params)) {
+          if (CRM_Utils_Array::arrayKeyExists("billing_$name", $params)) {
             $params[$name] = $params["billing_{$name}"];
             $params['preserveDBName'] = TRUE;
           }

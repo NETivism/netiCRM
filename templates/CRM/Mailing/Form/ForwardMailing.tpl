@@ -66,20 +66,6 @@ var editor = {/literal}"{$editor}"{literal};
     	}
 {/literal}
 {/if}
-{if $editor eq "tinymce"}
-{literal}
-	function customEvent() {
-		loadEditor();
-		tinyMCE.get('html_comment').onKeyPress.add(function(ed, e) {
- 		});
-	}
-
-tinyMCE.init({
-	oninit : "customEvent"
-});
-
-{/literal}
-{/if}
 {literal}
 </script>
 {/literal}

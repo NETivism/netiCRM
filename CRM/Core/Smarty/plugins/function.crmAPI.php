@@ -42,7 +42,7 @@ function smarty_function_crmAPI($params, &$smarty) {
   if (strpos($fnGroup, '_')) {
     $fnGroup = explode('_', $fnGroup);
     $fnGroup[1] = ucfirst($fnGroup[1]);
-    $fnGroup = implode('', $fnGroup);
+    $fnGroup = CRM_Utils_Array::implode('', $fnGroup);
   }
 
   if ($fnGroup == 'Contribution') {

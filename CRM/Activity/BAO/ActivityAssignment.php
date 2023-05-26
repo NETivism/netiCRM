@@ -58,7 +58,7 @@ class CRM_Activity_BAO_ActivityAssignment extends CRM_Activity_DAO_ActivityAssig
    * @access public
    *
    */
-  public function create(&$params) {
+  public static function create(&$params) {
     require_once 'CRM/Activity/BAO/ActivityAssignment.php';
     $assignment = new CRM_Activity_BAO_ActivityAssignment();
 

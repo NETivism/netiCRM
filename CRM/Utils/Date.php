@@ -68,10 +68,10 @@ class CRM_Utils_Date {
       return $invalidDate;
     }
 
-    if (array_key_exists('m', $date)) {
+    if (CRM_Utils_Array::arrayKeyExists('m', $date)) {
       $date['M'] = $date['m'];
     }
-    elseif (array_key_exists('F', $date)) {
+    elseif (CRM_Utils_Array::arrayKeyExists('F', $date)) {
       $date['M'] = $date['F'];
     }
 
@@ -470,7 +470,7 @@ class CRM_Utils_Date {
    * @param string $dateParam  index of params
    * @static
    */
-  function convertToDefaultDate(&$params, $dateType, $dateParam) {
+  static function convertToDefaultDate(&$params, $dateType, $dateParam) {
     $now = getDate();
     $cen = substr($now['year'], 0, 2);
     $prevCen = $cen - 1;
@@ -757,7 +757,7 @@ class CRM_Utils_Date {
    * @return int array $results contains years or months
    * @access public
    */
-  public function calculateAge($birthDate) {
+  public static function calculateAge($birthDate) {
     $results = array();
     $formatedBirthDate = CRM_Utils_Date::customFormat($birthDate, '%Y-%m-%d');
 
@@ -816,7 +816,7 @@ class CRM_Utils_Date {
    * @return array $result contains new date with added interval
    * @access public
    */
-  function intervalAdd($unit, $interval, $date, $dontCareTime = FALSE) {
+  static function intervalAdd($unit, $interval, $date, $dontCareTime = FALSE) {
     if (is_array($date)) {
       $hour = CRM_Utils_Array::value('H', $date);
       $minute = CRM_Utils_Array::value('i', $date);
@@ -873,7 +873,7 @@ class CRM_Utils_Date {
    * @param $format given format ( eg 'M Y', 'Y M' )
    * return array of qfMapping and date parts for date format.
    */
-  function checkBirthDateFormat($format = NULL) {
+  static function checkBirthDateFormat($format = NULL) {
     $birthDateFormat = NULL;
     if (!$format) {
       $birthDateFormat = self::getDateFormat('birth');
@@ -888,7 +888,7 @@ class CRM_Utils_Date {
       'dd/mm/yy' => '%E%f %B %Y',
     );
 
-    if (array_key_exists($birthDateFormat, $supportableFormats)) {
+    if (CRM_Utils_Array::arrayKeyExists($birthDateFormat, $supportableFormats)) {
       $birthDateFormat = array('qfMapping' => $supportableFormats[$birthDateFormat],
         'dateParts' => $formatMapping,
       );
@@ -906,7 +906,7 @@ class CRM_Utils_Date {
    * @return array $dateRange    start date and end date for the relative time frame
    * @static
    */
-  function relativeToAbsolute($relativeTerm, $unit) {
+  static function relativeToAbsolute($relativeTerm, $unit) {
     $now = getDate();
     $from = $to = $dateRange = array();
     $from['H'] = $from['i'] = $from['s'] = 0;

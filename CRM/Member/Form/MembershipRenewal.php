@@ -402,7 +402,7 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
 
       foreach ($nameFields as $name) {
         $fields[$name] = 1;
-        if (array_key_exists("billing_$name", $formValues)) {
+        if (CRM_Utils_Array::arrayKeyExists("billing_$name", $formValues)) {
           $formValues[$name] = $formValues["billing_{$name}"];
           $formValues['preserveDBName'] = TRUE;
         }
@@ -541,8 +541,7 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
           'trxn_id' => $result['trxn_id'],
         );
 
-        require_once 'CRM/Core/BAO/FinancialTrxn.php';
-        $trxn = &CRM_Core_BAO_FinancialTrxn::create($trxnParams);
+        CRM_Core_BAO_FinancialTrxn::create($trxnParams);
       }
     }
 

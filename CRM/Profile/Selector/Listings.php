@@ -566,7 +566,7 @@ class CRM_Profile_Selector_Listings extends CRM_Core_Selector_Base implements CR
           $row[] = $languages[$result->$name];
         }
         elseif ($multipleSelectFields &&
-          array_key_exists($name, $multipleSelectFields)
+          CRM_Utils_Array::arrayKeyExists($name, $multipleSelectFields)
         ) {
           //fix to display student checkboxes
           $key = $name;
@@ -617,7 +617,7 @@ class CRM_Profile_Selector_Listings extends CRM_Core_Selector_Base implements CR
 
       $newLinks = $links;
       $params = array('id' => $result->contact_id,
-        'gid' => implode(',', $this->_profileIds),
+        'gid' => CRM_Utils_Array::implode(',', $this->_profileIds),
       );
 
       if ($this->_linkToUF) {

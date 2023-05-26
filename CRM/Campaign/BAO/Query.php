@@ -207,7 +207,7 @@ class CRM_Campaign_BAO_Query {
       case self::civicrm_activity:
         require_once 'CRM/Campaign/PseudoConstant.php';
         $surveyActivityTypes = CRM_Campaign_PseudoConstant::activityType();
-        $surveyKeys = "(" . implode(',', array_keys($surveyActivityTypes)) . ")";
+        $surveyKeys = "(" . CRM_Utils_Array::implode(',', array_keys($surveyActivityTypes)) . ")";
         $from = " 
 INNER JOIN civicrm_activity ON ( civicrm_activity.id = civicrm_activity_target.activity_id AND 
                                  civicrm_activity.activity_type_id IN $surveyKeys )
@@ -384,7 +384,7 @@ INNER JOIN  civicrm_custom_group grp on fld.custom_group_id = grp.id
      * @return $voterClause as a string  
      * @static
      */
-  function voterClause($params) {
+  static function voterClause($params) {
     $voterClause = NULL;
     if (!is_array($params) || empty($params)) {
       return $voterClause;
@@ -449,7 +449,7 @@ INNER JOIN  civicrm_custom_group grp on fld.custom_group_id = grp.id
       }
 
       if (!empty($voterIds)) {
-        $voterClause = "( contact_a.id $operator ( " . implode(', ', $voterIds) . ' ) )';
+        $voterClause = "( contact_a.id $operator ( " . CRM_Utils_Array::implode(', ', $voterIds) . ' ) )';
       }
     }
 

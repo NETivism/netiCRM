@@ -31,7 +31,13 @@ casper.test.begin('Resurrectio test', function(test) {
     }, function fail() {
         test.assertExists("#user-login-form", 'Login form exist.');
     });
+    
+    casper.run(function() {
+        test.done();
+    });
+});
 
+casper.test.begin('Start testing...', function(test) {
     /* open add event */
     casper.thenOpen(vars.baseURL + "civicrm/event/add?reset=1&action=add", function() {
         // this.capture('1_add_event.png');

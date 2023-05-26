@@ -59,10 +59,10 @@ Class CRM_Core_Form_Date {
       $dateText = ts('yyyy-mm-dd OR yyyymmdd (1998-12-25 OR 19981225) OR (2008-9-1 OR 20080901)');
     }
 
-    $dateOptions[] = HTML_QuickForm::createElement('radio', NULL, NULL, $dateText, self::DATE_yyyy_mm_dd);
+    $dateOptions[] = $form->createElement('radio', NULL, NULL, $dateText, self::DATE_yyyy_mm_dd);
 
-    $dateOptions[] = HTML_QuickForm::createElement('radio', NULL, NULL, ts('mm/dd/yyyy OR mm-dd-yyyy (12/25/1998 OR 12-25-1998) OR (9/1/2008 OR 9-1-2008)'), self::DATE_mm_dd_yyyy);
-    $dateOptions[] = HTML_QuickForm::createElement('radio', NULL, NULL, ts('dd/mm/yyyy (25/12/1998) OR (1/9/2008)'), self::DATE_dd_mm_yyyy);
+    $dateOptions[] = $form->createElement('radio', NULL, NULL, ts('mm/dd/yyyy OR mm-dd-yyyy (12/25/1998 OR 12-25-1998) OR (9/1/2008 OR 9-1-2008)'), self::DATE_mm_dd_yyyy);
+    $dateOptions[] = $form->createElement('radio', NULL, NULL, ts('dd/mm/yyyy (25/12/1998) OR (1/9/2008)'), self::DATE_dd_mm_yyyy);
     $form->addGroup($dateOptions, 'dateFormats', ts('Date Format'), '<br/>');
     $form->setDefaults(array('dateFormats' => self::DATE_yyyy_mm_dd));
   }

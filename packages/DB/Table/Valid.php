@@ -124,7 +124,7 @@ class DB_Table_Valid {
     * 
     */
     
-    function isChar($value, $colsize)
+    static function isChar($value, $colsize)
     {
     	$is_scalar = (! is_array($value) && ! is_object($value));
         $in_range = (strlen($value) <= $colsize);
@@ -228,7 +228,7 @@ class DB_Table_Valid {
     * 
     */
     
-    function isDecimal($value, $colsize, $colscope)
+    static function isDecimal($value, $colsize, $colscope)
     {
         if (! is_numeric($value)) {
             return false;

@@ -112,7 +112,7 @@ class CRM_Core_BAO_Navigation extends CRM_Core_DAO_Navigation {
     }
 
     if (is_array($params['permission'])) {
-      $params['permission'] = implode(',', $params['permission']);
+      $params['permission'] = CRM_Utils_Array::implode(',', $params['permission']);
     }
 
     $navigation->copyValues($params);
@@ -237,7 +237,7 @@ FROM civicrm_navigation WHERE domain_id = $domainID {$whereClause} ORDER BY pare
 
   // helper function for getNavigationList( )
   static function _getNavigationValue($val, &$pidGroups) {
-    if (array_key_exists($val, $pidGroups)) {
+    if (CRM_Utils_Array::arrayKeyExists($val, $pidGroups)) {
       $list = array('navigation_id' => $val);
       foreach ($pidGroups[$val] as $label => $id) {
         $list[$label] = self::_getNavigationValue($id, $pidGroups);
@@ -361,7 +361,7 @@ ORDER BY parent_id, weight";
   /**
    * Recursively check child menus
    */
-  function recurseNavigation(&$value, &$navigationString, $json, $skipMenuItems) {
+  static function recurseNavigation(&$value, &$navigationString, $json, $skipMenuItems) {
     if ($json) {
       if (!empty($value['child'])) {
         $navigationString .= ', "children": [ ';
@@ -422,7 +422,7 @@ ORDER BY parent_id, weight";
   /**
    *  Get Menu name
    */
-  function getMenuName(&$value, &$skipMenuItems) {
+  static function getMenuName(&$value, &$skipMenuItems) {
     // we need to localise the menu labels (CRM-5456) and don’t
     // want to use ts() as it would throw the ts-extractor off
     $i18n = &CRM_Core_I18n::singleton();
@@ -550,7 +550,7 @@ ORDER BY parent_id, weight";
     }
 
     CRM_Core_DAO::commonRetrieve('CRM_Core_DAO_Preferences', $navParams, $navParams);
-    $navigation = array_key_exists('navigation', $navParams) ? $navParams['navigation'] : FALSE;
+    $navigation = CRM_Utils_Array::arrayKeyExists('navigation', $navParams) ? $navParams['navigation'] : FALSE;
 
     // FIXME: hack for CRM-5027: we need to prepend the navigation string with
     // (HTML-commented-out) locale info so that we rebuild menu on locale changes

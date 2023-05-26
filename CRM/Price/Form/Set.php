@@ -98,7 +98,7 @@ class CRM_Price_Form_Set extends CRM_Core_Form {
     //checks the given price set doesnot start with digit
     $title = $fields['title'];
     // gives the ascii value
-    $asciiValue = ord($title{0});
+    $asciiValue = ord($title[0]);
     if ($asciiValue >= 48 && $asciiValue <= 57) {
       $errors['title'] = ts("Set's Name should not start with digit");
     }
@@ -150,7 +150,7 @@ class CRM_Price_Form_Set extends CRM_Core_Form {
       if (!in_array($compName, $config->enableComponents)) {
         continue;
       }
-      $option = HTML_QuickForm::createElement('checkbox', $compValues['extend'], NULL, $compValues['title']);
+      $option = $this->createElement('checkbox', $compValues['extend'], NULL, $compValues['title']);
 
       //if price set is used than freeze it.
       if (!empty($priceSetUsedTables)) {
@@ -251,7 +251,7 @@ class CRM_Price_Form_Set extends CRM_Core_Form {
     if (is_array($extends)) {
       foreach ($extends as $compId => $selected) if ($selected) {   $compIds[] = $compId; }
     }
-    $params['extends'] = implode(CRM_Core_DAO::VALUE_SEPARATOR, $compIds);
+    $params['extends'] = CRM_Utils_Array::implode(CRM_Core_DAO::VALUE_SEPARATOR, $compIds);
 
     if ($this->_action & CRM_Core_Action::UPDATE) {
       $params['id'] = $this->_sid;

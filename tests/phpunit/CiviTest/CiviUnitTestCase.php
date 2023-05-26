@@ -50,3 +50,6 @@ if (PHP_MAJOR_VERSION === 5) {
 elseif(PHP_MAJOR_VERSION === 7) {
   require_once __DIR__.'/CiviUnitTestCase.7.php';
 }
+elseif(PHP_MAJOR_VERSION === 8) {
+  require_once __DIR__.'/CiviUnitTestCase.8.php';
+}
