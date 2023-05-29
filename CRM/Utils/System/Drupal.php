@@ -1125,8 +1125,11 @@ class CRM_Utils_System_Drupal {
     if (self::$_version < 8) {
       return module_implements($hook);
     }
-    elseif(self::$_version >= 8) {
+    elseif(self::$_version >= 8 && self::$_version < 10) {
       return \Drupal::moduleHandler()->getImplementations($hook);
+    }
+    elseif(self::$_version > 10) {
+      return \Drupal::moduleHandler()->hasImplementations($hook);
     }
     elseif (function_exists('module_list')) {
       $implements = array();
