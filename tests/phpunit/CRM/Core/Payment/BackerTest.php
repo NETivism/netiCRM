@@ -226,7 +226,6 @@ EOT;
     "flag": null,
     "render_status": "success",
     "type": "child",
-    "parent_trade_no": "SUB3679271669947543",
     "items": {
       "id": 4246283,
       "reward_id": 23431,
