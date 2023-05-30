@@ -124,7 +124,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
     return FALSE;
   }
 
-  function processContribution($jsonString, &$contributionResult, $contributionRecurId = NULL) {
+  function processContribution($jsonString, &$contributionResult) {
     $params = self::formatParams($jsonString);
     $locationType = CRM_Core_PseudoConstant::locationType(FALSE, 'name');
     $config = CRM_Core_Config::singleton();
@@ -426,9 +426,6 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
             $contrib['invoice_id'] = $contrib['invoice_id'].'_'.$this->_delivery;
           }
           $contrib['version'] = 3;
-          if ($contributionRecurId) {
-            $contrib['contribution_recur_id'] = $contributionRecurId;
-          }
           $result = civicrm_api('contribution', 'create', $contrib);
           if ($result['id']) {
             $currentContributionId = $result['id'];
@@ -679,6 +676,8 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
     if (!empty($json['transaction']['parent_trade_no'])) {
       // invoice id is uniq, will append additional info
       $params['contribution']['invoice_id'] = $json['transaction']['parent_trade_no'].'_'.substr(md5(uniqid(rand(), TRUE)), 0, 10);
+      $contributionRecurId = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution_recur WHERE trxn_id = %1" , array(1 => array($json['transaction']['parent_trade_no'], 'String')));
+      $params['contribution']['contribution_recur_id'] = $contributionRecurId;
     }
     else {
       $params['contribution']['invoice_id'] = md5(uniqid(rand(), TRUE));

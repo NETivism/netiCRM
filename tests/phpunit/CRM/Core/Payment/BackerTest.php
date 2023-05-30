@@ -366,9 +366,6 @@ EOT;
 }
 EOT;
     $jsonArray = json_decode($json, TRUE);
-    // randomize trade_no that test can run again
-    $jsonArray['transaction']['trade_no'] = CRM_Utils_String::createRandom(16, CRM_Utils_String::ALPHANUMERIC);
-    $this->_trxnId[3] = $jsonArray['transaction']['trade_no'];
     $this->_json[3] = json_encode($jsonArray);
     $this->_signature[3] = hash_hmac('sha1', $this->_json[3], '1234');
 
@@ -451,9 +448,6 @@ EOT;
 }
 EOT;
     $jsonArray = json_decode($json, TRUE);
-    // randomize trade_no that test can run again
-    $jsonArray['transaction']['trade_no'] = CRM_Utils_String::createRandom(16, CRM_Utils_String::ALPHANUMERIC);
-    $this->_trxnId[4] = $jsonArray['transaction']['trade_no'];
     $this->_json[4] = json_encode($jsonArray);
     $this->_signature[4] = hash_hmac('sha1', $this->_json[4], '1234');
 
