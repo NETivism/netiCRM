@@ -645,11 +645,28 @@ EOT;
     //main
     $contributionResult = NULL;
     $formatted = CRM_Core_Payment_Backer::formatParams($this->_json[3]);
-    $createdContributionId = $this->_processor->processContribution($this->_json[3], $contributionResult);
-    //sub
+    $this->_processor->processContribution($this->_json[3], $contributionResult);
+
+    // verify recur contribution saved data
+    $params = array(
+      'trxn_id' => $formatted['recurring']['trxn_id'],
+      'contribution_status_id' => $formatted['recurring']['contribution_status_id'],
+    );
+    $this->assertDBState('CRM_Contribute_DAO_ContributionRecur', $contributionResult['recur_contribution_id'], $params);
+
+    //sub contribution
     if ($contributionResult['recur_contribution_id']) {
       $formatted = CRM_Core_Payment_Backer::formatParams($this->_json[4]);
-      $createdContributionId = $this->_processor->processContribution($this->_json[4], $contributionResult, $contributionResult['recur_contribution_id']);
+      $this->_processor->processContribution($this->_json[4], $contributionResult);
+      $params = array(
+        'trxn_id' => $formatted['contribution']['trxn_id'],
+        'payment_instrument_id' => $formatted['contribution']['payment_instrument_id'],
+        'total_amount' => $formatted['contribution']['total_amount'],
+        'contribution_status_id' => $formatted['contribution']['contribution_status_id'],
+        'currency' => $formatted['contribution']['currency'],
+        'payment_processor_id' => $this->_payment['id'],
+      );
+      $this->assertDBState('CRM_Contribute_DAO_Contribution', $contributionResult['contributionId'], $params);
     }
   }
 }
