@@ -5,13 +5,9 @@
   // TODO: Need to change to real endpoint, refer to CRM/AI/Page/AJAX.php
   var endpoint = {
     getTemplateList: '/api/getTemplateList',
-    getDefaultTemplate: '/api/getDefaultTemplate',
     getTemplate: '/api/getTemplate',
     setTemplate: '/api/setTemplate',
-    getOrganizationIntro: '/api/getOrganizationIntro',
-    setOrganizationIntro: '/api/setOrganizationIntro',
     chat: '/api/chat',
-    quota: '/api/quota',
     setShare: '/api/setShare'
   }
 
@@ -135,10 +131,11 @@
       // Initialize
       function init() {
         // TODO: Add any necessary initialization tasks here
-
-        // Call the initialization function
-        init();
+        console.log('AICompletion init');
       }
+
+      // Call the initialization function
+      init();
     });
   };
 })(jQuery);
