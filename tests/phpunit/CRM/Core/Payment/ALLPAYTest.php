@@ -9,21 +9,6 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
   protected $_is_test;
   protected $_page_id;
 
-  /**
-   *  Constructor
-   *
-   *  Initialize configuration
-   */
-  function __construct() {
-//    $this->assertTrue(CRM_Utils_System::moduleExists('civicrm_allpay'), "You must enable civicrm_allpay module first before test.");
-
-    $pageId = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution_page ORDER BY id");
-    $this->assertNotEmpty($pageId, 'You need to have contribution page to procceed.');
-    $this->_page_id = $pageId;
-
-    parent::__construct();
-  }
-
   function get_info() {
     return array(
       'name' => 'ALLPAY payment processor',
@@ -37,6 +22,9 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
    */
   function setUpTest() {
     parent::setUp();
+    $pageId = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution_page ORDER BY id");
+    $this->assertNotEmpty($pageId, 'You need to have contribution page to procceed.');
+    $this->_page_id = $pageId;
 
     $this->_is_test = 1;
 
