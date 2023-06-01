@@ -192,7 +192,7 @@ class CRM_Utils_System_Drupal8 {
    */
   public function getLoginURL($destination = '') {
     $query = $destination ? ['destination' => $destination] : [];
-    return \Drupal::url('user.login', [], ['query' => $query]);
+    return \Drupal\Core\Url::fromRoute('user.login', [], ['query' => $query, 'absolute' => TRUE]);
   }
 
   /**
@@ -584,22 +584,6 @@ class CRM_Utils_System_Drupal8 {
   /**
    * @inheritDoc
    */
-  public function getModules() {
-    $modules = [];
-
-    $module_data = \Drupal::service('extension.list.module')->reset()->getList();
-    foreach ($module_data as $module_name => $extension) {
-      if (!isset($extension->info['hidden']) && $extension->origin != 'core') {
-        $extension->schema_version = drupal_get_installed_schema_version($module_name);
-        $modules[] = new CRM_Core_Module('drupal.' . $module_name, ($extension->status == 1));
-      }
-    }
-    return $modules;
-  }
-
-  /**
-   * @inheritDoc
-   */
   public function getUniqueIdentifierFromUserObject($user) {
     return $user->get('mail')->value;
   }
@@ -709,15 +693,6 @@ class CRM_Utils_System_Drupal8 {
   }
 
   /**
-   * Append Drupal8 js to coreResourcesList.
-   *
-   * @param \Civi\Core\Event\GenericHookEvent $e
-   */
-  public function appendCoreResources(\Civi\Core\Event\GenericHookEvent $e) {
-    $e->list[] = 'js/crm.drupal8.js';
-  }
-
-  /**
    * @inheritDoc
    */
   public function getTimeZoneString() {
@@ -783,23 +758,21 @@ class CRM_Utils_System_Drupal8 {
         }
         //domain
         if ($urlType == \Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl::CONFIG_DOMAIN) {
-          if (isset($language->domain) && $language->domain) {
-            if ($addLanguagePart) {
-              $url = (CRM_Utils_System::isSSL() ? 'https' : 'http') . '://' . $config['domains'][$language] . base_path();
-            }
-            if ($removeLanguagePart && defined('CIVICRM_UF_BASEURL')) {
-              $url = str_replace('\\', '/', $url);
-              $parseUrl = parse_url($url);
+          if ($addLanguagePart) {
+            $url = (CRM_Utils_System::isSSL() ? 'https' : 'http') . '://' . $config['domains'][$language] . base_path();
+          }
+          if ($removeLanguagePart && defined('CIVICRM_UF_BASEURL')) {
+            $url = str_replace('\\', '/', $url);
+            $parseUrl = parse_url($url);
 
-              //kinda hackish but not sure how to do it right
-              //hope http_build_url() will help at some point.
-              if (is_array($parseUrl) && !empty($parseUrl)) {
-                $urlParts = explode('/', $url);
-                $hostKey = array_search($parseUrl['host'], $urlParts);
-                $ufUrlParts = parse_url(CIVICRM_UF_BASEURL);
-                $urlParts[$hostKey] = $ufUrlParts['host'];
-                $url = CRM_Utils_Array::implode('/', $urlParts);
-              }
+            //kinda hackish but not sure how to do it right
+            //hope http_build_url() will help at some point.
+            if (is_array($parseUrl) && !empty($parseUrl)) {
+              $urlParts = explode('/', $url);
+              $hostKey = array_search($parseUrl['host'], $urlParts);
+              $ufUrlParts = parse_url(CIVICRM_UF_BASEURL);
+              $urlParts[$hostKey] = $ufUrlParts['host'];
+              $url = CRM_Utils_Array::implode('/', $urlParts);
             }
           }
         }

@@ -170,7 +170,7 @@ class CRM_Utils_System_Drupal {
     $url = str_replace('&amp;', '&', $url); // legacy url/crmURL behaviour should remove
     if($version >= 8){
       $headers = array('Cache-Control' => 'no-cache');
-      $response = \Symfony\Component\HttpFoundation\RedirectResponse::create($url, 302, $headers);
+      $response = new \Symfony\Component\HttpFoundation\RedirectResponse($url, 302, $headers);
       $response->send();
     }
     else {
