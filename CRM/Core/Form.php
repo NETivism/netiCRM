@@ -1139,7 +1139,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
         //in either flat string or an array format.
         $elementName = $name . '_time';
         if (substr($name, -1) == ']') {
-          $elementName = substr($name, 0, $name . length - 1) . '_time]';
+          $elementName = substr($name, 0, strlen($name) - 1) . '_time]';
         }
 
         $this->add('text', $elementName, ts('Time'), array('timeFormat' => $show24Hours));
