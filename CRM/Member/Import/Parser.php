@@ -675,12 +675,12 @@ abstract class CRM_Member_Import_Parser {
 
   function addField($name, $title, $type = CRM_Utils_Type::T_INT, $headerPattern = '//', $dataPattern = '//', $hasLocationType = FALSE) {
     if (empty($name)) {
-      $this->_fields['doNotImport'] = new CRM_Member_Import_Field($name, $title, $type, $headerPattern, $dataPattern, $hasLocationType);
+      $this->_fields['doNotImport'] = new CRM_Member_Import_Field($name, $title, $type, $headerPattern, $dataPattern);
     }
     else {
       $tempField = CRM_Contact_BAO_Contact::importableFields('All', NULL);
       if (!CRM_Utils_Array::arrayKeyExists($name, $tempField)) {
-        $this->_fields[$name] = new CRM_Member_Import_Field($name, $title, $type, $headerPattern, $dataPattern, $hasLocationType);
+        $this->_fields[$name] = new CRM_Member_Import_Field($name, $title, $type, $headerPattern, $dataPattern);
       }
       else {
         require_once 'CRM/Import/Field.php';

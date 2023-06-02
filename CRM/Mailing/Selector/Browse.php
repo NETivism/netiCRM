@@ -427,15 +427,7 @@ LEFT JOIN  civicrm_contact scheduledContact ON ( $mailing.scheduled_id = schedul
         //get status strings as per locale settings CRM-4411.
         $rows[$key]['status_label'] = CRM_Mailing_BAO_Job::status($row['status']);
 
-        $rows[$key]['action'] = CRM_Core_Action::formLink($actionLinks,
-          $actionMask,
-          array('mid' => $row['id']),
-          "more",
-          FALSE,
-          $opString,
-          "Mailing",
-          $row['id']
-        );
+        $rows[$key]['action'] = CRM_Core_Action::formLink($actionLinks, $actionMask, array('mid' => $row['id']), "more", FALSE);
 
         //unset($rows[$key]['id']);
         // if the scheduled date is 0, replace it with an empty string

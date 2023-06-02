@@ -74,7 +74,7 @@ function civicrm_event_create(&$params) {
     $ids['event_id']    = CRM_Utils_Array::value('event_id', $params);
 
     require_once 'CRM/Event/BAO/Event.php';
-    $eventBAO = CRM_Event_BAO_Event::create($params, $ids);
+    $eventBAO = CRM_Event_BAO_Event::create($params);
 
     if (is_a($eventBAO, 'CRM_Core_Error')) {
       return civicrm_create_error("Event is not created");

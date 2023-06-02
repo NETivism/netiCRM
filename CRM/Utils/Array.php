@@ -228,7 +228,7 @@ class CRM_Utils_Array {
     $copy = array();
     foreach ($array as $key => $value) {
       if (is_array($value)) {
-        self::arrayDeepCopy($value, $copy[$key], $maxdepth, ++$depth);
+        self::arrayDeepCopy($copy[$key], $maxdepth, ++$depth);
       }
       else {
         $copy[$key] = $value;

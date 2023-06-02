@@ -155,7 +155,7 @@ class CRM_Contact_Selector_Custom extends CRM_Core_Selector_Base implements CRM_
       $this->_search = new $customSearchClass($formValues);
     }
     else {
-      $customSearchFile = $ext->keyToPath($customSearchClass, 'search');
+      $customSearchFile = $ext->keyToPath($customSearchClass);
       require_once ($customSearchFile);
       $className = $ext->keyToClass($customSearchClass, 'search');
       $this->_search = new $className($formValues);

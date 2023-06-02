@@ -73,7 +73,7 @@ class CRM_Mailing_StateMachine_Send extends CRM_Core_StateMachine {
       $this->_pages['CRM_Mailing_Form_Schedule'] = NULL;
     }
 
-    $this->addSequentialPages($this->_pages, $action);
+    $this->addSequentialPages($this->_pages);
   }
 }
 

@@ -59,7 +59,7 @@ class CRM_Contribute_Import_StateMachine extends CRM_Core_StateMachine {
       'CRM_Contribute_Import_Form_Summary' => NULL,
     );
 
-    $this->addSequentialPages($this->_pages, $action);
+    $this->addSequentialPages($this->_pages);
   }
 }
 

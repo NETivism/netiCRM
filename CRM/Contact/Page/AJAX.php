@@ -351,7 +351,7 @@ class CRM_Contact_Page_AJAX {
   static function groupTree() {
     $gids = CRM_Utils_Type::escape($_GET['gids'], 'String');
     require_once 'CRM/Contact/BAO/GroupNestingCache.php';
-    echo CRM_Contact_BAO_GroupNestingCache::json($gids);
+    echo CRM_Contact_BAO_GroupNestingCache::json();
     CRM_Utils_System::civiExit();
   }
 
@@ -695,7 +695,7 @@ WHERE sort_name LIKE '%$name%'";
           if (strstr($cid, ',')) {
             $cids = explode(',', $cid);
             foreach($cids as $idx => $c) {
-              if (!CRM_Utils_Rule::PositiveInteger($c, 'Positive')) {
+              if (!CRM_Utils_Rule::PositiveInteger($c)) {
                 unset($cids[$idx]);
               }
             }
