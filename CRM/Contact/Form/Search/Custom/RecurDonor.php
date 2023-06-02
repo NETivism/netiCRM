@@ -356,7 +356,7 @@ ORDER BY r1.start_date ASC, r2.start_date ASC
     return $sql;
   }
 
-  public static function includeContactIDs(&$sql, &$formValues) {
+  public static function includeContactIDs(&$sql, &$formValues, $isExport = FALSE) {
     $contactIDs = array();
     foreach ($formValues as $id => $value) {
       list($contactID, $additionalID) = CRM_Core_Form::cbExtract($id);

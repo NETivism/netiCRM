@@ -204,7 +204,7 @@ $having
     return '';
   }
 
-  static function includeContactIDs(&$sql, &$formValues) {
+  static function includeContactIDs(&$sql, &$formValues, $isExport = FALSE) {
     $contactIDs = array();
     foreach ($formValues as $id => $value) {
       list($contactID, $additionalID) = CRM_Core_Form::cbExtract($id);
