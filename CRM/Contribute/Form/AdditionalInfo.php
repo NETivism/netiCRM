@@ -552,7 +552,7 @@ class CRM_Contribute_Form_AdditionalInfo {
    */
   static function processPriceSet($contributionId, $lineItem) {
     if (!$contributionId || !is_array($lineItem)
-      || CRM_Utils_system::isNull($lineItem)
+      || CRM_Utils_System::isNull($lineItem)
     ) {
       return;
     }

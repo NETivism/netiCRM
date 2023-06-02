@@ -18,7 +18,7 @@ function civicrm_api3_generic_update($apiRequest) {
   if (!CRM_Utils_Array::arrayKeyExists('id', $apiRequest['params']) ||
       empty($apiRequest['params']['id']) ||
       !is_numeric($apiRequest['params']['id'])) {
-    throw new api_Exception("Mandatory parameter missing `id`", 2000);
+    throw new API_Exception("Mandatory parameter missing `id`", 2000);
   }
   return civicrm_api($apiRequest['entity'], 'create', $apiRequest['params']);
 }

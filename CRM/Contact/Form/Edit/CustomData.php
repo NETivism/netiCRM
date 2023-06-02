@@ -74,7 +74,7 @@ class CRM_Contact_Form_Edit_CustomData {
    * @static
    */
   static function buildQuickForm(&$form) {
-    CRM_Custom_Form_Customdata::buildQuickForm($form);
+    CRM_Custom_Form_CustomData::buildQuickForm($form);
 
     //build custom data.
     $contactSubType = NULL;
@@ -99,7 +99,7 @@ class CRM_Contact_Form_Edit_CustomData {
    * @return None
    */
   static function setDefaultValues(&$form, &$defaults) {
-    $defaults += CRM_Custom_Form_Customdata::setDefaultValues($form);
+    $defaults += CRM_Custom_Form_CustomData::setDefaultValues($form);
   }
 }
 

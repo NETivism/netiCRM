@@ -236,7 +236,7 @@ class CRM_Utils_REST {
 
     // or the new format (entity+action)
     $args[1] = CRM_Utils_Request::retrieve('entity', 'String', CRM_Core_DAO::$_nullObject, FALSE, NULL, 'REQUEST');
-    $args[2] = CRM_Utils_array::value('action', $_REQUEST);
+    $args[2] = CRM_Utils_Array::value('action', $_REQUEST);
 
     // Everyone should be required to provide the server key, so the whole
     //  interface can be disabled in more change to the configuration file.

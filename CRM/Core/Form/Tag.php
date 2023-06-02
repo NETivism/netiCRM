@@ -89,7 +89,7 @@ class CRM_Core_Form_Tag {
           CRM_Utils_Array::value($parentId, $form->_submitValues['taglist'])
         ) {
 
-          $allTags = CRM_Core_Pseudoconstant::tag();
+          $allTags = CRM_Core_PseudoConstant::tag();
           $tagIds = explode(',', $form->_submitValues['taglist'][$parentId]);
           foreach ($tagIds as $tagId) {
             if (is_numeric($tagId)) {

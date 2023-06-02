@@ -76,7 +76,7 @@ class CRM_Core_BAO_CMSUser {
     $sql = "SELECT $id, $mail, $name FROM {$config->userFrameworkUsersTableName} where $mail != ''";
     $query = $db_uf->query($sql);
 
-    $user = new StdClass();
+    $user = new stdClass();
     $uf = $config->userFramework;
     $contactCount = 0;
     $contactCreated = 0;

@@ -201,7 +201,7 @@ class CRM_Contribute_BAO_Query {
     }
     foreach (array_keys($query->_params) as $id) {
       if (substr($query->_params[$id][0], 0, 13) == 'contribution_') {
-        if ($query->_mode == CRM_Contact_BAO_QUERY::MODE_CONTACTS) {
+        if ($query->_mode == CRM_Contact_BAO_Query::MODE_CONTACTS) {
           $query->_useDistinct = TRUE;
         }
         $grouping = $query->_params[$id][3];

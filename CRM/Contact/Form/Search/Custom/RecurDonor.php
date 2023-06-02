@@ -209,7 +209,7 @@ ORDER BY r1.start_date ASC, r2.start_date ASC
   }
 
   function setTitle() {
-    CRM_utils_System::setTitle(ts('Recurring Donors Search'));
+    CRM_Utils_System::setTitle(ts('Recurring Donors Search'));
   }
 
   function count(){

@@ -337,10 +337,10 @@ $having
 
   function setTitle() {
     if ($this->_mode == 'booster') {
-      CRM_utils_System::setTitle(ts('End of recurring contribution'));
+      CRM_Utils_System::setTitle(ts('End of recurring contribution'));
     }
     else {
-      CRM_utils_System::setTitle(ts('Custom Search').' - '.ts('Recurring Contribution'));
+      CRM_Utils_System::setTitle(ts('Custom Search').' - '.ts('Recurring Contribution'));
     }
   }
 
