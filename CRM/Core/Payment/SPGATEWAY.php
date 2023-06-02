@@ -355,7 +355,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
       }
 
       if ($debug) {
-        CRM_Core_Error::debug(SPGATEWAY doUpdateRecur , $requestParams);
+        CRM_Core_Error::debug('SPGATEWAY doUpdateRecur $requestParams', $requestParams);
       }
 
       /**
@@ -366,7 +366,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
         $recurResult2 = $apiOthers->request($requestParams);
         if ($debug) {
           $recurResult['API']['AlterMnt'] = $apiOthers;
-          CRM_Core_Error::debug(SPGATEWAY doUpdateRecur , $apiOthers);
+          CRM_Core_Error::debug('SPGATEWAY doUpdateRecur $apiOthers', $apiOthers);
         }
         if (is_array($recurResult2)) {
           $recurResult += $recurResult2;
