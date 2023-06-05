@@ -187,7 +187,7 @@ WHERE  id = %1";
    */
   public function getEmbedCode($contributionPageID, $widgetID, $format = "normal") {
     self::registerRequest($contributionPageID, $widgetID, __FUNCTION__);
-    return "<embed>.......................</embed>" . print_r(func_get_args(), 1);
+    return "<embed>.......................</embed>" . print_r(func_get_args(), true);
   }
 }
 

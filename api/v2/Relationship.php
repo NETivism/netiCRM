@@ -320,7 +320,7 @@ function _civicrm_relationship_format_params(&$params, &$values) {
   $fields = CRM_Contact_DAO_Relationship::fields();
   _civicrm_store_values($fields, $params, $values);
 
-  $relationTypes = CRM_Core_PseudoConstant::relationshipType('name', TRUE);
+  $relationTypes = CRM_Core_PseudoConstant::relationshipType('name');
 
   foreach ($params as $key => $value) {
     // ignore empty values or empty arrays etc

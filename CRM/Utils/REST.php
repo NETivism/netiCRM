@@ -236,7 +236,7 @@ class CRM_Utils_REST {
 
     // or the new format (entity+action)
     $args[1] = CRM_Utils_Request::retrieve('entity', 'String', CRM_Core_DAO::$_nullObject, FALSE, NULL, 'REQUEST');
-    $args[2] = CRM_Utils_array::value('action', $_REQUEST);
+    $args[2] = CRM_Utils_Array::value('action', $_REQUEST);
 
     // Everyone should be required to provide the server key, so the whole
     //  interface can be disabled in more change to the configuration file.
@@ -344,7 +344,7 @@ class CRM_Utils_REST {
       return $result;
     }
 
-    if ($_SERVER['REQUEST_METHOD'] == 'GET' && !strstr(strtolower($args[2]), 'get') && strtolower($args[2] != 'check')) {
+    if ($_SERVER['REQUEST_METHOD'] == 'GET' && !strstr(strtolower((string)$args[2]), 'get') && strtolower((string)$args[2]) != 'check') {
       // get only valid for non destructive methods
       require_once 'api/v3/utils.php';
       return civicrm_api3_create_error("SECURITY: All requests that modify the database must be http POST, not GET.",

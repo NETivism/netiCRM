@@ -244,10 +244,7 @@ class CRM_Contact_Page_View extends CRM_Core_Page {
       $contactType,
       $contactSubtype,
       $contactImageUrl
-    ) = CRM_Contact_BAO_Contact::getDisplayAndImage($contactId,
-      TRUE,
-      TRUE
-    );
+    ) = CRM_Contact_BAO_Contact::getDisplayAndImage($contactId, TRUE);
   }
 
   function getSearchURL() {

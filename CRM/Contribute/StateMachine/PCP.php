@@ -60,7 +60,7 @@ class CRM_Contribute_StateMachine_PCP extends CRM_Core_StateMachine {
       'CRM_Contribute_Form_PCP_Campaign' => NULL,
     );
 
-    $this->addSequentialPages($this->_pages, $action);
+    $this->addSequentialPages($this->_pages);
   }
 }
 

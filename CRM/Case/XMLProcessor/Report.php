@@ -716,7 +716,7 @@ LIMIT  1
     $isRedact = CRM_Utils_Request::retrieve('redact', 'Boolean', CRM_Core_DAO::$_nullObject);
     $includeActivities = CRM_Utils_Request::retrieve('all', 'Positive', CRM_Core_DAO::$_nullObject);
     $params = $otherRelationships = $globalGroupInfo = array();
-    $report = new CRM_Case_XMLProcessor_Report($isRedact);
+    $report = new CRM_Case_XMLProcessor_Report();
 
     if ($includeActivities) {
       $params['include_activities'] = 1;

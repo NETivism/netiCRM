@@ -122,7 +122,7 @@ class CRM_Campaign_BAO_Query {
 
     $grouping = NULL;
     foreach (array_keys($query->_params) as $id) {
-      if ($query->_mode == CRM_Contact_BAO_QUERY::MODE_CONTACTS) {
+      if ($query->_mode == CRM_Contact_BAO_Query::MODE_CONTACTS) {
         $query->_useDistinct = TRUE;
       }
 
@@ -322,7 +322,7 @@ INNER JOIN civicrm_activity_assignment ON ( civicrm_activity.id = civicrm_activi
         $userId = $form->_interviewerId;
       }
       if (!$userId) {
-        $session = CRM_core_Session::singleton();
+        $session = CRM_Core_Session::singleton();
         $userId = $session->get('userID');
       }
       if ($userId) {

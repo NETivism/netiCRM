@@ -539,7 +539,7 @@ function _civicrm_api3_dao_set_filter(&$dao, $params, $unique, $entity) {
             case 'BETWEEN':
             case 'NOT BETWEEN':
               if (empty($criteria[0]) || empty($criteria[1])) {
-                throw new exception("invalid criteria for $operator");
+                throw new Exception("invalid criteria for $operator");
               }
               $dao->whereAdd(sprintf('%s ' . $operator . ' "%s" AND "%s"', $fieldName, CRM_Core_DAO::escapeString($criteria[0]), CRM_Core_DAO::escapeString($criteria[1])));
               break;
@@ -549,7 +549,7 @@ function _civicrm_api3_dao_set_filter(&$dao, $params, $unique, $entity) {
             case 'IN':
             case 'NOT IN':
               if (empty($criteria)) {
-                throw new exception("invalid criteria for $operator");
+                throw new Exception("invalid criteria for $operator");
               }
               $escapedCriteria = array_map(array('CRM_Core_DAO', 'escapeString'), $criteria);
               $dao->whereAdd(sprintf('%s %s ("%s")', $fieldName, $operator, CRM_Utils_Array::implode('", "', $escapedCriteria)));
@@ -845,7 +845,7 @@ function _civicrm_api3_custom_format_params($params, &$values, $extends, $entity
     list($customFieldID, $customValueID) = CRM_Core_BAO_CustomField::getKeyID($key, TRUE);
     if ($customFieldID) {
       CRM_Core_BAO_CustomField::formatCustomField($customFieldID, $values['custom'],
-        $value, $extends, $customValueID, $entityId, FALSE, FALSE
+        $value, $extends, $customValueID, $entityId, FALSE
       );
     }
   }
@@ -1476,7 +1476,7 @@ function _civicrm_api3_getrequired($apiRequest) {
  * Function also swaps unique fields for non-unique fields & vice versa.
  */
 function _civicrm_api3_swap_out_aliases(&$apiRequest) {
-  if (strtolower($apiRequest['action'] == 'getfields')) {
+  if (strtolower($apiRequest['action']) == 'getfields') {
     if (CRM_Utils_Array::value('api_action', $apiRequest['params'])) {
       $apiRequest['params']['action'] = $apiRequest['params']['api_action'];
       unset($apiRequest['params']['api_action']);

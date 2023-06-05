@@ -214,7 +214,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
       */
   function doUpdateRecur($params, $debug = FALSE) {
     if ($debug) {
-      CRM_Core_error::debug('SPGATEWAY doUpdateRecur $params', $params);
+      CRM_Core_Error::debug('SPGATEWAY doUpdateRecur $params', $params);
     }
     // For no use neweb recur API condition, return original parameters.
     if ($this->_paymentProcessor['url_recur'] != 1) {
@@ -355,7 +355,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
       }
 
       if ($debug) {
-        CRM_Core_error::debug('SPGATEWAY doUpdateRecur $requestParams', $requestParams);
+        CRM_Core_Error::debug('SPGATEWAY doUpdateRecur $requestParams', $requestParams);
       }
 
       /**
@@ -366,7 +366,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
         $recurResult2 = $apiOthers->request($requestParams);
         if ($debug) {
           $recurResult['API']['AlterMnt'] = $apiOthers;
-          CRM_Core_error::debug('SPGATEWAY doUpdateRecur $apiOthers', $apiOthers);
+          CRM_Core_Error::debug('SPGATEWAY doUpdateRecur $apiOthers', $apiOthers);
         }
         if (is_array($recurResult2)) {
           $recurResult += $recurResult2;

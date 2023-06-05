@@ -531,7 +531,7 @@ SELECT label, value
               }
 
               // hack to handle yy format during search
-              if (is_numeric($value) && strlen($value) == 4) {
+              if (is_numeric($value) && strlen((string)$value) == 4) {
                 $value = "01-01-{$value}";
               }
 
@@ -540,11 +540,11 @@ SELECT label, value
               $this->_qill[$grouping][] = $field['label'] . " {$op} " . CRM_Utils_Date::customFormat($date);
             }
             else {
-              if (is_numeric($fromValue) && strlen($fromValue) == 4) {
+              if (is_numeric($fromValue) && strlen((string)$fromValue) == 4) {
                 $fromValue = "01-01-{$fromValue}";
               }
 
-              if (is_numeric($toValue) && strlen($toValue) == 4) {
+              if (is_numeric($toValue) && strlen((string)$toValue) == 4) {
                 $toValue = "01-01-{$toValue}";
               }
 

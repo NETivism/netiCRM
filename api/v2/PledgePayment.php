@@ -261,7 +261,7 @@ function &civicrm_pledge_payment_format_create(&$params) {
 
   CRM_Pledge_BAO_Pledge::resolveDefaults($params, TRUE);
 
-  $pledge = CRM_Pledge_BAO_Pledge::create($params, $ids);
+  $pledge = CRM_Pledge_BAO_Pledge::create($params);
   _civicrm_object_to_array($pledge, $pledgeArray);
   return $pledgeArray;
 }

@@ -415,7 +415,7 @@ INNER JOIN   civicrm_contact contact ON ( contact.id = contrib.contact_id )
     }
     else {
       // generate a new transaction id, if not already exist
-      $transaction['trxn_id'] = md5(uniqid(rand(), TRUE));
+      $transaction['trxn_id'] = md5(uniqid('', TRUE));
     }
 
     if (!isset($transaction['contribution_type_id'])) {
@@ -654,7 +654,7 @@ INNER JOIN   civicrm_contact contact ON ( contact.id = contrib.contact_id )
       // errors due to invoice ID. See:
       // ./CRM/Core/Payment/PayPalIPN.php:200
       if ($recurring->id) {
-        $params['invoice_id'] = md5(uniqid(rand(), TRUE));
+        $params['invoice_id'] = md5(uniqid((string)rand(), TRUE));
       }
 
       $recurring->copyValues($params);

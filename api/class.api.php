@@ -141,7 +141,7 @@ class civicrm_api3 {
       //execute post
       $result = curl_exec($ch);
       curl_close($ch);
-      return json_decode($result);
+      return json_decode($result, true);
       // not good, all in get when should be in post.
     }
     else {

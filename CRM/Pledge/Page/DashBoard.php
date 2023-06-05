@@ -74,15 +74,15 @@ class CRM_Pledge_Page_DashBoard extends CRM_Core_Page {
     $yearDateEnd = $year['Y'] . '1231235959';
 
     // current month - prefix = 'month'
-    $currentMonth = date("F Y", mktime(0, 0, 0, date("m"), 01, date("Y")));
+    $currentMonth = date("F Y", mktime(0, 0, 0, intval(date("m")), 1, intval(date("Y"))));
     $this->assign('currentMonthYear', $currentMonth);
     $monthDate = date('Ym') . '01000000';
     $monthDateEnd = CRM_Utils_Date::customFormat(date("Y-m-t", mktime(0, 0, 0, date("m"), 01, date("Y"))), '%Y%m%d') . '235959';
 
     // previous month - prefix = 'previous'
     $previousDate = CRM_Utils_Date::customFormat(date("Y-m-d", mktime(0, 0, 0, date("m") - 1, 01, date("Y"))), '%Y%m%d') . '000000';
-    $previousDateEnd = CRM_Utils_Date::customFormat(date("Y-m-t", mktime(0, 0, 0, date("m") - 1, 01, date("Y"))), '%Y%m%d') . '235959';
-    $previousMonth = date("F Y", mktime(0, 0, 0, date("m") - 1, 01, date("Y")));
+    $previousDateEnd = CRM_Utils_Date::customFormat(date("Y-m-t", mktime(0, 0, 0, intval(date("m")) - 1, 1, intval(date("Y")))), '%Y%m%d') . '235959';
+    $previousMonth = date("F Y", mktime(0, 0, 0, intval(date("m")) - 1, 1, intval(date("Y"))));
     $this->assign('previousMonthYear', $previousMonth);
 
 

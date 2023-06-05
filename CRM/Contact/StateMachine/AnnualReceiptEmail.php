@@ -22,7 +22,7 @@ class CRM_Contact_StateMachine_AnnualReceiptEmail extends CRM_Core_StateMachine 
       'CRM_Contact_Form_Task_AnnualReceiptEmail_Finish' => NULL,
     );
 
-    $this->addSequentialPages($this->_pages, $action);
+    $this->addSequentialPages($this->_pages);
   }
 }
 

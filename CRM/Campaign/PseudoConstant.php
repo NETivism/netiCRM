@@ -70,7 +70,7 @@ class CRM_Campaign_PseudoConstant extends CRM_Core_PseudoConstant {
    * @return array - array reference of all survey activity types.
    * @static
    */
-  public static function &activityType($returnColumn = 'name') {
+  public static function &activityType($all = TRUE, $includeCaseActivities = FALSE, $reset = FALSE, $returnColumn = 'label', $includeCampaignActivities = FALSE) {
     $cacheKey = $returnColumn;
     if (!isset(self::$activityType[$cacheKey])) {
       require_once 'CRM/Core/OptionGroup.php';

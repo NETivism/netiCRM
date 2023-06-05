@@ -412,7 +412,7 @@ class CRM_Contact_BAO_Query {
       $this->_skipPermission = TRUE;
     }
     else {
-      $this->_fields = CRM_Contact_BAO_Contact::exportableFields('All', FALSE, TRUE, TRUE);
+      $this->_fields = CRM_Contact_BAO_Contact::exportableFields('All', FALSE, TRUE);
 
       $fields = CRM_Core_Component::getQueryFields();
       unset($fields['note']);
@@ -735,7 +735,7 @@ class CRM_Contact_BAO_Query {
     CRM_Core_Component::alterQuery($this, 'select');
 
     if (!empty($this->_cfIDs)) {
-      $this->_customQuery = new CRM_Core_BAO_CustomQuery($this->_cfIDs, TRUE);
+      $this->_customQuery = new CRM_Core_BAO_CustomQuery($this->_cfIDs);
       $this->_customQuery->query();
       $this->_select = array_merge($this->_select, $this->_customQuery->_select);
       $this->_element = array_merge($this->_element, $this->_customQuery->_element);
@@ -3532,7 +3532,7 @@ WHERE  id IN ( $groupIDs )
     $opValues = $this->getWhereValues('privacy_operator', $grouping);
     $operator = 'OR';
     if ($opValues &&
-      strtolower($opValues[2] == 'AND')
+      strtolower($opValues[2]) == 'and'
     ) {
       $operator = 'AND';
     }
@@ -3760,10 +3760,10 @@ civicrm_relationship.start_date > {$today}
     if (!isset(self::$_defaultReturnProperties[$mode])) {
       // add activity return properties
       if ($mode & CRM_Contact_BAO_Query::MODE_ACTIVITY) {
-        self::$_defaultReturnProperties[$mode] = CRM_Activity_BAO_Query::defaultReturnProperties($mode, FALSE);
+        self::$_defaultReturnProperties[$mode] = CRM_Activity_BAO_Query::defaultReturnProperties($mode);
       }
       else {
-        self::$_defaultReturnProperties[$mode] = CRM_Core_Component::defaultReturnProperties($mode, FALSE);
+        self::$_defaultReturnProperties[$mode] = CRM_Core_Component::defaultReturnProperties($mode);
       }
 
       if (empty(self::$_defaultReturnProperties[$mode])) {

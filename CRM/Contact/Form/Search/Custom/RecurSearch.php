@@ -337,10 +337,10 @@ $having
 
   function setTitle() {
     if ($this->_mode == 'booster') {
-      CRM_utils_System::setTitle(ts('End of recurring contribution'));
+      CRM_Utils_System::setTitle(ts('End of recurring contribution'));
     }
     else {
-      CRM_utils_System::setTitle(ts('Custom Search').' - '.ts('Recurring Contribution'));
+      CRM_Utils_System::setTitle(ts('Custom Search').' - '.ts('Recurring Contribution'));
     }
   }
 
@@ -419,7 +419,7 @@ $having
     return '';
   }
 
-  public static function includeContactIDs(&$sql, &$formValues, $isExport) {
+  public static function includeContactIDs(&$sql, &$formValues, $isExport = FALSE) {
     $contactIDs = array();
     foreach ($formValues as $id => $value) {
       list($contactID, $additionalID) = CRM_Core_Form::cbExtract($id);

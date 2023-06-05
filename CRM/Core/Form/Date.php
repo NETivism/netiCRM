@@ -116,7 +116,7 @@ Class CRM_Core_Form_Date {
     );
     if ($addReportFilters) {
       require_once 'CRM/Report/Form.php';
-      $selector += CRM_Report_Form::getOperationPair(CRM_Report_FORM::OP_DATE);
+      $selector += CRM_Report_Form::getOperationPair(CRM_Report_Form::OP_DATE);
     }
     $config = CRM_Core_Config::singleton();
     //if fiscal year start on 1 jan then remove fiscal year task
