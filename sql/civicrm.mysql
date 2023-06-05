@@ -2439,12 +2439,30 @@ CREATE TABLE civicrm_entity_batch (
 CREATE TABLE civicrm_aicompletion (
 
 
-     id int unsigned NOT NULL AUTO_INCREMENT  COMMENT 'AICompletion ID' 
+     id int unsigned NOT NULL AUTO_INCREMENT  COMMENT 'AICompletion ID',
+     contact_id int unsigned NOT NULL   COMMENT 'FK to Contact ID',
+     is_template tinyint NOT NULL  DEFAULT 0 COMMENT 'Mark 1 when this AI completion is saved as a template',
+     tone_style varchar(64) NOT NULL   COMMENT 'AI tone style',
+     ai_role varchar(64) NOT NULL   COMMENT 'AI role',
+     context text NOT NULL   COMMENT 'AI context',
+     output_text text NOT NULL   COMMENT 'text that AI return',
+     is_share_with_others tinyint NOT NULL  DEFAULT 0 COMMENT 'Mark 1 when this context allow to share with other',
+     created_date datetime NOT NULL   COMMENT 'the day create AI completion',
+     prompt text NOT NULL   COMMENT 'context that send to AI',
+     component varchar(64) NOT NULL   COMMENT 'Name of table where item being referenced is stored.',
+     field text NOT NULL   COMMENT 'Other field',
+     temperature double NOT NULL   COMMENT 'If the number is higher the more creative.',
+     post_data text NOT NULL   COMMENT 'the data API post',
+     return_data text NOT NULL   COMMENT 'the data API return',
+     prompt_token varchar(255) NOT NULL   COMMENT 'the token for prompt',
+     completion_token varchar(255) NOT NULL   COMMENT 'the token for completion',
+     status_id int unsigned NOT NULL   COMMENT '1=completed, 2=pending, 3=cancel, 4=failed' 
 ,
     PRIMARY KEY ( id )
  
  
- 
+,      
+     CONSTRAINT FK_civicrm_aicompletion_contact_id FOREIGN KEY (contact_id) REFERENCES civicrm_contact(id) ON DELETE CASCADE  
 )  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************

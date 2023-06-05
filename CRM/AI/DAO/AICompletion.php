@@ -87,6 +87,108 @@ class CRM_AI_DAO_AICompletion extends CRM_Core_DAO
    */
   public $id;
   /**
+   * FK to Contact ID
+   *
+   * @var int unsigned
+   */
+  public $contact_id;
+  /**
+   * Mark 1 when this AI completion is saved as a template
+   *
+   * @var boolean
+   */
+  public $is_template;
+  /**
+   * AI tone style
+   *
+   * @var string
+   */
+  public $tone_style;
+  /**
+   * AI role
+   *
+   * @var string
+   */
+  public $ai_role;
+  /**
+   * AI context
+   *
+   * @var text
+   */
+  public $context;
+  /**
+   * text that AI return
+   *
+   * @var text
+   */
+  public $output_text;
+  /**
+   * Mark 1 when this context allow to share with other
+   *
+   * @var boolean
+   */
+  public $is_share_with_others;
+  /**
+   * the day create AI completion
+   *
+   * @var datetime
+   */
+  public $created_date;
+  /**
+   * context that send to AI
+   *
+   * @var text
+   */
+  public $prompt;
+  /**
+   * Name of table where item being referenced is stored.
+   *
+   * @var string
+   */
+  public $component;
+  /**
+   * Other field
+   *
+   * @var text
+   */
+  public $field;
+  /**
+   * If the number is higher the more creative.
+   *
+   * @var float
+   */
+  public $temperature;
+  /**
+   * the data API post
+   *
+   * @var text
+   */
+  public $post_data;
+  /**
+   * the data API return
+   *
+   * @var text
+   */
+  public $return_data;
+  /**
+   * the token for prompt
+   *
+   * @var string
+   */
+  public $prompt_token;
+  /**
+   * the token for completion
+   *
+   * @var string
+   */
+  public $completion_token;
+  /**
+   * 1=completed, 2=pending, 3=cancel, 4=failed
+   *
+   * @var int unsigned
+   */
+  public $status_id;
+  /**
    * class constructor
    *
    * @access public
@@ -95,6 +197,35 @@ class CRM_AI_DAO_AICompletion extends CRM_Core_DAO
   function __construct()
   {
     parent::__construct();
+  }
+  /**
+   * return foreign links
+   *
+   * @access public
+   * @return array
+   */
+  function &links()
+  {
+    if (!(self::$_links)) {
+      self::$_links = array(
+        'contact_id' => 'civicrm_contact:id',
+      );
+    }
+    return self::$_links;
+  }
+  /**
+   * Returns foreign keys and entity references.
+   *
+   * @return array
+   *   [CRM_Core_Reference_Interface]
+   */
+  public static function getReferenceColumns()
+  {
+    if (!isset(Civi::$statics[__CLASS__]['links'])) {
+      Civi::$statics[__CLASS__]['links'] = static ::createReferenceColumns(__CLASS__);
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'contact_id', 'civicrm_contact', 'id');
+    }
+    return Civi::$statics[__CLASS__]['links'];
   }
   /**
    * returns all the column names of this table
@@ -108,6 +239,115 @@ class CRM_AI_DAO_AICompletion extends CRM_Core_DAO
       self::$_fields = array(
         'id' => array(
           'name' => 'id',
+          'type' => CRM_Utils_Type::T_INT,
+          'required' => true,
+        ) ,
+        'contact_id' => array(
+          'name' => 'contact_id',
+          'type' => CRM_Utils_Type::T_INT,
+          'required' => true,
+          'FKClassName' => 'CRM_Contact_DAO_Contact',
+        ) ,
+        'is_template' => array(
+          'name' => 'is_template',
+          'type' => CRM_Utils_Type::T_BOOLEAN,
+          'required' => true,
+        ) ,
+        'tone_style' => array(
+          'name' => 'tone_style',
+          'type' => CRM_Utils_Type::T_STRING,
+          'title' => ts('Tone Style') ,
+          'required' => true,
+          'maxlength' => 64,
+          'size' => CRM_Utils_Type::BIG,
+        ) ,
+        'ai_role' => array(
+          'name' => 'ai_role',
+          'type' => CRM_Utils_Type::T_STRING,
+          'title' => ts('Ai Role') ,
+          'required' => true,
+          'maxlength' => 64,
+          'size' => CRM_Utils_Type::BIG,
+        ) ,
+        'context' => array(
+          'name' => 'context',
+          'type' => CRM_Utils_Type::T_TEXT,
+          'title' => ts('Context') ,
+          'required' => true,
+        ) ,
+        'output_text' => array(
+          'name' => 'output_text',
+          'type' => CRM_Utils_Type::T_TEXT,
+          'title' => ts('Output Text') ,
+          'required' => true,
+        ) ,
+        'is_share_with_others' => array(
+          'name' => 'is_share_with_others',
+          'type' => CRM_Utils_Type::T_BOOLEAN,
+          'required' => true,
+        ) ,
+        'created_date' => array(
+          'name' => 'created_date',
+          'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
+          'title' => ts('Created Date') ,
+          'required' => true,
+        ) ,
+        'prompt' => array(
+          'name' => 'prompt',
+          'type' => CRM_Utils_Type::T_TEXT,
+          'title' => ts('Prompt') ,
+          'required' => true,
+        ) ,
+        'component' => array(
+          'name' => 'component',
+          'type' => CRM_Utils_Type::T_STRING,
+          'title' => ts('Component') ,
+          'required' => true,
+          'maxlength' => 64,
+          'size' => CRM_Utils_Type::BIG,
+        ) ,
+        'field' => array(
+          'name' => 'field',
+          'type' => CRM_Utils_Type::T_TEXT,
+          'title' => ts('Field') ,
+          'required' => true,
+        ) ,
+        'temperature' => array(
+          'name' => 'temperature',
+          'type' => CRM_Utils_Type::T_FLOAT,
+          'title' => ts('Temperature') ,
+          'required' => true,
+        ) ,
+        'post_data' => array(
+          'name' => 'post_data',
+          'type' => CRM_Utils_Type::T_TEXT,
+          'title' => ts('Post Data') ,
+          'required' => true,
+        ) ,
+        'return_data' => array(
+          'name' => 'return_data',
+          'type' => CRM_Utils_Type::T_TEXT,
+          'title' => ts('Return Data') ,
+          'required' => true,
+        ) ,
+        'prompt_token' => array(
+          'name' => 'prompt_token',
+          'type' => CRM_Utils_Type::T_STRING,
+          'title' => ts('Prompt Token') ,
+          'required' => true,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ) ,
+        'completion_token' => array(
+          'name' => 'completion_token',
+          'type' => CRM_Utils_Type::T_STRING,
+          'title' => ts('Completion Token') ,
+          'required' => true,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ) ,
+        'status_id' => array(
+          'name' => 'status_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
         ) ,

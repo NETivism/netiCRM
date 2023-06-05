@@ -18,4 +18,154 @@
     <name>id</name>
     <autoincrement>true</autoincrement>
   </primaryKey>
+
+  <field>
+    <name>contact_id</name>
+    <type>int unsigned</type>
+    <required>true</required>
+    <comment>FK to Contact ID</comment>
+    <add>4.0</add>
+  </field>
+  <foreignKey>
+       <name>contact_id</name>
+       <table>civicrm_contact</table>
+       <key>id</key>
+       <add>4.0</add>
+       <onDelete>CASCADE</onDelete>
+  </foreignKey>
+
+  <field>
+    <name>is_template</name>
+    <type>boolean</type>
+    <default>0</default>
+    <required>true</required>
+    <comment>Mark 1 when this AI completion is saved as a template</comment>
+    <add>4.0</add>
+  </field>
+
+  <field>
+    <name>tone_style</name>
+    <type>varchar</type>
+    <length>64</length>
+    <required>true</required>
+    <comment>AI tone style</comment>
+    <add>4.0</add>
+  </field>
+
+  <field>
+    <name>ai_role</name>
+    <type>varchar</type>
+    <length>64</length>
+    <required>true</required>
+    <comment>AI role</comment>
+    <add>4.0</add>
+  </field>
+
+  <field>
+    <name>context</name>
+    <type>text</type>
+    <required>true</required>
+    <comment>AI context</comment>
+    <add>4.0</add>
+  </field>
+
+  <field>
+    <name>output_text</name>
+    <type>text</type>
+    <required>true</required>
+    <comment>text that AI return</comment>
+    <add>4.0</add>
+  </field>
+
+  <field>
+    <name>is_share_with_others</name>
+    <type>boolean</type>
+    <default>0</default>
+    <required>true</required>
+    <comment>Mark 1 when this context allow to share with other</comment>
+    <add>4.0</add>
+  </field>
+
+  <field>
+    <name>created_date</name>
+    <type>datetime</type>
+    <required>true</required>
+    <comment>the day create AI completion</comment>
+    <add>4.0</add>
+  </field>
+
+  <field>
+    <name>prompt</name>
+    <type>text</type>
+    <required>true</required>
+    <comment>context that send to AI</comment>
+    <add>4.0</add>
+  </field>
+
+  <field>
+    <name>component</name>
+    <type>varchar</type>
+    <length>64</length>
+    <required>true</required>
+    <comment>Name of table where item being referenced is stored.</comment>
+    <add>4.0</add>
+  </field>
+
+  <field>
+    <name>field</name>
+    <type>text</type>
+    <required>true</required>
+    <comment>Other field</comment>
+    <add>4.0</add>
+  </field>
+
+  <field>
+    <name>temperature</name>
+    <type>float</type>
+    <required>true</required>
+    <comment>If the number is higher the more creative.</comment>
+    <add>4.0</add>
+  </field>
+
+  <field>
+    <name>post_data</name>
+    <type>text</type>
+    <required>true</required>
+    <comment>the data API post</comment>
+    <add>4.0</add>
+  </field>
+
+  <field>
+    <name>return_data</name>
+    <type>text</type>
+    <required>true</required>
+    <comment>the data API return</comment>
+    <add>4.0</add>
+  </field>
+
+  <field>
+    <name>prompt_token</name>
+    <type>varchar</type>
+    <length>255</length>
+    <required>true</required>
+    <comment>the token for prompt</comment>
+    <add>4.0</add>
+  </field>
+
+  <field>
+    <name>completion_token</name>
+    <type>varchar</type>
+    <length>255</length>
+    <required>true</required>
+    <comment>the token for completion</comment>
+    <add>4.0</add>
+  </field>
+
+  <field>
+    <name>status_id</name>
+    <type>int unsigned</type>
+    <required>true</required>
+    <comment>1=completed, 2=pending, 3=cancel, 4=failed</comment>
+    <add>4.0</add>
+  </field>
 </table>
