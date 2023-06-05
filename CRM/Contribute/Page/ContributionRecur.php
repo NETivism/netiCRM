@@ -314,12 +314,12 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
     }
     $before = $log['before'];
     $after = $log['after'];
-    foreach ($after as $key => &$value) {
+    foreach ($after as $key => $value) {
       if (substr($key, -5, 5) == '_date' && !empty($value) && $value != 'null') {
         $after[$key] = date('Y-m-d H:i:s', strtotime($value));
       }
-      if ($value == 'null') {
-        $value = NULL;
+      elseif ($value == 'null') {
+        $after[$key] = NULL;
       }
     }
     if (!empty($before) && !empty($after)) {

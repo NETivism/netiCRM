@@ -120,8 +120,7 @@ class CRM_Core_IDS {
       ],
       'civicrm/event/search' => ['html_message'],
       'civicrm/event/manage/friend' => ['thankyou_text'],
-      'civicrm/contact/view/participant' => ['receipt_text'],
-      'civicrm/contact/view/participant' => ['from_email_address'],
+      'civicrm/contact/view/participant' => ['from_email_address', 'receipt_text'],
     ],
     'access CiviMail' => [
       'civicrm/admin/component' => [

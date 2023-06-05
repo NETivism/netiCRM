@@ -80,7 +80,7 @@ class CRM_Core_Page_AJAX {
         }
         else {
           $wrapper = new CRM_Utils_Wrapper();
-          $wrapper->run($className);
+          $wrapper->run($className, '');
         }
         break;
 

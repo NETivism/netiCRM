@@ -506,20 +506,6 @@ class CRM_Contribute_BAO_Query {
         $query->_tables['civicrm_contribution'] = $query->_whereTables['civicrm_contribution'] = 1;
         return;
 
-      case 'contribution_source':
-        /*
-        $value = $strtolower(CRM_Core_DAO::escapeString($value));
-        if ($wildcard) {
-          $value = "%$value%";
-          $op = 'LIKE';
-        }
-        $wc = ($op != 'LIKE') ? "LOWER(civicrm_contribution.source)" : "civicrm_contribution.source";
-        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause($wc, $op, $value, "String");
-        $query->_qill[$grouping][] = ts('Contribution Source %1 %2', array(1 => $op, 2 => $quoteValue));
-        $query->_tables['civicrm_contribution'] = $query->_whereTables['civicrm_contribution'] = 1;
-        */
-        return;
-
       case 'contribution_trxn_id':
       case 'contribution_transaction_id':
         $wc = "civicrm_contribution.trxn_id";
@@ -877,10 +863,8 @@ class CRM_Contribute_BAO_Query {
         'trxn_id' => 1,
         'invoice_id' => 1,
         'currency' => 1,
-        'cancel_date' => 1,
         'cancel_reason' => 1,
         'receipt_date' => 1,
-        'thankyou_date' => 1,
         'product_name' => 1,
         'sku' => 1,
         'product_option' => 1,

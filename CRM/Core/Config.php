@@ -246,7 +246,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
           self::$_singleton->_initVariables();
         }
         // add component specific settings
-        self::$_singleton->componentRegistry->addConfig($this);
+        self::$_singleton->componentRegistry->addConfig(self::$_singleton);
       }
 
       self::$_singleton->initialized = 1;

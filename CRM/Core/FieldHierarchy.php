@@ -60,7 +60,6 @@ class CRM_Core_FieldHierarchy {
       'addressee' => 1,
       'addressee_custom' => 1,
       'postal_greeting_custom' => 1,
-      'postal_greeting_custom' => 1,
     ),
     'event' => array( // use component
       'participant_id' => 1,

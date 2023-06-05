@@ -41,7 +41,7 @@ class CRM_Bridge_OG_Utils {
 
   static function syncFromCiviCRM() {
     // make sure that acls are not enabled
-    return !self::aclEnabled & self::syncFromCiviCRM;
+    return !self::aclEnabled && self::syncFromCiviCRM;
   }
 
   static function ogSyncName($ogID) {

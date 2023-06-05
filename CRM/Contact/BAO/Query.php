@@ -549,7 +549,7 @@ class CRM_Contact_BAO_Query {
 
       // if this is a hierarchical name, we ignore it
       $names = explode('-', $name);
-      if (is_array($name) && count($names > 1) && isset($names[1]) && is_numeric($names[1])) {
+      if (is_array($name) && count($names) > 1 && isset($names[1]) && is_numeric($names[1])) {
         continue;
       }
 
@@ -4063,7 +4063,7 @@ civicrm_relationship.start_date > {$today}
             // always add contact_a.id to the ORDER clause
             // so the order is deterministic
             if (!isset($this->_distinctComponentClause)) {
-              if (strpos('contact_a.id', $order) === FALSE) {
+              if (strpos($order, 'contact_a.id') === FALSE) {
                 $order .= ", contact_a.id";
               }
             }

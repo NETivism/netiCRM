@@ -410,8 +410,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
     $errorMessage = NULL;
 
     //checking error in custom data
-
-    $this->isErrorInCustomData($params, $errorMessage);
+    self::isErrorInCustomData($params, $errorMessage);
 
     //checking error in core data
     $this->isErrorInCoreData($params, $errorMessage);
@@ -1166,15 +1165,6 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
    *  @access public
    */
   static function isErrorInCustomData($params, &$errorMessage) {
-    //CRM-5125
-    //add custom fields for contact sub type
-    if (isset($this)) {
-      $dateType = $this->_dateFormats;
-      if (!empty($this->_contactSubType)) {
-        $csType = $this->_contactSubType;
-      }
-    }
-
     if (CRM_Utils_Array::value('contact_sub_type', $params)) {
       $csType = CRM_Utils_Array::value('contact_sub_type', $params);
     }
@@ -1323,14 +1313,6 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
       ) {
         //CRM-5125
         //supporting custom data of related contact subtypes
-        if (isset($this)) {
-          if (CRM_Utils_Array::arrayKeyExists($key, $this->_relationships)) {
-            $relation = $key;
-          }
-          elseif (CRM_Utils_Array::key($key, $this->_relationships)) {
-            $relation = CRM_Utils_Array::key($key, $this->_relationships);
-          }
-        }
         if (!empty($relation)) {
           list($id, $first, $second) = CRM_Utils_System::explode('_', $relation, 3);
           $direction = "contact_sub_type_$second";

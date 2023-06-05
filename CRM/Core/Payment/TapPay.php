@@ -1261,7 +1261,7 @@ LIMIT 0, 100
    * @return void
    */
   public static function doRecurUpdate($id, $idType = 'contribution', $form = NULL) {
-    if (strstr('recur', $idType)) {
+    if (strstr($idType, 'recur')) {
       $contribution_recur_id = $id;
     }
     else {

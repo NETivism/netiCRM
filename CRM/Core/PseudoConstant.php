@@ -1686,7 +1686,6 @@ ORDER BY name";
         'ad' => ts('ads'),
         'direct' => ts('direct'),
         'email' => ts('Email clients'),
-        'internal' => ts('internal'),
         'link' => ts('link'),
         'search' => ts('search'),
         'social' => ts('social'),

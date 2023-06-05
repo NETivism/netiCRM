@@ -174,8 +174,8 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
         continue;
       }
       $coupon[$dao->id] = array();
-      foreach($dao as $field => $value) {
-        if ($field == 'entity_table') {
+      foreach($dao as $fld => $value) {
+        if ($fld == 'entity_table') {
           if($dao->entity_table == 'civicrm_event'){
             $coupon[$dao->id]['used_for'][$dao->entity_table][$dao->entity_id] = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Event', $dao->entity_id, 'title');
           }
@@ -183,11 +183,11 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
             $coupon[$dao->id]['used_for'][$dao->entity_table][$dao->entity_id] = $priceOptions[$dao->entity_id];
           }
         }
-        if ($field == 'entity_id' || $field[0] == '_') {
+        if ($fld == 'entity_id' || $fld[0] == '_') {
           continue;
         }
         else {
-          $coupon[$dao->id][$field] = $value;
+          $coupon[$dao->id][$fld] = $value;
         }
       }
 

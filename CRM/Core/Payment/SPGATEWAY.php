@@ -379,7 +379,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
         return $errResult;
       }
       CRM_Core_Error::debug('SPGATEWAY doUpdateRecur $recurResult', $recurResult);
-      if (!empty($recurResult['installments'] && $recurResult['installments'] != $requestParams['PeriodTimes'])) {
+      if (!empty($recurResult['installments']) && $recurResult['installments'] != $requestParams['PeriodTimes']) {
         $recurResult['note_body'] .= ts('Selected installments is %1.', array(1 => $requestParams['PeriodTimes'])).ts('Modify installments by Newebpay data.');
       }
     }
