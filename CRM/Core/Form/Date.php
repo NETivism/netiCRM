@@ -121,7 +121,7 @@ Class CRM_Core_Form_Date {
     $config = CRM_Core_Config::singleton();
     //if fiscal year start on 1 jan then remove fiscal year task
     //form list
-    if ($config->fiscalYearStart['d'] == 1 & $config->fiscalYearStart['M'] == 1) {
+    if (intval($config->fiscalYearStart['d'] == 1) && $config->fiscalYearStart['M'] == 1) {
       unset($selector['this.fiscal_year']);
       unset($selector['previous.fiscal_year']);
     }

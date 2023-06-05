@@ -285,7 +285,7 @@ ORDER BY start_date desc
   }
 
   function search() {
-    if (isset($this->_action) &
+    if (intval(isset($this->_action)) &
       (CRM_Core_Action::ADD |
         CRM_Core_Action::UPDATE |
         CRM_Core_Action::DELETE

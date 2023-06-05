@@ -81,7 +81,7 @@ class CRM_Utils_File {
 
     $html = FALSE;
     $lineCount = 0;
-    while (!feof($fd) & $lineCount <= 5) {
+    while (!feof($fd) && $lineCount <= 5) {
       $lineCount++;
       $line = fgets($fd, 8192);
       if (!CRM_Utils_String::isHtml($line)) {

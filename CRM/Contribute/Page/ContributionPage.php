@@ -535,7 +535,7 @@ ORDER BY is_active DESC, id ASC
   }
 
   function search() {
-    if (isset($this->_action) &
+    if ((int)isset($this->_action) &
       (CRM_Core_Action::ADD |
         CRM_Core_Action::UPDATE |
         CRM_Core_Action::DELETE

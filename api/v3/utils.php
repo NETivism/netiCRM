@@ -989,16 +989,13 @@ function _civicrm_api3_basic_create($bao_name, &$params) {
   $args = array(&$params);
   if (method_exists($bao_name, 'create')) {
     $fct = 'create';
-    $fct_name = $bao_name . '::' . $fct;
     $bao = call_user_func_array(array($bao_name, $fct), $args);
   }
   elseif (method_exists($bao_name, 'add')) {
     $fct = 'add';
-    $fct_name = $bao_name . '::' . $fct;
     $bao = call_user_func_array(array($bao_name, $fct), $args);
   }
   else {
-    $fct_name = '_civicrm_api3_basic_create_fallback';
     $bao = _civicrm_api3_basic_create_fallback($bao_name, $params);
   }
 
