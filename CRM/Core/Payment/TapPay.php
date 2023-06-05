@@ -444,7 +444,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       $trxn_id = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $payment['contributionID'], 'trxn_id');
       $recurringId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $payment['contributionID'], 'contribution_recur_id');
       if(empty($trxn_id)){
-        $rand = base_convert(rand(16, 255), 10, 16);
+        $rand = base_convert(strval(rand(16, 255)), 10, 16);
         $recurringId = 
         $trxn_id = 'b_'.$recurringId.'_'.$payment['contributionID'].'_'.$rand;
         CRM_Core_DAO::setFieldValue('CRM_Contribute_DAO_Contribution', $payment['contributionID'], 'trxn_id', $trxn_id);
@@ -1407,7 +1407,7 @@ LIMIT 0, 100
   }
 
   static function getContributionTrxnID($contributionId, $recurringId = NULL) {
-    $rand = base_convert(rand(16, 255), 10, 16);
+    $rand = base_convert(strval(rand(16, 255)), 10, 16);
     if(empty($recurringId)){
       $recurringId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $contributionId, 'contribution_recur_id');
     }

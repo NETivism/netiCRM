@@ -150,11 +150,11 @@ class CRM_Utils_Money {
     $formatted = $amount;
     switch($valueFormat) {
       case '%!i':
-        $formatted = number_format($amount, 2);
+        $formatted = number_format((float)$amount, 2);
         break;
       case '%!.0n':
       default:
-        $formatted = number_format($amount, 0);
+        $formatted = number_format((float)$amount, 0);
         break;
     }
     return $formatted;

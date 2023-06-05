@@ -52,10 +52,10 @@ function smarty_modifier_crmNumberFormat($number, $decimals = NULL, $dec_point =
   if (is_numeric($number)) {
     // Both dec_point AND thousands_sep are required if one is specified (this is how number_format works)
     if ($dec_point && $thousands_sep) {
-      return number_format($number, $decimals, $dec_point, $thousands_sep);
+      return number_format((float)$number, $decimals, $dec_point, $thousands_sep);
     }
     else {
-      return number_format($number, $decimals);
+      return number_format((float)$number, $decimals);
     }
   }
   else {

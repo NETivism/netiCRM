@@ -1476,7 +1476,7 @@ function _civicrm_api3_getrequired($apiRequest) {
  * Function also swaps unique fields for non-unique fields & vice versa.
  */
 function _civicrm_api3_swap_out_aliases(&$apiRequest) {
-  if (strtolower($apiRequest['action'] == 'getfields')) {
+  if (strtolower($apiRequest['action']) == 'getfields') {
     if (CRM_Utils_Array::value('api_action', $apiRequest['params'])) {
       $apiRequest['params']['action'] = $apiRequest['params']['api_action'];
       unset($apiRequest['params']['api_action']);

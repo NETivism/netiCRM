@@ -3532,7 +3532,7 @@ WHERE  id IN ( $groupIDs )
     $opValues = $this->getWhereValues('privacy_operator', $grouping);
     $operator = 'OR';
     if ($opValues &&
-      strtolower($opValues[2] == 'AND')
+      strtolower($opValues[2]) == 'and'
     ) {
       $operator = 'AND';
     }

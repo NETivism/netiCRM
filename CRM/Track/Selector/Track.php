@@ -278,7 +278,7 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
           $referrerUrl = $url['host'].'... <a href="'.$dao->referrer_url.'" target="_blank"><i class="zmdi zmdi-arrow-right-top"></i></a>';
         }
         else {
-          $referrerUrl = strstr($dao->referrer_url, 0, 15).'...';
+          $referrerUrl = substr($dao->referrer_url, 0, 15).'...';
         }
       }
       if ($dao->landing) {

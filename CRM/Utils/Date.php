@@ -51,7 +51,7 @@ class CRM_Utils_Date {
    */
   static function format($date, $separator = '', $invalidDate = 0) {
     if (is_numeric($date) &&
-      ((strlen($date) == 8) || (strlen($date) == 14))
+      (strlen(strval($date)) == 8 || strlen(strval($date)) == 14)
     ) {
       return $date;
     }
@@ -472,7 +472,7 @@ class CRM_Utils_Date {
    */
   static function convertToDefaultDate(&$params, $dateType, $dateParam) {
     $now = getDate();
-    $cen = substr($now['year'], 0, 2);
+    $cen = substr(strval($now['year']), 0, 2);
     $prevCen = $cen - 1;
 
     $value = $time = NULL;
@@ -647,7 +647,7 @@ class CRM_Utils_Date {
     // 00 - 20 is always 2000 - 2020
     // 21 - 99 is always 1921 - 1999
     if ($year < 21) {
-      $year = (strlen($year) == 1) ? $cen . '0' . $year : $cen . $year;
+      $year = (strlen(strval($year)) == 1) ? $cen . '0' . $year : $cen . $year;
     }
     elseif ($year < 100) {
       $year = $prevCen . $year;
@@ -1005,7 +1005,7 @@ class CRM_Utils_Date {
             $from['M'] = (3 * $quarter) - 2;
             $to['M'] = 3 * $quarter;
             $to['Y'] = $from['Y'] = $now['year'];
-            $to['d'] = cal_days_in_month(CAL_GREGORIAN, $to['M'], $now['year']);
+            $to['d'] = cal_days_in_month(CAL_GREGORIAN, (int)$to['M'], (int)$now['year']);
             break;
 
           case 'previous':
@@ -1021,7 +1021,7 @@ class CRM_Utils_Date {
             $from['M'] = (3 * $quarter) - 2;
             $to['M'] = 3 * $quarter;
             $to['Y'] = $from['Y'] = $now['year'] - $subtractYear;
-            $to['d'] = cal_days_in_month(CAL_GREGORIAN, $to['M'], $to['Y']);
+            $to['d'] = cal_days_in_month(CAL_GREGORIAN, (int)$to['M'], (int)$to['Y']);
             break;
 
           case 'previous_before':
@@ -1037,7 +1037,7 @@ class CRM_Utils_Date {
             $from['M'] = (3 * $quarter) - 2;
             $to['M'] = 3 * $quarter;
             $to['Y'] = $from['Y'] = $now['year'] - $subtractYear;
-            $to['d'] = cal_days_in_month(CAL_GREGORIAN, $to['M'], $to['Y']);
+            $to['d'] = cal_days_in_month(CAL_GREGORIAN, (int)$to['M'], (int)$to['Y']);
             break;
 
           case 'previous_2':
@@ -1074,7 +1074,7 @@ class CRM_Utils_Date {
               $to['M'] = 3 * ($quarter - 3);
               $to['Y'] = $now['year'];
             }
-            $to['d'] = cal_days_in_month(CAL_GREGORIAN, $to['M'], $to['Y']);
+            $to['d'] = cal_days_in_month(CAL_GREGORIAN, (int)$to['M'], (int)$to['Y']);
             break;
 
           case 'earlier':
@@ -1085,7 +1085,7 @@ class CRM_Utils_Date {
             }
             $to['M'] = 3 * $quarter;
             $to['Y'] = $from['Y'] = $now['year'] - $subtractYear;
-            $to['d'] = cal_days_in_month(CAL_GREGORIAN, $to['M'], $to['Y']);
+            $to['d'] = cal_days_in_month(CAL_GREGORIAN, (int)$to['M'], (int)$to['Y']);
             unset($from);
             break;
 
@@ -1343,10 +1343,10 @@ class CRM_Utils_Date {
     $currentYear = date("Y");
 
     //recalculate the date because month 4::04 make the difference
-    $fiscalYear = explode('-', date("Y-m-d", mktime(0, 0, 0, $fyMonth, $fyDate, $currentYear)));
+    $fiscalYear = explode('-', date("Y-m-d", mktime(0, 0, 0, (int)$fyMonth, (int)$fyDate, (int)$currentYear)));
     $fyDate = $fiscalYear[2];
     $fyMonth = $fiscalYear[1];
-    $fyStartDate = date("Y-m-d", mktime(0, 0, 0, $fyMonth, $fyDate, $currentYear));
+    $fyStartDate = date("Y-m-d", mktime(0, 0, 0, (int)$fyMonth, (int)$fyDate, (int)$currentYear));
 
     if ($fyStartDate > $date) {
       $fy = intval(intval($currentYear) - 1);

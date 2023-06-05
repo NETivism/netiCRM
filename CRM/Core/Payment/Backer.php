@@ -394,7 +394,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
           $recur['invoice_id'] = $result['values'][$result['id']]['invoice_id'];
         }
         else {
-          $recur['invoice_id'] = md5(uniqid(rand(), TRUE));
+          $recur['invoice_id'] = md5(uniqid('', TRUE));
         }
         civicrm_api('ContributionRecur', 'create', $recur);
       }
@@ -662,10 +662,10 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
     // invoice_id, recurring
     if (!empty($json['transaction']['parent_trade_no'])) {
       // invoice id is uniq, will append additional info
-      $params['contribution']['invoice_id'] = $json['transaction']['parent_trade_no'].'_'.substr(md5(uniqid(rand(), TRUE)), 0, 10);
+      $params['contribution']['invoice_id'] = $json['transaction']['parent_trade_no'].'_'.substr(md5(uniqid((string)rand(), TRUE)), 0, 10);
     }
     else {
-      $params['contribution']['invoice_id'] = md5(uniqid(rand(), TRUE));
+      $params['contribution']['invoice_id'] = md5(uniqid((string)rand(), TRUE));
     }
 
     switch($statusMap[$json['transaction']['render_status']]) {
