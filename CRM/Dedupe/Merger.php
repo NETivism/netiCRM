@@ -970,7 +970,7 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
     $mainUser = NULL;
     if ($mainUfId) {
       // d6 compatible
-      if ($config->userSystem->is_drupal == '1' && function_exists($mainUser)) {
+      if ($config->userSystem->is_drupal == '1') {
         $mainUser = user_load($mainUfId);
       }
       elseif ($config->userFramework == 'Joomla') {
@@ -981,7 +981,7 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
     $otherUser = NULL;
     if ($otherUfId) {
       // d6 compatible
-      if ($config->userSystem->is_drupal == '1' && function_exists($mainUser)) {
+      if ($config->userSystem->is_drupal == '1') {
         $otherUser = user_load($otherUfId);
       }
       elseif ($config->userFramework == 'Joomla') {
