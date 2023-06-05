@@ -5,7 +5,7 @@
 <script type="text/javascript">
 (function ($) {
 	$(function() {
-    $(".netiaic-container").AICompletion();
+    $(".netiaic-container:not(.is-initialized)").AICompletion();
 	});
 })(cj);
 </script>
@@ -16,8 +16,44 @@
   <div class="netiaic-inner">
     <div class="netiaic-content">
       <div class="inner">
-        <!-- TODO: replace with real content -->
-        <p>netiCRM AICompletion Content</p>
+        <div class="netiaic-chat">
+          <div class="inner"></div>
+        </div>
+        <div class="netiaic-form-container">
+          <div class="inner">
+            <div class="netiaic-form-content">
+              <ul class="netiaic-use-tpl">
+                <li><a href="#">使用預設範本</a></li>
+                <li><a href="#">使用其他範本</a></li>
+              </ul>
+              <div class="netiaic-prompt-role-section crm-section form-item">
+                <div class="label"><label for="first_name">文案角色</label></div>
+                <div class="edit-value content">
+                  <div class="crm-form-elem crm-form-select">
+                    <select name="netiaic-prompt-role" class="netiaic-prompt-role-select form-select" data-placeholder="請輸入或選擇希望AI代表的角色（ex. 募款人員）"><option></option></select>
+                  </div>
+                </div>
+              </div>
+              <div class="netiaic-prompt-tone-section crm-section form-item">
+                <div class="label"><label for="first_name">語氣風格</label></div>
+                <div class="edit-value content">
+                  <div class="crm-form-elem crm-form-select">
+                    <select name="netiaic-prompt-tone" class="netiaic-prompt-tone-select form-select" data-placeholder="請輸入或選擇希望的文案風格（ex. 輕鬆的）"><option></option></select>
+                  </div>
+                </div>
+              </div>
+              <div class="netiaic-prompt-content-section crm-section form-item">
+                <div class="crm-form-elem crm-form-textarea">
+                  <textarea name="netiaic-prompt-content" placeholder="請輸入想請AI生成的募款文案" class="netiaic-prompt-content-textarea form-textarea"></textarea>
+                </div>
+              </div>
+            </div>
+            <div class="netiaic-form-footer">
+              <div class="netiaic-usage-info">您的使用額度為<span class="usage-max">10</span>次，目前已使用<span class="usage-used">0</span>次。</div>
+              <button class="netiaic-form-submit">{ts}Submit{/ts}</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

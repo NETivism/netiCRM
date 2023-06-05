@@ -12,10 +12,12 @@
   }
 
   // Default configuration options
-  var defaultOptions = {};
+  var defaultOptions = {},
+      defaultData = {};
 
   // Plugin constructor function
   $.fn.AICompletion = function(options) {
+    var $container = this;
     var settings = $.extend({}, defaultOptions, options);
 
     return this.each(function() {
@@ -128,14 +130,77 @@
         });
       }
 
+      function renderSelects() {
+        for (const selectName in defaultData.filters) {
+          if ($(`select[name="netiaic-prompt-${selectName}"]`).length) {
+            defaultData.filters[selectName].forEach(option => {
+              $(`select[name="netiaic-prompt-${selectName}"]`).append(`<option value="${option}">${option}</option>`);
+            });
+          }
+        }
+
+        setTimeout(function() {
+          $(".netiaic-form-container .form-select").select2({
+            "allowClear": true,
+            "dropdownAutoWidth": true
+          });
+        }, 3000);
+      }
+
+      // Get default data
+      function getDefaultData() {
+        let data = {};
+
+        // Test data
+        data = {
+          'org_info': '本組織成立於 19xx 年，致力於環境保育與自然生態導覽，為了這塊土地的...',
+          'usage': {
+            'max': 10,
+            'used': 3
+          },
+          'templates_default': [
+            {
+              'id': '1',
+              'created': 1677649420,
+              'changed': 1685592993,
+              'contact_id': '20',
+              'title': '範本A',
+              'type': '預設範本',
+              'role': '募款專員',
+              'tone': '幽默',
+              'content': '拿出你的傘、拿出你的畫筆，還有一份豪華的環境藝術計畫！從2006年開始舉辦的這個計畫...'
+            }
+          ],
+          "filters": {
+            "role": [
+              "募款專家",
+              "活動達人",
+              "電子報行銷大師"
+            ],
+            "tone": [
+              "放鬆",
+              "深情",
+              "幽默",
+              "細膩",
+              "熱情"
+            ]
+          }
+        }
+
+        return data;
+      }
+
       // Initialize
       function init() {
         // TODO: Add any necessary initialization tasks here
-        console.log('AICompletion init');
+        defaultData = getDefaultData();
+        renderSelects();
+        $container.addClass("is-initialized");
       }
 
       // Call the initialization function
       init();
+
     });
   };
 })(jQuery);

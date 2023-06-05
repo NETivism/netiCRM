@@ -1,1 +1,23 @@
 @charset "UTF-8";
+
+.netiaic-chat {
+  min-height: 200px;
+  padding: 20px;
+  background: #a0aab3;
+}
+.netiaic-use-tpl {
+  display: flex;
+  gap: 10px;
+  margin: 0;
+  list-style: none;
+}
+.netiaic-use-tpl li {
+  list-style: none;
+}
+
+.nsp-container.nme-setting-panels .nsp-content {
+  padding: 0;
+}
+.nsp-container.nme-setting-panels .nsp-content .nme-setting-panel:not(#nme-aicompletion) {
+  padding: 20px 20px 60px 20px;
+}
