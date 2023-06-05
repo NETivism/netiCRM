@@ -83,7 +83,8 @@ class CRM_Case_XMLProcessor {
       }
 
       // read xml file
-      $dom = DOMDocument::load($fileName);
+      $dom = new DOMDocument();
+      $dom->load($fileName);
       $dom->xinclude();
       self::$_xml[$caseType] = simplexml_import_dom($dom);
     }

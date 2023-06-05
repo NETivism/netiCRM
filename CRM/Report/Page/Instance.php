@@ -66,7 +66,8 @@ class CRM_Report_Page_Instance extends CRM_Core_Page {
       }
 
       $navId = CRM_Core_DAO::getFieldValue('CRM_Report_DAO_Instance', $instanceId, 'navigation_id', 'id');
-      CRM_Report_BAO_Instance::delete($instanceId);
+      $instance = new CRM_Report_BAO_Instance();
+      $instance->delete($instanceId);
 
       //delete navigation if exists
       if ($navId) {

@@ -141,8 +141,9 @@ function civicrm_group_organization_remove(&$params) {
     $error = civicrm_create_error('Invalid or no value for Group Organization ID');
     return $error;
   }
-  require_once 'CRM/Contact/BAO/GroupOrganization.php';
-  $result = CRM_Contact_BAO_GroupOrganization::delete($params['id']);
+
+  $groupOrg = new CRM_Contact_BAO_GroupOrganization();
+  $result = $groupOrg->delete($params['id']);
   return $result ? civicrm_create_success(ts('Deleted Group Organization successfully')) : civicrm_create_error(ts('Could not delete Group Organization'));
 }
 
