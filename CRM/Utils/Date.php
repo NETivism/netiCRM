@@ -1338,7 +1338,7 @@ class CRM_Utils_Date {
    * @return int $fy       Current Fiscl Year
    * @access public
    */
-  function calculateFiscalYear($fyDate, $fyMonth) {
+  static function calculateFiscalYear($fyDate, $fyMonth) {
     $date = date("Y-m-d");
     $currentYear = date("Y");
 

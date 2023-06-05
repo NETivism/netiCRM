@@ -244,7 +244,7 @@ class CRM_Utils_PDF_Utils {
     return $html;
   }
 
-  public function stripHTML($html) {
+  public static function stripHTML($html) {
     $html = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $html);
     $html = preg_replace('/(id|style)="[^"].+"/i', "", $html);
     $html = preg_replace("/(id|style)='[^'].+'/i", "", $html);
@@ -263,7 +263,7 @@ class CRM_Utils_PDF_Utils {
     return $html_new;
   }
 
-  private function DOMRemove(DOMNode$from) {
+  private static function DOMRemove(DOMNode$from) {
     $sibling = $from->firstChild;
     do {
       $next = $sibling->nextSibling;

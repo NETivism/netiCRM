@@ -116,7 +116,7 @@ class CRM_Utils_REST {
   }
 
   // Generates values needed for error messages
-  function error($message = 'Unknown Error') {
+  static function error($message = 'Unknown Error') {
 
     $values = array(
       'error_message' => $message,
@@ -163,7 +163,7 @@ class CRM_Utils_REST {
     return array();
   }
 
-  function output(&$result) {
+  static function output(&$result) {
     $hier = FALSE;
     if (is_scalar($result)) {
       if (!$result) {

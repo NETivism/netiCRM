@@ -47,7 +47,7 @@ class CRM_Utils_Mail_Incoming {
     return $t;
   }
 
-  function formatMailPart($part, &$attachments) {
+  static function formatMailPart($part, &$attachments) {
 
     if ($part instanceof ezcMail) {
       return self::formatMail($part, $attachments);
@@ -282,7 +282,7 @@ class CRM_Utils_Mail_Incoming {
     return $params;
   }
 
-  function parseAddress(&$address, &$params, &$subParam) {
+  static function parseAddress(&$address, &$params, &$subParam) {
     $subParam['email'] = $address->email;
     $subParam['name'] = $address->name;
 

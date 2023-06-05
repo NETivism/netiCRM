@@ -642,7 +642,7 @@ class CRM_Utils_System {
   }
 
   /** parse php modules from phpinfo */
-  function parsePHPModules() {
+  static function parsePHPModules() {
     ob_start();
     phpinfo(INFO_MODULES);
     $s = ob_get_contents();
