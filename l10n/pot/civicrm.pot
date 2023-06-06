@@ -48810,3 +48810,23 @@ msgstr ""
 #: templates/CRM/Admin/Form/Setting/Security.tpl
 msgid "You can enter one path per line, and use \"*\" as a wildcard character."
 msgstr ""
+
+#: templates/CRM/Admin/Form/Setting/Security.php
+msgid "Export excel file encryption settings"
+msgstr ""
+
+#: templates/CRM/Admin/Form/Setting/Security.php
+msgid "No password set"
+msgstr ""
+
+#: templates/CRM/Admin/Form/Setting/Security.php
+msgid "Use the email of the exporting user as the password"
+msgstr ""
+
+#: templates/CRM/Admin/Form/Setting/Security.php
+msgid "Use a generic password"
+msgstr ""
+
+#: templates/CRM/Admin/Form/Setting/Security.php
+msgid "Generic Password"
+msgstr ""
