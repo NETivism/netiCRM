@@ -95,13 +95,12 @@ class CRM_Core_Page_AJAX_Location {
   }
 
   function jqState($config) {
-    if (!isset($_GET['_value']) ||
-      empty($_GET['_value'])
-    ) {
+    $elements = array();
+    if (!isset($_GET['_value']) || empty($_GET['_value']) || !CRM_Utils_Type::validate($_GET['_value'], 'Positive', FALSE)) {
+      echo json_encode($elements);
       CRM_Utils_System::civiExit();
     }
 
-    require_once 'CRM/Core/PseudoConstant.php';
     $result = &CRM_Core_PseudoConstant::stateProvinceForCountry($_GET['_value']);
 
     $elements = array(array('name' => ts('- select a state-'),
@@ -113,7 +112,6 @@ class CRM_Core_Page_AJAX_Location {
       );
     }
 
-    require_once "CRM/Utils/JSON.php";
     echo json_encode($elements);
     CRM_Utils_System::civiExit();
   }
