@@ -13,14 +13,14 @@ class CRM_Admin_Form_Setting_Security extends CRM_Admin_Form_Setting {
 
     if (defined('ENABLE_DECRYPT_BLOCK')) {
       //add select option
-      $label = "匯出Excel檔案加密設定";
+      $label = ts("Export excel file encryption settings");
       $decryptExcelOptions = array(
-        '0' => "不設定密碼",
-        '1' => "以該檔案匯出操作者的email作為密碼",
-        '2' => "使用通用密碼"
+        '0' => ts("No password set"),
+        '1' => ts("Use the email of the exporting user as the password"),
+        '2' => ts("Use a generic password")
       );
       $this->addRadio('decryptExcelOption', $label, $decryptExcelOptions, NULL, "<br>", FALSE);
-      $this->addTextfield('decryptExcelPwd', "通用密碼：", NULL, FALSE);
+      $this->addTextfield('decryptExcelPwd', ts("Generic Password"), NULL, FALSE);
     }
 
     parent::buildQuickForm();
