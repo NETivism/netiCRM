@@ -14,10 +14,41 @@
 .netiaic-use-tpl li {
   list-style: none;
 }
+.netiaic-modal {
+  position: relative;
+  margin: 40px auto;
+  max-width: 90%;
+  background: #fff;
+}
+.netiaic-modal-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 20px;
+}
+.netiaic-modal-title {
+  font-size: 1.5rem;
+}
+.netiaic-modal-close {
+  padding: 0;
+  font-size: 30px;
+  cursor: pointer;
+  border: 0;
+  background: none;
+}
+.netiaic-modal-content {
+  padding: 15px 20px;
+}
 
 .nsp-container.nme-setting-panels .nsp-content {
   padding: 0;
 }
 .nsp-container.nme-setting-panels .nsp-content .nme-setting-panel:not(#nme-aicompletion) {
   padding: 20px 20px 60px 20px;
+}
+
+/** Particular: 1200 **/
+@media screen and (min-width: 1200px) {
+  .netiaic-modal {
+    max-width: 1000px;
+  }
 }

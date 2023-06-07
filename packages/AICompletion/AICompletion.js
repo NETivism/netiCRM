@@ -7,7 +7,8 @@
    * ============================
    */
 
-  const INIT_CLASS = 'is-initialized';
+  const INIT_CLASS = 'is-initialized',
+        MFP_ACTIVE_CLASS = 'mfp-is-active';
 
   /**
    * ============================
@@ -59,6 +60,72 @@
   // Plugin methods and functionality
   AICompletion.prototype = {
     constructor: AICompletion,
+    container: null,
+
+    modal: {
+      initialized: false,
+      init: function() {
+        let $container = AICompletion.prototype.container,
+            modal = AICompletion.prototype.modal;
+
+        if (!$container.find('.netiaic-modal').length) {
+          let modal = `<div class="netiaic-modal mfp-hide">
+            <div class="inner">
+              <div class="netiaic-modal-header">
+                <div class="netiaic-modal-title"></div>
+                <button type="button" class="netiaic-modal-close"><i class="zmdi zmdi-close"></i></button>
+              </div>
+              <div class="netiaic-modal-content"></div>
+            </div>
+          </div>`;
+
+          $container.append(modal);
+        }
+
+        $container.find('.netiaic-modal').on('click', '.netiaic-modal-close', function() {
+          modal.close();
+        });
+
+        $container.on('click', '.use-other-templates', function(e) {
+          e.preventDefault();
+          let modalTitle = '電子報生成範本',
+              modalContent = '';
+
+          modal.open(modalContent, modalTitle);
+        });
+
+
+        $container.find('.netiaic-modal').addClass(INIT_CLASS);
+        this.initialized = true;
+      },
+      open: function(content, title, callbacks) {
+        $.magnificPopup.open({
+          items: {
+            src: '.netiaic-modal'
+          },
+          type: 'inline',
+          mainClass: 'mfp-netiaic-modal',
+          preloader: true,
+          showCloseBtn: false,
+          callbacks: {
+            open: function() {
+              if (!content) content = '';
+              if (!title) title = '';
+
+              $('body').addClass(MFP_ACTIVE_CLASS);
+              $('.netiaic-modal-content').html(content);
+              $('.netiaic-modal-title').html(title);
+            },
+            close: function() {
+              $('body').removeClass(MFP_ACTIVE_CLASS);
+            },
+          }
+        });
+      },
+      close: function() {
+        $.magnificPopup.close();
+      }
+    },
 
     getDefaultTemplate: function() {
       sendAjaxRequest(endpoint.getDefaultTemplate, 'POST', null, function(response) {
@@ -128,12 +195,10 @@
         }
       }
 
-      setTimeout(function() {
-        $(".netiaic-form-container .form-select").select2({
-          "allowClear": true,
-          "dropdownAutoWidth": true
-        });
-      }, 3000);
+      $(".netiaic-form-container .form-select").select2({
+        "allowClear": true,
+        "dropdownAutoWidth": true
+      });
     },
 
     getDefaultData: function() {
@@ -182,7 +247,9 @@
       var $container = $(this.element);
       defaultData = this.getDefaultData();
 
+      AICompletion.prototype.container = $container;
       this.renderSelects();
+      this.modal.init();
       $container.addClass(INIT_CLASS);
     }
   };

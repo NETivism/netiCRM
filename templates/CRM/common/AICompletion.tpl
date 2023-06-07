@@ -5,7 +5,9 @@
 <script type="text/javascript">
 (function ($) {
 	$(function() {
-    $(".netiaic-container:not(.is-initialized)").AICompletion();
+    setTimeout(function() {
+      $(".netiaic-container:not(.is-initialized)").AICompletion();
+    }, 3000);
 	});
 })(cj);
 </script>
@@ -23,8 +25,8 @@
           <div class="inner">
             <div class="netiaic-form-content">
               <ul class="netiaic-use-tpl">
-                <li><a href="#">使用預設範本</a></li>
-                <li><a href="#">使用其他範本</a></li>
+                <li><a href="#" class="use-default-template">使用預設範本</a></li>
+                <li><a href="#" class="use-other-templates">使用其他範本</a></li>
               </ul>
               <div class="netiaic-prompt-role-section crm-section form-item">
                 <div class="label"><label for="first_name">文案角色</label></div>
@@ -58,4 +60,5 @@
     </div>
   </div>
 </div>
+
 <!-- AICompletion HTML end -->
