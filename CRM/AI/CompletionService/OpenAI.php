@@ -94,14 +94,75 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
       'Content-Type: application/json',
       'Authorization: Bearer ' . $this->_apiKey,
     ]);
-    $response = curl_exec($ch);
-    if(curl_errno($ch)){
-      throw new Exception(curl_error($ch));
-    }
-    curl_close($ch);
+    if ($params['stream']) {
+      header("Content-Type: text/event-stream");
+      header("X-Accel-Buffering: no");
+      while ($level = ob_get_level()) {
+        ob_end_clean();
+      }
+      curl_setopt($ch, CURLOPT_WRITEFUNCTION, function ($ch, $data) use (&$response){
+        $chunks = explode("\n", $data);
+        if (is_array($chunks)) {
+          $chunks = array_filter($chunks);
+        }
+        foreach($chunks as $resp) {
+          $json = preg_replace('/^data:\s/', '', $resp);
+          $decoded = json_decode($json, TRUE);
+          if ($decoded === FALSE) {
 
-    // Format the response and return it
-    return $this->formatResponse($response);
+          }
+          elseif ($decoded['error']['message'] != "") {
+            // error handler
+            if (strpos($decoded['error']['message'], "Rate limit reached") === 0) {
+            }
+            if (strpos($decoded['error']['message'], "Your access was terminated") === 0) {
+            }
+            if (strpos($decoded['error']['message'], "You didn't provide an API key") === 0) {
+            }
+            if (strpos($decoded['error']['message'], "You exceeded your current quota") === 0) {
+            }
+            if (strpos($decoded['error']['message'], "That model is currently overloaded") === 0) {
+            }
+          }
+          else {
+            if (trim($data) != "data: [DONE]" && isset($decoded["choices"][0]["delta"]["content"])) {
+              // log response to variable
+              $response .= $decoded["choices"][0]["delta"]["content"];
+              // output data
+              echo 'data: '.json_encode(array("message" => $decoded['choices'][0]['delta']['content']))."\n\n";
+            }
+            if (!empty($decoded["choices"][0]["finish_reason"]) && $decoded["choices"][0]["finish_reason"] === 'stop') {
+              echo 'data: [DONE]'."\n\n";
+            }
+            if (trim($data) === 'data: [DONE]') {
+              echo 'data: [DONE]'."\n\n";
+            }
+            if (!empty($decoded["choices"][0]["finish_reason"]) && $decoded["choices"][0]["finish_reason"] !== 'stop') {
+              echo 'data: [ERR]'."\n\n";
+            }
+          }
+        }
+        ob_flush();
+        flush();
+        return strlen($data);
+      });
+      curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+      curl_setopt($ch, CURLOPT_MAXREDIRS, 3);
+      curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+      curl_setopt($ch, CURLOPT_AUTOREFERER, true);
+    
+      curl_exec($ch);
+      curl_close($ch);
+    }
+    else {
+      $response = curl_exec($ch);
+      if(curl_errno($ch)){
+        throw new Exception(curl_error($ch));
+      }
+      curl_close($ch);
+      // Format the response and return it
+      return $this->formatResponse($response);
+    }
   }
 
   /**

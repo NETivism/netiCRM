@@ -92,6 +92,9 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
     if (isset($args['max_tokens'])) {
       $maxTokens = $args['max_tokens'];
     }
+    if (isset($args['stream'])) {
+      $requestData['stream'] = $args['stream'];
+    }
     $requestData['action'] = self::$_action;
     
     // Create or update db record
@@ -99,14 +102,15 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
       'date' => date('Y-m-d H:i:s'),
       'status' => 2, // Default status is 2 (didn't get response)
     ]);
-    // self::create($data);
+    $aicompletion = self::create($data);
 
     // Send request to OpenAI API
     $responseData = CRM_AI_BAO_AICompletion::getCompletion($requestData, $model, $maxTokens);
 
     // Save response data to db record
     $data = array_merge($data, $responseData);
-    // self::create($responseData);
+    $data['id'] = $aicompletion->id;
+    self::create($responseData);
 
     // Return result
     return $responseData;
@@ -146,9 +150,31 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
   /**
    * Only use for database record saving
    *
-   * @return void
+   * @return object
    */
   public static function create(&$data) {
+    $op = 'edit';
+    $id = CRM_Utils_Array::value('id', $data);
+    if (!$id) {
+      $op = 'create';
+    }
+    if (empty($data['contact_id'])) {
+      $session = CRM_Core_Session::singleton();
+      $data['contact_id'] = $session->get('userID') ? $session->get('userID') : 1;
+    }
+    CRM_Utils_Hook::pre($op, 'AICompletion', $id, $data);
+    $aicompletion = new CRM_AI_DAO_AICompletion();
+    $aicompletion->copyValues($data);
+    $aicompletion->save();
+
+    CRM_Utils_Hook::post($op, 'AICompletion', $aicompletion->id, $aicompletion);
+
+    $params = array(
+      'id' => $aicompletion->id,
+    );
+    $defaults = array();
+    $aicompletion = self::retrieve($params, $defaults);
+    return $aicompletion;
   }
 
   /**
