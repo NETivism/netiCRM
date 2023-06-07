@@ -89,9 +89,31 @@
         $container.on('click', '.use-other-templates', function(e) {
           e.preventDefault();
           let modalTitle = '電子報生成範本',
-              modalContent = '';
+              modalCallbacks = {},
+              modalContent = `<div id="use-other-templates-tabs" class="modal-tabs">
+              <ul class="modal-tabs-menu">
+                <li><a href="#use-other-templates-tabs-1">紀錄範本</a></li>
+                <li><a href="#use-other-templates-tabs-2">社群推薦</a></li>
+              </ul>
+              <div class="modal-tabs-panels">
+                <div id="use-other-templates-tabs-1" class="modal-tabs-panel">
+                  <p>紀錄範本的清單</p>
+                </div>
+                <div id="use-other-templates-tabs-2" class="modal-tabs-panel">
+                  <p>社群推薦的範本清單</p>
+                </div>
+              </div>
+            </div>`;
 
-          modal.open(modalContent, modalTitle);
+          modalCallbacks.open = function() {
+            if (typeof $.ui !== 'undefined' && $.ui.tabs !== 'undefined') {
+              $('#use-other-templates-tabs').tabs({
+                collapsible: true
+              });
+            }
+          }
+
+          modal.open(modalContent, modalTitle, modalCallbacks);
         });
 
 
@@ -115,6 +137,10 @@
               $('body').addClass(MFP_ACTIVE_CLASS);
               $('.netiaic-modal-content').html(content);
               $('.netiaic-modal-title').html(title);
+
+              if (callbacks && typeof callbacks === 'object' && typeof callbacks.open === 'function') {
+                callbacks.open();
+              }
             },
             close: function() {
               $('body').removeClass(MFP_ACTIVE_CLASS);
