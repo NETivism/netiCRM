@@ -454,14 +454,52 @@ class CRM_Contribute_Form_AdditionalInfo {
     }
 
     //handle custom data
-    if (CRM_Utils_Array::value('hidden_custom', $params)) {
+    if (!empty($params['contribution_page_id'])) {
+      $profiles = array();
+      // page profile pre id
+      $ufJoinParams = array(
+        'entity_table' => 'civicrm_contribution_page',
+        'entity_id' => $params['contribution_page_id'],
+        'weight' => 1,
+        'module' => 'CiviContribute',
+      );
+      $profiles['pre']['id'] = CRM_Core_BAO_UFJoin::findUFGroupId($ufJoinParams);
+      $ufJoinParams['weight'] = 2;
+      $profiles['post']['id'] = CRM_Core_BAO_UFJoin::findUFGroupId($ufJoinParams);
+      $customGroup = array();
+      foreach($profiles as $idx => $ufGroup) {
+        $customFields = $customValues = array();
+        if (CRM_Core_BAO_UFGroup::filterUFGroups($ufGroup['id'], $params['contact_id'])) {
+          $groupTitle = NULL;
+          $customFields = CRM_Core_BAO_UFGroup::getFields($ufGroup['id'], FALSE, CRM_Core_Action::VIEW);
+
+          foreach ($customFields as $k => $v) {
+            if (!$groupTitle) {
+              $groupTitle = $v["groupTitle"];
+            }
+            // unset all view only profile field
+            if ($v['is_view']){
+              unset($customFields[$k]);
+            }
+          }
+
+          $contribParams = array(array('contribution_id', '=', $params['contribution_id'], 0, 0));
+          if ($form->_mode == 'test') {
+            $contribParams[] = array('contribution_test', '=', 1, 0, 0);
+          }
+          CRM_Core_BAO_UFGroup::getValues($params['contact_id'], $customFields, $customValues, FALSE, $contribParams, CRM_Core_BAO_UFGroup::MASK_ALL);
+          $customGroup[$groupTitle] = $customValues;
+        }
+      }
+      $form->assign('customGroup', $customGroup);
+    }
+    elseif (CRM_Utils_Array::value('hidden_custom', $params)) {
       $contribParams = array(array('contribution_id', '=', $params['contribution_id'], 0, 0));
       if ($form->_mode == 'test') {
         $contribParams[] = array('contribution_test', '=', 1, 0, 0);
       }
 
       //retrieve custom data
-      require_once "CRM/Core/BAO/UFGroup.php";
       $customGroup = array();
 
       foreach ($form->_groupTree as $groupID => $group) {
