@@ -1,5 +1,7 @@
 @charset "UTF-8";
-
+:root {
+  --nsp-width: 480px;
+}
 .netiaic-chat {
   min-height: 200px;
   padding: 20px;
