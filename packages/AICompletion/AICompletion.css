@@ -40,7 +40,12 @@
 .netiaic-modal-content {
   padding: 15px 20px;
 }
-
+.netiaic-command {
+  display: none;
+}
+.netiaic-command.is-active {
+  display: block;
+}
 .nsp-container.nme-setting-panels .nsp-content {
   padding: 0;
 }

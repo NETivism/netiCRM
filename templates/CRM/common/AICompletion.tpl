@@ -47,6 +47,15 @@
               <div class="netiaic-prompt-content-section crm-section form-item">
                 <div class="crm-form-elem crm-form-textarea">
                   <textarea name="netiaic-prompt-content" placeholder="請輸入想請AI生成的募款文案" class="netiaic-prompt-content-textarea form-textarea"></textarea>
+                  <div class="netiaic-prompt-content-command netiaic-command">
+                    <ul class="netiaic-command-list">
+                      <li data-name="org_info" class="netiaic-command-item">
+                        <a class="get-org-info" href="#">點選以帶入組織簡介</a>
+                        <a href="#">（編輯簡介<i class="zmdi zmdi-edit"></i>）</a>
+                        <div class="netiaic-command-item-desc"></div>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
               </div>
             </div>

@@ -8,6 +8,7 @@
    */
 
   const INIT_CLASS = 'is-initialized',
+        ACTIVE_CLASS = 'is-active',
         MFP_ACTIVE_CLASS = 'mfp-is-active';
 
   /**
@@ -17,6 +18,7 @@
    */
 
   // Endpoint
+  // TODO: Need to change to real endpoint, refer to CRM/AI/Page/AJAX.php
   var endpoint = {
     getTemplateList: '/api/getTemplateList',
     getTemplate: '/api/getTemplate',
@@ -218,12 +220,6 @@
       });
     },
 
-    getOrganizationIntro: function() {
-      sendAjaxRequest(endpoint.getOrganizationIntro, 'POST', null, function(response) {
-        // TODO: Process and fill the data according to the API response
-      });
-    },
-
     sendPrompt: function() {
       var data = {};
       // TODO: Get prompt data from the form
@@ -252,19 +248,61 @@
       });
     },
 
-    renderSelects: function() {
-      // TODO: Render the selects based on the default data
-      for (const selectName in defaultData.filters) {
-        if ($(`select[name="netiaic-prompt-${selectName}"]`).length) {
+    formUI: function() {
+      let $container = AICompletion.prototype.container,
+          $promptContent = $container.find(".netiaic-prompt-content-textarea"),
+          $promptContentCommand = $container.find(".netiaic-prompt-content-command");
+
+      // Populate the select dropdowns with options from defaultData.filters
+      for (let selectName in defaultData.filters) {
+        if ($container.find(`select[name="netiaic-prompt-${selectName}"]`).length) {
           defaultData.filters[selectName].forEach(option => {
-            $(`select[name="netiaic-prompt-${selectName}"]`).append(`<option value="${option}">${option}</option>`);
+            $container.find(`select[name="netiaic-prompt-${selectName}"]`).append(`<option value="${option}">${option}</option>`);
           });
         }
       }
 
-      $(".netiaic-form-container .form-select").select2({
-        "allowClear": true,
-        "dropdownAutoWidth": true
+      // Initialize the select dropdowns with Select2 plugin
+      $container.find('.form-select').select2({
+        allowClear: true,
+        dropdownAutoWidth: true
+      });
+
+      $promptContent.on('focus', function() {
+        let inputText = $(this).val();
+
+        if (inputText === '') {
+          $promptContentCommand.addClass(ACTIVE_CLASS);
+        }
+      });
+
+      $promptContent.on('blur', function() {
+        setTimeout(function() {
+          $promptContentCommand.removeClass(ACTIVE_CLASS);
+        }, 300);
+      });
+
+      $promptContent.on('input', function() {
+        let inputText = $(this).val();
+        $promptContentCommand.toggleClass(ACTIVE_CLASS, inputText === '');
+      });
+
+      $promptContentCommand.find('[data-name="org_info"] .netiaic-command-item-desc').html(defaultData.org_info);
+      $promptContentCommand.on('click', '.get-org-info', function(e) {
+        e.preventDefault;
+
+        if ($promptContent.val() !== '') {
+          if (confirm('您將帶入組織資訊，確定覆蓋內容？')) {
+            $promptContent.val(defaultData.org_info);
+          }
+        }
+        else {
+          $promptContent.val(defaultData.org_info);
+        }
+      });
+
+      $promptContentCommand.on('hover', function() {
+        $promptContentCommand.addClass(ACTIVE_CLASS);
       });
     },
 
@@ -315,7 +353,7 @@
       defaultData = this.getDefaultData();
 
       AICompletion.prototype.container = $container;
-      this.renderSelects();
+      this.formUI();
       this.modal.init();
       this.useTemplates();
       $container.addClass(INIT_CLASS);
