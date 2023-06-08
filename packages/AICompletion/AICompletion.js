@@ -69,7 +69,7 @@
             modal = AICompletion.prototype.modal;
 
         if (!$container.find('.netiaic-modal').length) {
-          let modal = `<div class="netiaic-modal mfp-hide">
+          let modalHtml = `<div class="netiaic-modal mfp-hide">
             <div class="inner">
               <div class="netiaic-modal-header">
                 <div class="netiaic-modal-title"></div>
@@ -79,43 +79,12 @@
             </div>
           </div>`;
 
-          $container.append(modal);
+          $container.append(modalHtml);
         }
 
         $container.find('.netiaic-modal').on('click', '.netiaic-modal-close', function() {
           modal.close();
         });
-
-        $container.on('click', '.use-other-templates', function(e) {
-          e.preventDefault();
-          let modalTitle = '電子報生成範本',
-              modalCallbacks = {},
-              modalContent = `<div id="use-other-templates-tabs" class="modal-tabs">
-              <ul class="modal-tabs-menu">
-                <li><a href="#use-other-templates-tabs-1">紀錄範本</a></li>
-                <li><a href="#use-other-templates-tabs-2">社群推薦</a></li>
-              </ul>
-              <div class="modal-tabs-panels">
-                <div id="use-other-templates-tabs-1" class="modal-tabs-panel">
-                  <p>紀錄範本的清單</p>
-                </div>
-                <div id="use-other-templates-tabs-2" class="modal-tabs-panel">
-                  <p>社群推薦的範本清單</p>
-                </div>
-              </div>
-            </div>`;
-
-          modalCallbacks.open = function() {
-            if (typeof $.ui !== 'undefined' && $.ui.tabs !== 'undefined') {
-              $('#use-other-templates-tabs').tabs({
-                collapsible: true
-              });
-            }
-          }
-
-          modal.open(modalContent, modalTitle, modalCallbacks);
-        });
-
 
         $container.find('.netiaic-modal').addClass(INIT_CLASS);
         this.initialized = true;
@@ -159,21 +128,93 @@
       });
     },
 
-    applyTemplate: function(templateData) {
-      // TODO: Apply the template data to the form
+    getTemplateList: function(page) {
+      sendAjaxRequest(endpoint.getTemplateList, 'GET', { page: page }, function(response) {
+        // TODO: Process the list of templates according to the data returned by the API
+      });
     },
 
     setTemplate: function() {
       // TODO: Create a modal dialog for saving a Template based on the functional requirements
     },
 
-    showAllTemplates: function() {
-      // TODO: Create a modal dialog and related elements based on the functional requirements
+    formIsEmpty: function() {
+      let $container = AICompletion.prototype.container,
+          roleSelectData = $container.find('.netiaic-prompt-role-select').select2('data'),
+          toneSelectData = $container.find('.netiaic-prompt-tone-select').select2('data'),
+          hasRoleSelected = roleSelectData.length > 0 && roleSelectData[0].id !== "",
+          hasToneSelected = toneSelectData.length > 0 && toneSelectData[0].id !== "",
+          hasContent = $container.find('.netiaic-prompt-content-textarea').val().trim() !== '';
+
+      if (hasRoleSelected || hasToneSelected || hasContent) {
+        return false;
+      }
+
+      return true;
     },
 
-    getTemplateList: function(page) {
-      sendAjaxRequest(endpoint.getTemplateList, 'GET', { page: page }, function(response) {
-        // TODO: Process the list of templates according to the data returned by the API
+    applyTemplateToForm: function({ data = {} } = {}) {
+      let $container = AICompletion.prototype.container,
+          $roleSelect = $container.find('.netiaic-prompt-role-select'),
+          $toneSelect = $container.find('.netiaic-prompt-tone-select'),
+          $content = $container.find('.netiaic-prompt-content-textarea');
+
+      if (Object.keys(data).length === 0) {
+        data = { role: null, tone: null, content: null };
+      }
+
+      $roleSelect.val(data.role).trigger('change');
+      $toneSelect.val(data.tone).trigger('change');
+      $content.val(data.content);
+    },
+
+    useTemplates: function() {
+      // TODO: Create a modal dialog and related elements based on the functional requirements
+      let $container = AICompletion.prototype.container,
+          modal = AICompletion.prototype.modal;
+
+      $container.on('click', '.use-default-template', function(e) {
+        e.preventDefault();
+        let templateData = defaultData.templates_default[0];
+
+        if (!AICompletion.prototype.formIsEmpty()) {
+          if (confirm('系統將清除您目前的設定並套用此範本')) {
+            AICompletion.prototype.applyTemplateToForm({ data: templateData });
+          }
+        }
+        else {
+          AICompletion.prototype.applyTemplateToForm({ data: templateData });
+        }
+      });
+
+      $container.on('click', '.use-other-templates', function(e) {
+        e.preventDefault();
+        let modalTitle = '電子報生成範本',
+            modalCallbacks = {},
+            modalContent = `<div id="use-other-templates-tabs" class="modal-tabs">
+            <ul class="modal-tabs-menu">
+              <li><a href="#use-other-templates-tabs-1">紀錄範本</a></li>
+              <li><a href="#use-other-templates-tabs-2">社群推薦</a></li>
+            </ul>
+            <div class="modal-tabs-panels">
+              <div id="use-other-templates-tabs-1" class="modal-tabs-panel">
+                <p>紀錄範本的清單</p>
+              </div>
+              <div id="use-other-templates-tabs-2" class="modal-tabs-panel">
+                <p>社群推薦的範本清單</p>
+              </div>
+            </div>
+          </div>`;
+
+        modalCallbacks.open = function() {
+          if (typeof $.ui !== 'undefined' && $.ui.tabs !== 'undefined') {
+            $('#use-other-templates-tabs').tabs({
+              collapsible: true
+            });
+          }
+        }
+
+        modal.open(modalContent, modalTitle, modalCallbacks);
       });
     },
 
@@ -245,7 +286,7 @@
             'contact_id': '20',
             'title': '範本A',
             'type': '預設範本',
-            'role': '募款專員',
+            'role': '募款專家',
             'tone': '幽默',
             'content': '拿出你的傘、拿出你的畫筆，還有一份豪華的環境藝術計畫！從2006年開始舉辦的這個計畫...'
           }
@@ -276,6 +317,7 @@
       AICompletion.prototype.container = $container;
       this.renderSelects();
       this.modal.init();
+      this.useTemplates();
       $container.addClass(INIT_CLASS);
     }
   };
