@@ -17,19 +17,18 @@
    * ============================
    */
 
-  // Endpoint
-  // TODO: Need to change to real endpoint, refer to CRM/AI/Page/AJAX.php
-  var endpoint = {
-    getTemplateList: '/api/getTemplateList',
-    getTemplate: '/api/getTemplate',
-    setTemplate: '/api/setTemplate',
-    chat: '/api/chat',
-    setShare: '/api/setShare'
-  };
+  var defaultData = {},
+      ts = {}, // TODO: need to get translation string comparison table
+      endpoint = { // TODO: Need to change to real endpoint, refer to CRM/AI/Page/AJAX.php
+        getTemplateList: '/api/getTemplateList',
+        getTemplate: '/api/getTemplate',
+        setTemplate: '/api/setTemplate',
+        chat: '/api/chat',
+        setShare: '/api/setShare'
+      };
 
   // Default configuration options
-  var defaultOptions = {},
-      defaultData = {};
+  var defaultOptions = {};
 
   /**
    * ============================
@@ -131,7 +130,7 @@
     },
 
     getTemplateList: function(page) {
-      sendAjaxRequest(endpoint.getTemplateList, 'GET', { page: page }, function(response) {
+      sendAjaxRequest(endpoint.getTemplateList, 'POST', { page: page }, function(response) {
         // TODO: Process the list of templates according to the data returned by the API
       });
     },
@@ -291,12 +290,7 @@
       $promptContentCommand.on('click', '.get-org-info', function(e) {
         e.preventDefault;
 
-        if ($promptContent.val() !== '') {
-          if (confirm('您將帶入組織資訊，確定覆蓋內容？')) {
-            $promptContent.val(defaultData.org_info);
-          }
-        }
-        else {
+        if ($promptContent.val() === '') {
           $promptContent.val(defaultData.org_info);
         }
       });
@@ -306,10 +300,15 @@
       });
     },
 
+    formSubmit: function() {
+      // TODO: need to handle related events after the form is sent
+
+    },
+
     getDefaultData: function() {
       var data = {};
 
-      // Test data
+      // The test data is only used for development and needs to call the real endpoint
       data = {
         'org_info': '本組織成立於 19xx 年，致力於環境保育與自然生態導覽，為了這塊土地的...',
         'usage': {

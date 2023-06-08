@@ -14,6 +14,7 @@
 {/literal}
 <!-- AICompletion files end -->
 <!-- AICompletion HTML start -->
+<!-- TODO: Change the string to English and translate the string -->
 <div class="netiaic-container">
   <div class="netiaic-inner">
     <div class="netiaic-content">
@@ -52,7 +53,7 @@
                       <li data-name="org_info" class="netiaic-command-item">
                         <a class="get-org-info" href="#">點選以帶入組織簡介</a>
                         <a href="#">（編輯簡介<i class="zmdi zmdi-edit"></i>）</a>
-                        <div class="netiaic-command-item-desc"></div>
+                        <div class="netiaic-command-item-desc"><!-- TODO: smarty var --></div>
                       </li>
                     </ul>
                   </div>
@@ -69,5 +70,4 @@
     </div>
   </div>
 </div>
-
 <!-- AICompletion HTML end -->
