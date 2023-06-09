@@ -211,15 +211,16 @@ test.describe.serial('Import Records', () => {
                 const isEqual = await page.evaluate(() => {
                     const table = document.getElementById('preview-counts');
                     const rows = table.getElementsByTagName('tr');
-            
+                    let result = {};
+
                     let totalRows, validRows;
-            
+
                     for (let i = 0; i < rows.length; i++) {
                         const labelCell = rows[i].getElementsByClassName('label')[0];
                         if (labelCell) {
                             const labelText = labelCell.textContent.trim();
                             const dataCell = rows[i].getElementsByClassName('data')[0];
-                
+
                             if(labelText === 'Total Rows') {
                                 totalRows = parseInt(dataCell.textContent.trim(), 10);
                             }
@@ -228,14 +229,14 @@ test.describe.serial('Import Records', () => {
                             }
                         }
                     }
-            
-                    return totalRows === validRows;
+                    result['result'] = totalRows === validRows;;
+                    result['totalRows'] = 1;
+                    result['validRows'] = validRows;
+                    return result;
                 });
-                    
-                await expect(isEqual).toBe(true);
-
-                await utils.print('Total Rows are equal to Valid Rows.');               
-
+                await utils.print(isEqual);
+                await expect(isEqual['result']).toBe(true,JSON.isEqual);
+                await utils.print('Total Rows are equal to Valid Rows.');
             });
 
             /* Step 4: Import Rows. */
