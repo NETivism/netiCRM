@@ -33,9 +33,12 @@ class CRM_Admin_Form_Setting_Security extends CRM_Admin_Form_Setting {
    *
    * @return None
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = parent::setDefaultValues();
-    if (empty($defaults['decryptExcelOption'])) {
+    if ($defaults['decryptExcelOption'] != 2) {
+      $defaults['decryptExcelPwd'] = "";
+    }
+    if (!isset($defaults['decryptExcelOption'])) {
       $defaults['decryptExcelOption'] = 0;
     }
     return $defaults;

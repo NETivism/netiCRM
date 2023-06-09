@@ -17,10 +17,15 @@
 </div>
 <script>{literal}
 cj(document).ready(function($){
+    var decryptSelectExcelOption = ".crm-miscellaneous-form-block-decryptExcelOption input[type=radio]:checked";
     var decryptExcelOption = ".crm-miscellaneous-form-block-decryptExcelOption input[type=radio]";
     var decryptExcelPwd = ".crm-miscellaneous-form-block-decryptExcelPwd";
-    if ($(decryptExcelOption).val() != 2) {
+    if ($(decryptSelectExcelOption).val() != 2) {
         $(".crm-miscellaneous-form-block-decryptExcelPwd").hide();
+    }
+    else {
+        console.log("nin");
+        $(".crm-miscellaneous-form-block-decryptExcelPwd").show();
     }
     $(decryptExcelOption).click( function() {
         if ( $(this).val() == "2" ) {
