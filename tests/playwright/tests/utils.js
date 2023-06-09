@@ -54,6 +54,7 @@ async function clickElement(page, locator, expectEl={}){
     await locator.waitFor();
     await expect(locator).toBeEnabled();
     await locator.click();
+
     if ('exist' in expectEl) await expect(page.locator(expectEl.exist)).not.toHaveCount(0);
     if ('notExist' in expectEl) await expect(page.locator(expectEl.notExist)).toHaveCount(0);
     if ('visible' in expectEl) await expect(page.locator(expectEl.visible)).toBeVisible();
