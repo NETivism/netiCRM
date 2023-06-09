@@ -131,6 +131,11 @@ test.describe.serial('Import Records', () => {
         test(`Import task ${i++} : ${task.type}`, async () => {
 
             page.once('dialog', dialog => dialog.accept());
+            await test.step('Check Membership Types exists', async () => {
+                element = '.crm-membership-type-type_name';
+                await page.goto('civicrm/admin/member/membershipType?reset=1');
+                await utils.findElement(page, element);
+            });
 
             /* Step 1: Enter Upload File Page. */
             await test.step('Enter Upload File Page', async () => {
