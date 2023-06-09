@@ -230,12 +230,12 @@ test.describe.serial('Import Records', () => {
                         }
                     }
                     result['result'] = totalRows === validRows;;
-                    result['totalRows'] = 1;
+                    result['totalRows'] = totalRows;
                     result['validRows'] = validRows;
                     return result;
                 });
                 await utils.print(isEqual);
-                await expect(isEqual['result']).toBe(true,JSON.isEqual);
+                await expect(isEqual['result']).toBe(true,isEqual);
                 await utils.print('Total Rows are equal to Valid Rows.');
             });
 
