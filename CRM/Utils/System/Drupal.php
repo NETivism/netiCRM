@@ -167,6 +167,9 @@ class CRM_Utils_System_Drupal {
     if (!$url) {
       $url = self::url('');
     }
+
+    // refs #38065, make sure store session object before redirection
+    CRM_Utils_System::civiBeforeShutdown();
     $url = str_replace('&amp;', '&', $url); // legacy url/crmURL behaviour should remove
     if($version >= 8){
       $headers = array('Cache-Control' => 'no-cache');
@@ -181,7 +184,16 @@ class CRM_Utils_System_Drupal {
         fastcgi_finish_request();
       }
     }
-    CRM_Utils_System::civiExit();
+    if (CRM_Core_Config::singleton()->userFramework == 'Drupal') {
+      // drupal 6,7, change old exit method. Use exception to handling route
+      // drupal 8,9, the correct way to exit
+      // let symfony router handling this
+      // will trigger event(KernelEvents::TERMINATE at controller
+      // set default null exception handler to prevent no catch after this
+      set_exception_handler(array('CRM_Core_Exception', 'nullExceptionHandler'));
+      throw new CRM_Core_Exception('', CRM_Core_Error::NO_ERROR);
+    }
+    exit;
   }
 
   /**

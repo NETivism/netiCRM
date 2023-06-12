@@ -56,8 +56,14 @@ class CRM_Export_Form_Select extends CRM_Core_Form {
    * @var int
    */
   public $_exportMode;
-
   public $_componentTable;
+
+  public $_task;
+  public $_selectAll;
+  public $_componentIds;
+  public $_componentClause;
+  public $_force;
+  public $_mappingId;
 
   /**
    * build all the data structures needed to build the form
@@ -68,6 +74,10 @@ class CRM_Export_Form_Select extends CRM_Core_Form {
    * @access public
    */
   function preProcess() {
+    $buttonName = $this->getButtonName('next');
+    if ($buttonName === $this->controller->getButtonName() || $this->get('prevAction') === 'back') {
+      return;
+    }
     $customSearchID = $this->get('customSearchID');
     if ($customSearchID) {
       $customSearchClass = $this->get('customSearchClass');
@@ -90,7 +100,7 @@ class CRM_Export_Form_Select extends CRM_Core_Form {
           $customHeader["column{$i}"] = $headerName;
         }
       }
-      $this->assign('customHeader', $customHeader);
+      $this->set('customHeader', $customHeader);
     }
 
     $this->_selectAll = FALSE;
@@ -167,7 +177,7 @@ class CRM_Export_Form_Select extends CRM_Core_Form {
       CRM_Contact_Form_Task::preProcessCommon($this);
     }
     else {
-      $this->assign('taskName', "Export $componentName[1]");
+      $this->set('taskName', "Export $componentName[1]");
       $componentClass = 'CRM_'.$componentName[1].'_Task';
       $componentClass::tasks();
       $taskName = $componentTasks[$this->_task];
@@ -183,13 +193,13 @@ FROM   {$this->_componentTable}
     else {
       $totalSelectedRecords = count($this->_componentIds);
     }
-    $this->assign('totalSelectedRecords', $totalSelectedRecords);
-    $this->assign('taskName', $taskName);
+    $this->set('totalSelectedRecords', $totalSelectedRecords);
+    $this->set('taskName', $taskName);
 
     // all records actions = save a search
     if (($values['radio_ts'] == 'ts_all') || ($this->_task == CRM_Contact_Task::SAVE_SEARCH)) {
       $this->_selectAll = TRUE;
-      $this->assign('totalSelectedRecords', $this->get('rowCount'));
+      $this->set('totalSelectedRecords', $this->get('rowCount'));
     }
 
     $this->set('componentIds', $this->_componentIds);
@@ -229,14 +239,6 @@ FROM   {$this->_componentTable}
   public function buildQuickForm() {
     //export option
     $exportOptions = $mergeHousehold = $mergeAddress = array();
-    /*
-        $exportOptions[] = $this->createElement('radio',
-                                                         null, null,
-                                                         ts('Export PRIMARY fields'),
-                                                         self::EXPORT_ALL,
-                                                         array( 'onClick' => 'showMappingOption( );' ));
-        */
-
     $exportOptions[] = $this->createElement('radio',
       NULL, NULL,
       ts('Select fields for export'),
@@ -293,7 +295,7 @@ FROM   {$this->_componentTable}
   public function postProcess() {
     $exportOption = $this->controller->exportValue($this->_name, 'exportOption');
     $merge_same_address = $this->controller->exportValue($this->_name, 'merge_same_address');
-    $merge_same_address = $this->controller->exportValue($this->_name, 'merge_same_address');
+    $merge_same_household = $this->controller->exportValue($this->_name, 'merge_same_household');
 
     $submitted = $this->controller->exportValues();
     if (isset($submitted['mapping'])) {
