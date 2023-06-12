@@ -239,6 +239,7 @@ FROM   {$this->_componentTable}
   public function buildQuickForm() {
     //export option
     $exportOptions = $mergeHousehold = $mergeAddress = array();
+    $this->_exportMode = $this->get('exportMode');
     foreach(array('customHeader', 'taskName', 'totalSelectedRecords') as $name) {
       $this->assign($name, $this->get($name));
     }
