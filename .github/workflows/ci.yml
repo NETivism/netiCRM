@@ -249,7 +249,7 @@ jobs:
         run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/import.spec.js --reporter=list"
   notification:
     if: ${{ failure() }}
-    needs: test7
+    needs: [test7, test8, test8-d10]
     runs-on: ubuntu-latest
     steps:
       - name: Shorten sha
