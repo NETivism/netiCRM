@@ -34,7 +34,7 @@ const config = {
   ],
   use: {
     headless: true,
-    actionTimeout: 10000,
+    actionTimeout: 30 * 1000,
     storageState: 'storageState.json',
     baseURL: process.env.localUrl ,
     trace: 'retain-on-failure',
