@@ -36,7 +36,7 @@ class CRM_Utils_TypeTest extends CiviUnitTestCase {
   /**
    * @return array
    */
-  public function validateDataProvider() {
+  public static function validateDataProvider() {
     return array(
       array(10, 'Int', 10),
       array('145E+3', 'Int', NULL),
@@ -105,7 +105,7 @@ class CRM_Utils_TypeTest extends CiviUnitTestCase {
   /**
    * @return array
    */
-  public function escapeDataProvider() {
+  public static function escapeDataProvider() {
     return array(
       array(10, 'Int', 10),
       array('145E+3', 'Int', NULL),
