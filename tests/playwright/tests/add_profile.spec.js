@@ -356,9 +356,7 @@ test.describe.serial('Profile Editing', () => {
             await utils.clickElement(page, page.locator(element).first(), {exist: '#contact-summary'});
 
             /* check first name and last name */
-            element = '#page-title';
-            await utils.findElement(page, element);
-            await expect(page.locator(element), 'First Name and Last Name occur errors.').toHaveText(`${vars.first_name} ${vars.last_name}`);
+            await expect(page, `First Name and Last Name errors: ${vars.first_name} ${vars.last_name}"`).toHaveTitle(new RegExp('^' + `${vars.first_name} ${vars.last_name}`));
             await utils.print('First Name and Last Name correct.');
 
             /* check legal identifier */

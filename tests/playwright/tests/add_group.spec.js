@@ -65,7 +65,7 @@ test.describe.serial('Group Editing', () => {
             element = 'form#Basic input[value="Search"]';
             await utils.findElement(page, element);
             await utils.clickElement(page, page.locator(element));
-            await expect(page.locator('#page-title')).toHaveText('Add to Group: ' + vars.group_name);
+            await expect(page, `page title is not match "Add to Group: ${vars.group_name}"`).toHaveTitle(new RegExp('^Add to Group: ' + vars.group_name));
 
             /* select user that have email */
             element = '.selector';

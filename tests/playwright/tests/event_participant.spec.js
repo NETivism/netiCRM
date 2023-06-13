@@ -51,7 +51,7 @@ test.describe.serial('Participant Editing', () => {
             await utils.findElement(page, element);
             await locator.click();
             await expect(page.locator('#actions')).not.toHaveCount(0);
-            await expect(page.locator('#page-title')).toHaveText(event_title);
+            await expect(page, `page title is not match "${event_title}"`).toHaveTitle(new RegExp('^'+event_title));
             
         });
 
