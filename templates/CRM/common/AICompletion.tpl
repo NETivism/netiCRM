@@ -69,7 +69,7 @@ window.AICompletion = {
               <div class="netiaic-usage-info">
                 {ts}Your usage quota is <span class="usage-max">{$maxUsage}</span> times, currently used <span class="usage-current">{$currentUsage}</span>times.{/ts}
               </div>
-              <button class="netiaic-form-submit">{ts}Submit{/ts}</button>
+              <button type="button" class="netiaic-form-submit">{ts}Submit{/ts}</button>
             </div>
           </div>
         </div>

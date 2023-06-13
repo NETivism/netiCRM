@@ -24,7 +24,8 @@
         getTemplate: '/api/getTemplate',
         setTemplate: '/api/setTemplate',
         chat: '/api/chat',
-        setShare: '/api/setShare'
+        setShare: '/api/setShare',
+        devel: '/openai-stream/stream.php',
       };
 
   // Default configuration options
@@ -35,6 +36,25 @@
    * Private functions
    * ============================
    */
+
+  var renderID = function(str, len) {
+    var str = typeof str !== "undefined" ? str : "";
+    var len = typeof len !== "undefined" ? len : 10;
+    var allow = "abcdefghijklmnopqrstuvwxyz0123456789";
+    var output = "";
+
+    if (str) {
+      output = str + "-";
+    }
+
+    for (var i = 0; i < len; i++) {
+      output += allow.charAt(Math.floor(Math.random() * allow.length));
+    }
+
+    if (output) {
+      return output;
+    }
+  }
 
   var sendAjaxRequest = function(url, method, data, callback) {
     $.ajax({
@@ -217,13 +237,43 @@
       });
     },
 
-    sendPrompt: function() {
-      var data = {};
-      // TODO: Get prompt data from the form
+    createResponse: function(id, data, mode) {
+      let $container = AICompletion.prototype.container,
+          output = '';
 
-      sendAjaxRequest(endpoint.chat, 'POST', data, function(response) {
-        // TODO: Process and display the result based on the API response
-      });
+      if (!$container.find('.response[data-id="' + id + '"]').length) {
+        output = `<div data-id="${id}" class="response msg">
+          <div class="msg-avatar"><i class="zmdi zmdi-mood"></i></div>
+          <div class="msg-content speech-bubble speech-bubble-left">${data}</div>
+          </div>`;
+        $container.find('.netiaic-chat > .inner').append(output);
+      }
+      else {
+        if (mode == 'stream') {
+          $container.find('.response[data-id="' + id + '"] .msg-content').append(data);
+        }
+      }
+    },
+
+    sendPrompt: function() {
+      // TODO: Get prompt data from the form
+      let responseID = "response-" + renderID(),
+          evtSource = new EventSource(endpoint.devel, {
+            withCredentials: false,
+          });
+
+      evtSource.onmessage = (event) => {
+        if (event.data === '[DONE]' || event.data === '[ERR]') {
+          evtSource.close();
+        }
+        else {
+          let json = JSON.parse(event.data);
+
+          if (typeof json !== undefined && json.message.length) {
+            AICompletion.prototype.createResponse(responseID, json.message.replace(/\n/g, '<br>'), 'stream');
+          }
+        }
+      };
     },
 
     answerResponse: function(answer) {
@@ -296,11 +346,16 @@
       $promptContentCommand.on('hover', function() {
         $promptContentCommand.addClass(ACTIVE_CLASS);
       });
+
+      $('.netiaic-form-submit').on('click', function(e) {
+        e.preventDefault;
+        AICompletion.prototype.formSubmit();
+      });
     },
 
     formSubmit: function() {
       // TODO: need to handle related events after the form is sent
-
+      AICompletion.prototype.sendPrompt();
     },
 
     getDefaultData: function() {
