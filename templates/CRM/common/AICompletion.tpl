@@ -2,19 +2,23 @@
 <link rel="stylesheet" href="{$config->resourceBase}packages/AICompletion/AICompletion.css?v{$config->ver}">
 <style type="text/css" media="screen, print">@import url({$config->userFrameworkResourceURL}css/print.css);</style>
 {js src=packages/AICompletion/AICompletion.js group=999 weight=998 library=civicrm/civicrm-js-aicompletion}{/js}
+<!-- AICompletion files end -->
+
+<!-- Added global variable: AICompletion -->
 {literal}
 <script type="text/javascript">
-(function ($) {
-	$(function() {
-    // TODO: timeout is workaround
-    setTimeout(function() {
-      $(".netiaic-container:not(.is-initialized)").AICompletion();
-    }, 3000);
-	});
-})(cj);
+window.AICompletion = {
+  language: '{/literal}{$tsLocale}{literal}',
+  translation: {
+    'AI-generated Text Templates' : '{/literal}{ts}AI-generated Text Templates{/ts}{literal}',
+    'Saved Templates' : '{/literal}{ts}Saved Templates{/ts}{literal}',
+    'Community Recommendations' : '{/literal}{ts}Community Recommendations{/ts}{literal}',
+    'Warning! Applying this template will clear your current settings. Proceed with the application?' : '{/literal}{ts}Warning! Applying this template will clear your current settings. Proceed with the application?{/ts}{literal}'
+  }
+};
 </script>
 {/literal}
-<!-- AICompletion files end -->
+
 <!-- AICompletion HTML start -->
 <div class="netiaic-container">
   <div class="netiaic-inner">
@@ -74,3 +78,16 @@
   </div>
 </div>
 <!-- AICompletion HTML end -->
+
+{literal}
+<script type="text/javascript">
+(function ($) {
+  $(function() {
+    // TODO: timeout is workaround
+    setTimeout(function() {
+      $('.netiaic-container:not(.is-initialized)').AICompletion();
+    }, 3000);
+  });
+})(cj);
+</script>
+{/literal}

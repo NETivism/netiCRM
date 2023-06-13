@@ -179,7 +179,7 @@
         let templateData = defaultData.templates_default[0];
 
         if (!AICompletion.prototype.formIsEmpty()) {
-          if (confirm('系統將清除您目前的設定並套用此範本')) {
+          if (confirm(ts['Warning! Applying this template will clear your current settings. Proceed with the application?'])) {
             AICompletion.prototype.applyTemplateToForm({ data: templateData });
           }
         }
@@ -190,19 +190,17 @@
 
       $container.on('click', '.use-other-templates', function(e) {
         e.preventDefault();
-        let modalTitle = '電子報生成範本',
+        let modalTitle = ts['AI-generated Text Templates'],
             modalCallbacks = {},
             modalContent = `<div id="use-other-templates-tabs" class="modal-tabs">
             <ul class="modal-tabs-menu">
-              <li><a href="#use-other-templates-tabs-1">紀錄範本</a></li>
-              <li><a href="#use-other-templates-tabs-2">社群推薦</a></li>
+              <li><a href="#use-other-templates-tabs-1">${ts['Saved Templates']}</a></li>
+              <li><a href="#use-other-templates-tabs-2">${ts['Community Recommendations']}</a></li>
             </ul>
             <div class="modal-tabs-panels">
               <div id="use-other-templates-tabs-1" class="modal-tabs-panel">
-                <p>紀錄範本的清單</p>
               </div>
               <div id="use-other-templates-tabs-2" class="modal-tabs-panel">
-                <p>社群推薦的範本清單</p>
               </div>
             </div>
           </div>`;
@@ -352,6 +350,7 @@
       defaultData = this.getDefaultData();
 
       AICompletion.prototype.container = $container;
+      ts = window.AICompletion.translation;
       this.formUI();
       this.modal.init();
       this.useTemplates();
