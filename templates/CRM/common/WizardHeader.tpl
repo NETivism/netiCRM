@@ -23,21 +23,22 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
-{if count( $wizard.steps ) > 1}
+{if $wizard.steps|is_array}
+{if $wizard.steps|@count > 1}
 {* wizard.style variable is passed by some Wizards to allow alternate styling for progress "bar". *}
 <div id="wizard-steps">
-    {if count( $wizard.steps ) < 5}
+    {if $wizard.steps|@count < 5}
         {assign var="stepType" value="small"}
     {/if}
-    {if count( $wizard.steps ) >= 5 && count( $wizard.steps ) < 7}
+    {if $wizard.steps|@count >= 5 && $wizard.steps|@count < 7}
         {assign var="stepType" value="medium"}
     {/if}
-    {if count( $wizard.steps ) >= 7}
+    {if $wizard.steps|@count >= 7}
         {assign var="stepType" value="big"}
     {/if}
    <ol class="wizard-bar{if $wizard.style.barClass}-{$wizard.style.barClass}{/if} {if $stepType}wizard-bar-{$stepType}{/if}">
     {section name=step loop=$wizard.steps}
-        {if count ( $wizard.steps ) > 5 }
+        {if $wizard.steps|@count > 5 }
             {* truncate step titles so header isn't too wide *}
             {assign var="title" value=$wizard.steps[step].title|crmFirstWord}
         {else}
@@ -94,4 +95,5 @@
     <h2 class="wizard-title">{$wizard.currentStepTitle} {ts 1=$wizard.currentStepNumber 2=$wizard.stepCount}(step %1 of %2){/ts}</h2>
 {/if}
 {/if}
+{/if}{*test array*}
 

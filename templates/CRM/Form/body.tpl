@@ -33,7 +33,7 @@
   <div>{$form.hidden}</div>
 {/if}
 
-{if ! $suppressForm and count($form.errors) gt 0}
+{if ! $suppressForm && $form.errors|is_array && $form.errors|@count }
    <div class="messages crm-error">
    		<div class="icon red-zmdi zmdi-alert-circle"></div>
 	   {ts}Please correct the following errors in the form fields below:{/ts}

@@ -82,7 +82,7 @@
                     {assign var="showTarget" value=$showTarget+1}
                 {/if}
             {/foreach}
-            {if count($row.target_contact_name) > 5}({ts}more{/ts}){/if}
+            {if $row.target_contact_name|is_array && $row.target_contact_name|@count > 5}({ts}more{/ts}){/if}
         {/if}
         </td>
 
@@ -97,7 +97,7 @@
                     {assign var="showAssignee" value=$showAssignee+1}
                 {/if}
             {/foreach}
-            {if count($row.assignee_contact_name) > 5}({ts}more{/ts}){/if}
+            {if  $row.assignee_contact_name|is_array && $row.assignee_contact_name|@count > 5}({ts}more{/ts}){/if}
         {/if}	
         </td>
 
