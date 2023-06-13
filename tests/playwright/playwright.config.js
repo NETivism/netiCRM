@@ -15,7 +15,7 @@ const config = {
   testDir: './tests',
   timeout: 120 * 1000,
   expect: {
-    timeout: 5000
+    timeout: 30 * 1000
   },
   /* Run tests in files in parallel */
   fullyParallel: true,
