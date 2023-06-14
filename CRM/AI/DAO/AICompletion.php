@@ -245,7 +245,6 @@ class CRM_AI_DAO_AICompletion extends CRM_Core_DAO
         'contact_id' => array(
           'name' => 'contact_id',
           'type' => CRM_Utils_Type::T_INT,
-          'required' => true,
           'FKClassName' => 'CRM_Contact_DAO_Contact',
         ) ,
         'is_template' => array(
