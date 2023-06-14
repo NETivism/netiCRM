@@ -21,17 +21,20 @@ cj(document).ready(function($){
     var decryptExcelOption = ".crm-miscellaneous-form-block-decryptExcelOption input[type=radio]";
     var decryptExcelPwd = ".crm-miscellaneous-form-block-decryptExcelPwd";
     if ($(decryptSelectExcelOption).val() != 2) {
-        $(".crm-miscellaneous-form-block-decryptExcelPwd").hide();
+        $(decryptExcelPwd).hide();
+        $("#decryptExcelPwd").prop('required', false);
     }
     else {
-        console.log("nin");
-        $(".crm-miscellaneous-form-block-decryptExcelPwd").show();
+        $(decryptExcelPwd).show();
+         $("#decryptExcelPwd").prop('required', true);
     }
     $(decryptExcelOption).click( function() {
         if ( $(this).val() == "2" ) {
             $(decryptExcelPwd).show();
+            $("#decryptExcelPwd").prop('required', true);
         } else {
             $(decryptExcelPwd).hide();
+            $("#decryptExcelPwd").prop('required', false);
         }
     });
 });
