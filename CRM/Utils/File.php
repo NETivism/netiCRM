@@ -488,37 +488,11 @@ HTACCESS;
 
   /**
    * Encrypt Xlsx content or file.
-   * @param String $filePath file absolute path in the file system, If null, get content from output buffer (ob_get_clean)
+   * @param String $filePath file absolute path in the file system
    * 
    * @return Void
    */
   public static function encryptXlsxFile($filePath = NULL) {
-    // When $filePath is null, encrypt content from output buffer.
-    if (empty($filePath)) {
-      // Use content from output buffer.
-      $content = ob_get_clean();
-
-      if (!empty($content)) {
-        // Save content to temp dir.
-        $tmpfname = tempnam(sys_get_temp_dir(), 'exportXlsx_').'.xlsx';
-        file_put_contents($tmpfname, $content);
-  
-        // Encrypt temp file.
-        CRM_Utils_File::encryptXlsxFile($tmpfname);
-  
-        // Print encrypted content to output buffer and remove temp file. 
-        readfile($tmpfname);
-        unlink($tmpfname);
-      }
-      else {
-        $msg = "[xlsx encrypt]: output buffer doesn't have content.";
-        CRM_Core_Error::debug_log_message($msg);
-      }
-
-      // End of this behavior.
-      return;
-    }
-    // $filePath is not null situation:
     $config = CRM_Core_Config::singleton();
     $outputFile = $filePath;
     if (!$config->decryptExcelOption) {

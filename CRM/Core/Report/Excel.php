@@ -277,15 +277,6 @@ class CRM_Core_Report_Excel {
       ->addRows($rows)
       ->close();
     if ($download) {
-      $filePath = $config->uploadDir.$fileName;
-      // If temp file exists, encrypt file.
-      if (file_exists($filePath)) {
-        CRM_Utils_File::encryptXlsxFile($filePath);
-      }
-      else {
-        // if file doesn't exist, then encrypt output buffer content.
-        CRM_Utils_File::encryptXlsxFile();
-      }
       CRM_Utils_System::civiExit();
     }
     else {

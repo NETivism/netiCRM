@@ -1214,9 +1214,6 @@ class CRM_Export_BAO_Export {
     }
     else {
       self::writeCSVFromTable($exportTempTable, $headerRows, $sqlColumns, $exportMode, $fileName);
-      if (strstr($fileName, '.xlsx')) {
-        CRM_Utils_File::encryptXlsxFile();
-      }
       CRM_Utils_System::civiExit();
     }
   }
