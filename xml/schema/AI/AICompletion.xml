@@ -31,7 +31,7 @@
        <table>civicrm_contact</table>
        <key>id</key>
        <add>4.0</add>
-       <onDelete>CASCADE</onDelete>
+       <onDelete>SET NULL</onDelete>
   </foreignKey>
 
   <field>
@@ -39,7 +39,7 @@
     <type>boolean</type>
     <default>0</default>
     <required>true</required>
-    <comment>Mark 1 when this AI completion is saved as a template</comment>
+    <comment>Set to 1 to indicate that this AI completion is saved as a template.</comment>
     <add>4.0</add>
   </field>
 
@@ -107,15 +107,16 @@
     <type>varchar</type>
     <length>64</length>
     <required>true</required>
-    <comment>Name of table where item being referenced is stored.</comment>
+    <comment>Name of the function where the referenced item is used in.</comment>
     <add>4.0</add>
   </field>
 
   <field>
     <name>field</name>
-    <type>text</type>
+    <type>varchar</type>
+    <length>64</length>
     <required>true</required>
-    <comment>Other field</comment>
+    <comment>Additional data field to be used in AI completion.</comment>
     <add>4.0</add>
   </field>
 
@@ -131,7 +132,7 @@
     <name>post_data</name>
     <type>text</type>
     <required>true</required>
-    <comment>the data API post</comment>
+    <comment>Data to be sent as a POST request to the AI.</comment>
     <add>4.0</add>
   </field>
 
@@ -139,14 +140,13 @@
     <name>return_data</name>
     <type>text</type>
     <required>true</required>
-    <comment>the data API return</comment>
+    <comment>Data returned from the AI server.</comment>
     <add>4.0</add>
   </field>
 
   <field>
     <name>prompt_token</name>
-    <type>varchar</type>
-    <length>255</length>
+    <type>int unsigned</type>
     <required>true</required>
     <comment>the token for prompt</comment>
     <add>4.0</add>
@@ -154,8 +154,7 @@
 
   <field>
     <name>completion_token</name>
-    <type>varchar</type>
-    <length>255</length>
+    <type>int unsigned</type>
     <required>true</required>
     <comment>the token for completion</comment>
     <add>4.0</add>

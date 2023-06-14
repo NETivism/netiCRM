@@ -93,7 +93,7 @@ class CRM_AI_DAO_AICompletion extends CRM_Core_DAO
    */
   public $contact_id;
   /**
-   * Mark 1 when this AI completion is saved as a template
+   * Set to 1 to indicate that this AI completion is saved as a template.
    *
    * @var boolean
    */
@@ -141,15 +141,15 @@ class CRM_AI_DAO_AICompletion extends CRM_Core_DAO
    */
   public $prompt;
   /**
-   * Name of table where item being referenced is stored.
+   * Name of the function where the referenced item is used in.
    *
    * @var string
    */
   public $component;
   /**
-   * Other field
+   * Additional data field to be used in AI completion.
    *
-   * @var text
+   * @var string
    */
   public $field;
   /**
@@ -159,13 +159,13 @@ class CRM_AI_DAO_AICompletion extends CRM_Core_DAO
    */
   public $temperature;
   /**
-   * the data API post
+   * Data to be sent as a POST request to the AI.
    *
    * @var text
    */
   public $post_data;
   /**
-   * the data API return
+   * Data returned from the AI server.
    *
    * @var text
    */
@@ -173,13 +173,13 @@ class CRM_AI_DAO_AICompletion extends CRM_Core_DAO
   /**
    * the token for prompt
    *
-   * @var string
+   * @var int unsigned
    */
   public $prompt_token;
   /**
    * the token for completion
    *
-   * @var string
+   * @var int unsigned
    */
   public $completion_token;
   /**
@@ -308,9 +308,11 @@ class CRM_AI_DAO_AICompletion extends CRM_Core_DAO
         ) ,
         'field' => array(
           'name' => 'field',
-          'type' => CRM_Utils_Type::T_TEXT,
+          'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Field') ,
           'required' => true,
+          'maxlength' => 64,
+          'size' => CRM_Utils_Type::BIG,
         ) ,
         'temperature' => array(
           'name' => 'temperature',
@@ -332,19 +334,15 @@ class CRM_AI_DAO_AICompletion extends CRM_Core_DAO
         ) ,
         'prompt_token' => array(
           'name' => 'prompt_token',
-          'type' => CRM_Utils_Type::T_STRING,
+          'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Prompt Token') ,
           'required' => true,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
         ) ,
         'completion_token' => array(
           'name' => 'completion_token',
-          'type' => CRM_Utils_Type::T_STRING,
+          'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Completion Token') ,
           'required' => true,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
         ) ,
         'status_id' => array(
           'name' => 'status_id',
