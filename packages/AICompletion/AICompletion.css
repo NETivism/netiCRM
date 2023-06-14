@@ -43,6 +43,43 @@
 }
 .netiaic-command {
   display: none;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  margin: 0 0 70px 10px;
+  max-width: 90%;
+  border: 1px solid #ddd;
+  background: #fff;
+  border-radius: 5px;
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 15px 25px, rgba(0, 0, 0, 0.05) 0px 5px 10px;
+}
+.netiaic-command .inner {
+  padding: 10px;
+}
+.netiaic-command .netiaic-command-list {
+  margin: 0;
+  list-style: none;
+}
+.netiaic-command-list li {
+  padding: 5px;
+}
+.netiaic-command-list li:hover {
+  background: rgba(0,0,0,.05);
+}
+.netiaic-command-list a:not(.get-org-info),
+.netiaic-command-list a:not(.get-org-info) i {
+  color: #3F51B5;
+}
+.netiaic-command-item-desc {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+  overflow: hidden;
+  font-size: .9375rem;
+  color: #999;
+}
+.netiaic-command-list li:hover .netiaic-command-item-desc {
+  color: #777;
 }
 .netiaic-command.is-active {
   display: block;

@@ -53,13 +53,15 @@ window.AICompletion = {
                 <div class="crm-form-elem crm-form-textarea">
                   <textarea name="netiaic-prompt-content" placeholder="{ts}Please enter the fundraising copy you would like AI to generate.{/ts}" class="netiaic-prompt-content-textarea form-textarea"></textarea>
                   <div class="netiaic-prompt-content-command netiaic-command">
-                    <ul class="netiaic-command-list">
-                      <li data-name="org_info" class="netiaic-command-item">
-                        <a class="get-org-info" href="#">{ts}Click to insert organization intro.{/ts}</a>
-                        <a href="#">({ts}Edit{/ts}<i class="zmdi zmdi-edit"></i>)</a>
-                        <div class="netiaic-command-item-desc"><!-- TODO: smarty var --></div>
-                      </li>
-                    </ul>
+                    <div class="inner">
+                      <ul class="netiaic-command-list">
+                        <li data-name="org_info" class="netiaic-command-item">
+                          <a class="get-org-info" href="#">{ts}Click to insert organization intro.{/ts}</a>
+                          <a href="#" target="_blank">({ts}Edit{/ts}<i class="zmdi zmdi-edit"></i>)</a> <!-- TODO: Need to change to correct URL -->
+                          <div class="netiaic-command-item-desc"> <!-- TODO: smarty var --> </div>
+                        </li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
               </div>
