@@ -87,7 +87,7 @@ class CRM_AI_DAO_AICompletion extends CRM_Core_DAO
    */
   public $id;
   /**
-   * FK to Contact ID
+   * FK to civicrm_contact
    *
    * @var int unsigned
    */

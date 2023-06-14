@@ -23,7 +23,7 @@
     <name>contact_id</name>
     <type>int unsigned</type>
     <required>true</required>
-    <comment>FK to Contact ID</comment>
+    <comment>FK to civicrm_contact</comment>
     <add>4.0</add>
   </field>
   <foreignKey>
@@ -31,7 +31,6 @@
        <table>civicrm_contact</table>
        <key>id</key>
        <add>4.0</add>
-       <onDelete>SET NULL</onDelete>
   </foreignKey>
 
   <field>
