@@ -1515,6 +1515,7 @@ WHERE  contribution_id = {$this->_id}
         $this->_params['contact_id'] = $this->_contactID;
         $this->_params['contribution_id'] = $contribution->id;
         $this->_params['is_test'] = $contribution->is_test;
+        $this->_params['contribution_page_id'] = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $contribution->id, 'contribution_page_id');
         $sendReceipt = CRM_Contribute_Form_AdditionalInfo::emailReceipt($this, $this->_params, TRUE);
       }
 
@@ -1708,6 +1709,7 @@ WHERE  contribution_id = {$this->_id}
       if ($contribution->id && CRM_Utils_Array::value('is_email_receipt', $formValues)) {
         $formValues['contact_id'] = $this->_contactID;
         $formValues['contribution_id'] = $contribution->id;
+        $formValues['contribution_page_id'] = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $contribution->id, 'contribution_page_id');
         $formValues['is_test'] = CRM_Core_DAO::getFieldValue("CRM_Contribute_DAO_Contribution", $contribution->id, 'is_test');
         $sendReceipt = CRM_Contribute_Form_AdditionalInfo::emailReceipt($this, $formValues);
       }
