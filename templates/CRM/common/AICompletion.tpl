@@ -1,6 +1,5 @@
 <!-- AICompletion files start -->
 <link rel="stylesheet" href="{$config->resourceBase}packages/AICompletion/AICompletion.css?v{$config->ver}">
-<style type="text/css" media="screen, print">@import url({$config->userFrameworkResourceURL}css/print.css);</style>
 {js src=packages/AICompletion/AICompletion.js group=999 weight=998 library=civicrm/civicrm-js-aicompletion}{/js}
 <!-- AICompletion files end -->
 
