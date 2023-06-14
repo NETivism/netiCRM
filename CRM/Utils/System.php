@@ -463,7 +463,7 @@ class CRM_Utils_System {
 
   /**
    * Check hook exists in module list
-   * @return string
+   * @return array
    * @access public
    * @static
    */
