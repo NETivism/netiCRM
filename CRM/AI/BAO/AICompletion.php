@@ -8,8 +8,10 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
     COMPLETION_MODEL = 'gpt-3.5-turbo',
     // default max tokens base on model
     COMPLETION_MAX_TOKENS = 4096,
+
+    TEMPLATE_LIST_ROW_LIMIT = 10,
     
-  // Action:
+    // Action:
     CHAT_COMPLETION = 1,
     GET_TOKEN = 2;
   
@@ -67,9 +69,10 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
    *
    * @return array
    */
-  public static function chat($params = NULL) {
+  public static function chat($params = array()) {
     // Prepare follow parameters will be used.
     self::$_action = self::CHAT_COMPLETION;
+    // TODO: validate -> validateChatParams()
     $params = $params ? $params : $_POST;
     // $defaults = [];
     // $args = self::retrieve($params, $defaults);
@@ -116,6 +119,10 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
     return $responseData;
   }
 
+  private static function validateChatParams($params) {
+    return $params;
+  }
+
   /**
    * Usage information
    *
@@ -160,7 +167,7 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
     }
     if (empty($data['contact_id'])) {
       $session = CRM_Core_Session::singleton();
-      $data['contact_id'] = $session->get('userID') ? $session->get('userID') : 1;
+      $data['contact_id'] = $session->get('userID') ? $session->get('userID') : 1; // TODO: don't use 1
     }
     CRM_Utils_Hook::pre($op, 'AICompletion', $id, $data);
     $aicompletion = new CRM_AI_DAO_AICompletion();
@@ -224,4 +231,75 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
     // format result
     return $result;
   }
+
+  /**
+   * Retrieve AICompletion Template object(array) by AICompletion ID.
+   * @param Int $acId The AICompletion ID in DB row.
+   * 
+   * @return FALSE|array AICompletion data row.
+   */
+  public static function getTemplate($acId) {
+    $params = array(
+      'id' => $acId,
+    );
+    $objectArray = [];
+    self::retrieve($params, $objectArray);
+    return $objectArray;
+  }
+
+  /**
+   * Retrieve certain quantity of aicompletion data rows which 'is_template' = 1.
+   * @param Int $offset The offset of retrieve rows
+   * 
+   * @return array AICompletion data rows.
+   */
+  public static function getTemplateList($offset = 0) {
+    $sql = "SELECT * FROM civicrm_aicompletion WHERE is_template = 1";
+    $sql .= " LIMIT ".self::TEMPLATE_LIST_ROW_LIMIT;
+    if ($offset) {
+      $sql .= " OFFSET ".$offset;
+    }
+    $dao = CRM_Core_DAO::executeQuery($sql);
+    $return = [];
+    while ($dao->fetch()) {
+      $daoArray = [];
+      CRM_Core_DAO::storeValues($dao, $daoArray);
+      $return[] = $daoArray;
+    }
+    return $return;
+  }
+
+  /** 
+   * Set is_template value to 1 for AICompletion data by ID.
+   * @param Int $acId The ID of AiCompletion data.
+   * 
+   * @return Int If value has been changed, return 1, otherwise return 0.  
+   */
+  public static function setTemplate($acId) {
+    $returnValue = 0;
+    $is_template = CRM_Core_DAO::getFieldValue('CRM_AI_DAO_AICompletion', $acId, 'is_template');
+    if ($is_template == 0) {
+      $result = CRM_Core_DAO::setFieldValue('CRM_AI_DAO_AICompletion', $acId, 'is_template', 1);
+      $returnValue = $result ? 1 : 0;
+    }
+    return $returnValue;
+  }
+
+  /**
+   * Set is_share_with_others value to 1 for AICompletion data by ID.
+   * @param Int $acId The ID of AiCompletion data.
+   * 
+   * @return Int If value has been changed, return 1, otherwise return 0.  
+   */
+  public static function setShare($acId) {
+    $returnValue = 0;
+    $is_template = CRM_Core_DAO::getFieldValue('CRM_AI_DAO_AICompletion', $acId, 'is_share_with_others');
+    if ($is_template == 0) {
+      $result = CRM_Core_DAO::setFieldValue('CRM_AI_DAO_AICompletion', $acId, 'is_share_with_others', 1);
+      $returnValue = $result ? 1 : 0;
+    }
+    return $returnValue;
+  }
+
+
 }
