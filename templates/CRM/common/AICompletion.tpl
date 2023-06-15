@@ -73,7 +73,7 @@ window.AICompletion = {
               <div class="netiaic-usage-info">
                 {ts}Your usage limit is <span class="usage-max">{$maxUsage}</span> times, currently used <span class="usage-current">{$currentUsage}</span> times.{/ts}
               </div>
-              <button type="button" class="netiaic-form-submit">
+              <button type="button" class="shine-btn netiaic-form-submit">
                 <i class="zmdi zmdi-mail-send"></i>
                 <span class="text">{ts}Submit{/ts}</span>
                 <span class="loader"></span>
