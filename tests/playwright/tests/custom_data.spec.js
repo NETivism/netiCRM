@@ -4,7 +4,7 @@ const utils = require('./utils.js');
 /** @type {import('@playwright/test').Page} */
 let page;
 var locator, element;
-const wait_secs = 2000;
+const wait_secs = 800;
 
 var vars = {
     id: utils.makeid(5),
@@ -225,7 +225,7 @@ test.describe.serial('Custom Data', () => {
     });
 
     test('Check Preview and Add Contact', async () => {
-
+        test.slow();
         /* Step 4: Check Preview. */
         await test.step('Check Preview.', async () =>{
 
@@ -545,7 +545,7 @@ test.describe.serial('Custom Data', () => {
                         await utils.selectOption(locator, {index: 0});
                     }
                 } catch (error) {
-                    await utils.print('No select option.');
+                    await utils.print(element+': No select option.');
                 }
             }
 
