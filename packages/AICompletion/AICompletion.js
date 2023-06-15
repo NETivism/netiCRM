@@ -9,7 +9,10 @@
 
   const INIT_CLASS = 'is-initialized',
         ACTIVE_CLASS = 'is-active',
+        ERROR_CLASS = 'is-error',
         SENT_CLASS = 'is-sent',
+        FINISH_CLASS = 'is-finished',
+        COPY_CLASS = 'is-copied',
         MFP_ACTIVE_CLASS = 'mfp-is-active';
 
   /**
@@ -245,7 +248,10 @@
       if (!$container.find('.response[data-id="' + id + '"]').length) {
         output = `<div data-id="${id}" class="response msg">
           <div class="msg-avatar"><i class="zmdi zmdi-mood"></i></div>
-          <div class="msg-content speech-bubble speech-bubble-left">${data}</div>
+          <div class="msg-content">${data}</div>
+          <ul class='msg-tools'>
+            <li><button type="button" title="${ts['Copy']}" class="copy-btn handle-btn"><i class="zmdi zmdi-copy"></i> ${ts['Copy']}</button></li>
+          </ul>
           </div>`;
         $container.find('.netiaic-chat > .inner').append(output);
       }
@@ -254,42 +260,6 @@
           $container.find('.response[data-id="' + id + '"] .msg-content').append(data);
         }
       }
-    },
-
-    sendPrompt: function() {
-      // TODO: Get prompt data from the form
-      let responseID = "response-" + renderID(),
-          evtSource = new EventSource(endpoint.devel, {
-            withCredentials: false,
-          }),
-          $container = AICompletion.prototype.container,
-          $submit = $container.find('.netiaic-form-submit');
-
-      if (!$submit.hasClass(ACTIVE_CLASS)) {
-        $submit.addClass(ACTIVE_CLASS).prop('disabled', true);
-      }
-
-      evtSource.onmessage = (event) => {
-        if (event.data === '[DONE]' || event.data === '[ERR]') {
-          evtSource.close();
-
-          if ($submit.hasClass(ACTIVE_CLASS)) {
-            $submit.removeClass(ACTIVE_CLASS).prop('disabled', false);
-          }
-
-          if (!$submit.hasClass(SENT_CLASS)) {
-            $submit.addClass(SENT_CLASS).find('.text').text(ts['Try Again']);
-          }
-        }
-        else {
-          let json = JSON.parse(event.data);
-
-          if (typeof json !== "undefined" && json.message.length) {
-            let message = json.message.replace(/\n/g, '<br>');
-            AICompletion.prototype.createResponse(responseID, message, 'stream');
-          }
-        }
-      };
     },
 
     answerResponse: function(answer) {
@@ -372,7 +342,82 @@
 
     formSubmit: function() {
       // TODO: need to handle related events after the form is sent
-      AICompletion.prototype.sendPrompt();
+      let responseID = "response-" + renderID(),
+          evtSource = new EventSource(endpoint.devel, {
+            withCredentials: false,
+          }),
+          $container = AICompletion.prototype.container,
+          $submit = $container.find('.netiaic-form-submit'),
+          $response;
+
+      if (!$submit.hasClass(ACTIVE_CLASS)) {
+        $submit.addClass(ACTIVE_CLASS).prop('disabled', true);
+      }
+
+      evtSource.onmessage = (event) => {
+        if (event.data === '[DONE]' || event.data === '[ERR]') {
+          evtSource.close();
+
+          if ($submit.hasClass(ACTIVE_CLASS)) {
+            $submit.removeClass(ACTIVE_CLASS).prop('disabled', false);
+          }
+
+          if (!$submit.hasClass(SENT_CLASS)) {
+            $submit.addClass(SENT_CLASS).find('.text').text(ts['Try Again']);
+          }
+
+          if (event.data === '[DONE]') {
+            if (!$response.hasClass(FINISH_CLASS)) {
+              $response.addClass(FINISH_CLASS);
+            }
+          }
+
+          if (event.data === '[ERR]') {
+            if (!$response.hasClass(ERROR_CLASS)) {
+              $response.addClass(ERROR_CLASS);
+            }
+          }
+
+          if ($response.length) {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+              try {
+                $response.on('click', '.copy-btn', function(event) {
+                  event.preventDefault();
+                  let $copyBtn = $(this),
+                      $response = $copyBtn.closest('.response'),
+                      $msgContent = $response.find('.msg-content'),
+                      copyText = '';
+
+                  if ($msgContent.length) {
+                    copyText = $msgContent.html().replace(/<br>/g, '\n');
+                  }
+
+                  copyText = copyText.trim();
+                  navigator.clipboard.writeText(copyText);
+                  $copyBtn.addClass(COPY_CLASS);
+
+                  setTimeout(function() {
+                    $copyBtn.removeClass(COPY_CLASS);
+                  }, 3000);
+                });
+              } catch (error) {
+                console.error('Failed to copy text to clipboard:', error);
+              }
+            } else {
+              console.error('Clipboard API is not supported in this browser.');
+            }
+          }
+        }
+        else {
+          let json = JSON.parse(event.data);
+
+          if (typeof json !== "undefined" && json.message.length) {
+            let message = json.message.replace(/\n/g, '<br>');
+            AICompletion.prototype.createResponse(responseID, message, 'stream');
+            $response = $container.find('.response[data-id="' + responseID + '"]');
+          }
+        }
+      };
     },
 
     getDefaultData: function() {

@@ -7,10 +7,38 @@
   --loader-color: #ddd;
   --loader-color-highlight: #aaa;
 }
+.netiaic-container .copy-btn.is-copied::after {
+  content: "\f26b";
+  margin-left: 5px;
+  font-family: 'Material-Design-Iconic-Font';
+  font-size: 20px;
+  color: #CDDC39;
+}
 .netiaic-chat {
   min-height: 200px;
   padding: 20px;
   background: #a0aab3;
+}
+.netiaic-chat .msg-tools {
+  display: none;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.netiaic-chat .msg-tools .handle-btn {
+  margin: 0;
+  padding: 0;
+  line-height: 20px;
+  color: #fff;
+  background: none;
+}
+.netiaic-chat .msg-tools .handle-btn i {
+  color: #fff;
+}
+.netiaic-chat .msg.is-finished .msg-tools,
+.netiaic-chat .msg.is-error .msg-tools {
+  display: flex;
+  gap: 5px 10px;
 }
 .netiaic-use-tpl {
   display: flex;

@@ -9,6 +9,7 @@
 window.AICompletion = {
   language: '{/literal}{$tsLocale}{literal}',
   translation: {
+    'Copy': '{/literal}{ts}Copy{/ts}{literal}',
     'Submit': '{/literal}{ts}Submit{/ts}{literal}',
     'Try Again': '{/literal}{ts}Try Again{/ts}{literal}',
     'AI-generated Text Templates': '{/literal}{ts}AI-generated Text Templates{/ts}{literal}',
