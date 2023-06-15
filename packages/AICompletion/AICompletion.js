@@ -9,6 +9,7 @@
 
   const INIT_CLASS = 'is-initialized',
         ACTIVE_CLASS = 'is-active',
+        SENT_CLASS = 'is-sent',
         MFP_ACTIVE_CLASS = 'mfp-is-active';
 
   /**
@@ -260,17 +261,32 @@
       let responseID = "response-" + renderID(),
           evtSource = new EventSource(endpoint.devel, {
             withCredentials: false,
-          });
+          }),
+          $container = AICompletion.prototype.container,
+          $submit = $container.find('.netiaic-form-submit');
+
+      if (!$submit.hasClass(ACTIVE_CLASS)) {
+        $submit.addClass(ACTIVE_CLASS).prop('disabled', true);
+      }
 
       evtSource.onmessage = (event) => {
         if (event.data === '[DONE]' || event.data === '[ERR]') {
           evtSource.close();
+
+          if ($submit.hasClass(ACTIVE_CLASS)) {
+            $submit.removeClass(ACTIVE_CLASS).prop('disabled', false);
+          }
+
+          if (!$submit.hasClass(SENT_CLASS)) {
+            $submit.addClass(SENT_CLASS).find('.text').text(ts['Try Again']);
+          }
         }
         else {
           let json = JSON.parse(event.data);
 
-          if (typeof json !== undefined && json.message.length) {
-            AICompletion.prototype.createResponse(responseID, json.message.replace(/\n/g, '<br>'), 'stream');
+          if (typeof json !== "undefined" && json.message.length) {
+            let message = json.message.replace(/\n/g, '<br>');
+            AICompletion.prototype.createResponse(responseID, message, 'stream');
           }
         }
       };
@@ -295,10 +311,11 @@
       });
     },
 
-    formUI: function() {
+    formUiOperation: function() {
       let $container = AICompletion.prototype.container,
-          $promptContent = $container.find(".netiaic-prompt-content-textarea"),
-          $promptContentCommand = $container.find(".netiaic-prompt-content-command");
+          $promptContent = $container.find('.netiaic-prompt-content-textarea'),
+          $promptContentCommand = $container.find('.netiaic-prompt-content-command'),
+          $submit = $container.find('.netiaic-form-submit');
 
       // Populate the select dropdowns with options from defaultData.filters
       for (let selectName in defaultData.filters) {
@@ -347,7 +364,7 @@
         $promptContentCommand.addClass(ACTIVE_CLASS);
       });
 
-      $('.netiaic-form-submit').on('click', function(e) {
+      $submit.on('click', function(e) {
         e.preventDefault;
         AICompletion.prototype.formSubmit();
       });
@@ -406,7 +423,7 @@
 
       AICompletion.prototype.container = $container;
       ts = window.AICompletion.translation;
-      this.formUI();
+      this.formUiOperation();
       this.modal.init();
       this.useTemplates();
       $container.addClass(INIT_CLASS);

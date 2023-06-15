@@ -2,6 +2,10 @@
 
 :root {
   --nsp-width: 480px;
+  --loader-size: 10px;
+  --loader-dot-gap: 24px;
+  --loader-color: #ddd;
+  --loader-color-highlight: #aaa;
 }
 .netiaic-chat {
   min-height: 200px;
@@ -84,6 +88,58 @@
 .netiaic-command.is-active {
   display: block;
 }
+.crm-container .netiaic-form-submit {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 110px;
+  min-height: 40px;
+  color: #fff;
+  background: #3F51B5;
+}
+.crm-container .netiaic-form-submit:hover,
+.crm-container .netiaic-form-submit:focus {
+ background: #5C6BC0;
+}
+.crm-container .netiaic-form-submit:active {
+  background: #303F9F;
+}
+.crm-container .netiaic-form-submit .loader {
+  width: var(--loader-size);
+  height: var(--loader-size);
+  border-radius: 50%;
+  display: none;
+  position: relative;
+  background: var(--loader-color);
+  box-shadow: calc(-1 * var(--loader-dot-gap)) 0 var(--loader-color), var(--loader-dot-gap) 0 var(--loader-color);
+  box-sizing: border-box;
+  animation: sendLoader 2s linear infinite;
+}
+@keyframes sendLoader {
+  33% {
+    background: var(--loader-color);
+    box-shadow: calc(-1 * var(--loader-dot-gap)) 0 var(--loader-color-highlight), var(--loader-dot-gap) 0 var(--loader-color);
+  }
+  66% {
+    background: var(--loader-color-highlight);
+    box-shadow: calc(-1 * var(--loader-dot-gap)) 0 var(--loader-color), var(--loader-dot-gap) 0 var(--loader-color);
+  }
+  100% {
+    background: var(--loader-color);
+    box-shadow: calc(-1 * var(--loader-dot-gap)) 0 var(--loader-color), var(--loader-dot-gap) 0 var(--loader-color-highlight);
+  }
+}
+.crm-container .netiaic-form-submit i {
+  color: #fff;
+}
+.crm-container .netiaic-form-submit.is-active i,
+.crm-container .netiaic-form-submit.is-active .text {
+  display: none;
+}
+.crm-container .netiaic-form-submit.is-active .loader {
+  display: block;
+}
+
 .nsp-container.nme-setting-panels .nsp-content {
   padding: 0;
 }

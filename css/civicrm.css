@@ -4675,17 +4675,19 @@ ul.ui-sortable {
   padding: 4px 5px;
 }
 /* readonly & disabled */
-.crm-container input[disabled], 
-.crm-container textarea[disabled], 
+.crm-container input[disabled],
+.crm-container button[disabled],
+.crm-container textarea[disabled],
 .crm-container select[disabled],
-.crm-container input[disabled]:focus, 
-.crm-container textarea[disabled]:focus, 
+.crm-container input[disabled]:focus,
+.crm-container textarea[disabled]:focus,
 .crm-container select[disabled]:focus,
-.crm-container input[readonly], 
-.crm-container textarea[readonly], 
+.crm-container input[readonly],
+.crm-container button[readonly],
+.crm-container textarea[readonly],
 .crm-container select[readonly],
-.crm-container input[readonly]:focus, 
-.crm-container textarea[readonly]:focus, 
+.crm-container input[readonly]:focus,
+.crm-container textarea[readonly]:focus,
 .crm-container select[readonly]:focus
 {
   cursor: not-allowed !important;

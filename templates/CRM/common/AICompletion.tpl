@@ -9,10 +9,12 @@
 window.AICompletion = {
   language: '{/literal}{$tsLocale}{literal}',
   translation: {
-    'AI-generated Text Templates' : '{/literal}{ts}AI-generated Text Templates{/ts}{literal}',
-    'Saved Templates' : '{/literal}{ts}Saved Templates{/ts}{literal}',
-    'Community Recommendations' : '{/literal}{ts}Community Recommendations{/ts}{literal}',
-    'Warning! Applying this template will clear your current settings. Proceed with the application?' : '{/literal}{ts}Warning! Applying this template will clear your current settings. Proceed with the application?{/ts}{literal}'
+    'Submit': '{/literal}{ts}Submit{/ts}{literal}',
+    'Try Again': '{/literal}{ts}Try Again{/ts}{literal}',
+    'AI-generated Text Templates': '{/literal}{ts}AI-generated Text Templates{/ts}{literal}',
+    'Saved Templates': '{/literal}{ts}Saved Templates{/ts}{literal}',
+    'Community Recommendations': '{/literal}{ts}Community Recommendations{/ts}{literal}',
+    'Warning! Applying this template will clear your current settings. Proceed with the application?': '{/literal}{ts}Warning! Applying this template will clear your current settings. Proceed with the application?{/ts}{literal}'
   }
 };
 </script>
@@ -70,7 +72,11 @@ window.AICompletion = {
               <div class="netiaic-usage-info">
                 {ts}Your usage quota is <span class="usage-max">{$maxUsage}</span> times, currently used <span class="usage-current">{$currentUsage}</span>times.{/ts}
               </div>
-              <button type="button" class="netiaic-form-submit">{ts}Submit{/ts}</button>
+              <button type="button" class="netiaic-form-submit">
+                <i class="zmdi zmdi-mail-send"></i>
+                <span class="text">{ts}Submit{/ts}</span>
+                <span class="loader"></span>
+              </button>
             </div>
           </div>
         </div>
