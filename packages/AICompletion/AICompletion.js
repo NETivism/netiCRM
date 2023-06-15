@@ -30,6 +30,9 @@
         chat: '/api/chat',
         setShare: '/api/setShare',
         devel: '/openai-stream/stream.php',
+      },
+      chatData = {
+        messages: []
       };
 
   // Default configuration options
@@ -86,6 +89,19 @@
   AICompletion.prototype = {
     constructor: AICompletion,
     container: null,
+
+    // TODO: For development and testing only, need to be removed afterwards
+    devTestUse: function() {
+      let $container = AICompletion.prototype.container;
+
+      if ($container.find('.usage-max').length) {
+        $container.find('.usage-max').text(defaultData.usage.max);
+      }
+
+      if ($container.find('.usage-current').length) {
+        $container.find('.usage-current').text(defaultData.usage.current);
+      }
+    },
 
     modal: {
       initialized: false,
@@ -275,10 +291,15 @@
       });
     },
 
-    checkQuotaUsage: function() {
-      sendAjaxRequest(endpoint.quota, 'POST', null, function(response) {
-        // TODO: Process the quota usage information based on the API response
-      });
+    usageUpdate: function() {
+      let $container = AICompletion.prototype.container,
+          $usageCurrent = $container.find('.usage-current');
+
+      if ($usageCurrent.length) {
+        let usageCurrent = parseInt($usageCurrent.text(), 10);
+        usageCurrent++;
+        $usageCurrent.text(usageCurrent);
+      }
     },
 
     formUiOperation: function() {
@@ -341,9 +362,8 @@
     },
 
     formSubmit: function() {
-      // TODO: need to handle related events after the form is sent
       let responseID = "response-" + renderID(),
-          evtSource = new EventSource(endpoint.devel, {
+          evtSource = new EventSource(endpoint.devel, { // TODO: Need to be replaced with a real endpoint
             withCredentials: false,
           }),
           $container = AICompletion.prototype.container,
@@ -415,6 +435,19 @@
             let message = json.message.replace(/\n/g, '<br>');
             AICompletion.prototype.createResponse(responseID, message, 'stream');
             $response = $container.find('.response[data-id="' + responseID + '"]');
+
+            if (chatData.messages.hasOwnProperty(responseID)) {
+              if (!chatData.messages[responseID].used) {
+                AICompletion.prototype.usageUpdate();
+              }
+            }
+            else {
+              chatData.messages[responseID] = {
+                used: true
+              }
+
+              AICompletion.prototype.usageUpdate();
+            }
           }
         }
       };
@@ -427,8 +460,8 @@
       data = {
         'org_info': '本組織成立於 19xx 年，致力於環境保育與自然生態導覽，為了這塊土地的...',
         'usage': {
-          'max': 10,
-          'used': 3
+          'max': 1000,
+          'current': 3
         },
         'templates_default': [
           {
@@ -468,6 +501,7 @@
 
       AICompletion.prototype.container = $container;
       ts = window.AICompletion.translation;
+      this.devTestUse(); // TODO: For development and testing only, need to be removed afterwards
       this.formUiOperation();
       this.modal.init();
       this.useTemplates();

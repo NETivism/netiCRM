@@ -71,7 +71,7 @@ window.AICompletion = {
             </div>
             <div class="netiaic-form-footer">
               <div class="netiaic-usage-info">
-                {ts}Your usage quota is <span class="usage-max">{$maxUsage}</span> times, currently used <span class="usage-current">{$currentUsage}</span>times.{/ts}
+                {ts}Your usage limit is <span class="usage-max">{$maxUsage}</span> times, currently used <span class="usage-current">{$currentUsage}</span> times.{/ts}
               </div>
               <button type="button" class="netiaic-form-submit">
                 <i class="zmdi zmdi-mail-send"></i>
