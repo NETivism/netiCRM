@@ -7,8 +7,8 @@ const site_name = 'netiCRM';
 
 const url_ary = [
     {title:'Administer CiviCRM', url:'/civicrm/admin?reset=1'},
-    {title:'CiviCRM Home', url:'/civicrm/dashboard'},
-    {title:'CiviCRM Home', url:'/civicrm/civicrm/admin/configtask?reset=1'},
+    {title:'CiviCRM Home', url:'/civicrm/dashboard?reset=1'},
+    {title:'Configuration Checklist', url:'/civicrm/civicrm/admin/configtask?reset=1'},
     {title:'Synchronize Users to Contacts', url:'/civicrm/admin/synchUser?reset=1'},
     {title:'Find Contacts', url:'/civicrm/contact/search?reset=1'},
     {title:'New Individual', url:'/civicrm/contact/add?reset=1&ct=Individual'},
@@ -90,22 +90,23 @@ test.describe.serial('Page output correct test', () => {
 
     var i = 0;
     for(let obj of url_ary){
-        var url = obj.url;
-        var full_title = obj.title + ' | ' + site_name;
+        let url = obj.url;
+        let full_title = obj.title + ' | ' + site_name;
         i += 1;
 
-        test(`Check page output ${i} - ${obj.title}`, async () => {
-            
-            await test.step(`"${full_title}" should match the page title and have no errors`, async() => {
-                
-                await page.goto(url);
-                await expect(page, `page title is not match "${full_title}"`).toHaveTitle(full_title);
-                await expect(page.locator('.error-ci'), 'an error occurred in the page').toHaveCount(0);
-            
-            });
+        (function(url, full_title) {
+          test(`Check page output ${i} - ${obj.title}`, async () => {
 
-        });
-        
+              await test.step(`"${full_title}" should match the page title and have no errors`, async() => {
+
+                  await page.goto(url);
+                  await expect(page, `page title is not match "${full_title}"`).toHaveTitle(full_title);
+                  await expect(page.locator('.error-ci'), 'No error occurred in the page').toHaveCount(0);
+
+              });
+
+          })
+        })(url, full_title);
     }
 
 });
