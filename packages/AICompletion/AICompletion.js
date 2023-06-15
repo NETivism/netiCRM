@@ -22,7 +22,7 @@
    */
 
   var defaultData = {},
-      ts = {}, // TODO: need to get translation string comparison table
+      ts = {},
       endpoint = { // TODO: Need to change to real endpoint, refer to CRM/AI/Page/AJAX.php
         getTemplateList: '/api/getTemplateList',
         getTemplate: '/api/getTemplate',
@@ -45,10 +45,10 @@
    */
 
   var renderID = function(str, len) {
-    var str = typeof str !== "undefined" ? str : "";
-    var len = typeof len !== "undefined" ? len : 10;
-    var allow = "abcdefghijklmnopqrstuvwxyz0123456789";
-    var output = "";
+    var str = typeof str !== "undefined" ? str : "",
+        len = typeof len !== "undefined" ? len : 10,
+        allow = "abcdefghijklmnopqrstuvwxyz0123456789",
+        output = "";
 
     if (str) {
       output = str + "-";
@@ -163,12 +163,6 @@
       }
     },
 
-    getDefaultTemplate: function() {
-      sendAjaxRequest(endpoint.getDefaultTemplate, 'POST', null, function(response) {
-        // TODO: Process and fill the data according to the API response
-      });
-    },
-
     getTemplateList: function(page) {
       sendAjaxRequest(endpoint.getTemplateList, 'POST', { page: page }, function(response) {
         // TODO: Process the list of templates according to the data returned by the API
@@ -214,8 +208,8 @@
       let $container = AICompletion.prototype.container,
           modal = AICompletion.prototype.modal;
 
-      $container.on('click', '.use-default-template', function(e) {
-        e.preventDefault();
+      $container.on('click', '.use-default-template', function(event) {
+        event.preventDefault();
         let templateData = defaultData.templates_default[0];
 
         if (!AICompletion.prototype.formIsEmpty()) {
@@ -228,8 +222,8 @@
         }
       });
 
-      $container.on('click', '.use-other-templates', function(e) {
-        e.preventDefault();
+      $container.on('click', '.use-other-templates', function(event) {
+        event.preventDefault();
         let modalTitle = ts['AI-generated Text Templates'],
             modalCallbacks = {},
             modalContent = `<div id="use-other-templates-tabs" class="modal-tabs">
@@ -278,13 +272,9 @@
       }
     },
 
-    answerResponse: function(answer) {
-      // TODO: Display the AI response on the interface
-    },
-
     recommendTemplate: function() {
       // TODO: Create a modal dialog for recommending Template based on the functional requirements
-      var data = {};
+      let data = {};
 
       sendAjaxRequest(endpoint.setShare, 'POST', data, function(response) {
         // TODO: Process and display the result based on the API response
@@ -343,8 +333,8 @@
       });
 
       $promptContentCommand.find('[data-name="org_info"] .netiaic-command-item-desc').html(defaultData.org_info);
-      $promptContentCommand.on('click', '.get-org-info', function(e) {
-        e.preventDefault;
+      $promptContentCommand.on('click', '.get-org-info', function(event) {
+        event.preventDefault;
 
         if ($promptContent.val() === '') {
           $promptContent.val(defaultData.org_info);
@@ -355,8 +345,8 @@
         $promptContentCommand.addClass(ACTIVE_CLASS);
       });
 
-      $submit.on('click', function(e) {
-        e.preventDefault;
+      $submit.on('click', function(event) {
+        event.preventDefault;
         AICompletion.prototype.formSubmit();
       });
     },
@@ -497,14 +487,22 @@
 
     init: function() {
       var $container = $(this.element);
-      defaultData = this.getDefaultData();
 
+      defaultData = this.getDefaultData();
       AICompletion.prototype.container = $container;
+
+      // Get translation string comparison table
       ts = window.AICompletion.translation;
-      this.devTestUse(); // TODO: For development and testing only, need to be removed afterwards
-      this.formUiOperation();
+
+      // TODO: For development and testing only, need to be removed afterwards
+      this.devTestUse();
+
+      // Implement and install main features and functions
       this.modal.init();
+      this.formUiOperation();
       this.useTemplates();
+
+      // Finally, add class to mark the initialization
       $container.addClass(INIT_CLASS);
     }
   };
