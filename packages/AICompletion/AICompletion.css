@@ -6,7 +6,37 @@
   --loader-dot-gap: 24px;
   --loader-color: #ddd;
   --loader-color-highlight: #aaa;
+  --shine-degree: 120deg;
+  --shine-color: rgba(255, 255, 255, 0.2);
+  --shine-effect: linear-gradient(
+    var(--shine-degree),
+    transparent,
+    var(--shine-color),
+    transparent
+  );
+  --shine-transition: all 0.65s ease-in-out;
 }
+.shine-btn {
+  position: relative;
+  overflow: hidden;
+}
+.shine-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: var(--shine-effect);
+  transition: var(--shine-transition);
+}
+.shine-btn:hover {
+  box-shadow: var(--btn-shadow);
+}
+.shine-btn:hover::before {
+  left: 100%;
+}
+
 .netiaic-container .copy-btn.is-copied::after {
   content: "\f26b";
   margin-left: 5px;
