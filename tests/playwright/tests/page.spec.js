@@ -8,7 +8,7 @@ const site_name = 'netiCRM';
 const url_ary = [
     {title:'Administer CiviCRM', url:'/civicrm/admin?reset=1'},
     {title:'CiviCRM Home', url:'/civicrm/dashboard?reset=1'},
-    {title:'Configuration Checklist', url:'/civicrm/civicrm/admin/configtask?reset=1'},
+    {title:'Configuration Checklist', url:'/civicrm/admin/configtask?reset=1'},
     {title:'Synchronize Users to Contacts', url:'/civicrm/admin/synchUser?reset=1'},
     {title:'Find Contacts', url:'/civicrm/contact/search?reset=1'},
     {title:'New Individual', url:'/civicrm/contact/add?reset=1&ct=Individual'},
