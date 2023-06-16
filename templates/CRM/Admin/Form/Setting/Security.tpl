@@ -1,9 +1,5 @@
-<div id="help">
-    {ts}{/ts}
-</div>
 <div class="crm-block crm-form-block crm-security-form-block">
   <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>
-  {if $admin}
   <fieldset>
     <legend>{ts}Trusted Host{/ts}</legend>
     <table class="form-layout">
@@ -50,6 +46,5 @@
     </script>
     {/literal}
   </fieldset>
-  {/if}
   <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
 </div>
