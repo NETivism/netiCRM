@@ -2442,6 +2442,7 @@ CREATE TABLE civicrm_aicompletion (
      id int unsigned NOT NULL AUTO_INCREMENT  COMMENT 'AICompletion ID',
      contact_id int unsigned    COMMENT 'FK to civicrm_contact',
      is_template tinyint NOT NULL  DEFAULT 0 COMMENT 'Set to 1 to indicate that this AI completion is saved as a template.',
+     template_title varchar(128)    COMMENT 'Save as template title.',
      tone_style varchar(64) NOT NULL   COMMENT 'AI tone style',
      ai_role varchar(64) NOT NULL   COMMENT 'AI role',
      context text NOT NULL   COMMENT 'AI context',

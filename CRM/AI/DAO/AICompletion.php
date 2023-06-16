@@ -99,6 +99,12 @@ class CRM_AI_DAO_AICompletion extends CRM_Core_DAO
    */
   public $is_template;
   /**
+   * Save as template title.
+   *
+   * @var string
+   */
+  public $template_title;
+  /**
    * AI tone style
    *
    * @var string
@@ -251,6 +257,13 @@ class CRM_AI_DAO_AICompletion extends CRM_Core_DAO
           'name' => 'is_template',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'required' => true,
+        ) ,
+        'template_title' => array(
+          'name' => 'template_title',
+          'type' => CRM_Utils_Type::T_STRING,
+          'title' => ts('Template Title') ,
+          'maxlength' => 128,
+          'size' => CRM_Utils_Type::HUGE,
         ) ,
         'tone_style' => array(
           'name' => 'tone_style',
