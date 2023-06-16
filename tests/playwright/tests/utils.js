@@ -19,6 +19,12 @@ async function findElement(page, element){
     await print('Find an element matching: ' + element);
 }
 
+async function findElementByLabel(page, label) {
+    const element = await page.getByLabel(label);
+    await print('Find an element matching: ' + label);
+    return element;
+}
+
 async function fillInput(locator, text_input){
     await expect(locator).toBeEnabled();
     await locator.click();
@@ -80,5 +86,5 @@ function wait(ms){
 }
 
 module.exports = {
-    makeid, print, findElement, fillInput, checkInput, selectOption, clickElement, selectDate, wait
+    makeid, print, findElement, findElementByLabel, fillInput, checkInput, selectOption, clickElement, selectDate, wait
 }

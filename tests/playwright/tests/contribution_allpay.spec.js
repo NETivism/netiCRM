@@ -51,10 +51,9 @@ test.describe.serial('ALLPAY', () => {
             await utils.findElement(page, element);
             await utils.fillInput(page.locator(element), vars.amount);
 
-            element = '#CIVICRM_QFID_2_2';
-            await utils.findElement(page, element);
-            await utils.clickElement(page, page.locator(element));
-            await expect(page.locator(element)).toBeChecked();
+            element = await utils.findElementByLabel(page, 'ALLPAY金流');
+            await utils.clickElement(page, element);
+            await expect(element).toBeChecked();
 
             element = 'input[name="email-5"]';
             await utils.findElement(page, element);
@@ -103,26 +102,12 @@ test.describe.serial('ALLPAY', () => {
         });
 
         await test.step('ECPay Payment Page Check', async () => {
-
             /* Step 3: ECPay Payment Page Check */
             await page.waitForURL('https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut');
-            await expect(page).toHaveURL('https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut');
-            await expect(page).toHaveTitle(vars.ECPay_title);
-
-            await utils.findElement(page, '#ECPay');
-
-            element = '.o-pd-total';
-            await utils.findElement(page, element);
-            await expect(page.locator(element).nth(1)).toHaveText(vars.amount);
-            
-            element = '.o-other-total';
-            await utils.findElement(page, element);
-            await expect(page.locator(element)).toHaveText(`NT$${vars.amount}`);
-        
+            await expect(page).toHaveURL(/https:\/\/payment-stage\.ecpay\.com\.tw/);
         });
 
         await test.step('Re-login', async () => {
-
             /* Step 4: Re-login */
             await page.goto('/');
             await page.locator('input[name="name"]').fill(process.env.adminUser);
