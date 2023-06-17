@@ -83,7 +83,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
     }
     $params = array(
       'version' => 3,
-      'class_name' => 'Payment_ALLPAY',
+      'payment_processor_type' => 'ALLPAY',
       'is_test' => $this->_is_test,
     );
     $result = civicrm_api('PaymentProcessor', 'get', $params);
