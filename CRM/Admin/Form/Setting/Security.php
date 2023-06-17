@@ -14,20 +14,18 @@ class CRM_Admin_Form_Setting_Security extends CRM_Admin_Form_Setting {
     if (CRM_Core_Permission::check('administer neticrm')) {
       $this->assign('admin', TRUE);
     }
-    else {
-      $this->addTextarea('trustedHostsPatterns', ts('Trusted Host Settings'), array(
-        'placeholder' => ts('Example'). ":" . $_SERVER['HTTP_HOST']
-      ));
+    $this->addTextarea('trustedHostsPatterns', ts('Trusted Host Settings'), array(
+      'placeholder' => ts('Example'). ":" . $_SERVER['HTTP_HOST']
+    ));
 
-      $this->addElement('textarea', 'cspRules', ts('Content Security Policy'));
-      $this->addElement('textarea', 'cspExcludePath', ts('Exclude path'));
+    $this->addElement('textarea', 'cspRules', ts('Content Security Policy'));
+    $this->addElement('textarea', 'cspExcludePath', ts('Exclude path'));
 
-      $config = CRM_Core_Config::singleton();
-      if ($config->defaultCSP) {
-        $this->assign('defaultCSP', $config->defaultCSP);
-      }
-      $this->assign('admin', FALSE);
+    $config = CRM_Core_Config::singleton();
+    if ($config->defaultCSP) {
+      $this->assign('defaultCSP', $config->defaultCSP);
     }
+    $this->assign('admin', FALSE);
 
     parent::buildQuickForm();
     $this->addFormRule(array('CRM_Admin_Form_Setting_Security', 'formRule'));
