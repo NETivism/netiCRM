@@ -223,7 +223,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
       'contribution_page_id' => $this->_page_id,
       'payment_processor_id' => $this->_processor['id'],
       'payment_instrument_id' => 1,
-      'created_date' => date('YmdHis', $now),
+      'created_date' => date('YmdHis', $now-60),
       'non_deductible_amount' => 0,
       'total_amount' => $amount,
       'currency' => 'TWD',
