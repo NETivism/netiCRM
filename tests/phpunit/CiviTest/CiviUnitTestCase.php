@@ -508,6 +508,22 @@ class CiviUnitTestCase extends CiviUnitTestBase {
     return $this->assertInternalType($expected, $actual, $message);
   }
 
+  function assertCustomValues($entityType, $entityId, $expectValues, $message = '') {
+    $entityValues = CRM_Core_BAO_CustomValueTable::getEntityValues($entityId, $entityType);
+    $actualValues = array();
+    foreach ($entityValues as $k => $v) {
+      if (isset($expectValues['custom_'.$k])) {
+        $actualValues['custom_'.$k] = $v;
+      }
+    }
+    foreach($expectValues as $k => $v) {
+      if (!strstr($k, 'custom_')) {
+        unset($expectValues[$k]);
+      }
+    }
+    $this->assertEquals($expectValues, $actualValues, $message);
+  }
+
   /**
    * Generic function to create Organisation, to be used in test cases
    *
@@ -2108,6 +2124,90 @@ AND    ( TABLE_NAME LIKE 'civicrm_value_%' )
       fwrite($file, json_encode($response, JSON_PRETTY_PRINT));
       fclose($file);
     }
+  }
+
+  /**
+   * Generate custom values to test case
+   *
+   * @param string $entityType
+   * @param string $format available value: plain, postProcess
+   * @return void
+   */
+  function customValueGenerate($entityType, $format = 'plain') {
+    $tree = CRM_Core_BAO_CustomGroup::getTree($entityType);
+    $generatedArray = array();
+    if (is_array($tree) && !empty($tree)) {
+      foreach($tree as $groupId => $group) {
+        if (is_numeric($groupId) && !empty($group['fields'])) {
+          foreach($group['fields'] as $fieldId => $field) {
+            $options = array();
+            if (!empty($field['option_group_id'])) {
+              $options = CRM_Core_OptionGroup::valuesByID($field['option_group_id']);
+            }
+            if (!empty($options)) {
+              $generatedArray['custom_'.$fieldId] = array_rand($options);
+            }
+            else {
+              $value = NULL;
+              switch($field['data_type']) {
+                case "String":
+                case "Memo":
+                  $value = CRM_Utils_String::createRandom(20);
+                  break;
+                case "Int":
+                  $value = mt_rand(10, 10000);
+                  break;
+                case "Float":
+                  $value = (float)mt_rand(10, 10000);
+                  break;
+                case "Boolean":
+                  $value = mt_rand(0, 1);
+                  break;
+                case "Money":
+                  $value = (float)mt_rand(10, 10000);
+                  break;
+                case "Date":
+                  $value = date('Ymd', time()-mt_rand(10000, 500000));
+                  break;
+                case "ContactReference":
+                  break;
+                case "StateProvince":
+                  $provinces = CRM_Core_PseudoConstant::stateProvince();
+                  $value = array_rand($provinces);
+                  break;
+                case "Country":
+                  $provinces = CRM_Core_PseudoConstant::country();
+                  $value = array_rand($provinces);
+                  break;
+                case "Link":
+                  $value = 'https://testexampledomain.com/'.CRM_Utils_String::createRandom(10);
+                  break;
+                case "File":
+                  $value = '';
+                  break;
+              }
+              $generatedArray['custom_'.$fieldId] = $value;
+            }
+          }
+        }
+      }
+    }
+    if ($format == 'postProcess') {
+      $customFields = array();
+      return CRM_Core_BAO_CustomField::postProcess($generatedArray, $customFields, NULL, NULL);
+    }
+    return $generatedArray;
+  }
+
+  function customValueUpdate($entityId, $values) {
+    $values['entityID'] = $entityId;
+    return CRM_Core_BAO_CustomValueTable::setValues($values);
+  }
+
+  function updateConfig($name, $value) {
+    $params = array($name => $value);
+    CRM_Core_BAO_ConfigSetting::add($params);
+    CRM_Core_Config::singleton(TRUE, TRUE);
   }
 
   public static function getDBConfig() {

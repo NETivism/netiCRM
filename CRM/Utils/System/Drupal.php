@@ -1053,7 +1053,10 @@ class CRM_Utils_System_Drupal {
 
   function languageNegotiationURL($url, $addLanguagePart = TRUE, $removeLanguagePart = FALSE) {
     // call method in Drupalx.php
-    return CRM_Core_Config::$_userSystem->versionalClass->languageNegotiationURL($url, $addLanguagePart, $removeLanguagePart);
+    if (method_exists(CRM_Core_Config::$_userSystem->versionalClass, 'languageNegotiationURL')) {
+      return CRM_Core_Config::$_userSystem->versionalClass->languageNegotiationURL($url, $addLanguagePart, $removeLanguagePart);
+    }
+    return '';
   }
 
   function notFound(){

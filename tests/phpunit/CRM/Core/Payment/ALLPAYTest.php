@@ -184,7 +184,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
   }
 
   function testRecurringPaymentNotify(){
-    $now = time()+60;
+    $now = time();
     $trxn_id = 'ut'.substr($now, -5);
     $amount = 111;
 
@@ -236,6 +236,8 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
       'contribution_status_id' => 2,
       'contribution_recur_id' => $recurring->id,
     );
+    $customValues = $this->customValueGenerate('Contribution', 'postProcess');
+    $contrib['custom'] = $customValues;
     $contribution = CRM_Contribute_BAO_Contribution::create($contrib, CRM_Core_DAO::$_nullArray);
     $this->assertNotEmpty($contribution->id, "In line " . __LINE__);
     $params = array(
@@ -332,6 +334,15 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
 
     $data = CRM_Core_DAO::singleValueQuery("SELECT data FROM civicrm_contribution_allpay WHERE cid = $cid2");
     $this->assertNotEmpty($data, "In line " . __LINE__);
+
+    // before doing third payment, change second payment custom field
+    $updatedCustomValues = $this->customValueGenerate('Contribution');
+    $updatedCustomValues['entityID'] = $cid2;
+    $updatedResult = $this->customValueUpdate($cid2, $updatedCustomValues);
+    $this->assertEquals(0, $updatedResult['is_error'], 'Simulate update custom values on second contribution of recurring in line '.__LINE__);
+    $this->updateConfig('recurringCopySetting', 'latest');
+    $config = CRM_Core_Config::singleton();
+    $this->assertEquals($config->recurringCopySetting, 'latest', 'Make sure the config updated to recurringCopySetting=latest in line '.__LINE__);
 
     // use CRM_Core_Payment_ALLPAY::recurCheck to insert third Payment_ALLPAY
     $gwsr2 = 222222;
@@ -430,6 +441,9 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
 
     $data = CRM_Core_DAO::singleValueQuery("SELECT data FROM civicrm_contribution_allpay WHERE cid = $cid3");
     $this->assertNotEmpty($data, "In line " . __LINE__);
+
+    $this->updateConfig('recurringCopySetting', 'earliest');
+    $this->assertCustomValues('Contribution', $cid3, $updatedCustomValues, 'Make sure custom values follow the config recurringCopySetting=latest in line '.__LINE__);
 
     // fail contribution from recurring
     $hash = substr(md5(implode('', (array)$order_base->ExecLog[3])), 0, 8);
