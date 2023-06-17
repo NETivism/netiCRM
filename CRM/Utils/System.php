@@ -213,9 +213,9 @@ class CRM_Utils_System {
       return;
     }
     else {
-      $defaultCSP = CRM_Core_Config::singleton()->cspRules;
+      $cspRules = CRM_Core_Config::singleton()->cspRules;
     }
-    $csp = new CRM_Utils_CSP($defaultCSP);
+    $csp = new CRM_Utils_CSP($cspRules);
     $csp = (string) $csp;
 
     $currentPath = self::currentPath();
