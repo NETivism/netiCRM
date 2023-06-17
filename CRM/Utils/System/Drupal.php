@@ -112,6 +112,13 @@ class CRM_Utils_System_Drupal {
       self::$_loaded = TRUE;
       self::$_version = $this->version;
     }
+    // drupal is bootstraped, but config reload
+    elseif (!is_object($this->versionalClass)){
+      $v = floor($this->version);
+      $v = empty($v) ? '' : $v;
+      $class = 'CRM_Utils_System_Drupal'.$v;
+      $this->versionalClass = new $class();
+    }
 
     // #27780, correct SameSite for chrome 80
     if (CRM_Utils_System::isSSL() && CRM_Utils_System::sameSiteCheck()) {
@@ -1053,10 +1060,7 @@ class CRM_Utils_System_Drupal {
 
   function languageNegotiationURL($url, $addLanguagePart = TRUE, $removeLanguagePart = FALSE) {
     // call method in Drupalx.php
-    if (method_exists(CRM_Core_Config::$_userSystem->versionalClass, 'languageNegotiationURL')) {
-      return CRM_Core_Config::$_userSystem->versionalClass->languageNegotiationURL($url, $addLanguagePart, $removeLanguagePart);
-    }
-    return '';
+    return CRM_Core_Config::$_userSystem->versionalClass->languageNegotiationURL($url, $addLanguagePart, $removeLanguagePart);
   }
 
   function notFound(){

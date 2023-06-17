@@ -115,7 +115,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
   }
 
   function testSinglePaymentNotify(){
-    $now = time();
+    $now = time() - 60;
     $trxn_id = 'ut'.substr($now, -5);
     $amount = 111;
 
@@ -237,7 +237,9 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
       'contribution_recur_id' => $recurring->id,
     );
     $customValues = $this->customValueGenerate('Contribution', 'postProcess');
-    $contrib['custom'] = $customValues;
+    if (!empty($customValues)) {
+      $contrib['custom'] = $customValues;
+    }
     $contribution = CRM_Contribute_BAO_Contribution::create($contrib, CRM_Core_DAO::$_nullArray);
     $this->assertNotEmpty($contribution->id, "In line " . __LINE__);
     $params = array(
@@ -339,7 +341,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
     $updatedCustomValues = $this->customValueGenerate('Contribution');
     $updatedCustomValues['entityID'] = $cid2;
     $updatedResult = $this->customValueUpdate($cid2, $updatedCustomValues);
-    $this->assertEquals(0, $updatedResult['is_error'], 'Simulate update custom values on second contribution of recurring in line '.__LINE__);
+    $this->assertEquals(0, $updatedResult['is_error'], 'Simulate update custom values on second contribution of recurring in line '.__LINE__.'. Error message: '. $updatedResult['error_message']);
     $this->updateConfig('recurringCopySetting', 'latest');
     $config = CRM_Core_Config::singleton();
     $this->assertEquals($config->recurringCopySetting, 'latest', 'Make sure the config updated to recurringCopySetting=latest in line '.__LINE__);
