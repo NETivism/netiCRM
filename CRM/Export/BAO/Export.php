@@ -1312,7 +1312,6 @@ class CRM_Export_BAO_Export {
           );
 
           readfile($errorFileName);
-          CRM_Utils_File::encryptXlsxFile();
         }
       }
     }
@@ -1834,7 +1833,14 @@ GROUP BY civicrm_primary_id ";
     $query = "SELECT * FROM $exportTempTable";
     $componentDetails = array();
     $writer = CRM_Core_Report_Excel::singleton('excel');
-    $writer->openToBrowser($fileName);
+    $config = CRM_Core_Config::singleton();
+    if ($config->decryptExcelOption == 0) {
+      $writer->openToBrowser($fileName);
+    }
+    else {
+      $filePath = $config->uploadDir.$fileName;
+      $writer->openToFile($filePath);
+    }
     $writer->addRow($headerRows);
 
     $dao = CRM_Core_DAO::executeQuery($query);
@@ -1859,6 +1865,13 @@ GROUP BY civicrm_primary_id ";
       $writer->addRow($row);
     }
     $writer->close();
+    if ($config->decryptExcelOption != 0) {
+      CRM_Utils_File::encryptXlsxFile($filePath);
+      header('Content-type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+      header('Content-Disposition: attachment; filename=' . $fileName);
+      header('Pragma: no-cache');
+      echo file_get_contents($filePath);
+    }
   }
 
   static function writeBatchFromTable($exportTempTable, $headerRows, $sqlColumns, $exportMode, $fileName) {
@@ -1986,7 +1999,16 @@ GROUP BY civicrm_primary_id ";
   }
 
   function batchFinish() {
-
+    global $civicrm_batch;
+    $batchData = $civicrm_batch->data;
+    $fileFullPath = $batchData['download']['file'];
+    $fileType = $batchData['download']['header'][0];
+    if (strstr($fileType, 'vnd.openxmlformats-officedocument.spreadsheetml.sheet')) {
+      $config = CRM_Core_Config::singleton();
+      if ($config->decryptExcelOption != 0) {
+        CRM_Utils_File::encryptXlsxFile($fileFullPath);
+      }
+    }
   }
 
   public static function audit($exportMode, $fileName, $totalNumRow, $fields) {
