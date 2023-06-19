@@ -110,7 +110,7 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
       $matches = preg_grep('/(^'.$columnMatch.'$)|(^\w+\::'.$columnMatch.'$)/iu', $this->_mapperFields);
 
       // If there is exactly one match, mark the column as used and return its key
-      if (count($matches) == 1) {
+      if (is_array($matches) && count($matches) == 1) {
         $columnKey = key($matches);
         $this->_fieldUsed[$columnKey] = TRUE;
         return $columnKey;
