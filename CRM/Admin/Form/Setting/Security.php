@@ -41,7 +41,13 @@ class CRM_Admin_Form_Setting_Security extends CRM_Admin_Form_Setting {
     }
     return $defaults;
   }
+
   public function postProcess() {
+    $decryptExcelOptions = array(
+      '0' => ts("No password set"),
+      '1' => ts("Use the email of the exporting user as the password"),
+      '2' => ts("Use a generic password")
+    );
     $params = $this->controller->exportValues($this->_name);
     $currentOption = CRM_Utils_Array::value('decryptExcelOption', $params);
     $currentPwd = CRM_Utils_Array::value('decryptExcelPwd', $params);
@@ -54,12 +60,20 @@ class CRM_Admin_Form_Setting_Security extends CRM_Admin_Form_Setting {
     $config = CRM_Core_Config::singleton();
     $previousOption = $config->decryptExcelOption;
     $previousPwd = $config->decryptExcelPwd;
+    $serial = CRM_REQUEST_TIME;
     if ($currentOption != $previousOption) {
-      $serial = CRM_REQUEST_TIME;
+      $optionChange = ts("Setting option")." ".ts("From")." ".$decryptExcelOptions[$previousOption]." ".ts("change to")." ".$decryptExcelOptions[$currentOption];
       $data = array(
-        'Reason' => 'user change decrypt excel option.',
+        'event' => ts("Export excel file encryption settings option Changed"),
+        'log' => $optionChange,
       );
-      CRM_Core_BAO_Log::audit($serial, 'civicrm.security', json_encode($data));
+      CRM_Core_BAO_Log::audit($serial, 'civicrm.security.option', json_encode($data));
+    }
+    if ($currentPwd !== $previousPwd) {
+      $data = array(
+        'event' => ts("Export excel file encryption settings password Changed"),
+      );
+      CRM_Core_BAO_Log::audit($serial, 'civicrm.security.pwd', json_encode($data));
     }
   }
 }
