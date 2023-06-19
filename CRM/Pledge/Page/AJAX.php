@@ -41,7 +41,7 @@ class CRM_Pledge_Page_AJAX {
   /**
    * Function for building Pledge Name combo box
    */
-  function pledgeName(&$config) {
+  static function pledgeName(&$config) {
     require_once 'CRM/Utils/Type.php';
 
     $getRecords = FALSE;
