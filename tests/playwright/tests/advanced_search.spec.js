@@ -10,7 +10,6 @@ var vars = {
     note: utils.makeid(5),
     contribution_source: utils.makeid(5),
     member_source: utils.makeid(5),
-    event_name: '無名額限制，填表完成送出'
 }
 
 
@@ -28,9 +27,28 @@ test.describe.serial('Advanced Search', () => {
 
     test.use({ storageState: 'storageState.json' });
 
-    test('Advanced Search', async () => {
 
-        /* Step 1: Fill Up Search Criteria. */
+    test('Advanced Search', async () => {
+        var event_title = '';
+        var event_id = '';
+
+        /* Step 1: Get event title for later use */
+        await test.step('Get Event Title.', async () => {
+            /* open Event Manage page */
+            await page.goto('civicrm/event/manage?reset=1');
+            await utils.wait(wait_secs);
+            await utils.findElement(page, 'form#SearchEvent');
+
+            let first_event = await page.locator('td.crm-event-title a').first();
+            event_title = await first_event.innerText();
+            await expect(event_title).not.toBe('');
+            let first_href = await first_event.getAttribute('href');
+            let found = first_href.match(/event=(\d+)/);
+            event_id = found[1];
+            await expect(event_id).not.toBe('');
+        });
+
+        /* Step 2: Fill Up Search Criteria. */
         await test.step('Fill Up Search Criteria.', async () =>{
 
             /* open Advanced Search page */
@@ -115,14 +133,14 @@ test.describe.serial('Advanced Search', () => {
             await utils.findElement(page, element);
 
             await utils.wait(wait_secs);
-            
+
             await page.locator(element).first().click();
-            await page.keyboard.type(vars.event_name);
+            await page.keyboard.type(event_title);
             await page.keyboard.press('Alt');
             await utils.wait(wait_secs);
             await page.keyboard.press('Enter');
             // Validate since the selected event value is 1
-            await expect(page.locator('#event_id')).toHaveValue('1');
+            await expect(page.locator('#event_id')).toHaveValue(event_id);
 
             /* Step 1-7: Apply search. */
 
