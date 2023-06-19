@@ -127,7 +127,6 @@ class CRM_Member_BAO_MembershipType extends CRM_Member_DAO_MembershipType {
     $status = array();
     $dependancy = array(
       'Membership' => 'membership_type_id',
-      'MembershipBlock' => 'membership_type_default',
     );
 
     foreach ($dependancy as $name => $field) {
