@@ -36,6 +36,8 @@ test.describe.serial('Create Membership Type', () => {
         await page.getByLabel('Name\n     *').fill(membership_type);
         await page.getByLabel('Membership Organization').fill(organization);
         await page.locator('#_qf_MembershipType_refresh').click();
+        await utils.wait(wait_secs);
+
         await page.locator('[name=contact_check]').first().check();
         await page.getByRole('combobox', { name: 'Contribution Type' }).selectOption('2');
         await page.locator('#duration_interval').click();
