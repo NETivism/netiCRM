@@ -43,6 +43,14 @@
   </field>
 
   <field>
+    <name>template_title</name>
+    <type>varchar</type>
+    <length>128</length>
+    <comment>Save as template title.</comment>
+    <add>4.0</add>
+  </field>
+
+  <field>
     <name>tone_style</name>
     <type>varchar</type>
     <length>64</length>
