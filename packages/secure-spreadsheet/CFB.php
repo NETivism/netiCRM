@@ -43,8 +43,8 @@ class CFB
 
     private function init_cfb(&$cfb, $opts = null)
     {
-        $o = $opts ?? new \stdClass();
-        $root = $o->root ?? "Root Entry";
+        $o = $opts ? $opts : new \stdClass();
+        $root = $o->root ? $o->root : "Root Entry";
         if (!isset($cfb->FullPaths)) $cfb->FullPaths = [];
         if (!isset($cfb->FileIndex)) $cfb->FileIndex = [];
         if (count($cfb->FullPaths) !== count($cfb->FileIndex)) throw new \Error("inconsistent CFB structure");
@@ -70,7 +70,7 @@ class CFB
         $this->rebuild_cfb($cfb);
     }
 
-    private function new_buf($sz): Buffer
+    private function new_buf($sz)
     {
         $o = ($this->new_raw_buf($sz));
         $this->prep_blob($o, 0);
@@ -177,7 +177,7 @@ class CFB
                 $elt['size'] = 0;
             }
             $elt['start'] = 0;
-            $elt['clsid'] = ($elt['clsid'] ?? $HEADER_CLSID);
+            $elt['clsid'] = ($elt['clsid'] ? $elt['clsid'] : $HEADER_CLSID);
             if ($i === 0) {
                 $elt['C'] = count($data) > 1 ? 1 : -1;
                 $elt['size'] = 0;
@@ -189,7 +189,7 @@ class CFB
                 $elt['R'] = $j >= count($data) ? -1 : $j;
                 $elt['type'] = 1;
             } else {
-                if ($this->dirname($cfb->FullPaths[$i + 1] ?? "") == $this->dirname($nm)) $elt['R'] = $i + 1;
+                if ($this->dirname($cfb->FullPaths[$i + 1] ? $cfb->FullPaths[$i + 1] : "") == $this->dirname($nm)) $elt['R'] = $i + 1;
                 $elt['type'] = 2;
             }
 
@@ -273,34 +273,7 @@ class CFB
 
         $this->rebuild_cfb($cfb);
 
-        $L = (function ($cfb) {
-            $mini_size = 0;
-            $fat_size = 0;
-            for ($i = 0; $i < count($cfb->FileIndex); ++$i) {
-                $file = $cfb->FileIndex[$i];
-                if (!isset($file['content'])) continue;
-                $flen = count($file['content']);
-
-                if ($flen > 0) {
-                    if ($flen < 0x1000) {
-                        $mini_size += ($flen + 0x3F) >> 6;
-                    } else {
-                        $fat_size += ($flen + 0x01FF) >> 9;
-                    }
-                }
-            }
-            $dir_cnt = (count($cfb->FullPaths) + 3) >> 2;
-            $mini_cnt = ($mini_size + 7) >> 3;
-            $mfat_cnt = ($mini_size + 0x7F) >> 7;
-            $fat_base = $mini_cnt + $fat_size + $dir_cnt + $mfat_cnt;
-            $fat_cnt = ($fat_base + 0x7F) >> 7;
-            $difat_cnt = $fat_cnt <= 109 ? 0 : ceil(($fat_cnt - 109) / 0x7F);
-            while ((($fat_base + $fat_cnt + $difat_cnt + 0x7F) >> 7) > $fat_cnt) $difat_cnt = ++$fat_cnt <= 109 ? 0 : ceil(($fat_cnt - 109) / 0x7F);
-            $L =  [1, $difat_cnt, $fat_cnt, $mfat_cnt, $dir_cnt, $fat_size, $mini_size, 0];
-            $cfb->FileIndex[0]['size'] = $mini_size << 6;
-            $L[7] = ($cfb->FileIndex[0]['start'] = $L[0] + $L[1] + $L[2] + $L[3] + $L[4] + $L[5]) + (($L[6] + 7) >> 3);
-            return $L;
-        })($cfb);
+        $L = self::calculateCompoundFileBinarySizes($cfb);
         $o = $this->new_buf($L[7] << 9);
         $i = 0;
         $T = 0; {
@@ -397,7 +370,7 @@ class CFB
             $o->write_shift(-4, $file['C']);
             if (!$file['clsid']) for ($j = 0; $j < 4; ++$j) $o->write_shift(4, 0);
             else $o->write_shift(16, $file['clsid'], "hex");
-            $o->write_shift(4, $file['state'] ?? 0);
+            $o->write_shift(4, $file['state'] ? $file['state'] : 0);
             $o->write_shift(4, 0);
             $o->write_shift(4, 0);
             $o->write_shift(4, 0);
@@ -429,5 +402,34 @@ class CFB
         while ($o->l < count($o)) $o->write_shift(1, 0);
 
         return $o;
+    }
+
+    static private function calculateCompoundFileBinarySizes($cfb) {
+        $mini_size = 0;
+        $fat_size = 0;
+        for ($i = 0; $i < count($cfb->FileIndex); ++$i) {
+            $file = $cfb->FileIndex[$i];
+            if (!isset($file['content'])) continue;
+            $flen = count($file['content']);
+
+            if ($flen > 0) {
+                if ($flen < 0x1000) {
+                    $mini_size += ($flen + 0x3F) >> 6;
+                } else {
+                    $fat_size += ($flen + 0x01FF) >> 9;
+                }
+            }
+        }
+        $dir_cnt = (count($cfb->FullPaths) + 3) >> 2;
+        $mini_cnt = ($mini_size + 7) >> 3;
+        $mfat_cnt = ($mini_size + 0x7F) >> 7;
+        $fat_base = $mini_cnt + $fat_size + $dir_cnt + $mfat_cnt;
+        $fat_cnt = ($fat_base + 0x7F) >> 7;
+        $difat_cnt = $fat_cnt <= 109 ? 0 : ceil(($fat_cnt - 109) / 0x7F);
+        while ((($fat_base + $fat_cnt + $difat_cnt + 0x7F) >> 7) > $fat_cnt) $difat_cnt = ++$fat_cnt <= 109 ? 0 : ceil(($fat_cnt - 109) / 0x7F);
+        $L =  [1, $difat_cnt, $fat_cnt, $mfat_cnt, $dir_cnt, $fat_size, $mini_size, 0];
+        $cfb->FileIndex[0]['size'] = $mini_size << 6;
+        $L[7] = ($cfb->FileIndex[0]['start'] = $L[0] + $L[1] + $L[2] + $L[3] + $L[4] + $L[5]) + (($L[6] + 7) >> 3);
+        return $L;
     }
 }
