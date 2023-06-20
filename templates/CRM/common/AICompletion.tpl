@@ -12,10 +12,15 @@ window.AICompletion = {
     'Copy': '{/literal}{ts}Copy{/ts}{literal}',
     'Submit': '{/literal}{ts}Submit{/ts}{literal}',
     'Try Again': '{/literal}{ts}Try Again{/ts}{literal}',
+    'Role': '{/literal}{ts}Role{/ts}{literal}',
+    'Tone Style': '{/literal}{ts}Tone Style{/ts}{literal}',
+    'Content': '{/literal}{ts}Content{/ts}{literal}',
     'AI-generated Text Templates': '{/literal}{ts}AI-generated Text Templates{/ts}{literal}',
     'Saved Templates': '{/literal}{ts}Saved Templates{/ts}{literal}',
     'Community Recommendations': '{/literal}{ts}Community Recommendations{/ts}{literal}',
-    'Warning! Applying this template will clear your current settings. Proceed with the application?': '{/literal}{ts}Warning! Applying this template will clear your current settings. Proceed with the application?{/ts}{literal}'
+    'Save As New Template': '{/literal}{ts}Save As New Template{/ts}{literal}',
+    'Recommend': '{/literal}{ts}Recommend{/ts}{literal}',
+    'Warning! Applying this template will clear your current settings. Proceed with the application?': '{/literal}{ts}Warning! Applying this template will clear your current settings. Proceed with the application?{/ts}{literal}',
   }
 };
 </script>
@@ -45,7 +50,7 @@ window.AICompletion = {
                 </div>
               </div>
               <div class="netiaic-prompt-tone-section crm-section form-item">
-                <div class="label"><label for="first_name">{ts}Tone style{/ts}</label></div>
+                <div class="label"><label for="first_name">{ts}Tone Style{/ts}</label></div>
                 <div class="edit-value content">
                   <div class="crm-form-elem crm-form-select">
                     <select name="netiaic-prompt-tone" class="netiaic-prompt-tone-select form-select" data-placeholder="{ts}Please enter or select the desired writing style (e.g., casual).{/ts}"><option></option></select>

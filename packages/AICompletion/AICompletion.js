@@ -44,6 +44,10 @@
    * ============================
    */
 
+  var isObject = function(variable) {
+    return typeof variable === 'object' && variable !== null;
+  }
+
   var renderID = function(str, len) {
     var str = typeof str !== "undefined" ? str : "",
         len = typeof len !== "undefined" ? len : 10,
@@ -83,7 +87,7 @@
     this.element = element;
     this.settings = $.extend({}, defaultOptions, options);
     this.init();
-  };
+  }
 
   // Plugin methods and functionality
   AICompletion.prototype = {
@@ -251,23 +255,60 @@
       });
     },
 
-    createResponse: function(id, data, mode) {
+    createMessage: function(id, data, type, mode) {
       let $container = AICompletion.prototype.container,
+          msg = '',
           output = '';
 
-      if (!$container.find('.response[data-id="' + id + '"]').length) {
-        output = `<div data-id="${id}" class="response msg">
-          <div class="msg-avatar"><i class="zmdi zmdi-mood"></i></div>
-          <div class="msg-content">${data}</div>
-          <ul class='msg-tools'>
-            <li><button type="button" title="${ts['Copy']}" class="copy-btn handle-btn"><i class="zmdi zmdi-copy"></i> ${ts['Copy']}</button></li>
-          </ul>
-          </div>`;
-        $container.find('.netiaic-chat > .inner').append(output);
+      if (!$container.find('.msg[id="' + id + '"]').length) {
+        if (type == 'user') {
+          if (isObject(data)) {
+            if (data.role) {
+              msg += `${ts['Role']}: ${data.role}\n`;
+            }
+
+            if (data.tone) {
+              msg += `${ts['Tone Style']}: ${data.tone}\n\n`;
+            }
+
+            if (data.content) {
+              msg += `${ts['Content']}: ${data.content}\n`;
+            }
+
+            msg = msg.replace(/\n/g, '<br>');
+          }
+          else {
+            msg = data;
+          }
+
+          output = `<div id="${id}" class="user-msg msg is-finished">
+            <div class="msg-avatar"></div>
+            <div class="msg-content">${msg}</div>
+            <ul class='msg-tools'>
+              <li><button type="button" title="${ts['Save As New Template']}" class="save-btn handle-btn"><i class="zmdi zmdi-file-plus"></i> ${ts['Save As New Template']}</button></li>
+              <li><button type="button" title="${ts['Recommend']}" class="recommend-btn handle-btn"><i class="zmdi zmdi-accounts-alt"></i> ${ts['Recommend']}</button></li>
+            </ul>
+            </div>`;
+        }
+
+        if (type == 'ai') {
+          msg = data;
+          output = `<div id="${id}" class="ai-msg msg">
+            <div class="msg-avatar"><i class="zmdi zmdi-mood"></i></div>
+            <div class="msg-content">${msg}</div>
+            <ul class='msg-tools'>
+              <li><button type="button" title="${ts['Copy']}" class="copy-btn handle-btn"><i class="zmdi zmdi-copy"></i> ${ts['Copy']}</button></li>
+            </ul>
+            </div>`;
+        }
+
+        if (output.trim != '') {
+          $container.find('.netiaic-chat > .inner').append(output);
+        }
       }
       else {
         if (mode == 'stream') {
-          $container.find('.response[data-id="' + id + '"] .msg-content').append(data);
+          $container.find('.msg[id="' + id + '"] .msg-content').append(data);
         }
       }
     },
@@ -352,18 +393,28 @@
     },
 
     formSubmit: function() {
-      let responseID = "response-" + renderID(),
+      let userMsgID = 'user-msg-' + renderID(),
+          aiMsgID = 'ai-msg-' + renderID(),
           evtSource = new EventSource(endpoint.devel, { // TODO: Need to be replaced with a real endpoint
             withCredentials: false,
           }),
           $container = AICompletion.prototype.container,
           $submit = $container.find('.netiaic-form-submit'),
-          $response;
+          $aiMsg,
+          formData = {
+            role: $container.find('.netiaic-prompt-role-select').val(),
+            tone: $container.find('.netiaic-prompt-tone-select').val(),
+            content: $container.find('.netiaic-prompt-content-textarea').val()
+          };
 
       if (!$submit.hasClass(ACTIVE_CLASS)) {
         $submit.addClass(ACTIVE_CLASS).prop('disabled', true);
       }
 
+      // Create user's message
+      AICompletion.prototype.createMessage(userMsgID, formData, 'user');
+
+      // Create AI's message
       evtSource.onmessage = (event) => {
         if (event.data === '[DONE]' || event.data === '[ERR]') {
           evtSource.close();
@@ -377,25 +428,25 @@
           }
 
           if (event.data === '[DONE]') {
-            if (!$response.hasClass(FINISH_CLASS)) {
-              $response.addClass(FINISH_CLASS);
+            if (!$aiMsg.hasClass(FINISH_CLASS)) {
+              $aiMsg.addClass(FINISH_CLASS);
             }
           }
 
           if (event.data === '[ERR]') {
-            if (!$response.hasClass(ERROR_CLASS)) {
-              $response.addClass(ERROR_CLASS);
+            if (!$aiMsg.hasClass(ERROR_CLASS)) {
+              $aiMsg.addClass(ERROR_CLASS);
             }
           }
 
-          if ($response.length) {
+          if ($aiMsg.length) {
             if (navigator.clipboard && navigator.clipboard.writeText) {
               try {
-                $response.on('click', '.copy-btn', function(event) {
+                $aiMsg.on('click', '.copy-btn', function(event) {
                   event.preventDefault();
                   let $copyBtn = $(this),
-                      $response = $copyBtn.closest('.response'),
-                      $msgContent = $response.find('.msg-content'),
+                      $aiMsg = $copyBtn.closest('.msg'),
+                      $msgContent = $aiMsg.find('.msg-content'),
                       copyText = '';
 
                   if ($msgContent.length) {
@@ -423,16 +474,16 @@
 
           if (typeof json !== "undefined" && json.message.length) {
             let message = json.message.replace(/\n/g, '<br>');
-            AICompletion.prototype.createResponse(responseID, message, 'stream');
-            $response = $container.find('.response[data-id="' + responseID + '"]');
+            AICompletion.prototype.createMessage(aiMsgID, message, 'ai', 'stream');
+            $aiMsg = $container.find('.msg[id="' + aiMsgID + '"]');
 
-            if (chatData.messages.hasOwnProperty(responseID)) {
-              if (!chatData.messages[responseID].used) {
+            if (chatData.messages.hasOwnProperty(aiMsgID)) {
+              if (!chatData.messages[aiMsgID].used) {
                 AICompletion.prototype.usageUpdate();
               }
             }
             else {
-              chatData.messages[responseID] = {
+              chatData.messages[aiMsgID] = {
                 used: true
               }
 
@@ -463,7 +514,7 @@
             'type': '預設範本',
             'role': '募款專家',
             'tone': '幽默',
-            'content': '拿出你的傘、拿出你的畫筆，還有一份豪華的環境藝術計畫！從2006年開始舉辦的這個計畫...'
+            'content': '拿出你的傘、拿出你的畫筆，還有一份豪華的環境藝術計畫！從2006年開始舉辦的這個計畫...\n\n第二段拿出你的傘、拿出你的畫筆，還有一份豪華的環境藝術計畫！從2006年開始舉辦的這個計畫'
           }
         ],
         "filters": {
