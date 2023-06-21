@@ -49,9 +49,33 @@
   padding: 20px;
   background: #a0aab3;
 }
+.netiaic-chat .msg {
+  margin: 0 0 24px 0;
+  display: flex;
+  flex-wrap: wrap;
+}
+.netiaic-chat .msg-avatar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 8px;
+  width: 32px;
+  height: 32px;
+  color: #fff;
+  border-radius: 50%;
+  background: #304ffe;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .3);
+}
+.netiaic-chat .user-msg .msg-avatar {
+  background: #f48fb1;
+}
+.netiaic-chat .msg-avatar i {
+  color: #fff;
+  font-size: 20px;
+}
 .netiaic-chat .msg-tools {
   display: none;
-  margin: 0;
+  margin: 10px 0 0 0;
   padding: 0;
   list-style: none;
 }
@@ -68,7 +92,20 @@
 .netiaic-chat .msg.is-finished .msg-tools,
 .netiaic-chat .msg.is-error .msg-tools {
   display: flex;
-  gap: 5px 10px;
+  flex: 0 0 100%;
+  justify-content: flex-end;
+  gap: 5px 25px;
+}
+.netiaic-chat .msg-content {
+  flex: 0 0 calc(100% - 40px);
+  padding: 16px;
+  background: #fff;
+  border-radius: 8px;
+  border-top-left-radius: 0;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+}
+.netiaic-chat .user-msg .msg-content {
+  background: #eceff1;
 }
 .netiaic-use-tpl {
   display: flex;
