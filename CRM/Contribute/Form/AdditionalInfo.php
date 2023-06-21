@@ -488,37 +488,14 @@ class CRM_Contribute_Form_AdditionalInfo {
             $contribParams[] = array('contribution_test', '=', 1, 0, 0);
           }
           CRM_Core_BAO_UFGroup::getValues($params['contact_id'], $customFields, $customValues, FALSE, $contribParams, CRM_Core_BAO_UFGroup::MASK_ALL);
-          $customGroup[$groupTitle] = $customValues;
+          if (!empty(array_filter($customValues))) {
+            $customGroup[$groupTitle] = $customValues;
+          }
         }
       }
       $form->assign('customGroup', $customGroup);
     }
-    elseif (CRM_Utils_Array::value('hidden_custom', $params)) {
-      $contribParams = array(array('contribution_id', '=', $params['contribution_id'], 0, 0));
-      if ($form->_mode == 'test') {
-        $contribParams[] = array('contribution_test', '=', 1, 0, 0);
-      }
-
-      //retrieve custom data
-      $customGroup = array();
-
-      foreach ($form->_groupTree as $groupID => $group) {
-        $customFields = $customValues = array();
-        if ($groupID == 'info') {
-          continue;
-        }
-        foreach ($group['fields'] as $k => $field) {
-          $field['title'] = $field['label'];
-          $customFields["custom_{$k}"] = $field;
-        }
-
-        //build the array of customgroup contain customfields.
-        CRM_Core_BAO_UFGroup::getValues($params['contact_id'], $customFields, $customValues, FALSE, $contribParams, CRM_Core_BAO_UFGroup::MASK_ALL);
-        $customGroup[$group['title']] = $customValues;
-      }
-      //assign all custom group and corresponding fields to template.
-      $form->assign('customGroup', $customGroup);
-    }
+    // refs #35201, do not add any custom data to offline template when no contribution page specify
 
     if ($params['receipt_text']) {
       $params['receipt_text'] = CRM_Contribute_BAO_ContributionPage::tokenize($params['contact_id'], $params['receipt_text']); 
