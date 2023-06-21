@@ -48815,18 +48815,23 @@ msgstr ""
 msgid "Export excel file encryption settings"
 msgstr ""
 
-#: templates/CRM/Admin/Form/Setting/Security.php
 msgid "No password set"
 msgstr ""
 
-#: templates/CRM/Admin/Form/Setting/Security.php
 msgid "Use the email of the exporting user as the password"
 msgstr ""
 
-#: templates/CRM/Admin/Form/Setting/Security.php
 msgid "Use a generic password"
 msgstr ""
 
-#: templates/CRM/Admin/Form/Setting/Security.php
 msgid "Generic Password"
+msgstr ""
+
+msgid "Settings option changed from %1 to %2."
+msgstr ""
+
+msgid "Export excel file encryption settings option Changed"
+msgstr ""
+
+msgid "Export excel file encryption settings password Changed"
 msgstr ""
