@@ -62,7 +62,7 @@ class CRM_Admin_Form_Setting_Security extends CRM_Admin_Form_Setting {
     $previousPwd = $config->decryptExcelPwd;
     $serial = CRM_REQUEST_TIME;
     if ($currentOption != $previousOption) {
-      $optionChange = ts("Setting option")." ".ts("From")." ".$decryptExcelOptions[$previousOption]." ".ts("change to")." ".$decryptExcelOptions[$currentOption];
+      $optionChange = ts("Settings option changed from %1 to %2." , array(1 => $decryptExcelOptions[$previousOption], 2 => $decryptExcelOptions[$currentOption]));
       $data = array(
         'event' => ts("Export excel file encryption settings option Changed"),
         'log' => $optionChange,
