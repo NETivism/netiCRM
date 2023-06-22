@@ -1,7 +1,7 @@
 @charset "UTF-8";
 
 :root {
-  --nsp-width: 480px;
+  --nsp-width: 500px;
   --loader-size: 10px;
   --loader-dot-gap: 24px;
   --loader-color: #ddd;
@@ -50,9 +50,10 @@
   background: #a0aab3;
 }
 .netiaic-chat .msg {
-  margin: 0 0 24px 0;
   display: flex;
   flex-wrap: wrap;
+  position: relative;
+  margin: 0 0 24px 0;
 }
 .netiaic-chat .msg-avatar {
   display: flex;
@@ -106,6 +107,37 @@
 }
 .netiaic-chat .user-msg .msg-content {
   background: #eceff1;
+}
+.netiaic-chat .msg .msg-tip {
+  display: none;
+}
+.netiaic-chat .msg.msg.is-finished .msg-tip i {
+  font-size: 18px;
+  color: #fff;
+}
+.netiaic-chat .msg.msg.is-finished .msg-tip {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  margin-left: 40px;
+  width: calc(100% - 100px);
+  font-size: .75rem;
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+  background-image: linear-gradient(-45deg, #fff 45%, rgba(255, 255, 255, .5) 50%, #fff 55%);
+  background-size: 250% 100%;
+  animation: text-shiny 5s both infinite;
+}
+html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
+  font-size: .75rem;
+}
+@keyframes text-shiny {
+  0% {
+    background-position: 100% 100%;
+  }
 }
 .netiaic-use-tpl {
   display: flex;

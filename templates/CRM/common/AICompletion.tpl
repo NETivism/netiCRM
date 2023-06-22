@@ -21,6 +21,7 @@ window.AICompletion = {
     'Save As New Template': '{/literal}{ts}Save As New Template{/ts}{literal}',
     'Recommend': '{/literal}{ts}Recommend{/ts}{literal}',
     'Warning! Applying this template will clear your current settings. Proceed with the application?': '{/literal}{ts}Warning! Applying this template will clear your current settings. Proceed with the application?{/ts}{literal}',
+    'Remember to verify AI-generated text before using it.': '{/literal}{ts}Remember to verify AI-generated text before using it.{/ts}{literal}'
   }
 };
 </script>
