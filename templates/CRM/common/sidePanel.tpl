@@ -23,6 +23,7 @@
     neticrmSidePanelOpts.containerClass = "{/literal}{$containerClass}{literal}";
     neticrmSidePanelOpts.width = "{/literal}{$width}{literal}";
     neticrmSidePanelOpts.opened = "{/literal}{$opened}{literal}";
+    neticrmSidePanelOpts.fullscreen = "{/literal}{$fullscreen}{literal}";
 		neticrmSidePanelOpts.debugMode = "{/literal}{$config->debug}{literal}";
     window.neticrmSidePanelInstance = $(".nsp-container").neticrmSidePanel(".nsp-container", neticrmSidePanelOpts);
 	});
@@ -33,10 +34,16 @@
 <!-- sidePanel HTML start -->
 <div class="nsp-container">
   <div class="nsp-inner">
-
     <div class="nsp-content">
       <div class="inner"></div>
     </div>
-  <div class="nsp-trigger" title="{ts}{$triggerText}{/ts}" data-tooltip data-tooltip-placement="w"><i class="zmdi {$triggerIcon}"></i></div>
+  <div class="nsp-tools">
+    <div class="inner">
+      {if isset($fullscreen) && $fullscreen eq 'true'}
+        <div class="nsp-fullscreen-trigger nsp-tool-btn" title="{ts}Fullscreen{/ts}" data-tooltip data-tooltip-placement="w"><i class="zmdi zmdi-fullscreen"></i></div>
+      {/if}
+      <div class="nsp-trigger nsp-tool-btn" title="{ts}{$triggerText}{/ts}" data-tooltip data-tooltip-placement="w"><i class="zmdi {$triggerIcon}"></i></div>
+    </div>
+  </div>
 </div>
 <!-- sidePanel HTML end -->
