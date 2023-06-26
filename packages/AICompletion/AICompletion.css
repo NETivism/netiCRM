@@ -215,6 +215,16 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
 .netiaic-command.is-active {
   display: block;
 }
+.netiaic-container .netiaic-prompt-content-textarea {
+  width: 100%;
+  height: calc(1em * 1.5 * 2 + 20px);
+  line-height: 1.5;
+  resize: none;
+  transition: height .3s;
+}
+.netiaic-container .netiaic-prompt-content-textarea.is-expanded {
+  height: calc(1em * 1.5 * 7 + 20px);
+}
 .crm-container .netiaic-form-submit {
   display: inline-flex;
   justify-content: center;

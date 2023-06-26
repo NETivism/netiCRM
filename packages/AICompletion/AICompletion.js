@@ -12,6 +12,7 @@
         ERROR_CLASS = 'is-error',
         SENT_CLASS = 'is-sent',
         FINISH_CLASS = 'is-finished',
+        EXPAND_CLASS = 'is-expanded',
         COPY_CLASS = 'is-copied',
         MFP_ACTIVE_CLASS = 'mfp-is-active';
 
@@ -356,22 +357,42 @@
       });
 
       $promptContent.on('focus', function() {
-        let inputText = $(this).val();
+        let inputText = $(this).val(),
+            lines = $(this).val().split("\n").length;
 
         if (inputText === '') {
           $promptContentCommand.addClass(ACTIVE_CLASS);
         }
+
+        if (lines > 2 && !$(this).hasClass(EXPAND_CLASS)) {
+          $(this).addClass(EXPAND_CLASS);
+        }
       });
 
       $promptContent.on('blur', function() {
+        if ($(this).hasClass(EXPAND_CLASS)) {
+          $(this).removeClass(EXPAND_CLASS);
+        }
+
         setTimeout(function() {
           $promptContentCommand.removeClass(ACTIVE_CLASS);
         }, 300);
       });
 
       $promptContent.on('input', function() {
-        let inputText = $(this).val();
+        let inputText = $(this).val(),
+            lines = $(this).val().split("\n").length;
+
         $promptContentCommand.toggleClass(ACTIVE_CLASS, inputText === '');
+
+        if (lines > 2) {
+          if (!$(this).hasClass(EXPAND_CLASS)) {
+            $(this).addClass(EXPAND_CLASS);
+          }
+        }
+        else {
+          $(this).removeClass(EXPAND_CLASS);
+        }
       });
 
       $promptContentCommand.find('[data-name="org_info"] .netiaic-command-item-desc').html(defaultData.org_info);
