@@ -174,7 +174,7 @@ test.describe.serial('Batch Action', () => {
 
             await expect(page.locator('.crm-error')).toHaveCount(0);
 
-            await expect(page.locator('.messages')).toHaveText('Activity has been saved. .');
+            await expect(page.locator('.messages').first()).toHaveText('Activity has been saved. .');
             await utils.print('Activity has been saved.');
 
         });
@@ -271,7 +271,7 @@ test.describe.serial('Batch Action', () => {
 
             await expect(page.locator('.crm-error')).toHaveCount(0);
 
-            await expect(page.locator('.messages')).toHaveText('Your updates have been saved.');
+            await expect(page.locator('.messages').first()).toHaveText('Your updates have been saved.');
             await utils.print('Contacts updated successfully.');
 
         });
@@ -383,7 +383,7 @@ test.describe.serial('Batch Action', () => {
             await utils.wait(wait_secs);
 
             await expect(page.locator('.crm-error')).toHaveCount(0);
-            await expect(page.locator('.messages h3')).toHaveText('Contact(s) tagged as: 主要捐款者');
+            await expect(page.locator('.messages h3').first()).toHaveText('Contact(s) tagged as: 主要捐款者');
             await expect(page.locator('.messages ul').nth(1).locator('li')).toHaveText('Total Contact(s) tagged: 3');
             await utils.print('Contact(s) tagged successfully.');
 
@@ -412,7 +412,7 @@ test.describe.serial('Batch Action', () => {
             await utils.wait(wait_secs);
 
             await expect(page.locator('.crm-error')).toHaveCount(0);
-            await expect(page.locator('.messages')).toHaveText("Added Contact(s) to 管理員Total Selected Contact(s): 3Total Contact(s) added to group: 3");
+            await expect(page.locator('.messages').first()).toHaveText("Added Contact(s) to 管理員Total Selected Contact(s): 3Total Contact(s) added to group: 3");
             await utils.print('Successfully added contact to existing group.');
 
         });
@@ -445,7 +445,7 @@ test.describe.serial('Batch Action', () => {
             await utils.wait(wait_secs);
 
             await expect(page.locator('.crm-error')).toHaveCount(0);
-            await expect(page.locator('.messages')).toHaveText(`Added Contact(s) to ${vars.group_name}Total Selected Contact(s): 3Total Contact(s) added to group: 3`);
+            await expect(page.locator('.messages').first()).toHaveText(`Added Contact(s) to ${vars.group_name}Total Selected Contact(s): 3Total Contact(s) added to group: 3`);
             await utils.print('Successfully added contact to existing group.');
 
         });
@@ -478,7 +478,7 @@ test.describe.serial('Batch Action', () => {
             await utils.wait(wait_secs);
 
             await expect(page.locator('.crm-error')).toHaveCount(0);
-            await expect(page.locator('.messages')).toHaveText(`Your smart group has been saved as '${vars.smart_group_name}'.`);
+            await expect(page.locator('.messages').first()).toHaveText(`Your smart group has been saved as '${vars.smart_group_name}'.`);
 
             /* click "Done" */
             element = '#_qf_Result_done';

@@ -179,7 +179,7 @@ test.describe.serial('Add Contribution', () => {
             /* check success message */
             element = '.messages';
             await utils.findElement(page, element);
-            await expect(page.locator(element)).toHaveText('The contribution record has been saved.');
+            await expect(page.locator(element).first()).toHaveText('The contribution record has been saved.');
 
             /* check Transaction ID, Total Amount, Source, Contribution Status just filled in */
             await expect(page.locator('.selector tr:nth-child(1) td.crm-contribution-trxn-id')).toHaveText(trxn_id);
@@ -223,7 +223,7 @@ test.describe.serial('Add Contribution', () => {
             /* check success message */
             element = '.messages';
             await utils.findElement(page, element);
-            await expect(page.locator(element)).toHaveText('The contribution record has been saved.');
+            await expect(page.locator(element).first()).toHaveText('The contribution record has been saved.');
             
             /* check Transaction ID just filled in */
             await expect(page.locator('.selector tr:nth-child(1) td.crm-contribution-trxn-id')).toHaveText(trxn_id);
