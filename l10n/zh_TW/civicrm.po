@@ -49243,18 +49243,23 @@ msgstr "您可以每行輸入一個路徑，並使用「*」作為萬用字元�
 msgid "Export excel file encryption settings"
 msgstr "匯出Excel檔案加密設定"
 
-#: templates/CRM/Admin/Form/Setting/Security.php
 msgid "No password set"
 msgstr "不設定密碼"
 
-#: templates/CRM/Admin/Form/Setting/Security.php
 msgid "Use the email of the exporting user as the password"
 msgstr "以該檔案匯出操作者的email作為密碼"
 
-#: templates/CRM/Admin/Form/Setting/Security.php
 msgid "Use a generic password"
 msgstr "使用通用密碼"
 
-#: templates/CRM/Admin/Form/Setting/Security.php
 msgid "Generic Password"
 msgstr "通用密碼"
+
+msgid "Settings option changed from %1 to %2."
+msgstr "設定選項從 %1 變更為 %2"
+
+msgid "Export excel file encryption settings option Changed"
+msgstr "匯出Excel檔案加密設定選項變更"
+
+msgid "Export excel file encryption settings password Changed"
+msgstr "匯出Excel檔案加密設定密碼變更"
