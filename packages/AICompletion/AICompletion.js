@@ -437,6 +437,14 @@
       AICompletion.prototype.createMessage(userMsgID, formData, 'user');
 
       // Create AI's message
+      fetch(endpoint.devel, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
+
       evtSource.onmessage = (event) => {
         if (event.data === '[DONE]' || event.data === '[ERR]') {
           evtSource.close();
@@ -513,6 +521,10 @@
             }
           }
         }
+      };
+
+      evtSource.onerror = function(event) {
+        console.log("EventSource encountered an error: ", event);
       };
     },
 
