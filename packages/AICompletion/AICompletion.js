@@ -417,9 +417,6 @@
     formSubmit: function() {
       let userMsgID = 'user-msg-' + renderID(),
           aiMsgID = 'ai-msg-' + renderID(),
-          evtSource = new EventSource(endpoint.devel, { // TODO: Need to be replaced with a real endpoint
-            withCredentials: false,
-          }),
           $container = AICompletion.prototype.container,
           $submit = $container.find('.netiaic-form-submit'),
           $aiMsg,
@@ -443,89 +440,93 @@
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(formData)
-      });
+      }).then(function(response) {
+        var evtSource = new EventSource(endpoint.devel, { // TODO: Need to be replaced with a real endpoint
+          withCredentials: false,
+        });
 
-      evtSource.onmessage = (event) => {
-        if (event.data === '[DONE]' || event.data === '[ERR]') {
-          evtSource.close();
+        evtSource.onmessage = (event) => {
+          if (event.data === '[DONE]' || event.data === '[ERR]') {
+            evtSource.close();
 
-          if ($submit.hasClass(ACTIVE_CLASS)) {
-            $submit.removeClass(ACTIVE_CLASS).prop('disabled', false);
-          }
-
-          if (!$submit.hasClass(SENT_CLASS)) {
-            $submit.addClass(SENT_CLASS).find('.text').text(ts['Try Again']);
-          }
-
-          if (event.data === '[DONE]') {
-            if (!$aiMsg.hasClass(FINISH_CLASS)) {
-              $aiMsg.addClass(FINISH_CLASS);
+            if ($submit.hasClass(ACTIVE_CLASS)) {
+              $submit.removeClass(ACTIVE_CLASS).prop('disabled', false);
             }
-          }
 
-          if (event.data === '[ERR]') {
-            if (!$aiMsg.hasClass(ERROR_CLASS)) {
-              $aiMsg.addClass(ERROR_CLASS);
+            if (!$submit.hasClass(SENT_CLASS)) {
+              $submit.addClass(SENT_CLASS).find('.text').text(ts['Try Again']);
             }
-          }
 
-          if ($aiMsg.length) {
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-              try {
-                $aiMsg.on('click', '.copy-btn', function(event) {
-                  event.preventDefault();
-                  let $copyBtn = $(this),
-                      $aiMsg = $copyBtn.closest('.msg'),
-                      $msgContent = $aiMsg.find('.msg-content'),
-                      copyText = '';
-
-                  if ($msgContent.length) {
-                    copyText = $msgContent.html().replace(/<br>/g, '\n');
-                  }
-
-                  copyText = copyText.trim();
-                  navigator.clipboard.writeText(copyText);
-                  $copyBtn.addClass(COPY_CLASS);
-
-                  setTimeout(function() {
-                    $copyBtn.removeClass(COPY_CLASS);
-                  }, 3000);
-                });
-              } catch (error) {
-                console.error('Failed to copy text to clipboard:', error);
+            if (event.data === '[DONE]') {
+              if (!$aiMsg.hasClass(FINISH_CLASS)) {
+                $aiMsg.addClass(FINISH_CLASS);
               }
-            } else {
-              console.error('Clipboard API is not supported in this browser.');
+            }
+
+            if (event.data === '[ERR]') {
+              if (!$aiMsg.hasClass(ERROR_CLASS)) {
+                $aiMsg.addClass(ERROR_CLASS);
+              }
+            }
+
+            if ($aiMsg.length) {
+              if (navigator.clipboard && navigator.clipboard.writeText) {
+                try {
+                  $aiMsg.on('click', '.copy-btn', function(event) {
+                    event.preventDefault();
+                    let $copyBtn = $(this),
+                        $aiMsg = $copyBtn.closest('.msg'),
+                        $msgContent = $aiMsg.find('.msg-content'),
+                        copyText = '';
+
+                    if ($msgContent.length) {
+                      copyText = $msgContent.html().replace(/<br>/g, '\n');
+                    }
+
+                    copyText = copyText.trim();
+                    navigator.clipboard.writeText(copyText);
+                    $copyBtn.addClass(COPY_CLASS);
+
+                    setTimeout(function() {
+                      $copyBtn.removeClass(COPY_CLASS);
+                    }, 3000);
+                  });
+                } catch (error) {
+                  console.error('Failed to copy text to clipboard:', error);
+                }
+              } else {
+                console.error('Clipboard API is not supported in this browser.');
+              }
             }
           }
-        }
-        else {
-          let json = JSON.parse(event.data);
+          else {
+            let json = JSON.parse(event.data);
 
-          if (typeof json !== "undefined" && json.message.length) {
-            let message = json.message.replace(/\n/g, '<br>');
-            AICompletion.prototype.createMessage(aiMsgID, message, 'ai', 'stream');
-            $aiMsg = $container.find('.msg[id="' + aiMsgID + '"]');
+            if (typeof json !== "undefined" && json.message.length) {
+              let message = json.message.replace(/\n/g, '<br>');
+              AICompletion.prototype.createMessage(aiMsgID, message, 'ai', 'stream');
+              $aiMsg = $container.find('.msg[id="' + aiMsgID + '"]');
 
-            if (chatData.messages.hasOwnProperty(aiMsgID)) {
-              if (!chatData.messages[aiMsgID].used) {
+              if (chatData.messages.hasOwnProperty(aiMsgID)) {
+                if (!chatData.messages[aiMsgID].used) {
+                  AICompletion.prototype.usageUpdate();
+                }
+              }
+              else {
+                chatData.messages[aiMsgID] = {
+                  used: true
+                }
+
                 AICompletion.prototype.usageUpdate();
               }
             }
-            else {
-              chatData.messages[aiMsgID] = {
-                used: true
-              }
-
-              AICompletion.prototype.usageUpdate();
-            }
           }
-        }
-      };
+        };
 
-      evtSource.onerror = function(event) {
-        console.log("EventSource encountered an error: ", event);
-      };
+        evtSource.onerror = function(event) {
+          console.log("EventSource encountered an error: ", event);
+        };
+      });
     },
 
     getDefaultData: function() {
@@ -548,7 +549,7 @@
             'type': '預設範本',
             'role': '募款專家',
             'tone': '幽默',
-            'content': '拿出你的傘、拿出你的畫筆，還有一份豪華的環境藝術計畫！從2006年開始舉辦的這個計畫...\n\n第二段拿出你的傘、拿出你的畫筆，還有一份豪華的環境藝術計畫！從2006年開始舉辦的這個計畫'
+            'content': '組織簡介：「帥氣愛滋權益促進會」是國內第一個由愛滋感染者和他們的家屬、朋友，以及認同人權的社會人士所發起，長期投入愛滋平權運動的非營利互助團體。在倡導平權觀念的同時，我們希望以互諒、互愛的訴求為原則；我們也努力的在愛滋感染者與社會大眾、政府決策者、醫療及公共衛生等等相關單位之間，扮演溝通者的橋樑角色。我們非常歡迎您以精神支持，或實際行動投入我們倡導權益的行列；幫助感染者與家屬回復應有的居住、工作、就學、就醫等基本人權，使他們得以享有一般人的正常生活，並且，最終促使這個社會成為一個遠離偏見、不再有歧視的正常社會。請幫組織撰寫500字以內的募款文案，通過情感訴求和事實陳述來激發支持者共鳴和參與，支持者是促成改變的人，邀請支持者以捐款方式發揮力量。'
           }
         ],
         "filters": {
