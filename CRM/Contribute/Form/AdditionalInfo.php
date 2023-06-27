@@ -384,6 +384,12 @@ class CRM_Contribute_Form_AdditionalInfo {
       $params['honor_prefix'] = CRM_Utils_Array::value($params['honor_prefix_id'], $individualPrefix);
       $params["honor_type"] = CRM_Utils_Array::value($params["honor_type_id"], $honor);
     }
+    if (CRM_Utils_Array::value('honor_first_name', $params)) {
+      $params['honor_first_name'] = CRM_Utils_String::mask($params['honor_first_name']);
+    }
+    if (CRM_Utils_Array::value('honor_email', $params)) {
+      $params['honor_email'] = CRM_Utils_String::mask($params['honor_email']);
+    }
 
     // retrieve premium product name and assigned fulfilled
     // date to template
