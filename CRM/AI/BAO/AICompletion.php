@@ -62,50 +62,99 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
   }
 
   /**
+   * Saving chat parameters to DB, return the encrypted text about id.
+   * 
+   * @param array $params ['ai_role', 'tone_style', 'context', 'prompt']
+   * 
+   * @return array ['token', 'id]
+   */
+  public static function prepareChat($params = array()) {
+    // save params to DB data
+    $aicompletion = self::create($params);
+    $encryptObject = ['id' => $aicompletion->id];
+    $encryptToken = self::tokenEncrypt($encryptObject);
+    return [
+      'token' => $encryptToken,
+      'id' => $aicompletion->id,
+    ];
+
+  }
+
+  /**
+   * Encrypt object to a string.
+   * 
+   * @param object $object An AICompletion object.
+   * 
+   * @return string enctrypted string.
+   */
+  private function tokenEncrypt($object) {
+    $jsonEncode = json_encode($object);
+    $base64Encode = base64_encode($jsonEncode);
+    $encodeText = urlencode($base64Encode);
+    return $encodeText;
+  }
+
+  /**
+   * Decrypt string to an object.
+   * 
+   * @param string $tokenString enctrypted string.
+   * 
+   * @return array An Array of AICompletion object
+   */
+  private function tokenDecrypt($tokenString) {
+    $urlDecode = urldecode($tokenString);
+    $base64Decode = base64_decode($urlDecode);
+    $object = json_decode($base64Decode, TRUE);
+    return $object;
+  }
+
+  /**
    * High level function to call AI completion and save records into db
    *
    * Use this for making request and save data.
    * Use getCompletion() for send request only
+   * 
+   * @param array $params [
+   *   'prompt': The prompt straightly send to API.
+   *   'id': The data that retrive from DB.
+   *   'token': Retrive from DB by decoding the token.
+   *   'model'
+   *   'max_tokens'
+   *   'stream': Boolean, is the cURL stream or not.
+   * ]
    *
-   * @return array
+   * @return array result array.
    */
   public static function chat($params = array()) {
     // Prepare follow parameters will be used.
     self::$_action = self::CHAT_COMPLETION;
-    // TODO: validate -> validateChatParams()
-    $params = $params ? $params : $_POST;
-    // $defaults = [];
-    // $args = self::retrieve($params, $defaults);
-    $args = $params;
-    if (!isset($params['prompt'])) {
-      $missingParams = [];
-      if (!isset($requestData['prompt'])) {
-          $missingParams[] = 'prompt';
-      }
-      throw new Exception('Missing required parameters: ' . implode(', ', $missingParams));
-    }
 
+    $aicompletion = self::validateAndDecryptChatParams($params);
     // Validate request parameters
-    $requestData = [
-      'prompt' => $args['prompt'] ? $args['prompt'] : null,
-    ];
-    if (isset($args['model'])) {
-      $model = $args['model'];
+    if ($aicompletion['prompt']) {
+      $requestData = [
+        'prompt' => $aicompletion['prompt'] ? $aicompletion['prompt'] : null,
+      ];
     }
-    if (isset($args['max_tokens'])) {
-      $maxTokens = $args['max_tokens'];
+    if (isset($aicompletion['model'])) {
+      $model = $aicompletion['model'];
     }
-    if (isset($args['stream'])) {
-      $requestData['stream'] = $args['stream'];
+    if (isset($aicompletion['max_tokens'])) {
+      $maxTokens = $aicompletion['max_tokens'];
+    }
+    if (isset($params['stream'])) {
+      $requestData['stream'] = $params['stream'];
     }
     $requestData['action'] = self::$_action;
     
     // Create or update db record
     $data = array_merge($requestData, [
-      'date' => date('Y-m-d H:i:s'),
+      'id' => $aicompletion['id'],
+      'created_date' => date('Y-m-d H:i:s'),
       'status' => 2, // Default status is 2 (didn't get response)
     ]);
     $aicompletion = self::create($data);
+    $requestData['id'] = $aicompletion->id;
 
     // Send request to OpenAI API
     $responseData = CRM_AI_BAO_AICompletion::getCompletion($requestData, $model, $maxTokens);
@@ -113,14 +162,35 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
     // Save response data to db record
     $data = array_merge($data, $responseData);
     $data['id'] = $aicompletion->id;
-    self::create($responseData);
+    $data['output_text'] = $responseData['message'];
+    self::create($data);
 
     // Return result
     return $responseData;
   }
 
-  private static function validateChatParams($params) {
-    return $params;
+  private static function validateAndDecryptChatParams($params) {
+    $aicompletion = array();
+    if (isset($params['prompt'])) {
+      $aicompletion['prompt'] = $params['prompt'];
+    }
+    if (isset($params['id'])) {
+      $aicompletion['id'] = $params['id'];
+    }
+    if (!isset($params['prompt']) && isset($params['token'])) {
+      $decodeParams = self::tokenDecrypt($params['token']);
+      if ($decodeParams['id']) {
+        $params = array(
+          'id' => $decodeParams['id'],
+        );
+        self::retrieve($params, $aicompletion);
+      }
+    }
+    if (!isset($params['prompt']) && !isset($params['id']) && !isset($params['token'])) {
+      $missingParams = ['token'];
+      throw new Exception('Missing required parameters: ' . implode(', ', $missingParams));
+    }
+    return $aicompletion;
   }
 
   /**

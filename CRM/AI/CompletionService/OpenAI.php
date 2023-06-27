@@ -31,6 +31,27 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
    */
   private $_maxTokens = NULL;
 
+  /**
+   * AICompletion ID
+   * 
+   * @var int
+   */
+  static private $_id = NULL;
+
+  /**
+   * Post data , json format.
+   * 
+   * @var string
+   */
+  static private $_postData = '';
+
+  /**
+   * Response data
+   * 
+   * @var string
+   */
+  static private $_responseData = '';
+
 
   /**
    * Abstract function for setting the model name
@@ -80,7 +101,7 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
     $api_endpoint = self::END_POINT_LIST[$params['action']];
 
     // Format the parameters for the request
-    $jsonParams = $this->formatParams($params);
+    self::$_postData = $this->formatParams($params);
 
     // Set API Key
     $this->_apiKey = OPENAI_API_KEY;
@@ -88,7 +109,7 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
     // Send the request to OpenAI
     $ch = curl_init($api_endpoint);
     curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonParams);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, self::$_postData);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
       'Content-Type: application/json',
@@ -100,7 +121,12 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
       while ($level = ob_get_level()) {
         ob_end_clean();
       }
-      curl_setopt($ch, CURLOPT_WRITEFUNCTION, function ($ch, $data) use (&$response){
+      $responseData = &self::$_responseData;
+      $responseData = [
+        'state' => 2, // 2: pending, 5: processing, 1: finished, 
+        'id' => self::$_id,
+      ];
+      curl_setopt($ch, CURLOPT_WRITEFUNCTION, function ($ch, $data) use (&$responseData){
         $chunks = explode("\n", $data);
         if (is_array($chunks)) {
           $chunks = array_filter($chunks);
@@ -127,9 +153,17 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
           else {
             if (trim($data) != "data: [DONE]" && isset($decoded["choices"][0]["delta"]["content"])) {
               // log response to variable
-              $response .= $decoded["choices"][0]["delta"]["content"];
+              $responseData['message'] .= $decoded["choices"][0]["delta"]["content"];
               // output data
-              echo 'data: '.json_encode(array("message" => $decoded['choices'][0]['delta']['content']))."\n\n";
+              $outputData = array(
+                "message" => $decoded['choices'][0]['delta']['content'],
+              );
+              // change state
+              if ($responseData['state'] == 2) {
+                $responseData['state'] = 5;
+                $outputData['id'] = $responseData['id'];
+              }
+              echo 'data: '.json_encode($outputData)."\n\n";
             }
             if (!empty($decoded["choices"][0]["finish_reason"]) && $decoded["choices"][0]["finish_reason"] === 'stop') {
               echo 'data: [DONE]'."\n\n";
@@ -155,13 +189,13 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
       curl_close($ch);
     }
     else {
-      $response = curl_exec($ch);
+      self::$_responseData = curl_exec($ch);
       if(curl_errno($ch)){
         throw new Exception(curl_error($ch));
       }
       curl_close($ch);
       // Format the response and return it
-      return $this->formatResponse($response);
+      return $this->formatResponse(self::$_responseData);
     }
   }
 
@@ -198,6 +232,9 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
    * @return string json encoded string.
    */
   protected function formatParams(&$params) {
+    if ($params['id']) {
+      self::$_id = $params['id'];
+    }
     if ($params['action'] == CRM_AI_BAO_AICompletion::CHAT_COMPLETION) {
       if ($params['prompt'] && empty($params['messages'])) {
         $params['messages'] = [[
@@ -230,6 +267,8 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
   protected function formatResponse($responseString) {
     $response = json_decode($responseString, TRUE);
     $responseData = [
+      'post_data' => self::$_postData,
+      'return_data' => $responseString,
       'response' => $response,
       'used_token' => [
         'prompt_tokens' => $response['usage']['prompt_tokens'],
