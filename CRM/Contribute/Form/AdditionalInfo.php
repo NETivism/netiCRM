@@ -469,7 +469,7 @@ class CRM_Contribute_Form_AdditionalInfo {
       $customGroup = array();
       foreach($profiles as $idx => $ufGroup) {
         $customFields = $customValues = array();
-        if (CRM_Core_BAO_UFGroup::filterUFGroups($ufGroup['id'], $params['contact_id'])) {
+        if (!empty($ufGroup['id']) && CRM_Core_BAO_UFGroup::filterUFGroups($ufGroup['id'], $params['contact_id'])) {
           $groupTitle = NULL;
           $customFields = CRM_Core_BAO_UFGroup::getFields($ufGroup['id'], FALSE, CRM_Core_Action::VIEW);
 
