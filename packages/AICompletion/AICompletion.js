@@ -28,7 +28,7 @@
         getTemplateList: '/api/getTemplateList',
         getTemplate: '/api/getTemplate',
         setTemplate: '/api/setTemplate',
-        chat: '/api/chat',
+        chat: '/civicrm/ajax/chat',
         setShare: '/api/setShare',
         devel: '/openai-stream/stream.php',
       },

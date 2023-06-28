@@ -9,14 +9,17 @@ class CRM_AI_Page_AJAX {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $jsonString = file_get_contents('php://input');
       $jsondata = json_decode($jsonString, true);
-      if (is_string($jsondata['tone']) && isset(($jsondata['tone']))) {
+      if (is_string($jsondata['tone']) && isset($jsondata['tone'])) {
         $tone_style = $jsondata['tone'];
+        $data['tone_style'] = $tone_style;
       }
-      if (is_string($jsondata['role']) && isset(($jsondata['role']))) {
+      if (is_string($jsondata['role']) && isset($jsondata['role'])) {
         $ai_role = $jsondata['role'];
+        $data['ai_role'] = $ai_role;
       }
-      if (is_string($jsondata['content']) && isset(($jsondata['content']))) {
+      if (is_string($jsondata['content']) && isset($jsondata['content'])) {
         $context = $jsondata['content'];
+        $data['context'] = $context;
       }
 
       if ($tone_style && $ai_role && $context) {
@@ -38,8 +41,15 @@ class CRM_AI_Page_AJAX {
       }
     }
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-      //TODO : GET Token and send to CRM_AI_BAO_AICompletion::Chat
-      //CRM_AI_BAO_AICompletion::Chat($token);
+      if (is_string($_GET['token']) && isset($_GET['token'])) {
+        $token = $_GET['token'];
+        $params = [
+          'token' => $token,
+          'stream' => TRUE,
+        ];
+        $result = CRM_AI_BAO_AICompletion::Chat($params);
+        return $result;
+      }
     }
   }
 
