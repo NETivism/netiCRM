@@ -129,7 +129,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
     $locationType = CRM_Core_PseudoConstant::locationType(FALSE, 'name');
     $config = CRM_Core_Config::singleton();
     if (empty($params)) {
-      $contributionResult['status'] = " params is empty";
+      $contributionResult['status'] = "params is empty";
       // return;
     }
     if (empty($params['contribution']['trxn_id'])) {
@@ -677,7 +677,11 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
       // invoice id is uniq, will append additional info
       $params['contribution']['invoice_id'] = $json['transaction']['parent_trade_no'].'_'.substr(md5(uniqid(rand(), TRUE)), 0, 10);
       $contributionRecurId = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution_recur WHERE trxn_id = %1" , array(1 => array($json['transaction']['parent_trade_no'], 'String')));
-      $params['contribution']['contribution_recur_id'] = $contributionRecurId;
+      if (!empty($contributionRecurId)) {
+        $params['contribution']['contribution_recur_id'] = $contributionRecurId;
+      } else {
+        $contributionResult['status'] = "No recur id.";
+      }
     }
     else {
       $params['contribution']['invoice_id'] = md5(uniqid(rand(), TRUE));

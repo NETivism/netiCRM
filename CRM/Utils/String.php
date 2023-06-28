@@ -745,7 +745,12 @@ class CRM_Utils_String {
           $str = mb_substr($str, 0, 1) . str_repeat(self::MASK, $length - 2) . mb_substr($str, -1, 1);
           break;
         default:
-          $str = mb_substr($str, 0, 1) . str_repeat(self::MASK, $length - 3) . mb_substr($str, -2, 2);
+          if ($length > 20) {
+            $str = mb_substr($str, 0, 1) . str_repeat(self::MASK, 20 - 3) . mb_substr($str, -2, 2);
+          }
+          else {
+            $str = mb_substr($str, 0, 1) . str_repeat(self::MASK, $length - 3) . mb_substr($str, -2, 2);
+          }
           break;
       }
 
