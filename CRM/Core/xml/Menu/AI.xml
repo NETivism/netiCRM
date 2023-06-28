@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<menu>
+  <item>
+     <path>civicrm/ajax/chat</path>
+     <page_callback>CRM_AI_Page_AJAX::chat</page_callback>
+     <is_public>true</is_public>
+     <access_callback>1</access_callback>
+  </item>
+</menu>
