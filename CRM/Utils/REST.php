@@ -163,7 +163,7 @@ class CRM_Utils_REST {
     return array();
   }
 
-  function output(&$result) {
+  static function output(&$result) {
     $hier = FALSE;
     if (is_scalar($result)) {
       if (!$result) {

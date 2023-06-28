@@ -578,7 +578,7 @@ WHERE  id = %1";
         case 'Radio':
           //special case if user select -none-
           if ($params["price_{$id}"] == 0) {
-            continue;
+            break;
           }
           $optionValueId = $params["price_{$id}"];
           $params["price_{$id}"] = array($params["price_{$id}"] => $params["price_{$id}_{$optionValueId}_count"]);

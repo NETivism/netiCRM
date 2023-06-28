@@ -60,14 +60,7 @@ class CRM_Core_ClassLoader {
     if ($this->_registered) {
       return;
     }
-    if (version_compare(PHP_VERSION, '5.3.0') >= 0) {
-      spl_autoload_register(array($this, 'loadClass'), TRUE, $prepend);
-    }
-    else {
-      // http://www.php.net/manual/de/function.spl-autoload-register.php#107362
-      // "when specifying the third parameter (prepend), the function will fail badly in PHP 5.2"
-      spl_autoload_register(array($this, 'loadClass'), TRUE);
-    }
+    spl_autoload_register(array($this, 'loadClass'), TRUE, $prepend);
     $this->_registered = TRUE;
 
   }
