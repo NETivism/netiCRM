@@ -6,7 +6,7 @@
 class CRM_AI_Page_AJAX {
 
   function chat() {
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] == 'application/json') {
       $jsonString = file_get_contents('php://input');
       $jsondata = json_decode($jsonString, true);
       if (is_string($jsondata['tone']) && isset($jsondata['tone'])) {
@@ -37,18 +37,24 @@ class CRM_AI_Page_AJAX {
           ),
         );
         $token = CRM_AI_BAO_AICompletion::prepareChat($data);
-        return $token;
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($token);
+        CRM_Utils_System::civiExit();
       }
     }
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-      if (is_string($_GET['token']) && isset($_GET['token'])) {
+      if (is_string($_GET['token']) && isset($_GET['token']) && is_string($_GET['id']) && isset($_GET['id'])) {
         $token = $_GET['token'];
+        $id = $_GET['id'];
         $params = [
           'token' => $token,
+          'id' => $id,
           'stream' => TRUE,
         ];
         $result = CRM_AI_BAO_AICompletion::Chat($params);
-        return $result;
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($result);
+        CRM_Utils_System::civiExit();
       }
     }
   }
