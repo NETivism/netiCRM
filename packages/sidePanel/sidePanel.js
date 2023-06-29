@@ -273,6 +273,7 @@
       $("body").removeClass("nsp-" + OPEN_CLASS);
     },
     fullscreen: function() {
+      _nspMain.open();
       $(_container).addClass(FULLSCREEN_CLASS);
       $("body").addClass("nsp-" + FULLSCREEN_CLASS);
     },
