@@ -139,11 +139,50 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
     background-position: 100% 100%;
   }
 }
-.netiaic-use-tpl {
+.netiaic-container .netiaic-form-container .crm-section {
   display: flex;
-  gap: 10px;
+  padding: 0;
+  margin: 0 0 16px 0;
+  align-items: center;
+}
+.netiaic-container .crm-section > .crm-form-elem {
+  flex: 0 0 100%;
+}
+.netiaic-container .crm-section > .label {
+  flex: 0 0 20%;
   margin: 0;
+}
+.netiaic-container .crm-section > .label label {
+  margin: 0;
+}
+.netiaic-container .crm-section > .content {
+  flex: 0 0 80%;
+  margin: 0;
+  padding: 0 0 0 10px;
+  max-width: 80%;
+  font-size: .875rem;
+}
+
+.netiaic-form-container > .inner {
+  padding: 20px;
+}
+.netiaic-form-container  .crm-form-elem {
+  max-width: 100%;
+  width: 100%;
+}
+.netiaic-container .netiaic-use-tpl {
+  display: flex;
+  margin: 0 0 20px 0;
   list-style: none;
+  font-size: .875rem;
+}
+.netiaic-container .netiaic-use-tpl > li {
+  line-height: 1;
+}
+.netiaic-container .netiaic-use-tpl > li:not(:last-child) {
+  margin-right: 10px;
+  padding-right: 10px;
+  border-right: 1px solid #bdbdbd;
 }
 .netiaic-use-tpl li {
   list-style: none;
@@ -206,7 +245,7 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 5;
   overflow: hidden;
-  font-size: .9375rem;
+  font-size: .875rem;
   color: #999;
 }
 .netiaic-command-list li:hover .netiaic-command-item-desc {
@@ -229,6 +268,7 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
   display: inline-flex;
   justify-content: center;
   align-items: center;
+  margin: 0;
   min-width: 110px;
   min-height: 40px;
   color: #fff;
@@ -276,7 +316,15 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
 .crm-container .netiaic-form-submit.is-active .loader {
   display: block;
 }
-
+.netiaic-container .netiaic-form-footer {
+  display: flex;
+  gap: 0 10px;
+  align-items: center;
+}
+.netiaic-container .netiaic-form-footer .netiaic-usage-info {
+  font-size: .875rem;
+  color: #757575;
+}
 .nsp-container.nme-setting-panels .nsp-content {
   padding: 0;
 }
