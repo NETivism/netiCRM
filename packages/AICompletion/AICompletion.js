@@ -353,18 +353,18 @@
       // Initialize the select dropdowns with Select2 plugin
       $container.find('.form-select').select2({
         allowClear: true,
-        dropdownAutoWidth: true
+        dropdownAutoWidth: true,
+        width: '100%'
       });
 
       $promptContent.on('focus', function() {
-        let inputText = $(this).val(),
-            lines = $(this).val().split("\n").length;
+        let inputText = $(this).val();
 
         if (inputText === '') {
           $promptContentCommand.addClass(ACTIVE_CLASS);
         }
 
-        if (lines > 2 && !$(this).hasClass(EXPAND_CLASS)) {
+        if (this.scrollHeight > this.clientHeight && !$(this).hasClass(EXPAND_CLASS)) {
           $(this).addClass(EXPAND_CLASS);
         }
       });
@@ -380,12 +380,11 @@
       });
 
       $promptContent.on('input', function() {
-        let inputText = $(this).val(),
-            lines = $(this).val().split("\n").length;
+        let inputText = $(this).val();
 
         $promptContentCommand.toggleClass(ACTIVE_CLASS, inputText === '');
 
-        if (lines > 2) {
+        if (this.scrollHeight > this.clientHeight) {
           if (!$(this).hasClass(EXPAND_CLASS)) {
             $(this).addClass(EXPAND_CLASS);
           }
@@ -434,14 +433,16 @@
       AICompletion.prototype.createMessage(userMsgID, formData, 'user');
 
       // Create AI's message
-      fetch(endpoint.devel, {
+      fetch(endpoint.chat, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(formData)
       }).then(function(response) {
-        var evtSource = new EventSource(endpoint.devel, { // TODO: Need to be replaced with a real endpoint
+        console.log(response);
+        console.log("success !");
+        var evtSource = new EventSource(endpoint.chat, { // TODO: Need to be replaced with a real endpoint
           withCredentials: false,
         });
 
@@ -534,7 +535,7 @@
 
       // The test data is only used for development and needs to call the real endpoint
       data = {
-        'org_info': '本組織成立於 19xx 年，致力於環境保育與自然生態導覽，為了這塊土地的...',
+        'org_info': '「帥氣愛滋權益促進會」是國內第一個由愛滋感染者和他們的家屬、朋友，以及認同人權的社會人士所發起，長期投入愛滋平權運動的非營利互助團體。在倡導平權觀念的同時，我們希望以互諒、互愛的訴求為原則；我們也努力的在愛滋感染者與社會大眾、政府決策者、醫療及公共衛生等等相關單位之間，扮演溝通者的橋樑角色。',
         'usage': {
           'max': 1000,
           'current': 3
