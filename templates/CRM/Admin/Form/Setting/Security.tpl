@@ -3,16 +3,18 @@
     {ts}{/ts}
 </div>
     <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>
+    {if $form.decryptExcelOption}
     <table class="form-layout">
-    <tr class="crm-miscellaneous-form-block-decryptExcelOption">
-    <td class="label">{$form.decryptExcelOption.label}</td>
-    <td>{$form.decryptExcelOption.html}</td>
-    </tr>
-    <tr class="crm-miscellaneous-form-block-decryptExcelPwd">
-    <td class="label">{$form.decryptExcelPwd.label}</td>
-    <td>{$form.decryptExcelPwd.html}</td>
-    </tr>
+        <tr class="crm-miscellaneous-form-block-decryptExcelOption">
+            <td class="label">{$form.decryptExcelOption.label}</td>
+            <td>{$form.decryptExcelOption.html}</td>
+        </tr>
+        <tr class="crm-miscellaneous-form-block-decryptExcelPwd">
+            <td class="label">{$form.decryptExcelPwd.label}</td>
+            <td>{$form.decryptExcelPwd.html}</td>
+        </tr>
     </table>
+    {/if}
     <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
 </div>
 <script>{literal}
