@@ -69,43 +69,26 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
    * @return array ['token', 'id]
    */
   public static function prepareChat($params = array()) {
-    // save params to DB data
-    $aicompletion = self::create($params);
-    $encryptObject = ['id' => $aicompletion->id];
-    $encryptToken = self::tokenEncrypt($encryptObject);
-    return [
-      'token' => $encryptToken,
+    // prepare saving data.
+    $aicompletionData = $params;
+    if (is_array($params['prompt'])) {
+      $aicompletionData['prompt'] = json_encode($params['prompt']);
+    }
+    $aicompletionData['created_date'] = date('Y-m-d H:i:s');
+    $aicompletionData['status_id'] = 2; // Default status is 2 (didn't get response)
+    $session = CRM_Core_Session::singleton();
+    $aicompletionData['contact_id'] = $session->get('userID');
+    // save data to DB
+    $aicompletion = self::create($aicompletionData);
+    // Get token for validation.
+    $keyToken = CRM_Core_Key::get('aicompletion_'.$aicompletion->id);
+    // prepare return array.
+    $returnArray = [
+      'token' => $keyToken,
       'id' => $aicompletion->id,
     ];
+    return $returnArray;
 
-  }
-
-  /**
-   * Encrypt object to a string.
-   * 
-   * @param object $object An AICompletion object.
-   * 
-   * @return string enctrypted string.
-   */
-  private function tokenEncrypt($object) {
-    $jsonEncode = json_encode($object);
-    $base64Encode = base64_encode($jsonEncode);
-    $encodeText = urlencode($base64Encode);
-    return $encodeText;
-  }
-
-  /**
-   * Decrypt string to an object.
-   * 
-   * @param string $tokenString enctrypted string.
-   * 
-   * @return array An Array of AICompletion object
-   */
-  private function tokenDecrypt($tokenString) {
-    $urlDecode = urldecode($tokenString);
-    $base64Decode = base64_decode($urlDecode);
-    $object = json_decode($base64Decode, TRUE);
-    return $object;
   }
 
   /**
@@ -115,9 +98,9 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
    * Use getCompletion() for send request only
    * 
    * @param array $params [
-   *   'prompt': The prompt straightly send to API.
    *   'id': The data that retrive from DB.
-   *   'token': Retrive from DB by decoding the token.
+   *   'token': Used to validate 'id'.
+   *   'prompt': The prompt straightly send to API. If use prompt, we don't need 'id' and 'token'.
    *   'model'
    *   'max_tokens'
    *   'stream': Boolean, is the cURL stream or not.
@@ -126,44 +109,21 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
    * @return array result array.
    */
   public static function chat($params = array()) {
-    // Prepare follow parameters will be used.
-    self::$_action = self::CHAT_COMPLETION;
 
-    $aicompletion = self::validateAndDecryptChatParams($params);
-    // Validate request parameters
-    if ($aicompletion['prompt']) {
-      $requestData = [
-        'prompt' => $aicompletion['prompt'] ? $aicompletion['prompt'] : null,
-      ];
-    }
-    if (isset($aicompletion['model'])) {
-      $model = $aicompletion['model'];
-    }
-    if (isset($aicompletion['max_tokens'])) {
-      $maxTokens = $aicompletion['max_tokens'];
-    }
-    if (isset($params['stream'])) {
-      $requestData['stream'] = $params['stream'];
-    }
-    $requestData['action'] = self::$_action;
-    
-    // Create or update db record
-    $data = array_merge($requestData, [
-      'id' => $aicompletion['id'],
-      'created_date' => date('Y-m-d H:i:s'),
-      'status' => 2, // Default status is 2 (didn't get response)
-    ]);
-    $aicompletion = self::create($data);
-    $requestData['id'] = $aicompletion->id;
+    // Prepare follow parameters will be used.
+    $requestData = self::validateAndDecryptChatParams($params);
+    $requestData['action'] = self::CHAT_COMPLETION;
 
     // Send request to OpenAI API
-    $responseData = CRM_AI_BAO_AICompletion::getCompletion($requestData, $model, $maxTokens);
+    $responseData = CRM_AI_BAO_AICompletion::getCompletion($requestData);
 
     // Save response data to db record
-    $data = array_merge($data, $responseData);
-    $data['id'] = $aicompletion->id;
-    $data['output_text'] = $responseData['message'];
-    self::create($data);
+    if (isset($requestData['id'])) {
+      $data = array_merge($requestData, $responseData);
+      $data['id'] = $requestData['id'];
+      $data['output_text'] = $responseData['message'];
+      $result = self::create($data);
+    }
 
     // Return result
     return $responseData;
@@ -171,25 +131,69 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
 
   private static function validateAndDecryptChatParams($params) {
     $aicompletion = array();
+    $isPass = FALSE;
+    // If prompt is in $params, just use it.
     if (isset($params['prompt'])) {
-      $aicompletion['prompt'] = $params['prompt'];
+      if (is_array($params['prompt'])) {
+        $aicompletion['prompt'] = json_encode($params['prompt']);  
+      }
+      else {
+        $aicompletion['prompt'] = $params['prompt'];
+      }
+      $isPass = TRUE;
     }
+    // No prompt condition, we need 'id' in params.
     if (isset($params['id'])) {
-      $aicompletion['id'] = $params['id'];
-    }
-    if (!isset($params['prompt']) && isset($params['token'])) {
-      $decodeParams = self::tokenDecrypt($params['token']);
-      if ($decodeParams['id']) {
-        $params = array(
-          'id' => $decodeParams['id'],
-        );
-        self::retrieve($params, $aicompletion);
+      $aiID = $aicompletion['id'] = $params['id'];
+      // If there are 'token' in $params, validate the 'token' and assiociated 'id' is correct.
+      if (isset($params['token'])) {
+        $key = $params['token'];
+        $getKey = CRM_Core_Key::validate($key, 'aicompletion_'.$aiID);
+        $isKeyPass = ($getKey == $key);
+        if ($isKeyPass) {
+          $isPass = TRUE;
+          $aiCompletionArray = self::retrieveAICompletionDataArray($aiID);
+          $aicompletion = array_merge($aicompletion, $aiCompletionArray);
+        }
+        else {
+          throw new Exception('Invalid token.');
+        }
+      }
+      else {
+        // if there are no token, let is pass anyway.
+        $isPass = TRUE;
+        $aiCompletionArray = self::retrieveAICompletionDataArray($aiID);
+        $aicompletion = array_merge($aicompletion, $aiCompletionArray);
       }
     }
-    if (!isset($params['prompt']) && !isset($params['id']) && !isset($params['token'])) {
-      $missingParams = ['token'];
-      throw new Exception('Missing required parameters: ' . implode(', ', $missingParams));
+    // Get all the keys from the $params array
+    $paramsKeys = array_keys($params);
+    if ($isPass) {
+      // Define an array of keys that should not be copied
+      $dontCopyParams = ['prompt', 'id', 'token'];
+      // Get the keys that should be copied by removing the keys in $dontCopyParams from $paramsKeys
+      $copyKeys = array_diff($paramsKeys, $dontCopyParams);
+      foreach ($copyKeys as $key) {
+        // Copy the values from $params to $aicompletion for the keys in $copyKeys
+        $aicompletion[$key] = $params[$key];
+      }
     }
+    else {
+      // Check if both 'id' and 'token' keys are missing in $params
+      if (!isset($params['id']) && !isset($params['token'])) {
+        // Define an array of required keys
+        $requiredKeys = ['id', 'token'];
+        // Get the keys that are required but missing from $paramsKeys
+        $lackKeys = array_diff($requiredKeys, $paramsKeys);
+        // Throw an exception with a message indicating the missing required keys
+        throw new Exception('Missing required parameters: ' . implode(', ', $lackKeys));
+      }
+      else {
+        // Throw an exception indicating that the validation didn't pass
+        throw new Exception('Doesn\'t pass the validation.');
+      }
+    }
+    // Return the $aicompletion array
     return $aicompletion;
   }
 
@@ -255,6 +259,18 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
   }
 
   /**
+   * 
+   */
+  private function retrieveAICompletionDataArray($aiCompletionID) {
+    $params = array(
+      'id' => $aiCompletionID,
+    );
+    $returnArray = array();
+    self::retrieve($params, $returnArray);
+    return $returnArray;
+  }
+
+  /**
    * Verify data structure before saving into database
    *
    * @return void
@@ -289,13 +305,9 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
    * @return FALSE|array
    *  The return array should be compatible for function create
    */
-  public static function getCompletion($params, $model = NULL, $maxToken = NULL) {
-    if (empty($model)) {
-      $model = self::COMPLETION_MODEL;
-    }
-    if (empty($maxToken)) {
-      $maxToken = self::COMPLETION_MAX_TOKENS;
-    }
+  public static function getCompletion($params) {
+    $model = isset($params['model']) ? $params['model'] : self::COMPLETION_MODEL;
+    $maxToken = isset($params['max_token']) ? $params['max_token'] : self::COMPLETION_MAX_TOKENS;
     $completion = self::singleton(self::COMPLETION_SERVICE, $model, $maxToken);
     $result = $completion->_serviceProvider->request($params);
     // format result
@@ -304,17 +316,13 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
 
   /**
    * Retrieve AICompletion Template object(array) by AICompletion ID.
-   * @param Int $acId The AICompletion ID in DB row.
+   * @param Int $aiID The AICompletion ID in DB row.
    * 
    * @return FALSE|array AICompletion data row.
    */
-  public static function getTemplate($acId) {
-    $params = array(
-      'id' => $acId,
-    );
-    $objectArray = [];
-    self::retrieve($params, $objectArray);
-    return $objectArray;
+  public static function getTemplate($aiID) {
+    $retrieveAICompletionArray = self::retrieveAICompletionDataArray($aiID);
+    return $retrieveAICompletionArray;
   }
 
   /**

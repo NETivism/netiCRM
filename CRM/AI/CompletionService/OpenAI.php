@@ -36,21 +36,21 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
    * 
    * @var int
    */
-  static private $_id = NULL;
+  private $_id = NULL;
 
   /**
    * Post data , json format.
    * 
    * @var string
    */
-  static private $_postData = '';
+  private $_postData = '';
 
   /**
    * Response data
    * 
    * @var string
    */
-  static private $_responseData = '';
+  private $_responseData = '';
 
 
   /**
@@ -101,7 +101,7 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
     $api_endpoint = self::END_POINT_LIST[$params['action']];
 
     // Format the parameters for the request
-    self::$_postData = $this->formatParams($params);
+    $this->_postData = $this->formatParams($params);
 
     // Set API Key
     $this->_apiKey = OPENAI_API_KEY;
@@ -109,7 +109,7 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
     // Send the request to OpenAI
     $ch = curl_init($api_endpoint);
     curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, self::$_postData);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $this->_postData);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
       'Content-Type: application/json',
@@ -121,10 +121,10 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
       while ($level = ob_get_level()) {
         ob_end_clean();
       }
-      $responseData = &self::$_responseData;
+      $responseData = &$this->_responseData;
       $responseData = [
-        'state' => 2, // 2: pending, 5: processing, 1: finished, 
-        'id' => self::$_id,
+        'state_id' => 2, // 2: pending, 5: processing, 1: finished, 
+        'id' => $this->_id,
       ];
       curl_setopt($ch, CURLOPT_WRITEFUNCTION, function ($ch, $data) use (&$responseData){
         $chunks = explode("\n", $data);
@@ -159,8 +159,8 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
                 "message" => $decoded['choices'][0]['delta']['content'],
               );
               // change state
-              if ($responseData['state'] == 2) {
-                $responseData['state'] = 5;
+              if ($responseData['state_id'] == 2) {
+                $responseData['state_id'] = 5;
                 $outputData['id'] = $responseData['id'];
               }
               echo 'data: '.json_encode($outputData)."\n\n";
@@ -189,13 +189,13 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
       curl_close($ch);
     }
     else {
-      self::$_responseData = curl_exec($ch);
+      $this->_responseData = curl_exec($ch);
       if(curl_errno($ch)){
         throw new Exception(curl_error($ch));
       }
       curl_close($ch);
       // Format the response and return it
-      return $this->formatResponse(self::$_responseData);
+      return $this->formatResponse($this->_responseData);
     }
   }
 
@@ -233,20 +233,28 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
    */
   protected function formatParams(&$params) {
     if ($params['id']) {
-      self::$_id = $params['id'];
+      $this->_id = $params['id'];
     }
     if ($params['action'] == CRM_AI_BAO_AICompletion::CHAT_COMPLETION) {
       if ($params['prompt'] && empty($params['messages'])) {
-        $params['messages'] = [[
-          'role' => 'user',
-          'content' => $params['prompt'],
-        ]];
+        if ($prompt = json_decode($params['prompt'], TRUE)) {
+          $params['messages'] = $prompt;
+        }
+        else {
+          $params['messages'] = [[
+            'role' => 'user',
+            'content' => $params['prompt'],
+          ]];
+        }
       }
       if (empty($params['model'])) {
         $params['model'] = $this->_model;
       }
       if (empty($params['max_tokens']) && isset($this->_maxTokens)) {
         $params['max_tokens'] = $this->_maxTokens;
+      }
+      if (isset($params['temperature'])) {
+        $params['temperature'] = (int)$params['temperature'];
       }
     }
     $fields = self::fields('CHAT_COMPLETION');
@@ -267,7 +275,7 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
   protected function formatResponse($responseString) {
     $response = json_decode($responseString, TRUE);
     $responseData = [
-      'post_data' => self::$_postData,
+      'post_data' => $this->_postData,
       'return_data' => $responseString,
       'response' => $response,
       'used_token' => [
@@ -281,10 +289,10 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
       $responseData['message'] = $choice['message']['content'];
     }
     if (isset($responseData['response']['error'])) {
-      $responseData['status'] = 4; // Failed
+      $responseData['status_id'] = 4; // Failed
     }
     else {
-      $responseData['status'] = 1; // Finished
+      $responseData['status_id'] = 1; // Finished
     }
     return $responseData;
   }
