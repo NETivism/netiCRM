@@ -23,7 +23,7 @@ var dataLayer = window.dataLayer || [];
       "ecommerce": {
         "transaction_id": "{/literal}{$transaction_id}{literal}",
         "value": "{/literal}{$total_amount}{literal}",
-        "currency": "{/literal}{$currencyID}{literal}",
+        "currency": "{/literal}{$currency_id}{literal}",
         "items": [
           {
             "item_id": "{/literal}{$product_id}{literal}",
