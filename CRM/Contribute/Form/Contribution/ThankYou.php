@@ -107,6 +107,11 @@ class CRM_Contribute_Form_Contribution_ThankYou extends CRM_Contribute_Form_Cont
       if (!empty($this->_params['currencyID'])) {
         $this->assign('currencyID', $this->_params['currencyID']);
       }
+      else {
+        // should not use here, but in case that currencyID don't have value.
+        $currencyID = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $this->_contributionID, 'currency');
+        $this->assign('currencyID', $currencyID);
+      }
       $this->assign('product_name', $this->_values['title']);
       if ($this->_params['is_recur']) {
         $this->assign('product_category', ts('Recurring Contribution'));

@@ -23,14 +23,14 @@ var dataLayer = window.dataLayer || [];
       "ecommerce": {
         "transaction_id": "{/literal}{$transaction_id}{literal}",
         "value": "{/literal}{$total_amount}{literal}",
-        "currency": "{/literal}{if $currencyID}{$currencyID}{else}TWD{/if}{literal}",
+        "currency": "{/literal}{$currencyID}{literal}",
         "items": [
           {
             "item_id": "{/literal}{$product_id}{literal}",
             "item_name": "{/literal}{$product_name}{literal}",
             "item_category": "{/literal}{$product_category}{literal}",
-            "quantity" : "1",
-            "price": "{/literal}{$total_amount}{literal}"
+            "quantity" : "{/literal}{$product_quantity}{literal}",
+            "price": "{/literal}{$product_amount}{literal}"
           }
         ]
       }
@@ -39,13 +39,9 @@ var dataLayer = window.dataLayer || [];
 {/if}
 {if $dataLayerType == 'refund'}{literal}
   dataLayer.push({
-    'event' : 'ecommerce',
+    'event' : 'refund',
     'ecommerce': {
-      'refund': {
-        'actionField': {
-          'id': '{/literal}{$transaction_id}{literal}'
-        }
-      }
+      'transaction_id': '{/literal}{$transaction_id}{literal}'
     }
   });
 {/literal}{/if}
