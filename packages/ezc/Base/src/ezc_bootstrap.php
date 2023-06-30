@@ -31,16 +31,4 @@ else
 if ( spl_autoload_functions() !== false ) {
     spl_autoload_register(array('ezcBase', 'autoload'));
 }
-elseif ( !function_exists("__autoload") ) {
-    /**
-     * Implements the __autoload mechanism for PHP - which can only be done once
-     * per request.
-     *
-     * @param string $className  The name of the class that should be loaded.
-     */
-    function __autoload( $className )
-    {
-        ezcBase::autoload( $className );
-    }
- }
 ?>

@@ -109,7 +109,7 @@ class CRM_Admin_Form_WordReplacements extends CRM_Core_Form {
   public function buildQuickForm() {
     $config = CRM_Core_Config::singleton();
     $values = $config->localeCustomStrings[$config->lcMessages];
-    $instances = (count($values, COUNT_RECURSIVE) - 6);
+    $instances = (is_array($values) ? count($values, COUNT_RECURSIVE) - 6 : 0);
     if ($instances > 10) {
       $this->_numStrings = $instances;
     }

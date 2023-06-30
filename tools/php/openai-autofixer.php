@@ -135,7 +135,7 @@ function request($prompt, $params, &$result) {
     $output = [];
     exec($command, $output);
     if (!empty($output[0])) {
-      $decoded = json_decode($output[0], TRUE);
+      $decoded = json_decode(implode('', $output), TRUE);
       if (!empty($decoded['choices'][0]['message']['content'])) {
         $snippet = $decoded['choices'][0]['message']['content'];
         preg_match('/```(?:php)?(.*?)```/s', $snippet, $matches);
@@ -147,9 +147,10 @@ function request($prompt, $params, &$result) {
         }
         return TRUE;
       }
-    }
-    if (!empty($output[0])) {
-      $result = $output[0];
+      else {
+        $result = $output[0];
+        return FALSE;
+      }
     }
     else {
       $result = "Something wrong with openai output";

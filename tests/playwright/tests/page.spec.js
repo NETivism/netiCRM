@@ -1,7 +1,7 @@
 const { test, expect, chromium } = require('@playwright/test');
+const utils = require('./utils.js');
 
 /** @type {import('@playwright/test').Page} */
-let page;
 
 const site_name = 'netiCRM';
 
@@ -76,19 +76,19 @@ const url_ary = [
 ]
 
 
+let browser;
 test.beforeAll(async () => {
-    const browser = await chromium.launch();
-    page = await browser.newPage();
+    browser = await chromium.launch();
 });
   
 test.afterAll(async () => {
-    await page.close();
 });
 
 
 test.describe.serial('Page output correct test', () => {
-
+    test.setTimeout(300000);
     var i = 0;
+    var visited = [];
     for(let obj of url_ary){
         let url = obj.url;
         let full_title = obj.title + ' | ' + site_name;
@@ -98,11 +98,49 @@ test.describe.serial('Page output correct test', () => {
           test(`Check page output ${i} - ${obj.title}`, async () => {
 
               await test.step(`"${full_title}" should match the page title and have no errors`, async() => {
-
+                  const page = await browser.newPage();
                   await page.goto(url);
+                  await page.waitForURL(url);
                   await expect(page, `page title is not match "${full_title}"`).toHaveTitle(full_title);
                   await expect(page.locator('.error-ci'), 'No error occurred in the page').toHaveCount(0);
 
+                  if (typeof process.env.pageTestLink !== 'undfined' && process.env.pageTestLink) {
+                      const links = page.locator('.crm-container >> a:visible');
+                      const linkCount = await links.count();
+                      await utils.print(`Found ${linkCount} links.`);
+                      for (let i = 0; i < linkCount; i++) {
+                          let href = await links.nth(i).getAttribute('href');
+                          utils.print(` Trying click link: ${href}`);
+                          if ( visited.includes(href) ) {
+                              utils.print(" ... skip visited link");
+                              continue;
+                          }
+                          if ( href && href.length > 0 && href.match(/^\/|^http:\/\/1/) && !href.match(/admin\/weight.*idName=/)) {
+                              let newPage = await browser.newPage();
+                              try {
+                                const responsePromise = newPage.waitForResponse(href, { timeout: 5000 });
+                                await newPage.goto(href, { timeout: 3000, waitUntil: 'commit' });
+                                const response = await responsePromise;
+                                if (response.ok()) {
+                                    utils.print(" ... successful clicked on link");
+                                }
+                                else {
+                                    throw new Error(" ... error on loading page");
+                                }
+                                await newPage.close()
+                                visited.push(href);
+                              }
+                              catch(e) {
+                                utils.print(e.toString());
+                                continue;
+                              }
+                          }
+                          else {
+                              utils.print(" ... skip invalid link");
+                          }
+                      }
+                  }
+                  await page.close();
               });
 
           })
