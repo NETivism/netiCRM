@@ -461,11 +461,15 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
       else {
         // multiple scenario will happen
 
-        // failed: 1->3,4 or 2->3,4
-        if (in_array($contrib['contribution_status_id'], array(3,4)) && in_array($exists->contribution_status_id, array(1,2))) {
+        // failed: 1 or 2 ->4
+        if ($contrib['contribution_status_id'] == 4 && in_array($exists->contribution_status_id, array(1,2))) {
           $objects['contribution']->cancel_date = $contrib['cancel_date'];
           $cancelReason = $contrib['updated_at'].' '.ts("Update").":\n".$contrib['cancel_reason'];
           $ipn->failed($objects, $transaction, $cancelReason);
+        }
+        // cancel: 1 or 2->3
+        elseif ($contrib['contribution_status_id'] == 3 && in_array($exists->contribution_status_id, array(1,2))) {
+          $ipn->cancelled($objects, $transaction);
         }
         // pending: nothing
         elseif ($contrib['contribution_status_id'] == 2) {
