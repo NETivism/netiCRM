@@ -52,7 +52,7 @@ class CRM_AI_Page_AJAX {
           'stream' => TRUE,
         ];
         $result = CRM_AI_BAO_AICompletion::Chat($params);
-        header('Content-Type: application/json; charset=utf-8');
+        header('Content-Type: text/event-stream; charset=utf-8');
         echo json_encode($result);
         CRM_Utils_System::civiExit();
       }
