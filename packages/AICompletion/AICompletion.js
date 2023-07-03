@@ -440,9 +440,21 @@
         },
         body: JSON.stringify(formData)
       }).then(function(response) {
-        console.log(response);
-        console.log("success !");
-        var evtSource = new EventSource(endpoint.chat, { // TODO: Need to be replaced with a real endpoint
+        if (response.ok) {
+          // Determine the data type based on the Content-Type of the response
+          if (response.headers.get('Content-Type').includes('application/json')) {
+            return response.json(); // Parse as JSON
+          } else if (response.headers.get('Content-Type').includes('text/html')) {
+            return response.text(); // Parse as plain text
+          } else {
+            throw new Error('Unknown response data type');
+          }
+        } else {
+          throw new Error('Network request error');
+        }
+      })
+      .then(function(data) {
+        var evtSource = new EventSource(endpoint.chat + '?token=' + data.token + '&id=' + data.id, {
           withCredentials: false,
         });
 
@@ -527,6 +539,9 @@
         evtSource.onerror = function(event) {
           console.log("EventSource encountered an error: ", event);
         };
+      })
+      .catch(function(error) {
+        // TODO: Error handling
       });
     },
 
