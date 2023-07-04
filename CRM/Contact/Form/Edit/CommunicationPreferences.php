@@ -104,6 +104,10 @@ class CRM_Contact_Form_Edit_CommunicationPreferences {
 
       //add addressee in Contact form
       $greetingTokens = CRM_Core_PseudoConstant::greeting($filter);
+      $customizedKey = CRM_Utils_Array::key('Customized', $greetingTokens);
+      if (!empty($customizedKey)) {
+        $greetingTokens[$customizedKey] = ts('Customized');
+      }
       if (!empty($greetingTokens)) {
         $form->addElement('select', $fields['field'], $fields['label'],
           array('' => ts('- select -')) + $greetingTokens
