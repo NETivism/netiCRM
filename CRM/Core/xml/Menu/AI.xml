@@ -6,4 +6,10 @@
      <is_public>true</is_public>
      <access_callback>1</access_callback>
   </item>
+  <item>
+    <path>civicrm/ajax/setTemplate</path>
+    <page_callback>CRM_AI_Page_AJAX::setTemplate</page_callback>
+    <is_public>true</is_public>
+    <access_callback>1</access_callback>
+</item>
 </menu>

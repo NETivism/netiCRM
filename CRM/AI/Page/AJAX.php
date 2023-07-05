@@ -66,6 +66,59 @@ class CRM_AI_Page_AJAX {
   }
 
   function setTemplate() {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] == 'application/json') {
+      $jsonString = file_get_contents('php://input');
+      $jsondata = json_decode($jsonString, true);
+      if (is_string($jsondata['id']) && isset($jsondata['id'])) {
+        $acId = $jsondata['id'];
+        $data['id'] = $acId;
+      }
+      if (is_string($jsondata['is_template']) && isset($jsondata['is_template'])) {
+        $is_template = $jsondata['is_template'];
+        $is_template['is_template'] = $is_template;
+      }
+      if ($acId && $is_template) {
+        $setTemplateResult = CRM_AI_BAO_AICompletion::setTemplate($acId);
+        $result = array();
+        if ($setTemplateResult == TRUE) {
+          //set template successful return true
+          $result = [
+            'status' => "success",
+            'message' => "AI completion is set as template successfully",
+            'data' => [
+              'id' => $acId,
+              'is_template' => $is_template,
+            ],
+          ];
+        }
+        elseif ($setTemplateResult == FALSE) {
+          //Originally 1 returns False
+          $result = [
+            'status' => "success",
+            'message' => "AI completion is set as template already",
+            'data' => [
+              'id' => $acId,
+              'is_template' => $is_template,
+            ],
+          ];
+        }
+        else {
+          //If it cannot be set to 1 throw Error
+          //TODO: return error
+          $result = [
+            'status' => "Error",
+            'message' => "Error",
+            'data' => [
+              'id' => $acId,
+              'is_template' => $is_template,
+            ],
+          ];
+        }
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($result);
+        CRM_Utils_System::civiExit();
+      }
+    }
   }
 
   function setShare() {
