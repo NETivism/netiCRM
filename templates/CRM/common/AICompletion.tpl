@@ -10,6 +10,8 @@ window.AICompletion = {
   language: '{/literal}{$tsLocale}{literal}',
   translation: {
     'Copy': '{/literal}{ts}Copy{/ts}{literal}',
+    'Save': '{/literal}{ts}Save{/ts}{literal}',
+    'Title': '{/literal}{ts}Title{/ts}{literal}',
     'Submit': '{/literal}{ts}Submit{/ts}{literal}',
     'Try Again': '{/literal}{ts}Try Again{/ts}{literal}',
     'Role': '{/literal}{ts}Role{/ts}{literal}',
@@ -21,7 +23,9 @@ window.AICompletion = {
     'Save As New Template': '{/literal}{ts}Save As New Template{/ts}{literal}',
     'Recommend': '{/literal}{ts}Recommend{/ts}{literal}',
     'Warning! Applying this template will clear your current settings. Proceed with the application?': '{/literal}{ts}Warning! Applying this template will clear your current settings. Proceed with the application?{/ts}{literal}',
-    'Remember to verify AI-generated text before using it.': '{/literal}{ts}Remember to verify AI-generated text before using it.{/ts}{literal}'
+    'Remember to verify AI-generated text before using it.': '{/literal}{ts}Remember to verify AI-generated text before using it.{/ts}{literal}',
+    'Save prompt as shared template': '{/literal}{ts}Save prompt as shared template{/ts}{literal}',
+    'Once saved as a shared template, you can reuse this template for editing. Please enter a template title to identify the purpose of the template. If you need to edit a shared template, please go to the template management interface to edit.': '{/literal}{ts}Once saved as a shared template, you can reuse this template for editing. Please enter a template title to identify the purpose of the template. If you need to edit a shared template, please go to the template management interface to edit.{/ts}{literal}'
   }
 };
 </script>
@@ -43,18 +47,18 @@ window.AICompletion = {
                 <li><a href="#" class="use-other-templates">{ts}Use other templates{/ts}</a></li>
               </ul>
               <div class="netiaic-prompt-role-section crm-section crm-select-section form-item">
-                <div class="label"><label for="first_name">{ts}Role{/ts}</label></div>
+                <div class="label"><label for="netiaic-prompt-role">{ts}Role{/ts}</label></div>
                 <div class="edit-value content">
                   <div class="crm-form-elem crm-form-select">
-                    <select name="netiaic-prompt-role" class="netiaic-prompt-role-select form-select" data-placeholder="{ts}Please enter or select the role you want AI to represent (e.g., fundraiser).{/ts}"><option></option></select>
+                    <select id="netiaic-prompt-role" name="netiaic-prompt-role" class="netiaic-prompt-role-select form-select" data-placeholder="{ts}Please enter or select the role you want AI to represent (e.g., fundraiser).{/ts}"><option></option></select>
                   </div>
                 </div>
               </div>
               <div class="netiaic-prompt-tone-section crm-section crm-select-section form-item">
-                <div class="label"><label for="first_name">{ts}Tone Style{/ts}</label></div>
+                <div class="label"><label for="netiaic-prompt-tone">{ts}Tone Style{/ts}</label></div>
                 <div class="edit-value content">
                   <div class="crm-form-elem crm-form-select">
-                    <select name="netiaic-prompt-tone" class="netiaic-prompt-tone-select form-select" data-placeholder="{ts}Please enter or select the desired writing style (e.g., casual).{/ts}"><option></option></select>
+                    <select id="netiaic-prompt-tone" name="netiaic-prompt-tone" class="netiaic-prompt-tone-select form-select" data-placeholder="{ts}Please enter or select the desired writing style (e.g., casual).{/ts}"><option></option></select>
                   </div>
                 </div>
               </div>

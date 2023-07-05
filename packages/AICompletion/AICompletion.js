@@ -209,7 +209,7 @@
     },
 
     useTemplates: function() {
-      // TODO: Create a modal dialog and related elements based on the functional requirements
+      // Create a modal dialog and related elements based on the functional requirements
       let $container = AICompletion.prototype.container,
           modal = AICompletion.prototype.modal;
 
@@ -337,6 +337,7 @@
 
     formUiOperation: function() {
       let $container = AICompletion.prototype.container,
+          modal = AICompletion.prototype.modal,
           $promptContent = $container.find('.netiaic-prompt-content-textarea'),
           $promptContentCommand = $container.find('.netiaic-prompt-content-command'),
           $submit = $container.find('.netiaic-form-submit');
@@ -410,6 +411,38 @@
       $submit.on('click', function(event) {
         event.preventDefault;
         AICompletion.prototype.formSubmit();
+      });
+
+      $container.on('click', '.msg-tools .save-btn', function(event) {
+        event.preventDefault();
+
+        let $saveBtn = $(this),
+            $msg = $saveBtn.closest('.msg'),
+            msgID = $msg.attr('id');
+        console.log(msgID);
+
+        let modalTitle = ts['Save prompt as shared template'],
+            modalCallbacks = {},
+            modalContent = `<div class="save-tpl-form">
+              <div class="desc"><p>${ts['Once saved as a shared template, you can reuse this template for editing. Please enter a template title to identify the purpose of the template. If you need to edit a shared template, please go to the template management interface to edit.']}</p></div>
+                <div class="netiaic-save-tpl-title-section crm-section crm-text-section form-item">
+                  <div class="label"><label for="save-tpl-title">${ts['Title']}</label></div>
+                  <div class="edit-value content">
+                    <div class="crm-form-elem crm-form-textfield">
+                      <input name="subject" type="text" id="save-tpl-title" class="form-text">
+                    </div>
+                  </div>
+                </div>
+                <div class="form-actions">
+                  <button type="button" class="form-submit">${ts['Save']}</button>
+                </div>
+              </div>`;
+
+        modalCallbacks.open = function() {
+          // TODO: send request to save template
+        }
+
+        modal.open(modalContent, modalTitle, modalCallbacks);
       });
     },
 
