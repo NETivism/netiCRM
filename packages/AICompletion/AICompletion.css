@@ -173,10 +173,14 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
 .netiaic-container .netiaic-use-tpl {
   display: flex;
   margin: 0 0 20px 0;
+  padding: 10px 0 10px 30px;
   list-style: none;
   font-size: .875rem;
+  background: url(images/icon--magic.svg) no-repeat 0 50%;
 }
 .netiaic-container .netiaic-use-tpl > li {
+  display: flex;
+  align-items: center;
   line-height: 1;
 }
 .netiaic-container .netiaic-use-tpl > li:not(:last-child) {
@@ -256,13 +260,13 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
 }
 .netiaic-container .netiaic-prompt-content-textarea {
   width: 100%;
-  height: calc(1em * 1.5 * 2 + 20px);
+  height: calc(1em * 1.5 * 2 + 10px);
   line-height: 1.5;
   resize: none;
   transition: height .3s;
 }
 .netiaic-container .netiaic-prompt-content-textarea.is-expanded {
-  height: calc(1em * 1.5 * 7 + 20px);
+  height: calc(1em * 1.5 * 7 + 10px);
 }
 .crm-container .netiaic-form-submit {
   display: inline-flex;
@@ -320,6 +324,7 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
   display: flex;
   gap: 0 10px;
   align-items: center;
+  justify-content: space-between;
 }
 .netiaic-container .netiaic-form-footer .netiaic-usage-info {
   font-size: .875rem;
@@ -336,5 +341,34 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
 @media screen and (min-width: 1200px) {
   .netiaic-modal {
     max-width: 1000px;
+  }
+  .nsp-container.is-fullscreen .netiaic-form-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 10px;
+    justify-content: space-between;
+  }
+  .nsp-container.is-fullscreen .netiaic-form-content > ul,
+  .nsp-container.is-fullscreen .netiaic-form-content > div {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+  .nsp-container.is-fullscreen .netiaic-form-content .crm-select-section {
+    display: block;
+    flex: 0 0 calc(50% - 10px);
+    max-width: calc(50% - 10px);
+  }
+  .nsp-container.is-fullscreen .netiaic-form-content .crm-select-section .label,
+  .nsp-container.is-fullscreen .netiaic-form-content .crm-select-section .content {
+    padding: 0;
+    width: 100%;
+    max-width: 100%;
+  }
+  .nsp-container.is-fullscreen .netiaic-form-content .crm-select-section .label {
+    float: none;
+    text-align: left;
+  }
+  .nsp-container.is-fullscreen .netiaic-form-content .crm-select-section .label + .content {
+    margin-top: 5px;
   }
 }

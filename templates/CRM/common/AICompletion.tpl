@@ -42,7 +42,7 @@ window.AICompletion = {
                 <li><a href="#" class="use-default-template">{ts}Use default template{/ts}</a></li>
                 <li><a href="#" class="use-other-templates">{ts}Use other templates{/ts}</a></li>
               </ul>
-              <div class="netiaic-prompt-role-section crm-section form-item">
+              <div class="netiaic-prompt-role-section crm-section crm-select-section form-item">
                 <div class="label"><label for="first_name">{ts}Role{/ts}</label></div>
                 <div class="edit-value content">
                   <div class="crm-form-elem crm-form-select">
@@ -50,7 +50,7 @@ window.AICompletion = {
                   </div>
                 </div>
               </div>
-              <div class="netiaic-prompt-tone-section crm-section form-item">
+              <div class="netiaic-prompt-tone-section crm-section crm-select-section form-item">
                 <div class="label"><label for="first_name">{ts}Tone Style{/ts}</label></div>
                 <div class="edit-value content">
                   <div class="crm-form-elem crm-form-select">
@@ -58,7 +58,7 @@ window.AICompletion = {
                   </div>
                 </div>
               </div>
-              <div class="netiaic-prompt-content-section crm-section form-item">
+              <div class="netiaic-prompt-content-section crm-section crm-textarea-section form-item">
                 <div class="crm-form-elem crm-form-textarea">
                   <textarea name="netiaic-prompt-content" placeholder="{ts}Please enter the fundraising copy you would like AI to generate.{/ts}" class="netiaic-prompt-content-textarea form-textarea"></textarea>
                   <div class="netiaic-prompt-content-command netiaic-command">
