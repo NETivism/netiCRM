@@ -364,7 +364,12 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
     $originalIsTemplate = CRM_Core_DAO::getFieldValue('CRM_AI_DAO_AICompletion', $acId, 'is_template');
     $msg = array();
     if ($originalIsTemplate != $setTemplateValue) {
-      $isSuccess = CRM_Core_DAO::setFieldValue('CRM_AI_DAO_AICompletion', $acId, 'is_template', $setTemplateValue);
+      if (CRM_Core_DAO::getFieldValue('CRM_AI_DAO_AICompletion', $acId, 'id')) {
+        $isSuccess = CRM_Core_DAO::setFieldValue('CRM_AI_DAO_AICompletion', $acId, 'is_template', $setTemplateValue);
+      }
+      else {
+        $msg[] = 'Data of the ID doesn\'t existed.';
+      }
     }
     else {
       $msg[] = "The value of is_template is already `{$setTemplateValue}`";
