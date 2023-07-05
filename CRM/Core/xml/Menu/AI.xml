@@ -20,7 +20,7 @@
   </item>
   <item>
     <path>civicrm/ajax/getTemplateList</path>
-    <page_callback>CRM_AI_Page_AJAX::getTemplate</page_callback>
+    <page_callback>CRM_AI_Page_AJAX::getTemplateList</page_callback>
     <is_public>true</is_public>
     <access_callback>1</access_callback>
   </item>

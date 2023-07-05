@@ -63,6 +63,32 @@ class CRM_AI_Page_AJAX {
   }
 
   function getTemplate() {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] == 'application/json') {
+      $jsonString = file_get_contents('php://input');
+      $jsondata = json_decode($jsonString, true);
+      if (is_string($jsondata['id']) && isset($jsondata['id'])) {
+        $acId = $jsondata['id'];
+      }
+      if ($acId) {
+        $getTemplateResult = CRM_AI_BAO_AICompletion::getTemplate($acId);
+        if (is_array($getTemplateResult) && !empty($getTemplateResult)) {
+          $result = [
+            'status' => "success",
+            'message' => "Template retrieved successfully",
+            'data' => $getTemplateResult,
+          ];
+        }
+        elseif ($getTemplateResult == FALSE) {
+          $result = [
+            'status' => "Failed",
+            'message' => "Failed to retrieve template",
+          ];
+        }
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($result);
+        CRM_Utils_System::civiExit();
+      }
+    }
   }
 
   function setTemplate() {
@@ -99,7 +125,7 @@ class CRM_AI_Page_AJAX {
           //Originally 1 returns False
           $result = [
             'status' => "success",
-            'message' => "AI completion is set as template already",
+            'message' => "AI completion has already been set as a template",
             'data' => [
               'id' => $acId,
               'is_template' => $acTemplateTitle,
@@ -110,8 +136,8 @@ class CRM_AI_Page_AJAX {
           //If it cannot be set to 1 throw Error
           //TODO: return error
           $result = [
-            'status' => "Error",
-            'message' => "Error",
+            'status' => "Failed",
+            'message' => "Failed to set AI completion as template",
             'data' => [
               'id' => $acId,
               'is_template' => $acTemplateTitle,
