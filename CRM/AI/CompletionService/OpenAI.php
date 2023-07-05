@@ -166,13 +166,18 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
               echo 'data: '.json_encode($outputData)."\n\n";
             }
             if (!empty($decoded["choices"][0]["finish_reason"]) && $decoded["choices"][0]["finish_reason"] === 'stop') {
-              echo 'data: [DONE]'."\n\n";
+              $responseData['is_finished'] = 1;
+              echo 'data: [DONE]'.json_encode($responseData)."\n\n";
             }
             if (trim($data) === 'data: [DONE]') {
               echo 'data: [DONE]'."\n\n";
             }
             if (!empty($decoded["choices"][0]["finish_reason"]) && $decoded["choices"][0]["finish_reason"] !== 'stop') {
-              echo 'data: [ERR]'."\n\n";
+              $responseData['is_finished'] = 1;
+              $responseData['is_error'] = 1;
+              $responseData['error_message'] = $decoded["choices"][0]["finish_reason"];
+
+              echo 'data: [ERR]'.json_encode($responseData)."\n\n";
             }
           }
         }

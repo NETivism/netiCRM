@@ -340,27 +340,56 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
     $dao = CRM_Core_DAO::executeQuery($sql);
     $return = [];
     while ($dao->fetch()) {
-      $daoArray = [];
-      CRM_Core_DAO::storeValues($dao, $daoArray);
-      $return[] = $daoArray;
+      $aiCompletionData = self::retrieveAICompletionDataArray($dao->id);
+      $return[] = $aiCompletionData;
     }
     return $return;
   }
 
   /** 
    * Set is_template value to 1 for AICompletion data by ID.
-   * @param Int $acId The ID of AiCompletion data.
+   * @param array [
+   *   'id' => AICompletion ID
+   *   "is_template": 1 or 0
+   *   "template_title": "Template title" 
+   * ]
    * 
-   * @return Int If value has been changed, return 1, otherwise return 0.  
+   * @return array Result daa array.  
    */
-  public static function setTemplate($acId) {
-    $returnValue = 0;
-    $is_template = CRM_Core_DAO::getFieldValue('CRM_AI_DAO_AICompletion', $acId, 'is_template');
-    if ($is_template == 0) {
-      $result = CRM_Core_DAO::setFieldValue('CRM_AI_DAO_AICompletion', $acId, 'is_template', 1);
-      $returnValue = $result ? 1 : 0;
+  public static function setTemplate($data) {
+    $acId = $data['id'];
+    $isSuccess = FALSE;
+    // Set is template.
+    $setTemplateValue = $data['is_template'];
+    $originalIsTemplate = CRM_Core_DAO::getFieldValue('CRM_AI_DAO_AICompletion', $acId, 'is_template');
+    $msg = array();
+    if ($originalIsTemplate != $setTemplateValue) {
+      $isSuccess = CRM_Core_DAO::setFieldValue('CRM_AI_DAO_AICompletion', $acId, 'is_template', $setTemplateValue);
     }
-    return $returnValue;
+    else {
+      $msg[] = "The value of is_template is already `{$setTemplateValue}`";
+    }
+    // set template title.
+    if ($setTemplateValue) {
+      $originalTitle = CRM_Core_DAO::getFieldValue('CRM_AI_DAO_AICompletion', $acId, 'template_title');
+      $setTemplateTitle = $data['template_title'];
+      if ($originalTitle != $setTemplateTitle) {
+        $isSuccess = CRM_Core_DAO::setFieldValue('CRM_AI_DAO_AICompletion', $acId, 'template_title', $setTemplateTitle);
+      }
+      else {
+        $msg[] = "Template title is already `{$setTemplateTitle}`";
+      }
+    }
+    else {
+      // The case is_template is set to 0, then clear template_title anyway.
+      CRM_Core_DAO::setFieldValue('CRM_AI_DAO_AICompletion', $acId, 'template_title', 'NULL');
+    }
+
+    $returnData = $data;
+    $returnData['is_error'] = $isSuccess ? 0 : 1;
+    $returnData['message'] = implode('', $msg);
+
+    return $returnData;
   }
 
   /**
