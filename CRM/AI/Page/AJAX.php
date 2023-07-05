@@ -74,11 +74,15 @@ class CRM_AI_Page_AJAX {
         $data['id'] = $acId;
       }
       if (is_string($jsondata['is_template']) && isset($jsondata['is_template'])) {
-        $is_template = $jsondata['is_template'];
-        $is_template['is_template'] = $is_template;
+        $acIsTemplate = $jsondata['is_template'];
+        $data['is_template'] = $acIsTemplate;
       }
-      if ($acId && $is_template) {
-        $setTemplateResult = CRM_AI_BAO_AICompletion::setTemplate($acId);
+      if (is_string($jsondata['template_title']) && isset($jsondata['template_title'])) {
+        $acTemplateTitle = $jsondata['template_title'];
+        $data['template_title'] = $acTemplateTitle;
+      }
+      if ($acId && $acIsTemplate && $acTemplateTitle) {
+        $setTemplateResult = CRM_AI_BAO_AICompletion::setTemplate($data);
         $result = array();
         if ($setTemplateResult == TRUE) {
           //set template successful return true
@@ -87,7 +91,7 @@ class CRM_AI_Page_AJAX {
             'message' => "AI completion is set as template successfully",
             'data' => [
               'id' => $acId,
-              'is_template' => $is_template,
+              'is_template' => $acTemplateTitle,
             ],
           ];
         }
@@ -98,7 +102,7 @@ class CRM_AI_Page_AJAX {
             'message' => "AI completion is set as template already",
             'data' => [
               'id' => $acId,
-              'is_template' => $is_template,
+              'is_template' => $acTemplateTitle,
             ],
           ];
         }
@@ -110,7 +114,7 @@ class CRM_AI_Page_AJAX {
             'message' => "Error",
             'data' => [
               'id' => $acId,
-              'is_template' => $is_template,
+              'is_template' => $acTemplateTitle,
             ],
           ];
         }
