@@ -24,12 +24,12 @@
 
   var defaultData = {},
       ts = {},
-      endpoint = { // TODO: Need to change to real endpoint, refer to CRM/AI/Page/AJAX.php
-        getTemplateList: '/api/getTemplateList',
-        getTemplate: '/api/getTemplate',
-        setTemplate: '/api/setTemplate',
+      endpoint = {
+        getTemplateList: '/civicrm/ajax/getTemplateList',
+        getTemplate: '/civicrm/ajax/getTemplate',
+        setTemplate: '/civicrm/ajax/setTemplate',
         chat: '/civicrm/ajax/chat',
-        setShare: '/api/setShare',
+        setShare: '/civicrm/ajax/setShare',
         devel: '/openai-stream/stream.php',
       },
       chatData = {
@@ -175,7 +175,62 @@
     },
 
     setTemplate: function() {
-      // TODO: Create a modal dialog for saving a Template based on the functional requirements
+      let $container = AICompletion.prototype.container,
+          modal = AICompletion.prototype.modal;
+
+      $container.on('click', '.msg-tools .save-btn:not([disabled])', function(event) {
+        event.preventDefault();
+
+        let $saveBtn = $(this),
+            $userMsg = $saveBtn.closest('.msg'),
+            userMsgID = $userMsg.attr('id'),
+            aiMsgID = $userMsg.attr('data-ref-id'),
+            $aiMsg = $userMsg.next('.msg'),
+            aicompletionID = $aiMsg.data('aicompletion-id'),
+            modalTitle = ts['Save prompt as shared template'],
+            modalCallbacks = {},
+            modalContent = `<div class="set-tpl-form" data-id="${userMsgID}">
+              <div class="desc"><p>${ts['Once saved as a shared template, you can reuse this template for editing. Please enter a template title to identify the purpose of the template. If you need to edit a shared template, please go to the template management interface to edit.']}</p></div>
+                <div class="netiaic-save-tpl-title-section crm-section crm-text-section form-item">
+                  <div class="label"><label for="set-tpl-title">${ts['Title']}</label></div>
+                  <div class="edit-value content">
+                    <div class="crm-form-elem crm-form-textfield">
+                      <input name="set-tpl-title" type="text" id="set-tpl-title" class="form-text">
+                    </div>
+                  </div>
+                </div>
+                <div class="form-actions">
+                  <button id="set-tpl-submit" type="button" class="set-tpl-submit form-submit">${ts['Save']}</button>
+                </div>
+              </div>`;
+
+        if (aicompletionID) {
+          modalCallbacks.open = function() {
+            // TODO: send request to save template
+            $('.set-tpl-form').on('click', '.set-tpl-submit:not([disabled])', function(event) {
+              event.preventDefault();
+              let $submit = $(this),
+                  $container = $submit.closest('.set-tpl-form'),
+                  $tplTitle = $container.find('.form-text[name="set-tpl-title"]'),
+                  tplTitle = $tplTitle.val(),
+                  data = {
+                    id: aicompletionID,
+                    is_template: '1',
+                    template_title: tplTitle
+                  };
+
+              sendAjaxRequest(endpoint.setTemplate, 'POST', data, function(response) {
+                if (response.status == 'success') {
+                  $submit.text(ts['Saved']).prop('disabled', true);
+                  $saveBtn.html(`<i class="zmdi zmdi-check"></i>${ts['Saved']}`).prop('disabled', true);
+                }
+              });
+            });
+          }
+        }
+
+        modal.open(modalContent, modalTitle, modalCallbacks);
+      });
     },
 
     formIsEmpty: function() {
@@ -256,7 +311,7 @@
       });
     },
 
-    createMessage: function(id, data, type, mode) {
+    createMessage: function(id, refID, data, type, mode) {
       let $container = AICompletion.prototype.container,
           msg = '',
           output = '';
@@ -282,7 +337,7 @@
             msg = data;
           }
 
-          output = `<div id="${id}" class="user-msg msg is-finished">
+          output = `<div id="${id}" data-ref-id="${refID}" class="user-msg msg is-finished">
             <div class="msg-avatar"></div>
             <div class="msg-content">${msg}</div>
             <ul class='msg-tools'>
@@ -294,7 +349,7 @@
 
         if (type == 'ai') {
           msg = data;
-          output = `<div id="${id}" class="ai-msg msg">
+          output = `<div id="${id}" data-ref-id="${refID}" class="ai-msg msg">
             <div class="msg-avatar"><i class="zmdi zmdi-mood"></i></div>
             <div class="msg-content">${msg}</div>
             <ul class='msg-tools'>
@@ -412,38 +467,6 @@
         event.preventDefault;
         AICompletion.prototype.formSubmit();
       });
-
-      $container.on('click', '.msg-tools .save-btn', function(event) {
-        event.preventDefault();
-
-        let $saveBtn = $(this),
-            $msg = $saveBtn.closest('.msg'),
-            msgID = $msg.attr('id');
-        console.log(msgID);
-
-        let modalTitle = ts['Save prompt as shared template'],
-            modalCallbacks = {},
-            modalContent = `<div class="save-tpl-form">
-              <div class="desc"><p>${ts['Once saved as a shared template, you can reuse this template for editing. Please enter a template title to identify the purpose of the template. If you need to edit a shared template, please go to the template management interface to edit.']}</p></div>
-                <div class="netiaic-save-tpl-title-section crm-section crm-text-section form-item">
-                  <div class="label"><label for="save-tpl-title">${ts['Title']}</label></div>
-                  <div class="edit-value content">
-                    <div class="crm-form-elem crm-form-textfield">
-                      <input name="subject" type="text" id="save-tpl-title" class="form-text">
-                    </div>
-                  </div>
-                </div>
-                <div class="form-actions">
-                  <button type="button" class="form-submit">${ts['Save']}</button>
-                </div>
-              </div>`;
-
-        modalCallbacks.open = function() {
-          // TODO: send request to save template
-        }
-
-        modal.open(modalContent, modalTitle, modalCallbacks);
-      });
     },
 
     formSubmit: function() {
@@ -463,7 +486,7 @@
       }
 
       // Create user's message
-      AICompletion.prototype.createMessage(userMsgID, formData, 'user');
+      AICompletion.prototype.createMessage(userMsgID, aiMsgID, formData, 'user');
 
       // Create AI's message
       fetch(endpoint.chat, {
@@ -548,22 +571,29 @@
           else {
             let json = JSON.parse(event.data);
 
-            if (typeof json !== "undefined" && json.message.length) {
-              let message = json.message.replace(/\n/g, '<br>');
-              AICompletion.prototype.createMessage(aiMsgID, message, 'ai', 'stream');
-              $aiMsg = $container.find('.msg[id="' + aiMsgID + '"]');
+            if (typeof json !== "undefined") {
+              if (json.hasOwnProperty('message')) {
+                let message = json.message.replace(/\n/g, '<br>');
+                AICompletion.prototype.createMessage(aiMsgID, userMsgID, message, 'ai', 'stream');
+                $aiMsg = $container.find('.msg[id="' + aiMsgID + '"]');
 
-              if (chatData.messages.hasOwnProperty(aiMsgID)) {
-                if (!chatData.messages[aiMsgID].used) {
+                if (json.hasOwnProperty('id')) {
+                  $aiMsg.data('aicompletion-id', json.id);
+                }
+
+                // Update usage
+                if (chatData.messages.hasOwnProperty(aiMsgID)) {
+                  if (!chatData.messages[aiMsgID].used) {
+                    AICompletion.prototype.usageUpdate();
+                  }
+                }
+                else {
+                  chatData.messages[aiMsgID] = {
+                    used: true
+                  }
+
                   AICompletion.prototype.usageUpdate();
                 }
-              }
-              else {
-                chatData.messages[aiMsgID] = {
-                  used: true
-                }
-
-                AICompletion.prototype.usageUpdate();
               }
             }
           }
@@ -583,7 +613,7 @@
 
       // The test data is only used for development and needs to call the real endpoint
       data = {
-        'org_info': '「帥氣愛滋權益促進會」是國內第一個由愛滋感染者和他們的家屬、朋友，以及認同人權的社會人士所發起，長期投入愛滋平權運動的非營利互助團體。在倡導平權觀念的同時，我們希望以互諒、互愛的訴求為原則；我們也努力的在愛滋感染者與社會大眾、政府決策者、醫療及公共衛生等等相關單位之間，扮演溝通者的橋樑角色。',
+        'org_info': '「測試愛滋病權益促進會」是國內第一個由愛滋感染者和他們的家屬、朋友，以及認同人權的社會人士所發起，長期投入愛滋平權運動的非營利互助團體。在倡導平權觀念的同時，我們希望以互諒、互愛的訴求為原則；我們也努力的在愛滋感染者與社會大眾、政府決策者、醫療及公共衛生等等相關單位之間，扮演溝通者的橋樑角色。',
         'usage': {
           'max': 1000,
           'current': 3
@@ -598,7 +628,7 @@
             'type': '預設範本',
             'role': '募款專家',
             'tone': '幽默',
-            'content': '組織簡介：「帥氣愛滋權益促進會」是國內第一個由愛滋感染者和他們的家屬、朋友，以及認同人權的社會人士所發起，長期投入愛滋平權運動的非營利互助團體。在倡導平權觀念的同時，我們希望以互諒、互愛的訴求為原則；我們也努力的在愛滋感染者與社會大眾、政府決策者、醫療及公共衛生等等相關單位之間，扮演溝通者的橋樑角色。我們非常歡迎您以精神支持，或實際行動投入我們倡導權益的行列；幫助感染者與家屬回復應有的居住、工作、就學、就醫等基本人權，使他們得以享有一般人的正常生活，並且，最終促使這個社會成為一個遠離偏見、不再有歧視的正常社會。請幫組織撰寫500字以內的募款文案，通過情感訴求和事實陳述來激發支持者共鳴和參與，支持者是促成改變的人，邀請支持者以捐款方式發揮力量。'
+            'content': '組織簡介：「測試愛滋病權益促進會」是國內第一個由愛滋感染者和他們的家屬、朋友，以及認同人權的社會人士所發起，長期投入愛滋平權運動的非營利互助團體。在倡導平權觀念的同時，我們希望以互諒、互愛的訴求為原則；我們也努力的在愛滋感染者與社會大眾、政府決策者、醫療及公共衛生等等相關單位之間，扮演溝通者的橋樑角色。我們非常歡迎您以精神支持，或實際行動投入我們倡導權益的行列；幫助感染者與家屬回復應有的居住、工作、就學、就醫等基本人權，使他們得以享有一般人的正常生活，並且，最終促使這個社會成為一個遠離偏見、不再有歧視的正常社會。請幫組織撰寫500字以內的募款文案，通過情感訴求和事實陳述來激發支持者共鳴和參與，支持者是促成改變的人，邀請支持者以捐款方式發揮力量。'
           }
         ],
         "filters": {
@@ -636,6 +666,7 @@
       this.modal.init();
       this.formUiOperation();
       this.useTemplates();
+      this.setTemplate();
 
       // Finally, add class to mark the initialization
       $container.addClass(INIT_CLASS);
