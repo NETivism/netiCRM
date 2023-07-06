@@ -107,40 +107,45 @@ class CRM_AI_Page_AJAX {
         $acTemplateTitle = $jsondata['template_title'];
         $data['template_title'] = $acTemplateTitle;
       }
-      if ($acId && $acIsTemplate && $acTemplateTitle) {
+      if (isset($acId) && isset($acIsTemplate) && isset($acTemplateTitle)) {
         $setTemplateResult = CRM_AI_BAO_AICompletion::setTemplate($data);
         $result = array();
-        if ($setTemplateResult == TRUE) {
-          //set template successful return true
-          $result = [
-            'status' => "success",
-            'message' => "AI completion is set as template successfully",
-            'data' => [
-              'id' => $acId,
-              'is_template' => $acTemplateTitle,
-            ],
-          ];
-        }
-        elseif ($setTemplateResult == FALSE) {
-          //Originally 1 returns False
-          $result = [
-            'status' => "success",
-            'message' => "AI completion has already been set as a template",
-            'data' => [
-              'id' => $acId,
-              'is_template' => $acTemplateTitle,
-            ],
-          ];
+        if ($setTemplateResult['is_error'] == '0') {
+          //set or unset template successful return true
+          if ($acIsTemplate == "1") {
+            //0 -> 1
+            $result = [
+              'status' => "success",
+              'message' => "AI completion is set as template successfully",
+              'data' => [
+                'id' => $setTemplateResult['id'],
+                'is_template' => $setTemplateResult['is_template'],
+                'template_title' => $setTemplateResult['template_title'],
+              ],
+            ];
+          }
+          else {
+            //  1 -> 0
+            $result = [
+              'status' => "success",
+              'message' => "AI completion is unset as template successfully",
+              'data' => [
+                'id' => $setTemplateResult['id'],
+                'is_template' => $setTemplateResult['is_template'],
+                'template_title' => $setTemplateResult['template_title'],
+              ],
+            ];
+          }
         }
         else {
-          //If it cannot be set to 1 throw Error
-          //TODO: return error
+          //If it cannot be set/unset throw Error
           $result = [
             'status' => "Failed",
-            'message' => "Failed to set AI completion as template",
+            'message' => $setTemplateResult['message'],
             'data' => [
-              'id' => $acId,
-              'is_template' => $acTemplateTitle,
+              'id' => $setTemplateResult['id'],
+              'is_template' => $setTemplateResult['is_template'],
+              'template_title' => $setTemplateResult['template_title'],
             ],
           ];
         }
