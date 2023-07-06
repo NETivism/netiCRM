@@ -221,6 +221,7 @@
 
               sendAjaxRequest(endpoint.setTemplate, 'POST', data, function(response) {
                 if (response.status == 'success') {
+                  $tplTitle.prop('readonly', true);
                   $submit.text(ts['Saved']).prop('disabled', true);
                   $saveBtn.html(`<i class="zmdi zmdi-check"></i>${ts['Saved']}`).prop('disabled', true);
                 }
