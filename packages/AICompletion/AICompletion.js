@@ -515,7 +515,7 @@
         });
 
         evtSource.onmessage = (event) => {
-          if (event.data === '[DONE]' || event.data === '[ERR]') {
+          if (event.data === '[DONE]' || event.data === '[ERR]' || event.data.indexOf('[DONE]') != -1 || event.data.indexOf('[ERR]') != -1) { // TODO: Change format to JSON only
             evtSource.close();
 
             if ($submit.hasClass(ACTIVE_CLASS)) {
@@ -526,13 +526,13 @@
               $submit.addClass(SENT_CLASS).find('.text').text(ts['Try Again']);
             }
 
-            if (event.data === '[DONE]') {
+            if (event.data === '[DONE]' || event.data.indexOf('[DONE]') != -1) { // TODO: Change format to JSON only
               if (!$aiMsg.hasClass(FINISH_CLASS)) {
                 $aiMsg.addClass(FINISH_CLASS);
               }
             }
 
-            if (event.data === '[ERR]') {
+            if (event.data === '[ERR]' || event.data.indexOf('[ERR]') != -1) { // TODO: Change format to JSON only
               if (!$aiMsg.hasClass(ERROR_CLASS)) {
                 $aiMsg.addClass(ERROR_CLASS);
               }
