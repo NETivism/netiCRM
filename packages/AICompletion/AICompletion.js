@@ -569,38 +569,56 @@
             }
           }
           else {
-            let json = JSON.parse(event.data);
+            try {
+              let json = JSON.parse(event.data);
 
-            if (typeof json !== "undefined") {
-              if (json.hasOwnProperty('message')) {
-                let message = json.message.replace(/\n/g, '<br>');
-                AICompletion.prototype.createMessage(aiMsgID, userMsgID, message, 'ai', 'stream');
-                $aiMsg = $container.find('.msg[id="' + aiMsgID + '"]');
+              if (typeof json !== "undefined") {
+                if (json.hasOwnProperty('message')) {
+                  let message = json.message.replace(/\n/g, '<br>');
+                  AICompletion.prototype.createMessage(aiMsgID, userMsgID, message, 'ai', 'stream');
+                  $aiMsg = $container.find('.msg[id="' + aiMsgID + '"]');
 
-                if (json.hasOwnProperty('id')) {
-                  $aiMsg.data('aicompletion-id', json.id);
-                }
+                  if (json.hasOwnProperty('id')) {
+                    $aiMsg.data('aicompletion-id', json.id);
+                  }
 
-                // Update usage
-                if (chatData.messages.hasOwnProperty(aiMsgID)) {
-                  if (!chatData.messages[aiMsgID].used) {
+                  // Update usage
+                  if (chatData.messages.hasOwnProperty(aiMsgID)) {
+                    if (!chatData.messages[aiMsgID].used) {
+                      AICompletion.prototype.usageUpdate();
+                    }
+                  }
+                  else {
+                    chatData.messages[aiMsgID] = {
+                      used: true
+                    }
+
                     AICompletion.prototype.usageUpdate();
                   }
                 }
-                else {
-                  chatData.messages[aiMsgID] = {
-                    used: true
-                  }
-
-                  AICompletion.prototype.usageUpdate();
-                }
               }
+            } catch (error) {
+              console.log('JSON Parse Error:', error.message);
             }
           }
         };
 
         evtSource.onerror = function(event) {
           console.log("EventSource encountered an error: ", event);
+          evtSource.close();
+
+          // TODO: error handle
+          if ($submit.hasClass(ACTIVE_CLASS)) {
+            $submit.removeClass(ACTIVE_CLASS).prop('disabled', false);
+          }
+
+          if (!$submit.hasClass(SENT_CLASS)) {
+            $submit.addClass(SENT_CLASS).find('.text').text(ts['Try Again']);
+          }
+
+          if (!$aiMsg.hasClass(FINISH_CLASS)) {
+            $aiMsg.addClass(FINISH_CLASS);
+          }
         };
       })
       .catch(function(error) {
