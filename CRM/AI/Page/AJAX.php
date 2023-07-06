@@ -60,6 +60,41 @@ class CRM_AI_Page_AJAX {
   }
 
   function getTemplateList() {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] == 'application/json') {
+      $jsonString = file_get_contents('php://input');
+      $jsondata = json_decode($jsonString, true);
+      if (is_string($jsondata['component']) && isset($jsondata['component'])) {
+        $component = $jsondata['component'];
+        $data['component'] = $component;
+      }
+      if (is_string($jsondata['field']) && isset($jsondata['field'])) {
+        $field = $jsondata['field'];
+        $data['field'] = $field;
+      }
+      //TODO : with component and filed
+      // if (isset($data)) {
+      //   $getListResult = CRM_AI_BAO_AICompletion::getTemplateList($data);
+      // }
+      //Get all template list
+      $getListResult = CRM_AI_BAO_AICompletion::getTemplateList();
+      if (is_array($getListResult) && !empty($getListResult)) {
+        $result = [
+          'status' => "success",
+          'message' => "Template list retrieved successfully",
+          'data' => $getListResult,
+        ];
+      }
+      else {
+        $result = [
+          'status' => "Failed",
+          'message' => "Failed to retrieve template list",
+        ];
+      }
+
+      header('Content-Type: application/json; charset=utf-8');
+      echo json_encode($result);
+      CRM_Utils_System::civiExit();
+    }
   }
 
   function getTemplate() {
@@ -78,7 +113,7 @@ class CRM_AI_Page_AJAX {
             'data' => $getTemplateResult,
           ];
         }
-        elseif ($getTemplateResult == FALSE) {
+        else {
           $result = [
             'status' => "Failed",
             'message' => "Failed to retrieve template",
@@ -157,5 +192,44 @@ class CRM_AI_Page_AJAX {
   }
 
   function setShare() {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] == 'application/json') {
+      $jsonString = file_get_contents('php://input');
+      $jsondata = json_decode($jsonString, true);
+      if (is_string($jsondata['id']) && isset($jsondata['id'])) {
+        $acId = $jsondata['id'];
+      }
+      if (is_string($jsondata['is_share_with_others']) && isset($jsondata['is_share_with_others'])) {
+        $acIsShare = $jsondata['is_share_with_others'];
+      }
+      if (isset($acId) && isset($acIsShare)) {
+        $setShareResult = CRM_AI_BAO_AICompletion::setShare($acId);
+        $result = array();
+        if ($setShareResult) {
+          $result = [
+            'status' => "success",
+            'message' => "AI completion is set as shareable successfully",
+            'data' => [
+              'id' => $acId,
+              'is_template' => $acIsShare,
+            ],
+          ];
+        }
+        else {
+          $result = [
+            'status' => "Failed",
+            'message' => "AI completion has already been set as shareable",
+            'data' => [
+              'id' => $acId,
+              'is_template' => $acIsShare,
+            ],
+          ];
+        }
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($result);
+        CRM_Utils_System::civiExit();
+
+      }
+
+    }
   }
 }
