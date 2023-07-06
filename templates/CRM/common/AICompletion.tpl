@@ -11,6 +11,7 @@ window.AICompletion = {
   translation: {
     'Copy': '{/literal}{ts}Copy{/ts}{literal}',
     'Save': '{/literal}{ts}Save{/ts}{literal}',
+    'Saved': '{/literal}{ts}Saved{/ts}{literal}',
     'Title': '{/literal}{ts}Title{/ts}{literal}',
     'Submit': '{/literal}{ts}Submit{/ts}{literal}',
     'Try Again': '{/literal}{ts}Try Again{/ts}{literal}',
@@ -37,7 +38,12 @@ window.AICompletion = {
     <div class="netiaic-content">
       <div class="inner">
         <div class="netiaic-chat">
-          <div class="inner"></div>
+          <div class="inner">
+            <div id="ai-msg-welcome" class="ai-msg msg is-finished">
+              <div class="msg-avatar"><i class="zmdi zmdi-mood"></i></div>
+              <div class="msg-content">{ts}Hi, this is netiCRM copywriting helper, please be careful not to enter personal information or other confidential information.{/ts}</div>
+            </div>
+          </div>
         </div>
         <div class="netiaic-form-container">
           <div class="inner">
