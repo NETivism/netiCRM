@@ -206,9 +206,9 @@
 
         if (aicompletionID) {
           modalCallbacks.open = function() {
-            // TODO: send request to save template
             $('.set-tpl-form').on('click', '.set-tpl-submit:not([disabled])', function(event) {
               event.preventDefault();
+              console.log('wow');
               let $submit = $(this),
                   $container = $submit.closest('.set-tpl-form'),
                   $tplTitle = $container.find('.form-text[name="set-tpl-title"]'),
@@ -265,7 +265,6 @@
     },
 
     useTemplates: function() {
-      // Create a modal dialog and related elements based on the functional requirements
       let $container = AICompletion.prototype.container,
           modal = AICompletion.prototype.modal;
 
@@ -516,71 +515,70 @@
         });
 
         evtSource.onmessage = (event) => {
-          if (event.data === '[DONE]' || event.data === '[ERR]' || event.data.indexOf('[DONE]') != -1 || event.data.indexOf('[ERR]') != -1) { // TODO: Change format to JSON only
-            evtSource.close();
+          try {
+            let eventData = JSON.parse(event.data);
+            if (typeof eventData !== "undefined") {
+              if ($aiMsg.length && (eventData.hasOwnProperty('is_finished') || eventData.hasOwnProperty('is_error'))) {
+                evtSource.close();
 
-            if ($submit.hasClass(ACTIVE_CLASS)) {
-              $submit.removeClass(ACTIVE_CLASS).prop('disabled', false);
-            }
-
-            if (!$submit.hasClass(SENT_CLASS)) {
-              $submit.addClass(SENT_CLASS).find('.text').text(ts['Try Again']);
-            }
-
-            if (event.data === '[DONE]' || event.data.indexOf('[DONE]') != -1) { // TODO: Change format to JSON only
-              if (!$aiMsg.hasClass(FINISH_CLASS)) {
-                $aiMsg.addClass(FINISH_CLASS);
-              }
-            }
-
-            if (event.data === '[ERR]' || event.data.indexOf('[ERR]') != -1) { // TODO: Change format to JSON only
-              if (!$aiMsg.hasClass(ERROR_CLASS)) {
-                $aiMsg.addClass(ERROR_CLASS);
-              }
-            }
-
-            if ($aiMsg.length) {
-              if (navigator.clipboard && navigator.clipboard.writeText) {
-                try {
-                  $aiMsg.on('click', '.copy-btn', function(event) {
-                    event.preventDefault();
-                    let $copyBtn = $(this),
-                        $aiMsg = $copyBtn.closest('.msg'),
-                        $msgContent = $aiMsg.find('.msg-content'),
-                        copyText = '';
-
-                    if ($msgContent.length) {
-                      copyText = $msgContent.html().replace(/<br>/g, '\n');
-                    }
-
-                    copyText = copyText.trim();
-                    navigator.clipboard.writeText(copyText);
-                    $copyBtn.addClass(COPY_CLASS);
-
-                    setTimeout(function() {
-                      $copyBtn.removeClass(COPY_CLASS);
-                    }, 3000);
-                  });
-                } catch (error) {
-                  console.error('Failed to copy text to clipboard:', error);
+                if ($submit.hasClass(ACTIVE_CLASS)) {
+                  $submit.removeClass(ACTIVE_CLASS).prop('disabled', false);
                 }
-              } else {
-                console.error('Clipboard API is not supported in this browser.');
-              }
-            }
-          }
-          else {
-            try {
-              let json = JSON.parse(event.data);
 
-              if (typeof json !== "undefined") {
-                if (json.hasOwnProperty('message')) {
-                  let message = json.message.replace(/\n/g, '<br>');
+                if (!$submit.hasClass(SENT_CLASS)) {
+                  $submit.addClass(SENT_CLASS).find('.text').text(ts['Try Again']);
+                }
+
+                if (eventData.is_finished) {
+                  if (!$aiMsg.hasClass(FINISH_CLASS)) {
+                    $aiMsg.addClass(FINISH_CLASS);
+                  }
+                }
+
+                if (eventData.is_error) {
+                  if (!$aiMsg.hasClass(ERROR_CLASS)) {
+                    $aiMsg.addClass(ERROR_CLASS);
+                  }
+                }
+
+                if ($aiMsg.length) {
+                  if (navigator.clipboard && navigator.clipboard.writeText) {
+                    try {
+                      $aiMsg.on('click', '.copy-btn', function(event) {
+                        event.preventDefault();
+                        let $copyBtn = $(this),
+                            $aiMsg = $copyBtn.closest('.msg'),
+                            $msgContent = $aiMsg.find('.msg-content'),
+                            copyText = '';
+
+                        if ($msgContent.length) {
+                          copyText = $msgContent.html().replace(/<br>/g, '\n');
+                        }
+
+                        copyText = copyText.trim();
+                        navigator.clipboard.writeText(copyText);
+                        $copyBtn.addClass(COPY_CLASS);
+
+                        setTimeout(function() {
+                          $copyBtn.removeClass(COPY_CLASS);
+                        }, 3000);
+                      });
+                    } catch (error) {
+                      console.error('Failed to copy text to clipboard:', error);
+                    }
+                  } else {
+                    console.error('Clipboard API is not supported in this browser.');
+                  }
+                }
+              }
+              else {
+                if (eventData.hasOwnProperty('message')) {
+                  let message = eventData.message.replace(/\n/g, '<br>');
                   AICompletion.prototype.createMessage(aiMsgID, userMsgID, message, 'ai', 'stream');
                   $aiMsg = $container.find('.msg[id="' + aiMsgID + '"]');
 
-                  if (json.hasOwnProperty('id')) {
-                    $aiMsg.data('aicompletion-id', json.id);
+                  if (eventData.hasOwnProperty('id')) {
+                    $aiMsg.eventData('aicompletion-id', eventData.id);
                   }
 
                   // Update usage
@@ -598,9 +596,9 @@
                   }
                 }
               }
-            } catch (error) {
-              console.log('JSON Parse Error:', error.message);
             }
+          } catch (error) {
+            console.log('JSON Parse Error:', error.message);
           }
         };
 
@@ -615,10 +613,6 @@
 
           if (!$submit.hasClass(SENT_CLASS)) {
             $submit.addClass(SENT_CLASS).find('.text').text(ts['Try Again']);
-          }
-
-          if (!$aiMsg.hasClass(FINISH_CLASS)) {
-            $aiMsg.addClass(FINISH_CLASS);
           }
         };
       })
