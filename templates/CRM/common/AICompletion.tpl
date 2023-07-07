@@ -1,9 +1,27 @@
-<!-- AICompletion files start -->
-<link rel="stylesheet" href="{$config->resourceBase}packages/AICompletion/AICompletion.css?v{$config->ver}">
-{js src=packages/AICompletion/AICompletion.js group=999 weight=998 library=civicrm/civicrm-js-aicompletion}{/js}
-<!-- AICompletion files end -->
+{* AICompletion files start *}
+{* style files *}
+{*
+  The `<link rel="stylesheet">` tag placed inside the `<body>` is valid according to the specifications. For more information:
 
-<!-- Added global variable: AICompletion -->
+  - [HTML Standard 4.2.4 The link element](https://html.spec.whatwg.org/multipage/semantics.html#the-link-element) and search for "body-ok"
+  - [Keywords that are body-ok affect whether link elements are allowed in the body](https://html.spec.whatwg.org/multipage/links.html#body-ok)
+
+  Keywords that are "body-ok" determine whether link elements are allowed in the body. The "body-ok" keywords include dns-prefetch, modulepreload, pingback, preconnect, prefetch, preload, and stylesheet.
+
+  However, both the `<link rel="stylesheet">` tag and `@import url` inside the `<body>` are not considered best practices. This is because if CSS is imported within the <body> tag, it may cause flickering or changes in styles during page rendering, which goes against the principle of separating concerns.
+
+  Consider creating a smarty `{css}` similar to the way JavaScript is loaded, allowing CSS to be placed in the `<head>` section. This can help improve the overall performance and adhere to the best practices.
+
+  refs https://pm.netivism.com.tw/issues/37730#change-408923
+*}
+
+<link rel="stylesheet" href="{$config->resourceBase}packages/AICompletion/AICompletion.css?v{$config->ver}">
+
+{* script files *}
+{js src=packages/AICompletion/AICompletion.js group=999 weight=998 library=civicrm/civicrm-js-aicompletion}{/js}
+{* AICompletion files end *}
+
+{* Added global js variable: AICompletion *}
 {literal}
 <script type="text/javascript">
 window.AICompletion = {
@@ -32,7 +50,7 @@ window.AICompletion = {
 </script>
 {/literal}
 
-<!-- AICompletion HTML start -->
+{* AICompletion HTML start *}
 <div class="netiaic-container">
   <div class="netiaic-inner">
     <div class="netiaic-content">
@@ -76,8 +94,8 @@ window.AICompletion = {
                       <ul class="netiaic-command-list">
                         <li data-name="org_info" class="netiaic-command-item">
                           <a class="get-org-info" href="#">{ts}Click to insert organization intro.{/ts}</a>
-                          <a href="#" target="_blank">({ts}Edit{/ts}<i class="zmdi zmdi-edit"></i>)</a> <!-- TODO: Need to change to correct URL -->
-                          <div class="netiaic-command-item-desc"> <!-- TODO: smarty var --> </div>
+                          <a href="#" target="_blank">({ts}Edit{/ts}<i class="zmdi zmdi-edit"></i>)</a> {* TODO: Need to change to correct URL *}
+                          <div class="netiaic-command-item-desc"> {* TODO: smarty var *} </div>
                         </li>
                       </ul>
                     </div>
@@ -101,7 +119,7 @@ window.AICompletion = {
     </div>
   </div>
 </div>
-<!-- AICompletion HTML end -->
+{* AICompletion HTML end *}
 
 {literal}
 <script type="text/javascript">
