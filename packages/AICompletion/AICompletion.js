@@ -478,7 +478,10 @@
           formData = {
             role: $container.find('.netiaic-prompt-role-select').val(),
             tone: $container.find('.netiaic-prompt-tone-select').val(),
-            content: $container.find('.netiaic-prompt-content-textarea').val()
+            content: $container.find('.netiaic-prompt-content-textarea').val(),
+            sourceUrl: window.location.href,
+            sourceUrlPath: window.location.pathname,
+            sourceUrlQuery: window.location.search
           };
 
       if (!$submit.hasClass(ACTIVE_CLASS)) {
