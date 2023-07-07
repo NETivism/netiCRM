@@ -451,8 +451,8 @@
       });
 
       $promptContentCommand.find('[data-name="org_info"] .netiaic-command-item-desc').html(defaultData.org_info);
-      $promptContentCommand.on('click', '.get-org-info', function(event) {
-        event.preventDefault;
+      $promptContentCommand.on('click', '.get-org-info, .netiaic-command-item-desc', function(event) {
+        event.preventDefault();
 
         if ($promptContent.val() === '') {
           $promptContent.val(defaultData.org_info);
@@ -464,7 +464,7 @@
       });
 
       $submit.on('click', function(event) {
-        event.preventDefault;
+        event.preventDefault();
         AICompletion.prototype.formSubmit();
       });
     },

@@ -272,6 +272,7 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
   color: #999;
 }
 .netiaic-command-list li:hover .netiaic-command-item-desc {
+  cursor: pointer;
   color: #777;
 }
 .netiaic-command.is-active {
