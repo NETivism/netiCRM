@@ -327,17 +327,39 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
 
   /**
    * Retrieve certain quantity of aicompletion data rows which 'is_template' = 1.
-   * @param Int $offset The offset of retrieve rows
+   * @param array [
+   *   "component" => the component of records.
+   *   "field" => the page of the record.
+   *   "offset" => the offset of records.
+   * ]
    * 
    * @return array AICompletion data rows.
    */
-  public static function getTemplateList($offset = 0) {
-    $sql = "SELECT * FROM civicrm_aicompletion WHERE is_template = 1";
+  public static function getTemplateList($params = array()) {
+    extract($params);
+    $whereClause = [];
+    $sqlParams = [];
+    $whereClause[] = 'is_template = 1';
+    if ($component) {
+      $whereClause[] = "component = %1";
+      $sqlParams[1] = array($component, 'String');
+    }
+    if ($field) {
+      $whereClause[] = "field = %2";
+      $sqlParams[2] = array($field, 'String');
+    }
+    
+    $sql = "SELECT * FROM civicrm_aicompletion WHERE ".implode(' AND ', $whereClause);
     $sql .= " LIMIT ".self::TEMPLATE_LIST_ROW_LIMIT;
     if ($offset) {
       $sql .= " OFFSET ".$offset;
     }
-    $dao = CRM_Core_DAO::executeQuery($sql);
+    if (empty($sqlParams)) {
+      $dao = CRM_Core_DAO::executeQuery($sql);
+    }
+    else {
+      $dao = CRM_Core_DAO::executeQuery($sql, $sqlParams);
+    }
     $return = [];
     while ($dao->fetch()) {
       $aiCompletionData = self::retrieveAICompletionDataArray($dao->id);
@@ -411,6 +433,32 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
       $returnValue = $result ? 1 : 0;
     }
     return $returnValue;
+  }
+
+  public static function getAIFormPrepareValues() {
+    $session = CRM_Core_Session::singleton();
+    $cid = $session->get('userID');
+    $name = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $cid, 'sort_name');
+    $defaults = array(
+      'default' => array(
+        'ai_role' => ts('Fundraising Marcom Specialist'),
+        'tone_style' => ts('Gentle'),
+        'context' => ts('Please help me write a fundraising copy for our association, the "ABC Media Literacy Promotion Association". The "ABC Media Literacy Promotion Association" advocates for media literacy and strives to act as a bridge for communication between the media, audiences, government decision-makers, and other relevant entities. We warmly welcome your support, either in spirit or through direct action, in our advocacy efforts.'),
+      ),
+      'ai_role_options' => array(
+        1 => ts('Marketing Communications Specialist'),
+        2 => ts('Fundraising Marcom Specialist'),
+      ),
+      'tone_style_options' => array(
+        1 => ts('Gentle'),
+        2 => ts('Straight'),
+      ),
+      'orginization_instruction' => 'The "ABC Media Literacy Promotion Association" advocates for media literacy and strives to act as a bridge for communication between the media, audiences, government decision-makers, and other relevant entities.',
+      'contact_name' => $name,
+      'total_quota' => 100,
+      'current_quota' => 5,
+    );
+    return $defaults;
   }
 
 

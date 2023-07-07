@@ -177,7 +177,7 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
               $responseData['is_error'] = 1;
               $responseData['error_message'] = $decoded["choices"][0]["finish_reason"];
 
-              echo 'data: [ERR]'.json_encode($responseData)."\n\n";
+              echo 'data: '.json_encode($responseData)."\n\n";
             }
           }
         }
