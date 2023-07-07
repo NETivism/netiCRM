@@ -12,7 +12,7 @@
 
   Consider creating a smarty `{css}` similar to the way JavaScript is loaded, allowing CSS to be placed in the `<head>` section. This can help improve the overall performance and adhere to the best practices.
 
-  refs https://pm.netivism.com.tw/issues/37730#change-408923
+  refs #37730 46f
 *}
 
 <link rel="stylesheet" href="{$config->resourceBase}packages/AICompletion/AICompletion.css?v{$config->ver}">
