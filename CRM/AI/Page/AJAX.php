@@ -21,8 +21,31 @@ class CRM_AI_Page_AJAX {
         $context = $jsondata['content'];
         $data['context'] = $context;
       }
+      if (is_string($jsondata['sourceUrlPath']) && isset($jsondata['sourceUrlPath'])) {
+        $url = $jsondata['sourceUrlPath'];
+        switch ($url) {
+          case 'civicrm/admin/contribute/setting':
+          case '/zh-hant/civicrm/admin/contribute/settings':
+            $data['component'] = "CiviContribute";
+            break;
+          case 'civicrm/member':
+          case '/zh-hant/civicrm/member':
+            $data['component'] = "CiviMember";
+            break;
+          case '/civicrm/event/manage/eventInfo':
+          case '/zh-hant/civicrm/event/manage/eventInfo':
+            $data['component'] = "CiviEvent";
+            break;
+          case '/zh-hant/civicrm/mailing/send':
+          case '/civicrm/mailing/send':
+            $data['component'] = "CiviMail";
+            break;
+          default:
+            break;
+        }
+      }
 
-      if ($tone_style && $ai_role && $context) {
+      if ($tone_style && $ai_role && $context && $data['component']) {
         $system_prompt = ts("You are an %1 in Taiwan who uses Traditional Chinese and is skilled at writing %2 copywriting.",
           array(1 => $ai_role, 2 => $tone_style,)
         );
@@ -71,12 +94,19 @@ class CRM_AI_Page_AJAX {
         $field = $jsondata['field'];
         $data['field'] = $field;
       }
-      //TODO : with component and filed
-      // if (isset($data)) {
-      //   $getListResult = CRM_AI_BAO_AICompletion::getTemplateList($data);
-      // }
-      //Get all template list
-      $getListResult = CRM_AI_BAO_AICompletion::getTemplateList();
+      if (is_string($jsondata['offset']) && isset($jsondata['offset'])) {
+        $offset = $jsondata['offset'];
+        $data['offset'] = $offset;
+      }
+
+      if (isset($data)) {
+        $getListResult = CRM_AI_BAO_AICompletion::getTemplateList($data);
+      }
+      else {
+        //Get all template list
+        $getListResult = CRM_AI_BAO_AICompletion::getTemplateList();
+      }
+
       if (is_array($getListResult) && !empty($getListResult)) {
         $result = [
           'status' => "success",
@@ -227,9 +257,7 @@ class CRM_AI_Page_AJAX {
         header('Content-Type: application/json; charset=utf-8');
         echo json_encode($result);
         CRM_Utils_System::civiExit();
-
       }
-
     }
   }
 }
