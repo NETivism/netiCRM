@@ -208,7 +208,7 @@
           modalCallbacks.open = function() {
             $('.set-tpl-form').on('click', '.set-tpl-submit:not([disabled])', function(event) {
               event.preventDefault();
-              console.log('wow');
+
               let $submit = $(this),
                   $container = $submit.closest('.set-tpl-form'),
                   $tplTitle = $container.find('.form-text[name="set-tpl-title"]'),
@@ -521,7 +521,7 @@
           try {
             let eventData = JSON.parse(event.data);
             if (typeof eventData !== "undefined") {
-              if ($aiMsg.length && (eventData.hasOwnProperty('is_finished') || eventData.hasOwnProperty('is_error'))) {
+              if (($aiMsg && $aiMsg.length) && (eventData.hasOwnProperty('is_finished') || eventData.hasOwnProperty('is_error'))) {
                 evtSource.close();
 
                 if ($submit.hasClass(ACTIVE_CLASS)) {
@@ -581,7 +581,7 @@
                   $aiMsg = $container.find('.msg[id="' + aiMsgID + '"]');
 
                   if (eventData.hasOwnProperty('id')) {
-                    $aiMsg.eventData('aicompletion-id', eventData.id);
+                    $aiMsg.data('aicompletion-id', eventData.id);
                   }
 
                   // Update usage
