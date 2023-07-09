@@ -13,8 +13,11 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
 
     // Action:
     CHAT_COMPLETION = 1,
-    GET_TOKEN = 2;
+    GET_TOKEN = 2,
 
+    // Status:
+    STATUS_PENDING = 2,
+    STATUS_SUCCESS = 1;
   /**
    * What action is execute now
    *
@@ -75,7 +78,7 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
       $aicompletionData['prompt'] = json_encode($params['prompt']);
     }
     $aicompletionData['created_date'] = date('Y-m-d H:i:s');
-    $aicompletionData['status_id'] = 2; // Default status is 2 (didn't get response)
+    $aicompletionData['status_id'] = self::STATUS_PENDING;
     $session = CRM_Core_Session::singleton();
     $aicompletionData['contact_id'] = $session->get('userID');
     // save data to DB
@@ -83,12 +86,10 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
     // Get token for validation.
     $keyToken = CRM_Core_Key::get('aicompletion_'.$aicompletion->id);
     // prepare return array.
-    $returnArray = [
+    return [
       'token' => $keyToken,
       'id' => $aicompletion->id,
     ];
-    return $returnArray;
-
   }
 
   /**
@@ -111,7 +112,7 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
   public static function chat($params = array()) {
 
     // Prepare follow parameters will be used.
-    $requestData = self::validateAndDecryptChatParams($params);
+    $requestData = self::validateChatParams($params);
     $requestData['action'] = self::CHAT_COMPLETION;
 
     // Send request to OpenAI API
@@ -122,16 +123,25 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
       $data = array_merge($requestData, $responseData);
       $data['id'] = $requestData['id'];
       $data['output_text'] = $responseData['message'];
-      $result = self::create($data);
+      self::create($data);
     }
 
-    // Return result
     return $responseData;
   }
 
-  private static function validateAndDecryptChatParams($params) {
+  /**
+   * Validates chat parameters.
+   *
+   * @param array $params The parameters to validate.
+   *
+   * @return array The validated parameters.
+   *
+   * @throws Exception If the validation fails or required parameters are missing.
+   */
+  private static function validateChatParams($params) {
     $aicompletion = array();
     $isPass = FALSE;
+
     // If prompt is in $params, just use it.
     if (isset($params['prompt'])) {
       if (is_array($params['prompt'])) {
@@ -142,17 +152,17 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
       }
       $isPass = TRUE;
     }
-    // No prompt condition, we need 'id' in params.
+
     if (isset($params['id'])) {
-      $aiID = $aicompletion['id'] = $params['id'];
+      $acID = $aicompletion['id'] = $params['id'];
       // If there are 'token' in $params, validate the 'token' and assiociated 'id' is correct.
       if (isset($params['token'])) {
         $key = $params['token'];
-        $getKey = CRM_Core_Key::validate($key, 'aicompletion_'.$aiID);
+        $getKey = CRM_Core_Key::validate($key, 'aicompletion_'.$acID);
         $isKeyPass = ($getKey == $key);
         if ($isKeyPass) {
           $isPass = TRUE;
-          $aiCompletionArray = self::retrieveAICompletionDataArray($aiID);
+          $aiCompletionArray = self::retrieveAICompletionDataArray($acID);
           $aicompletion = array_merge($aicompletion, $aiCompletionArray);
         }
         else {
@@ -162,38 +172,29 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
       else {
         // if there are no token, let is pass anyway.
         $isPass = TRUE;
-        $aiCompletionArray = self::retrieveAICompletionDataArray($aiID);
+        $aiCompletionArray = self::retrieveAICompletionDataArray($acID);
         $aicompletion = array_merge($aicompletion, $aiCompletionArray);
       }
     }
     // Get all the keys from the $params array
     $paramsKeys = array_keys($params);
     if ($isPass) {
-      // Define an array of keys that should not be copied
       $dontCopyParams = ['prompt', 'id', 'token'];
-      // Get the keys that should be copied by removing the keys in $dontCopyParams from $paramsKeys
       $copyKeys = array_diff($paramsKeys, $dontCopyParams);
       foreach ($copyKeys as $key) {
-        // Copy the values from $params to $aicompletion for the keys in $copyKeys
         $aicompletion[$key] = $params[$key];
       }
     }
     else {
-      // Check if both 'id' and 'token' keys are missing in $params
       if (!isset($params['id']) && !isset($params['token'])) {
-        // Define an array of required keys
         $requiredKeys = ['id', 'token'];
-        // Get the keys that are required but missing from $paramsKeys
         $lackKeys = array_diff($requiredKeys, $paramsKeys);
-        // Throw an exception with a message indicating the missing required keys
         throw new Exception('Missing required parameters: ' . implode(', ', $lackKeys));
       }
       else {
-        // Throw an exception indicating that the validation didn't pass
         throw new Exception('Doesn\'t pass the validation.');
       }
     }
-    // Return the $aicompletion array
     return $aicompletion;
   }
 
@@ -234,14 +235,16 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
    * @return object
    */
   public static function create(&$data) {
-    $op = 'edit';
     $id = CRM_Utils_Array::value('id', $data);
     if (!$id) {
       $op = 'create';
     }
+    else {
+      $op = 'edit';
+    }
     if (empty($data['contact_id'])) {
       $session = CRM_Core_Session::singleton();
-      $data['contact_id'] = $session->get('userID') ? $session->get('userID') : 1; // TODO: don't use 1
+      $data['contact_id'] = $session->get('userID') ? $session->get('userID') : NULL;
     }
     CRM_Utils_Hook::pre($op, 'AICompletion', $id, $data);
     $aicompletion = new CRM_AI_DAO_AICompletion();
@@ -259,7 +262,10 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
   }
 
   /**
-   * 
+   * Retrieve AI Completion data array by ID.
+   *
+   * @param int $aiCompletionID The ID of the AI Completion.
+   * @return array The retrieved AI Completion data array.
    */
   private function retrieveAICompletionDataArray($aiCompletionID) {
     $params = array(
@@ -279,6 +285,13 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
   }
 
 
+  /**
+   * Constructor for the AI Completion class.
+   *
+   * @param string|null $serviceProvider The service provider for AI completion. Default is NULL.
+   * @param string|null $model The model for AI completion. Default is NULL.
+   * @param int|null $maxTokens The maximum number of tokens for AI completion. Default is NULL.
+   */
   public function __construct($serviceProvider = NULL, $model = NULL, $maxTokens = NULL) {
     if (empty($serviceProvider)) {
       $serviceProvider = self::COMPLETION_SERVICE;
@@ -316,18 +329,19 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
 
   /**
    * Retrieve AICompletion Template object(array) by AICompletion ID.
-   * @param Int $aiID The AICompletion ID in DB row.
-   * 
+   *
+   * @param Int $acID The AICompletion ID in DB row.
+   *
    * @return FALSE|array AICompletion data row.
    */
-  public static function getTemplate($aiID) {
-    $retrieveAICompletionArray = self::retrieveAICompletionDataArray($aiID);
+  public static function getTemplate($acID) {
+    $retrieveAICompletionArray = self::retrieveAICompletionDataArray($acID);
     return $retrieveAICompletionArray;
   }
 
   /**
    * Retrieve certain quantity of aicompletion data rows which 'is_template' = 1.
-   * @param array [
+   * @param array $param [
    *   "component" => the component of records.
    *   "field" => the page of the record.
    *   "offset" => the offset of records.
@@ -336,23 +350,22 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
    * @return array AICompletion data rows.
    */
   public static function getTemplateList($params = array()) {
-    extract($params);
     $whereClause = [];
     $sqlParams = [];
     $whereClause[] = 'is_template = 1';
-    if ($component) {
+    if (isset($params['component'])) {
       $whereClause[] = "component = %1";
-      $sqlParams[1] = array($component, 'String');
+      $sqlParams[1] = array($params['component'], 'String');
     }
-    if ($field) {
+    if ($params['field']) {
       $whereClause[] = "field = %2";
-      $sqlParams[2] = array($field, 'String');
+      $sqlParams[2] = array($params['field'], 'String');
     }
-    
+
     $sql = "SELECT * FROM civicrm_aicompletion WHERE ".implode(' AND ', $whereClause);
     $sql .= " LIMIT ".self::TEMPLATE_LIST_ROW_LIMIT;
-    if ($offset) {
-      $sql .= " OFFSET ".$offset;
+    if ($params['offset']) {
+      $sql .= " OFFSET ".$params['offset'];
     }
     if (empty($sqlParams)) {
       $dao = CRM_Core_DAO::executeQuery($sql);
@@ -362,23 +375,31 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
     }
     $return = [];
     while ($dao->fetch()) {
-      $aiCompletionData = self::retrieveAICompletionDataArray($dao->id);
+      $aiCompletionData = array();
+      // do not call retrieve again for save database load
+      self::storeValues($dao, $aiCompletionData);
       $return[] = $aiCompletionData;
     }
     return $return;
   }
 
-  /** 
+  /**
    * Set is_template value to 1 for AICompletion data by ID.
-   * @param array [
+   *
+   * @param array $data [
    *   'id' => AICompletion ID
    *   "is_template": 1 or 0
-   *   "template_title": "Template title" 
+   *   "template_title": "Template title"
    * ]
-   * 
-   * @return array Result daa array.  
+   *
+   * @return array Result data array.
    */
   public static function setTemplate($data) {
+    foreach($data as $key => $val) {
+      if (!in_array($key, ['id', 'is_template', 'template_title'])) {
+        unset($data[$key]);
+      }
+    }
     $acId = $data['id'];
     $isSuccess = FALSE;
     // Set is template.
@@ -390,7 +411,7 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
         $isSuccess = CRM_Core_DAO::setFieldValue('CRM_AI_DAO_AICompletion', $acId, 'is_template', $setTemplateValue);
       }
       else {
-        $msg[] = 'Data of the ID doesn\'t existed.';
+        $msg[] = "Data of the ID doesn't existed.";
       }
     }
     else {
@@ -409,7 +430,7 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
     }
     else {
       // The case is_template is set to 0, then clear template_title anyway.
-      CRM_Core_DAO::setFieldValue('CRM_AI_DAO_AICompletion', $acId, 'template_title', 'NULL');
+      CRM_Core_DAO::setFieldValue('CRM_AI_DAO_AICompletion', $acId, 'template_title', '');
     }
 
     $returnData = $data;
@@ -421,18 +442,19 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
 
   /**
    * Set is_share_with_others value to 1 for AICompletion data by ID.
-   * @param Int $acId The ID of AiCompletion data.
-   * 
-   * @return Int If value has been changed, return 1, otherwise return 0.  
+   * @param int $acId The ID of AiCompletion data.
+   *
+   * @return int Return 1 when set successfully. 0 when failed. -1 for already
    */
   public static function setShare($acId) {
-    $returnValue = 0;
-    $is_template = CRM_Core_DAO::getFieldValue('CRM_AI_DAO_AICompletion', $acId, 'is_share_with_others');
-    if ($is_template == 0) {
-      $result = CRM_Core_DAO::setFieldValue('CRM_AI_DAO_AICompletion', $acId, 'is_share_with_others', 1);
-      $returnValue = $result ? 1 : 0;
+    $isShare = CRM_Core_DAO::getFieldValue('CRM_AI_DAO_AICompletion', $acId, 'is_share_with_others');
+    if ($isShare == 0) {
+      return CRM_Core_DAO::setFieldValue('CRM_AI_DAO_AICompletion', $acId, 'is_share_with_others', 1) ? 1 :0;
     }
-    return $returnValue;
+    else {
+      return -1;
+    }
+    return 0;
   }
 
   public static function getAIFormPrepareValues() {
@@ -460,6 +482,4 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
     );
     return $defaults;
   }
-
-
 }
