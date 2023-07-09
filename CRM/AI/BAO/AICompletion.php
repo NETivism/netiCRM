@@ -10,14 +10,14 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
     COMPLETION_MAX_TOKENS = 4096,
 
     TEMPLATE_LIST_ROW_LIMIT = 10,
-    
+
     // Action:
     CHAT_COMPLETION = 1,
     GET_TOKEN = 2;
-  
+
   /**
    * What action is execute now
-   * 
+   *
    * @var int
    */
   private static $_action;
@@ -63,9 +63,9 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
 
   /**
    * Saving chat parameters to DB, return the encrypted text about id.
-   * 
+   *
    * @param array $params ['ai_role', 'tone_style', 'context', 'prompt']
-   * 
+   *
    * @return array ['token', 'id]
    */
   public static function prepareChat($params = array()) {
@@ -96,7 +96,7 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
    *
    * Use this for making request and save data.
    * Use getCompletion() for send request only
-   * 
+   *
    * @param array $params [
    *   'id': The data that retrive from DB.
    *   'token': Used to validate 'id'.
@@ -135,7 +135,7 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
     // If prompt is in $params, just use it.
     if (isset($params['prompt'])) {
       if (is_array($params['prompt'])) {
-        $aicompletion['prompt'] = json_encode($params['prompt']);  
+        $aicompletion['prompt'] = json_encode($params['prompt']);
       }
       else {
         $aicompletion['prompt'] = $params['prompt'];
@@ -332,7 +332,7 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
    *   "field" => the page of the record.
    *   "offset" => the offset of records.
    * ]
-   * 
+   *
    * @return array AICompletion data rows.
    */
   public static function getTemplateList($params = array()) {
