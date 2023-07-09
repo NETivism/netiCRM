@@ -92,8 +92,9 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
    * @return string
    */
   public function request($params) {
+    $config = CRM_Core_Config::singleton();
     // Check API key exist
-    if (!defined('OPENAI_API_KEY')) {
+    if (empty($config->openAIAPIKey)) {
       throw new Exception("OpenAI API Key doesn't found");
     }
 
@@ -104,7 +105,7 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
     $this->_postData = $this->formatParams($params);
 
     // Set API Key
-    $this->_apiKey = OPENAI_API_KEY;
+    $this->_apiKey = $config->openAIAPIKey;
 
     // Send the request to OpenAI
     $ch = curl_init($api_endpoint);
