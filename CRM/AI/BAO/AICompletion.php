@@ -195,10 +195,10 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
       if (!isset($params['id']) && !isset($params['token'])) {
         $requiredKeys = ['id', 'token'];
         $lackKeys = array_diff($requiredKeys, $paramsKeys);
-        throw new Exception('Missing required parameters: ' . implode(', ', $lackKeys));
+        throw new CRM_Core_Exception('Missing required parameters: ' . implode(', ', $lackKeys));
       }
       else {
-        throw new Exception('Doesn\'t pass the validation.');
+        throw new CRM_Core_Exception('Doesn\'t pass the validation.');
       }
     }
     return $aicompletion;

@@ -9,6 +9,12 @@ class CRM_AI_Page_AJAX {
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] == 'application/json') {
       $jsonString = file_get_contents('php://input');
       $jsondata = json_decode($jsonString, true);
+      if ($jsondata === FALSE) {
+        self::responseError(array(
+          'status' => 0,
+          'message' => 'The request is not a valid JSON format.',
+        ));
+      }
       if (is_string($jsondata['tone']) && isset($jsondata['tone'])) {
         $tone_style = $jsondata['tone'];
         $data['tone_style'] = $tone_style;
@@ -59,26 +65,52 @@ class CRM_AI_Page_AJAX {
             'content' => $context,
           ),
         );
-        $token = CRM_AI_BAO_AICompletion::prepareChat($data);
-        header('Content-Type: application/json; charset=utf-8');
-        echo json_encode($token);
-        CRM_Utils_System::civiExit();
+        try {
+          $token = CRM_AI_BAO_AICompletion::prepareChat($data);
+        }
+        catch(CRM_Core_Exception $e) {
+          $message = $e->getMessage();
+          self::responseError(array(
+            'status' => 0,
+            'message' => $message,
+          ));
+        }
+
+        self::responseOk(array(
+          'status' => 1,
+          'message' => 'Success create chat',
+          'data' => array(
+            'id' => $token['id'],
+            'token' => $token['token'],
+          )
+        ));
       }
     }
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
       if (is_string($_GET['token']) && isset($_GET['token']) && is_string($_GET['id']) && isset($_GET['id'])) {
         $token = $_GET['token'];
         $id = $_GET['id'];
-        $params = [
+        $params = array(
           'token' => $token,
           'id' => $id,
           'stream' => TRUE,
           'temperature' => CRM_AI_BAO_AICompletion::TEMPERATURE_DEFAULT,
-        ];
-        $result = CRM_AI_BAO_AICompletion::Chat($params);
-        header('Content-Type: text/event-stream; charset=utf-8');
-        echo json_encode($result);
-        CRM_Utils_System::civiExit();
+        );
+        try{
+          $result = CRM_AI_BAO_AICompletion::chat($params);
+        }
+        catch(CRM_Core_Exception $e) {
+          $message = $e->getMessage();
+          self::responseError(array(
+            'status' => 0,
+            'message' => $message,
+          ));
+        }
+        self::responseOk(array(
+          'status' => 1,
+          'message' => 'Stream chat successfully',
+          'data' => $result,
+        ));
       }
     }
   }
@@ -109,22 +141,18 @@ class CRM_AI_Page_AJAX {
       }
 
       if (is_array($getListResult) && !empty($getListResult)) {
-        $result = [
-          'status' => "success",
+        self::responseOk(array(
+          'status' => 1,
           'message' => "Template list retrieved successfully",
           'data' => $getListResult,
-        ];
+        ));
       }
       else {
-        $result = [
-          'status' => "Failed",
+        self::responseError(array(
+          'status' => 0,
           'message' => "Failed to retrieve template list",
-        ];
+        ));
       }
-
-      header('Content-Type: application/json; charset=utf-8');
-      echo json_encode($result);
-      CRM_Utils_System::civiExit();
     }
   }
 
@@ -138,21 +166,18 @@ class CRM_AI_Page_AJAX {
       if ($acId) {
         $getTemplateResult = CRM_AI_BAO_AICompletion::getTemplate($acId);
         if (is_array($getTemplateResult) && !empty($getTemplateResult)) {
-          $result = [
-            'status' => "success",
+          self::responseOk(array(
+            'status' => 1,
             'message' => "Template retrieved successfully",
             'data' => $getTemplateResult,
-          ];
+          ));
         }
         else {
-          $result = [
-            'status' => "Failed",
+          self::responseError(array(
+            'status' => 0,
             'message' => "Failed to retrieve template",
-          ];
+          ));
         }
-        header('Content-Type: application/json; charset=utf-8');
-        echo json_encode($result);
-        CRM_Utils_System::civiExit();
       }
     }
   }
@@ -180,44 +205,42 @@ class CRM_AI_Page_AJAX {
           //set or unset template successful return true
           if ($acIsTemplate == "1") {
             //0 -> 1
-            $result = [
+            $result = array(
               'status' => "success",
               'message' => "AI completion is set as template successfully",
-              'data' => [
+              'data' => array(
                 'id' => $setTemplateResult['id'],
                 'is_template' => $setTemplateResult['is_template'],
                 'template_title' => $setTemplateResult['template_title'],
-              ],
-            ];
+              ),
+            );
           }
           else {
             //  1 -> 0
-            $result = [
+            $result = array(
               'status' => "success",
               'message' => "AI completion is unset as template successfully",
-              'data' => [
+              'data' => array(
                 'id' => $setTemplateResult['id'],
                 'is_template' => $setTemplateResult['is_template'],
                 'template_title' => $setTemplateResult['template_title'],
-              ],
-            ];
+              ),
+            );
           }
         }
         else {
           //If it cannot be set/unset throw Error
-          $result = [
+          $result = array(
             'status' => "Failed",
             'message' => $setTemplateResult['message'],
-            'data' => [
+            'data' => array(
               'id' => $setTemplateResult['id'],
               'is_template' => $setTemplateResult['is_template'],
               'template_title' => $setTemplateResult['template_title'],
-            ],
-          ];
+            ),
+          );
         }
-        header('Content-Type: application/json; charset=utf-8');
-        echo json_encode($result);
-        CRM_Utils_System::civiExit();
+        self::responseOk($result);
       }
     }
   }
@@ -236,29 +259,41 @@ class CRM_AI_Page_AJAX {
         $setShareResult = CRM_AI_BAO_AICompletion::setShare($acId);
         $result = array();
         if ($setShareResult) {
-          $result = [
+          $result = array(
             'status' => "success",
             'message' => "AI completion is set as shareable successfully",
             'data' => [
               'id' => $acId,
               'is_template' => $acIsShare,
             ],
-          ];
+          );
         }
         else {
-          $result = [
+          $result = array(
             'status' => "Failed",
             'message' => "AI completion has already been set as shareable",
             'data' => [
               'id' => $acId,
               'is_template' => $acIsShare,
             ],
-          ];
+          );
         }
-        header('Content-Type: application/json; charset=utf-8');
-        echo json_encode($result);
-        CRM_Utils_System::civiExit();
+        self::responseOk($result);
       }
     }
+  }
+
+  function responseError($error) {
+    http_response_code(400);
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode($error);
+    CRM_Utils_System::civiExit();
+  }
+
+  public static function responseOk($data) {
+    http_response_code(200);
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode($data);
+    CRM_Utils_System::civiExit();
   }
 }

@@ -512,8 +512,8 @@
           throw new Error('Network request error');
         }
       })
-      .then(function(data) {
-        var evtSource = new EventSource(endpoint.chat + '?token=' + data.token + '&id=' + data.id, {
+      .then(function(result) {
+        var evtSource = new EventSource(endpoint.chat + '?token=' + result.data.token + '&id=' + result.data.id, {
           withCredentials: false,
         });
 
