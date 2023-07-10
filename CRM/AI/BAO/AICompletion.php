@@ -373,8 +373,10 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
     }
 
     $sql = "SELECT * FROM civicrm_aicompletion WHERE ".implode(' AND ', $whereClause);
-    $sql .= " LIMIT ".self::TEMPLATE_LIST_ROW_LIMIT;
-    if ($params['offset']) {
+    if (!empty($params['limit'])) {
+      $sql .= " LIMIT ".self::TEMPLATE_LIST_ROW_LIMIT;
+    }
+    if (!empty($params['offset']) && is_numeric($params['offset'])) {
       $sql .= " OFFSET ".$params['offset'];
     }
     if (empty($sqlParams)) {
