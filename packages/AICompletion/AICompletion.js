@@ -103,8 +103,8 @@
         $container.find('.usage-max').text(defaultData.usage.max);
       }
 
-      if ($container.find('.usage-current').length) {
-        $container.find('.usage-current').text(defaultData.usage.current);
+      if ($container.find('.usage-used').length) {
+        $container.find('.usage-used').text(defaultData.usage.used);
       }
     },
 
@@ -381,12 +381,12 @@
 
     usageUpdate: function() {
       let $container = AICompletion.prototype.container,
-          $usageCurrent = $container.find('.usage-current');
+          $usageUsed = $container.find('.usage-used');
 
-      if ($usageCurrent.length) {
-        let usageCurrent = parseInt($usageCurrent.text(), 10);
-        usageCurrent++;
-        $usageCurrent.text(usageCurrent);
+      if ($usageUsed.length) {
+        let usageUsed= parseInt($usageUsed.text(), 10);
+        usageUsed++;
+        $usageUsed.text(usageUsed);
       }
     },
 
@@ -625,45 +625,10 @@
     },
 
     getDefaultData: function() {
-      var data = {};
-
-      // The test data is only used for development and needs to call the real endpoint
-      data = {
-        'org_info': '「測試愛滋病權益促進會」是國內第一個由愛滋感染者和他們的家屬、朋友，以及認同人權的社會人士所發起，長期投入愛滋平權運動的非營利互助團體。在倡導平權觀念的同時，我們希望以互諒、互愛的訴求為原則；我們也努力的在愛滋感染者與社會大眾、政府決策者、醫療及公共衛生等等相關單位之間，扮演溝通者的橋樑角色。',
-        'usage': {
-          'max': 1000,
-          'current': 3
-        },
-        'templates_default': [
-          {
-            'id': '1',
-            'created': 1677649420,
-            'changed': 1685592993,
-            'contact_id': '20',
-            'title': '範本A',
-            'type': '預設範本',
-            'role': '募款專家',
-            'tone': '幽默',
-            'content': '組織簡介：「測試愛滋病權益促進會」是國內第一個由愛滋感染者和他們的家屬、朋友，以及認同人權的社會人士所發起，長期投入愛滋平權運動的非營利互助團體。在倡導平權觀念的同時，我們希望以互諒、互愛的訴求為原則；我們也努力的在愛滋感染者與社會大眾、政府決策者、醫療及公共衛生等等相關單位之間，扮演溝通者的橋樑角色。我們非常歡迎您以精神支持，或實際行動投入我們倡導權益的行列；幫助感染者與家屬回復應有的居住、工作、就學、就醫等基本人權，使他們得以享有一般人的正常生活，並且，最終促使這個社會成為一個遠離偏見、不再有歧視的正常社會。請幫組織撰寫500字以內的募款文案，通過情感訴求和事實陳述來激發支持者共鳴和參與，支持者是促成改變的人，邀請支持者以捐款方式發揮力量。'
-          }
-        ],
-        "filters": {
-          "role": [
-            "募款專家",
-            "活動達人",
-            "電子報行銷大師"
-          ],
-          "tone": [
-            "放鬆",
-            "深情",
-            "幽默",
-            "細膩",
-            "熱情"
-          ]
-        }
+      if (typeof window.AICompletion.default === 'object') {
+        return window.AICompletion.default;
       }
-
-      return data;
+      return {};
     },
 
     init: function() {

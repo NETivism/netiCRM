@@ -17,7 +17,10 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
 
     // Status:
     STATUS_PENDING = 2,
-    STATUS_SUCCESS = 1;
+    STATUS_SUCCESS = 1,
+
+    // Fallback Component
+    COMPONENT = 'Activity';
   /**
    * What action is execute now
    *
@@ -204,10 +207,14 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
    * @return array
    */
   public static function quota() {
+    $config = CRM_Core_Config::singleton();
+    $used = CRM_Core_DAO::singleValueQuery("SELECT count(*) FROM civicrm_aicompletion WHERE created_date >= DATE_FORMAT(CURDATE(), '%Y-%m-01 00:00:00') AND created_date < DATE_FORMAT(DATE_ADD(CURDATE(), INTERVAL 1 MONTH), '%Y-%m-01 00:00:00');");
+    $percent = $used < $config->openAICompletionQuota ? floor($used/$config->openAICompletionQuota)*100 : 100;
+
     return array(
-      'max' => $max,
-      'usage' => $percent,
+      'max' => $config->openAICompletionQuota,
       'used' => $used,
+      'percent' => $percent,
     );
   }
 
@@ -457,29 +464,37 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
     return 0;
   }
 
-  public static function getAIFormPrepareValues() {
+  public static function getDefaultTemplate($component) {
+    global $tsLocale;
     $session = CRM_Core_Session::singleton();
-    $cid = $session->get('userID');
-    $name = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $cid, 'sort_name');
-    $defaults = array(
-      'default' => array(
-        'ai_role' => ts('Fundraising Marcom Specialist'),
-        'tone_style' => ts('Gentle'),
-        'context' => ts('Please help me write a fundraising copy for our association, the "ABC Media Literacy Promotion Association". The "ABC Media Literacy Promotion Association" advocates for media literacy and strives to act as a bridge for communication between the media, audiences, government decision-makers, and other relevant entities. We warmly welcome your support, either in spirit or through direct action, in our advocacy efforts.'),
-      ),
-      'ai_role_options' => array(
-        1 => ts('Marketing Communications Specialist'),
-        2 => ts('Fundraising Marcom Specialist'),
-      ),
-      'tone_style_options' => array(
-        1 => ts('Gentle'),
-        2 => ts('Straight'),
-      ),
-      'orginization_instruction' => 'The "ABC Media Literacy Promotion Association" advocates for media literacy and strives to act as a bridge for communication between the media, audiences, government decision-makers, and other relevant entities.',
-      'contact_name' => $name,
-      'total_quota' => 100,
-      'current_quota' => 5,
-    );
-    return $defaults;
+    $smarty = CRM_Core_Smarty::singleton();
+    $config = CRM_Core_Config::singleton();
+    $enabledComponents = CRM_Core_Component::getEnabledComponents();
+
+    // sort name
+    $contactId = $session->get('userID');
+    $sortName = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $contactId, 'sort_name');
+    $smarty->assign('sort_name', $sortName);
+
+    // org info
+    $smarty->assign('org_info', $config->openAICompletionOrgInfo);
+
+    // usage
+    $quota = self::quota();
+    $smarty->assign('usage', $quota);
+
+    $suffix = '-1';
+    if ($tsLocale != 'en') {
+      $suffix .= '.'.$tsLocale;
+    }
+    if (!isset($enabledComponents[$component])) {
+      $component = 'Activity';
+    }
+    $default = $smarty->fetch('CRM/AI/defaults/'.$component.$suffix.'.tpl');
+    $verified = json_decode($default);
+    if ($verified !== FALSE) {
+      return $default;
+    }
+    return '';
   }
 }

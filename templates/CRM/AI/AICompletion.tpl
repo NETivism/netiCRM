@@ -47,6 +47,7 @@ window.AICompletion = {
     'Once saved as a shared template, you can reuse this template for editing. Please enter a template title to identify the purpose of the template. If you need to edit a shared template, please go to the template management interface to edit.': '{/literal}{ts}Once saved as a shared template, you can reuse this template for editing. Please enter a template title to identify the purpose of the template. If you need to edit a shared template, please go to the template management interface to edit.{/ts}{literal}'
   }
 };
+{/literal}window.AICompletion.default = {$ai_completion_default};{literal}
 </script>
 {/literal}
 
@@ -105,7 +106,8 @@ window.AICompletion = {
             </div>
             <div class="netiaic-form-footer">
               <div class="netiaic-usage-info">
-                {ts}Your usage limit is <span class="usage-max">{$maxUsage}</span> times, currently used <span class="usage-current">{$currentUsage}</span> times.{/ts}
+                {* $usage added in CRM/AI/BAO/AICompletion::getDefaultTemplate *}
+                {ts}Your usage limit is <span class="usage-max">{$usage.max}</span> times, currently used <span class="usage-current">{$usage.used}</span> times.{/ts}
               </div>
               <button type="button" class="shine-btn netiaic-form-submit">
                 <i class="zmdi zmdi-mail-send"></i>

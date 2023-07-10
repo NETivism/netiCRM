@@ -254,7 +254,7 @@ window.nmEditor = {
 						<div class="nme-setting-panel-inner">
 							<h3 class="nme-setting-panel-title">{ts}AICompletion{/ts}</h3>
 							<div class="nme-setting-panel-content">
-                {include file="CRM/common/AICompletion.tpl"}
+                {include file="CRM/AI/AICompletion.tpl"}
 							</div>
 						</div>
 					</div>
