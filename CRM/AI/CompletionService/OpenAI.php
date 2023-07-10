@@ -75,7 +75,10 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
    * @return int the real tokens set on this function
    */
   public function setMaxTokens($maxTokens) {
-    if ($maxTokens == CRM_AI_BAO_AICompletion::COMPLETION_MAX_TOKENS) {
+    if ($maxTokens >= CRM_AI_BAO_AICompletion::COMPLETION_MAX_TOKENS) {
+      // Set NULL is different with set token to max value
+      // When passing max_token into OpenAI, it will calc response and request token first
+      // When null given, OpenAI will not check token and trying his best to reply message in the limitation of max token
       $this->_maxTokens = NULL;
     }
     else {
@@ -260,7 +263,7 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
         $params['max_tokens'] = $this->_maxTokens;
       }
       if (isset($params['temperature'])) {
-        $params['temperature'] = (int)$params['temperature'];
+        $params['temperature'] = (float)$params['temperature'];
       }
     }
     $fields = self::fields('CHAT_COMPLETION');

@@ -11,6 +11,9 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
 
     TEMPLATE_LIST_ROW_LIMIT = 10,
 
+    // temperature TODO: add client side adjustment
+    TEMPERATURE_DEFAULT = 0.7,
+
     // Action:
     CHAT_COMPLETION = 1,
     GET_TOKEN = 2,

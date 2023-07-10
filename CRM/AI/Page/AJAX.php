@@ -73,6 +73,7 @@ class CRM_AI_Page_AJAX {
           'token' => $token,
           'id' => $id,
           'stream' => TRUE,
+          'temperature' => CRM_AI_BAO_AICompletion::TEMPERATURE_DEFAULT,
         ];
         $result = CRM_AI_BAO_AICompletion::Chat($params);
         header('Content-Type: text/event-stream; charset=utf-8');
