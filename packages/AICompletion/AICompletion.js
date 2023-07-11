@@ -83,6 +83,47 @@
     });
   }
 
+  var fallbackCopyTextToClipboard = function(text, $copyBtn) {
+    let textArea = document.createElement("textarea");
+    textArea.value = text;
+
+    // Make the textarea not appear on the user's screen
+    textArea.style.top = "0";
+    textArea.style.left = "0";
+    textArea.style.position = "fixed";
+    textArea.style.width = '0';
+    textArea.style.height = '0';
+    textArea.style.opacity = '0';
+
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+
+    try {
+      let successful = document.execCommand('copy'),
+          msg = successful ? 'successful' : 'unsuccessful';
+      console.log('Fallback: Copying text command was ' + msg);
+
+      if (successful && $copyBtn.length) {
+        toggleCopyClass($copyBtn);
+      }
+    } catch (error) {
+      console.error('Fallback: Oops, unable to copy', error);
+    }
+
+    document.body.removeChild(textArea);
+  }
+
+  var toggleCopyClass = function($copyBtn) {
+    if ($copyBtn.length) {
+      $copyBtn.addClass(COPY_CLASS);
+
+      setTimeout(function() {
+        $copyBtn.removeClass(COPY_CLASS);
+      }, 3000);
+    }
+  }
+
   // Plugin constructor function
   var AICompletion = function(element, options) {
     this.element = element;
@@ -561,35 +602,31 @@
                   }
                 }
 
-                if ($aiMsg.length) {
+                var msgCopyHandle = function(event) {
+                  event.preventDefault();
+                  let $copyBtn = $(this),
+                      $aiMsg = $copyBtn.closest('.msg'),
+                      $msgContent = $aiMsg.find('.msg-content'),
+                      copyText = '';
+
+                  if ($msgContent.length) {
+                    copyText = $msgContent.html().replace(/<br>/g, '\n');
+                  }
+
+                  copyText = copyText.trim();
                   if (navigator.clipboard && navigator.clipboard.writeText) {
-                    try {
-                      $aiMsg.on('click', '.copy-btn', function(event) {
-                        event.preventDefault();
-                        let $copyBtn = $(this),
-                            $aiMsg = $copyBtn.closest('.msg'),
-                            $msgContent = $aiMsg.find('.msg-content'),
-                            copyText = '';
-
-                        if ($msgContent.length) {
-                          copyText = $msgContent.html().replace(/<br>/g, '\n');
-                        }
-
-                        copyText = copyText.trim();
-                        navigator.clipboard.writeText(copyText);
-                        $copyBtn.addClass(COPY_CLASS);
-
-                        setTimeout(function() {
-                          $copyBtn.removeClass(COPY_CLASS);
-                        }, 3000);
-                      });
-                    } catch (error) {
+                    navigator.clipboard.writeText(copyText).then(function() {
+                      toggleCopyClass($copyBtn);
+                    }, function(error) {
                       console.error('Failed to copy text to clipboard:', error);
-                    }
+                    });
                   } else {
-                    console.error('Clipboard API is not supported in this browser.');
+                    console.warn('Clipboard API is not supported in this browser, fallback to execCommand.');
+                    fallbackCopyTextToClipboard(copyText, $copyBtn);
                   }
                 }
+
+                $aiMsg.on('click', '.copy-btn', msgCopyHandle);
               }
               else {
                 if (eventData.hasOwnProperty('message')) {
