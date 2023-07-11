@@ -249,6 +249,22 @@
       return true;
     },
 
+    setSelectOption: function($selectElement, value) {
+      if ($selectElement.find(`option[value="${value}"]`).length) {
+        $selectElement.val(value).trigger('change');
+      }
+      else {
+        // [Create option if not exists](https://select2.org/programmatic-control/add-select-clear-items#create-if-not-exists)
+        let optionData = {
+          id: value,
+          text: value
+        };
+
+        let newOption = new Option(optionData.text, optionData.id, true, true);
+        $selectElement.append(newOption).trigger('change');
+      }
+    },
+
     applyTemplateToForm: function({ data = {} } = {}) {
       let $container = AICompletion.prototype.container,
           $roleSelect = $container.find('.netiaic-prompt-role-select'),
@@ -259,8 +275,8 @@
         data = { role: null, tone: null, content: null };
       }
 
-      $roleSelect.val(data.role).trigger('change');
-      $toneSelect.val(data.tone).trigger('change');
+      AICompletion.prototype.setSelectOption($roleSelect, data.role);
+      AICompletion.prototype.setSelectOption($toneSelect, data.tone);
       $content.val(data.content);
     },
 
@@ -410,7 +426,8 @@
       $container.find('.form-select').select2({
         allowClear: true,
         dropdownAutoWidth: true,
-        width: '100%'
+        width: '100%',
+        tags: true // Select2 can dynamically create new options from text input by the user in the search box
       });
 
       $promptContent.on('focus', function() {
