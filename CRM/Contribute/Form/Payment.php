@@ -14,11 +14,11 @@ class CRM_Contribute_Form_Payment extends CRM_Core_Form {
 
   public $_pass;
 
+  public $_paymentProcessors;
+
   protected $_ids;
 
   protected $_component;
-
-  protected $_paymentProcessors;
 
   protected $_ppType;
 

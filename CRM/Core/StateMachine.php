@@ -141,6 +141,8 @@ class CRM_Core_StateMachine {
     // save the form values and validation status to the session
     $page->isFormBuilt() or $page->buildForm();
 
+    $page->controller->set('prevAction', $actionName);
+
     $pageName = $page->getAttribute('name');
     $data = &$page->controller->container();
 

@@ -24,12 +24,12 @@ class Encrypt
         ]
     ];
 
-    public function __construct(bool $nofile = false)
+    public function __construct(bool $nofile = NULL)
     {
         $this->NOFILE = $nofile;
     }
 
-    public function input(string $data)
+    public function input($data)
     {
         if ($this->NOFILE) {
             $this->data = unpack("C*", $data);
@@ -43,13 +43,13 @@ class Encrypt
         return $this;
     }
 
-    public function password(string $password)
+    public function password($password)
     {
         $this->password = $password;
         return $this;
     }
 
-    public function output(string $filePath = null)
+    public function output($filePath = null)
     {
         if (!$this->NOFILE && is_null($filePath)) {
             throw new Exception("Output Filepath cannot be NULL when NOFILE is False");
@@ -351,8 +351,14 @@ class Encrypt
     {
         $algorithm = strtolower($algorithm);
         $key = pack('C*', ...$key);
+        if (version_compare(PHP_VERSION, '7.2.0') >= 0) {
+            $hashAlgos = hash_hmac_algos();
+        }
+        else {
+            $hashAlgos = hash_algos();
+        }
 
-        if (!in_array($algorithm, hash_hmac_algos())) throw new \Exception("HMAC algorithm '$algorithm' not supported!");
+        if (!in_array($algorithm, $hashAlgos)) throw new \Exception("HMAC algorithm '$algorithm' not supported!");
 
         $ctx = hash_init($algorithm, HASH_HMAC, $key);
 
@@ -470,7 +476,7 @@ class Encrypt
     {
         // https://stackoverflow.com/questions/7717227/unable-to-add-attribute-with-namespace-prefix-using-php-simplexml
         foreach ($data as $k => $v) {
-            if (is_countable($v)) {
+            if (is_array($v)) {
                 foreach ($v as $kk => $vv) {
                     if ($k === 'attributes') {
                         $is_namespace = count(explode(':', $kk)) == 2;

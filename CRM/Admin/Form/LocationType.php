@@ -73,6 +73,16 @@ class CRM_Admin_Form_LocationType extends CRM_Admin_Form {
       $ele = $this->getElement('name');
       $ele->freeze();
     }
+
+    // refs #37993
+    if (CRM_Utils_Array::value('is_default', $defaults)) {
+      $ele = $this->getElement('is_default');
+      $ele->freeze();
+      if (CRM_Utils_Array::value('is_active', $defaults)) {
+        $ele = $this->getElement('is_active');
+        $ele->freeze();
+      }
+    }
     return $defaults;
   }
 
@@ -127,6 +137,9 @@ class CRM_Admin_Form_LocationType extends CRM_Admin_Form {
     $params = $this->exportValues();
     $params['is_active'] = CRM_Utils_Array::value('is_active', $params, FALSE);
     $params['is_default'] = CRM_Utils_Array::value('is_default', $params, FALSE);
+    if ($params['is_default']) {
+      $params['is_active'] = 1;
+    }
 
     // action is taken depending upon the mode
     $locationType = new CRM_Core_DAO_LocationType();

@@ -46058,7 +46058,7 @@ msgid "Are you sure you want to make this mailing public?"
 msgstr ""
 
 msgid "Are you sure you want to un-publish this mailing from public?"
-msgstr "" 
+msgstr ""
 
 # CRM/Admin/Form/Setting/Receipt.php
 msgid "The stamp of organization."
@@ -46310,7 +46310,7 @@ msgid "run every %1 minutes"
 msgstr ""
 
 msgid "Taipa"
-msgstr "" 
+msgstr ""
 
 msgid "Coloane"
 msgstr ""
@@ -47028,25 +47028,25 @@ msgid "Total recipients number is calculated by these conditions."
 msgstr ""
 
 msgid "Recipients still alive."
-msgstr "" 
+msgstr ""
 
 msgid "Recipients still subscribing selected group."
-msgstr "" 
+msgstr ""
 
 msgid "Recipients does not opt-out site-wide message."
-msgstr "" 
+msgstr ""
 
 msgid "\"Do Not Mail\" not checked in recipients privacy option."
-msgstr "" 
+msgstr ""
 
 msgid "Email address did not \"On Hold\" by bounced record."
-msgstr "" 
+msgstr ""
 
 msgid "Recipient list and total recipients number will be re-calculated base on contact privacy and subscribing data when mailing start."
-msgstr "" 
+msgstr ""
 
 msgid "Once mailing job start, the recipients list will be freezed."
-msgstr "" 
+msgstr ""
 
 msgid "Email will include event check in code."
 msgstr ""
@@ -48773,4 +48773,147 @@ msgstr ""
 
 #: CRM/Core/Config.php
 msgid "Current host \"%1\" doesn't in Trusted Host. If you are sure it's correct host, please add your domain into the <a href=\"%2\">trusted host setting</a>."
+msgstr ""
+
+# templates/CRM/Contribute/Form/ContributionView.tpl
+msgid "Please pay attention to protect credit card information."
+msgstr ""
+
+# templates/CRM/Contribute/Form/ContributionView.tpl
+msgid "Click to show details"
+msgstr ""
+
+# CRM/Admin/Form/Setting/Security.php
+msgid "Settings - Website Security"
+msgstr ""
+
+# templates/CRM/Admin/Page/Setting.tpl
+msgid "Website Security Settings"
+msgstr ""
+
+# templates/CRM/Admin/Page/Setting.tpl
+msgid "Global website security settings. eg. CSP, trusted hosts, export encrypt... etc."
+msgstr ""
+
+#: CRM/Admin/Form/Setting/Security.php
+msgid "Content Security Policy"
+msgstr ""
+
+#: CRM/Admin/Form/Setting/Security.php
+msgid "Exclude path"
+msgstr ""
+
+#: templates/CRM/Admin/Form/Setting/Security.tpl
+msgid "Content Security Policy will restrict embed media on your CRM system."
+msgstr ""
+
+#: templates/CRM/Admin/Form/Setting/Security.tpl
+msgid "You can enter one path per line, and use \"*\" as a wildcard character."
+msgstr ""
+
+#: templates/CRM/Admin/Form/Setting/Security.php
+msgid "Export excel file encryption settings"
+msgstr ""
+
+msgid "No password set"
+msgstr ""
+
+msgid "Use the email of the exporting user as the password"
+msgstr ""
+
+msgid "Use a generic password"
+msgstr ""
+
+msgid "Generic Password"
+msgstr ""
+
+msgid "Settings option changed from %1 to %2."
+msgstr ""
+
+msgid "Export excel file encryption settings option Changed"
+msgstr ""
+
+msgid "Export excel file encryption settings password Changed"
+msgstr ""
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid "AI Copywriter"
+msgstr ""
+
+msgid "AI-generated Text Templates"
+msgstr ""
+
+msgid "Community Recommendations"
+msgstr ""
+
+msgid "Copywriting Role"
+msgstr ""
+
+msgid "Due to the above, the results of your sharing will not appear immediately. We will schedule periodic updates and publications."
+msgstr ""
+
+msgid "Once published, you can view your shared template in the \"Community Recommended\" templates, which will also be marked with your organization's name."
+msgstr ""
+
+msgid "Once saved as a shared template, you can reuse this template for editing. Please enter a template title to identify the purpose of the template. If you need to edit a shared template, please go to the template management interface to edit."
+msgstr ""
+
+msgid "Recommend"
+msgstr ""
+
+msgid "Recommend a Template to Other Organizations"
+msgstr ""
+
+msgid "Recommended"
+msgstr ""
+
+msgid "Remember to verify AI-generated text before using it."
+msgstr ""
+
+msgid "Save prompt as shared template"
+msgstr ""
+
+msgid "Saved Templates"
+msgstr ""
+
+msgid "Thank you for being willing to share your templates with the community, thereby benefiting all netiCRM users."
+msgstr ""
+
+msgid "The netiCRM team will ensure the prompt does not contain any personal data and test its function to guarantee the privacy safety for you and other organizations."
+msgstr ""
+
+msgid "Tone Style"
+msgstr ""
+
+msgid "Try Again"
+msgstr ""
+
+msgid "Upon clicking \"Recommend\", we'll proceed with the following verification steps:"
+msgstr ""
+
+msgid "Warning! Applying this template will clear your current settings. Proceed with the application?"
+msgstr ""
+
+msgid "Hi, this is netiCRM copywriting helper, please be careful not to enter personal information or other confidential information."
+msgstr ""
+
+msgid "Use default template"
+msgstr ""
+
+msgid "Use other templates"
+msgstr ""
+
+msgid "Please enter or select the role you want AI to represent (e.g., fundraiser)."
+msgstr ""
+
+msgid "Please enter or select the desired writing style (e.g., casual)."
+msgstr ""
+
+msgid "Please enter the %1 copy you would like AI to generate."
+msgstr ""
+
+msgid "Click to insert organization intro."
+msgstr ""
+
+msgid "Your usage limit is <span class=\"usage-max\">%1</span> times, currently used <span class=\"usage-current\">%2</span> times."
 msgstr ""
