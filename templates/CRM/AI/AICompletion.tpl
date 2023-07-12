@@ -33,7 +33,7 @@ window.AICompletion = {
     'Title': '{/literal}{ts}Title{/ts}{literal}',
     'Submit': '{/literal}{ts}Submit{/ts}{literal}',
     'Try Again': '{/literal}{ts}Try Again{/ts}{literal}',
-    'Role': '{/literal}{ts}Role{/ts}{literal}',
+    'Copywriting Role': '{/literal}{ts}Copywriting Role{/ts}{literal}',
     'Tone Style': '{/literal}{ts}Tone Style{/ts}{literal}',
     'Content': '{/literal}{ts}Content{/ts}{literal}',
     'AI-generated Text Templates': '{/literal}{ts}AI-generated Text Templates{/ts}{literal}',
@@ -79,7 +79,7 @@ window.AICompletion = {
                 <li><a href="#" class="use-other-templates">{ts}Use other templates{/ts}</a></li>
               </ul>
               <div class="netiaic-prompt-role-section crm-section crm-select-section form-item">
-                <div class="label"><label for="netiaic-prompt-role">{ts}Role{/ts}</label></div>
+                <div class="label"><label for="netiaic-prompt-role">{ts}Copywriting Role{/ts}</label></div>
                 <div class="edit-value content">
                   <div class="crm-form-elem crm-form-select">
                     <select id="netiaic-prompt-role" name="netiaic-prompt-role" class="netiaic-prompt-role-select form-select" data-placeholder="{ts}Please enter or select the role you want AI to represent (e.g., fundraiser).{/ts}"><option></option></select>
@@ -96,7 +96,7 @@ window.AICompletion = {
               </div>
               <div class="netiaic-prompt-content-section crm-section crm-textarea-section form-item">
                 <div class="crm-form-elem crm-form-textarea">
-                  <textarea name="netiaic-prompt-content" placeholder="{ts}Please enter the fundraising copy you would like AI to generate.{/ts}" class="netiaic-prompt-content-textarea form-textarea"></textarea>
+                  <textarea name="netiaic-prompt-content" placeholder="{ts 1=$component_locale}Please enter the %1 copy you would like AI to generate.{/ts}" class="netiaic-prompt-content-textarea form-textarea"></textarea>
                   <div class="netiaic-prompt-content-command netiaic-command">
                     <div class="inner">
                       <ul class="netiaic-command-list">
@@ -114,7 +114,7 @@ window.AICompletion = {
             <div class="netiaic-form-footer">
               <div class="netiaic-usage-info">
                 {* $usage added in CRM/AI/BAO/AICompletion::getDefaultTemplate *}
-                {ts}Your usage limit is <span class="usage-max">{$usage.max}</span> times, currently used <span class="usage-current">{$usage.used}</span> times.{/ts}
+                {ts 1=$usage.max 2=$usage.used}Your usage limit is <span class="usage-max">%1</span> times, currently used <span class="usage-current">%2</span> times.{/ts}
               </div>
               <button type="button" class="shine-btn netiaic-form-submit">
                 <i class="zmdi zmdi-mail-send"></i>

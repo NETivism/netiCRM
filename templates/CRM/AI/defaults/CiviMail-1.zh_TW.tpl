@@ -1,12 +1,6 @@
 {literal}
 {
-  "org_info": "{/literal}{$org_info|escape:javascript}{literal}",
-  "sort_name": "{/literal}{$sort_name|escape:javascript}{literal}",
-  "usage": {
-    "max": {/literal}{if $usage.max}{$usage.max}{else}100{/if}{literal},
-    "used": {/literal}{if $usage.used}{$usage.used}{else}0{/if}{literal},
-    "percent": {/literal}{if $usage.percent}{$usage.percent}{else}0{/if}{literal}
-  },
+  {/literal}{include file="CRM/AI/defaults/info.tpl"}{literal},
   "templates_default": [
     {
       "role": "非營利組織理事長",
