@@ -129,7 +129,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
     $locationType = CRM_Core_PseudoConstant::locationType(FALSE, 'name');
     $config = CRM_Core_Config::singleton();
     if (empty($params)) {
-      $contributionResult['status'] = " params is empty";
+      $contributionResult['status'] = "params is empty";
       // return;
     }
     if (empty($params['contribution']['trxn_id'])) {
@@ -461,11 +461,15 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
       else {
         // multiple scenario will happen
 
-        // failed: 1->3,4 or 2->3,4
-        if (in_array($contrib['contribution_status_id'], array(3,4)) && in_array($exists->contribution_status_id, array(1,2))) {
+        // failed: 1 or 2 ->4
+        if ($contrib['contribution_status_id'] == 4 && in_array($exists->contribution_status_id, array(1,2))) {
           $objects['contribution']->cancel_date = $contrib['cancel_date'];
           $cancelReason = $contrib['updated_at'].' '.ts("Update").":\n".$contrib['cancel_reason'];
           $ipn->failed($objects, $transaction, $cancelReason);
+        }
+        // cancel: 1 or 2->3
+        elseif ($contrib['contribution_status_id'] == 3 && in_array($exists->contribution_status_id, array(1,2))) {
+          $ipn->cancelled($objects, $transaction);
         }
         // pending: nothing
         elseif ($contrib['contribution_status_id'] == 2) {
@@ -677,7 +681,11 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
       // invoice id is uniq, will append additional info
       $params['contribution']['invoice_id'] = $json['transaction']['parent_trade_no'].'_'.substr(md5(uniqid((string)rand(), TRUE)), 0, 10);
       $contributionRecurId = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution_recur WHERE trxn_id = %1" , array(1 => array($json['transaction']['parent_trade_no'], 'String')));
-      $params['contribution']['contribution_recur_id'] = $contributionRecurId;
+      if (!empty($contributionRecurId)) {
+        $params['contribution']['contribution_recur_id'] = $contributionRecurId;
+      } else {
+        $contributionResult['status'] = "No recur id.";
+      }
     }
     else {
       $params['contribution']['invoice_id'] = md5(uniqid((string)rand(), TRUE));

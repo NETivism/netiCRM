@@ -384,6 +384,12 @@ class CRM_Contribute_Form_AdditionalInfo {
       $params['honor_prefix'] = CRM_Utils_Array::value($params['honor_prefix_id'], $individualPrefix);
       $params["honor_type"] = CRM_Utils_Array::value($params["honor_type_id"], $honor);
     }
+    if (CRM_Utils_Array::value('honor_first_name', $params)) {
+      $params['honor_first_name'] = CRM_Utils_String::mask($params['honor_first_name']);
+    }
+    if (CRM_Utils_Array::value('honor_email', $params)) {
+      $params['honor_email'] = CRM_Utils_String::mask($params['honor_email']);
+    }
 
     // retrieve premium product name and assigned fulfilled
     // date to template
@@ -469,7 +475,7 @@ class CRM_Contribute_Form_AdditionalInfo {
       $customGroup = array();
       foreach($profiles as $idx => $ufGroup) {
         $customFields = $customValues = array();
-        if (CRM_Core_BAO_UFGroup::filterUFGroups($ufGroup['id'], $params['contact_id'])) {
+        if (!empty($ufGroup['id']) && CRM_Core_BAO_UFGroup::filterUFGroups($ufGroup['id'], $params['contact_id'])) {
           $groupTitle = NULL;
           $customFields = CRM_Core_BAO_UFGroup::getFields($ufGroup['id'], FALSE, CRM_Core_Action::VIEW);
 
@@ -488,37 +494,14 @@ class CRM_Contribute_Form_AdditionalInfo {
             $contribParams[] = array('contribution_test', '=', 1, 0, 0);
           }
           CRM_Core_BAO_UFGroup::getValues($params['contact_id'], $customFields, $customValues, FALSE, $contribParams, CRM_Core_BAO_UFGroup::MASK_ALL);
-          $customGroup[$groupTitle] = $customValues;
+          if (!empty(array_filter($customValues))) {
+            $customGroup[$groupTitle] = $customValues;
+          }
         }
       }
       $form->assign('customGroup', $customGroup);
     }
-    elseif (CRM_Utils_Array::value('hidden_custom', $params)) {
-      $contribParams = array(array('contribution_id', '=', $params['contribution_id'], 0, 0));
-      if ($form->_mode == 'test') {
-        $contribParams[] = array('contribution_test', '=', 1, 0, 0);
-      }
-
-      //retrieve custom data
-      $customGroup = array();
-
-      foreach ($form->_groupTree as $groupID => $group) {
-        $customFields = $customValues = array();
-        if ($groupID == 'info') {
-          continue;
-        }
-        foreach ($group['fields'] as $k => $field) {
-          $field['title'] = $field['label'];
-          $customFields["custom_{$k}"] = $field;
-        }
-
-        //build the array of customgroup contain customfields.
-        CRM_Core_BAO_UFGroup::getValues($params['contact_id'], $customFields, $customValues, FALSE, $contribParams, CRM_Core_BAO_UFGroup::MASK_ALL);
-        $customGroup[$group['title']] = $customValues;
-      }
-      //assign all custom group and corresponding fields to template.
-      $form->assign('customGroup', $customGroup);
-    }
+    // refs #35201, do not add any custom data to offline template when no contribution page specify
 
     if ($params['receipt_text']) {
       $params['receipt_text'] = CRM_Contribute_BAO_ContributionPage::tokenize($params['contact_id'], $params['receipt_text']); 
