@@ -428,6 +428,11 @@ class CRM_Core_Config_Variables extends CRM_Core_Config_Defaults {
   public $wkhtmltopdfPath = FALSE;
 
   /**
+   *  AI Organization profile
+   */
+  public $aiOrganizationProfile = '';
+
+  /**
    * Provide addressSequence
    *
    * @param
