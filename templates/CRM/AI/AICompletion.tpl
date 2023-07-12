@@ -41,10 +41,17 @@ window.AICompletion = {
     'Community Recommendations': '{/literal}{ts}Community Recommendations{/ts}{literal}',
     'Save As New Template': '{/literal}{ts}Save As New Template{/ts}{literal}',
     'Recommend': '{/literal}{ts}Recommend{/ts}{literal}',
+    'Recommended': '{/literal}{ts}Recommended{/ts}{literal}',
     'Warning! Applying this template will clear your current settings. Proceed with the application?': '{/literal}{ts}Warning! Applying this template will clear your current settings. Proceed with the application?{/ts}{literal}',
     'Remember to verify AI-generated text before using it.': '{/literal}{ts}Remember to verify AI-generated text before using it.{/ts}{literal}',
     'Save prompt as shared template': '{/literal}{ts}Save prompt as shared template{/ts}{literal}',
-    'Once saved as a shared template, you can reuse this template for editing. Please enter a template title to identify the purpose of the template. If you need to edit a shared template, please go to the template management interface to edit.': '{/literal}{ts}Once saved as a shared template, you can reuse this template for editing. Please enter a template title to identify the purpose of the template. If you need to edit a shared template, please go to the template management interface to edit.{/ts}{literal}'
+    'Once saved as a shared template, you can reuse this template for editing. Please enter a template title to identify the purpose of the template. If you need to edit a shared template, please go to the template management interface to edit.': '{/literal}{ts}Once saved as a shared template, you can reuse this template for editing. Please enter a template title to identify the purpose of the template. If you need to edit a shared template, please go to the template management interface to edit.{/ts}{literal}',
+    'Recommend a Template to Other Organizations': '{/literal}{ts}Recommend a Template to Other Organizations{/ts}{literal}',
+    'Upon clicking "Recommend", we\'ll proceed with the following verification steps:': '{/literal}{ts}Upon clicking "Recommend", we\'ll proceed with the following verification steps:{/ts}{literal}',
+    'The netiCRM team will ensure the prompt does not contain any personal data and test its function to guarantee the privacy safety for you and other organizations.': '{/literal}{ts}The netiCRM team will ensure the prompt does not contain any personal data and test its function to guarantee the privacy safety for you and other organizations.{/ts}{literal}',
+    'Due to the above, the results of your sharing will not appear immediately. We will schedule periodic updates and publications.': '{/literal}{ts}Due to the above, the results of your sharing will not appear immediately. We will schedule periodic updates and publications.{/ts}{literal}',
+    'Once published, you can view your shared template in the "Community Recommended" templates, which will also be marked with your organization\'s name.': '{/literal}{ts}Once published, you can view your shared template in the "Community Recommended" templates, which will also be marked with your organization\'s name.{/ts}{literal}',
+    'Thank you for being willing to share your templates with the community, thereby benefiting all netiCRM users.': '{/literal}{ts}Thank you for being willing to share your templates with the community, thereby benefiting all netiCRM users.{/ts}{literal}',
   }
 };
 {/literal}window.AICompletion.default = {$ai_completion_default};{literal}

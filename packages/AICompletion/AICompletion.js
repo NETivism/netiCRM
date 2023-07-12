@@ -261,7 +261,7 @@
                   };
 
               sendAjaxRequest(endpoint.setTemplate, 'POST', data, function(response) {
-                if (response.status == 'success') {
+                if (response.status == 'success' || response.status == 1) {
                   $tplTitle.prop('readonly', true);
                   $submit.text(ts['Saved']).prop('disabled', true);
                   $saveBtn.html(`<i class="zmdi zmdi-check"></i>${ts['Saved']}`).prop('disabled', true);
@@ -427,12 +427,59 @@
       }
     },
 
-    recommendTemplate: function() {
-      // TODO: Create a modal dialog for recommending Template based on the functional requirements
-      let data = {};
+    setShare: function() {
+      let $container = AICompletion.prototype.container,
+      modal = AICompletion.prototype.modal;
 
-      sendAjaxRequest(endpoint.setShare, 'POST', data, function(response) {
-        // TODO: Process and display the result based on the API response
+      $container.on('click', '.msg-tools .recommend-btn:not([disabled])', function(event) {
+        event.preventDefault();
+
+        let $shareBtn = $(this),
+            $userMsg = $shareBtn.closest('.msg'),
+            userMsgID = $userMsg.attr('id'),
+            aiMsgID = $userMsg.attr('data-ref-id'),
+            $aiMsg = $userMsg.next('.msg'),
+            aicompletionID = $aiMsg.data('aicompletion-id'),
+            modalTitle = ts['Recommend a Template to Other Organizations'],
+            modalCallbacks = {},
+            modalContent = `<div class="share-tpl-form" data-id="${userMsgID}">
+              <div class="desc">
+              <p>${ts['Upon clicking "Recommend", we\'ll proceed with the following verification steps:']}</p>
+              <ol>
+              <li>${ts['The netiCRM team will ensure the prompt does not contain any personal data and test its function to guarantee the privacy safety for you and other organizations.']}</li>
+              <li>${ts['Due to the above, the results of your sharing will not appear immediately. We will schedule periodic updates and publications.']}</li>
+              <li>${ts['Once published, you can view your shared template in the "Community Recommended" templates, which will also be marked with your organization\'s name.']}<br><img src="/sites/all/modules/civicrm/packages/AICompletion/images/example--share-tpl-screenshot@2x.jpg" alt=""></li>
+              </ol>
+              <p>${ts['Thank you for being willing to share your templates with the community, thereby benefiting all netiCRM users.']}</p>
+              </div>
+              <div class="form-actions">
+              <button id="share-tpl-submit" type="button" class="share-tpl-submit form-submit">${ts['Recommend']}</button>
+              </div>
+              </div>`;
+
+        if (aicompletionID) {
+          modalCallbacks.open = function() {
+            $('.share-tpl-form').on('click', '.share-tpl-submit:not([disabled])', function(event) {
+              event.preventDefault();
+
+              let $submit = $(this),
+                  $container = $submit.closest('.share-tpl-form'),
+                  data = {
+                    id: aicompletionID,
+                    is_share_with_others: '1',
+                  };
+
+              sendAjaxRequest(endpoint.setShare, 'POST', data, function(response) {
+                if (response.status == 'success' || response.status == 1) {
+                  $submit.text(ts['Recommended']).prop('disabled', true);
+                  $shareBtn.html(`<i class="zmdi zmdi-check"></i>${ts['Recommended']}`).prop('disabled', true);
+                }
+              });
+            });
+          }
+        }
+
+        modal.open(modalContent, modalTitle, modalCallbacks);
       });
     },
 
@@ -702,6 +749,7 @@
       this.formUiOperation();
       this.useTemplates();
       this.setTemplate();
+      this.setShare();
 
       // Finally, add class to mark the initialization
       $container.addClass(INIT_CLASS);
