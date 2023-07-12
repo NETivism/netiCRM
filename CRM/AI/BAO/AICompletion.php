@@ -172,7 +172,7 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
           $aicompletion = array_merge($aicompletion, $aiCompletionArray);
         }
         else {
-          throw new Exception('Invalid token.');
+          throw new CRM_Core_Exception('Invalid token.');
         }
       }
       else {
@@ -278,6 +278,12 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
    * @return array The retrieved AI Completion data array.
    */
   private function retrieveAICompletionDataArray($aiCompletionID) {
+    if (empty($aiCompletionID)) {
+      throw new CRM_Core_Exception("\$aiCompletionID has no value.");
+    }
+    elseif (!is_numeric($aiCompletionID)) {
+      throw new CRM_Core_Exception("\$aiCompletionID is not number.");
+    }
     $params = array(
       'id' => $aiCompletionID,
     );
@@ -332,6 +338,7 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
     $model = isset($params['model']) ? $params['model'] : self::COMPLETION_MODEL;
     $maxToken = isset($params['max_token']) ? $params['max_token'] : self::COMPLETION_MAX_TOKENS;
     $completion = self::singleton(self::COMPLETION_SERVICE, $model, $maxToken);
+    $params['temperature'] = isset($params['temperature']) ? $params['temperature'] : self::TEMPERATURE_DEFAULT;
     $result = $completion->_serviceProvider->request($params);
     // format result
     return $result;
@@ -385,11 +392,18 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
     else {
       $dao = CRM_Core_DAO::executeQuery($sql, $sqlParams);
     }
+    // retrieve all AICompletion values to assoc data.
     $return = [];
+    $fields = CRM_AI_DAO_AICompletion::fields();
     while ($dao->fetch()) {
       $aiCompletionData = array();
       // do not call retrieve again for save database load
-      self::storeValues($dao, $aiCompletionData);
+      foreach ($fields as $field) {
+        $dbName = $field['name'];
+        if (isset($dao->$dbName) && $dao->$dbName !== 'null') {
+          $aiCompletionData[$dbName] = $dao->$dbName;
+        }
+      }
       $return[] = $aiCompletionData;
     }
     return $return;

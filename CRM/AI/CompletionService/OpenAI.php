@@ -32,6 +32,13 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
   private $_maxTokens = NULL;
 
   /**
+   * Temperature
+   *
+   * @var float
+   */
+  private $_temperature = NULL;
+
+  /**
    * AICompletion ID
    * 
    * @var int
@@ -127,7 +134,7 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
       }
       $responseData = &$this->_responseData;
       $responseData = [
-        'state_id' => 2, // 2: pending, 5: processing, 1: finished, 
+        'status_id' => 2, // 2: pending, 5: processing, 1: finished, 
         'id' => $this->_id,
       ];
       curl_setopt($ch, CURLOPT_WRITEFUNCTION, function ($ch, $data) use (&$responseData){
@@ -163,14 +170,25 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
                 "message" => $decoded['choices'][0]['delta']['content'],
               );
               // change state
-              if ($responseData['state_id'] == 2) {
-                $responseData['state_id'] = 5;
+              if ($responseData['status_id'] == 2) {
+                $responseData['status_id'] = 5;
                 $outputData['id'] = $responseData['id'];
               }
               echo 'data: '.json_encode($outputData)."\n\n";
             }
             if (!empty($decoded["choices"][0]["finish_reason"]) && $decoded["choices"][0]["finish_reason"] === 'stop') {
               $responseData['is_finished'] = 1;
+              $responseData['status_id'] = 1;
+              // Last response, Save data.
+              $aiCompletionData = $responseData;
+              $aiCompletionData['output_text'] = $responseData['message'];
+              $aiCompletionData['return_data'] = json_encode($decoded);
+              if (json_decode($json)) {
+                $aiCompletionData['return_data'] = $json;
+              }
+              $aiCompletionData['post_data'] = $this->_postData;
+              $aiCompletionData['temperature'] = $this->_temperature;
+              CRM_AI_BAO_AICompletion::create($aiCompletionData);
               echo 'data: '.json_encode($responseData)."\n\n";
             }
             if (trim($data) === 'data: [DONE]') {
@@ -263,7 +281,7 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
         $params['max_tokens'] = $this->_maxTokens;
       }
       if (isset($params['temperature'])) {
-        $params['temperature'] = (float)$params['temperature'];
+        $this->_temperature = $params['temperature'] = (float)$params['temperature'];
       }
     }
     $fields = self::fields('CHAT_COMPLETION');
