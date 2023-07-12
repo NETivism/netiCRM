@@ -377,7 +377,7 @@
         if (type == 'user') {
           if (isObject(data)) {
             if (data.role) {
-              msg += `${ts['Role']}: ${data.role}\n`;
+              msg += `${ts['Copywriting Role']}: ${data.role}\n`;
             }
 
             if (data.tone) {
