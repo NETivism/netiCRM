@@ -884,7 +884,12 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
         }
         elseif ($name == 'first_name') {
           $params[$index] = $details->$name;
-          $values[$index] = $maskType ? CRM_Utils_String::mask($details->$name, 'custom', 0, 1) : $details->$name;
+          if (mb_strlen($details->$name) === 1 && $maskType) {
+            $values[$index] = CRM_Utils_String::MASK;
+          }
+          else {
+            $values[$index] = $maskType ? CRM_Utils_String::mask($details->$name, 'custom', 0, 1) : $details->$name;
+          }
         }
         elseif ($name == 'custom_'.$customTitle) {
           $params[$index] = $details->$name;
@@ -926,13 +931,11 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
                 }
                 else {
                   $customVal = NULL;
-                  if (isset($dao) && ($dao->data_type == 'Int' ||
-                      $dao->data_type == 'Boolean'
-                    )) {
-                    $customVal = (int )($details->{$name});
+                  if ($dataType == 'Int' || $dataType == 'Boolean') {
+                    $customVal = (int)($details->{$name});
                   }
-                  elseif (isset($dao) && $dao->data_type == 'Float') {
-                    $customVal = (float )($details->{$name});
+                  elseif ($dataType == 'Float') {
+                    $customVal = (float)($details->{$name});
                   }
                   elseif (!CRM_Utils_System::isNull(explode(CRM_Core_DAO::VALUE_SEPARATOR,
                         $details->{$name}
@@ -946,10 +949,10 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
                   }
 
                   $params[$index] = $customVal;
-                  $values[$index] = CRM_Core_BAO_CustomField::getDisplayValue($customVal,
-                    $cfID,
-                    $options
-                  );
+                  if ($htmlType === 'Text' || $htmlType === 'TextArea') {
+                    $customVal = $maskType ? CRM_Utils_String::mask($customVal) : $customVal;
+                  }
+                  $values[$index] = CRM_Core_BAO_CustomField::getDisplayValue($customVal, $cfID, $options);
                   if ($htmlType == 'Autocomplete-Select') {
                     $params[$index] = $values[$index];
                   }
@@ -970,7 +973,7 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
                 $params[$index] = CRM_Utils_Date::isoToMysql($details->$name);
               }
               else {
-                $values[$index] = $details->$name;
+                $values[$index] = $maskType ? CRM_Utils_String::mask($details->$name) : $details->$name;
               }
             }
           }

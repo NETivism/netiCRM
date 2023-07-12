@@ -14,7 +14,7 @@ class Buffer implements \ArrayAccess, \Countable, \Iterator
         $this->container = array_fill(0, $sz, 0);
     }
 
-    public function offsetSet($offset,  $value): void
+    public function offsetSet($offset,  $value)
     {
         if (is_null($offset)) {
             $this->container[] = $value;
@@ -23,12 +23,12 @@ class Buffer implements \ArrayAccess, \Countable, \Iterator
         }
     }
 
-    public function offsetExists($offset): bool
+    public function offsetExists($offset)
     {
         return isset($this->container[$offset]);
     }
 
-    public function offsetUnset($offset): void
+    public function offsetUnset($offset)
     {
         unset($this->container[$offset]);
     }
@@ -39,7 +39,7 @@ class Buffer implements \ArrayAccess, \Countable, \Iterator
         return isset($this->container[$offset]) ? $this->container[$offset] : null;
     }
 
-    public function count(): int
+    public function count()
     {
         return count($this->container);
     }
@@ -129,17 +129,17 @@ class Buffer implements \ArrayAccess, \Countable, \Iterator
         return $this->position;
     }
 
-    public function next(): void
+    public function next()
     {
         ++$this->position;
     }
 
-    public function rewind(): void
+    public function rewind()
     {
         $this->position = 0;
     }
 
-    public function valid(): bool
+    public function valid()
     {
         return isset($this->container[$this->position]);
     }
