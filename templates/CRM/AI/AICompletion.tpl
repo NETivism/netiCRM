@@ -1,4 +1,10 @@
+{* Magnific Popup *}
+<link rel="stylesheet" href="{$config->resourceBase}packages/Magnific-Popup/dist/magnific-popup.css?v{$config->ver}">
+{js src=packages/Magnific-Popup/dist/jquery.magnific-popup.min.js group=999 weight=997 library=civicrm/civicrm-js-mailingeditor}{/js}
+
 {* AICompletion files start *}
+{* TODO: File used temporarily during development, to be removed later *}
+<link rel="stylesheet" href="{$config->resourceBase}packages/mailingEditor/mailingEditor.css?v{$config->ver}">
 {* style files *}
 {*
   The `<link rel="stylesheet">` tag placed inside the `<body>` is valid according to the specifications. For more information:
@@ -14,7 +20,6 @@
 
   refs #37730 46f
 *}
-
 <link rel="stylesheet" href="{$config->resourceBase}packages/AICompletion/AICompletion.css?v{$config->ver}">
 
 {* script files *}
@@ -25,34 +30,34 @@
 {literal}
 <script type="text/javascript">
 window.AICompletion = {
-  language: '{/literal}{$tsLocale}{literal}',
+  language: "{/literal}{$tsLocale}{literal}",
   translation: {
-    'Copy': '{/literal}{ts}Copy{/ts}{literal}',
-    'Save': '{/literal}{ts}Save{/ts}{literal}',
-    'Saved': '{/literal}{ts}Saved{/ts}{literal}',
-    'Title': '{/literal}{ts}Title{/ts}{literal}',
-    'Submit': '{/literal}{ts}Submit{/ts}{literal}',
-    'Try Again': '{/literal}{ts}Try Again{/ts}{literal}',
-    'Copywriting Role': '{/literal}{ts}Copywriting Role{/ts}{literal}',
-    'Tone Style': '{/literal}{ts}Tone Style{/ts}{literal}',
-    'Content': '{/literal}{ts}Content{/ts}{literal}',
-    'AI-generated Text Templates': '{/literal}{ts}AI-generated Text Templates{/ts}{literal}',
-    'Saved Templates': '{/literal}{ts}Saved Templates{/ts}{literal}',
-    'Community Recommendations': '{/literal}{ts}Community Recommendations{/ts}{literal}',
-    'Save As New Template': '{/literal}{ts}Save As New Template{/ts}{literal}',
-    'Recommend': '{/literal}{ts}Recommend{/ts}{literal}',
-    'Recommended': '{/literal}{ts}Recommended{/ts}{literal}',
-    'Organization intro': '{/literal}{ts}Organization intro{/ts}{literal}',
-    'Warning! Applying this template will clear your current settings. Proceed with the application?': '{/literal}{ts}Warning! Applying this template will clear your current settings. Proceed with the application?{/ts}{literal}',
-    'Remember to verify AI-generated text before using it.': '{/literal}{ts}Remember to verify AI-generated text before using it.{/ts}{literal}',
-    'Save prompt as shared template': '{/literal}{ts}Save prompt as shared template{/ts}{literal}',
-    'Once saved as a shared template, you can reuse this template for editing. Please enter a template title to identify the purpose of the template. If you need to edit a shared template, please go to the template management interface to edit.': '{/literal}{ts}Once saved as a shared template, you can reuse this template for editing. Please enter a template title to identify the purpose of the template. If you need to edit a shared template, please go to the template management interface to edit.{/ts}{literal}',
-    'Recommend a Template to Other Organizations': '{/literal}{ts}Recommend a Template to Other Organizations{/ts}{literal}',
-    'Upon clicking "Recommend", we\'ll proceed with the following verification steps:': '{/literal}{ts}Upon clicking "Recommend", we\'ll proceed with the following verification steps:{/ts}{literal}',
-    'The netiCRM team will ensure the prompt does not contain any personal data and test its function to guarantee the privacy safety for you and other organizations.': '{/literal}{ts}The netiCRM team will ensure the prompt does not contain any personal data and test its function to guarantee the privacy safety for you and other organizations.{/ts}{literal}',
-    'Due to the above, the results of your sharing will not appear immediately. We will schedule periodic updates and publications.': '{/literal}{ts}Due to the above, the results of your sharing will not appear immediately. We will schedule periodic updates and publications.{/ts}{literal}',
-    'Once published, you can view your shared template in the "Community Recommended" templates, which will also be marked with your organization\'s name.': '{/literal}{ts}Once published, you can view your shared template in the "Community Recommended" templates, which will also be marked with your organization\'s name.{/ts}{literal}',
-    'Thank you for being willing to share your templates with the community, thereby benefiting all netiCRM users.': '{/literal}{ts}Thank you for being willing to share your templates with the community, thereby benefiting all netiCRM users.{/ts}{literal}',
+    "Copy": "{/literal}{ts}Copy{/ts}{literal}",
+    "Save": "{/literal}{ts}Save{/ts}{literal}",
+    "Saved": "{/literal}{ts}Saved{/ts}{literal}",
+    "Title": "{/literal}{ts}Title{/ts}{literal}",
+    "Submit": "{/literal}{ts}Submit{/ts}{literal}",
+    "Try Again": "{/literal}{ts}Try Again{/ts}{literal}",
+    "Copywriting Role": "{/literal}{ts}Copywriting Role{/ts}{literal}",
+    "Tone Style": "{/literal}{ts}Tone Style{/ts}{literal}",
+    "Content": "{/literal}{ts}Content{/ts}{literal}",
+    "AI-generated Text Templates": "{/literal}{ts}AI-generated Text Templates{/ts}{literal}",
+    "Saved Templates": "{/literal}{ts}Saved Templates{/ts}{literal}",
+    "Community Recommendations": "{/literal}{ts}Community Recommendations{/ts}{literal}",
+    "Save As New Template": "{/literal}{ts}Save As New Template{/ts}{literal}",
+    "Recommend": "{/literal}{ts}Recommend{/ts}{literal}",
+    "Recommended": "{/literal}{ts}Recommended{/ts}{literal}",
+    "Organization intro": "{/literal}{ts}Organization intro{/ts}{literal}",
+    "Warning! Applying this template will clear your current settings. Proceed with the application?": "{/literal}{ts}Warning! Applying this template will clear your current settings. Proceed with the application?{/ts}{literal}",
+    "Remember to verify AI-generated text before using it.": "{/literal}{ts}Remember to verify AI-generated text before using it.{/ts}{literal}",
+    "Save prompt as shared template": "{/literal}{ts}Save prompt as shared template{/ts}{literal}",
+    "Once saved as a shared template, you can reuse this template for editing. Please enter a template title to identify the purpose of the template. If you need to edit a shared template, please go to the template management interface to edit.": "{/literal}{ts}Once saved as a shared template, you can reuse this template for editing. Please enter a template title to identify the purpose of the template. If you need to edit a shared template, please go to the template management interface to edit.{/ts}{literal}",
+    "Recommend a Template to Other Organizations": "{/literal}{ts}Recommend a Template to Other Organizations{/ts}{literal}",
+    "Upon clicking \"Recommend\", we'll proceed with the following verification steps:": "{/literal}{ts}Upon clicking \"Recommend\", we'll proceed with the following verification steps:{/ts}{literal}",
+    "The netiCRM team will ensure the prompt does not contain any personal data and test its function to guarantee the privacy safety for you and other organizations.": "{/literal}{ts}The netiCRM team will ensure the prompt does not contain any personal data and test its function to guarantee the privacy safety for you and other organizations.{/ts}{literal}",
+    "Due to the above, the results of your sharing will not appear immediately. We will schedule periodic updates and publications.": "{/literal}{ts}Due to the above, the results of your sharing will not appear immediately. We will schedule periodic updates and publications.{/ts}{literal}",
+    "Once published, you can view your shared template in the \"Community Recommended\" templates, which will also be marked with your organization's name.": "{/literal}{ts}Once published, you can view your shared template in the \"Community Recommended\" templates, which will also be marked with your organization's name.{/ts}{literal}",
+    "Thank you for being willing to share your templates with the community, thereby benefiting all netiCRM users.": "{/literal}{ts}Thank you for being willing to share your templates with the community, thereby benefiting all netiCRM users.{/ts}{literal}",
   }
 };
 {/literal}window.AICompletion.default = {$ai_completion_default};{literal}
