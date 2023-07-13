@@ -5,7 +5,8 @@
       <td>
         {$form.aiOrganizationIntro.html|crmReplace:class:'huge40'}
         <div class="description">
-          {ts}Set up the organization intro, so that when using AI to generate text later, it can be quickly incorporated to let the AI understand the context of your organization.{/ts}
+          {ts}Establish an introduction for your organization so that when later generating text using AI, it can be swiftly integrated, enabling the AI to grasp the context of your organization.{/ts}<br>
+          {ts 1=200}Suggested word count: %1 words.{/ts}
         </div>
       </td>
     </tr>
