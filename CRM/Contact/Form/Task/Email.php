@@ -108,10 +108,16 @@ class CRM_Contact_Form_Task_Email extends CRM_Contact_Form_Task {
    * @return void
    */
   public function buildQuickForm() {
+    $config = CRM_Core_Config::singleton();
+
     //enable form element
     $this->assign('suppressForm', FALSE);
     $this->assign('emailTask', TRUE);
     $this->assign('templateDefault', $this->_templateDefault);
+
+    if ($config->nextEnabled) {
+      $this->assign('ai_completion_default', CRM_AI_BAO_AICompletion::getDefaultTemplate('Activity'));
+    }
 
     CRM_Contact_Form_Task_EmailCommon::buildQuickForm($this);
   }

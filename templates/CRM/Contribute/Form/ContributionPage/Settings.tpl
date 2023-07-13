@@ -294,7 +294,7 @@
 	<div class="nme-setting-panels-inner">
 		<div class="nme-setting-panels-header" id="nme-setting-panels-header">
 			<ul data-target-contents="nme-setting-panel" class="nme-setting-panels-tabs">
-				<li><a title="{ts}AI Completion{/ts}" href="#nme-aicompletion" data-target-id="nme-aicompletion"
+				<li><a title="{ts}AI Copywriter{/ts}" href="#nme-aicompletion" data-target-id="nme-aicompletion"
 						data-tooltip>{ts}AI Copywriter{/ts}</a></li>
 			</ul>
 		</div>
