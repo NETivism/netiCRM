@@ -212,7 +212,7 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
   public static function quota() {
     $config = CRM_Core_Config::singleton();
     $used = CRM_Core_DAO::singleValueQuery("SELECT count(*) FROM civicrm_aicompletion WHERE created_date >= DATE_FORMAT(CURDATE(), '%Y-%m-01 00:00:00') AND created_date < DATE_FORMAT(DATE_ADD(CURDATE(), INTERVAL 1 MONTH), '%Y-%m-01 00:00:00');");
-    $percent = $used < $config->openAICompletionQuota ? floor($used/$config->openAICompletionQuota)*100 : 100;
+    $percent = $used < $config->openAICompletionQuota ? floor(($used/$config->openAICompletionQuota)*100) : 100;
 
     return array(
       'max' => $config->openAICompletionQuota,
