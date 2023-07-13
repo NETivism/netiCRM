@@ -6,6 +6,7 @@
 class CRM_AI_Page_AJAX {
 
   function chat() {
+    $maxlength = 2000;
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] == 'application/json') {
       $jsonString = file_get_contents('php://input');
       $jsondata = json_decode($jsonString, true);
@@ -15,17 +16,26 @@ class CRM_AI_Page_AJAX {
           'message' => 'The request is not a valid JSON format.',
         ));
       }
-      if (is_string($jsondata['tone']) && isset($jsondata['tone'])) {
+      if (isset($jsondata['tone']) && is_string($jsondata['tone'])) {
         $tone_style = $jsondata['tone'];
         $data['tone_style'] = $tone_style;
       }
-      if (is_string($jsondata['role']) && isset($jsondata['role'])) {
+      if (isset($jsondata['role']) && is_string($jsondata['role'])) {
         $ai_role = $jsondata['role'];
         $data['ai_role'] = $ai_role;
       }
-      if (is_string($jsondata['content']) && isset($jsondata['content'])) {
+      if (isset($jsondata['content']) && is_string($jsondata['content'])) {
         $context = $jsondata['content'];
-        $data['context'] = $context;
+        $contextCount = mb_strlen($context);
+        if ($contextCount <= $maxlength) {
+          $data['context'] = $context;
+        }
+        else {
+          self::responseError(array(
+            'status' => 0,
+            'message' => "Content exceeds the maximum character limit.",
+          ));
+        }
       }
       if (is_string($jsondata['sourceUrlPath']) && isset($jsondata['sourceUrlPath'])) {
         $url = $jsondata['sourceUrlPath'];
