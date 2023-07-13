@@ -665,19 +665,19 @@
   </item>
   <item>
      <path>civicrm/admin/aicompletion</path>
-     <title>AI Copywriting Assistant</title>
-     <desc>List used prompts.</desc>
+     <title>AI Copywriter</title>
+     <desc>AI Copywriter</desc>
      <page_callback>CRM_Admin_Page_AICompletion</page_callback>
-     <access_arguments>administer CiviCRM,administer Reports</access_arguments>
+     <access_arguments>administer CiviCRM,access CiviCRM</access_arguments>
      <adminGroup>Manage</adminGroup>
      <weight>420</weight>
   </item>
   <item>
      <path>civicrm/admin/setting/aicompletion</path>
-     <title>Organization profile</title>
-     <desc>Set organization profile.</desc>
+     <title>Organization intro</title>
+     <desc>Set organization info</desc>
      <page_callback>CRM_Admin_Form_Setting_AICompletion</page_callback>
-     <access_arguments>administer CiviCRM,administer Reports</access_arguments>
+     <access_arguments>administer CiviCRM,access CiviCRM</access_arguments>
      <adminGroup>Manage</adminGroup>
      <skipBreadcrumb>true</skipBreadcrumb>
      <weight>420</weight>

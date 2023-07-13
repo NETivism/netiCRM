@@ -495,8 +495,8 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
     $sortName = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $contactId, 'sort_name');
     $smarty->assign('sort_name', $sortName);
 
-    // org info
-    $smarty->assign('org_info', $config->openAICompletionOrgInfo);
+    // org intro
+    $smarty->assign('org_intro', $config->aiOrganizationIntro);
 
     // usage
     $quota = self::quota();

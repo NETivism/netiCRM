@@ -430,7 +430,7 @@ class CRM_Core_Config_Variables extends CRM_Core_Config_Defaults {
   /**
    *  AI Organization profile
    */
-  public $aiOrganizationProfile = '';
+  public $aiOrganizationIntro = '';
 
   /**
    * Provide addressSequence

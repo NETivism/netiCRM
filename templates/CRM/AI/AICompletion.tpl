@@ -100,9 +100,9 @@ window.AICompletion = {
                   <div class="netiaic-prompt-content-command netiaic-command">
                     <div class="inner">
                       <ul class="netiaic-command-list">
-                        <li data-name="org_info" class="netiaic-command-item">
-                          <a class="get-org-info" href="#">{ts}Click to insert organization intro.{/ts}</a>
-                          <a href="#" target="_blank">({ts}Edit{/ts}<i class="zmdi zmdi-edit"></i>)</a> {* TODO: Need to change to correct URL *}
+                        <li data-name="org_intro" class="netiaic-command-item">
+                          <a class="get-org-intro" href="#">{ts}Click to insert organization intro.{/ts}</a>
+                          <a href="{crmURL p="civicrm/admin/setting/aicompletion" q="reset=1"}" target="_blank">({ts}Edit{/ts}<i class="zmdi zmdi-edit"></i>)</a> {* TODO: Need to change to correct URL *}
                           <div class="netiaic-command-item-desc"> {* TODO: smarty var *} </div>
                         </li>
                       </ul>

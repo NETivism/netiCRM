@@ -329,6 +329,7 @@
         event.preventDefault();
         let templateData = defaultData.templates_default[0];
 
+
         if (!AICompletion.prototype.formIsEmpty()) {
           if (confirm(ts['Warning! Applying this template will clear your current settings. Proceed with the application?'])) {
             AICompletion.prototype.applyTemplateToForm({ data: templateData });
@@ -555,12 +556,12 @@
         }
       });
 
-      $promptContentCommand.find('[data-name="org_info"] .netiaic-command-item-desc').html(defaultData.org_info);
-      $promptContentCommand.on('click', '.get-org-info, .netiaic-command-item-desc', function(event) {
+      $promptContentCommand.find('[data-name="org_intro"] .netiaic-command-item-desc').html(defaultData.org_intro);
+      $promptContentCommand.on('click', '.get-org-intro, .netiaic-command-item-desc', function(event) {
         event.preventDefault();
 
         if ($promptContent.val() === '') {
-          $promptContent.val(defaultData.org_info);
+          $promptContent.val(defaultData.org_intro);
         }
       });
 
