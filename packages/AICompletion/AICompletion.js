@@ -328,7 +328,11 @@
       $container.on('click', '.use-default-template', function(event) {
         event.preventDefault();
         let templateData = defaultData.templates_default[0];
-
+        console.log(templateData);
+        if (templateData.content.match(new RegExp('^'+ts['Organization intro']))) {
+          templateData.content = templateData.content.replace(new RegExp('^'+ts['Organization intro']+'.*'), ts['Organization intro']+': '+defaultData.org_intro+"\n");
+        }
+        console.log(templateData);
 
         if (!AICompletion.prototype.formIsEmpty()) {
           if (confirm(ts['Warning! Applying this template will clear your current settings. Proceed with the application?'])) {
