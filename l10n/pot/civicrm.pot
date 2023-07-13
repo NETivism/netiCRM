@@ -48929,3 +48929,10 @@ msgstr ""
 
 msgid "Organization intro"
 msgstr ""
+
+#: civicrm_backer_autoimport.install
+msgid "Link URL"
+msgstr ""
+
+msgid "Link Label"
+msgstr ""
