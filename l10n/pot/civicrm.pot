@@ -48835,3 +48835,97 @@ msgstr ""
 
 msgid "Export excel file encryption settings password Changed"
 msgstr ""
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid "AI Copywriter"
+msgstr ""
+
+msgid "AI-generated Text Templates"
+msgstr ""
+
+msgid "Community Recommendations"
+msgstr ""
+
+msgid "Copywriting Role"
+msgstr ""
+
+msgid "Due to the above, the results of your sharing will not appear immediately. We will schedule periodic updates and publications."
+msgstr ""
+
+msgid "Once published, you can view your shared template in the \"Community Recommended\" templates, which will also be marked with your organization's name."
+msgstr ""
+
+msgid "Once saved as a shared template, you can reuse this template for editing. Please enter a template title to identify the purpose of the template. If you need to edit a shared template, please go to the template management interface to edit."
+msgstr ""
+
+msgid "Recommend"
+msgstr ""
+
+msgid "Recommend a Template to Other Organizations"
+msgstr ""
+
+msgid "Recommended"
+msgstr ""
+
+msgid "Remember to verify AI-generated text before using it."
+msgstr ""
+
+msgid "Save prompt as shared template"
+msgstr ""
+
+msgid "Saved Templates"
+msgstr ""
+
+msgid "Thank you for being willing to share your templates with the community, thereby benefiting all netiCRM users."
+msgstr ""
+
+msgid "The netiCRM team will ensure the prompt does not contain any personal data and test its function to guarantee the privacy safety for you and other organizations."
+msgstr ""
+
+msgid "Tone Style"
+msgstr ""
+
+msgid "Try Again"
+msgstr ""
+
+msgid "Upon clicking \"Recommend\", we'll proceed with the following verification steps:"
+msgstr ""
+
+msgid "Warning! Applying this template will clear your current settings. Proceed with the application?"
+msgstr ""
+
+msgid "Hi, this is netiCRM copywriting helper, please be careful not to enter personal information or other confidential information."
+msgstr ""
+
+msgid "Use default template"
+msgstr ""
+
+msgid "Use other templates"
+msgstr ""
+
+msgid "Please enter or select the role you want AI to represent (e.g., fundraiser)."
+msgstr ""
+
+msgid "Please enter or select the desired writing style (e.g., casual)."
+msgstr ""
+
+msgid "Please enter the %1 copy you would like AI to generate."
+msgstr ""
+
+msgid "Click to insert organization intro."
+msgstr ""
+
+msgid "Your usage limit is <span class=\"usage-max\">%1</span> times, currently used <span class=\"usage-current\">%2</span> times."
+msgstr ""
+
+msgid "Establish an introduction for your organization so that when later generating text using AI, it can be swiftly integrated, enabling the AI to grasp the context of your organization."
+msgstr ""
+
+msgid "Suggested word count: %1 words."
+msgstr ""
+
+msgid "The Smiling Elderly Foundation, a non-profit organization based in Taiwan, is committed to enhancing the quality of life for seniors. We offer thoughtful care, support, and organize welfare activities, in addition to providing medical assistance. Additionally, we are staunch advocates for the rights of the elderly. Our objective is to ensure that seniors feel the warmth, respect, and appreciation of society."
+msgstr ""
+
+msgid "Organization intro"
+msgstr ""

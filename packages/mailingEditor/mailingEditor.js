@@ -1629,7 +1629,7 @@
       }
 
       // Prevent users from pressing enter to send the #upload form.
-      $("#Upload").off("keypress").on("keypress", "input, textarea", function(event){
+      $("#Upload").off("keypress").on("keypress", "input", function(event){
         let code = event.keyCode || event.which;
 
         if (code == 13) {

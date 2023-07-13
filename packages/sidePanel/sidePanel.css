@@ -1,5 +1,15 @@
+@charset "UTF-8";
+
 :root {
   --nsp-width: 320px;
+  --admin-sidebar-width: 230px;
+  --sidepanel-button-size: 44px;
+}
+.nsp-is-fullscreen {
+  --nsp-width: calc(100% - var(--admin-sidebar-width) - var(--sidepanel-button-size));
+}
+.admin-sidebar-mini.nsp-is-fullscreen {
+  --admin-sidebar-width: 60px;
 }
 img {
   max-width: 100%;
@@ -11,12 +21,19 @@ img {
 a.btn:hover {
   text-decoration: none;
 }
+#admin-header {
+  z-index: 998;
+}
 #page {
   padding-right: 0;
   transition: padding .3s;
 }
-.nsp-is-opened #page {
+.nsp-is-opened:not(.nsp-is-fullscreen) #page {
   padding-right: var(--nsp-width);
+}
+.overlay.nsp-is-fullscreen #page:after {
+  background-color: rgba(0,0,0,.5);
+  visibility: visible;
 }
 .nsp-hide {
   display: none !important;
@@ -46,29 +63,39 @@ a.btn:hover {
   -moz-transform: translate3d(0,0,0);
   transform: translate3d(0,0,0);
 }
+.nsp-container.is-fullscreen {
+  z-index: 997;
+}
 .nsp-inner {
   position: relative;
   height: 100%;
 }
-.nsp-container .nsp-trigger {
+.nsp-container .nsp-tools {
   position: absolute;
   top: 0;
   left: 0;
   margin: 220px 0 0 -44px;
-  padding: 10px 12px;
+}
+.nsp-container .nsp-tool-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 2px;
+  width: 44px;
+  height: 44px;
   text-align: center;
   color: #fff;
   background: #3F51B5;
   cursor: pointer;
 }
-.nsp-container .nsp-trigger i {
-  display: flex;
-  text-align: center;
-  width: auto;
+.nsp-container .nsp-tool-btn i {
+  margin: 0;
   font-size: 24px;
   color: #fff;
   cursor: pointer;
-  margin: 0;
+}
+.nsp-container .nsp-fullscreen-trigger i {
+  font-size: 30px;
 }
 
 .nsp-container .nsp-inner {

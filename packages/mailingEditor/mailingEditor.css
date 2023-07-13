@@ -968,4 +968,10 @@ ul.nme-setting-panels-tabs li a.is-active {
   .nme-preview-popup {
     max-width: 1000px;
   }
+  .nsp-container.is-fullscreen ul.nme-setting-panels-tabs li {
+    flex: 0 1 auto;
+  }
+  .nsp-container.is-fullscreen ul.nme-setting-panels-tabs li a {
+    padding: 5px 30px;
+  }
 }

@@ -15,6 +15,7 @@
         INNER_CLASS = "inner",
         ACTIVE_CLASS = "is-active",
         OPEN_CLASS = "is-opened",
+        FULLSCREEN_CLASS = "is-fullscreen",
         INIT_CLASS = "is-initialized";
 
 	/**
@@ -50,6 +51,7 @@
     _nspFooter,
     _nspWidth,
     _nspOpened,
+    _nspFullscreen,
     _nspContainerClass,
 		_nspAPI = window.location.origin + "/api/",
 		_container,
@@ -223,6 +225,19 @@
         }
       });
 
+      if (_nspFullscreen) {
+        $(_container).on("click", ".nsp-fullscreen-trigger", function(event) {
+          event.preventDefault();
+
+          if ($(_container).hasClass(FULLSCREEN_CLASS)) {
+            _nspMain.side();
+          }
+          else {
+            _nspMain.fullscreen();
+          }
+        });
+      }
+
       if (_nspContainerClass) {
         $(_container).addClass(_nspContainerClass);
         $(_container).find("." + NSP_INNER).addClass(_nspContainerClass + "-innner");
@@ -256,6 +271,15 @@
     close: function() {
       $(_container).removeClass(OPEN_CLASS);
       $("body").removeClass("nsp-" + OPEN_CLASS);
+    },
+    fullscreen: function() {
+      _nspMain.open();
+      $(_container).addClass(FULLSCREEN_CLASS);
+      $("body").addClass("nsp-" + FULLSCREEN_CLASS);
+    },
+    side: function() {
+      $(_container).removeClass(FULLSCREEN_CLASS);
+      $("body").removeClass("nsp-" + FULLSCREEN_CLASS);
     }
 	};
 
@@ -400,7 +424,11 @@
 		},
 		close: function(elem) {
       _nspMain.close();
-		}
+		},
+    setPanelWidth: function(width) {
+      _nspWidth = width;
+      _cssVariablesUpdate("--nsp-width", _nspWidth);
+    }
 	};
 
 	/**
@@ -436,6 +464,7 @@
       _nspContainerClass = _nspOptions.containerClass;
       _nspWidth = _nspOptions.width;
       _nspOpened = _nspOptions.opened;
+      _nspFullscreen = _nspOptions.fullscreen;
 
       if (_debugMode) {
         $("html").addClass("is-debug");

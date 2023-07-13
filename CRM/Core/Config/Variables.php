@@ -438,6 +438,11 @@ class CRM_Core_Config_Variables extends CRM_Core_Config_Defaults {
   public $cspRules = "default-src 'self'; img-src 'self' data: https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.googletagmanager.com https://*.google-analytics.com https://*.facebook.net https://*.facebook.com https://*.twitter.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com; font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; frame-src 'self' https://neticrm.tw https://*.facebook.net https://*.facebook.com https://*.twitter.com https://*.youtube.com https://*.vimeo.com; object-src 'none'";
 
   /**
+   *  AI Organization profile
+   */
+  public $aiOrganizationIntro = '';
+
+  /**
    * Provide addressSequence
    *
    * @param
