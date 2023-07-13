@@ -198,6 +198,10 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
     $this->add('hidden', 'deleteBackgroundImage');
     $this->add('hidden', 'deleteMobileBackgroundImage');
 
+    if ($config->nextEnabled) {
+      $this->assign('ai_completion_default', CRM_AI_BAO_AICompletion::getDefaultTemplate('CiviContribute'));
+    }
+
     parent::buildQuickForm();
   }
 
