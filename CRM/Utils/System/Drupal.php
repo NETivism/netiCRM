@@ -1206,7 +1206,17 @@ class CRM_Utils_System_Drupal {
         return $sessionID;
       }
       else {
-        // refs #31356, this is drupal 8 / 9 specific code for retrieve tempstore
+        // trying to start session
+        // the issue is that when https secure connection
+        // with ajax, we need both drupal session and temp store
+        // to keep anonymous session
+        self::sessionStart();
+        $session = \Drupal::service('session_manager');
+        $sessionID = $session->getID();
+        if ($sessionID) {
+          return $sessionID;
+        }
+
         $sessionID = self::tempstoreGet('sessionID');
         if ($sessionID) {
           return $sessionID;
