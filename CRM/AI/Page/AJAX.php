@@ -7,10 +7,11 @@ class CRM_AI_Page_AJAX {
 
   function chat() {
     $maxlength = 2000;
+    $tone_style = $ai_role = $context = null;
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] == 'application/json') {
       $jsonString = file_get_contents('php://input');
       $jsondata = json_decode($jsonString, true);
-      if ($jsondata === FALSE) {
+      if ($jsondata === NULL) {
         self::responseError(array(
           'status' => 0,
           'message' => 'The request is not a valid JSON format.',
@@ -79,18 +80,21 @@ class CRM_AI_Page_AJAX {
           ));
         }
 
-        self::responseOk(array(
-          'status' => 1,
-          'message' => 'Success create chat',
-          'data' => array(
-            'id' => $token['id'],
-            'token' => $token['token'],
-          )
-        ));
+        if (is_numeric($token['id']) && is_string($token['token'])) {
+          self::responseSucess(array(
+            'status' => 1,
+            'message' => 'Success create chat',
+            'data' => array(
+              'id' => $token['id'],
+              'token' => $token['token'],
+            )
+          ));
+        }
       }
     }
+    // When request method is get,Use stream to return ai content
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-      if (is_string($_GET['token']) && isset($_GET['token']) && is_string($_GET['id']) && isset($_GET['id'])) {
+      if (isset($_GET['token']) && isset($_GET['id']) && is_string($_GET['token']) && is_string($_GET['id'])) {
         $token = $_GET['token'];
         $id = $_GET['id'];
         $params = array(
@@ -109,7 +113,7 @@ class CRM_AI_Page_AJAX {
             'message' => $message,
           ));
         }
-        self::responseOk(array(
+        self::responseSucess(array(
           'status' => 1,
           'message' => 'Stream chat successfully',
           'data' => $result,
@@ -119,23 +123,30 @@ class CRM_AI_Page_AJAX {
   }
 
   function getTemplateList() {
+    $data = array();
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] == 'application/json') {
       $jsonString = file_get_contents('php://input');
       $jsondata = json_decode($jsonString, true);
-      if (is_string($jsondata['component']) && isset($jsondata['component'])) {
+      if ($jsondata === NULL) {
+        self::responseError(array(
+          'status' => 0,
+          'message' => 'The request is not a valid JSON format.',
+        ));
+      }
+      if (isset($jsondata['component']) && is_string($jsondata['component'])) {
         $component = $jsondata['component'];
         $data['component'] = $component;
       }
-      if (is_string($jsondata['field']) && isset($jsondata['field'])) {
+      if (isset($jsondata['field']) && is_string($jsondata['field'])) {
         $field = $jsondata['field'];
         $data['field'] = $field;
       }
-      if (is_string($jsondata['offset']) && isset($jsondata['offset'])) {
+      if (isset($jsondata['offset']) && is_numeric($jsondata['offset'])) {
         $offset = $jsondata['offset'];
         $data['offset'] = $offset;
       }
 
-      if (isset($data)) {
+      if (!empty($data)) {
         $getListResult = CRM_AI_BAO_AICompletion::getTemplateList($data);
       }
       else {
@@ -144,7 +155,7 @@ class CRM_AI_Page_AJAX {
       }
 
       if (is_array($getListResult) && !empty($getListResult)) {
-        self::responseOk(array(
+        self::responseSucess(array(
           'status' => 1,
           'message' => "Template list retrieved successfully",
           'data' => $getListResult,
@@ -163,13 +174,19 @@ class CRM_AI_Page_AJAX {
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] == 'application/json') {
       $jsonString = file_get_contents('php://input');
       $jsondata = json_decode($jsonString, true);
-      if (is_string($jsondata['id']) && isset($jsondata['id'])) {
+      if ($jsondata === NULL) {
+        self::responseError(array(
+          'status' => 0,
+          'message' => 'The request is not a valid JSON format.',
+        ));
+      }
+      if (isset($jsondata['id']) && is_numeric($jsondata['id'])) {
         $acId = $jsondata['id'];
       }
       if ($acId) {
         $getTemplateResult = CRM_AI_BAO_AICompletion::getTemplate($acId);
         if (is_array($getTemplateResult) && !empty($getTemplateResult)) {
-          self::responseOk(array(
+          self::responseSucess(array(
             'status' => 1,
             'message' => "Template retrieved successfully",
             'data' => $getTemplateResult,
@@ -189,15 +206,21 @@ class CRM_AI_Page_AJAX {
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] == 'application/json') {
       $jsonString = file_get_contents('php://input');
       $jsondata = json_decode($jsonString, true);
-      if (is_string($jsondata['id']) && isset($jsondata['id'])) {
+      if ($jsondata === NULL) {
+        self::responseError(array(
+          'status' => 0,
+          'message' => 'The request is not a valid JSON format.',
+        ));
+      }
+      if (isset($jsondata['id']) && is_numeric($jsondata['id'])) {
         $acId = $jsondata['id'];
         $data['id'] = $acId;
       }
-      if (is_string($jsondata['is_template']) && isset($jsondata['is_template'])) {
+      if (isset($jsondata['is_template']) && is_numeric($jsondata['is_template'])) {
         $acIsTemplate = $jsondata['is_template'];
         $data['is_template'] = $acIsTemplate;
       }
-      if (is_string($jsondata['template_title']) && isset($jsondata['template_title'])) {
+      if (isset($jsondata['template_title']) && is_string($jsondata['template_title'])) {
         $acTemplateTitle = $jsondata['template_title'];
         $data['template_title'] = $acTemplateTitle;
       }
@@ -243,7 +266,7 @@ class CRM_AI_Page_AJAX {
             ),
           );
         }
-        self::responseOk($result);
+        self::responseSucess($result);
       }
     }
   }
@@ -252,10 +275,16 @@ class CRM_AI_Page_AJAX {
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] == 'application/json') {
       $jsonString = file_get_contents('php://input');
       $jsondata = json_decode($jsonString, true);
-      if (is_string($jsondata['id']) && isset($jsondata['id'])) {
+      if ($jsondata === NULL) {
+        self::responseError(array(
+          'status' => 0,
+          'message' => 'The request is not a valid JSON format.',
+        ));
+      }
+      if (isset($jsondata['id']) && is_numeric($jsondata['id'])) {
         $acId = $jsondata['id'];
       }
-      if (is_string($jsondata['is_share_with_others']) && isset($jsondata['is_share_with_others'])) {
+      if (isset($jsondata['is_share_with_others']) && is_numeric($jsondata['is_share_with_others'])) {
         $acIsShare = $jsondata['is_share_with_others'];
       }
       if (isset($acId) && isset($acIsShare)) {
@@ -281,11 +310,16 @@ class CRM_AI_Page_AJAX {
             ],
           );
         }
-        self::responseOk($result);
+        self::responseSucess($result);
       }
     }
   }
 
+  /**
+   * This function handles the response in case of an error.
+   *
+   * @param mixed $error The error message or object that needs to be sent as a response.
+   */
   function responseError($error) {
     http_response_code(400);
     header('Content-Type: application/json; charset=utf-8');
@@ -293,7 +327,12 @@ class CRM_AI_Page_AJAX {
     CRM_Utils_System::civiExit();
   }
 
-  public static function responseOk($data) {
+  /**
+   * This function handles the response in case of success.
+   *
+   * @param mixed $data The data that needs to be sent as a response.
+   */
+  public static function responseSucess($data) {
     http_response_code(200);
     header('Content-Type: application/json; charset=utf-8');
     echo json_encode($data);
