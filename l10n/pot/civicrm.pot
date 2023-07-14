@@ -48936,3 +48936,7 @@ msgstr ""
 
 msgid "Link Label"
 msgstr ""
+
+#: CRM/AI/Page/AJAX.php
+msgid "You are an %1 in Taiwan who uses Traditional Chinese and is skilled at writing %2 copywriting."
+msgstr ""

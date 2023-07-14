@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: CC Chu <poliphilonet@gmail.com>, 2020-2023\n"
+"Last-Translator: 馮 佳今, 2022-2023\n"
 "Language-Team: Chinese (Taiwan) (http://app.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49396,3 +49396,9 @@ msgstr "連結網址"
 
 msgid "Link Label"
 msgstr "連結名稱"
+
+#: CRM/AI/Page/AJAX.php
+msgid ""
+"You are an %1 in Taiwan who uses Traditional Chinese and is skilled at "
+"writing %2 copywriting."
+msgstr "你是一個在台灣，使用繁體中文的%1，很會撰寫語氣%2的文案。"
