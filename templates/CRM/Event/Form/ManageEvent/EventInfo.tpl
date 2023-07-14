@@ -193,7 +193,7 @@ function reloadWindow( tempId ) {
 </script>
 {/literal}
 
-{if $config->nextEnabled}
+{if $config->nextEnabled && !isset($smarty.get.snippet)}
 <div class="nme-setting-panels">
   <div class="nme-setting-panels-inner">
     <div class="nme-setting-panels-header" id="nme-setting-panels-header">
