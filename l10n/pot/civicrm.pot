@@ -48852,7 +48852,7 @@ msgstr ""
 msgid "Due to the above, the results of your sharing will not appear immediately. We will schedule periodic updates and publications."
 msgstr ""
 
-msgid "Once published, you can view your shared template in the \"Community Recommended\" templates, which will also be marked with your organization's name."
+msgid "Once published, you can view your shared template in the 'Community Recommended' templates, which will also be marked with your organization's name."
 msgstr ""
 
 msgid "Once saved as a shared template, you can reuse this template for editing. Please enter a template title to identify the purpose of the template. If you need to edit a shared template, please go to the template management interface to edit."
@@ -48888,7 +48888,7 @@ msgstr ""
 msgid "Try Again"
 msgstr ""
 
-msgid "Upon clicking \"Recommend\", we'll proceed with the following verification steps:"
+msgid "Upon clicking 'Recommend', we'll proceed with the following verification steps:"
 msgstr ""
 
 msgid "Warning! Applying this template will clear your current settings. Proceed with the application?"
