@@ -448,11 +448,11 @@
             modalCallbacks = {},
             modalContent = `<div class="share-tpl-form" data-id="${userMsgID}">
               <div class="desc">
-              <p>${ts['Upon clicking "Recommend", we\'ll proceed with the following verification steps:']}</p>
+              <p>${ts['Upon clicking \'Recommend\', we\'ll proceed with the following verification steps:']}</p>
               <ol>
               <li>${ts['The netiCRM team will ensure the prompt does not contain any personal data and test its function to guarantee the privacy safety for you and other organizations.']}</li>
               <li>${ts['Due to the above, the results of your sharing will not appear immediately. We will schedule periodic updates and publications.']}</li>
-              <li>${ts['Once published, you can view your shared template in the "Community Recommended" templates, which will also be marked with your organization\'s name.']}<br><img src="/sites/all/modules/civicrm/packages/AICompletion/images/example--share-tpl-screenshot@2x.jpg" alt=""></li>
+              <li>${ts['Once published, you can view your shared template in the \'Community Recommended\' templates, which will also be marked with your organization\'s name.']}<br><img src="/sites/all/modules/civicrm/packages/AICompletion/images/example--share-tpl-screenshot@2x.jpg" alt=""></li>
               </ol>
               <p>${ts['Thank you for being willing to share your templates with the community, thereby benefiting all netiCRM users.']}</p>
               </div>
