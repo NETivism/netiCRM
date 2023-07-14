@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>, 2013,2015-2023\n"
+"Last-Translator: CC Chu <poliphilonet@gmail.com>, 2020-2023\n"
 "Language-Team: Chinese (Taiwan) (http://app.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49283,10 +49283,10 @@ msgid ""
 msgstr "因應上述，您分享的結果不會立即出現 ，我們將定期排程更新發布"
 
 msgid ""
-"Once published, you can view your shared template in the \"Community "
-"Recommended\" templates, which will also be marked with your organization's "
+"Once published, you can view your shared template in the 'Community "
+"Recommended' templates, which will also be marked with your organization's "
 "name."
-msgstr " 一旦發布後，您可以看到「其他組織推薦範本」的範本中，看到您分享的範本，亦會標示您所屬的組織名稱"
+msgstr "一旦發布後，您可以看到「其他組織推薦範本」的範本中，看到您分享的範本，亦會標示您所屬的組織名稱"
 
 msgid ""
 "Once saved as a shared template, you can reuse this template for editing. "
@@ -49331,7 +49331,7 @@ msgid "Try Again"
 msgstr "再試一次"
 
 msgid ""
-"Upon clicking \"Recommend\", we'll proceed with the following verification "
+"Upon clicking 'Recommend', we'll proceed with the following verification "
 "steps:"
 msgstr "點擊「推薦」後，我們會用以下步驟進行確認："
 
@@ -49389,3 +49389,10 @@ msgstr "微笑老人基金會是一個位於台灣的非營利組織，致力於
 
 msgid "Organization intro"
 msgstr "組織簡介"
+
+#: civicrm_backer_autoimport.install
+msgid "Link URL"
+msgstr "連結網址"
+
+msgid "Link Label"
+msgstr "連結名稱"
