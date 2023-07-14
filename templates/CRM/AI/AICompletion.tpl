@@ -120,7 +120,7 @@ window.AICompletion = {
             <div class="netiaic-form-footer">
               <div class="netiaic-usage-info">
                 {* $usage added in CRM/AI/BAO/AICompletion::getDefaultTemplate *}
-                {ts 1=$usage.max 2=$usage.used}Your usage limit is <span class="usage-max">%1</span> times, currently used <span class="usage-current">%2</span> times.{/ts}
+                {ts 1=$usage.max 2=$usage.used}Your usage limit is <span class="usage-max">%1</span> times, currently used <span class="usage-used">%2</span> times.{/ts}
               </div>
               <button type="button" class="shine-btn netiaic-form-submit">
                 <i class="zmdi zmdi-mail-send"></i>
@@ -142,6 +142,7 @@ window.AICompletion = {
   $(function() {
     // TODO: timeout is workaround
     setTimeout(function() {
+      console.log('before init');
       $('.netiaic-container:not(.is-initialized)').AICompletion();
     }, 3000);
   });
