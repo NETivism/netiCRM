@@ -59,6 +59,7 @@ a.btn:hover {
 .nsp-container.is-opened {
   top: 0;
   opacity: 1;
+  width: var(--nsp-width);
   -webkit-transform: translate3d(0,0,0);
   -moz-transform: translate3d(0,0,0);
   transform: translate3d(0,0,0);
