@@ -41,17 +41,26 @@ class CRM_AI_Page_AJAX {
       if (is_string($jsondata['sourceUrlPath']) && isset($jsondata['sourceUrlPath'])) {
         $mailTypeId = CRM_Core_OptionGroup::getValue('activity_type', 'Email', 'name');
         $url = $jsondata['sourceUrlPath'];
-        if (strstr($url, 'civicrm/admin/contribute/setting')) {
-          $data['component'] = "CiviContribute";
-        }
-        elseif (strstr($url, 'civicrm/event/manage/eventInfo')){
-          $data['component'] = "CiviEvent";
-        }
-        elseif (strstr($url, 'civicrm/mailing/send')) {
-          $data['component'] = "CiviMail";
-        }
-        elseif (strstr($url, 'civicrm/activity/add') && strstr($jsondata['sourceUrl'], "atype=$mailTypeId")) {
-          $data['component'] = "Activity";
+
+        $allowPatterns = [
+          'CiviContribute' => ['civicrm/admin/contribute/setting'],
+          'CiviEvent' => ['civicrm/event/manage/eventInfo'],
+          'CiviMail' => ['civicrm/mailing/send'],
+          'Activity' => ['civicrm/activity/add', 'civicrm/contact/view/activity'],
+        ];
+
+        foreach ($allowPatterns as $component => $allowedUrls) {
+          foreach ($allowedUrls as $allowedUrl) {
+            if (strstr($url, $allowedUrl)) {
+              if ($component === "Activity" && strstr($jsondata['sourceUrl'], "atype=$mailTypeId")) {
+                $data['component'] = $component;
+                break 2;
+              } elseif ($component !== "Activity") {
+                $data['component'] = $component;
+                break 2;
+              }
+            }
+          }
         }
       }
 
