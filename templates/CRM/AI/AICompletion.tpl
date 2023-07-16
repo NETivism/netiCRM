@@ -37,10 +37,13 @@ window.AICompletion = {
     "Saved": "{/literal}{ts}Saved{/ts}{literal}",
     "Title": "{/literal}{ts}Title{/ts}{literal}",
     "Submit": "{/literal}{ts}Submit{/ts}{literal}",
+    "Loading...": "{/literal}{ts}Loading...{/ts}{literal}",
     "Try Again": "{/literal}{ts}Try Again{/ts}{literal}",
+    "Content": "{/literal}{ts}Content{/ts}{literal}",
+    "Content Summary": "{/literal}{ts}Content Summary{/ts}{literal}",
     "Copywriting Role": "{/literal}{ts}Copywriting Role{/ts}{literal}",
     "Tone Style": "{/literal}{ts}Tone Style{/ts}{literal}",
-    "Content": "{/literal}{ts}Content{/ts}{literal}",
+    "Apply Template": "{/literal}{ts}Apply Template{/ts}{literal}",
     "AI-generated Text Templates": "{/literal}{ts}AI-generated Text Templates{/ts}{literal}",
     "Saved Templates": "{/literal}{ts}Saved Templates{/ts}{literal}",
     "Community Recommendations": "{/literal}{ts}Community Recommendations{/ts}{literal}",
@@ -58,6 +61,7 @@ window.AICompletion = {
     "Due to the above, the results of your sharing will not appear immediately. We will schedule periodic updates and publications.": "{/literal}{ts}Due to the above, the results of your sharing will not appear immediately. We will schedule periodic updates and publications.{/ts}{literal}",
     "Once published, you can view your shared template in the 'Community Recommended' templates, which will also be marked with your organization's name.": "{/literal}{ts}Once published, you can view your shared template in the 'Community Recommended' templates, which will also be marked with your organization's name.{/ts}{literal}",
     "Thank you for being willing to share your templates with the community, thereby benefiting all netiCRM users.": "{/literal}{ts}Thank you for being willing to share your templates with the community, thereby benefiting all netiCRM users.{/ts}{literal}",
+    "There are currently no templates available.": "{/literal}{ts}There are currently no templates available.{/ts}{literal}",
   }
 };
 {/literal}window.AICompletion.default = {$ai_completion_default};{literal}
@@ -142,7 +146,6 @@ window.AICompletion = {
   $(function() {
     // TODO: timeout is workaround
     setTimeout(function() {
-      console.log('before init');
       $('.netiaic-container:not(.is-initialized)').AICompletion();
     }, 3000);
   });

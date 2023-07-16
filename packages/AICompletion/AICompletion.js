@@ -11,6 +11,7 @@
         ACTIVE_CLASS = 'is-active',
         ERROR_CLASS = 'is-error',
         SENT_CLASS = 'is-sent',
+        PROCESS_CLASS = 'is-processing',
         FINISH_CLASS = 'is-finished',
         EXPAND_CLASS = 'is-expanded',
         COPY_CLASS = 'is-copied',
@@ -23,19 +24,23 @@
    */
 
   var defaultData = {},
-      ts = {},
-      endpoint = {
-        getTemplateList: '/civicrm/ajax/getTemplateList',
-        getTemplate: '/civicrm/ajax/getTemplate',
-        setTemplate: '/civicrm/ajax/setTemplate',
-        chat: '/civicrm/ajax/chat',
-        setShare: '/civicrm/ajax/setShare',
-        devel: '/openai-stream/stream.php',
-      },
-      chatData = {
-        messages: []
-      };
-
+    templateListData = {
+      savedTemplates: [],
+      communityRecommendations: []
+    },
+    ts = {},
+    endpoint = {
+      getTemplateList: '/civicrm/ajax/getTemplateList',
+      getTemplate: '/civicrm/ajax/getTemplate',
+      setTemplate: '/civicrm/ajax/setTemplate',
+      chat: '/civicrm/ajax/chat',
+      setShare: '/civicrm/ajax/setShare',
+      devel: '/openai-stream/stream.php',
+    },
+    chatData = {
+      messages: []
+    },
+    colon = ':';
   // Default configuration options
   var defaultOptions = {};
 
@@ -209,10 +214,46 @@
       }
     },
 
-    getTemplateList: function(page) {
-      sendAjaxRequest(endpoint.getTemplateList, 'POST', { page: page }, function(response) {
-        // TODO: Process the list of templates according to the data returned by the API
-      });
+    getTemplateList: function(data = {}) {
+      let output = `<p>${ts['There are currently no templates available.']}<p>`;
+
+      for (let key in templateListData) {
+        if (key == 'savedTemplates') {
+          sendAjaxRequest(endpoint.getTemplateList, 'POST', data, function(response) {
+            if (response.status == 'success' || response.status == 1) {
+              if (response.data) { // TODO: check data
+                templateListData[key] = response.data;
+                output = `<div class="template-list">`;
+                console.log(templateListData);
+
+                for (let i in templateListData[key]) {
+                  let data = templateListData[key][i],
+                      prompt = JSON.parse(data.prompt);
+                  console.log(prompt);
+                  output += `<div class="template-item" data-ai-role="${data.ai_role}" data-tone-style="${data.tone_style}" data-context="${data.context}">
+                      <div class="inner">
+                        <div class="ai-role"><span class="label">${ts['Copywriting Role']}</span>${colon}${data.ai_role}</div>
+                        <div class="tone-style"><span class="label">${ts['Tone Style']}</span>${colon}${data.tone_style}</div>
+                        <div class="context"><span class="label">${ts['Content Summary']}</span>${colon}${data.context}</div>
+                        <div class="actions">
+                          <button type="button" class="apply-btn btn">${ts['Apply Template']}</button>
+                        </div>
+                      </div>
+                    </div>`;
+                }
+
+                output += `</div>`;
+              }
+            }
+
+            $(`#use-other-templates-tabs .modal-tabs-panel[data-type="${key}"]`).html(output);
+          });
+        }
+
+        if (key == 'communityRecommendations') {
+          $(`#use-other-templates-tabs .modal-tabs-panel[data-type="${key}"]`).html(output);
+        }
+      }
     },
 
     setTemplate: function() {
@@ -331,7 +372,6 @@
         if (templateData.content.match(new RegExp('^'+ts['Organization intro']))) {
           templateData.content = templateData.content.replace(new RegExp('^'+ts['Organization intro']+'.*'), ts['Organization intro']+': '+defaultData.org_intro+"\n");
         }
-        console.log(templateData);
 
         if (!AICompletion.prototype.formIsEmpty()) {
           if (confirm(ts['Warning! Applying this template will clear your current settings. Proceed with the application?'])) {
@@ -353,14 +393,13 @@
               <li><a href="#use-other-templates-tabs-2">${ts['Community Recommendations']}</a></li>
             </ul>
             <div class="modal-tabs-panels">
-              <div id="use-other-templates-tabs-1" class="modal-tabs-panel">
-              </div>
-              <div id="use-other-templates-tabs-2" class="modal-tabs-panel">
-              </div>
+            <div id="use-other-templates-tabs-1" class="modal-tabs-panel ${PROCESS_CLASS}" data-type="savedTemplates">${ts['Loading...']}</div>
+            <div id="use-other-templates-tabs-2" class="modal-tabs-panel ${PROCESS_CLASS}" data-type="communityRecommendations">${ts['Loading...']}</div>
             </div>
           </div>`;
 
         modalCallbacks.open = function() {
+          AICompletion.prototype.getTemplateList();
           if (typeof $.ui !== 'undefined' && $.ui.tabs !== 'undefined') {
             $('#use-other-templates-tabs').tabs({
               collapsible: true
@@ -744,6 +783,7 @@
 
       // Get translation string comparison table
       ts = window.AICompletion.translation;
+      colon = window.AICompletion.language == 'zh_TW' ? '：' : ':';
 
       // TODO: For development and testing only, need to be removed afterwards
       this.devTestUse();
