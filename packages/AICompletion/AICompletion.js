@@ -30,12 +30,11 @@
     },
     ts = {},
     endpoint = {
-      getTemplateList: '/civicrm/ajax/getTemplateList',
-      getTemplate: '/civicrm/ajax/getTemplate',
-      setTemplate: '/civicrm/ajax/setTemplate',
-      chat: '/civicrm/ajax/chat',
-      setShare: '/civicrm/ajax/setShare',
-      devel: '/openai-stream/stream.php',
+      getTemplateList: '/civicrm/ajax/get-template-list',
+      getTemplate: '/civicrm/ajax/ai/get-template',
+      setTemplate: '/civicrm/ajax/ai/set-template',
+      chat: '/civicrm/ajax/ai/chat',
+      setShare: '/civicrm/ajax/ai/set-share',
     },
     chatData = {
       messages: []
