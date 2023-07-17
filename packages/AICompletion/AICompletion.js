@@ -248,7 +248,6 @@
               if (response.data) { // TODO: check data
                 templateListData[key] = response.data;
                 output = `<div class="template-list">`;
-                console.log(templateListData);
 
                 for (let i in templateListData[key]) {
                   let data = templateListData[key][i],
@@ -271,6 +270,26 @@
             }
 
             $(`#use-other-templates-tabs .modal-tabs-panel[data-type="${key}"]`).html(output);
+
+            $('.template-list').on('click', '.apply-btn', function() {
+              let $templateItem = $(this).closest('.template-item'),
+                  templateData = {
+                    role: $templateItem.attr("data-ai-role"),
+                    tone: $templateItem.attr("data-tone-style"),
+                    content: $templateItem.attr("data-context")
+                  };
+
+              if (!AICompletion.prototype.formIsEmpty()) {
+                if (confirm(ts['Warning! Applying this template will clear your current settings. Proceed with the application?'])) {
+                  AICompletion.prototype.applyTemplateToForm({ data: templateData });
+                  AICompletion.prototype.modal.close();
+                }
+              }
+              else {
+                AICompletion.prototype.applyTemplateToForm({ data: templateData });
+                AICompletion.prototype.modal.close();
+              }
+            });
           });
         }
 
