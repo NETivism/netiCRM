@@ -38,6 +38,7 @@ class CRM_AI_Page_AJAX {
           ));
         }
       }
+      // Set component
       if (is_string($jsondata['sourceUrlPath']) && isset($jsondata['sourceUrlPath'])) {
         $mailTypeId = CRM_Core_OptionGroup::getValue('activity_type', 'Email', 'name');
         $url = $jsondata['sourceUrlPath'];
@@ -62,6 +63,12 @@ class CRM_AI_Page_AJAX {
             }
           }
         }
+      }
+      if (empty($data['component'])) {
+        self::responseError(array(
+          'status' => 0,
+          'message' => "No corresponding component was found",
+        ));
       }
 
       if ($tone_style && $ai_role && $context && $data['component']) {
