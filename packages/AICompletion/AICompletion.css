@@ -185,9 +185,12 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
 .netiaic-form-container > .inner {
   padding: 20px;
 }
-.netiaic-form-container  .crm-form-elem {
+.netiaic-form-container .crm-form-elem {
   max-width: 100%;
   width: 100%;
+}
+.netiaic-form-container .crm-form-elem .description {
+  font-size: .8125rem;
 }
 .netiaic-container .netiaic-use-tpl {
   display: flex;

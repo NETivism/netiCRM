@@ -62,6 +62,7 @@ window.AICompletion = {
     "Once published, you can view your shared template in the 'Community Recommended' templates, which will also be marked with your organization's name.": "{/literal}{ts}Once published, you can view your shared template in the 'Community Recommended' templates, which will also be marked with your organization's name.{/ts}{literal}",
     "Thank you for being willing to share your templates with the community, thereby benefiting all netiCRM users.": "{/literal}{ts}Thank you for being willing to share your templates with the community, thereby benefiting all netiCRM users.{/ts}{literal}",
     "There are currently no templates available.": "{/literal}{ts}There are currently no templates available.{/ts}{literal}",
+    "Maximum character limit for this field is <span class=\"limit-max\">1500</span> characters, and the current character count is <span class=\"current\">0</span>.": "{/literal}{ts}Maximum character limit for this field is <span class=\"limit-max\">1500</span> characters, and the current character count is <span class=\"current\">0</span>.{/ts}{literal}",
   }
 };
 {/literal}window.AICompletion.default = {$ai_completion_default};{literal}
@@ -107,13 +108,14 @@ window.AICompletion = {
               <div class="netiaic-prompt-content-section crm-section crm-textarea-section form-item">
                 <div class="crm-form-elem crm-form-textarea">
                   <textarea name="netiaic-prompt-content" placeholder="{ts 1=$component_locale}Please enter the %1 copy you would like AI to generate.{/ts}" class="netiaic-prompt-content-textarea form-textarea"></textarea>
+                  <div class="description">{ts}Maximum character limit for this field is <span class="limit-max">1500</span> characters, and the current character count is <span class="current">0</span>.{/ts}</div>
                   <div class="netiaic-prompt-content-command netiaic-command">
                     <div class="inner">
                       <ul class="netiaic-command-list">
                         <li data-name="org_intro" class="netiaic-command-item">
                           <a class="get-org-intro" href="#">{ts}Click to insert organization intro.{/ts}</a>
-                          <a href="{crmURL p="civicrm/admin/setting/aicompletion" q="reset=1"}" target="_blank">({ts}Edit{/ts}<i class="zmdi zmdi-edit"></i>)</a> {* TODO: Need to change to correct URL *}
-                          <div class="netiaic-command-item-desc"> {* TODO: smarty var *} </div>
+                          <a href="{crmURL p="civicrm/admin/setting/aicompletion" q="reset=1"}" target="_blank">({ts}Edit{/ts}<i class="zmdi zmdi-edit"></i>)</a>
+                          <div class="netiaic-command-item-desc"></div>
                         </li>
                       </ul>
                     </div>

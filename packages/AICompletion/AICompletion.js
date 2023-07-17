@@ -88,6 +88,10 @@
     });
   }
 
+  var countCharacters = function(text) {
+    return Array.from(text).length;
+  }
+
   var fallbackCopyTextToClipboard = function(text, $copyBtn) {
     let textArea = document.createElement("textarea");
     textArea.value = text;
@@ -211,6 +215,26 @@
       },
       close: function() {
         $.magnificPopup.close();
+      }
+    },
+
+    promptContentCounterUpdate: function($elem) {
+      if ($elem.length) {
+        let textLength = countCharacters($elem.val()),
+        $desc = $elem.next('.description'),
+        $current = $desc.find('.current'),
+        limitMax = 1500;
+
+        $current.text(textLength);
+
+        if (textLength > limitMax) {
+          if (!$desc.hasClass('font-red')) {
+            $desc.addClass('font-red');
+          }
+        }
+        else {
+          $desc.removeClass('font-red');
+        }
       }
     },
 
@@ -360,6 +384,7 @@
       AICompletion.prototype.setSelectOption($roleSelect, data.role);
       AICompletion.prototype.setSelectOption($toneSelect, data.tone);
       $content.val(data.content);
+      AICompletion.prototype.promptContentCounterUpdate($content);
     },
 
     useTemplates: function() {
@@ -539,7 +564,6 @@
 
     formUiOperation: function() {
       let $container = AICompletion.prototype.container,
-          modal = AICompletion.prototype.modal,
           $promptContent = $container.find('.netiaic-prompt-content-textarea'),
           $promptContentCommand = $container.find('.netiaic-prompt-content-command'),
           $submit = $container.find('.netiaic-form-submit');
@@ -596,6 +620,8 @@
         else {
           $(this).removeClass(EXPAND_CLASS);
         }
+
+        AICompletion.prototype.promptContentCounterUpdate($(this));
       });
 
       $promptContentCommand.find('[data-name="org_intro"] .netiaic-command-item-desc').html(defaultData.org_intro);
