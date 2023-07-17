@@ -25,6 +25,7 @@
   </div>
 </div>
 
+{include file="CRM/common/pager.tpl" location="top"}
 <table id="aicomplete-items" class="crm-aicomplete-items">
 <thead>
 <tr>
@@ -53,3 +54,4 @@
 {/foreach}
 </tbody>
 </table>
+{include file="CRM/common/pager.tpl" location="bottom"}
