@@ -30,7 +30,7 @@
     },
     ts = {},
     endpoint = {
-      getTemplateList: '/civicrm/ajax/get-template-list',
+      getTemplateList: '/civicrm/ajax/ai/get-template-list',
       getTemplate: '/civicrm/ajax/ai/get-template',
       setTemplate: '/civicrm/ajax/ai/set-template',
       chat: '/civicrm/ajax/ai/chat',
