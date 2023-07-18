@@ -219,6 +219,12 @@
       }
     },
 
+    contentScrollBottom: function(delay = 250) {
+      setTimeout(function() {
+        $(".netiaic-chat").scrollTop(function() { return this.scrollHeight; });
+      }, delay);
+    },
+
     promptContentCounterUpdate: function($elem) {
       if ($elem.length) {
         let textLength = countCharacters($elem.val()),
@@ -525,6 +531,7 @@
 
         if (output.trim != '') {
           $container.find('.netiaic-chat > .inner').append(output);
+          AICompletion.prototype.contentScrollBottom();
 
           if (mode == 'error') {
             $container.find('.msg[id="' + id + '"]').addClass('error-msg');
@@ -542,6 +549,7 @@
       else {
         if (mode == 'stream') {
           $container.find('.msg[id="' + id + '"] .msg-content').append(data);
+          AICompletion.prototype.contentScrollBottom(1000);
         }
       }
     },

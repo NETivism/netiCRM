@@ -3,6 +3,8 @@
 :root {
   --color-error: #e43d2b;
   --nsp-width: 500px;
+  --nsp-content-height: calc(100vh - 66px);
+  --netiaic-form-height: 350px;
   --loader-size: 10px;
   --loader-dot-gap: 24px;
   --loader-color: #ddd;
@@ -31,6 +33,22 @@ select[readonly] {
   background-color: #f5f5f5 !important;
   box-shadow: none !important;
   cursor: not-allowed !important;
+}
+.nsp-container .nsp-content {
+  overflow: visible;
+  height: var(--nsp-content-height);
+}
+.civicrm-menu-enabled .nsp-container .nsp-content {
+  --nsp-content-height: calc(100vh - 30px - 66px);
+  height: var(--nsp-content-height);
+}
+.is-civicrm-user .nsp-container .nsp-content {
+  --nsp-content-height: calc(100vh - 60px - 66px);
+  height: var(--nsp-content-height);
+}
+.is-civicrm-user.civicrm-menu-enabled .nsp-container .nsp-content {
+  --nsp-content-height: calc(100vh - 30px - 60px - 66px);
+  height: var(--nsp-content-height);
 }
 .netiaic-chat .msg-tools .handle-btn {
   color: #fff !important;
@@ -66,6 +84,8 @@ select[readonly] {
 }
 .netiaic-chat {
   min-height: 200px;
+  max-height: calc(var(--nsp-content-height) - var(--netiaic-form-height));
+  overflow-y: auto;
   padding: 20px;
   background: #a0aab3;
 }
@@ -191,8 +211,12 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
 .netiaic-container .crm-section.is-error .select2-container--default .select2-selection--single {
   border-color: var(--color-error);
 }
+.netiaic-form-container {
+  max-height: var(--netiaic-form-height);
+}
 .netiaic-form-container > .inner {
-  padding: 20px;
+  max-height: var(--netiaic-form-height);
+  padding: 15px 20px;
 }
 .netiaic-form-container .crm-form-elem {
   max-width: 100%;
