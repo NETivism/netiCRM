@@ -39,7 +39,9 @@
     chatData = {
       messages: []
     },
-    colon = ':';
+    colon = ':',
+    defaultErrorMessage = 'We\'re sorry, our service is currently experiencing some issues. Please try again later. If the problem persists, please contact our customer service team.';
+
   // Default configuration options
   var defaultOptions = {};
 
@@ -504,6 +506,10 @@
 
         if (output.trim != '') {
           $container.find('.netiaic-chat > .inner').append(output);
+
+          if (mode == 'error') {
+            $container.find('.msg[id="' + id + '"]').addClass('error-msg');
+          }
         }
       }
       else {
@@ -789,13 +795,15 @@
               }
             }
           } catch (error) {
-            console.log('JSON Parse Error:', error.message);
+            console.error('JSON Parse Error:', error.message);
+            AICompletion.prototype.createMessage(aiMsgID, userMsgID, defaultErrorMessage, 'ai', 'error');
           }
         };
 
         evtSource.onerror = function(event) {
-          console.log("EventSource encountered an error: ", event);
+          console.error("EventSource encountered an error: ", event);
           evtSource.close();
+          AICompletion.prototype.createMessage(aiMsgID, userMsgID, defaultErrorMessage, 'ai', 'error');
 
           // TODO: error handle
           if ($submit.hasClass(ACTIVE_CLASS)) {
@@ -809,6 +817,8 @@
       })
       .catch(function(error) {
         // TODO: Error handling
+        console.error("Encountered an error: ", error);
+        AICompletion.prototype.createMessage(aiMsgID, userMsgID, defaultErrorMessage, 'ai', 'error');
       });
     },
 
@@ -828,6 +838,7 @@
       // Get translation string comparison table
       ts = window.AICompletion.translation;
       colon = window.AICompletion.language == 'zh_TW' ? '：' : ':';
+      defaultErrorMessage = ts['We\'re sorry, our service is currently experiencing some issues. Please try again later. If the problem persists, please contact our customer service team.'];
 
       // TODO: For development and testing only, need to be removed afterwards
       this.devTestUse();

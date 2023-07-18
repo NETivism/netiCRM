@@ -1,6 +1,7 @@
 @charset "UTF-8";
 
 :root {
+  --color-error: #e43d2b;
   --nsp-width: 500px;
   --loader-size: 10px;
   --loader-dot-gap: 24px;
@@ -152,6 +153,9 @@ select[readonly] {
 }
 html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
   font-size: .75rem;
+}
+.netiaic-chat .error-msg {
+  color: var(--color-error);
 }
 @keyframes text-shiny {
   0% {
