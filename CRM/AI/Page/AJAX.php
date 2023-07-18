@@ -8,6 +8,7 @@ class CRM_AI_Page_AJAX {
   function chat() {
     $maxlength = 2000;
     $tone_style = $ai_role = $context = null;
+    $data = array();
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] == 'application/json') {
       $jsonString = file_get_contents('php://input');
       $jsondata = json_decode($jsonString, true);
@@ -17,49 +18,57 @@ class CRM_AI_Page_AJAX {
           'message' => 'The request is not a valid JSON format.',
         ));
       }
-      if (isset($jsondata['tone']) && is_string($jsondata['tone'])) {
-        $tone_style = $jsondata['tone'];
-        $data['tone_style'] = $tone_style;
+      $allowedInput = array(
+        'tone' => 'string',
+        'role' => 'string',
+        'content' => 'string',
+        'sourceUrlPath' => 'string',
+      );
+      $checkFormatResult = self::validateJsonData($jsondata, $allowedInput);
+      if (!$checkFormatResult) {
+        self::responseError(array(
+          'status' => 0,
+          'message' => 'The request does not match the expected format.',
+        ));
       }
-      if (isset($jsondata['role']) && is_string($jsondata['role'])) {
-        $ai_role = $jsondata['role'];
-        $data['ai_role'] = $ai_role;
-      }
-      if (isset($jsondata['content']) && is_string($jsondata['content'])) {
-        $context = $jsondata['content'];
-        $contextCount = mb_strlen($context);
-        if ($contextCount <= $maxlength) {
-          $data['context'] = $context;
-        }
-        else {
-          self::responseError(array(
-            'status' => 0,
-            'message' => "Content exceeds the maximum character limit.",
-          ));
-        }
-      }
-      // Set component
-      if (is_string($jsondata['sourceUrlPath']) && isset($jsondata['sourceUrlPath'])) {
-        $mailTypeId = CRM_Core_OptionGroup::getValue('activity_type', 'Email', 'name');
-        $url = $jsondata['sourceUrlPath'];
 
-        $allowPatterns = [
-          'CiviContribute' => ['civicrm/admin/contribute/setting'],
-          'CiviEvent' => ['civicrm/event/manage/eventInfo'],
-          'CiviMail' => ['civicrm/mailing/send'],
-          'Activity' => ['civicrm/activity/add', 'civicrm/contact/view/activity'],
-        ];
+      $tone_style = $jsondata['tone'];
+      $data['tone_style'] = $tone_style;
 
-        foreach ($allowPatterns as $component => $allowedUrls) {
-          foreach ($allowedUrls as $allowedUrl) {
-            if (strstr($url, $allowedUrl)) {
-              if ($component === "Activity" && strstr($jsondata['sourceUrl'], "atype=$mailTypeId")) {
-                $data['component'] = $component;
-                break 2;
-              } elseif ($component !== "Activity") {
-                $data['component'] = $component;
-                break 2;
-              }
+      $ai_role = $jsondata['role'];
+      $data['ai_role'] = $ai_role;
+
+      $context = $jsondata['content'];
+      $contextCount = mb_strlen($context);
+
+      if ($contextCount > $maxlength) {
+        self::responseError(array(
+          'status' => 0,
+          'message' => "Content exceeds the maximum character limit.",
+        ));
+      }
+      $data['context'] = $context;
+
+      // get url and check component
+      $mailTypeId = CRM_Core_OptionGroup::getValue('activity_type', 'Email', 'name');
+      $url = $jsondata['sourceUrlPath'];
+
+      $allowPatterns = [
+        'CiviContribute' => ['civicrm/admin/contribute/setting'],
+        'CiviEvent' => ['civicrm/event/manage/eventInfo'],
+        'CiviMail' => ['civicrm/mailing/send'],
+        'Activity' => ['civicrm/activity/add', 'civicrm/contact/view/activity'],
+      ];
+
+      foreach ($allowPatterns as $component => $allowedUrls) {
+        foreach ($allowedUrls as $allowedUrl) {
+          if (strstr($url, $allowedUrl)) {
+            if ($component === "Activity" && strstr($jsondata['sourceUrl'], "atype=$mailTypeId")) {
+              $data['component'] = $component;
+              break 2;
+            } elseif ($component !== "Activity") {
+              $data['component'] = $component;
+              break 2;
             }
           }
         }
@@ -67,7 +76,7 @@ class CRM_AI_Page_AJAX {
       if (empty($data['component'])) {
         self::responseError(array(
           'status' => 0,
-          'message' => "No corresponding component was found",
+          'message' => "No corresponding component was found.",
         ));
       }
 
@@ -99,7 +108,7 @@ class CRM_AI_Page_AJAX {
         if (is_numeric($token['id']) && is_string($token['token'])) {
           self::responseSucess(array(
             'status' => 1,
-            'message' => 'Success create chat',
+            'message' => 'Chat created successfully.',
             'data' => array(
               'id' => $token['id'],
               'token' => $token['token'],
@@ -131,7 +140,7 @@ class CRM_AI_Page_AJAX {
         }
         self::responseSucess(array(
           'status' => 1,
-          'message' => 'Stream chat successfully',
+          'message' => 'Stream chat successfully.',
           'data' => $result,
         ));
       }
@@ -353,5 +362,26 @@ class CRM_AI_Page_AJAX {
     header('Content-Type: application/json; charset=utf-8');
     echo json_encode($data);
     CRM_Utils_System::civiExit();
+  }
+
+  /**
+   * Function to validate JSON data.
+   *
+   * This function iterates over the allowed inputs and checks if these inputs exist in the JSON data,
+   * and if the type of these inputs matches the expected type. If all inputs exist and are of the correct type,
+   * the function will return true; otherwise, it will return false.
+   *
+   * @param array $jsondata The JSON data to be validated.
+   * @param array $allowedInput An associative array where the keys are what we expect to find in the JSON data,
+   *                            and the values are the types that these inputs should have.
+   * @return bool Returns true if all inputs exist and are of the correct type; otherwise returns false.
+   */
+  public static function validateJsonData($jsondata, $allowedInput) {
+    foreach ($allowedInput as $key => $type) {
+        if (!isset($jsondata[$key]) || gettype($jsondata[$key]) != $type) {
+            return false;
+        }
+    }
+    return true;
   }
 }
