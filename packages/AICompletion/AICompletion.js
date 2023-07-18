@@ -222,19 +222,25 @@
     promptContentCounterUpdate: function($elem) {
       if ($elem.length) {
         let textLength = countCharacters($elem.val()),
-        $desc = $elem.next('.description'),
-        $current = $desc.find('.current'),
-        limitMax = 1500;
+            $section = $elem.closest('.crm-section'),
+            $desc = $elem.next('.description'),
+            $current = $desc.find('.current'),
+            limitMax = 1500;
 
         $current.text(textLength);
 
         if (textLength > limitMax) {
-          if (!$desc.hasClass('font-red')) {
-            $desc.addClass('font-red');
+          if (!$section.hasClass(ERROR_CLASS)) {
+            $section.addClass(ERROR_CLASS);
+          }
+
+          if (!$desc.hasClass(ERROR_CLASS)) {
+            $desc.addClass(ERROR_CLASS);
           }
         }
         else {
-          $desc.removeClass('font-red');
+          $section.removeClass(ERROR_CLASS);
+          $desc.removeClass(ERROR_CLASS);
         }
       }
     },
@@ -375,6 +381,18 @@
       return true;
     },
 
+    formValidate: function() {
+      let $container = AICompletion.prototype.container,
+          $formContainer = $container.find('.netiaic-form-container'),
+          $formSubmit = $container.find('.netiaic-form-submit');
+
+      if ($formContainer.find('.is-error').length) {
+        return false;
+      }
+
+      return true;
+    },
+
     setSelectOption: function($selectElement, value) {
       if ($selectElement.find(`option[value="${value}"]`).length) {
         $selectElement.val(value).trigger('change');
@@ -458,6 +476,7 @@
 
     createMessage: function(id, refID, data, type, mode) {
       let $container = AICompletion.prototype.container,
+          $submit = $container.find('.netiaic-form-submit'),
           msg = '',
           output = '';
 
@@ -509,6 +528,14 @@
 
           if (mode == 'error') {
             $container.find('.msg[id="' + id + '"]').addClass('error-msg');
+
+            if ($submit.hasClass(ACTIVE_CLASS)) {
+              $submit.removeClass(ACTIVE_CLASS).prop('disabled', false);
+            }
+
+            if (!$submit.hasClass(SENT_CLASS)) {
+              $submit.addClass(SENT_CLASS).find('.text').text(ts['Try Again']);
+            }
           }
         }
       }
@@ -654,6 +681,7 @@
 
         if ($promptContent.val() === '') {
           $promptContent.val(defaultData.org_intro);
+          AICompletion.prototype.promptContentCounterUpdate($promptContent);
         }
       });
 
@@ -663,7 +691,10 @@
 
       $submit.on('click', function(event) {
         event.preventDefault();
-        AICompletion.prototype.formSubmit();
+
+        if (AICompletion.prototype.formValidate()) {
+          AICompletion.prototype.formSubmit();
+        }
       });
     },
 
@@ -804,15 +835,6 @@
           console.error("EventSource encountered an error: ", event);
           evtSource.close();
           AICompletion.prototype.createMessage(aiMsgID, userMsgID, defaultErrorMessage, 'ai', 'error');
-
-          // TODO: error handle
-          if ($submit.hasClass(ACTIVE_CLASS)) {
-            $submit.removeClass(ACTIVE_CLASS).prop('disabled', false);
-          }
-
-          if (!$submit.hasClass(SENT_CLASS)) {
-            $submit.addClass(SENT_CLASS).find('.text').text(ts['Try Again']);
-          }
         };
       })
       .catch(function(error) {

@@ -185,7 +185,12 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
   max-width: 80%;
   font-size: .875rem;
 }
-
+.netiaic-container .crm-section.is-error .form-text,
+.netiaic-container .crm-section.is-error .form-textarea,
+.netiaic-container .crm-section.is-error .form-select,
+.netiaic-container .crm-section.is-error .select2-container--default .select2-selection--single {
+  border-color: var(--color-error);
+}
 .netiaic-form-container > .inner {
   padding: 20px;
 }
@@ -195,6 +200,9 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
 }
 .netiaic-form-container .crm-form-elem .description {
   font-size: .8125rem;
+}
+.netiaic-form-container .crm-form-elem .description.is-error {
+  color: var(--color-error);
 }
 .netiaic-container .netiaic-use-tpl {
   display: flex;
