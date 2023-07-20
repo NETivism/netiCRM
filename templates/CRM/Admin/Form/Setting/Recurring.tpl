@@ -37,7 +37,16 @@
     <div class="label">{$form.recurringCopySetting.label}</div>
     <div class="content">
       {$form.recurringCopySetting.html} 
-      <div class="description">{ts}When recurring contribution being triggered, witch contribution you want to copy?{/ts}</div>
+      <div class="description">{ts}When the recurring contribution is triggered, which contribution do you want to copy?{/ts}</div>
     </div>
   </div>
+  {if $form.copyContributionTypeSource}
+  <div class="crm-section">
+    <div class="label">{$form.copyContributionTypeSource.label}</div>
+    <div class="content">
+      {$form.copyContributionTypeSource.html} 
+      <div class="description">{ts}When the recurring contribution is triggered, which source of contribution type do you want to copy?{/ts}</div>
+    </div>
+  </div>
+  {/if}
 <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>     

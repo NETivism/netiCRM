@@ -48948,3 +48948,18 @@ msgstr ""
 #: templates/CRM/Custom/Form/Field.tpl
 msgid "Please be aware that half-width parentheses '(' or ')' should not be used in the field name. If you need to use parentheses, please use the full-width versions '（' or '）'."
 msgstr ""
+
+msgid "When the recurring contribution is triggered, which contribution do you want to copy?"
+msgstr ""
+
+msgid "Copied Contribution Type Source"
+msgstr ""
+
+msgid "From source contribution."
+msgstr ""
+
+msgid "From contribution page setting."
+msgstr ""
+
+msgid "When the recurring contribution is triggered, which source of contribution type do you want to copy?"
+msgstr ""
