@@ -49406,3 +49406,10 @@ msgstr "你是一個在台灣，使用繁體中文的%1，很會撰寫語氣%2�
 #: templates/CRM/Contact/Form/Task/RemoveFromGroup.tpl
 msgid "The operation of removing contacts from the group cannot be undone."
 msgstr "將聯絡人移出群組操作無法復原"
+
+#: templates/CRM/Custom/Form/Field.tpl
+msgid ""
+"Please be aware that half-width parentheses '(' or ')' should not be used in"
+" the field name. If you need to use parentheses, please use the full-width "
+"versions '（' or '）'."
+msgstr "請注意，欄位名稱不應使用半形括號「(」和「)」，如需使用括號，請改用全形括號「（」和「）」"

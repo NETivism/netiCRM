@@ -48944,3 +48944,7 @@ msgstr ""
 #: templates/CRM/Contact/Form/Task/RemoveFromGroup.tpl
 msgid "The operation of removing contacts from the group cannot be undone."
 msgstr ""
+
+#: templates/CRM/Custom/Form/Field.tpl
+msgid "Please be aware that half-width parentheses '(' or ')' should not be used in the field name. If you need to use parentheses, please use the full-width versions '（' or '）'."
+msgstr ""
