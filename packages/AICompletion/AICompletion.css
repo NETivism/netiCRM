@@ -273,6 +273,84 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
 .netiaic-modal-content {
   padding: 15px 20px;
 }
+.netiaic-modal .modal-tabs {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.netiaic-modal .modal-tabs-menu {
+  margin: 0 -20px;
+  padding: 0 30px;
+  border: none;
+  background: #eee;
+}
+.netiaic-modal .modal-tabs-menu::after {
+  display: block;
+  position: relative;
+  z-index: 10;
+  margin: 0 -30px;
+  height: 2px;
+  background: #fff;
+}
+.netiaic-modal .modal-tabs-menu li {
+  margin: 0;
+  list-style: none;
+  font-size: 1rem;
+  background: none;
+}
+.netiaic-modal .modal-tabs-menu li:hover {
+  background: none;
+}
+.netiaic-modal .modal-tabs-menu li.ui-tabs-active {
+  background: none;
+}
+.netiaic-modal .modal-tabs-menu li a {
+  display: block;
+  padding: 12px 15px !important;
+  line-height: 1;
+  color: #616161;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  transition: color .3s;
+}
+.netiaic-modal .modal-tabs-menu li a:hover {
+  color: #212121;
+  background: none;
+}
+.netiaic-modal .modal-tabs-menu li.ui-tabs-active a {
+  position: relative;
+  margin-top: -3px;
+  color: #000;
+  border-top: 3px solid #536DFE;
+  background: #fafafa;
+  box-shadow: 0px 0px 3px rgba(0,0,0,0.2);
+}
+.netiaic-modal .template-item {
+  margin: 16px 0;
+  padding: 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  border-top-left-radius: 0;
+}
+.netiaic-modal .template-item:hover {
+  border-color: #536DFE;
+}
+.netiaic-modal .template-item .label {
+  font-weight: bold;
+}
+.netiaic-modal .template-item .context {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+.netiaic-modal .template-item:hover .context {
+  display: block;
+}
+.netiaic-modal .template-item .actions {
+  text-align: right;
+}
 .netiaic-command {
   display: none;
   position: absolute;
