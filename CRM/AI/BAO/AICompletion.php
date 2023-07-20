@@ -396,7 +396,7 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
       $whereClause[] = "component = %1";
       $sqlParams[1] = array($params['component'], 'String');
     }
-    if ($params['field']) {
+    if (isset($params['field'])) {
       $whereClause[] = "field = %2";
       $sqlParams[2] = array($params['field'], 'String');
     }
