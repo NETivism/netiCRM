@@ -84,7 +84,7 @@ select[readonly] {
   color: #CDDC39;
 }
 .netiaic-chat {
-  min-height: 200px;
+  min-height: 150px;
   max-height: calc(var(--nsp-content-height) - var(--netiaic-form-height));
   overflow-y: auto;
   padding: 20px;
