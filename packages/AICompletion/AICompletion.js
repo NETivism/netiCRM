@@ -15,7 +15,8 @@
         FINISH_CLASS = 'is-finished',
         EXPAND_CLASS = 'is-expanded',
         COPY_CLASS = 'is-copied',
-        MFP_ACTIVE_CLASS = 'mfp-is-active';
+        MFP_ACTIVE_CLASS = 'mfp-is-active',
+        TIMEOUT = 30000;
 
   /**
    * ============================
@@ -40,7 +41,7 @@
       messages: []
     },
     colon = ':',
-    defaultErrorMessage = 'We\'re sorry, our service is currently experiencing some issues. Please try again later. If the problem persists, please contact our customer service team.';
+    errorMessage;
 
   // Default configuration options
   var defaultOptions = {};
@@ -729,13 +730,23 @@
       AICompletion.prototype.createMessage(userMsgID, aiMsgID, formData, 'user');
 
       // Create AI's message
-      fetch(endpoint.chat, {
+      let fetchPromise = fetch(endpoint.chat, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(formData)
-      }).then(function(response) {
+      });
+
+      let timeoutPromise = new Promise((_, reject) => {
+        let timeoutId = setTimeout(() => {
+          clearTimeout(timeoutId);
+          reject(new Error("Network request timed out."));
+        }, TIMEOUT);
+      });
+
+      Promise.race([fetchPromise, timeoutPromise])
+      .then(function(response) {
         if (response.ok) {
           // Determine the data type based on the Content-Type of the response
           if (response.headers.get('Content-Type').includes('application/json')) {
@@ -835,20 +846,24 @@
             }
           } catch (error) {
             console.error('JSON Parse Error:', error.message);
-            AICompletion.prototype.createMessage(aiMsgID, userMsgID, defaultErrorMessage, 'ai', 'error');
+            AICompletion.prototype.createMessage(aiMsgID, userMsgID, errorMessage, 'ai', 'error');
           }
         };
 
         evtSource.onerror = function(event) {
           console.error("EventSource encountered an error: ", event);
           evtSource.close();
-          AICompletion.prototype.createMessage(aiMsgID, userMsgID, defaultErrorMessage, 'ai', 'error');
+          AICompletion.prototype.createMessage(aiMsgID, userMsgID, errorMessage, 'ai', 'error');
         };
       })
       .catch(function(error) {
         // TODO: Error handling
         console.error("Encountered an error: ", error);
-        AICompletion.prototype.createMessage(aiMsgID, userMsgID, defaultErrorMessage, 'ai', 'error');
+        if (error.message.includes('timed out')) {
+          errorMessage = ts['Our service is currently busy, please try again later. If needed, please contact our customer service team.'];
+        }
+
+        AICompletion.prototype.createMessage(aiMsgID, userMsgID, errorMessage, 'ai', 'error');
       });
     },
 
@@ -868,7 +883,7 @@
       // Get translation string comparison table
       ts = window.AICompletion.translation;
       colon = window.AICompletion.language == 'zh_TW' ? '：' : ':';
-      defaultErrorMessage = ts['We\'re sorry, our service is currently experiencing some issues. Please try again later. If the problem persists, please contact our customer service team.'];
+      errorMessage = ts['We\'re sorry, our service is currently experiencing some issues. Please try again later. If the problem persists, please contact our customer service team.'];
 
       // TODO: For development and testing only, need to be removed afterwards
       this.devTestUse();
