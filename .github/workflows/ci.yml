@@ -93,6 +93,13 @@ jobs:
       - name: Frontend - Contribution Booster - Playwright
         run: docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_booster.spec.js --reporter=list"
 
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: playwright-report
+          path: tests/playwright/playwright-report
+          retention-days: 30
+
   test8:
     runs-on: ubuntu-latest
     if: ${{ !contains(github.event.head_commit.message, '#skip-build') }}
@@ -180,6 +187,14 @@ jobs:
         run: docker exec neticrm-ci  bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_spgateway.spec.js --reporter=list"
       - name: Frontend - Contribution Booster - Playwright
         run: docker exec neticrm-ci  bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_booster.spec.js --reporter=list"
+
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: playwright-report
+          path: tests/playwright/playwright-report
+          retention-days: 30
+
   test8-d10:
     runs-on: ubuntu-latest
     if: ${{ !contains(github.event.head_commit.message, '#skip-build') }}
@@ -269,6 +284,14 @@ jobs:
         run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_spgateway.spec.js --reporter=list"
       - name: Frontend - Contribution Booster - Playwright
         run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_booster.spec.js --reporter=list"
+
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: playwright-report
+          path: tests/playwright/playwright-report
+          retention-days: 30
+
   notification:
     if: ${{ failure() }}
     needs: [test7, test8, test8-d10]
