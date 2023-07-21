@@ -1,7 +1,8 @@
 @charset "UTF-8";
 
 :root {
-  --color-error: #e43d2b;
+  --color-error: rgba(228, 61, 43, 1);
+  --bg-color-error: rgba(255, 239, 237, 1);
   --nsp-width: 500px;
   --nsp-content-height: calc(100vh - 66px);
   --netiaic-form-height: 350px;
@@ -10,7 +11,7 @@
   --loader-color: #ddd;
   --loader-color-highlight: #aaa;
   --shine-degree: 120deg;
-  --shine-color: rgba(255, 255, 255, 0.2);
+  --shine-color: rgba(255, 255, 255, .2);
   --shine-effect: linear-gradient(
     var(--shine-degree),
     transparent,
@@ -176,6 +177,9 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
 }
 .netiaic-chat .error-msg {
   color: var(--color-error);
+}
+.netiaic-chat .error-msg .msg-content {
+  background: var(--bg-color-error);
 }
 @keyframes text-shiny {
   0% {
