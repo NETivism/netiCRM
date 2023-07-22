@@ -49367,7 +49367,7 @@ msgstr "點擊以插入組織簡介"
 msgid ""
 "Your usage limit is <span class=\"usage-max\">%1</span> times, currently "
 "used <span class=\"usage-used\">%2</span> times."
-msgstr ""
+msgstr "您的使用額度為 <span class=\"usage-max\">1% </span> 次，目前已使用 <span class=\"usage-used\">2% </span> 次。"
 
 msgid ""
 "Establish an introduction for your organization so that when later "
@@ -49451,7 +49451,7 @@ msgid ""
 "Maximum character limit for this field is <span class=\"limit-"
 "max\">1500</span> characters, and the current character count is <span "
 "class=\"current\">0</span>."
-msgstr "欄位限制字數上限為<span class=\\\"limit-max\\\">1500</span> 字， 目前字數為 <span class=\\\"current\\\">0</span> 字。"
+msgstr "欄位限制字數上限為 <span class=\"limit-max\">1500</span> 字， 目前字數為 <span class=\"current\">1500</span> 字。"
 
 #: templates/CRM/AI/AICompletion.tpl
 msgid "There are currently no templates available."
