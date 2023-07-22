@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: 馮 佳今, 2022-2023\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>, 2016-2023\n"
 "Language-Team: Chinese (Taiwan) (http://app.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49402,3 +49402,33 @@ msgid ""
 "You are an %1 in Taiwan who uses Traditional Chinese and is skilled at "
 "writing %2 copywriting."
 msgstr "你是一個在台灣，使用繁體中文的%1，很會撰寫語氣%2的文案。"
+
+#: templates/CRM/Contact/Form/Task/RemoveFromGroup.tpl
+msgid "The operation of removing contacts from the group cannot be undone."
+msgstr "將聯絡人移出群組操作無法復原"
+
+#: templates/CRM/Custom/Form/Field.tpl
+msgid ""
+"Please be aware that half-width parentheses '(' or ')' should not be used in"
+" the field name. If you need to use parentheses, please use the full-width "
+"versions '（' or '）'."
+msgstr "請注意，欄位名稱不應使用半形括號「(」和「)」，如需使用括號，請改用全形括號「（」和「）」"
+
+msgid ""
+"When the recurring contribution is triggered, which contribution do you want"
+" to copy?"
+msgstr "定期捐款觸發時，哪一種捐款儲存的資訊應該被複製到新的一筆定期？"
+
+msgid "Copied Contribution Type Source"
+msgstr "最新扣款的費用類型來源"
+
+msgid "From source contribution."
+msgstr "沿用被複製的捐款的費用類型"
+
+msgid "From contribution page setting."
+msgstr "來自募款頁的費用類型設定（用於有勸募字號的情況）"
+
+msgid ""
+"When the recurring contribution is triggered, which source of contribution "
+"type do you want to copy?"
+msgstr "定期捐款觸發時，新的一筆扣款的費用類型來源為何？"

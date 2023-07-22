@@ -4915,6 +4915,7 @@ ul.ui-sortable {
 .crm-delete-action a.button:link,
 .crm-delete-action a.button:visited,
 .crm-container input[id*="Delete_done"],
+.crm-container input[id*="RemoveFromGroup_next"],
 .crm-container a.delete.button {
   color: #fff;
   background: #D32F2F;
@@ -4925,6 +4926,8 @@ ul.ui-sortable {
 .crm-delete-action a.button:focus,
 .crm-container input[id*="Delete_done"]:hover,
 .crm-container input[id*="Delete_done"]:focus,
+.crm-container input[id*="RemoveFromGroup_next"]:hover,
+.crm-container input[id*="RemoveFromGroup_next"]:focus,
 .crm-container a.delete.button:hover,
 .crm-container a.delete.button:focus {
   color: #fff;
@@ -4933,6 +4936,7 @@ ul.ui-sortable {
 .crm-delete-action .button:active,
 .crm-delete-action a.button:active,
 .crm-container input[id*="Delete_done"]:active,
+.crm-container input[id*="RemoveFromGroup_next"]:active,
 .crm-container a.delete.button:active {
   background: #B71C1C;
 }
