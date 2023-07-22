@@ -190,7 +190,6 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
   display: flex;
   padding: 0;
   margin: 0 0 16px 0;
-  align-items: center;
 }
 .netiaic-container .crm-section > .crm-form-elem {
   flex: 0 0 100%;
@@ -228,13 +227,14 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
 }
 .netiaic-form-container .crm-form-elem .description {
   font-size: .8125rem;
+  margin: 0;
 }
 .netiaic-form-container .crm-form-elem .description.is-error {
   color: var(--color-error);
 }
 .netiaic-container .netiaic-use-tpl {
   display: flex;
-  margin: 0 0 20px 0;
+  margin: 0 0 12px 0;
   padding: 10px 0 10px 30px;
   list-style: none;
   font-size: .875rem;
