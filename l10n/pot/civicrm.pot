@@ -48915,7 +48915,7 @@ msgstr ""
 msgid "Click to insert organization intro."
 msgstr ""
 
-msgid "Your usage limit is <span class=\"usage-max\">%1</span> times, currently used <span class=\"usage-current\">%2</span> times."
+msgid "Your usage limit is <span class=\"usage-max\">%1</span> times, currently used <span class=\"usage-used\">%2</span> times."
 msgstr ""
 
 msgid "Establish an introduction for your organization so that when later generating text using AI, it can be swiftly integrated, enabling the AI to grasp the context of your organization."
@@ -48962,4 +48962,32 @@ msgid "From contribution page setting."
 msgstr ""
 
 msgid "When the recurring contribution is triggered, which source of contribution type do you want to copy?"
+msgstr ""
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid "Our service is currently busy, please try again later. If needed, please contact our customer service team."
+msgstr ""
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid "We're sorry, our service is currently experiencing some issues. Please try again later. If the problem persists, please contact our customer service team."
+msgstr ""
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid "Maximum character limit for this field is <span class=\"limit-max\">1500</span> characters, and the current character count is <span class=\"current\">0</span>."
+msgstr ""
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid "There are currently no templates available."
+msgstr ""
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid "Loading..."
+msgstr ""
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid "Content Summary"
+msgstr ""
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid "Apply Template"
 msgstr ""
