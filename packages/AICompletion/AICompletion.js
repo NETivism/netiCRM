@@ -16,7 +16,7 @@
         EXPAND_CLASS = 'is-expanded',
         COPY_CLASS = 'is-copied',
         MFP_ACTIVE_CLASS = 'mfp-is-active',
-        TIMEOUT = 10;
+        TIMEOUT = 30000;
 
   /**
    * ============================
