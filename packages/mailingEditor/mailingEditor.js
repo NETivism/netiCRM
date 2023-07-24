@@ -3038,6 +3038,7 @@
         $targetContents.removeClass(ACTIVE_CLASS);
         $thisTabLink.addClass(ACTIVE_CLASS);
         $targetTabContent.addClass(ACTIVE_CLASS);
+        $(_panels).attr('data-tab-active-id', targetID);
       });
 
       // Switch the default panel to block panel if mail data field has value

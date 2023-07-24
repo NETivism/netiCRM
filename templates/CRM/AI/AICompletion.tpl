@@ -37,10 +37,13 @@ window.AICompletion = {
     "Saved": "{/literal}{ts}Saved{/ts}{literal}",
     "Title": "{/literal}{ts}Title{/ts}{literal}",
     "Submit": "{/literal}{ts}Submit{/ts}{literal}",
+    "Loading...": "{/literal}{ts}Loading...{/ts}{literal}",
     "Try Again": "{/literal}{ts}Try Again{/ts}{literal}",
+    "Content": "{/literal}{ts}Content{/ts}{literal}",
+    "Content Summary": "{/literal}{ts}Content Summary{/ts}{literal}",
     "Copywriting Role": "{/literal}{ts}Copywriting Role{/ts}{literal}",
     "Tone Style": "{/literal}{ts}Tone Style{/ts}{literal}",
-    "Content": "{/literal}{ts}Content{/ts}{literal}",
+    "Apply Template": "{/literal}{ts}Apply Template{/ts}{literal}",
     "AI-generated Text Templates": "{/literal}{ts}AI-generated Text Templates{/ts}{literal}",
     "Saved Templates": "{/literal}{ts}Saved Templates{/ts}{literal}",
     "Community Recommendations": "{/literal}{ts}Community Recommendations{/ts}{literal}",
@@ -53,11 +56,15 @@ window.AICompletion = {
     "Save prompt as shared template": "{/literal}{ts}Save prompt as shared template{/ts}{literal}",
     "Once saved as a shared template, you can reuse this template for editing. Please enter a template title to identify the purpose of the template. If you need to edit a shared template, please go to the template management interface to edit.": "{/literal}{ts}Once saved as a shared template, you can reuse this template for editing. Please enter a template title to identify the purpose of the template. If you need to edit a shared template, please go to the template management interface to edit.{/ts}{literal}",
     "Recommend a Template to Other Organizations": "{/literal}{ts}Recommend a Template to Other Organizations{/ts}{literal}",
-    "Upon clicking \"Recommend\", we'll proceed with the following verification steps:": "{/literal}{ts}Upon clicking \"Recommend\", we'll proceed with the following verification steps:{/ts}{literal}",
+    "Upon clicking 'Recommend', we'll proceed with the following verification steps:": "{/literal}{ts}Upon clicking 'Recommend', we'll proceed with the following verification steps:{/ts}{literal}",
     "The netiCRM team will ensure the prompt does not contain any personal data and test its function to guarantee the privacy safety for you and other organizations.": "{/literal}{ts}The netiCRM team will ensure the prompt does not contain any personal data and test its function to guarantee the privacy safety for you and other organizations.{/ts}{literal}",
     "Due to the above, the results of your sharing will not appear immediately. We will schedule periodic updates and publications.": "{/literal}{ts}Due to the above, the results of your sharing will not appear immediately. We will schedule periodic updates and publications.{/ts}{literal}",
-    "Once published, you can view your shared template in the \"Community Recommended\" templates, which will also be marked with your organization's name.": "{/literal}{ts}Once published, you can view your shared template in the \"Community Recommended\" templates, which will also be marked with your organization's name.{/ts}{literal}",
+    "Once published, you can view your shared template in the 'Community Recommended' templates, which will also be marked with your organization's name.": "{/literal}{ts}Once published, you can view your shared template in the 'Community Recommended' templates, which will also be marked with your organization's name.{/ts}{literal}",
     "Thank you for being willing to share your templates with the community, thereby benefiting all netiCRM users.": "{/literal}{ts}Thank you for being willing to share your templates with the community, thereby benefiting all netiCRM users.{/ts}{literal}",
+    "There are currently no templates available.": "{/literal}{ts}There are currently no templates available.{/ts}{literal}",
+    "Maximum character limit for this field is <span class=\"limit-max\">1500</span> characters, and the current character count is <span class=\"current\">0</span>.": "{/literal}{ts}Maximum character limit for this field is <span class=\"limit-max\">1500</span> characters, and the current character count is <span class=\"current\">0</span>.{/ts}{literal}",
+    "We're sorry, our service is currently experiencing some issues. Please try again later. If the problem persists, please contact our customer service team.": "{/literal}{ts}We're sorry, our service is currently experiencing some issues. Please try again later. If the problem persists, please contact our customer service team.{/ts}{literal}",
+    "Our service is currently busy, please try again later. If needed, please contact our customer service team.": "{/literal}{ts}Our service is currently busy, please try again later. If needed, please contact our customer service team.{/ts}{literal}",
   }
 };
 {/literal}window.AICompletion.default = {$ai_completion_default};{literal}
@@ -103,13 +110,14 @@ window.AICompletion = {
               <div class="netiaic-prompt-content-section crm-section crm-textarea-section form-item">
                 <div class="crm-form-elem crm-form-textarea">
                   <textarea name="netiaic-prompt-content" placeholder="{ts 1=$component_locale}Please enter the %1 copy you would like AI to generate.{/ts}" class="netiaic-prompt-content-textarea form-textarea"></textarea>
+                  <div class="description">{ts}Maximum character limit for this field is <span class="limit-max">1500</span> characters, and the current character count is <span class="current">0</span>.{/ts}</div>
                   <div class="netiaic-prompt-content-command netiaic-command">
                     <div class="inner">
                       <ul class="netiaic-command-list">
                         <li data-name="org_intro" class="netiaic-command-item">
                           <a class="get-org-intro" href="#">{ts}Click to insert organization intro.{/ts}</a>
-                          <a href="{crmURL p="civicrm/admin/setting/aicompletion" q="reset=1"}" target="_blank">({ts}Edit{/ts}<i class="zmdi zmdi-edit"></i>)</a> {* TODO: Need to change to correct URL *}
-                          <div class="netiaic-command-item-desc"> {* TODO: smarty var *} </div>
+                          <a href="{crmURL p="civicrm/admin/setting/aicompletion" q="reset=1"}" target="_blank">({ts}Edit{/ts}<i class="zmdi zmdi-edit"></i>)</a>
+                          <div class="netiaic-command-item-desc"></div>
                         </li>
                       </ul>
                     </div>
@@ -120,7 +128,7 @@ window.AICompletion = {
             <div class="netiaic-form-footer">
               <div class="netiaic-usage-info">
                 {* $usage added in CRM/AI/BAO/AICompletion::getDefaultTemplate *}
-                {ts 1=$usage.max 2=$usage.used}Your usage limit is <span class="usage-max">%1</span> times, currently used <span class="usage-current">%2</span> times.{/ts}
+                {ts 1=$usage.max 2=$usage.used}Your usage limit is <span class="usage-max">%1</span> times, currently used <span class="usage-used">%2</span> times.{/ts}
               </div>
               <button type="button" class="shine-btn netiaic-form-submit">
                 <i class="zmdi zmdi-mail-send"></i>

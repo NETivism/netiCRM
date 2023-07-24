@@ -37,6 +37,11 @@
  */
 class CRM_Admin_Page_AICompletion extends CRM_Core_Page {
 
+  /**
+   * constants for static parameters of the pager
+   */
+  CONST ROWCOUNT = 20;
+
   function run() {
     $destination = CRM_Utils_System::url('civicrm/admin/aicompletion', 'reset=1', FALSE, NULL, FALSE);
     $destination = urlencode($destination);
@@ -75,6 +80,19 @@ ORDER BY
 DESC
 ";
     $dao = CRM_Core_DAO::executeQuery($sql);
+
+    if ($dao->N) {
+      $this->pager($dao->N);
+      list($filter['offset'], $filter['limit']) = $this->_pager->getOffsetAndRowCount();
+      unset($dao);
+    }
+
+    if (isset($filter['offset']) && !empty($filter['limit'])) {
+      $sql .= " LIMIT {$filter['offset']}, {$filter['limit']} ";
+    }
+
+    $dao = CRM_Core_DAO::executeQuery($sql);
+
     while ($dao->fetch()) {
       $details = CRM_Contact_BAO_Contact::getContactDetails($dao->contact_id);
       $content = preg_replace('/^'.ts('Organization intro').'.*/u', '', $dao->context);
@@ -94,5 +112,17 @@ DESC
     $this->assign('rows', $rows);
 
     return parent::run();
+  }
+
+  function pager($total) {
+    $params = array(); 
+    $params['status'] = '';
+    $params['csvString'] = NULL;
+    $params['buttonTop'] = 'PagerTopButton';
+    $params['buttonBottom'] = 'PagerBottomButton';
+    $params['rowCount'] = self::ROWCOUNT;
+    $params['total'] = $total;
+    $this->_pager = new CRM_Utils_Pager($params);
+    $this->assign_by_ref('pager', $this->_pager);
   }
 }

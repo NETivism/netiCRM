@@ -48852,7 +48852,7 @@ msgstr ""
 msgid "Due to the above, the results of your sharing will not appear immediately. We will schedule periodic updates and publications."
 msgstr ""
 
-msgid "Once published, you can view your shared template in the \"Community Recommended\" templates, which will also be marked with your organization's name."
+msgid "Once published, you can view your shared template in the 'Community Recommended' templates, which will also be marked with your organization's name."
 msgstr ""
 
 msgid "Once saved as a shared template, you can reuse this template for editing. Please enter a template title to identify the purpose of the template. If you need to edit a shared template, please go to the template management interface to edit."
@@ -48888,7 +48888,7 @@ msgstr ""
 msgid "Try Again"
 msgstr ""
 
-msgid "Upon clicking \"Recommend\", we'll proceed with the following verification steps:"
+msgid "Upon clicking 'Recommend', we'll proceed with the following verification steps:"
 msgstr ""
 
 msgid "Warning! Applying this template will clear your current settings. Proceed with the application?"
@@ -48915,7 +48915,7 @@ msgstr ""
 msgid "Click to insert organization intro."
 msgstr ""
 
-msgid "Your usage limit is <span class=\"usage-max\">%1</span> times, currently used <span class=\"usage-current\">%2</span> times."
+msgid "Your usage limit is <span class=\"usage-max\">%1</span> times, currently used <span class=\"usage-used\">%2</span> times."
 msgstr ""
 
 msgid "Establish an introduction for your organization so that when later generating text using AI, it can be swiftly integrated, enabling the AI to grasp the context of your organization."
@@ -48928,4 +48928,66 @@ msgid "The Smiling Elderly Foundation, a non-profit organization based in Taiwan
 msgstr ""
 
 msgid "Organization intro"
+msgstr ""
+
+#: civicrm_backer_autoimport.install
+msgid "Link URL"
+msgstr ""
+
+msgid "Link Label"
+msgstr ""
+
+#: CRM/AI/Page/AJAX.php
+msgid "You are an %1 in Taiwan who uses Traditional Chinese and is skilled at writing %2 copywriting."
+msgstr ""
+
+#: templates/CRM/Contact/Form/Task/RemoveFromGroup.tpl
+msgid "The operation of removing contacts from the group cannot be undone."
+msgstr ""
+
+#: templates/CRM/Custom/Form/Field.tpl
+msgid "Please be aware that half-width parentheses '(' or ')' should not be used in the field name. If you need to use parentheses, please use the full-width versions '（' or '）'."
+msgstr ""
+
+msgid "When the recurring contribution is triggered, which contribution do you want to copy?"
+msgstr ""
+
+msgid "Copied Contribution Type Source"
+msgstr ""
+
+msgid "From source contribution."
+msgstr ""
+
+msgid "From contribution page setting."
+msgstr ""
+
+msgid "When the recurring contribution is triggered, which source of contribution type do you want to copy?"
+msgstr ""
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid "Our service is currently busy, please try again later. If needed, please contact our customer service team."
+msgstr ""
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid "We're sorry, our service is currently experiencing some issues. Please try again later. If the problem persists, please contact our customer service team."
+msgstr ""
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid "Maximum character limit for this field is <span class=\"limit-max\">1500</span> characters, and the current character count is <span class=\"current\">0</span>."
+msgstr ""
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid "There are currently no templates available."
+msgstr ""
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid "Loading..."
+msgstr ""
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid "Content Summary"
+msgstr ""
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid "Apply Template"
 msgstr ""

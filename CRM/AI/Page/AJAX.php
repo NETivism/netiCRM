@@ -7,51 +7,77 @@ class CRM_AI_Page_AJAX {
 
   function chat() {
     $maxlength = 2000;
+    $tone_style = $ai_role = $context = null;
+    $data = array();
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] == 'application/json') {
       $jsonString = file_get_contents('php://input');
       $jsondata = json_decode($jsonString, true);
-      if ($jsondata === FALSE) {
+      if ($jsondata === NULL) {
         self::responseError(array(
           'status' => 0,
           'message' => 'The request is not a valid JSON format.',
         ));
       }
-      if (isset($jsondata['tone']) && is_string($jsondata['tone'])) {
-        $tone_style = $jsondata['tone'];
-        $data['tone_style'] = $tone_style;
+      $allowedInput = array(
+        'tone' => 'string',
+        'role' => 'string',
+        'content' => 'string',
+        'sourceUrlPath' => 'string',
+      );
+      $checkFormatResult = self::validateJsonData($jsondata, $allowedInput);
+      if (!$checkFormatResult) {
+        self::responseError(array(
+          'status' => 0,
+          'message' => 'The request does not match the expected format.',
+        ));
       }
-      if (isset($jsondata['role']) && is_string($jsondata['role'])) {
-        $ai_role = $jsondata['role'];
-        $data['ai_role'] = $ai_role;
+
+      $tone_style = $jsondata['tone'];
+      $data['tone_style'] = $tone_style;
+
+      $ai_role = $jsondata['role'];
+      $data['ai_role'] = $ai_role;
+
+      $context = $jsondata['content'];
+      $contextCount = mb_strlen($context);
+
+      if ($contextCount > $maxlength) {
+        self::responseError(array(
+          'status' => 0,
+          'message' => "Content exceeds the maximum character limit.",
+        ));
       }
-      if (isset($jsondata['content']) && is_string($jsondata['content'])) {
-        $context = $jsondata['content'];
-        $contextCount = mb_strlen($context);
-        if ($contextCount <= $maxlength) {
-          $data['context'] = $context;
-        }
-        else {
-          self::responseError(array(
-            'status' => 0,
-            'message' => "Content exceeds the maximum character limit.",
-          ));
+      $data['context'] = $context;
+
+      // get url and check component
+      $mailTypeId = CRM_Core_OptionGroup::getValue('activity_type', 'Email', 'name');
+      $url = $jsondata['sourceUrlPath'];
+
+      $allowPatterns = [
+        'CiviContribute' => ['civicrm/admin/contribute/add', 'civicrm/admin/contribute/setting'],
+        'CiviEvent' => ['civicrm/event/add', 'civicrm/event/manage/eventInfo'],
+        'CiviMail' => ['civicrm/mailing/send'],
+        'Activity' => ['civicrm/activity/add', 'civicrm/contact/view/activity'],
+      ];
+
+      foreach ($allowPatterns as $component => $allowedUrls) {
+        foreach ($allowedUrls as $allowedUrl) {
+          if (strstr($url, $allowedUrl)) {
+            if ($component === "Activity" && strstr($jsondata['sourceUrl'], "atype=$mailTypeId")) {
+              $data['component'] = $component;
+              break 2;
+            } elseif ($component !== "Activity") {
+              $data['component'] = $component;
+              break 2;
+            }
+          }
         }
       }
-      if (is_string($jsondata['sourceUrlPath']) && isset($jsondata['sourceUrlPath'])) {
-        $mailTypeId = CRM_Core_OptionGroup::getValue('activity_type', 'Email', 'name');
-        $url = $jsondata['sourceUrlPath'];
-        if (strstr($url, 'civicrm/admin/contribute/setting')) {
-          $data['component'] = "CiviContribute";
-        }
-        elseif (strstr($url, 'civicrm/event/manage/eventInfo')){
-          $data['component'] = "CiviEvent";
-        }
-        elseif (strstr($url, 'civicrm/mailing/send')) {
-          $data['component'] = "CiviMail";
-        }
-        elseif (strstr($url, 'civicrm/activity/add') && strstr($jsondata['sourceUrl'], "atype=$mailTypeId")) {
-          $data['component'] = "Activity";
-        }
+      if (empty($data['component'])) {
+        self::responseError(array(
+          'status' => 0,
+          'message' => "No corresponding component was found.",
+        ));
       }
 
       if ($tone_style && $ai_role && $context && $data['component']) {
@@ -79,18 +105,21 @@ class CRM_AI_Page_AJAX {
           ));
         }
 
-        self::responseOk(array(
-          'status' => 1,
-          'message' => 'Success create chat',
-          'data' => array(
-            'id' => $token['id'],
-            'token' => $token['token'],
-          )
-        ));
+        if (is_numeric($token['id']) && is_string($token['token'])) {
+          self::responseSucess(array(
+            'status' => 1,
+            'message' => 'Chat created successfully.',
+            'data' => array(
+              'id' => $token['id'],
+              'token' => $token['token'],
+            )
+          ));
+        }
       }
     }
+    // When request method is get,Use stream to return ai content
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-      if (is_string($_GET['token']) && isset($_GET['token']) && is_string($_GET['id']) && isset($_GET['id'])) {
+      if (isset($_GET['token']) && isset($_GET['id']) && is_string($_GET['token']) && is_string($_GET['id'])) {
         $token = $_GET['token'];
         $id = $_GET['id'];
         $params = array(
@@ -109,9 +138,9 @@ class CRM_AI_Page_AJAX {
             'message' => $message,
           ));
         }
-        self::responseOk(array(
+        self::responseSucess(array(
           'status' => 1,
-          'message' => 'Stream chat successfully',
+          'message' => 'Stream chat successfully.',
           'data' => $result,
         ));
       }
@@ -119,23 +148,30 @@ class CRM_AI_Page_AJAX {
   }
 
   function getTemplateList() {
+    $data = array();
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] == 'application/json') {
       $jsonString = file_get_contents('php://input');
       $jsondata = json_decode($jsonString, true);
-      if (is_string($jsondata['component']) && isset($jsondata['component'])) {
+      if ($jsondata === NULL) {
+        self::responseError(array(
+          'status' => 0,
+          'message' => 'The request is not a valid JSON format.',
+        ));
+      }
+      if (isset($jsondata['component']) && is_string($jsondata['component'])) {
         $component = $jsondata['component'];
         $data['component'] = $component;
       }
-      if (is_string($jsondata['field']) && isset($jsondata['field'])) {
+      if (isset($jsondata['field']) && is_string($jsondata['field'])) {
         $field = $jsondata['field'];
         $data['field'] = $field;
       }
-      if (is_string($jsondata['offset']) && isset($jsondata['offset'])) {
+      if (isset($jsondata['offset']) && is_numeric($jsondata['offset'])) {
         $offset = $jsondata['offset'];
         $data['offset'] = $offset;
       }
 
-      if (isset($data)) {
+      if (!empty($data)) {
         $getListResult = CRM_AI_BAO_AICompletion::getTemplateList($data);
       }
       else {
@@ -144,16 +180,16 @@ class CRM_AI_Page_AJAX {
       }
 
       if (is_array($getListResult) && !empty($getListResult)) {
-        self::responseOk(array(
+        self::responseSucess(array(
           'status' => 1,
-          'message' => "Template list retrieved successfully",
+          'message' => "Template list retrieved successfully.",
           'data' => $getListResult,
         ));
       }
       else {
         self::responseError(array(
           'status' => 0,
-          'message' => "Failed to retrieve template list",
+          'message' => "Failed to retrieve template list.",
         ));
       }
     }
@@ -163,22 +199,28 @@ class CRM_AI_Page_AJAX {
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] == 'application/json') {
       $jsonString = file_get_contents('php://input');
       $jsondata = json_decode($jsonString, true);
-      if (is_string($jsondata['id']) && isset($jsondata['id'])) {
+      if ($jsondata === NULL) {
+        self::responseError(array(
+          'status' => 0,
+          'message' => 'The request is not a valid JSON format.',
+        ));
+      }
+      if (isset($jsondata['id']) && is_numeric($jsondata['id'])) {
         $acId = $jsondata['id'];
       }
       if ($acId) {
         $getTemplateResult = CRM_AI_BAO_AICompletion::getTemplate($acId);
         if (is_array($getTemplateResult) && !empty($getTemplateResult)) {
-          self::responseOk(array(
+          self::responseSucess(array(
             'status' => 1,
-            'message' => "Template retrieved successfully",
+            'message' => "Template retrieved successfully.",
             'data' => $getTemplateResult,
           ));
         }
         else {
           self::responseError(array(
             'status' => 0,
-            'message' => "Failed to retrieve template",
+            'message' => "Failed to retrieve template.",
           ));
         }
       }
@@ -189,28 +231,43 @@ class CRM_AI_Page_AJAX {
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] == 'application/json') {
       $jsonString = file_get_contents('php://input');
       $jsondata = json_decode($jsonString, true);
-      if (is_string($jsondata['id']) && isset($jsondata['id'])) {
-        $acId = $jsondata['id'];
-        $data['id'] = $acId;
+      if ($jsondata === NULL) {
+        self::responseError(array(
+          'status' => 0,
+          'message' => 'The request is not a valid JSON format.',
+        ));
       }
-      if (is_string($jsondata['is_template']) && isset($jsondata['is_template'])) {
-        $acIsTemplate = $jsondata['is_template'];
-        $data['is_template'] = $acIsTemplate;
+      $allowedInput = array(
+        'id' => 'integer',
+        'is_template' => 'integer',
+        'template_title' => 'string',
+      );
+      $checkFormatResult = self::validateJsonData($jsondata, $allowedInput);
+      if (!$checkFormatResult) {
+        self::responseError(array(
+          'status' => 0,
+          'message' => 'The request does not match the expected format.',
+        ));
       }
-      if (is_string($jsondata['template_title']) && isset($jsondata['template_title'])) {
-        $acTemplateTitle = $jsondata['template_title'];
-        $data['template_title'] = $acTemplateTitle;
-      }
-      if (isset($acId) && isset($acIsTemplate) && isset($acTemplateTitle)) {
-        $setTemplateResult = CRM_AI_BAO_AICompletion::setTemplate($data);
+      $acId = $jsondata['id'];
+      $data['id'] = $acId;
+
+      $acIsTemplate = $jsondata['is_template'];
+      $data['is_template'] = $acIsTemplate;
+
+      $acTemplateTitle = $jsondata['template_title'];
+      $data['template_title'] = $acTemplateTitle;
+
+      if (!empty($acId) && !empty($acIsTemplate) && !empty($acTemplateTitle)) {
         $result = array();
-        if ($setTemplateResult['is_error'] == '0') {
+        $setTemplateResult = CRM_AI_BAO_AICompletion::setTemplate($data);
+        if ($setTemplateResult['is_error'] === 0) {
           //set or unset template successful return true
           if ($acIsTemplate == "1") {
             //0 -> 1
             $result = array(
-              'status' => "success",
-              'message' => "AI completion is set as template successfully",
+              'status' => 1,
+              'message' => "AI completion is set as template successfully.",
               'data' => array(
                 'id' => $setTemplateResult['id'],
                 'is_template' => $setTemplateResult['is_template'],
@@ -221,7 +278,7 @@ class CRM_AI_Page_AJAX {
           else {
             //  1 -> 0
             $result = array(
-              'status' => "success",
+              'status' => 1,
               'message' => "AI completion is unset as template successfully",
               'data' => array(
                 'id' => $setTemplateResult['id'],
@@ -230,11 +287,12 @@ class CRM_AI_Page_AJAX {
               ),
             );
           }
+          self::responseSucess($result);
         }
         else {
           //If it cannot be set/unset throw Error
           $result = array(
-            'status' => "Failed",
+            'status' => 0,
             'message' => $setTemplateResult['message'],
             'data' => array(
               'id' => $setTemplateResult['id'],
@@ -242,8 +300,8 @@ class CRM_AI_Page_AJAX {
               'template_title' => $setTemplateResult['template_title'],
             ),
           );
+          self::responseError($result);
         }
-        self::responseOk($result);
       }
     }
   }
@@ -252,40 +310,46 @@ class CRM_AI_Page_AJAX {
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] == 'application/json') {
       $jsonString = file_get_contents('php://input');
       $jsondata = json_decode($jsonString, true);
-      if (is_string($jsondata['id']) && isset($jsondata['id'])) {
+      if ($jsondata === NULL) {
+        self::responseError(array(
+          'status' => 0,
+          'message' => 'The request is not a valid JSON format.',
+        ));
+      }
+      if (isset($jsondata['id']) && is_numeric($jsondata['id'])) {
         $acId = $jsondata['id'];
       }
-      if (is_string($jsondata['is_share_with_others']) && isset($jsondata['is_share_with_others'])) {
+      if (isset($jsondata['is_share_with_others']) && is_numeric($jsondata['is_share_with_others'])) {
         $acIsShare = $jsondata['is_share_with_others'];
       }
       if (isset($acId) && isset($acIsShare)) {
         $setShareResult = CRM_AI_BAO_AICompletion::setShare($acId);
         $result = array();
         if ($setShareResult) {
-          $result = array(
-            'status' => "success",
-            'message' => "AI completion is set as shareable successfully",
-            'data' => [
+          self::responseSucess(array(
+            'status' => 1,
+            'message' => "AI completion is set as shareable successfully.",
+            'data' => array(
               'id' => $acId,
               'is_template' => $acIsShare,
-            ],
-          );
+            ),
+          ));
         }
         else {
-          $result = array(
-            'status' => "Failed",
-            'message' => "AI completion has already been set as shareable",
-            'data' => [
-              'id' => $acId,
-              'is_template' => $acIsShare,
-            ],
-          );
+          self::responseError(array(
+            'status' => 0,
+            'message' => 'AI completion has already been set as shareable.',
+          ));
         }
-        self::responseOk($result);
       }
     }
   }
 
+  /**
+   * This function handles the response in case of an error.
+   *
+   * @param mixed $error The error message or object that needs to be sent as a response.
+   */
   function responseError($error) {
     http_response_code(400);
     header('Content-Type: application/json; charset=utf-8');
@@ -293,10 +357,43 @@ class CRM_AI_Page_AJAX {
     CRM_Utils_System::civiExit();
   }
 
-  public static function responseOk($data) {
+  /**
+   * This function handles the response in case of success.
+   *
+   * @param mixed $data The data that needs to be sent as a response.
+   */
+  public static function responseSucess($data) {
     http_response_code(200);
     header('Content-Type: application/json; charset=utf-8');
     echo json_encode($data);
     CRM_Utils_System::civiExit();
+  }
+
+  /**
+   * Function to validate JSON data.
+   *
+   * This function iterates over the allowed inputs and checks if these inputs exist in the JSON data,
+   * and if the type of these inputs matches the expected type. If all inputs exist and are of the correct type,
+   * the function will return true; otherwise, it will return false.
+   *
+   * @param array $jsondata The JSON data to be validated.
+   * @param array $allowedInput An associative array where the keys are what we expect to find in the JSON data,
+   *                            and the values are the types that these inputs should have.
+   * @return bool Returns true if all inputs exist and are of the correct type; otherwise returns false.
+   */
+  public static function validateJsonData($jsondata, $allowedInput) {
+    foreach ($allowedInput as $key => $type) {
+      if (!isset($jsondata[$key])) {
+        return false;
+      }
+      if ($type === 'integer' || $type === 'double') {
+        if (!is_numeric($jsondata[$key])) {
+          return false;
+        }
+      } else if (gettype($jsondata[$key]) != $type) {
+        return false;
+      }
+    }
+    return true;
   }
 }

@@ -140,7 +140,10 @@ function custom_option_html_type( ) {
                 {include file='CRM/Core/I18n/Dialog.tpl' table='civicrm_custom_field' field='label' id=$id}
             {/if}
             </td>
-            <td class="html-adjust">{$form.label.html}</td>
+            <td class="html-adjust">
+              {$form.label.html}
+              <div class="description">{ts}Please be aware that half-width parentheses '(' or ')' should not be used in the field name. If you need to use parentheses, please use the full-width versions '（' or '）'.{/ts}</div>
+            </td>
         </tr>
         <tr class="crm-custom-field-form-block-data_type">
             <td class="label">{$form.data_type.label}</td>

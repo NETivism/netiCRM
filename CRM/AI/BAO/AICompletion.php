@@ -80,8 +80,14 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
   public static function prepareChat($params = array()) {
     // prepare saving data.
     $aicompletionData = $params;
-    if (is_array($params['prompt'])) {
-      $aicompletionData['prompt'] = json_encode($params['prompt']);
+    if (!isset($params['prompt'])) {
+      throw new CRM_Core_Exception("Missing for prompt parameters");
+    }
+    else {
+      if (is_array($params['prompt'])) {
+        // If Prompt is not String, use json_encode.
+        $aicompletionData['prompt'] = json_encode($params['prompt']);
+      }
     }
     $aicompletionData['created_date'] = date('Y-m-d H:i:s');
     $aicompletionData['status_id'] = self::STATUS_PENDING;
@@ -245,6 +251,9 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
    * @return object
    */
   public static function create(&$data) {
+    if (!is_array($data)) {
+      throw new CRM_Core_Exception("data should be an Array.");
+    }
     $id = CRM_Utils_Array::value('id', $data);
     if (!$id) {
       $op = 'create';
@@ -318,11 +327,18 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
     if (empty($maxTokens)) {
       $maxTokens = self::COMPLETION_MAX_TOKENS;
     }
+    elseif (!is_numeric($maxTokens)) {
+      throw new CRM_Core_Exception("maxTokens should be a integer number.");
+    }
+    $serviceProvider = preg_replace('/[^a-zA-Z0-9_]/', '', $serviceProvider);
     $className = 'CRM_AI_CompletionService_'.$serviceProvider;
     if (class_exists($className)) {
       $this->_serviceProvider = new $className();
       $this->_serviceProvider->setModel($model);
       $this->_serviceProvider->setMaxTokens($maxTokens);
+    }
+    else {
+      throw new CRM_Core_Exception(" Class `CRM_AI_CompletionService_$serviceProvider` doesn't existed.");
     }
   }
 
@@ -335,6 +351,9 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
    *  The return array should be compatible for function create
    */
   public static function getCompletion($params) {
+    if (!is_array($params)) {
+      throw new CRM_Core_Exception("params should be an Array.");
+    }
     $model = isset($params['model']) ? $params['model'] : self::COMPLETION_MODEL;
     $maxToken = isset($params['max_token']) ? $params['max_token'] : self::COMPLETION_MAX_TOKENS;
     $completion = self::singleton(self::COMPLETION_SERVICE, $model, $maxToken);
@@ -367,6 +386,9 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
    * @return array AICompletion data rows.
    */
   public static function getTemplateList($params = array()) {
+    if (!is_array($params)) {
+      throw new CRM_Core_Exception("params should be an Array.");
+    }
     $whereClause = [];
     $sqlParams = [];
     $whereClause[] = 'is_template = 1';
@@ -374,7 +396,7 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
       $whereClause[] = "component = %1";
       $sqlParams[1] = array($params['component'], 'String');
     }
-    if ($params['field']) {
+    if (isset($params['field'])) {
       $whereClause[] = "field = %2";
       $sqlParams[2] = array($params['field'], 'String');
     }

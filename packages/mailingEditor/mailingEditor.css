@@ -334,6 +334,9 @@ a.editable-click[data-type="xquill"] + .editable-container .editable-buttons {
   width: 100%;
   background: #ddd;
 }
+.nme-setting-panels[data-tab-active-id*="aicompletion"] .nme-setting-panels-footer {
+  display: none;
+}
 ul.nme-setting-panels-tabs {
   display: flex;
   margin: 0;

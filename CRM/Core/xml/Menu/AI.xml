@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="iso-8859-1" ?>
 <menu>
   <item>
-     <path>civicrm/ajax/chat</path>
+     <path>civicrm/ajax/ai/chat</path>
      <page_callback>CRM_AI_Page_AJAX::chat</page_callback>
      <access_arguments>access CiviCRM</access_arguments>
   </item>
   <item>
-    <path>civicrm/ajax/setTemplate</path>
+    <path>civicrm/ajax/ai/set-template</path>
     <page_callback>CRM_AI_Page_AJAX::setTemplate</page_callback>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
   <item>
-    <path>civicrm/ajax/getTemplate</path>
+    <path>civicrm/ajax/ai/get-template</path>
     <page_callback>CRM_AI_Page_AJAX::getTemplate</page_callback>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
   <item>
-    <path>civicrm/ajax/getTemplateList</path>
+    <path>civicrm/ajax/ai/get-template-list</path>
     <page_callback>CRM_AI_Page_AJAX::getTemplateList</page_callback>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
   <item>
-    <path>civicrm/ajax/setShare</path>
+    <path>civicrm/ajax/ai/set-share</path>
     <page_callback>CRM_AI_Page_AJAX::setShare</page_callback>
     <access_arguments>access CiviCRM</access_arguments>
   </item>

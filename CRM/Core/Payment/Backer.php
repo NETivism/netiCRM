@@ -74,6 +74,12 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
       array('name' => 'password',
         'label' => $ppDAO->password_label,
       ),
+      array('name' => 'url_site',
+        'label' => ts('Link Label'),
+      ),
+      array('name' => 'url_api',
+        'label' => ts('Link URL'),
+      ),
     );
   }
 
@@ -624,6 +630,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
     $recurring['contribution_status_id'] = $statusMap[$json['transaction']['render_status']];
     if ($json['transaction']['render_status'] == 'success') {
       $recurring['end_date'] = date('YmdHis');
+      unset($recurring['amount']);
     }
     elseif ($json['transaction']['render_status'] == 'recurring') {
       $recurring['start_date'] = date('YmdHis', strtotime($json['transaction']['created_at']));
