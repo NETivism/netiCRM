@@ -239,7 +239,7 @@ class CRM_AI_DAO_AICompletion extends CRM_Core_DAO
    * @access public
    * @return array
    */
-  function &fields()
+  static function &fields()
   {
     if (!(self::$_fields)) {
       self::$_fields = array(
@@ -371,7 +371,7 @@ class CRM_AI_DAO_AICompletion extends CRM_Core_DAO
    * @access public
    * @return string
    */
-  function getTableName()
+  static function getTableName()
   {
     return self::$_tableName;
   }
