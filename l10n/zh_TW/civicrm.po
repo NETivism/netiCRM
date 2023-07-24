@@ -2,7 +2,7 @@
 # Translators:
 # CC Chu <poliphilonet@gmail.com>, 2020-2023
 # Chang Shu-huai <junsuwhy@gmail.com>, 2016-2023
-# Charles Chuang, 2022
+# Charles Chuang, 2022-2023
 # CHUNLIAN WU <susanna@netivism.com.tw>, 2017
 # Fuyuan Cheng <gloomcheng@gmail.com>, 2013-2015
 # Harry Lin <harry@netivism.com.tw>, 2023
@@ -34096,7 +34096,7 @@ msgid ""
 "and End Event settings are ignored for Administrator statuses. EXAMPLE: This"
 " setting can be useful for special case statuses like 'Non-expiring', "
 "'Barred' or 'Expelled', etc."
-msgstr "如果此狀態只讓管理工作人員使用，請勾選此框。如果已勾選，此狀態不會自動被會員指派。當新增或編輯會籍記錄，它會被指派到一個聯絡人會員籍，透過勾選<strong>狀態撤銷</strong>標誌。管理者狀態的開始及結束活動設定會被忽略。例如：此設定可以被用於特別個案狀態如「非過期」、「禁止」或「開除」等。"
+msgstr "如果此狀態只讓管理工作人員使用，請勾選此框。若勾選，系統不會自動指派此狀態。當新增或編輯會籍記錄，可勾選「<strong>是否覆蓋掉會員狀態？</strong>」，就可以將此狀態指派到聯絡人的會籍。此狀態的開始及結束活動設定會被忽略。例如：此設定可以被用於特別個案狀態如「非過期」、「禁止」或「開除」等。"
 
 #: templates/CRM/Member/Form/MembershipStatus.tpl
 msgid ""
@@ -49426,7 +49426,7 @@ msgid "From source contribution."
 msgstr "沿用被複製的捐款的費用類型"
 
 msgid "From contribution page setting."
-msgstr "來自募款頁的費用類型設定（用於有勸募字號的情況）"
+msgstr "來自募款頁目前的費用類型設定"
 
 msgid ""
 "When the recurring contribution is triggered, which source of contribution "
@@ -49451,7 +49451,7 @@ msgid ""
 "Maximum character limit for this field is <span class=\"limit-"
 "max\">1500</span> characters, and the current character count is <span "
 "class=\"current\">0</span>."
-msgstr "欄位限制字數上限為 <span class=\"limit-max\">1500</span> 字， 目前字數為 <span class=\"current\">1500</span> 字。"
+msgstr "欄位限制字數上限為 <span class=\"limit-max\">1500</span> 字， 目前字數為 <span class=\"current\">0</span> 字。"
 
 #: templates/CRM/AI/AICompletion.tpl
 msgid "There are currently no templates available."
