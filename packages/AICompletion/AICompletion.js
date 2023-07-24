@@ -16,7 +16,7 @@
         EXPAND_CLASS = 'is-expanded',
         COPY_CLASS = 'is-copied',
         MFP_ACTIVE_CLASS = 'mfp-is-active',
-        TIMEOUT = 30000;
+        TIMEOUT = 10;
 
   /**
    * ============================
@@ -41,7 +41,8 @@
       messages: []
     },
     colon = ':',
-    errorMessage;
+    errorMessage,
+    errorMessageDefault;
 
   // Default configuration options
   var defaultOptions = {};
@@ -75,17 +76,25 @@
     }
   }
 
-  var sendAjaxRequest = function(url, method, data, callback) {
+  var sendAjaxRequest = function(url, method, data, successCallback, errorCallback) {
     $.ajax({
       url: url,
       method: method,
       data: JSON.stringify(data),
       contentType: 'application/json',
+      timeout: TIMEOUT,
       success: function(response) {
-        callback(response);
+        successCallback(response);
       },
       error: function(xhr, status, error) {
-        console.error('AJAX request failed:', status, error);
+        if (status === "timeout") {
+          console.error('AJAX request timed out');
+        }
+        else {
+          console.error('AJAX request failed:', status, error);
+        }
+
+        errorCallback(xhr, status, error);
       }
     });
   }
@@ -253,7 +262,7 @@
     },
 
     getTemplateList: function(data = {}) {
-      let output = `<p>${ts['There are currently no templates available.']}<p>`;
+      let output = `<p>${ts['There are currently no templates available.']}</p>`;
 
       for (let key in templateListData) {
         if (key == 'savedTemplates') {
@@ -304,6 +313,11 @@
                 AICompletion.prototype.modal.close();
               }
             });
+          }, function(xhr, status, error) {
+            if (status === "timeout") {
+              errorMessage = `<p class="error">${ts['Our service is currently busy, please try again later. If needed, please contact our customer service team.']}</p>`;
+              $(`#use-other-templates-tabs .modal-tabs-panel[data-type="${key}"]`).html(errorMessage);
+            }
           });
         }
 
@@ -463,8 +477,8 @@
               <li><a href="#use-other-templates-tabs-2">${ts['Community Recommendations']}</a></li>
             </ul>
             <div class="modal-tabs-panels">
-            <div id="use-other-templates-tabs-1" class="modal-tabs-panel ${PROCESS_CLASS}" data-type="savedTemplates">${ts['Loading...']}</div>
-            <div id="use-other-templates-tabs-2" class="modal-tabs-panel ${PROCESS_CLASS}" data-type="communityRecommendations">${ts['Loading...']}</div>
+            <div id="use-other-templates-tabs-1" class="modal-tabs-panel ${PROCESS_CLASS}" data-type="savedTemplates"><p>${ts['Loading...']}</p></div>
+            <div id="use-other-templates-tabs-2" class="modal-tabs-panel ${PROCESS_CLASS}" data-type="communityRecommendations"><p>${ts['Loading...']}</p></div>
             </div>
           </div>`;
 
@@ -846,14 +860,14 @@
             }
           } catch (error) {
             console.error('JSON Parse Error:', error.message);
-            AICompletion.prototype.createMessage(aiMsgID, userMsgID, errorMessage, 'ai', 'error');
+            AICompletion.prototype.createMessage(aiMsgID, userMsgID, errorMessageDefault, 'ai', 'error');
           }
         };
 
         evtSource.onerror = function(event) {
           console.error("EventSource encountered an error: ", event);
           evtSource.close();
-          AICompletion.prototype.createMessage(aiMsgID, userMsgID, errorMessage, 'ai', 'error');
+          AICompletion.prototype.createMessage(aiMsgID, userMsgID, errorMessageDefault, 'ai', 'error');
         };
       })
       .catch(function(error) {
@@ -883,7 +897,8 @@
       // Get translation string comparison table
       ts = window.AICompletion.translation;
       colon = window.AICompletion.language == 'zh_TW' ? '：' : ':';
-      errorMessage = ts['We\'re sorry, our service is currently experiencing some issues. Please try again later. If the problem persists, please contact our customer service team.'];
+      errorMessageDefault = ts['We\'re sorry, our service is currently experiencing some issues. Please try again later. If the problem persists, please contact our customer service team.'];
+      errorMessage = errorMessageDefault;
 
       // TODO: For development and testing only, need to be removed afterwards
       this.devTestUse();
