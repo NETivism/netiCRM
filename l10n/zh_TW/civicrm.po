@@ -49468,3 +49468,7 @@ msgstr "內容概要"
 #: templates/CRM/AI/AICompletion.tpl
 msgid "Apply Template"
 msgstr "套用範本"
+
+#: templates/CRM/common/sidePanel.tpl
+msgid "Expand"
+msgstr "展開"
