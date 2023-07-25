@@ -57,6 +57,25 @@
     return typeof variable === 'object' && variable !== null;
   }
 
+  var getFirstCharacter = function(input) {
+    try {
+      if (typeof input !== 'string') {
+        throw new Error('Input must be a string');
+      }
+
+      if (input.length === 0) {
+        return '';
+      }
+
+      for (let character of input) {
+        return character;
+      }
+    } catch (error) {
+      console.error(error.message);
+      return '';
+    }
+  }
+
   var renderID = function(str, len) {
     var str = typeof str !== "undefined" ? str : "",
         len = typeof len !== "undefined" ? len : 10,
@@ -515,6 +534,8 @@
 
       if (!$container.find('.msg[id="' + id + '"]').length) {
         if (type == 'user') {
+          let firstCharacter = getFirstCharacter(defaultData.sort_name);
+
           if (isObject(data)) {
             if (data.role) {
               msg += `${ts['Copywriting Role']}: ${data.role}\n`;
@@ -535,7 +556,7 @@
           }
 
           output = `<div id="${id}" data-ref-id="${refID}" class="user-msg msg is-finished">
-            <div class="msg-avatar"></div>
+            <div class="msg-avatar">${firstCharacter}</div>
             <div class="msg-content">${msg}</div>
             <ul class='msg-tools'>
               <li><button type="button" title="${ts['Save As New Template']}" class="save-btn handle-btn"><i class="zmdi zmdi-file-plus"></i> ${ts['Save As New Template']}</button></li>
