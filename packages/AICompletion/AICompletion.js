@@ -773,6 +773,7 @@
           aiMsgID = 'ai-msg-' + renderID(),
           $container = AICompletion.prototype.container,
           $submit = $container.find('.netiaic-form-submit'),
+          $userMsg,
           $aiMsg,
           formData = {
             role: $container.find('.netiaic-prompt-role-select').val(),
@@ -845,6 +846,10 @@
                   if (!$aiMsg.hasClass(FINISH_CLASS)) {
                     $aiMsg.addClass(FINISH_CLASS);
                   }
+
+                  if (!$userMsg.hasClass(`ai-msg-${FINISH_CLASS}`)) {
+                    $userMsg.addClass(`ai-msg-${FINISH_CLASS}`);
+                  }
                 }
 
                 if (eventData.is_error) {
@@ -884,6 +889,7 @@
                   let message = eventData.message.replace(/\n/g, '<br>');
                   AICompletion.prototype.createMessage(aiMsgID, userMsgID, message, 'ai', 'stream');
                   $aiMsg = $container.find('.msg[id="' + aiMsgID + '"]');
+                  $userMsg = $container.find('.msg[id="' + userMsgID + '"]');
 
                   if (eventData.hasOwnProperty('id')) {
                     $aiMsg.data('aicompletion-id', eventData.id);

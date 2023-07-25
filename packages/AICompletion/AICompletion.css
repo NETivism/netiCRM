@@ -143,8 +143,9 @@ button.form-submit-primary,
 .netiaic-chat .msg-tools .handle-btn i {
   color: #fff;
 }
-.netiaic-chat .msg.is-finished .msg-tools,
-.netiaic-chat .msg.is-error .msg-tools {
+.netiaic-chat .user-msg.ai-msg-is-finished .msg-tools,
+.netiaic-chat .ai-msg.is-finished .msg-tools,
+.netiaic-chat .ai-msg.is-error .msg-tools {
   display: flex;
   flex: 0 0 100%;
   justify-content: flex-end;
