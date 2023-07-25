@@ -846,10 +846,6 @@
                   if (!$aiMsg.hasClass(FINISH_CLASS)) {
                     $aiMsg.addClass(FINISH_CLASS);
                   }
-
-                  if (!$userMsg.hasClass(`ai-msg-${FINISH_CLASS}`)) {
-                    $userMsg.addClass(`ai-msg-${FINISH_CLASS}`);
-                  }
                 }
 
                 if (eventData.is_error) {
@@ -893,6 +889,10 @@
 
                   if (eventData.hasOwnProperty('id')) {
                     $aiMsg.data('aicompletion-id', eventData.id);
+
+                    if (!$userMsg.hasClass(`ai-msg-${FINISH_CLASS}`)) {
+                      $userMsg.addClass(`ai-msg-${FINISH_CLASS}`);
+                    }
                   }
 
                   // Update usage
