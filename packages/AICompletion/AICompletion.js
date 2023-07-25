@@ -196,13 +196,13 @@
         $container.find('.netiaic-modal').addClass(INIT_CLASS);
         this.initialized = true;
       },
-      open: function(content, title, callbacks) {
+      open: function(content, title, callbacks, classes = 'mfp-netiaic-modal') {
         $.magnificPopup.open({
           items: {
             src: '.netiaic-modal'
           },
           type: 'inline',
-          mainClass: 'mfp-netiaic-modal',
+          mainClass: classes,
           preloader: true,
           showCloseBtn: false,
           callbacks: {
@@ -342,6 +342,7 @@
             aicompletionID = $aiMsg.data('aicompletion-id'),
             modalTitle = ts['Save prompt as shared template'],
             modalCallbacks = {},
+            modalClasses = 'mfp-netiaic-modal mfp-netiaic-modal-mini mfp-netiaic-set-tpl',
             modalContent = `<div class="set-tpl-form" data-id="${userMsgID}">
               <div class="desc"><p>${ts['Once saved as a shared template, you can reuse this template for editing. Please enter a template title to identify the purpose of the template. If you need to edit a shared template, please go to the template management interface to edit.']}</p></div>
                 <div class="netiaic-save-tpl-title-section crm-section crm-text-section form-item">
@@ -353,7 +354,7 @@
                   </div>
                 </div>
                 <div class="form-actions">
-                  <button id="set-tpl-submit" type="button" class="set-tpl-submit form-submit">${ts['Save']}</button>
+                  <button id="set-tpl-submit" type="button" class="set-tpl-submit form-submit-primary form-submit">${ts['Save']}</button>
                 </div>
               </div>`;
 
@@ -378,6 +379,9 @@
                   $tplTitle.prop('readonly', true);
                   $submit.text(ts['Saved']).prop('disabled', true);
                   $saveBtn.html(`<i class="zmdi zmdi-check"></i>${ts['Saved']}`).prop('disabled', true);
+                  setTimeout(function() {
+                    modal.close();
+                  }, 800);
                 }
               }, function(xhr, status, error) {
                 if (status == 'timeout') {
@@ -390,7 +394,7 @@
           }
         }
 
-        modal.open(modalContent, modalTitle, modalCallbacks);
+        modal.open(modalContent, modalTitle, modalCallbacks, modalClasses);
       });
     },
 
@@ -478,6 +482,7 @@
         event.preventDefault();
         let modalTitle = ts['AI-generated Text Templates'],
             modalCallbacks = {},
+            modalClasses = 'mfp-netiaic-modal mfp-netiaic-modal-with-tabs mfp-netiaic-use-tpl',
             modalContent = `<div id="use-other-templates-tabs" class="modal-tabs">
             <ul class="modal-tabs-menu">
               <li><a href="#use-other-templates-tabs-1">${ts['Saved Templates']}</a></li>
@@ -498,7 +503,7 @@
           }
         }
 
-        modal.open(modalContent, modalTitle, modalCallbacks);
+        modal.open(modalContent, modalTitle, modalCallbacks, modalClasses);
       });
     },
 
@@ -591,6 +596,7 @@
             aicompletionID = $aiMsg.data('aicompletion-id'),
             modalTitle = ts['Recommend a Template to Other Organizations'],
             modalCallbacks = {},
+            modalClasses = 'mfp-netiaic-modal mfp-netiaic-modal-mini mfp-netiaic-share-tpl',
             modalContent = `<div class="share-tpl-form" data-id="${userMsgID}">
               <div class="desc">
               <p>${ts['Upon clicking \'Recommend\', we\'ll proceed with the following verification steps:']}</p>
@@ -602,7 +608,7 @@
               <p>${ts['Thank you for being willing to share your templates with the community, thereby benefiting all netiCRM users.']}</p>
               </div>
               <div class="form-actions">
-              <button id="share-tpl-submit" type="button" class="share-tpl-submit form-submit">${ts['Recommend']}</button>
+              <button id="share-tpl-submit" type="button" class="share-tpl-submit form-submit form-submit-primary">${ts['Recommend']}</button>
               </div>
               </div>`;
 
@@ -623,6 +629,9 @@
                 if (response.status == 'success' || response.status == 1) {
                   $submit.text(ts['Recommended']).prop('disabled', true);
                   $shareBtn.html(`<i class="zmdi zmdi-check"></i>${ts['Recommended']}`).prop('disabled', true);
+                  setTimeout(function() {
+                    modal.close();
+                  }, 800);
                 }
               }, function(xhr, status, error) {
                 if (status == 'timeout') {
@@ -634,7 +643,7 @@
           }
         }
 
-        modal.open(modalContent, modalTitle, modalCallbacks);
+        modal.open(modalContent, modalTitle, modalCallbacks, modalClasses);
       });
     },
 
@@ -693,7 +702,7 @@
 
         setTimeout(function() {
           $promptContentCommand.removeClass(ACTIVE_CLASS);
-        }, 300);
+        }, 500);
       });
 
       $promptContent.on('input', function() {
