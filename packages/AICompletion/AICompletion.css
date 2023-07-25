@@ -35,6 +35,9 @@ select[readonly] {
   box-shadow: none !important;
   cursor: not-allowed !important;
 }
+.nsp-container.is-opened {
+  max-width: 1100px;
+}
 .nsp-container .nsp-content {
   overflow: visible;
   height: var(--nsp-content-height);
