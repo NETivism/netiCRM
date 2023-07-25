@@ -699,7 +699,7 @@
 
         $promptContentCommand.toggleClass(ACTIVE_CLASS, inputText === '');
 
-        if (this.scrollHeight > this.clientHeight) {
+        if (this.scrollHeight >= this.clientHeight) {
           if (!$(this).hasClass(EXPAND_CLASS)) {
             $(this).addClass(EXPAND_CLASS);
           }
