@@ -1,7 +1,7 @@
 @charset "UTF-8";
 
 :root {
-  --color-error: rgba(228, 61, 43, 1);
+  --color-error: rgba(183, 28, 28, 1);
   --bg-color-error: rgba(255, 239, 237, 1);
   --nsp-width: 500px;
   --nsp-content-height: calc(100vh - 66px);

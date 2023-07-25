@@ -373,7 +373,7 @@
                     template_title: tplTitle
                   };
 
-              $container.find('.error-msg').remove();
+              $container.find('.error').remove();
               sendAjaxRequest(endpoint.setTemplate, 'POST', data, function(response) {
                 if (response.status == 'success' || response.status == 1) {
                   $tplTitle.prop('readonly', true);
@@ -385,7 +385,7 @@
                 }
               }, function(xhr, status, error) {
                 if (status == 'timeout') {
-                  errorMessage = `<p class="error-msg error msg">${ts['Our service is currently busy, please try again later. If needed, please contact our customer service team.']}</p>`;
+                  errorMessage = `<p class="error">${ts['Our service is currently busy, please try again later. If needed, please contact our customer service team.']}</p>`;
                   $tplTitle.prop('readonly', false);
                   $submit.text(ts['Save']).prop('disabled', false).after(errorMessage);
                 }
@@ -624,7 +624,7 @@
                     is_share_with_others: '1',
                   };
 
-              $container.find('.error-msg').remove();
+              $container.find('.error').remove();
               sendAjaxRequest(endpoint.setShare, 'POST', data, function(response) {
                 if (response.status == 'success' || response.status == 1) {
                   $submit.text(ts['Recommended']).prop('disabled', true);
@@ -635,7 +635,7 @@
                 }
               }, function(xhr, status, error) {
                 if (status == 'timeout') {
-                  errorMessage = `<p class="error-msg error msg">${ts['Our service is currently busy, please try again later. If needed, please contact our customer service team.']}</p>`;
+                  errorMessage = `<p class="error">${ts['Our service is currently busy, please try again later. If needed, please contact our customer service team.']}</p>`;
                   $submit.text(ts['Recommend']).prop('disabled', false).after(errorMessage);
                 }
               });
