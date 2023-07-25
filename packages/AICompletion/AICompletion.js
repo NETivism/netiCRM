@@ -681,12 +681,14 @@
 
         if (this.scrollHeight > this.clientHeight && !$(this).hasClass(EXPAND_CLASS)) {
           $(this).addClass(EXPAND_CLASS);
+          $container.addClass(`form-${EXPAND_CLASS}`);
         }
       });
 
       $promptContent.on('blur', function() {
         if ($(this).hasClass(EXPAND_CLASS)) {
           $(this).removeClass(EXPAND_CLASS);
+          $container.removeClass(`form-${EXPAND_CLASS}`);
         }
 
         setTimeout(function() {
@@ -702,10 +704,12 @@
         if (this.scrollHeight >= this.clientHeight) {
           if (!$(this).hasClass(EXPAND_CLASS)) {
             $(this).addClass(EXPAND_CLASS);
+            $container.addClass(`form-${EXPAND_CLASS}`);
           }
         }
         else {
           $(this).removeClass(EXPAND_CLASS);
+          $container.removeClass(`form-${EXPAND_CLASS}`);
         }
 
         AICompletion.prototype.promptContentCounterUpdate($(this));

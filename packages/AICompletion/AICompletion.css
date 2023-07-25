@@ -221,6 +221,9 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
   max-height: var(--netiaic-form-height);
   padding: 15px 20px;
 }
+.netiaic-container.form-is-expanded {
+  --netiaic-form-height: calc(1em * 1.5 * 5 + 10px + 350px);
+}
 .netiaic-form-container .crm-form-elem {
   max-width: 100%;
   width: 100%;
@@ -404,7 +407,6 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
   height: calc(1em * 1.5 * 2 + 10px);
   line-height: 1.5;
   resize: none;
-  transition: height .3s;
 }
 .netiaic-container .netiaic-prompt-content-textarea.is-expanded {
   height: calc(1em * 1.5 * 7 + 10px);
