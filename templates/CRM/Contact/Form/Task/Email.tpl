@@ -168,10 +168,8 @@ cj( 'ul.token-input-list-facebook, div.token-input-dropdown-facebook' ).css( 'wi
     </div>
   </div>
 </div>
-  <div class="nme-setting-panels-trigger" title="{ts}AI Copywriter{/ts}" data-tooltip data-tooltip-placement="w"><i
+  <div class="nme-setting-panels-trigger" data-tooltip data-tooltip-placement="w"><i
  class="zmdi zmdi-settings"></i></div>
 </div>
-{include file="CRM/common/sidePanel.tpl" type="inline" headerSelector="#nme-setting-panels-header"
-contentSelector="#nme-setting-panels-content" containerClass="nme-setting-panels" opened="true" triggerText="AI
-Copywriter" width="500px" fullscreen="true"}
+{include file="CRM/common/sidePanel.tpl" type="inline" headerSelector="#nme-setting-panels-header" contentSelector="#nme-setting-panels-content" containerClass="nme-setting-panels" opened="true" triggerText="AI Copywriter" width="500px" fullscreen="true"}
 {/if}

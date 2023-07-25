@@ -130,7 +130,7 @@ window.nmEditor = {
 						<li><a title="{ts}Switch Templates{/ts}" href="#nme-select-tpl" class="is-active" data-target-id="nme-select-tpl" data-tooltip>{ts}Templates{/ts}</a></li>
 						<li><a title="{ts}Add Blocks{/ts}" href="#nme-add-block" data-target-id="nme-add-block" data-tooltip>{ts}Blocks{/ts}</a></li>
 						<li><a title="{ts}Global Settings{/ts}" href="#nme-global-setting" data-target-id="nme-global-setting" data-tooltip>{ts}Settings{/ts}</a></li>
-						{if $config->nextEnabled}<li><a title="{ts}AI Completion{/ts}" href="#nme-aicompletion" data-target-id="nme-aicompletion" data-tooltip>{ts}AI Copywriter{/ts}</a></li>{/if}
+						{if $config->nextEnabled}<li><a title="{ts}AI Copywriter{/ts}" href="#nme-aicompletion" data-target-id="nme-aicompletion" data-tooltip>{ts}AI Copywriter{/ts}</a></li>{/if}
 					</ul>
 				</div>
 				<div class="nme-setting-panels-content" id="nme-setting-panels-content">
