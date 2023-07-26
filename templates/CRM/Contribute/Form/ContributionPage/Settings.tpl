@@ -292,12 +292,6 @@
 {if $config->nextEnabled}
 <div class="nme-setting-panels">
   <div class="nme-setting-panels-inner">
-    <div class="nme-setting-panels-header" id="nme-setting-panels-header">
-      <ul data-target-contents="nme-setting-panel" class="nme-setting-panels-tabs">
-        <li><a title="{ts}AI Copywriter{/ts}" href="#nme-aicompletion" data-target-id="nme-aicompletion"
-            data-tooltip>{ts}AI Copywriter{/ts}</a></li>
-      </ul>
-    </div>
     <div class="nme-setting-panels-content" id="nme-setting-panels-content">
       <div id="nme-aicompletion" class="nme-aicompletion nme-setting-panel is-active">
         <div class="nme-setting-panel-inner">
@@ -312,7 +306,7 @@
 	<div class="nme-setting-panels-trigger" data-tooltip data-tooltip-placement="w"><i
 			class="zmdi zmdi-settings"></i></div>
 </div>
-{include file="CRM/common/sidePanel.tpl" type="inline" headerSelector="#nme-setting-panels-header" contentSelector="#nme-setting-panels-content" containerClass="nme-setting-panels" opened="true" triggerText="AI Copywriter" width="500px" fullscreen="true" triggerIcon="zmdi-memory"}
+{include file="CRM/common/sidePanel.tpl" type="inline" contentSelector="#nme-setting-panels-content" containerClass="nme-setting-panels" opened="true" triggerText="AI Copywriter" width="500px" fullscreen="true" triggerIcon="zmdi-memory"}
 {/if}
 
 {/if}{* end cdtype *}
