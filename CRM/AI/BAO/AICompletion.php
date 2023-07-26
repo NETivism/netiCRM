@@ -525,17 +525,20 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
     $smarty->assign('usage', $quota);
 
     $suffix = '-1';
-    if ($tsLocale != 'en') {
-      $suffix .= '.'.$tsLocale;
+    if ($tsLocale !== CRM_Core_Config::SYSTEM_LANG) {
+      $locale = '.'.$tsLocale;
     }
     if (!isset($enabledComponents[$component])) {
       $component = 'Activity';
     }
-    $default = $smarty->fetch('CRM/AI/defaults/'.$component.$suffix.'.tpl');
+    $path = 'CRM/AI/defaults/'.$component.$suffix.$locale.'.tpl';
+    $default = $smarty->fetch($path);
     $verified = json_decode($default);
-    if ($verified !== FALSE) {
-      return $default;
+    if (!$verified) {
+      // fallback to non-locale template
+      $path = 'CRM/AI/defaults/'.$component.$suffix.'.tpl';
+      $default = $smarty->fetch($path);
     }
-    return '';
+    return $default;
   }
 }

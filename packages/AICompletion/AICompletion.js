@@ -31,11 +31,6 @@
     },
     ts = {},
     endpoint = {
-      getTemplateList: '/civicrm/ajax/ai/get-template-list',
-      getTemplate: '/civicrm/ajax/ai/get-template',
-      setTemplate: '/civicrm/ajax/ai/set-template',
-      chat: '/civicrm/ajax/ai/chat',
-      setShare: '/civicrm/ajax/ai/set-share',
     },
     chatData = {
       messages: []
@@ -938,13 +933,14 @@
       if (typeof window.AICompletion.default === 'object') {
         return window.AICompletion.default;
       }
-      return {};
     },
 
     init: function() {
       var $container = $(this.element);
 
       defaultData = this.getDefaultData();
+      endpoint = window.AICompletion.endpoint;
+      console.log(endpoint);
       AICompletion.prototype.container = $container;
 
       // Get translation string comparison table

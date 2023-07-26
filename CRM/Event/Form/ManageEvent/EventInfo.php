@@ -258,6 +258,7 @@ class CRM_Event_Form_ManageEvent_EventInfo extends CRM_Event_Form_ManageEvent {
 
     if ($config->nextEnabled) {
       $this->assign('ai_completion_default', CRM_AI_BAO_AICompletion::getDefaultTemplate('CiviEvent'));
+      $this->assign('ai_completion_url_basepath', $config->userSystem->languageNegotiationURL('/'));
     }
 
     parent::buildQuickForm();
