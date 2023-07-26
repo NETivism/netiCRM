@@ -2,7 +2,7 @@
 # Translators:
 # CC Chu <poliphilonet@gmail.com>, 2020-2023
 # Chang Shu-huai <junsuwhy@gmail.com>, 2016-2023
-# Charles Chuang, 2022
+# Charles Chuang, 2022-2023
 # CHUNLIAN WU <susanna@netivism.com.tw>, 2017
 # Fuyuan Cheng <gloomcheng@gmail.com>, 2013-2015
 # Harry Lin <harry@netivism.com.tw>, 2023
@@ -34096,7 +34096,7 @@ msgid ""
 "and End Event settings are ignored for Administrator statuses. EXAMPLE: This"
 " setting can be useful for special case statuses like 'Non-expiring', "
 "'Barred' or 'Expelled', etc."
-msgstr "如果此狀態只讓管理工作人員使用，請勾選此框。如果已勾選，此狀態不會自動被會員指派。當新增或編輯會籍記錄，它會被指派到一個聯絡人會員籍，透過勾選<strong>狀態撤銷</strong>標誌。管理者狀態的開始及結束活動設定會被忽略。例如：此設定可以被用於特別個案狀態如「非過期」、「禁止」或「開除」等。"
+msgstr "如果此狀態只讓管理工作人員使用，請勾選此框。若勾選，系統不會自動指派此狀態。當新增或編輯會籍記錄，可勾選「<strong>是否覆蓋掉會員狀態？</strong>」，就可以將此狀態指派到聯絡人的會籍。此狀態的開始及結束活動設定會被忽略。例如：此設定可以被用於特別個案狀態如「非過期」、「禁止」或「開除」等。"
 
 #: templates/CRM/Member/Form/MembershipStatus.tpl
 msgid ""
@@ -49366,8 +49366,8 @@ msgstr "點擊以插入組織簡介"
 
 msgid ""
 "Your usage limit is <span class=\"usage-max\">%1</span> times, currently "
-"used <span class=\"usage-current\">%2</span> times."
-msgstr "您的使用額度為 <span class=\"usage-max\">%1</span>次，目前已使用 <span class=\"usage-current\">%2</span> 次。"
+"used <span class=\"usage-used\">%2</span> times."
+msgstr "您的使用額度為 <span class=\"usage-max\">1% </span> 次，目前已使用 <span class=\"usage-used\">2% </span> 次。"
 
 msgid ""
 "Establish an introduction for your organization so that when later "
@@ -49406,3 +49406,69 @@ msgstr "你是一個在台灣，使用繁體中文的%1，很會撰寫語氣%2�
 #: templates/CRM/Contact/Form/Task/RemoveFromGroup.tpl
 msgid "The operation of removing contacts from the group cannot be undone."
 msgstr "將聯絡人移出群組操作無法復原"
+
+#: templates/CRM/Custom/Form/Field.tpl
+msgid ""
+"Please be aware that half-width parentheses '(' or ')' should not be used in"
+" the field name. If you need to use parentheses, please use the full-width "
+"versions '（' or '）'."
+msgstr "請注意，欄位名稱不應使用半形括號「(」和「)」，如需使用括號，請改用全形括號「（」和「）」"
+
+msgid ""
+"When the recurring contribution is triggered, which contribution do you want"
+" to copy?"
+msgstr "定期捐款觸發時，哪一種捐款儲存的資訊應該被複製到新的一筆定期？"
+
+msgid "Copied Contribution Type Source"
+msgstr "最新扣款的費用類型來源"
+
+msgid "From source contribution."
+msgstr "沿用被複製的捐款的費用類型"
+
+msgid "From contribution page setting."
+msgstr "來自募款頁目前的費用類型設定"
+
+msgid ""
+"When the recurring contribution is triggered, which source of contribution "
+"type do you want to copy?"
+msgstr "定期捐款觸發時，新的一筆扣款的費用類型來源為何？"
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid ""
+"Our service is currently busy, please try again later. If needed, please "
+"contact our customer service team."
+msgstr "我們目前的服務正在忙碌中，請您稍後再嘗試。如有需要，請您聯繫我們的客服人員。"
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid ""
+"We're sorry, our service is currently experiencing some issues. Please try "
+"again later. If the problem persists, please contact our customer service "
+"team."
+msgstr "很抱歉，我們的服務目前遇到一些問題，請稍後再試。如果問題持續存在，請聯絡我們的客服人員。"
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid ""
+"Maximum character limit for this field is <span class=\"limit-"
+"max\">1500</span> characters, and the current character count is <span "
+"class=\"current\">0</span>."
+msgstr "欄位限制字數上限為 <span class=\"limit-max\">1500</span> 字， 目前字數為 <span class=\"current\">0</span> 字。"
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid "There are currently no templates available."
+msgstr "目前沒有可用的範本。"
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid "Loading..."
+msgstr "載入中……"
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid "Content Summary"
+msgstr "內容概要"
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid "Apply Template"
+msgstr "套用範本"
+
+#: templates/CRM/common/sidePanel.tpl
+msgid "Expand"
+msgstr "展開"
