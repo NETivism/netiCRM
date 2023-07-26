@@ -66,6 +66,7 @@ a.btn:hover {
 }
 .nsp-container.is-fullscreen {
   z-index: 997;
+  box-shadow: 0px 0px 10px 0px rgb(0 0 0 / 50%);
 }
 .nsp-inner {
   position: relative;
@@ -75,15 +76,15 @@ a.btn:hover {
   position: absolute;
   top: 0;
   left: 0;
-  margin: 220px 0 0 -44px;
+  margin: 220px 0 0 -40px;
 }
 .nsp-container .nsp-tool-btn {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 2px;
-  width: 44px;
-  height: 44px;
+  margin-bottom: 5px;
+  width: 40px;
+  height: 40px;
   text-align: center;
   color: #fff;
   background: #3F51B5;
@@ -95,8 +96,49 @@ a.btn:hover {
   color: #fff;
   cursor: pointer;
 }
+.nsp-container .nsp-tool-btn:hover {
+  background: #5C6BC0;
+}
 .nsp-container .nsp-fullscreen-trigger i {
-  font-size: 30px;
+  font-size: 28px;
+}
+.nsp-container.is-closed .nsp-tools {
+  margin-left: -30px;
+}
+.nsp-container.is-closed .nsp-tool-btn {
+  width: 30px;
+  border-radius: 20px 0 0 20px;
+  box-shadow: -1px 0px 1px 0 rgba(60,64,67,.5), -1px 0px 3px 1px rgba(60,64,67,.3);
+}
+.nsp-container.is-closed .nsp-fullscreen-trigger {
+  display: none;
+}
+.nsp-container.is-closed .nsp-tool-btn.nsp-trigger {
+  background: #333;
+}
+.nsp-container.is-closed .nsp-tool-btn.nsp-trigger i::before {
+  content: '\f2fa';
+}
+.nsp-container.is-opened .nsp-tool-btn {
+  border-radius: 0;
+}
+.nsp-container.is-fullscreen .nsp-tools {
+  margin-left: -41px;
+}
+.nsp-container.is-fullscreen .nsp-tool-btn.nsp-trigger {
+  display: none;
+}
+.nsp-container.is-fullscreen .nsp-tool-btn.nsp-fullscreen-trigger {
+  background: #333;
+  box-shadow: -2px 0px 5px 1px rgb(0 0 0 / 50%)
+}
+
+.nsp-container.is-closed .nsp-tool-btn.nsp-trigger:hover,
+.nsp-container.is-fullscreen .nsp-tool-btn.nsp-fullscreen-trigger:hover {
+  background: #555;
+}
+.nsp-container.is-fullscreen .nsp-tool-btn.nsp-fullscreen-trigger i::before {
+  content: '\f136';
 }
 
 .nsp-container .nsp-inner {

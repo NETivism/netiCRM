@@ -15,6 +15,7 @@
         INNER_CLASS = "inner",
         ACTIVE_CLASS = "is-active",
         OPEN_CLASS = "is-opened",
+        CLOSE_CLASS = "is-closed",
         FULLSCREEN_CLASS = "is-fullscreen",
         INIT_CLASS = "is-initialized";
 
@@ -266,10 +267,12 @@
 		},
     open: function() {
       $(_container).addClass(OPEN_CLASS);
+      $(_container).removeClass(CLOSE_CLASS);
       $("body").addClass("nsp-" + OPEN_CLASS);
     },
     close: function() {
       $(_container).removeClass(OPEN_CLASS);
+      $(_container).addClass(CLOSE_CLASS);
       $("body").removeClass("nsp-" + OPEN_CLASS);
     },
     fullscreen: function() {
