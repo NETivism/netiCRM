@@ -166,6 +166,8 @@ class CRM_Event_Form_ManageEvent_EventInfo extends CRM_Event_Form_ManageEvent {
    * @access public
    */
   public function buildQuickForm() {
+    $config = CRM_Core_Config::singleton();
+
     if ($this->_cdType) {
       return CRM_Custom_Form_CustomData::buildQuickForm($this);
     }
@@ -253,6 +255,11 @@ class CRM_Event_Form_ManageEvent_EventInfo extends CRM_Event_Form_ManageEvent {
     $this->addElement('checkbox', 'is_active', ts('Is this Event Active?'));
 
     $this->addFormRule(array('CRM_Event_Form_ManageEvent_EventInfo', 'formRule'));
+
+    if ($config->nextEnabled) {
+      $this->assign('ai_completion_default', CRM_AI_BAO_AICompletion::getDefaultTemplate('CiviEvent'));
+      $this->assign('ai_completion_url_basepath', $config->userSystem->languageNegotiationURL('/'));
+    }
 
     parent::buildQuickForm();
   }

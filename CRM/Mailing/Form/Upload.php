@@ -386,6 +386,10 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
         ),
       );
     }
+    if ($config->nextEnabled) {
+      $this->assign('ai_completion_default', CRM_AI_BAO_AICompletion::getDefaultTemplate('CiviMail'));
+      $this->assign('ai_completion_url_basepath', $config->userSystem->languageNegotiationURL('/'));
+    }
     $this->addButtons($buttons);
   }
 

@@ -48937,10 +48937,6 @@ msgstr ""
 msgid "Link Label"
 msgstr ""
 
-#: CRM/AI/Page/AJAX.php
-msgid "You are an %1 in Taiwan who uses Traditional Chinese and is skilled at writing %2 copywriting."
-msgstr ""
-
 #: templates/CRM/Contact/Form/Task/RemoveFromGroup.tpl
 msgid "The operation of removing contacts from the group cannot be undone."
 msgstr ""
@@ -48994,4 +48990,14 @@ msgstr ""
 
 #: templates/CRM/common/sidePanel.tpl
 msgid "Expand"
+msgstr ""
+
+#: CRM/AI/Page/AJAX.php
+msgid "You are an %1 in %3 who uses %4 and is skilled at writing %2 copywriting."
+msgstr ""
+
+msgid "You are using %1 as your language."
+msgstr ""
+
+msgid "Chinese (Taiwan)"
 msgstr ""

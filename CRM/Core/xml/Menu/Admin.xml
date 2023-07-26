@@ -14,7 +14,7 @@
      <path>civicrm/admin/custom/group/field</path>
      <title>Custom Data Fields</title>
      <page_callback>CRM_Custom_Page_Field</page_callback>
-     <skipBreadcrumb>true</skipBreadcrumb> 
+     <skipBreadcrumb>true</skipBreadcrumb>
      <weight>11</weight>
   </item>
   <item>
@@ -81,7 +81,7 @@
      <title>AdditionalInfo Form</title>
      <page_callback>CRM_UF_Form_AdvanceSetting</page_callback>
      <weight>0</weight>
-  </item>  
+  </item>
   <item>
      <path>civicrm/admin/options/custom_search</path>
      <title>Manage Custom Searches</title>
@@ -446,7 +446,7 @@
      <adminGroup>Option Lists</adminGroup>
      <icon>admin/small/01.png</icon>
      <weight>405</weight>
-  </item> 
+  </item>
   <item>
      <path>civicrm/admin/options/postal_greeting</path>
      <title>Postal Greetings</title>
@@ -562,7 +562,7 @@
      <adminGroup>Customize</adminGroup>
      <icon>admin/small/price_sets.png</icon>
      <weight>390</weight>
-  </item>  
+  </item>
   <item>
      <path>civicrm/admin/price/add</path>
      <title>New Price Set</title>
@@ -661,6 +661,25 @@
      <access_arguments>administer CiviCRM,administer Reports</access_arguments>
      <adminGroup>Manage</adminGroup>
      <icon>admin/small/03.png</icon>
+     <weight>420</weight>
+  </item>
+  <item>
+     <path>civicrm/admin/aicompletion</path>
+     <title>AI Copywriter</title>
+     <desc>AI Copywriter</desc>
+     <page_callback>CRM_Admin_Page_AICompletion</page_callback>
+     <access_arguments>administer CiviCRM,access CiviCRM</access_arguments>
+     <adminGroup>Manage</adminGroup>
+     <weight>420</weight>
+  </item>
+  <item>
+     <path>civicrm/admin/setting/aicompletion</path>
+     <title>Organization intro</title>
+     <desc>Set organization info</desc>
+     <page_callback>CRM_Admin_Form_Setting_AICompletion</page_callback>
+     <access_arguments>administer CiviCRM,access CiviCRM</access_arguments>
+     <adminGroup>Manage</adminGroup>
+     <skipBreadcrumb>true</skipBreadcrumb>
      <weight>420</weight>
   </item>
 </menu>
