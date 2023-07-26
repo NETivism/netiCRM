@@ -7,7 +7,7 @@ class CRM_AI_Page_AJAX {
 
   function chat() {
     $maxlength = 2000;
-    $tone_style = $ai_role = $context = null;
+    $toneStyle = $aiRole = $context = null;
     $data = array();
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] == 'application/json') {
       $jsonString = file_get_contents('php://input');
@@ -32,11 +32,11 @@ class CRM_AI_Page_AJAX {
         ));
       }
 
-      $tone_style = $jsondata['tone'];
-      $data['tone_style'] = $tone_style;
+      $toneStyle = $jsondata['tone'];
+      $data['tone_style'] = $toneStyle;
 
-      $ai_role = $jsondata['role'];
-      $data['ai_role'] = $ai_role;
+      $aiRole = $jsondata['role'];
+      $data['ai_role'] = $aiRole;
 
       $context = $jsondata['content'];
       $contextCount = mb_strlen($context);
@@ -80,20 +80,40 @@ class CRM_AI_Page_AJAX {
         ));
       }
 
-      if ($tone_style && $ai_role && $context && $data['component']) {
-        $system_prompt = ts("You are an %1 in Taiwan who uses Traditional Chinese and is skilled at writing %2 copywriting.",
-          array(1 => $ai_role, 2 => $tone_style,)
-        );
-        $data['prompt'] = array(
-          array(
-            'role' => 'system',
-            'content' => $system_prompt,
-          ),
-          array(
-            'role' => 'user',
-            'content' => $context,
-          ),
-        );
+      if ($context && $data['component']) {
+        $countryId = CRM_Core_Config::singleton()->defaultContactCountry;
+        $languages = CRM_Core_PseudoConstant::languages();
+        $countries = CRM_Core_PseudoConstant::country();
+        global $tsLocale;
+        $country = $countries[$countryId];
+        $language = $languages[$tsLocale];
+        if ($toneStyle && $aiRole) {
+          $system_prompt = ts("You are an %1 in %3 who uses %4 and is skilled at writing %2 copywriting.",
+            array(1 => $aiRole, 2 => $toneStyle, 3 => $country, 4 => ts($language))
+          );
+          $data['prompt'] = array(
+            array(
+              'role' => 'system',
+              'content' => $system_prompt,
+            ),
+            array(
+              'role' => 'user',
+              'content' => $context,
+            ),
+          );
+        }
+        else {
+          $data['prompt'] = array(
+            array(
+              'role' => 'system',
+              'content' => ts('You are using %1 as your language.', array(2 => ts($language))),
+            ),
+            array(
+              'role' => 'user',
+              'content' => $context,
+            ),
+          );
+        }
         try {
           $token = CRM_AI_BAO_AICompletion::prepareChat($data);
         }

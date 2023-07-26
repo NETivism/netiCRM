@@ -40,7 +40,7 @@
   <div class="nsp-tools">
     <div class="inner">
       {if isset($fullscreen) && $fullscreen eq 'true'}
-        <div class="nsp-fullscreen-trigger nsp-tool-btn" title="{ts}Fullscreen{/ts}" data-tooltip data-tooltip-placement="w"><i class="zmdi zmdi-fullscreen"></i></div>
+        <div class="nsp-fullscreen-trigger nsp-tool-btn" title="{ts}Expand{/ts}" data-tooltip data-tooltip-placement="w"><i class="zmdi zmdi-fullscreen"></i></div>
       {/if}
       <div class="nsp-trigger nsp-tool-btn" title="{ts}{$triggerText}{/ts}" data-tooltip data-tooltip-placement="w"><i class="zmdi {$triggerIcon}"></i></div>
     </div>

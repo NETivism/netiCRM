@@ -31,11 +31,6 @@
     },
     ts = {},
     endpoint = {
-      getTemplateList: '/civicrm/ajax/ai/get-template-list',
-      getTemplate: '/civicrm/ajax/ai/get-template',
-      setTemplate: '/civicrm/ajax/ai/set-template',
-      chat: '/civicrm/ajax/ai/chat',
-      setShare: '/civicrm/ajax/ai/set-share',
     },
     chatData = {
       messages: []
@@ -55,6 +50,25 @@
 
   var isObject = function(variable) {
     return typeof variable === 'object' && variable !== null;
+  }
+
+  var getFirstCharacter = function(input) {
+    try {
+      if (typeof input !== 'string') {
+        throw new Error('Input must be a string');
+      }
+
+      if (input.length === 0) {
+        return '';
+      }
+
+      for (let character of input) {
+        return character;
+      }
+    } catch (error) {
+      console.error(error.message);
+      return '';
+    }
   }
 
   var renderID = function(str, len) {
@@ -196,13 +210,13 @@
         $container.find('.netiaic-modal').addClass(INIT_CLASS);
         this.initialized = true;
       },
-      open: function(content, title, callbacks) {
+      open: function(content, title, callbacks, classes = 'mfp-netiaic-modal') {
         $.magnificPopup.open({
           items: {
             src: '.netiaic-modal'
           },
           type: 'inline',
-          mainClass: 'mfp-netiaic-modal',
+          mainClass: classes,
           preloader: true,
           showCloseBtn: false,
           callbacks: {
@@ -314,7 +328,7 @@
               }
             });
           }, function(xhr, status, error) {
-            if (status === "timeout") {
+            if (status == 'timeout') {
               errorMessage = `<p class="error">${ts['Our service is currently busy, please try again later. If needed, please contact our customer service team.']}</p>`;
               $(`#use-other-templates-tabs .modal-tabs-panel[data-type="${key}"]`).html(errorMessage);
             }
@@ -342,6 +356,7 @@
             aicompletionID = $aiMsg.data('aicompletion-id'),
             modalTitle = ts['Save prompt as shared template'],
             modalCallbacks = {},
+            modalClasses = 'mfp-netiaic-modal mfp-netiaic-modal-mini mfp-netiaic-set-tpl',
             modalContent = `<div class="set-tpl-form" data-id="${userMsgID}">
               <div class="desc"><p>${ts['Once saved as a shared template, you can reuse this template for editing. Please enter a template title to identify the purpose of the template. If you need to edit a shared template, please go to the template management interface to edit.']}</p></div>
                 <div class="netiaic-save-tpl-title-section crm-section crm-text-section form-item">
@@ -353,7 +368,7 @@
                   </div>
                 </div>
                 <div class="form-actions">
-                  <button id="set-tpl-submit" type="button" class="set-tpl-submit form-submit">${ts['Save']}</button>
+                  <button id="set-tpl-submit" type="button" class="set-tpl-submit form-submit-primary form-submit">${ts['Save']}</button>
                 </div>
               </div>`;
 
@@ -372,18 +387,28 @@
                     template_title: tplTitle
                   };
 
+              $container.find('.error').remove();
               sendAjaxRequest(endpoint.setTemplate, 'POST', data, function(response) {
                 if (response.status == 'success' || response.status == 1) {
                   $tplTitle.prop('readonly', true);
                   $submit.text(ts['Saved']).prop('disabled', true);
                   $saveBtn.html(`<i class="zmdi zmdi-check"></i>${ts['Saved']}`).prop('disabled', true);
+                  setTimeout(function() {
+                    modal.close();
+                  }, 800);
+                }
+              }, function(xhr, status, error) {
+                if (status == 'timeout') {
+                  errorMessage = `<p class="error">${ts['Our service is currently busy, please try again later. If needed, please contact our customer service team.']}</p>`;
+                  $tplTitle.prop('readonly', false);
+                  $submit.text(ts['Save']).prop('disabled', false).after(errorMessage);
                 }
               });
             });
           }
         }
 
-        modal.open(modalContent, modalTitle, modalCallbacks);
+        modal.open(modalContent, modalTitle, modalCallbacks, modalClasses);
       });
     },
 
@@ -471,6 +496,7 @@
         event.preventDefault();
         let modalTitle = ts['AI-generated Text Templates'],
             modalCallbacks = {},
+            modalClasses = 'mfp-netiaic-modal mfp-netiaic-modal-with-tabs mfp-netiaic-use-tpl',
             modalContent = `<div id="use-other-templates-tabs" class="modal-tabs">
             <ul class="modal-tabs-menu">
               <li><a href="#use-other-templates-tabs-1">${ts['Saved Templates']}</a></li>
@@ -491,7 +517,7 @@
           }
         }
 
-        modal.open(modalContent, modalTitle, modalCallbacks);
+        modal.open(modalContent, modalTitle, modalCallbacks, modalClasses);
       });
     },
 
@@ -503,6 +529,8 @@
 
       if (!$container.find('.msg[id="' + id + '"]').length) {
         if (type == 'user') {
+          let firstCharacter = getFirstCharacter(defaultData.sort_name);
+
           if (isObject(data)) {
             if (data.role) {
               msg += `${ts['Copywriting Role']}: ${data.role}\n`;
@@ -523,7 +551,7 @@
           }
 
           output = `<div id="${id}" data-ref-id="${refID}" class="user-msg msg is-finished">
-            <div class="msg-avatar"></div>
+            <div class="msg-avatar">${firstCharacter}</div>
             <div class="msg-content">${msg}</div>
             <ul class='msg-tools'>
               <li><button type="button" title="${ts['Save As New Template']}" class="save-btn handle-btn"><i class="zmdi zmdi-file-plus"></i> ${ts['Save As New Template']}</button></li>
@@ -584,6 +612,7 @@
             aicompletionID = $aiMsg.data('aicompletion-id'),
             modalTitle = ts['Recommend a Template to Other Organizations'],
             modalCallbacks = {},
+            modalClasses = 'mfp-netiaic-modal mfp-netiaic-modal-mini mfp-netiaic-share-tpl',
             modalContent = `<div class="share-tpl-form" data-id="${userMsgID}">
               <div class="desc">
               <p>${ts['Upon clicking \'Recommend\', we\'ll proceed with the following verification steps:']}</p>
@@ -595,7 +624,7 @@
               <p>${ts['Thank you for being willing to share your templates with the community, thereby benefiting all netiCRM users.']}</p>
               </div>
               <div class="form-actions">
-              <button id="share-tpl-submit" type="button" class="share-tpl-submit form-submit">${ts['Recommend']}</button>
+              <button id="share-tpl-submit" type="button" class="share-tpl-submit form-submit form-submit-primary">${ts['Recommend']}</button>
               </div>
               </div>`;
 
@@ -611,17 +640,26 @@
                     is_share_with_others: '1',
                   };
 
+              $container.find('.error').remove();
               sendAjaxRequest(endpoint.setShare, 'POST', data, function(response) {
                 if (response.status == 'success' || response.status == 1) {
                   $submit.text(ts['Recommended']).prop('disabled', true);
                   $shareBtn.html(`<i class="zmdi zmdi-check"></i>${ts['Recommended']}`).prop('disabled', true);
+                  setTimeout(function() {
+                    modal.close();
+                  }, 800);
+                }
+              }, function(xhr, status, error) {
+                if (status == 'timeout') {
+                  errorMessage = `<p class="error">${ts['Our service is currently busy, please try again later. If needed, please contact our customer service team.']}</p>`;
+                  $submit.text(ts['Recommend']).prop('disabled', false).after(errorMessage);
                 }
               });
             });
           }
         }
 
-        modal.open(modalContent, modalTitle, modalCallbacks);
+        modal.open(modalContent, modalTitle, modalCallbacks, modalClasses);
       });
     },
 
@@ -668,17 +706,19 @@
 
         if (this.scrollHeight > this.clientHeight && !$(this).hasClass(EXPAND_CLASS)) {
           $(this).addClass(EXPAND_CLASS);
+          $container.addClass(`form-${EXPAND_CLASS}`);
         }
       });
 
       $promptContent.on('blur', function() {
         if ($(this).hasClass(EXPAND_CLASS)) {
           $(this).removeClass(EXPAND_CLASS);
+          $container.removeClass(`form-${EXPAND_CLASS}`);
         }
 
         setTimeout(function() {
           $promptContentCommand.removeClass(ACTIVE_CLASS);
-        }, 300);
+        }, 500);
       });
 
       $promptContent.on('input', function() {
@@ -686,13 +726,15 @@
 
         $promptContentCommand.toggleClass(ACTIVE_CLASS, inputText === '');
 
-        if (this.scrollHeight > this.clientHeight) {
+        if (this.scrollHeight >= this.clientHeight) {
           if (!$(this).hasClass(EXPAND_CLASS)) {
             $(this).addClass(EXPAND_CLASS);
+            $container.addClass(`form-${EXPAND_CLASS}`);
           }
         }
         else {
           $(this).removeClass(EXPAND_CLASS);
+          $container.removeClass(`form-${EXPAND_CLASS}`);
         }
 
         AICompletion.prototype.promptContentCounterUpdate($(this));
@@ -726,6 +768,7 @@
           aiMsgID = 'ai-msg-' + renderID(),
           $container = AICompletion.prototype.container,
           $submit = $container.find('.netiaic-form-submit'),
+          $userMsg,
           $aiMsg,
           formData = {
             role: $container.find('.netiaic-prompt-role-select').val(),
@@ -837,9 +880,14 @@
                   let message = eventData.message.replace(/\n/g, '<br>');
                   AICompletion.prototype.createMessage(aiMsgID, userMsgID, message, 'ai', 'stream');
                   $aiMsg = $container.find('.msg[id="' + aiMsgID + '"]');
+                  $userMsg = $container.find('.msg[id="' + userMsgID + '"]');
 
                   if (eventData.hasOwnProperty('id')) {
                     $aiMsg.data('aicompletion-id', eventData.id);
+
+                    if (!$userMsg.hasClass(`ai-msg-${FINISH_CLASS}`)) {
+                      $userMsg.addClass(`ai-msg-${FINISH_CLASS}`);
+                    }
                   }
 
                   // Update usage
@@ -885,13 +933,13 @@
       if (typeof window.AICompletion.default === 'object') {
         return window.AICompletion.default;
       }
-      return {};
     },
 
     init: function() {
       var $container = $(this.element);
 
       defaultData = this.getDefaultData();
+      endpoint = window.AICompletion.endpoint;
       AICompletion.prototype.container = $container;
 
       // Get translation string comparison table

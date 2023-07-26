@@ -1,7 +1,7 @@
 @charset "UTF-8";
 
 :root {
-  --color-error: rgba(228, 61, 43, 1);
+  --color-error: rgba(183, 28, 28, 1);
   --bg-color-error: rgba(255, 239, 237, 1);
   --nsp-width: 500px;
   --nsp-content-height: calc(100vh - 66px);
@@ -34,6 +34,13 @@ select[readonly] {
   background-color: #f5f5f5 !important;
   box-shadow: none !important;
   cursor: not-allowed !important;
+}
+button.form-submit-primary,
+.form-submit.form-submit-primary {
+  background: #3F51B5;
+}
+.nsp-container.is-opened {
+  max-width: 1100px;
 }
 .nsp-container .nsp-content {
   overflow: visible;
@@ -103,17 +110,19 @@ select[readonly] {
   margin-right: 8px;
   width: 32px;
   height: 32px;
+  font-size: 1.125rem;
   color: #fff;
   border-radius: 50%;
   background: #304ffe;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .3);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, .3);
 }
 .netiaic-chat .user-msg .msg-avatar {
   background: #f48fb1;
 }
 .netiaic-chat .msg-avatar i {
   color: #fff;
-  font-size: 20px;
+  font-size: 1.5rem;
 }
 .netiaic-chat .msg-tools {
   display: none;
@@ -128,11 +137,15 @@ select[readonly] {
   color: #fff;
   background: none;
 }
+.netiaic-chat .msg-tools .handle-btn:hover {
+  text-shadow: 1px 1px 4px #000;
+}
 .netiaic-chat .msg-tools .handle-btn i {
   color: #fff;
 }
-.netiaic-chat .msg.is-finished .msg-tools,
-.netiaic-chat .msg.is-error .msg-tools {
+.netiaic-chat .user-msg.ai-msg-is-finished .msg-tools,
+.netiaic-chat .ai-msg.is-finished .msg-tools,
+.netiaic-chat .ai-msg.is-error .msg-tools {
   display: flex;
   flex: 0 0 100%;
   justify-content: flex-end;
@@ -164,13 +177,13 @@ select[readonly] {
   left: 0;
   margin-left: 40px;
   width: calc(100% - 100px);
-  font-size: .75rem;
+  font-size: .875rem;
   color: transparent;
   background-clip: text;
   -webkit-background-clip: text;
-  background-image: linear-gradient(-45deg, #fff 45%, rgba(255, 255, 255, .5) 50%, #fff 55%);
+  background-image: linear-gradient(-90deg, #fff 35%, #00000099 36%, #000 39%, #fff 39%);
   background-size: 250% 100%;
-  animation: text-shiny 5s both infinite;
+  animation: text-shiny 10s both infinite;
 }
 html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
   font-size: .75rem;
@@ -221,6 +234,9 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
   max-height: var(--netiaic-form-height);
   padding: 15px 20px;
 }
+.netiaic-container.form-is-expanded {
+  --netiaic-form-height: calc(1em * 1.5 * 5 + 10px + 350px);
+}
 .netiaic-form-container .crm-form-elem {
   max-width: 100%;
   width: 100%;
@@ -259,10 +275,17 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
   max-width: 90%;
   background: #fff;
 }
+.mfp-netiaic-modal-mini .netiaic-modal {
+  max-width: 600px;
+}
 .netiaic-modal-header {
   display: flex;
   justify-content: space-between;
   padding: 15px 20px;
+  border-bottom: 1px solid #b5b5b5;
+}
+.mfp-netiaic-modal-with-tabs .netiaic-modal-header {
+  border-bottom: 0;
 }
 .netiaic-modal-title {
   font-size: 1.5rem;
@@ -276,6 +299,33 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
 }
 .netiaic-modal-content {
   padding: 15px 20px;
+}
+.netiaic-modal-content .desc ol {
+  counter-reset: my-awesome-counter;
+  list-style: none;
+  padding-left: 40px;
+  margin: 0;
+}
+.netiaic-modal-content .desc li {
+  margin: 0 0 0.5rem 0;
+  counter-increment: my-awesome-counter;
+  position: relative;
+}
+.netiaic-modal-content .desc li::before {
+  content: counter(my-awesome-counter);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: bold;
+  position: absolute;
+  --size: 24px;
+  left: calc(-1 * var(--size) - 10px);
+  line-height: var(--size);
+  width: var(--size);
+  height: var(--size);
+  top: 0;
+  background: #424242;
+  border-radius: 4px;
+  text-align: center;
 }
 .netiaic-modal .modal-tabs {
   margin: 0;
@@ -355,6 +405,24 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
 .netiaic-modal .template-item .actions {
   text-align: right;
 }
+.netiaic-modal .netiaic-save-tpl-title-section {
+  display: flex;
+  align-items: center;
+}
+.netiaic-modal .netiaic-save-tpl-title-section .label {
+  float: none;
+  width: auto;
+  text-align: left;
+  width: 50px;
+}
+.netiaic-modal .netiaic-save-tpl-title-section .content {
+  margin: 0;
+  width: calc(100% - 50px);
+}
+.netiaic-modal .netiaic-save-tpl-title-section .crm-form-elem,
+.netiaic-modal .netiaic-save-tpl-title-section .form-text {
+  width: 100%;
+}
 .netiaic-command {
   display: none;
   position: absolute;
@@ -404,7 +472,6 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
   height: calc(1em * 1.5 * 2 + 10px);
   line-height: 1.5;
   resize: none;
-  transition: height .3s;
 }
 .netiaic-container .netiaic-prompt-content-textarea.is-expanded {
   height: calc(1em * 1.5 * 7 + 10px);

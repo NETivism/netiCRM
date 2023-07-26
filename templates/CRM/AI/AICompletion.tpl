@@ -31,6 +31,14 @@
 <script type="text/javascript">
 window.AICompletion = {
   language: "{/literal}{$tsLocale}{literal}",
+  basePath: "{/literal}{$ai_completion_url_basepath}{literal}",
+  endpoint: {
+    getTemplateList: "{/literal}{$ai_completion_url_basepath}{literal}civicrm/ajax/ai/get-template-list",
+    getTemplate: "{/literal}{$ai_completion_url_basepath}{literal}civicrm/ajax/ai/get-template",
+    setTemplate: "{/literal}{$ai_completion_url_basepath}{literal}civicrm/ajax/ai/set-template",
+    chat: "{/literal}{$ai_completion_url_basepath}{literal}civicrm/ajax/ai/chat",
+    setShare: "{/literal}{$ai_completion_url_basepath}{literal}civicrm/ajax/ai/set-share",
+  },
   translation: {
     "Copy": "{/literal}{ts}Copy{/ts}{literal}",
     "Save": "{/literal}{ts}Save{/ts}{literal}",
