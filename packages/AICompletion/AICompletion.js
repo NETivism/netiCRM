@@ -940,7 +940,6 @@
 
       defaultData = this.getDefaultData();
       endpoint = window.AICompletion.endpoint;
-      console.log(endpoint);
       AICompletion.prototype.container = $container;
 
       // Get translation string comparison table

@@ -216,5 +216,5 @@ function reloadWindow( tempId ) {
 	<div class="nme-setting-panels-trigger" data-tooltip data-tooltip-placement="w"><i
  class="zmdi zmdi-settings"></i></div>
 </div>
-{include file="CRM/common/sidePanel.tpl" type="inline" headerSelector="#nme-setting-panels-header" contentSelector="#nme-setting-panels-content" containerClass="nme-setting-panels" opened="true" triggerText="AI Copywriter" width="500px" fullscreen="true"}
+{include file="CRM/common/sidePanel.tpl" type="inline" headerSelector="#nme-setting-panels-header" contentSelector="#nme-setting-panels-content" containerClass="nme-setting-panels" opened="true" triggerText="AI Copywriter" width="500px" fullscreen="true" triggerIcon="zmdi-memory"}
 {/if}
