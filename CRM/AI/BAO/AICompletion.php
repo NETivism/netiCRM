@@ -541,4 +541,27 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
     }
     return $default;
   }
+
+  public static function getSharedTemplate($component) {
+    global $tsLocale;
+    $smarty = CRM_Core_Smarty::singleton();
+    $enabledComponents = CRM_Core_Component::getEnabledComponents();
+
+    $suffix = '-1';
+    if ($tsLocale !== CRM_Core_Config::SYSTEM_LANG) {
+      $locale = '.'.$tsLocale;
+    }
+    if (!isset($enabledComponents[$component])) {
+      $component = 'Activity';
+    }
+    $path = 'CRM/AI/shared/'.$component.$suffix.$locale.'.tpl';
+    $shared = $smarty->fetch($path);
+    $verified = json_decode($shared);
+    if (!$verified) {
+      // fallback to non-locale template
+      $path = 'CRM/AI/shared/'.$component.$suffix.'.tpl';
+      $shared = $smarty->fetch($path);
+    }
+    return $shared;
+  }
 }
