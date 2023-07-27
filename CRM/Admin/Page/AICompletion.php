@@ -13,6 +13,13 @@ class CRM_Admin_Page_AICompletion extends CRM_Core_Page {
   static $_links = NULL;
 
   /**
+   * Database uniq id
+   *
+   * @var int
+   */
+  public $_id;
+
+  /**
    * constants for static parameters of the pager
    */
   const ROWCOUNT = 20;
@@ -41,6 +48,7 @@ class CRM_Admin_Page_AICompletion extends CRM_Core_Page {
    */
   function run() {
     $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE, 'browse');
+    $this->assign('action', $this->_action);
     if ($this->_action & CRM_Core_Action::VIEW) {
       $this->view();
     }
@@ -107,6 +115,8 @@ SELECT
     component,
     ai_role,
     tone_style,
+    is_template,
+    template_title,
     context
 FROM
     civicrm_aicompletion
@@ -140,7 +150,13 @@ DESC
         $content = $dao->context;
       }
 
-      $action = CRM_Core_Action::formLink($links, NULL, array('id' => $dao->id));
+      $itemLinks = $links;
+      $editTemplateLink = array();
+      if ($dao->is_template) {
+        $editTemplateLink[CRM_Core_Action::UPDATE] = $itemLinks[CRM_Core_Action::UPDATE];
+      }
+      $action = CRM_Core_Action::formLink($itemLinks, NULL, array('id' => $dao->id));
+      $editTemplateAction = CRM_Core_Action::formLink($editTemplateLink, NULL, array('id' => $dao->id));
       $rows[] = array(
         'id' => $dao->id,
         'contact_id' => $dao->contact_id,
@@ -150,6 +166,9 @@ DESC
         'ai_role' => $dao->ai_role != 'null' ? $dao->ai_role : '',
         'tone_style' => $dao->tone_style != 'null' ? $dao->tone_style : '',
         'content' => str_replace("\n", '', $content),
+        'template_title' => !empty($dao->template_title) ? $dao->template_title : '',
+        'is_template' => $dao->is_template,
+        'edit_template_link' => $editTemplateAction,
         'action' => $action,
       );
     }
@@ -158,11 +177,23 @@ DESC
   }
 
   function view() {
-
+    $this->edit();
   }
 
   function edit() {
+    $this->_id = CRM_Utils_Request::retrieve('id', 'Positive', $this);
+    $controller = new CRM_Core_Controller_Simple('CRM_AI_Form_AICompletion', ts('AI Copywriter'), $this->_action);
+    $controller->setEmbedded(TRUE);
 
+    // set the userContext stack
+    $session = CRM_Core_Session::singleton();
+    $url = CRM_Utils_System::url('civicrm/admin/aicompletion', 'reset=1');
+    $session->pushUserContext($url);
+
+    $controller->reset();
+    $controller->set('id', $this->_id);
+    $controller->process();
+    $controller->run();
   }
 
   /**
@@ -174,6 +205,12 @@ DESC
   static function &links() {
     if (!(self::$_links)) {
       self::$_links = array(
+        CRM_Core_Action::VIEW=> array(
+          'name' => ts('View'),
+          'url' => 'civicrm/admin/aicompletion',
+          'qs' => 'action=view&reset=1&id=%%id%%',
+          'title' => ts('Edit Note'),
+        ),
         CRM_Core_Action::UPDATE => array(
           'name' => ts('Edit'),
           'url' => 'civicrm/admin/aicompletion',

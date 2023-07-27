@@ -1,3 +1,8 @@
+{if $action eq 4 or $action eq 2}{* when action is view or update *}
+
+{include file="CRM/AI/Form/AICompletion.tpl"}
+
+{else}{* when action is browse *}
 
 {if !$show_reset}
 <div class="row">
@@ -42,10 +47,10 @@
   {if $show_reset}
     <a class="button" href="{crmURL p="civicrm/admin/aicompletion" q="reset=1"}"><i class="zmdi zmdi-undo"></i>{ts}Reset{/ts}</a>
   {else}
-    <a class="button" href="{crmURL p="civicrm/admin/aicompletion" q="reset=1&is_shared=1"}">
+    <a class="button" href="{crmURL p="civicrm/admin/aicompletion" q="reset=1&is_template=1"}">
       <i class="zmdi zmdi-filter-list"></i>{ts}Filter{/ts}: {ts}Template List{/ts}
     </a>
-    <a class="button" href="{crmURL p="civicrm/admin/aicompletion" q="reset=1&is_template=1"}">
+    <a class="button" href="{crmURL p="civicrm/admin/aicompletion" q="reset=1&is_shared=1"}">
       <i class="zmdi zmdi-filter-list"></i>{ts}Filter{/ts}: {ts}Recommend a Template to Other Organizations{/ts}
     </a>
   {/if}
@@ -62,6 +67,7 @@
   <th class="crm-aicomplete-items-airole">{ts}Copywriting Role{/ts}</th>
   <th class="crm-aicomplete-items-tonestyle">{ts}Tone Style{/ts}</th>
   <th class="crm-aicomplete-items-content overflow-safe">{ts}Content{/ts}</th>
+  <th class="crm-aicomplete-items-template">{ts}Template Title{/ts}</th>
   <th class="crm-aicomplete-items-action">{ts}Operation{/ts}</th>
 </tr>
 </thead>
@@ -101,8 +107,20 @@
       {ts}(n/a){/ts}
     {/if}
   </td>
-  <td class="crm-aicomplete-items-content overflow-safe">
+  <td class="crm-aicomplete-items-content">
     {$row.content}
+  </td>
+  <td class="crm-aicomplete-items-template_title">
+    {if $row.template_title}
+      {$row.template_title}
+      {if $row.is_template}
+        ({ts}Is Active{/ts})
+      {else}
+        ({ts}Inactive {/ts})
+      {/if}
+    {else}
+      {ts}(n/a){/ts}
+    {/if}
   </td>
   <td class="crm-aicomplete-items-operation">{$row.action}</td>
 </tr>
@@ -110,3 +128,5 @@
 </tbody>
 </table>
 {include file="CRM/common/pager.tpl" location="bottom"}
+
+{/if}{* end action condition *}
