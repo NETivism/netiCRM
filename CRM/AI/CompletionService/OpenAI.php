@@ -195,9 +195,6 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
               CRM_AI_BAO_AICompletion::create($aiCompletionData);
               echo 'data: '.json_encode($responseData)."\n\n";
             }
-            if (trim($data) === 'data: [DONE]') {
-              echo 'data: [DONE]'."\n\n";
-            }
             if (!empty($decoded["choices"][0]["finish_reason"]) && $decoded["choices"][0]["finish_reason"] !== 'stop') {
               $responseData['is_finished'] = 1;
               $responseData['is_error'] = 1;
