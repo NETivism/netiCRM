@@ -217,15 +217,9 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
       $curl_errno = curl_errno($ch);
       $curl_error = curl_error($ch);  
       if ($curl_errno > 0) {
-        $responseData = array(
-          'is_error' => 1,
-          'error_type' => 'curl_error',
-          'error_no' => $curl_errno,
-          'message' => $curl_error,
-        );
+        throw new CRM_Core_Exception("Curl Error. Error Number: {$curl_errno}. Error message: {$curl_error}");
       }
       curl_close($ch);
-      return $responseData;
     }
     else {
       $this->_responseData = curl_exec($ch);
