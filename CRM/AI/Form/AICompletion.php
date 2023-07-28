@@ -22,6 +22,8 @@ class CRM_AI_Form_AICompletion extends CRM_Core_Form {
     }
     $params['id'] = $this->_id;
     CRM_Core_DAO::commonRetrieve('CRM_AI_DAO_AICompletion', $params, $this->_itemValues);
+    $details = CRM_Contact_BAO_Contact::getContactDetails($this->_itemValues['contact_id']);
+    $this->_itemValues['display_name'] = $details[0];
     $this->assign('item', $this->_itemValues);
 
     if ($this->_itemValues['template_title']) {

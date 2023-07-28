@@ -108,16 +108,12 @@
     {/if}
   </td>
   <td class="crm-aicomplete-items-content">
-    {$row.content}
+    <div><i class="zmdi zmdi-comment-alt-text"></i> {$row.content}</div>
+    <div class="description"><i class="zmdi zmdi-comments"></i> {$row.output}</div>
   </td>
   <td class="crm-aicomplete-items-template_title">
     {if $row.template_title}
       {$row.template_title}
-      {if $row.is_template}
-        ({ts}Is Active{/ts})
-      {else}
-        ({ts}Inactive {/ts})
-      {/if}
     {else}
       {ts}(n/a){/ts}
     {/if}

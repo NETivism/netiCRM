@@ -117,6 +117,7 @@ SELECT
     tone_style,
     is_template,
     template_title,
+    output_text,
     context
 FROM
     civicrm_aicompletion
@@ -149,6 +150,12 @@ DESC
       else {
         $content = $dao->context;
       }
+      if (mb_strlen($dao->output_text) > 30) {
+        $output = mb_substr($dao->output_text, 0, 30). ' ...';
+      }
+      else{
+        $output = $dao->output_text;
+      }
 
       $itemLinks = $links;
       $editTemplateLink = array();
@@ -166,6 +173,7 @@ DESC
         'ai_role' => $dao->ai_role != 'null' ? $dao->ai_role : '',
         'tone_style' => $dao->tone_style != 'null' ? $dao->tone_style : '',
         'content' => str_replace("\n", '', $content),
+        'output' => str_replace("\n", '', $output),
         'template_title' => !empty($dao->template_title) ? $dao->template_title : '',
         'is_template' => $dao->is_template,
         'edit_template_link' => $editTemplateAction,

@@ -27,7 +27,9 @@
     <table class="crm-info-panel">
       <tr>
         <td class="label">{ts}Created by{/ts}</td>
-        <td>{$item.contact_id}</td>
+        <td>
+          <a href="{crmURL a=true p='civicrm/contact/view' q="reset=1&cid=`$item.contact_id`"}">{$item.display_name}</a>
+        </td>
       </tr>
       <tr>
         <td class="label">{ts}Created Date{/ts}</td>
@@ -51,7 +53,13 @@
       </tr>
       <tr>
         <td class="label">{ts}Result{/ts}</td>
-        <td>{$item.output_text|nl2br}</td>
+        <td>
+          <textarea class="huge" data="copy-text">{$item.output_text}</textarea>
+          {include file="CRM/common/copyText.tpl"}
+          <div class="description font-red">
+            <i class="zmdi zmdi-info-outline"></i>{ts}Remember to verify AI-generated text before using it.{/ts}<br>
+          </div>
+        </td>
       </tr>
       {if $item.is_template}
       <tr>
@@ -61,7 +69,7 @@
       {/if}
     </table>
     <div class="crm-submit-buttons">
-      <input type="button" name='cancel' value="{ts}Done{/ts}" onclick="location.href='{crmURL p='civicrm/contact/view' q='action=browse&selectedChild=note'}';"/>
+      <input type="button" name='cancel' value="{ts}Done{/ts}" onclick="location.href='{crmURL p='civicrm/admin/aicompletion' q='reset=1'}';"/>
     </div>
   </div>
 </fieldset>
