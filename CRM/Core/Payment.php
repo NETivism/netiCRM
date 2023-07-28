@@ -269,27 +269,5 @@ abstract class CRM_Core_Payment {
     $expiredDate = date('Y-m-d', $baseTime + 86400 * $plusDay);
     return strtotime($expiredDate.' 23:59:59'); // timestamp
   }
-
-  static function copyContribution(&$contrib, $rid, $trxn_id) {
-    if(is_object($contrib)){
-      $c = clone $contrib;
-      unset($c->id);
-      unset($c->receive_date);
-      unset($c->cancel_date);
-      unset($c->cancel_reason);
-      unset($c->invoice_id);
-      unset($c->receipt_id);
-      unset($c->receipt_date);
-      $c->contribution_status_id = 2;
-      $c->trxn_id = $trxn_id;
-      $c->created_date = date('YmdHis');
-      $transaction = new CRM_Core_Transaction('READ COMMITTED');
-      $c->save();
-      $transaction->commit();
-      CRM_Contribute_BAO_ContributionRecur::syncContribute($rid, $c->id);
-      return $c;
-    }
-    return FALSE;
-  }
 }
 
