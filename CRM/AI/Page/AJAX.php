@@ -5,7 +5,7 @@
  */
 class CRM_AI_Page_AJAX {
 
-  function chat() {
+  public static function chat() {
     $maxlength = 2000;
     $toneStyle = $aiRole = $context = null;
     $data = array();
@@ -167,7 +167,7 @@ class CRM_AI_Page_AJAX {
     }
   }
 
-  function getTemplateList() {
+  public static function getTemplateList() {
     $data = array();
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] == 'application/json') {
       $jsonString = file_get_contents('php://input');
@@ -215,7 +215,7 @@ class CRM_AI_Page_AJAX {
     }
   }
 
-  function getTemplate() {
+  public static function getTemplate() {
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] == 'application/json') {
       $jsonString = file_get_contents('php://input');
       $jsondata = json_decode($jsonString, true);
@@ -247,7 +247,7 @@ class CRM_AI_Page_AJAX {
     }
   }
 
-  function setTemplate() {
+  public static function setTemplate() {
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] == 'application/json') {
       $jsonString = file_get_contents('php://input');
       $jsondata = json_decode($jsonString, true);
@@ -326,7 +326,7 @@ class CRM_AI_Page_AJAX {
     }
   }
 
-  function setShare() {
+  public static function setShare() {
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] == 'application/json') {
       $jsonString = file_get_contents('php://input');
       $jsondata = json_decode($jsonString, true);
@@ -370,7 +370,7 @@ class CRM_AI_Page_AJAX {
    *
    * @param mixed $error The error message or object that needs to be sent as a response.
    */
-  function responseError($error) {
+  public static function responseError($error) {
     http_response_code(400);
     header('Content-Type: application/json; charset=utf-8');
     echo json_encode($error);
