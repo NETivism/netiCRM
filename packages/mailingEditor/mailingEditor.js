@@ -1629,7 +1629,7 @@
       }
 
       // Prevent users from pressing enter to send the #upload form.
-      $("#Upload").off("keypress").on("keypress", "input, textarea", function(event){
+      $("#Upload").off("keypress").on("keypress", "input", function(event){
         let code = event.keyCode || event.which;
 
         if (code == 13) {
@@ -3038,6 +3038,7 @@
         $targetContents.removeClass(ACTIVE_CLASS);
         $thisTabLink.addClass(ACTIVE_CLASS);
         $targetTabContent.addClass(ACTIVE_CLASS);
+        $(_panels).attr('data-tab-active-id', targetID);
       });
 
       // Switch the default panel to block panel if mail data field has value

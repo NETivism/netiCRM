@@ -96,7 +96,7 @@ class CRM_Event_Form_Registration_ThankYou extends CRM_Event_Form_Registration {
       }
       $this->assign('transaction_id', $transactionId);
       if (!empty($this->_params[0]['currencyID'])) {
-        $this->assign('currencyID', $this->_params[0]['currencyID']);
+        $this->assign('currency_id', $this->_params[0]['currencyID']);
       }
       $this->assign('product_id', ts('Event').'-'.$this->_eventId);
       $this->assign('product_name', $this->_values['event']['title']);

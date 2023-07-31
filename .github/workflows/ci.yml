@@ -145,6 +145,8 @@ jobs:
         run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit api/v3/GetOptionsTest.php"
       - name: API Test - Phone
         run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit --group CItesting api/v3/PhoneTest.php"
+      - name: API Test - Participant
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit --group CItesting api/v3/ParticipantTest.php"
       - name: API Test - Activity
         run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit --group CItesting api/v3/ActivityTest.php"
       - name: API Test - Membership
@@ -240,6 +242,8 @@ jobs:
         run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/phpunit && phpunit api/v3/GetOptionsTest.php"
       - name: API Test - Phone
         run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/phpunit && phpunit --group CItesting api/v3/PhoneTest.php"
+      - name: API Test - Participant
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/phpunit && phpunit --group CItesting api/v3/ParticipantTest.php"
       - name: API Test - Activity
         run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/phpunit && phpunit --group CItesting api/v3/ActivityTest.php"
       - name: API Test - Membership

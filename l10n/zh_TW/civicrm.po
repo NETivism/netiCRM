@@ -2,7 +2,7 @@
 # Translators:
 # CC Chu <poliphilonet@gmail.com>, 2020-2023
 # Chang Shu-huai <junsuwhy@gmail.com>, 2016-2023
-# Charles Chuang, 2022
+# Charles Chuang, 2022-2023
 # CHUNLIAN WU <susanna@netivism.com.tw>, 2017
 # Fuyuan Cheng <gloomcheng@gmail.com>, 2013-2015
 # Harry Lin <harry@netivism.com.tw>, 2023
@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: 馮 佳今, 2022-2023\n"
+"Last-Translator: jimyhuang <jimmy@netivism.com.tw>, 2013,2015-2023\n"
 "Language-Team: Chinese (Taiwan) (http://app.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34096,7 +34096,7 @@ msgid ""
 "and End Event settings are ignored for Administrator statuses. EXAMPLE: This"
 " setting can be useful for special case statuses like 'Non-expiring', "
 "'Barred' or 'Expelled', etc."
-msgstr "如果此狀態只讓管理工作人員使用，請勾選此框。如果已勾選，此狀態不會自動被會員指派。當新增或編輯會籍記錄，它會被指派到一個聯絡人會員籍，透過勾選<strong>狀態撤銷</strong>標誌。管理者狀態的開始及結束活動設定會被忽略。例如：此設定可以被用於特別個案狀態如「非過期」、「禁止」或「開除」等。"
+msgstr "如果此狀態只讓管理工作人員使用，請勾選此框。若勾選，系統不會自動指派此狀態。當新增或編輯會籍記錄，可勾選「<strong>是否覆蓋掉會員狀態？</strong>」，就可以將此狀態指派到聯絡人的會籍。此狀態的開始及結束活動設定會被忽略。例如：此設定可以被用於特別個案狀態如「非過期」、「禁止」或「開除」等。"
 
 #: templates/CRM/Member/Form/MembershipStatus.tpl
 msgid ""
@@ -49263,3 +49263,217 @@ msgstr "匯出Excel檔案加密設定選項變更"
 
 msgid "Export excel file encryption settings password Changed"
 msgstr "匯出Excel檔案加密設定密碼變更"
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid "AI Copywriter"
+msgstr "AI文案小幫手"
+
+msgid "AI-generated Text Templates"
+msgstr "AI生成文字的設定範本"
+
+msgid "Community Recommendations"
+msgstr "其他組織推薦範本"
+
+msgid "Copywriting Role"
+msgstr "文案角色"
+
+msgid ""
+"Due to the above, the results of your sharing will not appear immediately. "
+"We will schedule periodic updates and publications."
+msgstr "因應上述，您分享的結果不會立即出現 ，我們將定期排程更新發布"
+
+msgid ""
+"Once published, you can view your shared template in the 'Community "
+"Recommended' templates, which will also be marked with your organization's "
+"name."
+msgstr "一旦發布後，您可以看到「其他組織推薦範本」的範本中，看到您分享的範本，亦會標示您所屬的組織名稱"
+
+msgid ""
+"Once saved as a shared template, you can reuse this template for editing. "
+"Please enter a template title to identify the purpose of the template. If "
+"you need to edit a shared template, please go to the template management "
+"interface to edit."
+msgstr "儲存為共用範本後，可以重複使用此範本進行編輯。請輸入範本標題以利辨識範本用途。如需編輯共用範本請至範本管理介面進行編輯。"
+
+msgid "Recommend"
+msgstr "推薦"
+
+msgid "Recommend a Template to Other Organizations"
+msgstr "推薦範本給其他組織"
+
+msgid "Recommended"
+msgstr "已推薦"
+
+msgid "Remember to verify AI-generated text before using it."
+msgstr "小提醒！AI 生成的文字需要詳加檢核再使用。"
+
+msgid "Save prompt as shared template"
+msgstr "儲存提示為共用範本"
+
+msgid "Saved Templates"
+msgstr "儲存範本"
+
+msgid ""
+"Thank you for being willing to share your templates with the community, "
+"thereby benefiting all netiCRM users."
+msgstr "感謝您願意將範本分享於社群，讓 netiCRM 用戶共好。"
+
+msgid ""
+"The netiCRM team will ensure the prompt does not contain any personal data "
+"and test its function to guarantee the privacy safety for you and other "
+"organizations."
+msgstr "netiCRM 團隊會確定提示詞沒有包含個資，測試提示詞作用，以確保您和其他組織的隱私安全。"
+
+msgid "Tone Style"
+msgstr "語氣風格"
+
+msgid "Try Again"
+msgstr "再試一次"
+
+msgid ""
+"Upon clicking 'Recommend', we'll proceed with the following verification "
+"steps:"
+msgstr "點擊「推薦」後，我們會用以下步驟進行確認："
+
+msgid ""
+"Warning! Applying this template will clear your current settings. Proceed "
+"with the application?"
+msgstr "警告！套用此範本將會清除現有的設定。確定要繼續進行嗎？"
+
+msgid ""
+"Hi, this is netiCRM copywriting helper, please be careful not to enter "
+"personal information or other confidential information."
+msgstr "Hi, 這是netiCRM文案小幫手，請注意不要輸入個人資訊或其他機密資料。"
+
+msgid "Use default template"
+msgstr "使用預設範本"
+
+msgid "Use other templates"
+msgstr "使用其它範本"
+
+msgid ""
+"Please enter or select the role you want AI to represent (e.g., fundraiser)."
+msgstr "請輸入或選擇希望AI代表的角色（ex. 募款人員）"
+
+msgid "Please enter or select the desired writing style (e.g., casual)."
+msgstr "請輸入或選擇希望的文案風格（ex. 輕鬆的）"
+
+msgid "Please enter the %1 copy you would like AI to generate."
+msgstr "請輸入想請AI生成的%1文案"
+
+msgid "Click to insert organization intro."
+msgstr "點擊以插入組織簡介"
+
+msgid ""
+"Your usage limit is <span class=\"usage-max\">%1</span> times, currently "
+"used <span class=\"usage-used\">%2</span> times."
+msgstr "您的使用額度為 <span class=\"usage-max\">1% </span> 次，目前已使用 <span class=\"usage-used\">2% </span> 次。"
+
+msgid ""
+"Establish an introduction for your organization so that when later "
+"generating text using AI, it can be swiftly integrated, enabling the AI to "
+"grasp the context of your organization."
+msgstr "建立您的組織簡介，以便在稍後使用AI生成文案時，它可以迅速地融入，使AI能夠理解您組織的背景情境。"
+
+msgid "Suggested word count: %1 words."
+msgstr "建議字數 %1 字。"
+
+msgid ""
+"The Smiling Elderly Foundation, a non-profit organization based in Taiwan, "
+"is committed to enhancing the quality of life for seniors. We offer "
+"thoughtful care, support, and organize welfare activities, in addition to "
+"providing medical assistance. Additionally, we are staunch advocates for the"
+" rights of the elderly. Our objective is to ensure that seniors feel the "
+"warmth, respect, and appreciation of society."
+msgstr "微笑老人基金會是一個位於台灣的非營利組織，致力於提升老年人的生活品質。我們提供貼心的照護、支援，並組織福利活動，以及提供醫療援助。此外，我們也是老年人權益的堅定倡導者。我們的目標是確保老年人能感受到社會的溫暖、尊重和賞識。"
+
+msgid "Organization intro"
+msgstr "組織簡介"
+
+#: civicrm_backer_autoimport.install
+msgid "Link URL"
+msgstr "連結網址"
+
+msgid "Link Label"
+msgstr "連結名稱"
+
+#: templates/CRM/Contact/Form/Task/RemoveFromGroup.tpl
+msgid "The operation of removing contacts from the group cannot be undone."
+msgstr "將聯絡人移出群組操作無法復原"
+
+#: templates/CRM/Custom/Form/Field.tpl
+msgid ""
+"Please be aware that half-width parentheses '(' or ')' should not be used in"
+" the field name. If you need to use parentheses, please use the full-width "
+"versions '（' or '）'."
+msgstr "請注意，欄位名稱不應使用半形括號「(」和「)」，如需使用括號，請改用全形括號「（」和「）」"
+
+msgid ""
+"When the recurring contribution is triggered, which contribution do you want"
+" to copy?"
+msgstr "定期捐款觸發時，哪一種捐款儲存的資訊應該被複製到新的一筆定期？"
+
+msgid "Copied Contribution Type Source"
+msgstr "最新扣款的費用類型來源"
+
+msgid "From source contribution."
+msgstr "沿用被複製的捐款的費用類型"
+
+msgid "From contribution page setting."
+msgstr "來自募款頁目前的費用類型設定"
+
+msgid ""
+"When the recurring contribution is triggered, which source of contribution "
+"type do you want to copy?"
+msgstr "定期捐款觸發時，新的一筆扣款的費用類型來源為何？"
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid ""
+"Our service is currently busy, please try again later. If needed, please "
+"contact our customer service team."
+msgstr "我們目前的服務正在忙碌中，請您稍後再嘗試。如有需要，請您聯繫我們的客服人員。"
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid ""
+"We're sorry, our service is currently experiencing some issues. Please try "
+"again later. If the problem persists, please contact our customer service "
+"team."
+msgstr "很抱歉，我們的服務目前遇到一些問題，請稍後再試。如果問題持續存在，請聯絡我們的客服人員。"
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid ""
+"Maximum character limit for this field is <span class=\"limit-"
+"max\">1500</span> characters, and the current character count is <span "
+"class=\"current\">0</span>."
+msgstr "欄位限制字數上限為 <span class=\"limit-max\">1500</span> 字， 目前字數為 <span class=\"current\">0</span> 字。"
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid "There are currently no templates available."
+msgstr "目前沒有可用的範本。"
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid "Loading..."
+msgstr "載入中……"
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid "Content Summary"
+msgstr "內容概要"
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid "Apply Template"
+msgstr "套用範本"
+
+#: templates/CRM/common/sidePanel.tpl
+msgid "Expand"
+msgstr "展開"
+
+#: CRM/AI/Page/AJAX.php
+msgid ""
+"You are an %1 in %3 who uses %4 and is skilled at writing %2 copywriting."
+msgstr "你是一個在%3，使用%4語言的%1，很會撰寫%2語氣的文案。"
+
+msgid "You are using %1 as your language."
+msgstr "你使用%1作為語言。"
+
+msgid "Chinese (Taiwan)"
+msgstr "繁體中文（台灣）"

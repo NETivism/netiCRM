@@ -149,9 +149,13 @@ class api_v3_ParticipantTest extends CiviUnitTestCase {
     $params = $this->_params;
     $params['custom_' . $ids['custom_field_id']] = "custom string";
     $result = civicrm_api($this->_entity, 'create', $params);
-
     $this->docMakerRequest($params, __FILE__, __FUNCTION__);
-    $get = civicrm_api('participant', 'get', $params);
+    $get_params = array(
+      'id' => $result['id'],
+      'version' => $this->_apiversion,
+      'return' => 'id,participant_register_date,event_id',
+    );
+    $get = civicrm_api($this->_entity, 'get', $get_params);
     $this->assertAPISuccess($get, 'In line ' . __LINE__);
     $this->docMakerResponse($get, __FILE__, __FUNCTION__);
   }

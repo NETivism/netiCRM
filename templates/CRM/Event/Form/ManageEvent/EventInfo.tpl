@@ -193,3 +193,22 @@ function reloadWindow( tempId ) {
 </script>
 {/literal}
 
+{if $config->nextEnabled && !isset($smarty.get.snippet)}
+<div class="nme-setting-panels">
+  <div class="nme-setting-panels-inner">
+    <div class="nme-setting-panels-content" id="nme-setting-panels-content">
+      <div id="nme-aicompletion" class="nme-aicompletion nme-setting-panel is-active">
+        <div class="nme-setting-panel-inner">
+          <h3 class="nme-setting-panel-title">{ts}AI Copywriter{/ts}</h3>
+          <div class="nme-setting-panel-content">
+            {include file="CRM/AI/AICompletion.tpl"}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+	<div class="nme-setting-panels-trigger" data-tooltip data-tooltip-placement="w"><i
+ class="zmdi zmdi-settings"></i></div>
+</div>
+{include file="CRM/common/sidePanel.tpl" type="inline" contentSelector="#nme-setting-panels-content" containerClass="nme-setting-panels" opened="true" triggerText="AI Copywriter" width="500px" fullscreen="true" triggerIcon="packages/AICompletion/images/icon--magic--white.svg"}
+{/if}

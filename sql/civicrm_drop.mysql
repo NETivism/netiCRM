@@ -106,6 +106,7 @@ DROP TABLE IF EXISTS civicrm_custom_field;
 DROP TABLE IF EXISTS civicrm_custom_group;
 DROP TABLE IF EXISTS civicrm_country;
 DROP TABLE IF EXISTS civicrm_cache;
+DROP TABLE IF EXISTS civicrm_aicompletion;
 DROP TABLE IF EXISTS civicrm_entity_batch;
 DROP TABLE IF EXISTS civicrm_batch;
 DROP TABLE IF EXISTS civicrm_price_set_entity;
