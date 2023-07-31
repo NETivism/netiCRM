@@ -129,7 +129,7 @@ test.describe.serial('Import Records', () => {
         await test.step('Check Membership Types exists', async () => {
             element = '.crm-membership-type-type_name';
             await page.goto('civicrm/admin/member/membershipType?reset=1');
-            await expect(page.getByRole('cell', { name: 'General' })).toHaveCount(1);
+            await expect(page.getByRole('cell', { name: 'typeForTest' })).toHaveCount(1);
         });
     });
 
