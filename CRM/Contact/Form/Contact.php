@@ -290,6 +290,7 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
       $this->_blocks = CRM_Core_BAO_Preferences::valueOptions('contact_edit_options', TRUE, NULL,
         FALSE, 'name', TRUE, 'AND v.filter = 1'
       );
+      unset($this->_blocks['OpenID']);
       $this->set('blocks', $this->_blocks);
     }
     $this->assign('blocks', $this->_blocks);

@@ -286,7 +286,7 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
    * @param int $aiCompletionID The ID of the AI Completion.
    * @return array The retrieved AI Completion data array.
    */
-  private function retrieveAICompletionDataArray($aiCompletionID) {
+  private static function retrieveAICompletionDataArray($aiCompletionID) {
     if (empty($aiCompletionID)) {
       throw new CRM_Core_Exception("\$aiCompletionID has no value.");
     }
