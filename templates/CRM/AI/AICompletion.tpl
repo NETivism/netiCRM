@@ -73,6 +73,7 @@ window.AICompletion = {
     "Maximum character limit for this field is <span class=\"limit-max\">1500</span> characters, and the current character count is <span class=\"current\">0</span>.": "{/literal}{ts}Maximum character limit for this field is <span class=\"limit-max\">1500</span> characters, and the current character count is <span class=\"current\">0</span>.{/ts}{literal}",
     "We're sorry, our service is currently experiencing some issues. Please try again later. If the problem persists, please contact our customer service team.": "{/literal}{ts}We're sorry, our service is currently experiencing some issues. Please try again later. If the problem persists, please contact our customer service team.{/ts}{literal}",
     "Our service is currently busy, please try again later. If needed, please contact our customer service team.": "{/literal}{ts}Our service is currently busy, please try again later. If needed, please contact our customer service team.{/ts}{literal}",
+    "Please enter the %1 copy you would like AI to generate.": "{/literal}{ts 1=$component_locale}Please enter the %1 copy you would like AI to generate.{/ts}{literal}",
   }
 };
 {/literal}window.AICompletion.default = {$ai_completion_default};{literal}

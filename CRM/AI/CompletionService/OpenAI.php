@@ -122,6 +122,7 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
     curl_setopt($ch, CURLOPT_POST, true);
     curl_setopt($ch, CURLOPT_POSTFIELDS, $this->_postData);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 30);
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
       'Content-Type: application/json',
       'Authorization: Bearer ' . $this->_apiKey,
@@ -149,17 +150,20 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
 
           }
           elseif ($decoded['error']['message'] != "") {
+            CRM_Core_Error::debug_log_message($decoded['error']['message']);
             // error handler
-            if (strpos($decoded['error']['message'], "Rate limit reached") === 0) {
-            }
-            if (strpos($decoded['error']['message'], "Your access was terminated") === 0) {
-            }
-            if (strpos($decoded['error']['message'], "You didn't provide an API key") === 0) {
-            }
-            if (strpos($decoded['error']['message'], "You exceeded your current quota") === 0) {
-            }
-            if (strpos($decoded['error']['message'], "That model is currently overloaded") === 0) {
-            }
+            // some error message for $decoded['error']['message'] example:
+            // "Rate limit reached"
+            // "Your access was terminated"
+            // "You didn't provide an API key"
+            // "You exceeded your current quota"
+            // "That model is currently overloaded"
+            echo 'data: '.json_encode(
+              array(
+                'is_error' => 1,
+                'message' => $decoded['error']['message'],
+              )
+            );
           }
           else {
             if (trim($data) != "data: [DONE]" && isset($decoded["choices"][0]["delta"]["content"])) {
@@ -191,9 +195,6 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
               CRM_AI_BAO_AICompletion::create($aiCompletionData);
               echo 'data: '.json_encode($responseData)."\n\n";
             }
-            if (trim($data) === 'data: [DONE]') {
-              echo 'data: [DONE]'."\n\n";
-            }
             if (!empty($decoded["choices"][0]["finish_reason"]) && $decoded["choices"][0]["finish_reason"] !== 'stop') {
               $responseData['is_finished'] = 1;
               $responseData['is_error'] = 1;
@@ -211,14 +212,25 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
       curl_setopt($ch, CURLOPT_MAXREDIRS, 3);
       curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
       curl_setopt($ch, CURLOPT_AUTOREFERER, true);
-    
+
       curl_exec($ch);
+      $curl_errno = curl_errno($ch);
+      $curl_error = curl_error($ch);  
+      if ($curl_errno > 0) {
+        $responseData = array(
+          'is_error' => 1,
+          'error_type' => 'curl_error',
+          'error_no' => $curl_errno,
+          'message' => $curl_error,
+        );
+      }
       curl_close($ch);
+      return $responseData;
     }
     else {
       $this->_responseData = curl_exec($ch);
       if(curl_errno($ch)){
-        throw new Exception(curl_error($ch));
+        throw new CRM_Core_Exception(curl_error($ch));
       }
       curl_close($ch);
       // Format the response and return it
