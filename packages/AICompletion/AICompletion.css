@@ -19,6 +19,7 @@
     transparent
   );
   --shine-transition: all 0.65s ease-in-out;
+  --skeleton-width: 450px;
 }
 input[disabled],
 button[disabled],
@@ -543,6 +544,46 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
 }
 .nsp-container.nme-setting-panels .nsp-content .nme-setting-panel:not(#nme-aicompletion) {
   padding: 20px 20px 60px 20px;
+}
+
+@keyframes skeleton-animation {
+  0% {
+    background-position: calc(-1 * var(--skeleton-width)) 0;
+  }
+  100% {
+    background-position: var(--skeleton-width) 0;
+  }
+}
+.netiaic-container:not(.is-initialized) .netiaic-chat .msg-avatar,
+.netiaic-container:not(.is-initialized) .netiaic-chat .msg-content,
+.netiaic-container:not(.is-initialized) .netiaic-use-tpl > li,
+.netiaic-container:not(.is-initialized) .crm-section,
+.netiaic-container:not(.is-initialized) .netiaic-form-submit {
+  position: relative;
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  animation-name: skeleton-animation;
+  animation-timing-function: linear;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background: linear-gradient(to right, #ddd 8%, #ccc 18%, #ddd 33%);
+  background-size: calc(2 * var(--skeleton-width)) var(--skeleton-width);
+}
+.netiaic-container:not(.is-initialized) .netiaic-use-tpl {
+  background: none;
+}
+.netiaic-container:not(.is-initialized) .netiaic-chat .msg-content,
+.netiaic-container:not(.is-initialized) .netiaic-form-submit {
+  text-indent: -9999px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.netiaic-container:not(.is-initialized) .netiaic-chat .msg-avatar i,
+.netiaic-container:not(.is-initialized) .netiaic-use-tpl > li > *,
+.netiaic-container:not(.is-initialized) .crm-section *,
+.netiaic-container:not(.is-initialized) .netiaic-usage-info {
+  opacity: 0;
 }
 
 /** Particular: 1200 **/
