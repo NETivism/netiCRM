@@ -505,6 +505,7 @@ WHERE  id = %1
       'autocompleteContactSearch',
       'autocompleteContactReference',
       'checksumTimeout',
+      'defaultCSP',
     );
   }
 }
