@@ -109,7 +109,7 @@
           console.error('AJAX request timed out');
         }
         else {
-          console.error('AJAX request failed:', status, error);
+          console.error('AJAX request failed:', status, error, xhr.responseJSON.message);
         }
 
         errorCallback(xhr, status, error);
@@ -334,8 +334,15 @@
           }, function(xhr, status, error) {
             if (status == 'timeout') {
               errorMessage = `<p class="error">${ts['Our service is currently busy, please try again later. If needed, please contact our customer service team.']}</p>`;
-              $(`#use-other-templates-tabs .modal-tabs-panel[data-type="${key}"]`).html(errorMessage);
             }
+            else if (xhr.responseJSON.message == 'There are currently no templates available.') {
+              errorMessage = `<p class="error">${ts['There are currently no templates available.']}</p>`;
+            }
+            else {
+              errorMessage = `<p class="error">${errorMessageDefault}</p>`;
+            }
+
+            $(`#use-other-templates-tabs .modal-tabs-panel[data-type="${key}"]`).html(errorMessage);
           });
         }
 
