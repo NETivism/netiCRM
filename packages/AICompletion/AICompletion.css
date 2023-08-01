@@ -556,6 +556,18 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
 .nsp-container.nme-setting-panels .nsp-content .nme-setting-panel:not(#nme-aicompletion) {
   padding: 20px 20px 60px 20px;
 }
+.nsp-is-opened .select2-search.select2-search--dropdown::before {
+  content: "\f158";
+  font-family: 'Material-Design-Iconic-Font';
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 5px 0 0 12px;
+}
+.nsp-is-opened .select2-container--default .select2-search--dropdown .select2-search__field {
+  background: none;
+}
+
 
 @keyframes skeleton-animation {
   0% {
