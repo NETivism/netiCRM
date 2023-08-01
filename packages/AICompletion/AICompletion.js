@@ -335,7 +335,7 @@
             if (status == 'timeout') {
               errorMessage = `<p class="error">${ts['Our service is currently busy, please try again later. If needed, please contact our customer service team.']}</p>`;
             }
-            else if (xhr.responseJSON.message == 'There are currently no templates available.') {
+            else if (xhr.responseJSON.message == 'Failed to retrieve template list.') {
               errorMessage = `<p>${ts['There are currently no templates available.']}</p>`;
             }
             else {
