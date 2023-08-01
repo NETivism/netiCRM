@@ -580,6 +580,7 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
   border-radius: 10px;
   background: linear-gradient(to right, #ddd 8%, #ccc 18%, #ddd 33%);
   background-size: calc(2 * var(--skeleton-width)) var(--skeleton-width);
+  pointer-events: none;
 }
 .netiaic-container:not(.is-initialized) .netiaic-use-tpl {
   background: none;
@@ -589,12 +590,14 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
   text-indent: -9999px;
   overflow: hidden;
   white-space: nowrap;
+  pointer-events: none;
 }
 .netiaic-container:not(.is-initialized) .netiaic-chat .msg-avatar i,
 .netiaic-container:not(.is-initialized) .netiaic-use-tpl > li > *,
 .netiaic-container:not(.is-initialized) .crm-section *,
 .netiaic-container:not(.is-initialized) .netiaic-usage-info {
   opacity: 0;
+  pointer-events: none;
 }
 
 /** Particular: 1200 **/
