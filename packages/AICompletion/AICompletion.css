@@ -40,6 +40,11 @@ button.form-submit-primary,
 .form-submit.form-submit-primary {
   background: #3F51B5;
 }
+.select2-container--default .select2-search--dropdown .select2-search__field:focus {
+  border-color: #3F51B5;
+  outline: 2px solid #C5CAE9;
+  outline-offset: 0px;
+}
 .nsp-container.is-opened {
   max-width: 1100px;
 }

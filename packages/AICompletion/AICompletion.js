@@ -706,6 +706,29 @@
         tags: true // Select2 can dynamically create new options from text input by the user in the search box
       });
 
+      // Enhance select2 search field focus styling
+      $(document).on('select2:open', function(e) {
+        let selectId = e.target.id,
+            $select2Element = $(e.target),
+            selectedOptions = $select2Element.val();
+
+        if (!selectedOptions && selectedOptions.length == 0) {
+          $(".select2-results__options[id='select2-" + selectId + "-results']").each(function(key, elem) {
+            let $elem = $(elem);
+
+            if ($elem.length) {
+              setTimeout(function() {
+                $elem.find('.select2-results__option[aria-selected=true]').attr('aria-selected', false).removeClass('select2-results__option--highlighted');
+              }, 200); // TODO: timeout is workaournd
+            }
+          });
+
+          $(".select2-search__field[aria-controls='select2-" + selectId + "-results']").each(function(key, elem) {
+            setTimeout(function() { elem.focus(); } , 300); // TODO: timeout is workaournd
+          });
+        }
+      });
+
       $promptContent.on('focus', function() {
         let inputText = $(this).val();
 
