@@ -539,6 +539,12 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
   font-size: .875rem;
   color: #757575;
 }
+.netiaic-container .netiaic-form-footer .netiaic-usage-info a {
+  color: #757575;
+}
+.netiaic-container .netiaic-form-footer .netiaic-usage-info a:hover {
+  color: #304ffe;
+}
 .nsp-container.nme-setting-panels .nsp-content {
   padding: 0;
 }
