@@ -49001,3 +49001,6 @@ msgstr ""
 
 msgid "Chinese (Taiwan)"
 msgstr ""
+
+msgid "The fee you selected has expired before submission. Please reselect the fee."
+msgstr ""
