@@ -18,7 +18,7 @@ function getPageTitle(title){
 }
 
 async function fillForm(email='test@aipvo.com', first_name='user', last_name='test', phone='0222233311', current_employer='test company', form_selector='form#Register'){
-  
+
   await expect(page.locator(form_selector)).toBeDefined();
 
   var locator = page.locator('input[name="email-5"]')
@@ -58,7 +58,7 @@ test.describe.serial('Event register page', () => {
     await test.step('Check can register', async () => {
       await page.goto('/civicrm/event/register?cid=0&reset=1&id=2');
       await expect(page).toHaveTitle(page_title);
-      await fillForm('test@kvien.com');
+      await fillForm(utils.makeid(5) + '@fakemail.com');
       await page.locator('text=/.*Continue \\>\\>.*/').click();
       await expect(page).toHaveURL(/_qf_ThankYou_display/);
       await expect(page.locator('#help .msg-register-success')).toBeDefined();
@@ -76,7 +76,7 @@ test.describe.serial('Event register page', () => {
     await test.step('Check can register', async () => {
       await page.goto('/civicrm/event/register?cid=0&reset=1&id=3');
       await expect(page).toHaveTitle(page_title);
-      await fillForm('test@ovoqnj.com');
+      await fillForm(utils.makeid(5) + '@fakemail.com');
       await page.locator('text=/.*Continue \\>\\>.*/').click();
       await expect(page).toHaveURL(/_qf_ThankYou_display/);
       await expect(page.locator('#help p')).toBeDefined();
@@ -84,7 +84,7 @@ test.describe.serial('Event register page', () => {
     await test.step('Check message hvae wait list', async () => {
       await page.goto('/civicrm/event/register?cid=0&reset=1&id=3');
       await expect(page).toHaveTitle(page_title);
-      await fillForm('test2@soossovk.com');
+      await fillForm(utils.makeid(5) + '@fakemail.com');
       await page.locator('text=/.*Continue \\>\\>.*/').click();
       await expect(page.locator('.bold')).toContainText([/候補|wait list/i]);
     });
@@ -95,7 +95,7 @@ test.describe.serial('Event register page', () => {
     await test.step('First register success', async () => {
       await page.goto('/civicrm/event/register?cid=0&reset=1&id=4');
       await expect(page).toHaveTitle(page_title);
-      await fillForm('test@vkioob.com');
+      await fillForm(utils.makeid(5) + '@fakemail.com');
       await page.locator('text=/.*Continue \\>\\>.*/').click();
       await expect(page).toHaveURL(/_qf_ThankYou_display/);
       await expect(page.locator('#help p')).toBeDefined();
@@ -106,7 +106,7 @@ test.describe.serial('Event register page', () => {
       await expect(page).toHaveTitle(page_title);
       await expect(page.locator('.messages.status')).toBeDefined();
       await expect(page.locator('#crm-container > div.messages.status')).toContainText([/額滿|full/i]);
-    });    
+    });
   });
 
   test('Unlimit participants. Need approval', async () => {
