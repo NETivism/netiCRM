@@ -743,9 +743,14 @@
       });
 
       $promptContent.on('blur', function() {
-        if ($(this).hasClass(EXPAND_CLASS)) {
-          $(this).removeClass(EXPAND_CLASS);
-          $container.removeClass(`form-${EXPAND_CLASS}`);
+        let $field = $(this);
+
+        // Add delay to expansion collapse to ensure other form elements can be clicked
+        if ($field.hasClass(EXPAND_CLASS)) {
+          setTimeout(function() {
+            $field.removeClass(EXPAND_CLASS);
+            $container.removeClass(`form-${EXPAND_CLASS}`);
+          }, 200);
         }
 
         setTimeout(function() {
