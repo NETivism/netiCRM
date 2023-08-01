@@ -336,7 +336,7 @@
               errorMessage = `<p class="error">${ts['Our service is currently busy, please try again later. If needed, please contact our customer service team.']}</p>`;
             }
             else if (xhr.responseJSON.message == 'There are currently no templates available.') {
-              errorMessage = `<p class="error">${ts['There are currently no templates available.']}</p>`;
+              errorMessage = `<p>${ts['There are currently no templates available.']}</p>`;
             }
             else {
               errorMessage = `<p class="error">${errorMessageDefault}</p>`;
