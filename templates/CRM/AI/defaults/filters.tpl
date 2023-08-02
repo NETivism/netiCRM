@@ -7,10 +7,10 @@
     "Public Relations",
   ],
   "tone": [
-    "Academic Tone",
-    "Conversational Tone",
-    "Narrative Tone",
-    "Critical Review Tone",
-    "Journalistic Tone"
+    "Academic Article",
+    "Oral Narrative",
+    "Story",
+    "Critical Review",
+    "News Report"
   ]
 }{/literal}

@@ -137,7 +137,9 @@ window.AICompletion = {
             <div class="netiaic-form-footer">
               <div class="netiaic-usage-info">
                 {* $usage added in CRM/AI/BAO/AICompletion::getDefaultTemplate *}
-                {ts 1=$usage.max 2=$usage.used}Your usage limit is <span class="usage-max">%1</span> times, currently used <span class="usage-used">%2</span> times.{/ts}
+                {capture assign=aiURL}{/capture}
+                <a href="{crmURL p='civicrm/admin/aicompletion' q='reset=1'}" target="_blank">
+                {ts 1=$usage.max 2=$usage.used}Your usage limit is <span class="usage-max">%1</span> times, currently used <span class="usage-used">%2</span> times.{/ts}</a>
               </div>
               <button type="button" class="shine-btn netiaic-form-submit">
                 <i class="zmdi zmdi-mail-send"></i>

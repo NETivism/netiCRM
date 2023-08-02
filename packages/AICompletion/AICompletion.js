@@ -109,7 +109,7 @@
           console.error('AJAX request timed out');
         }
         else {
-          console.error('AJAX request failed:', status, error);
+          console.error('AJAX request failed:', status, error, xhr.responseJSON.message);
         }
 
         errorCallback(xhr, status, error);
@@ -334,8 +334,15 @@
           }, function(xhr, status, error) {
             if (status == 'timeout') {
               errorMessage = `<p class="error">${ts['Our service is currently busy, please try again later. If needed, please contact our customer service team.']}</p>`;
-              $(`#use-other-templates-tabs .modal-tabs-panel[data-type="${key}"]`).html(errorMessage);
             }
+            else if (xhr.responseJSON.message == 'Failed to retrieve template list.') {
+              errorMessage = `<p>${ts['There are currently no templates available.']}</p>`;
+            }
+            else {
+              errorMessage = `<p class="error">${errorMessageDefault}</p>`;
+            }
+
+            $(`#use-other-templates-tabs .modal-tabs-panel[data-type="${key}"]`).html(errorMessage);
           });
         }
 
@@ -706,6 +713,29 @@
         tags: true // Select2 can dynamically create new options from text input by the user in the search box
       });
 
+      // Enhance select2 search field focus styling
+      $(document).on('select2:open', function(e) {
+        let selectId = e.target.id,
+            $select2Element = $(e.target),
+            selectedOptions = $select2Element.val();
+
+        if (!selectedOptions && selectedOptions.length == 0) {
+          $(".select2-results__options[id='select2-" + selectId + "-results']").each(function(key, elem) {
+            let $elem = $(elem);
+
+            if ($elem.length) {
+              setTimeout(function() {
+                $elem.find('.select2-results__option[aria-selected=true]').attr('aria-selected', false).removeClass('select2-results__option--highlighted');
+              }, 200); // TODO: timeout is workaournd
+            }
+          });
+
+          $(".select2-search__field[aria-controls='select2-" + selectId + "-results']").each(function(key, elem) {
+            setTimeout(function() { elem.focus(); } , 300); // TODO: timeout is workaournd
+          });
+        }
+      });
+
       $promptContent.on('focus', function() {
         let inputText = $(this).val();
 
@@ -720,9 +750,14 @@
       });
 
       $promptContent.on('blur', function() {
-        if ($(this).hasClass(EXPAND_CLASS)) {
-          $(this).removeClass(EXPAND_CLASS);
-          $container.removeClass(`form-${EXPAND_CLASS}`);
+        let $field = $(this);
+
+        // Add delay to expansion collapse to ensure other form elements can be clicked
+        if ($field.hasClass(EXPAND_CLASS)) {
+          setTimeout(function() {
+            $field.removeClass(EXPAND_CLASS);
+            $container.removeClass(`form-${EXPAND_CLASS}`);
+          }, 200);
         }
 
         setTimeout(function() {
