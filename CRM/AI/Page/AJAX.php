@@ -89,7 +89,7 @@ class CRM_AI_Page_AJAX {
         $country = $countries[$countryId];
         $language = $languages[$tsLocale];
         if ($toneStyle && $aiRole) {
-          $system_prompt = ts("Please use %4 language of %3 to play the role of %1 and help generate a %2",
+          $system_prompt = ts("Please use %4 language of %3 to play the role of %1 and help generate a %2.",
             array(1 => $aiRole, 2 => $toneStyle, 3 => $country, 4 => ts($language))
           );
           $data['prompt'] = array(
