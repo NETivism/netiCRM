@@ -48993,10 +48993,10 @@ msgid "Expand"
 msgstr ""
 
 #: CRM/AI/Page/AJAX.php
-msgid "You are an %1 in %3 who uses %4 and is skilled at writing %2 copywriting."
+msgid "Please use %4 language of %3 to play the role of %1 and help generate a %2."
 msgstr ""
 
-msgid "You are using %1 as your language."
+msgid "Please using %1 language to generate content."
 msgstr ""
 
 msgid "Chinese (Taiwan)"
