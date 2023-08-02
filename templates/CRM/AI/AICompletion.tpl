@@ -73,6 +73,7 @@ window.AICompletion = {
     "Maximum character limit for this field is <span class=\"limit-max\">1500</span> characters, and the current character count is <span class=\"current\">0</span>.": "{/literal}{ts}Maximum character limit for this field is <span class=\"limit-max\">1500</span> characters, and the current character count is <span class=\"current\">0</span>.{/ts}{literal}",
     "We're sorry, our service is currently experiencing some issues. Please try again later. If the problem persists, please contact our customer service team.": "{/literal}{ts}We're sorry, our service is currently experiencing some issues. Please try again later. If the problem persists, please contact our customer service team.{/ts}{literal}",
     "Our service is currently busy, please try again later. If needed, please contact our customer service team.": "{/literal}{ts}Our service is currently busy, please try again later. If needed, please contact our customer service team.{/ts}{literal}",
+    "Please enter the %1 copy you would like AI to generate.": "{/literal}{ts 1=$component_locale}Please enter the %1 copy you would like AI to generate.{/ts}{literal}",
   }
 };
 {/literal}window.AICompletion.default = {$ai_completion_default};{literal}
@@ -136,7 +137,9 @@ window.AICompletion = {
             <div class="netiaic-form-footer">
               <div class="netiaic-usage-info">
                 {* $usage added in CRM/AI/BAO/AICompletion::getDefaultTemplate *}
-                {ts 1=$usage.max 2=$usage.used}Your usage limit is <span class="usage-max">%1</span> times, currently used <span class="usage-used">%2</span> times.{/ts}
+                {capture assign=aiURL}{/capture}
+                <a href="{crmURL p='civicrm/admin/aicompletion' q='reset=1'}" target="_blank">
+                {ts 1=$usage.max 2=$usage.used}Your usage limit is <span class="usage-max">%1</span> times, currently used <span class="usage-used">%2</span> times.{/ts}</a>
               </div>
               <button type="button" class="shine-btn netiaic-form-submit">
                 <i class="zmdi zmdi-mail-send"></i>

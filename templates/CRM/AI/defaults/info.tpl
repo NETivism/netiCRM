@@ -1,4 +1,4 @@
-  "org_intro": "{/literal}{$org_intro|escape:javascript}{literal}",
+  "org_intro": "{/literal}{if $org_intro}{ts}Organization intro{/ts}:{$org_intro|escape:javascript}{/if}{literal}",
   "sort_name": "{/literal}{$sort_name|escape:javascript}{literal}",
   "usage": {
     "max": {/literal}{if $usage.max}{$usage.max}{else}100{/if}{literal},

@@ -37,12 +37,21 @@
     <div class="nsp-content">
       <div class="inner"></div>
     </div>
-  <div class="nsp-tools">
-    <div class="inner">
-      {if isset($fullscreen) && $fullscreen eq 'true'}
-        <div class="nsp-fullscreen-trigger nsp-tool-btn" title="{ts}Expand{/ts}" data-tooltip data-tooltip-placement="w"><i class="zmdi zmdi-fullscreen"></i></div>
-      {/if}
-      <div class="nsp-trigger nsp-tool-btn" title="{ts}{$triggerText}{/ts}" data-tooltip data-tooltip-placement="w"><i class="zmdi {$triggerIcon}"></i></div>
+    <div class="nsp-tools">
+      <div class="inner">
+        {if isset($fullscreen) && $fullscreen eq 'true'}
+          <div class="nsp-fullscreen-trigger nsp-tool-btn" title="{ts}Expand{/ts}" data-tooltip data-tooltip-placement="w"><i class="zmdi zmdi-fullscreen"></i></div>
+        {/if}
+        {if $triggerIcon|strstr:"zmdi-"}
+          <div class="nsp-trigger nsp-tool-btn" title="{ts}{$triggerText}{/ts}" data-tooltip data-tooltip-placement="w">
+            <i class="zmdi {$triggerIcon}"></i>
+          </div>
+        {else}
+          <div class="nsp-trigger nsp-tool-btn" title="{ts}{$triggerText}{/ts}" data-tooltip data-tooltip-placement="w">
+            <img src="{$config->resourceBase}/{$triggerIcon}" >
+          </div>
+        {/if}
+      </div>
     </div>
   </div>
 </div>

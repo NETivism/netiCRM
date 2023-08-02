@@ -5,10 +5,11 @@
  */
 class CRM_AI_Page_AJAX {
 
-  function chat() {
+  public static function chat() {
     $maxlength = 2000;
     $toneStyle = $aiRole = $context = null;
     $data = array();
+    $result = FALSE;
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] == 'application/json') {
       $jsonString = file_get_contents('php://input');
       $jsondata = json_decode($jsonString, true);
@@ -88,29 +89,21 @@ class CRM_AI_Page_AJAX {
         $country = $countries[$countryId];
         $language = $languages[$tsLocale];
         if ($toneStyle && $aiRole) {
-          $system_prompt = ts("You are an %1 in %3 who uses %4 and is skilled at writing %2 copywriting.",
+          $system_prompt = ts("Please use %4 language of %3 to play the role of %1 and help generate a %2.",
             array(1 => $aiRole, 2 => $toneStyle, 3 => $country, 4 => ts($language))
           );
           $data['prompt'] = array(
             array(
-              'role' => 'system',
-              'content' => $system_prompt,
-            ),
-            array(
               'role' => 'user',
-              'content' => $context,
+              'content' => $system_prompt."\n".$context,
             ),
           );
         }
         else {
           $data['prompt'] = array(
             array(
-              'role' => 'system',
-              'content' => ts('You are using %1 as your language.', array(2 => ts($language))),
-            ),
-            array(
               'role' => 'user',
-              'content' => $context,
+              'content' => ts('Please using %1 language to generate content.', array(2 => ts($language)))."\n".$context,
             ),
           );
         }
@@ -126,6 +119,7 @@ class CRM_AI_Page_AJAX {
         }
 
         if (is_numeric($token['id']) && is_string($token['token'])) {
+          $result = TRUE;
           self::responseSucess(array(
             'status' => 1,
             'message' => 'Chat created successfully.',
@@ -165,9 +159,15 @@ class CRM_AI_Page_AJAX {
         ));
       }
     }
+    if (!$result) {
+      self::responseError(array(
+        'status' => 0,
+        'message' => 'An error occurred during processing. Please verify your input and try again.',
+      ));
+    }
   }
 
-  function getTemplateList() {
+  public static function getTemplateList() {
     $data = array();
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] == 'application/json') {
       $jsonString = file_get_contents('php://input');
@@ -215,7 +215,7 @@ class CRM_AI_Page_AJAX {
     }
   }
 
-  function getTemplate() {
+  public static function getTemplate() {
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] == 'application/json') {
       $jsonString = file_get_contents('php://input');
       $jsondata = json_decode($jsonString, true);
@@ -247,7 +247,8 @@ class CRM_AI_Page_AJAX {
     }
   }
 
-  function setTemplate() {
+  public static function setTemplate() {
+    $result = FALSE;
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] == 'application/json') {
       $jsonString = file_get_contents('php://input');
       $jsondata = json_decode($jsonString, true);
@@ -282,6 +283,7 @@ class CRM_AI_Page_AJAX {
         $result = array();
         $setTemplateResult = CRM_AI_BAO_AICompletion::setTemplate($data);
         if ($setTemplateResult['is_error'] === 0) {
+          $result = TRUE;
           //set or unset template successful return true
           if ($acIsTemplate == "1") {
             //0 -> 1
@@ -309,24 +311,18 @@ class CRM_AI_Page_AJAX {
           }
           self::responseSucess($result);
         }
-        else {
-          //If it cannot be set/unset throw Error
-          $result = array(
-            'status' => 0,
-            'message' => $setTemplateResult['message'],
-            'data' => array(
-              'id' => $setTemplateResult['id'],
-              'is_template' => $setTemplateResult['is_template'],
-              'template_title' => $setTemplateResult['template_title'],
-            ),
-          );
-          self::responseError($result);
-        }
       }
+    }
+    if (!$result) {
+      self::responseError(array(
+        'status' => 0,
+        'message' => 'An error occurred during processing. Please verify your input and try again.',
+      ));
     }
   }
 
-  function setShare() {
+  public static function setShare() {
+    $result = FALSE;
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] == 'application/json') {
       $jsonString = file_get_contents('php://input');
       $jsondata = json_decode($jsonString, true);
@@ -346,6 +342,7 @@ class CRM_AI_Page_AJAX {
         $setShareResult = CRM_AI_BAO_AICompletion::setShare($acId);
         $result = array();
         if ($setShareResult) {
+          $result = TRUE;
           self::responseSucess(array(
             'status' => 1,
             'message' => "AI completion is set as shareable successfully.",
@@ -363,6 +360,12 @@ class CRM_AI_Page_AJAX {
         }
       }
     }
+    if (!$result) {
+      self::responseError(array(
+        'status' => 0,
+        'message' => 'An error occurred during processing. Please verify your input and try again.',
+      ));
+    }
   }
 
   /**
@@ -370,7 +373,7 @@ class CRM_AI_Page_AJAX {
    *
    * @param mixed $error The error message or object that needs to be sent as a response.
    */
-  function responseError($error) {
+  public static function responseError($error) {
     http_response_code(400);
     header('Content-Type: application/json; charset=utf-8');
     echo json_encode($error);
