@@ -125,7 +125,10 @@ class CRM_Mailing_Form_ForwardMailing extends CRM_Core_Form {
     $params = array();
     $params['body_text'] = $formValues['html_comment'];
     $html_comment = $formValues['html_comment'];
-    $params['body_html'] = str_replace('%7B', '{', str_replace('%7D', '}', $html_comment));
+    dpm($html_comment);
+    $html_comment = str_replace('%7B', '{', str_replace('%7D', '}', $html_comment));
+    $html_comment = str_replace("\n", "<br>", $html_comment);
+    $params['body_html'] = $html_comment;
 
     $emails = array();
     for ($i = 0; $i < 5; $i++) {
