@@ -49469,11 +49469,15 @@ msgstr "展開"
 
 #: CRM/AI/Page/AJAX.php
 msgid ""
-"You are an %1 in %3 who uses %4 and is skilled at writing %2 copywriting."
-msgstr "你是一個在%3，使用%4語言的%1，很會撰寫%2語氣的文案。"
+"Please use %4 language of %3 to play the role of %1 and help generate a %2."
+msgstr "請用%3%4語言，扮演%1，幫忙產生%2。"
 
-msgid "You are using %1 as your language."
-msgstr "你使用%1作為語言。"
+msgid "Please using %1 language to generate content."
+msgstr "請用%1語言產生文字。"
 
 msgid "Chinese (Taiwan)"
 msgstr "繁體中文（台灣）"
+
+msgid ""
+"The fee you selected has expired before submission. Please reselect the fee."
+msgstr "您所選的費用在送出前已超過有效期限，請重新選擇費用。"
