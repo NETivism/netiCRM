@@ -403,7 +403,7 @@ class CRM_Export_BAO_Export {
         $allRelContactArray[$rel] = array();
         // build Query for each relationship
         $relationQuery[$rel] = new CRM_Contact_BAO_Query(0, $relationReturnProperties,
-          NULL, FALSE, FALSE, $queryMode
+          NULL, FALSE, FALSE, CRM_Contact_BAO_Query::MODE_CONTACTS
         );
         list($relationSelect, $relationFrom, $relationWhere) = $relationQuery[$rel]->query();
         $relationSelect = str_replace('civicrm_state_province.abbreviation', 'civicrm_state_province.name', $relationSelect);
