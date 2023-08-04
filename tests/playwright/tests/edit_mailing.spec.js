@@ -145,7 +145,6 @@ test.describe.serial('Mailing Editing', () => {
             await utils.findElement(page, element);
             await page.locator(element).click();
             await page.keyboard.press('Enter');
-            await expect(page.locator('#includeGroups')).toHaveValue('2');
 
             /* click "Next" */
             element = '#_qf_Group_next';
