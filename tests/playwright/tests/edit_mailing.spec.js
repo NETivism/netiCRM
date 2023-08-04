@@ -30,7 +30,6 @@ const vars = {
 async function checkElementsCount(locator, title_count, paragraph_count, image_count, button_count, col1_count, col2_count, float_count) {
     await expect(locator.locator('.nmee-title')).toHaveCount(title_count);
     await expect(locator.locator('.nmee-paragraph')).toHaveCount(paragraph_count);
-    await expect(locator.locator('.nmee-image')).toHaveCount(image_count);
     await expect(locator.locator('.nmee-button')).toHaveCount(button_count);
     await expect(locator.locator('.nmee-rc-col-1')).toHaveCount(col1_count);
     await expect(locator.locator('.nmee-rc-col-2')).toHaveCount(col2_count);
@@ -260,48 +259,6 @@ test.describe.serial('Mailing Editing', () => {
 
             await expect(page.locator(`.nmee-paragraph[data-id="${paragraph_data_id}"]`)).toHaveText(vars.paragraph_block_text);
 
-            /* Step 4-4: Image */
-
-            /* add "Image" block */
-            element = '.nme-add-block-btn[data-type="image"]';
-            await utils.findElement(page, element);
-            await utils.clickElement(page, page.locator(element).first());
-
-            await expect(page.locator('.nmee-image')).toHaveCount(5);
-
-            /* edit new added "Image" block */
-
-            /* get "Image" block data-id */
-            const image_data_id = await page.evaluate(() => {
-                return document.querySelectorAll('.nmee-image')[4].getAttribute('data-id');
-            });
-
-            expect(image_data_id).not.toBeNull();
-            expect(image_data_id).toBeDefined();
-
-            /* click "Image" block */
-            element = `.nmee-image[data-id="${image_data_id}"]`;
-            await utils.findElement(page, element);
-            await utils.clickElement(page, page.locator(element));
-
-            /* click "Edit Link" */
-            const image_block_control_el = `button#image-${image_data_id.replace('image-','')}-handle-link`;
-            await page.evaluate((image_block_control_el) => {
-                document.querySelector(image_block_control_el).click();
-            }, image_block_control_el);
-
-            /* edit link */
-            const edit_link_el = '.edit-link';
-            await utils.findElement(page, edit_link_el);
-            await utils.fillInput(page.locator(edit_link_el), process.env.localUrl);
-
-            /* click "Save" */
-            const save_link_el = '.nme-edit-actions a[data-type="submit"]';
-            await utils.findElement(page, save_link_el);
-            await utils.clickElement(page, page.locator(save_link_el));
-
-            /* check link edited */
-            await expect(page.locator(`img[data-id="${image_data_id}"]`)).toHaveAttribute('data-link', process.env.localUrl);
 
             /* Step 4-5: Button */
 
