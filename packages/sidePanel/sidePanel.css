@@ -103,10 +103,10 @@ a.btn:hover {
   font-size: 28px;
 }
 .nsp-container.is-closed .nsp-tools {
-  margin-left: -30px;
+  margin-left: -35px;
 }
 .nsp-container.is-closed .nsp-tool-btn {
-  width: 30px;
+  width: 35px;
   border-radius: 20px 0 0 20px;
   box-shadow: -1px 0px 1px 0 rgba(60,64,67,.5), -1px 0px 3px 1px rgba(60,64,67,.3);
 }

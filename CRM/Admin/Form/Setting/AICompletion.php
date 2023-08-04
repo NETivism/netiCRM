@@ -4,6 +4,9 @@ class CRM_Admin_Form_Setting_AICompletion extends CRM_Admin_Form_Setting {
   public function preProcess() {
     parent::preProcess();
     CRM_Utils_System::setTitle(ts('AI Copywriter').' - '.ts('Settings'));
+
+    $url = CRM_Utils_System::url('civicrm/admin/aicompletion', 'reset=1');
+    CRM_Core_Session::singleton()->pushUserContext($url);
   }
 
   /**

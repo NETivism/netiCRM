@@ -52,6 +52,10 @@
     return typeof variable === 'object' && variable !== null;
   }
 
+  var isEmpty = function(value) {
+    return value === undefined || value === null || String(value).trim() === "";
+  }
+
   var getFirstCharacter = function(input) {
     try {
       if (typeof input !== 'string') {
@@ -105,7 +109,7 @@
           console.error('AJAX request timed out');
         }
         else {
-          console.error('AJAX request failed:', status, error);
+          console.error('AJAX request failed:', status, error, xhr.responseJSON.message);
         }
 
         errorCallback(xhr, status, error);
@@ -330,8 +334,15 @@
           }, function(xhr, status, error) {
             if (status == 'timeout') {
               errorMessage = `<p class="error">${ts['Our service is currently busy, please try again later. If needed, please contact our customer service team.']}</p>`;
-              $(`#use-other-templates-tabs .modal-tabs-panel[data-type="${key}"]`).html(errorMessage);
             }
+            else if (xhr.responseJSON.message == 'Failed to retrieve template list.') {
+              errorMessage = `<p>${ts['There are currently no templates available.']}</p>`;
+            }
+            else {
+              errorMessage = `<p class="error">${errorMessageDefault}</p>`;
+            }
+
+            $(`#use-other-templates-tabs .modal-tabs-panel[data-type="${key}"]`).html(errorMessage);
           });
         }
 
@@ -478,8 +489,8 @@
       $container.on('click', '.use-default-template', function(event) {
         event.preventDefault();
         let templateData = defaultData.templates_default[0];
-        if (templateData.content.match(new RegExp('^'+ts['Organization intro']))) {
-          templateData.content = templateData.content.replace(new RegExp('^'+ts['Organization intro']+'.*'), ts['Organization intro']+': '+defaultData.org_intro+"\n");
+        if (templateData.content.match(new RegExp('^'+ts['Organization intro'])) && defaultData.org_intro.length > 0) {
+          templateData.content = templateData.content.replace(new RegExp('^'+ts['Organization intro']+'.*'), ts['Organization intro']+': '+defaultData.org_intro);
         }
 
         if (!AICompletion.prototype.formIsEmpty()) {
@@ -532,16 +543,21 @@
           let firstCharacter = getFirstCharacter(defaultData.sort_name);
 
           if (isObject(data)) {
-            if (data.role) {
-              msg += `${ts['Copywriting Role']}: ${data.role}\n`;
+            if (isEmpty(data.role) && isEmpty(data.tone) && isEmpty(data.content)) {
+              msg = '(n/a)';
             }
+            else {
+              if (data.role) {
+                msg += `${ts['Copywriting Role']}: ${data.role}\n`;
+              }
 
-            if (data.tone) {
-              msg += `${ts['Tone Style']}: ${data.tone}\n\n`;
-            }
+              if (data.tone) {
+                msg += `${ts['Tone Style']}: ${data.tone}\n\n`;
+              }
 
-            if (data.content) {
-              msg += `${ts['Content']}: ${data.content}\n`;
+              if (data.content) {
+                msg += `${ts['Content']}: ${data.content}\n`;
+              }
             }
 
             msg = msg.replace(/\n/g, '<br>');
@@ -697,6 +713,29 @@
         tags: true // Select2 can dynamically create new options from text input by the user in the search box
       });
 
+      // Enhance select2 search field focus styling
+      $(document).on('select2:open', function(e) {
+        let selectId = e.target.id,
+            $select2Element = $(e.target),
+            selectedOptions = $select2Element.val();
+
+        if (!selectedOptions && selectedOptions.length == 0) {
+          $(".select2-results__options[id='select2-" + selectId + "-results']").each(function(key, elem) {
+            let $elem = $(elem);
+
+            if ($elem.length) {
+              setTimeout(function() {
+                $elem.find('.select2-results__option[aria-selected=true]').attr('aria-selected', false).removeClass('select2-results__option--highlighted');
+              }, 200); // TODO: timeout is workaournd
+            }
+          });
+
+          $(".select2-search__field[aria-controls='select2-" + selectId + "-results']").each(function(key, elem) {
+            setTimeout(function() { elem.focus(); } , 300); // TODO: timeout is workaournd
+          });
+        }
+      });
+
       $promptContent.on('focus', function() {
         let inputText = $(this).val();
 
@@ -711,9 +750,14 @@
       });
 
       $promptContent.on('blur', function() {
-        if ($(this).hasClass(EXPAND_CLASS)) {
-          $(this).removeClass(EXPAND_CLASS);
-          $container.removeClass(`form-${EXPAND_CLASS}`);
+        let $field = $(this);
+
+        // Add delay to expansion collapse to ensure other form elements can be clicked
+        if ($field.hasClass(EXPAND_CLASS)) {
+          setTimeout(function() {
+            $field.removeClass(EXPAND_CLASS);
+            $container.removeClass(`form-${EXPAND_CLASS}`);
+          }, 200);
         }
 
         setTimeout(function() {
@@ -777,156 +821,164 @@
             sourceUrl: window.location.href,
             sourceUrlPath: window.location.pathname,
             sourceUrlQuery: window.location.search
-          };
+          },
+          isEmptyPrompt = isEmpty(formData.role) && isEmpty(formData.tone) && isEmpty(formData.content) ? true : false,
+          userMessage = isEmptyPrompt ? '(n/a)' : formData;
+
 
       if (!$submit.hasClass(ACTIVE_CLASS)) {
         $submit.addClass(ACTIVE_CLASS).prop('disabled', true);
       }
 
       // Create user's message
-      AICompletion.prototype.createMessage(userMsgID, aiMsgID, formData, 'user');
+      AICompletion.prototype.createMessage(userMsgID, aiMsgID, userMessage, 'user');
 
       // Create AI's message
-      let fetchPromise = fetch(endpoint.chat, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
-      });
-
-      let timeoutPromise = new Promise((_, reject) => {
-        let timeoutId = setTimeout(() => {
-          clearTimeout(timeoutId);
-          reject(new Error("Network request timed out."));
-        }, TIMEOUT);
-      });
-
-      Promise.race([fetchPromise, timeoutPromise])
-      .then(function(response) {
-        if (response.ok) {
-          // Determine the data type based on the Content-Type of the response
-          if (response.headers.get('Content-Type').includes('application/json')) {
-            return response.json(); // Parse as JSON
-          } else if (response.headers.get('Content-Type').includes('text/html')) {
-            return response.text(); // Parse as plain text
-          } else {
-            throw new Error('Unknown response data type');
-          }
-        } else {
-          throw new Error('Network request error');
-        }
-      })
-      .then(function(result) {
-        var evtSource = new EventSource(endpoint.chat + '?token=' + result.data.token + '&id=' + result.data.id, {
-          withCredentials: false,
+      if (isEmptyPrompt) {
+        errorMessage = ts['Please enter the %1 copy you would like AI to generate.'];
+        AICompletion.prototype.createMessage(aiMsgID, userMsgID, errorMessage, 'ai', 'error');
+      }
+      else {
+        let fetchPromise = fetch(endpoint.chat, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(formData)
         });
 
-        evtSource.onmessage = (event) => {
-          try {
-            let eventData = JSON.parse(event.data);
-            if (typeof eventData !== "undefined") {
-              if (($aiMsg && $aiMsg.length) && (eventData.hasOwnProperty('is_finished') || eventData.hasOwnProperty('is_error'))) {
-                evtSource.close();
+        let timeoutPromise = new Promise((_, reject) => {
+          let timeoutId = setTimeout(() => {
+            clearTimeout(timeoutId);
+            reject(new Error("Network request timed out."));
+          }, TIMEOUT);
+        });
 
-                if ($submit.hasClass(ACTIVE_CLASS)) {
-                  $submit.removeClass(ACTIVE_CLASS).prop('disabled', false);
-                }
+        Promise.race([fetchPromise, timeoutPromise])
+        .then(function(response) {
+          if (response.ok) {
+            // Determine the data type based on the Content-Type of the response
+            if (response.headers.get('Content-Type').includes('application/json')) {
+              return response.json(); // Parse as JSON
+            } else if (response.headers.get('Content-Type').includes('text/html')) {
+              return response.text(); // Parse as plain text
+            } else {
+              throw new Error('Unknown response data type');
+            }
+          } else {
+            throw new Error('Network request error');
+          }
+        })
+        .then(function(result) {
+          var evtSource = new EventSource(endpoint.chat + '?token=' + result.data.token + '&id=' + result.data.id, {
+            withCredentials: false,
+          });
 
-                if (!$submit.hasClass(SENT_CLASS)) {
-                  $submit.addClass(SENT_CLASS).find('.text').text(ts['Try Again']);
-                }
+          evtSource.onmessage = (event) => {
+            try {
+              let eventData = JSON.parse(event.data);
+              if (typeof eventData !== "undefined") {
+                if (($aiMsg && $aiMsg.length) && (eventData.hasOwnProperty('is_finished') || eventData.hasOwnProperty('is_error'))) {
+                  evtSource.close();
 
-                if (eventData.is_finished) {
-                  if (!$aiMsg.hasClass(FINISH_CLASS)) {
-                    $aiMsg.addClass(FINISH_CLASS);
+                  if ($submit.hasClass(ACTIVE_CLASS)) {
+                    $submit.removeClass(ACTIVE_CLASS).prop('disabled', false);
                   }
-                }
 
-                if (eventData.is_error) {
-                  if (!$aiMsg.hasClass(ERROR_CLASS)) {
-                    $aiMsg.addClass(ERROR_CLASS);
-                  }
-                }
-
-                var msgCopyHandle = function(event) {
-                  event.preventDefault();
-                  let $copyBtn = $(this),
-                      $aiMsg = $copyBtn.closest('.msg'),
-                      $msgContent = $aiMsg.find('.msg-content'),
-                      copyText = '';
-
-                  if ($msgContent.length) {
-                    copyText = $msgContent.html().replace(/<br>/g, '\n');
+                  if (!$submit.hasClass(SENT_CLASS)) {
+                    $submit.addClass(SENT_CLASS).find('.text').text(ts['Try Again']);
                   }
 
-                  copyText = copyText.trim();
-                  if (navigator.clipboard && navigator.clipboard.writeText) {
-                    navigator.clipboard.writeText(copyText).then(function() {
-                      toggleCopyClass($copyBtn);
-                    }, function(error) {
-                      console.error('Failed to copy text to clipboard:', error);
-                    });
-                  } else {
-                    console.warn('Clipboard API is not supported in this browser, fallback to execCommand.');
-                    fallbackCopyTextToClipboard(copyText, $copyBtn);
-                  }
-                }
-
-                $aiMsg.on('click', '.copy-btn', msgCopyHandle);
-              }
-              else {
-                if (eventData.hasOwnProperty('message')) {
-                  let message = eventData.message.replace(/\n/g, '<br>');
-                  AICompletion.prototype.createMessage(aiMsgID, userMsgID, message, 'ai', 'stream');
-                  $aiMsg = $container.find('.msg[id="' + aiMsgID + '"]');
-                  $userMsg = $container.find('.msg[id="' + userMsgID + '"]');
-
-                  if (eventData.hasOwnProperty('id')) {
-                    $aiMsg.data('aicompletion-id', eventData.id);
-
-                    if (!$userMsg.hasClass(`ai-msg-${FINISH_CLASS}`)) {
-                      $userMsg.addClass(`ai-msg-${FINISH_CLASS}`);
+                  if (eventData.is_finished) {
+                    if (!$aiMsg.hasClass(FINISH_CLASS)) {
+                      $aiMsg.addClass(FINISH_CLASS);
                     }
                   }
 
-                  // Update usage
-                  if (chatData.messages.hasOwnProperty(aiMsgID)) {
-                    if (!chatData.messages[aiMsgID].used) {
+                  if (eventData.is_error) {
+                    if (!$aiMsg.hasClass(ERROR_CLASS)) {
+                      $aiMsg.addClass(ERROR_CLASS);
+                    }
+                  }
+
+                  var msgCopyHandle = function(event) {
+                    event.preventDefault();
+                    let $copyBtn = $(this),
+                        $aiMsg = $copyBtn.closest('.msg'),
+                        $msgContent = $aiMsg.find('.msg-content'),
+                        copyText = '';
+
+                    if ($msgContent.length) {
+                      copyText = $msgContent.html().replace(/<br>/g, '\n');
+                    }
+
+                    copyText = copyText.trim();
+                    if (navigator.clipboard && navigator.clipboard.writeText) {
+                      navigator.clipboard.writeText(copyText).then(function() {
+                        toggleCopyClass($copyBtn);
+                      }, function(error) {
+                        console.error('Failed to copy text to clipboard:', error);
+                      });
+                    } else {
+                      console.warn('Clipboard API is not supported in this browser, fallback to execCommand.');
+                      fallbackCopyTextToClipboard(copyText, $copyBtn);
+                    }
+                  }
+
+                  $aiMsg.on('click', '.copy-btn', msgCopyHandle);
+                }
+                else {
+                  if (eventData.hasOwnProperty('message')) {
+                    let message = eventData.message.replace(/\n/g, '<br>');
+                    AICompletion.prototype.createMessage(aiMsgID, userMsgID, message, 'ai', 'stream');
+                    $aiMsg = $container.find('.msg[id="' + aiMsgID + '"]');
+                    $userMsg = $container.find('.msg[id="' + userMsgID + '"]');
+
+                    if (eventData.hasOwnProperty('id')) {
+                      $aiMsg.data('aicompletion-id', eventData.id);
+
+                      if (!$userMsg.hasClass(`ai-msg-${FINISH_CLASS}`)) {
+                        $userMsg.addClass(`ai-msg-${FINISH_CLASS}`);
+                      }
+                    }
+
+                    // Update usage
+                    if (chatData.messages.hasOwnProperty(aiMsgID)) {
+                      if (!chatData.messages[aiMsgID].used) {
+                        AICompletion.prototype.usageUpdate();
+                      }
+                    }
+                    else {
+                      chatData.messages[aiMsgID] = {
+                        used: true
+                      }
+
                       AICompletion.prototype.usageUpdate();
                     }
                   }
-                  else {
-                    chatData.messages[aiMsgID] = {
-                      used: true
-                    }
-
-                    AICompletion.prototype.usageUpdate();
-                  }
                 }
               }
+            } catch (error) {
+              console.error('JSON Parse Error:', error.message);
+              AICompletion.prototype.createMessage(aiMsgID, userMsgID, errorMessageDefault, 'ai', 'error');
             }
-          } catch (error) {
-            console.error('JSON Parse Error:', error.message);
+          };
+
+          evtSource.onerror = function(event) {
+            console.error("EventSource encountered an error: ", event);
+            evtSource.close();
             AICompletion.prototype.createMessage(aiMsgID, userMsgID, errorMessageDefault, 'ai', 'error');
+          };
+        })
+        .catch(function(error) {
+          console.error("Encountered an error: ", error);
+          if (error.message.includes('timed out')) {
+            errorMessage = ts['Our service is currently busy, please try again later. If needed, please contact our customer service team.'];
           }
-        };
 
-        evtSource.onerror = function(event) {
-          console.error("EventSource encountered an error: ", event);
-          evtSource.close();
-          AICompletion.prototype.createMessage(aiMsgID, userMsgID, errorMessageDefault, 'ai', 'error');
-        };
-      })
-      .catch(function(error) {
-        // TODO: Error handling
-        console.error("Encountered an error: ", error);
-        if (error.message.includes('timed out')) {
-          errorMessage = ts['Our service is currently busy, please try again later. If needed, please contact our customer service team.'];
-        }
-
-        AICompletion.prototype.createMessage(aiMsgID, userMsgID, errorMessage, 'ai', 'error');
-      });
+          AICompletion.prototype.createMessage(aiMsgID, userMsgID, errorMessage, 'ai', 'error');
+        });
+      }
     },
 
     getDefaultData: function() {
