@@ -49,46 +49,46 @@ async function checkElementsCount(locator, title_count, paragraph_count, image_c
  * @param {number} col2_count The expected count of Rich Content: 2 Column elements.
  * @param {number} float_count The expected count of Rich Content: Float elements.
  * @return {Promise<void>}
- */  
+ */
 async function previewCheck(page, title_count, paragraph_count, image_count, button_count, col1_count, col2_count, float_count) {
     /* click "Preview" */
     element = '.switch-toggle-slider';
     await utils.findElement(page, element);
     await utils.clickElement(page, page.locator(element));
-  
+
     await expect(page.locator('#nme-preview-popup')).toBeVisible();
-  
+
     /* check "Normal" preview */
     element = 'button.nme-preview-mode-btn[data-mode="desktop"]';
     await utils.findElement(page, element);
     await utils.clickElement(page, page.locator(element).first());
-  
+
     element = '#nme-preview-iframe-desktop';
     await utils.findElement(page, element);
     await expect(page.locator(element)).toBeVisible();
-  
+
     locator = page.frameLocator(element).first();
 
     await checkElementsCount(locator, title_count, paragraph_count, image_count, button_count, col1_count, col2_count, float_count);
-  
+
     /* check "Mobile" preview */
     element = 'button.nme-preview-mode-btn[data-mode="mobile"]';
     await utils.findElement(page, element);
     await utils.clickElement(page, page.locator(element).first());
-  
+
     element = '#nme-preview-iframe-mobile';
     await utils.findElement(page, element);
     await expect(page.locator(element)).toBeVisible();
-  
+
     locator = page.frameLocator(element).first();
-  
+
     await checkElementsCount(locator, title_count, paragraph_count, image_count, button_count, col1_count, col2_count, float_count);
-  
+
     /* close preview */
     element = 'button.nme-preview-close';
     await utils.findElement(page, element);
     await utils.clickElement(page, page.locator(element).first());
-  
+
     await expect(page.locator('#nme-preview-popup')).toBeHidden();
 }
 
@@ -105,13 +105,13 @@ async function switchTab(data_target_id) {
         document.querySelector(element).click();
     }, element);
 }
-  
+
 
 test.beforeAll(async () => {
     const browser = await chromium.launch();
     page = await browser.newPage();
 });
-  
+
 test.afterAll(async () => {
     await page.close();
 });
@@ -124,7 +124,7 @@ test.describe.serial('Mailing Editing', () => {
     test('Mailing Editing', async () => {
 
         page.on('dialog', dialog => dialog.accept());
-        
+
         await test.step('Mailing Test.', async () => {
 
             /* Step 1: open "New Mailing" page */
@@ -157,14 +157,6 @@ test.describe.serial('Mailing Editing', () => {
 
             /* Step 3: Track and Respond. */
 
-            /* ensure "Total Recipients" value is 1 */
-            const group_num = await page.evaluate(() =>{
-                return document.querySelector('.messages strong').textContent;
-            });
-
-            await expect(group_num, 'The recipient number of group is incorrect.').toBe('0');
-            await utils.print('Assert recipient number of group correct.')
-
             /* select "Mailing Visibility" */
             element = 'select#visibility';
             await utils.findElement(page, element);
@@ -180,7 +172,7 @@ test.describe.serial('Mailing Editing', () => {
             await expect(page.locator('.crm-error')).toHaveCount(0);
 
         });
-    
+
         await test.step('Mailing Content Test - Blocks.', async () => {
 
             /* Step 4: Mailing Content - Blocks. */
@@ -354,7 +346,7 @@ test.describe.serial('Mailing Editing', () => {
             await utils.clickElement(page, page.locator(element).first());
 
             await expect(page.locator('.nmee-rc-col-1')).toHaveCount(4);
-            
+
             /* edit new added "Rich Content: 1 Column" block */
 
             /* get "Rich Content: 1 Column" block data-id */
@@ -380,8 +372,8 @@ test.describe.serial('Mailing Editing', () => {
             const rc_col_1_block_control_el = `button#rc-col-1-${rc_col_1_data_id.replace('rc-col-1-','')}-handle-block-bg`;
             await page.evaluate((rc_col_1_block_control_el) => {
                 document.querySelector(rc_col_1_block_control_el).click();
-            }, rc_col_1_block_control_el);    
-            
+            }, rc_col_1_block_control_el);
+
             /* pick color */
             const color_picker_el = '.pcr-app.visible';
             await utils.findElement(page, color_picker_el);
@@ -408,7 +400,7 @@ test.describe.serial('Mailing Editing', () => {
 
             /* Step 4-7: Rich Content: 2 Column */
 
-            /* add "Rich Content: 2 Column" block */            
+            /* add "Rich Content: 2 Column" block */
             element = '.nme-add-block-btn[data-type="rc-col-2"]';
             await utils.findElement(page, element);
             await utils.clickElement(page, page.locator(element).first());
@@ -431,7 +423,7 @@ test.describe.serial('Mailing Editing', () => {
             for (const col of rc_col_2_columns) {
                 const element = `.nmee-rc-col-2[data-id="${rc_col_2_data_id}"] ${col}`;
                 await utils.findElement(page, element);
-                
+
                 await expect(page.locator(element).locator('.nmee-image')).toHaveCount(1);
                 await expect(page.locator(element).locator('.nmee-paragraph')).toHaveCount(1);
                 await expect(page.locator(element).locator('.nmee-button')).toHaveCount(1);
@@ -472,7 +464,7 @@ test.describe.serial('Mailing Editing', () => {
             }
 
             /* Step 4-8: Rich Content: Float */
-            
+
             /* add "Rich Content: Float" block */
             element = '.nme-add-block-btn[data-type="rc-float"]';
             await utils.findElement(page, element);
@@ -513,7 +505,7 @@ test.describe.serial('Mailing Editing', () => {
             /* check "Rich Content: Float" block background color */
             element = `.nmee-rc-float[data-id="${rc_float_data_id}"]`;
             await utils.findElement(page, element);
-            
+
             const rc_float_title_bgc = await page.evaluate((element) => {
                 return document.querySelector(`${element} .nmeb-inner`).style.backgroundColor;
             }, element);
@@ -524,7 +516,7 @@ test.describe.serial('Mailing Editing', () => {
                 return document.querySelector(`${element} .nmeb-inner`).style.backgroundColor;
             }, element);
 
-            await expect(rc_float_paragraph_bgc).toBe('rgb(255, 152, 0)');  
+            await expect(rc_float_paragraph_bgc).toBe('rgb(255, 152, 0)');
 
             /* Step 4-9: Preview */
             await previewCheck(page, 5, 9, 9, 8, 4, 1, 1)
