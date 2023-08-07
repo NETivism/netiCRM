@@ -1,19 +1,26 @@
 <?php
 
 class CRM_Contribute_Form_NewebpayImport_Upload extends CRM_Core_Form {
-  protected $_contactId = NULL;
-  protected $_id = NULL;
-  protected $_contributionRecurId = NULL;
-  protected $_action = NULL;
 
   function preProcess() {
-    $this->addFormRule(array('CRM_Contribute_Form_TaiwanACH_Upload', 'formRule'), $this);
+    $this->addFormRule(array('CRM_Contribute_Form_NewebpayImport_Upload', 'formRule'), $this);
   }
 
   function buildQuickForm() {
     $this->add('file', 'uploadFile', ts('Import Data File'), 'size=30 maxlength=60', TRUE);
 
-    
+    $customFields = array();
+    $customFields[0] = ts('-- Select --');
+    $sql = "SELECT cf.id, cf.label FROM civicrm_custom_field cf LEFT JOIN civicrm_custom_group cg ON cf.custom_group_id = cg.id WHERE data_type = 'Date' AND cg.extends = 'Contribution'";
+    $dao = CRM_Core_DAO::executeQuery($sql);
+    while ($dao->fetch()) {
+      $customFields[$dao->id] = $dao->label;
+    }
+    if (count($customFields) > 1) {
+
+      $this->addSelect('disbursementDate', ts('Disbursement Date'), $customFields, array());
+      // $this->add('Select', 'accounting_date', ts('Accounting date'), array(), )
+    }
 
     $this->addButtons(array(
         array('type' => 'upload',
@@ -33,8 +40,17 @@ class CRM_Contribute_Form_NewebpayImport_Upload extends CRM_Core_Form {
       $errors['uploadFile'] = ts('Missing required field: %1', array(1 => ts('Import Data File')));
     }
 
-    if ($files['uploadFile']['type'] !== 'text/plain') {
-      $errors['uploadFile'] = ts('File format must be one of these: %1', array(1 => 'csv'));
+    $typePass = FALSE;
+    switch ($files['uploadFile']['type']) {
+      // case 'text/csv':
+      case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+        $typePass = TRUE;
+        break;
+      default:
+        break;
+    }
+    if (!$typePass) {
+      $errors['uploadFile'] = ts('File format must be one of these: %1', array(1 => 'xlsx'));
     }
 
     return $errors;
@@ -50,76 +66,32 @@ class CRM_Contribute_Form_NewebpayImport_Upload extends CRM_Core_Form {
     $this->set('parseResult', NULL);
     $submittedValues = $this->controller->exportValues($this->_name);
     if ($submittedValues['uploadFile']['name']) {
-      $result = self::parseUpload($submittedValues['uploadFile']['name']);
+      $result['content'] = self::parseUpload($submittedValues['uploadFile']);
       $result['original_file'] = $submittedValues['uploadFile']['name'];
       $this->set('parseResult', $result);
     }
   }
 
-  public static function parseUpload($file, $processId = NULL) {
-    $result = array();
-    if (file_exists($file)) {
-      $content = file_get_contents($file);
-      $result = CRM_Contribute_BAO_TaiwanACH::parseUpload($content, $processId);
-      $contributionStatus = CRM_Contribute_PseudoConstant::contributionStatus();
-      $contributionType = CRM_Contribute_PseudoConstant::contributionType();
-      $paymentInstrument = CRM_Contribute_PseudoConstant::paymentInstrument();
-      $stampStatus = CRM_Contribute_PseudoConstant::taiwanACHStampVerification();
-      $counter = array();
-      foreach($result['processed_data'] as &$line) {
-        if (!empty($line['payment_instrument_id'])) {
-          $line['payment_instrument'] = $paymentInstrument[$line['payment_instrument_id']];
-        }
-        if (!empty($line['contribution_type_id'])) {
-          $line['contribution_type'] = $contributionType[$line['contribution_type_id']];
-        }
-        if (!empty($line['contribution_status_id'])) {
-          $line['contribution_status'] = $contributionStatus[$line['contribution_status_id']];
-        }
-        if (isset($line['stamp_verification'])) {
-          $line['stamp_verification_status'] = $stampStatus[$line['stamp_verification']];
-        }
-        if ($line['contribution_status_id'] == 1 && $result['import_type'] == 'transaction') {
-          $counter[ts('Completed Donation')]++;
-        }
-        else if ($line['contribution_status_id'] == 5 && $result['import_type'] == 'verification') {
-          $counter[ts('Completed Donation')]++;
-        }
-        else {
-          $counter[ts('Failure Count')]++;
+  public static function parseUpload($file) {
+    if (file_exists($file['name'])) {
+      if ($file['type'] == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+        $rowsFromSheet = CRM_Core_Report_Excel::readExcelFile($file['name']);
+        $rows = array();
+        foreach ($rowsFromSheet as $rowNum => $row) {
+          if ($rowNum == 1) {
+            $header = $row;
+            $rows[] = $header;
+          }
+          else {
+            $oneRow = array();
+            foreach ($row as $columnNum => $value) {
+              $oneRow[$header[$columnNum]] = $value;
+            }
+            $rows[] = $oneRow;
+          }
         }
       }
-      $result['counter'] = $counter;
-      if ($result['import_type'] == 'transaction') {
-        $result['columns'] = array(
-          'id' => ts('Contribution ID'),
-          'trxn_id' => ts('Transaction ID'),
-          'invoice_id' => ts('Invoice ID'),
-          'payment_instrument' => ts('Payment Instrument'),
-          'total_amount' => ts('Amount'),
-          'contribution_type' => ts('Type'),
-          'source' => ts('Source'),
-          'created_date' => ts('Created Date'),
-          'receive_date' => ts('Received'),
-          'contribution_status' => ts('Status'),
-          'cancel_reason' => ts('Cancelled or Failed Reason'),
-        );
-      }
-      else {
-        $result['columns'] = array(
-          'id' => ts('Recurring Contribution ID'),
-          'invoice_id' => ts('Invoice ID'),
-          'payment_type' => ts('Payment Instrument'),
-          'create_date' => ts('Created Date'),
-          'start_date' => ts('Start Date'),
-          'contribution_status' => ts('Recurring Status'),
-          'amount' => ts('Amount'),
-          'stamp_verification_status' => ts('Stamp Verification Status'),
-          'verification_failed_date' => ts('Stamp Verification').' - '.ts('Cancelled or Failed Date'),
-          'verification_failed_reason' => ts('Stamp Verification').' - '.ts('Cancelled or Failed Reason'),
-        );
-      }
-      return $result;
+      return $rows;
     }
     else {
       return array();
