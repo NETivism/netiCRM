@@ -1,7 +1,7 @@
 (function ($) {
 $(document).ready(function(){
 // start here
-$().crmDependentSelect();
+new crmDependentSelect('.crm-container select[data-parent]');
 $().crmtooltip();
 // end here
 });
