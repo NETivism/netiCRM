@@ -3,6 +3,7 @@ const utils = require('./utils.js');
 
 /** @type {import('@playwright/test').Page} */
 let page;
+const wait_secs = 2000;
 
 var item = {
   event_name_1: '無名額限制，填表完成送出',
@@ -63,6 +64,10 @@ test.describe.serial('Event register page', () => {
       await expect(page).toHaveURL(/_qf_ThankYou_display/);
       await expect(page.locator('#help .msg-register-success')).toBeDefined();
     });
+
+    await page.reload();
+    await utils.wait(wait_secs);
+
     await test.step('Second participant message is correct.', async () => {
       await page.goto('/civicrm/event/register?cid=0&reset=1&id=2');
       await expect(page).toHaveTitle(page_title);
