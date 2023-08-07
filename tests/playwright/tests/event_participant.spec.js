@@ -4,6 +4,7 @@ const utils = require('./utils.js');
 /** @type {import('@playwright/test').Page} */
 let page, pageCreateContact;
 var locator, element;
+const wait_secs = 2000;
 
 var vars = {
     first_name: utils.makeid(3),
@@ -20,12 +21,12 @@ test.beforeAll(async () => {
     const browser = await chromium.launch();
     page = await browser.newPage();
 });
-  
+
 test.afterAll(async () => {
     await page.close();
     await pageCreateContact.close();
 });
-  
+
 test.describe.serial('Participant Editing', () => {
 
     test.use({ storageState: 'storageState.json' });
@@ -52,7 +53,7 @@ test.describe.serial('Participant Editing', () => {
             await locator.click();
             await expect(page.locator('#actions')).not.toHaveCount(0);
             await expect(page, `page title is not match "${event_title}"`).toHaveTitle(new RegExp('^'+event_title));
-            
+
         });
 
         await test.step("Register New Participant To It.", async () =>{
@@ -67,7 +68,7 @@ test.describe.serial('Participant Editing', () => {
             const pageCreateContactPromise = page.waitForEvent('popup');
             pageCreateContact = await pageCreateContactPromise;
             await expect(pageCreateContact.locator('form#Participant')).not.toHaveCount(0);
-            
+
             /* select 新增個人 */
             element = '#profiles_1';
             locator = pageCreateContact.locator(element);
@@ -79,7 +80,7 @@ test.describe.serial('Participant Editing', () => {
             element = 'form#Edit';
             locator = pageCreateContact.locator(element);
             await utils.findElement(pageCreateContact, element);
-            
+
             locator = pageCreateContact.locator('#first_name');
             await utils.fillInput(locator, vars.first_name);
             locator = pageCreateContact.locator('#last_name');
@@ -103,6 +104,9 @@ test.describe.serial('Participant Editing', () => {
             console.log('Fail to find element matching selector: .crm-error');
 
         });
+
+        await page.reload();
+        await utils.wait(wait_secs);
 
         await test.step("Edit Event Participant.", async () =>{
 
@@ -149,7 +153,7 @@ test.describe.serial('Participant Editing', () => {
             await locator.click();
             await expect(page.locator('.crm-error')).toHaveCount(0);
             console.log('Fail to find element matching selector: .crm-error');
-            
+
         });
     });
 });
