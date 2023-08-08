@@ -490,6 +490,11 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
       $errors['qfKey'] = ts("This coupon is not valid anymore. Please refill your registration.");
     }
 
+    $expired = self::checkPricesetExpired($self);
+    if (!empty($expired)) {
+      $errors['qfKey'] = $expired;
+    }
+
     if (!empty($self->_values['fee'])) {
       $self->_feeBlock = &$self->_values['fee'];
       CRM_Event_Form_Registration_Register::formatFieldsForOptionFull($self);

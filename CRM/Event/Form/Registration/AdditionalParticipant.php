@@ -475,6 +475,27 @@ class CRM_Event_Form_Registration_AdditionalParticipant extends CRM_Event_Form_R
           }
         }
       }
+      else{
+        
+        // Check discount priceset is correct.
+        if (!empty($self->_values['discount'])) {
+          $timestamp = CRM_REQUEST_TIME;
+          $amountSelection = $self->_submitValues['amount'];
+          $discountId = CRM_Core_BAO_Discount::findSet($self->_eventId, 'civicrm_event', $timestamp);
+          if (!empty($discountId)) {
+            if (!empty($self->_values['discount'][$discountId])) {
+              if (!isset($self->_values['discount'][$discountId][$amountSelection])) {
+                $errors['amount'] = ts("The fee you selected has expired before submission. Please begin from the first step. You can refill another <a href=\"%1\">here</a>.", array(1 => CRM_Utils_System::url('civicrm/event/register', "reset=1&id={$self->_eventId}")));
+              }
+            }
+          }
+          else {
+            if (!isset($self->_values['fee'][$amountSelection])) {
+              $errors['amount'] = ts("The fee you selected has expired before submission. Please begin from the first step. You can refill another <a href=\"%1\">here</a>.", array(1 => CRM_Utils_System::url("civicrm/event/register", "reset=1&id={$self->_eventId}")));
+            }
+          }
+        }
+      }
     }
 
     if ($button == 'skip' && $self->_lastParticipant && CRM_Utils_Array::value('priceSetId', $fields)) {

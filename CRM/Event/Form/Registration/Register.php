@@ -651,7 +651,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
     if (is_array($discountedFee) && !empty($discountedFee)) {
       if (!$discountId) {
         $participantId = $form->get('participantId');
-        $timestamp = self::getRegistrationTimestamp($participantId);
+        $timestamp = self::getRegistrationTimestamp($participantId, $form);
         $form->_discountId = $discountId = CRM_Core_BAO_Discount::findSet($form->_eventId, 'civicrm_event', $timestamp);
       }
       if ($discountId) {
@@ -1219,6 +1219,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
       else {
         $params['is_pay_later'] = 0;
       }
+      $params['submit_timestamp'] = CRM_REQUEST_TIME;
 
       $this->_params = array();
       $this->_params[] = $params;
@@ -1325,7 +1326,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
    */
   function checkRegistration($fields, &$self, $isAdditional = FALSE) {
     if ($self->_mode == 'test') {
-      return FALSE;
+      return TRUE;
     }
 
     $contactID = NULL;
@@ -1420,7 +1421,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
     return ts('Register for Event');
   }
 
-  static function getRegistrationTimestamp($participantId) {
+  static function getRegistrationTimestamp($participantId, $form = NULL) {
     if (!empty($participantId)) {
       $activityTypes = CRM_Core_PseudoConstant::activityType(TRUE, TRUE, FALSE, 'name', TRUE);
       $activityId = CRM_Utils_Array::key('Event Registration', $activityTypes);
@@ -1430,10 +1431,14 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
       ));
       $timestamp = strtotime($registerDate);
     }
+    elseif (!empty($form) && isset($form->_params[0]['submit_timestamp'])) {
+      $timestamp = $form->_params[0]['submit_timestamp'];
+    }
     else {
       $timestamp = CRM_REQUEST_TIME;
     }
     return $timestamp;
   }
+
 }
 

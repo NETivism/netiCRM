@@ -1073,7 +1073,7 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
       $this->assign('isRequireApproval', $this->_requireApproval);
 
       foreach ($additionalIDs as $participantID => $contactId) {
-        if ($participantID == $registerByID) {
+          if ($participantID == $registerByID) {
           //set as Primary Participant
           $this->assign('isPrimary', 1);
 
@@ -1772,6 +1772,42 @@ WHERE  v.option_group_id = g.id
       $params['entity_id'] = $primaryParticipant;
     }
     $track = CRM_Core_BAO_Track::add($params);
+  }
+
+  static public function checkPricesetExpired($self) {
+    // Validate: check every amount selections are in current discount set or in the price fee set.
+    if (!empty($self->_values['discount'])) {
+      $timestamp = CRM_REQUEST_TIME;
+      $discountId = CRM_Core_BAO_Discount::findSet($self->_eventId, 'civicrm_event', $timestamp);
+      if (!empty($discountId)) {
+        if (!empty($self->_values['discount'][$discountId])) {
+          $priceset = $self->_values['discount'][$discountId];
+        }
+      }
+      else {
+        $priceset = $self->_values['fee'];
+      }
+      $isPass = array();
+      foreach($self->_amount as $count => $selectedAmount) {
+        foreach ($priceset as $amount) {
+          $label = explode('  -  ', $selectedAmount['label']);
+          $label = $label[0];
+          if (is_array($amount) &&
+            $amount['label'] == $label &&
+            $amount['value'] == $selectedAmount['amount']
+          ) {
+            $isPass[$count] = TRUE;
+          }
+        }
+      }
+      $amountDiff = array_diff_key($self->_amount, $isPass);
+    }
+    if (!empty($amountDiff)) {
+      return ts("The fee you selected has expired before submission. Please begin from the first step. You can refill another <a href=\"%1\">here</a>.", array(1 => CRM_Utils_System::url('civicrm/event/register', "reset=1&id={$self->_eventId}")));
+    }
+    else {
+      return FALSE;
+    }
   }
 }
 
