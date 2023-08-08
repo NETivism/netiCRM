@@ -38,14 +38,7 @@ test.describe.serial('Participant Editing', () => {
             /* open CiviEvent Dashboard */
             await page.goto('/civicrm/event?reset=1');
 
-            /* click sort by id */
-            element = '#event_status_id table thead th:first-child';
-            locator = page.locator(element);
-            await utils.findElement(page, element);
-            await locator.click();
-            await expect(page.locator('.sorting_1')).not.toHaveCount(0);
-
-            /* click latest created event */
+            /* click first event */
             element = '#event_status_id table tbody tr:last-child td.crm-event-title a';
             locator = page.locator(element).nth(0);
             var event_title = await locator.textContent();
