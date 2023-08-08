@@ -21,6 +21,14 @@
  */
 
 (function(global, factory) {
+  'use strict';
+
+  // Prevent global variable conflicts
+  if (global.crmDependentSelect) {
+    console.warn('crmDependentSelect is already defined. Please check if other scripts use the same global variable name.');
+    return;
+  }
+
   // Check if the environment supports module.exports (such as Node.js)
   if (typeof module === 'object' && typeof module.exports === 'object') {
       // Export the factory function as a module
@@ -32,6 +40,9 @@
 }(this, function() {
   'use strict';
 
+  // Ensure native methods aren't overridden
+  const originalForEach = Array.prototype.forEach;
+
   // Default configuration options for the plugin
   var defaultOptions = {
       debug: false
@@ -41,11 +52,19 @@
   function CrmDependentSelect(element, options) {
       // Select the element and validate it
       this.element = document.querySelector(element);
+      if (!this.element) {
+        console.error('The specified element does not exist.');
+        return;
+      }
       this.validateElement();
 
       // Merge user options with default options
       this.settings = Object.assign({}, defaultOptions, options);
-      this.init();
+      try {
+        this.init();
+      } catch (e) {
+        console.error('An error occurred while initializing crmDependentSelect:', e);
+      }
   }
 
   // Method to get parent information of the element
@@ -90,6 +109,11 @@
 
   // Method to setup the dependent select element
   CrmDependentSelect.prototype.setupDependentSelect = function() {
+      // Ensure native methods aren't overridden
+      if (Array.prototype.forEach !== originalForEach) {
+        throw new Error('Array\'s forEach method seems to be overridden.');
+      }
+
       // Get all the original options of the select element
       const originalOptions = Array.from(this.container.querySelectorAll('option'));
       this.container.classList.add("depended");
