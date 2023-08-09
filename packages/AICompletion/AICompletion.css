@@ -45,6 +45,11 @@ button.form-submit-primary,
   outline: 2px solid #C5CAE9;
   outline-offset: 0px;
 }
+.select2-container--default .select2-selection--single .select2-selection__clear {
+  padding: 0 4px 0 10px;
+  line-height: 1;
+  font-size: 18px;
+}
 .nsp-container.is-opened {
   max-width: 1100px;
 }
