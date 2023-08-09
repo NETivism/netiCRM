@@ -86,6 +86,7 @@ test.describe.serial('Event register page', () => {
       await expect(page).toHaveURL(/_qf_ThankYou_display/);
       await expect(page.locator('#help p')).toBeDefined();
     });
+    await utils.wait(wait_secs);
     await test.step('Check message hvae wait list', async () => {
       await page.goto('/civicrm/event/register?cid=0&reset=1&id=3');
       await expect(page).toHaveTitle(page_title);
@@ -106,6 +107,7 @@ test.describe.serial('Event register page', () => {
       await expect(page.locator('#help p')).toBeDefined();
       await expect(page.locator('.bold')).toContainText([/審核|reviewed/i]);
     });
+    await utils.wait(wait_secs);
     await test.step('Second participant message is correct.', async () => {
       await page.goto('/civicrm/event/register?cid=0&reset=1&id=4');
       await expect(page).toHaveTitle(page_title);
@@ -125,6 +127,7 @@ test.describe.serial('Event register page', () => {
       await expect(page.locator('#help p')).toBeDefined();
       await expect(page.locator('.bold')).toContainText([/審核|reviewed/i]);
     })
+    await utils.wait(wait_secs);
     await test.step("Second participant message is correct", async () =>{
       await page.goto('/civicrm/event/register?reset=1&action=preview&id=5&cid=0');
       await expect(page).toHaveTitle(page_title);
