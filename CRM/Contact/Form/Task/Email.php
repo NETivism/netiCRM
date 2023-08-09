@@ -118,6 +118,7 @@ class CRM_Contact_Form_Task_Email extends CRM_Contact_Form_Task {
     if ($config->nextEnabled) {
       $this->assign('ai_completion_default', CRM_AI_BAO_AICompletion::getDefaultTemplate('Activity'));
       $this->assign('ai_completion_url_basepath', $config->userSystem->languageNegotiationURL('/'));
+      $this->assign('ai_completion_component', 'Activity');
     }
 
     CRM_Contact_Form_Task_EmailCommon::buildQuickForm($this);

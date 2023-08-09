@@ -94,7 +94,7 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
       //we don't want to retrieve template details once it is
       //set in session
       $justSavedTemplate = $this->get('justSavedTemplate');
-      
+
       $this->assign('templateSelected', $justSavedTemplate ? $justSavedTemplate: 0);
       if (isset($defaults['msg_template_id']) && !$justSavedTemplate) {
         $messageTemplate = new CRM_Core_DAO_MessageTemplates();
@@ -109,7 +109,7 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
           if (!empty($json->sections)) {
             // this is correct json object for nme
             $jsonMessage = $messageTemplate->msg_text;
-          } 
+          }
           else {
             $jsonMessage = '';
           }
@@ -389,6 +389,7 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
     if ($config->nextEnabled) {
       $this->assign('ai_completion_default', CRM_AI_BAO_AICompletion::getDefaultTemplate('CiviMail'));
       $this->assign('ai_completion_url_basepath', $config->userSystem->languageNegotiationURL('/'));
+      $this->assign('ai_completion_component', 'CiviMail');
     }
     $this->addButtons($buttons);
   }

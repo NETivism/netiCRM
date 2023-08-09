@@ -30,12 +30,12 @@
       communityRecommendations: []
     },
     ts = {},
-    endpoint = {
-    },
+    endpoint = {},
     chatData = {
       messages: []
     },
     colon = ':',
+    component,
     errorMessage,
     errorMessageDefault;
 
@@ -282,6 +282,10 @@
     getTemplateList: function(data = {}) {
       let output = `<p>${ts['There are currently no templates available.']}</p>`;
 
+      if (component) {
+        data['component'] = component;
+      }
+
       for (let key in templateListData) {
         if (key == 'savedTemplates') {
           sendAjaxRequest(endpoint.getTemplateList, 'POST', data, function(response) {
@@ -293,7 +297,7 @@
                 for (let i in templateListData[key]) {
                   let data = templateListData[key][i],
                       prompt = JSON.parse(data.prompt);
-                  console.log(prompt);
+
                   output += `<div class="template-item" data-ai-role="${data.ai_role}" data-tone-style="${data.tone_style}" data-context="${data.context}">
                       <div class="inner">
                         <div class="ai-role"><span class="label">${ts['Copywriting Role']}</span>${colon}${data.ai_role}</div>
@@ -992,6 +996,7 @@
 
       defaultData = this.getDefaultData();
       endpoint = window.AICompletion.endpoint;
+      component = window.AICompletion.component;
       AICompletion.prototype.container = $container;
 
       // Get translation string comparison table
