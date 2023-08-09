@@ -190,6 +190,33 @@ class CRM_AI_Page_AJAX {
         $offset = $jsondata['offset'];
         $data['offset'] = $offset;
       }
+      if (isset($jsondata['is_share_with_others']) && is_numeric($jsondata['is_share_with_others'])) {
+        $isShared = $jsondata['is_share_with_others'];
+      }
+
+      if ($isShared) {
+        if (empty($component)) {
+          self::responseError(array(
+            'status' => 0,
+            'message' => "Component is empty,failed to retrieve template list.",
+          ));
+        }
+
+        $sharedData = CRM_AI_BAO_AICompletion::getSharedTemplate($component);
+        if (!empty($sharedData)) {
+          self::responseSucess(array(
+            'status' => 1,
+            'message' => "Template list retrieved successfully.",
+            'data' => $sharedData,
+          ));
+        }
+        else {
+          self::responseError(array(
+            'status' => 0,
+            'message' => "Failed to retrieve template list.",
+          ));
+        }
+      }
 
       if (!empty($data)) {
         $getListResult = CRM_AI_BAO_AICompletion::getTemplateList($data);

@@ -39,6 +39,7 @@ window.AICompletion = {
     chat: "{/literal}{$ai_completion_url_basepath}{literal}civicrm/ajax/ai/chat",
     setShare: "{/literal}{$ai_completion_url_basepath}{literal}civicrm/ajax/ai/set-share",
   },
+  component: "{/literal}{$ai_completion_component}{literal}",
   translation: {
     "Copy": "{/literal}{ts}Copy{/ts}{literal}",
     "Save": "{/literal}{ts}Save{/ts}{literal}",
