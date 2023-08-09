@@ -77,9 +77,9 @@ packages/jquery/plugins/jquery.modal.min.js
 packages/jquery/css/jquery.modal.min.css
 
 js/rest.js
+js/crmdependentselect.js
 
 js/jquery/jquery.crmaccordions.js
-js/jquery/jquery.crmdependentselect.js
 js/jquery/jquery.crmasmselect.js
 js/jquery/jquery.crmtooltip.js
 js/jquery/jquery.disablesubmit.js

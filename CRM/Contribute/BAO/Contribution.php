@@ -892,7 +892,21 @@ INNER JOIN  civicrm_contact contact ON ( contact.id = civicrm_contribution.conta
         $page_id = CRM_Core_DAO::getFieldValue("CRM_Contribute_DAO_Contribution", $id, 'contribution_page_id');
         if($page_id){
           if($ids['membership']){
-          
+            $membership_type_ids = array();
+            // Retrive actived membership type list.
+            $membership_types = CRM_Member_PseudoConstant::membershipType();
+            foreach ($membership_types as $membership_type_id => $membership_type) {
+              // Search for membership of the contact each types.
+              $membership = CRM_Member_BAO_Membership::getContactMembership($ids['contact_id'], $membership_type_id , $ids['is_test']);
+              if (!empty($membership)) {
+                // If there are memberships, add to an array.
+                $membership_type_ids[] = $membership['membership_type_id'];
+              }
+            }
+            // If the array is not empty, than the contact can paid by payment.
+            if (!empty($membership_type_ids)) {
+              $return = TRUE;
+            }
           }
           else{
             $return = TRUE;
