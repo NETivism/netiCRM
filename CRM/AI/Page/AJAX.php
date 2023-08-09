@@ -147,10 +147,25 @@ class CRM_AI_Page_AJAX {
         }
         catch(CRM_Core_Exception $e) {
           $message = $e->getMessage();
-          self::responseError(array(
-            'status' => 0,
-            'message' => $message,
-          ));
+
+          // Check if the exception message is related to cURL timeout or any cURL errors
+          if(strpos($message, "Curl Error") !== false) {
+            // Send the error as a SSE formatted message
+            header('Content-Type: text/event-stream');
+            header('Cache-Control: no-cache');
+
+            echo "data: " . json_encode(array(
+              "is_error" => 1,
+              "message" => $message
+            )) . "\n\n";
+            flush();
+            CRM_Utils_System::civiExit();
+          } else {
+            self::responseError(array(
+              'status' => 0,
+              'message' => $message,
+            ));
+          }
         }
         self::responseSucess(array(
           'status' => 1,

@@ -902,6 +902,7 @@
                   if (eventData.is_error) {
                     if (!$aiMsg.hasClass(ERROR_CLASS)) {
                       $aiMsg.addClass(ERROR_CLASS);
+                      throw new Error(`${eventData.message} (onmessage error)`);
                     }
                   }
 
@@ -934,44 +935,73 @@
                 else {
                   if (eventData.hasOwnProperty('message')) {
                     let message = eventData.message.replace(/\n/g, '<br>');
-                    AICompletion.prototype.createMessage(aiMsgID, userMsgID, message, 'ai', 'stream');
-                    $aiMsg = $container.find('.msg[id="' + aiMsgID + '"]');
-                    $userMsg = $container.find('.msg[id="' + userMsgID + '"]');
 
-                    if (eventData.hasOwnProperty('id')) {
-                      $aiMsg.data('aicompletion-id', eventData.id);
+                    if (eventData.hasOwnProperty('is_error')) {
+                      let msgID = 'ai-msg-' + renderID();
 
-                      if (!$userMsg.hasClass(`ai-msg-${FINISH_CLASS}`)) {
-                        $userMsg.addClass(`ai-msg-${FINISH_CLASS}`);
+                      if (eventData.message.includes('timed out')) {
+                        errorMessage = ts['Our service is currently busy, please try again later. If needed, please contact our customer service team.'];
+                        AICompletion.prototype.createMessage(msgID, '', errorMessage, 'ai', 'error');
                       }
-                    }
-
-                    // Update usage
-                    if (chatData.messages.hasOwnProperty(aiMsgID)) {
-                      if (!chatData.messages[aiMsgID].used) {
-                        AICompletion.prototype.usageUpdate();
+                      else {
+                        AICompletion.prototype.createMessage(msgID, '', errorMessageDefault, 'ai', 'error');
                       }
+
+                      console.error(message);
                     }
                     else {
-                      chatData.messages[aiMsgID] = {
-                        used: true
+                      AICompletion.prototype.createMessage(aiMsgID, userMsgID, message, 'ai', 'stream');
+                      $aiMsg = $container.find('.msg[id="' + aiMsgID + '"]');
+                      $userMsg = $container.find('.msg[id="' + userMsgID + '"]');
+
+                      if (eventData.hasOwnProperty('id')) {
+                        $aiMsg.data('aicompletion-id', eventData.id);
+
+                        if (!$userMsg.hasClass(`ai-msg-${FINISH_CLASS}`)) {
+                          $userMsg.addClass(`ai-msg-${FINISH_CLASS}`);
+                        }
                       }
 
-                      AICompletion.prototype.usageUpdate();
+                      // Update usage
+                      if (chatData.messages.hasOwnProperty(aiMsgID)) {
+                        if (!chatData.messages[aiMsgID].used) {
+                          AICompletion.prototype.usageUpdate();
+                        }
+                      }
+                      else {
+                        chatData.messages[aiMsgID] = {
+                          used: true
+                        }
+
+                        AICompletion.prototype.usageUpdate();
+                      }
                     }
                   }
                 }
               }
             } catch (error) {
-              console.error('JSON Parse Error:', error.message);
-              AICompletion.prototype.createMessage(aiMsgID, userMsgID, errorMessageDefault, 'ai', 'error');
+              if (error.message.includes('onmessage error')) {
+                let msgID = 'ai-msg-' + renderID();
+
+                if (error.message.includes('timed out')) {
+                  errorMessage = ts['Our service is currently busy, please try again later. If needed, please contact our customer service team.'];
+                  AICompletion.prototype.createMessage(msgID, '', errorMessage, 'ai', 'error');
+                }
+                else {
+                  AICompletion.prototype.createMessage(msgID, '', errorMessageDefault, 'ai', 'error');
+                }
+              }
+              else {
+                AICompletion.prototype.createMessage(aiMsgID, userMsgID, errorMessageDefault, 'ai', 'error');
+              }
+
+              console.error(error.message);
             }
           };
 
           evtSource.onerror = function(event) {
             console.error("EventSource encountered an error: ", event);
             evtSource.close();
-            AICompletion.prototype.createMessage(aiMsgID, userMsgID, errorMessageDefault, 'ai', 'error');
           };
         })
         .catch(function(error) {
