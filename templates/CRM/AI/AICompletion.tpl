@@ -163,7 +163,9 @@ window.AICompletion = {
   $(function() {
     // TODO: timeout is workaround
     setTimeout(function() {
-      $('.netiaic-container:not(.is-initialized)').AICompletion();
+      AICompletionOpts = {};
+      AICompletionOpts.debug = "{/literal}{$config->debug}{literal}";
+      $('.netiaic-container:not(.is-initialized)').AICompletion(AICompletionOpts);
     }, 3000);
   });
 })(cj);

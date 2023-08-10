@@ -35,18 +35,27 @@
       messages: []
     },
     colon = ':',
+    debug = false,
     component,
     errorMessage,
     errorMessageDefault;
 
   // Default configuration options
-  var defaultOptions = {};
+  var defaultOptions = {
+    debug: false
+  };
 
   /**
    * ============================
    * Private functions
    * ============================
    */
+
+  var debugLog = function(message, obj) {
+    if (debug && window.console && window.console.log) {
+      console.log('AICompletion:', message, obj || '');
+    }
+  };
 
   var isObject = function(variable) {
     return typeof variable === 'object' && variable !== null;
@@ -166,6 +175,13 @@
   var AICompletion = function(element, options) {
     this.element = element;
     this.settings = $.extend({}, defaultOptions, options);
+
+    debug = this.settings.debug === "1" ? true : false;
+
+    if (debug) {
+      $("html").addClass("is-debug");
+    }
+
     this.init();
   }
 
@@ -1107,6 +1123,7 @@
 
       // Finally, add class to mark the initialization
       $container.addClass(INIT_CLASS);
+      debugLog('AICompletion initialized on element:', this.element);
     }
   };
 
