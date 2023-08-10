@@ -295,14 +295,13 @@
                 output = `<div class="template-list">`;
 
                 for (let i in templateListData[key]) {
-                  let data = templateListData[key][i],
-                      prompt = JSON.parse(data.prompt);
+                  let tplData = templateListData[key][i];
 
-                  output += `<div class="template-item" data-ai-role="${data.ai_role}" data-tone-style="${data.tone_style}" data-context="${data.context}">
+                  output += `<div class="template-item" data-ai-role="${tplData.ai_role}" data-tone-style="${tplData.tone_style}" data-context="${tplData.context}">
                       <div class="inner">
-                        <div class="ai-role"><span class="label">${ts['Copywriting Role']}</span>${colon}${data.ai_role}</div>
-                        <div class="tone-style"><span class="label">${ts['Tone Style']}</span>${colon}${data.tone_style}</div>
-                        <div class="context"><span class="label">${ts['Content Summary']}</span>${colon}${data.context}</div>
+                        <div class="ai-role"><span class="label">${ts['Copywriting Role']}</span>${colon}${tplData.ai_role}</div>
+                        <div class="tone-style"><span class="label">${ts['Tone Style']}</span>${colon}${tplData.tone_style}</div>
+                        <div class="context"><span class="label">${ts['Content Summary']}</span>${colon}${tplData.context}</div>
                         <div class="actions">
                           <button type="button" class="apply-btn btn">${ts['Apply Template']}</button>
                         </div>
@@ -351,7 +350,68 @@
         }
 
         if (key == 'communityRecommendations') {
-          $(`#use-other-templates-tabs .modal-tabs-panel[data-type="${key}"]`).html(output);
+          data['is_share_with_others'] = 1;
+
+          sendAjaxRequest(endpoint.getTemplateList, 'POST', data, function(response) {
+            if (response.status == 'success' || response.status == 1) {
+              if (response.data) { // TODO: check data
+                templateListData[key] = response.data;
+                output = `<div class="template-list">`;
+
+                for (let i in templateListData[key]['templates']) {
+                  let tplData = templateListData[key]['templates'][i];
+
+                  output += `<div class="template-item" data-ai-role="${tplData.role}" data-tone-style="${tplData.tone}" data-context="${tplData.content}">
+                      <div class="inner">
+                        <div class="ai-role"><span class="label">${ts['Copywriting Role']}</span>${colon}${tplData.role}</div>
+                        <div class="tone-style"><span class="label">${ts['Tone Style']}</span>${colon}${tplData.tone}</div>
+                        <div class="context"><span class="label">${ts['Content Summary']}</span>${colon}${tplData.content}</div>
+                        <div class="org"><span class="label">${ts['The organization sharing this template']}</span>${colon}${tplData.org}</div>
+                        <div class="actions">
+                          <button type="button" class="apply-btn btn">${ts['Apply Template']}</button>
+                        </div>
+                      </div>
+                    </div>`;
+                }
+
+                output += `</div>`;
+              }
+            }
+
+            $(`#use-other-templates-tabs .modal-tabs-panel[data-type="${key}"]`).html(output);
+
+            $('.template-list').on('click', '.apply-btn', function() {
+              let $templateItem = $(this).closest('.template-item'),
+                  templateData = {
+                    role: $templateItem.attr("data-ai-role"),
+                    tone: $templateItem.attr("data-tone-style"),
+                    content: $templateItem.attr("data-context")
+                  };
+
+              if (!AICompletion.prototype.formIsEmpty()) {
+                if (confirm(ts['Warning! Applying this template will clear your current settings. Proceed with the application?'])) {
+                  AICompletion.prototype.applyTemplateToForm({ data: templateData });
+                  AICompletion.prototype.modal.close();
+                }
+              }
+              else {
+                AICompletion.prototype.applyTemplateToForm({ data: templateData });
+                AICompletion.prototype.modal.close();
+              }
+            });
+          }, function(xhr, status, error) {
+            if (status == 'timeout') {
+              errorMessage = `<p class="error">${ts['Our service is currently busy, please try again later. If needed, please contact our customer service team.']}</p>`;
+            }
+            else if (xhr.responseJSON.message == 'Failed to retrieve template list.') {
+              errorMessage = `<p>${ts['There are currently no templates available.']}</p>`;
+            }
+            else {
+              errorMessage = `<p class="error">${errorMessageDefault}</p>`;
+            }
+
+            $(`#use-other-templates-tabs .modal-tabs-panel[data-type="${key}"]`).html(errorMessage);
+          });
         }
       }
     },

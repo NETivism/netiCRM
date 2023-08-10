@@ -416,6 +416,10 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
 .netiaic-modal .template-item:hover .context {
   display: block;
 }
+.netiaic-modal .template-item .org {
+  position: absolute;
+  bottom: 0;
+}
 .netiaic-modal .template-item .actions {
   text-align: right;
 }
