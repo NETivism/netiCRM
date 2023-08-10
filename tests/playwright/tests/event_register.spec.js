@@ -65,7 +65,7 @@ test.describe.serial('Event register page', () => {
     });
 
     await test.step('Second participant message is correct.', async () => {
-      await page.locator('.event_info_link-section').click();
+      await page.locator('.event_info_link-section a').click();
       await expect(page).toHaveTitle(page_title);
       await expect(page.locator('.messages.status')).toBeDefined();
       await expect(page.locator('#crm-container > div.messages.status')).toContainText([/額滿|full/i]);
@@ -103,7 +103,7 @@ test.describe.serial('Event register page', () => {
       await expect(page.locator('.bold')).toContainText([/審核|reviewed/i]);
     });
     await test.step('Second participant message is correct.', async () => {
-      await page.locator('.event_info_link-section').click();
+      await page.locator('.event_info_link-section a').click();
       await expect(page).toHaveTitle(page_title);
       await expect(page.locator('.messages.status')).toBeDefined();
       await expect(page.locator('#crm-container > div.messages.status')).toContainText([/額滿|full/i]);
