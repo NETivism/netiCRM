@@ -42,7 +42,7 @@ test.describe.serial('Event register page', () => {
   test('Normal registration', async () => {
     var page_title = getPageTitle(item.event_name_1);
     await test.step("Check can visit page.", async () =>{
-      await page.goto('/civicrm/event/register?reset=1&action=preview&id=1&cid=0');
+      await page.goto('/civicrm/event/register?reset=1&id=1&cid=0');
       await expect(page).toHaveTitle(page_title);
     })
     await test.step("Check register event.", async () =>{
@@ -65,7 +65,7 @@ test.describe.serial('Event register page', () => {
     });
 
     await test.step('Second participant message is correct.', async () => {
-      await page.goto('/civicrm/event/info?reset=1&id=2');
+      await page.locator('.event_info_link-section').click();
       await expect(page).toHaveTitle(page_title);
       await expect(page.locator('.messages.status')).toBeDefined();
       await expect(page.locator('#crm-container > div.messages.status')).toContainText([/額滿|full/i]);
@@ -103,7 +103,7 @@ test.describe.serial('Event register page', () => {
       await expect(page.locator('.bold')).toContainText([/審核|reviewed/i]);
     });
     await test.step('Second participant message is correct.', async () => {
-      await page.goto('/civicrm/event/info?reset=1&id=4');
+      await page.locator('.event_info_link-section').click();
       await expect(page).toHaveTitle(page_title);
       await expect(page.locator('.messages.status')).toBeDefined();
       await expect(page.locator('#crm-container > div.messages.status')).toContainText([/額滿|full/i]);
@@ -113,7 +113,7 @@ test.describe.serial('Event register page', () => {
   test('Unlimit participants. Need approval', async () => {
     var page_title = getPageTitle(item.event_name_5);
     await test.step("Verity can register event.", async () =>{
-      await page.goto('/civicrm/event/register?reset=1&action=preview&id=5&cid=0');
+      await page.goto('/civicrm/event/register?reset=1&id=5&cid=0');
       await expect(page).toHaveTitle(page_title);
       await fillForm(utils.makeid(5) + '@fakemailevent6.com');
       await page.locator('text=/.*Continue \\>\\>.*/').click();
@@ -122,7 +122,7 @@ test.describe.serial('Event register page', () => {
       await expect(page.locator('.bold')).toContainText([/審核|reviewed/i]);
     })
     await test.step("Second participant message is correct", async () =>{
-      await page.goto('/civicrm/event/register?reset=1&action=preview&id=5&cid=0');
+      await page.goto('/civicrm/event/register?reset=1&id=5&cid=0');
       await expect(page).toHaveTitle(page_title);
       await fillForm(utils.makeid(5) + '@fakemailevent7.com');
       await page.locator('text=/.*Continue \\>\\>.*/').click();
