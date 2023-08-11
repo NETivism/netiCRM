@@ -6985,6 +6985,11 @@ input.crm-form-textfield,
   padding-left: 30px;
   background: url(images/icon--search.png) left 0 top 50% / 30px no-repeat;
 }
+.select2-container--default .select2-selection--single .select2-selection__clear {
+  padding: 0 6px 0 10px;
+  line-height: 1;
+  font-size: 18px;
+}
 
 /* click to show */
 .click-to-show-info {
