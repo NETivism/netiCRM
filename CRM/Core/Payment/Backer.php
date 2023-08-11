@@ -74,10 +74,14 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
       array('name' => 'password',
         'label' => $ppDAO->password_label,
       ),
-      array('name' => 'url_site',
+      array(
+        'name' => 'url_api',
+        'label' => ts('API URL'),
+      ),
+      array('name' => 'url_button',
         'label' => ts('Link Label'),
       ),
-      array('name' => 'url_api',
+      array('name' => 'url_site',
         'label' => ts('Link URL'),
       ),
     );

@@ -1073,7 +1073,8 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
 
     // Check discount priceset is correct.
     if (!empty($self->_values['discount'])) {
-      $timestamp = CRM_REQUEST_TIME;
+      $participantId = $self->get('participantId');
+      $timestamp = self::getRegistrationTimestamp($participantId);
       $discountId = CRM_Core_BAO_Discount::findSet($self->_eventId, 'civicrm_event', $timestamp);
       if (!empty($discountId)) {
         if (!empty($self->_values['discount'][$discountId])) {

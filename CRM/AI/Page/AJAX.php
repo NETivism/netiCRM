@@ -147,10 +147,25 @@ class CRM_AI_Page_AJAX {
         }
         catch(CRM_Core_Exception $e) {
           $message = $e->getMessage();
-          self::responseError(array(
-            'status' => 0,
-            'message' => $message,
-          ));
+
+          // Check if the exception message is related to cURL timeout or any cURL errors
+          if(strpos($message, "Curl Error") !== false) {
+            // Send the error as a SSE formatted message
+            header('Content-Type: text/event-stream');
+            header('Cache-Control: no-cache');
+
+            echo "data: " . json_encode(array(
+              "is_error" => 1,
+              "message" => $message
+            )) . "\n\n";
+            flush();
+            CRM_Utils_System::civiExit();
+          } else {
+            self::responseError(array(
+              'status' => 0,
+              'message' => $message,
+            ));
+          }
         }
         self::responseSucess(array(
           'status' => 1,
@@ -189,6 +204,33 @@ class CRM_AI_Page_AJAX {
       if (isset($jsondata['offset']) && is_numeric($jsondata['offset'])) {
         $offset = $jsondata['offset'];
         $data['offset'] = $offset;
+      }
+      if (isset($jsondata['is_share_with_others']) && is_numeric($jsondata['is_share_with_others'])) {
+        $isShared = $jsondata['is_share_with_others'];
+      }
+
+      if ($isShared) {
+        if (empty($component)) {
+          self::responseError(array(
+            'status' => 0,
+            'message' => "Component is empty,failed to retrieve template list.",
+          ));
+        }
+
+        $sharedData = CRM_AI_BAO_AICompletion::getSharedTemplate($component);
+        if (!empty($sharedData)) {
+          self::responseSucess(array(
+            'status' => 1,
+            'message' => "Template list retrieved successfully.",
+            'data' => $sharedData,
+          ));
+        }
+        else {
+          self::responseError(array(
+            'status' => 0,
+            'message' => "Failed to retrieve template list.",
+          ));
+        }
       }
 
       if (!empty($data)) {

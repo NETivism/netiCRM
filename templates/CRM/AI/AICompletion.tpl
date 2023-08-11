@@ -39,6 +39,7 @@ window.AICompletion = {
     chat: "{/literal}{$ai_completion_url_basepath}{literal}civicrm/ajax/ai/chat",
     setShare: "{/literal}{$ai_completion_url_basepath}{literal}civicrm/ajax/ai/set-share",
   },
+  component: "{/literal}{$ai_completion_component}{literal}",
   translation: {
     "Copy": "{/literal}{ts}Copy{/ts}{literal}",
     "Save": "{/literal}{ts}Save{/ts}{literal}",
@@ -59,6 +60,7 @@ window.AICompletion = {
     "Recommend": "{/literal}{ts}Recommend{/ts}{literal}",
     "Recommended": "{/literal}{ts}Recommended{/ts}{literal}",
     "Organization intro": "{/literal}{ts}Organization intro{/ts}{literal}",
+    "The organization sharing this template": "{/literal}{ts}The organization sharing this template{/ts}{literal}",
     "Warning! Applying this template will clear your current settings. Proceed with the application?": "{/literal}{ts}Warning! Applying this template will clear your current settings. Proceed with the application?{/ts}{literal}",
     "Remember to verify AI-generated text before using it.": "{/literal}{ts}Remember to verify AI-generated text before using it.{/ts}{literal}",
     "Save prompt as shared template": "{/literal}{ts}Save prompt as shared template{/ts}{literal}",
@@ -161,7 +163,9 @@ window.AICompletion = {
   $(function() {
     // TODO: timeout is workaround
     setTimeout(function() {
-      $('.netiaic-container:not(.is-initialized)').AICompletion();
+      AICompletionOpts = {};
+      AICompletionOpts.debug = "{/literal}{$config->debug}{literal}";
+      $('.netiaic-container:not(.is-initialized)').AICompletion(AICompletionOpts);
     }, 3000);
   });
 })(cj);
