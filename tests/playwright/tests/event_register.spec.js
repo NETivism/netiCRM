@@ -60,6 +60,7 @@ test.describe.serial('Event register page', () => {
       await expect(page).toHaveTitle(page_title);
       await fillForm(utils.makeid(5) + '@fakemailevent2.com');
       await page.locator('text=/.*Continue \\>\\>.*/').click();
+      await utils.wait(wait_secs);
       await expect(page).toHaveURL(/_qf_ThankYou_display/);
       await expect(page.locator('#help .msg-register-success')).toBeDefined();
       await page.locator('.event_info_link-section a').click();
@@ -95,6 +96,7 @@ test.describe.serial('Event register page', () => {
       await expect(page).toHaveTitle(page_title);
       await fillForm(utils.makeid(5) + '@fakemailevent5.com');
       await page.locator('text=/.*Continue \\>\\>.*/').click();
+      await utils.wait(wait_secs);
       await expect(page).toHaveURL(/_qf_ThankYou_display/);
       await expect(page.locator('#help p')).toBeDefined();
       await expect(page.locator('.bold')).toContainText([/審核|reviewed/i]);
