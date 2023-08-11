@@ -9,6 +9,8 @@ class CRM_Contribute_Form_NewebpayImport_Upload extends CRM_Core_Form {
   function buildQuickForm() {
     $this->add('file', 'uploadFile', ts('Import Data File'), 'size=30 maxlength=60', TRUE);
 
+    $this->addRule('uploadFile', ts('Input file must be in CSV format'), 'utf8File');
+
     $customFields = array();
     $customFields[0] = ts('-- Select --');
     $sql = "SELECT cf.id, cf.label FROM civicrm_custom_field cf LEFT JOIN civicrm_custom_group cg ON cf.custom_group_id = cg.id WHERE data_type = 'Date' AND cg.extends = 'Contribution'";
@@ -42,7 +44,7 @@ class CRM_Contribute_Form_NewebpayImport_Upload extends CRM_Core_Form {
 
     $typePass = FALSE;
     switch ($files['uploadFile']['type']) {
-      // case 'text/csv':
+      case 'text/csv':
       case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
         $typePass = TRUE;
         break;
@@ -50,7 +52,7 @@ class CRM_Contribute_Form_NewebpayImport_Upload extends CRM_Core_Form {
         break;
     }
     if (!$typePass) {
-      $errors['uploadFile'] = ts('File format must be one of these: %1', array(1 => 'xlsx'));
+      $errors['uploadFile'] = ts('File format must be one of these: %1', array(1 => 'csv, xlsx'));
     }
 
     return $errors;
@@ -74,21 +76,32 @@ class CRM_Contribute_Form_NewebpayImport_Upload extends CRM_Core_Form {
 
   public static function parseUpload($file) {
     if (file_exists($file['name'])) {
+      if ($file['type'] == 'text/csv') {
+        $filePath = $file['name'];
+        $fd = fopen($filePath, 'r');
+        $config = CRM_Core_Config::singleton();
+        $rowsFromSheet = array();
+        $i = 1;
+        while($row = fgetcsv($fd, 0, $config->fieldSeparator)) {
+          $rowsFromSheet[$i] = $row;
+          $i++;
+        }
+      }
       if ($file['type'] == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
         $rowsFromSheet = CRM_Core_Report_Excel::readExcelFile($file['name']);
-        $rows = array();
-        foreach ($rowsFromSheet as $rowNum => $row) {
-          if ($rowNum == 1) {
-            $header = $row;
-            $rows[] = $header;
+      }
+      $rows = array();
+      foreach ($rowsFromSheet as $rowNum => $row) {
+        if ($rowNum == 1) {
+          $header = $row;
+          $rows[] = $header;
+        }
+        else {
+          $oneRow = array();
+          foreach ($row as $columnNum => $value) {
+            $oneRow[$header[$columnNum]] = $value;
           }
-          else {
-            $oneRow = array();
-            foreach ($row as $columnNum => $value) {
-              $oneRow[$header[$columnNum]] = $value;
-            }
-            $rows[] = $oneRow;
-          }
+          $rows[] = $oneRow;
         }
       }
       return $rows;
