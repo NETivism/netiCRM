@@ -40,6 +40,7 @@ test.afterAll(async () => {
 
 test.describe.serial('Event register page', () => {
   test('Normal registration', async () => {
+    await page.goto('/user/logout');
     var page_title = getPageTitle(item.event_name_1);
     await test.step("Check can visit page.", async () =>{
       await page.goto('/civicrm/event/register?reset=1&id=1&cid=0');
@@ -117,7 +118,7 @@ test.describe.serial('Event register page', () => {
       await expect(page).toHaveURL(/_qf_ThankYou_display/);
       await expect(page.locator('#help p')).toBeDefined();
       await expect(page.locator('.bold')).toContainText([/審核|reviewed/i]);
-    })
+    });
     await test.step("Second participant message is correct", async () =>{
       await page.goto('/civicrm/event/register?reset=1&id=5&cid=0');
       await expect(page).toHaveTitle(page_title);
@@ -126,6 +127,16 @@ test.describe.serial('Event register page', () => {
       await expect(page).toHaveURL(/_qf_ThankYou_display/);
       await expect(page.locator('#help p')).toBeDefined();
       await expect(page.locator('.bold')).toContainText([/審核|reviewed/i]);
-    })
+    });
+    await test.step('Re-login', async () => {
+      await page.goto('/');
+      await page.locator('input[name="name"]').fill(process.env.adminUser);
+      await page.locator('input[name="pass"]').fill(process.env.adminPwd);
+      await page.locator('input[value="Log in"]').click();
+      // Save signed-in state to 'storageState.json'.
+      await page.context().storageState({ path: 'storageState.json' });
+      await expect(page).toHaveTitle(/Welcome[^|]+ \| netiCRM/);
+    });
   });
+
 });
