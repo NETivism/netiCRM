@@ -197,6 +197,12 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     }
     else {
       $is_test = $this->_mode == 'test' ? 1 : 0;
+      if (isset($this->_paymentForm) && get_class($this->_paymentForm) == 'CRM_Contribute_Form_Payment_Main') {
+        if (empty($params['email-5'] && !empty($params['contactID']))) {
+          $params['email-5'] = CRM_Contact_BAO_Contact::getPrimaryEmail($params['contactID']);
+        }
+        $params['item_name'] = $params['description'];
+      }
       civicrm_spgateway_do_transfer_checkout($params, $component, $this->_paymentProcessor, $is_test);
     }
   }
