@@ -53,18 +53,15 @@ test.describe.serial('Event register page', () => {
     })
   });
 
-  test('limit participants. Not fot waiting', async() => {
+  test('limit participants. Not for waiting', async() => {
     var page_title = getPageTitle(item.event_name_2);
-    await test.step('Check can register', async () => {
+    await test.step('Check can register and second participant message is correct.', async () => {
       await page.goto('/civicrm/event/register?cid=0&reset=1&id=2');
       await expect(page).toHaveTitle(page_title);
       await fillForm(utils.makeid(5) + '@fakemailevent2.com');
       await page.locator('text=/.*Continue \\>\\>.*/').click();
       await expect(page).toHaveURL(/_qf_ThankYou_display/);
       await expect(page.locator('#help .msg-register-success')).toBeDefined();
-    });
-
-    await test.step('Second participant message is correct.', async () => {
       await page.locator('.event_info_link-section a').click();
       await expect(page).toHaveTitle(page_title);
       await expect(page.locator('.messages.status')).toBeDefined();
@@ -72,7 +69,7 @@ test.describe.serial('Event register page', () => {
     });
   });
 
-  test('limit participants. Not fot waiting.', async () => {
+  test('limit participants. Accepting waitlist registrations.', async () => {
     var page_title = getPageTitle(item.event_name_3);
     await test.step('Check can register', async () => {
       await page.goto('/civicrm/event/register?cid=0&reset=1&id=3');
@@ -93,7 +90,7 @@ test.describe.serial('Event register page', () => {
 
   test('limit participants. Need approval', async () => {
     var page_title = getPageTitle(item.event_name_4);
-    await test.step('First register success', async () => {
+    await test.step('First register success and second participant message is correct', async () => {
       await page.goto('/civicrm/event/register?cid=0&reset=1&id=4');
       await expect(page).toHaveTitle(page_title);
       await fillForm(utils.makeid(5) + '@fakemailevent5.com');
@@ -101,8 +98,6 @@ test.describe.serial('Event register page', () => {
       await expect(page).toHaveURL(/_qf_ThankYou_display/);
       await expect(page.locator('#help p')).toBeDefined();
       await expect(page.locator('.bold')).toContainText([/審核|reviewed/i]);
-    });
-    await test.step('Second participant message is correct.', async () => {
       await page.locator('.event_info_link-section a').click();
       await expect(page).toHaveTitle(page_title);
       await expect(page.locator('.messages.status')).toBeDefined();
