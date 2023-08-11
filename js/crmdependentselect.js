@@ -53,7 +53,7 @@
       // Select the element and validate it
       this.element = document.querySelector(element);
       if (!this.element) {
-        console.error('The specified element does not exist.');
+        console.warn('The specified element does not exist.');
         return;
       }
       this.validateElement();

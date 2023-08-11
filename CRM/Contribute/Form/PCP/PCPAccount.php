@@ -69,6 +69,12 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
     if ($this->_id) {
       $this->_contactID = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_PCP', $this->_id, 'contact_id');
     }
+    else {
+      $userID = CRM_Core_Session::singleton()->get('userID');
+      if (!empty($userID)) {
+        $this->_contactID = $userID;
+      }
+    }
     $this->set('contactID', $this->_contactID);
 
     if (!$this->_pageId) {
@@ -273,13 +279,12 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
     $contactID = &CRM_Contact_BAO_Contact::createProfileContact($params, $this->_fields, $this->_contactID);
     $this->set('contactID', $contactID);
 
-    if (!empty($params['email'])) {
-      $params['email'] = $params['email'][1]['email'];
-    }
-
-    require_once "CRM/Contribute/BAO/Contribution/Utils.php";
-    if (!$session->get('userID')) {
-      CRM_Contribute_BAO_Contribution_Utils::createCMSUser($params, $contactID, 'email');
+    if (!$session->get('userID') && CRM_Utils_Array::value('cms_create_account', $params)) {
+      if (!empty($params['email'])) {
+        $params['email'] = $params['email'][1]['email'];
+      }
+      $params['contactID'] = $contactID;
+      CRM_Core_BAO_CMSUser::create($params, 'email');
     }
   }
 }
