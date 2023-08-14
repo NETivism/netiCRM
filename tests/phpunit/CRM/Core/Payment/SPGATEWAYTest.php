@@ -241,7 +241,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
       'start_date' => $date,
       'create_date' => $date,
       'modified_date' => $date,
-      'invoice_id' => md5($now),
+      'invoice_id' => md5(uniqid((string)rand(), TRUE)),
       'contribution_status_id' => 2,
       'trxn_id' => md5(uniqid((string)rand(), TRUE)),
     );
