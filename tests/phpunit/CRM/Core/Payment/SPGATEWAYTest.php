@@ -243,7 +243,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
       'modified_date' => $date,
       'invoice_id' => md5($now),
       'contribution_status_id' => 2,
-      'trxn_id' => CRM_Utils_Array::value('trxn_id', $params),
+      'trxn_id' => md5(uniqid((string)rand(), TRUE)),
     );
     $ids = array();
     $recurring = &CRM_Contribute_BAO_ContributionRecur::add($recur, $ids);
