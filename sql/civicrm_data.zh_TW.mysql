@@ -4682,7 +4682,7 @@ VALUES
   (@option_group_id_pi, '銀聯卡',  16, 'UnionPay', NULL, 0, NULL, 16, NULL, 0, 1, 1, NULL, NULL),
   (@option_group_id_pi, 'Apple Pay',  17, 'ApplePay', NULL, 0, NULL, 17, NULL, 0, 1, 1, NULL, NULL),
   (@option_group_id_pi, 'Google Pay',  18, 'GooglePay', NULL, 0, NULL, 18, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_pi, 'Line Pay',  19, 'LinePay', NULL, 0, NULL, 19, NULL, 0, 1, 1, NULL, NULL),
+  (@option_group_id_pi, 'LINE Pay',  19, 'LinePay', NULL, 0, NULL, 19, NULL, 0, 1, 1, NULL, NULL),
   (@option_group_id_pi, 'ACH 銀行',  20, 'ACH Bank', NULL, 0, NULL, 20, NULL, 0, 1, 1, NULL, NULL),
   (@option_group_id_pi, 'ACH 郵局',  21, 'ACH Post', NULL, 0, NULL, 21, NULL, 0, 1, 1, NULL, NULL),
   (@option_group_id_pi, 'Alipay',  22, 'Alipay', NULL, 0, NULL, 22, NULL, 0, 1, 1, NULL, NULL),
