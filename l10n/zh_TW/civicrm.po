@@ -48456,7 +48456,7 @@ msgid "GooglePay"
 msgstr "Google Pay"
 
 msgid "LinePay"
-msgstr "Line Pay"
+msgstr "LINE Pay"
 
 msgid "ACH Bank"
 msgstr "ACH 銀行"
@@ -49486,3 +49486,7 @@ msgid ""
 "The fee you selected has expired before submission. Please begin from the "
 "first step. You can refill another <a href=\"%1\">here</a>."
 msgstr "您所選的費用在送出前已超過有效期限，請返回第一步重新填寫報名表單。您可以按<a href=\"%1\">這裡</a>直接返回報名頁面。"
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid "The organization sharing this template"
+msgstr "分享組織"

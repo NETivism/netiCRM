@@ -556,12 +556,15 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
     }
     $path = 'CRM/AI/shared/'.$component.$suffix.$locale.'.tpl';
     $shared = $smarty->fetch($path);
-    $verified = json_decode($shared);
-    if (!$verified) {
+    $decodedShared = json_decode($shared, true);
+
+    if (!$decodedShared) {
       // fallback to non-locale template
       $path = 'CRM/AI/shared/'.$component.$suffix.'.tpl';
       $shared = $smarty->fetch($path);
+      $decodedShared = json_decode($shared, true);
     }
-    return $shared;
+
+    return $decodedShared;
   }
 }
