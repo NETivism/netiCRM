@@ -574,7 +574,12 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
 .nsp-is-opened .select2-container--default .select2-search--dropdown .select2-search__field {
   background: none;
 }
-
+.is-show {
+  display: block !important;
+}
+.is-hide {
+  display: none !important;
+}
 
 @keyframes skeleton-animation {
   0% {

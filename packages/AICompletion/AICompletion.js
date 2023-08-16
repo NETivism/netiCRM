@@ -15,6 +15,8 @@
         FINISH_CLASS = 'is-finished',
         EXPAND_CLASS = 'is-expanded',
         COPY_CLASS = 'is-copied',
+        SHOW_CLASS = 'is-show',
+        HIDE_CLASS = 'is-hide',
         MFP_ACTIVE_CLASS = 'mfp-is-active',
         TIMEOUT = 30000;
 
@@ -303,12 +305,14 @@
       }
 
       for (let key in templateListData) {
+        output = `<div class="template-filters"><input class="keyword-filter" type="text" placeholder="${ts['Input search keywords']}"></div>`;
+
         if (key == 'savedTemplates') {
           sendAjaxRequest(endpoint.getTemplateList, 'POST', data, function(response) {
             if (response.status == 'success' || response.status == 1) {
               if (response.data) { // TODO: check data
                 templateListData[key] = response.data;
-                output = `<div class="template-list">`;
+                output += `<div class="template-list">`;
 
                 for (let i in templateListData[key]) {
                   let tplData = templateListData[key][i];
@@ -350,6 +354,28 @@
                 AICompletion.prototype.modal.close();
               }
             });
+
+            let buffer;
+            $('.keyword-filter').off().on('input', function() {
+              clearTimeout(buffer);
+                let $panel = $(this).closest('.modal-tabs-panel'),
+                    $list = $panel.find('.template-list'),
+                    keyword = $(this).val();
+              buffer = setTimeout(function() {
+                $list.find('.template-item').each(function() {
+                    var $item = $(this);
+                    var aiRole = $item.data('ai-role').toLowerCase();
+                    var toneStyle = $item.data('tone-style').toLowerCase();
+                    var context = $item.data('context').toLowerCase();
+
+                    if (aiRole.includes(keyword) || toneStyle.includes(keyword) || context.includes(keyword)) {
+                      $item.addClass(SHOW_CLASS).removeClass(HIDE_CLASS);
+                    } else {
+                      $item.addClass(HIDE_CLASS).removeClass(SHOW_CLASS);
+                    }
+                });
+              }, 300);
+            });
           }, function(xhr, status, error) {
             if (status == 'timeout') {
               errorMessage = `<p class="error">${ts['Our service is currently busy, please try again later. If needed, please contact our customer service team.']}</p>`;
@@ -372,7 +398,7 @@
             if (response.status == 'success' || response.status == 1) {
               if (response.data) { // TODO: check data
                 templateListData[key] = response.data;
-                output = `<div class="template-list">`;
+                output += `<div class="template-list">`;
 
                 for (let i in templateListData[key]['templates']) {
                   let tplData = templateListData[key]['templates'][i];
@@ -414,6 +440,28 @@
                 AICompletion.prototype.applyTemplateToForm({ data: templateData });
                 AICompletion.prototype.modal.close();
               }
+            });
+
+            let buffer;
+            $('.keyword-filter').off().on('input', function() {
+              clearTimeout(buffer);
+                let $panel = $(this).closest('.modal-tabs-panel'),
+                    $list = $panel.find('.template-list'),
+                    keyword = $(this).val();
+              buffer = setTimeout(function() {
+                $list.find('.template-item').each(function() {
+                    var $item = $(this);
+                    var aiRole = $item.data('ai-role').toLowerCase();
+                    var toneStyle = $item.data('tone-style').toLowerCase();
+                    var context = $item.data('context').toLowerCase();
+
+                    if (aiRole.includes(keyword) || toneStyle.includes(keyword) || context.includes(keyword)) {
+                      $item.addClass(SHOW_CLASS).removeClass(HIDE_CLASS);
+                    } else {
+                      $item.addClass(HIDE_CLASS).removeClass(SHOW_CLASS);
+                    }
+                });
+              }, 300);
             });
           }, function(xhr, status, error) {
             if (status == 'timeout') {
