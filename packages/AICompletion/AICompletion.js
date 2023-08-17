@@ -305,7 +305,14 @@
       }
 
       for (let key in templateListData) {
-        output = `<div class="template-filters"><input class="keyword-filter" type="text" placeholder="${ts['Input search keywords']}"></div>`;
+        output = `<div class="template-filters crm-container">
+          <div class="keyword-filter-item filter-item form-item">
+            <i class="zmdi zmdi-search"></i>
+            <div class="crm-form-elem crm-form-textfield">
+              <input class="keyword-filter form-text huge" type="search" placeholder="${ts['Input search keywords']}">
+            </div>
+          </div>
+          </div>`;
 
         if (key == 'savedTemplates') {
           sendAjaxRequest(endpoint.getTemplateList, 'POST', data, function(response) {

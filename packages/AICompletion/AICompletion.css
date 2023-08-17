@@ -389,6 +389,23 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
   background: #fafafa;
   box-shadow: 0px 0px 3px rgba(0,0,0,0.2);
 }
+.netiaic-modal .template-filters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.netiaic-modal .template-filters .filter-item {
+  display: flex;
+  align-items: center;
+}
+.netiaic-modal .filter-item > i {
+  margin-right: 12px;
+  font-size: 24px;
+  color: #000;
+}
+.netiaic-modal .filter-item .crm-form-elem {
+  display: block;
+}
 .netiaic-modal .template-item {
   margin: 16px 0;
   padding: 16px;
