@@ -718,6 +718,13 @@ class CRM_Core_Payment_BaseIPN {
       $c->save();
       $transaction->commit();
       CRM_Contribute_BAO_ContributionRecur::syncContribute($rid, $c->id);
+
+      $config = CRM_Core_Config::singleton();
+      if ($config->copyContributionTypeSource == 1) {
+        $c->contribution_type_id = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage', 'contribution_type_id', $c->contribution_page_id);
+        $c->save();
+      }
+
       return $c;
     }
     return FALSE;
