@@ -1,17 +1,14 @@
 <?php
 
 class CRM_Contribute_Form_NewebpayImport_Summary extends CRM_Core_Form {
-  protected $_contactId = NULL;
-  protected $_id = NULL;
-  protected $_contributionRecurId = NULL;
-  protected $_action = NULL;
+
+  protected $_successedContribution;
 
   function preProcess() {
-    $this->_parseResult = $this->get('parseResult');
-    $this->_processResult = $this->get('processResult');
-    $this->assign('processResult', $this->_processResult);
-    $this->assign('parseResult', $this->_parseResult);
-    $this->assign('importType', $this->_parseResult['import_type']);
+    $successedTableHeader = $this->get('successedTableHeader');
+    $this->_successedContribution = $this->get('successedContribution');
+    $this->assign('successedTableHeader', $successedTableHeader);
+    $this->assign('successedContribution', $this->_successedContribution);
   }
 
   function buildQuickForm() {

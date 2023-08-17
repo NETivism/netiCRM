@@ -72,6 +72,9 @@ class CRM_Contribute_Form_NewebpayImport_Upload extends CRM_Core_Form {
       $result['original_file'] = $submittedValues['uploadFile']['name'];
       $this->set('parseResult', $result);
     }
+    if ($submittedValues['disbursementDate']) {
+      $this->set('disbursementDate', $submittedValues['disbursementDate']);
+    }
   }
 
   public static function parseUpload($file) {
