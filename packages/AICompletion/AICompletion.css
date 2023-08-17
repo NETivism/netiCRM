@@ -150,8 +150,7 @@ button.form-submit-primary,
   color: #fff;
 }
 .netiaic-chat .user-msg.ai-msg-is-finished .msg-tools,
-.netiaic-chat .ai-msg.is-finished .msg-tools,
-.netiaic-chat .ai-msg.is-error .msg-tools {
+.netiaic-chat .ai-msg.is-finished .msg-tools {
   display: flex;
   flex: 0 0 100%;
   justify-content: flex-end;
@@ -167,6 +166,10 @@ button.form-submit-primary,
 }
 .netiaic-chat .user-msg .msg-content {
   background: #eceff1;
+}
+.netiaic-chat .is-error .msg-content {
+  color: var(--color-error);
+  background: var(--bg-color-error);
 }
 .netiaic-chat .msg .msg-tip {
   display: none;
@@ -407,6 +410,10 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
 }
 .netiaic-modal .template-item:hover .context {
   display: block;
+}
+.netiaic-modal .template-item .org {
+  position: absolute;
+  bottom: 0;
 }
 .netiaic-modal .template-item .actions {
   text-align: right;
