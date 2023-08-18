@@ -12,6 +12,7 @@ class CRM_Contribute_Form_NewebpayImport_Preview extends CRM_Core_Form {
   function buildQuickForm() {
     $this->_result = $this->get('parseResult');
     $this->_successedContribution = $errorContribution = array();
+    $importDateCustomFieldId = $this->get('disbursementDate');
     foreach ($this->_result['content'] as $rowNum => &$row) {
       if ($rowNum == 0) {
         $header = $row;
@@ -21,23 +22,36 @@ class CRM_Contribute_Form_NewebpayImport_Preview extends CRM_Core_Form {
           $trxn_id = $row['trxn_id'] = $row['商店訂單編號'];
           $contribution = new CRM_Contribute_DAO_Contribution();
           $contribution->trxn_id = $trxn_id;
+          $isSuccess = FALSE;
           if ($contribution->find(TRUE)) {
             $row['contact_id'] = $contribution->contact_id;
             $row['id'] = $contribution->id;
             if ($contribution->contribution_status_id == 1) {
-              $this->_successedContribution[] = $row;
+              $isSuccess = TRUE;
             }
             else {
               $row['error_message'] = 'Contribution status is not "successed".';
-              $errorContribution[] = $row;
+              $isSuccess = FALSE;
             }
             if ($contribution->total_amount != $row['金額']) {
               $row['error_message'] = 'Amount is not correct.';
-              $errorContribution[] = $row;
+              $isSuccess = FALSE;
+            }
+            if ($importDateCustomFieldId) {
+              if (!CRM_Utils_Type::validate($row['撥款日期'], 'Date', FALSE)) {
+                $row['error_message'] = '撥款日期欄位不正確';
+                $isSuccess = FALSE;
+              }
             }
           }
           else {
             $row['error_message'] = 'Can\'t find the contribution in CRM.';
+            $isSuccess = FALSE;
+          }
+          if ($isSuccess) {
+            $this->_successedContribution[] = $row;
+          }
+          else {
             $errorContribution[] = $row;
           }
           $tableContent[] = $row;
@@ -45,10 +59,12 @@ class CRM_Contribute_Form_NewebpayImport_Preview extends CRM_Core_Form {
       }
     }
 
-    $this->assign('tableHeader', $header);
     $this->assign('tableContent', $tableContent);
     $this->set('tableHeader', $header);
+    $this->assign('successedTableHeader', $header);
     $this->assign('successedContribution', $this->_successedContribution);
+    $header[] = 'error_message';
+    $this->assign('errorTableHeader', $header);
     $this->assign('errorContribution', $errorContribution);
     $this->set('errorContribution', $errorContribution);
 
