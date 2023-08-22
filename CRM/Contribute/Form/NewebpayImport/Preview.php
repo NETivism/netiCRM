@@ -13,6 +13,8 @@ class CRM_Contribute_Form_NewebpayImport_Preview extends CRM_Core_Form {
     $this->_result = $this->get('parseResult');
     $this->_successedContribution = $errorContribution = array();
     $importDateCustomFieldId = $this->get('disbursementDate');
+    $contributionStatus = CRM_Contribute_PseudoConstant::contributionStatus();
+    // Add all row to the tables
     foreach ($this->_result['content'] as $rowNum => &$row) {
       if ($rowNum == 0) {
         $header = $row;
@@ -22,34 +24,39 @@ class CRM_Contribute_Form_NewebpayImport_Preview extends CRM_Core_Form {
           $trxn_id = $row['trxn_id'] = $row['商店訂單編號'];
           $contribution = new CRM_Contribute_DAO_Contribution();
           $contribution->trxn_id = $trxn_id;
-          $isSuccess = FALSE;
+          $rowProcessType = 0;
+          // 1 => successed, 2 => contribution_status is wrong, 3 => error.
           if ($contribution->find(TRUE)) {
             $row['contact_id'] = $contribution->contact_id;
             $row['id'] = $contribution->id;
             if ($contribution->contribution_status_id == 1) {
-              $isSuccess = TRUE;
+              $rowProcessType = 1;
             }
             else {
               $row['error_message'] = 'Contribution status is not "successed".';
-              $isSuccess = FALSE;
+              $rowProcessType = 2;
             }
             if ($contribution->total_amount != $row['金額']) {
               $row['error_message'] = 'Amount is not correct.';
-              $isSuccess = FALSE;
+              $rowProcessType = 3;
             }
             if ($importDateCustomFieldId) {
               if (!CRM_Utils_Type::validate($row['撥款日期'], 'Date', FALSE)) {
                 $row['error_message'] = '撥款日期欄位不正確';
-                $isSuccess = FALSE;
+                $rowProcessType = 3;
               }
             }
           }
           else {
             $row['error_message'] = 'Can\'t find the contribution in CRM.';
-            $isSuccess = FALSE;
+            $rowProcessType = 3;
           }
-          if ($isSuccess) {
+          if ($rowProcessType == 1) {
             $this->_successedContribution[] = $row;
+          }
+          elseif ($rowProcessType == 2) {
+            $row[ts('Contribution Status')] = $contributionStatus[$contribution->contribution_status_id];
+            $modifyStatusContribution[] = $row;
           }
           else {
             $errorContribution[] = $row;
@@ -57,6 +64,14 @@ class CRM_Contribute_Form_NewebpayImport_Preview extends CRM_Core_Form {
           $tableContent[] = $row;
         }
       }
+    }
+
+    if (!empty($modifyStatusContribution)) {
+      $modifyStatusHeader = $header;
+      $modifyStatusHeader[] = ts('Contribution Status');
+      $this->assign('modifyStatusHeader', $modifyStatusHeader);
+      $this->assign('modifyStatusContribution', $modifyStatusContribution);
+
     }
 
     $this->assign('tableContent', $tableContent);
