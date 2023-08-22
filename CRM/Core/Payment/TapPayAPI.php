@@ -184,14 +184,20 @@ class CRM_Core_Payment_TapPayAPI {
       );
     }
     $ch = curl_init($this->_apiURL);
-    $opt = array();
+    if (!$ch) {
+      throw new Exception("Failed to initialize cURL");
+    }
 
-    $opt[CURLOPT_HTTPHEADER] = array(
-      'Content-Type: application/json',
-      'x-api-key: ' . $this->_partnerKey,
+    $opt = array(
+      CURLOPT_HTTPHEADER => array(
+          'Content-Type: application/json',
+          'x-api-key: ' . $this->_partnerKey,
+      ),
+      CURLOPT_RETURNTRANSFER => TRUE,
+      CURLOPT_TIMEOUT => 180, // Set a timeout (e.g., 180 seconds)
+      CURLOPT_CONNECTTIMEOUT => 30, // this will limit common connection timeout
     );
-    $opt[CURLOPT_RETURNTRANSFER] = TRUE;
-    if($this->_apiMethod == 'POST'){
+    if ($this->_apiMethod == 'POST') {
       $opt[CURLOPT_POST] = TRUE;
       $opt[CURLOPT_POSTFIELDS] = json_encode($this->_request, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
     }
@@ -204,31 +210,45 @@ class CRM_Core_Payment_TapPayAPI {
       'post_data' => $opt[CURLOPT_POSTFIELDS],
     );
     $lodId = self::writeRecord(NULL, $recordData);
+    $curlError = array();
 
-    $result = curl_exec($ch);
+    try {
+      $result = curl_exec($ch);
 
-    $recordData = array(
-      'return_data' => $result,
-    );
-    self::writeRecord($lodId, $recordData);
+      $recordData = array(
+        'return_data' => $result,
+      );
 
-    $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    $errno = curl_errno($ch);
-    if (!empty($errno)) {
-        $errno = curl_errno($ch);
-        $err = curl_error($ch);
-        CRM_Core_Error::debug_log_message("CURL: $err :: $errno");
-    }
-
-    if ($result === FALSE) {
+      $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
       $errno = curl_errno($ch);
-      $err = curl_error($ch);
-      $curlError = array($errno => $err);
+      if ($errno) {
+        $err = curl_error($ch);
+        $curlError = array($errno => $err);
+        $recordData['curl_data'] = $curlError;
+      }
+      self::writeRecord($lodId, $recordData);
+
+      if ($errno) {
+        throw new CRM_Core_Exception("CURL Error: $err ($errno)");
+      }
+
+      curl_close($ch);
+
+      if ($result === FALSE) {
+        throw new CRM_Core_Exception("cURL request failed");
+      }
+
+    } catch (CRM_Core_Exception $e) {
+      CRM_Core_Error::debug_log_message($e->getMessage());
+
+      // Unified error response
+      // $errorResponse = array(
+      //     'status' => 0,
+      //     'message' => $e->getMessage(),
+      // );
+      // Assuming you have a method to send JSON response
+      // self::responseError($errorResponse);
     }
-    else{
-      $curlError = array();
-    }
-    curl_close($ch);
     if (!empty($result)) {
       $response = json_decode($result);
       $this->_response = $response;
