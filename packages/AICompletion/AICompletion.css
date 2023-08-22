@@ -453,6 +453,10 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
 .netiaic-modal .netiaic-save-tpl-title-section .form-text {
   width: 100%;
 }
+.netiaic-modal .no-result {
+  margin-top: 20px;
+  text-align: center;
+}
 .netiaic-command {
   display: none;
   position: absolute;

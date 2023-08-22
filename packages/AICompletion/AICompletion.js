@@ -390,20 +390,30 @@
           clearTimeout(buffer);
           let $panel = $(this).closest('.modal-tabs-panel'),
               $list = $panel.find('.template-list'),
-              keyword = $(this).val();
-          buffer = setTimeout(function() {
-            $list.find('.template-item').each(function() {
-              var $item = $(this);
-              var aiRole = $item.data('ai-role').toLowerCase();
-              var toneStyle = $item.data('tone-style').toLowerCase();
-              var context = $item.data('context').toLowerCase();
+              keyword = $(this).val().toLowerCase();
 
-              if (aiRole.includes(keyword) || toneStyle.includes(keyword) || context.includes(keyword)) {
-                $item.addClass(SHOW_CLASS).removeClass(HIDE_CLASS);
-              } else {
-                $item.addClass(HIDE_CLASS).removeClass(SHOW_CLASS);
-              }
+          buffer = setTimeout(function() {
+            let hasResult = false;
+            $list.find('.template-item').each(function() {
+                var $item = $(this);
+                var aiRole = $item.data('ai-role').toLowerCase();
+                var toneStyle = $item.data('tone-style').toLowerCase();
+                var context = $item.data('context').toLowerCase();
+
+                if (aiRole.includes(keyword) || toneStyle.includes(keyword) || context.includes(keyword)) {
+                  $item.addClass(SHOW_CLASS).removeClass(HIDE_CLASS);
+                  hasResult = true;
+                } else {
+                  $item.addClass(HIDE_CLASS).removeClass(SHOW_CLASS);
+                }
             });
+
+            if (!hasResult) {
+              $list.next('.no-result').remove();
+              $list.after(`<div class="no-result">${ts['No matches found.']}</div>`);
+            } else {
+              $list.next('.no-result').remove();
+            }
           }, 300);
         });
       };

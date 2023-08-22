@@ -61,6 +61,7 @@ window.AICompletion = {
     "Recommended": "{/literal}{ts}Recommended{/ts}{literal}",
     "Organization intro": "{/literal}{ts}Organization intro{/ts}{literal}",
     "Input search keywords": "{/literal}{ts}Input search keywords{/ts}{literal}",
+    "No matches found.": "{/literal}{ts}No matches found.{/ts}{literal}",
     "The organization sharing this template": "{/literal}{ts}The organization sharing this template{/ts}{literal}",
     "Warning! Applying this template will clear your current settings. Proceed with the application?": "{/literal}{ts}Warning! Applying this template will clear your current settings. Proceed with the application?{/ts}{literal}",
     "Remember to verify AI-generated text before using it.": "{/literal}{ts}Remember to verify AI-generated text before using it.{/ts}{literal}",
