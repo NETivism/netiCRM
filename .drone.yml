@@ -50,6 +50,28 @@ steps:
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/edit_mailing.spec.js
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_spgateway.spec.js
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_booster.spec.js
+- name: notify
+  image: drillster/drone-email
+  settings:
+    from.address:
+      from_secret: email_from_addr
+    from.name:
+      from_secret: email_from_name
+    host:
+      from_secret: email_host
+    port:
+      from_secret: email_port
+    username:
+      from_secret: email_username
+    password:
+      from_secret: email_password
+    recipients:
+      from_secret: email_recipients
+    recipients_only: true
+    skip_verify: true
+  when:
+    status:
+    - failure
 
 
 ---
@@ -106,6 +128,28 @@ steps:
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/edit_mailing.spec.js
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_spgateway.spec.js
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_booster.spec.js
+- name: notify
+  image: drillster/drone-email
+  settings:
+    from.address:
+      from_secret: email_from_addr
+    from.name:
+      from_secret: email_from_name
+    host:
+      from_secret: email_host
+    port:
+      from_secret: email_port
+    username:
+      from_secret: email_username
+    password:
+      from_secret: email_password
+    recipients:
+      from_secret: email_recipients
+    recipients_only: true
+    skip_verify: true
+  when:
+    status:
+    - failure
 
 ---
 kind: pipeline
@@ -161,6 +205,28 @@ steps:
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/edit_mailing.spec.js
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_spgateway.spec.js
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_booster.spec.js
+- name: notify
+  image: drillster/drone-email
+  settings:
+    from.address:
+      from_secret: email_from_addr
+    from.name:
+      from_secret: email_from_name
+    host:
+      from_secret: email_host
+    port:
+      from_secret: email_port
+    username:
+      from_secret: email_username
+    password:
+      from_secret: email_password
+    recipients:
+      from_secret: email_recipients
+    recipients_only: true
+    skip_verify: true
+  when:
+    status:
+    - failure
 
 ---
 kind: pipeline
@@ -186,10 +252,6 @@ steps:
       from_secret: email_recipients
     recipients_only: true
     skip_verify: true
-  when:
-    status:
-    - success
-    - failure
 depends_on:
 - php5
 - php7
