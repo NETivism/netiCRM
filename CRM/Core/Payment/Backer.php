@@ -755,6 +755,11 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
         $params['contribution']['amount_level'] = CRM_Core_BAO_CustomOption::VALUE_SEPERATOR.implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, $amountLevel).CRM_Core_BAO_CustomOption::VALUE_SEPERATOR;
       }
     }
+    else {
+      if (!empty($amountLevel)) {
+        $params['contribution']['amount_level'] = CRM_Core_BAO_CustomOption::VALUE_SEPERATOR.implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, $amountLevel).CRM_Core_BAO_CustomOption::VALUE_SEPERATOR;
+      }
+    }
 
     // handling receipt
     if (!empty($json['receipt']) && !empty($json['receipt']['receipt_type'])) {
