@@ -806,6 +806,16 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
         $params['contribution'][$receiptFieldsMap['receipt_type']] = 'annual_paper_receipt';
         $needReceipt = TRUE;
       }
+      elseif ($receiptType === '稅捐收據' && $choice === '單次寄送電子收據') {
+        // special case
+        $params['contribution'][$receiptFieldsMap['receipt_type']] = 'single_e_receipt';
+        $needReceipt = TRUE;
+      }
+      elseif ($receiptType === '稅捐收據' && $choice === '年度寄送電子收據') {
+        // special case
+        $params['contribution'][$receiptFieldsMap['receipt_type']] = 'annual_e_receipt';
+        $needReceipt = TRUE;
+      }
       if ($needReceipt) {
         if (!empty($json['receipt']['corporate_name'])) {
           $params['contribution'][$receiptFieldsMap['corporate_name']] = $json['receipt']['corporate_name'];
