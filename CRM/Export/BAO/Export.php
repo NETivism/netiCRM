@@ -1364,7 +1364,13 @@ class CRM_Export_BAO_Export {
       $row = array();
 
       foreach ($fields as $field) {
-        $row[$field] = CRM_Utils_String::toNumber($dao->$field);
+        // Avoid "too many $dao->$field doesn't exist" error messages.
+        if (isset($dao->$field)) {
+          $row[$field] = CRM_Utils_String::toNumber($dao->$field);
+        }
+        else {
+          $row[$field] = NULL;
+        }
       }
       if ($alterRow) {
         $search->alterRow($row);

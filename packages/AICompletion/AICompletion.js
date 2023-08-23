@@ -15,6 +15,8 @@
         FINISH_CLASS = 'is-finished',
         EXPAND_CLASS = 'is-expanded',
         COPY_CLASS = 'is-copied',
+        SHOW_CLASS = 'is-show',
+        HIDE_CLASS = 'is-hide',
         MFP_ACTIVE_CLASS = 'mfp-is-active',
         TIMEOUT = 30000;
 
@@ -302,132 +304,135 @@
         data['component'] = component;
       }
 
-      for (let key in templateListData) {
-        if (key == 'savedTemplates') {
-          sendAjaxRequest(endpoint.getTemplateList, 'POST', data, function(response) {
-            if (response.status == 'success' || response.status == 1) {
-              if (response.data) { // TODO: check data
-                templateListData[key] = response.data;
-                output = `<div class="template-list">`;
+      const fetchTemplates = function(key, data, output) {
+        sendAjaxRequest(endpoint.getTemplateList, 'POST', data, (response) => {
+          handleSuccessResponse(key, response, output);
+        }, (xhr, status, error) => {
+          handleErrorResponse(key, xhr, status, error);
+        });
+      };
 
-                for (let i in templateListData[key]) {
-                  let tplData = templateListData[key][i];
+      const handleSuccessResponse = function(key, response, output) {
+        if (response.status == 'success' || response.status == 1) {
+          if (response.data) {
+            templateListData[key] = key === 'savedTemplates' ? response.data : response.data['templates'];
+            output += `<div class="template-list">`;
 
-                  output += `<div class="template-item" data-ai-role="${tplData.ai_role}" data-tone-style="${tplData.tone_style}" data-context="${tplData.context}">
-                      <div class="inner">
-                        <div class="ai-role"><span class="label">${ts['Copywriting Role']}</span>${colon}${tplData.ai_role}</div>
-                        <div class="tone-style"><span class="label">${ts['Tone Style']}</span>${colon}${tplData.tone_style}</div>
-                        <div class="context"><span class="label">${ts['Content Summary']}</span>${colon}${tplData.context}</div>
-                        <div class="actions">
-                          <button type="button" class="apply-btn btn">${ts['Apply Template']}</button>
-                        </div>
-                      </div>
-                    </div>`;
-                }
+            for (let i in templateListData[key]) {
+              let tplData = templateListData[key][i],
+                  role = tplData.ai_role ? tplData.ai_role : tplData.role,
+                  tone = tplData.tone_style ? tplData.tone_style : tplData.tone,
+                  context = tplData.context ? tplData.context : tplData.content;
 
-                output += `</div>`;
+              let templateItemHtml = `
+                <div class="template-item" data-ai-role="${role}" data-tone-style="${tone}" data-context="${context}">
+                  <div class="inner">
+                    <div class="ai-role"><span class="label">${ts['Copywriting Role']}</span>${colon}${role}</div>
+                    <div class="tone-style"><span class="label">${ts['Tone Style']}</span>${colon}${tone}</div>
+                    <div class="context"><span class="label">${ts['Content Summary']}</span>${colon}${context}</div>
+                    <div class="actions">
+                      <button type="button" class="apply-btn btn">${ts['Apply Template']}</button>
+                    </div>
+                  </div>
+                </div>`;
+
+              if (key === 'communityRecommendations') {
+                templateItemHtml = templateItemHtml.replace('<div class="actions">', `<div class="org"><span class="label">${ts['The organization sharing this template']}</span>${colon}${tplData.org}</div><div class="actions">`);
               }
+
+              output += templateItemHtml;
             }
 
-            $(`#use-other-templates-tabs .modal-tabs-panel[data-type="${key}"]`).html(output);
-
-            $('.template-list').on('click', '.apply-btn', function() {
-              let $templateItem = $(this).closest('.template-item'),
-                  templateData = {
-                    role: $templateItem.attr("data-ai-role"),
-                    tone: $templateItem.attr("data-tone-style"),
-                    content: $templateItem.attr("data-context")
-                  };
-
-              if (!AICompletion.prototype.formIsEmpty()) {
-                if (confirm(ts['Warning! Applying this template will clear your current settings. Proceed with the application?'])) {
-                  AICompletion.prototype.applyTemplateToForm({ data: templateData });
-                  AICompletion.prototype.modal.close();
-                }
-              }
-              else {
-                AICompletion.prototype.applyTemplateToForm({ data: templateData });
-                AICompletion.prototype.modal.close();
-              }
-            });
-          }, function(xhr, status, error) {
-            if (status == 'timeout') {
-              errorMessage = `<p class="error">${ts['Our service is currently busy, please try again later. If needed, please contact our customer service team.']}</p>`;
-            }
-            else if (xhr.responseJSON.message == 'Failed to retrieve template list.') {
-              errorMessage = `<p>${ts['There are currently no templates available.']}</p>`;
-            }
-            else {
-              errorMessage = `<p class="error">${errorMessageDefault}</p>`;
-            }
-
-            $(`#use-other-templates-tabs .modal-tabs-panel[data-type="${key}"]`).html(errorMessage);
-          });
+            output += `</div>`;
+          }
         }
 
-        if (key == 'communityRecommendations') {
-          data['is_share_with_others'] = 1;
+        let $currentPanel = $(`#use-other-templates-tabs .modal-tabs-panel[data-type="${key}"]`);
+        $currentPanel.html(output);
+        bindTemplateListEvents($currentPanel);
+      };
 
-          sendAjaxRequest(endpoint.getTemplateList, 'POST', data, function(response) {
-            if (response.status == 'success' || response.status == 1) {
-              if (response.data) { // TODO: check data
-                templateListData[key] = response.data;
-                output = `<div class="template-list">`;
+      const handleErrorResponse = function(key, xhr, status, error) {
+        if (status == 'timeout') {
+          errorMessage = `<p class="error">${ts['Our service is currently busy, please try again later. If needed, please contact our customer service team.']}</p>`;
+        } else if (xhr.responseJSON.message == 'Failed to retrieve template list.') {
+          errorMessage = `<p>${ts['There are currently no templates available.']}</p>`;
+        } else {
+          errorMessage = `<p class="error">${errorMessageDefault}</p>`;
+        }
 
-                for (let i in templateListData[key]['templates']) {
-                  let tplData = templateListData[key]['templates'][i];
+        $(`#use-other-templates-tabs .modal-tabs-panel[data-type="${key}"]`).html(errorMessage);
+      };
 
-                  output += `<div class="template-item" data-ai-role="${tplData.role}" data-tone-style="${tplData.tone}" data-context="${tplData.content}">
-                      <div class="inner">
-                        <div class="ai-role"><span class="label">${ts['Copywriting Role']}</span>${colon}${tplData.role}</div>
-                        <div class="tone-style"><span class="label">${ts['Tone Style']}</span>${colon}${tplData.tone}</div>
-                        <div class="context"><span class="label">${ts['Content Summary']}</span>${colon}${tplData.content}</div>
-                        <div class="org"><span class="label">${ts['The organization sharing this template']}</span>${colon}${tplData.org}</div>
-                        <div class="actions">
-                          <button type="button" class="apply-btn btn">${ts['Apply Template']}</button>
-                        </div>
-                      </div>
-                    </div>`;
-                }
+      const bindTemplateListEvents = function($panel) {
+        $panel.find('.template-list').on('click', '.apply-btn', function() {
+          let $templateItem = $(this).closest('.template-item'),
+              templateData = {
+                role: $templateItem.attr("data-ai-role"),
+                tone: $templateItem.attr("data-tone-style"),
+                content: $templateItem.attr("data-context")
+              };
 
-                output += `</div>`;
-              }
+          if (!AICompletion.prototype.formIsEmpty()) {
+            if (confirm(ts['Warning! Applying this template will clear your current settings. Proceed with the application?'])) {
+              AICompletion.prototype.applyTemplateToForm({ data: templateData });
+              AICompletion.prototype.modal.close();
             }
+          }
+          else {
+            AICompletion.prototype.applyTemplateToForm({ data: templateData });
+            AICompletion.prototype.modal.close();
+          }
+        });
 
-            $(`#use-other-templates-tabs .modal-tabs-panel[data-type="${key}"]`).html(output);
+        let buffer;
+        $panel.find('.keyword-filter').on('input', function() {
+          clearTimeout(buffer);
+          let $panel = $(this).closest('.modal-tabs-panel'),
+              $list = $panel.find('.template-list'),
+              keyword = $(this).val().toLowerCase();
 
-            $('.template-list').on('click', '.apply-btn', function() {
-              let $templateItem = $(this).closest('.template-item'),
-                  templateData = {
-                    role: $templateItem.attr("data-ai-role"),
-                    tone: $templateItem.attr("data-tone-style"),
-                    content: $templateItem.attr("data-context")
-                  };
+          buffer = setTimeout(function() {
+            let hasResult = false;
+            $list.find('.template-item').each(function() {
+                var $item = $(this);
+                var aiRole = $item.data('ai-role').toLowerCase();
+                var toneStyle = $item.data('tone-style').toLowerCase();
+                var context = $item.data('context').toLowerCase();
 
-              if (!AICompletion.prototype.formIsEmpty()) {
-                if (confirm(ts['Warning! Applying this template will clear your current settings. Proceed with the application?'])) {
-                  AICompletion.prototype.applyTemplateToForm({ data: templateData });
-                  AICompletion.prototype.modal.close();
+                if (aiRole.includes(keyword) || toneStyle.includes(keyword) || context.includes(keyword)) {
+                  $item.addClass(SHOW_CLASS).removeClass(HIDE_CLASS);
+                  hasResult = true;
+                } else {
+                  $item.addClass(HIDE_CLASS).removeClass(SHOW_CLASS);
                 }
-              }
-              else {
-                AICompletion.prototype.applyTemplateToForm({ data: templateData });
-                AICompletion.prototype.modal.close();
-              }
             });
-          }, function(xhr, status, error) {
-            if (status == 'timeout') {
-              errorMessage = `<p class="error">${ts['Our service is currently busy, please try again later. If needed, please contact our customer service team.']}</p>`;
-            }
-            else if (xhr.responseJSON.message == 'Failed to retrieve template list.') {
-              errorMessage = `<p>${ts['There are currently no templates available.']}</p>`;
-            }
-            else {
-              errorMessage = `<p class="error">${errorMessageDefault}</p>`;
-            }
 
-            $(`#use-other-templates-tabs .modal-tabs-panel[data-type="${key}"]`).html(errorMessage);
-          });
+            if (!hasResult) {
+              $list.next('.no-result').remove();
+              $list.after(`<div class="no-result">${ts['No matches found.']}</div>`);
+            } else {
+              $list.next('.no-result').remove();
+            }
+          }, 300);
+        });
+      };
+
+      for (let key in templateListData) {
+        output = `<div class="template-filters crm-container">
+        <div class="keyword-filter-item filter-item form-item">
+          <i class="zmdi zmdi-search"></i>
+          <div class="crm-form-elem crm-form-textfield">
+            <input class="keyword-filter form-text huge" type="search" placeholder="${ts['Input search keywords']}">
+          </div>
+        </div>
+        </div>`;
+
+        if (['savedTemplates', 'communityRecommendations'].includes(key)) {
+          if (key === 'communityRecommendations') {
+            data['is_share_with_others'] = 1;
+          }
+          fetchTemplates(key, data, output);
         }
       }
     },
