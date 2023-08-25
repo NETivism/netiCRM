@@ -149,7 +149,7 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
         $local_succ_times = CRM_Core_DAO::singleValueQuery("SELECT count(*) FROM civicrm_contribution WHERE contribution_recur_id = %1 AND contribution_status_id = 1", array(1 => array($recur->id, 'Integer')));
         if($input['RtnCode'] != 1){
           $contribution->contribution_status_id = 4; // Failed
-          $c = $this->copyContribution($contribution, $ids['contributionRecur'], $trxn_id);
+          $c = self::copyContribution($contribution, $ids['contributionRecur'], $trxn_id);
         }
         elseif($input['RtnCode'] == 1){
           if ($local_succ_times >= $input['TotalSuccessTimes']) {
@@ -160,7 +160,7 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
             $note .= "Possible over charge. Will be $local_succ_times successful contributions in CRM, but greenworld only have {$input['TotalSuccessTimes']} success execution.";
           }
           $contribution->contribution_status_id = 1; // Completed
-          $c = $this->copyContribution($contribution, $ids['contributionRecur'], $trxn_id);
+          $c = self::copyContribution($contribution, $ids['contributionRecur'], $trxn_id);
         }
         if(!empty($c)){
           unset($objects['contribution']);
@@ -229,28 +229,6 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
     }
 
     return $pass;
-  }
-
-  function copyContribution(&$contrib, $rid, $trxn_id){
-    if(is_object($contrib)){
-      $c = clone $contrib;
-      unset($c->id);
-      unset($c->receive_date);
-      unset($c->cancel_date);
-      unset($c->cancel_reason);
-      unset($c->invoice_id);
-      unset($c->receipt_id);
-      unset($c->receipt_date);
-      $c->contribution_status_id = 2;
-      $c->trxn_id = $trxn_id;
-      $c->created_date = date('YmdHis');
-      $transaction = new CRM_Core_Transaction('READ COMMITTED');
-      $c->save();
-      $transaction->commit();
-      CRM_Contribute_BAO_ContributionRecur::syncContribute($rid, $c->id);
-      return $c;
-    }
-    return FALSE;
   }
 
   function addNote($note, &$contribution){
