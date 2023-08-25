@@ -245,7 +245,7 @@ steps:
 - name: neticrm ci php 8 drupal 10
   image: rg.netivism.com.tw/netivism/docker-neticrm-ci:drone-php8-d10
   environment:
-    DRUOAK: "10"
+    DRUPAL: "10"
     TZ: Asia/Taipei
     RUNPORT: "8080"
     DRUPAL_ROOT: "/var/www/html"
