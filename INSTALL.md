@@ -16,7 +16,7 @@ Workable in theory but not tested:
 (Please refer install guide of Drupal 7)
 
 2\. Clone repository to modules folder of Drupal.
-(You can use following command under all/modules folder.)
+(You can use following command under sites/all/modules folder.)
 ```
 git clone git@github.com:NETivism/netiCRM.git civicrm
 ```
