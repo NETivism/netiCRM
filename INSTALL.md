@@ -35,6 +35,6 @@ git checkout 7.x-master
 cd drupal/
 git checkout 7.x-master
 ```
-6\. Go to the modules configuration page. You should see NetiCRM is available. Enable it and Press "Submit" button.
+6\. Go to the modules configuration page. You should see CiviCRM module is available. Enable it and Press "Submit" button.
 
 7\. Complete!!
