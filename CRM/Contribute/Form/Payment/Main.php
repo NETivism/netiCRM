@@ -56,7 +56,7 @@ class CRM_Contribute_Form_Payment_Main extends CRM_Contribute_Form_Payment {
     parent::preProcess();
     if(!$this->_pass){
       CRM_Utils_System::notFound();
-      CRM_Utils_Ssytem::civiExit();
+      CRM_Utils_System::civiExit();
     }
     else{
       $this->assign('ppType', FALSE);
@@ -84,6 +84,16 @@ class CRM_Contribute_Form_Payment_Main extends CRM_Contribute_Form_Payment {
       $pps = $this->_paymentProcessors;
       foreach ($pps as $key => & $name) {
         $pps[$key] = $name['name'];
+      }
+    }
+
+    if ($this->getVar('_component') == 'event') {
+      $event = new CRM_Event_DAO_Event();
+      $event->id = $this->_entityId;
+      $event->find(TRUE);
+      if ($event->is_pay_later) {
+        $pps[0] = $event->pay_later_text;
+        $this->assign('pay_later_receipt', $event->pay_later_receipt);
       }
     }
 
