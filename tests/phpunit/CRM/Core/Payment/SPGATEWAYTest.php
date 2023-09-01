@@ -206,7 +206,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
       'Result' => $json,
       ));
     $post = array('JSONData' => $jsonData);
-    civicrm_spgateway_ipn('Credit', $post, $get);
+    CRM_Core_Payment_SPGATEWAY::doIPN('Credit', $post, $get);
 
     // verify contribution status after trigger
     $this->assertDBCompareValue(
@@ -326,8 +326,8 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     $ppid = $this->_processor['id'];
     $get['ppid'] = $ppid;
     $PaymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($ppid, $this->_is_test?'test':'live');
-    $post = array('Period' => _civicrm_spgateway_recur_encrypt(json_encode($post), $PaymentProcessor));
-    civicrm_spgateway_ipn('Credit', $post, $get);
+    $post = array('Period' => CRM_Core_Payment_SPGATEWAYAPI::recurEncrypt(json_encode($post), $PaymentProcessor));
+    CRM_Core_Payment_SPGATEWAY::doIPN('Credit', $post, $get);
 
     // verify contribution status after trigger
     $this->assertDBCompareValue(
@@ -384,8 +384,8 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
         "NextAuthDate" => "",
       ),
     );
-    $post = array('Period' => _civicrm_spgateway_recur_encrypt(json_encode($post), $PaymentProcessor));
-    civicrm_spgateway_ipn('Credit', $post, $get);
+    $post = array('Period' => CRM_Core_Payment_SPGATEWAYAPI::recurEncrypt(json_encode($post), $PaymentProcessor));
+    CRM_Core_Payment_SPGATEWAY::doIPN('Credit', $post, $get);
     // $trxn_id2 = _civicrm_spgateway_recur_trxn($trxn_id, $gwsr1);
     // $trxn_id2 = "testdev500302T368_2";
 
@@ -445,8 +445,8 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
         "NextAuthDate" => "",
       ),
     );
-    $post = array('Period' => _civicrm_spgateway_recur_encrypt(json_encode($post), $PaymentProcessor));
-    civicrm_spgateway_ipn('Credit', $post, $get);
+    $post = array('Period' => CRM_Core_Payment_SPGATEWAYAPI::recurEncrypt(json_encode($post), $PaymentProcessor));
+    CRM_Core_Payment_SPGATEWAY::doIPN('Credit', $post, $get);
     // $trxn_id2 = _civicrm_spgateway_recur_trxn($trxn_id, $gwsr1);
     // $trxn_id2 = "testdev500302T368_2";
 
@@ -503,7 +503,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
       )),
     );
 
-    $result = civicrm_spgateway_single_check($trxn_id4, $create_contribution = TRUE, $post);
+    $result = CRM_Core_Payment_SPGATEWAY::recurSyncTransaction($trxn_id4, $create_contribution = TRUE, $post);
     $params = array(
       1 => array($recurring->id, 'Integer'),
     );
@@ -548,9 +548,9 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
         "NextAuthDate" => "",
       ),
     );
-    $post = array('Period' => _civicrm_spgateway_recur_encrypt(json_encode($post), $PaymentProcessor));
+    $post = array('Period' => CRM_Core_Payment_SPGATEWAYAPI::recurEncrypt(json_encode($post), $PaymentProcessor));
 
-    civicrm_spgateway_ipn('Credit', $post, $get);
+    CRM_Core_Payment_SPGATEWAY::doIPN('Credit', $post, $get);
     // $trxn_id2 = _civicrm_spgateway_recur_trxn($trxn_id, $gwsr1);
     // $trxn_id2 = "testdev500302T368_2";
 
@@ -659,7 +659,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
       'TEST2' => 'BBB',
     );
     $_GET['q'] = 'spgateway/record';
-    civicrm_spgateway_record($cid);
+    CRM_Core_Payment_SPGATEWAYAPI::writeRecord($cid);
     $this->assertDBQuery($cid, "SELECT cid FROM civicrm_contribution_spgateway WHERE data LIKE '%#info%TEST1%' AND cid = $cid");
     */
   }
@@ -717,7 +717,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
       'Result' => $json,
       ));
     $post = array('JSONData' => $jsonData);
-    civicrm_spgateway_ipn('Credit', $post, $get);
+    CRM_Core_Payment_SPGATEWAY::doIPN('Credit', $post, $get);
 
     // verify contribution status after trigger
     $this->assertDBCompareValue(
