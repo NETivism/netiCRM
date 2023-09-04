@@ -249,7 +249,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     $formKey = $component == 'event' ? 'CRM_Event_Controller_Registration_'.$params['qfKey'] : 'CRM_Contribute_Controller_Contribution_'.$params['qfKey'];
 
     // The first, we insert every contribution into record. After this, we'll use update for the record.
-    $exists = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution_spgateway WHERE cid = %1", array(
+    $exists = CRM_Core_DAO::singleValueQuery("SELECT cid FROM civicrm_contribution_spgateway WHERE cid = %1", array(
       1 => array($params['contributionID'], 'Integer'),
     ));
     if (!$exists) {
