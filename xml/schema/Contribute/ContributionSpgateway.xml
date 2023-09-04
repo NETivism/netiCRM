@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<table>
+  <base>CRM/Contribute</base>
+  <class>SPGATEWAY</class>
+  <name>civicrm_contribution_spgateway</name>
+  <comment>Spgateway and neweb data warehouse</comment>
+  <add>4.0</add>
+  <field>
+    <name>id</name>
+    <type>int unsigned</type>
+    <required>true</required>
+    <add>4.0</add>
+  </field>
+  <primaryKey>
+    <name>id</name>
+    <autoincrement>true</autoincrement>
+  </primaryKey>
+  <field>
+    <name>cid</name>
+    <uniqueName>spgateway_contribution_id</uniqueName>
+    <type>int unsigned</type>
+    <title>Spgateway Contribution ID</title>
+    <comment>FK to contribution table</comment>
+    <add>4.0</add>
+  </field>
+  <foreignKey>
+    <name>cid</name>
+    <table>civicrm_contribution</table>
+    <key>id</key>
+    <add>2.0</add>
+    <onDelete>SET NULL</onDelete>
+  </foreignKey>
+  <index>
+    <name>UI_spgateway_id</name>
+    <fieldName>cid</fieldName>
+    <unique>true</unique>
+    <add>4.0</add>
+  </index>
+  <field>
+    <name>data</name>
+    <comment>Spgateway return data</comment>
+    <type>blob</type>
+    <add>4.0</add>
+  </field>
+</table>
