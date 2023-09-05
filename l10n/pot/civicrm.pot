@@ -49011,3 +49011,7 @@ msgstr ""
 #: templates/CRM/AI/AICompletion.tpl
 msgid "The organization sharing this template"
 msgstr ""
+
+#: templates/CRM/Contribute/Page/ContributionPageEdit.tpl
+msgid "Admin Basic Settings"
+msgstr ""
