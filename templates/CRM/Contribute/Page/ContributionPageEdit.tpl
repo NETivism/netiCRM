@@ -50,7 +50,7 @@
 {include file="CRM/common/ContributionPageStatusCard.tpl" statistics=$contribution_page_statistics}
 
 <h2>{ts}Settings{/ts}</h2>
-<table class="report"> 
+<table class="report">
 <tr>
     <td><a href="{crmURL p='civicrm/contribute/transact' q="reset=1&action=preview&id=`$id`"}" target="_blank">&raquo; {ts}Test-drive{/ts}</a></td>
     <td>{ts}Test-drive the entire contribution process - including custom fields, confirmation, thank-you page, and receipting. Transactions will be directed to your payment processor's test server. <strong>No live financial transactions will be submitted. However, a contact record will be created or updated and a test contribution record will be saved to the database. Use obvious test contact names so you can review and delete these records as needed. Test contributions are not visible on the Contributions tab, but can be viewed by searching for 'Test Contributions' in the CiviContribute search form.</strong>{/ts}
@@ -90,9 +90,9 @@
 <tr>
     <td class="nowrap" id="idPcp">&raquo; {ts}Personal Campaign Pages{/ts}</td>
     <td>{ts}Allow constituents to create their own personal fundraising pages linked to this contribution page.{/ts}<br>
-      <a href="{crmURL p='civicrm/admin/contribute/pcp' q="reset=1&action=update&id=`$id`"}" target="_blank"><i class="zmdi zmdi-link"></i> {ts}Personal Campaign Pages{/ts} - {ts}Settings{/ts}</a> <br>
+      <a href="{crmURL p='civicrm/admin/contribute/pcp' q="reset=1&action=update&id=`$id`"}" target="_blank"><i class="zmdi zmdi-link"></i> {ts}Personal Campaign Pages{/ts} - {ts}Admin Basic Settings{/ts}</a> <br>
       <a href="{crmURL p="civicrm/admin/pcp" q="reset=1&contribution_page_id=`$id`"}" target="_blank"><i class="zmdi zmdi-link"></i> {ts}Manage Personal Campaign Pages{/ts}</a> <br>
-      <a href="{crmURL a=true p='civicrm/contribute/campaign' q="action=add&reset=1&pageId=`$id`"}" target="_blank"><i class="zmdi zmdi-link"></i> {ts}Setup a Personal Campaign Page{/ts}</a>
+      <a href="{crmURL a=true p='civicrm/contribute/campaign' q="action=add&reset=1&pageId=`$id`"}" target="_blank"><i class="zmdi zmdi-link"></i> {ts}New personal campaign page{/ts}</a>
     </td>
 </tr>
 <tr>
