@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>, 2016-2023\n"
+"Last-Translator: CC Chu <poliphilonet@gmail.com>, 2020-2023\n"
 "Language-Team: Chinese (Taiwan) (http://app.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29933,7 +29933,7 @@ msgstr "新增募款頁"
 
 #: templates/CRM/Contribute/Page/ContributionPage.tpl
 msgid "Manage Personal Campaign Pages"
-msgstr "管理個人募款頁"
+msgstr "管理已建立的個人募款頁"
 
 #: templates/CRM/Contribute/Page/ContributionPage.tpl
 msgid ""
@@ -49490,3 +49490,7 @@ msgstr "您所選的費用在送出前已超過有效期限，請返回第一步
 #: templates/CRM/AI/AICompletion.tpl
 msgid "The organization sharing this template"
 msgstr "分享組織"
+
+#: templates/CRM/Contribute/Page/ContributionPageEdit.tpl
+msgid "Admin Basic Settings"
+msgstr "管理者基本設定"
