@@ -49015,3 +49015,7 @@ msgstr ""
 #: templates/CRM/Contribute/Page/ContributionPageEdit.tpl
 msgid "Admin Basic Settings"
 msgstr ""
+
+#: templates/CRM/Contribute/Page/ContributionPageEdit.tpl
+msgid "You can provide this URL to supporters for creating new Personal Campaign Pages."
+msgstr ""
