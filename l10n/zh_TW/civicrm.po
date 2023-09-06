@@ -49494,3 +49494,9 @@ msgstr "分享組織"
 #: templates/CRM/Contribute/Page/ContributionPageEdit.tpl
 msgid "Admin Basic Settings"
 msgstr "管理者基本設定"
+
+#: templates/CRM/Contribute/Page/ContributionPageEdit.tpl
+msgid ""
+"You can provide this URL to supporters for creating new Personal Campaign "
+"Pages."
+msgstr "您可以提供這個網址給支持者以建立新的個人募款頁。"
