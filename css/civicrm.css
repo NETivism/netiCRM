@@ -6950,11 +6950,8 @@ input.crm-form-textfield,
   display: flex;
   flex-wrap: wrap;
   margin: 5px 0;
+  gap: 0 10px;
 }
-.crm-container .flex-general > * {
-  margin: 0 10px;
-}
-
 .crm-container .flex-general button,
 .crm-container .flex-general input[type="button"],
 .crm-container .flex-general .button,
@@ -6995,6 +6992,18 @@ input.crm-form-textfield,
 .click-to-show-info {
   display: none;
 }
+
+/* new personal campaign */
+.new-personal-campaign-link-wrap {
+  max-width: 200px;
+}
+html[lang="en"] .new-personal-campaign-link-wrap {
+  max-width: 250px;
+}
+.new-personal-campaign-wrap a.button.url-copy {
+  margin-left: 0 !important;
+}
+
 
 /* RWD block */
 @media screen and (max-width: 768px) {
