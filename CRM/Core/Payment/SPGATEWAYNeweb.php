@@ -215,8 +215,8 @@ class CRM_Core_Payment_SPGATEWAYNeweb {
         CRM_Core_Error::debug_var("doResyncOldNewebRecur:result", $result);
 
         if (!empty($result) && $result->Status == 'SUCCESS') {
-          $output .= ":查詢成功";
-          echo ":查詢成功";
+          $output .= ":QuerySuccess";
+          echo ":QuerySuccess";
           // prepare contribution
           $contribution = new CRM_Contribute_DAO_Contribution();
           $contribution->contribution_recur_id = $recurId;
@@ -226,9 +226,9 @@ class CRM_Core_Payment_SPGATEWAYNeweb {
             $exists = CRM_Core_DAO::singleValueQuery("SELECT COUNT(*) FROM civicrm_contribution WHERE trxn_id LIKE 'r_{$trxn_id}'");
             if ($exists) {
               $alreadyExist++;
-              $output .= ":資料已存在:";
+              $output .= ":DataExists:";
               $output .= $result->Result->TradeStatus."\n";
-              echo ":資料已存在:";
+              echo ":DataExists:";
               echo $result->Result->TradeStatus."\n";
               continue;
             }
@@ -238,14 +238,14 @@ class CRM_Core_Payment_SPGATEWAYNeweb {
             // prepare post, complex logic because recurring have different variable names
             $ipn_result = clone $result;
             if ($result->Result->TradeStatus != 1) {
-              $output .= ":交易失敗:".$result->Result->RespondMsg;
-              echo ":交易失敗:".$result->Result->RespondMsg;
+              $output .= ":TransactionFailed:".$result->Result->RespondMsg;
+              echo ":TransactionFailed:".$result->Result->RespondMsg;
               $ipn_result->Status = 'Error';
               $transactFailed++;
             }
             else {
-              $output .= ":交易成功";
-              echo ":交易成功";
+              $output .= ":TransactionCompleted";
+              echo ":TransactionCompleted";
               $success++;
             }
             $ipn_result->Message = $result->Result->RespondMsg;
@@ -265,24 +265,24 @@ class CRM_Core_Payment_SPGATEWAYNeweb {
         }
         else {
           var_dump($result);
-          $output .= ":查詢失敗";
-          echo ":查詢失敗";
+          $output .= ":QueryFailed";
+          echo ":QueryFailed";
           $queryFailed++;
         }
         echo "\n";
         CRM_Core_Error::debug_log_message($output);
 
       }
-      $message = "本次 cron 成果：";
+      $message = "cron result：";
       $start = $offset+1;
-      $message .= "從第{$start}筆開始進行，";
+      $message .= "From date {$start}. ";
       if ($skip > 0) {
-        $message .= "跳過{$skip}筆本月已更新完成；";
+        $message .= "Skip {$skip} records which already completed this month. ";
       }
-      $message .= "總共執行{$count}筆更新, {$alreadyExist}筆已存在, {$transactFailed}筆交易失敗, {$success}筆交易成功, {$queryFailed}筆查詢失敗";
+      $message .= "Updated {$count} records. {$alreadyExist} records exists, {$transactFailed} records failed, {$success} records success, {$queryFailed} records query failed.";
       if ($total > ($count+$skip)) {
         $unexecuted = $total - $count - $skip;
-        $message .= "，剩{$unexecuted}筆未執行，移到下次進行。";
+        $message .= "，{$unexecuted} records scheduled to next cron.";
       }
       CRM_Core_Error::debug_log_message($message);
       CRM_Core_BAO_Cache::setItem($offset+300, 'spgateway_neweb', 'resync_offset_'.$ppid_new);

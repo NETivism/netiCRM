@@ -1069,6 +1069,10 @@ EOT;
   public static function doIPN($instrument, $post = NULL, $get = NULL, $print = TRUE) {
     $post = !empty($post) ? $post : $_POST;
     $get = !empty($get) ? $get : $_GET;
+    if (empty($instrument)) {
+      $qArray = explode('/', $get['q']);
+      $instrument = end($qArray);
+    }
 
     // detect variables
     if(empty($post)){
@@ -1082,6 +1086,7 @@ EOT;
         $result = $ipn->main($component, $instrument);
         if(!empty($result) && $print){
           echo $result;
+          CRM_Utils_System::civiExit();
         }
         else{
           return $result;
