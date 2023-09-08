@@ -29933,7 +29933,7 @@ msgstr "新增募款頁"
 
 #: templates/CRM/Contribute/Page/ContributionPage.tpl
 msgid "Manage Personal Campaign Pages"
-msgstr "管理個人募款頁"
+msgstr "管理已建立的個人募款頁"
 
 #: templates/CRM/Contribute/Page/ContributionPage.tpl
 msgid ""
@@ -49490,3 +49490,19 @@ msgstr "您所選的費用在送出前已超過有效期限，請返回第一步
 #: templates/CRM/AI/AICompletion.tpl
 msgid "The organization sharing this template"
 msgstr "分享組織"
+
+#: templates/CRM/Contribute/Page/ContributionPageEdit.tpl
+msgid "Admin Basic Settings"
+msgstr "管理者基本設定"
+
+#: templates/CRM/Contribute/Page/ContributionPageEdit.tpl
+msgid ""
+"You can provide this URL to supporters for creating new Personal Campaign "
+"Pages."
+msgstr "您可以提供這個網址給支持者以建立新的個人募款頁。"
+
+#: CRM/Contribute/Form/Payment.php
+msgid ""
+"This payment cannot be made at the moment. If you have any questions, please"
+" contact the site administrator."
+msgstr "這筆費用目前不能進行繳費，如有問題請洽網站管理員。"
