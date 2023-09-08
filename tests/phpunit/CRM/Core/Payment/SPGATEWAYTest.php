@@ -302,7 +302,8 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     );
     $instrument_code = $contrib['payment_instrument_id'];
     module_load_include('inc', 'civicrm_spgateway', 'civicrm_spgateway.checkout');
-    $query = _civicrm_spgateway_notify_url($vars, 'spgateway/ipn/'.$instrument_code, 'contribute');
+    $query = CRM_Contribute_BAO_Contribution::makeNotifyUrl($vars, 'spgateway/ipn/'.$instrument_code, TRUE);
+
     parse_str($query, $get);
     $post = array(
       "Status" => "SUCCESS",

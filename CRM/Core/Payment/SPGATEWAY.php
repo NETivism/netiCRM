@@ -207,34 +207,29 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     if ($component != 'contribute' && $component != 'event') {
       CRM_Core_Error::fatal(ts('Component is invalid'));
     }
-    if (module_load_include('inc', 'civicrm_spgateway', 'civicrm_spgateway.checkout') === FALSE) {
-      CRM_Core_Error::fatal('Module civicrm_spgateway doesn\'t exists.');
-    }
-    else {
-      $is_test = $this->_mode == 'test' ? 1 : 0;
-      if (isset($this->_paymentForm) && get_class($this->_paymentForm) == 'CRM_Contribute_Form_Payment_Main') {
-        if (empty($params['email-5'])) {
-          // Retrieve email of billing type or primary.
-          $locationTypes = CRM_Core_PseudoConstant::locationType(FALSE, 'name');
-          $bltID = array_search('Billing', $locationTypes);
-          if (!$bltID) {
-            return CRM_Core_Error::statusBounce(ts('Please set a location type of %1', array(1 => 'Billing')));
-          }
-          $fields = array();
-          $fields['email-'.$bltID] = 1;
-          $fields['email-Primary'] = 1;
-          $default = array();
-
-          CRM_Core_BAO_UFGroup::setProfileDefaults($params['contactID'], $fields, $default);
-          if (!empty($default['email-'.$bltID])) {
-            $params['email-5'] = $default['email-'.$bltID];
-          }
-          elseif (!empty($default['email-Primary'])) {
-            $params['email-5'] = $default['email-Primary'];
-          }
+    $is_test = $this->_mode == 'test' ? 1 : 0;
+    if (isset($this->_paymentForm) && get_class($this->_paymentForm) == 'CRM_Contribute_Form_Payment_Main') {
+      if (empty($params['email-5'])) {
+        // Retrieve email of billing type or primary.
+        $locationTypes = CRM_Core_PseudoConstant::locationType(FALSE, 'name');
+        $bltID = array_search('Billing', $locationTypes);
+        if (!$bltID) {
+          return CRM_Core_Error::statusBounce(ts('Please set a location type of %1', array(1 => 'Billing')));
         }
-        $params['item_name'] = $params['description'];
+        $fields = array();
+        $fields['email-'.$bltID] = 1;
+        $fields['email-Primary'] = 1;
+        $default = array();
+
+        CRM_Core_BAO_UFGroup::setProfileDefaults($params['contactID'], $fields, $default);
+        if (!empty($default['email-'.$bltID])) {
+          $params['email-5'] = $default['email-'.$bltID];
+        }
+        elseif (!empty($default['email-Primary'])) {
+          $params['email-5'] = $default['email-Primary'];
+        }
       }
+      $params['item_name'] = $params['description'];
     }
 
     $instrumentId = $params['civicrm_instrument_id'];
@@ -1086,7 +1081,6 @@ EOT;
         $result = $ipn->main($component, $instrument);
         if(!empty($result) && $print){
           echo $result;
-          CRM_Utils_System::civiExit();
         }
         else{
           return $result;
@@ -1094,7 +1088,6 @@ EOT;
       }
       else{
         CRM_Core_Error::debug_log_message( "civicrm_spgateway: Could not get module name from request url", TRUE);
-        CRM_Utils_System::civiExit();
       }
     }
   }
