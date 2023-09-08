@@ -49004,3 +49004,22 @@ msgstr ""
 
 msgid "The fee you selected has expired before submission. Please reselect the fee."
 msgstr ""
+
+msgid "The fee you selected has expired before submission. Please begin from the first step. You can refill another <a href=\"%1\">here</a>."
+msgstr ""
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid "The organization sharing this template"
+msgstr ""
+
+#: templates/CRM/Contribute/Page/ContributionPageEdit.tpl
+msgid "Admin Basic Settings"
+msgstr ""
+
+#: templates/CRM/Contribute/Page/ContributionPageEdit.tpl
+msgid "You can provide this URL to supporters for creating new Personal Campaign Pages."
+msgstr ""
+
+#: CRM/Contribute/Form/Payment.php
+msgid "This payment cannot be made at the moment. If you have any questions, please contact the site administrator."
+msgstr ""

@@ -150,8 +150,7 @@ button.form-submit-primary,
   color: #fff;
 }
 .netiaic-chat .user-msg.ai-msg-is-finished .msg-tools,
-.netiaic-chat .ai-msg.is-finished .msg-tools,
-.netiaic-chat .ai-msg.is-error .msg-tools {
+.netiaic-chat .ai-msg.is-finished .msg-tools {
   display: flex;
   flex: 0 0 100%;
   justify-content: flex-end;
@@ -167,6 +166,10 @@ button.form-submit-primary,
 }
 .netiaic-chat .user-msg .msg-content {
   background: #eceff1;
+}
+.netiaic-chat .is-error .msg-content {
+  color: var(--color-error);
+  background: var(--bg-color-error);
 }
 .netiaic-chat .msg .msg-tip {
   display: none;
@@ -386,6 +389,23 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
   background: #fafafa;
   box-shadow: 0px 0px 3px rgba(0,0,0,0.2);
 }
+.netiaic-modal .template-filters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.netiaic-modal .template-filters .filter-item {
+  display: flex;
+  align-items: center;
+}
+.netiaic-modal .filter-item > i {
+  margin-right: 12px;
+  font-size: 24px;
+  color: #000;
+}
+.netiaic-modal .filter-item .crm-form-elem {
+  display: block;
+}
 .netiaic-modal .template-item {
   margin: 16px 0;
   padding: 16px;
@@ -408,6 +428,10 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
 .netiaic-modal .template-item:hover .context {
   display: block;
 }
+.netiaic-modal .template-item .org {
+  position: absolute;
+  bottom: 0;
+}
 .netiaic-modal .template-item .actions {
   text-align: right;
 }
@@ -428,6 +452,10 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
 .netiaic-modal .netiaic-save-tpl-title-section .crm-form-elem,
 .netiaic-modal .netiaic-save-tpl-title-section .form-text {
   width: 100%;
+}
+.netiaic-modal .no-result {
+  margin-top: 20px;
+  text-align: center;
 }
 .netiaic-command {
   display: none;
@@ -567,7 +595,12 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
 .nsp-is-opened .select2-container--default .select2-search--dropdown .select2-search__field {
   background: none;
 }
-
+.is-show {
+  display: block !important;
+}
+.is-hide {
+  display: none !important;
+}
 
 @keyframes skeleton-animation {
   0% {

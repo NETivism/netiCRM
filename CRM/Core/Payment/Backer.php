@@ -74,10 +74,14 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
       array('name' => 'password',
         'label' => $ppDAO->password_label,
       ),
-      array('name' => 'url_site',
+      array(
+        'name' => 'url_api',
+        'label' => ts('API URL'),
+      ),
+      array('name' => 'url_button',
         'label' => ts('Link Label'),
       ),
-      array('name' => 'url_api',
+      array('name' => 'url_site',
         'label' => ts('Link URL'),
       ),
     );
@@ -747,6 +751,11 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
           $amountLevel[] = $label.'→'.$value;
         }
       }
+      if (!empty($amountLevel)) {
+        $params['contribution']['amount_level'] = CRM_Core_BAO_CustomOption::VALUE_SEPERATOR.implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, $amountLevel).CRM_Core_BAO_CustomOption::VALUE_SEPERATOR;
+      }
+    }
+    else {
       if (!empty($amountLevel)) {
         $params['contribution']['amount_level'] = CRM_Core_BAO_CustomOption::VALUE_SEPERATOR.implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, $amountLevel).CRM_Core_BAO_CustomOption::VALUE_SEPERATOR;
       }

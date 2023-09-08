@@ -57,8 +57,8 @@ We take the security of this project very seriously. If you believe you have fou
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 4.1     | :white_check_mark: |
-| < 4.1   | :x:                |
+| 5.0     | :white_check_mark: |
+| < 5     | :x:                |
 
 ### License
 

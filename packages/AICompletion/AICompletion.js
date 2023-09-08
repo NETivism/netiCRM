@@ -15,6 +15,8 @@
         FINISH_CLASS = 'is-finished',
         EXPAND_CLASS = 'is-expanded',
         COPY_CLASS = 'is-copied',
+        SHOW_CLASS = 'is-show',
+        HIDE_CLASS = 'is-hide',
         MFP_ACTIVE_CLASS = 'mfp-is-active',
         TIMEOUT = 30000;
 
@@ -30,23 +32,32 @@
       communityRecommendations: []
     },
     ts = {},
-    endpoint = {
-    },
+    endpoint = {},
     chatData = {
       messages: []
     },
     colon = ':',
+    debug = false,
+    component,
     errorMessage,
     errorMessageDefault;
 
   // Default configuration options
-  var defaultOptions = {};
+  var defaultOptions = {
+    debug: false
+  };
 
   /**
    * ============================
    * Private functions
    * ============================
    */
+
+  var debugLog = function(message, obj) {
+    if (debug && window.console && window.console.log) {
+      console.log('AICompletion:', message, obj || '');
+    }
+  };
 
   var isObject = function(variable) {
     return typeof variable === 'object' && variable !== null;
@@ -166,6 +177,13 @@
   var AICompletion = function(element, options) {
     this.element = element;
     this.settings = $.extend({}, defaultOptions, options);
+
+    debug = this.settings.debug === "1" ? true : false;
+
+    if (debug) {
+      $("html").addClass("is-debug");
+    }
+
     this.init();
   }
 
@@ -282,72 +300,139 @@
     getTemplateList: function(data = {}) {
       let output = `<p>${ts['There are currently no templates available.']}</p>`;
 
-      for (let key in templateListData) {
-        if (key == 'savedTemplates') {
-          sendAjaxRequest(endpoint.getTemplateList, 'POST', data, function(response) {
-            if (response.status == 'success' || response.status == 1) {
-              if (response.data) { // TODO: check data
-                templateListData[key] = response.data;
-                output = `<div class="template-list">`;
+      if (component) {
+        data['component'] = component;
+      }
 
-                for (let i in templateListData[key]) {
-                  let data = templateListData[key][i],
-                      prompt = JSON.parse(data.prompt);
-                  console.log(prompt);
-                  output += `<div class="template-item" data-ai-role="${data.ai_role}" data-tone-style="${data.tone_style}" data-context="${data.context}">
-                      <div class="inner">
-                        <div class="ai-role"><span class="label">${ts['Copywriting Role']}</span>${colon}${data.ai_role}</div>
-                        <div class="tone-style"><span class="label">${ts['Tone Style']}</span>${colon}${data.tone_style}</div>
-                        <div class="context"><span class="label">${ts['Content Summary']}</span>${colon}${data.context}</div>
-                        <div class="actions">
-                          <button type="button" class="apply-btn btn">${ts['Apply Template']}</button>
-                        </div>
-                      </div>
-                    </div>`;
-                }
+      const fetchTemplates = function(key, data, output) {
+        sendAjaxRequest(endpoint.getTemplateList, 'POST', data, (response) => {
+          handleSuccessResponse(key, response, output);
+        }, (xhr, status, error) => {
+          handleErrorResponse(key, xhr, status, error);
+        });
+      };
 
-                output += `</div>`;
+      const handleSuccessResponse = function(key, response, output) {
+        if (response.status == 'success' || response.status == 1) {
+          if (response.data) {
+            templateListData[key] = key === 'savedTemplates' ? response.data : response.data['templates'];
+            output += `<div class="template-list">`;
+
+            for (let i in templateListData[key]) {
+              let tplData = templateListData[key][i],
+                  role = tplData.ai_role ? tplData.ai_role : tplData.role,
+                  tone = tplData.tone_style ? tplData.tone_style : tplData.tone,
+                  context = tplData.context ? tplData.context : tplData.content;
+
+              let templateItemHtml = `
+                <div class="template-item" data-ai-role="${role}" data-tone-style="${tone}" data-context="${context}">
+                  <div class="inner">
+                    <div class="ai-role"><span class="label">${ts['Copywriting Role']}</span>${colon}${role}</div>
+                    <div class="tone-style"><span class="label">${ts['Tone Style']}</span>${colon}${tone}</div>
+                    <div class="context"><span class="label">${ts['Content Summary']}</span>${colon}${context}</div>
+                    <div class="actions">
+                      <button type="button" class="apply-btn btn">${ts['Apply Template']}</button>
+                    </div>
+                  </div>
+                </div>`;
+
+              if (key === 'communityRecommendations') {
+                templateItemHtml = templateItemHtml.replace('<div class="actions">', `<div class="org"><span class="label">${ts['The organization sharing this template']}</span>${colon}${tplData.org}</div><div class="actions">`);
               }
+
+              output += templateItemHtml;
             }
 
-            $(`#use-other-templates-tabs .modal-tabs-panel[data-type="${key}"]`).html(output);
-
-            $('.template-list').on('click', '.apply-btn', function() {
-              let $templateItem = $(this).closest('.template-item'),
-                  templateData = {
-                    role: $templateItem.attr("data-ai-role"),
-                    tone: $templateItem.attr("data-tone-style"),
-                    content: $templateItem.attr("data-context")
-                  };
-
-              if (!AICompletion.prototype.formIsEmpty()) {
-                if (confirm(ts['Warning! Applying this template will clear your current settings. Proceed with the application?'])) {
-                  AICompletion.prototype.applyTemplateToForm({ data: templateData });
-                  AICompletion.prototype.modal.close();
-                }
-              }
-              else {
-                AICompletion.prototype.applyTemplateToForm({ data: templateData });
-                AICompletion.prototype.modal.close();
-              }
-            });
-          }, function(xhr, status, error) {
-            if (status == 'timeout') {
-              errorMessage = `<p class="error">${ts['Our service is currently busy, please try again later. If needed, please contact our customer service team.']}</p>`;
-            }
-            else if (xhr.responseJSON.message == 'Failed to retrieve template list.') {
-              errorMessage = `<p>${ts['There are currently no templates available.']}</p>`;
-            }
-            else {
-              errorMessage = `<p class="error">${errorMessageDefault}</p>`;
-            }
-
-            $(`#use-other-templates-tabs .modal-tabs-panel[data-type="${key}"]`).html(errorMessage);
-          });
+            output += `</div>`;
+          }
         }
 
-        if (key == 'communityRecommendations') {
-          $(`#use-other-templates-tabs .modal-tabs-panel[data-type="${key}"]`).html(output);
+        let $currentPanel = $(`#use-other-templates-tabs .modal-tabs-panel[data-type="${key}"]`);
+        $currentPanel.html(output);
+        bindTemplateListEvents($currentPanel);
+      };
+
+      const handleErrorResponse = function(key, xhr, status, error) {
+        if (status == 'timeout') {
+          errorMessage = `<p class="error">${ts['Our service is currently busy, please try again later. If needed, please contact our customer service team.']}</p>`;
+        } else if (xhr.responseJSON.message == 'Failed to retrieve template list.') {
+          errorMessage = `<p>${ts['There are currently no templates available.']}</p>`;
+        } else {
+          errorMessage = `<p class="error">${errorMessageDefault}</p>`;
+        }
+
+        $(`#use-other-templates-tabs .modal-tabs-panel[data-type="${key}"]`).html(errorMessage);
+      };
+
+      const bindTemplateListEvents = function($panel) {
+        $panel.find('.template-list').on('click', '.apply-btn', function() {
+          let $templateItem = $(this).closest('.template-item'),
+              templateData = {
+                role: $templateItem.attr("data-ai-role"),
+                tone: $templateItem.attr("data-tone-style"),
+                content: $templateItem.attr("data-context")
+              };
+
+          if (!AICompletion.prototype.formIsEmpty()) {
+            if (confirm(ts['Warning! Applying this template will clear your current settings. Proceed with the application?'])) {
+              AICompletion.prototype.applyTemplateToForm({ data: templateData });
+              AICompletion.prototype.modal.close();
+            }
+          }
+          else {
+            AICompletion.prototype.applyTemplateToForm({ data: templateData });
+            AICompletion.prototype.modal.close();
+          }
+        });
+
+        let buffer;
+        $panel.find('.keyword-filter').on('input', function() {
+          clearTimeout(buffer);
+          let $panel = $(this).closest('.modal-tabs-panel'),
+              $list = $panel.find('.template-list'),
+              keyword = $(this).val().toLowerCase();
+
+          buffer = setTimeout(function() {
+            let hasResult = false;
+            $list.find('.template-item').each(function() {
+                var $item = $(this);
+                var aiRole = $item.data('ai-role').toLowerCase();
+                var toneStyle = $item.data('tone-style').toLowerCase();
+                var context = $item.data('context').toLowerCase();
+
+                if (aiRole.includes(keyword) || toneStyle.includes(keyword) || context.includes(keyword)) {
+                  $item.addClass(SHOW_CLASS).removeClass(HIDE_CLASS);
+                  hasResult = true;
+                } else {
+                  $item.addClass(HIDE_CLASS).removeClass(SHOW_CLASS);
+                }
+            });
+
+            if (!hasResult) {
+              $list.next('.no-result').remove();
+              $list.after(`<div class="no-result">${ts['No matches found.']}</div>`);
+            } else {
+              $list.next('.no-result').remove();
+            }
+          }, 300);
+        });
+      };
+
+      for (let key in templateListData) {
+        output = `<div class="template-filters crm-container">
+        <div class="keyword-filter-item filter-item form-item">
+          <i class="zmdi zmdi-search"></i>
+          <div class="crm-form-elem crm-form-textfield">
+            <input class="keyword-filter form-text huge" type="search" placeholder="${ts['Input search keywords']}">
+          </div>
+        </div>
+        </div>`;
+
+        if (['savedTemplates', 'communityRecommendations'].includes(key)) {
+          if (key === 'communityRecommendations') {
+            data['is_share_with_others'] = 1;
+          }
+          fetchTemplates(key, data, output);
         }
       }
     },
@@ -898,6 +983,7 @@
                   if (eventData.is_error) {
                     if (!$aiMsg.hasClass(ERROR_CLASS)) {
                       $aiMsg.addClass(ERROR_CLASS);
+                      throw new Error(`${eventData.message} (onmessage error)`);
                     }
                   }
 
@@ -930,44 +1016,73 @@
                 else {
                   if (eventData.hasOwnProperty('message')) {
                     let message = eventData.message.replace(/\n/g, '<br>');
-                    AICompletion.prototype.createMessage(aiMsgID, userMsgID, message, 'ai', 'stream');
-                    $aiMsg = $container.find('.msg[id="' + aiMsgID + '"]');
-                    $userMsg = $container.find('.msg[id="' + userMsgID + '"]');
 
-                    if (eventData.hasOwnProperty('id')) {
-                      $aiMsg.data('aicompletion-id', eventData.id);
+                    if (eventData.hasOwnProperty('is_error')) {
+                      let msgID = 'ai-msg-' + renderID();
 
-                      if (!$userMsg.hasClass(`ai-msg-${FINISH_CLASS}`)) {
-                        $userMsg.addClass(`ai-msg-${FINISH_CLASS}`);
+                      if (eventData.message.includes('timed out')) {
+                        errorMessage = ts['Our service is currently busy, please try again later. If needed, please contact our customer service team.'];
+                        AICompletion.prototype.createMessage(msgID, '', errorMessage, 'ai', 'error');
                       }
-                    }
-
-                    // Update usage
-                    if (chatData.messages.hasOwnProperty(aiMsgID)) {
-                      if (!chatData.messages[aiMsgID].used) {
-                        AICompletion.prototype.usageUpdate();
+                      else {
+                        AICompletion.prototype.createMessage(msgID, '', errorMessageDefault, 'ai', 'error');
                       }
+
+                      console.error(message);
                     }
                     else {
-                      chatData.messages[aiMsgID] = {
-                        used: true
+                      AICompletion.prototype.createMessage(aiMsgID, userMsgID, message, 'ai', 'stream');
+                      $aiMsg = $container.find('.msg[id="' + aiMsgID + '"]');
+                      $userMsg = $container.find('.msg[id="' + userMsgID + '"]');
+
+                      if (eventData.hasOwnProperty('id')) {
+                        $aiMsg.data('aicompletion-id', eventData.id);
+
+                        if (!$userMsg.hasClass(`ai-msg-${FINISH_CLASS}`)) {
+                          $userMsg.addClass(`ai-msg-${FINISH_CLASS}`);
+                        }
                       }
 
-                      AICompletion.prototype.usageUpdate();
+                      // Update usage
+                      if (chatData.messages.hasOwnProperty(aiMsgID)) {
+                        if (!chatData.messages[aiMsgID].used) {
+                          AICompletion.prototype.usageUpdate();
+                        }
+                      }
+                      else {
+                        chatData.messages[aiMsgID] = {
+                          used: true
+                        }
+
+                        AICompletion.prototype.usageUpdate();
+                      }
                     }
                   }
                 }
               }
             } catch (error) {
-              console.error('JSON Parse Error:', error.message);
-              AICompletion.prototype.createMessage(aiMsgID, userMsgID, errorMessageDefault, 'ai', 'error');
+              if (error.message.includes('onmessage error')) {
+                let msgID = 'ai-msg-' + renderID();
+
+                if (error.message.includes('timed out')) {
+                  errorMessage = ts['Our service is currently busy, please try again later. If needed, please contact our customer service team.'];
+                  AICompletion.prototype.createMessage(msgID, '', errorMessage, 'ai', 'error');
+                }
+                else {
+                  AICompletion.prototype.createMessage(msgID, '', errorMessageDefault, 'ai', 'error');
+                }
+              }
+              else {
+                AICompletion.prototype.createMessage(aiMsgID, userMsgID, errorMessageDefault, 'ai', 'error');
+              }
+
+              console.error(error.message);
             }
           };
 
           evtSource.onerror = function(event) {
             console.error("EventSource encountered an error: ", event);
             evtSource.close();
-            AICompletion.prototype.createMessage(aiMsgID, userMsgID, errorMessageDefault, 'ai', 'error');
           };
         })
         .catch(function(error) {
@@ -992,6 +1107,7 @@
 
       defaultData = this.getDefaultData();
       endpoint = window.AICompletion.endpoint;
+      component = window.AICompletion.component;
       AICompletion.prototype.container = $container;
 
       // Get translation string comparison table
@@ -1012,6 +1128,7 @@
 
       // Finally, add class to mark the initialization
       $container.addClass(INIT_CLASS);
+      debugLog('AICompletion initialized on element:', this.element);
     }
   };
 

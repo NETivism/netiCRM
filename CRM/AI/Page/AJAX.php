@@ -147,10 +147,19 @@ class CRM_AI_Page_AJAX {
         }
         catch(CRM_Core_Exception $e) {
           $message = $e->getMessage();
-          self::responseError(array(
-            'status' => 0,
-            'message' => $message,
-          ));
+
+          // Check if the exception message is related to cURL timeout or any cURL errors
+          if(strpos($message, "Curl Error") !== false) {
+            self::responseSseError(array(
+              'is_error' => 1,
+              'message' => 'OpenAI Connect Error'
+            ));
+          } else {
+            self::responseError(array(
+              'status' => 0,
+              'message' => $message,
+            ));
+          }
         }
         self::responseSucess(array(
           'status' => 1,
@@ -189,6 +198,33 @@ class CRM_AI_Page_AJAX {
       if (isset($jsondata['offset']) && is_numeric($jsondata['offset'])) {
         $offset = $jsondata['offset'];
         $data['offset'] = $offset;
+      }
+      if (isset($jsondata['is_share_with_others']) && is_numeric($jsondata['is_share_with_others'])) {
+        $isShared = $jsondata['is_share_with_others'];
+      }
+
+      if ($isShared) {
+        if (empty($component)) {
+          self::responseError(array(
+            'status' => 0,
+            'message' => "Component is empty,failed to retrieve template list.",
+          ));
+        }
+
+        $sharedData = CRM_AI_BAO_AICompletion::getSharedTemplate($component);
+        if (!empty($sharedData)) {
+          self::responseSucess(array(
+            'status' => 1,
+            'message' => "Template list retrieved successfully.",
+            'data' => $sharedData,
+          ));
+        }
+        else {
+          self::responseError(array(
+            'status' => 0,
+            'message' => "Failed to retrieve template list.",
+          ));
+        }
       }
 
       if (!empty($data)) {
@@ -377,6 +413,20 @@ class CRM_AI_Page_AJAX {
     http_response_code(400);
     header('Content-Type: application/json; charset=utf-8');
     echo json_encode($error);
+    CRM_Utils_System::civiExit();
+  }
+
+  /**
+   * This function handles the response in case of an error related to cURL.
+   *
+   * @param mixed $error The error message or object that needs to be sent as a response.
+   */
+  public static function responseSseError($error) {
+    // Send the error as a SSE formatted message, SSE formatted message does not need to set http response code
+    header('Content-Type: text/event-stream');
+    header('Cache-Control: no-cache');
+    echo "data: " . json_encode($error) . "\n\n";
+    flush();
     CRM_Utils_System::civiExit();
   }
 

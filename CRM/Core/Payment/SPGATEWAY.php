@@ -197,6 +197,29 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     }
     else {
       $is_test = $this->_mode == 'test' ? 1 : 0;
+      if (isset($this->_paymentForm) && get_class($this->_paymentForm) == 'CRM_Contribute_Form_Payment_Main') {
+        if (empty($params['email-5'])) {
+          // Retrieve email of billing type or primary.
+          $locationTypes = CRM_Core_PseudoConstant::locationType(FALSE, 'name');
+          $bltID = array_search('Billing', $locationTypes);
+          if (!$bltID) {
+            return CRM_Core_Error::statusBounce(ts('Please set a location type of %1', array(1 => 'Billing')));
+          }
+          $fields = array();
+          $fields['email-'.$bltID] = 1;
+          $fields['email-Primary'] = 1;
+          $default = array();
+
+          CRM_Core_BAO_UFGroup::setProfileDefaults($params['contactID'], $fields, $default);
+          if (!empty($default['email-'.$bltID])) {
+            $params['email-5'] = $default['email-'.$bltID];
+          }
+          elseif (!empty($default['email-Primary'])) {
+            $params['email-5'] = $default['email-Primary'];
+          }
+        }
+        $params['item_name'] = $params['description'];
+      }
       civicrm_spgateway_do_transfer_checkout($params, $component, $this->_paymentProcessor, $is_test);
     }
   }
