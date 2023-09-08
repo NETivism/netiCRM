@@ -49019,3 +49019,7 @@ msgstr ""
 #: templates/CRM/Contribute/Page/ContributionPageEdit.tpl
 msgid "You can provide this URL to supporters for creating new Personal Campaign Pages."
 msgstr ""
+
+#: CRM/Contribute/Form/Payment.php
+msgid "This payment cannot be made at the moment. If you have any questions, please contact the site administrator."
+msgstr ""
