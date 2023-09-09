@@ -938,7 +938,7 @@ EOT;
     }
   }
 
-  static function doSingleQueryRecord($contributionId = NULL) {
+  public static function doSingleQueryRecord($contributionId = NULL) {
     $get = $_GET;
     unset($get['q']);
     if (!is_numeric($contributionId) || empty($contributionId)) {
@@ -1028,7 +1028,7 @@ EOT;
     CRM_Utils_System::redirect($redirect);
   }
 
-  static function getSyncDataUrl($contributionId, &$form = NULL) {
+  public static function getSyncDataUrl($contributionId, &$form = NULL) {
     $get = $_GET;
     unset($get['q']);
     $query = http_build_query($get);
@@ -1098,7 +1098,7 @@ EOT;
    * @param string $type
    * @return void
    */
-  function instruments($type = 'normal'){
+  public static function instruments($type = 'normal'){
     $i = array(
       'Credit Card' => array('label' => ts('Credit Card'), 'desc' => '', 'code' => 'Credit'),
       'ATM' => array('label' => ts('ATM Transfer'), 'desc' => '', 'code' => 'ATM'),
@@ -1131,7 +1131,7 @@ EOT;
    * @param int $id
    * @return string
    */
-  function generateTrxnId($is_test, $id){
+  public static function generateTrxnId($is_test, $id){
     if($is_test){
       $trxnId = 'test' . substr(str_replace(array('.','-'), '', $_SERVER['HTTP_HOST']), 0, 3) . $id. 'T'. mt_rand(100, 999);
       return $trxnId;
