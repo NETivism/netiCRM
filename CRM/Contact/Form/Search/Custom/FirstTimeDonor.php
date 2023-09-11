@@ -360,6 +360,15 @@ GROUP BY contact.id
       $pageId = $row['contribution_page_id'];
       $row['contribution_page_id'] = "<a href='".CRM_Utils_System::url('civicrm/admin/contribute', 'action=update&reset=1&id='.$pageId)."' target='_blank'>". $this->_contributionPage[$pageId]."</a>";
     }
+    // for #38751 error, workaround.
+    if ($this->_isExport) {
+      if (empty($row['contribution_page_id'])) {
+        $row['contribution_page_id'] = '';
+      }
+      if (empty($row['contribution_recur_id'])) {
+        $row['contribution_recur_id'] = '';
+      }
+    }
   }
 
   /**
