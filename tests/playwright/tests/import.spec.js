@@ -237,6 +237,7 @@ test.describe.serial('Import Records', () => {
                             }
                         }
                     }
+                    result['result'] = totalRows === validRows;
                     result['totalRows'] = totalRows;
                     result['validRows'] = validRows;
                     return result;
