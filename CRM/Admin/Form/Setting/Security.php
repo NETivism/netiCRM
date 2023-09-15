@@ -28,11 +28,12 @@ class CRM_Admin_Form_Setting_Security extends CRM_Admin_Form_Setting {
       $this->assign('admin', TRUE);
     }
     $this->addTextarea('trustedHostsPatterns', ts('Trusted Host Settings'), array(
-      'placeholder' => ts('Example'). ":" . $_SERVER['HTTP_HOST']
+      'data-host' => $_SERVER['HTTP_HOST']
     ));
+    $this->assign('current_host', $_SERVER['HTTP_HOST']);
 
     $this->addElement('textarea', 'cspRules', ts('Content Security Policy'));
-    $this->addElement('textarea', 'cspExcludePath', ts('Exclude path'));
+    #$this->addElement('textarea', 'cspExcludePath', ts('Exclude path'));
 
     $config = CRM_Core_Config::singleton();
     if ($config->defaultCSP) {
