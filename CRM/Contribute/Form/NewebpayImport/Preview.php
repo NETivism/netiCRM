@@ -5,13 +5,23 @@ class CRM_Contribute_Form_NewebpayImport_Preview extends CRM_Core_Form {
 
   protected $_successedContribution = [];
 
-  function preProcess() {
-    $this->addFormRule(array('CRM_Contribute_Form_NewebpayImport_Preview', 'formRule'), $this);
-  }
+  protected $_statusHeader = [];
 
-  function buildQuickForm() {
+  protected $_statusContent = [];
+
+  protected $_errorHeader = [];
+
+  protected $_errorContent = [];
+
+  protected $_statusFileName = 'NewebpayImportPreviewStatus.xlsx';
+
+  protected $_errorFileName = 'NewebpayImportPreviewError.xlsx';
+
+  function preProcess() {
+    $downloadErrorType = CRM_Utils_Request::retrieve( 'downloadType', 'String', CRM_Core_DAO::$_nullObject);
+
     $this->_result = $this->get('parseResult');
-    $this->_successedContribution = $errorContribution = array();
+    $this->_successedContribution = array();
     $importDateCustomFieldId = $this->get('disbursementDate');
     $contributionStatus = CRM_Contribute_PseudoConstant::contributionStatus();
     // Add all row to the tables
@@ -56,33 +66,69 @@ class CRM_Contribute_Form_NewebpayImport_Preview extends CRM_Core_Form {
           }
           elseif ($rowProcessType == 2) {
             $row[ts('Contribution Status')] = $contributionStatus[$contribution->contribution_status_id];
-            $modifyStatusContribution[] = $row;
+            $this->_statusContent[] = $row;
           }
           else {
-            $errorContribution[] = $row;
+            $this->_errorContent[] = $row;
           }
           $tableContent[] = $row;
         }
       }
     }
 
-    if (!empty($modifyStatusContribution)) {
-      $modifyStatusHeader = $header;
-      $modifyStatusHeader[] = ts('Contribution Status');
-      $this->assign('modifyStatusHeader', $modifyStatusHeader);
-      $this->assign('modifyStatusContribution', $modifyStatusContribution);
+    if (!empty($this->_statusContent)) {
+      $this->_statusHeader = $header;
+      $this->_statusHeader[] = ts('Contribution Status');
+      $this->assign('modifyStatusHeader', $this->_statusHeader);
+      $this->assign('modifyStatusContribution', $this->_statusContent);
+    }
 
+    $this->_errorHeader = $header;
+    $this->_errorHeader[] = 'error_message';
+
+    if ($downloadErrorType) {
+      if ($downloadErrorType == 'error') {
+        foreach ($this->_errorContent as &$row) {
+          foreach ($row as $key => $value) {
+            if (!in_array($key, $this->_errorHeader)) {
+              unset($row[$key]);
+            }
+          }
+        }
+        CRM_Core_Report_Excel::writeExcelFile($this->_errorFileName, $this->_errorHeader, $this->_errorContent, $download = TRUE);
+      }
+      if ($downloadErrorType == 'status') {
+        foreach ($this->_statusContent as &$row) {
+          foreach ($row as $key => $value) {
+            if (!in_array($key, $this->_statusHeader)) {
+              unset($row[$key]);
+            }
+          }
+        }
+        CRM_Core_Report_Excel::writeExcelFile($this->_statusFileName, $this->_statusHeader, $this->_statusContent, $download = TRUE);
+      }
     }
 
     $this->assign('tableContent', $tableContent);
     $this->set('tableHeader', $header);
     $this->assign('successedTableHeader', $header);
     $this->assign('successedContribution', $this->_successedContribution);
-    $header[] = 'error_message';
-    $this->assign('errorTableHeader', $header);
-    $this->assign('errorContribution', $errorContribution);
-    $this->set('errorContribution', $errorContribution);
+    $this->assign('errorTableHeader', $this->_errorHeader);
+    $this->assign('errorContribution', $this->_errorContent);
+    $this->set('errorContribution', $this->_errorContent);
+    $this->addFormRule(array('CRM_Contribute_Form_NewebpayImport_Preview', 'formRule'), $this);
 
+    $query = "_qf_Preview_display=true&qfKey={$this->controller->_key}&downloadType=";
+    $queryError = $query.'error';
+    $downloadErrorUrl = CRM_Utils_System::url('civicrm/contribute/newebpay/import', $queryError);
+    $this->assign('downloadErrorUrl', $downloadErrorUrl);
+
+    $queryStatus = $query.'status';
+    $downloadStatusUrl = CRM_Utils_System::url('civicrm/contribute/newebpay/import', $queryStatus);
+    $this->assign('downloadStatusUrl', $downloadStatusUrl);
+  }
+
+  function buildQuickForm() {
     $this->addButtons(array(
         array('type' => 'upload',
           'name' => ts('Import'),
@@ -105,7 +151,6 @@ class CRM_Contribute_Form_NewebpayImport_Preview extends CRM_Core_Form {
     );
     return $defaults;
   }
-
 
   function postProcess() {
     $importDateCustomFieldId = $this->get('disbursementDate');
