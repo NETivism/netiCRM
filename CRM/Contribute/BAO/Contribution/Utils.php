@@ -415,7 +415,7 @@ INNER JOIN   civicrm_contact contact ON ( contact.id = contrib.contact_id )
     }
     else {
       // generate a new transaction id, if not already exist
-      $transaction['trxn_id'] = md5(uniqid('', TRUE));
+      $transaction['trxn_id'] = md5(uniqid((string)rand(), TRUE));
     }
 
     if (!isset($transaction['contribution_type_id'])) {

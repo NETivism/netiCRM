@@ -150,7 +150,7 @@ class CRM_Contribute_Form_Payment_Main extends CRM_Contribute_Form_Payment {
       $contrib->source = ' '.ts('Change Payment Method');
     }
     if(!empty($contrib->invoice_id)){
-      $invoice_id = md5(uniqid(rand(), TRUE));
+      $invoice_id = md5(uniqid((string)rand(), TRUE));
       $contrib->invoice_id = $invoice_id;;
       $this->set('invoiceID', $invoiceID);
     }
