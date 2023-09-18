@@ -239,24 +239,19 @@ FROM   {$this->_componentTable}
   public function buildQuickForm() {
     //export option
     $exportOptions = $mergeHousehold = $mergeAddress = array();
-    $this->_exportMode = $this->get('exportMode');
-    foreach(array('customHeader', 'taskName', 'totalSelectedRecords') as $name) {
-      $this->assign($name, $this->get($name));
-    }
-
-    $exportOptions[] = HTML_QuickForm::createElement('radio',
+    $exportOptions[] = $this->createElement('radio',
       NULL, NULL,
       ts('Select fields for export'),
       self::EXPORT_SELECTED,
       array('onClick' => 'showMappingOption( );')
     );
 
-    $mergeAddress[] = HTML_QuickForm::createElement('advcheckbox',
+    $mergeAddress[] = $this->createElement('advcheckbox',
       'merge_same_address',
       NULL,
       ts('Merge Contacts with the Same Address')
     );
-    $mergeHousehold[] = HTML_QuickForm::createElement('advcheckbox',
+    $mergeHousehold[] = $this->createElement('advcheckbox',
       'merge_same_household',
       NULL,
       ts('Merge Household Members into their Households')

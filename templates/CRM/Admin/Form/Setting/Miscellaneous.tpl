@@ -100,6 +100,6 @@
             <td>{$form.recaptchaPrivateKey.html}</td>
         </tr>
         </table>
-           <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
     </fieldset>
+    <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
 </div>

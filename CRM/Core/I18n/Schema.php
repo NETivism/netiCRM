@@ -68,7 +68,7 @@ class CRM_Core_I18n_Schema {
    *
    * @return void
    */
-  function makeMultilingual($locale) {
+  static function makeMultilingual($locale) {
     $domain = new CRM_Core_DAO_Domain();
     $domain->find(TRUE);
 
@@ -122,7 +122,7 @@ class CRM_Core_I18n_Schema {
    *
    * @return void
    */
-  function makeSinglelingual($retain) {
+  static function makeSinglelingual($retain) {
     $domain = new CRM_Core_DAO_Domain;
     $domain->find(TRUE);
     $locales = explode(CRM_Core_DAO::VALUE_SEPARATOR, $domain->locales);
@@ -192,7 +192,7 @@ class CRM_Core_I18n_Schema {
    *
    * @return void
    */
-  function addLocale($locale, $source) {
+  static function addLocale($locale, $source) {
     // get the current supported locales
     $domain = new CRM_Core_DAO_Domain();
     $domain->find(TRUE);
@@ -233,7 +233,7 @@ class CRM_Core_I18n_Schema {
 
     // update civicrm_domain.locales
     $locales[] = $locale;
-    $domain->locales = implode(CRM_Core_DAO::VALUE_SEPARATOR, $locales);
+    $domain->locales = CRM_Utils_Array::implode(CRM_Core_DAO::VALUE_SEPARATOR, $locales);
     $domain->save();
   }
 
@@ -345,7 +345,7 @@ class CRM_Core_I18n_Schema {
    *
    * @return array          array of CREATE INDEX queries
    */
-  private function createIndexQueries($locale, $table, $class = 'CRM_Core_I18n_SchemaStructure') {
+  private static function createIndexQueries($locale, $table, $class = 'CRM_Core_I18n_SchemaStructure') {
     $indices =& $class::indices();
     $columns =& $class::columns();
     if (!isset($indices[$table])) {
@@ -361,7 +361,7 @@ class CRM_Core_I18n_Schema {
           $index['field'][$i] = "{$col}_{$locale}";
         }
       }
-      $cols = implode(', ', $index['field']);
+      $cols = CRM_Utils_Array::implode(', ', $index['field']);
       $name = $index['name'];
       if ($locale) {
         $name .= '_' . $locale;
@@ -380,7 +380,7 @@ class CRM_Core_I18n_Schema {
    *
    * @return array          array of CREATE TRIGGER queries
    */
-  private function createTriggerQueries($locales, $locale, $class = 'CRM_Core_I18n_SchemaStructure') {
+  private static function createTriggerQueries($locales, $locale, $class = 'CRM_Core_I18n_SchemaStructure') {
     $columns =& $class::columns();
     $queries = array();
     $namesTrigger = array();
@@ -410,7 +410,7 @@ class CRM_Core_I18n_Schema {
       $individualNamesTrigger[] = "IF NEW.sort_name_{$loc}    = '' THEN SET NEW.sort_name_{$loc}    = @email; END IF;";
     }
 
-    $beforeUpdateNamesTrigger = implode(' ', $namesTrigger) . implode(' ', $individualNamesTrigger);
+    $beforeUpdateNamesTrigger = CRM_Utils_Array::implode(' ', $namesTrigger) . CRM_Utils_Array::implode(' ', $individualNamesTrigger);
     // ...for UPDATE it's a separate trigger, for INSERT it has to be merged into the below, general one
     $queries[] = "DROP TRIGGER IF EXISTS civicrm_contact_before_update";
     $queries[] = "CREATE TRIGGER civicrm_contact_before_update BEFORE UPDATE ON civicrm_contact FOR EACH ROW BEGIN " . $beforeUpdateNamesTrigger . ' END';
@@ -450,7 +450,7 @@ class CRM_Core_I18n_Schema {
       }
       $trigger[] = 'END';
 
-      $queries[] = implode(' ', $trigger);
+      $queries[] = CRM_Utils_Array::implode(' ', $trigger);
     }
     return $queries;
   }
@@ -465,7 +465,7 @@ class CRM_Core_I18n_Schema {
    *
    * @return array          array of CREATE INDEX queries
    */
-  private function createViewQuery($locale, $table, &$dao, $class = 'CRM_Core_I18n_SchemaStructure') {
+  private static function createViewQuery($locale, $table, &$dao, $class = 'CRM_Core_I18n_SchemaStructure') {
     $columns =& $class::columns();
     $cols = array();
     $dao->query("DESCRIBE {$table}", FALSE);
@@ -481,7 +481,7 @@ class CRM_Core_I18n_Schema {
     foreach ($columns[$table] as $column => $_) {
       $cols[] = "{$column}_{$locale} {$column}";
     }
-    return "CREATE OR REPLACE VIEW {$table}_{$locale} AS SELECT " . implode(', ', $cols) . " FROM {$table}";
+    return "CREATE OR REPLACE VIEW {$table}_{$locale} AS SELECT " . CRM_Utils_Array::implode(', ', $cols) . " FROM {$table}";
   }
 }
 

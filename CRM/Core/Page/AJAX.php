@@ -100,7 +100,7 @@ class CRM_Core_Page_AJAX {
     if (!$id = CRM_Utils_Array::value('id', $_GET)) {
       return FALSE;
     }
-    $priceSetId = CRM_Price_BAO_Set::getFor($_GET['context'], $id, NULL);
+    $priceSetId = CRM_Price_BAO_Set::getFor($_GET['context'], $id);
     if ($priceSetId) {
       $result = CRM_Price_BAO_Set::setIsQuickConfig($priceSetId, 0);
     }

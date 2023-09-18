@@ -101,16 +101,6 @@ class Net_URL
     var $useBrackets;
 
     /**
-    * PHP4 Constructor
-    *
-    * @see __construct()
-    */
-    function Net_URL($url = null, $useBrackets = true)
-    {
-        $this->__construct($url, $useBrackets);
-    }
-
-    /**
     * PHP5 Constructor
     *
     * Parses the given url and stores the various parts
@@ -190,7 +180,7 @@ class Net_URL
                         break;
 
                     case 'path':
-                        if ($value{0} == '/') {
+                        if ($value[0] == '/') {
                             $this->path = $value;
                         } else {
                             $path = dirname($this->path) == DIRECTORY_SEPARATOR ? '' : dirname($this->path);
@@ -378,7 +368,7 @@ class Net_URL
     * @param  string $path URL path to resolve
     * @return string      The result
     */
-    function resolvePath($path)
+    static function resolvePath($path)
     {
         $path = explode('/', str_replace('//', '/', $path));
 

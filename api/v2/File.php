@@ -75,7 +75,7 @@ function civicrm_file_create($params) {
   $properties = array('id', 'file_type_id', 'mime_type', 'uri', 'document', 'description', 'upload_date');
 
   foreach ($properties as $name) {
-    if (array_key_exists($name, $params)) {
+    if (CRM_Utils_Array::arrayKeyExists($name, $params)) {
       $fileDAO->$name = $params[$name];
     }
   }
@@ -114,7 +114,7 @@ function civicrm_file_get($params) {
   $properties = array('id', 'file_type_id', 'mime_type', 'uri', 'document', 'description', 'upload_date');
 
   foreach ($properties as $name) {
-    if (array_key_exists($name, $params)) {
+    if (CRM_Utils_Array::arrayKeyExists($name, $params)) {
       $fileDAO->$name = $params[$name];
     }
   }
@@ -244,7 +244,7 @@ function civicrm_entity_file_create(&$fileID, &$entityID, $entity_table = 'civic
  *
  * @access public
  */
-function civicrm_file_by_entity_add($name, $entityID, $entityTable = 'civicrm_contact', $params) {
+function civicrm_file_by_entity_add($name, $entityID, $entityTable, $params) {
   require_once 'CRM/Core/BAO/File.php';
   CRM_Core_BAO_File::filePostProcess($name, NULL, $entityTable, $entityID, NULL, FALSE, $params);
 }
@@ -278,7 +278,7 @@ function civicrm_files_by_entity_get($entityID, $entityTable = 'civicrm_contact'
       _civicrm_object_to_array($entityFileDAO, $entityFile);
       $files[$entityFileDAO->file_id] = $entityFile;
 
-      if (array_key_exists('file_id', $files[$entityFileDAO->file_id])) {
+      if (CRM_Utils_Array::arrayKeyExists('file_id', $files[$entityFileDAO->file_id])) {
         $fileDAO = new CRM_Core_DAO_File();
         $fileDAO->id = $entityFile['file_id'];
         $fileDAO->find(TRUE);
@@ -321,7 +321,7 @@ function civicrm_entity_file_delete(&$params) {
 
   $properties = array('id', 'entity_id', 'entity_table', 'file_id');
   foreach ($properties as $name) {
-    if (array_key_exists($name, $params)) {
+    if (CRM_Utils_Array::arrayKeyExists($name, $params)) {
       $entityFileDAO->$name = $params[$name];
     }
   }

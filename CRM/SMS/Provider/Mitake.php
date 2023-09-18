@@ -129,7 +129,7 @@ class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
           }
         }
         $details[] = '</div>';
-        $details = implode("<br>", $details);
+        $details = CRM_Utils_Array::implode("<br>", $details);
         if (is_numeric($sms['result']['statuscode']) && !empty($this->_mitakeStatusesMapping[$sms['result']['statuscode']])) {
           $toStatus = $this->_mitakeStatusesMapping[$sms['result']['statuscode']];
         }
@@ -303,7 +303,7 @@ class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
         $msg['response'] = ''; // TODO: add callback
       }
       $msg['smbody'] = preg_replace('/(\r\n|\n|\r)/m', chr(6), $message['body']);
-      $body[] = implode('$$', $msg);
+      $body[] = CRM_Utils_Array::implode('$$', $msg);
 
       // for update activity
       $this->_sms[$msg['clientID']] = $msg;
@@ -312,7 +312,7 @@ class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
         $this->_sms[$msg['clientID']]['activityId'] = $message['activityId'];
       }
     }
-    $httpBody = implode("\n", $body);
+    $httpBody = CRM_Utils_Array::implode("\n", $body);
     return $this->prepareSmsRequest($httpBody);
   }
 
@@ -394,7 +394,7 @@ class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
     }
 
     foreach($this->_sms as $idx => $sms) {
-      if (array_key_exists($idx, $result)) {
+      if (CRM_Utils_Array::arrayKeyExists($idx, $result)) {
         $this->_sms[$idx]['result'] = $result[$idx];
       }
       elseif (!$result[1]['success']) {

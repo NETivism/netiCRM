@@ -258,13 +258,13 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
 
     // build demographics only for Individual contact type
     if ($this->_contactType != 'Individual' &&
-      array_key_exists('Demographics', $this->_editOptions)
+      CRM_Utils_Array::arrayKeyExists('Demographics', $this->_editOptions)
     ) {
       unset($this->_editOptions['Demographics']);
     }
 
     // in update mode don't show notes
-    if ($this->_contactId && array_key_exists('Notes', $this->_editOptions)) {
+    if ($this->_contactId && CRM_Utils_Array::arrayKeyExists('Notes', $this->_editOptions)) {
       unset($this->_editOptions['Notes']);
     }
 
@@ -290,6 +290,7 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
       $this->_blocks = CRM_Core_BAO_Preferences::valueOptions('contact_edit_options', TRUE, NULL,
         FALSE, 'name', TRUE, 'AND v.filter = 1'
       );
+      unset($this->_blocks['OpenID']);
       $this->set('blocks', $this->_blocks);
     }
     $this->assign('blocks', $this->_blocks);
@@ -304,7 +305,7 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
     CRM_Contact_Form_Location::preProcess($this);
 
     // execute preProcess dynamically by js else execute normal preProcess
-    if (array_key_exists('CustomData', $this->_editOptions)) {
+    if (CRM_Utils_Array::arrayKeyExists('CustomData', $this->_editOptions)) {
       if (CRM_Utils_Request::retrieve('type', 'String', CRM_Core_DAO::$_nullObject)) {
         require_once 'CRM/Contact/Form/Edit/CustomData.php';
         CRM_Contact_Form_Edit_CustomData::preProcess($this);
@@ -336,7 +337,7 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
     $params = array();
 
     if ($this->_action & CRM_Core_Action::ADD) {
-      if (array_key_exists('TagsAndGroups', $this->_editOptions)) {
+      if (CRM_Utils_Array::arrayKeyExists('TagsAndGroups', $this->_editOptions)) {
         // set group and tag defaults if any
         if ($this->_gid) {
           $defaults['group'][$this->_gid] = 1;
@@ -498,7 +499,7 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
     ));
 
     $allBlocks = $this->_blocks;
-    if (array_key_exists('Address', $this->_editOptions)) {
+    if (CRM_Utils_Array::arrayKeyExists('Address', $this->_editOptions)) {
       $allBlocks['Address'] = $this->_editOptions['Address'];
     }
 
@@ -508,7 +509,7 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
       $hasPrimary = $updateMode = FALSE;
 
       // user is in update mode.
-      if (array_key_exists($name, $defaults) &&
+      if (CRM_Utils_Array::arrayKeyExists($name, $defaults) &&
         !CRM_Utils_System::isNull($defaults[$name])
       ) {
         $updateMode = TRUE;
@@ -594,7 +595,7 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
     $this->addFormRule(array('CRM_Contact_Form_Edit_' . $this->_contactType, 'formRule'), $this->_contactId);
     $this->addFormRule(array('CRM_Contact_Form_Edit_Address', 'formRule'));
 
-    if (array_key_exists('CommunicationPreferences', $this->_editOptions)) {
+    if (CRM_Utils_Array::arrayKeyExists('CommunicationPreferences', $this->_editOptions)) {
       $this->addFormRule(array('CRM_Contact_Form_Edit_CommunicationPreferences', 'formRule'), $this);
     }
   }
@@ -629,7 +630,7 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
       FALSE, 'name', TRUE, 'AND v.filter = 0'
     );
     //get address block inside.
-    if (array_key_exists('Address', $otherEditOptions)) {
+    if (CRM_Utils_Array::arrayKeyExists('Address', $otherEditOptions)) {
       $blocks['Address'] = $otherEditOptions['Address'];
     }
 
@@ -669,10 +670,8 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
           }
 
           if ($name == 'openid' && CRM_Utils_Array::value($name, $blockValues)) {
-            require_once 'CRM/Core/DAO/OpenID.php';
-            require_once 'Auth/OpenID.php';
             $oid = new CRM_Core_DAO_OpenID();
-            $oid->openid = $openIds[$instance] = Auth_OpenID::normalizeURL(CRM_Utils_Array::value($name, $blockValues));
+            $oid->openid = $openIds[$instance] = CRM_Core_BAO_OpenID::normalizeURL(CRM_Utils_Array::value($name, $blockValues));
             $cid = isset($contactId) ? $contactId : 0;
             if ($oid->find(TRUE) && ($oid->contact_id != $cid)) {
               $errors["{$name}[$instance][openid]"] = ts('%1 already exist.', array(1 => $blocks['OpenID']));
@@ -695,7 +694,7 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
     //do validations for all opend ids they should be distinct.
     if (!empty($openIds) && (count(array_unique($openIds)) != count($openIds))) {
       foreach ($openIds as $instance => $value) {
-        if (!array_key_exists($instance, array_unique($openIds))) {
+        if (!CRM_Utils_Array::arrayKeyExists($instance, array_unique($openIds))) {
           $errors["openid[$instance][openid]"] = ts('%1 already used.', array(1 => $blocks['OpenID']));
         }
       }
@@ -720,7 +719,7 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
         if (!empty($invalidStreetNumbers)) {
           $first = $invalidStreetNumbers[0];
           foreach ($invalidStreetNumbers as & $num) $num = CRM_Contact_Form_Contact::ordinalNumber($num);
-          $errors["address[$first][street_number]"] = ts('The street number you entered for the %1 address block(s) is not in an expected format. Street numbers may include numeric digit(s) followed by other characters. You can still enter the complete street address (unparsed) by clicking "Edit Complete Street Address".', array(1 => implode(', ', $invalidStreetNumbers)));
+          $errors["address[$first][street_number]"] = ts('The street number you entered for the %1 address block(s) is not in an expected format. Street numbers may include numeric digit(s) followed by other characters. You can still enter the complete street address (unparsed) by clicking "Edit Complete Street Address".', array(1 => CRM_Utils_Array::implode(', ', $invalidStreetNumbers)));
         }
       }
     }
@@ -766,7 +765,7 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
 
     // build Custom data if Custom data present in edit option
     $buildCustomData = NULL;
-    if (array_key_exists('CustomData', $this->_editOptions)) {
+    if (CRM_Utils_Array::arrayKeyExists('CustomData', $this->_editOptions)) {
       $buildCustomData = "removeDefaultCustomFields( ), buildCustomData('{$this->_contactType}',this.value), highlightTabs( );";
     }
 
@@ -919,7 +918,7 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
       TRUE
     );
 
-    if (array_key_exists('CommunicationPreferences', $this->_editOptions)) {
+    if (CRM_Utils_Array::arrayKeyExists('CommunicationPreferences', $this->_editOptions)) {
       // this is a chekbox, so mark false if we dont get a POST value
       $params['is_opt_out'] = CRM_Utils_Array::value('is_opt_out', $params, FALSE);
     }
@@ -928,7 +927,7 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
     require_once 'CRM/Contact/BAO/Contact/Utils.php';
     CRM_Contact_BAO_Contact_Utils::processSharedAddress($params['address']);
 
-    if (!array_key_exists('TagsAndGroups', $this->_editOptions)) {
+    if (!CRM_Utils_Array::arrayKeyExists('TagsAndGroups', $this->_editOptions)) {
       unset($params['group']);
     }
 
@@ -975,7 +974,7 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
     // set the contact ID
     $this->_contactId = $contact->id;
 
-    if (array_key_exists('TagsAndGroups', $this->_editOptions)) {
+    if (CRM_Utils_Array::arrayKeyExists('TagsAndGroups', $this->_editOptions)) {
       //add contact to tags
       require_once 'CRM/Core/BAO/EntityTag.php';
       CRM_Core_BAO_EntityTag::create($params['tag'], 'civicrm_contact',
@@ -1297,7 +1296,7 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
 
     if (!empty($parseFails)) {
       $statusMsg = ts("Complete street address(es) have been saved. However we were unable to split the address in the %1 address block(s) into address elements (street number, street name, street unit) due to an unrecognized address format. You can set the address elements manually by clicking 'Edit Address Elements' next to the Street Address field while in edit mode.",
-        array(1 => implode(', ', $parseFails))
+        array(1 => CRM_Utils_Array::implode(', ', $parseFails))
       );
     }
 

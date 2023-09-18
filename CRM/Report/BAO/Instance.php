@@ -43,7 +43,7 @@ class CRM_Report_BAO_Instance extends CRM_Report_DAO_Instance {
    * @access public
    *
    */
-  function delete($id = NULL) {
+  static function deleteInstance($id = NULL) {
     $dao = new CRM_Report_DAO_Instance();
     $dao->id = $id;
     return $dao->delete();

@@ -463,7 +463,7 @@ SELECT count(*)
           else {
             $defVal[] = $customOption->value;
           }
-          $customField->default_value = CRM_Core_BAO_CustomOption::VALUE_SEPERATOR . implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, $defVal) . CRM_Core_BAO_CustomOption::VALUE_SEPERATOR;
+          $customField->default_value = CRM_Core_BAO_CustomOption::VALUE_SEPERATOR . CRM_Utils_Array::implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, $defVal) . CRM_Core_BAO_CustomOption::VALUE_SEPERATOR;
           $customField->save();
         }
       }
@@ -475,7 +475,7 @@ SELECT count(*)
           }
         }
 
-        $customField->default_value = CRM_Core_BAO_CustomOption::VALUE_SEPERATOR . implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, $tempVal) . CRM_Core_BAO_CustomOption::VALUE_SEPERATOR;
+        $customField->default_value = CRM_Core_BAO_CustomOption::VALUE_SEPERATOR . CRM_Utils_Array::implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, $tempVal) . CRM_Core_BAO_CustomOption::VALUE_SEPERATOR;
         $customField->save();
       }
     }

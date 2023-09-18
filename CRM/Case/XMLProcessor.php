@@ -54,7 +54,7 @@ class CRM_Case_XMLProcessor {
         $config->customTemplateDir
       ) {
         // check if the file exists in the custom templates directory
-        $fileName = implode(DIRECTORY_SEPARATOR,
+        $fileName = CRM_Utils_Array::implode(DIRECTORY_SEPARATOR,
           array($config->customTemplateDir,
             'CRM',
             'Case',
@@ -69,7 +69,7 @@ class CRM_Case_XMLProcessor {
         !file_exists($fileName)
       ) {
         // check if file exists locally
-        $fileName = implode(DIRECTORY_SEPARATOR,
+        $fileName = CRM_Utils_Array::implode(DIRECTORY_SEPARATOR,
           array(dirname(__FILE__),
             'xml',
             'configuration',
@@ -83,7 +83,7 @@ class CRM_Case_XMLProcessor {
       }
 
       // read xml file
-      $dom = DomDocument::load($fileName);
+      $dom = DOMDocument::load($fileName);
       $dom->xinclude();
       self::$_xml[$caseType] = simplexml_import_dom($dom);
     }
@@ -94,7 +94,7 @@ class CRM_Case_XMLProcessor {
     static $activityTypes = NULL;
     if (!$activityTypes) {
       require_once 'CRM/Case/PseudoConstant.php';
-      $activityTypes = CRM_Case_PseudoConstant::activityType($indexName, $all);
+      $activityTypes = CRM_Case_PseudoConstant::caseActivityType($indexName, $all);
     }
     return $activityTypes;
   }

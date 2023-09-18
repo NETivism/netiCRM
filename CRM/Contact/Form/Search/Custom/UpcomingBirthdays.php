@@ -174,7 +174,7 @@ class CRM_Contact_Form_Search_Custom_UpcomingBirthdays implements CRM_Contact_Fo
         }
       }
       if (!empty($limit_group)) {
-        $clauses[] = "g.group_id IN(".implode(',', $limit_group).")";
+        $clauses[] = "g.group_id IN(".CRM_Utils_Array::implode(',', $limit_group).")";
       }
     }
 
@@ -188,14 +188,14 @@ class CRM_Contact_Form_Search_Custom_UpcomingBirthdays implements CRM_Contact_Fo
       }
 
       if (!empty($contactIDs)) {
-        $contactIDs = implode(', ', $contactIDs);
+        $contactIDs = CRM_Utils_Array::implode(', ', $contactIDs);
         $clauses[] = "contact_a.id IN ( $contactIDs )";
       }
     }
 
     $clauses[] = "contact_a.is_deleted = 0";
 
-    $partial_where_clause = implode(' AND ', $clauses);
+    $partial_where_clause = CRM_Utils_Array::implode(' AND ', $clauses);
     return $partial_where_clause;
   }
 

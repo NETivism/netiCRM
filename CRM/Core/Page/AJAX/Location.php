@@ -67,26 +67,26 @@ class CRM_Core_Page_AJAX_Location {
       $location['email'][1]['email'],
     );
 
-    if (array_key_exists('street_address', $addressSequence)) {
+    if (CRM_Utils_Array::arrayKeyExists('street_address', $addressSequence)) {
       $elements["address_1_street_address"] = $location['address'][1]['street_address'];
     }
-    if (array_key_exists('supplemental_address_1', $addressSequence)) {
+    if (CRM_Utils_Array::arrayKeyExists('supplemental_address_1', $addressSequence)) {
       $elements['address_1_supplemental_address_1'] = $location['address'][1]['supplemental_address_1'];
     }
-    if (array_key_exists('supplemental_address_2', $addressSequence)) {
+    if (CRM_Utils_Array::arrayKeyExists('supplemental_address_2', $addressSequence)) {
       $elements['address_1_supplemental_address_2'] = $location['address'][1]['supplemental_address_2'];
     }
-    if (array_key_exists('city', $addressSequence)) {
+    if (CRM_Utils_Array::arrayKeyExists('city', $addressSequence)) {
       $elements['address_1_city'] = $location['address'][1]['city'];
     }
-    if (array_key_exists('postal_code', $addressSequence)) {
+    if (CRM_Utils_Array::arrayKeyExists('postal_code', $addressSequence)) {
       $elements['address_1_postal_code'] = $location['address'][1]['postal_code'];
       $elements['address_1_postal_code_suffix'] = $location['address'][1]['postal_code_suffix'];
     }
-    if (array_key_exists('country', $addressSequence)) {
+    if (CRM_Utils_Array::arrayKeyExists('country', $addressSequence)) {
       $elements['address_1_country_id'] = $location['address'][1]['country_id'];
     }
-    if (array_key_exists('state_province', $addressSequence)) {
+    if (CRM_Utils_Array::arrayKeyExists('state_province', $addressSequence)) {
       $elements['address_1_state_province_id'] = $location['address'][1]['state_province_id'];
     }
 

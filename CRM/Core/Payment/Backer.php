@@ -29,7 +29,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
    * @static
    *
    */
-  public static function &singleton($mode = 'live', &$paymentProcessor, $paymentForm = NULL) {
+  public static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
     $processorName = $paymentProcessor['name'];
     if (self::$_singleton[$processorName] === NULL) {
       self::$_singleton[$processorName] = new CRM_Core_Payment_Backer($mode, $paymentProcessor);
@@ -52,7 +52,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
 
 
     if (!empty($error)) {
-      return implode('<br>', $error);
+      return CRM_Utils_Array::implode('<br>', $error);
     }
     else {
       return NULL;
@@ -289,7 +289,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
       // move exists billing address to other
       $otherLocationTypeId = array_search('Other', $locationType);
       $billingLocationTypeId = array_search('Billing', $locationType);
-      if (count($contact['address']) > 0 && $otherLocationTypeId && $billingLocationTypeId) {
+      if (count((array)$contact['address']) > 0 && $otherLocationTypeId && $billingLocationTypeId) {
         $existsBillingAddress = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_address WHERE location_type_id = '$billingLocationTypeId' AND contact_id = %1", array(
           1 => array($contact['id'], 'Integer')
         ));
@@ -422,7 +422,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
           $recur['invoice_id'] = $result['values'][$result['id']]['invoice_id'];
         }
         else {
-          $recur['invoice_id'] = md5(uniqid(rand(), TRUE));
+          $recur['invoice_id'] = md5(uniqid('', TRUE));
         }
         $recur['version'] = "3";
         $recurResult = civicrm_api('ContributionRecur', 'create', $recur);
@@ -706,7 +706,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
     // invoice_id, recurring
     if (!empty($json['transaction']['parent_trade_no'])) {
       // invoice id is uniq, will append additional info
-      $params['contribution']['invoice_id'] = $json['transaction']['parent_trade_no'].'_'.substr(md5(uniqid(rand(), TRUE)), 0, 10);
+      $params['contribution']['invoice_id'] = $json['transaction']['parent_trade_no'].'_'.substr(md5(uniqid((string)rand(), TRUE)), 0, 10);
       $contributionRecurId = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution_recur WHERE trxn_id = %1" , array(1 => array($json['transaction']['parent_trade_no'], 'String')));
       if (!empty($contributionRecurId)) {
         $params['contribution']['contribution_recur_id'] = $contributionRecurId;
@@ -715,7 +715,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
       }
     }
     else {
-      $params['contribution']['invoice_id'] = md5(uniqid(rand(), TRUE));
+      $params['contribution']['invoice_id'] = md5(uniqid((string)rand(), TRUE));
     }
 
     switch($statusMap[$json['transaction']['render_status']]) {
@@ -768,7 +768,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
         }
       }
       if (!empty($amountLevel)) {
-        $params['contribution']['amount_level'] = CRM_Core_BAO_CustomOption::VALUE_SEPERATOR.implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, $amountLevel).CRM_Core_BAO_CustomOption::VALUE_SEPERATOR;
+        $params['contribution']['amount_level'] = CRM_Core_BAO_CustomOption::VALUE_SEPERATOR.CRM_Utils_Array::implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, $amountLevel).CRM_Core_BAO_CustomOption::VALUE_SEPERATOR;
       }
     }
     else {

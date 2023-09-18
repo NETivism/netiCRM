@@ -67,7 +67,7 @@ class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache {
       self::$_cache = array();
     }
     $argString = "CRM_CT_{$group}_{$path}_{$componentID}";
-    if (!array_key_exists($argString, self::$_cache)) {
+    if (!CRM_Utils_Array::arrayKeyExists($argString, self::$_cache)) {
       $cache = CRM_Utils_Cache::singleton();
       self::$_cache[$argString] = $cache->get($argString);
       if (!self::$_cache[$argString]) {
@@ -119,7 +119,7 @@ class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache {
     }
 
     $argString = "CRM_CT_CI_{$group}_{$componentID}";
-    if (!array_key_exists($argString, self::$_cache)) {
+    if (!CRM_Utils_Array::arrayKeyExists($argString, self::$_cache)) {
       $cache = CRM_Utils_Cache::singleton();
       self::$_cache[$argString] = $cache->get($argString);
       if (!self::$_cache[$argString]) {

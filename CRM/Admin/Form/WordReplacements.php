@@ -109,7 +109,7 @@ class CRM_Admin_Form_WordReplacements extends CRM_Core_Form {
   public function buildQuickForm() {
     $config = CRM_Core_Config::singleton();
     $values = $config->localeCustomStrings[$config->lcMessages];
-    $instances = (count($values, COUNT_RECURSIVE) - 6);
+    $instances = (is_array($values) ? count($values, COUNT_RECURSIVE) - 6 : 0);
     if ($instances > 10) {
       $this->_numStrings = $instances;
     }
@@ -204,7 +204,7 @@ class CRM_Admin_Form_WordReplacements extends CRM_Core_Form {
         CRM_Utils_Array::value($i, $params['old'])
       ) {
         if (CRM_Utils_Array::value($i, $params['enabled'])) {
-          if (is_array($params['cb']) && array_key_exists($i, $params['cb'])) {
+          if (is_array($params['cb']) && CRM_Utils_Array::arrayKeyExists($i, $params['cb'])) {
             $enabled['exactMatch'] += array($params['old'][$i] => $params['new'][$i]);
           }
           else {
@@ -212,7 +212,7 @@ class CRM_Admin_Form_WordReplacements extends CRM_Core_Form {
           }
         }
         else {
-          if (is_array($params['cb']) && array_key_exists($i, $params['cb'])) {
+          if (is_array($params['cb']) && CRM_Utils_Array::arrayKeyExists($i, $params['cb'])) {
             $disabled['exactMatch'] += array($params['old'][$i] => $params['new'][$i]);
           }
           else {

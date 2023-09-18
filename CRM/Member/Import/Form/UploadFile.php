@@ -128,7 +128,7 @@ class CRM_Member_Import_Form_UploadFile extends CRM_Core_Form {
       foreach($groupValues['fields'] as $name){
         $name = preg_replace('/.*(_\d+)$/', 'custom$1', $name);
         // If selection has field like 'sort_name', dont add it.
-        if(!array_key_exists($name, $selectableFields[$contentType])){
+        if(!CRM_Utils_Array::arrayKeyExists($name, $selectableFields[$contentType])){
           $dontAdd = true;
           break;
         }
@@ -147,7 +147,7 @@ class CRM_Member_Import_Form_UploadFile extends CRM_Core_Form {
       if ($groupValues['is_default']) {
         $label .= ts('Default');
       }
-      $dedupeRule[$dedupegroup_id] = $label . ' - '.$groupValues['name'] . ' (' . implode(', ', $fields) .')';
+      $dedupeRule[$dedupegroup_id] = $label . ' - '.$groupValues['name'] . ' (' . CRM_Utils_Array::implode(', ', $fields) .')';
     }
     $this->add('select', 'dedupeRuleGroup', ts('Dedupe Rule of Contact'), $dedupeRule);
 

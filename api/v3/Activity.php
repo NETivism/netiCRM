@@ -129,11 +129,11 @@ function civicrm_api3_activity_create($params) {
 
   if ($case_id && $createRevision) {
     // This is very similar to the copy-to-case action.
-    if (!CRM_Utils_Array::crmIsEmptyArray($oldActivityValues['target_contact'])) {
-      $oldActivityValues['targetContactIds'] = implode(',', array_unique($oldActivityValues['target_contact']));
+    if (!CRM_Utils_Array::isEmpty($oldActivityValues['target_contact'])) {
+      $oldActivityValues['targetContactIds'] = CRM_Utils_Array::implode(',', array_unique($oldActivityValues['target_contact']));
     }
-    if (!CRM_Utils_Array::crmIsEmptyArray($oldActivityValues['assignee_contact'])) {
-      $oldActivityValues['assigneeContactIds'] = implode(',', array_unique($oldActivityValues['assignee_contact']));
+    if (!CRM_Utils_Array::isEmpty($oldActivityValues['assignee_contact'])) {
+      $oldActivityValues['assigneeContactIds'] = CRM_Utils_Array::implode(',', array_unique($oldActivityValues['assignee_contact']));
     }
     $oldActivityValues['mode'] = 'copy';
     $oldActivityValues['caseID'] = $case_id;
@@ -311,7 +311,7 @@ function _civicrm_api3_activity_check_params(&$params) {
     $sql = '
 SELECT  count(*)
   FROM  civicrm_contact
- WHERE  id IN (' . implode(', ', $contactIds) . ' )';
+ WHERE  id IN (' . CRM_Utils_Array::implode(', ', $contactIds) . ' )';
     if (count($contactIds) != CRM_Core_DAO::singleValueQuery($sql)) {
       return civicrm_api3_create_error('Invalid ' .  ' Contact Id');
     }
@@ -356,7 +356,7 @@ SELECT  count(*)
     $params['activity_type_id'] = $activityTypeIdInList;
   }
   elseif ($activityTypeId &&
-    !array_key_exists($activityTypeId, $activityTypes)
+    !CRM_Utils_Array::arrayKeyExists($activityTypeId, $activityTypes)
   ) {
     return civicrm_api3_create_error('Invalid Activity Type ID');
   }
@@ -366,7 +366,7 @@ SELECT  count(*)
     require_once "CRM/Core/PseudoConstant.php";
     $activityStatus = CRM_Core_PseudoConstant::activityStatus();
 
-    if (is_numeric($params['activity_status_id']) && !array_key_exists($params['activity_status_id'], $activityStatus)) {
+    if (is_numeric($params['activity_status_id']) && !CRM_Utils_Array::arrayKeyExists($params['activity_status_id'], $activityStatus)) {
       return civicrm_api3_create_error('Invalid Activity Status');
     }
     elseif (!is_numeric($params['activity_status_id'])) {

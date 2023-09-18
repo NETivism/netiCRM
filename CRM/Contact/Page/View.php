@@ -238,16 +238,13 @@ class CRM_Contact_Page_View extends CRM_Core_Page {
    * @return void
    * @access public
    */
-  function getContactDetails($contactId) {
+  static function getContactDetails($contactId) {
     return list($displayName,
       $contactImage,
       $contactType,
       $contactSubtype,
       $contactImageUrl
-    ) = CRM_Contact_BAO_Contact::getDisplayAndImage($contactId,
-      TRUE,
-      TRUE
-    );
+    ) = CRM_Contact_BAO_Contact::getDisplayAndImage($contactId, TRUE);
   }
 
   function getSearchURL() {
@@ -333,7 +330,7 @@ class CRM_Contact_Page_View extends CRM_Core_Page {
     }
   }
 
-  function setTitle($contactId, $isDeleted = FALSE) {
+  static function setTitle($contactId, $isDeleted = FALSE) {
     static $contactDetails;
     $displayName = $contactImage = NULL;
     if (!isset($contactDetails[$contactId])) {

@@ -161,7 +161,7 @@ SELECT module
 
       $gidString = $this->_gid;
       if (!empty($this->_profileIds)) {
-        $gidString = implode(',', $this->_profileIds);
+        $gidString = CRM_Utils_Array::implode(',', $this->_profileIds);
       }
 
       if (!$this->_postURL) {
@@ -263,7 +263,7 @@ SELECT module
     if (!$this->_postURL) {
       $gidString = $this->_gid;
       if (!empty($this->_profileIds)) {
-        $gidString = implode(',', $this->_profileIds);
+        $gidString = CRM_Utils_Array::implode(',', $this->_profileIds);
       }
 
       $last_check_id = $this->get('last_check_id');

@@ -120,7 +120,7 @@ class civicrm_api3 {
   /**  As of PHP 5.3.0  */
   public static function __callStatic($name, $arguments) {
     // Should we implement it ?
-    echo "Calling static method '$name' " . implode(', ', $arguments) . "\n";
+    echo "Calling static method '$name' " . CRM_Utils_Array::implode(', ', $arguments) . "\n";
   }
 
   function remoteCall($entity, $action, $params = array(
@@ -141,7 +141,7 @@ class civicrm_api3 {
       //execute post
       $result = curl_exec($ch);
       curl_close($ch);
-      return json_decode($result);
+      return json_decode($result, true);
       // not good, all in get when should be in post.
     }
     else {

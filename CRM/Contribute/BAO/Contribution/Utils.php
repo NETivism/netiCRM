@@ -381,7 +381,7 @@ INNER JOIN   civicrm_contact contact ON ( contact.id = contrib.contact_id )
   }
 
   static function _fillCommonParams(&$params, $type = 'paypal') {
-    if (array_key_exists('transaction', $params)) {
+    if (CRM_Utils_Array::arrayKeyExists('transaction', $params)) {
       $transaction = &$params['transaction'];
     }
     else {
@@ -415,7 +415,7 @@ INNER JOIN   civicrm_contact contact ON ( contact.id = contrib.contact_id )
     }
     else {
       // generate a new transaction id, if not already exist
-      $transaction['trxn_id'] = md5(uniqid(rand(), TRUE));
+      $transaction['trxn_id'] = md5(uniqid((string)rand(), TRUE));
     }
 
     if (!isset($transaction['contribution_type_id'])) {
@@ -536,12 +536,12 @@ INNER JOIN   civicrm_contact contact ON ( contact.id = contrib.contact_id )
 
     if ($type == 'google') {
       // return if response smell invalid
-      if (!array_key_exists('risk-information-notification', $apiParams[1][$apiParams[0]]['notifications'])) {
+      if (!CRM_Utils_Array::arrayKeyExists('risk-information-notification', $apiParams[1][$apiParams[0]]['notifications'])) {
         return FALSE;
       }
       $riskInfo = &$apiParams[1][$apiParams[0]]['notifications']['risk-information-notification'];
 
-      if (array_key_exists('new-order-notification', $apiParams[1][$apiParams[0]]['notifications'])) {
+      if (CRM_Utils_Array::arrayKeyExists('new-order-notification', $apiParams[1][$apiParams[0]]['notifications'])) {
         $newOrder = &$apiParams[1][$apiParams[0]]['notifications']['new-order-notification'];
       }
 
@@ -573,7 +573,7 @@ INNER JOIN   civicrm_contact contact ON ( contact.id = contrib.contact_id )
           'item-name' => $newOrder['shopping-cart']['items']['item']['item-name']['VALUE'],
           'timestamp' => $apiParams[2]['timestamp']['VALUE'],
         );
-        if (array_key_exists('latest-charge-fee', $apiParams[2])) {
+        if (CRM_Utils_Array::arrayKeyExists('latest-charge-fee', $apiParams[2])) {
           $localMapper['latest-charge-fee'] = $apiParams[2]['latest-charge-fee']['total']['VALUE'];
           $localMapper['net-amount'] = $localMapper['total-charge-amount'] - $localMapper['latest-charge-fee'];
         }
@@ -597,7 +597,7 @@ INNER JOIN   civicrm_contact contact ON ( contact.id = contrib.contact_id )
   }
 
   static function processAPIContribution($params) {
-    if (empty($params) || array_key_exists('error', $params)) {
+    if (empty($params) || CRM_Utils_Array::arrayKeyExists('error', $params)) {
       return FALSE;
     }
 
@@ -617,7 +617,7 @@ INNER JOIN   civicrm_contact contact ON ( contact.id = contrib.contact_id )
     }
 
     // only pass transaction params to contribution::create, if available
-    if (array_key_exists('transaction', $params)) {
+    if (CRM_Utils_Array::arrayKeyExists('transaction', $params)) {
       $params = $params['transaction'];
       $params['contact_id'] = $contact->id;
     }
@@ -654,7 +654,7 @@ INNER JOIN   civicrm_contact contact ON ( contact.id = contrib.contact_id )
       // errors due to invoice ID. See:
       // ./CRM/Core/Payment/PayPalIPN.php:200
       if ($recurring->id) {
-        $params['invoice_id'] = md5(uniqid(rand(), TRUE));
+        $params['invoice_id'] = md5(uniqid((string)rand(), TRUE));
       }
 
       $recurring->copyValues($params);

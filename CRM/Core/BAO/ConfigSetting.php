@@ -146,7 +146,7 @@ class CRM_Core_BAO_ConfigSetting {
     }
     else {
       foreach ($params as $key => $val) {
-        if (array_key_exists($key, $values)) {
+        if (CRM_Utils_Array::arrayKeyExists($key, $values)) {
           unset($values[$key]);
         }
       }
@@ -179,7 +179,7 @@ class CRM_Core_BAO_ConfigSetting {
 
       $skipVars = self::skipVars();
       foreach ($skipVars as $skip) {
-        if (array_key_exists($skip, $defaults)) {
+        if (CRM_Utils_Array::arrayKeyExists($skip, $defaults)) {
           unset($defaults[$skip]);
         }
       }
@@ -219,7 +219,7 @@ class CRM_Core_BAO_ConfigSetting {
         require_once 'CRM/Utils/Request.php';
         $lcMessagesRequest = CRM_Utils_Request::retrieve('lcMessages', 'String', CRM_Core_DAO::$_nullObject);
         $languageLimit = array();
-        if (array_key_exists('languageLimit', $defaults) && is_array($defaults['languageLimit'])) {
+        if (CRM_Utils_Array::arrayKeyExists('languageLimit', $defaults) && is_array($defaults['languageLimit'])) {
           $languageLimit = $defaults['languageLimit'];
         }
 
@@ -505,6 +505,7 @@ WHERE  id = %1
       'autocompleteContactSearch',
       'autocompleteContactReference',
       'checksumTimeout',
+      'defaultCSP',
     );
   }
 }

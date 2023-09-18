@@ -101,7 +101,7 @@ PRIMARY KEY (id)
     foreach($this->_queryColumns as $k => $v){
       $select[] = $k.' as '.$v;
     }
-    $select = implode(", \n" , $select);
+    $select = CRM_Utils_Array::implode(", \n" , $select);
     $from = $this->tempFrom();
     $where = $this->tempWhere();
 
@@ -126,7 +126,7 @@ GROUP BY contact.id
           $values[] = 'NULL';
         }
       }
-      $values = implode(', ' , $values);
+      $values = CRM_Utils_Array::implode(', ' , $values);
       $sql = "REPLACE INTO {$this->_tableName} VALUES ($values)";
       CRM_Core_DAO::executeQuery($sql, CRM_Core_DAO::$_nullArray);
     }
@@ -139,7 +139,7 @@ GROUP BY contact.id
     $sub_where_clauses[] = 'pp.id IS NULL';
     $sub_where_clauses[] = 'mp.id IS NULL';
     $sub_where_clauses[] = 'c.contribution_status_id = 1';
-    $sub_where_clause = implode(' AND ', $sub_where_clauses);
+    $sub_where_clause = CRM_Utils_Array::implode(' AND ', $sub_where_clauses);
     $sub_query = "SELECT MIN(IFNULL(receive_date, created_date)) AS min_receive_date, contact_id FROM civicrm_contribution c
       LEFT JOIN civicrm_membership_payment mp ON mp.contribution_id = c.id
       LEFT JOIN civicrm_participant_payment pp ON pp.contribution_id = c.id
@@ -157,7 +157,7 @@ GROUP BY contact.id
     $clauses = array();
     $clauses[] = "contact.is_deleted = 0";
 
-    return implode(' AND ', $clauses);
+    return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
   function buildForm(&$form){
@@ -272,7 +272,7 @@ GROUP BY contact.id
       $clauses[] = "contribution_page_id = $page_id";
     }
     if (count($clauses)) {
-      $sql = '('.implode(' AND ', $clauses).')';
+      $sql = '('.CRM_Utils_Array::implode(' AND ', $clauses).')';
     }
     else {
       $sql = '(1)';
@@ -287,7 +287,7 @@ GROUP BY contact.id
     return '';
   }
 
-  static function includeContactIDs(&$sql, &$formValues) {
+  static function includeContactIDs(&$sql, &$formValues, $isExport = FALSE) {
     $contactIDs = array();
     foreach ($formValues as $id => $value) {
       list($contactID, $additionalID) = CRM_Core_Form::cbExtract($id);
@@ -297,7 +297,7 @@ GROUP BY contact.id
     }
 
     if (!empty($contactIDs)) {
-      $contactIDs = implode(', ', $contactIDs);
+      $contactIDs = CRM_Utils_Array::implode(', ', $contactIDs);
       $sql .= " AND contact_a.contact_id IN ( $contactIDs )";
     }
   }

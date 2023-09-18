@@ -3,7 +3,7 @@
   $templates = array();
   foreach (preg_grep('/\.tpl$/', scandir($dir)) as $filename) {
     $parts = explode('_', basename($filename, '.tpl'));
-    $templates[] = array('type' => array_pop($parts), 'name' => implode('_', $parts), 'filename' => "$dir/$filename");
+    $templates[] = array('type' => array_pop($parts), 'name' => CRM_Utils_Array::implode('_', $parts), 'filename' => "$dir/$filename");
   }
   $this->assign('templates', $templates);
 {/php}

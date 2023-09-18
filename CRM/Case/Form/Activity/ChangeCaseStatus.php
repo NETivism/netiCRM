@@ -67,7 +67,7 @@ class CRM_Case_Form_Activity_ChangeCaseStatus {
     $form->_caseStatus = CRM_Case_PseudoConstant::caseStatus();
     $form->_defaultCaseStatus = CRM_Core_DAO::getFieldValue('CRM_Case_DAO_Case', $form->_caseId, 'status_id');
 
-    if (!array_key_exists($form->_defaultCaseStatus, $form->_caseStatus)) {
+    if (!CRM_Utils_Array::arrayKeyExists($form->_defaultCaseStatus, $form->_caseStatus)) {
       $form->_caseStatus[$form->_defaultCaseStatus] = CRM_Core_OptionGroup::getLabel('case_status',
         $form->_defaultCaseStatus,
         FALSE

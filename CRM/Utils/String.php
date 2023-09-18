@@ -49,7 +49,14 @@ class CRM_Utils_String {
   /**
    * Allowed HTML Tags
    */
-  const ALLOWED_TAGS = 'div[style],b,strong,i,em,s,a[href|title],ul,ol,li,p[style],blockquote,br,span[style],img[width|height|alt|src|style],figure[class|style],figcaption,table[border|cellpadding|cellspacing|style],thead,tbody,tr,td[style],th[style],hr,iframe[allow|allowfullscreen|frameborder|src|height|title|width]';
+  const ALLOWED_TAGS = array(
+    'div[style]','b','strong','i','em','s','a[href|title]',
+    'ul','ol','li','p[style]','blockquote','br','span[style]',
+    'img[width|height|alt|src|style]','figure[class|style]',
+    'figcaption','table[border|cellpadding|cellspacing|style]',
+    'thead','tbody','tr','td[style]','th[style]','hr',
+    'iframe[allow|allowfullscreen|frameborder|src|height|title|width]',
+  );
 
   /**
    * Convert a display name into a potential variable
@@ -334,7 +341,7 @@ class CRM_Utils_String {
    * @access public
    * @static
    */
-  function match($url1, $url2) {
+  static function match($url1, $url2) {
     $url1 = strtolower($url1);
     $url2 = strtolower($url2);
 
@@ -357,7 +364,7 @@ class CRM_Utils_String {
    * @return mix $v  returns civicrm url (eg: civicrm/contact/search/...)
    * @access public
    */
-  function extractURLVarValue($query) {
+  static function extractURLVarValue($query) {
     $config = CRM_Core_Config::singleton();
     $urlVar = $config->userFrameworkURLVar;
 
@@ -442,7 +449,8 @@ class CRM_Utils_String {
   static function htmlPurifier($html, $allowed_tags = array()) {
     require_once 'packages/IDS/vendors/htmlpurifier/HTMLPurifier.auto.php';
     static $_purifier;
-    $hash = md5(implode('', $allowed_tags));
+    $hash = md5(CRM_Utils_Array::implode('', $allowed_tags));
+
     if (!$_purifier[$hash]) {
       $config = CRM_Core_Config::singleton();
 
@@ -592,7 +600,7 @@ class CRM_Utils_String {
     $alphabetSize = strlen($alphabet);
     $result = '';
     for ($i = 0; $i < $len; $i++) {
-      $result .= $alphabet{mt_rand(1, $alphabetSize) - 1};
+      $result .= $alphabet[mt_rand(1, $alphabetSize) - 1];
     }
     return $result;
   }

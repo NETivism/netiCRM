@@ -202,7 +202,7 @@ class CRM_Contact_Page_View_Summary extends CRM_Contact_Page_View {
     }
 
     // to make contact type label available in the template -
-    $contactType = array_key_exists('contact_sub_type', $defaults) ? $defaults['contact_sub_type'] : $defaults['contact_type'];
+    $contactType = CRM_Utils_Array::arrayKeyExists('contact_sub_type', $defaults) ? $defaults['contact_sub_type'] : $defaults['contact_type'];
     $defaults['contact_type_label'] = CRM_Contact_BAO_ContactType::contactTypePairs(TRUE, $contactType);
 
     // get contact tags
@@ -215,7 +215,7 @@ class CRM_Contact_Page_View_Summary extends CRM_Contact_Page_View {
         $tagUrl = CRM_Utils_System::url('civicrm/contact/search','reset=1&force=1&tid=' . $key);
         $contactTagsHtml[] = '<a href="' . $tagUrl . '">' . $value . '</a>';
       }
-      $defaults['contactTag'] = implode( ', ', $contactTagsHtml );
+      $defaults['contactTag'] = CRM_Utils_Array::implode( ', ', $contactTagsHtml );
     }
 
     $defaults['privacy_values'] = CRM_Core_SelectValues::privacy();
@@ -295,7 +295,7 @@ class CRM_Contact_Page_View_Summary extends CRM_Contact_Page_View {
 
         // FIXME: not very elegant, probably needs better approach
         // allow explicit id, if not defined, use keyword instead
-        if (array_key_exists('id', $elem)) {
+        if (CRM_Utils_Array::arrayKeyExists('id', $elem)) {
           $i = $elem['id'];
         }
         else {

@@ -180,7 +180,7 @@ class CRM_Price_Page_Set extends CRM_Core_Page {
         else {
           // add breadcrumb
           $url = CRM_Utils_System::url('civicrm/admin/price', 'reset=1');
-          CRM_Utils_System::appendBreadCrumb(ts('Price Sets'), $url);
+          CRM_Utils_System::appendBreadCrumb(array(array('title' => ts('Price Sets'), 'url' => $url)));
           $this->assign('usedPriceSetTitle', CRM_Price_BAO_Set::getTitle($sid));
           $this->assign('usedBy', $usedBy);
           $comps = array("Event" => "civicrm_event",
@@ -188,7 +188,7 @@ class CRM_Price_Page_Set extends CRM_Core_Page {
           );
           $priceSetContexts = array();
           foreach ($comps as $name => $table) {
-            if (array_key_exists($table, $usedBy)) {
+            if (CRM_Utils_Array::arrayKeyExists($table, $usedBy)) {
               $priceSetContexts[] = $name;
             }
           }
@@ -279,7 +279,7 @@ class CRM_Price_Page_Set extends CRM_Core_Page {
       );
       $extends = array();
       foreach ($compIds as $compId) $extends[] = $comps[CRM_Core_Component::getComponentName($compId)];
-      $priceSet[$dao->id]['extends'] = implode(', ', $extends);
+      $priceSet[$dao->id]['extends'] = CRM_Utils_Array::implode(', ', $extends);
 
       // form all action links
       $action = array_sum(array_keys($this->actionLinks()));

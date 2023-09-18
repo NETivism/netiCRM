@@ -673,7 +673,7 @@ class HTML_QuickForm_select extends HTML_QuickForm_element {
     // }}}
     // {{{ onQuickFormEvent()
 
-    function onQuickFormEvent($event, $arg, $caller = null)
+    function onQuickFormEvent($event, $arg, &$caller)
     {
         if ($caller && 'updateValue' == $event) {
             $value = $this->_findValue($caller->_constantValues);

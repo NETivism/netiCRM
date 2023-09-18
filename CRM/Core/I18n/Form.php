@@ -57,7 +57,7 @@ class CRM_Core_I18n_Form extends CRM_Core_Form {
     foreach ($this->_locales as $locale) {
       $cols[] = "{$field}_{$locale} {$locale}";
     }
-    $query = 'SELECT ' . implode(', ', $cols) . " FROM $table WHERE id = $id";
+    $query = 'SELECT ' . CRM_Utils_Array::implode(', ', $cols) . " FROM $table WHERE id = $id";
 
     $dao = new CRM_Core_DAO();
     $dao->query($query, FALSE);
@@ -103,7 +103,7 @@ class CRM_Core_I18n_Form extends CRM_Core_Form {
       $params[$i] = array($values["{$field}_{$locale}"], 'String');
       $i++;
     }
-    $query = "UPDATE $table SET " . implode(', ', $cols) . " WHERE id = %0";
+    $query = "UPDATE $table SET " . CRM_Utils_Array::implode(', ', $cols) . " WHERE id = %0";
     $dao = new CRM_Core_DAO();
     $query = CRM_Core_DAO::composeQuery($query, $params, TRUE);
     $dao->query($query, FALSE);

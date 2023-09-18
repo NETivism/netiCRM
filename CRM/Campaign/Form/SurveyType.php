@@ -175,7 +175,7 @@ class CRM_Campaign_Form_SurveyType extends CRM_Admin_Form {
       $params = $this->exportValues();
 
       // set db value of filter in params if filter is non editable
-      if ($this->_id && !array_key_exists('filter', $params)) {
+      if ($this->_id && !CRM_Utils_Array::arrayKeyExists('filter', $params)) {
         $params['filter'] = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionValue', $this->_id, 'filter', 'id');
       }
 

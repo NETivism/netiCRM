@@ -142,7 +142,7 @@
   {if $is_allow_other_amount}
       <div class="crm-section {$form.amount_other.name}-section">
       <div class="label">{$form.amount_other.label}</div>
-      <div class="content">{$form.amount_other.html|crmMoney}</div>
+      <div class="content">{$form.amount_other.html}</div>
       <div class="clear"></div>
       </div>
   {/if}

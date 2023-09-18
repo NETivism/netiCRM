@@ -582,7 +582,7 @@ ORDER BY is_active DESC, id ASC
             $val[$v] = $v;
           }
         }
-        $type = implode(',', $val);
+        $type = CRM_Utils_Array::implode(',', $val);
       }
 
       $clauses[] = "contribution_type_id IN ({$type})";
@@ -604,7 +604,7 @@ ORDER BY is_active DESC, id ASC
       $this->assign('isSearch', 1);
     }
 
-    return implode(' AND ', $clauses);
+    return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
   function pager($whereClause, $whereParams) {

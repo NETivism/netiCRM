@@ -270,7 +270,7 @@ WHERE id = %2
 
     //clean line item table.
     if (!empty($dupeLineItemIds)) {
-      $sql = 'DELETE FROM civicrm_line_item WHERE id IN ( ' . implode(', ', $dupeLineItemIds) . ' )';
+      $sql = 'DELETE FROM civicrm_line_item WHERE id IN ( ' . CRM_Utils_Array::implode(', ', $dupeLineItemIds) . ' )';
       CRM_Core_DAO::executeQuery($sql);
     }
 
@@ -306,7 +306,7 @@ WHERE id = %2
 INNER JOIN  civicrm_option_group grp ON ( grp.id = val.option_group_id )
        SET  val.is_active = 1
      WHERE  grp.name = %1
-       AND  val.name IN ( ' . "'" . implode("', '", $locales) . "' )";
+       AND  val.name IN ( ' . "'" . CRM_Utils_Array::implode("', '", $locales) . "' )";
 
       CRM_Core_DAO::executeQuery($sql,
         array(1 => array('languages', 'String')),

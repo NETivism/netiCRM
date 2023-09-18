@@ -89,7 +89,7 @@ class CRM_Admin_Form_FromEmailAddress_DNSVerify extends CRM_Admin_Form_FromEmail
       }
 
       if (!empty($errorMsg)) {
-        $errors['qfKey'] = implode('<br>', $errorMsg);
+        $errors['qfKey'] = CRM_Utils_Array::implode('<br>', $errorMsg);
       }
 
       // save validation result
@@ -126,7 +126,7 @@ class CRM_Admin_Form_FromEmailAddress_DNSVerify extends CRM_Admin_Form_FromEmail
       foreach($spfRecord as $spf) {
         $record[] = $spf['host'].' '.$spf['type'].' '.$spf['txt'];
       }
-      $this->assign('spf_record', implode("\n", $record));
+      $this->assign('spf_record', CRM_Utils_Array::implode("\n", $record));
     }
     else {
       $this->assign('spf_record', ts('None'));

@@ -49023,3 +49023,6 @@ msgstr ""
 #: CRM/Contribute/Form/Payment.php
 msgid "This payment cannot be made at the moment. If you have any questions, please contact the site administrator."
 msgstr ""
+
+msgid "To ensure security, it is recommended that you submit a request through the customer service system before changing this field. If you are sure you want to modify this setting, please click Confirm button."
+msgstr ""

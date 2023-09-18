@@ -9,7 +9,6 @@
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2009 The Authors
  * @license    http://opensource.org/licenses/bsd-license.php New BSD License
- * @version    CVS: $Id: ChannelFile.php 286951 2009-08-09 14:41:22Z dufuz $
  * @link       http://pear.php.net/package/PEAR
  * @since      File available since Release 1.4.0a1
  */
@@ -146,7 +145,7 @@ $GLOBALS['_PEAR_CHANNELS_MIRROR_TYPES'] =  array('server');
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2009 The Authors
  * @license    http://opensource.org/licenses/bsd-license.php New BSD License
- * @version    Release: 1.9.0
+ * @version    Release: @package_version@
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 1.4.0a1
  */
@@ -194,7 +193,7 @@ class PEAR_ChannelFile
      */
     var $_isValid = false;
 
-    function PEAR_ChannelFile()
+    function __construct()
     {
         $this->_stack = new PEAR_ErrorStack('PEAR_ChannelFile');
         $this->_stack->setErrorMessageTemplate($this->_getErrorMessage());
@@ -306,11 +305,12 @@ class PEAR_ChannelFile
 
     /**
      * @param array
-     * @static
+     *
      * @return PEAR_ChannelFile|false false if invalid
      */
-    function &fromArray($data, $compatibility = false, $stackClass = 'PEAR_ErrorStack')
-    {
+    public static function &fromArray(
+        $data, $compatibility = false, $stackClass = 'PEAR_ErrorStack'
+    ) {
         $a = new PEAR_ChannelFile($compatibility, $stackClass);
         $a->_fromArray($data);
         if (!$a->validate()) {
@@ -322,13 +322,14 @@ class PEAR_ChannelFile
 
     /**
      * Unlike {@link fromArray()} this does not do any validation
+     *
      * @param array
-     * @static
+     *
      * @return PEAR_ChannelFile
      */
-    function &fromArrayWithErrors($data, $compatibility = false,
-                                  $stackClass = 'PEAR_ErrorStack')
-    {
+    public static function &fromArrayWithErrors(
+        $data, $compatibility = false, $stackClass = 'PEAR_ErrorStack'
+    ) {
         $a = new PEAR_ChannelFile($compatibility, $stackClass);
         $a->_fromArray($data);
         return $a;

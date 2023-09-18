@@ -384,7 +384,7 @@ AND        a.is_deleted = 0
       // we don't set activity_date_time for auto generated
       // activities, but we want it to be set for open case.
       $activityParams['activity_date_time'] = $params['activity_date_time'];
-      if (array_key_exists('custom', $params) && is_array($params['custom'])) {
+      if (CRM_Utils_Array::arrayKeyExists('custom', $params) && is_array($params['custom'])) {
         $activityParams['custom'] = $params['custom'];
       }
     }
@@ -462,7 +462,7 @@ AND        a.is_deleted = 0
     return TRUE;
   }
 
-  function activitySets($activitySetsXML) {
+  static function activitySets($activitySetsXML) {
     $result = array();
     foreach ($activitySetsXML as $activitySetXML) {
       foreach ($activitySetXML as $recordXML) {

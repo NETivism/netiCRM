@@ -93,7 +93,7 @@ class CRM_Case_Form_ActivityView extends CRM_Core_Form {
         $tags[$tid] = $allTag[$tid];
       }
       $report['fields'][] = array('label' => 'Tags',
-        'value' => implode('<br />', $tags),
+        'value' => CRM_Utils_Array::implode('<br />', $tags),
         'type' => 'String',
       );
     }

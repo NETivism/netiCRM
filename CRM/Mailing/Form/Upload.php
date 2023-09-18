@@ -759,7 +759,7 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
       if (!empty($dataErrors)) {
         $errors[$file . 'File'] = ts('The following errors were detected in %1:', array(
             1 => $name,
-          )) . ' <ul>' . implode('', $dataErrors) . '</ul><br /><a href="' . CRM_Utils_System::docURL2('Sample CiviMail Messages', TRUE) . '" target="_blank">' . ts('More information on required tokens...') . '</a>';
+          )) . ' <ul>' . CRM_Utils_Array::implode('', $dataErrors) . '</ul><br /><a href="' . CRM_Utils_System::docURL2('Sample CiviMail Messages', TRUE) . '" target="_blank">' . ts('More information on required tokens...') . '</a>';
       }
     }
 

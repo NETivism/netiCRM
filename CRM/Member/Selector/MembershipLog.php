@@ -155,9 +155,9 @@ class CRM_Member_Selector_MembershipLog extends CRM_Core_Selector_Base implement
 
     $whereClauses = array();
     foreach ($this->_queryParams as $arr) {
-      $whereClauses[] = implode(' ', array_slice($arr, 0, 3));
+      $whereClauses[] = CRM_Utils_Array::implode(' ', array_slice($arr, 0, 3));
     }
-    $this->_where = implode(' AND ', $whereClauses);
+    $this->_where = CRM_Utils_Array::implode(' AND ', $whereClauses);
   }
 
   /**
@@ -211,7 +211,7 @@ class CRM_Member_Selector_MembershipLog extends CRM_Core_Selector_Base implement
     $offsetClause = !empty($offset) ? "OFFSET $offset" : "";
     $limit = !empty($this->_limit) ? "LIMIT $this->_limit" : "";
 
-    $fields = implode(', ', self::$_properties);
+    $fields = CRM_Utils_Array::implode(', ', self::$_properties);
     $sql = "SELECT $fields FROM civicrm_membership_log WHERE $this->_where $order $limit $offsetClause";
     $dao = CRM_Core_DAO::executeQuery($sql);
     while($dao->fetch()){

@@ -173,7 +173,7 @@ class PEAR_Autoloader extends PEAR
         $ok = false;
         $classname = strtolower($classname);
         reset($this->_method_map);
-        while (list($method, $obj) = each($this->_method_map)) {
+        foreach($this->_method_map as $method => $obj) {
             if (is_a($obj, $classname)) {
                 unset($this->_method_map[$method]);
                 $ok = true;

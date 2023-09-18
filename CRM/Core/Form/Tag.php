@@ -89,7 +89,7 @@ class CRM_Core_Form_Tag {
           CRM_Utils_Array::value($parentId, $form->_submitValues['taglist'])
         ) {
 
-          $allTags = CRM_Core_Pseudoconstant::tag();
+          $allTags = CRM_Core_PseudoConstant::tag();
           $tagIds = explode(',', $form->_submitValues['taglist'][$parentId]);
           foreach ($tagIds as $tagId) {
             if (is_numeric($tagId)) {
@@ -129,7 +129,7 @@ class CRM_Core_Form_Tag {
           $tagset[$tagsetItem]['entityTags'] = json_encode(array_values($entityTags));
 
           if (!empty($form->_entityTagValues)) {
-            $form->_entityTagValues = CRM_Utils_Array::crmArrayMerge($entityTags, $form->_entityTagValues);
+            $form->_entityTagValues = CRM_Utils_Array::arrayMerge($entityTags, $form->_entityTagValues);
           }
           else {
             $form->_entityTagValues = $entityTags;
@@ -145,7 +145,7 @@ class CRM_Core_Form_Tag {
    * Function to save entity tags when it is not save used AJAX
    *
    */
-  static function postProcess(&$params, $entityId, $entityTable = 'civicrm_contact', &$form) {
+  static function postProcess(&$params, $entityId, $entityTable = 'civicrm_contact', &$form = NULL) {
     foreach ($params as $value) {
       if (!$value) {
         continue;
@@ -155,13 +155,13 @@ class CRM_Core_Form_Tag {
       $insertSQL = NULL;
       if (!empty($tagsIDs)) {
         foreach ($tagsIDs as $tagId) {
-          if (is_numeric($tagId) && !array_key_exists($tagId, $form->_entityTagValues)) {
+          if (is_numeric($tagId) && !CRM_Utils_Array::arrayKeyExists($tagId, $form->_entityTagValues)) {
             $insertValues[] = "( {$tagId}, {$entityId}, '{$entityTable}' ) ";
           }
         }
 
         if (!empty($insertValues)) {
-          $insertSQL = 'INSERT INTO civicrm_entity_tag ( tag_id, entity_id, entity_table ) VALUES ' . implode(', ', $insertValues) . ';';
+          $insertSQL = 'INSERT INTO civicrm_entity_tag ( tag_id, entity_id, entity_table ) VALUES ' . CRM_Utils_Array::implode(', ', $insertValues) . ';';
           CRM_Core_DAO::executeQuery($insertSQL);
         }
       }

@@ -345,10 +345,10 @@ class CRM_Case_Form_Search extends CRM_Core_Form {
 
     //search for civicase
     if (!$this->_force) {
-      if (array_key_exists('case_owner', $this->_formValues) && !$this->_formValues['case_owner']) {
+      if (CRM_Utils_Array::arrayKeyExists('case_owner', $this->_formValues) && !$this->_formValues['case_owner']) {
         $this->_formValues['case_owner'] = 0;
       }
-      elseif (array_key_exists('case_owner', $this->_formValues)) {
+      elseif (CRM_Utils_Array::arrayKeyExists('case_owner', $this->_formValues)) {
         $this->_formValues['case_owner'] = 1;
       }
     }

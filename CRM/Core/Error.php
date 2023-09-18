@@ -96,20 +96,20 @@ class CRM_Core_Error extends PEAR_ErrorStack {
     }
   }
 
-  function getMessages(&$error, $separator = '<br />') {
+  static function getMessages(&$error, $separator = '<br />') {
     if (is_a($error, 'CRM_Core_Error')) {
       $errors = $error->getErrors();
       $message = array();
       foreach ($errors as $e) {
         $message[] = $e['code'] . ':' . $e['message'];
       }
-      $message = implode($separator, $message);
+      $message = CRM_Utils_Array::implode($separator, $message);
       return $message;
     }
     return NULL;
   }
 
-  function displaySessionError(&$error, $separator = '<br />') {
+  static function displaySessionError(&$error, $separator = '<br />') {
     $message = ts('Payment failed.').' '.ts('We were unable to process your payment. You will not be charged in this transaction.');
     $detail = self::getMessages($error, $separator);
     if (!empty($detail)) {
@@ -252,6 +252,20 @@ class CRM_Core_Error extends PEAR_ErrorStack {
     $content = self::output($config->fatalErrorTemplate, $vars);
     self::abend();
     throw new CRM_Core_Exception($message, CRM_Core_Error::FATAL_ERROR, array('content' => $content));
+  }
+
+  /**
+   * Handles fatal errors without requiring an initialized configuration object
+   * This function is useful in cases where using the regular fatal() function
+   * would cause a circular dependency
+   *
+   * @param string message The error message to be displayed
+   *
+   */
+  static function fatalWithoutInitialized($message = NULL) {
+    http_response_code(self::FATAL_ERROR);
+    echo $message;
+    exit;
   }
 
   /**
@@ -414,7 +428,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
 
     $msgs = array();
     foreach ($backTrace as $trace) {
-      $msgs[] = implode(', ',
+      $msgs[] = CRM_Utils_Array::implode(', ',
         array(CRM_Utils_Array::value('file', $trace),
           CRM_Utils_Array::value('function', $trace),
           CRM_Utils_Array::value('line', $trace),
@@ -422,7 +436,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
       );
     }
 
-    $message = "\n".implode("\n", $msgs);
+    $message = "\n".CRM_Utils_Array::implode("\n", $msgs);
     if ($log) {
       CRM_Core_Error::debug_var($msg, $message, FALSE, TRUE);
     }

@@ -157,11 +157,11 @@ function civicrm_api3_extension_uninstall($params) {
  *
  */
 function civicrm_api3_extension_download($params) {
-  if (! array_key_exists('key', $params)) {
+  if (! CRM_Utils_Array::arrayKeyExists('key', $params)) {
     throw new API_Exception('Missing required parameter: key');
   }
 
-  if (! array_key_exists('url', $params)) {
+  if (! CRM_Utils_Array::arrayKeyExists('url', $params)) {
     if (! CRM_Extension_System::singleton()->getBrowser()->isEnabled()) {
       throw new API_Exception('Automatic downloading is diabled. Try adding parameter "url"');
     }
@@ -176,7 +176,7 @@ function civicrm_api3_extension_download($params) {
     }
   }
 
-  if (! array_key_exists('url', $params)) {
+  if (! CRM_Utils_Array::arrayKeyExists('url', $params)) {
     throw new API_Exception('Cannot resolve download url for extension. Try adding parameter "url"');
   }
 
@@ -262,15 +262,15 @@ function civicrm_api3_extension_get($params) {
  * @throws API_Exception
  */
 function _civicrm_api3_getKeys($params) {
-  if (array_key_exists('keys', $params) && is_array($params['keys'])) {
+  if (CRM_Utils_Array::arrayKeyExists('keys', $params) && is_array($params['keys'])) {
     return $params['keys'];
-  } elseif (array_key_exists('keys', $params) && is_string($params['keys'])) {
+  } elseif (CRM_Utils_Array::arrayKeyExists('keys', $params) && is_string($params['keys'])) {
     if ($params['keys'] == '') {
       return array();
     } else {
       return explode(API_V3_EXTENSION_DELIMITER, $params['keys']);
     }
-  } elseif (array_key_exists('key', $params)) {
+  } elseif (CRM_Utils_Array::arrayKeyExists('key', $params)) {
     return array($params['key']);
   } else {
     throw new API_Exception('Missing required parameter: key or keys');

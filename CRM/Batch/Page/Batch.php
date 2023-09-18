@@ -134,7 +134,7 @@ class CRM_Batch_Page_Batch extends CRM_Core_Page_Basic {
       $dao->whereAdd("label LIKE '%".CRM_Utils_Type::escape($label, 'String')."%'");
     }
     if ($statusIds && is_array($statusIds)) {
-      $dao->whereAdd("status_id IN (".implode(",", $statusIds).")");
+      $dao->whereAdd("status_id IN (".CRM_Utils_Array::implode(",", $statusIds).")");
     }
     else {
       $status = CRM_Batch_BAO_Batch::batchStatus();
@@ -142,12 +142,12 @@ class CRM_Batch_Page_Batch extends CRM_Core_Page_Basic {
       unset($status['Running']);
       unset($status['Pending']);
       $purgeDay = CRM_Batch_BAO_Batch::EXPIRE_DAY * 4;
-      $where = "(DATE_ADD(modified_date, INTERVAL ".$purgeDay." DAY) > NOW() AND status_id IN (".implode(',', $status).")) OR status_id IN({$allstatus['Running']}, {$allstatus['Pending']})";
+      $where = "(DATE_ADD(modified_date, INTERVAL ".$purgeDay." DAY) > NOW() AND status_id IN (".CRM_Utils_Array::implode(',', $status).")) OR status_id IN({$allstatus['Running']}, {$allstatus['Pending']})";
 
       $dao->whereAdd($where);
     }
     if ($typeIds && is_array($typeIds)) {
-      $dao->whereAdd("status_id IN (".implode(",", $typeIds).")");
+      $dao->whereAdd("status_id IN (".CRM_Utils_Array::implode(",", $typeIds).")");
     }
     $dao->orderBy('created_date DESC');
     $dao->find();

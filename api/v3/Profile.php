@@ -201,7 +201,7 @@ function civicrm_api3_profile_set($params) {
   }
 
   if (!empty($missingParams)) {
-    return civicrm_api3_create_error("Missing required parameters for profile id {$params['profile_id']}: " . implode(', ', $missingParams));
+    return civicrm_api3_create_error("Missing required parameters for profile id {$params['profile_id']}: " . CRM_Utils_Array::implode(', ', $missingParams));
   }
 
   $contactParams['version'] = 3;

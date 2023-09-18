@@ -38,7 +38,10 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     );
   }
 
-  function setUp() {
+  /**
+   * @before
+   */
+  function setUpTest() {
     parent::setUp();
 
     $this->_is_test = 1;
@@ -125,7 +128,10 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     $loaded = module_load_include('inc', 'civicrm_spgateway', 'civicrm_spgateway.ipn');
   }
 
-  function tearDown() {
+  /**
+   * @after
+   */
+  function tearDownTest() {
     $this->_processor = NULL;
   }
 
@@ -220,7 +226,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
 
   function testRecurringPaymentNotify(){
     $now = time();
-    $trxn_id = 'ut'.substr($now, -5);
+    $trxn_id = 'sput'.substr($now, -5);
     $amount = 222;
 
     // create recurring
@@ -235,9 +241,9 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
       'start_date' => $date,
       'create_date' => $date,
       'modified_date' => $date,
-      'invoice_id' => md5($now),
+      'invoice_id' => md5(uniqid((string)rand(), TRUE)),
       'contribution_status_id' => 2,
-      'trxn_id' => CRM_Utils_Array::value('trxn_id', $params),
+      'trxn_id' => md5(uniqid((string)rand(), TRUE)),
     );
     $ids = array();
     $recurring = &CRM_Contribute_BAO_ContributionRecur::add($recur, $ids);
@@ -274,6 +280,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
       'contribution_recur_id' => $recurring->id,
     );
     $contribution = CRM_Contribute_BAO_Contribution::create($contrib, CRM_Core_DAO::$_nullArray);
+    $this->assertNotEquals('CRM_Core_Error', get_class($contribution), "Contribution return error in line ".__LINE__.". Error messages:\n  ".CRM_Core_Error::getMessages($contribution, "\n  "));
     $this->assertNotEmpty($contribution->id, "In line " . __LINE__);
     $params = array(
       'is_test' => $this->_is_test,

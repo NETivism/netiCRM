@@ -276,9 +276,9 @@ class CRM_Utils_Mail {
     return $message;
   }
 
-  function logger(&$to, &$headers, &$message) {
+  static function logger(&$to, &$headers, &$message) {
     if (is_array($to)) {
-      $toString = implode(', ', $to);
+      $toString = CRM_Utils_Array::implode(', ', $to);
       $fileName = $to[0];
     }
     else {
@@ -458,7 +458,7 @@ class CRM_Utils_Mail {
         }
         $explains = $checkResult->getMessages();
         if (!empty($explains)) {
-          return implode("\n", $explains);
+          return CRM_Utils_Array::implode("\n", $explains);
         }
         switch($result) {
           case SPFLib\Check\Result::CODE_NONE:
@@ -570,7 +570,7 @@ class CRM_Utils_Mail {
    * @param array $domains
    * @return bool
    */
-  function checkMailInDomains($email, $domains) {
+  static function checkMailInDomains($email, $domains) {
     if (strstr($email, '<')) {
       $email = self::pluckEmailFromHeader($email);
     }

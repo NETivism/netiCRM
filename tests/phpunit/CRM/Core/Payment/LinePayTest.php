@@ -8,25 +8,6 @@ class CRM_Core_Payment_LinePayTest extends CiviUnitTestCase {
   protected $_is_test;
   protected $_page_id;
 
-  /**
-   *  Constructor
-   *
-   *  Initialize configuration
-   */
-  function __construct() {
-    // test if drupal bootstraped
-    if(!defined('DRUPAL_ROOT')){
-      die("You must exprot DRUPAL_ROOT for bootstrap drupal before test.");
-    }
-    $query = "SELECT id FROM civicrm_payment_processor WHERE payment_processor_type = 'Mobile'";
-    $pageId = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution_page ORDER BY id");
-    $class_name = 'Payment_Mobile';
-    if(isset($payment_page[$class_name])){
-      $this->_page_id = $payment_page[$class_name];
-    }
-    parent::__construct();
-  }
-
   function get_info() {
     return array(
      'name' => 'LinePay Instrument of Mobile Payment Processor',
@@ -35,7 +16,10 @@ class CRM_Core_Payment_LinePayTest extends CiviUnitTestCase {
     );
   }
 
-  function setUp() {
+  /**
+   * @before
+   */
+  function setUpTest() {
     parent::setUp();
 
     $this->_is_test = 1;
@@ -116,7 +100,10 @@ class CRM_Core_Payment_LinePayTest extends CiviUnitTestCase {
     }
   }
 
-  function tearDown() {
+  /**
+   * @after
+   */
+  function tearDownTest() {
     $this->_processor = NULL;
   }
 

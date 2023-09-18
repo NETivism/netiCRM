@@ -203,14 +203,14 @@ class CRM_Contact_Form_Task extends CRM_Core_Form {
           $count++;
           $insertString[] = " ( {$dao->contact_id} ) ";
           if ($count % 200 == 0) {
-            $string = implode(',', $insertString);
+            $string = CRM_Utils_Array::implode(',', $insertString);
             $sql = "REPLACE INTO {$form->_componentTable} ( contact_id ) VALUES $string";
             CRM_Core_DAO::executeQuery($sql);
             $insertString = array();
           }
         }
         if (!empty($insertString)) {
-          $string = implode(',', $insertString);
+          $string = CRM_Utils_Array::implode(',', $insertString);
           $sql = "REPLACE INTO {$form->_componentTable} ( contact_id ) VALUES $string";
           CRM_Core_DAO::executeQuery($sql);
         }
@@ -223,7 +223,7 @@ class CRM_Contact_Form_Task extends CRM_Core_Form {
           if (!empty($dao->id)) {
             $form->_additionalIds[$dao->id] = $dao->id;
           }
-          if (!array_key_exists($dao->contact_id, $alreadySeen)) {
+          if (!CRM_Utils_Array::arrayKeyExists($dao->contact_id, $alreadySeen)) {
             $form->_contactIds[] = $dao->contact_id;
             $alreadySeen[$dao->contact_id] = 1;
           }
@@ -240,12 +240,12 @@ class CRM_Contact_Form_Task extends CRM_Core_Form {
         list($contactID, $additionalID) = CRM_Core_Form::cbExtract($name);
         if (!empty($contactID)) {
           if ($useTable) {
-            if (!array_key_exists($contactID, $alreadySeen)) {
+            if (!CRM_Utils_Array::arrayKeyExists($contactID, $alreadySeen)) {
               $insertString[] = " ( {$contactID} ) ";
             }
           }
           else {
-            if (!array_key_exists($contactID, $alreadySeen)) {
+            if (!CRM_Utils_Array::arrayKeyExists($contactID, $alreadySeen)) {
               $form->_contactIds[] = $contactID;
             }
             if (!empty($additionalID) && is_numeric($additionalID)) {
@@ -256,7 +256,7 @@ class CRM_Contact_Form_Task extends CRM_Core_Form {
         }
       }
       if (!empty($insertString)) {
-        $string = implode(',', $insertString);
+        $string = CRM_Utils_Array::implode(',', $insertString);
         $sql = "REPLACE INTO {$form->_componentTable} ( contact_id ) VALUES $string";
         CRM_Core_DAO::executeQuery($sql);
       }
@@ -280,7 +280,7 @@ class CRM_Contact_Form_Task extends CRM_Core_Form {
     }
 
     if (!empty($form->_contactIds)) {
-      $form->_componentClause = ' contact_a.id IN ( ' . implode(',', $form->_contactIds) . ' ) ';
+      $form->_componentClause = ' contact_a.id IN ( ' . CRM_Utils_Array::implode(',', $form->_contactIds) . ' ) ';
       $form->assign('totalSelectedContacts', count($form->_contactIds));
 
       $form->_componentIds = $form->_contactIds;

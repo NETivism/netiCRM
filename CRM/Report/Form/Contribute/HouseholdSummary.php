@@ -160,7 +160,7 @@ class CRM_Report_Form_Contribute_HouseholdSummary extends CRM_Report_Form {
   function select() {
     $this->_columnHeaders = $select = array();
     foreach ($this->_columns as $tableName => $table) {
-      if (array_key_exists('fields', $table)) {
+      if (CRM_Utils_Array::arrayKeyExists('fields', $table)) {
         foreach ($table['fields'] as $fieldName => $field) {
           if (CRM_Utils_Array::value('required', $field) ||
             CRM_Utils_Array::value($fieldName, $this->_params['fields'])
@@ -190,7 +190,7 @@ class CRM_Report_Form_Contribute_HouseholdSummary extends CRM_Report_Form {
         }
       }
     }
-    $this->_select = "SELECT " . implode(', ', $select) . " ";
+    $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
   function from() {
@@ -223,7 +223,7 @@ class CRM_Report_Form_Contribute_HouseholdSummary extends CRM_Report_Form {
   function where() {
     $clauses = array();
     foreach ($this->_columns as $tableName => $table) {
-      if (array_key_exists('filters', $table)) {
+      if (CRM_Utils_Array::arrayKeyExists('filters', $table)) {
         foreach ($table['filters'] as $fieldName => $field) {
           $clause = NULL;
           if ($field['type'] & CRM_Utils_Type::T_DATE) {
@@ -261,7 +261,7 @@ class CRM_Report_Form_Contribute_HouseholdSummary extends CRM_Report_Form {
       $this->_where = "WHERE ( 1 )";
     }
     else {
-      $this->_where = "WHERE " . implode(' AND ', $clauses);
+      $this->_where = "WHERE " . CRM_Utils_Array::implode(' AND ', $clauses);
     }
 
     if ($this->_aclWhere) {
@@ -344,7 +344,7 @@ class CRM_Report_Form_Contribute_HouseholdSummary extends CRM_Report_Form {
     foreach ($rows as $rowNum => $row) {
 
       //replace retionship id by relationship name
-      if (array_key_exists('civicrm_relationship_relationship_type_id', $row)) {
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_relationship_relationship_type_id', $row)) {
         if ($value = $row['civicrm_relationship_relationship_type_id']) {
           $rows[$rowNum]['civicrm_relationship_relationship_type_id'] = $this->relationTypes[$value . '_' . $type];
           $entryFound = TRUE;
@@ -352,7 +352,7 @@ class CRM_Report_Form_Contribute_HouseholdSummary extends CRM_Report_Form {
       }
 
       //remove duplicate Organization names
-      if (array_key_exists('civicrm_contact_household_household_name', $row) && $this->_outputMode != 'csv') {
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_contact_household_household_name', $row) && $this->_outputMode != 'csv') {
         if ($value = $row['civicrm_contact_household_household_name']) {
           if ($rowNum == 0) {
             $priviousHousehold = $value;
@@ -383,7 +383,7 @@ class CRM_Report_Form_Contribute_HouseholdSummary extends CRM_Report_Form {
       }
 
       //remove duplicate Contact names and relationship type
-      if (array_key_exists('civicrm_contact_id', $row) && $this->_outputMode != 'csv') {
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_contact_id', $row) && $this->_outputMode != 'csv') {
         if ($value = $row['civicrm_contact_id']) {
           if ($rowNum == 0) {
             $priviousContact = $value;
@@ -408,14 +408,14 @@ class CRM_Report_Form_Contribute_HouseholdSummary extends CRM_Report_Form {
         }
       }
 
-      if (array_key_exists('civicrm_contribution_contribution_status_id', $row)) {
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_contribution_contribution_status_id', $row)) {
         if ($value = $row['civicrm_contribution_contribution_status_id']) {
           $rows[$rowNum]['civicrm_contribution_contribution_status_id'] = CRM_Contribute_PseudoConstant::contributionStatus($value);
         }
       }
 
       // handle state province
-      if (array_key_exists('civicrm_address_state_province_id', $row)) {
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_address_state_province_id', $row)) {
         if ($value = $row['civicrm_address_state_province_id']) {
           $rows[$rowNum]['civicrm_address_state_province_id'] = CRM_Core_PseudoConstant::stateProvinceAbbreviation($value, FALSE);
         }
@@ -423,7 +423,7 @@ class CRM_Report_Form_Contribute_HouseholdSummary extends CRM_Report_Form {
       }
 
       // handle country
-      if (array_key_exists('civicrm_address_country_id', $row)) {
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_address_country_id', $row)) {
         if ($value = $row['civicrm_address_country_id']) {
           $rows[$rowNum]['civicrm_address_country_id'] = CRM_Core_PseudoConstant::country($value, FALSE);
         }
@@ -431,9 +431,9 @@ class CRM_Report_Form_Contribute_HouseholdSummary extends CRM_Report_Form {
       }
 
       // convert display name to links
-      if (array_key_exists('civicrm_contact_sort_name', $row) &&
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_contact_sort_name', $row) &&
         $rows[$rowNum]['civicrm_contact_sort_name'] &&
-        array_key_exists('civicrm_contact_id', $row)
+        CRM_Utils_Array::arrayKeyExists('civicrm_contact_id', $row)
       ) {
         $url = CRM_Report_Utils_Report::getNextUrl('contribute/detail',
           'reset=1&force=1&id_op=eq&id_value=' . $row['civicrm_contact_id'],

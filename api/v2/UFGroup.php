@@ -356,7 +356,7 @@ function civicrm_uf_field_update($params, $fieldId) {
   $params['field_name'] = array($field_type, $field_name, $location_type_id, $phone_type);
 
   require_once 'CRM/Core/BAO/UFField.php';
-  $UFField = new CRM_core_BAO_UFField();
+  $UFField = new CRM_Core_BAO_UFField();
   $UFField->id = $fieldId;
 
   if (!(CRM_Utils_Array::value('group_id', $params)) && $UFField->find(TRUE)) {

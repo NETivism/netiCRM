@@ -69,7 +69,7 @@ class CRM_Member_PseudoConstant extends CRM_Core_PseudoConstant {
       );
     }
     if ($id) {
-      if (array_key_exists($id, self::$membershipType)) {
+      if (CRM_Utils_Array::arrayKeyExists($id, self::$membershipType)) {
         return self::$membershipType[$id];
       }
       else {

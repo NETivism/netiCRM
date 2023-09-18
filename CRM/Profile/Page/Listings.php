@@ -362,7 +362,7 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
       }
       else {
         $gids = $this->_profileIds;
-        $gidString = implode(',', $this->_profileIds);
+        $gidString = CRM_Utils_Array::implode(',', $this->_profileIds);
       }
 
       $map = 0;
@@ -426,7 +426,7 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
    *
    * @access public
    */
-  function getProfileContact($gid) {
+  static function getProfileContact($gid) {
     $session = CRM_Core_Session::singleton();
     $params = $session->get('profileParams');
 

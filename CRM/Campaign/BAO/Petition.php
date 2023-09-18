@@ -237,7 +237,7 @@ WHERE
   }
 
 
-  public function getSurveyInfo($surveyId = NULL) {
+  public static function getSurveyInfo($surveyId = NULL) {
     $surveyInfo = array();
 
     $sql = "
@@ -385,7 +385,7 @@ WHERE 	a.source_record_id = " . $surveyId . "
    * @access public
    * @static
    */
-  function sendEmail($params, $sendEmailMode) {
+  static function sendEmail($params, $sendEmailMode) {
 
     /* sendEmailMode
      * CRM_Campaign_Form_Petition_Signature::EMAIL_THANK
@@ -489,7 +489,7 @@ WHERE 	a.source_record_id = " . $surveyId . "
         $localpart = CRM_Core_BAO_MailSettings::defaultLocalpart();
 
         require_once 'CRM/Utils/Verp.php';
-        $replyTo = implode($config->verpSeparator,
+        $replyTo = CRM_Utils_Array::implode($config->verpSeparator,
           array($localpart . 'c',
             $se->contact_id,
             $se->id,

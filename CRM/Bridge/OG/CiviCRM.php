@@ -47,7 +47,7 @@ class CRM_Bridge_OG_CiviCRM {
     require_once 'CRM/Bridge/OG/Utils.php';
     $ogID = CRM_Bridge_OG_Utils::ogID($groupID, FALSE);
 
-    $node = new StdClass();
+    $node = new stdClass();
     if ($ogID) {
       $node->nid = $ogID;
     }

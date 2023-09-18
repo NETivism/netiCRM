@@ -96,7 +96,7 @@ class CRM_Contact_Form_Search_Custom_Base {
     return $this->_columns;
   }
 
-  static function includeContactIDs(&$sql, &$formValues) {
+  static function includeContactIDs(&$sql, &$formValues, $isExport = FALSE) {
     $contactIDs = array();
     foreach ($formValues as $id => $value) {
       list($contactID, $additionalID) = CRM_Core_Form::cbExtract($id);
@@ -106,7 +106,7 @@ class CRM_Contact_Form_Search_Custom_Base {
     }
 
     if (!empty($contactIDs)) {
-      $contactIDs = implode(', ', $contactIDs);
+      $contactIDs = CRM_Utils_Array::implode(', ', $contactIDs);
       $sql .= " AND contact_a.id IN ( $contactIDs )";
     }
   }

@@ -130,7 +130,7 @@ class CRM_Pledge_BAO_PledgeBlock extends CRM_Pledge_DAO_PledgeBlock {
 
       $freqUnits = $newFreqUnits;
       if (is_array($freqUnits) && !empty($freqUnits)) {
-        $freqUnits = implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, array_keys($freqUnits));
+        $freqUnits = CRM_Utils_Array::implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, array_keys($freqUnits));
         $pledgeBlock->pledge_frequency_unit = $freqUnits;
       }
       else {
@@ -204,7 +204,7 @@ class CRM_Pledge_BAO_PledgeBlock extends CRM_Pledge_DAO_PledgeBlock {
    * @param int $pageId
    * @static
    */
-  function buildPledgeBlock($form) {
+  static function buildPledgeBlock($form) {
     //build pledge payment fields.
     if (CRM_Utils_Array::value('pledge_id', $form->_values)) {
       //get all payments required details.
@@ -295,7 +295,7 @@ class CRM_Pledge_BAO_PledgeBlock extends CRM_Pledge_DAO_PledgeBlock {
       $freqUnits = array();
       $frequencyUnits = CRM_Core_OptionGroup::values('recur_frequency_units');
       foreach ($freqUnitVals as $key => $val) {
-        if (array_key_exists($val, $frequencyUnits)) {
+        if (CRM_Utils_Array::arrayKeyExists($val, $frequencyUnits)) {
           $freqUnits[$val] = CRM_Utils_Array::value('is_pledge_interval', $pledgeBlock) ? ts($val) : ts($val);
         }
       }

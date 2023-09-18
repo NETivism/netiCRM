@@ -112,6 +112,13 @@ class CRM_Utils_System_Drupal {
       self::$_loaded = TRUE;
       self::$_version = $this->version;
     }
+    // drupal is bootstraped, but config reload
+    elseif (!is_object($this->versionalClass)){
+      $v = floor($this->version);
+      $v = empty($v) ? '' : $v;
+      $class = 'CRM_Utils_System_Drupal'.$v;
+      $this->versionalClass = new $class();
+    }
 
     // #27780, correct SameSite for chrome 80
     if (CRM_Utils_System::isSSL() && CRM_Utils_System::sameSiteCheck()) {
@@ -173,7 +180,7 @@ class CRM_Utils_System_Drupal {
     $url = str_replace('&amp;', '&', $url); // legacy url/crmURL behaviour should remove
     if($version >= 8){
       $headers = array('Cache-Control' => 'no-cache');
-      $response = \Symfony\Component\HttpFoundation\RedirectResponse::create($url, 302, $headers);
+      $response = new \Symfony\Component\HttpFoundation\RedirectResponse($url, 302, $headers);
       $response->send();
     }
     else {
@@ -733,7 +740,7 @@ class CRM_Utils_System_Drupal {
    * @access public
    *
    */
-  function url($path = NULL, $query = NULL, $absolute = FALSE,
+  static function url($path = NULL, $query = NULL, $absolute = FALSE,
     $fragment = NULL, $htmlize = TRUE,
     $frontend = FALSE
   ) {
@@ -1137,8 +1144,15 @@ class CRM_Utils_System_Drupal {
     if (self::$_version < 8) {
       return module_implements($hook);
     }
-    elseif(self::$_version >= 8) {
+    elseif(self::$_version >= 8 && self::$_version < 10) {
       return \Drupal::moduleHandler()->getImplementations($hook);
+    }
+    elseif(self::$_version >= 10) {
+      $implementors = array();
+      \Drupal::moduleHandler()->invokeAllWith($hook, function (callable $hook, string $module) use (&$implementors) {
+        $implementors[] = $module;
+      });
+      return $implementors;
     }
     elseif (function_exists('module_list')) {
       $implements = array();
@@ -1181,37 +1195,51 @@ class CRM_Utils_System_Drupal {
   }
 
   function sessionID() {
-    // when session success started, this should have id
-    $sessionID = session_id();
-    if ($sessionID) {
-      return $sessionID;
-    }
-
-    // try start session here
-    self::sessionStart();
-    $sessionID = session_id();
-    if ($sessionID) {
-      return $sessionID;
-    }
-
-    // refs #31356, because self::sessionStart() force initialize session for drupal
-    // we should get session id by session manager service here
-    // not sure why session_id() doesn't return correct id
     $version = self::$_version;
-    if ($version >= 8) {
-      $session = \Drupal::service('session_manager');
-      $sessionID = $session->getId();
-      return $sessionID;
 
-      // refs #31356, this is drupal 8 / 9 specific code for retrieve tempstore
-      /*
-      $sessionID = self::tempstoreGet('sessionID');
+    // drupal 9+ using lazy session on anonymous user
+    // We need generate our own id and save to temp store
+    if ($version >= 8) {
+      if (self::isUserLoggedIn()) {
+        $session = \Drupal::service('session_manager');
+        $sessionID = $session->getId();
+        return $sessionID;
+      }
+      else {
+        // trying to start session
+        // the issue is that when https secure connection
+        // with ajax, we need both drupal session and temp store
+        // to keep anonymous session
+        self::sessionStart();
+        $session = \Drupal::service('session_manager');
+        $sessionID = $session->getID();
+        if ($sessionID) {
+          return $sessionID;
+        }
+
+        $sessionID = self::tempstoreGet('sessionID');
+        if ($sessionID) {
+          return $sessionID;
+        }
+        $sessionID = bin2hex(random_bytes(32));
+
+        self::tempstoreSet('sessionID', $sessionID);
+        return $sessionID;
+      }
+    }
+    // drupal 7 using traditional way to generate session id
+    else {
+      $sessionID = session_id();
       if ($sessionID) {
         return $sessionID;
       }
-      $sessionID = str_replace(array('+','/','='), array('-','_','',), base64_encode(random_bytes(32)));
-      self::tempstoreSet('sessionID', $sessionID);
-      */
+
+      // try start session here
+      self::sessionStart();
+      $sessionID = session_id();
+      if ($sessionID) {
+        return $sessionID;
+      }
     }
     return '';
   }

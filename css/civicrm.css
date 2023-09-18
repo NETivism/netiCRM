@@ -6195,6 +6195,27 @@ tbody.scrollContent tr.alternateRow {
   display: block;
 }
 
+/* md: crm form element accessibility outline */
+.crm-container-md .crm-form-elem input[type="file"]:focus-visible,
+.crm-container-md .crm-form-elem input[type="text"]:focus-visible,
+.crm-container-md .crm-form-elem input[type="number"]:focus-visible,
+.crm-container-md .crm-form-elem input.form-text:focus-visible,
+.crm-container-md .crm-form-elem input.form-number:focus-visible,
+.crm-container-md .crm-form-elem select:focus-visible,
+.crm-container-md .crm-form-elem select.form-select:focus-visible,
+.crm-container-md .crm-form-elem textarea:focus-visible,
+.crm-container-md .crm-form-elem textarea.form-textarea:focus-visible,
+.crm-container-md input:focus-visible {
+  outline: 2px solid #3F51B5 !important;
+  box-shadow: 1px 1px 8px 1px #3F51B5 !important;
+}
+a:focus-visible,
+.crm-container-md .crm-form-radio:focus-within,
+.crm-container-md .crm-form-checkbox:focus-within {
+  outline: 2px solid #3F51B5 !important;
+  box-shadow: 1px 1px 8px 1px #3F51B5 !important;
+}
+
 /* md: crm form element placeholder */
 .crm-container-md .crm-form-elem ::-webkit-input-placeholder,
 .crm-container-md .crm-form-elem ::-webkit-input-placeholder {

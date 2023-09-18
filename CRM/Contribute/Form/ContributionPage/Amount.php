@@ -103,7 +103,7 @@ class CRM_Contribute_Form_ContributionPage_Amount extends CRM_Contribute_Form_Co
     $recurringPaymentProcessor = array();
 
     if (!empty($paymentProcessor)) {
-      $paymentProcessorIds = implode(',', array_keys($paymentProcessor));
+      $paymentProcessorIds = CRM_Utils_Array::implode(',', array_keys($paymentProcessor));
       $query = "
 SELECT id
   FROM civicrm_payment_processor
@@ -481,7 +481,7 @@ SELECT id
       if ($params['is_recur_only']) {
         $params['is_recur'] = 2;
       }
-      $params['recur_frequency_unit'] = implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
+      $params['recur_frequency_unit'] = CRM_Utils_Array::implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
         array_keys($params['recur_frequency_unit'])
       );
       $params['is_recur_interval'] = CRM_Utils_Array::value('is_recur_interval', $params, FALSE);
@@ -489,8 +489,8 @@ SELECT id
       $params['installments_option'] = CRM_Utils_Array::value('show_installments_option', $params, '1');
     }
 
-    if (array_key_exists('payment_processor', $params) && !CRM_Utils_System::isNull($params['payment_processor'])) {
-      $params['payment_processor'] = implode(CRM_Core_DAO::VALUE_SEPARATOR, array_keys($params['payment_processor']));
+    if (CRM_Utils_Array::arrayKeyExists('payment_processor', $params) && !CRM_Utils_System::isNull($params['payment_processor'])) {
+      $params['payment_processor'] = CRM_Utils_Array::implode(CRM_Core_DAO::VALUE_SEPARATOR, array_keys($params['payment_processor']));
     }
     else {
       $params['payment_processor'] = 'null';

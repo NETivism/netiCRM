@@ -78,7 +78,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
       $deductible_type_id[] = $dao->id;
     }
     if(count($deductible_type_id) > 0){
-      $deductible_type = implode(',', $deductible_type_id);
+      $deductible_type = CRM_Utils_Array::implode(',', $deductible_type_id);
       $deductible_type_clause = "OR contribution_type_id IN ($deductible_type)";
     }
     // check that all the contribution ids have pending status
@@ -134,7 +134,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
         array_push($emptyEmail,$contributorDisplayName[0]);
       }
     }
-    $emptyEmailList = implode(",", $emptyEmail);
+    $emptyEmailList = CRM_Utils_Array::implode(",", $emptyEmail);
     $actionName = $this->controller->getActionName($this->_name);
     if ($emailIsEmpty && $actionName[1] == 'display') {
       $this->assign('emptyEmailList', $emptyEmailList);
@@ -296,7 +296,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
       $contributionIds = array_slice($contributionIds, $offset, self::PDF_BATCH_THRESHOLD);
     }
     
-    $contribIDs = implode(',', $contributionIds);
+    $contribIDs = CRM_Utils_Array::implode(',', $contributionIds);
     $details = &CRM_Contribute_Form_Task_Status::getDetails($contribIDs);
     $details = array_replace(array_flip($contributionIds), $details);
     $this->makeReceipt($details, $params['window_envelope']);

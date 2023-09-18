@@ -39,8 +39,13 @@ casper.test.begin('Resurrectio test', function(test) {
         casper.echo('** Step 0-1: Enter "New Contribution Page" Page. **');
         casper.echo('=====================================');
     });
+    
+    casper.run(function() {
+        test.done();
+    });
+});
 
-    casper.wait(2000);
+casper.test.begin('Start testing...', function(test) {
 
     /*
      * Step 1: Title

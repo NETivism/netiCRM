@@ -169,7 +169,7 @@ class CRM_Report_Form_Contact_CurrentEmployer extends CRM_Report_Form {
     $select = $this->_columnHeaders = array();
 
     foreach ($this->_columns as $tableName => $table) {
-      if (array_key_exists('fields', $table)) {
+      if (CRM_Utils_Array::arrayKeyExists('fields', $table)) {
         foreach ($table['fields'] as $fieldName => $field) {
           if (CRM_Utils_Array::value('required', $field) ||
             CRM_Utils_Array::value($fieldName, $this->_params['fields'])
@@ -183,7 +183,7 @@ class CRM_Report_Form_Contact_CurrentEmployer extends CRM_Report_Form {
       }
     }
 
-    $this->_select = "SELECT " . implode(', ', $select) . " ";
+    $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
   function from() {
@@ -211,7 +211,7 @@ FROM civicrm_contact {$this->_aliases['civicrm_contact']}
 
     $clauses = array();
     foreach ($this->_columns as $tableName => $table) {
-      if (array_key_exists('filters', $table)) {
+      if (CRM_Utils_Array::arrayKeyExists('filters', $table)) {
         foreach ($table['filters'] as $fieldName => $field) {
           $clause = NULL;
           if ($field['operatorType'] & CRM_Report_Form::OP_DATE) {
@@ -244,7 +244,7 @@ FROM civicrm_contact {$this->_aliases['civicrm_contact']}
       $this->_where = "WHERE {$this->_aliases['civicrm_contact']}.employer_id!='null' ";
     }
     else {
-      $this->_where = "WHERE ({$this->_aliases['civicrm_contact']}.employer_id!='null') AND " . implode(' AND ', $clauses);
+      $this->_where = "WHERE ({$this->_aliases['civicrm_contact']}.employer_id!='null') AND " . CRM_Utils_Array::implode(' AND ', $clauses);
     }
 
     if ($this->_aclWhere) {
@@ -271,8 +271,8 @@ FROM civicrm_contact {$this->_aliases['civicrm_contact']}
     foreach ($rows as $rowNum => $row) {
 
       // convert employer name to links
-      if (array_key_exists('civicrm_employer_organization_name', $row) &&
-        array_key_exists('civicrm_employer_id', $row)
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_employer_organization_name', $row) &&
+        CRM_Utils_Array::arrayKeyExists('civicrm_employer_id', $row)
       ) {
         $url = CRM_Report_Utils_Report::getNextUrl('contact/detail',
           'reset=1&force=1&id_op=eq&id_value=' . $row['civicrm_employer_id'],
@@ -299,7 +299,7 @@ FROM civicrm_contact {$this->_aliases['civicrm_contact']}
       }
 
       //handle gender
-      if (array_key_exists('civicrm_contact_gender_id', $row)) {
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_contact_gender_id', $row)) {
         if ($value = $row['civicrm_contact_gender_id']) {
           $gender = CRM_Core_PseudoConstant::gender();
           $rows[$rowNum]['civicrm_contact_gender_id'] = $gender[$value];
@@ -308,8 +308,8 @@ FROM civicrm_contact {$this->_aliases['civicrm_contact']}
       }
 
       // convert employee name to links
-      if (array_key_exists('civicrm_contact_display_name', $row) &&
-        array_key_exists('civicrm_contact_id', $row)
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_contact_display_name', $row) &&
+        CRM_Utils_Array::arrayKeyExists('civicrm_contact_id', $row)
       ) {
         $url = CRM_Report_Utils_Report::getNextUrl('contact/detail',
           'reset=1&force=1&id_op=eq&id_value=' . $row['civicrm_contact_id'],
@@ -320,14 +320,14 @@ FROM civicrm_contact {$this->_aliases['civicrm_contact']}
       }
 
       // handle country
-      if (array_key_exists('civicrm_address_country_id', $row)) {
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_address_country_id', $row)) {
         if ($value = $row['civicrm_address_country_id']) {
           $rows[$rowNum]['civicrm_address_country_id'] = CRM_Core_PseudoConstant::country($value, FALSE);
         }
         $entryFound = TRUE;
       }
 
-      if (array_key_exists('civicrm_address_state_province_id', $row)) {
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_address_state_province_id', $row)) {
         if ($value = $row['civicrm_address_state_province_id']) {
           $rows[$rowNum]['civicrm_address_state_province_id'] = CRM_Core_PseudoConstant::stateProvince($value, FALSE);
         }

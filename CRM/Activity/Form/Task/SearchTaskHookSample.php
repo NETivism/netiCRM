@@ -50,7 +50,7 @@ class CRM_Activity_Form_Task_SearchTaskHookSample extends CRM_Activity_Form_Task
     parent::preProcess();
     $rows = array();
     // display name and activity details of all selected contacts
-    $activityIDs = implode(',', $this->_activityHolderIds);
+    $activityIDs = CRM_Utils_Array::implode(',', $this->_activityHolderIds);
     $query = "
     SELECT at.subject      as subject,
            ov.label        as activity_type,

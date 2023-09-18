@@ -85,7 +85,7 @@ class CRM_Contribute_Form_Task_Batch extends CRM_Contribute_Form_Task {
     $returnProperties = array('sort_name' => 1);
     $contactDetails = CRM_Contact_BAO_Contact_Utils::contactDetails($this->_contributionIds, 'CiviContribute', $returnProperties);
     $contributionDAO = new CRM_Contribute_DAO_Contribution();
-    $contributionDAO->whereAdd("id IN (".implode(',', $this->_contributionIds).")");
+    $contributionDAO->whereAdd("id IN (".CRM_Utils_Array::implode(',', $this->_contributionIds).")");
     $contributionDAO->selectAdd(); // clear *
     $contributionDAO->selectAdd('id as contribution_id, trxn_id, receipt_id');
     $contributionDAO->find();

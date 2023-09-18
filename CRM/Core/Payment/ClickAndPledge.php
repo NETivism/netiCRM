@@ -129,7 +129,7 @@ class CRM_Core_Payment_ClickAndPledge extends CRM_Core_Payment {
     }
 
     if (!empty($error)) {
-      return implode('<p>', $error);
+      return CRM_Utils_Array::implode('<p>', $error);
     }
     else {
       return NULL;

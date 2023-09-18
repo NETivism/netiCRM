@@ -481,7 +481,7 @@ class HTML_QuickForm_hierselect extends HTML_QuickForm_group
     // }}}
     // {{{ onQuickFormEvent()
 
-    function onQuickFormEvent($event, $arg, $caller = null)
+    function onQuickFormEvent($event, $arg, &$caller)
     {
         if ('updateValue' == $event) {
             // we need to call setValue() so that the secondary option

@@ -46,7 +46,7 @@ class CRM_Case_Form_Activity_LinkCases {
     }
 
     $form->assign('clientID', $form->_currentlyViewedContactId);
-    $form->assign('caseTypeLabel', CRM_Case_BAO_case::getCaseType($form->_caseId));
+    $form->assign('caseTypeLabel', CRM_Case_BAO_Case::getCaseType($form->_caseId));
 
     // get the related cases for given case.
     $relatedCases = $form->get('relatedCases');
@@ -58,7 +58,7 @@ class CRM_Case_Form_Activity_LinkCases {
     if (is_array($relatedCases) && !empty($relatedCases)) {
       $excludeCaseIds = array_merge($excludeCaseIds, array_keys($relatedCases));
     }
-    $form->assign('excludeCaseIds', implode(',', $excludeCaseIds));
+    $form->assign('excludeCaseIds', CRM_Utils_Array::implode(',', $excludeCaseIds));
   }
 
   /**
@@ -100,7 +100,7 @@ class CRM_Case_Form_Activity_LinkCases {
 
     // do check for existing related cases.
     $relatedCases = $form->get('relatedCases');
-    if (is_array($relatedCases) && array_key_exists($linkCaseId, $relatedCases)) {
+    if (is_array($relatedCases) && CRM_Utils_Array::arrayKeyExists($linkCaseId, $relatedCases)) {
       $errors['link_to_case'] = ts('It looks like selected case is already linked.');
     }
 

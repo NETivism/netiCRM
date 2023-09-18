@@ -152,18 +152,18 @@ class CRM_Utils_REST {
         return 'Request rate limit reached. Last hit: '.round($interval, 2).' seconds ago. Usage: '.$dao->value;
       }
       $dao->timestamp = microtime(true);
-      $dao->value = implode('-', $args);
+      $dao->value = CRM_Utils_Array::implode('-', $args);
       $dao->update();
     }
     else {
       $dao->timestamp = microtime(true);
-      $dao->value = implode('-', $args);
+      $dao->value = CRM_Utils_Array::implode('-', $args);
       $dao->insert();
     }
     return array();
   }
 
-  function output(&$result) {
+  static function output(&$result) {
     $hier = FALSE;
     if (is_scalar($result)) {
       if (!$result) {
@@ -175,7 +175,7 @@ class CRM_Utils_REST {
       if (CRM_Utils_Array::isHierarchical($result)) {
         $hier = TRUE;
       }
-      elseif (!array_key_exists('is_error', $result)) {
+      elseif (!CRM_Utils_Array::arrayKeyExists('is_error', $result)) {
         $result['is_error'] = 0;
       }
     }
@@ -224,7 +224,7 @@ class CRM_Utils_REST {
   function handle() {
     // block ajax request REST API to prevent database info leak
     /* It's not reliable way to detect, and shouldn't block whole connection
-    if(array_key_exists('HTTP_X_REQUESTED_WITH', $_SERVER) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'){
+    if(CRM_Utils_Array::arrayKeyExists('HTTP_X_REQUESTED_WITH', $_SERVER) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'){
       return self::error("FATAL: this API can only request from backend. *DO NOT* use ajax application call this.");
     }
     */
@@ -236,7 +236,7 @@ class CRM_Utils_REST {
 
     // or the new format (entity+action)
     $args[1] = CRM_Utils_Request::retrieve('entity', 'String', CRM_Core_DAO::$_nullObject, FALSE, NULL, 'REQUEST');
-    $args[2] = CRM_Utils_array::value('action', $_REQUEST);
+    $args[2] = CRM_Utils_Array::value('action', $_REQUEST);
 
     // Everyone should be required to provide the server key, so the whole
     //  interface can be disabled in more change to the configuration file.
@@ -333,7 +333,7 @@ class CRM_Utils_REST {
       return call_user_func(array($params['className'], $params['fnName']), $params);
     }
 
-    if (!array_key_exists('version', $params)) {
+    if (!CRM_Utils_Array::arrayKeyExists('version', $params)) {
       $params['version'] = 3;
     }
 
@@ -344,7 +344,7 @@ class CRM_Utils_REST {
       return $result;
     }
 
-    if ($_SERVER['REQUEST_METHOD'] == 'GET' && !strstr(strtolower($args[2]), 'get') && strtolower($args[2] != 'check')) {
+    if ($_SERVER['REQUEST_METHOD'] == 'GET' && !strstr(strtolower((string)$args[2]), 'get') && strtolower((string)$args[2]) != 'check') {
       // get only valid for non destructive methods
       require_once 'api/v3/utils.php';
       return civicrm_api3_create_error("SECURITY: All requests that modify the database must be http POST, not GET.",
@@ -416,7 +416,7 @@ class CRM_Utils_REST {
         CRM_Utils_System::civiExit();
       }
     }
-    elseif (array_key_exists('json', $_REQUEST) && $_REQUEST['json'][0] == "{") {
+    elseif (CRM_Utils_Array::arrayKeyExists('json', $_REQUEST) && $_REQUEST['json'][0] == "{") {
       $params = json_decode($_REQUEST['json'], TRUE);
       if (empty($params)) {
         echo json_encode(array('is_error' => 1, 'error_message', 'invalid json format: ?{"param_with_double_quote":"value"}'));
@@ -425,11 +425,11 @@ class CRM_Utils_REST {
     }
 
     foreach ($_REQUEST as $n => $v) {
-      if (!array_key_exists($n, $skipVars)) {
+      if (!CRM_Utils_Array::arrayKeyExists($n, $skipVars)) {
         $params[$n] = $v;
       }
     }
-    if (array_key_exists('return', $_REQUEST) && is_array($_REQUEST['return'])) {
+    if (CRM_Utils_Array::arrayKeyExists('return', $_REQUEST) && is_array($_REQUEST['return'])) {
       foreach ($_REQUEST['return'] as $key => $v) $params['return.' . $key] = 1;
     }
     return $params;
@@ -462,12 +462,13 @@ class CRM_Utils_REST {
 
   /** used to load a template "inline", eg. for ajax, without having to build a menu for each template */
   static function loadTemplate() {
-    $request = CRM_Utils_Request::retrieve('q', 'String');
+    /*
+    $request = CRM_Utils_Request::retrieve('q', 'String', CRM_Core_DAO::$_nullObject);
     if (FALSE !== strpos($request, '..')) {
       die("SECURITY FATAL: the url can't contain '..'. Please report the issue on the forum at civicrm.org");
     }
 
-    $request = split('/', $request);
+    $request = preg_split('/\//', $request);
     $entity = _civicrm_api_get_camel_name($request[2]);
     $tplfile = _civicrm_api_get_camel_name($request[3]);
 
@@ -479,11 +480,11 @@ class CRM_Utils_REST {
       die("Can't find the requested template file templates/$tpl");
     }
     // special treatmenent, because it's often used
-    if (array_key_exists('id', $_GET)) {
+    if (CRM_Utils_Array::arrayKeyExists('id', $_GET)) {
       // an id is always positive
       $smarty->assign('id', (int)$_GET['id']);
     }
-    $pos = strpos(implode(array_keys($_GET)), '<');
+    $pos = strpos(CRM_Utils_Array::implode(array_keys($_GET)), '<');
 
     if ($pos !== FALSE) {
       die("SECURITY FATAL: one of the param names contains &lt;");
@@ -492,7 +493,7 @@ class CRM_Utils_REST {
     unset($param['q']);
     $smarty->assign_by_ref("request", $param);
 
-    if (!array_key_exists('HTTP_X_REQUESTED_WITH', $_SERVER) ||
+    if (!CRM_Utils_Array::arrayKeyExists('HTTP_X_REQUESTED_WITH', $_SERVER) ||
       $_SERVER['HTTP_X_REQUESTED_WITH'] != "XMLHttpRequest"
     ) {
 
@@ -513,6 +514,7 @@ class CRM_Utils_REST {
       echo $content . $smarty->fetch($tpl);
       CRM_Utils_System::civiExit();
     }
+    */
   }
 
   /** This is a wrapper so you can call an api via json (it returns json too)
@@ -521,7 +523,7 @@ class CRM_Utils_REST {
    **/
   static function ajaxJson() {
     require_once 'api/v3/utils.php';
-    if (!$config->debug && (!array_key_exists('HTTP_X_REQUESTED_WITH', $_SERVER) ||
+    if (!$config->debug && (!CRM_Utils_Array::arrayKeyExists('HTTP_X_REQUESTED_WITH', $_SERVER) ||
         $_SERVER['HTTP_X_REQUESTED_WITH'] != "XMLHttpRequest"
       )) {
       $error = civicrm_api3_create_error("SECURITY ALERT: Ajax requests can only be issued by javascript clients, eg. $().crmAPI().",
@@ -576,7 +578,7 @@ class CRM_Utils_REST {
     // the request has to be sent by an ajax call. First line of protection against csrf
     $config = CRM_Core_Config::singleton();
     if (!$config->debug &&
-      (!array_key_exists('HTTP_X_REQUESTED_WITH', $_SERVER) ||
+      (!CRM_Utils_Array::arrayKeyExists('HTTP_X_REQUESTED_WITH', $_SERVER) ||
         $_SERVER['HTTP_X_REQUESTED_WITH'] != "XMLHttpRequest"
       )
     ) {

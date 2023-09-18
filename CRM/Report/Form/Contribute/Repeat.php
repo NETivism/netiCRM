@@ -215,13 +215,13 @@ contribution2_total_amount_count, contribution2_total_amount_sum',
     $append = NULL;
 
     // since contact fields not related to contribution type
-    if (array_key_exists('contribution_type', $this->_params['group_bys']) ||
-      array_key_exists('contribution_source', $this->_params['group_bys'])
+    if (CRM_Utils_Array::arrayKeyExists('contribution_type', $this->_params['group_bys']) ||
+      CRM_Utils_Array::arrayKeyExists('contribution_source', $this->_params['group_bys'])
     ) {
       unset($this->_columns['civicrm_contact']['fields']['id']);
     }
 
-    if (array_key_exists('country_id', $this->_params['group_bys'])) {
+    if (CRM_Utils_Array::arrayKeyExists('country_id', $this->_params['group_bys'])) {
       $this->_columns['civicrm_contribution']['fields']['total_amount1']['clause'] = '
 SUM(contribution1_total_amount_count) as contribution1_total_amount_count, 
 SUM(contribution1_total_amount_sum)   as contribution1_total_amount_sum';
@@ -231,7 +231,7 @@ SUM(contribution2_total_amount_sum)   as contribution2_total_amount_sum';
     }
 
     foreach ($this->_columns as $tableName => $table) {
-      if (array_key_exists('group_bys', $table)) {
+      if (CRM_Utils_Array::arrayKeyExists('group_bys', $table)) {
         foreach ($table['group_bys'] as $fieldName => $field) {
           if (CRM_Utils_Array::value($fieldName, $this->_params['group_bys'])) {
             $uni[] = "{$field['dbAlias']}";
@@ -239,7 +239,7 @@ SUM(contribution2_total_amount_sum)   as contribution2_total_amount_sum';
         }
       }
 
-      if (array_key_exists('fields', $table)) {
+      if (CRM_Utils_Array::arrayKeyExists('fields', $table)) {
         foreach ($table['fields'] as $fieldName => $field) {
           if (CRM_Utils_Array::value('required', $field) ||
             CRM_Utils_Array::value($fieldName, $this->_params['fields'])
@@ -268,11 +268,11 @@ SUM(contribution2_total_amount_sum)   as contribution2_total_amount_sum';
     }
 
     if (count($uni) >= 1) {
-      $select[] = "CONCAT_WS('_', {$append}" . implode(', ', $uni) . ") AS uni";
+      $select[] = "CONCAT_WS('_', {$append}" . CRM_Utils_Array::implode(', ', $uni) . ") AS uni";
       $this->_columnHeaders["uni"] = array('no_display' => TRUE);
     }
 
-    $this->_select = "SELECT " . implode(', ', $select) . " ";
+    $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
   function groupBy($tableCol = FALSE) {
@@ -281,7 +281,7 @@ SUM(contribution2_total_amount_sum)   as contribution2_total_amount_sum';
       !empty($this->_params['group_bys'])
     ) {
       foreach ($this->_columns as $tableName => $table) {
-        if (array_key_exists('group_bys', $table)) {
+        if (CRM_Utils_Array::arrayKeyExists('group_bys', $table)) {
           foreach ($table['group_bys'] as $fieldName => $field) {
             if (CRM_Utils_Array::value($fieldName, $this->_params['group_bys'])) {
               if ($tableCol) {
@@ -295,7 +295,7 @@ SUM(contribution2_total_amount_sum)   as contribution2_total_amount_sum';
         }
       }
 
-      $this->_groupBy = "GROUP BY " . implode(', ', $this->_groupBy);
+      $this->_groupBy = "GROUP BY " . CRM_Utils_Array::implode(', ', $this->_groupBy);
     }
   }
 
@@ -336,7 +336,7 @@ INNER JOIN civicrm_contact {$this->_aliases['civicrm_contact']} ON {$this->_alia
       $contriCol = "contact_id";
     }
 
-    $IN = implode(",", $this->_params['contribution_status_id_value']);
+    $IN = CRM_Utils_Array::implode(",", $this->_params['contribution_status_id_value']);
 
     $contriStatus1 = ($IN != NULL) ? " AND contribution1.contribution_status_id IN ( {$IN} ) " : " ";
     $contriStatus2 = ($IN != NULL) ? " AND contribution2.contribution_status_id IN ( {$IN} ) " : " ";
@@ -367,7 +367,7 @@ LEFT  JOIN (
     $clauses[] = "!(contribution1_total_amount_count IS NULL AND contribution2_total_amount_count IS NULL)";
 
     foreach ($this->_columns as $tableName => $table) {
-      if (array_key_exists('filters', $table)) {
+      if (CRM_Utils_Array::arrayKeyExists('filters', $table)) {
         foreach ($table['filters'] as $fieldName => $field) {
           $clause = NULL;
           if (!(CRM_Utils_Array::value('type', $field) & CRM_Utils_Type::T_DATE)) {
@@ -394,11 +394,11 @@ LEFT  JOIN (
       $this->_where = "WHERE ( 1 ) ";
     }
     else {
-      $this->_where = "WHERE " . implode(' AND ', $clauses);
+      $this->_where = "WHERE " . CRM_Utils_Array::implode(' AND ', $clauses);
     }
   }
 
-  function formRule($fields, $files, $self) {
+  static function formRule($fields, $files, $self) {
     $errors = $grouping = $checkDate = $errorCount = array();
 
     $rules = array('id' => array('sort_name', 'email', 'phone',
@@ -422,8 +422,8 @@ LEFT  JOIN (
     if (empty($fields['group_bys'])) {
       $errors['fields'] = ts('Please select at least one Group by field.');
     }
-    elseif ((array_key_exists('contribution_source', $fields['group_bys']) ||
-        array_key_exists('contribution_type', $fields['group_bys'])
+    elseif ((CRM_Utils_Array::arrayKeyExists('contribution_source', $fields['group_bys']) ||
+        CRM_Utils_Array::arrayKeyExists('contribution_type', $fields['group_bys'])
       ) &&
       (count($fields['group_bys']) > 1)
     ) {
@@ -445,18 +445,18 @@ LEFT  JOIN (
             }
           }
           if (!$found) {
-            $erorrGrps = implode(',', $invlidGroups);
+            $erorrGrps = CRM_Utils_Array::implode(',', $invlidGroups);
             $tempErrors[] = ts("Do not select field %1 with Group by %2.", array(1 => $idMapping[$fld_id], 2 => $erorrGrps));
           }
         }
       }
       if (!empty($tempErrors)) {
-        $errors['fields'] = implode("<br>", $tempErrors);
+        $errors['fields'] = CRM_Utils_Array::implode("<br>", $tempErrors);
       }
     }
 
     if (!empty($fields['gid_value']) && CRM_Utils_Array::value('group_bys', $fields)) {
-      if (!array_key_exists('id', $fields['group_bys'])) {
+      if (!CRM_Utils_Array::arrayKeyExists('id', $fields['group_bys'])) {
         $errors['gid_value'] = ts("Filter with Group only allow with group by Contact");
       }
     }
@@ -636,7 +636,7 @@ LEFT  JOIN (
 
     foreach ($rows as $rowNum => $row) {
       // handle country
-      if (array_key_exists('address_civireport_country_id', $row)) {
+      if (CRM_Utils_Array::arrayKeyExists('address_civireport_country_id', $row)) {
         if ($value = $row['address_civireport_country_id']) {
           $rows[$rowNum]['address_civireport_country_id'] = CRM_Core_PseudoConstant::country($value, FALSE);
 
@@ -655,7 +655,7 @@ LEFT  JOIN (
       }
 
       // handle state province
-      if (array_key_exists('address_civireport_state_province_id', $row)) {
+      if (CRM_Utils_Array::arrayKeyExists('address_civireport_state_province_id', $row)) {
         if ($value = $row['address_civireport_state_province_id']) {
           $rows[$rowNum]['address_civireport_state_province_id'] = CRM_Core_PseudoConstant::stateProvince($value, FALSE);
 
@@ -672,8 +672,8 @@ LEFT  JOIN (
       }
 
       // convert display name to links
-      if (array_key_exists('contact_civireport_sort_name', $row) &&
-        array_key_exists('contact_civireport_id', $row)
+      if (CRM_Utils_Array::arrayKeyExists('contact_civireport_sort_name', $row) &&
+        CRM_Utils_Array::arrayKeyExists('contact_civireport_id', $row)
       ) {
         $url = CRM_Report_Utils_Report::getNextUrl('contribute/detail',
           'reset=1&force=1&id_op=eq&id_value=' . $row['contact_civireport_id'],

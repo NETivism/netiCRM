@@ -115,7 +115,7 @@ class CRM_Event_Form_Task extends CRM_Core_Form {
     }
 
     if (!empty($ids)) {
-      $form->_componentClause = ' civicrm_participant.id IN ( ' . implode(',', $ids) . ' ) ';
+      $form->_componentClause = ' civicrm_participant.id IN ( ' . CRM_Utils_Array::implode(',', $ids) . ' ) ';
       $form->assign('totalSelectedParticipants', count($ids));
     }
 

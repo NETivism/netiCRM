@@ -92,7 +92,7 @@ class CRM_Utils_Cache_SqlGroup implements CRM_Utils_Cache_Interface {
   }
 
   function get($key) {
-    if (!array_key_exists($key, $this->frontCache)) {
+    if (!CRM_Utils_Array::arrayKeyExists($key, $this->frontCache)) {
       $this->frontCache[$key] = CRM_Core_BAO_Cache::getItem($this->group, $key, $this->componentID);
     }
     return $this->frontCache[$key];
@@ -103,7 +103,7 @@ class CRM_Utils_Cache_SqlGroup implements CRM_Utils_Cache_Interface {
   }
 
   function delete($key) {
-    CRM_Core_BAO_Cache::deleteGroup($this->group, $key);
+    CRM_Core_BAO_Cache::deleteGroup($this->group);
     unset($this->frontCache[$key]);
   }
 

@@ -138,7 +138,7 @@ class CRM_Mailing_BAO_Query {
         continue;
       }
       if (substr($query->_params[$id][0], 0, 8) == 'mailing_') {
-        if ($query->_mode == CRM_Contact_BAO_QUERY::MODE_CONTACTS) {
+        if ($query->_mode == CRM_Contact_BAO_Query::MODE_CONTACTS) {
           $query->_useDistinct = TRUE;
         }
         $grouping = $query->_params[$id][3];
@@ -257,7 +257,7 @@ class CRM_Mailing_BAO_Query {
     switch ($name) {
       case 'mailing_id':
         $selectedMailings = array_flip($value);
-        $value = "(" . implode(',', $value) . ")";
+        $value = "(" . CRM_Utils_Array::implode(',', $value) . ")";
         $op = 'IN';
         $query->_where[$grouping][] = "civicrm_mailing.id $op $value";
 
@@ -265,7 +265,7 @@ class CRM_Mailing_BAO_Query {
         foreach ($selectedMailings as $id => $dnc) {
           $selectedMailings[$id] = $mailings[$id];
         }
-        $selectedMailings = implode(' '.ts('or').' ', $selectedMailings);
+        $selectedMailings = CRM_Utils_Array::implode(' '.ts('or').' ', $selectedMailings);
 
         $query->_qill[$grouping][] = ts("Mailing Name")." - \"$selectedMailings\"";
         $query->_tables['civicrm_mailing'] = $query->_whereTables['civicrm_mailing'] = 1;
@@ -504,8 +504,8 @@ class CRM_Mailing_BAO_Query {
     }
 
     if (is_array($value)) {
-      $query->_where[$grouping][] = "$tableName.$fieldName $op (" . implode(',', $value) . ")";
-      $query->_qill[$grouping][] = "$fieldTitle - " . implode(', ', array_intersect_key($valueTitles, array_flip($value)));
+      $query->_where[$grouping][] = "$tableName.$fieldName $op (" . CRM_Utils_Array::implode(',', $value) . ")";
+      $query->_qill[$grouping][] = "$fieldTitle - " . CRM_Utils_Array::implode(', ', array_intersect_key($valueTitles, array_flip($value)));
     }
     else {
       $query->_qill[$grouping][] = $fieldTitle . ' - ' . $valueTitles[$value];

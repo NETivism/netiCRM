@@ -146,7 +146,7 @@ class CRM_Contribute_Form_Task extends CRM_Core_Form {
     }
 
     if (!empty($ids)) {
-      $form->_componentClause = ' civicrm_contribution.id IN ( ' . implode(',', $ids) . ' ) ';
+      $form->_componentClause = ' civicrm_contribution.id IN ( ' . CRM_Utils_Array::implode(',', $ids) . ' ) ';
 
       $form->assign('totalSelectedContributions', count($ids));
     }

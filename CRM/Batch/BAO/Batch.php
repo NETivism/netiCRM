@@ -134,7 +134,7 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
     $status = self::batchStatus();
     unset($status['Completed']);
     unset($status['Canceled']);
-    $sql = "SELECT id FROM civicrm_batch WHERE type_id = %1 AND status_id IN (".implode(',', $status).") ORDER BY created_date ASC LIMIT 1";
+    $sql = "SELECT id FROM civicrm_batch WHERE type_id = %1 AND status_id IN (".CRM_Utils_Array::implode(',', $status).") ORDER BY created_date ASC LIMIT 1";
     $batchId = CRM_Core_DAO::singleValueQuery($sql, array(
       1 => array($type['Auto'], 'Integer'),
     ));
@@ -188,7 +188,7 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
     unset($status['Running']);
     unset($status['Pending']);
     $purgeDay = self::EXPIRE_DAY*4;
-    $sql = "SELECT id FROM civicrm_batch WHERE type_id = %1 AND status_id IN (".implode(',', $status).") AND DATE_ADD(modified_date, INTERVAL ".$purgeDay." DAY) < NOW() AND modified_date IS NOT NULL ORDER BY modified_date ASC";
+    $sql = "SELECT id FROM civicrm_batch WHERE type_id = %1 AND status_id IN (".CRM_Utils_Array::implode(',', $status).") AND DATE_ADD(modified_date, INTERVAL ".$purgeDay." DAY) < NOW() AND modified_date IS NOT NULL ORDER BY modified_date ASC";
     $dao = CRM_Core_DAO::executeQuery($sql, array(
       1 => array($type['Auto'], 'Integer'),
     ));
@@ -208,7 +208,7 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
       }
     }
     if (count($expires)) {
-      $msg = 'Batch ids in '.implode(",", $expires).' has been expires';
+      $msg = 'Batch ids in '.CRM_Utils_Array::implode(",", $expires).' has been expires';
       CRM_Core_Error::debug_log_message($msg);
       return $msg;
     }

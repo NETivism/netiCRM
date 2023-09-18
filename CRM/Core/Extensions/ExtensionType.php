@@ -57,7 +57,7 @@ class CRM_Core_Extensions_ExtensionType {
   }
 
   public function deinstall($id, $key) {
-    $this->deleteEntry($id, $key, TRUE);
+    $this->deleteEntry($id, $key);
   }
 
   public function moveFiles($id, $key, $deleteOrginal = FALSE) {

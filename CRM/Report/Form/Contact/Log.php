@@ -131,7 +131,7 @@ class CRM_Report_Form_Contact_Log extends CRM_Report_Form {
     $select = array();
     $this->_columnHeaders = array();
     foreach ($this->_columns as $tableName => $table) {
-      if (array_key_exists('fields', $table)) {
+      if (CRM_Utils_Array::arrayKeyExists('fields', $table)) {
         foreach ($table['fields'] as $fieldName => $field) {
           if (CRM_Utils_Array::value('required', $field) ||
             CRM_Utils_Array::value($fieldName, $this->_params['fields'])
@@ -145,7 +145,7 @@ class CRM_Report_Form_Contact_Log extends CRM_Report_Form {
       }
     }
 
-    $this->_select = "SELECT " . implode(', ', $select) . " ";
+    $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
   static function formRule($fields, $files, $self) {
@@ -166,7 +166,7 @@ class CRM_Report_Form_Contact_Log extends CRM_Report_Form {
     $clauses = array();
     $this->_having = '';
     foreach ($this->_columns as $tableName => $table) {
-      if (array_key_exists('filters', $table)) {
+      if (CRM_Utils_Array::arrayKeyExists('filters', $table)) {
         foreach ($table['filters'] as $fieldName => $field) {
           $clause = NULL;
           if ($field['operatorType'] & CRM_Report_Form::OP_DATE) {
@@ -196,7 +196,7 @@ class CRM_Report_Form_Contact_Log extends CRM_Report_Form {
     }
 
     $clauses[] = "({$this->_aliases['civicrm_log']}.entity_table <> 'civicrm_domain')";
-    $this->_where = "WHERE " . implode(' AND ', $clauses);
+    $this->_where = "WHERE " . CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
   function orderBy() {
@@ -224,8 +224,8 @@ ORDER BY {$this->_aliases['civicrm_log']}.modified_date DESC
     $entryFound = FALSE;
     foreach ($rows as $rowNum => $row) {
       // convert display name to links
-      if (array_key_exists('civicrm_contact_display_name', $row) &&
-        array_key_exists('civicrm_contact_id', $row)
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_contact_display_name', $row) &&
+        CRM_Utils_Array::arrayKeyExists('civicrm_contact_id', $row)
       ) {
         $url = CRM_Utils_System::url('civicrm/contact/view',
           'reset=1&cid=' . $row['civicrm_contact_id'],
@@ -236,8 +236,8 @@ ORDER BY {$this->_aliases['civicrm_log']}.modified_date DESC
         $entryFound = TRUE;
       }
 
-      if (array_key_exists('civicrm_contact_touched_display_name_touched', $row) &&
-        array_key_exists('civicrm_contact_touched_id', $row) &&
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_contact_touched_display_name_touched', $row) &&
+        CRM_Utils_Array::arrayKeyExists('civicrm_contact_touched_id', $row) &&
         $row['civicrm_contact_touched_display_name_touched'] !== ''
       ) {
         $url = CRM_Utils_System::url('civicrm/contact/view',
@@ -249,8 +249,8 @@ ORDER BY {$this->_aliases['civicrm_log']}.modified_date DESC
         $entryFound = TRUE;
       }
 
-      if (array_key_exists('civicrm_activity_subject', $row) &&
-        array_key_exists('civicrm_activity_id', $row) &&
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_activity_subject', $row) &&
+        CRM_Utils_Array::arrayKeyExists('civicrm_activity_id', $row) &&
         $row['civicrm_activity_subject'] !== ''
       ) {
         $url = CRM_Utils_System::url('civicrm/contact/view/activity',
@@ -262,7 +262,7 @@ ORDER BY {$this->_aliases['civicrm_log']}.modified_date DESC
         $entryFound = TRUE;
       }
 
-      if (array_key_exists('civicrm_activity_activity_type_id', $row)) {
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_activity_activity_type_id', $row)) {
         if ($value = $row['civicrm_activity_activity_type_id']) {
           $rows[$rowNum]['civicrm_activity_activity_type_id'] = $this->activityTypes[$value];
         }

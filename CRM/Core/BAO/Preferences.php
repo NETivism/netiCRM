@@ -215,7 +215,7 @@ class CRM_Core_BAO_Preferences extends CRM_Core_DAO_Preferences {
       }
 
       if (!empty($cbValues)) {
-        $object->$name = CRM_Core_BAO_CustomOption::VALUE_SEPERATOR . implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
+        $object->$name = CRM_Core_BAO_CustomOption::VALUE_SEPERATOR . CRM_Utils_Array::implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
           array_keys($cbValues)
         ) . CRM_Core_BAO_CustomOption::VALUE_SEPERATOR;
       }

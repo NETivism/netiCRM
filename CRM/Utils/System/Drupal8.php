@@ -192,7 +192,7 @@ class CRM_Utils_System_Drupal8 {
    */
   public function getLoginURL($destination = '') {
     $query = $destination ? ['destination' => $destination] : [];
-    return \Drupal::url('user.login', [], ['query' => $query]);
+    return \Drupal\Core\Url::fromRoute('user.login', [], ['query' => $query, 'absolute' => TRUE]);
   }
 
   /**
@@ -510,7 +510,7 @@ class CRM_Utils_System_Drupal8 {
     array_pop($paths);
 
     while (count($paths)) {
-      $candidate = implode('/', $paths);
+      $candidate = CRM_Utils_Array::implode('/', $paths);
       if (file_exists($candidate . "/core/includes/bootstrap.inc")) {
         return $candidate;
       }
@@ -579,22 +579,6 @@ class CRM_Utils_System_Drupal8 {
     foreach (Drupal\Core\Cache\Cache::getBins() as $service_id => $cache_backend) {
       $cache_backend->deleteAll();
     }
-  }
-
-  /**
-   * @inheritDoc
-   */
-  public function getModules() {
-    $modules = [];
-
-    $module_data = \Drupal::service('extension.list.module')->reset()->getList();
-    foreach ($module_data as $module_name => $extension) {
-      if (!isset($extension->info['hidden']) && $extension->origin != 'core') {
-        $extension->schema_version = drupal_get_installed_schema_version($module_name);
-        $modules[] = new CRM_Core_Module('drupal.' . $module_name, ($extension->status == 1));
-      }
-    }
-    return $modules;
   }
 
   /**
@@ -698,7 +682,7 @@ class CRM_Utils_System_Drupal8 {
 
     // Create a route name by replacing the forward slashes in the path with
     // underscores, civicrm/contact/search => civicrm.civicrm_contact_search.
-    $processed['route_name'] = 'civicrm.' . implode('_', explode('/', $url['path']));
+    $processed['route_name'] = 'civicrm.' . CRM_Utils_Array::implode('_', explode('/', $url['path']));
 
     // Turn the query string (if it exists) into an associative array.
     if (!empty($url['query'])) {
@@ -706,15 +690,6 @@ class CRM_Utils_System_Drupal8 {
     }
 
     return $processed;
-  }
-
-  /**
-   * Append Drupal8 js to coreResourcesList.
-   *
-   * @param \Civi\Core\Event\GenericHookEvent $e
-   */
-  public function appendCoreResources(\Civi\Core\Event\GenericHookEvent $e) {
-    $e->list[] = 'js/crm.drupal8.js';
   }
 
   /**
@@ -767,7 +742,7 @@ class CRM_Utils_System_Drupal8 {
       //does user configuration allow language
       //support from the URL (Path prefix or domain)
       $enabledLanguageMethods = \Drupal::config('language.types')->get('negotiation.language_interface.enabled') ?: [];
-      if (array_key_exists(\Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl::METHOD_ID, $enabledLanguageMethods)) {
+      if (CRM_Utils_Array::arrayKeyExists(\Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl::METHOD_ID, $enabledLanguageMethods)) {
         $urlType = $config['source'];
 
         //url prefix
@@ -783,23 +758,21 @@ class CRM_Utils_System_Drupal8 {
         }
         //domain
         if ($urlType == \Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl::CONFIG_DOMAIN) {
-          if (isset($language->domain) && $language->domain) {
-            if ($addLanguagePart) {
-              $url = (CRM_Utils_System::isSSL() ? 'https' : 'http') . '://' . $config['domains'][$language] . base_path();
-            }
-            if ($removeLanguagePart && defined('CIVICRM_UF_BASEURL')) {
-              $url = str_replace('\\', '/', $url);
-              $parseUrl = parse_url($url);
+          if ($addLanguagePart) {
+            $url = (CRM_Utils_System::isSSL() ? 'https' : 'http') . '://' . $config['domains'][$language] . base_path();
+          }
+          if ($removeLanguagePart && defined('CIVICRM_UF_BASEURL')) {
+            $url = str_replace('\\', '/', $url);
+            $parseUrl = parse_url($url);
 
-              //kinda hackish but not sure how to do it right
-              //hope http_build_url() will help at some point.
-              if (is_array($parseUrl) && !empty($parseUrl)) {
-                $urlParts = explode('/', $url);
-                $hostKey = array_search($parseUrl['host'], $urlParts);
-                $ufUrlParts = parse_url(CIVICRM_UF_BASEURL);
-                $urlParts[$hostKey] = $ufUrlParts['host'];
-                $url = implode('/', $urlParts);
-              }
+            //kinda hackish but not sure how to do it right
+            //hope http_build_url() will help at some point.
+            if (is_array($parseUrl) && !empty($parseUrl)) {
+              $urlParts = explode('/', $url);
+              $hostKey = array_search($parseUrl['host'], $urlParts);
+              $ufUrlParts = parse_url(CIVICRM_UF_BASEURL);
+              $urlParts[$hostKey] = $ufUrlParts['host'];
+              $url = CRM_Utils_Array::implode('/', $urlParts);
             }
           }
         }

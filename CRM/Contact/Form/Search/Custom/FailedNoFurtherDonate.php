@@ -79,7 +79,7 @@ PRIMARY KEY (id)
     foreach($this->_queryColumns as $k => $v){
       $select[] = $k.' as '.$v;
     }
-    $select = implode(", \n" , $select);
+    $select = CRM_Utils_Array::implode(", \n" , $select);
     $from = $this->tempFrom();
     $where = $this->tempWhere();
     $having = $this->tempHaving();
@@ -110,7 +110,7 @@ $having
           $values[] = 'NULL';
         }
       }
-      $values = implode(', ' , $values);
+      $values = CRM_Utils_Array::implode(', ' , $values);
       $sql = "REPLACE INTO {$this->_tableName} VALUES ($values)";
       CRM_Core_DAO::executeQuery($sql, CRM_Core_DAO::$_nullArray);
     }
@@ -134,7 +134,7 @@ $having
     $clauses[] = "contact.is_deleted = 0";
     $clauses[] = "(success.created_date IS NULL OR success.created_date > date_add(failed.created_date, INTERVAL $days DAY) OR success.created_date <= failed.created_date)";
 
-    return implode(' AND ', $clauses);
+    return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
   function tempHaving(){
@@ -220,7 +220,7 @@ $having
     $status = CRM_Utils_Array::value('status', $this->_formValues);
     if (is_array($status)) {
       $status = array_keys($status);
-      $clauses[] = "contribution_status_id IN (".implode(',', $status).")";
+      $clauses[] = "contribution_status_id IN (".CRM_Utils_Array::implode(',', $status).")";
     }
 
     $recurring = CRM_Utils_Array::value('recurring', $this->_formValues);
@@ -238,7 +238,7 @@ $having
       $clauses[] = "contribution_page_id = $page_id";
     }
     if (count($clauses)) {
-      $sql = '('.implode(' AND ', $clauses).')';
+      $sql = '('.CRM_Utils_Array::implode(' AND ', $clauses).')';
     }
     else {
       $sql = '(1)';
@@ -255,7 +255,7 @@ $having
     return '';
   }
 
-  static function includeContactIDs(&$sql, &$formValues) {
+  static function includeContactIDs(&$sql, &$formValues, $isExport = FALSE) {
     $contactIDs = array();
     foreach ($formValues as $id => $value) {
       list($contactID, $additionalID) = CRM_Core_Form::cbExtract($id);
@@ -265,7 +265,7 @@ $having
     }
 
     if (!empty($contactIDs)) {
-      $contactIDs = implode(', ', $contactIDs);
+      $contactIDs = CRM_Utils_Array::implode(', ', $contactIDs);
       $sql .= " AND contact_a.contact_id IN ( $contactIDs )";
     }
   }

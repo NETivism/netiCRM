@@ -50,7 +50,7 @@ class CRM_Contact_Form_Edit_Individual {
    *
    * @return None
    */
-  public function buildQuickForm(&$form, $action = NULL) {
+  public static function buildQuickForm(&$form, $action = NULL) {
     $form->applyFilter('__ALL__', 'trim');
 
     //prefix
