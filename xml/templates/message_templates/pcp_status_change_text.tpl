@@ -4,29 +4,13 @@
 
 ============================
 
-{ts}Your personal campaign page has been approved and is now live.{/ts}
+{ts}Your personal fundraising page is now available for public access. Congratulations!
+Now you can share the page publicly to raise more donations for your fundraising project!{/ts}
 
-{ts}Whenever you want to preview, update or promote your page{/ts}:
-1. {ts}Login to your account at{/ts}:
+{ts}Please log in to the system to get the link to your personal fundraising page. You can
+then share the link to your personal fundraising page on major social media platforms to
+encourage your friends and family to participate in this fundraising project!{/ts}:
 {$loginUrl}
-
-2. {ts}Click or paste this link into your browser to go to your page{/ts}:
-{$pcpInfoURL}
-
-{ts}When you view your campaign page WHILE LOGGED IN, the page includes links to edit
-your page, tell friends, and update your contact info.{/ts}
-
-{if $isTellFriendEnabled}
-
-{ts}After logging in, you can use this form to promote your fundraising page{/ts}:
-{$pcpTellFriendURL}
-
-{/if}
-
-{if $pcpNotifyEmailAddress}
-{ts}Questions? Send email to{/ts}:
-{$pcpNotifyEmailAddress}
-{/if}
 
 {* Rejected message *}
 {elseif $pcpStatus eq 'Not Approved'}

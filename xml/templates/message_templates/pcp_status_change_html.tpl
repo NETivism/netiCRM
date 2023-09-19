@@ -22,22 +22,8 @@
 
     {if $pcpStatus eq 'Approved'}
 
-     <p>{ts}Your personal campaign page has been approved and is now live.{/ts}</p>
-     <p>{ts}Whenever you want to preview, update or promote your page{/ts}:</p>
-     <ol>
-      <li><a href="{$loginUrl}">{ts}Login to your account{/ts}</a></li>
-      <li><a href="{$pcpInfoURL}">{ts}Go to your page{/ts}</a></li>
-     </ol>
-     <p>{ts}When you view your campaign page WHILE LOGGED IN, the page includes links to edit
-your page, tell friends, and update your contact info.{/ts}</p>
-
-     {if $isTellFriendEnabled}
-      <p><a href="{$pcpTellFriendURL}">{ts}After logging in, you can use this form to promote your fundraising page{/ts}</a></p>
-     {/if}
-
-     {if $pcpNotifyEmailAddress}
-      <p>{ts}Questions? Send email to{/ts}: {$pcpNotifyEmailAddress}</p>
-     {/if}
+     <p>{ts}Your personal fundraising page is now available for public access. Congratulations! Now you can share the page publicly to raise more donations for your fundraising project!{/ts}</p>
+     <p>{ts}Please <a href="{$loginUrl}">log in</a> to the system to get the link to your personal fundraising page. You can then share the link to your personal fundraising page on major social media platforms to encourage your friends and family to participate in this fundraising project!{/ts}</p>
 
     {elseif $pcpStatus eq 'Not Approved'}
 
