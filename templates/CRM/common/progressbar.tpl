@@ -4,7 +4,7 @@
     <div class="progress-amount">
       <div class="progress-amount-raised bubble">
         {if $progress.type|strstr:"amount"}
-          {capture assign=amount_achieved}<span>{$progress.current|crmMoney:$progress.currency:null:true}</span>{/capture}
+          {capture assign=amount_achieved}<span>{$progress.current|crmMoney}</span>{/capture}
           {ts 1=$amount_achieved}Raised %1{/ts}
         {else}
           <span>{$progress.current}</span> {ts}People{/ts}
@@ -12,7 +12,7 @@
       </div>
       <div class="progress-amount-goal">
         {if $progress.type|strstr:"amount"}
-          {$progress.label} <span>{$progress.goal|crmMoney:$progress.currency:null:true}</span>
+          {$progress.label} <span>{$progress.goal|crmMoney}</span>
         {elseif $progress.type == "recurring"}
           {$progress.label} <span>{$progress.goal}</span>{ts}People{/ts}
         {/if}
@@ -26,7 +26,7 @@
       {if $progress.link_display}
         <div class="progress-cell progress-button">
           {if $progress.link_url}
-            <a href="{$progress.link_url}">{if $progress.link_text}{$progress.link_text}{else}{ts}Donate Now{/ts}{/if}</a>
+            <a class="button" href="{$progress.link_url}">{if $progress.link_text}{$progress.link_text}{else}{ts}Donate Now{/ts}{/if}</a>
           {else}
             <div class="button"><span>{if $progress.link_text}{$progress.link_text}{else}{ts}Donate Now{/ts}{/if}</span></div>
           {/if}

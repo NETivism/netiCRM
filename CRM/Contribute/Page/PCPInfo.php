@@ -249,6 +249,29 @@ class CRM_Contribute_Page_PCPInfo extends CRM_Core_Page {
       $this->assign('contributeURL', $url);
     }
 
+    $template = CRM_Core_Smarty::singleton();
+    $progress = array(
+      'type' => 'amount',
+      'label' => ts('Goal Amount'),
+      'goal' => $pcpInfo['goal_amount'],
+      'currency' => $pcpInfo['currency'],
+      'fullwidth' => TRUE,
+      'display' => $pcpInfo['is_thermometer']
+    );
+    if ($template->get_template_vars('total') !== null) {
+      $progress['current'] = $template->get_template_vars('total');
+    }
+    if ($template->get_template_vars('achieved') !== null) {
+      $progress['achieved_percent'] = $template->get_template_vars('achieved');
+      $progress['achieved_status'] = $progress['achieved_percent'] >= 100 ? TRUE : FALSE;
+    }
+    if ($template->get_template_vars('validDate') && $template->get_template_vars('contributeURL')) {
+      $progress['link_display'] = TRUE;
+      $progress['link_url'] = $template->get_template_vars('contributeURL');
+      $progress['link_text'] = $template->get_template_vars('contributionText');
+    }
+    $this->assign('progress', $progress);
+
     // we do not want to display recently viewed items, so turn off
     $this->assign('displayRecent', FALSE);
 

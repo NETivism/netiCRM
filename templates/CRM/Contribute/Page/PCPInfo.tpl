@@ -23,11 +23,11 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
-{* this template is used for displaying PCP information *} 
+{* this template is used for displaying PCP information *}
 {capture assign="contribPageURL"}{crmURL p='civicrm/contribute/transact' q="reset=1&id=`$pcp.contribution_page_id`"}{/capture}
 {if $owner}
 <div class="messages status">
-	
+
 	<p><strong>{ts}Personal Fundraiser View{/ts}</strong> - {ts 1=$contribPageURL 2=$pageName}This is a preview of your Personal Campaign Page in support of <a href="%1"><strong>"%2"</strong></a>.{/ts}</p>
         {ts}The current status of your page is{/ts}: <strong {if $pcp.status_id NEQ 2}class=disabled {/if}>{$owner.status}</strong>.
         {if $pcp.status_id NEQ 2}<br /><span class="description">{ts}You will receive an email notification when your page is Approved and you can begin promoting your campaign.{/ts}</span>{/if}
@@ -52,32 +52,11 @@
 <div class="pcp-leading" style="background-image:url({$pcpImageSrc})">
 </div>
 {/if}
-{if $pcp.is_thermometer}
-<div class="thermometer-wrapper {if $achieved >= 100}thermometer-full{else}thermometer-middle{/if}">
-  <div class="thermometer-cell thermometer-fill-wrapper">
-    <div class="thermometer-fill" data-percent="{$achievedPercent}"></div><!-- /.thermometer-fill -->
-    {if $achieved < 100}
-    <div class="thermometer-pointer" data-percent="{$achievedPercent}"><span class="pcp-percent-raised">{$achieved}%</span></div>
-    <div class="pcp-amount-raised">
-      <label>{ts}raised{/ts}</label> <span class="raised-amount crmMoney">{$total|crmMoney}</span>
-    </div>
-    <div class="pcp-amount-goal">
-      <label>{ts}Goal{/ts}</label> <span class="goal-amount crmMoney">{$pcp.goal_amount|crmMoney}</span>
-    </div>
-    {else}
-    <div class="thermometer-pointer thermometer-pointer-over" style="left: 90%;"><span class="pcp-percent-raised">{$achieved}%</span></div>
-    <div class="pcp-amount-raised-over">
-      <label>{ts}Goal{/ts}</label> <span class="goal-amount crmMoney">{$pcp.goal_amount|crmMoney}</span> &#9829; <label>{ts}raised{/ts}</label> <span class="raised-amount crmMoney">{$total|crmMoney}</span>
-    </div>
-    {/if}
-  </div><!-- /.thermometer-fill-wrapper -->
-{if $validDate && $contributeURL}
-  <div class="thermometer-cell pcp-donate"> 
-    <a class="button" href="{$contributeURL}"><i class="zmdi zmdi-money-box"></i> {$contributionText}</a>
-  </div>
+
+{if $progress.display}
+  {include file="CRM/common/progressbar.tpl" progress=$progress}
 {/if}
-</div>
-{/if}{* end is_thermometer *}
+
 <div class="pcp-campaign">
   <div class="pcp-intro-text">
     <i class="zmdi zmdi-quote"></i> {$pcp.intro_text|purify}
@@ -86,7 +65,7 @@
     {$pcp.page_text|purify}
   </div>
   {if $validDate && $contributeURL}
-  <div class="pcp-donate"> 
+  <div class="pcp-donate">
       <a href="{$contributeURL}" class="button contribute-button pcp-contribute-button"><span>{$contributionText}</span></a>
   </div>
   {/if}{* end contribute button *}
@@ -94,11 +73,11 @@
   <div class="honor-roll-wrapper">
     <h3 class="honor-roll-title">{ts}HONOR ROLL{/ts}</h3>
     <div class="pcp-honor-roll-names">
-      {foreach from=$honor item=v key=honor_id} 
+      {foreach from=$honor item=v key=honor_id}
         <div class="pcp-honor-roll-entry">
           <div class="pcp-honor-roll-nickname" id="pcp-honor-roll-{$honor_id}">{$v.nickname}{if $v.personal_note}{help id="pcp-honor-roll-$honor_id" text=$v.personal_note helpicon='zmdi zmdi-comment-text-alt'}{else}<i class="zmdi zmdi-comment-outline"></i>{/if}</div>
         </div>
-      {/foreach} 
+      {/foreach}
     </div>
   </div>
   {/if}{* end pcp honor roll *}
