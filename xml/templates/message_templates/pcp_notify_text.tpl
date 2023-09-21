@@ -2,15 +2,7 @@
 {ts}Personal Campaign Page Notification{/ts}
 
 ===========================================================
-{ts}Action{/ts}: {if $mode EQ 'Update'}{ts}Updated personal campaign page{/ts}{else}{ts}New personal campaign page{/ts}{/if}
-{ts}Personal Campaign Page Title{/ts}: {$pcpTitle}
-{ts}Current Status{/ts}: {$pcpStatus}
-{capture assign=pcpURL}{crmURL p="civicrm/contribute/pcp/info" q="reset=1&id=`$pcpId`" h=0 a=1}{/capture}
-{ts}View Page{/ts}:
->> {$pcpURL}
-
-{ts}Supporter{/ts}: {$supporterName}
->> {$supporterUrl}
+{ts 1=$contribPageTitle}You are currently adding or modifying a personal fundraising page for %1. The page is not yet complete. To continue editing, please log in to the system to access your personal fundraising page.{/ts}
 
 {ts}Linked to Contribution Page{/ts}: {$contribPageTitle}
 >> {$contribPageUrl}
