@@ -23,7 +23,7 @@
     {if $pcpStatus eq 'Approved'}
 
      <p>{ts}Your personal fundraising page is now available for public access. Congratulations! Now you can share the page publicly to raise more donations for your fundraising project!{/ts}</p>
-     <p>{ts}Please <a href="{$loginUrl}">log in</a> to the system to get the link to your personal fundraising page. You can then share the link to your personal fundraising page on major social media platforms to encourage your friends and family to participate in this fundraising project!{/ts}</p>
+     <p>{ts 1=$loginUrl}Please <a href="%1">log in</a> to the system to get the link to your personal fundraising page. You can then share the link to your personal fundraising page on major social media platforms to encourage your friends and family to participate in this fundraising project!{/ts}</p>
 
     {elseif $pcpStatus eq 'Not Approved'}
 

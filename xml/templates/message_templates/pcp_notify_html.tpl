@@ -22,70 +22,8 @@
 
   <tr>
    <td>
-    <table style="border: 1px solid #999; margin: 1em 0em 1em; border-collapse: collapse; width:100%;">
-     <tr>
-      <th {$headerStyle}>
-       {ts}Personal Campaign Page Notification{/ts}
-      </th>
-     </tr>
-     <tr>
-      <td {$labelStyle}>
-       {ts}Action{/ts}:
-      </td>
-      <td {$valueStyle}>
-       {if $mode EQ 'Update'}
-        {ts}Updated personal campaign page{/ts}
-       {else}
-        {ts}New personal campaign page{/ts}
-       {/if}
-      </td>
-     </tr>
-     <tr>
-      <td {$labelStyle}>
-       {ts}Personal Campaign Page Title{/ts}
-      </td>
-      <td {$valueStyle}>
-       {$pcpTitle}
-      </td>
-     </tr>
-     <tr>
-      <td {$labelStyle}>
-       {ts}Current Status{/ts}
-      </td>
-      <td {$valueStyle}>
-       {$pcpStatus}
-      </td>
-     </tr>
-
-     <tr>
-      <td rowspan="2" {$labelStyle}>
-       <a href="{$pcpURL}">{ts}View Page{/ts}</a>
-      </td>
-     </tr>
-     <tr>
-      <td {$labelStyle}>
-       {ts}Supporter{/ts}
-      </td>
-      <td {$valueStyle}>
-       <a href="{$supporterUrl}">{$supporterName}</a>
-      </td>
-     </tr>
-     <tr>
-      <td {$labelStyle}>
-       {ts}Linked to Contribution Page{/ts}
-      </td>
-      <td {$valueStyle}>
-       <a href="{$contribPageUrl}">{$contribPageTitle}</a>
-      </td>
-     </tr>
-     <tr>
-      <td rowspan="2" {$labelStyle}>
-       <a href="{$managePCPUrl}">{ts}Manage Personal Campaign Pages{/ts}</a>
-      </td>
-     </tr>
-
-    </table>
-   </td>
+	   <p>{ts 1=$contribPageUrl 2=$contribPageTitle 3=$managePCPUrl}You are currently adding or modifying a personal fundraising page for <a href="%1">%2</a>. The page is not yet complete. To continue editing, please <a href="%3">log in</a> to the system to access your personal fundraising page.{/ts}</p>
+	 </td>
   </tr>
  </table>
 </center>

@@ -38,21 +38,16 @@ your page, tell friends, and update your contact info.{/ts}
 
 
 {elseif $pcpStatus EQ 'Waiting Review'}
-{ts}Your page requires administrator review before you can begin your fundraising efforts.{/ts}
+{ts}Before you can share your personal campaign page and start fundraising, it needs to be approved by the administrator.{/ts}
 
+{ts 1=$pcpNotifyEmailAddress}Currently, your page is in the review process. Once the review is complete, you will soon receive an approval email from %1. After receiving the email, you can share your page and start fundraising!{/ts}
 
-{ts}A notification email has been sent to the site administrator, and you will receive another notification from them as soon as the review process is complete.{/ts}
+{ts}If you would like to preview your edited campaign page before the administrator approves it, please follow these steps{/ts}:
 
-
-{ts}You can still preview your page prior to approval{/ts}:
-1. {ts}Login to your account at{/ts}:
+1. {ts}Log in to the system to preview your personal campaign page.{/ts}:
 {$loginUrl}
 
 2. {ts}Click or paste this link into your browser{/ts}:
 {$pcpInfoURL}
 
-{/if}
-{if $pcpNotifyEmailAddress}
-{ts}Questions? Send email to{/ts}:
-{$pcpNotifyEmailAddress}
 {/if}
