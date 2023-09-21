@@ -21,7 +21,6 @@
 
   <tr>
    <td>
-    <p>{ts}Dear supporter{/ts},</p>
     <p>{ts 1="$contribPageTitle"}Thanks for creating a personal campaign page in support of %1.{/ts}</p>
    </td>
   </tr>
@@ -73,24 +72,17 @@ your page, tell friends, and update your contact info.{/ts}</p>
 
     <tr>
      <td>
-      <p>{ts}Your page requires administrator review before you can begin your fundraising efforts.{/ts}</p>
-      <p>{ts}A notification email has been sent to the site administrator, and you will receive another notification from them as soon as the review process is complete.{/ts}</p>
-      <p>{ts}You can still preview your page prior to approval{/ts}:</p>
+      <p>{ts}Before you can share your personal campaign page and start fundraising, it needs to be approved by the administrator.{/ts}</p>
+      <p>{ts 1=$pcpNotifyEmailAddress}Currently, your page is in the review process. Once the review is complete, you will soon receive an approval email from %1. After receiving the email, you can share your page and start fundraising!{/ts}</p>
+      <p>{ts}If you would like to preview your edited campaign page before the administrator approves it, please follow these steps{/ts}:</p>
+
       <ol>
-       <li><a href="{$loginUrl}">{ts}Login to your account{/ts}</a></li>
+       <li><a href="{$loginUrl}">{ts}Log in to the system to preview your personal campaign page.{/ts}</a></li>
        <li><a href="{$pcpInfoURL}">{ts}Click this link{/ts}</a></li>
       </ol>
      </td>
     </tr>
 
-   {/if}
-
-   {if $pcpNotifyEmailAddress}
-    <tr>
-     <td>
-      <p>{ts}Questions? Send email to{/ts}: {$pcpNotifyEmailAddress}</p>
-     </td>
-    </tr>
    {/if}
 
  </table>
