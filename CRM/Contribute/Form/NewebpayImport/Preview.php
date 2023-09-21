@@ -79,6 +79,8 @@ class CRM_Contribute_Form_NewebpayImport_Preview extends CRM_Core_Form {
     if (!empty($this->_statusContent)) {
       $this->_statusHeader = $header;
       $this->_statusHeader[] = ts('Contribution Status');
+      $this->set('modifyStatusHeader', $this->_statusHeader);
+      $this->set('modifyStatusContribution', $this->_statusContent);
       $this->assign('modifyStatusHeader', $this->_statusHeader);
       $this->assign('modifyStatusContribution', $this->_statusContent);
     }
@@ -107,6 +109,7 @@ class CRM_Contribute_Form_NewebpayImport_Preview extends CRM_Core_Form {
         }
         CRM_Core_Report_Excel::writeExcelFile($this->_statusFileName, $this->_statusHeader, $this->_statusContent, $download = TRUE);
       }
+      CRM_Core_Error::statusBounce(ts('Error type is wrong.'));
     }
 
     $this->assign('tableContent', $tableContent);
@@ -115,6 +118,7 @@ class CRM_Contribute_Form_NewebpayImport_Preview extends CRM_Core_Form {
     $this->assign('successedContribution', $this->_successedContribution);
     $this->assign('errorTableHeader', $this->_errorHeader);
     $this->assign('errorContribution', $this->_errorContent);
+    $this->set('errorHeader', $this->_errorHeader);
     $this->set('errorContribution', $this->_errorContent);
     $this->addFormRule(array('CRM_Contribute_Form_NewebpayImport_Preview', 'formRule'), $this);
 
@@ -153,25 +157,14 @@ class CRM_Contribute_Form_NewebpayImport_Preview extends CRM_Core_Form {
   }
 
   function postProcess() {
-    $importDateCustomFieldId = $this->get('disbursementDate');
     if (!empty($this->_successedContribution)) {
       foreach ($this->_successedContribution as &$contributionRow) {
-        $contributionRow[ts('Result')] = "";
-        if (!empty($contributionRow['id']) && !empty($contributionRow['手續費'])) {
-          $id = $contributionRow['id'];
-          $feeAmount = $contributionRow['手續費'];
-          CRM_Core_DAO::setFieldValue('CRM_Contribute_DAO_Contribution', $id, 'fee_amount', $feeAmount);
-          $contributionRow[ts('Result')] .= 'Add fee to contribution.';
-        }
-        if (!empty($importDateCustomFieldId)) {
-          $fieldName = 'custom_'.$importDateCustomFieldId;
-          $importDate = array(
-            $fieldName => $contributionRow['撥款日期'],
-            'entityID' => $id,
-          );
-          CRM_Core_BAO_CustomValueTable::setValues($importDate);
-          $contributionRow[ts('Result')] .= "Add date to `{$fieldName}`";
-        }
+        $this->processImportData($contributionRow);
+      }
+    }
+    if (!empty($this->_statusContent)) {
+      foreach ($this->_statusContent as &$contributionRow) {
+        $this->processImportData($contributionRow, $isChangeStatus = TRUE);
       }
     }
     $successedHeader = $this->get('tableHeader');
@@ -188,5 +181,55 @@ class CRM_Contribute_Form_NewebpayImport_Preview extends CRM_Core_Form {
    */
   public function getTitle() {
     return ts('Preview');
+  }
+
+  /**
+   * Process the contribution, which is array type.
+   * 
+   * @param Array $contributionRow
+   */
+  private function processImportData(&$contributionRow, $isChangeStatus = FALSE) {
+    $contributionRow[ts('Result')] = "";
+    $id = $contributionRow['id'];
+    if (!empty($contributionRow['id']) && !empty($contributionRow['手續費'])) {
+    $feeAmount = $contributionRow['手續費'];
+      CRM_Core_DAO::setFieldValue('CRM_Contribute_DAO_Contribution', $id, 'fee_amount', $feeAmount);
+      $contributionRow[ts('Result')] .= 'Add fee to contribution.';
+    }
+    $importDateCustomFieldId = $this->get('disbursementDate');
+    if (!empty($importDateCustomFieldId)) {
+      $fieldName = 'custom_'.$importDateCustomFieldId;
+      $importDate = array(
+        $fieldName => $contributionRow['撥款日期'],
+        'entityID' => $id,
+      );
+      $contributionRow[ts('Result')] .= "Add date to `{$fieldName}`";
+    }
+    if ($isChangeStatus) {
+      CRM_Core_DAO::setFieldValue('CRM_Contribute_DAO_Contribution', $id, 'contribution_status_id', 1);
+      $contributionRow[ts('Result')] .= "Modify contribution status to 'finished'";
+    }
+    self::addNote($contributionRow[ts('Result')], $contributionRow);
+  }
+
+  static private function addNote($note, &$contributionRow){
+    require_once 'CRM/Core/BAO/Note.php';
+    $note = date("Y/m/d H:i:s"). ts("Transaction record").": \n".$note."\n===============================\n";
+    $note_exists = CRM_Core_BAO_Note::getNote( $contributionRow['id'], 'civicrm_contribution' );
+    if(count($note_exists)){
+      $note_id = array( 'id' => reset(array_keys($note_exists)) );
+      $note = $note . reset($note_exists);
+    }
+    else{
+      $note_id = NULL;
+    }
+    $noteParams = array(
+      'entity_table'  => 'civicrm_contribution',
+      'note'          => $note,
+      'entity_id'     => $contributionRow['id'],
+      'contact_id'    => $contributionRow['contact_id'],
+      'modified_date' => date('Ymd')
+    );
+    CRM_Core_BAO_Note::add( $noteParams, $note_id );
   }
 }
