@@ -313,7 +313,7 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
   }
 
   function getModeValue($mode = 1) {
-    $this->setModeValues();
+    self::setModeValues();
 
     if (!CRM_Utils_Array::arrayKeyExists($mode, self::$_modeValues)) {
       $mode = 1;
@@ -323,7 +323,7 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
   }
 
   function getModeSelect() {
-    $this->setModeValues();
+    self::setModeValues();
 
     $select = array();
     foreach (self::$_modeValues as $id => & $value) {
