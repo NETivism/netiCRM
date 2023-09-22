@@ -49522,9 +49522,6 @@ msgstr "待處理狀態捐款"
 msgid "Error Contribution"
 msgstr "錯誤捐款"
 
-msgid "The above donation will update the following information:"
-msgstr "上述捐款將更新以下資料："
-
 msgid ""
 "The status will be changed to 'Completed.' No contribution completion "
 "notification email will be sent."
@@ -49567,3 +49564,12 @@ msgstr "錯誤類型的參數無效。"
 
 msgid "Import completed, below is the summary of the import results."
 msgstr "匯入完成，以下是匯入結果的摘要。"
+
+msgid "`%1` to the field `%2`"
+msgstr "「%1」對應到欄位「%2」"
+
+msgid "Disbursement Date"
+msgstr "撥款日期"
+
+msgid "The above contribution will update the following information: %1"
+msgstr "上述捐款將更新以下資料：%1"

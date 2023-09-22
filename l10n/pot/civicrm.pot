@@ -49036,9 +49036,6 @@ msgstr ""
 msgid "Error Contribution"
 msgstr ""
 
-msgid "The above donation will update the following information:"
-msgstr ""
-
 msgid "The status will be changed to 'Completed.' No contribution completion notification email will be sent."
 msgstr ""
 
@@ -49076,4 +49073,13 @@ msgid "Invalid parameter of error type."
 msgstr ""
 
 msgid "Import completed, below is the summary of the import results."
+msgstr ""
+
+msgid "`%1` to the field `%2`"
+msgstr ""
+
+msgid "Disbursement Date"
+msgstr ""
+
+msgid "The above contribution will update the following information: %1"
 msgstr ""
