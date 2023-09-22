@@ -9,16 +9,23 @@ class CRM_Contribute_Form_NewebpayImport_Summary extends CRM_Core_Form {
     $this->_successedContribution = $this->get('successedContribution');
     $this->assign('successedTableHeader', $successedTableHeader);
     $this->assign('successedContribution', $this->_successedContribution);
+    $this->assign('successedHeaderText', ts('Success Contribution'));
 
-    $statusHeader = $this->get('modifyStatusHeader');
     $statusContent = $this->get('modifyStatusContribution');
-    $this->assign('modifyStatusHeader', $statusHeader);
-    $this->assign('modifyStatusContribution', $statusContent);
+    if (!empty($statusContent)) {
+      $statusHeader = $this->get('modifyStatusHeader');
+      $this->assign('modifyStatusHeader', $statusHeader);
+      $this->assign('modifyStatusContribution', $statusContent);
+      $this->assign('modifyStatusBlockHeaderText', ts('Pending Contribution'));
+    }
 
-    $errorHeader = $this->get('errorHeader');
     $errorContent = $this->get('errorContribution');
-    $this->assign('errorTableHeader', $errorHeader);
-    $this->assign('errorContribution', $errorContent);
+    if (!empty($errorContent)) {
+      $errorHeader = $this->get('errorHeader');
+      $this->assign('errorTableHeader', $errorHeader);
+      $this->assign('errorContribution', $errorContent);
+      $this->assign('errorBlockHeaderText', ts('Error Contribution'));
+    }
   }
 
   function buildQuickForm() {

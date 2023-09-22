@@ -22,7 +22,14 @@ class CRM_Contribute_Form_NewebpayImport_Preview extends CRM_Core_Form {
 
     $this->_result = $this->get('parseResult');
     $this->_successedContribution = array();
+    $modifyFieldsArray = [ts('Transaction Fee Amount')];
     $importDateCustomFieldId = $this->get('disbursementDate');
+    if ($importDateCustomFieldId) {
+      $importDataCustomFieldName = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_CustomField', $importDateCustomFieldId, 'label');
+      $modifyFieldsArray[] = ts("`%1` to the field `%2`", array(1 => ts('Disbursement Date'), 2 => $importDataCustomFieldName));
+    }
+    $modifyFields = implode(', ', $modifyFieldsArray);
+    $this->assign('modifyFields', $modifyFields);
     $contributionStatus = CRM_Contribute_PseudoConstant::contributionStatus();
     // Add all row to the tables
     foreach ($this->_result['content'] as $rowNum => &$row) {
@@ -43,22 +50,22 @@ class CRM_Contribute_Form_NewebpayImport_Preview extends CRM_Core_Form {
               $rowProcessType = 1;
             }
             else {
-              $row['error_message'] = 'Contribution status is not "successed".';
+              $row['error_message'] = ts("Contribution status is not 'Completed'.");
               $rowProcessType = 2;
             }
             if ($contribution->total_amount != $row['金額']) {
-              $row['error_message'] = 'Amount is not correct.';
+              $row['error_message'] = ts('Amount is not correct.');
               $rowProcessType = 3;
             }
             if ($importDateCustomFieldId) {
               if (!CRM_Utils_Type::validate($row['撥款日期'], 'Date', FALSE)) {
-                $row['error_message'] = '撥款日期欄位不正確';
+                $row['error_message'] = ts('Disbursement date is not correct.');
                 $rowProcessType = 3;
               }
             }
           }
           else {
-            $row['error_message'] = 'Can\'t find the contribution in CRM.';
+            $row['error_message'] = ts("Can't find the contribution in database.");
             $rowProcessType = 3;
           }
           if ($rowProcessType == 1) {
@@ -83,6 +90,7 @@ class CRM_Contribute_Form_NewebpayImport_Preview extends CRM_Core_Form {
       $this->set('modifyStatusContribution', $this->_statusContent);
       $this->assign('modifyStatusHeader', $this->_statusHeader);
       $this->assign('modifyStatusContribution', $this->_statusContent);
+      $this->assign('modifyStatusBlockHeaderText', ts('Pending Contribution'));
     }
 
     $this->_errorHeader = $header;
@@ -116,10 +124,14 @@ class CRM_Contribute_Form_NewebpayImport_Preview extends CRM_Core_Form {
     $this->set('tableHeader', $header);
     $this->assign('successedTableHeader', $header);
     $this->assign('successedContribution', $this->_successedContribution);
-    $this->assign('errorTableHeader', $this->_errorHeader);
-    $this->assign('errorContribution', $this->_errorContent);
-    $this->set('errorHeader', $this->_errorHeader);
-    $this->set('errorContribution', $this->_errorContent);
+    $this->assign('successedHeaderText', ts('Success Contribution'));
+    if (!empty($this->_errorContent)) {
+      $this->assign('errorTableHeader', $this->_errorHeader);
+      $this->assign('errorContribution', $this->_errorContent);
+      $this->set('errorHeader', $this->_errorHeader);
+      $this->set('errorContribution', $this->_errorContent);
+      $this->assign('errorBlockHeaderText', ts('Error Contribution'));
+    }
     $this->addFormRule(array('CRM_Contribute_Form_NewebpayImport_Preview', 'formRule'), $this);
 
     $query = "_qf_Preview_display=true&qfKey={$this->controller->_key}&downloadType=";
@@ -194,7 +206,7 @@ class CRM_Contribute_Form_NewebpayImport_Preview extends CRM_Core_Form {
     if (!empty($contributionRow['id']) && !empty($contributionRow['手續費'])) {
     $feeAmount = $contributionRow['手續費'];
       CRM_Core_DAO::setFieldValue('CRM_Contribute_DAO_Contribution', $id, 'fee_amount', $feeAmount);
-      $contributionRow[ts('Result')] .= 'Add fee to contribution.';
+      $contributionRow[ts('Result')] .= ts('Add fee to contribution.');
     }
     $importDateCustomFieldId = $this->get('disbursementDate');
     if (!empty($importDateCustomFieldId)) {
@@ -203,11 +215,26 @@ class CRM_Contribute_Form_NewebpayImport_Preview extends CRM_Core_Form {
         $fieldName => $contributionRow['撥款日期'],
         'entityID' => $id,
       );
-      $contributionRow[ts('Result')] .= "Add date to `{$fieldName}`";
+      $contributionRow[ts('Result')] .= ts("Add disbursement date to field `%1`", array(1 => $fieldName));
     }
     if ($isChangeStatus) {
-      CRM_Core_DAO::setFieldValue('CRM_Contribute_DAO_Contribution', $id, 'contribution_status_id', 1);
-      $contributionRow[ts('Result')] .= "Modify contribution status to 'finished'";
+      $contribution = new CRM_Contribute_DAO_Contribution();
+      $contribution->id = $contributionRow['id'];
+      $contribution->find(TRUE);
+      $isChanged = FALSE;
+      if ($contribution->contribution_status_id != 1) {
+        $contribution->contribution_status_id = 1;
+        $isChanged = TRUE;
+        $contributionRow[ts('Result')] .= ts("Modify contribution status to 'finished'.");
+      }
+      if (empty($contribution->receive_date)) {
+        $contribution->receive_date = $contributionRow['撥款日期'];
+        $isChanged = TRUE;
+        $contributionRow[ts('Result')] .= ts("Update disbursement date data to receive date.");
+      }
+      if ($isChanged) {
+        $contribution->save();
+      }
     }
     self::addNote($contributionRow[ts('Result')], $contributionRow);
   }
