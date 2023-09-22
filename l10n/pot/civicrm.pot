@@ -49026,3 +49026,54 @@ msgstr ""
 
 msgid "To ensure security, it is recommended that you submit a request through the customer service system before changing this field. If you are sure you want to modify this setting, please click Confirm button."
 msgstr ""
+
+msgid "Success Contribution"
+msgstr ""
+
+msgid "Pending Contribution"
+msgstr ""
+
+msgid "Error Contribution"
+msgstr ""
+
+msgid "The above donation will update the following information:"
+msgstr ""
+
+msgid "The status will be changed to 'Completed.' No contribution completion notification email will be sent."
+msgstr ""
+
+msgid "You can click <a href=\"%1\">here</a> to download the Excel result file for this batch of contributions."
+msgstr ""
+
+msgid "No changes will be made to the above contributions."
+msgstr ""
+
+msgid "Add fee to contribution."
+msgstr ""
+
+msgid "Add disbursement date to field `%1`"
+msgstr ""
+
+msgid "Modify contribution status to 'finished'."
+msgstr ""
+
+msgid "Update disbursement date data to receive date."
+msgstr ""
+
+msgid "Can't find the contribution in database."
+msgstr ""
+
+msgid "Contribution status is not 'Completed'."
+msgstr ""
+
+msgid "Amount is not correct."
+msgstr ""
+
+msgid "Disbursement date is not correct."
+msgstr ""
+
+msgid "Invalid parameter of error type."
+msgstr ""
+
+msgid "Import completed, below is the summary of the import results."
+msgstr ""
