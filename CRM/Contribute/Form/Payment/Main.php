@@ -87,6 +87,16 @@ class CRM_Contribute_Form_Payment_Main extends CRM_Contribute_Form_Payment {
       }
     }
 
+    if ($this->getVar('_component') == 'event') {
+      $event = new CRM_Event_DAO_Event();
+      $event->id = $this->_entityId;
+      $event->find(TRUE);
+      if ($event->is_pay_later) {
+        $pps[0] = $event->pay_later_text;
+        $this->assign('pay_later_receipt', $event->pay_later_receipt);
+      }
+    }
+
     if (count($pps) >= 1) {
       $this->addRadio('payment_processor', ts('Payment Method'), $pps, NULL, "&nbsp;", TRUE);
     }
@@ -140,7 +150,7 @@ class CRM_Contribute_Form_Payment_Main extends CRM_Contribute_Form_Payment {
       $contrib->source = ' '.ts('Change Payment Method');
     }
     if(!empty($contrib->invoice_id)){
-      $invoice_id = md5(uniqid(rand(), TRUE));
+      $invoice_id = md5(uniqid((string)rand(), TRUE));
       $contrib->invoice_id = $invoice_id;;
       $this->set('invoiceID', $invoiceID);
     }
@@ -148,15 +158,45 @@ class CRM_Contribute_Form_Payment_Main extends CRM_Contribute_Form_Payment {
     $values = array();
     $contrib->storeValues($contrib, $values);
     $this->set('contrib', $values);
-    $payment = CRM_Core_Payment::singleton($this->_mode, $processor, $this);
-    $vars = $payment->prepareTransferCheckoutParams($contrib, $params);
+    $ids = $this->getVar('_ids');
+    $pid = $ids['participant'];
+    if(!empty($pid)) {
+      $this->payLaterProcessor($pid);
+    }
+    if (!empty($params['payment_processor'])) {
+      $payment = CRM_Core_Payment::singleton($this->_mode, $processor, $this);
+      $vars = $payment->prepareTransferCheckoutParams($contrib, $params);
+    }
 
     // before leave to transfercheckout, call hook
     CRM_Utils_Hook::postProcess(get_class($this), $this);
 
     // TODO: we have to redirect to correct thank you page 
     // maybe create own controller for that
-    $payment->doTransferCheckout($vars, $this->_component);
+    if (!empty($params['payment_processor'])) {
+      $payment->doTransferCheckout($vars, $this->_component);
+    }
+  }
+
+  /**
+   * Function to process when payment data is event registration and pay later.
+   * @param int $pid for participant id.
+   * @param object $contrib A CRM_Contrib_DAO_Contribution object.
+   *
+   * @return void
+   */
+  private function payLaterProcessor($pid) {
+    // Update status
+    $value = array();
+    $participant = new CRM_Event_DAO_Participant();
+    $participant->id = $pid;
+    if ($participant->find(TRUE)) {
+      $pendingStatuses = CRM_Event_PseudoConstant::participantStatus(NULL, "class = 'Pending'");
+      $status = 'Pending from pay later';
+      $value['participant_status_id'] = array_search($status, $pendingStatuses);
+      $participant->copyValues($value);
+      $participant->save();
+    }
   }
 
   /**

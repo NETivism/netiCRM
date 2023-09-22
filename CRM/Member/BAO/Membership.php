@@ -1092,7 +1092,7 @@ AND civicrm_membership.is_test = %2";
         CRM_Core_Error::fatal("Could not find a system table");
       }
       $tempParams['amount'] = $minimumFee;
-      $invoiceID = md5(uniqid(rand(), TRUE));
+      $invoiceID = md5(uniqid((string)rand(), TRUE));
       $tempParams['invoiceID'] = $invoiceID;
 
       //we don't allow recurring membership.CRM-3781.

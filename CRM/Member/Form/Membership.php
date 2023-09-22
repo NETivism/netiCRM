@@ -860,7 +860,7 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
       $this->_params['amount'] = $params['total_amount'];
       $this->_params['currencyID'] = $config->defaultCurrency;
       $this->_params['payment_action'] = 'Sale';
-      $this->_params['invoiceID'] = md5(uniqid(rand(), TRUE));
+      $this->_params['invoiceID'] = md5(uniqid((string)rand(), TRUE));
 
       // at this point we've created a contact and stored its address etc
       // all the payment processors expect the name and address to be in the

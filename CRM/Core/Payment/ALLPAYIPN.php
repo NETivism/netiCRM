@@ -300,7 +300,12 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
         }
 
         if($billing_notify && function_exists('civicrm_allpay_notify_generate')){
-          civicrm_allpay_notify_generate($cid, TRUE); // send mail
+          $maybeSent = CRM_Core_DAO::singleValueQuery("SELECT expire_date FROM civicrm_contribution WHERE id = %1", array(
+            1 => array( $cid, 'Integer'),
+          ));
+          if (!$maybeSent) {
+            civicrm_allpay_notify_generate($cid, TRUE); // send mail
+          }
 
           // return allpay successful received notify
           echo "1|OK";

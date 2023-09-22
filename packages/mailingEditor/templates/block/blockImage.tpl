@@ -38,7 +38,7 @@ elem (nme-elem): none
           <tbody>
             <tr>
               <td class="nmeb-content" valign="top" data-settings-target="elemContainerInner" style="text-align: center;">
-                <img align="center" alt="" src="{$config->resourceBase}packages/istockphoto/thumb_1.jpg" width="680" style="max-width: 100%; height: auto; padding-bottom: 0; display: inline !important; vertical-align: bottom;" class="nmee-image nme-elem" data-settings-target="elem">
+                <img align="center" alt="" src="{$config->resourceBase}packages/midjourney/thumb_1.jpg" width="680" style="max-width: 100%; height: auto; padding-bottom: 0; display: inline !important; vertical-align: bottom;" class="nmee-image nme-elem" data-settings-target="elem">
               </td>
             </tr>
           </tbody>

@@ -186,7 +186,7 @@ class CRM_Contact_BAO_Contact extends CRM_Contact_DAO_Contact {
     // only do this in create mode, not update
     if (empty($contact->hash) && !$contact->id) {
       $allNull = FALSE;
-      $contact->hash = md5(uniqid(rand(), TRUE));
+      $contact->hash = md5(uniqid((string)rand(), TRUE));
     }
 
     if (!$allNull) {

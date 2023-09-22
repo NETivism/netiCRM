@@ -258,7 +258,7 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
     return $searchContext ? TRUE : FALSE;
   }
 
-  static function setModeValues() {
+  function setModeValues() {
     if (!self::$_modeValues) {
       if (isset($this)) {
         $selectorName = (property_exists($this, '_selectorName') && $this->_selectorName) ? $this->_selectorName : 'CRM_Contact_Selector';
@@ -312,7 +312,7 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
     }
   }
 
-  static function getModeValue($mode = 1) {
+  function getModeValue($mode = 1) {
     self::setModeValues();
 
     if (!CRM_Utils_Array::arrayKeyExists($mode, self::$_modeValues)) {
@@ -322,7 +322,7 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
     return self::$_modeValues[$mode];
   }
 
-  static function getModeSelect() {
+  function getModeSelect() {
     self::setModeValues();
 
     $select = array();
