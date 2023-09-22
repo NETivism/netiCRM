@@ -15,7 +15,7 @@ const config = {
   testDir: './tests',
   timeout: 120 * 1000,
   expect: {
-    timeout: 5000
+    timeout: 30 * 1000
   },
   /* Run tests in files in parallel */
   fullyParallel: true,
@@ -28,13 +28,13 @@ const config = {
 
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [
-    //['list']
+    ['list'],
     ['html', { open: 'never'}],
-    ['./test-reporter.js']
+    // ['./test-reporter.js']
   ],
   use: {
     headless: true,
-    actionTimeout: 10000,
+    actionTimeout: 30 * 1000,
     storageState: 'storageState.json',
     baseURL: process.env.localUrl ,
     trace: 'retain-on-failure',

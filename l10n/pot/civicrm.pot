@@ -48993,11 +48993,36 @@ msgid "Expand"
 msgstr ""
 
 #: CRM/AI/Page/AJAX.php
-msgid "You are an %1 in %3 who uses %4 and is skilled at writing %2 copywriting."
+msgid "Please use %4 language of %3 to play the role of %1 and help generate a %2."
 msgstr ""
 
-msgid "You are using %1 as your language."
+msgid "Please using %1 language to generate content."
 msgstr ""
 
 msgid "Chinese (Taiwan)"
+msgstr ""
+
+msgid "The fee you selected has expired before submission. Please reselect the fee."
+msgstr ""
+
+msgid "The fee you selected has expired before submission. Please begin from the first step. You can refill another <a href=\"%1\">here</a>."
+msgstr ""
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid "The organization sharing this template"
+msgstr ""
+
+#: templates/CRM/Contribute/Page/ContributionPageEdit.tpl
+msgid "Admin Basic Settings"
+msgstr ""
+
+#: templates/CRM/Contribute/Page/ContributionPageEdit.tpl
+msgid "You can provide this URL to supporters for creating new Personal Campaign Pages."
+msgstr ""
+
+#: CRM/Contribute/Form/Payment.php
+msgid "This payment cannot be made at the moment. If you have any questions, please contact the site administrator."
+msgstr ""
+
+msgid "To ensure security, it is recommended that you submit a request through the customer service system before changing this field. If you are sure you want to modify this setting, please click Confirm button."
 msgstr ""

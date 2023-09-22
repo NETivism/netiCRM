@@ -274,7 +274,7 @@ class CRM_Core_BAO_Block {
     foreach ($params[$blockName] as $count => $value) {
       $blockId = CRM_Utils_Array::value('id', $value);
       if ($blockId) {
-        if (is_array($blockIds) && array_key_exists($blockId, $blockIds)) {
+        if (is_array($blockIds) && CRM_Utils_Array::arrayKeyExists($blockId, $blockIds)) {
           unset($blockIds[$blockId]);
         }
         else {

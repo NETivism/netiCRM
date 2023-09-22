@@ -125,7 +125,7 @@ class CRM_Contact_Form_Task_PickProfile extends CRM_Contact_Form_Task {
     $profiles = CRM_Core_BAO_UFGroup::getProfiles($this->_contactTypes);
 
     if (empty($profiles)) {
-      $types = implode('or', $this->_contactTypes);
+      $types = CRM_Utils_Array::implode('or', $this->_contactTypes);
       CRM_Core_Session::setStatus("The contact type selected for Batch Update do not have corresponding profiles. Please make sure that {$types} has a profile and try again.");
       CRM_Utils_System::redirect($this->_userContext);
     }

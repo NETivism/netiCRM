@@ -176,7 +176,7 @@ class CRM_Utils_PDF_Utils {
    * @ $option string
    * see /usr/local/bin/wkhtmltopdf-i386 --help
    */
-  function wkhtmltopdf($html, $dest, $option = '-n') {
+  static function wkhtmltopdf($html, $dest, $option = '-n') {
     $config = CRM_Core_Config::singleton();
     $wkhtmltopdf = $config->wkhtmltopdfPath;
 
@@ -216,7 +216,7 @@ class CRM_Utils_PDF_Utils {
     }
   }
 
-  public function makeHTML($values, $strip_html = FALSE) {
+  public static function makeHTML($values, $strip_html = FALSE) {
     $html = '';
     foreach ($values as $k => $value) {
       if ($k) {

@@ -319,7 +319,7 @@ $earthDistanceSQL  <= $distance
 
     $qill = ts('Proximity search to a distance of %1 from %2',
       array(1 => $qillUnits,
-        2 => implode(', ', $qill),
+        2 => CRM_Utils_Array::implode(', ', $qill),
       )
     );
 

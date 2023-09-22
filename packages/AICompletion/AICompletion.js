@@ -15,6 +15,8 @@
         FINISH_CLASS = 'is-finished',
         EXPAND_CLASS = 'is-expanded',
         COPY_CLASS = 'is-copied',
+        SHOW_CLASS = 'is-show',
+        HIDE_CLASS = 'is-hide',
         MFP_ACTIVE_CLASS = 'mfp-is-active',
         TIMEOUT = 30000;
 
@@ -30,17 +32,20 @@
       communityRecommendations: []
     },
     ts = {},
-    endpoint = {
-    },
+    endpoint = {},
     chatData = {
       messages: []
     },
     colon = ':',
+    debug = false,
+    component,
     errorMessage,
     errorMessageDefault;
 
   // Default configuration options
-  var defaultOptions = {};
+  var defaultOptions = {
+    debug: false
+  };
 
   /**
    * ============================
@@ -48,8 +53,18 @@
    * ============================
    */
 
+  var debugLog = function(message, obj) {
+    if (debug && window.console && window.console.log) {
+      console.log('AICompletion:', message, obj || '');
+    }
+  };
+
   var isObject = function(variable) {
     return typeof variable === 'object' && variable !== null;
+  }
+
+  var isEmpty = function(value) {
+    return value === undefined || value === null || String(value).trim() === "";
   }
 
   var getFirstCharacter = function(input) {
@@ -105,7 +120,7 @@
           console.error('AJAX request timed out');
         }
         else {
-          console.error('AJAX request failed:', status, error);
+          console.error('AJAX request failed:', status, error, xhr.responseJSON.message);
         }
 
         errorCallback(xhr, status, error);
@@ -162,6 +177,13 @@
   var AICompletion = function(element, options) {
     this.element = element;
     this.settings = $.extend({}, defaultOptions, options);
+
+    debug = this.settings.debug === "1" ? true : false;
+
+    if (debug) {
+      $("html").addClass("is-debug");
+    }
+
     this.init();
   }
 
@@ -278,65 +300,139 @@
     getTemplateList: function(data = {}) {
       let output = `<p>${ts['There are currently no templates available.']}</p>`;
 
-      for (let key in templateListData) {
-        if (key == 'savedTemplates') {
-          sendAjaxRequest(endpoint.getTemplateList, 'POST', data, function(response) {
-            if (response.status == 'success' || response.status == 1) {
-              if (response.data) { // TODO: check data
-                templateListData[key] = response.data;
-                output = `<div class="template-list">`;
+      if (component) {
+        data['component'] = component;
+      }
 
-                for (let i in templateListData[key]) {
-                  let data = templateListData[key][i],
-                      prompt = JSON.parse(data.prompt);
-                  console.log(prompt);
-                  output += `<div class="template-item" data-ai-role="${data.ai_role}" data-tone-style="${data.tone_style}" data-context="${data.context}">
-                      <div class="inner">
-                        <div class="ai-role"><span class="label">${ts['Copywriting Role']}</span>${colon}${data.ai_role}</div>
-                        <div class="tone-style"><span class="label">${ts['Tone Style']}</span>${colon}${data.tone_style}</div>
-                        <div class="context"><span class="label">${ts['Content Summary']}</span>${colon}${data.context}</div>
-                        <div class="actions">
-                          <button type="button" class="apply-btn btn">${ts['Apply Template']}</button>
-                        </div>
-                      </div>
-                    </div>`;
-                }
+      const fetchTemplates = function(key, data, output) {
+        sendAjaxRequest(endpoint.getTemplateList, 'POST', data, (response) => {
+          handleSuccessResponse(key, response, output);
+        }, (xhr, status, error) => {
+          handleErrorResponse(key, xhr, status, error);
+        });
+      };
 
-                output += `</div>`;
+      const handleSuccessResponse = function(key, response, output) {
+        if (response.status == 'success' || response.status == 1) {
+          if (response.data) {
+            templateListData[key] = key === 'savedTemplates' ? response.data : response.data['templates'];
+            output += `<div class="template-list">`;
+
+            for (let i in templateListData[key]) {
+              let tplData = templateListData[key][i],
+                  role = tplData.ai_role ? tplData.ai_role : tplData.role,
+                  tone = tplData.tone_style ? tplData.tone_style : tplData.tone,
+                  context = tplData.context ? tplData.context : tplData.content;
+
+              let templateItemHtml = `
+                <div class="template-item" data-ai-role="${role}" data-tone-style="${tone}" data-context="${context}">
+                  <div class="inner">
+                    <div class="ai-role"><span class="label">${ts['Copywriting Role']}</span>${colon}${role}</div>
+                    <div class="tone-style"><span class="label">${ts['Tone Style']}</span>${colon}${tone}</div>
+                    <div class="context"><span class="label">${ts['Content Summary']}</span>${colon}${context}</div>
+                    <div class="actions">
+                      <button type="button" class="apply-btn btn">${ts['Apply Template']}</button>
+                    </div>
+                  </div>
+                </div>`;
+
+              if (key === 'communityRecommendations') {
+                templateItemHtml = templateItemHtml.replace('<div class="actions">', `<div class="org"><span class="label">${ts['The organization sharing this template']}</span>${colon}${tplData.org}</div><div class="actions">`);
               }
+
+              output += templateItemHtml;
             }
 
-            $(`#use-other-templates-tabs .modal-tabs-panel[data-type="${key}"]`).html(output);
-
-            $('.template-list').on('click', '.apply-btn', function() {
-              let $templateItem = $(this).closest('.template-item'),
-                  templateData = {
-                    role: $templateItem.attr("data-ai-role"),
-                    tone: $templateItem.attr("data-tone-style"),
-                    content: $templateItem.attr("data-context")
-                  };
-
-              if (!AICompletion.prototype.formIsEmpty()) {
-                if (confirm(ts['Warning! Applying this template will clear your current settings. Proceed with the application?'])) {
-                  AICompletion.prototype.applyTemplateToForm({ data: templateData });
-                  AICompletion.prototype.modal.close();
-                }
-              }
-              else {
-                AICompletion.prototype.applyTemplateToForm({ data: templateData });
-                AICompletion.prototype.modal.close();
-              }
-            });
-          }, function(xhr, status, error) {
-            if (status == 'timeout') {
-              errorMessage = `<p class="error">${ts['Our service is currently busy, please try again later. If needed, please contact our customer service team.']}</p>`;
-              $(`#use-other-templates-tabs .modal-tabs-panel[data-type="${key}"]`).html(errorMessage);
-            }
-          });
+            output += `</div>`;
+          }
         }
 
-        if (key == 'communityRecommendations') {
-          $(`#use-other-templates-tabs .modal-tabs-panel[data-type="${key}"]`).html(output);
+        let $currentPanel = $(`#use-other-templates-tabs .modal-tabs-panel[data-type="${key}"]`);
+        $currentPanel.html(output);
+        bindTemplateListEvents($currentPanel);
+      };
+
+      const handleErrorResponse = function(key, xhr, status, error) {
+        if (status == 'timeout') {
+          errorMessage = `<p class="error">${ts['Our service is currently busy, please try again later. If needed, please contact our customer service team.']}</p>`;
+        } else if (xhr.responseJSON.message == 'Failed to retrieve template list.') {
+          errorMessage = `<p>${ts['There are currently no templates available.']}</p>`;
+        } else {
+          errorMessage = `<p class="error">${errorMessageDefault}</p>`;
+        }
+
+        $(`#use-other-templates-tabs .modal-tabs-panel[data-type="${key}"]`).html(errorMessage);
+      };
+
+      const bindTemplateListEvents = function($panel) {
+        $panel.find('.template-list').on('click', '.apply-btn', function() {
+          let $templateItem = $(this).closest('.template-item'),
+              templateData = {
+                role: $templateItem.attr("data-ai-role"),
+                tone: $templateItem.attr("data-tone-style"),
+                content: $templateItem.attr("data-context")
+              };
+
+          if (!AICompletion.prototype.formIsEmpty()) {
+            if (confirm(ts['Warning! Applying this template will clear your current settings. Proceed with the application?'])) {
+              AICompletion.prototype.applyTemplateToForm({ data: templateData });
+              AICompletion.prototype.modal.close();
+            }
+          }
+          else {
+            AICompletion.prototype.applyTemplateToForm({ data: templateData });
+            AICompletion.prototype.modal.close();
+          }
+        });
+
+        let buffer;
+        $panel.find('.keyword-filter').on('input', function() {
+          clearTimeout(buffer);
+          let $panel = $(this).closest('.modal-tabs-panel'),
+              $list = $panel.find('.template-list'),
+              keyword = $(this).val().toLowerCase();
+
+          buffer = setTimeout(function() {
+            let hasResult = false;
+            $list.find('.template-item').each(function() {
+                var $item = $(this);
+                var aiRole = $item.data('ai-role').toLowerCase();
+                var toneStyle = $item.data('tone-style').toLowerCase();
+                var context = $item.data('context').toLowerCase();
+
+                if (aiRole.includes(keyword) || toneStyle.includes(keyword) || context.includes(keyword)) {
+                  $item.addClass(SHOW_CLASS).removeClass(HIDE_CLASS);
+                  hasResult = true;
+                } else {
+                  $item.addClass(HIDE_CLASS).removeClass(SHOW_CLASS);
+                }
+            });
+
+            if (!hasResult) {
+              $list.next('.no-result').remove();
+              $list.after(`<div class="no-result">${ts['No matches found.']}</div>`);
+            } else {
+              $list.next('.no-result').remove();
+            }
+          }, 300);
+        });
+      };
+
+      for (let key in templateListData) {
+        output = `<div class="template-filters crm-container">
+        <div class="keyword-filter-item filter-item form-item">
+          <i class="zmdi zmdi-search"></i>
+          <div class="crm-form-elem crm-form-textfield">
+            <input class="keyword-filter form-text huge" type="search" placeholder="${ts['Input search keywords']}">
+          </div>
+        </div>
+        </div>`;
+
+        if (['savedTemplates', 'communityRecommendations'].includes(key)) {
+          if (key === 'communityRecommendations') {
+            data['is_share_with_others'] = 1;
+          }
+          fetchTemplates(key, data, output);
         }
       }
     },
@@ -478,8 +574,8 @@
       $container.on('click', '.use-default-template', function(event) {
         event.preventDefault();
         let templateData = defaultData.templates_default[0];
-        if (templateData.content.match(new RegExp('^'+ts['Organization intro']))) {
-          templateData.content = templateData.content.replace(new RegExp('^'+ts['Organization intro']+'.*'), ts['Organization intro']+': '+defaultData.org_intro+"\n");
+        if (templateData.content.match(new RegExp('^'+ts['Organization intro'])) && defaultData.org_intro.length > 0) {
+          templateData.content = templateData.content.replace(new RegExp('^'+ts['Organization intro']+'.*'), ts['Organization intro']+': '+defaultData.org_intro);
         }
 
         if (!AICompletion.prototype.formIsEmpty()) {
@@ -532,16 +628,21 @@
           let firstCharacter = getFirstCharacter(defaultData.sort_name);
 
           if (isObject(data)) {
-            if (data.role) {
-              msg += `${ts['Copywriting Role']}: ${data.role}\n`;
+            if (isEmpty(data.role) && isEmpty(data.tone) && isEmpty(data.content)) {
+              msg = '(n/a)';
             }
+            else {
+              if (data.role) {
+                msg += `${ts['Copywriting Role']}: ${data.role}\n`;
+              }
 
-            if (data.tone) {
-              msg += `${ts['Tone Style']}: ${data.tone}\n\n`;
-            }
+              if (data.tone) {
+                msg += `${ts['Tone Style']}: ${data.tone}\n\n`;
+              }
 
-            if (data.content) {
-              msg += `${ts['Content']}: ${data.content}\n`;
+              if (data.content) {
+                msg += `${ts['Content']}: ${data.content}\n`;
+              }
             }
 
             msg = msg.replace(/\n/g, '<br>');
@@ -697,6 +798,29 @@
         tags: true // Select2 can dynamically create new options from text input by the user in the search box
       });
 
+      // Enhance select2 search field focus styling
+      $(document).on('select2:open', function(e) {
+        let selectId = e.target.id,
+            $select2Element = $(e.target),
+            selectedOptions = $select2Element.val();
+
+        if (!selectedOptions && selectedOptions.length == 0) {
+          $(".select2-results__options[id='select2-" + selectId + "-results']").each(function(key, elem) {
+            let $elem = $(elem);
+
+            if ($elem.length) {
+              setTimeout(function() {
+                $elem.find('.select2-results__option[aria-selected=true]').attr('aria-selected', false).removeClass('select2-results__option--highlighted');
+              }, 200); // TODO: timeout is workaournd
+            }
+          });
+
+          $(".select2-search__field[aria-controls='select2-" + selectId + "-results']").each(function(key, elem) {
+            setTimeout(function() { elem.focus(); } , 300); // TODO: timeout is workaournd
+          });
+        }
+      });
+
       $promptContent.on('focus', function() {
         let inputText = $(this).val();
 
@@ -711,9 +835,14 @@
       });
 
       $promptContent.on('blur', function() {
-        if ($(this).hasClass(EXPAND_CLASS)) {
-          $(this).removeClass(EXPAND_CLASS);
-          $container.removeClass(`form-${EXPAND_CLASS}`);
+        let $field = $(this);
+
+        // Add delay to expansion collapse to ensure other form elements can be clicked
+        if ($field.hasClass(EXPAND_CLASS)) {
+          setTimeout(function() {
+            $field.removeClass(EXPAND_CLASS);
+            $container.removeClass(`form-${EXPAND_CLASS}`);
+          }, 200);
         }
 
         setTimeout(function() {
@@ -777,156 +906,194 @@
             sourceUrl: window.location.href,
             sourceUrlPath: window.location.pathname,
             sourceUrlQuery: window.location.search
-          };
+          },
+          isEmptyPrompt = isEmpty(formData.role) && isEmpty(formData.tone) && isEmpty(formData.content) ? true : false,
+          userMessage = isEmptyPrompt ? '(n/a)' : formData;
+
 
       if (!$submit.hasClass(ACTIVE_CLASS)) {
         $submit.addClass(ACTIVE_CLASS).prop('disabled', true);
       }
 
       // Create user's message
-      AICompletion.prototype.createMessage(userMsgID, aiMsgID, formData, 'user');
+      AICompletion.prototype.createMessage(userMsgID, aiMsgID, userMessage, 'user');
 
       // Create AI's message
-      let fetchPromise = fetch(endpoint.chat, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
-      });
-
-      let timeoutPromise = new Promise((_, reject) => {
-        let timeoutId = setTimeout(() => {
-          clearTimeout(timeoutId);
-          reject(new Error("Network request timed out."));
-        }, TIMEOUT);
-      });
-
-      Promise.race([fetchPromise, timeoutPromise])
-      .then(function(response) {
-        if (response.ok) {
-          // Determine the data type based on the Content-Type of the response
-          if (response.headers.get('Content-Type').includes('application/json')) {
-            return response.json(); // Parse as JSON
-          } else if (response.headers.get('Content-Type').includes('text/html')) {
-            return response.text(); // Parse as plain text
-          } else {
-            throw new Error('Unknown response data type');
-          }
-        } else {
-          throw new Error('Network request error');
-        }
-      })
-      .then(function(result) {
-        var evtSource = new EventSource(endpoint.chat + '?token=' + result.data.token + '&id=' + result.data.id, {
-          withCredentials: false,
+      if (isEmptyPrompt) {
+        errorMessage = ts['Please enter the %1 copy you would like AI to generate.'];
+        AICompletion.prototype.createMessage(aiMsgID, userMsgID, errorMessage, 'ai', 'error');
+      }
+      else {
+        let fetchPromise = fetch(endpoint.chat, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(formData)
         });
 
-        evtSource.onmessage = (event) => {
-          try {
-            let eventData = JSON.parse(event.data);
-            if (typeof eventData !== "undefined") {
-              if (($aiMsg && $aiMsg.length) && (eventData.hasOwnProperty('is_finished') || eventData.hasOwnProperty('is_error'))) {
-                evtSource.close();
+        let timeoutPromise = new Promise((_, reject) => {
+          let timeoutId = setTimeout(() => {
+            clearTimeout(timeoutId);
+            reject(new Error("Network request timed out."));
+          }, TIMEOUT);
+        });
 
-                if ($submit.hasClass(ACTIVE_CLASS)) {
-                  $submit.removeClass(ACTIVE_CLASS).prop('disabled', false);
+        Promise.race([fetchPromise, timeoutPromise])
+        .then(function(response) {
+          if (response.ok) {
+            // Determine the data type based on the Content-Type of the response
+            if (response.headers.get('Content-Type').includes('application/json')) {
+              return response.json(); // Parse as JSON
+            } else if (response.headers.get('Content-Type').includes('text/html')) {
+              return response.text(); // Parse as plain text
+            } else {
+              throw new Error('Unknown response data type');
+            }
+          } else {
+            throw new Error('Network request error');
+          }
+        })
+        .then(function(result) {
+          var evtSource = new EventSource(endpoint.chat + '?token=' + result.data.token + '&id=' + result.data.id, {
+            withCredentials: false,
+          });
+
+          evtSource.onmessage = (event) => {
+            try {
+              let eventData = JSON.parse(event.data);
+              if (typeof eventData !== "undefined") {
+                if (($aiMsg && $aiMsg.length) && (eventData.hasOwnProperty('is_finished') || eventData.hasOwnProperty('is_error'))) {
+                  evtSource.close();
+
+                  if ($submit.hasClass(ACTIVE_CLASS)) {
+                    $submit.removeClass(ACTIVE_CLASS).prop('disabled', false);
+                  }
+
+                  if (!$submit.hasClass(SENT_CLASS)) {
+                    $submit.addClass(SENT_CLASS).find('.text').text(ts['Try Again']);
+                  }
+
+                  if (eventData.is_finished) {
+                    if (!$aiMsg.hasClass(FINISH_CLASS)) {
+                      $aiMsg.addClass(FINISH_CLASS);
+                    }
+                  }
+
+                  if (eventData.is_error) {
+                    if (!$aiMsg.hasClass(ERROR_CLASS)) {
+                      $aiMsg.addClass(ERROR_CLASS);
+                      throw new Error(`${eventData.message} (onmessage error)`);
+                    }
+                  }
+
+                  var msgCopyHandle = function(event) {
+                    event.preventDefault();
+                    let $copyBtn = $(this),
+                        $aiMsg = $copyBtn.closest('.msg'),
+                        $msgContent = $aiMsg.find('.msg-content'),
+                        copyText = '';
+
+                    if ($msgContent.length) {
+                      copyText = $msgContent.html().replace(/<br>/g, '\n');
+                    }
+
+                    copyText = copyText.trim();
+                    if (navigator.clipboard && navigator.clipboard.writeText) {
+                      navigator.clipboard.writeText(copyText).then(function() {
+                        toggleCopyClass($copyBtn);
+                      }, function(error) {
+                        console.error('Failed to copy text to clipboard:', error);
+                      });
+                    } else {
+                      console.warn('Clipboard API is not supported in this browser, fallback to execCommand.');
+                      fallbackCopyTextToClipboard(copyText, $copyBtn);
+                    }
+                  }
+
+                  $aiMsg.on('click', '.copy-btn', msgCopyHandle);
                 }
+                else {
+                  if (eventData.hasOwnProperty('message')) {
+                    let message = eventData.message.replace(/\n/g, '<br>');
 
-                if (!$submit.hasClass(SENT_CLASS)) {
-                  $submit.addClass(SENT_CLASS).find('.text').text(ts['Try Again']);
-                }
+                    if (eventData.hasOwnProperty('is_error')) {
+                      let msgID = 'ai-msg-' + renderID();
 
-                if (eventData.is_finished) {
-                  if (!$aiMsg.hasClass(FINISH_CLASS)) {
-                    $aiMsg.addClass(FINISH_CLASS);
+                      if (eventData.message.includes('timed out')) {
+                        errorMessage = ts['Our service is currently busy, please try again later. If needed, please contact our customer service team.'];
+                        AICompletion.prototype.createMessage(msgID, '', errorMessage, 'ai', 'error');
+                      }
+                      else {
+                        AICompletion.prototype.createMessage(msgID, '', errorMessageDefault, 'ai', 'error');
+                      }
+
+                      console.error(message);
+                    }
+                    else {
+                      AICompletion.prototype.createMessage(aiMsgID, userMsgID, message, 'ai', 'stream');
+                      $aiMsg = $container.find('.msg[id="' + aiMsgID + '"]');
+                      $userMsg = $container.find('.msg[id="' + userMsgID + '"]');
+
+                      if (eventData.hasOwnProperty('id')) {
+                        $aiMsg.data('aicompletion-id', eventData.id);
+
+                        if (!$userMsg.hasClass(`ai-msg-${FINISH_CLASS}`)) {
+                          $userMsg.addClass(`ai-msg-${FINISH_CLASS}`);
+                        }
+                      }
+
+                      // Update usage
+                      if (chatData.messages.hasOwnProperty(aiMsgID)) {
+                        if (!chatData.messages[aiMsgID].used) {
+                          AICompletion.prototype.usageUpdate();
+                        }
+                      }
+                      else {
+                        chatData.messages[aiMsgID] = {
+                          used: true
+                        }
+
+                        AICompletion.prototype.usageUpdate();
+                      }
+                    }
                   }
                 }
+              }
+            } catch (error) {
+              if (error.message.includes('onmessage error')) {
+                let msgID = 'ai-msg-' + renderID();
 
-                if (eventData.is_error) {
-                  if (!$aiMsg.hasClass(ERROR_CLASS)) {
-                    $aiMsg.addClass(ERROR_CLASS);
-                  }
+                if (error.message.includes('timed out')) {
+                  errorMessage = ts['Our service is currently busy, please try again later. If needed, please contact our customer service team.'];
+                  AICompletion.prototype.createMessage(msgID, '', errorMessage, 'ai', 'error');
                 }
-
-                var msgCopyHandle = function(event) {
-                  event.preventDefault();
-                  let $copyBtn = $(this),
-                      $aiMsg = $copyBtn.closest('.msg'),
-                      $msgContent = $aiMsg.find('.msg-content'),
-                      copyText = '';
-
-                  if ($msgContent.length) {
-                    copyText = $msgContent.html().replace(/<br>/g, '\n');
-                  }
-
-                  copyText = copyText.trim();
-                  if (navigator.clipboard && navigator.clipboard.writeText) {
-                    navigator.clipboard.writeText(copyText).then(function() {
-                      toggleCopyClass($copyBtn);
-                    }, function(error) {
-                      console.error('Failed to copy text to clipboard:', error);
-                    });
-                  } else {
-                    console.warn('Clipboard API is not supported in this browser, fallback to execCommand.');
-                    fallbackCopyTextToClipboard(copyText, $copyBtn);
-                  }
+                else {
+                  AICompletion.prototype.createMessage(msgID, '', errorMessageDefault, 'ai', 'error');
                 }
-
-                $aiMsg.on('click', '.copy-btn', msgCopyHandle);
               }
               else {
-                if (eventData.hasOwnProperty('message')) {
-                  let message = eventData.message.replace(/\n/g, '<br>');
-                  AICompletion.prototype.createMessage(aiMsgID, userMsgID, message, 'ai', 'stream');
-                  $aiMsg = $container.find('.msg[id="' + aiMsgID + '"]');
-                  $userMsg = $container.find('.msg[id="' + userMsgID + '"]');
-
-                  if (eventData.hasOwnProperty('id')) {
-                    $aiMsg.data('aicompletion-id', eventData.id);
-
-                    if (!$userMsg.hasClass(`ai-msg-${FINISH_CLASS}`)) {
-                      $userMsg.addClass(`ai-msg-${FINISH_CLASS}`);
-                    }
-                  }
-
-                  // Update usage
-                  if (chatData.messages.hasOwnProperty(aiMsgID)) {
-                    if (!chatData.messages[aiMsgID].used) {
-                      AICompletion.prototype.usageUpdate();
-                    }
-                  }
-                  else {
-                    chatData.messages[aiMsgID] = {
-                      used: true
-                    }
-
-                    AICompletion.prototype.usageUpdate();
-                  }
-                }
+                AICompletion.prototype.createMessage(aiMsgID, userMsgID, errorMessageDefault, 'ai', 'error');
               }
+
+              console.error(error.message);
             }
-          } catch (error) {
-            console.error('JSON Parse Error:', error.message);
-            AICompletion.prototype.createMessage(aiMsgID, userMsgID, errorMessageDefault, 'ai', 'error');
+          };
+
+          evtSource.onerror = function(event) {
+            console.error("EventSource encountered an error: ", event);
+            evtSource.close();
+          };
+        })
+        .catch(function(error) {
+          console.error("Encountered an error: ", error);
+          if (error.message.includes('timed out')) {
+            errorMessage = ts['Our service is currently busy, please try again later. If needed, please contact our customer service team.'];
           }
-        };
 
-        evtSource.onerror = function(event) {
-          console.error("EventSource encountered an error: ", event);
-          evtSource.close();
-          AICompletion.prototype.createMessage(aiMsgID, userMsgID, errorMessageDefault, 'ai', 'error');
-        };
-      })
-      .catch(function(error) {
-        // TODO: Error handling
-        console.error("Encountered an error: ", error);
-        if (error.message.includes('timed out')) {
-          errorMessage = ts['Our service is currently busy, please try again later. If needed, please contact our customer service team.'];
-        }
-
-        AICompletion.prototype.createMessage(aiMsgID, userMsgID, errorMessage, 'ai', 'error');
-      });
+          AICompletion.prototype.createMessage(aiMsgID, userMsgID, errorMessage, 'ai', 'error');
+        });
+      }
     },
 
     getDefaultData: function() {
@@ -940,6 +1107,7 @@
 
       defaultData = this.getDefaultData();
       endpoint = window.AICompletion.endpoint;
+      component = window.AICompletion.component;
       AICompletion.prototype.container = $container;
 
       // Get translation string comparison table
@@ -960,6 +1128,7 @@
 
       // Finally, add class to mark the initialization
       $container.addClass(INIT_CLASS);
+      debugLog('AICompletion initialized on element:', this.element);
     }
   };
 

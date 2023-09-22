@@ -83,7 +83,7 @@ class CRM_Contact_StateMachine_Search extends CRM_Core_StateMachine {
       $this->_pages['CRM_Contact_Form_Task_Result'] = NULL;
     }
 
-    $this->addSequentialPages($this->_pages, $action);
+    $this->addSequentialPages($this->_pages);
   }
 
   /**
@@ -113,6 +113,7 @@ class CRM_Contact_StateMachine_Search extends CRM_Core_StateMachine {
     if ($value) {
       $componentMode = $this->_controller->get('component_mode');
       require_once 'CRM/Contact/Form/Search.php';
+
       $modeValue = CRM_Contact_Form_Search::getModeValue($componentMode);
       require_once (str_replace('_', DIRECTORY_SEPARATOR, $modeValue['taskClassName']) . '.php');
       $taskClassName = $modeValue['taskClassName'];

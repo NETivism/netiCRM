@@ -62,6 +62,6 @@ function smarty_block_localize($params, $text, &$smarty) {
     $lines[] = $line;
   }
 
-  return implode(', ', $lines);
+  return CRM_Utils_Array::implode(', ', $lines);
 }
 

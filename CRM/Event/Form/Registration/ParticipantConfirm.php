@@ -133,7 +133,7 @@ class CRM_Event_Form_Registration_ParticipantConfirm extends CRM_Event_Form_Regi
     
     // only pending status class family able to confirm.
     $statusMsg = NULL;
-    if (array_key_exists($this->_participantStatusId, CRM_Event_PseudoConstant::participantStatus(NULL, "class = 'Pending'")) && !$expired) {
+    if (CRM_Utils_Array::arrayKeyExists($this->_participantStatusId, CRM_Event_PseudoConstant::participantStatus(NULL, "class = 'Pending'")) && !$expired) {
       //need to confirm that though participant confirming
       //registration - but is there enough space to confirm.
       require_once 'CRM/Event/PseudoConstant.php';
@@ -161,7 +161,7 @@ class CRM_Event_Form_Registration_ParticipantConfirm extends CRM_Event_Form_Regi
     }
 
     // status class other than Negative should be able to cancel registration.
-    if (array_key_exists($this->_participantStatusId, CRM_Event_PseudoConstant::participantStatus(NULL, "class != 'Negative'")) && !$expired) {
+    if (CRM_Utils_Array::arrayKeyExists($this->_participantStatusId, CRM_Event_PseudoConstant::participantStatus(NULL, "class != 'Negative'")) && !$expired) {
       $cancelConfirm = ts('Are you sure you want to cancel your registration for this event?');
       $buttons = array_merge($buttons, array(array('type' => 'submit',
             'name' => ts('Cancel Registration'),

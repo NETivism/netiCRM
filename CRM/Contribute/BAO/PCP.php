@@ -187,7 +187,7 @@ WHERE  civicrm_pcp.contact_id = civicrm_contact.id
 
     $excludePageClause = NULL;
     if (!empty($contactPCPPages)) {
-      $excludePageClause = " AND pg.id NOT IN ( " . implode(',', $contactPCPPages) . ") ";
+      $excludePageClause = " AND pg.id NOT IN ( " . CRM_Utils_Array::implode(',', $contactPCPPages) . ") ";
     }
 
     $query = "
@@ -365,7 +365,7 @@ WHERE pcp.id = %1 AND cc.contribution_status_id =1 AND cc.is_test = 0";
    * @static
    *
    */
-  function delete($id = NULL) {
+  static function deleteById($id = NULL) {
     require_once 'CRM/Utils/Hook.php';
     CRM_Utils_Hook::pre('delete', 'Campaign', $id, CRM_Core_DAO::$_nullArray);
 
@@ -671,7 +671,7 @@ WHERE pcp.id = %1";
    * @access public
    *
    */
-  public function getSupporterProfileId($contributionPageId) {
+  public static function getSupporterProfileId($contributionPageId) {
     $query = "
 SELECT pcp.supporter_profile_id
 FROM civicrm_pcp_block pcp 

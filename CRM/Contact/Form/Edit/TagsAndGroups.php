@@ -97,7 +97,7 @@ class CRM_Contact_Form_Edit_TagsandGroups {
         else {
           $group = &CRM_Core_PseudoConstant::group();
         }
-        $ids = implode(',', array_keys($group));
+        $ids = CRM_Utils_Array::implode(',', array_keys($group));
         $ids = 'IN (' . $ids . ')';
       }
 
@@ -164,7 +164,7 @@ class CRM_Contact_Form_Edit_TagsandGroups {
           $elements[$id] = $name;
         }
         else {
-          $elements[] = &HTML_QuickForm::createElement('checkbox', $id, NULL, $name);
+          $elements[] = &$form->createElement('checkbox', $id, NULL, $name);
         }
       }
       if (!empty($elements)) {
@@ -251,10 +251,10 @@ class CRM_Contact_Form_Edit_TagsandGroups {
    *
    * @return None
    */
-  function setDefaultValues(&$form, &$defaults) {
+  static function setDefaultValues(&$form, &$defaults) {
     $contactEditOptions = $form->get('contactEditOptions');
     if ($form->_action & CRM_Core_Action::ADD) {
-      if (array_key_exists('TagsAndGroups', $contactEditOptions)) {
+      if (CRM_Utils_Array::arrayKeyExists('TagsAndGroups', $contactEditOptions)) {
         // set group and tag defaults if any
         if ($form->_gid) {
           $defaults['group'][$form->_gid] = 1;
@@ -265,7 +265,7 @@ class CRM_Contact_Form_Edit_TagsandGroups {
       }
     }
     else {
-      if (array_key_exists('TagsAndGroups', $contactEditOptions)) {
+      if (CRM_Utils_Array::arrayKeyExists('TagsAndGroups', $contactEditOptions)) {
         // set the group and tag ids
         self::setDefaults($form->_contactId, $defaults, self::ALL);
       }

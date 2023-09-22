@@ -74,8 +74,8 @@ class CRM_Contact_Page_AJAX {
       }
     }
 
-    $select = implode(', ', $select);
-    $from = implode(' ', $from);
+    $select = CRM_Utils_Array::implode(', ', $select);
+    $from = CRM_Utils_Array::implode(' ', $from);
     if (CRM_Utils_Array::value('limit', $_GET)) {
       $limit = CRM_Utils_Type::escape($_GET['limit'], 'Positive');
     }
@@ -141,7 +141,7 @@ class CRM_Contact_Page_AJAX {
       $whereClauses[] = "$field LIKE '$phoneSearch'";
     }
 
-    $whereClause = ' WHERE ( '.implode(" OR ", $whereClauses).' ) '.$where;
+    $whereClause = ' WHERE ( '.CRM_Utils_Array::implode(" OR ", $whereClauses).' ) '.$where;
 
     $additionalFrom = '';
     if ($relType) {
@@ -237,7 +237,8 @@ class CRM_Contact_Page_AJAX {
       2 => array($optionGroupID, 'Positive'),
     ));
     if (empty($id)) {
-      CRM_Core_Error::debug("The custom field ID and option group ID are not correct. Which field ID is {$fieldID} and option group ID is {$optionGroupID}");
+      CRM_Core_Error::debug_log_message("The custom field ID and option group ID are not correct. Which field ID is {$fieldID} and option group ID is {$optionGroupID}");
+      CRM_Utils_System::civiExit();
     }
 
     require_once 'CRM/Core/BAO/CustomOption.php';
@@ -327,26 +328,30 @@ class CRM_Contact_Page_AJAX {
    * Function to obtain list of permissioned employer for the given contact-id.
    */
   static function getPermissionedEmployer() {
-    $cid = CRM_Utils_Type::escape($_GET['cid'], 'Integer');
-    $name = trim(CRM_Utils_Type::escape($_GET['name'], 'String'));
-    $name = str_replace('*', '%', $name);
+    $session = CRM_Core_Session::singleton();
+    $userID = $session->get('userID');
+    if ($userID) {
+      $cid = CRM_Utils_Type::escape($_GET['cid'], 'Integer');
+      $name = trim(CRM_Utils_Type::escape($_GET['name'], 'String'));
+      $name = str_replace('*', '%', $name);
 
-    require_once 'CRM/Contact/BAO/Relationship.php';
-    $elements = CRM_Contact_BAO_Relationship::getPermissionedEmployer($cid, $name);
+      require_once 'CRM/Contact/BAO/Relationship.php';
+      $elements = CRM_Contact_BAO_Relationship::getPermissionedEmployer($cid, $name);
 
-    if (!empty($elements)) {
-      foreach ($elements as $cid => $name) {
-        echo $element = $name['name'] . "|$cid\n";
+      if (!empty($elements)) {
+        foreach ($elements as $cid => $name) {
+          echo $element = $name['name'] . "|$cid\n";
+        }
       }
+      CRM_Utils_System::civiExit();
     }
-    CRM_Utils_System::civiExit();
   }
 
 
   static function groupTree() {
     $gids = CRM_Utils_Type::escape($_GET['gids'], 'String');
     require_once 'CRM/Contact/BAO/GroupNestingCache.php';
-    echo CRM_Contact_BAO_GroupNestingCache::json($gids);
+    echo CRM_Contact_BAO_GroupNestingCache::json();
     CRM_Utils_System::civiExit();
   }
 
@@ -356,7 +361,7 @@ class CRM_Contact_Page_AJAX {
   static function search() {
     $json = TRUE;
     $name = CRM_Utils_Array::value('name', $_GET, '');
-    if (!array_key_exists('name', $_GET)) {
+    if (!CRM_Utils_Array::arrayKeyExists('name', $_GET)) {
       $name = CRM_Utils_Array::value('s', $_GET) . '%';
       $json = FALSE;
     }
@@ -690,12 +695,12 @@ WHERE sort_name LIKE '%$name%'";
           if (strstr($cid, ',')) {
             $cids = explode(',', $cid);
             foreach($cids as $idx => $c) {
-              if (!CRM_Utils_Rule::PositiveInteger($c, 'Positive')) {
+              if (!CRM_Utils_Rule::PositiveInteger($c)) {
                 unset($cids[$idx]);
               }
             }
             if (!empty($cids)) {
-              $queryString = " cc.id IN (".implode(',', $cids).")";
+              $queryString = " cc.id IN (".CRM_Utils_Array::implode(',', $cids).")";
             }
           }
         }

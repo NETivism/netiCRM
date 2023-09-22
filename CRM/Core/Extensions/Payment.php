@@ -43,12 +43,12 @@ class CRM_Core_Extensions_Payment {
   }
 
   public function install() {
-    if (array_key_exists($this->ext->key, $this->paymentProcessorTypes)) {
+    if (CRM_Utils_Array::arrayKeyExists($this->ext->key, $this->paymentProcessorTypes)) {
       CRM_Core_Error::fatal('This payment processor type is already installed.');
     }
 
     $ppByName = $this->_getAllPaymentProcessorTypes('name');
-    if (array_key_exists($this->ext->name, $ppByName)) {
+    if (CRM_Utils_Array::arrayKeyExists($this->ext->name, $ppByName)) {
       CRM_Core_Error::fatal('This payment processor type already exists.');
     }
 
@@ -104,7 +104,7 @@ class CRM_Core_Extensions_Payment {
    * @return void
    **/
   public function uninstall() {
-    if (!array_key_exists($this->ext->key, $this->paymentProcessorTypes)) {
+    if (!CRM_Utils_Array::arrayKeyExists($this->ext->key, $this->paymentProcessorTypes)) {
       CRM_Core_Error::fatal('This payment processor type is not registered.');
     }
 

@@ -120,7 +120,7 @@ LEFT JOIN civicrm_phone ON ( civicrm_phone.contact_id = civicrm_contact.id )
    */
   static function &getMapInfo($ids, $locationTypeID = NULL, $imageUrlOnly = FALSE) {
     require_once 'CRM/Utils/Address.php';
-    $idString = ' ( ' . implode(',', $ids) . ' ) ';
+    $idString = ' ( ' . CRM_Utils_Array::implode(',', $ids) . ' ) ';
     $sql = "
    SELECT civicrm_contact.id as contact_id,
           civicrm_contact.contact_type as contact_type,

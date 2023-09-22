@@ -200,7 +200,7 @@ function &civicrm_contribution_search(&$params) {
   }
 
   // add is_test to the clause if not present
-  if (!array_key_exists('contribution_test', $inputParams)) {
+  if (!CRM_Utils_Array::arrayKeyExists('contribution_test', $inputParams)) {
     $inputParams['contribution_test'] = 0;
   }
 
@@ -361,7 +361,7 @@ function _civicrm_contribute_duplicate_check(&$params) {
   $duplicates = array();
   $result = CRM_Contribute_BAO_Contribution::checkDuplicate($params, $duplicates);
   if ($result) {
-    $d = implode(', ', $duplicates);
+    $d = CRM_Utils_Array::implode(', ', $duplicates);
     $error = CRM_Core_Error::createError("Duplicate error - existing contribution record(s) have a matching Transaction ID or Invoice ID. Contribution record ID(s) are: $d", CRM_Core_Error::DUPLICATE_CONTRIBUTION, 'Fatal', $d);
     return civicrm_create_error($error->pop(),
       $d
@@ -386,7 +386,7 @@ function _civicrm_contribute_receiptid_check(&$params) {
   $result = CRM_Contribute_BAO_Contribution::checkDuplicateReceipt($params, $duplicates);
 
   if ($result) {
-    $d = implode(', ', $duplicates);
+    $d = CRM_Utils_Array::implode(', ', $duplicates);
     $error = CRM_Core_Error::createError("Duplicate error - existing contribution record(s) have a matching Receipt ID. Contribution record ID(s) are: $d", CRM_Core_Error::DUPLICATE_CONTRIBUTION, 'Fatal', $d);
     return civicrm_create_error($error->pop(),
       $d

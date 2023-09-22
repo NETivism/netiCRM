@@ -116,7 +116,7 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
 
     $statusID = $this->get('statusID');
     if (!$statusID) {
-      $statusID = md5(uniqid(rand(), TRUE));
+      $statusID = md5(uniqid((string)rand(), TRUE));
       $this->set('statusID', $statusID);
     }
     $statusUrl = CRM_Utils_System::url('civicrm/ajax/status', "id={$statusID}", FALSE, NULL, FALSE);
@@ -322,7 +322,7 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
       $config = CRM_Core_Config::singleton();
       $errorFile = $config->uploadDir . "sqlImport.error.log";
       if ($fd = fopen($errorFile, 'w')) {
-        fwrite($fd, implode('\n', $errorMessage));
+        fwrite($fd, CRM_Utils_Array::implode('\n', $errorMessage));
       }
       fclose($fd);
 
@@ -454,7 +454,7 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
           }
         }
       }
-      $mapperFields[] = implode(' - ', $header);
+      $mapperFields[] = CRM_Utils_Array::implode(' - ', $header);
     }
 
     $tableName = $this->get('importTableName');
@@ -593,7 +593,7 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
       $config = CRM_Core_Config::singleton();
       $errorFile = $config->uploadDir . "sqlImport.error.log";
       if ($fd = fopen($errorFile, 'w')) {
-        fwrite($fd, implode('\n', $errorMessage));
+        fwrite($fd, CRM_Utils_Array::implode('\n', $errorMessage));
       }
       fclose($fd);
 

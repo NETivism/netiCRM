@@ -91,7 +91,7 @@ class CRM_Core_Payment_TapPayAPI {
       }
     }
     if(!empty($missingRequired)) {
-      CRM_Core_Error::fatal('Required parameters missing: '.implode(',', $missingRequired));
+      CRM_Core_Error::fatal('Required parameters missing: '.CRM_Utils_Array::implode(',', $missingRequired));
     }
 
     // Format of amount

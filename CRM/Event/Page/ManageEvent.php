@@ -256,8 +256,8 @@ ORDER BY start_date desc
     require_once 'CRM/Event/PseudoConstant.php';
     $statusTypes = CRM_Event_PseudoConstant::participantStatus(NULL, 'is_counted = 1', 'label');
     $statusTypesPending = CRM_Event_PseudoConstant::participantStatus(NULL, 'is_counted = 0', 'label');
-    $findParticipants['statusCounted'] = implode(', ', array_values($statusTypes));
-    $findParticipants['statusNotCounted'] = implode(', ', array_values($statusTypesPending));
+    $findParticipants['statusCounted'] = CRM_Utils_Array::implode(', ', array_values($statusTypes));
+    $findParticipants['statusNotCounted'] = CRM_Utils_Array::implode(', ', array_values($statusTypesPending));
     $this->assign('findParticipants', $findParticipants);
   }
 
@@ -301,7 +301,7 @@ ORDER BY start_date desc
     $controller->run();
   }
 
-  function whereClause(&$params, $sortBy = TRUE, $force) {
+  function whereClause(&$params, $sortBy, $force) {
     $values = array();
     $clauses = array();
     $title = $this->get('title');
@@ -325,18 +325,18 @@ ORDER BY start_date desc
             $val[$k] = $k;
           }
         }
-        $type = implode(',', $val);
+        $type = CRM_Utils_Array::implode(',', $val);
       }
       else {
         $value = explode(',', $value);
         foreach($value as $v) {
             $val[$v] = $v;
         }
-        $type = implode(',', $val);
+        $type = CRM_Utils_Array::implode(',', $val);
       }
       $clauses[] = "event_type_id IN ({$type})";
     }
-    return !empty($clauses) ? implode(' AND ', $clauses) : '(1)';
+    return !empty($clauses) ? CRM_Utils_Array::implode(' AND ', $clauses) : '(1)';
   }
 
   function pager($whereClause, $whereParams) {

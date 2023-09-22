@@ -4,28 +4,17 @@ require_once 'CiviTest/CiviUnitTestCase.php';
 
 class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
   public $DBResetRequired = FALSE;
+  public $_cid;
   protected $_apiversion;
   protected $_processor;
   protected $_is_test;
   protected $_page_id;
   protected $_recurFirstContributionId;
+  protected $_cardToken;
 
-  /**
-   *  Constructor
-   *
-   *  Initialize configuration
-   */
-  function __construct() {
-    // test if drupal bootstraped
-    if(!defined('DRUPAL_ROOT')){
-      die("You must exprot DRUPAL_ROOT for bootstrap drupal before test.");
-    }
-    
-    parent::__construct();
-    $this->_page_id = 1;
-    $this->prepareMailLog();
-    $this->_cardToken = "token".time();
-  }
+  protected $_refundTrxnId;
+  protected $_refundAmount;
+  protected $_refundContributionId;
 
   function get_info() {
     return array(
@@ -35,8 +24,14 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     );
   }
 
-  function setUp() {
+  /**
+   * @before
+   */
+  function setUpTest() {
     parent::setUp();
+    $this->_page_id = 1;
+    $this->prepareMailLog();
+    $this->_cardToken = "token".time();
 
     $this->_is_test = 1;
 
@@ -128,7 +123,10 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     }
   }
 
-  function tearDown() {
+  /**
+   * @after
+   */
+  function tearDownTest() {
     $this->_processor = NULL;
   }
 

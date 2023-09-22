@@ -264,7 +264,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
           }
           // ignore component fields
         }
-        elseif (array_key_exists($name, $contribFields) || (substr($name, 0, 11) == 'membership_')) {
+        elseif (CRM_Utils_Array::arrayKeyExists($name, $contribFields) || (substr($name, 0, 11) == 'membership_')) {
           continue;
         }
         $fields[$name] = 1;
@@ -930,7 +930,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     $honorOptions = array();
     $honor = CRM_Core_PseudoConstant::honor();
     foreach ($honor as $key => $var) {
-      $honorTypes[$key] = HTML_QuickForm::createElement('radio', NULL, NULL, $var, $key, $extraOption);
+      $honorTypes[$key] = $this->createElement('radio', NULL, NULL, $var, $key, $extraOption);
     }
     $this->addGroup($honorTypes, 'honor_type_id', NULL);
 
@@ -1057,7 +1057,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     );
     $frequencyUnits = CRM_Core_OptionGroup::values('recur_frequency_units');
     foreach ($unitVals as $key => $val) {
-      if (array_key_exists($val, $frequencyUnits)) {
+      if (CRM_Utils_Array::arrayKeyExists($val, $frequencyUnits)) {
         $units[$val] = ts($unitTrans[$val]);
       }
     }
@@ -1403,7 +1403,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     return empty($errors) ? TRUE : $errors;
   }
 
-  public function computeAmount(&$params, &$form) {
+  public static function computeAmount(&$params, &$form) {
     $amount = NULL;
 
     // first clean up the other amount field if present
@@ -1481,7 +1481,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     }
     if (($this->_values['is_pay_later'] &&
         empty($this->_paymentProcessor) &&
-        !array_key_exists('hidden_processor', $params)
+        !CRM_Utils_Array::arrayKeyExists('hidden_processor', $params)
       ) ||
       CRM_Utils_Array::value('payment_processor', $params) == 0
     ) {
@@ -1503,7 +1503,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     $this->set('amount_level',$params['amount_level']);
 
     // generate and set an invoiceID for this transaction
-    $invoiceID = md5(uniqid(rand(), TRUE));
+    $invoiceID = md5(uniqid((string)rand(), TRUE));
     $this->set('invoiceID', $invoiceID);
 
     // required only if is_monetary and valid postive amount

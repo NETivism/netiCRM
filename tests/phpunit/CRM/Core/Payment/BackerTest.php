@@ -13,16 +13,6 @@ class CRM_Core_Payment_BackerTest extends CiviUnitTestCase {
   protected $_json;
   static $_rtypeId;
 
-  /**
-   *  Constructor
-   *
-   *  Initialize configuration
-   */
-  function __construct() {
-    // test if drupal bootstraped
-    parent::__construct();
-  }
-
   function get_info() {
     return array(
       'name' => 'Backer payment processor',

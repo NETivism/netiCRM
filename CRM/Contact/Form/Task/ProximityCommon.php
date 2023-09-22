@@ -82,7 +82,7 @@ class CRM_Contact_Form_Task_ProximityCommon extends CRM_Contact_Form_Task {
    *
    * @return void
    */
-  function buildQuickForm($form = NULL, $proxSearch = NULL) {
+  static function buildQuickForm($form = NULL, $proxSearch = NULL) {
     // is proximity search required (2) or optional (1)?
     $proxRequired = ($proxSearch == 2 ? TRUE : FALSE);
     $form->assign('proximity_search', TRUE);

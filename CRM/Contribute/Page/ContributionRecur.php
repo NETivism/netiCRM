@@ -166,7 +166,7 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
             $log['after_contribution_status'] = $statuses[$after['contribution_status_id']];
           }
           $diff = self::_diff_contribute_recur_log($data);
-          $log['other_diff'] = implode('<br/>', $diff);
+          $log['other_diff'] = CRM_Utils_Array::implode('<br/>', $diff);
         }
 
         if ($notes[$log['modified_date']]) {

@@ -90,7 +90,7 @@ class CRM_Import_Form_DataSource extends CRM_Core_Form {
     }
     closedir($handler);
     if (!empty($results)) {
-      CRM_Core_Error::fatal(ts('<b>%1</b> file(s) in %2 directory are not writable. Listed file(s) might be used during the import to log the errors occurred during Import process. Contact your site administrator for assistance.', array(1 => implode(', ', $results), 2 => $config->uploadDir)));
+      CRM_Core_Error::fatal(ts('<b>%1</b> file(s) in %2 directory are not writable. Listed file(s) might be used during the import to log the errors occurred during Import process. Contact your site administrator for assistance.', array(1 => CRM_Utils_Array::implode(', ', $results), 2 => $config->uploadDir)));
     }
 
     $this->_dataSourceIsValid = FALSE;
@@ -172,16 +172,16 @@ class CRM_Import_Form_DataSource extends CRM_Core_Form {
 
     // duplicate handling options
     $duplicateOptions = array();
-    $duplicateOptions[] = HTML_QuickForm::createElement('radio',
+    $duplicateOptions[] = $this->createElement('radio',
       NULL, NULL, ts('Skip'), CRM_Import_Parser::DUPLICATE_SKIP
     );
-    $duplicateOptions[] = HTML_QuickForm::createElement('radio',
+    $duplicateOptions[] = $this->createElement('radio',
       NULL, NULL, ts('Update'), CRM_Import_Parser::DUPLICATE_UPDATE
     );
-    $duplicateOptions[] = HTML_QuickForm::createElement('radio',
+    $duplicateOptions[] = $this->createElement('radio',
       NULL, NULL, ts('Fill'), CRM_Import_Parser::DUPLICATE_FILL
     );
-    $duplicateOptions[] = HTML_QuickForm::createElement('radio',
+    $duplicateOptions[] = $this->createElement('radio',
       NULL, NULL, ts('No Duplicate Checking'), CRM_Import_Parser::DUPLICATE_NOCHECK
     );
 
@@ -209,7 +209,7 @@ class CRM_Import_Form_DataSource extends CRM_Core_Form {
     // contact types option
     $contactOptions = array();
     foreach($this->_contactTypes as $type => $tsName) {
-      $contactOptions[] = HTML_QuickForm::createElement('radio', NULL, NULL, $tsName, $type, $js);
+      $contactOptions[] = $this->createElement('radio', NULL, NULL, $tsName, $type, $js);
     }
     $this->addGroup($contactOptions, 'contactType', ts('Contact Type'));
 
@@ -230,7 +230,7 @@ class CRM_Import_Form_DataSource extends CRM_Core_Form {
       if ($groupValues['is_default']) {
         $label .= ts('Default');
       }
-      $dedupeRule[$dedupegroup_id] = $label . ' - '.$groupValues['name'] . ' (' . implode(', ', $fields) .')';
+      $dedupeRule[$dedupegroup_id] = $label . ' - '.$groupValues['name'] . ' (' . CRM_Utils_Array::implode(', ', $fields) .')';
     }
     $this->addSelect('dedupeRuleGroupId', ts('Dedupe Rule of Contact'), $dedupeRule);
     if ($dedupeRuleGroupId = $this->get('dedupeRuleGroupId')) {

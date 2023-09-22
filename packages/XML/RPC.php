@@ -185,24 +185,9 @@ $GLOBALS['XML_RPC_errxml'] = 100;
 $GLOBALS['XML_RPC_backslash'] = chr(92) . chr(92);
 
 
-/**#@+
- * Which functions to use, depending on whether mbstring is enabled or not.
- */
-if (function_exists('mb_ereg')) {
-    /** @global string $GLOBALS['XML_RPC_func_ereg'] */
-    $GLOBALS['XML_RPC_func_ereg'] = 'mb_eregi';
-    /** @global string $GLOBALS['XML_RPC_func_ereg_replace'] */
-    $GLOBALS['XML_RPC_func_ereg_replace'] = 'mb_eregi_replace';
-    /** @global string $GLOBALS['XML_RPC_func_split'] */
-    $GLOBALS['XML_RPC_func_split'] = 'mb_split';
-} else {
-    /** @ignore */
-    $GLOBALS['XML_RPC_func_ereg'] = 'eregi';
-    /** @ignore */
-    $GLOBALS['XML_RPC_func_ereg_replace'] = 'eregi_replace';
-    /** @ignore */
-    $GLOBALS['XML_RPC_func_split'] = 'split';
-}
+$GLOBALS['XML_RPC_func_ereg'] = 'preg_match';
+$GLOBALS['XML_RPC_func_ereg_replace'] = 'preg_replace';
+$GLOBALS['XML_RPC_func_split'] = 'preg_split';
 /**#@-*/
 
 
@@ -284,7 +269,7 @@ function XML_RPC_se($parser_resource, $name, $attrs)
     } else {
         // not top level element: see if parent is OK
         if (!in_array($XML_RPC_xh[$parser]['stack'][0], $XML_RPC_valid_parents[$name])) {
-            $name = $GLOBALS['XML_RPC_func_ereg_replace']('[^a-zA-Z0-9._-]', '', $name);
+            $name = $GLOBALS['XML_RPC_func_ereg_replace']('/[^a-zA-Z0-9._-]/i', '', $name);
             $XML_RPC_xh[$parser]['isf'] = 2;
             $XML_RPC_xh[$parser]['isf_reason'] = "xmlrpc element $name cannot be child of {$XML_RPC_xh[$parser]['stack'][0]}";
             return;
@@ -448,9 +433,9 @@ function XML_RPC_ee($parser_resource, $name)
         } else {
             // we have an I4, INT or a DOUBLE
             // we must check that only 0123456789-.<space> are characters here
-            if (!$GLOBALS['XML_RPC_func_ereg']("^[+-]?[0123456789 \t\.]+$", $XML_RPC_xh[$parser]['ac'])) {
-                XML_RPC_Base::raiseError('Non-numeric value received in INT or DOUBLE',
-                                         XML_RPC_ERROR_NON_NUMERIC_FOUND);
+            if (!$GLOBALS['XML_RPC_func_ereg']("/^[+-]?[0123456789 \t\.]+$/i", $XML_RPC_xh[$parser]['ac'])) {
+                $XML_RPC_Base = new XML_RPC_Base();
+                $XML_RPC_Base->raiseError('Non-numeric value received in INT or DOUBLE', XML_RPC_ERROR_NON_NUMERIC_FOUND);
                 $XML_RPC_xh[$parser]['value'] = XML_RPC_ERROR_NON_NUMERIC_FOUND;
             } else {
                 // it's ok, add it on
@@ -512,7 +497,7 @@ function XML_RPC_ee($parser_resource, $name)
 
     case 'METHODNAME':
     case 'RPCMETHODNAME':
-        $XML_RPC_xh[$parser]['method'] = $GLOBALS['XML_RPC_func_ereg_replace']("^[\n\r\t ]+", '',
+        $XML_RPC_xh[$parser]['method'] = $GLOBALS['XML_RPC_func_ereg_replace']("/^[\n\r\t ]+/i", '',
                                                       $XML_RPC_xh[$parser]['ac']);
         break;
     }
@@ -579,11 +564,7 @@ class XML_RPC_Base {
     function raiseError($msg, $code)
     {
         include_once 'PEAR.php';
-        if (is_object(@$this)) {
-            return PEAR::raiseError(get_class($this) . ': ' . $msg, $code);
-        } else {
-            return PEAR::raiseError('XML_RPC: ' . $msg, $code);
-        }
+        return PEAR::raiseError(get_class($this) . ': ' . $msg, $code);
     }
 
     /**
@@ -742,15 +723,16 @@ class XML_RPC_Client extends XML_RPC_Base {
      *
      * @return void
      */
-    function XML_RPC_Client($path, $server, $port = 0,
+    function __construct($path, $server, $port = 0,
                             $proxy = '', $proxy_port = 0,
                             $proxy_user = '', $proxy_pass = '')
     {
         $this->path       = $path;
         $this->proxy_user = $proxy_user;
         $this->proxy_pass = $proxy_pass;
+        $match = array();
 
-        $GLOBALS['XML_RPC_func_ereg']('^(http://|https://|ssl://)?(.*)$', $server, $match);
+        $GLOBALS['XML_RPC_func_ereg']('/^(http://|https://|ssl://)?(.*)$/i', $server, $match);
         if ($match[1] == '') {
             if ($port == 443) {
                 $this->server   = $match[2];
@@ -778,7 +760,7 @@ class XML_RPC_Client extends XML_RPC_Base {
         }
 
         if ($proxy) {
-            $GLOBALS['XML_RPC_func_ereg']('^(http://|https://|ssl://)?(.*)$', $proxy, $match);
+            $GLOBALS['XML_RPC_func_ereg']('@^(http://|https://|ssl://)?(.*)$@i', $proxy, $match);
             if ($match[1] == '') {
                 if ($proxy_port == 443) {
                     $this->proxy          = $match[2];
@@ -1074,7 +1056,7 @@ class XML_RPC_Response extends XML_RPC_Base
     /**
      * @return void
      */
-    function XML_RPC_Response($val, $fcode = 0, $fstr = '')
+    function __construct($val, $fcode = 0, $fstr = '')
     {
         if ($fcode != 0) {
             $this->fn = $fcode;
@@ -1219,7 +1201,7 @@ class XML_RPC_Message extends XML_RPC_Base
     /**
      * @return void
      */
-    function XML_RPC_Message($meth, $pars = 0)
+    function __construct($meth, $pars = 0)
     {
         $this->methodname = $meth;
         if (is_array($pars) && sizeof($pars) > 0) {
@@ -1290,9 +1272,9 @@ class XML_RPC_Message extends XML_RPC_Base
         $this->payload .= "</params>\n";
         $this->payload .= $this->xml_footer();
         if ($this->remove_extra_lines) {
-            $this->payload = $GLOBALS['XML_RPC_func_ereg_replace']("[\r\n]+", "\r\n", $this->payload);
+            $this->payload = $GLOBALS['XML_RPC_func_ereg_replace']("/[\r\n]+/i", "\r\n", $this->payload);
         } else {
-            $this->payload = $GLOBALS['XML_RPC_func_ereg_replace']("\r\n|\n|\r|\n\r", "\r\n", $this->payload);
+            $this->payload = $GLOBALS['XML_RPC_func_ereg_replace']("/\r\n|\n|\r|\n\r/i", "\r\n", $this->payload);
         }
         if ($this->convert_payload_encoding) {
             $this->payload = mb_convert_encoding($this->payload, $this->send_encoding);
@@ -1410,11 +1392,12 @@ class XML_RPC_Message extends XML_RPC_Base
      * @link   http://php.net/xml_parser_create
      * @since  Method available since Release 1.2.0
      */
-    function getEncoding($data)
+    static function getEncodingStatic($data)
     {
         global $XML_RPC_defencoding;
 
-        if ($GLOBALS['XML_RPC_func_ereg']('<\?xml[^>]*[:space:]*encoding[:space:]*=[:space:]*[\'"]([^"\']*)[\'"]',
+        $match = array();
+        if ($GLOBALS['XML_RPC_func_ereg']('/<\?xml[^>]*[:space:]*encoding[:space:]*=[:space:]*[\'"]([^"\']*)[\'"]/i',
                        $data, $match))
         {
             $match[1] = trim(strtoupper($match[1]));
@@ -1431,6 +1414,24 @@ class XML_RPC_Message extends XML_RPC_Base
         } else {
             return $XML_RPC_defencoding;
         }
+    }
+    /**
+     * Determine the XML's encoding via the encoding attribute
+     * in the XML declaration
+     *
+     * If the encoding parameter is not set or is not ISO-8859-1, UTF-8
+     * or US-ASCII, $XML_RPC_defencoding will be returned.
+     *
+     * @param string $data  the XML that will be parsed
+     *
+     * @return string  the encoding to be used
+     *
+     * @link   http://php.net/xml_parser_create
+     * @since  Method available since Release 1.2.0
+     */
+    function getEncoding($data)
+    {
+      return self::getEncodingStatic($data);
     }
 
     /**
@@ -1479,9 +1480,9 @@ class XML_RPC_Message extends XML_RPC_Base
 
         // See if response is a 200 or a 100 then a 200, else raise error.
         // But only do this if we're using the HTTP protocol.
-        if ($GLOBALS['XML_RPC_func_ereg']('^HTTP', $data) &&
-            !$GLOBALS['XML_RPC_func_ereg']('^HTTP/[0-9\.]+ 200 ', $data) &&
-            !$GLOBALS['XML_RPC_func_ereg']('^HTTP/[0-9\.]+ 10[0-9]([A-Z ]+)?[\r\n]+HTTP/[0-9\.]+ 200', $data))
+        if ($GLOBALS['XML_RPC_func_ereg']('/^HTTP/i', $data) &&
+            !$GLOBALS['XML_RPC_func_ereg']('/^HTTP/[0-9\.]+ 200 /i', $data) &&
+            !$GLOBALS['XML_RPC_func_ereg']('/^HTTP/[0-9\.]+ 10[0-9]([A-Z ]+)?[\r\n]+HTTP/[0-9\.]+ 200/i', $data))
         {
                 $errstr = substr($data, 0, strpos($data, "\n") - 1);
                 error_log('HTTP error, got response: ' . $errstr);
@@ -1578,7 +1579,7 @@ class XML_RPC_Value extends XML_RPC_Base
     /**
      * @return void
      */
-    function XML_RPC_Value($val = -1, $type = '')
+    function __construct($val = -1, $type = '')
     {
         $this->me = array();
         $this->mytype = 0;
@@ -1777,7 +1778,8 @@ class XML_RPC_Value extends XML_RPC_Base
         }
         $ar = $o->me;
         reset($ar);
-        list($typ, $val) = each($ar);
+        $typ = key($ar);
+        $val = current($ar);
         return '<value>' .  $this->serializedata($typ, $val) .  "</value>\n";
     }
 
@@ -1802,7 +1804,7 @@ class XML_RPC_Value extends XML_RPC_Base
      */
     function structeach()
     {
-        return each($this->me['struct']);
+        return array(key($this->me['struct']), current($this->me['struct']));
     }
 
     /**
@@ -1882,7 +1884,7 @@ class XML_RPC_Value extends XML_RPC_Base
     function arraysize()
     {
         reset($this->me);
-        list($a, $b) = each($this->me);
+        $b = current($this->me);
         return sizeof($b);
     }
 
@@ -1947,7 +1949,8 @@ function XML_RPC_iso8601_encode($timet, $utc = 0)
 function XML_RPC_iso8601_decode($idate, $utc = 0)
 {
     $t = 0;
-    if ($GLOBALS['XML_RPC_func_ereg']('([0-9]{4})([0-9]{2})([0-9]{2})T([0-9]{2}):([0-9]{2}):([0-9]{2})', $idate, $regs)) {
+    $regs = array();
+    if ($GLOBALS['XML_RPC_func_ereg']('/([0-9]{4})([0-9]{2})([0-9]{2})T([0-9]{2}):([0-9]{2}):([0-9]{2})/i', $idate, $regs)) {
         if ($utc) {
             $t = gmmktime($regs[4], $regs[5], $regs[6], $regs[2], $regs[3], $regs[1]);
         } else {
@@ -2036,10 +2039,10 @@ function XML_RPC_encode($php_val)
 
     case 'string':
     case 'NULL':
-        if ($GLOBALS['XML_RPC_func_ereg']('^[0-9]{8}\T{1}[0-9]{2}\:[0-9]{2}\:[0-9]{2}$', $php_val)) {
+        if ($GLOBALS['XML_RPC_func_ereg']('/^[0-9]{8}\T{1}[0-9]{2}\:[0-9]{2}\:[0-9]{2}$/', $php_val)) {
             $XML_RPC_val->addScalar($php_val, $GLOBALS['XML_RPC_DateTime']);
         } elseif ($GLOBALS['XML_RPC_auto_base64']
-                  && $GLOBALS['XML_RPC_func_ereg']("[^ -~\t\r\n]", $php_val))
+                  && $GLOBALS['XML_RPC_func_ereg']("/[^ -~\t\r\n]/", $php_val))
         {
             // Characters other than alpha-numeric, punctuation, SP, TAB,
             // LF and CR break the XML parser, encode value via Base 64.

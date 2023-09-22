@@ -17,7 +17,10 @@ class api_v3_ContributionRecurTest extends CiviUnitTestCase {
   protected $_entity = 'contribution_recur';
   public $_eNoticeCompliant = TRUE;
 
-  function setUp() {
+  /**
+   * @before
+   */
+  function setUpTest() {
     parent::setUp();
     $this->_individualId = $this->individualCreate();
     $this->_params = array(
@@ -48,7 +51,10 @@ class api_v3_ContributionRecurTest extends CiviUnitTestCase {
     );
   }
 
-  function tearDown() {
+  /**
+   * @after
+   */
+  function tearDownTest() {
   }
 
   /**

@@ -169,7 +169,7 @@ PRIMARY KEY (id)
     foreach($this->_queryColumns as $k => $v){
       $select[] = $k.' as '.$v;
     }
-    $select = implode(", \n" , $select);
+    $select = CRM_Utils_Array::implode(", \n" , $select);
     $from = $this->tempFrom();
     $where = $this->tempWhere();
     $having = $this->tempHaving();
@@ -199,7 +199,7 @@ $having
           $values[] = 'NULL';
         }
       }
-      $values = implode(', ' , $values);
+      $values = CRM_Utils_Array::implode(', ' , $values);
       $sql = "REPLACE INTO {$this->_tableName} VALUES ($values)";
       CRM_Core_DAO::executeQuery($sql, CRM_Core_DAO::$_nullArray);
     }
@@ -252,10 +252,10 @@ $having
 
     $contributionPage = $this->_formValues['contribution_page'];
     if (!empty($contributionPage)) {
-      $clauses[] = "c.contribution_page_id IN (".implode(",", $contributionPage).")";
+      $clauses[] = "c.contribution_page_id IN (".CRM_Utils_Array::implode(",", $contributionPage).")";
     }
 
-    return implode(' AND ', $clauses);
+    return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
   function tempHaving(){
@@ -272,7 +272,7 @@ $having
 
     }
     if(count($clauses)){
-      return implode(' AND ', $clauses);
+      return CRM_Utils_Array::implode(' AND ', $clauses);
     }
     return '';
   }
@@ -337,10 +337,10 @@ $having
 
   function setTitle() {
     if ($this->_mode == 'booster') {
-      CRM_utils_System::setTitle(ts('End of recurring contribution'));
+      CRM_Utils_System::setTitle(ts('End of recurring contribution'));
     }
     else {
-      CRM_utils_System::setTitle(ts('Custom Search').' - '.ts('Recurring Contribution'));
+      CRM_Utils_System::setTitle(ts('Custom Search').' - '.ts('Recurring Contribution'));
     }
   }
 
@@ -419,7 +419,7 @@ $having
     return '';
   }
 
-  public static function includeContactIDs(&$sql, &$formValues, $isExport) {
+  public static function includeContactIDs(&$sql, &$formValues, $isExport = FALSE) {
     $contactIDs = array();
     foreach ($formValues as $id => $value) {
       list($contactID, $additionalID) = CRM_Core_Form::cbExtract($id);
@@ -434,7 +434,7 @@ $having
     }
 
     if (!empty($contactIDs)) {
-      $contactIDs = implode(', ', $contactIDs);
+      $contactIDs = CRM_Utils_Array::implode(', ', $contactIDs);
       if ($isExport) {
         $sql .= " AND contact_a.id IN ( $contactIDs )";
       }

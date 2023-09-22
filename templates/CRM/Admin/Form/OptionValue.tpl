@@ -41,7 +41,7 @@
         </tr>    
         <tr class="crm-admin-optionvalue-form-block-value">
             <td class="label">{$form.value.label}</td>
-            <td>{$form.value.html}<br /> {if $config->languageLimit|@count >= 2}
+            <td>{$form.value.html}<br /> {if $config->languageLimit|@is_array and $config->languageLimit|@count >= 2}
             <span class="description">{ts}The same option value is stored for all languages. Changing this value will change it for all languages.{/ts}</span> {/if} </td>
         </tr> 
         <tr class="crm-admin-optionvalue-form-block-name">   

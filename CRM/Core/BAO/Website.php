@@ -75,7 +75,7 @@ class CRM_Core_BAO_Website extends CRM_Core_DAO_Website {
     foreach ($params as $key => $values) {
       $websiteId = CRM_Utils_Array::value('id', $values);
       if ($websiteId) {
-        if (array_key_exists($websiteId, $ids)) {
+        if (CRM_Utils_Array::arrayKeyExists($websiteId, $ids)) {
           unset($ids[$websiteId]);
         }
         else {
@@ -112,7 +112,7 @@ class CRM_Core_BAO_Website extends CRM_Core_DAO_Website {
    * @static
    */
   static function del($ids) {
-    $query = 'DELETE FROM civicrm_website WHERE id IN ( ' . implode(',', $ids) . ')';
+    $query = 'DELETE FROM civicrm_website WHERE id IN ( ' . CRM_Utils_Array::implode(',', $ids) . ')';
     CRM_Core_DAO::executeQuery($query);
   }
 

@@ -13,7 +13,7 @@ function civicrm_api3_entity_get($params) {
   $include_dirs = array_unique(explode(PATH_SEPARATOR, get_include_path()));
   #$include_dirs = array(dirname(__FILE__). '/../../');
   foreach ($include_dirs as $include_dir) {
-    $api_dir = implode(DIRECTORY_SEPARATOR, array($include_dir, 'api', 'v3'));
+    $api_dir = CRM_Utils_Array::implode(DIRECTORY_SEPARATOR, array($include_dir, 'api', 'v3'));
     if (! is_dir($api_dir)) {
       continue;
     }

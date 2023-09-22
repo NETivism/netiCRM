@@ -147,7 +147,7 @@ function civicrm_relationship_types_get($params = NULL) {
   if (!empty($params) && is_array($params)) {
     $properties = array_keys($relationType->fields());
     foreach ($properties as $name) {
-      if (array_key_exists($name, $params)) {
+      if (CRM_Utils_Array::arrayKeyExists($name, $params)) {
         $relationType->$name = $params[$name];
       }
     }

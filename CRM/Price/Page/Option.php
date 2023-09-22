@@ -211,9 +211,7 @@ class CRM_Price_Page_Option extends CRM_Core_Page {
       // add breadcrumb
       require_once 'CRM/Core/BAO/OptionValue.php';
       $url = CRM_Utils_System::url('civicrm/admin/price/field/option', 'reset=1');
-      CRM_Utils_System::appendBreadCrumb(ts('Price Option'),
-        $url
-      );
+      CRM_Utils_System::appendBreadCrumb(array(array('title' => ts('Price Option'), 'url' => $url)));
       $this->assign('usedPriceSetTitle', CRM_Core_BAO_OptionValue::getTitle($oid));
       $this->assign('usedBy', $usedBy);
       $comps = array("Event" => "civicrm_event",
@@ -221,7 +219,7 @@ class CRM_Price_Page_Option extends CRM_Core_Page {
       );
       $priceSetContexts = array();
       foreach ($comps as $name => $table) {
-        if (array_key_exists($table, $usedBy)) {
+        if (CRM_Utils_Array::arrayKeyExists($table, $usedBy)) {
           $priceSetContexts[] = $name;
         }
       }

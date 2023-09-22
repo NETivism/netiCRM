@@ -41,7 +41,7 @@ class CRM_Event_Page_AJAX {
   /**
    * Function for building Event combo box
    */
-  function event() {
+  static function event() {
     require_once 'CRM/Utils/Type.php';
     $name = trim(CRM_Utils_Type::escape($_GET['name'], 'String'));
     $whereClause = " title LIKE '%$name%' AND ( civicrm_event.is_template IS NULL OR civicrm_event.is_template = 0 )";
@@ -67,7 +67,7 @@ LIMIT 0, 50
   /**
    * Function for building Event Type combo box
    */
-  function eventType() {
+  static function eventType() {
     require_once 'CRM/Utils/Type.php';
     $name = trim(CRM_Utils_Type::escape($_GET['name'], 'String'));
     $whereClause = " v.label LIKE '%$name%' ";
@@ -94,7 +94,7 @@ ORDER by v.weight";
   /**
    * Function for building EventFee combo box
    */
-  function eventFee() {
+  static function eventFee() {
     require_once 'CRM/Utils/Type.php';
     $name = trim(CRM_Utils_Type::escape($_GET['s'], 'String'));
     if (!$name) {
@@ -117,7 +117,7 @@ WHERE cg.name LIKE 'civicrm_event.amount%'
     CRM_Utils_System::civiExit();
   }
 
-  function eventList() {
+  static function eventList() {
     require_once "CRM/Event/BAO/Event.php";
     $events = CRM_Event_BAO_Event::getEvents(TRUE);
 
@@ -138,11 +138,14 @@ WHERE cg.name LIKE 'civicrm_event.amount%'
   /**
    * Function to get default participant role
    */
-  function participantRole() {
+  static function participantRole() {
 
     require_once 'CRM/Utils/Type.php';
 
     $eventID = $_GET['eventId'];
+    if (!CRM_Utils_Rule::positiveInteger($eventID)) {
+      CRM_Utils_System::civiExit();
+    }
 
     $defaultRoleId = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Event',
       $eventID,
@@ -158,10 +161,10 @@ WHERE cg.name LIKE 'civicrm_event.amount%'
   /**
    * Function to get Event Full or left seat
    */
-  function eventFull() {
+  static function eventFull() {
     $id = $_GET['id'] ? $_GET['id'] : ($_GET['eventId'] ? $_GET['eventId'] : NULL);
     $info = array();
-    if (is_numeric($id) && !empty($id)) {
+    if (CRM_Utils_Rule::positiveInteger($id)) {
       $seat = CRM_Event_BAO_Participant::eventFull($id, TRUE);
       $info['seat'] = $seat;
     }

@@ -63,7 +63,7 @@ class CRM_Contact_BAO_ContactType extends CRM_Contact_DAO_ContactType {
 
   static function isActive($contactType) {
     $contact = self::contactTypeInfo(FALSE);
-    $active = array_key_exists($contactType, $contact) ? TRUE : FALSE;
+    $active = CRM_Utils_Array::arrayKeyExists($contactType, $contact) ? TRUE : FALSE;
     return $active;
   }
 
@@ -83,7 +83,7 @@ class CRM_Contact_BAO_ContactType extends CRM_Contact_DAO_ContactType {
     }
 
     $argString = $all ? 'CRM_CT_BTI_1' : 'CRM_CT_BTI_0';
-    if (!array_key_exists($argString, $_cache)) {
+    if (!CRM_Utils_Array::arrayKeyExists($argString, $_cache)) {
       $cache = &CRM_Utils_Cache::singleton();
       $_cache[$argString] = $cache->get($argString);
       if (!$_cache[$argString]) {
@@ -161,10 +161,10 @@ WHERE  parent_id IS NULL
 
     $argString = $all ? 'CRM_CT_STI_1_' : 'CRM_CT_STI_0_';
     if (!empty($contactType)) {
-      $argString .= implode("_", $contactType);
+      $argString .= CRM_Utils_Array::implode("_", $contactType);
     }
 
-    if ((!array_key_exists($argString, $_cache)) || $ignoreCache) {
+    if ((!CRM_Utils_Array::arrayKeyExists($argString, $_cache)) || $ignoreCache) {
       $cache = &CRM_Utils_Cache::singleton();
       $_cache[$argString] = $cache->get($argString);
       if (!$_cache[$argString] || $ignoreCache) {
@@ -172,7 +172,7 @@ WHERE  parent_id IS NULL
 
         $ctWHERE = '';
         if (!empty($contactType)) {
-          $ctWHERE = " AND parent.name IN ('" . implode("','", $contactType) . "')";
+          $ctWHERE = " AND parent.name IN ('" . CRM_Utils_Array::implode("','", $contactType) . "')";
         }
 
         $sql = "
@@ -272,7 +272,7 @@ WHERE  subtype.name IS NOT NULL AND subtype.parent_id IS NOT NULL {$ctWHERE}
     }
 
     $argString = $all ? 'CRM_CT_CTI_1' : 'CRM_CT_CTI_0';
-    if (!array_key_exists($argString, $_cache)) {
+    if (!CRM_Utils_Array::arrayKeyExists($argString, $_cache)) {
       $cache = &CRM_Utils_Cache::singleton();
       $_cache[$argString] = $cache->get($argString);
       if (!$_cache[$argString]) {
@@ -296,7 +296,7 @@ WHERE  type.name IS NOT NULL
         while ($dao->fetch()) {
           $value = array();
           CRM_Core_DAO::storeValues($dao, $value);
-          if (array_key_exists('parent_id', $value)) {
+          if (CRM_Utils_Array::arrayKeyExists('parent_id', $value)) {
             $value['parent'] = $dao->parent;
             $value['parent_label'] = $dao->parent_label;
           }
@@ -323,7 +323,7 @@ WHERE  type.name IS NOT NULL
     $types = self::contactTypeInfo($all);
 
     if ($typeName) {
-      if (array_key_exists($typeName, $types)) {
+      if (CRM_Utils_Array::arrayKeyExists($typeName, $types)) {
         return $types[$typeName]['label'];
       }
     }
@@ -349,7 +349,7 @@ WHERE  type.name IS NOT NULL
 
     $argString = $all ? 'CRM_CT_GSE_1' : 'CRM_CT_GSE_0';
     $argString .= $isSeperator ? '_1' : '_0';
-    if (!array_key_exists($argString, $_cache)) {
+    if (!CRM_Utils_Array::arrayKeyExists($argString, $_cache)) {
       $cache = &CRM_Utils_Cache::singleton();
       $_cache[$argString] = $cache->get($argString);
 
@@ -438,16 +438,16 @@ AND   ( p.is_active = 1 OR p.id IS NULL )
       $subType = array($subType);
       $isArray = FALSE;
     }
-    $argString = implode("_", $subType);
+    $argString = CRM_Utils_Array::implode("_", $subType);
 
-    if (!array_key_exists($argString, $_cache)) {
+    if (!CRM_Utils_Array::arrayKeyExists($argString, $_cache)) {
       $_cache[$argString] = array();
 
       $sql = "
 SELECT subtype.name as contact_subtype, type.name as contact_type 
 FROM   civicrm_contact_type subtype
 INNER JOIN civicrm_contact_type type ON ( subtype.parent_id = type.id )
-WHERE  subtype.name IN ('" . implode("','", $subType) . "' )";
+WHERE  subtype.name IN ('" . CRM_Utils_Array::implode("','", $subType) . "' )";
       $dao = CRM_Core_DAO::executeQuery($sql);
       while ($dao->fetch()) {
         if (!$isArray) {
@@ -674,7 +674,7 @@ WHERE name = %1";
   static function getLabel($typeName) {
     $types = self::contactTypeInfo(TRUE);
 
-    if (array_key_exists($typeName, $types)) {
+    if (CRM_Utils_Array::arrayKeyExists($typeName, $types)) {
       return $types[$typeName]['label'];
     }
     return $typeName;

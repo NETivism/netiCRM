@@ -124,9 +124,6 @@ else {
   define( 'CIVICRM_CLEANURL', 0 );
 }
 
-// force PHP to auto-detect Mac line endings
-ini_set('auto_detect_line_endings', '1');
-
 // make sure the memory_limit is at least 64 MB
 $memLimitString = trim(ini_get('memory_limit'));
 $memLimitUnit   = strtolower(substr($memLimitString, -1));

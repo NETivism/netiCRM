@@ -129,7 +129,7 @@ class CRM_Core_Payment_AuthorizeNet extends CRM_Core_Payment {
 
     curl_setopt($submit, CURLOPT_POST, TRUE);
     curl_setopt($submit, CURLOPT_RETURNTRANSFER, TRUE);
-    curl_setopt($submit, CURLOPT_POSTFIELDS, implode('&', $postFields));
+    curl_setopt($submit, CURLOPT_POSTFIELDS, CRM_Utils_Array::implode('&', $postFields));
 
     $response = curl_exec($submit);
 
@@ -164,7 +164,7 @@ class CRM_Core_Payment_AuthorizeNet extends CRM_Core_Payment {
     if (($this->_mode == 'test') || $response_fields[6] == 0) {
       $query = "SELECT MAX(trxn_id) FROM civicrm_contribution WHERE trxn_id LIKE 'test%'";
       $p = array();
-      $trxn_id = strval(CRM_Core_Dao::singleValueQuery($query, $p));
+      $trxn_id = strval(CRM_Core_DAO::singleValueQuery($query, $p));
       $trxn_id = str_replace('test', '', $trxn_id);
       $trxn_id = intval($trxn_id) + 1;
       $params['trxn_id'] = sprintf('test%08d', $trxn_id);
@@ -547,7 +547,7 @@ class CRM_Core_Payment_AuthorizeNet extends CRM_Core_Payment {
     }
 
     if (!empty($error)) {
-      return implode('<p>', $error);
+      return CRM_Utils_Array::implode('<p>', $error);
     }
     else {
       return NULL;

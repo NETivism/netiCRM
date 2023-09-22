@@ -176,7 +176,7 @@ class CRM_Core_IDS {
    * @return boolean
    */
   public function check(&$args) {
-    $path = implode('/', $args);
+    $path = CRM_Utils_Array::implode('/', $args);
 
     // remove tracking parameters to prevent false positive
     $trackingG = array('fbclid', 'gclid', 'wbraid');
@@ -204,7 +204,7 @@ class CRM_Core_IDS {
 
     // lets request parameter handling by others
     // check document uri only
-    $request['IDS_document_uri'] = urldecode($_SERVER['DOCUMENT_URI']);
+    $request['IDS_document_uri'] = isset($_SERVER['DOCUMENT_URI']) ? urldecode($_SERVER['DOCUMENT_URI']) : '';
 
     // init the PHPIDS
     $config = CRM_Core_Config::singleton();

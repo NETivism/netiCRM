@@ -499,7 +499,7 @@ class CRM_Member_BAO_Membership extends CRM_Member_DAO_Membership {
     return NULL;
   }
 
-  function getStatusANDTypeVaues($membershipId) {
+  static function getStatusANDTypeVaues($membershipId) {
     $values = array();
     if (!$membershipId) {
       return $values;
@@ -584,7 +584,7 @@ INNER JOIN  civicrm_membership_type type ON ( type.id = membership.membership_ty
     $subject = ts('Deleted Member(s): %1', array(1 => $id));
     if (!empty($relatedContributions)) {
       $membership->contributions = $relatedContributions;
-      $line = ts('Contribution ID').' '.implode(',', $relatedContributions);
+      $line = ts('Contribution ID').' '.CRM_Utils_Array::implode(',', $relatedContributions);
       $subject .= ts('%1 reserved', array(1 => $line));
     }
     $statusId = CRM_Core_OptionGroup::getValue('activity_status', 'Completed', 'name');
@@ -653,7 +653,7 @@ INNER JOIN  civicrm_membership_type type ON ( type.id = membership.membership_ty
    *
    * @static
    */
-  function buildMembershipBlock(&$form,
+  static function buildMembershipBlock(&$form,
     $pageID,
     $formItems = FALSE,
     $selectedMembershipTypeID = NULL,
@@ -845,7 +845,7 @@ INNER JOIN  civicrm_membership_type type ON ( type.id = membership.membership_ty
    * @return array array of importable Fields
    * @access public
    */
-  function &importableFields($contactType = 'Individual', $status = TRUE) {
+  static function &importableFields($contactType = 'Individual', $status = TRUE) {
     if (!self::$_importableFields) {
       if (!self::$_importableFields) {
         self::$_importableFields = array();
@@ -905,7 +905,7 @@ INNER JOIN  civicrm_membership_type type ON ( type.id = membership.membership_ty
    *
    * @retun array return array of all exportable fields
    */
-  function &exportableFields() {
+  static function &exportableFields() {
     require_once 'CRM/Member/DAO/MembershipType.php';
     $expFieldMembership = CRM_Member_DAO_Membership::export();
     $expFieldsMemType = CRM_Member_DAO_MembershipType::export();
@@ -937,7 +937,7 @@ INNER JOIN  civicrm_membership_type type ON ( type.id = membership.membership_ty
    * @return returns the number of members of type $membershipTypeId whose
    *         start_date is between $startDate and $endDate
    */
-  function getMembershipStarts($membershipTypeId, $startDate, $endDate, $isTest = 0) {
+  static function getMembershipStarts($membershipTypeId, $startDate, $endDate, $isTest = 0) {
     $query = "SELECT count(civicrm_membership.id) as member_count
   FROM   civicrm_membership left join civicrm_membership_status on ( civicrm_membership.status_id = civicrm_membership_status.id )
 WHERE  membership_type_id = %1 AND start_date >= '$startDate' AND start_date <= '$endDate' 
@@ -971,7 +971,7 @@ AND is_test = %2";
    * @return returns the number of members of type $membershipTypeId as of
    *         $date.
    */
-  function getMembershipCount($membershipTypeId, $date = NULL, $isTest = 0) {
+  static function getMembershipCount($membershipTypeId, $date = NULL, $isTest = 0) {
     if (!is_null($date) && !preg_match('/^\d{8}$/', $date)) {
        return CRM_Core_Error::statusBounce(ts('Invalid date "%1" (must have form yyyymmdd).', array(1 => $date)));
     }
@@ -1002,7 +1002,7 @@ AND civicrm_membership.is_test = %2";
    *
    * @return
    */
-  function statusAvilability($contactId) {
+  static function statusAvilability($contactId) {
     require_once 'CRM/Member/DAO/MembershipStatus.php';
     $membership = new CRM_Member_DAO_MembershipStatus();
     $membership->whereAdd('1');
@@ -1025,7 +1025,7 @@ AND civicrm_membership.is_test = %2";
    * @return void
    * @access public
    */
-  public function postProcessMembership($membershipParams, $contactID, &$form, &$premiumParams) {
+  public static function postProcessMembership($membershipParams, $contactID, &$form, &$premiumParams) {
     $tempParams = $membershipParams;
     $paymentDone = FALSE;
     $result = NULL;
@@ -1092,7 +1092,7 @@ AND civicrm_membership.is_test = %2";
         CRM_Core_Error::fatal("Could not find a system table");
       }
       $tempParams['amount'] = $minimumFee;
-      $invoiceID = md5(uniqid(rand(), TRUE));
+      $invoiceID = md5(uniqid((string)rand(), TRUE));
       $tempParams['invoiceID'] = $invoiceID;
 
       //we don't allow recurring membership.CRM-3781.
@@ -1194,7 +1194,7 @@ AND civicrm_membership.is_test = %2";
           $message[] = $error;
         }
       }
-      $message = ts("Payment Processor Error message") . ": " . implode('<br/>', $message);
+      $message = ts("Payment Processor Error message") . ": " . CRM_Utils_Array::implode('<br/>', $message);
       $session = CRM_Core_Session::singleton();
       $session->setStatus($message);
       CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/contribute/transact',
@@ -1820,7 +1820,7 @@ WHERE  civicrm_membership.contact_id = civicrm_contact.id
   static function &buildMembershipTypeValues(&$form, $membershipTypeID = NULL) {
     $whereClause = NULL;
     if (is_array($membershipTypeID)) {
-      $allIDs = implode(',', $membershipTypeID);
+      $allIDs = CRM_Utils_Array::implode(',', $membershipTypeID);
       $whereClause = "WHERE id IN ( $allIDs )";
     }
     elseif (is_numeric($membershipTypeID) &&

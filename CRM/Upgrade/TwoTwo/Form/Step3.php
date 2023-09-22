@@ -286,7 +286,7 @@ ALTER TABLE `civicrm_domain`
       $backendValues = unserialize($domain->config_backend);
       foreach ($mailerFields as $field) {
         $mailerValues[$field] = CRM_Utils_Array::value($field, $backendValues);
-        if (array_key_exists($field, $backendValues)) {
+        if (CRM_Utils_Array::arrayKeyExists($field, $backendValues)) {
           unset($backendValues[$field]);
         }
       }

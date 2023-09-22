@@ -141,7 +141,7 @@ function civicrm_api($entity, $action, $params, $extra = NULL) {
       return 0;
     }
     $data = $e->getExtraParams();
-    $err = civicrm_api3_create_error($e->getMessage(), $data, $apiRequest, $e->getCode());
+    $err = civicrm_api3_create_error($e->getMessage(), $data, $apiRequest);
     if (CRM_Utils_Array::value('debug', CRM_Utils_Array::value('params',$apiRequest))) {
       $err['trace'] = $e->getTraceAsString();
     }
@@ -155,7 +155,7 @@ function civicrm_api($entity, $action, $params, $extra = NULL) {
       return 0;
     }
     $data = array();
-    $err = civicrm_api3_create_error($e->getMessage(), $data, $apiRequest, $e->getCode());
+    $err = civicrm_api3_create_error($e->getMessage(), $data, $apiRequest);
     if (CRM_Utils_Array::value('debug', $apiRequest['params'])) {
       $err['trace'] = $e->getTraceAsString();
     }
@@ -270,7 +270,7 @@ function _civicrm_api_loadEntity($entity, $version = 3) {
   $loaded_files = array(); // array($relativeFilePath => TRUE)
   $include_dirs = array_unique(explode(PATH_SEPARATOR, get_include_path()));
   foreach ($include_dirs as $include_dir) {
-    $action_dir = implode(DIRECTORY_SEPARATOR, array($include_dir, 'api', "v${version}", $camelName));
+    $action_dir = CRM_Utils_Array::implode(DIRECTORY_SEPARATOR, array($include_dir, 'api', "v{$version}", $camelName));
     if (! is_dir($action_dir)) {
       continue;
     }
@@ -278,7 +278,7 @@ function _civicrm_api_loadEntity($entity, $version = 3) {
     $iterator = new DirectoryIterator($action_dir);
     foreach ($iterator as $fileinfo) {
       $file = $fileinfo->getFilename();
-      if (array_key_exists($file, $loaded_files)) {
+      if (CRM_Utils_Array::arrayKeyExists($file, $loaded_files)) {
         continue; // action provided by an earlier item on include_path
       }
 
@@ -348,7 +348,7 @@ function civicrm_get_api_version($desired_version = NULL) {
  */
 function civicrm_error($result) {
   if (is_array($result)) {
-    return (array_key_exists('is_error', $result) &&
+    return (CRM_Utils_Array::arrayKeyExists('is_error', $result) &&
       $result['is_error']
     ) ? TRUE : FALSE;
   }
@@ -385,7 +385,7 @@ function _civicrm_api_get_camel_name($entity, $version = NULL) {
   if ($fragments[0] === 'Uf') {
     $fragments[0] = 'UF';
   }
-  return implode('', $fragments);
+  return CRM_Utils_Array::implode('', $fragments);
 }
 
 function _civicrm_api_get_constant_camel_name($name) {
@@ -401,7 +401,7 @@ function _civicrm_api_get_constant_camel_name($name) {
     }
   }
 
-  $_map[$name] = implode('', $fragments);
+  $_map[$name] = CRM_Utils_Array::implode('', $fragments);
   return $_map[$name];
 }
 
@@ -483,7 +483,7 @@ function _civicrm_api_call_nested_api(&$params, &$result, $action, $entity, $ver
         }
         $enforcedSubParams['sequential'] = 1;
         $enforcedSubParams['api.has_parent'] = 1;
-        if (array_key_exists(0, $newparams)) {
+        if (CRM_Utils_Array::arrayKeyExists(0, $newparams)) {
           // it is a numerically indexed array - ie. multiple creates
           foreach ($newparams as $entity => $entityparams) {
             // Defaults, overridden by request params, overridden by enforced params.
@@ -550,7 +550,7 @@ function _civicrm_api_replace_variables($entity, $action, &$params, &$parentResu
         $count = count($stringParts);
         while ($count > 0) {
           $fieldname .= "." . array_shift($stringParts);
-          if (array_key_exists($fieldname, $parentResult) && is_array($parentResult[$fieldname])) {
+          if (CRM_Utils_Array::arrayKeyExists($fieldname, $parentResult) && is_array($parentResult[$fieldname])) {
             $arrayLocation = $parentResult[$fieldname];
             foreach ($stringParts as $key => $value) {
               $arrayLocation = $arrayLocation[$value];

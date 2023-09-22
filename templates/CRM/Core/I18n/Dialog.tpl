@@ -23,7 +23,7 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
-{if $config->languageLimit|@count >= 2 and $translatePermission }
+{if $config->languageLimit|@is_array and $config->languageLimit|@count >= 2 and $translatePermission }
 <a href="javascript:" onClick="loadDialog('{crmURL p='civicrm/i18n' q="reset=1&table=$table&field=$field&id=$id&snippet=1&context=dialog" h=0}', '{$field}');"><img src="{$config->resourceBase}i/langs.png" /></a><div id="locale-dialog_{$field}" style="display:none"></div>
 
 {literal}

@@ -203,7 +203,7 @@ class CRM_Core_Payment_PayPalIPN extends CRM_Core_Payment_BaseIPN {
       }
     }
     else {
-      $contribution->invoice_id = md5(uniqid(rand(), TRUE));
+      $contribution->invoice_id = md5(uniqid('', TRUE));
     }
 
     if (!$recur) {

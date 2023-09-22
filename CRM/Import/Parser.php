@@ -373,7 +373,7 @@ abstract class CRM_Import_Parser {
       }
       elseif ($mode == self::MODE_IMPORT) {
         //print "Running parser in import mode<br/>\n";
-        $returnCode = $this->import($onDuplicate, $values, $doGeocodeAddress);
+        $returnCode = $this->import($onDuplicate, $values);
         if ($statusID && (($this->_rowCount % $skip) == 0)) {
           $currTimestamp = time();
           $totalTime = ($currTimestamp - $startTimestamp);

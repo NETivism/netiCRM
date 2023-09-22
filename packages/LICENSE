@@ -17,8 +17,8 @@ Licensing info in this file:
 
 PEAR
 ====
+Auth_SASL                     BSD 2-cl.
 Archive_Tar                   BSD 2-cl.
-Auth_SASL                     BSD 3-cl.
 Console_Getopt                PHP 3.0
 Console_Table                 BSD 3-cl.
 Contact_Vcard_Build           PHP 3          local changes
@@ -59,8 +59,6 @@ XML_Util                      BSD 3-cl.
 NON-PEAR
 ========
 AMFPHP         GPL 2       http://amfphp.org/
-Auth_OpenID    Apache 2    http://openidenabled.com/php-openid/
-Auth_Yadis     Apache 2    http://openidenabled.com/php-openid/
 PHP gettext    GPL 2+      http://savannah.nongnu.org/projects/php-gettext/
 PHPIDS         LGPL 3+     http://php-ids.org/
 Smarty         LGPL 2.1+   http://smarty.php.net/                                        local changes
@@ -97,6 +95,7 @@ secure-spreasheet     MIT            https://github.com/nick322/secure-spreadshe
 Limited Licesne
 ===============
 istockphoto/* https://www.istockphoto.com/help/licenses
+Midjourney    General Commercial Terms https://docs.midjourney.com/terms-of-service
 
 
 Unlisted

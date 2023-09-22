@@ -23,7 +23,7 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
-{if $tabHeader and count($tabHeader) gt 1}
+{if $tabHeader && $tabHeader|is_array && $tabHeader|@count gt 1}
 <div id="mainTabContainer" class="ui-tabs ui-widget ui-widget-content ui-corner-all">
 <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
    {foreach from=$tabHeader key=tabName item=tabValue}

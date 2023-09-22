@@ -85,7 +85,7 @@ class CRM_Contribute_BAO_Contribution extends CRM_Contribute_DAO_Contribution {
         CRM_Utils_Array::value('contribution', $ids)
       )) {
       $error = &CRM_Core_Error::singleton();
-      $d = implode(', ', $duplicates);
+      $d = CRM_Utils_Array::implode(', ', $duplicates);
       $error->push(CRM_Core_Error::DUPLICATE_CONTRIBUTION,
         'Fatal',
         array($d),
@@ -398,9 +398,9 @@ class CRM_Contribute_BAO_Contribution extends CRM_Contribute_DAO_Contribution {
       }
 
       foreach ($table as $tableName => $tableColumns) {
-        $insert = 'INSERT INTO ' . $tableName . ' (' . implode(', ', $tableColumns) . ') ';
+        $insert = 'INSERT INTO ' . $tableName . ' (' . CRM_Utils_Array::implode(', ', $tableColumns) . ') ';
         $tableColumns[0] = $copyContrib->id;
-        $select = 'SELECT ' . implode(', ', $tableColumns);
+        $select = 'SELECT ' . CRM_Utils_Array::implode(', ', $tableColumns);
         $from = ' FROM ' . $tableName;
         $where = " WHERE {$tableName}.entity_id = {$id}";
         $query = $insert . $select . $from . $where;
@@ -461,14 +461,14 @@ class CRM_Contribute_BAO_Contribution extends CRM_Contribute_DAO_Contribution {
     $src = $reverse ? $property : $id;
     $dst = $reverse ? $id : $property;
 
-    if (!array_key_exists($src, $defaults)) {
+    if (!CRM_Utils_Array::arrayKeyExists($src, $defaults)) {
       return FALSE;
     }
 
     $look = $reverse ? array_flip($lookup) : $lookup;
 
     if (is_array($look)) {
-      if (!array_key_exists($defaults[$src], $look)) {
+      if (!CRM_Utils_Array::arrayKeyExists($defaults[$src], $look)) {
         return FALSE;
       }
     }
@@ -506,7 +506,7 @@ class CRM_Contribute_BAO_Contribution extends CRM_Contribute_DAO_Contribution {
    * @return array array of importable Fields
    * @access public
    */
-  function &importableFields($contacType = 'Individual', $status = TRUE) {
+  static function &importableFields($contacType = 'Individual', $status = TRUE) {
     if (!self::$_importableFields) {
       if (!self::$_importableFields) {
         self::$_importableFields = array();
@@ -561,7 +561,7 @@ class CRM_Contribute_BAO_Contribution extends CRM_Contribute_DAO_Contribution {
     return self::$_importableFields;
   }
 
-  function &exportableFields() {
+  static function &exportableFields() {
     if (!self::$_exportableFields) {
       if (!self::$_exportableFields) {
         self::$_exportableFields = array();
@@ -624,7 +624,7 @@ class CRM_Contribute_BAO_Contribution extends CRM_Contribute_DAO_Contribution {
       $where[] = "receive_date <= '" . CRM_Utils_Type::escape($endDate, 'Timestamp') . "'";
     }
 
-    $whereCond = implode(' AND ', $where);
+    $whereCond = CRM_Utils_Array::implode(' AND ', $where);
 
     $query = "
     SELECT  sum( total_amount ) as total_amount, 
@@ -647,7 +647,7 @@ INNER JOIN  civicrm_contact contact ON ( contact.id = civicrm_contribution.conta
       $amount[] = CRM_Utils_Money::format($dao->total_amount, $dao->currency);
     }
     if ($count) {
-      return array('amount' => implode(', ', $amount),
+      return array('amount' => CRM_Utils_Array::implode(', ', $amount),
         'count' => $count,
       );
     }
@@ -769,7 +769,7 @@ INNER JOIN  civicrm_contact contact ON ( contact.id = civicrm_contribution.conta
       return FALSE;
     }
 
-    $clause = implode(' OR ', $clause);
+    $clause = CRM_Utils_Array::implode(' OR ', $clause);
     if ($id) {
       $clause = "( $clause ) AND id != %3";
       $input[3] = array($id, 'Integer');
@@ -814,7 +814,7 @@ INNER JOIN  civicrm_contact contact ON ( contact.id = civicrm_contribution.conta
       return FALSE;
     }
 
-    $clause = implode(' OR ', $clause);
+    $clause = CRM_Utils_Array::implode(' OR ', $clause);
     if ($id) {
       $clause = "( $clause ) AND id != %3";
       $input[3] = array($id, 'Integer');
@@ -867,6 +867,10 @@ INNER JOIN  civicrm_contact contact ON ( contact.id = civicrm_contribution.conta
               if($contribution_status_id == 2){
                 $return = TRUE;
               }
+              // have been failed, but now is waiting for payment.
+              if($contribution_status_id == 4){
+                $return = TRUE;
+              }
             }
           }
           elseif(!empty($negative_status[$participant_status_id])){
@@ -892,7 +896,21 @@ INNER JOIN  civicrm_contact contact ON ( contact.id = civicrm_contribution.conta
         $page_id = CRM_Core_DAO::getFieldValue("CRM_Contribute_DAO_Contribution", $id, 'contribution_page_id');
         if($page_id){
           if($ids['membership']){
-          
+            $membership_type_ids = array();
+            // Retrive actived membership type list.
+            $membership_types = CRM_Member_PseudoConstant::membershipType();
+            foreach ($membership_types as $membership_type_id => $membership_type) {
+              // Search for membership of the contact each types.
+              $membership = CRM_Member_BAO_Membership::getContactMembership($ids['contact_id'], $membership_type_id , $ids['is_test']);
+              if (!empty($membership)) {
+                // If there are memberships, add to an array.
+                $membership_type_ids[] = $membership['membership_type_id'];
+              }
+            }
+            // If the array is not empty, than the contact can paid by payment.
+            if (!empty($membership_type_ids)) {
+              $return = TRUE;
+            }
           }
           else{
             $return = TRUE;
@@ -991,7 +1009,7 @@ GROUP BY p.id
    *
    * @return contact id
    */
-  function createHonorContact(&$params, $honorId = NULL) {
+  static function createHonorContact(&$params, $honorId = NULL) {
     $honorParams = array('first_name' => $params["honor_first_name"],
       'last_name' => $params["honor_last_name"],
       'prefix_id' => $params["honor_prefix_id"],
@@ -1075,7 +1093,7 @@ WHERE  civicrm_contribution.contact_id = civicrm_contact.id
 
   static function annual($contactID) {
     if (is_array($contactID)) {
-      $contactIDs = implode(',', $contactID);
+      $contactIDs = CRM_Utils_Array::implode(',', $contactID);
     }
     else {
       $contactIDs = $contactID;
@@ -1139,8 +1157,8 @@ GROUP BY currency
     }
     if ($count > 0) {
       return array($count,
-        implode(',&nbsp;', $amount),
-        implode(',&nbsp;', $average),
+        CRM_Utils_Array::implode(',&nbsp;', $amount),
+        CRM_Utils_Array::implode(',&nbsp;', $average),
       );
     }
     return array(0, 0, 0);
@@ -1165,7 +1183,7 @@ GROUP BY currency
         $clause[] = "$k = '$v'";
       }
     }
-    $clause = implode(' AND ', $clause);
+    $clause = CRM_Utils_Array::implode(' AND ', $clause);
     $query = "SELECT id FROM civicrm_contribution WHERE $clause";
     $dao = &CRM_Core_DAO::executeQuery($query, $input);
 
@@ -1191,7 +1209,7 @@ GROUP BY currency
     require_once "CRM/Export/Form/Select.php";
 
     $paymentDetails = array();
-    $componentClause = ' IN ( ' . implode(',', $componentIds) . ' ) ';
+    $componentClause = ' IN ( ' . CRM_Utils_Array::implode(',', $componentIds) . ' ) ';
 
     if ($exportMode == CRM_Export_Form_Select::EVENT_EXPORT) {
       $componentSelect = " civicrm_participant_payment.participant_id id";
@@ -1406,9 +1424,9 @@ LEFT JOIN civicrm_option_value contribution_status ON (civicrm_contribution.cont
     }
 
     if ($count > 0) {
-      return array(implode(',&nbsp;', $amount),
-        implode(',&nbsp;', $average),
-        implode(',&nbsp;', $currency),
+      return array(CRM_Utils_Array::implode(',&nbsp;', $amount),
+        CRM_Utils_Array::implode(',&nbsp;', $average),
+        CRM_Utils_Array::implode(',&nbsp;', $currency),
       );
     }
     return array(0, 0);
@@ -1512,7 +1530,7 @@ LEFT JOIN  civicrm_contribution contribution ON ( componentPayment.contribution_
   /**
    * This function update contribution as well as related objects.
    */
-  function transitionComponents($params, $processContributionObject = FALSE) {
+  static function transitionComponents($params, $processContributionObject = FALSE) {
     // get minimum required values.
     $contactId = CRM_Utils_Array::value('contact_id', $params);
     $componentId = CRM_Utils_Array::value('component_id', $params);
@@ -1816,12 +1834,12 @@ LEFT JOIN  civicrm_contribution contribution ON ( componentPayment.contribution_
    *
    * @param array $ids contribution ids 
    */
-  function getComponentDetails($ids) {
+  static function getComponentDetails($ids) {
     $componentDetails = $pledgePayment = array();
     if (empty($ids)) {
       return $componentDetails;
     }
-    $contributionIds = implode(',', $ids);
+    $contributionIds = CRM_Utils_Array::implode(',', $ids);
 
     $query = "
 SELECT    c.id                 as contribution_id,
@@ -1867,7 +1885,7 @@ WHERE c.id IN ({$contributionIds}) ORDER BY c.id ASC";
     return $componentDetails;
   }
 
-  function contributionCount($contactId, $includeSoftCredit = TRUE, $includeHonoree = TRUE) {
+  static function contributionCount($contactId, $includeSoftCredit = TRUE, $includeHonoree = TRUE) {
     if (!$contactId) {
       return 0;
     }
@@ -1882,7 +1900,7 @@ WHERE c.id IN ({$contributionIds}) ORDER BY c.id ASC";
     if ($includeHonoree) {
       $whereConditions[] = " contribution.honor_contact_id = {$contactId}";
     }
-    $whereClause = " contribution.is_test = 0 AND ( " . implode(' OR ', $whereConditions) . " )";
+    $whereClause = " contribution.is_test = 0 AND ( " . CRM_Utils_Array::implode(' OR ', $whereConditions) . " )";
 
     $query = "       
    SELECT  count( contribution.id ) count
@@ -1901,7 +1919,7 @@ WHERE c.id IN ({$contributionIds}) ORDER BY c.id ASC";
    * @return array $ids             containing organization id and individual id
    * @access public
    */
-  function getOnbehalfIds($contributionId, $contributorId = NULL) {
+  static function getOnbehalfIds($contributionId, $contributorId = NULL) {
 
     $ids = array();
 
@@ -1960,7 +1978,7 @@ SELECT source_contact_id
     return $ids;
   }
 
-  function getContributionDates() {
+  static function getContributionDates() {
     $config = CRM_Core_Config::singleton();
     $currentMonth = date('m');
     $currentDay = date('d');
@@ -2085,7 +2103,7 @@ SELECT source_contact_id
     }
 
     // get the billing location type
-    if (!array_key_exists('related_contact', $values)) {
+    if (!CRM_Utils_Array::arrayKeyExists('related_contact', $values)) {
       $locationTypes = &CRM_Core_PseudoConstant::locationType();
       $billingLocationTypeId = array_search('Billing', $locationTypes);
     }
@@ -2303,7 +2321,7 @@ SELECT source_contact_id
     }
     if(!empty($option['contribution_type_id'])){
       if(is_array($option['contribution_type_id'])){
-        $where[] = "c.contribution_type_id IN (".implode(',', $option['contribution_type_id']).')';
+        $where[] = "c.contribution_type_id IN (".CRM_Utils_Array::implode(',', $option['contribution_type_id']).')';
       }
       else{
         $where[] = "c.contribution_type_id = ".$option['contribution_type_id'];
@@ -2312,7 +2330,7 @@ SELECT source_contact_id
     else{
       $types = array();
       CRM_Core_PseudoConstant::populate($types, 'CRM_Contribute_DAO_ContributionType', FALSE, 'is_deductible', 'is_active', 'is_deductible=1');
-      $where[] = "c.contribution_type_id IN (".implode(',', array_keys($types)).")";
+      $where[] = "c.contribution_type_id IN (".CRM_Utils_Array::implode(',', array_keys($types)).")";
     }
 
     // filter by recurring contribution
@@ -2324,7 +2342,7 @@ SELECT source_contact_id
         $where[] = "c.contribution_recur_id IS NULL";
       }
     }
-    $where = !empty($where) ? ' AND '.implode(' AND ', $where) : NULL;
+    $where = !empty($where) ? ' AND '.CRM_Utils_Array::implode(' AND ', $where) : NULL;
 
     $args = array(
       1 => array($contact_id, 'Integer'),
@@ -2581,7 +2599,7 @@ WHERE c.id = $id";
    * @param boolean $return_query to only return query string 
    * when TRUE, default FALSE
    */
-  function makeNotifyUrl(&$params, $path, $return_query = FALSE){
+  static function makeNotifyUrl(&$params, $path, $return_query = FALSE){
     $query = array();
     $query[] = "contact_id={$params['contactID']}";
     $query[] = "cid={$params['contributionID']}";
@@ -2613,9 +2631,9 @@ WHERE c.id = $id";
     }
 
     if($return_query){
-      return implode('&', $query);
+      return CRM_Utils_Array::implode('&', $query);
     }
-    $url = CRM_Utils_System::url($path, implode('&', $query), TRUE, NULL, FALSE);
+    $url = CRM_Utils_System::url($path, CRM_Utils_Array::implode('&', $query), TRUE, NULL, FALSE);
     if (CRM_Utils_System::isSSL()) {
       return str_replace('http://', 'https://', $url);
     }

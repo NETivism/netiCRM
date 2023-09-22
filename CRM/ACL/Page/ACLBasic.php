@@ -155,7 +155,7 @@ ORDER BY entity_id
     require_once 'CRM/Core/Permission.php';
     $permissions = CRM_Core_Permission::basicPermissions();
     while ($dao->fetch()) {
-      if (!array_key_exists($dao->entity_id, $acl)) {
+      if (!CRM_Utils_Array::arrayKeyExists($dao->entity_id, $acl)) {
         $acl[$dao->entity_id] = array();
         $acl[$dao->entity_id]['name'] = $dao->name;
         $acl[$dao->entity_id]['entity_id'] = $dao->entity_id;

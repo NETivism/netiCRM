@@ -19,6 +19,7 @@
     transparent
   );
   --shine-transition: all 0.65s ease-in-out;
+  --skeleton-width: 450px;
 }
 input[disabled],
 button[disabled],
@@ -38,6 +39,11 @@ select[readonly] {
 button.form-submit-primary,
 .form-submit.form-submit-primary {
   background: #3F51B5;
+}
+.select2-container--default .select2-search--dropdown .select2-search__field:focus {
+  border-color: #3F51B5;
+  outline: 2px solid #C5CAE9;
+  outline-offset: 0px;
 }
 .nsp-container.is-opened {
   max-width: 1100px;
@@ -144,8 +150,7 @@ button.form-submit-primary,
   color: #fff;
 }
 .netiaic-chat .user-msg.ai-msg-is-finished .msg-tools,
-.netiaic-chat .ai-msg.is-finished .msg-tools,
-.netiaic-chat .ai-msg.is-error .msg-tools {
+.netiaic-chat .ai-msg.is-finished .msg-tools {
   display: flex;
   flex: 0 0 100%;
   justify-content: flex-end;
@@ -161,6 +166,10 @@ button.form-submit-primary,
 }
 .netiaic-chat .user-msg .msg-content {
   background: #eceff1;
+}
+.netiaic-chat .is-error .msg-content {
+  color: var(--color-error);
+  background: var(--bg-color-error);
 }
 .netiaic-chat .msg .msg-tip {
   display: none;
@@ -380,6 +389,23 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
   background: #fafafa;
   box-shadow: 0px 0px 3px rgba(0,0,0,0.2);
 }
+.netiaic-modal .template-filters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.netiaic-modal .template-filters .filter-item {
+  display: flex;
+  align-items: center;
+}
+.netiaic-modal .filter-item > i {
+  margin-right: 12px;
+  font-size: 24px;
+  color: #000;
+}
+.netiaic-modal .filter-item .crm-form-elem {
+  display: block;
+}
 .netiaic-modal .template-item {
   margin: 16px 0;
   padding: 16px;
@@ -402,6 +428,10 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
 .netiaic-modal .template-item:hover .context {
   display: block;
 }
+.netiaic-modal .template-item .org {
+  position: absolute;
+  bottom: 0;
+}
 .netiaic-modal .template-item .actions {
   text-align: right;
 }
@@ -422,6 +452,10 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
 .netiaic-modal .netiaic-save-tpl-title-section .crm-form-elem,
 .netiaic-modal .netiaic-save-tpl-title-section .form-text {
   width: 100%;
+}
+.netiaic-modal .no-result {
+  margin-top: 20px;
+  text-align: center;
 }
 .netiaic-command {
   display: none;
@@ -538,11 +572,77 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
   font-size: .875rem;
   color: #757575;
 }
+.netiaic-container .netiaic-form-footer .netiaic-usage-info a {
+  color: #757575;
+}
+.netiaic-container .netiaic-form-footer .netiaic-usage-info a:hover {
+  color: #304ffe;
+}
 .nsp-container.nme-setting-panels .nsp-content {
   padding: 0;
 }
 .nsp-container.nme-setting-panels .nsp-content .nme-setting-panel:not(#nme-aicompletion) {
   padding: 20px 20px 60px 20px;
+}
+.nsp-is-opened .select2-search.select2-search--dropdown::before {
+  content: "\f158";
+  font-family: 'Material-Design-Iconic-Font';
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 5px 0 0 12px;
+}
+.nsp-is-opened .select2-container--default .select2-search--dropdown .select2-search__field {
+  background: none;
+}
+.is-show {
+  display: block !important;
+}
+.is-hide {
+  display: none !important;
+}
+
+@keyframes skeleton-animation {
+  0% {
+    background-position: calc(-1 * var(--skeleton-width)) 0;
+  }
+  100% {
+    background-position: var(--skeleton-width) 0;
+  }
+}
+.netiaic-container:not(.is-initialized) .netiaic-chat .msg-avatar,
+.netiaic-container:not(.is-initialized) .netiaic-chat .msg-content,
+.netiaic-container:not(.is-initialized) .netiaic-use-tpl > li,
+.netiaic-container:not(.is-initialized) .crm-section,
+.netiaic-container:not(.is-initialized) .netiaic-form-submit {
+  position: relative;
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  animation-name: skeleton-animation;
+  animation-timing-function: linear;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background: linear-gradient(to right, #ddd 8%, #ccc 18%, #ddd 33%);
+  background-size: calc(2 * var(--skeleton-width)) var(--skeleton-width);
+  pointer-events: none;
+}
+.netiaic-container:not(.is-initialized) .netiaic-use-tpl {
+  background: none;
+}
+.netiaic-container:not(.is-initialized) .netiaic-chat .msg-content,
+.netiaic-container:not(.is-initialized) .netiaic-form-submit {
+  text-indent: -9999px;
+  overflow: hidden;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.netiaic-container:not(.is-initialized) .netiaic-chat .msg-avatar i,
+.netiaic-container:not(.is-initialized) .netiaic-use-tpl > li > *,
+.netiaic-container:not(.is-initialized) .crm-section *,
+.netiaic-container:not(.is-initialized) .netiaic-usage-info {
+  opacity: 0;
+  pointer-events: none;
 }
 
 /** Particular: 1200 **/

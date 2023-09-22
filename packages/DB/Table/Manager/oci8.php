@@ -357,7 +357,7 @@ class DB_Table_Manager_oci8 {
             case 'rename':
                 break;
             default:
-                return DB_Table::throwError(DB_TABLE_ERR_ALTER_TABLE_IMPOS);
+                return DB_Table::throwDBError(DB_TABLE_ERR_ALTER_TABLE_IMPOS);
             }
         }
 

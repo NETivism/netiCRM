@@ -29933,7 +29933,7 @@ msgstr "新增募款頁"
 
 #: templates/CRM/Contribute/Page/ContributionPage.tpl
 msgid "Manage Personal Campaign Pages"
-msgstr "管理個人募款頁"
+msgstr "管理已建立的個人募款頁"
 
 #: templates/CRM/Contribute/Page/ContributionPage.tpl
 msgid ""
@@ -48456,7 +48456,7 @@ msgid "GooglePay"
 msgstr "Google Pay"
 
 msgid "LinePay"
-msgstr "Line Pay"
+msgstr "LINE Pay"
 
 msgid "ACH Bank"
 msgstr "ACH 銀行"
@@ -49469,11 +49469,46 @@ msgstr "展開"
 
 #: CRM/AI/Page/AJAX.php
 msgid ""
-"You are an %1 in %3 who uses %4 and is skilled at writing %2 copywriting."
-msgstr "你是一個在%3，使用%4語言的%1，很會撰寫%2語氣的文案。"
+"Please use %4 language of %3 to play the role of %1 and help generate a %2."
+msgstr "請用%3%4語言，扮演%1，幫忙產生%2。"
 
-msgid "You are using %1 as your language."
-msgstr "你使用%1作為語言。"
+msgid "Please using %1 language to generate content."
+msgstr "請用%1語言產生文字。"
 
 msgid "Chinese (Taiwan)"
 msgstr "繁體中文（台灣）"
+
+msgid ""
+"The fee you selected has expired before submission. Please reselect the fee."
+msgstr "您所選的費用在送出前已超過有效期限，請重新選擇費用。"
+
+msgid ""
+"The fee you selected has expired before submission. Please begin from the "
+"first step. You can refill another <a href=\"%1\">here</a>."
+msgstr "您所選的費用在送出前已超過有效期限，請返回第一步重新填寫報名表單。您可以按<a href=\"%1\">這裡</a>直接返回報名頁面。"
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid "The organization sharing this template"
+msgstr "分享組織"
+
+#: templates/CRM/Contribute/Page/ContributionPageEdit.tpl
+msgid "Admin Basic Settings"
+msgstr "管理者基本設定"
+
+#: templates/CRM/Contribute/Page/ContributionPageEdit.tpl
+msgid ""
+"You can provide this URL to supporters for creating new Personal Campaign "
+"Pages."
+msgstr "您可以提供這個網址給支持者以建立新的個人募款頁。"
+
+#: CRM/Contribute/Form/Payment.php
+msgid ""
+"This payment cannot be made at the moment. If you have any questions, please"
+" contact the site administrator."
+msgstr "這筆費用目前不能進行繳費，如有問題請洽網站管理員。"
+
+msgid ""
+"To ensure security, it is recommended that you submit a request through the "
+"customer service system before changing this field. If you are sure you want"
+" to modify this setting, please click Confirm button."
+msgstr "為維護安全性，在您更改此欄位前建議您利用客服系統提出需求。已確定要更改請按「確定」。"

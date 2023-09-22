@@ -50,7 +50,7 @@ class CRM_Grant_Form_Task_SearchTaskHookSample extends CRM_Grant_Form_Task {
     parent::preProcess();
     $rows = array();
     // display name and grant details of all selectced contacts
-    $grantIDs = implode(',', $this->_grantIds);
+    $grantIDs = CRM_Utils_Array::implode(',', $this->_grantIds);
 
     $query = "
     SELECT grt.decision_date  as decision_date,

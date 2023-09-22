@@ -190,7 +190,7 @@ class CRM_Member_Import_Form_Preview extends CRM_Core_Form {
       if (isset($mapFields[$mapper[$key][0]])) {
         $header[] = $mapFields[$mapper[$key][0]];
       }
-      $mapperFields[] = implode(' - ', $header);
+      $mapperFields[] = CRM_Utils_Array::implode(' - ', $header);
     }
     $lock = new CRM_Core_Lock($this->controller->_key);
     if (!$lock->isAcquired()) {
@@ -225,7 +225,7 @@ class CRM_Member_Import_Form_Preview extends CRM_Core_Form {
       $errorFile = $fileName['name'] . '.error.log';
 
       if ($fd = fopen($errorFile, 'w')) {
-        fwrite($fd, implode('\n', $errorMessage));
+        fwrite($fd, CRM_Utils_Array::implode('\n', $errorMessage));
       }
       fclose($fd);
 

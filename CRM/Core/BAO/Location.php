@@ -230,7 +230,7 @@ WHERE e.id = %1";
     // return if no data present
     $dataExists = FALSE;
     foreach (self::$blocks as $block) {
-      if (array_key_exists($block, $params)) {
+      if (CRM_Utils_Array::arrayKeyExists($block, $params)) {
         $dataExists = TRUE;
         break;
       }
@@ -365,18 +365,18 @@ WHERE e.id = %1";
 
     foreach (array('Email', 'IM', 'Phone', 'Address', 'OpenID') as $block) {
       $name = strtolower($block);
-      if (array_key_exists($name, $primaryLocBlockIds) &&
+      if (CRM_Utils_Array::arrayKeyExists($name, $primaryLocBlockIds) &&
         !CRM_Utils_System::isNull($primaryLocBlockIds[$name])
       ) {
         if (count($primaryLocBlockIds[$name]) > 1) {
           // keep only single block as primary.
           $primaryId = array_pop($primaryLocBlockIds[$name]);
-          $resetIds = "(" . implode(',', $primaryLocBlockIds[$name]) . ")";
+          $resetIds = "(" . CRM_Utils_Array::implode(',', $primaryLocBlockIds[$name]) . ")";
           // reset all primary except one.
           CRM_Core_DAO::executeQuery("UPDATE civicrm_$name SET is_primary = 0 WHERE id IN $resetIds");
         }
       }
-      elseif (array_key_exists($name, $nonPrimaryBlockIds) &&
+      elseif (CRM_Utils_Array::arrayKeyExists($name, $nonPrimaryBlockIds) &&
         !CRM_Utils_System::isNull($nonPrimaryBlockIds[$name])
       ) {
         // data exists and no primary block - make one primary.
@@ -418,7 +418,7 @@ WHERE e.id = %1";
         $keep = array_pop($addr['billing']);
       }
       unset($addr['billing'][$keepId]);
-      $restIds = "(" . implode(',', array_keys($addr['billing'])) . ")";
+      $restIds = "(" . CRM_Utils_Array::implode(',', array_keys($addr['billing'])) . ")";
       CRM_Core_DAO::executeQuery("UPDATE civicrm_address SET is_billing = 0 WHERE id IN $restIds");
     }
     elseif (count($addr['billing']) == 0 && count($addr['nonbilling']) > 0) {

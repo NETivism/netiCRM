@@ -137,7 +137,7 @@ class CRM_Core_ShowHideBlocks {
    */
   function addShow($name) {
     $this->_show[$name] = 1;
-    if (array_key_exists($name, $this->_hide)) {
+    if (CRM_Utils_Array::arrayKeyExists($name, $this->_hide)) {
       unset($this->_hide[$name]);
     }
   }
@@ -152,7 +152,7 @@ class CRM_Core_ShowHideBlocks {
    */
   function addHide($name) {
     $this->_hide[$name] = 1;
-    if (array_key_exists($name, $this->_show)) {
+    if (CRM_Utils_Array::arrayKeyExists($name, $this->_show)) {
       unset($this->_show[$name]);
     }
   }
@@ -183,14 +183,14 @@ class CRM_Core_ShowHideBlocks {
    * @return void
    * @access public
    */
-  function links(&$form, $prefix, $showLinkText, $hideLinkText, $assign = TRUE) {
+  static function links(&$form, $prefix, $showLinkText, $hideLinkText, $assign = TRUE) {
     $showCode = "show('id_{$prefix}'); hide('id_{$prefix}_show');";
     $hideCode = "hide('id_{$prefix}'); show('id_{$prefix}_show'); return false;";
 
     self::setIcons();
     $values = array();
-    $values['show'] = self::linkHtml("${prefix}_show", "#${prefix}_hide", self::$_showIcon . $showLinkText, "onclick=\"$showCode\"");
-    $values['hide'] = self::linkHtml("${prefix}_hide", "#${prefix}", self::$_hideIcon . $hideLinkText, "onclick=\"$hideCode\"");
+    $values['show'] = self::linkHtml("{$prefix}_show", "#{$prefix}_hide", self::$_showIcon . $showLinkText, "onclick=\"$showCode\"");
+    $values['hide'] = self::linkHtml("{$prefix}_hide", "#{$prefix}", self::$_hideIcon . $hideLinkText, "onclick=\"$hideCode\"");
 
     if ($assign) {
       $form->assign($prefix, $values);

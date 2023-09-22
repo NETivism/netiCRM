@@ -47,7 +47,7 @@ class CRM_Contact_Form_Edit_Organization {
    *
    * @return None
    */
-  public function buildQuickForm(&$form) {
+  public static function buildQuickForm(&$form) {
     $attributes = CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Contact');
 
     $form->applyFilter('__ALL__', 'trim');

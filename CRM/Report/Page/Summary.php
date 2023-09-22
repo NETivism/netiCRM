@@ -289,6 +289,7 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
     );
     $this->assign('chartMailingFunnel', $chartMailingFunnel);
 
+    /*
     if(end(end($participant_after_mailing)) > 0){
       $chartParticipantAfterMailing = array(
         'name' => 'participant_after_mailing',
@@ -316,6 +317,7 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
 
       $template->assign('chartContributeAfterMailing', $chartContributeAfterMailing);
     }
+    */
 
     $template->assign('update_time', date('n/j H:i',$time));
 

@@ -174,7 +174,7 @@ class CRM_Core_Smarty extends Smarty {
       $crm_container_class_arr[] = 'crm-container-md';
     }
 
-    $crm_container_class = implode(" ", $crm_container_class_arr);
+    $crm_container_class = CRM_Utils_Array::implode(" ", $crm_container_class_arr);
     $this->assign('crm_container_class', $crm_container_class);
   }
 

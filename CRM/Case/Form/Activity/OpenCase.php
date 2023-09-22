@@ -292,7 +292,7 @@ class CRM_Case_Form_Activity_OpenCase {
       'details' => $params['activity_details'],
     );
 
-    if (array_key_exists('custom', $params) && is_array($params['custom'])) {
+    if (CRM_Utils_Array::arrayKeyExists('custom', $params) && is_array($params['custom'])) {
       $xmlProcessorParams['custom'] = $params['custom'];
     }
 

@@ -1,77 +1,10 @@
 const { test, expect, chromium } = require('@playwright/test');
+const utils = require('./utils.js');
 
 /** @type {import('@playwright/test').Page} */
 let page;
 var locator, element;
 
-function makeid(length) {
-    var result           = '';
-    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    var charactersLength = characters.length;
-    for ( var i = 0; i < length; i++ ) {
-       result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
-}
-
-async function findElement(element){
-    await expect(page.locator(element)).not.toHaveCount(0);
-    console.log('Find an element matching: ' + element);
-}
-
-async function fillInput(locator, text_input){
-    await expect(locator).toBeEnabled();
-    await locator.click();
-    await locator.fill(text_input);
-    await expect(locator).toHaveValue(text_input);
-}
-
-async function checkInput(locator, expectEl={}){
-    await expect(locator).toBeEnabled();
-    await locator.click();
-    await expect(locator).toBeChecked();
-    if ('visible' in expectEl) await expect(page.locator(expectEl.visible)).toBeVisible();
-}
-
-async function selectOption(locator, option) {
-    await expect(locator).toBeEnabled();
-    var expectValue;
-
-    if (typeof option === 'object'){
-        if ('index' in option){
-            var optionLocator = await locator.locator('option');
-            if (option.index < 0) option.index += await optionLocator.count();
-            expectValue = await optionLocator.nth(option.index).getAttribute('value');
-        }
-    }
-    else if (typeof option === 'string') expectValue = option;
-
-    await locator.selectOption(option);
-    await expect(locator).toHaveValue(expectValue);
-}
-
-async function clickElement(locator, expectEl={}){
-    await expect(locator).toBeEnabled();
-    await locator.click();
-    if ('exist' in expectEl) await expect(page.locator(expectEl.exist)).not.toHaveCount(0);
-    else if ('notExist' in expectEl) await expect(page.locator(expectEl.notExist)).toHaveCount(0);
-    else if ('visible' in expectEl) await expect(page.locator(expectEl.visible)).toBeVisible();
-}
-
-function formatNumber(num, digits=2, fill='0') {
-    num = num.toString();
-    while (num.length < digits) num = `${fill}${num}`;
-    return num;
-}
-
-async function selectDate(locator, year, month, day, p=page){
-    await locator.click();
-    await p.locator('select.ui-datepicker-year').selectOption(`${year}`);
-    await p.locator('select.ui-datepicker-month').selectOption(`${month-1}`);
-    await p.locator(`a.ui-state-default[data-date='${day}']`).click();
-    var format = await locator.getAttribute('format');
-    await expect(locator).toHaveValue(format.replace('yy', year).replace('mm', formatNumber(month)).replace('dd', formatNumber(day)));
-}
 
 test.beforeAll(async () => {
     const browser = await chromium.launch();
@@ -82,6 +15,7 @@ test.afterAll(async () => {
     await page.close();
 });
   
+
 test.describe.serial('Add Contribution', () => {
 
     test.use({ storageState: 'storageState.json' });
@@ -97,20 +31,20 @@ test.describe.serial('Add Contribution', () => {
 
             /* select 新增個人 */
             element = '#profiles_1';
-            await findElement(element);
-            await selectOption(page.locator(element), '4');
+            await utils.findElement(page, element);
+            await utils.selectOption(page.locator(element), '4');
 
             /* filled up new contact form */
-            var first_name = makeid(3);
-            var last_name = makeid(3);
+            var first_name = utils.makeid(3);
+            var last_name = utils.makeid(3);
 
             element = 'form#Edit #last_name';
-            await findElement(element);
-            await fillInput(page.locator(element), last_name);
+            await utils.findElement(page, element);
+            await utils.fillInput(page.locator(element), last_name);
 
             element = 'form#Edit #first_name';
-            await findElement(element);
-            await fillInput(page.locator(element), first_name);
+            await utils.findElement(page, element);
+            await utils.fillInput(page.locator(element), first_name);
 
             await page.locator('#_qf_Edit_next').click();
 
@@ -118,121 +52,124 @@ test.describe.serial('Add Contribution', () => {
 
             /* select Contribution Type */
             element = '#contribution_type_id';
-            await findElement(element);
-            await selectOption(page.locator(element), '1');
+            await utils.findElement(page, element);
+            await utils.selectOption(page.locator(element), '1');
 
             /* fill in Total Amount */
             element = '#total_amount';
             total_amount = '100';
-            await findElement(element);
-            await fillInput(page.locator(element), total_amount);
+            await utils.findElement(page, element);
+            await utils.fillInput(page.locator(element), total_amount);
 
             /* fill in Source */
             element = '#source';
             source = 'hand to hand';
-            await findElement(element);
-            await fillInput(page.locator(element), source);
+            await utils.findElement(page, element);
+            await utils.fillInput(page.locator(element), source);
 
             /* select received date */
             element = '#receive_date';
-            await findElement(element);
-            await selectDate(page.locator(element), 2020, 1, 1);
+            await utils.findElement(page, element);
+            await utils.selectDate(page, page.locator(element), 2020, 1, 1);
 
             element = '#receive_date_time';
-            await findElement(element);
-            await fillInput(page.locator(element), '12:00PM');
+            await utils.findElement(page, element);
+            await utils.fillInput(page.locator(element), '12:00PM');
 
             /* select Paid By */
             element = '#payment_instrument_id';
-            await findElement(element);
-            await selectOption(page.locator(element), '12');
+            await utils.findElement(page, element);
+            await utils.selectOption(page.locator(element), '12');
 
             /* fill in Transaction ID */
             element = '#trxn_id';
-            trxn_id = makeid(8);
-            await findElement(element);
-            await fillInput(page.locator(element), trxn_id);
+            trxn_id = utils.makeid(8);
+            await utils.findElement(page, element);
+            await utils.fillInput(page.locator(element), trxn_id);
 
             /* click Receipt */
             element = '#have_receipt';
-            await findElement(element);
-            await checkInput(page.locator(element), {visible: '#receipt-option'});
+            await utils.findElement(page, element);
+            await utils.checkInput(page, page.locator(element), {visible: '#receipt-option'});
 
             /* select receipt date */
             element = '#receipt_date ';
-            await findElement(element);
-            await selectDate(page.locator(element), 2020, 1, 1);
+            await utils.findElement(page, element);
+            await utils.selectDate(page, page.locator(element), 2020, 1, 1);
 
             element = '#receipt_date_time';
-            await findElement(element);
-            await fillInput(page.locator(element), '12:00PM');
+            await utils.findElement(page, element);
+            await utils.fillInput(page.locator(element), '12:00PM');
 
             /* 收據資訊 */
 
             /* click 需要（請寄給我紙本收據） */
             element = '#CIVICRM_QFID_1_4';
-            await findElement(element);
-            await checkInput(page.locator(element));
+            await utils.findElement(page, element);
+            await utils.checkInput(page, page.locator(element));
 
             /* fill in 收據抬頭 */
             element = '#custom_2_-1';
-            await findElement(element);
-            await fillInput(page.locator(element), makeid(5));
+            await utils.findElement(page, element);
+            await utils.fillInput(page.locator(element), utils.makeid(5));
 
             /* fill in 報稅憑證 */
             element = '#custom_3_-1';
-            await findElement(element);
-            await fillInput(page.locator(element), makeid(5));
+            await utils.findElement(page, element);
+            await utils.fillInput(page.locator(element), utils.makeid(5));
 
             /* sendKeys 捐款徵信名稱 */
             element = '#custom_4_-1';
-            await findElement(element);
-            await fillInput(page.locator(element), makeid(5));
+            await utils.findElement(page, element);
+            await utils.fillInput(page.locator(element), utils.makeid(5));
 
             /* get contribution status */
-            element = '#contribution_status_id option';
-            await findElement(element);
-            contribution_status = await page.locator(element).nth(0).innerText();
+            element = '#contribution_status_id';
+            await utils.findElement(page, element);
+            contribution_status = await page.evaluate((element) => {
+                const contribution_value = document.querySelector(element).value;
+                return document.querySelector(`${element} option[value="${contribution_value}"]`).innerText;
+            }, element);
 
             /* click Additional Details */
             element = '#AdditionalDetail';
-            await findElement(element);
-            await clickElement(page.locator(element), {visible: '#id-additionalDetail'});
+            await utils.findElement(page, element);
+            await utils.clickElement(page, page.locator(element), {visible: '#id-additionalDetail'});
 
             /* select Contribution Page */
             element = '#contribution_page_id';
-            await findElement(element);
-            await selectOption(page.locator(element), {index: -1});
+            await utils.findElement(page, element);
+            await utils.selectOption(page.locator(element), {index: -1});
 
             /* click Honoree Information */
             element = '#Honoree';
-            await findElement(element);
-            await clickElement(page.locator(element), {visible: '#id-honoree'});
+            await utils.findElement(page, element);
+            await utils.clickElement(page, page.locator(element), {visible: '#id-honoree'});
 
             /* click 致敬 */
             element = '#CIVICRM_QFID_1_2';
-            await findElement(element);
-            await checkInput(page.locator(element), {visible: '#honorType'});
+            await utils.findElement(page, element);
+            await utils.checkInput(page, page.locator(element), {visible: '#honorType'});
 
             /* select Prefix */
             element = '#honor_prefix_id';
-            await findElement(element);
-            await selectOption(page.locator(element), '1');
+            await utils.findElement(page, element);
+            await utils.selectOption(page.locator(element), '1');
 
             /* fill in First Name */
             element = '#honor_first_name';
-            await findElement(element);
-            await fillInput(page.locator(element), makeid(3));
+            await utils.findElement(page, element);
+            await utils.fillInput(page.locator(element), utils.makeid(3));
 
             /* fill in Last Name */
             element = '#honor_last_name';
-            await findElement(element);
-            await fillInput(page.locator(element), makeid(3));
+            await utils.findElement(page, element);
+            await utils.fillInput(page.locator(element), utils.makeid(3));
 
             /* click Save */
             element = '#_qf_Contribution_upload-bottom';
-            await findElement(element);
-            await clickElement(page.locator(element), {notExist: '.crm-error'});
+            await utils.findElement(page, element);
+            await utils.clickElement(page, page.locator(element), {notExist: '.crm-error'});
 
         });
 
@@ -241,8 +178,8 @@ test.describe.serial('Add Contribution', () => {
 
             /* check success message */
             element = '.messages';
-            await findElement(element);
-            await expect(page.locator(element)).toHaveText('The contribution record has been saved.');
+            await utils.findElement(page, element);
+            await expect(page.locator(element).first()).toHaveText('The contribution record has been saved.');
 
             /* check Transaction ID, Total Amount, Source, Contribution Status just filled in */
             await expect(page.locator('.selector tr:nth-child(1) td.crm-contribution-trxn-id')).toHaveText(trxn_id);
@@ -258,25 +195,25 @@ test.describe.serial('Add Contribution', () => {
             
             /* click edit contribution */
             element = 'table.selector .row-action .action-item:nth-child(2)';
-            await findElement(element);
-            await clickElement(page.locator(element), {exist: 'form#Contribution'});
+            await utils.findElement(page, element);
+            await utils.clickElement(page, page.locator(element), {exist: 'form#Contribution'});
 
             /* clear receipt date */
             element = '.crm-receipt-option .crm-clear-link a';
-            await clickElement(page.locator(element));
+            await utils.clickElement(page, page.locator(element));
             await expect(page.locator('#receipt_date')).toHaveValue('');
             await expect(page.locator('#receipt_date_time')).toHaveValue('');
 
             /* fill in Transaction ID again */
             element = '#trxn_id';
-            await findElement(element);
-            trxn_id = makeid(8);
-            await fillInput(page.locator(element), trxn_id);
+            await utils.findElement(page, element);
+            trxn_id = utils.makeid(8);
+            await utils.fillInput(page.locator(element), trxn_id);
 
             /* click submit */
             element = '#_qf_Contribution_upload-bottom';
-            await findElement(element);
-            await clickElement(page.locator(element), {notExist: '.crm-error'});
+            await utils.findElement(page, element);
+            await utils.clickElement(page, page.locator(element), {notExist: '.crm-error'});
 
         });
 
@@ -285,8 +222,8 @@ test.describe.serial('Add Contribution', () => {
 
             /* check success message */
             element = '.messages';
-            await findElement(element);
-            await expect(page.locator(element)).toHaveText('The contribution record has been saved.');
+            await utils.findElement(page, element);
+            await expect(page.locator(element).first()).toHaveText('The contribution record has been saved.');
             
             /* check Transaction ID just filled in */
             await expect(page.locator('.selector tr:nth-child(1) td.crm-contribution-trxn-id')).toHaveText(trxn_id);

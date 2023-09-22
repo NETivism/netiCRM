@@ -903,7 +903,7 @@ WHERE  contribution_id = {$this->_id}
       TRUE, array('onChange' => "buildCustomData( 'Contribution', this.value );")
     );
     $deductibleType = CRM_Contribute_PseudoConstant::contributionType(NULL, 'is_deductible');
-    $this->assign('deductible_type_ids', implode(',', array_keys($deductibleType)));
+    $this->assign('deductible_type_ids', CRM_Utils_Array::implode(',', array_keys($deductibleType)));
     if ($this->_online) {
       // $element->freeze( );
     }
@@ -1353,7 +1353,7 @@ WHERE  contribution_id = {$this->_id}
       $nameFields = array('first_name', 'middle_name', 'last_name');
       foreach ($nameFields as $name) {
         $fields[$name] = 1;
-        if (array_key_exists("billing_$name", $params)) {
+        if (CRM_Utils_Array::arrayKeyExists("billing_$name", $params)) {
           $params[$name] = $params["billing_{$name}"];
           $params['preserveDBName'] = TRUE;
         }
@@ -1401,7 +1401,7 @@ WHERE  contribution_id = {$this->_id}
       CRM_Contribute_Form_AdditionalInfo::postProcessCommon($params, $this->_params);
 
       if (empty($this->_params['invoice_id'])) {
-        $this->_params['invoiceID'] = md5(uniqid(rand(), TRUE));
+        $this->_params['invoiceID'] = md5(uniqid((string)rand(), TRUE));
       }
       else {
         $this->_params['invoiceID'] = $this->_params['invoice_id'];
@@ -1484,7 +1484,7 @@ WHERE  contribution_id = {$this->_id}
           $params
         )
       );
-      $customFields = CRM_Utils_Array::crmArrayMerge($customFieldsContributionType,
+      $customFields = CRM_Utils_Array::arrayMerge($customFieldsContributionType,
         CRM_Core_BAO_CustomField::getFields('Contribution', FALSE, FALSE, NULL, NULL, TRUE)
       );
       $params['custom'] = CRM_Core_BAO_CustomField::postProcess($params,

@@ -291,7 +291,7 @@ class CRM_Core_Payment_eWAY extends CRM_Core_Payment {
     curl_setopt($submit, CURLOPT_TIMEOUT, 36000);
     // if open_basedir or safe_mode are enabled in PHP settings CURLOPT_FOLLOWLOCATION won't work so don't apply it
     // it's not really required CRM-5841
-    if (ini_get('open_basedir') == '' && ini_get('safe_mode' == 'Off')) {
+    if (ini_get('open_basedir') == '' && ini_get('safe_mode') == 'Off') {
       // ensures any Location headers are followed
       curl_setopt($submit, CURLOPT_FOLLOWLOCATION, 1);
     }
@@ -327,7 +327,7 @@ class CRM_Core_Payment_eWAY extends CRM_Core_Payment {
     // NOTE: You will not necessarily get a string back, if the request failed for
     //       any reason, the return value will be the boolean false.
     //----------------------------------------------------------------------------------------------------
-    if (($responseData === FALSE) || (strlen($responseData) == 0)) {
+    if (($responseData === FALSE) || (!is_string($responseData)) || (strlen($responseData) == 0)) {
       return self::errorExit(9006, "Error: Connection to payment gateway failed - no data returned.");
     }
 
@@ -490,7 +490,7 @@ class CRM_Core_Payment_eWAY extends CRM_Core_Payment {
     }
 
     if (!empty($errorMsg)) {
-      return implode('<p>', $errorMsg);
+      return CRM_Utils_Array::implode('<p>', $errorMsg);
     }
     else {
       return NULL;

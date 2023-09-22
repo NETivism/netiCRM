@@ -315,7 +315,7 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
   function getModeValue($mode = 1) {
     self::setModeValues();
 
-    if (!array_key_exists($mode, self::$_modeValues)) {
+    if (!CRM_Utils_Array::arrayKeyExists($mode, self::$_modeValues)) {
       $mode = 1;
     }
 
@@ -418,7 +418,7 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
       $group_contact_status = array();
       foreach (CRM_Core_SelectValues::groupContactStatus() as $k => $v) {
         if (!empty($k)) {
-          $group_contact_status[] = HTML_QuickForm::createElement('checkbox', $k, NULL, $v);
+          $group_contact_status[] = $this->createElement('checkbox', $k, NULL, $v);
         }
       }
       $this->addGroup($group_contact_status,

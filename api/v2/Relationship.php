@@ -98,7 +98,7 @@ function civicrm_relationship_create(&$params) {
   }
   CRM_Contact_BAO_Relationship::relatedMemberships($params['contact_id_a'], $values, $ids, $action);
 
-  return civicrm_create_success(array('id' => implode(',', $relationshipBAO[4])));
+  return civicrm_create_success(array('id' => CRM_Utils_Array::implode(',', $relationshipBAO[4])));
 }
 
 /**
@@ -320,7 +320,7 @@ function _civicrm_relationship_format_params(&$params, &$values) {
   $fields = CRM_Contact_DAO_Relationship::fields();
   _civicrm_store_values($fields, $params, $values);
 
-  $relationTypes = CRM_Core_PseudoConstant::relationshipType('name', TRUE);
+  $relationTypes = CRM_Core_PseudoConstant::relationshipType('name');
 
   foreach ($params as $key => $value) {
     // ignore empty values or empty arrays etc
@@ -373,7 +373,7 @@ function _civicrm_relationship_format_params(&$params, &$values) {
           return civicrm_create_error('Invalid Relationship Type');
         }
       case 'relationship_type_id':
-        if ($key == 'relationship_type_id' && !array_key_exists($value, $relationTypes)) {
+        if ($key == 'relationship_type_id' && !CRM_Utils_Array::arrayKeyExists($value, $relationTypes)) {
           return civicrm_create_error("$key not a valid: $value");
         }
 
@@ -397,7 +397,7 @@ function _civicrm_relationship_format_params(&$params, &$values) {
     }
   }
 
-  if (array_key_exists('note', $params)) {
+  if (CRM_Utils_Array::arrayKeyExists('note', $params)) {
     $values['note'] = $params['note'];
   }
   _civicrm_custom_format_params($params, $values, 'Relationship');

@@ -123,12 +123,12 @@ class CRM_Utils_System {
       }
     }
     $querystring = array_merge($querystring, array_unique($arrays));
-    return implode('&', $querystring) . (!empty($querystring) ? '&' : '') . $urlVar . '=';
+    return CRM_Utils_Array::implode('&', $querystring) . (!empty($querystring) ? '&' : '') . $urlVar . '=';
   }
 
   /**
    * Wrapping function to themeing
-   * 
+   *
    * For drupal 9 and new exception handling, we use exception to handle what kind of theme we should output
    * Do not use this control themeing anymore. Use drupal invoke function to display output
    * All content will use stdout and capture by drupal
@@ -138,7 +138,7 @@ class CRM_Utils_System {
    * @return void           prints content on stdout
    * @access public
    */
-  function theme(&$content) {
+  static function theme(&$content) {
     if(empty($content)){
       return self::notFound();
     }
@@ -177,7 +177,7 @@ class CRM_Utils_System {
     return "<a href=\"$url\">$text</a>";
   }
 
-  function permissionDenied() {
+  static function permissionDenied() {
     return CRM_Core_Config::$_userSystem->permissionDenied();
   }
 
@@ -204,6 +204,65 @@ class CRM_Utils_System {
   }
 
   /**
+	 * This static function sets the Content-Security-Policy header based on the configuration
+	 * rules defined in CRM_Core_Config. If the current path matches the CSPexcludePath
+	 * configuration rule, the header is not set.
+	 */
+  static function setCSPHeader() {
+    if (empty(CRM_Core_Config::singleton()->cspRules)) {
+      return;
+    }
+    else {
+      $cspRules = CRM_Core_Config::singleton()->cspRules;
+    }
+    $csp = new CRM_Utils_CSP($cspRules);
+    $csp = (string) $csp;
+
+    $currentPath = self::currentPath();
+    $cspExcludePath = CRM_Core_Config::singleton()->cspExcludePath;
+
+    if (!self::matchPath($cspExcludePath, $currentPath) && !empty($csp)) {
+      header("Content-Security-Policy: ".$csp);
+    }
+  }
+
+
+  /**
+   * This static function checks if the given path matches any of the patterns in the
+   * given pattern string. The pattern string should be a newline-separated list of
+   * Unix-style shell wildcards (e.g. *.php, /admin/*).
+   *
+   * @param string $pattern The pattern string to match against.
+   * @param string $path The path to test.
+   * @return bool Whether the path matches any of the patterns in the pattern string.
+   */
+  static function matchPath($pattern, $path) {
+
+    if (empty($pattern)) {
+      return false;
+    }
+
+    $patterns = preg_split('/\r?\n/', $pattern);
+    $patterns = array_map('trim', $patterns);
+    static $results = [];
+
+    foreach ($patterns as $pattern) {
+      if (isset($results[$pattern])) {
+        $result = $results[$pattern];
+      }
+      else {
+        $result = fnmatch($pattern, $path);
+        $results[$pattern] = $result;
+      }
+
+      if ($result) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
    * this function is called from a template to compose a url
    *
    * @param array $params list of parameters
@@ -211,7 +270,7 @@ class CRM_Utils_System {
    * @return string url
    * @access public
    */
-  function crmURL($params) {
+  static function crmURL($params) {
     $p = CRM_Utils_Array::value('p', $params);
     if (!isset($p)) {
       $p = self::currentPath();
@@ -235,7 +294,7 @@ class CRM_Utils_System {
    * @return void
    * @access public
    */
-  function setTitle($title, $pageTitle = NULL) {
+  static function setTitle($title, $pageTitle = NULL) {
     return CRM_Core_Config::$_userSystem->setTitle($title, $pageTitle);
   }
 
@@ -360,7 +419,7 @@ class CRM_Utils_System {
    *
    * @return string
    * @access public
-   * @static  
+   * @static
    */
   static function siteName() {
     return CRM_Core_Config::$_userSystem->siteName($name, $default);
@@ -371,7 +430,7 @@ class CRM_Utils_System {
    *
    * @return boolean
    * @access public
-   * @static  
+   * @static
    */
   static function allowedUserRegisteration() {
     return CRM_Core_Config::$_userSystem->allowedUserRegisteration();
@@ -382,7 +441,7 @@ class CRM_Utils_System {
    *
    * @return boolean
    * @access public
-   * @static  
+   * @static
    */
   static function userEmailVerification() {
     return CRM_Core_Config::$_userSystem->userEmailVerification();
@@ -392,7 +451,7 @@ class CRM_Utils_System {
    * Check module exists on system
    * @return string
    * @access public
-   * @static  
+   * @static
    */
   static function moduleExists($module) {
     $config = CRM_Core_Config::singleton();
@@ -404,9 +463,9 @@ class CRM_Utils_System {
 
   /**
    * Check hook exists in module list
-   * @return string
+   * @return array
    * @access public
-   * @static  
+   * @static
    */
   static function moduleImplements($hook) {
     $config = CRM_Core_Config::singleton();
@@ -617,7 +676,7 @@ class CRM_Utils_System {
   }
 
   /** get a module setting */
-  function getModuleSetting($pModuleName, $pSetting) {
+  static function getModuleSetting($pModuleName, $pSetting) {
     $vModules = self::parsePHPModules();
     return $vModules[$pModuleName][$pSetting];
   }
@@ -698,7 +757,7 @@ class CRM_Utils_System {
       self::$_callbacks = array();
     }
 
-    if (!array_key_exists($callback, self::$_callbacks)) {
+    if (!CRM_Utils_Array::arrayKeyExists($callback, self::$_callbacks)) {
       if (strpos($callback, '::') !== FALSE) {
         list($className, $methodName) = explode('::', $callback);
         $fileName = str_replace('_', DIRECTORY_SEPARATOR, $className) . '.php';
@@ -834,7 +893,7 @@ class CRM_Utils_System {
     static $version;
 
     if (!$version) {
-      $verFile = implode(DIRECTORY_SEPARATOR,
+      $verFile = CRM_Utils_Array::implode(DIRECTORY_SEPARATOR,
         array(dirname(__FILE__), '..', '..', 'civicrm-version.txt')
       );
       if (file_exists($verFile)) {
@@ -844,7 +903,7 @@ class CRM_Utils_System {
       }
       else {
         // svn installs don't have version.txt by default. In that case version.xml should help -
-        $verFile = implode(DIRECTORY_SEPARATOR,
+        $verFile = CRM_Utils_Array::implode(DIRECTORY_SEPARATOR,
           array(dirname(__FILE__), '..', '..', 'xml', 'version.xml')
         );
         if (file_exists($verFile)) {
@@ -972,6 +1031,27 @@ class CRM_Utils_System {
    */
   static function getDocBaseURL() {
     return CRM_Core_Config::singleton()->docURLBase;
+  }
+
+  /**
+   * Returns trusted Hosts patterns
+   *
+   * @return string hosts patterns
+   * @access public
+   */
+  static function getTrustedHostsPatterns() {
+    global $civicrm_conf;
+    $patterns = array();
+    if (!empty($civicrm_conf['trustedHostsPatterns'])) {
+      $patterns[] = trim($civicrm_conf['trustedHostsPatterns']);
+    }
+    if (!empty(CRM_Core_Config::singleton()->trustedHostsPatterns)) {
+      $patterns[] = trim(CRM_Core_Config::singleton()->trustedHostsPatterns);
+    }
+    if (!empty($patterns)) {
+      return trim(CRM_Utils_Array::implode("\n", $patterns));
+    }
+    return '';
   }
 
   /**
@@ -1153,7 +1233,7 @@ class CRM_Utils_System {
    * Only functions in register_shutdown_function will be call after this.
    * You should add callbacks into CRM_Core_Config::shutdownCallbacks
    * When using fpm, we may have fastcgi_finish_request and location of header here.
-   * 
+   *
    * @param integer $status
    * @return void
    */
@@ -1599,17 +1679,17 @@ class CRM_Utils_System {
 
   /**
    * SameSite cookie compatibility check
-   * 
+   *
    * from https://www.chromium.org/updates/same-site/incompatible-clients
    */
   public static function sameSiteCheck() {
     $useragent = $_SERVER['HTTP_USER_AGENT'];
     $isIOS = preg_match('/(iP.+; CPU .*OS (\d+)[_\d]*.*) AppleWebKit\//i', $useragent, $ios);
     if ($isIOS && $ios[2] == '12') {
-      return FALSE; 
+      return FALSE;
     }
     $safariStr = preg_match('/Version\/.* Safari\//i', $useragent);
-    $isChromiumBased = preg_match('/Chrom(e|ium)/i', $useragent); 
+    $isChromiumBased = preg_match('/Chrom(e|ium)/i', $useragent);
     $isSafari = !empty($safariStr) && !$isChromiumBased;
     if ($isSafari) {
       $isMAC = preg_match('/(Macintosh;.*Mac OS X (\d+)_(\d+)[_\d]*.*) AppleWebKit\//i', $useragent, $mac);
@@ -1702,6 +1782,40 @@ class CRM_Utils_System {
    */
   public static function loadUser($params) {
     return CRM_Core_Config::$_userSystem->loadUser($params);
+  }
+
+  /**
+   * Validates that a hostname (for example $_SERVER['HTTP_HOST']) is safe.
+   *
+   * @return bool
+   *   TRUE if only containing valid characters, or FALSE otherwise.
+   */
+  static function checkTrustedHosts($host = null) {
+    if (!empty($host)) {
+      $trusted_host_patterns = self::getTrustedHostsPatterns();
+      $trusted_host_patterns_arr = explode("\n", $trusted_host_patterns);
+
+      if (php_sapi_name() !== 'cli' && !empty($trusted_host_patterns_arr)) {
+        foreach ($trusted_host_patterns_arr as $pattern) {
+          $pattern = trim($pattern);
+          if ($pattern === '') {
+            continue;
+          }
+
+          // Replace wildcard character "*" with regular expression ".*"
+          // and add anchors at the start and end of the pattern
+          $pattern = '/^' . str_replace('\*', '.*', preg_quote($pattern, '/')) . '$/';
+
+          if (preg_match($pattern, $host)) {
+            return TRUE;
+          }
+        }
+
+        return FALSE;
+      }
+
+      return TRUE;
+    }
   }
 }
 

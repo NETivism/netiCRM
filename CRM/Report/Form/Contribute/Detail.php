@@ -234,7 +234,7 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
 
     $this->_columnHeaders = array();
     foreach ($this->_columns as $tableName => $table) {
-      if (array_key_exists('fields', $table)) {
+      if (CRM_Utils_Array::arrayKeyExists('fields', $table)) {
         foreach ($table['fields'] as $fieldName => $field) {
           if (CRM_Utils_Array::value('required', $field) ||
             CRM_Utils_Array::value($fieldName, $this->_params['fields'])
@@ -282,7 +282,7 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
       }
     }
 
-    $this->_select = "SELECT " . implode(', ', $select) . " ";
+    $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
   function from() {
@@ -366,7 +366,7 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
     foreach ($rows as $rowNum => $row) {
       if (!empty($this->_noRepeats) && $this->_outputMode != 'csv') {
         // don't repeat contact details if its same as the previous row
-        if (array_key_exists('civicrm_contact_id', $row)) {
+        if (CRM_Utils_Array::arrayKeyExists('civicrm_contact_id', $row)) {
           if ($cid = $row['civicrm_contact_id']) {
             if ($rowNum == 0) {
               $prev_cid = $cid;
@@ -395,7 +395,7 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
       }
 
       // handle state province
-      if (array_key_exists('civicrm_address_state_province_id', $row)) {
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_address_state_province_id', $row)) {
         if ($value = $row['civicrm_address_state_province_id']) {
           $rows[$rowNum]['civicrm_address_state_province_id'] = CRM_Core_PseudoConstant::stateProvince($value, FALSE);
 
@@ -411,7 +411,7 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
       }
 
       // handle country
-      if (array_key_exists('civicrm_address_country_id', $row)) {
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_address_country_id', $row)) {
         if ($value = $row['civicrm_address_country_id']) {
           $rows[$rowNum]['civicrm_address_country_id'] = CRM_Core_PseudoConstant::country($value, FALSE);
 
@@ -428,9 +428,9 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
       }
 
       // convert display name to links
-      if (array_key_exists('civicrm_contact_sort_name', $row) &&
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_contact_sort_name', $row) &&
         CRM_Utils_Array::value('civicrm_contact_sort_name', $rows[$rowNum]) &&
-        array_key_exists('civicrm_contact_id', $row)
+        CRM_Utils_Array::arrayKeyExists('civicrm_contact_id', $row)
       ) {
         $url = CRM_Utils_System::url("civicrm/contact/view",
           'reset=1&cid=' . $row['civicrm_contact_id'],
@@ -457,7 +457,7 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
       }
 
       // convert payment instruments display
-      if (array_key_exists('civicrm_contribution_payment_instrument_id', $row)) {
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_contribution_payment_instrument_id', $row)) {
         $rows[$rowNum]['civicrm_contribution_payment_instrument_id'] = $payment_instrument[$rows[$rowNum]['civicrm_contribution_payment_instrument_id']];
         $entryFound = TRUE;
       }

@@ -508,7 +508,7 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
     }
     if ($text && ($test || $contact['preferred_mail_format'] == 'Text' ||
         $contact['preferred_mail_format'] == 'Both' ||
-        ($contact['preferred_mail_format'] == 'HTML' && !array_key_exists('html', $pEmails))
+        ($contact['preferred_mail_format'] == 'HTML' && !CRM_Utils_Array::arrayKeyExists('html', $pEmails))
       )) {
       if (is_array($text)) {
         $textBody = join('', $text);
@@ -648,7 +648,7 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
     $from[] = "LEFT JOIN $eu as optout ON optout.event_queue_id = $eq.id AND optout.org_unsubscribe = 1";
 
     $select = "SELECT $eq.contact_id, COUNT($ed.time_stamp) as delivered, COUNT($eo.time_stamp) as opened, COUNT($ec.time_stamp) as clicks, COUNT($eb.time_stamp) as bounce, COUNT(unsubscribe.time_stamp) as unsubscribe, COUNT(optout.time_stamp)  as optout";
-    $from  = "\n FROM $eq ".implode("\n ", $from);
+    $from  = "\n FROM $eq ".CRM_Utils_Array::implode("\n ", $from);
     $where = "\n WHERE $eq.contact_id = %1 AND $ea.activity_id = %2";
     $sql = $select . $from . $where;
     $dao = CRM_Core_DAO::executeQuery($sql, array(

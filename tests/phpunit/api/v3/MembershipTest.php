@@ -19,17 +19,20 @@ class api_v3_MembershipTest extends CiviUnitTestCase {
   protected $_params;
   public $_eNoticeCompliant = TRUE;
 
-  public function setUp() {
+  /**
+   * @before
+   */
+  public function setUpTest() {
     //  Connect to the database
     parent::setUp();
     $this->_apiversion = 3;
-    //local
-    // $this->_contactID = '54';
-    // $this->_membershipTypeID = '9';
-    // $this->_membershipStatusID = '2';
+
+    // ref #35445 13f, temporarily set membershipStatusID to 2 until check membershipStatusTest.
+    $this->_membershipStatusID = '2';
+    // $this->_membershipStatusID = $this->membershipStatusCreate('test status');
     $this->_contactID = $this->individualCreate();
     $this->_membershipTypeID = $this->membershipTypeCreate($this->_contactID);
-    $this->_membershipStatusID = $this->membershipStatusCreate('test status');
+
 
     require_once 'CRM/Member/PseudoConstant.php';
     CRM_Member_PseudoConstant::membershipType(NULL, TRUE);
@@ -50,7 +53,10 @@ class api_v3_MembershipTest extends CiviUnitTestCase {
     );
   }
 
-  function tearDown() {
+  /**
+   * @after
+   */
+  function tearDownTest() {
     // $this->membershipStatusDelete($this->_membershipStatusID);
     // $this->membershipTypeDelete(array('id' => $this->_membershipTypeID));
     // $this->contactDelete($this->_contactID);
@@ -70,6 +76,7 @@ class api_v3_MembershipTest extends CiviUnitTestCase {
    * @response_body {$response_body}
    *
    * @docmaker_end
+   * @group CItesting
    */
   function testCreateMembership() {
     $result = civicrm_api('membership', 'create', $this->_params);
@@ -91,6 +98,7 @@ class api_v3_MembershipTest extends CiviUnitTestCase {
    * @response_body {$response_body}
    *
    * @docmaker_end
+   * @group CItesting
    */
   function testGetMembership() {
     $membership = civicrm_api('membership', 'create', $this->_params);
@@ -120,6 +128,7 @@ class api_v3_MembershipTest extends CiviUnitTestCase {
    * @response_body {$response_body}
    *
    * @docmaker_end
+   * @group CItesting
    */
   function testUpdateMembership() {
     $membership = civicrm_api('membership', 'create', $this->_params);
@@ -158,6 +167,7 @@ class api_v3_MembershipTest extends CiviUnitTestCase {
    * @response_body {$response_body}
    *
    * @docmaker_end
+   * @group CItesting
    */
   function testDeleteMembership() {
     $membership = civicrm_api('membership', 'create', $this->_params);

@@ -125,7 +125,7 @@ class CRM_Contact_Page_View_GroupContact extends CRM_Core_Page {
       CRM_Utils_System::redirect($session->popUserContext());
     }
 
-    $this->edit(NULL, CRM_Core_Action::ADD);
+    $this->edit(NULL);
     $this->browse();
     return parent::run();
   }
@@ -138,7 +138,7 @@ class CRM_Contact_Page_View_GroupContact extends CRM_Core_Page {
    *
    * $access public
    */
-  function del($groupContactId, $status, $contactID) {
+  static function del($groupContactId, $status, $contactID) {
     $groupId = CRM_Contact_BAO_GroupContact::getGroupId($groupContactId);
 
     switch ($status) {

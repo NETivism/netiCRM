@@ -61,7 +61,7 @@ class CRM_Contact_Form_Task_Merge extends CRM_Contact_Form_Task {
     // do check for same contact type.
     $contactTypes = array();
     if (!$statusMsg) {
-      $sql = "SELECT contact_type FROM civicrm_contact WHERE id IN (" . implode(',', $contactIds) . ")";
+      $sql = "SELECT contact_type FROM civicrm_contact WHERE id IN (" . CRM_Utils_Array::implode(',', $contactIds) . ")";
       $contact = CRM_Core_DAO::executeQuery($sql);
       while ($contact->fetch()) {
         $contactTypes[$contact->contact_type] = TRUE;

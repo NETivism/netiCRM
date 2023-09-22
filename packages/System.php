@@ -248,7 +248,7 @@ class System
             } elseif ($opt[0] == 'm') {
                 // if the mode is clearly an octal number (starts with 0)
                 // convert it to decimal
-                if (strlen($opt[1]) && $opt[1]{0} == '0') {
+                if (strlen($opt[1]) && $opt[1][0] == '0') {
                     $opt[1] = octdec($opt[1]);
                 } else {
                     // convert to int
@@ -451,7 +451,7 @@ class System
      * @static
      * @return string The temporary directory on the system
      */
-    function tmpdir()
+    static function tmpdir()
     {
         if (OS_WINDOWS) {
             if ($var = isset($_ENV['TMP']) ? $_ENV['TMP'] : getenv('TMP')) {
@@ -484,7 +484,7 @@ class System
      * @static
      * @author Stig Bakken <ssb@php.net>
      */
-    function which($program, $fallback = false)
+    static function which($program, $fallback = false)
     {
         // enforce API
         if (!is_string($program) || '' == $program) {

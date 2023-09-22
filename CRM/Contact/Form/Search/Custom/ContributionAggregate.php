@@ -205,12 +205,12 @@ civicrm_contact AS contact_a
       }
 
       if (!empty($contactIDs)) {
-        $contactIDs = implode(', ', $contactIDs);
+        $contactIDs = CRM_Utils_Array::implode(', ', $contactIDs);
         $clauses[] = "contact_a.id IN ( $contactIDs )";
       }
     }
 
-    return implode(' AND ', $clauses);
+    return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
   function having($includeContactIDs = FALSE) {
@@ -227,7 +227,7 @@ civicrm_contact AS contact_a
       $clauses[] = "sum(contrib.total_amount) <= $max";
     }
 
-    return implode(' AND ', $clauses);
+    return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
   /* 

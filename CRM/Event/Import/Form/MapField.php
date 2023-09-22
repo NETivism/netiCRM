@@ -102,7 +102,7 @@ class CRM_Event_Import_Form_MapField extends CRM_Core_Form {
     if (!preg_match('/^[0-9a-z]$/i', $columnName)) {
       $columnMatch = trim(preg_replace('/([\.\?\+\*\(\)\[\]\{\}])/', '\\\\$1', preg_replace('/\(.*\)/', '', $columnName)));
       $matches = preg_grep('/^'.$columnMatch.'/iu', $this->_mapperFields);
-      if (count($matches)) {
+      if (!empty($matches)) {
         $columnKey = key($matches);
         $this->_fieldUsed[$columnKey] = TRUE;
         return $columnKey;
@@ -401,7 +401,7 @@ class CRM_Event_Import_Form_MapField extends CRM_Core_Form {
   static function formRule($fields, $files, $self) {
     $errors = array();
     $fieldMessage = NULL;
-    if (!array_key_exists('savedMapping', $fields)) {
+    if (!CRM_Utils_Array::arrayKeyExists('savedMapping', $fields)) {
       $importKeys = array();
       foreach ($fields['mapper'] as $mapperPart) {
         $importKeys[] = $mapperPart[0];
@@ -426,7 +426,7 @@ class CRM_Event_Import_Form_MapField extends CRM_Core_Form {
       list($ruleFields, $threshold) = CRM_Dedupe_BAO_RuleGroup::dedupeRuleFieldsWeight($params);
       $weightSum = 0;
       foreach ($importKeys as $key => $val) {
-        if (array_key_exists($val, $ruleFields)) {
+        if (CRM_Utils_Array::arrayKeyExists($val, $ruleFields)) {
           $weightSum += $ruleFields[$val];
         }
       }
@@ -472,7 +472,7 @@ class CRM_Event_Import_Form_MapField extends CRM_Core_Form {
     }
 
     //display Error if loaded mapping is not selected
-    if (array_key_exists('loadMapping', $fields)) {
+    if (CRM_Utils_Array::arrayKeyExists('loadMapping', $fields)) {
       $getMapName = CRM_Utils_Array::value('savedMapping', $fields);
       if (empty($getMapName)) {
         $errors['savedMapping'] = ts('Select saved mapping');

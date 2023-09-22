@@ -131,7 +131,7 @@ define('PEAR_ERRORSTACK_ERR_OBJTOSTRING', 2);
  * $local_stack = new PEAR_ErrorStack('MyPackage');
  * </code>
  * @author     Greg Beaver <cellog@php.net>
- * @version    1.10.0
+ * @version    @package_version@
  * @package    PEAR_ErrorStack
  * @category   Debugging
  * @copyright  2004-2008 Greg Beaver
@@ -252,7 +252,7 @@ class PEAR_ErrorStack {
      * @return PEAR_ErrorStack
      */
     public static function &singleton(
-        $package = NULL, $msgCallback = false, $contextCallback = false,
+        $package, $msgCallback = false, $contextCallback = false,
         $throwPEAR_Error = false, $stackClass = 'PEAR_ErrorStack'
     ) {
         if (isset($GLOBALS['_PEAR_ERRORSTACK_SINGLETON'][$package])) {
@@ -599,7 +599,6 @@ class PEAR_ErrorStack {
      *                          to find error context
      * @return PEAR_Error|array if compatibility mode is on, a PEAR_Error is also
      *                          thrown.  see docs for {@link push()}
-     *
      */
     public static function staticPush(
         $package, $code, $level = 'error', $params = array(),
@@ -677,7 +676,7 @@ class PEAR_ErrorStack {
      * @return boolean
      * @since PEAR1.5.0a1
      */
-    function staticPop($package)
+    static function staticPop($package)
     {
         if ($package) {
             if (!isset($GLOBALS['_PEAR_ERRORSTACK_SINGLETON'][$package])) {

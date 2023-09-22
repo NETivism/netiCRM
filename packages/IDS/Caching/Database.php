@@ -193,7 +193,7 @@ class IDS_Caching_Database implements IDS_Caching_Interface
                 return unserialize($row['data']);
             }
 
-        } catch (PDOException $e) {
+        } catch (Exception $e) {
             throw new PDOException('PDOException: ' . $e->getMessage());
         }
         return false;
@@ -231,8 +231,8 @@ class IDS_Caching_Database implements IDS_Caching_Interface
                 PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true
             );
 
-        } catch (PDOException $e) {
-            throw new PDOException('PDOException: ' . $e->getMessage());
+        } catch (Exception $e) {
+            throw new Exception('PDOException: ' . $e->getMessage());
         }
         return $handle;
     }
@@ -276,7 +276,7 @@ class IDS_Caching_Database implements IDS_Caching_Interface
                 throw new PDOException($statement->errorCode());
             }
     
-        } catch (PDOException $e) {
+        } catch (Exception $e) {
             throw new PDOException('PDOException: ' . $e->getMessage());
         }    
     }

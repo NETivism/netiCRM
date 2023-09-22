@@ -396,7 +396,7 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
       }
 
       // set db value of filter in params if filter is non editable
-      if ($this->_id && !array_key_exists('filter', $params) && $this->_gName != 'participant_role') {
+      if ($this->_id && !CRM_Utils_Array::arrayKeyExists('filter', $params) && $this->_gName != 'participant_role') {
         $params['filter'] = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionValue', $this->_id, 'filter', 'id');
       }
 

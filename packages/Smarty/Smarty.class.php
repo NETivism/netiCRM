@@ -27,7 +27,6 @@
  * @author Monte Ohrt <monte at ohrt dot com>
  * @author Andrei Zmievski <andrei@php.net>
  * @package Smarty
- * @version 2.6.30
  */
 
 /* $Id$ */
@@ -61,6 +60,7 @@ define('SMARTY_PHP_ALLOW',      3);
 /**
  * @package Smarty
  */
+#[AllowDynamicProperties]
 class Smarty
 {
     /**#@+
@@ -465,7 +465,7 @@ class Smarty
      *
      * @var string
      */
-    var $_version              = '2.6.30';
+    var $_version = '2.6.32';
 
     /**
      * current template inclusion depth
@@ -1208,7 +1208,7 @@ class Smarty
                         $_server_vars = ($this->request_use_auto_globals) ? $_SERVER : $GLOBALS['HTTP_SERVER_VARS'];
                         $_last_modified_date = @substr($_server_vars['HTTP_IF_MODIFIED_SINCE'], 0, strpos($_server_vars['HTTP_IF_MODIFIED_SINCE'], 'GMT') + 3);
                         $_gmt_mtime = gmdate('D, d M Y H:i:s', $this->_cache_info['timestamp']).' GMT';
-                        if (@count($this->_cache_info['insert_tags']) == 0
+                        if (empty($this->_cache_info['insert_tags'])
                             && !$this->_cache_serials
                             && $_gmt_mtime == $_last_modified_date) {
                             if (php_sapi_name()=='cgi')
@@ -1517,8 +1517,43 @@ class Smarty
      */
     function _get_compile_path($resource_name)
     {
-        return $this->_get_auto_filename($this->compile_dir, $resource_name,
+        $compilePath =  $this->_get_auto_filename($this->compile_dir, $resource_name,
                                          $this->_compile_id) . '.php';
+
+        //for 'string:' resource smarty might going to fail to create
+        //compile file, so make sure we should have valid path, CRM-5890
+        $matches = array( );
+        if ( preg_match( '/^(\s+)?string:/', $resource_name, $matches ) ) {
+            if ( !$this->validateCompilePath( $compilePath ) ) {
+                $compilePath = $this->_get_auto_filename( $this->compile_dir,
+                                                          time().rand(),
+                                                          $this->_compile_id );
+                $compilePath .= '.php';
+            }
+        }
+
+        return $compilePath;
+    }
+
+    /**
+     *  do check can smarty create a file w/ given path.
+     */
+    function validateCompilePath( $compilePath ) {
+        //first check for directory.
+        $dirname = dirname( $compilePath );
+        if ( !is_dir( $dirname ) ) {
+            require_once(SMARTY_CORE_DIR . 'core.create_dir_structure.php');
+            smarty_core_create_dir_structure( array('dir' => $dirname ), $this );
+        }
+
+        $isValid = FALSE;
+        if ( $fd = @fopen( $compilePath, 'wb') ) {
+            $isValid = TRUE;
+            @fclose( $fd );
+            @unlink($compilePath);
+        }
+
+        return $isValid;
     }
 
     /**

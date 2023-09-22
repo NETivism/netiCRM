@@ -155,7 +155,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     }
 
     if (!empty($error)) {
-      return implode('<p>', $error);
+      return CRM_Utils_Array::implode('<p>', $error);
     }
     else {
       return NULL;
@@ -197,6 +197,29 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     }
     else {
       $is_test = $this->_mode == 'test' ? 1 : 0;
+      if (isset($this->_paymentForm) && get_class($this->_paymentForm) == 'CRM_Contribute_Form_Payment_Main') {
+        if (empty($params['email-5'])) {
+          // Retrieve email of billing type or primary.
+          $locationTypes = CRM_Core_PseudoConstant::locationType(FALSE, 'name');
+          $bltID = array_search('Billing', $locationTypes);
+          if (!$bltID) {
+            return CRM_Core_Error::statusBounce(ts('Please set a location type of %1', array(1 => 'Billing')));
+          }
+          $fields = array();
+          $fields['email-'.$bltID] = 1;
+          $fields['email-Primary'] = 1;
+          $default = array();
+
+          CRM_Core_BAO_UFGroup::setProfileDefaults($params['contactID'], $fields, $default);
+          if (!empty($default['email-'.$bltID])) {
+            $params['email-5'] = $default['email-'.$bltID];
+          }
+          elseif (!empty($default['email-Primary'])) {
+            $params['email-5'] = $default['email-Primary'];
+          }
+        }
+        $params['item_name'] = $params['description'];
+      }
       civicrm_spgateway_do_transfer_checkout($params, $component, $this->_paymentProcessor, $is_test);
     }
   }
@@ -214,7 +237,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
       */
   function doUpdateRecur($params, $debug = FALSE) {
     if ($debug) {
-      CRM_Core_error::debug('SPGATEWAY doUpdateRecur $params', $params);
+      CRM_Core_Error::debug('SPGATEWAY doUpdateRecur $params', $params);
     }
     // For no use neweb recur API condition, return original parameters.
     if ($this->_paymentProcessor['url_recur'] != 1) {
@@ -355,7 +378,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
       }
 
       if ($debug) {
-        CRM_Core_error::debug('SPGATEWAY doUpdateRecur $requestParams', $requestParams);
+        CRM_Core_Error::debug('SPGATEWAY doUpdateRecur $requestParams', $requestParams);
       }
 
       /**
@@ -366,7 +389,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
         $recurResult2 = $apiOthers->request($requestParams);
         if ($debug) {
           $recurResult['API']['AlterMnt'] = $apiOthers;
-          CRM_Core_error::debug('SPGATEWAY doUpdateRecur $apiOthers', $apiOthers);
+          CRM_Core_Error::debug('SPGATEWAY doUpdateRecur $apiOthers', $apiOthers);
         }
         if (is_array($recurResult2)) {
           $recurResult += $recurResult2;
@@ -623,7 +646,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
       $resultMessage."<ul>";
       foreach ($diffContribution as $key => $value) {
         if ($key && is_array($value)) {
-          $resultMessage .= "<li><span>{$key}: </span>".implode(' ==> ', $value)."</li>";
+          $resultMessage .= "<li><span>{$key}: </span>".CRM_Utils_Array::implode(' ==> ', $value)."</li>";
         }
         else {
           $resultMessage .= "<li>{$value}</li>";
@@ -661,7 +684,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
           $updateDataArray[] = ts('Send SMS');
         }
       }
-      $updateData = implode(', ', $updateDataArray);
+      $updateData = CRM_Utils_Array::implode(', ', $updateDataArray);
       $form->set('sync_data_hint', ts('If the transaction is finished, it will update the follow data by this action: %1', $updateData));
     }
 

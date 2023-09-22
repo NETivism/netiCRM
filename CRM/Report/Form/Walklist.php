@@ -145,7 +145,7 @@ class CRM_Report_Form_Walklist extends CRM_Report_Form {
       }
     }
 
-    $this->_select = "SELECT " . implode(",\n", $select) . " ";
+    $this->_select = "SELECT " . CRM_Utils_Array::implode(",\n", $select) . " ";
   }
 
   function from() {
@@ -170,7 +170,7 @@ FROM       civicrm_contact {$this->_aliases['civicrm_contact']} {$this->_aclFrom
   function where() {
     $clauses = array();
     foreach ($this->_columns as $tableName => $table) {
-      if (array_key_exists('filters', $table)) {
+      if (CRM_Utils_Array::arrayKeyExists('filters', $table)) {
         foreach ($table['filters'] as $fieldName => $field) {
           $clause = NULL;
 
@@ -204,7 +204,7 @@ FROM       civicrm_contact {$this->_aliases['civicrm_contact']} {$this->_aclFrom
       $this->_where = "WHERE ( 1 ) ";
     }
     else {
-      $this->_where = "WHERE " . implode(' AND ', $clauses);
+      $this->_where = "WHERE " . CRM_Utils_Array::implode(' AND ', $clauses);
     }
 
     if ($this->_aclWhere) {
@@ -215,13 +215,13 @@ FROM       civicrm_contact {$this->_aliases['civicrm_contact']} {$this->_aclFrom
   function orderBy() {
     $this->_orderBy = "";
     foreach ($this->_columns as $tableName => $table) {
-      if (array_key_exists('order_bys', $table)) {
+      if (CRM_Utils_Array::arrayKeyExists('order_bys', $table)) {
         foreach ($table['order_bys'] as $fieldName => $field) {
           $this->_orderBy[] = $field['dbAlias'];
         }
       }
     }
-    $this->_orderBy = "ORDER BY " . implode(', ', $this->_orderBy) . " ";
+    $this->_orderBy = "ORDER BY " . CRM_Utils_Array::implode(', ', $this->_orderBy) . " ";
   }
 
   function postProcess() {
@@ -235,7 +235,7 @@ FROM       civicrm_contact {$this->_aliases['civicrm_contact']} {$this->_aclFrom
     $entryFound = FALSE;
     foreach ($rows as $rowNum => $row) {
       // handle state province
-      if (array_key_exists('civicrm_address_state_province_id', $row)) {
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_address_state_province_id', $row)) {
         if ($value = $row['civicrm_address_state_province_id']) {
           $rows[$rowNum]['civicrm_address_state_province_id'] = CRM_Core_PseudoConstant::stateProvince($value);
         }
@@ -243,7 +243,7 @@ FROM       civicrm_contact {$this->_aliases['civicrm_contact']} {$this->_aclFrom
       }
 
       // handle country
-      if (array_key_exists('civicrm_address_country_id', $row)) {
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_address_country_id', $row)) {
         if ($value = $row['civicrm_address_country_id']) {
           $rows[$rowNum]['civicrm_address_country_id'] = CRM_Core_PseudoConstant::country($value);
         }
@@ -251,8 +251,8 @@ FROM       civicrm_contact {$this->_aliases['civicrm_contact']} {$this->_aclFrom
       }
 
       // convert display name to links
-      if (array_key_exists('civicrm_contact_display_name', $row) &&
-        array_key_exists('civicrm_contact_id', $row)
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_contact_display_name', $row) &&
+        CRM_Utils_Array::arrayKeyExists('civicrm_contact_id', $row)
       ) {
         $url = CRM_Report_Utils_Report::getNextUrl('contact/detail',
           'reset=1&force=1&id_op=eq&id_value=' . $row['civicrm_contact_id'],

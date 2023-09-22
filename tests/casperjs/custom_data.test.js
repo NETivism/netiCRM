@@ -71,6 +71,13 @@ casper.test.begin('Resurrectio test', function(test) {
         test.assertExists("#user-login-form", 'Login form exist.');
     });
 
+    casper.run(function() {
+        test.done();
+    });
+});
+
+casper.test.begin('Start testing...', function(test) {
+
     /*
      * Add Set of Custom Fields
     */

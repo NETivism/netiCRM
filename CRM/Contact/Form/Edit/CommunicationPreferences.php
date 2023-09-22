@@ -64,7 +64,7 @@ class CRM_Contact_Form_Edit_CommunicationPreferences {
     $privacy = $commPreff = $commPreference = array();
     $privacyOptions = CRM_Core_SelectValues::privacy();
     foreach ($privacyOptions as $name => $label) {
-      $privacy[] = HTML_QuickForm::createElement('advcheckbox', $name, NULL, $label);
+      $privacy[] = $form->createElement('advcheckbox', $name, NULL, $label);
     }
     $form->addGroup($privacy, 'privacy', ts('Privacy'), '&nbsp;');
 
@@ -72,7 +72,7 @@ class CRM_Contact_Form_Edit_CommunicationPreferences {
     require_once 'CRM/Core/PseudoConstant.php';
     $comm = CRM_Core_PseudoConstant::pcm();
     foreach ($comm as $value => $title) {
-      $commPreff[] = HTML_QuickForm::createElement('advcheckbox', $value, NULL, $title);
+      $commPreff[] = $form->createElement('advcheckbox', $value, NULL, $title);
     }
     $form->addGroup($commPreff, 'preferred_communication_method', ts('Preferred Method(s)'));
 
@@ -157,7 +157,7 @@ class CRM_Contact_Form_Edit_CommunicationPreferences {
    *
    * @return None
    */
-  function setDefaultValues(&$form, &$defaults) {
+  static function setDefaultValues(&$form, &$defaults) {
 
     if (!empty($defaults['preferred_language'])) {
       $languages = array_flip(CRM_Core_PseudoConstant::languages());

@@ -314,7 +314,7 @@ SELECT DISTINCT(civicrm_mailing_event_queue.contact_id) as contact_id,
 
     while (!empty($values)) {
       $input = array_splice($values, 0, CRM_Core_DAO::BULK_INSERT_COUNT);
-      $str = implode(',', $input);
+      $str = CRM_Utils_Array::implode(',', $input);
       $sql = "INSERT INTO civicrm_mailing_event_queue ( job_id, email_id, contact_id, hash ) VALUES $str;";
       CRM_Core_DAO::executeQuery($sql);
     }

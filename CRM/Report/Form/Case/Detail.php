@@ -248,7 +248,7 @@ class CRM_Report_Form_Case_Detail extends CRM_Report_Form {
     $select = array();
     $this->_columnHeaders = array();
     foreach ($this->_columns as $tableName => $table) {
-      if (array_key_exists('fields', $table)) {
+      if (CRM_Utils_Array::arrayKeyExists('fields', $table)) {
         foreach ($table['fields'] as $fieldName => $field) {
           if ($tableName == 'civicrm_address') {
             $this->_addressField = TRUE;
@@ -279,7 +279,7 @@ class CRM_Report_Form_Case_Detail extends CRM_Report_Form {
       }
     }
 
-    $this->_select = "SELECT " . implode(', ', $select) . " ";
+    $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
   function from() {
@@ -341,7 +341,7 @@ class CRM_Report_Form_Case_Detail extends CRM_Report_Form {
     $clauses = array();
     $this->_having = '';
     foreach ($this->_columns as $tableName => $table) {
-      if (array_key_exists('filters', $table)) {
+      if (CRM_Utils_Array::arrayKeyExists('filters', $table)) {
         foreach ($table['filters'] as $fieldName => $field) {
           $clause = NULL;
 
@@ -397,7 +397,7 @@ class CRM_Report_Form_Case_Detail extends CRM_Report_Form {
       $this->_where = "WHERE ( 1 ) ";
     }
     else {
-      $this->_where = "WHERE " . implode(' AND ', $clauses);
+      $this->_where = "WHERE " . CRM_Utils_Array::implode(' AND ', $clauses);
     }
   }
 
@@ -413,7 +413,7 @@ class CRM_Report_Form_Case_Detail extends CRM_Report_Form {
     $countryCount = CRM_Core_DAO::singleValueQuery($sql);
 
     //CaseType statistics
-    if (array_key_exists('filters', $statistics)) {
+    if (CRM_Utils_Array::arrayKeyExists('filters', $statistics)) {
       foreach ($statistics['filters'] as $id => $value) {
         if ($value['title'] == 'Case Type') {
           $statistics['filters'][$id]['value'] = 'Is ' . $this->case_types[substr($statistics['filters'][$id]
@@ -473,21 +473,21 @@ class CRM_Report_Form_Case_Detail extends CRM_Report_Form {
     $entryFound = FALSE;
 
     foreach ($rows as $rowNum => $row) {
-      if (array_key_exists('civicrm_case_status_id', $row)) {
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_case_status_id', $row)) {
         if ($value = $row['civicrm_case_status_id']) {
           $rows[$rowNum]['civicrm_case_status_id'] = $this->case_statuses[$value];
 
           $entryFound = TRUE;
         }
       }
-      if (array_key_exists('civicrm_case_case_type_id', $row)) {
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_case_case_type_id', $row)) {
         if ($value = str_replace(CRM_Case_BAO_Case::VALUE_SEPERATOR, "", $row['civicrm_case_case_type_id'])) {
           $rows[$rowNum]['civicrm_case_case_type_id'] = $this->case_types[$value];
 
           $entryFound = TRUE;
         }
       }
-      if (array_key_exists('civicrm_case_subject', $row)) {
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_case_subject', $row)) {
         if ($value = $row['civicrm_case_subject']) {
           $caseId = $row['civicrm_case_id'];
           $contactId = $row['civicrm_contact_id'];
@@ -497,26 +497,26 @@ class CRM_Report_Form_Case_Detail extends CRM_Report_Form {
           $entryFound = TRUE;
         }
       }
-      if (array_key_exists('civicrm_relationship_relationship_type_id', $row)) {
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_relationship_relationship_type_id', $row)) {
         if ($value = $row['civicrm_relationship_relationship_type_id']) {
           $rows[$rowNum]['civicrm_relationship_relationship_type_id'] = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_RelationshipType', $value, 'label_b_a');
 
           $entryFound = TRUE;
         }
       }
-      if (array_key_exists('civicrm_address_country_id', $row)) {
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_address_country_id', $row)) {
         if ($value = $row['civicrm_address_country_id']) {
           $rows[$rowNum]['civicrm_address_country_id'] = CRM_Core_PseudoConstant::country($value, FALSE);
         }
         $entryFound = TRUE;
       }
-      if (array_key_exists('civicrm_address_state_province_id', $row)) {
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_address_state_province_id', $row)) {
         if ($value = $row['civicrm_address_state_province_id']) {
           $rows[$rowNum]['civicrm_address_state_province_id'] = CRM_Core_PseudoConstant::stateProvince($value, FALSE);
         }
         $entryFound = TRUE;
       }
-      if (array_key_exists('civicrm_activity_activity_subject', $row)) {
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_activity_activity_subject', $row)) {
         if (!($value = $row['civicrm_activity_activity_subject'])) {
           $rows[$rowNum]['civicrm_activity_activity_subject'] = "No Subject";
         }

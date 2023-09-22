@@ -127,7 +127,6 @@ class CRM_Member_BAO_MembershipType extends CRM_Member_DAO_MembershipType {
     $status = array();
     $dependancy = array(
       'Membership' => 'membership_type_id',
-      'MembershipBlock' => 'membership_type_default',
     );
 
     foreach ($dependancy as $name => $field) {
@@ -240,7 +239,7 @@ class CRM_Member_BAO_MembershipType extends CRM_Member_DAO_MembershipType {
    * @param int $membershipTypeId
    * @static
    */
-  function getMembershipTypeDetails($membershipTypeId) {
+  static function getMembershipTypeDetails($membershipTypeId) {
     require_once 'CRM/Member/DAO/Membership.php';
     $membershipTypeDetails = array();
 
@@ -267,7 +266,7 @@ class CRM_Member_BAO_MembershipType extends CRM_Member_DAO_MembershipType {
    * @return array associated array with  start date, end date and join date for the membership
    * @static
    */
-  function getDatesForMembershipType($membershipTypeId, $joinDate = NULL, $startDate = NULL, $endDate = NULL) {
+  static function getDatesForMembershipType($membershipTypeId, $joinDate = NULL, $startDate = NULL, $endDate = NULL) {
     $membershipTypeDetails = self::getMembershipTypeDetails($membershipTypeId);
 
     // convert all dates to 'Y-m-d' format.
@@ -444,7 +443,7 @@ class CRM_Member_BAO_MembershipType extends CRM_Member_DAO_MembershipType {
    * @return Array array fo the start date, end date and join date of the membership
    * @static
    */
-  function getRenewalDatesForMembershipType($membershipId, $changeToday = NULL) {
+  static function getRenewalDatesForMembershipType($membershipId, $changeToday = NULL) {
     require_once 'CRM/Member/BAO/Membership.php';
     require_once 'CRM/Member/BAO/MembershipStatus.php';
     $params = array('id' => $membershipId);

@@ -144,7 +144,7 @@ WHERE    price_set_id = %1";
     foreach ($forms as $table => $entities) {
       switch ($table) {
         case 'civicrm_event':
-          $ids = implode(',', $entities);
+          $ids = CRM_Utils_Array::implode(',', $entities);
           $queryString = "SELECT ce.id as id, ce.title as title, ce.is_public as isPublic, ce.start_date as startDate, ce.end_date as endDate, civicrm_option_value.label as eventType
 FROM       civicrm_event ce
 LEFT JOIN  civicrm_option_value ON  
@@ -166,7 +166,7 @@ WHERE
           break;
 
         case 'civicrm_contribution_page':
-          $ids = implode(',', $entities);
+          $ids = CRM_Utils_Array::implode(',', $entities);
           $queryString = "SELECT cp.id as id, cp.title as title, cp.start_date as startDate, cp.end_date as endDate,ct.name as type
 FROM      civicrm_contribution_page cp, civicrm_contribution_type ct
 WHERE     ct.id = cp.contribution_type_id AND 
@@ -410,7 +410,7 @@ WHERE     ct.id = cp.contribution_type_id AND
     }
 
     // create select
-    $select = 'SELECT ' . implode(',', $priceFields);
+    $select = 'SELECT ' . CRM_Utils_Array::implode(',', $priceFields);
     $from = ' FROM civicrm_price_field';
 
     $params = array();
@@ -578,7 +578,7 @@ WHERE  id = %1";
         case 'Radio':
           //special case if user select -none-
           if ($params["price_{$id}"] == 0) {
-            continue;
+            break;
           }
           $optionValueId = $params["price_{$id}"];
           $params["price_{$id}"] = array($params["price_{$id}"] => $params["price_{$id}_{$optionValueId}_count"]);
@@ -767,7 +767,7 @@ WHERE  id = %1";
    *
    * @param int $sid the price set id
    */
-  function checkPermission($sid) {
+  static function checkPermission($sid) {
     if ($sid && defined('CIVICRM_EVENT_PRICE_SET_DOMAIN_ID') && CIVICRM_EVENT_PRICE_SET_DOMAIN_ID) {
       $domain_id = CRM_Core_DAO::getFieldValue('CRM_Price_DAO_Set', $sid, 'domain_id', 'id');
       if (CRM_Core_Config::domainID() != $domain_id) {
@@ -832,7 +832,7 @@ WHERE  pset.id = %1 $where";
       $displayParticipantCount = CRM_Core_BAO_CustomOption::VALUE_SEPERATOR . ts('Participant Count') . ':' . $totalParticipant;
     }
 
-    return CRM_Core_BAO_CustomOption::VALUE_SEPERATOR . implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, $amount_level) . $displayParticipantCount . CRM_Core_BAO_CustomOption::VALUE_SEPERATOR;
+    return CRM_Core_BAO_CustomOption::VALUE_SEPERATOR . CRM_Utils_Array::implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, $amount_level) . $displayParticipantCount . CRM_Core_BAO_CustomOption::VALUE_SEPERATOR;
   }
 }
 

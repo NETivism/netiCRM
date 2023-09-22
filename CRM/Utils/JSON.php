@@ -55,7 +55,7 @@ class CRM_Utils_JSON {
       $buildObject[] = "{ name: \"$name\", {$identifier}:\"{$value[$identifier]}\"}";
     }
 
-    $jsonObject = '{ identifier: "' . $identifier . '", items: [' . implode(',', $buildObject) . ' ]}';
+    $jsonObject = '{ identifier: "' . $identifier . '", items: [' . CRM_Utils_Array::implode(',', $buildObject) . ' ]}';
 
     return $jsonObject;
   }

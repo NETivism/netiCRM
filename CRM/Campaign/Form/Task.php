@@ -122,7 +122,7 @@ class CRM_Campaign_Form_Task extends CRM_Core_Form {
     }
 
     if (!empty($ids)) {
-      $this->_componentClause = 'contact_a.id IN ( ' . implode(',', $ids) . ' ) ';
+      $this->_componentClause = 'contact_a.id IN ( ' . CRM_Utils_Array::implode(',', $ids) . ' ) ';
 
       $this->assign('totalSelectedVoters', count($ids));
     }

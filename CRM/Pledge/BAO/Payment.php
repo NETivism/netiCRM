@@ -321,7 +321,7 @@ WHERE     pledge_id = %1
    *
    * @return int $newStatus, updated status id (or 0)
    */
-  function updatePledgePaymentStatus($pledgeID,
+  static function updatePledgePaymentStatus($pledgeID,
     $paymentIDs = NULL,
     $paymentStatusID = NULL,
     $pledgeStatusID = NULL,
@@ -335,7 +335,7 @@ WHERE     pledge_id = %1
 
     // if we get do not get contribution id means we are editing the scheduled payment.
     if (!empty($paymentIDs)) {
-      $payments = implode(',', $paymentIDs);
+      $payments = CRM_Utils_Array::implode(',', $paymentIDs);
       $paymentContributionId = CRM_Core_DAO::getFieldValue('CRM_Pledge_DAO_Payment',
         $payments,
         'contribution_id',
@@ -355,7 +355,7 @@ WHERE     pledge_id = %1
       self::updatePledgePayments($pledgeID, $paymentStatusID, $paymentIDs, $actualAmount, $paymentContributionId, $isScriptUpdate);
     }
     if (!empty($paymentIDs) && $actualAmount) {
-      $payments = implode(',', $paymentIDs);
+      $payments = CRM_Utils_Array::implode(',', $paymentIDs);
       $pledgeScheduledAmount = CRM_Core_DAO::getFieldValue('CRM_Pledge_DAO_Payment',
         $payments,
         'scheduled_amount',
@@ -529,7 +529,7 @@ WHERE  civicrm_pledge.id = %2
     $allStatus = CRM_Contribute_PseudoConstant::contributionStatus(NULL, 'name');
     $paymentClause = NULL;
     if (!empty($paymentIds)) {
-      $payments = implode(',', $paymentIds);
+      $payments = CRM_Utils_Array::implode(',', $paymentIds);
       $paymentClause = " AND civicrm_pledge_payment.id IN ( {$payments} )";
     }
     $actualAmountClause = NULL;
@@ -592,7 +592,7 @@ WHERE  civicrm_pledge_payment.id = {$paymentId}
     $status[] = array_search('Pending', $pledgeStatuses);
     $status[] = array_search('Overdue', $pledgeStatuses);
 
-    $statusClause = " IN (" . implode(',', $status) . ")";
+    $statusClause = " IN (" . CRM_Utils_Array::implode(',', $status) . ")";
 
     $query = "
 SELECT civicrm_pledge_payment.id id, civicrm_pledge_payment.scheduled_amount amount

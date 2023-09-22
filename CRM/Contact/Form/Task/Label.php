@@ -125,7 +125,7 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
       $address[$v] = 1;
     }
 
-    if (array_key_exists('postal_code', $address)) {
+    if (CRM_Utils_Array::arrayKeyExists('postal_code', $address)) {
       $address['postal_code_suffix'] = 1;
     }
 
@@ -139,7 +139,7 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
       $returnProperties = array_merge($returnProperties, $mailingFormatProperties);
     }
     //we should not consider addressee for data exists, CRM-6025
-    if (array_key_exists('addressee', $mailingFormatProperties)) {
+    if (CRM_Utils_Array::arrayKeyExists('addressee', $mailingFormatProperties)) {
       unset($mailingFormatProperties['addressee']);
     }
 
@@ -348,7 +348,7 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
         foreach ($val as $vals) {
           $temp[] = $comm[$vals];
         }
-        $row['preferred_communication_method'] = implode(', ', $temp);
+        $row['preferred_communication_method'] = CRM_Utils_Array::implode(', ', $temp);
       }
       $row['id'] = $id;
       $formatted = CRM_Utils_Address::format($row, 'mailing_format', FALSE, TRUE, $individualFormat, $tokenFields);
@@ -455,7 +455,7 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
           break;
         }
         // collapse the tree to summarize
-        $family = trim(implode(" , ", $sort_names));
+        $family = trim(CRM_Utils_Array::implode(" , ", $sort_names));
         if ($count) {
           $processedNames .= " , " . $family;
         }
@@ -490,7 +490,7 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
       $dao->find();
       while ($dao->fetch()) {
         $individual_id = $dao->contact_id_a;
-        if (array_key_exists($individual_id, $individuals)) {
+        if (CRM_Utils_Array::arrayKeyExists($individual_id, $individuals)) {
           unset($individuals[$individual_id]);
         }
       }

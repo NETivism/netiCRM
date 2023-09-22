@@ -128,7 +128,7 @@ class CRM_Core_Selector_Base {
       if (!empty($columnHeaders)) {
         foreach ($columnHeaders as $k => $header) {
           $header = &$columnHeaders[$k];
-          if (array_key_exists('sort', $header)) {
+          if (CRM_Utils_Array::arrayKeyExists('sort', $header)) {
             if ($firstElementNotFound && $header['direction'] != CRM_Utils_Sort::DONTCARE) {
               $this->_order[1] = &$header;
               $firstElementNotFound = FALSE;

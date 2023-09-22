@@ -41,7 +41,7 @@ class CRM_Contribute_Form_AdditionalInfo {
    *
    * @return None
    */
-  function buildPremium(&$form) {
+  static function buildPremium(&$form) {
     //premium section
     $form->add('hidden', 'hidden_Premium', 1);
     require_once 'CRM/Contribute/DAO/Product.php';
@@ -124,7 +124,7 @@ class CRM_Contribute_Form_AdditionalInfo {
    *
    * @return None
    */
-  function buildAdditionalDetail(&$form) {
+  static function buildAdditionalDetail(&$form) {
     //Additional information section
     $form->add('hidden', 'hidden_AdditionalDetail', 1);
 
@@ -189,13 +189,13 @@ class CRM_Contribute_Form_AdditionalInfo {
    *
    * @return None
    */
-  function buildHonoree(&$form) {
+  static function buildHonoree(&$form) {
     //Honoree section
     $form->add('hidden', 'hidden_Honoree', 1);
     $honor = CRM_Core_PseudoConstant::honor();
     $extraOption = array('onclick' => "return enableHonorType();");
     foreach ($honor as $key => $var) {
-      $honorTypes[$key] = HTML_QuickForm::createElement('radio', NULL, NULL, $var, $key, $extraOption);
+      $honorTypes[$key] = $form->createElement('radio', NULL, NULL, $var, $key, $extraOption);
     }
     $form->addGroup($honorTypes, 'honor_type_id', NULL);
     $form->add('select', 'honor_prefix_id', ts('Prefix'), array('' => ts('- prefix -')) + CRM_Core_PseudoConstant::individualPrefix());
@@ -212,7 +212,7 @@ class CRM_Contribute_Form_AdditionalInfo {
    *
    * @return None
    */
-  function buildPaymentReminders(&$form) {
+  static function buildPaymentReminders(&$form) {
     //PaymentReminders section
     $form->add('hidden', 'hidden_PaymentReminders', 1);
     $form->add('text', 'initial_reminder_day', ts('Send Initial Reminder'), array('size' => 3));
@@ -230,7 +230,7 @@ class CRM_Contribute_Form_AdditionalInfo {
    *
    * @return None
    */
-  function processPremium(&$params, $contributionID, $premiumID = NULL, &$options = NULL) {
+  static function processPremium(&$params, $contributionID, $premiumID = NULL, &$options = NULL) {
     require_once 'CRM/Contribute/DAO/ContributionProduct.php';
     $dao = new CRM_Contribute_DAO_ContributionProduct();
     $dao->contribution_id = $contributionID;
@@ -264,7 +264,7 @@ class CRM_Contribute_Form_AdditionalInfo {
    *
    * @return None
    */
-  function processNote(&$params, $contactID, $contributionID, $contributionNoteID = NULL) {
+  static function processNote(&$params, $contactID, $contributionID, $contributionNoteID = NULL) {
     //process note
     require_once 'CRM/Core/BAO/Note.php';
     $noteParams = array('entity_table' => 'civicrm_contribution',
@@ -287,7 +287,7 @@ class CRM_Contribute_Form_AdditionalInfo {
    *
    * @return None
    */
-  function postProcessCommon(&$params, &$formatted) {
+  static function postProcessCommon(&$params, &$formatted) {
     $fields = array('non_deductible_amount',
       'total_amount',
       'fee_amount',
@@ -352,7 +352,7 @@ class CRM_Contribute_Form_AdditionalInfo {
    *
    * @return None.
    */
-  function emailReceipt(&$form, &$params, $ccContribution = FALSE) {
+  static function emailReceipt(&$form, &$params, $ccContribution = FALSE) {
     if (!empty($params['is_attach_receipt'])) {
       $config = CRM_Core_Config::singleton();
       $receiptEmailType = !empty($config->receiptEmailType) ? $config->receiptEmailType : 'copy_only';
@@ -571,9 +571,9 @@ class CRM_Contribute_Form_AdditionalInfo {
    *
    * @return None
    */
-  function processPriceSet($contributionId, $lineItem) {
+  static function processPriceSet($contributionId, $lineItem) {
     if (!$contributionId || !is_array($lineItem)
-      || CRM_Utils_system::isNull($lineItem)
+      || CRM_Utils_System::isNull($lineItem)
     ) {
       return;
     }

@@ -304,12 +304,12 @@ class CRM_Contact_Form_Search_Custom_ActivitySearch implements CRM_Contact_Form_
       }
 
       if (!empty($contactIDs)) {
-        $contactIDs = implode(', ', $contactIDs);
+        $contactIDs = CRM_Utils_Array::implode(', ', $contactIDs);
         $clauses[] = "contact_a.id IN ( $contactIDs )";
       }
     }
 
-    return implode(' AND ', $clauses);
+    return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
   /* 

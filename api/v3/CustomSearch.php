@@ -39,7 +39,7 @@ function civicrm_api3_custom_search_create($params) {
     'CRM_Core_DAO_OptionGroup', 'custom_search', 'id', 'name'
   );
   // empirically, class name goes to both 'name' and 'label'
-  if (array_key_exists('name', $params)) {
+  if (CRM_Utils_Array::arrayKeyExists('name', $params)) {
     $params['label'] = $params['name'];
   }
   return civicrm_api3_option_value_create($params);

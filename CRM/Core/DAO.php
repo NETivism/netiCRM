@@ -80,7 +80,7 @@ class CRM_Core_DAO extends DB_DataObject {
   /**
    * empty definition for virtual function
    */
-  function getTableName() {
+  static function getTableName() {
     return NULL;
   }
 
@@ -188,7 +188,7 @@ class CRM_Core_DAO extends DB_DataObject {
       $GLOBALS['_DB_DATAOBJECT']['LINKS'][$this->_database] = array();
     }
 
-    if (!array_key_exists($this->__table, $GLOBALS['_DB_DATAOBJECT']['LINKS'][$this->_database])) {
+    if (!CRM_Utils_Array::arrayKeyExists($this->__table, $GLOBALS['_DB_DATAOBJECT']['LINKS'][$this->_database])) {
       $GLOBALS['_DB_DATAOBJECT']['LINKS'][$this->_database][$this->__table] = $links;
     }
   }
@@ -259,7 +259,7 @@ class CRM_Core_DAO extends DB_DataObject {
    *
    * @return array
    */
-  function &fields() {
+  static function &fields() {
     $result = NULL;
     return $result;
   }
@@ -354,11 +354,11 @@ class CRM_Core_DAO extends DB_DataObject {
     $allNull = TRUE;
     foreach ($fields as $name => $value) {
       $dbName = $value['name'];
-      if (array_key_exists($dbName, $params)) {
+      if (CRM_Utils_Array::arrayKeyExists($dbName, $params)) {
         $pValue = $params[$dbName];
         $exists = TRUE;
       }
-      elseif (array_key_exists($name, $params)) {
+      elseif (CRM_Utils_Array::arrayKeyExists($name, $params)) {
         $pValue = $params[$name];
         $exists = TRUE;
       }
@@ -465,7 +465,7 @@ class CRM_Core_DAO extends DB_DataObject {
    * @access public
    * @static
    */
-  function getAttribute($class, $fieldName = NULL) {
+  static function getAttribute($class, $fieldName = NULL) {
     $object = new $class( );
     $fields = &$object->fields();
     if ($fieldName != NULL) {
@@ -527,7 +527,7 @@ class CRM_Core_DAO extends DB_DataObject {
    * @return boolean true if exists, else false
    * @static
    */
-  function checkFieldExists($tableName, $columnName) {
+  static function checkFieldExists($tableName, $columnName) {
     $query = "
 SHOW COLUMNS
 FROM $tableName
@@ -585,7 +585,7 @@ LIKE %1
   static function isDBMyISAM($maxTablesToCheck = 10) {
     // show error if any of the tables, use 'MyISAM' storage engine.
     $engines = self::getStorageValues(NULL, $maxTablesToCheck);
-    if (array_key_exists('MyISAM', $engines)) {
+    if (CRM_Utils_Array::arrayKeyExists('MyISAM', $engines)) {
       return TRUE;
     }
     return FALSE;
@@ -603,7 +603,7 @@ LIKE %1
   function checkConstraintExists($tableName, $constraint) {
     static $show = array();
 
-    if (!array_key_exists($tableName, $show)) {
+    if (!CRM_Utils_Array::arrayKeyExists($tableName, $show)) {
       $query = "SHOW CREATE TABLE $tableName";
       $dao = CRM_Core_DAO::executeQuery($query);
 
@@ -631,7 +631,7 @@ LIKE %1
   function checkFKConstraintInFormat($tableName, $columnName) {
     static $show = array();
 
-    if (!array_key_exists($tableName, $show)) {
+    if (!CRM_Utils_Array::arrayKeyExists($tableName, $show)) {
       $query = "SHOW CREATE TABLE $tableName";
       $dao = CRM_Core_DAO::executeQuery($query);
 
@@ -736,7 +736,7 @@ FROM   civicrm_domain
       self::$_dbColumnValueCache = array();
     }
 
-    if (!array_key_exists($cacheKey, self::$_dbColumnValueCache) || $force) {
+    if (!CRM_Utils_Array::arrayKeyExists($cacheKey, self::$_dbColumnValueCache) || $force) {
       $object = new $daoName();
       $object->$searchColumn = $searchValue;
       $object->selectAdd();
@@ -834,7 +834,7 @@ FROM   civicrm_domain
     // return only specific fields if returnproperties are sent
     if (!empty($returnProperities)) {
       $object->selectAdd();
-      $object->selectAdd(implode(',', $returnProperities));
+      $object->selectAdd(CRM_Utils_Array::implode(',', $returnProperities));
     }
 
     if ($object->find(TRUE)) {
@@ -1114,7 +1114,7 @@ FROM   civicrm_domain
       return $contactIDs;
     }
 
-    $IDs = implode(',', $componentIDs);
+    $IDs = CRM_Utils_Array::implode(',', $componentIDs);
     $query = "
 SELECT contact_id
   FROM $tableName
@@ -1144,7 +1144,7 @@ SELECT contact_id
    * @access public
    * @static
    */
-  static function commonRetrieveAll($daoName, $fieldIdName = 'id', $fieldId, &$details, $returnProperities = NULL) {
+  static function commonRetrieveAll($daoName, $fieldIdName, $fieldId, &$details, $returnProperities = NULL) {
     $object = new $daoName();
     $object->$fieldIdName = $fieldId;
 
@@ -1152,7 +1152,7 @@ SELECT contact_id
     if (!empty($returnProperities)) {
       $object->selectAdd();
       $object->selectAdd('id');
-      $object->selectAdd(implode(',', $returnProperities));
+      $object->selectAdd(CRM_Utils_Array::implode(',', $returnProperities));
     }
 
     $object->find();
@@ -1556,7 +1556,7 @@ SELECT contact_id
    *
    * @return array
    */
-  public static function getProfiles() {
+  public static function getProfiles($types, $onlyPure = FALSE) {
     global $_DB_PROFILING;
     if (CRM_Core_Config::singleton()->debugDatabaseProfiling) {
       $dao = CRM_Core_DAO::executeQuery("SHOW PROFILES");
