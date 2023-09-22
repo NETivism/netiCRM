@@ -50,22 +50,22 @@ class CRM_Contribute_Form_NewebpayImport_Preview extends CRM_Core_Form {
               $rowProcessType = 1;
             }
             else {
-              $row['error_message'] = ts("Contribution status is not 'Completed'.");
+              $row[ts('Error Message')] = ts("Contribution status is not 'Completed'.");
               $rowProcessType = 2;
             }
             if ($contribution->total_amount != $row['金額']) {
-              $row['error_message'] = ts('Amount is not correct.');
+              $row[ts('Error Message')] = ts('Amount is not correct.');
               $rowProcessType = 3;
             }
             if ($importDateCustomFieldId) {
               if (!CRM_Utils_Type::validate($row['撥款日期'], 'Date', FALSE)) {
-                $row['error_message'] = ts('Disbursement date is not correct.');
+                $row[ts('Error Message')] = ts('Disbursement date is not correct.');
                 $rowProcessType = 3;
               }
             }
           }
           else {
-            $row['error_message'] = ts("Can't find the contribution in database.");
+            $row[ts('Error Message')] = ts("Can't find the contribution in database.");
             $rowProcessType = 3;
           }
           if ($rowProcessType == 1) {
@@ -94,7 +94,7 @@ class CRM_Contribute_Form_NewebpayImport_Preview extends CRM_Core_Form {
     }
 
     $this->_errorHeader = $header;
-    $this->_errorHeader[] = 'error_message';
+    $this->_errorHeader[] = ts('Error Message');
 
     if ($downloadErrorType) {
       if ($downloadErrorType == 'error') {
