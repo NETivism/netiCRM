@@ -1,3 +1,12 @@
+/** Variables **/
+:root {
+  --color-error: #f44336;
+  --color-error-dark: #b71c1c;
+  --color-form-input-border: #999;
+  --color-crm-special-contribute-primary: var(--neticrm-color-crm-special-contribute-primary, #3f51b5);
+  --color-crm-special-contribute-info-link: var(--neticrm-color-crm-special-contribute-info-link, #c4ccff);
+}
+
 /* Visually hidden helper (bootstrap 5) */
 .visually-hidden,
 .visually-hidden-focusable:not(:focus):not(:focus-within) {
@@ -1970,6 +1979,20 @@ table.campaign td,
 }
 .crm-container .pcp-donate {
     text-align: center;
+}
+.crm-container .pcp-donate .button,
+.crm-container .pcp-donate a.button,
+.crm-container .pcp-donate a.button:visited,
+.crm-container .pcp-donate a.button:link {
+  padding: 16px 20px;
+  min-width: 260px;
+  line-height: 1.2;
+  font-weight: 400;
+  font-size: 24px;
+  color: #fff;
+  border-radius: 2px;
+  background: var(--color-crm-special-contribute-primary);
+  box-shadow: 1px 1px 10px 1px rgba(0,0,0,.25);
 }
 
 .crm-container .pcp-intro-text {
@@ -6795,6 +6818,7 @@ input.crm-form-textfield,
 }
 .crm-container .progress-cell.progress-button {
   width: 19%;
+  text-align: center;
 }
 .crm-container .progress-bar-wrapper {
   position:relative;
@@ -6804,7 +6828,7 @@ input.crm-form-textfield,
 }
 .crm-container .progress-bar {
   height: 30px;
-  background: #4cb6ac;
+  background: var(--color-crm-special-contribute-primary);
   border-radius: 2px 0 0 2px;
   box-shadow: 0px 0px 5px 0px #aaa;
 }
@@ -6832,27 +6856,44 @@ input.crm-form-textfield,
 }
 .crm-container .progress-amount-raised {
 }
-.crm-container .progress-amount-raised span{
+.crm-container .progress-amount-raised span {
   font-weight: bold;
   font-size: 1.1em;
-  color: #4cb6ac;
+  color: var(--color-crm-special-contribute-primary);
 }
 .crm-container .progress-amount-goal {
 }
 .crm-container .progress-amount-goal span {
   font-weight: bold;
   font-size: 1.2em;
-  color: #3c4db7;
+  color: var(--color-crm-special-contribute-primary);
 }
-.crm-container .progress-cell .button {
+.crm-container .progress-cell .button,
+.crm-container .progress-cell a.button,
+.crm-container .progress-cell .button:visited,
+.crm-container .progress-cell a.button:link {
     white-space: nowrap;
     vertical-align: middle;
     text-align: center;
     margin: 0;
     width: 100%;
-    background: #3f51b5;
+    background: var(--color-crm-special-contribute-primary);
     border-radius: 2px;
     box-shadow: 1px 1px 10px 1px #aaa;
+}
+.crm-container .progressbar-fullwidth .progress-cell .button,
+.crm-container .progressbar-fullwidth .progress-cell a.button,
+.crm-container .progressbar-fullwidth .progress-cell .button:visited,
+.crm-container .progressbar-fullwidth .progress-cell a.button:link {
+  padding: 16px 20px;
+  min-width: 260px;
+  line-height: 1.2;
+  font-weight: 400;
+  font-size: 24px;
+  color: #fff;
+  border-radius: 2px;
+  background: var(--color-crm-special-contribute-primary);
+  box-shadow: 1px 1px 10px 1px rgba(0,0,0,.25);
 }
 .crm-container .progressbar-fullwidth .progress-wrapper {
   flex-wrap: wrap;
@@ -6861,6 +6902,7 @@ input.crm-form-textfield,
 .crm-container .progressbar-fullwidth .progress-cell.progress-bar-wrapper {
   flex: 0 0 100%;
   width: 100%;
+  margin-bottom: 30px;
 }
 
 /* CSS talk bubble */
