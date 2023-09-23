@@ -1,6 +1,6 @@
 {if $progress.display}
   {capture assign='percent_css'}{if $progress.achieved_status}100{else}{$progress.achieved_percent}{/if}{/capture}
-  <div class="progress-block">{* progress-block start *}
+  <div class="progress-block {if $progress.fullwidth}progressbar-fullwidth{/if}">{* progress-block start *}
     <div class="progress-amount">
       <div class="progress-amount-raised bubble">
         {if $progress.type|strstr:"amount"}
@@ -19,7 +19,7 @@
       </div>
     </div>
     <div class="progress-wrapper">
-      <div class="progress-cell progress-bar-wrapper" {if !$progress.fullwidth}style="width:100%;"{/if}>
+      <div class="progress-cell progress-bar-wrapper">
         <div class="progress-bar" style="width:0px;" data-current="{$percent_css}"></div>
         <div class="progress-pointer" style="left:0px;margin-left:0;opacity:0">{ts 1="`$progress.achieved_percent`%"}%1 achieved{/ts}</div>
       </div>

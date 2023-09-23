@@ -6854,6 +6854,15 @@ input.crm-form-textfield,
     border-radius: 2px;
     box-shadow: 1px 1px 10px 1px #aaa;
 }
+.crm-container .progressbar-fullwidth .progress-wrapper {
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.crm-container .progressbar-fullwidth .progress-cell.progress-bar-wrapper {
+  flex: 0 0 100%;
+  width: 100%;
+}
+
 /* CSS talk bubble */
 .crm-container .bubble{
   display: inline-block;
