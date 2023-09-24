@@ -1984,11 +1984,12 @@ table.campaign td,
 .crm-container .pcp-donate a.button,
 .crm-container .pcp-donate a.button:visited,
 .crm-container .pcp-donate a.button:link {
-  padding: 16px 20px;
-  min-width: 260px;
+  padding: 16px;
+  width: auto;
+  min-width: 200px;
   line-height: 1.2;
   font-weight: 400;
-  font-size: 24px;
+  font-size: 20px;
   color: #fff;
   border-radius: 2px;
   background: var(--color-crm-special-contribute-primary);
@@ -6805,6 +6806,9 @@ input.crm-form-textfield,
 .crm-container .progress-block {
   margin: 0 0 30px 0;
 }
+.crm-container .progress-block .inner {
+  padding: 20px;
+}
 .crm-container .progress-wrapper {
   display: flex;
   justify-content: space-between;
@@ -6851,6 +6855,7 @@ input.crm-form-textfield,
 }
 .crm-container .progress-amount {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   margin-bottom: 10px;
 }
@@ -6861,8 +6866,7 @@ input.crm-form-textfield,
   font-size: 1.1em;
   color: var(--color-crm-special-contribute-primary);
 }
-.crm-container .progress-amount-goal {
-}
+.crm-container .progress-amount-goal {}
 .crm-container .progress-amount-goal span {
   font-weight: bold;
   font-size: 1.2em;
@@ -6872,38 +6876,70 @@ input.crm-form-textfield,
 .crm-container .progress-cell a.button,
 .crm-container .progress-cell .button:visited,
 .crm-container .progress-cell a.button:link {
-    white-space: nowrap;
-    vertical-align: middle;
-    text-align: center;
-    margin: 0;
-    width: 100%;
-    background: var(--color-crm-special-contribute-primary);
-    border-radius: 2px;
-    box-shadow: 1px 1px 10px 1px #aaa;
+  white-space: nowrap;
+  vertical-align: middle;
+  text-align: center;
+  margin: 0;
+  width: 100%;
+  background: var(--color-crm-special-contribute-primary);
+  border-radius: 2px;
+  box-shadow: 1px 1px 10px 1px #aaa;
 }
 .crm-container .progressbar-fullwidth .progress-cell .button,
 .crm-container .progressbar-fullwidth .progress-cell a.button,
 .crm-container .progressbar-fullwidth .progress-cell .button:visited,
 .crm-container .progressbar-fullwidth .progress-cell a.button:link {
-  padding: 16px 20px;
-  min-width: 260px;
+  padding: 16px;
+  width: auto;
+  min-width: 200px;
   line-height: 1.2;
   font-weight: 400;
-  font-size: 24px;
+  font-size: 20px;
   color: #fff;
   border-radius: 2px;
   background: var(--color-crm-special-contribute-primary);
   box-shadow: 1px 1px 10px 1px rgba(0,0,0,.25);
 }
 .crm-container .progressbar-fullwidth .progress-wrapper {
-  flex-wrap: wrap;
-  justify-content: center;
+  display: block;
 }
 .crm-container .progressbar-fullwidth .progress-cell.progress-bar-wrapper {
-  flex: 0 0 100%;
   width: 100%;
   margin-bottom: 30px;
 }
+.crm-container .progressbar-fullwidth .progress-cell.progress-button {
+  width: 100%;
+}
+@media (min-width: 1200px) {
+  .crm-container .progress-block > .inner {
+    margin-right: auto;
+    margin-left: auto;
+    max-width: 992px;
+  }
+}
+@media (min-width: 1400px) {
+  .crm-container .progress-block > .inner {
+    max-width: 1200px;
+  }
+  .crm-container .progressbar-fullwidth .progress-cell .button,
+  .crm-container .progressbar-fullwidth .progress-cell a.button,
+  .crm-container .progressbar-fullwidth .progress-cell .button:visited,
+  .crm-container .progressbar-fullwidth .progress-cell a.button:link,
+  .crm-container .pcp-donate .button,
+  .crm-container .pcp-donate a.button,
+  .crm-container .pcp-donate a.button:visited,
+  .crm-container .pcp-donate a.button:link {
+    padding: 16px 20px;
+    min-width: 260px;
+    font-size: 24px;
+  }
+}
+@media (min-width: 1600px) {
+  .crm-container .progress-block > .inner {
+    max-width: 1400px;
+  }
+}
+
 
 /* CSS talk bubble */
 .crm-container .bubble{
