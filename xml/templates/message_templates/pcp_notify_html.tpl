@@ -22,7 +22,7 @@
 
   <tr>
    <td>
-	   <p>{ts 1=$contribPageUrl 2=$contribPageTitle 3=$managePCPUrl}You are currently adding or modifying a personal fundraising page for <a href="%1">%2</a>. The page is not yet complete. To continue editing, please <a href="%3">log in</a> to the system to access your personal fundraising page.{/ts}</p>
+	   <p>{ts 1=$contribPageUrl 2=$contribPageTitle 3=$managePCPUrl}You are currently adding or modifying a personal campaign page for <a href="%1">%2</a>. The page is not yet complete. To continue editing, please <a href="%3">log in</a> to the system to access your personal campaign page.{/ts}</p>
 	 </td>
   </tr>
  </table>
