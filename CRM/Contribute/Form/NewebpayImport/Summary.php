@@ -14,6 +14,9 @@ class CRM_Contribute_Form_NewebpayImport_Summary extends CRM_Core_Form {
     $statusContent = $this->get('modifyStatusContribution');
     if (!empty($statusContent)) {
       $statusHeader = $this->get('modifyStatusHeader');
+      foreach ($statusContent as &$row) {
+        $row[ts('Contribution Status')] = ts('Completed');
+      }
       $this->assign('modifyStatusHeader', $statusHeader);
       $this->assign('modifyStatusContribution', $statusContent);
       $this->assign('modifyStatusBlockHeaderText', ts('Pending Contribution'));
@@ -26,6 +29,15 @@ class CRM_Contribute_Form_NewebpayImport_Summary extends CRM_Core_Form {
       $this->assign('errorContribution', $errorContent);
       $this->assign('errorBlockHeaderText', ts('Error Contribution'));
     }
+
+    $query = "_qf_Preview_display=true&qfKey={$this->controller->_key}&downloadType=";
+    $queryError = $query.'error';
+    $downloadErrorUrl = CRM_Utils_System::url('civicrm/contribute/newebpay/import', $queryError);
+    $this->assign('downloadErrorUrl', $downloadErrorUrl);
+
+    $queryStatus = $query.'status';
+    $downloadStatusUrl = CRM_Utils_System::url('civicrm/contribute/newebpay/import', $queryStatus);
+    $this->assign('downloadStatusUrl', $downloadStatusUrl);
   }
 
   function buildQuickForm() {

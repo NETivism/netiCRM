@@ -6,8 +6,6 @@
 
 <div class="crm-block crm-form-block crm-form-block-newebpayImport-import">
 
-<p>{ts}Import completed, below is the summary of the import results.{/ts}</p>
-
 {include file="CRM/Contribute/Form/NewebpayImport/accordianTable.tpl" headerText=$successedHeaderText tableHeader=$successedTableHeader tableContent=$successedContribution}
 
     {if $modifyStatusHeader}

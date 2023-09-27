@@ -7,7 +7,7 @@
 
     {if $modifyStatusHeader}
       {include file="CRM/Contribute/Form/NewebpayImport/accordianTable.tpl" headerText=$modifyStatusBlockHeaderText tableHeader=$modifyStatusHeader tableContent=$modifyStatusContribution}
-      <p>{ts 1=$modifyFields}The above contribution will update the following information: %1{/ts}<br>
+      <p>{ts 1=$modifyStatusFields}The above contribution will update the following information: %1{/ts}<br>
       {ts}The status will be changed to 'Completed.' No contribution completion notification email will be sent.{/ts}<br/>
       {ts 1=$downloadStatusUrl}You can click <a href="%1">here</a> to download the Excel result file for this batch of contributions.{/ts}</p>
     {/if}
