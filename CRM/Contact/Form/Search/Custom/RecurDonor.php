@@ -479,7 +479,7 @@ ORDER BY r1.start_date ASC, r2.start_date ASC
     }
     // Refs #38855, Workaround for export error when there are NULL field.
     foreach ($row as $key => $value) {
-      if ($value == NULL) {
+      if ($value === NULL) {
         $row[$key] = '';
       }
     }
