@@ -49091,3 +49091,9 @@ msgstr ""
 #: templates/CRM/Contribute/Form/ContributionPage/PCP.tpl
 msgid "When your supporters create a Personal Campaign page, they must log in or register an account from a The Supporter Profile to use functions such as editing drafts or submitting for approval. Please select one Profile here for login or registration."
 msgstr ""
+
+msgid "Empty Receive Date"
+msgstr ""
+
+msgid "Error Message"
+msgstr ""
