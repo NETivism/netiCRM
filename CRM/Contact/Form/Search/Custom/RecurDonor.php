@@ -477,6 +477,12 @@ ORDER BY r1.start_date ASC, r2.start_date ASC
       );
       $row['contribution_id2'] = '<a href="'.CRM_Utils_System::crmURL($params).'" target="_blank">'.$row['contribution_id2'].'</a>';
     }
+    // Refs #38855, Workaround for export error when there are NULL field.
+    foreach ($row as $key => $value) {
+      if ($value == NULL) {
+        $row[$key] = '';
+      }
+    }
   }
 
   function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
