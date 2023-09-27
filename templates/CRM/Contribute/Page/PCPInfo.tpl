@@ -58,9 +58,7 @@
 {/if}
 
 <div class="pcp-campaign">
-  <div class="pcp-intro-text">
-    <i class="zmdi zmdi-quote"></i> {$pcp.intro_text|purify}
-  </div>
+  <div class="pcp-intro-text">{$pcp.intro_text|purify}</div>
   <div class="pcp-page-text">
     {$pcp.page_text|purify}
   </div>
