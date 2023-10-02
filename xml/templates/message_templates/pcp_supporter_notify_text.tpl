@@ -40,7 +40,11 @@ your page, tell friends, and update your contact info.{/ts}
 {elseif $pcpStatus EQ 'Waiting Review'}
 {ts}Before you can share your personal campaign page and start fundraising, it needs to be approved by the administrator.{/ts}
 
+{if $pcpNotifyEmailAddress}
 {ts 1=$pcpNotifyEmailAddress}Currently, your page is in the review process. Once the review is complete, you will soon receive an approval email from %1. After receiving the email, you can share your page and start fundraising!{/ts}
+{else}
+{ts}Currently, your page is in the review process. Once the review is complete, you can share your page and start fundraising!{/ts}
+{/if}
 
 {ts}If you would like to preview your edited campaign page before the administrator approves it, please follow these steps{/ts}:
 

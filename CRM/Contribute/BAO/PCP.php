@@ -510,9 +510,11 @@ WHERE pcp.id = %1 AND cc.contribution_status_id =1 AND cc.is_test = 0";
     );
     $tplParams['pcpInfoURL'] = $pcpInfoURL;
     $tplParams['contribPageTitle'] = $contribPageTitle;
+    $cc = NULL;
     if ($emails = CRM_Utils_Array::value('notify_email', $pcpBlockInfo)) {
       $emailArray = explode(',', $emails);
       $tplParams['pcpNotifyEmailAddress'] = $emailArray[0];
+      $cc = CRM_Utils_Array::implode(',', $emailArray);
     }
     // get appropriate message based on status
     $tplParams['pcpStatus'] = $pcpStatus[$newStatus];
@@ -529,6 +531,7 @@ WHERE pcp.id = %1 AND cc.contribution_status_id =1 AND cc.is_test = 0";
         'from' => $receiptFrom,
         'toName' => $name,
         'toEmail' => $address,
+        'cc' => $cc,
       )
     );
     return $sent;

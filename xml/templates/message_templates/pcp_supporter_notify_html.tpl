@@ -73,7 +73,11 @@ your page, tell friends, and update your contact info.{/ts}</p>
     <tr>
      <td>
       <p>{ts}Before you can share your personal campaign page and start fundraising, it needs to be approved by the administrator.{/ts}</p>
+      {if $pcpNotifyEmailAddress}
       <p>{ts 1=$pcpNotifyEmailAddress}Currently, your page is in the review process. Once the review is complete, you will soon receive an approval email from %1. After receiving the email, you can share your page and start fundraising!{/ts}</p>
+      {else}
+      <p>{ts}Currently, your page is in the review process. Once the review is complete, you can share your page and start fundraising!{/ts}</p>
+      {/if}
       <p>{ts}If you would like to preview your edited campaign page before the administrator approves it, please follow these steps{/ts}:</p>
 
       <ol>
