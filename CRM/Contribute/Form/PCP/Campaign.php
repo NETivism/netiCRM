@@ -192,6 +192,7 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
     $contactID = isset($this->_contactID) ? $this->_contactID : $session->get('userID');
     if (!$contactID) {
       $contactID = $this->get('contactID');
+      $canNotify = TRUE;
     }
     $params['contact_id'] = $contactID;
     $params['contribution_page_id'] = $this->get('contribution_page_id') ? $this->get('contribution_page_id') : $this->_contriPageId;
@@ -284,24 +285,21 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
       list($name, $to) = CRM_Contact_BAO_Contact_Location::getEmailDetails($pcpInfo['contact_id']);
       $cc = CRM_Utils_Array::implode(',', $emailArray);
 
-      $session = CRM_Core_Session::singleton();
       $sessionUserID = $session->get('userID');
 
-      if ($pcpInfo['contact_id'] != $sessionUserID) {
-        return;
+      if ($canNotify || $contactID == $sessionUserID) {
+        require_once 'CRM/Core/BAO/MessageTemplates.php';
+        list($sent, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate(
+          array(
+            'groupName' => 'msg_tpl_workflow_contribution',
+            'valueName' => 'pcp_notify',
+            'contactId' => $contactID,
+            'from' => "$domainEmailName <$domainEmailAddress>",
+            'toEmail' => $to,
+            'cc' => $cc,
+          )
+        );
       }
-
-      require_once 'CRM/Core/BAO/MessageTemplates.php';
-      list($sent, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate(
-        array(
-          'groupName' => 'msg_tpl_workflow_contribution',
-          'valueName' => 'pcp_notify',
-          'contactId' => $contactID,
-          'from' => "$domainEmailName <$domainEmailAddress>",
-          'toEmail' => $to,
-          'cc' => $cc,
-        )
-      );
 
       if ($sent) {
         $notifyStatus = ts('A notification email has been sent to the site administrator.');
