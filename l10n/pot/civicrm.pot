@@ -49097,3 +49097,15 @@ msgstr ""
 
 msgid "Error Message"
 msgstr ""
+
+msgid "Contribution data that matches"
+msgstr ""
+
+msgid "Contribution data with inconsistent 'status' (import after modifying status)"
+msgstr ""
+
+msgid "Erroneous contribution data (cannot be imported)"
+msgstr ""
+
+msgid "You can click <a href=\"%1\">here</a> to download the Excel file of the original status for this batch of contributions."
+msgstr ""
