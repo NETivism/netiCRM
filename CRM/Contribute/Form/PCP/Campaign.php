@@ -284,6 +284,13 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
       list($name, $to) = CRM_Contact_BAO_Contact_Location::getEmailDetails($pcpInfo['contact_id']);
       $cc = CRM_Utils_Array::implode(',', $emailArray);
 
+      $session = CRM_Core_Session::singleton();
+      $sessionUserID = $session->get('userID');
+
+      if ($pcpInfo['contact_id'] != $sessionUserID) {
+        return;
+      }
+
       require_once 'CRM/Core/BAO/MessageTemplates.php';
       list($sent, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate(
         array(
