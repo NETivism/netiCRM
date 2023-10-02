@@ -280,8 +280,8 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
       //address should be sent in users email receipt for
       //support purpose.
       $emailArray = explode(',', $emails);
-      $to = $emailArray[0];
-      unset($emailArray[0]);
+      CRM_Core_DAO::commonRetrieve('CRM_Contribute_DAO_PCP', $params, $pcpInfo);
+      list($name, $to) = CRM_Contact_BAO_Contact_Location::getEmailDetails($pcpInfo['contact_id']);
       $cc = CRM_Utils_Array::implode(',', $emailArray);
 
       require_once 'CRM/Core/BAO/MessageTemplates.php';
