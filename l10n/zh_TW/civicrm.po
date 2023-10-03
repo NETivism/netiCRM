@@ -49545,7 +49545,7 @@ msgid "Modify contribution status to 'finished'."
 msgstr "更新捐款狀態為「已完成」"
 
 msgid "Update disbursement date data to receive date."
-msgstr "更新撥款日期至收入日期欄位。"
+msgstr "更新撥款日期至收到日期欄位。"
 
 msgid "Can't find the contribution in database."
 msgstr "資料庫中找不到對應的捐款。"
@@ -49595,3 +49595,33 @@ msgstr "空白的收到日期"
 
 msgid "Error Message"
 msgstr "錯誤訊息"
+
+msgid "Contribution data that matches"
+msgstr "比對相符的捐款資料"
+
+msgid ""
+"Contribution data with inconsistent 'status' (import after modifying status)"
+msgstr "「狀態」不一致的捐款資料（修改狀態後匯入）"
+
+msgid "Erroneous contribution data (cannot be imported)"
+msgstr "錯誤的捐款資料（無法匯入）"
+
+msgid ""
+"You can click <a href=\"%1\">here</a> to download the Excel file of the "
+"original status for this batch of contributions."
+msgstr "可<a href=\"%1\">按此下載</a>這批捐款原本狀態的excel檔案"
+
+#: templates/CRM/common/CMSUser.tpl
+msgid ""
+"Please fill in the basic information to register for an account that can "
+"edit a personal campaign page. The account registration rules are as "
+"follows:"
+msgstr "請填寫基本資料,以註冊取得一個可編輯個人募款頁的帳號,帳號註冊規則如下:"
+
+msgid "1. One email can only register one account."
+msgstr "1.一個email,只可註冊一個帳號"
+
+msgid ""
+"2. If you have already registered an account on this site, you can click "
+"Forgot Password, enter your email, and get the login link from your mailbox."
+msgstr "2.若您已經註冊過本站帳號, 您可點選\"忘記密碼\",輸入email,即可從信箱取得登入連結"
