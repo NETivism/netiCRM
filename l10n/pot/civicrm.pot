@@ -49091,3 +49091,19 @@ msgstr ""
 #: templates/CRM/Contribute/Form/ContributionPage/PCP.tpl
 msgid "When your supporters create a Personal Campaign page, they must log in or register an account from a The Supporter Profile to use functions such as editing drafts or submitting for approval. Please select one Profile here for login or registration."
 msgstr ""
+
+msgid "Empty Receive Date"
+msgstr ""
+
+msgid "Error Message"
+msgstr ""
+
+#: templates/CRM/common/CMSUser.tpl
+msgid "Please fill in the basic information to register for an account that can edit a personal campaign page. The account registration rules are as follows:"
+msgstr ""
+
+msgid "1. One email can only register one account."
+msgstr ""
+
+msgid "2. If you have already registered an account on this site, you can click Forgot Password, enter your email, and get the login link from your mailbox."
+msgstr ""
