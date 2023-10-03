@@ -210,6 +210,7 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
     }
     $this->addFormRule(array('CRM_Contribute_Form_PCP_PCPAccount', 'formRule'), $this);
     $this->addButtons($button);
+    $this->assign('isPcP', "TRUE");
   }
 
   /**
