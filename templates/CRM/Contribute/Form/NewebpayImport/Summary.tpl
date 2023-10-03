@@ -10,7 +10,7 @@
 
     {if $modifyStatusHeader}
       {include file="CRM/Contribute/Form/NewebpayImport/accordianTable.tpl" headerText=$modifyStatusBlockHeaderText tableHeader=$modifyStatusHeader tableContent=$modifyStatusContribution}
-      <p>{ts 1=$downloadStatusUrl}You can click <a href="%1">here</a> to download the Excel result file for this batch of contributions.{/ts}</p>
+      <p>{ts 1=$downloadStatusUrl}You can click <a href="%1">here</a> to download the Excel file of the original status for this batch of contributions.{/ts}</p>
     {/if}
 
 

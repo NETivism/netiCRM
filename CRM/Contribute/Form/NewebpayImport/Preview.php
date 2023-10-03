@@ -99,7 +99,7 @@ class CRM_Contribute_Form_NewebpayImport_Preview extends CRM_Core_Form {
       $this->set('modifyStatusContribution', $this->_statusContent);
       $this->assign('modifyStatusHeader', $this->_statusHeader);
       $this->assign('modifyStatusContribution', $this->_statusContent);
-      $this->assign('modifyStatusBlockHeaderText', ts('Pending Contribution'));
+      $this->assign('modifyStatusBlockHeaderText', ts("Contribution data with inconsistent 'status' (import after modifying status)"));
       $modifyStatusFieldsArray = [ts('Transaction Fee Amount')];
       $modifyStatusFieldsArray[] = ts("`%1` to the field `%2`", array(1 => ts('Disbursement Date'), 2 => ts('Empty Receive Date')));
       $modifyStatusFields = implode(', ', $modifyStatusFieldsArray);
@@ -137,13 +137,13 @@ class CRM_Contribute_Form_NewebpayImport_Preview extends CRM_Core_Form {
     $this->set('tableHeader', $header);
     $this->assign('successedTableHeader', $header);
     $this->assign('successedContribution', $this->_successedContribution);
-    $this->assign('successedHeaderText', ts('Success Contribution'));
+    $this->assign('successedHeaderText', ts("Contribution data that matches"));
     if (!empty($this->_errorContent)) {
       $this->assign('errorTableHeader', $this->_errorHeader);
       $this->assign('errorContribution', $this->_errorContent);
       $this->set('errorHeader', $this->_errorHeader);
       $this->set('errorContribution', $this->_errorContent);
-      $this->assign('errorBlockHeaderText', ts('Error Contribution'));
+      $this->assign('errorBlockHeaderText', ts("Erroneous contribution data (cannot be imported)"));
     }
     $this->addFormRule(array('CRM_Contribute_Form_NewebpayImport_Preview', 'formRule'), $this);
 
@@ -224,12 +224,34 @@ class CRM_Contribute_Form_NewebpayImport_Preview extends CRM_Core_Form {
     }
     $importDateCustomFieldId = $this->get('disbursementDate');
     if (!empty($importDateCustomFieldId)) {
-      $fieldName = 'custom_'.$importDateCustomFieldId;
-      $importDate = array(
-        $fieldName => $contributionRow['撥款日期'],
-        'entityID' => $id,
-      );
-      $contributionRow[ts('Result')] .= ts("Add disbursement date to field `%1`", array(1 => $fieldName));
+      $sql = "SELECT table_name, cg.id as custom_group_id, cf.label as field_label, column_name FROM civicrm_custom_group cg INNER JOIN civicrm_custom_field cf ON cg.id = cf.custom_group_id WHERE cf.id = %1";
+      $params = array( 1 => array($importDateCustomFieldId, 'Positive'));
+      $dao = CRM_Core_DAO::executeQuery($sql, $params);
+      if ($dao->fetch()) {
+        $sql2 = "SELECT id FROM {$dao->table_name} WHERE entity_id = %1";
+        $params2 = array( 1 => array($id, 'Positive'));
+        $customValueID = CRM_Core_DAO::singleValueQuery($sql2, $params2);
+        $tableName = $dao->table_name;
+        $importDate = array(
+          $tableName => array(
+            0 => array(
+              0 => array(
+                'entity_id' => $id,
+                'column_name' => $dao->column_name,
+                'custom_group_id' => $dao->custom_group_id,
+                'is_multiple' => FALSE,
+                'type' => 'Date',
+                'value' => $contributionRow['撥款日期'],
+              )
+            )
+          )
+        );
+        if ($customValueID) {
+          $importDate[$tableName][0][0]['id'] = $customValueID;
+        }
+        CRM_Core_BAO_CustomValueTable::create($importDate);
+        $contributionRow[ts('Result')] .= ts("Add disbursement date to field `%1`", array(1 => $dao->field_label));
+      }
     }
     if ($isChangeStatus) {
       $contribution = new CRM_Contribute_DAO_Contribution();

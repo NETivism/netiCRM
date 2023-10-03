@@ -29,7 +29,7 @@
               {elseif $column|strstr:"撥款日期"}
                 <td>{$value|crmDate}</td>
               {elseif $column == '商店訂單編號'}
-                <td><a href="{crmURL p='civicrm/contact/view/contribution' q="reset=1&id=`$line.id`&cid=`$line.contact_id`&action=view&context=recur&selectedChild=contribute" h=0 a=1 fe=1}" target="_blank">{$line.id}</a></td>
+                <td><a href="{crmURL p='civicrm/contact/view/contribution' q="reset=1&id=`$line.id`&cid=`$line.contact_id`&action=view&context=recur&selectedChild=contribute" h=0 a=1 fe=1}" target="_blank">{$line.trxn_id}</a></td>
               {else}
                 <td>{$value}</td>
               {/if}

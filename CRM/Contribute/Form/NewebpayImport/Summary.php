@@ -9,7 +9,7 @@ class CRM_Contribute_Form_NewebpayImport_Summary extends CRM_Core_Form {
     $this->_successedContribution = $this->get('successedContribution');
     $this->assign('successedTableHeader', $successedTableHeader);
     $this->assign('successedContribution', $this->_successedContribution);
-    $this->assign('successedHeaderText', ts('Success Contribution'));
+    $this->assign('successedHeaderText', ts("Contribution data that matches"));
 
     $statusContent = $this->get('modifyStatusContribution');
     if (!empty($statusContent)) {
@@ -19,7 +19,7 @@ class CRM_Contribute_Form_NewebpayImport_Summary extends CRM_Core_Form {
       }
       $this->assign('modifyStatusHeader', $statusHeader);
       $this->assign('modifyStatusContribution', $statusContent);
-      $this->assign('modifyStatusBlockHeaderText', ts('Pending Contribution'));
+      $this->assign('modifyStatusBlockHeaderText', ts("Contribution data with inconsistent 'status' (import after modifying status)"));
     }
 
     $errorContent = $this->get('errorContribution');
@@ -27,7 +27,7 @@ class CRM_Contribute_Form_NewebpayImport_Summary extends CRM_Core_Form {
       $errorHeader = $this->get('errorHeader');
       $this->assign('errorTableHeader', $errorHeader);
       $this->assign('errorContribution', $errorContent);
-      $this->assign('errorBlockHeaderText', ts('Error Contribution'));
+      $this->assign('errorBlockHeaderText', ts("Erroneous contribution data (cannot be imported)"));
     }
 
     $query = "_qf_Preview_display=true&qfKey={$this->controller->_key}&downloadType=";
