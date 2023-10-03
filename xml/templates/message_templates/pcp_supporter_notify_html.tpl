@@ -81,7 +81,7 @@ your page, tell friends, and update your contact info.{/ts}</p>
       <p>{ts}If you would like to preview your edited campaign page before the administrator approves it, please follow these steps{/ts}:</p>
 
       <ol>
-       <li><a href="{$loginUrl}">{ts}Log in to the system to preview your personal campaign page.{/ts}</a></li>
+       <li>{ts 1=$loginUrl}<a href="%1">Log in</a> to the system to preview your personal campaign page.{/ts}</li>
        <li><a href="{$pcpInfoURL}">{ts}Click this link{/ts}</a></li>
       </ol>
      </td>
