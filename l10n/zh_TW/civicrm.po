@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: 馮 佳今, 2022-2023\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>, 2016-2023\n"
 "Language-Team: Chinese (Taiwan) (http://app.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49545,7 +49545,7 @@ msgid "Modify contribution status to 'finished'."
 msgstr "更新捐款狀態為「已完成」"
 
 msgid "Update disbursement date data to receive date."
-msgstr "更新撥款日期至收入日期欄位。"
+msgstr "更新撥款日期至收到日期欄位。"
 
 msgid "Can't find the contribution in database."
 msgstr "資料庫中找不到對應的捐款。"
@@ -49595,6 +49595,21 @@ msgstr "空白的收到日期"
 
 msgid "Error Message"
 msgstr "錯誤訊息"
+
+msgid "Contribution data that matches"
+msgstr "比對相符的捐款資料"
+
+msgid ""
+"Contribution data with inconsistent 'status' (import after modifying status)"
+msgstr "「狀態」不一致的捐款資料（修改狀態後匯入）"
+
+msgid "Erroneous contribution data (cannot be imported)"
+msgstr "錯誤的捐款資料（無法匯入）"
+
+msgid ""
+"You can click <a href=\"%1\">here</a> to download the Excel file of the "
+"original status for this batch of contributions."
+msgstr "可<a href=\"%1\">按此下載</a>這批捐款原本狀態的excel檔案"
 
 #: templates/CRM/common/CMSUser.tpl
 msgid ""
