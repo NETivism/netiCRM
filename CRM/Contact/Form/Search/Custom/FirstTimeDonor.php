@@ -157,6 +157,15 @@ GROUP BY contact.id
     $clauses = array();
     $clauses[] = "contact.is_deleted = 0";
 
+    if (!empty($this->_formValues['receive_date_from'])) {
+      $receive_date_from = CRM_Utils_Date::processDate($this->_formValues['receive_date_from']);
+      $clauses[] = "c.min_receive_date >= '$receive_date_from'";
+    }
+    if (!empty($this->_formValues['receive_date_to'])) {
+      $receive_date_to = CRM_Utils_Date::processDate($this->_formValues['receive_date_to']);
+      $clauses[] = "c.min_receive_date <= '$receive_date_to'";
+    }
+
     return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
