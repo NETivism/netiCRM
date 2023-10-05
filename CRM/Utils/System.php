@@ -170,7 +170,7 @@ class CRM_Utils_System {
     return CRM_Core_Config::$_userSystem->url($path, $query, $absolute, $fragment, $htmlize, $frontend);
   }
 
-  function href($text, $path = NULL, $query = NULL, $absolute = TRUE,
+  static function href($text, $path = NULL, $query = NULL, $absolute = TRUE,
     $fragment = NULL, $htmlize = TRUE, $frontend = FALSE
   ) {
     $url = self::url($path, $query, $absolute, $fragment, $htmlize, $frontend);
@@ -642,7 +642,7 @@ class CRM_Utils_System {
   }
 
   /** parse php modules from phpinfo */
-  function parsePHPModules() {
+  static function parsePHPModules() {
     ob_start();
     phpinfo(INFO_MODULES);
     $s = ob_get_contents();

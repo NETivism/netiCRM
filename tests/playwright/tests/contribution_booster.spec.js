@@ -111,7 +111,7 @@ test.describe.serial('Contribution Booster', () => {
             await expect(page).toHaveURL('/civicrm/contact/search/custom?force=1&reset=1&csid=19');
 
             /* Step 2: check titles */
-            await expect(page.locator('#page-title')).toHaveText('Donor who donate in last %count month');
+            await expect(page.locator('#page-title')).toHaveText('Donor who donate in last 6 months');
 
             /* Step 3: check search form */
             element = '.crm-accordion-body';
@@ -128,7 +128,7 @@ test.describe.serial('Contribution Booster', () => {
 
             /* Step 4: check search results */
             await expect(page.locator('.crm-error')).toHaveCount(0);
-            await expect(page.locator('#page-title')).toHaveText('Donor who donate in last 1 month');
+            await expect(page.locator('#page-title')).toHaveText('Donor who donate in last 6 months');
 
         });
 
