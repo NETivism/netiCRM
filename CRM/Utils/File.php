@@ -493,6 +493,7 @@ HTACCESS;
    * @return Void
    */
   public static function encryptXlsxFile($filePath = NULL) {
+    ini_set('memory_limit', '2048M');
     $config = CRM_Core_Config::singleton();
     $outputFile = $filePath;
     if (!$config->decryptExcelOption) {
