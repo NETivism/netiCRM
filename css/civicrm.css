@@ -1739,6 +1739,10 @@ div.block-civicrm li, .crm-container ul li, .crm-container ul.treeview li {
     color: #536DFE;
 }
 
+/* Attachment */
+.crm-container .attachments table .current-attachments img {
+  max-width: 18%;
+}
 /*
 ** Style for hiding blocks or table rows
 */

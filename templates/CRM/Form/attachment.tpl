@@ -47,7 +47,7 @@
       </div><!-- /.crm-accordion-header -->
      <div class="crm-accordion-body">    
    {/if}
-    <div id="attachments">
+    <div id="attachments" class="attachments">
     <table class="form-layout-compressed">
     {if $form.attachFile.$emptyStringKey}
             <tr>
@@ -62,7 +62,7 @@
     {if $currentAttachmentURL}
         <tr>
             <td class="label">{ts}Current Attachment(s){/ts}</td>
-            <td class="view-value"><strong>{$currentAttachmentURL}</strong></td>
+            <td class="view-value current-attachments"><strong>{$currentAttachmentURL}</strong></td>
         </tr>
         <tr>
             <td class="label">&nbsp;</td>

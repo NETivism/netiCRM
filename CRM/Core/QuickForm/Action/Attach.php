@@ -1,32 +1,6 @@
 <?php
-/*
- +--------------------------------------------------------------------+
- | CiviCRM version 3.3                                                |
- +--------------------------------------------------------------------+
- | Copyright CiviCRM LLC (c) 2004-2010                                |
- +--------------------------------------------------------------------+
- | This file is a part of CiviCRM.                                    |
- |                                                                    |
- | CiviCRM is free software; you can copy, modify, and distribute it  |
- | under the terms of the GNU Affero General Public License           |
- | Version 3, 19 November 2007 and the CiviCRM Licensing Exception.   |
- |                                                                    |
- | CiviCRM is distributed in the hope that it will be useful, but     |
- | WITHOUT ANY WARRANTY; without even the implied warranty of         |
- | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.               |
- | See the GNU Affero General Public License for more details.        |
- |                                                                    |
- | You should have received a copy of the GNU Affero General Public   |
- | License and the CiviCRM Licensing Exception along                  |
- | with this program; if not, contact CiviCRM LLC                     |
- | at info[AT]civicrm[DOT]org. If you have questions about the        |
- | GNU Affero General Public License or the licensing of CiviCRM,     |
- | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
- +--------------------------------------------------------------------+
-*/
-
 /**
- * Redefine the upload action.
+ * Another upload action when form needs 2 upload buttons
  *
  * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
@@ -34,8 +8,7 @@
  *
  */
 
-require_once 'CRM/Core/QuickForm/Action.php';
-class CRM_Core_QuickForm_Action_Upload extends CRM_Core_QuickForm_Action {
+class CRM_Core_QuickForm_Action_Attach extends CRM_Core_QuickForm_Action {
 
   /**
    * the array of uploaded file names
@@ -77,7 +50,7 @@ class CRM_Core_QuickForm_Action_Upload extends CRM_Core_QuickForm_Action {
    * @return void
    * @access private
    */
-  function upload(&$page, &$data, $pageName, $uploadName) {
+  function attach(&$page, &$data, $pageName, $uploadName) {
     // make sure uploadName exists in the QF array
     // else we skip, CRM-3427
     if (empty($uploadName) ||
@@ -142,7 +115,7 @@ class CRM_Core_QuickForm_Action_Upload extends CRM_Core_QuickForm_Action {
     // so basically the rug might have been pulled from us, so we actually just check
     // and potentially call the right one
     // this allows standalong form uploads to work nicely
-    $page->controller->_actions['upload']->realPerform($page, $actionName);
+    $page->controller->_actions['attach']->realPerform($page, $actionName);
   }
 
   function realPerform(&$page, $actionName) {
@@ -156,7 +129,7 @@ class CRM_Core_QuickForm_Action_Upload extends CRM_Core_QuickForm_Action {
     }
 
     foreach ($this->_uploadNames as $name) {
-      $this->upload($page, $data, $pageName, $name);
+      $this->attach($page, $data, $pageName, $name);
     }
 
     $state = &$this->_stateMachine->getState($pageName);

@@ -392,23 +392,16 @@ WHERE pcp.id = %1 AND cc.contribution_status_id =1 AND cc.is_test = 0";
    * @static
    *
    */
-  static function setIsActive($id, $is_active) {
-    switch ($is_active) {
-      case 0:
-        $is_active = 3;
-        break;
-
-      case 1:
-        $is_active = 2;
-        break;
+  static function setIsActive($id, $statusId) {
+    $pcpStatus = CRM_Contribute_PseudoConstant::pcpStatus();
+    if (!in_array($statusId, array_keys($pcpStatus))) {
+      return;
     }
 
-    CRM_Core_DAO::setFieldValue('CRM_Contribute_DAO_PCP', $id, 'status_id', $is_active);
+    CRM_Core_DAO::setFieldValue('CRM_Contribute_DAO_PCP', $id, 'status_id', $statusId);
 
-    require_once 'CRM/Contribute/PseudoConstant.php';
     $pcpTitle = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_PCP', $id, 'title');
-    $pcpStatus = CRM_Contribute_PseudoConstant::pcpStatus();
-    $pcpStatus = $pcpStatus[$is_active];
+    $pcpStatus = $pcpStatus[$statusId];
 
     CRM_Core_Session::setStatus(ts("%1 status has been updated to %2.", array(
       1 => $pcpTitle,
@@ -416,7 +409,7 @@ WHERE pcp.id = %1 AND cc.contribution_status_id =1 AND cc.is_test = 0";
     )));
 
     // send status change mail
-    $result = self::sendStatusUpdate($id, $is_active);
+    $result = self::sendStatusUpdate($id, $statusId);
 
     if ($result) {
       CRM_Core_Session::setStatus(ts("A notification email has been sent to the supporter."));

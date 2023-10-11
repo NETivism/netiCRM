@@ -110,12 +110,36 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
    * @access public
    */
   public function buildQuickForm() {
+    $isManager = CRM_Core_Permission::check('administer CiviCRM');
+    $pcpValues = array();
+    $statusDraftId = CRM_Core_OptionGroup::getValue('pcp_status', 'Draft', 'name');
+    $statusApprovedId = intval(CRM_Core_OptionGroup::getValue('pcp_status', 'Approved', 'name'));
+    if (!empty($this->_pageId)) {
+      $dao = new CRM_Contribute_DAO_PCP();
+      $dao->id = $this->_pageId;
+      if ($dao->find(TRUE)) {
+        CRM_Core_DAO::storeValues($dao, $pcpValues);
+      }
+      $statusId = $pcpValues['status_id'];
+    }
+    else {
+      $statusId = $statusDraftId;
+    }
+
+    $contribPageId = !empty($pcpValues['contribution_page_id']) ? $pcpValues['contribution_page_id'] : $this->get('contribution_page_id');
+    $approvalNeeded = FALSE;
+    if (!empty($contribPageId)) {
+      $approvalNeeded = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_PCPBlock', $contribPageId, 'is_approval_needed', 'entity_id');
+    }
+
     if ($this->_key) {
       $this->add('hidden', 'key', $this->_key);
     }
-    $this->add('text', 'title', ts('Title'), NULL, TRUE);
-    $this->add('textarea', 'intro_text', ts('Event Summary'), NULL, TRUE);
-    $this->add('text', 'goal_amount', ts('Your Goal'), NULL, TRUE);
+
+    $readOnly = array();
+    $readOnly[] = $this->add('text', 'title', ts('Title'), NULL, TRUE);
+    $readOnly[] = $this->add('textarea', 'intro_text', ts('Event Summary'), NULL, TRUE);
+    $readOnly[] = $this->add('text', 'goal_amount', ts('Your Goal'), NULL, TRUE);
     $this->addRule('goal_amount', ts('Goal Amount should be a numeric value'), 'money');
     $attributes = array();
     if ($this->get('action') & CRM_Core_Action::ADD) {
@@ -124,28 +148,51 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
 
     $this->add('text', 'donate_link_text', ts('Donation Button'), $attributes);
     $attrib = array('rows' => 8, 'cols' => 60);
-    $this->addWysiwyg('page_text', ts('Your Message'), $attrib);
-    //        $this->add('textarea', 'page_text', ts('Your Message'), null, false );
+    $readOnly[] = $this->addWysiwyg('page_text', ts('Your Message'), $attrib);
 
     $maxAttachments = 5;
     CRM_Core_BAO_File::buildAttachment($this, 'civicrm_pcp', $this->_pageId, $maxAttachments, array('accept' => 'image/x-png,image/gif,image/jpeg', 'multiple' => 'multiple'));
+    if (CRM_Utils_Array::arrayKeyExists('attachFile[]', $this->_elementIndex)) {
+      $readOnly[] = $this->getElement('attachFile[]');
+    }
+    if (CRM_Utils_Array::arrayKeyExists('is_delete_attachment', $this->_elementIndex)) {
+      $readOnly[] = $this->getElement('is_delete_attachment');
+    }
 
-    $this->addElement('checkbox', 'is_thermometer', ts('Progress Bar'));
-    $this->addElement('checkbox', 'is_honor_roll', ts('Honor Roll'), NULL);
-    $this->addElement('checkbox', 'is_active', ts('Active'));
+    $readOnly[] = $this->addElement('checkbox', 'is_thermometer', ts('Progress Bar'));
+    $readOnly[] = $this->addElement('checkbox', 'is_honor_roll', ts('Honor Roll'), NULL);
+    $isActive = $this->addElement('checkbox', 'is_active', ts('Active'));
+    $readOnly[] = $isActive;
 
-    $this->addButtons(array(
-        array(
-          'type' => 'upload',
-          'name' => ts('Save'),
-          'isDefault' => TRUE,
-        ),
-        array(
-          'type' => 'cancel',
-          'name' => ts('Cancel'),
-        ),
-      )
+    if (!in_array($statusId, array($statusApprovedId)) && !$isManager) {
+      $isActive->freeze();
+    }
+    if (!in_array($statusId, array($statusDraftId)) && !$isManager) {
+      foreach($readOnly as &$element) {
+        $element->freeze();
+      }
+    }
+
+    $buttons = array();
+    if ($statusId === $statusDraftId || $isManager) {
+      $buttons[] = array(
+        'type' => 'attach',
+        'name' => ts('Save and Preview'),
+        'isDefault' => TRUE,
+      );
+    }
+    if ($statusId === $statusDraftId) {
+      $submitText = !empty($approvalNeeded) ? ts('Submit').' ('.ts('Requires Approval').')' : ts('Submit');
+      $buttons[] = array(
+        'type' => 'upload',
+        'name' => $submitText,
+      );
+    }
+    $buttons[] = array(
+      'type' => 'cancel',
+      'name' => ts('Cancel'),
     );
+    $this->addButtons($buttons);
     $this->addFormRule(array('CRM_Contribute_Form_PCP_Campaign', 'formRule'), $this);
   }
 
@@ -181,6 +228,7 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
    */
   public function postProcess() {
     $params = $this->controller->exportValues();
+    $buttonName = $this->controller->getButtonName();
     $checkBoxes = array('is_thermometer', 'is_honor_roll', 'is_active');
 
     foreach ($checkBoxes as $key) {
@@ -204,14 +252,25 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
       $params['contribution_page_id'], 'is_approval_needed', 'entity_id'
     );
     $approvalMessage = NULL;
-    if ($this->get('action') & CRM_Core_Action::ADD) {
-      $params['status_id'] = $approval_needed ? 1 : 2;
+    $statusDraftId = CRM_Core_OptionGroup::getValue('pcp_status', 'Draft', 'name');
+    $statusWaitReviewId = intval(CRM_Core_OptionGroup::getValue('pcp_status', 'Waiting Review', 'name'));
+    $statusApprovedId = intval(CRM_Core_OptionGroup::getValue('pcp_status', 'Approved', 'name'));
+    if ($buttonName == '_qf_Campaign_upload') {
+      $params['status_id'] = $approval_needed ? $statusWaitReviewId : $statusApprovedId;
       $approvalMessage = $approval_needed ? ts('but requires administrator review before you can begin your fundraising efforts. You will receive an email confirmation shortly which includes a link to return to your fundraising page.') : ts('and is ready to use.');
+    }
+    else {
+      if ($this->get('action') & CRM_Core_Action::ADD) {
+        $params['status_id'] = $statusDraftId;
+      }
+      else {
+        // do not update status when update and button is Save and Preview
+        unset($params['status_id']);
+      }
     }
 
     $params['id'] = $this->_pageId;
 
-    require_once 'CRM/Contribute/BAO/PCP.php';
     $pcp = CRM_Contribute_BAO_PCP::add($params, FALSE);
 
     // add attachments as needed

@@ -88,6 +88,12 @@ class CRM_Contribute_Page_PCP extends CRM_Core_Page_Basic {
           'qs' => 'action=revert&id=%%id%%',
           'title' => ts('Reject Personal Campaign Page'),
         ),
+        CRM_Core_Action::PREVIEW => array(
+          'name' => ts('Revoke to Draft'),
+          'url' => 'civicrm/admin/pcp',
+          'qs' => 'action=preview&id=%%id%%',
+          'title' => ts('Revoke Personal Campaign Page to Draft status'),
+        ),
         CRM_Core_Action::DELETE => array(
           'name' => ts('Delete'),
           'url' => 'civicrm/admin/pcp',
@@ -118,15 +124,24 @@ class CRM_Contribute_Page_PCP extends CRM_Core_Page_Basic {
       $this, FALSE,
       'browse'
     );
+    $statusApprovedId = intval(CRM_Core_OptionGroup::getValue('pcp_status', 'Approved', 'name'));
+    $statusNotApprovedId = intval(CRM_Core_OptionGroup::getValue('pcp_status', 'Not Approved', 'name'));
+    $statusDraftId = intval(CRM_Core_OptionGroup::getValue('pcp_status', 'Draft', 'name'));
     if ($action & CRM_Core_Action::REVERT) {
       $id = CRM_Utils_Request::retrieve('id', 'Positive', $this, FALSE);
-      CRM_Contribute_BAO_PCP::setIsActive($id, 0);
+      CRM_Contribute_BAO_PCP::setIsActive($id, $statusNotApprovedId);
       $session = CRM_Core_Session::singleton();
       $session->pushUserContext(CRM_Utils_System::url(CRM_Utils_System::currentPath(), 'reset=1'));
     }
     elseif ($action & CRM_Core_Action::RENEW) {
       $id = CRM_Utils_Request::retrieve('id', 'Positive', $this, FALSE);
-      CRM_Contribute_BAO_PCP::setIsActive($id, 1);
+      CRM_Contribute_BAO_PCP::setIsActive($id, $statusApprovedId);
+      $session = CRM_Core_Session::singleton();
+      $session->pushUserContext(CRM_Utils_System::url(CRM_Utils_System::currentPath(), 'reset=1'));
+    }
+    elseif ($action & CRM_Core_Action::PREVIEW) {
+      $id = CRM_Utils_Request::retrieve('id', 'Positive', $this, FALSE);
+      CRM_Contribute_BAO_PCP::setIsActive($id, $statusDraftId);
       $session = CRM_Core_Session::singleton();
       $session->pushUserContext(CRM_Utils_System::url(CRM_Utils_System::currentPath(), 'reset=1'));
     }

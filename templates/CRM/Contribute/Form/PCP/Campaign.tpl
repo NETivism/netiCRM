@@ -80,3 +80,15 @@
 </table>
 </div>
 <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
+
+<script>{literal}
+cj(document).ready(function($){
+  $('input[name=_qf_Campaign_upload]').click(function(e){
+    var confirmed = confirm("{/literal}{ts}The content cannot be modified once it is submit.{/ts} {ts}Are you sure you want to continue?{/ts}{literal}");
+    if (!confirmed) {
+      e.preventDefault();
+      return false;
+    }
+  });
+});
+{/literal}</script>
