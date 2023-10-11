@@ -1276,7 +1276,7 @@ class CRM_Export_BAO_Export {
    * Function to handle import error file creation.
    *
    **/
-  function invoke() {
+  public static function invoke() {
     $type = CRM_Utils_Request::retrieve('type', 'Positive', CRM_Core_DAO::$_nullObject);
     $parserName = CRM_Utils_Request::retrieve('parser', 'String', CRM_Core_DAO::$_nullObject);
     $fileName = CRM_Utils_Request::retrieve('file', 'String', CRM_Core_DAO::$_nullObject);

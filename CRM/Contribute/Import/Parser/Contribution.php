@@ -723,20 +723,41 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
         $fieldsArray = $this->_dedupeRuleFields;
 
         $dispArray = array();
-        foreach ($fieldsArray as $value) {
+        $noValueFields = array();
+        foreach ($fieldsArray as $dupeFieldName) {
           if ($doCreateContact) {
-            if (!CRM_Utils_Array::arrayKeyExists(trim($value), $params)) {
-              $dispArray[] = $this->_importableContactFields[$value]['title'];
+            if (!CRM_Utils_Array::arrayKeyExists(trim($dupeFieldName), $params)) {
+              $dispArray[] = $this->_importableContactFields[$dupeFieldName]['title'];
+            }
+            elseif (!is_array($params[$dupeFieldName]) && empty(trim($params[$dupeFieldName]))) {
+              $noValueFields[$dupeFieldName] = $this->_importableContactFields[$dupeFieldName]['title'];
+            }
+            elseif (is_array($params[$dupeFieldName])) {
+              $hasValue = FALSE;
+              foreach($params[$dupeFieldName] as $email) {
+                if ($dupeFieldName === 'email' && !empty($email['email'])) {
+                  $hasValue = TRUE;
+                }
+              }
+              if (!$hasValue) {
+                $noValueFields[$dupeFieldName] = $this->_importableContactFields[$dupeFieldName]['title'];
+              }
             }
           }
-          elseif (CRM_Utils_Array::arrayKeyExists(trim($value), $params)) {
-            $paramValue = $params[trim($value)];
+          elseif (CRM_Utils_Array::arrayKeyExists(trim($dupeFieldName), $params)) {
+            $paramValue = $params[trim($dupeFieldName)];
             if (is_array($paramValue)) {
-              $dispArray[] = $params[trim($value)][0][trim($value)];
+              $dispArray[] = $params[trim($dupeFieldName)][0][trim($dupeFieldName)];
             }
             else {
-              $dispArray[] = $params[trim($value)];
+              $dispArray[] = $params[trim($dupeFieldName)];
             }
+          }
+        }
+
+        if ($doCreateContact && count($noValueFields) >= count($fieldsArray)) {
+          foreach($noValueFields as $fieldTitle) {
+            $dispArray[] = $fieldTitle;
           }
         }
 
