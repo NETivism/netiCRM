@@ -107,9 +107,45 @@ const url_member_ary = [
     {title:'Import Memberships', url:'/civicrm/member/import?reset=1'},
 ];
 
+//List all report page list
 const url_report_ary = [
-    {title:'CiviCRM Reports', url:'/civicrm/report/list?reset=1'},
+    {title:'CiviCRM Reports', url:'/civicrm/report/list?reset=1', type:'all'},
+    {title:'Traffic Source', url:'/civicrm/track/report'},
+    {title:'Create Reports from Templates', url:'/civicrm/report/template/list'},
+    {title:'Registered Templates', url:'/civicrm/report/options/report_template'},
+    {title:'Report Template', url:'/civicrm/admin/report/register'},
+    {title:'Reports Listing', url:'/civicrm/admin/report/list'},
+    {title:'Report Summary', url:'/civicrm/report/summary'},
+    {title:'Constituent Report (Summary)', url:'/civicrm/report/instance/1?reset=1'},
+    {title:'Constituent Report (Detail)', url:'/civicrm/report/instance/2?reset=1'},
+    {title:'Donor Report (Summary)', url:'/civicrm/report/instance/3?reset=1'},
+    {title:'Donor Report (Detail)', url:'/civicrm/report/instance/4?reset=1'},
+    {title:'Donation Summary Report (Repeat)', url:'/civicrm/report/instance/5?reset=1'},
+    {title:'SYBUNT Report', url:'/civicrm/report/instance/6?reset=1'},
+    {title:'LYBUNT Report', url:'/civicrm/report/instance/7?reset=1'},
+    {title:'Soft Credit Report', url:'/civicrm/report/instance/8?reset=1'},
+    {title:'Membership Report (Summary)', url:'/civicrm/report/instance/9?reset=1'},
+    {title:'Membership Report (Detail)', url:'/civicrm/report/instance/10?reset=1'},
+    {title:'Membership Report (Lapsed)', url:'/civicrm/report/instance/11?reset=1'},
+    {title:'Event Participant Report (List)', url:'/civicrm/report/instance/12?reset=1'},
+    {title:'Event Income Report (Summary)', url:'/civicrm/report/instance/13?reset=1'},
+    {title:'Event Income Report (Detail)', url:'/civicrm/report/instance/14?reset=1'},
+    {title:'Attendee List', url:'/civicrm/report/instance/15?reset=1'},
+    {title:'Activity Report ', url:'/civicrm/report/instance/16?reset=1'},
+    {title:'Relationship Report', url:'/civicrm/report/instance/17?reset=1'},
+    {title:'Donation Summary Report (Organization)', url:'/civicrm/report/instance/18?reset=1'},
+    {title:'Donation Summary Report (Household)', url:'/civicrm/report/instance/19?reset=1'},
+    {title:'Top Donors Report', url:'/civicrm/report/instance/20?reset=1'},
+    {title:'Pledge Summary Report', url:'/civicrm/report/instance/21?reset=1'},
+    {title:'Pledged But not Paid Report', url:'/civicrm/report/instance/22?reset=1'},
+    {title:'Bookkeeping Transactions Report', url:'/civicrm/report/instance/23?reset=1'},
+    {title:'Grant Report', url:'/civicrm/report/instance/24?reset=1'},
+    {title:'Mail Bounce Report', url:'/civicrm/report/instance/25?reset=1'},
+    {title:'Mail Summary Report', url:'/civicrm/report/instance/26?reset=1'},
+    {title:'Mail Opened Report', url:'/civicrm/report/instance/27?reset=1'},
+    {title:'Mail Clickthrough Report', url:'/civicrm/report/instance/28?reset=1'}
 ];
+
 
 const all_pages_ary = [
     {name: 'admin', array: url_admin_ary},
@@ -126,8 +162,6 @@ const all_pages_ary = [
     {name: 'member', array: url_member_ary},
     {name: 'report', array: url_report_ary}
 ];
-
-
 
 let browser;
 test.beforeAll(async () => {
