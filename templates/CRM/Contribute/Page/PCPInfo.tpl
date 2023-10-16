@@ -70,11 +70,18 @@
   {if $pcp.is_honor_roll && $honor}
   <div class="honor-roll-wrapper">
     <h3 class="honor-roll-title">{ts}HONOR ROLL{/ts}</h3>
-    <div class="pcp-honor-roll-names">
+    <div class="pcp-honor-roll-items">
       {foreach from=$honor item=v key=honor_id}
-        <div class="pcp-honor-roll-entry">
-          <div class="pcp-honor-roll-nickname" id="pcp-honor-roll-{$honor_id}">{$v.nickname}{if $v.personal_note}{help id="pcp-honor-roll-$honor_id" text=$v.personal_note helpicon='zmdi zmdi-comment-text-alt'}{else}<i class="zmdi zmdi-comment-outline"></i>{/if}</div>
+        {if $v.nickname || $v.personal_note}
+        <div class="pcp-honor-roll-item" id="pcp-honor-roll-item-{$honor_id}">
+          {if $v.nickname}
+          <div class="pcp-honor-roll-name">{$v.nickname}</div>
+          {/if}
+          {if $v.personal_note}
+          <div class="pcp-honor-roll-message">{$v.personal_note}</div>
+          {/if}
         </div>
+        {/if}
       {/foreach}
     </div>
   </div>
