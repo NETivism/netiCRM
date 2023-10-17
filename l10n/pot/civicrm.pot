@@ -49129,3 +49129,12 @@ msgstr ""
 
 msgid "To add pcp for others, click <a href=\"%1\">Create a Personal Campaign Page for others</a> to create page."
 msgstr ""
+
+#: templates/CRM/Contribute/Page/PCP.tpl
+msgid "Search Personal Campaign Pages"
+msgstr ""
+
+#: templates/CRM/Contribute/Page/PCP.tpl
+#: templates/CRM/Contribute/Form/PCP/PCP.tpl
+msgid "Belonging Main Contribution Page"
+msgstr ""
