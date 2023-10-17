@@ -41,6 +41,7 @@ const url_dashboard_ary = [
     {title:'CiviCRM Home', url:'/civicrm/dashboard?reset=1'},
 ];
 
+//List all contact page
 const url_contact_ary = [
     {title:'Find Contacts', url:'/civicrm/contact/search?reset=1'},
     {title:'New Individual', url:'/civicrm/contact/add?reset=1&ct=Individual'},
@@ -50,6 +51,10 @@ const url_contact_ary = [
     {title:'Search Builder', url:'/civicrm/contact/search/builder?reset=1'},
     {title:'全文搜尋', url:'/civicrm/contact/search/custom?csid=15&reset=1'},
     {title:'Advanced Search', url:'/civicrm/contact/search/advanced?reset=1'},
+    {title:'Find Contacts', url:'/civicrm/contact/search/basic'},
+    {title:'Simple Search', url:'/civicrm/contact/search/simple'},
+    {title:'Print Annual Receipt', url:'/civicrm/contact/task/annualreceipt'},
+    {title:'Find and Merge Duplicate Contacts', url:'/civicrm/contact/dedupefind'},
 ];
 
 const url_activity_ary = [
