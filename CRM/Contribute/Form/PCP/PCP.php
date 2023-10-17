@@ -175,7 +175,7 @@ class CRM_Contribute_Form_PCP_PCP extends CRM_Core_Form {
       }
 
       $this->addSelect('status_id', ts('Status'), $status);
-      $this->addSelect('contribution_page_id', ts('Contribution Page'), $contribution_page);
+      $this->addSelect('contribution_page_id', ts('Belonging Main Contribution Page'), $contribution_page);
       $this->addSelect('contact_id', ts('Created by'), $contacts);
       $this->add('text', 'title', ts('Page Title'));
       $this->addButtons(array(

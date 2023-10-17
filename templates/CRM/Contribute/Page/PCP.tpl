@@ -41,7 +41,7 @@
     <tr>
 		<th>{ts}Page Title{/ts}</th>
 		<th>{ts}Created by{/ts}</th>
-		<th>{ts}Contribution Page{/ts}</th>
+		<th>{ts}Belonging Main Contribution Page{/ts}</th>
 		<th id="start_date">{ts}Starts{/ts}</th>
 		<th id="end_date">{ts}Ends{/ts}</th>
 		<th id="sortable">{ts}Status{/ts}</th>
