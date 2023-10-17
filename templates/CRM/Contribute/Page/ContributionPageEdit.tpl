@@ -90,9 +90,9 @@
 <tr>
     <td class="nowrap" id="idPcp">&raquo; {ts}Personal Campaign Pages{/ts}</td>
     <td>{ts}Allow constituents to create their own personal fundraising pages linked to this contribution page.{/ts}<br>
-      <a href="{crmURL p='civicrm/admin/contribute/pcp' q="reset=1&action=update&id=`$id`"}" target="_blank"><i class="zmdi zmdi-link"></i> {ts}Personal Campaign Pages{/ts} - {ts}Settings{/ts}</a> <br>
+      <a href="{crmURL p='civicrm/admin/contribute/pcp' q="reset=1&action=update&id=`$id`"}"><i class="zmdi zmdi-link"></i> {ts}Personal Campaign Pages{/ts} - {ts}Settings{/ts}</a> <br>
       <a href="{crmURL p="civicrm/admin/pcp" q="reset=1&contribution_page_id=`$id`"}" target="_blank"><i class="zmdi zmdi-link"></i> {ts}Manage Personal Campaign Pages{/ts}</a> <br>
-      <a href="{crmURL a=true p='civicrm/contribute/campaign' q="action=add&reset=1&pageId=`$id`"}" target="_blank"><i class="zmdi zmdi-link"></i> {ts}Setup a Personal Campaign Page{/ts}</a>
+      <a href="{crmURL a=true p='civicrm/contribute/campaign' q="action=add&reset=1&cid=0&pageId=`$id`"}" target="_blank"><i class="zmdi zmdi-link"></i> {ts}Setup a Personal Campaign Page{/ts}</a>
     </td>
 </tr>
 <tr>
