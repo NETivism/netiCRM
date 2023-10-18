@@ -74,24 +74,71 @@
       {foreach from=$honor item=v key=honor_id}
         {if $v.nickname || $v.personal_note}
         <div class="pcp-honor-roll-item" id="pcp-honor-roll-item-{$honor_id}">
-          {if $v.nickname}
-          <div class="pcp-honor-roll-name">{$v.nickname}</div>
-          {/if}
-          {if $v.personal_note}
-          <div class="pcp-honor-roll-message">{$v.personal_note}</div>
-          {/if}
+          <div class="inner">
+            {if $v.nickname}
+            <div class="pcp-honor-roll-name">{$v.nickname}</div>
+            {/if}
+            {if $v.personal_note}
+            <div class="pcp-honor-roll-message">{$v.personal_note}</div>
+            {/if}
+          </div>
         </div>
         {/if}
       {/foreach}
     </div>
   </div>
+  {* pcp honor roll masonry layout helper script *}
+  {literal}
+  <script>
+  (function ($) {
+    // Function to resize a single grid item
+    const resizeGridItem = (item, grid, rowHeight, rowGap) => {
+      // Calculate the number of rows a grid item should span
+      const rowSpan = Math.ceil(
+        (item.querySelector(".inner").getBoundingClientRect().height + rowGap) / 
+        (rowHeight + rowGap)
+      );
+      // Set the grid-row-end property to span the calculated number of rows
+      item.style.gridRowEnd = `span ${rowSpan}`;
+    };
+
+    // Function to resize all grid items in the container
+    const resizeAllGridItems = () => {
+      // Query the container and grid element
+      const container = document.querySelector(".crm-container");
+      const grid = container.querySelector(".pcp-honor-roll-items");
+      // Get computed style of the grid to obtain row height and row gap values
+      const style = window.getComputedStyle(grid);
+      // Parse row height from the grid's computed style, default to 20 if not set
+      const rowHeight = parseInt(style.getPropertyValue("grid-auto-rows")) || 20;
+      // Parse row gap from the grid's computed style
+      const rowGap = parseInt(style.getPropertyValue("grid-row-gap"));
+      // Query all grid items
+      const allItems = document.querySelectorAll(".pcp-honor-roll-item");
+      // Loop through each grid item and resize it
+      allItems.forEach(item => resizeGridItem(item, grid, rowHeight, rowGap));
+    };
+
+    // Function to resize a single grid item instance
+    const resizeInstance = (instance) => {
+      // Get the first element from the instance object
+      const item = instance.elements[0];
+      // Assuming grid, rowHeight, and rowGap are available in scope, 
+      // or fetch them as in resizeAllGridItems
+      resizeGridItem(item, grid, rowHeight, rowGap);
+    };
+
+    // Resize all grid items once the document is ready
+    $(document).ready(resizeAllGridItems);
+    // Add a resize event listener to the window to resize grid items when the window is resized
+    window.addEventListener("resize", resizeAllGridItems);
+  })(cj);
+  </script>
+  {/literal}
   {/if}{* end pcp honor roll *}
 
   <div class="pcp-parent-link"><a href="{$contribPageURL}">{ts}Back to contribution page{/ts} <i class="zmdi zmdi-arrow-right-top"></i></a></div>
 </div><!-- /.campaign -->
-
-
-
 
 {literal}
 <script language="JavaScript">
