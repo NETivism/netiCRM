@@ -42,8 +42,6 @@
 		<th>{ts}Page Title{/ts}</th>
 		<th>{ts}Created by{/ts}</th>
 		<th>{ts}Belonging Main Contribution Page{/ts}</th>
-		<th id="start_date">{ts}Starts{/ts}</th>
-		<th id="end_date">{ts}Ends{/ts}</th>
 		<th id="sortable">{ts}Status{/ts}</th>
 		<th></th>
 		<th class="hiddenElement"></th>
@@ -56,12 +54,8 @@
         	<td><a href="{crmURL p='civicrm/contribute/pcp/info' q="reset=1&id=`$row.id` " fe='true'}" title="{ts}View Personal Campaign Page{/ts}" target="_blank">{$row.title}</a></td>
 		<td><a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$row.pcp_contact_id`"}" title="{ts}View contact record{/ts}" target="_blank">{$row.pcp_contact}</a> ({if $row.pcp_contact_external_id}{$row.pcp_contact_id} - {$row.pcp_contact_external_id}{else}{$row.pcp_contact_id}{/if})</td>
 		<td><a href="{crmURL p='civicrm/admin/contribute' q="action=update&reset=1&id=`$row.contribution_page_id`" fe='true'}" title="{ts}View contribution page{/ts}" target="_blank">{$row.contribution_page_title} ( {ts}ID{/ts}: {$row.contribution_page_id})</td>
-		<td>{$row.start_date|crmDate:"%b %d, %Y %l:%M %P"}</td>
-		<td>{if $row.end_date}{$row.end_date|crmDate:"%b %d, %Y %l:%M %P"}{else}({ts}ongoing{/ts}){/if}</td>
 		<td>{$row.status_id}</td>
 		<td id={$row.id}>{$row.action|replace:'xx':$row.id}</td>
-		<td class="start_date hiddenElement">{$row.start_date|truncate:10:''|crmDate}</td>
-		<td class="end_date hiddenElement">{if $row.end_date}{$row.end_date|truncate:10:''|crmDate}{else}({ts}ongoing{/ts}){/if}</td>
 	</tr>
 	{/foreach}
 	</tbody>
