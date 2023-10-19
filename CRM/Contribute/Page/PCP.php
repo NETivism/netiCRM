@@ -235,12 +235,25 @@ class CRM_Contribute_Page_PCP extends CRM_Core_Page_Basic {
         }
 
         switch ($dao->status_id) {
+          case 0:
+            $action = CRM_Core_Action::UPDATE;
+            break;
+
+          case 1:
+            $action -= CRM_Core_Action::DELETE;
+            $action -= CRM_Core_Action::PREVIEW;
+            break;
+
           case 2:
             $action -= CRM_Core_Action::RENEW;
+            $action -= CRM_Core_Action::DELETE;
+            $action -= CRM_Core_Action::PREVIEW;
             break;
 
           case 3:
             $action -= CRM_Core_Action::REVERT;
+            $action -= CRM_Core_Action::DELETE;
+            $action -= CRM_Core_Action::PREVIEW;
             break;
         }
 
