@@ -6,6 +6,11 @@
   --color-crm-special-contribute-primary: var(--neticrm-color-crm-special-contribute-primary, #3f51b5);
   --color-crm-special-contribute-info-link: var(--neticrm-color-crm-special-contribute-info-link, #c4ccff);
   --font-sans-serif: "PingFang TC", "Heiti TC", "Noto Sans TC", "Noto Sans CJK TC", NotoSansCJKtc-Regular, source-han-sans-traditional, "Microsoft JhengHei Fixed", "Microsoft JhengHei", "微軟正黑體", sans-serif;
+  --header-min-height: 120px;
+  --pcp-progress-padding: 40px;
+  --pcp-progress-amount-height: 40px;
+  --pcp-progress-bar-height: 30px;
+  --pcp-leading-height: calc(100dvh - var(--header-min-height) - var(--pcp-progress-padding) - var(--pcp-progress-amount-height) - var(--pcp-progress-bar-height));
 }
 
 /* Visually hidden helper (bootstrap 5) */
@@ -1936,7 +1941,7 @@ table.campaign td,
 }
 
 .crm-container .pcp-leading {
-    min-height: 300px;
+    min-height: var(--pcp-leading-height, 300px);
     overflow:hidden;
     background-repeat: no-repeat;
     background-position: 50% 50%;
