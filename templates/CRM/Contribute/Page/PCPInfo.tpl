@@ -59,7 +59,7 @@
 
 <div class="pcp-campaign">
   <div class="pcp-intro-text">{$pcp.intro_text|purify}</div>
-  <div class="pcp-page-text">
+  <div class="pcp-page-text main-content">
     {$pcp.page_text|purify}
   </div>
   {if $validDate && $contributeURL}
