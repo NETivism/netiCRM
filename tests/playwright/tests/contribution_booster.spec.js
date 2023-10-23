@@ -25,7 +25,7 @@ test.beforeAll(async () => {
     const browser = await chromium.launch();
     page = await browser.newPage();
 });
-  
+
 test.afterAll(async () => {
     await page.close();
 });
@@ -71,13 +71,6 @@ test.describe.serial('Contribution Booster', () => {
             /* Step 2: check titles */
             await expect(page.locator('#page-title')).toHaveText('找到首次捐款人');
 
-            /* Step 3: check search form */
-            element = '.crm-accordion-header';
-            await utils.findElement(page, element);
-            await utils.clickElement(page, page.locator(element).first());
-            await expect(page.locator('.crm-accordion-body').first()).toBeVisible();
-            await expect(page.locator('table tr.crm-contact-custom-search-form-row-receive_date td.label label[for="receive_date_from"]')).toHaveText('First time donation donors - From');
-
             /* select date from */
             element = '#receive_date_from';
             await utils.findElement(page, element);
@@ -121,6 +114,11 @@ test.describe.serial('Contribution Booster', () => {
                 return text.includes('Donor who donate in last') && text.includes('month(s)');
             }, element)).toBeTruthy();
 
+            /* select days */
+            element = '#month';
+            await utils.findElement(page, element);
+            await utils.selectOption(page.locator(element), '3');
+
             /* click "Search" button */
             element = '#_qf_Custom_refresh-top';
             await utils.findElement(page, element);
@@ -128,11 +126,11 @@ test.describe.serial('Contribution Booster', () => {
 
             /* Step 4: check search results */
             await expect(page.locator('.crm-error')).toHaveCount(0);
-            await expect(page.locator('#page-title')).toHaveText('Donor who donate in last 6 months');
+            await expect(page.locator('#page-title')).toHaveText('Donor who donate in last 3 months');
 
         });
 
-        await test.step('After payment failed but not retry in days page check.', async () => {
+        await test.step('After payment failed but not retry in N days page check.', async () => {
 
             /* Step 1: open "After payment failed but not retry in days" page */
             await page.goto(vars.href_validation_data[2].href_link);
@@ -140,7 +138,7 @@ test.describe.serial('Contribution Booster', () => {
             await expect(page).toHaveURL('/civicrm/contact/search/custom?force=1&reset=1&csid=20');
 
             /* Step 2: check titles */
-            await expect(page.locator('#page-title')).toHaveText('After payment failed but not retry in days');
+            await expect(page.locator('#page-title')).toHaveText('After payment failed but not retry in 7 days');
 
             /* Step 3: check search form */
             element = '.crm-accordion-body';
