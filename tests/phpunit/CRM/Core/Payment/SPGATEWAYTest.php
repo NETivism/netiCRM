@@ -622,12 +622,12 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
       $return_params
     );
 
-    // ATM : 13
+    // ATM : 14
     $now = $now + 60;
     $trxn_id = 'ut'.substr($now, -5);
     $amount = 111;
 
-    $instrument_id = 13;
+    $instrument_id = 14;
     $payment_type = 'VACC';
 
     $return_params = array(
