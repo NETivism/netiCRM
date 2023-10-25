@@ -2825,17 +2825,23 @@ WHERE  id IN ( $groupIDs )
 
     $val = CRM_Utils_Type::escape($value, 'Integer', false);
     if (strstr($op, 'NULL') && $name) {
-      $this->_where[$grouping][] = " ( YEAR(CURRENT_TIMESTAMP) - YEAR(contact_a.birth_date) - (RIGHT(CURRENT_DATE, 5) < RIGHT(contact_a.birth_date, 5)) $op) ";
-      $this->_qill[$grouping][] = ts('Age') . " $op";
+      if (strstr($op, 'NOT')) {
+        $this->_where[$grouping][999] = "( contact_a.is_deceased = 0 )";
+        $this->_qill[$grouping][999] = ts('Contact is deceased') . ' = ' . ts("No");
+        $this->_where[$grouping][] = " ( YEAR(CURRENT_TIMESTAMP) - YEAR(contact_a.birth_date) - (RIGHT(CURRENT_DATE, 5) < RIGHT(contact_a.birth_date, 5)) $op) ";
+      }
+      else {
+        $this->_where[$grouping][] = " ( NULLIF(contact_a.birth_date, '') IS NULL) ";
+      }
+      $this->_qill[$grouping][] = ts('Age') . ' ' .ts($op);
     }
-
-    if ($val && $name) {
+    elseif (!empty($val) && $name) {
       $this->_where[$grouping][999] = "( contact_a.is_deceased = 0 )";
-      $this->_qill[$grouping][999] = ts('Contact is deceased') . ' ' . ts("IS NULL");
+      $this->_qill[$grouping][999] = ts('Contact is deceased') . ' = ' . ts("No");
 
       if ($name == 'age') {
         $this->_where[$grouping][] = " ( YEAR(CURRENT_TIMESTAMP) - YEAR(contact_a.birth_date) - (RIGHT(CURRENT_DATE, 5) < RIGHT(contact_a.birth_date, 5)) $op '$val' ) ";
-        $this->_qill[$grouping][] = ts('Age') . " $op $val";
+        $this->_qill[$grouping][] = ts('Age') . ' '.ts($op). " $val";
       }
       elseif($name == 'age_low') {
         $this->_where[$grouping][] = " ( YEAR(CURRENT_TIMESTAMP) - YEAR(contact_a.birth_date) - (RIGHT(CURRENT_DATE, 5) < RIGHT(contact_a.birth_date, 5)) >= '$val' ) ";
