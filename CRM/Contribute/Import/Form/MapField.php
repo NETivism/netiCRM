@@ -109,10 +109,8 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
       // Escape any special characters and remove parenthesis content
       $columnMatch = trim(preg_replace('/([\.\?\+\*\(\)\[\]\{\}\/])/', '\\\\$1', preg_replace('/\(.*\)/', '', $columnName)));
 
-      // Clone the mapper fields
+      // refs #38980, workaround for first name trailing space
       $mapperFields = $this->_mapperFields;
-
-      // Trim whitespace from the 'first_name' field if it exists
       if (isset($mapperFields['first_name'])) {
         $mapperFields['first_name'] = trim($mapperFields['first_name']);
       }
