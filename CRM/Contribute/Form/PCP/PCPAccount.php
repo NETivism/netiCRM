@@ -56,23 +56,51 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
    */
   public $_single;
 
+  public $_contactID;
+
+  private $_context;
+
   public function preProcess() {
     $session = CRM_Core_Session::singleton();
     $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE);
     $this->_pageId = CRM_Utils_Request::retrieve('pageId', 'Positive', $this);
     $this->_id = CRM_Utils_Request::retrieve('id', 'Positive', $this);
-    $this->_contactID = CRM_Utils_Request::retrieve('cid', 'Positive', $this);
+    $this->_contactID = CRM_Utils_Request::retrieve('cid', 'Integer', $this);
     $this->_context = CRM_Utils_Request::retrieve('context', 'String', $this);
+    $isManager = CRM_Core_Permission::check('access CiviContribute');
+    $userID = CRM_Core_Session::singleton()->get('userID');
     if ($this->_context) {
       $this->controller->set('context', $this->_context);
     }
+
+    // update exists pcp contact info
     if ($this->_id) {
-      $this->_contactID = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_PCP', $this->_id, 'contact_id');
+      $pcpContactID = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_PCP', $this->_id, 'contact_id');
+      if ($isManager || $userID == $pcpContactID) {
+        $this->_contactID = $pcpContactID;
+        if (!empty($userID)) {
+          $this->assign('readonly_profile', 1);
+        }
+      }
+      else {
+        CRM_Utils_System::permissionDenied();
+      }
     }
+    // add new pcp contact
     else {
-      $userID = CRM_Core_Session::singleton()->get('userID');
+      $this->assign('is_manager', $isManager);
+      $this->assign('page_id', $this->_pageId);
       if (!empty($userID)) {
-        $this->_contactID = $userID;
+        if ($this->_contactID === '0' && $isManager) {
+          $this->assign('create_pcp_for_others', TRUE);
+        }
+        else {
+          $this->assign('readonly_profile', 1);
+          $this->_contactID = $userID;
+        }
+      }
+      else {
+        $this->_contactID = '0';
       }
     }
     $this->set('contactID', $this->_contactID);
@@ -85,17 +113,6 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
       else {
         $this->_pageId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_PCP', $this->_id, 'contribution_page_id');
       }
-    }
-    $config = CRM_Core_Config::singleton();
-    //redirect back to online Contribution page, we allow only logged in
-    //user to configure the PCP account and Page in standalone installation.
-    if ($config->userFramework == 'Standalone' && !$this->_contactID) {
-       return CRM_Core_Error::statusBounce(ts("You must login with your OpenID provider before you can create a Personal Campaign Page."),
-        CRM_Utils_System::url('civicrm/contribute/transact',
-          "reset=1&id={$this->_pageId}",
-          FALSE, NULL, FALSE, TRUE
-        )
-      );
     }
     $this->_single = $this->get('single');
 

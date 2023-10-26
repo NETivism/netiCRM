@@ -2823,14 +2823,25 @@ WHERE  id IN ( $groupIDs )
   function age(&$values) {
     list($name, $op, $value, $grouping, $wildcard) = $values;
 
-    $val = CRM_Utils_Type::escape($value, 'Integer');
-    if ($val && $name) {
-      $this->_where[$grouping][999] = "( contact_a.is_deceased = 0 )";
-      $this->_qill[$grouping][999] = ts('Contact is deceased') . ' ' . ts("IS NULL");
+    $val = CRM_Utils_Type::escape($value, 'Integer', false);
+    if (strstr($op, 'NULL') && $name) {
+      if (strstr($op, 'NOT')) {
+        $this->_where[$grouping][999] = "( contact_a.is_deceased = 0 OR contact_a.is_deceased IS NULL )";
+        $this->_qill[$grouping][999] = ts('Contact is deceased') . ' = ' . ts("No");
+        $this->_where[$grouping][] = " ( YEAR(CURRENT_TIMESTAMP) - YEAR(contact_a.birth_date) - (RIGHT(CURRENT_DATE, 5) < RIGHT(contact_a.birth_date, 5)) $op) ";
+      }
+      else {
+        $this->_where[$grouping][] = " ( NULLIF(contact_a.birth_date, '') IS NULL) ";
+      }
+      $this->_qill[$grouping][] = ts('Age') . ' ' .ts($op);
+    }
+    elseif (!empty($val) && $name) {
+      $this->_where[$grouping][999] = "( contact_a.is_deceased = 0  OR contact_a.is_deceased IS NULL )";
+      $this->_qill[$grouping][999] = ts('Contact is deceased') . ' = ' . ts("No");
 
       if ($name == 'age') {
-        $this->_where[$grouping][] = " ( YEAR(CURRENT_TIMESTAMP) - YEAR(contact_a.birth_date) - (RIGHT(CURRENT_DATE, 5) < RIGHT(contact_a.birth_date, 5)) = '$val' ) ";
-        $this->_qill[$grouping][] = ts('Age') . " = $val";
+        $this->_where[$grouping][] = " ( YEAR(CURRENT_TIMESTAMP) - YEAR(contact_a.birth_date) - (RIGHT(CURRENT_DATE, 5) < RIGHT(contact_a.birth_date, 5)) $op '$val' ) ";
+        $this->_qill[$grouping][] = ts('Age') . ' '.ts($op). " $val";
       }
       elseif($name == 'age_low') {
         $this->_where[$grouping][] = " ( YEAR(CURRENT_TIMESTAMP) - YEAR(contact_a.birth_date) - (RIGHT(CURRENT_DATE, 5) < RIGHT(contact_a.birth_date, 5)) >= '$val' ) ";
@@ -2840,7 +2851,6 @@ WHERE  id IN ( $groupIDs )
         $this->_where[$grouping][] = " ( YEAR(CURRENT_TIMESTAMP) - YEAR(contact_a.birth_date) - (RIGHT(CURRENT_DATE, 5) < RIGHT(contact_a.birth_date, 5)) <= '$value' ) ";
         $this->_qill[$grouping][] = ts('Age') . " <= $val";
       }
-      
       self::$_openedPanes['Demographics'] = TRUE;
     }
   }
