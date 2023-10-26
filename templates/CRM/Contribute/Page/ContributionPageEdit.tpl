@@ -95,7 +95,7 @@
       <div class="new-personal-campaign-wrap flex-general">
         {capture assign=newPersonalCampaignURL}{crmURL a=true p='civicrm/contribute/campaign' q="action=add&reset=1&pageId=`$id`"}{/capture}
         <div class="new-personal-campaign-link-wrap link-desc-wrap">
-          <a href="{crmURL a=true p='civicrm/contribute/campaign' q="action=add&reset=1&pageId=`$id`"}" target="_blank"><i class="zmdi zmdi-link"></i> &raquo; {ts}New personal campaign page{/ts}</a>
+          <a href="{crmURL a=true p='civicrm/contribute/campaign' q="action=add&reset=1&cid=0&pageId=`$id`"}" target="_blank"><i class="zmdi zmdi-link"></i> &raquo; {ts}New personal campaign page{/ts}</a>
           <div class="description">{ts}You can provide this URL to supporters for creating new Personal Campaign Pages.{/ts}</div>
         </div>
         <textarea name="url_to_copy_new_personal_campaign" class="url_to_copy" cols="45" rows="1" onclick="this.select(); document.execCommand('copy');" data-url-original="{$newPersonalCampaignURL}">{if $shorten}{$shorten}{else}{$newPersonalCampaignURL}{/if}</textarea>
