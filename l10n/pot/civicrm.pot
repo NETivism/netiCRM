@@ -49138,3 +49138,10 @@ msgstr ""
 #: templates/CRM/Contribute/Form/PCP/PCP.tpl
 msgid "Belonging Main Contribution Page"
 msgstr ""
+
+msgid "Draft"
+msgstr ""
+
+#: CRM/Contribute/Page/PCP.php
+msgid "Revoke to Draft"
+msgstr ""
