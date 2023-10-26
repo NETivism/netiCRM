@@ -20,6 +20,18 @@ const vars = {
     ],
 };
 
+async function check_and_set_accordionElement() {
+    const accordionElement = await page.locator('.crm-accordion-wrapper.crm-custom_search_form-accordion.crm-accordion-processed');
+    const isaccordionEletFound = await accordionElement.count();
+    if (isaccordionEletFound > 0) {
+        const classNames = await accordionElement.getAttribute('class');
+        if (classNames.includes('crm-accordion-closed')) {
+            element = '.crm-accordion-header';
+            await utils.clickElement(page, page.locator(element));
+        }
+    }
+}
+
 
 test.beforeAll(async () => {
     const browser = await chromium.launch();
@@ -71,6 +83,7 @@ test.describe.serial('Contribution Booster', () => {
             /* Step 2: check titles */
             await expect(page.locator('#page-title')).toHaveText('找到首次捐款人');
 
+            await check_and_set_accordionElement();
             /* select date from */
             element = '#receive_date_from';
             await utils.findElement(page, element);
@@ -106,6 +119,7 @@ test.describe.serial('Contribution Booster', () => {
             /* Step 2: check titles */
             await expect(page.locator('#page-title')).toHaveText('Donor who donate in last 6 months');
 
+            await check_and_set_accordionElement();
             /* Step 3: check search form */
             element = '.crm-accordion-body';
             await expect(page.locator(element).first()).toBeVisible();
@@ -139,7 +153,8 @@ test.describe.serial('Contribution Booster', () => {
 
             /* Step 2: check titles */
             await expect(page.locator('#page-title')).toHaveText('After payment failed but not retry in 7 days');
-
+            
+            await check_and_set_accordionElement();
             /* Step 3: check search form */
             element = '.crm-accordion-body';
             await expect(page.locator(element).first()).toBeVisible();
@@ -174,6 +189,7 @@ test.describe.serial('Contribution Booster', () => {
             /* Step 2: check titles */
             await expect(page.locator('#page-title')).toHaveText('Recurring Donors Search');
 
+            await check_and_set_accordionElement();
             /* Step 3: check search form */
             await expect(page.locator('.crm-accordion-body').first()).toBeVisible();
             element = 'table tr.crm-contact-custom-search-form-row-search_criteria td.label label[for="search_criteria"]';
@@ -207,6 +223,7 @@ test.describe.serial('Contribution Booster', () => {
             /* Step 2: check titles */
             await expect(page.locator('#page-title')).toHaveText('Birth Date Search');
 
+            await check_and_set_accordionElement();
             /* Step 3: check search form */
             await expect(page.locator('.crm-accordion-body').first()).toBeVisible();
             await expect(page.locator('table tr.crm-contact-custom-search-form-row-limit_groups td.label label[for="limit_groups"]')).toHaveText('Groups');
@@ -231,10 +248,8 @@ test.describe.serial('Contribution Booster', () => {
             /* Step 2: check titles */
             await expect(page.locator('#page-title')).toHaveText('Last year but not this year donors');
 
+            await check_and_set_accordionElement();
             /* Step 3: check search form */
-            element = '.crm-accordion-header';
-            await utils.findElement(page, element);
-            await utils.clickElement(page, page.locator(element).first());
             await expect(page.locator('.crm-accordion-body').first()).toBeVisible();
             await expect(page.locator('table tr.crm-contact-custom-search-contribSYBNT-form-block-contribution_type_id td.label label[for="contribution_type_id"]')).toHaveText('Contribution Type');
 
@@ -270,6 +285,7 @@ test.describe.serial('Contribution Booster', () => {
             /* Step 2: check titles */
             await expect(page.locator('#page-title')).toHaveText('End of recurring contribution');
 
+            await check_and_set_accordionElement();
             /* Step 3: check search form */
             await expect(page.locator('.crm-accordion-body').first()).toBeVisible();
             await expect(page.locator('table tr.crm-contact-custom-search-form-row-status td.label label')).toHaveText('Recurring Status');
