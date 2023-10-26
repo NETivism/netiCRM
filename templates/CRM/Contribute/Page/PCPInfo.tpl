@@ -128,8 +128,16 @@
       resizeGridItem(item, grid, rowHeight, rowGap);
     };
 
+    // Update grid item height when mouse enters each item
+    document.querySelectorAll('.pcp-honor-roll-item').forEach(function(item) {
+      item.addEventListener('mouseenter', function() {
+        resizeAllGridItems();
+      });
+    });
+
     // Resize all grid items once the document is ready
     $(document).ready(resizeAllGridItems);
+
     // Add a resize event listener to the window to resize grid items when the window is resized
     window.addEventListener("resize", resizeAllGridItems);
   })(cj);

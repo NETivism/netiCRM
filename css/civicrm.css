@@ -1921,6 +1921,14 @@ table.campaign td,
 .crm-container .pcp-honor-roll-message {
   font-size: 15px;
   color: #333;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 8;
+  overflow: hidden;
+}
+.crm-container .pcp-honor-roll-item:hover .pcp-honor-roll-message {
+  display: block;
+  overflow: visible;
 }
 .crm-container .pcp-honor-roll-name + .pcp-honor-roll-message {
   margin-top: 10px;
