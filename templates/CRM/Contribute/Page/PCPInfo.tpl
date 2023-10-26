@@ -133,6 +133,10 @@
       item.addEventListener('mouseenter', function() {
         resizeAllGridItems();
       });
+
+      item.addEventListener('mouseleave', function() {
+        resizeAllGridItems();
+      });
     });
 
     // Resize all grid items once the document is ready
