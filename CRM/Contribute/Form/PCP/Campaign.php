@@ -366,6 +366,23 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
       }
     }
 
+    if (empty($params['is_delete_attachment']) && empty($params['attachFile_0']['location']) && !empty($params['preset_image'])) {
+      $config = CRM_Core_Config::singleton();
+      $pcpPresetNum = CRM_Utils_Type::escape($params['preset_image'], 'Integer');
+      $pcpPresetFile = 'pcp_preset_'.$pcpPresetNum.'.png';
+      $dest = $config->customFileUploadDir.$pcpPresetFile;
+      global $civicrm_root;
+      if (!file_exists($dest) && file_exists($civicrm_root.'packages/midjourney/'.$pcpPresetFile)) {
+        $src = $civicrm_root.'packages/midjourney/'.$pcpPresetFile;
+        copy($src, $dest);
+      }
+      $params['attachFile_0'] = array(
+        'uri' => $dest,
+        'location' => $dest,
+        'type' => 'image/png',
+        'upload_date' => '20231024025850',
+      );
+    }
     CRM_Core_BAO_File::processAttachment($params, 'civicrm_pcp', $pcp->id, $maxAttachments);
 
     // send email notification to supporter, if initial setup / add mode.
