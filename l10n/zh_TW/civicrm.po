@@ -49655,3 +49655,11 @@ msgstr "草稿"
 #: CRM/Contribute/Page/PCP.php
 msgid "Revoke to Draft"
 msgstr "退回草稿"
+
+#: neticrm/civicrm_instrument.module
+msgid ""
+"The payment processor you choose does not support annual recurring payments."
+msgstr "你選擇的金流不支援年度定期定額。"
+
+msgid "%1 only supports monthly recurring payments."
+msgstr "%1 僅僅支援每月定期定額。"
