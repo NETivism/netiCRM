@@ -656,6 +656,32 @@ WHERE entity_table = 'civicrm_contribution_page'
       }
     }
 
+    //copy custom data
+    require_once 'CRM/Core/BAO/CustomGroup.php';
+    $extends = array('contributionPage');
+    $groupTree = CRM_Core_BAO_CustomGroup::getGroupDetail(NULL, NULL, $extends);
+    if ($groupTree) {
+      foreach ($groupTree as $groupID => $group) {
+        $table[$groupTree[$groupID]['table_name']] = array('entity_id');
+        foreach ($group['fields'] as $fieldID => $field) {
+          if ($field['data_type'] == 'File') {
+            continue;
+          }
+          $table[$groupTree[$groupID]['table_name']][] = $groupTree[$groupID]['fields'][$fieldID]['column_name'];
+        }
+      }
+
+      foreach ($table as $tableName => $tableColumns) {
+        $insert = 'INSERT INTO ' . $tableName . ' (' . CRM_Utils_Array::implode(', ', $tableColumns) . ') ';
+        $tableColumns[0] = $copy->id;
+        $select = 'SELECT ' . CRM_Utils_Array::implode(', ', $tableColumns);
+        $from = ' FROM ' . $tableName;
+        $where = " WHERE {$tableName}.entity_id = {$id}";
+        $query = $insert . $select . $from . $where;
+        $dao = CRM_Core_DAO::executeQuery($query, CRM_Core_DAO::$_nullArray);
+      }
+    }
+
     $copy->save();
     $copy->originId = $id;
 
