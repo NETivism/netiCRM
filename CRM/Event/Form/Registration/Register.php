@@ -1188,7 +1188,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
       $this->set('amount_level', $params['amount_level']);
 
       // generate and set an invoiceID for this transaction
-      $invoiceID = md5(uniqid(rand(), TRUE));
+      $invoiceID = md5(uniqid((string)rand(), TRUE));
       $this->set('invoiceID', $invoiceID);
 
       if (is_array($this->_paymentProcessor)) {

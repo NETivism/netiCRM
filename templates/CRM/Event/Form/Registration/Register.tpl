@@ -181,7 +181,6 @@
   </div>
   {/if}
 </div><!-- end register-me -->
-
 </div><!-- end crm-event-register-form-block -->
 {literal} 
 <script type="text/javascript">
@@ -316,7 +315,7 @@
   });
   cj("input[name=payment_processor]").click(function(){
     if(cj(this).val() == 0){
-      cj("#billing-payment-block").html('<div class="crm-section payment-description"><div class="label"></div><div class="content">{/literal}{$event.pay_later_receipt|nl2br|regex_replace:"/[\r\n]/":""}{literal}</div><div class="clear"></div></div>');
+      cj("#billing-payment-block").html('<div class="crm-section payment-description"><div class="label"></div><div class="content">{/literal}{$event.pay_later_receipt|escape:"quotes"|nl2br|regex_replace:"/[\r\n]/":""}{literal}</div><div class="clear"></div></div>');
     }
   });
   var lockfield = function($obj){

@@ -1424,6 +1424,9 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
     // **** After migrate, check email on-hold data on other contact when email is duplicated
     $dao = CRM_Core_DAO::executeQuery("SELECT email, on_hold, hold_date FROM civicrm_email WHERE on_hold = 1 AND contact_id = %1", array(1 => array($otherId, 'Integer')));
     while($dao->fetch()) {
+      if (empty($dao->hold_date)) {
+        $dao->hold_date = 'NULL';
+      }
       CRM_Core_DAO::executeQuery("UPDATE civicrm_email SET on_hold = 1, hold_date = %1 WHERE contact_id = %2 AND email = %3", array(
         1 => array($dao->hold_date, 'String'),
         2 => array($mainId, 'Integer'),

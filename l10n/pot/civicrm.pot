@@ -49011,3 +49011,137 @@ msgstr ""
 #: templates/CRM/AI/AICompletion.tpl
 msgid "The organization sharing this template"
 msgstr ""
+
+#: templates/CRM/Contribute/Page/ContributionPageEdit.tpl
+msgid "Admin Basic Settings"
+msgstr ""
+
+#: templates/CRM/Contribute/Page/ContributionPageEdit.tpl
+msgid "You can provide this URL to supporters for creating new Personal Campaign Pages."
+msgstr ""
+
+#: CRM/Contribute/Form/Payment.php
+msgid "This payment cannot be made at the moment. If you have any questions, please contact the site administrator."
+msgstr ""
+
+msgid "To ensure security, it is recommended that you submit a request through the customer service system before changing this field. If you are sure you want to modify this setting, please click Confirm button."
+msgstr ""
+
+msgid "Success Contribution"
+msgstr ""
+
+msgid "Pending Contribution"
+msgstr ""
+
+msgid "Error Contribution"
+msgstr ""
+
+msgid "The status will be changed to 'Completed.' No contribution completion notification email will be sent."
+msgstr ""
+
+msgid "You can click <a href=\"%1\">here</a> to download the Excel result file for this batch of contributions."
+msgstr ""
+
+msgid "No changes will be made to the above contributions."
+msgstr ""
+
+msgid "Add fee to contribution."
+msgstr ""
+
+msgid "Add disbursement date to field `%1`"
+msgstr ""
+
+msgid "Modify contribution status to 'finished'."
+msgstr ""
+
+msgid "Update disbursement date data to receive date."
+msgstr ""
+
+msgid "Can't find the contribution in database."
+msgstr ""
+
+msgid "Contribution status is not 'Completed'."
+msgstr ""
+
+msgid "Amount is not correct."
+msgstr ""
+
+msgid "Disbursement date is not correct."
+msgstr ""
+
+msgid "Invalid parameter of error type."
+msgstr ""
+
+msgid "Import completed, below is the summary of the import results."
+msgstr ""
+
+msgid "`%1` to the field `%2`"
+msgstr ""
+
+msgid "Disbursement Date"
+msgstr ""
+
+msgid "The above contribution will update the following information: %1"
+msgstr ""
+
+#: templates/CRM/Contribute/Form/ContributionPage/PCP.tpl
+msgid "If checked, an administrator will need to approve new personal campaign pages before they are available to the public. The person who created the personal campaign page will be automatically notified via email when their page is approved so that they can begin promoting the campaign."
+msgstr ""
+
+#: templates/CRM/Contribute/Form/ContributionPage/PCP.tpl
+msgid "When your supporters create a Personal Campaign page, they must log in or register an account from a The Supporter Profile to use functions such as editing drafts or submitting for approval. Please select one Profile here for login or registration."
+msgstr ""
+
+msgid "Empty Receive Date"
+msgstr ""
+
+msgid "Error Message"
+msgstr ""
+
+msgid "Contribution data that matches"
+msgstr ""
+
+msgid "Contribution data with inconsistent 'status' (import after modifying status)"
+msgstr ""
+
+msgid "Erroneous contribution data (cannot be imported)"
+msgstr ""
+
+msgid "You can click <a href=\"%1\">here</a> to download the Excel file of the original status for this batch of contributions."
+msgstr ""
+
+#: templates/CRM/common/CMSUser.tpl
+msgid "Please fill in the basic information to register for an account that can edit a personal campaign page. The account registration rules are as follows:"
+msgstr ""
+
+msgid "1. One email can only register one account."
+msgstr ""
+
+msgid "2. If you have already registered an account on this site, you can click Forgot Password, enter your email, and get the login link from your mailbox."
+msgstr ""
+
+#: templates/CRM/Contribute/Form/PCP/PCPAccount.tpl
+msgid "This is a page for create PCP for a new contact. To create your own personal campaign, visit this <a href=\"%1\">link</a>."
+msgstr ""
+
+msgid "Create a Personal Campaign Page for others"
+msgstr ""
+
+msgid "To add pcp for others, click <a href=\"%1\">Create a Personal Campaign Page for others</a> to create page."
+msgstr ""
+
+#: templates/CRM/Contribute/Page/PCP.tpl
+msgid "Search Personal Campaign Pages"
+msgstr ""
+
+#: templates/CRM/Contribute/Page/PCP.tpl
+#: templates/CRM/Contribute/Form/PCP/PCP.tpl
+msgid "Belonging Main Contribution Page"
+msgstr ""
+
+msgid "Draft"
+msgstr ""
+
+#: CRM/Contribute/Page/PCP.php
+msgid "Revoke to Draft"
+msgstr ""

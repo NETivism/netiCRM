@@ -867,6 +867,10 @@ INNER JOIN  civicrm_contact contact ON ( contact.id = civicrm_contribution.conta
               if($contribution_status_id == 2){
                 $return = TRUE;
               }
+              // have been failed, but now is waiting for payment.
+              if($contribution_status_id == 4){
+                $return = TRUE;
+              }
             }
           }
           elseif(!empty($negative_status[$participant_status_id])){

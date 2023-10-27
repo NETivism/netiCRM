@@ -1697,7 +1697,7 @@ WHERE cg.extends IN ('" . CRM_Utils_Array::implode("','", $this->_customGroupExt
               function statistics(&$rows) {
                 $statistics = array();
 
-                $count = is_countable($rows) ? count($rows) : 0;
+                $count = is_array($rows) ? count($rows) : 0;
 
                 if ($this->_rollup && ($this->_rollup != '') && $this->_grandFlag) {
                   $count++;

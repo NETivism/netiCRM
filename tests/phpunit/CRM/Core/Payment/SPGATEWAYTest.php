@@ -135,7 +135,6 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     $this->_processor = NULL;
   }
 
-  /**
   function testSinglePaymentNotify(){
     $now = time();
     $trxn_id = 'ut'.substr($now, -5);
@@ -222,7 +221,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     $cid = CRM_Core_DAO::singleValueQuery("SELECT cid FROM civicrm_contribution_spgateway WHERE cid = $contribution->id");
     $this->assertNotEmpty($cid, "In line " . __LINE__);
   }
-  */
+
 
   function testRecurringPaymentNotify(){
     $now = time();
@@ -624,12 +623,12 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
       $return_params
     );
 
-    // ATM : 13
+    // ATM : 14
     $now = $now + 60;
     $trxn_id = 'ut'.substr($now, -5);
     $amount = 111;
 
-    $instrument_id = 13;
+    $instrument_id = 14;
     $payment_type = 'VACC';
 
     $return_params = array(

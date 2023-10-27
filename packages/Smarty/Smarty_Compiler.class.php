@@ -346,7 +346,7 @@ class Smarty_Compiler extends Smarty {
         }
         $compiled_content = '';
         
-        $tag_guard = '%%%SMARTYOTG' . md5(uniqid(rand(), true)) . '%%%';
+        $tag_guard = '%%%SMARTYOTG' . md5(uniqid((string)rand(), true)) . '%%%';
         
         /* Interleave the compiled contents and text blocks to get the final result. */
         for ($i = 0, $for_max = count($compiled_tags); $i < $for_max; $i++) {

@@ -127,7 +127,7 @@ class CRM_Dedupe_BAO_Rule extends CRM_Dedupe_DAO_Rule {
     if ($this->params) {
       $from = "{$this->rule_table} t1";
       $str = 'NULL';
-      if (isset($this->params[$this->rule_table][$this->rule_field])) {
+      if (CRM_Utils_Array::arrayKeyExists($this->rule_field, $this->params[$this->rule_table])) {
         if (is_array($this->params[$this->rule_table][$this->rule_field])) {
           foreach($this->params[$this->rule_table][$this->rule_field] as $str) {
             $str = CRM_Utils_Type::escape($str, 'String');

@@ -245,7 +245,15 @@ class CRM_Dedupe_Finder {
    * A hackish function needed to massage CRM_Contact_Form_$ctype::formRule()
    * object into a valid $params array for dedupe
    *
-   * @param array $fields  contact structure from formRule()
+   * @param array $fields  contact structure from formRule(), structure should be like this:
+   *   [
+   *     'contact_type' => 'Individual',
+   *     'last_name' => 'abc',
+   *     'first_name' => 'def',
+   *     'email' => [
+   *       1 => ['email' => 'aaa@bbb.ccc', 'location_type_id' => 1],
+   *     ],
+   *   ]
    * @param string $ctype  contact type of the given contact
    *
    * @return array  valid $params array for dedupe
@@ -368,6 +376,10 @@ class CRM_Dedupe_Finder {
       foreach($params['civicrm_contact'] as $field => $value) {
         $contact->$field = $value;
         $formatParams[$field] = $value;
+      }
+      foreach($params['civicrm_email'] as $field => $value) {
+        $contact->$field = $value;
+        $formatParams[$field][] = array('email' => $value);
       }
       CRM_Contact_BAO_Individual::format($formatParams, $contact);
       $params['civicrm_contact']['display_name'] = $contact->display_name;
