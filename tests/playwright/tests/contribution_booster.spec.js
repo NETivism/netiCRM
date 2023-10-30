@@ -20,6 +20,31 @@ const vars = {
     ],
 };
 
+async function check_and_set_accordionElement() {
+    const accordionElement = await page.locator('.crm-accordion-wrapper.crm-custom_search_form-accordion.crm-accordion-processed');
+    const isaccordionEletFound = await accordionElement.count();
+    if (isaccordionEletFound > 0) {
+        const classNames = await accordionElement.getAttribute('class');
+        if (classNames.includes('crm-accordion-closed')) {
+            element = '.crm-accordion-header';
+            await utils.clickElement(page, page.locator(element));
+        }
+    }
+}
+
+async function check_page_title($verifty_title) {
+    // For d10 env
+    const titleElement = await page.locator('h1.page-title');
+    await utils.wait(wait_secs);
+    const isElementFound = await titleElement.count();
+    if (isElementFound > 0) {
+        await expect(page.locator('h1.page-title')).toHaveText($verifty_title);
+    } else {
+        // For d7 env
+        await expect(page.locator('#page-title')).toHaveText($verifty_title);
+    }
+}
+
 
 test.beforeAll(async () => {
     const browser = await chromium.launch();
@@ -46,7 +71,7 @@ test.describe.serial('Contribution Booster', () => {
             await utils.findElement(page, '.crm-contribute-booster');
 
             /* Step 2: check titles */
-            await expect(page.locator('#page-title')).toHaveText('Contribution Booster');
+            await check_page_title('Contribution Booster');
             await expect(page.locator('.crm-section-title').first()).toHaveText('Connect Exists Donors');
             await expect(page.locator('.crm-section-title').nth(1)).toHaveText('Potential Donors');
 
@@ -69,8 +94,9 @@ test.describe.serial('Contribution Booster', () => {
             await expect(page).toHaveURL('/civicrm/contact/search/custom?force=1&reset=1&csid=18');
 
             /* Step 2: check titles */
-            await expect(page.locator('#page-title')).toHaveText('找到首次捐款人');
+            await check_page_title('找到首次捐款人');
 
+            await check_and_set_accordionElement();
             /* select date from */
             element = '#receive_date_from';
             await utils.findElement(page, element);
@@ -104,8 +130,9 @@ test.describe.serial('Contribution Booster', () => {
             await expect(page).toHaveURL('/civicrm/contact/search/custom?force=1&reset=1&csid=19');
 
             /* Step 2: check titles */
-            await expect(page.locator('#page-title')).toHaveText('Donor who donate in last 6 months');
+            await check_page_title('Donor who donate in last 6 months');
 
+            await check_and_set_accordionElement();
             /* Step 3: check search form */
             element = '.crm-accordion-body';
             await expect(page.locator(element).first()).toBeVisible();
@@ -126,8 +153,7 @@ test.describe.serial('Contribution Booster', () => {
 
             /* Step 4: check search results */
             await expect(page.locator('.crm-error')).toHaveCount(0);
-            await expect(page.locator('#page-title')).toHaveText('Donor who donate in last 3 months');
-
+            await check_page_title('Donor who donate in last 3 months');
         });
 
         await test.step('After payment failed but not retry in N days page check.', async () => {
@@ -138,8 +164,9 @@ test.describe.serial('Contribution Booster', () => {
             await expect(page).toHaveURL('/civicrm/contact/search/custom?force=1&reset=1&csid=20');
 
             /* Step 2: check titles */
-            await expect(page.locator('#page-title')).toHaveText('After payment failed but not retry in 7 days');
+            await check_page_title('After payment failed but not retry in 7 days');
 
+            await check_and_set_accordionElement();
             /* Step 3: check search form */
             element = '.crm-accordion-body';
             await expect(page.locator(element).first()).toBeVisible();
@@ -160,7 +187,7 @@ test.describe.serial('Contribution Booster', () => {
 
             /* Step 4: check search results */
             await expect(page.locator('.crm-error')).toHaveCount(0);
-            await expect(page.locator('#page-title')).toHaveText('After payment failed but not retry in 3 days');
+            await check_page_title('After payment failed but not retry in 3 days');
 
         });
 
@@ -172,8 +199,9 @@ test.describe.serial('Contribution Booster', () => {
             await expect(page).toHaveURL('/civicrm/contact/search/custom?reset=1&csid=23');
 
             /* Step 2: check titles */
-            await expect(page.locator('#page-title')).toHaveText('Recurring Donors Search');
+            await check_page_title('Recurring Donors Search');
 
+            await check_and_set_accordionElement();
             /* Step 3: check search form */
             await expect(page.locator('.crm-accordion-body').first()).toBeVisible();
             element = 'table tr.crm-contact-custom-search-form-row-search_criteria td.label label[for="search_criteria"]';
@@ -205,8 +233,9 @@ test.describe.serial('Contribution Booster', () => {
             await expect(page).toHaveURL('/civicrm/contact/search/custom?reset=1&csid=24');
 
             /* Step 2: check titles */
-            await expect(page.locator('#page-title')).toHaveText('Birth Date Search');
+            await check_page_title('Birth Date Search');
 
+            await check_and_set_accordionElement();
             /* Step 3: check search form */
             await expect(page.locator('.crm-accordion-body').first()).toBeVisible();
             await expect(page.locator('table tr.crm-contact-custom-search-form-row-limit_groups td.label label[for="limit_groups"]')).toHaveText('Groups');
@@ -229,12 +258,10 @@ test.describe.serial('Contribution Booster', () => {
             await expect(page).toHaveURL('/civicrm/contact/search/custom?force=1&reset=1&csid=13');
 
             /* Step 2: check titles */
-            await expect(page.locator('#page-title')).toHaveText('Last year but not this year donors');
+            await check_page_title('Last year but not this year donors');
 
+            await check_and_set_accordionElement();
             /* Step 3: check search form */
-            element = '.crm-accordion-header';
-            await utils.findElement(page, element);
-            await utils.clickElement(page, page.locator(element).first());
             await expect(page.locator('.crm-accordion-body').first()).toBeVisible();
             await expect(page.locator('table tr.crm-contact-custom-search-contribSYBNT-form-block-contribution_type_id td.label label[for="contribution_type_id"]')).toHaveText('Contribution Type');
 
@@ -268,8 +295,9 @@ test.describe.serial('Contribution Booster', () => {
             await expect(page).toHaveURL('/civicrm/contact/search/custom?mode=booster&force=1&reset=1&csid=17');
 
             /* Step 2: check titles */
-            await expect(page.locator('#page-title')).toHaveText('End of recurring contribution');
+            await check_page_title('End of recurring contribution');
 
+            await check_and_set_accordionElement();
             /* Step 3: check search form */
             await expect(page.locator('.crm-accordion-body').first()).toBeVisible();
             await expect(page.locator('table tr.crm-contact-custom-search-form-row-status td.label label')).toHaveText('Recurring Status');
