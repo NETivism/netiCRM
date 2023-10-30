@@ -137,7 +137,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
 
   function testSinglePaymentNotify(){
     $now = time();
-    $trxn_id = 'ut'.substr($now, -5);
+    $trxn_id = 'sput'.substr($now, -5);
     $amount = 111;
 
     // create contribution
@@ -163,6 +163,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     );
 
     $contribution = CRM_Contribute_BAO_Contribution::create($contrib, CRM_Core_DAO::$_nullArray);
+    $this->assertNotEquals('CRM_Core_Error', get_class($contribution), "Contribution return error in line ".__LINE__.". Error messages:\n  ".CRM_Core_Error::getMessages($contribution, "\n  "));
     $this->assertNotEmpty($contribution->id, "In line " . __LINE__);
     $params = array(
       'is_test' => $this->_is_test,
