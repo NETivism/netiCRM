@@ -604,7 +604,11 @@ WHERE sort_name LIKE '%$name%'";
         count($recordClass) >= 3
       ) {
         require_once (str_replace('_', DIRECTORY_SEPARATOR, $recordBAO) . ".php");
-        $method = 'setIsActive';
+        if ($recordBAO == "CRM_Contribute_BAO_PCP") {
+          $method = 'setDisable';
+        } else {
+          $method = 'setIsActive';
+        }
 
         if (method_exists($recordBAO, $method)) {
           $updated = call_user_func_array(array($recordBAO, $method),

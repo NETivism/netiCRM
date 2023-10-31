@@ -101,6 +101,18 @@ class CRM_Contribute_Page_PCP extends CRM_Core_Page_Basic {
           'extra' => 'onclick = "return confirm(\'' . $deleteExtra . '\');"',
           'title' => ts('Delete Personal Campaign Page'),
         ),
+        CRM_Core_Action::DISABLE => array(
+          'name' => ts('Disable'),
+          'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_Contribute_BAO_PCP' . '\',\'' . 'enable-disable' . '\' );"',
+          'ref' => 'disable-action',
+          'title' => ts('Disable Personal Campaign Pages'),
+        ),
+        CRM_Core_Action::ENABLE => array(
+          'name' => ts('Enable'),
+          'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_Contribute_BAO_PCP' . '\',\'' . 'disable-enable' . '\' );"',
+          'ref' => 'enable-action',
+          'title' => ts('Enable Personal Campaign Pages'),
+        ),
       );
     }
     return self::$_links;
@@ -242,18 +254,27 @@ class CRM_Contribute_Page_PCP extends CRM_Core_Page_Basic {
           case 1:
             $action -= CRM_Core_Action::DELETE;
             $action -= CRM_Core_Action::PREVIEW;
+            $action -= CRM_Core_Action::ENABLE;
+            $action -= CRM_Core_Action::DISABLE;
             break;
 
           case 2:
             $action -= CRM_Core_Action::RENEW;
             $action -= CRM_Core_Action::DELETE;
             $action -= CRM_Core_Action::PREVIEW;
+            if ($dao->active == 1) {
+              $action -= CRM_Core_Action::ENABLE;
+            } else {
+              $action -= CRM_Core_Action::DISABLE;
+            }
             break;
 
           case 3:
             $action -= CRM_Core_Action::REVERT;
             $action -= CRM_Core_Action::DELETE;
             $action -= CRM_Core_Action::PREVIEW;
+            $action -= CRM_Core_Action::ENABLE;
+            $action -= CRM_Core_Action::DISABLE;
             break;
         }
 

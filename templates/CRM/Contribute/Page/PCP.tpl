@@ -35,6 +35,7 @@
 {if $rows}
 <div id="ltype">
 {include file="CRM/common/jsortable.tpl hasPager=1}
+{include file="CRM/common/enableDisable.tpl"}
 {strip}
 <table id="options" class="display">
 	<thead>
@@ -50,7 +51,7 @@
 	</thead>
 	<tbody>
 	{foreach from=$rows item=row}
-	<tr class="{cycle values="odd-row,even-row"} {$row.class}">
+	<tr id="row_{$row.id}" class="{cycle values="odd-row,even-row"} {$row.class}">
         	<td><a href="{crmURL p='civicrm/contribute/pcp/info' q="reset=1&id=`$row.id` " fe='true'}" title="{ts}View Personal Campaign Page{/ts}" target="_blank">{$row.title}</a></td>
 		<td><a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$row.pcp_contact_id`"}" title="{ts}View contact record{/ts}" target="_blank">{$row.pcp_contact}</a> ({if $row.pcp_contact_external_id}{$row.pcp_contact_id} - {$row.pcp_contact_external_id}{else}{$row.pcp_contact_id}{/if})</td>
 		<td><a href="{crmURL p='civicrm/admin/contribute' q="action=update&reset=1&id=`$row.contribution_page_id`" fe='true'}" title="{ts}View contribution page{/ts}" target="_blank">{$row.contribution_page_title} ( {ts}ID{/ts}: {$row.contribution_page_id})</td>
