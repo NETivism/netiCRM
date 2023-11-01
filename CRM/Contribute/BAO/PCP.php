@@ -393,6 +393,10 @@ WHERE pcp.id = %1 AND cc.contribution_status_id =1 AND cc.is_test = 0";
    *
    */
   static function setIsActive($id, $statusId) {
+    if ($statusId === true || $statusId === false) {
+      return self::setDisable($id, $statusId);
+    }
+
     $pcpStatus = CRM_Contribute_PseudoConstant::pcpStatus();
     if (!in_array($statusId, array_keys($pcpStatus))) {
       return;
