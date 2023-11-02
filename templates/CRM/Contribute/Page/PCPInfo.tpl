@@ -25,6 +25,8 @@
 *}
 {* this template is used for displaying PCP information *}
 {capture assign="contribPageURL"}{crmURL p='civicrm/contribute/transact' q="reset=1&id=`$pcp.contribution_page_id`"}{/capture}
+<link rel="stylesheet" href="{$config->resourceBase}packages/fontawesome/css/fontawesome.min.css?v{$config->ver}">
+<link rel="stylesheet" href="{$config->resourceBase}packages/fontawesome/css/brands.min.css?v{$config->ver}">
 {if $owner}
 <div class="messages status">
 
@@ -159,8 +161,8 @@
       <a href="{$contributeURL}" class="button contribute-button pcp-contribute-button"><span class="normal-text">{$contributionText}</span><span class="mini-text">{ts}Contribute Now{/ts}</span></a>
     </div>
     <ul class="pcp-social-links">
-      <li><a class="share-link" href="{$shareUrl.facebook}">Facebook</a></li>
-      <li><a class="share-link" href="{$shareUrl.line}">Line</a></li>
+      <li><a class="social-link facebook" href="{$shareUrl.facebook}">Facebook</a></li>
+      <li><a class="social-link line" href="{$shareUrl.line}">Line</a></li>
     </ul>
   </div>
 </div>
