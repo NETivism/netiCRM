@@ -1891,6 +1891,7 @@ table.campaign td,
 
 .crm-container .honor-roll-wrapper {
   margin: 40px auto;
+  padding: 0 12px;
   text-align: center;
 }
 .crm-container .honor-roll-title {
@@ -1899,7 +1900,7 @@ table.campaign td,
 }
 .crm-container .pcp-honor-roll-items {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(40%, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(60%, 1fr));
   grid-gap: 15px;
   grid-auto-rows: minmax(0, auto);
   grid-auto-rows: 20px;
@@ -1941,6 +1942,9 @@ table.campaign td,
   color: #fff;
 }
 @media screen and (min-width: 992px) {
+  .crm-container .honor-roll-wrapper {
+    padding: 0;
+  }
   .crm-container .pcp-honor-roll-items {
     grid-template-columns: repeat(auto-fill, minmax(25%, 1fr));
     grid-auto-rows: 20px;
@@ -2039,7 +2043,7 @@ table.campaign td,
 }
 .crm-container .pcp-page-text {
   margin: 0 auto 1em;
-  padding: 10px;
+  padding: 10px 12px;
   font-family: var(--font-sans-serif);
 }
 .crm-container .pcp-parent-link {
@@ -2099,7 +2103,7 @@ table.campaign td,
   margin: 0;
   padding: 10px 20px;
   min-width: 0;
-  font-size: 1.25rem;
+  font-size: 1rem;
 }
 .crm-container .pcp-sticky-header .pcp-contribute-button .mini-text {
   display: none;
@@ -2113,9 +2117,56 @@ table.campaign td,
 .crm-container .pcp-sticky-header .pcp-social-links {
   display: none;
 }
+.crm-container .pcp-sticky-header .social-link {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  width: 36px;
+  height: 36px;
+  line-height: 36px;
+  text-align: center;
+  text-decoration: none;
+  vertical-align: middle;
+  font-family: "Font Awesome 6 Brands";
+  font-size: 0;
+  color: #fff;
+  border-radius: 50%;
+  background: #626262;
+  transition: none;
+  }
+.crm-container .pcp-sticky-header .social-link.facebook:hover {
+  background: #3b5999;
+}
+.crm-container .pcp-sticky-header .social-link::before {
+  display: block;
+  height: 100%;
+  text-decoration: inherit;
+  font-style: normal;
+  font-size: 20px;
+}
+.crm-container .pcp-sticky-header .social-link.facebook::before {
+  content: "\f39e";
+}
+.crm-container .pcp-sticky-header .social-link.line {
+  background: #fff;
+}
+.crm-container .pcp-sticky-header .social-link.line::before {
+  content: "\f3c0";
+  font-size: 36px;
+  color: #626262;
+}
+.crm-container .pcp-sticky-header .social-link.line:hover::before {
+  color: #03B24E;
+}
+
 @media (min-width: 992px) {
   .crm-container .pcp-sticky-header .pcp-honor-counter {
     font-size: 1rem;
+  }
+  .crm-container .pcp-sticky-header .pcp-donate .pcp-contribute-button,
+  .crm-container .pcp-sticky-header .pcp-donate .pcp-contribute-button:link {
+    font-size: 1.25rem;
   }
   .crm-container .pcp-sticky-header .pcp-social-links {
     display: flex;
@@ -6848,6 +6899,8 @@ input.crm-form-textfield,
     text-align: center;
   }
   .crm-container .pcp-intro-text {
+    margin-left: 12px;
+    margin-right: 12px;
     font-size: 1.25em;
   }
 }
@@ -6917,7 +6970,7 @@ input.crm-form-textfield,
   margin: 0 0 30px 0;
 }
 .crm-container .progress-block .inner {
-  padding: 20px;
+  padding: 20px 12px;
 }
 .crm-container .progress-wrapper {
   display: flex;
@@ -6969,14 +7022,17 @@ input.crm-form-textfield,
   justify-content: space-between;
   margin-bottom: 10px;
 }
-.crm-container .progress-amount-raised {
+.crm-container .progress-amount .progress-amount-raised {
+    font-size: .8125rem;
 }
 .crm-container .progress-amount-raised span {
   font-weight: bold;
   font-size: 1.1em;
   color: var(--color-crm-special-contribute-primary);
 }
-.crm-container .progress-amount-goal {}
+.crm-container .progress-amount .progress-amount-goal {
+  font-size: .8125rem;
+}
 .crm-container .progress-amount-goal span {
   font-weight: bold;
   font-size: 1.2em;
@@ -7020,7 +7076,18 @@ input.crm-form-textfield,
 .crm-container .progressbar-fullwidth .progress-cell.progress-button {
   width: 100%;
 }
+@media (min-width: 768px) {
+  .crm-container .progress-amount .progress-amount-raised {
+    font-size: 1rem;
+  }
+  .crm-container .progress-amount .progress-amount-goal {
+    font-size: 1rem;
+  }
+}
 @media (min-width: 992px) {
+  .crm-container .progress-block .inner {
+    padding: 20px;
+  }
   .crm-container .pcp-page-text {
     max-width: 720px;
   }
