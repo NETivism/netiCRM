@@ -175,7 +175,18 @@
       $('body').removeClass('is-mobile-mode');
     }
   };
-  $(document).ready(windowResizeEvent);
+  $(document).ready(function() {
+    windowResizeEvent();
+
+    $(window).on('scroll', function() {
+      let buttonOffset = $('.progress-button').offset().top + $('.progress-button').outerHeight();
+      if ($(window).scrollTop() > buttonOffset) {
+        $('.pcp-sticky-header').addClass('is-visible');
+      } else {
+        $('.pcp-sticky-header').removeClass('is-visible');
+      }
+      });
+  });
   window.addEventListener("resize", windowResizeEvent);
 })(cj);
 </script>

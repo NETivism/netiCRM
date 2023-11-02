@@ -2059,13 +2059,21 @@ table.campaign td,
   margin-left: 30px;
 }
 .crm-container .pcp-sticky-header {
+  opacity: 0;
+  visibility: hidden;
   position: fixed;
-  z-index: 100;
+  z-index: -10;
   top: 0;
   left: 0;
   right: 0;
   background: #fff;
   box-shadow: 0 3px 5px rgba(57, 63, 72, 0.3);
+  transition: .3s all;
+}
+.crm-container .pcp-sticky-header.is-visible {
+  opacity: 1;
+  visibility: visible;
+  z-index: 100;
 }
 .crm-container .pcp-sticky-header > .inner {
   position: relative;
@@ -2080,6 +2088,7 @@ table.campaign td,
   align-items: center;
   align-self: stretch;
   margin: -10px 0 -12px;
+  font-size: .9375rem;
   border-bottom: 4px solid var(--color-crm-special-contribute-primary);
 }
 .crm-container .pcp-sticky-header .pcp-donate {
@@ -2102,12 +2111,21 @@ table.campaign td,
   display: block;
 }
 .crm-container .pcp-sticky-header .pcp-social-links {
-  display: flex;
-  gap: 10px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
+  display: none;
 }
+@media (min-width: 992px) {
+  .crm-container .pcp-sticky-header .pcp-honor-counter {
+    font-size: 1rem;
+  }
+  .crm-container .pcp-sticky-header .pcp-social-links {
+    display: flex;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+}
+
 
 .crm-container .ui-draggable {
   background: url("../i/draggable.png") no-repeat left 1px;
