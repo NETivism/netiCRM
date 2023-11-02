@@ -895,6 +895,20 @@ function _civicrm_contribute_formatted_param(&$params, &$values, $create = FALSE
 
     //Handling Custom Data
     _civicrm_generic_handle_custom_data($key, $value, $values, $customFields);
+    if (preg_match('/^custom_/', $key)) {
+      $customFieldID = CRM_Core_BAO_CustomField::getKeyID($key);
+      $type = $customFields[$customFieldID]['data_type'];
+      if ($type == 'Float') {
+        $value = CRM_Utils_Rule::cleanMoney($value);
+        $values[$key] = $value;
+        $error = CRM_Utils_Type::validate($value, 'Float', FALSE);
+        if ($error != $value) {
+          $label = $customFields[$customFieldID]['label'];
+          $errorMsg = ts('Invalid value for field(s)').': '. $label.'('.$value.')';
+          return civicrm_create_error($errorMsg);
+        }
+      }
+    }
 
     switch ($key) {
       case 'contribution_contact_id':
