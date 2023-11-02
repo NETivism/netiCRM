@@ -257,7 +257,7 @@ class CRM_Core_BAO_File extends CRM_Core_DAO_File {
     }
   }
 
-  public function getEntity($fileID) {
+  public static function getEntity($fileID) {
     $entityFileDAO = new CRM_Core_DAO_EntityFile();
     $entityFileDAO->file_id = $fileID;
 

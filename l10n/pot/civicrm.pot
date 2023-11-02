@@ -49145,3 +49145,10 @@ msgstr ""
 #: CRM/Contribute/Page/PCP.php
 msgid "Revoke to Draft"
 msgstr ""
+
+#: neticrm/civicrm_instrument.module
+msgid "The payment processor you choose does not support annual recurring payments."
+msgstr ""
+
+msgid "%1 only supports monthly recurring payments."
+msgstr ""
