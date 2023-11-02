@@ -78,6 +78,15 @@ class CRM_Contribute_Page_PCPInfo extends CRM_Core_Page {
     CRM_Utils_System::setTitle($pcpInfo['title']);
     $this->assign('pcp', $pcpInfo);
 
+    $currentUrl = CRM_Utils_System::url(CRM_Utils_System::currentPath(), 'id=' . $this->_id . '&reset=1', ['absolute' => TRUE]);
+    $this->assign('currentUrl', $currentUrl);
+
+    $shareUrl = array(
+      'facebook' => 'https://www.facebook.com/sharer.php?u=' . $currentUrl,
+      'line' => 'https://line.me/R/msg/text/?' . urlencode($pcpInfo['title']) . '%0D%0A' . $currentUrl,
+    );
+    $this->assign('shareUrl', $shareUrl);
+
     require_once 'CRM/Contribute/PseudoConstant.php';
     require_once 'CRM/Core/OptionGroup.php';
     $pcpStatus = CRM_Contribute_PseudoConstant::pcpStatus();

@@ -152,6 +152,35 @@
   <div class="pcp-parent-link"><a href="{$contribPageURL}">{ts}Back to contribution page{/ts} <i class="zmdi zmdi-arrow-right-top"></i></a></div>
 </div><!-- /.campaign -->
 
+<div class="pcp-sticky-header">
+  <div class="inner">
+    <div class="pcp-honor-counter">{ts 1=$honor|@count}Supported by %1 people{/ts}</div>
+    <div class="pcp-donate">
+      <a href="{$contributeURL}" class="button contribute-button pcp-contribute-button"><span class="normal-text">{$contributionText}</span><span class="mini-text">{ts}Contribute Now{/ts}</span></a>
+    </div>
+    <ul class="pcp-social-links">
+      <li><a class="share-link" href="{$shareUrl.facebook}">Facebook</a></li>
+      <li><a class="share-link" href="{$shareUrl.line}">Line</a></li>
+    </ul>
+  </div>
+</div>
+{literal}
+<script>
+(function ($) {
+  const windowResizeEvent = () => {
+    if ($(window).width() < 768) {
+      $('body').addClass('is-mobile-mode');
+    }
+    else {
+      $('body').removeClass('is-mobile-mode');
+    }
+  };
+  $(document).ready(windowResizeEvent);
+  window.addEventListener("resize", windowResizeEvent);
+})(cj);
+</script>
+{/literal}
+
 {literal}
 <script language="JavaScript">
 cj(document).ready(function($){
