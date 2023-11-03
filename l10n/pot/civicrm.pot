@@ -49152,3 +49152,7 @@ msgstr ""
 
 msgid "%1 only supports monthly recurring payments."
 msgstr ""
+
+#: templates/CRM/Contribute/Page/PCPInfo.tpl
+msgid "Supported by %1 people"
+msgstr ""
