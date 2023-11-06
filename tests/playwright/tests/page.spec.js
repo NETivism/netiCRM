@@ -14,15 +14,7 @@ const url_admin_ary = [
     {title:'Relationship Types', url:'/civicrm/admin/reltype?reset=1'},
     {title:'CiviCRM Profile', url:'/civicrm/admin/uf/group?reset=1'},
     {title:'Custom Data', url:'/civicrm/admin/custom/group?reset=1'},
-    {title:'Payment Instrument Options', url:'/civicrm/admin/options/payment_instrument?group=payment_instrument&reset=1'},
-    {title:'Manage Contribution Pages', url:'/civicrm/admin/contribute?reset=1'},
-    {title:'Personal Campaign Pages', url:'/civicrm/admin/pcp?reset=1'},
-    {title:'Manage Premiums', url:'/civicrm/admin/contribute/managePremiums?reset=1'},
-    //price
-    {title:'New Price Set', url:'/civicrm/admin/price?reset=1&action=add'},
-    {title:'Price Sets', url:'/civicrm/admin/price?reset=1'},
     {title:'Coupon', url:'/civicrm/admin/coupon?reset=1'},
-    {title:'Contribution Types', url:'/civicrm/admin/contribute/contributionType?reset=1'},
     {title:'Event Type Options', url:'/civicrm/admin/options/event_type?group=event_type&reset=1'},
     {title:'Participant Status', url:'/civicrm/admin/participant_status?reset=1'},
     {title:'Participant Role Options', url:'/civicrm/admin/options/participant_role?group=participant_role&reset=1'},
@@ -54,6 +46,13 @@ const url_contact_ary = [
     {title:'Find and Merge Duplicate Contacts', url:'/civicrm/contact/dedupefind'},
 ];
 
+// List all contact-group page links
+const url_group_ary = [
+    {title:'Manage Groups', url:'/civicrm/group?reset=1'},
+    {title:'New Group', url:'/civicrm/group/add?reset=1'},
+    {title:'包括/不包括群組聯絡人/標籤', url:'/civicrm/contact/search/custom?reset=1&csid=4'},
+];
+
 // List all activity page links
 const url_activity_ary = [
     {title:'Activities', url:'/civicrm/activity/add?atype=3&action=add&reset=1&context=standalone'},
@@ -66,33 +65,50 @@ const url_activity_ary = [
 const url_import_ary = [
     {title:'Import Contacts', url:'/civicrm/import/contact?reset=1'},
     {title:'Import Activities', url:'/civicrm/import/activity?reset=1'},
-];
-
-const url_group_ary = [
-    {title:'Manage Groups', url:'/civicrm/group?reset=1'},
+    {title:'Import Contributions', url:'/civicrm/contribute/import?reset=1'},
+    {title:'Import Participants', url:'/civicrm/event/import?reset=1'},
+    {title:'Import Memberships', url:'/civicrm/member/import?reset=1'},
 ];
 
 // List all contribute page links
 const url_contribute_ary = [
+    // add contribution
     {title:'CiviContribute Dashboard', url:'/civicrm/contribute?reset=1'},
     {title:'New Contribution', url:'/civicrm/contribute/add?reset=1&action=add&context=standalone'},
-    {title:'Find Contributions', url:'/civicrm/contribute/search?reset=1'},
-    {title:'Import Contributions', url:'/civicrm/contribute/import?reset=1'},
     {title:'Title and Settings', url:'/civicrm/admin/contribute/add?reset=1&action=add'},
+    // search contribution
+    {title:'Find Contributions', url:'/civicrm/contribute/search?reset=1'},
+    {title:'Contribution Booster', url:'/civicrm/contribute/booster?reset=1'},
+    {title:'Custom Search - Recurring Contribution', url:'/civicrm/contact/search/custom?reset=1&csid=17'},
+    {title:'捐款整合', url:'/civicrm/contact/search/custom?reset=1&csid=2'},
+    {title:'匯出募款專頁的價格表內容', url:'/civicrm/contact/search/custom?reset=1&csid=16'},
+    // manage contribution page
+    {title:'Manage Contribution Pages', url:'/civicrm/admin/contribute?reset=1'},
+    {title:'Personal Campaign Pages', url:'/civicrm/admin/pcp?reset=1'},
+    {title:'Manage Premiums', url:'/civicrm/admin/contribute/managePremiums?reset=1'},
+    {title:'Manage Premiums', url:'/civicrm/admin/contribute/managePremiums?action=add&reset=1'},
+    {title:'New Price Set', url:'/civicrm/admin/price?reset=1&action=add'},
+    {title:'Price Sets', url:'/civicrm/admin/price?reset=1'},
+    {title:'Import ACH', url:'/civicrm/contribute/taiwanach/import'},
+    // contribution page - setting
+    {title:'Settings - Contribution Receipt', url:'/civicrm/admin/receipt'},
+    {title:'Contribution Types', url:'/civicrm/admin/contribute/contributionType?reset=1'},
+    {title:'Contribution Types', url:'/civicrm/admin/contribute/contributionType?action=add&reset=1'},
+    {title:'Payment Instrument Options', url:'/civicrm/admin/options/payment_instrument?group=payment_instrument&reset=1'},
+    {title:'Payment Instrument Options', url:'/civicrm/admin/options/payment_instrument?group=payment_instrument&action=add&reset=1'},
 ];
 
 // List all event page links (Include participant)
 const url_event_ary = [
     // event
     {title:'CiviEvent Dashboard', url:'/civicrm/event?reset=1'},
-    {title:'Find Participants', url:'/civicrm/event/search?reset=1'},
-    {title:'Import Participants', url:'/civicrm/event/import?reset=1'},
     {title:'New Event', url:'/civicrm/event/add?reset=1&action=add'},
     {title:'CiviEvent Dashboard', url:'/civicrm/event/manage?reset=1'},
     {title:'Event Templates', url:'/civicrm/admin/eventTemplate?reset=1'},
     // participant
     {title:'Register New Participant', url:'/civicrm/participant/add?reset=1&action=add&context=standalone'},
     {title:'給活動參與者的價格表詳情' ,url:'/civicrm/contact/search/custom?reset=1&csid=9'},
+    {title:'Find Participants', url:'/civicrm/event/search?reset=1'},
 ];
 
 // List all mailing page links
@@ -112,7 +128,6 @@ const url_member_ary = [
     {title:'CiviMember', url:'/civicrm/member?reset=1'},
     {title:'New Member', url:'/civicrm/member/add?reset=1&action=add&context=standalone'},
     {title:'Find Members', url:'/civicrm/member/search?reset=1'},
-    {title:'Import Memberships', url:'/civicrm/member/import?reset=1'},
 ];
 
 //List all report page list
