@@ -146,6 +146,9 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
       $attributes = array('value' => ts('Donate Now'), 'onClick' => 'select();');
     }
 
+    $this->add('hidden', 'preset_image', '1');
+    $this->addRule('preset_image', ts('The preset image value should be numeric.'), 'numeric');
+
     $this->add('text', 'donate_link_text', ts('Donation Button'), $attributes);
     $attrib = array('rows' => 8, 'cols' => 60);
     $readOnly[] = $this->addWysiwyg('page_text', ts('Your Message'), $attrib);
