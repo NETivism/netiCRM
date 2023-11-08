@@ -250,6 +250,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       // trxn_id will update after copy contribution.
       $hash = hash('sha256', $firstContributionId);
       $c = CRM_Core_Payment_BaseIPN::copyContribution($firstContribution, $recurringId, $hash);
+      $c->total_amount = $contributionRecur->amount;
     }
     else {
       $c = new CRM_Contribute_DAO_Contribution();
