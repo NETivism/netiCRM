@@ -499,7 +499,7 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
           'sort' => 'total_amount',
           'direction' => CRM_Utils_Sort::DONTCARE,
         ),
-        array('name' => ts('Type'),
+        array('name' => ts('Contribution Type'),
           'sort' => 'contribution_type_id',
           'direction' => CRM_Utils_Sort::DONTCARE,
         ),
