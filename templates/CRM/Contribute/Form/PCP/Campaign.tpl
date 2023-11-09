@@ -92,27 +92,3 @@ cj(document).ready(function($){
   });
 });
 {/literal}</script>
-<script>{literal}
-(function ($) {
-	$(function() {
-    if (!$('.pcp-default-preset-img-list').length && $('#attachments').length) {
-      let defaultPresetImgList = '<ul class="pcp-default-preset-img-list">';
-
-      for (let i = 1; i <= 5; i++) {
-        defaultPresetImgList += `<li><img src="{/literal}{$config->resourceBase}{literal}packages/midjourney/pcp_preset_${i}.png"></li>`;
-      }
-
-      defaultPresetImgList += '</ul>';
-
-      if ($('#attachments .description').length) {
-        $('#attachments .description').after(defaultPresetImgList);
-      }
-      else {
-        if ($('#attachments .crm-form-file').length) {
-          $('#attachments .crm-form-file').after(defaultPresetImgList);
-        }
-      }
-    }
-  });
-})(cj);
-{/literal}</script>

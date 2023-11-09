@@ -71,6 +71,41 @@
             </td>
         </tr>
     {/if}
+    {if $context EQ 'pcpCampaign'}
+        <tr>
+              <td class="label">{ts}Select from gallery{/ts}</td>
+              <td class="view-value select-from-gallery pcp-select-from-gallery">
+                  <div class="description">{ts}If you don't have a picture to upload, you can choose it from the gallery{/ts}</div>
+                  <script>{literal}
+                  (function ($) {
+                    $(function() {
+                      if (!$('.pcp-preset-img-list').length && $('.pcp-select-from-gallery').length && $('input[name="preset_image"][type="hidden"]').length) {
+                        let pcpPresetImgList = '<ul class="pcp-preset-img-list">';
+
+                        for (let i = 1; i <= 5; i++) {
+                          pcpPresetImgList += `<li class='item' data-img-id="${i}"><img src="{/literal}{$config->resourceBase}{literal}packages/midjourney/pcp_preset_${i}.png"></li>`;
+                        }
+
+                        pcpPresetImgList += '</ul>';
+                        $('.pcp-select-from-gallery').prepend(pcpPresetImgList);
+
+                        $('.pcp-preset-img-list').on('click', '.item', function() {
+                          let $thisItem = $(this),
+                              $list = $thisItem.closest('.pcp-preset-img-list'),
+                              $items = $list.find('.item'),
+                              imgId = $thisItem.attr('data-img-id');
+
+                          $items.removeClass('is-selected');
+                          $thisItem.addClass('is-selected');
+                          $('input[name="preset_image"][type="hidden"]').val(imgId);
+                        });
+                      }
+                    });
+                  })(cj);
+                  {/literal}</script>
+              </td>
+        </tr>
+    {/if}
         </table>
     </div>
   </div><!-- /.crm-accordion-body -->
