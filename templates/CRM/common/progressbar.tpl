@@ -38,17 +38,13 @@
   </div>{* progress-block end *}
   {* for animation *}
   <script>{literal}
-  // IIFE to encapsulate the code and avoid global scope pollution
   (function() {
-    // Define constants for transition time and delay
     const TRANSITION_TIME = "1.5s";
     const DELAY = 800;
 
-    // Function to initialize progress bars
     function initProgressBars() {
       const progressBlocks = document.querySelectorAll(".progress-block");
 
-      // Loop through each progress block to set styles
       progressBlocks.forEach(progressBlock => {
         const progressBar = progressBlock.querySelector(".progress-bar");
         const progressPointer = progressBlock.querySelector(".progress-pointer");
@@ -58,9 +54,8 @@
         applyStyles(progressBar, progressPointer, goal);
       });
     }
-    // Function to apply dynamic styles to progress bars and pointers
+
     function applyStyles(progressBar, progressPointer, goal) {
-      // Check if the goal is above 50
       const isGoalAbove50 = goal > 50;
 
       // Conditionally set margin and class for the pointer
@@ -71,23 +66,18 @@
       Object.assign(progressBar.style, { transition: `width ${TRANSITION_TIME}` });
       Object.assign(progressPointer.style, { transition: `all ${TRANSITION_TIME}` });
 
-      // Delay setting the final styles
+      // Set the final width, position and visibility of the progress bar
       setTimeout(() => {
-        // Set the final width of the progress bar
         Object.assign(progressBar.style, { width: `${goal}%` });
-        // Set the final position and visibility of the pointer
         Object.assign(progressPointer.style, { left: `${goal}%`, opacity: "1" });
       }, DELAY);
     }
 
-    // Function to initialize progress buttons
     function initProgressButtons() {
       const paymentGroup = document.querySelector(".payment_options-group");
 
-      // Return if the group does not exist
       if (!paymentGroup) return;
 
-      // Add smooth scroll event listener for each button in the progress-button class
       document.querySelectorAll(".progress-button .button").forEach(button => {
         button.addEventListener("click", () => {
           // Scroll smoothly to the payment group
@@ -99,7 +89,6 @@
       });
     }
 
-    // Initialize both progress bars and buttons when the DOM is fully loaded
     document.addEventListener("DOMContentLoaded", function() {
       initProgressBars();
       initProgressButtons();
