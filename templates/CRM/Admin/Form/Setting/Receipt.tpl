@@ -122,6 +122,20 @@
             </td>
         </tr>
         {/if}
+        {if $form.receiptEmailEncryption}
+        <tr class="crm-form-block-receiptEmailEncryption">
+            <td class="label">{$form.receiptEmailEncryption.label}</td><td>{$form.receiptEmailEncryption.html}<br />
+            <span class="description">{ts}After activation, a password will be added to the email receipt. If the receipt includes tax filing credentials (such as ID number or Uniform Number), encryption will be done using these credentials. If these fields are not present, the recipient's email address will be used for encryption.{/ts}</span>
+            </td>
+        </tr>
+        {/if}
+        {if $form.receiptEmailEncryptionText}
+        <tr class="crm-form-block-receiptEmailEncryptionText">
+            <td class="label">{$form.receiptEmailEncryptionText.label}</td><td>{$form.receiptEmailEncryptionText.html}<br />
+            <span class="description">{ts}If no specific text is set, the default text will be: "Please enter your ID number or Email address to open your receipt.{/ts}</span>
+            </td>
+        </tr>
+        {/if}
         {if $form.receiptDisplayLegalID}
         <tr class="crm-form-block-receiptDisplayLegalID">
             <td class="label">{$form.receiptDisplayLegalID.label}</td><td>{$form.receiptDisplayLegalID.html}<br />    
