@@ -83,6 +83,11 @@ class CRM_Admin_Form_Setting_Miscellaneous extends CRM_Admin_Form_Setting {
       $this->addYesNo('versionCheck', ts('Version Check & Statistics Reporting'));
       $this->assign('admin', TRUE);
       $this->addTextfield('docURLBase', ts('Documentation URL Base Path'));
+
+      // Refs #38829, Add Path to qpdf executable field.
+      $this->addElement('text', 'qpdfPath', ts('Path to qpdf executable'),
+        array('size' => 64, 'maxlength' => 256)
+      );
     }
     else {
       $this->assign('admin', FALSE);
