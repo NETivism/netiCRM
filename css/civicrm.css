@@ -6,6 +6,7 @@
   --color-crm-special-contribute-primary: var(--neticrm-color-crm-special-contribute-primary, #3f51b5);
   --color-crm-special-contribute-info-link: var(--neticrm-color-crm-special-contribute-info-link, #c4ccff);
   --font-sans-serif: "PingFang TC", "Heiti TC", "Noto Sans TC", "Noto Sans CJK TC", NotoSansCJKtc-Regular, source-han-sans-traditional, "Microsoft JhengHei Fixed", "Microsoft JhengHei", "微軟正黑體", sans-serif;
+  --font-icon-zmdi: "Material-Design-Iconic-Font";
   --header-min-height: 120px;
   --pcp-progress-padding: 40px;
   --pcp-progress-amount-height: 40px;
@@ -2178,6 +2179,7 @@ table.campaign td,
   list-style: none;
 }
 .crm-container .pcp-preset-img-list .item {
+  position: relative;
   opacity: .3;
   border: 2px solid rgba(0,0,0,.15);
 }
@@ -2194,6 +2196,25 @@ table.campaign td,
 .crm-container .pcp-preset-img-list .item.is-selected,
 .crm-container .pcp-preset-img-list .item.is-selected:hover {
   border-color: rgba(0,0,0,1);
+}
+.crm-container .pcp-preset-img-list .item.is-selected::before,
+.crm-container .pcp-preset-img-list .item.is-selected:hover::before {
+  content: "\f26b";
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 4px;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: var(--font-icon-zmdi);
+  font-size: 20px;
+  color: #fff;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: #000;
 }
 .crm-container .pcp-preset-img-list .item img {
   display: block;
