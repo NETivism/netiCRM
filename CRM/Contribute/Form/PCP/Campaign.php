@@ -369,7 +369,15 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
       }
     }
 
-    if (empty($params['is_delete_attachment']) && empty($params['attachFile_0']['location']) && !empty($params['preset_image'])) {
+    $attachmentIsExist = !empty($params['is_delete_attachment']) && !empty($params['attachFile_0']['location']);
+
+    // If an attachment file is present, reset the 'preset_image'
+    // We give priority to the user-uploaded attachment file as the main image for the PCP
+    if ($attachmentIsExist) {
+      $params['preset_image'] = '';
+    }
+
+    if (!$attachmentIsExist && !empty($params['preset_image'])) {
       $config = CRM_Core_Config::singleton();
       $pcpPresetNum = CRM_Utils_Type::escape($params['preset_image'], 'Integer');
       $pcpPresetFile = 'pcp_preset_'.$pcpPresetNum.'.png';
