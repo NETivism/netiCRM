@@ -75,12 +75,18 @@
         <tr>
               <td class="label">{ts}Select from gallery{/ts}</td>
               <td class="view-value select-from-gallery pcp-select-from-gallery">
-                  <div class="description">{ts}If you don't have a picture to upload, you can choose it from the gallery{/ts}</div>
+                  <div class="description">
+                  {if $currentAttachmentURL}
+                    {ts}Please remove the current attachment before selecting images from the gallery.{/ts}
+                    {else}
+                    {ts}If you don't have a picture to upload, you can choose it from the gallery.{/ts}
+                  {/if}
+                  </div>
                   <script>{literal}
                   (function ($) {
                     $(function() {
                       if (!$('.pcp-preset-img-list').length && $('.pcp-select-from-gallery').length && $('input[name="preset_image"][type="hidden"]').length) {
-                        let pcpPresetImgList = '<ul class="pcp-preset-img-list">';
+                        let pcpPresetImgList = '<ul class="pcp-preset-img-list is-active">';
 
                         for (let i = 1; i <= 5; i++) {
                           pcpPresetImgList += `<li class='item' data-img-id="${i}"><img src="{/literal}{$config->resourceBase}{literal}packages/midjourney/pcp_preset_${i}.png"></li>`;
@@ -89,7 +95,7 @@
                         pcpPresetImgList += '</ul>';
                         $('.pcp-select-from-gallery').prepend(pcpPresetImgList);
 
-                        $('.pcp-preset-img-list').on('click', '.item', function() {
+                        $('.pcp-preset-img-list.is-active').on('click', '.item', function() {
                           let $thisItem = $(this),
                               $list = $thisItem.closest('.pcp-preset-img-list'),
                               $items = $list.find('.item'),
@@ -98,6 +104,24 @@
                           $items.removeClass('is-selected');
                           $thisItem.addClass('is-selected');
                           $('input[name="preset_image"][type="hidden"]').val(imgId);
+                        });
+                      }
+
+                      if ($('.current-attachments').length && $('.pcp-preset-img-list').length) {
+                        $('.pcp-preset-img-list').off('click', '.item').removeClass('is-active');
+                      }
+
+                      let $formFile = $('.pcp-preset-img-list').closest('#attachments').find('.form-file[name*="attachFile[]"]');
+                      let notice = "{/literal}{ts}Please remove the current attachment before selecting images from the gallery.{/ts}{literal}";
+
+                      if ($formFile.length) {
+                        $formFile.change(function() {
+                          if ($(this).prop('files').length > 0) {
+                            $('.pcp-select-from-gallery .description').text(notice);
+                            $('.pcp-preset-img-list').off('click', '.item').removeClass('is-active');
+                            $('input[name="preset_image"][type="hidden"]').val('');
+                            $('.pcp-preset-img-list .item.is-selected').removeClass('is-selected');
+                          }
                         });
                       }
                     });

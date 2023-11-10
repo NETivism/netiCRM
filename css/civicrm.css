@@ -2173,17 +2173,26 @@ table.campaign td,
 .crm-container .pcp-preset-img-list {
   display: flex;
   gap: 12px;
+  position: relative;
   margin: 0;
   list-style: none;
 }
 .crm-container .pcp-preset-img-list .item {
+  opacity: .3;
   border: 2px solid rgba(0,0,0,.15);
 }
 .crm-container .pcp-preset-img-list .item:hover {
-  cursor: pointer;
-  border-color: rgba(0,0,0,.3);
+  cursor: not-allowed;
 }
-.crm-container .pcp-preset-img-list .item.is-selected {
+.crm-container .pcp-preset-img-list.is-active .item {
+  opacity: 1;
+}
+.crm-container .pcp-preset-img-list.is-active .item:hover {
+  border-color: rgba(0,0,0,.3);
+  cursor: pointer;
+}
+.crm-container .pcp-preset-img-list .item.is-selected,
+.crm-container .pcp-preset-img-list .item.is-selected:hover {
   border-color: rgba(0,0,0,1);
 }
 .crm-container .pcp-preset-img-list .item img {
