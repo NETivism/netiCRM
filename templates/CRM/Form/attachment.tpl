@@ -78,20 +78,26 @@
                   <div class="description">
                   {if $currentAttachmentURL}
                     {ts}Please remove the current attachment before selecting images from the gallery.{/ts}
-                    {else}
+                  {else}
                     {ts}If you don't have a picture to upload, you can choose it from the gallery.{/ts}
                   {/if}
                   </div>
                   <script>{literal}
                   (function ($) {
                     $(function() {
+                      const disableSelectGallery = function() {
+                        let desc = "{/literal}{ts}Please remove the current attachment before selecting images from the gallery.{/ts}{literal}";
+                        $('input[name="preset_image"][type="hidden"]').val('');
+                        $('.pcp-select-from-gallery .description').text(desc);
+                        $('.pcp-preset-img-list').off('click', '.item').removeClass('is-active');
+                        $('.pcp-preset-img-list .item.is-selected').removeClass('is-selected');
+                      }
+
                       if (!$('.pcp-preset-img-list').length && $('.pcp-select-from-gallery').length && $('input[name="preset_image"][type="hidden"]').length) {
                         let pcpPresetImgList = '<ul class="pcp-preset-img-list is-active">';
-
                         for (let i = 1; i <= 5; i++) {
                           pcpPresetImgList += `<li class='item' data-img-id="${i}"><img src="{/literal}{$config->resourceBase}{literal}packages/midjourney/pcp_preset_${i}.png"></li>`;
                         }
-
                         pcpPresetImgList += '</ul>';
                         $('.pcp-select-from-gallery').prepend(pcpPresetImgList);
 
@@ -108,19 +114,14 @@
                       }
 
                       if ($('.current-attachments').length && $('.pcp-preset-img-list').length) {
-                        $('.pcp-preset-img-list').off('click', '.item').removeClass('is-active');
+                        disableSelectGallery();
                       }
 
                       let $formFile = $('.pcp-preset-img-list').closest('#attachments').find('.form-file[name*="attachFile[]"]');
-                      let notice = "{/literal}{ts}Please remove the current attachment before selecting images from the gallery.{/ts}{literal}";
-
                       if ($formFile.length) {
                         $formFile.change(function() {
                           if ($(this).prop('files').length > 0) {
-                            $('.pcp-select-from-gallery .description').text(notice);
-                            $('.pcp-preset-img-list').off('click', '.item').removeClass('is-active');
-                            $('input[name="preset_image"][type="hidden"]').val('');
-                            $('.pcp-preset-img-list .item.is-selected').removeClass('is-selected');
+                            disableSelectGallery();
                           }
                         });
                       }
