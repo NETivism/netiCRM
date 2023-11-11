@@ -49,28 +49,6 @@
    {/if}
     <div id="attachments" class="attachments">
     <table class="form-layout-compressed">
-    {if $form.attachFile.$emptyStringKey}
-            <tr>
-                <td class="label">{$form.attachFile.$emptyStringKey.label}</td>
-                <td>{$form.attachFile.$emptyStringKey.html}<br />
-                  {if $context EQ 'pcpCampaign'}
-                      <div class="description">{ts}You can upload a picture or image to include on your page. Your file should be in .jpg, .gif, or .png format. Recommended image size is 250 x 250 pixels. Maximum size is 360 x 360 pixels.{/ts}</div>
-                  {/if}
-                </td>
-            </tr>
-    {/if}
-    {if $currentAttachmentURL}
-        <tr>
-            <td class="label">{ts}Current Attachment(s){/ts}</td>
-            <td class="view-value current-attachments"><strong>{$currentAttachmentURL}</strong></td>
-        </tr>
-        <tr>
-            <td class="label">&nbsp;</td>
-            <td>{$form.is_delete_attachment.html}&nbsp;{$form.is_delete_attachment.label}<br />
-                <span class="description">{ts}Check this box and click Save to delete all current attachments.{/ts}</span>
-            </td>
-        </tr>
-    {/if}
     {if $context EQ 'pcpCampaign'}
         <tr>
               <td class="label">{ts}Select from gallery{/ts}</td>
@@ -79,7 +57,7 @@
                   {if $currentAttachmentURL}
                     {ts}Please remove the current attachment before selecting images from the gallery.{/ts}
                   {else}
-                    {ts}If you don't have a picture to upload, you can choose it from the gallery.{/ts}
+                    {ts}You can use our preset images from the gallery or upload your own in the attached file below.{/ts}
                   {/if}
                   </div>
                   <script>{literal}
@@ -129,6 +107,28 @@
                   })(cj);
                   {/literal}</script>
               </td>
+        </tr>
+    {/if}
+    {if $form.attachFile.$emptyStringKey}
+            <tr>
+                <td class="label">{$form.attachFile.$emptyStringKey.label}</td>
+                <td>{$form.attachFile.$emptyStringKey.html}<br />
+                  {if $context EQ 'pcpCampaign'}
+                      <div class="description">{ts}You can upload a picture or image to include on your page. Your file should be in .jpg, .gif, or .png format. Recommended image size is 250 x 250 pixels. Maximum size is 360 x 360 pixels.{/ts}</div>
+                  {/if}
+                </td>
+            </tr>
+    {/if}
+    {if $currentAttachmentURL}
+        <tr>
+            <td class="label">{ts}Current Attachment(s){/ts}</td>
+            <td class="view-value current-attachments"><strong>{$currentAttachmentURL}</strong></td>
+        </tr>
+        <tr>
+            <td class="label">&nbsp;</td>
+            <td>{$form.is_delete_attachment.html}&nbsp;{$form.is_delete_attachment.label}<br />
+                <span class="description">{ts}Check this box and click Save to delete all current attachments.{/ts}</span>
+            </td>
         </tr>
     {/if}
         </table>
