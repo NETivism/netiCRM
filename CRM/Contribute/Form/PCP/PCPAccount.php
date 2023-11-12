@@ -91,7 +91,7 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
       $this->assign('is_manager', $isManager);
       $this->assign('page_id', $this->_pageId);
       if (!empty($userID)) {
-        if ($this->_contactID === '0' && $isManager) {
+        if ($this->_contactID === '0' && CRM_Utils_System::isUserLoggedIn()) {
           $this->assign('create_pcp_for_others', TRUE);
         }
         else {
