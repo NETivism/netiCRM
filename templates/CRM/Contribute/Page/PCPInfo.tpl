@@ -58,8 +58,17 @@
 {if $progress.display}
   {include file="CRM/common/progressbar.tpl" progress=$progress}
 {else}
+  {if $progress.type}
+  <div class="pcp-amount-goal pcp-amount-goal-top">
+    {if $progress.type|strstr:"amount"}
+      {$progress.label} <span class="counter">{$progress.goal|crmMoney}</span>
+    {elseif $progress.type == "recurring"}
+      {$progress.label} <span class="counter">{$progress.goal}</span>{ts}People{/ts}
+    {/if}
+  </div>
+  {/if}
   {if $link_display}
-  <div class="pcp-donate pcp-buttons-top">
+  <div class="pcp-donate pcp-buttons pcp-buttons-top">
     {if $contributeURL}
     <a href="{$contributeURL}" class="button contribute-button pcp-contribute-button"><span class="normal-text">{$contributionText}</span></a>
     {else}
