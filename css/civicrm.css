@@ -7044,7 +7044,7 @@ input.crm-form-textfield,
 .crm-container .progress-cell.progress-bar-wrapper {
   width: 80%;
 }
-.crm-container .progress-cell.progress-button {
+.crm-container .progress-cell.progress-buttons {
   width: 19%;
   text-align: center;
 }
@@ -7134,7 +7134,7 @@ input.crm-form-textfield,
   width: 100%;
   margin-bottom: 30px;
 }
-.crm-container .progressbar-fullwidth .progress-cell.progress-button {
+.crm-container .progressbar-fullwidth .progress-cell.progress-buttons {
   width: 100%;
 }
 @media (min-width: 768px) {

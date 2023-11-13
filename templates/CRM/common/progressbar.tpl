@@ -25,7 +25,7 @@
           <div class="progress-pointer" style="left:0px;margin-left:0;opacity:0">{ts 1="`$progress.achieved_percent`%"}%1 achieved{/ts}</div>
         </div>
         {if $progress.link_display}
-          <div class="progress-cell progress-button">
+          <div class="progress-cell progress-buttons pcp-buttons-top">
             {if $progress.link_url}
               <a class="button" href="{$progress.link_url}">{if $progress.link_text}{$progress.link_text}{else}{ts}Donate Now{/ts}{/if}</a>
             {else}

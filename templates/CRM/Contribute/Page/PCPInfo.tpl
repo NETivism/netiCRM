@@ -58,6 +58,15 @@
 {if $progress.display}
   {include file="CRM/common/progressbar.tpl" progress=$progress}
 {else}
+  {if $link_display}
+  <div class="pcp-donate pcp-buttons-top">
+    {if $contributeURL}
+    <a href="{$contributeURL}" class="button contribute-button pcp-contribute-button"><span class="normal-text">{$contributionText}</span></a>
+    {else}
+    <div class="button"><span class="normal-text">{$contributionText}</span></div>
+    {/if}
+  </div>
+  {/if}
 {/if}
 
 <div class="pcp-campaign">
@@ -191,12 +200,15 @@
   $(document).ready(function() {
     windowResizeEvent();
 
+    let $pcpButtonsTop = $('.pcp-buttons-top'),
+        $pcpStickyHeader = $('.pcp-sticky-header');
+
     $(window).on('scroll', function() {
-      let buttonOffset = $('.progress-button').offset().top + $('.progress-button').outerHeight();
+      let buttonOffset = $pcpButtonsTop.offset().top + $pcpButtonsTop.outerHeight();
       if ($(window).scrollTop() > buttonOffset) {
-        $('.pcp-sticky-header').addClass('is-visible');
+        $pcpStickyHeader.addClass('is-visible');
       } else {
-        $('.pcp-sticky-header').removeClass('is-visible');
+        $pcpStickyHeader.removeClass('is-visible');
       }
       });
   });
