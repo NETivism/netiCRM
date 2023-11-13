@@ -78,7 +78,7 @@
     {$sharethis}
   </div>{/if}
 
-  {if $progress.goal}
+  {if $progress.display}
     {include file="CRM/common/progressbar.tpl" progress=$progress}
   {/if}
 

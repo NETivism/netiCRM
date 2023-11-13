@@ -792,8 +792,9 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
       'achieved_percent' => $achievement['percent'],
       'achieved_status' => $achievement['achieved'],
       'fullwidth' => FALSE,
-      'display' => TRUE
+      'display' => $achievement['goal'] ? TRUE : FALSE,
     );
+
     $introTextAssigned = $template->get_template_vars('intro_text') !== null;
     if ($introTextAssigned) {
       $progress['link_display'] = TRUE;
