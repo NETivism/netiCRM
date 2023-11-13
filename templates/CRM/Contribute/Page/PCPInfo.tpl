@@ -57,6 +57,7 @@
 
 {if $progress.display}
   {include file="CRM/common/progressbar.tpl" progress=$progress}
+{else}
 {/if}
 
 <div class="pcp-campaign">
@@ -64,9 +65,13 @@
   <div class="pcp-page-text main-content">
     {$pcp.page_text|purify}
   </div>
-  {if $validDate && $contributeURL}
+  {if $link_display}
   <div class="pcp-donate">
+      {if $contributeURL}
       <a href="{$contributeURL}" class="button contribute-button pcp-contribute-button"><span>{$contributionText}</span></a>
+      {else}
+      <div class="button"><span>{$contributionText}</span></div>
+      {/if}
   </div>
   {/if}{* end contribute button *}
   {if $pcp.is_honor_roll && $honor}
@@ -157,9 +162,15 @@
 <div class="pcp-sticky-header">
   <div class="inner">
     <div class="pcp-honor-counter">{ts 1=$honor|@count}Supported by %1 people{/ts}</div>
+    {if $link_display}
     <div class="pcp-donate">
+      {if $contributeURL}
       <a href="{$contributeURL}" class="button contribute-button pcp-contribute-button"><span class="normal-text">{$contributionText}</span><span class="mini-text">{ts}Contribute Now{/ts}</span></a>
+      {else}
+      <div class="button"><span class="normal-text">{$contributionText}</span><span class="mini-text">{ts}Contribute Now{/ts}</span></div>
+      {/if}
     </div>
+    {/if}
     <ul class="pcp-social-links">
       <li><a class="social-link facebook" href="{$shareUrl.facebook}">Facebook</a></li>
       <li><a class="social-link line" href="{$shareUrl.line}">Line</a></li>

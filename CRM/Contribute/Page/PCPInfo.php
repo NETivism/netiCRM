@@ -210,7 +210,7 @@ class CRM_Contribute_Page_PCPInfo extends CRM_Core_Page {
     $totalAmount = CRM_Contribute_BAO_PCP::thermoMeter($this->_id);
     $achieved = round($totalAmount / $pcpInfo['goal_amount'] * 100, 2);
 
-
+    $link_display = FALSE;
     if ($linkText = CRM_Contribute_BAO_PCP::getPcpBlockStatus($pcpInfo['contribution_page_id'])) {
       $linkTextUrl = CRM_Utils_System::url('civicrm/contribute/campaign',
         "action=add&reset=1&pageId={$pcpInfo['contribution_page_id']}",
@@ -287,15 +287,19 @@ class CRM_Contribute_Page_PCPInfo extends CRM_Core_Page {
       $progress['achieved_percent'] = $template->get_template_vars('achieved');
       $progress['achieved_status'] = $progress['achieved_percent'] >= 100 ? TRUE : FALSE;
     }
+
     if ($template->get_template_vars('validDate') && $template->get_template_vars('contributeURL')) {
-      $progress['link_display'] = TRUE;
+      $link_display = TRUE;
+      $progress['link_display'] = $link_display;
       $progress['link_url'] = $template->get_template_vars('contributeURL');
       $progress['link_text'] = $template->get_template_vars('contributionText');
     }
     $this->assign('progress', $progress);
+    $this->assign('link_display', $link_display);
 
     // we do not want to display recently viewed items, so turn off
     $this->assign('displayRecent', FALSE);
+
 
     $single = $permission = FALSE;
     switch ($action) {
