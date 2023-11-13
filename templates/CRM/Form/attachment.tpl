@@ -63,6 +63,10 @@
                   <script>{literal}
                   (function ($) {
                     $(function() {
+                      const pageAction = "{/literal}{$action}{literal}";
+                      const presetImgStartIndex = 1;
+                      const presetImgMaxNum = 5;
+
                       const disableSelectGallery = function() {
                         let desc = "{/literal}{ts}Please remove the current attachment before selecting images from the gallery.{/ts}{literal}";
                         $('input[name="preset_image"][type="hidden"]').val('');
@@ -71,23 +75,31 @@
                         $('.pcp-preset-img-list .item.is-selected').removeClass('is-selected');
                       }
 
+                      const setPresetImg = function(imgId) {
+                        if (imgId < presetImgStartIndex || imgId > presetImgMaxNum) {
+                          return;
+                        }
+
+                        if (!imgId) {
+                          imgId = Math.floor(Math.random() * (presetImgMaxNum - presetImgStartIndex + 1)) + presetImgStartIndex;
+                        }
+
+                        $('.pcp-preset-img-list .item').removeClass('is-selected');
+                        $(`.pcp-preset-img-list .item[data-img-id="${imgId}"]`).addClass('is-selected');
+                        $('input[name="preset_image"][type="hidden"]').val(imgId);
+                      }
+                      
                       if (!$('.pcp-preset-img-list').length && $('.pcp-select-from-gallery').length && $('input[name="preset_image"][type="hidden"]').length) {
                         let pcpPresetImgList = '<ul class="pcp-preset-img-list is-active">';
-                        for (let i = 1; i <= 5; i++) {
+                        for (let i = presetImgStartIndex; i <= presetImgMaxNum; i++) {
                           pcpPresetImgList += `<li class='item' data-img-id="${i}"><img src="{/literal}{$config->resourceBase}{literal}packages/midjourney/pcp_preset_${i}.png"></li>`;
                         }
                         pcpPresetImgList += '</ul>';
                         $('.pcp-select-from-gallery').prepend(pcpPresetImgList);
 
                         $('.pcp-preset-img-list.is-active').on('click', '.item', function() {
-                          let $thisItem = $(this),
-                              $list = $thisItem.closest('.pcp-preset-img-list'),
-                              $items = $list.find('.item'),
-                              imgId = $thisItem.attr('data-img-id');
-
-                          $items.removeClass('is-selected');
-                          $thisItem.addClass('is-selected');
-                          $('input[name="preset_image"][type="hidden"]').val(imgId);
+                          let imgId = $(this).attr('data-img-id');
+                          setPresetImg(imgId);
                         });
                       }
 
@@ -102,6 +114,10 @@
                             disableSelectGallery();
                           }
                         });
+                      }
+
+                      if (pageAction != 2) {
+                        setPresetImg();
                       }
                     });
                   })(cj);
