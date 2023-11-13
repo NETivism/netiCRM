@@ -35,6 +35,7 @@ async function check_and_set_accordionElement() {
 async function check_page_title($verifty_title) {
     // For d10 env
     const titleElement = await page.locator('h1.page-title');
+    await utils.wait(wait_secs);
     const isElementFound = await titleElement.count();
     if (isElementFound > 0) {
         await expect(page.locator('h1.page-title')).toHaveText($verifty_title);
