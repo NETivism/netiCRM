@@ -49156,3 +49156,15 @@ msgstr ""
 #: templates/CRM/Contribute/Page/PCPInfo.tpl
 msgid "Supported by %1 people"
 msgstr ""
+
+#: templates/CRM/Form/attachment.tpl
+msgid "Please remove the current attachment before selecting images from the gallery."
+msgstr ""
+
+#: templates/CRM/Form/attachment.tpl
+msgid "You can use our preset images from the gallery or upload your own in the attached file below."
+msgstr ""
+
+#: templates/CRM/Form/attachment.tpl
+msgid "Select from gallery"
+msgstr "" 
