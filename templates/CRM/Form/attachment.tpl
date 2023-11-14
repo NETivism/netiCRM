@@ -67,21 +67,24 @@
                       const presetImgStartIndex = 1;
                       const presetImgMaxNum = 5;
 
-                      const disableSelectGallery = function() {
+                      function disableSelectGallery() {
                         let desc = "{/literal}{ts}Please remove the current attachment before selecting images from the gallery.{/ts}{literal}";
                         $('input[name="preset_image"][type="hidden"]').val('');
                         $('.pcp-select-from-gallery .description').text(desc);
-                        $('.pcp-preset-img-list').off('click', '.item').removeClass('is-active');
+                        $(document).off('click', '.pcp-preset-img-list.is-active .item');
+                        $('.pcp-preset-img-list.is-active').removeClass('is-active');
                         $('.pcp-preset-img-list .item.is-selected').removeClass('is-selected');
                       }
 
-                      const setPresetImg = function(imgId) {
+                      function getRandomImgId() {
+                        return Math.floor(Math.random() * (presetImgMaxNum - presetImgStartIndex + 1)) + presetImgStartIndex;
+                      }
+
+                      function setPresetImg(imgId) {
+                        imgId = imgId || getRandomImgId();
+
                         if (imgId < presetImgStartIndex || imgId > presetImgMaxNum) {
                           return;
-                        }
-
-                        if (!imgId) {
-                          imgId = Math.floor(Math.random() * (presetImgMaxNum - presetImgStartIndex + 1)) + presetImgStartIndex;
                         }
 
                         $('.pcp-preset-img-list .item').removeClass('is-selected');
@@ -97,7 +100,7 @@
                         pcpPresetImgList += '</ul>';
                         $('.pcp-select-from-gallery').prepend(pcpPresetImgList);
 
-                        $('.pcp-preset-img-list.is-active').on('click', '.item', function() {
+                        $(document).on('click', '.pcp-preset-img-list.is-active .item', function() {
                           let imgId = $(this).attr('data-img-id');
                           setPresetImg(imgId);
                         });
