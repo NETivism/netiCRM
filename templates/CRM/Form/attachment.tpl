@@ -50,20 +50,12 @@
     <div id="attachments" class="attachments">
     <table class="form-layout-compressed">
     {if $context EQ 'pcpCampaign'}
-        <tr class="attachments-upload-your-own-image-row">
-              <td><label for="upload-your-own-image">{ts}Upload Your Own Image?{/ts}</label></td>
-              <td>
-                  <input type="checkbox" id="upload-your-own-image" name="upload-your-own-image" />
-                  <div class="description">
-                  </div>
-              </td>
-        </tr>
         <tr class="attachments-select-from-gallery-row">
               <td class="label"><label>{ts}Select from gallery{/ts}</label></td>
               <td class="view-value select-from-gallery pcp-select-from-gallery">
                   <div class="description">
                   {if $currentAttachmentURL}
-                    {ts}Before selecting images from the gallery, please uncheck the 'Upload Your Own Image?' checkbox and remove any currently attached file.{/ts}
+                    {ts}Before selecting images from the gallery, please uncheck the 'Upload Your Own Image?' checkbox and delete all currently attachments.{/ts}
                   {else}
                     {ts}You can use our preset images from the gallery or upload your own in the attached file below.{/ts}
                   {/if}
@@ -86,12 +78,21 @@
                       }
 
                       function disableSelectGallery() {
-                        let desc = "{/literal}{ts}Before selecting images from the gallery, please uncheck the 'Upload Your Own Image?' checkbox and remove any currently attached file.{/ts}{literal}";
+                        let desc = "{/literal}{ts}Before selecting images from the gallery, please uncheck the 'Upload Your Own Image?' checkbox and delete all currently attachments.{/ts}{literal}";
                         $('.pcp-select-from-gallery .description').text(desc);
                         $('input[name="preset_image"][type="hidden"]').val('');
                         $(document).off('click', '.pcp-preset-img-list.is-active .item');
                         $('.pcp-preset-img-list.is-active').removeClass('is-active');
                         $('.pcp-preset-img-list .item.is-selected').removeClass('is-selected');
+                      }
+
+                      function enableUploadFile() {
+                        $('.attachments-upload-your-own-image-row:not(.is-checked)').addClass('is-checked');
+                      }
+
+                      function disableUploadFile() {
+                        $('.attachments-upload-your-own-image-row.is-checked').removeClass('is-checked');
+                        $('.attachments-form-file-row .form-file').val('');
                       }
 
                       function getRandomImgId() {
@@ -133,13 +134,11 @@
                         $formFile.change(function() {
                           if ($(this).prop('files').length > 0) {
                             disableSelectGallery();
-                            $('#upload-your-own-image').prop('checked', true);
-                            $('#upload-your-own-image').prop('disabled', true);
                           }
                           else {
-                            enableSelectGallery();
-                            $('#upload-your-own-image').prop('checked', false);
-                            $('#upload-your-own-image').prop('disabled', false);
+                            if (!$('.current-attachments').length) {
+                              enableSelectGallery();
+                            }
                           }
                         });
                       }
@@ -151,9 +150,11 @@
                       $(document).on('change', '#upload-your-own-image', function() {
                         if ($(this).is(':checked')) {
                           disableSelectGallery();
+                          enableUploadFile();
                         }
                         else {
                           enableSelectGallery();
+                          disableUploadFile();
                         }
                       });
                     });
@@ -161,16 +162,32 @@
                   {/literal}</script>
               </td>
         </tr>
+        {if $currentAttachmentURL}
+        <tr class="attachments-upload-your-own-image-row is-checked">
+        {else}
+        <tr class="attachments-upload-your-own-image-row">
+        {/if}
+            <td><label for="upload-your-own-image">{ts}Upload Your Own Image?{/ts}</label></td>
+            <td>
+            {if $currentAttachmentURL}
+                <input type="checkbox" id="upload-your-own-image" name="upload-your-own-image" checked disabled />
+                <div class="description">{ts}If this option is checked, you can upload your own image. If you want to uncheck this option, please delete all currently attachments.{/ts}</div>
+                {else}
+                <input type="checkbox" id="upload-your-own-image" name="upload-your-own-image" />
+                <div class="description">{ts}If this option is checked, you can upload your own image.{/ts}</div>
+            {/if}
+            </td>
+        </tr>
     {/if}
     {if $form.attachFile.$emptyStringKey}
-            <tr class="attachments-form-file-row">
-                <td class="label">{$form.attachFile.$emptyStringKey.label}</td>
-                <td>{$form.attachFile.$emptyStringKey.html}<br />
-                  {if $context EQ 'pcpCampaign'}
-                      <div class="description">{ts}You can upload a picture or image to include on your page. Your file should be in .jpg, .gif, or .png format. Recommended image size is 250 x 250 pixels. Maximum size is 360 x 360 pixels.{/ts}</div>
-                  {/if}
-                </td>
-            </tr>
+        <tr class="attachments-form-file-row">
+            <td class="label">{$form.attachFile.$emptyStringKey.label}</td>
+            <td>{$form.attachFile.$emptyStringKey.html}<br />
+              {if $context EQ 'pcpCampaign'}
+                  <div class="description">{ts}You can upload a picture or image to include on your page. Your file should be in .jpg, .gif, or .png format. Recommended image size is 250 x 250 pixels. Maximum size is 360 x 360 pixels.{/ts}</div>
+              {/if}
+            </td>
+        </tr>
     {/if}
     {if $currentAttachmentURL}
         <tr class="attachments-current-attachment-row">
