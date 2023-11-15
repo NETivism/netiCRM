@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>, 2016-2023\n"
+"Last-Translator: CC Chu <poliphilonet@gmail.com>, 2020-2023\n"
 "Language-Team: Chinese (Taiwan) (http://app.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2596,7 +2596,7 @@ msgstr "- 稱謂 -"
 #: CRM/Report/Form/Mailing/Bounce.php CRM/Report/Form/Mailing/Clicks.php
 #: CRM/Report/Form/Mailing/Opened.php templates/CRM/Friend/Form.tpl
 msgid "First Name"
-msgstr "名字 "
+msgstr "名字"
 
 #: CRM/Contact/BAO/Contact/Utils.php CRM/Contact/DAO/Contact.php
 #: CRM/Contact/Form/Edit/Individual.php
@@ -49625,3 +49625,61 @@ msgid ""
 "2. If you have already registered an account on this site, you can click "
 "Forgot Password, enter your email, and get the login link from your mailbox."
 msgstr "2.若您已經註冊過本站帳號, 您可點選\"忘記密碼\",輸入email,即可從信箱取得登入連結"
+
+#: templates/CRM/Contribute/Form/PCP/PCPAccount.tpl
+msgid ""
+"This is a page for create PCP for a new contact. To create your own personal"
+" campaign, visit this <a href=\"%1\">link</a>."
+msgstr "這個頁面用來幫其他聯絡人建立個人募款頁。若你希望建立自己的個人募款頁，請前往 <a href=\"%1\">此連結</a>。"
+
+msgid "Create a Personal Campaign Page for others"
+msgstr "為他人建立個人募款頁"
+
+msgid ""
+"To add pcp for others, click <a href=\"%1\">Create a Personal Campaign Page "
+"for others</a> to create page."
+msgstr "要為其他人建立個人募款頁，請點擊 <a href=\"%1\">為他人建立個人募款頁</a> 。"
+
+#: templates/CRM/Contribute/Page/PCP.tpl
+msgid "Search Personal Campaign Pages"
+msgstr "搜尋個人募款頁"
+
+#: templates/CRM/Contribute/Page/PCP.tpl
+#: templates/CRM/Contribute/Form/PCP/PCP.tpl
+msgid "Belonging Main Contribution Page"
+msgstr "所屬主募款頁"
+
+msgid "Draft"
+msgstr "草稿"
+
+#: CRM/Contribute/Page/PCP.php
+msgid "Revoke to Draft"
+msgstr "退回草稿"
+
+#: neticrm/civicrm_instrument.module
+msgid ""
+"The payment processor you choose does not support annual recurring payments."
+msgstr "你選擇的金流不支援年度定期定額。"
+
+msgid "%1 only supports monthly recurring payments."
+msgstr "%1 僅僅支援每月定期定額。"
+
+#: templates/CRM/Contribute/Page/PCPInfo.tpl
+msgid "Supported by %1 people"
+msgstr "%1 人響應"
+
+#: templates/CRM/Form/attachment.tpl
+msgid ""
+"Please remove the current attachment before selecting images from the "
+"gallery."
+msgstr "在從圖庫選擇圖片之前，請先移除目前已附加的檔案。"
+
+#: templates/CRM/Form/attachment.tpl
+msgid ""
+"You can use our preset images from the gallery or upload your own in the "
+"attached file below."
+msgstr "您可以使用我們預設的圖庫裡的圖片，或者在下方附加的檔案區域上傳您自己的圖片。"
+
+#: templates/CRM/Form/attachment.tpl
+msgid "Select from gallery"
+msgstr "從圖庫中選擇"

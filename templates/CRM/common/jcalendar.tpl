@@ -90,7 +90,35 @@
       var lcMessage = {/literal}"{$config->lcMessages}"{literal};
       var localisation = lcMessage.replace("_", "-");
       var defaultDate = (cj( element_date ).attr('formattype') == "birth")?'-30y':'today';
-      if(date_format.search('d') == -1){
+      if(date_format.search('m') == -1){
+        cj(element_date).click(function(){
+          cj('.ui-datepicker-calendar').hide();
+          cj('.ui-datepicker-month').hide();
+          cj('.ui-datepicker-prev, .ui-datepicker-next').hide();
+        });
+        cj(element_date).datepicker({
+            changeMonth: false,
+            changeYear: true,
+            showButtonPanel: true,
+            dateFormat: date_format,
+            altField: alt_field,
+            yearRange: yearRange,
+            altFormat: 'mm/dd/yy',
+            onChangeMonthYear: function(dateText, inst){
+                setTimeout(function(){
+                    cj('.ui-datepicker-calendar').hide();
+                    cj('.ui-datepicker-month').hide();
+                    cj('.ui-datepicker-prev, .ui-datepicker-next').hide();
+                },1);
+            },
+            onClose: function(dateText, inst) { 
+                var year = cj("#ui-datepicker-div .ui-datepicker-year :selected").val();
+                cj(this).datepicker('setDate', new Date(year, 1, 1));
+                cj('.ui-corner-all').off('click');
+            }
+        });
+      }
+      else if(date_format.search('d') == -1){
         cj(element_date).click(function(){
           cj('.ui-datepicker-calendar').hide();
           cj('.ui-corner-all').click(function(){
@@ -116,7 +144,8 @@
             cj('.ui-corner-all').off('click');
           }
         })
-      }else{
+      }
+      else{
         cj(element_date).datepicker({
                                       closeAtTop        : true,
                                       dateFormat        : date_format,

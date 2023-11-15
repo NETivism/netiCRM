@@ -95,8 +95,18 @@
     			document.getElementById("saveMappingName").disabled = true;
     			document.getElementById("saveMappingDesc").disabled = true;
     		 }
-         }
+        }
         cj(document).ready(function($){
+          $('#updateMapping, #saveMapping').click(function() {
+            let clickedId = $(this).attr('id');
+            if (clickedId == 'updateMapping') {
+              $('#saveMapping').prop('checked', false);
+              showSaveDetails($('#saveMapping')[0]);
+            }
+            else {
+              $('#updateMapping').prop('checked', false);
+            }
+          });
           $('Select[id^="mapper[1]"][id$="[1]"]').addClass('huge');
           var mappers = $("#map-field select").filter(function(){
             var n = $(this).attr('name');

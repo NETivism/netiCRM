@@ -90,7 +90,7 @@
   </div>
   {/if}
 </div>
-<script src="https://js.tappaysdk.com/tpdirect/v5.1.0"></script>
+<script src="https://js.tappaysdk.com/sdk/tpdirect/v5.17.0"></script>
 <script>{literal}
 cj(document).ready(function($){
   var appID = '{/literal}{$payment_processor.signature}{literal}';
@@ -152,7 +152,7 @@ cj(document).ready(function($){
         'color': '#555555'
       },
       // Styling ccv field
-      'input.cvc': {
+      'input.ccv': {
         'font-size': '16px'
       },
       // Styling expiration-date field

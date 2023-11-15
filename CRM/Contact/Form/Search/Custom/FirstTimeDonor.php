@@ -41,7 +41,7 @@ class CRM_Contact_Form_Search_Custom_FirstTimeDonor extends CRM_Contact_Form_Sea
       'contact.id' => 'id',
       'c.contact_id' => 'contact_id',
       'contact.sort_name' => 'sort_name',
-      'c2.min_receive_date' => 'receive_date',
+      'c.min_receive_date' => 'receive_date',
       'ROUND(c.total_amount,0)' => 'amount',
       'c.contribution_recur_id' => 'contribution_recur_id',
       'c.contribution_page_id' => 'contribution_page_id',
@@ -135,19 +135,19 @@ GROUP BY contact.id
 
   function tempFrom() {
     $sub_where_clauses = array();
-    $sub_where_clauses[] = 'c.is_test = 0';
+    $sub_where_clauses[] = 'co.is_test = 0';
     $sub_where_clauses[] = 'pp.id IS NULL';
     $sub_where_clauses[] = 'mp.id IS NULL';
-    $sub_where_clauses[] = 'c.contribution_status_id = 1';
+    $sub_where_clauses[] = 'co.contribution_status_id = 1';
     $sub_where_clause = CRM_Utils_Array::implode(' AND ', $sub_where_clauses);
-    $sub_query = "SELECT MIN(IFNULL(receive_date, created_date)) AS min_receive_date, contact_id FROM civicrm_contribution c
-      LEFT JOIN civicrm_membership_payment mp ON mp.contribution_id = c.id
-      LEFT JOIN civicrm_participant_payment pp ON pp.contribution_id = c.id
-      WHERE $sub_where_clause GROUP BY contact_id";
+    $sub_query = "SELECT MIN(IFNULL(co.receive_date, co.created_date)) AS min_receive_date, co.* FROM civicrm_contribution co
+      LEFT JOIN civicrm_membership_payment mp ON mp.contribution_id = co.id
+      LEFT JOIN civicrm_participant_payment pp ON pp.contribution_id = co.id
+      WHERE $sub_where_clause
+      GROUP BY co.contact_id";
 
     return " civicrm_contact AS contact
-      INNER JOIN civicrm_contribution c ON c.contact_id = contact.id
-      INNER JOIN ($sub_query) c2 ON c.contact_id = c2.contact_id AND (c.receive_date = c2.min_receive_date OR c.created_date = c2.min_receive_date)";
+      INNER JOIN ($sub_query) c ON contact.id = c.contact_id";
   }
 
   /**
@@ -157,13 +157,22 @@ GROUP BY contact.id
     $clauses = array();
     $clauses[] = "contact.is_deleted = 0";
 
+    if (!empty($this->_formValues['receive_date_from'])) {
+      $receive_date_from = CRM_Utils_Date::processDate($this->_formValues['receive_date_from']);
+      $clauses[] = "c.min_receive_date >= '$receive_date_from'";
+    }
+    if (!empty($this->_formValues['receive_date_to'])) {
+      $receive_date_to = CRM_Utils_Date::processDate($this->_formValues['receive_date_to']);
+      $clauses[] = "c.min_receive_date <= '$receive_date_to'";
+    }
+
     return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
   function buildForm(&$form){
     // Define the search form fields here
 
-    $form->addDateRange('receive_date', ts('First time donation donors').' - '.ts('From'), NULL, FALSE);
+    $form->addDateRange('receive_date', ts('Receive Date').' - '.ts('From'), NULL, FALSE);
 
     $recurring = $form->addRadio('recurring', ts('Recurring Contribution'), $this->_recurringStatus);
     $form->addSelect('contribution_page_id', ts('Contribution Page'), array('' => ts('- select -')) + $this->_contributionPage);
@@ -183,7 +192,7 @@ GROUP BY contact.id
     $from = !empty($this->_formValues['receive_date_from']) ? $this->_formValues['receive_date_from'] : NULL;
     $to = !empty($this->_formValues['receive_date_to']) ? $this->_formValues['receive_date_to'] : NULL;
     if ($from || $to) {
-      $to = empty($to) ? ts('Today') : $to;
+      $to = empty($to) ? ts('no limit') : $to;
       $from = empty($from) ? ' ... ' : $from;
       $qill[1]['receiveDateRange'] = ts("Receive Date").': '. $from . '~' . $to;
     }
@@ -251,10 +260,12 @@ GROUP BY contact.id
     $receive_date_from = CRM_Utils_Array::value('receive_date_from', $this->_formValues);
     $receive_date_to = CRM_Utils_Array::value('receive_date_to', $this->_formValues);
     if ($receive_date_from) {
-      $clauses[] = "receive_date >= '$receive_date_from 00:00:00'";
+      $receive_date_from = CRM_Utils_Date::processDate($receive_date_from);
+      $clauses[] = "receive_date >= '$receive_date_from'";
     }
     if ($receive_date_to) {
-      $clauses[] = "receive_date <= '$receive_date_to 23:59:59'";
+      $receive_date_to = CRM_Utils_Date::processDate($receive_date_to, '23:59:59');
+      $clauses[] = "receive_date <= '$receive_date_to'";
     }
 
     $recurring = CRM_Utils_Array::value('recurring', $this->_formValues);

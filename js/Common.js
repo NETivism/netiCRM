@@ -401,13 +401,13 @@ function hide(block_id)
  * @return
  */
 function toggleCheckboxVals(fldPrefix,object) {
-    if ( object.id == 'toggleSelect' && cj(object).is(':checked') ) {
-       cj('input[id*="' + fldPrefix + '"],Input[id*="toggleSelect"]').attr('checked', true);
-       cj('input[name=radio_ts][value=ts_all]').removeAttr('checked');
-       cj('input[name=radio_ts][value=ts_sel]').trigger('click');
-    } else {
-       cj('input[id*="' + fldPrefix + '"],Input[id*="toggleSelect"]').attr('checked', false);
-    }
+  if (object.id === 'toggleSelect' && cj(object).is(':checked')) {
+    cj('input[id*="' + fldPrefix + '"],Input[id*="toggleSelect"]').prop('checked', true);
+    cj('input[name=radio_ts][value=ts_all]').prop('checked', false);
+    cj('input[name=radio_ts][value=ts_sel]').trigger('click');
+  } else {
+    cj('input[id*="' + fldPrefix + '"],Input[id*="toggleSelect"]').prop('checked', false);
+  }
 }
 
 function countSelectedCheckboxes(fldPrefix, form) {
@@ -429,21 +429,20 @@ function toggleTaskAction( status ) {
   var $radio_ts_sel = cj("input[name=radio_ts][value=ts_sel]");
 
   if (!$radio_ts_sel.length) {
-    $radio_ts_all.attr("checked", "checked");
+    $radio_ts_all.prop("checked", true);
   }
 
-  if ($radio_ts_all.attr("checked") == 'checked' || $radio_ts_sel.attr("checked") == 'checked') {
+  if ($radio_ts_all.prop("checked") === true || $radio_ts_sel.prop("checked") === true) {
     status = true;
   }
 
   var formElements = ['task', 'Go', 'Print'];
-  for(var i=0; i<formElements.length; i++ ) {
+  for (var i = 0; i < formElements.length; i++) {
     var $ele = cj('#' + formElements[i]);
     if ($ele.length) {
       if (status) {
         $ele.removeAttr('disabled');
-      }
-      else{
+      } else {
         $ele.attr('disabled', 'disabled');
       }
     }

@@ -639,9 +639,11 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       $this->set('style', 'origin');
     }
     if($this->_values['is_active'] & CRM_Contribute_BAO_ContributionPage::IS_SPECIAL && $_GET['snippet'] != 4 && $this->get('style') != 'origin'){
+      $bgFile = basename($this->_values['background_URL']);
+      $bgFileMobile = basename($this->_values['mobile_background_URL']);
       $this->assign('intro_text', $this->_values['intro_text']);
-      $this->assign('backgroundImageUrl', $this->_values['background_URL']);
-      $this->assign('mobileBackgroundImageUrl', $this->_values['mobile_background_URL']);
+      $this->assign('backgroundImageUrl', str_replace($bgFile, urlencode($bgFile), $this->_values['background_URL']));
+      $this->assign('mobileBackgroundImageUrl', str_replace($bgFileMobile, urlencode($bgFileMobile), $this->_values['mobile_background_URL']));
       $this->assign('special_style', 1);
       $this->assign('min_amount', (float) $this->_values['min_amount']);
       $this->assign('max_amount', (float) $this->_values['max_amount']);
@@ -653,17 +655,6 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
         ),
       );
       CRM_Utils_System::addHTMLHead($object);
-
-      /** civicrm_instrument is not the table included by civicrm, and afraid of it ban the contributor.
-      $query_params = array(
-        1 => array($this->_id, 'Integer'),
-      );
-      $payment_instruments = CRM_Core_DAO::singleValueQuery("SELECT payment_instruments FROM civicrm_instrument WHERE entity_id = %1 AND entity_table = 'civicrm_contribution_page'", $query_params);
-      $active_instruments = unserialize($payment_instruments);
-      if(count($active_instruments) == 1 && isset($active_instruments['credit_card'])){
-        $this->assign('credit_card_only', 1);
-      }
-      */
     }
 
 

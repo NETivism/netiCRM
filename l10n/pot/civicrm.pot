@@ -49119,3 +49119,52 @@ msgstr ""
 
 msgid "2. If you have already registered an account on this site, you can click Forgot Password, enter your email, and get the login link from your mailbox."
 msgstr ""
+
+#: templates/CRM/Contribute/Form/PCP/PCPAccount.tpl
+msgid "This is a page for create PCP for a new contact. To create your own personal campaign, visit this <a href=\"%1\">link</a>."
+msgstr ""
+
+msgid "Create a Personal Campaign Page for others"
+msgstr ""
+
+msgid "To add pcp for others, click <a href=\"%1\">Create a Personal Campaign Page for others</a> to create page."
+msgstr ""
+
+#: templates/CRM/Contribute/Page/PCP.tpl
+msgid "Search Personal Campaign Pages"
+msgstr ""
+
+#: templates/CRM/Contribute/Page/PCP.tpl
+#: templates/CRM/Contribute/Form/PCP/PCP.tpl
+msgid "Belonging Main Contribution Page"
+msgstr ""
+
+msgid "Draft"
+msgstr ""
+
+#: CRM/Contribute/Page/PCP.php
+msgid "Revoke to Draft"
+msgstr ""
+
+#: neticrm/civicrm_instrument.module
+msgid "The payment processor you choose does not support annual recurring payments."
+msgstr ""
+
+msgid "%1 only supports monthly recurring payments."
+msgstr ""
+
+#: templates/CRM/Contribute/Page/PCPInfo.tpl
+msgid "Supported by %1 people"
+msgstr ""
+
+#: templates/CRM/Form/attachment.tpl
+msgid "Please remove the current attachment before selecting images from the gallery."
+msgstr ""
+
+#: templates/CRM/Form/attachment.tpl
+msgid "You can use our preset images from the gallery or upload your own in the attached file below."
+msgstr ""
+
+#: templates/CRM/Form/attachment.tpl
+msgid "Select from gallery"
+msgstr "" 

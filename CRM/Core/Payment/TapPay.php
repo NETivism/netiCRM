@@ -247,19 +247,10 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
 
     if (empty($referContributionId)) {
       // Clone Contribution
-      $c = clone $firstContribution;
-      unset($c->id);
-      unset($c->receive_date);
-      unset($c->cancel_date);
-      unset($c->cancel_reason);
-      unset($c->invoice_id);
-      unset($c->receipt_date);
-      unset($c->receipt_id);
-      unset($c->trxn_id);
-      $c->contribution_status_id = 2;
-      $c->created_date = date('YmdHis');
+      // trxn_id will update after copy contribution.
+      $hash = hash('sha256', $firstContributionId);
+      $c = CRM_Core_Payment_BaseIPN::copyContribution($firstContribution, $recurringId, $hash);
       $c->total_amount = $contributionRecur->amount;
-      $c->save();
     }
     else {
       $c = new CRM_Contribute_DAO_Contribution();
@@ -743,6 +734,7 @@ WHERE
   $cycleDayFilter AND
   (SELECT MAX(created_date) FROM civicrm_contribution WHERE contribution_recur_id = r.id GROUP BY r.id) < '$currentDate'
 AND r.contribution_status_id = 5
+AND r.frequency_unit = 'month'
 AND p.payment_processor_type = 'TapPay'
 GROUP BY r.id
 ORDER BY r.id

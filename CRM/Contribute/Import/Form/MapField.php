@@ -104,10 +104,19 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
    * @access public
    */
   public function defaultFromHeader($columnName, &$patterns) {
+    // Validate the column name to ensure it contains only alphanumeric characters
     if (!preg_match('/^[0-9a-z]$/i', $columnName)) {
+      // Escape any special characters and remove parenthesis content
       $columnMatch = trim(preg_replace('/([\.\?\+\*\(\)\[\]\{\}\/])/', '\\\\$1', preg_replace('/\(.*\)/', '', $columnName)));
+
+      // refs #38980, workaround for first name trailing space
+      $mapperFields = $this->_mapperFields;
+      if (isset($mapperFields['first_name'])) {
+        $mapperFields['first_name'] = trim($mapperFields['first_name']);
+      }
+
       // Find matching columns in the mapper fields array
-      $matches = preg_grep('/(^'.$columnMatch.'$)|(^\w+\::'.$columnMatch.'$)/iu', $this->_mapperFields);
+      $matches = preg_grep('/(^'.$columnMatch.'$)|(^\w+\::'.$columnMatch.'$)/iu', $mapperFields);
 
       // If there is exactly one match, mark the column as used and return its key
       if (is_array($matches) && count($matches) == 1) {
