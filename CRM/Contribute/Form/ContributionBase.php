@@ -643,7 +643,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       $bgFileMobile = basename($this->_values['mobile_background_URL']);
       $this->assign('intro_text', $this->_values['intro_text']);
       $this->assign('backgroundImageUrl', str_replace($bgFile, urlencode($bgFile), $this->_values['background_URL']));
-      $this->assign('mobileBackgroundImageUrl', str_replace($bgFileMobil, urlencode($bgFileMobile), $this->_values['mobile_background_URL']));
+      $this->assign('mobileBackgroundImageUrl', str_replace($bgFileMobile, urlencode($bgFileMobile), $this->_values['mobile_background_URL']));
       $this->assign('special_style', 1);
       $this->assign('min_amount', (float) $this->_values['min_amount']);
       $this->assign('max_amount', (float) $this->_values['max_amount']);

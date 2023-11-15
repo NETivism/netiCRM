@@ -49667,3 +49667,19 @@ msgstr "%1 僅僅支援每月定期定額。"
 #: templates/CRM/Contribute/Page/PCPInfo.tpl
 msgid "Supported by %1 people"
 msgstr "%1 人響應"
+
+#: templates/CRM/Form/attachment.tpl
+msgid ""
+"Please remove the current attachment before selecting images from the "
+"gallery."
+msgstr "在從圖庫選擇圖片之前，請先移除目前已附加的檔案。"
+
+#: templates/CRM/Form/attachment.tpl
+msgid ""
+"You can use our preset images from the gallery or upload your own in the "
+"attached file below."
+msgstr "您可以使用我們預設的圖庫裡的圖片，或者在下方附加的檔案區域上傳您自己的圖片。"
+
+#: templates/CRM/Form/attachment.tpl
+msgid "Select from gallery"
+msgstr "從圖庫中選擇"
