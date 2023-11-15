@@ -50,12 +50,20 @@
     <div id="attachments" class="attachments">
     <table class="form-layout-compressed">
     {if $context EQ 'pcpCampaign'}
-        <tr>
-              <td class="label">{ts}Select from gallery{/ts}</td>
+        <tr class="attachments-upload-your-own-image-row">
+              <td><label for="upload-your-own-image">{ts}Upload Your Own Image?{/ts}</label></td>
+              <td>
+                  <input type="checkbox" id="upload-your-own-image" name="upload-your-own-image" />
+                  <div class="description">
+                  </div>
+              </td>
+        </tr>
+        <tr class="attachments-select-from-gallery-row">
+              <td class="label"><label>{ts}Select from gallery{/ts}</label></td>
               <td class="view-value select-from-gallery pcp-select-from-gallery">
                   <div class="description">
                   {if $currentAttachmentURL}
-                    {ts}Please remove the current attachment before selecting images from the gallery.{/ts}
+                    {ts}Before selecting images from the gallery, please uncheck the 'Upload Your Own Image?' checkbox and remove any currently attached file.{/ts}
                   {else}
                     {ts}You can use our preset images from the gallery or upload your own in the attached file below.{/ts}
                   {/if}
@@ -67,10 +75,20 @@
                       const presetImgStartIndex = 1;
                       const presetImgMaxNum = 5;
 
-                      function disableSelectGallery() {
-                        let desc = "{/literal}{ts}Please remove the current attachment before selecting images from the gallery.{/ts}{literal}";
-                        $('input[name="preset_image"][type="hidden"]').val('');
+                      function enableSelectGallery() {
+                        let desc = "{/literal}{ts}You can use our preset images from the gallery or upload your own in the attached file below.{/ts}{literal}";
                         $('.pcp-select-from-gallery .description').text(desc);
+                        $('.pcp-preset-img-list').addClass('is-active');
+                        $(document).on('click', '.pcp-preset-img-list.is-active .item', function() {
+                          let imgId = $(this).attr('data-img-id');
+                          setPresetImg(imgId);
+                        });
+                      }
+
+                      function disableSelectGallery() {
+                        let desc = "{/literal}{ts}Before selecting images from the gallery, please uncheck the 'Upload Your Own Image?' checkbox and remove any currently attached file.{/ts}{literal}";
+                        $('.pcp-select-from-gallery .description').text(desc);
+                        $('input[name="preset_image"][type="hidden"]').val('');
                         $(document).off('click', '.pcp-preset-img-list.is-active .item');
                         $('.pcp-preset-img-list.is-active').removeClass('is-active');
                         $('.pcp-preset-img-list .item.is-selected').removeClass('is-selected');
@@ -115,6 +133,13 @@
                         $formFile.change(function() {
                           if ($(this).prop('files').length > 0) {
                             disableSelectGallery();
+                            $('#upload-your-own-image').prop('checked', true);
+                            $('#upload-your-own-image').prop('disabled', true);
+                          }
+                          else {
+                            enableSelectGallery();
+                            $('#upload-your-own-image').prop('checked', false);
+                            $('#upload-your-own-image').prop('disabled', false);
                           }
                         });
                       }
@@ -122,6 +147,15 @@
                       if (pageAction != 2) {
                         setPresetImg();
                       }
+
+                      $(document).on('change', '#upload-your-own-image', function() {
+                        if ($(this).is(':checked')) {
+                          disableSelectGallery();
+                        }
+                        else {
+                          enableSelectGallery();
+                        }
+                      });
                     });
                   })(cj);
                   {/literal}</script>
@@ -129,7 +163,7 @@
         </tr>
     {/if}
     {if $form.attachFile.$emptyStringKey}
-            <tr>
+            <tr class="attachments-form-file-row">
                 <td class="label">{$form.attachFile.$emptyStringKey.label}</td>
                 <td>{$form.attachFile.$emptyStringKey.html}<br />
                   {if $context EQ 'pcpCampaign'}
@@ -139,11 +173,11 @@
             </tr>
     {/if}
     {if $currentAttachmentURL}
-        <tr>
+        <tr class="attachments-current-attachment-row">
             <td class="label">{ts}Current Attachment(s){/ts}</td>
             <td class="view-value current-attachments"><strong>{$currentAttachmentURL}</strong></td>
         </tr>
-        <tr>
+        <tr class="attachments-delete-current-attachment-row">
             <td class="label">&nbsp;</td>
             <td>{$form.is_delete_attachment.html}&nbsp;{$form.is_delete_attachment.label}<br />
                 <span class="description">{ts}Check this box and click Save to delete all current attachments.{/ts}</span>
