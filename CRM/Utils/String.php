@@ -665,14 +665,14 @@ class CRM_Utils_String {
       if (preg_match('/^0\d+$/', $str)) {
         return $str;
       }
-      if (is_float($str)) {
+      if (filter_var($str, FILTER_VALIDATE_FLOAT)) {
         return (float) $str;
       }
-      if (is_int($str)) {
+      if (filter_var($str, FILTER_VALIDATE_INT)) {
         return (int) $str;
       }
       if (is_numeric($str)) {
-        return (int) $str;
+        return (float) $str;
       }
     }
     return $str;
