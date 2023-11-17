@@ -504,7 +504,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
                 }
             }
 */
-      if(!empty($this->_paymentProcessors) && count($this->_paymentProcessors == 1)){
+      if(!empty($this->_paymentProcessors) && count($this->_paymentProcessors) == 1){
         $pid = key($this->_paymentProcessors);
         $this->_defaults['payment_processor'] = $pid;
       }
