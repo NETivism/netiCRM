@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: CC Chu <poliphilonet@gmail.com>, 2020-2023\n"
+"Last-Translator: 馮 佳今, 2022-2023\n"
 "Language-Team: Chinese (Taiwan) (http://app.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49667,3 +49667,48 @@ msgstr "%1 僅僅支援每月定期定額。"
 #: templates/CRM/Contribute/Page/PCPInfo.tpl
 msgid "Supported by %1 people"
 msgstr "%1 人響應"
+
+#: templates/CRM/Form/attachment.tpl
+msgid ""
+"Please remove the current attachment before selecting images from the "
+"gallery."
+msgstr "在從圖庫選擇圖片之前，請先移除目前已附加的檔案。"
+
+#: templates/CRM/Form/attachment.tpl
+msgid ""
+"You can use our preset images from the gallery or upload your own in the "
+"attached file below."
+msgstr "您可以使用我們預設的圖庫裡的圖片，或者在下方附加的檔案區域上傳您自己的圖片。"
+
+#: templates/CRM/Form/attachment.tpl
+msgid "Select from gallery"
+msgstr "從圖庫中選擇"
+
+#: CRM/Admin/Form/Setting/Receipt.php
+msgid "Email Receipt Password"
+msgstr "電子郵件收據密碼"
+
+msgid "Email Receipt Password Explanation Text"
+msgstr "電子郵件收據密碼說明文案"
+
+#: templates/CRM/Admin/Form/Setting/Receipt.tpl
+msgid ""
+"After activation, a password will be added to the email receipt. If the "
+"receipt includes tax filing credentials (such as ID number or Uniform "
+"Number), encryption will be done using these credentials. If these fields "
+"are not present, the recipient's email address will be used for encryption."
+msgstr "啟用後，將會為電子郵件收據加上密碼，若收據中有包含報稅憑證（例如身份證字號、統一編號），將會用報稅憑證進行加密；若沒有該欄位的值，將會用收件人 Email 地址加密。"
+
+msgid ""
+"If no specific text is set, the default text will be: Please enter your ID "
+"number or Email address to open your receipt."
+msgstr "若未設定文案，預設文案為「請輸入身分證字號或Email地址開啟您的收據。」"
+
+#: CRM/Admin/Form/Setting/Miscellaneous.php
+msgid "Path to qpdf executable"
+msgstr "執行qpdf的路徑"
+
+#: templates/CRM/Admin/Form/Setting/Miscellaneous.tpl
+msgid ""
+"If qpdf is installed, CiviCRM will use it to generate PDF form letters."
+msgstr "如果安裝了 qpdf，CiviCRM 將使用它來產生 PDF 。"
