@@ -34,7 +34,7 @@
       <a href="{$create_pcp_for_others_link}" class="button"><span><i class="zmdi zmdi-accounts-add"></i> {ts}Create a Personal Campaign Page for others{/ts}</span></a>
     </div>
   </div>
-  {elseif $is_manager && $create_pcp_for_others}
+  {elseif $create_pcp_for_others}
     {capture assign="create_pcp_for_myself"}{crmURL p='civicrm/contribute/campaign' q="action=add&reset=1&pageId=`$page_id`"}{/capture}
     <div class="messages">
       {ts 1="$create_pcp_for_myself"}This is a page for create PCP for a new contact. To create your own personal campaign, visit this <a href="%1">link</a>.{/ts}
