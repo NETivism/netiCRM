@@ -151,16 +151,16 @@ cj( 'ul.token-input-list-facebook, div.token-input-dropdown-facebook' ).css( 'wi
 {if $config->nextEnabled}
 <div class="nme-setting-panels">
   <div class="nme-setting-panels-inner">
-  <div class="nme-setting-panels-content" id="nme-setting-panels-content">
-    <div id="nme-aicompletion" class="nme-aicompletion nme-setting-panel is-active">
-      <div class="nme-setting-panel-inner">
-        <h3 class="nme-setting-panel-title">{ts}AI Copywriter{/ts}</h3>
-        <div class="nme-setting-panel-content">
-          {include file="CRM/AI/AICompletion.tpl"}
+    <div class="nme-setting-panels-content" id="nme-setting-panels-content">
+      <div id="nme-aicompletion" class="nme-aicompletion nme-setting-panel is-active">
+        <div class="nme-setting-panel-inner">
+          <h3 class="nme-setting-panel-title">{ts}AI Copywriter{/ts}</h3>
+          <div class="nme-setting-panel-content">
+            {include file="CRM/AI/AICompletion.tpl"}
+          </div>
         </div>
       </div>
     </div>
-  </div>
   </div>
   <div class="nme-setting-panels-trigger" data-tooltip data-tooltip-placement="w"><i
  class="zmdi zmdi-settings"></i></div>

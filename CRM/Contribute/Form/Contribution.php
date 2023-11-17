@@ -1401,7 +1401,7 @@ WHERE  contribution_id = {$this->_id}
       CRM_Contribute_Form_AdditionalInfo::postProcessCommon($params, $this->_params);
 
       if (empty($this->_params['invoice_id'])) {
-        $this->_params['invoiceID'] = md5(uniqid(rand(), TRUE));
+        $this->_params['invoiceID'] = md5(uniqid((string)rand(), TRUE));
       }
       else {
         $this->_params['invoiceID'] = $this->_params['invoice_id'];

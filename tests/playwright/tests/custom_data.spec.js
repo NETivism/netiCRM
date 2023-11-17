@@ -55,7 +55,7 @@ async function add_field(field_name, data_type, input_type, should_fill_options=
     element = 'select[name="data_type[1]"]';
     await utils.findElement(page, element);
     await utils.selectOption(page.locator(element), {index: input_type});
-    
+
     if (should_fill_options){
         /* click dropdown to invoke onclick function */
         await utils.clickElement(page, page.locator(element));
@@ -155,7 +155,7 @@ test.describe.serial('Custom Data', () => {
 
         /* Step 3: Add Integer, Number, Money, Note, Date, Yes or No, State/Province, Country, File, Link, Contact Reference fields. */
         await test.step('Add Integer, Number, Money, Note, Date, Yes or No, State/Province, Country, File, Link, Contact Reference fields.', async () =>{
-        
+
             /* Step 3-1: Add Integer field. */
             await add_field('Integer', 1, 0, false);
             await click_submit();
@@ -225,7 +225,6 @@ test.describe.serial('Custom Data', () => {
     });
 
     test('Check Preview and Add Contact', async () => {
-        test.slow();
         /* Step 4: Check Preview. */
         await test.step('Check Preview.', async () =>{
 
@@ -244,7 +243,7 @@ test.describe.serial('Custom Data', () => {
 
             element = 'a[title="Preview Custom Field"]';
             await utils.findElement(page, element);
-            
+
             /* get all fields id */
             vars.ids = await page.evaluate((element) => {
               const all_links = Array.from(document.querySelectorAll(element));
@@ -291,7 +290,7 @@ test.describe.serial('Custom Data', () => {
             });
 
             await expect(select_ids.length).not.toEqual(0);
-            
+
             /* Step 4-4: Get all radio input id. */
             const radio_ids = await page.evaluate(() => {
                 const all_radio = document.getElementById('Preview').querySelectorAll('input[type="radio"]');
@@ -325,7 +324,7 @@ test.describe.serial('Custom Data', () => {
             });
 
             await expect(checkbox_ids.length).not.toEqual(0);
-            
+
             /* Step 4-6: Get all textarea id. */
             const textarea_ids = await page.evaluate(() => {
                 const all_textarea = Array.from(document.querySelectorAll('#Preview textarea'));
@@ -348,7 +347,7 @@ test.describe.serial('Custom Data', () => {
             id_no_duplicate.sort((a, b) => a - b);
 
             await expect(id_no_duplicate).toEqual(vars.ids);
-        
+
         });
 
         /* Step 5: Check Add Contact. */
@@ -364,14 +363,14 @@ test.describe.serial('Custom Data', () => {
 
             /* get custom data id */
             vars.custom_id = (await page.locator(element).locator('tr').count()) - 1;
-            
+
             /* open new individual page */
             await page.goto('civicrm/contact/add?reset=1&ct=Individual');
             await utils.wait(wait_secs);
 
             element = 'customData' + vars.custom_id;
             await utils.findElement(page, '#' + element);
-            
+
             /* Step 5-2: Get all text input id. */
             const text_ids = await page.evaluate((element) => {
                 const all_text = document.getElementById(element).querySelectorAll('input[type="text"]:not(.hiddenElement), input[type="file"]');
@@ -390,7 +389,7 @@ test.describe.serial('Custom Data', () => {
             });
 
             await expect(text_ids.length).not.toEqual(0);
-            
+
             /* Step 5-3: Get all select id. */
             const select_ids = await page.evaluate((element) => {
                 const all_select = document.getElementById(element).querySelectorAll('select');
@@ -473,7 +472,7 @@ test.describe.serial('Custom Data', () => {
 
         /* Step 6: Input All Fields. */
         await test.step('Input All Fields.', async () => {
-        
+
             /* 6-1: Filled up last name and first name. */
             element = '#last_name';
             await utils.findElement(page, element);
@@ -493,7 +492,7 @@ test.describe.serial('Custom Data', () => {
                 }
                 return text_ids;
             }, vars.custom_id);
-            
+
             text_ids.forEach((text_id) => {
                 vars.text_id_for_input.push(text_id);
             });
@@ -514,23 +513,33 @@ test.describe.serial('Custom Data', () => {
                     await utils.fillInput(page.locator(element), rand_int);
                 }
             }
-            
+
             /* Step 6-4: Get all select(not multi) id. */
             var select_id_for_input = [];
             const select_ids = await page.evaluate((custom_id) => {
-                const all_select = document.getElementById(`customData${custom_id}`).querySelectorAll('select');
                 const select_ids = [];
+                const adv_selector_ids_array = [];
+                const adv_selector_ele = `#customData${custom_id} table.advmultiselect select`;
+                const adv_selector_ids = document.querySelectorAll(adv_selector_ele);
+                for(let i = 0; i < adv_selector_ids.length; i++) {
+                    const adv_selector_array = adv_selector_ids[i].id.split('_');
+                    adv_selector_ids_array.push(adv_selector_array[1]);
+                }
+
+                const all_select = document.getElementById(`customData${custom_id}`).querySelectorAll('select');
                 for (let i = 0; i < all_select.length; i++) {
                     const sp = all_select[i].id.split('_');
-                    select_ids.push(sp[1]);
+                    if (!adv_selector_ids_array.includes(sp[1])) {
+                        select_ids.push(sp[1]);
+                    }
                 }
                 return select_ids;
             }, vars.custom_id);
-            
+
             select_ids.forEach((select_id) => {
                 select_id_for_input.push(select_id);
             });
-            
+
             await expect(select_id_for_input.length).not.toEqual(0);
 
             /* Step 6-5: Input all select(not multi). */
@@ -559,13 +568,13 @@ test.describe.serial('Custom Data', () => {
                 }
                 return radio_ids;
             }, vars.custom_id);
-            
+
             radio_ids.forEach((radio_id) => {
                 vars.radio_id_for_input.push(radio_id);
             });
-            
+
             await expect(vars.radio_id_for_input.length).not.toEqual(0);
-            
+
             /* Step 6-7: Input all radio. */
             for (var radio_id of vars.radio_id_for_input) {
                 element = `input[name="custom_${radio_id}_-1"]`;
@@ -577,11 +586,11 @@ test.describe.serial('Custom Data', () => {
             const checkbox_id = await page.evaluate((custom_id) => {
                 return document.getElementById(`customData${custom_id}`).querySelectorAll('input[type="checkbox"]')[0].id;
             }, vars.custom_id);
-            
+
             element = `input.form-checkbox[name="${checkbox_id}"]`;
             await utils.findElement(page, element);
             await utils.checkInput(page, page.locator(element).first());
-            
+
             /* Step 6-9: Input advanced multi select. */
             const adv_selector = `#customData${vars.custom_id} table.advmultiselect select`;
             await utils.findElement(page, adv_selector);
@@ -606,13 +615,13 @@ test.describe.serial('Custom Data', () => {
 
         /* Step 7: Check All Fields Exists in Edit Page. */
         await test.step('Check All Fields Exists in Edit Page', async () => {
-        
+
             /* Step 7-1: Go to edit page. */
             element = 'a.edit';
             await utils.findElement(page, element);
             await utils.clickElement(page, page.locator(element).first());
             await expect(page.locator('.crm-error')).toHaveCount(0);
-            
+
             await utils.wait(wait_secs);
 
             /* Step 7-2: Check all pure text. */
@@ -627,7 +636,7 @@ test.describe.serial('Custom Data', () => {
             }, vars.custom_id);
 
             vars.ids_for_check = [...text_ids];
-            
+
             /* Step 7-3: Get all select id. */
             const select_ids = await page.evaluate((custom_id) => {
                 const all_select = document.getElementById(`customData${custom_id}`).querySelectorAll('select');
@@ -638,11 +647,11 @@ test.describe.serial('Custom Data', () => {
                 }
                 return select_ids;
             }, vars.custom_id);
-        
+
             select_ids.forEach((selectId) => {
                 vars.ids_for_check.push(selectId);
             });
-        
+
             /* Step 7-4: Get all radio input id. */
             const radio_ids = await page.evaluate((custom_id) => {
                 const all_radio = document.getElementById(`customData${custom_id}`).querySelectorAll('input[type="radio"]');
@@ -698,8 +707,8 @@ test.describe.serial('Custom Data', () => {
             /* Step 7-8: Save data. */
             element = '#_qf_Contact_upload_view';
             utils.findElement(page, element);
-            await utils.clickElement(page, page.locator(element).first(), {notExist: '.crm-error'});            
-        
+            await utils.clickElement(page, page.locator(element).first(), {notExist: '.crm-error'});
+
         });
 
     });

@@ -11,6 +11,7 @@
 <xi:include href="ContributionTapPay.xml"   parse="xml" />
 <xi:include href="ContributionTapPayLog.xml"  parse="xml" />
 <xi:include href="ContributionAllPay.xml"   parse="xml" />
+<xi:include href="ContributionSpgateway.xml"   parse="xml" />
 <xi:include href="ContributionTaiwanACH.xml"  parse="xml" />
 <xi:include href="Premium.xml"              parse="xml" />
 <xi:include href="Product.xml"              parse="xml" />

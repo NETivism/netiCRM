@@ -51,6 +51,7 @@ class Encrypt
 
     public function output($filePath = null)
     {
+        require_once('random_compat/lib/random.php');
         if (!$this->NOFILE && is_null($filePath)) {
             throw new Exception("Output Filepath cannot be NULL when NOFILE is False");
         }

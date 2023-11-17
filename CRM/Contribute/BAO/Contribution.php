@@ -867,6 +867,10 @@ INNER JOIN  civicrm_contact contact ON ( contact.id = civicrm_contribution.conta
               if($contribution_status_id == 2){
                 $return = TRUE;
               }
+              // have been failed, but now is waiting for payment.
+              if($contribution_status_id == 4){
+                $return = TRUE;
+              }
             }
           }
           elseif(!empty($negative_status[$participant_status_id])){
@@ -892,7 +896,21 @@ INNER JOIN  civicrm_contact contact ON ( contact.id = civicrm_contribution.conta
         $page_id = CRM_Core_DAO::getFieldValue("CRM_Contribute_DAO_Contribution", $id, 'contribution_page_id');
         if($page_id){
           if($ids['membership']){
-          
+            $membership_type_ids = array();
+            // Retrive actived membership type list.
+            $membership_types = CRM_Member_PseudoConstant::membershipType();
+            foreach ($membership_types as $membership_type_id => $membership_type) {
+              // Search for membership of the contact each types.
+              $membership = CRM_Member_BAO_Membership::getContactMembership($ids['contact_id'], $membership_type_id , $ids['is_test']);
+              if (!empty($membership)) {
+                // If there are memberships, add to an array.
+                $membership_type_ids[] = $membership['membership_type_id'];
+              }
+            }
+            // If the array is not empty, than the contact can paid by payment.
+            if (!empty($membership_type_ids)) {
+              $return = TRUE;
+            }
           }
           else{
             $return = TRUE;
@@ -2586,17 +2604,17 @@ WHERE c.id = $id";
     $query[] = "contact_id={$params['contactID']}";
     $query[] = "cid={$params['contributionID']}";
 
-    if($params['eventID']) {
+    if(!empty($params['eventID'])) {
       $query[] = "module=event";
       $query[] = "eid={$params['eventID']}";
       $query[] = "pid={$params['participantID']}";
     }
     else {
       $query[] = "module=contribute";
-      if ( $params['membershipID'] ) {
+      if (!empty($params['membershipID'])) {
         $query[] = "mid=".$params['membershipID'];
       }
-      if ($params['related_contact']) {
+      if (!empty($params['related_contact'])) {
         $query[] = "rid=".$params['related_contact'];
         if ($params['onbehalf_dupe_alert']) {
           $query[] = "onbehalf_dupe_alert=".$params['onbehalf_dupe_alert'];

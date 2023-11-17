@@ -74,10 +74,14 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
       array('name' => 'password',
         'label' => $ppDAO->password_label,
       ),
-      array('name' => 'url_site',
+      array(
+        'name' => 'url_api',
+        'label' => ts('API URL'),
+      ),
+      array('name' => 'url_button',
         'label' => ts('Link Label'),
       ),
-      array('name' => 'url_api',
+      array('name' => 'url_site',
         'label' => ts('Link URL'),
       ),
     );
@@ -154,7 +158,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
     }
 
     // first, check if contribution exists
-    if ( $params['contribution']) {
+    if ($params['contribution']) {
       $currentContributionId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $params['contribution']['trxn_id'], 'id', 'trxn_id');
       if ($currentContributionId) {
         // update status and payment only
@@ -260,6 +264,16 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
           $blockValue['contact_id'] = $contactId;
           if ($blockName == 'address') {
             CRM_Core_BAO_Address::valueExists($blockValue);
+          }
+          elseif ($blockName == 'email') {
+            if (count($params['email']) == 1) {
+              CRM_Core_BAO_Block::blockValueExists($blockName, $blockValue);
+            }
+            else {
+              foreach($params[$blockName] as $emailKey => $emailValue) {
+                CRM_Core_BAO_Block::blockValueExists($blockName, $emailValue);
+              }
+            }
           }
           else {
             CRM_Core_BAO_Block::blockValueExists($blockName, $blockValue);
@@ -536,6 +550,12 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
       'is_primary' => 1,
       'append' => TRUE,
     );
+     $params['email'][] = array(
+      'email' => $json['receipt']['email'],
+      'location_type_id' => array_search('Billing', $locationType),
+      'is_primary' => 1,
+      'append' => TRUE,
+    );
     $phone = self::validateMobilePhone($json['user']['cellphone']);
     $params['phone'][] = array(
       'phone' => $phone ? $phone : $json['user']['cellphone'],
@@ -751,6 +771,11 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
         $params['contribution']['amount_level'] = CRM_Core_BAO_CustomOption::VALUE_SEPERATOR.CRM_Utils_Array::implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, $amountLevel).CRM_Core_BAO_CustomOption::VALUE_SEPERATOR;
       }
     }
+    else {
+      if (!empty($amountLevel)) {
+        $params['contribution']['amount_level'] = CRM_Core_BAO_CustomOption::VALUE_SEPERATOR.implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, $amountLevel).CRM_Core_BAO_CustomOption::VALUE_SEPERATOR;
+      }
+    }
 
     // handling receipt
     if (!empty($json['receipt']) && !empty($json['receipt']['receipt_type'])) {
@@ -779,6 +804,16 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
       elseif ($receiptType === '稅捐收據' && $choice === '年度寄送紙本收據') {
         // special case
         $params['contribution'][$receiptFieldsMap['receipt_type']] = 'annual_paper_receipt';
+        $needReceipt = TRUE;
+      }
+      elseif ($receiptType === '稅捐收據' && $choice === '單次寄送電子收據') {
+        // special case
+        $params['contribution'][$receiptFieldsMap['receipt_type']] = 'single_e_receipt';
+        $needReceipt = TRUE;
+      }
+      elseif ($receiptType === '稅捐收據' && $choice === '年度寄送電子收據') {
+        // special case
+        $params['contribution'][$receiptFieldsMap['receipt_type']] = 'annual_e_receipt';
         $needReceipt = TRUE;
       }
       if ($needReceipt) {

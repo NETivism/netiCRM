@@ -143,7 +143,7 @@ class CRM_Contact_Form_Search_Criteria {
     );
 
     require_once 'CRM/Contact/Form/Search.php';
-    $componentModes = CRM_Contact_Form_Search::getModeSelect();
+    $componentModes = $form->getModeSelect();
 
     if (count($componentModes) > 1) {
       $form->addElement('select',

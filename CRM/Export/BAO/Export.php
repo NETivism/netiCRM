@@ -403,7 +403,7 @@ class CRM_Export_BAO_Export {
         $allRelContactArray[$rel] = array();
         // build Query for each relationship
         $relationQuery[$rel] = new CRM_Contact_BAO_Query(0, $relationReturnProperties,
-          NULL, FALSE, FALSE, $queryMode
+          NULL, FALSE, FALSE, CRM_Contact_BAO_Query::MODE_CONTACTS
         );
         list($relationSelect, $relationFrom, $relationWhere) = $relationQuery[$rel]->query();
         $relationSelect = str_replace('civicrm_state_province.abbreviation', 'civicrm_state_province.name', $relationSelect);
@@ -1276,7 +1276,7 @@ class CRM_Export_BAO_Export {
    * Function to handle import error file creation.
    *
    **/
-  function invoke() {
+  public static function invoke() {
     $type = CRM_Utils_Request::retrieve('type', 'Positive', CRM_Core_DAO::$_nullObject);
     $parserName = CRM_Utils_Request::retrieve('parser', 'String', CRM_Core_DAO::$_nullObject);
     $fileName = CRM_Utils_Request::retrieve('file', 'String', CRM_Core_DAO::$_nullObject);
@@ -1364,7 +1364,13 @@ class CRM_Export_BAO_Export {
       $row = array();
 
       foreach ($fields as $field) {
-        $row[$field] = CRM_Utils_String::toNumber($dao->$field);
+        // Avoid "too many $dao->$field doesn't exist" error messages.
+        if (isset($dao->$field)) {
+          $row[$field] = CRM_Utils_String::toNumber($dao->$field);
+        }
+        else {
+          $row[$field] = NULL;
+        }
       }
       if ($alterRow) {
         $search->alterRow($row);

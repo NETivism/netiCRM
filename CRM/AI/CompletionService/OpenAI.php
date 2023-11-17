@@ -122,7 +122,6 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
     curl_setopt($ch, CURLOPT_POST, true);
     curl_setopt($ch, CURLOPT_POSTFIELDS, $this->_postData);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 30);
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
       'Content-Type: application/json',
       'Authorization: Bearer ' . $this->_apiKey,
@@ -208,7 +207,12 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
         flush();
         return strlen($data);
       });
-      curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+
+      // this will break event stream
+      curl_setopt($ch, CURLOPT_TIMEOUT, 300);
+
+      // the common connection timeout
+      curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
       curl_setopt($ch, CURLOPT_MAXREDIRS, 3);
       curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
       curl_setopt($ch, CURLOPT_AUTOREFERER, true);
@@ -222,6 +226,11 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
       curl_close($ch);
     }
     else {
+      // this will break when openai took too long to response
+      curl_setopt($ch, CURLOPT_TIMEOUT, 300);
+
+      // this will limit common connection timeout
+      curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
       $this->_responseData = curl_exec($ch);
       if(curl_errno($ch)){
         throw new CRM_Core_Exception(curl_error($ch));

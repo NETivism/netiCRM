@@ -76,7 +76,7 @@ class CRM_Contribute_Form_Payment extends CRM_Core_Form {
       if(!empty($this->_ids) && $state != 'ThankYou'){
         $available = CRM_Contribute_BAO_Contribution::checkPaymentAvailable($this->_id, $this->_ids, $this);
         if($available === FALSE){
-           return CRM_Core_Error::statusBounce(ts('Payment expired.'));
+           return CRM_Core_Error::statusBounce(ts('This payment cannot be made at the moment. If you have any questions, please contact the site administrator.'));
         }
         else{
           $this->_paymentProcessors = $this->get('paymentProcessors');

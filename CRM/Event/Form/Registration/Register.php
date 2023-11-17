@@ -1071,6 +1071,25 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
       $self->_preventMultipleSubmission = TRUE;
     }
 
+    // Check discount priceset is correct.
+    if (!empty($self->_values['discount'])) {
+      $participantId = $self->get('participantId');
+      $timestamp = self::getRegistrationTimestamp($participantId);
+      $discountId = CRM_Core_BAO_Discount::findSet($self->_eventId, 'civicrm_event', $timestamp);
+      if (!empty($discountId)) {
+        if (!empty($self->_values['discount'][$discountId])) {
+          if (!isset($self->_values['discount'][$discountId][$fields['amount']])) {
+            $errors['amount'] = ts('The fee you selected has expired before submission. Please reselect the fee.');
+          }
+        }
+      }
+      else {
+        if (!isset($self->_values['fee'][$fields['amount']])) {
+          $errors['amount'] = ts('The fee you selected has expired before submission. Please reselect the fee.');
+        }
+      }
+    }
+
     return empty($errors) ? TRUE : $errors;
   }
 
@@ -1169,7 +1188,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
       $this->set('amount_level', $params['amount_level']);
 
       // generate and set an invoiceID for this transaction
-      $invoiceID = md5(uniqid(rand(), TRUE));
+      $invoiceID = md5(uniqid((string)rand(), TRUE));
       $this->set('invoiceID', $invoiceID);
 
       if (is_array($this->_paymentProcessor)) {

@@ -133,7 +133,7 @@ WHERE  id IN ( $idString )
       $contactID, 'hash'
     );
     if (!$hash) {
-      $hash = md5(uniqid('', TRUE));
+      $hash = md5(uniqid((string)rand(), TRUE));
       CRM_Core_DAO::setFieldValue('CRM_Contact_DAO_Contact',
         $contactID,
         'hash', $hash

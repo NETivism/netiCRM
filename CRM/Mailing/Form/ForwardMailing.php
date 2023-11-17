@@ -89,7 +89,7 @@ class CRM_Mailing_Form_ForwardMailing extends CRM_Core_Form {
     }
 
     //insert message Text by selecting "Select Template option"
-    $this->add('textarea', 'forward_comment', ts('Comment'), array('cols' => '80', 'rows' => '8'));
+    $this->add('textarea', 'forward_comment', ts('Comment'), array('cols' => '80', 'rows' => '8', 'style' => 'display:none'));
     $this->addWysiwyg('html_comment',
       ts('HTML Message'),
       array('cols' => '80', 'rows' => '8')
@@ -123,9 +123,11 @@ class CRM_Mailing_Form_ForwardMailing extends CRM_Core_Form {
 
     $formValues = $this->controller->exportValues($this->_name);
     $params = array();
-    $params['body_text'] = $formValues['forward_comment'];
+    $params['body_text'] = $formValues['html_comment'];
     $html_comment = $formValues['html_comment'];
-    $params['body_html'] = str_replace('%7B', '{', str_replace('%7D', '}', $html_comment));
+    $html_comment = str_replace('%7B', '{', str_replace('%7D', '}', $html_comment));
+    $html_comment = str_replace("\n", "<br>", $html_comment);
+    $params['body_html'] = $html_comment;
 
     $emails = array();
     for ($i = 0; $i < 5; $i++) {
