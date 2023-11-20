@@ -72,10 +72,10 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
     $check = TRUE;
     parent::buildQuickForm($check);
 
-    // Refs #38829, Add receipt Email Encryption option.
+    // Refs #38829, Add receipt Email Encryption option
     if (defined('CIVICRM_ENABLE_PDF_ENCRYPTION') && CIVICRM_ENABLE_PDF_ENCRYPTION) {
-      $this->addCheckBox('receiptEmailEncryption', ts('Email Receipt Encryption'), array('' => 1));
-      $this->addElement('text', 'receiptEmailEncryptionText', ts('Email Receipt Encryption Explanation Text'));
+      $this->add('checkbox', 'receiptEmailEncryption', ts('Email Receipt Password'));
+      $this->addElement('text', 'receiptEmailEncryptionText', ts('Email Receipt Password Explanation Text'));
     }
   }
 
@@ -135,6 +135,20 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
     $haveAttachReceiptOption = CRM_Core_OptionGroup::getValue('activity_type', 'Email Receipt', 'name');
     if (!empty($haveAttachReceiptOption) && empty($params['receiptEmailAuto'])) {
       $params['receiptEmailAuto'] = FALSE;
+    }
+    $config = CRM_Core_Config::singleton();
+    $receiptEmailPwdEnable = CRM_Utils_Array::value('receiptEmailEncryption', $params);
+    $receiptEmailPwdText = CRM_Utils_Array::value('receiptEmailEncryptionText', $params);
+    $defaultMsg = "請輸入身分證字號或Email地址開啟您的收據。";
+    if (empty($receiptEmailPwdText)) {
+      $params['receiptEmailPwdText'] = $defaultMsg;
+      // $config->receiptEmailPwdText = $defaultMsg;
+    } else {
+      $params['receiptEmailPwdText'] = $receiptEmailPwdText;
+    }
+    $params['receiptEmailPwdEnable'] = $receiptEmailPwdEnable;
+    if (empty($params['receiptEmailPwdEnable'])) {
+      $params['receiptEmailPwdEnable'] = FALSE;
     }
 
     parent::commonProcess($params);

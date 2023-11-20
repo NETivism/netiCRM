@@ -132,7 +132,7 @@
         {if $form.receiptEmailEncryptionText}
         <tr class="crm-form-block-receiptEmailEncryptionText">
             <td class="label">{$form.receiptEmailEncryptionText.label}</td><td>{$form.receiptEmailEncryptionText.html}<br />
-            <span class="description">{ts}If no specific text is set, the default text will be: "Please enter your ID number or Email address to open your receipt.{/ts}</span>
+            <span class="description">{ts}If no specific text is set, the default text will be: Please enter your ID number or Email address to open your receipt.{/ts}</span>
             </td>
         </tr>
         {/if}
