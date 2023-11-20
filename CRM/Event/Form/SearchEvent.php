@@ -69,6 +69,8 @@ class CRM_Event_Form_SearchEvent extends CRM_Core_Form {
     $event_type = CRM_Core_OptionGroup::values('event_type', FALSE);
     $attrs = array('multiple' => 'multiple');
     $this->addElement('select', 'event_type_id', 'Event Type', $event_type, $attrs);
+    $this->addDate('event_start_date', ts('Event Dates - From'), FALSE, array('formatType' => 'searchDate'));
+    $this->addDate('event_end_date', ts('To'), FALSE, array('formatType' => 'searchDate'));
     $this->addButtons(array(
         array(
           'type' => 'refresh',
@@ -84,7 +86,7 @@ class CRM_Event_Form_SearchEvent extends CRM_Core_Form {
     $parent = $this->controller->getParent();
     $parent->set('searchResult', 1);
     if (!empty($params)) {
-      $fields = array('title', 'event_type_id');
+      $fields = array('title', 'event_type_id', 'event_start_date', 'event_end_date');
       foreach ($fields as $field) {
         if (isset($params[$field]) && !CRM_Utils_System::isNull($params[$field])) {
           if ($field == 'event_type_id') {
