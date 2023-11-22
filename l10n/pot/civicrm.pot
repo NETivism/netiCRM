@@ -49190,3 +49190,7 @@ msgstr ""
 #: templates/CRM/Admin/Form/Setting/Miscellaneous.tpl
 msgid "If qpdf is installed, CiviCRM will use it to generate PDF form letters."
 msgstr ""
+
+#: templates/CRM/Contribute/Page/PCPInfo.tpl
+msgid "Share to %1"
+msgstr ""
