@@ -971,5 +971,27 @@ class CRM_Utils_Hook {
     $className = $config->userHookClass;
     return $className::invoke( 4, $entity, $action, $params, $result, $null, 'civicrm_alterAPIResult' );
   }
+
+  /**
+   * Modifies from clause in query object of Contact_BAO_Query.
+   *
+   */
+  static function alterQueryFromClause(&$clauseArray, $mode, $queryObject) {
+    $config = CRM_Core_Config::singleton();
+    $null = &CRM_Core_DAO::$_nullObject;
+    $className = $config->userHookClass;
+    return $className::invoke( 3, $clauseArray, $mode, $queryObject, $null, $null, 'civicrm_alterQueryFromClause' );
+  }
+
+  /**
+   * Modifies where clause and qill in query object of Contact_BAO_Query.
+   *
+   */
+  static function alterQueryWhereClause(&$whereClauseArray, &$qillClauseArray, $mode, $queryObject) {
+    $config = CRM_Core_Config::singleton();
+    $null = &CRM_Core_DAO::$_nullObject;
+    $className = $config->userHookClass;
+    return $className::invoke( 4, $whereClauseArray, $qillClauseArray, $mode, $queryObject, $null, 'civicrm_alterQueryWhereClause' );
+  }
 }
 

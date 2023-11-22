@@ -1621,6 +1621,7 @@ class CRM_Contact_BAO_Query {
       $this->_qill = CRM_Utils_Array::arrayMerge($this->_qill, $this->_customQuery->_qill);
     }
 
+    CRM_Utils_Hook::alterQueryWhereClause($this->_where[0], $this->_qill[0], $this->_mode, $this);
     $clauses = array();
     $andClauses = array();
 
@@ -2128,7 +2129,7 @@ class CRM_Contact_BAO_Query {
    * @access public
    * @static
    */
-  static function fromClause(&$tables, $inner = NULL, $right = NULL, $primaryLocation = TRUE, $mode = self::MODE_CONTACTS) {
+  static function fromClause(&$tables, $inner = NULL, $right = NULL, $primaryLocation = TRUE, $mode = self::MODE_CONTACTS, $self = NULL) {
     require_once ("CRM/Core/TableHierarchy.php");
 
     $from = ' FROM civicrm_contact contact_a';
@@ -2203,6 +2204,8 @@ class CRM_Contact_BAO_Query {
     }
 
     $tables = $newTables;
+
+    CRM_Utils_Hook::alterQueryFromClause($tables, $mode, $self);
 
     foreach ($tables as $name => $value) {
       if (!$value) {
@@ -3991,8 +3994,8 @@ civicrm_relationship.start_date > {$today}
         if (!$count) {
           $this->_useDistinct = TRUE;
         }
-        $this->_fromClause = self::fromClause($this->_tables, NULL, NULL, $this->_primaryLocation, $this->_mode);
-        $this->_simpleFromClause = self::fromClause($this->_whereTables, NULL, NULL, $this->_primaryLocation, $this->_mode);
+        $this->_fromClause = self::fromClause($this->_tables, NULL, NULL, $this->_primaryLocation, $this->_mode, $this);
+        $this->_simpleFromClause = self::fromClause($this->_whereTables, NULL, NULL, $this->_primaryLocation, $this->_mode, $this);
       }
     }
     else {
