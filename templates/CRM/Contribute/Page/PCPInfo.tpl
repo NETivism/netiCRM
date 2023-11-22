@@ -181,10 +181,12 @@
       {/if}
     </div>
     {/if}
+    {if $shareUrl}
     <ul class="pcp-social-links">
-      <li><a class="social-link facebook" href="{$shareUrl.facebook}">Facebook</a></li>
-      <li><a class="social-link line" href="{$shareUrl.line}">Line</a></li>
+      <li><a class="social-link facebook" href="{$shareUrl.facebook}" target="_blank" title="{ts 1='Facebook'}Share to %1{/ts}">Facebook</a></li>
+      <li><a class="social-link line" href="{$shareUrl.line}" target="_blank" title="{ts 1='LINE'}Share to %1{/ts}">LINE</a></li>
     </ul>
+    {/if}
   </div>
 </div>
 {* window resize helper script *}
