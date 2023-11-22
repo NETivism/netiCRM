@@ -169,7 +169,9 @@
 
 <div class="pcp-sticky-header">
   <div class="inner">
+    {if $pcp.is_honor_roll && $honor}
     <div class="pcp-honor-counter">{ts 1=$honor|@count}Supported by %1 people{/ts}</div>
+    {/if}
     {if $link_display}
     <div class="pcp-donate">
       {if $contributeURL}
