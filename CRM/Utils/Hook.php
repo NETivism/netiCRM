@@ -973,25 +973,19 @@ class CRM_Utils_Hook {
   }
 
   /**
-   * Modifies from clause in query object of Contact_BAO_Query.
+   * Alter query of CRM_Contact_BAO_Query
    *
+   * @param int Mode of query component, check constant of CRM_Contact_BAO_Query::MODE_
+   * @param string $part Query component to alter in lower case. Available: select, from, where, having
+   * @param object $object Query object of CRM_Contact_BAO_Query
+   * @param array $additional Additional parameter for alter query
+   *   - part == 'from', use $additional['tables'] to alter query
    */
-  static function alterQueryFromClause(&$clauseArray, $mode, $queryObject) {
+  static function alterQuery($mode, $part, &$object, &$additional) {
     $config = CRM_Core_Config::singleton();
     $null = &CRM_Core_DAO::$_nullObject;
     $className = $config->userHookClass;
-    return $className::invoke( 3, $clauseArray, $mode, $queryObject, $null, $null, 'civicrm_alterQueryFromClause' );
-  }
-
-  /**
-   * Modifies where clause and qill in query object of Contact_BAO_Query.
-   *
-   */
-  static function alterQueryWhereClause(&$whereClauseArray, &$qillClauseArray, $mode, $queryObject) {
-    $config = CRM_Core_Config::singleton();
-    $null = &CRM_Core_DAO::$_nullObject;
-    $className = $config->userHookClass;
-    return $className::invoke( 4, $whereClauseArray, $qillClauseArray, $mode, $queryObject, $null, 'civicrm_alterQueryWhereClause' );
+    return $className::invoke( 4, $mode, $part, $object, $additional, $null, 'civicrm_alterQuery' );
   }
 }
 
