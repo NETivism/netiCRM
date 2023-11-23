@@ -44,7 +44,7 @@
 	</tr>
 	<tr class="crm-contribution-form-block-goal_amount">
 		<td class="label">{$form.goal_amount.label}</td>
-		<td>{$form.goal_amount.html|crmReplace:class:six}<br />
+		<td>{$form.goal_amount.html|crmReplace:class:six}
             <span class="description">{ts}Total amount you would like to raise for this campaign.{/ts}</span>
 		</td>
 	</tr>
@@ -55,20 +55,20 @@
 	<tr class="crm-contribution-form-block-intro_text">
 		<td class="label">{$form.intro_text.label}</td>
 		<td>
-            {$form.intro_text.html|crmReplace:class:big}<br />
+            {$form.intro_text.html|crmReplace:class:big}
             <span class="description">{ts}Introduce the campaign and why you're supporting it. This text will appear at the top of your personal page AND at the top of the main campaign contribution page when people make a contribution through your page.{/ts}</span>
         </td>
 	</tr>
 	<tr class="crm-contribution-form-block-page_text">
 		<td class="label" width="15%">{$form.page_text.label}</td>
 		<td width="85%">
-            <span class="description">{ts}Tell people why this campaign is important to you.{/ts}</span><br />
+            <span class="description">{ts}Tell people why this campaign is important to you.{/ts}</span>
             {$form.page_text.html|crmReplace:class:huge}
         </td>
 	</tr>
 	<tr class="crm-contribution-form-block-donate_link_text">
 		<td class="label">{$form.donate_link_text.label}</td>
-		<td>{$form.donate_link_text.html}<br />
+		<td>{$form.donate_link_text.html}
             <span class="description">{ts}The text for the contribute button.{/ts}</span>
 		</td>
 	</tr>

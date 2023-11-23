@@ -2181,9 +2181,29 @@ table.campaign td,
 .crm-container .pcp-sticky-header .social-link.line:hover::before {
   color: #03B24E;
 }
+
+@media (min-width: 992px) {
+  .crm-container .pcp-sticky-header .pcp-honor-counter {
+    font-size: 1rem;
+  }
+  .crm-container .pcp-sticky-header .pcp-donate .pcp-contribute-button,
+  .crm-container .pcp-sticky-header .pcp-donate .pcp-contribute-button:link {
+    font-size: 1.25rem;
+  }
+  .crm-container .pcp-sticky-header .pcp-social-links {
+    display: flex;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+}
+
+/* PCP backend */
 .crm-container .pcp-preset-img-list {
   display: flex;
-  gap: 12px;
+  flex-wrap: wrap;
+  gap: 10px;
   position: relative;
   margin: 0;
   list-style: none;
@@ -2214,13 +2234,13 @@ table.campaign td,
   top: 0;
   left: 0;
   margin: 4px;
-  width: 30px;
-  height: 30px;
+  width: 20px;
+  height: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
   font-family: var(--font-icon-zmdi);
-  font-size: 20px;
+  font-size: 16px;
   color: #fff;
   border: 2px solid #fff;
   border-radius: 50%;
@@ -2228,26 +2248,79 @@ table.campaign td,
 }
 .crm-container .pcp-preset-img-list .item img {
   display: block;
-  max-width: 180px;
+  max-width: 90px;
 }
+.crm-container .crm-contribution-campaign-form-block .form-layout-compressed {
+  display: block;
+}
+.crm-container .crm-contribution-campaign-form-block .crm-accordion-wrapper {
 
+}
+.crm-container .crm-contribution-campaign-form-block .form-layout-compressed tr {
+  display: block;
+}
+.crm-container .crm-contribution-campaign-form-block .form-layout-compressed td,
+.crm-container .crm-contribution-campaign-form-block .form-layout-compressed td.label,
+.crm-container .crm-contribution-campaign-form-block .form-layout-compressed td.content {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+}
+.crm-container .crm-contribution-campaign-form-block .form-layout-compressed td.label {
+  width: 100%;
+  text-align: left;
+}
+.crm-container .crm-contribution-campaign-form-block .crm-form-elem,
+.crm-container .crm-contribution-campaign-form-block .form-text,
+.crm-container .crm-contribution-campaign-form-block .form-textarea,
+.crm-container .crm-contribution-campaign-form-block .form-CKeditor,
+.crm-container .crm-contribution-campaign-form-block .cke {
+  width: 100%;
+}
+.crm-container .crm-contribution-campaign-form-block .cke[style*="width"] {
+  width: 100% !important;
+}
 @media (min-width: 992px) {
-  .crm-container .pcp-sticky-header .pcp-honor-counter {
-    font-size: 1rem;
+  .crm-container .pcp-preset-img-list .item img {
+    max-width: 180px;
   }
-  .crm-container .pcp-sticky-header .pcp-donate .pcp-contribute-button,
-  .crm-container .pcp-sticky-header .pcp-donate .pcp-contribute-button:link {
-    font-size: 1.25rem;
+  .crm-container .pcp-preset-img-list .item.is-selected::before,
+  .crm-container .pcp-preset-img-list .item.is-selected:hover::before {
+    margin: 4px;
+    width: 30px;
+    height: 30px;
+    font-size: 20px;
   }
-  .crm-container .pcp-sticky-header .pcp-social-links {
-    display: flex;
-    gap: 10px;
-    margin: 0;
-    padding: 0;
-    list-style: none;
+  .crm-container .crm-contribution-campaign-form-block .form-layout-compressed {
+    display: table;
+  }
+  .crm-container .crm-contribution-campaign-form-block .form-layout-compressed tr {
+    display: table-row;
+  }
+  .crm-container .crm-contribution-campaign-form-block .form-layout-compressed td,
+  .crm-container .crm-contribution-campaign-form-block .form-layout-compressed td.label,
+  .crm-container .crm-contribution-campaign-form-block .form-layout-compressed td.content {
+    display: table-cell;
+    box-sizing: content-box;
+    width: auto;
+  }
+  .crm-container .crm-contribution-campaign-form-block .form-layout-compressed td.label {
+    width: 200px;
+    text-align: right;
+  }
+  .crm-container .crm-contribution-campaign-form-block .crm-form-elem,
+  .crm-container .crm-contribution-campaign-form-block .form-text,
+  .crm-container .crm-contribution-campaign-form-block .form-textarea,
+  .crm-container .crm-contribution-campaign-form-block .form-CKeditor {
+    width: auto;
+  }
+  .crm-container .crm-contribution-campaign-form-block .six {
+    width: 7em;
+  }
+  .crm-container .crm-contribution-campaign-form-block .big {
+    width: 36em;
   }
 }
-
 
 .crm-container .ui-draggable {
   background: url("../i/draggable.png") no-repeat left 1px;
