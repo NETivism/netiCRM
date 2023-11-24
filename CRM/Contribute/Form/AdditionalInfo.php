@@ -358,7 +358,15 @@ class CRM_Contribute_Form_AdditionalInfo {
       $receiptEmailType = !empty($config->receiptEmailType) ? $config->receiptEmailType : 'copy_only';
       $receiptTask = new CRM_Contribute_Form_Task_PDF();
       $receiptTask->makeReceipt($params['contribution_id'], $receiptEmailType, TRUE);
-      $pdfFilePath = $receiptTask->makePDF(False);
+      //set encrypt password
+      $recepitPwd = $form->userEmail;
+      if (!empty($form->_contactID)) {
+        $legal_identifier =  CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $form->_contactID, 'legal_identifier');
+        if (!empty($legal_identifier)) {
+          $recepitPwd = $legal_identifier;
+        }
+      }
+      $pdfFilePath = $receiptTask->makePDF(False, True, $recepitPwd);
       $pdfFileName = strstr($pdfFilePath, 'Receipt');
       $pdfParams =  array(
         'fullPath' => $pdfFilePath,
