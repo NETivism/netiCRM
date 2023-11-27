@@ -293,7 +293,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
       'Result' => $json,
       ));
     $post = array('JSONData' => $jsonData);
-    $result = civicrm_spgateway_ipn('Credit', $post, $get);
+    CRM_Core_Payment_SPGATEWAY::doIPN('Credit', $post, $get);
     $error_msg = CRM_Core_DAO::singleValueQuery("SELECT note FROM civicrm_note WHERE entity_id = $contribution->id");
     $this->assertNotEmpty($error_msg, "In line " . __LINE__);
     $this->assertContains('Failuare', $error_msg, "In line " . __LINE__);
