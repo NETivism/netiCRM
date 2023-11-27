@@ -49194,3 +49194,10 @@ msgstr ""
 #: templates/CRM/Contribute/Page/PCPInfo.tpl
 msgid "Share to %1"
 msgstr ""
+
+#: CRM/Core/Payment/TapPay.php
+msgid "Card Category"
+msgstr ""
+
+msgid "Prepaid Card"
+msgstr ""
