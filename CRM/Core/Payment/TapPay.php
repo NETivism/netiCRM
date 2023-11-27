@@ -23,6 +23,13 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     5 => 'AMEX',
   );
 
+  public static $_cardCategory = array(
+    -1 => 'Unknown',
+    0 => 'Credit Card',
+    1 => 'Debit Card',
+    2 => 'Prepaid Card',
+  );
+
   public static $_allowRecurUnit = array('month');
 
   /**
@@ -1368,6 +1375,7 @@ LIMIT 0, 100
       $cardInfo = $tappayObject->card_info;
       $returnData[ts('Card Issuer')] = $cardInfo->issuer;
       $returnData[ts('Card Type')] = self::$_cardType[$cardInfo->type];
+      $returnData[ts('Card Category')] = ts(self::$_cardCategory[$cardInfo->funding]);
     }
     if (!empty($tappayDAO->contribution_recur_id)) {
       $autoRenew = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionRecur', $tappayDAO->contribution_recur_id, 'auto_renew');
