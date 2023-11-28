@@ -378,10 +378,10 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
     }
 
     // add receipt email encryption block
-    if ($params['receiptEmailEncryption']) {
-      $config = CRM_Core_Config::singleton();
+    $config = CRM_Core_Config::singleton();
+    if ($config->receiptEmailEncryption) {
       $defaultMsg = "請輸入身分證字號或Email地址開啟您的收據。";
-      if (empty($params['receiptEmailEncryptionText'])) {
+      if (empty($config->receiptEmailEncryptionText)) {
         $msg = $defaultMsg;
       } else {
         $msg = $config->receiptEmailEncryptionText;

@@ -368,7 +368,8 @@ class CRM_Contribute_Form_AdditionalInfo {
           }
         }
         $pdfFilePath = $receiptTask->makePDF(False, True, $recepitPwd);
-      } else {
+      }
+      else {
         $pdfFilePath = $receiptTask->makePDF(False);
       }
       $pdfFileName = strstr($pdfFilePath, 'Receipt');
@@ -568,10 +569,6 @@ class CRM_Contribute_Form_AdditionalInfo {
     }
     $templateParams['activityId'] = $activityId;
     $config = CRM_Core_Config::singleton();
-    if (defined('CIVICRM_ENABLE_PDF_ENCRYPTION') && CIVICRM_ENABLE_PDF_ENCRYPTION && $config->receiptEmailEncryption) {
-      $templateParams['receiptEmailEncryption'] = $config->receiptEmailEncryption;
-      $templateParams['receiptEmailEncryptionText'] = $config->receiptEmailEncryptionText;
-    }
     list($sendReceipt, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate($templateParams, CRM_Core_DAO::$_nullObject, array(
       0 => array('CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  array($activityId, TRUE)),
       1 => array('CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  array($activityId, FALSE)),

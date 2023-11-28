@@ -2772,7 +2772,21 @@ WHERE c.id = $id";
     $receiptTask = new CRM_Contribute_Form_Task_PDF();
     $receiptType = !empty($receiptType) ? $receiptType : 'copy_only';
     $receiptTask->makeReceipt($contributionId, $receiptType, TRUE);
-    $pdfFilePath = $receiptTask->makePDF(FALSE);
+    //set encrypt password
+    $config = CRM_Core_Config::singleton();
+    if (!empty($config->receiptEmailEncryption) && $config->receiptEmailEncryption) {
+      $recepitPwd = $contributorEmail;
+      if (!empty($params['contact_id'])) {
+        $legal_identifier =  CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $params['contact_id'], 'legal_identifier');
+        if (!empty($legal_identifier)) {
+          $recepitPwd = $legal_identifier;
+        }
+      }
+      $pdfFilePath = $receiptTask->makePDF(False, True, $recepitPwd);
+
+    } else {
+      $pdfFilePath = $receiptTask->makePDF(FALSE);
+    }
     $pdfFileName = strstr($pdfFilePath, 'Receipt');
     $pdfParams =  array(
       'fullPath' => $pdfFilePath,
