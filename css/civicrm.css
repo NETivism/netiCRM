@@ -2252,6 +2252,15 @@ table.campaign td,
   display: block;
   max-width: 90px;
 }
+.crm-container .crm-pcp-submit-buttons-top {
+  position: sticky;
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: 10;
+  padding: 10px;
+  background: #fff;
+}
 .crm-container .crm-contribution-campaign-form-block .form-layout-compressed {
   display: block;
 }

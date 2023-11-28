@@ -23,6 +23,7 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
+<div class="crm-submit-buttons crm-submit-buttons-top crm-pcp-submit-buttons-top">{include file="CRM/common/formButtons.tpl" location="top"}</div>
 <div id="help">
     {ts}Personalize the contents and appearance of your fundraising page here. You will be able to return to this page and make changes at any time.{/ts}
 </div>
@@ -79,7 +80,7 @@
 	</tr>
 </table>
 </div>
-<div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
+<div class="crm-submit-buttons crm-submit-buttons-bottom crm-pcp-submit-buttons-bottom">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
 
 <script>{literal}
 cj(document).ready(function($){
