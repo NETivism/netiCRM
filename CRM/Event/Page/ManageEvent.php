@@ -347,9 +347,9 @@ ORDER BY start_date desc
         $inputEndDate = '9999-12-31';
       }
       $clauses[] = "
-      COALESCE(start_date, '1000-01-01') <= '{$inputEndDate}'
+      IFNULL(start_date, '1000-01-01') <= '{$inputEndDate}'
       AND
-      COALESCE(end_date, '9999-12-31') >= '{$inputStartDate}'";
+      IFNULL(end_date, '9999-12-31') >= '{$inputStartDate}'";
     }
     return !empty($clauses) ? CRM_Utils_Array::implode(' AND ', $clauses) : '(1)';
   }
