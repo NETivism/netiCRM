@@ -377,6 +377,19 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
       $html = preg_replace('/<body(.*)$/im', "<body\\1\n{$meta['msg_html']}", $html);
     }
 
+    // add receipt email encryption block
+    if ($params['receiptEmailEncryption']) {
+      $config = CRM_Core_Config::singleton();
+      $defaultMsg = "請輸入身分證字號或Email地址開啟您的收據。";
+      if (empty($params['receiptEmailEncryptionText'])) {
+        $msg = $defaultMsg;
+      } else {
+        $msg = $config->receiptEmailEncryptionText;
+      }
+      $target_text = "{if \$formValues.receipt_text}";
+      $html  = str_replace($target_text, $msg.$target_text, $html);
+    }
+
     // replace tokens in the three elements (in subject as if it was the text body)
 
     $domain = CRM_Core_BAO_Domain::getDomain();

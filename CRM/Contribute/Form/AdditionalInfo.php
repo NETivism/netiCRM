@@ -359,14 +359,18 @@ class CRM_Contribute_Form_AdditionalInfo {
       $receiptTask = new CRM_Contribute_Form_Task_PDF();
       $receiptTask->makeReceipt($params['contribution_id'], $receiptEmailType, TRUE);
       //set encrypt password
-      $recepitPwd = $form->userEmail;
-      if (!empty($form->_contactID)) {
-        $legal_identifier =  CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $form->_contactID, 'legal_identifier');
-        if (!empty($legal_identifier)) {
-          $recepitPwd = $legal_identifier;
+      if (!empty($config->receiptEmailEncryption) && $config->receiptEmailEncryption) {
+        $recepitPwd = $form->userEmail;
+        if (!empty($form->_contactID)) {
+          $legal_identifier =  CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $form->_contactID, 'legal_identifier');
+          if (!empty($legal_identifier)) {
+            $recepitPwd = $legal_identifier;
+          }
         }
+        $pdfFilePath = $receiptTask->makePDF(False, True, $recepitPwd);
+      } else {
+        $pdfFilePath = $receiptTask->makePDF(False);
       }
-      $pdfFilePath = $receiptTask->makePDF(False, True, $recepitPwd);
       $pdfFileName = strstr($pdfFilePath, 'Receipt');
       $pdfParams =  array(
         'fullPath' => $pdfFilePath,
@@ -563,6 +567,11 @@ class CRM_Contribute_Form_AdditionalInfo {
       $activityId = CRM_Activity_BAO_Activity::addTransactionalActivity($contribution, 'Contribution Notification Email', $workflow['msg_title']);
     }
     $templateParams['activityId'] = $activityId;
+    $config = CRM_Core_Config::singleton();
+    if (defined('CIVICRM_ENABLE_PDF_ENCRYPTION') && CIVICRM_ENABLE_PDF_ENCRYPTION && $config->receiptEmailEncryption) {
+      $templateParams['receiptEmailEncryption'] = $config->receiptEmailEncryption;
+      $templateParams['receiptEmailEncryptionText'] = $config->receiptEmailEncryptionText;
+    }
     list($sendReceipt, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate($templateParams, CRM_Core_DAO::$_nullObject, array(
       0 => array('CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  array($activityId, TRUE)),
       1 => array('CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  array($activityId, FALSE)),

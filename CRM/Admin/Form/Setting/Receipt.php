@@ -136,19 +136,8 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
     if (!empty($haveAttachReceiptOption) && empty($params['receiptEmailAuto'])) {
       $params['receiptEmailAuto'] = FALSE;
     }
-    $config = CRM_Core_Config::singleton();
-    $receiptEmailPwdEnable = CRM_Utils_Array::value('receiptEmailEncryption', $params);
-    $receiptEmailPwdText = CRM_Utils_Array::value('receiptEmailEncryptionText', $params);
-    $defaultMsg = "請輸入身分證字號或Email地址開啟您的收據。";
-    if (empty($receiptEmailPwdText)) {
-      $params['receiptEmailPwdText'] = $defaultMsg;
-      // $config->receiptEmailPwdText = $defaultMsg;
-    } else {
-      $params['receiptEmailPwdText'] = $receiptEmailPwdText;
-    }
-    $params['receiptEmailPwdEnable'] = $receiptEmailPwdEnable;
-    if (empty($params['receiptEmailPwdEnable'])) {
-      $params['receiptEmailPwdEnable'] = FALSE;
+    if (empty($params['receiptEmailEncryption'])) {
+      $params['receiptEmailEncryption'] = FALSE;
     }
 
     parent::commonProcess($params);
