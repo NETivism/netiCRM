@@ -63,6 +63,12 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
 
     if ($this->_pageId) {
       $title = ts('Edit Your Personal Campaign Page');
+      $pcpPagePreviewUrl = CRM_Utils_System::url("civicrm/contribute/pcp/info",
+      "reset=1&id={$this->_pageId}&preview=1",
+      TRUE, NULL, FALSE,
+      TRUE
+    );
+    $this->assign('pcpPagePreviewUrl', $pcpPagePreviewUrl);
     }
 
     CRM_Utils_System::setTitle($title);
@@ -424,14 +430,14 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
     }
     elseif (!$this->_pageId) {
       if ($buttonName == '_qf_Campaign_attach') {
-        $session->pushUserContext(CRM_Utils_System::url('civicrm/contribute/pcp/info', "action=update&reset=1&id={$pcp->id}&context=standalone&key="));
+        $session->pushUserContext(CRM_Utils_System::url('civicrm/contribute/pcp/info', "action=update&reset=1&id={$pcp->id}&context=standalone&preview=1&key="));
       } else {
         $session->pushUserContext(CRM_Utils_System::url('civicrm/contribute/pcp/info', "reset=1&id={$pcp->id}&ap={$anonymousPCP}"));
       }
     }
     elseif ($this->_context == 'standalone') {
       if ($buttonName == '_qf_Campaign_attach') {
-        $session->pushUserContext(CRM_Utils_System::url('civicrm/contribute/pcp/info', "action=update&reset=1&id={$pcp->id}&context=standalone&key="));
+        $session->pushUserContext(CRM_Utils_System::url('civicrm/contribute/pcp/info', "action=update&reset=1&id={$pcp->id}&context=standalone&preview=1&key="));
       } else {
         $session->pushUserContext(CRM_Utils_System::url('civicrm/contribute/pcp/info', "reset=1&id={$pcp->id}&ap={$anonymousPCP}"));
       }

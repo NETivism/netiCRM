@@ -93,3 +93,76 @@ cj(document).ready(function($){
   });
 });
 {/literal}</script>
+
+{if $smarty.get.preview && $smarty.get.preview == 1 && isset($pcpPagePreviewUrl)}
+<link rel="stylesheet" href="{$config->resourceBase}packages/Magnific-Popup/dist/magnific-popup.css?v{$config->ver}">
+{js src=packages/Magnific-Popup/dist/jquery.magnific-popup.min.js group=999 weight=997 library=civicrm/civicrm-js-mailingeditor}{/js}
+
+<div id="pcp-preview-popup" class="pcp-preview-popup crm-preview-popup">
+  <div class="inner">
+    <div class="crm-preview-toolbar">
+      <div class="crm-preview-title">{ts}Preview{/ts}</div>
+      <div class="crm-preview-mode"><button type="button" class="crm-preview-mode-btn"
+          data-mode="desktop">{ts}Normal{/ts}</button><button type="button" class="crm-preview-mode-btn is-active"
+          data-mode="mobile">{ts}Mobile Device{/ts}</button></div><button type="button" class="crm-preview-close"><i
+          class="zmdi zmdi-close"></i></button>
+    </div>
+    <div class="crm-preview-content">
+      <div class="crm-preview-panels">
+        <div class="crm-preview-panel crm-preview-desktop-panel" data-mode="desktop">
+          <div class="desktop-preview-container preview-container">
+            <div class="preview-content"><iframe id="crm-preview-iframe-desktop" class="crm-preview-iframe" src="{$pcpPagePreviewUrl}"></iframe>
+            </div>
+          </div>
+        </div>
+        <div class="crm-preview-panel crm-preview-mobile-panel is-active" data-mode="mobile">
+          <div class="mobile-preview-container preview-container">
+            <div class="preview-content"><iframe id="crm-preview-iframe-mobile" class="crm-preview-iframe" src="{$pcpPagePreviewUrl}"></iframe>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>{literal}
+(function ($) {
+  $(function () {
+    const previewPopupInit = function () {
+      $.magnificPopup.open({
+        items: {
+          src: "#pcp-preview-popup"
+        },
+        type: "inline",
+        mainClass: "mfp-preview-popup",
+        preloader: true,
+        showCloseBtn: false,
+        callbacks: {
+          open: function () {
+            $("body").addClass("mfp-is-active");
+            $(".crm-preview-mode-btn").on("click", function () {
+              let mode = $(this).data("mode");
+              $(".crm-preview-mode-btn").removeClass("is-active");
+              $(this).addClass("is-active");
+              $(".crm-preview-panel").removeClass("is-active");
+              $(".crm-preview-panel[data-mode='" + mode + "']").addClass("is-active");
+            });
+          },
+          close: function () {
+            $("body").removeClass("mfp-is-active");
+          },
+        }
+      });
+
+      $("#crm-preview-popup").on("click", ".crm-preview-close", function () {
+        $.magnificPopup.close();
+      });
+    }
+
+    if ($.fn.magnificPopup) {
+      previewPopupInit();
+    }
+  });
+})(cj);
+{/literal}</script>
+{/if}
