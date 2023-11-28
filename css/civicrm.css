@@ -1,3 +1,5 @@
+@charset "UTF-8";
+
 /** Variables **/
 :root {
   --color-error: #f44336;
@@ -2279,6 +2281,7 @@ table.campaign td,
 }
 .crm-container .crm-contribution-campaign-form-block .cke[style*="width"] {
   width: 100% !important;
+  max-width: 720px;
 }
 @media (min-width: 992px) {
   .crm-container .pcp-preset-img-list .item img {
@@ -2307,6 +2310,14 @@ table.campaign td,
   .crm-container .crm-contribution-campaign-form-block .form-layout-compressed td.label {
     width: 200px;
     text-align: right;
+  }
+  .crm-container .attachments-upload-your-own-image-row ~ .attachments-form-file-row,
+  .crm-container .crm-contribution-campaign-form-block .attachments-upload-your-own-image-row ~ .attachments-form-file-row {
+    display: none;
+  }
+  .crm-container .attachments-upload-your-own-image-row.is-checked ~ .attachments-form-file-row,
+  .crm-container .crm-contribution-campaign-form-block .attachments-upload-your-own-image-row.is-checked ~ .attachments-form-file-row {
+    display: table-row;
   }
   .crm-container .crm-contribution-campaign-form-block .crm-form-elem,
   .crm-container .crm-contribution-campaign-form-block .form-text,
