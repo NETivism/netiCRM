@@ -1751,12 +1751,12 @@ div.block-civicrm li, .crm-container ul li, .crm-container ul.treeview li {
 .crm-container .attachments table .current-attachments img {
   max-width: 18%;
 }
-.crm-container .attachments-upload-your-own-image-row ~ .attachments-form-file-row
-{
+.crm-container .attachments-upload-your-own-image-row ~ .attachments-form-file-row,
+.crm-container .crm-contribution-campaign-form-block .attachments-upload-your-own-image-row ~ .attachments-form-file-row {
   display: none;
 }
-.crm-container .attachments-upload-your-own-image-row.is-checked ~ .attachments-form-file-row
-{
+.crm-container .attachments-upload-your-own-image-row.is-checked ~ .attachments-form-file-row,
+.crm-container .crm-contribution-campaign-form-block .attachments-upload-your-own-image-row.is-checked ~ .attachments-form-file-row {
   display: table-row;
 }
 /*
