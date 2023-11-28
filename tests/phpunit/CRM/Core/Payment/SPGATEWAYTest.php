@@ -9,27 +9,6 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
   protected $_is_test;
   protected $_page_id;
 
-  /**
-   *  Constructor
-   *
-   *  Initialize configuration
-   */
-  function __construct() {
-    // test if drupal bootstraped
-    if(!defined('DRUPAL_ROOT')){
-      die("You must exprot DRUPAL_ROOT for bootstrap drupal before test.");
-    }
-    if(!CRM_Utils_System::moduleExists('civicrm_spgateway')){
-      die("You must enable civicrm_spgateway module first before test.");
-    }
-    $payment_page = variable_get('civicrm_demo_payment_page', array());
-    $class_name = 'Payment_SPGATEWAY';
-    if(isset($payment_page[$class_name])){
-      $this->_page_id = $payment_page[$class_name];
-    }
-    parent::__construct();
-  }
-
   function get_info() {
     return array(
      'name' => 'SPGATEWAY payment processor',
@@ -43,6 +22,19 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
    */
   function setUpTest() {
     parent::setUp();
+
+    // Initialize configuration
+    if(!defined('DRUPAL_ROOT')){
+      die("You must exprot DRUPAL_ROOT for bootstrap drupal before test.");
+    }
+    if(!CRM_Utils_System::moduleExists('civicrm_spgateway')){
+      die("You must enable civicrm_spgateway module first before test.");
+    }
+    $payment_page = variable_get('civicrm_demo_payment_page', array());
+    $class_name = 'Payment_SPGATEWAY';
+    if(isset($payment_page[$class_name])){
+      $this->_page_id = $payment_page[$class_name];
+    }
 
     $this->_is_test = 1;
 
