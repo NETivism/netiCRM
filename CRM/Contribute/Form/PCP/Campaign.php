@@ -423,10 +423,18 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
       }
     }
     elseif (!$this->_pageId) {
-      $session->pushUserContext(CRM_Utils_System::url('civicrm/contribute/pcp/info', "reset=1&id={$pcp->id}&ap={$anonymousPCP}"));
+      if ($buttonName == '_qf_Campaign_attach') {
+        $session->pushUserContext(CRM_Utils_System::url('civicrm/contribute/pcp/info', "action=update&reset=1&id={$pcp->id}&context=standalone&key="));
+      } else {
+        $session->pushUserContext(CRM_Utils_System::url('civicrm/contribute/pcp/info', "reset=1&id={$pcp->id}&ap={$anonymousPCP}"));
+      }
     }
     elseif ($this->_context == 'standalone') {
-      $session->pushUserContext(CRM_Utils_System::url('civicrm/contribute/pcp/info', "reset=1&id={$pcp->id}&ap={$anonymousPCP}"));
+      if ($buttonName == '_qf_Campaign_attach') {
+        $session->pushUserContext(CRM_Utils_System::url('civicrm/contribute/pcp/info', "action=update&reset=1&id={$pcp->id}&context=standalone&key="));
+      } else {
+        $session->pushUserContext(CRM_Utils_System::url('civicrm/contribute/pcp/info', "reset=1&id={$pcp->id}&ap={$anonymousPCP}"));
+      }
     }
   }
 }
