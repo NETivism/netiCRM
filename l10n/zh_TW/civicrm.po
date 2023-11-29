@@ -49712,3 +49712,14 @@ msgstr "執行qpdf的路徑"
 msgid ""
 "If qpdf is installed, CiviCRM will use it to generate PDF form letters."
 msgstr "如果安裝了 qpdf，CiviCRM 將使用它來產生 PDF 。"
+
+#: templates/CRM/Contribute/Page/PCPInfo.tpl
+msgid "Share to %1"
+msgstr "分享到 %1"
+
+#: CRM/Core/Payment/TapPay.php
+msgid "Card Category"
+msgstr "卡片類別"
+
+msgid "Prepaid Card"
+msgstr "預付卡"
