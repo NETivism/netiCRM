@@ -353,8 +353,8 @@ class CRM_Contribute_Form_AdditionalInfo {
    * @return None.
    */
   static function emailReceipt(&$form, &$params, $ccContribution = FALSE) {
+    $config = CRM_Core_Config::singleton();
     if (!empty($params['is_attach_receipt'])) {
-      $config = CRM_Core_Config::singleton();
       $receiptEmailType = !empty($config->receiptEmailType) ? $config->receiptEmailType : 'copy_only';
       $receiptTask = new CRM_Contribute_Form_Task_PDF();
       $receiptTask->makeReceipt($params['contribution_id'], $receiptEmailType, TRUE);
@@ -552,6 +552,13 @@ class CRM_Contribute_Form_AdditionalInfo {
     if (!empty($params['is_attach_receipt'])) {
       $templateParams['attachments'][] = $pdfParams;
       $templateParams['tplParams']['pdf_receipt'] = 1;
+      if (!empty($config->receiptEmailEncryption)) {
+        $pdfReceiptDecryptInfo = $config->receiptEmailEncryptionText;
+        if (empty(trim($pdfReceiptDecryptInfo))) {
+          $pdfReceiptDecryptInfo = ts('Your PDF receipt is encrypted.').' '.ts('The password is either your tax certificate number or, if not provided, your email address.');
+        }
+        $templateParams['tplParams']['pdf_receipt_decrypt_info'] = $pdfReceiptDecryptInfo;
+      }
     }
     else {
       $templateParams['PDFFilename'] = 'receipt.pdf';

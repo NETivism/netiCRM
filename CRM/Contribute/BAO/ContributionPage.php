@@ -326,6 +326,13 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
       if (!empty($pdfParams) && !empty($activityTypeId)) {
         $sendTemplateParams['attachments'][] = $pdfParams;
         $sendTemplateParams['tplParams']['pdf_receipt'] = 1;
+        if (!empty($config->receiptEmailEncryption)) {
+          $pdfReceiptDecryptInfo = $config->receiptEmailEncryptionText;
+          if (empty(trim($pdfReceiptDecryptInfo))) {
+            $pdfReceiptDecryptInfo = ts('Your PDF receipt is encrypted.').' '.ts('The password is either your tax certificate number or, if not provided, your email address.');
+          }
+          $templateParams['tplParams']['pdf_receipt_decrypt_info'] = $pdfReceiptDecryptInfo;
+        }
         unset($sendTemplateParams['PDFFilename']);
 
         $activityId = CRM_Activity_BAO_Activity::addTransactionalActivity($contribution, 'Email Receipt', $workflow['msg_title']);

@@ -2797,6 +2797,14 @@ WHERE c.id = $id";
     }
     $templateParams['attachments'][] = $pdfParams;
     $templateParams['tplParams']['pdf_receipt'] = 1;
+    $config = CRM_Core_Config::singleton();
+    if (!empty($config->receiptEmailEncryption) && !empty($templateParams['tplParams']['pdf_receipt'])) {
+      $pdfReceiptDecryptInfo = $config->receiptEmailEncryptionText;
+      if (empty(trim($pdfReceiptDecryptInfo))) {
+        $pdfReceiptDecryptInfo = ts('Your PDF receipt is encrypted.').' '.ts('The password is either your tax certificate number or, if not provided, your email address.');
+      }
+      $templateParams['tplParams']['pdf_receipt_decrypt_info'] = $pdfReceiptDecryptInfo;
+    }
 
     $config = CRM_Core_Config::singleton();
     $smarty = new CRM_Core_Smarty($config->templateDir, $config->templateCompileDir);
