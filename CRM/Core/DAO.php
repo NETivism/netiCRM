@@ -1107,7 +1107,7 @@ FROM   civicrm_domain
    * Given the component id, compute the contact id
    * since its used for things like send email
    */
-  public function &getContactIDsFromComponent(&$componentIDs, $tableName) {
+  public static function &getContactIDsFromComponent(&$componentIDs, $tableName) {
     $contactIDs = array();
 
     if (empty($componentIDs)) {
