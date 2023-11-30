@@ -102,10 +102,11 @@ cj(document).ready(function($){
   <div class="inner">
     <div class="crm-preview-toolbar">
       <div class="crm-preview-title">{ts}Preview{/ts}</div>
-      <div class="crm-preview-mode"><button type="button" class="crm-preview-mode-btn"
-          data-mode="desktop">{ts}Normal{/ts}</button><button type="button" class="crm-preview-mode-btn is-active"
-          data-mode="mobile">{ts}Mobile Device{/ts}</button></div><button type="button" class="crm-preview-close"><i
-          class="zmdi zmdi-close"></i></button>
+      <div class="crm-preview-mode">
+        <button type="button" class="crm-preview-mode-btn" data-mode="desktop">{ts}Normal{/ts}</button>
+        <button type="button" class="crm-preview-mode-btn is-active" data-mode="mobile">{ts}Mobile Device{/ts}</button>
+      </div>
+      <button type="button" class="crm-preview-close"><i class="zmdi zmdi-close"></i></button>
     </div>
     <div class="crm-preview-content">
       <div class="crm-preview-panels">
@@ -128,6 +129,27 @@ cj(document).ready(function($){
 <script>{literal}
 (function ($) {
   $(function () {
+    let resizeTimer = null,
+        deviceWidthMode = 'mobile';
+
+    const updateDeviceWidthMode = function() {
+      let windowWidth = $(window).width();
+
+      if (windowWidth >= 1200) {
+        deviceWidthMode = 'desktop';
+      }
+      else {
+        deviceWidthMode = 'mobile';
+      }
+
+      $('html').attr('data-device-width-mode', deviceWidthMode);
+      $(`.crm-preview-mode-btn[data-mode="${deviceWidthMode}"]`).click();
+    }
+
+    const windowResize = function() {
+      updateDeviceWidthMode();
+    }
+
     const previewPopupInit = function () {
       $.magnificPopup.open({
         items: {
@@ -161,7 +183,13 @@ cj(document).ready(function($){
 
     if ($.fn.magnificPopup) {
       previewPopupInit();
+      updateDeviceWidthMode();
     }
+
+    $(window).resize(function() {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(windowResize, 250);
+    });
   });
 })(cj);
 {/literal}</script>

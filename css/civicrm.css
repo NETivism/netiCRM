@@ -7446,6 +7446,129 @@ html[lang="en"] .new-personal-campaign-link-wrap {
   }
 }
 
+/* crm preview popup */
+.crm-preview-popup {
+  position: relative;
+  margin: 40px auto;
+  max-width: 98%;
+  background: #fff;
+}
+.crm-preview-popup .crm-preview-toolbar {
+  display: flex;
+  justify-content: space-between;
+}
+.crm-preview-popup .crm-preview-toolbar {
+  padding: 15px 20px;
+}
+.crm-preview-popup .crm-preview-title {
+  font-size: 1.5rem;
+}
+.crm-preview-popup .crm-preview-close {
+  padding: 0;
+  font-size: 30px;
+  cursor: pointer;
+  border: 0;
+  background: none;
+}
+.crm-preview-popup .crm-preview-content {
+  padding: 0 10px 15px;
+}
+.crm-preview-popup .preview-content {
+  height: 85vh;
+}
+.crm-preview-popup .crm-preview-mode {
+  display: none;
+}
+.crm-preview-popup .crm-preview-mode-btn {
+  margin: 0 10px;
+  padding: 5px 15px;
+  font-size: 1.125rem;
+  color: #3F51B5;
+  cursor: pointer;
+  border-radius: 5px;
+  border: 1px solid #3F51B5;
+  background: #fff;
+}
+.crm-preview-popup .crm-preview-mode-btn.is-active {
+  color: #fff;
+  background: #3F51B5;
+}
+.crm-preview-popup .crm-preview-panel {
+  display: none;
+}
+.crm-preview-popup .crm-preview-panel.is-active {
+  display: block;
+}
+.crm-preview-popup .crm-preview-panel .preview-container {
+  box-sizing: content-box;
+}
+.crm-preview-popup .crm-preview-iframe {
+  width: 100%;
+  height: 100%;
+  border: 1px solid #ccc;
+}
+.crm-preview-popup .desktop-preview-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+@media screen and (min-width: 480px) {
+  .crm-preview-popup {
+    max-width: 90%;
+  }
+  .crm-preview-popup .crm-preview-content {
+    padding: 15px 20px;
+  }
+  .crm-preview-popup .mobile-preview-container {
+    position: relative;
+    width: 360px;
+    height: 640px;
+    margin: auto;
+    border: 16px black solid;
+    border-top-width: 60px;
+    border-bottom-width: 60px;
+    border-radius: 36px;
+  }
+  .crm-preview-popup .mobile-preview-container:before {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 5px;
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #333;
+    border-radius: 10px;
+  }
+  .crm-preview-popup .mobile-preview-container:after {
+    content: '';
+    display: block;
+    width: 35px;
+    height: 35px;
+    position: absolute;
+    left: 50%;
+    bottom: -65px;
+    transform: translate(-50%, -50%);
+    background: #333;
+    border-radius: 50%;
+  }
+  .crm-preview-popup .mobile-preview-container .preview-content {
+    width: 360px;
+    height: 640px;
+    background: white;
+  }
+}
+@media screen and (min-width: 992px) {
+  .crm-preview-popup .crm-preview-mode {
+    display: block;
+  }
+}
+@media screen and (min-width: 1600px) {
+  .crm-preview-popup {
+    max-width: 1320px;
+  }
+}
+
 /* debug */
 .xdebug-var-dump {
   overflow-x: scroll;
