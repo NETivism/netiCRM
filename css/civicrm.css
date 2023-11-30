@@ -1759,6 +1759,7 @@ div.block-civicrm li, .crm-container ul li, .crm-container ul.treeview li {
 .crm-container .crm-contribution-campaign-form-block .attachments-upload-your-own-image-row.is-checked ~ .attachments-form-file-row {
   display: table-row;
 }
+
 /*
 ** Style for hiding blocks or table rows
 */
@@ -1953,6 +1954,9 @@ table.campaign td,
   color: #fff;
 }
 @media screen and (min-width: 992px) {
+  .crm-container .attachments > .description {
+    padding-left: 100px;
+  }
   .crm-container .honor-roll-wrapper {
     padding: 0;
   }
