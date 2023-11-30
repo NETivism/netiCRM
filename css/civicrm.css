@@ -7579,6 +7579,10 @@ html[lang="en"] .new-personal-campaign-link-wrap {
   }
 }
 
+.embed-preview-mode .crm-management {
+  display: none !important;
+}
+
 /* debug */
 .xdebug-var-dump {
   overflow-x: scroll;

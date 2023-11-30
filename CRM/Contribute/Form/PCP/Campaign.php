@@ -64,7 +64,7 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
     if ($this->_pageId) {
       $title = ts('Edit Your Personal Campaign Page');
       $pcpPagePreviewUrl = CRM_Utils_System::url("civicrm/contribute/pcp/info",
-      "reset=1&id={$this->_pageId}&preview=1",
+      "reset=1&id={$this->_pageId}&embed=1&preview=1",
       TRUE, NULL, FALSE,
       TRUE
     );
