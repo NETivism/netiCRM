@@ -29347,7 +29347,7 @@ msgstr "您希望為此活動籌得的總金額。"
 msgid ""
 "If this option is checked, a \"thermometer\" showing progress toward your "
 "goal will be included on the page."
-msgstr "若勾選此選項，一個顯示募款進度計將會在頁面上顯示。"
+msgstr "勾選此選項即可在您的募款頁代表圖下方顯示您已募得的金額、目標金額、與目標百分比進度條。有目標金額的募款活動將更具有號召力。目標金額可略低於預期金額，若超越原定目標也可以繼續收受捐款。"
 
 #: templates/CRM/Contribute/Form/PCP/Campaign.tpl
 msgid "The text for the contribute button."
@@ -49731,6 +49731,12 @@ msgstr "是否要自行上傳圖片？"
 #: templates/CRM/Form/attachment.tpl
 msgid "If this option is checked, you can upload your own image."
 msgstr "若勾選此選項，您將可以自行上傳圖片。"
+
+#: templates/CRM/Form/attachment.tpl
+msgid ""
+"If this option is checked, you can upload your own image. If you want to "
+"uncheck this option, please delete all currently attachments."
+msgstr "勾選此選項以啟用自行上傳圖片功能。目前該項目是鎖定不能編輯的狀態，若您要取消勾選此項目，請先勾選下方「刪除目前的附加檔案」並按下「儲存與預覽」以刪除所有附檔圖片。"
 
 #: templates/CRM/Form/attachment.tpl
 msgid ""
