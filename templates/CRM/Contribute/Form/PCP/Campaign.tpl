@@ -40,7 +40,9 @@
 <table class="form-layout-compressed">
   <tr class="crm-contribution-form-block-title">
     <td class="label">{$form.title.label}</td>
-    <td>{$form.title.html|crmReplace:class:big}</td>
+    <td>{$form.title.html|crmReplace:class:big}
+      <span class="description">{ts}Please set a main title for your 'Personal Campaign Page'.{/ts}</span>
+    </td>
   </tr>
 </table>
 {include file="CRM/Form/attachment.tpl" context="pcpCampaign"}

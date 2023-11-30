@@ -48,6 +48,7 @@
      <div class="crm-accordion-body">    
    {/if}
     <div id="attachments" class="attachments">
+    <div class="description">{ts}Add an eye-catching image to your fundraising campaign. You can choose a picture from the gallery or upload your own.{/ts}</div>
     <table class="form-layout-compressed">
     {if $context EQ 'pcpCampaign'}
         <tr class="attachments-select-from-gallery-row">
@@ -167,8 +168,8 @@
         {else}
         <tr class="attachments-upload-your-own-image-row">
         {/if}
-            <td><label for="upload-your-own-image">{ts}Upload Your Own Image?{/ts}</label></td>
-            <td>
+            <td class="label"><label for="upload-your-own-image">{ts}Upload Your Own Image?{/ts}</label></td>
+            <td class="view-value">
             {if $currentAttachmentURL}
                 <input type="checkbox" id="upload-your-own-image" name="upload-your-own-image" checked disabled />
                 <div class="description">{ts}If this option is checked, you can upload your own image. If you want to uncheck this option, please delete all currently attachments.{/ts}</div>
