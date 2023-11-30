@@ -23,6 +23,13 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     5 => 'AMEX',
   );
 
+  public static $_cardCategory = array(
+    -1 => 'Unknown',
+    0 => 'Credit Card',
+    1 => 'Debit Card',
+    2 => 'Prepaid Card',
+  );
+
   public static $_allowRecurUnit = array('month');
 
   /**
@@ -247,19 +254,10 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
 
     if (empty($referContributionId)) {
       // Clone Contribution
-      $c = clone $firstContribution;
-      unset($c->id);
-      unset($c->receive_date);
-      unset($c->cancel_date);
-      unset($c->cancel_reason);
-      unset($c->invoice_id);
-      unset($c->receipt_date);
-      unset($c->receipt_id);
-      unset($c->trxn_id);
-      $c->contribution_status_id = 2;
-      $c->created_date = date('YmdHis');
+      // trxn_id will update after copy contribution.
+      $hash = hash('sha256', $firstContributionId);
+      $c = CRM_Core_Payment_BaseIPN::copyContribution($firstContribution, $recurringId, $hash);
       $c->total_amount = $contributionRecur->amount;
-      $c->save();
     }
     else {
       $c = new CRM_Contribute_DAO_Contribution();
@@ -1377,6 +1375,7 @@ LIMIT 0, 100
       $cardInfo = $tappayObject->card_info;
       $returnData[ts('Card Issuer')] = $cardInfo->issuer;
       $returnData[ts('Card Type')] = self::$_cardType[$cardInfo->type];
+      $returnData[ts('Card Category')] = ts(self::$_cardCategory[$cardInfo->funding]);
     }
     if (!empty($tappayDAO->contribution_recur_id)) {
       $autoRenew = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionRecur', $tappayDAO->contribution_recur_id, 'auto_renew');

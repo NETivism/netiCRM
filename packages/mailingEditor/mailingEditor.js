@@ -524,13 +524,13 @@
           break;
 
         case "thumb":
-          img.url = crmPath + "packages/midjourney/thumb_" + _getRandomInt(1,5) + ".png";
+          img.url = crmPath + "packages/midjourney/thumb_" + _getRandomInt(1,5) + ".jpg";
           img.width = 680;
           img.height = 383;
           break;
 
           case "square":
-          img.url = crmPath + "packages/midjourney/square_" + _getRandomInt(1,5) + ".png";
+          img.url = crmPath + "packages/midjourney/square_" + _getRandomInt(1,5) + ".jpg";
           img.width = 210;
           img.height = 210;
           break;
