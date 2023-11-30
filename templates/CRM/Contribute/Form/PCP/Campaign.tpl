@@ -176,7 +176,7 @@ cj(document).ready(function($){
         }
       });
 
-      $("#crm-preview-popup").on("click", ".crm-preview-close", function () {
+      $(".crm-preview-popup").on("click", ".crm-preview-close", function () {
         $.magnificPopup.close();
       });
     }
