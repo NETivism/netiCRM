@@ -49211,6 +49211,10 @@ msgid "If this option is checked, you can upload your own image."
 msgstr ""
 
 #: templates/CRM/Form/attachment.tpl
+msgid "If this option is checked, you can upload your own image. If you want to uncheck this option, please delete all currently attachments."
+msgstr ""
+
+#: templates/CRM/Form/attachment.tpl
 msgid "Before selecting images from the gallery, please uncheck the 'Upload Your Own Image?' checkbox and delete all currently attachments."
 msgstr ""
 

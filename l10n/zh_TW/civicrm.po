@@ -49734,6 +49734,12 @@ msgstr "若勾選此選項，您將可以自行上傳圖片。"
 
 #: templates/CRM/Form/attachment.tpl
 msgid ""
+"If this option is checked, you can upload your own image. If you want to "
+"uncheck this option, please delete all currently attachments."
+msgstr "勾選此選項以啟用自行上傳圖片功能。目前該項目是鎖定不能編輯的狀態，若您要取消勾選此項目，請先勾選下方「刪除目前的附加檔案」並按下「儲存與預覽」以刪除所有附檔圖片。"
+
+#: templates/CRM/Form/attachment.tpl
+msgid ""
 "Before selecting images from the gallery, please uncheck the 'Upload Your "
 "Own Image?' checkbox and delete all currently attachments."
 msgstr "若要從圖庫選擇圖片，請先移除目前已附加的檔案，並取消「是否要自行上傳圖片？」的勾選。"
