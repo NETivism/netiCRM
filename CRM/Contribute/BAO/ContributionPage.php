@@ -179,11 +179,40 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
       $haveAttachReceiptOption = CRM_Core_OptionGroup::getValue('activity_type', 'Email Receipt', 'name');
       $contributionTypeId = CRM_Utils_Array::value('contribution_type_id', $values);
       $deductible = CRM_Contribute_BAO_ContributionType::deductible($contributionTypeId, TRUE);
+
+      require_once 'CRM/Contact/BAO/Contact/Location.php';
+      if (!CRM_Utils_Array::arrayKeyExists('related_contact', $values)) {
+        list($displayName, $email) = CRM_Contact_BAO_Contact_Location::getEmailDetails($contactID, FALSE, $billingLocationTypeId);
+      }
+      // get primary location email if no email exist( for billing location).
+      if (!$email) {
+        list($displayName, $email) = CRM_Contact_BAO_Contact_Location::getEmailDetails($contactID);
+      }
+
       if ($config->receiptEmailAuto && $haveAttachReceiptOption && !$is_pay_later && $deductible) {
         $receiptEmailType = !empty($config->receiptEmailType) ? $config->receiptEmailType : 'copy_only';
         $receiptTask = new CRM_Contribute_Form_Task_PDF();
         $receiptTask->makeReceipt($values['contribution_id'], $receiptEmailType, TRUE);
-        $pdfFilePath = $receiptTask->makePDF(False);
+        //set encrypt password
+        if (!empty($config->receiptEmailEncryption) && $config->receiptEmailEncryption) {
+          $recepitPwd = $email;
+          if (!empty($config->receiptSerial) && !empty($values['contribution_id'])) {
+            $params_get_custom = array(
+              'version' => 3,
+              'entity_id' => $values['contribution_id'],
+              'return.custom_'.$config->receiptSerial => 1,
+            );
+            $result = civicrm_api('custom_value', 'get', $params_get_custom);
+            $receiptSerial = $result['values'][$config->receiptSerial]['latest'];
+            if (preg_match('/^[A-Za-z]{1,2}\d{8,9}$|^\d{8}$/', $receiptSerial)) {
+              $recepitPwd = $receiptSerial;
+            }
+          }
+          $pdfFilePath = $receiptTask->makePDF(False, True, $recepitPwd);
+        }
+        else {
+          $pdfFilePath = $receiptTask->makePDF(False);
+        }
         $pdfFileName = strstr($pdfFilePath, 'Receipt');
         $pdfParams =  array(
           'fullPath' => $pdfFilePath,
@@ -203,15 +232,6 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
         require_once 'CRM/Core/BAO/LocationType.php';
         $locType = CRM_Core_BAO_LocationType::getDefault();
         $billingLocationTypeId = $locType->id;
-      }
-
-      require_once 'CRM/Contact/BAO/Contact/Location.php';
-      if (!CRM_Utils_Array::arrayKeyExists('related_contact', $values)) {
-        list($displayName, $email) = CRM_Contact_BAO_Contact_Location::getEmailDetails($contactID, FALSE, $billingLocationTypeId);
-      }
-      // get primary location email if no email exist( for billing location).
-      if (!$email) {
-        list($displayName, $email) = CRM_Contact_BAO_Contact_Location::getEmailDetails($contactID);
       }
 
       //for display profile need to get individual contact id,

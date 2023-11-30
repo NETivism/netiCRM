@@ -361,10 +361,16 @@ class CRM_Contribute_Form_AdditionalInfo {
       //set encrypt password
       if (!empty($config->receiptEmailEncryption) && $config->receiptEmailEncryption) {
         $recepitPwd = $form->userEmail;
-        if (!empty($form->_contactID)) {
-          $legal_identifier =  CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $form->_contactID, 'legal_identifier');
-          if (!empty($legal_identifier)) {
-            $recepitPwd = $legal_identifier;
+        if (!empty($config->receiptSerial) && !empty($form->_id)) {
+          $params_get_custom = array(
+            'version' => 3,
+            'entity_id' => $form->_id,
+            'return.custom_'.$config->receiptSerial => 1,
+          );
+          $result = civicrm_api('custom_value', 'get', $params_get_custom);
+          $receiptSerial = $result['values'][$config->receiptSerial]['latest'];
+          if (preg_match('/^[A-Za-z]{1,2}\d{8,9}$|^\d{8}$/', $receiptSerial)) {
+            $recepitPwd = $receiptSerial;
           }
         }
         $pdfFilePath = $receiptTask->makePDF(False, True, $recepitPwd);
