@@ -49180,7 +49180,7 @@ msgstr ""
 msgid "After activation, a password will be added to the email receipt. If the receipt includes tax filing credentials (such as ID number or Uniform Number), encryption will be done using these credentials. If these fields are not present, the recipient's email address will be used for encryption."
 msgstr ""
 
-msgid "If no specific text is set, the default text will be: Please enter your ID number or Email address to open your receipt."
+msgid "If no specific text is set, the default text will be: Your PDF receipt is encrypted. The password is either your tax certificate number or, if not provided, your email address."
 msgstr ""
 
 #: CRM/Admin/Form/Setting/Miscellaneous.php
@@ -49228,4 +49228,13 @@ msgstr ""
 
 #: templates/CRM/Form/attachment.tpl
 msgid "Add an eye-catching image to your fundraising campaign. You can choose a picture from the gallery or upload your own."
+msgstr ""
+
+#: CRM/Contribute/BAO/Contribution.php
+#: CRM/Contribute/BAO/ContributionPage.php
+#: CRM/Contribute/Form/AdditionalInfo.php
+msgid "Your PDF receipt is encrypted."
+msgstr ""
+
+msgid "The password is either your tax certificate number or, if not provided, your email address."
 msgstr ""
