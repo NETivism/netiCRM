@@ -49213,3 +49213,7 @@ msgstr ""
 #: templates/CRM/Form/attachment.tpl
 msgid "Before selecting images from the gallery, please uncheck the 'Upload Your Own Image?' checkbox and delete all currently attachments."
 msgstr ""
+
+#: CRM/Event/Form/SearchEvent.php
+msgid "Event Start Date - From"
+msgstr ""
