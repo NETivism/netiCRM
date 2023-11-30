@@ -49217,3 +49217,11 @@ msgstr ""
 #: CRM/Event/Form/SearchEvent.php
 msgid "Event Start Date - From"
 msgstr ""
+
+#: templates/CRM/Contribute/Form/PCP/Campaign.tpl
+msgid "Please set a main title for your 'Personal Campaign Page'."
+msgstr ""
+
+#: templates/CRM/Form/attachment.tpl
+msgid "Add an eye-catching image to your fundraising campaign. You can choose a picture from the gallery or upload your own."
+msgstr ""

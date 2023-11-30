@@ -29330,7 +29330,7 @@ msgstr "警告：刪除此選項會導致捐款記錄遺失。"
 msgid ""
 "Personalize the contents and appearance of your fundraising page here. You "
 "will be able to return to this page and make changes at any time."
-msgstr "請在此步驟填寫您的個人募款頁面內容。完成輸入後，您可以選擇預覽並提交您的內容，或將其儲存為草稿，以便未來登入時進行修改。"
+msgstr "請在此步驟填寫您的個人募款頁面內容。完成輸入後，您可以選擇提交您的內容，或將其儲存為草稿並預覽，以便未來登入時進行修改。"
 
 #: templates/CRM/Contribute/Form/PCP/Campaign.tpl
 msgid ""
@@ -49741,3 +49741,13 @@ msgstr "若要從圖庫選擇圖片，請先移除目前已附加的檔案，並
 #: CRM/Event/Form/SearchEvent.php
 msgid "Event Start Date - From"
 msgstr "活動開始日期 - 從"
+
+#: templates/CRM/Contribute/Form/PCP/Campaign.tpl
+msgid "Please set a main title for your 'Personal Campaign Page'."
+msgstr "請為您的「個人募款頁」設定一個主標題，例如「邀請你，把給王小明的生日祝福捐給 OOO 組織」"
+
+#: templates/CRM/Form/attachment.tpl
+msgid ""
+"Add an eye-catching image to your fundraising campaign. You can choose a "
+"picture from the gallery or upload your own."
+msgstr "為您的募款活動放一張吸睛的圖片。您可以從我們的圖庫中選擇或上傳您自己的照片，包括個人照片或電子賀卡，讓您的朋友慷慨解囊。"
