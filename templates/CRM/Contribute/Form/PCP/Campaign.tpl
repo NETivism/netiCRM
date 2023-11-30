@@ -28,6 +28,7 @@
     {ts}Personalize the contents and appearance of your fundraising page here. You will be able to return to this page and make changes at any time.{/ts}
 </div>
 <div class="crm-block crm-contribution-campaign-form-block">
+{if !$form.is_active.frozen}
 <table class="form-layout-compressed">
 	<tr class="crm-contribution-form-block-is_active">
 		<td class="label">{$form.is_active.label}</td>
@@ -35,6 +36,7 @@
     <span class="description">{ts}Is your Personal Campaign Page active? You can activate/de-activate it any time during it's lifecycle.{/ts}</span></td>
 	</tr>
 </table>
+{/if}
 {include file="CRM/Form/attachment.tpl" context="pcpCampaign"}
 <table class="form-layout-compressed" width="100%">
 	<tr class="crm-contribution-form-block-is_thermometer">
