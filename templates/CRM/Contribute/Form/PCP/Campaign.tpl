@@ -37,6 +37,12 @@
 	</tr>
 </table>
 {/if}
+<table class="form-layout-compressed">
+  <tr class="crm-contribution-form-block-title">
+    <td class="label">{$form.title.label}</td>
+    <td>{$form.title.html|crmReplace:class:big}</td>
+  </tr>
+</table>
 {include file="CRM/Form/attachment.tpl" context="pcpCampaign"}
 <table class="form-layout-compressed" width="100%">
 	<tr class="crm-contribution-form-block-is_thermometer">
@@ -50,10 +56,6 @@
 		<td>{$form.goal_amount.html|crmReplace:class:six}
             <span class="description">{ts}Total amount you would like to raise for this campaign.{/ts}</span>
 		</td>
-	</tr>
-	<tr class="crm-contribution-form-block-title">
-		<td class="label">{$form.title.label}</td>
-		<td>{$form.title.html|crmReplace:class:big}</td>
 	</tr>
 	<tr class="crm-contribution-form-block-intro_text">
 		<td class="label">{$form.intro_text.label}</td>
