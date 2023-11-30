@@ -28,7 +28,11 @@
 <link rel="stylesheet" href="{$config->resourceBase}packages/fontawesome/css/fontawesome.min.css?v{$config->ver}">
 <link rel="stylesheet" href="{$config->resourceBase}packages/fontawesome/css/brands.min.css?v{$config->ver}">
 {if $owner}
+{if $is_embed}
+<div class="pcp-management crm-management is-embed-mode">
+{else}
 <div class="pcp-management crm-management">
+{/if}
 <div class="inner">
 <div class="messages status">
 	<p><strong>{ts}Personal Fundraiser View{/ts}</strong> - {ts 1=$contribPageURL 2=$pageName}This is a preview of your Personal Campaign Page in support of <a href="%1"><strong>"%2"</strong></a>.{/ts}</p>

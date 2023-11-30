@@ -64,6 +64,8 @@ class CRM_Contribute_Page_PCPInfo extends CRM_Core_Page {
     $this->_id = CRM_Utils_Request::retrieve('id', 'Positive', $this, TRUE);
 
     $action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE);
+    $is_embed = CRM_Utils_Request::retrieve('embed', 'Boolean', $this);
+    $this->assign('is_embed', $is_embed);
 
     $prms = array('id' => $this->_id);
 

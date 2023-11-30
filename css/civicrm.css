@@ -7578,8 +7578,7 @@ html[lang="en"] .new-personal-campaign-link-wrap {
     max-width: 1320px;
   }
 }
-
-.embed-preview-mode .crm-management {
+.crm-management.is-embed-mode {
   display: none !important;
 }
 

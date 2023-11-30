@@ -2,7 +2,7 @@
 $(document).ready(function(){
   let urlParams = new URLSearchParams(window.location.search);
 
-  if (urlParams.get('embed') === '1' && urlParams.get('preview') === '1' && !$('.embed-preview-mode').length) {
+  if (urlParams.get('embed') === '1' && !$('.embed-preview-mode').length) {
     let crmContainerHtml = $('.crm-container').clone().wrap('<div>').parent().html();
     $('body').html(crmContainerHtml).addClass('embed-preview-mode');
   }
