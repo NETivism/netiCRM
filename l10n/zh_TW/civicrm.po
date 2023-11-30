@@ -29337,7 +29337,7 @@ msgid ""
 "Introduce the campaign and why you're supporting it. This text will appear "
 "at the top of your personal page AND at the top of the main campaign "
 "contribution page when people make a contribution through your page."
-msgstr "介紹這個活動，與說明您為何支持此活動。當有人從您的頁面捐款時，這個文字將會顯示在您個人募款頁面上方，以及主募款頁面上方。"
+msgstr "請簡述您發起這次個人募款活動的動機和想法，讓支持者理解您的目的。"
 
 #: templates/CRM/Contribute/Form/PCP/Campaign.tpl
 msgid "Total amount you would like to raise for this campaign."
@@ -29351,11 +29351,11 @@ msgstr "若勾選此選項，一個顯示募款進度計將會在頁面上顯示
 
 #: templates/CRM/Contribute/Form/PCP/Campaign.tpl
 msgid "The text for the contribute button."
-msgstr "在捐款按鍵顯示的文字。"
+msgstr "自訂您的捐款按鈕文字。立刻捐款？捐款祝我生日快樂？都可以唷"
 
 #: templates/CRM/Contribute/Form/PCP/Campaign.tpl
 msgid "Tell people why this campaign is important to you."
-msgstr "告訴人們此捐款活動對您的重要性。"
+msgstr "請分享這次捐款活動對您的意義，並向您的朋友介紹您與該組織的特殊聯繫及其對您的重要性。"
 
 #: templates/CRM/Contribute/Form/PCP/Campaign.tpl
 msgid ""
@@ -29363,7 +29363,7 @@ msgid ""
 "names (or nicknames) of the people who donated through your fundraising "
 "page. (Donors will have the option to remain anonymous. Their names will NOT"
 " be listed.)"
-msgstr "如果勾選此項，會顯示一個捐款名單，列出所有在您的個人捐款頁貢獻金錢的人。（捐款者也可以選擇匿名，不顯示名稱）"
+msgstr "勾選此選項將在您的個人募款頁面上顯示捐款人名單。捐款者可以設定化名，輸入祝福小語，讓您的募款活動吸引與激勵更多人參與。"
 
 #: templates/CRM/Contribute/Form/PCP/Campaign.tpl
 msgid ""
@@ -32499,7 +32499,7 @@ msgid ""
 "You can upload a picture or image to include on your page. Your file should "
 "be in .jpg, .gif, or .png format. Recommended image size is 250 x 250 "
 "pixels. Maximum size is 360 x 360 pixels."
-msgstr "您可以上傳一張圖片至您的個人募款頁。圖檔必須是 .jpg，.gif 或 .png 格式。因頁面有RWD，圖片會隨著螢幕寬高有所不同，圖片尺寸建議以橫式（landscape）為主，圖片比例16:9 或 16:10，寬度2000px左右，電腦版呈現會有最佳效果。手機版本，圖片會變成直式（portrait），因此圖片左右會被裁切，置中。"
+msgstr "請上傳一張圖片作為您個人募款頁的主題。支持的檔案格式有：.jpg，.gif，.png，其中最推薦使用 .jpg 格式。為達到最佳展示效果，建議使用 2560x1440 尺寸的圖片，並保持 16:9 的比例。請注意，如果圖片比例不符，圖片的邊緣部分可能會被裁切。"
 
 #: templates/CRM/Form/attachment.tpl
 msgid "Browse to the <strong>file</strong> you want to upload."
