@@ -336,20 +336,14 @@ ORDER BY start_date desc
       }
       $clauses[] = "event_type_id IN ({$type})";
     }
-    // For start date and end date:
-    $inputStartDate = $this->get('event_start_date');
-    $inputEndDate = $this->get('event_end_date');
-    if ($inputStartDate || $inputEndDate) {
-      if (empty($inputStartDate)) {
-        $inputStartDate = '1000-01-01';
-      }
-      if (empty($inputEndDate)) {
-        $inputEndDate = '9999-12-31';
-      }
-      $clauses[] = "
-      IFNULL(start_date, '1000-01-01') <= '{$inputEndDate}'
-      AND
-      IFNULL(end_date, '9999-12-31') >= '{$inputStartDate}'";
+    // For start date low and high:
+    $inputStartDateLow = $this->get('event_start_date_low');
+    if (!empty($inputStartDateLow)) {
+      $clauses[] = "IFNULL(start_date, '1000-01-01') >= '{$inputStartDateLow} 00:00:00'";
+    }
+    $inputStartDateHigh = $this->get('event_start_date_high');
+    if (!empty($inputStartDateHigh)) {
+      $clauses[] = "IFNULL(start_date, '9999-12-31') <= '{$inputStartDateHigh} 23:59:59'";
     }
     return !empty($clauses) ? CRM_Utils_Array::implode(' AND ', $clauses) : '(1)';
   }

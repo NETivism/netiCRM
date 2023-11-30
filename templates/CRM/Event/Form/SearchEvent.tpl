@@ -31,12 +31,16 @@
             <label>{ts}Complete OR partial Event name.{/ts}</label>
             {$form.title.html|crmReplace:class:huge}
         </td>
-        <td class="crm-event-form-block-event_start_date">
-          {$form.event_start_date.label}{include file="CRM/common/jcalendar.tpl" elementName=event_start_date}
-        </td>
-        <td class="crm-event-form-block-event_end_date">
-          {$form.event_end_date.label}{include file="CRM/common/jcalendar.tpl" elementName=event_end_date}
-        </td>
+        {if $form.event_start_date_low}
+          <td class="crm-event-form-block-event_start_date_low">
+            {$form.event_start_date_low.label}{include file="CRM/common/jcalendar.tpl" elementName=event_start_date_low}
+          </td>
+        {/if}
+        {if $form.event_start_date_high}
+          <td class="crm-event-form-block-event_start_date_high">
+            {$form.event_start_date_high.label}{include file="CRM/common/jcalendar.tpl" elementName=event_start_date_high}
+          </td>
+        {/if}
         <td>
           <label>{ts}Event Type{/ts}</label>
           {$form.event_type_id.html} 
