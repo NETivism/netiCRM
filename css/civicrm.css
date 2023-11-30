@@ -2202,6 +2202,9 @@ table.campaign td,
 }
 
 /* PCP backend */
+.crm-container .pcp-management {
+  margin: 20px;
+}
 .crm-container .pcp-preset-img-list {
   display: flex;
   flex-wrap: wrap;
@@ -7257,6 +7260,7 @@ input.crm-form-textfield,
   }
 }
 @media (min-width: 1200px) {
+  .crm-container .pcp-management,
   .crm-container .progress-block > .inner {
     margin-right: auto;
     margin-left: auto;
@@ -7264,6 +7268,7 @@ input.crm-form-textfield,
   }
 }
 @media (min-width: 1400px) {
+  .crm-container .pcp-management,
   .crm-container .progress-block > .inner {
     max-width: 1200px;
   }
@@ -7281,6 +7286,7 @@ input.crm-form-textfield,
   }
 }
 @media (min-width: 1600px) {
+  .crm-container .pcp-management,
   .crm-container .progress-block > .inner {
     max-width: 1400px;
   }

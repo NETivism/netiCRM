@@ -28,6 +28,7 @@
 <link rel="stylesheet" href="{$config->resourceBase}packages/fontawesome/css/fontawesome.min.css?v{$config->ver}">
 <link rel="stylesheet" href="{$config->resourceBase}packages/fontawesome/css/brands.min.css?v{$config->ver}">
 {if $owner}
+<div class="pcp-management">
 <div class="messages status">
 
 	<p><strong>{ts}Personal Fundraiser View{/ts}</strong> - {ts 1=$contribPageURL 2=$pageName}This is a preview of your Personal Campaign Page in support of <a href="%1"><strong>"%2"</strong></a>.{/ts}</p>
@@ -47,6 +48,7 @@
   	   </table>
 	<i class="zmdi zmdi-lamp"></i>
      <strong>{ts}Tip{/ts}</strong> - <span>{ts}You must be logged in to your account to access the editing options above. (If you visit this page without logging in, you will be viewing the page in "live" mode - as your visitors and friends see it.){/ts}</span>
+</div>
 </div>
 {/if}
 
