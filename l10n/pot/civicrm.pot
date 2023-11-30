@@ -49201,3 +49201,19 @@ msgstr ""
 
 msgid "Prepaid Card"
 msgstr ""
+
+#: templates/CRM/Form/attachment.tpl
+msgid "Upload Your Own Image?"
+msgstr ""
+
+#: templates/CRM/Form/attachment.tpl
+msgid "If this option is checked, you can upload your own image."
+msgstr ""
+
+#: templates/CRM/Form/attachment.tpl
+msgid "Before selecting images from the gallery, please uncheck the 'Upload Your Own Image?' checkbox and delete all currently attachments."
+msgstr ""
+
+#: CRM/Event/Form/SearchEvent.php
+msgid "Event Start Date - From"
+msgstr ""
