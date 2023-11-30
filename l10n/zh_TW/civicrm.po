@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: 馮 佳今, 2022-2023\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>, 2016-2023\n"
 "Language-Team: Chinese (Taiwan) (http://app.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29330,7 +29330,7 @@ msgstr "警告：刪除此選項會導致捐款記錄遺失。"
 msgid ""
 "Personalize the contents and appearance of your fundraising page here. You "
 "will be able to return to this page and make changes at any time."
-msgstr "您可在此對您個人募款頁面的內容與外觀進行修改。請先填入所有必填欄位後點選儲存。您隨時可以回到此頁面修改所有內容。"
+msgstr "請在此步驟填寫您的個人募款頁面內容。完成輸入後，您可以選擇預覽並提交您的內容，或將其儲存為草稿，以便未來登入時進行修改。"
 
 #: templates/CRM/Contribute/Form/PCP/Campaign.tpl
 msgid ""
@@ -49712,3 +49712,32 @@ msgstr "執行qpdf的路徑"
 msgid ""
 "If qpdf is installed, CiviCRM will use it to generate PDF form letters."
 msgstr "如果安裝了 qpdf，CiviCRM 將使用它來產生 PDF 。"
+
+#: templates/CRM/Contribute/Page/PCPInfo.tpl
+msgid "Share to %1"
+msgstr "分享到 %1"
+
+#: CRM/Core/Payment/TapPay.php
+msgid "Card Category"
+msgstr "卡片類別"
+
+msgid "Prepaid Card"
+msgstr "預付卡"
+
+#: templates/CRM/Form/attachment.tpl
+msgid "Upload Your Own Image?"
+msgstr "是否要自行上傳圖片？"
+
+#: templates/CRM/Form/attachment.tpl
+msgid "If this option is checked, you can upload your own image."
+msgstr "若勾選此選項，您將可以自行上傳圖片。"
+
+#: templates/CRM/Form/attachment.tpl
+msgid ""
+"Before selecting images from the gallery, please uncheck the 'Upload Your "
+"Own Image?' checkbox and delete all currently attachments."
+msgstr "若要從圖庫選擇圖片，請先移除目前已附加的檔案，並取消「是否要自行上傳圖片？」的勾選。"
+
+#: CRM/Event/Form/SearchEvent.php
+msgid "Event Start Date - From"
+msgstr "活動開始日期 - 從"

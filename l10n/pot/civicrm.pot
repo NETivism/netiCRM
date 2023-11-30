@@ -49190,3 +49190,30 @@ msgstr ""
 #: templates/CRM/Admin/Form/Setting/Miscellaneous.tpl
 msgid "If qpdf is installed, CiviCRM will use it to generate PDF form letters."
 msgstr ""
+
+#: templates/CRM/Contribute/Page/PCPInfo.tpl
+msgid "Share to %1"
+msgstr ""
+
+#: CRM/Core/Payment/TapPay.php
+msgid "Card Category"
+msgstr ""
+
+msgid "Prepaid Card"
+msgstr ""
+
+#: templates/CRM/Form/attachment.tpl
+msgid "Upload Your Own Image?"
+msgstr ""
+
+#: templates/CRM/Form/attachment.tpl
+msgid "If this option is checked, you can upload your own image."
+msgstr ""
+
+#: templates/CRM/Form/attachment.tpl
+msgid "Before selecting images from the gallery, please uncheck the 'Upload Your Own Image?' checkbox and delete all currently attachments."
+msgstr ""
+
+#: CRM/Event/Form/SearchEvent.php
+msgid "Event Start Date - From"
+msgstr ""
