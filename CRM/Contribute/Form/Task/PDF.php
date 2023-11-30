@@ -362,6 +362,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
     $template->assign('pages', $pages);
     $pages = $template->fetch('CRM/common/Receipt.tpl');
     $pdf_real_filename = CRM_Utils_PDF_Utils::html2pdf($pages, 'Receipt.pdf', 'portrait', 'a4', $download);
+    $encryptPwd = str_replace(array('\'', '"'), '', $encryptPwd);
     if (defined('CIVICRM_ENABLE_PDF_ENCRYPTION') && CIVICRM_ENABLE_PDF_ENCRYPTION && $encryptWhenPossible) {
       $pdf_real_filename = self::encryptPDF($pdf_real_filename, $encryptPwd);
     }
@@ -386,7 +387,6 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
   static function encryptPDF($dest, $encryptPwd, $option = ' --encrypt', $key_length = 256) {
     $config = CRM_Core_Config::singleton();
     $qpdftopdf = $config->qpdfPath;
-    $qpdftopdf = "/usr/bin/qpdf";
 
     if (!empty(exec("test -x $qpdftopdf && echo 1"))) {
       $destInput = '-- ' . $dest;
