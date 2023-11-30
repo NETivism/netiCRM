@@ -6906,7 +6906,7 @@ input.crm-form-textfield,
 
 @media screen and (max-width: 1600px) {
   .crm-container .pcp-leading {
-    max-height: none;
+    max-height: 56.25dvw;
   }
 }
 
