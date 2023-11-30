@@ -49716,3 +49716,24 @@ msgstr "如果安裝了 qpdf，CiviCRM 將使用它來產生 PDF 。"
 #: templates/CRM/Contribute/Page/PCPInfo.tpl
 msgid "Share to %1"
 msgstr "分享到 %1"
+
+#: CRM/Core/Payment/TapPay.php
+msgid "Card Category"
+msgstr "卡片類別"
+
+msgid "Prepaid Card"
+msgstr "預付卡"
+
+#: templates/CRM/Form/attachment.tpl
+msgid "Upload Your Own Image?"
+msgstr "是否要自行上傳圖片？"
+
+#: templates/CRM/Form/attachment.tpl
+msgid "If this option is checked, you can upload your own image."
+msgstr "若勾選此選項，您將可以自行上傳圖片。"
+
+#: templates/CRM/Form/attachment.tpl
+msgid ""
+"Before selecting images from the gallery, please uncheck the 'Upload Your "
+"Own Image?' checkbox and delete all currently attachments."
+msgstr "若要從圖庫選擇圖片，請先移除目前已附加的檔案，並取消「是否要自行上傳圖片？」的勾選。"
