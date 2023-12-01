@@ -49237,3 +49237,7 @@ msgstr ""
 
 msgid "The password is either your tax certificate number or, if not provided, your email address."
 msgstr ""
+
+#: templates/CRM/Contribute/Form/PCP/Campaign.tpl
+msgid "The content cannot be modified once it is submit."
+msgstr ""
