@@ -356,14 +356,48 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
     return $return;
   }
 
-  public function makePDF($download = TRUE) {
+  public function makePDF($download = TRUE, $encryptWhenPossible = FALSE, $encryptPwd = NULL) {
     $template = &CRM_Core_Smarty::singleton();
     $pages = $this->popFile();
     $template->assign('pages', $pages);
     $pages = $template->fetch('CRM/common/Receipt.tpl');
     $pdf_real_filename = CRM_Utils_PDF_Utils::html2pdf($pages, 'Receipt.pdf', 'portrait', 'a4', $download);
+    $encryptPwd = str_replace(array('\'', '"'), '', $encryptPwd);
+    if (defined('CIVICRM_ENABLE_PDF_ENCRYPTION') && CIVICRM_ENABLE_PDF_ENCRYPTION && $encryptWhenPossible) {
+      $pdf_real_filename = self::encryptPDF($pdf_real_filename, $encryptPwd);
+    }
     if (!$download) {
       return $pdf_real_filename;
+    }
+  }
+
+  /**
+   * Generate pdf from static version of pdf
+   *
+   *
+   * @ $dest string
+   * destination of pdf out
+   *
+   * @ $encryptPwd string
+   * destination of encrypt password
+   *
+   * @ $option string
+   * see /usr/bin/qpdf --help
+   */
+  static function encryptPDF($dest, $encryptPwd, $option = ' --encrypt', $key_length = 256) {
+    $config = CRM_Core_Config::singleton();
+    $qpdftopdf = $config->qpdfPath;
+
+    if (!empty(exec("test -x $qpdftopdf && echo 1"))) {
+      $destInput = '-- ' . $dest;
+      $destOutput = "--replace-input";
+      $exec = $qpdftopdf . escapeshellcmd("$option $encryptPwd $encryptPwd $key_length $destInput $destOutput");
+      exec($exec);
+      return $dest;
+    }
+    else {
+      CRM_Core_Error::debug_log_message("Could not find qpdf library");
+      return FALSE;
     }
   }
 

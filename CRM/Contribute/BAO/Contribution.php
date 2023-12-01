@@ -2772,7 +2772,27 @@ WHERE c.id = $id";
     $receiptTask = new CRM_Contribute_Form_Task_PDF();
     $receiptType = !empty($receiptType) ? $receiptType : 'copy_only';
     $receiptTask->makeReceipt($contributionId, $receiptType, TRUE);
-    $pdfFilePath = $receiptTask->makePDF(FALSE);
+    //set encrypt password
+    $config = CRM_Core_Config::singleton();
+    if (!empty($config->receiptEmailEncryption) && $config->receiptEmailEncryption) {
+      $recepitPwd = $contributorEmail;;
+      if (!empty($config->receiptSerial) && !empty($contributionId)) {
+        $params_get_custom = array(
+          'version' => 3,
+          'entity_id' => $contributionId,
+          'return.custom_'.$config->receiptSerial => 1,
+        );
+        $result = civicrm_api('custom_value', 'get', $params_get_custom);
+        $receiptSerial = $result['values'][$config->receiptSerial]['latest'];
+        if (preg_match('/^[A-Za-z]{1,2}\d{8,9}$|^\d{8}$/', $receiptSerial)) {
+          $recepitPwd = $receiptSerial;
+        }
+      }
+      $pdfFilePath = $receiptTask->makePDF(False, True, $recepitPwd);
+    }
+    else {
+      $pdfFilePath = $receiptTask->makePDF(False);
+    }
     $pdfFileName = strstr($pdfFilePath, 'Receipt');
     $pdfParams =  array(
       'fullPath' => $pdfFilePath,
@@ -2797,6 +2817,14 @@ WHERE c.id = $id";
     }
     $templateParams['attachments'][] = $pdfParams;
     $templateParams['tplParams']['pdf_receipt'] = 1;
+    $config = CRM_Core_Config::singleton();
+    if (!empty($config->receiptEmailEncryption) && !empty($templateParams['tplParams']['pdf_receipt'])) {
+      $pdfReceiptDecryptInfo = $config->receiptEmailEncryptionText;
+      if (empty(trim($pdfReceiptDecryptInfo))) {
+        $pdfReceiptDecryptInfo = ts('Your PDF receipt is encrypted.').' '.ts('The password is either your tax certificate number or, if not provided, your email address.');
+      }
+      $templateParams['tplParams']['pdf_receipt_decrypt_info'] = $pdfReceiptDecryptInfo;
+    }
 
     $config = CRM_Core_Config::singleton();
     $smarty = new CRM_Core_Smarty($config->templateDir, $config->templateCompileDir);

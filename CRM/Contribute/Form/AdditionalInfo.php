@@ -353,12 +353,31 @@ class CRM_Contribute_Form_AdditionalInfo {
    * @return None.
    */
   static function emailReceipt(&$form, &$params, $ccContribution = FALSE) {
+    $config = CRM_Core_Config::singleton();
     if (!empty($params['is_attach_receipt'])) {
-      $config = CRM_Core_Config::singleton();
       $receiptEmailType = !empty($config->receiptEmailType) ? $config->receiptEmailType : 'copy_only';
       $receiptTask = new CRM_Contribute_Form_Task_PDF();
       $receiptTask->makeReceipt($params['contribution_id'], $receiptEmailType, TRUE);
-      $pdfFilePath = $receiptTask->makePDF(False);
+      //set encrypt password
+      if (!empty($config->receiptEmailEncryption) && $config->receiptEmailEncryption) {
+        $recepitPwd = $form->userEmail;
+        if (!empty($config->receiptSerial) && !empty($form->_id)) {
+          $params_get_custom = array(
+            'version' => 3,
+            'entity_id' => $form->_id,
+            'return.custom_'.$config->receiptSerial => 1,
+          );
+          $result = civicrm_api('custom_value', 'get', $params_get_custom);
+          $receiptSerial = $result['values'][$config->receiptSerial]['latest'];
+          if (preg_match('/^[A-Za-z]{1,2}\d{8,9}$|^\d{8}$/', $receiptSerial)) {
+            $recepitPwd = $receiptSerial;
+          }
+        }
+        $pdfFilePath = $receiptTask->makePDF(False, True, $recepitPwd);
+      }
+      else {
+        $pdfFilePath = $receiptTask->makePDF(False);
+      }
       $pdfFileName = strstr($pdfFilePath, 'Receipt');
       $pdfParams =  array(
         'fullPath' => $pdfFilePath,
@@ -540,6 +559,13 @@ class CRM_Contribute_Form_AdditionalInfo {
     if (!empty($params['is_attach_receipt'])) {
       $templateParams['attachments'][] = $pdfParams;
       $templateParams['tplParams']['pdf_receipt'] = 1;
+      if (!empty($config->receiptEmailEncryption)) {
+        $pdfReceiptDecryptInfo = $config->receiptEmailEncryptionText;
+        if (empty(trim($pdfReceiptDecryptInfo))) {
+          $pdfReceiptDecryptInfo = ts('Your PDF receipt is encrypted.').' '.ts('The password is either your tax certificate number or, if not provided, your email address.');
+        }
+        $templateParams['tplParams']['pdf_receipt_decrypt_info'] = $pdfReceiptDecryptInfo;
+      }
     }
     else {
       $templateParams['PDFFilename'] = 'receipt.pdf';
@@ -555,6 +581,7 @@ class CRM_Contribute_Form_AdditionalInfo {
       $activityId = CRM_Activity_BAO_Activity::addTransactionalActivity($contribution, 'Contribution Notification Email', $workflow['msg_title']);
     }
     $templateParams['activityId'] = $activityId;
+    $config = CRM_Core_Config::singleton();
     list($sendReceipt, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate($templateParams, CRM_Core_DAO::$_nullObject, array(
       0 => array('CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  array($activityId, TRUE)),
       1 => array('CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  array($activityId, FALSE)),
