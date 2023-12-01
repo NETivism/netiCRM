@@ -383,9 +383,10 @@ WHERE pcp.id = %1 AND cc.contribution_status_id =1 AND cc.is_test = 0";
   }
 
   /**
-   * Function to Approve / Reject the campaign page
+   * Approve / Reject / Back to draft, enable / disable page and send email notification
    *
    * @param int $id campaign page id
+   * @param int|bool $statusId bool for set is_active, number for set status_id
    *
    * @return null
    * @access public
@@ -393,7 +394,7 @@ WHERE pcp.id = %1 AND cc.contribution_status_id =1 AND cc.is_test = 0";
    *
    */
   static function setIsActive($id, $statusId) {
-    if ($statusId === true || $statusId === false) {
+    if ($statusId === TRUE || $statusId === FALSE) {
       return self::setDisable($id, $statusId);
     }
 
@@ -418,6 +419,10 @@ WHERE pcp.id = %1 AND cc.contribution_status_id =1 AND cc.is_test = 0";
     if ($result) {
       CRM_Core_Session::setStatus(ts("A notification email has been sent to the supporter."));
     }
+    else {
+      $fixUrl = CRM_Utils_System::url("civicrm/admin/domain", 'action=update&reset=1');
+      CRM_Core_Session::setStatus(ts('The site administrator needs to enter a valid \'FROM Email Address\' in <a href="%1">Administer CiviCRM &raquo; Configure &raquo; Domain Information</a>. The email address used may need to be a valid mail account with your email service provider.', array(1 => $fixUrl)), TRUE, 'warning');
+    }
   }
 
   /**
@@ -435,17 +440,12 @@ WHERE pcp.id = %1 AND cc.contribution_status_id =1 AND cc.is_test = 0";
    *
    */
   static function sendStatusUpdate($pcpId, $newStatus, $isInitial = FALSE) {
-    require_once 'CRM/Contribute/PseudoConstant.php';
     $pcpStatus = CRM_Contribute_PseudoConstant::pcpStatus('name');
     $config = CRM_Core_Config::singleton();
 
     if (!isset($pcpStatus[$newStatus])) {
       return FALSE;
     }
-
-    require_once 'CRM/Utils/Mail.php';
-    require_once 'Mail/mime.php';
-    require_once 'CRM/Contact/BAO/Contact/Location.php';
 
     //set loginUrl
     $loginUrl = $config->userFrameworkBaseURL;
@@ -469,16 +469,12 @@ WHERE pcp.id = %1 AND cc.contribution_status_id =1 AND cc.is_test = 0";
     );
 
     //get the default domain email address.
-    require_once 'CRM/Core/BAO/Domain.php';
     list($domainEmailName, $domainEmailAddress) = CRM_Core_BAO_Domain::getNameAndEmail();
-
     if (!$domainEmailAddress || $domainEmailAddress == 'info@FIXME.ORG') {
-      require_once 'CRM/Utils/System.php';
-      $fixUrl = CRM_Utils_System::url("civicrm/admin/domain", 'action=update&reset=1');
-       return CRM_Core_Error::statusBounce(ts('The site administrator needs to enter a valid \'FROM Email Address\' in <a href="%1">Administer CiviCRM &raquo; Configure &raquo; Domain Information</a>. The email address used may need to be a valid mail account with your email service provider.', array(1 => $fixUrl)));
+      return FALSE;
     }
 
-    $receiptFrom = '"' . $domainEmailName . '" <' . $domainEmailAddress . '>';
+    $receiptFrom = CRM_Utils_Mail::formatRFC822Email($domainEmailName, $domainEmailAddress);
 
     // get recipient (supporter) name and email
     $params = array('id' => $pcpId);
