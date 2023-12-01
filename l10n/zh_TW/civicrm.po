@@ -49700,9 +49700,10 @@ msgid ""
 msgstr "啟用後，將會為電子郵件收據加上密碼，若收據中有包含報稅憑證（例如身份證字號、統一編號），將會用報稅憑證進行加密；若沒有該欄位的值，將會用收件人 Email 地址加密。"
 
 msgid ""
-"If no specific text is set, the default text will be: Please enter your ID "
-"number or Email address to open your receipt."
-msgstr "若未設定文案，預設文案為「請輸入身分證字號或Email地址開啟您的收據。」"
+"If no specific text is set, the default text will be: Your PDF receipt is "
+"encrypted. The password is either your tax certificate number or, if not "
+"provided, your email address."
+msgstr "若未設定文案，預設文案為「您的PDF收據已加密。密碼是您的報稅憑證，若未提供此號碼，則使用您的電子郵件地址作為密碼。」"
 
 #: CRM/Admin/Form/Setting/Miscellaneous.php
 msgid "Path to qpdf executable"
@@ -49757,3 +49758,17 @@ msgid ""
 "Add an eye-catching image to your fundraising campaign. You can choose a "
 "picture from the gallery or upload your own."
 msgstr "為您的募款活動放一張吸睛的圖片。您可以從我們的圖庫中選擇或上傳您自己的照片，包括個人照片或電子賀卡，讓您的朋友慷慨解囊。"
+
+#: CRM/Contribute/BAO/Contribution.php CRM/Contribute/BAO/ContributionPage.php
+#: CRM/Contribute/Form/AdditionalInfo.php
+msgid "Your PDF receipt is encrypted."
+msgstr "您的PDF收據已加密。"
+
+msgid ""
+"The password is either your tax certificate number or, if not provided, your"
+" email address."
+msgstr "密碼是您的報稅憑證，若未提供此號碼，則使用您的電子郵件地址作為密碼。"
+
+#: templates/CRM/Contribute/Form/PCP/Campaign.tpl
+msgid "The content cannot be modified once it is submit."
+msgstr "內容一旦提交就無法修改。"
