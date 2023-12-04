@@ -168,7 +168,9 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
       $readOnly[] = $this->getElement('is_delete_attachment');
     }
 
-    $readOnly[] = $this->addElement('checkbox', 'is_thermometer', ts('Progress Bar'));
+    $readOnly[] = $this->addElement('radio', 'is_thermometer', ts('Display progress bar and amount raised'), '', '1');
+    $readOnly[] = $this->addElement('radio', 'is_thermometer', ts('Display amount raised only'), '', '2');
+    $readOnly[] = $this->addElement('radio', 'is_thermometer', ts('Do not display progress'), '', '0');
     $readOnly[] = $this->addElement('checkbox', 'is_honor_roll', ts('Honor Roll'), NULL);
     $isActive = $this->addElement('checkbox', 'is_active', ts('Active'));
     $readOnly[] = $isActive;

@@ -46,10 +46,21 @@
 {include file="CRM/Form/attachment.tpl" context="pcpCampaign"}
 <table class="form-layout-compressed" width="100%">
 	<tr class="crm-contribution-form-block-is_thermometer">
-		<td class="label">{$form.is_thermometer.label}</td>
-		<td>{$form.is_thermometer.html}
-            <span class="description">{ts}If this option is checked, a "thermometer" showing progress toward your goal will be included on the page.{/ts}</span>
-        </td>
+		<td class="label">{ts}Display fundraising progress{/ts}</td>
+		<td>
+      <div class="crm-form-elem crm-form-radio">
+        {$form.is_thermometer.1.html}{$form.is_thermometer.1.label}
+        <span class="description">{ts}If this option is checked, a "thermometer" showing progress toward your goal will be included on the page.{/ts}</span>
+      </div>
+      <div class="crm-form-elem crm-form-radio">
+        {$form.is_thermometer.2.html}{$form.is_thermometer.2.label}
+        <span class="description">{ts}If this option is checked, the amount of money you have raised will be displayed, but the target amount and progress bar indicating the percentage of the goal will not be shown.{/ts}</span>
+      </div>
+      <div class="crm-form-elem crm-form-radio">
+        {$form.is_thermometer.0.html}{$form.is_thermometer.0.label}
+        <span class="description">{ts}If this option is checked, none of the details including the amount raised, the target amount, and the progress bar showing the goal percentage will be displayed on your fundraising page.{/ts}</span>
+      </div>
+    </td>
 	</tr>
 	<tr class="crm-contribution-form-block-goal_amount">
 		<td class="label">{$form.goal_amount.label}</td>
