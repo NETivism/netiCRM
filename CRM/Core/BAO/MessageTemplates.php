@@ -376,7 +376,6 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
       $text = $meta['msg_text'] . $text;
       $html = preg_replace('/<body(.*)$/im', "<body\\1\n{$meta['msg_html']}", $html);
     }
-
     // replace tokens in the three elements (in subject as if it was the text body)
 
     $domain = CRM_Core_BAO_Domain::getDomain();
