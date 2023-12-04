@@ -606,6 +606,7 @@ INNER JOIN  civicrm_contact ct ON ( ct.id = participant.contact_id ) AND ( ct.is
     $positiveStatuses = CRM_Event_PseudoConstant::participantStatus(NULL, "class = 'Positive'");
     $statusIds = "(" . CRM_Utils_Array::implode(',', array_keys($positiveStatuses)) . ")";
 
+    $seperatorChar = CRM_Core_BAO_CustomOption::VALUE_SEPERATOR;
     $query = "
   SELECT  count(participant.id) as registered,
           civicrm_event.max_participants
@@ -613,6 +614,10 @@ INNER JOIN  civicrm_contact ct ON ( ct.id = participant.contact_id ) AND ( ct.is
    WHERE  participant.event_id = {$eventId}
      AND  civicrm_event.id = participant.event_id
      AND  participant.status_id IN {$statusIds}
+     AND  IF(participant.role_id = civicrm_event.default_role_id,
+      TRUE,
+      INSTR(CONCAT('{$seperatorChar}',participant.role_id,'{$seperatorChar}'), CONCAT('{$seperatorChar}',civicrm_event.default_role_id,'{$seperatorChar}')))
+     AND  participant.is_test = 0
 GROUP BY  participant.event_id
 ";
     $dao = &CRM_Core_DAO::executeQuery($query);
