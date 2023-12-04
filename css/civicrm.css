@@ -4023,6 +4023,7 @@ table.crm-info-panel td.label {
 }
 
 .crm-container .form-layout td.label,
+.crm-container .form-layout-compressed td.label,
 .crm-container form table.report .label,
 .crm-container form table label,
 .crm-container form table.report label {
