@@ -389,10 +389,13 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
     $qpdftopdf = $config->qpdfPath;
 
     if (!empty(exec("test -x $qpdftopdf && echo 1"))) {
-      $destInput = '-- ' . $dest;
-      $destOutput = "--replace-input";
-      $exec = $qpdftopdf . escapeshellcmd("$option $encryptPwd $encryptPwd $key_length $destInput $destOutput");
+      $pdfName = basename($dest);
+      $destInput = '-- '.$dest;
+      $destOutput = str_replace($pdfName, "Encrypt_".$pdfName, $dest);
+      $exec = $qpdftopdf.escapeshellcmd("$option $encryptPwd $encryptPwd $key_length $destInput $destOutput");
       exec($exec);
+      unlink($dest);
+      rename($destOutput, $dest);
       return $dest;
     }
     else {
