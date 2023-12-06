@@ -138,16 +138,9 @@ class CRM_Event_Form_Registration_ParticipantConfirm extends CRM_Event_Form_Regi
       //registration - but is there enough space to confirm.
       require_once 'CRM/Event/PseudoConstant.php';
       require_once 'CRM/Event/BAO/Participant.php';
-      $params = array( 1 => array($this->_participantId, 'Positive'));
-      $isTest = CRM_Core_DAO::singleValueQuery("SELECT is_test FROM civicrm_participant WHERE id = %1", $params);
-      if ($isTest == 1) {
-        $emptySeats = NULL;
-      }
-      else {
-        $emptySeats = CRM_Event_BAO_participant::pendingToConfirmSpaces($this->_eventId);
-        $additonalIds = CRM_Event_BAO_participant::getAdditionalParticipantIds($this->_participantId);
-        $requireSpace = 1 + count($additonalIds);
-      }
+      $emptySeats = CRM_Event_BAO_participant::pendingToConfirmSpaces($this->_eventId);
+      $additonalIds = CRM_Event_BAO_participant::getAdditionalParticipantIds($this->_participantId);
+      $requireSpace = 1 + count($additonalIds);
       if ($emptySeats !== NULL && ($requireSpace > $emptySeats)) {
         $statusMsg = ts("Oops, it looks like there are currently no available spaces for the %1 event.", array(1 => $values['event']['title']));
       }
