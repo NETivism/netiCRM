@@ -33,13 +33,18 @@
  *
  */
 
-require_once 'CRM/Core/Page.php';
-require_once 'CRM/Contribute/BAO/PCP.php';
 
 /**
  * PCP Info Page - Summary about the PCP
  */
 class CRM_Contribute_Page_PCPInfo extends CRM_Core_Page {
+
+  /**
+   * id for current pcp page
+   *
+   * @var int
+   */
+  private $_id;
 
   /**
    * Run the page.
@@ -55,24 +60,23 @@ class CRM_Contribute_Page_PCPInfo extends CRM_Core_Page {
   function run() {
     $session = CRM_Core_Session::singleton();
     $config = CRM_Core_Config::singleton();
-    $permissionCheck = FALSE;
     $statusMessage = '';
-    if ($config->userFramework != 'Joomla') {
-      $permissionCheck = CRM_Core_Permission::check('administer CiviCRM');
-    }
+    $permissionCheck = CRM_Core_Permission::check('administer CiviCRM');
+
     //get the pcp id.
     $this->_id = CRM_Utils_Request::retrieve('id', 'Positive', $this, TRUE);
 
     $action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE);
-    $is_embed = CRM_Utils_Request::retrieve('embed', 'Boolean', $this);
-    $this->assign('is_embed', $is_embed);
+    $isEmbed = CRM_Utils_Request::retrieve('embed', 'Boolean', $this);
+
+    $this->assign('is_embed', $isEmbed);
 
     $prms = array('id' => $this->_id);
 
     CRM_Core_DAO::commonRetrieve('CRM_Contribute_DAO_PCP', $prms, $pcpInfo);
     if (empty($pcpInfo)) {
       $statusMessage = ts('The personal campaign page you requested is currently unavailable.');
-       return CRM_Core_Error::statusBounce($statusMessage,
+      return CRM_Core_Error::statusBounce($statusMessage,
         $config->userFrameworkBaseURL
       );
     }
@@ -89,8 +93,6 @@ class CRM_Contribute_Page_PCPInfo extends CRM_Core_Page {
     );
     $this->assign('shareUrl', $shareUrl);
 
-    require_once 'CRM/Contribute/PseudoConstant.php';
-    require_once 'CRM/Core/OptionGroup.php';
     $pcpStatus = CRM_Contribute_PseudoConstant::pcpStatus();
     $approvedId = CRM_Core_OptionGroup::getValue('pcp_status', 'Approved', 'name');
 
@@ -117,22 +119,38 @@ class CRM_Contribute_Page_PCPInfo extends CRM_Core_Page {
       $statusMessage = ts('The personal campaign page you requested is currently unavailable. However you can still support the campaign by making a contribution here.');
     }
 
-    if ($pcpInfo['status_id'] != $approvedId || !$pcpInfo['is_active']) {
+    // check if PCP needs preview for specific user session
+    $userID = $session->get('userID');
+    $validated = FALSE;
+    if (!$permissionCheck && !$userID) {
+      $qfKeyFromPCPController = CRM_Utils_Request::retrieve('key', 'String', $this);
+      $anonyContactId = $session->get('pcpAnonymousContactId');
+      $validated = CRM_Core_Key::validate($qfKeyFromPCPController, 'CRM_Contribute_Controller_PCP', TRUE);
+
+      if (empty($validated) || $anonyContactId != $pcpInfo['contact_id']) {
+        return CRM_Core_Error::statusBounce($statusMessage, CRM_Utils_System::url('civicrm/contribute/transact',
+          "reset=1&id={$pcpInfo['contribution_page_id']}",
+          FALSE, NULL, FALSE, TRUE
+        ));
+      }
+      $userID = $anonyContactId;
+    }
+    elseif ($pcpInfo['status_id'] != $approvedId || !$pcpInfo['is_active']) {
       if ($pcpInfo['contact_id'] != $session->get('userID') && !$permissionCheck) {
-         return CRM_Core_Error::statusBounce($statusMessage, CRM_Utils_System::url('civicrm/contribute/transact',
-            "reset=1&id={$pcpInfo['contribution_page_id']}",
-            FALSE, NULL, FALSE, TRUE
-          ));
+        return CRM_Core_Error::statusBounce($statusMessage, CRM_Utils_System::url('civicrm/contribute/transact',
+          "reset=1&id={$pcpInfo['contribution_page_id']}",
+          FALSE, NULL, FALSE, TRUE
+        ));
       }
     }
     else {
       $getStatus = CRM_Contribute_BAO_PCP::getStatus($this->_id);
       if (!$getStatus) {
         // PCP not enabled for this contribution page. Forward everyone to main contribution page
-         return CRM_Core_Error::statusBounce($statusMessage, CRM_Utils_System::url('civicrm/contribute/transact',
-            "reset=1&id={$pcpInfo['contribution_page_id']}",
-            FALSE, NULL, FALSE, TRUE
-          ));
+        return CRM_Core_Error::statusBounce($statusMessage, CRM_Utils_System::url('civicrm/contribute/transact',
+          "reset=1&id={$pcpInfo['contribution_page_id']}",
+          FALSE, NULL, FALSE, TRUE
+        ));
       }
     }
 
@@ -142,7 +160,6 @@ class CRM_Contribute_Page_PCPInfo extends CRM_Core_Page {
       $pcpInfo['contribution_page_id'], $default, array('start_date', 'end_date')
     );
 
-    require_once "CRM/Contribute/PseudoConstant.php";
     $this->assign('pageName', CRM_Contribute_PseudoConstant::contributionPage($pcpInfo['contribution_page_id'], TRUE));
 
     if ($pcpInfo['contact_id'] == $session->get('userID')) {
@@ -150,7 +167,6 @@ class CRM_Contribute_Page_PCPInfo extends CRM_Core_Page {
       $owner['status'] = CRM_Utils_Array::value($pcpInfo['status_id'], $pcpStatus);
       $this->assign('owner', $owner);
 
-      require_once 'CRM/Contribute/BAO/PCP.php';
       $link = CRM_Contribute_BAO_PCP::pcpLinks();
       unset($link['all'][CRM_Core_Action::DELETE]);
       if ($pcpInfo['status_id'] == $approvedId) {
@@ -318,16 +334,16 @@ class CRM_Contribute_Page_PCPInfo extends CRM_Core_Page {
         break;
     }
 
-    $userID = $session->get('userID');
     //make sure the user has "administer CiviCRM" permission
     //OR has created the PCP
     if (CRM_Core_Permission::check('administer CiviCRM') ||
-      ($userID && (CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_PCP', $this->_id, 'contact_id') == $userID))
+      ($userID && ($pcpInfo['contact_id'] == $userID)) ||
+      !empty($validated) && ($pcpInfo['contact_id'] == $userID) && $pcpInfo['id'] == $session->get('pcpAnonymousPageId')
     ) {
       $permission = TRUE;
     }
+
     if ($single && $permission) {
-      require_once 'CRM/Core/Controller/Simple.php';
       $controller = new CRM_Core_Controller_Simple($form, $subForm, $action);
       $controller->set('id', $this->_id);
       $controller->set('single', TRUE);

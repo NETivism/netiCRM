@@ -32,8 +32,6 @@
  * $Id$
  *
  */
-require_once 'CRM/Core/Form.php';
-require_once 'CRM/Contribute/BAO/PCP.php';
 
 /**
  * This class generates form components for processing a ontribution
@@ -41,6 +39,11 @@ require_once 'CRM/Contribute/BAO/PCP.php';
  */
 class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
   public $_context;
+
+  private $_key;
+  private $_pageId;
+  private $_contactID;
+  private $_contriPageId;
 
   public function preProcess() {
     // we do not want to display recently viewed items, so turn off
@@ -63,12 +66,20 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
 
     if ($this->_pageId) {
       $title = ts('Edit Your Personal Campaign Page');
-      $pcpPagePreviewUrl = CRM_Utils_System::url("civicrm/contribute/pcp/info",
-      "reset=1&id={$this->_pageId}&embed=1&preview=1",
-      TRUE, NULL, FALSE,
-      TRUE
-    );
-    $this->assign('pcpPagePreviewUrl', $pcpPagePreviewUrl);
+      $queryParams = array(
+        'reset' => 1,
+        'id' => $this->_pageId,
+        'embed' => 1,
+        'preview' => 1,
+      );
+      if ($this->_key) {
+        $queryParams['key'] = $this->_key;
+      }
+      $pcpPagePreviewUrl = CRM_Utils_System::url("civicrm/contribute/pcp/info", http_build_query($queryParams, '', '&'),
+        TRUE, NULL, FALSE,
+        TRUE
+      );
+      $this->assign('pcpPagePreviewUrl', $pcpPagePreviewUrl);
     }
 
     CRM_Utils_System::setTitle($title);
@@ -77,7 +88,6 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
   }
 
   function setDefaultValues() {
-    require_once 'CRM/Contribute/DAO/PCP.php';
     $dafaults = array();
     $dao = new CRM_Contribute_DAO_PCP();
 
@@ -88,7 +98,6 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
       }
       // fix the display of the monetary value, CRM-4038
       if (isset($defaults['goal_amount'])) {
-        require_once 'CRM/Utils/Money.php';
         $defaults['goal_amount'] = CRM_Utils_Money::format($defaults['goal_amount'], NULL, '%a');
       }
 
@@ -254,6 +263,9 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
       $contactID = $this->get('contactID');
       $canNotify = TRUE;
     }
+    if (!$session->get('userID')) {
+      $session->set('pcpAnonymousContactId', $contactID);
+    }
     $params['contact_id'] = $contactID;
     $params['contribution_page_id'] = $this->get('contribution_page_id') ? $this->get('contribution_page_id') : $this->_contriPageId;
 
@@ -283,6 +295,7 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
     $params['id'] = $this->_pageId;
 
     $pcp = CRM_Contribute_BAO_PCP::add($params, FALSE);
+    $session->set('pcpAnonymousPageId', $pcp->id);
 
     // add attachments as needed
     $maxAttachments = 5;
@@ -306,7 +319,6 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
       else {
         $this->assign('mode', 'Add');
       }
-      require_once 'CRM/Core/OptionGroup.php';
       $pcpStatus = CRM_Core_OptionGroup::getLabel('pcp_status', $statusId);
       $this->assign('pcpStatus', $pcpStatus);
 
@@ -338,11 +350,9 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
       $this->assign('managePCPUrl', $managePCPUrl);
 
       //get the default domain email address.
-      require_once 'CRM/Core/BAO/Domain.php';
       list($domainEmailName, $domainEmailAddress) = CRM_Core_BAO_Domain::getNameAndEmail();
 
       if (!$domainEmailAddress || $domainEmailAddress == 'info@FIXME.ORG') {
-        require_once 'CRM/Utils/System.php';
         $fixUrl = CRM_Utils_System::url("civicrm/admin/domain", 'action=update&reset=1');
         CRM_Core_Error::fatal(ts('The site administrator needs to enter a valid \'FROM Email Address\' in <a href="%1">Administer CiviCRM &raquo; Configure &raquo; Domain Information</a>. The email address used may need to be a valid mail account with your email service provider.', array(1 => $fixUrl)));
       }
@@ -359,7 +369,6 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
       $sessionUserID = $session->get('userID');
 
       if ($canNotify || $contactID == $sessionUserID) {
-        require_once 'CRM/Core/BAO/MessageTemplates.php';
         list($sent, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate(
           array(
             'groupName' => 'msg_tpl_workflow_contribution',
@@ -418,9 +427,7 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
       $anonymousPCP = 1;
     }
 
-    CRM_Core_Session::setStatus(ts("Your Personal Campaign Page has been %1 %2 %3",
-        array(1 => $pageStatus, 2 => $approvalMessage, 3 => $notifyStatus)
-      ));
+    CRM_Core_Session::setStatus(ts("Your Personal Campaign Page has been %1 %2 %3", array(1 => $pageStatus, 2 => $approvalMessage, 3 => $notifyStatus)));
     if ($this->_context == 'dashboard') {
       // $session->pushUserContext(CRM_Utils_System::url('civicrm/contribute/pcp/info', "reset=1&id={$pcp->id}&ap={$anonymousPCP}"));
       if (!empty($params['key'])) {
@@ -430,17 +437,31 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
         $session->pushUserContext(CRM_Utils_System::url('civicrm/admin/pcp', "reset=1"));
       }
     }
-    elseif (!$this->_pageId) {
+    // comes from pcp account creation and controller
+    elseif (is_a($this->controller, 'CRM_Contribute_Controller_PCP')) {
       if ($buttonName == '_qf_Campaign_attach') {
-        $session->pushUserContext(CRM_Utils_System::url('civicrm/contribute/pcp/info', "action=update&reset=1&id={$pcp->id}&context=standalone&preview=1&key="));
-      } else {
+        if ($anonymousPCP) {
+          $session->pushUserContext(CRM_Utils_System::url('civicrm/contribute/pcp/info', "action=update&reset=1&id={$pcp->id}&preview=1&key={$this->controller->_key}"));
+        }
+        else {
+          $session->pushUserContext(CRM_Utils_System::url('civicrm/contribute/pcp/info', "action=update&reset=1&id={$pcp->id}&preview=1"));
+        }
+      }
+      else {
         $session->pushUserContext(CRM_Utils_System::url('civicrm/contribute/pcp/info', "reset=1&id={$pcp->id}&ap={$anonymousPCP}"));
       }
     }
-    elseif ($this->_context == 'standalone') {
+    // comes from edit page
+    elseif (is_a($this->controller, 'CRM_Core_Controller_Simple')) {
       if ($buttonName == '_qf_Campaign_attach') {
-        $session->pushUserContext(CRM_Utils_System::url('civicrm/contribute/pcp/info', "action=update&reset=1&id={$pcp->id}&context=standalone&preview=1&key="));
-      } else {
+        if ($anonymousPCP) {
+          $session->pushUserContext(CRM_Utils_System::url('civicrm/contribute/pcp/info', "action=update&reset=1&id={$pcp->id}&preview=1&key={$this->_key}"));
+        }
+        else {
+          $session->pushUserContext(CRM_Utils_System::url('civicrm/contribute/pcp/info', "action=update&reset=1&id={$pcp->id}&preview=1"));
+        }
+      }
+      else {
         $session->pushUserContext(CRM_Utils_System::url('civicrm/contribute/pcp/info', "reset=1&id={$pcp->id}&ap={$anonymousPCP}"));
       }
     }
