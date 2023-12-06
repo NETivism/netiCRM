@@ -62,6 +62,10 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
 
     $this->_pageId = CRM_Utils_Request::retrieve('id', 'Positive', $this, FALSE);
     $this->_contactID = CRM_Utils_Request::retrieve('contactID', 'Positive', $this, FALSE);
+    $pcpShowPreview = CRM_Utils_Request::retrieve('preview', 'Positive', $this, FALSE);
+    if (!empty($pcpShowPreview)) {
+      $this->assign('pcpShowPreview', TRUE);
+    }
     $title = ts('Setup a Personal Campaign Page - Step 2');
 
     if ($this->_pageId) {

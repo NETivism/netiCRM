@@ -109,7 +109,7 @@ cj(document).ready(function($){
 });
 {/literal}</script>
 
-{if $smarty.get.preview && $smarty.get.preview == 1 && isset($pcpPagePreviewUrl)}
+{if $pcpShowPreview && isset($pcpPagePreviewUrl)}
 <link rel="stylesheet" href="{$config->resourceBase}packages/Magnific-Popup/dist/magnific-popup.css?v{$config->ver}">
 {js src=packages/Magnific-Popup/dist/jquery.magnific-popup.min.js group=999 weight=997 library=civicrm/civicrm-js-mailingeditor}{/js}
 
