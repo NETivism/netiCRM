@@ -81,18 +81,21 @@ class CRM_Contribute_Page_PCP extends CRM_Core_Page_Basic {
           'url' => 'civicrm/admin/pcp',
           'qs' => 'action=renew&id=%%id%%',
           'title' => ts('Approve Personal Campaign Page'),
+          'class' => 'dialog approve',
         ),
         CRM_Core_Action::REVERT => array(
           'name' => ts('Reject'),
           'url' => 'civicrm/admin/pcp',
           'qs' => 'action=revert&id=%%id%%',
           'title' => ts('Reject Personal Campaign Page'),
+          'class' => 'dialog reject',
         ),
         CRM_Core_Action::PREVIEW => array(
           'name' => ts('Revoke to Draft'),
           'url' => 'civicrm/admin/pcp',
           'qs' => 'action=preview&id=%%id%%',
           'title' => ts('Revoke Personal Campaign Page to Draft status'),
+          'class' => 'dialog revoke',
         ),
         CRM_Core_Action::DELETE => array(
           'name' => ts('Delete'),
@@ -253,6 +256,7 @@ class CRM_Contribute_Page_PCP extends CRM_Core_Page_Basic {
             $action -= CRM_Core_Action::REVERT;
             $action -= CRM_Core_Action::ENABLE;
             $action -= CRM_Core_Action::DISABLE;
+            $action -= CRM_Core_Action::DELETE;
             break;
 
           case 1:
@@ -275,6 +279,7 @@ class CRM_Contribute_Page_PCP extends CRM_Core_Page_Basic {
             $action -= CRM_Core_Action::REVERT;
             $action -= CRM_Core_Action::ENABLE;
             $action -= CRM_Core_Action::DISABLE;
+            $action -= CRM_Core_Action::DELETE;
             break;
         }
 

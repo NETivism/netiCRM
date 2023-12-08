@@ -34,7 +34,6 @@
 
 {if $rows}
 <div id="ltype">
-{include file="CRM/common/jsortable.tpl hasPager=1}
 {include file="CRM/common/enableDisable.tpl"}
 {strip}
 <table id="options" class="display">
@@ -61,7 +60,40 @@
 	{/foreach}
 	</tbody>
 </table>
+<div id="statusChangeMessage" title="{ts}Status Change{/ts}">
+  <p>{ts 1=approve}Change this pcp page to status <span id="status-indicator">%1</span>{/ts}</p>
+  <p>{ts}Are you sure you want to continue?{/ts}</p>
+</div>
 {/strip}
+<script>{literal}
+  cj(document).ready(function($){
+    $("a.action-item.dialog").click(function(e){
+      e.preventDefault();
+      var $item = $(this);
+      let status = $item.text();
+      $('#status-indicator').text(status);
+      $("#statusChangeMessage").dialog({
+        autoOpen:false,
+        resizable:false,
+        width:450,
+        height:250,
+        modal:true,
+        buttons: {
+          "{/literal}{ts}Proceed and Send Notification{/ts}{literal}": function() {
+            window.location = $item.attr('href');
+            return true;
+          },
+          "{/literal}{ts}Cancel{/ts}{literal}": function() {
+            $(this).dialog('close');
+            return false;
+          }
+        }
+      });
+      $('#statusChangeMessage').dialog('open');
+      return false;
+    });
+  });
+{/literal}</script>
 </div>
 {else}
 <div class="messages status">
