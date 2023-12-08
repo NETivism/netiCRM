@@ -83,4 +83,4 @@ function showElements() {
 </script>
 {/literal} 
 {/if}
-{include file="CRM/common/chosen.tpl" selector="#group_id"}
+{include file="CRM/common/chosen.tpl" selector="#id_existing_group group_id"}
