@@ -441,6 +441,7 @@ WHERE pcp.id = %1 AND cc.contribution_status_id =1 AND cc.is_test = 0";
    */
   static function sendStatusUpdate($pcpId, $newStatus, $isInitial = FALSE) {
     $pcpStatus = CRM_Contribute_PseudoConstant::pcpStatus('name');
+    $pcpStatusLabel = CRM_Contribute_PseudoConstant::pcpStatus();
     $config = CRM_Core_Config::singleton();
 
     if (!isset($pcpStatus[$newStatus])) {
@@ -502,7 +503,6 @@ WHERE pcp.id = %1 AND cc.contribution_status_id =1 AND cc.is_test = 0";
       TRUE, NULL, FALSE, TRUE
     );
     $tplParams['pcpInfoURL'] = $pcpInfoURL;
-    $tplParams['contribPageTitle'] = $contribPageTitle;
     $cc = NULL;
     if ($emails = CRM_Utils_Array::value('notify_email', $pcpBlockInfo)) {
       $emailArray = explode(',', $emails);
@@ -511,6 +511,8 @@ WHERE pcp.id = %1 AND cc.contribution_status_id =1 AND cc.is_test = 0";
     }
     // get appropriate message based on status
     $tplParams['pcpStatus'] = $pcpStatus[$newStatus];
+    $tplParams['pcpStatusLabel'] = $pcpStatusLabel[$newStatus];
+    $tplParams['pcpTitle'] = $pcpInfo['title'];
 
     $tplName = $isInitial ? 'pcp_supporter_notify' : 'pcp_status_change';
 

@@ -133,6 +133,7 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
     $pcpValues = array();
     $statusDraftId = CRM_Core_OptionGroup::getValue('pcp_status', 'Draft', 'name');
     $statusApprovedId = intval(CRM_Core_OptionGroup::getValue('pcp_status', 'Approved', 'name'));
+    $statusWaitingId = intval(CRM_Core_OptionGroup::getValue('pcp_status', 'Waiting Review', 'name'));
     if (!empty($this->_pageId)) {
       $dao = new CRM_Contribute_DAO_PCP();
       $dao->id = $this->_pageId;
@@ -262,10 +263,8 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
     }
     $session = CRM_Core_Session::singleton();
     $contactID = isset($this->_contactID) ? $this->_contactID : $session->get('userID');
-    $canNotify = FALSE;
     if (!$contactID) {
       $contactID = $this->get('contactID');
-      $canNotify = TRUE;
     }
     if (!$session->get('userID')) {
       $session->set('pcpAnonymousContactId', $contactID);
@@ -314,6 +313,33 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
     $notifyStatus = "";
     CRM_Core_DAO::commonRetrieve('CRM_Contribute_DAO_PCPBlock', $pcpParams, $notifyParams, array('notify_email'));
 
+    $attachmentIsExist = !empty($params['is_delete_attachment']) && !empty($params['attachFile_0']['location']);
+
+    // If an attachment file is present, reset the 'preset_image'
+    // We give priority to the user-uploaded attachment file as the main image for the PCP
+    if ($attachmentIsExist) {
+      $params['preset_image'] = '';
+    }
+
+    if (!$attachmentIsExist && !empty($params['preset_image'])) {
+      $config = CRM_Core_Config::singleton();
+      $pcpPresetNum = CRM_Utils_Type::escape($params['preset_image'], 'Integer');
+      $pcpPresetFile = 'pcp_preset_'.$pcpPresetNum.'.png';
+      $dest = $config->customFileUploadDir.$pcpPresetFile;
+      global $civicrm_root;
+      if (!file_exists($dest) && file_exists($civicrm_root.'packages/midjourney/'.$pcpPresetFile)) {
+        $src = $civicrm_root.'packages/midjourney/'.$pcpPresetFile;
+        copy($src, $dest);
+      }
+      $params['attachFile_0'] = array(
+        'uri' => $dest,
+        'location' => $dest,
+        'type' => 'image/png',
+        'upload_date' => '20231024025850',
+      );
+    }
+    CRM_Core_BAO_File::processAttachment($params, 'civicrm_pcp', $pcp->id, $maxAttachments);
+
     if ($emails = CRM_Utils_Array::value('notify_email', $notifyParams)) {
       $this->assign('pcpTitle', $pcp->title);
 
@@ -353,76 +379,42 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
       );
       $this->assign('managePCPUrl', $managePCPUrl);
 
-      //get the default domain email address.
+      // send admin notification when submit button pressed
       list($domainEmailName, $domainEmailAddress) = CRM_Core_BAO_Domain::getNameAndEmail();
-
-      if (!$domainEmailAddress || $domainEmailAddress == 'info@FIXME.ORG') {
-        $fixUrl = CRM_Utils_System::url("civicrm/admin/domain", 'action=update&reset=1');
-        CRM_Core_Error::fatal(ts('The site administrator needs to enter a valid \'FROM Email Address\' in <a href="%1">Administer CiviCRM &raquo; Configure &raquo; Domain Information</a>. The email address used may need to be a valid mail account with your email service provider.', array(1 => $fixUrl)));
-      }
-
-      //if more than one email present for PCP notification ,
-      //first email take it as To and other as CC and First email
-      //address should be sent in users email receipt for
-      //support purpose.
-      $emailArray = explode(',', $emails);
-      CRM_Core_DAO::commonRetrieve('CRM_Contribute_DAO_PCP', $params, $pcpInfo);
-      list($name, $to) = CRM_Contact_BAO_Contact_Location::getEmailDetails($pcpInfo['contact_id']);
-      $cc = CRM_Utils_Array::implode(',', $emailArray);
-
-      $sessionUserID = $session->get('userID');
-
-      if ($canNotify || $contactID == $sessionUserID) {
+      if ($domainEmailAddress && $domainEmailAddress != 'info@FIXME.ORG' && $buttonName == '_qf_Campaign_upload') {
+        $emailArray = explode(',', $emails);
+        $to = trim($emailArray[0]);
+        unset($emailArray[0]);
+        $cc = CRM_Utils_Array::implode(',', $emailArray);
         list($sent, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate(
           array(
             'groupName' => 'msg_tpl_workflow_contribution',
             'valueName' => 'pcp_notify',
             'contactId' => $contactID,
-            'from' => "$domainEmailName <$domainEmailAddress>",
+            'from' => CRM_Utils_Mail::formatRFC822Email($domainEmailName, $domainEmailAddress),
             'toEmail' => $to,
             'cc' => $cc,
           )
         );
-      }
-
-      if ($sent) {
-        $notifyStatus = ts('A notification email has been sent to the site administrator.');
+        if ($sent) {
+          $notifyStatus = ts('A notification email has been sent to the site administrator.');
+        }
       }
     }
 
-    $attachmentIsExist = !empty($params['is_delete_attachment']) && !empty($params['attachFile_0']['location']);
 
-    // If an attachment file is present, reset the 'preset_image'
-    // We give priority to the user-uploaded attachment file as the main image for the PCP
-    if ($attachmentIsExist) {
-      $params['preset_image'] = '';
-    }
-
-    if (!$attachmentIsExist && !empty($params['preset_image'])) {
-      $config = CRM_Core_Config::singleton();
-      $pcpPresetNum = CRM_Utils_Type::escape($params['preset_image'], 'Integer');
-      $pcpPresetFile = 'pcp_preset_'.$pcpPresetNum.'.png';
-      $dest = $config->customFileUploadDir.$pcpPresetFile;
-      global $civicrm_root;
-      if (!file_exists($dest) && file_exists($civicrm_root.'packages/midjourney/'.$pcpPresetFile)) {
-        $src = $civicrm_root.'packages/midjourney/'.$pcpPresetFile;
-        copy($src, $dest);
-      }
-      $params['attachFile_0'] = array(
-        'uri' => $dest,
-        'location' => $dest,
-        'type' => 'image/png',
-        'upload_date' => '20231024025850',
-      );
-    }
-    CRM_Core_BAO_File::processAttachment($params, 'civicrm_pcp', $pcp->id, $maxAttachments);
-
-    // send email notification to supporter, if initial setup / add mode.
+    // send welcome mail to Draft user or Waiting for review user
     if (!$this->_pageId) {
+      // whatever button they press, send welcome mail to them
       CRM_Contribute_BAO_PCP::sendStatusUpdate($pcp->id, $statusId, TRUE);
-      if ($approvalMessage && CRM_Utils_Array::value('status_id', $params) == 1) {
-        $notifyStatus .= ts(' You will receive a second email as soon as the review process is complete.');
-      }
+    }
+    elseif (in_array($statusId, array($statusApprovedId, $statusWaitReviewId)) && $buttonName == '_qf_Campaign_upload') {
+      // submit button pressed, welcome again if needed
+      CRM_Contribute_BAO_PCP::sendStatusUpdate($pcp->id, $statusId, TRUE);
+    }
+
+    if ($approvalMessage && $statusId == $statusWaitReviewId) {
+      $notifyStatus .= ts(' You will receive a second email as soon as the review process is complete.');
     }
 
     //check if pcp created by anonymous user
