@@ -157,7 +157,7 @@ class CRM_Contribute_Form_PCP_PCP extends CRM_Core_Form {
     else {
       require_once 'CRM/Contribute/PseudoConstant.php';
       $status = array_merge(
-        array(ts('- select -')),
+        array('' => ts('- select -')),
         CRM_Contribute_PseudoConstant::pcpstatus()
       );
       $contribution_page = array_merge(

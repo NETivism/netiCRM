@@ -198,7 +198,8 @@ class CRM_Contribute_Page_PCP extends CRM_Core_Page_Basic {
       $contribution_page = CRM_Contribute_PseudoConstant::contributionPage();
       $whereClause = array();
 
-      if ($status_id = CRM_Utils_Request::retrieve('status_id', 'Positive', $this)) {
+      $status_id = CRM_Utils_Request::retrieve('status_id', 'Integer', $this);
+      if (!empty($status_id) || $status_id === '0') {
         $whereClause[] = 'cp.status_id = %1';
         $params['1'] = array($status_id, 'Integer');
       }
