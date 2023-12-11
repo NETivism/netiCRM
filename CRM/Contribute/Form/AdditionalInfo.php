@@ -361,6 +361,9 @@ class CRM_Contribute_Form_AdditionalInfo {
       //set encrypt password
       if (!empty($config->receiptEmailEncryption) && $config->receiptEmailEncryption) {
         $recepitPwd = $form->userEmail;
+        if (!empty($config->serial_id)) {
+          $recepitPwd = $config->serial_id;
+        }
         if (!empty($config->receiptSerial) && !empty($form->_id)) {
           $params_get_custom = array(
             'version' => 3,

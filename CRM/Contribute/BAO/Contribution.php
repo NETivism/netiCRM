@@ -2775,7 +2775,10 @@ WHERE c.id = $id";
     //set encrypt password
     $config = CRM_Core_Config::singleton();
     if (!empty($config->receiptEmailEncryption) && $config->receiptEmailEncryption) {
-      $recepitPwd = $contributorEmail;;
+      $recepitPwd = $contributorEmail;
+      if (!empty($config->serial_id)) {
+        $recepitPwd = $config->serial_id;
+      }
       if (!empty($config->receiptSerial) && !empty($contributionId)) {
         $params_get_custom = array(
           'version' => 3,

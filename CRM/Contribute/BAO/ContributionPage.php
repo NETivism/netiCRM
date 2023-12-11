@@ -196,6 +196,9 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
         //set encrypt password
         if (!empty($config->receiptEmailEncryption) && $config->receiptEmailEncryption) {
           $recepitPwd = $email;
+          if (!empty($config->serial_id)) {
+            $recepitPwd = $config->serial_id;
+          }
           if (!empty($config->receiptSerial) && !empty($values['contribution_id'])) {
             $params_get_custom = array(
               'version' => 3,
