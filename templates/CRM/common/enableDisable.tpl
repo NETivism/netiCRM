@@ -172,9 +172,10 @@ function saveEnableDisable( recordID, recordBAO, op, reloadPage ) {
 
       //modify action link html
       if ( recordBAO == 'CRM_Contribute_BAO_ContributionRecur' ) {
+        let rowId = "row_" + recordID;
         removeLinkAttributes( recordID, op, rowId );
       } else {
-        modifyLinkAttributes( recordID, op, recordBAO, reloadPage, rowId ); 
+        modifyLinkAttributes( recordID, op, recordBAO);
       }
     } 
     //cj( '#enableDisableStatusMsg' ).show( ).html( successMsg );
