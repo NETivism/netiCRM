@@ -49,6 +49,14 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
    */
   public $_single = FALSE;
 
+  /**
+   * Save last serial id when generate receipt
+   *
+   * @var string
+   */
+  public $_lastSerialId = '';
+
+
   protected $_tmpreceipt;
 
   protected $_rows;
@@ -511,7 +519,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
         $receipt_id = CRM_Contribute_BAO_Contribution::genReceiptID($contribution);
       }
       $html .= CRM_Contribute_BAO_Contribution::getReceipt($input, $ids, $objects, $values, $template);
-      $config->serial_id = $template->_tpl_vars['serial_id'];
+      $this->_lastSerialId = $template->_tpl_vars['serial_id'];
 
       // do not use array to prevent memory exhusting
       $this->pushFile($html);
