@@ -279,20 +279,20 @@ class CRM_Contribute_Page_PCPInfo extends CRM_Core_Page {
 
       // we always generate urls for the front end in joomla
       if ($action == CRM_Core_Action::PREVIEW) {
-        $url = CRM_Utils_System::url('civicrm/contribute/transact',
+        $contributeURL = CRM_Utils_System::url('civicrm/contribute/transact',
           "id={$pcpInfo['contribution_page_id']}&pcpId={$this->_id}&reset=1&action=preview",
           TRUE, NULL, TRUE,
           TRUE
         );
       }
       else {
-        $url = CRM_Utils_System::url('civicrm/contribute/transact',
+        $contributeURL = CRM_Utils_System::url('civicrm/contribute/transact',
           "id={$pcpInfo['contribution_page_id']}&pcpId={$this->_id}&reset=1",
           TRUE, NULL, TRUE,
           TRUE
         );
       }
-      $this->assign('contributeURL', $url);
+      $this->assign('contributeURL', $contributeURL);
     }
 
     $template = CRM_Core_Smarty::singleton();
@@ -302,21 +302,17 @@ class CRM_Contribute_Page_PCPInfo extends CRM_Core_Page {
       'goal' => $pcpInfo['goal_amount'],
       'currency' => $pcpInfo['currency'],
       'fullwidth' => TRUE,
-      'display' => $pcpInfo['is_thermometer']
+      'display' => $pcpInfo['is_thermometer'],
+      'current' => $totalAmount,
+      'achieved_percent' => floor($achieved) <= 100 ? $achieved : 100,
+      'achieved_status'=> floor($achieved) >= 100 ? TRUE : FALSE,
     );
-    if ($template->get_template_vars('total') !== null) {
-      $progress['current'] = $template->get_template_vars('total');
-    }
-    if ($template->get_template_vars('achieved') !== null) {
-      $progress['achieved_percent'] = $template->get_template_vars('achieved');
-      $progress['achieved_status'] = $progress['achieved_percent'] >= 100 ? TRUE : FALSE;
-    }
 
-    if ($template->get_template_vars('validDate') && $template->get_template_vars('contributeURL')) {
+    if ($validDate && $contributeURL) {
       $link_display = TRUE;
       $progress['link_display'] = $link_display;
-      $progress['link_url'] = $template->get_template_vars('contributeURL');
-      $progress['link_text'] = $template->get_template_vars('contributionText');
+      $progress['link_url'] = $contributeURL;
+      $progress['link_text'] = $contributionText;
     }
     $this->assign('progress', $progress);
     $this->assign('link_display', $link_display);
