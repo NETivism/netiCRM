@@ -192,10 +192,10 @@
       {/if}
     </div>
     {/if}
-    {if $shareUrl}
+    {if $share_data}
     <ul class="pcp-social-links">
-      <li><a class="social-link facebook" href="{$shareUrl.facebook}" target="_blank" title="{ts 1='Facebook'}Share to %1{/ts}">Facebook</a></li>
-      <li><a class="social-link line" href="{$shareUrl.line}" target="_blank" title="{ts 1='LINE'}Share to %1{/ts}">LINE</a></li>
+      <li><a class="social-link facebook" href="https://www.facebook.com/sharer.php?u={$share_data.url}" target="_blank" title="{ts 1='Facebook'}Share to %1{/ts}">Facebook</a></li>
+      <li><a class="social-link line" href="https://line.me/R/msg/text/?{$share_data.title}%0D%0A{$share_data.url}" target="_blank" title="{ts 1='LINE'}Share to %1{/ts}">LINE</a></li>
     </ul>
     {/if}
   </div>
