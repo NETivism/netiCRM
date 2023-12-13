@@ -49237,3 +49237,31 @@ msgstr ""
 
 msgid "The password is either your tax certificate number or, if not provided, your email address."
 msgstr ""
+
+#: templates/CRM/Contribute/Form/PCP/Campaign.tpl
+msgid "The content cannot be modified once it is submit."
+msgstr ""
+
+#: templates/CRM/Contribute/Form/PCP/Campaign.tpl
+msgid "Display fundraising progress"
+msgstr ""
+
+#: templates/CRM/Contribute/Form/PCP/Campaign.tpl
+msgid "If this option is checked, the amount of money you have raised will be displayed, but the target amount and progress bar indicating the percentage of the goal will not be shown."
+msgstr ""
+
+#: templates/CRM/Contribute/Form/PCP/Campaign.tpl
+msgid "If this option is checked, none of the details including the amount raised, the target amount, and the progress bar showing the goal percentage will be displayed on your fundraising page."
+msgstr ""
+
+#: CRM/Contribute/Form/PCP/Campaign.php
+msgid "Display progress bar and amount raised"
+msgstr ""
+
+#: CRM/Contribute/Form/PCP/Campaign.php
+msgid "Display amount raised only"
+msgstr ""
+
+#: CRM/Contribute/Form/PCP/Campaign.php
+msgid "Do not display either"
+msgstr ""

@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: 馮 佳今, 2022-2023\n"
+"Last-Translator: CC Chu <poliphilonet@gmail.com>, 2020-2023\n"
 "Language-Team: Chinese (Taiwan) (http://app.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49768,3 +49768,37 @@ msgid ""
 "The password is either your tax certificate number or, if not provided, your"
 " email address."
 msgstr "密碼是您的報稅憑證，若未提供此號碼，則使用您的電子郵件地址作為密碼。"
+
+#: templates/CRM/Contribute/Form/PCP/Campaign.tpl
+msgid "The content cannot be modified once it is submit."
+msgstr "內容一旦提交就無法修改。"
+
+#: templates/CRM/Contribute/Form/PCP/Campaign.tpl
+msgid "Display fundraising progress"
+msgstr "顯示募款進度"
+
+#: templates/CRM/Contribute/Form/PCP/Campaign.tpl
+msgid ""
+"If this option is checked, the amount of money you have raised will be "
+"displayed, but the target amount and progress bar indicating the percentage "
+"of the goal will not be shown."
+msgstr "勾選此選項，在您的募款頁代表圖下方顯示已募得金額，但不包括目標金額和進度條。"
+
+#: templates/CRM/Contribute/Form/PCP/Campaign.tpl
+msgid ""
+"If this option is checked, none of the details including the amount raised, "
+"the target amount, and the progress bar showing the goal percentage will be "
+"displayed on your fundraising page."
+msgstr "勾選此選項將隱藏您募款頁上的所有募款進度資訊，包括已募得金額、目標金額和進度條。"
+
+#: CRM/Contribute/Form/PCP/Campaign.php
+msgid "Display progress bar and amount raised"
+msgstr "顯示進度條與已募得金額"
+
+#: CRM/Contribute/Form/PCP/Campaign.php
+msgid "Display amount raised only"
+msgstr "僅顯示已募得金額"
+
+#: CRM/Contribute/Form/PCP/Campaign.php
+msgid "Do not display either"
+msgstr "都不顯示"
