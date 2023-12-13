@@ -606,13 +606,28 @@ INNER JOIN  civicrm_contact ct ON ( ct.id = participant.contact_id ) AND ( ct.is
     $positiveStatuses = CRM_Event_PseudoConstant::participantStatus(NULL, "class = 'Positive'");
     $statusIds = "(" . CRM_Utils_Array::implode(',', array_keys($positiveStatuses)) . ")";
 
+    $participantRoles = CRM_Event_PseudoConstant::participantRole(NULL, 'filter = 1');
+    if (!empty($participantRoles)) {
+      $roleOr = array();
+      foreach($participantRoles as $roleId => $roleName) {
+        $roleOr[] = "FIND_IN_SET('{$roleId}' , pp.role_ids)";
+      }
+      if (!empty($roleOr)) {
+        $whereRoleOr = " (".CRM_Utils_Array::implode(' OR ', $roleOr).") ";
+      }
+    }
+
     $query = "
   SELECT  count(participant.id) as registered,
-          civicrm_event.max_participants
-    FROM  civicrm_participant participant, civicrm_event
+          event.max_participants,
+          pp.role_ids
+    FROM  civicrm_participant participant
+    INNER JOIN civicrm_event event ON event.id = participant.event_id
+    INNER JOIN (SELECT id, REPLACE(role_id, '".CRM_Core_DAO::VALUE_SEPARATOR."', ',') as role_ids FROM civicrm_participant) pp ON pp.id = participant.id
    WHERE  participant.event_id = {$eventId}
-     AND  civicrm_event.id = participant.event_id
      AND  participant.status_id IN {$statusIds}
+     AND  {$whereRoleOr}
+     AND  ( participant.is_test = 0 OR participant.is_test IS NULL )
 GROUP BY  participant.event_id
 ";
     $dao = &CRM_Core_DAO::executeQuery($query);
