@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: CC Chu <poliphilonet@gmail.com>, 2020-2023\n"
+"Last-Translator: jimyhuang <jimmy@netivism.com.tw>, 2013,2015-2023\n"
 "Language-Team: Chinese (Taiwan) (http://app.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49802,3 +49802,15 @@ msgstr "僅顯示已募得金額"
 #: CRM/Contribute/Form/PCP/Campaign.php
 msgid "Do not display either"
 msgstr "都不顯示"
+
+#: templates/CRM/Contribute/Page/PCP.tpl
+msgid "Change this pcp page to status <span id=\"status-indicator\">%1</span>"
+msgstr "變更此個人募款頁的狀態為 <span id=\"status-indicator\">%1</span>"
+
+#: templates/CRM/Contribute/Page/PCP.tpl
+msgid "Proceed and Send Notification"
+msgstr "繼續並寄送通知信"
+
+#: templates/CRM/Contribute/Page/PCP.tpl
+msgid "Status Change"
+msgstr "狀態變更"
