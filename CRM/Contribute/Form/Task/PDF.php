@@ -394,13 +394,17 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
    */
   static function encryptPDF($dest, $encryptPwd, $option = ' --encrypt', $key_length = 256) {
     $config = CRM_Core_Config::singleton();
-    $qpdftopdf = $config->qpdfPath;
+    $qpdf = $config->qpdfPath;
+    if (empty($qpdf)) {
+      CRM_Core_Error::debug_log_message("qpdf path is empty");
+      return $dest;
+    }
 
-    if (!empty(exec("test -x $qpdftopdf && echo 1"))) {
+    if (!empty(exec("test -x $qpdf && echo 1"))) {
       $pdfName = basename($dest);
       $destInput = '-- '.$dest;
       $destOutput = str_replace($pdfName, "Encrypt_".$pdfName, $dest);
-      $exec = $qpdftopdf.escapeshellcmd("$option $encryptPwd $encryptPwd $key_length $destInput $destOutput");
+      $exec = $qpdf.escapeshellcmd("$option $encryptPwd $encryptPwd $key_length $destInput $destOutput");
       exec($exec);
       unlink($dest);
       rename($destOutput, $dest);
