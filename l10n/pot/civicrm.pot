@@ -49265,3 +49265,15 @@ msgstr ""
 #: CRM/Contribute/Form/PCP/Campaign.php
 msgid "Do not display either"
 msgstr ""
+
+#: templates/CRM/Contribute/Page/PCP.tpl
+msgid "Change this pcp page to status <span id=\"status-indicator\">%1</span>"
+msgstr ""
+
+#: templates/CRM/Contribute/Page/PCP.tpl
+msgid "Proceed and Send Notification"
+msgstr ""
+
+#: templates/CRM/Contribute/Page/PCP.tpl
+msgid "Status Change"
+msgstr ""
