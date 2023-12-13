@@ -69,6 +69,12 @@ class CRM_Contribute_Page_PCPInfo extends CRM_Core_Page {
     $action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE);
     $isEmbed = CRM_Utils_Request::retrieve('embed', 'Boolean', $this);
 
+    // Convert the 'isEmbed' variable to a proper Boolean value.
+    // The strtobool method is used here because even if we specify 'Boolean' as the data type,
+    // the value retrieved from an HTTP request could still be a string (like "true", "false", "1", "0").
+    // The strtobool method ensures that these string representations are correctly interpreted as Boolean values.
+    $isEmbed = CRM_Utils_String::strtobool($isEmbed);
+
     $this->assign('is_embed', $isEmbed);
 
     $prms = array('id' => $this->_id);
