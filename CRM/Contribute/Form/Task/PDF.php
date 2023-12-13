@@ -49,6 +49,14 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
    */
   public $_single = FALSE;
 
+  /**
+   * Save last serial id when generate receipt
+   *
+   * @var string
+   */
+  public $_lastSerialId = '';
+
+
   protected $_tmpreceipt;
 
   protected $_rows;
@@ -386,13 +394,17 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
    */
   static function encryptPDF($dest, $encryptPwd, $option = ' --encrypt', $key_length = 256) {
     $config = CRM_Core_Config::singleton();
-    $qpdftopdf = $config->qpdfPath;
+    $qpdf = $config->qpdfPath;
+    if (empty($qpdf)) {
+      CRM_Core_Error::debug_log_message("qpdf path is empty");
+      return $dest;
+    }
 
-    if (!empty(exec("test -x $qpdftopdf && echo 1"))) {
+    if (!empty(exec("test -x $qpdf && echo 1"))) {
       $pdfName = basename($dest);
       $destInput = '-- '.$dest;
       $destOutput = str_replace($pdfName, "Encrypt_".$pdfName, $dest);
-      $exec = $qpdftopdf.escapeshellcmd("$option $encryptPwd $encryptPwd $key_length $destInput $destOutput");
+      $exec = $qpdf.escapeshellcmd("$option $encryptPwd $encryptPwd $key_length $destInput $destOutput");
       exec($exec);
       unlink($dest);
       rename($destOutput, $dest);
@@ -511,6 +523,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
         $receipt_id = CRM_Contribute_BAO_Contribution::genReceiptID($contribution);
       }
       $html .= CRM_Contribute_BAO_Contribution::getReceipt($input, $ids, $objects, $values, $template);
+      $this->_lastSerialId = $template->_tpl_vars['serial_id'];
 
       // do not use array to prevent memory exhusting
       $this->pushFile($html);
