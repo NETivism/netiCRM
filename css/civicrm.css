@@ -7585,6 +7585,18 @@ html[lang="en"] .new-personal-campaign-link-wrap {
 .crm-management.is-embed-mode {
   display: none !important;
 }
+.crm-container .preview-page-title-block {
+  border-bottom: 1px solid #e0e0e0;
+  background: #fff;
+}
+.crm-container .preview-page-title-block > .inner {
+  padding: 15px 10px 10px;
+}
+@media screen and (min-width: 992px) {
+  .crm-container .preview-page-title-block > .inner {
+    padding: 20px;
+  }
+}
 
 /* debug */
 .xdebug-var-dump {
