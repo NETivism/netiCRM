@@ -613,7 +613,7 @@ INNER JOIN  civicrm_contact ct ON ( ct.id = participant.contact_id ) AND ( ct.is
         $roleOr[] = "FIND_IN_SET('{$roleId}' , pp.role_ids)";
       }
       if (!empty($roleOr)) {
-        $whereRoleOr = " (".CRM_Utils_Array::implode(' OR ', $roleOr).") ";
+        $whereRoleOr = "AND (".CRM_Utils_Array::implode(' OR ', $roleOr).") ";
       }
     }
 
@@ -626,7 +626,7 @@ INNER JOIN  civicrm_contact ct ON ( ct.id = participant.contact_id ) AND ( ct.is
     INNER JOIN (SELECT id, REPLACE(role_id, '".CRM_Core_DAO::VALUE_SEPARATOR."', ',') as role_ids FROM civicrm_participant) pp ON pp.id = participant.id
    WHERE  participant.event_id = {$eventId}
      AND  participant.status_id IN {$statusIds}
-     AND  {$whereRoleOr}
+     {$whereRoleOr}
      AND  ( participant.is_test = 0 OR participant.is_test IS NULL )
 GROUP BY  participant.event_id
 ";
