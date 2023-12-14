@@ -34,7 +34,7 @@
     {/if}
     </td>
   </tr>
-  <tr><td><label>{ts}When{/ts}</label></td>
+  <tr><td><label>{ts}Date{/ts}</label></td>
       <td width="90%">
         {$event.event_start_date|crmDate}
         {if $event.event_end_date}

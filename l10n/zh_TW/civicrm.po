@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>, 2013,2015-2023\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>, 2016-2023\n"
 "Language-Team: Chinese (Taiwan) (http://app.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29330,7 +29330,7 @@ msgstr "警告：刪除此選項會導致捐款記錄遺失。"
 msgid ""
 "Personalize the contents and appearance of your fundraising page here. You "
 "will be able to return to this page and make changes at any time."
-msgstr "您可在此對您個人募款頁面的內容與外觀進行修改。請先填入所有必填欄位後點選儲存。您隨時可以回到此頁面修改所有內容。"
+msgstr "請在此步驟填寫您的個人募款頁面內容。完成輸入後，您可以選擇預覽並提交您的內容，或將其儲存為草稿，以便未來登入時進行修改。"
 
 #: templates/CRM/Contribute/Form/PCP/Campaign.tpl
 msgid ""
@@ -49663,3 +49663,81 @@ msgstr "你選擇的金流不支援年度定期定額。"
 
 msgid "%1 only supports monthly recurring payments."
 msgstr "%1 僅僅支援每月定期定額。"
+
+#: templates/CRM/Contribute/Page/PCPInfo.tpl
+msgid "Supported by %1 people"
+msgstr "%1 人響應"
+
+#: templates/CRM/Form/attachment.tpl
+msgid ""
+"Please remove the current attachment before selecting images from the "
+"gallery."
+msgstr "在從圖庫選擇圖片之前，請先移除目前已附加的檔案。"
+
+#: templates/CRM/Form/attachment.tpl
+msgid ""
+"You can use our preset images from the gallery or upload your own in the "
+"attached file below."
+msgstr "您可以使用我們預設的圖庫裡的圖片，或者在下方附加的檔案區域上傳您自己的圖片。"
+
+#: templates/CRM/Form/attachment.tpl
+msgid "Select from gallery"
+msgstr "從圖庫中選擇"
+
+#: CRM/Admin/Form/Setting/Receipt.php
+msgid "Email Receipt Password"
+msgstr "電子郵件收據密碼"
+
+msgid "Email Receipt Password Explanation Text"
+msgstr "電子郵件收據密碼說明文案"
+
+#: templates/CRM/Admin/Form/Setting/Receipt.tpl
+msgid ""
+"After activation, a password will be added to the email receipt. If the "
+"receipt includes tax filing credentials (such as ID number or Uniform "
+"Number), encryption will be done using these credentials. If these fields "
+"are not present, the recipient's email address will be used for encryption."
+msgstr "啟用後，將會為電子郵件收據加上密碼，若收據中有包含報稅憑證（例如身份證字號、統一編號），將會用報稅憑證進行加密；若沒有該欄位的值，將會用收件人 Email 地址加密。"
+
+msgid ""
+"If no specific text is set, the default text will be: Please enter your ID "
+"number or Email address to open your receipt."
+msgstr "若未設定文案，預設文案為「請輸入身分證字號或Email地址開啟您的收據。」"
+
+#: CRM/Admin/Form/Setting/Miscellaneous.php
+msgid "Path to qpdf executable"
+msgstr "執行qpdf的路徑"
+
+#: templates/CRM/Admin/Form/Setting/Miscellaneous.tpl
+msgid ""
+"If qpdf is installed, CiviCRM will use it to generate PDF form letters."
+msgstr "如果安裝了 qpdf，CiviCRM 將使用它來產生 PDF 。"
+
+#: templates/CRM/Contribute/Page/PCPInfo.tpl
+msgid "Share to %1"
+msgstr "分享到 %1"
+
+#: CRM/Core/Payment/TapPay.php
+msgid "Card Category"
+msgstr "卡片類別"
+
+msgid "Prepaid Card"
+msgstr "預付卡"
+
+#: templates/CRM/Form/attachment.tpl
+msgid "Upload Your Own Image?"
+msgstr "是否要自行上傳圖片？"
+
+#: templates/CRM/Form/attachment.tpl
+msgid "If this option is checked, you can upload your own image."
+msgstr "若勾選此選項，您將可以自行上傳圖片。"
+
+#: templates/CRM/Form/attachment.tpl
+msgid ""
+"Before selecting images from the gallery, please uncheck the 'Upload Your "
+"Own Image?' checkbox and delete all currently attachments."
+msgstr "若要從圖庫選擇圖片，請先移除目前已附加的檔案，並取消「是否要自行上傳圖片？」的勾選。"
+
+#: CRM/Event/Form/SearchEvent.php
+msgid "Event Start Date - From"
+msgstr "活動開始日期 - 從"
