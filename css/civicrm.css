@@ -2010,6 +2010,7 @@ table.campaign td,
 .crm-container .pcp-donate a.button,
 .crm-container .pcp-donate a.button:visited,
 .crm-container .pcp-donate a.button:link {
+  margin: 0;
   padding: 16px;
   width: auto;
   min-width: 200px;
@@ -2020,6 +2021,23 @@ table.campaign td,
   border-radius: 2px;
   background: var(--color-crm-special-contribute-primary);
   box-shadow: 1px 1px 10px 1px rgba(0,0,0,.25);
+}
+.crm-container .pcp-donate .button.is-disabled,
+.crm-container .pcp-donate a.button.is-disabled {
+  cursor: not-allowed !important;
+  color: #9e9e9e !important;
+  border: 1px solid #e0e0e0 !important;
+  outline: 0 !important;
+  background-color: #f5f5f5 !important;
+  box-shadow: 1px 1px 10px 1px rgba(0,0,0,.1);
+}
+.crm-container .pcp-donate .button:last-child {
+  margin-right: 0;
+}
+.crm-container .pcp-donate-desc {
+  margin: 12px 0;
+  text-align: center;
+  font-size: 1rem;
 }
 .crm-container .pcp-amount-goal-top {
   position: relative;
@@ -2032,8 +2050,14 @@ table.campaign td,
 .crm-container .pcp-amount-goal-top .counter {
   color: var(--color-crm-special-contribute-primary);
 }
-.crm-container .pcp-amount-goal-top + .pcp-donate .button {
-  margin: 20px 0 30px 0;
+.crm-container .pcp-amount-goal-top + .pcp-donate {
+  margin: 20px 0 0 0;
+}
+.crm-container .pcp-amount-goal-top + .pcp-donate + .pcp-donate-desc {
+  margin-bottom: 30px;
+}
+.crm-container .pcp-campaign {
+  padding-bottom: 40px;
 }
 .crm-container .pcp-intro-text {
   position: relative;
@@ -7226,6 +7250,15 @@ input.crm-form-textfield,
   border-radius: 2px;
   box-shadow: 1px 1px 10px 1px #aaa;
 }
+.crm-container .progress-cell .button.is-disabled,
+.crm-container .progress-cell a.button.is-disabled {
+  cursor: not-allowed !important;
+  color: #9e9e9e !important;
+  border: 1px solid #e0e0e0 !important;
+  outline: 0 !important;
+  background-color: #f5f5f5 !important;
+  box-shadow: 1px 1px 10px 1px rgba(0,0,0,.1);
+}
 .crm-container .progressbar-fullwidth .progress-cell .button,
 .crm-container .progressbar-fullwidth .progress-cell a.button,
 .crm-container .progressbar-fullwidth .progress-cell .button:visited,
@@ -7240,6 +7273,11 @@ input.crm-form-textfield,
   border-radius: 2px;
   background: var(--color-crm-special-contribute-primary);
   box-shadow: 1px 1px 10px 1px rgba(0,0,0,.25);
+}
+.crm-container .progress-desc {
+  margin: 12px 0;
+  text-align: center;
+  font-size: 1rem;
 }
 .crm-container .progressbar-fullwidth .progress-wrapper {
   display: block;

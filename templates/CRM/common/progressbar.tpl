@@ -24,13 +24,28 @@
         <div class="progress-pointer" style="left:0px;margin-left:0;opacity:0">{ts 1="`$progress.achieved_percent`%"}%1 achieved{/ts}</div>
       </div>
       {if $progress.link_display}
-        <div class="progress-cell progress-buttons pcp-buttons-top">
+        <div class="progress-cell progress-buttons">
+        {if isset($progress.contribution_page_is_active)}
+          {if $progress.contribution_page_is_active}
+            {if $progress.link_url}
+            <a class="button" href="{$progress.link_url}">{if $progress.link_text}{$progress.link_text}{else}{ts}Donate Now{/ts}{/if}</a>
+            {else}
+            <div class="button"><span>{if $progress.link_text}{$progress.link_text}{else}{ts}Donate Now{/ts}{/if}</span></div>
+            {/if}
+          {else}
+            <div class="button is-disabled"><span>{if $progress.link_text}{$progress.link_text}{else}{ts}Donate Now{/ts}{/if}</span></div>
+          {/if}
+        {else}
           {if $progress.link_url}
             <a class="button" href="{$progress.link_url}">{if $progress.link_text}{$progress.link_text}{else}{ts}Donate Now{/ts}{/if}</a>
           {else}
             <div class="button"><span>{if $progress.link_text}{$progress.link_text}{else}{ts}Donate Now{/ts}{/if}</span></div>
           {/if}
+        {/if}
         </div>
+        {if isset($progress.contribution_page_is_active) && !$progress.contribution_page_is_active}
+        <div class="progress-desc">{ts}This fundraising campaign has ended.{/ts}</div>
+        {/if}
       {/if}
     </div>
   </div>

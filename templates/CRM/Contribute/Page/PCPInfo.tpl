@@ -78,13 +78,20 @@
     </div>
     {/if}
     {if $link_display}
-    <div class="pcp-donate pcp-buttons pcp-buttons-top">
-      {if $contributeURL}
-      <a href="{$contributeURL}" class="button contribute-button pcp-contribute-button"><span class="normal-text">{$contributionText}</span></a>
-      {else}
-      <div class="button"><span class="normal-text">{$contributionText}</span></div>
+      <div class="pcp-donate pcp-buttons pcp-buttons-top">
+        {if $contribution_page.is_active}
+          {if $contributeURL}
+          <a href="{$contributeURL}" class="button contribute-button pcp-contribute-button"><span class="normal-text">{$contributionText}</span></a>
+          {else}
+          <div class="button contribute-button pcp-contribute-button"><span class="normal-text">{$contributionText}</span></div>
+          {/if}
+        {else}
+        <div class="button contribute-button pcp-contribute-button is-disabled"><span class="normal-text">{$contributionText}</span></div>
+        {/if}
+      </div>
+      {if !$contribution_page.is_active}
+      <div class="pcp-donate-desc">{ts}This fundraising campaign has ended.{/ts}</div>
       {/if}
-    </div>
     {/if}
   {/if}
 {/if}
@@ -95,13 +102,20 @@
     {$pcp.page_text|purify}
   </div>
   {if $link_display}
-  <div class="pcp-donate">
-      {if $contributeURL}
-      <a href="{$contributeURL}" class="button contribute-button pcp-contribute-button"><span>{$contributionText}</span></a>
+    <div class="pcp-donate pcp-buttons pcp-buttons-bottom">
+      {if $contribution_page.is_active}
+        {if $contributeURL}
+        <a href="{$contributeURL}" class="button contribute-button pcp-contribute-button"><span class="normal-text">{$contributionText}</span></a>
+        {else}
+        <div class="button contribute-button pcp-contribute-button"><span class="normal-text">{$contributionText}</span></div>
+        {/if}
       {else}
-      <div class="button"><span>{$contributionText}</span></div>
+      <div class="button contribute-button pcp-contribute-button is-disabled"><span class="normal-text">{$contributionText}</span></div>
       {/if}
-  </div>
+    </div>
+    {if !$contribution_page.is_active}
+    <div class="pcp-donate-desc">{ts}This fundraising campaign has ended.{/ts}</div>
+    {/if}
   {/if}{* end contribute button *}
   {if $pcp.is_honor_roll && $honor}
   <div class="honor-roll-wrapper">
@@ -188,7 +202,7 @@
       {if $contributeURL}
       <a href="{$contributeURL}" class="button contribute-button pcp-contribute-button"><span class="normal-text">{$contributionText}</span><span class="mini-text">{ts}Contribute Now{/ts}</span></a>
       {else}
-      <div class="button"><span class="normal-text">{$contributionText}</span><span class="mini-text">{ts}Contribute Now{/ts}</span></div>
+      <div class="button contribute-button pcp-contribute-button"><span class="normal-text">{$contributionText}</span><span class="mini-text">{ts}Contribute Now{/ts}</span></div>
       {/if}
     </div>
     {/if}
