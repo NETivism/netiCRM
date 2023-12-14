@@ -373,7 +373,7 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
       $this->assign('contribPageTitle', $contribPageTitle);
 
       $managePCPUrl = CRM_Utils_System::url("civicrm/admin/pcp",
-        "reset=1",
+        "reset=1&contribution_page_id={$pcp->contribution_page_id}",
         TRUE, NULL, FALSE,
         FALSE
       );
@@ -396,9 +396,6 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
             'cc' => $cc,
           )
         );
-        if ($sent) {
-          $notifyStatus = ts('A notification email has been sent to the site administrator.');
-        }
       }
     }
 

@@ -243,6 +243,10 @@ cj(document).ready(function($){
       $('.thermometer-pointer').animate({"left":percent+'%'}, 1500);
     }, 500);
   }
+  $(".crm-container > .messages.status").hide();
+  let pcpSessionMessage = $(".crm-container > .messages.status").html();
+  pcpSessionMessage = '<p>'+pcpSessionMessage+'</p>';
+  pcpSessionMessage.prependTo('.pcp-management .inner .messages');
 });
 </script>
 {/literal}
