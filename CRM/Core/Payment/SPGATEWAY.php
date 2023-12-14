@@ -1252,16 +1252,22 @@ EOT;
    * @return void
    */
   public static function recurSync($recurId) {
-    $query = "SELECT trxn_id, CAST(REGEXP_REPLACE(trxn_id, '^[0-9]+_?', '') as UNSIGNED) as number FROM civicrm_contribution WHERE contribution_recur_id = %1 ORDER BY number DESC";
+    $query = "SELECT trxn_id, CAST(REGEXP_REPLACE(trxn_id, '^[0-9_r]+_([0-9]+)$', '\\\\1') as UNSIGNED) as number FROM civicrm_contribution WHERE contribution_recur_id = %1 AND CAST(trxn_id as UNSIGNED) < 900000000 ORDER BY number DESC";
     $result = CRM_Core_DAO::executeQuery($query, array(1 => array($recurId, 'Integer')));
     $result->fetch();
     if(!empty($result->N)){
       // when recurring trxn_id have underline, eg oooo_1
       if (strstr($result->trxn_id, '_')) {
-        list($parentTrxnId, $installment) = explode('_', $result->trxn_id);
-        if (is_numeric($installment)) {
-          $installment++;
-          self::recurSyncTransaction($parentTrxnId.'_'.$installment, TRUE);
+        list($parentTrxnId, $recurringInstallment, $oldRecurInstallment) = explode('_', $result->trxn_id);
+        if ($parentTrxnId == 'r' && is_numeric($oldRecurInstallment)) {
+          // for old recurring. trxn_id like 'r_12_3', $parentTrxnId = 'r', $recurringInstallment = 12, $oldRecurInstallment = 3
+          $oldRecurInstallment++;
+          self::recurSyncTransaction($parentTrxnId.'_'.$recurringInstallment.'_'.$oldRecurInstallment, $createContribution = TRUE);
+        }
+        elseif (is_numeric($recurringInstallment)) {
+          // for current recurring, for trxn_id like 123_4, $parentTrxnId = 123, $recurringInstallment = 4
+          $recurringInstallment++;
+          self::recurSyncTransaction($parentTrxnId.'_'.$recurringInstallment, $createContribution = TRUE);
         }
       }
       // when first recurring trxn_id record without underline
@@ -1288,7 +1294,15 @@ EOT;
     $parentTrxnId = 0;
     $paymentProcessorId = 0;
     if (strstr($trxnId, '_')) {
-      list($parentTrxnId, $recurring_installment) = explode('_', $trxnId);
+      list($recurId, $installment, $oldInstallment) = explode('_', $trxnId);
+      if ($recurId == 'r' && !empty($oldInstallment)) {
+        // Old newebpay recurring, format: r_123_4
+        $parentTrxnId = $trxnId.'_'.$installment;
+      }
+      else {
+        // Current spgateway recurring, format: 1234_5
+        $parentTrxnId = $trxnId;
+      }
     }
     $contribution = new CRM_Contribute_DAO_Contribution();
     $contribution->trxn_id = $trxnId;
