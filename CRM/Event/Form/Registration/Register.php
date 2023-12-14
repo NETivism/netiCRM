@@ -522,7 +522,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
       }
       else{
         $this->assign('show_payment_processors', 1);
-        if (count($pps)) {
+        if (is_array($pps) && count($pps)) {
           if (CRM_Utils_Array::value('is_pay_later', $this->_values['event']) && ($this->_allowConfirmation || (!$this->_requireApproval && !$this->_isOnWaitlist))) {
             $pps[0] = $this->_values['event']['pay_later_text'];
           }
