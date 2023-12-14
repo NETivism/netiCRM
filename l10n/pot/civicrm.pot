@@ -49277,3 +49277,7 @@ msgstr ""
 #: templates/CRM/Contribute/Page/PCP.tpl
 msgid "Status Change"
 msgstr ""
+
+#: templates/CRM/Contribute/Page/PCPInfo.tpl
+msgid "This fundraising campaign has ended."
+msgstr ""
