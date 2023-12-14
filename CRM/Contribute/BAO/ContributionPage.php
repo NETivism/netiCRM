@@ -195,23 +195,14 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
         $receiptTask->makeReceipt($values['contribution_id'], $receiptEmailType, TRUE);
         //set encrypt password
         if (!empty($config->receiptEmailEncryption) && $config->receiptEmailEncryption) {
-          $recepitPwd = $email;
-          if (!empty($config->receiptSerial) && !empty($values['contribution_id'])) {
-            $params_get_custom = array(
-              'version' => 3,
-              'entity_id' => $values['contribution_id'],
-              'return.custom_'.$config->receiptSerial => 1,
-            );
-            $result = civicrm_api('custom_value', 'get', $params_get_custom);
-            $receiptSerial = $result['values'][$config->receiptSerial]['latest'];
-            if (preg_match('/^[A-Za-z]{1,2}\d{8,9}$|^\d{8}$/', $receiptSerial)) {
-              $recepitPwd = $receiptSerial;
-            }
+          $receiptPwd = $email;
+          if (!empty($receiptTask->_lastSerialId) && preg_match('/^[A-Za-z]{1,2}\d{8,9}$|^\d{8}$/', $receiptTask->_lastSerialId)) {
+            $receiptPwd = $receiptTask->_lastSerialId;
           }
-          $pdfFilePath = $receiptTask->makePDF(False, True, $recepitPwd);
+          $pdfFilePath = $receiptTask->makePDF(FALSE, TRUE, $receiptPwd);
         }
         else {
-          $pdfFilePath = $receiptTask->makePDF(False);
+          $pdfFilePath = $receiptTask->makePDF(FALSE);
         }
         $pdfFileName = strstr($pdfFilePath, 'Receipt');
         $pdfParams =  array(
@@ -351,7 +342,7 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
           if (empty(trim($pdfReceiptDecryptInfo))) {
             $pdfReceiptDecryptInfo = ts('Your PDF receipt is encrypted.').' '.ts('The password is either your tax certificate number or, if not provided, your email address.');
           }
-          $templateParams['tplParams']['pdf_receipt_decrypt_info'] = $pdfReceiptDecryptInfo;
+          $sendTemplateParams['tplParams']['pdf_receipt_decrypt_info'] = $pdfReceiptDecryptInfo;
         }
         unset($sendTemplateParams['PDFFilename']);
 

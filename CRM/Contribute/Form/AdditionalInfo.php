@@ -360,20 +360,11 @@ class CRM_Contribute_Form_AdditionalInfo {
       $receiptTask->makeReceipt($params['contribution_id'], $receiptEmailType, TRUE);
       //set encrypt password
       if (!empty($config->receiptEmailEncryption) && $config->receiptEmailEncryption) {
-        $recepitPwd = $form->userEmail;
-        if (!empty($config->receiptSerial) && !empty($form->_id)) {
-          $params_get_custom = array(
-            'version' => 3,
-            'entity_id' => $form->_id,
-            'return.custom_'.$config->receiptSerial => 1,
-          );
-          $result = civicrm_api('custom_value', 'get', $params_get_custom);
-          $receiptSerial = $result['values'][$config->receiptSerial]['latest'];
-          if (preg_match('/^[A-Za-z]{1,2}\d{8,9}$|^\d{8}$/', $receiptSerial)) {
-            $recepitPwd = $receiptSerial;
-          }
+        $receiptPwd = $form->userEmail;
+        if (!empty($receiptTask->_lastSerialId) && preg_match('/^[A-Za-z]{1,2}\d{8,9}$|^\d{8}$/', $receiptTask->_lastSerialId)) {
+          $receiptPwd = $receiptTask->_lastSerialId;
         }
-        $pdfFilePath = $receiptTask->makePDF(False, True, $recepitPwd);
+        $pdfFilePath = $receiptTask->makePDF(False, True, $receiptPwd);
       }
       else {
         $pdfFilePath = $receiptTask->makePDF(False);
