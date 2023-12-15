@@ -49281,3 +49281,140 @@ msgstr ""
 #: templates/CRM/Contribute/Page/PCPInfo.tpl
 msgid "This fundraising campaign has ended."
 msgstr ""
+
+#: xml/templates/message_templates/pcp_notify_subject.tpl
+#: xml/templates/message_templates/pcp_status_change_subject.tpl
+#: xml/templates/message_templates/pcp_supporter_notify_subject.tpl
+msgid "Is live"
+msgstr ""
+
+#: xml/templates/message_templates/pcp_status_change_html.tpl
+#: xml/templates/message_templates/pcp_status_change_text.tpl
+#: xml/templates/message_templates/pcp_supporter_notify_html.tpl
+#: xml/templates/message_templates/pcp_supporter_notify_text.tpl
+msgid "Your Personal Campaign Page is now available for public access."
+msgstr ""
+
+#: xml/templates/message_templates/pcp_status_change_html.tpl
+#: xml/templates/message_templates/pcp_status_change_text.tpl
+#: xml/templates/message_templates/pcp_supporter_notify_html.tpl
+#: xml/templates/message_templates/pcp_supporter_notify_text.tpl
+msgid "Congratulations!"
+msgstr ""
+
+#: xml/templates/message_templates/pcp_status_change_html.tpl
+#: xml/templates/message_templates/pcp_status_change_text.tpl
+#: xml/templates/message_templates/pcp_supporter_notify_html.tpl
+#: xml/templates/message_templates/pcp_supporter_notify_text.tpl
+msgid ""
+"You can now openly share the page to gather more donations for your "
+"fundraising campaign!"
+msgstr ""
+
+#: xml/templates/message_templates/pcp_status_change_html.tpl
+#: xml/templates/message_templates/pcp_status_change_text.tpl
+#: xml/templates/message_templates/pcp_supporter_notify_html.tpl
+msgid "Please copy your Personal Campign Page URL %1"
+msgstr ""
+
+#: xml/templates/message_templates/pcp_status_change_html.tpl
+#: xml/templates/message_templates/pcp_status_change_text.tpl
+#: xml/templates/message_templates/pcp_supporter_notify_html.tpl
+#: xml/templates/message_templates/pcp_supporter_notify_text.tpl
+msgid ""
+"Subsequently, you can share your Personal Campaign Page link across various "
+"social media platforms to rally friends and family to support this "
+"fundraising initiative!"
+msgstr ""
+
+#: xml/templates/message_templates/pcp_status_change_html.tpl
+#: xml/templates/message_templates/pcp_status_change_text.tpl
+msgid ""
+"Your Personal Campaign Page has been reviewed by our administrators, and it "
+"has been determined that further modifications are needed."
+msgstr ""
+
+#: xml/templates/message_templates/pcp_status_change_html.tpl
+#: xml/templates/message_templates/pcp_status_change_text.tpl
+msgid "As a result, it has been reverted to a draft status."
+msgstr ""
+
+#: xml/templates/message_templates/pcp_status_change_html.tpl
+#: xml/templates/message_templates/pcp_status_change_text.tpl
+msgid ""
+"We recommend reaching out to the administrator at %1 to understand the "
+"reasons for the required changes."
+msgstr ""
+
+#: xml/templates/message_templates/pcp_status_change_html.tpl
+msgid ""
+"You can <a href=\"%1\">log in</a> to the system again to <a href=\"%2\">edit "
+"the page</a>."
+msgstr ""
+
+#: xml/templates/message_templates/pcp_status_change_html.tpl
+#: xml/templates/message_templates/pcp_status_change_text.tpl
+msgid ""
+"Once the editing is completed, you can resubmit it for administrator review."
+msgstr ""
+
+#: xml/templates/message_templates/pcp_status_change_text.tpl
+msgid "Afterward, you can log in to the system again to edit the page."
+msgstr ""
+
+#: xml/templates/message_templates/pcp_status_change_text.tpl
+msgid "Edit personal campaign page"
+msgstr ""
+
+#: xml/templates/message_templates/pcp_supporter_notify_html.tpl
+#: xml/templates/message_templates/pcp_supporter_notify_text.tpl
+msgid ""
+"Before you start sharing the Personal Campaign Page and commence "
+"fundraising, it needs to obtain approval from the administrator."
+msgstr ""
+
+#: xml/templates/message_templates/pcp_supporter_notify_html.tpl
+msgid "Currently, this page is undergoing the approval process."
+msgstr ""
+
+#: xml/templates/message_templates/pcp_supporter_notify_html.tpl
+#: xml/templates/message_templates/pcp_supporter_notify_text.tpl
+msgid ""
+"Once the review is complete, you will soon receive an approval confirmation "
+"email from %1."
+msgstr ""
+
+#: xml/templates/message_templates/pcp_supporter_notify_html.tpl
+#: xml/templates/message_templates/pcp_supporter_notify_text.tpl
+msgid ""
+"Upon receiving an approval email, you can begin sharing the page and start "
+"fundraising!"
+msgstr ""
+
+#: xml/templates/message_templates/pcp_supporter_notify_html.tpl
+#: xml/templates/message_templates/pcp_supporter_notify_text.tpl
+msgid ""
+"If you wish to preview the edited fundraising page before administrator "
+"approval, please follow these steps:"
+msgstr ""
+
+#: xml/templates/message_templates/pcp_supporter_notify_html.tpl
+#: xml/templates/message_templates/pcp_supporter_notify_text.tpl
+msgid "Preview your personal campaign page"
+msgstr ""
+
+#: xml/templates/message_templates/pcp_supporter_notify_html.tpl
+msgid ""
+"You have currently saved this page as a draft and it has not been submitted "
+"yet."
+msgstr ""
+
+#: xml/templates/message_templates/pcp_supporter_notify_html.tpl
+msgid ""
+"To continue editing this page, please <a href=\"%1\">log in</a> then you can "
+"further edit <a href=\"%2\">your Personal Campaign Page</a>."
+msgstr ""
+
+#: xml/templates/message_templates/pcp_supporter_notify_text.tpl
+msgid "Please log in to obtain your Personal Campaign Page link"
+msgstr ""
