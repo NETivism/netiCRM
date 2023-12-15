@@ -34,7 +34,7 @@ which prevented us from approving the page. We are sorry for any inconvenience.{
     {elseif $pcpStatus eq 'Draft'}
       <p>{ts}Your Personal Campaign Page has been reviewed by our administrators, and it has been determined that further modifications are needed.{/ts} {ts}As a result, it has been reverted to a draft status.{/ts}<p>
       {if $pcpNotifyEmailAddress}
-      <p>{ts 1=pcpNotifyEmailAddress}We recommend reaching out to the administrator at %1 to understand the reasons for the required changes.{/ts}</p>
+      <p>{ts 1=$pcpNotifyEmailAddress}We recommend reaching out to the administrator at %1 to understand the reasons for the required changes.{/ts}</p>
       {/if}
       <p>{ts 1=$loginUrl 2=$pcpInfoURL}You can <a href="%1">log in</a> to the system again to <a href="%2">edit the page</a>.{/ts} {ts}Once the editing is completed, you can resubmit it for administrator review.{/ts}</p>
     {/if}
