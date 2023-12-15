@@ -132,7 +132,7 @@ class CRM_Contribute_Page_PCPInfo extends CRM_Core_Page {
     // check if PCP needs preview for specific user session
     $userID = $session->get('userID');
     $validated = FALSE;
-    if (!$permissionCheck && !$userID && $pcpInfo['status_id'] != $approvedId && !$pcpInfo['is_active']) {
+    if (!$permissionCheck && !$userID && $pcpInfo['status_id'] != $approvedId) {
       $qfKeyFromPCPController = CRM_Utils_Request::retrieve('key', 'String', $this);
       $anonyContactId = $session->get('pcpAnonymousContactId');
       $validated = CRM_Core_Key::validate($qfKeyFromPCPController, 'CRM_Contribute_Controller_PCP', TRUE);
