@@ -1,8 +1,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
- <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
- <title></title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title></title>
 </head>
 <body>
 
@@ -11,7 +11,7 @@
 {capture assign=valueStyle }style="padding: 4px; border-bottom: 1px solid #999;"{/capture}
 
 <center>
- <table width="620" border="0" cellpadding="0" cellspacing="0" id="crm-event_receipt" style="font-family: Arial, Verdana, sans-serif; text-align: left;">
+<table width="620" border="0" cellpadding="0" cellspacing="0" id="crm-event_receipt" style="font-family: Arial, Verdana, sans-serif; text-align: left;">
 
   <!-- BEGIN HEADER -->
   <!-- You can add table row(s) here with logo or other header elements -->
@@ -20,76 +20,50 @@
   <!-- BEGIN CONTENT -->
 
   <tr>
-   <td>
+    <td>
     <p>{ts 1="$contribPageTitle"}Thanks for creating a personal campaign page in support of %1.{/ts}</p>
-   </td>
+    </td>
   </tr>
 
   {if $pcpStatus eq 'Approved'}
-
     <tr>
-     <td>
-      <table style="border: 1px solid #999; margin: 1em 0em 1em; border-collapse: collapse; width:100%;">
-       <tr>
-        <th {$headerStyle}>
-         {ts}Promoting Your Page{/ts}
-        </th>
-       </tr>
-       <tr>
-        <td colspan="2" {$valueStyle}>
-         {if $isTellFriendEnabled}
-          <p>{ts}You can begin your fundraising efforts using our "Tell a Friend" form{/ts}:</p>
-          <ol>
-           <li><a href="{$loginUrl}">{ts}Login to your account{/ts}</a></li>
-           <li><a href="{$pcpTellFriendURL}">{ts}Click this link and follow the prompts{/ts}</a></li>
-          </ol>
-         {else}
-          <p>{ts}Send email to family, friends and colleagues with a personal message about this campaign.{/ts} {ts}Include this link to your fundraising page in your emails{/ts}: {$pcpInfoURL}</p>
-         {/if}
-        </td>
-       </tr>
-       <tr>
-        <th {$headerStyle}>
-         {ts}Managing Your Page{/ts}
-        </th>
-       <tr>
-        <td colspan="2" {$valueStyle}>
-         <p>{ts}Whenever you want to preview, update or promote your page{/ts}:</p>
-         <ol>
-          <li><a href="{$loginUrl}">{ts}Login to your account{/ts}</a></li>
-          <li><a href="{$pcpInfoURL}">{ts}Go to your page{/ts}</a></li>
-         </ol>
-         <p>{ts}When you view your campaign page WHILE LOGGED IN, the page includes links to edit
-your page, tell friends, and update your contact info.{/ts}</p>
-        </td>
-       </tr>
-       </tr>
-      </table>
-     </td>
+      <td>
+      <p>{ts}Your Personal Campaign Page is now available for public access.{/ts} {ts}Congratulations!{/ts} {ts}You can now openly share the page to gather more donations for your fundraising campaign!{/ts}</p>
+      <p>{ts 1=$pcpInfoURL}Please copy your Personal Campign Page URL %1{/ts}. {ts}Subsequently, you can share your Personal Campaign Page link across various social media platforms to rally friends and family to support this fundraising initiative!{/ts}</p>
+      </td>
     </tr>
 
-   {elseif $pcpStatus EQ 'Waiting Review'}
-
+  {elseif $pcpStatus eq 'Waiting Review'}
     <tr>
-     <td>
-      <p>{ts}Before you can share your personal campaign page and start fundraising, it needs to be approved by the administrator.{/ts}</p>
-      {if $pcpNotifyEmailAddress}
-      <p>{ts 1=$pcpNotifyEmailAddress}Currently, your page is in the review process. Once the review is complete, you will soon receive an approval email from %1. After receiving the email, you can share your page and start fundraising!{/ts}</p>
-      {else}
-      <p>{ts}Currently, your page is in the review process. Once the review is complete, you can share your page and start fundraising!{/ts}</p>
-      {/if}
-      <p>{ts}If you would like to preview your edited campaign page before the administrator approves it, please follow these steps{/ts}:</p>
+      <td>
+      <p>{ts}Before you start sharing the Personal Campaign Page and commence fundraising, it needs to obtain approval from the administrator.{/ts}</p>
+      <p>{ts}Currently, this page is undergoing the approval process.{/ts} {ts 1=$pcpNotifyEmailAddress}Once the review is complete, you will soon receive an approval confirmation email from %1.{/ts} {ts}Upon receiving an approval email, you can begin sharing the page and start fundraising!{/ts}</p>
 
+      <p>{ts}If you wish to preview the edited fundraising page before administrator approval, please follow these steps:{/ts}</p>
       <ol>
-       <li>{ts 1=$loginUrl}<a href="%1">Log in</a> to the system to preview your personal campaign page.{/ts}</li>
-       <li><a href="{$pcpInfoURL}">{ts}Click this link{/ts}</a></li>
+        <li><a href="{$loginUrl}">{ts}Login to your account{/ts}</a></li>
+        <li><a href="{$pcpInfoURL}">{ts}Preview your personal campaign page{/ts}</a></li>
       </ol>
-     </td>
+
+      {if $pcpNotifyEmailAddress}
+        <tr>
+          <td>
+          <p>{ts}Questions? Send email to{/ts}: {$pcpNotifyEmailAddress}</p>
+          </td>
+        </tr>
+      {/if}
+    </td>
     </tr>
+  {elseif $pcpStatus eq 'Draft'}
+    <tr>
+      <td>
+      <p>{ts}You have currently saved this page as a draft and it has not been submitted yet.{/ts}</p>
+      <p>{ts 1=$loginUrl 2=$pcpInfoURL}To continue editing this page, please <a href="%1">log in</a> then you can further edit <a href="%2">your Personal Campaign Page</a>.{/ts}</p>
+      </td>
+    </tr>
+  {/if}
 
-   {/if}
-
- </table>
+</table>
 </center>
 
 </body>
