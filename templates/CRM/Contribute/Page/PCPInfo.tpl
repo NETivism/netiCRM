@@ -34,27 +34,27 @@
 <div class="pcp-management crm-management">
 {/if}
 <div class="inner">
-<div class="messages status">
-	<p><strong>{ts}Personal Fundraiser View{/ts}</strong> - {ts 1=$contribPageURL 2=$pageName}This is a preview of your Personal Campaign Page in support of <a href="%1"><strong>"%2"</strong></a>.{/ts}</p>
-        {ts}The current status of your page is{/ts}: <strong {if $pcp.status_id NEQ 2}class="font-red"{/if}>{$owner.status}</strong>.
-        {if $pcp.status_id NEQ 2}<br />{ts}You will receive an email notification when your page is Approved and you can begin promoting your campaign.{/ts}{/if}
-        {if $owner.start_date}<br />{ts}This campaign is active from{/ts} <strong>{$owner.start_date|truncate:10:''|crmDate}</strong> {ts}until{/ts} <strong>{$owner.end_date|truncate:10:''|crmDate}</strong>.{/if}
-        <table class="form-layout-compressed">
-        <tr><td colspan="2"><strong>{ts}You can{/ts}:</strong></td></tr>
-		{foreach from = $links key = k item = v}
-          <tr>
-            <td>
-                <a href="{crmURL p=$v.url q=$v.qs|replace:'%%pcpId%%':$replace.id|replace:'%%pcpBlock%%':$replace.block}" title="{$v.title}"{if $v.extra}{$v.extra}{/if}><strong>&raquo; {$v.name}</strong></a>
-		   </td>
-  		   <td>&nbsp;<cite>{$hints.$k}</cite></td>
-	 	 </tr>
+<div class="crm-box crm-box-info">
+  <div class="crm-box-inner inner">
+    <div class="crm-box-body">
+      <div class="message">
+        <h3><strong>{ts}Personal Fundraiser View{/ts}</strong> - {ts 1=$contribPageURL 2=$pageName}This is a preview of your Personal Campaign Page in support of <a href="%1"><strong>"%2"</strong></a>.{/ts}</h3>
+        {ts}The current status of your page is{/ts}: <strong {if $pcp.status_id NEQ 2}class="font-red" {/if}>{$owner.status}</strong>. {if $pcp.status_id NEQ 2}<br />{ts}You will receive an email notification when your page is Approved and you can begin promoting your campaign.{/ts}{/if}{if $owner.start_date}<br />{ts}This campaign is active from{/ts}<strong>{$owner.start_date|truncate:10:''|crmDate}</strong> {ts}until{/ts}<strong>{$owner.end_date|truncate:10:''|crmDate}</strong>.{/if}
+      </div> {* message end *}
+      <ul class="crm-list">
+        {foreach from = $links key = k item = v}
+        <li class="crm-list-item">
+          <a class="action-link" href="{crmURL p=$v.url q=$v.qs|replace:'%%pcpId%%':$replace.id|replace:'%%pcpBlock%%':$replace.block}" title="{$v.title}" {if $v.extra}{$v.extra}{/if}>{$v.name}</a>
+          <div class="desc">{$hints.$k}</div>
+        </li>
         {/foreach}
-  	   </table>
-	<i class="zmdi zmdi-lamp"></i>
-     <strong>{ts}Tip{/ts}</strong> - <span>{ts}You must be logged in to your account to access the editing options above. (If you visit this page without logging in, you will be viewing the page in "live" mode - as your visitors and friends see it.){/ts}</span>
-</div>
-</div>
-</div>
+      </ul> {* crm-list end *}
+      <div class="tip"><strong>{ts}Tip{/ts}</strong> - {ts}You must be logged in to your account to access the editing options above. (If you visit this page without logging in, you will be viewing the page in "live" mode - as your visitors and friends see it.){/ts}</div>
+    </div> {* crm-box-body end *}
+  </div> {* crm-box-inner end *}
+</div> {* crm-box end *}
+</div> {* pcp-management inner end *}
+</div> {* pcp-management end *}
 {/if}
 
 {if $pcpImageSrc}
