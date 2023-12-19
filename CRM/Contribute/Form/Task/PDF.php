@@ -49,6 +49,14 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
    */
   public $_single = FALSE;
 
+  /**
+   * Save last serial id when generate receipt
+   *
+   * @var string
+   */
+  public $_lastSerialId = '';
+
+
   protected $_tmpreceipt;
 
   protected $_rows;
@@ -356,14 +364,55 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
     return $return;
   }
 
-  public function makePDF($download = TRUE) {
+  public function makePDF($download = TRUE, $encryptWhenPossible = FALSE, $encryptPwd = NULL) {
     $template = &CRM_Core_Smarty::singleton();
     $pages = $this->popFile();
     $template->assign('pages', $pages);
     $pages = $template->fetch('CRM/common/Receipt.tpl');
     $pdf_real_filename = CRM_Utils_PDF_Utils::html2pdf($pages, 'Receipt.pdf', 'portrait', 'a4', $download);
+    $encryptPwd = str_replace(array('\'', '"'), '', $encryptPwd);
+    if (defined('CIVICRM_ENABLE_PDF_ENCRYPTION') && CIVICRM_ENABLE_PDF_ENCRYPTION && $encryptWhenPossible) {
+      $pdf_real_filename = self::encryptPDF($pdf_real_filename, $encryptPwd);
+    }
     if (!$download) {
       return $pdf_real_filename;
+    }
+  }
+
+  /**
+   * Generate pdf from static version of pdf
+   *
+   *
+   * @ $dest string
+   * destination of pdf out
+   *
+   * @ $encryptPwd string
+   * destination of encrypt password
+   *
+   * @ $option string
+   * see /usr/bin/qpdf --help
+   */
+  static function encryptPDF($dest, $encryptPwd, $option = ' --encrypt', $key_length = 256) {
+    $config = CRM_Core_Config::singleton();
+    $qpdf = $config->qpdfPath;
+    if (empty($qpdf)) {
+      CRM_Core_Error::debug_log_message("qpdf path is empty");
+      return $dest;
+    }
+
+    if (!empty(exec("test -x $qpdf && echo 1"))) {
+      $pdfName = basename($dest);
+      $destInput = '-- '.$dest;
+      $destOutput = str_replace($pdfName, "Encrypt_".$pdfName, $dest);
+      $exec = $qpdf.escapeshellcmd("$option $encryptPwd $encryptPwd $key_length $destInput $destOutput");
+      exec($exec);
+      unlink($dest);
+      rename($destOutput, $dest);
+      return $dest;
+    }
+    else {
+      CRM_Core_Error::debug_log_message("Could not find qpdf library");
+      return FALSE;
     }
   }
 
@@ -474,6 +523,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
         $receipt_id = CRM_Contribute_BAO_Contribution::genReceiptID($contribution);
       }
       $html .= CRM_Contribute_BAO_Contribution::getReceipt($input, $ids, $objects, $values, $template);
+      $this->_lastSerialId = $template->_tpl_vars['serial_id'];
 
       // do not use array to prevent memory exhusting
       $this->pushFile($html);
