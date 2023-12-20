@@ -39913,7 +39913,7 @@ msgstr "登入後，您可以使用此表格去宣傳您的募款頁。"
 #: xml/templates/message_templates/pcp_supporter_notify_html.tpl
 #: xml/templates/message_templates/pcp_supporter_notify_text.tpl
 msgid "Questions? Send email to"
-msgstr "我們將儘速確認並發佈您的個人募款頁，請靜待通知。若有任何問題？ 請 email 到"
+msgstr "若有任何問題，請寫信到 "
 
 #: xml/templates/message_templates/pcp_status_change_html.tpl
 #: xml/templates/message_templates/pcp_status_change_text.tpl
@@ -49814,3 +49814,144 @@ msgstr "繼續並寄送通知信"
 #: templates/CRM/Contribute/Page/PCP.tpl
 msgid "Status Change"
 msgstr "狀態變更"
+
+#: templates/CRM/Contribute/Page/PCPInfo.tpl
+msgid "This fundraising campaign has ended."
+msgstr "本募款活動已結束。"
+
+#: xml/templates/message_templates/pcp_notify_subject.tpl
+#: xml/templates/message_templates/pcp_status_change_subject.tpl
+#: xml/templates/message_templates/pcp_supporter_notify_subject.tpl
+msgid "Is live"
+msgstr "已上線"
+
+#: xml/templates/message_templates/pcp_status_change_html.tpl
+#: xml/templates/message_templates/pcp_status_change_text.tpl
+#: xml/templates/message_templates/pcp_supporter_notify_html.tpl
+#: xml/templates/message_templates/pcp_supporter_notify_text.tpl
+msgid "Your Personal Campaign Page is now available for public access."
+msgstr "您的個人募款頁已可公開上線，"
+
+#: xml/templates/message_templates/pcp_status_change_html.tpl
+#: xml/templates/message_templates/pcp_status_change_text.tpl
+#: xml/templates/message_templates/pcp_supporter_notify_html.tpl
+#: xml/templates/message_templates/pcp_supporter_notify_text.tpl
+msgid "Congratulations!"
+msgstr "恭喜！"
+
+#: xml/templates/message_templates/pcp_status_change_html.tpl
+#: xml/templates/message_templates/pcp_status_change_text.tpl
+#: xml/templates/message_templates/pcp_supporter_notify_html.tpl
+#: xml/templates/message_templates/pcp_supporter_notify_text.tpl
+msgid ""
+"You can now openly share the page to gather more donations for your "
+"fundraising campaign!"
+msgstr "現在您可以公開分享頁面，為捐款計畫募集更多捐款！"
+
+#: xml/templates/message_templates/pcp_status_change_html.tpl
+#: xml/templates/message_templates/pcp_status_change_text.tpl
+#: xml/templates/message_templates/pcp_supporter_notify_html.tpl
+msgid "Please copy your Personal Campign Page URL %1"
+msgstr "請您複製個人募款頁連結網址 %1 "
+
+#: xml/templates/message_templates/pcp_status_change_html.tpl
+#: xml/templates/message_templates/pcp_status_change_text.tpl
+#: xml/templates/message_templates/pcp_supporter_notify_html.tpl
+#: xml/templates/message_templates/pcp_supporter_notify_text.tpl
+msgid ""
+"Subsequently, you can share your Personal Campaign Page link across various "
+"social media platforms to rally friends and family to support this "
+"fundraising initiative!"
+msgstr "後續即可在各大社群分享您的個人募款頁連結，號召親朋好友一起響應這個募款計畫！"
+
+#: xml/templates/message_templates/pcp_status_change_html.tpl
+#: xml/templates/message_templates/pcp_status_change_text.tpl
+msgid ""
+"Your Personal Campaign Page has been reviewed by our administrators, and it "
+"has been determined that further modifications are needed."
+msgstr "您所送出的個人募款頁，經由管理員審核後，評估需要再修改。"
+
+#: xml/templates/message_templates/pcp_status_change_html.tpl
+#: xml/templates/message_templates/pcp_status_change_text.tpl
+msgid "As a result, it has been reverted to a draft status."
+msgstr "因此已為您回復到草稿狀態。"
+
+#: xml/templates/message_templates/pcp_status_change_html.tpl
+#: xml/templates/message_templates/pcp_status_change_text.tpl
+msgid ""
+"We recommend reaching out to the administrator at %1 to understand the "
+"reasons for the required changes."
+msgstr "建議您可以連絡管理員 %1 ，了解修改原因。"
+
+#: xml/templates/message_templates/pcp_status_change_html.tpl
+msgid ""
+"You can <a href=\"%1\">log in</a> to the system again to <a href=\"%2\">edit"
+" the page</a>."
+msgstr "您可以再 <a href=\"%1\">登入</a> 系統重新 <a href=\"%2\">編輯頁面</a>。"
+
+#: xml/templates/message_templates/pcp_status_change_html.tpl
+#: xml/templates/message_templates/pcp_status_change_text.tpl
+msgid ""
+"Once the editing is completed, you can resubmit it for administrator review."
+msgstr "編輯完成後可再點選「送出」，交由管理員審核。"
+
+#: xml/templates/message_templates/pcp_status_change_text.tpl
+msgid "Afterward, you can log in to the system again to edit the page."
+msgstr "後續您可以再登入系統重新編輯頁面。"
+
+#: xml/templates/message_templates/pcp_status_change_text.tpl
+msgid "Edit personal campaign page"
+msgstr "編輯個人募款頁"
+
+#: xml/templates/message_templates/pcp_supporter_notify_html.tpl
+#: xml/templates/message_templates/pcp_supporter_notify_text.tpl
+msgid ""
+"Before you start sharing the Personal Campaign Page and commence "
+"fundraising, it needs to obtain approval from the administrator."
+msgstr "在您開始分享個人募款頁、開始募款之前，需要通過管理員的審核確認。"
+
+#: xml/templates/message_templates/pcp_supporter_notify_html.tpl
+msgid "Currently, this page is undergoing the approval process."
+msgstr "目前此頁面正在審核作業中。"
+
+#: xml/templates/message_templates/pcp_supporter_notify_html.tpl
+#: xml/templates/message_templates/pcp_supporter_notify_text.tpl
+msgid ""
+"Once the review is complete, you will soon receive an approval confirmation "
+"email from %1."
+msgstr "當審核完成，您很快會收到來自 %1 的審核通知信。"
+
+#: xml/templates/message_templates/pcp_supporter_notify_html.tpl
+#: xml/templates/message_templates/pcp_supporter_notify_text.tpl
+msgid ""
+"Upon receiving an approval email, you can begin sharing the page and start "
+"fundraising!"
+msgstr "收到信後，即可分享專頁、開始募款！"
+
+#: xml/templates/message_templates/pcp_supporter_notify_html.tpl
+#: xml/templates/message_templates/pcp_supporter_notify_text.tpl
+msgid ""
+"If you wish to preview the edited fundraising page before administrator "
+"approval, please follow these steps:"
+msgstr "在管理員批准前，若要先預覽您所編輯的募款頁，請按以下步驟進行："
+
+#: xml/templates/message_templates/pcp_supporter_notify_html.tpl
+#: xml/templates/message_templates/pcp_supporter_notify_text.tpl
+msgid "Preview your personal campaign page"
+msgstr "預覽您的個人募款頁"
+
+#: xml/templates/message_templates/pcp_supporter_notify_html.tpl
+msgid ""
+"You have currently saved this page as a draft and it has not been submitted "
+"yet."
+msgstr "目前您將此頁面儲存為草稿狀態、尚未送出。"
+
+#: xml/templates/message_templates/pcp_supporter_notify_html.tpl
+msgid ""
+"To continue editing this page, please <a href=\"%1\">log in</a> then you can"
+" further edit <a href=\"%2\">your Personal Campaign Page</a>."
+msgstr "若要繼續編修此頁面，請 <a href=\"%1\">登入</a> ，即可繼續編輯 <a href=\"%2\">您的個人募款頁</a>。"
+
+#: xml/templates/message_templates/pcp_supporter_notify_text.tpl
+msgid "Please log in to obtain your Personal Campaign Page link"
+msgstr "請登入取得你的個人募款頁連結"
