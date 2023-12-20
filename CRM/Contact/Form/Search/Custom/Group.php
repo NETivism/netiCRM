@@ -99,7 +99,6 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
       CRM_Utils_System::redirect($url);
     }
 
-    // $this->addElement('select', 'groups', ts('Add imported records to existing group(s)'), $groups, array('multiple' => "multiple", 'size' => 5));
     $inG = &$form->addElement('select', 'includeGroups',
       ts('Include Group(s)') . ' ', $groups,
       array('size' => 5,
