@@ -24,7 +24,7 @@
  +--------------------------------------------------------------------+
 *}
 {* this template is used for displaying PCP information *}
-{capture assign="contribPageURL"}{crmURL p='civicrm/contribute/transact' q="reset=1&id=`$pcp.contribution_page_id`"}{/capture}
+{capture assign="contrib_page_url"}{crmURL p='civicrm/contribute/transact' q="reset=1&id=`$pcp.contribution_page_id`"}{/capture}
 <link rel="stylesheet" href="{$config->resourceBase}packages/fontawesome/css/fontawesome.min.css?v{$config->ver}">
 <link rel="stylesheet" href="{$config->resourceBase}packages/fontawesome/css/brands.min.css?v{$config->ver}">
 {if $owner}
@@ -38,7 +38,7 @@
   <div class="crm-box-inner inner">
     <div class="crm-box-body">
       <div class="message">
-        <h3><strong>{ts}Personal Fundraiser View{/ts}</strong> - {ts 1=$contribPageURL 2=$pageName}This is a preview of your Personal Campaign Page in support of <a href="%1"><strong>"%2"</strong></a>.{/ts}</h3>
+        <h3><strong>{ts}Personal Fundraiser View{/ts}</strong> - {ts 1=$contrib_page_url 2=$pageName}This is a preview of your Personal Campaign Page in support of <a href="%1"><strong>"%2"</strong></a>.{/ts}</h3>
         {ts}The current status of your page is{/ts}: <strong {if $pcp.status_id NEQ 2}class="font-red" {/if}>{$owner.status}</strong>. {if $pcp.status_id NEQ 2}<br />{ts}You will receive an email notification when your page is Approved and you can begin promoting your campaign.{/ts}{/if}{if $owner.start_date}<br />{ts}This campaign is active from{/ts}<strong>{$owner.start_date|truncate:10:''|crmDate}</strong> {ts}until{/ts}<strong>{$owner.end_date|truncate:10:''|crmDate}</strong>.{/if}
       </div> {* message end *}
       <ul class="crm-list">
@@ -57,8 +57,8 @@
 </div> {* pcp-management end *}
 {/if}
 
-{if $pcpImageSrc}
-<div class="pcp-leading" style="background-image:url({$pcpImageSrc})">
+{if $pcp_image_src}
+<div class="pcp-leading" style="background-image:url({$pcp_image_src})">
 </div>
 {/if}
 
@@ -80,13 +80,13 @@
     {if $link_display}
       <div class="pcp-donate pcp-buttons pcp-buttons-top">
         {if $contribution_page.is_active}
-          {if $contributeURL}
-          <a href="{$contributeURL}" class="button contribute-button pcp-contribute-button"><span class="normal-text">{$contributionText}</span></a>
+          {if $contribute_url}
+          <a href="{$contribute_url}" class="button contribute-button pcp-contribute-button"><span class="normal-text">{$contribution_text}</span></a>
           {else}
-          <div class="button contribute-button pcp-contribute-button"><span class="normal-text">{$contributionText}</span></div>
+          <div class="button contribute-button pcp-contribute-button"><span class="normal-text">{$contribution_text}</span></div>
           {/if}
         {else}
-        <div class="button contribute-button pcp-contribute-button is-disabled"><span class="normal-text">{$contributionText}</span></div>
+        <div class="button contribute-button pcp-contribute-button is-disabled"><span class="normal-text">{$contribution_text}</span></div>
         {/if}
       </div>
       {if !$contribution_page.is_active}
@@ -104,13 +104,13 @@
   {if $link_display}
     <div class="pcp-donate pcp-buttons pcp-buttons-bottom">
       {if $contribution_page.is_active}
-        {if $contributeURL}
-        <a href="{$contributeURL}" class="button contribute-button pcp-contribute-button"><span class="normal-text">{$contributionText}</span></a>
+        {if $contribute_url}
+        <a href="{$contribute_url}" class="button contribute-button pcp-contribute-button"><span class="normal-text">{$contribution_text}</span></a>
         {else}
-        <div class="button contribute-button pcp-contribute-button"><span class="normal-text">{$contributionText}</span></div>
+        <div class="button contribute-button pcp-contribute-button"><span class="normal-text">{$contribution_text}</span></div>
         {/if}
       {else}
-      <div class="button contribute-button pcp-contribute-button is-disabled"><span class="normal-text">{$contributionText}</span></div>
+      <div class="button contribute-button pcp-contribute-button is-disabled"><span class="normal-text">{$contribution_text}</span></div>
       {/if}
     </div>
     {if !$contribution_page.is_active}
@@ -189,7 +189,7 @@
   {/literal}
   {/if}{* end pcp honor roll *}
 
-  <div class="pcp-parent-link"><a href="{$contribPageURL}">{ts}Back to contribution page{/ts} <i class="zmdi zmdi-arrow-right-top"></i></a></div>
+  <div class="pcp-parent-link"><a href="{$contrib_page_url}">{ts}Back to contribution page{/ts} <i class="zmdi zmdi-arrow-right-top"></i></a></div>
 </div><!-- /.campaign -->
 
 <div class="pcp-sticky-header">
@@ -199,10 +199,10 @@
     {/if}
     {if $link_display}
     <div class="pcp-donate">
-      {if $contributeURL}
-      <a href="{$contributeURL}" class="button contribute-button pcp-contribute-button"><span class="normal-text">{$contributionText}</span><span class="mini-text">{ts}Contribute Now{/ts}</span></a>
+      {if $contribute_url}
+      <a href="{$contribute_url}" class="button contribute-button pcp-contribute-button"><span class="normal-text">{$contribution_text}</span><span class="mini-text">{ts}Contribute Now{/ts}</span></a>
       {else}
-      <div class="button contribute-button pcp-contribute-button"><span class="normal-text">{$contributionText}</span><span class="mini-text">{ts}Contribute Now{/ts}</span></div>
+      <div class="button contribute-button pcp-contribute-button"><span class="normal-text">{$contribution_text}</span><span class="mini-text">{ts}Contribute Now{/ts}</span></div>
       {/if}
     </div>
     {/if}

@@ -231,7 +231,7 @@ class CRM_Contribute_Page_PCPInfo extends CRM_Core_Page {
           ),
         );
         CRM_Utils_System::addHTMLHead($meta);
-        $this->assign('pcpImageSrc', $encodedSrc);
+        $this->assign('pcp_image_src', $encodedSrc);
       }
     }
 
@@ -279,7 +279,7 @@ class CRM_Contribute_Page_PCPInfo extends CRM_Core_Page {
         $contributionText = $pcpInfo['donate_link_text'];
       }
 
-      $this->assign('contributionText', $contributionText);
+      $this->assign('contribution_text', $contributionText);
 
       // we always generate urls for the front end in joomla
       if ($action == CRM_Core_Action::PREVIEW) {
@@ -296,7 +296,7 @@ class CRM_Contribute_Page_PCPInfo extends CRM_Core_Page {
           TRUE
         );
       }
-      $this->assign('contributeURL', $contributeURL);
+      $this->assign('contribute_url', $contributeURL);
     }
 
     $progress = array(

@@ -109,7 +109,7 @@ cj(document).ready(function($){
 });
 {/literal}</script>
 
-{if $pcpShowPreview && isset($pcpPagePreviewUrl)}
+{if $pcp_show_preview && isset($pcp_page_preview_url)}
 <link rel="stylesheet" href="{$config->resourceBase}packages/Magnific-Popup/dist/magnific-popup.css?v{$config->ver}">
 {js src=packages/Magnific-Popup/dist/jquery.magnific-popup.min.js group=999 weight=997 library=civicrm/civicrm-js-mailingeditor}{/js}
 
@@ -127,13 +127,13 @@ cj(document).ready(function($){
       <div class="crm-preview-panels">
         <div class="crm-preview-panel crm-preview-desktop-panel" data-mode="desktop">
           <div class="desktop-preview-container preview-container">
-            <div class="preview-content"><iframe id="crm-preview-iframe-desktop" class="crm-preview-iframe" src="{$pcpPagePreviewUrl}"></iframe>
+            <div class="preview-content"><iframe id="crm-preview-iframe-desktop" class="crm-preview-iframe" src="{$pcp_page_preview_url}"></iframe>
             </div>
           </div>
         </div>
         <div class="crm-preview-panel crm-preview-mobile-panel is-active" data-mode="mobile">
           <div class="mobile-preview-container preview-container">
-            <div class="preview-content"><iframe id="crm-preview-iframe-mobile" class="crm-preview-iframe" src="{$pcpPagePreviewUrl}"></iframe>
+            <div class="preview-content"><iframe id="crm-preview-iframe-mobile" class="crm-preview-iframe" src="{$pcp_page_preview_url}"></iframe>
             </div>
           </div>
         </div>
