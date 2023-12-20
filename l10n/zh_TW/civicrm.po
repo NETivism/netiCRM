@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>, 2013,2015-2023\n"
+"Last-Translator: CC Chu <poliphilonet@gmail.com>, 2020-2023\n"
 "Language-Team: Chinese (Taiwan) (http://app.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49955,3 +49955,9 @@ msgstr "若要繼續編修此頁面，請 <a href=\"%1\">登入</a> ，即可繼
 #: xml/templates/message_templates/pcp_supporter_notify_text.tpl
 msgid "Please log in to obtain your Personal Campaign Page link"
 msgstr "請登入取得你的個人募款頁連結"
+
+#: templates/CRM/Member/Form/Task/Delete.tpl
+msgid ""
+"This delete operation cannot be undone and will delete all transactions and "
+"activity associated with these members."
+msgstr "這個刪除操作無法復原，並將會刪除與這些會員相關的所有交易和活動記錄。"
