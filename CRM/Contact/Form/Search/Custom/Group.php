@@ -122,7 +122,7 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
       ts('Include Tag(s)') . ' ', $tags,
       array('size' => 5,
         'style' => 'width:400px',
-        'class' => 'multiple',
+        'multiple' => 'multiple',
       )
     );
 
