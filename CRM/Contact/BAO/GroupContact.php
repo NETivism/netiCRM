@@ -344,7 +344,7 @@ class CRM_Contact_BAO_GroupContact extends CRM_Contact_DAO_GroupContact {
     }
 
     require_once 'CRM/Contact/BAO/Query.php';
-    $from = CRM_Contact_BAO_Query::fromClause($tables);
+    $from = CRM_Contact_BAO_Query::getFromClause($tables);
 
     $where .= " AND $permission ";
 
@@ -478,7 +478,7 @@ class CRM_Contact_BAO_GroupContact extends CRM_Contact_DAO_GroupContact {
     $whereTables = array();
     $where = CRM_Contact_BAO_Query::getWhereClause($params, NULL, $tables, $whereTables);
     $permission = CRM_Core_Permission::whereClause(CRM_Core_Permission::VIEW, $tables, $whereTables, 'contact');
-    $from = CRM_Contact_BAO_Query::fromClause($tables, $inner);
+    $from = CRM_Contact_BAO_Query::getFromClause($tables, $inner);
     $query .= " $from WHERE $permission AND $where ";
 
     if ($sort != NULL) {
