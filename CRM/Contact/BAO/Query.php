@@ -4268,10 +4268,10 @@ SELECT COUNT( cc.total_amount ) as total_count,
        cc.currency              as currency";
 
     // make sure contribution is completed - CRM-4989
-    $whereForTatol = $where;
-    $whereForTatol .= " AND civicrm_contribution.contribution_status_id = 1 ";
+    $whereForTotal = $where;
+    $whereForTotal .= " AND civicrm_contribution.contribution_status_id = 1 ";
     if ($context == 'search') {
-      $whereForTatol .= " AND contact_a.is_deleted = 0 ";
+      $whereForTotal .= " AND contact_a.is_deleted = 0 ";
     }
 
     $summary = array();
