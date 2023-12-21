@@ -257,47 +257,30 @@ class CRM_Contribute_Page_PCPInfo extends CRM_Core_Page {
     if ($achieved <= 100) {
       $this->assign('remaining', 100 - $achieved);
     }
-    // make sure that we are between  registration start date and registration end date
-    $startDate = CRM_Utils_Date::unixTime(CRM_Utils_Array::value('start_date', $owner));
 
-    $endDate = CRM_Utils_Date::unixTime(CRM_Utils_Array::value('end_date', $owner));
-
-    $now = time();
-    $validDate = TRUE;
-    if ($startDate && $startDate >= $now) {
-      $validDate = FALSE;
-    }
-    if ($endDate && $endDate < $now) {
-      $validDate = FALSE;
+    $contributionText = ts('Contribute Now');
+    if (CRM_Utils_Array::value('donate_link_text', $pcpInfo)) {
+      $contributionText = $pcpInfo['donate_link_text'];
     }
 
-    $this->assign('validDate', TRUE);
-    if ($validDate) {
+    $this->assign('contribution_text', $contributionText);
 
-      $contributionText = ts('Contribute Now');
-      if (CRM_Utils_Array::value('donate_link_text', $pcpInfo)) {
-        $contributionText = $pcpInfo['donate_link_text'];
-      }
-
-      $this->assign('contribution_text', $contributionText);
-
-      // we always generate urls for the front end in joomla
-      if ($action == CRM_Core_Action::PREVIEW) {
-        $contributeURL = CRM_Utils_System::url('civicrm/contribute/transact',
-          "id={$pcpInfo['contribution_page_id']}&pcpId={$this->_id}&reset=1&action=preview",
-          TRUE, NULL, TRUE,
-          TRUE
-        );
-      }
-      else {
-        $contributeURL = CRM_Utils_System::url('civicrm/contribute/transact',
-          "id={$pcpInfo['contribution_page_id']}&pcpId={$this->_id}&reset=1",
-          TRUE, NULL, TRUE,
-          TRUE
-        );
-      }
-      $this->assign('contribute_url', $contributeURL);
+    // we always generate urls for the front end in joomla
+    if ($action == CRM_Core_Action::PREVIEW) {
+      $contributeURL = CRM_Utils_System::url('civicrm/contribute/transact',
+        "id={$pcpInfo['contribution_page_id']}&pcpId={$this->_id}&reset=1&action=preview",
+        TRUE, NULL, TRUE,
+        TRUE
+      );
     }
+    else {
+      $contributeURL = CRM_Utils_System::url('civicrm/contribute/transact',
+        "id={$pcpInfo['contribution_page_id']}&pcpId={$this->_id}&reset=1",
+        TRUE, NULL, TRUE,
+        TRUE
+      );
+    }
+    $this->assign('contribute_url', $contributeURL);
 
     $progress = array(
       'type' => 'amount',
@@ -312,7 +295,7 @@ class CRM_Contribute_Page_PCPInfo extends CRM_Core_Page {
       'contribution_page_is_active' => $contributionPageInfo['is_active']
     );
 
-    if ($validDate && $contributeURL) {
+    if ($contributeURL) {
       $linkDisplay = TRUE;
       $progress['link_display'] = $linkDisplay;
       $progress['link_url'] = $contributeURL;

@@ -229,8 +229,15 @@
   $(document).ready(function() {
     windowResizeEvent();
 
-    let $pcpButtonsTop = $('.pcp-buttons-top'),
-        $pcpStickyHeader = $('.pcp-sticky-header');
+    var $pcpButtonsTop;
+    if ($('.progress-block').length > 0) {
+      $pcpButtonsTop = $('.progress-block .progress-buttons');
+      console.log($pcpButtonsTop);
+    }
+    else {
+      $pcpButtonsTop = $('.pcp-buttons-top');
+    }
+    let $pcpStickyHeader = $('.pcp-sticky-header');
 
     $(window).on('scroll', function() {
       let buttonOffset = $pcpButtonsTop.offset().top + $pcpButtonsTop.outerHeight();
@@ -259,8 +266,10 @@ cj(document).ready(function($){
   }
   $(".crm-container > .messages.status").hide();
   let pcpSessionMessage = $(".crm-container > .messages.status").html();
-  pcpSessionMessage = '<p>'+pcpSessionMessage+'</p>';
-  pcpSessionMessage.prependTo('.pcp-management .inner .messages');
+  if (pcpSessionMessage) {
+    pcpSessionMessage = '<p>'+pcpSessionMessage+'</p>';
+    pcpSessionMessage.prependTo('.pcp-management .inner .messages');
+  }
 });
 </script>
 {/literal}
