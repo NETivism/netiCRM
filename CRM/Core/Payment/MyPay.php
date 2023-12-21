@@ -6,7 +6,7 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
   const MYPAY_TEST_DOMAIN = 'https://pay.usecase.cc';
   const MYPAY_URL_API = '/api/init';
 
-  public static $_allowRecurUnit = array('month');
+  public static $_allowRecurUnit = array('month', 'year');
 
   /**
    * mode of operation: live or test
