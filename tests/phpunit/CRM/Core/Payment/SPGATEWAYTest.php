@@ -31,12 +31,6 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
       die("You must enable civicrm_spgateway module first before test.");
     }
     $payment_page = variable_get('civicrm_demo_payment_page', array());
-    $payment_page= array(
-      'Payment_ALLPAY' => 9,
-      'Payment_Neweb' => 10,
-      'Payment_SPGATEWAY' => 11,
-      'Payment_Mobile' => 12,
-    );
     $class_name = 'Payment_SPGATEWAY';
     if(isset($payment_page[$class_name])){
       $this->_page_id = $payment_page[$class_name];
