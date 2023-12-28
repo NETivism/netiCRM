@@ -938,7 +938,7 @@ EOT;
     }
   }
 
-  public static function doSingleQueryRecord($contributionId = NULL) {
+  public static function doSingleQueryRecord($contributionId = NULL, $order = NULL) {
     $get = $_GET;
     unset($get['q']);
     if (!is_numeric($contributionId) || empty($contributionId)) {
@@ -955,7 +955,14 @@ EOT;
       $resultMessage = ts("The contribution with transaction ID: %1 can't find from Newebpay API.", array(1 => $cid));
     }
     else {
-      self::syncTransaction($trxnId);
+      if (!empty($order)) {
+        // this is for ci testing or something we already had response
+        // should be object or associated array
+        self::syncTransaction($trxnId, $order);
+      }
+      else {
+        self::syncTransaction($trxnId);
+      }
       $resultMessage = ts("Synchronizing to %1 server success.", array(1 => ts("NewebPay")));
       $updatedDAO = new CRM_Contribute_DAO_Contribution();
       $updatedDAO->id = $cid;
@@ -1024,8 +1031,10 @@ EOT;
       }
       $resultMessage.="</ul>";
     }
-    CRM_Core_Session::setStatus($resultMessage);
-    CRM_Utils_System::redirect($redirect);
+    if (!isset($order)) {
+      CRM_Core_Session::setStatus($resultMessage);
+      CRM_Utils_System::redirect($redirect);
+    }
   }
 
   public static function getSyncDataUrl($contributionId, &$form = NULL) {
@@ -1146,8 +1155,9 @@ EOT;
    *
    * @param int $inputTrxnId
    * @return bool|object
+   * @param string $order
    */
-  public static function syncTransaction($inputTrxnId) {
+  public static function syncTransaction($inputTrxnId, $order = NULL) {
     $paymentProcessorId = 0;
 
     // Check contribution is exists
@@ -1165,26 +1175,33 @@ EOT;
       $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($paymentProcessorId, $contribution->is_test ? 'test': 'live');
 
       if (strstr($paymentProcessor['payment_processor_type'], 'SPGATEWAY') && !empty($paymentProcessor['user_name'])) {
-        $amount = $contribution->total_amount;
-        if ($contribution->contribution_recur_id && !strstr($inputTrxnId, '_')) {
-          $trxnId = $inputTrxnId.'_1';
-          $recurring_first_contribution = TRUE;
+        if ($order) {
+          // this is for ci testing or something we already had response
+          // should be object or associated array
+          $result = $order;
         }
         else {
-          $trxnId = $inputTrxnId;
+          $amount = $contribution->total_amount;
+          if ($contribution->contribution_recur_id && !strstr($inputTrxnId, '_')) {
+            $trxnId = $inputTrxnId.'_1';
+            $recurring_first_contribution = TRUE;
+          }
+          else {
+            $trxnId = $inputTrxnId;
+          }
+          $data = array(
+            'Amt' => floor($amount),
+            'MerchantID' => $paymentProcessor['user_name'],
+            'MerchantOrderNo' => $trxnId,
+            'RespondType' => self::RESPONSE_TYPE,
+            'TimeStamp' => CRM_REQUEST_TIME,
+            'Version' => self::QUERY_VERSION,
+          );
+          $args = array('IV','Amt','MerchantID','MerchantOrderNo', 'Key');
+          CRM_Core_Payment_SPGATEWAYAPI::encode($data, $paymentProcessor, $args);
+          $urlApi = $contribution->is_test ? self::TEST_DOMAIN.self::URL_API : self::REAL_DOMAIN.self::URL_API;
+          $result = CRM_Core_Payment_SPGATEWAYAPI::sendRequest($urlApi, $data);
         }
-        $data = array(
-          'Amt' => floor($amount),
-          'MerchantID' => $paymentProcessor['user_name'],
-          'MerchantOrderNo' => $trxnId,
-          'RespondType' => self::RESPONSE_TYPE,
-          'TimeStamp' => CRM_REQUEST_TIME,
-          'Version' => self::QUERY_VERSION,
-        );
-        $args = array('IV','Amt','MerchantID','MerchantOrderNo', 'Key');
-        CRM_Core_Payment_SPGATEWAYAPI::encode($data, $paymentProcessor, $args);
-        $urlApi = $contribution->is_test ? self::TEST_DOMAIN.self::URL_API : self::REAL_DOMAIN.self::URL_API;
-        $result = CRM_Core_Payment_SPGATEWAYAPI::sendRequest($urlApi, $data);
 
         // Online contribution
         // Only trigger if there are pay time in result;
