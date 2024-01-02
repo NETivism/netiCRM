@@ -1314,11 +1314,11 @@ EOT;
       list($recurId, $installment, $oldInstallment) = explode('_', $trxnId);
       if ($recurId == 'r' && !empty($oldInstallment)) {
         // Old newebpay recurring, format: r_123_4
-        $parentTrxnId = $trxnId.'_'.$installment;
+        $parentTrxnId = $recurId.'_'.$installment;
       }
       else {
         // Current spgateway recurring, format: 1234_5
-        $parentTrxnId = $trxnId;
+        $parentTrxnId = $recurId;
       }
     }
     $contribution = new CRM_Contribute_DAO_Contribution();
