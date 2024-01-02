@@ -700,7 +700,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
       )),
     );
 
-    $result = CRM_Core_Payment_SPGATEWAY::recurSyncTransaction($trxn_id4, $create_contribution = TRUE, $post);
+    $result = CRM_Core_Payment_SPGATEWAY::recurSyncTransaction($trxn_id3, $create_contribution = TRUE, $post);
     $params = array(
       1 => array($recurring->id, 'Integer'),
     );
