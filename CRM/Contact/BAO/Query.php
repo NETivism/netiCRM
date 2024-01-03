@@ -4278,7 +4278,7 @@ SELECT COUNT( cc.total_amount ) as total_count,
     $summary['total'] = array();
     $summary['total']['count'] = $summary['total']['amount'] = $summary['total']['avg'] = "n/a";
 
-    $query = "$select FROM (SELECT civicrm_contribution.total_amount, civicrm_contribution.currency $from $whereForTatol GROUP BY civicrm_contribution.id) cc GROUP BY cc.currency";
+    $query = "$select FROM (SELECT civicrm_contribution.total_amount, civicrm_contribution.currency $from $whereForTotal GROUP BY civicrm_contribution.id) cc GROUP BY cc.currency";
     $params = array();
 
     $dao = CRM_Core_DAO::executeQuery($query, $params);
