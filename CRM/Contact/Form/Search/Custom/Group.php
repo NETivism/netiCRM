@@ -243,7 +243,7 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
       CRM_Core_DAO::executeQuery($sql);
 
       //used only when exclude group is selected
-      if ($xGroups != 0) {
+      if (!empty($xGroups)) {
         $excludeGroup = "INSERT INTO  Xg_{$this->_tableName} ( contact_id )
                   SELECT  DISTINCT civicrm_group_contact.contact_id
                   FROM civicrm_group_contact, civicrm_contact                    
@@ -383,7 +383,7 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
       CRM_Core_DAO::executeQuery($sql);
 
       //used only when exclude tag is selected
-      if ($xTags != 0) {
+      if (!empty($xTags)) {
         $excludeTag = "INSERT INTO  Xt_{$this->_tableName} ( contact_id )
                   SELECT  DISTINCT civicrm_entity_tag.entity_id
                   FROM civicrm_entity_tag, civicrm_contact                    

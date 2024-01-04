@@ -30,7 +30,7 @@
   </div>
   <div class="messages status">
      
-        <span>{ts}Are you sure you want to delete the selected memberships? This delete operation cannot be undone and will delete all transactions and activity associated with these members.{/ts}</span>
+        <span>{ts}Are you sure you want to delete the selected memberships?{/ts}{ts}This delete operation cannot be undone and will delete all transactions and activity associated with these members.{/ts}</span>
         <p>{include file="CRM/Member/Form/Task.tpl"}</p>
   </div>
   <div class="crm-submit-buttons">
