@@ -1154,6 +1154,9 @@ class CRM_Export_BAO_Export {
         $i = 1;
         $values = '';
         foreach ($rows as $value) {
+          if (is_null($value)) {
+            $value = '';
+          }
           $values .= ", %{$i}";
           $params[$i] = array(
             $value, 
@@ -1162,7 +1165,6 @@ class CRM_Export_BAO_Export {
           $i++;
         }
         $sql = "REPLACE INTO {$csResultTempTable} ( $primaryIDName $customColumnsNames) VALUES ( {$key} $values)";
-
         CRM_Core_DAO::executeQuery($sql, $params);
       }
 
