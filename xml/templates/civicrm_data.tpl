@@ -833,7 +833,8 @@ VALUES
  ('ALLPAYX', '{ts escape="sql"}AllPay Non-Credit Card{/ts}', NULL, 1, 0, '{ts escape="sql"}Merchant ID{/ts}', 'HashKey', 'HashIV', '', 'Payment_ALLPAY', 'https://payment.ecpay.com.tw/Cashier/AioCheckOut', 'https://payment.ecpay.com.tw/Cashier/QueryTradeInfo', NULL, NULL, 'https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut', 'https://payment-stage.ecpay.com.tw/Cashier/QueryTradeInfo', NULL, NULL, 4, 0),
 ('SPGATEWAY', '{ts escape="sql"}NewebPay Credit Card{/ts}', NULL, 1, 0, '{ts escape="sql"}Merchant ID{/ts}', 'HashKey', 'HashIV', '', 'Payment_SPGATEWAY', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 4, 1),
 ('SPGATEWAYX', '{ts escape="sql"}NewebPay Non-Credit Card{/ts}', NULL, 1, 0, '{ts escape="sql"}Merchant ID{/ts}', 'HashKey', 'HashIV', '', 'Payment_SPGATEWAY', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 4, 0),
-('Backer', '{ts escape="sql"}Backer Founder{/ts}', NULL, 1, 0, '{ts escape="sql"}Contribution Page{/ts}', 'Secret Key', NULL, NULL, 'Payment_Backer', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 7, 0);
+('Backer', '{ts escape="sql"}Backer Founder{/ts}', NULL, 1, 0, '{ts escape="sql"}Contribution Page{/ts}', 'Secret Key', NULL, NULL, 'Payment_Backer', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 7, 0),
+('MyPay', 'MyPay', NULL, 1, 0, 'Store ID', 'Secret', 'In-App Token', '', 'Payment_MyPay', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 4, 1);
 
 
 -- the fuzzy default dedupe rules

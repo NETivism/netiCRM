@@ -5337,7 +5337,8 @@ VALUES
  ('ALLPAYX', '綠界非信用卡', NULL, 1, 0, '商家編號', 'HashKey', 'HashIV', '', 'Payment_ALLPAY', 'https://payment.ecpay.com.tw/Cashier/AioCheckOut', 'https://payment.ecpay.com.tw/Cashier/QueryTradeInfo', NULL, NULL, 'https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut', 'https://payment-stage.ecpay.com.tw/Cashier/QueryTradeInfo', NULL, NULL, 4, 0),
 ('SPGATEWAY', '藍新信用卡', NULL, 1, 0, '商家編號', 'HashKey', 'HashIV', '', 'Payment_SPGATEWAY', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 4, 1),
 ('SPGATEWAYX', '藍新非信用卡', NULL, 1, 0, '商家編號', 'HashKey', 'HashIV', '', 'Payment_SPGATEWAY', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 4, 0),
-('Backer', '貝殼放大', NULL, 1, 0, '募款頁', 'Secret Key', NULL, NULL, 'Payment_Backer', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 7, 0);
+('Backer', '貝殼放大', NULL, 1, 0, '募款頁', 'Secret Key', NULL, NULL, 'Payment_Backer', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 7, 0),
+('MyPay', 'MyPay', NULL, 1, 0, 'Store ID', 'Secret', 'In-App Token', '', 'Payment_MyPay', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 4, 1);
 
 
 -- the fuzzy default dedupe rules

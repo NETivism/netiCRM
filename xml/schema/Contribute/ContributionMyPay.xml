@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<table>
+  <base>CRM/Contribute</base>
+  <class>MyPay</class>
+  <name>civicrm_contribution_mypay</name>
+  <add>4.0</add>
+  <field>
+      <name>id</name>
+      <uniqueName>mypay_id</uniqueName>
+      <type>int unsigned</type>
+      <required>true</required>
+      <title>MyPay ID</title>
+      <comment>MyPay ID</comment>
+      <add>4.0</add>
+  </field>
+  <primaryKey>
+       <name>id</name>
+       <autoincrement>true</autoincrement>
+  </primaryKey>
+  <field>
+      <name>contribution_id</name>
+      <uniqueName>contribution_id</uniqueName>
+      <type>int unsigned</type>
+      <default>NULL</default>
+      <title>Contribuution ID</title>
+      <comment>Contribuution ID</comment>
+      <add>4.0</add>
+  </field>
+  <foreignKey>
+    <name>contribution_id</name>
+    <table>civicrm_contribution</table>
+    <key>id</key>
+    <add>4.0</add>
+    <onDelete>SET NULL</onDelete>
+  </foreignKey>
+  <field>
+      <name>contribution_recur_id</name>
+      <uniqueName>contribution_recur_id</uniqueName>
+      <type>int unsigned</type>
+      <title>Contribuution Recur ID</title>
+      <comment>Contribuution Recur ID</comment>
+      <add>4.0</add>
+  </field>
+  <foreignKey>
+    <name>contribution_recur_id</name>
+    <table>civicrm_contribution_recur</table>
+    <key>id</key>
+    <add>4.0</add>
+    <onDelete>SET NULL</onDelete>
+  </foreignKey>
+  <field>
+      <name>uid</name>
+      <uniqueName>uid</uniqueName>
+      <title>User Order ID</title>
+      <type>varchar</type>
+      <length>255</length>
+      <comment>Payment Hub User Order ID</comment>
+      <add>4.0</add>
+  </field>
+  <index>
+      <name>UI_uid</name>
+      <fieldName>uid</fieldName>
+      <add>4.0</add>
+  </index>
+  <field>
+      <name>expired_date</name>
+      <type>date</type>
+      <comment>Used date time of this coupon track.</comment>
+      <add>4.0</add>
+  </field>
+  <field>
+    <name>data</name>
+    <comment>Newest return data.</comment>
+    <type>text</type>
+    <add>4.0</add>
+  </field>
+</table>

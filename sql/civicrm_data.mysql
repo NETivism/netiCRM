@@ -5337,7 +5337,8 @@ VALUES
  ('ALLPAYX', 'AllPay Non-Credit Card', NULL, 1, 0, 'Merchant ID', 'HashKey', 'HashIV', '', 'Payment_ALLPAY', 'https://payment.ecpay.com.tw/Cashier/AioCheckOut', 'https://payment.ecpay.com.tw/Cashier/QueryTradeInfo', NULL, NULL, 'https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut', 'https://payment-stage.ecpay.com.tw/Cashier/QueryTradeInfo', NULL, NULL, 4, 0),
 ('SPGATEWAY', 'NewebPay Credit Card', NULL, 1, 0, 'Merchant ID', 'HashKey', 'HashIV', '', 'Payment_SPGATEWAY', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 4, 1),
 ('SPGATEWAYX', 'NewebPay Non-Credit Card', NULL, 1, 0, 'Merchant ID', 'HashKey', 'HashIV', '', 'Payment_SPGATEWAY', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 4, 0),
-('Backer', 'Backer Founder', NULL, 1, 0, 'Contribution Page', 'Secret Key', NULL, NULL, 'Payment_Backer', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 7, 0);
+('Backer', 'Backer Founder', NULL, 1, 0, 'Contribution Page', 'Secret Key', NULL, NULL, 'Payment_Backer', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 7, 0),
+('MyPay', 'MyPay', NULL, 1, 0, 'Store ID', 'Secret', 'In-App Token', '', 'Payment_MyPay', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 4, 1);
 
 
 -- the fuzzy default dedupe rules

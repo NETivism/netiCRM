@@ -61,6 +61,8 @@ DROP TABLE IF EXISTS civicrm_event;
 DROP TABLE IF EXISTS civicrm_membership_payment;
 DROP TABLE IF EXISTS civicrm_coupon_track;
 DROP TABLE IF EXISTS civicrm_contribution_allpay;
+DROP TABLE IF EXISTS civicrm_contribution_mypay_log;
+DROP TABLE IF EXISTS civicrm_contribution_mypay;
 DROP TABLE IF EXISTS civicrm_contribution_tappay_log;
 DROP TABLE IF EXISTS civicrm_contribution_tappay;
 DROP TABLE IF EXISTS civicrm_contribution_soft;
@@ -4782,6 +4784,60 @@ CREATE TABLE civicrm_contribution_tappay_log (
   
 ,      
      CONSTRAINT FK_civicrm_contribution_tappay_log_contribution_id FOREIGN KEY (contribution_id) REFERENCES civicrm_contribution(id) ON DELETE SET NULL  
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
+
+-- /*******************************************************
+-- *
+-- * civicrm_contribution_mypay
+-- *
+-- *******************************************************/
+CREATE TABLE civicrm_contribution_mypay (
+
+
+     id int unsigned NOT NULL AUTO_INCREMENT  COMMENT 'MyPay ID',
+     contribution_id int unsigned   DEFAULT NULL COMMENT 'Contribuution ID',
+     contribution_recur_id int unsigned    COMMENT 'Contribuution Recur ID',
+     uid varchar(255)    COMMENT 'Payment Hub User Order ID',
+     expired_date date    COMMENT 'Used date time of this coupon track.',
+     data text    COMMENT 'Newest return data.' 
+,
+    PRIMARY KEY ( id )
+ 
+    ,     INDEX UI_uid(
+        uid
+  )
+  
+,      
+     CONSTRAINT FK_civicrm_contribution_mypay_contribution_id FOREIGN KEY (contribution_id) REFERENCES civicrm_contribution(id) ON DELETE SET NULL,      
+     CONSTRAINT FK_civicrm_contribution_mypay_contribution_recur_id FOREIGN KEY (contribution_recur_id) REFERENCES civicrm_contribution_recur(id) ON DELETE SET NULL  
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
+
+-- /*******************************************************
+-- *
+-- * civicrm_contribution_mypay_log
+-- *
+-- *******************************************************/
+CREATE TABLE civicrm_contribution_mypay_log (
+
+
+     id int unsigned NOT NULL AUTO_INCREMENT  COMMENT 'MyPay Log ID',
+     contribution_id int unsigned   DEFAULT NULL COMMENT 'Contribuution ID',
+     url varchar(255)    COMMENT 'Request URL',
+     date datetime    COMMENT 'Request Date Time',
+     post_data text    COMMENT 'Request Post Data',
+     return_data text    COMMENT 'Request Return Data' 
+,
+    PRIMARY KEY ( id )
+ 
+    ,     INDEX UI_url(
+        url
+  )
+  ,     INDEX UI_date(
+        date
+  )
+  
+,      
+     CONSTRAINT FK_civicrm_contribution_mypay_log_contribution_id FOREIGN KEY (contribution_id) REFERENCES civicrm_contribution(id) ON DELETE SET NULL  
 )  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************

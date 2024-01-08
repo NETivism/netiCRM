@@ -36,6 +36,8 @@ DROP TABLE IF EXISTS civicrm_event;
 DROP TABLE IF EXISTS civicrm_membership_payment;
 DROP TABLE IF EXISTS civicrm_coupon_track;
 DROP TABLE IF EXISTS civicrm_contribution_allpay;
+DROP TABLE IF EXISTS civicrm_contribution_mypay_log;
+DROP TABLE IF EXISTS civicrm_contribution_mypay;
 DROP TABLE IF EXISTS civicrm_contribution_tappay_log;
 DROP TABLE IF EXISTS civicrm_contribution_tappay;
 DROP TABLE IF EXISTS civicrm_contribution_soft;
