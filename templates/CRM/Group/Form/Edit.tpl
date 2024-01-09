@@ -56,7 +56,63 @@
 	    </tr>
 	{/if}
     
-        <tr class="crm-group-form-block-visibility">
+  {if $form.smart_marketing_group}
+	<tr class="crm-group-form-block-smart_marketing_group">
+		<td class="label">{$form.smart_marketing_group.label}</td>
+		<td>
+      {$form.smart_marketing_group.html}
+      {if $smart_marketing_sync}
+        <input class="form-submit default smart-marketing-button" name="sync_{$smart_marketing_vendor}" value="{ts}Manually Synchronize{/ts}" type="button" id="sync-{$smart_marketing_vendor}">
+        <div id="smart-marketing-sync-confirm">
+          {ts}The automated marketing journey does not start immediately and needs to be scheduled.{/ts}
+        </div>
+      {/if}
+<script>{literal}
+cj(function($){
+  $('.crm-group-form-block-smart_marketing_group').hide();
+  $('input[name*=group_type]').each(function(){
+    if($(this).data('filter').match('Smart-Marketing')) {
+      if ($(this).prop("checked")) {
+        $('.crm-group-form-block-smart_marketing_group').show();
+      }
+      $(this).click(function(){
+        if ($(this).prop("checked")) {
+          $('.crm-group-form-block-smart_marketing_group').show();
+        }
+        else {
+          $('.crm-group-form-block-smart_marketing_group').hide();
+        }
+      });
+    }
+  });
+  $('.smart-marketing-button').click(function(e){
+    e.preventDefault();
+    $("#smart-marketing-sync-confirm").dialog({
+      title: "{/literal}{ts}Manually Synchronize{/ts}{literal}",
+      autoOpen: false,
+      modal: true,
+      dialogClass: "smart-marketing-sync-confirm-box",
+      buttons: {
+        "{/literal}{ts}Sync Now{/ts}{literal}": function() {
+          console.log('sync group contacts to remote');
+          $(this).dialog("close");
+          return true;
+        },
+        "{/literal}{ts}Cancel{/ts}{literal}": function() {
+          console.log('cancel action');
+          cj( this ).dialog( "close" );
+          return false;
+        }
+      }
+    });
+    cj("#smart-marketing-sync-confirm").dialog('open');
+  });
+});
+{/literal}</script>
+    </td>
+	</tr>
+  {/if}
+  <tr class="crm-group-form-block-visibility">
 	    <td class="label">{$form.visibility.label}</td>
 	    <td>{$form.visibility.html|crmReplace:class:huge} {help id="id-group-visibility" file="CRM/Group/Page/Group.hlp"}</td>
 	</tr>
@@ -150,3 +206,5 @@ cj('#organization').autocomplete( dataUrl, {
 </script>
 {/literal}
 </div>
+
+{include file="CRM/common/chosen.tpl" selector="#smart_marketing_group,#parents"}

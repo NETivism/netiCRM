@@ -86,6 +86,13 @@ class CRM_Group_Form_Edit extends CRM_Core_Form {
   protected $_groupOrganizationID;
 
   /**
+   * the smart marketing object
+   *
+   * @var object
+   */
+  protected $_smartMarketingService;
+
+  /**
    * set up variables to build the form
    *
    * @return void
@@ -238,20 +245,52 @@ class CRM_Group_Form_Edit extends CRM_Core_Form {
     }
 
     if (!empty($groupTypes)) {
+      $tsGroupTypes = $filterGroupTypes = array();
       foreach ($groupTypes as $k => $v) {
         $gt = ts($k);
         $tsGroupTypes[$gt] = $v;
+        $filterGroupTypes[$v] = str_replace(' ', '-', $k);
       }
       $this->addCheckBox('group_type',
         ts('Group Type'),
         $tsGroupTypes,
         NULL, NULL, NULL, NULL, '&nbsp;&nbsp;&nbsp;'
       );
+      $groupTypeItems = $this->getElement('group_type');
+      foreach($groupTypeItems->_elements as &$ele) {
+        $gtId = $ele->_attributes['id'];
+        $ele->_attributes['data-filter'] = $filterGroupTypes[$gtId];
+        if (strstr($filterGroupTypes[$gtId], 'Smart-Marketing')) {
+          // freeze when smart_marketing_group has value
+          if (!empty($this->_groupValues['is_sync'])) {
+            $ele->freeze();
+          }
+        }
+      }
     }
 
-    $this->add('select', 'visibility', ts('Visibility'),
-      CRM_Core_SelectValues::ufVisibility(TRUE), TRUE
-    );
+    $this->initSmartMarketingGroup();
+    if (isset($this->_smartMarketingService)) {
+      // dropdown box
+      $remoteGroups = $this->_smartMarketingService->getRemoteGroups();
+      $remoteGroups = array_merge(array('' => '-- '.ts('Create New Group').' --'), $remoteGroups);
+      $eleSmGroup = $this->addSelect('smart_marketing_group', ts('Smart Marketing Group'), $remoteGroups);
+      if (!empty($this->_groupValues['is_sync'])) {
+        $eleSmGroup->freeze();
+      }
+
+      // button
+      $vendorName = end(explode('_', get_class($this->_smartMarketingService)));
+      $this->assign('smart_marketing_vendor', $vendorName);
+      $this->assign('smart_marketing_sync', TRUE);
+      if (!empty($this->_groupValues['is_sync']) && !empty($this->_groupValues['sync_data'])) {
+        $isPrepared = $this->_smartMarketingService->parseSavedData($this->_groupValues['sync_data']);
+        if ($isPrepared !== FALSE) {
+          $this->assign('smart_marketing_sync', TRUE);
+        }
+      }
+    }
+    $this->addSelect('visibility', ts('Visibility'), CRM_Core_SelectValues::ufVisibility(TRUE), TRUE);
 
     $groupNames = &CRM_Core_PseudoConstant::group();
 
@@ -470,6 +509,28 @@ AND    id <> %3
     if ($updateNestingCache) {
       require_once 'CRM/Contact/BAO/GroupNestingCache.php';
       CRM_Contact_BAO_GroupNestingCache::update();
+    }
+  }
+
+  /**
+   * init first enabled smart marketing group to property
+   *
+   * @return void
+   */
+  private function initSmartMarketingGroup() {
+    $groupTypes = CRM_Core_OptionGroup::values('group_type');
+    foreach($groupTypes as $smartMarketingName) {
+      if (strstr($smartMarketingName, 'Smart Marketing')) {
+        list($smartMarketingVendor) = explode(' ', $smartMarketingName);
+        if (strlen($smartMarketingVendor) > 0) {
+          $smartMarketingVendor = ucfirst($smartMarketingVendor);
+          $smartMarketingClass = 'CRM_Mailing_External_SmartMarketing_'.$smartMarketingVendor;
+          if (class_exists($smartMarketingClass)) {
+            $this->_smartMarketingService = new $smartMarketingClass();
+            return TRUE;
+          }
+        }
+      }
     }
   }
 }
