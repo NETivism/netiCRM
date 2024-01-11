@@ -1064,7 +1064,7 @@ EOT;
         }
       }
       $updateData = CRM_Utils_Array::implode(', ', $updateDataArray);
-      $form->set('sync_data_hint', ts('If the transaction is finished, it will update the follow data by this action: %1', $updateData));
+      $form->set('sync_data_hint', ts('If the transaction is finished, it will update the follow data by this action: %1', array(1 => $updateData)));
     }
 
     return $sync_url;
