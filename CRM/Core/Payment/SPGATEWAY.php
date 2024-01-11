@@ -1070,9 +1070,12 @@ EOT;
     return $sync_url;
   }
 
-  public static function doIPN($instrument, $post = NULL, $get = NULL, $print = TRUE) {
+  public static function doIPN($arguments, $post = NULL, $get = NULL, $print = TRUE) {
     $post = !empty($post) ? $post : $_POST;
     $get = !empty($get) ? $get : $_GET;
+    if (!empty($arguments)) {
+      $instrument = end($arguments);
+    }
     if (empty($instrument)) {
       $qArray = explode('/', $get['q']);
       $instrument = end($qArray);
