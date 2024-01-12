@@ -891,7 +891,12 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
     $post = !empty($post) ? $post : $_POST;
     $get = !empty($get) ? $get : $_GET;
     if (!empty($arguments)) {
-      $instrument = end($arguments);
+      if (is_array($arguments)) {
+        $instrument = end($arguments);
+      }
+      else {
+        $instrument = $arguments;
+      }
     }
     if (empty($instrument)) {
       $qArray = explode('/', $get['q']);

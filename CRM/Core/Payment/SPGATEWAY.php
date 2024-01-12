@@ -1073,8 +1073,13 @@ EOT;
   public static function doIPN($arguments, $post = NULL, $get = NULL, $print = TRUE) {
     $post = !empty($post) ? $post : $_POST;
     $get = !empty($get) ? $get : $_GET;
-    if (!empty($arguments)) {
-      $instrument = end($arguments);
+    if (!empty($arguments) && is_array($arguments)) {
+      if (is_array($arguments)) {
+        $instrument = end($arguments);
+      }
+      else {
+        $instrument = $arguments;
+      }
     }
     if (empty($instrument)) {
       $qArray = explode('/', $get['q']);
