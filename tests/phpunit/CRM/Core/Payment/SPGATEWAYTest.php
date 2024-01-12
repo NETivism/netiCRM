@@ -30,7 +30,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     if(!CRM_Utils_System::moduleExists('civicrm_spgateway')){
       die("You must enable civicrm_spgateway module first before test.");
     }
-    $payment_page = variable_get('civicrm_demo_payment_page', array());
+    $payment_page = CRM_Utils_System_Drupal::variable_get('civicrm_demo.payment_page', array());
     $class_name = 'Payment_SPGATEWAY';
     if(isset($payment_page[$class_name])){
       $this->_page_id = $payment_page[$class_name];
