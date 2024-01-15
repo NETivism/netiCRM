@@ -614,6 +614,9 @@ class CRM_Utils_System_Drupal {
     if ($version < 8 ) {
       return variable_get($name, $default);
     }
+    elseif ($version > 8) {
+      return \Drupal::state()->get($name, $default);
+    }
     else {
       // exception
     }
