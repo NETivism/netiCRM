@@ -352,9 +352,9 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
     );
 
     // refs #17486. Date format should be YmdHis.
-    foreach ($params as $key => $value) {
-      if(preg_match('/\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/',$value)){
-        $params[$key] = preg_replace('/-| |:/', '', $value);
+    foreach (array('create_date', 'start_date', 'modified_date', 'cancel_date', 'end_date', 'next_sched_contribution', 'failure_retry_date', 'last_execute_date') as $idx) {
+      if(preg_match('/\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/', $params[$idx])){
+        $params[$idx] = preg_replace('/-| |:/', '', $params[$idx]);
       }
     }
 
