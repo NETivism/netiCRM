@@ -425,7 +425,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     CRM_Core_Payment_SPGATEWAY::doIPN('Credit', $post, $get);
     $error_msg = CRM_Core_DAO::singleValueQuery("SELECT note FROM civicrm_note WHERE entity_id = $contribution->id");
     $this->assertNotEmpty($error_msg, "In line " . __LINE__);
-    $this->assertMatchesRegularExpression('/Failuare/', $error_msg);
+    $this->assertNotFalse(strpos($error_msg, 'Failuare'));
   }
 
   function testRecurringPaymentNotify(){
