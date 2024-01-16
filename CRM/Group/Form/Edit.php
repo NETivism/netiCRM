@@ -273,7 +273,8 @@ class CRM_Group_Form_Edit extends CRM_Core_Form {
     if (isset($this->_smartMarketingService)) {
       // dropdown box
       $remoteGroups = $this->_smartMarketingService->getRemoteGroups();
-      $remoteGroups = array_merge(array('' => '-- '.ts('Create New Group').' --'), $remoteGroups);
+      // flydove doesn't support create group
+      // $remoteGroups = array('-1' => '-- '.ts('Create New Group').' --') + $remoteGroups;
       $eleSmGroup = $this->addSelect('smart_marketing_group', ts('Smart Marketing Group'), $remoteGroups);
       if (!empty($this->_groupValues['is_sync'])) {
         $eleSmGroup->freeze();
@@ -282,7 +283,7 @@ class CRM_Group_Form_Edit extends CRM_Core_Form {
       // button
       $vendorName = end(explode('_', get_class($this->_smartMarketingService)));
       $this->assign('smart_marketing_vendor', $vendorName);
-      $this->assign('smart_marketing_sync', TRUE);
+      // $this->assign('smart_marketing_sync', TRUE);
       if (!empty($this->_groupValues['is_sync']) && !empty($this->_groupValues['sync_data'])) {
         $isPrepared = $this->_smartMarketingService->parseSavedData($this->_groupValues['sync_data']);
         if ($isPrepared !== FALSE) {
@@ -526,8 +527,12 @@ AND    id <> %3
           $smartMarketingVendor = ucfirst($smartMarketingVendor);
           $smartMarketingClass = 'CRM_Mailing_External_SmartMarketing_'.$smartMarketingVendor;
           if (class_exists($smartMarketingClass)) {
-            $this->_smartMarketingService = new $smartMarketingClass();
-            return TRUE;
+            $providers = CRM_SMS_BAO_Provider::getProviders(NULL, array('name' => 'CRM_SMS_Provider_Flydove'));
+            if (!empty($providers)) {
+              $provider = reset($providers);
+              $this->_smartMarketingService = new $smartMarketingClass($provider['id']);
+              return TRUE;
+            }
           }
         }
       }

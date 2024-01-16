@@ -63,7 +63,7 @@
       {$form.smart_marketing_group.html}
       {if $smart_marketing_sync}
         <input class="form-submit default smart-marketing-button" name="sync_{$smart_marketing_vendor}" value="{ts}Manually Synchronize{/ts}" type="button" id="sync-{$smart_marketing_vendor}">
-        <div id="smart-marketing-sync-confirm">
+        <div id="smart-marketing-sync-confirm" class="hide-block">
           {ts}The automated marketing journey does not start immediately and needs to be scheduled.{/ts}
         </div>
       {/if}
