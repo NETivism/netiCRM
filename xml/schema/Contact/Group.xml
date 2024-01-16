@@ -126,6 +126,24 @@
     <comment>Is this group hidden?</comment>
     <add>2.2</add>
   </field>
+  <field>
+    <name>is_sync</name>
+    <type>boolean</type>
+    <comment>Indicates whether the group is synchronized.</comment>
+    <add>7.0</add>
+  </field>
+  <field>
+    <name>sync_data</name>
+    <type>blob</type>
+    <comment>Stores JSON format data from the remote group, such as remote group ID, name, creation time.</comment>
+    <add>7.0</add>
+  </field>
+  <field>
+    <name>last_sync</name>
+    <type>datetime</type>
+    <comment>Stores the last sync time with the remote group.</comment>
+    <add>7.0</add>
+  </field>
   <index>
     <name>index_group_type</name>
     <fieldName>group_type</fieldName>     
