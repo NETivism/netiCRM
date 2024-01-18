@@ -5,6 +5,13 @@ class CRM_Mailing_External_SmartMarketing_Flydove extends CRM_Mailing_External_S
   const BATCH_NUM = 500;
 
   /**
+   * Check initialized
+   *
+   * @var int
+   */
+  public $_init;
+
+  /**
    * tokens of flydove
    *
    * @var array
@@ -34,10 +41,12 @@ class CRM_Mailing_External_SmartMarketing_Flydove extends CRM_Mailing_External_S
         if (!empty($apiParams['tokens'])) {
           $this->_tokens = $apiParams['tokens'];
           $this->_apiUrl = $dao->api_url;
+          $this->_init = TRUE;
           return TRUE;
         }
       }
     }
+    $this->_init = FALSE;
     return FALSE;
   }
 
@@ -133,7 +142,7 @@ class CRM_Mailing_External_SmartMarketing_Flydove extends CRM_Mailing_External_S
     }
   }
 
-  private function batchSchedule($contactIds, $destRemoteGroup, $providerId) {
+  public function batchSchedule($contactIds, $destRemoteGroup, $providerId) {
     $remoteGroups = $this->getRemoteGroups();
     if (isset($remoteGroups[$destRemoteGroup])) {
       if (!empty(count($contactIds))) {
