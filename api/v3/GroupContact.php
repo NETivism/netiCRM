@@ -57,12 +57,52 @@ function civicrm_api3_group_contact_get($params) {
     return civicrm_api3_create_success($values, $params);
   }
   else {
+    if (!empty($params['group_id'])) {
+      $group_id = $params['group_id'];
+      //Get all contact id in group
+      $params_new = array(
+        0 => array('group', 'IN', array($group_id => 1), 0, 0),
+      );
+      $searchDescendentGroups = TRUE; // return sub-group contact
+      $smartGroupCache = TRUE;
+      $returnProperties = array('contact_id');
+      $query = new CRM_Contact_BAO_Query($params_new, $returnProperties, NULL, FALSE, FALSE, CRM_Contact_BAO_Query::MODE_CONTACTS, FALSE, $searchDescendentGroups, $smartGroupCache);
+      $offset = $rowCount = 0;
+      $result = $query->searchQuery($offset, $rowCount);
+      while($result->fetch()) {
+        $contactIds[] = $result->contact_id;
+      }
+    }
+
     if (empty($params['status'])) {
       //default to 'Added'
       $params['status'] = 'Added';
     }
     //ie. id passed in so we have to return something
-    return _civicrm_api3_basic_get('CRM_Contact_BAO_GroupContact', $params);
+    $origin = _civicrm_api3_basic_get('CRM_Contact_BAO_GroupContact', $params);
+
+    $smartContactIds = $contactIds;
+    foreach ($contactIds as $index => $id) {
+      foreach ($origin['values'] as $i => $value) {
+        $addValue = $value['contact_id'];
+        if ($id == $addValue) {
+          unset($smartContactIds[$index]);
+        }
+      }
+    }
+
+    foreach ($smartContactIds as $index => $id) {
+      //refs #36681 32f, set custom id for smart group.
+      $smartId = $group_id."_".$id;
+      $smartContact[$group_id."_".$id]['id'] = $group_id."_".$id;
+      $smartContact[$group_id."_".$id]['group_id'] = $group_id;
+      $smartContact[$group_id."_".$id]['contact_id'] = $id;
+      //smart group to 'smart'
+      $smartContact[$group_id."_".$id]['status'] = "smart";
+      array_push($origin['values'], $smartContact[$group_id."_".$id]);
+    }
+    $origin['count'] = count($origin['values']);
+    return $origin;
   }
 }
 
