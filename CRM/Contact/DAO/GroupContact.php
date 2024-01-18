@@ -192,7 +192,7 @@ class CRM_Contact_DAO_GroupContact extends CRM_Core_DAO
           'name' => 'status',
           'type' => CRM_Utils_Type::T_ENUM,
           'title' => ts('Status') ,
-          'enumValues' => 'Added, Removed, Pending',
+          'enumValues' => 'Added,Removed,Pending',
         ) ,
         'location_id' => array(
           'name' => 'location_id',
