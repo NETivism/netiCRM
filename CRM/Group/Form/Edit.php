@@ -527,7 +527,7 @@ AND    id <> %3
           $smartMarketingVendor = ucfirst($smartMarketingVendor);
           $smartMarketingClass = 'CRM_Mailing_External_SmartMarketing_'.$smartMarketingVendor;
           if (class_exists($smartMarketingClass)) {
-            $providers = CRM_SMS_BAO_Provider::getProviders(NULL, array('name' => 'CRM_SMS_Provider_Flydove'));
+            $providers = CRM_SMS_BAO_Provider::getProviders(NULL, array('name' => 'CRM_SMS_Provider_'.$smartMarketingVendor));
             if (!empty($providers)) {
               $provider = reset($providers);
               $this->_smartMarketingService = new $smartMarketingClass($provider['id']);

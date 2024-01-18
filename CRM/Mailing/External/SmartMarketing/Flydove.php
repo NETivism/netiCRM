@@ -5,6 +5,13 @@ class CRM_Mailing_External_SmartMarketing_Flydove extends CRM_Mailing_External_S
   const BATCH_NUM = 500;
 
   /**
+   * Check initialized
+   *
+   * @var int
+   */
+  public $_init;
+
+  /**
    * tokens of flydove
    *
    * @var array
@@ -34,10 +41,12 @@ class CRM_Mailing_External_SmartMarketing_Flydove extends CRM_Mailing_External_S
         if (!empty($apiParams['tokens'])) {
           $this->_tokens = $apiParams['tokens'];
           $this->_apiUrl = $dao->api_url;
+          $this->_init = TRUE;
           return TRUE;
         }
       }
     }
+    $this->_init = FALSE;
     return FALSE;
   }
 
@@ -71,20 +80,23 @@ class CRM_Mailing_External_SmartMarketing_Flydove extends CRM_Mailing_External_S
    * @return array
    */
   private function apiRequestSend($apiType, $data = NULL) {
-    if (!in_array($apiType, array('GetGroupList', 'DeleteCustomer', 'CreateMailFile'))) {
+    if (!in_array($apiType, array('GetGroupList', 'DeleteCustomer', 'BatchCreateCustomer'))) {
       throw new CRM_Core_Exception("Flydove: API type not supported. Provided api type: $apiType");
     }
     $token = '';
     switch($apiType) {
       case 'GetGroupList':
+      case 'BatchCreateCustomer':
         $token = !empty($this->_tokens['group']) ? $this->_tokens['group'] : '';
         break;
       case 'DeleteCustomer':
         $token = !empty($this->_tokens['subscribe']) ? $this->_tokens['subscribe'] : '';
         break;
-      case 'CreateMailFile':
+      /*
+      case 'BatchCreateCustomer':
         $token = !empty($this->_tokens['import']) ? $this->_tokens['import'] : '';
         break;
+        */
     }
     if (empty($token)) {
       throw new CRM_Core_Exception("Flydove: The API you call is $apiType. Do not have matches token.");
@@ -130,7 +142,7 @@ class CRM_Mailing_External_SmartMarketing_Flydove extends CRM_Mailing_External_S
     }
   }
 
-  private function batchSchedule($contactIds, $destRemoteGroup, $providerId) {
+  public function batchSchedule($contactIds, $destRemoteGroup, $providerId) {
     $remoteGroups = $this->getRemoteGroups();
     if (isset($remoteGroups[$destRemoteGroup])) {
       if (!empty(count($contactIds))) {
@@ -169,24 +181,29 @@ class CRM_Mailing_External_SmartMarketing_Flydove extends CRM_Mailing_External_S
    */
   public static function addContactToRemote($contactIds, $destRemoteGroup, $providerId) {
     global $civicrm_batch;
-    $remoteGroups = $this->getRemoteGroups();
+    $flydove = new CRM_Mailing_External_SmartMarketing_Flydove($providerId);
+    $remoteGroups = $flydove->getRemoteGroups();
     $phoneTypes = CRM_Core_OptionGroup::values('phone_type', TRUE, FALSE, FALSE, NULL, 'name');
     $mobileTypeId = $phoneTypes['Mobile'];
     if (isset($remoteGroups[$destRemoteGroup])) {
       if (!empty($contactIds)) {
-        $offset = $limit = 0;
+        $offset = 0;
+        $limit = 1;
         if ($civicrm_batch) {
           if (isset($civicrm_batch->data['processed']) && !empty($civicrm_batch->data['processed'])) {
             $offset = $civicrm_batch->data['processed'];
           }
           $limit = 10;
         }
-        $slices = array_slice($contactIds, $offset, self::BATCH_NUM);
-        $sliceResults = array();
-        foreach($slices as $numOfSlice => $ids) {
-          if (!empty($limit) && $numOfSlice >= $limit) {
+        for($i = 0; $i < $limit; $i++) {
+          $ids = array_slice($contactIds, $offset, self::BATCH_NUM);
+          if (empty($ids)) {
             break;
           }
+          if (!empty($civicrm_batch) && $civicrm_batch->data['processed'] >= $civicrm_batch->data['total']) {
+            break;
+          }
+          $sliceResults = array();
           $syncData = array();
           $queryParams = array();
           $returnProperties = array(
@@ -211,12 +228,13 @@ FROM civicrm_contact
 LEFT JOIN civicrm_phone ON ( civicrm_contact.id = civicrm_phone.contact_id )
 WHERE civicrm_contact.id IN (%1) AND civicrm_phone.phone_type_id = %2
 ORDER BY civicrm_phone.is_primary DESC, phone_id ASC";
+          $imploded = CRM_Utils_Array::implode(',', $ids);
           $mobilePhoneResult = CRM_Core_DAO::executeQuery($mobilePhoneQuery, array(
-            1 => array(CRM_Utils_Array::implode(',', $ids), 'CommaSeperatedIntegers'),
+            1 => array($imploded, 'CommaSeparatedIntegers'),
             2 => array($mobileTypeId, 'Integer'),
           ));
           while ($mobilePhoneResult->fetch()) {
-            $details[$mobilePhoneResult->contact_id]['phone'] = $mobilePhoneResult->phone;
+            $details[0][$mobilePhoneResult->contact_id]['phone'] = $mobilePhoneResult->phone;
           }
           $skipped = array();
           foreach($details[0] as $contactId => $detail) {
@@ -233,15 +251,16 @@ ORDER BY civicrm_phone.is_primary DESC, phone_id ASC";
               'var1' => !empty($detail['birth_date']) && mb_strlen($detail['birth_date']) < 50 ? $detail['birth_date'] : '',
             );
           }
-          $flydove = new CRM_Mailing_External_SmartMarketing_Flydove($providerId);
           try {
-            $apiResult = $flydove->apiRequestSend('BatchCreateCustomer', array(
+            $sendData = array(
               'customers' => $syncData,
               'group_ids' => array($destRemoteGroup),
-            ));
+            );
+            // CRM_Core_Error::debug_var('sendData', $sendData);
+            $apiResult = $flydove->apiRequestSend('BatchCreateCustomer', json_encode($sendData));
             if ($apiResult) {
-              $sliceResults[$numOfSlice]['success'] = TRUE;
-              $sliceResults[$numOfSlice]['skipped'] = $skipped;
+              $sliceResults[$i]['success'] = TRUE;
+              $sliceResults[$i]['skipped'] = $skipped;
             }
           }
           catch(CRM_Core_Exception $e) {
@@ -253,6 +272,7 @@ ORDER BY civicrm_phone.is_primary DESC, phone_id ASC";
           if ($civicrm_batch) {
             $civicrm_batch->data['processed'] += self::BATCH_NUM;
           }
+          $offset += self::BATCH_NUM;
           usleep(500000);
         }
         if ($civicrm_batch) {

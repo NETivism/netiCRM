@@ -49,7 +49,7 @@
   <field>
        <name>status</name>
        <type>enum</type>
-       <values>Added, Removed, Pending</values>
+       <values>Added,Removed,Pending</values>
        <comment>status of contact relative to membership in group</comment>
        <add>1.1</add>
   </field>
