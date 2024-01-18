@@ -342,7 +342,6 @@ class CRM_Contact_DAO_Group extends CRM_Core_DAO
         'is_sync' => array(
           'name' => 'is_sync',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-          'title' => ts('Is Sync') ,
         ) ,
         'sync_data' => array(
           'name' => 'sync_data',

@@ -486,7 +486,7 @@ VALUES
 
   (@option_group_id_gType, 'Access Control'  , 1, NULL, NULL, 0, NULL, 1, NULL, 0, 1, 1, NULL, NULL),
   (@option_group_id_gType, 'Mailing List'    , 2, NULL, NULL, 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_gType, '{ts escape="sql"}Flydove Smart Marketing{/ts}', 3, NULL, NULL, 0, NULL, 3, NULL, 0, 0, 0, NULL, NULL);
+  (@option_group_id_gType, 'Flydove Smart Marketing', 3, NULL, NULL, 0, NULL, 3, NULL, 0, 0, 0, NULL, NULL);
 
   (@option_group_id_grantSt, '{ts escape="sql"}Pending{/ts}',  1, 'Pending',  NULL, 0, 1,    1, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_grantSt, '{ts escape="sql"}Granted{/ts}',  2, 'Granted',  NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
