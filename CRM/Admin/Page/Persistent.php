@@ -125,7 +125,7 @@ class CRM_Admin_Page_Persistent extends CRM_Core_Page {
           NULL,
           array('id' => $daoResult->id)
         );
-        $values[$daoResult->id]['data'] = implode(',', unserialize($daoResult->data));
+        $values[$daoResult->id]['data'] = CRM_Utils_Array::implode(',', unserialize($daoResult->data));
         $configCustomization[$daoResult->id] = $values[$daoResult->id];
       }
       if ($daoResult->is_config == 0) {

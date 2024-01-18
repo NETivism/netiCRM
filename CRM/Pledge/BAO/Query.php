@@ -187,7 +187,7 @@ class CRM_Pledge_BAO_Query {
     $grouping = NULL;
     foreach (array_keys($query->_params) as $id) {
       if (substr($query->_params[$id][0], 0, 7) == 'pledge_') {
-        if ($query->_mode == CRM_Contact_BAO_QUERY::MODE_CONTACTS) {
+        if ($query->_mode == CRM_Contact_BAO_Query::MODE_CONTACTS) {
           $query->_useDistinct = TRUE;
         }
         if ($query->_params[$id][0] == 'pledge_test') {
@@ -257,7 +257,7 @@ class CRM_Pledge_BAO_Query {
             }
           }
 
-          $status = implode(',', $val);
+          $status = CRM_Utils_Array::implode(',', $val);
 
           if (count($val) > 1) {
             $op = 'IN';
@@ -282,7 +282,7 @@ class CRM_Pledge_BAO_Query {
           $names[] = $statusValues[$value];
         }
 
-        $query->_qill[$grouping][] = ts('Pledge Status %1', array(1 => $op)) . ' ' . implode(' ' . ts('or') . ' ', $names);
+        $query->_qill[$grouping][] = ts('Pledge Status %1', array(1 => $op)) . ' ' . CRM_Utils_Array::implode(' ' . ts('or') . ' ', $names);
         $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("civicrm_pledge.status_id",
           $op,
           $status,
@@ -299,7 +299,7 @@ class CRM_Pledge_BAO_Query {
             }
           }
 
-          $status = implode(',', $val);
+          $status = CRM_Utils_Array::implode(',', $val);
 
           if (count($val) > 1) {
             $op = 'IN';
@@ -324,7 +324,7 @@ class CRM_Pledge_BAO_Query {
           $names[] = $statusValues[$value];
         }
 
-        $query->_qill[$grouping][] = ts('Pledge Payment Status %1', array(1 => $op)) . ' ' . implode(' ' . ts('or') . ' ', $names);
+        $query->_qill[$grouping][] = ts('Pledge Payment Status %1', array(1 => $op)) . ' ' . CRM_Utils_Array::implode(' ' . ts('or') . ' ', $names);
         $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("civicrm_pledge_payment.status_id",
           $op,
           $status,
@@ -380,7 +380,7 @@ class CRM_Pledge_BAO_Query {
           $sub[] = " ( pledge_contact_b.sort_name LIKE $value )";
         }
 
-        $query->_where[$grouping][] = ' ( ' . implode('  OR ', $sub) . ' ) ';
+        $query->_where[$grouping][] = ' ( ' . CRM_Utils_Array::implode('  OR ', $sub) . ' ) ';
         $query->_qill[$grouping][] = ts('Honor name like - \'%1\'', array(1 => $name));
         $query->_tables['pledge_contact_b'] = $query->_whereTables['pledge_contact_b'] = 1;
         $query->_tables['civicrm_pledge'] = $query->_whereTables['civicrm_pledge'] = 1;

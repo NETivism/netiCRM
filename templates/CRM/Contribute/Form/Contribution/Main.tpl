@@ -142,7 +142,7 @@
   {if $is_allow_other_amount}
       <div class="crm-section {$form.amount_other.name}-section">
       <div class="label">{$form.amount_other.label}</div>
-      <div class="content">{$form.amount_other.html|crmMoney}</div>
+      <div class="content">{$form.amount_other.html}</div>
       <div class="clear"></div>
       </div>
   {/if}
@@ -452,7 +452,7 @@ function enableHonorType( ) {
 {/literal}{/if}{literal}
   cj("input[name=payment_processor]").click(function(){
     if(cj(this).val() == 0){
-      cj("#billing-payment-block").html('<div class="crm-section payment-description"><div class="label"></div><div class="content">{/literal}{$pay_later_receipt|nl2br|regex_replace:"/[\r\n]/":""}{literal}</div><div class="clear"></div></div>');
+      cj("#billing-payment-block").html('<div class="crm-section payment-description"><div class="label"></div><div class="content">{/literal}{$pay_later_receipt|escape:"quotes"|nl2br|regex_replace:"/[\r\n]/":""}{literal}</div><div class="clear"></div></div>');
     }
   });
 

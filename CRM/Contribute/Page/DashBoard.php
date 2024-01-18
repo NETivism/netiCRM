@@ -160,12 +160,12 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
       }
 
       $contrib_this_year = $summary_contrib['ContribThisYear'];
-      $this->assign('this_year_sum_non_recur', @array_sum($contrib_this_year['not_recur']['sum']));
-      $this->assign('this_year_sum_recur', @array_sum($contrib_this_year['recur']['sum']));
-      $this->assign('this_year_count_non_recur', @array_sum($contrib_this_year['not_recur']['count']));
-      $this->assign('this_year_count_recur', @array_sum($contrib_this_year['recur']['count']));
-      $this->assign('this_year_people_non_recur', @array_sum($contrib_this_year['not_recur']['people']));
-      $this->assign('this_year_people_recur', @array_sum($contrib_this_year['recur']['people']));
+      $this->assign('this_year_sum_non_recur', $contrib_this_year['not_recur']['sum'] ? array_sum($contrib_this_year['not_recur']['sum']) : NULL);
+      $this->assign('this_year_sum_recur', $contrib_this_year['recur']['sum'] ? array_sum($contrib_this_year['recur']['sum']) : NULL);
+      $this->assign('this_year_count_non_recur', $contrib_this_year['not_recur']['count'] ? array_sum($contrib_this_year['not_recur']['count']) : NULL);
+      $this->assign('this_year_count_recur', $contrib_this_year['recur']['count'] ? array_sum($contrib_this_year['recur']['count']) : NULL);
+      $this->assign('this_year_people_non_recur', $contrib_this_year['not_recur']['people'] ? array_sum($contrib_this_year['not_recur']['people']) : NULL);
+      $this->assign('this_year_people_recur', $contrib_this_year['recur']['people'] ? array_sum($contrib_this_year['recur']['people']) : NULL);
       $recur_year_sum = self::getDataForChart($year_month_label, $contrib_this_year['recur']);
       $not_recur_year_sum = self::getDataForChart($year_month_label, $contrib_this_year['not_recur']);
       for ($i=1; $i < 12; $i++) {

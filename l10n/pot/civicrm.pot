@@ -46058,7 +46058,7 @@ msgid "Are you sure you want to make this mailing public?"
 msgstr ""
 
 msgid "Are you sure you want to un-publish this mailing from public?"
-msgstr "" 
+msgstr ""
 
 # CRM/Admin/Form/Setting/Receipt.php
 msgid "The stamp of organization."
@@ -46310,7 +46310,7 @@ msgid "run every %1 minutes"
 msgstr ""
 
 msgid "Taipa"
-msgstr "" 
+msgstr ""
 
 msgid "Coloane"
 msgstr ""
@@ -47028,25 +47028,25 @@ msgid "Total recipients number is calculated by these conditions."
 msgstr ""
 
 msgid "Recipients still alive."
-msgstr "" 
+msgstr ""
 
 msgid "Recipients still subscribing selected group."
-msgstr "" 
+msgstr ""
 
 msgid "Recipients does not opt-out site-wide message."
-msgstr "" 
+msgstr ""
 
 msgid "\"Do Not Mail\" not checked in recipients privacy option."
-msgstr "" 
+msgstr ""
 
 msgid "Email address did not \"On Hold\" by bounced record."
-msgstr "" 
+msgstr ""
 
 msgid "Recipient list and total recipients number will be re-calculated base on contact privacy and subscribing data when mailing start."
-msgstr "" 
+msgstr ""
 
 msgid "Once mailing job start, the recipients list will be freezed."
-msgstr "" 
+msgstr ""
 
 msgid "Email will include event check in code."
 msgstr ""
@@ -48765,4 +48765,660 @@ msgstr ""
 
 #: CRM/Core/Config.php
 msgid "Access Denied."
+msgstr ""
+
+#: templates/CRM/Admin/Form/Setting/Miscellaneous.tpl
+msgid "NOTE: Once this option is set, security rules will be applied to recognize access to your website only from domains that match those listed above, in order to provide page services. Please make sure that you have set the \"trusted hosts\" correctly to avoid blocking visitors due to your security settings."
+msgstr ""
+
+#: CRM/Core/Config.php
+msgid "Current host \"%1\" doesn't in Trusted Host. If you are sure it's correct host, please add your domain into the <a href=\"%2\">trusted host setting</a>."
+msgstr ""
+
+# templates/CRM/Contribute/Form/ContributionView.tpl
+msgid "Please pay attention to protect credit card information."
+msgstr ""
+
+# templates/CRM/Contribute/Form/ContributionView.tpl
+msgid "Click to show details"
+msgstr ""
+
+# CRM/Admin/Form/Setting/Security.php
+msgid "Settings - Website Security"
+msgstr ""
+
+# templates/CRM/Admin/Page/Setting.tpl
+msgid "Website Security Settings"
+msgstr ""
+
+# templates/CRM/Admin/Page/Setting.tpl
+msgid "Global website security settings. eg. CSP, trusted hosts, export encrypt... etc."
+msgstr ""
+
+#: CRM/Admin/Form/Setting/Security.php
+msgid "Content Security Policy"
+msgstr ""
+
+#: CRM/Admin/Form/Setting/Security.php
+msgid "Exclude path"
+msgstr ""
+
+#: templates/CRM/Admin/Form/Setting/Security.tpl
+msgid "Content Security Policy will restrict embed media on your CRM system."
+msgstr ""
+
+#: templates/CRM/Admin/Form/Setting/Security.tpl
+msgid "You can enter one path per line, and use \"*\" as a wildcard character."
+msgstr ""
+
+#: templates/CRM/Admin/Form/Setting/Security.php
+msgid "Export excel file encryption settings"
+msgstr ""
+
+msgid "No password set"
+msgstr ""
+
+msgid "Use the email of the exporting user as the password"
+msgstr ""
+
+msgid "Use a generic password"
+msgstr ""
+
+msgid "Generic Password"
+msgstr ""
+
+msgid "Settings option changed from %1 to %2."
+msgstr ""
+
+msgid "Export excel file encryption settings option Changed"
+msgstr ""
+
+msgid "Export excel file encryption settings password Changed"
+msgstr ""
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid "AI Copywriter"
+msgstr ""
+
+msgid "AI-generated Text Templates"
+msgstr ""
+
+msgid "Community Recommendations"
+msgstr ""
+
+msgid "Copywriting Role"
+msgstr ""
+
+msgid "Due to the above, the results of your sharing will not appear immediately. We will schedule periodic updates and publications."
+msgstr ""
+
+msgid "Once published, you can view your shared template in the 'Community Recommended' templates, which will also be marked with your organization's name."
+msgstr ""
+
+msgid "Once saved as a shared template, you can reuse this template for editing. Please enter a template title to identify the purpose of the template. If you need to edit a shared template, please go to the template management interface to edit."
+msgstr ""
+
+msgid "Recommend"
+msgstr ""
+
+msgid "Recommend a Template to Other Organizations"
+msgstr ""
+
+msgid "Recommended"
+msgstr ""
+
+msgid "Remember to verify AI-generated text before using it."
+msgstr ""
+
+msgid "Save prompt as shared template"
+msgstr ""
+
+msgid "Saved Templates"
+msgstr ""
+
+msgid "Thank you for being willing to share your templates with the community, thereby benefiting all netiCRM users."
+msgstr ""
+
+msgid "The netiCRM team will ensure the prompt does not contain any personal data and test its function to guarantee the privacy safety for you and other organizations."
+msgstr ""
+
+msgid "Tone Style"
+msgstr ""
+
+msgid "Try Again"
+msgstr ""
+
+msgid "Upon clicking 'Recommend', we'll proceed with the following verification steps:"
+msgstr ""
+
+msgid "Warning! Applying this template will clear your current settings. Proceed with the application?"
+msgstr ""
+
+msgid "Hi, this is netiCRM copywriting helper, please be careful not to enter personal information or other confidential information."
+msgstr ""
+
+msgid "Use default template"
+msgstr ""
+
+msgid "Use other templates"
+msgstr ""
+
+msgid "Please enter or select the role you want AI to represent (e.g., fundraiser)."
+msgstr ""
+
+msgid "Please enter or select the desired writing style (e.g., casual)."
+msgstr ""
+
+msgid "Please enter the %1 copy you would like AI to generate."
+msgstr ""
+
+msgid "Click to insert organization intro."
+msgstr ""
+
+msgid "Your usage limit is <span class=\"usage-max\">%1</span> times, currently used <span class=\"usage-used\">%2</span> times."
+msgstr ""
+
+msgid "Establish an introduction for your organization so that when later generating text using AI, it can be swiftly integrated, enabling the AI to grasp the context of your organization."
+msgstr ""
+
+msgid "Suggested word count: %1 words."
+msgstr ""
+
+msgid "The Smiling Elderly Foundation, a non-profit organization based in Taiwan, is committed to enhancing the quality of life for seniors. We offer thoughtful care, support, and organize welfare activities, in addition to providing medical assistance. Additionally, we are staunch advocates for the rights of the elderly. Our objective is to ensure that seniors feel the warmth, respect, and appreciation of society."
+msgstr ""
+
+msgid "Organization intro"
+msgstr ""
+
+#: civicrm_backer_autoimport.install
+msgid "Link URL"
+msgstr ""
+
+msgid "Link Label"
+msgstr ""
+
+#: templates/CRM/Contact/Form/Task/RemoveFromGroup.tpl
+msgid "The operation of removing contacts from the group cannot be undone."
+msgstr ""
+
+#: templates/CRM/Custom/Form/Field.tpl
+msgid "Please be aware that half-width parentheses '(' or ')' should not be used in the field name. If you need to use parentheses, please use the full-width versions '（' or '）'."
+msgstr ""
+
+msgid "When the recurring contribution is triggered, which contribution do you want to copy?"
+msgstr ""
+
+msgid "Copied Contribution Type Source"
+msgstr ""
+
+msgid "From source contribution."
+msgstr ""
+
+msgid "From contribution page setting."
+msgstr ""
+
+msgid "When the recurring contribution is triggered, which source of contribution type do you want to copy?"
+msgstr ""
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid "Our service is currently busy, please try again later. If needed, please contact our customer service team."
+msgstr ""
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid "We're sorry, our service is currently experiencing some issues. Please try again later. If the problem persists, please contact our customer service team."
+msgstr ""
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid "Maximum character limit for this field is <span class=\"limit-max\">1500</span> characters, and the current character count is <span class=\"current\">0</span>."
+msgstr ""
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid "There are currently no templates available."
+msgstr ""
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid "Loading..."
+msgstr ""
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid "Content Summary"
+msgstr ""
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid "Apply Template"
+msgstr ""
+
+#: templates/CRM/common/sidePanel.tpl
+msgid "Expand"
+msgstr ""
+
+#: CRM/AI/Page/AJAX.php
+msgid "Please use %4 language of %3 to play the role of %1 and help generate a %2."
+msgstr ""
+
+msgid "Please using %1 language to generate content."
+msgstr ""
+
+msgid "Chinese (Taiwan)"
+msgstr ""
+
+msgid "The fee you selected has expired before submission. Please reselect the fee."
+msgstr ""
+
+msgid "The fee you selected has expired before submission. Please begin from the first step. You can refill another <a href=\"%1\">here</a>."
+msgstr ""
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid "The organization sharing this template"
+msgstr ""
+
+#: templates/CRM/Contribute/Page/ContributionPageEdit.tpl
+msgid "Admin Basic Settings"
+msgstr ""
+
+#: templates/CRM/Contribute/Page/ContributionPageEdit.tpl
+msgid "You can provide this URL to supporters for creating new Personal Campaign Pages."
+msgstr ""
+
+#: CRM/Contribute/Form/Payment.php
+msgid "This payment cannot be made at the moment. If you have any questions, please contact the site administrator."
+msgstr ""
+
+msgid "To ensure security, it is recommended that you submit a request through the customer service system before changing this field. If you are sure you want to modify this setting, please click Confirm button."
+msgstr ""
+
+msgid "Success Contribution"
+msgstr ""
+
+msgid "Pending Contribution"
+msgstr ""
+
+msgid "Error Contribution"
+msgstr ""
+
+msgid "The status will be changed to 'Completed.' No contribution completion notification email will be sent."
+msgstr ""
+
+msgid "You can click <a href=\"%1\">here</a> to download the Excel result file for this batch of contributions."
+msgstr ""
+
+msgid "No changes will be made to the above contributions."
+msgstr ""
+
+msgid "Add fee to contribution."
+msgstr ""
+
+msgid "Add disbursement date to field `%1`"
+msgstr ""
+
+msgid "Modify contribution status to 'finished'."
+msgstr ""
+
+msgid "Update disbursement date data to receive date."
+msgstr ""
+
+msgid "Can't find the contribution in database."
+msgstr ""
+
+msgid "Contribution status is not 'Completed'."
+msgstr ""
+
+msgid "Amount is not correct."
+msgstr ""
+
+msgid "Disbursement date is not correct."
+msgstr ""
+
+msgid "Invalid parameter of error type."
+msgstr ""
+
+msgid "Import completed, below is the summary of the import results."
+msgstr ""
+
+msgid "`%1` to the field `%2`"
+msgstr ""
+
+msgid "Disbursement Date"
+msgstr ""
+
+msgid "The above contribution will update the following information: %1"
+msgstr ""
+
+#: templates/CRM/Contribute/Form/ContributionPage/PCP.tpl
+msgid "If checked, an administrator will need to approve new personal campaign pages before they are available to the public. The person who created the personal campaign page will be automatically notified via email when their page is approved so that they can begin promoting the campaign."
+msgstr ""
+
+#: templates/CRM/Contribute/Form/ContributionPage/PCP.tpl
+msgid "When your supporters create a Personal Campaign page, they must log in or register an account from a The Supporter Profile to use functions such as editing drafts or submitting for approval. Please select one Profile here for login or registration."
+msgstr ""
+
+msgid "Empty Receive Date"
+msgstr ""
+
+msgid "Error Message"
+msgstr ""
+
+msgid "Contribution data that matches"
+msgstr ""
+
+msgid "Contribution data with inconsistent 'status' (import after modifying status)"
+msgstr ""
+
+msgid "Erroneous contribution data (cannot be imported)"
+msgstr ""
+
+msgid "You can click <a href=\"%1\">here</a> to download the Excel file of the original status for this batch of contributions."
+msgstr ""
+
+#: templates/CRM/common/CMSUser.tpl
+msgid "Please fill in the basic information to register for an account that can edit a personal campaign page. The account registration rules are as follows:"
+msgstr ""
+
+msgid "1. One email can only register one account."
+msgstr ""
+
+msgid "2. If you have already registered an account on this site, you can click Forgot Password, enter your email, and get the login link from your mailbox."
+msgstr ""
+
+#: templates/CRM/Contribute/Form/PCP/PCPAccount.tpl
+msgid "This is a page for create PCP for a new contact. To create your own personal campaign, visit this <a href=\"%1\">link</a>."
+msgstr ""
+
+msgid "Create a Personal Campaign Page for others"
+msgstr ""
+
+msgid "To add pcp for others, click <a href=\"%1\">Create a Personal Campaign Page for others</a> to create page."
+msgstr ""
+
+#: templates/CRM/Contribute/Page/PCP.tpl
+msgid "Search Personal Campaign Pages"
+msgstr ""
+
+#: templates/CRM/Contribute/Page/PCP.tpl
+#: templates/CRM/Contribute/Form/PCP/PCP.tpl
+msgid "Belonging Main Contribution Page"
+msgstr ""
+
+msgid "Draft"
+msgstr ""
+
+#: CRM/Contribute/Page/PCP.php
+msgid "Revoke to Draft"
+msgstr ""
+
+#: neticrm/civicrm_instrument.module
+msgid "The payment processor you choose does not support annual recurring payments."
+msgstr ""
+
+msgid "%1 only supports monthly recurring payments."
+msgstr ""
+
+#: templates/CRM/Contribute/Page/PCPInfo.tpl
+msgid "Supported by %1 people"
+msgstr ""
+
+#: templates/CRM/Form/attachment.tpl
+msgid "Please remove the current attachment before selecting images from the gallery."
+msgstr ""
+
+#: templates/CRM/Form/attachment.tpl
+msgid "You can use our preset images from the gallery or upload your own in the attached file below."
+msgstr ""
+
+#: templates/CRM/Form/attachment.tpl
+msgid "Select from gallery"
+msgstr ""
+
+#: CRM/Admin/Form/Setting/Receipt.php
+msgid "Email Receipt Password"
+msgstr ""
+
+msgid "Email Receipt Password Explanation Text"
+msgstr ""
+
+#: templates/CRM/Admin/Form/Setting/Receipt.tpl
+msgid "After activation, a password will be added to the email receipt. If the receipt includes tax filing credentials (such as ID number or Uniform Number), encryption will be done using these credentials. If these fields are not present, the recipient's email address will be used for encryption."
+msgstr ""
+
+msgid "If no specific text is set, the default text will be: Your PDF receipt is encrypted. The password is either your tax certificate number or, if not provided, your email address."
+msgstr ""
+
+#: CRM/Admin/Form/Setting/Miscellaneous.php
+msgid "Path to qpdf executable"
+msgstr ""
+
+#: templates/CRM/Admin/Form/Setting/Miscellaneous.tpl
+msgid "If qpdf is installed, CiviCRM will use it to generate PDF form letters."
+msgstr ""
+
+#: templates/CRM/Contribute/Page/PCPInfo.tpl
+msgid "Share to %1"
+msgstr ""
+
+#: CRM/Core/Payment/TapPay.php
+msgid "Card Category"
+msgstr ""
+
+msgid "Prepaid Card"
+msgstr ""
+
+#: templates/CRM/Form/attachment.tpl
+msgid "Upload Your Own Image?"
+msgstr ""
+
+#: templates/CRM/Form/attachment.tpl
+msgid "If this option is checked, you can upload your own image."
+msgstr ""
+
+#: templates/CRM/Form/attachment.tpl
+msgid "If this option is checked, you can upload your own image. If you want to uncheck this option, please delete all currently attachments."
+msgstr ""
+
+#: templates/CRM/Form/attachment.tpl
+msgid "Before selecting images from the gallery, please uncheck the 'Upload Your Own Image?' checkbox and delete all currently attachments."
+msgstr ""
+
+#: CRM/Event/Form/SearchEvent.php
+msgid "Event Start Date - From"
+msgstr ""
+
+#: templates/CRM/Contribute/Form/PCP/Campaign.tpl
+msgid "Please set a main title for your 'Personal Campaign Page'."
+msgstr ""
+
+#: templates/CRM/Form/attachment.tpl
+msgid "Add an eye-catching image to your fundraising campaign. You can choose a picture from the gallery or upload your own."
+msgstr ""
+
+#: CRM/Contribute/BAO/Contribution.php CRM/Contribute/BAO/ContributionPage.php
+#: CRM/Contribute/Form/AdditionalInfo.php
+msgid "Your PDF receipt is encrypted."
+msgstr ""
+
+msgid "The password is either your tax certificate number or, if not provided, your email address."
+msgstr ""
+
+#: templates/CRM/Contribute/Form/PCP/Campaign.tpl
+msgid "The content cannot be modified once it is submit."
+msgstr ""
+
+#: templates/CRM/Contribute/Form/PCP/Campaign.tpl
+msgid "Display fundraising progress"
+msgstr ""
+
+#: templates/CRM/Contribute/Form/PCP/Campaign.tpl
+msgid "If this option is checked, the amount of money you have raised will be displayed, but the target amount and progress bar indicating the percentage of the goal will not be shown."
+msgstr ""
+
+#: templates/CRM/Contribute/Form/PCP/Campaign.tpl
+msgid "If this option is checked, none of the details including the amount raised, the target amount, and the progress bar showing the goal percentage will be displayed on your fundraising page."
+msgstr ""
+
+#: CRM/Contribute/Form/PCP/Campaign.php
+msgid "Display progress bar and amount raised"
+msgstr ""
+
+#: CRM/Contribute/Form/PCP/Campaign.php
+msgid "Display amount raised only"
+msgstr ""
+
+#: CRM/Contribute/Form/PCP/Campaign.php
+msgid "Do not display either"
+msgstr ""
+
+#: templates/CRM/Contribute/Page/PCP.tpl
+msgid "Change this pcp page to status <span id=\"status-indicator\">%1</span>"
+msgstr ""
+
+#: templates/CRM/Contribute/Page/PCP.tpl
+msgid "Proceed and Send Notification"
+msgstr ""
+
+#: templates/CRM/Contribute/Page/PCP.tpl
+msgid "Status Change"
+msgstr ""
+
+#: templates/CRM/Contribute/Page/PCPInfo.tpl
+msgid "This fundraising campaign has ended."
+msgstr ""
+
+#: xml/templates/message_templates/pcp_notify_subject.tpl
+#: xml/templates/message_templates/pcp_status_change_subject.tpl
+#: xml/templates/message_templates/pcp_supporter_notify_subject.tpl
+msgid "Is live"
+msgstr ""
+
+#: xml/templates/message_templates/pcp_status_change_html.tpl
+#: xml/templates/message_templates/pcp_status_change_text.tpl
+#: xml/templates/message_templates/pcp_supporter_notify_html.tpl
+#: xml/templates/message_templates/pcp_supporter_notify_text.tpl
+msgid "Your Personal Campaign Page is now available for public access."
+msgstr ""
+
+#: xml/templates/message_templates/pcp_status_change_html.tpl
+#: xml/templates/message_templates/pcp_status_change_text.tpl
+#: xml/templates/message_templates/pcp_supporter_notify_html.tpl
+#: xml/templates/message_templates/pcp_supporter_notify_text.tpl
+msgid "Congratulations!"
+msgstr ""
+
+#: xml/templates/message_templates/pcp_status_change_html.tpl
+#: xml/templates/message_templates/pcp_status_change_text.tpl
+#: xml/templates/message_templates/pcp_supporter_notify_html.tpl
+#: xml/templates/message_templates/pcp_supporter_notify_text.tpl
+msgid ""
+"You can now openly share the page to gather more donations for your "
+"fundraising campaign!"
+msgstr ""
+
+#: xml/templates/message_templates/pcp_status_change_html.tpl
+#: xml/templates/message_templates/pcp_status_change_text.tpl
+#: xml/templates/message_templates/pcp_supporter_notify_html.tpl
+msgid "Please copy your Personal Campign Page URL %1"
+msgstr ""
+
+#: xml/templates/message_templates/pcp_status_change_html.tpl
+#: xml/templates/message_templates/pcp_status_change_text.tpl
+#: xml/templates/message_templates/pcp_supporter_notify_html.tpl
+#: xml/templates/message_templates/pcp_supporter_notify_text.tpl
+msgid ""
+"Subsequently, you can share your Personal Campaign Page link across various "
+"social media platforms to rally friends and family to support this "
+"fundraising initiative!"
+msgstr ""
+
+#: xml/templates/message_templates/pcp_status_change_html.tpl
+#: xml/templates/message_templates/pcp_status_change_text.tpl
+msgid ""
+"Your Personal Campaign Page has been reviewed by our administrators, and it "
+"has been determined that further modifications are needed."
+msgstr ""
+
+#: xml/templates/message_templates/pcp_status_change_html.tpl
+#: xml/templates/message_templates/pcp_status_change_text.tpl
+msgid "As a result, it has been reverted to a draft status."
+msgstr ""
+
+#: xml/templates/message_templates/pcp_status_change_html.tpl
+#: xml/templates/message_templates/pcp_status_change_text.tpl
+msgid ""
+"We recommend reaching out to the administrator at %1 to understand the "
+"reasons for the required changes."
+msgstr ""
+
+#: xml/templates/message_templates/pcp_status_change_html.tpl
+msgid ""
+"You can <a href=\"%1\">log in</a> to the system again to <a href=\"%2\">edit "
+"the page</a>."
+msgstr ""
+
+#: xml/templates/message_templates/pcp_status_change_html.tpl
+#: xml/templates/message_templates/pcp_status_change_text.tpl
+msgid ""
+"Once the editing is completed, you can resubmit it for administrator review."
+msgstr ""
+
+#: xml/templates/message_templates/pcp_status_change_text.tpl
+msgid "Afterward, you can log in to the system again to edit the page."
+msgstr ""
+
+#: xml/templates/message_templates/pcp_status_change_text.tpl
+msgid "Edit personal campaign page"
+msgstr ""
+
+#: xml/templates/message_templates/pcp_supporter_notify_html.tpl
+#: xml/templates/message_templates/pcp_supporter_notify_text.tpl
+msgid ""
+"Before you start sharing the Personal Campaign Page and commence "
+"fundraising, it needs to obtain approval from the administrator."
+msgstr ""
+
+#: xml/templates/message_templates/pcp_supporter_notify_html.tpl
+msgid "Currently, this page is undergoing the approval process."
+msgstr ""
+
+#: xml/templates/message_templates/pcp_supporter_notify_html.tpl
+#: xml/templates/message_templates/pcp_supporter_notify_text.tpl
+msgid ""
+"Once the review is complete, you will soon receive an approval confirmation "
+"email from %1."
+msgstr ""
+
+#: xml/templates/message_templates/pcp_supporter_notify_html.tpl
+#: xml/templates/message_templates/pcp_supporter_notify_text.tpl
+msgid ""
+"Upon receiving an approval email, you can begin sharing the page and start "
+"fundraising!"
+msgstr ""
+
+#: xml/templates/message_templates/pcp_supporter_notify_html.tpl
+#: xml/templates/message_templates/pcp_supporter_notify_text.tpl
+msgid ""
+"If you wish to preview the edited fundraising page before administrator "
+"approval, please follow these steps:"
+msgstr ""
+
+#: xml/templates/message_templates/pcp_supporter_notify_html.tpl
+#: xml/templates/message_templates/pcp_supporter_notify_text.tpl
+msgid "Preview your personal campaign page"
+msgstr ""
+
+#: xml/templates/message_templates/pcp_supporter_notify_html.tpl
+msgid ""
+"You have currently saved this page as a draft and it has not been submitted "
+"yet."
+msgstr ""
+
+#: xml/templates/message_templates/pcp_supporter_notify_html.tpl
+msgid ""
+"To continue editing this page, please <a href=\"%1\">log in</a> then you can "
+"further edit <a href=\"%2\">your Personal Campaign Page</a>."
+msgstr ""
+
+#: xml/templates/message_templates/pcp_supporter_notify_text.tpl
+msgid "Please log in to obtain your Personal Campaign Page link"
+msgstr ""
+
+#: templates/CRM/Member/Form/Task/Delete.tpl
+msgid "This delete operation cannot be undone and will delete all transactions and activity associated with these members."
 msgstr ""

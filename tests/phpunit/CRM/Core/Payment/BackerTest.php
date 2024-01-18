@@ -4,33 +4,27 @@ require_once 'CiviTest/CiviUnitTestCase.php';
 
 class CRM_Core_Payment_BackerTest extends CiviUnitTestCase {
   public $DBResetRequired = FALSE;
-  protected $_apiversion;
   protected $_processor;
-  protected $_is_test;
-  protected $_page_id;
-  protected $_merchant_no;
-  protected $_merchant_pass;
+  protected $_isTest;
+  protected $_pageId;
+  protected $_payment;
+  protected $_trxnId;
+  protected $_signature;
+  protected $_json;
   static $_rtypeId;
-
-  /**
-   *  Constructor
-   *
-   *  Initialize configuration
-   */
-  function __construct() {
-    // test if drupal bootstraped
-    parent::__construct();
-  }
 
   function get_info() {
     return array(
-     'name' => 'Backer payment processor',
-     'description' => 'Test Backer payment processor.',
-     'group' => 'Payment Processor Tests',
+      'name' => 'Backer payment processor',
+      'description' => 'Test Backer payment processor.',
+      'group' => 'Payment Processor Tests',
     );
   }
 
-  function setUp() {
+  /**
+   * @before
+   */
+  function setUpTest() {
     // login by user 1 to get customfield
     CRM_Utils_System::loadUser(array('uid' => 1));
     parent::setUp();
@@ -38,13 +32,13 @@ class CRM_Core_Payment_BackerTest extends CiviUnitTestCase {
     $this->_pageId = key($pages);
     $this->assertNotEmpty($this->_pageId, "In line " . __LINE__);
 
-    $this->_is_test = 1;
+    $this->_isTest = 1;
 
     // get processor
     $params = array(
       'version' => 3,
       'class_name' => 'Payment_Backer',
-      'is_test' => $this->_is_test,
+      'is_test' => $this->_isTest,
     );
     $result = civicrm_api('PaymentProcessor', 'get', $params);
     $this->assertAPISuccess($result);
@@ -92,7 +86,7 @@ class CRM_Core_Payment_BackerTest extends CiviUnitTestCase {
     $params = array(
       'version' => 3,
       'class_name' => 'Payment_Backer',
-      'is_test' => $this->_is_test,
+      'is_test' => $this->_isTest,
     );
     $result = civicrm_api('PaymentProcessor', 'get', $params);
     $this->assertAPISuccess($result);
@@ -100,18 +94,6 @@ class CRM_Core_Payment_BackerTest extends CiviUnitTestCase {
     $this->_payment = $pp;
     $this->_processor = CRM_Core_Payment::singleton('live', $this->_payment);
 
-    // get cid
-    $params = array(
-      'version' => 3,
-      'limit' => 1,
-      'options' => array(
-      ),
-    );
-    $result = civicrm_api('Contact', 'get', $params);
-    $this->assertAPISuccess($result);
-    if(!empty($result['count'])){
-      $this->_cid = $result['id'];
-    }
     $json = <<< EOT
 {
   "transaction": {
@@ -135,56 +117,56 @@ class CRM_Core_Payment_BackerTest extends CiviUnitTestCase {
           "field_type": "checkbox",
           "name": "詳細介紹",
           "is_required": false,
-          "value": "yes" 
+          "value": "yes"
         },
         {
           "id": 42566,
           "field_type": "checkbox",
           "name": "加贈手機殼！",
           "is_required": false,
-          "value": "yes" 
+          "value": "yes"
         },
         {
           "id": 42118,
           "field_type": "checkbox",
           "name": "方案總覽",
           "is_required": false,
-          "value": "yes" 
+          "value": "yes"
         },
         {
           "id": 42093,
           "field_type": "select_box",
           "name": "是否需要收據",
           "is_required": true,
-          "value": "需要（請寄給我紙本收據）" 
+          "value": "需要（請寄給我紙本收據）"
         },
         {
           "id": 42083,
           "field_type": "select_box",
           "name": "請選擇Tshirt尺寸",
           "is_required": false,
-          "value": "M" 
+          "value": "M"
         },
         {
           "id": 42094,
           "field_type": "text",
           "name": "收據抬頭",
           "is_required": false,
-          "value": "王測試" 
+          "value": "王測試"
         },
         {
           "id": 42095,
           "field_type": "text",
           "name": "報稅憑證",
           "is_required": false,
-          "value": "A123123120" 
+          "value": "A123123120"
         },
         {
           "id": 42096,
           "field_type": "text",
           "name": "捐款徵信名稱",
           "is_required": false,
-          "value": "ABC" 
+          "value": "ABC"
         }
       ]
     }
@@ -201,7 +183,7 @@ class CRM_Core_Payment_BackerTest extends CiviUnitTestCase {
     "id": 482920,
     "email": "admintest@example.com",
     "name": "王測試",
-    "cellphone": "+886900111222" 
+    "cellphone": "+886900111222"
   },
   "recipient": {
     "recipient_name": "王測試",
@@ -211,7 +193,7 @@ class CRM_Core_Payment_BackerTest extends CiviUnitTestCase {
     "recipient_postal_code": "421",
     "recipient_country": "TW",
     "recipient_subdivision": "TXG",
-    "recipient_cityarea": "后里區" 
+    "recipient_cityarea": "后里區"
   }
 }
 EOT;
@@ -234,7 +216,6 @@ EOT;
     "flag": null,
     "render_status": "success",
     "type": "child",
-    "parent_trade_no": "SUB3679271669947543",
     "items": {
       "id": 4246283,
       "reward_id": 23431,
@@ -291,6 +272,174 @@ EOT;
     $this->_json[2] = json_encode($jsonArray);
     $this->_signature[2] = hash_hmac('sha1', $this->_json[2], '1234');
 
+    // json object 3 for recurring main data
+    $json = <<< EOT
+{
+  "transaction": {
+  "trade_no": "SUB3679271678955153",
+  "money": "20.0",
+  "created_at": "2023-03-16T16:24:57.060+08:00",
+  "updated_at": "2023-03-16T16:25:54.100+08:00",
+  "quantity": 1,
+  "flag": null,
+  "render_status": "recurring",
+  "type": "parent",
+  "parent_trade_no": null,
+  "items": {
+  "id": 4425501,
+  "reward_id": 25048,
+  "reward_name": "test reward name",
+  "quantity": 1,
+  "money": "20.0",
+  "note": "",
+  "custom_fields": [
+    {
+      "id": 74879,
+      "field_type": "select_box",
+      "name": "下拉選單",
+      "is_required": false,
+      "value": "選項 2"
+    },
+    {
+      "id": 74880,
+      "field_type": "text",
+      "name": "捐款徵信名稱",
+      "is_required": false,
+      "value": "捐款徵信名稱捐款徵信名稱"
+    },
+    {
+      "id": 74878,
+      "field_type": "checkbox",
+      "name": "核取方塊",
+      "is_required": false,
+      "value": "yes"
+    }
+    ]
+  }
+  },
+  "payment": {
+    "type": "period",
+    "paid_at": "2023-03-16T16:24:57.060+08:00",
+    "next_paid_time": "",
+    "next_paid_amount": "",
+    "log": "",
+    "refund_at": null
+  },
+  "user": {
+    "id": 482920,
+    "email": "admintest@example.com",
+    "name": "王測試",
+    "cellphone": "+886900111222"
+  },
+  "recipient": {
+    "recipient_name": "王測試",
+    "recipient_contact_email": "admintest@eaxmple.com",
+    "recipient_cellphone": "0900222333",
+    "recipient_address": "泉州路2之xxx號",
+    "recipient_postal_code": "421",
+    "recipient_country": "TW",
+    "recipient_subdivision": "TXG",
+    "recipient_cityarea": "后里區"
+  },
+  "receipt": {
+    "receipt_type": "紙本收據",
+    "choice": "單次寄送紙本收據",
+    "contact_name": "稅捐收據抬頭",
+    "identity_card_number": "1234567890",
+    "country": "TW",
+    "subdivision": "HSQ",
+    "city_area": "竹北市",
+    "postal_code": "302",
+    "address": "三重路一段3號5樓"
+  }
+}
+EOT;
+    $jsonArray = json_decode($json, TRUE);
+    $this->_json[3] = json_encode($jsonArray);
+    $this->_signature[3] = hash_hmac('sha1', $this->_json[3], '1234');
+
+    // json object 4 for recurring sub data
+    $json = <<< EOT
+{
+  "transaction": {
+  "trade_no": "SUB3679271678955097",
+  "money": "20.0",
+  "created_at": "2023-03-16T16:25:54.276+08:00",
+  "updated_at": "2023-03-16T16:25:54.431+08:00",
+  "quantity": 1,
+  "flag": null,
+  "render_status": "success",
+  "type": "child",
+  "parent_trade_no": "SUB3679271678955153",
+  "items": {
+    "id": 4425502,
+    "reward_id": 25048,
+    "reward_name": "test reward name",
+    "quantity": 1,
+    "money": "20.0",
+    "note": "",
+    "custom_fields": [ {
+      "id": 74879,
+      "field_type": "select_box",
+      "name": "下拉選單",
+      "is_required": false,
+      "value": "選項 2"
+    }, {
+      "id": 74880,
+      "field_type": "text",
+      "name": "捐款徵信名稱",
+      "is_required": false,
+      "value": "捐款徵信名稱捐款徵信名稱"
+    }, {
+      "id": 74878,
+      "field_type": "checkbox",
+      "name": "核取方塊",
+      "is_required": false,
+      "value": "yes"
+    }
+    ]}
+  },
+  "payment": {
+    "type": "credit",
+    "paid_at": "2023-03-16T16:25:54.276+08:00",
+    "next_paid_time": "2023-03-18T16:24:57.060+08:00",
+    "next_paid_amount": "20.0",
+    "log": "",
+    "refund_at": null
+  },
+  "user": {
+    "id": 482920,
+    "email": "admintest@example.com",
+    "name": "王測試",
+    "cellphone": "+886900111222"
+  },
+  "recipient": {
+    "recipient_name": "王測試",
+    "recipient_contact_email": "admintest@eaxmple.com",
+    "recipient_cellphone": "0900222333",
+    "recipient_address": "泉州路2之xxx號",
+    "recipient_postal_code": "421",
+    "recipient_country": "TW",
+    "recipient_subdivision": "TXG",
+    "recipient_cityarea": "后里區"
+  },
+  "receipt": {
+    "receipt_type": "紙本收據",
+    "choice": "單次寄送紙本收據",
+    "contact_name": "稅捐收據抬頭",
+    "identity_card_number": "1234567890",
+    "country": "TW",
+    "subdivision": "HSQ",
+    "city_area": "竹北市",
+    "postal_code": "302",
+    "address": "三重路一段3號5樓"
+  }
+}
+EOT;
+    $jsonArray = json_decode($json, TRUE);
+    $this->_json[4] = json_encode($jsonArray);
+    $this->_signature[4] = hash_hmac('sha1', $this->_json[4], '1234');
+
     // relationship type
     if (!$this->_rtypeId) {
       $rtypeId = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_relationship_type WHERE label_a_b = 'Orderer' AND label_b_a = 'Recipient'");
@@ -322,16 +471,21 @@ EOT;
     $this->_rtypeId = $rtypeId;
   }
 
-  function tearDown() {
+  /**
+   * @after
+   */
+  function tearDownTest() {
   }
 
   function testBackerIPN(){
+    $contributionResult = array();
     $now = time();
     $hash = hash_hmac('sha1', $this->_json[1], $this->_payment['password']);
     $this->assertEquals($hash, $this->_signature[1]);
 
     $formatted = CRM_Core_Payment_Backer::formatParams($this->_json[1]);
-    $createdContributionId = $this->_processor->processContribution($this->_json[1]);
+    $createdContributionId = $this->_processor->processContribution($this->_json[1], $contributionResult);
+    $createdContributionId = $contributionResult['contributionId'];
     $this->assertNotEmpty($createdContributionId, "In line " . __LINE__);
 
     // verify all contribution saved data
@@ -384,6 +538,7 @@ EOT;
 
   function testBackerAdditionAddress(){
     $now = time();
+    $contributionResult = NULL;
 
     // prepare data
     $json = json_decode($this->_json[1], TRUE);
@@ -392,7 +547,8 @@ EOT;
     $formatted = CRM_Core_Payment_Backer::formatParams($json);
 
     // run
-    $createdContributionId = $this->_processor->processContribution($json);
+    $createdContributionId = $this->_processor->processContribution($json, $contributionResult);
+    $createdContributionId = $contributionResult['contributionId'];
     $this->assertNotEmpty($createdContributionId, "In line " . __LINE__);
     $contactId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $createdContributionId, 'contact_id');
 
@@ -420,9 +576,11 @@ EOT;
   }
 
   function testBackerReceiptNew(){
+    $contributionResult = NULL;
     // prepare data
     $formatted = CRM_Core_Payment_Backer::formatParams($this->_json[2]);
-    $createdContributionId = $this->_processor->processContribution($this->_json[2]);
+    $createdContributionId = $this->_processor->processContribution($this->_json[2] ,$contributionResult);
+    $createdContributionId = $contributionResult['contributionId'];
     $this->assertNotEmpty($createdContributionId, "In line " . __LINE__);
 
     // verify all contribution saved data
@@ -471,5 +629,34 @@ EOT;
     $this->assertEquals($formatted['address'][0]['street_address'], $result['values'][$result['id']]['street_address']);
     $this->assertEquals($formatted['email'][0]['email'], $result['values'][$result['id']]['email']);
     $this->assertEquals($formatted['phone'][0]['phone'], $result['values'][$result['id']]['phone']);
+  }
+
+  function testBackerRecurring(){
+    //main
+    $contributionResult = NULL;
+    $formatted = CRM_Core_Payment_Backer::formatParams($this->_json[3]);
+    $this->_processor->processContribution($this->_json[3], $contributionResult);
+
+    // verify recur contribution saved data
+    $params = array(
+      'trxn_id' => $formatted['recurring']['trxn_id'],
+      'contribution_status_id' => $formatted['recurring']['contribution_status_id'],
+    );
+    $this->assertDBState('CRM_Contribute_DAO_ContributionRecur', $contributionResult['recur_contribution_id'], $params);
+
+    //sub contribution
+    if ($contributionResult['recur_contribution_id']) {
+      $formatted = CRM_Core_Payment_Backer::formatParams($this->_json[4]);
+      $this->_processor->processContribution($this->_json[4], $contributionResult);
+      $params = array(
+        'trxn_id' => $formatted['contribution']['trxn_id'],
+        'payment_instrument_id' => $formatted['contribution']['payment_instrument_id'],
+        'total_amount' => $formatted['contribution']['total_amount'],
+        'contribution_status_id' => $formatted['contribution']['contribution_status_id'],
+        'currency' => $formatted['contribution']['currency'],
+        'payment_processor_id' => $this->_payment['id'],
+      );
+      $this->assertDBState('CRM_Contribute_DAO_Contribution', $contributionResult['contributionId'], $params);
+    }
   }
 }

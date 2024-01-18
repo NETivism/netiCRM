@@ -45,7 +45,7 @@ class CRM_Contact_BAO_Contact_Utils {
    */
   static function getImage($contactType, $urlOnly = FALSE, $contactId = NULL) {
     static $imageInfo = array();
-    if (!array_key_exists($contactType, $imageInfo)) {
+    if (!CRM_Utils_Array::arrayKeyExists($contactType, $imageInfo)) {
       $imageInfo[$contactType] = array();
 
       $typeInfo = array();
@@ -64,7 +64,7 @@ class CRM_Contact_BAO_Contact_Utils {
         $imageInfo[$contactType]['url'] = $imageUrl;
       }
       else {
-        $isSubtype = (array_key_exists('parent_id', $typeInfo) &&
+        $isSubtype = (CRM_Utils_Array::arrayKeyExists('parent_id', $typeInfo) &&
           $typeInfo['parent_id']
         ) ? TRUE : FALSE;
 
@@ -105,7 +105,7 @@ class CRM_Contact_BAO_Contact_Utils {
       return FALSE;
     }
 
-    $idString = implode(',', $contactIds);
+    $idString = CRM_Utils_Array::implode(',', $contactIds);
     $query = "
 SELECT count( DISTINCT contact_type )
 FROM   civicrm_contact
@@ -133,7 +133,7 @@ WHERE  id IN ( $idString )
       $contactID, 'hash'
     );
     if (!$hash) {
-      $hash = md5(uniqid(rand(), TRUE));
+      $hash = md5(uniqid((string)rand(), TRUE));
       CRM_Core_DAO::setFieldValue('CRM_Contact_DAO_Contact',
         $contactID,
         'hash', $hash
@@ -629,7 +629,7 @@ UPDATE civicrm_contact
    SELECT  c.id, c.display_name, c.contact_type, ce.email 
      FROM  civicrm_contact c 
 LEFT JOIN  civicrm_email ce ON ( ce.contact_id=c.id AND ce.is_primary = 1 )
-    WHERE  c.id IN  (' . implode(',', $contactIDs) . ' ) LIMIT 20';
+    WHERE  c.id IN  (' . CRM_Utils_Array::implode(',', $contactIDs) . ' ) LIMIT 20';
 
     $dao = CRM_Core_DAO::executeQuery($query);
 
@@ -648,19 +648,19 @@ LEFT JOIN  civicrm_email ce ON ( ce.contact_id=c.id AND ce.is_primary = 1 )
       }
 
       // do check for view.
-      if (array_key_exists('view', $hasPermissions)) {
+      if (CRM_Utils_Array::arrayKeyExists('view', $hasPermissions)) {
         $contactLinks['rows'][$i]['view'] = '<a class="action-item action-item-first" href="' . CRM_Utils_System::url('civicrm/contact/view', 'reset=1&cid=' . $dao->id) . '" target="_blank">' . ts('View') . '</a>';
         if (!$contactLinks['msg']) {
           $contactLinks['msg'] = 'view';
         }
       }
-      if (array_key_exists('edit', $hasPermissions)) {
+      if (CRM_Utils_Array::arrayKeyExists('edit', $hasPermissions)) {
         $contactLinks['rows'][$i]['edit'] = '<a class="action-item" href="' . CRM_Utils_System::url('civicrm/contact/add', 'reset=1&action=update&cid=' . $dao->id) . '" target="_blank">' . ts('Edit') . '</a>';
         if (!$contactLinks['msg'] || $contactLinks['msg'] != 'merge') {
           $contactLinks['msg'] = 'edit';
         }
       }
-      if (!empty($originalId) && array_key_exists('merge', $hasPermissions)) {
+      if (!empty($originalId) && CRM_Utils_Array::arrayKeyExists('merge', $hasPermissions)) {
         $rgBao = new CRM_Dedupe_BAO_RuleGroup();
         $rgBao->contact_type = $dao->contact_type;
         $rgBao->level = 'Fuzzy';
@@ -755,9 +755,9 @@ LEFT JOIN  civicrm_email ce ON ( ce.contact_id=c.id AND ce.is_primary = 1 )
 
     //finally retrieve contact details.
     if (!empty($select) && !empty($from)) {
-      $fromClause = implode(' ', $from);
-      $selectClause = implode(', ', $select);
-      $whereClause = "{$compTable}.id IN (" . implode(',', $componentIds) . ')';
+      $fromClause = CRM_Utils_Array::implode(' ', $from);
+      $selectClause = CRM_Utils_Array::implode(', ', $select);
+      $whereClause = "{$compTable}.id IN (" . CRM_Utils_Array::implode(',', $componentIds) . ')';
 
       $query = "
   SELECT  contact.id as contactId, $compTable.id as componentId, $selectClause 
@@ -851,7 +851,7 @@ Group By  componentId";
       $query = 'SELECT ca.id, cc.display_name, cc.id as cid, cc.is_deleted
                       FROM civicrm_contact cc
                            INNER JOIN civicrm_address ca ON cc.id = ca.contact_id
-                      WHERE ca.id IN  ( ' . implode(',', $masterAddressIds) . ')';
+                      WHERE ca.id IN  ( ' . CRM_Utils_Array::implode(',', $masterAddressIds) . ')';
       $dao = CRM_Core_DAO::executeQuery($query);
 
       while ($dao->fetch()) {

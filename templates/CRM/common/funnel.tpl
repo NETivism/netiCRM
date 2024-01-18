@@ -6,7 +6,7 @@
     $chart_classes = array('ncfunnel-chart');
     $funnel = $this->get_template_vars('funnel');
     
-    if (count($funnel['classes']) > 0) {
+    if (is_array($funnel['classes']) && count($funnel['classes']) > 0) {
       $chart_classes = array_merge($chart_classes, $funnel['classes']); 
     }
 

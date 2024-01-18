@@ -87,7 +87,7 @@ class CRM_Contact_Page_DedupeFind extends CRM_Core_Page_Basic {
     $session = CRM_Core_Session::singleton();
     if ($this->_context == 'search') {
       $this->_contactIds = $session->get('selectedSearchContactIds');
-      $str = implode('|',$this->_contactIds);
+      $str = CRM_Utils_Array::implode('|',$this->_contactIds);
       $this->_cachePath = 'search:'.md5($str);
       $backURL = $session->readUserContext();
       $renewURL = CRM_Utils_System::url('civicrm/contact/dedupefind', "reset=1&action=renew&context=search");
@@ -190,7 +190,7 @@ class CRM_Contact_Page_DedupeFind extends CRM_Core_Page_Basic {
           $this->_cids[$dupe[0]] = 1;
           $this->_cids[$dupe[1]] = 1;
         }
-        $this->_cidString = implode(', ', array_keys($this->_cids));
+        $this->_cidString = CRM_Utils_Array::implode(', ', array_keys($this->_cids));
         $sql = "SELECT id, sort_name FROM civicrm_contact WHERE id IN ($this->_cidString) ORDER BY sort_name";
         $dao = new CRM_Core_DAO();
         $dao->query($sql);
@@ -386,7 +386,7 @@ class CRM_Contact_Page_DedupeFind extends CRM_Core_Page_Basic {
     $this->assign_by_ref('pager', $this->_pager);
   }
 
-  function dedupeRunning() {
+  static function dedupeRunning() {
     $dao = new CRM_Core_DAO_Sequence();
     $dao->name = self::QUEUE_NAME;
     if ($dao->find(TRUE)) {

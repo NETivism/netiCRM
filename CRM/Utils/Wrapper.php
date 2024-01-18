@@ -86,7 +86,7 @@ class CRM_Utils_Wrapper {
       $attachUpload
     );
 
-    if (array_key_exists('urlToSession', $arguments)) {
+    if (CRM_Utils_Array::arrayKeyExists('urlToSession', $arguments)) {
       if (is_array($arguments['urlToSession'])) {
         foreach ($arguments['urlToSession'] as $params) {
           $urlVar = CRM_Utils_Array::value('urlVar', $params);
@@ -105,7 +105,7 @@ class CRM_Utils_Wrapper {
       }
     }
 
-    if (array_key_exists('setEmbedded', $arguments)) {
+    if (CRM_Utils_Array::arrayKeyExists('setEmbedded', $arguments)) {
       $this->_controller->setEmbedded(TRUE);
     }
 

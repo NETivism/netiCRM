@@ -329,7 +329,8 @@ body .crm-container-md table.crm-custom-data-view.no-border{
     cursor: default;
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
+    justify-content: center;
+    gap: 0 20px;
 }
 .error-msg-inner {
   overflow-y: hidden;
@@ -776,7 +777,7 @@ body .crm-container fieldset{
 .crm-button-type-cancel a.button, 
 .crm-button-type-upload a.button, 
 #checkavailability {
-  background-color: #d8d8d8;
+  background-color: #717171;
   color: white;
   width: 120px;
   display: inline-block;
@@ -795,7 +796,9 @@ body .crm-container fieldset{
   display: flex;
   justify-content: space-between;
 }
-.crm-button-type-upload a.button {
+.crm-button-type-upload a.button,
+.crm-button-type-upload a.button:hover,
+.crm-button-type-upload a.button:active {
   background-color: var(--color-crm-special-contribute-primary);
 }
 #checkavailability {

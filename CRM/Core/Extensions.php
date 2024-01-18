@@ -199,7 +199,7 @@ class CRM_Core_Extensions {
       $instKeys[] = $ext->key;
     }
     foreach ($result as $id => $ext) {
-      if (array_key_exists($ext->key, array_flip($instKeys))) {
+      if (CRM_Utils_Array::arrayKeyExists($ext->key, array_flip($instKeys))) {
         unset($result[$id]);
       }
     }
@@ -317,7 +317,7 @@ class CRM_Core_Extensions {
    */
   public function classToPath($clazz) {
     $elements = explode('_', $clazz);
-    $key = implode('.', $elements);
+    $key = CRM_Utils_Array::implode('.', $elements);
     return $this->keyToPath($key);
   }
 
@@ -334,7 +334,7 @@ class CRM_Core_Extensions {
     $path = $this->classToPath($clazz);
     $pathElm = explode(DIRECTORY_SEPARATOR, $path);
     array_pop($pathElm);
-    return implode(DIRECTORY_SEPARATOR, $pathElm) . DIRECTORY_SEPARATOR . self::EXT_TEMPLATES_DIRNAME;
+    return CRM_Utils_Array::implode(DIRECTORY_SEPARATOR, $pathElm) . DIRECTORY_SEPARATOR . self::EXT_TEMPLATES_DIRNAME;
   }
 
   /**
@@ -382,8 +382,8 @@ class CRM_Core_Extensions {
 
     if (substr($clazz, 0, 4) != 'CRM_') {
       require_once 'CRM/Core/PseudoConstant.php';
-      $extensions = CRM_Core_PseudoConstant::getExtensions($clazz);
-      if (array_key_exists($this->classToKey($clazz), $extensions)) {
+      $extensions = CRM_Core_PseudoConstant::getExtensions();
+      if (CRM_Utils_Array::arrayKeyExists($this->classToKey($clazz), $extensions)) {
         return TRUE;
       }
     }

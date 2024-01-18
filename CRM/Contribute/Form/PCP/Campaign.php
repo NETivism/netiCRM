@@ -282,7 +282,7 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
       $emailArray = explode(',', $emails);
       $to = $emailArray[0];
       unset($emailArray[0]);
-      $cc = implode(',', $emailArray);
+      $cc = CRM_Utils_Array::implode(',', $emailArray);
 
       require_once 'CRM/Core/BAO/MessageTemplates.php';
       list($sent, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate(

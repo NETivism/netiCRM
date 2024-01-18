@@ -227,7 +227,7 @@ COLS;
 
     CRM_Core_DAO::executeQuery($query);
 
-    $columns = implode(', ', $this->columnsOf($table));
+    $columns = CRM_Utils_Array::implode(', ', $this->columnsOf($table));
     CRM_Core_DAO::executeQuery("INSERT INTO {$this->loggingDB}.log_$table ($columns, log_conn_id, log_user_id, log_action) SELECT $columns, CONNECTION_ID(), @civicrm_user_id, 'Initialization' FROM {$table}");
 
     $this->tables[] = $table;

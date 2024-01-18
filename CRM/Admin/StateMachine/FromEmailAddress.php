@@ -27,7 +27,7 @@ class CRM_Admin_StateMachine_FromEmailAddress extends CRM_Core_StateMachine {
       unset($this->_pages['CRM_Admin_Form_FromEmailAddress_EmailVerify']);
     }
 
-    $this->addSequentialPages($this->_pages, $action);
+    $this->addSequentialPages($this->_pages);
   }
 }
 

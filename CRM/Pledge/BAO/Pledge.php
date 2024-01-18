@@ -314,7 +314,7 @@ class CRM_Pledge_BAO_Pledge extends CRM_Pledge_DAO_Pledge {
   /**
    * function to get the amount details date wise.
    */
-  function getTotalAmountAndCount($status = NULL, $startDate = NULL, $endDate = NULL) {
+  static function getTotalAmountAndCount($status = NULL, $startDate = NULL, $endDate = NULL) {
     $where = array();
     $select = $from = $queryDate = NULL;
     //get all status
@@ -352,7 +352,7 @@ class CRM_Pledge_BAO_Pledge extends CRM_Pledge_DAO_Pledge {
       $where[] = "create_date <= '" . CRM_Utils_Type::escape($endDate, 'Timestamp') . "'";
     }
 
-    $whereCond = implode(' AND ', $where);
+    $whereCond = CRM_Utils_Array::implode(' AND ', $where);
 
     $query = "
 SELECT sum( amount ) as pledge_amount, count( id ) as pledge_count
@@ -411,7 +411,7 @@ WHERE  $whereCond AND is_test=0
       $where[] = " $queryDate <= '" . CRM_Utils_Type::escape($endDate, 'Timestamp') . "'";
     }
 
-    $whereCond = implode(' AND ', $where);
+    $whereCond = CRM_Utils_Array::implode(' AND ', $where);
 
     $query = "
 SELECT $select
@@ -482,7 +482,7 @@ WHERE  $whereCond
    *
    * @return None.
    */
-  function sendAcknowledgment(&$form, $params) {
+  static function sendAcknowledgment(&$form, $params) {
     //handle Acknowledgment.
     $allPayments = $payments = array();
 
@@ -685,7 +685,7 @@ WHERE  $whereCond
    * @return array array of exportable Fields
    * @access public
    */
-  function &exportableFields() {
+  static function &exportableFields() {
     if (!self::$_exportableFields) {
       if (!self::$_exportableFields) {
         self::$_exportableFields = array();
@@ -764,7 +764,7 @@ WHERE  $whereCond
       return $pledgeDetails;
     }
 
-    $statusClause = " IN (" . implode(',', $status) . ")";
+    $statusClause = " IN (" . CRM_Utils_Array::implode(',', $status) . ")";
 
     $query = "
 SELECT civicrm_pledge.id id

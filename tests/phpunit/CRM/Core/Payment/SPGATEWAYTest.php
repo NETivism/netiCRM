@@ -38,7 +38,10 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     );
   }
 
-  function setUp() {
+  /**
+   * @before
+   */
+  function setUpTest() {
     parent::setUp();
 
     $this->_is_test = 1;
@@ -125,14 +128,16 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     $loaded = module_load_include('inc', 'civicrm_spgateway', 'civicrm_spgateway.ipn');
   }
 
-  function tearDown() {
+  /**
+   * @after
+   */
+  function tearDownTest() {
     $this->_processor = NULL;
   }
 
-  /**
   function testSinglePaymentNotify(){
     $now = time();
-    $trxn_id = 'ut'.substr($now, -5);
+    $trxn_id = 'singleut'.substr($now, -5);
     $amount = 111;
 
     // create contribution
@@ -158,6 +163,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     );
 
     $contribution = CRM_Contribute_BAO_Contribution::create($contrib, CRM_Core_DAO::$_nullArray);
+    $this->assertNotEquals('CRM_Core_Error', get_class($contribution), "Contribution return error in line ".__LINE__.". Error messages:\n  ".CRM_Core_Error::getMessages($contribution, "\n  "));
     $this->assertNotEmpty($contribution->id, "In line " . __LINE__);
     $params = array(
       'is_test' => $this->_is_test,
@@ -216,11 +222,87 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     $cid = CRM_Core_DAO::singleValueQuery("SELECT cid FROM civicrm_contribution_spgateway WHERE cid = $contribution->id");
     $this->assertNotEmpty($cid, "In line " . __LINE__);
   }
-  */
+
+  function testSingleWithWrongParms() {
+    $now = time();
+    $trxn_id = 'emptyut'.substr($now, -5);
+    $amount = 222;
+
+    // create contribution
+    $contrib = array(
+      'trxn_id' => $trxn_id,
+      'contact_id' => $this->_cid,
+      'contribution_contact_id' => $this->_cid,
+      'contribution_type_id' => 1,
+      'contribution_page_id' => $this->_page_id,
+      'payment_processor_id' => $this->_processor['id'],
+      'payment_instrument_id' => 1,
+      'created_date' => date('YmdHis', $now),
+      'non_deductible_amount' => 0,
+      'total_amount' => $amount,
+      'currency' => 'TWD',
+      'cancel_reason' => '0',
+      'source' => 'AUTO: unit test',
+      'contribution_source' => 'AUTO: unit test',
+      'amount_level' => '',
+      'is_test' => $this->_is_test,
+      'is_pay_later' => 0,
+      'contribution_status_id' => 2,
+    );
+
+    $contribution = CRM_Contribute_BAO_Contribution::create($contrib, CRM_Core_DAO::$_nullArray);
+    $this->assertNotEquals('CRM_Core_Error', get_class($contribution), "Contribution return error in line ".__LINE__.". Error messages:\n  ".CRM_Core_Error::getMessages($contribution, "\n  "));
+    $this->assertNotEmpty($contribution->id, "In line " . __LINE__);
+    $params = array(
+      'is_test' => $this->_is_test,
+      'id' => $contribution->id,
+    );
+    $this->assertDBState('CRM_Contribute_DAO_Contribution', $contribution->id, $params);
+
+    // manually trigger ipn
+    $get = $post = $ids = array();
+    $ids = CRM_Contribute_BAO_Contribution::buildIds($contribution->id);
+    $query = CRM_Contribute_BAO_Contribution::makeNotifyUrl($ids, NULL, $return_query = TRUE);
+    parse_str($query, $get);
+    $data = array(
+      'MerchantID' => 'abcd',// have to modify
+      'Amt' => $amount,
+      'TradeNo' => '16112117153757079',
+      'MerchantOrderNo' => $trxn_id.'error',
+      'RespondType' => 'JSON',
+      'PaymentType' => 'CREDIT',
+      'IP' => NULL,
+      'EscrowBank' => 'KGI',
+      'ItemDesc' => 'This is description.',
+      'Gateway' => 'MPG',
+      'IsLogin' => FALSE,
+      'LangType' => 'zh-Tw',
+      'PayTime' => date('Y-m-d H:i:s',$now),
+      'RespondCode' => '00',
+      'Exp' => '2112',
+      'TokenUseStatus' => 0,
+      'InstFirst' => 100,
+      'InstEach' => 0,
+      'Inst' => 0,
+      'ECI' => '',
+    );
+    $json = json_encode($data);
+    $jsonData = json_encode(array(
+      'Status' => 'SUCCESS',
+      'Message' => '',
+      'Result' => $json,
+      ));
+    $post = array('JSONData' => $jsonData);
+    $result = civicrm_spgateway_ipn('Credit', $post, $get);
+    $error_msg = CRM_Core_DAO::singleValueQuery("SELECT note FROM civicrm_note WHERE entity_id = $contribution->id");
+    $this->assertNotEmpty($error_msg, "In line " . __LINE__);
+    $this->assertContains('Failuare', $error_msg, "In line " . __LINE__);
+
+  }
 
   function testRecurringPaymentNotify(){
     $now = time();
-    $trxn_id = 'ut'.substr($now, -5);
+    $trxn_id = 'sput'.substr($now, -5);
     $amount = 222;
 
     // create recurring
@@ -235,9 +317,9 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
       'start_date' => $date,
       'create_date' => $date,
       'modified_date' => $date,
-      'invoice_id' => md5($now),
+      'invoice_id' => md5(uniqid((string)rand(), TRUE)),
       'contribution_status_id' => 2,
-      'trxn_id' => CRM_Utils_Array::value('trxn_id', $params),
+      'trxn_id' => md5(uniqid((string)rand(), TRUE)),
     );
     $ids = array();
     $recurring = &CRM_Contribute_BAO_ContributionRecur::add($recur, $ids);
@@ -274,6 +356,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
       'contribution_recur_id' => $recurring->id,
     );
     $contribution = CRM_Contribute_BAO_Contribution::create($contrib, CRM_Core_DAO::$_nullArray);
+    $this->assertNotEquals('CRM_Core_Error', get_class($contribution), "Contribution return error in line ".__LINE__.". Error messages:\n  ".CRM_Core_Error::getMessages($contribution, "\n  "));
     $this->assertNotEmpty($contribution->id, "In line " . __LINE__);
     $params = array(
       'is_test' => $this->_is_test,
@@ -616,12 +699,12 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
       $return_params
     );
 
-    // ATM : 13
+    // ATM : 14
     $now = $now + 60;
     $trxn_id = 'ut'.substr($now, -5);
     $amount = 111;
 
-    $instrument_id = 13;
+    $instrument_id = 14;
     $payment_type = 'VACC';
 
     $return_params = array(

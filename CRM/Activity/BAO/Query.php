@@ -139,7 +139,7 @@ class CRM_Activity_BAO_Query {
     $grouping = NULL;
     foreach (array_keys($query->_params) as $id) {
       if (substr($query->_params[$id][0], 0, 9) == 'activity_') {
-        if ($query->_mode == CRM_Contact_BAO_QUERY::MODE_CONTACTS) {
+        if ($query->_mode == CRM_Contact_BAO_Query::MODE_CONTACTS) {
           $query->_useDistinct = TRUE;
         }
         $grouping = $query->_params[$id][3];
@@ -179,18 +179,18 @@ class CRM_Activity_BAO_Query {
         $clause = array();
         if (is_array($value)) {
           foreach ($value as $id) {
-            if (array_key_exists($id, $types)) {
+            if (CRM_Utils_Array::arrayKeyExists($id, $types)) {
               $clause[] = "'" . CRM_Utils_Type::escape($types[$id], 'String') . "'";
             }
           }
-          $activityTypes = implode(',', $value);
+          $activityTypes = CRM_Utils_Array::implode(',', $value);
         }
         else {
           $clause[] = "'" . CRM_Utils_Type::escape($value, 'String') . "'";
           $activityTypes = $value;
         }
         $query->_where[$grouping][] = ' civicrm_activity.activity_type_id IN (' . $activityTypes . ')';
-        $query->_qill[$grouping][] = ts('Activity Type') . ' ' . implode(' ' . ts('or') . ' ', $clause);
+        $query->_qill[$grouping][] = ts('Activity Type') . ' ' . CRM_Utils_Array::implode(' ' . ts('or') . ' ', $clause);
         break;
 
       case 'source_record_id':
@@ -254,8 +254,8 @@ class CRM_Activity_BAO_Query {
         else {
           $clause[] = "'" . CRM_Utils_Type::escape($value, 'String') . "'";
         }
-        $query->_where[$grouping][] = ' civicrm_activity.status_id IN (' . implode(',', $value) . ')';
-        $query->_qill[$grouping][] = ts('Activity Status') . ' - ' . implode(' ' . ts('or') . ' ', $clause);
+        $query->_where[$grouping][] = ' civicrm_activity.status_id IN (' . CRM_Utils_Array::implode(',', $value) . ')';
+        $query->_qill[$grouping][] = ts('Activity Status') . ' - ' . CRM_Utils_Array::implode(' ' . ts('or') . ' ', $clause);
         break;
 
       case 'activity_subject':
@@ -306,8 +306,8 @@ class CRM_Activity_BAO_Query {
             $names[] = $activityTags[$v];
           }
         }
-        $query->_where[$grouping][] = "civicrm_activity_tag.tag_id IN (" . implode(",", $value) . ")";
-        $query->_qill[$grouping][] = ts('Activity Tag %1', array(1 => $op)) . ' ' . implode(' ' . ts('OR') . ' ', $names);
+        $query->_where[$grouping][] = "civicrm_activity_tag.tag_id IN (" . CRM_Utils_Array::implode(",", $value) . ")";
+        $query->_qill[$grouping][] = ts('Activity Tag %1', array(1 => $op)) . ' ' . CRM_Utils_Array::implode(' ' . ts('OR') . ' ', $names);
         $query->_tables['civicrm_activity_tag'] = $query->_whereTables['civicrm_activity_tag'] = 1;
         break;
     }

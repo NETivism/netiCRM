@@ -144,7 +144,7 @@ class CRM_UF_Form_Preview extends CRM_Core_Form {
       //CRM-5403
       if ((substr($name, 0, 14) === 'state_province') || (substr($name, 0, 7) === 'country')) {
         list($fieldName, $index) = CRM_Utils_System::explode('-', $name, 2);
-        if (!array_key_exists($index, $stateCountryMap)) {
+        if (!CRM_Utils_Array::arrayKeyExists($index, $stateCountryMap)) {
           $stateCountryMap[$index] = array();
         }
         $stateCountryMap[$index][$fieldName] = $name;

@@ -112,7 +112,7 @@ class CRM_Upgrade_Form extends CRM_Core_Form {
     $versionParts = explode('.', $version);
     $versionName = self::$_numberMap[$versionParts[0]] . self::$_numberMap[$versionParts[1]];
 
-    if (!array_key_exists($versionName, $incrementalPhpObject)) {
+    if (!CRM_Utils_Array::arrayKeyExists($versionName, $incrementalPhpObject)) {
       $className = "CRM_Upgrade_Incremental_php_{$versionName}";
       $incrementalPhpObject[$versionName] = new $className;
     }
@@ -252,7 +252,7 @@ SET    version = '$version'
 
   function getRevisionSequence() {
     $revList = array();
-    $sqlDir = implode(DIRECTORY_SEPARATOR,
+    $sqlDir = CRM_Utils_Array::implode(DIRECTORY_SEPARATOR,
       array(dirname(__FILE__), 'Incremental', 'sql')
     );
     $sqlFiles = scandir($sqlDir);
@@ -289,7 +289,7 @@ SET    version = '$version'
   }
 
   function processSQL($rev) {
-    $sqlFile = implode(DIRECTORY_SEPARATOR,
+    $sqlFile = CRM_Utils_Array::implode(DIRECTORY_SEPARATOR,
       array(dirname(__FILE__), 'Incremental',
         'sql', $rev . '.mysql',
       )

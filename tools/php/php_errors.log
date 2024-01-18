@@ -1,0 +1,14 @@
+PHP Deprecated:  urldecode(): Passing null to parameter #1 ($string) of type string is deprecated in /mnt/neticrm-10/civicrm/CRM/Core/IDS.php on line 207
+PHP Fatal error:  __autoload() is no longer supported, use spl_autoload_register() instead in /mnt/neticrm-10/civicrm/packages/ezc/Base/src/ezc_bootstrap.php on line 41
+PHP Warning:  Constant DRUPAL_ROOT already defined in /var/www/html/core/includes/bootstrap.inc on line 61
+PHP Warning:  "continue" targeting switch is equivalent to "break". Did you mean to use "continue 2"? in /mnt/neticrm-10/civicrm/CRM/Price/BAO/Set.php on line 581
+PHP Warning:  Private methods cannot be final as they are never overridden by other classes in /mnt/neticrm-10/civicrm/packages/Spout/Common/Singleton.php on line 39
+PHP Warning:  Private methods cannot be final as they are never overridden by other classes in /mnt/neticrm-10/civicrm/packages/Spout/Common/Singleton.php on line 40
+PHP Warning:  The magic method Box\Spout\Common\Singleton::__wakeup() must have public visibility in /mnt/neticrm-10/civicrm/packages/Spout/Common/Singleton.php on line 39
+PHP Warning:  Undefined array key "DOCUMENT_URI" in /mnt/neticrm-10/civicrm/CRM/Core/IDS.php on line 207
+Uncaught PHP Exception Error: "Call to a member function fetch() on bool" at /mnt/neticrm-10/civicrm/CRM/Utils/Weight.php line 47
+Uncaught PHP Exception Error: "Non-static method CRM_Report_BAO_Instance::delete() cannot be called statically" at /mnt/neticrm-10/civicrm/CRM/Report/Page/Instance.php line 69
+Uncaught PHP Exception Error: "Non-static method CRM_Utils_REST::output() cannot be called statically" at /mnt/neticrm-10/civicrm/CRM/Utils/REST.php line 625
+Uncaught PHP Exception TypeError: "count(): Argument #1 ($value) must be of type Countable|array, null given" at /mnt/neticrm-10/civicrm/CRM/Admin/Form/WordReplacements.php line 112
+Uncaught PHP Exception TypeError: "count(): Argument #1 ($value) must be of type Countable|array, null given" at /mnt/neticrm-10/civicrm/CRM/Report/Form.php line 1700
+Uncaught PHP Exception TypeError: "count(): Argument #1 ($value) must be of type Countable|array, null given" at /tmp/smartycli-server/127.0.0.1:8080/en_US/%%40/40E/40EB8D5D%%Tag.tpl.php line 54

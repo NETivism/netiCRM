@@ -142,17 +142,17 @@ class CRM_Contact_Form_Search_Custom_RandomSegment extends CRM_Contact_Form_Sear
         $smartGroup[$group->saved_search_id] = $group->id;
       }
     }
-    $includedGroups = implode(',', $allGroups);
+    $includedGroups = CRM_Utils_Array::implode(',', $allGroups);
 
     if (!empty($this->_includeGroups)) {
-      $iGroups = implode(',', $this->_includeGroups);
+      $iGroups = CRM_Utils_Array::implode(',', $this->_includeGroups);
     }
     else {
       //if no group selected search for all groups
       $iGroups = $includedGroups;
     }
     if (is_array($this->_excludeGroups)) {
-      $xGroups = implode(',', $this->_excludeGroups);
+      $xGroups = CRM_Utils_Array::implode(',', $this->_excludeGroups);
     }
     else {
       $xGroups = 0;

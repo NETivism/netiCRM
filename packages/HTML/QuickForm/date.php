@@ -157,7 +157,7 @@ class HTML_QuickForm_date extends HTML_QuickForm_group
         $locale    =& $this->_locale;
         $backslash =  false;
         for ($i = 0, $length = strlen($this->_options['format']); $i < $length; $i++) {
-            $sign = $this->_options['format']{$i};
+            $sign = $this->_options['format'][$i];
             if ($backslash) {
                 $backslash  = false;
                 $separator .= $sign;
@@ -391,7 +391,7 @@ class HTML_QuickForm_date extends HTML_QuickForm_group
     // }}}
     // {{{ onQuickFormEvent()
 
-    function onQuickFormEvent($event, $arg, $caller = null)
+    function onQuickFormEvent($event, $arg, &$caller)
     {
         if ('updateValue' == $event) {
             // we need to call setValue(), 'cause the default/constant value

@@ -100,7 +100,7 @@ class CRM_Event_Form_ManageEvent_TabHeader {
       $class = 'eventInfo';
     }
 
-    if (array_key_exists($class, $tabs)) {
+    if (CRM_Utils_Array::arrayKeyExists($class, $tabs)) {
       $tabs[$class]['current'] = TRUE;
     }
 

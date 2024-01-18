@@ -491,7 +491,7 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
         ),
         array(
           'name' => ts('Payment Instrument'),
-          'sort' => 'payment_instrument',
+          'sort' => 'payment_instrument_id',
           'direction' => CRM_Utils_Sort::DONTCARE,
         ),
         array(
@@ -499,7 +499,7 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
           'sort' => 'total_amount',
           'direction' => CRM_Utils_Sort::DONTCARE,
         ),
-        array('name' => ts('Type'),
+        array('name' => ts('Contribution Type'),
           'sort' => 'contribution_type_id',
           'direction' => CRM_Utils_Sort::DONTCARE,
         ),
@@ -645,7 +645,7 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
   public static function getContributionPremiums($ids) {
     $sql = "SELECT cp.contribution_id, cp.product_option, p.name FROM civicrm_contribution_product cp INNER JOIN civicrm_product p ON p.id = cp.product_id WHERE cp.contribution_id IN (%1)";
     $dao = CRM_Core_DAO::executeQuery($sql, array(
-      1 => array(implode(',', $ids), 'CommaSeperatedIntegers')
+      1 => array(CRM_Utils_Array::implode(',', $ids), 'CommaSeperatedIntegers')
     ));
     $premiums = array();
     while($dao->fetch()) {

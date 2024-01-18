@@ -103,7 +103,7 @@ class CRM_Case_Form_CaseView extends CRM_Core_Form {
     $userID = $session->get('userID');
     if (!$this->_hasAccessToAllCases) {
       $this->_userCases = CRM_Case_BAO_Case::getCases(FALSE, $userID);
-      if (!array_key_exists($this->_caseID, $this->_userCases)) {
+      if (!CRM_Utils_Array::arrayKeyExists($this->_caseID, $this->_userCases)) {
         return CRM_Core_Error::statusBounce(ts('You are not authorized to access this page.'));
       }
     }
@@ -239,7 +239,7 @@ class CRM_Case_Form_CaseView extends CRM_Core_Form {
 
     // remove Open Case activity type since we're inside an existing case
     if (($openActTypeId = array_search('Open Case', $allActTypes)) &&
-      array_key_exists($openActTypeId, $aTypes)
+      CRM_Utils_Array::arrayKeyExists($openActTypeId, $aTypes)
     ) {
       unset($aTypes[$openActTypeId]);
     }
@@ -248,7 +248,7 @@ class CRM_Case_Form_CaseView extends CRM_Core_Form {
     $unclosedCases = CRM_Case_BAO_Case::getUnclosedCases(NULL, array($this->_caseID));
     if (empty($unclosedCases) &&
       ($linkActTypeId = array_search('Link Cases', $allActTypes)) &&
-      array_key_exists($linkActTypeId, $aTypes)
+      CRM_Utils_Array::arrayKeyExists($linkActTypeId, $aTypes)
     ) {
       unset($aTypes[$linkActTypeId]);
     }
@@ -277,7 +277,7 @@ class CRM_Case_Form_CaseView extends CRM_Core_Form {
         //filter current and own cases.
         if (($caseId == $this->_caseID) ||
           (!$this->_hasAccessToAllCases &&
-            !array_key_exists($caseId, $this->_userCases)
+            !CRM_Utils_Array::arrayKeyExists($caseId, $this->_userCases)
           )
         ) {
           continue;
@@ -369,7 +369,7 @@ class CRM_Case_Form_CaseView extends CRM_Core_Form {
     // so they don't show up twice.
     $clientRelationships = array();
     foreach ($relClient as $r) {
-      if (!array_key_exists($r['id'], $caseRelationships)) {
+      if (!property_exists($caseRelationships, $r['id'])) {
         $clientRelationships[] = $r;
       }
     }
@@ -415,7 +415,7 @@ class CRM_Case_Form_CaseView extends CRM_Core_Form {
         $tags[$tid] = $allTags[$tid];
       }
 
-      $this->assign('tags', implode(', ', array_filter($tags)));
+      $this->assign('tags', CRM_Utils_Array::implode(', ', array_filter($tags)));
       $this->assign('showTags', TRUE);
     }
     else {

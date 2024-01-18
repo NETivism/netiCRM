@@ -168,6 +168,7 @@ class CRM_Contribute_Form_TaiwanACH_Preview extends CRM_Core_Form {
       }
     }
     elseif ($this->_parseResult['import_type'] == 'transaction') {
+      $counter[ts('Completed')] = 0;
       foreach ($this->_parseResult['processed_data'] as $id => $ignore) {
         $this->_parseResult['parsed_data'][$id]['process_date'] = $receiveDate;
         $line = CRM_Contribute_BAO_TaiwanACH::doProcessTransaction($id, $this->_parseResult['parsed_data'][$id], FALSE);
@@ -180,8 +181,8 @@ class CRM_Contribute_Form_TaiwanACH_Preview extends CRM_Core_Form {
         if (!empty($line['contribution_status_id'])) {
           $line['contribution_status'] = $contributionStatus[$line['contribution_status_id']];
         }
-        if ($line['contribution_status_id'] == 1 && empty($line['cancel_reason'])) {
-          $counter[ts('Completed Donation')]++;
+        if ($line['contribution_status_id'] == 1 && empty($line['cancel_reason']) && $line['executed'] == TRUE) {
+          $counter[ts('Completed')]++;
         }
         $this->_processResult[$id] = $line;
       }

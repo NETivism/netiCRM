@@ -459,7 +459,7 @@ SELECT civicrm_custom_group.name as name,
        civicrm_custom_group.id as id,
        extends_entity_column_value as value
   FROM civicrm_custom_group
- WHERE ( extends_entity_column_value REGEXP '[[:<:]]" . implode('[[:>:]]|[[:<:]]', array_keys($roleIds)) . "[[:>:]]' 
+ WHERE ( extends_entity_column_value REGEXP '[[:<:]]" . CRM_Utils_Array::implode('[[:>:]]|[[:<:]]', array_keys($roleIds)) . "[[:>:]]' 
     OR extends_entity_column_value IS NULL )
    AND extends_entity_column_id = '{$this->_roleCustomDataTypeID}' 
    AND extends = 'Participant'
@@ -844,7 +844,7 @@ cj(function() {
     $roleids = CRM_Event_PseudoConstant::participantRole();
 
     foreach ($roleids as $rolekey => $rolevalue) {
-      $roleTypes[] = HTML_QuickForm::createElement('checkbox', $rolekey, NULL, $rolevalue,
+      $roleTypes[] = $this->createElement('checkbox', $rolekey, NULL, $rolevalue,
         array('onclick' => "showCustomData( 'Participant', {$rolekey}, {$this->_roleCustomDataTypeID} );")
       );
     }
@@ -990,7 +990,7 @@ cj(function() {
         CRM_Price_BAO_Field::priceSetValidation($priceSetId, $values, $errorMsg);
       }
     }
-    return CRM_Utils_Array::crmIsEmptyArray($errorMsg) ? TRUE : $errorMsg;
+    return CRM_Utils_Array::isEmpty($errorMsg) ? TRUE : $errorMsg;
   }
 
   /**
@@ -1205,7 +1205,7 @@ cj(function() {
 
       foreach ($nameFields as $name) {
         $fields[$name] = 1;
-        if (array_key_exists("billing_$name", $params)) {
+        if (CRM_Utils_Array::arrayKeyExists("billing_$name", $params)) {
           $params[$name] = $params["billing_{$name}"];
           $params['preserveDBName'] = TRUE;
         }
@@ -1229,11 +1229,11 @@ cj(function() {
           $this->_eventTypeId,
           $this->_eventTypeCustomDataTypeID
         );
-        $customFields = CRM_Utils_Array::crmArrayMerge($customFieldsRole,
+        $customFields = CRM_Utils_Array::arrayMerge($customFieldsRole,
           CRM_Core_BAO_CustomField::getFields('Participant', FALSE, FALSE, NULL, NULL, TRUE)
         );
-        $customFields = CRM_Utils_Array::crmArrayMerge($customFieldsEvent, $customFields);
-        $customFields = CRM_Utils_Array::crmArrayMerge($customFieldsEventType, $customFields);
+        $customFields = CRM_Utils_Array::arrayMerge($customFieldsEvent, $customFields);
+        $customFields = CRM_Utils_Array::arrayMerge($customFieldsEventType, $customFields);
         $params['custom'] = CRM_Core_BAO_CustomField::postProcess($params,
           $customFields,
           $this->_id,
@@ -1254,7 +1254,7 @@ cj(function() {
       $this->_params['amount_level'] = $params['amount_level'];
       $this->_params['currencyID'] = $config->defaultCurrency;
       $this->_params['payment_action'] = 'Sale';
-      $this->_params['invoiceID'] = md5(uniqid(rand(), TRUE));
+      $this->_params['invoiceID'] = md5(uniqid((string)rand(), TRUE));
 
       // at this point we've created a contact and stored its address etc
       // all the payment processors expect the name and address to be in the
@@ -1310,7 +1310,7 @@ cj(function() {
       // add participant record
       $participants = array();
       if (CRM_Utils_Array::value('participant_role_id', $this->_params) && is_array($this->_params['participant_role_id'])) {
-        $this->_params['participant_role_id'] = implode(CRM_Core_DAO::VALUE_SEPARATOR,
+        $this->_params['participant_role_id'] = CRM_Utils_Array::implode(CRM_Core_DAO::VALUE_SEPARATOR,
           array_keys($this->_params['participant_role_id'])
         );
       }
@@ -1345,7 +1345,7 @@ cj(function() {
           }
           require_once 'CRM/Core/DAO.php';
           $seperator = CRM_Core_DAO::VALUE_SEPARATOR;
-          $params['role_id'] = implode($seperator, $rolesIDS);
+          $params['role_id'] = CRM_Utils_Array::implode($seperator, $rolesIDS);
         }
         else {
           $params['role_id'] = 'NULL';
@@ -1363,8 +1363,8 @@ cj(function() {
             }
             require_once 'CRM/Core/DAO.php';
             $seperator = CRM_Core_DAO::VALUE_SEPARATOR;
-            $commonParams['role_id'] = implode($seperator, $rolesIDS);
-            $commonParams['participant_role_id'] = implode($seperator, $rolesIDS);
+            $commonParams['role_id'] = CRM_Utils_Array::implode($seperator, $rolesIDS);
+            $commonParams['participant_role_id'] = CRM_Utils_Array::implode($seperator, $rolesIDS);
           }
           else {
             $commonParams['role_id'] = 'NULL';
@@ -1519,7 +1519,7 @@ cj(function() {
         foreach (array_keys($params['role_id']) as $roleId) {
           $selectedRoles[] = $role[$roleId];
         }
-        $event['participant_role'] = implode(', ', $selectedRoles);
+        $event['participant_role'] = CRM_Utils_Array::implode(', ', $selectedRoles);
       }
       else {
         $event['participant_role'] = $role[$params['role_id']];

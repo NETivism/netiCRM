@@ -605,8 +605,7 @@ class CRM_Core_Payment_BaseIPN {
         'trxn_id' => $contribution->trxn_id,
       );
 
-      require_once 'CRM/Core/BAO/FinancialTrxn.php';
-      $trxn = &CRM_Core_BAO_FinancialTrxn::create($trxnParams);
+      CRM_Core_BAO_FinancialTrxn::create($trxnParams);
     }
 
     //update corresponding pledge payment record
@@ -700,6 +699,32 @@ class CRM_Core_Payment_BaseIPN {
         CRM_Core_Error::debug_log_message("Success Contribution: {$contribution->id} - SMS not sent");
       }
     }
+  }
+
+  static function copyContribution(&$contrib, $rid, $trxn_id) {
+    if(is_object($contrib)){
+      $c = clone $contrib;
+      unset($c->id);
+      unset($c->receive_date);
+      unset($c->cancel_date);
+      unset($c->cancel_reason);
+      unset($c->invoice_id);
+      unset($c->receipt_id);
+      unset($c->receipt_date);
+      $c->contribution_status_id = 2;
+      $c->trxn_id = $trxn_id;
+      $c->created_date = date('YmdHis');
+      $config = CRM_Core_Config::singleton();
+      if ($config->copyContributionTypeSource == 1) {
+        $c->contribution_type_id = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage', $c->contribution_page_id, 'contribution_type_id');
+      }
+      $transaction = new CRM_Core_Transaction('READ COMMITTED');
+      $c->save();
+      $transaction->commit();
+      CRM_Contribute_BAO_ContributionRecur::syncContribute($rid, $c->id);
+      return $c;
+    }
+    return FALSE;
   }
 
   function getBillingID(&$ids) {
@@ -1094,7 +1119,7 @@ class CRM_Core_Payment_BaseIPN {
     }
   }
 
-  function updateContributionStatus(&$params) {
+  static function updateContributionStatus(&$params) {
     // get minimum required values.
     $statusId = CRM_Utils_Array::value('contribution_status_id', $params);
     $componentId = CRM_Utils_Array::value('component_id', $params);

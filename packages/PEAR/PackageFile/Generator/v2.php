@@ -10,7 +10,6 @@
  * @author     Stephan Schmidt (original XML_Serializer code)
  * @copyright  1997-2009 The Authors
  * @license    http://opensource.org/licenses/bsd-license.php New BSD License
- * @version    CVS: $Id: v2.php 278907 2009-04-17 21:10:04Z dufuz $
  * @link       http://pear.php.net/package/PEAR
  * @since      File available since Release 1.4.0a1
  */
@@ -31,7 +30,7 @@ require_once 'XML/Util.php';
  * @author     Stephan Schmidt (original XML_Serializer code)
  * @copyright  1997-2009 The Authors
  * @license    http://opensource.org/licenses/bsd-license.php New BSD License
- * @version    Release: 1.9.0
+ * @version    Release: @PEAR-VER@
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 1.4.0a1
  */
@@ -70,7 +69,7 @@ http://pear.php.net/dtd/package-2.0
 http://pear.php.net/dtd/package-2.0.xsd',
         ),               // attributes of the root tag
         'attributesArray'    => 'attribs',                  // all values in this key will be treated as attributes
-        'contentName'        => '_content',                   // this value will be used directly as content, instead of creating a new tag, may only be used in conjuction with attributesArray
+        'contentName'        => '_content',                   // this value will be used directly as content, instead of creating a new tag, may only be used in conjunction with attributesArray
         'beautifyFilelist'   => false,
         'encoding' => 'UTF-8',
     );
@@ -100,7 +99,7 @@ http://pear.php.net/dtd/package-2.0.xsd',
     /**
      * @param PEAR_PackageFile_v2
      */
-    function PEAR_PackageFile_Generator_v2(&$packagefile)
+    function __construct(&$packagefile)
     {
         $this->_packagefile = &$packagefile;
         if (isset($this->_packagefile->encoding)) {
@@ -113,7 +112,7 @@ http://pear.php.net/dtd/package-2.0.xsd',
      */
     function getPackagerVersion()
     {
-        return '1.9.0';
+        return '@PEAR-VER@';
     }
 
     /**
@@ -398,7 +397,7 @@ http://pear.php.net/dtd/package-2.0.xsd',
             $this->options['beautifyFilelist'] = true;
         }
 
-        $arr['attribs']['packagerversion'] = '1.9.0';
+        $arr['attribs']['packagerversion'] = '@PEAR-VER@';
         if ($this->serialize($arr, $options)) {
             return $this->_serializedData . "\n";
         }
@@ -782,7 +781,7 @@ http://pear.php.net/dtd/package-2.0.xsd',
                     }
                 }
 
-                if (is_string($value) && $value && ($value{strlen($value) - 1} == "\n")) {
+                if (is_string($value) && $value && ($value[strlen($value) - 1] == "\n")) {
                     $value .= str_repeat($this->options['indent'], $this->_tagDepth);
                 }
                 $tmp .= $this->_createXMLTag(array(
@@ -869,12 +868,6 @@ http://pear.php.net/dtd/package-2.0.xsd',
         }
 
         if (is_scalar($tag['content']) || is_null($tag['content'])) {
-            if ($this->options['encoding'] == 'UTF-8' &&
-                  version_compare(phpversion(), '5.0.0', 'lt')
-            ) {
-                $tag['content'] = utf8_encode($tag['content']);
-            }
-
             if ($replaceEntities === true) {
                 $replaceEntities = XML_UTIL_ENTITIES_XML;
             }

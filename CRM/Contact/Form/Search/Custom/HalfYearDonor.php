@@ -76,7 +76,7 @@ PRIMARY KEY (id)
     foreach($this->_queryColumns as $k => $v){
       $select[] = $k.' as '.$v;
     }
-    $select = implode(", \n" , $select);
+    $select = CRM_Utils_Array::implode(", \n" , $select);
     $from = $this->tempFrom();
     $where = $this->tempWhere();
     $having = $this->tempHaving();
@@ -106,7 +106,7 @@ $having
           $values[] = 'NULL';
         }
       }
-      $values = implode(', ' , $values);
+      $values = CRM_Utils_Array::implode(', ' , $values);
       $sql = "REPLACE INTO {$this->_tableName} VALUES ($values)";
       CRM_Core_DAO::executeQuery($sql, CRM_Core_DAO::$_nullArray);
     }
@@ -128,7 +128,7 @@ $having
     $clauses[] = "c.receive_date > '$halfyear'";
     $clauses[] = "c.contribution_status_id = 1";
 
-    return implode(' AND ', $clauses);
+    return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
   function tempHaving(){
@@ -204,7 +204,7 @@ $having
     return '';
   }
 
-  static function includeContactIDs(&$sql, &$formValues) {
+  static function includeContactIDs(&$sql, &$formValues, $isExport = FALSE) {
     $contactIDs = array();
     foreach ($formValues as $id => $value) {
       list($contactID, $additionalID) = CRM_Core_Form::cbExtract($id);
@@ -214,7 +214,7 @@ $having
     }
 
     if (!empty($contactIDs)) {
-      $contactIDs = implode(', ', $contactIDs);
+      $contactIDs = CRM_Utils_Array::implode(', ', $contactIDs);
       $sql .= " AND contact_a.contact_id IN ( $contactIDs )";
     }
   }

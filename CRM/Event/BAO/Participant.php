@@ -247,7 +247,7 @@ class CRM_Event_BAO_Participant extends CRM_Event_DAO_Participant {
     $hasNoteField = FALSE;
     // refs #34079, participant_note has greater priority then note
     foreach (array('participant_note', 'note') as $noteFld) {
-      if (array_key_exists($noteFld, $params)) {
+      if (CRM_Utils_Array::arrayKeyExists($noteFld, $params)) {
         $noteValue = $params[$noteFld];
         $hasNoteField = TRUE;
         break;
@@ -393,7 +393,7 @@ class CRM_Event_BAO_Participant extends CRM_Event_DAO_Participant {
         $roleOr[] = "FIND_IN_SET('{$roleId}' , pp.role_ids)";
       }
       if (!empty($roleOr)) {
-        $where[] = " (".implode(' OR ', $roleOr).") ";
+        $where[] = " (".CRM_Utils_Array::implode(' OR ', $roleOr).") ";
       }
     }
 
@@ -403,7 +403,7 @@ class CRM_Event_BAO_Participant extends CRM_Event_DAO_Participant {
     if ($includeWaitingList && $onWaitlistStatusId) {
 
       //build the where clause.
-      $whereClause = ' WHERE ' . implode(' AND ', $where);
+      $whereClause = ' WHERE ' . CRM_Utils_Array::implode(' AND ', $where);
       $whereClause .= " AND participant.status_id = $onWaitlistStatusId ";
       $whereClause .= " AND contact.is_deleted = 0 ";
 
@@ -436,9 +436,9 @@ class CRM_Event_BAO_Participant extends CRM_Event_DAO_Participant {
     }
 
     //consider only counted participants.
-    $where[] = ' participant.status_id IN ( ' . implode(', ', array_keys($countedStatuses)) . ' ) ';
+    $where[] = ' participant.status_id IN ( ' . CRM_Utils_Array::implode(', ', array_keys($countedStatuses)) . ' ) ';
     $where[] = ' contact.is_deleted = 0 ';
-    $whereClause = ' WHERE ' . implode(' AND ', $where);
+    $whereClause = ' WHERE ' . CRM_Utils_Array::implode(' AND ', $where);
 
     $query = "
     SELECT  participant.id id,
@@ -538,7 +538,7 @@ SELECT  event.event_full_text,
     }
     $statusIdClause = NULL;
     if (!empty($allStatusIds)) {
-      $statusIdClause = ' AND participant.status_id IN ( ' . implode(', ', array_values($allStatusIds)) . ')';
+      $statusIdClause = ' AND participant.status_id IN ( ' . CRM_Utils_Array::implode(', ', array_values($allStatusIds)) . ')';
     }
 
     $isTestClause = NULL;
@@ -548,7 +548,7 @@ SELECT  event.event_full_text,
 
     $skipParticipantClause = NULL;
     if (is_array($skipParticipantIds) && !empty($skipParticipantIds)) {
-      $skipParticipantClause = ' AND participant.id NOT IN ( ' . implode(', ', $skipParticipantIds) . ')';
+      $skipParticipantClause = ' AND participant.id NOT IN ( ' . CRM_Utils_Array::implode(', ', $skipParticipantIds) . ')';
     }
 
     $sql = "
@@ -604,15 +604,30 @@ INNER JOIN  civicrm_contact ct ON ( ct.id = participant.contact_id ) AND ( ct.is
     }
 
     $positiveStatuses = CRM_Event_PseudoConstant::participantStatus(NULL, "class = 'Positive'");
-    $statusIds = "(" . implode(',', array_keys($positiveStatuses)) . ")";
+    $statusIds = "(" . CRM_Utils_Array::implode(',', array_keys($positiveStatuses)) . ")";
+
+    $participantRoles = CRM_Event_PseudoConstant::participantRole(NULL, 'filter = 1');
+    if (!empty($participantRoles)) {
+      $roleOr = array();
+      foreach($participantRoles as $roleId => $roleName) {
+        $roleOr[] = "FIND_IN_SET('{$roleId}' , pp.role_ids)";
+      }
+      if (!empty($roleOr)) {
+        $whereRoleOr = "AND (".CRM_Utils_Array::implode(' OR ', $roleOr).") ";
+      }
+    }
 
     $query = "
   SELECT  count(participant.id) as registered,
-          civicrm_event.max_participants
-    FROM  civicrm_participant participant, civicrm_event
+          event.max_participants,
+          pp.role_ids
+    FROM  civicrm_participant participant
+    INNER JOIN civicrm_event event ON event.id = participant.event_id
+    INNER JOIN (SELECT id, REPLACE(role_id, '".CRM_Core_DAO::VALUE_SEPARATOR."', ',') as role_ids FROM civicrm_participant) pp ON pp.id = participant.id
    WHERE  participant.event_id = {$eventId}
-     AND  civicrm_event.id = participant.event_id
      AND  participant.status_id IN {$statusIds}
+     {$whereRoleOr}
+     AND  ( participant.is_test = 0 OR participant.is_test IS NULL )
 GROUP BY  participant.event_id
 ";
     $dao = &CRM_Core_DAO::executeQuery($query);
@@ -642,7 +657,7 @@ GROUP BY  participant.event_id
    * @return array array of importable Fields
    * @access public
    */
-  function &importableFields($contactType = 'Individual', $status = TRUE, $onlyParticipant = FALSE) {
+  static function &importableFields($contactType = 'Individual', $status = TRUE, $onlyParticipant = FALSE) {
     if (!self::$_importableFields) {
       if (!self::$_importableFields) {
         self::$_importableFields = array();
@@ -733,7 +748,7 @@ GROUP BY  participant.event_id
    * @return array array of exportable Fields
    * @access public
    */
-  function &exportableFields() {
+  static function &exportableFields() {
     if (!self::$_exportableFields) {
       if (!self::$_exportableFields) {
         self::$_exportableFields = array();
@@ -830,14 +845,14 @@ WHERE  civicrm_participant.id = {$participantId}
     $src = $reverse ? $property : $id;
     $dst = $reverse ? $id : $property;
 
-    if (!array_key_exists($src, $defaults)) {
+    if (!CRM_Utils_Array::arrayKeyExists($src, $defaults)) {
       return FALSE;
     }
 
     $look = $reverse ? array_flip($lookup) : $lookup;
 
     if (is_array($look)) {
-      if (!array_key_exists($defaults[$src], $look)) {
+      if (!CRM_Utils_Array::arrayKeyExists($defaults[$src], $look)) {
         return FALSE;
       }
     }
@@ -908,7 +923,7 @@ WHERE  civicrm_participant.id = {$participantId}
     $subject = ts('Deleted Participation(s): %1', array(1 => $id));
     if (!empty($relatedContributions)) {
       $participant->contributions = $relatedContributions;
-      $line = ts('Contribution ID').' '.implode(',', $relatedContributions);
+      $line = ts('Contribution ID').' '.CRM_Utils_Array::implode(',', $relatedContributions);
       $subject .= ts('%1 reserved', array(1 => $line));
     }
     $statusId = CRM_Core_OptionGroup::getValue('activity_status', 'Completed', 'name');
@@ -964,7 +979,7 @@ WHERE  civicrm_participant.id = {$participantId}
       return FALSE;
     }
 
-    $clause = implode(' AND ', $clause);
+    $clause = CRM_Utils_Array::implode(' AND ', $clause);
 
     $query = "SELECT id FROM civicrm_participant WHERE $clause";
     $dao = &CRM_Core_DAO::executeQuery($query, $input);
@@ -994,7 +1009,7 @@ WHERE  civicrm_participant.id = {$participantId}
     if ((substr($eventLevel, 0, 1) == CRM_Core_BAO_CustomOption::VALUE_SEPERATOR) &&
       (substr($eventLevel, -1, 1) == CRM_Core_BAO_CustomOption::VALUE_SEPERATOR)
     ) {
-      $eventLevel = implode(', ', explode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
+      $eventLevel = CRM_Utils_Array::implode(', ', explode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
           substr($eventLevel, 1, -1)
         ));
       if ($pos = strrpos($eventLevel, "(multiple participants)", 0)) {
@@ -1002,12 +1017,12 @@ WHERE  civicrm_participant.id = {$participantId}
       }
     }
     elseif ((substr($eventLevel, 0, 1) == CRM_Core_BAO_CustomOption::VALUE_SEPERATOR)) {
-      $eventLevel = implode(', ', explode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
+      $eventLevel = CRM_Utils_Array::implode(', ', explode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
           substr($eventLevel, 0, 1)
         ));
     }
     elseif ((substr($eventLevel, -1, 1) == CRM_Core_BAO_CustomOption::VALUE_SEPERATOR)) {
-      $eventLevel = implode(', ', explode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
+      $eventLevel = CRM_Utils_Array::implode(', ', explode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
           substr($eventLevel, 0, -1)
         ));
     }
@@ -1063,7 +1078,7 @@ WHERE  civicrm_participant.id = {$participantId}
    * @return array $feeDetails
    * @static
    */
-  function getFeeDetails($participantIds, $hasLineItems = FALSE) {
+  static function getFeeDetails($participantIds, $hasLineItems = FALSE) {
     $feeDetails = array();
     if (!is_array($participantIds) || empty($participantIds)) {
       return $feeDetails;
@@ -1094,7 +1109,7 @@ INNER JOIN civicrm_price_field field ON ( field.id = lineItem.price_field_id )
 INNER JOIN civicrm_price_field_value value ON ( value.id = lineItem.price_field_value_id ) 
 ";
     }
-    $where = 'WHERE participant.id IN ( ' . implode(', ', $participantIds) . ' )';
+    $where = 'WHERE participant.id IN ( ' . CRM_Utils_Array::implode(', ', $participantIds) . ' )';
     $query = "$select $from  $where";
 
     $feeInfo = CRM_Core_DAO::executeQuery($query);
@@ -1173,7 +1188,7 @@ INNER JOIN civicrm_price_field_value value ON ( value.id = lineItem.price_field_
     $cascadeAdditionalIds = self::getValidAdditionalIds($participantID, $oldStatusID, $newStatusID);
 
     if (!empty($cascadeAdditionalIds)) {
-      $cascadeAdditionalIds = implode(',', $cascadeAdditionalIds);
+      $cascadeAdditionalIds = CRM_Utils_Array::implode(',', $cascadeAdditionalIds);
       $query = "UPDATE civicrm_participant cp SET cp.status_id = %1 WHERE  cp.id IN ({$cascadeAdditionalIds})";
       $params = array(1 => array($newStatusID, 'Integer'));
       $dao = CRM_Core_DAO::executeQuery($query, $params);
@@ -1206,7 +1221,7 @@ INNER JOIN civicrm_price_field_value value ON ( value.id = lineItem.price_field_
       $setClause .= ", register_date = NOW()";
     }
 
-    $participantIdClause = "( " . implode(',', $participantIds) . " )";
+    $participantIdClause = "( " . CRM_Utils_Array::implode(',', $participantIds) . " )";
 
     $query = "
 UPDATE  civicrm_participant 
@@ -1274,7 +1289,7 @@ UPDATE  civicrm_participant
     );
 
     //first thing is pull all necessory data from db.
-    $participantIdClause = "(" . implode(',', $allParticipantIds) . ")";
+    $participantIdClause = "(" . CRM_Utils_Array::implode(',', $allParticipantIds) . ")";
 
     //get all participants data.
     $query = "SELECT * FROM civicrm_participant WHERE id IN {$participantIdClause}";
@@ -1290,11 +1305,11 @@ UPDATE  civicrm_participant
         'register_date' => $dao->register_date,
         'registered_by_id' => $dao->registered_by_id,
       );
-      if (!array_key_exists($dao->contact_id, $contactDetails)) {
+      if (!CRM_Utils_Array::arrayKeyExists($dao->contact_id, $contactDetails)) {
         $contactIds[$dao->contact_id] = $dao->contact_id;
       }
 
-      if (!array_key_exists($dao->event_id, $eventDetails)) {
+      if (!CRM_Utils_Array::arrayKeyExists($dao->event_id, $eventDetails)) {
         $eventIds[$dao->event_id] = $dao->event_id;
       }
     }
@@ -1385,7 +1400,7 @@ UPDATE  civicrm_participant
       }
 
       //check is it primary and has additional.
-      if (array_key_exists($participantId, $primaryANDAdditonalIds)) {
+      if (CRM_Utils_Array::arrayKeyExists($participantId, $primaryANDAdditonalIds)) {
         foreach ($primaryANDAdditonalIds[$participantId] as $additonalId) {
 
           if ($emailType) {
@@ -1415,7 +1430,7 @@ UPDATE  civicrm_participant
             $lastRegisteration = $eventDetails[$participantValues['event_id']]['registration_end_date'];
           }
           if (!empty($eventDetails[$participantValues['event_id']]['expiration_time'])) {
-            if (array_key_exists($toStatusId, $pendingStatuses)) {
+            if (CRM_Utils_Array::arrayKeyExists($toStatusId, $pendingStatuses)) {
               $baseTime = CRM_REQUEST_TIME;
             }
             else {
@@ -1449,7 +1464,7 @@ UPDATE  civicrm_participant
       //update the register date only when we,
       //move participant to pending class, CRM-6496
       $updateRegisterDate = FALSE;
-      if (array_key_exists($toStatusId, $pendingStatuses)) {
+      if (CRM_Utils_Array::arrayKeyExists($toStatusId, $pendingStatuses)) {
         $updateRegisterDate = TRUE;
       }
       self::updateStatus($updateParticipantIds, $toStatusId, $updateRegisterDate);
@@ -1482,7 +1497,7 @@ UPDATE  civicrm_participant
    * @access public
    * @static
    */
-  function sendTransitionParticipantMail($participantId,
+  static function sendTransitionParticipantMail($participantId,
     $participantValues,
     $eventDetails,
     $contactDetails,
@@ -1579,7 +1594,7 @@ UPDATE  civicrm_participant
    * @return string
    * @access public
    */
-  function updateStatusMessage($participantId, $statusChangeTo, $fromStatusId) {
+  static function updateStatusMessage($participantId, $statusChangeTo, $fromStatusId) {
     $statusMsg = NULL;
     $results = self::transitionParticipants(array($participantId),
       $statusChangeTo, $fromStatusId, TRUE
@@ -1590,7 +1605,7 @@ UPDATE  civicrm_participant
     if (is_array($results) && !empty($results)) {
       if (is_array($results['updatedParticipantIds']) && !empty($results['updatedParticipantIds'])) {
         foreach ($results['updatedParticipantIds'] as $processedId) {
-          if (is_array($results['mailedParticipants']) && array_key_exists($processedId, $results['mailedParticipants'])) {
+          if (is_array($results['mailedParticipants']) && CRM_Utils_Array::arrayKeyExists($processedId, $results['mailedParticipants'])) {
             $statusMsg .= '<br /> ' . ts("Participant status has been updated to '%1'. An email has been sent to %2.",
               array(
                 1 => ts($allStatuses[$statusChangeTo]),
@@ -1617,7 +1632,7 @@ UPDATE  civicrm_participant
     if ($participantId) {
       require_once 'CRM/Event/PseudoConstant.php';
       $dbStatusId = CRM_Core_DAO::getFieldValue("CRM_Event_DAO_Participant", $participantId, 'status_id');
-      if (array_key_exists($dbStatusId, CRM_Event_PseudoConstant::participantStatus(NULL, "is_counted = 1"))) {
+      if (CRM_Utils_Array::arrayKeyExists($dbStatusId, CRM_Event_PseudoConstant::participantStatus(NULL, "is_counted = 1"))) {
         //participant already in counted status no need to check for event full messages.
         $checkEventFull = FALSE;
       }
@@ -1787,7 +1802,7 @@ UPDATE  civicrm_participant
 INNER JOIN  civicrm_price_field_value value ON ( value.id = line.price_field_value_id )
 INNER JOIN  civicrm_price_field field ON ( value.price_field_id = field.id )   
      WHERE  line.entity_table = 'civicrm_participant'
-       AND  line.entity_id IN (" . implode(', ', $participantIds) . ' )';
+       AND  line.entity_id IN (" . CRM_Utils_Array::implode(', ', $participantIds) . ' )';
 
     $lineItem = CRM_Core_DAO::executeQuery($sql);
     $countDetails = $participantCount = array();
@@ -1845,7 +1860,7 @@ INNER JOIN  civicrm_price_field field ON ( value.price_field_id = field.id )
         "action=update&reset=1&id={$value}&cid={$details['cid']}"
       );
       $links[] = "<td><a href='{$viewUrl}'>" . $details['name'] . "</a></td><td></td><td><a href='{$editUrl}'>" . ts('Edit') . "</a></td>";
-      $links = "<table><tr>" . implode("</tr><tr>", $links) . "</tr></table>";
+      $links = "<table><tr>" . CRM_Utils_Array::implode("</tr><tr>", $links) . "</tr></table>";
       return $links;
     }
   }
@@ -1883,7 +1898,7 @@ INNER JOIN  civicrm_price_field field ON ( value.price_field_id = field.id )
         $roleOr[] = "FIND_IN_SET('{$roleId}' , pp.role_ids)";
       }
       if (!empty($roleOr)) {
-        $roleWhere = " AND (".implode(' OR ', $roleOr).") ";
+        $roleWhere = " AND (".CRM_Utils_Array::implode(' OR ', $roleOr).") ";
       }
     }
     $sql = "SELECT cp.id, cp.status_id

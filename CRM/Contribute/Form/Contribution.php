@@ -627,6 +627,7 @@ WHERE  contribution_id = {$this->_id}
 
     if (CRM_Utils_Array::value('is_test', $defaults)) {
       $this->assign('is_test', TRUE);
+      $defaults['is_test'] = 1;
     }
 
     if (isset($defaults['honor_contact_id'])) {
@@ -890,13 +891,19 @@ WHERE  contribution_id = {$this->_id}
 
     $attributes = CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_Contribution');
 
+    if (CRM_Utils_Array::value('is_test', $defaults)) {
+      $isTestOption = array(0 => ts('No'), 1 => ts('Yes'));
+      $isTestElement = $this->addRadio('is_test', ts('Is Test'), $isTestOption);
+      $isTestElement->freeze();
+    }
+
     $element = $this->add('select', 'contribution_type_id',
       ts('Contribution Type'),
       array('' => ts('- select -')) + CRM_Contribute_PseudoConstant::contributionType(NULL, NULL, TRUE),
       TRUE, array('onChange' => "buildCustomData( 'Contribution', this.value );")
     );
     $deductibleType = CRM_Contribute_PseudoConstant::contributionType(NULL, 'is_deductible');
-    $this->assign('deductible_type_ids', implode(',', array_keys($deductibleType)));
+    $this->assign('deductible_type_ids', CRM_Utils_Array::implode(',', array_keys($deductibleType)));
     if ($this->_online) {
       // $element->freeze( );
     }
@@ -1346,7 +1353,7 @@ WHERE  contribution_id = {$this->_id}
       $nameFields = array('first_name', 'middle_name', 'last_name');
       foreach ($nameFields as $name) {
         $fields[$name] = 1;
-        if (array_key_exists("billing_$name", $params)) {
+        if (CRM_Utils_Array::arrayKeyExists("billing_$name", $params)) {
           $params[$name] = $params["billing_{$name}"];
           $params['preserveDBName'] = TRUE;
         }
@@ -1394,7 +1401,7 @@ WHERE  contribution_id = {$this->_id}
       CRM_Contribute_Form_AdditionalInfo::postProcessCommon($params, $this->_params);
 
       if (empty($this->_params['invoice_id'])) {
-        $this->_params['invoiceID'] = md5(uniqid(rand(), TRUE));
+        $this->_params['invoiceID'] = md5(uniqid((string)rand(), TRUE));
       }
       else {
         $this->_params['invoiceID'] = $this->_params['invoice_id'];
@@ -1477,7 +1484,7 @@ WHERE  contribution_id = {$this->_id}
           $params
         )
       );
-      $customFields = CRM_Utils_Array::crmArrayMerge($customFieldsContributionType,
+      $customFields = CRM_Utils_Array::arrayMerge($customFieldsContributionType,
         CRM_Core_BAO_CustomField::getFields('Contribution', FALSE, FALSE, NULL, NULL, TRUE)
       );
       $params['custom'] = CRM_Core_BAO_CustomField::postProcess($params,
@@ -1508,6 +1515,7 @@ WHERE  contribution_id = {$this->_id}
         $this->_params['contact_id'] = $this->_contactID;
         $this->_params['contribution_id'] = $contribution->id;
         $this->_params['is_test'] = $contribution->is_test;
+        $this->_params['contribution_page_id'] = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $contribution->id, 'contribution_page_id');
         $sendReceipt = CRM_Contribute_Form_AdditionalInfo::emailReceipt($this, $this->_params, TRUE);
       }
 
@@ -1579,7 +1587,8 @@ WHERE  contribution_id = {$this->_id}
         $currentCurrency
       );
 
-      $fields = array('contribution_type_id',
+      $fields = array(
+        'contribution_type_id',
         'contribution_status_id',
         'payment_instrument_id',
         'cancel_reason',
@@ -1591,6 +1600,7 @@ WHERE  contribution_id = {$this->_id}
         'pcp_roll_nickname',
         'pcp_personal_note',
         'receipt_id',
+        'is_test',
       );
 
       foreach ($fields as $f) {
@@ -1699,6 +1709,7 @@ WHERE  contribution_id = {$this->_id}
       if ($contribution->id && CRM_Utils_Array::value('is_email_receipt', $formValues)) {
         $formValues['contact_id'] = $this->_contactID;
         $formValues['contribution_id'] = $contribution->id;
+        $formValues['contribution_page_id'] = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $contribution->id, 'contribution_page_id');
         $formValues['is_test'] = CRM_Core_DAO::getFieldValue("CRM_Contribute_DAO_Contribution", $contribution->id, 'is_test');
         $sendReceipt = CRM_Contribute_Form_AdditionalInfo::emailReceipt($this, $formValues);
       }

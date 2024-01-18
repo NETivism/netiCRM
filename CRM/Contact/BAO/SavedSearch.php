@@ -156,7 +156,7 @@ class CRM_Contact_BAO_SavedSearch extends CRM_Contact_DAO_SavedSearch {
     if (!$where) {
       $where = '( 1 )';
     }
-    $from = CRM_Contact_BAO_Query::fromClause($whereTables);
+    $from = CRM_Contact_BAO_Query::getFromClause($whereTables);
     return "
 SELECT contact_a.id
 $from
@@ -174,7 +174,7 @@ WHERE  $where";
       else {
         $tables = $whereTables = array('civicrm_contact' => 1, 'civicrm_email' => 1);
         $where = CRM_Contact_BAO_SavedSearch::whereClause($id, $tables, $whereTables);
-        $from = CRM_Contact_BAO_Query::fromClause($whereTables);
+        $from = CRM_Contact_BAO_Query::getFromClause($whereTables);
         return array($from, $where);
       }
     }

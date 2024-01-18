@@ -441,7 +441,7 @@ class CRM_Event_Form_EventFees {
       $sql = "
 SELECT  id, html_type 
   FROM  civicrm_price_field 
- WHERE  id IN (" . implode(',', array_keys($priceFields)) . ')';
+ WHERE  id IN (" . CRM_Utils_Array::implode(',', array_keys($priceFields)) . ')';
       $fieldDAO = CRM_Core_DAO::executeQuery($sql);
       while ($fieldDAO->fetch()) {
         $htmlTypes[$fieldDAO->id] = $fieldDAO->html_type;

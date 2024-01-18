@@ -150,7 +150,7 @@ ORDER BY c.id, l.price_field_value_id;
     }
 
     foreach (array_keys($rows) as $participantID) {
-      $values = implode(',', $rows[$participantID]);
+      $values = CRM_Utils_Array::implode(',', $rows[$participantID]);
       $sql = "
 UPDATE {$this->_tableName}
 SET $values

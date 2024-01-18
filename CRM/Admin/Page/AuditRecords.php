@@ -68,6 +68,14 @@ class CRM_Admin_Page_AuditRecords extends CRM_Core_Page {
           $data = json_decode($dao->data, TRUE);
           $auditStatusName = ts('Export Records').": ".CRM_Export_BAO_Export::getExportName($data['Type']);
           break;
+        case 'audit.civicrm.security.option':
+          $data = json_decode($dao->data, TRUE);
+          $auditStatusName = ts('Export excel file encryption settings option Changed');
+          $data = $data['log'];
+          break;
+        case 'audit.civicrm.security.pwd':
+          $auditStatusName = ts('Export excel file encryption settings password Changed');
+          break;
         default:
           $auditStatusName = ts('Other');
           break;

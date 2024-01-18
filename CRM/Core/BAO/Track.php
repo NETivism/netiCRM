@@ -114,8 +114,33 @@ class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
     $track = new CRM_Core_BAO_Track();
     $fields = $track->fields();
     $params = (array) $json;
-    $params = array_intersect_key($params, $fields);
     $params = array_filter($params);
+    foreach($params as $key => $value) {
+      if (isset($fields[$key])) {
+        $field = $fields[$key];
+        switch ($field['type']) {
+          case CRM_Utils_Type::T_INT:
+            if (!CRM_Utils_Type::validate($value, 'Integer', FALSE)) {
+              unset($params[$key]);
+            }
+            break;
+          case CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME:
+            if (!CRM_Utils_Type::validate($value, 'Date', FALSE)) {
+              unset($params[$key]);
+            }
+            break;
+          case CRM_Utils_Type::T_STRING:
+          default:
+            if (!CRM_Utils_Type::validate($value, 'String', FALSE)) {
+              unset($params[$key]);
+            }
+            break;
+        }
+      }
+      else {
+        unset($params[$key]);
+      }
+    }
     $track = CRM_Core_BAO_Track::add($params);
     CRM_Utils_System::civiExit();
   }

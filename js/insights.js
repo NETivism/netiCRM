@@ -2,7 +2,7 @@
 (function() {
 
 function loadScript(url, callback){
-  let script = document.createElement("script")
+  let script = document.createElement("script");
   script.type = "text/javascript";
 
   if (script.readyState){  //IE
@@ -82,11 +82,12 @@ function loadReferrer() {
       let searchParams = new URLSearchParams(window.location.search);
       searchParams.delete("civimail_x_q");
       searchParams.delete("civimail_x_u");
+      let newQuery = '';
       if (searchParams.toString() === '') {
-        let newQuery = '';
+        newQuery = '';
       }
       else {
-        let newQuery = '?'+searchParams.toString();
+        newQuery = '?'+searchParams.toString();
       }
       let newUrl = window.location.origin+window.location.pathname+newQuery;
       window.history.replaceState({}, null, newUrl);

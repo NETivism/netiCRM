@@ -74,7 +74,7 @@ function civicrm_event_create(&$params) {
     $ids['event_id']    = CRM_Utils_Array::value('event_id', $params);
 
     require_once 'CRM/Event/BAO/Event.php';
-    $eventBAO = CRM_Event_BAO_Event::create($params, $ids);
+    $eventBAO = CRM_Event_BAO_Event::create($params);
 
     if (is_a($eventBAO, 'CRM_Core_Error')) {
       return civicrm_create_error("Event is not created");
@@ -153,12 +153,12 @@ function civicrm_event_search(&$params) {
   $returnCustomProperties = array();
   $otherVars = array('sort', 'offset', 'rowCount', 'isCurrent');
 
-  $sort = array_key_exists('return.sort', $params) ? $params['return.sort'] : FALSE;
+  $sort = CRM_Utils_Array::arrayKeyExists('return.sort', $params) ? $params['return.sort'] : FALSE;
 
   // don't check if empty, more meaningful error for API user instead of silent defaults
-  $offset    = array_key_exists('return.offset', $params) ? $params['return.offset'] : 0;
-  $rowCount  = array_key_exists('return.max_results', $params) ? $params['return.max_results'] : 25;
-  $isCurrent = array_key_exists('isCurrent', $params) ? $params['isCurrent'] : 0;
+  $offset    = CRM_Utils_Array::arrayKeyExists('return.offset', $params) ? $params['return.offset'] : 0;
+  $rowCount  = CRM_Utils_Array::arrayKeyExists('return.max_results', $params) ? $params['return.max_results'] : 25;
+  $isCurrent = CRM_Utils_Array::arrayKeyExists('isCurrent', $params) ? $params['isCurrent'] : 0;
 
   foreach ($params as $n => $v) {
     if (substr($n, 0, 7) == 'return.') {
@@ -191,7 +191,7 @@ function civicrm_event_search(&$params) {
   $event = array();
   if (!empty($returnProperties)) {
     $eventDAO->selectAdd();
-    $eventDAO->selectAdd(implode(',', $returnProperties));
+    $eventDAO->selectAdd(CRM_Utils_Array::implode(',', $returnProperties));
   }
   $eventDAO->whereAdd('( is_template IS NULL ) OR ( is_template = 0 )');
   if ($isCurrent) {

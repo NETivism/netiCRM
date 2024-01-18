@@ -52,7 +52,7 @@ class CRM_Dedupe_Finder {
    *
    * @return array  array of (cid1, cid2, weight) dupe triples
    */
-  function dupes($rgid, $cids = array()) {
+  static function dupes($rgid, $cids = array()) {
     $rgBao = new CRM_Dedupe_BAO_RuleGroup();
     $rgBao->id = $rgid;
     $rgBao->contactIds = $cids;
@@ -90,7 +90,7 @@ class CRM_Dedupe_Finder {
    *
    * @return array  matching contact ids
    */
-  function dupesByParams($params,
+  static function dupesByParams($params,
     $ctype,
     $level = 'Strict',
     $except = array(),
@@ -157,7 +157,7 @@ class CRM_Dedupe_Finder {
    * @param int    $threshold threshold that meet above rules
    * @return array  matching contact ids
    */
-  function dupesByRules($params, $ctype, $level = 'Strict', $except = array(), $rules = array(),     $threshold = 10) {
+  static function dupesByRules($params, $ctype, $level = 'Strict', $except = array(), $rules = array(),     $threshold = 10) {
     // If $params is empty there is zero reason to proceed.
     if (!$params) {
       return array();
@@ -195,7 +195,7 @@ class CRM_Dedupe_Finder {
    *
    * @return array  array of (cid1, cid2, weight) dupe triples
    */
-  function dupesInGroup($rgid, $gid) {
+  static function dupesInGroup($rgid, $gid) {
     $cids = array_keys(CRM_Contact_BAO_Group::getMember($gid));
     return self::dupes($rgid, $cids);
   }
@@ -245,12 +245,20 @@ class CRM_Dedupe_Finder {
    * A hackish function needed to massage CRM_Contact_Form_$ctype::formRule()
    * object into a valid $params array for dedupe
    *
-   * @param array $fields  contact structure from formRule()
+   * @param array $fields  contact structure from formRule(), structure should be like this:
+   *   [
+   *     'contact_type' => 'Individual',
+   *     'last_name' => 'abc',
+   *     'first_name' => 'def',
+   *     'email' => [
+   *       1 => ['email' => 'aaa@bbb.ccc', 'location_type_id' => 1],
+   *     ],
+   *   ]
    * @param string $ctype  contact type of the given contact
    *
    * @return array  valid $params array for dedupe
    */
-  function formatParams($fields, $ctype) {
+  static function formatParams($fields, $ctype) {
     $flat = array();
     CRM_Utils_Array::flatten($fields, $flat);
 
@@ -271,12 +279,12 @@ class CRM_Dedupe_Finder {
     }
 
     // handle preferred_communication_method
-    if (array_key_exists('preferred_communication_method', $fields)) {
+    if (CRM_Utils_Array::arrayKeyExists('preferred_communication_method', $fields)) {
       $methods = array_intersect($fields['preferred_communication_method'], array('1'));
       $methods = array_keys($methods);
       sort($methods);
       if ($methods) {
-        $flat['preferred_communication_method'] = CRM_Core_DAO::VALUE_SEPARATOR . implode(CRM_Core_DAO::VALUE_SEPARATOR, $methods) . CRM_Core_DAO::VALUE_SEPARATOR;
+        $flat['preferred_communication_method'] = CRM_Core_DAO::VALUE_SEPARATOR . CRM_Utils_Array::implode(CRM_Core_DAO::VALUE_SEPARATOR, $methods) . CRM_Core_DAO::VALUE_SEPARATOR;
       }
     }
 
@@ -320,7 +328,7 @@ class CRM_Dedupe_Finder {
         if (isset($flat[$flatKey]) && !is_array($flat[$flatKey])) {
           unset($flat[$flatKey]);
         }
-        $hasResult = array_search($value, $flat[$flatKey]);
+        $hasResult = is_array($flat[$flatKey]) ? array_search($value, $flat[$flatKey]) : NULL;
         if(!$hasResult) {
           $flat[$flatKey][] = $value;
         }
@@ -368,6 +376,10 @@ class CRM_Dedupe_Finder {
       foreach($params['civicrm_contact'] as $field => $value) {
         $contact->$field = $value;
         $formatParams[$field] = $value;
+      }
+      foreach($params['civicrm_email'] as $field => $value) {
+        $contact->$field = $value;
+        $formatParams[$field][] = array('email' => $value);
       }
       CRM_Contact_BAO_Individual::format($formatParams, $contact);
       $params['civicrm_contact']['display_name'] = $contact->display_name;

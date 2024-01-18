@@ -138,7 +138,7 @@ class CRM_Report_Form_Member_Summary extends CRM_Report_Form {
       'type' => CRM_Utils_Type::T_DATE,
     );
     foreach ($this->_columns as $tableName => $table) {
-      if (array_key_exists('group_bys', $table)) {
+      if (CRM_Utils_Array::arrayKeyExists('group_bys', $table)) {
         foreach ($table['group_bys'] as $fieldName => $field) {
           if (CRM_Utils_Array::value($fieldName, $this->_params['group_bys'])) {
 
@@ -190,7 +190,7 @@ class CRM_Report_Form_Member_Summary extends CRM_Report_Form {
       }
       // end of select
 
-      if (array_key_exists('fields', $table)) {
+      if (CRM_Utils_Array::arrayKeyExists('fields', $table)) {
         foreach ($table['fields'] as $fieldName => $field) {
           if (CRM_Utils_Array::value('required', $field) ||
             CRM_Utils_Array::value($fieldName, $this->_params['fields'])
@@ -253,7 +253,7 @@ class CRM_Report_Form_Member_Summary extends CRM_Report_Form {
       unset($select['joinDate']);
       unset($this->_columnHeaders["civicrm_membership_member_join_date"]);
     }
-    $this->_select = "SELECT " . implode(', ', $select) . " ";
+    $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
   function from() {
@@ -273,7 +273,7 @@ class CRM_Report_Form_Member_Summary extends CRM_Report_Form {
   function where() {
     $clauses = array();
     foreach ($this->_columns as $tableName => $table) {
-      if (array_key_exists('filters', $table)) {
+      if (CRM_Utils_Array::arrayKeyExists('filters', $table)) {
         foreach ($table['filters'] as $fieldName => $field) {
           $clause = NULL;
 
@@ -305,7 +305,7 @@ class CRM_Report_Form_Member_Summary extends CRM_Report_Form {
     }
 
     if (!empty($clauses)) {
-      $this->_where = "WHERE {$this->_aliases['civicrm_membership']}.is_test = 0 AND " . implode(' AND ', $clauses);
+      $this->_where = "WHERE {$this->_aliases['civicrm_membership']}.is_test = 0 AND " . CRM_Utils_Array::implode(' AND ', $clauses);
     }
     else {
       $this->_where = "WHERE {$this->_aliases['civicrm_membership']}.is_test = 0";
@@ -318,7 +318,7 @@ class CRM_Report_Form_Member_Summary extends CRM_Report_Form {
       !empty($this->_params['group_bys'])
     ) {
       foreach ($this->_columns as $tableName => $table) {
-        if (array_key_exists('group_bys', $table)) {
+        if (CRM_Utils_Array::arrayKeyExists('group_bys', $table)) {
           foreach ($table['group_bys'] as $fieldName => $field) {
             if (CRM_Utils_Array::value($fieldName, $this->_params['group_bys'])) {
               if (CRM_Utils_Array::value('chart', $field)) {
@@ -346,7 +346,7 @@ class CRM_Report_Form_Member_Summary extends CRM_Report_Form {
       }
 
       $this->_rollup = ' WITH ROLLUP';
-      $this->_groupBy = 'GROUP BY ' . implode(', ', $groupBy) . " {$this->_rollup} ";
+      $this->_groupBy = 'GROUP BY ' . CRM_Utils_Array::implode(', ', $groupBy) . " {$this->_rollup} ";
     }
     else {
       $this->_groupBy = "GROUP BY {$this->_aliases['civicrm_membership']}.join_date";
@@ -452,17 +452,12 @@ class CRM_Report_Form_Member_Summary extends CRM_Report_Form {
       }
 
       // build chart.
-      require_once 'CRM/Utils/OpenFlashChart.php';
       if ($isMembershipType) {
         $graphRows['value'] = $display;
         $chartInfo = array('legend' => 'Membership Summary',
           'xname' => 'Join Date / Member Type',
           'yname' => 'Fees',
         );
-        CRM_Utils_OpenFlashChart::reportChart($graphRows, $this->_params['charts'], $interval, $chartInfo);
-      }
-      else {
-        CRM_Utils_OpenFlashChart::chart($graphRows, $this->_params['charts'], $this->_interval);
       }
     }
     $this->assign('chartType', $this->_params['charts']);
@@ -518,7 +513,7 @@ class CRM_Report_Form_Member_Summary extends CRM_Report_Form {
         }
         $statusUrl = '';
         if (!empty($this->_params['status_id_value'])) {
-          $statusUrl = "&sid_op=in&sid_value=" . implode(",", $this->_params['status_id_value']);
+          $statusUrl = "&sid_op=in&sid_value=" . CRM_Utils_Array::implode(",", $this->_params['status_id_value']);
         }
         $url = CRM_Report_Utils_Report::getNextUrl('member/detail',
           "reset=1&force=1&join_date_from={$dateStart}&join_date_to={$dateEnd}{$typeUrl}{$statusUrl}",
@@ -532,25 +527,25 @@ class CRM_Report_Form_Member_Summary extends CRM_Report_Form {
       }
 
       // handle Membership Types
-      if (array_key_exists('civicrm_membership_membership_type_id', $row)) {
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_membership_membership_type_id', $row)) {
         if ($value = $row['civicrm_membership_membership_type_id']) {
           $value = explode(',', $value);
           foreach ($value as $key => $id) {
             $value[$key] = CRM_Member_PseudoConstant::membershipType($id, FALSE);
           }
-          $rows[$rowNum]['civicrm_membership_membership_type_id'] = implode(' , ', $value);
+          $rows[$rowNum]['civicrm_membership_membership_type_id'] = CRM_Utils_Array::implode(' , ', $value);
         }
         $entryFound = TRUE;
       }
 
       // make subtotals look nicer
-      if (array_key_exists('civicrm_membership_join_date_subtotal', $row) &&
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_membership_join_date_subtotal', $row) &&
         !$row['civicrm_membership_join_date_subtotal']
       ) {
         $this->fixSubTotalDisplay($rows[$rowNum], $this->_statFields);
         $entryFound = TRUE;
       }
-      elseif (array_key_exists('civicrm_membership_join_date_subtotal', $row) &&
+      elseif (CRM_Utils_Array::arrayKeyExists('civicrm_membership_join_date_subtotal', $row) &&
         $row['civicrm_membership_join_date_subtotal'] &&
         !$row['civicrm_membership_membership_type_id']
       ) {

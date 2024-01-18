@@ -304,12 +304,15 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
           $values[$object->id]['mode'] = ts('Smart');
           $customSearchID = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_SavedSearch', $object->saved_search_id, 'search_custom_id');
           if ($customSearchID) {
+            $newLinks[CRM_Core_Action::ADVANCED] = $newLinks[CRM_Core_Action::VIEW];
             $newLinks[CRM_Core_Action::VIEW]['url'] = 'civicrm/contact/search/custom';
             $newLinks[CRM_Core_Action::VIEW]['qs'] = "reset=1&force=1&ssID={$object->saved_search_id}&gid={$object->id}";
+            $newLinks[CRM_Core_Action::VIEW]['name'] = ts('Search Results');
+            $newLinks[CRM_Core_Action::VIEW]['title'] = ts('Custom Searches');
           }
         }
         $action = array_sum(array_keys($newLinks));
-        if (array_key_exists('is_active', $object)) {
+        if (property_exists($object, 'is_active')) {
           if ($object->is_active) {
             $action -= CRM_Core_Action::ENABLE;
           }
@@ -333,7 +336,7 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
             $types[] = $allTypes[$type];
             $tsTypes[] = ts($allTypes[$type]);
           }
-          $values[$object->id]['group_type'] = implode(', ', $tsTypes);
+          $values[$object->id]['group_type'] = CRM_Utils_Array::implode(', ', $tsTypes);
         }
         $values[$object->id]['action'] = CRM_Core_Action::formLink($newLinks,
           $action,
@@ -341,7 +344,7 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
             'ssid' => $object->saved_search_id,
           )
         );
-        if (array_key_exists('orgName', $object)) {
+        if (property_exists($object, 'orgName')) {
           if ($object->orgName) {
             $values[$object->id]['org_name'] = $object->orgName;
             $values[$object->id]['org_id'] = $object->orgID;
@@ -403,7 +406,7 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
       $types = array_keys($groupType);
       if (!empty($types)) {
         $clauses[] = 'groups.group_type LIKE %2';
-        $typeString = CRM_Core_DAO::VALUE_SEPARATOR . implode(CRM_Core_DAO::VALUE_SEPARATOR, $types) . CRM_Core_DAO::VALUE_SEPARATOR;
+        $typeString = CRM_Core_DAO::VALUE_SEPARATOR . CRM_Utils_Array::implode(CRM_Core_DAO::VALUE_SEPARATOR, $types) . CRM_Core_DAO::VALUE_SEPARATOR;
         $params[2] = array($typeString, 'String', TRUE);
       }
     }
@@ -468,7 +471,7 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
       $clauses[] = 'groups.is_hidden = 0';
     }
 
-    return implode(' AND ', $clauses);
+    return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
   function pager($whereClause, $whereParams) {

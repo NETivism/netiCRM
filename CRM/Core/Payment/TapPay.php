@@ -23,6 +23,13 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     5 => 'AMEX',
   );
 
+  public static $_cardCategory = array(
+    -1 => 'Unknown',
+    0 => 'Credit Card',
+    1 => 'Debit Card',
+    2 => 'Prepaid Card',
+  );
+
   public static $_allowRecurUnit = array('month');
 
   /**
@@ -49,7 +56,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
    * @static
    *
    */
-  public static function &singleton($mode = 'live', &$paymentProcessor, &$paymentForm = NULL) {
+  public static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
     $args = func_get_args();
     if (isset($args[3])) {
       $apiType = $args[3];
@@ -79,7 +86,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
 
 
     if (!empty($error)) {
-      return implode('<br>', $error);
+      return CRM_Utils_Array::implode('<br>', $error);
     }
     else {
       return NULL;
@@ -247,19 +254,10 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
 
     if (empty($referContributionId)) {
       // Clone Contribution
-      $c = clone $firstContribution;
-      unset($c->id);
-      unset($c->receive_date);
-      unset($c->cancel_date);
-      unset($c->cancel_reason);
-      unset($c->invoice_id);
-      unset($c->receipt_date);
-      unset($c->receipt_id);
-      unset($c->trxn_id);
-      $c->contribution_status_id = 2;
-      $c->created_date = date('YmdHis');
+      // trxn_id will update after copy contribution.
+      $hash = hash('sha256', $firstContributionId);
+      $c = CRM_Core_Payment_BaseIPN::copyContribution($firstContribution, $recurringId, $hash);
       $c->total_amount = $contributionRecur->amount;
-      $c->save();
     }
     else {
       $c = new CRM_Contribute_DAO_Contribution();
@@ -444,7 +442,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       $trxn_id = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $payment['contributionID'], 'trxn_id');
       $recurringId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $payment['contributionID'], 'contribution_recur_id');
       if(empty($trxn_id)){
-        $rand = base_convert(rand(16, 255), 10, 16);
+        $rand = base_convert(strval(rand(16, 255)), 10, 16);
         $recurringId = 
         $trxn_id = 'b_'.$recurringId.'_'.$payment['contributionID'].'_'.$rand;
         CRM_Core_DAO::setFieldValue('CRM_Contribute_DAO_Contribution', $payment['contributionID'], 'trxn_id', $trxn_id);
@@ -715,7 +713,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       for($i = $today; $i <= 31 ; $i++) {
         $days[] = $i;
       }
-      $cycleDayFilter = 'r.cycle_day IN ('.implode(',', $days).')';
+      $cycleDayFilter = 'r.cycle_day IN ('.CRM_Utils_Array::implode(',', $days).')';
     }
 
     $currentDate = date('Y-m-01 00:00:00', $time);
@@ -743,6 +741,7 @@ WHERE
   $cycleDayFilter AND
   (SELECT MAX(created_date) FROM civicrm_contribution WHERE contribution_recur_id = r.id GROUP BY r.id) < '$currentDate'
 AND r.contribution_status_id = 5
+AND r.frequency_unit = 'month'
 AND p.payment_processor_type = 'TapPay'
 GROUP BY r.id
 ORDER BY r.id
@@ -1376,6 +1375,7 @@ LIMIT 0, 100
       $cardInfo = $tappayObject->card_info;
       $returnData[ts('Card Issuer')] = $cardInfo->issuer;
       $returnData[ts('Card Type')] = self::$_cardType[$cardInfo->type];
+      $returnData[ts('Card Category')] = ts(self::$_cardCategory[$cardInfo->funding]);
     }
     if (!empty($tappayDAO->contribution_recur_id)) {
       $autoRenew = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionRecur', $tappayDAO->contribution_recur_id, 'auto_renew');
@@ -1407,7 +1407,7 @@ LIMIT 0, 100
   }
 
   static function getContributionTrxnID($contributionId, $recurringId = NULL) {
-    $rand = base_convert(rand(16, 255), 10, 16);
+    $rand = base_convert(strval(rand(16, 255)), 10, 16);
     if(empty($recurringId)){
       $recurringId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $contributionId, 'contribution_recur_id');
     }

@@ -43,6 +43,9 @@ class CRM_Admin_Page_Setting extends CRM_Core_Page {
     if (defined('CIVICRM_SITE_KEY')) {
       $this->assign("site_key", CIVICRM_SITE_KEY);
     }
+    if (CRM_Core_Permission::check('administer neticrm')) {
+      $this->assign("admin", TRUE);
+    }
     CRM_Utils_System::setTitle(ts("Global Settings"));
 
     parent::run();

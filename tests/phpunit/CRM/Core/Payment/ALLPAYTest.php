@@ -9,21 +9,6 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
   protected $_is_test;
   protected $_page_id;
 
-  /**
-   *  Constructor
-   *
-   *  Initialize configuration
-   */
-  function __construct() {
-//    $this->assertTrue(CRM_Utils_System::moduleExists('civicrm_allpay'), "You must enable civicrm_allpay module first before test.");
-
-    $pageId = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution_page ORDER BY id");
-    $this->assertNotEmpty($pageId, 'You need to have contribution page to procceed.');
-    $this->_page_id = $pageId;
-
-    parent::__construct();
-  }
-
   function get_info() {
     return array(
       'name' => 'ALLPAY payment processor',
@@ -32,8 +17,14 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
     );
   }
 
-  function setUp() {
+  /**
+   * @before
+   */
+  function setUpTest() {
     parent::setUp();
+    $pageId = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution_page ORDER BY id");
+    $this->assertNotEmpty($pageId, 'You need to have contribution page to procceed.');
+    $this->_page_id = $pageId;
 
     $this->_is_test = 1;
 
@@ -92,7 +83,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
     }
     $params = array(
       'version' => 3,
-      'class_name' => 'Payment_ALLPAY',
+      'payment_processor_type' => 'ALLPAY',
       'is_test' => $this->_is_test,
     );
     $result = civicrm_api('PaymentProcessor', 'get', $params);
@@ -116,12 +107,15 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
     // load drupal module file
   }
 
-  function tearDown() {
+  /**
+   * @after
+   */
+  function tearDownTest() {
     $this->_processor = NULL;
   }
 
   function testSinglePaymentNotify(){
-    $now = time();
+    $now = time() - 60;
     $trxn_id = 'ut'.substr($now, -5);
     $amount = 111;
 
@@ -190,7 +184,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
   }
 
   function testRecurringPaymentNotify(){
-    $now = time()+60;
+    $now = time();
     $trxn_id = 'ut'.substr($now, -5);
     $amount = 111;
 
@@ -229,7 +223,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
       'contribution_page_id' => $this->_page_id,
       'payment_processor_id' => $this->_processor['id'],
       'payment_instrument_id' => 1,
-      'created_date' => date('YmdHis', $now),
+      'created_date' => date('YmdHis', $now-60),
       'non_deductible_amount' => 0,
       'total_amount' => $amount,
       'currency' => 'TWD',
@@ -242,6 +236,10 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
       'contribution_status_id' => 2,
       'contribution_recur_id' => $recurring->id,
     );
+    $customValues = $this->customValueGenerate('Contribution', 'postProcess');
+    if (!empty($customValues)) {
+      $contrib['custom'] = $customValues;
+    }
     $contribution = CRM_Contribute_BAO_Contribution::create($contrib, CRM_Core_DAO::$_nullArray);
     $this->assertNotEmpty($contribution->id, "In line " . __LINE__);
     $params = array(
@@ -338,6 +336,15 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
 
     $data = CRM_Core_DAO::singleValueQuery("SELECT data FROM civicrm_contribution_allpay WHERE cid = $cid2");
     $this->assertNotEmpty($data, "In line " . __LINE__);
+
+    // before doing third payment, change second payment custom field
+    $updatedCustomValues = $this->customValueGenerate('Contribution');
+    $updatedCustomValues['entityID'] = $cid2;
+    $updatedResult = $this->customValueUpdate($cid2, $updatedCustomValues);
+    $this->assertEquals(0, $updatedResult['is_error'], 'Simulate update custom values on second contribution of recurring in line '.__LINE__.'. Error message: '. $updatedResult['error_message']);
+    $this->updateConfig('recurringCopySetting', 'latest');
+    $config = CRM_Core_Config::singleton();
+    $this->assertEquals($config->recurringCopySetting, 'latest', 'Make sure the config updated to recurringCopySetting=latest in line '.__LINE__);
 
     // use CRM_Core_Payment_ALLPAY::recurCheck to insert third Payment_ALLPAY
     $gwsr2 = 222222;
@@ -436,6 +443,9 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
 
     $data = CRM_Core_DAO::singleValueQuery("SELECT data FROM civicrm_contribution_allpay WHERE cid = $cid3");
     $this->assertNotEmpty($data, "In line " . __LINE__);
+
+    $this->updateConfig('recurringCopySetting', 'earliest');
+    $this->assertCustomValues('Contribution', $cid3, $updatedCustomValues, 'Make sure custom values follow the config recurringCopySetting=latest in line '.__LINE__);
 
     // fail contribution from recurring
     $hash = substr(md5(implode('', (array)$order_base->ExecLog[3])), 0, 8);

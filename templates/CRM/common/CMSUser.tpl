@@ -125,7 +125,8 @@ cj("#checkavailability").click(function() {
     cj("#msgbox").removeClass().addClass('cmsmessagebox').css({"color":"#000","backgroundColor":"#FFC","border":"1px solid #c93"}).text(check).fadeIn("slow");
 	 
     //check the username exists or not from ajax
-	  var contactUrl = {/literal}"{crmURL p='civicrm/ajax/cmsuser' h=0}"{literal};
+    var qfKey = '{/literal}{$cmsQfKey}{literal}';
+	  var contactUrl = {/literal}"{crmURL p='civicrm/ajax/cmsuser' h=0 q="qfKey=`$cmsQfKey`&ctrName=`$cmsCtrName`"}"{literal};
 	 
     cj.post(contactUrl,{ cms_name:cj("#cms_name").val() } ,function(data) {
 	    if ( data.name == "no") { // user name not available

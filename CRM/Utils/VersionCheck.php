@@ -150,7 +150,7 @@ class CRM_Utils_VersionCheck {
         while ($dao->fetch()) $ppTypes[] = $dao->payment_processor_type;
 
         // add the .-separated list of the processor types (urlencoded just in case)
-        $url .= '&PPTypes=' . urlencode(implode('.', array_unique($ppTypes)));
+        $url .= '&PPTypes=' . urlencode(CRM_Utils_Array::implode('.', array_unique($ppTypes)));
 
         // get the latest version using the stats-carrying $url
         $this->latestVersion = file_get_contents($url);
@@ -212,7 +212,7 @@ class CRM_Utils_VersionCheck {
   /**
    * A dummy function required for suppressing download errors
    */
-  function downloadError($errorNumber, $errorString) {
+  static function downloadError($errorNumber, $errorString) {
     return;
   }
 }

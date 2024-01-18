@@ -163,7 +163,7 @@ class CRM_Admin_Page_Tag extends CRM_Core_Page_Basic {
       }
 
       if (!empty($used)) {
-        $values[$tag->id]['used_for'] = implode(", ", $used);
+        $values[$tag->id]['used_for'] = CRM_Utils_Array::implode(", ", $used);
       }
 
       $newAction = $action;

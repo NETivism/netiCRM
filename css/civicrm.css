@@ -4675,17 +4675,19 @@ ul.ui-sortable {
   padding: 4px 5px;
 }
 /* readonly & disabled */
-.crm-container input[disabled], 
-.crm-container textarea[disabled], 
+.crm-container input[disabled],
+.crm-container button[disabled],
+.crm-container textarea[disabled],
 .crm-container select[disabled],
-.crm-container input[disabled]:focus, 
-.crm-container textarea[disabled]:focus, 
+.crm-container input[disabled]:focus,
+.crm-container textarea[disabled]:focus,
 .crm-container select[disabled]:focus,
-.crm-container input[readonly], 
-.crm-container textarea[readonly], 
+.crm-container input[readonly],
+.crm-container button[readonly],
+.crm-container textarea[readonly],
 .crm-container select[readonly],
-.crm-container input[readonly]:focus, 
-.crm-container textarea[readonly]:focus, 
+.crm-container input[readonly]:focus,
+.crm-container textarea[readonly]:focus,
 .crm-container select[readonly]:focus
 {
   cursor: not-allowed !important;
@@ -4913,6 +4915,7 @@ ul.ui-sortable {
 .crm-delete-action a.button:link,
 .crm-delete-action a.button:visited,
 .crm-container input[id*="Delete_done"],
+.crm-container input[id*="RemoveFromGroup_next"],
 .crm-container a.delete.button {
   color: #fff;
   background: #D32F2F;
@@ -4923,6 +4926,8 @@ ul.ui-sortable {
 .crm-delete-action a.button:focus,
 .crm-container input[id*="Delete_done"]:hover,
 .crm-container input[id*="Delete_done"]:focus,
+.crm-container input[id*="RemoveFromGroup_next"]:hover,
+.crm-container input[id*="RemoveFromGroup_next"]:focus,
 .crm-container a.delete.button:hover,
 .crm-container a.delete.button:focus {
   color: #fff;
@@ -4931,6 +4936,7 @@ ul.ui-sortable {
 .crm-delete-action .button:active,
 .crm-delete-action a.button:active,
 .crm-container input[id*="Delete_done"]:active,
+.crm-container input[id*="RemoveFromGroup_next"]:active,
 .crm-container a.delete.button:active {
   background: #B71C1C;
 }
@@ -6189,6 +6195,27 @@ tbody.scrollContent tr.alternateRow {
   display: block;
 }
 
+/* md: crm form element accessibility outline */
+.crm-container-md .crm-form-elem input[type="file"]:focus-visible,
+.crm-container-md .crm-form-elem input[type="text"]:focus-visible,
+.crm-container-md .crm-form-elem input[type="number"]:focus-visible,
+.crm-container-md .crm-form-elem input.form-text:focus-visible,
+.crm-container-md .crm-form-elem input.form-number:focus-visible,
+.crm-container-md .crm-form-elem select:focus-visible,
+.crm-container-md .crm-form-elem select.form-select:focus-visible,
+.crm-container-md .crm-form-elem textarea:focus-visible,
+.crm-container-md .crm-form-elem textarea.form-textarea:focus-visible,
+.crm-container-md input:focus-visible {
+  outline: 2px solid #3F51B5 !important;
+  box-shadow: 1px 1px 8px 1px #3F51B5 !important;
+}
+a:focus-visible,
+.crm-container-md .crm-form-radio:focus-within,
+.crm-container-md .crm-form-checkbox:focus-within {
+  outline: 2px solid #3F51B5 !important;
+  box-shadow: 1px 1px 8px 1px #3F51B5 !important;
+}
+
 /* md: crm form element placeholder */
 .crm-container-md .crm-form-elem ::-webkit-input-placeholder,
 .crm-container-md .crm-form-elem ::-webkit-input-placeholder {
@@ -6957,6 +6984,16 @@ input.crm-form-textfield,
 .select2-container--default .select2-search--dropdown .select2-search__field {
   padding-left: 30px;
   background: url(images/icon--search.png) left 0 top 50% / 30px no-repeat;
+}
+.select2-container--default .select2-selection--single .select2-selection__clear {
+  padding: 0 6px 0 10px;
+  line-height: 1;
+  font-size: 18px;
+}
+
+/* click to show */
+.click-to-show-info {
+  display: none;
 }
 
 /* RWD block */

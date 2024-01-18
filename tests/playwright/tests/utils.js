@@ -19,6 +19,12 @@ async function findElement(page, element){
     await print('Find an element matching: ' + element);
 }
 
+async function findElementByLabel(page, label) {
+    const element = await page.getByLabel(label);
+    await print('Find an element matching: ' + label);
+    return element;
+}
+
 async function fillInput(locator, text_input){
     await expect(locator).toBeEnabled();
     await locator.click();
@@ -54,6 +60,7 @@ async function clickElement(page, locator, expectEl={}){
     await locator.waitFor();
     await expect(locator).toBeEnabled();
     await locator.click();
+
     if ('exist' in expectEl) await expect(page.locator(expectEl.exist)).not.toHaveCount(0);
     if ('notExist' in expectEl) await expect(page.locator(expectEl.notExist)).toHaveCount(0);
     if ('visible' in expectEl) await expect(page.locator(expectEl.visible)).toBeVisible();
@@ -79,5 +86,5 @@ function wait(ms){
 }
 
 module.exports = {
-    makeid, print, findElement, fillInput, checkInput, selectOption, clickElement, selectDate, wait
+    makeid, print, findElement, findElementByLabel, fillInput, checkInput, selectOption, clickElement, selectDate, wait
 }

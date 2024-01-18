@@ -222,7 +222,7 @@ class CRM_Event_BAO_Query {
       if (substr($query->_params[$id][0], 0, 6) == 'event_' ||
         substr($query->_params[$id][0], 0, 12) == 'participant_'
       ) {
-        if ($query->_mode == CRM_Contact_BAO_QUERY::MODE_CONTACTS) {
+        if ($query->_mode == CRM_Contact_BAO_Query::MODE_CONTACTS) {
           $query->_useDistinct = TRUE;
         }
         if ($query->_params[$id][0] == 'participant_test') {
@@ -325,13 +325,13 @@ class CRM_Event_BAO_Query {
           $feeLabels[] = CRM_Core_DAO::escapeString(trim($value));
         }
         if (!empty($feeLabels)) {
-          $feeLabel = implode('|', preg_replace('/[()*^$%\[\]\|]/', '.', $feeLabels));
+          $feeLabel = CRM_Utils_Array::implode('|', preg_replace('/[()*^$%\[\]\|]/', '.', $feeLabels));
           $query->_where[$grouping][] = "civicrm_participant.fee_level REGEXP '$feeLabel'";
-          $query->_qill[$grouping][] = ts("Fee level").' '.ts('IN').' '.implode(', ', $feeLabels);
+          $query->_qill[$grouping][] = ts("Fee level").' '.ts('IN').' '.CRM_Utils_Array::implode(', ', $feeLabels);
         }
         elseif (!empty($priceValues)) {
-          $query->_where[$grouping][] = "participant_line_item.price_field_value_id IN (".implode(",", $priceValues).")";
-          $query->_qill[$grouping][] = ts("Fee level").' '.ts('IN').' '.implode(', ', $feeLabels);
+          $query->_where[$grouping][] = "participant_line_item.price_field_value_id IN (".CRM_Utils_Array::implode(",", $priceValues).")";
+          $query->_qill[$grouping][] = ts("Fee level").' '.ts('IN').' '.CRM_Utils_Array::implode(', ', $feeLabels);
           $query->_tables['participant_line_item'] = $query->_whereTables['participant_line_item'] = 1;
         }
         $query->_tables['civicrm_participant'] = $query->_whereTables['civicrm_participant'] = 1;
@@ -403,7 +403,7 @@ class CRM_Event_BAO_Query {
         }
 
         $op = 'IN';
-        $status = implode(",", $val);
+        $status = CRM_Utils_Array::implode(",", $val);
         $status = "({$status})";
 
         require_once 'CRM/Event/PseudoConstant.php';
@@ -414,7 +414,7 @@ class CRM_Event_BAO_Query {
           }
         }
 
-        $query->_qill[$grouping][] = ts('Participant Status %1', array(1 => ts($op))) . ' ' . implode(' ' . ts('or') . ' ', $names);
+        $query->_qill[$grouping][] = ts('Participant Status %1', array(1 => ts($op))) . ' ' . CRM_Utils_Array::implode(' ' . ts('or') . ' ', $names);
 
         $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("civicrm_participant.status_id",
           $op,
@@ -450,8 +450,8 @@ class CRM_Event_BAO_Query {
           $names[] = $roleTypes[$value];
         }
 
-        $query->_qill[$grouping][] = ts('Participant Role %1', array(1 => $op)) . ' ' . implode(' ' . ts('or') . ' ', $names);
-        $query->_where[$grouping][] = " civicrm_participant.role_id REGEXP '[[:<:]]" . implode('[[:>:]]|[[:<:]]', array_keys($value)) . "[[:>:]]' ";
+        $query->_qill[$grouping][] = ts('Participant Role %1', array(1 => $op)) . ' ' . CRM_Utils_Array::implode(' ' . ts('or') . ' ', $names);
+        $query->_where[$grouping][] = " civicrm_participant.role_id REGEXP '[[:<:]]" . CRM_Utils_Array::implode('[[:>:]]|[[:<:]]', array_keys($value)) . "[[:>:]]' ";
 
         $query->_tables['civicrm_participant'] = $query->_whereTables['civicrm_participant'] = 1;
         return;

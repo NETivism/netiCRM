@@ -328,18 +328,18 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
           if (is_array($typeValues)) {
             if ($groupType == 'Participant') {
               foreach ($typeValues as $subType => $subTypeValues) {
-                $groupTypesStrings[] = $subType . '::' . implode(': ', $subTypeValues);
+                $groupTypesStrings[] = $subType . '::' . CRM_Utils_Array::implode(': ', $subTypeValues);
               }
             }
             else {
-              $groupTypesStrings[] = ts($groupType) . '::' . implode(': ', current($typeValues));
+              $groupTypesStrings[] = ts($groupType) . '::' . CRM_Utils_Array::implode(': ', current($typeValues));
             }
           }
           else {
             $groupTypesStrings[] = ts($groupType);
           }
         }
-        $groupTypesString = implode(', ', $groupTypesStrings);
+        $groupTypesString = CRM_Utils_Array::implode(', ', $groupTypesStrings);
       }
       $ufGroup[$id]['group_type'] = $groupTypesString;
 
@@ -364,7 +364,7 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
         $modules[$k] = ts(str_replace("_", " ", $v));
       }
       $modules = array_unique($modules);
-      $ufGroup[$id]['module'] = implode(',<br />', $modules);
+      $ufGroup[$id]['module'] = CRM_Utils_Array::implode(',<br />', $modules);
     }
 
     $this->assign('rows', $ufGroup);

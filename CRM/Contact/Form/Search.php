@@ -260,70 +260,82 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
 
   function setModeValues() {
     if (!self::$_modeValues) {
-      if (isset($this)) {
-        $selectorName = (property_exists($this, '_selectorName') && $this->_selectorName) ? $this->_selectorName : 'CRM_Contact_Selector';
-      }
-      else {
-        $selectorName = 'CRM_Contact_Selector';
-      }
-      self::$_modeValues = array(
-        1 => array(
-          'selectorName' => $selectorName,
-          'selectorLabel' => ts('Contacts'),
-          'taskFile' => "CRM/Contact/Form/Search/ResultTasks.tpl",
-          'taskContext' => NULL,
-          'resultFile' => 'CRM/Contact/Form/Selector.tpl',
-          'resultContext' => NULL,
-          'taskClassName' => 'CRM_Contact_Task',
-        ),
-        2 => array('selectorName' => 'CRM_Contribute_Selector_Search',
-          'selectorLabel' => ts('Contributions'),
-          'taskFile' => "CRM/common/searchResultTasks.tpl",
-          'taskContext' => 'Contribution',
-          'resultFile' => 'CRM/Contribute/Form/Selector.tpl',
-          'resultContext' => 'Search',
-          'taskClassName' => 'CRM_Contribute_Task',
-        ),
-        3 => array('selectorName' => 'CRM_Event_Selector_Search',
-          'selectorLabel' => ts('Event Participants'),
-          'taskFile' => "CRM/common/searchResultTasks.tpl",
-          'taskContext' => NULL,
-          'resultFile' => 'CRM/Event/Form/Selector.tpl',
-          'resultContext' => 'Search',
-          'taskClassName' => 'CRM_Event_Task',
-        ),
-        4 => array('selectorName' => 'CRM_Activity_Selector_Search',
-          'selectorLabel' => ts('Activities'),
-          'taskFile' => "CRM/common/searchResultTasks.tpl",
-          'taskContext' => NULL,
-          'resultFile' => 'CRM/Activity/Form/Selector.tpl',
-          'resultContext' => 'Search',
-          'taskClassName' => 'CRM_Activity_Task',
-        ),
-        5 => array('selectorName' => 'CRM_Member_Selector_Search',
-          'selectorLabel' => ts('Membership'),
-          'taskFile' => "CRM/common/searchResultTasks.tpl",
-          'taskContext' => NULL,
-          'resultFile' => 'CRM/Member/Form/Selector.tpl',
-          'resultContext' => 'Search',
-          'taskClassName' => 'CRM_Member_Task',
-        ),
-      );
+      $selectorName = (property_exists($this, '_selectorName') && $this->_selectorName) ? $this->_selectorName : 'CRM_Contact_Selector';
+      self::setModeValuesCommon($selectorName);
     }
   }
 
   function getModeValue($mode = 1) {
-    self::setModeValues();
+    $this->setModeValues();
 
-    if (!array_key_exists($mode, self::$_modeValues)) {
+    if (!CRM_Utils_Array::arrayKeyExists($mode, self::$_modeValues)) {
       $mode = 1;
     }
 
     return self::$_modeValues[$mode];
   }
 
+  public static function getModeValueCommon($mode) {
+    if (!self::$_modeValues) {
+      self::setModeValuesCommon('CRM_Contact_Selector');
+    }
+
+    if (!CRM_Utils_Array::arrayKeyExists($mode, self::$_modeValues)) {
+      $mode = 1;
+    }
+
+    return self::$_modeValues[$mode];
+  }
+
+  public static function setModeValuesCommon($selectorName) {
+    self::$_modeValues = array(
+      1 => array(
+        'selectorName' => $selectorName,
+        'selectorLabel' => ts('Contacts'),
+        'taskFile' => "CRM/Contact/Form/Search/ResultTasks.tpl",
+        'taskContext' => NULL,
+        'resultFile' => 'CRM/Contact/Form/Selector.tpl',
+        'resultContext' => NULL,
+        'taskClassName' => 'CRM_Contact_Task',
+      ),
+      2 => array('selectorName' => 'CRM_Contribute_Selector_Search',
+        'selectorLabel' => ts('Contributions'),
+        'taskFile' => "CRM/common/searchResultTasks.tpl",
+        'taskContext' => 'Contribution',
+        'resultFile' => 'CRM/Contribute/Form/Selector.tpl',
+        'resultContext' => 'Search',
+        'taskClassName' => 'CRM_Contribute_Task',
+      ),
+      3 => array('selectorName' => 'CRM_Event_Selector_Search',
+        'selectorLabel' => ts('Event Participants'),
+        'taskFile' => "CRM/common/searchResultTasks.tpl",
+        'taskContext' => NULL,
+        'resultFile' => 'CRM/Event/Form/Selector.tpl',
+        'resultContext' => 'Search',
+        'taskClassName' => 'CRM_Event_Task',
+      ),
+      4 => array('selectorName' => 'CRM_Activity_Selector_Search',
+        'selectorLabel' => ts('Activities'),
+        'taskFile' => "CRM/common/searchResultTasks.tpl",
+        'taskContext' => NULL,
+        'resultFile' => 'CRM/Activity/Form/Selector.tpl',
+        'resultContext' => 'Search',
+        'taskClassName' => 'CRM_Activity_Task',
+      ),
+      5 => array('selectorName' => 'CRM_Member_Selector_Search',
+        'selectorLabel' => ts('Membership'),
+        'taskFile' => "CRM/common/searchResultTasks.tpl",
+        'taskContext' => NULL,
+        'resultFile' => 'CRM/Member/Form/Selector.tpl',
+        'resultContext' => 'Search',
+        'taskClassName' => 'CRM_Member_Task',
+      ),
+    );
+  }
+
+
   function getModeSelect() {
-    self::setModeValues();
+    $this->setModeValues();
 
     $select = array();
     foreach (self::$_modeValues as $id => & $value) {
@@ -418,7 +430,7 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
       $group_contact_status = array();
       foreach (CRM_Core_SelectValues::groupContactStatus() as $k => $v) {
         if (!empty($k)) {
-          $group_contact_status[] = HTML_QuickForm::createElement('checkbox', $k, NULL, $v);
+          $group_contact_status[] = $this->createElement('checkbox', $k, NULL, $v);
         }
       }
       $this->addGroup($group_contact_status,

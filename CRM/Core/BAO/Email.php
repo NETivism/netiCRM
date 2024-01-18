@@ -71,7 +71,7 @@ class CRM_Core_BAO_Email extends CRM_Core_DAO_Email {
    * @static
    */
   static function create(&$params) {
-    CRM_Core_BAO_Block::handlePrimary($params, get_class());
+    CRM_Core_BAO_Block::handlePrimary($params, 'CRM_Core_BAO_Email');
 
     $hook = empty($params['id']) ? 'create' : 'edit';
     CRM_Utils_Hook::pre($hook, 'Email', CRM_Utils_Array::value('id', $params), $params);

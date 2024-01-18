@@ -185,7 +185,7 @@ function &civicrm_pledge_get(&$params) {
   }
 
   // add is_test to the clause if not present
-  if (!array_key_exists('pledge_test', $inputParams)) {
+  if (!CRM_Utils_Array::arrayKeyExists('pledge_test', $inputParams)) {
     $inputParams['pledge_test'] = 0;
   }
 
@@ -343,7 +343,7 @@ function _civicrm_pledge_format_params(&$params, &$values, $create = FALSE) {
     //create_date may have been dropped by the $fields function so retrieve it
     $values['create_date'] = $params['create_date'];
   }
-  if (array_key_exists('installment_amount', $params)) {
+  if (CRM_Utils_Array::arrayKeyExists('installment_amount', $params)) {
     //field has been renamed - don't lose it! Note that this must be called
     // installment amount not pledge_installment_amount, pledge_original_installment_amount
     // or original_installment_amount to avoid error
@@ -352,31 +352,31 @@ function _civicrm_pledge_format_params(&$params, &$values, $create = FALSE) {
     // 'standards'
     $values['installment_amount'] = $params['installment_amount'];
   }
-  if (array_key_exists('original_installment_amount', $params)) {
+  if (CRM_Utils_Array::arrayKeyExists('original_installment_amount', $params)) {
     $values['installment_amount'] = $params['original_installment_amount'];
   }
-  if (array_key_exists('pledge_original_installment_amount', $params)) {
+  if (CRM_Utils_Array::arrayKeyExists('pledge_original_installment_amount', $params)) {
     $values['installment_amount'] = $params['pledge_original_installment_amount'];
   }
-  if (array_key_exists('status_id', $params)) {
+  if (CRM_Utils_Array::arrayKeyExists('status_id', $params)) {
     $values['pledge_status_id'] = $params['status_id'];
   }
   if ($params['contact_id']) {
     //this is validity checked further down to make sure the contact exists
     $values['pledge_contact_id'] = $params['contact_id'];
   }
-  if (array_key_exists('id', $params)) {
+  if (CRM_Utils_Array::arrayKeyExists('id', $params)) {
     //retrieve the id key dropped from params. Note we can't use pledge_id because it
     //causes an error in CRM_Pledge_BAO_PledgePayment - approx line 302
     $values['id'] = $params['id'];
   }
-  if (array_key_exists('pledge_id', $params)) {
+  if (CRM_Utils_Array::arrayKeyExists('pledge_id', $params)) {
     //retrieve the id key dropped from params. Note we can't use pledge_id because it
     //causes an error in CRM_Pledge_BAO_PledgePayment - approx line 302
     $values['id'] = $params['pledge_id'];
     unset($values['pledge_id']);
   }
-  if (array_key_exists('status_id', $params)) {
+  if (CRM_Utils_Array::arrayKeyExists('status_id', $params)) {
     $values['pledge_status_id'] = $params['status_id'];
   }
   if (empty($values['id'])) {
@@ -388,7 +388,7 @@ function _civicrm_pledge_format_params(&$params, &$values, $create = FALSE) {
     //scheduled date is required to set next payment date - defaults to start date
     $values['scheduled_date'] = $params['scheduled_date'];
   }
-  elseif (array_key_exists('start_date', $params)) {
+  elseif (CRM_Utils_Array::arrayKeyExists('start_date', $params)) {
     $values['scheduled_date'] = $params['start_date'];
   }
     if( CRM_Utils_Array::value( 'financial_type_id', $params ) ) {

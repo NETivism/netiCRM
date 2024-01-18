@@ -77,7 +77,7 @@ class CRM_Admin_Page_AJAX {
           $result = array($recordBAO, $method);
           $ufJoin = call_user_func_array(($result), array($recordID, TRUE));
           if (!empty($ufJoin)) {
-            $status = ts('This profile is currently used for %1.', array(1 => implode(', ', $ufJoin))) . ' <br/><br/>' . ts('If you disable the profile - it will be removed from these forms and/or modules. Do you want to continue?');
+            $status = ts('This profile is currently used for %1.', array(1 => CRM_Utils_Array::implode(', ', $ufJoin))) . ' <br/><br/>' . ts('If you disable the profile - it will be removed from these forms and/or modules. Do you want to continue?');
           }
           else {
             $status = ts('Are you sure you want to disable this profile?');
@@ -97,7 +97,7 @@ class CRM_Admin_Page_AJAX {
             );
             $contexts = array();
             foreach ($comps as $name => $table) {
-              if (array_key_exists($table, $usedBy)) {
+              if (CRM_Utils_Array::arrayKeyExists($table, $usedBy)) {
                 $contexts[] = $name;
               }
             }

@@ -61,7 +61,7 @@ function civicrm_api3_grant_create($params) {
   if (CRM_Utils_Array::value('id', $params)) {
     $ids['grant'] = $params['id'];
   }
-  $bao = CRM_GRANT_BAO_GRANT::create($params, $ids);
+  $bao = CRM_Grant_BAO_Grant::create($params, $ids);
   if (is_null($bao)) {
     return civicrm_api3_create_error('Grant not created ');
   }

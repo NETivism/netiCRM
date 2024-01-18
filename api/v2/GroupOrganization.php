@@ -64,18 +64,18 @@ function civicrm_group_organization_get(&$params) {
     return civicrm_create_error('No input parameter present');
   }
 
-  if (!array_key_exists('organization_id', $params) &&
-    !array_key_exists('group_id', $params)
+  if (!CRM_Utils_Array::arrayKeyExists('organization_id', $params) &&
+    !CRM_Utils_Array::arrayKeyExists('group_id', $params)
   ) {
     return civicrm_create_error(ts('at least one of organization_id or group_id is a required field'));
   }
 
   require_once 'CRM/Contact/DAO/GroupOrganization.php';
   $dao = new CRM_Contact_DAO_GroupOrganization();
-  if (array_key_exists('organization_id', $params)) {
+  if (CRM_Utils_Array::arrayKeyExists('organization_id', $params)) {
     $dao->organization_id = $params['organization_id'];
   }
-  if (array_key_exists('group_id', $params)) {
+  if (CRM_Utils_Array::arrayKeyExists('group_id', $params)) {
     $dao->group_id = $params['group_id'];
   }
   $dao->find();
@@ -100,8 +100,8 @@ function civicrm_group_organization_create(&$params) {
     return civicrm_create_error('No input parameter present');
   }
 
-  if (!array_key_exists('organization_id', $params) ||
-    !array_key_exists('group_id', $params)
+  if (!CRM_Utils_Array::arrayKeyExists('organization_id', $params) ||
+    !CRM_Utils_Array::arrayKeyExists('group_id', $params)
   ) {
     return civicrm_create_error(ts('organization_id and group_id are required field'));
   }

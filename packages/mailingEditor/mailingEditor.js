@@ -524,13 +524,13 @@
           break;
 
         case "thumb":
-          img.url = crmPath + "packages/istockphoto/thumb_" + _getRandomInt(1,5) + ".jpg";
+          img.url = crmPath + "packages/midjourney/thumb_" + _getRandomInt(1,5) + ".jpg";
           img.width = 680;
           img.height = 383;
           break;
 
           case "square":
-          img.url = crmPath + "packages/istockphoto/square_" + _getRandomInt(1,5) + ".jpg";
+          img.url = crmPath + "packages/midjourney/square_" + _getRandomInt(1,5) + ".jpg";
           img.width = 210;
           img.height = 210;
           break;
@@ -1629,7 +1629,7 @@
       }
 
       // Prevent users from pressing enter to send the #upload form.
-      $("#Upload").off("keypress").on("keypress", "input, textarea", function(event){
+      $("#Upload").off("keypress").on("keypress", "input", function(event){
         let code = event.keyCode || event.which;
 
         if (code == 13) {
@@ -3038,6 +3038,7 @@
         $targetContents.removeClass(ACTIVE_CLASS);
         $thisTabLink.addClass(ACTIVE_CLASS);
         $targetTabContent.addClass(ACTIVE_CLASS);
+        $(_panels).attr('data-tab-active-id', targetID);
       });
 
       // Switch the default panel to block panel if mail data field has value
@@ -3054,11 +3055,11 @@
     },
     open: function() {
       $(_panels).addClass("is-opened");
-      $("body").addClass("nme-panel-is-opened");
+      $("body").addClass("nsp-is-opened");
     },
     close: function() {
       $(_panels).removeClass("is-opened");
-      $("body").removeClass("nme-panel-is-opened");
+      $("body").removeClass("nsp-is-opened");
     }
   }
 

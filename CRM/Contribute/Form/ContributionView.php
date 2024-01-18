@@ -71,12 +71,12 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
     }
 
     $paymentClass = CRM_Contribute_BAO_Contribution::getPaymentClass($id);
-    if (method_exists($paymentClass, 'getRecordDetail')) {
+    if (!empty($paymentClass) && method_exists($paymentClass, 'getRecordDetail')) {
       $recordDetail = $paymentClass::getRecordDetail($id);
       $this->assign('record_detail', $recordDetail);
     }
 
-    if (method_exists($paymentClass, 'getSyncDataUrl')) {
+    if (!empty($paymentClass) && method_exists($paymentClass, 'getSyncDataUrl')) {
       $syncUrl = $paymentClass::getSyncDataUrl($id, $this);
       $this->assign('sync_url', $syncUrl);
       $syncDataHint = $this->get('sync_data_hint');

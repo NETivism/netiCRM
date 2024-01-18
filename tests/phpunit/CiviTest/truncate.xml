@@ -143,6 +143,8 @@
 
   <civicrm_entity_batch />
 
+  <civicrm_aicompletion />
+
   <civicrm_cache />
 
   <civicrm_country />

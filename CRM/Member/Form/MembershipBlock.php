@@ -110,8 +110,8 @@ class CRM_Member_Form_MembershipBlock extends CRM_Contribute_Form_ContributionPa
       $membership = array();
       $membershipDefault = array();
       foreach ($membershipTypes as $k => $v) {
-        $membership[] = HTML_QuickForm::createElement('advcheckbox', $k, NULL, $v);
-        $membershipDefault[] = HTML_QuickForm::createElement('radio', NULL, NULL, NULL, $k);
+        $membership[] = $this->createElement('advcheckbox', $k, NULL, $v);
+        $membershipDefault[] = $this->createElement('radio', NULL, NULL, NULL, $k);
       }
 
       $this->addGroup($membership, 'membership_type', ts('Membership Types'));
@@ -231,7 +231,7 @@ class CRM_Member_Form_MembershipBlock extends CRM_Contribute_Form_ContributionPa
       }
 
       $params['membership_type_default'] = CRM_Utils_Array::value('membership_type_default', $params, 'null');
-      $params['membership_types'] = implode(',', $membershipTypes);
+      $params['membership_types'] = CRM_Utils_Array::implode(',', $membershipTypes);
       $params['is_required'] = CRM_Utils_Array::value('is_required', $params, FALSE);
       $params['is_active'] = CRM_Utils_Array::value('is_active', $params, FALSE);
       $params['is_renewal_only'] = CRM_Utils_Array::value('is_renewal_only', $params, FALSE);

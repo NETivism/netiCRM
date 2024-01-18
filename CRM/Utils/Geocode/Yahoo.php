@@ -112,7 +112,7 @@ class CRM_Utils_Geocode_Yahoo {
       $arg[] = "zip=" . urlencode($values['postal_code']);
     }
 
-    $args = implode('&', $arg);
+    $args = CRM_Utils_Array::implode('&', $arg);
 
     $query = 'http://' . self::$_server . self::$_uri . '?' . $args;
 

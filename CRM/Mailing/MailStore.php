@@ -44,7 +44,7 @@ class CRM_Mailing_MailStore {
    *
    * @return object        mail store implementation for processing CiviMail-bound emails
    */
-  function getStore($name = NULL) {
+  public static function getStore($name = NULL) {
     if($name) {
       $params = array(
         'name' => $name,

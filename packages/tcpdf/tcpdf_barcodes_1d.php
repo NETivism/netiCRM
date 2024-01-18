@@ -2241,7 +2241,7 @@ class TCPDFBarcode {
 			}
 		}
 		$hex = array_reverse($hex);
-		return implode($hex);
+		return implode('', $hex);
 	}
 
 	/**

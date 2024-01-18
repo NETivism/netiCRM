@@ -191,8 +191,8 @@ class DatabaseCache implements CacheInterface
                 return unserialize($row['data']);
             }
 
-        } catch (\PDOException $e) {
-            throw new \PDOException('PDOException: ' . $e->getMessage());
+        } catch (\Exception $e) {
+            throw new \Exception('PDOException: ' . $e->getMessage());
         }
 
         return false;
@@ -225,8 +225,8 @@ class DatabaseCache implements CacheInterface
             );
             $handle->setAttribute(\PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
 
-        } catch (\PDOException $e) {
-            throw new \PDOException('PDOException: ' . $e->getMessage());
+        } catch (\Exception $e) {
+            throw new \Exception('PDOException: ' . $e->getMessage());
         }
 
         return $handle;
@@ -268,10 +268,10 @@ class DatabaseCache implements CacheInterface
             $statement->bindValue('data', serialize($data));
 
             if (!$statement->execute()) {
-                throw new \PDOException($statement->errorCode());
+                throw new \Exception($statement->errorCode());
             }
-        } catch (\PDOException $e) {
-            throw new \PDOException('PDOException: ' . $e->getMessage());
+        } catch (\Exception $e) {
+            throw new \Exception('PDOException: ' . $e->getMessage());
         }
     }
 }

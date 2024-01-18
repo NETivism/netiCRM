@@ -60,6 +60,12 @@
                 <p class="description">{ts}If wkhtmltopdf is installed, CiviCRM will use it to generate PDF form letters.{/ts}</p>
             </td>
         </tr>
+        <tr class="crm-miscellaneous-form-block-qpdfPath">
+            <td class="label">{$form.qpdfPath.label}</td>
+            <td>{$form.qpdfPath.html}<br />
+                <p class="description">{ts}If qpdf is installed, CiviCRM will use it to generate PDF form letters.{/ts}</p>
+            </td>
+        </tr>
         <tr class="crm-miscellaneous-form-block-versionCheck">
             <td class="label">{$form.versionCheck.label}</td>
             <td>{$form.versionCheck.html}<br />
@@ -101,18 +107,5 @@
         </tr>
         </table>
     </fieldset>
-{if $admin}
-<fieldset><legend>{ts}Trusted Host{/ts}</legend>
-    <div class="description">
-        {ts}To enable the trusted host mechanism, you enable your allowable hosts in 'Trusted Host Settings' field. You can input as many values as needed, but only one value is allowed per row. You can use '*' as a wildcard character.{/ts}
-    </div>
-    <table class="form-layout">
-        <tr class="crm-miscellaneous-form-block-trustedHosts">
-            <td class="label">{$form.trustedHostsPatterns.label}</td>
-            <td>{$form.trustedHostsPatterns.html}</td>
-        </tr>
-        </table>
-        <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
-    </fieldset>
-{/if}
+    <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
 </div>

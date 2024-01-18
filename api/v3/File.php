@@ -71,7 +71,7 @@ function civicrm_api3_file_create($params) {
   $properties = array('id', 'file_type_id', 'mime_type', 'uri', 'document', 'description', 'upload_date');
 
   foreach ($properties as $name) {
-    if (array_key_exists($name, $params)) {
+    if (CRM_Utils_Array::arrayKeyExists($name, $params)) {
       $fileDAO->$name = $params[$name];
     }
   }

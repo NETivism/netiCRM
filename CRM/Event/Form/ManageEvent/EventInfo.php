@@ -112,7 +112,7 @@ class CRM_Event_Form_ManageEvent_EventInfo extends CRM_Event_Form_ManageEvent {
       return $defaults;
     }
     $defaults = parent::setDefaultValues();
-    
+
 
     // in update mode, we need to set custom data subtype to tpl
     if (CRM_Utils_Array::value('event_type_id', $defaults)) {
@@ -166,6 +166,8 @@ class CRM_Event_Form_ManageEvent_EventInfo extends CRM_Event_Form_ManageEvent {
    * @access public
    */
   public function buildQuickForm() {
+    $config = CRM_Core_Config::singleton();
+
     if ($this->_cdType) {
       return CRM_Custom_Form_CustomData::buildQuickForm($this);
     }
@@ -253,6 +255,12 @@ class CRM_Event_Form_ManageEvent_EventInfo extends CRM_Event_Form_ManageEvent {
     $this->addElement('checkbox', 'is_active', ts('Is this Event Active?'));
 
     $this->addFormRule(array('CRM_Event_Form_ManageEvent_EventInfo', 'formRule'));
+
+    if ($config->nextEnabled) {
+      $this->assign('ai_completion_default', CRM_AI_BAO_AICompletion::getDefaultTemplate('CiviEvent'));
+      $this->assign('ai_completion_url_basepath', $config->userSystem->languageNegotiationURL('/'));
+      $this->assign('ai_completion_component', 'CiviEvent');
+    }
 
     parent::buildQuickForm();
   }
@@ -437,7 +445,7 @@ class CRM_Event_Form_ManageEvent_EventInfo extends CRM_Event_Form_ManageEvent {
     return ts('Event Information and Settings');
   }
 
-  /* Retrieve event template custom data values 
+  /* Retrieve event template custom data values
      * and set as default values for current new event.
      *
      * @params int $tempId event template id.

@@ -67,7 +67,7 @@ class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache {
       self::$_cache = array();
     }
     $argString = "CRM_CT_{$group}_{$path}_{$componentID}";
-    if (!array_key_exists($argString, self::$_cache)) {
+    if (!CRM_Utils_Array::arrayKeyExists($argString, self::$_cache)) {
       $cache = CRM_Utils_Cache::singleton();
       self::$_cache[$argString] = $cache->get($argString);
       if (!self::$_cache[$argString]) {
@@ -119,7 +119,7 @@ class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache {
     }
 
     $argString = "CRM_CT_CI_{$group}_{$componentID}";
-    if (!array_key_exists($argString, self::$_cache)) {
+    if (!CRM_Utils_Array::arrayKeyExists($argString, self::$_cache)) {
       $cache = CRM_Utils_Cache::singleton();
       self::$_cache[$argString] = $cache->get($argString);
       if (!self::$_cache[$argString]) {
@@ -167,7 +167,10 @@ class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache {
     // get a lock so that multiple ajax requests on the same page
     // dont trample on each other
     // CRM-11234
-    $lockName = "civicrm.cache.{$group}_{$path}._{$componentID}";
+    $lockName = "ch.{$group}_{$path}_{$componentID}";
+    if (strlen($lockName) > 64) {
+      $lockName = substr($lockName, 0, 64);
+    }
     $lock = new CRM_Core_Lock($lockName);
     if (!$lock->isAcquired()) {
       CRM_Core_Error::fatal("Trying acquire lock failed: $lockName");

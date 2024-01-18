@@ -116,7 +116,7 @@ function civicrm_membership_status_get(&$params) {
   $properties = array_keys($membershipStatusBAO->fields());
 
   foreach ($properties as $name) {
-    if (array_key_exists($name, $params)) {
+    if (CRM_Utils_Array::arrayKeyExists($name, $params)) {
       $membershipStatusBAO->$name = $params[$name];
     }
   }
@@ -173,7 +173,7 @@ function &civicrm_membership_status_update(&$params) {
   if ($membershipStatusBAO->find(TRUE)) {
     $fields = $membershipStatusBAO->fields();
     foreach ($fields as $name => $field) {
-      if (array_key_exists($name, $params)) {
+      if (CRM_Utils_Array::arrayKeyExists($name, $params)) {
         $membershipStatusBAO->$name = $params[$name];
       }
     }

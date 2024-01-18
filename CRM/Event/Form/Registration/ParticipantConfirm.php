@@ -133,14 +133,21 @@ class CRM_Event_Form_Registration_ParticipantConfirm extends CRM_Event_Form_Regi
     
     // only pending status class family able to confirm.
     $statusMsg = NULL;
-    if (array_key_exists($this->_participantStatusId, CRM_Event_PseudoConstant::participantStatus(NULL, "class = 'Pending'")) && !$expired) {
+    if (CRM_Utils_Array::arrayKeyExists($this->_participantStatusId, CRM_Event_PseudoConstant::participantStatus(NULL, "class = 'Pending'")) && !$expired) {
       //need to confirm that though participant confirming
       //registration - but is there enough space to confirm.
       require_once 'CRM/Event/PseudoConstant.php';
       require_once 'CRM/Event/BAO/Participant.php';
-      $emptySeats = CRM_Event_BAO_participant::pendingToConfirmSpaces($this->_eventId);
-      $additonalIds = CRM_Event_BAO_participant::getAdditionalParticipantIds($this->_participantId);
-      $requireSpace = 1 + count($additonalIds);
+      $params = array( 1 => array($this->_participantId, 'Positive'));
+      $isTest = CRM_Core_DAO::singleValueQuery("SELECT is_test FROM civicrm_participant WHERE id = %1", $params);
+      if ($isTest == 1) {
+        $emptySeats = NULL;
+      }
+      else {
+        $emptySeats = CRM_Event_BAO_participant::pendingToConfirmSpaces($this->_eventId);
+        $additonalIds = CRM_Event_BAO_participant::getAdditionalParticipantIds($this->_participantId);
+        $requireSpace = 1 + count($additonalIds);
+      }
       if ($emptySeats !== NULL && ($requireSpace > $emptySeats)) {
         $statusMsg = ts("Oops, it looks like there are currently no available spaces for the %1 event.", array(1 => $values['event']['title']));
       }
@@ -161,7 +168,7 @@ class CRM_Event_Form_Registration_ParticipantConfirm extends CRM_Event_Form_Regi
     }
 
     // status class other than Negative should be able to cancel registration.
-    if (array_key_exists($this->_participantStatusId, CRM_Event_PseudoConstant::participantStatus(NULL, "class != 'Negative'")) && !$expired) {
+    if (CRM_Utils_Array::arrayKeyExists($this->_participantStatusId, CRM_Event_PseudoConstant::participantStatus(NULL, "class != 'Negative'")) && !$expired) {
       $cancelConfirm = ts('Are you sure you want to cancel your registration for this event?');
       $buttons = array_merge($buttons, array(array('type' => 'submit',
             'name' => ts('Cancel Registration'),

@@ -145,7 +145,7 @@ class CRM_Activity_DAO_ActivityAssignment extends CRM_Core_DAO
    * @access public
    * @return array
    */
-  function &fields()
+  static function &fields()
   {
     if (!(self::$_fields)) {
       self::$_fields = array(
@@ -176,7 +176,7 @@ class CRM_Activity_DAO_ActivityAssignment extends CRM_Core_DAO
    * @access public
    * @return string
    */
-  function getTableName()
+  static function getTableName()
   {
     return self::$_tableName;
   }
@@ -196,7 +196,7 @@ class CRM_Activity_DAO_ActivityAssignment extends CRM_Core_DAO
    * @access public
    * return array
    */
-  function &import($prefix = false)
+  static function &import($prefix = false)
   {
     if (!(self::$_import)) {
       self::$_import = array();
@@ -219,7 +219,7 @@ class CRM_Activity_DAO_ActivityAssignment extends CRM_Core_DAO
    * @access public
    * return array
    */
-  function &export($prefix = false)
+  static function &export($prefix = false)
   {
     if (!(self::$_export)) {
       self::$_export = array();

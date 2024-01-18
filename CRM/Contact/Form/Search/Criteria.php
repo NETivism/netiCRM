@@ -131,7 +131,7 @@ class CRM_Contact_Form_Search_Criteria {
 
     $searchProfiles = array();
     foreach ($ufGroups as $key => $var) {
-      if (!array_key_exists($key, $componentProfiles) && in_array($key, $accessibleUfGroups)) {
+      if (!CRM_Utils_Array::arrayKeyExists($key, $componentProfiles) && in_array($key, $accessibleUfGroups)) {
         $searchProfiles[$key] = $var['title'];
       }
     }
@@ -143,7 +143,7 @@ class CRM_Contact_Form_Search_Criteria {
     );
 
     require_once 'CRM/Contact/Form/Search.php';
-    $componentModes = CRM_Contact_Form_Search::getModeSelect();
+    $componentModes = $form->getModeSelect();
 
     if (count($componentModes) > 1) {
       $form->addElement('select',
@@ -214,10 +214,10 @@ class CRM_Contact_Form_Search_Criteria {
 
     $commPreff = array();
     foreach ($comm as $k => $v) {
-      $commPreff[] = HTML_QuickForm::createElement('advcheckbox', $k, NULL, $v);
+      $commPreff[] = $form->createElement('advcheckbox', $k, NULL, $v);
     }
 
-    $onHold[] = HTML_QuickForm::createElement('advcheckbox', 'on_hold', NULL, ts(''));
+    $onHold[] = $form->createElement('advcheckbox', 'on_hold', NULL, ts(''));
     $form->addGroup($onHold, 'email_on_hold', ts('Email On Hold'));
 
     $form->addGroup($commPreff, 'preferred_communication_method', ts('Preferred Communication Method'));
@@ -328,7 +328,7 @@ class CRM_Contact_Form_Search_Criteria {
     $location_type = array();
     $locationType = CRM_Core_PseudoConstant::locationType();
     foreach ($locationType as $locationTypeID => $locationTypeName) {
-      $location_type[] = HTML_QuickForm::createElement('checkbox', $locationTypeID, NULL, $locationTypeName);
+      $location_type[] = $form->createElement('checkbox', $locationTypeID, NULL, $locationTypeName);
     }
     $form->addGroup($location_type, 'location_type', ts('Location Types'), '&nbsp;');
 
@@ -423,7 +423,7 @@ class CRM_Contact_Form_Search_Criteria {
     $genderOptions = array();
     $gender = CRM_Core_PseudoConstant::gender();
     foreach ($gender as $key => $var) {
-      $genderOptions[$key] = HTML_QuickForm::createElement('radio', NULL, ts('Gender'), $var, $key);
+      $genderOptions[$key] = $form->createElement('radio', NULL, ts('Gender'), $var, $key);
     }
     $form->addGroup($genderOptions, 'gender', ts('Gender'));
 

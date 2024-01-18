@@ -136,7 +136,7 @@ class CRM_Utils_File {
    * @access public
    * @static
    */
-  public function cleanDir($target, $rmdir = TRUE) {
+  public static function cleanDir($target, $rmdir = TRUE) {
     static $exceptions = array('.', '..');
 
     if ($sourcedir = @opendir($target)) {
@@ -160,7 +160,7 @@ class CRM_Utils_File {
     }
   }
 
-  public function copyDir($source, $destination) {
+  public static function copyDir($source, $destination) {
 
     $dir = opendir($source);
     @mkdir($destination);
@@ -247,7 +247,7 @@ class CRM_Utils_File {
     return $name;
   }
 
-  function sourceSQLFile($dsn, $fileName, $prefix = NULL, $isQueryString = FALSE, $dieOnErrors = TRUE) {
+  static function sourceSQLFile($dsn, $fileName, $prefix = NULL, $isQueryString = FALSE, $dieOnErrors = TRUE) {
     require_once 'DB.php';
 
     $db = &DB::connect($dsn);
@@ -484,6 +484,85 @@ HTACCESS;
 		}
 
 		return $destination;
+  }
+
+  /**
+   * Encrypt Xlsx content or file.
+   * @param String $filePath file absolute path in the file system
+   * 
+   * @return Void
+   */
+  public static function encryptXlsxFile($filePath = NULL) {
+    ini_set('memory_limit', '2048M');
+    $config = CRM_Core_Config::singleton();
+    $outputFile = $filePath;
+    if (!$config->decryptExcelOption) {
+      $outputFile = $filePath;
+    }
+    else {
+
+      // Get the directory path of the file
+      $dirPath = dirname($filePath);
+
+      // Check if the file exists
+      if (!file_exists($filePath)) {
+        $msg = "[xlsx encrypt]: {$filePath} does not exist.";
+      }
+
+      // Check if the file is readable
+      elseif (!is_readable($filePath)) {
+        $msg = "[xlsx encrypt]: {$filePath} cannot be read.";
+      }
+
+      // Check if the file is in xlsx format
+      elseif (pathinfo($filePath, PATHINFO_EXTENSION) !== 'xlsx') {
+        $msg = "[xlsx encrypt]: {$filePath} is not in xlsx format.";
+      }
+
+      // Check if the directory has write permission
+      elseif (!is_writable($dirPath)) {
+        $msg = "[xlsx encrypt]: {$dirPath} does not have write permission.";
+      }
+      if (!empty($msg)) {
+        CRM_Core_Error::debug_log_message($msg);
+        $outputFile = $filePath;
+      }
+      else {
+        $outputFile = preg_replace('/\.xlsx$/', "_encrypt.xlsx", $filePath);
+        require_once 'secure-spreadsheet/autoload.php';
+        if ($config->decryptExcelOption == 1) {
+          // Get the user's primary email address
+          $session = CRM_Core_Session::singleton();
+          $contactId = $session->get('userID');
+          $emails = CRM_Core_BAO_Email::allEmails($contactId);
+          $i = 0;
+          foreach ($emails as $emailArray) {
+            $i++;
+            if ($emailArray['is_primary'] || $i == 1) {
+              $userEmail = $emailArray['email'];
+              break;
+            }
+          }
+    
+          // Use SecureSpreadsheet to encrypt the file by user Email
+          $encrypt = new \Nick\SecureSpreadsheet\Encrypt();
+          $encrypt->input($filePath)
+            ->password($userEmail)
+            ->output($outputFile);
+          unlink($filePath);
+          rename($outputFile, $filePath);
+        }
+        else if ($config->decryptExcelOption == 2) {
+          // Use SecureSpreadsheet to decrypt the file by custom password
+          $encrypt = new \Nick\SecureSpreadsheet\Encrypt();
+          $encrypt->input($filePath)
+            ->password($config->decryptExcelPwd)
+            ->output($outputFile);
+          unlink($filePath);
+          rename($outputFile, $filePath);
+        }
+      }
+    }
   }
 }
 

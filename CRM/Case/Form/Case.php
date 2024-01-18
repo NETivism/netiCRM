@@ -153,7 +153,7 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
       $this->assign('activityTypeFile', $this->_activityTypeFile);
     }
 
-    $details = CRM_Case_PseudoConstant::activityType(FALSE);
+    $details = CRM_Case_PseudoConstant::caseActivityType(FALSE);
 
     CRM_Utils_System::setTitle($details[$this->_activityTypeId]['label']);
     $this->assign('activityType', $details[$this->_activityTypeId]['label']);
@@ -382,7 +382,7 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
     // 3. format activity custom data
     if (CRM_Utils_Array::value('hidden_custom', $params)) {
       $customFields = CRM_Core_BAO_CustomField::getFields('Activity', FALSE, FALSE, $this->_activityTypeId);
-      $customFields = CRM_Utils_Array::crmArrayMerge($customFields,
+      $customFields = CRM_Utils_Array::arrayMerge($customFields,
         CRM_Core_BAO_CustomField::getFields('Activity', FALSE, FALSE,
           NULL, NULL, TRUE
         )

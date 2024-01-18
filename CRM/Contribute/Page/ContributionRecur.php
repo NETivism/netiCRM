@@ -101,7 +101,8 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
       }
       if ($contribution->id && $contribution->contribution_page_id) {
         $pageIsActive = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage', $contribution->contribution_page_id, 'is_active');
-        if ($pageIsActive) {
+        $isIndividual = CRM_Contact_BAO_Contact::getContactType($recur->contact_id);
+        if ($pageIsActive && $isIndividual == 'Individual') {
           $cid = $recur->contact_id;
           $oid = $contribution->id;
           $pageId = $contribution->contribution_page_id;
@@ -165,7 +166,7 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
             $log['after_contribution_status'] = $statuses[$after['contribution_status_id']];
           }
           $diff = self::_diff_contribute_recur_log($data);
-          $log['other_diff'] = implode('<br/>', $diff);
+          $log['other_diff'] = CRM_Utils_Array::implode('<br/>', $diff);
         }
 
         if ($notes[$log['modified_date']]) {

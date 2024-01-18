@@ -484,7 +484,7 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
       if ($this->_action & CRM_Core_Action::VIEW) {
         $defaults['details'] = CRM_Utils_String::htmlPurifier($defaults['details'], CRM_Utils_String::ALLOWED_TAGS);
         
-        $url = CRM_Utils_System::url(implode("/", $this->_urlPath), "reset=1&id={$this->_activityId}&action=view&cid={$this->_values['source_contact_id']}");
+        $url = CRM_Utils_System::url(CRM_Utils_Array::implode("/", $this->_urlPath), "reset=1&id={$this->_activityId}&action=view&cid={$this->_values['source_contact_id']}");
         $activityTName = CRM_Core_OptionGroup::values('activity_type', FALSE, FALSE, FALSE, 'AND v.value = ' . $this->_activityTypeId, 'name');
         $recentTitle = CRM_Utils_Array::value('subject', $defaults, ts('(no subject)')) . ' - '.$defaults['source_contact']. ' (' . ts($activityTName[$this->_activityTypeId]) . ')';
         CRM_Utils_Recent::add($recentTitle,
@@ -498,12 +498,12 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
       $defaults['source_contact_qid'] = $defaults['source_contact_id'];
       $defaults['source_contact_id'] = $defaults['source_contact'];
 
-      if (!CRM_Utils_Array::crmIsEmptyArray($defaults['target_contact'])) {
+      if (!CRM_Utils_Array::isEmpty($defaults['target_contact'])) {
         $target_contact_value = explode(';', trim($defaults['target_contact_value']));
         $this->assign('target_contact', array_combine(array_unique($defaults['target_contact']), $target_contact_value));
       }
 
-      if (!CRM_Utils_Array::crmIsEmptyArray($defaults['assignee_contact'])) {
+      if (!CRM_Utils_Array::isEmpty($defaults['assignee_contact'])) {
         $assignee_contact_value = explode(';', trim($defaults['assignee_contact_value']));
         $this->assign('assignee_contact', array_combine($defaults['assignee_contact'], $assignee_contact_value));
       }
@@ -619,7 +619,7 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
         $withDisplayName = self::_getDisplayNameById($contactId);
         $withArray[] = "\"$withDisplayName\" ";
       }
-      $this->assign('with', implode(', ', $withArray));
+      $this->assign('with', CRM_Utils_Array::implode(', ', $withArray));
     }
 
     if ($this->_cdType) {
@@ -844,7 +844,7 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
     }
 
     //Activity type is mandatory if creating new activity, CRM-4515
-    if (array_key_exists('activity_type_id', $fields) &&
+    if (CRM_Utils_Array::arrayKeyExists('activity_type_id', $fields) &&
       !CRM_Utils_Array::value('activity_type_id', $fields)
     ) {
       $errors['activity_type_id'] = ts('Activity Type is required field.');
@@ -865,7 +865,7 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
       }
       if (!empty($nullAssignee)) {
         $errors["assignee_contact_id"] = ts('Assignee Contact(s) "%1" does not exist.<br/>',
-          array(1 => implode(", ", $nullAssignee))
+          array(1 => CRM_Utils_Array::implode(", ", $nullAssignee))
         );
       }
     }
@@ -877,7 +877,7 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
       }
       if (!empty($nullTarget)) {
         $errors["target_contact_id"] = ts('Target Contact(s) "%1" does not exist.',
-          array(1 => implode(", ", $nullTarget))
+          array(1 => CRM_Utils_Array::implode(", ", $nullTarget))
         );
       }
     }
@@ -946,7 +946,7 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
       $customFields = CRM_Core_BAO_CustomField::getFields('Activity', FALSE, FALSE,
         $this->_activityTypeId
       );
-      $customFields = CRM_Utils_Array::crmArrayMerge($customFields,
+      $customFields = CRM_Utils_Array::arrayMerge($customFields,
         CRM_Core_BAO_CustomField::getFields('Activity', FALSE, FALSE,
           NULL, NULL, TRUE
         )
@@ -1002,7 +1002,7 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
 
     $activityAssigned = array();
     // format assignee params
-    if (!CRM_Utils_Array::crmIsEmptyArray($params['assignee_contact_id'])) {
+    if (!CRM_Utils_Array::isEmpty($params['assignee_contact_id'])) {
       //skip those assignee contacts which are already assigned
       //while sending a copy.CRM-4509.
       $activityAssigned = array_flip($params['assignee_contact_id']);
@@ -1051,13 +1051,13 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
     $mailStatus = '';
     $config = &CRM_Core_Config::singleton();
 
-    if (!CRM_Utils_Array::crmIsEmptyArray($params['assignee_contact_id']) && $config->activityAssigneeNotification) {
+    if (!CRM_Utils_Array::isEmpty($params['assignee_contact_id']) && $config->activityAssigneeNotification) {
       $mailToContacts = array();
       $assigneeContacts = CRM_Activity_BAO_ActivityAssignment::getAssigneeNames($activity->id, TRUE, FALSE);
 
       //build an associative array with unique email addresses.
       foreach ($activityAssigned as $id => $dnc) {
-        if (isset($id) && array_key_exists($id, $assigneeContacts)) {
+        if (isset($id) && CRM_Utils_Array::arrayKeyExists($id, $assigneeContacts)) {
           $mailToContacts[$assigneeContacts[$id]['email']] = $assigneeContacts[$id];
         }
       }

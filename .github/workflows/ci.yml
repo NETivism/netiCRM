@@ -1,7 +1,7 @@
 name: CI Testing
 on: [push, pull_request]
 jobs:
-  testing:
+  test7:
     runs-on: ubuntu-latest
     if: ${{ !contains(github.event.head_commit.message, '#skip-build') }}
     steps:
@@ -18,64 +18,288 @@ jobs:
       - name: Prepare container
         run: |
           docker pull ghcr.io/netivism/docker-neticrm-ci:drone-php7
-          git clone -b drone-php7 https://github.com/NETivism/docker-neticrm-ci.git
-          docker run -d --name neticrm-ci-php7 -p 8080:8080 -v $GITHUB_WORKSPACE:/mnt/neticrm-7/civicrm -e "TZ=Asia/Taipei" -e "RUNPORT=8080" -e "DRUPAL_ROOT=/var/www/html" -e "CIVICRM_TEST_DSN=mysql://root@localhost/neticrmci" ghcr.io/netivism/docker-neticrm-ci:drone-php7
+          docker run -d --name neticrm-ci -p 8080:8080 -v $GITHUB_WORKSPACE:/mnt/neticrm-7/civicrm -e "DRUPAL=7" -e "TZ=Asia/Taipei" -e "RUNPORT=8080" -e "DRUPAL_ROOT=/var/www/html" -e "CIVICRM_TEST_DSN=mysql://root@localhost/neticrmci" ghcr.io/netivism/docker-neticrm-ci:drone-php7
 
       - name: Install netiCRM
         run: |
-          docker exec neticrm-ci-php7 /init.sh
-          docker exec neticrm-ci-php7 bash -c "cd /var/www/html && drush status | grep version"
-          docker exec neticrm-ci-php7 bash -c "php -v"
+          docker exec neticrm-ci /init.sh
+          docker exec neticrm-ci bash -c "cd /var/www/html && drush status | grep version"
+          docker exec neticrm-ci bash -c "php -v"
 
       - name: Unit Test - Type test
-        run: docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Utils/TypeTest.php"
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Utils/TypeTest.php"
       - name: Unit Test - Contribution - Duplicate receipt id test
-        run: docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit --filter testLastReceiptId CRM/Contribute/BAO/ContributionTest.php"
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit --filter testLastReceiptId CRM/Contribute/BAO/ContributionTest.php"
       - name: Payment Test - ALLPAY
-        run: docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/ALLPAYTest.php"
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/ALLPAYTest.php"
       - name: Payment Test - Neweb(new)
-        run: docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/SPGATEWAYTest.php"
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/SPGATEWAYTest.php"
       - name: Payment Test - LINE Pay
-        run: docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/LinePayTest.php"
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/LinePayTest.php"
       - name: Payment Test - TapPay
-        run: docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/TapPayTest.php"
-      - name: Payment Test - Backer 
-        run: docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/BackerTest.php"
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/TapPayTest.php"
+      - name: Payment Test - Backer
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/BackerTest.php"
       - name: API Test - Contribution Recur
-        run: docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit api/v3/ContributionRecurTest.php"
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit api/v3/ContributionRecurTest.php"
       - name: API Test - Get Options
-        run: docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit api/v3/GetOptionsTest.php"
-      - name: Frontend - All Pages
-        run: docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/pages.js"
-      - name: Frontend - Event Registeration
-        run: docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/event_register.js"
-      - name: Frontend - Import Records
-        run: docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/import.js"
-      - name: Frontend - Add Contact
-        run: docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/add_contact.test.js"
-      - name: Frontend - Edit Contact
-        run: docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/edit_contact.test.js"
-      - name: Frontend - Search Tasks
-        run: docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/batch_action.test.js"
-      - name: Frontend - Event Editing
-        run: docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/add_event.test.js"
-      - name: Frontend - Participant Editing
-        run: docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/event_participant.test.js"
-      - name: Frontend - Contribution Page Editing
-        run: docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/add_contribution_page.test.js"
-      - name: Frontend - Contribution Editing
-        run: docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/new_contribution.test.js"
-      - name: Frontend - Custom Data
-        run: docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/custom_data.test.js"
-      - name: Frontend - Group Editing
-        run: docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/add_group.test.js"
-      - name: Frontend - Advanced Search
-        run: docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/advanced_search.test.js"
-      - name: Frontend - Profile Editing
-        run: docker exec neticrm-ci-php7 bash -c "cd \$DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/add_profile.test.js"
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit api/v3/GetOptionsTest.php"
+      - name: API Test - Phone
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit --group CItesting api/v3/PhoneTest.php"
+      - name: API Test - Participant
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit --group CItesting api/v3/ParticipantTest.php"
+      - name: API Test - Activity
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit --group CItesting api/v3/ActivityTest.php"
+      - name: API Test - Membership
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit --group CItesting api/v3/MembershipTest.php"
+      - name: Frontend - Batch Actions - Playwright
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/batch_action.spec.js"
+      - name: Frontend - All Pages - Playwright
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/page.spec.js"
+      - name: Frontend - Add Contact - Playwright
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/add_contact.spec.js"
+      - name: Frontend - Contribution Page Editing - Playwright
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/add_contribution_page.spec.js"
+      - name: Frontend - Event Editing - Playwright
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/add_event.spec.js"
+      - name: Frontend - Edit Contact - Playwright
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/edit_contact.spec.js"
+      - name: Frontend - Custom Data - Playwright
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/custom_data.spec.js"
+      - name: Payment Test - ALLPAY - Playwright
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_allpay.spec.js"
+      - name: Payment Test - ALLPAY - ATM - Playwright
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_allpay_atm.spec.js"
+      - name: Payment Test - ALLPAY - Barcode - Playwright
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_allpay_barcode.spec.js"
+      - name: Frontend - Contribution Editing - Playwright
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/new_contribution.spec.js"
+      - name: Frontend - Advanced Search - Playwright
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/advanced_search.spec.js"
+      - name: Frontend - Group Editing - Playwright
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/add_group.spec.js"
+      - name: Frontend - Add Membership Type - Playwright
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/add_membership_type.spec.js"
+      - name: Frontend - Import Records - Playwright
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/import.spec.js"
+      - name: Frontend - Event Registration - Playwright
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/event_register.spec.js"
+      - name: Frontend - Participant Editing - Playwright
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/event_participant.spec.js"
+      - name: Frontend - Mailing Editing - Playwright
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/edit_mailing.spec.js"
+      - name: Payment Test - SPGATEWAY - Playwright
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_spgateway.spec.js"
+      - name: Frontend - Contribution Booster - Playwright
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_booster.spec.js"
+
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: playwright-report-test7
+          path: tests/playwright/playwright-report
+          retention-days: 30
+
+  test8:
+    runs-on: ubuntu-latest
+    if: ${{ !contains(github.event.head_commit.message, '#skip-build') }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Login to registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
+
+      - name: Initialize submodules
+        run: |
+          git submodule init
+          git submodule update
+
+      - name: Prepare container
+        run: |
+          docker pull ghcr.io/netivism/docker-neticrm-ci:drone-php8
+          docker run -d --name neticrm-ci -p 8080:8080 -v $GITHUB_WORKSPACE:/mnt/neticrm-7/civicrm -e "DRUPAL=7" -e "TZ=Asia/Taipei" -e "RUNPORT=8080" -e "DRUPAL_ROOT=/var/www/html" -e "CIVICRM_TEST_DSN=mysql://root@localhost/neticrmci" ghcr.io/netivism/docker-neticrm-ci:drone-php8
+
+      - name: Install netiCRM
+        run: |
+          docker exec neticrm-ci /init.sh
+          docker exec neticrm-ci bash -c "cd /var/www/html && drush status | grep version"
+          docker exec neticrm-ci bash -c "php -v"
+
+      - name: Unit Test - Type test
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Utils/TypeTest.php"
+      - name: Unit Test - Contribution - Duplicate receipt id test
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit --filter testLastReceiptId CRM/Contribute/BAO/ContributionTest.php"
+      - name: Payment Test - ALLPAY
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/ALLPAYTest.php"
+      - name: Payment Test - Neweb(new)
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/SPGATEWAYTest.php"
+      - name: Payment Test - LINE Pay
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/LinePayTest.php"
+      - name: Payment Test - TapPay
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/TapPayTest.php"
+      - name: Payment Test - Backer
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/BackerTest.php"
+      - name: API Test - Contribution Recur
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit api/v3/ContributionRecurTest.php"
+      - name: API Test - Get Options
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit api/v3/GetOptionsTest.php"
+      - name: API Test - Phone
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit --group CItesting api/v3/PhoneTest.php"
+      - name: API Test - Participant
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit --group CItesting api/v3/ParticipantTest.php"
+      - name: API Test - Activity
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit --group CItesting api/v3/ActivityTest.php"
+      - name: API Test - Membership
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit --group CItesting api/v3/MembershipTest.php"
+      - name: Frontend - Batch Actions - Playwright
+        run: docker exec neticrm-ci  bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/batch_action.spec.js"
+      - name: Frontend - All Pages - Playwright
+        run: docker exec neticrm-ci  bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/page.spec.js"
+      - name: Frontend - Add Contact - Playwright
+        run: docker exec neticrm-ci  bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/add_contact.spec.js"
+      - name: Frontend - Contribution Page Editing - Playwright
+        run: docker exec neticrm-ci  bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/add_contribution_page.spec.js"
+      - name: Frontend - Event Editing - Playwright
+        run: docker exec neticrm-ci  bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/add_event.spec.js"
+      - name: Frontend - Edit Contact - Playwright
+        run: docker exec neticrm-ci  bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/edit_contact.spec.js"
+      - name: Frontend - Custom Data - Playwright
+        run: docker exec neticrm-ci  bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/custom_data.spec.js"
+      - name: Payment Test - ALLPAY - Playwright
+        run: docker exec neticrm-ci  bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_allpay.spec.js"
+      - name: Payment Test - ALLPAY - ATM - Playwright
+        run: docker exec neticrm-ci  bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_allpay_atm.spec.js"
+      - name: Payment Test - ALLPAY - Barcode - Playwright
+        run: docker exec neticrm-ci  bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_allpay_barcode.spec.js"
+      - name: Frontend - Contribution Editing - Playwright
+        run: docker exec neticrm-ci  bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/new_contribution.spec.js"
+      - name: Frontend - Advanced Search - Playwright
+        run: docker exec neticrm-ci  bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/advanced_search.spec.js"
+      - name: Frontend - Group Editing - Playwright
+        run: docker exec neticrm-ci  bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/add_group.spec.js"
+      - name: Frontend - Add Membership Type - Playwright
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/add_membership_type.spec.js"
+      - name: Frontend - Import Records - Playwright
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/import.spec.js"
+      - name: Frontend - Event Registration - Playwright
+        run: docker exec neticrm-ci  bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/event_register.spec.js"
+      - name: Frontend - Participant Editing - Playwright
+        run: docker exec neticrm-ci  bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/event_participant.spec.js"
+      - name: Frontend - Mailing Editing - Playwright
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/edit_mailing.spec.js"
+      - name: Payment Test - SPGATEWAY - Playwright
+        run: docker exec neticrm-ci  bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_spgateway.spec.js"
+      - name: Frontend - Contribution Booster - Playwright
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_booster.spec.js"
+
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: playwright-report-test8
+          path: tests/playwright/playwright-report
+          retention-days: 30
+
+  test8-d10:
+    runs-on: ubuntu-latest
+    if: ${{ !contains(github.event.head_commit.message, '#skip-build') }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Login to registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
+
+      - name: Initialize submodules
+        run: |
+          git submodule init
+          git submodule update
+          cd $GITHUB_WORKSPACE/drupal && git checkout 9.x-develop && git pull
+          cd $GITHUB_WORKSPACE/neticrm && git checkout 9.x-develop && git pull
+
+      - name: Prepare container
+        run: |
+          docker pull ghcr.io/netivism/docker-neticrm-ci:drone-php8
+          docker run -d --name neticrm-ci -p 8080:8080 -v $GITHUB_WORKSPACE:/mnt/neticrm-10/civicrm -e "DRUPAL=10" -e "TZ=Asia/Taipei" -e "RUNPORT=8080" -e "DRUPAL_ROOT=/var/www/html" -e "CIVICRM_TEST_DSN=mysql://root@localhost/neticrmci" ghcr.io/netivism/docker-neticrm-ci:drone-php8-d10
+
+      - name: Install netiCRM
+        run: |
+          docker exec neticrm-ci /init.sh
+          docker exec neticrm-ci bash -c "cd /var/www/html && drush status | grep version"
+          docker exec neticrm-ci bash -c "php -v"
+
+      - name: Unit Test - Type test
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/phpunit && phpunit CRM/Utils/TypeTest.php"
+      - name: Unit Test - Contribution - Duplicate receipt id test
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/phpunit && phpunit --filter testLastReceiptId CRM/Contribute/BAO/ContributionTest.php"
+      - name: Payment Test - ALLPAY
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/ALLPAYTest.php"
+      - name: Payment Test - LINE Pay
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/LinePayTest.php"
+      - name: Payment Test - TapPay
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/TapPayTest.php"
+      - name: Payment Test - Backer
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/BackerTest.php"
+      - name: API Test - Contribution Recur
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/phpunit && phpunit api/v3/ContributionRecurTest.php"
+      - name: API Test - Get Options
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/phpunit && phpunit api/v3/GetOptionsTest.php"
+      - name: API Test - Phone
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/phpunit && phpunit --group CItesting api/v3/PhoneTest.php"
+      - name: API Test - Participant
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/phpunit && phpunit --group CItesting api/v3/ParticipantTest.php"
+      - name: API Test - Activity
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/phpunit && phpunit --group CItesting api/v3/ActivityTest.php"
+      - name: API Test - Membership
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/phpunit && phpunit --group CItesting api/v3/MembershipTest.php"
+      - name: Frontend - Batch Actions - Playwright
+        run: docker exec neticrm-ci  bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/batch_action.spec.js"
+      - name: Frontend - All Pages - Playwright
+        run: docker exec neticrm-ci  bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/page.spec.js"
+      - name: Frontend - Add Contact - Playwright
+        run: docker exec neticrm-ci  bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/add_contact.spec.js"
+      - name: Frontend - Contribution Page Editing - Playwright
+        run: docker exec neticrm-ci  bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/add_contribution_page.spec.js"
+      - name: Frontend - Event Editing - Playwright
+        run: docker exec neticrm-ci  bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/add_event.spec.js"
+      - name: Frontend - Edit Contact - Playwright
+        run: docker exec neticrm-ci  bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/edit_contact.spec.js"
+      - name: Frontend - Custom Data - Playwright
+        run: docker exec neticrm-ci  bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/custom_data.spec.js"
+      - name: Payment Test - ALLPAY - Playwright
+        run: docker exec neticrm-ci  bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_allpay.spec.js"
+      - name: Payment Test - ALLPAY - ATM - Playwright
+        run: docker exec neticrm-ci  bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_allpay_atm.spec.js"
+      - name: Payment Test - ALLPAY - Barcode - Playwright
+        run: docker exec neticrm-ci  bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_allpay_barcode.spec.js"
+      - name: Frontend - Contribution Editing - Playwright
+        run: docker exec neticrm-ci  bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/new_contribution.spec.js"
+      - name: Frontend - Advanced Search - Playwright
+        run: docker exec neticrm-ci  bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/advanced_search.spec.js"
+      - name: Frontend - Group Editing - Playwright
+        run: docker exec neticrm-ci  bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/add_group.spec.js"
+      - name: Frontend - Add Membership Type - Playwright
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/add_membership_type.spec.js"
+      - name: Frontend - Import Records - Playwright
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/import.spec.js"
+      - name: Frontend - Event Registration - Playwright
+        run: docker exec neticrm-ci  bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/event_register.spec.js"
+      - name: Frontend - Participant Editing - Playwright
+        run: docker exec neticrm-ci  bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/event_participant.spec.js"
+      - name: Frontend - Mailing Editing - Playwright
+        run: docker exec neticrm-ci  bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/edit_mailing.spec.js"
+      - name: Frontend - Contribution Booster - Playwright
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_booster.spec.js"
+
+
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: playwright-report-test8-d10
+          path: tests/playwright/playwright-report
+          retention-days: 30
+
   notification:
     if: ${{ failure() }}
-    needs: testing
+    needs: [test7, test8, test8-d10]
     runs-on: ubuntu-latest
     steps:
       - name: Shorten sha

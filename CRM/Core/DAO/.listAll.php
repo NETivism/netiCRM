@@ -32,7 +32,7 @@ $dao['SavedSearch'] = 'CRM_Contact_DAO_SavedSearch';
 $dao['ContactType'] = 'CRM_Contact_DAO_ContactType';
 //NAMESPACE ERROR: Component already used . CRM_Mailing_DAO_Component ignored.
 $dao['Mailing'] = 'CRM_Mailing_DAO_Mailing';
-$dao['Group'] = 'CRM_Mailing_DAO_Group';
+//NAMESPACE ERROR: Group already used . CRM_Mailing_DAO_Group ignored.
 $dao['TrackableURL'] = 'CRM_Mailing_DAO_TrackableURL';
 $dao['Job'] = 'CRM_Mailing_DAO_Job';
 $dao['BounceType'] = 'CRM_Mailing_DAO_BounceType';
@@ -71,6 +71,7 @@ $dao['Set'] = 'CRM_Price_DAO_Set';
 $dao['SetEntity'] = 'CRM_Price_DAO_SetEntity';
 $dao['Batch'] = 'CRM_Batch_DAO_Batch';
 $dao['EntityBatch'] = 'CRM_Batch_DAO_EntityBatch';
+$dao['AICompletion'] = 'CRM_AI_DAO_AICompletion';
 $dao['Cache'] = 'CRM_Core_DAO_Cache';
 $dao['Country'] = 'CRM_Core_DAO_Country';
 $dao['CustomGroup'] = 'CRM_Core_DAO_CustomGroup';
@@ -95,7 +96,7 @@ $dao['OpenID'] = 'CRM_Core_DAO_OpenID';
 $dao['Website'] = 'CRM_Core_DAO_Website';
 //NAMESPACE ERROR: Cache already used . CRM_ACL_DAO_Cache ignored.
 $dao['DashboardContact'] = 'CRM_Contact_DAO_DashboardContact';
-//NAMESPACE ERROR: Group already used . CRM_Contact_DAO_Group ignored.
+$dao['Group'] = 'CRM_Contact_DAO_Group';
 $dao['SubscriptionHistory'] = 'CRM_Contact_DAO_SubscriptionHistory';
 $dao['GroupContactCache'] = 'CRM_Contact_DAO_GroupContactCache';
 $dao['GroupNesting'] = 'CRM_Contact_DAO_GroupNesting';

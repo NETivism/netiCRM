@@ -41,7 +41,7 @@ class CRM_Contribute_Form_AdditionalInfo {
    *
    * @return None
    */
-  function buildPremium(&$form) {
+  static function buildPremium(&$form) {
     //premium section
     $form->add('hidden', 'hidden_Premium', 1);
     require_once 'CRM/Contribute/DAO/Product.php';
@@ -124,7 +124,7 @@ class CRM_Contribute_Form_AdditionalInfo {
    *
    * @return None
    */
-  function buildAdditionalDetail(&$form) {
+  static function buildAdditionalDetail(&$form) {
     //Additional information section
     $form->add('hidden', 'hidden_AdditionalDetail', 1);
 
@@ -189,13 +189,13 @@ class CRM_Contribute_Form_AdditionalInfo {
    *
    * @return None
    */
-  function buildHonoree(&$form) {
+  static function buildHonoree(&$form) {
     //Honoree section
     $form->add('hidden', 'hidden_Honoree', 1);
     $honor = CRM_Core_PseudoConstant::honor();
     $extraOption = array('onclick' => "return enableHonorType();");
     foreach ($honor as $key => $var) {
-      $honorTypes[$key] = HTML_QuickForm::createElement('radio', NULL, NULL, $var, $key, $extraOption);
+      $honorTypes[$key] = $form->createElement('radio', NULL, NULL, $var, $key, $extraOption);
     }
     $form->addGroup($honorTypes, 'honor_type_id', NULL);
     $form->add('select', 'honor_prefix_id', ts('Prefix'), array('' => ts('- prefix -')) + CRM_Core_PseudoConstant::individualPrefix());
@@ -212,7 +212,7 @@ class CRM_Contribute_Form_AdditionalInfo {
    *
    * @return None
    */
-  function buildPaymentReminders(&$form) {
+  static function buildPaymentReminders(&$form) {
     //PaymentReminders section
     $form->add('hidden', 'hidden_PaymentReminders', 1);
     $form->add('text', 'initial_reminder_day', ts('Send Initial Reminder'), array('size' => 3));
@@ -230,7 +230,7 @@ class CRM_Contribute_Form_AdditionalInfo {
    *
    * @return None
    */
-  function processPremium(&$params, $contributionID, $premiumID = NULL, &$options = NULL) {
+  static function processPremium(&$params, $contributionID, $premiumID = NULL, &$options = NULL) {
     require_once 'CRM/Contribute/DAO/ContributionProduct.php';
     $dao = new CRM_Contribute_DAO_ContributionProduct();
     $dao->contribution_id = $contributionID;
@@ -264,7 +264,7 @@ class CRM_Contribute_Form_AdditionalInfo {
    *
    * @return None
    */
-  function processNote(&$params, $contactID, $contributionID, $contributionNoteID = NULL) {
+  static function processNote(&$params, $contactID, $contributionID, $contributionNoteID = NULL) {
     //process note
     require_once 'CRM/Core/BAO/Note.php';
     $noteParams = array('entity_table' => 'civicrm_contribution',
@@ -287,7 +287,7 @@ class CRM_Contribute_Form_AdditionalInfo {
    *
    * @return None
    */
-  function postProcessCommon(&$params, &$formatted) {
+  static function postProcessCommon(&$params, &$formatted) {
     $fields = array('non_deductible_amount',
       'total_amount',
       'fee_amount',
@@ -352,13 +352,23 @@ class CRM_Contribute_Form_AdditionalInfo {
    *
    * @return None.
    */
-  function emailReceipt(&$form, &$params, $ccContribution = FALSE) {
+  static function emailReceipt(&$form, &$params, $ccContribution = FALSE) {
+    $config = CRM_Core_Config::singleton();
     if (!empty($params['is_attach_receipt'])) {
-      $config = CRM_Core_Config::singleton();
       $receiptEmailType = !empty($config->receiptEmailType) ? $config->receiptEmailType : 'copy_only';
       $receiptTask = new CRM_Contribute_Form_Task_PDF();
       $receiptTask->makeReceipt($params['contribution_id'], $receiptEmailType, TRUE);
-      $pdfFilePath = $receiptTask->makePDF(False);
+      //set encrypt password
+      if (!empty($config->receiptEmailEncryption) && $config->receiptEmailEncryption) {
+        $receiptPwd = $form->userEmail;
+        if (!empty($receiptTask->_lastSerialId) && preg_match('/^[A-Za-z]{1,2}\d{8,9}$|^\d{8}$/', $receiptTask->_lastSerialId)) {
+          $receiptPwd = $receiptTask->_lastSerialId;
+        }
+        $pdfFilePath = $receiptTask->makePDF(False, True, $receiptPwd);
+      }
+      else {
+        $pdfFilePath = $receiptTask->makePDF(False);
+      }
       $pdfFileName = strstr($pdfFilePath, 'Receipt');
       $pdfParams =  array(
         'fullPath' => $pdfFilePath,
@@ -383,6 +393,12 @@ class CRM_Contribute_Form_AdditionalInfo {
       $honor = CRM_Core_PseudoConstant::honor();
       $params['honor_prefix'] = CRM_Utils_Array::value($params['honor_prefix_id'], $individualPrefix);
       $params["honor_type"] = CRM_Utils_Array::value($params["honor_type_id"], $honor);
+    }
+    if (CRM_Utils_Array::value('honor_first_name', $params)) {
+      $params['honor_first_name'] = CRM_Utils_String::mask($params['honor_first_name']);
+    }
+    if (CRM_Utils_Array::value('honor_email', $params)) {
+      $params['honor_email'] = CRM_Utils_String::mask($params['honor_email']);
     }
 
     // retrieve premium product name and assigned fulfilled
@@ -454,33 +470,48 @@ class CRM_Contribute_Form_AdditionalInfo {
     }
 
     //handle custom data
-    if (CRM_Utils_Array::value('hidden_custom', $params)) {
-      $contribParams = array(array('contribution_id', '=', $params['contribution_id'], 0, 0));
-      if ($form->_mode == 'test') {
-        $contribParams[] = array('contribution_test', '=', 1, 0, 0);
-      }
-
-      //retrieve custom data
-      require_once "CRM/Core/BAO/UFGroup.php";
+    if (!empty($params['contribution_page_id'])) {
+      $profiles = array();
+      // page profile pre id
+      $ufJoinParams = array(
+        'entity_table' => 'civicrm_contribution_page',
+        'entity_id' => $params['contribution_page_id'],
+        'weight' => 1,
+        'module' => 'CiviContribute',
+      );
+      $profiles['pre']['id'] = CRM_Core_BAO_UFJoin::findUFGroupId($ufJoinParams);
+      $ufJoinParams['weight'] = 2;
+      $profiles['post']['id'] = CRM_Core_BAO_UFJoin::findUFGroupId($ufJoinParams);
       $customGroup = array();
-
-      foreach ($form->_groupTree as $groupID => $group) {
+      foreach($profiles as $idx => $ufGroup) {
         $customFields = $customValues = array();
-        if ($groupID == 'info') {
-          continue;
-        }
-        foreach ($group['fields'] as $k => $field) {
-          $field['title'] = $field['label'];
-          $customFields["custom_{$k}"] = $field;
-        }
+        if (!empty($ufGroup['id']) && CRM_Core_BAO_UFGroup::filterUFGroups($ufGroup['id'], $params['contact_id'])) {
+          $groupTitle = NULL;
+          $customFields = CRM_Core_BAO_UFGroup::getFields($ufGroup['id'], FALSE, CRM_Core_Action::VIEW);
 
-        //build the array of customgroup contain customfields.
-        CRM_Core_BAO_UFGroup::getValues($params['contact_id'], $customFields, $customValues, FALSE, $contribParams, CRM_Core_BAO_UFGroup::MASK_ALL);
-        $customGroup[$group['title']] = $customValues;
+          foreach ($customFields as $k => $v) {
+            if (!$groupTitle) {
+              $groupTitle = $v["groupTitle"];
+            }
+            // unset all view only profile field
+            if ($v['is_view']){
+              unset($customFields[$k]);
+            }
+          }
+
+          $contribParams = array(array('contribution_id', '=', $params['contribution_id'], 0, 0));
+          if ($form->_mode == 'test') {
+            $contribParams[] = array('contribution_test', '=', 1, 0, 0);
+          }
+          CRM_Core_BAO_UFGroup::getValues($params['contact_id'], $customFields, $customValues, FALSE, $contribParams, CRM_Core_BAO_UFGroup::MASK_ALL);
+          if (!empty(array_filter($customValues))) {
+            $customGroup[$groupTitle] = $customValues;
+          }
+        }
       }
-      //assign all custom group and corresponding fields to template.
       $form->assign('customGroup', $customGroup);
     }
+    // refs #35201, do not add any custom data to offline template when no contribution page specify
 
     if ($params['receipt_text']) {
       $params['receipt_text'] = CRM_Contribute_BAO_ContributionPage::tokenize($params['contact_id'], $params['receipt_text']); 
@@ -519,6 +550,13 @@ class CRM_Contribute_Form_AdditionalInfo {
     if (!empty($params['is_attach_receipt'])) {
       $templateParams['attachments'][] = $pdfParams;
       $templateParams['tplParams']['pdf_receipt'] = 1;
+      if (!empty($config->receiptEmailEncryption)) {
+        $pdfReceiptDecryptInfo = $config->receiptEmailEncryptionText;
+        if (empty(trim($pdfReceiptDecryptInfo))) {
+          $pdfReceiptDecryptInfo = ts('Your PDF receipt is encrypted.').' '.ts('The password is either your tax certificate number or, if not provided, your email address.');
+        }
+        $templateParams['tplParams']['pdf_receipt_decrypt_info'] = $pdfReceiptDecryptInfo;
+      }
     }
     else {
       $templateParams['PDFFilename'] = 'receipt.pdf';
@@ -534,6 +572,7 @@ class CRM_Contribute_Form_AdditionalInfo {
       $activityId = CRM_Activity_BAO_Activity::addTransactionalActivity($contribution, 'Contribution Notification Email', $workflow['msg_title']);
     }
     $templateParams['activityId'] = $activityId;
+    $config = CRM_Core_Config::singleton();
     list($sendReceipt, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate($templateParams, CRM_Core_DAO::$_nullObject, array(
       0 => array('CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  array($activityId, TRUE)),
       1 => array('CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  array($activityId, FALSE)),
@@ -550,9 +589,9 @@ class CRM_Contribute_Form_AdditionalInfo {
    *
    * @return None
    */
-  function processPriceSet($contributionId, $lineItem) {
+  static function processPriceSet($contributionId, $lineItem) {
     if (!$contributionId || !is_array($lineItem)
-      || CRM_Utils_system::isNull($lineItem)
+      || CRM_Utils_System::isNull($lineItem)
     ) {
       return;
     }

@@ -344,7 +344,7 @@ class CRM_Contact_BAO_GroupContact extends CRM_Contact_DAO_GroupContact {
     }
 
     require_once 'CRM/Contact/BAO/Query.php';
-    $from = CRM_Contact_BAO_Query::fromClause($tables);
+    $from = CRM_Contact_BAO_Query::getFromClause($tables);
 
     $where .= " AND $permission ";
 
@@ -451,7 +451,7 @@ class CRM_Contact_BAO_GroupContact extends CRM_Contact_DAO_GroupContact {
     }
     else {
       $query = "SELECT DISTINCT(contact_a.id) as contact_id , $grpStatus as status,";
-      $query .= implode(',', $returnProperties);
+      $query .= CRM_Utils_Array::implode(',', $returnProperties);
     }
 
     $params = array();
@@ -478,7 +478,7 @@ class CRM_Contact_BAO_GroupContact extends CRM_Contact_DAO_GroupContact {
     $whereTables = array();
     $where = CRM_Contact_BAO_Query::getWhereClause($params, NULL, $tables, $whereTables);
     $permission = CRM_Core_Permission::whereClause(CRM_Core_Permission::VIEW, $tables, $whereTables, 'contact');
-    $from = CRM_Contact_BAO_Query::fromClause($tables, $inner);
+    $from = CRM_Contact_BAO_Query::getFromClause($tables, $inner);
     $query .= " $from WHERE $permission AND $where ";
 
     if ($sort != NULL) {
@@ -486,7 +486,7 @@ class CRM_Contact_BAO_GroupContact extends CRM_Contact_DAO_GroupContact {
       foreach ($sort as $key => $direction) {
         $order[] = " $key $direction ";
       }
-      $query .= " ORDER BY " . implode(',', $order);
+      $query .= " ORDER BY " . CRM_Utils_Array::implode(',', $order);
     }
 
     if (!is_null($offset) && !is_null($row_count)) {
@@ -545,7 +545,7 @@ AND civicrm_subscription_history.method ='Email' ";
    * @access public
    * @static
    */
-  function updateGroupMembershipStatus($contactId, $groupID, $method = 'Email', $tracking = NULL) {
+  static function updateGroupMembershipStatus($contactId, $groupID, $method = 'Email', $tracking = NULL) {
     if (!isset($contactId) && !isset($groupID)) {
       return CRM_Core_Error::fatal("$contactId or $groupID should not empty");
     }
@@ -635,11 +635,11 @@ AND civicrm_group_contact.group_id = %2";
 
     // check which values has to be add/remove contact from group
     foreach ($allGroup as $key => $varValue) {
-      if (CRM_Utils_Array::value($key, $params) && !array_key_exists($key, $contactGroup)) {
+      if (CRM_Utils_Array::value($key, $params) && !CRM_Utils_Array::arrayKeyExists($key, $contactGroup)) {
         // add contact to group
         CRM_Contact_BAO_GroupContact::addContactsToGroup($contactIds, $key, $method);
       }
-      elseif (!CRM_Utils_Array::value($key, $params) && array_key_exists($key, $contactGroup)) {
+      elseif (!CRM_Utils_Array::value($key, $params) && CRM_Utils_Array::arrayKeyExists($key, $contactGroup)) {
         // remove contact from group
         CRM_Contact_BAO_GroupContact::removeContactsFromGroup($contactIds, $key, $method);
       }
@@ -701,7 +701,7 @@ VALUES
     // to avoid long strings, lets do BULK_INSERT_HIGH_COUNT values at a time
     while (!empty($contactIDs)) {
       $input = array_splice($contactIDs, 0, CRM_Core_DAO::BULK_INSERT_HIGH_COUNT);
-      $contactStr = implode(',', $input);
+      $contactStr = CRM_Utils_Array::implode(',', $input);
 
       // lets check their current status
       $sql = "
@@ -739,10 +739,10 @@ AND    contact_id IN ( $contactStr )
       }
 
       if (!empty($gcValues)) {
-        $cgSQL = $contactGroupSQL . implode(",\n", $gcValues);
+        $cgSQL = $contactGroupSQL . CRM_Utils_Array::implode(",\n", $gcValues);
         CRM_Core_DAO::executeQuery($cgSQL);
 
-        $shSQL = $subscriptioHistorySQL . implode(",\n", $shValues);
+        $shSQL = $subscriptioHistorySQL . CRM_Utils_Array::implode(",\n", $shValues);
         CRM_Core_DAO::executeQuery($shSQL);
       }
     }
@@ -785,7 +785,7 @@ AND       cMain.contact_id IS NULL
     }
 
     if (!empty($otherGroupIDs)) {
-      $otherGroupIDString = implode(',', $otherGroupIDs);
+      $otherGroupIDString = CRM_Utils_Array::implode(',', $otherGroupIDs);
 
       $sql = "
 UPDATE    civicrm_group_contact
@@ -823,7 +823,7 @@ AND        cOther.contact_id = %2
     }
 
     if (!empty($groupIDs)) {
-      $groupIDString = implode(',', $groupIDs);
+      $groupIDString = CRM_Utils_Array::implode(',', $groupIDs);
 
       $sql = "
 UPDATE    civicrm_group_contact

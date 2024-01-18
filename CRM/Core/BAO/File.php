@@ -40,7 +40,7 @@
 class CRM_Core_BAO_File extends CRM_Core_DAO_File {
   const PUBLIC_ENTITY_TABLE = 'civicrm_pcp';
 
-  function path($fileID, $entityID, $entityTable = NULL, $quest = FALSE) {
+  static function path($fileID, $entityID, $entityTable = NULL, $quest = FALSE) {
 
     $entityFileDAO = new CRM_Core_DAO_EntityFile();
     if ($entityTable) {
@@ -76,7 +76,7 @@ class CRM_Core_BAO_File extends CRM_Core_DAO_File {
     return array(NULL, NULL, NULL);
   }
 
-  function url($fileID, $entityID, $entityTable = NULL, $quest = FALSE) {
+  static function url($fileID, $entityID, $entityTable = NULL, $quest = FALSE) {
     $entityFileDAO = new CRM_Core_DAO_EntityFile();
     if ($entityTable) {
       $entityFileDAO->entity_table = $entityTable;
@@ -114,12 +114,12 @@ class CRM_Core_BAO_File extends CRM_Core_DAO_File {
   }
 
 
-  public function filePostProcess($data, $fileID,
+  public static function filePostProcess($data, $fileID,
     $entityTable, $entityID,
     $entitySubtype, $overwrite = TRUE,
     $fileParams = NULL,
     $uploadName = 'uploadFile',
-    $mimeType
+    $mimeType = NULL
   ) {
 
     $config = &CRM_Core_Config::singleton();
@@ -188,7 +188,7 @@ class CRM_Core_BAO_File extends CRM_Core_DAO_File {
     $entityFileDAO->save();
   }
 
-  public function del($fileID, $entityID, $fieldID) {
+  public static function del($fileID, $entityID, $fieldID) {
     // get the table and column name
     list($tableName, $columnName, $groupID) = CRM_Core_BAO_CustomField::getTableColumnGroup($fieldID);
 
@@ -225,7 +225,7 @@ class CRM_Core_BAO_File extends CRM_Core_DAO_File {
    * delete all the files and associated object associated with this
    * combination
    */
-  public function deleteEntityFile($entityTable, $entityID) {
+  public static function deleteEntityFile($entityTable, $entityID) {
     if (empty($entityTable) ||
       empty($entityID)
     ) {
@@ -245,19 +245,19 @@ class CRM_Core_BAO_File extends CRM_Core_DAO_File {
     }
 
     if (!empty($cefIDs)) {
-      $cefIDs = implode(',', $cefIDs);
+      $cefIDs = CRM_Utils_Array::implode(',', $cefIDs);
       $sql = "DELETE FROM civicrm_entity_file where id IN ( $cefIDs )";
       CRM_Core_DAO::executeQuery($sql);
     }
 
     if (!empty($cfIDs)) {
-      $cfIDs = implode(',', $cfIDs);
+      $cfIDs = CRM_Utils_Array::implode(',', $cfIDs);
       $sql = "DELETE FROM civicrm_file where id IN ( $cfIDs )";
       CRM_Core_DAO::executeQuery($sql);
     }
   }
 
-  public function getEntity($fileID) {
+  public static function getEntity($fileID) {
     $entityFileDAO = new CRM_Core_DAO_EntityFile();
     $entityFileDAO->file_id = $fileID;
 
@@ -272,7 +272,7 @@ class CRM_Core_BAO_File extends CRM_Core_DAO_File {
    * get all the files and associated object associated with this
    * combination
    */
-  public function &getEntityFile($entityTable, $entityID) {
+  public static function &getEntityFile($entityTable, $entityID) {
     static $entityFiles;
     $config = CRM_Core_Config::singleton();
     if (!empty($entityFiles[$entityTable][$entityID])) {
@@ -307,7 +307,7 @@ class CRM_Core_BAO_File extends CRM_Core_DAO_File {
     return $entityFiles[$entityTable][$entityID];
   }
 
-  public function sql($entityTable, $entityID, $fileID = NULL) {
+  public static function sql($entityTable, $entityID, $fileID = NULL) {
     $sql = "
 SELECT    CF.id as cfID,
           CF.uri as uri,
@@ -386,7 +386,7 @@ AND       CEF.entity_id    = %2";
           $currentAttachmentURL[] = $attach['href'];
         }
       }
-      return implode(' ', $currentAttachmentURL);
+      return CRM_Utils_Array::implode(' ', $currentAttachmentURL);
     }
     return NULL;
   }

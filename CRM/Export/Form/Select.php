@@ -56,8 +56,15 @@ class CRM_Export_Form_Select extends CRM_Core_Form {
    * @var int
    */
   public $_exportMode;
-
   public $_componentTable;
+
+  public $_task;
+  public $_selectAll;
+  public $_componentIds;
+  public $_componentClause;
+  public $_force;
+  public $_mappingId;
+  public $_mappingTypeId;
 
   /**
    * build all the data structures needed to build the form
@@ -68,6 +75,21 @@ class CRM_Export_Form_Select extends CRM_Core_Form {
    * @access public
    */
   function preProcess() {
+    // we need to determine component export
+    $stateMachine = $this->controller->getStateMachine();
+    $formName = CRM_Utils_System::getClassName($stateMachine);
+    $componentName = explode('_', $formName);
+    $components = array('Contribute', 'Member', 'Event', 'Pledge', 'Case', 'Grant', 'Activity');
+    $this->_exportMode = self::CONTACT_EXPORT;
+    if (in_array($componentName[1], $components)) {
+      $modeVar = strtoupper($componentName[1]) . '_EXPORT';
+      $this->_exportMode = constant("self::$modeVar");
+    }
+
+    $buttonName = $this->getButtonName('next');
+    if ($buttonName === $this->controller->getButtonName() || $this->get('prevAction') === 'back') {
+      return;
+    }
     $customSearchID = $this->get('customSearchID');
     if ($customSearchID) {
       $customSearchClass = $this->get('customSearchClass');
@@ -90,11 +112,10 @@ class CRM_Export_Form_Select extends CRM_Core_Form {
           $customHeader["column{$i}"] = $headerName;
         }
       }
-      $this->assign('customHeader', $customHeader);
+      $this->set('customHeader', $customHeader);
     }
 
     $this->_selectAll = FALSE;
-    $this->_exportMode = self::CONTACT_EXPORT;
 
     // get the submitted values based on search
     if ($this->_action == CRM_Core_Action::ADVANCED) {
@@ -108,14 +129,7 @@ class CRM_Export_Form_Select extends CRM_Core_Form {
     }
     else {
       // we need to determine component export
-      $stateMachine = &$this->controller->getStateMachine();
-      $formName = CRM_Utils_System::getClassName($stateMachine);
-      $componentName = explode('_', $formName);
-      $components = array('Contribute', 'Member', 'Event', 'Pledge', 'Case', 'Grant', 'Activity');
-
       if (in_array($componentName[1], $components)) {
-        $modeVar = strtoupper($componentName[1]) . '_EXPORT';
-        $this->_exportMode = constant("self::$modeVar");
         $componentClass = 'CRM_'.$componentName[1].'_Form_Task';
         $componentClass::preProcessCommon($this);
         $values = $this->controller->exportValues('Search');
@@ -167,10 +181,10 @@ class CRM_Export_Form_Select extends CRM_Core_Form {
       CRM_Contact_Form_Task::preProcessCommon($this);
     }
     else {
-      $this->assign('taskName', "Export $componentName[1]");
+      $this->set('taskName', "Export $componentName[1]");
       $componentClass = 'CRM_'.$componentName[1].'_Task';
-      $componentClass::tasks();
-      $taskName = $componentTasks[$this->_task];
+      $componentTasks = $componentClass::tasks();
+      $taskName = $componentTasks[$this->_task]['title'];
     }
 
     if ($this->_componentTable) {
@@ -183,13 +197,13 @@ FROM   {$this->_componentTable}
     else {
       $totalSelectedRecords = count($this->_componentIds);
     }
-    $this->assign('totalSelectedRecords', $totalSelectedRecords);
-    $this->assign('taskName', $taskName);
+    $this->set('totalSelectedRecords', $totalSelectedRecords);
+    $this->set('taskName', $taskName);
 
     // all records actions = save a search
     if (($values['radio_ts'] == 'ts_all') || ($this->_task == CRM_Contact_Task::SAVE_SEARCH)) {
       $this->_selectAll = TRUE;
-      $this->assign('totalSelectedRecords', $this->get('rowCount'));
+      $this->set('totalSelectedRecords', $this->get('rowCount'));
     }
 
     $this->set('componentIds', $this->_componentIds);
@@ -198,7 +212,6 @@ FROM   {$this->_componentTable}
     $this->set('componentClause', $this->_componentClause);
     $this->set('componentTable', $this->_componentTable);
 
-    $exportOption = $this->controller->exportValue($this->_name, 'exportOption');
     $this->_force = CRM_Utils_Request::retrieve('force', 'Boolean', $this, FALSE);
     $this->_mappingId = CRM_Utils_Request::retrieve('mappingId', 'Integer', $this, FALSE);
     if ($this->_force) {
@@ -229,27 +242,22 @@ FROM   {$this->_componentTable}
   public function buildQuickForm() {
     //export option
     $exportOptions = $mergeHousehold = $mergeAddress = array();
-    /*
-        $exportOptions[] = HTML_QuickForm::createElement('radio',
-                                                         null, null,
-                                                         ts('Export PRIMARY fields'),
-                                                         self::EXPORT_ALL,
-                                                         array( 'onClick' => 'showMappingOption( );' ));
-        */
-
-    $exportOptions[] = HTML_QuickForm::createElement('radio',
+    foreach(array('customHeader', 'taskName', 'totalSelectedRecords') as $name) {
+      $this->assign($name, $this->get($name));
+    }
+    $exportOptions[] = $this->createElement('radio',
       NULL, NULL,
       ts('Select fields for export'),
       self::EXPORT_SELECTED,
       array('onClick' => 'showMappingOption( );')
     );
 
-    $mergeAddress[] = HTML_QuickForm::createElement('advcheckbox',
+    $mergeAddress[] = $this->createElement('advcheckbox',
       'merge_same_address',
       NULL,
       ts('Merge Contacts with the Same Address')
     );
-    $mergeHousehold[] = HTML_QuickForm::createElement('advcheckbox',
+    $mergeHousehold[] = $this->createElement('advcheckbox',
       'merge_same_household',
       NULL,
       ts('Merge Household Members into their Households')
@@ -293,7 +301,7 @@ FROM   {$this->_componentTable}
   public function postProcess() {
     $exportOption = $this->controller->exportValue($this->_name, 'exportOption');
     $merge_same_address = $this->controller->exportValue($this->_name, 'merge_same_address');
-    $merge_same_address = $this->controller->exportValue($this->_name, 'merge_same_address');
+    $merge_same_household = $this->controller->exportValue($this->_name, 'merge_same_household');
 
     $submitted = $this->controller->exportValues();
     if (isset($submitted['mapping'])) {

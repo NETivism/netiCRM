@@ -29,7 +29,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
    * @static
    *
    */
-  public static function &singleton($mode = 'live', &$paymentProcessor, $paymentForm = NULL) {
+  public static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
     $processorName = $paymentProcessor['name'];
     if (self::$_singleton[$processorName] === NULL) {
       self::$_singleton[$processorName] = new CRM_Core_Payment_Backer($mode, $paymentProcessor);
@@ -52,7 +52,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
 
 
     if (!empty($error)) {
-      return implode('<br>', $error);
+      return CRM_Utils_Array::implode('<br>', $error);
     }
     else {
       return NULL;
@@ -73,6 +73,16 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
       ),
       array('name' => 'password',
         'label' => $ppDAO->password_label,
+      ),
+      array(
+        'name' => 'url_api',
+        'label' => ts('API URL'),
+      ),
+      array('name' => 'url_button',
+        'label' => ts('Link Label'),
+      ),
+      array('name' => 'url_site',
+        'label' => ts('Link URL'),
       ),
     );
   }
@@ -124,33 +134,40 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
     return FALSE;
   }
 
-  function processContribution($jsonString) {
+  function processContribution($jsonString, &$contributionResult) {
     $params = self::formatParams($jsonString);
     $locationType = CRM_Core_PseudoConstant::locationType(FALSE, 'name');
     $config = CRM_Core_Config::singleton();
-
     if (empty($params)) {
-      return;
+      $contributionResult['status'] = "params is empty";
+      // return;
     }
     if (empty($params['contribution']['trxn_id'])) {
-      return;
+      $contributionResult['status'] = "Contribution trxn_id is empty.";
+      // return;
     }
     if (empty($params['contribution']['contribution_status_id'])) {
-      return;
+      $contributionResult['status'] = "Contribution contribution_status_id is empty.";
+      // return;
     }
 
     $contributionPageId = $this->_paymentProcessor['user_name'];
     if (empty($contributionPageId)) {
-      return;
+      $contributionResult['status'] = "Contribution page id is empty.";
+      // return;
     }
 
     // first, check if contribution exists
-    $currentContributionId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $params['contribution']['trxn_id'], 'id', 'trxn_id');
-    if ($currentContributionId) {
-      // update status and payment only
-      $ids = CRM_Contribute_BAO_Contribution::buildIds($currentContributionId, 'ipn');
-      $this->processIPN($ids, $params['contribution']);
-      return $currentContributionId;
+    if ($params['contribution']) {
+      $currentContributionId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $params['contribution']['trxn_id'], 'id', 'trxn_id');
+      if ($currentContributionId) {
+        // update status and payment only
+        $ids = CRM_Contribute_BAO_Contribution::buildIds($currentContributionId, 'ipn');
+        $this->processIPN($ids, $params['contribution']);
+        $contributionResult['status'] = "Contribution exists, retrun currentContributionId.";
+        $contributionResult['contributionId'] = $currentContributionId;
+        return $currentContributionId;
+      }
     }
 
     // not exists contribution, check contact first
@@ -248,6 +265,16 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
           if ($blockName == 'address') {
             CRM_Core_BAO_Address::valueExists($blockValue);
           }
+          elseif ($blockName == 'email') {
+            if (count($params['email']) == 1) {
+              CRM_Core_BAO_Block::blockValueExists($blockName, $blockValue);
+            }
+            else {
+              foreach($params[$blockName] as $emailKey => $emailValue) {
+                CRM_Core_BAO_Block::blockValueExists($blockName, $emailValue);
+              }
+            }
+          }
           else {
             CRM_Core_BAO_Block::blockValueExists($blockName, $blockValue);
           }
@@ -262,7 +289,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
       // move exists billing address to other
       $otherLocationTypeId = array_search('Other', $locationType);
       $billingLocationTypeId = array_search('Billing', $locationType);
-      if (count($contact['address']) > 0 && $otherLocationTypeId && $billingLocationTypeId) {
+      if (count((array)$contact['address']) > 0 && $otherLocationTypeId && $billingLocationTypeId) {
         $existsBillingAddress = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_address WHERE location_type_id = '$billingLocationTypeId' AND contact_id = %1", array(
           1 => array($contact['id'], 'Integer')
         ));
@@ -285,6 +312,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
 
     // process recurring or contribution
     if ($contactId) {
+      $contributionResult['contactId']  = $contactId;
       // create additional contact if needed
       $backerRelationTypeId = $config->backerFounderRelationship;
       if (!empty($params['additional']['first_name']) && !empty($params['additional']['address']) && !empty($backerRelationTypeId)) {
@@ -394,9 +422,12 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
           $recur['invoice_id'] = $result['values'][$result['id']]['invoice_id'];
         }
         else {
-          $recur['invoice_id'] = md5(uniqid(rand(), TRUE));
+          $recur['invoice_id'] = md5(uniqid('', TRUE));
         }
-        civicrm_api('ContributionRecur', 'create', $recur);
+        $recur['version'] = "3";
+        $recurResult = civicrm_api('ContributionRecur', 'create', $recur);
+        $contributionResult['recur_contribution_id']  = $recurResult['id'];
+        $contributionResult['status'] = "ContributionRecur ID already created.";
       }
 
       // create a pending contribution then trigger ipn
@@ -422,7 +453,9 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
             $contrib['id'] = $result['id'];
             $ids = CRM_Contribute_BAO_Contribution::buildIds($contrib['id'], 'ipn');
             $this->processIPN($ids, $params['contribution']);
-            return $currentContributionId;
+            $contributionResult['status'] = "Get currentContributionId.";
+            $contributionResult['contributionId'] = $currentContributionId;
+            // return $currentContributionId;
           }
         }
       }
@@ -448,11 +481,15 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
       else {
         // multiple scenario will happen
 
-        // failed: 1->3,4 or 2->3,4
-        if (in_array($contrib['contribution_status_id'], array(3,4)) && in_array($exists->contribution_status_id, array(1,2))) {
+        // failed: 1 or 2 ->4
+        if ($contrib['contribution_status_id'] == 4 && in_array($exists->contribution_status_id, array(1,2))) {
           $objects['contribution']->cancel_date = $contrib['cancel_date'];
           $cancelReason = $contrib['updated_at'].' '.ts("Update").":\n".$contrib['cancel_reason'];
           $ipn->failed($objects, $transaction, $cancelReason);
+        }
+        // cancel: 1 or 2->3
+        elseif ($contrib['contribution_status_id'] == 3 && in_array($exists->contribution_status_id, array(1,2))) {
+          $ipn->cancelled($objects, $transaction);
         }
         // pending: nothing
         elseif ($contrib['contribution_status_id'] == 2) {
@@ -510,6 +547,12 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
     $params['email'][] = array(
       'email' => $json['user']['email'],
       'location_type_id' => array_search('Home', $locationType),
+      'is_primary' => 1,
+      'append' => TRUE,
+    );
+     $params['email'][] = array(
+      'email' => $json['receipt']['email'],
+      'location_type_id' => array_search('Billing', $locationType),
       'is_primary' => 1,
       'append' => TRUE,
     );
@@ -607,6 +650,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
     $recurring['contribution_status_id'] = $statusMap[$json['transaction']['render_status']];
     if ($json['transaction']['render_status'] == 'success') {
       $recurring['end_date'] = date('YmdHis');
+      unset($recurring['amount']);
     }
     elseif ($json['transaction']['render_status'] == 'recurring') {
       $recurring['start_date'] = date('YmdHis', strtotime($json['transaction']['created_at']));
@@ -662,10 +706,16 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
     // invoice_id, recurring
     if (!empty($json['transaction']['parent_trade_no'])) {
       // invoice id is uniq, will append additional info
-      $params['contribution']['invoice_id'] = $json['transaction']['parent_trade_no'].'_'.substr(md5(uniqid(rand(), TRUE)), 0, 10);
+      $params['contribution']['invoice_id'] = $json['transaction']['parent_trade_no'].'_'.substr(md5(uniqid((string)rand(), TRUE)), 0, 10);
+      $contributionRecurId = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution_recur WHERE trxn_id = %1" , array(1 => array($json['transaction']['parent_trade_no'], 'String')));
+      if (!empty($contributionRecurId)) {
+        $params['contribution']['contribution_recur_id'] = $contributionRecurId;
+      } else {
+        $contributionResult['status'] = "No recur id.";
+      }
     }
     else {
-      $params['contribution']['invoice_id'] = md5(uniqid(rand(), TRUE));
+      $params['contribution']['invoice_id'] = md5(uniqid((string)rand(), TRUE));
     }
 
     switch($statusMap[$json['transaction']['render_status']]) {
@@ -718,6 +768,11 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
         }
       }
       if (!empty($amountLevel)) {
+        $params['contribution']['amount_level'] = CRM_Core_BAO_CustomOption::VALUE_SEPERATOR.CRM_Utils_Array::implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, $amountLevel).CRM_Core_BAO_CustomOption::VALUE_SEPERATOR;
+      }
+    }
+    else {
+      if (!empty($amountLevel)) {
         $params['contribution']['amount_level'] = CRM_Core_BAO_CustomOption::VALUE_SEPERATOR.implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, $amountLevel).CRM_Core_BAO_CustomOption::VALUE_SEPERATOR;
       }
     }
@@ -749,6 +804,16 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
       elseif ($receiptType === '稅捐收據' && $choice === '年度寄送紙本收據') {
         // special case
         $params['contribution'][$receiptFieldsMap['receipt_type']] = 'annual_paper_receipt';
+        $needReceipt = TRUE;
+      }
+      elseif ($receiptType === '稅捐收據' && $choice === '單次寄送電子收據') {
+        // special case
+        $params['contribution'][$receiptFieldsMap['receipt_type']] = 'single_e_receipt';
+        $needReceipt = TRUE;
+      }
+      elseif ($receiptType === '稅捐收據' && $choice === '年度寄送電子收據') {
+        // special case
+        $params['contribution'][$receiptFieldsMap['receipt_type']] = 'annual_e_receipt';
         $needReceipt = TRUE;
       }
       if ($needReceipt) {

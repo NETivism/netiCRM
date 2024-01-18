@@ -94,7 +94,7 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
       //we don't want to retrieve template details once it is
       //set in session
       $justSavedTemplate = $this->get('justSavedTemplate');
-      
+
       $this->assign('templateSelected', $justSavedTemplate ? $justSavedTemplate: 0);
       if (isset($defaults['msg_template_id']) && !$justSavedTemplate) {
         $messageTemplate = new CRM_Core_DAO_MessageTemplates();
@@ -109,7 +109,7 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
           if (!empty($json->sections)) {
             // this is correct json object for nme
             $jsonMessage = $messageTemplate->msg_text;
-          } 
+          }
           else {
             $jsonMessage = '';
           }
@@ -149,12 +149,8 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
       //set default from email address.
       require_once 'CRM/Core/OptionGroup.php';
       if (CRM_Utils_Array::value('from_name', $defaults) && CRM_Utils_Array::value('from_email', $defaults)) {
-        $fromMailAddr = '"' . $defaults['from_name'] . '" <' . $defaults['from_email'] . '>';
-        $defaults['from_email_address'] = array_search($fromMailAddr, CRM_Core_PseudoConstant::fromEmailAddress());
-      }
-      else {
-        //get the default from email address.
-        $defaults['from_email_address'] = 'default';
+        $fromMailAddr = '"' . $defaults['from_name']. '" <' . $defaults['from_email']. '>';
+        $defaults['from_email_address'] = $fromMailAddr;
       }
 
       if (CRM_Utils_Array::value('replyto_email', $defaults)) {
@@ -385,6 +381,11 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
           'name' => ts('Cancel'),
         ),
       );
+    }
+    if ($config->nextEnabled) {
+      $this->assign('ai_completion_default', CRM_AI_BAO_AICompletion::getDefaultTemplate('CiviMail'));
+      $this->assign('ai_completion_url_basepath', $config->userSystem->languageNegotiationURL('/'));
+      $this->assign('ai_completion_component', 'CiviMail');
     }
     $this->addButtons($buttons);
   }
@@ -758,7 +759,7 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
       if (!empty($dataErrors)) {
         $errors[$file . 'File'] = ts('The following errors were detected in %1:', array(
             1 => $name,
-          )) . ' <ul>' . implode('', $dataErrors) . '</ul><br /><a href="' . CRM_Utils_System::docURL2('Sample CiviMail Messages', TRUE) . '" target="_blank">' . ts('More information on required tokens...') . '</a>';
+          )) . ' <ul>' . CRM_Utils_Array::implode('', $dataErrors) . '</ul><br /><a href="' . CRM_Utils_System::docURL2('Sample CiviMail Messages', TRUE) . '" target="_blank">' . ts('More information on required tokens...') . '</a>';
       }
     }
 

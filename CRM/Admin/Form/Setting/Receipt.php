@@ -71,6 +71,12 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
 
     $check = TRUE;
     parent::buildQuickForm($check);
+
+    // Refs #38829, Add receipt Email Encryption option
+    if (defined('CIVICRM_ENABLE_PDF_ENCRYPTION') && CIVICRM_ENABLE_PDF_ENCRYPTION) {
+      $this->add('checkbox', 'receiptEmailEncryption', ts('Email Receipt Password'));
+      $this->addElement('text', 'receiptEmailEncryptionText', ts('Email Receipt Password Explanation Text'));
+    }
   }
 
   function setDefaultValues() {
@@ -129,6 +135,9 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
     $haveAttachReceiptOption = CRM_Core_OptionGroup::getValue('activity_type', 'Email Receipt', 'name');
     if (!empty($haveAttachReceiptOption) && empty($params['receiptEmailAuto'])) {
       $params['receiptEmailAuto'] = FALSE;
+    }
+    if (empty($params['receiptEmailEncryption'])) {
+      $params['receiptEmailEncryption'] = FALSE;
     }
 
     parent::commonProcess($params);

@@ -74,8 +74,8 @@ class CRM_Contact_Page_AJAX {
       }
     }
 
-    $select = implode(', ', $select);
-    $from = implode(' ', $from);
+    $select = CRM_Utils_Array::implode(', ', $select);
+    $from = CRM_Utils_Array::implode(' ', $from);
     if (CRM_Utils_Array::value('limit', $_GET)) {
       $limit = CRM_Utils_Type::escape($_GET['limit'], 'Positive');
     }
@@ -141,7 +141,7 @@ class CRM_Contact_Page_AJAX {
       $whereClauses[] = "$field LIKE '$phoneSearch'";
     }
 
-    $whereClause = ' WHERE ( '.implode(" OR ", $whereClauses).' ) '.$where;
+    $whereClause = ' WHERE ( '.CRM_Utils_Array::implode(" OR ", $whereClauses).' ) '.$where;
 
     $additionalFrom = '';
     if ($relType) {
@@ -228,6 +228,7 @@ class CRM_Contact_Page_AJAX {
     $fieldID = CRM_Utils_Type::escape($_GET['cfid'], 'Integer');
     $optionGroupID = CRM_Utils_Type::escape($_GET['ogid'], 'Integer');
     $label = CRM_Utils_Type::escape($_GET['s'], 'String');
+    self::validate();
 
     // Check custom field ID is correct.
     $sql = "SELECT id FROM civicrm_custom_field WHERE id = %1 AND option_group_id = %2";
@@ -350,7 +351,7 @@ class CRM_Contact_Page_AJAX {
   static function groupTree() {
     $gids = CRM_Utils_Type::escape($_GET['gids'], 'String');
     require_once 'CRM/Contact/BAO/GroupNestingCache.php';
-    echo CRM_Contact_BAO_GroupNestingCache::json($gids);
+    echo CRM_Contact_BAO_GroupNestingCache::json();
     CRM_Utils_System::civiExit();
   }
 
@@ -360,7 +361,7 @@ class CRM_Contact_Page_AJAX {
   static function search() {
     $json = TRUE;
     $name = CRM_Utils_Array::value('name', $_GET, '');
-    if (!array_key_exists('name', $_GET)) {
+    if (!CRM_Utils_Array::arrayKeyExists('name', $_GET)) {
       $name = CRM_Utils_Array::value('s', $_GET) . '%';
       $json = FALSE;
     }
@@ -628,6 +629,7 @@ WHERE sort_name LIKE '%$name%'";
     */
 
   static public function checkUserName() {
+    self::validate();
     $config = CRM_Core_Config::singleton();
     $username = $_POST['cms_name'];
 
@@ -693,12 +695,12 @@ WHERE sort_name LIKE '%$name%'";
           if (strstr($cid, ',')) {
             $cids = explode(',', $cid);
             foreach($cids as $idx => $c) {
-              if (!CRM_Utils_Rule::PositiveInteger($c, 'Positive')) {
+              if (!CRM_Utils_Rule::PositiveInteger($c)) {
                 unset($cids[$idx]);
               }
             }
             if (!empty($cids)) {
-              $queryString = " cc.id IN (".implode(',', $cids).")";
+              $queryString = " cc.id IN (".CRM_Utils_Array::implode(',', $cids).")";
             }
           }
         }
@@ -1122,6 +1124,18 @@ WHERE sort_name LIKE '%$name%'";
 
     echo json_encode($addressVal);
     CRM_Utils_System::civiExit();
+  }
+
+  private static function validate() {
+    $qfKey = CRM_Utils_Type::escape($_GET['qfKey'], 'String');
+    $ctrName = CRM_Utils_Type::escape($_GET['ctrName'], 'String');
+
+    if (!($ctrName == 'CRM_Core_Controller_Simple' && $qfKey == 'ignoreKey')) {
+      $key = CRM_Core_Key::validate($qfKey, $ctrName, TRUE);
+      if (!$key) {
+        CRM_Core_Error::fatal(ts('Site Administrators: This error may indicate that users are accessing this page using a domain or URL other than the configured Base URL. EXAMPLE: Base URL is http://example.org, but some users are accessing the page via http://www.example.org or a domain alias like http://myotherexample.org.'));
+      }
+    }
   }
 }
 

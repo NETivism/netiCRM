@@ -104,15 +104,22 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
    * @access public
    */
   public function defaultFromHeader($columnName, &$patterns) {
+    // Validate the column name to ensure it contains only alphanumeric characters
     if (!preg_match('/^[0-9a-z]$/i', $columnName)) {
-      $columnMatch = trim(preg_replace('/([\.\?\+\*\(\)\[\]\{\}])/', '\\\\$1', preg_replace('/\(.*\)/', '', $columnName)));
-      // Quote any regex special characters in the column name
-      $columnMatch = preg_quote($columnMatch, '/');
+      // Escape any special characters and remove parenthesis content
+      $columnMatch = trim(preg_replace('/([\.\?\+\*\(\)\[\]\{\}\/])/', '\\\\$1', preg_replace('/\(.*\)/', '', $columnName)));
+
+      // refs #38980, workaround for first name trailing space
+      $mapperFields = $this->_mapperFields;
+      if (isset($mapperFields['first_name'])) {
+        $mapperFields['first_name'] = trim($mapperFields['first_name']);
+      }
+
       // Find matching columns in the mapper fields array
-      $matches = preg_grep('/(^'.$columnMatch.'$)|(^\w+\::'.$columnMatch.'$)/iu', $this->_mapperFields);
+      $matches = preg_grep('/(^'.$columnMatch.'$)|(^\w+\::'.$columnMatch.'$)/iu', $mapperFields);
 
       // If there is exactly one match, mark the column as used and return its key
-      if (count($matches) == 1) {
+      if (is_array($matches) && count($matches) == 1) {
         $columnKey = key($matches);
         $this->_fieldUsed[$columnKey] = TRUE;
         return $columnKey;
@@ -246,6 +253,9 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
         );
       }
       $this->_dedupeFields = CRM_Dedupe_BAO_Rule::dedupeRuleFieldsMapping($ruleParams);
+      if (!$dedupeFields || !is_array($dedupeFields)) {
+        $dedupeFields = array();
+      }
       $this->_dedupeFields = array_merge($dedupeFields, array('contribution_contact_id', 'external_identifier'));
       // correct sort_name / display_name problem
       $hasSortName = array_search('sort_name', $dedupeFields);
@@ -647,7 +657,7 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
     $errors = array();
     $fieldMessage = NULL;
 
-    if (!array_key_exists('savedMapping', $fields)) {
+    if (!CRM_Utils_Array::arrayKeyExists('savedMapping', $fields)) {
       $importKeys = array();
       foreach ($fields['mapper'] as $mapperPart) {
         $importKeys[] = $mapperPart[0];
@@ -684,7 +694,7 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
       unset($ruleFields['display_name']);
       $weightSum = 0;
       foreach ($importKeys as $key => $val) {
-        if (array_key_exists($val, $ruleFields)) {
+        if (CRM_Utils_Array::arrayKeyExists($val, $ruleFields)) {
           $weightSum += $ruleFields[$val];
         }
       }

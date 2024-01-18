@@ -61,11 +61,11 @@ function &civicrm_survey_respondant_get(&$params) {
     return civicrm_create_error(ts('Input parameters is not an array'));
   }
 
-  if (!array_key_exists('survey_id', $params)) {
+  if (!CRM_Utils_Array::arrayKeyExists('survey_id', $params)) {
     return (civicrm_create_error('survey_id mandatory'));
   }
 
-  if (array_key_exists('status_id', $params)) {
+  if (CRM_Utils_Array::arrayKeyExists('status_id', $params)) {
     $status_id = $params['status_id'];
   }
   else {
@@ -80,7 +80,7 @@ function &civicrm_survey_respondant_get(&$params) {
 function &civicrm_survey_respondant_count(&$params) {
   _civicrm_initialize();
   $petition = new CRM_Campaign_BAO_Petition();
-  if (array_key_exists('groupby', $params) && $params['groupby'] == 'country') {
+  if (CRM_Utils_Array::arrayKeyExists('groupby', $params) && $params['groupby'] == 'country') {
     $signaturesCount = $petition->getPetitionSignatureTotalbyCountry($params['survey_id']);
   }
   else {

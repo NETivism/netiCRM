@@ -197,7 +197,7 @@ function &civicrm_pledge_payment_search(&$params) {
   }
 
   // add is_test to the clause if not present
-  if (!array_key_exists('pledge_test', $inputParams)) {
+  if (!CRM_Utils_Array::arrayKeyExists('pledge_test', $inputParams)) {
     $inputParams['pledge_test'] = 0;
   }
 
@@ -261,7 +261,7 @@ function &civicrm_pledge_payment_format_create(&$params) {
 
   CRM_Pledge_BAO_Pledge::resolveDefaults($params, TRUE);
 
-  $pledge = CRM_Pledge_BAO_Pledge::create($params, $ids);
+  $pledge = CRM_Pledge_BAO_Pledge::create($params);
   _civicrm_object_to_array($pledge, $pledgeArray);
   return $pledgeArray;
 }
@@ -322,7 +322,7 @@ function _civicrm_pledgepayment_check_params(&$params) {
     $duplicates = array( );
     $result = CRM_Pledge_BAO_Pledge::checkDuplicate( $params,$duplicates ); 
     if ( $result ) {
-        $d = implode( ', ', $duplicates );
+        $d = CRM_Utils_Array::implode( ', ', $duplicates );
         $error = CRM_Core_Error::createError( "Duplicate error - existing pledge record(s) have a matching Transaction ID or Invoice ID. pledge record ID(s) are: $d", CRM_Core_Error::DUPLICATE_pledge, 'Fatal', $d);
         return civicrm_create_error( $error->pop( ),
                                      $d );
@@ -418,25 +418,25 @@ function _civicrm_pledgepayment_format_params(&$params, &$values, $create = FALS
     }
   }
 
-  if (array_key_exists('note', $params)) {
+  if (CRM_Utils_Array::arrayKeyExists('note', $params)) {
     $values['note'] = $params['note'];
   }
 
-  if (array_key_exists('installment_amount', $params)) {
+  if (CRM_Utils_Array::arrayKeyExists('installment_amount', $params)) {
     $values['installment_amount'] = $params['installment_amount'];
   }
   // testing testing - how do I make it take a create_date? It needs $values['create_date'] set but doesn't seem to like it because $fields calls it $pledge_create_date
   //ditto scheduled date. I don't know why this is needs to be done because I don't fully understand the code above
-  if (array_key_exists('pledge_create_date', $params)) {
+  if (CRM_Utils_Array::arrayKeyExists('pledge_create_date', $params)) {
     $values['create_date'] = $params['pledge_create_date'];
   }
-  if (array_key_exists('pledge_scheduled_date', $params)) {
+  if (CRM_Utils_Array::arrayKeyExists('pledge_scheduled_date', $params)) {
     $values['scheduled_date'] = $params['pledge_scheduled_date'];
   }
-  if (array_key_exists('pledge_create_date', $params)) {
+  if (CRM_Utils_Array::arrayKeyExists('pledge_create_date', $params)) {
     $values['create_date'] = $params['pledge_create_date'];
   }
-  if (array_key_exists('status_id', $params)) {
+  if (CRM_Utils_Array::arrayKeyExists('status_id', $params)) {
     $values['status_id'] = $params['status_id'];
     $values['pledge_status_id'] = $params['status_id'];
   }

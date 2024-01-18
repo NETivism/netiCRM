@@ -24,7 +24,7 @@
  +--------------------------------------------------------------------+
 *}
 {* Navigation template for multi-section Wizards *}
-{if count( $category.steps ) > 0}
+{if $category.steps|is_array && $category.steps|@count > 0}
 <div id="wizard-steps">
    <ul class="section-list">
     {foreach from=$category.steps item=step}

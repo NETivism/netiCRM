@@ -501,7 +501,7 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
    * @access public
    * @static
    */
-  public function formRule($params, $files, $self) {
+  public static function formRule($params, $files, $self) {
     $errors = array();
 
     //check if contact is selected in standalone mode
@@ -760,7 +760,7 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
       CRM_Utils_Array::value('membership_type_id', $params)
     );
 
-    $customFields = CRM_Utils_Array::crmArrayMerge($customFields,
+    $customFields = CRM_Utils_Array::arrayMerge($customFields,
       CRM_Core_BAO_CustomField::getFields('Membership', FALSE, FALSE, NULL, NULL, TRUE)
     );
 
@@ -842,7 +842,7 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
 
       foreach ($nameFields as $name) {
         $fields[$name] = 1;
-        if (array_key_exists("billing_$name", $formValues)) {
+        if (CRM_Utils_Array::arrayKeyExists("billing_$name", $formValues)) {
           $formValues[$name] = $formValues["billing_{$name}"];
           $formValues['preserveDBName'] = TRUE;
         }
@@ -860,7 +860,7 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
       $this->_params['amount'] = $params['total_amount'];
       $this->_params['currencyID'] = $config->defaultCurrency;
       $this->_params['payment_action'] = 'Sale';
-      $this->_params['invoiceID'] = md5(uniqid(rand(), TRUE));
+      $this->_params['invoiceID'] = md5(uniqid((string)rand(), TRUE));
 
       // at this point we've created a contact and stored its address etc
       // all the payment processors expect the name and address to be in the
@@ -925,8 +925,7 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
           'trxn_id' => $result['trxn_id'],
         );
 
-        require_once 'CRM/Core/BAO/FinancialTrxn.php';
-        $trxn = &CRM_Core_BAO_FinancialTrxn::create($trxnParams);
+        CRM_Core_BAO_FinancialTrxn::create($trxnParams);
       }
     }
     else {

@@ -37,6 +37,8 @@
 			.track-outer {
 				display: flex;
         justify-content: center;
+        flex-wrap: wrap;
+        gap: 10px;
 			}
 			.track-inner {
 				flex: 0 0 auto;

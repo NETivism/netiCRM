@@ -99,7 +99,7 @@ class CRM_Utils_Money {
 
     // ensure $currency is a valid currency code
     // for backwards-compatibility, also accept one space instead of a currency
-    if ($currency != ' ' && !array_key_exists($currency, self::$_currencySymbols)) {
+    if ($currency != ' ' && !CRM_Utils_Array::arrayKeyExists($currency, self::$_currencySymbols)) {
       throw new CRM_Core_Exception("Invalid currency \"{$currency}\"");
     }
 
@@ -144,13 +144,20 @@ class CRM_Utils_Money {
    * @return string
    */
   protected static function formatNumericByFormat($amount, $valueFormat) {
-    if (is_numeric($amount) && function_exists('money_format')) {
-      $lc = setlocale(LC_MONETARY, 0);
-      setlocale(LC_MONETARY, 'en_US.utf8', 'en_US', 'en_US.utf8', 'en_US', 'C');
-      $amount = money_format($valueFormat, $amount);
-      setlocale(LC_MONETARY, $lc);
+    if (!is_numeric($amount)) {
+      return $amount;
     }
-    return $amount;
+    $formatted = $amount;
+    switch($valueFormat) {
+      case '%!i':
+        $formatted = number_format((float)$amount, 2);
+        break;
+      case '%!.0n':
+      default:
+        $formatted = number_format((float)$amount, 0);
+        break;
+    }
+    return $formatted;
   }
 
 

@@ -56,7 +56,7 @@ class CRM_Event_Form_Registration_ThankYou extends CRM_Event_Form_Registration {
     $this->_totalAmount = $this->get('totalAmount');
     $this->_receiveDate = $this->get('receiveDate');
     $trxn_id = $this->get('trxnId');
-    $this->_trxnId = !empty($trxn_id) ? $trxn_id : isset($this->_params['trxn_id']) ? $this->_params['trxn_id'] : '';
+    $this->_trxnId = !empty($trxn_id) ? $trxn_id : (isset($this->_params['trxn_id']) ? $this->_params['trxn_id'] : '');
     $this->_isOnWaitlist = $this->get('isOnWaitlist');
     $finalAmount = $this->get('finalAmount');
     $this->assign('finalAmount', $finalAmount);
@@ -95,6 +95,9 @@ class CRM_Event_Form_Registration_ThankYou extends CRM_Event_Form_Registration {
         $transactionId = 'test-'.$transactionId;
       }
       $this->assign('transaction_id', $transactionId);
+      if (!empty($this->_params[0]['currencyID'])) {
+        $this->assign('currency_id', $this->_params[0]['currencyID']);
+      }
       $this->assign('product_id', ts('Event').'-'.$this->_eventId);
       $this->assign('product_name', $this->_values['event']['title']);
       $this->assign('product_category', $this->_values['event']['event_type']);

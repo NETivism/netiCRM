@@ -199,7 +199,7 @@ class CRM_Utils_Sort {
     list($current, $direction) = explode('_', $url);
 
     // if current is wierd and does not exist in the vars array, skip
-    if (!array_key_exists($current, $this->_vars)) {
+    if (!CRM_Utils_Array::arrayKeyExists($current, $this->_vars)) {
       return;
     }
 

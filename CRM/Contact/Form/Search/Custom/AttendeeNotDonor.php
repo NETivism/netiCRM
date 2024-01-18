@@ -77,7 +77,7 @@ PRIMARY KEY (id)
     foreach($this->_queryColumns as $k => $v){
       $select[] = $k.' as '.$v;
     }
-    $select = implode(", \n" , $select);
+    $select = CRM_Utils_Array::implode(", \n" , $select);
     $from = $this->tempFrom();
     $where = $this->tempWhere();
     $having = $this->tempHaving();
@@ -108,7 +108,7 @@ $having
           $values[] = 'NULL';
         }
       }
-      $values = implode(', ' , $values);
+      $values = CRM_Utils_Array::implode(', ' , $values);
       $sql = "REPLACE INTO {$this->_tableName} VALUES ($values)";
       CRM_Core_DAO::executeQuery($sql, CRM_Core_DAO::$_nullArray);
     }
@@ -120,7 +120,7 @@ $having
     $statuses = array_intersect($attendeeStatus, $this->_participantStatuses);
     
     $attendeeStatusId = array_keys($statuses);
-    $from = "civicrm_contact AS contact INNER JOIN civicrm_participant p ON p.contact_id = contact.id AND p.is_test = 0 AND p.status_id IN (".implode(',', $attendeeStatusId).") 
+    $from = "civicrm_contact AS contact INNER JOIN civicrm_participant p ON p.contact_id = contact.id AND p.is_test = 0 AND p.status_id IN (".CRM_Utils_Array::implode(',', $attendeeStatusId).") 
     LEFT JOIN (SELECT cc.* FROM civicrm_contribution cc LEFT JOIN civicrm_membership_payment mp ON mp.contribution_id = cc.id LEFT JOIN civicrm_participant_payment pp ON pp.contribution_id = cc.id WHERE cc.is_test = 0 AND cc.contribution_status_id = 1 AND pp.id IS NULL AND mp.id IS NULL ORDER BY cc.created_date DESC) c ON c.contact_id = contact.id
     ";
     return $from;
@@ -142,14 +142,14 @@ $having
       $clauses[] = "p.register_date <= '$to'";
     }
 
-    return implode(' AND ', $clauses);
+    return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
   function tempHaving(){
     $attended = $this->_formValues['attended'];
     $clauses = array();
     $clauses[] = 'COUNT(p.id) >= '.$attended;
-    return implode(' AND ', $clauses);
+    return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
   function buildForm(&$form){
@@ -158,7 +158,7 @@ $having
     }
     $attendeeStatus = array_map('ts', $this->_participantStatuses);
     $form->addDateRange('register_date', ts('Register Date').' - '.ts('From'), NULL, FALSE);
-    $form->addSelect('attended', implode(', ', $attendeeStatus), $option);
+    $form->addSelect('attended', CRM_Utils_Array::implode(', ', $attendeeStatus), $option);
   }
 
   function setDefaultValues() {
@@ -171,7 +171,7 @@ $having
     $qill = array();
 
     $attendeeStatus = array_map('ts', $this->_participantStatuses);
-    $qill[1][] = ts('Participant Statuses').': '.implode(', ', $attendeeStatus);
+    $qill[1][] = ts('Participant Statuses').': '.CRM_Utils_Array::implode(', ', $attendeeStatus);
 
     $from = !empty($this->_formValues['register_date_from']) ? $this->_formValues['register_date_from'] : NULL;
     $to = !empty($this->_formValues['register_date_to']) ? $this->_formValues['register_date_to'] : NULL;
@@ -238,7 +238,7 @@ $having
     return '';
   }
 
-  static function includeContactIDs(&$sql, &$formValues) {
+  static function includeContactIDs(&$sql, &$formValues, $isExport = FALSE) {
     $contactIDs = array();
     foreach ($formValues as $id => $value) {
       list($contactID, $additionalID) = CRM_Core_Form::cbExtract($id);
@@ -248,7 +248,7 @@ $having
     }
 
     if (!empty($contactIDs)) {
-      $contactIDs = implode(', ', $contactIDs);
+      $contactIDs = CRM_Utils_Array::implode(', ', $contactIDs);
       $sql .= " AND contact_a.contact_id IN ( $contactIDs )";
     }
   }

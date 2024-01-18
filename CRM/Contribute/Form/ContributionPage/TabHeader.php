@@ -133,7 +133,7 @@ class CRM_Contribute_Form_ContributionPage_TabHeader {
     $qfKey = $form->get('qfKey');
     $form->assign('qfKey', $qfKey);
 
-    if (array_key_exists($class, $tabs)) {
+    if (CRM_Utils_Array::arrayKeyExists($class, $tabs)) {
       $tabs[$class]['current'] = TRUE;
     }
 

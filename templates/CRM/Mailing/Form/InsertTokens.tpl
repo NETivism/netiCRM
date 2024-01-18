@@ -132,8 +132,6 @@ function selectValue( val, prefix) {
         if ( editor == "ckeditor" ) {
             oEditor = CKEDITOR.instances[html_message];
             oEditor.setData('');
-        } else if ( editor == "tinymce" ) {
-            tinyMCE.getInstanceById(html_message).setContent( html_body );
         } else if ( editor == "joomlaeditor" ) { 
             document.getElementById(html_message).value = '' ;
             tinyMCE.execCommand('mceSetContent',false, '');               
@@ -200,8 +198,6 @@ function selectValue( val, prefix) {
         if ( editor == "ckeditor" ) {
             oEditor = CKEDITOR.instances[html_message];
             oEditor.setData( html_body );
-        } else if ( editor == "tinymce" ) {
-            tinyMCE.execInstanceCommand('html_message',"mceInsertContent",false, html_body );
         } else if ( editor == "joomlaeditor" ) { 
             cj("#"+ html_message).val( html_body );
             tinyMCE.execCommand('mceSetContent',false, html_body);           
@@ -255,29 +251,6 @@ if ( isMailing ) {
             oEditor.BaseHref = '' ;
             oEditor.UserFilesPath = '' ; 
 	    oEditor.on( 'focus', verify );
-        });
-        {/literal}
-    {elseif $editor eq "tinymce"}
-        {literal}
-        cj( function( ) {
-	if ( isMailing ) { 
- 	  cj('div.html').hover( 
-	  function( ) {
-	     if ( tinyMCE.get(html_message) ) {
-	     tinyMCE.get(html_message).onKeyUp.add(function() {
- 	        verify( );
-  	     });
-	     }
-          },
-	  function( ) {
-	     if ( tinyMCE.get(html_message) ) {
-	       if ( tinyMCE.get(html_message).getContent() ) {
-                 verify( );
-               } 
-	     }
-          }
-	  );
-        }
         });
         {/literal}
     {elseif $editor eq "drupalwysiwyg"}
@@ -336,9 +309,7 @@ if ( isMailing ) {
     {
         var token2     = cj("#token2").val( )[0];
         var editor     = {/literal}"{$editor}"{literal};
-        if ( editor == "tinymce" ) {
-            tinyMCE.execInstanceCommand('html_message',"mceInsertContent",false, token2 );
-        } else if ( editor == "joomlaeditor" ) { 
+        if ( editor == "joomlaeditor" ) {
             tinyMCE.execCommand('mceInsertContent',false, token2);
             var msg       = document.getElementById(html_message).value;
             var cursorlen = document.getElementById(html_message).selectionStart;
@@ -408,7 +379,6 @@ if ( isMailing ) {
                         } else if (element == 'Html' ) {
                             switch ({/literal}"{$editor}"{literal}) {
                                 case 'ckeditor': { oEditor = CKEDITOR.instances[html_message]; oEditor.focus(); break;}
-                                case 'tinymce'  : { tinyMCE.get(html_message).focus(); break; } 
                                 case 'joomlaeditor' : { tinyMCE.get(html_message).focus(); break; } 
                                 default         : { cj("#"+ html_message).focus(); break; } 
                         }
@@ -457,9 +427,7 @@ if ( isMailing ) {
                         oEditor = CKEDITOR.instances[html_message];
                         var htmlMessage = oEditor.getData( ) + '<br/><br/>--' + data.signature_html;
                         oEditor.setData( htmlMessage  );
-                    } else if ( editor == "tinymce" ) {
-                        tinyMCE.execInstanceCommand('html_message',"mceInsertContent",false, htmlMessage );
-                    }  else if ( editor == "drupalwysiwyg" ) {
+                    } else if ( editor == "drupalwysiwyg" ) {
                         Drupal.wysiwyg.instances[html_message].insert(htmlMessage);
                     } else {	
                         cj("#"+ html_message).val( htmlMessage );

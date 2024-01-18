@@ -218,16 +218,16 @@ class CRM_Contact_Form_Search_Custom_EventAggregate extends CRM_Contact_Form_Sea
       }
 
       if (!empty($contactIDs)) {
-        $contactIDs = implode(', ', $contactIDs);
+        $contactIDs = CRM_Utils_Array::implode(', ', $contactIDs);
         $clauses[] = "contact.id IN ( $contactIDs )";
       }
     }
 
     if (!empty($this->_formValues['event_type_id'])) {
-      $event_type_ids = implode(',', array_keys($this->_formValues['event_type_id']));
+      $event_type_ids = CRM_Utils_Array::implode(',', array_keys($this->_formValues['event_type_id']));
       $clauses[] = "civicrm_event.event_type_id IN ( $event_type_ids )";
     }
-    return implode(' AND ', $clauses);
+    return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
 

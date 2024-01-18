@@ -258,7 +258,7 @@ class CRM_Utils_Weight {
    */
   static function &query($queryType,
     $daoName,
-    $fieldValues = NULL,
+    $fieldValues,
     $queryData,
     $additionalWhere = NULL,
     $orderBy = NULL,
@@ -291,7 +291,7 @@ class CRM_Utils_Weight {
         $params[$fieldNum] = array($value, CRM_Utils_Type::typeToString($fieldType));
       }
     }
-    $where = implode(' AND ', $whereConditions);
+    $where = CRM_Utils_Array::implode(' AND ', $whereConditions);
 
     switch ($queryType) {
       case 'SELECT':
@@ -380,7 +380,7 @@ class CRM_Utils_Weight {
         $links[] = "<img src=\"{$imageURL}/spacer.gif\" class=\"order-icon\">";
         $links[] = "<img src=\"{$imageURL}/spacer.gif\" class=\"order-icon\">";
       }
-      $rows[$id]['weight'] = implode('&nbsp;', $links);
+      $rows[$id]['weight'] = CRM_Utils_Array::implode('&nbsp;', $links);
     }
   }
 

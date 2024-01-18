@@ -87,7 +87,7 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
       if (in_array($type, $validTypes)) {
         $cType = $type;
       }
-      elseif (array_key_exists($type, $validSubTypes)) {
+      elseif (CRM_Utils_Array::arrayKeyExists($type, $validSubTypes)) {
         $cType = CRM_Utils_Array::value('parent', $validSubTypes[$type]);
       }
       if ($cType)
@@ -275,7 +275,7 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
       $profileIds = $id;
     }
 
-    $gids = implode(',', $profileIds);
+    $gids = CRM_Utils_Array::implode(',', $profileIds);
     $params = array();
     if ($restrict) {
       $query = "SELECT g.* from civicrm_uf_group g, civicrm_uf_join j 
@@ -328,7 +328,7 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
           $clause[] = 'visibility = "Public Pages and Listings"';
         }
         if (!empty($clause)) {
-          $where .= ' AND ( ' . implode(' OR ', $clause) . ' ) ';
+          $where .= ' AND ( ' . CRM_Utils_Array::implode(' OR ', $clause) . ' ) ';
         }
       }
 
@@ -459,7 +459,7 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
         ) {
           // if field is not present in customFields, that means the user
           // DOES NOT HAVE permission to access that field
-          if (array_key_exists($field->field_name, $customFields)) {
+          if (CRM_Utils_Array::arrayKeyExists($field->field_name, $customFields)) {
             $fields[$name]['is_search_range'] = $customFields[$field->field_name]['is_search_range'];
             // fix for CRM-1994
             $fields[$name]['options_per_line'] = $customFields[$field->field_name]['options_per_line'];
@@ -481,7 +481,7 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
 
     if (empty($fields) && !$validGroup) {
        return CRM_Core_Error::statusBounce(ts('The requested Profile (gid=%1) is disabled OR it is not configured to be used for \'Profile\' listings in its Settings OR there is no Profile with that ID OR you do not have permission to access this profile. Please contact the site administrator if you need assistance.',
-          array(1 => implode(',', $profileIds))
+          array(1 => CRM_Utils_Array::implode(',', $profileIds))
         ));
     }
     return $fields;
@@ -707,7 +707,7 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
     $dedupeParams['check_permission'] = CRM_Utils_Array::value('check_permission', $params, TRUE);
     $ids = CRM_Dedupe_Finder::dupesByParams($dedupeParams, $contactType, 'Fuzzy', array($id));
     if (!empty($ids)) {
-      return implode(',', $ids);
+      return CRM_Utils_Array::implode(',', $ids);
     }
     else {
       return NULL;
@@ -833,7 +833,7 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
             }
           }
           $params[$index] = $details->$name;
-          $values[$index] = implode(",", $compref);
+          $values[$index] = CRM_Utils_Array::implode(",", $compref);
         }
         elseif ($name === 'preferred_language') {
           $languages = CRM_Core_PseudoConstant::languages();
@@ -851,8 +851,8 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
               }
             }
           }
-          $values[$index] = implode(', ', $title);
-          $params[$index] = implode(',', $ids);
+          $values[$index] = CRM_Utils_Array::implode(', ', $title);
+          $params[$index] = CRM_Utils_Array::implode(',', $ids);
         }
         elseif ($name == 'tag') {
           require_once 'CRM/Core/BAO/EntityTag.php';
@@ -862,10 +862,10 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
           foreach ($entityTags as $tagId) {
             $title[] = $allTags[$tagId];
           }
-          $values[$index] = implode(', ', $title);
-          $params[$index] = implode(',', $entityTags);
+          $values[$index] = CRM_Utils_Array::implode(', ', $title);
+          $params[$index] = CRM_Utils_Array::implode(',', $entityTags);
         }
-        elseif (array_key_exists($name, $studentFields)) {
+        elseif (CRM_Utils_Array::arrayKeyExists($name, $studentFields)) {
           require_once 'CRM/Core/OptionGroup.php';
           $paramsNew = array($name => $details->$name);
           if ($name == 'test_tutoring') {
@@ -884,7 +884,12 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
         }
         elseif ($name == 'first_name') {
           $params[$index] = $details->$name;
-          $values[$index] = $maskType ? CRM_Utils_String::mask($details->$name, 'custom', 0, 1) : $details->$name;
+          if (mb_strlen($details->$name) === 1 && $maskType) {
+            $values[$index] = CRM_Utils_String::MASK;
+          }
+          else {
+            $values[$index] = $maskType ? CRM_Utils_String::mask($details->$name, 'custom', 0, 1) : $details->$name;
+          }
         }
         elseif ($name == 'custom_'.$customTitle) {
           $params[$index] = $details->$name;
@@ -926,13 +931,11 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
                 }
                 else {
                   $customVal = NULL;
-                  if (isset($dao) && ($dao->data_type == 'Int' ||
-                      $dao->data_type == 'Boolean'
-                    )) {
-                    $customVal = (int )($details->{$name});
+                  if ($dataType == 'Int' || $dataType == 'Boolean') {
+                    $customVal = (int)($details->{$name});
                   }
-                  elseif (isset($dao) && $dao->data_type == 'Float') {
-                    $customVal = (float )($details->{$name});
+                  elseif ($dataType == 'Float') {
+                    $customVal = (float)($details->{$name});
                   }
                   elseif (!CRM_Utils_System::isNull(explode(CRM_Core_DAO::VALUE_SEPARATOR,
                         $details->{$name}
@@ -946,10 +949,10 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
                   }
 
                   $params[$index] = $customVal;
-                  $values[$index] = CRM_Core_BAO_CustomField::getDisplayValue($customVal,
-                    $cfID,
-                    $options
-                  );
+                  if ($htmlType === 'Text' || $htmlType === 'TextArea') {
+                    $customVal = $maskType ? CRM_Utils_String::mask($customVal) : $customVal;
+                  }
+                  $values[$index] = CRM_Core_BAO_CustomField::getDisplayValue($customVal, $cfID, $options);
                   if ($htmlType == 'Autocomplete-Select') {
                     $params[$index] = $values[$index];
                   }
@@ -970,7 +973,7 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
                 $params[$index] = CRM_Utils_Date::isoToMysql($details->$name);
               }
               else {
-                $values[$index] = $details->$name;
+                $values[$index] = $maskType ? CRM_Utils_String::mask($details->$name) : $details->$name;
               }
             }
           }
@@ -1135,7 +1138,7 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
             foreach ($eachMultiValue as $key => $valueLabel) {
               $links[] = '<a href="' . $url[$key] . '">' . $valueLabel . '</a>';
             }
-            $values[$index] = implode(', ', $links);
+            $values[$index] = CRM_Utils_Array::implode(', ', $links);
           }
           else {
             $values[$index] = '<a href="' . $url . '">' . $values[$index] . '</a>';
@@ -1285,11 +1288,11 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
       if ($key == 'User Account') {
         $menuRebuild = TRUE;
       }
-      if (array_key_exists($key, $groupTypes) && !in_array($key, $ufGroupRecord)) {
+      if (CRM_Utils_Array::arrayKeyExists($key, $groupTypes) && !in_array($key, $ufGroupRecord)) {
         // insert a new record
         CRM_Core_BAO_UFGroup::addUFJoin($joinParams);
       }
-      elseif (!array_key_exists($key, $groupTypes) && in_array($key, $ufGroupRecord)) {
+      elseif (!CRM_Utils_Array::arrayKeyExists($key, $groupTypes) && in_array($key, $ufGroupRecord)) {
         // delete a record for existing ufgroup
         CRM_Core_BAO_UFGroup::delUFJoin($joinParams);
       }
@@ -1654,7 +1657,7 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
       $genderOptions = array();
       $gender = CRM_Core_PseudoConstant::gender();
       foreach ($gender as $key => $var) {
-        $genderOptions[$key] = HTML_QuickForm::createElement('radio', NULL, ts('Gender'), $var, $key);
+        $genderOptions[$key] = $form->createElement('radio', NULL, ts('Gender'), $var, $key);
       }
       $form->addGroup($genderOptions, $name, $title);
       if ($required) {
@@ -1739,7 +1742,7 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
         if ($key == '') {
           continue;
         }
-        $communicationOptions[] = &HTML_QuickForm::createElement('checkbox', $key, NULL, $var);
+        $communicationOptions[] = &$form->createElement('checkbox', $key, NULL, $var);
       }
       $form->addGroup($communicationOptions, $name, $title, '<br/>');
     }
@@ -2012,7 +2015,7 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
             // hack to add custom data for components
             $components = array("Contribution", "Participant", "Membership", "Activity");
             foreach ($components as $value) {
-              $customFields = CRM_Utils_Array::crmArrayMerge($customFields,
+              $customFields = CRM_Utils_Array::arrayMerge($customFields,
                 CRM_Core_BAO_CustomField::getFieldsForImport($value)
               );
             }
@@ -2094,7 +2097,7 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
               foreach ($details as $key => $value) {
                 $primaryLocationType = FALSE;
                 if ($locTypeId == 'Primary') {
-                  if (is_array($value) && array_key_exists($fieldName, $value)) {
+                  if (is_array($value) && CRM_Utils_Array::arrayKeyExists($fieldName, $value)) {
                     $primaryLocationType = TRUE;
                     $locTypeId = CRM_Contact_BAO_Contact::getPrimaryLocationType($contactId, FALSE, $fieldName);
                   }
@@ -2195,7 +2198,7 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
 
             foreach ($fields as $name => $field) {
               $fldName = "field[$contactId][$name]";
-              if (array_key_exists($name, $studentDefaults)) {
+              if (CRM_Utils_Array::arrayKeyExists($name, $studentDefaults)) {
                 $defaults[$fldName] = $studentDefaults[$name];
               }
             }
@@ -2235,7 +2238,7 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
    * @static
    * @access public
    */
-  static function getProfiles($types, $onlyPure = FALSE) {
+  public static function getProfiles($types, $onlyPure = FALSE) {
     require_once "CRM/Core/BAO/UFField.php";
     $profiles = array();
     $ufGroups = CRM_Core_PseudoConstant::ufgroup();
@@ -2540,7 +2543,7 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
           if ($customFieldID = CRM_Core_BAO_CustomField::getKeyID($key)) {
             //fix checkbox
             if ($customFields[$customFieldID]['html_type'] == 'CheckBox') {
-              $value = implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, array_keys($value));
+              $value = CRM_Utils_Array::implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, array_keys($value));
             }
             // fix the date field
             if ($customFields[$customFieldID]['data_type'] == 'Date') {
@@ -2586,7 +2589,7 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
    *
    * @return array list of calculated group type
    */
-  function calculateGroupType($gId, $ignoreFieldId = NULL) {
+  static function calculateGroupType($gId, $ignoreFieldId = NULL) {
     //get the profile fields.
     $ufFields = self::getFields($gId, FALSE, NULL, NULL, NULL, TRUE, NULL, TRUE);
     $groupType = array();
@@ -2654,9 +2657,9 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
     }
 
     // Build String to store group types and group subtypes
-    $groupTypeString = implode(',', $gTypes);
+    $groupTypeString = CRM_Utils_Array::implode(',', $gTypes);
     if (!empty($gTypeValues)) {
-      $groupTypeString .= CRM_Core_DAO::VALUE_SEPARATOR . implode(',', $gTypeValues);
+      $groupTypeString .= CRM_Core_DAO::VALUE_SEPARATOR . CRM_Utils_Array::implode(',', $gTypeValues);
     }
 
     return CRM_Core_DAO::setFieldValue('CRM_Core_DAO_UFGroup', $gId, 'group_type', $groupTypeString);
@@ -2672,7 +2675,7 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
    *
    * @return void.
    */
-  function setComponentDefaults(&$fields, $componentId, $component, &$defaults) {
+  static function setComponentDefaults(&$fields, $componentId, $component, &$defaults) {
     if (!$componentId ||
       !in_array($component, array('Contribute', 'Membership', 'Event', 'Activity'))
     ) {
@@ -2719,7 +2722,7 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
         $timefldName = "field[$componentId][{$name}_time]";
         list($defaults[$fldName], $defaults[$timefldName]) = CRM_Utils_Date::setDateDefaults($values[$name]);
       }
-      elseif (array_key_exists($name, $values)) {
+      elseif (CRM_Utils_Array::arrayKeyExists($name, $values)) {
         $defaults[$fldName] = $values[$name];
       }
       elseif ($name == 'participant_note') {
@@ -2738,7 +2741,7 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
           require_once 'CRM/Core/BAO/CustomGroup.php';
           foreach ($componentSubType as $subType) {
             $subTree = CRM_Core_BAO_CustomGroup::getTree($componentBAOName, CRM_Core_DAO::$_nullObject, $componentId, 0, $values[$subType]);
-            $groupTree = CRM_Utils_Array::crmArrayMerge($groupTree, $subTree);
+            $groupTree = CRM_Utils_Array::arrayMerge($groupTree, $subTree);
           }
           $formattedGroupTree = CRM_Core_BAO_CustomGroup::formatGroupTree($groupTree, 1, CRM_Core_DAO::$_nullObject);
           CRM_Core_BAO_CustomGroup::setDefaults($formattedGroupTree, $defaults);
@@ -2809,7 +2812,7 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
       }
     }
     if (!empty($profileNames)) {
-      $whereClause = 'name IN ( ' . implode(',', $profileNames) . ' ) AND is_reserved = 1';
+      $whereClause = 'name IN ( ' . CRM_Utils_Array::implode(',', $profileNames) . ' ) AND is_reserved = 1';
     }
     else {
       $whereClause = 'is_reserved = 1';
@@ -2821,7 +2824,7 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
     while ($dao->fetch()) {
       $key = $dao->id;
       if ($extraProfiles) {
-        $key .= ',' . implode(',', $extraProfiles);
+        $key .= ',' . CRM_Utils_Array::implode(',', $extraProfiles);
       }
       $reservedProfiles[$key] = $dao->title;
     }
@@ -2859,7 +2862,7 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
 
     // process further only if profileDoubleOptIn enabled and if groups exist
     if (!$config->profileDoubleOptIn ||
-      !array_key_exists('group', $params) ||
+      !CRM_Utils_Array::arrayKeyExists('group', $params) ||
       CRM_Utils_System::isNull($params['group'])
     ) {
       return $subscribeGroupIds;

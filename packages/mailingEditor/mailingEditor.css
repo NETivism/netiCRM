@@ -334,6 +334,9 @@ a.editable-click[data-type="xquill"] + .editable-container .editable-buttons {
   width: 100%;
   background: #ddd;
 }
+.nme-setting-panels[data-tab-active-id*="aicompletion"] .nme-setting-panels-footer {
+  display: none;
+}
 ul.nme-setting-panels-tabs {
   display: flex;
   margin: 0;
@@ -967,5 +970,11 @@ ul.nme-setting-panels-tabs li a.is-active {
 @media screen and (min-width: 1200px) {
   .nme-preview-popup {
     max-width: 1000px;
+  }
+  .nsp-container.is-fullscreen ul.nme-setting-panels-tabs li {
+    flex: 0 1 auto;
+  }
+  .nsp-container.is-fullscreen ul.nme-setting-panels-tabs li a {
+    padding: 5px 30px;
   }
 }

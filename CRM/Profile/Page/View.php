@@ -120,7 +120,7 @@ class CRM_Profile_Page_View extends CRM_Core_Page {
 
       $gidString = $this->_gid;
       if (!empty($profileIds)) {
-        $gidString = implode(',', $profileIds);
+        $gidString = CRM_Utils_Array::implode(',', $profileIds);
       }
       if (CRM_Core_Permission::ufGroupValid($this->_gid,
           CRM_Core_Permission::SEARCH

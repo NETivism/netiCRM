@@ -51,7 +51,7 @@ class CRM_Coupon_Page_AJAX {
       $activeOptionIds = explode(',', $activeOptionIdsText);
     }
 
-    if (!empty($event_id)) {
+    if (!empty($event_id) && CRM_Utils_Rule::positiveInteger($event_id)) {
       $coupon = CRM_Coupon_BAO_Coupon::validEventFromCode($code, $event_id);
       if($coupon){
         // this coupon doesn't specify any event, check price field value
@@ -70,6 +70,11 @@ class CRM_Coupon_Page_AJAX {
     if ($json) {
       echo $json;
     }
+    else {
+      $json = json_encode(array('error' => ts('The coupon is not valid.')));
+      echo $json;
+      http_response_code(400);
+    }
     CRM_Utils_System::civiExit();
   }
 
@@ -81,7 +86,7 @@ class CRM_Coupon_Page_AJAX {
       $fvids = $coupon['used_for']['civicrm_price_field_value'];
       $return['entity_table'] = 'civicrm_price_field_value';
       $fields = array();
-      $sql = "SELECT price_field_id, id FROM civicrm_price_field_value WHERE id IN(".implode(',', $fvids).")";
+      $sql = "SELECT price_field_id, id FROM civicrm_price_field_value WHERE id IN(".CRM_Utils_Array::implode(',', $fvids).")";
       $dao = CRM_Core_DAO::executeQuery($sql);
       while($dao->fetch()) {
         $fieldName = 'price_'.$dao->price_field_id;

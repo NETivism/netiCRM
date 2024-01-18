@@ -405,7 +405,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
           case 'pcp_display_in_roll':
           case 'pcp_roll_nickname':
           case 'pcp_personal_note':
-            if (!array_key_exists('pcp_id', $params) && !array_key_exists('pcp_page', $params) && !array_key_exists('pcp_creator', $params) && !$addedError) {
+            if (!CRM_Utils_Array::arrayKeyExists('pcp_id', $params) && !CRM_Utils_Array::arrayKeyExists('pcp_page', $params) && !CRM_Utils_Array::arrayKeyExists('pcp_creator', $params) && !$addedError) {
               $addedError = TRUE;
               CRM_Import_Parser_Contact::addToErrorMsg(ts('PCP related field needs PCP page title or id or user'), $errorMessage);
             }
@@ -671,7 +671,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
           $errorMsg[] = "$labels[$k] $v";
         }
       }
-      $errorMsg = implode(' AND ', $errorMsg);
+      $errorMsg = CRM_Utils_Array::implode(' AND ', $errorMsg);
       $importRecordParams = array($statusFieldName => CRM_Contribute_Import_Parser::ERROR, "${statusFieldName}Msg" => "Matching Contribution record not found for " . $errorMsg . ". Row was skipped.");
       $this->updateImportStatus($values[count($values) - 1], $importRecordParams);
       array_unshift($values, $importRecordParams[$statusFieldName.'Msg']);
@@ -723,20 +723,41 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
         $fieldsArray = $this->_dedupeRuleFields;
 
         $dispArray = array();
-        foreach ($fieldsArray as $value) {
+        $noValueFields = array();
+        foreach ($fieldsArray as $dupeFieldName) {
           if ($doCreateContact) {
-            if (!array_key_exists(trim($value), $params)) {
-              $dispArray[] = $this->_importableContactFields[$value]['title'];
+            if (!CRM_Utils_Array::arrayKeyExists(trim($dupeFieldName), $params)) {
+              $dispArray[] = $this->_importableContactFields[$dupeFieldName]['title'];
+            }
+            elseif (!is_array($params[$dupeFieldName]) && empty(trim($params[$dupeFieldName]))) {
+              $noValueFields[$dupeFieldName] = $this->_importableContactFields[$dupeFieldName]['title'];
+            }
+            elseif (is_array($params[$dupeFieldName])) {
+              $hasValue = FALSE;
+              foreach($params[$dupeFieldName] as $email) {
+                if ($dupeFieldName === 'email' && !empty($email['email'])) {
+                  $hasValue = TRUE;
+                }
+              }
+              if (!$hasValue) {
+                $noValueFields[$dupeFieldName] = $this->_importableContactFields[$dupeFieldName]['title'];
+              }
             }
           }
-          elseif (array_key_exists(trim($value), $params)) {
-            $paramValue = $params[trim($value)];
+          elseif (CRM_Utils_Array::arrayKeyExists(trim($dupeFieldName), $params)) {
+            $paramValue = $params[trim($dupeFieldName)];
             if (is_array($paramValue)) {
-              $dispArray[] = $params[trim($value)][0][trim($value)];
+              $dispArray[] = $params[trim($dupeFieldName)][0][trim($dupeFieldName)];
             }
             else {
-              $dispArray[] = $params[trim($value)];
+              $dispArray[] = $params[trim($dupeFieldName)];
             }
+          }
+        }
+
+        if ($doCreateContact && count($noValueFields) >= count($fieldsArray)) {
+          foreach($noValueFields as $fieldTitle) {
+            $dispArray[] = $fieldTitle;
           }
         }
 
@@ -745,10 +766,10 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
         }
         if (!empty($dispArray)) {
           if ($doCreateContact) {
-            $errDisp = ts('Missing required contact matching fields.')." - ".implode('|', $dispArray);
+            $errDisp = ts('Missing required contact matching fields.')." - ".CRM_Utils_Array::implode('|', $dispArray);
           }
           else {
-            $errDisp = ts("No matching results for "). ":" . implode('|', $dispArray) . "";
+            $errDisp = ts("No matching results for "). ":" . CRM_Utils_Array::implode('|', $dispArray) . "";
           }
           $doCreateContact = FALSE;
         }

@@ -99,6 +99,7 @@ class CRM_Contribute_Form_Task extends CRM_Core_Form {
     $form->assign('taskName', $contributeTasks[$form->_task]);
 
     $ids = array();
+    $rowCount = $form->get('rowCount');
     if ($values['radio_ts'] == 'ts_sel') {
       foreach ($values as $name => $value) {
         list($contactID, $additionalID) = CRM_Core_Form::cbExtract($name);
@@ -120,13 +121,11 @@ class CRM_Contribute_Form_Task extends CRM_Core_Form {
         $form->_sort = new CRM_Utils_Sort($sortOrder, $sortID);
       }
 
-      $result = $query->searchQuery(0, 0, $form->_sort);
 
       // separate query to prevent memory peak
-      $jobSize = 100000;
-      if ($result->N && $result->N / $jobSize > 1) {
-        $jobs = $result->N / $jobSize;
-        $result->free();
+      $jobSize = 50000;
+      if (is_numeric($rowCount) && $rowCount / $jobSize > 1) {
+        $jobs = $rowCount / $jobSize;
         for($i = 0; $i < $jobs; $i++) {
           $offset = $i*$jobSize;
           $result = $query->searchQuery($offset, $jobSize, $form->_sort);
@@ -137,6 +136,7 @@ class CRM_Contribute_Form_Task extends CRM_Core_Form {
         }
       }
       else {
+        $result = $query->searchQuery(0, 0, $form->_sort);
         while ($result->fetch()) {
           $ids[] = $result->contribution_id;
         }
@@ -146,7 +146,7 @@ class CRM_Contribute_Form_Task extends CRM_Core_Form {
     }
 
     if (!empty($ids)) {
-      $form->_componentClause = ' civicrm_contribution.id IN ( ' . implode(',', $ids) . ' ) ';
+      $form->_componentClause = ' civicrm_contribution.id IN ( ' . CRM_Utils_Array::implode(',', $ids) . ' ) ';
 
       $form->assign('totalSelectedContributions', count($ids));
     }

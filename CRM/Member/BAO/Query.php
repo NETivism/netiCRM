@@ -123,7 +123,7 @@ class CRM_Member_BAO_Query {
     $grouping = NULL;
     foreach (array_keys($query->_params) as $id) {
       if (substr($query->_params[$id][0], 0, 7) == 'member_') {
-        if ($query->_mode == CRM_Contact_BAO_QUERY::MODE_CONTACTS) {
+        if ($query->_mode == CRM_Contact_BAO_Query::MODE_CONTACTS) {
           $query->_useDistinct = TRUE;
         }
         if ($query->_params[$id][0] == 'member_test') {
@@ -195,7 +195,7 @@ class CRM_Member_BAO_Query {
         return;
 
       case 'member_status_id':
-        $status = implode(',', $value);
+        $status = CRM_Utils_Array::implode(',', $value);
 
         if (count($value) > 1) {
           $op = 'IN';
@@ -207,7 +207,7 @@ class CRM_Member_BAO_Query {
         foreach ($value as $id => $dontCare) {
           $names[] = $statusTypes[$id];
         }
-        $query->_qill[$grouping][] = ts('Membership Status %1', array(1 => $op)) . ' ' . implode(' ' . ts('or') . ' ', $names);
+        $query->_qill[$grouping][] = ts('Membership Status %1', array(1 => $op)) . ' ' . CRM_Utils_Array::implode(' ' . ts('or') . ' ', $names);
         $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("civicrm_membership.status_id",
           $op,
           $status,
@@ -241,7 +241,7 @@ class CRM_Member_BAO_Query {
         return;
 
       case 'member_membership_type_id':
-        $mType = implode(',', $value);
+        $mType = CRM_Utils_Array::implode(',', $value);
         if (count($value) > 1) {
           $op = 'IN';
           $mType = "({$mType})";
@@ -252,7 +252,7 @@ class CRM_Member_BAO_Query {
         foreach ($value as $id => $dontCare) {
           $names[] = $membershipTypes[$id];
         }
-        $query->_qill[$grouping][] = ts('Membership Type %1', array(1 => $op)) . ' ' . implode(' ' . ts('or') . ' ', $names);
+        $query->_qill[$grouping][] = ts('Membership Type %1', array(1 => $op)) . ' ' . CRM_Utils_Array::implode(' ' . ts('or') . ' ', $names);
         $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("civicrm_membership.membership_type_id",
           $op,
           $mType,

@@ -55,8 +55,8 @@ class CRM_Member_Page_DashBoard extends CRM_Core_Page {
     require_once "CRM/Member/BAO/Membership.php";
     CRM_Utils_System::setTitle(ts('CiviMember'));
     $membershipSummary = array();
-    $preMonth = CRM_Utils_Date::customFormat(date("Y-m-d", mktime(0, 0, 0, date("m") - 1, 01, date("Y"))), '%Y%m%d');
-    $preMonthEnd = CRM_Utils_Date::customFormat(date("Y-m-t", mktime(0, 0, 0, date("m") - 1, 01, date("Y"))), '%Y%m%d');
+    $preMonth = CRM_Utils_Date::customFormat(date("Y-m-d", mktime(0, 0, 0, intval(date("m")) - 1, 1, intval(date("Y")))), '%Y%m%d');
+    $preMonthEnd = CRM_Utils_Date::customFormat(date("Y-m-t", mktime(0, 0, 0, intval(date("m")) - 1, 1, intval(date("Y")))), '%Y%m%d');
     $preMonthYear = mktime(0, 0, 0, substr($preMonth, 4, 2), 1, substr($preMonth, 0, 4));
 
     $today = getdate();
@@ -113,7 +113,7 @@ class CRM_Member_Page_DashBoard extends CRM_Core_Page {
     }
     require_once "CRM/Member/BAO/MembershipStatus.php";
     $status = CRM_Member_BAO_MembershipStatus::getMembershipStatusCurrent();
-    $status = implode(',', $status);
+    $status = CRM_Utils_Array::implode(',', $status);
 
     foreach ($membershipSummary as $typeID => $details) {
       foreach ($details as $key => $value) {

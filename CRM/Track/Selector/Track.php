@@ -278,7 +278,7 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
           $referrerUrl = $url['host'].'... <a href="'.$dao->referrer_url.'" target="_blank"><i class="zmdi zmdi-arrow-right-top"></i></a>';
         }
         else {
-          $referrerUrl = strstr($dao->referrer_url, 0, 15).'...';
+          $referrerUrl = substr($dao->referrer_url, 0, 15).'...';
         }
       }
       if ($dao->landing) {
@@ -292,7 +292,7 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
         }
       }
       if (!empty($utmInfo)) {
-        $utmInfo = '<ul><li>'.implode("</li><li>", $utmInfo).'</li></ul>';
+        $utmInfo = '<ul><li>'.CRM_Utils_Array::implode("</li><li>", $utmInfo).'</li></ul>';
       }
       else {
         $utmInfo = '';
@@ -319,7 +319,7 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
       }
     }
     foreach($pageTables as $table => $pages) {
-      $pageDAO = CRM_Core_DAO::executeQuery("SELECT id, title FROM $table WHERE id IN(".implode(',', array_keys($pages)).")");
+      $pageDAO = CRM_Core_DAO::executeQuery("SELECT id, title FROM $table WHERE id IN(".CRM_Utils_Array::implode(',', array_keys($pages)).")");
       while($pageDAO->fetch()) {
         foreach($pages[$pageDAO->id] as $resultId) {
           $url = str_replace('%%id%%', $pageDAO->id, $this->_pageUrl[$table]);
@@ -329,10 +329,10 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
     }
     foreach($recordTables as $table => $records) {
       if ($table === 'civicrm_contact') {
-        $recordDAO = CRM_Core_DAO::executeQuery("SELECT c.id, c.id as cid, c.sort_name FROM $table c WHERE c.id IN(".implode(',', array_keys($records)).")");
+        $recordDAO = CRM_Core_DAO::executeQuery("SELECT c.id, c.id as cid, c.sort_name FROM $table c WHERE c.id IN(".CRM_Utils_Array::implode(',', array_keys($records)).")");
       }
       else {
-        $recordDAO = CRM_Core_DAO::executeQuery("SELECT t.id, t.contact_id as cid, c.sort_name FROM $table t INNER JOIN civicrm_contact c ON c.id = t.contact_id WHERE t.id IN(".implode(',', array_keys($records)).")");
+        $recordDAO = CRM_Core_DAO::executeQuery("SELECT t.id, t.contact_id as cid, c.sort_name FROM $table t INNER JOIN civicrm_contact c ON c.id = t.contact_id WHERE t.id IN(".CRM_Utils_Array::implode(',', array_keys($records)).")");
       }
       while($recordDAO->fetch()) {
         foreach($records[$recordDAO->id] as $resultId) {
@@ -380,7 +380,7 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
         }
         elseif (is_array($this->_entityId)) {
           $where[] = "entity_id IN (%5)";
-          $args[5] = array(implode(',', $this->_entityId), 'CommaSeperatedIntegers');
+          $args[5] = array(CRM_Utils_Array::implode(',', $this->_entityId), 'CommaSeperatedIntegers');
         }
       }
     }
@@ -425,7 +425,7 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
       $args[14] = array($this->_entityTable, 'String');
     }
 
-    $where = implode(" AND ", $where);
+    $where = CRM_Utils_Array::implode(" AND ", $where);
 
     $query = "SELECT $select FROM civicrm_track WHERE $where $groupBy";
     if ($sort) {
@@ -477,7 +477,7 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
           break;
       }
     } 
-    return implode(' - ', $name);
+    return CRM_Utils_Array::implode(' - ', $name);
   }
 
   function getTitle() {

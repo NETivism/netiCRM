@@ -156,7 +156,7 @@ class CRM_Core_Report_Excel {
                 }
               }
 
-              $str = implode($seperator, $strArray);
+              $str = CRM_Utils_Array::implode($seperator, $strArray);
               $value = &$str;
             }
 
@@ -257,11 +257,17 @@ class CRM_Core_Report_Excel {
     return NULL;
   }
   
-  static function writeExportFile($type = 'excel', $fileName, &$header, &$rows, $download = TRUE) {
+  static function writeExportFile($type, $fileName, &$header, &$rows, $download = TRUE) {
     $config = CRM_Core_Config::singleton();
     $writer = self::singleton($type);
     if ($download) {
-      $writer->openToBrowser($fileName);
+      if ($config->decryptExcelOption == 0) {
+        $writer->openToBrowser($fileName);
+      }
+      else {
+        $filePath = $config->uploadDir.$fileName;
+        $writer->openToFile($filePath);
+      }
     }
     else {
       if (strpos($fileName, $config->uploadDir) === 0) {
@@ -277,9 +283,22 @@ class CRM_Core_Report_Excel {
       ->addRows($rows)
       ->close();
     if ($download) {
-      CRM_Utils_System::civiExit();
+      if ($config->decryptExcelOption == 0) {
+        CRM_Utils_System::civiExit();
+      }
+      else {
+        CRM_Utils_File::encryptXlsxFile($filePath);
+        header('Content-type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment; filename=' . $fileName);
+        header('Pragma: no-cache');
+        echo file_get_contents($filePath);
+        CRM_Utils_System::civiExit();
+      }
     }
     else {
+      if ($config->decryptExcelOption) {
+        CRM_Utils_File::encryptXlsxFile($filePath);
+      }
       return $filePath;
     }
   }

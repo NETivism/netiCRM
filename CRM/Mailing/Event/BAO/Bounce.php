@@ -288,7 +288,7 @@ class CRM_Mailing_Event_BAO_Bounce extends CRM_Mailing_Event_DAO_Bounce {
       return NULL;
     }
     else {
-      $sql = $select." WHERE ".implode(" AND ", $where);
+      $sql = $select." WHERE ".CRM_Utils_Array::implode(" AND ", $where);
       $sql .= "\n ORDER BY CASE bt.name 
         WHEN 'Spam' THEN 1
         WHEN 'Syntax' THEN 5

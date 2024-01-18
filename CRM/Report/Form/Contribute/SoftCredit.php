@@ -200,7 +200,7 @@ class CRM_Report_Form_Contribute_SoftCredit extends CRM_Report_Form {
     $select = array();
     $this->_columnHeaders = array();
     foreach ($this->_columns as $tableName => $table) {
-      if (array_key_exists('fields', $table)) {
+      if (CRM_Utils_Array::arrayKeyExists('fields', $table)) {
         foreach ($table['fields'] as $fieldName => $field) {
           if (CRM_Utils_Array::value('required', $field) ||
             CRM_Utils_Array::value($fieldName, $this->_params['fields'])
@@ -261,7 +261,7 @@ class CRM_Report_Form_Contribute_SoftCredit extends CRM_Report_Form {
       }
     }
 
-    $this->_select = "SELECT " . implode(', ', $select) . " ";
+    $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
   static function formRule($fields, $files, $self) {
@@ -377,7 +377,6 @@ class CRM_Report_Form_Contribute_SoftCredit extends CRM_Report_Form {
     $this->buildACLClause(array('constituentname', 'contact_civireport'));
     $sql = $this->buildQuery();
 
-    require_once 'CRM/Utils/OpenFlashChart.php';
     $dao = CRM_Core_DAO::executeQuery($sql);
     $rows = $graphRows = array();
     $count = 0;
@@ -408,8 +407,8 @@ class CRM_Report_Form_Contribute_SoftCredit extends CRM_Report_Form {
 
     foreach ($rows as $rowNum => $row) {
       // Link constituent (contributor) to contribution detail
-      if (array_key_exists('civicrm_contact_sort_name_constituent', $row) &&
-        array_key_exists('civicrm_contact_id_constituent', $row)
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_contact_sort_name_constituent', $row) &&
+        CRM_Utils_Array::arrayKeyExists('civicrm_contact_id_constituent', $row)
       ) {
 
         $url = CRM_Report_Utils_Report::getNextUrl('contribute/detail',
@@ -422,7 +421,7 @@ class CRM_Report_Form_Contribute_SoftCredit extends CRM_Report_Form {
       }
 
       // Handling Creditor's sort_name no Repeat
-      if (array_key_exists('civicrm_contact_sort_name_creditor', $row) && $this->_outputMode != 'csv') {
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_contact_sort_name_creditor', $row) && $this->_outputMode != 'csv') {
         if ($value = $row['civicrm_contact_sort_name_creditor']) {
           if ($rowNum == 0) {
             $prev_dispname = $value;
@@ -454,7 +453,7 @@ class CRM_Report_Form_Contribute_SoftCredit extends CRM_Report_Form {
       }
 
       // Handling Creditor's Phone No Repeat
-      if (array_key_exists('civicrm_phone_phone_creditor', $row) && $this->_outputMode != 'csv') {
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_phone_phone_creditor', $row) && $this->_outputMode != 'csv') {
         //$value = 0;
         if ($value = $row['civicrm_phone_phone_creditor']) {
           if ($rowNum == 0) {
@@ -482,7 +481,7 @@ class CRM_Report_Form_Contribute_SoftCredit extends CRM_Report_Form {
       }
 
       // Handling Creditor's Email No Repeat
-      if (array_key_exists('civicrm_email_email_creditor', $row) && $this->_outputMode != 'csv') {
+      if (CRM_Utils_Array::arrayKeyExists('civicrm_email_email_creditor', $row) && $this->_outputMode != 'csv') {
         if ($value = $row['civicrm_email_email_creditor']) {
           if ($rowNum == 0) {
             $prev_email = $value;

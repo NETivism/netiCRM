@@ -404,6 +404,7 @@ class CRM_Event_Form_Registration_AdditionalParticipant extends CRM_Event_Form_R
       require_once 'CRM/Event/Form/Registration/Register.php';
       $isRegistered = CRM_Event_Form_Registration_Register::checkRegistration($fields, $self, TRUE);
       // refs #32662,return false means additional participant already registered
+
       if (!$isRegistered) {
         $errors['_qf_default'] = ts('A person is already registered for this event.');
       }
@@ -601,7 +602,7 @@ class CRM_Event_Form_Registration_AdditionalParticipant extends CRM_Event_Form_R
           CRM_Price_BAO_Set::processAmount($this->_values['fee'], $params, $lineItem);
 
           //build the line item..
-          if (array_key_exists($addParticipantNum, $this->_lineItem)) {
+          if (CRM_Utils_Array::arrayKeyExists($addParticipantNum, $this->_lineItem)) {
             $this->_lineItem[$addParticipantNum] = $lineItem;
           }
           else {
@@ -625,7 +626,7 @@ class CRM_Event_Form_Registration_AdditionalParticipant extends CRM_Event_Form_R
       }
 
       //build the params array.
-      if (array_key_exists($addParticipantNum, $this->_params)) {
+      if (CRM_Utils_Array::arrayKeyExists($addParticipantNum, $this->_params)) {
         $this->_params[$addParticipantNum] = $params;
       }
       else {
@@ -658,7 +659,7 @@ class CRM_Event_Form_Registration_AdditionalParticipant extends CRM_Event_Form_R
     }
   }
 
-  function &getPages($additionalParticipant) {
+  static function &getPages($additionalParticipant) {
     $details = array();
     for ($i = 1; $i <= $additionalParticipant; $i++) {
       $details["Participant_{$i}"] = array('className' => 'CRM_Event_Form_Registration_AdditionalParticipant',

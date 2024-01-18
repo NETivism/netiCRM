@@ -141,6 +141,8 @@ class CRM_Core_StateMachine {
     // save the form values and validation status to the session
     $page->isFormBuilt() or $page->buildForm();
 
+    $page->controller->set('prevAction', $actionName);
+
     $pageName = $page->getAttribute('name');
     $data = &$page->controller->container();
 
@@ -198,7 +200,7 @@ class CRM_Core_StateMachine {
    * @access public
    */
   function find($name) {
-    if (array_key_exists($name, $this->_states)) {
+    if (CRM_Utils_Array::arrayKeyExists($name, $this->_states)) {
       return $this->_states[$name];
     }
     else {

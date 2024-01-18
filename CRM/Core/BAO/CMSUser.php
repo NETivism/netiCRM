@@ -76,7 +76,7 @@ class CRM_Core_BAO_CMSUser {
     $sql = "SELECT $id, $mail, $name FROM {$config->userFrameworkUsersTableName} where $mail != ''";
     $query = $db_uf->query($sql);
 
-    $user = new StdClass();
+    $user = new stdClass();
     $uf = $config->userFramework;
     $contactCount = 0;
     $contactCreated = 0;
@@ -204,6 +204,16 @@ class CRM_Core_BAO_CMSUser {
           $form->assign('isCMS', $required);
           require_once 'CRM/Core/Action.php';
           if (!$userID || $action & CRM_Core_Action::PREVIEW || $action & CRM_Core_Action::PROFILE) {
+            // for validate ajax
+            $controllerName = CRM_Utils_System::getClassName($form->controller);
+            if ($controllerName == 'CRM_Core_Controller_Simple') {
+              $qfKey = 'ignoreKey';
+            }
+            else {
+              $qfKey = $form->controller->_key;
+            }
+            $form->assign('cmsQfKey', $qfKey);
+            $form->assign('cmsCtrName', $controllerName);
             $form->add('text', 'cms_name', ts('Username'), NULL, $required);
             if (($isDrupal && !CRM_Utils_System::userEmailVerification()) OR ($isJoomla)) {
               $form->add('password', 'cms_pass', ts('Password'));
