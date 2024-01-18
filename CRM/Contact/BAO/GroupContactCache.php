@@ -35,7 +35,10 @@
 
 class CRM_Contact_BAO_GroupContactCache extends CRM_Contact_DAO_GroupContactCache {
 
-  const SMARTGROUP_CACHE_TIMEOUT_MINIMAL = 3;
+  /**
+   * Minimal cache time in seconds
+   */
+  const SMARTGROUP_CACHE_TIMEOUT_MINIMAL = 30;
 
   static $_alreadyLoaded = array();
 

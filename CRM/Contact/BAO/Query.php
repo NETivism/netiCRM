@@ -2705,7 +2705,7 @@ WHERE  id IN ( $groupIDs )
           // refs #31308, do not refresh smart group too often
           $config = CRM_Core_Config::singleton();
           $minimalCacheTime = CRM_Contact_BAO_GroupContactCache::SMARTGROUP_CACHE_TIMEOUT_MINIMAL;
-          if (CRM_REQUEST_TIME - $minimalCacheTime*60 > strtotime($group->cache_date)) {
+          if (CRM_REQUEST_TIME - $minimalCacheTime > strtotime($group->cache_date)) {
             CRM_Contact_BAO_GroupContactCache::load($group);
           }
         }
