@@ -486,7 +486,7 @@ VALUES
 
   (@option_group_id_gType, 'Access Control'  , 1, NULL, NULL, 0, NULL, 1, NULL, 0, 1, 1, NULL, NULL),
   (@option_group_id_gType, 'Mailing List'    , 2, NULL, NULL, 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_gType, 'Flydove Smart Marketing', 3, NULL, NULL, 0, NULL, 3, NULL, 0, 0, 0, NULL, NULL);
+  (@option_group_id_gType, 'Flydove Smart Marketing', 3, NULL, NULL, 0, NULL, 3, NULL, 0, 0, 0, NULL, NULL),
 
   (@option_group_id_grantSt, '{ts escape="sql"}Pending{/ts}',  1, 'Pending',  NULL, 0, 1,    1, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_grantSt, '{ts escape="sql"}Granted{/ts}',  2, 'Granted',  NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
@@ -714,7 +714,7 @@ VALUES
   (@option_group_id_campaignStatus, '{ts escape="sql"}Completed{/ts}', 3, 'Completed',  NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_campaignStatus, '{ts escape="sql"}Cancelled{/ts}', 4, 'Cancelled',  NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_sms_provider_name , 'Mitake', 'CRM_SMS_Provider_Mitake', 'http', NULL, 0, NULL, 1, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_sms_provider_name , 'Flydove', 'CRM_SMS_Provider_Flydove', 'http', NULL, 0, NULL, 1, NULL, 0, 1, 1, NULL, NULL),
+  (@option_group_id_sms_provider_name , 'Flydove', 'CRM_SMS_Provider_Flydove', 'http', NULL, 0, NULL, 1, NULL, 0, 1, 1, NULL, NULL);
 
 -- Now insert option values which require domainID
 --
