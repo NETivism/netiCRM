@@ -56,11 +56,11 @@
 	    </tr>
 	{/if}
     
-  {if $form.smart_marketing_group}
-	<tr class="crm-group-form-block-smart_marketing_group">
-		<td class="label">{$form.smart_marketing_group.label}</td>
+  {if $form.remote_group_id}
+	<tr class="crm-group-form-block-remote_group_id">
+		<td class="label">{$form.remote_group_id.label}</td>
 		<td>
-      {$form.smart_marketing_group.html}
+      {$form.remote_group_id.html}
       {if $smart_marketing_sync}
         <input class="form-submit default smart-marketing-button" name="sync_{$smart_marketing_vendor}" value="{ts}Manually Synchronize{/ts}" type="button" id="sync-{$smart_marketing_vendor}">
         <div id="smart-marketing-sync-confirm" class="hide-block">
@@ -69,18 +69,21 @@
       {/if}
 <script>{literal}
 cj(function($){
-  $('.crm-group-form-block-smart_marketing_group').hide();
+  $('.crm-group-form-block-remote_group_id').hide();
+  if ($('.crm-group-form-block-remote_group_id input[type=hidden][name=remote_group_id]')) {
+    $('.crm-group-form-block-remote_group_id').show();
+  }
   $('input[name*=group_type]').each(function(){
-    if($(this).data('filter').match('Smart-Marketing')) {
+    if($(this).data('filter') && $(this).data('filter').match('Smart-Marketing')) {
       if ($(this).prop("checked")) {
-        $('.crm-group-form-block-smart_marketing_group').show();
+        $('.crm-group-form-block-remote_group_id').show();
       }
       $(this).click(function(){
         if ($(this).prop("checked")) {
-          $('.crm-group-form-block-smart_marketing_group').show();
+          $('.crm-group-form-block-remote_group_id').show();
         }
         else {
-          $('.crm-group-form-block-smart_marketing_group').hide();
+          $('.crm-group-form-block-remote_group_id').hide();
         }
       });
     }
@@ -94,12 +97,23 @@ cj(function($){
       dialogClass: "smart-marketing-sync-confirm-box",
       buttons: {
         "{/literal}{ts}Sync Now{/ts}{literal}": function() {
-          console.log('sync group contacts to remote');
-          $(this).dialog("close");
+          let dataURL = "{/literal}{crmURL p='civicrm/ajax/addContactToRemote' q='snippet=5'}{literal}";
+          let providerId = "{/literal}{$smart_marketing_provider_id}{literal}";
+          let groupId = "{/literal}{$group.id}{literal}";
+          $.ajax({
+            url: dataURL,
+            type: "POST",
+            data: {"provider_id":providerId, "group_id":groupId},
+            dataType: "json",
+            success: function(data) {
+              if (data.success) {
+
+              }
+            }
+          });
           return true;
         },
         "{/literal}{ts}Cancel{/ts}{literal}": function() {
-          console.log('cancel action');
           cj( this ).dialog( "close" );
           return false;
         }
@@ -207,4 +221,4 @@ cj('#organization').autocomplete( dataUrl, {
 {/literal}
 </div>
 
-{include file="CRM/common/chosen.tpl" selector="#smart_marketing_group,#parents"}
+{include file="CRM/common/chosen.tpl" selector="#parents"}

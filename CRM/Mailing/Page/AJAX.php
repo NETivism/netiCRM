@@ -67,8 +67,13 @@ class CRM_Mailing_Page_AJAX {
    * @return string
    */
   public static function addContactToRemote() {
-    $providerId = CRM_Utils_Request::retrieve('provider_id', 'Integer', CRM_Core_DAO::$_nullObject, TRUE, NULL, 'POST');
-    $groupId = CRM_Utils_Request::retrieve('group_id', 'Integer', CRM_Core_DAO::$_nullObject, TRUE, NULL, 'POST');
+    $providerId = CRM_Utils_Request::retrieve('provider_id', 'Integer', CRM_Core_DAO::$_nullObject, FALSE , NULL, 'POST');
+    $groupId = CRM_Utils_Request::retrieve('group_id', 'Integer', CRM_Core_DAO::$_nullObject, FALSE, NULL, 'POST');
+    if (empty($providerId) || empty($groupId)) {
+      http_response_code(400);
+      echo json_encode(array('success' => FALSE, 'message' => 'please provide correct arguments'));
+      CRM_Utils_System::civiExit();
+    }
     $providers = CRM_SMS_BAO_Provider::getProviders(NULL, array('id' => $providerId));
 
     $groupParams = array(
@@ -94,8 +99,11 @@ class CRM_Mailing_Page_AJAX {
         $smartMarketingClass = 'CRM_Mailing_External_SmartMarketing_'.$vendorName;
         $smartMarketingService = new $smartMarketingClass($providerId);
         try {
-          $smartMarketingService->batchSchedule($contactIds, $syncData['remote_group_id'], $providerId);
-          $remoteResult = array('success' => TRUE, 'message' => '');
+          $batchId = $smartMarketingService->batchSchedule($contactIds, $syncData['remote_group_id'], $providerId);
+          $remoteResult = array(
+            'success' => TRUE,
+            'message' => ts('Because of the large amount of data you are about to perform, we have scheduled this job for the batch process. You will receive an email notification when the work is completed.'). ' &raquo; <a href="'.CRM_Utils_System::url('civicrm/admin/batch', "reset=1&id=$batchId").'" target="_blank">'.ts('Batch Job List').'</a>',
+          );
         }
         catch(CRM_Core_Exception $e) {
           $remoteResult = array('success' => FALSE, 'message' => $e->getMessage());

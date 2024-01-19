@@ -142,6 +142,14 @@ class CRM_Mailing_External_SmartMarketing_Flydove extends CRM_Mailing_External_S
     }
   }
 
+  /**
+   * Undocumented function
+   *
+   * @param array $contactIds
+   * @param int $destRemoteGroup
+   * @param int $providerId
+   * @return int batch id when success
+   */
   public function batchSchedule($contactIds, $destRemoteGroup, $providerId) {
     $remoteGroups = $this->getRemoteGroups();
     if (isset($remoteGroups[$destRemoteGroup])) {
@@ -159,6 +167,7 @@ class CRM_Mailing_External_SmartMarketing_Flydove extends CRM_Mailing_External_S
           'processed' => 0,
         );
         $batch->start($batchParams);
+        return $batch->_id;
       }
       else {
         throw new CRM_Core_Exception(ts("Please provide at least 1 contact."));

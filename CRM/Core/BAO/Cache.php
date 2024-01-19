@@ -56,7 +56,7 @@ class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache {
    * @param string $group (required) The group name of the item
    * @param string $path  (required) The path under which this item is stored
    * @param int    $componentID The optional component ID (so componenets can share the same name space)
-   * @param date   $createdTime minimal create date time in int or mysql datetime format
+   * @param int $createdTime minimal create date time in int or mysql datetime format
    *
    * @return mixed The data if present in cache, else null
    * @static

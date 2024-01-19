@@ -93,6 +93,13 @@ class CRM_Group_Form_Edit extends CRM_Core_Form {
   protected $_smartMarketingService;
 
   /**
+   * the smart marketing group type id
+   *
+   * @var object
+   */
+  protected $_smartMarketingTypeId;
+
+  /**
    * set up variables to build the form
    *
    * @return void
@@ -151,6 +158,9 @@ class CRM_Group_Form_Edit extends CRM_Core_Form {
 
     //build custom data
     CRM_Custom_Form_Customdata::preProcess($this, NULL, NULL, 1, 'Group', $this->_id);
+
+    // smart marketing
+    $this->initSmartMarketingGroup();
   }
 
   /*
@@ -188,6 +198,14 @@ class CRM_Group_Form_Edit extends CRM_Core_Form {
 
         $this->assign('organizationID', $defaults['organization_id']);
       }
+
+      // smart marketing
+      if (!empty($defaults['is_sync']) && !empty($defaults['sync_data'])) {
+        $data = json_decode($defaults['sync_data'], TRUE);
+        if (!empty($data['remote_group_id'])) {
+          $defaults['remote_group_id'] = $data['remote_group_id'];
+        }
+      }
     }
 
     if (!CRM_Utils_Array::value('parents', $defaults)) {
@@ -196,6 +214,7 @@ class CRM_Group_Form_Edit extends CRM_Core_Form {
 
     // custom data set defaults
     $defaults += CRM_Custom_Form_Customdata::setDefaultValues($this);
+
     return $defaults;
   }
 
@@ -261,7 +280,7 @@ class CRM_Group_Form_Edit extends CRM_Core_Form {
         $gtId = $ele->_attributes['id'];
         $ele->_attributes['data-filter'] = $filterGroupTypes[$gtId];
         if (strstr($filterGroupTypes[$gtId], 'Smart-Marketing')) {
-          // freeze when smart_marketing_group has value
+          // freeze when remote_group_id has value
           if (!empty($this->_groupValues['is_sync'])) {
             $ele->freeze();
           }
@@ -269,13 +288,16 @@ class CRM_Group_Form_Edit extends CRM_Core_Form {
       }
     }
 
-    $this->initSmartMarketingGroup();
     if (isset($this->_smartMarketingService)) {
       // dropdown box
-      $remoteGroups = $this->_smartMarketingService->getRemoteGroups();
+      $remoteGroups = CRM_Core_BAO_Cache::getItem('group editing', 'remote-groups-'.get_class($this->_smartMarketingService), NULL, CRM_REQUEST_TIME-180);
+      if (empty($remoteGroups)) {
+        $remoteGroups = $this->_smartMarketingService->getRemoteGroups();
+        CRM_Core_BAO_Cache::setItem($remoteGroups, 'group editing', 'remote-groups-'.get_class($this->_smartMarketingService), NULL, CRM_REQUEST_TIME+180);
+      }
       // flydove doesn't support create group
       // $remoteGroups = array('-1' => '-- '.ts('Create New Group').' --') + $remoteGroups;
-      $eleSmGroup = $this->addSelect('smart_marketing_group', ts('Smart Marketing Group'), $remoteGroups);
+      $eleSmGroup = $this->addSelect('remote_group_id', ts('Smart Marketing Group'), $remoteGroups);
       if (!empty($this->_groupValues['is_sync'])) {
         $eleSmGroup->freeze();
       }
@@ -474,6 +496,21 @@ AND    id <> %3
         'Group'
       );
 
+      if (!empty($params['group_type']) && !empty($this->_smartMarketingTypeId)) {
+        foreach($params['group_type'] as $typeId => $dontCare) {
+          if ($typeId == $this->_smartMarketingTypeId) {
+            // save smart marketing related fields
+            $params['is_sync'] = 1;
+            if (!empty($params['remote_group_id'])) {
+              $params['sync_data'] = json_encode(array(
+                'remote_group_id' => $params['remote_group_id'],
+              ));
+            }
+            break;
+          }
+        }
+      }
+
       require_once 'CRM/Contact/BAO/Group.php';
       $group = &CRM_Contact_BAO_Group::create($params);
 
@@ -520,8 +557,9 @@ AND    id <> %3
    */
   private function initSmartMarketingGroup() {
     $groupTypes = CRM_Core_OptionGroup::values('group_type');
-    foreach($groupTypes as $smartMarketingName) {
+    foreach($groupTypes as $typeId => $smartMarketingName) {
       if (strstr($smartMarketingName, 'Smart Marketing')) {
+        $this->_smartMarketingTypeId = $typeId;
         list($smartMarketingVendor) = explode(' ', $smartMarketingName);
         if (strlen($smartMarketingVendor) > 0) {
           $smartMarketingVendor = ucfirst($smartMarketingVendor);
@@ -531,6 +569,7 @@ AND    id <> %3
             if (!empty($providers)) {
               $provider = reset($providers);
               $this->_smartMarketingService = new $smartMarketingClass($provider['id']);
+              $this->assign('smart_marketing_provider_id', $provider['id']);
               return TRUE;
             }
           }
