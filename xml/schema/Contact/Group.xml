@@ -134,7 +134,7 @@
   </field>
   <field>
     <name>sync_data</name>
-    <type>blob</type>
+    <type>text</type>
     <comment>Stores JSON format data from the remote group, such as remote group ID, name, creation time.</comment>
     <add>4.0</add>
   </field>
