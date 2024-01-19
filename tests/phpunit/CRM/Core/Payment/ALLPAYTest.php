@@ -22,9 +22,19 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
    */
   function setUpTest() {
     parent::setUp();
-    $pageId = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution_page ORDER BY id");
-    $this->assertNotEmpty($pageId, 'You need to have contribution page to procceed.');
-    $this->_page_id = $pageId;
+    $version = CRM_Core_Config::$_userSystem->version;
+    if($version < 8){
+      $payment_page = variable_get('civicrm_demo_payment_page', array());
+    }
+    else {
+      $payment_page = \Drupal::state()->get('civicrm_demo.payment_page');
+    }
+    if(isset($payment_page['Payment_ALLPAY'])){
+      $this->_page_id = $payment_page['Payment_ALLPAY'];
+    }
+    else {
+      $this->assertNotEmpty($this->_page_id, 'You need to have contribution page to procceed.');
+    }
 
     $this->_is_test = 1;
 

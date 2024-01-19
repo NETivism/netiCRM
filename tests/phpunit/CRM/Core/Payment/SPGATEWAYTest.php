@@ -31,18 +31,20 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
       die("You must enable civicrm_spgateway module first before test.");
     }
     // check drupal version
-    $drupalSystem = new CRM_Utils_System_Drupal();
-    $version = $drupalSystem->version;
+    $version = CRM_Core_Config::$_userSystem->version;
     if($version < 8){
       $payment_page = variable_get('civicrm_demo_payment_page', array());
     }
     else {
-      $payment_page = CRM_Utils_System_Drupal::variable_get('civicrm_demo.payment_page', array());
+      $payment_page = \Drupal::state()->get('civicrm_demo.payment_page');
     }
 
     $class_name = 'Payment_SPGATEWAY';
     if(isset($payment_page[$class_name])){
       $this->_page_id = $payment_page[$class_name];
+    }
+    else {
+      $this->assertNotEmpty($this->_page_id, 'You need to have contribution page to procceed.');
     }
 
     $this->_is_test = 1;
