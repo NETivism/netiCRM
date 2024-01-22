@@ -276,6 +276,16 @@ ORDER BY civicrm_phone.is_primary DESC, phone_id ASC";
               $skippedCount++;
               continue;
             }
+            if (!empty($detail['do_not_email'])) {
+              $skipped['do_not_email'][] = $detail['email'];
+              $skippedCount++;
+              continue;
+            }
+            if (!empty($detail['is_deceased'])) {
+              $skipped['is_deceased'][] = $detail['email'];
+              $skippedCount++;
+              continue;
+            }
             if (!empty($detail['phone']) && is_string($detail['phone'])) {
               $detail['phone'] = preg_replace('/[^0-9]/', '', $detail['phone']);
             }
