@@ -18,6 +18,8 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
 
   public static $_hideFields = array('invoice_id', 'trxn_id');
 
+  private $_logId = NULL;
+
   /**
    * We only need one instance of this object. So we use the singleton
    * pattern and cache the instance in this variable
@@ -201,7 +203,18 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
       'encry_data' => self::encryptArgs($arguments['encry_data'], $this->_paymentProcessor),
     );
     $actionUrl = $this->_paymentProcessor['url_api'];
+    $saveData = array(
+      'contribution_id' => $contribParams['id'],
+      'url' => $actionUrl,
+      'cmd' => $arguments['service']['cmd'],
+      'date' => date('Y-m-d H:i:s'),
+      'post_data' => json_encode($arguments['encry_data']),
+    );
+    $this->_logId = CRM_Core_Payment_MyPayAPI::writeRecord(NULL, $saveData);
     $result = $this->postData($actionUrl, $encryptedArgs);
+    $saveData = array(
+      'result_data' => $result,
+    );
     $transationData = array(
       'uid' => $result['uid'], // serial number of transaction of MyPay
       'key' => $result['key'],
@@ -391,6 +404,10 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
     curl_setopt($ch, CURLOPT_POST, TRUE);
     curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
     $result = curl_exec($ch);
+    $saveData = array(
+      'return_data' => $result,
+    );
+    CRM_Core_Payment_MyPayAPI::writeRecord($this->_logId, $saveData);
     $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     $errno = curl_errno($ch);
     if (!empty($errno)) {
