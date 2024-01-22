@@ -107,7 +107,7 @@ class CRM_Mailing_External_SmartMarketing_Flydove extends CRM_Mailing_External_S
     curl_setopt($ch, CURLOPT_POST, TRUE);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
     curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
 
     $postData = array(
       'token' => $token,
@@ -125,6 +125,10 @@ class CRM_Mailing_External_SmartMarketing_Flydove extends CRM_Mailing_External_S
     }
     curl_close($ch);
     // Format the response and return it
+    if (!empty(CRM_Core_Config::singleton()->debug)) {
+      CRM_Core_Error::debug_log_message('FlydoveReqDebug-'.$apiUrl.': '.$postFields);
+      CRM_Core_Error::debug_log_message('FlydoveRespDebug: '.$responseData);
+    }
     $decoded = json_decode($responseData, TRUE);
     if ($decoded) {
       if ($decoded['is_error']) {
@@ -150,7 +154,7 @@ class CRM_Mailing_External_SmartMarketing_Flydove extends CRM_Mailing_External_S
    * @param int $providerId
    * @return int batch id when success
    */
-  public function batchSchedule($contactIds, $destRemoteGroup, $providerId) {
+  public function batchSchedule($contactIds, $groupId, $destRemoteGroup, $providerId) {
     $remoteGroups = $this->getRemoteGroups();
     if (isset($remoteGroups[$destRemoteGroup])) {
       if (!empty(count($contactIds))) {
@@ -159,8 +163,8 @@ class CRM_Mailing_External_SmartMarketing_Flydove extends CRM_Mailing_External_S
           'label' => ts('Flydove').': '.ts('Manually Synchronize'),
           'startCallback' => NULL,
           'startCallbackArgs' => NULL,
-          'processCallback' => array($this, 'batchRunning'),
-          'processCallbackArgs' => array($contactIds, $destRemoteGroup, $providerId),
+          'processCallback' => array($this, 'addContactToRemote'),
+          'processCallbackArgs' => array($contactIds, $groupId, $destRemoteGroup, $providerId),
           'finishCallback' => NULL,
           'finishCallbackArgs' => NULL,
           'total' => count($contactIds),
@@ -188,10 +192,29 @@ class CRM_Mailing_External_SmartMarketing_Flydove extends CRM_Mailing_External_S
    * @static
    * @return void|array
    */
-  public static function addContactToRemote($contactIds, $destRemoteGroup, $providerId) {
+  public static function addContactToRemote($contactIds, $groupId, $destRemoteGroup, $providerId) {
     global $civicrm_batch;
     $flydove = new CRM_Mailing_External_SmartMarketing_Flydove($providerId);
-    $remoteGroups = $flydove->getRemoteGroups();
+    // do not check remote group id if process is running
+    if (!empty($civicrm_batch) && $civicrm_batch->data['processed'] > 0) {
+      $remoteGroups = array($destRemoteGroup => 1);
+    }
+    else {
+      try {
+        $remoteGroups = $flydove->getRemoteGroups();
+      }
+      catch(CRM_Core_Exception $e) {
+        $errorMessage =$e->getMessage();
+        $errorCode =$e->getErrorCode();
+        if ($civicrm_batch) {
+          CRM_Core_Error::debug_log_message("Flydove error - : $errorCode $errorMessage");
+          return;
+        }
+        else {
+          throw new CRM_Core_Exception(ts('Flydove').':'.ts("Cannot get remote groups list."));
+        }
+      }
+    }
     $phoneTypes = CRM_Core_OptionGroup::values('phone_type', TRUE, FALSE, FALSE, NULL, 'name');
     $mobileTypeId = $phoneTypes['Mobile'];
     if (isset($remoteGroups[$destRemoteGroup])) {
@@ -204,6 +227,7 @@ class CRM_Mailing_External_SmartMarketing_Flydove extends CRM_Mailing_External_S
           }
           $limit = 10;
         }
+        $skippedCount = 0;
         for($i = 0; $i < $limit; $i++) {
           $ids = array_slice($contactIds, $offset, self::BATCH_NUM);
           if (empty($ids)) {
@@ -249,27 +273,37 @@ ORDER BY civicrm_phone.is_primary DESC, phone_id ASC";
           foreach($details[0] as $contactId => $detail) {
             if (!CRM_Utils_Rule::email($detail['email']) || empty($detail['email'])) {
               $skipped['invalid_or_empty_email'][] = $contactId;
+              $skippedCount++;
               continue;
             }
-            $detail['phone'] = preg_replace('/[^0-9]/', '', $detail['phone']);
+            if (!empty($detail['phone']) && is_string($detail['phone'])) {
+              $detail['phone'] = preg_replace('/[^0-9]/', '', $detail['phone']);
+            }
             $syncData[] = array(
               'email' => $detail['email'],
               'phone' => !empty($detail['phone']) && strlen($detail['phone']) == 10 ? trim($detail['phone']) : '',
               'title' => !empty($detail['individual_prefix']) && strlen($detail['individual_prefix']) < 10 ? $detail['individual_prefix'] : '',
               'name' => !empty($detail['sort_name']) && mb_strlen($detail['sort_name']) < 50 ? $detail['sort_name'] : '',
               'var1' => !empty($detail['birth_date']) && mb_strlen($detail['birth_date']) < 50 ? $detail['birth_date'] : '',
+              'var2' => '',
+              'var3' => '',
+              'var4' => '',
+              'var5' => (string) $contactId,
             );
           }
           try {
+            $destRemoteGroup = (int) $destRemoteGroup;
             $sendData = array(
               'customers' => $syncData,
               'group_ids' => array($destRemoteGroup),
             );
-            // CRM_Core_Error::debug_var('sendData', $sendData);
             $apiResult = $flydove->apiRequestSend('BatchCreateCustomer', json_encode($sendData));
             if ($apiResult) {
               $sliceResults[$i]['success'] = TRUE;
               $sliceResults[$i]['skipped'] = $skipped;
+            }
+            if ($civicrm_batch) {
+              $civicrm_batch->data['processed'] += self::BATCH_NUM;
             }
           }
           catch(CRM_Core_Exception $e) {
@@ -278,28 +312,81 @@ ORDER BY civicrm_phone.is_primary DESC, phone_id ASC";
             CRM_Core_Error::debug_log_message("Flydove error - BatchCreateCustomer: $errorCode $errorMessage");
           }
 
-          if ($civicrm_batch) {
-            $civicrm_batch->data['processed'] += self::BATCH_NUM;
-          }
           $offset += self::BATCH_NUM;
           usleep(500000);
         }
+        CRM_Core_DAO::executeQuery("UPDATE civicrm_group SET last_sync = %1 WHERE id = %2", array(
+          1 => array(date('YmdHis'), 'String'),
+          2 => array($groupId, 'Integer')
+        ));
+        $total = count($contactIds);
+        $sliceResults['#count'] = array(
+          'total' => $total,
+          'skipped' => $skippedCount,
+          'success' => $total - $skippedCount,
+        );
+        $sliceResults['#remote_group_id'] = is_numeric($remoteGroups[$destRemoteGroup]) ? $destRemoteGroup : $remoteGroups[$destRemoteGroup]."($destRemoteGroup)";
+        $sliceResults['#group_id'] = $groupId;
+        $report = self::formatResult($sliceResults);
         if ($civicrm_batch) {
           if ($civicrm_batch->data['processed'] >= $civicrm_batch->data['total']) {
             $civicrm_batch->data['processed'] = $civicrm_batch->data['total'];
             $civicrm_batch->data['isCompleted'] = TRUE;
           }
+          foreach($report as $rep) {
+            CRM_Core_Error::debug_log_message($rep);
+          }
         }
         else {
+          foreach($report as $rep) {
+            CRM_Core_Error::debug_log_message($rep);
+          }
+          $sliceResults['#report'] = $report;
           return $sliceResults;
         }
       }
       else {
-        throw new CRM_Core_Exception(ts("Please provide at least 1 contact."));
+        if ($civicrm_batch) {
+          CRM_Core_Error::debug_log_message(ts('Flydove').': '."Please provide at least 1 contact.");
+        }
+        else {
+          throw new CRM_Core_Exception(ts("Please provide at least 1 contact."));
+        }
       }
     }
     else {
-      throw new CRM_Core_Exception(ts('Flydove').':'.ts("Group you request doesn't exists in flydove."));
+      if ($civicrm_batch) {
+        CRM_Core_Error::debug_log_message(ts('Flydove').': '."The group you request doesn't exists in flydove.");
+      }
+      else {
+        throw new CRM_Core_Exception(ts('Flydove').': '.ts("The group you request doesn't exists in flydove."));
+      }
     }
+  }
+
+  public static function formatResult($meta) {
+    $groups = CRM_Core_PseudoConstant::group();
+    $skippedText = array();
+    if (!empty($meta['#count']) && !empty($meta['#count']['skipped'])) {
+      foreach($meta as $idx => $slice) {
+        if (is_numeric($idx) && isset($slice['skipped']) && is_array($slice['skipped'])) {
+          foreach($slice['skipped'] as $reason => $ids) {
+            $skippedText[] = $reason.'('.count($ids).')';
+          }
+        }
+      }
+    }
+    $report['success'] = ts('Flydove').': '.ts('Success sync %1 contacts from group %2 to remote group %3', array(
+      1 => $meta['#count']['success'],
+      2 => $groups[$meta['#group_id']]."(".$meta['#group_id'].")",
+      3 => $meta['#remote_group_id']),
+    );
+    if (!empty($meta['#count']['skipped']) && !empty($skippedText)) {
+      $report['skipped'] = ts('Flydove').': '.ts('Skipped %1 contacts due to reasons: %2.', array(
+        1 => $meta['#count']['skipped'],
+        2 => implode(' / ', $skippedText)),
+      );
+    }
+    return $report;
   }
 }
