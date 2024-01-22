@@ -90,16 +90,27 @@ cj(function($){
   });
   $('.smart-marketing-button').click(function(e){
     e.preventDefault();
+    let dialogCls = "smart-marketing-sync-confirm-box";
     $("#smart-marketing-sync-confirm").dialog({
       title: "{/literal}{ts}Manually Synchronize{/ts}{literal}",
       autoOpen: false,
       modal: true,
-      dialogClass: "smart-marketing-sync-confirm-box",
+      dialogClass: dialogCls,
+      open: function(event, ui ) {
+        let isSynced = $(this).dialog("option", 'synced');
+        if (isSynced) {
+          $('.'+dialogCls).find('.ui-dialog-buttonset button').eq(0).attr('disabled', true).addClass('ui-state-disabled');
+        }
+      },
       buttons: {
         "{/literal}{ts}Sync Now{/ts}{literal}": function() {
+          $(this).dialog("option", 'synced', true);
+          $('.'+dialogCls).find('.ui-dialog-buttonset button').eq(0).attr("disabled", true).addClass("ui-state-disabled");
           let dataURL = "{/literal}{crmURL p='civicrm/ajax/addContactToRemote' q='snippet=5'}{literal}";
           let providerId = "{/literal}{$smart_marketing_provider_id}{literal}";
           let groupId = "{/literal}{$group.id}{literal}";
+          let runningStr= "{/literal}{ts}Running{/ts}{literal}";
+          $('#smart-marketing-sync-confirm').html(runningStr+'<i class="zmdi zmdi-rotate-right zmdi-hc-spin"></i>');
           $.ajax({
             url: dataURL,
             type: "POST",
@@ -107,14 +118,17 @@ cj(function($){
             dataType: "json",
             success: function(data) {
               if (data.success) {
-
+                $('#smart-marketing-sync-confirm').html(data.message);
+              }
+              else {
+                $('#smart-marketing-sync-confirm').html('<i class="zmdi zmdi-refresh-sync-alert"></i> '+data.message);
               }
             }
           });
           return true;
         },
-        "{/literal}{ts}Cancel{/ts}{literal}": function() {
-          cj( this ).dialog( "close" );
+        "{/literal}{ts}Close{/ts}{literal}": function() {
+          $(this).dialog("close");
           return false;
         }
       }
