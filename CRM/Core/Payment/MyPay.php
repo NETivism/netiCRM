@@ -335,6 +335,7 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
         'cost' => (string) $amount,
         'pfn' => '',
         'ip' => CRM_Utils_System::ipAddress(),
+        'echo_0' => $component,
         'items' => array( 0 => array(
           'id' => $vars['trxn_id'],
           'name' => preg_replace('~[^\p{L}\p{N}]++~u', ' ', $vars['item_name']),
@@ -480,5 +481,37 @@ EOT;
     $data = openssl_encrypt($data, 'AES-256-CBC', $paymentProcessor['password'], OPENSSL_RAW_DATA, $iv);
     $data = base64_encode($iv . $data);
     return $data;
+  }
+
+  /**
+   * Execute ipn as called from mypay transaction.
+   *
+   * @param array $url_params Default params in CiviCRM Router, Must be array('civicrm', 'mypay', 'ipn')
+   * @param string $instrument The code of used instrument like 'Credit' or 'ATM'.
+   * @param array $post Bring post variables if you need test.
+   * @param array $get Bring get variables if you need test.
+   * @param boolean $print Does server echo the result, or just return that. Default is TRUE.
+   *
+   * @return string|void If $print is FALSE, function will return the result as Array.
+   */
+  public static function doIPN($url_params, $instrument = NULL, $post = NULL, $get = NULL, $print = TRUE) {
+    // detect variables
+    $post = !empty($post) ? $post : $_POST;
+    $get = !empty($get) ? $get : $_GET;
+
+    // Save Data to Log.
+    $contribution_id = NULL;
+    $requestURL = $_SERVER['HTTP_ORIGIN'].$_SERVER['REQUEST_URI'];
+    $saveData = array(
+      'contribution_id' => $contribution_id,
+      'url' => $requestURL,
+      'cmd' => NULL,
+      'date' => date('Y-m-d H:i:s'),
+      'post_data' => $post,
+    );
+    CRM_Core_Payment_MyPayAPI::writeRecord(NULL, $saveData);
+    echo 8888;
+    exit;
+
   }
 }
