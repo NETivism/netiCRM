@@ -70,7 +70,7 @@
 <script>{literal}
 cj(function($){
   $('.crm-group-form-block-remote_group_id').hide();
-  if ($('.crm-group-form-block-remote_group_id input[type=hidden][name=remote_group_id]')) {
+  if ($('.crm-group-form-block-remote_group_id input[type=hidden][name=remote_group_id]').length) {
     $('.crm-group-form-block-remote_group_id').show();
   }
   $('input[name*=group_type]').each(function(){

@@ -100,6 +100,13 @@ class CRM_Group_Form_Edit extends CRM_Core_Form {
   protected $_smartMarketingTypeId;
 
   /**
+   * the smart marketing freezed groups
+   *
+   * @var array
+   */
+  protected $_smartMarketingFreezed = array();
+
+  /**
    * set up variables to build the form
    *
    * @return void
@@ -161,6 +168,22 @@ class CRM_Group_Form_Edit extends CRM_Core_Form {
 
     // smart marketing
     $this->initSmartMarketingGroup();
+
+    if ($this->_smartMarketingTypeId) {
+      // check freezed remote group to prevent many local to 1 remote group issue
+      if ($this->_id) {
+        $syncData = CRM_Core_DAO::executeQuery("SELECT id, sync_data FROM civicrm_group WHERE NULLIF(sync_data, '') IS NOT NULL AND id != %1", array(1 => array($this->_id, 'Integer')));
+      }
+      else {
+        $syncData = CRM_Core_DAO::executeQuery("SELECT id, sync_data FROM civicrm_group NULLIF(sync_data, '') IS NOT NULL");
+      }
+      while($syncData->fetch()) {
+        $data = json_decode($syncData->sync_data, TRUE);
+        if (!empty($data['remote_group_id'])) {
+          $this->_smartMarketingFreezed[$data['remote_group_id']] = 1;
+        }
+      }
+    }
   }
 
   /*
@@ -281,7 +304,7 @@ class CRM_Group_Form_Edit extends CRM_Core_Form {
         $ele->_attributes['data-filter'] = $filterGroupTypes[$gtId];
         if (strstr($filterGroupTypes[$gtId], 'Smart-Marketing')) {
           // freeze when remote_group_id has value
-          if (!empty($this->_groupValues['is_sync'])) {
+          if (!empty($this->_groupValues['is_sync']) || !empty($this->_groupValues['sync_data'])) {
             $ele->freeze();
           }
         }
@@ -297,6 +320,7 @@ class CRM_Group_Form_Edit extends CRM_Core_Form {
       }
       // flydove doesn't support create group
       // $remoteGroups = array('-1' => '-- '.ts('Create New Group').' --') + $remoteGroups;
+      $remoteGroups = array_diff_key($remoteGroups, $this->_smartMarketingFreezed);
       $eleSmGroup = $this->addSelect('remote_group_id', ts('Smart Marketing Group'), $remoteGroups);
       if (!empty($this->_groupValues['is_sync'])) {
         $eleSmGroup->freeze();
