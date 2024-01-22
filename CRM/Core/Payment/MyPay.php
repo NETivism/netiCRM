@@ -203,6 +203,8 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
       'encry_data' => self::encryptArgs($arguments['encry_data'], $this->_paymentProcessor),
     );
     $actionUrl = $this->_paymentProcessor['url_api'];
+    // Record Data
+    // 1. Record Log Data.
     $saveData = array(
       'contribution_id' => $contribParams['id'],
       'url' => $actionUrl,
@@ -210,7 +212,12 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
       'date' => date('Y-m-d H:i:s'),
       'post_data' => json_encode($arguments['encry_data']),
     );
-    $this->_logId = CRM_Core_Payment_MyPayAPI::writeRecord(NULL, $saveData);
+    $this->_logId = self::writeRecord(NULL, $saveData);
+    // 2. Record usable data.
+    $data = array(
+
+    );
+    self::doRecordData($contribParams['id'], $data);
     $result = $this->postData($actionUrl, $encryptedArgs);
     $saveData = array(
       'result_data' => $result,
@@ -405,12 +412,17 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
     curl_setopt($ch, CURLOPT_POST, TRUE);
     curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
     $result = curl_exec($ch);
+    
+    $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $errno = curl_errno($ch);
+    // Record all data
+    // 1. Record log data.
     $saveData = array(
       'return_data' => $result,
     );
-    CRM_Core_Payment_MyPayAPI::writeRecord($this->_logId, $saveData);
-    $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    $errno = curl_errno($ch);
+    self::writeRecord($this->_logId, $saveData);
+    // 2. Record usable data.
+
     if (!empty($errno)) {
       $errno = curl_errno($ch);
       $err = curl_error($ch);
@@ -500,18 +512,132 @@ EOT;
     $get = !empty($get) ? $get : $_GET;
 
     // Save Data to Log.
-    $contribution_id = NULL;
-    $requestURL = $_SERVER['HTTP_ORIGIN'].$_SERVER['REQUEST_URI'];
     $saveData = array(
-      'contribution_id' => $contribution_id,
-      'url' => $requestURL,
-      'cmd' => NULL,
       'date' => date('Y-m-d H:i:s'),
-      'post_data' => $post,
+      'post_data' => json_encode($post),
     );
-    CRM_Core_Payment_MyPayAPI::writeRecord(NULL, $saveData);
-    echo 8888;
-    exit;
+    $logId = self::writeRecord(NULL, $saveData);
+    if ($post['order_id']) {
+      $trxn_id = $post['order_id'];
+      $contribution_id = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution WHERE trxn_id = %1", array(1 => array($trxn_id, 'String')));
+      $requestURL = '';
+      if (CRM_Utils_System::isSSL()) {
+        $requestURL .= "https://";
+      }
+      else {
+        $requestURL .= "http://";
+      }
+      $requestURL .= $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+      $saveData = array(
+        'contribution_id' => $contribution_id,
+        'url' => $requestURL,
+      );
+      self::writeRecord($logId, $saveData);
+    }
 
+    // Give $instrument
+    if (empty($instrument)) {
+      switch ($post['result_content_type']) {
+        case 'CREDITCARD':
+          $instrument = 'Credit';
+          break;
+        case 'BARCODE':
+          $instrument = 'BARCODE';
+          break;
+        case 'E_COLLECTION':
+          $instrument = 'ATM';
+          break;
+        case 'WEBATM':
+          $instrument = 'WebATM';
+          break;
+        default:
+          CRM_Core_Error::debug_log_message( "mypay: The instrument doesn't use, type is '{$post['result_content_type']}'", TRUE);
+          exit;
+          break;
+      }
+    }
+
+    // detect variables
+    if(empty($post)){
+      CRM_Core_Error::debug_log_message( "civicrm_mypay: Could not find POST data from payment server", TRUE);
+      exit;
+    }
+    else{
+      $component = $post['echo_0'];
+      if(!empty($component)){
+        $ipn = new CRM_Core_Payment_MyPayIPN($post, $get);
+        $result = $ipn->main($component, $instrument);
+        if(!empty($result) && $print){
+          echo $result;
+        }
+        else{
+          return $result;
+        }
+      }
+      else{
+        CRM_Core_Error::debug_log_message( "mypay: Could not get module name from request url", TRUE);
+      }
+    }
+  }
+
+  /**
+   * 
+   */
+  public static function writeRecord($logId, $data = array()) {
+    $recordType = array('contribution_id', 'url', 'date', 'post_data', 'return_data');
+
+    $record = new CRM_Contribute_DAO_MyPayLog();
+    if(!empty($logId)) {
+      $record->id = $logId;
+      $record->find(TRUE);
+    }
+
+    foreach ($recordType as $key) {
+      $record->$key = $data[$key];
+    }
+    $record->save();
+    return $record->id;
+  }
+
+  /**
+   * 
+   */
+  static public function doRecordData($contributionId, $data, $apiType = '') {
+    $recordType = array(
+      'contribution_id',
+      'contribution_recur_id',
+      'uid',
+      'key',
+      'expired_date',
+      'create_post_data',
+      'create_result_data',
+      'ipn_result_data'
+    );
+    $mypay = new CRM_Contribute_DAO_MyPay();
+    if($contributionId) {
+      $mypay->contribution_id = $contributionId;
+      $mypay->find(TRUE);
+      $mypay->contribution_recur_id = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $contributionId, 'contribution_recur_id');
+    }
+    foreach ($recordType as $key) {
+      $mypay->$key = $data[$key];
+    }
+    $mypay->save();
+  }
+
+  /**
+   * 
+   */
+  static public function getKey($contributionId) {
+    $mypay = new CRM_Contribute_DAO_MyPay();
+    $mypay->contribution_id = $contributionId;
+    $mypay->find(TRUE);
+    $result = json_decode($mypay->create_result_data);
+    if ($result) {
+      return $result->key;
+    }
+    else {
+      return NULL;
+    }
   }
 }
