@@ -711,6 +711,16 @@ return array(
     'class' => 'CRM_Contribute_DAO_TapPayLog',
     'table' => 'civicrm_contribution_tappay_log',
   ) ,
+  'CRM_Contribute_DAO_MyPay' => array(
+    'name' => 'MyPay',
+    'class' => 'CRM_Contribute_DAO_MyPay',
+    'table' => 'civicrm_contribution_mypay',
+  ) ,
+  'CRM_Contribute_DAO_MyPayLog' => array(
+    'name' => 'MyPayLog',
+    'class' => 'CRM_Contribute_DAO_MyPayLog',
+    'table' => 'civicrm_contribution_mypay_log',
+  ) ,
   'CRM_Contribute_DAO_AllPay' => array(
     'name' => 'AllPay',
     'class' => 'CRM_Contribute_DAO_AllPay',

@@ -99,6 +99,12 @@ class CRM_Contribute_DAO_MyPayLog extends CRM_Core_DAO
    */
   public $url;
   /**
+   * Request URL
+   *
+   * @var string
+   */
+  public $cmd;
+  /**
    * Request Date Time
    *
    * @var datetime
@@ -182,6 +188,13 @@ class CRM_Contribute_DAO_MyPayLog extends CRM_Core_DAO
           'name' => 'url',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Request URL') ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ) ,
+        'cmd' => array(
+          'name' => 'cmd',
+          'type' => CRM_Utils_Type::T_STRING,
+          'title' => ts('service API CMD Name') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
         ) ,

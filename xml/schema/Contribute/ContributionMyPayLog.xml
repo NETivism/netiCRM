@@ -44,6 +44,15 @@
       <add>4.0</add>
   </field>
   <field>
+      <name>cmd</name>
+      <uniqueName>cmd</uniqueName>
+      <title>service API CMD Name</title>
+      <type>varchar</type>
+      <length>255</length>
+      <comment>Request URL</comment>
+      <add>4.0</add>
+  </field>
+  <field>
       <name>date</name>
       <type>datetime</type>
       <comment>Request Date Time</comment>

@@ -4823,6 +4823,7 @@ CREATE TABLE civicrm_contribution_mypay_log (
      id int unsigned NOT NULL AUTO_INCREMENT  COMMENT 'MyPay Log ID',
      contribution_id int unsigned   DEFAULT NULL COMMENT 'Contribuution ID',
      url varchar(255)    COMMENT 'Request URL',
+     cmd varchar(255)    COMMENT 'Request URL',
      date datetime    COMMENT 'Request Date Time',
      post_data text    COMMENT 'Request Post Data',
      return_data text    COMMENT 'Request Return Data' 
