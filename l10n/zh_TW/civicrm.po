@@ -1,6 +1,6 @@
 # 
 # Translators:
-# CC Chu <poliphilonet@gmail.com>, 2020-2023
+# CC Chu <poliphilonet@gmail.com>, 2020-2024
 # Chang Shu-huai <junsuwhy@gmail.com>, 2016-2023
 # Charles Chuang, 2022-2023
 # CHUNLIAN WU <susanna@netivism.com.tw>, 2017
@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: CC Chu <poliphilonet@gmail.com>, 2020-2023\n"
+"Last-Translator: CC Chu <poliphilonet@gmail.com>, 2020-2024\n"
 "Language-Team: Chinese (Taiwan) (http://app.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49961,3 +49961,7 @@ msgid ""
 "This delete operation cannot be undone and will delete all transactions and "
 "activity associated with these members."
 msgstr "這個刪除操作無法復原，並將會刪除與這些會員相關的所有捐款和活動記錄。"
+
+#: xml/templates/civicrm_data.tpl
+msgid "Flydove Smart Marketing"
+msgstr "飛信自動化行銷"
