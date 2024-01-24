@@ -262,9 +262,13 @@
                       {docURL page="Configure SPF Record" text="Learn how to config settings"}
                     </span>
                   {/if}
-                  <span class="description">{ts}FROM email address (this must be a valid email account with your SMTP email service provider).{/ts}<br>
-                  {ts}Most of mail providers apply DMARC, that means if you use free email address as mail sender, the mail will be blocked by destination inbox.{/ts}<br>
-                  {ts 1=`$mail_providers`}Do not use free mail address as mail sender. (eg. %1){/ts}
+                  <span class="description font-red">
+                    {ts}Only verified domain of email can be set as sender.{/ts} {ts}Otherwise, the email will be hidden on above select list.{/ts}<br>
+                    {capture assign="from_email_admin_path"}{crmURL p="civicrm/admin/from_email" q="reset=1"}{/capture}
+                    {ts 1=$from_email_admin_path}Make sure at least one of your email domain verified in <a href="%1">FROM email address</a> list.{/ts}
+                  </span>
+                  <span class="description">
+                    {ts 1=`$mail_providers`}Do not use free mail address as mail sender. (eg. %1){/ts}
                   </span>
                </td>
              </tr>
