@@ -171,6 +171,7 @@ class CRM_Admin_Page_OptionValue extends CRM_Core_Page_Basic {
       CRM_Core_DAO::storeValues($dao, $optionValue[$dao->id]);
       // form all action links
       $action = array_sum(array_keys($this->links()));
+
       if ($dao->is_default) {
         $optionValue[$dao->id]['default_value'] = '[x]';
       }
@@ -196,6 +197,11 @@ class CRM_Admin_Page_OptionValue extends CRM_Core_Page_Basic {
         ) {
           $action -= CRM_Core_Action::DELETE;
         }
+      }
+
+      // refs #39632. Prevent Flydove group type deletion
+      if ($this->_gName == 'group_type' && $dao->label == 'Flydove Smart Marketing') {
+        $action -= CRM_Core_Action::DELETE;
       }
 
       $optionValue[$dao->id]['action'] = CRM_Core_Action::formLink(self::links(), $action,
