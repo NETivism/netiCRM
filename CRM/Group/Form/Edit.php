@@ -175,7 +175,7 @@ class CRM_Group_Form_Edit extends CRM_Core_Form {
         $syncData = CRM_Core_DAO::executeQuery("SELECT id, sync_data FROM civicrm_group WHERE NULLIF(sync_data, '') IS NOT NULL AND id != %1", array(1 => array($this->_id, 'Integer')));
       }
       else {
-        $syncData = CRM_Core_DAO::executeQuery("SELECT id, sync_data FROM civicrm_group NULLIF(sync_data, '') IS NOT NULL");
+        $syncData = CRM_Core_DAO::executeQuery("SELECT id, sync_data FROM civicrm_group WHERE NULLIF(sync_data, '') IS NOT NULL");
       }
       while($syncData->fetch()) {
         $data = json_decode($syncData->sync_data, TRUE);
