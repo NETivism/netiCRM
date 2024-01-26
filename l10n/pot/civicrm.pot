@@ -49422,3 +49422,7 @@ msgstr ""
 #: templates/CRM/Member/Form/Task/Delete.tpl
 msgid "This delete operation cannot be undone and will delete all transactions and activity associated with these members."
 msgstr ""
+
+#: xml/templates/civicrm_data.tpl
+msgid "Flydove Smart Marketing"
+msgstr ""

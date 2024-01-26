@@ -28,14 +28,12 @@ class CRM_Admin_Form_Setting_Recurring extends CRM_Admin_Form_Setting {
     );
     $this->addElement('select', 'recurringCopySetting', ts('Copy Contribution'), $option);
 
-    if (defined('ENABLE_COPY_CONTRIBUTION_PAGE_TYPE') && ENABLE_COPY_CONTRIBUTION_PAGE_TYPE) {
-      //add select option
-      $options = array(
-        '0' => ts("From source contribution."),
-        '1' => ts("From contribution page setting."),
-      );
-      $this->addElement('select', 'copyContributionTypeSource', ts("Copied Contribution Type Source"), $options);
-    }
+    //add select option
+    $options = array(
+      '0' => ts("From source contribution."),
+      '1' => ts("From contribution page setting."),
+    );
+    $this->addElement('select', 'copyContributionTypeSource', ts("Copied Contribution Type Source"), $options);
 
     // redirect to Administer Section After hitting either Save or Cancel button.
     $session = CRM_Core_Session::singleton();
