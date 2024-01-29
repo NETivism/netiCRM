@@ -1,5 +1,3 @@
-
-
 <?php
 
 class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
@@ -32,11 +30,8 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
     $input = $this->_post;
     $input['component'] = $component;
 
-    if(empty($this->_get['is_recur'])){
-      CRM_Core_Payment_MyPay::doRecordData($ids['contribution'], array('ipn_post_data' => $this->_post));
-    }
+    CRM_Core_Payment_MyPay::doRecordData($ids['contribution'], array('ipn_result_data' => json_encode($this->_post)));
     if(empty($ids['contributionRecur'])){
-      // we will save record later if this is recurring
       $isRecur = FALSE;
     }
     else{
@@ -111,8 +106,7 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
     }
 
     // MyPay validation
-    // the 'key' must be same as 'key' in request curl result.
-    /*
+    // the 'key' in request curl result must be same as 'uid_key' in `civicrm_contribution_mypay`.
     if(!empty($input['key'])){
       $key = CRM_Core_Payment_MyPay::getKey($contribution->id);
       if($key != $input['key']) {
@@ -122,7 +116,6 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
         $pass = FALSE;
       }
     }
-    */
 
     // recurring validation
     // certainly this is recurring contribution

@@ -18,6 +18,8 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
 
   public static $_hideFields = array('invoice_id', 'trxn_id');
 
+  private $_contributionId = NULL;
+
   private $_logId = NULL;
 
   /**
@@ -167,7 +169,7 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
     $isTest = $this->_mode == 'test' ? 1 : 0;
 
     // once they enter here, we will check SESSION
-    // to see what instrument for newweb
+    // to see what instrument for mypay
     $instrumentId = $params['civicrm_instrument_id'];
     $instruments = CRM_Contribute_PseudoConstant::paymentInstrument('name');
     $instrumentName = $instruments[$instrumentId];
@@ -215,17 +217,12 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
     $this->_logId = self::writeRecord(NULL, $saveData);
     // 2. Record usable data.
     $data = array(
-
+      'create_post_data' => json_encode($arguments['encry_data']),
     );
     self::doRecordData($contribParams['id'], $data);
+    // contribution_id is needed in postData
+    $this->_contributionId = $params['contributionID'];
     $result = $this->postData($actionUrl, $encryptedArgs);
-    $saveData = array(
-      'result_data' => $result,
-    );
-    $transationData = array(
-      'uid' => $result['uid'], // serial number of transaction of MyPay
-      'key' => $result['key'],
-    );
     if (isset($result['code']) && $result['code'] == '200') {
       // redirect to payment form
       //TODO: save transaction data to db
@@ -421,18 +418,27 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
       'return_data' => $result,
     );
     self::writeRecord($this->_logId, $saveData);
+    $resultArray = json_decode($result, TRUE);
     // 2. Record usable data.
+    if ($this->_contributionId) {
+      $transationData = array(
+        'uid' => $resultArray['uid'], // serial number of transaction of MyPay
+        'uid_key' => $resultArray['key'],
+        'create_result_data' => $result,
+      );
+      self::doRecordData($this->_contributionId, $transationData);
+    }
 
     if (!empty($errno)) {
       $errno = curl_errno($ch);
       $err = curl_error($ch);
-      CRM_Core_Error::debug_log_message("MyPay postData: httpstatus-$status :: error-$errno :: $err");
+      CRM_Core_Error::debug_log_message("MyPay postData: Contribution ID-{$this->_contributionId} :: httpstatus-$status :: error-$errno :: $err");
       return array();
     }
     if ($result === FALSE) {
       $errno = curl_errno($ch);
       $err = curl_error($ch);
-      CRM_Core_Error::debug_log_message("MyPay postData: httpstatus-$status :: error-$errno :: $err");
+      CRM_Core_Error::debug_log_message("MyPay postData: Contribution ID-{$this->_contributionId} :: httpstatus-$status :: error-$errno :: $err");
       return array();
     }
     curl_close($ch);
@@ -581,10 +587,14 @@ EOT;
   }
 
   /**
+   * Write data into table `civicrm_contrbution_mypay_log`
+   * @param number|NULL $logId The field `id` in `civicrm_contrbution_mypay_log`. Use NULL to create new row.
+   * @param Array $data Insert fields of the row. The value must be String type and keys must match field name.
    * 
+   * @return number $id The `id` of the row.
    */
   public static function writeRecord($logId, $data = array()) {
-    $recordType = array('contribution_id', 'url', 'date', 'post_data', 'return_data');
+    $recordType = array('contribution_id', 'url', 'cmd', 'date', 'post_data', 'return_data');
 
     $record = new CRM_Contribute_DAO_MyPayLog();
     if(!empty($logId)) {
@@ -593,7 +603,9 @@ EOT;
     }
 
     foreach ($recordType as $key) {
-      $record->$key = $data[$key];
+      if (!empty($data[$key])) {
+        $record->$key = $data[$key];
+      }
     }
     $record->save();
     return $record->id;
@@ -604,23 +616,24 @@ EOT;
    */
   static public function doRecordData($contributionId, $data, $apiType = '') {
     $recordType = array(
-      'contribution_id',
-      'contribution_recur_id',
       'uid',
-      'key',
+      'uid_key',
       'expired_date',
       'create_post_data',
       'create_result_data',
       'ipn_result_data'
     );
     $mypay = new CRM_Contribute_DAO_MyPay();
-    if($contributionId) {
-      $mypay->contribution_id = $contributionId;
-      $mypay->find(TRUE);
-      $mypay->contribution_recur_id = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $contributionId, 'contribution_recur_id');
+    $mypay->contribution_id = $contributionId;
+    $mypay->find(TRUE);
+    $contributionRecurId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $contributionId, 'contribution_recur_id');
+    if (empty($mypay->contribution_recur_id) && !empty($contributionRecurId)) {
+      $mypay->contribution_recur_id = $contributionRecurId;
     }
     foreach ($recordType as $key) {
-      $mypay->$key = $data[$key];
+      if (!empty($data[$key])) {
+        $mypay->$key = $data[$key];
+      }
     }
     $mypay->save();
   }
@@ -632,12 +645,7 @@ EOT;
     $mypay = new CRM_Contribute_DAO_MyPay();
     $mypay->contribution_id = $contributionId;
     $mypay->find(TRUE);
-    $result = json_decode($mypay->create_result_data);
-    if ($result) {
-      return $result->key;
-    }
-    else {
-      return NULL;
-    }
+    $key = $mypay->uid_key;
+    return $key;
   }
 }
