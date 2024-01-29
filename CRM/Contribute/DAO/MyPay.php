@@ -105,17 +105,35 @@ class CRM_Contribute_DAO_MyPay extends CRM_Core_DAO
    */
   public $uid;
   /**
+   * Validation text by order.
+   *
+   * @var string
+   */
+  public $uid_key;
+  /**
    * Used date time of this coupon track.
    *
    * @var date
    */
   public $expired_date;
   /**
-   * Newest return data.
+   * The post data when send request.
    *
    * @var text
    */
-  public $data;
+  public $create_post_data;
+  /**
+   * The result data after sending request.
+   *
+   * @var text
+   */
+  public $create_result_data;
+  /**
+   * The post data as IPN sending to us.
+   *
+   * @var text
+   */
+  public $ipn_result_data;
   /**
    * class constructor
    *
@@ -193,15 +211,32 @@ class CRM_Contribute_DAO_MyPay extends CRM_Core_DAO
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
         ) ,
+        'uid_key' => array(
+          'name' => 'uid_key',
+          'type' => CRM_Utils_Type::T_STRING,
+          'title' => ts('Uid Key') ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ) ,
         'expired_date' => array(
           'name' => 'expired_date',
           'type' => CRM_Utils_Type::T_DATE,
           'title' => ts('Expired Date') ,
         ) ,
-        'data' => array(
-          'name' => 'data',
+        'create_post_data' => array(
+          'name' => 'create_post_data',
           'type' => CRM_Utils_Type::T_TEXT,
-          'title' => ts('Data') ,
+          'title' => ts('Create Post Data') ,
+        ) ,
+        'create_result_data' => array(
+          'name' => 'create_result_data',
+          'type' => CRM_Utils_Type::T_TEXT,
+          'title' => ts('Create Result Data') ,
+        ) ,
+        'ipn_result_data' => array(
+          'name' => 'ipn_result_data',
+          'type' => CRM_Utils_Type::T_TEXT,
+          'title' => ts('Ipn Result Data') ,
         ) ,
       );
     }

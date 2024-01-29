@@ -4798,8 +4798,11 @@ CREATE TABLE civicrm_contribution_mypay (
      contribution_id int unsigned   DEFAULT NULL COMMENT 'Contribuution ID',
      contribution_recur_id int unsigned    COMMENT 'Contribuution Recur ID',
      uid varchar(255)    COMMENT 'Payment Hub User Order ID',
+     uid_key varchar(255)    COMMENT 'Validation text by order.',
      expired_date date    COMMENT 'Used date time of this coupon track.',
-     data text    COMMENT 'Newest return data.' 
+     create_post_data text    COMMENT 'The post data when send request.',
+     create_result_data text    COMMENT 'The result data after sending request.',
+     ipn_result_data text    COMMENT 'The post data as IPN sending to us.' 
 ,
     PRIMARY KEY ( id )
  
