@@ -1700,22 +1700,24 @@ class CRM_Utils_System {
 
     $isUcBrowser = preg_match('/UCBrowser\//i', $useragent);
     if ($isUcBrowser) {
-      preg_match('/UCBrowser\/(\d+)\.(\d+)\.(\d+)[\.\d]* /i', $useragent, $ucVersion);
-      if ($ucVersion[1] < 12) { // major
-        return FALSE;
-      }
-      if ($ucVersion[2] < 13) { // minor
-        return FALSE;
-      }
-      if ($ucVersion[3] < 2) { // buil
-        return FALSE;
+      if(preg_match('/UCBrowser\/(\d+)\.(\d+)\.(\d+)[\.\d]* /i', $useragent, $ucVersion)) {
+        if ($ucVersion[1] < 12) { // major
+          return FALSE;
+        }
+        if ($ucVersion[2] < 13) { // minor
+          return FALSE;
+        }
+        if ($ucVersion[3] < 2) { // buil
+          return FALSE;
+        }
       }
     }
 
     if ($isChromiumBased) {
-      preg_match('/Chrome\/(\d+)\.(\d+)\.(\d+)[\.\d]* /i', $useragent, $chVersion);
-      if ($chVersion[1] >= 51 && $chVersion[1] <= 66) {
-        return FALSE;
+      if (preg_match('/Chrome\/(\d+)\.(\d+)\.(\d+)[\.\d]* /i', $useragent, $chVersion)) {
+        if ($chVersion[1] >= 51 && $chVersion[1] <= 66) {
+          return FALSE;
+        }
       }
     }
     return TRUE;
