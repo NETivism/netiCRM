@@ -64,7 +64,7 @@ class CRM_Contact_BAO_Contact_Permission {
     $permission = CRM_ACL_API::whereClause($type, $tables, $whereTables);
 
     require_once "CRM/Contact/BAO/Query.php";
-    $from = CRM_Contact_BAO_Query::fromClause($whereTables);
+    $from = CRM_Contact_BAO_Query::getFromClause($whereTables);
 
     $query = "
 SELECT count(DISTINCT contact_a.id) 
@@ -125,7 +125,7 @@ AND    $operationClause
     $permission = CRM_ACL_API::whereClause($type, $tables, $whereTables, $userID);
 
     require_once "CRM/Contact/BAO/Query.php";
-    $from = CRM_Contact_BAO_Query::fromClause($whereTables);
+    $from = CRM_Contact_BAO_Query::getFromClause($whereTables);
 
     $query = "
 SELECT DISTINCT(contact_a.id) as id

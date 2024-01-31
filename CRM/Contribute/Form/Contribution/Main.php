@@ -287,7 +287,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
       // refs #29618, add mask on default personal data
       if (!empty($this->_originalId) && empty($this->_ppType)) {
         foreach($fields as $name => $dontcare) {
-          if (isset($this->_elementIndex[$name]) && !in_array($name, array('last_name', 'first_name', 'middle_name')) && !preg_match('/amount|city|postal_code|email/', $name)) {
+          if (isset($this->_elementIndex[$name]) && !in_array($name, array('last_name', 'first_name', 'middle_name')) && !preg_match('/amount|city|postal_code|email/', $name) && !preg_match('/^custom_\d+.*/', $name)) {
             $ele = $this->getElement($name);
             $eleClass = get_class($ele);
             if ($ele->_type == 'text' && strstr($eleClass, 'HTML_QuickForm_text')) {
@@ -408,6 +408,13 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
               if (isset($this->_elementIndex[$name])) {
                 $ele = $this->getElement($name);
                 $ele->updateAttributes(array('data-mask' => $this->_defaults[$name]));
+              }
+              if (isset($this->_rules[$name])) {
+                foreach($this->_rules[$name] as $idx => &$rule) {
+                  if ($rule['type'] != 'xssString') {
+                    unset($this->_rules[$name][$idx]);
+                  }
+                }
               }
             }
           }
