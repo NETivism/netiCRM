@@ -18,7 +18,7 @@ test.afterAll(async () => {
     await page.close();
 });
 test.describe.serial('Version Check', () => {
-    test.use({ storageState: 'storageState.json' });
+    // test.use({ storageState: 'storageState.json' });
     test('Check Pages', async () => {
         const rl = readline.createInterface({
             input: fs.createReadStream('tests/files/sites.csv'),
