@@ -93,6 +93,36 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     }
   }
 
+  static function getAdminFields($ppDAO){
+    $fields = array(
+      array(
+        'name' => 'user_name',
+        'label' => $ppDAO->user_name_label,
+      ),
+      array(
+        'name' => 'password',
+        'label' => $ppDAO->password_label,
+      ),
+      array(
+        'name' => 'signature',
+        'label' => $ppDAO->signature_label,
+      ),
+      array(
+        'name' => 'subject',
+        'label' => $ppDAO->subject_label,
+      ),
+    );
+    if (defined("NETICRM_ENABLE_TAPPAY_3D_SECURE") && NETICRM_ENABLE_TAPPAY_3D_SECURE) {
+      $fields[] = array(
+        'name' => 'url_site',
+        'label' => ts('啟用3D驗證'),
+        'msg' => ts(''),
+      );
+    }
+    return $fields;
+  }
+
+
   function setExpressCheckOut(&$params) {
     CRM_Core_Error::fatal(ts('This function is not implemented'));
   }

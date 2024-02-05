@@ -152,3 +152,40 @@
     </script>
 
 {/if}
+{if $ppType eq 'TapPay'}
+    <script>
+        {literal}
+            (function($){
+                if ($('#url_site').length) {
+                    function setTapPay3DSecureOption(formBlockName) {
+                        var urlSiteFieldDiv = $(formBlockName);
+                        var urlSiteTextField = urlSiteFieldDiv.find('input.form-text[type="text"]');
+                        urlSiteTextField.hide();
+                        var newCheckBox = $('<input type="checkbox">');
+                        newCheckBox.insertBefore(urlSiteTextField);
+                        newCheckBox.change(function(){
+                            if (newCheckBox.prop('checked')) {
+                                urlSiteTextField.val('1');
+                            }
+                            else {
+                                urlSiteTextField.val('');
+                            }
+                        });
+                        // Set Label Behavior
+                        var urlSiteLabel = urlSiteFieldDiv.find('label');
+                        urlSiteLabel.click(function(){
+                            newCheckBox.click();
+                        });
+                        // Set Default Value
+                        if (urlSiteTextField.val()) {
+                            newCheckBox.prop('checked', 1);
+                        }
+                    }
+
+                    setTapPay3DSecureOption('.crm-paymentProcessor-form-block-url_site');
+                    setTapPay3DSecureOption('.crm-paymentProcessor-form-block-test_url_site');
+                }
+            })(jQuery);
+        {/literal}
+    </script>
+{/if}
