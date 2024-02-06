@@ -85,6 +85,20 @@ function wait(ms){
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+async function getPageTitle(title){
+    return title + " | netiCRM";
+}
+
+
+async function fillForm(email='test@aipvo.com', page, form_selector='form#Register'){
+
+    await expect(page.locator(form_selector)).toBeDefined();
+  
+    var locator = page.locator('input[name="email-5"]');
+    await fillInput(locator, email);
+  
+}
+
 module.exports = {
-    makeid, print, findElement, findElementByLabel, fillInput, checkInput, selectOption, clickElement, selectDate, wait
+    makeid, print, findElement, findElementByLabel, fillInput, checkInput, selectOption, clickElement, selectDate, wait, getPageTitle, fillForm
 }
