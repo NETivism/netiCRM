@@ -49426,3 +49426,7 @@ msgstr ""
 #: xml/templates/civicrm_data.tpl
 msgid "Flydove Smart Marketing"
 msgstr ""
+
+#: CRM/Core/Payment/TapPay.php
+msgid "Enable 3D secure"
+msgstr ""
