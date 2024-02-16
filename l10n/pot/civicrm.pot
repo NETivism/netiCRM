@@ -49430,3 +49430,8 @@ msgstr ""
 #: CRM/Core/Payment/TapPay.php
 msgid "Enable 3D secure"
 msgstr ""
+
+#: CRM/Contact/Form/Merge.php
+#: CRM/Contact/Form/Task/Merge.php
+msgid "Cannot merge with the administrator, please recheck the selected contacts."
+msgstr ""
