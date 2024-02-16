@@ -49,6 +49,7 @@ steps:
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/add_membership_type.spec.js
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/import.spec.js
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/event_normal_register.spec.js
+    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/event_limit_noWait_register.spec.js
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/event_participant.spec.js
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/edit_mailing.spec.js
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_spgateway.spec.js
@@ -130,6 +131,7 @@ steps:
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/add_membership_type.spec.js
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/import.spec.js
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/event_normal_register.spec.js
+    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/event_limit_noWait_register.spec.js
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/event_participant.spec.js
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/edit_mailing.spec.js
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_spgateway.spec.js
@@ -212,6 +214,7 @@ steps:
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/add_membership_type.spec.js
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/import.spec.js
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/event_normal_register.spec.js
+    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/event_limit_noWait_register.spec.js
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/event_participant.spec.js
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/edit_mailing.spec.js
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_spgateway.spec.js
@@ -293,6 +296,7 @@ steps:
     - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/add_membership_type.spec.js
     - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/import.spec.js
     - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/event_normal_register.spec.js
+    - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/event_limit_noWait_register.spec.js
     - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/event_participant.spec.js
     - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/edit_mailing.spec.js
 - name: notify

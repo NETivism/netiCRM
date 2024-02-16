@@ -82,8 +82,10 @@ jobs:
         run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/add_membership_type.spec.js"
       - name: Frontend - Import Records - Playwright
         run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/import.spec.js"
-      - name: Frontend - Event Registration - Playwright
+      - name: Frontend - Event Normal Registration - Playwright
         run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/event_normal_register.spec.js"
+      - name: Frontend - Event Registration for limited participants without waitlist - Playwright
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/event_limit_noWait_register.spec.js"
       - name: Frontend - Participant Editing - Playwright
         run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/event_participant.spec.js"
       - name: Frontend - Mailing Editing - Playwright
@@ -181,8 +183,10 @@ jobs:
         run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/add_membership_type.spec.js"
       - name: Frontend - Import Records - Playwright
         run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/import.spec.js"
-      - name: Frontend - Event Registration - Playwright
+      - name: Frontend - Event Normal Registration - Playwright
         run: docker exec neticrm-ci  bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/event_normal_register.spec.js"
+      - name: Frontend - Event Registration for limited participants without waitlist - Playwright
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/event_limit_noWait_register.spec.js"
       - name: Frontend - Participant Editing - Playwright
         run: docker exec neticrm-ci  bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/event_participant.spec.js"
       - name: Frontend - Mailing Editing - Playwright
@@ -282,6 +286,8 @@ jobs:
         run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/import.spec.js"
       - name: Frontend - Event Normal Registration - Playwright
         run: docker exec neticrm-ci  bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/event_normal_register.spec.js"
+      - name: Frontend - Event Registration for limited participants without waitlist - Playwright
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/event_limit_noWait_register.spec.js"  
       - name: Frontend - Participant Editing - Playwright
         run: docker exec neticrm-ci  bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/event_participant.spec.js"
       - name: Frontend - Mailing Editing - Playwright
