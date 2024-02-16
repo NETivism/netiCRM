@@ -4,12 +4,13 @@ const utils = require('./utils.js');
 /** @type {import('@playwright/test').Page} */
 let page;
 const wait_secs = 2000;
-var page_title =  await utils.getPageTitle('有名額限制，不開放候補');
+let page_title;
 
 
 test.beforeAll(async () => {
   const browser = await chromium.launch();
   page = await browser.newPage();
+  page_title = await utils.getPageTitle('有名額限制，不開放候補');
   await test.step('Check the participant number is correct', async()=>{
     const response = await page.goto('/civicrm/event/search?reset=1&force=1&event=2');
     await expect(response.status()).toBe(200);
