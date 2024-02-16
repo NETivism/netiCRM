@@ -4,6 +4,7 @@ const utils = require('./utils.js');
 /** @type {import('@playwright/test').Page} */
 let page;
 const wait_secs = 2000;
+var page_title =  await utils.getPageTitle('有名額限制，不開放候補');
 
 
 test.beforeAll(async () => {
@@ -12,7 +13,7 @@ test.beforeAll(async () => {
   await test.step('Check the participant number is correct', async()=>{
     const response = await page.goto('/civicrm/event/search?reset=1&force=1&event=2');
     await expect(response.status()).toBe(200);
-    await expect(page).toHaveTitle('有名額限制，不開放候補 | netiCRM');
+    await expect(page).toHaveTitle(page_title);
     const counted_people = await page.locator('div#stat_ps>div#stat_ps_label1>ol>li>div>span.people-count').first().textContent();
     console.log('counted people:', counted_people);
     // check the number of participants
@@ -34,7 +35,6 @@ test.afterAll(async () => {
 
 test('limit participants. Not for waiting', async() => {
   await page.goto('/user/logout');
-  var page_title =  await utils.getPageTitle('有名額限制，不開放候補');
   await test.step('Check can register and second participant message is correct.', async () => {
     await page.goto('/civicrm/event/register?cid=0&reset=1&id=2');
     await expect(page).toHaveTitle(page_title);
