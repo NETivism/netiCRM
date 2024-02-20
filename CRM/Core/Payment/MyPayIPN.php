@@ -46,8 +46,7 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
     // set global variable for paymentProcessor
     self::$_payment_processor =& $objects['paymentProcessor'];
     self::$_input = $input;
-
-    if($objects['contribution']->contribution_status_id == 1 && empty($this->_get['is_recur'])){
+    if($objects['contribution']->contribution_status_id == 1 && empty($input['nois'])){
       // already completed, skip
       return '8888';
     }
@@ -87,7 +86,7 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
   function validateOthers(&$input, &$ids, &$objects, &$note) {
     $contribution = &$objects['contribution'];
     $pass = TRUE;
-    
+
     // check contribution id matches
     if (!strstr($contribution->trxn_id, $input['order_id'])) {
       $msg = "MyPay: OrderNumber values doesn't match between database and IPN request. {$contribution->trxn_id} : {$input['order_id']} ";
@@ -133,38 +132,33 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
       // Todo: Validate Recurring.
       // Is Recurring
       if($this->_post['group_id']){
-        $trxn_id = $input['uid'];
-        $local_succ_times = CRM_Core_DAO::singleValueQuery("SELECT count(*) FROM civicrm_contribution WHERE contribution_recur_id = %1 AND contribution_status_id = 1", array(1 => array($recur->id, 'Integer')));
-        if($input['RtnCode'] != 1){
+        $trxn_id = $input['order_id'];
+        $query_params = array(1 => array($recur->id, 'Integer'));
+        $local_succ_times = CRM_Core_DAO::singleValueQuery("SELECT count(*) FROM civicrm_contribution WHERE contribution_recur_id = %1 AND contribution_status_id = 1", $query_params);
+        $final_installment = CRM_Core_DAO::singleValueQuery("SELECT installments FROM civicrm_contribution_recur WHERE id = %1", $query_params);
+        if($input['prc'] != '250'){
           $contribution->contribution_status_id = 4; // Failed
           $c = self::copyContribution($contribution, $ids['contributionRecur'], $trxn_id);
         }
-        elseif($input['RtnCode'] == 1){
-          if ($local_succ_times >= $input['TotalSuccessTimes']) {
+        elseif($input['prc'] == '250' && $input['nois'] != '1'){
+          if ($input['nois'] >= $final_installment) {
             // Possible over charged. Record on the contribtion
-            $local_succ_times++;
-            $msg = 'MyPay: Possible over charge, detect from TotalSuccessTimes: '.$input['TotalSuccessTimes'];
+            // $local_succ_times++;
+            $msg = 'MyPay: Possible over charge, detect from Current Times: '.$input['nois'];
             CRM_Core_Error::debug_log_message($msg);
-            $note .= "Possible over charge. Will be $local_succ_times successful contributions in CRM, but greenworld only have {$input['TotalSuccessTimes']} success execution.";
+            $note .= "Possible over charge. Will be $final_installment successful contributions in CRM, but greenworld only have {$input['nois']} success execution.";
           }
           $contribution->contribution_status_id = 1; // Completed
           $c = self::copyContribution($contribution, $ids['contributionRecur'], $trxn_id);
         }
         if(!empty($c)){
           unset($objects['contribution']);
-          self::doRecordData($c->id, $this->_post);
           // Set expire time
           $data = $this->_post;
-          if(!empty($data['#info']['ExpireDate'])){
-            $expire_date = $data['#info']['ExpireDate'];
-          }
-          if(!empty($data['ExpireDate'])){
-            $expire_date = $data['ExpireDate'];
+          if(!empty($data['expired_date'])){
+            $expire_date = $data['expired_date'];
           }
           if(!empty($expire_date)){
-            if (strlen($expire_date) < 11) {
-              $expire_date = str_replace('/', '-', $expire_date).' 23:59:59';
-            }
             $sql = "UPDATE civicrm_contribution SET expire_date = %1 WHERE id = %2";
             $params = array(
               1 => array( $expire_date, 'String'),
@@ -184,22 +178,23 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
             CRM_Contribute_BAO_ContributionRecur::add($params, $null);
           }
         }
-      }
-      else{
-        // is first time
-        if($input['RtnCode'] == 1){
-          $params['id'] = $recur->id;
-          $params['start_date'] = date('YmdHis', strtotime($input['PaymentDate']));
-          $params['contribution_status_id'] = 5; // from pending to processing
-          $params['modified_date'] = date('YmdHis');
-          CRM_Contribute_BAO_ContributionRecur::add($params, $null);
-        }
         else{
-          CRM_Contribute_BAO_ContributionRecur::cancelRecurContribution($recur->id, CRM_Core_DAO::$_nullObject, 4);
+          // is first time
+          if ($input['nois'] == 1) {
+            if ($input['prc'] == '250'){
+              $params['id'] = $recur->id;
+              $params['start_date'] = $input['finishtime'];
+              $params['contribution_status_id'] = 5; // from pending to processing
+              $params['modified_date'] = date('YmdHis');
+              CRM_Contribute_BAO_ContributionRecur::add($params, $null);
+            }
+            else{
+              CRM_Contribute_BAO_ContributionRecur::cancelRecurContribution($recur->id, CRM_Core_DAO::$_nullObject, 4);
+            }
+          }
         }
       }
     }
-      
     // process fail response
     if($input['prc'] != "250" && $pass){
       if (!empty($input['ProcessDate'])) {

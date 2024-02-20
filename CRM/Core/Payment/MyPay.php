@@ -197,7 +197,6 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
     $_SESSION['CiviCRM'][$formKey]['params']['is_pay_later'] = $contribValues['is_pay_later'];
     $params['trxn_id'] = $contribution->trxn_id;
     $params['contact_id'] = $contribution->contact_id;
-    $params['contribution_recur_id'] = $contribution->contribution_recur_id;
 
     $arguments = $this->getOrderArgs($params, $component, $instrumentCode, $formKey);
     $encryptedArgs = array(
@@ -352,13 +351,6 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
         'failure_returl' => CRM_Utils_System::url(CRM_Utils_System::currentPath(), $failureQuery, TRUE, NULL, FALSE),
       ),
     );
-    print_r($vars);
-    print_r($values);
-    // if ($values['is_recur']) {
-    //   $args['encry_data']['group_id'] = $vars['contribution_recur_id'];
-    //   $args['encry_data']['regular_total'] = empty($values['installments']) ? 0 : $values['installments'];
-    //   $args['encry_data']['regular'] = $values['recur_frequency_unit'] == 'year' ? 'A' : 'M';
-    // }
 
     echo $instrumentCode;
     switch ($instrumentCode) {
@@ -367,6 +359,7 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
         if ($vars['is_recur']) {
           $args['encry_data']['pfn'] = 'DIRECTDEBIT';
           $args['encry_data']['regular'] = '';
+          $args['encry_data']['group_id'] = $vars['contributionRecurID'];
           switch($vars['frequency_unit']) {
             case 'month':
               $args['encry_data']['regular'] = 'M';
