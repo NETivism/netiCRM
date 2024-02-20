@@ -10,24 +10,13 @@ test.beforeAll(async () => {
   const browser = await chromium.launch();
   page = await browser.newPage();
   page_title =  await utils.getPageTitle('有名額限制，需事先審核');
-  await test.step('Check the participant number is correct', async()=>{
-    const response = await page.goto('/civicrm/event/search?reset=1&force=1&event=4');
-    await expect(response.status()).toBe(200);
-    await expect(page).toHaveTitle(page_title);
-    const counted_people = await page.locator('div#stat_ps>div#stat_ps_label1>ol>li>div>span.people-count').first().textContent();
-    console.log('counted people:', counted_people);
-    // check the number of participants
-    if (counted_people == '5'){
-      // capture the fifth participant and delete it
-      await page.locator('div#participantSearch>table>tbody>tr').first().getByRole('link', { name: 'Delete' }).click();
-      await page.locator('[id="_qf_Participant_next-bottom"]').click();
-    }
-    // check whether it was deleted sucessfully
-    await expect(page.locator('div#stat_ps>div#stat_ps_label1>ol>li>div>span.people-count').first()).toHaveText('4');
-  })
+  await utils.checkParticipantNum(page, page_title, 4);
+  //logout
+  await page.goto('/user/logout');
 });
 
 test.afterAll(async () => {
+  await utils.reLogin(page);
   await page.close();
 });
 
