@@ -99,6 +99,32 @@ async function fillForm(email='test@aipvo.com', page, form_selector='form#Regist
   
 }
 
+async function reLogin(page, user=process.env.adminUser, password=process.env.adminPwd  ){
+    await page.goto('/');
+    await page.locator('input[name="name"]').fill(user);
+    await page.locator('input[name="pass"]').fill(password);
+    await page.locator('input[value="Log in"]').click();
+    // Save signed-in state to 'storageState.json'.
+    await page.context().storageState({ path: 'storageState.json' });
+    await expect(page).toHaveTitle(/Welcome[^|]+ \| netiCRM/);
+}
+
+async function checkParticipantNum(page, page_title, event_id){
+    const response = await page.goto(`/civicrm/event/search?reset=1&force=1&event=${event_id}`);
+    await expect(response.status()).toBe(200);
+    await expect(page).toHaveTitle(page_title);
+    const counted_people = await page.locator('div#stat_ps>div#stat_ps_label1>ol>li>div>span.people-count').first().textContent();
+    console.log('counted people:', counted_people);
+    // check the number of participants
+    if (counted_people == '5'){
+      // capture the fifth participant and delete it
+      await page.locator('div#participantSearch>table>tbody>tr').first().getByRole('link', { name: 'Delete' }).click();
+      await page.locator('[id="_qf_Participant_next-bottom"]').click();
+    }
+    // check whether it was deleted sucessfully
+    await expect(page.locator('div#stat_ps>div#stat_ps_label1>ol>li>div>span.people-count').first()).toHaveText('4');
+}
+
 module.exports = {
-    makeid, print, findElement, findElementByLabel, fillInput, checkInput, selectOption, clickElement, selectDate, wait, getPageTitle, fillForm
+    makeid, print, findElement, findElementByLabel, fillInput, checkInput, selectOption, clickElement, selectDate, wait, getPageTitle, fillForm ,reLogin , checkParticipantNum
 }
