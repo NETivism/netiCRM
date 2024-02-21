@@ -197,8 +197,7 @@ class CRM_Core_Payment_MyPayTest extends CiviUnitTestCase {
       'echo_3' => '',
       'echo_4' => ''
     );
-    $r = CRM_Core_Payment_MyPay::doIPN(NULL, 'Credit', $post, $get);
-    print_r($r);
+    CRM_Core_Payment_MyPay::doIPN(NULL, 'Credit', $post, $get);
 
     // verify contribution status after trigger
     $this->assertDBCompareValue(
@@ -211,7 +210,7 @@ class CRM_Core_Payment_MyPayTest extends CiviUnitTestCase {
     );
 
     // verify data in drupal module
-    $cid = CRM_Core_DAO::singleValueQuery("SELECT cid FROM civicrm_contribution_mypay  WHERE cid = $contribution->id");
+    $cid = CRM_Core_DAO::singleValueQuery("SELECT contribution_id FROM civicrm_contribution_mypay  WHERE contribution_id = $contribution->id");
     $this->assertNotEmpty($cid, "In line " . __LINE__);
   }
 }
