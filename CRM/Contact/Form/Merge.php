@@ -72,6 +72,11 @@ class CRM_Contact_Form_Merge extends CRM_Core_Form {
       $this->_hasError = TRUE;
     }
 
+    if (!self::checkContactIsAdmin($cid, $oid)) {
+      return CRM_Core_Error::statusBounce(ts('Cannot merge with the administrator, please recheck the selected contacts.'));
+      $this->_hasError = TRUE;
+    }
+
     // Block access if user does not have EDIT permissions for both contacts.
     if (!(CRM_Contact_BAO_Contact_Permission::allow($cid, CRM_Core_Permission::EDIT)
         && CRM_Contact_BAO_Contact_Permission::allow($oid, CRM_Core_Permission::EDIT)
@@ -270,6 +275,24 @@ class CRM_Contact_Form_Merge extends CRM_Core_Form {
       $exception->contact_id2 = $cid;
     }
     if ($exception->find(TRUE)) {
+      return FALSE;
+    }
+    else {
+      return TRUE;
+    }
+  }
+
+  function checkContactIsAdmin($cid, $oid) {
+    // Check contact is admin or not
+    $cid_sql = "SELECT uf_id FROM `civicrm_uf_match` where contact_id = %1";
+    $cid_params = array( 1 => array($cid, 'Integer'));
+    $cid_uid = CRM_Core_DAO::singleValueQuery($cid_sql, $cid_params);
+
+    $oid_sql = "SELECT uf_id FROM `civicrm_uf_match` where contact_id = %1";
+    $oid_params = array( 1 => array($oid, 'Integer'));
+    $oid_uid = CRM_Core_DAO::singleValueQuery($oid_sql, $oid_params);
+
+    if ($cid_uid == 1 || $oid_uid == 1) {
       return FALSE;
     }
     else {
