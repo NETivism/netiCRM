@@ -102,7 +102,7 @@ class CRM_Contact_Form_Task_SMSCommon {
 SELECT civicrm_phone.contact_id, civicrm_phone.phone, civicrm_phone.id as phone_id, civicrm_phone.phone_type_id
 FROM civicrm_contact
 LEFT JOIN civicrm_phone ON ( civicrm_contact.id = civicrm_phone.contact_id )
-WHERE civicrm_contact.id IN (%1) AND civicrm_phone.phone_type_id = %2
+WHERE civicrm_contact.id IN (%1) AND civicrm_phone.phone_type_id = %2 GROUP BY civicrm_phone.contact_id
 ORDER BY civicrm_phone.is_primary DESC, phone_id ASC";
       $mobilePhoneResult = CRM_Core_DAO::executeQuery($mobilePhoneQuery, array(
         1 => array(CRM_Utils_Array::implode(',', $form->_contactIds), 'CommaSeperatedIntegers'),
