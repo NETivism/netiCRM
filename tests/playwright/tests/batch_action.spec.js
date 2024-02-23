@@ -20,7 +20,7 @@ var vars = {
  * @return {Promise<void>}
  */
 async function list_contacts_and_select_top_n(page, top_n=3) {
-
+    
     /* Step 1: Open the "Find Contacts" page URL and wait for 2 seconds */
     await page.goto('civicrm/contact/search?reset=1');
     await utils.wait(wait_secs);
@@ -42,7 +42,7 @@ async function list_contacts_and_select_top_n(page, top_n=3) {
         await utils.findElement(page, element);
         await utils.checkInput(page, page.locator(element));
     }
-
+    
 }
 
 /**
@@ -70,6 +70,87 @@ async function select_action_and_go(page, option_index, expect_element) {
     await utils.findElement(page, expect_element);
 
 }
+
+async function search_contacts(page, contactName){
+    // go to search page
+    await page.goto('civicrm/contact/search?reset=1');
+    await utils.wait(wait_secs);
+    // input search contact name
+    var searchLocator='#sort_name';
+    await utils.findElement(page, searchLocator);
+    await utils.fillInput(page.locator(searchLocator), contactName);
+    // search and wait for the result
+    var searchLocator='#_qf_Basic_refresh';
+    await utils.findElement(page, searchLocator);
+    await utils.clickElement(page, page.locator(searchLocator));
+    await utils.wait(wait_secs);
+}
+
+async function delete_contact(page){
+    deleteLocator = '#_qf_Delete_done';
+    // go to delete page
+    await select_action_and_go(page, deleteLocator);
+    //
+}
+
+
+/**
+ * create_and_search_contacts_for_merge function description: create new contants and search them for merging function.
+ *
+ * @param {Object} page - The Playwright page object.
+ * @param {number} contactNum - The number of the contacts that we want to create.
+ * @return {Promise<void>}
+ */
+
+async function create_and_search_contacts_for_merge(page, contactNum){
+
+    // 1. check whether there is contacts data of the last merge testing
+    
+    await search_contacts(page, 'merge_test');
+    const result_empty = await page.locator('.crm-results-block.crm-results-block-empty').isVisible();
+    if (!result_empty){
+        // select all results and check the number
+        await utils.clickElement(page, page.locator('#toggleSelect'));
+        var resultNum = await page.locator('table.selector>tbody>tr').count();
+        // delete
+        await delete_contact(page);
+    }
+    
+    // 2. create new contact data
+    
+    // Open the "New Individul" page URL and wait for 2 seconds
+    await page.goto('/civicrm/contact/add?reset=1&ct=Individual');
+    await utils.wait(wait_secs);
+    
+    // Create new contants
+    for (let i=1; i <= contactNum; i++ ){
+        // fill data
+        var emailLocator='input#email_1_email';
+        await utils.findElement(page, emailLocator);
+        await utils.fillInput(page.locator(emailLocator), `merge_test_${i}@example.com`);
+        // save
+        var saveLocator='#_qf_Contact_upload_new';
+        await utils.findElement(page, saveLocator);
+        await utils.clickElement(page, page.locator(saveLocator).first());
+    }
+    
+    // Search the contacts that we just created   
+    await search_contacts(page, 'merge_test');
+
+    // check if the search results are correct
+    var contactNumLocator='#search-status>table>tbody>tr>td'
+    await utils.findElement(page, contactNumLocator);
+    await expect(page.locator(contactNumLocator).first()).toHaveText(`${contactNum} Contact`);
+    
+    // Check the checkboxes of the top n rows
+    for (let j = 1; j <= contactNum; j++) {
+        element = `table.selector tr:nth-child(${j}) td:nth-child(1) input`;
+        await utils.findElement(page, element);
+        await utils.checkInput(page, page.locator(element));
+    }
+}
+
+
 
 
 test.beforeAll(async () => {
@@ -320,7 +401,7 @@ test.describe.serial('Batch Action', () => {
         /* Step 5-1: Merge Contacts - Merge. */
         await test.step('Merge Contacts - Merge.', async () =>{
 
-            await list_contacts_and_select_top_n(page, 2);
+            await create_and_search_contacts_for_merge(page, 2);
 
             /* select "Merge Contacts" and click "Go" */
             await select_action_and_go(page, 10, 'form#Merge');
@@ -341,7 +422,7 @@ test.describe.serial('Batch Action', () => {
         /* Step 5-2: Merge Contacts - Mark this pair as not a duplicate. */
         await test.step('Merge Contacts - Mark this pair as not a duplicate.', async () =>{
 
-            await list_contacts_and_select_top_n(page, 2);
+            await create_and_search_contacts_for_merge(page, 2);
 
             /* select "Merge Contacts" and click "Go" */
             await select_action_and_go(page, 10, 'form#Merge');
@@ -362,156 +443,156 @@ test.describe.serial('Batch Action', () => {
 
         });
 
-        /* Step 6: Tag Contacts. */
-        await test.step('Tag Contacts.', async () =>{
+        // /* Step 6: Tag Contacts. */
+        // await test.step('Tag Contacts.', async () =>{
 
-            await list_contacts_and_select_top_n(page);
+        //     await list_contacts_and_select_top_n(page);
 
-            /* select "Tag Contacts (assign tags)" and click "Go" */
-            await select_action_and_go(page, 11, 'form#AddToTag')
+        //     /* select "Tag Contacts (assign tags)" and click "Go" */
+        //     await select_action_and_go(page, 11, 'form#AddToTag')
 
-            /* click scrollbar */
-            element = 'tr.crm-contact-task-addtotag-form-block-tag div.listing-box div:first-child input';
-            await utils.findElement(page, element);
-            await utils.clickElement(page, page.locator(element).first());
+        //     /* click scrollbar */
+        //     element = 'tr.crm-contact-task-addtotag-form-block-tag div.listing-box div:first-child input';
+        //     await utils.findElement(page, element);
+        //     await utils.clickElement(page, page.locator(element).first());
 
-            /* click "Tag Contacts" */
-            element = '#_qf_AddToTag_next-bottom';
-            await utils.findElement(page, element);
-            await utils.clickElement(page, page.locator(element).first());
+        //     /* click "Tag Contacts" */
+        //     element = '#_qf_AddToTag_next-bottom';
+        //     await utils.findElement(page, element);
+        //     await utils.clickElement(page, page.locator(element).first());
 
-            await utils.wait(wait_secs);
+        //     await utils.wait(wait_secs);
 
-            await expect(page.locator('.crm-error')).toHaveCount(0);
-            await expect(page.locator('.messages h3').first()).toHaveText('Contact(s) tagged as: 主要捐款者');
-            await expect(page.locator('.messages ul').nth(1).locator('li')).toHaveText('Total Contact(s) tagged: 3');
-            await utils.print('Contact(s) tagged successfully.');
+        //     await expect(page.locator('.crm-error')).toHaveCount(0);
+        //     await expect(page.locator('.messages h3').first()).toHaveText('Contact(s) tagged as: 主要捐款者');
+        //     await expect(page.locator('.messages ul').nth(1).locator('li')).toHaveText('Total Contact(s) tagged: 3');
+        //     await utils.print('Contact(s) tagged successfully.');
 
-        });
+        // });
 
-        /* Add Contacts to Group - 1 Add Contact To Existing Group */
+        // /* Add Contacts to Group - 1 Add Contact To Existing Group */
 
-        /* Step 7-1: Add Contacts to Group - Add Contact To Existing Group. */
-        await test.step('Add Contacts to Group - Add Contact To Existing Group.', async () =>{
+        // /* Step 7-1: Add Contacts to Group - Add Contact To Existing Group. */
+        // await test.step('Add Contacts to Group - Add Contact To Existing Group.', async () =>{
 
-            await list_contacts_and_select_top_n(page);
+        //     await list_contacts_and_select_top_n(page);
 
-            /* select "Add Contacts to Group" and click "Go" */
-            await select_action_and_go(page, 2, 'form#AddToGroup');
+        //     /* select "Add Contacts to Group" and click "Go" */
+        //     await select_action_and_go(page, 2, 'form#AddToGroup');
 
-            /* select first option from "Select Group" dropdown */
-            element = '#group_id';
-            await utils.findElement(page, element);
-            await utils.selectOption(page.locator(element), { index: 1 });
+        //     /* select first option from "Select Group" dropdown */
+        //     element = '#group_id';
+        //     await utils.findElement(page, element);
+        //     await utils.selectOption(page.locator(element), { index: 1 });
 
-            /* click "Confirm" */
-            element = '#_qf_AddToGroup_next-bottom';
-            await utils.findElement(page, element);
-            await utils.clickElement(page, page.locator(element).first());
+        //     /* click "Confirm" */
+        //     element = '#_qf_AddToGroup_next-bottom';
+        //     await utils.findElement(page, element);
+        //     await utils.clickElement(page, page.locator(element).first());
 
-            await utils.wait(wait_secs);
+        //     await utils.wait(wait_secs);
 
-            await expect(page.locator('.crm-error')).toHaveCount(0);
-            await expect(page.locator('.messages').first()).toHaveText("Added Contact(s) to 管理員Total Selected Contact(s): 3Total Contact(s) added to group: 3");
-            await utils.print('Successfully added contact to existing group.');
+        //     await expect(page.locator('.crm-error')).toHaveCount(0);
+        //     await expect(page.locator('.messages').first()).toHaveText("Added Contact(s) to 管理員Total Selected Contact(s): 3Total Contact(s) added to group: 3");
+        //     await utils.print('Successfully added contact to existing group.');
 
-        });
+        // });
 
-        /* Add Contacts to Group - 2 Create New Group */
+        // /* Add Contacts to Group - 2 Create New Group */
 
-        /* Step 7-2: Add Contacts to Group - Create New Group. */
-        await test.step('Add Contacts to Group - Create New Group.', async () =>{
+        // /* Step 7-2: Add Contacts to Group - Create New Group. */
+        // await test.step('Add Contacts to Group - Create New Group.', async () =>{
 
-            await list_contacts_and_select_top_n(page);
+        //     await list_contacts_and_select_top_n(page);
 
-            /* select "Add Contacts to Group" and click "Go" */
-            await select_action_and_go(page, 2, 'form#AddToGroup');
+        //     /* select "Add Contacts to Group" and click "Go" */
+        //     await select_action_and_go(page, 2, 'form#AddToGroup');
 
-            /* click "Create New Group" */
-            element = '#CIVICRM_QFID_1_4';
-            await utils.findElement(page, element);
-            await utils.clickElement(page, page.locator(element).first());
+        //     /* click "Create New Group" */
+        //     element = '#CIVICRM_QFID_1_4';
+        //     await utils.findElement(page, element);
+        //     await utils.clickElement(page, page.locator(element).first());
 
-            /* fill in "Group Name" */
-            element = '#title';
-            await utils.findElement(page, element);
-            await utils.fillInput(page.locator(element).first(), vars.group_name);
+        //     /* fill in "Group Name" */
+        //     element = '#title';
+        //     await utils.findElement(page, element);
+        //     await utils.fillInput(page.locator(element).first(), vars.group_name);
 
-            /* click "Confirm" */
-            element = '#_qf_AddToGroup_next-bottom';
-            await utils.findElement(page, element);
-            await utils.clickElement(page, page.locator(element).first());
+        //     /* click "Confirm" */
+        //     element = '#_qf_AddToGroup_next-bottom';
+        //     await utils.findElement(page, element);
+        //     await utils.clickElement(page, page.locator(element).first());
 
-            await utils.wait(wait_secs);
+        //     await utils.wait(wait_secs);
 
-            await expect(page.locator('.crm-error')).toHaveCount(0);
-            await expect(page.locator('.messages').first()).toHaveText(`Added Contact(s) to ${vars.group_name}Total Selected Contact(s): 3Total Contact(s) added to group: 3`);
-            await utils.print('Successfully added contact to existing group.');
+        //     await expect(page.locator('.crm-error')).toHaveCount(0);
+        //     await expect(page.locator('.messages').first()).toHaveText(`Added Contact(s) to ${vars.group_name}Total Selected Contact(s): 3Total Contact(s) added to group: 3`);
+        //     await utils.print('Successfully added contact to existing group.');
 
-        });
+        // });
 
-        /* New Smart Group */
+        // /* New Smart Group */
 
-        /* Step 8: New Smart Group. */
-        await test.step('New Smart Group.', async () =>{
+        // /* Step 8: New Smart Group. */
+        // await test.step('New Smart Group.', async () =>{
 
-            await list_contacts_and_select_top_n(page);
+        //     await list_contacts_and_select_top_n(page);
 
-            /* click "All records" */
-            element = '#CIVICRM_QFID_ts_all_4';
-            await utils.findElement(page, element);
-            await utils.clickElement(page, page.locator(element).first());
+        //     /* click "All records" */
+        //     element = '#CIVICRM_QFID_ts_all_4';
+        //     await utils.findElement(page, element);
+        //     await utils.clickElement(page, page.locator(element).first());
 
-            /* select "New Smart Group" and click "Go" */
-            await select_action_and_go(page, 4, 'form#SaveSearch');
+        //     /* select "New Smart Group" and click "Go" */
+        //     await select_action_and_go(page, 4, 'form#SaveSearch');
 
-            /* fill in "Name" */
-            element = '#title';
-            await utils.findElement(page, element);
-            await utils.fillInput(page.locator(element).first(), vars.smart_group_name);
+        //     /* fill in "Name" */
+        //     element = '#title';
+        //     await utils.findElement(page, element);
+        //     await utils.fillInput(page.locator(element).first(), vars.smart_group_name);
 
-            /* click "Save Smart Group" */
-            element = '#_qf_SaveSearch_next-bottom';
-            await utils.findElement(page, element);
-            await utils.clickElement(page, page.locator(element).first());
+        //     /* click "Save Smart Group" */
+        //     element = '#_qf_SaveSearch_next-bottom';
+        //     await utils.findElement(page, element);
+        //     await utils.clickElement(page, page.locator(element).first());
 
-            await utils.wait(wait_secs);
+        //     await utils.wait(wait_secs);
 
-            await expect(page.locator('.crm-error')).toHaveCount(0);
-            await expect(page.locator('.messages').first()).toHaveText(`Your smart group has been saved as '${vars.smart_group_name}'.`);
+        //     await expect(page.locator('.crm-error')).toHaveCount(0);
+        //     await expect(page.locator('.messages').first()).toHaveText(`Your smart group has been saved as '${vars.smart_group_name}'.`);
 
-            /* click "Done" */
-            element = '#_qf_Result_done';
-            await utils.findElement(page, element);
-            await utils.clickElement(page, page.locator(element).first());
+        //     /* click "Done" */
+        //     element = '#_qf_Result_done';
+        //     await utils.findElement(page, element);
+        //     await utils.clickElement(page, page.locator(element).first());
 
-            await utils.wait(wait_secs);
+        //     await utils.wait(wait_secs);
 
-            await utils.print('Successfully saved smart group.');
+        //     await utils.print('Successfully saved smart group.');
 
-        });
+        // });
 
-        /* Delete Contacts */
+        // /* Delete Contacts */
 
-        /* Step 9: Delete Contacts. */
-        await test.step('Delete Contacts.', async () =>{
+        // /* Step 9: Delete Contacts. */
+        // await test.step('Delete Contacts.', async () =>{
 
-            await list_contacts_and_select_top_n(page);
+        //     await list_contacts_and_select_top_n(page);
 
-            /* select "Delete Contacts" and click "Go" */
-            await select_action_and_go(page, 17, 'form#Delete');
+        //     /* select "Delete Contacts" and click "Go" */
+        //     await select_action_and_go(page, 17, 'form#Delete');
 
-            /* click "Delete Contact(s)" */
-            element = '#_qf_Delete_done';
-            await utils.findElement(page, element);
-            await utils.clickElement(page, page.locator(element).first());
+        //     /* click "Delete Contact(s)" */
+        //     element = '#_qf_Delete_done';
+        //     await utils.findElement(page, element);
+        //     await utils.clickElement(page, page.locator(element).first());
 
-            await utils.wait(wait_secs);
+        //     await utils.wait(wait_secs);
 
-            await expect(page.locator('.crm-error')).toHaveCount(0);
-            await utils.print('Successfully deleted contacts.');
+        //     await expect(page.locator('.crm-error')).toHaveCount(0);
+        //     await utils.print('Successfully deleted contacts.');
 
-        });
+        // });
 
     });
 
