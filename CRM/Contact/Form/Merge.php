@@ -72,7 +72,7 @@ class CRM_Contact_Form_Merge extends CRM_Core_Form {
       $this->_hasError = TRUE;
     }
 
-    if (!self::checkContactIsAdmin($cid, $oid)) {
+    if (self::checkContactIsAdmin($cid, $oid)) {
       return CRM_Core_Error::statusBounce(ts('Cannot merge with the administrator, please recheck the selected contacts.'));
       $this->_hasError = TRUE;
     }
@@ -284,19 +284,19 @@ class CRM_Contact_Form_Merge extends CRM_Core_Form {
 
   function checkContactIsAdmin($cid, $oid) {
     // Check contact is admin or not
-    $cid_sql = "SELECT uf_id FROM `civicrm_uf_match` where contact_id = %1";
-    $cid_params = array( 1 => array($cid, 'Integer'));
-    $cid_uid = CRM_Core_DAO::singleValueQuery($cid_sql, $cid_params);
+    $cidSql = "SELECT uf_id FROM `civicrm_uf_match` where contact_id = %1";
+    $cidParams = array( 1 => array($cid, 'Integer'));
+    $cidUid = CRM_Core_DAO::singleValueQuery($cidSql, $cidParams);
 
-    $oid_sql = "SELECT uf_id FROM `civicrm_uf_match` where contact_id = %1";
-    $oid_params = array( 1 => array($oid, 'Integer'));
-    $oid_uid = CRM_Core_DAO::singleValueQuery($oid_sql, $oid_params);
+    $oidSql = "SELECT uf_id FROM `civicrm_uf_match` where contact_id = %1";
+    $oidParams = array( 1 => array($oid, 'Integer'));
+    $oidUid = CRM_Core_DAO::singleValueQuery($oidSql, $oidParams);
 
-    if ($cid_uid == 1 || $oid_uid == 1) {
-      return FALSE;
+    if ($cidUid == 1 || $oidUid == 1) {
+      return TRUE;
     }
     else {
-      return TRUE;
+      return FALSE;
     }
   }
 }
