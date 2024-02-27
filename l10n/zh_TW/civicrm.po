@@ -1,7 +1,7 @@
 # 
 # Translators:
-# CC Chu <poliphilonet@gmail.com>, 2020-2023
-# Chang Shu-huai <junsuwhy@gmail.com>, 2016-2023
+# CC Chu <poliphilonet@gmail.com>, 2020-2024
+# Chang Shu-huai <junsuwhy@gmail.com>, 2016-2024
 # Charles Chuang, 2022-2023
 # CHUNLIAN WU <susanna@netivism.com.tw>, 2017
 # Fuyuan Cheng <gloomcheng@gmail.com>, 2013-2015
@@ -14,12 +14,12 @@
 # charlesc <yeouhsin@gmail.com>, 2013-2014,2016,2020,2022
 # 淑涵 詹 <amy0222@netivism.com.tw>, 2020-2021
 # 花玉婷 <klavier1976@netivism.com.tw>, 2016-2019,2021-2023
-# 馮 佳今, 2022-2023
+# 馮 佳今, 2022-2024
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: CC Chu <poliphilonet@gmail.com>, 2020-2023\n"
+"Last-Translator: 馮 佳今, 2022-2024\n"
 "Language-Team: Chinese (Taiwan) (http://app.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49961,3 +49961,16 @@ msgid ""
 "This delete operation cannot be undone and will delete all transactions and "
 "activity associated with these members."
 msgstr "這個刪除操作無法復原，並將會刪除與這些會員相關的所有捐款和活動記錄。"
+
+#: xml/templates/civicrm_data.tpl
+msgid "Flydove Smart Marketing"
+msgstr "飛信自動化行銷"
+
+#: CRM/Core/Payment/TapPay.php
+msgid "Enable 3D secure"
+msgstr "啟用 3D 驗證"
+
+#: CRM/Contact/Form/Merge.php CRM/Contact/Form/Task/Merge.php
+msgid ""
+"Cannot merge with the administrator, please recheck the selected contacts."
+msgstr "無法合併管理員，請重新檢查您所選擇的聯絡人。"

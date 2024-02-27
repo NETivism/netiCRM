@@ -49422,3 +49422,16 @@ msgstr ""
 #: templates/CRM/Member/Form/Task/Delete.tpl
 msgid "This delete operation cannot be undone and will delete all transactions and activity associated with these members."
 msgstr ""
+
+#: xml/templates/civicrm_data.tpl
+msgid "Flydove Smart Marketing"
+msgstr ""
+
+#: CRM/Core/Payment/TapPay.php
+msgid "Enable 3D secure"
+msgstr ""
+
+#: CRM/Contact/Form/Merge.php
+#: CRM/Contact/Form/Task/Merge.php
+msgid "Cannot merge with the administrator, please recheck the selected contacts."
+msgstr ""
