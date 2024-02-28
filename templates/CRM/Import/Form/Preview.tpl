@@ -249,3 +249,4 @@ cj("#new-tag").removeClass( 'crm-accordion-closed' ).addClass( 'crm-accordion-op
 
 </script>
 {/literal}
+{include file="CRM/common/chosen.tpl" selector="#groups"}

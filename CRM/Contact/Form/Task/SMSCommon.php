@@ -111,9 +111,11 @@ ORDER BY civicrm_phone.is_primary DESC, phone_id ASC";
       while ($mobilePhoneResult->fetch()) {
         if (!empty(trim($mobilePhoneResult->phone))) {
           $contactId = $mobilePhoneResult->contact_id;
-          $form->_contactDetails[$contactId]['phone_id'] = $mobilePhoneResult->phone_id;
-          $form->_contactDetails[$contactId]['phone'] = trim($mobilePhoneResult->phone);
-          $form->_contactDetails[$contactId]['phone_type_id'] = $mobilePhoneResult->phone_type_id;
+          if (!isset($form->_contactDetails[$contactId]['phone_id'])) {
+            $form->_contactDetails[$contactId]['phone_id'] = $mobilePhoneResult->phone_id;
+            $form->_contactDetails[$contactId]['phone'] = trim($mobilePhoneResult->phone);
+            $form->_contactDetails[$contactId]['phone_type_id'] = $mobilePhoneResult->phone_type_id;
+          }
         }
       }
 
