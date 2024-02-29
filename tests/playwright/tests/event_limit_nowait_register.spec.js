@@ -11,7 +11,7 @@ test.beforeAll(async () => {
   const browser = await chromium.launch();
   page = await browser.newPage();
   page_title = await utils.getPageTitle('有名額限制，不開放候補');
-  await utils.checkParticipantNum(page, page_title, 2);
+  await utils.setParticipantNum(page, page_title, 2, '5', '4');
   // logout
   await page.goto('/user/logout');
 });

@@ -10,7 +10,7 @@ test.beforeAll(async () => {
   const browser = await chromium.launch();
   page = await browser.newPage();
   page_title =  await utils.getPageTitle('有名額限制，需事先審核');
-  await utils.checkParticipantNum(page, page_title, 4);
+  await utils.setParticipantNum(page, page_title, 4, '5', '4');
   //logout
   await page.goto('/user/logout');
 });
@@ -23,7 +23,6 @@ test.afterAll(async () => {
 
 
 test('limit participants. Need approval', async () => {
-    await page.goto('/user/logout');
     await test.step('First register success and second participant message is correct', async () => {
       await page.goto('/civicrm/event/register?cid=0&reset=1&id=4');
       await expect(page).toHaveTitle(page_title);
