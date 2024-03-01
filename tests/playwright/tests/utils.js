@@ -115,8 +115,9 @@ async function reLogin(page, user=process.env.adminUser, password=process.env.ad
  * @param {number} event_id The id of the specfic event for testing.
  * @param {number} full_participant The maximum number of participant that we want to set.
  * @param {number} verify_participant The defalut number of participant that we wamt to set for beginning.
+ * @return {Promise<void>}
  */
-async function setParticipantNum(page, page_title, event_id, full_participant, verify_participant){
+async function setParticipantNum(page, page_title, event_id, full_participant='5', verify_participant='4'){
     // check that we go to event page sucessfully
     var response = await page.goto(`/civicrm/event/search?reset=1&force=1&event=${event_id}`);
     await expect(response.status()).toBe(200);

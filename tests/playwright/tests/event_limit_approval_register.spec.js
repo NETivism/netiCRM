@@ -10,7 +10,7 @@ test.beforeAll(async () => {
   const browser = await chromium.launch();
   page = await browser.newPage();
   page_title =  await utils.getPageTitle('有名額限制，需事先審核');
-  await utils.setParticipantNum(page, page_title, 4, '5', '4');
+  await utils.setParticipantNum(page, page_title, 4);
   //logout
   await page.goto('/user/logout');
 });
