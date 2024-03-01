@@ -85,6 +85,117 @@ function wait(ms){
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+async function getPageTitle(title){
+    return title + " | netiCRM";
+}
+
+
+async function fillForm(email='test@aipvo.com', page, form_selector='form#Register'){
+
+    await expect(page.locator(form_selector)).toBeDefined();
+  
+    var locator = page.locator('input[name="email-5"]');
+    await fillInput(locator, email);
+  
+}
+
+async function reLogin(page, user=process.env.adminUser, password=process.env.adminPwd  ){
+    await page.goto('/');
+    await page.locator('input[name="name"]').fill(user);
+    await page.locator('input[name="pass"]').fill(password);
+    await page.locator('input[value="Log in"]').click();
+    // Save signed-in state to 'storageState.json'.
+    await page.context().storageState({ path: 'storageState.json' });
+    await expect(page).toHaveTitle(/Welcome[^|]+ \| netiCRM/);
+}
+/**
+ * Set the number of participants in a event as defalut valus we expect
+ * @param {Page} page The current page object. 
+ * @param {string} page_title The title of the current page.
+ * @param {number} event_id The id of the specfic event for testing.
+ * @param {number} full_participant The maximum number of participant that we want to set.
+ * @param {number} verify_participant The defalut number of participant that we wamt to set for beginning.
+ * @return {Promise<void>}
+ */
+async function setParticipantNum(page, page_title, event_id, full_participant='5', verify_participant='4'){
+    // check that we go to event page sucessfully
+    var response = await page.goto(`/civicrm/event/search?reset=1&force=1&event=${event_id}`);
+    await expect(response.status()).toBe(200);
+    await expect(page).toHaveTitle(page_title);
+    // capture the number of participants
+    var current_participant = await page.locator('div#stat_ps>div#stat_ps_label1>ol>li>div>span.people-count').first().textContent();
+    console.log('Current number of participant:', current_participant);
+    // check the number of participants and set the number as what we want (verify participant)
+    while (current_participant != verify_participant){
+        if (current_participant == full_participant){
+          // capture the topest participant and delete it
+          await page.locator('div#participantSearch>table>tbody>tr').first().getByRole('link', { name: 'Delete' }).click();
+          await page.locator('[id="_qf_Participant_next-bottom"]').click();
+          wait(2000);
+        }
+        else{
+          // register new participant
+          /* click Register New Participant */
+          var element = 'ul#actions li:nth-child(2) a';
+          var locator = page.locator(element).nth(0);
+          await findElement(page, element);
+          await locator.click();
+
+          /* switch to new tab */
+          const pageCreateContactPromise = page.waitForEvent('popup');
+          const pageCreateContact = await pageCreateContactPromise;
+          await expect(pageCreateContact.locator('form#Participant')).not.toHaveCount(0);
+
+          /* select 新增個人 */
+          element = '#profiles_1';
+          locator = pageCreateContact.locator(element);
+          await findElement(pageCreateContact, element);
+          await locator.selectOption('4');
+          await expect(pageCreateContact.locator('form#Edit')).not.toHaveCount(0);
+
+          /* filled up new contact form */
+          element = 'form#Edit';
+          locator = pageCreateContact.locator(element);
+          await findElement(pageCreateContact, element);
+
+          locator = pageCreateContact.locator('#first_name');
+          const firstName = makeid(3);
+          const lastName = makeid(3);
+          await fillInput(locator, firstName);
+          locator = pageCreateContact.locator('#last_name');
+          await fillInput(locator, lastName);
+          await pageCreateContact.locator('#_qf_Edit_next').click();
+          await expect(pageCreateContact.locator('#contact_1')).toHaveValue(`${firstName} ${lastName}`);
+
+          /* select Participant Status */
+          element = '#status_id';
+          locator = pageCreateContact.locator(element);
+          await findElement(pageCreateContact, element);
+          await locator.selectOption('1');
+          await expect(locator).toHaveValue('1');
+
+          /* click submit */
+          element = "form#Participant input[type=submit][value='Save']";
+          locator = pageCreateContact.locator(element);
+          await findElement(pageCreateContact, element);
+          await locator.click();
+          await expect(page.locator('.crm-error')).toHaveCount(0);
+          console.log('Fail to find element matching selector: .crm-error');
+          wait(2000);
+          await expect(pageCreateContact.locator('#page-title')).toHaveText(`${firstName} ${lastName}`);
+          // back to event page
+          response = await page.goto(`/civicrm/event/search?reset=1&force=1&event=${event_id}`);
+          await expect(response.status()).toBe(200);
+          await expect(page).toHaveTitle(page_title);
+        }
+        // read current the number of participant again
+        current_participant = await page.locator('div#stat_ps>div#stat_ps_label1>ol>li>div>span.people-count').first().textContent();
+    }
+    // check whether setting is successful
+    await expect(page.locator('div#stat_ps>div#stat_ps_label1>ol>li>div>span.people-count').first()).toHaveText(verify_participant);
+    console.log('After setting, the current number of participant:', current_participant);
+}
+
 module.exports = {
-    makeid, print, findElement, findElementByLabel, fillInput, checkInput, selectOption, clickElement, selectDate, wait
+    makeid, print, findElement, findElementByLabel, fillInput, checkInput, selectOption, clickElement, selectDate, wait, getPageTitle, fillForm ,reLogin , setParticipantNum
 }
