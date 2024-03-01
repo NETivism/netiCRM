@@ -35,7 +35,7 @@
  */
 require_once __DIR__.'/extern.inc';
 
-$config   = CRM_Core_Config::singleton( );
+CRM_Core_Config::singleton( );
 $cpageId  = CRM_Utils_Request::retrieve( 'cpageId', 'Positive', CRM_Core_DAO::$_nullObject);
 if (empty($cpageId)) {
   http_response_code(400);
