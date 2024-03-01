@@ -12,7 +12,7 @@ test.beforeAll(async () => {
   page = await browser.newPage();
   page_title =  await utils.getPageTitle('有名額限制，開放候補');
   // check whether the number of participants is correct
-  await utils.checkParticipantNum(page, page_title, 3);
+  await utils.setParticipantNum(page, page_title, 3);
   //logout
   await page.goto('/user/logout');
 });
