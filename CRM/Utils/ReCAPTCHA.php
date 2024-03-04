@@ -69,10 +69,13 @@ class CRM_Utils_ReCAPTCHA {
 
   function __construct() {
     $require_path = 'packages/recaptcha/src/ReCaptcha';
-    if(CRM_Utils_System::moduleExists('recaptcha')){
-      $possible_path = drupal_get_path('module', 'recaptcha').'/recaptcha-php/src/ReCaptcha';
-      if(is_file($possible_path.'/ReCaptcha.php')){
-        $require_path = $possible_path;
+    $config = CRM_Core_Config::singleton();
+    if(CRM_Utils_System::moduleExists('recaptcha') && $config->userFramework == 'Drupal') {
+      if ($config->userSystem->version < 8) {
+        $possible_path = drupal_get_path('module', 'recaptcha').'/recaptcha-php/src/ReCaptcha';
+        if(is_file($possible_path.'/ReCaptcha.php')){
+          $require_path = $possible_path;
+        }
       }
     }
 
