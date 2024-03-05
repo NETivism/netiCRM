@@ -197,17 +197,17 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
     }
     // process fail response
     if($input['prc'] != "250" && $pass){
-      if (!empty($input['ProcessDate'])) {
-        $time = strtotime($input['ProcessDate']);
+      if (!empty($input['finishtime'])) {
+        $time = strtotime($input['finishtime']);
         $objects['contribution']->cancel_date = date('YmdHis', $time);
       }
-      $response_code = $input['prc'];
-      $response_msg = $input['retmsg'];
+      $responseCode = $input['prc'];
+      $responseMsg = $input['retmsg'];
       // $response_msg .= "\n".CRM_Core_Payment_MyPay::getErrorMsg($response_code);
-      $failed_reason = $response_msg.' ('.ts('Error Code:').$response_code.')';
-      $note .= $failed_reason;
+      $failedReason = $responseMsg.' ('.ts('Error Code:').$responseCode.')';
+      $note .= $failedReason;
       $transaction = new CRM_Core_Transaction();
-      $this->failed($objects, $transaction, $failed_reason);
+      $this->failed($objects, $transaction, $failedReason);
       $pass = FALSE;
     }
 

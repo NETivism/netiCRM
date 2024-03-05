@@ -214,7 +214,7 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
       'date' => date('Y-m-d H:i:s'),
       'post_data' => json_encode($arguments['encry_data']),
     );
-    $this->_logId = self::writeRecord(NULL, $saveData);
+    $this->_logId = self::writeLog(NULL, $saveData);
     // 2. Record usable data.
     $data = array(
       'create_post_data' => json_encode($arguments['encry_data']),
@@ -230,8 +230,16 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
     }
     else {
       // something wrong
-      //TODO: save transaction data to db
-      // CRM_Utils_System::redirect($thankyouFailure);
+      $contribution->cancel_date = date('Y-m-d H:i:s', CRM_REQUEST_TIME);
+      $contribution->cancel_reason = "Code: {$result['code']}\nMessage: {$result['msg']}";
+      $contribution->save();
+      $failureQuery = http_build_query(array(
+        '_qf_ThankYou_display' => "1",
+        'qfKey' => $params['qfKey'],
+        'payment_result_type' => '4',
+      ), '', '&');
+      $failureRedirectURL = CRM_Utils_System::url(CRM_Utils_System::currentPath(), $failureQuery, TRUE, NULL, FALSE);
+      CRM_Utils_System::redirect($failureRedirectURL);
     }
     // move things to CiviCRM cache as needed
     CRM_Utils_System::civiExit();
@@ -340,6 +348,7 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
         'pfn' => '',
         'ip' => CRM_Utils_System::ipAddress(),
         'echo_0' => $component,
+        'echo_1' => $vars['contributionID'],
         'items' => array( 0 => array(
           'id' => $vars['trxn_id'],
           'name' => preg_replace('~[^\p{L}\p{N}]++~u', ' ', $vars['item_name']),
@@ -419,7 +428,7 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
     $saveData = array(
       'return_data' => $result,
     );
-    self::writeRecord($this->_logId, $saveData);
+    self::writeLog($this->_logId, $saveData);
     $resultArray = json_decode($result, TRUE);
     // 2. Record usable data.
     if ($this->_contributionId) {
@@ -506,7 +515,7 @@ EOT;
   /**
    * Execute ipn as called from mypay transaction.
    *
-   * @param array $url_params Default params in CiviCRM Router, Must be array('civicrm', 'mypay', 'ipn')
+   * @param array $urlParams Default params in CiviCRM Router, Must be array('civicrm', 'mypay', 'ipn')
    * @param string $instrument The code of used instrument like 'Credit' or 'ATM'.
    * @param array $post Bring post variables if you need test.
    * @param array $get Bring get variables if you need test.
@@ -514,33 +523,36 @@ EOT;
    *
    * @return string|void If $print is FALSE, function will return the result as Array.
    */
-  public static function doIPN($url_params, $instrument = NULL, $post = NULL, $get = NULL, $print = TRUE) {
+  public static function doIPN($urlParams, $instrument = NULL, $post = NULL, $get = NULL, $print = TRUE) {
     // detect variables
     $post = !empty($post) ? $post : $_POST;
     $get = !empty($get) ? $get : $_GET;
 
-    // Save Data to Log.
-    $saveData = array(
-      'date' => date('Y-m-d H:i:s'),
-      'post_data' => json_encode($post),
-    );
-    $logId = self::writeRecord(NULL, $saveData);
-    if ($post['order_id']) {
-      $trxn_id = $post['order_id'];
-      $contribution_id = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution WHERE trxn_id = %1", array(1 => array($trxn_id, 'String')));
-      $requestURL = '';
-      if (CRM_Utils_System::isSSL()) {
-        $requestURL .= "https://";
-      }
-      else {
-        $requestURL .= "http://";
-      }
-      $requestURL .= $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+    if (!empty($post['uid']) && !empty($post['key']) && !empty($post['prc'])) {
+      // Save Data to Log.
       $saveData = array(
-        'contribution_id' => $contribution_id,
-        'url' => $requestURL,
+        'date' => date('Y-m-d H:i:s'),
+        'post_data' => json_encode($post),
       );
-      self::writeRecord($logId, $saveData);
+      $logId = self::writeLog(NULL, $saveData);
+      if ($post['order_id']) {
+        $contributionID = $post['echo_1'];
+        if (empty($contributionID)) {
+          $trxn_id = $post['order_id'];
+          $contributionID = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution WHERE trxn_id = %1", array(1 => array($trxn_id, 'String')));
+        }
+        $requestURL = CRM_Utils_System::isSSL() ? 'https://' : 'http://';
+        $requestURL .= $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+        $saveData = array(
+          'contribution_id' => $contributionID,
+          'url' => CRM_Core_DAO::escapeString($requestURL),
+        );
+        self::writeLog($logId, $saveData);
+      }
+    }
+    else {
+      CRM_Core_Error::debug_log_message( "civicrm_mypay: Don't have necessary params: uid, key, prc.", TRUE);
+      exit;
     }
 
     // Give $instrument
@@ -559,7 +571,7 @@ EOT;
           $instrument = 'WebATM';
           break;
         default:
-          CRM_Core_Error::debug_log_message( "mypay: The instrument doesn't use, type is '{$post['result_content_type']}'", TRUE);
+          CRM_Core_Error::debug_log_message( "MyPay: The instrument doesn't use, type is '{$post['result_content_type']}'", TRUE);
           exit;
           break;
       }
@@ -583,7 +595,7 @@ EOT;
         }
       }
       else{
-        CRM_Core_Error::debug_log_message( "mypay: Could not get module name from request url", TRUE);
+        CRM_Core_Error::debug_log_message( "civicrm_mypay: Could not get module name from request url", TRUE);
       }
     }
   }
@@ -595,7 +607,7 @@ EOT;
    * 
    * @return number $id The `id` of the row.
    */
-  public static function writeRecord($logId, $data = array()) {
+  public static function writeLog($logId, $data = array()) {
     $recordType = array('contribution_id', 'url', 'cmd', 'date', 'post_data', 'return_data');
 
     $record = new CRM_Contribute_DAO_MyPayLog();

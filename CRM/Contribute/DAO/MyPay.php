@@ -105,7 +105,7 @@ class CRM_Contribute_DAO_MyPay extends CRM_Core_DAO
    */
   public $uid;
   /**
-   * Validation text by order.
+   * Transaction verification code, identified by key in return parameters.
    *
    * @var string
    */

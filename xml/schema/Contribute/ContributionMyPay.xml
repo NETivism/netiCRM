@@ -65,9 +65,9 @@
   </index>
   <field>
     <name>uid_key</name>
-    <comment>Validation text by order.</comment>
-    <type>varchar</type>     
-    <length>255</length>  
+    <comment>Transaction verification code, identified by key in return parameters.</comment>
+    <type>varchar</type>
+    <length>255</length>
     <add>4.0</add>
   </field>
   <field>
