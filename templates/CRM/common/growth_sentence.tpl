@@ -23,5 +23,6 @@
       </a>
     {/if}
   {/if} 
-  <span class="{$color}">{$verb} <span class="{$bigger}">{$growth|abs}%</span></span>
+  {capture assign="growth_abs"}{math equation="abs(x)" x=$growth}{/capture}
+  <span class="{$color}">{$verb} <span class="{$bigger}">{$growth_abs}%</span></span>
 {/if}
