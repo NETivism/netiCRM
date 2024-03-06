@@ -23,6 +23,6 @@
       </a>
     {/if}
   {/if} 
-  {capture assign="growth_abs"}{math equation="abs(x)" x=$growth}{/capture}
+  {capture assign="growth_abs"}{math equation="abs(x)" x=$growth|replace:',':''}{/capture}
   <span class="{$color}">{$verb} <span class="{$bigger}">{$growth_abs}%</span></span>
 {/if}
