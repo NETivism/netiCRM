@@ -178,6 +178,9 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     if ($paymentResult['status'] == "0") {
       $thankyou = CRM_Utils_System::url($currentPath, '_qf_ThankYou_display=1&qfKey='.$params['qfKey'].'&payment_result_type=1');
     }
+    elseif ($paymentResult['redirect']) {
+      $thankyou = $paymentResult['redirect'];
+    }
     else {
       $thankyou = CRM_Utils_System::url($currentPath, '_qf_ThankYou_display=1&qfKey='.$params['qfKey'].'&payment_result_type=4&payment_result_message='.$paymentResult['msg']);
     }
@@ -230,8 +233,34 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
           'national_id' => '', //optional
         ),
         'remember' => TRUE,
-        'contribution_id' => $id,
+        'contribution_id' => $payment['contributionID'],
       );
+      // third domain secure
+      $successQuery = http_build_query(array(
+        '_qf_ThankYou_display' => "1",
+        'qfKey' => $payment['qfKey'],
+        'payment_result_type' => '1',
+      ), '', '&');
+      $ipnParams = array(
+        'contribution_id' => $payment['contributionID'],
+      );
+      if ($payment['participantID']) {
+        $ipnParams['participant_id'] = $payment['participantID'];
+      }
+      $failureQuery = http_build_query(array(
+        '_qf_ThankYou_display' => "1",
+        'qfKey' => $payment['qfKey'],
+        'payment_result_type' => '4',
+      ), '', '&');
+      CRM_Core_Error::debug_var('paymentProcessor', $paymentProcessor);
+      if ($paymentProcessor['url_site']) {
+        $data['three_domain_secure'] = TRUE;
+        $data['result_url'] = array(
+          'frontend_redirect_url' => CRM_Utils_System::url(CRM_Utils_System::currentPath(), $successQuery, TRUE, NULL, FALSE),
+          'backend_notify_url' => CRM_Utils_System::url('civicrm/tappay/ipn', http_build_query($ipnParams, '', '&'), TRUE, NULL, FALSE),
+          'go_back_url' => CRM_Utils_System::url(CRM_Utils_System::currentPath(), $failureQuery, TRUE, NULL, FALSE),
+        );
+      }
 
       // Allow further manipulation of the arguments via custom hooks ..
       $mode = $paymentProcessor['is_test'] ? 'test' : 'live';
@@ -241,6 +270,12 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       CRM_Utils_Hook::alterPaymentProcessorParams($paymentClass, $payment, $data);
 
       $result = $api->request($data);
+
+      // If 3D Secure Validation is on, don't do transaction.
+      if (!empty($result->transaction_method_details) && $result->transaction_method_details->transaction_method == 'THREE_DOMAIN_SECURE' && !empty($result->payment_url)) {
+        $response = array('redirect' => $result->payment_url);
+        return $response;
+      }
       self::doTransaction($result, $payment['contributionID']);
 
       // update token status after transaction completed
@@ -597,6 +632,14 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     return FALSE;
   }
 
+  /**
+   * Make Transaction for certainly contribution.
+   * 
+   * @param Object $result The result object.
+   * @param Integer $contributionId The ID of contribution.
+   * @param Boolean $sendMail If TRUE, send mail for contact after finished.
+   * @return Boolean Is success or not.
+   */
   public static function doTransaction($result, $contributionId = NULL, $sendMail = TRUE) {
     $input = $ids = $objects = array();
 
@@ -1258,6 +1301,74 @@ LIMIT 0, 100
       }
     }
     return 1;
+  }
+
+  /**
+   * Execute ipn when called by tappay 3d validation.
+   *
+   * @param array $urlParams Default params in CiviCRM Router, Must be array('civicrm', 'mypay', 'ipn')
+   * @param string $request Bring post variables if you need test, format json.
+   * @param array $get Bring get variables if you need test.
+   * @param boolean $sendMail TRUE mean need sendmail after finished..
+   * @return void
+   */
+  public static function doIPN($params, $request = NULL, $get = NULL, $sendMail = TRUE) {
+    // Get Input
+    if (empty($request)) {
+      $input = file_get_contents('php://input');
+      $data = json_decode($input);
+    }
+    elseif (is_string($request)){
+      $input = $request;
+      $data = json_decode($request);
+    }
+    else {
+      $data = $request;
+    }
+
+    if (empty($data)) {
+      return 0;
+    }
+    $requestURL = CRM_Utils_System::isSSL() ? 'https://' : 'http://';
+    $requestURL .= $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+
+    $get = empty($get) ? $_GET : $get;
+    $contributionID = CRM_Utils_Type::escape($get['contribution_id'], 'Integer', TRUE);
+
+    // Get contribution ids by token
+    $recordData = array(
+      'contribution_id' => $contributionID,
+      'url' => CRM_Core_DAO::escapeString($requestURL),
+      'date' => date('Y-m-d H:i:s'),
+      'post_data' => $input,
+    );
+    CRM_Core_Payment_TapPayAPI::writeRecord(NULL, $recordData);
+
+    // Simple Verify
+    $pass = TRUE;
+    $note = '';
+    $participantID = !empty($get['participantID']) ? CRM_Utils_Type::escape($get['participantID'], 'Integer', TRUE) : NULL;
+    $data->component = $participantID ? 'event' : 'contribute';
+
+    $contribution = new CRM_Contribute_DAO_Contribution();
+    $contribution->id = $contributionID;
+    $contribution->find(TRUE);
+
+    // check trxn id matches
+    if (!strstr($contribution->trxn_id, $data->order_number)) {
+      $msg = "TapPay: OrderNumber values doesn't match between database and IPN request. {$contribution->trxn_id} : {$data->order_number} ";
+      CRM_Core_Error::debug_log_message($msg);
+      $note .= ts("Failuare: %1", array(1 => $msg))."\n";
+      $pass = FALSE;
+    }
+
+    if ($pass) {
+      self::doTransaction($data, $contributionID, $sendMail);
+    }
+    else {
+      self::addNote($note, $contribution);
+    }
+    return;
   }
 
   /**
