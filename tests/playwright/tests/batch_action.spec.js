@@ -16,7 +16,10 @@ var vars = {
 }
 
 async function select_top_n(page, top_n){
-
+    // Check the radio button
+    element = "input#CIVICRM_QFID_ts_all_4";
+    await utils.findElement(page, element);
+    await utils.checkInput(page, page.locator(element));
     // Check the checkboxes of the top n rows
     for (let j = 1; j <= top_n; j++) {
         element = `table.selector tr:nth-child(${j}) td:nth-child(1) input`;
@@ -83,7 +86,7 @@ async function select_action_and_go(page, option_index, expect_element) {
 async function search_contacts(page, contactName){
     // go to search page
     await page.goto('civicrm/contact/search?reset=1');
-    await utils.wait(wait_secs);
+    await utils.wait(wait_secs);    
     // input search contact name
     var searchLocator='#sort_name';
     await utils.findElement(page, searchLocator);
@@ -503,7 +506,7 @@ test.describe.serial('Batch Action', () => {
         //     /* click "Confirm" */
         //     element = '#_qf_AddToGroup_next-bottom';
         //     await utils.findElement(page, element);
-        //     await utils.clickElement(page, page.locator(element).first());
+        //     await utils.clickElement(page, page.locat:or(element).first());
 
         //     await utils.wait(wait_secs);
 
