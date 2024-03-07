@@ -64,5 +64,8 @@ class CRM_Admin_Form_FromEmailAddress_Finish extends CRM_Admin_Form_FromEmailAdd
     $this->_values['is_active'] = $this->exportValue('is_active');
     $this->_values['is_default'] = $this->exportValue('is_default');
     $this->saveValues();
+    if (!empty($this->_values['is_active'])) {
+      CRM_Utils_Mail::validDKIMDomainList(TRUE, CRM_Utils_Mail::DKIM_EXTERNAL_VERIFIED_FILE);
+    }
   }
 }
