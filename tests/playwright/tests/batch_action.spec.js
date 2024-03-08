@@ -15,7 +15,7 @@ var vars = {
     delete_search: 'delete_test'
 }
 /**
- * select the top n rows function description: Check the checkboxes of the top n rows in the search results table (Contact Type: Individual) of "Find Contacts" page
+ * Check the checkboxes of the top n rows in the search results table (Contact Type: Individual) of "Find Contacts" page
  * @param {Object} page - The Playwright page object.
  * @param {number} top_n - The number of top rows to check the checkboxes.
  * @return {Promise<void>}
@@ -34,8 +34,7 @@ async function select_top_n(page, top_n){
 }
 
 /**
- * list_contacts_and_select_top_n function description: Check the checkboxes of the top n rows in the search results table(Contact Type: Individual) of "Find Contacts" page
- *
+ * Check the checkboxes of the top n rows in the search results table(Contact Type: Individual) of "Find Contacts" page
  * @param {Object} page - The Playwright page object.
  * @param {number} top_n - The number of top rows to check the checkboxes.
  * @return {Promise<void>}
@@ -63,8 +62,7 @@ async function list_contacts_and_select_top_n(page, top_n=3) {
 }
 
 /**
- * select_action_and_go function description: Select an option from the "Actions" dropdown and clicks the "Go" button.
- *
+ * Select an option from the "Actions" dropdown and clicks the "Go" button.
  * @param {Object} page - The Playwright page object.
  * @param {number} option_index - The index of the option to be selected.
  * @param {string} expect_element - The CSS selector of the element expected to appear on the page.
@@ -89,7 +87,7 @@ async function select_action_and_go(page, option_index, expect_element) {
 }
 
 /**
- * search contacts function description: Input keyword to search some specific contacts in "Find Contacts" page.
+ * Input keyword to search some specific contacts in "Find Contacts" page.
  * @param {Object} page - The Playwright page object.
  * @param {string} contactName - Keyword that we want to search.
  * @return {Promise<void>}
@@ -111,8 +109,7 @@ async function search_contacts(page, contactName){
 
 
 /**
- * create_and_search_contacts_for_merge function description: create new contants and search them for merging function.
- *
+ * Create new contants and search them for merging function.
  * @param {Object} page - The Playwright page object.
  * @param {number} contactNum - The number of the contacts that we want to create.
  * @return {Promise<void>}
