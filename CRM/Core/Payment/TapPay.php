@@ -175,11 +175,12 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     else {
       $paymentResult = self::payByPrime($params);
     }
-    if ($paymentResult['status'] == "0") {
-      $thankyou = CRM_Utils_System::url($currentPath, '_qf_ThankYou_display=1&qfKey='.$params['qfKey'].'&payment_result_type=1');
+    if ($paymentResult['redirect']) {
+      // 3D secure validation.
+      CRM_Utils_System::redirect($paymentResult['redirect']);
     }
-    elseif ($paymentResult['redirect']) {
-      $thankyou = $paymentResult['redirect'];
+    elseif ($paymentResult['status'] == "0") {
+      $thankyou = CRM_Utils_System::url($currentPath, '_qf_ThankYou_display=1&qfKey='.$params['qfKey'].'&payment_result_type=1');
     }
     else {
       $thankyou = CRM_Utils_System::url($currentPath, '_qf_ThankYou_display=1&qfKey='.$params['qfKey'].'&payment_result_type=4&payment_result_message='.$paymentResult['msg']);
@@ -236,18 +237,13 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
         'contribution_id' => $payment['contributionID'],
       );
       // third domain secure
-      $successQuery = http_build_query(array(
+      $thankYouQuery = http_build_query(array(
         '_qf_ThankYou_display' => "1",
         'qfKey' => $payment['qfKey'],
-        'payment_result_type' => '1',
       ), '', '&');
-      $ipnParams = array(
-        'contribution_id' => $payment['contributionID'],
-      );
-      if ($payment['participantID']) {
-        $ipnParams['participant_id'] = $payment['participantID'];
-      }
-      $failureQuery = http_build_query(array(
+      $ids = CRM_Contribute_BAO_Contribution::buildIds($payment['contributionID']);
+      $ipnQuery = CRM_Contribute_BAO_Contribution::makeNotifyUrl($ids, NULL, $return_query = TRUE);
+      $goBackQuery = http_build_query(array(
         '_qf_ThankYou_display' => "1",
         'qfKey' => $payment['qfKey'],
         'payment_result_type' => '4',
@@ -256,9 +252,9 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       if ($paymentProcessor['url_site']) {
         $data['three_domain_secure'] = TRUE;
         $data['result_url'] = array(
-          'frontend_redirect_url' => CRM_Utils_System::url(CRM_Utils_System::currentPath(), $successQuery, TRUE, NULL, FALSE),
-          'backend_notify_url' => CRM_Utils_System::url('civicrm/tappay/ipn', http_build_query($ipnParams, '', '&'), TRUE, NULL, FALSE),
-          'go_back_url' => CRM_Utils_System::url(CRM_Utils_System::currentPath(), $failureQuery, TRUE, NULL, FALSE),
+          'frontend_redirect_url' => CRM_Utils_System::url(CRM_Utils_System::currentPath(), $thankYouQuery, TRUE, NULL, FALSE),
+          'backend_notify_url' => CRM_Utils_System::url('civicrm/tappay/ipn', $ipnQuery, TRUE, NULL, FALSE),
+          'go_back_url' => CRM_Utils_System::url(CRM_Utils_System::currentPath(), $goBackQuery, TRUE, NULL, FALSE),
         );
       }
 
@@ -272,15 +268,25 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       $result = $api->request($data);
 
       // If 3D Secure Validation is on, don't do transaction.
-      if (!empty($result->transaction_method_details) && $result->transaction_method_details->transaction_method == 'THREE_DOMAIN_SECURE' && !empty($result->payment_url)) {
-        $response = array('redirect' => $result->payment_url);
-        return $response;
+      if (!empty($result->transaction_method_details) && $result->transaction_method_details->transaction_method == 'THREE_DOMAIN_SECURE') {
+        $isPass = TRUE;
+        if (empty($result->payment_url)) {
+          // validate url has no special character
+          $url = CRM_Core_DAO::escapeString($result->payment_url);
+          if (!$url == $result->payment_url) {
+            $isPass = FALSE;
+          }
+        }
+        if ($isPass) {
+          $response = array('redirect' => $result->payment_url);
+          return $response;
+        }
       }
       self::doTransaction($result, $payment['contributionID']);
 
       // update token status after transaction completed
       if ($result->status === 0 && !empty($contribution['contribution_recur_id'])) {
-        self::cardMetadata($payment['contributionID']); 
+        self::cardMetadata($payment['contributionID']);
       }
 
       $response = array('status' => $result->status, 'msg' => $result->msg);
@@ -1333,41 +1339,23 @@ LIMIT 0, 100
     $requestURL .= $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
 
     $get = empty($get) ? $_GET : $get;
-    $contributionID = CRM_Utils_Type::escape($get['contribution_id'], 'Integer', TRUE);
+    $contributionID = CRM_Utils_Type::escape($get['cid'], 'Integer', TRUE);
+    $module = $get['module'];
 
-    // Get contribution ids by token
-    $recordData = array(
-      'contribution_id' => $contributionID,
-      'url' => CRM_Core_DAO::escapeString($requestURL),
-      'date' => date('Y-m-d H:i:s'),
-      'post_data' => $input,
-    );
-    CRM_Core_Payment_TapPayAPI::writeRecord(NULL, $recordData);
+    if (!empty($contributionID) && in_array($module, array('contribute', 'event'))) {
+      // Get contribution ids by token
+      $recordData = array(
+        'contribution_id' => $contributionID,
+        'url' => CRM_Core_DAO::escapeString($requestURL),
+        'date' => date('Y-m-d H:i:s'),
+        'post_data' => $input,
+      );
+      CRM_Core_Payment_TapPayAPI::writeRecord(NULL, $recordData);
 
-    // Simple Verify
-    $pass = TRUE;
-    $note = '';
-    $participantID = !empty($get['participantID']) ? CRM_Utils_Type::escape($get['participantID'], 'Integer', TRUE) : NULL;
-    $data->component = $participantID ? 'event' : 'contribute';
-
-    $contribution = new CRM_Contribute_DAO_Contribution();
-    $contribution->id = $contributionID;
-    $contribution->find(TRUE);
-
-    // check trxn id matches
-    if (!strstr($contribution->trxn_id, $data->order_number)) {
-      $msg = "TapPay: OrderNumber values doesn't match between database and IPN request. {$contribution->trxn_id} : {$data->order_number} ";
-      CRM_Core_Error::debug_log_message($msg);
-      $note .= ts("Failuare: %1", array(1 => $msg))."\n";
-      $pass = FALSE;
-    }
-
-    if ($pass) {
+      // Execute original trasaction.
       self::doTransaction($data, $contributionID, $sendMail);
     }
-    else {
-      self::addNote($note, $contribution);
-    }
+
     return;
   }
 
