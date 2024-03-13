@@ -36,6 +36,7 @@
 class CRM_Utils_Mail {
 
   const DMARC_MAIL_PROVIDERS = 'yahoo.com|gmail.com|msn.com|outlook.com|hotmail.com';
+  const DKIM_EXTERNAL_VERIFIED_FILE = 'verified_external_dkim.config';
 
   /**
    * Wrapper function to send mail in CiviCRM. Hooks are called from this function.
@@ -583,6 +584,73 @@ class CRM_Utils_Mail {
       }
     }
     return FALSE;
+  }
+
+  /**
+   * Get valid DKIM domain list via verified from email addr
+   *
+   * @param string $savePath if given, list will save to specify file name into system path
+   * @return array
+   */
+  public static function validDKIMDomainList($externalOnly = FALSE, $saveFile = NULL) {
+    global $civicrm_conf;
+    if (empty($civicrm_conf['mailing_dkim_domain']) || empty($civicrm_conf['mailing_dkim_selector'])) {
+      return NULL;
+    }
+    $defaultFrom = CRM_Mailing_BAO_Mailing::defaultFromMail();
+    $defaultDomain = substr($defaultFrom, strpos($defaultFrom, '@')+1);
+    if ($saveFile) {
+      $confPath = CRM_Utils_System::cmsRootPath().DIRECTORY_SEPARATOR.CRM_Utils_System::confPath().DIRECTORY_SEPARATOR;
+      $savePath = $confPath.basename($saveFile);
+      if (file_exists($savePath)) {
+        $existsList = file_get_contents($savePath);
+        $existsDomains = explode("\n", $existsList);
+      }
+    }
+
+    $validType = CRM_Admin_Form_FromEmailAddress::VALID_EMAIL | CRM_Admin_Form_FromEmailAddress::VALID_SPF | CRM_Admin_Form_FromEmailAddress::VALID_DKIM;
+    $verifiedDomains = CRM_Admin_Form_FromEmailAddress::getVerifiedEmail($validType, 'domain');
+    foreach($verifiedDomains as $idx => $domain) {
+      if ($externalOnly && preg_match('/'.preg_quote($defaultDomain).'$/', $domain)) {
+        unset($verifiedDomains[$idx]);
+      }
+      $isValid = FALSE;
+
+      // do not trigger dns query when list exists
+      if (in_array($domain, $existsDomains)) {
+        $isValid = TRUE;
+      }
+      // this will do dns query
+      else {
+        $isValid = self::checkDKIM($domain);
+      }
+      if (!$isValid) {
+        unset($verifiedDomains[$idx]);
+      }
+    }
+    if (!empty($verifiedDomains)) {
+      if ($savePath) {
+        $addDomains = array_diff($verifiedDomains, $existsDomains);
+        if (!empty($addDomains)) {
+          $file = fopen($savePath, 'w');
+          if ($file !== FALSE) {
+            $written = fwrite($file, implode("\n", $verifiedDomains));
+            if (!$written) {
+              CRM_Core_Error::debug_log_message('File save failed: '.$savePath);
+            }
+            fclose($file);
+          }
+          else {
+            CRM_Core_Error::debug_log_message('Could not open file to save: '.$savePath);
+          }
+          if (file_exists($savePath)) {
+            CRM_Utils_File::chmod($savePath, 0666);
+          }
+        }
+      }
+      return $verifiedDomains;
+    }
+    return array();
   }
 }
 
