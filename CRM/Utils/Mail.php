@@ -602,6 +602,7 @@ class CRM_Utils_Mail {
     if ($saveFile) {
       $confPath = CRM_Utils_System::cmsRootPath().DIRECTORY_SEPARATOR.CRM_Utils_System::confPath().DIRECTORY_SEPARATOR;
       $savePath = $confPath.basename($saveFile);
+      $existsDomains = array();
       if (file_exists($savePath)) {
         $existsList = file_get_contents($savePath);
         $existsDomains = explode("\n", $existsList);
