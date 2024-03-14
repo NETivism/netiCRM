@@ -41,25 +41,6 @@ require_once 'CRM/Contribute/Form/ContributionPage.php';
 class CRM_Contribute_Form_ContributionPage_ThankYou extends CRM_Contribute_Form_ContributionPage {
 
   /**
-   * Function to set variables up before form is built
-   *
-   * @return void
-   * @access public
-   */
-  function preProcess() {
-    parent::preProcess();
-
-    // refs #30318, migrate exists mail address to from_email_address
-    // do not trigger lookup when submit form
-    if (empty($_POST)) {
-      $pageDefault = parent::setDefaultValues();
-      if (!empty($pageDefault['receipt_from_email']) && CRM_Utils_Rule::email($pageDefault['receipt_from_email'])){
-        CRM_Admin_Form_FromEmailAddress::migrateEmailFromPages($pageDefault['receipt_from_name'], $pageDefault['receipt_from_email']);
-      }
-    }
-  }
-
-  /**
    * This function sets the default values for the form. Note that in edit/view mode
    * the default values are retrieved from the database
    *
@@ -92,6 +73,10 @@ class CRM_Contribute_Form_ContributionPage_ThankYou extends CRM_Contribute_Form_
 
     $availableFrom = CRM_Core_PseudoConstant::fromEmailAddress(TRUE, TRUE);
     $verifiedFrom = CRM_Admin_Form_FromEmailAddress::getVerifiedEmail();
+    $verifiedDomains = CRM_Admin_Form_FromEmailAddress::getVerifiedEmail(
+      CRM_Admin_Form_FromEmailAddress::VALID_EMAIL | CRM_Admin_Form_FromEmailAddress::VALID_DKIM | CRM_Admin_Form_FromEmailAddress::VALID_SPF,
+      'domain'
+    );
     $selectableEmail = array();
     $hasVerified = FALSE;
     foreach($availableFrom as $fromAddr) {
@@ -99,8 +84,11 @@ class CRM_Contribute_Form_ContributionPage_ThankYou extends CRM_Contribute_Form_
       if (array_search($fromAddr['email'], $verifiedFrom) !== FALSE) {
         $email = ts('%1 Verified', array(1 => '🛡️ '.htmlspecialchars($fromAddr['email'])));
         $hasVerified = TRUE;
+        $selectableEmail[$fromAddr['email']] = $email;
       }
-      $selectableEmail[$fromAddr['email']] = $email;
+      elseif (CRM_Utils_Mail::checkMailInDomains($fromAddr['email'], $verifiedDomains)) {
+        $selectableEmail[$fromAddr['email']] = $email;
+      }
     }
     arsort($selectableEmail);
     if (!$hasVerified) {

@@ -138,3 +138,4 @@ cj(function() {
 });
 </script>
 {/literal}
+{include file="CRM/common/chosen.tpl" selector="#includeGroups, #excludeGroups, #includeTags, #excludeTags"}
