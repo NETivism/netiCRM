@@ -420,7 +420,14 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
       $anonymousPCP = 1;
     }
 
-    CRM_Core_Session::setStatus(ts("Your Personal Campaign Page has been %1 %2 %3", array(1 => $pageStatus, 2 => $approvalMessage, 3 => $notifyStatus)));
+    if ($statusId == $statusApprovedId) {
+      $contributionPageTitle = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage', $pcp->contribution_page_id, 'title');
+      CRM_Core_Session::setStatus(ts('Thanks for creating a personal campaign page in support of %1.', array(1 => $contributionPageTitle)));
+      CRM_Core_Session::setStatus(ts('Your Personal Campaign Page is now available for public access.').' '.ts('Congratulations!').' '.ts('You can now openly share the page to gather more donations for your fundraising campaign!'));
+    }
+    else {
+      CRM_Core_Session::setStatus(ts("Your Personal Campaign Page has been %1 %2 %3", array(1 => $pageStatus, 2 => $approvalMessage, 3 => $notifyStatus)));
+    }
     if ($this->_context == 'dashboard') {
       // $session->pushUserContext(CRM_Utils_System::url('civicrm/contribute/pcp/info', "reset=1&id={$pcp->id}&ap={$anonymousPCP}"));
       if (!empty($params['key'])) {
@@ -455,7 +462,7 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
         }
       }
       else {
-        $session->pushUserContext(CRM_Utils_System::url('civicrm/contribute/pcp/info', "reset=1&id={$pcp->id}&ap={$anonymousPCP}"));
+        $session->pushUserContext(CRM_Utils_System::url('civicrm/contribute/pcp/info', "reset=1&id={$pcp->id}"));
       }
     }
   }

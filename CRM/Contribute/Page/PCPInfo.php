@@ -106,28 +106,11 @@ class CRM_Contribute_Page_PCPInfo extends CRM_Core_Page {
     $pcpStatus = CRM_Contribute_PseudoConstant::pcpStatus();
     $approvedId = CRM_Core_OptionGroup::getValue('pcp_status', 'Approved', 'name');
 
-    // check if PCP is created by anonymous user
-    $anonymousPCP = CRM_Utils_Request::retrieve('ap', 'Boolean', $this);
-    if ($anonymousPCP) {
-      $loginUrl = $config->userFrameworkBaseURL;
-
-      switch (ucfirst($config->userFramework)) {
-        case 'Joomla':
-          $loginUrl = str_replace('administrator/', '', $loginUrl);
-          $loginUrl .= 'index.php?option=com_user&view=login';
-          break;
-
-        case 'Drupal':
-          $loginUrl .= 'user';
-          break;
-      }
-
-      $anonMessage = ts('Once you\'ve received your new account welcome email, you can <a href=%1>click here</a> to login and promote your campaign page.', array(1 => $loginUrl));
-      CRM_Core_Session::setStatus($anonMessage);
+    // check if PCP has status message
+    if (!empty(CRM_Core_Session::singleton()->getStatus())) {
+      $this->assign('anonMessage', TRUE);
     }
-    else {
-      $statusMessage = ts('The personal campaign page you requested is currently unavailable. However you can still support the campaign by making a contribution here.');
-    }
+    $statusMessage = ts('The personal campaign page you requested is currently unavailable. However you can still support the campaign by making a contribution here.');
 
     // check if PCP needs preview for specific user session
     $userID = $session->get('userID');

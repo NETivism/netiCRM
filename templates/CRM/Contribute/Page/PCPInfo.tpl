@@ -55,7 +55,20 @@
 </div> {* crm-box end *}
 </div> {* pcp-management inner end *}
 </div> {* pcp-management end *}
-{/if}
+{elseif $anonMessage}
+<div class="pcp-management crm-management">
+  <div class="inner">
+  <div class="crm-box crm-box-info">
+    <div class="crm-box-inner inner">
+      <div class="crm-box-body">
+        <div class="message">
+        </div>
+      </div> {* crm-box-body end *}
+    </div> {* crm-box-inner end *}
+  </div> {* crm-box end *}
+  </div> {* pcp-management inner end *}
+</div> {* pcp-management end *}
+{/if}{*end owner*}
 
 {if $pcp_image_src}
 <div class="pcp-leading" style="background-image:url({$pcp_image_src})">
@@ -267,8 +280,8 @@ cj(document).ready(function($){
   $(".crm-container > .messages.status").hide();
   let pcpSessionMessage = $(".crm-container > .messages.status").html();
   if (pcpSessionMessage) {
-    pcpSessionMessage = '<p>'+pcpSessionMessage+'</p>';
-    pcpSessionMessage.prependTo('.pcp-management .inner .messages');
+    $pcpSessionMessage = $('<p>'+pcpSessionMessage+'</p>');
+    $pcpSessionMessage.prependTo('.pcp-management .inner .message');
   }
 });
 </script>
