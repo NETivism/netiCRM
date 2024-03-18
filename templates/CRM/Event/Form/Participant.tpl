@@ -618,4 +618,5 @@ cj(function() {
 });
 </script>
 {/literal}
+{include file="CRM/common/chosen.tpl" selector="#event_id"}
 
