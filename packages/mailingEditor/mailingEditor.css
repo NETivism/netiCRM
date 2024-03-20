@@ -776,6 +776,13 @@ ul.nme-setting-panels-tabs li a.is-active {
 .nme-container table[width="100%"] {
   width: 100%;
 }
+.nme-container tr,
+.nme-container tr:hover {
+  background: none;
+}
+.nme-container td {
+  height: auto;
+}
 .nme-mail-container {
   max-width: 680px;
   border-collapse: collapse;
