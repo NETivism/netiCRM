@@ -180,6 +180,13 @@
                         if (urlSiteTextField.val()) {
                             newCheckBox.prop('checked', 1);
                         }
+                        // Set instruction text
+                        var urlSiteTd = urlSiteTextField.closest('td');
+                        urlSiteTd.append($('<span class="description">{/literal}{ts}To enable 3D Secure, you must add a TapPay  Merchant ID and Partner Key that supports this feature. If you need 3D Secure, please contact customer service.{/ts}{literal}</span>'));
+                        urlSiteFieldDiv.find('.helpicon').hide();
+
+                        // hide url recur
+                        var urlRecurFieldTr = $(formBlockName.replace('url_site', 'url_recur')).hide();
                     }
 
                     setTapPay3DSecureOption('.crm-paymentProcessor-form-block-url_site');

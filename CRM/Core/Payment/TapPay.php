@@ -253,7 +253,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
         $data['three_domain_secure'] = TRUE;
         $data['result_url'] = array(
           'frontend_redirect_url' => CRM_Utils_System::url(CRM_Utils_System::currentPath(), $thankYouQuery, TRUE, NULL, FALSE),
-          'backend_notify_url' => CRM_Utils_System::url('civicrm/tappay/ipn', $ipnQuery, TRUE, NULL, FALSE),
+          'backend_notify_url' => CRM_Utils_System::url('tappay/ipn', $ipnQuery, TRUE, NULL, FALSE),
           'go_back_url' => CRM_Utils_System::url(CRM_Utils_System::currentPath(), $goBackQuery, TRUE, NULL, FALSE),
         );
       }
