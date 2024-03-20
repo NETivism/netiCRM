@@ -7,8 +7,40 @@ img {
   position: relative;
 }
 
-a.btn:hover {
+.btn,
+.button,
+.form-submit,
+a.btn,
+a.button,
+input.form-submit {
+  display: inline-block;
+  margin: .5em 1em .5em 0;
+  padding: 6px 10px;
   text-decoration: none;
+  font-size: .9375rem;
+  line-height: 1.2;
+  color: #fff;
+  cursor: pointer;
+  border: none;
+  border-radius: 0;
+  background-color: #333;
+  transition: border .2s linear, color .2s linear, background-color .2s linear;
+  -webkit-font-smoothing: subpixel-antialiased;
+}
+.btn:hover,
+.btn:focus,
+.button:hover,
+.button:focus,
+.form-submit:hover,
+.form-submit:focus {
+  text-decoration: none;
+  color: #fff;
+  background-color: #555;
+}
+.btn:active,
+.button:active,
+.form-submit:active {
+  background-color: #111;
 }
 
 .online-template-link { display: none; }
