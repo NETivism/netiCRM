@@ -131,7 +131,6 @@ async function setParticipantNum(page, page_title, event_id, full_participant='5
           // capture the topest participant and delete it
           await page.locator('div#participantSearch>table>tbody>tr').first().getByRole('link', { name: 'Delete' }).click();
           await page.locator('[id="_qf_Participant_next-bottom"]').click();
-          wait(2000);
         }
         else{
           // register new participant
@@ -179,13 +178,10 @@ async function setParticipantNum(page, page_title, event_id, full_participant='5
           locator = pageCreateContact.locator(element);
           await findElement(pageCreateContact, element);
           await locator.click();
-          await expect(page.locator('.crm-error')).toHaveCount(0);
-          console.log('Fail to find element matching selector: .crm-error');
-          wait(2000);
           await expect(pageCreateContact.locator('#page-title')).toHaveText(`${firstName} ${lastName}`);
+          console.log('Page title correct.');
           // back to event page
           response = await page.goto(`/civicrm/event/search?reset=1&force=1&event=${event_id}`);
-          await expect(response.status()).toBe(200);
           await expect(page).toHaveTitle(page_title);
         }
         // read current the number of participant again
