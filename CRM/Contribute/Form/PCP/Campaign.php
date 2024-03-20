@@ -410,10 +410,6 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
       CRM_Contribute_BAO_PCP::sendStatusUpdate($pcp->id, $statusId, TRUE);
     }
 
-    if ($approvalMessage && $statusId == $statusWaitReviewId) {
-      $notifyStatus .= ts(' You will receive a second email as soon as the review process is complete.');
-    }
-
     //check if pcp created by anonymous user
     $anonymousPCP = 0;
     if (!$session->get('userID')) {
