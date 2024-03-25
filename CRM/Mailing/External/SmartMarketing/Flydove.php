@@ -389,8 +389,8 @@ ORDER BY civicrm_phone.is_primary DESC, phone_id ASC";
     $report['success'] = ts('Flydove').': '.ts('Success sync %1 contacts from group %2 to remote group %3', array(
       1 => $meta['#count']['success'],
       2 => $groups[$meta['#group_id']]."(".$meta['#group_id'].")",
-      3 => $meta['#remote_group_id']),
-    );
+      3 => $meta['#remote_group_id'],
+    ));
     if (!empty($meta['#count']['skipped']) && !empty($skippedText)) {
       $report['skipped'] = ts('Flydove').': '.ts('Skipped %1 contacts due to reasons: %2.', array(
         1 => $meta['#count']['skipped'],
