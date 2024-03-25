@@ -740,7 +740,6 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
       $uploadDir = empty($config->uploadDir) ? CRM_Utils_System::cmsDir('temp') .'/' : $config->uploadDir;
     }
 
-    require_once 'CRM/Core/BAO/File.php';
     if (empty($uploadNames)) {
       $uploadNames = $this->get('uploadNames');
       if (!empty($uploadNames)) {
@@ -753,12 +752,16 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
       }
     }
 
-    require_once 'CRM/Core/QuickForm/Action/Upload.php';
     $action = new CRM_Core_QuickForm_Action_Upload($this->_stateMachine,
       $uploadDir,
       $uploadNames
     );
     $this->addAction('upload', $action);
+    $action = new CRM_Core_QuickForm_Action_Attach($this->_stateMachine,
+      $uploadDir,
+      $uploadNames
+    );
+    $this->addAction('attach', $action);
   }
 
   public function setParent($parent) {

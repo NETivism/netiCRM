@@ -392,6 +392,7 @@ VALUES
   (@option_group_id_cs, '{ts escape="sql"}Overdue{/ts}'    , 6, 'Overdue'    , NULL, 0, NULL, 6, NULL, 0, 1, 1, NULL, NULL),
   (@option_group_id_cs, '{ts escape="sql"}Suspended{/ts}'  , 7, 'Suspended'  , NULL, 0, NULL, 7, NULL, 0, 1, 1, NULL, NULL),
 
+  (@option_group_id_pcp, '{ts escape="sql"}Draft{/ts}',          0, 'Draft'         , NULL, 0, NULL, 0, NULL, 0, 1, 1, NULL, NULL),
   (@option_group_id_pcp, '{ts escape="sql"}Waiting Review{/ts}', 1, 'Waiting Review', NULL, 0, NULL, 1, NULL, 0, 1, 1, NULL, NULL),
   (@option_group_id_pcp, '{ts escape="sql"}Approved{/ts}'      , 2, 'Approved'      , NULL, 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL),
   (@option_group_id_pcp, '{ts escape="sql"}Not Approved{/ts}'  , 3, 'Not Approved'  , NULL, 0, NULL, 3, NULL, 0, 1, 1, NULL, NULL),

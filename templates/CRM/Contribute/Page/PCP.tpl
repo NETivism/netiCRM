@@ -34,16 +34,14 @@
 
 {if $rows}
 <div id="ltype">
-{include file="CRM/common/jsortable.tpl hasPager=1}
+{include file="CRM/common/enableDisable.tpl"}
 {strip}
 <table id="options" class="display">
 	<thead>
     <tr>
 		<th>{ts}Page Title{/ts}</th>
 		<th>{ts}Created by{/ts}</th>
-		<th>{ts}Contribution Page{/ts}</th>
-		<th id="start_date">{ts}Starts{/ts}</th>
-		<th id="end_date">{ts}Ends{/ts}</th>
+		<th>{ts}Belonging Main Contribution Page{/ts}</th>
 		<th id="sortable">{ts}Status{/ts}</th>
 		<th></th>
 		<th class="hiddenElement"></th>
@@ -52,21 +50,50 @@
 	</thead>
 	<tbody>
 	{foreach from=$rows item=row}
-	<tr class="{cycle values="odd-row,even-row"} {$row.class}">
+	<tr id="row_{$row.id}" class="{cycle values="odd-row,even-row"} {$row.class}">
         	<td><a href="{crmURL p='civicrm/contribute/pcp/info' q="reset=1&id=`$row.id` " fe='true'}" title="{ts}View Personal Campaign Page{/ts}" target="_blank">{$row.title}</a></td>
 		<td><a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$row.pcp_contact_id`"}" title="{ts}View contact record{/ts}" target="_blank">{$row.pcp_contact}</a> ({if $row.pcp_contact_external_id}{$row.pcp_contact_id} - {$row.pcp_contact_external_id}{else}{$row.pcp_contact_id}{/if})</td>
 		<td><a href="{crmURL p='civicrm/admin/contribute' q="action=update&reset=1&id=`$row.contribution_page_id`" fe='true'}" title="{ts}View contribution page{/ts}" target="_blank">{$row.contribution_page_title} ( {ts}ID{/ts}: {$row.contribution_page_id})</td>
-		<td>{$row.start_date|crmDate:"%b %d, %Y %l:%M %P"}</td>
-		<td>{if $row.end_date}{$row.end_date|crmDate:"%b %d, %Y %l:%M %P"}{else}({ts}ongoing{/ts}){/if}</td>
 		<td>{$row.status_id}</td>
 		<td id={$row.id}>{$row.action|replace:'xx':$row.id}</td>
-		<td class="start_date hiddenElement">{$row.start_date|truncate:10:''|crmDate}</td>
-		<td class="end_date hiddenElement">{if $row.end_date}{$row.end_date|truncate:10:''|crmDate}{else}({ts}ongoing{/ts}){/if}</td>
 	</tr>
 	{/foreach}
 	</tbody>
 </table>
+<div id="statusChangeMessage" title="{ts}Status Change{/ts}" class="hide-block">
+  <p>{ts 1=approve}Change this pcp page to status <span id="status-indicator">%1</span>{/ts}</p>
+  <p>{ts}Are you sure you want to continue?{/ts}</p>
+</div>
 {/strip}
+<script>{literal}
+  cj(document).ready(function($){
+    $("a.action-item.dialog").click(function(e){
+      e.preventDefault();
+      var $item = $(this);
+      let status = $item.text();
+      $('#status-indicator').text(status);
+      $("#statusChangeMessage").dialog({
+        autoOpen:false,
+        resizable:false,
+        width:450,
+        height:250,
+        modal:true,
+        buttons: {
+          "{/literal}{ts}Proceed and Send Notification{/ts}{literal}": function() {
+            window.location = $item.attr('href');
+            return true;
+          },
+          "{/literal}{ts}Cancel{/ts}{literal}": function() {
+            $(this).dialog('close');
+            return false;
+          }
+        }
+      });
+      $('#statusChangeMessage').dialog('open');
+      return false;
+    });
+  });
+{/literal}</script>
 </div>
 {else}
 <div class="messages status">

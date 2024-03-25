@@ -212,13 +212,13 @@ class CRM_Contact_DAO_ACLContactCache extends CRM_Core_DAO
   {
     if (!(self::$_import)) {
       self::$_import = array();
-      $fields = & self::fields();
+      $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
-            self::$_import['acl_contact_cache'] = & $fields[$name];
+            self::$_import['acl_contact_cache'] = &$fields[$name];
           } else {
-            self::$_import[$name] = & $fields[$name];
+            self::$_import[$name] = &$fields[$name];
           }
         }
       }
@@ -235,13 +235,13 @@ class CRM_Contact_DAO_ACLContactCache extends CRM_Core_DAO
   {
     if (!(self::$_export)) {
       self::$_export = array();
-      $fields = & self::fields();
+      $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
-            self::$_export['acl_contact_cache'] = & $fields[$name];
+            self::$_export['acl_contact_cache'] = &$fields[$name];
           } else {
-            self::$_export[$name] = & $fields[$name];
+            self::$_export[$name] = &$fields[$name];
           }
         }
       }
@@ -294,7 +294,7 @@ class CRM_Contact_DAO_ACLContactCache extends CRM_Core_DAO
    */
   static function addDisplayEnums(&$values)
   {
-    $enumFields = & CRM_Contact_DAO_ACLContactCache::getEnums();
+    $enumFields = &CRM_Contact_DAO_ACLContactCache::getEnums();
     foreach($enumFields as $enum) {
       if (isset($values[$enum])) {
         $values[$enum . '_display'] = CRM_Contact_DAO_ACLContactCache::tsEnum($enum, $values[$enum]);

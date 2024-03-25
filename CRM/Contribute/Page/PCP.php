@@ -81,12 +81,21 @@ class CRM_Contribute_Page_PCP extends CRM_Core_Page_Basic {
           'url' => 'civicrm/admin/pcp',
           'qs' => 'action=renew&id=%%id%%',
           'title' => ts('Approve Personal Campaign Page'),
+          'class' => 'dialog approve',
         ),
         CRM_Core_Action::REVERT => array(
           'name' => ts('Reject'),
           'url' => 'civicrm/admin/pcp',
           'qs' => 'action=revert&id=%%id%%',
           'title' => ts('Reject Personal Campaign Page'),
+          'class' => 'dialog reject',
+        ),
+        CRM_Core_Action::PREVIEW => array(
+          'name' => ts('Revoke to Draft'),
+          'url' => 'civicrm/admin/pcp',
+          'qs' => 'action=preview&id=%%id%%',
+          'title' => ts('Revoke Personal Campaign Page to Draft status'),
+          'class' => 'dialog revoke',
         ),
         CRM_Core_Action::DELETE => array(
           'name' => ts('Delete'),
@@ -94,6 +103,18 @@ class CRM_Contribute_Page_PCP extends CRM_Core_Page_Basic {
           'qs' => 'action=delete&id=%%id%%',
           'extra' => 'onclick = "return confirm(\'' . $deleteExtra . '\');"',
           'title' => ts('Delete Personal Campaign Page'),
+        ),
+        CRM_Core_Action::DISABLE => array(
+          'name' => ts('Disable'),
+          'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_Contribute_BAO_PCP' . '\',\'' . 'enable-disable' . '\' );"',
+          'ref' => 'disable-action',
+          'title' => ts('Disable Personal Campaign Pages'),
+        ),
+        CRM_Core_Action::ENABLE => array(
+          'name' => ts('Enable'),
+          'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_Contribute_BAO_PCP' . '\',\'' . 'disable-enable' . '\' );"',
+          'ref' => 'enable-action',
+          'title' => ts('Enable Personal Campaign Pages'),
         ),
       );
     }
@@ -118,15 +139,24 @@ class CRM_Contribute_Page_PCP extends CRM_Core_Page_Basic {
       $this, FALSE,
       'browse'
     );
+    $statusApprovedId = intval(CRM_Core_OptionGroup::getValue('pcp_status', 'Approved', 'name'));
+    $statusNotApprovedId = intval(CRM_Core_OptionGroup::getValue('pcp_status', 'Not Approved', 'name'));
+    $statusDraftId = intval(CRM_Core_OptionGroup::getValue('pcp_status', 'Draft', 'name'));
     if ($action & CRM_Core_Action::REVERT) {
       $id = CRM_Utils_Request::retrieve('id', 'Positive', $this, FALSE);
-      CRM_Contribute_BAO_PCP::setIsActive($id, 0);
+      CRM_Contribute_BAO_PCP::setIsActive($id, $statusNotApprovedId);
       $session = CRM_Core_Session::singleton();
       $session->pushUserContext(CRM_Utils_System::url(CRM_Utils_System::currentPath(), 'reset=1'));
     }
     elseif ($action & CRM_Core_Action::RENEW) {
       $id = CRM_Utils_Request::retrieve('id', 'Positive', $this, FALSE);
-      CRM_Contribute_BAO_PCP::setIsActive($id, 1);
+      CRM_Contribute_BAO_PCP::setIsActive($id, $statusApprovedId);
+      $session = CRM_Core_Session::singleton();
+      $session->pushUserContext(CRM_Utils_System::url(CRM_Utils_System::currentPath(), 'reset=1'));
+    }
+    elseif ($action & CRM_Core_Action::PREVIEW) {
+      $id = CRM_Utils_Request::retrieve('id', 'Positive', $this, FALSE);
+      CRM_Contribute_BAO_PCP::setIsActive($id, $statusDraftId);
       $session = CRM_Core_Session::singleton();
       $session->pushUserContext(CRM_Utils_System::url(CRM_Utils_System::currentPath(), 'reset=1'));
     }
@@ -168,7 +198,8 @@ class CRM_Contribute_Page_PCP extends CRM_Core_Page_Basic {
       $contribution_page = CRM_Contribute_PseudoConstant::contributionPage();
       $whereClause = array();
 
-      if ($status_id = CRM_Utils_Request::retrieve('status_id', 'Positive', $this)) {
+      $status_id = CRM_Utils_Request::retrieve('status_id', 'Integer', $this);
+      if (!empty($status_id) || $status_id === '0') {
         $whereClause[] = 'cp.status_id = %1';
         $params['1'] = array($status_id, 'Integer');
       }
@@ -220,12 +251,36 @@ class CRM_Contribute_Page_PCP extends CRM_Core_Page_Basic {
         }
 
         switch ($dao->status_id) {
+          case 0:
+            $action -= CRM_Core_Action::PREVIEW;
+            $action -= CRM_Core_Action::RENEW;
+            $action -= CRM_Core_Action::REVERT;
+            $action -= CRM_Core_Action::ENABLE;
+            $action -= CRM_Core_Action::DISABLE;
+            $action -= CRM_Core_Action::DELETE;
+            break;
+
+          case 1:
+            $action -= CRM_Core_Action::DELETE;
+            $action -= CRM_Core_Action::ENABLE;
+            $action -= CRM_Core_Action::DISABLE;
+            break;
+
           case 2:
             $action -= CRM_Core_Action::RENEW;
+            $action -= CRM_Core_Action::DELETE;
+            if ($dao->active == 1) {
+              $action -= CRM_Core_Action::ENABLE;
+            } else {
+              $action -= CRM_Core_Action::DISABLE;
+            }
             break;
 
           case 3:
             $action -= CRM_Core_Action::REVERT;
+            $action -= CRM_Core_Action::ENABLE;
+            $action -= CRM_Core_Action::DISABLE;
+            $action -= CRM_Core_Action::DELETE;
             break;
         }
 

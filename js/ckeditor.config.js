@@ -26,6 +26,7 @@ CKEDITOR.editorConfig = function(config) {
     ['Format'],
     ['RemoveFormat'],
     ['Bold','Italic','Underline','Strike'],
+    ['FontSize','TextColor','BGColor'],
     ['NumberedList','BulletedList'],
     ['Link','Unlink'],['Image'],
     ['Undo','Redo']
