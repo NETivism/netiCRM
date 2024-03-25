@@ -383,7 +383,7 @@ test.describe.serial('Batch Action', () => {
 
     test('Batch Action - 2', async () => {
 
-        // /* Merge Contacts - 1 Merge */
+        /* Merge Contacts - 1 Merge */
 
         /* Step 5-1: Merge Contacts - Merge. */
         await test.step('Merge Contacts - Merge.', async () =>{
@@ -401,40 +401,40 @@ test.describe.serial('Batch Action', () => {
             await utils.findElement(page, element);
             await utils.clickElement(page, page.locator(element).first());
 
-        //     await utils.wait(wait_secs);
+            await utils.wait(wait_secs);
 
-        //     await expect(page.locator('.crm-error')).toHaveCount(0);
+            await expect(page.locator('.crm-error')).toHaveCount(0);
 
-        // });
+        });
 
         // /* Merge Contacts - 2 Mark this pair as not a duplicate */
 
-        // /* Step 5-2: Merge Contacts - Mark this pair as not a duplicate. */
-        // await test.step('Merge Contacts - Mark this pair as not a duplicate.', async () =>{
+        /* Step 5-2: Merge Contacts - Mark this pair as not a duplicate. */
+        await test.step('Merge Contacts - Mark this pair as not a duplicate.', async () =>{
 
             /* create new contact data and select top two*/
             await create_contacts(page, 2, vars.merge_search);
             await search_contacts(page, vars.merge_search);
             await select_top_n(page, 2);
 
-        //     /* select "Merge Contacts" and click "Go" */
-        //     await select_action_and_go(page, 10, 'form#Merge');
+            /* select "Merge Contacts" and click "Go" */
+            await select_action_and_go(page, 10, 'form#Merge');
 
-        //     /* click "Mark this pair as not a duplicate" button */
-        //     element = '#notDuplicate';
-        //     await utils.findElement(page, element);
-        //     await utils.clickElement(page, page.locator(element).first());
+            /* click "Mark this pair as not a duplicate" button */
+            element = '#notDuplicate';
+            await utils.findElement(page, element);
+            await utils.clickElement(page, page.locator(element).first());
 
-        //     /* click "Ok" */
-        //     element = 'div.ui-dialog-buttonset button:nth-child(2)';
-        //     await utils.findElement(page, element);
-        //     await utils.clickElement(page, page.locator(element).first());
+            /* click "Ok" */
+            element = 'div.ui-dialog-buttonset button:nth-child(2)';
+            await utils.findElement(page, element);
+            await utils.clickElement(page, page.locator(element).first());
 
             await utils.wait(wait_secs);
             
             await expect(page.locator('.crm-error')).toHaveCount(0);
 
-        // });
+        });
 
         /* Step 6: Tag Contacts. */
         await test.step('Tag Contacts.', async () =>{
