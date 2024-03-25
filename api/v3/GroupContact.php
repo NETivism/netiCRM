@@ -57,12 +57,52 @@ function civicrm_api3_group_contact_get($params) {
     return civicrm_api3_create_success($values, $params);
   }
   else {
-    if (empty($params['status'])) {
-      //default to 'Added'
-      $params['status'] = 'Added';
+    if (!empty($params['group_id'])) {
+      // check group ids
+      $search = array();
+      if (is_string($params['group_id']) || is_numeric($params['group_id'])) {
+        if (CRM_Utils_Rule::positiveInteger($params['group_id'])) {
+          $search['group'][$params['group_id']] = 1;
+        }
+        elseif(strstr($params['group_id'], ',') && CRM_Utils_Rule::commaSeparatedIntegers($params['group_id'])) {
+          $groupIds = explode(',', $params['group_id']);
+          foreach($groupIds as $gid)  {
+            $search['group'][$gid] = 1;
+          }
+        }
+      }
+      elseif(is_array($params['group_id'])) {
+        foreach($params['group_id'] as $gid) {
+          if(CRM_Utils_Rule::positiveInteger($gid)) {
+            $search['group'][$gid] = 1;
+          }
+        }
+      }
+      if (empty($search['group'])) {
+        return civicrm_api3_create_error('group_id is a required field');
+      }
+
+      // check status filter
+      if (!empty($params['status'])) {
+        if (is_string($params['status'])) {
+          $search['group_contact_status'][$params['status']] = 1;
+        }
+      }
+
+      $queryParams = CRM_Contact_BAO_Query::convertFormValues($search);
+      $searchDescendentGroups = TRUE; // return sub-group contact
+      $smartGroupCache = TRUE;
+      $returnProperties = array('contact_id');
+      $query = new CRM_Contact_BAO_Query($queryParams, $returnProperties, NULL, FALSE, FALSE, CRM_Contact_BAO_Query::MODE_CONTACTS, FALSE, $searchDescendentGroups, $smartGroupCache);
+      $offset = $rowCount = 0;
+      $result = $query->searchQuery($offset, $rowCount);
+      $contactIds = array();
+      while($result->fetch()) {
+        $contactIds[] = $result->contact_id;
+      }
+      return civicrm_api3_create_success($contactIds, $params);
     }
-    //ie. id passed in so we have to return something
-    return _civicrm_api3_basic_get('CRM_Contact_BAO_GroupContact', $params);
+    return civicrm_api3_create_error('group_id is a required field');
   }
 }
 

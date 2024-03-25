@@ -10,17 +10,37 @@ var vars = {
     organization_name: utils.makeid(5),
     group_name: utils.makeid(5),
     smart_group_name: utils.makeid(5),
+    individual_name: utils.makeid(3),
+    merge_search: 'merge_test',
+    delete_search: 'delete_test'
+}
+/**
+ * Check the checkboxes of the top n rows in the search results table (Contact Type: Individual) of "Find Contacts" page
+ * @param {Object} page - The Playwright page object.
+ * @param {number} top_n - The number of top rows to check the checkboxes.
+ * @return {Promise<void>}
+ */
+async function select_top_n(page, top_n){
+    // Check the radio button
+    element = "input#CIVICRM_QFID_ts_all_4";
+    await utils.findElement(page, element);
+    await utils.checkInput(page, page.locator(element));
+    // Check the checkboxes of the top n rows
+    for (let j = 1; j <= top_n; j++) {
+        element = `table.selector tr:nth-child(${j}) td:nth-child(1) input`;
+        await utils.findElement(page, element);
+        await utils.checkInput(page, page.locator(element));
+    }
 }
 
 /**
- * list_contacts_and_select_top_n function description: Check the checkboxes of the top n rows in the search results table(Contact Type: Individual) of "Find Contacts" page
- *
+ * Check the checkboxes of the top n rows in the search results table(Contact Type: Individual) of "Find Contacts" page
  * @param {Object} page - The Playwright page object.
  * @param {number} top_n - The number of top rows to check the checkboxes.
  * @return {Promise<void>}
  */
 async function list_contacts_and_select_top_n(page, top_n=3) {
-
+    
     /* Step 1: Open the "Find Contacts" page URL and wait for 2 seconds */
     await page.goto('civicrm/contact/search?reset=1');
     await utils.wait(wait_secs);
@@ -37,17 +57,12 @@ async function list_contacts_and_select_top_n(page, top_n=3) {
     await utils.wait(wait_secs);
 
     /* Step 4: Check the checkboxes of the top n rows */
-    for (let i = 1; i <= top_n; i++) {
-        element = `table.selector tr:nth-child(${i}) td:nth-child(1) input`;
-        await utils.findElement(page, element);
-        await utils.checkInput(page, page.locator(element));
-    }
-
+    await select_top_n(page, top_n);
+    
 }
 
 /**
- * select_action_and_go function description: Select an option from the "Actions" dropdown and clicks the "Go" button.
- *
+ * Select an option from the "Actions" dropdown and clicks the "Go" button.
  * @param {Object} page - The Playwright page object.
  * @param {number} option_index - The index of the option to be selected.
  * @param {string} expect_element - The CSS selector of the element expected to appear on the page.
@@ -69,6 +84,59 @@ async function select_action_and_go(page, option_index, expect_element) {
 
     await utils.findElement(page, expect_element);
 
+}
+
+/**
+ * Input keyword to search some specific contacts in "Find Contacts" page.
+ * @param {Object} page - The Playwright page object.
+ * @param {string} contactName - Keyword that we want to search.
+ * @return {Promise<void>}
+ */
+async function search_contacts(page, contactName){
+    // go to search page
+    await page.goto('civicrm/contact/search?reset=1');
+    await utils.wait(wait_secs);    
+    // input search contact name
+    var searchLocator='#sort_name';
+    await utils.findElement(page, searchLocator);
+    await utils.fillInput(page.locator(searchLocator), contactName);
+    // search and wait for the result
+    var searchLocator='#_qf_Basic_refresh';
+    await utils.findElement(page, searchLocator);
+    await utils.clickElement(page, page.locator(searchLocator));
+    await utils.wait(wait_secs);
+}
+
+
+/**
+ * Create new contants and search them for merging function.
+ * @param {Object} page - The Playwright page object.
+ * @param {number} contactNum - The number of the contacts that we want to create.
+ * @return {Promise<void>}
+ */
+
+async function create_contacts(page, contactNum, contactName){
+    // create new contact data
+    
+    // Open the "New Individul" page URL and wait for 2 seconds
+    await page.goto('/civicrm/contact/add?reset=1&ct=Individual');
+    await utils.wait(wait_secs);
+    
+    // Create new contants
+    for (let i=1; i <= contactNum; i++ ){
+        // fill data
+        var emailLocator='input#email_1_email';
+        await utils.findElement(page, emailLocator);
+        await utils.fillInput(page.locator(emailLocator), contactName + `_${utils.makeid(3)}@example.com`);
+        // save
+        var saveLocator='#_qf_Contact_upload_new';
+        await utils.findElement(page, saveLocator);
+        await utils.clickElement(page, page.locator(saveLocator).first());
+        // check
+        var messageLocator = '#crm-container>div.messages.status';
+        await utils.findElement(page, messageLocator);
+    }
+    
 }
 
 
@@ -317,18 +385,21 @@ test.describe.serial('Batch Action', () => {
 
         // /* Merge Contacts - 1 Merge */
 
-        // /* Step 5-1: Merge Contacts - Merge. */
-        // await test.step('Merge Contacts - Merge.', async () =>{
-
-        //     await list_contacts_and_select_top_n(page, 2);
-
-        //     /* select "Merge Contacts" and click "Go" */
-        //     await select_action_and_go(page, 10, 'form#Merge');
-
-        //     /* click "Merge" button */
-        //     element = '#_qf_Merge_next-bottom';
-        //     await utils.findElement(page, element);
-        //     await utils.clickElement(page, page.locator(element).first());
+        /* Step 5-1: Merge Contacts - Merge. */
+        await test.step('Merge Contacts - Merge.', async () =>{
+            
+            /* create new contact data and select top two*/
+            await create_contacts(page, 2, vars.merge_search);  
+            await search_contacts(page, vars.merge_search);
+            await select_top_n(page, 2);
+        
+            /* select "Merge Contacts" and click "Go" */
+            await select_action_and_go(page, 10, 'form#Merge');
+ 
+            /* click "Merge" button */
+            element = '#_qf_Merge_next-bottom';
+            await utils.findElement(page, element);
+            await utils.clickElement(page, page.locator(element).first());
 
         //     await utils.wait(wait_secs);
 
@@ -341,7 +412,10 @@ test.describe.serial('Batch Action', () => {
         // /* Step 5-2: Merge Contacts - Mark this pair as not a duplicate. */
         // await test.step('Merge Contacts - Mark this pair as not a duplicate.', async () =>{
 
-        //     await list_contacts_and_select_top_n(page, 2);
+            /* create new contact data and select top two*/
+            await create_contacts(page, 2, vars.merge_search);
+            await search_contacts(page, vars.merge_search);
+            await select_top_n(page, 2);
 
         //     /* select "Merge Contacts" and click "Go" */
         //     await select_action_and_go(page, 10, 'form#Merge');
@@ -356,9 +430,9 @@ test.describe.serial('Batch Action', () => {
         //     await utils.findElement(page, element);
         //     await utils.clickElement(page, page.locator(element).first());
 
-        //     await utils.wait(wait_secs);
-
-        //     await expect(page.locator('.crm-error')).toHaveCount(0);
+            await utils.wait(wait_secs);
+            
+            await expect(page.locator('.crm-error')).toHaveCount(0);
 
         // });
 
@@ -495,8 +569,11 @@ test.describe.serial('Batch Action', () => {
 
         /* Step 9: Delete Contacts. */
         await test.step('Delete Contacts.', async () =>{
-
-            await list_contacts_and_select_top_n(page);
+            /* create new contact data and select top two*/
+            const deleteContact = 'delete_test';
+            await create_contacts(page, 2, deleteContact);
+            await search_contacts(page, deleteContact);
+            await select_top_n(page, 2);
 
             /* select "Delete Contacts" and click "Go" */
             await select_action_and_go(page, 17, 'form#Delete');
