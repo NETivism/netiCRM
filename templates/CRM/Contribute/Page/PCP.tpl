@@ -60,7 +60,7 @@
 	{/foreach}
 	</tbody>
 </table>
-<div id="statusChangeMessage" title="{ts}Status Change{/ts}">
+<div id="statusChangeMessage" title="{ts}Status Change{/ts}" class="hide-block">
   <p>{ts 1=approve}Change this pcp page to status <span id="status-indicator">%1</span>{/ts}</p>
   <p>{ts}Are you sure you want to continue?{/ts}</p>
 </div>
