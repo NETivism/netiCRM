@@ -394,8 +394,8 @@ ORDER BY civicrm_phone.is_primary DESC, phone_id ASC";
     if (!empty($meta['#count']['skipped']) && !empty($skippedText)) {
       $report['skipped'] = ts('Flydove').': '.ts('Skipped %1 contacts due to reasons: %2.', array(
         1 => $meta['#count']['skipped'],
-        2 => implode(' / ', $skippedText)),
-      );
+        2 => implode(' / ', $skippedText),
+      ));
     }
     return $report;
   }
