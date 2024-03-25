@@ -304,7 +304,7 @@ class CRM_Group_Form_Edit extends CRM_Core_Form {
         $ele->_attributes['data-filter'] = $filterGroupTypes[$gtId];
         if (strstr($filterGroupTypes[$gtId], 'Smart-Marketing')) {
           // freeze when remote_group_id has value
-          if (!empty($this->_groupValues['is_sync']) || !empty($this->_groupValues['sync_data'])) {
+          if (!empty($this->_groupValues['is_sync']) && !empty($this->_groupValues['sync_data'])) {
             $ele->freeze();
           }
         }
@@ -319,10 +319,10 @@ class CRM_Group_Form_Edit extends CRM_Core_Form {
         CRM_Core_BAO_Cache::setItem($remoteGroups, 'group editing', 'remote-groups-'.get_class($this->_smartMarketingService), NULL, CRM_REQUEST_TIME+180);
       }
       // flydove doesn't support create group
-      // $remoteGroups = array('-1' => '-- '.ts('Create New Group').' --') + $remoteGroups;
       $remoteGroups = array_diff_key($remoteGroups, $this->_smartMarketingFreezed);
+      $remoteGroups = array('' => ts('-- Select --')) + $remoteGroups;
       $eleSmGroup = $this->addSelect('remote_group_id', ts('Smart Marketing Group'), $remoteGroups);
-      if (!empty($this->_groupValues['is_sync'])) {
+      if (!empty($this->_groupValues['is_sync']) && !empty($this->_groupValues['sync_data'])) {
         $eleSmGroup->freeze();
       }
 
