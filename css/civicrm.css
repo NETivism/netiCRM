@@ -2180,36 +2180,24 @@ table.campaign td,
   text-align: center;
   text-decoration: none;
   vertical-align: middle;
-  font-family: "Font Awesome 6 Brands";
   font-size: 0;
   color: #fff;
-  border-radius: 50%;
-  background: #626262;
   transition: none;
-  }
+  background-size: contain;
+  filter: grayscale(1);
+}
+.crm-container .pcp-sticky-header .social-link.facebook {
+  background-image:url("../i/exttm/facebook_logo.png");
+  filter: grayscale(1) brightness(1.6);
+}
 .crm-container .pcp-sticky-header .social-link.facebook:hover {
-  background: #3b5999;
-}
-.crm-container .pcp-sticky-header .social-link::before {
-  display: block;
-  height: 100%;
-  text-decoration: inherit;
-  font-style: normal;
-  font-size: 20px;
-}
-.crm-container .pcp-sticky-header .social-link.facebook::before {
-  content: "\f39e";
+  filter: unset;
 }
 .crm-container .pcp-sticky-header .social-link.line {
-  background: #fff;
+  background-image:url("../i/exttm/line_app_icon.png");
 }
-.crm-container .pcp-sticky-header .social-link.line::before {
-  content: "\f3c0";
-  font-size: 36px;
-  color: #626262;
-}
-.crm-container .pcp-sticky-header .social-link.line:hover::before {
-  color: #03B24E;
+.crm-container .pcp-sticky-header .social-link.line:hover {
+  filter: unset;
 }
 
 @media (min-width: 992px) {

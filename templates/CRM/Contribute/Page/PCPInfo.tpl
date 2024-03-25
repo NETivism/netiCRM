@@ -25,8 +25,6 @@
 *}
 {* this template is used for displaying PCP information *}
 {capture assign="contrib_page_url"}{crmURL p='civicrm/contribute/transact' q="reset=1&id=`$pcp.contribution_page_id`"}{/capture}
-<link rel="stylesheet" href="{$config->resourceBase}packages/fontawesome/css/fontawesome.min.css?v{$config->ver}">
-<link rel="stylesheet" href="{$config->resourceBase}packages/fontawesome/css/brands.min.css?v{$config->ver}">
 {if $owner}
 {if $is_embed}
 <div class="pcp-management crm-management is-embed-mode">
