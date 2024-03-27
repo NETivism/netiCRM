@@ -5094,6 +5094,7 @@ ul.ui-sortable {
 #activity-content td {
   padding: 4px;
   vertical-align: top;
+  height: auto;
 }
 
 .crm-container tr.even-row td,
