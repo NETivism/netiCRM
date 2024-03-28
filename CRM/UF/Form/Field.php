@@ -141,7 +141,7 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
 			$breadcrumbs = array(
         array('title' => ts('Home'), 'url' => CRM_Utils_System::url()),
         array('title' => ts('Administer CiviCRM'), 'url' => CRM_Utils_System::url('civicrm/admin', 'reset=1')),
-        array('title' => ts('Profile'), 'url' =>  CRM_Utils_System::url('admin/uf/group', 'reset=1')),
+        array('title' => ts('Profile'), 'url' =>  CRM_Utils_System::url('civicrm/admin/uf/group', 'reset=1')),
         array('title' => ts('CiviCRM Profile Fields'), 'url' => $url),
       );
       CRM_Utils_System::appendBreadCrumb($breadcrumbs);

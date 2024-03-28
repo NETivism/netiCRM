@@ -58,15 +58,6 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
    */
   function preProcess() {
     parent::preProcess();
-
-    // refs #30318, migrate exists mail address to from_email_address
-    // do not trigger lookup when submit form
-    if (empty($_POST)) {
-      $eventDefault = parent::setDefaultValues();
-      if (!empty($eventDefault['confirm_from_email']) && CRM_Utils_Rule::email($eventDefault['confirm_from_email'])){
-        CRM_Admin_Form_FromEmailAddress::migrateEmailFromPages($eventDefault['confirm_from_name'], $eventDefault['confirm_from_email']);
-      }
-    }
   }
 
   /**
@@ -320,6 +311,10 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
 
     $availableFrom = CRM_Core_PseudoConstant::fromEmailAddress(TRUE, TRUE);
     $verifiedFrom = CRM_Admin_Form_FromEmailAddress::getVerifiedEmail();
+    $verifiedDomains = CRM_Admin_Form_FromEmailAddress::getVerifiedEmail(
+      CRM_Admin_Form_FromEmailAddress::VALID_EMAIL | CRM_Admin_Form_FromEmailAddress::VALID_DKIM | CRM_Admin_Form_FromEmailAddress::VALID_SPF,
+      'domain'
+    );
     $selectableEmail = array();
     $hasVerified = FALSE;
     foreach($availableFrom as $fromAddr) {
@@ -327,8 +322,11 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
       if (array_search($fromAddr['email'], $verifiedFrom) !== FALSE) {
         $email = ts('%1 Verified', array(1 => '🛡️ '.htmlspecialchars($fromAddr['email'])));
         $hasVerified = TRUE;
+        $selectableEmail[$fromAddr['email']] = $email;
       }
-      $selectableEmail[$fromAddr['email']] = $email;
+      elseif (CRM_Utils_Mail::checkMailInDomains($fromAddr['email'], $verifiedDomains)) {
+        $selectableEmail[$fromAddr['email']] = $email;
+      }
     }
     arsort($selectableEmail);
     if (!$hasVerified) {
