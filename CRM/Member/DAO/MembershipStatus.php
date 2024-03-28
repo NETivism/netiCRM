@@ -314,13 +314,13 @@ class CRM_Member_DAO_MembershipStatus extends CRM_Core_DAO
   {
     if (!(self::$_import)) {
       self::$_import = array();
-      $fields = & self::fields();
+      $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
-            self::$_import['membership_status'] = & $fields[$name];
+            self::$_import['membership_status'] = &$fields[$name];
           } else {
-            self::$_import[$name] = & $fields[$name];
+            self::$_import[$name] = &$fields[$name];
           }
         }
       }
@@ -337,13 +337,13 @@ class CRM_Member_DAO_MembershipStatus extends CRM_Core_DAO
   {
     if (!(self::$_export)) {
       self::$_export = array();
-      $fields = & self::fields();
+      $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
-            self::$_export['membership_status'] = & $fields[$name];
+            self::$_export['membership_status'] = &$fields[$name];
           } else {
-            self::$_export[$name] = & $fields[$name];
+            self::$_export[$name] = &$fields[$name];
           }
         }
       }
@@ -410,7 +410,7 @@ class CRM_Member_DAO_MembershipStatus extends CRM_Core_DAO
    */
   static function addDisplayEnums(&$values)
   {
-    $enumFields = & CRM_Member_DAO_MembershipStatus::getEnums();
+    $enumFields = &CRM_Member_DAO_MembershipStatus::getEnums();
     foreach($enumFields as $enum) {
       if (isset($values[$enum])) {
         $values[$enum . '_display'] = CRM_Member_DAO_MembershipStatus::tsEnum($enum, $values[$enum]);

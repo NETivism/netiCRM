@@ -49425,4 +49425,22 @@ msgstr ""
 
 #: xml/templates/civicrm_data.tpl
 msgid "Flydove Smart Marketing"
+<<<<<<< HEAD
+=======
+msgstr ""
+
+#: CRM/Core/Payment/TapPay.php
+msgid "Enable 3D secure"
+msgstr ""
+
+#: CRM/Contact/Form/Merge.php
+#: CRM/Contact/Form/Task/Merge.php
+msgid "Cannot merge with the administrator, please recheck the selected contacts."
+msgstr ""
+
+msgid "Notice: If you are already logged in, clicking the above link will take you to the backend of your personal fundraising page for editing."
+msgstr ""
+
+msgid "While general users who have not logged in, clicking the link will simply take them to the completed personal fundraising page where they can proceed to fill out the donation form as usual."
+>>>>>>> 1e15c58f5500000544edb1146b02b9ee867a8538
 msgstr ""

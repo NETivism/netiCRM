@@ -63,7 +63,7 @@ test.describe.serial('Advanced Search', () => {
             await page.locator(element).selectOption('2');
             await expect(page.locator('#group')).toHaveValue('2');
 
-            element = '#crmasmSelect2';
+            element = '#contact_tags';
             await utils.findElement(page, element);
             await page.locator(element).selectOption('4');
             await expect(page.locator('#contact_tags')).toHaveValue('4');

@@ -58,13 +58,13 @@ class CRM_AI_Page_AJAX {
         'CiviContribute' => ['civicrm/admin/contribute/add', 'civicrm/admin/contribute/setting'],
         'CiviEvent' => ['civicrm/event/add', 'civicrm/event/manage/eventInfo'],
         'CiviMail' => ['civicrm/mailing/send'],
-        'Activity' => ['civicrm/activity/add', 'civicrm/contact/view/activity'],
+        'Activity' => ['civicrm/activity/add', 'civicrm/contact/view/activity', 'civicrm/contact/search'],
       ];
 
       foreach ($allowPatterns as $component => $allowedUrls) {
         foreach ($allowedUrls as $allowedUrl) {
           if (strstr($url, $allowedUrl)) {
-            if ($component === "Activity" && strstr($jsondata['sourceUrl'], "atype=$mailTypeId")) {
+            if ($component === "Activity" && (strstr($jsondata['sourceUrl'], "atype=$mailTypeId") || strstr($jsondata['sourceUrl'], "_qf_Email_display"))) {
               $data['component'] = $component;
               break 2;
             } elseif ($component !== "Activity") {
