@@ -48,7 +48,11 @@
 <table class="form-layout">
    <tr class="crm-contribution-contributionpage-pcp-form-block-is_approval_needed">
 	    <td class="label">{$form.is_approval_needed.label}</td>
-	    <td>{$form.is_approval_needed.html} {help id="id-approval_needed"}</td>
+	    <td>{$form.is_approval_needed.html}
+        <div class="description">
+          {ts}If checked, an administrator will need to approve new personal campaign pages before they are available to the public. The person who created the personal campaign page will be automatically notified via email when their page is approved so that they can begin promoting the campaign.{/ts}
+        </div>
+      </td>
    </tr>
    <tr class="crm-contribution-contributionpage-pcp-form-block-notify_email">
 	    <td class="label">{$form.notify_email.label}</td>
@@ -56,7 +60,11 @@
    </tr>       
    <tr class="crm-contribution-contributionpage-pcp-form-block-supporter_profile_id">
 	    <td class="label">{$form.supporter_profile_id.label} <span class="marker"> *</span></td>
-	    <td>{$form.supporter_profile_id.html} {help id="id-supporter_profile"}</td>
+	    <td>{$form.supporter_profile_id.html}
+        <div class="description">
+          {ts}When your supporters create a Personal Campaign page, they must log in or register an account from a The Supporter Profile to use functions such as editing drafts or submitting for approval. Please select one Profile here for login or registration.{/ts}
+        </div>
+      </td>
    </tr>
    <tr class="crm-contribution-contributionpage-pcp-form-block-link_text">
 	    <td class="label">{$form.link_text.label}</td>

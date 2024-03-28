@@ -415,16 +415,13 @@ AND       CEF.entity_id    = %2";
     if (isset($formValues[$attachName]) && !empty($formValues[$attachName])) {
       for ($i = 0; $i < $numAttachments; $i++) {
         // ensure file is not empty
-        $contents = file_get_contents($formValues[$attachName][$i]['name']);
-        if ($contents) {
-          $fileParams = array(
-            'uri' => $formValues[$attachName][$i]['name'],
-            'type' => $formValues[$attachName][$i]['type'],
-            'upload_date' => date('Ymdhis'),
-            'location' => $formValues[$attachName][$i]['name'],
-          );
-          $params['attachFile_'.$i] = $fileParams;
-        }
+        $fileParams = array(
+          'uri' => $formValues[$attachName][$i]['name'],
+          'type' => $formValues[$attachName][$i]['type'],
+          'upload_date' => date('Ymdhis'),
+          'location' => $formValues[$attachName][$i]['name'],
+        );
+        $params['attachFile_'.$i] = $fileParams;
       }
     }
   }
@@ -442,16 +439,18 @@ AND       CEF.entity_id    = %2";
       if (isset($params["attachFile_$i"]) &&
         is_array($params["attachFile_$i"])
       ) {
-        self::filePostProcess($params["attachFile_$i"]['location'],
-          NULL,
-          $entityTable,
-          $entityID,
-          NULL,
-          TRUE,
-          $params["attachFile_$i"],
-          "attachFile_$i",
-          $params["attachFile_$i"]['type']
-        );
+        if (!empty($params["attachFile_$i"]['location']) && file_exists($params["attachFile_$i"]['location'])) {
+          self::filePostProcess($params["attachFile_$i"]['location'],
+            NULL,
+            $entityTable,
+            $entityID,
+            NULL,
+            TRUE,
+            $params["attachFile_$i"],
+            "attachFile_$i",
+            $params["attachFile_$i"]['type']
+          );
+        }
       }
     }
   }

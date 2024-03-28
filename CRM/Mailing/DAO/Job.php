@@ -289,13 +289,13 @@ class CRM_Mailing_DAO_Job extends CRM_Core_DAO
   {
     if (!(self::$_import)) {
       self::$_import = array();
-      $fields = & self::fields();
+      $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
-            self::$_import['mailing_job'] = & $fields[$name];
+            self::$_import['mailing_job'] = &$fields[$name];
           } else {
-            self::$_import[$name] = & $fields[$name];
+            self::$_import[$name] = &$fields[$name];
           }
         }
       }
@@ -312,13 +312,13 @@ class CRM_Mailing_DAO_Job extends CRM_Core_DAO
   {
     if (!(self::$_export)) {
       self::$_export = array();
-      $fields = & self::fields();
+      $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
-            self::$_export['mailing_job'] = & $fields[$name];
+            self::$_export['mailing_job'] = &$fields[$name];
           } else {
-            self::$_export[$name] = & $fields[$name];
+            self::$_export[$name] = &$fields[$name];
           }
         }
       }
@@ -369,7 +369,7 @@ class CRM_Mailing_DAO_Job extends CRM_Core_DAO
    */
   static function addDisplayEnums(&$values)
   {
-    $enumFields = & CRM_Mailing_DAO_Job::getEnums();
+    $enumFields = &CRM_Mailing_DAO_Job::getEnums();
     foreach($enumFields as $enum) {
       if (isset($values[$enum])) {
         $values[$enum . '_display'] = CRM_Mailing_DAO_Job::tsEnum($enum, $values[$enum]);

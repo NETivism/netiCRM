@@ -89,20 +89,6 @@
 {if $form.contact_tags}
             <td><label>{ts}Select Tag(s){/ts}</label><br>
                 {$form.contact_tags.html}
-                {literal}
-                <script type="text/javascript">
-
-                cj("select#contact_tags").crmasmSelect({
-                    addItemTarget: 'bottom',
-                    animate: false,
-                    highlight: true,
-                    sortable: true,
-                    respectParents: true
-                });
-
-
-                </script>
-                {/literal}
             </td>
 {else}
             <td>&nbsp;</td>
@@ -204,4 +190,4 @@
              </td>
         </tr>
     </table>
-
+{include file="CRM/common/chosen.tpl" selector="#contact_tags"}

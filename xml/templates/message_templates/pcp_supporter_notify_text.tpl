@@ -1,58 +1,24 @@
-{ts}Dear supporter{/ts},
 {ts 1="$contribPageTitle"}Thanks for creating a personal campaign page in support of %1.{/ts}
 
 {if $pcpStatus eq 'Approved'}
-====================
-{ts}Promoting Your Page{/ts}
 
-====================
-{if $isTellFriendEnabled}
-
-{ts}You can begin your fundraising efforts using our "Tell a Friend" form{/ts}:
-
-1. {ts}Login to your account at{/ts}:
-{$loginUrl}
-
-2. {ts}Click or paste this link into your browser and follow the prompts{/ts}:
-{$pcpTellFriendURL}
-{else}
-
-{ts}Send email to family, friends and colleagues with a personal message about this campaign.{/ts}
-{ts}Include this link to your fundraising page in your emails{/ts}:
-{$pcpInfoURL}
-{/if}
-
-===================
-{ts}Managing Your Page{/ts}
-
-===================
-{ts}Whenever you want to preview, update or promote your page{/ts}:
-1. {ts}Login to your account at{/ts}:
-{$loginUrl}
-
-2. {ts}Click or paste this link into your browser to go to your page{/ts}:
-{$pcpInfoURL}
-
-{ts}When you view your campaign page WHILE LOGGED IN, the page includes links to edit
-your page, tell friends, and update your contact info.{/ts}
-
+{ts}Your Personal Campaign Page is now available for public access.{/ts} {ts}Congratulations!{/ts} {ts}You can now openly share the page to gather more donations for your fundraising campaign!{/ts}
+{ts 1=$pcpInfoURL}Please copy your Personal Campign Page URL %1{/ts}. {ts}Subsequently, you can share your Personal Campaign Page link across various social media platforms to rally friends and family to support this fundraising initiative!{/ts}
+{ts}Notice: If you are already logged in, clicking the above link will take you to the backend of your personal fundraising page for editing.{/ts} {ts}While general users who have not logged in, clicking the link will simply take them to the completed personal fundraising page where they can proceed to fill out the donation form as usual.{/ts}
 
 {elseif $pcpStatus EQ 'Waiting Review'}
-{ts}Your page requires administrator review before you can begin your fundraising efforts.{/ts}
 
+{ts}Before you start sharing the Personal Campaign Page and commence fundraising, it needs to obtain approval from the administrator.{/ts}
+{ts}Currently, this page is undergoing the approval process.{/t} {ts 1=$pcpNotifyEmailAddress}Once the review is complete, you will soon receive an approval confirmation email from %1.{/ts} {ts}Upon receiving an approval email, you can begin sharing the page and start fundraising!{/ts}
 
-{ts}A notification email has been sent to the site administrator, and you will receive another notification from them as soon as the review process is complete.{/ts}
+{ts}If you wish to preview the edited fundraising page before administrator approval, please follow these steps:{/ts}
 
-
-{ts}You can still preview your page prior to approval{/ts}:
-1. {ts}Login to your account at{/ts}:
+{ts}Login to your account{/ts}
 {$loginUrl}
 
-2. {ts}Click or paste this link into your browser{/ts}:
+{ts}Preview your personal campaign page{/ts}
 {$pcpInfoURL}
 
-{/if}
 {if $pcpNotifyEmailAddress}
-{ts}Questions? Send email to{/ts}:
-{$pcpNotifyEmailAddress}
+{ts}Questions? Send email to{/ts}: {$pcpNotifyEmailAddress}
 {/if}

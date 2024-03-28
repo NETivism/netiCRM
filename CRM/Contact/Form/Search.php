@@ -409,7 +409,7 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
       // also set the group title
       $cacheDate = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Group', $this->_groupID, 'cache_date');
       $groupValues = array('id' => $this->_groupID, 'title' => $this->_group[$this->_groupID], 'cache_date' => $cacheDate);
-      if (CRM_REQUEST_TIME - CRM_Contact_BAO_GroupContactCache::SMARTGROUP_CACHE_TIMEOUT_MINIMAL*60 > strtotime($cacheDate)) {
+      if (CRM_REQUEST_TIME - CRM_Contact_BAO_GroupContactCache::SMARTGROUP_CACHE_TIMEOUT_MINIMAL > strtotime($cacheDate)) {
         $groupValues['refresh_button'] = TRUE;
       }
       $this->set('gid', $this->_groupID);

@@ -66,7 +66,7 @@ class CRM_Contact_Form_Search_Criteria {
 
       if ($contactTags) {
         $form->add('select', 'contact_tags', ts('Tags'), $contactTags, FALSE,
-          array('id' => 'contact_tags', 'multiple' => 'multiple', 'title' => ts('- select -'))
+          array('id' => 'contact_tags', 'multiple' => 'multiple', 'title' => ts('- select -'), 'style' => 'width:160px')
         );
       }
 

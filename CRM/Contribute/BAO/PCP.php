@@ -383,32 +383,30 @@ WHERE pcp.id = %1 AND cc.contribution_status_id =1 AND cc.is_test = 0";
   }
 
   /**
-   * Function to Approve / Reject the campaign page
+   * Approve / Reject / Back to draft, enable / disable page and send email notification
    *
    * @param int $id campaign page id
+   * @param int|bool $statusId bool for set is_active, number for set status_id
    *
    * @return null
    * @access public
    * @static
    *
    */
-  static function setIsActive($id, $is_active) {
-    switch ($is_active) {
-      case 0:
-        $is_active = 3;
-        break;
-
-      case 1:
-        $is_active = 2;
-        break;
+  static function setIsActive($id, $statusId) {
+    if ($statusId === TRUE || $statusId === FALSE) {
+      return self::setDisable($id, $statusId);
     }
 
-    CRM_Core_DAO::setFieldValue('CRM_Contribute_DAO_PCP', $id, 'status_id', $is_active);
-
-    require_once 'CRM/Contribute/PseudoConstant.php';
-    $pcpTitle = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_PCP', $id, 'title');
     $pcpStatus = CRM_Contribute_PseudoConstant::pcpStatus();
-    $pcpStatus = $pcpStatus[$is_active];
+    if (!in_array($statusId, array_keys($pcpStatus))) {
+      return;
+    }
+
+    CRM_Core_DAO::setFieldValue('CRM_Contribute_DAO_PCP', $id, 'status_id', $statusId);
+
+    $pcpTitle = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_PCP', $id, 'title');
+    $pcpStatus = $pcpStatus[$statusId];
 
     CRM_Core_Session::setStatus(ts("%1 status has been updated to %2.", array(
       1 => $pcpTitle,
@@ -416,10 +414,14 @@ WHERE pcp.id = %1 AND cc.contribution_status_id =1 AND cc.is_test = 0";
     )));
 
     // send status change mail
-    $result = self::sendStatusUpdate($id, $is_active);
+    $result = self::sendStatusUpdate($id, $statusId);
 
     if ($result) {
       CRM_Core_Session::setStatus(ts("A notification email has been sent to the supporter."));
+    }
+    else {
+      $fixUrl = CRM_Utils_System::url("civicrm/admin/domain", 'action=update&reset=1');
+      CRM_Core_Session::setStatus(ts('The site administrator needs to enter a valid \'FROM Email Address\' in <a href="%1">Administer CiviCRM &raquo; Configure &raquo; Domain Information</a>. The email address used may need to be a valid mail account with your email service provider.', array(1 => $fixUrl)), TRUE, 'warning');
     }
   }
 
@@ -438,17 +440,13 @@ WHERE pcp.id = %1 AND cc.contribution_status_id =1 AND cc.is_test = 0";
    *
    */
   static function sendStatusUpdate($pcpId, $newStatus, $isInitial = FALSE) {
-    require_once 'CRM/Contribute/PseudoConstant.php';
     $pcpStatus = CRM_Contribute_PseudoConstant::pcpStatus('name');
+    $pcpStatusLabel = CRM_Contribute_PseudoConstant::pcpStatus();
     $config = CRM_Core_Config::singleton();
 
     if (!isset($pcpStatus[$newStatus])) {
       return FALSE;
     }
-
-    require_once 'CRM/Utils/Mail.php';
-    require_once 'Mail/mime.php';
-    require_once 'CRM/Contact/BAO/Contact/Location.php';
 
     //set loginUrl
     $loginUrl = $config->userFrameworkBaseURL;
@@ -472,16 +470,12 @@ WHERE pcp.id = %1 AND cc.contribution_status_id =1 AND cc.is_test = 0";
     );
 
     //get the default domain email address.
-    require_once 'CRM/Core/BAO/Domain.php';
     list($domainEmailName, $domainEmailAddress) = CRM_Core_BAO_Domain::getNameAndEmail();
-
     if (!$domainEmailAddress || $domainEmailAddress == 'info@FIXME.ORG') {
-      require_once 'CRM/Utils/System.php';
-      $fixUrl = CRM_Utils_System::url("civicrm/admin/domain", 'action=update&reset=1');
-       return CRM_Core_Error::statusBounce(ts('The site administrator needs to enter a valid \'FROM Email Address\' in <a href="%1">Administer CiviCRM &raquo; Configure &raquo; Domain Information</a>. The email address used may need to be a valid mail account with your email service provider.', array(1 => $fixUrl)));
+      return FALSE;
     }
 
-    $receiptFrom = '"' . $domainEmailName . '" <' . $domainEmailAddress . '>';
+    $receiptFrom = CRM_Utils_Mail::formatRFC822Email($domainEmailName, $domainEmailAddress);
 
     // get recipient (supporter) name and email
     $params = array('id' => $pcpId);
@@ -509,13 +503,16 @@ WHERE pcp.id = %1 AND cc.contribution_status_id =1 AND cc.is_test = 0";
       TRUE, NULL, FALSE, TRUE
     );
     $tplParams['pcpInfoURL'] = $pcpInfoURL;
-    $tplParams['contribPageTitle'] = $contribPageTitle;
+    $cc = NULL;
     if ($emails = CRM_Utils_Array::value('notify_email', $pcpBlockInfo)) {
       $emailArray = explode(',', $emails);
       $tplParams['pcpNotifyEmailAddress'] = $emailArray[0];
+      $cc = CRM_Utils_Array::implode(',', $emailArray);
     }
     // get appropriate message based on status
     $tplParams['pcpStatus'] = $pcpStatus[$newStatus];
+    $tplParams['pcpStatusLabel'] = $pcpStatusLabel[$newStatus];
+    $tplParams['pcpTitle'] = $pcpInfo['title'];
 
     $tplName = $isInitial ? 'pcp_supporter_notify' : 'pcp_status_change';
 
@@ -529,6 +526,7 @@ WHERE pcp.id = %1 AND cc.contribution_status_id =1 AND cc.is_test = 0";
         'from' => $receiptFrom,
         'toName' => $name,
         'toEmail' => $address,
+        'cc' => $cc,
       )
     );
     return $sent;
