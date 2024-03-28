@@ -66,17 +66,18 @@ test.describe.serial('Create Membership Type', () => {
         await expect(page.locator('#contact_1')).toHaveValue(name);
 
         // select the first option in the membership type and orginization
-        element = '[id="membership_type_id\\[0\\]"]';
-        await utils.selectOption(page.locator(element), { index: 0 }); 
-        element = '[id="membership_type_id\\[1\\]"]';
-        await utils.selectOption(page.locator(element), { index: 1 }); 
+        element = page.locator('[id="membership_type_id\\[0\\]"]');
+        // await utils.selectOption(page.locator(element), { index: 0 }); 
+        await element.selectOption(organization); 
+        element = page.locator('[id="membership_type_id\\[1\\]"]');
+        await element.selectOption(membership_type); 
         // pick the first date
         await page.locator('#join_date').click();
         await page.getByRole('link', { name: '1', exact: true }).click();
         await page.locator('#start_date').click();
         await page.getByRole('link', { name: '1', exact: true }).click();
         await page.locator('[id="_qf_Membership_upload-bottom"]').click();
-        await utils.wait(wait_secs);
+        // await utils.wait(wait_secs);
         await expect(page).toHaveTitle(name + ' | netiCRM');
         await expect(page.locator('#option11>tbody')).toContainText(membership_type);
     });
