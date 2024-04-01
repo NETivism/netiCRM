@@ -17,7 +17,7 @@ test.afterAll(async () => {
 
 test.describe.serial('Create Membership Type', () => {
     var organization = utils.makeid(10);
-    var membership_type = utils.makeid(5);
+    var membership_type = 'typeForTest';
     var element;
     test('Create Organization Contact', async () => {
         await page.goto('civicrm/contact/add?reset=1&ct=Organization');
