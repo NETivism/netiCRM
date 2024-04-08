@@ -1577,7 +1577,7 @@ class CRM_Utils_System {
   /**
    * Get CMS public or private or temp dir
    *
-   * @return boolean.
+   * @return false|string
    */
   public static function cmsDir($type) {
     return CRM_Core_Config::$_userSystem->cmsDir($type);

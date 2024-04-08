@@ -3,6 +3,48 @@
  * class to provide simple static functions for image handling
  */
 class CRM_Utils_Image {
+  /**
+   * Image source
+   *
+   * @var string
+   */
+  public $source;
+
+  /**
+   * Destination to save image
+   *
+   * @var string
+   */
+  public $destination;
+
+  /**
+   * Image info array
+   *
+   * @var array
+   */
+  public $info;
+
+  /**
+   * Image convert setting
+   *
+   * @var array
+   */
+  public $convert;
+
+  /**
+   * Image resource
+   *
+   * @var GdImage
+   */
+  private $resource;
+
+  /**
+   * Image tmp resource
+   *
+   * @var GdImage
+   */
+  private $tmp;
+
   function __construct($source, $destination, $quality = 90, $replace = FALSE) {
     if (!is_file($source) && !is_uploaded_file($source)) {
       return FALSE;
@@ -77,7 +119,7 @@ class CRM_Utils_Image {
         // in unnecessary dither.
         $this->gdCreateTmp($this->info['width'], $this->info['height']);
         if ($this->tmp) {
-          imagecopy($this->tmp, $this->resource, 0, 0, 0, 0, imagesx($this-tmp), imagesy($this->tmp));
+          imagecopy($this->tmp, $this->resource, 0, 0, 0, 0, imagesx($this->tmp), imagesy($this->tmp));
           imagedestroy($this->resource);
           $this->resource = $this->tmp;
         }
@@ -138,7 +180,7 @@ class CRM_Utils_Image {
 
     if ($this->convert['skip']) {
       @copy($this->source, $this->destination);
-      return $success;
+      return TRUE;
     }
     elseif (function_exists($function)) {
       if ($extension == 'jpeg') {
@@ -307,7 +349,13 @@ class CRM_Utils_Image {
   }
 
   function __destruct() {
-    imagedestroy($this->resource);
-    imagedestroy($this->tmp);
+    if (version_compare(PHP_VERSION, '8.0.0', '<')) {
+      if (isset($this->resource)) {
+        imagedestroy($this->resource);
+      }
+      if (isset($this->tmp)) {
+        imagedestroy($this->tmp);
+      }
+    }
   }
 }
