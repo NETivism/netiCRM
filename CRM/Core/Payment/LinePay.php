@@ -120,7 +120,13 @@ class CRM_Core_Payment_LinePay {
   static function confirm($url_params, $get = array()){
     if(empty($get)){
       foreach ($_GET as $key => $value) {
-        if($key == 'q')continue;
+        if ($key == 'q') continue;
+        if ($key == 'qfKey') {
+          $value = CRM_Utils_Type::escape($value, 'String', FALSE);
+        }
+        else {
+          $value = CRM_Utils_Type::escape($value, 'Integer', FALSE);
+        }
         $params[$key] = $value;
       }
     }
@@ -147,6 +153,7 @@ class CRM_Core_Payment_LinePay {
     $result = $this->_linePayAPI->request($requestParams);
 
     // Timeout condition.
+    $triedTimes = 0;
     while (!empty($this->_linePayAPI->_curlError[28]) && $triedTimes < 2) {
       sleep(10);
       $paymentProcessorId = $this->_paymentProcessId;
@@ -155,8 +162,8 @@ class CRM_Core_Payment_LinePay {
         'transactionId' => $params['transactionId'],
         'orderId' => $params['cid'],
       );
-      $result = $this->_linePayAPI->request($params);
-      $triedTimes += 1;
+      $this->_linePayAPI->request($params);
+      $triedTimes++;
     }
     $is_success = $this->_linePayAPI->_success;
     $thankYouPath = 'civicrm/contribute/transact';
@@ -183,12 +190,13 @@ class CRM_Core_Payment_LinePay {
       $transaction = new CRM_Core_Transaction();
       if($is_success){
         $input['payment_instrument_id'] = $contribution->payment_instrument_id;
-        $input['amount'] = $contribution->amount;
+        $input['amount'] = $contribution->total_amount;
         $objects['contribution']->receive_date = date('YmdHis');
         $transaction_result = $ipn->completeTransaction($input, $ids, $objects, $transaction);
         $thankyou_url = self::prepareThankYouUrl($thankYouPath, $params['qfKey']);
       }
       else{
+        $error = '';
         $ipn->failed($objects, $transaction, $error);
         $this->addResponseMessageToNote($contribution);
         $thankyou_url = self::prepareThankYouUrl($thankYouPath, $params['qfKey'], True);
@@ -236,7 +244,7 @@ class CRM_Core_Payment_LinePay {
         }
 
         // record original cancel_date, status_id data.
-        $origin_cancel_date = $contribution->cancel_date;
+        $origin_cancel_date = (string) $contribution->cancel_date;
         $origin_cancel_date = date('YmdHis', strtotime($origin_cancel_date));
         $origin_status_id = $contribution->contribution_status_id;
 
@@ -275,7 +283,7 @@ class CRM_Core_Payment_LinePay {
 
       $query = http_build_query($get);
       $redirect = CRM_Utils_System::url('civicrm/contact/view/contribution', $query);
-       return CRM_Core_Error::statusBounce($result_note, $redirect);
+      return CRM_Core_Error::statusBounce($result_note, $redirect);
     }else{
       CRM_Core_Error::fatal(ts('Wrong contribution ID in url query'));
     }
@@ -286,8 +294,9 @@ class CRM_Core_Payment_LinePay {
       $contribution = self::prepareContribution($contribution);
     }
     $errorMessage = CRM_Core_Payment_LinePayAPI::errorMessage($this->_linePayAPI->_response->returnCode);
+    $note = '';
     $note .= "Error, return code is ".$this->_linePayAPI->_response->returnCode.": ".$errorMessage;
-    CRM_Core_Payment_Mobile::addNote($note, $contribution); 
+    CRM_Core_Payment_Mobile::addNote($note, $contribution);
   }
 
   private static function prepareContribution($contributionId){
