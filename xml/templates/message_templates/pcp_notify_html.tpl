@@ -1,8 +1,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
- <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
- <title></title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title></title>
 </head>
 <body>
 
@@ -12,7 +12,7 @@
 {capture assign=pcpURL     }{crmURL p="civicrm/contribute/pcp/info" q="reset=1&id=`$pcpId`" h=0 a=1}{/capture}
 
 <center>
- <table width="620" border="0" cellpadding="0" cellspacing="0" id="crm-event_receipt" style="font-family: Arial, Verdana, sans-serif; text-align: left;">
+<table width="620" border="0" cellpadding="0" cellspacing="0" id="crm-event_receipt" style="font-family: Arial, Verdana, sans-serif; text-align: left;">
 
   <!-- BEGIN HEADER -->
   <!-- You can add table row(s) here with logo or other header elements -->
@@ -21,73 +21,75 @@
   <!-- BEGIN CONTENT -->
 
   <tr>
-   <td>
+    <td>
     <table style="border: 1px solid #999; margin: 1em 0em 1em; border-collapse: collapse; width:100%;">
-     <tr>
-      <th {$headerStyle}>
-       {ts}Personal Campaign Page Notification{/ts}
-      </th>
-     </tr>
-     <tr>
+      <tr>
+        <th {$headerStyle}>
+          {ts}Personal Campaign Page Notification{/ts}
+        </th>
+      </tr>
+      <tr>
       <td {$labelStyle}>
-       {ts}Action{/ts}:
+        {ts}Action{/ts}:
       </td>
       <td {$valueStyle}>
-       {if $mode EQ 'Update'}
+      {if $mode EQ 'Update'}
         {ts}Updated personal campaign page{/ts}
-       {else}
+      {else}
         {ts}New personal campaign page{/ts}
-       {/if}
+      {/if}
       </td>
-     </tr>
-     <tr>
+    </tr>
+    <tr>
       <td {$labelStyle}>
-       {ts}Personal Campaign Page Title{/ts}
+      {ts}Personal Campaign Page Title{/ts}
       </td>
       <td {$valueStyle}>
-       {$pcpTitle}
+      {$pcpTitle}
       </td>
-     </tr>
-     <tr>
+    </tr>
+    <tr>
       <td {$labelStyle}>
-       {ts}Current Status{/ts}
+      {ts}Current Status{/ts}
       </td>
       <td {$valueStyle}>
-       {$pcpStatus}
+      {$pcpStatus}
       </td>
-     </tr>
-
-     <tr>
-      <td rowspan="2" {$labelStyle}>
-       <a href="{$pcpURL}">{ts}View Page{/ts}</a>
-      </td>
-     </tr>
-     <tr>
+    </tr>
+    <tr>
       <td {$labelStyle}>
-       {ts}Supporter{/ts}
+        {ts}Personal Campaign Page{/ts}
       </td>
       <td {$valueStyle}>
-       <a href="{$supporterUrl}">{$supporterName}</a>
+        <a href="{$pcpURL}">{ts}View Page{/ts}</a>
       </td>
-     </tr>
-     <tr>
+    </tr>
+    <tr>
       <td {$labelStyle}>
-       {ts}Linked to Contribution Page{/ts}
+      {ts}Supporter{/ts}
       </td>
       <td {$valueStyle}>
-       <a href="{$contribPageUrl}">{$contribPageTitle}</a>
+      <a href="{$supporterUrl}">{$supporterName}</a>
       </td>
-     </tr>
-     <tr>
-      <td rowspan="2" {$labelStyle}>
-       <a href="{$managePCPUrl}">{ts}Manage Personal Campaign Pages{/ts}</a>
+    </tr>
+    <tr>
+      <td {$labelStyle}>
+      {ts}Contribution Page{/ts}
       </td>
-     </tr>
+      <td {$valueStyle}>
+      <a href="{$contribPageUrl}">{$contribPageTitle}</a>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2" {$labelStyle}>
+      <a href="{$managePCPUrl}">{ts}Manage Personal Campaign Pages{/ts}</a>
+      </td>
+    </tr>
 
     </table>
-   </td>
+  </td>
   </tr>
- </table>
+</table>
 </center>
 
 </body>

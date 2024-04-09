@@ -425,12 +425,17 @@ class CRM_Core_Config_Variables extends CRM_Core_Config_Defaults {
   /**
    * Path to wkhtmltopdf if available
    */
-  public $wkhtmltopdfPath = FALSE;
+  public $wkhtmltopdfPath = '/usr/bin/wkhtmltopdf';
+
+  /**
+   * Path to wkhtmltopdf if available
+   */
+  public $qpdfPath = '/usr/bin/qpdf';
 
   /**
    * The default value for Content Security Policy recover.
    */
-  public $defaultCSP = "default-src 'self'; img-src 'self' data: https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://analytics.neticrm.tw https://*.googletagmanager.com https://*.google-analytics.com https://www.google.com/recaptcha/api.js https://*.facebook.net https://*.facebook.com https://*.twitter.com https://*.tappaysdk.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com; font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; frame-src 'self' https://neticrm.tw https://*.facebook.net https://*.facebook.com https://*.twitter.com https://*.youtube.com https://*.vimeo.com https://*.tappaysdk.com; object-src 'none'; connect-src 'self' https://neti.cc";
+  public $defaultCSP = "default-src 'self'; img-src 'self' data: https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://analytics.neticrm.tw https://*.googletagmanager.com https://*.google-analytics.com https://www.google.com/recaptcha/api.js https://*.facebook.net https://*.facebook.com https://*.twitter.com https://*.tappaysdk.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com; font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; frame-src 'self' https://neticrm.tw https://*.facebook.net https://*.facebook.com https://*.twitter.com https://*.youtube.com https://*.vimeo.com https://*.tappaysdk.com https://www.google.com; object-src 'none'; connect-src 'self' https://neti.cc";
 
   /**
    * The default value for Content Security Policy setting.

@@ -1,25 +1,25 @@
 # 
 # Translators:
-# CC Chu <poliphilonet@gmail.com>, 2020-2023
-# Chang Shu-huai <junsuwhy@gmail.com>, 2016-2023
+# CC Chu <poliphilonet@gmail.com>, 2020-2024
+# Chang Shu-huai <junsuwhy@gmail.com>, 2016-2024
 # Charles Chuang, 2022-2023
 # CHUNLIAN WU <susanna@netivism.com.tw>, 2017
 # Fuyuan Cheng <gloomcheng@gmail.com>, 2013-2015
 # Harry Lin <harry@netivism.com.tw>, 2023
 # IreneLin, 2013
 # IreneLin, 2013
-# jimyhuang <jimmy@netivism.com.tw>, 2013,2015-2023
+# jimyhuang <jimmy@netivism.com.tw>, 2013,2015-2024
 # Chang Shu-huai <junsuwhy@gmail.com>, 2015-2016
 # SharonKwan <sharon@netivism.com.tw>, 2015-2017
 # charlesc <yeouhsin@gmail.com>, 2013-2014,2016,2020,2022
 # 淑涵 詹 <amy0222@netivism.com.tw>, 2020-2021
-# 花玉婷 <klavier1976@netivism.com.tw>, 2016-2019,2021-2023
-# 馮 佳今, 2022-2023
+# 花玉婷 <klavier1976@netivism.com.tw>, 2016-2019,2021-2024
+# 馮 佳今, 2022-2024
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: CC Chu <poliphilonet@gmail.com>, 2020-2023\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>, 2016-2024\n"
 "Language-Team: Chinese (Taiwan) (http://app.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -11448,7 +11448,7 @@ msgid ""
 "but requires administrator review before you can begin your fundraising "
 "efforts. You will receive an email confirmation shortly which includes a "
 "link to return to your fundraising page."
-msgstr "但必須經由網站管理員審核，您才可以開始您的募款行動。很快您便會收到Email通知，內含回到您募款專頁的連結。"
+msgstr "但必須經由網站管理員審核，您才可以開始您的募款行動。專頁審核完成後，您會立刻收到 Email 通知。\n您收到的Email通知，會附上讓您回到您募款專頁的連結。"
 
 #: CRM/Contribute/Form/PCP/Campaign.php
 msgid "and is ready to use."
@@ -49737,7 +49737,7 @@ msgstr "若勾選此選項，您將可以自行上傳圖片。"
 msgid ""
 "If this option is checked, you can upload your own image. If you want to "
 "uncheck this option, please delete all currently attachments."
-msgstr "勾選此選項以啟用自行上傳圖片功能。目前該項目是鎖定不能編輯的狀態，若您要取消勾選此項目，請先勾選下方「刪除目前的附加檔案」並按下「儲存與預覽」以刪除所有附檔圖片。"
+msgstr "想要自行上傳圖片，請勾選此選項。目前該項目是鎖定不能編輯的狀態，若您要「更換圖片」或「改用上方圖庫圖片」，請先勾選下方「刪除目前的附加檔案」並按下「儲存與預覽」以刪除所有附檔圖片，即可重新選圖。"
 
 #: templates/CRM/Form/attachment.tpl
 msgid ""
@@ -49961,3 +49961,33 @@ msgid ""
 "This delete operation cannot be undone and will delete all transactions and "
 "activity associated with these members."
 msgstr "這個刪除操作無法復原，並將會刪除與這些會員相關的所有捐款和活動記錄。"
+
+#: xml/templates/civicrm_data.tpl
+msgid "Flydove Smart Marketing"
+msgstr "飛信自動化行銷"
+
+#: CRM/Core/Payment/TapPay.php
+msgid "Enable 3D secure"
+msgstr "啟用 3D 驗證"
+
+#: CRM/Contact/Form/Merge.php CRM/Contact/Form/Task/Merge.php
+msgid ""
+"Cannot merge with the administrator, please recheck the selected contacts."
+msgstr "無法合併管理員，請重新檢查您所選擇的聯絡人。"
+
+msgid ""
+"Notice: If you are already logged in, clicking the above link will take you "
+"to the backend of your personal fundraising page for editing."
+msgstr "提醒您：若您為登入狀態，點入上述連結後，會看到個人募款頁編輯後台。"
+
+msgid ""
+"While general users who have not logged in, clicking the link will simply "
+"take them to the completed personal fundraising page where they can proceed "
+"to fill out the donation form as usual."
+msgstr "若是一般未登入的使用者，點入連結後，會正常前往已公開的個人募款頁、可直接進行填表捐款。"
+
+msgid ""
+"To enable 3D Secure, you must add a TapPay  Merchant ID and Partner Key that"
+" supports this feature. If you need 3D Secure, please contact customer "
+"service."
+msgstr "若要啟用 3D 驗證，必須新增有支援此功能的 TapPay 商店 Merchant ID 與帳號金鑰，若需要 3D 驗證請洽客服。"

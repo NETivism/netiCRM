@@ -1,1 +1,1 @@
-{ts 1=$contribPageTitle}Your Personal Campaign Page for %1{/ts}
+{ts 1=$contribPageTitle}Your Personal Campaign Page for %1{/ts} - {if $pcpStatus eq 'Approved'}{ts}Is live{/ts}{elseif $pcpStatus eq 'Waiting Review'}{ts}Awaiting approval{/ts}{elseif $pcpStatus eq 'Draft'}{ts}Draft{/ts}{/if}

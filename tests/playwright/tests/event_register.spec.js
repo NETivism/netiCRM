@@ -14,15 +14,15 @@ var item = {
   site_name: 'netiCRM'
 }
 
-function getPageTitle(title){
+async function getPageTitle(title){
   return title + " | " + item.site_name;
 }
 
-async function fillForm(email='test@aipvo.com', first_name='user', last_name='test', phone='0222233311', current_employer='test company', form_selector='form#Register'){
+async function fillForm(email='test@aipvo.com', form_selector='form#Register'){
 
   await expect(page.locator(form_selector)).toBeDefined();
 
-  var locator = page.locator('input[name="email-5"]')
+  var locator = page.locator('input[name="email-5"]');
   await utils.fillInput(locator, email);
 
 }
@@ -41,7 +41,7 @@ test.afterAll(async () => {
 test.describe.serial('Event register page', () => {
   test('Normal registration', async () => {
     await page.goto('/user/logout');
-    var page_title = getPageTitle(item.event_name_1);
+    var page_title = await getPageTitle(item.event_name_1);
     await test.step("Check can visit page.", async () =>{
       await page.goto('/civicrm/event/register?reset=1&id=1&cid=0');
       await expect(page).toHaveTitle(page_title);
@@ -55,7 +55,7 @@ test.describe.serial('Event register page', () => {
   });
 
   test('limit participants. Not for waiting', async() => {
-    var page_title = getPageTitle(item.event_name_2);
+    var page_title =  await getPageTitle(item.event_name_2);
     await test.step('Check can register and second participant message is correct.', async () => {
       await page.goto('/civicrm/event/register?cid=0&reset=1&id=2');
       await expect(page).toHaveTitle(page_title);
@@ -72,7 +72,7 @@ test.describe.serial('Event register page', () => {
   });
 
   test('limit participants. Accepting waitlist registrations.', async () => {
-    var page_title = getPageTitle(item.event_name_3);
+    var page_title =  await getPageTitle(item.event_name_3);
     await test.step('Check can register', async () => {
       await page.goto('/civicrm/event/register?cid=0&reset=1&id=3');
       await expect(page).toHaveTitle(page_title);
@@ -91,7 +91,7 @@ test.describe.serial('Event register page', () => {
   });
 
   test('limit participants. Need approval', async () => {
-    var page_title = getPageTitle(item.event_name_4);
+    var page_title =  await getPageTitle(item.event_name_4);
     await test.step('First register success and second participant message is correct', async () => {
       await page.goto('/civicrm/event/register?cid=0&reset=1&id=4');
       await expect(page).toHaveTitle(page_title);
@@ -109,7 +109,7 @@ test.describe.serial('Event register page', () => {
   });
 
   test('Unlimit participants. Need approval', async () => {
-    var page_title = getPageTitle(item.event_name_5);
+    var page_title =  await getPageTitle(item.event_name_5);
     await test.step("Verity can register event.", async () =>{
       await page.goto('/civicrm/event/register?reset=1&id=5&cid=0');
       await expect(page).toHaveTitle(page_title);

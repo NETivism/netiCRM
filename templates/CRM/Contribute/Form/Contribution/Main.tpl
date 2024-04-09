@@ -78,8 +78,8 @@
     {$sharethis}
   </div>{/if}
 
-  {if $achievement.goal}
-    {include file="CRM/common/progressbar.tpl" achievement=$achievement}
+  {if $progress.display}
+    {include file="CRM/common/progressbar.tpl" progress=$progress}
   {/if}
 
   <div id="intro_text" class="crm-section intro_text-section">
@@ -114,7 +114,7 @@
             <span class="description">{ts}Your recurring contribution will be processed automatically for the number of installments you specify. You can choose to cancel at any time.{/ts}
           {/if}
             {if $is_email_receipt}
-                {ts}You will receive an email receipt for each recurring contribution.{/ts} 
+                {ts}You will receive an email receipt for each recurring contribution.{/ts}
                 {if $receipt_from_email && $display_recurring_email}
                 {ts 1=$receipt_from_email}To modify or cancel future contributions please contact us at %1.{/ts}
                 {else}

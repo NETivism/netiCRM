@@ -150,3 +150,4 @@ cj('#organization').autocomplete( dataUrl, {
 </script>
 {/literal}
 </div>
+{include file="CRM/common/chosen.tpl" selector="#parents"}
