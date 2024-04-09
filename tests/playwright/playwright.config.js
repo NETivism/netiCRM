@@ -13,7 +13,7 @@ require('dotenv').config({ path: path.resolve(__dirname, 'setup.env') });
 const config = {
   globalSetup: require.resolve('./global-setup'),
   testDir: './tests',
-  timeout: 1200 * 1000,
+  timeout: 120 * 1000,
   expect: {
     timeout: 30 * 1000
   },
