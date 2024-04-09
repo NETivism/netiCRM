@@ -1,11 +1,7 @@
 # 
 # Translators:
 # CC Chu <poliphilonet@gmail.com>, 2020-2024
-<<<<<<< HEAD
-# Chang Shu-huai <junsuwhy@gmail.com>, 2016-2023
-=======
 # Chang Shu-huai <junsuwhy@gmail.com>, 2016-2024
->>>>>>> 1e15c58f5500000544edb1146b02b9ee867a8538
 # Charles Chuang, 2022-2023
 # CHUNLIAN WU <susanna@netivism.com.tw>, 2017
 # Fuyuan Cheng <gloomcheng@gmail.com>, 2013-2015
@@ -49969,8 +49965,6 @@ msgstr "這個刪除操作無法復原，並將會刪除與這些會員相關的
 #: xml/templates/civicrm_data.tpl
 msgid "Flydove Smart Marketing"
 msgstr "飛信自動化行銷"
-<<<<<<< HEAD
-=======
 
 #: CRM/Core/Payment/TapPay.php
 msgid "Enable 3D secure"
@@ -49991,3 +49985,9 @@ msgid ""
 "take them to the completed personal fundraising page where they can proceed "
 "to fill out the donation form as usual."
 msgstr "若是一般未登入的使用者，點入連結後，會正常前往已公開的個人募款頁、可直接進行填表捐款。"
+
+msgid ""
+"To enable 3D Secure, you must add a TapPay  Merchant ID and Partner Key that"
+" supports this feature. If you need 3D Secure, please contact customer "
+"service."
+msgstr "若要啟用 3D 驗證，必須新增有支援此功能的 TapPay 商店 Merchant ID 與帳號金鑰，若需要 3D 驗證請洽客服。"
