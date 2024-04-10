@@ -441,7 +441,8 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
     global $tsLocale;
     $temp = CRM_Utils_System::cmsDir('temp');
     if ($temp) {
-      $this->templateCompileDir = $temp . DIRECTORY_SEPARATOR . 'smarty' . php_sapi_name() . DIRECTORY_SEPARATOR . $_SERVER['HTTP_HOST'] . DIRECTORY_SEPARATOR . $tsLocale . DIRECTORY_SEPARATOR;
+      $dirName = CRM_Utils_Type::escape($_SERVER['HTTP_HOST'], 'DirectoryName');
+      $this->templateCompileDir = $temp . DIRECTORY_SEPARATOR . 'smarty' . php_sapi_name() . DIRECTORY_SEPARATOR . $dirName . DIRECTORY_SEPARATOR . $tsLocale . DIRECTORY_SEPARATOR;
     }
     elseif(defined('CIVICRM_TEMPLATE_COMPILEDIR')) {
       $this->templateCompileDir = CRM_Utils_File::addTrailingSlash(CIVICRM_TEMPLATE_COMPILEDIR).CRM_Utils_File::addTrailingSlash($tsLocale);
