@@ -336,6 +336,7 @@ class CRM_Utils_Type {
         break;
 
       case 'CommaSeperatedIntegers':
+      case 'CommaSeparatedIntegers':
       case 'CSInts':
         if (CRM_Utils_Rule::commaSeparatedIntegers($data)) {
           return $data;
