@@ -239,13 +239,13 @@ class CRM_Core_DAO_EntityFinancialTrxn extends CRM_Core_DAO
   {
     if (!(self::$_import)) {
       self::$_import = array();
-      $fields = & self::fields();
+      $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
-            self::$_import['entity_financial_trxn'] = & $fields[$name];
+            self::$_import['entity_financial_trxn'] = &$fields[$name];
           } else {
-            self::$_import[$name] = & $fields[$name];
+            self::$_import[$name] = &$fields[$name];
           }
         }
       }
@@ -262,13 +262,13 @@ class CRM_Core_DAO_EntityFinancialTrxn extends CRM_Core_DAO
   {
     if (!(self::$_export)) {
       self::$_export = array();
-      $fields = & self::fields();
+      $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
-            self::$_export['entity_financial_trxn'] = & $fields[$name];
+            self::$_export['entity_financial_trxn'] = &$fields[$name];
           } else {
-            self::$_export[$name] = & $fields[$name];
+            self::$_export[$name] = &$fields[$name];
           }
         }
       }

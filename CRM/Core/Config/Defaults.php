@@ -188,7 +188,8 @@ class CRM_Core_Config_Defaults {
     }
 
     if (!isset($defaults['uploadDir'])) {
-      $uploadDir = CRM_Utils_System::cmsDir('temp') .'/'.$_SERVER['HTTP_HOST']."/upload/";
+      $dirName = CRM_Utils_Type::escape($_SERVER['HTTP_HOST'], 'DirectoryName');
+      $uploadDir = CRM_Utils_System::cmsDir('temp') .'/'.$dirName."/upload/";
 
       CRM_Utils_File::createDir($uploadDir);
       CRM_Utils_File::restrictAccess($uploadDir);

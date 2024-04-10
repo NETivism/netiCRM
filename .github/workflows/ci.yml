@@ -98,6 +98,8 @@ jobs:
         run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/edit_mailing.spec.js"
       - name: Payment Test - SPGATEWAY - Playwright
         run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_spgateway.spec.js"
+      - name: Frontend - Contribution Booster - Playwright
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_booster.spec.js"
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -203,6 +205,8 @@ jobs:
         run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/edit_mailing.spec.js"
       - name: Payment Test - SPGATEWAY - Playwright
         run: docker exec neticrm-ci  bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_spgateway.spec.js"
+      - name: Frontend - Contribution Booster - Playwright
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_booster.spec.js"
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -306,6 +310,9 @@ jobs:
         run: docker exec neticrm-ci  bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/event_participant.spec.js"
       - name: Frontend - Mailing Editing - Playwright
         run: docker exec neticrm-ci  bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/edit_mailing.spec.js"
+      - name: Frontend - Contribution Booster - Playwright
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_booster.spec.js"
+
 
 
       - uses: actions/upload-artifact@v3

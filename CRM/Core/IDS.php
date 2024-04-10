@@ -271,7 +271,8 @@ class CRM_Core_IDS {
         $dirs = glob($temp.DIRECTORY_SEPARATOR.'smarty*');
         if (!empty($dirs)) {
           foreach($dirs as $dir) {
-            $configFile = $dir . DIRECTORY_SEPARATOR . $_SERVER['HTTP_HOST'] . DIRECTORY_SEPARATOR . $tsLocale . DIRECTORY_SEPARATOR . 'ConfigAndLog' . DIRECTORY_SEPARATOR . self::CONFIG_FILE;
+            $hostname = CRM_Utils_Type::escape($_SERVER['HTTP_HOST'], 'DirectoryName', FALSE);
+            $configFile = $dir . DIRECTORY_SEPARATOR . $hostname . DIRECTORY_SEPARATOR . $tsLocale . DIRECTORY_SEPARATOR . 'ConfigAndLog' . DIRECTORY_SEPARATOR . self::CONFIG_FILE;
             self::initConfig($configFile, $forceCreate);
           }
         }

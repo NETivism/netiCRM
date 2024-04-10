@@ -205,13 +205,13 @@ class CRM_ACL_DAO_EntityRole extends CRM_Core_DAO
   {
     if (!(self::$_import)) {
       self::$_import = array();
-      $fields = & self::fields();
+      $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
-            self::$_import['acl_entity_role'] = & $fields[$name];
+            self::$_import['acl_entity_role'] = &$fields[$name];
           } else {
-            self::$_import[$name] = & $fields[$name];
+            self::$_import[$name] = &$fields[$name];
           }
         }
       }
@@ -228,13 +228,13 @@ class CRM_ACL_DAO_EntityRole extends CRM_Core_DAO
   {
     if (!(self::$_export)) {
       self::$_export = array();
-      $fields = & self::fields();
+      $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
-            self::$_export['acl_entity_role'] = & $fields[$name];
+            self::$_export['acl_entity_role'] = &$fields[$name];
           } else {
-            self::$_export[$name] = & $fields[$name];
+            self::$_export[$name] = &$fields[$name];
           }
         }
       }

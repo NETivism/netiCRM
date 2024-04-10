@@ -27,7 +27,7 @@
   {include file="CRM/Contribute/Form/PCP/Delete.tpl"}
 {else}
     <div id="pcp" class="crm-block crm-form-block crm-pcp-search-form-block">
-      <h3>{ts}Find Campaign Pages{/ts}</h3>
+      <h3>{ts}Search Personal Campaign Pages{/ts}</h3>
       <table class="form-layout-compressed">
         <tr>
           <td>{$form.title.label}<br />{$form.title.html}</td>

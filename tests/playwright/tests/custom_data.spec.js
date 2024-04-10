@@ -536,8 +536,6 @@ test.describe.serial('Custom Data', () => {
                 return select_ids;
             }, vars.custom_id);
 
-            await utils.print(select_ids);
-
             select_ids.forEach((select_id) => {
                 select_id_for_input.push(select_id);
             });
