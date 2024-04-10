@@ -110,7 +110,7 @@ async function reLogin(page, user=process.env.adminUser, password=process.env.ad
 }
 /**
  * Set the number of participants in a event as defalut valus we expect
- * @param {Page} page The current page object.
+ * @param {Page} page The current page object. 
  * @param {string} page_title The title of the current page.
  * @param {number} event_id The id of the specfic event for testing.
  * @param {number} full_participant The maximum number of participant that we want to set.

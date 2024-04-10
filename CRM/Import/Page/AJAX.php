@@ -46,9 +46,10 @@ class CRM_Import_Page_AJAX {
     if (!isset($_GET['id'])) {
       return;
     }
-
+    $statusId = CRM_Utils_File::sanitizeFileName($_GET['id']);
     $config = CRM_Core_Config::singleton();
-    $file = "{$config->uploadDir}status_{$_GET['id']}.txt";
+    $uploadDir = empty($config->uploadDir) ? CRM_Utils_System::cmsDir('temp') .'/' : $config->uploadDir;
+    $file = $uploadDir."/status_{$statusId}.txt";
     if (file_exists($file)) {
       $str = file_get_contents($file);
       echo $str;

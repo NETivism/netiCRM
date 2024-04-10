@@ -1,62 +1,111 @@
-  {capture assign='percent_css'}{if $achievement.achieved}100{else}{$achievement.percent}{/if}{/capture}
-  <div class="progress-block">
+{capture assign='percent_css'}{if $progress.achieved_status}100{else}{$progress.achieved_percent}{/if}{/capture}
+<div class="progress-block {if $progress.fullwidth}progressbar-fullwidth{/if}">{* progress-block start *}
+  <div class="inner">
     <div class="progress-amount">
       <div class="progress-amount-raised bubble">
-        {if $achievement.type|strstr:"amount"}
-          {capture assign=amount_achieved}<span>{$achievement.current|crmMoney:null:null:true}</span>{/capture}
+        {if $progress.type|strstr:"amount"}
+          {capture assign=amount_achieved}<span>{$progress.current|crmMoney}</span>{/capture}
           {ts 1=$amount_achieved}Raised %1{/ts}
         {else}
-          <span>{$achievement.current}</span> {ts}People{/ts}
+          <span>{$progress.current}</span> {ts}People{/ts}
         {/if}
       </div>
       <div class="progress-amount-goal">
-        {if $achievement.type|strstr:"amount"}
-          {$achievement.label} <span>{$achievement.goal|crmMoney:null:null:true}</span>
-        {elseif $achievement.type == "recurring"}
-          {$achievement.label} <span>{$achievement.goal}</span>{ts}People{/ts}
+        {if $progress.type|strstr:"amount"}
+          {$progress.label} <span>{$progress.goal|crmMoney}</span>
+        {elseif $progress.type == "recurring"}
+          {$progress.label} <span>{$progress.goal}</span>{ts}People{/ts}
         {/if}
       </div>
     </div>
     <div class="progress-wrapper">
-      <div class="progress-cell progress-bar-wrapper" {if !$intro_text}style="width:100%;"{/if}>
+      <div class="progress-cell progress-bar-wrapper">
         <div class="progress-bar" style="width:0px;" data-current="{$percent_css}"></div>
-        <div class="progress-pointer" style="left:0px;margin-left:0;opacity:0">{ts 1="`$achievement.percent`%"}%1 achieved{/ts}</div>
+        <div class="progress-pointer" style="left:0px;margin-left:0;opacity:0">{ts 1="`$progress.achieved_percent`%"}%1 achieved{/ts}</div>
       </div>
-      {if $intro_text}
-      <div class="progress-cell progress-button">
-        <div class="button"><span>{if $achievement.button}{ts}{$achievement.button}{/ts}{else}{ts}Donate Now{/ts}{/if}</span></div>
-      </div>
+      {if $progress.link_display}
+        <div class="progress-cell progress-buttons">
+        {if isset($progress.contribution_page_is_active)}
+          {if $progress.contribution_page_is_active}
+            {if $progress.link_url}
+            <a class="button" href="{$progress.link_url}">{if $progress.link_text}{$progress.link_text}{else}{ts}Donate Now{/ts}{/if}</a>
+            {else}
+            <div class="button"><span>{if $progress.link_text}{$progress.link_text}{else}{ts}Donate Now{/ts}{/if}</span></div>
+            {/if}
+          {else}
+            <div class="button is-disabled"><span>{if $progress.link_text}{$progress.link_text}{else}{ts}Donate Now{/ts}{/if}</span></div>
+          {/if}
+        {else}
+          {if $progress.link_url}
+            <a class="button" href="{$progress.link_url}">{if $progress.link_text}{$progress.link_text}{else}{ts}Donate Now{/ts}{/if}</a>
+          {else}
+            <div class="button"><span>{if $progress.link_text}{$progress.link_text}{else}{ts}Donate Now{/ts}{/if}</span></div>
+          {/if}
+        {/if}
+        </div>
+        {if isset($progress.contribution_page_is_active) && !$progress.contribution_page_is_active}
+        <div class="progress-desc">{ts}This fundraising campaign has ended.{/ts}</div>
+        {/if}
       {/if}
     </div>
-  </div><!--progress-block-->
-  <script>{literal}
-  <!-- for css animation -->
-  cj(document).ready(function($){
-    // click then scroll to bottom
-    if ($(".payment_options-group").length) {
-      $(".progress-button .button").click(function(){
-        if ($(".payment_options-group").length) {
-          $(".payment_options-group")[0].scrollIntoView({"behavior":"smooth","block":"center"});
-        }
-      });
-    }
-    if ($(".progress-bar-wrapper").length) {
-      $(".progress-bar-wrapper").each(function(){
-        var $progressbar = $(this).find(".progress-bar");
-        var $progresspointer = $(this).find(".progress-pointer");
-        var goal = $progressbar.data("current");
+  </div>
+</div>{* progress-block end *}
+{* for animation *}
+<script>{literal}
+(function() {
+  const TRANSITION_TIME = "1.5s";
+  const DELAY = 800;
 
-        if (goal > 50) {
-          $progresspointer.css({"margin-left":"-"+$progresspointer.outerWidth()+"px"});
-          $progresspointer.addClass("white");
-        }
-        $progressbar.css({"transition":"width 1.5s"});
-        $progresspointer.css({"transition":"all 1.5s"});
-        setTimeout(function(){
-          $progressbar.css({"width":goal+"%"});
-          $progresspointer.css({"left":goal+"%","opacity":100});
-        }, 800);
+  function initProgressBars() {
+    const progressBlocks = document.querySelectorAll(".progress-block");
+
+    progressBlocks.forEach(progressBlock => {
+      const progressBar = progressBlock.querySelector(".progress-bar");
+      const progressPointer = progressBlock.querySelector(".progress-pointer");
+      let goal = progressBar.getAttribute("data-current");
+
+      // Apply styles based on the goal
+      applyStyles(progressBar, progressPointer, goal);
+    });
+  }
+
+  function applyStyles(progressBar, progressPointer, goal) {
+    const isGoalAbove50 = goal > 50;
+
+    // Conditionally set margin and class for the pointer
+    progressPointer.style.marginLeft = isGoalAbove50 ? `-${progressPointer.offsetWidth}px` : "";
+    progressPointer.classList.toggle("white", isGoalAbove50);
+
+    // Set transition styles for bar and pointer
+    Object.assign(progressBar.style, { transition: `width ${TRANSITION_TIME}` });
+    Object.assign(progressPointer.style, { transition: `all ${TRANSITION_TIME}` });
+
+    // Set the final width, position and visibility of the progress bar
+    setTimeout(() => {
+      Object.assign(progressBar.style, { width: `${goal}%` });
+      Object.assign(progressPointer.style, { left: `${goal}%`, opacity: "1" });
+    }, DELAY);
+  }
+
+  function initProgressButtons() {
+    const paymentGroup = document.querySelector(".payment_options-group");
+
+    if (!paymentGroup) return;
+
+    document.querySelectorAll(".progress-button .button").forEach(button => {
+      button.addEventListener("click", () => {
+        // Scroll smoothly to the payment group
+        paymentGroup.scrollIntoView({
+          behavior: "smooth",
+          block: "center"
+        });
       });
-    }
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", function() {
+    initProgressBars();
+    initProgressButtons();
   });
-  {/literal}</script>
+})();
+{/literal}</script>

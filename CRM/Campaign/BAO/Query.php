@@ -390,6 +390,7 @@ INNER JOIN  civicrm_custom_group grp on fld.custom_group_id = grp.id
       return $voterClause;
     }
     $surveyId = CRM_Utils_Array::value('campaign_survey_id', $params);
+    $surveyId = CRM_Utils_Type::escape($surveyId, 'Integer');
     $interviewerId = CRM_Utils_Array::value('survey_interviewer_id', $params);
     $searchVoterFor = CRM_Utils_Array::value('campaign_search_voter_for', $params);
 

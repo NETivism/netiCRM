@@ -713,7 +713,9 @@ class CRM_Utils_String {
 
   static function safeFilename($str) {
     $str = preg_replace("/([^\w\s\d\.\-_~\[\]\(\)]|[\.]{2,})/u", '', $str);
-    return preg_replace("/\s+/u", '_', $str);
+    $str = preg_replace("/\s+/u", '_', $str);
+    $str = CRM_Utils_File::sanitizeFileName($str);
+    return $str;
   }
 
   /**
