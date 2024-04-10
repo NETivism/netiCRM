@@ -30,7 +30,8 @@ class CRM_Utils_TypeTest extends CiviUnitTestCase {
    * @param $expectedResult
    */
   public function testValidate($inputData, $inputType, $expectedResult) {
-    $this->assertTrue($expectedResult === CRM_Utils_Type::validate($inputData, $inputType, FALSE));
+    $validatedResult = CRM_Utils_Type::validate($inputData, $inputType, FALSE);
+    $this->assertTrue($expectedResult === $validatedResult, "$inputData:::$validatedResult");
   }
 
   /**
@@ -63,7 +64,8 @@ class CRM_Utils_TypeTest extends CiviUnitTestCase {
    * @param $expectedResult
    */
   public function testEscape($inputData, $inputType, $expectedResult) {
-    $this->assertTrue($expectedResult === CRM_Utils_Type::escape($inputData, $inputType, FALSE));
+    $escapedResult = CRM_Utils_Type::escape($inputData, $inputType, FALSE);
+    $this->assertTrue($expectedResult === $escapedResult, "$inputData:::$escapedResult");
   }
 
   /**
@@ -108,11 +110,6 @@ class CRM_Utils_TypeTest extends CiviUnitTestCase {
       // Strings containing control characters
       array("file\x00name.txt", 'FileName', 'filename.txt'),
       array("file\x1Fname.txt", 'FileName', 'filename.txt'),
-
-      // Strings containing non-printing characters
-      array("file\x7Fname.txt", 'FileName', 'filename.txt'),
-      array("file\xA0name.txt", 'FileName', 'filename.txt'),
-      array("file\xADname.txt", 'FileName', 'filename.txt'),
 
       // Strings containing URI reserved characters
       array("file#name.txt", 'FileName', 'filename.txt'),

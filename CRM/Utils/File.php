@@ -605,8 +605,9 @@ HTACCESS;
     $filename = ltrim($filename, '.-');
 
     // maximize filename length to 255 bytes
-    $ext = pathinfo($filename, PATHINFO_EXTENSION);
-    $basename = pathinfo($filename, PATHINFO_FILENAME);
+    $parts = explode('.', $filename);
+    $ext = array_pop($parts);
+    $basename = implode('.', $parts);
     $filename = mb_strcut($basename, 0, 255 - ($ext ? strlen($ext) + 1 : 0), mb_detect_encoding($filename)) . ($ext ? '.' . $ext : '');
     return $filename;
   }
