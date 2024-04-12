@@ -7254,7 +7254,7 @@ input.crm-form-textfield,
 .crm-container .progress-block {
   margin: 0 0 30px 0;
 }
-.crm-container .progress-block .inner {
+.page-civicrm-contribute-pcp .crm-container .progress-block .inner {
   padding: 20px 12px;
 }
 .crm-container .progress-wrapper {
@@ -7266,6 +7266,9 @@ input.crm-form-textfield,
   vertical-align: middle;
 }
 .crm-container .progress-cell.progress-bar-wrapper {
+  width: 100%;
+}
+.crm-container .progressbar-with-link .progress-cell.progress-bar-wrapper {
   width: 80%;
 }
 .crm-container .progress-cell.progress-buttons {
@@ -7384,7 +7387,7 @@ input.crm-form-textfield,
   }
 }
 @media (min-width: 992px) {
-  .crm-container .progress-block .inner {
+  .page-civicrm-contribute-pcp .crm-container .progress-block .inner {
     padding: 20px;
   }
   .crm-container .pcp-page-text {
