@@ -49,8 +49,8 @@ jQuery.fn.chainSelect = function( target, url, settings )
 
 		ajaxCallback = function(data, textStatus) 
 		{
-			$(target).html("");//clear old options
-			data = eval(data);//get json array
+			$(target).html(""); //clear old options
+			data = JSON.parse(data); //get json array
                         if ( data != null ) {
 			    for (i = 0; i < data.length; i++) {
 				$(target).get(0).add(new Option(data[i].name, data[i].value), document.all ? i : null);
