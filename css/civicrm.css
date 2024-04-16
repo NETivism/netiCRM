@@ -5505,8 +5505,10 @@ ul.ui-sortable {
 .crm-container table.criteria-group {
   margin-bottom: .1em;
 }
-
-
+.crm-container table[align="center"] {
+  margin-right: auto;
+  margin-left: auto;
+}
 .crm-container th,
 .crm-container table.display thead th,
 .crm-container table thead.sticky th,
