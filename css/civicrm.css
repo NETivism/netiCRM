@@ -1750,6 +1750,7 @@ div.block-civicrm li, .crm-container ul li, .crm-container ul.treeview li {
 /* Attachment */
 .crm-container .attachments table .current-attachments img {
   max-width: 18%;
+  height: auto;
 }
 .crm-container .attachments-upload-your-own-image-row ~ .attachments-form-file-row,
 .crm-container .crm-contribution-campaign-form-block .attachments-upload-your-own-image-row ~ .attachments-form-file-row {
@@ -5504,8 +5505,10 @@ ul.ui-sortable {
 .crm-container table.criteria-group {
   margin-bottom: .1em;
 }
-
-
+.crm-container table[align="center"] {
+  margin-right: auto;
+  margin-left: auto;
+}
 .crm-container th,
 .crm-container table.display thead th,
 .crm-container table thead.sticky th,
