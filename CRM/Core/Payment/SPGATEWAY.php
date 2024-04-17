@@ -835,7 +835,7 @@ EOT;
           $ids = CRM_Contribute_BAO_Contribution::buildIds($contributionId);
           $query = CRM_Contribute_BAO_Contribution::makeNotifyUrl($ids, NULL, TRUE);
           parse_str($query, $get);
-          $result = self::doIPN('Credit', $submitValues, $get, FALSE);
+          $result = self::doIPN(array('spgateway', 'ipn', 'Credit'), $submitValues, $get, FALSE);
           if(strstr($result, 'OK')){
             $status = 1;
           }
@@ -1070,43 +1070,54 @@ EOT;
     return $sync_url;
   }
 
+  /**
+   * The IPN warpping
+   *
+   * @param array $arguments Router will pass array into this function
+   * @param array $post Simulate POST data
+   * @param array $get Simulate GET data
+   * @param bool $print print result
+   * @return void
+   */
   public static function doIPN($arguments, $post = NULL, $get = NULL, $print = TRUE) {
     $post = !empty($post) ? $post : $_POST;
     $get = !empty($get) ? $get : $_GET;
-    if (!empty($arguments) && is_array($arguments)) {
+    if (!empty($arguments)) {
       if (is_array($arguments)) {
         $instrument = end($arguments);
       }
-      else {
+      elseif (is_string($arguments)){
         $instrument = $arguments;
       }
-    }
-    if (empty($instrument)) {
-      $qArray = explode('/', $get['q']);
-      $instrument = end($qArray);
+      else {
+        CRM_Core_Error::debug_log_message("Spgateway: IPN Missing require argument.");
+        CRM_Utils_System::civiExit();
+      }
     }
 
     // detect variables
     if(empty($post)){
-      CRM_Core_Error::debug_log_message( "civicrm_spgateway: Could not find POST data from payment server", TRUE);
+      CRM_Core_Error::debug_log_message("Spgateway: Could not find POST data from payment server.");
       CRM_Utils_System::civiExit();
     }
     else{
-      $component = $get['module'];
-      if(!empty($component)){
+      // validate some post
+      if (!empty($post['JSONData']) || !empty($post['Period']) || !empty($post['Result'])) {
         $ipn = new CRM_Core_Payment_SPGATEWAYIPN($post, $get);
-        $result = $ipn->main($component, $instrument);
-        if(!empty($result) && $print){
+        $result = $ipn->main($instrument);
+        if(is_string($result) && $print){
           echo $result;
         }
         else{
           return $result;
         }
       }
-      else{
-        CRM_Core_Error::debug_log_message( "civicrm_spgateway: Could not get module name from request url", TRUE);
+      else {
+        CRM_Core_Error::debug_log_message("Spgateway: Invlid POST data.");
+        CRM_Core_Error::debug_var("spgateway_ipn_post", $post);
       }
     }
+    CRM_Utils_System::civiExit();
   }
 
   /**
@@ -1248,7 +1259,7 @@ EOT;
           // create recurring record
           $result->_post = $ipnPost;
           $result->_get = $ipnGet;
-          $result->_response = self::doIPN('Credit', $result->_post, $result->_get, FALSE);
+          $result->_response = self::doIPN(array('spgateway', 'ipn', 'Credit'), $result->_post, $result->_get, FALSE);
 
           if ($recurring_first_contribution) {
             $contribution = new CRM_Contribute_DAO_Contribution();
@@ -1426,7 +1437,7 @@ EOT;
             // create recurring record
             $result->_post = $ipnPost;
             $result->_get = $ipnGet;
-            $result->_response = self::doIPN('Credit', $ipnPost, $ipnGet, FALSE);
+            $result->_response = self::doIPN(array('spgateway', 'ipn', 'Credit'), $ipnPost, $ipnGet, FALSE);
             $contribution = new CRM_Contribute_DAO_Contribution();
             $contribution->trxn_id = $parentTrxnId;
             if ($contribution->find(TRUE) && strstr($trxnId, '_1')) {

@@ -86,7 +86,7 @@ class CRM_Core_Payment_SPGATEWAYNeweb {
       $result->_ipn_result = $ipn_result;
       $result->_post = $ipn_post;
       $result->_get = $ipn_get;
-      $result->_response = CRM_Core_Payment_SPGATEWAY::doIPN('Credit', $ipn_post, $ipn_get, FALSE);
+      $result->_response = CRM_Core_Payment_SPGATEWAY::doIPN(array('spgateway', 'ipn', 'Credit'), $ipn_post, $ipn_get, FALSE);
       // If correct, it must return '1|OK'.
       if (!empty($result->_response)) {
         $query = "UPDATE civicrm_contribution SET payment_processor_id = %1 WHERE contribution_recur_id = %2 ORDER BY id DESC LIMIT 1";
@@ -136,7 +136,7 @@ class CRM_Core_Payment_SPGATEWAYNeweb {
    * @return void
    */
   public static function resync($ppid_new, $day = '', $recurNo = array()) {
-    CRM_Core_Error::debug_log_message("Start doResyncOldNewebRecur, time:".date('Y-m-d H:i:s').", ppid_new = {$ppid_new}, day = {$day}");
+    CRM_Core_Error::debug_log_message("Start doResyncOldNewebRecur, ppid_new = {$ppid_new}, day = {$day}");
     $payment_processor = CRM_Core_BAO_PaymentProcessor::getPayment($ppid_new, 'live');
     if (!empty($payment_processor)) {
 
@@ -155,7 +155,7 @@ class CRM_Core_Payment_SPGATEWAYNeweb {
           CRM_Core_BAO_Cache::setItem(0, 'spgateway_neweb', 'resync_offset_'.$ppid_new);
 
           // There are no recur need execute. return finished.
-          $message = "已無需要處理之捐款，結束PPID為{$ppid_new}的所有舊藍新同步。";
+          $message = "No more old neweb recurring need to sync {$ppid_new}";
           CRM_Core_Error::debug_log_message($message);
           return TRUE;
         }

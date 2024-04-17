@@ -209,8 +209,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
       'Result' => $json,
       ));
     $post = array('JSONData' => $jsonData);
-    CRM_Core_Payment_SPGATEWAY::doIPN('Credit', $post, $get);
-
+    $this->doIPN(array('spgateway', 'ipn', 'Credit'), $post, $get, __LINE__);
     // verify contribution status after trigger
     $this->assertDBCompareValue(
       'CRM_Contribute_DAO_Contribution',
@@ -296,7 +295,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
       'Result' => $json,
       ));
     $post = array('JSONData' => $jsonData);
-    CRM_Core_Payment_SPGATEWAY::doIPN('Credit', $post, $get);
+    $this->doIPN(array('spgateway', 'ipn', 'Credit'), $post, $get, __LINE__);
 
     // verify contribution status after trigger
     $this->assertDBCompareValue(
@@ -341,7 +340,16 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
         'PaymentMethod' => 'CREDIT',
       )),
     );
-    CRM_Core_Payment_SPGATEWAY::doSingleQueryRecord($contribution->id, $post);
+    try {
+      CRM_Core_Payment_SPGATEWAY::doSingleQueryRecord($contribution->id, $post);
+    }
+    catch (CRM_Core_Exception $e) {
+      $message = $e->getMessage();
+      $code = $e->getErrorCode();
+      if ($code != CRM_Core_Error::NO_ERROR) {
+        throw new Exception($message.' at line '.__LINE__, $code);
+      }
+    }
     // verify contribution status after trigger
     $this->assertDBCompareValue(
       'CRM_Contribute_DAO_Contribution',
@@ -424,7 +432,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
       'Result' => $json,
       ));
     $post = array('JSONData' => $jsonData);
-    CRM_Core_Payment_SPGATEWAY::doIPN('Credit', $post, $get);
+    $this->doIPN(array('spgateway', 'ipn', 'Credit'), $post, $get, __LINE__);
     $error_msg = CRM_Core_DAO::singleValueQuery("SELECT note FROM civicrm_note WHERE entity_id = $contribution->id");
     $this->assertNotEmpty($error_msg, "In line " . __LINE__);
     $this->assertNotFalse(strpos($error_msg, 'Failuare'));
@@ -534,7 +542,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     $get['ppid'] = $ppid;
     $PaymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($ppid, $this->_is_test?'test':'live');
     $post = array('Period' => CRM_Core_Payment_SPGATEWAYAPI::recurEncrypt(json_encode($post), $PaymentProcessor));
-    CRM_Core_Payment_SPGATEWAY::doIPN('Credit', $post, $get);
+    $this->doIPN(array('spgateway', 'ipn', 'Credit'), $post, $get, __LINE__);
 
     // verify contribution status after trigger
     $this->assertDBCompareValue(
@@ -592,7 +600,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
       ),
     );
     $post = array('Period' => CRM_Core_Payment_SPGATEWAYAPI::recurEncrypt(json_encode($post), $PaymentProcessor));
-    CRM_Core_Payment_SPGATEWAY::doIPN('Credit', $post, $get);
+    $this->doIPN(array('spgateway', 'ipn', 'Credit'), $post, $get, __LINE__);
     // $trxn_id2 = _civicrm_spgateway_recur_trxn($trxn_id, $gwsr1);
     // $trxn_id2 = "testdev500302T368_2";
 
@@ -653,7 +661,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
       ),
     );
     $post = array('Period' => CRM_Core_Payment_SPGATEWAYAPI::recurEncrypt(json_encode($post), $PaymentProcessor));
-    CRM_Core_Payment_SPGATEWAY::doIPN('Credit', $post, $get);
+    $this->doIPN(array('spgateway', 'ipn', 'Credit'), $post, $get, __LINE__);
     // $trxn_id2 = _civicrm_spgateway_recur_trxn($trxn_id, $gwsr1);
     // $trxn_id2 = "testdev500302T368_2";
 
@@ -757,7 +765,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     );
     $post = array('Period' => CRM_Core_Payment_SPGATEWAYAPI::recurEncrypt(json_encode($post), $PaymentProcessor));
 
-    CRM_Core_Payment_SPGATEWAY::doIPN('Credit', $post, $get);
+    $this->doIPN(array('spgateway', 'ipn', 'Credit'), $post, $get, __LINE__);
     // $trxn_id2 = _civicrm_spgateway_recur_trxn($trxn_id, $gwsr1);
     // $trxn_id2 = "testdev500302T368_2";
 
@@ -924,7 +932,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
       'Result' => $json,
       ));
     $post = array('JSONData' => $jsonData);
-    CRM_Core_Payment_SPGATEWAY::doIPN('Credit', $post, $get);
+    $this->doIPN(array('spgateway', 'ipn', 'Credit'), $post, $get, __LINE__);
 
     // verify contribution status after trigger
     $this->assertDBCompareValue(
@@ -941,5 +949,18 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     $this->assertNotEmpty($cid, "In line " . __LINE__);
   }
 
+  function doIPN($args, $post, $get, $line) {
+    try {
+      CRM_Core_Payment_SPGATEWAY::doIPN($args, $post, $get);
+    }
+    catch (CRM_Core_Exception $e) {
+      $message = $e->getMessage();
+      $data = $e->getErrorData();
+      $code = $e->getErrorCode();
+      if ($code != CRM_Core_Error::NO_ERROR) {
+        throw new Exception($message.' at line '.$line, $code);
+      }
+    }
+  }
 }
 
