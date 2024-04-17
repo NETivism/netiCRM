@@ -334,6 +334,10 @@ class CRM_Contribute_Page_ContributionPage extends CRM_Core_Page {
       if ($shorten) {
         $this->assign('shorten', $shorten);
       }
+      $shorten_pcp = CRM_Core_OptionGroup::getValue('shorten_url', 'civicrm_pcp.'.$id, 'name', 'String', 'value');
+      if ($shorten_pcp) {
+        $this->assign('shorten_pcp', $shorten_pcp);
+      }
 
       // statistics
       CRM_Utils_System::setTitle(ts('Dashlets')." - ".$page['title']);
