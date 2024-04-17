@@ -55,10 +55,7 @@ We take the security of this project very seriously. If you believe you have fou
 
 ## Supported Versions
 
-| Version | Supported          |
-| ------- | ------------------ |
-| 5.0     | :white_check_mark: |
-| < 5     | :x:                |
+Only support latest release version.
 
 ### License
 
