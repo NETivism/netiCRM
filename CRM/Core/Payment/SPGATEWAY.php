@@ -811,59 +811,6 @@ EOT;
   }
 
   /**
-   * return array(
-   *   // All instrument:
-   *   'status' => contribuion_status
-   *   'msg' => return message
-   * 
-   *   // Not Credit Card:
-   *   'payment_instrument' => civicrm_spgateway_notify_display() return value
-   * )
-   */
-  function doGetResultFromIPNNotify($contributionId, $submitValues = array()) {
-    // First, check if it is redirect payment.
-    $instruments = CRM_Contribute_PseudoConstant::paymentInstrument('Name');
-    $cDao = new CRM_Contribute_DAO_Contribution();
-    $cDao->id = $contributionId;
-    $cDao->fetch(TRUE);
-    if (strstr($instruments[$cDao->payment_instrument_id], 'Credit')) {
-      // If contribution status id == 2, wait 3 second for IPN trigger
-      if ($cDao->contribution_status_id == 2) {
-        sleep(3);
-        $contribution_status_id = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $contributionId, 'contribution_status_id');
-        if ($contribution_status_id == 2) {
-          $ids = CRM_Contribute_BAO_Contribution::buildIds($contributionId);
-          $query = CRM_Contribute_BAO_Contribution::makeNotifyUrl($ids, NULL, TRUE);
-          parse_str($query, $get);
-          $result = self::doIPN(array('spgateway', 'ipn', 'Credit'), $submitValues, $get, FALSE);
-          if(strstr($result, 'OK')){
-            $status = 1;
-          }
-          else{
-            $status = 2;
-          }
-        }
-      }
-      else {
-        $status = $cDao->contribution_status_id;
-        if (!empty($submitValues['JSONData'])) {
-          $return_params = CRM_Core_Payment_SPGATEWAYAPI::dataDecode($submitValues['JSONData']);
-        }
-        if(!empty($submitValues['Period']) && empty($return_params)){
-          $paymentProcessors = CRM_Core_BAO_PaymentProcessor::getPayment($cDao->payment_processor_id, $cDao->is_test?'test':'live');
-          $return_params = CRM_Core_Payment_SPGATEWAYAPI::dataDecode(CRM_Core_Payment_SPGATEWAYAPI::recurDecrypt($submitValues['Period'], $paymentProcessors));
-        }
-        $msg = _civicrm_spgateway_error_msg($return_params['RtnCode']);
-      }
-    }
-    else {
-
-    }
-
-  }
-
-  
-  /**
    * Function called from contributionRecur page to show tappay detail information
    * 
    * @param int @contributionId the contribution id
