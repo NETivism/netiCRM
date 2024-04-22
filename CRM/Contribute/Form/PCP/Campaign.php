@@ -324,7 +324,7 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
     if (!$attachmentIsExist && !empty($params['preset_image'])) {
       $config = CRM_Core_Config::singleton();
       $pcpPresetNum = CRM_Utils_Type::escape($params['preset_image'], 'Integer');
-      $pcpPresetFile = 'pcp_preset_'.$pcpPresetNum.'.png';
+      $pcpPresetFile = 'pcp_preset_'.$pcpPresetNum.'.webp';
       $dest = $config->customFileUploadDir.$pcpPresetFile;
       global $civicrm_root;
       if (!file_exists($dest) && file_exists($civicrm_root.'packages/midjourney/'.$pcpPresetFile)) {
