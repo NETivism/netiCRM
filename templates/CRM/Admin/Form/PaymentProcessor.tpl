@@ -161,7 +161,12 @@
                         var urlSiteFieldDiv = $(formBlockName);
                         var urlSiteTextField = urlSiteFieldDiv.find('input.form-text[type="text"]');
                         urlSiteTextField.hide();
-                        var newCheckBox = $('<input type="checkbox">');
+                        if (!formBlockName.match('test')) {
+                            var newCheckBox = $('<input type="checkbox" {/literal}{if $having_contribution} disabled="disabled"{/if}{literal}>');
+                        }
+                        else {
+                            var newCheckBox = $('<input type="checkbox" {/literal}{if $having_contribution_test} disabled="disabled"{/if}{literal}>');
+                        }
                         newCheckBox.insertBefore(urlSiteTextField);
                         newCheckBox.change(function(){
                             if (newCheckBox.prop('checked')) {

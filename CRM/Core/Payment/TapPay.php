@@ -111,13 +111,29 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
         'name' => 'subject',
         'label' => $ppDAO->subject_label,
       ),
-    );
-    if (defined("NETICRM_ENABLE_TAPPAY_3D_SECURE") && NETICRM_ENABLE_TAPPAY_3D_SECURE) {
-      $fields[] = array(
+      array(
         'name' => 'url_site',
         'label' => ts('啟用3D驗證'),
         'msg' => ts(''),
+      ),
+    );
+    $nullObj = NULL;
+    $ppid = CRM_Utils_Request::retrieve('id', 'Positive', $nullObj);
+    if ($ppid) {
+      $params = array(
+        1 => array($ppid, 'Positive'),
+        2 => array(0, 'Integer'),
       );
+      $paramsTest = array(
+        1 => array($ppid+1, 'Positive'),
+        2 => array(1, 'Integer'),
+      );
+      $sql = 'SELECT count(id) FROM civicrm_contribution WHERE payment_processor_id = %1 AND is_test = %2';
+      $isHavingContribution = CRM_Core_DAO::singleValueQuery($sql, $params);
+      $isHavingContributionTest = CRM_Core_DAO::singleValueQuery($sql, $paramsTest);
+      $smarty = CRM_Core_Smarty::singleton();
+      $smarty->assign('having_contribution', $isHavingContribution);
+      $smarty->assign('having_contribution_test', $isHavingContributionTest);
     }
     return $fields;
   }
