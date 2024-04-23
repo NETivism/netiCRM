@@ -474,7 +474,7 @@ class CRM_Contribute_BAO_Query {
             $value = $statusIndex;
           }
           else {
-            unset($value);
+            $value = 0;
           }
         }
 
