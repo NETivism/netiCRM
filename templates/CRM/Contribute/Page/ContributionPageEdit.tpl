@@ -92,6 +92,7 @@
     <td>{ts}Allow constituents to create their own personal fundraising pages linked to this contribution page.{/ts}<br>
       <a href="{crmURL p='civicrm/admin/contribute/pcp' q="reset=1&action=update&id=`$id`"}"><i class="zmdi zmdi-settings"></i> {ts}Admin Basic Settings{/ts}</a> <br>
       <a href="{crmURL p="civicrm/admin/pcp" q="reset=1&contribution_page_id=`$id`"}"><i class="zmdi zmdi-file"></i> {ts}Manage Personal Campaign Pages{/ts}</a> <br>
+      {if $pcp_is_active}
       <div class="new-personal-campaign-wrap flex-general">
         {capture assign=newPersonalCampaignURL}{crmURL a=true p='civicrm/contribute/campaign' q="action=add&reset=1&pageId=`$id`"}{/capture}
         <div class="new-personal-campaign-link-wrap link-desc-wrap">
@@ -106,6 +107,7 @@
         <a href="#" class="button url-shorten" data-url-shorten="url_to_copy_new_personal_campaign" data-page-id="{$id}" data-page-type="civicrm_pcp"><i class="zmdi zmdi-share"></i> {ts}Shorten URL{/ts}</a>
         </span>
       </div>
+      {/if}
     </td>
 </tr>
 <tr>
