@@ -665,12 +665,12 @@ abstract class CRM_Event_Import_Parser {
     }
   }
 
-  function errorFileName($type) {
+  public static function errorFileName($type) {
     $fileName = CRM_Import_Parser::errorFileName($type);
     return $fileName;
   }
 
-  function saveFileName($type) {
+  public static function saveFileName($type) {
     $fileName = CRM_Import_Parser::saveFileName($type);
     return $fileName;
   }
