@@ -694,6 +694,21 @@ INNER JOIN   civicrm_contact contact ON ( contact.id = contrib.contact_id )
         $contribution->copyValues($params);
         if($contribution->find(TRUE)) {
           $status = $contribution->contribution_status_id;
+
+          // Check if it is tappay 3d validation
+          if ($contribution->payment_processor_id) {
+            $mode = $contribution->is_test ? 'test' : 'live';
+            $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($contribution->payment_processor_id, $mode);
+            if ($paymentProcessor['payment_processor_type'] == 'TapPay' && $paymentProcessor['url_site'] == 1) {
+              $status = CRM_Utils_Request::retrieve('status', 'String', $form);
+              if ($status == '0') {
+                $status = 1;
+              }
+              else {
+                $status = 4;
+              }
+            }
+          }
         }
       }
     }
