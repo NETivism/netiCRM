@@ -792,7 +792,7 @@
        */
       rightColBetter: function() {
         var leftCol = document.querySelector('#intro_text'),
-            rightCol = document.querySelector('#main-inner');
+            rightCol = document.querySelector('#main-inner') ? document.querySelector('#main-inner') : document.querySelector('#main .row-offcanvas');
 
         if (leftCol && rightCol) {
           var leftColOuterHeight = leftCol.offsetHeight,
