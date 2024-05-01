@@ -470,7 +470,7 @@ class CRM_Contribute_BAO_Query {
           }
 
           // Check contribution status exit or not
-          if ($statusIndex !== null) {
+          if ($statusIndex !== null && $statusIndex != false) {
             $value = $statusIndex;
           }
           else {

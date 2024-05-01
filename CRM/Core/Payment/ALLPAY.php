@@ -695,9 +695,23 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
 
           $orders = array();
           foreach($order->ExecLog as $o){
-            // skip first recorded contribution
+            // update exists first contribution if pending
+            // otherwise skip
             if($order->gwsr == $o->gwsr){
-              continue;
+              if($result->contribution_status_id != 2) {
+                continue;
+              }
+              else {
+                $trxn_id = $result->trxn_id;
+                $orders[$trxn_id] = $o;
+              }
+            }
+
+            // skip failed contribution when process_date before last month
+            if (!empty($o->process_date) && $o->RtnCode != 1) {
+              if (strtotime($o->process_date) < strtotime(date('Y-m-01 00:00:00'))) {
+                continue;
+              }
             }
             $noid = self::getNoidHash($o, $order->MerchantTradeNo);
             if (!empty($noid)) {
@@ -720,7 +734,9 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
               $ids = CRM_Contribute_BAO_Contribution::buildIds($first_contrib_id);
               $query = CRM_Contribute_BAO_Contribution::makeNotifyUrl($ids, NULL, $return_query = TRUE);
               parse_str($query, $get);
-              $get['is_recur'] = 1;
+              if($order->gwsr != $o->gwsr){
+                $get['is_recur'] = 1;
+              }
               $post = array(
                 'MerchantID' => $order->MerchantID,
                 'MerchantTradeNo' => $order->MerchantTradeNo,
