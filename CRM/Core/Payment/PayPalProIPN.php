@@ -41,7 +41,7 @@ class CRM_Core_Payment_PayPalProIPN extends CRM_Core_Payment_BaseIPN {
     parent::__construct();
   }
 
-  function getValue($name, $abort = TRUE) {
+  function getValue($name, $type, $abort = TRUE) {
 
     if (!empty($_POST)) {
       $rpInvoiceArray = array();
@@ -53,8 +53,9 @@ class CRM_Core_Payment_PayPalProIPN extends CRM_Core_Payment_BaseIPN {
           $value = $rpValueArray[1];
         }
       }
+      $value = CRM_Utils_Type::escape($value, $type, FALSE);
 
-      if ($value == NULL && $abort) {
+      if (is_null($value) && $abort) {
         echo "Failure: Missing Parameter<p>";
         exit();
       }
@@ -67,13 +68,14 @@ class CRM_Core_Payment_PayPalProIPN extends CRM_Core_Payment_BaseIPN {
     }
   }
 
-  static function retrieve($name, $type, $location = 'POST', $abort = TRUE) {
+  static function retrieve($name, $type, $method = 'POST', $abort = TRUE) {
     static $store = NULL;
     $value = CRM_Utils_Request::retrieve($name, $type, $store,
-      FALSE, NULL, $location
+      FALSE, NULL, $method
     );
     if ($abort && $value === NULL) {
-      CRM_Core_Error::debug_log_message("Could not find an entry for $name in $location");
+      $name = CRM_Utils_Type::escape($name, 'string', FALSE);
+      CRM_Core_Error::debug_log_message("Could not find an entry for $name in http request");
       echo "Failure: Missing Parameter<p>";
       exit();
     }
@@ -280,21 +282,21 @@ class CRM_Core_Payment_PayPalProIPN extends CRM_Core_Payment_BaseIPN {
     $input['component'] = $component;
 
     // get the contribution and contact ids from the GET params
-    $ids['contact'] = self::getValue('c', TRUE);
-    $ids['contribution'] = self::getValue('b', TRUE);
+    $ids['contact'] = self::getValue('c', 'Integer', TRUE);
+    $ids['contribution'] = self::getValue('b', 'Integer', TRUE);
 
     $this->getInput($input, $ids);
 
     if ($component == 'event') {
-      $ids['event'] = self::getValue('e', TRUE);
-      $ids['participant'] = self::getValue('p', TRUE);
-      $ids['contributionRecur'] = self::getValue('r', FALSE);
+      $ids['event'] = self::getValue('e', 'Integer', TRUE);
+      $ids['participant'] = self::getValue('p', 'Integer', TRUE);
+      $ids['contributionRecur'] = self::getValue('r', 'Integer', FALSE);
     }
     else {
       // get the optional ids
       $ids['membership'] = self::retrieve('membershipID', 'Integer', 'GET', FALSE);
-      $ids['contributionRecur'] = self::getValue('r', FALSE);
-      $ids['contributionPage'] = self::getValue('p', FALSE);
+      $ids['contributionRecur'] = self::getValue('r', 'Integer', FALSE);
+      $ids['contributionPage'] = self::getValue('p', 'Integer', FALSE);
       $ids['related_contact'] = self::retrieve('relatedContactID', 'Integer', 'GET', FALSE);
       $ids['onbehalf_dupe_alert'] = self::retrieve('onBehalfDupeAlert', 'Integer', 'GET', FALSE);
     }
@@ -330,7 +332,7 @@ class CRM_Core_Payment_PayPalProIPN extends CRM_Core_Payment_BaseIPN {
 
     $input['txnType'] = self::retrieve('txn_type', 'String', 'POST', FALSE);
     $input['paymentStatus'] = self::retrieve('payment_status', 'String', 'POST', FALSE);
-    $input['invoice'] = self::getValue('i', TRUE);
+    $input['invoice'] = self::getValue('i', 'String', TRUE);
 
     $input['amount'] = self::retrieve('mc_gross', 'Money', 'POST', FALSE);
     $input['reasonCode'] = self::retrieve('ReasonCode', 'String', 'POST', FALSE);

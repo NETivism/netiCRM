@@ -25,15 +25,21 @@
 *}
 {if $showCMS }{*true if is_cms_user field is set *}
   <div class="messages help cms_user_help-section">
+  {if $isPcP}
+    {ts}Please fill in the basic information to register for an account that can edit a personal campaign page. The account registration rules are as follows:{/ts}</br>
+    {ts}1. One email can only register one account.{/ts}</br>
+    {ts}2. If you have already registered an account on this site, you can click Forgot Password, enter your email, and get the login link from your mailbox.{/ts}</br>
+  {else}
     {if !$isCMS}
       {ts}If you would like to create an account on this site, check the box below and enter a user name{/ts}
       {if $form.cms_pass}
         {ts}and a password{/ts}
       {/if}
-    {else}
-      {ts}Please enter a user name to create an account{/ts}
-    {/if}.
-    {ts 1=$loginUrl}If you already have an account, <a href='%1'>please login</a> before completing this form.{/ts}
+      {else}
+        {ts}Please enter a user name to create an account{/ts}
+      {/if}
+      {ts 1=$loginUrl}If you already have an account, <a href='%1'>please login</a> before completing this form.{/ts}
+  {/if}
     </div>
   <div>{$form.cms_create_account.html} {$form.cms_create_account.label}</div>
   <div id="details" class="crm_user_signup-section">

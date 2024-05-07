@@ -1,3 +1,21 @@
+@charset "UTF-8";
+
+/** Variables **/
+:root {
+  --color-error: #f44336;
+  --color-error-dark: #b71c1c;
+  --color-form-input-border: #999;
+  --color-crm-special-contribute-primary: var(--neticrm-color-crm-special-contribute-primary, #3f51b5);
+  --color-crm-special-contribute-info-link: var(--neticrm-color-crm-special-contribute-info-link, #c4ccff);
+  --font-sans-serif: "PingFang TC", "Heiti TC", "Noto Sans TC", "Noto Sans CJK TC", NotoSansCJKtc-Regular, source-han-sans-traditional, "Microsoft JhengHei Fixed", "Microsoft JhengHei", "微軟正黑體", sans-serif;
+  --font-icon-zmdi: "Material-Design-Iconic-Font";
+  --header-min-height: 120px;
+  --pcp-progress-padding: 40px;
+  --pcp-progress-amount-height: 40px;
+  --pcp-progress-bar-height: 30px;
+  --pcp-leading-height: calc(100dvh - var(--header-min-height) - var(--pcp-progress-padding) - var(--pcp-progress-amount-height) - var(--pcp-progress-bar-height));
+}
+
 /* Visually hidden helper (bootstrap 5) */
 .visually-hidden,
 .visually-hidden-focusable:not(:focus):not(:focus-within) {
@@ -1729,6 +1747,20 @@ div.block-civicrm li, .crm-container ul li, .crm-container ul.treeview li {
     color: #536DFE;
 }
 
+/* Attachment */
+.crm-container .attachments table .current-attachments img {
+  max-width: 18%;
+  height: auto;
+}
+.crm-container .attachments-upload-your-own-image-row ~ .attachments-form-file-row,
+.crm-container .crm-contribution-campaign-form-block .attachments-upload-your-own-image-row ~ .attachments-form-file-row {
+  display: none;
+}
+.crm-container .attachments-upload-your-own-image-row.is-checked ~ .attachments-form-file-row,
+.crm-container .crm-contribution-campaign-form-block .attachments-upload-your-own-image-row.is-checked ~ .attachments-form-file-row {
+  display: table-row;
+}
+
 /*
 ** Style for hiding blocks or table rows
 */
@@ -1871,74 +1903,78 @@ table.campaign td,
 }
 
 .crm-container .honor-roll-wrapper {
-    margin: 30px auto;
-    text-align: center;
-    max-width: 768px;
+  margin: 40px auto;
+  padding: 0 12px;
+  text-align: center;
 }
-
-.crm-container .pcp-honor-roll-entry {
-    display: inline-block;
-    min-width: 150px;
-    margin: 10px 0;
+.crm-container .honor-roll-title {
+  margin-bottom: 20px;
+  font-size: 32px;
+}
+.crm-container .pcp-honor-roll-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(60%, 1fr));
+  grid-gap: 15px;
+  grid-auto-rows: minmax(0, auto);
+  grid-auto-rows: 20px;
+  grid-auto-flow: dense;
+  counter-reset: waterfall-item;
+}
+.crm-container .pcp-honor-roll-item {
+  grid-column-end: span 1;
+  background: #f5f5f5;
+  transition: all .3s;
+}
+.crm-container .pcp-honor-roll-item > .inner {
+  padding: 15px 20px;
+  text-align: left;
+}
+.crm-container .pcp-honor-roll-name {
+  font-size: 20px;
+}
+.crm-container .pcp-honor-roll-message {
+  font-size: 15px;
+  color: #333;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 8;
+  overflow: hidden;
+}
+.crm-container .pcp-honor-roll-item:hover .pcp-honor-roll-message {
+  display: block;
+  overflow: visible;
+}
+.crm-container .pcp-honor-roll-name + .pcp-honor-roll-message {
+  margin-top: 10px;
+}
+.crm-container .pcp-honor-roll-item:hover {
+  color: #fff;
+  background: var(--color-crm-special-contribute-primary);
+}
+.crm-container .pcp-honor-roll-item:hover .pcp-honor-roll-message {
+  color: #fff;
+}
+@media screen and (min-width: 992px) {
+  .crm-container .attachments > .description {
+    padding-left: 100px;
+  }
+  .crm-container .honor-roll-wrapper {
+    padding: 0;
+  }
+  .crm-container .pcp-honor-roll-items {
+    grid-template-columns: repeat(auto-fill, minmax(25%, 1fr));
+    grid-auto-rows: 20px;
+    grid-gap: 30px;
+  }
 }
 
 .crm-container .pcp-leading {
-    min-height: 300px;
+    height: var(--pcp-leading-height, 300px);
+    max-height: 50dvh;
     overflow:hidden;
     background-repeat: no-repeat;
     background-position: 50% 50%;
     background-size: cover;
-}
-.crm-container .thermometer-wrapper {
-    display: table;
-    width: 100%;
-    background: #EFEFEF;
-    margin-bottom: 50px;
-}
-.crm-container .thermometer-cell {
-    display: table-cell;
-}
-.crm-container .thermometer-cell label {
-    font-weight: normal;
-}
-.crm-container .thermometer-cell .crmMoney {
-    font-weight: bold;
-}
-.crm-container .thermometer-fill-wrapper {
-    height: 50px;
-    position:relative;
-    width: 80%;
-}
-.crm-container .thermometer-fill {
-    bottom:0;
-    left:0;
-    position:absolute;
-    height: 50px;
-    background: #fff73b;
-}
-.crm-container .thermometer-fill:after {
-    position: absolute;
-    content:'';
-    display: block;
-    width: 0;
-    height: 0;
-    right: -25px;
-    border-style: solid;
-    border-width: 25px 0 25px 25px;
-    border-color: transparent transparent transparent #fff73b;
-}
-
-.crm-container .thermometer-pointer {
-    position:absolute;
-    top: 26px;
-    color: #777;
-}
-.crm-container .thermometer-pointer-over {
-    position:absolute;
-    top: 10px;
-    color: #999;
-    font-size: 1.2em;
-    font-weight: bold;
 }
 .crm-container .pcp-amount-raised {
     position:absolute;
@@ -1971,17 +2007,460 @@ table.campaign td,
 .crm-container .pcp-donate {
     text-align: center;
 }
-
+.crm-container .pcp-donate .button,
+.crm-container .pcp-donate a.button,
+.crm-container .pcp-donate a.button:visited,
+.crm-container .pcp-donate a.button:link {
+  margin: 0;
+  padding: 16px;
+  width: auto;
+  min-width: 200px;
+  line-height: 1.2;
+  font-weight: 400;
+  font-size: 20px;
+  color: #fff;
+  border-radius: 2px;
+  background: var(--color-crm-special-contribute-primary);
+  box-shadow: 1px 1px 10px 1px rgba(0,0,0,.25);
+}
+.crm-container .pcp-donate .button.is-disabled,
+.crm-container .pcp-donate a.button.is-disabled {
+  cursor: not-allowed !important;
+  color: #9e9e9e !important;
+  border: 1px solid #e0e0e0 !important;
+  outline: 0 !important;
+  background-color: #f5f5f5 !important;
+  box-shadow: 1px 1px 10px 1px rgba(0,0,0,.1);
+}
+.crm-container .pcp-donate .button:last-child {
+  margin-right: 0;
+}
+.crm-container .pcp-donate-desc {
+  margin: 12px 0;
+  text-align: center;
+  font-size: 1rem;
+}
+.crm-container .pcp-amount-goal-top {
+  position: relative;
+  margin: 50px 0 0 0;
+  padding: 0;
+  text-align: center;
+  font-weight: bold;
+  font-size: 20px;
+}
+.crm-container .pcp-amount-goal-top .counter {
+  color: var(--color-crm-special-contribute-primary);
+}
+.crm-container .pcp-amount-goal-top + .pcp-donate {
+  margin: 20px 0 0 0;
+}
+.crm-container .pcp-amount-goal-top + .pcp-donate + .pcp-donate-desc {
+  margin-bottom: 30px;
+}
+.crm-container .pcp-campaign {
+  padding-bottom: 40px;
+}
 .crm-container .pcp-intro-text {
-  margin: 30px 50px 30px 50px;
-  font-size: 1.75em;
-  text-indent: -16px;
+  position: relative;
+  margin: 30px 0;
+  padding: 35px 40px;
+  font-size: 1.25rem;
+  font-style: normal;
+  font-family: var(--font-sans-serif);
+  border: 0;
 }
-.crm-container .pcp-intro-text .zmdi{
-  font-size: 30px;
-  color: #999;
+.crm-container .pcp-intro-text::before,
+.crm-container .pcp-intro-text::after {
+  position: absolute;
+  font-size: 72px;
+  color: var(--color-crm-special-contribute-primary,#999);
+  font-family: georgia;
+  line-height: 72px;
+  font-weight: 700;
+}
+.crm-container .pcp-intro-text::before {
+  content: "\201C";
+  top: 0;
+  left: 0;
+  margin: -5px 0 0 0;
+}
+.crm-container .pcp-intro-text::after {
+  content: "\201D";
+  right: 0;
+  bottom: 0;
+  margin: 0 0 -35px 0;
+}
+.crm-container .pcp-create-your-own {
+  clear:left;
+  margin:1em 0;
+}
+.crm-container .pcp-page-text {
+  margin: 0 auto 1em;
+  padding: 10px 12px;
+  font-family: var(--font-sans-serif);
+}
+.crm-container .pcp-parent-link {
+  text-align: center;
+  margin: 10px 0;
+}
+.crm-container .pcp-page-text p,
+.crm-container .pcp-page-text ul,
+.crm-container .pcp-page-text ol {
+  margin: 0 0 2.25em 0;
+  line-height: 1.7;
+  letter-spacing: .4px;
+  font-size: 1.125rem;
+  font-family: var(--font-sans-serif);
+}
+.crm-container .pcp-page-text li {
+  margin-left: 30px;
+}
+.crm-container .pcp-sticky-header {
+  opacity: 0;
+  visibility: hidden;
+  position: fixed;
+  z-index: -10;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: #fff;
+  box-shadow: 0 3px 5px rgba(57, 63, 72, 0.3);
+  transition: .3s all;
+}
+.crm-container .pcp-sticky-header.is-visible {
+  opacity: 1;
+  visibility: visible;
+  z-index: 100;
+}
+.crm-container .pcp-sticky-header > .inner {
+  position: relative;
+  display: flex;
+  justify-content:space-between;
+  align-items: center;
+  gap: 10px 30px;
+  padding: 12px 20px;
+}
+.crm-container .pcp-sticky-header .pcp-honor-counter {
+  display: flex;
+  align-items: center;
+  align-self: stretch;
+  margin: -10px 0 -12px;
+  font-size: .9375rem;
+  border-bottom: 4px solid var(--color-crm-special-contribute-primary);
+}
+.crm-container .pcp-sticky-header .pcp-donate {
+  margin-left: auto;
+}
+.crm-container .pcp-sticky-header .pcp-donate .pcp-contribute-button,
+.crm-container .pcp-sticky-header .pcp-donate .pcp-contribute-button:link {
+  margin: 0;
+  padding: 10px 20px;
+  min-width: 0;
+  font-size: 1rem;
+}
+.crm-container .pcp-sticky-header .pcp-contribute-button .mini-text {
+  display: none;
+}
+.is-mobile-mode .crm-container .pcp-sticky-header .pcp-contribute-button .normal-text {
+  display: none;
+}
+.is-mobile-mode .crm-container .pcp-sticky-header .pcp-contribute-button .mini-text {
+  display: block;
+}
+.crm-container .pcp-sticky-header .pcp-social-links {
+  display: none;
+}
+.crm-container .pcp-sticky-header .social-link {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  width: 36px;
+  height: 36px;
+  line-height: 36px;
+  text-align: center;
+  text-decoration: none;
+  vertical-align: middle;
+  font-size: 0;
+  color: #fff;
+  transition: none;
+  background-size: contain;
+  filter: grayscale(1);
+}
+.crm-container .pcp-sticky-header .social-link.facebook {
+  background-image:url("../i/exttm/facebook_logo.png");
+  filter: grayscale(1) brightness(1.6);
+}
+.crm-container .pcp-sticky-header .social-link.facebook:hover {
+  filter: unset;
+}
+.crm-container .pcp-sticky-header .social-link.line {
+  background-image:url("../i/exttm/line_app_icon.png");
+}
+.crm-container .pcp-sticky-header .social-link.line:hover {
+  filter: unset;
 }
 
+@media (min-width: 992px) {
+  .crm-container .pcp-sticky-header .pcp-honor-counter {
+    font-size: 1rem;
+  }
+  .crm-container .pcp-sticky-header .pcp-donate .pcp-contribute-button,
+  .crm-container .pcp-sticky-header .pcp-donate .pcp-contribute-button:link {
+    font-size: 1.25rem;
+  }
+  .crm-container .pcp-sticky-header .pcp-social-links {
+    display: flex;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+}
+
+/* CRM box & list */
+.crm-list,
+ul.crm-list,
+.block .crm-list {
+  --crm-list-gutter: 16px;
+  margin: 24px 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid #ccc;
+}
+.crm-list .crm-list-item {
+  margin: 0;
+  padding: 12px 0;
+  font-size: 15px;
+  border-bottom: 1px solid #ccc;
+}
+.crm-list .crm-list-item:hover {
+  background: #f5f5f5;
+}
+.crm-list .crm-list-item a {
+  color: #1976d2;
+  text-decoration: none;
+}
+.crm-list .crm-list-item a:hover {
+  color: #2196f3;
+  text-decoration: none;
+}
+.crm-box {
+  --crm-box-gutter: 12px;
+  --crm-box-gutter-y: 12px;
+  --crm-box-gutter-x: var(--crm-box-gutter);
+  text-align: left;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background: #fff;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  transition: all .3s;
+}
+.crm-box:hover {
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 8px;
+}
+.crm-box * {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.crm-box-inner {
+  position: relative;
+}
+.crm-box a {
+  color: #1976d2;
+}
+.crm-box p {
+  margin-bottom: 1em;
+}
+.crm-box .message {
+  padding: 16px;
+  font-size: .9375rem;
+  color: #3f62b5;
+  border-radius: 6px;
+  background: #dbeaff;
+}
+.crm-box .message h3 {
+  font-weight: bold;
+  font-size: 1.125rem;
+}
+.crm-box .tip {
+  font-size: .9375rem;
+  color: #616161;
+}
+.crm-box-body {
+  padding: var(--crm-box-gutter-y) var(--crm-box-gutter-x) calc(var(--crm-box-gutter-y) * 2);
+  line-height: 1.6;
+  color: #424242;
+}
+@media (min-width: 992px) {
+  .crm-list .crm-list-item {
+    padding: 12px;
+  }
+  .crm-list .crm-list-item {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .crm-list .crm-list-item .desc {
+    margin-left: auto;
+  }
+  .crm-box {
+    --crm-box-gutter: 24px;
+    --crm-box-gutter-y: 15px;
+    --crm-box-gutter-x: var(--crm-box-gutter);
+  }
+}
+
+/* PCP backend */
+.crm-container .pcp-management {
+  background: #f2f5f6;
+}
+.crm-container .pcp-management > .inner {
+  padding: 12px;
+}
+.crm-container .pcp-preset-img-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  position: relative;
+  margin: 0;
+  list-style: none;
+}
+.crm-container .pcp-preset-img-list .item {
+  position: relative;
+  opacity: .3;
+  border: 2px solid rgba(0,0,0,.15);
+}
+.crm-container .pcp-preset-img-list .item:hover {
+  cursor: not-allowed;
+}
+.crm-container .pcp-preset-img-list.is-active .item {
+  opacity: 1;
+}
+.crm-container .pcp-preset-img-list.is-active .item:hover {
+  border-color: rgba(0,0,0,.3);
+  cursor: pointer;
+}
+.crm-container .pcp-preset-img-list .item.is-selected,
+.crm-container .pcp-preset-img-list .item.is-selected:hover {
+  border-color: rgba(0,0,0,1);
+}
+.crm-container .pcp-preset-img-list .item.is-selected::before,
+.crm-container .pcp-preset-img-list .item.is-selected:hover::before {
+  content: "\f26b";
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 4px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: var(--font-icon-zmdi);
+  font-size: 16px;
+  color: #fff;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: #000;
+}
+.crm-container .pcp-preset-img-list .item img {
+  display: block;
+  max-width: 90px;
+}
+.crm-container .crm-pcp-submit-buttons-top {
+  position: sticky;
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: 10;
+  padding: 10px;
+  background: #fff;
+}
+.crm-container .crm-contribution-campaign-form-block .form-layout-compressed {
+  display: block;
+}
+.crm-container .crm-contribution-campaign-form-block .crm-accordion-wrapper {
+
+}
+.crm-container .crm-contribution-campaign-form-block .form-layout-compressed tr {
+  display: block;
+}
+.crm-container .crm-contribution-campaign-form-block .form-layout-compressed td,
+.crm-container .crm-contribution-campaign-form-block .form-layout-compressed td.label,
+.crm-container .crm-contribution-campaign-form-block .form-layout-compressed td.content {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+}
+.crm-container .crm-contribution-campaign-form-block .form-layout-compressed td.label {
+  width: 100%;
+  text-align: left;
+}
+.crm-container .crm-contribution-campaign-form-block .crm-form-elem,
+.crm-container .crm-contribution-campaign-form-block .form-text,
+.crm-container .crm-contribution-campaign-form-block .form-textarea,
+.crm-container .crm-contribution-campaign-form-block .form-CKeditor,
+.crm-container .crm-contribution-campaign-form-block .cke {
+  width: 100%;
+}
+.crm-container .crm-contribution-campaign-form-block .cke[style*="width"] {
+  width: 100% !important;
+  max-width: 720px;
+}
+@media (min-width: 992px) {
+  .crm-container .pcp-management > .inner {
+    padding: 30px 20px;
+  }
+  .crm-container .pcp-preset-img-list .item img {
+    max-width: 180px;
+  }
+  .crm-container .pcp-preset-img-list .item.is-selected::before,
+  .crm-container .pcp-preset-img-list .item.is-selected:hover::before {
+    margin: 4px;
+    width: 30px;
+    height: 30px;
+    font-size: 20px;
+  }
+  .crm-container .crm-contribution-campaign-form-block .form-layout-compressed {
+    display: table;
+  }
+  .crm-container .crm-contribution-campaign-form-block .form-layout-compressed tr {
+    display: table-row;
+  }
+  .crm-container .crm-contribution-campaign-form-block .form-layout-compressed td,
+  .crm-container .crm-contribution-campaign-form-block .form-layout-compressed td.label,
+  .crm-container .crm-contribution-campaign-form-block .form-layout-compressed td.content {
+    display: table-cell;
+    box-sizing: content-box;
+    width: auto;
+  }
+  .crm-container .crm-contribution-campaign-form-block .form-layout-compressed td.label {
+    width: 200px;
+    text-align: right;
+  }
+  .crm-container .attachments-upload-your-own-image-row ~ .attachments-form-file-row,
+  .crm-container .crm-contribution-campaign-form-block .attachments-upload-your-own-image-row ~ .attachments-form-file-row {
+    display: none;
+  }
+  .crm-container .attachments-upload-your-own-image-row.is-checked ~ .attachments-form-file-row,
+  .crm-container .crm-contribution-campaign-form-block .attachments-upload-your-own-image-row.is-checked ~ .attachments-form-file-row {
+    display: table-row;
+  }
+  .crm-container .crm-contribution-campaign-form-block .crm-form-elem,
+  .crm-container .crm-contribution-campaign-form-block .form-text,
+  .crm-container .crm-contribution-campaign-form-block .form-textarea,
+  .crm-container .crm-contribution-campaign-form-block .form-CKeditor {
+    width: auto;
+  }
+  .crm-container .crm-contribution-campaign-form-block .six {
+    width: 7em;
+  }
+  .crm-container .crm-contribution-campaign-form-block .big {
+    width: 36em;
+  }
+}
 
 .crm-container .ui-draggable {
   background: url("../i/draggable.png") no-repeat left 1px;
@@ -2041,22 +2520,6 @@ table.campaign td,
   position: absolute;
   right: 15px;
   top: 15px;
-}
-
-.crm-container .pcp-create-your-own {
-    clear:left;
-    margin:1em 0;
-}
-
-.crm-container .pcp-page-text {
-    margin-bottom: 1em;
-    max-width: 768px;
-    margin: 0 auto;
-    padding: 10px;
-}
-.crm-container .pcp-parent-link {
-    text-align: center;
-    margin: 10px 0;
 }
 
 .crm-container table.nestedSelector {
@@ -3670,6 +4133,7 @@ table.crm-info-panel td.label {
 }
 
 .crm-container .form-layout td.label,
+.crm-container .form-layout-compressed td.label,
 .crm-container form table.report .label,
 .crm-container form table label,
 .crm-container form table.report label {
@@ -5041,8 +5505,10 @@ ul.ui-sortable {
 .crm-container table.criteria-group {
   margin-bottom: .1em;
 }
-
-
+.crm-container table[align="center"] {
+  margin-right: auto;
+  margin-left: auto;
+}
 .crm-container th,
 .crm-container table.display thead th,
 .crm-container table thead.sticky th,
@@ -5094,6 +5560,7 @@ ul.ui-sortable {
 #activity-content td {
   padding: 4px;
   vertical-align: top;
+  height: auto;
 }
 
 .crm-container tr.even-row td,
@@ -6554,6 +7021,12 @@ input.crm-form-textfield,
   clear: both;
 }
 
+@media screen and (max-width: 1600px) {
+  .crm-container .pcp-leading {
+    max-height: 56.25dvw;
+  }
+}
+
 @media screen and (max-width: 768px) {
   .crm-container {
     margin-top: 0;
@@ -6678,7 +7151,7 @@ input.crm-form-textfield,
     display: block;
   }
   .crm-container .pcp-leading {
-    min-height: 175px;
+    max-height: 175px;
   }
   .crm-container .thermometer-cell {
     display: block;
@@ -6714,6 +7187,8 @@ input.crm-form-textfield,
     text-align: center;
   }
   .crm-container .pcp-intro-text {
+    margin-left: 12px;
+    margin-right: 12px;
     font-size: 1.25em;
   }
 }
@@ -6782,6 +7257,9 @@ input.crm-form-textfield,
 .crm-container .progress-block {
   margin: 0 0 30px 0;
 }
+.page-civicrm-contribute-pcp .crm-container .progress-block .inner {
+  padding: 20px 12px;
+}
 .crm-container .progress-wrapper {
   display: flex;
   justify-content: space-between;
@@ -6791,10 +7269,14 @@ input.crm-form-textfield,
   vertical-align: middle;
 }
 .crm-container .progress-cell.progress-bar-wrapper {
+  width: 100%;
+}
+.crm-container .progressbar-with-link .progress-cell.progress-bar-wrapper {
   width: 80%;
 }
-.crm-container .progress-cell.progress-button {
+.crm-container .progress-cell.progress-buttons {
   width: 19%;
+  text-align: center;
 }
 .crm-container .progress-bar-wrapper {
   position:relative;
@@ -6804,7 +7286,7 @@ input.crm-form-textfield,
 }
 .crm-container .progress-bar {
   height: 30px;
-  background: #4cb6ac;
+  background: var(--color-crm-special-contribute-primary);
   border-radius: 2px 0 0 2px;
   box-shadow: 0px 0px 5px 0px #aaa;
 }
@@ -6827,33 +7309,128 @@ input.crm-form-textfield,
 }
 .crm-container .progress-amount {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   margin-bottom: 10px;
 }
-.crm-container .progress-amount-raised {
+.crm-container .progress-amount .progress-amount-raised {
+    font-size: .8125rem;
 }
-.crm-container .progress-amount-raised span{
+.crm-container .progress-amount-raised span {
   font-weight: bold;
   font-size: 1.1em;
-  color: #4cb6ac;
+  color: var(--color-crm-special-contribute-primary);
 }
-.crm-container .progress-amount-goal {
+.crm-container .progress-amount .progress-amount-goal {
+  font-size: .8125rem;
 }
 .crm-container .progress-amount-goal span {
   font-weight: bold;
   font-size: 1.2em;
-  color: #3c4db7;
+  color: var(--color-crm-special-contribute-primary);
 }
-.crm-container .progress-cell .button {
-    white-space: nowrap;
-    vertical-align: middle;
-    text-align: center;
-    margin: 0;
-    width: 100%;
-    background: #3f51b5;
-    border-radius: 2px;
-    box-shadow: 1px 1px 10px 1px #aaa;
+.crm-container .progress-cell .button,
+.crm-container .progress-cell a.button,
+.crm-container .progress-cell .button:visited,
+.crm-container .progress-cell a.button:link {
+  white-space: nowrap;
+  vertical-align: middle;
+  text-align: center;
+  margin: 0;
+  width: 100%;
+  background: var(--color-crm-special-contribute-primary);
+  border-radius: 2px;
+  box-shadow: 1px 1px 10px 1px #aaa;
 }
+.crm-container .progress-cell .button.is-disabled,
+.crm-container .progress-cell a.button.is-disabled {
+  cursor: not-allowed !important;
+  color: #9e9e9e !important;
+  border: 1px solid #e0e0e0 !important;
+  outline: 0 !important;
+  background-color: #f5f5f5 !important;
+  box-shadow: 1px 1px 10px 1px rgba(0,0,0,.1) !important;
+}
+.crm-container .progressbar-fullwidth .progress-cell .button,
+.crm-container .progressbar-fullwidth .progress-cell a.button,
+.crm-container .progressbar-fullwidth .progress-cell .button:visited,
+.crm-container .progressbar-fullwidth .progress-cell a.button:link {
+  padding: 16px;
+  width: auto;
+  min-width: 200px;
+  line-height: 1.2;
+  font-weight: 400;
+  font-size: 20px;
+  color: #fff;
+  border-radius: 2px;
+  background: var(--color-crm-special-contribute-primary);
+  box-shadow: 1px 1px 10px 1px rgba(0,0,0,.25);
+}
+.crm-container .progress-desc {
+  margin: 12px 0;
+  text-align: center;
+  font-size: 1rem;
+}
+.crm-container .progressbar-fullwidth .progress-wrapper {
+  display: block;
+}
+.crm-container .progressbar-fullwidth .progress-cell.progress-bar-wrapper {
+  width: 100%;
+  margin-bottom: 30px;
+}
+.crm-container .progressbar-fullwidth .progress-cell.progress-buttons {
+  width: 100%;
+}
+@media (min-width: 768px) {
+  .crm-container .progress-amount .progress-amount-raised {
+    font-size: 1rem;
+  }
+  .crm-container .progress-amount .progress-amount-goal {
+    font-size: 1rem;
+  }
+}
+@media (min-width: 992px) {
+  .page-civicrm-contribute-pcp .crm-container .progress-block .inner {
+    padding: 20px;
+  }
+  .crm-container .pcp-page-text {
+    max-width: 720px;
+  }
+}
+@media (min-width: 1200px) {
+  .crm-container .pcp-management > .inner,
+  .crm-container .progress-block > .inner {
+    margin-right: auto;
+    margin-left: auto;
+    max-width: 992px;
+  }
+}
+@media (min-width: 1400px) {
+  .crm-container .pcp-management > .inner,
+  .crm-container .progress-block > .inner {
+    max-width: 1200px;
+  }
+  .crm-container .progressbar-fullwidth .progress-cell .button,
+  .crm-container .progressbar-fullwidth .progress-cell a.button,
+  .crm-container .progressbar-fullwidth .progress-cell .button:visited,
+  .crm-container .progressbar-fullwidth .progress-cell a.button:link,
+  .crm-container .pcp-donate .button,
+  .crm-container .pcp-donate a.button,
+  .crm-container .pcp-donate a.button:visited,
+  .crm-container .pcp-donate a.button:link {
+    padding: 16px 20px;
+    min-width: 260px;
+    font-size: 24px;
+  }
+}
+@media (min-width: 1600px) {
+  .crm-container .pcp-management > .inner,
+  .crm-container .progress-block > .inner {
+    max-width: 1400px;
+  }
+}
+
+
 /* CSS talk bubble */
 .crm-container .bubble{
   display: inline-block;
@@ -6950,11 +7527,8 @@ input.crm-form-textfield,
   display: flex;
   flex-wrap: wrap;
   margin: 5px 0;
+  gap: 0 10px;
 }
-.crm-container .flex-general > * {
-  margin: 0 10px;
-}
-
 .crm-container .flex-general button,
 .crm-container .flex-general input[type="button"],
 .crm-container .flex-general .button,
@@ -6996,11 +7570,161 @@ input.crm-form-textfield,
   display: none;
 }
 
+/* new personal campaign */
+.new-personal-campaign-link-wrap {
+  max-width: 200px;
+}
+html[lang="en"] .new-personal-campaign-link-wrap {
+  max-width: 250px;
+}
+.new-personal-campaign-wrap a.button.url-copy {
+  margin-left: 0 !important;
+}
+
+
 /* RWD block */
 @media screen and (max-width: 768px) {
   .crm-container .crm-block-rwd {
     max-width: 90vw;
     padding: 2vw;
+  }
+}
+
+/* crm preview popup */
+.crm-preview-popup {
+  position: relative;
+  margin: 40px auto;
+  max-width: 98%;
+  background: #fff;
+}
+.crm-preview-popup .crm-preview-toolbar {
+  display: flex;
+  justify-content: space-between;
+}
+.crm-preview-popup .crm-preview-toolbar {
+  padding: 15px 20px;
+}
+.crm-preview-popup .crm-preview-title {
+  font-size: 1.5rem;
+}
+.crm-preview-popup .crm-preview-close {
+  padding: 0;
+  font-size: 30px;
+  cursor: pointer;
+  border: 0;
+  background: none;
+}
+.crm-preview-popup .crm-preview-content {
+  padding: 0 10px 15px;
+}
+.crm-preview-popup .preview-content {
+  height: 85vh;
+}
+.crm-preview-popup .crm-preview-mode {
+  display: none;
+}
+.crm-preview-popup .crm-preview-mode-btn {
+  margin: 0 10px;
+  padding: 5px 15px;
+  font-size: 1.125rem;
+  color: #3F51B5;
+  cursor: pointer;
+  border-radius: 5px;
+  border: 1px solid #3F51B5;
+  background: #fff;
+}
+.crm-preview-popup .crm-preview-mode-btn.is-active {
+  color: #fff;
+  background: #3F51B5;
+}
+.crm-preview-popup .crm-preview-panel {
+  display: none;
+}
+.crm-preview-popup .crm-preview-panel.is-active {
+  display: block;
+}
+.crm-preview-popup .crm-preview-panel .preview-container {
+  box-sizing: content-box;
+}
+.crm-preview-popup .crm-preview-iframe {
+  width: 100%;
+  height: 100%;
+  border: 1px solid #ccc;
+}
+.crm-preview-popup .desktop-preview-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+@media screen and (min-width: 480px) {
+  .crm-preview-popup {
+    max-width: 90%;
+  }
+  .crm-preview-popup .crm-preview-content {
+    padding: 15px 20px;
+  }
+  .crm-preview-popup .mobile-preview-container {
+    position: relative;
+    width: 360px;
+    height: 640px;
+    margin: auto;
+    border: 16px black solid;
+    border-top-width: 60px;
+    border-bottom-width: 60px;
+    border-radius: 36px;
+  }
+  .crm-preview-popup .mobile-preview-container:before {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 5px;
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #333;
+    border-radius: 10px;
+  }
+  .crm-preview-popup .mobile-preview-container:after {
+    content: '';
+    display: block;
+    width: 35px;
+    height: 35px;
+    position: absolute;
+    left: 50%;
+    bottom: -65px;
+    transform: translate(-50%, -50%);
+    background: #333;
+    border-radius: 50%;
+  }
+  .crm-preview-popup .mobile-preview-container .preview-content {
+    width: 360px;
+    height: 640px;
+    background: white;
+  }
+}
+@media screen and (min-width: 992px) {
+  .crm-preview-popup .crm-preview-mode {
+    display: block;
+  }
+}
+@media screen and (min-width: 1600px) {
+  .crm-preview-popup {
+    max-width: 1320px;
+  }
+}
+.crm-management.is-embed-mode {
+  display: none !important;
+}
+.crm-container .preview-page-title-block {
+  border-bottom: 1px solid #e0e0e0;
+  background: #fff;
+}
+.crm-container .preview-page-title-block > .inner {
+  padding: 15px 10px 10px;
+}
+@media screen and (min-width: 992px) {
+  .crm-container .preview-page-title-block > .inner {
+    padding: 20px;
   }
 }
 

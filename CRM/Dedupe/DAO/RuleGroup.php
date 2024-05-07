@@ -204,13 +204,13 @@ class CRM_Dedupe_DAO_RuleGroup extends CRM_Core_DAO
   {
     if (!(self::$_import)) {
       self::$_import = array();
-      $fields = & self::fields();
+      $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
-            self::$_import['dedupe_rule_group'] = & $fields[$name];
+            self::$_import['dedupe_rule_group'] = &$fields[$name];
           } else {
-            self::$_import[$name] = & $fields[$name];
+            self::$_import[$name] = &$fields[$name];
           }
         }
       }
@@ -227,13 +227,13 @@ class CRM_Dedupe_DAO_RuleGroup extends CRM_Core_DAO
   {
     if (!(self::$_export)) {
       self::$_export = array();
-      $fields = & self::fields();
+      $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
-            self::$_export['dedupe_rule_group'] = & $fields[$name];
+            self::$_export['dedupe_rule_group'] = &$fields[$name];
           } else {
-            self::$_export[$name] = & $fields[$name];
+            self::$_export[$name] = &$fields[$name];
           }
         }
       }
@@ -287,7 +287,7 @@ class CRM_Dedupe_DAO_RuleGroup extends CRM_Core_DAO
    */
   static function addDisplayEnums(&$values)
   {
-    $enumFields = & CRM_Dedupe_DAO_RuleGroup::getEnums();
+    $enumFields = &CRM_Dedupe_DAO_RuleGroup::getEnums();
     foreach($enumFields as $enum) {
       if (isset($values[$enum])) {
         $values[$enum . '_display'] = CRM_Dedupe_DAO_RuleGroup::tsEnum($enum, $values[$enum]);

@@ -63,7 +63,7 @@
             <td>{$row.id}</td>
             <td class="crm-event-type">{$row.event_type}</td>
             <td class="crm-event-title crm-event_{$row.id}">
-              <a href="{crmURL p='civicrm/event/search' q="reset=1&force=1&event=`$row.id`"}" class="bold">{$row.title}</a>
+              <a href="{crmURL p='civicrm/event/search' q="reset=1&force=1&event=`$row.id`"}" class="bold">{$row.title|smarty:nodefaults|purify}</a>
               <ul class="crm-nav-menu crm-nav-links-event">
                 <li><a href="{crmURL p='civicrm/event/search' q="reset=1&force=1&event=`$row.id`"}" title="{ts}Statistics{/ts}"><i class="zmdi zmdi-chart"></i>{ts}Participant Count{/ts}: {$row.counted}{if $row.max_participants}/{$row.max_participants}{/if}</a></li>
                 <li><a href="{crmURL p='civicrm/participant/add' q="reset=1&action=add&context=standalone&eid=`$row.id`"}" title="{ts}Register New Participant{/ts}"><i class="zmdi zmdi-account-add"></i>{ts}Register Event Participant{/ts}</a></li>

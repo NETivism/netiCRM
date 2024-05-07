@@ -207,6 +207,24 @@ class CRM_Utils_Type {
         }
         break;
 
+      case 'DirectoryName':
+        if (CRM_Utils_Rule::directoryName($data)) {
+          return $data;
+        }
+        else {
+          return CRM_Utils_File::sanitizeDirectoryName($data);
+        }
+        break;
+
+      case 'FileName':
+        if (CRM_Utils_Rule::fileName($data)) {
+          return $data;
+        }
+        else {
+          return CRM_Utils_File::sanitizeFileName($data);
+        }
+        break;
+
       default:
         CRM_Core_Error::fatal("Cannot recognize $type for $data");
         break;
@@ -318,6 +336,7 @@ class CRM_Utils_Type {
         break;
 
       case 'CommaSeperatedIntegers':
+      case 'CommaSeparatedIntegers':
       case 'CSInts':
         if (CRM_Utils_Rule::commaSeparatedIntegers($data)) {
           return $data;

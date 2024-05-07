@@ -9,6 +9,7 @@
 {else}
 
 {ts}Please print this receipt for your records.{/ts}
+{if $pdf_receipt_decrypt_info}{$pdf_receipt_decrypt_info|escape:'html'} {/if}{ts}Please print this confirmation for your records.{/ts}
 {/if}
 
 {if $amount}

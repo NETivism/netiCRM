@@ -2,7 +2,7 @@
 CALLEDPATH=`dirname $0`
 CIVICRMPATH=`cd $CALLEDPATH/../../ && pwd`
 LANGUAGE='zh_TW'
-MAJOR_VERSION='5.1'
+MAJOR_VERSION='6.0'
 
 neticrm_merge(){
   TAG=`git tag | grep "^$MAJOR_VERSION" | awk -F "." '{print $3}' | sort -nr | head -n 1`
@@ -14,12 +14,10 @@ neticrm_merge(){
   fi
   cd $CIVICRMPATH/neticrm
   echo -e "\n###### netiCRM-neticrm ######\n"
-  do_merge $TAG 6.x
   do_merge $TAG 7.x
 
   cd $CIVICRMPATH/drupal
   echo -e "\n###### netiCRM-drupal ######\n"
-  do_merge $TAG 6.x
   do_merge $TAG 7.x
 
   echo -e "\n###### netiCRM ######\n"
@@ -58,7 +56,6 @@ fi
 
 echo "Git status checking ..."
 cd $CIVICRMPATH
-git commit civicrm-version.txt -m "Update to lastest version tag of git"
 NEED_COMMIT=`git status --porcelain | grep "^ M"`
 
 if [ -n "$NEED_COMMIT" ]; then
@@ -69,7 +66,17 @@ else
   # do merge jobs
   echo -e "\nProcessing merge ...\n"
   neticrm_merge
+
+  # commit civicrm-version.txt to latest tag
+  git_tag=$(git describe --tags)
+  IFS='-' read -ra parts <<< "$git_tag"
+  git_tag="${parts[0]}+${parts[1]}"
+  git_revision=$(git rev-parse --short HEAD)
+  git_revision=$(echo $git_revision | tr -d '[:space:]')
+  cd $CIVICRMPATH
+  echo "${git_tag} (${git_revision})" > civicrm-version.txt
+  git commit civicrm-version.txt -m "Update to lastest version tag of git"
   echo -e "\nDone!"
-  cd $CIVICRMPATH && git status --porcelain && git tag
+  cd $CIVICRMPATH && git status --porcelain
   echo -e "You can use command below for release this:\n  git push --tags\n"
 fi

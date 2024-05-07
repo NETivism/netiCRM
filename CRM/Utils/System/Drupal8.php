@@ -199,6 +199,7 @@ class CRM_Utils_System_Drupal8 {
    * @inheritDoc
    */
   public function setTitle($title) {
+    $title = CRM_Utils_String::htmlPurifier($title);
     \Drupal::service('civicrm.page_state')->setTitle($title);
   }
 

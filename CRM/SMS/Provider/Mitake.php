@@ -208,6 +208,9 @@ class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
       $response['raw'] = $responseBody;
       $response['body'] = $this->formatResponse($responseBody);
       $response['success'] = $response['body']['success'];
+      if (empty($response['body']['success'])) {
+        CRM_Core_Error::debug_var('mitake_send_error', $responseBody);
+      }
     }
     curl_close($ch);
 

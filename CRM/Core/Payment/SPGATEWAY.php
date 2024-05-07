@@ -851,7 +851,14 @@ EOT;
       // If current contribution status is completed, find next contribution.
       if ($contribution->contribution_status_id == 1) {
         $isAddedNewContribution = TRUE;
-        $trxn_id = $explodedTrxnId[0] . '_' . ($explodedTrxnId[1] + 1);
+        if ($explodedTrxnId[0] == 'r' && !empty($explodedTrxnId[2])) {
+          // For old neweb contribution trxn id, format: r_123_4
+          $trxn_id = $explodedTrxnId[0] . '_' . $explodedTrxnId[1] . '_' . ($explodedTrxnId[2] + 1);
+        }
+        else {
+          // For current spgateway trxn id, format: 1234_5
+          $trxn_id = $explodedTrxnId[0] . '_' . ($explodedTrxnId[1] + 1);
+        }
       }
 
       $result = self::recurSyncTransaction($trxn_id, TRUE);

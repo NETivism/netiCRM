@@ -564,5 +564,52 @@ HTACCESS;
       }
     }
   }
+
+  /**
+   * Sanitize Directory Name before use
+   *
+   * @param string $name
+   * @return string
+   */
+  public static function sanitizeDirectoryName($name) {
+    if (empty($name)) {
+      return '';
+    }
+    $dirName = str_replace(['/', '\\', '..'], '', $name);
+    $dirName = preg_replace('/[^a-zA-Z0-9\-\.]/', '', $dirName);
+    return $dirName;
+  }
+
+  /**
+   * Sanitize File Name before use
+   *
+   * @param string $name
+   * @return string
+   */
+  public static function sanitizeFileName($name) {
+    if (empty($name)) {
+      return '';
+    }
+    $filename = preg_replace(
+      '~
+      [<>:"/\\\|?*]|       # file system reserved
+      [\x00-\x1F]|         # control characters
+      [\x7F\xA0\xAD]|      # non-printing characters
+      [#\[\]@!$&\'()+,;=]| # URI reserved
+      [{}^\~`]|            # URL unsafe characters
+      \.\.                 # Double dot for path traversal
+      ~xu',
+      '', $name);
+
+    // avoids ".", ".." or ".hiddenFiles"
+    $filename = ltrim($filename, '.-');
+
+    // maximize filename length to 255 bytes
+    $parts = explode('.', $filename);
+    $ext = array_pop($parts);
+    $basename = implode('.', $parts);
+    $filename = mb_strcut($basename, 0, 255 - ($ext ? strlen($ext) + 1 : 0), mb_detect_encoding($filename)) . ($ext ? '.' . $ext : '');
+    return $filename;
+  }
 }
 

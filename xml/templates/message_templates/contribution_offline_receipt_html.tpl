@@ -28,7 +28,7 @@
      <p>{ts}Thanks for your support.{/ts}</p>
     {/if}
 
-    <p>{ts}Please print this receipt for your records.{/ts}</p>
+    <p>{if $pdf_receipt_decrypt_info}{$pdf_receipt_decrypt_info|escape:'html'} {/if} {ts}Please print this receipt for your records.{/ts}</p>
 
    </td>
   </tr>

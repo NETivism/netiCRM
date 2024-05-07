@@ -964,5 +964,33 @@ class CRM_Utils_Rule {
     }
     return true;
   }
+
+  /**
+   * Check Directory Name
+   *
+   * @param string $name
+   * @return bool
+   */
+  public static function directoryName($name) {
+    $dirName = CRM_Utils_File::sanitizeDirectoryName($name);
+    if ($dirName == $name) {
+      return TRUE;
+    }
+    return FALSE;
+  }
+
+  /**
+   * Check File Name
+   *
+   * @param string $name
+   * @return bool
+   */
+  public static function fileName($name) {
+    $fileName = CRM_Utils_File::sanitizeFileName($name);
+    if ($fileName == $name) {
+      return TRUE;
+    }
+    return FALSE;
+  }
 }
 

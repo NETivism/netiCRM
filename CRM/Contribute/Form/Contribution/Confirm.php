@@ -281,10 +281,10 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
     $this->buildCustom($this->_values['custom_pre_id'], 'customPre', TRUE);
     $this->buildCustom($this->_values['custom_post_id'], 'customPost', TRUE);
 
-    // refs #39423, donate from oid should remove some rule
+    // donate from oid should remove some rule
     if (!empty($this->_originalId)) {
       foreach($this->_rules as $fieldName => &$qfField) {
-        if (preg_match('/^custom_\d+/', $fieldName) && isset($this->_originalValues[$fieldName])) {
+        if (preg_match('/^custom_\d+/', $fieldName) && isset($this->_originalValues[$fieldName]) && strstr($params[$fieldName], CRM_Utils_String::MASK)) {
           foreach($qfField as $idx => $rule) {
             if ($rule['type'] != 'xssString') {
               unset($qfField[$idx]);
@@ -356,8 +356,18 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
     $contact = $this->_params;
     foreach ($fields as $name => $dontCare) {
       if (isset($contact[$name])) {
+        // convert submit values to masks
         if (!strstr($name, 'country') && !strstr($name, 'city') && !strstr($name, 'state_province') && $this->_fields[$name]['html_type'] === 'Text' && $this->get('csContactID')) {
-          $defaults[$name] = CRM_Utils_String::mask($contact[$name]);
+          // when user enter new value
+          // do not mask their current input
+          if (!strstr($contact[$name], CRM_Utils_String::MASK)) {
+            $defaults[$name] = $contact[$name];
+          }
+          // when user use original value
+          // mask their input to prevent data leak
+          else {
+            $defaults[$name] = CRM_Utils_String::mask($contact[$name]);
+          }
         }
         else {
           $defaults[$name] = $contact[$name];

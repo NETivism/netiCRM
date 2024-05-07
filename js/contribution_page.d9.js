@@ -610,7 +610,7 @@
         if(this.currentFormStep == 1 && step == 2){
           // Check instrument is credit card
           var error_msg = [];
-          console.log(this.currentPriceAmount);
+          //console.log(this.currentPriceAmount);
           if(!this.currentPriceAmount || this.currentPriceAmount == 0){
             error_msg.push('Please enter a valid amount.');
           }
@@ -644,6 +644,9 @@
 
       updateFormStep: function(isScrollAnimate) {
         var currentStepClassName = 'contrib-step-'+this.currentFormStep;
+        var $rightCol = $('#main-inner').length ? $('#main-inner') : $('#main .row-offcanvas');
+        var $stepInfo = $('.custom-step-info');
+
         $('[class*=contrib-step-]').each(function(){
           var $this = $(this);
           /**
@@ -681,7 +684,7 @@
         });
 
         if (isScrollAnimate) {
-          var topPosition = $('#content-main').offset().top - 30;
+          var topPosition = $rightCol.offset().top - $stepInfo.height();
           $('html,body').animate({ scrollTop: topPosition }, 500);
         }
 
@@ -792,7 +795,7 @@
        */
       rightColBetter: function() {
         var leftCol = document.querySelector('#intro_text'),
-            rightCol = document.querySelector('#main-inner');
+            rightCol = document.querySelector('#main-inner') ? document.querySelector('#main-inner') : document.querySelector('#main .row-offcanvas');
 
         if (leftCol && rightCol) {
           var leftColOuterHeight = leftCol.offsetHeight,

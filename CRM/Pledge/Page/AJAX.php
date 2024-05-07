@@ -76,7 +76,8 @@ WHERE {$whereClause}
     if (empty($elements)) {
       $name = $_GET['name'];
       if (!$name && isset($_GET['id'])) {
-        $name = $_GET['id'];
+        $pledgeName = CRM_Utils_Type::escape($_GET['id'], 'String', FALSE);
+        $name = $pledgeName;
       }
       $elements[] = array('name' => trim($name, '*'),
         'value' => trim($name, '*'),

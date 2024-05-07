@@ -52,7 +52,7 @@ class CRM_Contribute_Form_PCP_PCP extends CRM_Core_Form {
     if ($this->_action & CRM_Core_Action::DELETE) {
       //check permission for action.
       if (!CRM_Core_Permission::checkActionPermission('CiviContribute', $this->_action)) {
-         return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
+        return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
       }
 
       $this->_id = CRM_Utils_Request::retrieve('id', 'Positive', $this);
@@ -74,42 +74,39 @@ class CRM_Contribute_Form_PCP_PCP extends CRM_Core_Form {
     $userID = $session->get('userID');
 
     //do not allow destructive actions without permissions
-    $permission = FALSE;
     if (!$userID) {
       CRM_Utils_System::permissionDenied();
     }
-    if (CRM_Core_Permission::check('administer CiviCRM') ||
-      ($userID && (CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_PCP',
-            $this->_id,
-            'contact_id'
-          ) == $userID))
-    ) {
-      $permission = TRUE;
+    $isManager = $isOwner = FALSE;
+    if (CRM_Core_Permission::check('administer CiviCRM')) {
+      $isManager = TRUE;
     }
-    if ($permission && $this->_id) {
-
-      require_once 'CRM/Contribute/BAO/PCP.php';
+    if ($userID && $this->_id && (CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_PCP', $this->_id, 'contact_id') == $userID)) {
+      $isOwner = TRUE;
+    }
+    if (($isOwner || $isManager) && $this->_id) {
       $this->_title = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_PCP', $this->_id, 'title');
-      switch ($this->_action) {
-        case CRM_Core_Action::DELETE:
-        case 'delete':
-          CRM_Contribute_BAO_PCP::deleteById($this->_id);
-          CRM_Core_Session::setStatus(ts("The Campaign Page '%1' has been deleted.", array(1 => $this->_title)));
-          break;
-
-        case CRM_Core_Action::DISABLE:
-        case 'disable':
-          CRM_Contribute_BAO_PCP::setDisable($this->_id, '0');
-          CRM_Core_Session::setStatus(ts("The Campaign Page '%1' has been disabled.", array(1 => $this->_title)));
-          break;
-
-        case CRM_Core_Action::ENABLE:
-        case 'enable':
-          CRM_Contribute_BAO_PCP::setDisable($this->_id, '1');
-          CRM_Core_Session::setStatus(ts("The Campaign Page '%1' has been enabled.", array(1 => $this->_title)));
-          break;
+      $statusId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_PCP', $this->_id, 'status_id');
+      $statusApprovedId = intval(CRM_Core_OptionGroup::getValue('pcp_status', 'Approved', 'name'));
+      if ($isManager && ($this->_action == CRM_Core_Action::DELETE || $this->_action == 'delete')) {
+        CRM_Contribute_BAO_PCP::deleteById($this->_id);
+        CRM_Core_Session::setStatus(ts("The Campaign Page '%1' has been deleted.", array(1 => $this->_title)));
       }
+      elseif ($isManager || ($isOwner && $statusId == $statusApprovedId)) {
+        switch ($this->_action) {
+          case CRM_Core_Action::DISABLE:
+          case 'disable':
+            CRM_Contribute_BAO_PCP::setDisable($this->_id, '0');
+            CRM_Core_Session::setStatus(ts("The Campaign Page '%1' has been disabled.", array(1 => $this->_title)));
+            break;
 
+          case CRM_Core_Action::ENABLE:
+          case 'enable':
+            CRM_Contribute_BAO_PCP::setDisable($this->_id, '1');
+            CRM_Core_Session::setStatus(ts("The Campaign Page '%1' has been enabled.", array(1 => $this->_title)));
+            break;
+        }
+      }
       if ($context) {
         CRM_Utils_System::redirect($context);
       }
@@ -160,7 +157,7 @@ class CRM_Contribute_Form_PCP_PCP extends CRM_Core_Form {
     else {
       require_once 'CRM/Contribute/PseudoConstant.php';
       $status = array_merge(
-        array(ts('- select -')),
+        array('' => ts('- select -')),
         CRM_Contribute_PseudoConstant::pcpstatus()
       );
       $contribution_page = array_merge(
@@ -178,7 +175,7 @@ class CRM_Contribute_Form_PCP_PCP extends CRM_Core_Form {
       }
 
       $this->addSelect('status_id', ts('Status'), $status);
-      $this->addSelect('contribution_page_id', ts('Contribution Page'), $contribution_page);
+      $this->addSelect('contribution_page_id', ts('Belonging Main Contribution Page'), $contribution_page);
       $this->addSelect('contact_id', ts('Created by'), $contacts);
       $this->add('text', 'title', ts('Page Title'));
       $this->addButtons(array(

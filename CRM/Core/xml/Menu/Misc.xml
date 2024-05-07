@@ -165,6 +165,13 @@
      <is_public>true</is_public>
   </item>
   <item>
+     <path>tappay/ipn</path>
+     <page_callback>CRM_Core_Payment_TapPay::doIPN</page_callback>
+     <access_callback>1</access_callback>
+     <is_ssl>true</is_ssl>
+     <is_public>true</is_public>
+  </item>
+  <item>
      <path>allpay/ipn</path>
      <page_callback>CRM_Core_Payment_ALLPAY::doIPN</page_callback>
      <access_callback>1</access_callback>
