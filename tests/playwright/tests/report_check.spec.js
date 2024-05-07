@@ -18,9 +18,17 @@ test.afterAll(async () => {
 test.describe.serial('Report Check', () => {
     test('Check report pages', async() => {
         var title_locator;
+        var num_url;
         var url_locator, url_text, report_content_locator;
         var err_message_locator, err_message;
-        for (let i=1; i<=26; i++){
+        // capture the number of urls requires to check
+        await page.goto('/civicrm/report/list?reset=1');
+        await expect(page.locator('#crm-container>div>div>div.crm-accordion-header').first()).toContainText('Contact Report');
+        url_locator = 'table.report-layout>tbody>tr';
+        num_url = await page.locator(url_locator).count();
+        console.log('There are %d urls that requires to check.', num_url);
+        // start checking
+        for (let i=1; i<=num_url; i++){
             await page.goto('/civicrm/report/list?reset=1');
             await expect(page.locator('#crm-container>div>div>div.crm-accordion-header').first()).toContainText('Contact Report');
             // click the url button
@@ -46,7 +54,6 @@ test.describe.serial('Report Check', () => {
                 // no error message and press print button
                 console.log('%d. there is no error message.', i);
                 await page.getByText('Print Report', {exact: true}).click();
-                // await expect(page).toHaveURL(/instance/g);
                 await expect(page.locator('#crm-container>div>h1')).toHaveText(url_text);
             }
         }
