@@ -145,7 +145,8 @@ class CRM_Mailing_Event_BAO_Unsubscribe extends CRM_Mailing_Event_DAO_Unsubscrib
                 ON      $mg.entity_id = $group.id
             WHERE       $job.id = " . CRM_Utils_Type::escape($job_id, 'Integer') . "
                 AND     $mg.group_type IN ('Include', 'Base') 
-                AND     $group.is_hidden = 0"
+                AND     $group.is_hidden = 0
+            ORDER BY    $mg.id ASC"
     );
 
     /* Make a list of groups and a list of prior mailings that received 
@@ -214,6 +215,11 @@ class CRM_Mailing_Event_BAO_Unsubscribe extends CRM_Mailing_Event_DAO_Unsubscrib
 
 
     $baseGroupClause = '';
+    if (count($group_ids) && empty($base_group_ids)) {
+      $base_group_ids = array(
+        reset($group_ids),
+      );
+    }
     if (!empty($base_group_ids)) {
       $baseGroupClause = "OR  $group.id IN(" . CRM_Utils_Array::implode(', ', $base_group_ids) . ")";
     }
