@@ -18,7 +18,7 @@
         {/if}
       </div>
     </div>
-    <div class="progress-wrapper">
+    <div class="progress-wrapper {if $progress.link_display}progressbar-with-link{/if}">
       <div class="progress-cell progress-bar-wrapper">
         <div class="progress-bar" style="width:0px;" data-current="{$percent_css}"></div>
         <div class="progress-pointer" style="left:0px;margin-left:0;opacity:0">{ts 1="`$progress.achieved_percent`%"}%1 achieved{/ts}</div>

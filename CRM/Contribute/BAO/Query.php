@@ -453,6 +453,31 @@ class CRM_Contribute_BAO_Query {
         return;
 
       case 'contribution_status_id':
+      case 'contribution_status':
+        require_once "CRM/Core/OptionGroup.php";
+        $statusValues = CRM_Core_OptionGroup::values("contribution_status");
+        if ($name == 'contribution_status') {
+          $statusIndex = null;
+          if (is_numeric($value) || ctype_digit($value)) {
+            $value = CRM_Utils_Type::escape($value, 'Integer');
+            if (isset($statusValues[$value])) {
+              $statusIndex = $value;
+            }
+          }
+          elseif (is_string($value)) {
+            $value = CRM_Utils_Type::escape($value, 'String');
+            $statusIndex = array_search($value, $statusValues);
+          }
+
+          // Check contribution status exit or not
+          if ($statusIndex !== null && $statusIndex != false) {
+            $value = $statusIndex;
+          }
+          else {
+            $value = 0;
+          }
+        }
+
         if (is_array($value)) {
           foreach ($value as $k => $v) {
             if ($v) {
@@ -471,9 +496,6 @@ class CRM_Contribute_BAO_Query {
           $op = '=';
           $status = $value;
         }
-
-        require_once "CRM/Core/OptionGroup.php";
-        $statusValues = CRM_Core_OptionGroup::values("contribution_status");
 
         $names = array();
         if (is_array($val)) {
