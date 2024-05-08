@@ -754,6 +754,12 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
                 //'SimulatePaid' => $order->SimulatePaid,
               );
 
+              /* TODO: #40509, do not send email notification after transaction overdue
+              if (strtotime($o->process_date) < $now - 86400*2) {
+                $post['do_not_email'] = 1;
+              }
+              */
+
               // manually trigger ipn
               self::doIPN('Credit', $post, $get, FALSE);
             }
@@ -761,6 +767,93 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
         }
       }
     }
+  }
+
+  /**
+   * Check TradeStatus from ALLPAY
+   *
+   * @param string $orderId
+   * @param array $order
+   * @return false|string
+   */
+  public static function tradeCheck($orderId, $order = NULL) {
+    $contribution = new CRM_Contribute_DAO_Contribution();
+    $contribution->trxn_id = $orderId;
+    if ($contribution->find(TRUE)) {
+      $paymentProcessorId = $contribution->payment_processor_id;
+      if ($contribution->contribution_status_id == 1) {
+        $message = ts('There are no any change.');
+        return $message;
+      }
+    }
+    if (!empty($paymentProcessorId) && !empty($contribution->id)) {
+      $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($paymentProcessorId, $contribution->is_test ? 'test': 'live');
+
+      if (strstr($paymentProcessor['payment_processor_type'], 'ALLPAY') && !empty($paymentProcessor['user_name'])) {
+        $processor = array(
+          'password' => $paymentProcessor['password'],
+          'signature' => $paymentProcessor['signature'],
+        );
+        $postData = array(
+          'MerchantID' => $paymentProcessor['user_name'],
+          'MerchantTradeNo' => $orderId,
+          'TimeStamp' => CRM_REQUEST_TIME,
+        );
+        self::generateMacValue($postData, $processor);
+        if (empty($order)) {
+          $order = self::postdata($paymentProcessor['url_api'], $postData, FALSE);
+        }
+
+        // Online contribution
+        // Only trigger if there are pay time in result;
+        if (!empty($order) && is_array($order) && isset($order['TradeStatus'])) {
+          // transition status ipn when status is change
+          $processIPN = FALSE;
+          if ($order['TradeStatus'] == 1 && $contribution->contribution_status_id != 1) {
+            $processIPN = TRUE;
+          }
+          if ($order['TradeStatus'] != 1 && in_array($contribution->contribution_status_id, array(1, 2))) {
+            $processIPN = TRUE;
+          }
+          // can't find trade number
+          if ($order['TradeStatus'] == '10200047') {
+            $processIPN = FALSE;
+          }
+
+          if ($processIPN) {
+            $ids = CRM_Contribute_BAO_Contribution::buildIds($contribution->id);
+            $query = CRM_Contribute_BAO_Contribution::makeNotifyUrl($ids, NULL, TRUE);
+
+            parse_str($query, $ipnGet);
+            $rtnMsg = self::getErrorMsg($order['TradeStatus']);
+            $ipnPost = array(
+              'MerchantID' => $order['MerchantID'],
+              'MerchantTradeNo' => $order['MerchantTradeNo'],
+              'RtnCode' => $order['TradeStatus'],
+              'RtnMsg' => $rtnMsg,
+              'Amount' => !empty($order['amount']) ? $order['amount'] : $order['TradeAmt'],
+              'Gwsr' => $order['gwsr'],
+              'ProcessDate' => $order['process_date'],
+              'AuthCode' => !empty($order['auth_code']) ? $order['auth_code'] : '',
+            );
+
+            // only non-credit card offline payment have this val
+            if (isset($order['ExpireDate'])) {
+              $ipnPost['ExpireDate'] = $order['ExpireDate'];
+            }
+
+            /* TODO: #40509, do not send email notification after transaction overdue
+            if (strtotime($order['process_date']) < CRM_REQUEST_TIME - 86400*2) {
+              $ipnPost['do_not_email'] = 1;
+            }
+            */
+            $result = self::doIPN('Credit', $ipnPost, $ipnGet, FALSE);
+            return $result;
+          }
+        }
+      }
+    }
+    return FALSE;
   }
 
   /**
