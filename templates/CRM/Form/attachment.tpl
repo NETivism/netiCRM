@@ -115,7 +115,7 @@
                       if (!$('.pcp-preset-img-list').length && $('.pcp-select-from-gallery').length && $('input[name="preset_image"][type="hidden"]').length) {
                         let pcpPresetImgList = '<ul class="pcp-preset-img-list is-active">';
                         for (let i = presetImgStartIndex; i <= presetImgMaxNum; i++) {
-                          pcpPresetImgList += `<li class='item' data-img-id="${i}"><img src="{/literal}{$config->resourceBase}{literal}packages/midjourney/pcp_preset_${i}.png"></li>`;
+                          pcpPresetImgList += `<li class='item' data-img-id="${i}"><img src="{/literal}{$config->resourceBase}{literal}packages/midjourney/pcp_preset_${i}.webp"></li>`;
                         }
                         pcpPresetImgList += '</ul>';
                         $('.pcp-select-from-gallery').prepend(pcpPresetImgList);

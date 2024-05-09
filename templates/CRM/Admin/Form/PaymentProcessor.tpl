@@ -152,3 +152,52 @@
     </script>
 
 {/if}
+{if $ppType eq 'TapPay'}
+    <script>
+        {literal}
+            (function($){
+                if ($('#url_site').length) {
+                    function setTapPay3DSecureOption(formBlockName) {
+                        var urlSiteFieldDiv = $(formBlockName);
+                        var urlSiteTextField = urlSiteFieldDiv.find('input.form-text[type="text"]');
+                        urlSiteTextField.hide();
+                        if (!formBlockName.match('test')) {
+                            var newCheckBox = $('<input type="checkbox" {/literal}{if $having_contribution} disabled="disabled"{/if}{literal}>');
+                        }
+                        else {
+                            var newCheckBox = $('<input type="checkbox" {/literal}{if $having_contribution_test} disabled="disabled"{/if}{literal}>');
+                        }
+                        newCheckBox.insertBefore(urlSiteTextField);
+                        newCheckBox.change(function(){
+                            if (newCheckBox.prop('checked')) {
+                                urlSiteTextField.val('1');
+                            }
+                            else {
+                                urlSiteTextField.val('');
+                            }
+                        });
+                        // Set Label Behavior
+                        var urlSiteLabel = urlSiteFieldDiv.find('label');
+                        urlSiteLabel.click(function(){
+                            newCheckBox.click();
+                        });
+                        // Set Default Value
+                        if (urlSiteTextField.val()) {
+                            newCheckBox.prop('checked', 1);
+                        }
+                        // Set instruction text
+                        var urlSiteTd = urlSiteTextField.closest('td');
+                        urlSiteTd.append($('<span class="description">{/literal}{ts}To enable 3D Secure, you must add a TapPay  Merchant ID and Partner Key that supports this feature. If you need 3D Secure, please contact customer service.{/ts}{literal}</span>'));
+                        urlSiteFieldDiv.find('.helpicon').hide();
+
+                        // hide url recur
+                        var urlRecurFieldTr = $(formBlockName.replace('url_site', 'url_recur')).hide();
+                    }
+
+                    setTapPay3DSecureOption('.crm-paymentProcessor-form-block-url_site');
+                    setTapPay3DSecureOption('.crm-paymentProcessor-form-block-test_url_site');
+                }
+            })(jQuery);
+        {/literal}
+    </script>
+{/if}

@@ -273,7 +273,7 @@ class CRM_Contribute_Page_PCPInfo extends CRM_Core_Page {
       'fullwidth' => TRUE,
       'display' => $pcpInfo['is_thermometer'],
       'current' => $totalAmount,
-      'achieved_percent' => floor($achieved) <= 100 ? $achieved : 100,
+      'achieved_percent' => floor($achieved),
       'achieved_status'=> floor($achieved) >= 100 ? TRUE : FALSE,
       'contribution_page_is_active' => $contributionPageInfo['is_active']
     );
