@@ -5,6 +5,7 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
   const MYPAY_REAL_DOMAIN = 'https://ka.mypay.tw';
   const MYPAY_TEST_DOMAIN = 'https://pay.usecase.cc';
   const MYPAY_URL_API = '/api/init';
+  const MYPAY_RECUR_URL_API = '/api/agent';
 
   public static $_allowRecurUnit = array('month', 'year');
 
@@ -73,8 +74,10 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
   {
     if ($payment->is_test > 0) {
       $default['url_api'] = CRM_Core_Payment_MyPay::MYPAY_TEST_DOMAIN . CRM_Core_Payment_MyPay::MYPAY_URL_API;
+      $default['url_recur'] = CRM_Core_Payment_MyPay::MYPAY_TEST_DOMAIN . CRM_Core_Payment_MyPay::MYPAY_RECUR_URL_API;
     } else {
       $default['url_api'] = CRM_Core_Payment_MyPay::MYPAY_REAL_DOMAIN . CRM_Core_Payment_MyPay::MYPAY_URL_API;
+      $default['url_recur'] = CRM_Core_Payment_MyPay::MYPAY_REAL_DOMAIN . CRM_Core_Payment_MyPay::MYPAY_RECUR_URL_API;
     }
   }
 
@@ -199,12 +202,22 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
     $params['contact_id'] = $contribution->contact_id;
 
     $arguments = $this->getOrderArgs($params, $component, $instrumentCode, $formKey);
-    $encryptedArgs = array(
-      'store_uid' => $arguments['store_uid'],
-      'service' => self::encryptArgs($arguments['service'], $this->_paymentProcessor),
-      'encry_data' => self::encryptArgs($arguments['encry_data'], $this->_paymentProcessor),
-    );
-    $actionUrl = $this->_paymentProcessor['url_api'];
+    if ($params['is_recur'] && $params['is_internal']) {
+      $encryptedArgs = array(
+        'agent_uid' => $arguments['store_uid'],
+        'service' => self::encryptArgs($arguments['service'], $this->_paymentProcessor['signature']),
+        'encry_data' => self::encryptArgs($arguments['encry_data'], $this->_paymentProcessor['signature']),
+      );
+      $actionUrl = $this->_paymentProcessor['url_recur'];
+    }
+    else {
+      $encryptedArgs = array(
+        'store_uid' => $arguments['store_uid'],
+        'service' => self::encryptArgs($arguments['service'], $this->_paymentProcessor['password']),
+        'encry_data' => self::encryptArgs($arguments['encry_data'], $this->_paymentProcessor['password']),
+      );
+      $actionUrl = $this->_paymentProcessor['url_api'];
+    }
     // Record Data
     // 1. Record Log Data.
     $saveData = array(
@@ -369,6 +382,10 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
           $args['encry_data']['pfn'] = 'DIRECTDEBIT';
           $args['encry_data']['regular'] = '';
           $args['encry_data']['group_id'] = $vars['contributionRecurID'];
+          if ($vars['is_internal']) {
+            $args['service']['cmd'] = 'api/batchdebitcreator';
+            $args['encry_data']['project_name'] = 'Recurring_'.$vars['trxn_id'];
+          }
           switch($vars['frequency_unit']) {
             case 'month':
               $args['encry_data']['regular'] = 'M';
@@ -503,11 +520,11 @@ EOT;
     return $html;
   }
 
-  public static function encryptArgs($fields, $paymentProcessor){
+  public static function encryptArgs($fields, $key){
     $data = json_encode($fields);
     $size = openssl_cipher_iv_length('AES-256-CBC');
     $iv   = openssl_random_pseudo_bytes($size);
-    $data = openssl_encrypt($data, 'AES-256-CBC', $paymentProcessor['password'], OPENSSL_RAW_DATA, $iv);
+    $data = openssl_encrypt($data, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, $iv);
     $data = base64_encode($iv . $data);
     return $data;
   }
@@ -589,6 +606,7 @@ EOT;
         $result = $ipn->main($component, $instrument);
         if(!empty($result) && $print){
           echo $result;
+		      CRM_Utils_System::civiExit();
         }
         else{
           return $result;
@@ -662,4 +680,21 @@ EOT;
     $key = $mypay->uid_key;
     return $key;
   }
+
+  /**
+   * 
+   */
+  static public function getTrxnId($input) {
+    $trxnId = NULL;
+    if ($input['order_id']) {
+      if ($input['uid'] && $input['nois']) {
+        $trxnId = $input['order_id'].'-'.$input['uid'];
+      }
+      else {
+        $trxnId = $input['order_id'];
+      }
+    }
+    return $trxnId;
+  }
 }
+
