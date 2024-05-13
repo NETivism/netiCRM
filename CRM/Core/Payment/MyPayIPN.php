@@ -254,6 +254,13 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
     $trxnId = $this->_post['order_id'];
     $contributionId = CRM_Core_DAO::singleValueQuery('SELECT id FROM civicrm_contribution WHERE trxn_id = %1', array(1 => array($trxnId, 'String')));
     $buildIds = CRM_Contribute_BAO_Contribution::buildIds($contributionId);
+    if (!empty($buildIds['participantID'])) {
+      $ids['event'] = $buildIds['eventID'];
+      $ids['participant'] = $buildIds['participantID'];
+    }
+    if (!empty($buildIds['membershipID'])) {
+      $ids['membership'] = $buildIds['membershipID'];
+    }
     $ids['contact'] = $buildIds['contactID'];
     $ids['contribution'] = $buildIds['contributionID'];
     $ids['contributionRecur'] = $buildIds['contributionRecurID'];
