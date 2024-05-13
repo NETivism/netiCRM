@@ -191,7 +191,7 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
     if($params['civicrm_instrument_id']){
       $contribValues['payment_instrument_id'] = $params['civicrm_instrument_id'];
     }
-    $contribValues['trxn_id'] = self::getContributionTrxnID($isTest, $params['contributionID']);
+    $contribValues['trxn_id'] = self::getContributionTrxnID($params['contributionID'], $isTest, $params['contribution_recur_id']);
     $contribution =& CRM_Contribute_BAO_Contribution::create($contribValues, $contribIds);
 
     // Inject in quickform sessions
@@ -295,7 +295,7 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
    *
    * @return string If test, return expand string of id.
    */
-  static function getContributionTrxnID($contributionId, $recurringId = NULL, $is_test = 0) {
+  static function getContributionTrxnID($contributionId, $is_test = 0, $recurringId = NULL) {
     $rand = base_convert(strval(rand(16, 255)), 10, 16);
     if (empty($recurringId)) {
       $recurringId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $contributionId, 'contribution_recur_id');
@@ -307,7 +307,7 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
       $trxnId = 'c_' . $contributionId . '_' . $rand;
     }
     if ($is_test) {
-      $trxnId = 'test' . substr(str_replace(array('.', '-'), '', $_SERVER['HTTP_HOST']), 0, 3).'-'.$trxnId;
+      $trxnId = 'test' . substr(str_replace(array('.', '-'), '', $_SERVER['HTTP_HOST']), 0, 3).'_'.$trxnId;
     }
     return $trxnId;
   }
@@ -684,10 +684,10 @@ EOT;
   /**
    * 
    */
-  static public function getTrxnId($input) {
+  static public function getTrxnIdByPost($input) {
     $trxnId = NULL;
     if ($input['order_id']) {
-      if ($input['uid'] && $input['nois']) {
+      if ($input['uid'] && !empty($input['nois']) && $input['nois'] > 1) {
         $trxnId = $input['order_id'].'-'.$input['uid'];
       }
       else {

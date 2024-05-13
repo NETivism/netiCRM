@@ -30,7 +30,10 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
     $input = $this->_post;
     $input['component'] = $component;
 
-    CRM_Core_Payment_MyPay::doRecordData($ids['contribution'], array('ipn_result_data' => json_encode($this->_post)));
+    // Record data to db. If it's not recur or first contribution.
+    if (empty($input['nois']) || $input['nois'] == 1) {
+      CRM_Core_Payment_MyPay::doRecordData($ids['contribution'], array('ipn_result_data' => json_encode($this->_post)));
+    }
     if(empty($ids['contributionRecur'])){
       $isRecur = FALSE;
     }
@@ -63,10 +66,6 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
             $contribution->receive_date = date('YmdHis');
           }
         }
-        // Set expire time
-        if(!empty($input['expired_date'])){
-          $contribution->expire_date = $input['expired_date'];
-        }
 
         // assign trxn_id before complete transaction
         $input['trxn_id'] = $objects['contribution']->trxn_id;
@@ -92,6 +91,7 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
     $pass = TRUE;
 
     // check contribution id matches
+    // If it's recurring, Search for first contribution trxn_id.
     if (!strstr($contribution->trxn_id, $input['order_id'])) {
       $msg = "MyPay: OrderNumber values doesn't match between database and IPN request. {$contribution->trxn_id} : {$input['order_id']} ";
       CRM_Core_Error::debug_log_message($msg);
@@ -141,8 +141,7 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
       if($this->_post['group_id']){
         $query_params = array(1 => array($recur->id, 'Integer'));
         $local_succ_times = CRM_Core_DAO::singleValueQuery("SELECT count(*) FROM civicrm_contribution WHERE contribution_recur_id = %1 AND contribution_status_id = 1", $query_params);
-        $final_installment = CRM_Core_DAO::singleValueQuery("SELECT installments FROM civicrm_contribution_recur WHERE id = %1", $query_params);
-        $new_trxn_id = CRM_Core_Payment_MyPay::getTrxnId($input);
+        $new_trxn_id = CRM_Core_Payment_MyPay::getTrxnIdByPost($input);
         if($input['prc'] != '250'){
           $contribution->contribution_status_id = 4; // Failed
           $id_from_trxn_id = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution WHERE trxn_id = %1", array(
@@ -166,7 +165,7 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
             // $local_succ_times++;
             $msg = 'MyPay: Possible over charge, detect from Current Times: '.$input['nois'];
             CRM_Core_Error::debug_log_message($msg);
-            $note .= "Possible over charge. Will be $final_installment successful contributions in CRM, but greenworld only have {$input['nois']} success execution.";
+            $note .= "Possible over charge. Will be $local_succ_times successful contributions in CRM, but greenworld only have {$input['nois']} success execution.";
           }
           $contribution->contribution_status_id = 1; // Completed
           $id_from_trxn_id = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution WHERE trxn_id = %1", array(
@@ -185,18 +184,20 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
         }
         if(!empty($c)){
           unset($objects['contribution']);
-          $recordData = array(
-            'uid' => $input['uid'],
-            'uid_key' => $input['key'],
-            'expired_date' => $input['expired_date'],
-            'ipn_result_data' => $input,
-          );
-          CRM_Core_Payment_MyPay::doRecordData($c->id, $recordData);
+          // After retrive contribution object, first save db data via contribution_id.
+          if ($input['nois'] > 1) {
+            $data = array(
+              'uid' => $input['uid'],
+              'uid_key' => $input['key'],
+              'ipn_result_data' => json_encode($input),
+            );
+            CRM_Core_Payment_MyPay::doRecordData($c->id, $data);
+          }
           $objects['contribution'] = $c;
 
           // update recurring object
           // never end if TotalSuccessTimes not excceed the ExecTimes
-          if ($input['nois'] >= $final_installment) {
+          if (!empty($recur->installments) && $input['nois'] >= $recur->installments) {
             $params['id'] = $recur->id;
             $params['modified_date'] = date('YmdHis');
             $params['end_date'] = date('YmdHis');
@@ -212,6 +213,10 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
               $params['start_date'] = $input['finishtime'];
               $params['contribution_status_id'] = 5; // from pending to processing
               $params['modified_date'] = date('YmdHis');
+              // Set expire time
+              if(!empty($input['expired_date'])){
+                $params['expired_date'] = $input['expired_date'];
+              }
               CRM_Contribute_BAO_ContributionRecur::add($params, $null);
             }
             else{
@@ -240,6 +245,10 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
     return $pass;
   }
 
+  /**
+   * MyPay ids doesn't be carried in GET params.
+   * If it's recurring, The contribution should be the first time one.
+   */
   function getIds() {
     $ids = array();
     $trxnId = $this->_post['order_id'];
