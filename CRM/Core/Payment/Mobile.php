@@ -163,10 +163,6 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
     $paymentProcessor = $this->_paymentProcessor;
 
     $provider_name = $paymentProcessor['password'];
-    $module_name = 'civicrm_'.strtolower($provider_name);
-    if ($this->_instrumentType != 'linepay' && module_load_include('inc', $module_name, $module_name.'.checkout') === FALSE) {
-      CRM_Core_Error::fatal('Module '.$module_name.' doesn\'t exists.');
-    }
 
     if(!empty($params['eventID'])){
       $event = new CRM_Event_DAO_Event();
@@ -213,11 +209,11 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
       print($page);
       CRM_Utils_System::civiExit();
     }
-    else if ($this->_instrumentType == 'googlepay') {
-      $checkoutFunction = $module_name.'_do_transfer_checkout';
+    else if ($this->_instrumentType == 'googlepay' && $provider_name == 'spgateway') {
       $mode = $is_test ? 'test':'';
       $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($this->_paymentProcessor['user_name'], $mode);
-      $checkoutFunction($params, $component, $paymentProcessor, $is_test);
+      $payment = new CRM_Core_Payment_SPGATEWAY($mode, $paymentProcessor);
+      $payment->doTransferCheckout($params, $component);
     }
   }
 
@@ -344,12 +340,11 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
       $type = 'applepay';
     }
     // call mobile checkout function
-    $module_name = 'civicrm_'.strtolower($ppProvider);
-    $checkout_func = $module_name.'_mobile_checkout';
-    if(!function_exists($checkout_func)){
-      return CRM_Core_Error::fatal('Function '.$checkout_func.' doesn\'t exists.');
+    $paymentProviderClass = 'CRM_Core_Payment_'.strtoupper($ppProvider);
+    if (!is_callable(array($paymentProviderClass, 'mobileCheckout'))) {
+      return CRM_Core_Error::fatal('Function '.$paymentProviderClass.'::mobileCheckout doesn\'t exists.');
     }
-    $return = call_user_func($checkout_func, $type, $post, $objects);
+    $return = call_user_func(array($paymentProviderClass, 'mobileCheckout'), $type, $post, $objects);
 
     if(!empty($return)){
 
