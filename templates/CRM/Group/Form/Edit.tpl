@@ -60,13 +60,16 @@
 	<tr class="crm-group-form-block-remote_group_id">
 		<td class="label">{$form.remote_group_id.label}</td>
 		<td>
+      <div>
       {$form.remote_group_id.html}
       {if $smart_marketing_sync}
         <input class="form-submit default smart-marketing-button" name="sync_{$smart_marketing_vendor}" value="{ts}Manually Synchronize{/ts}" type="button" id="sync-{$smart_marketing_vendor}">
         <div id="smart-marketing-sync-confirm" class="hide-block">
-          {ts}The automated marketing journey does not start immediately and needs to be scheduled.{/ts}
+          {ts}The automated marketing journey does not start immediately and it needs to follow the external tool to schedule.{/ts}
         </div>
       {/if}
+      </div>
+      <div class="description">{ts}After binding a group, the system will lock this group, preventing any edits.{/ts} {docURL page="Smart Marketing Group"}</div>
 <script>{literal}
 cj(function($){
   $('.crm-group-form-block-remote_group_id').hide();

@@ -113,7 +113,7 @@ class CRM_Mailing_Page_AJAX {
         else {
           try {
             $syncResult = call_user_func(array($smartMarketingClass, 'addContactToRemote'), $contactIds, $groupId, $syncData['remote_group_id'], $providerId);
-            $report = 'Successful synced.';
+            $report = ts('Successful synced');
             if (!empty($syncResult['#report'])) {
               $report = '';
               foreach($syncResult['#report'] as $rep) {
@@ -128,7 +128,7 @@ class CRM_Mailing_Page_AJAX {
           catch(CRM_Core_Exception $e) {
             $remoteResult = array(
               'success' => FALSE,
-              'message' => ts('Synchronize error.').':'.$syncResult,
+              'message' => ts('Synchronize error').':'.$syncResult,
             );
           }
         }
