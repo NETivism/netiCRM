@@ -65,7 +65,13 @@ class CRM_Core_Payment_SPGATEWAYIPN extends CRM_Core_Payment_BaseIPN {
       // skip doing job when contribution already success
       if(!empty($input['AlreadyTimes']) && $input['Status'] === 'SUCCESS'){
         $newTrxnId = $input['OrderNo'];
-        if ($newTrxnId != $input['MerchantOrderNo'] . "_1") {
+        if ($newTrxnId == $input['MerchantOrderNo'] . "_1") {
+          if($objects['contribution']->contribution_status_id == 1){
+            CRM_Core_Error::debug_log_message("Spgateway: The transaction {$newTrxnId}, associated with the contribution {$objects['contribution']->trxn_id}, has been successfully processed before. Skipped.");
+            return '1|OK';
+          }
+        }
+        else {
           $alreadySuccessId = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution WHERE trxn_id = %1 AND contribution_status_id = 1", array(
             1 => array($newTrxnId, 'String'),
           ));
