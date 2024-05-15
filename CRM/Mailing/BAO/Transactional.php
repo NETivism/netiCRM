@@ -113,7 +113,7 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
 
     if (empty($params['from'])) {
       $defaultNameEmail = CRM_Core_BAO_Domain::getNameAndEmail( );
-      $params['from'] = "{$defaultNameEmail[0]} <{$defaultNameEmail[1]}>";
+      $params['from'] = CRM_Utils_Mail::formatRFC822Email($defaultNameEmail[0], $defaultNameEmail[1]);
     }
 
     $tmail = new CRM_Mailing_BAO_Transactional($params);
@@ -405,12 +405,12 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
 
     list($verp, $urls, $headers) = $this->getVerpAndUrlsAndHeaders($job_id, $event_queue_id, $hash, $email, $isForward);
     //set from email who is forwarding it and not original one.
-    if ($fromEmail) {
+    if ($fromEmail && CRM_Utils_Rule::email($fromEmail)) {
       unset($headers['From']);
-      $headers['From'] = "<{$fromEmail}>";
+      $headers['From'] = CRM_Utils_Mail::formatRFC822Email('', $fromEmail);
     }
 
-    if ($replyToEmail && ($fromEmail != $replyToEmail)) {
+    if ($replyToEmail && ($fromEmail != $replyToEmail) && CRM_Utils_Mail::checkRFC822Email($fromEmail)) {
       $headers['Reply-To'] = "{$replyToEmail}";
     }
 
@@ -588,7 +588,7 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
       }
     }
 
-    $headers['To'] = "{$mailParams['toName']} <{$mailParams['toEmail']}>";
+    $headers['To'] = CRM_Utils_Mail::formatRFC822Email($mailParams['toName'], $mailParams['toEmail']);
     // Will test in the mail processor if the X-VERP is set in the bounced email.
     // (As an option to replace real VERP for those that can't set it up)
     $headers['X-CiviMail-Bounce'] = $verp['bounce'];
