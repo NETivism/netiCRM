@@ -6359,6 +6359,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 {else}{ts}Thanks for your support.{/ts}{/if}
 
 {ts}Please print this receipt for your records.{/ts}
+{if $pdf_receipt_decrypt_info}{$pdf_receipt_decrypt_info|escape:\'html\'} {/if} {ts}Please print this receipt for your records.{/ts}
 
 
 ===========================================================
@@ -6481,7 +6482,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
      <p>{ts}Thanks for your support.{/ts}</p>
     {/if}
 
-    <p>{ts}Please print this receipt for your records.{/ts}</p>
+    <p>{if $pdf_receipt_decrypt_info}{$pdf_receipt_decrypt_info|escape:\'html\'} {/if} {ts}Please print this receipt for your records.{/ts}</p>
 
    </td>
   </tr>
@@ -6718,6 +6719,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 {else}{ts}Thanks for your support.{/ts}{/if}
 
 {ts}Please print this receipt for your records.{/ts}
+{if $pdf_receipt_decrypt_info}{$pdf_receipt_decrypt_info|escape:\'html\'} {/if} {ts}Please print this receipt for your records.{/ts}
 
 
 ===========================================================
@@ -6840,7 +6842,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
      <p>{ts}Thanks for your support.{/ts}</p>
     {/if}
 
-    <p>{ts}Please print this receipt for your records.{/ts}</p>
+    <p>{if $pdf_receipt_decrypt_info}{$pdf_receipt_decrypt_info|escape:\'html\'} {/if} {ts}Please print this receipt for your records.{/ts}</p>
 
    </td>
   </tr>
@@ -7085,6 +7087,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 {else}
 
 {ts}Please print this receipt for your records.{/ts}
+{if $pdf_receipt_decrypt_info}{$pdf_receipt_decrypt_info|escape:\'html\'} {/if}{ts}Please print this confirmation for your records.{/ts}
 {/if}
 
 {if $amount}
@@ -7281,7 +7284,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
     {if $is_pay_later}
      <p>{$pay_later_receipt}</p> {* FIXME: this might be text rather than HTML *}
     {else}
-     <p>{ts}Please print this confirmation for your records.{/ts}</p>
+     <p>{if $pdf_receipt_decrypt_info}{$pdf_receipt_decrypt_info|escape:\'html\'} {/if}{ts}Please print this confirmation for your records.{/ts}</p>
     {/if}
 
    </td>
@@ -7642,6 +7645,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 {else}
 
 {ts}Please print this receipt for your records.{/ts}
+{if $pdf_receipt_decrypt_info}{$pdf_receipt_decrypt_info|escape:\'html\'} {/if}{ts}Please print this confirmation for your records.{/ts}
 {/if}
 
 {if $amount}
@@ -7838,7 +7842,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
     {if $is_pay_later}
      <p>{$pay_later_receipt}</p> {* FIXME: this might be text rather than HTML *}
     {else}
-     <p>{ts}Please print this confirmation for your records.{/ts}</p>
+     <p>{if $pdf_receipt_decrypt_info}{$pdf_receipt_decrypt_info|escape:\'html\'} {/if}{ts}Please print this confirmation for your records.{/ts}</p>
     {/if}
 
    </td>
@@ -8859,6 +8863,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
       ('Personal Campaign Pages - Supporter Status Change Notification', '{ts 1=$contribPageTitle}Your Personal Campaign Page for %1{/ts} - {if $pcpStatus eq \'Approved\'}{ts}Is live{/ts}{elseif $pcpStatus eq \'Not Approved\'}{ts}Not Approved{/ts}{elseif $pcpStatus eq \'Draft\'}{ts}Revoke to Draft{/ts}{/if}', '{if $pcpStatus eq \'Approved\'}
   {ts}Your Personal Campaign Page is now available for public access.{/ts} {ts}Congratulations!{/ts} {ts}You can now openly share the page to gather more donations for your fundraising campaign!{/ts}
   {ts 1=$pcpInfoURL}Please copy your Personal Campign Page URL %1{/ts}. {ts}Subsequently, you can share your Personal Campaign Page link across various social media platforms to rally friends and family to support this fundraising initiative!{/ts}
+  {ts}Notice: If you are already logged in, clicking the above link will take you to the backend of your personal fundraising page for editing.{/ts} {ts}While general users who have not logged in, clicking the link will simply take them to the completed personal fundraising page where they can proceed to fill out the donation form as usual.{/ts}
 
   {if $pcpNotifyEmailAddress}
   {ts}Questions? Send email to{/ts}: {$pcpNotifyEmailAddress}
@@ -8900,7 +8905,7 @@ which prevented us from approving the page. We are sorry for any inconvenience.{
     {if $pcpStatus eq \'Approved\'}
       <p>{ts}Your Personal Campaign Page is now available for public access.{/ts} {ts}Congratulations!{/ts} {ts}You can now openly share the page to gather more donations for your fundraising campaign!{/ts}</p>
       <p>{ts 1=$pcpInfoURL}Please copy your Personal Campign Page URL %1{/ts}. {ts}Subsequently, you can share your Personal Campaign Page link across various social media platforms to rally friends and family to support this fundraising initiative!{/ts}</p>
-
+      <p>{ts}Notice: If you are already logged in, clicking the above link will take you to the backend of your personal fundraising page for editing.{/ts} {ts}While general users who have not logged in, clicking the link will simply take them to the completed personal fundraising page where they can proceed to fill out the donation form as usual.{/ts}</p>
       {if $pcpNotifyEmailAddress}
       <p>{ts}Questions? Send email to{/ts}: {$pcpNotifyEmailAddress}</p>
       {/if}
@@ -8929,6 +8934,7 @@ which prevented us from approving the page. We are sorry for any inconvenience.{
       ('Personal Campaign Pages - Supporter Status Change Notification', '{ts 1=$contribPageTitle}Your Personal Campaign Page for %1{/ts} - {if $pcpStatus eq \'Approved\'}{ts}Is live{/ts}{elseif $pcpStatus eq \'Not Approved\'}{ts}Not Approved{/ts}{elseif $pcpStatus eq \'Draft\'}{ts}Revoke to Draft{/ts}{/if}', '{if $pcpStatus eq \'Approved\'}
   {ts}Your Personal Campaign Page is now available for public access.{/ts} {ts}Congratulations!{/ts} {ts}You can now openly share the page to gather more donations for your fundraising campaign!{/ts}
   {ts 1=$pcpInfoURL}Please copy your Personal Campign Page URL %1{/ts}. {ts}Subsequently, you can share your Personal Campaign Page link across various social media platforms to rally friends and family to support this fundraising initiative!{/ts}
+  {ts}Notice: If you are already logged in, clicking the above link will take you to the backend of your personal fundraising page for editing.{/ts} {ts}While general users who have not logged in, clicking the link will simply take them to the completed personal fundraising page where they can proceed to fill out the donation form as usual.{/ts}
 
   {if $pcpNotifyEmailAddress}
   {ts}Questions? Send email to{/ts}: {$pcpNotifyEmailAddress}
@@ -8970,7 +8976,7 @@ which prevented us from approving the page. We are sorry for any inconvenience.{
     {if $pcpStatus eq \'Approved\'}
       <p>{ts}Your Personal Campaign Page is now available for public access.{/ts} {ts}Congratulations!{/ts} {ts}You can now openly share the page to gather more donations for your fundraising campaign!{/ts}</p>
       <p>{ts 1=$pcpInfoURL}Please copy your Personal Campign Page URL %1{/ts}. {ts}Subsequently, you can share your Personal Campaign Page link across various social media platforms to rally friends and family to support this fundraising initiative!{/ts}</p>
-
+      <p>{ts}Notice: If you are already logged in, clicking the above link will take you to the backend of your personal fundraising page for editing.{/ts} {ts}While general users who have not logged in, clicking the link will simply take them to the completed personal fundraising page where they can proceed to fill out the donation form as usual.{/ts}</p>
       {if $pcpNotifyEmailAddress}
       <p>{ts}Questions? Send email to{/ts}: {$pcpNotifyEmailAddress}</p>
       {/if}
@@ -9003,7 +9009,8 @@ which prevented us from approving the page. We are sorry for any inconvenience.{
 {if $pcpStatus eq \'Approved\'}
 
 {ts}Your Personal Campaign Page is now available for public access.{/ts} {ts}Congratulations!{/ts} {ts}You can now openly share the page to gather more donations for your fundraising campaign!{/ts}
-{ts}Please log in to obtain your Personal Campaign Page link{/ts}. {ts}Subsequently, you can share your Personal Campaign Page link across various social media platforms to rally friends and family to support this fundraising initiative!{/ts}
+{ts 1=$pcpInfoURL}Please copy your Personal Campign Page URL %1{/ts}. {ts}Subsequently, you can share your Personal Campaign Page link across various social media platforms to rally friends and family to support this fundraising initiative!{/ts}
+{ts}Notice: If you are already logged in, clicking the above link will take you to the backend of your personal fundraising page for editing.{/ts} {ts}While general users who have not logged in, clicking the link will simply take them to the completed personal fundraising page where they can proceed to fill out the donation form as usual.{/ts}
 
 {elseif $pcpStatus EQ \'Waiting Review\'}
 
@@ -9052,6 +9059,7 @@ which prevented us from approving the page. We are sorry for any inconvenience.{
       <td>
       <p>{ts}Your Personal Campaign Page is now available for public access.{/ts} {ts}Congratulations!{/ts} {ts}You can now openly share the page to gather more donations for your fundraising campaign!{/ts}</p>
       <p>{ts 1=$pcpInfoURL}Please copy your Personal Campign Page URL %1{/ts}. {ts}Subsequently, you can share your Personal Campaign Page link across various social media platforms to rally friends and family to support this fundraising initiative!{/ts}</p>
+      <p>{ts}Notice: If you are already logged in, clicking the above link will take you to the backend of your personal fundraising page for editing.{/ts} {ts}While general users who have not logged in, clicking the link will simply take them to the completed personal fundraising page where they can proceed to fill out the donation form as usual.{/ts}</p>
       </td>
     </tr>
 
@@ -9095,7 +9103,8 @@ which prevented us from approving the page. We are sorry for any inconvenience.{
 {if $pcpStatus eq \'Approved\'}
 
 {ts}Your Personal Campaign Page is now available for public access.{/ts} {ts}Congratulations!{/ts} {ts}You can now openly share the page to gather more donations for your fundraising campaign!{/ts}
-{ts}Please log in to obtain your Personal Campaign Page link{/ts}. {ts}Subsequently, you can share your Personal Campaign Page link across various social media platforms to rally friends and family to support this fundraising initiative!{/ts}
+{ts 1=$pcpInfoURL}Please copy your Personal Campign Page URL %1{/ts}. {ts}Subsequently, you can share your Personal Campaign Page link across various social media platforms to rally friends and family to support this fundraising initiative!{/ts}
+{ts}Notice: If you are already logged in, clicking the above link will take you to the backend of your personal fundraising page for editing.{/ts} {ts}While general users who have not logged in, clicking the link will simply take them to the completed personal fundraising page where they can proceed to fill out the donation form as usual.{/ts}
 
 {elseif $pcpStatus EQ \'Waiting Review\'}
 
@@ -9144,6 +9153,7 @@ which prevented us from approving the page. We are sorry for any inconvenience.{
       <td>
       <p>{ts}Your Personal Campaign Page is now available for public access.{/ts} {ts}Congratulations!{/ts} {ts}You can now openly share the page to gather more donations for your fundraising campaign!{/ts}</p>
       <p>{ts 1=$pcpInfoURL}Please copy your Personal Campign Page URL %1{/ts}. {ts}Subsequently, you can share your Personal Campaign Page link across various social media platforms to rally friends and family to support this fundraising initiative!{/ts}</p>
+      <p>{ts}Notice: If you are already logged in, clicking the above link will take you to the backend of your personal fundraising page for editing.{/ts} {ts}While general users who have not logged in, clicking the link will simply take them to the completed personal fundraising page where they can proceed to fill out the donation form as usual.{/ts}</p>
       </td>
     </tr>
 

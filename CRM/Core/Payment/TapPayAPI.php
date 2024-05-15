@@ -313,7 +313,7 @@ class CRM_Core_Payment_TapPayAPI {
     $fields = array();
     switch($apiType){
       case 'pay_by_prime':
-        $fields = explode(',', 'prime*,partner_key*,merchant_id*,amount*,currency,order_number,bank_transaction_id,details*,cardholder*,instalment,delay_capture_in_days,remember');
+        $fields = explode(',', 'prime*,partner_key*,merchant_id*,amount*,currency,order_number,bank_transaction_id,details*,cardholder*,instalment,delay_capture_in_days,remember,three_domain_secure,result_url');
         break;
       case 'pay_by_token':
         $fields = explode(',', 'card_key*,card_token*,partner_key*,merchant_id*,amount*,currency*,order_number,bank_transaction_id,details*,instalment,delay_capture_in_days,three_domain_secure,result_url,fraud_id,card_ccv');

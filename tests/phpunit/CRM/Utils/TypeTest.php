@@ -30,7 +30,8 @@ class CRM_Utils_TypeTest extends CiviUnitTestCase {
    * @param $expectedResult
    */
   public function testValidate($inputData, $inputType, $expectedResult) {
-    $this->assertTrue($expectedResult === CRM_Utils_Type::validate($inputData, $inputType, FALSE));
+    $validatedResult = CRM_Utils_Type::validate($inputData, $inputType, FALSE);
+    $this->assertTrue($expectedResult === $validatedResult, "$inputData:::$validatedResult");
   }
 
   /**
@@ -50,42 +51,6 @@ class CRM_Utils_TypeTest extends CiviUnitTestCase {
       array(-10, 'Positive', NULL),
       array('-10', 'Positive', NULL),
       array('-10foo', 'Positive', NULL),
-#      array('civicrm_column_name', 'MysqlColumnNameOrAlias', 'civicrm_column_name'),
-#      array('table.civicrm_column_name', 'MysqlColumnNameOrAlias', 'table.civicrm_column_name'),
-#      array('table.civicrm_column_name.toomanydots', 'MysqlColumnNameOrAlias', NULL),
-#      array('Home-street_address', 'MysqlColumnNameOrAlias', 'Home-street_address'),
-#      array('`Home-street_address`', 'MysqlColumnNameOrAlias', '`Home-street_address`'),
-#      array('`Home-street_address', 'MysqlColumnNameOrAlias', NULL),
-#      array('table.`Home-street_address`', 'MysqlColumnNameOrAlias', 'table.`Home-street_address`'),
-#      array('`table-alias`.`Home-street_address`', 'MysqlColumnNameOrAlias', '`table-alias`.`Home-street_address`'),
-#      array('`table-alias`.column', 'MysqlColumnNameOrAlias', '`table-alias`.column'),
-      // Spaces also permitted, only when enclosed in backticks.
-#      array('`column alias`', 'MysqlColumnNameOrAlias', '`column alias`'),
-#      array('`table alias`.column', 'MysqlColumnNameOrAlias', '`table alias`.column'),
-#      array('`table alias`.`column alias`', 'MysqlColumnNameOrAlias', '`table alias`.`column alias`'),
-#      array('table alias.column alias', 'MysqlColumnNameOrAlias', NULL),
-#      array('table alias.column_alias', 'MysqlColumnNameOrAlias', NULL),
-#      array('table_alias.column alias', 'MysqlColumnNameOrAlias', NULL),
-      // Functions are not permitted.
-#      array('column_name, sleep(5)', 'MysqlColumnNameOrAlias', NULL),
-      // Length checking permits only 64 chars.
-#      array(str_repeat('a', 64), 'MysqlColumnNameOrAlias', str_repeat('a', 64)),
-#      array(str_repeat('a', 65), 'MysqlColumnNameOrAlias', NULL),
-#      array(str_repeat('a', 64) . '.' . str_repeat('a', 64), 'MysqlColumnNameOrAlias', str_repeat('a', 64) . '.' . str_repeat('a', 64)),
-#      array('`' . str_repeat('a', 64) . '`.`' . str_repeat('b', 64) . '`', 'MysqlColumnNameOrAlias', '`' . str_repeat('a', 64) . '`.`' . str_repeat('b', 64) . '`'),
-#      array(str_repeat('a', 64) . '.' . str_repeat('a', 65), 'MysqlColumnNameOrAlias', NULL),
-#      array(str_repeat('a', 65) . '.' . str_repeat('a', 64), 'MysqlColumnNameOrAlias', NULL),
-      // ORDER BY can be ASC or DESC, case not significant.
-#      array('asc', 'MysqlOrderByDirection', 'asc'),
-#      array('DESC', 'MysqlOrderByDirection', 'desc'),
-#      array('DESCc', 'MysqlOrderByDirection', NULL),
-#      array('table.civicrm_column_name desc', 'MysqlOrderBy', 'table.civicrm_column_name desc'),
-#      array('field(civicrm_column_name,4,5,6)', 'MysqlOrderBy', 'field(civicrm_column_name,4,5,6)'),
-#      array('field(table.civicrm_column_name,4,5,6)', 'MysqlOrderBy', 'field(table.civicrm_column_name,4,5,6)'),
-#      array('table.civicrm_column_name desc,other_column, another_column desc', 'MysqlOrderBy', 'table.civicrm_column_name desc,other_column, another_column desc'),
-#      array('table.`Home-street_address` asc, `table-alias`.`Home-street_address` desc,`table-alias`.column', 'MysqlOrderBy', 'table.`Home-street_address` asc, `table-alias`.`Home-street_address` desc,`table-alias`.column'),
-      // Lab issue dev/core#93 allow for 3 column orderby
-#      array('contact_id.gender_id.label', 'MysqlOrderBy', 'contact_id.gender_id.label'),
       array('a string', 'String', 'a string'),
       array('{"contact":{"contact_id":205}}', 'Json', '{"contact":{"contact_id":205}}'),
       array('{"contact":{"contact_id":!n†rude®}}', 'Json', NULL),
@@ -99,7 +64,8 @@ class CRM_Utils_TypeTest extends CiviUnitTestCase {
    * @param $expectedResult
    */
   public function testEscape($inputData, $inputType, $expectedResult) {
-    $this->assertTrue($expectedResult === CRM_Utils_Type::escape($inputData, $inputType, FALSE));
+    $escapedResult = CRM_Utils_Type::escape($inputData, $inputType, FALSE);
+    $this->assertTrue($expectedResult === $escapedResult, "$inputData:::$escapedResult");
   }
 
   /**
@@ -125,6 +91,56 @@ class CRM_Utils_TypeTest extends CiviUnitTestCase {
       array('-3', 'ContactReference', NULL),
       // Escape function is meant for sql, not xss
       array('<p onclick="alert(\'xss\');">Hello</p>', 'Memo', '<p onclick=\\"alert(\\\'xss\\\');\\">Hello</p>'),
+
+      # directory name
+      array("abc.def.com/../", 'DirectoryName', 'abc.def.com'),
+      array("abc.中テ험def.com/../", 'DirectoryName', 'abc.def.com'),
+
+      # filename
+      // Strings containing file system reserved characters
+      array("file|name.txt", 'FileName', 'filename.txt'),
+      array("file/name.txt", 'FileName', 'filename.txt'),
+      array("file<name>.txt", 'FileName', 'filename.txt'),
+      array("file:name.txt", 'FileName', 'filename.txt'),
+      array("file\"name.txt", 'FileName', 'filename.txt'),
+      array("file*name.txt", 'FileName', 'filename.txt'),
+      array("file?name.txt", 'FileName', 'filename.txt'),
+      array("file/../name.txt", 'FileName', 'filename.txt'),
+
+      // Strings containing control characters
+      array("file\x00name.txt", 'FileName', 'filename.txt'),
+      array("file\x1Fname.txt", 'FileName', 'filename.txt'),
+
+      // Strings containing URI reserved characters
+      array("file#name.txt", 'FileName', 'filename.txt'),
+      array("file[name].txt", 'FileName', 'filename.txt'),
+      array("file@name.txt", 'FileName', 'filename.txt'),
+      array("file!name.txt", 'FileName', 'filename.txt'),
+      array('file$name.txt', 'FileName', 'filename.txt'),
+      array("file&name.txt", 'FileName', 'filename.txt'),
+      array("file'name.txt", 'FileName', 'filename.txt'),
+      array("file(name).txt", 'FileName', 'filename.txt'),
+      array("file+name.txt", 'FileName', 'filename.txt'),
+      array("file,name.txt", 'FileName', 'filename.txt'),
+      array("file;name.txt", 'FileName', 'filename.txt'),
+      array("file=name.txt", 'FileName', 'filename.txt'),
+
+      // Strings containing URL unsafe characters
+      array("file{name}.txt", 'FileName', 'filename.txt'),
+      array("file^name.txt", 'FileName', 'filename.txt'),
+      array("file~name.txt", 'FileName', 'filename.txt'),
+      array("file`name.txt", 'FileName', 'filename.txt'),
+
+      // Strings starting with a dot, hyphen, or a combination of both
+      array(".filename.txt", 'FileName', 'filename.txt'),
+      array("..filename.txt", 'FileName', 'filename.txt'),
+      array("-filename.txt", 'FileName', 'filename.txt'),
+      array(".-filename.txt", 'FileName', 'filename.txt'),
+
+      // multi language
+      array("中文測試.txt", 'FileName', '中文測試.txt'),
+      array("日本語テスト.txt", 'FileName', '日本語テスト.txt'),
+      array("韓한국어 시험.txt", 'FileName', '韓한국어 시험.txt'),
     );
   }
 

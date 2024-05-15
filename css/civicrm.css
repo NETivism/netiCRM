@@ -1750,6 +1750,7 @@ div.block-civicrm li, .crm-container ul li, .crm-container ul.treeview li {
 /* Attachment */
 .crm-container .attachments table .current-attachments img {
   max-width: 18%;
+  height: auto;
 }
 .crm-container .attachments-upload-your-own-image-row ~ .attachments-form-file-row,
 .crm-container .crm-contribution-campaign-form-block .attachments-upload-your-own-image-row ~ .attachments-form-file-row {
@@ -5504,8 +5505,10 @@ ul.ui-sortable {
 .crm-container table.criteria-group {
   margin-bottom: .1em;
 }
-
-
+.crm-container table[align="center"] {
+  margin-right: auto;
+  margin-left: auto;
+}
 .crm-container th,
 .crm-container table.display thead th,
 .crm-container table thead.sticky th,
@@ -5557,6 +5560,7 @@ ul.ui-sortable {
 #activity-content td {
   padding: 4px;
   vertical-align: top;
+  height: auto;
 }
 
 .crm-container tr.even-row td,
@@ -7253,7 +7257,7 @@ input.crm-form-textfield,
 .crm-container .progress-block {
   margin: 0 0 30px 0;
 }
-.crm-container .progress-block .inner {
+.page-civicrm-contribute-pcp .crm-container .progress-block .inner {
   padding: 20px 12px;
 }
 .crm-container .progress-wrapper {
@@ -7265,6 +7269,9 @@ input.crm-form-textfield,
   vertical-align: middle;
 }
 .crm-container .progress-cell.progress-bar-wrapper {
+  width: 100%;
+}
+.crm-container .progressbar-with-link .progress-cell.progress-bar-wrapper {
   width: 80%;
 }
 .crm-container .progress-cell.progress-buttons {
@@ -7383,7 +7390,7 @@ input.crm-form-textfield,
   }
 }
 @media (min-width: 992px) {
-  .crm-container .progress-block .inner {
+  .page-civicrm-contribute-pcp .crm-container .progress-block .inner {
     padding: 20px;
   }
   .crm-container .pcp-page-text {

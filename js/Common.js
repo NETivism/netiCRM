@@ -797,12 +797,17 @@ function activityStatus( message )
     } 
 }
 
-function setCookie(cname, cvalue, extsec) {
+function setCookie(cname, cvalue, extsec, path) {
     extsec = typeof extsec !== 'undefined' ? extsec : 86400;
     var d = new Date();
     d.setTime(d.getTime() + (extsec*1000));
     var expires = "expires=" + d.toGMTString();
-    document.cookie = cname+"="+cvalue+"; "+expires;
+    if (path) {
+      document.cookie = cname+"="+cvalue+"; "+expires+'; path='+path;
+    }
+    else {
+      document.cookie = cname+"="+cvalue+"; "+expires;
+    }
 }
 
 function getCookie(cname) {

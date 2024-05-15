@@ -425,7 +425,12 @@ class CRM_Core_Config_Variables extends CRM_Core_Config_Defaults {
   /**
    * Path to wkhtmltopdf if available
    */
-  public $wkhtmltopdfPath = FALSE;
+  public $wkhtmltopdfPath = '/usr/bin/wkhtmltopdf';
+
+  /**
+   * Path to wkhtmltopdf if available
+   */
+  public $qpdfPath = '/usr/bin/qpdf';
 
   /**
    * The default value for Content Security Policy recover.

@@ -411,7 +411,15 @@ class CRM_Core_Payment_BaseIPN {
       $contribution->source = !empty($contribution->source) ? $contribution->source : $values['title'];
 
       if ($values['is_email_receipt'] || $values['is_send_sms']) {
-        $contribution->receipt_date = self::$_now;
+        // only override receipt_date when necessary
+        if (empty($contribution->receipt_date)) {
+          $contribution->receipt_date = self::$_now;
+        }
+        else {
+          if (is_string($contribution->receipt_date) && strtotime($contribution->receipt_date) <= 10000) {
+            $contribution->receipt_date = self::$_now;
+          }
+        }
       }
 
       if ($membership) {
@@ -540,7 +548,15 @@ class CRM_Core_Payment_BaseIPN {
       $contribution->source = !empty($contribution->source) ? $contribution->source : ts('Online Event Registration') . ':' . $values['event']['title'];
 
       if ($values['event']['is_email_confirm']) {
-        $contribution->receipt_date = self::$_now;
+        // only override receipt_date when necessary
+        if (empty($contribution->receipt_date)) {
+          $contribution->receipt_date = self::$_now;
+        }
+        else {
+          if (is_string($contribution->receipt_date) && strtotime($contribution->receipt_date) <= 10000) {
+            $contribution->receipt_date = self::$_now;
+          }
+        }
       }
 
       $participant->status_id = 1;

@@ -575,7 +575,6 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     if ($this->_ppType) {
       return CRM_Core_Payment_ProcessorForm::buildQuickForm($this);
     }
-
     $config = CRM_Core_Config::singleton();
 
     $this->applyFilter('__ALL__', 'trim');
@@ -790,7 +789,6 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     $achievement = CRM_Contribute_BAO_ContributionPage::goalAchieved($this->_id);
     $this->assign('achievement', $achievement);
 
-    $template = CRM_Core_Smarty::singleton();
     $progress = array(
       'type' => $achievement['type'],
       'label' => $achievement['label'],
@@ -800,12 +798,8 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
       'achieved_status' => $achievement['achieved'],
       'fullwidth' => FALSE,
       'display' => $achievement['goal'] ? TRUE : FALSE,
+      'link_display' => FALSE
     );
-
-    $introTextAssigned = $template->get_template_vars('intro_text') !== null;
-    if ($introTextAssigned) {
-      $progress['link_display'] = TRUE;
-    }
     $this->assign('progress', $progress);
 
     // hidden track id

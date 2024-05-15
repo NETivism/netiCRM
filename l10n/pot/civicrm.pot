@@ -49441,3 +49441,6 @@ msgstr ""
 
 msgid "While general users who have not logged in, clicking the link will simply take them to the completed personal fundraising page where they can proceed to fill out the donation form as usual."
 msgstr ""
+
+msgid "To enable 3D Secure, you must add a TapPay  Merchant ID and Partner Key that supports this feature. If you need 3D Secure, please contact customer service."
+msgstr ""

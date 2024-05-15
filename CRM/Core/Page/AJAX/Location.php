@@ -94,7 +94,7 @@ class CRM_Core_Page_AJAX_Location {
     CRM_Utils_System::civiExit();
   }
 
-  function jqState($config) {
+  public static function jqState($config) {
     $elements = array();
     if (!isset($_GET['_value']) || empty($_GET['_value']) || !CRM_Utils_Type::validate($_GET['_value'], 'Positive', FALSE)) {
       echo json_encode($elements);
