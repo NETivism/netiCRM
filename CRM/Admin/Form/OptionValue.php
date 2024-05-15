@@ -152,6 +152,14 @@ class CRM_Admin_Form_OptionValue extends CRM_Admin_Form {
       $this->add('text', 'grouping', ts('Option Grouping Name'), CRM_Core_DAO::getAttribute('CRM_Core_DAO_OptionValue', 'grouping'));
     }
 
+    if ($this->_gName == 'group_type') {
+      $this->getElement('label')->freeze();
+      $this->getElement('value')->freeze();
+      $this->getElement('name')->freeze();
+      $this->getElement('grouping')->freeze();
+      $this->getElement('description')->freeze();
+    }
+
     $this->add('text', 'weight', ts('Weight'), CRM_Core_DAO::getAttribute('CRM_Core_DAO_OptionValue', 'weight'), TRUE);
     $this->add('checkbox', 'is_active', ts('Enabled?'));
     $this->add('checkbox', 'is_default', ts('Default Option?'));
