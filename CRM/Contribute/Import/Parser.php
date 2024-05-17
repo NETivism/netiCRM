@@ -552,34 +552,34 @@ abstract class CRM_Contribute_Import_Parser {
         }
       }
       $headers = array_merge(array(ts('Line Number'), ts('Reason')), $customHeaders);
-      $fileNamePrefix = str_replace('civicrm_import_job', self::ERROR_FILE_PREFIX, $tableName);
+      $filenamePrefix = str_replace('civicrm_import_job', self::ERROR_FILE_PREFIX, $tableName);
 
       if ($this->_invalidRowCount) {
-        $this->_errorFileName = self::errorFileName(self::ERROR, $fileNamePrefix);
+        $this->_errorFileName = self::errorFileName(self::ERROR, $filenamePrefix);
         CRM_Import_Parser::exportCSV($this->_errorFileName, $headers, $this->_errors);
       }
 
       if ($this->_invalidPledgePaymentRowCount) {
-        $this->_pledgePaymentErrorsFileName = self::errorFileName(self::PLEDGE_PAYMENT_ERROR, $fileNamePrefix);
+        $this->_pledgePaymentErrorsFileName = self::errorFileName(self::PLEDGE_PAYMENT_ERROR, $filenamePrefix);
         CRM_Import_Parser::exportCSV($this->_pledgePaymentErrorsFileName, $headers, $this->_pledgePaymentErrors);
       }
 
       if ($this->_invalidSoftCreditRowCount) {
-        $this->_softCreditErrorsFileName = self::errorFileName(self::SOFT_CREDIT_ERROR, $fileNamePrefix);
+        $this->_softCreditErrorsFileName = self::errorFileName(self::SOFT_CREDIT_ERROR, $filenamePrefix);
         CRM_Import_Parser::exportCSV($this->_softCreditErrorsFileName, $headers, $this->_softCreditErrors);
       }
 
       if ($this->_invalidPCPRowCount) {
-        $this->_pcpErrorsFileName = self::errorFileName(self::PCP_ERROR, $fileNamePrefix);
+        $this->_pcpErrorsFileName = self::errorFileName(self::PCP_ERROR, $filenamePrefix);
         CRM_Import_Parser::exportCSV($this->_pcpErrorsFileName, $headers, $this->_pcpErrors);
       }
 
       if ($this->_conflictCount) {
-        $this->_conflictFileName = self::errorFileName(self::CONFLICT, $fileNamePrefix);
+        $this->_conflictFileName = self::errorFileName(self::CONFLICT, $filenamePrefix);
         CRM_Import_Parser::exportCSV($this->_conflictFileName, $headers, $this->_conflicts);
       }
       if ($this->_duplicateCount) {
-        $this->_duplicateFileName = self::errorFileName(self::DUPLICATE, $fileNamePrefix);
+        $this->_duplicateFileName = self::errorFileName(self::DUPLICATE, $filenamePrefix);
         CRM_Import_Parser::exportCSV($this->_duplicateFileName, $headers, $this->_duplicates);
       }
     }

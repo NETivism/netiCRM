@@ -1304,12 +1304,13 @@ class CRM_Export_BAO_Export {
       if (!empty($errorFileName) && is_file($errorFileName)) {
         $buffer = '';
         CRM_Utils_System::download(
-          $errorFileName,
-          'application/vnd.ms-excel',
+          $filename,
+          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
           $buffer,
           NULL,
-          TRUE
+          FALSE
         );
+        readfile($errorFileName);
       }
     }
 

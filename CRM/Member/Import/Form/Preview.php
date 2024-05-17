@@ -77,18 +77,21 @@ class CRM_Member_Import_Form_Preview extends CRM_Core_Form {
       $this->assign('rowDisplayCount', 2);
     }
 
+    $prefix = $this->get('errorFilenamePrefix');
+    $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String', $this);
+
     if ($invalidRowCount) {
-      $urlParams = 'type=' . CRM_Member_Import_Parser::ERROR . '&parser=CRM_Member_Import_Parser';
+      $urlParams = CRM_Import_Parser::setImportErrorFilename($qfKey, CRM_Member_Import_Parser::ERROR, 'CRM_Member_Import_Parser', $prefix);
       $this->set('downloadErrorRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
     }
 
     if ($conflictRowCount) {
-      $urlParams = 'type=' . CRM_Member_Import_Parser::CONFLICT . '&parser=CRM_Member_Import_Parser';
+      $urlParams = CRM_Import_Parser::setImportErrorFilename($qfKey, CRM_Member_Import_Parser::CONFLICT, 'CRM_Member_Import_Parser', $prefix);
       $this->set('downloadConflictRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
     }
 
     if ($mismatchCount) {
-      $urlParams = 'type=' . CRM_Member_Import_Parser::NO_MATCH . '&parser=CRM_Member_Import_Parser';
+      $urlParams = CRM_Import_Parser::setImportErrorFilename($qfKey, CRM_Member_Import_Parser::NO_MATCH, 'CRM_Member_Import_Parser', $prefix);
       $this->set('downloadMismatchRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
     }
 
@@ -197,6 +200,10 @@ class CRM_Member_Import_Form_Preview extends CRM_Core_Form {
       CRM_Core_Error::statusBounce(ts("The selected import job is already running. To prevent duplicate records being imported, please wait the job complete."));
       CRM_Core_Error::debug_log_message("Trying acquire lock {$this->controller->_key} failed at line ".__LINE__);
     }
+
+    $errorFilenamePrefix = CRM_Member_Import_Parser::ERROR_FILE_PREFIX.'_'.date('YmdHis', CRM_REQUEST_TIME);
+    $this->set('errorFilenamePrefix', $errorFilenamePrefix);
+
     $parser->run($fileName, $seperator,
       $mapperFields,
       $skipColumnHeader,
@@ -205,7 +212,8 @@ class CRM_Member_Import_Form_Preview extends CRM_Core_Form {
       $onDuplicate,
       $this->get('createContactOption'),
       $this->get('dedupeRuleGroup'),
-      $dataReferenceField
+      $dataReferenceField,
+      $errorFilenamePrefix
     );
 
     // add all the necessary variables to the form
@@ -230,12 +238,6 @@ class CRM_Member_Import_Form_Preview extends CRM_Core_Form {
       fclose($fd);
 
       $this->set('errorFile', $errorFile);
-      $urlParams = 'type=' . CRM_Member_Import_Parser::ERROR . '&parser=CRM_Member_Import_Parser';
-      $this->set('downloadErrorRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
-      $urlParams = 'type=' . CRM_Member_Import_Parser::CONFLICT . '&parser=CRM_Member_Import_Parser';
-      $this->set('downloadConflictRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
-      $urlParams = 'type=' . CRM_Member_Import_Parser::NO_MATCH . '&parser=CRM_Member_Import_Parser';
-      $this->set('downloadMismatchRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
     }
   }
 }

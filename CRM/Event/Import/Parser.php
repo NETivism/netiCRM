@@ -216,7 +216,8 @@ abstract class CRM_Event_Import_Parser {
     $skipColumnHeader = FALSE,
     $mode = self::MODE_PREVIEW,
     $contactType = self::CONTACT_INDIVIDUAL,
-    $onDuplicate = self::DUPLICATE_SKIP
+    $onDuplicate = self::DUPLICATE_SKIP,
+    $filenamePrefix = self::ERROR_FILE_PREFIX
   ) {
     if (!is_array($fileName)) {
       CRM_Core_Error::fatal();
@@ -382,7 +383,6 @@ abstract class CRM_Event_Import_Parser {
     fclose($fd);
 
     if ($mode == self::MODE_PREVIEW || $mode == self::MODE_IMPORT) {
-      $fileNamePrefix = self::ERROR_FILE_PREFIX.'_'.date('YmdHis', CRM_REQUEST_TIME);
       $customHeaders = $mapper;
 
       $customfields = &CRM_Core_BAO_CustomField::getFields('Participant');
@@ -399,7 +399,7 @@ abstract class CRM_Event_Import_Parser {
           ),
           $customHeaders
         );
-        $this->_errorFileName = self::errorFileName(self::ERROR, $fileNamePrefix);
+        $this->_errorFileName = self::errorFileName(self::ERROR, $filenamePrefix);
         self::exportCSV($this->_errorFileName, $headers, $this->_errors);
       }
       if ($this->_conflictCount) {
@@ -408,7 +408,7 @@ abstract class CRM_Event_Import_Parser {
           ),
           $customHeaders
         );
-        $this->_conflictFileName = self::errorFileName(self::CONFLICT, $fileNamePrefix);
+        $this->_conflictFileName = self::errorFileName(self::CONFLICT, $filenamePrefix);
         self::exportCSV($this->_conflictFileName, $headers, $this->_conflicts);
       }
       if ($this->_duplicateCount) {
@@ -418,7 +418,7 @@ abstract class CRM_Event_Import_Parser {
           $customHeaders
         );
 
-        $this->_duplicateFileName = self::errorFileName(self::DUPLICATE, $fileNamePrefix);
+        $this->_duplicateFileName = self::errorFileName(self::DUPLICATE, $filenamePrefix);
         self::exportCSV($this->_duplicateFileName, $headers, $this->_duplicates);
       }
     }

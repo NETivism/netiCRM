@@ -56,21 +56,31 @@ class CRM_Contribute_Import_Form_Summary extends CRM_Core_Form {
     $totalRowCount += $relatedCount;
     $this->set('totalRowCount', $totalRowCount);
 
+    $tableName = $this->get('importTableName');
+    $prefix = str_replace('civicrm_import_job', CRM_Import_Parser::ERROR_FILE_PREFIX, $tableName);
+    $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String', $this);
+
+    $urlParams = CRM_Import_Parser::setImportErrorFilename($qfKey, CRM_Contribute_Import_Parser::ERROR, 'CRM_Contribute_Import_Parser', $prefix);
+    $this->set('downloadErrorRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
+
+    $urlParams = CRM_Import_Parser::setImportErrorFilename($qfKey, CRM_Contribute_Import_Parser::CONFLICT, 'CRM_Contribute_Import_Parser', $prefix);
+    $this->set('downloadConflictRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
+
     $invalidRowCount = $this->get('invalidRowCount');
     $invalidSoftCreditRowCount = $this->get('invalidSoftCreditRowCount');
     if ($invalidSoftCreditRowCount) {
-      $urlParams = 'type=' . CRM_Contribute_Import_Parser::SOFT_CREDIT_ERROR . '&parser=CRM_Contribute_Import_Parser';
+      $urlParams = CRM_Import_Parser::setImportErrorFilename($qfKey, CRM_Contribute_Import_Parser::SOFT_CREDIT_ERROR, 'CRM_Contribute_Import_Parser', $prefix);
       $this->set('downloadSoftCreditErrorRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
     }
     $invalidPCPRowCount = $this->get('invalidPCPRowCount');
     if ($invalidPCPRowCount) {
-      $urlParams = 'type=' . CRM_Contribute_Import_Parser::PCP_ERROR. '&parser=CRM_Contribute_Import_Parser';
+      $urlParams = CRM_Import_Parser::setImportErrorFilename($qfKey, CRM_Contribute_Import_Parser::PCP_ERROR, 'CRM_Contribute_Import_Parser', $prefix);
       $this->set('downloadPCPErrorRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
     }
     $validSoftCreditRowCount = $this->get('validSoftCreditRowCount');
     $invalidPledgePaymentRowCount = $this->get('invalidPledgePaymentRowCount');
     if ($invalidPledgePaymentRowCount) {
-      $urlParams = 'type=' . CRM_Contribute_Import_Parser::PLEDGE_PAYMENT_ERROR . '&parser=CRM_Contribute_Import_Parser';
+      $urlParams = CRM_Import_Parser::setImportErrorFilename($qfKey, CRM_Contribute_Import_Parser::PLEDGE_PAYMENT_ERROR, 'CRM_Contribute_Import_Parser', $prefix);
       $this->set('downloadPledgePaymentErrorRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
     }
     $validPledgePaymentRowCount = $this->get('validPledgePaymentRowCount');
@@ -79,11 +89,11 @@ class CRM_Contribute_Import_Form_Summary extends CRM_Core_Form {
     $onDuplicate = $this->get('onDuplicate');
     $mismatchCount = $this->get('unMatchCount');
     if ($duplicateRowCount > 0) {
-      $urlParams = 'type=' . CRM_Contribute_Import_Parser::DUPLICATE . '&parser=CRM_Contribute_Import_Parser';
+      $urlParams = CRM_Import_Parser::setImportErrorFilename($qfKey, CRM_Contribute_Import_Parser::DUPLICATE, 'CRM_Contribute_Import_Parser', $prefix);
       $this->set('downloadDuplicateRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
     }
     elseif ($mismatchCount) {
-      $urlParams = 'type=' . CRM_Contribute_Import_Parser::NO_MATCH . '&parser=CRM_Contribute_Import_Parser';
+      $urlParams = CRM_Import_Parser::setImportErrorFilename($qfKey, CRM_Contribute_Import_Parser::NO_MATCH, 'CRM_Contribute_Import_Parser', $prefix);
       $this->set('downloadMismatchRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
     }
     else {

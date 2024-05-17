@@ -65,13 +65,20 @@ class CRM_Import_Form_Summary extends CRM_Core_Form {
     $unparsedAddressCount = $this->get('unparsedAddressCount');
 
     $tableName = $this->get('importTableName');
-    $fileName = str_replace('civicrm_import_job', CRM_Import_Parser::ERROR_FILE_PREFIX, $tableName);
+    $prefix = str_replace('civicrm_import_job', CRM_Import_Parser::ERROR_FILE_PREFIX, $tableName);
+    $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String', $this);
+    $urlParams = CRM_Import_Parser::setImportErrorFilename($qfKey, CRM_Import_Parser::ERROR, 'CRM_Import_Parser', $prefix);
+    $this->set('downloadErrorRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
+
+    $urlParams = CRM_Import_Parser::setImportErrorFilename($qfKey, CRM_Import_Parser::CONFLICT, 'CRM_Import_Parser', $prefix);
+    $this->set('downloadConflictRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
+
     if ($duplicateRowCount > 0) {
-      $urlParams = 'type=' . CRM_Import_Parser::DUPLICATE . '&parser=CRM_Import_Parser&file='.$fileName;
+      $urlParams = CRM_Import_Parser::setImportErrorFilename($qfKey, CRM_Import_Parser::DUPLICATE, 'CRM_Import_Parser', $prefix);
       $this->set('downloadDuplicateRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
     }
     elseif ($mismatchCount) {
-      $urlParams = 'type=' . CRM_Import_Parser::NO_MATCH . '&parser=CRM_Import_Parser&file='.$fileName;
+      $urlParams = CRM_Import_Parser::setImportErrorFilename($qfKey, CRM_Import_Parser::NO_MATCH, 'CRM_Import_Parser', $prefix);
       $this->set('downloadMismatchRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
     }
     else {
@@ -79,7 +86,7 @@ class CRM_Import_Form_Summary extends CRM_Core_Form {
       $this->set('duplicateRowCount', $duplicateRowCount);
     }
     if ($unparsedAddressCount) {
-      $urlParams = 'type=' . CRM_Import_Parser::UNPARSED_ADDRESS_WARNING . '&parser=CRM_Import_Parser&file='.$fileName;
+      $urlParams = CRM_Import_Parser::setImportErrorFilename($qfKey, CRM_Import_Parser::UNPARSED_ADDRESS_WARNING, 'CRM_Import_Parser', $prefix);
       $this->assign('downloadAddressRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
       $unparsedStreetAddressString = ts('Records imported successfully but unable to parse some of the street addresses');
       $this->assign('unparsedStreetAddressString', $unparsedStreetAddressString);
