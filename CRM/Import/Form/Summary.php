@@ -65,7 +65,7 @@ class CRM_Import_Form_Summary extends CRM_Core_Form {
     $unparsedAddressCount = $this->get('unparsedAddressCount');
 
     $tableName = $this->get('importTableName');
-    $fileName = str_replace('civicrm_import_job_', 'import_', $tableName);
+    $fileName = str_replace('civicrm_import_job', CRM_Import_Parser::ERROR_FILE_PREFIX, $tableName);
     if ($duplicateRowCount > 0) {
       $urlParams = 'type=' . CRM_Import_Parser::DUPLICATE . '&parser=CRM_Import_Parser&file='.$fileName;
       $this->set('downloadDuplicateRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
