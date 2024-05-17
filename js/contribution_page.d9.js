@@ -629,7 +629,7 @@
               $('.contrib-step-1 .step-action-wrapper').before($('<label generated="true" class="error" style="color: rgb(238, 85, 85); padding-left: 10px;">'+ts[term]+'</label>'))
             });
             setTimeout(function(){
-              $('.contrib-step-1 .error').remove();
+              $('.contrib-step-1 label.error').remove();
             }, 5000);
             return;
           }
