@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>, 2016-2024\n"
+"Last-Translator: 馮 佳今, 2022-2024\n"
 "Language-Team: Chinese (Taiwan) (http://app.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -8362,7 +8362,7 @@ msgstr "該圖片為無效的檔案類型，無法上傳。"
 
 #: CRM/Contact/BAO/Contact.php
 msgid "Contact Image is deleted successfully"
-msgstr "選取的聯絡人已成功刪除。"
+msgstr "選取的聯絡人圖像已成功刪除。"
 
 #: CRM/Contact/BAO/Contact.php
 msgid "Note(s)"
@@ -49991,3 +49991,93 @@ msgid ""
 " supports this feature. If you need 3D Secure, please contact customer "
 "service."
 msgstr "若要啟用 3D 驗證，必須新增有支援此功能的 TapPay 商店 Merchant ID 與帳號金鑰，若需要 3D 驗證請洽客服。"
+
+#: CRM/Group/Form/Edit.php
+msgid "Smart Marketing Group"
+msgstr ""
+
+#: CRM/Mailing/External/SmartMarketing/Flydove.php
+msgid "Cannot retrive remote group, try again later"
+msgstr ""
+
+#: CRM/Mailing/External/SmartMarketing/Flydove.php
+msgid "Flydove"
+msgstr ""
+
+#: CRM/Mailing/External/SmartMarketing/Flydove.php
+msgid "Please provide at least 1 contact."
+msgstr ""
+
+#: CRM/Mailing/External/SmartMarketing/Flydove.php
+msgid "Group you request doesn't exists in flydove."
+msgstr ""
+
+#: CRM/Mailing/External/SmartMarketing/Flydove.php
+msgid "Cannot get remote groups list."
+msgstr ""
+
+#: CRM/Mailing/External/SmartMarketing/Flydove.php
+msgid "The group you request doesn't exists in flydove."
+msgstr ""
+
+#: CRM/Mailing/External/SmartMarketing/Flydove.php
+msgid "Success sync %1 contacts from group %2 to remote group %3"
+msgstr ""
+
+#: CRM/Mailing/External/SmartMarketing/Flydove.php
+msgid "Skipped %1 contacts due to reasons: %2."
+msgstr ""
+
+#: CRM/Mailing/Page/AJAX.php
+msgid "Synchronize error"
+msgstr ""
+
+#: CRM/Mailing/Page/AJAX.php
+msgid "Successful synced"
+msgstr ""
+
+#: CRM/SMS/Form/Provider.php
+msgid "This Title already exists in Database."
+msgstr ""
+
+#: templates/CRM/Group/Form/Edit.tpl
+msgid ""
+"The automated marketing journey does not start immediately and it needs to "
+"follow the external tool to schedule."
+msgstr ""
+
+#: templates/CRM/Group/Form/Edit.tpl
+msgid ""
+"After binding a group, the system will lock this group, preventing any "
+"edits."
+msgstr ""
+
+#: templates/CRM/Group/Page/Group.tpl
+msgid ""
+"Deactivation only applies to CRM groups; the automated marketing journey is "
+"still ongoing. To deactivate, please go to the smart marketing tools backend"
+" to proceed."
+msgstr ""
+
+#: templates/CRM/SMS/Form/Provider.tpl
+msgid "Flydove Settings"
+msgstr ""
+
+#: templates/CRM/SMS/Form/Provider.tpl
+msgid "Flydove File Import API Token"
+msgstr ""
+
+#: templates/CRM/SMS/Form/Provider.tpl
+msgid "Flydove Subscribe API Token"
+msgstr ""
+
+#: templates/CRM/SMS/Form/Provider.tpl
+msgid "Flydove Group Management API Token"
+msgstr ""
+
+#: templates/CRM/Group/Page/Group.tpl
+msgid ""
+"The smart markeintg journey is still in progress. To delete the contact or "
+"remove contact from group list, you need to go to the external smart "
+"marketing tool to proceed."
+msgstr ""
