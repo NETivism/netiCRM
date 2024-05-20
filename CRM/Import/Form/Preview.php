@@ -84,20 +84,7 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
     $tableName = $this->get('importTableName');
     $prefix = str_replace('civicrm_import_job', CRM_Import_Parser::ERROR_FILE_PREFIX, $tableName);
     $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String', $this);
-    if ($invalidRowCount) {
-      $urlParams = CRM_Import_Parser::setImportErrorFilename($qfKey, CRM_Import_Parser::ERROR, 'CRM_Import_Parser', $prefix);
-      $this->set('downloadErrorRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
-    }
-
-    if ($conflictRowCount) {
-      $urlParams = CRM_Import_Parser::setImportErrorFilename($qfKey, CRM_Import_Parser::CONFLICT, 'CRM_Import_Parser', $prefix);
-      $this->set('downloadConflictRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
-    }
-
-    if ($mismatchCount) {
-      $urlParams = CRM_Import_Parser::setImportErrorFilename($qfKey, CRM_Import_Parser::NO_MATCH, 'CRM_Import_Parser', $prefix);
-      $this->set('downloadMismatchRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
-    }
+    CRM_Import_Parser::setImportErrorFilenames($qfKey, array('error', 'conflict','no_match'), 'CRM_Import_Parser', $prefix, $this);
 
     $properties = array('mapper', 'locations', 'phones', 'ims',
       'dataValues', 'columnCount',

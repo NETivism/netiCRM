@@ -67,27 +67,13 @@ class CRM_Import_Form_Summary extends CRM_Core_Form {
     $tableName = $this->get('importTableName');
     $prefix = str_replace('civicrm_import_job', CRM_Import_Parser::ERROR_FILE_PREFIX, $tableName);
     $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String', $this);
-    $urlParams = CRM_Import_Parser::setImportErrorFilename($qfKey, CRM_Import_Parser::ERROR, 'CRM_Import_Parser', $prefix);
-    $this->set('downloadErrorRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
+    CRM_Import_Parser::setImportErrorFilenames($qfKey, array('error', 'conflict','duplicate','no_match','unparsed_address_warning'), 'CRM_Import_Parser', $prefix, $this);
 
-    $urlParams = CRM_Import_Parser::setImportErrorFilename($qfKey, CRM_Import_Parser::CONFLICT, 'CRM_Import_Parser', $prefix);
-    $this->set('downloadConflictRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
-
-    if ($duplicateRowCount > 0) {
-      $urlParams = CRM_Import_Parser::setImportErrorFilename($qfKey, CRM_Import_Parser::DUPLICATE, 'CRM_Import_Parser', $prefix);
-      $this->set('downloadDuplicateRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
-    }
-    elseif ($mismatchCount) {
-      $urlParams = CRM_Import_Parser::setImportErrorFilename($qfKey, CRM_Import_Parser::NO_MATCH, 'CRM_Import_Parser', $prefix);
-      $this->set('downloadMismatchRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
-    }
-    else {
+    if ($duplicateRowCount <= 0 && !$mismatchCount) {
       $duplicateRowCount = 0;
       $this->set('duplicateRowCount', $duplicateRowCount);
     }
     if ($unparsedAddressCount) {
-      $urlParams = CRM_Import_Parser::setImportErrorFilename($qfKey, CRM_Import_Parser::UNPARSED_ADDRESS_WARNING, 'CRM_Import_Parser', $prefix);
-      $this->assign('downloadAddressRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
       $unparsedStreetAddressString = ts('Records imported successfully but unable to parse some of the street addresses');
       $this->assign('unparsedStreetAddressString', $unparsedStreetAddressString);
     }
@@ -116,7 +102,7 @@ class CRM_Import_Form_Summary extends CRM_Core_Form {
 
     $this->assign('dupeActionString', $dupeActionString);
 
-    $properties = array('totalRowCount', 'validRowCount', 'invalidRowCount', 'conflictRowCount', 'downloadConflictRecordsUrl', 'downloadErrorRecordsUrl', 'duplicateRowCount', 'downloadDuplicateRecordsUrl', 'downloadMismatchRecordsUrl', 'groupAdditions', 'tagAdditions', 'unMatchCount', 'unparsedAddressCount');
+    $properties = array('totalRowCount', 'validRowCount', 'invalidRowCount', 'conflictRowCount', 'downloadConflictRecordsUrl', 'downloadErrorRecordsUrl', 'duplicateRowCount', 'downloadDuplicateRecordsUrl', 'downloadMismatchRecordsUrl', 'groupAdditions', 'tagAdditions', 'unMatchCount', 'unparsedAddressCount','downloadAddressRecordsUrl');
     foreach ($properties as $property) {
       $this->assign($property, $this->get($property));
     }

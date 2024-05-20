@@ -1055,23 +1055,43 @@ abstract class CRM_Import_Parser {
    * @param string $filename
    * @return void
    */
-  public static function setImportErrorFilename($qfKey, $type, $parserClass, $prefix){
+  public static function setImportErrorFilenames($qfKey, $urlMap, $parserClass, $prefix, $form){
+    $defaultUrlMap = array(
+      // defaults
+      self::ERROR => 'downloadErrorRecordsUrl',
+      self::CONFLICT => 'downloadConflictRecordsUrl',
+      self::DUPLICATE => 'downloadDuplicateRecordsUrl',
+      self::NO_MATCH => 'downloadMismatchRecordsUrl',
+      // special in contact
+      self::UNPARSED_ADDRESS_WARNING => 'downloadAddressRecordsUrl',
+      // special in contribution
+      CRM_Contribute_Import_Parser::SOFT_CREDIT_ERROR => 'downloadSoftCreditErrorRecordsUrl',
+      CRM_Contribute_Import_Parser::PLEDGE_PAYMENT_ERROR => 'downloadPledgePaymentErrorRecordsUrl',
+      CRM_Contribute_Import_Parser::PCP_ERROR => 'downloadPCPErrorRecordsUrl',
+    );
     $session = CRM_Core_Session::singleton();
     $scope = 'import-'.$qfKey;
-    $name = $parserClass.'-'.$type;
-    if (is_callable(array($parserClass, 'errorFileName'))) {
-      $filename = call_user_func(array($parserClass, 'errorFileName'), $type, $prefix);
-      if (!empty($filename)) {
-        $session->set($name, $filename, $scope);
+
+    foreach($urlMap as $idx => $type) {
+      $type = strtoupper($type);
+      if (is_callable(array($parserClass, 'errorFileName')) && defined($parserClass.'::'.$type)) {
+        $constType = constant($parserClass.'::'.$type);
+        if (is_numeric($constType)) {
+          $name = $parserClass.'-'.$constType;
+          $filename = call_user_func(array($parserClass, 'errorFileName'), $constType, $prefix);
+          if (!empty($filename)) {
+            $session->set($name, $filename, $scope);
+          }
+          $urlParams = http_build_query(array(
+            'type' => $constType,
+            'parser' => $parserClass,
+            'qfKey' => $qfKey,
+          ), '', '&');
+          $tplVarName = is_numeric($idx) ? $defaultUrlMap[$constType] : $idx;
+          $form->set($tplVarName, CRM_Utils_System::url('civicrm/export', $urlParams));
+        }
       }
     }
-
-    $urlParams = array(
-      'type' => $type,
-      'parser' => $parserClass,
-      'qfKey' => $qfKey,
-    );
-    return http_build_query($urlParams, '', '&');
   }
 }
 

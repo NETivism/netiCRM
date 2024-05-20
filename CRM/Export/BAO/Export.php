@@ -1277,6 +1277,7 @@ class CRM_Export_BAO_Export {
   /**
    * Alias of importError to support old menu
    *
+   * @deprecated
    * @return void
    */
   public static function invoke() {
@@ -1288,11 +1289,11 @@ class CRM_Export_BAO_Export {
    *
    **/
   public static function importError() {
-    $type = CRM_Utils_Request::retrieve('type', 'Positive', CRM_Core_DAO::$_nullObject);
-    $parserName = CRM_Utils_Request::retrieve('parser', 'String', CRM_Core_DAO::$_nullObject);
-    $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String', CRM_Core_DAO::$_nullObject);
-    if (empty($parserName) || empty($type)) {
-      return;
+    $type = CRM_Utils_Request::retrieve('type', 'Positive', CRM_Core_DAO::$_nullObject, TRUE);
+    $parserName = CRM_Utils_Request::retrieve('parser', 'String', CRM_Core_DAO::$_nullObject, TRUE);
+    $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String', CRM_Core_DAO::$_nullObject, TRUE);
+    if (empty($type) || empty($parserName) || empty($qfKey)) {
+      CRM_Core_Error::fatal('Invalid parameters');
     }
 
     // clean and ensure parserName is a valid string
@@ -1314,6 +1315,8 @@ class CRM_Export_BAO_Export {
       }
     }
 
+    CRM_Core_Error::debug_log_message('Import error file fetch error - unknown file: '."$qfKey $type $parserName");
+    CRM_Core_Error::fatal('Invalid parameters');
     CRM_Utils_System::civiExit();
   }
 

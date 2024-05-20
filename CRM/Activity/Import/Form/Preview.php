@@ -80,21 +80,7 @@ class CRM_Activity_Import_Form_Preview extends CRM_Core_Form {
     $prefix = $this->get('errorFilenamePrefix');
     $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String', $this);
 
-    if ($invalidRowCount) {
-      $urlParams = CRM_Import_Parser::setImportErrorFilename($qfKey, CRM_Activity_Import_Parser::ERROR, 'CRM_Activity_Import_Parser', $prefix);
-      $this->set('downloadErrorRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
-    }
-
-    if ($conflictRowCount) {
-      $urlParams = CRM_Import_Parser::setImportErrorFilename($qfKey, CRM_Activity_Import_Parser::CONFLICT, 'CRM_Activity_Import_Parser', $prefix);
-      $this->set('downloadConflictRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
-    }
-
-    if ($mismatchCount) {
-      $urlParams = CRM_Import_Parser::setImportErrorFilename($qfKey, CRM_Activity_Import_Parser::NO_MATCH, 'CRM_Activity_Import_Parser', $prefix);
-      $this->set('downloadMismatchRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
-    }
-
+    CRM_Import_Parser::setImportErrorFilenames($qfKey, array('error', 'conflict','no_match'), 'CRM_Activity_Import_Parser', $prefix, $this);
 
     $properties = array('mapper',
       'dataValues', 'columnCount',

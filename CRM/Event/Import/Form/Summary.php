@@ -64,22 +64,9 @@ class CRM_Event_Import_Form_Summary extends CRM_Core_Form {
     $prefix = $this->get('errorFilenamePrefix');
     $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String', $this);
 
-    $urlParams = CRM_Import_Parser::setImportErrorFilename($qfKey, CRM_Event_Import_Parser::ERROR, 'CRM_Event_Import_Parser', $prefix);
-    $this->set('downloadErrorRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
+    CRM_Import_Parser::setImportErrorFilenames($qfKey, array('error','conflict','duplicate','no_match'), 'CRM_Event_Import_Parser', $prefix, $this);
 
-    $urlParams = CRM_Import_Parser::setImportErrorFilename($qfKey, CRM_Event_Import_Parser::CONFLICT, 'CRM_Event_Import_Parser', $prefix);
-    $this->set('downloadConflictRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
-
-    if ($duplicateRowCount > 0) {
-      $urlParams = 'type=' . CRM_Event_Import_Parser::DUPLICATE . '&parser=CRM_Event_Import_Parser';
-      $urlParams = CRM_Import_Parser::setImportErrorFilename($qfKey, CRM_Event_Import_Parser::DUPLICATE, 'CRM_Event_Import_Parser', $prefix);
-      $this->set('downloadDuplicateRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
-    }
-    elseif ($mismatchCount) {
-      $urlParams = CRM_Import_Parser::setImportErrorFilename($qfKey, CRM_Event_Import_Parser::NO_MATCH, 'CRM_Event_Import_Parser', $prefix);
-      $this->set('downloadMismatchRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
-    }
-    else {
+    if ($duplicateRowCount <= 0 && !$mismatchCount) {
       $duplicateRowCount = 0;
       $this->set('duplicateRowCount', $duplicateRowCount);
     }
