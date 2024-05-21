@@ -334,6 +334,19 @@ class CRM_Contribute_Page_ContributionPage extends CRM_Core_Page {
       if ($shorten) {
         $this->assign('shorten', $shorten);
       }
+      $shorten_pcp = CRM_Core_OptionGroup::getValue('shorten_url', 'civicrm_pcp.'.$id, 'name', 'String', 'value');
+      if ($shorten_pcp) {
+        $this->assign('shorten_pcp', $shorten_pcp);
+      }
+
+      $this->assign('pcp_is_active', 0);
+      $pcpInfo = new CRM_Contribute_DAO_PCPBlock();
+      $pcpInfo->entity_table = 'civicrm_contribution_page';
+      $pcpInfo->entity_id = $id;
+      $pcpInfo->find(TRUE);
+      if (!empty($pcpInfo->is_active)) {
+        $this->assign('pcp_is_active', 1);
+      }
 
       // statistics
       CRM_Utils_System::setTitle(ts('Dashlets')." - ".$page['title']);

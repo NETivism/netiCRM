@@ -4,7 +4,7 @@ class CRM_Core_Page_AJAX_SaveShortenURL {
     $pageId = CRM_Utils_Request::retrieve('page_id', 'Positive', CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST');
     $pageType = CRM_Utils_Request::retrieve('page_type', 'String', CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST');
     $shorten = CRM_Utils_Request::retrieve('shorten', 'String', CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST');
-    if (in_array($pageType, array('civicrm_contribution_page', 'civicrm_event.info', 'civicrm_event.register', 'civicrm_uf_group'))) {
+    if (in_array($pageType, array('civicrm_contribution_page', 'civicrm_pcp', 'civicrm_event.info', 'civicrm_event.register', 'civicrm_uf_group'))) {
       $exists = CRM_Core_OptionGroup::getValue('shorten_url', $pageType.'.'.$pageId, 'name', 'String', 'id');
       $groupParams = array(
         'name' => 'shorten_url',
