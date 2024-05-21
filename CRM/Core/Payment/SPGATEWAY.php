@@ -1408,4 +1408,153 @@ EOT;
     }
     return FALSE;
   }
+
+  /**
+   * Using weblog post data to sync
+   *
+   * @param string $processOnlyDate string that format YYYYmmddHH indicate only process date in that hour
+   * @param array $lines custom provided lines for test o process
+   * @return void
+   */
+  public static function syncTransactionWebLog($filterDatetime = '', $lines = NULL) {
+    $paymentProcessors = array();
+    if (isset($lines) && is_array($lines)) {
+      $logLines = $lines;
+    }
+    else {
+      $logLines = array();
+      $logFile = CRM_Utils_System::cmsRootPath().'/'.CRM_Core_Config::singleton()->webLogDir.'/ipn_post.log';
+      $logContent = '';
+      if (strpos($logFile, '/') === 0 && is_file($logFile)) {
+        $logContent = file_get_contents($logFile);
+        $logLines = explode("\n", $logContent);
+      }
+    }
+
+    if (!empty($logLines)) {
+      $ordersByMerchant = array();
+      foreach ($logLines as $idx => $logLine) {
+        $getParams = $ipnResult = $postParams = array();
+        $logLine = trim($logLine);
+        if (empty($logLine)) {
+          continue;
+        }
+        // separate by space
+        preg_match('/^([^ ]+)\s\[([^\s]+)\]\s([^\s]+)\s(.*)$/', $logLine, $logMatches);
+        if (count($logMatches) >= 4) {
+          $isoDate = $logMatches[2];
+          // skip ipn when filter
+          if ($filterDatetime && strpos(date('YmdH', strtotime($isoDate)), $filterDatetime) === FALSE) {
+            continue;
+          }
+
+          $getString = $logMatches[3];
+          $postString = isset($logMatches[4]) ? $logMatches[4] : '';
+          $postString = preg_replace_callback('/\\\\x([0-9a-fA-F]{2})/', function ($strMatches) {
+            return chr(hexdec($strMatches[1]));
+          }, $postString);
+
+          $parsedUrl = parse_url($getString);
+          parse_str($parsedUrl['query'], $getParams);
+
+          // analysis POST
+          if (!empty($postString)) {
+            if (strpos($postString, 'JSONData=') === 0) {
+              $postString = substr($postString, 9);
+              $postParams = json_decode($postString, true);
+              if (!empty($postParams['Result'])) {
+                $ipnResult = json_decode($postParams['Result'], TRUE);
+                if (!empty($ipnResult['MerchantID'])) {
+                  $ordersByMerchant[$ipnResult['MerchantID']][$idx] = array(
+                    'recurring' => FALSE,
+                    'contribution_id' => !empty($getParams['cid']) ? $getParams['cid'] : '',
+                    'contact_id' => !empty($getParams['contact_id']) ? $getParams['contact_id'] : '',
+                    'success' => (isset($postParams['Status']) && $postParams['Status'] === 'SUCCESS') ? TRUE : FALSE,
+                    'total_amount' => isset($ipnResult['Amt']) ? (float)$ipnResult['Amt'] : 0,
+                    'trxn_id' => isset($ipnResult['MerchantOrderNo']) ? $ipnResult['MerchantOrderNo'] : '',
+                    'receive_date' => isset($ipnResult['PayTime']) ? date('c', strtotime($ipnResult['PayTime'])) : '',
+                    'ipn_date' => $isoDate,
+                  );
+                }
+              }
+            }
+            elseif (strpos($postString, 'Content-Disposition: form-data') !== false) {
+              $rawPostData = preg_replace('/\r\n--------------------------\w+--\r\n$/', '', $postString);
+              $postParts = preg_split('/\r\n--------------------------\w+\r\n/', $rawPostData);
+              $postParams = array();
+              foreach ($postParts as $part) {
+                if (preg_match('/Content-Disposition: form-data; name="(.+?)"\r\n\r\n(.*)/s', $part, $strMatches)) {
+                  $key = $strMatches[1];
+                  $value = $strMatches[2];
+                  $postParams[$key] = $value;
+                }
+              }
+              if (!empty($postParams['Period'])) {
+                // decode
+                if(is_numeric($getParams['cid'])) {
+                  $dao = CRM_Core_DAO::executeQuery("SELECT payment_processor_id, is_test FROM civicrm_contribution WHERE id = %1", array(
+                    1 => array($getParams['cid'], 'Integer'),
+                  ));
+                  $dao->fetch();
+                  if (!empty($paymentProcessors[$dao->payment_processor_id])) {
+                    $paymentProcessor = $paymentProcessors[$dao->payment_processor_id];
+                  }
+                  elseif (!empty($dao->payment_processor_id)) {
+                    $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($dao->payment_processor_id, $dao->is_test ? 'test' : 'live');
+                  }
+                  $postDecode = CRM_Core_Payment_SPGATEWAYAPI::recurDecrypt($postParams['Period'], $paymentProcessor);
+                  if (!empty($postDecode) && json_decode($postDecode)) {
+                    $postParams = json_decode($postDecode, TRUE);
+                    $ipnResult = $postParams['Result'];
+                    $orderNumber = !empty($ipnResult['OrderNo']) ? $ipnResult['OrderNo'] : $ipnResult['MerchantOrderNo'];
+                    $amount = isset($ipnResult['AuthAmt']) ? $ipnResult['AuthAmt'] : $ipnResult['PeriodAmt'];
+                    $ordersByMerchant[$ipnResult['MerchantID']][$idx] = array(
+                      'recurring' => TRUE,
+                      'contribution_id' => !empty($getParams['cid']) ? $getParams['cid'] : '',
+                      'contact_id' => !empty($getParams['contact_id']) ? $getParams['contact_id'] : '',
+                      'success' => (isset($postParams['Status']) && $postParams['Status'] === 'SUCCESS') ? TRUE : FALSE,
+                      'total_amount' => $amount,
+                      'trxn_id' => $orderNumber,
+                      'receive_date' => isset($ipnResult['AuthTime']) ? date('c', strtotime($ipnResult['AuthTime'])) : '',
+                      'ipn_date' => $isoDate,
+                    );
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      // process complete, start to call sync when necessery
+      // only trigger sync when contribution status is pending
+      if (!empty($ordersByMerchant)) {
+        foreach($ordersByMerchant as $merchantId => $orders) {
+          foreach($orders as $idx => $order) {
+            if (!empty($order['trxn_id'])) {
+              $current_status_id = CRM_Core_DAO::singleValueQuery("SELECT contribution_status_id FROM civicrm_contribution WHERE trxn_id = %1", array(
+                1 => array($order['trxn_id'], 'String'),
+              ));
+              if ($order['recurring']) {
+                if (empty($current_status_id)) {
+                  CRM_Core_Error::debug_log_message("spgateway: weblog sync recur create");
+                  self::recurSyncTransaction($order['trxn_id'], TRUE);
+                }
+                elseif($current_status_id == 2) {
+                  CRM_Core_Error::debug_log_message("spgateway: weblog sync recur status");
+                  self::recurSyncTransaction($order['trxn_id']);
+                }
+              }
+              else {
+                if ($current_status_id == 2) {
+                  // only sync status
+                  CRM_Core_Error::debug_log_message("spgateway: weblog sync non-recur status");
+                  self::syncTransaction($order['trxn_id']);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 }

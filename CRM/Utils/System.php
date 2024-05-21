@@ -1586,7 +1586,7 @@ class CRM_Utils_System {
   /**
    * Get CMS public or private or temp dir
    *
-   * @return boolean.
+   * @return string
    */
   public static function cmsRootPath() {
     return CRM_Core_Config::$_userSystem->cmsRootPath();
