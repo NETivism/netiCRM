@@ -57,7 +57,7 @@ class CRM_Contribute_Import_Form_Summary extends CRM_Core_Form {
     $this->set('totalRowCount', $totalRowCount);
 
     $tableName = $this->get('importTableName');
-    $prefix = str_replace('civicrm_import_job', CRM_Import_Parser::ERROR_FILE_PREFIX, $tableName);
+    $prefix = str_replace('civicrm_import_job', CRM_Contribute_Import_Parser::ERROR_FILE_PREFIX, $tableName);
     $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String', $this);
 
     CRM_Import_Parser::setImportErrorFilenames($qfKey, array('error', 'conflict','soft_credit_error', 'pcp_error', 'pledge_payment_error', 'duplicate', 'no_match'), 'CRM_Contribute_Import_Parser', $prefix, $this);
