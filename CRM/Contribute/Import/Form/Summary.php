@@ -56,37 +56,22 @@ class CRM_Contribute_Import_Form_Summary extends CRM_Core_Form {
     $totalRowCount += $relatedCount;
     $this->set('totalRowCount', $totalRowCount);
 
+    $tableName = $this->get('importTableName');
+    $prefix = str_replace('civicrm_import_job', CRM_Import_Parser::ERROR_FILE_PREFIX, $tableName);
+    $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String', $this);
+
+    CRM_Import_Parser::setImportErrorFilenames($qfKey, array('error', 'conflict','soft_credit_error', 'pcp_error', 'pledge_payment_error', 'duplicate', 'no_match'), 'CRM_Contribute_Import_Parser', $prefix, $this);
+
     $invalidRowCount = $this->get('invalidRowCount');
     $invalidSoftCreditRowCount = $this->get('invalidSoftCreditRowCount');
-    if ($invalidSoftCreditRowCount) {
-      $urlParams = 'type=' . CRM_Contribute_Import_Parser::SOFT_CREDIT_ERROR . '&parser=CRM_Contribute_Import_Parser';
-      $this->set('downloadSoftCreditErrorRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
-    }
     $invalidPCPRowCount = $this->get('invalidPCPRowCount');
-    if ($invalidPCPRowCount) {
-      $urlParams = 'type=' . CRM_Contribute_Import_Parser::PCP_ERROR. '&parser=CRM_Contribute_Import_Parser';
-      $this->set('downloadPCPErrorRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
-    }
-    $validSoftCreditRowCount = $this->get('validSoftCreditRowCount');
     $invalidPledgePaymentRowCount = $this->get('invalidPledgePaymentRowCount');
-    if ($invalidPledgePaymentRowCount) {
-      $urlParams = 'type=' . CRM_Contribute_Import_Parser::PLEDGE_PAYMENT_ERROR . '&parser=CRM_Contribute_Import_Parser';
-      $this->set('downloadPledgePaymentErrorRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
-    }
-    $validPledgePaymentRowCount = $this->get('validPledgePaymentRowCount');
     $conflictRowCount = $this->get('conflictRowCount');
     $duplicateRowCount = $this->get('duplicateRowCount');
     $onDuplicate = $this->get('onDuplicate');
     $mismatchCount = $this->get('unMatchCount');
-    if ($duplicateRowCount > 0) {
-      $urlParams = 'type=' . CRM_Contribute_Import_Parser::DUPLICATE . '&parser=CRM_Contribute_Import_Parser';
-      $this->set('downloadDuplicateRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
-    }
-    elseif ($mismatchCount) {
-      $urlParams = 'type=' . CRM_Contribute_Import_Parser::NO_MATCH . '&parser=CRM_Contribute_Import_Parser';
-      $this->set('downloadMismatchRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
-    }
-    else {
+
+    if ($duplicateRowCount <= 0 && !$mismatchCount) {
       $duplicateRowCount = 0;
       $this->set('duplicateRowCount', $duplicateRowCount);
     }

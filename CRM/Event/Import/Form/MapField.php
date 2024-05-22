@@ -585,13 +585,23 @@ class CRM_Event_Import_Form_MapField extends CRM_Core_Form {
       $this->set('savedMapping', $saveMappingFields->mapping_id);
     }
 
-    require_once 'CRM/Event/Import/Parser/Participant.php';
+    $errorFilenamePrefix = CRM_Event_Import_Parser::ERROR_FILE_PREFIX.'_'.date('YmdHis', CRM_REQUEST_TIME);
+    $this->set('errorFilenamePrefix', $errorFilenamePrefix);
+
     $parser = new CRM_Event_Import_Parser_Participant($mapperKeysMain);
-    $parser->run($fileName, $seperator, $mapper, $skipColumnHeader,
-      CRM_Event_Import_Parser::MODE_PREVIEW, $this->get('contactType')
+    $parser->run(
+      $fileName,
+      $seperator,
+      $mapper,
+      $skipColumnHeader,
+      CRM_Event_Import_Parser::MODE_PREVIEW,
+      $this->get('contactType'),
+      CRM_Event_Import_Parser::DUPLICATE_SKIP,
+      $errorFilenamePrefix
     );
     // add all the necessary variables to the form
     $parser->set($this);
+
   }
 
   /**

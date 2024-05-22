@@ -65,22 +65,15 @@ class CRM_Import_Form_Summary extends CRM_Core_Form {
     $unparsedAddressCount = $this->get('unparsedAddressCount');
 
     $tableName = $this->get('importTableName');
-    $fileName = str_replace('civicrm_import_job_', 'import_', $tableName);
-    if ($duplicateRowCount > 0) {
-      $urlParams = 'type=' . CRM_Import_Parser::DUPLICATE . '&parser=CRM_Import_Parser&file='.$fileName;
-      $this->set('downloadDuplicateRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
-    }
-    elseif ($mismatchCount) {
-      $urlParams = 'type=' . CRM_Import_Parser::NO_MATCH . '&parser=CRM_Import_Parser&file='.$fileName;
-      $this->set('downloadMismatchRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
-    }
-    else {
+    $prefix = str_replace('civicrm_import_job', CRM_Import_Parser::ERROR_FILE_PREFIX, $tableName);
+    $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String', $this);
+    CRM_Import_Parser::setImportErrorFilenames($qfKey, array('error', 'conflict','duplicate','no_match','unparsed_address_warning'), 'CRM_Import_Parser', $prefix, $this);
+
+    if ($duplicateRowCount <= 0 && !$mismatchCount) {
       $duplicateRowCount = 0;
       $this->set('duplicateRowCount', $duplicateRowCount);
     }
     if ($unparsedAddressCount) {
-      $urlParams = 'type=' . CRM_Import_Parser::UNPARSED_ADDRESS_WARNING . '&parser=CRM_Import_Parser&file='.$fileName;
-      $this->assign('downloadAddressRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
       $unparsedStreetAddressString = ts('Records imported successfully but unable to parse some of the street addresses');
       $this->assign('unparsedStreetAddressString', $unparsedStreetAddressString);
     }
@@ -109,7 +102,7 @@ class CRM_Import_Form_Summary extends CRM_Core_Form {
 
     $this->assign('dupeActionString', $dupeActionString);
 
-    $properties = array('totalRowCount', 'validRowCount', 'invalidRowCount', 'conflictRowCount', 'downloadConflictRecordsUrl', 'downloadErrorRecordsUrl', 'duplicateRowCount', 'downloadDuplicateRecordsUrl', 'downloadMismatchRecordsUrl', 'groupAdditions', 'tagAdditions', 'unMatchCount', 'unparsedAddressCount');
+    $properties = array('totalRowCount', 'validRowCount', 'invalidRowCount', 'conflictRowCount', 'downloadConflictRecordsUrl', 'downloadErrorRecordsUrl', 'duplicateRowCount', 'downloadDuplicateRecordsUrl', 'downloadMismatchRecordsUrl', 'groupAdditions', 'tagAdditions', 'unMatchCount', 'unparsedAddressCount','downloadAddressRecordsUrl');
     foreach ($properties as $property) {
       $this->assign($property, $this->get($property));
     }

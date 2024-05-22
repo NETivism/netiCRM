@@ -1275,48 +1275,48 @@ class CRM_Export_BAO_Export {
   }
 
   /**
+   * Alias of importError to support old menu
+   *
+   * @deprecated
+   * @return void
+   */
+  public static function invoke() {
+    self::importError();
+  }
+
+  /**
    * Function to handle import error file creation.
    *
    **/
-  public static function invoke() {
-    $type = CRM_Utils_Request::retrieve('type', 'Positive', CRM_Core_DAO::$_nullObject);
-    $parserName = CRM_Utils_Request::retrieve('parser', 'String', CRM_Core_DAO::$_nullObject);
-    $fileName = CRM_Utils_Request::retrieve('file', 'String', CRM_Core_DAO::$_nullObject);
-    if (empty($parserName) || empty($type)) {
-      return;
+  public static function importError() {
+    $type = CRM_Utils_Request::retrieve('type', 'Positive', CRM_Core_DAO::$_nullObject, TRUE);
+    $parserName = CRM_Utils_Request::retrieve('parser', 'String', CRM_Core_DAO::$_nullObject, TRUE);
+    $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String', CRM_Core_DAO::$_nullObject, TRUE);
+    if (empty($type) || empty($parserName) || empty($qfKey)) {
+      CRM_Core_Error::fatal('Invalid parameters');
     }
 
     // clean and ensure parserName is a valid string
     $parserName = CRM_Utils_String::munge($parserName);
-    $parserClass = explode('_', $parserName);
-
-    // make sure parserClass is in the CRM namespace and
-    // at least 3 levels deep
-    if ($parserClass[0] == 'CRM' &&
-      count($parserClass) >= 3
-    ) {
-      // ensure the functions exists
-      if (method_exists($parserName, 'errorFileName') &&
-        method_exists($parserName, 'saveFileName')
-      ) {
-        $errorFileName = $parserName::errorFileName( $type, $fileName);
-        $saveFileName = $parserName::saveFileName( $type, $fileName);
-        $config = CRM_Core_Config::singleton();
-        $errorFileName = $config->uploadDir . $errorFileName;
-        if (!empty($errorFileName) && !empty($saveFileName) ) {
-          $buffer = '';
-          CRM_Utils_System::download(
-            $saveFileName,
-            'application/vnd.ms-excel',
-            $buffer,
-            NULL,
-            FALSE
-          );
-
-          readfile($errorFileName);
-        }
+    $filename = CRM_Import_Parser::getImportErrorFilename($qfKey, $type, $parserName);
+    if (!empty($filename)) {
+      $config = CRM_Core_Config::singleton();
+      $errorFileName = $config->uploadDir . $filename;
+      if (!empty($errorFileName) && is_file($errorFileName)) {
+        $buffer = '';
+        CRM_Utils_System::download(
+          $filename,
+          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+          $buffer,
+          NULL,
+          FALSE
+        );
+        readfile($errorFileName);
       }
     }
+
+    CRM_Core_Error::debug_log_message('Import error file fetch error - unknown file: '."$qfKey $type $parserName");
+    CRM_Core_Error::fatal('Invalid parameters');
     CRM_Utils_System::civiExit();
   }
 
