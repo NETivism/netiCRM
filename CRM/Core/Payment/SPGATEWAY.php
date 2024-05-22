@@ -1506,10 +1506,18 @@ EOT;
                   if (!empty($postDecode) && json_decode($postDecode)) {
                     $postParams = json_decode($postDecode, TRUE);
                     $ipnResult = $postParams['Result'];
-                    $orderNumber = !empty($ipnResult['OrderNo']) ? $ipnResult['OrderNo'] : $ipnResult['MerchantOrderNo'];
+                    if (!empty($ipnResult['OrderNo'])) {
+                      $orderNumber = $ipnResult['OrderNo'];
+                      $firstRecurring = FALSE;
+                    }
+                    else {
+                      $orderNumber = $ipnResult['MerchantOrderNo'];
+                      $firstRecurring = TRUE;
+                    }
                     $amount = isset($ipnResult['AuthAmt']) ? $ipnResult['AuthAmt'] : $ipnResult['PeriodAmt'];
                     $ordersByMerchant[$ipnResult['MerchantID']][$idx] = array(
                       'recurring' => TRUE,
+                      'first_recurring' => $firstRecurring,
                       'contribution_id' => !empty($getParams['cid']) ? $getParams['cid'] : '',
                       'contact_id' => !empty($getParams['contact_id']) ? $getParams['contact_id'] : '',
                       'success' => (isset($postParams['Status']) && $postParams['Status'] === 'SUCCESS') ? TRUE : FALSE,
@@ -1531,23 +1539,37 @@ EOT;
         foreach($ordersByMerchant as $merchantId => $orders) {
           foreach($orders as $idx => $order) {
             if (!empty($order['trxn_id'])) {
-              $current_status_id = CRM_Core_DAO::singleValueQuery("SELECT contribution_status_id FROM civicrm_contribution WHERE trxn_id = %1", array(
-                1 => array($order['trxn_id'], 'String'),
-              ));
+              if ($order['first_recurring']) {
+                $current_status_id = CRM_Core_DAO::singleValueQuery("SELECT contribution_status_id FROM civicrm_contribution WHERE trxn_id IN (%1, %2)", array(
+                  1 => array($order['trxn_id'], 'String'),
+                  2 => array($order['trxn_id'].'_1', 'String'),
+                ));
+              }
+              else {
+                $current_status_id = CRM_Core_DAO::singleValueQuery("SELECT contribution_status_id FROM civicrm_contribution WHERE trxn_id = %1", array(
+                  1 => array($order['trxn_id'], 'String'),
+                ));
+              }
               if ($order['recurring']) {
                 if (empty($current_status_id)) {
-                  CRM_Core_Error::debug_log_message("spgateway: weblog sync recur create");
+                  CRM_Core_Error::debug_log_message("spgateway: weblog sync recur create for trxn_id {$order['trxn_id']}");
                   self::recurSyncTransaction($order['trxn_id'], TRUE);
                 }
                 elseif($current_status_id == 2) {
-                  CRM_Core_Error::debug_log_message("spgateway: weblog sync recur status");
-                  self::recurSyncTransaction($order['trxn_id']);
+                  CRM_Core_Error::debug_log_message("spgateway: weblog sync recur status for trxn_id {$order['trxn_id']}");
+                  if ($order['first_recurring']) {
+                    $ids = explode('_', $order['trxn_id']);
+                    self::syncTransaction($ids[0]);
+                  }
+                  else {
+                    self::syncTransaction($order['trxn_id']);
+                  }
                 }
               }
               else {
                 if ($current_status_id == 2) {
                   // only sync status
-                  CRM_Core_Error::debug_log_message("spgateway: weblog sync non-recur status");
+                  CRM_Core_Error::debug_log_message("spgateway: weblog sync non-recur status for trxn_id {$order['trxn_id']}");
                   self::syncTransaction($order['trxn_id']);
                 }
               }
