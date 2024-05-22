@@ -1314,9 +1314,11 @@ class CRM_Export_BAO_Export {
         readfile($errorFileName);
       }
     }
+    else {
+      CRM_Core_Error::debug_log_message('Import error file fetch error - unknown file: '."$qfKey $type $parserName");
+      CRM_Core_Error::fatal('Invalid parameters');
+    }
 
-    CRM_Core_Error::debug_log_message('Import error file fetch error - unknown file: '."$qfKey $type $parserName");
-    CRM_Core_Error::fatal('Invalid parameters');
     CRM_Utils_System::civiExit();
   }
 
