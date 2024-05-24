@@ -964,9 +964,8 @@ class CRM_Utils_System {
     $config = CRM_Core_Config::singleton();
     $req_headers = CRM_Utils_System::getRequestHeaders();
     if ($config->enableSSL &&
-       (!isset($_SERVER['HTTPS']) || strtolower($_SERVER['HTTPS']) == 'off') &&
-       strtolower($req_headers['X_FORWARDED_PROTO']) != 'https'
-    ) {
+      (!isset($_SERVER['HTTPS']) || strtolower($_SERVER['HTTPS']) == 'off') &&
+      strtolower($req_headers['X_FORWARDED_PROTO']) != 'https' ) {
       // ensure that SSL is enabled on a civicrm url (for cookie reasons etc)
       $url = "https://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
       if (!self::checkURL($url, TRUE)) {
@@ -975,8 +974,6 @@ class CRM_Utils_System {
         }
         else {
           CRM_Core_Session::setStatus('HTTPS is not set up on this machine');
-          // admin should be the only one following this
-          // since we dont want the user stuck in a bad place
           return;
         }
       }
