@@ -532,7 +532,7 @@ EOT;
   /**
    * Execute ipn as called from mypay transaction.
    *
-   * @param array $urlParams Default params in CiviCRM Router, Must be array('civicrm', 'mypay', 'ipn')
+   * @param array $arguments Default params in CiviCRM Router, Must be array('civicrm', 'mypay', 'ipn')
    * @param string $instrument The code of used instrument like 'Credit' or 'ATM'.
    * @param array $post Bring post variables if you need test.
    * @param array $get Bring get variables if you need test.
@@ -540,10 +540,22 @@ EOT;
    *
    * @return string|void If $print is FALSE, function will return the result as Array.
    */
-  public static function doIPN($urlParams, $instrument = NULL, $post = NULL, $get = NULL, $print = TRUE) {
+  public static function doIPN($arguments, $instrument = NULL, $post = NULL, $get = NULL, $print = TRUE) {
     // detect variables
     $post = !empty($post) ? $post : $_POST;
     $get = !empty($get) ? $get : $_GET;
+    if (!empty($arguments)) {
+      if (is_array($arguments)) {
+        $instrument = end($arguments);
+      }
+      else {
+        $instrument = $arguments;
+      }
+    }
+    if (empty($instrument)) {
+      $qArray = explode('/', $get['q']);
+      $instrument = end($qArray);
+    }
 
     if (!empty($post['uid']) && !empty($post['key']) && !empty($post['prc'])) {
       // Save Data to Log.
@@ -569,7 +581,7 @@ EOT;
     }
     else {
       CRM_Core_Error::debug_log_message( "civicrm_mypay: Don't have necessary params: uid, key, prc.", TRUE);
-      exit;
+      CRM_Utils_System::civiExit();
     }
 
     // Give $instrument
@@ -589,7 +601,7 @@ EOT;
           break;
         default:
           CRM_Core_Error::debug_log_message( "MyPay: The instrument doesn't use, type is '{$post['result_content_type']}'", TRUE);
-          exit;
+          CRM_Utils_System::civiExit();
           break;
       }
     }
@@ -597,7 +609,7 @@ EOT;
     // detect variables
     if(empty($post)){
       CRM_Core_Error::debug_log_message( "civicrm_mypay: Could not find POST data from payment server", TRUE);
-      exit;
+      CRM_Utils_System::civiExit();
     }
     else{
       $component = $post['echo_0'];
@@ -606,7 +618,6 @@ EOT;
         $result = $ipn->main($component, $instrument);
         if(!empty($result) && $print){
           echo $result;
-		      CRM_Utils_System::civiExit();
         }
         else{
           return $result;
@@ -616,6 +627,7 @@ EOT;
         CRM_Core_Error::debug_log_message( "civicrm_mypay: Could not get module name from request url", TRUE);
       }
     }
+    CRM_Utils_System::civiExit();
   }
 
   /**

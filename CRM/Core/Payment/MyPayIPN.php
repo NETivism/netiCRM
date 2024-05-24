@@ -18,17 +18,16 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
   /**
    * Main function
    *
-   * @param array $component The component of IPN. Such as 'contrib', 'event'
    * @param array $instrument The instrument, like 'Credit', 'BARCODE'... etc.
    *
    * @return void
    */
-  function main($component, $instrument){
+  function main($instrument){
     // get the contribution and contact ids from the GET params
     $objects = $ids = $input = array();
-    $ids = $this->getIds();
+    $this->getIds($ids);
     $input = $this->_post;
-    $input['component'] = $component;
+    $input['component'] = !empty($ids['participant']) ? 'event' : 'contribute';
 
     // Record data to db. If it's not recur or first contribution.
     if (empty($input['nois']) || $input['nois'] == 1) {
@@ -56,7 +55,7 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
     else{
       // start validation
       $note = '';
-      if( $this->validateOthers($input, $ids, $objects, $note) ){
+      if( $this->validateOthers($input, $ids, $objects, $note, $instrument) ){
         $contribution =& $objects['contribution'];
         if(empty($contribution->receive_date)){
           if (!empty($input['finishtime'])) {
@@ -86,7 +85,7 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
     // never for front-end user.
   }
 
-  function validateOthers(&$input, &$ids, &$objects, &$note) {
+  function validateOthers(&$input, &$ids, &$objects, &$note, $instrument) {
     $contribution = &$objects['contribution'];
     $pass = TRUE;
 
@@ -140,7 +139,6 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
       // Is Recurring
       if($this->_post['group_id']){
         $query_params = array(1 => array($recur->id, 'Integer'));
-        $local_succ_times = CRM_Core_DAO::singleValueQuery("SELECT count(*) FROM civicrm_contribution WHERE contribution_recur_id = %1 AND contribution_status_id = 1", $query_params);
         $new_trxn_id = CRM_Core_Payment_MyPay::getTrxnIdByPost($input);
         if($input['prc'] != '250'){
           $contribution->contribution_status_id = 4; // Failed
@@ -160,13 +158,6 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
         }
         elseif($input['nois'] != '1'){
            // Completed
-          if ($local_succ_times > $input['nois']) {
-            // Possible over charged. Record on the contribtion
-            // $local_succ_times++;
-            $msg = 'MyPay: Possible over charge, detect from Current Times: '.$input['nois'];
-            CRM_Core_Error::debug_log_message($msg);
-            $note .= "Possible over charge. Will be $local_succ_times successful contributions in CRM, but greenworld only have {$input['nois']} success execution.";
-          }
           $contribution->contribution_status_id = 1; // Completed
           $id_from_trxn_id = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution WHERE trxn_id = %1", array(
             1 => array($new_trxn_id, 'String'),
@@ -213,10 +204,6 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
               $params['start_date'] = $input['finishtime'];
               $params['contribution_status_id'] = 5; // from pending to processing
               $params['modified_date'] = date('YmdHis');
-              // Set expire time
-              if(!empty($input['expired_date'])){
-                $params['expired_date'] = $input['expired_date'];
-              }
               CRM_Contribute_BAO_ContributionRecur::add($params, $null);
             }
             else{
@@ -249,23 +236,10 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
    * MyPay ids doesn't be carried in GET params.
    * If it's recurring, The contribution should be the first time one.
    */
-  function getIds() {
-    $ids = array();
+  function getIds(&$ids = array()) {
     $trxnId = $this->_post['order_id'];
     $contributionId = CRM_Core_DAO::singleValueQuery('SELECT id FROM civicrm_contribution WHERE trxn_id = %1', array(1 => array($trxnId, 'String')));
-    $buildIds = CRM_Contribute_BAO_Contribution::buildIds($contributionId);
-    if (!empty($buildIds['participantID'])) {
-      $ids['event'] = $buildIds['eventID'];
-      $ids['participant'] = $buildIds['participantID'];
-    }
-    if (!empty($buildIds['membershipID'])) {
-      $ids['membership'] = $buildIds['membershipID'];
-    }
-    $ids['contact'] = $buildIds['contactID'];
-    $ids['contribution'] = $buildIds['contributionID'];
-    $ids['contributionRecur'] = $buildIds['contributionRecurID'];
-    $ids['contributionPage'] = $buildIds['contributionPageID'];
-    return $ids;
+    $ids = CRM_Contribute_BAO_Contribution::buildIds($contributionId, '');
   }
 
   /**
