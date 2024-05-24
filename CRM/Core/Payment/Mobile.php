@@ -151,13 +151,16 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
       );
       CRM_Core_DAO::executeQuery("UPDATE civicrm_contribution SET payment_instrument_id = %1 WHERE id = %2", $options);
     }
+    CRM_Core_Error::debug_var('mobile_payment_params', $params);
 
     if($this->_instrumentType == 'linepay'){
+      CRM_Core_Error::debug_var('mobile_payment_linepay', $cid);
       $this->_mobilePayment = new CRM_Core_Payment_LinePay($params['payment_processor']);
       $this->_mobilePayment->doRequest($params);
       return;
     }
 
+    CRM_Core_Error::debug_var('mobile_payment_others', $cid);
     // If not use linepay, We need another payment processor.
     $qfKey = $params['qfKey'];
     $paymentProcessor = $this->_paymentProcessor;
