@@ -93,13 +93,19 @@ class CRM_Contribute_DAO_MyPayLog extends CRM_Core_DAO
    */
   public $contribution_id;
   /**
+   * The uid in mypay transaction.
+   *
+   * @var string
+   */
+  public $uid;
+  /**
    * Request URL
    *
    * @var string
    */
   public $url;
   /**
-   * Request URL
+   * Request Command
    *
    * @var string
    */
@@ -183,6 +189,14 @@ class CRM_Contribute_DAO_MyPayLog extends CRM_Core_DAO
           'title' => ts('Contribuution ID') ,
           'default' => 'UL',
           'FKClassName' => 'CRM_Contribute_DAO_Contribution',
+        ) ,
+        'uid' => array(
+          'name' => 'uid',
+          'type' => CRM_Utils_Type::T_STRING,
+          'title' => ts('MyPay uid') ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+          'default' => 'UL',
         ) ,
         'url' => array(
           'name' => 'url',

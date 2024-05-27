@@ -35,6 +35,16 @@
     <onDelete>SET NULL</onDelete>
   </foreignKey>
   <field>
+      <name>uid</name>
+      <uniqueName>uid</uniqueName>
+      <type>varchar</type>
+      <length>255</length>
+      <default>NULL</default>
+      <title>MyPay uid</title>
+      <comment>The uid in mypay transaction.</comment>
+      <add>4.0</add>
+  </field>
+  <field>
       <name>url</name>
       <uniqueName>url</uniqueName>
       <title>Request URL</title>
@@ -49,7 +59,7 @@
       <title>service API CMD Name</title>
       <type>varchar</type>
       <length>255</length>
-      <comment>Request URL</comment>
+      <comment>Request Command</comment>
       <add>4.0</add>
   </field>
   <field>
@@ -72,6 +82,11 @@
       <comment>Request Return Data</comment>
       <add>4.0</add>
   </field>
+  <index>
+    <name>UI_uid</name>
+    <fieldName>uid</fieldName>
+    <add>4.0</add>
+  </index>
   <index>
     <name>UI_url</name>
     <fieldName>url</fieldName>

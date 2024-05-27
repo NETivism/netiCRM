@@ -346,6 +346,18 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
     ), '', '&');
     $amount = $vars['currencyID'] == 'TWD' && strstr($vars['amount'], '.') ? substr($vars['amount'], 0, strpos($vars['amount'], '.')) : $vars['amount'];
 
+    if ($vars['contributionRecurID']) {
+      $params = array(
+        1 => $vars['contributionRecurID'],
+        2 => $vars['installments'] ? ts("%1 Periods", array(1 => $vars['installments'])) : ts('no period'),
+      );
+      $item = ts("Recur %1-%2", $params);
+    }
+    else {
+      $params = array(1 => $vars['contributionID']);
+      $item = ts("Contribution %1", $params);
+    }
+
     $args = array(
       'store_uid' => $paymentProcessor['user_name'],
       'service' => array(
@@ -357,6 +369,7 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
         'user_id' => $vars['contact_id'],
         'currency' => $vars['currencyID'],
         'order_id' => $vars['trxn_id'],
+        'agent_sms_fee_type' => 0,
         'cost' => (string) $amount,
         'pfn' => '',
         'ip' => CRM_Utils_System::ipAddress(),
@@ -364,7 +377,7 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
         'echo_1' => $vars['contributionID'],
         'items' => array( 0 => array(
           'id' => $vars['trxn_id'],
-          'name' => preg_replace('~[^\p{L}\p{N}]++~u', ' ', $vars['item_name']),
+          'name' => $item,
           'cost' => (string) $amount,
           'total' => (string) $amount,
           'amount' => 1,
@@ -442,11 +455,12 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
     $errno = curl_errno($ch);
     // Record all data
     // 1. Record log data.
+    $resultArray = json_decode($result, TRUE);
     $saveData = array(
+      'uid' => $resultArray['uid'],
       'return_data' => $result,
     );
     self::writeLog($this->_logId, $saveData);
-    $resultArray = json_decode($result, TRUE);
     // 2. Record usable data.
     if ($this->_contributionId) {
       $transationData = array(
@@ -560,6 +574,7 @@ EOT;
     if (!empty($post['uid']) && !empty($post['key']) && !empty($post['prc'])) {
       // Save Data to Log.
       $saveData = array(
+        'uid' => $post['uid'],
         'date' => date('Y-m-d H:i:s'),
         'post_data' => json_encode($post),
       );
@@ -615,7 +630,7 @@ EOT;
       $component = $post['echo_0'];
       if(!empty($component)){
         $ipn = new CRM_Core_Payment_MyPayIPN($post, $get);
-        $result = $ipn->main($component, $instrument);
+        $result = $ipn->main($instrument);
         if(!empty($result) && $print){
           echo $result;
         }
@@ -638,7 +653,7 @@ EOT;
    * @return number $id The `id` of the row.
    */
   public static function writeLog($logId, $data = array()) {
-    $recordType = array('contribution_id', 'url', 'cmd', 'date', 'post_data', 'return_data');
+    $recordType = array('contribution_id', 'uid', 'url', 'cmd', 'date', 'post_data', 'return_data');
 
     $record = new CRM_Contribute_DAO_MyPayLog();
     if(!empty($logId)) {
@@ -700,7 +715,7 @@ EOT;
     $trxnId = NULL;
     if ($input['order_id']) {
       if ($input['uid'] && !empty($input['nois']) && $input['nois'] > 1) {
-        $trxnId = $input['order_id'].'-'.$input['uid'];
+        $trxnId = $input['order_id'].'-'.$input['nois'].'-'.$input['uid'];
       }
       else {
         $trxnId = $input['order_id'];
@@ -709,4 +724,5 @@ EOT;
     return $trxnId;
   }
 }
+
 

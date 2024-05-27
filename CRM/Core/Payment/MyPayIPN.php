@@ -48,11 +48,24 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
     // set global variable for paymentProcessor
     self::$_payment_processor =& $objects['paymentProcessor'];
     self::$_input = $input;
-    if($objects['contribution']->contribution_status_id == 1 && empty($input['nois'])){
-      // already completed, skip
+    if ($objects['contribution']->contribution_status_id == 1 && empty($input['nois']) && $input['prc'] == '250') {
+      // Single contribution or first contribution, already completed, skip
+      CRM_Core_Error::debug_log_message("MyPay: The transaction uid: {$input['uid']}, associated with the contribution {$objects['contribution']->trxn_id}, has been successfully processed before. Skipped.");
       return '8888';
     }
-    else{
+    elseif (!empty($input['nois']) && $input['prc'] == '250') {
+      // Recurring and finished.
+      $trxnId = CRM_Core_Payment_MyPay::getTrxnIdByPost($input);
+      $sql = "SELECT contribution_status_id FROM civicrm_contribution WHERE trxn_id = %1";
+      $params = array( 1 => array($trxnId, 'String'));
+      $contributionStatusID = CRM_Core_DAO::singleValueQuery($sql, $params);
+      if ($contributionStatusID == 1) {
+        // already completed, skip
+        CRM_Core_Error::debug_log_message("MyPay: The transaction uid: {$input['uid']}, associated with the contribution {$trxnId}, has been successfully processed before. Skipped.");
+        return '8888';
+      }
+    }
+    else {
       // start validation
       $note = '';
       if( $this->validateOthers($input, $ids, $objects, $note, $instrument) ){
