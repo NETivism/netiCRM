@@ -49525,3 +49525,16 @@ msgstr ""
 #: templates/CRM/Group/Page/Group.tpl
 msgid "The smart markeintg journey is still in progress. To delete the contact or remove contact from group list, you need to go to the external smart marketing tool to proceed."
 msgstr ""
+
+#: CRM/Core/Payment/MyPay.php
+msgid "no period"
+msgstr ""
+
+msgid "%1 Periods"
+msgstr ""
+
+msgid "Recur %1-%2"
+msgstr ""
+
+msgid "Contribution %1"
+msgstr ""
