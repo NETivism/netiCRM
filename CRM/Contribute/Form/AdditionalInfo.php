@@ -361,8 +361,6 @@ class CRM_Contribute_Form_AdditionalInfo {
       //set encrypt password
       if (!empty($config->receiptEmailEncryption) && $config->receiptEmailEncryption) {
         $receiptPwd = $form->userEmail;
-        // list($contributorDisplayName,$contributorEmail) = CRM_Contact_BAO_Contact_Location::getEmailDetails($params['contact_id']);
-        // $receiptPwd = $contributorEmail;
         if (!empty($receiptTask->_lastSerialId) && preg_match('/^[A-Za-z]{1,2}\d{8,9}$|^\d{8}$/', $receiptTask->_lastSerialId)) {
           $receiptPwd = $receiptTask->_lastSerialId;
         }
