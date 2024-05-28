@@ -48,10 +48,11 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
     // set global variable for paymentProcessor
     self::$_payment_processor =& $objects['paymentProcessor'];
     self::$_input = $input;
+    $result = NULL;
     if ($objects['contribution']->contribution_status_id == 1 && empty($input['nois']) && $input['prc'] == '250') {
       // Single contribution or first contribution, already completed, skip
       CRM_Core_Error::debug_log_message("MyPay: The transaction uid: {$input['uid']}, associated with the contribution {$objects['contribution']->trxn_id}, has been successfully processed before. Skipped.");
-      return '8888';
+      $result = '8888';
     }
     elseif (!empty($input['nois']) && $input['prc'] == '250') {
       // Recurring and finished.
@@ -62,8 +63,11 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
       if ($contributionStatusID == 1) {
         // already completed, skip
         CRM_Core_Error::debug_log_message("MyPay: The transaction uid: {$input['uid']}, associated with the contribution {$trxnId}, has been successfully processed before. Skipped.");
-        return '8888';
+        $result = '8888';
       }
+    }
+    if ($result) {
+      return $result;
     }
     else {
       // start validation
