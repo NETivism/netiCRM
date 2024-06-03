@@ -60,6 +60,7 @@ DROP TABLE IF EXISTS civicrm_participant;
 DROP TABLE IF EXISTS civicrm_event;
 DROP TABLE IF EXISTS civicrm_membership_payment;
 DROP TABLE IF EXISTS civicrm_coupon_track;
+DROP TABLE IF EXISTS civicrm_contribution_spgateway;
 DROP TABLE IF EXISTS civicrm_contribution_allpay;
 DROP TABLE IF EXISTS civicrm_contribution_tappay_log;
 DROP TABLE IF EXISTS civicrm_contribution_tappay;
@@ -4809,6 +4810,30 @@ CREATE TABLE civicrm_contribution_allpay (
   
 ,      
      CONSTRAINT FK_civicrm_contribution_allpay_cid FOREIGN KEY (cid) REFERENCES civicrm_contribution(id) ON DELETE SET NULL  
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
+
+-- /*******************************************************
+-- *
+-- * civicrm_contribution_spgateway
+-- *
+-- * Spgateway and neweb data warehouse
+-- *
+-- *******************************************************/
+CREATE TABLE civicrm_contribution_spgateway (
+
+
+     id int unsigned NOT NULL AUTO_INCREMENT  ,
+     cid int unsigned    COMMENT 'FK to contribution table',
+     data blob    COMMENT 'Spgateway return data' 
+,
+    PRIMARY KEY ( id )
+ 
+    ,     UNIQUE INDEX UI_spgateway_id(
+        cid
+  )
+  
+,      
+     CONSTRAINT FK_civicrm_contribution_spgateway_cid FOREIGN KEY (cid) REFERENCES civicrm_contribution(id) ON DELETE SET NULL  
 )  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************

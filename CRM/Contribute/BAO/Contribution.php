@@ -2604,17 +2604,17 @@ WHERE c.id = $id";
     $query[] = "contact_id={$params['contactID']}";
     $query[] = "cid={$params['contributionID']}";
 
-    if($params['eventID']) {
+    if(!empty($params['eventID'])) {
       $query[] = "module=event";
       $query[] = "eid={$params['eventID']}";
       $query[] = "pid={$params['participantID']}";
     }
     else {
       $query[] = "module=contribute";
-      if ( $params['membershipID'] ) {
+      if (!empty($params['membershipID'])) {
         $query[] = "mid=".$params['membershipID'];
       }
-      if ($params['related_contact']) {
+      if (!empty($params['related_contact'])) {
         $query[] = "rid=".$params['related_contact'];
         if ($params['onbehalf_dupe_alert']) {
           $query[] = "onbehalf_dupe_alert=".$params['onbehalf_dupe_alert'];

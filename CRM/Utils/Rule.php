@@ -172,6 +172,12 @@ class CRM_Utils_Rule {
       $url = $scheme.'://' . $_SERVER['HTTP_HOST'] . $url;
     }
     $valid = (bool) filter_var($url, FILTER_VALIDATE_URL);
+    if (!$valid) {
+      $parts = parse_url($url);
+      if (!empty($parts['scheme']) && !empty($parts['host'])) {
+        $valid = TRUE;
+      }
+    }
 
     if (!in_array(substr($url, 0, 5), array('http:', 'https'))) {
       $valid = FALSE;

@@ -468,6 +468,9 @@ class CRM_Utils_System_Drupal8 {
     \Drupal::service('civicrm')->initialize();
 
     if ($loadUser) {
+      if (empty($params['uid'])) {
+        $params['uid'] = 0;
+      }
       $userObject = \Drupal\user\Entity\User::load($params['uid']);
       if (!empty($params['uid']) && $username = $userObject->getAccountName()) {
         $this->loadUserByName($username);

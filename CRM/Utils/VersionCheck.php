@@ -36,7 +36,7 @@
 require_once 'CRM/Core/Config.php';
 class CRM_Utils_VersionCheck {
   // timeout for when the connection or the server is slow
-  CONST LATEST_VERSION_AT = 'http://latest.civicrm.org/stable.php',
+  CONST LATEST_VERSION_AT = '',
   // relative to $civicrm_root
   CHECK_TIMEOUT = 5, LOCALFILE_NAME = 'civicrm-version.txt',
   // relative to $config->uploadDir
@@ -73,102 +73,6 @@ class CRM_Utils_VersionCheck {
    * @access private
    */
   function __construct() {
-    global $civicrm_root;
-    $config = CRM_Core_Config::singleton();
-
-    $localfile = $civicrm_root . DIRECTORY_SEPARATOR . self::LOCALFILE_NAME;
-    $cachefile = $config->uploadDir . self::CACHEFILE_NAME;
-
-    // Skip all civicrm version check. Because the stable version is not very stable ..
-    return;
-
-    if ($config->versionCheck and file_exists($localfile)) {
-      $localParts = explode(' ', trim(file_get_contents($localfile)));
-      $this->localVersion = $localParts[0];
-      $expiryTime = time() - self::CACHEFILE_EXPIRE;
-
-      // if there's a cachefile and it's not stale use it to
-      // read the latestVersion, else read it from the Internet
-      if (file_exists($cachefile) and (filemtime($cachefile) > $expiryTime)) {
-        $this->latestVersion = file_get_contents($cachefile);
-      }
-      else {
-        // we have to set the error handling to a dummy function, otherwise
-        // if the URL is not working (e.g., due to our server being down)
-        // the users would be presented with an unsuppressable warning
-        ini_set('default_socket_timeout', self::CHECK_TIMEOUT);
-        set_error_handler(array('CRM_Utils_VersionCheck', 'downloadError'));
-        $hash = md5($config->userFrameworkBaseURL);
-
-        $url = self::LATEST_VERSION_AT . "?version={$this->localVersion}&uf={$config->userFramework}&hash=$hash&lang={$config->lcMessages}&ufv={$config->userSystem->version}";
-
-        // add PHP and MySQL versions
-        $dao = new CRM_Core_DAO;
-        $dao->query('SELECT VERSION() AS version');
-        $dao->fetch();
-        $url .= '&MySQL=' . $dao->version . '&PHP=' . phpversion();
-
-        $tables = array(
-          'CRM_Activity_DAO_Activity' => 'is_test = 0',
-          'CRM_Case_DAO_Case' => NULL,
-          'CRM_Contact_DAO_Contact' => NULL,
-          'CRM_Contact_DAO_Relationship' => NULL,
-          'CRM_Contribute_DAO_Contribution' => 'is_test = 0',
-          'CRM_Contribute_DAO_ContributionPage' => 'is_active = 1',
-          'CRM_Contribute_DAO_ContributionProduct' => NULL,
-          'CRM_Contribute_DAO_Widget' => 'is_active = 1',
-          'CRM_Core_DAO_Discount' => NULL,
-          'CRM_Price_DAO_SetEntity' => NULL,
-          'CRM_Core_DAO_UFGroup' => 'is_active = 1',
-          'CRM_Event_DAO_Event' => 'is_active = 1',
-          'CRM_Event_DAO_Participant' => 'is_test = 0',
-          'CRM_Friend_DAO_Friend' => 'is_active = 1',
-          'CRM_Grant_DAO_Grant' => NULL,
-          'CRM_Mailing_DAO_Mailing' => 'is_completed = 1',
-          'CRM_Member_DAO_Membership' => 'is_test = 0',
-          'CRM_Member_DAO_MembershipBlock' => 'is_active = 1',
-          'CRM_Pledge_DAO_Pledge' => 'is_test = 0',
-          'CRM_Pledge_DAO_PledgeBlock' => NULL,
-        );
-
-        // add &key=count pairs to $url, where key is the last part of the DAO
-        foreach ($tables as $daoName => $where) {
-          $dao = new $daoName;
-          if ($where) {
-            $dao->whereAdd($where);
-          }
-          $url .= '&' . array_pop(explode('_', $daoName)) . "={$dao->count()}";
-        }
-
-        // get active payment processor types
-        require_once 'CRM/Core/DAO/PaymentProcessor.php';
-        $dao = new CRM_Core_DAO_PaymentProcessor;
-        $dao->is_active = 1;
-        $dao->find();
-
-        $ppTypes = array();
-        while ($dao->fetch()) $ppTypes[] = $dao->payment_processor_type;
-
-        // add the .-separated list of the processor types (urlencoded just in case)
-        $url .= '&PPTypes=' . urlencode(CRM_Utils_Array::implode('.', array_unique($ppTypes)));
-
-        // get the latest version using the stats-carrying $url
-        $this->latestVersion = file_get_contents($url);
-        ini_restore('default_socket_timeout');
-        restore_error_handler();
-
-        if (!preg_match('/^\d+\.\d+\.\d+$/', $this->latestVersion)) {
-          $this->latestVersion = NULL;
-        }
-        if (!$this->latestVersion) {
-          return;
-        }
-
-        $fp = fopen($cachefile, 'w');
-        fwrite($fp, $this->latestVersion);
-        fclose($fp);
-      }
-    }
   }
 
   /**
@@ -192,20 +96,6 @@ class CRM_Utils_VersionCheck {
    * @return string|null  returns the newer version's number or null if the versions are equal
    */
   function newerVersion() {
-    $local = explode('.', $this->localVersion);
-    $latest = explode('.', $this->latestVersion);
-
-    // compare by version part; this allows us to use trunk.$rev
-    // for trunk versions ('trunk' is greater than '1')
-    // we only do major / minor version comparison, so stick to 2
-    for ($i = 0; $i < 2; $i++) {
-      if (CRM_Utils_Array::value($i, $local) > CRM_Utils_Array::value($i, $latest)) {
-        return NULL;
-      }
-      elseif (CRM_Utils_Array::value($i, $local) < CRM_Utils_Array::value($i, $latest) and preg_match('/^\d+\.\d+\.\d+$/', $this->latestVersion)) {
-        return $this->latestVersion;
-      }
-    }
     return NULL;
   }
 

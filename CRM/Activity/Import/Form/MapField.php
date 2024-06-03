@@ -494,7 +494,7 @@ class CRM_Activity_Import_Form_MapField extends CRM_Core_Form {
     $skipColumnHeader = $this->controller->exportValue('UploadFile', 'skipColumnHeader');
 
     $config = CRM_Core_Config::singleton();
-    $seperator = $config->fieldSeparator;
+    $separator = $config->fieldSeparator;
 
     $mapperKeys = array();
     $mapper = array();
@@ -582,9 +582,18 @@ class CRM_Activity_Import_Form_MapField extends CRM_Core_Form {
     }
 
 
+    $errorFilenamePrefix = CRM_Activity_Import_Parser::ERROR_FILE_PREFIX.'_'.date('YmdHis', CRM_REQUEST_TIME);
+    $this->set('errorFilenamePrefix', $errorFilenamePrefix);
+
     $parser = new CRM_Activity_Import_Parser_Activity($mapperKeysMain, $mapperLocType, $mapperPhoneType);
-    $parser->run($fileName, $seperator, $mapper, $skipColumnHeader,
-      CRM_Activity_Import_Parser::MODE_PREVIEW
+    $parser->run(
+      $fileName,
+      $separator,
+      $mapper,
+      $skipColumnHeader,
+      CRM_Activity_Import_Parser::MODE_PREVIEW,
+      CRM_Activity_Import_Parser::DUPLICATE_SKIP,
+      $errorFilenamePrefix
     );
 
     // add all the necessary variables to the form

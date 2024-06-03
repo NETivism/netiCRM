@@ -2,6 +2,18 @@
 date_default_timezone_set('Asia/Taipei');
 require_once 'CRM/Core/Payment.php';
 class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
+  const EXPIRE_DAY = 7;
+  const MAX_EXPIRE_DAY = 180;
+  const RESPONSE_TYPE = 'JSON';
+  const MPG_VERSION = '1.2';
+  const RECUR_VERSION = '1.0';
+  const QUERY_VERSION = '1.1';
+  const REAL_DOMAIN = 'https://core.newebpay.com';
+  const TEST_DOMAIN = 'https://ccore.newebpay.com';
+  const URL_SITE = '/MPG/mpg_gateway';
+  const URL_API = '/API/QueryTradeInfo';
+  const URL_RECUR = '/MPG/period';
+  const URL_CREDITBG = "/API/CreditCard";
 
   /**
    * mode of operation: live or test
@@ -9,7 +21,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
    * @var object
    * @static
    */
-  static protected $_mode = NULL;
+  protected static $_mode = NULL;
 
   public static $_hideFields = array('invoice_id');
 
@@ -37,7 +49,10 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
    * @var object
    * @static
    */
-  static private $_singleton = NULL;
+  private static $_singleton = NULL;
+
+  private $_config = NULL;
+  private $_processorName = NULL;
 
   /**
    * Constructor
@@ -54,7 +69,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     $this->_config = $config;
   }
 
-  static function getEditableFields($paymentProcessor = NULL, $form = NULL) {
+  public static function getEditableFields($paymentProcessor = NULL, $form = NULL) {
     if (empty($paymentProcessor)) {
       $returnArray = array();
     }
@@ -89,7 +104,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     return $returnArray;
   }
 
-  static function postBuildForm($form) {
+  public static function postBuildForm($form) {
     $form->addDate('cycle_day_date', FALSE, FALSE, array('formatType' => 'custom', 'format' => 'mm-dd'));
     $cycleDay = &$form->getElement('cycle_day');
     unset($cycleDay->_attributes['max']);
@@ -103,7 +118,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     }
   }
 
-  static function validateInstallments($fields, $ignore, $form) {
+  public static function validateInstallments($fields, $ignore, $form) {
     $errors = array();
     $pass = TRUE;
     $contribution_status_id = $fields['contribution_status_id'];
@@ -127,7 +142,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
    * @static
    *
    */
-  static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
+  public static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
     $processorName = $paymentProcessor['name'];
     if (self::$_singleton[$processorName] === NULL) {
       self::$_singleton[$processorName] = new CRM_Core_Payment_SPGATEWAY($mode, $paymentProcessor);
@@ -192,49 +207,417 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     if ($component != 'contribute' && $component != 'event') {
       CRM_Core_Error::fatal(ts('Component is invalid'));
     }
-    if (module_load_include('inc', 'civicrm_spgateway', 'civicrm_spgateway.checkout') === FALSE) {
-      CRM_Core_Error::fatal('Module civicrm_spgateway doesn\'t exists.');
-    }
-    else {
-      $is_test = $this->_mode == 'test' ? 1 : 0;
-      if (isset($this->_paymentForm) && get_class($this->_paymentForm) == 'CRM_Contribute_Form_Payment_Main') {
-        if (empty($params['email-5'])) {
-          // Retrieve email of billing type or primary.
-          $locationTypes = CRM_Core_PseudoConstant::locationType(FALSE, 'name');
-          $bltID = array_search('Billing', $locationTypes);
-          if (!$bltID) {
-            return CRM_Core_Error::statusBounce(ts('Please set a location type of %1', array(1 => 'Billing')));
-          }
-          $fields = array();
-          $fields['email-'.$bltID] = 1;
-          $fields['email-Primary'] = 1;
-          $default = array();
+    $is_test = $this->_mode == 'test' ? 1 : 0;
+    if (isset($this->_paymentForm) && get_class($this->_paymentForm) == 'CRM_Contribute_Form_Payment_Main') {
+      if (empty($params['email-5'])) {
+        // Retrieve email of billing type or primary.
+        $locationTypes = CRM_Core_PseudoConstant::locationType(FALSE, 'name');
+        $bltID = array_search('Billing', $locationTypes);
+        if (!$bltID) {
+          return CRM_Core_Error::statusBounce(ts('Please set a location type of %1', array(1 => 'Billing')));
+        }
+        $fields = array();
+        $fields['email-'.$bltID] = 1;
+        $fields['email-Primary'] = 1;
+        $default = array();
 
-          CRM_Core_BAO_UFGroup::setProfileDefaults($params['contactID'], $fields, $default);
-          if (!empty($default['email-'.$bltID])) {
-            $params['email-5'] = $default['email-'.$bltID];
-          }
-          elseif (!empty($default['email-Primary'])) {
-            $params['email-5'] = $default['email-Primary'];
+        CRM_Core_BAO_UFGroup::setProfileDefaults($params['contactID'], $fields, $default);
+        if (!empty($default['email-'.$bltID])) {
+          $params['email-5'] = $default['email-'.$bltID];
+        }
+        elseif (!empty($default['email-Primary'])) {
+          $params['email-5'] = $default['email-Primary'];
+        }
+      }
+      $params['item_name'] = $params['description'];
+    }
+
+    $instrumentId = $params['civicrm_instrument_id'];
+    $options = array(1 => array( $instrumentId, 'Integer'));
+    $instrumentName = CRM_Core_DAO::singleValueQuery("SELECT v.name FROM civicrm_option_value v INNER JOIN civicrm_option_group g ON v.option_group_id = g.id WHERE g.name = 'payment_instrument' AND v.is_active = 1 AND v.value = %1;", $options);
+    $spgatewayInstruments = self::instruments('code');
+    $instrumentCode = $spgatewayInstruments[$instrumentName];
+    if (empty($instrumentCode)) {
+      // For google pay
+      $instrumentCode = $instrumentName;
+    }
+    $formKey = $component == 'event' ? 'CRM_Event_Controller_Registration_'.$params['qfKey'] : 'CRM_Contribute_Controller_Contribution_'.$params['qfKey'];
+
+    // The first, we insert every contribution into record. After this, we'll use update for the record.
+    $exists = CRM_Core_DAO::singleValueQuery("SELECT cid FROM civicrm_contribution_spgateway WHERE cid = %1", array(
+      1 => array($params['contributionID'], 'Integer'),
+    ));
+    if (!$exists) {
+      CRM_Core_DAO::executeQuery("INSERT INTO civicrm_contribution_spgateway (cid) VALUES (%1)", array(
+        1 => array($params['contributionID'], 'Integer'),
+      ));
+    }
+
+    if($instrumentCode == 'Credit' || $instrumentCode == 'WebATM'){
+      $isPayLater = FALSE;
+    }
+    else{
+      $isPayLater = TRUE;
+
+      // Set participant status to 'Pending from pay later', Accupied the seat.
+      if($params['participantID']){
+        $participantStatus = CRM_Event_PseudoConstant::participantStatus();
+        if($newStatus = array_search('Pending from pay later', $participantStatus)){
+          CRM_Core_DAO::setFieldValue('CRM_Event_DAO_Participant', $params['participantID'], 'status_id', $newStatus, 'id');
+          $cancelledStatus = array_search('Cancelled', $participantStatus);
+          $sql = 'SELECT id FROM civicrm_participant WHERE registered_by_id = %1 AND status_id != %2';
+          $paramsRegisteredBy = array(
+            1 => array($params['participantID'], 'Integer'),
+            2 => array($cancelledStatus, 'Integer'),
+          );
+          $dao = CRM_Core_DAO::executeQuery($sql, $paramsRegisteredBy);
+          while($dao->fetch()){
+            CRM_Core_DAO::setFieldValue('CRM_Event_DAO_Participant', $dao->id, 'status_id', $newStatus, 'id');
           }
         }
-        $params['item_name'] = $params['description'];
       }
-      civicrm_spgateway_do_transfer_checkout($params, $component, $this->_paymentProcessor, $is_test);
     }
+
+    // now process contribution to save some default value
+    $contrib_params = array( 'id' => $params['contributionID'] );
+    $contrib_values = $contrib_ids = array();
+    CRM_Contribute_BAO_Contribution::getValues($contrib_params, $contrib_values, $contrib_ids);
+    if($params['civicrm_instrument_id']){
+      $contrib_values['payment_instrument_id'] = $params['civicrm_instrument_id'];
+    }
+    $contrib_values['is_pay_later'] = $isPayLater;
+    $contrib_values['trxn_id'] = self::generateTrxnId($is_test, $params['contributionID']);
+    $contribution =& CRM_Contribute_BAO_Contribution::create($contrib_values, $contrib_ids);
+
+    // Inject in quickform sessions
+    // Special hacking for display trxn_id after thank you page.
+    $_SESSION['CiviCRM'][$formKey]['params']['trxn_id'] = $contribution->trxn_id;
+    $_SESSION['CiviCRM'][$formKey]['params']['is_pay_later'] = $isPayLater;
+    $params['trxn_id'] = $contribution->trxn_id;
+
+    $arguments = $this->prepareOrderParams($contribution, $params, $instrumentCode, $formKey);
+    if(!$contrib_values['is_recur']){
+      CRM_Core_Payment_SPGATEWAYAPI::checkMacValue($arguments, $this->_paymentProcessor);
+    }
+    CRM_Core_Error::debug_var('spgateway_post_data_', $arguments);
+    /* TODO: detect this sh*t
+    // making redirect form
+    $alter = array(
+      'module' => 'civicrm_spgateway',
+      'billing_mode' => $this->_paymentProcessor['billing_mode'],
+      'params' => $arguments,
+    );
+    drupal_alter('civicrm_checkout_params', $alter);
+    */
+    print $this->redirectForm($arguments);
+    CRM_Utils_System::civiExit();
+  }
+
+  /**
+   * Migrate from _civicrm_spgateway_order
+   *
+   * Prepare order form element
+   *
+   * @param object $contribution
+   * @param array $vars
+   * @param object $paymentProcessor
+   * @param string $instrumentCode
+   * @param string $formKey
+   * @return void
+   */
+  function prepareOrderParams(&$contribution, &$vars, $instrumentCode, $formKey){
+    global $tsLocale;
+
+    // url
+    $ids = CRM_Contribute_BAO_Contribution::buildIds($contribution->id);
+    $notifyURL= CRM_Contribute_BAO_Contribution::makeNotifyUrl($ids, 'spgateway/ipn/'.$instrumentCode);
+    $baseURL= CRM_Utils_System::currentPath();
+    $urlParams = array( "_qf_ThankYou_display" => "1" , "qfKey" => $vars['qfKey'], );
+    $thankyouURL = CRM_Utils_System::url($baseURL, http_build_query($urlParams), TRUE);
+
+    $component = !empty($ids['eventID']) ? 'event' : 'contribution';
+
+    // parameter
+    if($component == 'event' && !empty($_SESSION['CiviCRM'][$formKey])){
+      $values =& $_SESSION['CiviCRM'][$formKey]['values']['event'];
+    }
+    else{
+      $values =& $_SESSION['CiviCRM'][$formKey]['values'];
+    }
+
+    // max 180 days of expire
+    $baseTime = time() + 86400; // because not include today
+    if (!empty($vars['payment_expired_timestamp'])) {
+      $hours = ($vars['payment_expired_timestamp'] - $baseTime) / 3600;
+    }
+    else {
+      $hours = (CRM_Core_Payment::calcExpirationDate(0) - $baseTime) / 3600;
+    }
+    if ($hours < 24) {
+      $values['expiration_day'] = 1;
+    }
+    elseif ($hours > 24 * self::MAX_EXPIRE_DAY ) {
+      $values['expiration_day'] = self::MAX_EXPIRE_DAY;
+    }
+    elseif(!empty($hours)){
+      $values['expiration_day'] = ceil($hours/24);
+    }
+
+    // building vars
+    $amount = $vars['currencyID'] == 'TWD' && strstr($vars['amount'], '.') ? substr($vars['amount'], 0, strpos($vars['amount'],'.')) : $vars['amount'];
+
+    $itemDescription = $vars['description'];
+    $itemDescription .= ($vars['description'] == $vars['item_name'])?'':':'.$vars['item_name'];
+    $itemDescription .= ':'.floatval($vars['amount']);
+    $itemDescription = preg_replace('/[^[:alnum:][:space:]]/u', ' ', $itemDescription);
+
+    if(!$vars['is_recur']){
+      $args = array(
+        'MerchantID' => $this->_paymentProcessor['user_name'],
+        'RespondType' => self::RESPONSE_TYPE,
+        'TimeStamp' => time(),
+        'Version' => self::MPG_VERSION,
+        'Amt' => $amount,
+        'NotifyURL' => $notifyURL,
+        'Email' => $vars['email-5'],
+        'LoginType' => '0',
+        'ItemDesc' => $itemDescription,
+        'MerchantOrderNo' => $vars['trxn_id'],
+      );
+      if ($this->_paymentProcessor['is_test']) {
+        $args['#url'] = self::TEST_DOMAIN.self::URL_SITE;
+      }
+      else {
+        $args['#url'] = self::REAL_DOMAIN.self::URL_SITE;
+      }
+
+      switch($instrumentCode){
+        case 'ATM':
+          $args['VACC'] = 1;
+          $day = !empty($values['expiration_day']) ? $values['expiration_day'] : self::EXPIRE_DAY;
+          $args['ExpireDate'] = date('Ymd',strtotime("+$day day"));
+          $args['CustomerURL'] = $thankyouURL;
+          // $args['ReturnURL'] = url('spgateway/record/'.$vars['contributionID'], array('absolute' => true));
+          break;
+        case 'BARCODE':
+          $args['BARCODE'] = 1;
+          $day = !empty($values['expiration_day']) ? $values['expiration_day'] : self::EXPIRE_DAY;
+          $args['ExpireDate'] = date('Ymd',strtotime("+$day day"));
+          $args['CustomerURL'] = $thankyouURL;
+          // $args['ReturnURL'] = url('spgateway/record/'.$vars['contributionID'], array('absolute' => true));
+          break;
+        case 'CVS':
+          $args['CVS'] = 1;
+          if($instrumentCode == 'CVS' && !empty($values['expiration_day'])) {
+            $day = !empty($values['expiration_day']) ? $values['expiration_day'] : self::EXPIRE_DAY;
+            $args['ExpireDate'] = date('Ymd',strtotime("+$day day"));
+          }
+          // $args['ReturnURL'] = url('spgateway/record/'.$vars['contributionID'], array('absolute' => true));
+          // $args['Desc_1'] = '';
+          // $args['Desc_2'] = '';
+          // $args['Desc_3'] = '';
+          // $args['Desc_4'] = '';
+
+          #ATM / CVS / BARCODE
+          $args['CustomerURL'] = $thankyouURL;
+          break;
+        case 'WebATM':
+          $args['WEBATM'] = 1;
+          $args['ReturnURL'] = $thankyouURL;
+          break;
+        case 'Credit':
+          $args['CREDIT'] = 1;
+          $args['ReturnURL'] = $thankyouURL;
+          break;
+        case 'GooglePay':
+          $args['ANDROIDPAY'] = 1;
+          $args['ReturnURL'] = $thankyouURL;
+          break;
+      }
+
+      if($tsLocale == CRM_Core_Config::SYSTEM_LANG){
+        $args['LangType'] = 'en';
+      }
+      // Use hook_civicrm_alterPaymentProcessorParams
+      $mode = $this->_paymentProcessor['is_test'] ? 'test' : 'live';
+      $paymentClass = CRM_Core_Payment::singleton($mode, $this->_paymentProcessor, CRM_Core_DAO::$_nullObject);
+      CRM_Utils_Hook::alterPaymentProcessorParams($paymentClass, $vars, $args);
+    }
+    else{
+      $data = array(
+        'MerchantID' => $this->_paymentProcessor['user_name'],
+        'RespondType' => self::RESPONSE_TYPE,
+        'TimeStamp' => time(),
+        'Version' => self::RECUR_VERSION,
+        'Amt' => $amount,
+        'NotifyURL' => $notifyURL."&qfKey=".$vars['qfKey'],
+        'PayerEmail' => $vars['email-5'],
+        'LoginType' => '0',
+        'MerOrderNo' => $vars['trxn_id'],
+        'ProdDesc' => $itemDescription,
+        'PeriodAmt' => $amount,
+        'PeriodStartType' => 2,
+        'ReturnURL' => $thankyouURL,
+        'PaymentInfo' => 'N',
+        'OrderInfo' => 'N',
+      );
+      $period = strtoupper($vars['frequency_unit'][0]);
+
+      if($vars['frequency_unit'] == 'month'){
+        $frequency_interval = $vars['frequency_interval'] > 12 ? 12 : $vars['frequency_interval'];
+        $data['PeriodType'] = 'M';
+        $data['PeriodPoint'] = date('d');
+      }
+      elseif($vars['frequency_unit'] == 'week'){
+        $frequency_interval = (7 * $vars['frequency_interval']) > 365 ? 365 : ($vars['frequency_interval'] * 7);
+        $data['PeriodType'] = 'W';
+      }
+      elseif($vars['frequency_unit'] == 'year'){
+        $frequency_interval = 1;
+        $data['PeriodType'] = 'Y';
+        $data['PeriodPoint'] = date('md');
+      }
+      if(empty($frequency_interval)){
+        $frequency_interval = 1;
+      }
+      // $data['PeriodTimes'] = $frequency_interval;
+      if($vars['frequency_unit'] == 'year'){
+        $data['PeriodTimes'] = empty($vars['installments']) ? 9 : $vars['installments'];
+      }else{
+        $data['PeriodTimes'] = empty($vars['installments']) ? 99 : $vars['installments']; // support endless
+      }
+      if($tsLocale == CRM_Core_Config::SYSTEM_LANG){
+        $data['LangType'] = 'en';
+      }
+      // Use hook_civicrm_alterPaymentProcessorParams
+      $mode = $this->_paymentProcessor['is_test'] ? 'test' : 'live';
+      $paymentClass = CRM_Core_Payment::singleton($mode, $this->_paymentProcessor, CRM_Core_DAO::$_nullObject);
+      CRM_Utils_Hook::alterPaymentProcessorParams($paymentClass, $vars, $data);
+      // Encrypt Recurring Request.
+      $str = http_build_query($data, '', '&');
+      $strPost = CRM_Core_Payment_SPGATEWAYAPI::recurEncrypt($str, $this->_paymentProcessor);
+      $args['PostData_'] = $strPost;
+      $args['MerchantID_'] = $this->_paymentProcessor['user_name'];
+      if ($this->_paymentProcessor['is_test']) {
+        $args['#url'] = self::TEST_DOMAIN.self::URL_RECUR;
+      }
+      else {
+        $args['#url'] = self::REAL_DOMAIN.self::URL_RECUR;
+      }
+    }
+
+
+    return $args ;
   }
 
 
-  /*
-      * $params = array(
-      *    'contribution_recur_id   => Positive,
-      *    'contribution_status_id' => Positive(7 => suspend, 3 => terminate, 5 => restart),
-      *    'amount'                 => Positive,
-      *    'frequency_unit'         => String('year', 'month')
-      *    'cycle_day'              => Positive(1 - 31, 101 - 1231)
-      *    'end_date'               => Date
-      * )
-      */
+  private function redirectForm($vars){
+    header('Pragma: no-cache');
+    header('Cache-Control: no-store, no-cache, must-revalidate');
+    header('Expires: 0');
+
+    $output = "";
+
+    $js = 'document.forms.redirect.submit();';
+    $output .= '<form action="'.$vars['#url'].'" name="redirect" method="post" id="redirect-form">';
+    foreach($vars as $k=>$p){
+      if($k[0] != '#'){
+        $output .= '<input type="hidden" name="'.$k.'" value="'.$p.'" />';
+      }
+    }
+    $output .= '</form>';
+    return <<<EOT
+  <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+  <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  </head>
+  <body>
+    {$output}
+    <script type="text/javascript">
+    {$js}
+    </script>
+  </body>
+  <html>
+EOT;
+  }
+
+  public static function mobileCheckout($type, $post, $objects) {
+    $contribution = $objects['contribution'];
+    $merchantPaymentProcessor = $objects['payment_processor'];
+
+    if($type = 'applepay') {
+      $email = new CRM_Core_DAO_Email();
+      $email->contact_id = $contribution->contact_id;
+      $email->is_primary = true;
+      $email->find(TRUE);
+
+      $token = urlencode(json_encode($post['token']));
+      $is_test = $contribution->is_test;
+
+      $params = array(
+        'TimeStamp' => time(),
+        'Version' => '1.0',
+        'MerchantOrderNo' => CRM_Core_Payment_SPGATEWAY::generateTrxnId($is_test, $contribution->id),
+        'Amt' => $contribution->total_amount,
+        'ProdDesc' => $post['description'],
+        'PayerEmail' => $email->email,
+        'CardNo' => '',
+        'Exp' => '',
+        'CVC' => '',
+        'APPLEPAY' => $token,
+        'APPLEPAYTYPE' => '02',
+      );
+      CRM_Core_Error::debug('applepay_transact_curl_params_before_encrypt', $params);
+
+      $data = CRM_Core_Payment_SPGATEWAYAPI::recurEncrypt(http_build_query($params), get_object_vars($merchantPaymentProcessor));
+
+      $data = array(
+        'MerchantID_' => $merchantPaymentProcessor->user_name,
+        'PostData_' => $data,
+        'Pos_' => 'JSON',
+      );
+      if($contribution->is_test){
+        $url = CRM_Core_Payment_SPGATEWAY::TEST_DOMAIN.CRM_Core_Payment_SPGATEWAY::URL_CREDITBG;
+      }else{
+        $url = CRM_Core_Payment_SPGATEWAY::REAL_DOMAIN.CRM_Core_Payment_SPGATEWAY::URL_CREDITBG;
+      }
+
+      CRM_Core_Error::debug('applepay_transact_curl_data_after_encrypt', $data);
+
+      $ch = curl_init($url);
+      $opt = array();
+      $opt[CURLOPT_RETURNTRANSFER] = TRUE;
+      $opt[CURLOPT_POST] = TRUE;
+      $opt[CURLOPT_POSTFIELDS] = $data;
+      $opt[CURLOPT_SSL_VERIFYPEER] = FALSE;
+      curl_setopt_array($ch, $opt);
+
+      $result = curl_exec($ch);
+      $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+      if ($result === FALSE) {
+        $errno = curl_errno($ch);
+        $err = curl_error($ch);
+        $curlError = array($errno => $err);
+      }
+      else{
+        $curlError = array();
+      }
+      curl_close($ch);
+      CRM_Core_Error::debug('applepay_transact_curl_error', $curlError);
+
+      $result = json_decode($result);
+      CRM_Core_Payment_SPGATEWAYAPI::writeRecord($contribution->id, get_object_vars($result));
+      $return = array();
+      if($result->Status == 'SUCCESS'){
+        $return['is_success'] = true;
+      }
+      $return['message'] = $result->Message;
+    }
+    return $return;
+  }
+
   function doUpdateRecur($params, $debug = FALSE) {
     if ($debug) {
       CRM_Core_Error::debug('SPGATEWAY doUpdateRecur $params', $params);
@@ -243,10 +626,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     if ($this->_paymentProcessor['url_recur'] != 1) {
       return $params;
     }
-    if (module_load_include('inc', 'civicrm_spgateway', 'civicrm_spgateway.api') === FALSE) {
-      CRM_Core_Error::fatal('Module civicrm_spgateway doesn\'t exists.');
-    }
-    else if (empty($params['contribution_recur_id'])) {
+    if (empty($params['contribution_recur_id'])) {
       CRM_Core_Error::fatal('Missing contribution recur ID in params');
     }
     else {
@@ -283,9 +663,9 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
 
       if (!empty($params['contribution_status_id'])) {
         $apiConstructParams['apiType'] = 'alter-status';
-        $spgatewayAPI = new spgateway_spgateway_api($apiConstructParams);
+        $spgatewayAPI = new CRM_Core_Payment_SPGATEWAYAPI($apiConstructParams);
         $newStatusId = $params['contribution_status_id'];
-        
+
         /*
         * $requestParams = array(
         *    'AlterStatus'          => Positive(7 => suspend, 3 => terminate, 5 => restart),
@@ -330,7 +710,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
       // Send alter other property API.
 
       $apiConstructParams['apiType'] = 'alter-amt';
-      $spgatewayAPI = new spgateway_spgateway_api($apiConstructParams);
+      $spgatewayAPI = new CRM_Core_Payment_SPGATEWAYAPI($apiConstructParams);
       $isChangeRecur = FALSE;
       $requestParams = array(
         'Version' => self::$_recurEditAPIVersion,
@@ -431,59 +811,6 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
   }
 
   /**
-   * return array(
-   *   // All instrument:
-   *   'status' => contribuion_status
-   *   'msg' => return message
-   * 
-   *   // Not Credit Card:
-   *   'payment_instrument' => civicrm_spgateway_notify_display() return value
-   * )
-   */
-  function doGetResultFromIPNNotify($contributionId, $submitValues = array()) {
-    // First, check if it is redirect payment.
-    $instruments = CRM_Contribute_PseudoConstant::paymentInstrument('Name');
-    $cDao = new CRM_Contribute_DAO_Contribution();
-    $cDao->id = $contributionId;
-    $cDao->fetch(TRUE);
-    if (strstr($instruments[$cDao->payment_instrument_id], 'Credit')) {
-      // If contribution status id == 2, wait 3 second for IPN trigger
-      if ($cDao->contribution_status_id == 2) {
-        sleep(3);
-        $contribution_status_id = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $contributionId, 'contribution_status_id');
-        if ($contribution_status_id == 2) {
-          $ids = CRM_Contribute_BAO_Contribution::buildIds($contributionId);
-          $query = CRM_Contribute_BAO_Contribution::makeNotifyUrl($ids, NULL, TRUE);
-          parse_str($query, $get);
-          $result = civicrm_spgateway_ipn('Credit', $submitValues, $get, FALSE);
-          if(strstr($result, 'OK')){
-            $status = 1;
-          }
-          else{
-            $status = 2;
-          }
-        }
-      }
-      else {
-        $status = $cDao->contribution_status_id;
-        if (!empty($submitValues['JSONData'])) {
-          $return_params = _civicrm_spgateway_post_decode($submitValues['JSONData']);
-        }
-        if(!empty($submitValues['Period']) && empty($return_params)){
-          $payment_processors = CRM_Core_BAO_PaymentProcessor::getPayment($cDao->payment_processor_id, $cDao->is_test?'test':'live');
-          $return_params = _civicrm_spgateway_post_decode(_civicrm_spgateway_recur_decrypt($submitValues['Period'], $payment_processors));
-        }
-        $msg = _civicrm_spgateway_error_msg($return_params['RtnCode']);
-      }
-    }
-    else {
-
-    }
-
-  }
-
-  
-  /**
    * Function called from contributionRecur page to show tappay detail information
    * 
    * @param int @contributionId the contribution id
@@ -534,7 +861,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
         }
       }
 
-      $result = civicrm_spgateway_single_check($trxn_id, TRUE);
+      $result = self::recurSyncTransaction($trxn_id, TRUE);
       $session = CRM_Core_Session::singleton();
       if (!empty($result)) {
         if ($isAddedNewContribution) {
@@ -565,7 +892,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     }
   }
 
-  static function doSingleQueryRecord($contributionId = NULL) {
+  public static function doSingleQueryRecord($contributionId = NULL, $order = NULL) {
     $get = $_GET;
     unset($get['q']);
     if (!is_numeric($contributionId) || empty($contributionId)) {
@@ -582,68 +909,65 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
       $resultMessage = ts("The contribution with transaction ID: %1 can't find from Newebpay API.", array(1 => $cid));
     }
     else {
-      if (module_load_include('inc', 'civicrm_spgateway', 'civicrm_spgateway.checkout') === FALSE) {
-        $resultMessage = ts('Module %1 doesn\'t exists.', array(1 => 'civicrm_spgateway'));
+      if (!empty($order)) {
+        // this is for ci testing or something we already had response
+        // should be object or associated array
+        self::syncTransaction($trxnId, $order);
       }
       else {
-        if (!function_exists('civicrm_spgateway_single_contribution_sync')) {
-          $resultMessage = ts("Sync single contribution function doesn't exist.");
-        }
-        else {
-          civicrm_spgateway_single_contribution_sync($trxnId);
-          $resultMessage = ts("Synchronizing to %1 server success.", array(1 => ts("NewebPay")));
-          $updatedDAO = new CRM_Contribute_DAO_Contribution();
-          $updatedDAO->id = $cid;
-          $updatedDAO->find(TRUE);
-          $diffContribution = array();
-          if ($updatedDAO->contribution_status_id != $origDAO->contribution_status_id) {
-            $status = CRM_Contribute_PseudoConstant::contributionStatus();
-            $diffContribution[ts('Contribution Status')] = array($status[$origDAO->contribution_status_id], $status[$updatedDAO->contribution_status_id]);
+        self::syncTransaction($trxnId);
+      }
+      $resultMessage = ts("Synchronizing to %1 server success.", array(1 => ts("NewebPay")));
+      $updatedDAO = new CRM_Contribute_DAO_Contribution();
+      $updatedDAO->id = $cid;
+      $updatedDAO->find(TRUE);
+      $diffContribution = array();
+      if ($updatedDAO->contribution_status_id != $origDAO->contribution_status_id) {
+        $status = CRM_Contribute_PseudoConstant::contributionStatus();
+        $diffContribution[ts('Contribution Status')] = array($status[$origDAO->contribution_status_id], $status[$updatedDAO->contribution_status_id]);
 
-            // Check it will send Email.
-            $components = CRM_Contribute_BAO_Contribution::getComponentDetails(array($cid));
-            $contributeComponent = $components[$cid];
-            $componentName = $contributeComponent['component'];
-            $pageId = $contributeComponent['page_id'];
-            if ($componentName == 'contribute' && !empty($pageId)) {
-              $pageParams = array(1 => array( $pageId, 'Positive'));
-              $isEmailReceipt = CRM_Core_DAO::singleValueQuery("SELECT is_email_receipt FROM civicrm_contribution_page WHERE id = %1", $pageParams);
-              if ($isEmailReceipt) {
-                $diffContribution[] = ts('A notification email has been sent to the supporter.');
-              }
-            }
-
-            // Check if the SMS is sent.
-            $activityType = CRM_Core_PseudoConstant::activityType(TRUE, TRUE, FALSE, 'name', TRUE);
-            $activitySMSParams = array(
-              'source_record_id' => $cid,
-              'activity_type_id' => CRM_Utils_Array::key('Contribution SMS', $activityType),
-            );
-            $smsActivity = new CRM_Activity_DAO_Activity();
-            $smsActivity->copyValues($activitySMSParams);
-            if ($smsActivity->find(TRUE)) {
-              $diffContribution[] = ts('SMS Sent');
-            }
-          }
-          if ($updatedDAO->receive_date != $origDAO->receive_date) {
-            $diffContribution[ts('Received Date')] = array($origDAO->receive_date, $updatedDAO->receive_date);
-          }
-          if ($updatedDAO->cancel_date != $origDAO->cancel_date) {
-            $diffContribution[ts('Cancel Date')] = array($origDAO->cancel_date, $updatedDAO->cancel_date);
-          }
-          if ($updatedDAO->cancel_reason != $origDAO->cancel_reason) {
-            $diffContribution[ts('Cancel Reason')] = array($origDAO->cancel_reason, $updatedDAO->cancel_reason);
-          }
-          if ($updatedDAO->receipt_id != $origDAO->receipt_id) {
-            $diffContribution[ts('Receipt ID')] = array($origDAO->receipt_id, $updatedDAO->receipt_id);
-          }
-          if ($updatedDAO->receipt_date != $origDAO->receipt_date) {
-            $diffContribution[ts('Receipt Date')] = array($origDAO->receipt_date, $updatedDAO->receipt_date);
-          }
-          if (empty($diffContribution)) {
-            $diffContribution[] = ts("There are no any change.");
+        // Check it will send Email.
+        $components = CRM_Contribute_BAO_Contribution::getComponentDetails(array($cid));
+        $contributeComponent = $components[$cid];
+        $componentName = $contributeComponent['component'];
+        $pageId = $contributeComponent['page_id'];
+        if ($componentName == 'contribute' && !empty($pageId)) {
+          $pageParams = array(1 => array( $pageId, 'Positive'));
+          $isEmailReceipt = CRM_Core_DAO::singleValueQuery("SELECT is_email_receipt FROM civicrm_contribution_page WHERE id = %1", $pageParams);
+          if ($isEmailReceipt) {
+            $diffContribution[] = ts('A notification email has been sent to the supporter.');
           }
         }
+
+        // Check if the SMS is sent.
+        $activityType = CRM_Core_PseudoConstant::activityType(TRUE, TRUE, FALSE, 'name', TRUE);
+        $activitySMSParams = array(
+          'source_record_id' => $cid,
+          'activity_type_id' => CRM_Utils_Array::key('Contribution SMS', $activityType),
+        );
+        $smsActivity = new CRM_Activity_DAO_Activity();
+        $smsActivity->copyValues($activitySMSParams);
+        if ($smsActivity->find(TRUE)) {
+          $diffContribution[] = ts('SMS Sent');
+        }
+      }
+      if ($updatedDAO->receive_date != $origDAO->receive_date) {
+        $diffContribution[ts('Received Date')] = array($origDAO->receive_date, $updatedDAO->receive_date);
+      }
+      if ($updatedDAO->cancel_date != $origDAO->cancel_date) {
+        $diffContribution[ts('Cancel Date')] = array($origDAO->cancel_date, $updatedDAO->cancel_date);
+      }
+      if ($updatedDAO->cancel_reason != $origDAO->cancel_reason) {
+        $diffContribution[ts('Cancel Reason')] = array($origDAO->cancel_reason, $updatedDAO->cancel_reason);
+      }
+      if ($updatedDAO->receipt_id != $origDAO->receipt_id) {
+        $diffContribution[ts('Receipt ID')] = array($origDAO->receipt_id, $updatedDAO->receipt_id);
+      }
+      if ($updatedDAO->receipt_date != $origDAO->receipt_date) {
+        $diffContribution[ts('Receipt Date')] = array($origDAO->receipt_date, $updatedDAO->receipt_date);
+      }
+      if (empty($diffContribution)) {
+        $diffContribution[] = ts("There are no any change.");
       }
     }
     // Redirect to contribution view page.
@@ -661,11 +985,13 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
       }
       $resultMessage.="</ul>";
     }
-    CRM_Core_Session::setStatus($resultMessage);
-    CRM_Utils_System::redirect($redirect);
+    if (!isset($order)) {
+      CRM_Core_Session::setStatus($resultMessage);
+      CRM_Utils_System::redirect($redirect);
+    }
   }
 
-  static function getSyncDataUrl($contributionId, &$form = NULL) {
+  public static function getSyncDataUrl($contributionId, &$form = NULL) {
     $get = $_GET;
     unset($get['q']);
     $query = http_build_query($get);
@@ -692,10 +1018,566 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
         }
       }
       $updateData = CRM_Utils_Array::implode(', ', $updateDataArray);
-      $form->set('sync_data_hint', ts('If the transaction is finished, it will update the follow data by this action: %1', $updateData));
+      $updateString = ts('If the transaction is finished, it will update the follow data by this action: %1', array(1 => $updateData));
+      $form->set('sync_data_hint', $updateString);
     }
 
     return $sync_url;
   }
-}
 
+  /**
+   * The IPN warpping
+   *
+   * @param array $arguments Router will pass array into this function
+   * @param array $post Simulate POST data
+   * @param array $get Simulate GET data
+   * @param bool $print print result
+   * @return void
+   */
+  public static function doIPN($arguments, $post = NULL, $get = NULL, $print = TRUE) {
+    $post = !empty($post) ? $post : $_POST;
+    $get = !empty($get) ? $get : $_GET;
+    if (!empty($arguments)) {
+      if (is_array($arguments)) {
+        $instrument = end($arguments);
+      }
+      elseif (is_string($arguments)){
+        $instrument = $arguments;
+      }
+      else {
+        CRM_Core_Error::debug_log_message("Spgateway: IPN Missing require argument.");
+        CRM_Utils_System::civiExit();
+      }
+    }
+
+    // detect variables
+    if(empty($post)){
+      CRM_Core_Error::debug_log_message("Spgateway: Could not find POST data from payment server.");
+      CRM_Utils_System::civiExit();
+    }
+    else{
+      // validate some post
+      if (!empty($post['JSONData']) || !empty($post['Period']) || !empty($post['Result'])) {
+        $ipn = new CRM_Core_Payment_SPGATEWAYIPN($post, $get);
+        $result = $ipn->main($instrument);
+        if(is_string($result) && $print){
+          echo $result;
+        }
+        else{
+          return $result;
+        }
+      }
+      else {
+        CRM_Core_Error::debug_log_message("Spgateway: Invlid POST data.");
+        CRM_Core_Error::debug_var("spgateway_ipn_post", $post);
+      }
+    }
+    CRM_Utils_System::civiExit();
+  }
+
+  /**
+   * Migrate from _civicrm_spgateway_instrument
+   *
+   * @param string $type
+   * @return void
+   */
+  public static function instruments($type = 'normal'){
+    $i = array(
+      'Credit Card' => array('label' => ts('Credit Card'), 'desc' => '', 'code' => 'Credit'),
+      'ATM' => array('label' => ts('ATM Transfer'), 'desc' => '', 'code' => 'ATM'),
+      'Web ATM' => array('label' => ts('Web ATM'), 'desc' => '', 'code' => 'WebATM'),
+      'Convenient Store' => array('label' => ts('Convenient Store Barcode'), 'desc'=>'', 'code' => 'BARCODE'),
+      'Convenient Store (Code)' => array('label'=> ts('Convenient Store (Code)'),'desc' => '', 'code' => 'CVS'),
+    );
+    if($type == 'form_name'){
+      foreach($i as $name => $data){
+        $form_name = preg_replace('/[^0-9a-z]+/i', '_', strtolower($name));
+        $instrument[$form_name] = $data;
+      }
+      return $instrument;
+    }
+    elseif($type == 'code'){
+      foreach($i as $name =>  $data){
+        $instrument[$name] = $data['code'];
+      }
+      return $instrument;
+    }
+    else{
+      return $i;
+    }
+  }
+
+  /**
+   * Migrate from _civicrm_spgateway_trxn_id
+   *
+   * @param int $is_test
+   * @param int $id
+   * @return string
+   */
+  public static function generateTrxnId($is_test, $id){
+    if($is_test){
+      $trxnId = 'test' . substr(str_replace(array('.','-'), '', $_SERVER['HTTP_HOST']), 0, 3) . $id. 'T'. mt_rand(100, 999);
+      return $trxnId;
+    }
+    return (string) $id;
+  }
+
+  /**
+   * Migrate from civicrm_spgateway_single_contribution_sync
+   *
+   * Sync non-recurring transaction by specific trxn id
+   *
+   * @param int $inputTrxnId
+   * @return bool|object
+   * @param string $order
+   */
+  public static function syncTransaction($inputTrxnId, $order = NULL) {
+    $paymentProcessorId = 0;
+
+    // Check contribution is exists
+    $contribution = new CRM_Contribute_DAO_Contribution();
+    $contribution->trxn_id = $inputTrxnId;
+    if ($contribution->find(TRUE)) {
+      $paymentProcessorId = $contribution->payment_processor_id;
+      if ($contribution->contribution_status_id == 1) {
+        $message = ts('There are no any change.');
+        return $message;
+      }
+    }
+    // we can't support single contribution check because lake of payment processor id #TODO - logic to get payment processor id
+    if (!empty($paymentProcessorId)) {
+      $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($paymentProcessorId, $contribution->is_test ? 'test': 'live');
+
+      if (strstr($paymentProcessor['payment_processor_type'], 'SPGATEWAY') && !empty($paymentProcessor['user_name'])) {
+        if ($order) {
+          // this is for ci testing or something we already had response
+          // should be object or associated array
+          $result = $order;
+        }
+        else {
+          $amount = $contribution->total_amount;
+          if ($contribution->contribution_recur_id && !strstr($inputTrxnId, '_')) {
+            $trxnId = $inputTrxnId.'_1';
+            $recurring_first_contribution = TRUE;
+          }
+          else {
+            $trxnId = $inputTrxnId;
+          }
+          $data = array(
+            'Amt' => floor($amount),
+            'MerchantID' => $paymentProcessor['user_name'],
+            'MerchantOrderNo' => $trxnId,
+            'RespondType' => self::RESPONSE_TYPE,
+            'TimeStamp' => CRM_REQUEST_TIME,
+            'Version' => self::QUERY_VERSION,
+          );
+          $args = array('IV','Amt','MerchantID','MerchantOrderNo', 'Key');
+          CRM_Core_Payment_SPGATEWAYAPI::encode($data, $paymentProcessor, $args);
+          $urlApi = $contribution->is_test ? self::TEST_DOMAIN.self::URL_API : self::REAL_DOMAIN.self::URL_API;
+          $result = CRM_Core_Payment_SPGATEWAYAPI::sendRequest($urlApi, $data);
+        }
+
+        // Online contribution
+        // Only trigger if there are pay time in result;
+        if (!empty($result) && $result->Status == 'SUCCESS' && $result->Result->TradeStatus !== '0') {
+          // complex part to simulate spgateway ipn
+          $ipnGet = $ipnPost = array();
+
+          // prepare post, complex logic because recurring have different variable names
+          $ipnResult = clone $result;
+          if ($result->Result->TradeStatus != 1) {
+            $ipnResult->Status =$result->Result->RespondCode;
+          }
+          $ipnResult->Message = $result->Result->RespondMsg;
+          // Pass CheckCode.
+          unset($ipnResult->Result->CheckCode);
+          $ipnPost = (array) $ipnResult;
+
+          if ($contribution->contribution_recur_id) {
+            $ipnResult->Result->AuthAmt = $result->Result->Amt;
+            unset($ipnResult->Result->Amt);
+            $ipnResult->Result->OrderNo = $result->Result->MerchantOrderNo;
+            list($first_id, $period_times) = explode('_', $result->Result->MerchantOrderNo);
+            if(!empty($period_times) && $period_times != 1){
+              $ipnResult->Result->AlreadyTimes = $period_times;
+            }
+            $ipnResult->Result->MerchantOrderNo = $first_id;
+            $ipnResult = json_encode($ipnResult);
+            $ipnPost = array('Period' => CRM_Core_Payment_SPGATEWAYAPI::recurEncrypt($ipnResult, $paymentProcessor));
+          }
+
+          // prepare get
+          $ids = CRM_Contribute_BAO_Contribution::buildIds($contribution->id);
+          $query = CRM_Contribute_BAO_Contribution::makeNotifyUrl($ids, NULL, TRUE);
+          parse_str($query, $ipnGet);
+
+          // create recurring record
+          $result->_post = $ipnPost;
+          $result->_get = $ipnGet;
+          $result->_response = self::doIPN(array('spgateway', 'ipn', 'Credit'), $result->_post, $result->_get, FALSE);
+
+          if ($recurring_first_contribution) {
+            $contribution = new CRM_Contribute_DAO_Contribution();
+            $contribution->trxn_id = $inputTrxnId;
+            if ($contribution->find(TRUE) && strstr($trxnId, '_1')) {
+              // The case first contribution trxn_id not append '_1' in the end.
+              CRM_Core_DAO::setFieldValue('CRM_Contribute_DAO_Contribution', $contribution->id, 'trxn_id', $trxnId);
+            }
+          }
+          return $result;
+        }
+      }
+    }
+    return FALSE;
+  }
+
+  /**
+   * Always trying to fetch next trxn_id which not appear in CRM
+   */
+  /**
+   * Migrate from civicrm_spgateway_recur_check
+   *
+   * Trying to get next transaction by given recurring id
+   *
+   * @param int $recurId
+   * @return void
+   */
+  public static function recurSync($recurId) {
+    $query = "SELECT trxn_id, CAST(REGEXP_REPLACE(trxn_id, '^[0-9_r]+_([0-9]+)$', '\\\\1') as UNSIGNED) as number FROM civicrm_contribution WHERE contribution_recur_id = %1 AND CAST(trxn_id as UNSIGNED) < 900000000 ORDER BY number DESC";
+    $result = CRM_Core_DAO::executeQuery($query, array(1 => array($recurId, 'Integer')));
+    $result->fetch();
+    if(!empty($result->N)){
+      // when recurring trxn_id have underline, eg oooo_1
+      if (strstr($result->trxn_id, '_')) {
+        list($parentTrxnId, $recurringInstallment, $oldRecurInstallment) = explode('_', $result->trxn_id);
+        if ($parentTrxnId == 'r' && is_numeric($oldRecurInstallment)) {
+          // for old recurring. trxn_id like 'r_12_3', $parentTrxnId = 'r', $recurringInstallment = 12, $oldRecurInstallment = 3
+          $oldRecurInstallment++;
+          self::recurSyncTransaction($parentTrxnId.'_'.$recurringInstallment.'_'.$oldRecurInstallment, $createContribution = TRUE);
+        }
+        elseif (is_numeric($recurringInstallment)) {
+          // for current recurring, for trxn_id like 123_4, $parentTrxnId = 123, $recurringInstallment = 4
+          $recurringInstallment++;
+          self::recurSyncTransaction($parentTrxnId.'_'.$recurringInstallment, $createContribution = TRUE);
+        }
+      }
+      // when first recurring trxn_id record without underline
+      else {
+        $parentTrxnId= $result->trxn_id;
+        $installment = 2;
+        self::recurSyncTransaction($parentTrxnId, TRUE);
+      }
+    }
+  }
+
+  /**
+   * Migrate from civicrm_spgateway_single_check
+   *
+   * Create recurring transacation by specific trxn id
+   * Base on spgateway / neweb response
+   *
+   * @param string $trxnId
+   * @param bool $createContribution
+   * @param string $order
+   * @return object|bool
+   */
+  public static function recurSyncTransaction($trxnId, $createContribution = FALSE, $order = NULL) {
+    $parentTrxnId = 0;
+    $paymentProcessorId = 0;
+    if (strstr($trxnId, '_')) {
+      list($recurId, $installment, $oldInstallment) = explode('_', $trxnId);
+      if ($recurId == 'r' && !empty($oldInstallment)) {
+        // Old newebpay recurring, format: r_123_4
+        $parentTrxnId = $recurId.'_'.$installment;
+      }
+      else {
+        // Current spgateway recurring, format: 1234_5
+        $parentTrxnId = $recurId;
+      }
+    }
+    $contribution = new CRM_Contribute_DAO_Contribution();
+    $contribution->trxn_id = $trxnId;
+    if ($contribution->find(TRUE)) {
+      $paymentProcessorId = $contribution->payment_processor_id;
+      if ($contribution->contribution_status_id == 1) {
+        $createContribution = FALSE; // Found, And contribution is already success.
+      }
+      elseif (empty($parentTrxnId) && $createContribution) {
+        // First recurring or single contribution.
+        $contribution = new CRM_Contribute_DAO_Contribution();
+        $contribution->id = $trxnId;
+        if ($contribution->find(TRUE)) {
+          $paymentProcessorId = $contribution->payment_processor_id;
+          if (!empty($contribution->contribution_recur_id)) {
+            // First recurring contribution
+            $trxnId = $trxnId.'_1';
+          }
+        }
+      }
+    }
+    elseif($createContribution) {
+      // recurring contribution
+      if ($parentTrxnId) {
+        $contribution = new CRM_Contribute_DAO_Contribution();
+        $contribution->trxn_id = $parentTrxnId.'_1';
+        if ($contribution->find(TRUE)) {
+          $paymentProcessorId = $contribution->payment_processor_id;
+        }
+        else {
+          $contribution = new CRM_Contribute_DAO_Contribution();
+          $contribution->trxn_id = $parentTrxnId;
+          if ($contribution->find(TRUE)) {
+            $paymentProcessorId = $contribution->payment_processor_id;
+          }
+        }
+      }
+    }
+
+    // we can't support single contribution check because lake of payment processor id #TODO - logic to get payment processor id
+    if (!empty($paymentProcessorId)) {
+      $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($paymentProcessorId, $contribution->is_test ? 'test': 'live');
+
+      if (!empty($paymentProcessor['user_name'])) {
+        if ($order) {
+          // this is for ci testing or something we already had response
+          // should be object or associated array
+          $result = $order;
+        }
+        else {
+          $amount = CRM_Core_DAO::singleValueQuery('SELECT amount FROM civicrm_contribution_recur WHERE id = %1', array(1 => array($contribution->contribution_recur_id, 'Positive')));
+          $data = array(
+            'Amt' => floor($amount),
+            'MerchantID' => $paymentProcessor['user_name'],
+            'MerchantOrderNo' => $trxnId,
+            'RespondType' => self::RESPONSE_TYPE,
+            'TimeStamp' => CRM_REQUEST_TIME,
+            'Version' => self::QUERY_VERSION,
+          );
+          $args = array('IV','Amt','MerchantID','MerchantOrderNo', 'Key');
+          CRM_Core_Payment_SPGATEWAYAPI::encode($data, $paymentProcessor, $args);
+          $urlApi = $contribution->is_test ? self::TEST_DOMAIN.self::URL_API : self::REAL_DOMAIN.self::URL_API;
+          $result = CRM_Core_Payment_SPGATEWAYAPI::sendRequest($urlApi, $data);
+        }
+
+        // Online contribution
+        if (!empty($result) && $result->Status == 'SUCCESS') {
+          if ($createContribution && $contribution->id) {
+            // complex part to simulate spgateway ipn
+            $ipnGet = $ipnPost = array();
+
+            // prepare post, complex logic because recurring have different variable names
+            $ipnResult = clone $result;
+            if ($result->Result->TradeStatus != 1) {
+              $ipnResult->Status =$result->Result->RespondCode;
+            }
+            $ipnResult->Message = $result->Result->RespondMsg;
+
+            $ipnResult->Result->AuthAmt = $result->Result->Amt;
+            unset($ipnResult->Result->Amt);
+            unset($ipnResult->Result->CheckCode);
+            $ipnResult->Result->OrderNo = $result->Result->MerchantOrderNo;
+            list($first_id, $period_times) = explode('_', $result->Result->MerchantOrderNo);
+            if(!empty($period_times) && $period_times != 1){
+              $ipnResult->Result->AlreadyTimes = $period_times;
+            }
+            $ipnResult->Result->MerchantOrderNo = $first_id;
+            $ipnResult = json_encode($ipnResult);
+            $ipnPost = array('Period' => CRM_Core_Payment_SPGATEWAYAPI::recurEncrypt($ipnResult, $paymentProcessor));
+
+            // prepare get
+            $ids = CRM_Contribute_BAO_Contribution::buildIds($contribution->id);
+            $query = CRM_Contribute_BAO_Contribution::makeNotifyUrl($ids, NULL, $return_query = TRUE);
+            parse_str($query, $ipnGet);
+
+            // create recurring record
+            $result->_post = $ipnPost;
+            $result->_get = $ipnGet;
+            $result->_response = self::doIPN(array('spgateway', 'ipn', 'Credit'), $ipnPost, $ipnGet, FALSE);
+            $contribution = new CRM_Contribute_DAO_Contribution();
+            $contribution->trxn_id = $parentTrxnId;
+            if ($contribution->find(TRUE) && strstr($trxnId, '_1')) {
+              // The case first contribution trxn_id not append '_1' in the end.
+              CRM_Core_DAO::setFieldValue('CRM_Contribute_DAO_Contribution', $contribution->id, 'trxn_id', $trxnId);
+            }
+            return $result;
+          }
+          else {
+            return $result;
+          }
+        }
+      }
+    }
+    return FALSE;
+  }
+
+  /**
+   * Using weblog post data to sync
+   *
+   * @param string $processOnlyDate string that format YYYYmmddHH indicate only process date in that hour
+   * @param array $lines custom provided lines for test o process
+   * @return void
+   */
+  public static function syncTransactionWebLog($filterDatetime = '', $lines = NULL) {
+    $paymentProcessors = array();
+    if (isset($lines) && is_array($lines)) {
+      $logLines = $lines;
+    }
+    else {
+      $logLines = array();
+      $logFile = CRM_Utils_System::cmsRootPath().'/'.CRM_Core_Config::singleton()->webLogDir.'/ipn_post.log';
+      $logContent = '';
+      if (strpos($logFile, '/') === 0 && is_file($logFile)) {
+        $logContent = file_get_contents($logFile);
+        $logLines = explode("\n", $logContent);
+      }
+    }
+
+    if (!empty($logLines)) {
+      $ordersByMerchant = array();
+      foreach ($logLines as $idx => $logLine) {
+        $getParams = $ipnResult = $postParams = array();
+        $logLine = trim($logLine);
+        if (empty($logLine)) {
+          continue;
+        }
+        // separate by space
+        preg_match('/^([^ ]+)\s\[([^\s]+)\]\s([^\s]+)\s(.*)$/', $logLine, $logMatches);
+        if (count($logMatches) >= 4) {
+          $isoDate = $logMatches[2];
+          // skip ipn when filter
+          if ($filterDatetime && strpos(date('YmdH', strtotime($isoDate)), $filterDatetime) === FALSE) {
+            continue;
+          }
+
+          $getString = $logMatches[3];
+          $postString = isset($logMatches[4]) ? $logMatches[4] : '';
+          $postString = preg_replace_callback('/\\\\x([0-9a-fA-F]{2})/', function ($strMatches) {
+            return chr(hexdec($strMatches[1]));
+          }, $postString);
+
+          $parsedUrl = parse_url($getString);
+          parse_str($parsedUrl['query'], $getParams);
+
+          // analysis POST
+          if (!empty($postString)) {
+            if (strpos($postString, 'JSONData=') === 0) {
+              $postString = substr($postString, 9);
+              $postParams = json_decode($postString, true);
+              if (!empty($postParams['Result'])) {
+                $ipnResult = json_decode($postParams['Result'], TRUE);
+                if (!empty($ipnResult['MerchantID'])) {
+                  $ordersByMerchant[$ipnResult['MerchantID']][$idx] = array(
+                    'recurring' => FALSE,
+                    'contribution_id' => !empty($getParams['cid']) ? $getParams['cid'] : '',
+                    'contact_id' => !empty($getParams['contact_id']) ? $getParams['contact_id'] : '',
+                    'success' => (isset($postParams['Status']) && $postParams['Status'] === 'SUCCESS') ? TRUE : FALSE,
+                    'total_amount' => isset($ipnResult['Amt']) ? (float)$ipnResult['Amt'] : 0,
+                    'trxn_id' => isset($ipnResult['MerchantOrderNo']) ? $ipnResult['MerchantOrderNo'] : '',
+                    'receive_date' => isset($ipnResult['PayTime']) ? date('c', strtotime($ipnResult['PayTime'])) : '',
+                    'ipn_date' => $isoDate,
+                  );
+                }
+              }
+            }
+            elseif (strpos($postString, 'Content-Disposition: form-data') !== false) {
+              $rawPostData = preg_replace('/\r\n--------------------------\w+--\r\n$/', '', $postString);
+              $postParts = preg_split('/\r\n--------------------------\w+\r\n/', $rawPostData);
+              $postParams = array();
+              foreach ($postParts as $part) {
+                if (preg_match('/Content-Disposition: form-data; name="(.+?)"\r\n\r\n(.*)/s', $part, $strMatches)) {
+                  $key = $strMatches[1];
+                  $value = $strMatches[2];
+                  $postParams[$key] = $value;
+                }
+              }
+              if (!empty($postParams['Period'])) {
+                // decode
+                if(is_numeric($getParams['cid'])) {
+                  $dao = CRM_Core_DAO::executeQuery("SELECT payment_processor_id, is_test FROM civicrm_contribution WHERE id = %1", array(
+                    1 => array($getParams['cid'], 'Integer'),
+                  ));
+                  $dao->fetch();
+                  if (!empty($paymentProcessors[$dao->payment_processor_id])) {
+                    $paymentProcessor = $paymentProcessors[$dao->payment_processor_id];
+                  }
+                  elseif (!empty($dao->payment_processor_id)) {
+                    $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($dao->payment_processor_id, $dao->is_test ? 'test' : 'live');
+                  }
+                  $postDecode = CRM_Core_Payment_SPGATEWAYAPI::recurDecrypt($postParams['Period'], $paymentProcessor);
+                  if (!empty($postDecode) && json_decode($postDecode)) {
+                    $postParams = json_decode($postDecode, TRUE);
+                    $ipnResult = $postParams['Result'];
+                    if (!empty($ipnResult['OrderNo'])) {
+                      $orderNumber = $ipnResult['OrderNo'];
+                      $firstRecurring = FALSE;
+                    }
+                    else {
+                      $orderNumber = $ipnResult['MerchantOrderNo'];
+                      $firstRecurring = TRUE;
+                    }
+                    $amount = isset($ipnResult['AuthAmt']) ? $ipnResult['AuthAmt'] : $ipnResult['PeriodAmt'];
+                    $ordersByMerchant[$ipnResult['MerchantID']][$idx] = array(
+                      'recurring' => TRUE,
+                      'first_recurring' => $firstRecurring,
+                      'contribution_id' => !empty($getParams['cid']) ? $getParams['cid'] : '',
+                      'contact_id' => !empty($getParams['contact_id']) ? $getParams['contact_id'] : '',
+                      'success' => (isset($postParams['Status']) && $postParams['Status'] === 'SUCCESS') ? TRUE : FALSE,
+                      'total_amount' => $amount,
+                      'trxn_id' => $orderNumber,
+                      'receive_date' => isset($ipnResult['AuthTime']) ? date('c', strtotime($ipnResult['AuthTime'])) : '',
+                      'ipn_date' => $isoDate,
+                    );
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      // process complete, start to call sync when necessery
+      // only trigger sync when contribution status is pending
+      if (!empty($ordersByMerchant)) {
+        foreach($ordersByMerchant as $merchantId => $orders) {
+          foreach($orders as $idx => $order) {
+            if (!empty($order['trxn_id'])) {
+              if ($order['first_recurring']) {
+                $current_status_id = CRM_Core_DAO::singleValueQuery("SELECT contribution_status_id FROM civicrm_contribution WHERE trxn_id IN (%1, %2)", array(
+                  1 => array($order['trxn_id'], 'String'),
+                  2 => array($order['trxn_id'].'_1', 'String'),
+                ));
+              }
+              else {
+                $current_status_id = CRM_Core_DAO::singleValueQuery("SELECT contribution_status_id FROM civicrm_contribution WHERE trxn_id = %1", array(
+                  1 => array($order['trxn_id'], 'String'),
+                ));
+              }
+              if ($order['recurring']) {
+                if (empty($current_status_id)) {
+                  CRM_Core_Error::debug_log_message("spgateway: weblog sync recur create for trxn_id {$order['trxn_id']}");
+                  self::recurSyncTransaction($order['trxn_id'], TRUE);
+                }
+                elseif($current_status_id == 2) {
+                  CRM_Core_Error::debug_log_message("spgateway: weblog sync recur status for trxn_id {$order['trxn_id']}");
+                  if ($order['first_recurring']) {
+                    $ids = explode('_', $order['trxn_id']);
+                    self::syncTransaction($ids[0]);
+                  }
+                  else {
+                    self::syncTransaction($order['trxn_id']);
+                  }
+                }
+              }
+              else {
+                if ($current_status_id == 2) {
+                  // only sync status
+                  CRM_Core_Error::debug_log_message("spgateway: weblog sync non-recur status for trxn_id {$order['trxn_id']}");
+                  self::syncTransaction($order['trxn_id']);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

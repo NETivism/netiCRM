@@ -103,8 +103,7 @@ function civicrm_create_success($result = 1) {
  */
 function civicrm_duplicate($error) {
   if (is_array($error) && civicrm_error($error)) {
-    $code = $error['error_message']['code'];
-    if ($code == CRM_Core_Error::DUPLICATE_CONTACT) {
+    if (!empty($error['error_message']['code']) && $error['error_message']['code'] == CRM_Core_Error::DUPLICATE_CONTACT) {
       return TRUE;
     }
   }

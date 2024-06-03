@@ -663,13 +663,10 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
         }
         if(!empty($order) && $order->MerchantTradeNo == $result->trxn_id && count($order->ExecLog) > 1){
           // update recur status
-          $recur = $order->ExecStatus;
           if(isset($order->ExecStatus)){
-            $update_status = NULL;
             $recur_param = $null = array();
             if($order->ExecStatus == 0 && $result->recurring_status != 3){
               // cancelled
-              $update_status = 3;
               $recur_param = array(
                 'id' => $rid,
                 'modified_date' => date('YmdHis'),
@@ -754,11 +751,11 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
                 //'SimulatePaid' => $order->SimulatePaid,
               );
 
-              /* TODO: #40509, do not send email notification after transaction overdue
-              if (strtotime($o->process_date) < $now - 86400*2) {
+              // #40509, do not send email notification after transaction overdue
+              if (strtotime($o->process_date) < strtotime('today')) {
                 $post['do_not_email'] = 1;
+                $post['do_not_receipt'] = 1;
               }
-              */
 
               // manually trigger ipn
               self::doIPN('Credit', $post, $get, FALSE);
@@ -995,10 +992,18 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
    *
    * @return string|void If $print is FALSE, function will return the result as Array.
    */
-  static function doIPN($instrument = NULL, $post = NULL, $get = NULL, $print = TRUE) {
+  static function doIPN($arguments, $post = NULL, $get = NULL, $print = TRUE) {
     // detect variables
     $post = !empty($post) ? $post : $_POST;
     $get = !empty($get) ? $get : $_GET;
+    if (!empty($arguments)) {
+      if (is_array($arguments)) {
+        $instrument = end($arguments);
+      }
+      else {
+        $instrument = $arguments;
+      }
+    }
     if (empty($instrument)) {
       $qArray = explode('/', $get['q']);
       $instrument = end($qArray);
@@ -1007,13 +1012,11 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
     // detect variables
     if(empty($post)){
       CRM_Core_Error::debug_log_message( "civicrm_allpay: Could not find POST data from payment server", TRUE);
-      exit;
+      CRM_Utils_System::civiExit();
     }
     else{
       $component = $get['module'];
       if(!empty($component)){
-        // include_once(__DIR__.'/ALLPAYIPN.php');
-
         $ipn = new CRM_Core_Payment_ALLPAYIPN($post, $get);
         $result = $ipn->main($component, $instrument);
         if(!empty($result) && $print){
