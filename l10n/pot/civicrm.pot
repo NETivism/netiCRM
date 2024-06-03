@@ -49444,3 +49444,97 @@ msgstr ""
 
 msgid "To enable 3D Secure, you must add a TapPay  Merchant ID and Partner Key that supports this feature. If you need 3D Secure, please contact customer service."
 msgstr ""
+
+#: CRM/Group/Form/Edit.php
+msgid "Smart Marketing Group"
+msgstr ""
+
+
+#: CRM/Mailing/External/SmartMarketing/Flydove.php
+msgid "Cannot retrive remote group, try again later"
+msgstr ""
+
+#: CRM/Mailing/External/SmartMarketing/Flydove.php
+msgid "Flydove"
+msgstr ""
+
+#: CRM/Mailing/External/SmartMarketing/Flydove.php
+msgid "Please provide at least 1 contact."
+msgstr ""
+
+#: CRM/Mailing/External/SmartMarketing/Flydove.php
+msgid "Group you request doesn't exists in flydove."
+msgstr ""
+
+#: CRM/Mailing/External/SmartMarketing/Flydove.php
+msgid "Cannot get remote groups list."
+msgstr ""
+
+#: CRM/Mailing/External/SmartMarketing/Flydove.php
+msgid "The group you request doesn't exists in flydove."
+msgstr ""
+
+#: CRM/Mailing/External/SmartMarketing/Flydove.php
+msgid "Success sync %1 contacts from group %2 to remote group %3"
+msgstr ""
+
+#: CRM/Mailing/External/SmartMarketing/Flydove.php
+msgid "Skipped %1 contacts due to reasons: %2."
+msgstr ""
+
+#: CRM/Mailing/Page/AJAX.php
+msgid "Synchronize error"
+msgstr ""
+
+#: CRM/Mailing/Page/AJAX.php
+msgid "Successful synced"
+msgstr ""
+
+#: CRM/SMS/Form/Provider.php
+msgid "This Title already exists in Database."
+msgstr ""
+
+#: templates/CRM/Group/Form/Edit.tpl
+msgid "The automated marketing journey does not start immediately and it needs to follow the external tool to schedule."
+msgstr ""
+
+#: templates/CRM/Group/Form/Edit.tpl
+msgid "After binding a group, the system will lock this group, preventing any edits."
+msgstr ""
+
+#: templates/CRM/Group/Page/Group.tpl
+msgid "Deactivation only applies to CRM groups; the automated marketing journey is still ongoing. To deactivate, please go to the smart marketing tools backend to proceed."
+msgstr ""
+
+#: templates/CRM/SMS/Form/Provider.tpl
+msgid "Flydove Settings"
+msgstr ""
+
+#: templates/CRM/SMS/Form/Provider.tpl
+msgid "Flydove File Import API Token"
+msgstr ""
+
+#: templates/CRM/SMS/Form/Provider.tpl
+msgid "Flydove Subscribe API Token"
+msgstr ""
+
+#: templates/CRM/SMS/Form/Provider.tpl
+msgid "Flydove Group Management API Token"
+msgstr ""
+
+#: templates/CRM/Group/Page/Group.tpl
+msgid "The smart markeintg journey is still in progress. To delete the contact or remove contact from group list, you need to go to the external smart marketing tool to proceed."
+msgstr ""
+
+#: CRM/Core/Payment/MyPay.php
+msgid "no period"
+msgstr ""
+
+msgid "%1 Periods"
+msgstr ""
+
+msgid "Recur %1-%2"
+msgstr ""
+
+msgid "Contribution %1"
+msgstr ""

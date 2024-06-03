@@ -663,13 +663,10 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
         }
         if(!empty($order) && $order->MerchantTradeNo == $result->trxn_id && count($order->ExecLog) > 1){
           // update recur status
-          $recur = $order->ExecStatus;
           if(isset($order->ExecStatus)){
-            $update_status = NULL;
             $recur_param = $null = array();
             if($order->ExecStatus == 0 && $result->recurring_status != 3){
               // cancelled
-              $update_status = 3;
               $recur_param = array(
                 'id' => $rid,
                 'modified_date' => date('YmdHis'),
@@ -754,11 +751,11 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
                 //'SimulatePaid' => $order->SimulatePaid,
               );
 
-              /* TODO: #40509, do not send email notification after transaction overdue
-              if (strtotime($o->process_date) < $now - 86400*2) {
+              // #40509, do not send email notification after transaction overdue
+              if (strtotime($o->process_date) < strtotime('today')) {
                 $post['do_not_email'] = 1;
+                $post['do_not_receipt'] = 1;
               }
-              */
 
               // manually trigger ipn
               self::doIPN('Credit', $post, $get, FALSE);

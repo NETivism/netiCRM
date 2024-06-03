@@ -57,6 +57,11 @@ abstract class CRM_Import_Parser {
    */
   CONST CONTACT_INDIVIDUAL = 'Individual', CONTACT_HOUSEHOLD = 'Household', CONTACT_ORGANIZATION = 'Organization';
 
+  /**
+   * Error file name prefix
+   */
+  CONST ERROR_FILE_PREFIX = 'contact';
+
   protected $_tableName;
 
   /**#@+
@@ -482,14 +487,14 @@ abstract class CRM_Import_Parser {
         }
       }
 
-      $fileName = str_replace('civicrm_import_job_', 'import_', $this->_tableName);
+      $filenamePrefix = str_replace('civicrm_import_job', self::ERROR_FILE_PREFIX, $this->_tableName);
       if ($this->_invalidRowCount) {
         // removed view url for invlaid contacts
         $headers = array_merge(
           array(ts('Line Number'), ts('Reason')),
           $customHeaders
         );
-        $this->_errorFileName = self::saveFileName(self::ERROR, $fileName);
+        $this->_errorFileName = self::errorFileName(self::ERROR, $filenamePrefix);
         self::exportCSV($this->_errorFileName, $headers, $this->_errors);
       }
       if ($this->_conflictCount) {
@@ -497,7 +502,7 @@ abstract class CRM_Import_Parser {
           array(ts('Line Number'), ts('Reason')),
           $customHeaders
         );
-        $this->_conflictFileName = self::saveFileName(self::CONFLICT, $fileName);
+        $this->_conflictFileName = self::errorFileName(self::CONFLICT, $filenamePrefix);
         self::exportCSV($this->_conflictFileName, $headers, $this->_conflicts);
       }
       if ($this->_duplicateCount) {
@@ -506,7 +511,7 @@ abstract class CRM_Import_Parser {
           $customHeaders
         );
 
-        $this->_duplicateFileName = self::saveFileName(self::DUPLICATE, $fileName);
+        $this->_duplicateFileName = self::errorFileName(self::DUPLICATE, $filenamePrefix);
         self::exportCSV($this->_duplicateFileName, $headers, $this->_duplicates);
       }
       if ($this->_unMatchCount) {
@@ -515,7 +520,7 @@ abstract class CRM_Import_Parser {
           $customHeaders
         );
 
-        $this->_misMatchFileName = self::saveFileName(self::NO_MATCH, $fileName);
+        $this->_misMatchFileName = self::errorFileName(self::NO_MATCH, $filenamePrefix);
         self::exportCSV($this->_misMatchFileName, $headers, $this->_unMatch);
       }
       if ($this->_unparsedAddressCount) {
@@ -523,7 +528,7 @@ abstract class CRM_Import_Parser {
           array(ts('Line Number'), ts('Contact Edit URL')),
           $customHeaders
         );
-        $this->_unparsedAddressFileName = self::saveFileName(self::UNPARSED_ADDRESS_WARNING, $fileName);
+        $this->_unparsedAddressFileName = self::errorFileName(self::UNPARSED_ADDRESS_WARNING, $filenamePrefix);
         self::exportCSV($this->_unparsedAddressFileName, $headers, $this->_unparsedAddresses);
       }
     }
@@ -976,18 +981,30 @@ abstract class CRM_Import_Parser {
     }
   }
 
-  public static function errorFileName($type, $prefix = NULL) {
+  /**
+   * For internal call
+   *
+   * @param [type] $type
+   * @param [type] $prefix
+   * @return void
+   */
+  public static function errorFileName($type, $prefix) {
     $fileName = self::saveFileName($type, $prefix);
     return $fileName;
   }
 
-  public static function saveFileName($type, $prefix = NULL) {
+  /**
+   * Contact, contribution, member, activity, event will call this
+   *
+   * @param [type] $type
+   * @param [type] $prefix
+   * @return void
+   */
+  public static function saveFileName($type, $prefix) {
     if (empty($prefix)) {
-      $prefix = 'import';
+      $prefix = 'import_'.date('YmdHis', CRM_REQUEST_TIME);
     }
     $fileName = $prefix;
-
-    $config = CRM_Core_Config::singleton();
     switch ($type) {
       case CRM_Import_Parser::ERROR:
         $fileName .= '.errors';
@@ -1011,6 +1028,70 @@ abstract class CRM_Import_Parser {
     }
 
     return $fileName . '.xlsx';
+  }
+
+  /**
+   * For download endpoint to retrieve filename
+   *
+   * @param string $qfKey
+   * @param int $type
+   * @param string $parserClass
+   * @return string
+   */
+  public static function getImportErrorFilename($qfKey, $type, $parserClass){
+    $session = CRM_Core_Session::singleton();
+    $scope = 'import-'.$qfKey;
+    $name = $parserClass.'-'.$type;
+    $filename = $session->get($name, $scope);
+    return $filename;
+  }
+
+  /**
+   * For import form to set error filename to session and return url
+   *
+   * @param string $qfKey
+   * @param int $type
+   * @param string $parserClass
+   * @param string $filename
+   * @return void
+   */
+  public static function setImportErrorFilenames($qfKey, $urlMap, $parserClass, $prefix, $form){
+    $defaultUrlMap = array(
+      // defaults
+      self::ERROR => 'downloadErrorRecordsUrl',
+      self::CONFLICT => 'downloadConflictRecordsUrl',
+      self::DUPLICATE => 'downloadDuplicateRecordsUrl',
+      self::NO_MATCH => 'downloadMismatchRecordsUrl',
+      // special in contact
+      self::UNPARSED_ADDRESS_WARNING => 'downloadAddressRecordsUrl',
+      // special in contribution
+      CRM_Contribute_Import_Parser::SOFT_CREDIT_ERROR => 'downloadSoftCreditErrorRecordsUrl',
+      CRM_Contribute_Import_Parser::PLEDGE_PAYMENT_ERROR => 'downloadPledgePaymentErrorRecordsUrl',
+      CRM_Contribute_Import_Parser::PCP_ERROR => 'downloadPCPErrorRecordsUrl',
+    );
+    $session = CRM_Core_Session::singleton();
+    $scope = 'import-'.$qfKey;
+
+    foreach($urlMap as $idx => $type) {
+      $type = strtoupper($type);
+      if (is_callable(array($parserClass, 'errorFileName')) && defined($parserClass.'::'.$type)) {
+        $constType = constant($parserClass.'::'.$type);
+        if (is_numeric($constType)) {
+          $name = $parserClass.'-'.$constType;
+          $filename = call_user_func(array($parserClass, 'errorFileName'), $constType, $prefix);
+          if (!empty($filename)) {
+            $session->set($name, $filename, $scope);
+          }
+          $urlParams = http_build_query(array(
+            'type' => $constType,
+            'parser' => $parserClass,
+            'qfKey' => $qfKey,
+          ), '', '&');
+          $tplVarName = is_numeric($idx) ? $defaultUrlMap[$constType] : $idx;
+          $form->set($tplVarName, CRM_Utils_System::url('civicrm/export', $urlParams));
+        }
+      }
+    }
   }
 }
 

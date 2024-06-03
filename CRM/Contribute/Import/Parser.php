@@ -75,6 +75,8 @@ abstract class CRM_Contribute_Import_Parser {
     CONTACT_HOUSEHOLD = CRM_Import_Parser::CONTACT_HOUSEHOLD,
     CONTACT_ORGANIZATION = CRM_Import_Parser::CONTACT_ORGANIZATION;
 
+  const ERROR_FILE_PREFIX = 'contribution';
+
   protected $_fileName;
 
   /**#@+
@@ -550,33 +552,34 @@ abstract class CRM_Contribute_Import_Parser {
         }
       }
       $headers = array_merge(array(ts('Line Number'), ts('Reason')), $customHeaders);
+      $filenamePrefix = str_replace('civicrm_import_job', self::ERROR_FILE_PREFIX, $tableName);
 
       if ($this->_invalidRowCount) {
-        $this->_errorFileName = self::errorFileName(self::ERROR);
+        $this->_errorFileName = self::errorFileName(self::ERROR, $filenamePrefix);
         CRM_Import_Parser::exportCSV($this->_errorFileName, $headers, $this->_errors);
       }
 
       if ($this->_invalidPledgePaymentRowCount) {
-        $this->_pledgePaymentErrorsFileName = self::errorFileName(self::PLEDGE_PAYMENT_ERROR);
+        $this->_pledgePaymentErrorsFileName = self::errorFileName(self::PLEDGE_PAYMENT_ERROR, $filenamePrefix);
         CRM_Import_Parser::exportCSV($this->_pledgePaymentErrorsFileName, $headers, $this->_pledgePaymentErrors);
       }
 
       if ($this->_invalidSoftCreditRowCount) {
-        $this->_softCreditErrorsFileName = self::errorFileName(self::SOFT_CREDIT_ERROR);
+        $this->_softCreditErrorsFileName = self::errorFileName(self::SOFT_CREDIT_ERROR, $filenamePrefix);
         CRM_Import_Parser::exportCSV($this->_softCreditErrorsFileName, $headers, $this->_softCreditErrors);
       }
 
       if ($this->_invalidPCPRowCount) {
-        $this->_pcpErrorsFileName = self::errorFileName(self::PCP_ERROR);
+        $this->_pcpErrorsFileName = self::errorFileName(self::PCP_ERROR, $filenamePrefix);
         CRM_Import_Parser::exportCSV($this->_pcpErrorsFileName, $headers, $this->_pcpErrors);
       }
 
       if ($this->_conflictCount) {
-        $this->_conflictFileName = self::errorFileName(self::CONFLICT);
+        $this->_conflictFileName = self::errorFileName(self::CONFLICT, $filenamePrefix);
         CRM_Import_Parser::exportCSV($this->_conflictFileName, $headers, $this->_conflicts);
       }
       if ($this->_duplicateCount) {
-        $this->_duplicateFileName = self::errorFileName(self::DUPLICATE);
+        $this->_duplicateFileName = self::errorFileName(self::DUPLICATE, $filenamePrefix);
         CRM_Import_Parser::exportCSV($this->_duplicateFileName, $headers, $this->_duplicates);
       }
     }
@@ -968,15 +971,10 @@ abstract class CRM_Contribute_Import_Parser {
     }
   }
 
-  public static function errorFileName($type) {
-    $fileName = NULL;
-    if (empty($type)) {
-      return $fileName;
+  public static function errorFileName($type, $prefix) {
+    if (empty($prefix)) {
+      $prefix = 'contribution';
     }
-
-    $config = CRM_Core_Config::singleton();
-    $fileName = "sqlImport";
-
     switch ($type) {
       case CRM_Contribute_Import_Parser::ERROR:
       case CRM_Contribute_Import_Parser::NO_MATCH:
@@ -996,63 +994,19 @@ abstract class CRM_Contribute_Import_Parser {
         else {
           $type = CRM_Import_Parser::DUPLICATE;
         }
-        $fileName = CRM_Import_Parser::errorFileName($type);
+        $fileName = CRM_Import_Parser::saveFileName($type, $prefix);
         break;
 
       case CRM_Contribute_Import_Parser::SOFT_CREDIT_ERROR:
-        $fileName .= '.softCreditErrors.xlsx';
+        $fileName = $prefix.'.softcredit.xlsx';
         break;
 
       case CRM_Contribute_Import_Parser::PLEDGE_PAYMENT_ERROR:
-        $fileName .= '.pledgePaymentErrors.xlsx';
+        $fileName = $prefix.'.pledge.xlsx';
         break;
 
       case CRM_Contribute_Import_Parser::PCP_ERROR:
-        $fileName .= '.pcpErrors.xlsx';
-        break;
-    }
-
-    return $fileName;
-  }
-
-  public static function saveFileName($type) {
-    $fileName = NULL;
-    if (empty($type)) {
-      return $fileName;
-    }
-
-    switch ($type) {
-      case CRM_Contribute_Import_Parser::ERROR:
-      case CRM_Contribute_Import_Parser::NO_MATCH:
-      case CRM_Contribute_Import_Parser::CONFLICT:
-      case CRM_Contribute_Import_Parser::DUPLICATE:
-        //here constants get collides.
-        require_once 'CRM/Import/Parser.php';
-        if ($type == CRM_Contribute_Import_Parser::ERROR) {
-          $type = CRM_Import_Parser::ERROR;
-        }
-        elseif ($type == CRM_Contribute_Import_Parser::NO_MATCH) {
-          $type = CRM_Import_Parser::NO_MATCH;
-        }
-        elseif ($type == CRM_Contribute_Import_Parser::CONFLICT) {
-          $type = CRM_Import_Parser::CONFLICT;
-        }
-        else {
-          $type = CRM_Import_Parser::DUPLICATE;
-        }
-        $fileName = CRM_Import_Parser::saveFileName($type);
-        break;
-
-      case CRM_Contribute_Import_Parser::SOFT_CREDIT_ERROR:
-        $fileName = 'Import_Soft_Credit_Errors.xlsx';
-        break;
-
-      case CRM_Contribute_Import_Parser::PLEDGE_PAYMENT_ERROR:
-        $fileName = 'Import_Pledge_Payment_Errors.xlsx';
-        break;
-
-      case CRM_Contribute_Import_Parser::PCP_ERROR:
-        $fileName = 'Import_PCP_Errors.xlsx';
+        $fileName = $prefix.'.pcp.xlsx';
         break;
     }
 

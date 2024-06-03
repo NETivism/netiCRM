@@ -10,12 +10,8 @@
   <item>
      <path>civicrm/export</path>
      <title>Download Errors</title>
-     <page_callback>CRM_Export_BAO_Export::invoke</page_callback>
-  </item>
-  <item>
-     <path>civicrm/export/contact</path>
-     <title>Export Contacts</title>
-     <weight>0</weight>
+     <page_callback>CRM_Export_BAO_Export::importError</page_callback>
+     <access_arguments>access CiviCRM</access_arguments>
   </item>
   <item>
      <path>civicrm/admin/options/acl_role</path>
