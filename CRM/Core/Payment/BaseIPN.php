@@ -410,7 +410,8 @@ class CRM_Core_Payment_BaseIPN {
       CRM_Contribute_BAO_ContributionPage::setValues($contribution->contribution_page_id, $values);
       $contribution->source = !empty($contribution->source) ? $contribution->source : $values['title'];
 
-      if ($values['is_email_receipt'] || $values['is_send_sms']) {
+      if ($sendMail && empty($input['do_not_email']) && empty($input['do_not_receipt']) &&
+        ($values['is_email_receipt'] || $values['is_send_sms']) ) {
         // only override receipt_date when necessary
         if (empty($contribution->receipt_date)) {
           $contribution->receipt_date = self::$_now;
@@ -667,7 +668,13 @@ class CRM_Core_Payment_BaseIPN {
       $is_online = FALSE;
     }
     // refs #31643, genReceiptID should move after transaction to prevent deadlock
-    CRM_Contribute_BAO_Contribution::genReceiptID($contribution, TRUE, $is_online);
+    if (empty($input['do_not_receipt'])) {
+      $receiptId = CRM_Contribute_BAO_Contribution::genReceiptID($contribution, TRUE, $is_online);
+      CRM_Core_Error::debug_log_message("ReceiptID: {$contribution->id} - {$receiptId} generated.");
+    }
+    else {
+      CRM_Core_Error::debug_log_message("ReceiptID: {$contribution->id} - input do_not_receipt set, skip receipt id.");
+    }
 
     CRM_Core_Error::debug_log_message("Success: {$contribution->id} - Database updated");
     CRM_Utils_Hook::ipnPost('complete', $objects, $input, $ids, $values);

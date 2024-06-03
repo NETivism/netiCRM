@@ -327,13 +327,13 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
 
       if ($zip->open($zipFile, ZipArchive::CREATE) == TRUE) {
         $config = CRM_Core_Config::singleton();
-        $fileName = str_replace('civicrm_import_job_', 'import_', $this->_tableName);
+        $fileName = str_replace('civicrm_import_job', CRM_Import_Parser::ERROR_FILE_PREFIX, $this->_tableName);
         $errorFiles = array();
-        $errorFiles[] = CRM_Import_Parser::saveFileName(CRM_Import_Parser::ERROR, $fileName);
-        $errorFiles[] = CRM_Import_Parser::saveFileName(CRM_Import_Parser::CONFLICT, $fileName);
-        $errorFiles[] = CRM_Import_Parser::saveFileName(CRM_Import_Parser::DUPLICATE, $fileName);
-        $errorFiles[] = CRM_Import_Parser::saveFileName(CRM_Import_Parser::NO_MATCH, $fileName);
-        $errorFiles[] = CRM_Import_Parser::saveFileName(CRM_Import_Parser::UNPARSED_ADDRESS_WARNING, $fileName);
+        $errorFiles[] = CRM_Import_Parser::errorFileName(CRM_Import_Parser::ERROR, $fileName);
+        $errorFiles[] = CRM_Import_Parser::errorFileName(CRM_Import_Parser::CONFLICT, $fileName);
+        $errorFiles[] = CRM_Import_Parser::errorFileName(CRM_Import_Parser::DUPLICATE, $fileName);
+        $errorFiles[] = CRM_Import_Parser::errorFileName(CRM_Import_Parser::NO_MATCH, $fileName);
+        $errorFiles[] = CRM_Import_Parser::errorFileName(CRM_Import_Parser::UNPARSED_ADDRESS_WARNING, $fileName);
         foreach($errorFiles as $idx => $fileName) {
           $filePath = $config->uploadDir.$fileName;
           if (is_file($filePath)) {

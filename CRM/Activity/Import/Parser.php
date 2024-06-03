@@ -51,7 +51,7 @@ abstract class CRM_Activity_Import_Parser {
    */
   CONST DUPLICATE_SKIP = 1, DUPLICATE_REPLACE = 2, DUPLICATE_UPDATE = 4, DUPLICATE_FILL = 8, DUPLICATE_NOCHECK = 16;
 
-  protected $_fileName;
+  CONST ERROR_FILE_PREFIX = 'activity';
 
   /**#@+
    * @access protected
@@ -206,7 +206,8 @@ abstract class CRM_Activity_Import_Parser {
     &$mapper,
     $skipColumnHeader = FALSE,
     $mode = self::MODE_PREVIEW,
-    $onDuplicate = self::DUPLICATE_SKIP
+    $onDuplicate = self::DUPLICATE_SKIP,
+    $filenamePrefix = self::ERROR_FILE_PREFIX
   ) {
     if (!is_array($fileName)) {
       CRM_Core_Error::fatal('Empty file array');
@@ -361,6 +362,7 @@ abstract class CRM_Activity_Import_Parser {
 
     if ($mode == self::MODE_PREVIEW || $mode == self::MODE_IMPORT) {
       $customHeaders = $mapper;
+      $filenamePrefix = self::ERROR_FILE_PREFIX.'_'.date('YmdHis', CRM_REQUEST_TIME);
 
       $customfields = &CRM_Core_BAO_CustomField::getFields('Activity');
       foreach ($customHeaders as $key => $value) {
@@ -375,7 +377,7 @@ abstract class CRM_Activity_Import_Parser {
           ),
           $customHeaders
         );
-        $this->_errorFileName = self::errorFileName(self::ERROR);
+        $this->_errorFileName = self::errorFileName(self::ERROR, $filenamePrefix);
         self::exportCSV($this->_errorFileName, $headers, $this->_errors);
       }
       if ($this->_conflictCount) {
@@ -384,7 +386,7 @@ abstract class CRM_Activity_Import_Parser {
           ),
           $customHeaders
         );
-        $this->_conflictFileName = self::errorFileName(self::CONFLICT);
+        $this->_conflictFileName = self::errorFileName(self::CONFLICT, $filenamePrefix);
         self::exportCSV($this->_conflictFileName, $headers, $this->_conflicts);
       }
       if ($this->_duplicateCount) {
@@ -394,7 +396,7 @@ abstract class CRM_Activity_Import_Parser {
           $customHeaders
         );
 
-        $this->_duplicateFileName = self::errorFileName(self::DUPLICATE);
+        $this->_duplicateFileName = self::errorFileName(self::DUPLICATE, $filenamePrefix);
         self::exportCSV($this->_duplicateFileName, $headers, $this->_duplicates);
       }
     }
@@ -625,14 +627,8 @@ abstract class CRM_Activity_Import_Parser {
     }
   }
 
-  function errorFileName($type) {
-    $fileName = CRM_Import_Parser::errorFileName($type);
-    return $fileName;
-  }
-
-  function saveFileName($type) {
-    $fileName = CRM_Import_Parser::saveFileName($type);
-    return $fileName;
+  function errorFileName($type, $prefix) {
+    return CRM_Import_Parser::saveFileName($type, $prefix);
   }
 }
 

@@ -50,6 +50,8 @@ abstract class CRM_Event_Import_Parser {
    */
   CONST CONTACT_INDIVIDUAL = 1, CONTACT_HOUSEHOLD = 2, CONTACT_ORGANIZATION = 4;
 
+  CONST ERROR_FILE_PREFIX = 'event';
+
   protected $_fileName;
 
   /**#@+
@@ -214,7 +216,8 @@ abstract class CRM_Event_Import_Parser {
     $skipColumnHeader = FALSE,
     $mode = self::MODE_PREVIEW,
     $contactType = self::CONTACT_INDIVIDUAL,
-    $onDuplicate = self::DUPLICATE_SKIP
+    $onDuplicate = self::DUPLICATE_SKIP,
+    $filenamePrefix = self::ERROR_FILE_PREFIX
   ) {
     if (!is_array($fileName)) {
       CRM_Core_Error::fatal();
@@ -396,7 +399,7 @@ abstract class CRM_Event_Import_Parser {
           ),
           $customHeaders
         );
-        $this->_errorFileName = self::errorFileName(self::ERROR);
+        $this->_errorFileName = self::errorFileName(self::ERROR, $filenamePrefix);
         self::exportCSV($this->_errorFileName, $headers, $this->_errors);
       }
       if ($this->_conflictCount) {
@@ -405,7 +408,7 @@ abstract class CRM_Event_Import_Parser {
           ),
           $customHeaders
         );
-        $this->_conflictFileName = self::errorFileName(self::CONFLICT);
+        $this->_conflictFileName = self::errorFileName(self::CONFLICT, $filenamePrefix);
         self::exportCSV($this->_conflictFileName, $headers, $this->_conflicts);
       }
       if ($this->_duplicateCount) {
@@ -415,7 +418,7 @@ abstract class CRM_Event_Import_Parser {
           $customHeaders
         );
 
-        $this->_duplicateFileName = self::errorFileName(self::DUPLICATE);
+        $this->_duplicateFileName = self::errorFileName(self::DUPLICATE, $filenamePrefix);
         self::exportCSV($this->_duplicateFileName, $headers, $this->_duplicates);
       }
     }
@@ -665,14 +668,8 @@ abstract class CRM_Event_Import_Parser {
     }
   }
 
-  public static function errorFileName($type) {
-    $fileName = CRM_Import_Parser::errorFileName($type);
-    return $fileName;
-  }
-
-  public static function saveFileName($type) {
-    $fileName = CRM_Import_Parser::saveFileName($type);
-    return $fileName;
+  public static function errorFileName($type, $prefix) {
+    return CRM_Import_Parser::saveFileName($type, $prefix);
   }
 }
 

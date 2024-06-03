@@ -290,14 +290,9 @@ class CRM_Utils_System_Joomla {
     $user = NULL;
     require_once 'CRM/Core/BAO/UFMatch.php';
     if ($row = $query->fetchRow(DB_FETCHMODE_ASSOC)) {
-      // now check password
-      if (strpos($row['password'], ':') === FALSE) {
-        if ($row['password'] != md5($password)) {
-          return FALSE;
-        }
-      }
-      else {
-        list($hash, $salt) = explode(':', $row['password']);
+      if (version_compare(JVERSION, '2.5.18', 'lt') || (version_compare(JVERSION, '3.0', 'ge') && version_compare(JVERSION, '3.2.1', 'lt'))) {
+        // now check password
+        list($hash, $salt) = explode(':', $dbPassword);
         $cryptpass = md5($password . $salt);
         if ($hash != $cryptpass) {
           return FALSE;

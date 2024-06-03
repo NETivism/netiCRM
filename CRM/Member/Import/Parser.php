@@ -67,6 +67,8 @@ abstract class CRM_Member_Import_Parser {
    */
   CONST CONTACT_INDIVIDUAL = 'Individual', CONTACT_HOUSEHOLD = 'Household', CONTACT_ORGANIZATION = 'Organization';
 
+  CONST ERROR_FILE_PREFIX = 'member';
+
   protected $_fileName;
 
   /**#@+
@@ -268,7 +270,8 @@ abstract class CRM_Member_Import_Parser {
     $onDuplicate = self::DUPLICATE_SKIP,
     $createContactOption = self::CONTACT_NOIDCREATE,
     $dedupeRuleGroupId = 0,
-    $dataReferenceField = ''
+    $dataReferenceField = '',
+    $filenamePrefix = self::ERROR_FILE_PREFIX
   ) {
     set_time_limit(600);
     if (!is_array($fileName)) {
@@ -428,6 +431,7 @@ abstract class CRM_Member_Import_Parser {
     fclose($fd);
 
     if ($mode == self::MODE_PREVIEW || $mode == self::MODE_IMPORT) {
+      $filenamePrefix = self::ERROR_FILE_PREFIX.'_'.date('YmdHis', CRM_REQUEST_TIME);
       $customHeaders = $mapper;
 
       $customfields = &CRM_Core_BAO_CustomField::getFields('Membership');
@@ -443,7 +447,7 @@ abstract class CRM_Member_Import_Parser {
           ),
           $customHeaders
         );
-        $this->_errorFileName = self::errorFileName(self::ERROR);
+        $this->_errorFileName = self::errorFileName(self::ERROR, $filenamePrefix);
         self::exportCSV($this->_errorFileName, $headers, $this->_errors);
       }
       if ($this->_conflictCount) {
@@ -452,7 +456,7 @@ abstract class CRM_Member_Import_Parser {
           ),
           $customHeaders
         );
-        $this->_conflictFileName = self::errorFileName(self::CONFLICT);
+        $this->_conflictFileName = self::errorFileName(self::CONFLICT, $filenamePrefix);
         self::exportCSV($this->_conflictFileName, $headers, $this->_conflicts);
       }
       if ($this->_duplicateCount) {
@@ -462,7 +466,7 @@ abstract class CRM_Member_Import_Parser {
           $customHeaders
         );
 
-        $this->_duplicateFileName = self::errorFileName(self::DUPLICATE);
+        $this->_duplicateFileName = self::errorFileName(self::DUPLICATE, $filenamePrefix);
         self::exportCSV($this->_duplicateFileName, $headers, $this->_duplicates);
       }
     }
@@ -531,7 +535,7 @@ abstract class CRM_Member_Import_Parser {
       }
     }
   }
-  
+
   function setActiveFieldPhoneTypes( $elements ) {
     if (!empty($elements)) {
       for ($i = 0; $i < count( $elements ); $i++) {
@@ -790,14 +794,8 @@ abstract class CRM_Member_Import_Parser {
     }
   }
 
-  public static function errorFileName($type) {
-    $fileName = CRM_Import_Parser::errorFileName($type);
-    return $fileName;
-  }
-
-  public static function saveFileName($type) {
-    $fileName = CRM_Import_Parser::saveFileName($type);
-    return $fileName;
+  public static function errorFileName($type, $prefix) {
+    return CRM_Import_Parser::saveFileName($type, $prefix);
   }
 }
 
