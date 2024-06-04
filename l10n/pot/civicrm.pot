@@ -49451,7 +49451,7 @@ msgstr ""
 
 
 #: CRM/Mailing/External/SmartMarketing/Flydove.php
-msgid "Cannot retrive remote group, try again later"
+msgid "Cannot retrieve remote group, try again later"
 msgstr ""
 
 #: CRM/Mailing/External/SmartMarketing/Flydove.php
@@ -49491,7 +49491,7 @@ msgid "Successful synced"
 msgstr ""
 
 #: CRM/SMS/Form/Provider.php
-msgid "This Title already exists in Database."
+msgid "This title already exists in Database."
 msgstr ""
 
 #: templates/CRM/Group/Form/Edit.tpl
