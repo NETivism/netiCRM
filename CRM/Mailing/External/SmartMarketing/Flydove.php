@@ -62,7 +62,7 @@ class CRM_Mailing_External_SmartMarketing_Flydove extends CRM_Mailing_External_S
       $errorMessage =$e->getMessage();
       $errorCode =$e->getErrorCode();
       CRM_Core_Error::debug_log_message("Flydove error - getRemoteGroups: $errorCode $errorMessage");
-      CRM_Core_Session::setStatus(ts('Cannot retrive remote group, try again later'), TRUE, 'warning');
+      CRM_Core_Session::setStatus(ts('Cannot retrieve remote group, try again later'), TRUE, 'warning');
     }
     return $groups;
   }
