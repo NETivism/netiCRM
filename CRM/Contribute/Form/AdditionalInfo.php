@@ -364,7 +364,7 @@ class CRM_Contribute_Form_AdditionalInfo {
       $receiptTask->makeReceipt($params['contribution_id'], $receiptEmailType, TRUE);
       //set encrypt password
       if (!empty($config->receiptEmailEncryption) && $config->receiptEmailEncryption) {
-        $receiptPwd = $form->userEmail;
+        $receiptPwd = $contributorEmail;
         if (!empty($receiptTask->_lastSerialId) && preg_match('/^[A-Za-z]{1,2}\d{8,9}$|^\d{8}$/', $receiptTask->_lastSerialId)) {
           $receiptPwd = $receiptTask->_lastSerialId;
         }
@@ -460,8 +460,8 @@ class CRM_Contribute_Form_AdditionalInfo {
     else {
       //offline contribution
       //Retrieve the name and email from receipt is to be send
-      $params['receipt_from_name'] = $form->userDisplayName;
-      $params['receipt_from_email'] = $form->userEmail;
+      $params['receipt_from_name'] = $contributorDisplayName;
+      $params['receipt_from_email'] = $contributorEmail;
       // assigned various dates to the templates
       $form->assign('receipt_date', CRM_Utils_Date::processDate($params['receipt_date']));
       $form->assign('cancel_date', CRM_Utils_Date::processDate($params['cancel_date']));
