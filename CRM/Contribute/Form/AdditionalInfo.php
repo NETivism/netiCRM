@@ -354,6 +354,10 @@ class CRM_Contribute_Form_AdditionalInfo {
    */
   static function emailReceipt(&$form, &$params, $ccContribution = FALSE) {
     $config = CRM_Core_Config::singleton();
+    require_once 'CRM/Contact/BAO/Contact/Location.php';
+    list($contributorDisplayName,
+    $contributorEmail
+    ) = CRM_Contact_BAO_Contact_Location::getEmailDetails($params['contact_id']);
     if (!empty($params['is_attach_receipt'])) {
       $receiptEmailType = !empty($config->receiptEmailType) ? $config->receiptEmailType : 'copy_only';
       $receiptTask = new CRM_Contribute_Form_Task_PDF();
@@ -517,11 +521,7 @@ class CRM_Contribute_Form_AdditionalInfo {
       $params['receipt_text'] = CRM_Contribute_BAO_ContributionPage::tokenize($params['contact_id'], $params['receipt_text']); 
     }
     $form->assign_by_ref('formValues', $params);
-    require_once 'CRM/Contact/BAO/Contact/Location.php';
     require_once 'CRM/Utils/Mail.php';
-    list($contributorDisplayName,
-      $contributorEmail
-    ) = CRM_Contact_BAO_Contact_Location::getEmailDetails($params['contact_id']);
     $form->assign('contactID', $params['contact_id']);
     $form->assign('contributionID', $params['contribution_id']);
     $form->assign('currency', $params['currency']);
