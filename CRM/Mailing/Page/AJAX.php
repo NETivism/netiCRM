@@ -67,75 +67,45 @@ class CRM_Mailing_Page_AJAX {
    * @return string
    */
   public static function addContactToRemote() {
-    $providerId = CRM_Utils_Request::retrieve('provider_id', 'Integer', CRM_Core_DAO::$_nullObject, FALSE , NULL, 'POST');
     $groupId = CRM_Utils_Request::retrieve('group_id', 'Integer', CRM_Core_DAO::$_nullObject, FALSE, NULL, 'POST');
-    if (empty($providerId) || empty($groupId)) {
+    if (empty($groupId)) {
       http_response_code(400);
-      echo json_encode(array('success' => FALSE, 'message' => 'please provide correct arguments'));
+      $output = json_encode(array('success' => FALSE, 'message' => 'please provide correct arguments'));
+      echo $output;
       CRM_Utils_System::civiExit();
     }
-    $providers = CRM_SMS_BAO_Provider::getProviders(NULL, array('id' => $providerId));
 
-    $groupParams = array(
-      'id' => $groupId,
-    );
-    $group = array();
-    CRM_Contact_BAO_Group::retrieve($groupParams, $group);
-    $syncData = json_decode($group['sync_data'], TRUE);
-    if (!empty($providers) && $group['id'] == $groupId && !empty($syncData['remote_group_id'])) {
-      $apiParams = array(
-        'group_id' => $groupId,
-        'version' => 3,
-      );
-      $result = civicrm_api('group_contact', 'get', $apiParams);
-      if (!empty($result['values'])) {
-        $contactIds = array();
-        foreach($result['values'] as $item) {
-          $contactIds[$item] = $item;
+    try {
+      $syncResult = CRM_Mailing_External_SmartMarketing::syncGroup($groupId);
+      if ($syncResult['batch'] && !empty($syncResult['batch_id'])) {
+        $remoteResult = array(
+          'success' => TRUE,
+          'message' => '<p>'.ts('Because of the large amount of data you are about to perform, we have scheduled this job for the batch process. You will receive an email notification when the work is completed.'). '</p><p>&raquo; <a href="'.CRM_Utils_System::url('civicrm/admin/batch', "reset=1&id={$syncResult['batch_id']}").'" target="_blank">'.ts('Batch Job List').'</a></p>',
+        );
+      }
+      elseif (!empty($syncResult['result']['#report'])) {
+        $report = ts('Successful synced');
+        foreach($syncResult['result']['#report'] as $rep) {
+          $report .= "<p>$rep</p>";
         }
-        $provider = reset($providers);
-        $names = explode('_', $provider['name']);
-        $vendorName = end($names);
-        $smartMarketingClass = 'CRM_Mailing_External_SmartMarketing_'.$vendorName;
-        if (count($contactIds) > $smartMarketingClass::BATCH_NUM) {
-          $smartMarketingService = new $smartMarketingClass($providerId);
-          try {
-            $batchId = $smartMarketingService->batchSchedule($contactIds, $groupId, $syncData['remote_group_id'], $providerId);
-            $remoteResult = array(
-              'success' => TRUE,
-              'message' => '<p>'.ts('Because of the large amount of data you are about to perform, we have scheduled this job for the batch process. You will receive an email notification when the work is completed.'). '</p><p>&raquo; <a href="'.CRM_Utils_System::url('civicrm/admin/batch', "reset=1&id=$batchId").'" target="_blank">'.ts('Batch Job List').'</a></p>',
-            );
-          }
-          catch(CRM_Core_Exception $e) {
-            $remoteResult = array('success' => FALSE, 'message' => $e->getMessage());
-          }
-        }
-        else {
-          try {
-            $syncResult = call_user_func(array($smartMarketingClass, 'addContactToRemote'), $contactIds, $groupId, $syncData['remote_group_id'], $providerId);
-            $report = ts('Successful synced');
-            if (!empty($syncResult['#report'])) {
-              $report = '';
-              foreach($syncResult['#report'] as $rep) {
-                $report .= "<p>$rep</p>";
-              }
-            }
-            $remoteResult = array(
-              'success' => TRUE,
-              'message' => $report,
-            );
-          }
-          catch(CRM_Core_Exception $e) {
-            $remoteResult = array(
-              'success' => FALSE,
-              'message' => ts('Synchronize error').':'.$syncResult,
-            );
-          }
-        }
-        echo json_encode($remoteResult);
-        CRM_Utils_System::civiExit();
+        $remoteResult = array(
+          'success' => TRUE,
+          'message' => $report,
+        );
+      }
+      else {
+        $remoteResult = array(
+          'success' => FALSE,
+          'message' => ts('Synchronize error').':'.$syncResult,
+        );
       }
     }
+    catch(CRM_Core_Exception $e) {
+      $remoteResult = array('success' => FALSE, 'message' => $e->getMessage());
+    }
+    $output = json_encode($remoteResult);
+    echo $output;
+    CRM_Utils_System::civiExit();
   }
 }
 

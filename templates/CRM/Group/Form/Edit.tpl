@@ -110,14 +110,13 @@ cj(function($){
           $(this).dialog("option", 'synced', true);
           $('.'+dialogCls).find('.ui-dialog-buttonset button').eq(0).attr("disabled", true).addClass("ui-state-disabled");
           let dataURL = "{/literal}{crmURL p='civicrm/ajax/addContactToRemote' q='snippet=5'}{literal}";
-          let providerId = "{/literal}{$smart_marketing_provider_id}{literal}";
           let groupId = "{/literal}{$group.id}{literal}";
           let runningStr= "{/literal}{ts}Running{/ts}{literal}";
           $('#smart-marketing-sync-confirm').html(runningStr+'<i class="zmdi zmdi-rotate-right zmdi-hc-spin"></i>');
           $.ajax({
             url: dataURL,
             type: "POST",
-            data: {"provider_id":providerId, "group_id":groupId},
+            data: {"group_id":groupId},
             dataType: "json",
             success: function(data) {
               if (data.success) {

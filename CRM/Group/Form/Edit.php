@@ -593,7 +593,6 @@ AND    id <> %3
             if (!empty($providers)) {
               $provider = reset($providers);
               $this->_smartMarketingService = new $smartMarketingClass($provider['id']);
-              $this->assign('smart_marketing_provider_id', $provider['id']);
               return TRUE;
             }
           }
