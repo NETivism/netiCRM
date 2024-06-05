@@ -1705,15 +1705,6 @@ WHERE  contribution_id = {$this->_id}
         );
       }
 
-      if ($this->_contactID) {
-        require_once 'CRM/Contact/BAO/Contact/Location.php';
-        list($this->userDisplayName,
-          $this->userEmail
-        ) = CRM_Contact_BAO_Contact_Location::getEmailDetails($this->_contactID);
-        $this->assign('displayName', $this->userDisplayName);
-        $this->assign('contactID', $this->_contactID);
-      }
-
       //send receipt mail.
       if ($contribution->id && CRM_Utils_Array::value('is_email_receipt', $formValues)) {
         $formValues['contact_id'] = $this->_contactID;
