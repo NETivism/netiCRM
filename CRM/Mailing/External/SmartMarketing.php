@@ -23,7 +23,32 @@ abstract class CRM_Mailing_External_SmartMarketing {
    * Sync all smart marketing to remote
    */
   public static function syncAll() {
-
+    $availableGroupTypes = CRM_Core_OptionGroup::values('group_type');
+    $typeNames = array();
+    foreach($availableGroupTypes as $typeId => $typeName) {
+      if (strstr($typeName, 'Smart Marketing')) {
+        list($smartMarketingVendor) = explode(' ', $typeName);
+        $typeNames[$typeId] = $smartMarketingVendor;
+      }
+    }
+    if (!empty($typeNames)) {
+      $syncResult = array();
+      foreach($typeNames as $typeId => $class) {
+        $groups = CRM_Core_PseudoConstant::allGroup($typeId);
+        if (!empty($groups)) {
+          foreach($groups as $groupId => $groupName) {
+            // skip synced
+            if (isset($syncResult[$groupId])) {
+              continue;
+            }
+            $syncResult[$groupId] = self::syncGroup($groupId);
+            if (!empty($syncResult[$groupId]['result']['#report'])) {
+              CRM_Core_Error::debug_log_message(implode(' / ', $syncResult[$groupId]['result']['#report']));
+            }
+          }
+        }
+      }
+    }
   }
 
   /**

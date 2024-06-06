@@ -563,6 +563,9 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group {
     elseif ($groupType == 'Access') {
       $value = CRM_Core_DAO::VALUE_SEPARATOR . '1' . CRM_Core_DAO::VALUE_SEPARATOR;
     }
+    elseif (is_numeric($groupType)) {
+      $value = CRM_Core_DAO::VALUE_SEPARATOR . "$groupType" . CRM_Core_DAO::VALUE_SEPARATOR;
+    }
 
     $condition = NULL;
     if ($excludeHidden) {
