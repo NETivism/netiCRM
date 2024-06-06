@@ -354,13 +354,17 @@ class CRM_Contribute_Form_AdditionalInfo {
    */
   static function emailReceipt(&$form, &$params, $ccContribution = FALSE) {
     $config = CRM_Core_Config::singleton();
+    require_once 'CRM/Contact/BAO/Contact/Location.php';
+    list($contributorDisplayName,
+    $contributorEmail
+    ) = CRM_Contact_BAO_Contact_Location::getEmailDetails($params['contact_id']);
     if (!empty($params['is_attach_receipt'])) {
       $receiptEmailType = !empty($config->receiptEmailType) ? $config->receiptEmailType : 'copy_only';
       $receiptTask = new CRM_Contribute_Form_Task_PDF();
       $receiptTask->makeReceipt($params['contribution_id'], $receiptEmailType, TRUE);
       //set encrypt password
       if (!empty($config->receiptEmailEncryption) && $config->receiptEmailEncryption) {
-        $receiptPwd = $form->userEmail;
+        $receiptPwd = $contributorEmail;
         if (!empty($receiptTask->_lastSerialId) && preg_match('/^[A-Za-z]{1,2}\d{8,9}$|^\d{8}$/', $receiptTask->_lastSerialId)) {
           $receiptPwd = $receiptTask->_lastSerialId;
         }
@@ -456,8 +460,8 @@ class CRM_Contribute_Form_AdditionalInfo {
     else {
       //offline contribution
       //Retrieve the name and email from receipt is to be send
-      $params['receipt_from_name'] = $form->userDisplayName;
-      $params['receipt_from_email'] = $form->userEmail;
+      $params['receipt_from_name'] = $contributorDisplayName;
+      $params['receipt_from_email'] = $contributorEmail;
       // assigned various dates to the templates
       $form->assign('receipt_date', CRM_Utils_Date::processDate($params['receipt_date']));
       $form->assign('cancel_date', CRM_Utils_Date::processDate($params['cancel_date']));
@@ -517,11 +521,7 @@ class CRM_Contribute_Form_AdditionalInfo {
       $params['receipt_text'] = CRM_Contribute_BAO_ContributionPage::tokenize($params['contact_id'], $params['receipt_text']); 
     }
     $form->assign_by_ref('formValues', $params);
-    require_once 'CRM/Contact/BAO/Contact/Location.php';
     require_once 'CRM/Utils/Mail.php';
-    list($contributorDisplayName,
-      $contributorEmail
-    ) = CRM_Contact_BAO_Contact_Location::getEmailDetails($params['contact_id']);
     $form->assign('contactID', $params['contact_id']);
     $form->assign('contributionID', $params['contribution_id']);
     $form->assign('currency', $params['currency']);
