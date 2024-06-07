@@ -69,7 +69,11 @@
         </div>
       {/if}
       </div>
-      <div class="description">{ts}After binding a group, the system will lock this group, preventing any edits.{/ts} {docURL page="Smart Marketing Group"}</div>
+      <div class="description">
+        <div>{ts}After binding a group, the system will lock this group, preventing any edits.{/ts} {docURL page="Smart Marketing Group"}</div>
+        <div>{ts}The will be synchronized at a fixed time every day.{/ts}</div>
+        <div>{ts}If there is an immediate need, you can click "Manual Sync".{/ts}</div>
+      </div>
 <script>{literal}
 cj(function($){
   $('.crm-group-form-block-remote_group_id').hide();
