@@ -93,9 +93,25 @@ abstract class CRM_Mailing_External_SmartMarketing {
             );
           }
         }
+        else {
+          return array(
+            'batch' => FALSE,
+            'batch_id' => 0,
+            'result' => array(
+              '#report' => array('error' => ts('Please provide at least 1 contact.')),
+            ),
+          );
+        }
       }
     }
-    return array();
+
+    return array(
+      'batch' => FALSE,
+      'batch_id' => 0,
+      'result' => array(
+        '#report' => array('error' => ts('The group you request doesn\'t exists in flydove.')),
+      ),
+    );
   }
 
   public static function getProviderByGroup($groupId) {

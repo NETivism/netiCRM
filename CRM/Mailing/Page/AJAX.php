@@ -83,7 +83,7 @@ class CRM_Mailing_Page_AJAX {
           'message' => '<p>'.ts('Because of the large amount of data you are about to perform, we have scheduled this job for the batch process. You will receive an email notification when the work is completed.'). '</p><p>&raquo; <a href="'.CRM_Utils_System::url('civicrm/admin/batch', "reset=1&id={$syncResult['batch_id']}").'" target="_blank">'.ts('Batch Job List').'</a></p>',
         );
       }
-      elseif (!empty($syncResult['result']['#report'])) {
+      elseif (!empty($syncResult['result']['#count']) && !empty($syncResult['result']['#report'])) {
         $report = ts('Successful synced');
         foreach($syncResult['result']['#report'] as $rep) {
           $report .= "<p>$rep</p>";
@@ -94,9 +94,13 @@ class CRM_Mailing_Page_AJAX {
         );
       }
       else {
+        $report = ts('Synchronize error').': ';
+        foreach($syncResult['result']['#report'] as $rep) {
+          $report .= "<span>$rep</span>";
+        }
         $remoteResult = array(
           'success' => FALSE,
-          'message' => ts('Synchronize error').':'.$syncResult,
+          'message' => $report,
         );
       }
     }
