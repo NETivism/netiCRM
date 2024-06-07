@@ -49538,3 +49538,9 @@ msgstr ""
 
 msgid "Contribution %1"
 msgstr ""
+
+msgid "The will be synchronized at a fixed time every day."
+msgstr ""
+
+msgid "If there is an immediate need, you can click \"Manual Sync\"."
+msgstr ""

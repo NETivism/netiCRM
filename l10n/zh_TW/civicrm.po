@@ -2,7 +2,7 @@
 # Translators:
 # CC Chu <poliphilonet@gmail.com>, 2020-2024
 # Chang Shu-huai <junsuwhy@gmail.com>, 2016-2024
-# Charles Chuang, 2022-2023
+# Charles Chuang, 2022-2024
 # CHUNLIAN WU <susanna@netivism.com.tw>, 2017
 # Fuyuan Cheng <gloomcheng@gmail.com>, 2013-2015
 # Harry Lin <harry@netivism.com.tw>, 2023
@@ -31682,7 +31682,7 @@ msgstr "按「<strong>繼續</strong>」鍵以進行結帳流程，完成付款�
 msgid ""
 "Otherwise, click the <strong>Continue</strong> button below to complete your"
 " registration."
-msgstr "請按下方「<strong>繼續</strong>」以完成報名。"
+msgstr "請按下方的「<strong>下一步</strong>」按鈕以完成報名。"
 
 #: templates/CRM/Event/Form/Registration/Confirm.tpl
 #: templates/CRM/Event/Form/Registration/ThankYou.tpl
@@ -50052,7 +50052,7 @@ msgstr "自動化行銷旅程非立即進行，需依自動化行銷工具排程
 msgid ""
 "After binding a group, the system will lock this group, preventing any "
 "edits."
-msgstr "綁定群組後，系統會鎖定此群組無法編輯"
+msgstr "綁定群組後，系統會鎖定此群組無法編輯。"
 
 #: templates/CRM/Group/Page/Group.tpl
 msgid ""
@@ -50096,3 +50096,9 @@ msgstr "定期編號%1-%2"
 
 msgid "Contribution %1"
 msgstr "捐款編號%1"
+
+msgid "The will be synchronized at a fixed time every day."
+msgstr "將於每日固定時間會同步名單。"
+
+msgid "If there is an immediate need, you can click \"Manual Sync\"."
+msgstr "若有需要，你可點擊「手動同步」"
