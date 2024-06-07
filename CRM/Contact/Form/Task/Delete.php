@@ -182,6 +182,7 @@ class CRM_Contact_Form_Task_Delete extends CRM_Contact_Form_Task {
           $smartMarketing = CRM_Mailing_External_SmartMarketing::getProviderByGroup($groupId);
           if (!empty($smartMarketing)) {
             $this->assign('smart_marketing_hint', TRUE);
+            break;
           }
         }
       }
