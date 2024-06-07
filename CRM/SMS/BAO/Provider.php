@@ -80,14 +80,14 @@ class CRM_SMS_BAO_Provider extends CRM_SMS_DAO_Provider {
     $dao->whereAdd("(domain_id = " . CRM_Core_Config::domainID() . " OR domain_id IS NULL)");
     $dao->orderBy($orderBy);
     $cacheId = md5(implode('|', $dao->_query));
-    $providers = CRM_Core_BAO_Cache::getItem('SMS Provider', $cacheId);
+    $providers = CRM_Core_BAO_Cache::getItem('SMS Provider', $cacheId, NULL);
     if (empty($providers)) {
       $dao->find();
       while ($dao->fetch()) {
         CRM_Core_DAO::storeValues($dao, $temp);
         $providers[] = $temp;
       }
-      CRM_Core_BAO_Cache::setItem($providers, 'SMS Provider', $cacheId);
+      CRM_Core_BAO_Cache::setItem($providers, 'SMS Provider', $cacheId, NULL, CRM_REQUEST_TIME+3600);
     }
     return $providers;
   }
