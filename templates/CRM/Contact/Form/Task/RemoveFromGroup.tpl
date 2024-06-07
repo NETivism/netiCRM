@@ -25,13 +25,19 @@
 *}
 <div class="crm-form-block crm-block crm-contact-task-removefromgroup-form-block">
 <div class="messages warning">
-  {ts}The operation of removing contacts from the group cannot be undone.{/ts}
+  <div>{ts}The operation of removing contacts from the group cannot be undone.{/ts}</div>
+  {if $smart_marketing_hint}
+    <div>{ts}The smart markeintg journey is still in progress. To delete the contact or remove contact from group list, you need to go to the external smart marketing tool to proceed.{/ts}</div>
+  {/if}
 </div>
 <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>
+
  <table class="form-layout-compressed">
      <tr class="crm-contact-task-removefromgroupform-block-group_id">
         <td class="label">{if $group.id}{ts}Group{/ts}{else}{$form.group_id.label}{/if}</td>
-        <td>{$form.group_id.html}</td>
+        <td>
+          {$form.group_id.html}
+        </td>
       </tr>
       <tr>
         <td></td><td>{include file="CRM/Contact/Form/Task.tpl"}</td>

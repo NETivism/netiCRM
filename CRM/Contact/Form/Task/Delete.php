@@ -91,12 +91,7 @@ class CRM_Contact_Form_Task_Delete extends CRM_Contact_Form_Task {
     $this->assign('delete_permanatly', $this->_skipUndelete);
     $this->assign('restore', $this->_restore);
 
-    if ($this->_restore) {
-
-      CRM_Utils_System::setTitle(ts('Restore Contact'));
-
-    }
-
+    $contactName = '';
     if ($cid) {
       require_once 'CRM/Contact/BAO/Contact/Permission.php';
       if (!CRM_Contact_BAO_Contact_Permission::allow($cid, CRM_Core_Permission::EDIT)) {
@@ -106,10 +101,23 @@ class CRM_Contact_Form_Task_Delete extends CRM_Contact_Form_Task {
       $this->_contactIds = array($cid);
       $this->_single = TRUE;
       $this->assign('totalSelectedContacts', 1);
+      list($contactName) =  CRM_Contact_BAO_Contact::getContactDetails($cid);
     }
     else {
       parent::preProcess();
     }
+
+    if ($this->_restore) {
+      $pageTitle = ts('Restore Contact');
+    }
+    else {
+      $pageTitle = ts('Delete Contact');
+    }
+    if (!empty($contactName)) {
+      $pageTitle .= ': '.$contactName;
+    }
+    CRM_Utils_System::setTitle($pageTitle);
+
 
     $this->_sharedAddressMessage = $this->get('sharedAddressMessage');
     if (!$this->_restore && !$this->_sharedAddressMessage) {
@@ -146,6 +154,37 @@ class CRM_Contact_Form_Task_Delete extends CRM_Contact_Form_Task {
 
       // set in form controller so that queries are not fired again
       $this->set('sharedAddressMessage', $this->_sharedAddressMessage);
+    }
+
+    // check if contact deletion from group listing
+    $context = $this->get('context');
+    $groupId = $this->get('gid');
+    if ($context == 'smog' && !empty($groupId)) {
+      $smartMarketing = CRM_Mailing_External_SmartMarketing::getProviderByGroup($groupId);
+      if (!empty($smartMarketing)) {
+        $this->assign('smart_marketing_hint', TRUE);
+      }
+    }
+
+    // when delete single contact, check belong groups
+    // we can only get cached smart group here
+    if ($cid && $_GET['context'] === 'smog') {
+      $groups = CRM_Contact_BAO_GroupContact::getGroupList($cid);
+      $smartGroups = CRM_Contact_BAO_GroupContactCache::contactGroup($cid);
+      $groupIds = array_keys($groups);
+      if (!empty($smartGroups)) {
+        foreach($smartGroups['group'] as $group) {
+          $groupIds[] = $group['id'];
+        }
+      }
+      if (!empty($groupIds)) {
+        foreach($groupIds as $groupId) {
+          $smartMarketing = CRM_Mailing_External_SmartMarketing::getProviderByGroup($groupId);
+          if (!empty($smartMarketing)) {
+            $this->assign('smart_marketing_hint', TRUE);
+          }
+        }
+      }
     }
   }
 

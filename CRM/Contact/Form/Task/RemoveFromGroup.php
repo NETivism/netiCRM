@@ -56,6 +56,14 @@ class CRM_Contact_Form_Task_RemoveFromGroup extends CRM_Contact_Form_Task {
 
     CRM_Utils_System::setTitle(ts('Remove Contacts from Group'));
     $this->addDefaultButtons(ts('Remove from Group'));
+
+    if ($this->get('context') === 'smog' && !empty($this->get('gid'))) {
+      $smartMarketing = CRM_Mailing_External_SmartMarketing::getProviderByGroup($this->get('gid'));
+      if (!empty($smartMarketing)) {
+        $this->assign('smart_marketing_hint', TRUE);
+        $groupElement->freeze();
+      }
+    }
   }
 
   /**

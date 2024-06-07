@@ -76,6 +76,7 @@ class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache {
         $dao->group_name = $group;
         $dao->path = $path;
         $dao->component_id = $componentID;
+        $dao->whereAdd("expired_date >= NOW()");
         if ($createdTime) {
           if (is_numeric($createdTime)) {
             $createdTime = CRM_Utils_Type::escape($createdTime, 'Positive');
