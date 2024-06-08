@@ -76,7 +76,6 @@ class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache {
         $dao->group_name = $group;
         $dao->path = $path;
         $dao->component_id = $componentID;
-        $dao->whereAdd("expired_date >= NOW()");
         if ($createdTime) {
           if (is_numeric($createdTime)) {
             $createdTime = CRM_Utils_Type::escape($createdTime, 'Positive');
@@ -246,7 +245,7 @@ class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache {
     foreach ($names as $key => $sessionName) {
       if (is_array($sessionName)) {
         if (!empty($_SESSION[$sessionName[0]][$sessionName[1]])) {
-          $expired = isset($_SESSION[$sessionName[0]][$sessionName[1]]['expired']) ? $_SESSION[$sessionName[0]][$sessionName[1]]['expired'] : NULL;
+          $expired = isset($_SESSION[$sessionName[0]][$sessionName[1]]['expired']) ? $_SESSION[$sessionName[0]][$sessionName[1]]['expired'] : CRM_REQUEST_TIME+86400;
           self::setItem($_SESSION[$sessionName[0]][$sessionName[1]], 'CiviCRM Session', "{$sessionName[0]}_{$sessionName[1]}", NULL, $expired);
           // CRM_Core_Error::debug_var( "session value for: {$sessionName[0]}_{$sessionName[1]}",
           // $_SESSION[$sessionName[0]][$sessionName[1]] );
@@ -258,7 +257,7 @@ class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache {
       }
       else {
         if (!empty($_SESSION[$sessionName])) {
-          $expired = isset($_SESSION[$sessionName]) ? $_SESSION[$sessionName]['expired'] : NULL;
+          $expired = isset($_SESSION[$sessionName]['expired']) ? $_SESSION[$sessionName]['expired'] : CRM_REQUEST_TIME+86400;
           self::setItem($_SESSION[$sessionName], 'CiviCRM Session', $sessionName, NULL, $expired);
           // CRM_Core_Error::debug_var( "session value for: {$sessionName}",
           // $_SESSION[$sessionName] );
