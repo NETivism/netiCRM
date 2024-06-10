@@ -145,6 +145,7 @@ $dao['TapPayLog'] = 'CRM_Contribute_DAO_TapPayLog';
 $dao['MyPay'] = 'CRM_Contribute_DAO_MyPay';
 $dao['MyPayLog'] = 'CRM_Contribute_DAO_MyPayLog';
 $dao['AllPay'] = 'CRM_Contribute_DAO_AllPay';
+$dao['SPGATEWAY'] = 'CRM_Contribute_DAO_SPGATEWAY';
 $dao['CouponTrack'] = 'CRM_Coupon_DAO_CouponTrack';
 $dao['MembershipPayment'] = 'CRM_Member_DAO_MembershipPayment';
 $dao['Event'] = 'CRM_Event_DAO_Event';

@@ -74,7 +74,7 @@ class HTML_QuickForm_CKeditor extends HTML_QuickForm_textarea
               $allowedContent = 'editor.config.allowedContent = true;';
             }
             else {
-              $allowedContent = "editor.config.allowedContent = 'h1 h2 h3 p blockquote; strong em; a[!href]; img(left,right)[!src,alt,width,height];';";
+              $allowedContent = "editor.config.allowedContent = 'h1 h2 h3 p blockquote; strong em; a[!href]; img(left,right)[!src,alt,width,height]; span{font-size,color,background-color}';";
               $toolbar =  'CiviCRMBasic';
             }
             $fullPage = $this->getAttribute('fullpage');

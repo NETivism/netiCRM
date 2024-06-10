@@ -466,8 +466,8 @@ class CRM_Contact_BAO_Query {
     $this->selectClause();
     $this->_whereClause = $this->whereClause();
 
-    $this->_fromClause = self::fromClause($this->_tables, NULL, NULL, $this->_primaryLocation, $this->_mode);
-    $this->_simpleFromClause = self::fromClause($this->_whereTables, NULL, NULL, $this->_primaryLocation, $this->_mode);
+    $this->_fromClause = $this->fromClause($this->_tables);
+    $this->_simpleFromClause = $this->fromClause($this->_whereTables);
 
     $this->openedSearchPanes(TRUE);
   }
@@ -733,6 +733,8 @@ class CRM_Contact_BAO_Query {
 
     //fix for CRM-951
     CRM_Core_Component::alterQuery($this, 'select');
+    $additional = array();
+    CRM_Utils_Hook::alterQuery($this->_mode, 'select', $this, $additional);
 
     if (!empty($this->_cfIDs)) {
       $this->_customQuery = new CRM_Core_BAO_CustomQuery($this->_cfIDs);
@@ -1180,6 +1182,8 @@ class CRM_Contact_BAO_Query {
 
     $having = '';
     if (!empty($this->_having)) {
+      $additional = array();
+      CRM_Utils_Hook::alterQuery($this->_mode, 'having', $this, $additional);
       foreach ($this->_having as $havingsets) {
         foreach ($havingsets as $havingset) {
           $havingvalue[] = $havingset;
@@ -1621,6 +1625,8 @@ class CRM_Contact_BAO_Query {
       $this->_qill = CRM_Utils_Array::arrayMerge($this->_qill, $this->_customQuery->_qill);
     }
 
+    $additional = array();
+    CRM_Utils_Hook::alterQuery($this->_mode, 'where', $this, $additional);
     $clauses = array();
     $andClauses = array();
 
@@ -2117,18 +2123,39 @@ class CRM_Contact_BAO_Query {
   }
 
   /**
+   * Separate static call
+   *
+   * @param array $tables
+   * @param bool $inner
+   * @param bool $right
+   *
+   * @return string
+   *
+   * @see self::fromClause
+   * @static
+   */
+  static function getFromClause($tables, $inner = NULL, $right = NULL) {
+    $query = new CRM_Contact_BAO_Query();
+    return $query->fromClause($tables, $inner, $right);
+  }
+
+  /**
    * create the from clause
    *
    * @param array $tables tables that need to be included in this from clause
    *                      if null, return mimimal from clause (i.e. civicrm_contact)
    * @param array $inner  tables that should be inner-joined
    * @param array $right  tables that should be right-joined
+   * @param bool $primaryLocation primary location only to limit join
+   * @param int $mode Mode of this query, check self::MODE_
+   * @param object $object Object to use this clauses
    *
    * @return string the from clause
    * @access public
-   * @static
    */
-  static function fromClause(&$tables, $inner = NULL, $right = NULL, $primaryLocation = TRUE, $mode = self::MODE_CONTACTS) {
+  function fromClause($tables, $inner = NULL, $right = NULL) {
+    $mode = isset($this->_mode) ? $this->_mode : self::MODE_CONTACTS;
+    $primaryLocation = isset($this->_primaryLocation) ? $this->_primaryLocation : TRUE;
     require_once ("CRM/Core/TableHierarchy.php");
 
     $from = ' FROM civicrm_contact contact_a';
@@ -2203,6 +2230,9 @@ class CRM_Contact_BAO_Query {
     }
 
     $tables = $newTables;
+
+    $additional['tables'] =& $tables;
+    CRM_Utils_Hook::alterQuery($mode, 'from', $this, $additional);
 
     foreach ($tables as $name => $value) {
       if (!$value) {
@@ -2675,7 +2705,7 @@ WHERE  id IN ( $groupIDs )
           // refs #31308, do not refresh smart group too often
           $config = CRM_Core_Config::singleton();
           $minimalCacheTime = CRM_Contact_BAO_GroupContactCache::SMARTGROUP_CACHE_TIMEOUT_MINIMAL;
-          if (CRM_REQUEST_TIME - $minimalCacheTime*60 > strtotime($group->cache_date)) {
+          if (CRM_REQUEST_TIME - $minimalCacheTime > strtotime($group->cache_date)) {
             CRM_Contact_BAO_GroupContactCache::load($group);
           }
         }
@@ -3991,8 +4021,8 @@ civicrm_relationship.start_date > {$today}
         if (!$count) {
           $this->_useDistinct = TRUE;
         }
-        $this->_fromClause = self::fromClause($this->_tables, NULL, NULL, $this->_primaryLocation, $this->_mode);
-        $this->_simpleFromClause = self::fromClause($this->_whereTables, NULL, NULL, $this->_primaryLocation, $this->_mode);
+        $this->_fromClause = $this->fromClause($this->_tables);
+        $this->_simpleFromClause = $this->fromClause($this->_whereTables);
       }
     }
     else {
@@ -4145,9 +4175,7 @@ civicrm_relationship.start_date > {$today}
         }
 
         if ($doOpt) {
-          $this->_simpleFromClause = self::fromClause($this->_whereTables, NULL, NULL,
-            $this->_primaryLocation, $this->_mode
-          );
+          $this->_simpleFromClause = $this->fromClause($this->_whereTables);
 
           if ($additionalFromClause) {
             $this->_simpleFromClause .= "\n" . $additionalFromClause;
@@ -4240,7 +4268,8 @@ SELECT COUNT( cc.total_amount ) as total_count,
        cc.currency              as currency";
 
     // make sure contribution is completed - CRM-4989
-    $where .= " AND civicrm_contribution.contribution_status_id = 1 ";
+    $whereForTotal = $where;
+    $whereForTotal .= " AND civicrm_contribution.contribution_status_id = 1 ";
     if ($context == 'search') {
       $where .= " AND contact_a.is_deleted = 0 ";
     }
@@ -4249,7 +4278,7 @@ SELECT COUNT( cc.total_amount ) as total_count,
     $summary['total'] = array();
     $summary['total']['count'] = $summary['total']['amount'] = $summary['total']['avg'] = "n/a";
 
-    $query = "$select FROM (SELECT civicrm_contribution.total_amount, civicrm_contribution.currency $from $where GROUP BY civicrm_contribution.id) cc GROUP BY cc.currency";
+    $query = "$select FROM (SELECT civicrm_contribution.total_amount, civicrm_contribution.currency $from $whereForTotal GROUP BY civicrm_contribution.id) cc GROUP BY cc.currency";
     $params = array();
 
     $dao = CRM_Core_DAO::executeQuery($query, $params);
@@ -4276,12 +4305,13 @@ SELECT COUNT( cc.total_amount ) as cancel_count,
        AVG(   cc.total_amount ) as cancel_avg,
        cc.currency              as currency";
 
-    $where .= " AND civicrm_contribution.cancel_date IS NOT NULL ";
+    $whereForCancel = $where;
+    $whereForCancel .= " AND civicrm_contribution.contribution_status_id = 3 ";
     if ($context == 'search') {
       $where .= " AND contact_a.is_deleted = 0 ";
     }
 
-    $query = "$select FROM (SELECT civicrm_contribution.total_amount, civicrm_contribution.currency $from $where GROUP BY civicrm_contribution.id) cc GROUP BY cc.currency";
+    $query = "$select FROM (SELECT civicrm_contribution.total_amount, civicrm_contribution.currency $from $whereForCancel GROUP BY civicrm_contribution.id) cc GROUP BY cc.currency";
     $dao = CRM_Core_DAO::executeQuery($query, $params);
 
     if ($dao->N <= 1) {

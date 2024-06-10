@@ -60,6 +60,12 @@
                 <p class="description">{ts}If wkhtmltopdf is installed, CiviCRM will use it to generate PDF form letters.{/ts}</p>
             </td>
         </tr>
+        <tr class="crm-miscellaneous-form-block-qpdfPath">
+            <td class="label">{$form.qpdfPath.label}</td>
+            <td>{$form.qpdfPath.html}<br />
+                <p class="description">{ts}If qpdf is installed, CiviCRM will use it to generate PDF form letters.{/ts}</p>
+            </td>
+        </tr>
         <tr class="crm-miscellaneous-form-block-versionCheck">
             <td class="label">{$form.versionCheck.label}</td>
             <td>{$form.versionCheck.html}<br />

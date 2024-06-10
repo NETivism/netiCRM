@@ -114,7 +114,7 @@ class CRM_Utils_Type {
   }
 
   /**
-   * Verify that a variable is of a given type
+   * Verify that a variable is of a given type and apply a bit of processing
    *
    * @param mixed   $data         The variable
    * @param string  $type         The type
@@ -204,6 +204,36 @@ class CRM_Utils_Type {
       case 'CSInts':
         if (CRM_Utils_Rule::commaSeparatedIntegers($data)) {
           return $data;
+        }
+        break;
+
+      case 'DirectoryName':
+        if (CRM_Utils_Rule::directoryName($data)) {
+          return $data;
+        }
+        else {
+          return CRM_Utils_File::sanitizeDirectoryName($data);
+        }
+        break;
+
+      case 'FileName':
+        if (CRM_Utils_Rule::fileName($data)) {
+          return $data;
+        }
+        else {
+          return CRM_Utils_File::sanitizeFileName($data);
+        }
+        break;
+
+      case 'Email':
+        if (CRM_Utils_Rule::email($data)) {
+          return $data;
+        }
+        else {
+          $email = CRM_Utils_Mail::sanitizeEmail($data);
+          if (!empty($email)) {
+            return $email;
+          }
         }
         break;
 
@@ -318,8 +348,27 @@ class CRM_Utils_Type {
         break;
 
       case 'CommaSeperatedIntegers':
+      case 'CommaSeparatedIntegers':
       case 'CSInts':
         if (CRM_Utils_Rule::commaSeparatedIntegers($data)) {
+          return $data;
+        }
+        break;
+
+      case 'DirectoryName':
+        if (CRM_Utils_Rule::directoryName($data)) {
+          return $data;
+        }
+        break;
+
+      case 'FileName':
+        if (CRM_Utils_Rule::fileName($data)) {
+          return $data;
+        }
+        break;
+
+      case 'Email':
+        if (CRM_Utils_Rule::email($data)) {
           return $data;
         }
         break;

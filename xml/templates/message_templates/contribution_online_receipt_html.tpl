@@ -29,7 +29,7 @@
     {if $is_pay_later}
      <p>{$pay_later_receipt}</p> {* FIXME: this might be text rather than HTML *}
     {else}
-     <p>{ts}Please print this confirmation for your records.{/ts}</p>
+     <p>{if $pdf_receipt_decrypt_info}{$pdf_receipt_decrypt_info|escape:'html'} {/if}{ts}Please print this confirmation for your records.{/ts}</p>
     {/if}
 
    </td>

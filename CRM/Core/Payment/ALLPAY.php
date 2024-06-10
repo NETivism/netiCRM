@@ -663,13 +663,10 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
         }
         if(!empty($order) && $order->MerchantTradeNo == $result->trxn_id && count($order->ExecLog) > 1){
           // update recur status
-          $recur = $order->ExecStatus;
           if(isset($order->ExecStatus)){
-            $update_status = NULL;
             $recur_param = $null = array();
             if($order->ExecStatus == 0 && $result->recurring_status != 3){
               // cancelled
-              $update_status = 3;
               $recur_param = array(
                 'id' => $rid,
                 'modified_date' => date('YmdHis'),
@@ -695,9 +692,23 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
 
           $orders = array();
           foreach($order->ExecLog as $o){
-            // skip first recorded contribution
+            // update exists first contribution if pending
+            // otherwise skip
             if($order->gwsr == $o->gwsr){
-              continue;
+              if($result->contribution_status_id != 2) {
+                continue;
+              }
+              else {
+                $trxn_id = $result->trxn_id;
+                $orders[$trxn_id] = $o;
+              }
+            }
+
+            // skip failed contribution when process_date before last month
+            if (!empty($o->process_date) && $o->RtnCode != 1) {
+              if (strtotime($o->process_date) < strtotime(date('Y-m-01 00:00:00'))) {
+                continue;
+              }
             }
             $noid = self::getNoidHash($o, $order->MerchantTradeNo);
             if (!empty($noid)) {
@@ -720,7 +731,9 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
               $ids = CRM_Contribute_BAO_Contribution::buildIds($first_contrib_id);
               $query = CRM_Contribute_BAO_Contribution::makeNotifyUrl($ids, NULL, $return_query = TRUE);
               parse_str($query, $get);
-              $get['is_recur'] = 1;
+              if($order->gwsr != $o->gwsr){
+                $get['is_recur'] = 1;
+              }
               $post = array(
                 'MerchantID' => $order->MerchantID,
                 'MerchantTradeNo' => $order->MerchantTradeNo,
@@ -738,6 +751,12 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
                 //'SimulatePaid' => $order->SimulatePaid,
               );
 
+              // #40509, do not send email notification after transaction overdue
+              if (strtotime($o->process_date) < strtotime('today')) {
+                $post['do_not_email'] = 1;
+                $post['do_not_receipt'] = 1;
+              }
+
               // manually trigger ipn
               self::doIPN('Credit', $post, $get, FALSE);
             }
@@ -745,6 +764,93 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
         }
       }
     }
+  }
+
+  /**
+   * Check TradeStatus from ALLPAY
+   *
+   * @param string $orderId
+   * @param array $order
+   * @return false|string
+   */
+  public static function tradeCheck($orderId, $order = NULL) {
+    $contribution = new CRM_Contribute_DAO_Contribution();
+    $contribution->trxn_id = $orderId;
+    if ($contribution->find(TRUE)) {
+      $paymentProcessorId = $contribution->payment_processor_id;
+      if ($contribution->contribution_status_id == 1) {
+        $message = ts('There are no any change.');
+        return $message;
+      }
+    }
+    if (!empty($paymentProcessorId) && !empty($contribution->id)) {
+      $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($paymentProcessorId, $contribution->is_test ? 'test': 'live');
+
+      if (strstr($paymentProcessor['payment_processor_type'], 'ALLPAY') && !empty($paymentProcessor['user_name'])) {
+        $processor = array(
+          'password' => $paymentProcessor['password'],
+          'signature' => $paymentProcessor['signature'],
+        );
+        $postData = array(
+          'MerchantID' => $paymentProcessor['user_name'],
+          'MerchantTradeNo' => $orderId,
+          'TimeStamp' => CRM_REQUEST_TIME,
+        );
+        self::generateMacValue($postData, $processor);
+        if (empty($order)) {
+          $order = self::postdata($paymentProcessor['url_api'], $postData, FALSE);
+        }
+
+        // Online contribution
+        // Only trigger if there are pay time in result;
+        if (!empty($order) && is_array($order) && isset($order['TradeStatus'])) {
+          // transition status ipn when status is change
+          $processIPN = FALSE;
+          if ($order['TradeStatus'] == 1 && $contribution->contribution_status_id != 1) {
+            $processIPN = TRUE;
+          }
+          if ($order['TradeStatus'] != 1 && in_array($contribution->contribution_status_id, array(1, 2))) {
+            $processIPN = TRUE;
+          }
+          // can't find trade number
+          if ($order['TradeStatus'] == '10200047') {
+            $processIPN = FALSE;
+          }
+
+          if ($processIPN) {
+            $ids = CRM_Contribute_BAO_Contribution::buildIds($contribution->id);
+            $query = CRM_Contribute_BAO_Contribution::makeNotifyUrl($ids, NULL, TRUE);
+
+            parse_str($query, $ipnGet);
+            $rtnMsg = self::getErrorMsg($order['TradeStatus']);
+            $ipnPost = array(
+              'MerchantID' => $order['MerchantID'],
+              'MerchantTradeNo' => $order['MerchantTradeNo'],
+              'RtnCode' => $order['TradeStatus'],
+              'RtnMsg' => $rtnMsg,
+              'Amount' => !empty($order['amount']) ? $order['amount'] : $order['TradeAmt'],
+              'Gwsr' => $order['gwsr'],
+              'ProcessDate' => $order['process_date'],
+              'AuthCode' => !empty($order['auth_code']) ? $order['auth_code'] : '',
+            );
+
+            // only non-credit card offline payment have this val
+            if (isset($order['ExpireDate'])) {
+              $ipnPost['ExpireDate'] = $order['ExpireDate'];
+            }
+
+            /* TODO: #40509, do not send email notification after transaction overdue
+            if (strtotime($order['process_date']) < CRM_REQUEST_TIME - 86400*2) {
+              $ipnPost['do_not_email'] = 1;
+            }
+            */
+            $result = self::doIPN('Credit', $ipnPost, $ipnGet, FALSE);
+            return $result;
+          }
+        }
+      }
+    }
+    return FALSE;
   }
 
   /**
@@ -886,10 +992,18 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
    *
    * @return string|void If $print is FALSE, function will return the result as Array.
    */
-  static function doIPN($instrument = NULL, $post = NULL, $get = NULL, $print = TRUE) {
+  static function doIPN($arguments, $post = NULL, $get = NULL, $print = TRUE) {
     // detect variables
     $post = !empty($post) ? $post : $_POST;
     $get = !empty($get) ? $get : $_GET;
+    if (!empty($arguments)) {
+      if (is_array($arguments)) {
+        $instrument = end($arguments);
+      }
+      else {
+        $instrument = $arguments;
+      }
+    }
     if (empty($instrument)) {
       $qArray = explode('/', $get['q']);
       $instrument = end($qArray);
@@ -898,13 +1012,11 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
     // detect variables
     if(empty($post)){
       CRM_Core_Error::debug_log_message( "civicrm_allpay: Could not find POST data from payment server", TRUE);
-      exit;
+      CRM_Utils_System::civiExit();
     }
     else{
       $component = $get['module'];
       if(!empty($component)){
-        // include_once(__DIR__.'/ALLPAYIPN.php');
-
         $ipn = new CRM_Core_Payment_ALLPAYIPN($post, $get);
         $result = $ipn->main($component, $instrument);
         if(!empty($result) && $print){

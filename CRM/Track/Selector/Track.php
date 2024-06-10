@@ -380,7 +380,7 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
         }
         elseif (is_array($this->_entityId)) {
           $where[] = "entity_id IN (%5)";
-          $args[5] = array(CRM_Utils_Array::implode(',', $this->_entityId), 'CommaSeperatedIntegers');
+          $args[5] = array(CRM_Utils_Array::implode(',', $this->_entityId), 'CommaSeparatedIntegers');
         }
       }
     }

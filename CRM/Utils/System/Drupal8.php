@@ -134,12 +134,12 @@ class CRM_Utils_System_Drupal8 {
    *
    * @param array $params
    *   Array of name and mail values.
-   * @param array $errors
-   *   Errors.
    * @param string $emailName
    *   Field label for the 'email'.
+   * @return @param array $errors
+   *   Errors.
    */
-  public static function checkUserNameEmailExists(&$params, &$errors, $emailName = 'email') {
+  public static function checkUserNameEmailExists(&$params, $emailName = 'email') {
     // If we are given a name, let's check to see if it already exists.
     if (!empty($params['name'])) {
       $name = $params['name'];
@@ -185,6 +185,7 @@ class CRM_Utils_System_Drupal8 {
         $errors[$emailName] = (string) $violations[0]->getMessage();
       }
     }
+    return $errors;
   }
 
   /**
@@ -199,6 +200,7 @@ class CRM_Utils_System_Drupal8 {
    * @inheritDoc
    */
   public function setTitle($title) {
+    $title = CRM_Utils_String::htmlPurifier($title);
     \Drupal::service('civicrm.page_state')->setTitle($title);
   }
 
@@ -467,6 +469,9 @@ class CRM_Utils_System_Drupal8 {
     \Drupal::service('civicrm')->initialize();
 
     if ($loadUser) {
+      if (empty($params['uid'])) {
+        $params['uid'] = 0;
+      }
       $userObject = \Drupal\user\Entity\User::load($params['uid']);
       if (!empty($params['uid']) && $username = $userObject->getAccountName()) {
         $this->loadUserByName($username);

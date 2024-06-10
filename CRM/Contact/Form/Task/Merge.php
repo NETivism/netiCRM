@@ -58,6 +58,16 @@ class CRM_Contact_Form_Task_Merge extends CRM_Contact_Form_Task {
       $statusMsg = ts('Minimum two contact records are required to perform merge operation.');
     }
 
+    // do check for contact is admin or not
+    foreach ($contactIds as $key => $id) {
+      $sql = "SELECT uf_id FROM `civicrm_uf_match` where contact_id = %1";
+      $params = array( 1 => array($id, 'Integer'));
+      $uid = CRM_Core_DAO::singleValueQuery($sql, $params);
+      if ($uid == 1) {
+        $statusMsg = ts('Cannot merge with the administrator, please recheck the selected contacts.');
+      }
+    }
+
     // do check for same contact type.
     $contactTypes = array();
     if (!$statusMsg) {

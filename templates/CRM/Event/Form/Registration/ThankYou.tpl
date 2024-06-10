@@ -245,7 +245,7 @@
                     {ts 1=$customName+1}Participant Information - Participant %1{/ts}	
                 </div>
                 {foreach from=$value item=val key=field}
-                    {if $field eq additionalCustomPre or $field eq additionalCustomPost }
+                    {if $field eq 'additionalCustomPre' or $field eq 'additionalCustomPost' }
                         {if $field eq 'additionalCustomPre' }
                             <fieldset class="label-left"><legend>{$value.additionalCustomPre_grouptitle}</legend>
                         {else}

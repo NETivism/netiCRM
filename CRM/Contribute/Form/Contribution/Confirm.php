@@ -52,6 +52,7 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
     // lineItem isn't set until Register postProcess
     $this->_lineItem = $this->get('lineItem');
     $this->_params = $this->controller->exportValues('Main');
+    $this->_originalValues = $this->get('originalValues');
     if (!($this->_paymentProcessor = $this->get('paymentProcessor')) && !empty($this->_params['payment_processor'])) {
       $this->_paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($this->_params['payment_processor'], $this->_mode);
     }
@@ -279,6 +280,20 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
     }
     $this->buildCustom($this->_values['custom_pre_id'], 'customPre', TRUE);
     $this->buildCustom($this->_values['custom_post_id'], 'customPost', TRUE);
+
+    // donate from oid should remove some rule
+    if (!empty($this->_originalId)) {
+      foreach($this->_rules as $fieldName => &$qfField) {
+        if (preg_match('/^custom_\d+/', $fieldName) && isset($this->_originalValues[$fieldName]) && strstr($params[$fieldName], CRM_Utils_String::MASK)) {
+          foreach($qfField as $idx => $rule) {
+            if ($rule['type'] != 'xssString') {
+              unset($qfField[$idx]);
+            }
+          }
+        }
+      }
+    }
+
     $this->_separateMembershipPayment = $this->get('separateMembershipPayment');
     $this->assign("is_separate_payment", $this->_separateMembershipPayment);
     $this->assign('lineItem', $this->_lineItem);
@@ -341,8 +356,18 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
     $contact = $this->_params;
     foreach ($fields as $name => $dontCare) {
       if (isset($contact[$name])) {
+        // convert submit values to masks
         if (!strstr($name, 'country') && !strstr($name, 'city') && !strstr($name, 'state_province') && $this->_fields[$name]['html_type'] === 'Text' && $this->get('csContactID')) {
-          $defaults[$name] = CRM_Utils_String::mask($contact[$name]);
+          // when user enter new value
+          // do not mask their current input
+          if (!strstr($contact[$name], CRM_Utils_String::MASK)) {
+            $defaults[$name] = $contact[$name];
+          }
+          // when user use original value
+          // mask their input to prevent data leak
+          else {
+            $defaults[$name] = CRM_Utils_String::mask($contact[$name]);
+          }
         }
         else {
           $defaults[$name] = $contact[$name];
@@ -444,7 +469,6 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
    */
   public function postProcess() {
     $config = CRM_Core_Config::singleton();
-    $this->_originalValues = $this->get('originalValues');
     if (!empty($this->_originalValues) && !empty($this->get('originalId'))) {
       foreach($this->_originalValues as $key => $val) {
         if (strstr($this->_params[$key], CRM_Utils_String::MASK) && !empty($val) && $val !== $this->_params[$key]) {

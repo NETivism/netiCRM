@@ -446,10 +446,10 @@ class CRM_Utils_String {
     return $converter->get_text();
   }
 
-  static function htmlPurifier($html, $allowed_tags = array()) {
+  static function htmlPurifier($html, $allowedTags = array()) {
     require_once 'packages/IDS/vendors/htmlpurifier/HTMLPurifier.auto.php';
     static $_purifier;
-    $hash = md5(CRM_Utils_Array::implode('', $allowed_tags));
+    $hash = md5(CRM_Utils_Array::implode(',', $allowedTags));
 
     if (!$_purifier[$hash]) {
       $config = CRM_Core_Config::singleton();
@@ -467,7 +467,8 @@ class CRM_Utils_String {
       $purifierConfig->set('URI.SafeIframeRegexp', '%^(https?:)?//(www\.youtube(?:-nocookie)?\.com/embed/|player\.vimeo\.com/video/)%'); //allow YouTube and Vimeo
 
       // allowed tags put at the end
-      $purifierConfig->set('HTML.Allowed', $allowed_tags);
+      $allowed = implode(', ', $allowedTags);
+      $purifierConfig->set('HTML.Allowed', $allowed);
 
       // def needs after configure
       // fullscreen
@@ -665,14 +666,14 @@ class CRM_Utils_String {
       if (preg_match('/^0\d+$/', $str)) {
         return $str;
       }
-      if (is_float($str)) {
+      if (filter_var($str, FILTER_VALIDATE_FLOAT)) {
         return (float) $str;
       }
-      if (is_int($str)) {
+      if (filter_var($str, FILTER_VALIDATE_INT)) {
         return (int) $str;
       }
       if (is_numeric($str)) {
-        return (int) $str;
+        return (float) $str;
       }
     }
     return $str;
@@ -713,7 +714,9 @@ class CRM_Utils_String {
 
   static function safeFilename($str) {
     $str = preg_replace("/([^\w\s\d\.\-_~\[\]\(\)]|[\.]{2,})/u", '', $str);
-    return preg_replace("/\s+/u", '_', $str);
+    $str = preg_replace("/\s+/u", '_', $str);
+    $str = CRM_Utils_File::sanitizeFileName($str);
+    return $str;
   }
 
   /**

@@ -4695,6 +4695,7 @@ VALUES
   (@option_group_id_cs, 'Overdue'    , 6, 'Overdue'    , NULL, 0, NULL, 6, NULL, 0, 1, 1, NULL, NULL),
   (@option_group_id_cs, 'Suspended'  , 7, 'Suspended'  , NULL, 0, NULL, 7, NULL, 0, 1, 1, NULL, NULL),
 
+  (@option_group_id_pcp, 'Draft',          0, 'Draft'         , NULL, 0, NULL, 0, NULL, 0, 1, 1, NULL, NULL),
   (@option_group_id_pcp, 'Waiting Review', 1, 'Waiting Review', NULL, 0, NULL, 1, NULL, 0, 1, 1, NULL, NULL),
   (@option_group_id_pcp, 'Approved'      , 2, 'Approved'      , NULL, 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL),
   (@option_group_id_pcp, 'Not Approved'  , 3, 'Not Approved'  , NULL, 0, NULL, 3, NULL, 0, 1, 1, NULL, NULL),
@@ -6357,6 +6358,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 {else}{ts}Thanks for your support.{/ts}{/if}
 
 {ts}Please print this receipt for your records.{/ts}
+{if $pdf_receipt_decrypt_info}{$pdf_receipt_decrypt_info|escape:\'html\'} {/if} {ts}Please print this receipt for your records.{/ts}
 
 
 ===========================================================
@@ -6479,7 +6481,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
      <p>{ts}Thanks for your support.{/ts}</p>
     {/if}
 
-    <p>{ts}Please print this receipt for your records.{/ts}</p>
+    <p>{if $pdf_receipt_decrypt_info}{$pdf_receipt_decrypt_info|escape:\'html\'} {/if} {ts}Please print this receipt for your records.{/ts}</p>
 
    </td>
   </tr>
@@ -6716,6 +6718,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 {else}{ts}Thanks for your support.{/ts}{/if}
 
 {ts}Please print this receipt for your records.{/ts}
+{if $pdf_receipt_decrypt_info}{$pdf_receipt_decrypt_info|escape:\'html\'} {/if} {ts}Please print this receipt for your records.{/ts}
 
 
 ===========================================================
@@ -6838,7 +6841,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
      <p>{ts}Thanks for your support.{/ts}</p>
     {/if}
 
-    <p>{ts}Please print this receipt for your records.{/ts}</p>
+    <p>{if $pdf_receipt_decrypt_info}{$pdf_receipt_decrypt_info|escape:\'html\'} {/if} {ts}Please print this receipt for your records.{/ts}</p>
 
    </td>
   </tr>
@@ -7083,6 +7086,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 {else}
 
 {ts}Please print this receipt for your records.{/ts}
+{if $pdf_receipt_decrypt_info}{$pdf_receipt_decrypt_info|escape:\'html\'} {/if}{ts}Please print this confirmation for your records.{/ts}
 {/if}
 
 {if $amount}
@@ -7279,7 +7283,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
     {if $is_pay_later}
      <p>{$pay_later_receipt}</p> {* FIXME: this might be text rather than HTML *}
     {else}
-     <p>{ts}Please print this confirmation for your records.{/ts}</p>
+     <p>{if $pdf_receipt_decrypt_info}{$pdf_receipt_decrypt_info|escape:\'html\'} {/if}{ts}Please print this confirmation for your records.{/ts}</p>
     {/if}
 
    </td>
@@ -7640,6 +7644,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 {else}
 
 {ts}Please print this receipt for your records.{/ts}
+{if $pdf_receipt_decrypt_info}{$pdf_receipt_decrypt_info|escape:\'html\'} {/if}{ts}Please print this confirmation for your records.{/ts}
 {/if}
 
 {if $amount}
@@ -7836,7 +7841,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
     {if $is_pay_later}
      <p>{$pay_later_receipt}</p> {* FIXME: this might be text rather than HTML *}
     {else}
-     <p>{ts}Please print this confirmation for your records.{/ts}</p>
+     <p>{if $pdf_receipt_decrypt_info}{$pdf_receipt_decrypt_info|escape:\'html\'} {/if}{ts}Please print this confirmation for your records.{/ts}</p>
     {/if}
 
    </td>
@@ -8626,31 +8631,28 @@ rule for Organizations to find the potential duplicates and merge them if approp
 </html>', @tpl_ovid_contribution_invoice_notify, 0,          1) ,      
       
       
-      ('Personal Campaign Pages - Admin Notification', '{ts}Personal Campaign Page Notification{/ts}', '===========================================================
+      ('Personal Campaign Pages - Admin Notification', '{ts 1=$contribPageTitle}Your Personal Campaign Page for %1{/ts}({$pcpTitle}) - {if $pcpStatus eq \'Approved\'}{ts}Is live{/ts}{elseif $pcpStatus eq \'Not Approved\'}{ts}Not Approved{/ts}{elseif $pcpStatus eq \'Draft\'}{ts}Revoke to Draft{/ts}{/if}', '===========================================================
 {ts}Personal Campaign Page Notification{/ts}
 
 ===========================================================
 {ts}Action{/ts}: {if $mode EQ \'Update\'}{ts}Updated personal campaign page{/ts}{else}{ts}New personal campaign page{/ts}{/if}
 {ts}Personal Campaign Page Title{/ts}: {$pcpTitle}
 {ts}Current Status{/ts}: {$pcpStatus}
-{capture assign=pcpURL}{crmURL p="civicrm/contribute/pcp/info" q="reset=1&id=`$pcpId`" h=0 a=1}{/capture}
-{ts}View Page{/ts}:
->> {$pcpURL}
+{ts}View Page{/ts}: {capture assign=pcpURL}{crmURL p="civicrm/contribute/pcp/info" q="reset=1&id=`$pcpId`" h=0 a=1}{/capture}
+{$pcpURL}
 
 {ts}Supporter{/ts}: {$supporterName}
->> {$supporterUrl}
+{$supporterUrl}
 
-{ts}Linked to Contribution Page{/ts}: {$contribPageTitle}
->> {$contribPageUrl}
+{ts}Contribution Page{/ts}: {$contribPageTitle}
+{$contribPageUrl}
 
 {ts}Manage Personal Campaign Pages{/ts}:
->> {$managePCPUrl}
-
-', '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+{$managePCPUrl}', '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
- <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
- <title></title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title></title>
 </head>
 <body>
 
@@ -8660,7 +8662,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 {capture assign=pcpURL     }{crmURL p="civicrm/contribute/pcp/info" q="reset=1&id=`$pcpId`" h=0 a=1}{/capture}
 
 <center>
- <table width="620" border="0" cellpadding="0" cellspacing="0" id="crm-event_receipt" style="font-family: Arial, Verdana, sans-serif; text-align: left;">
+<table width="620" border="0" cellpadding="0" cellspacing="0" id="crm-event_receipt" style="font-family: Arial, Verdana, sans-serif; text-align: left;">
 
   <!-- BEGIN HEADER -->
   <!-- You can add table row(s) here with logo or other header elements -->
@@ -8669,103 +8671,101 @@ rule for Organizations to find the potential duplicates and merge them if approp
   <!-- BEGIN CONTENT -->
 
   <tr>
-   <td>
+    <td>
     <table style="border: 1px solid #999; margin: 1em 0em 1em; border-collapse: collapse; width:100%;">
-     <tr>
-      <th {$headerStyle}>
-       {ts}Personal Campaign Page Notification{/ts}
-      </th>
-     </tr>
-     <tr>
+      <tr>
+        <th {$headerStyle}>
+          {ts}Personal Campaign Page Notification{/ts}
+        </th>
+      </tr>
+      <tr>
       <td {$labelStyle}>
-       {ts}Action{/ts}:
+        {ts}Action{/ts}:
       </td>
       <td {$valueStyle}>
-       {if $mode EQ \'Update\'}
+      {if $mode EQ \'Update\'}
         {ts}Updated personal campaign page{/ts}
-       {else}
+      {else}
         {ts}New personal campaign page{/ts}
-       {/if}
+      {/if}
       </td>
-     </tr>
-     <tr>
+    </tr>
+    <tr>
       <td {$labelStyle}>
-       {ts}Personal Campaign Page Title{/ts}
+      {ts}Personal Campaign Page Title{/ts}
       </td>
       <td {$valueStyle}>
-       {$pcpTitle}
+      {$pcpTitle}
       </td>
-     </tr>
-     <tr>
+    </tr>
+    <tr>
       <td {$labelStyle}>
-       {ts}Current Status{/ts}
+      {ts}Current Status{/ts}
       </td>
       <td {$valueStyle}>
-       {$pcpStatus}
+      {$pcpStatus}
       </td>
-     </tr>
-
-     <tr>
-      <td rowspan="2" {$labelStyle}>
-       <a href="{$pcpURL}">{ts}View Page{/ts}</a>
-      </td>
-     </tr>
-     <tr>
+    </tr>
+    <tr>
       <td {$labelStyle}>
-       {ts}Supporter{/ts}
+        {ts}Personal Campaign Page{/ts}
       </td>
       <td {$valueStyle}>
-       <a href="{$supporterUrl}">{$supporterName}</a>
+        <a href="{$pcpURL}">{ts}View Page{/ts}</a>
       </td>
-     </tr>
-     <tr>
+    </tr>
+    <tr>
       <td {$labelStyle}>
-       {ts}Linked to Contribution Page{/ts}
+      {ts}Supporter{/ts}
       </td>
       <td {$valueStyle}>
-       <a href="{$contribPageUrl}">{$contribPageTitle}</a>
+      <a href="{$supporterUrl}">{$supporterName}</a>
       </td>
-     </tr>
-     <tr>
-      <td rowspan="2" {$labelStyle}>
-       <a href="{$managePCPUrl}">{ts}Manage Personal Campaign Pages{/ts}</a>
+    </tr>
+    <tr>
+      <td {$labelStyle}>
+      {ts}Contribution Page{/ts}
       </td>
-     </tr>
+      <td {$valueStyle}>
+      <a href="{$contribPageUrl}">{$contribPageTitle}</a>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2" {$labelStyle}>
+      <a href="{$managePCPUrl}">{ts}Manage Personal Campaign Pages{/ts}</a>
+      </td>
+    </tr>
 
     </table>
-   </td>
+  </td>
   </tr>
- </table>
+</table>
 </center>
 
 </body>
-</html>
-', @tpl_ovid_pcp_notify, 1,          0),
-      ('Personal Campaign Pages - Admin Notification', '{ts}Personal Campaign Page Notification{/ts}', '===========================================================
+</html>', @tpl_ovid_pcp_notify, 1,          0),
+      ('Personal Campaign Pages - Admin Notification', '{ts 1=$contribPageTitle}Your Personal Campaign Page for %1{/ts}({$pcpTitle}) - {if $pcpStatus eq \'Approved\'}{ts}Is live{/ts}{elseif $pcpStatus eq \'Not Approved\'}{ts}Not Approved{/ts}{elseif $pcpStatus eq \'Draft\'}{ts}Revoke to Draft{/ts}{/if}', '===========================================================
 {ts}Personal Campaign Page Notification{/ts}
 
 ===========================================================
 {ts}Action{/ts}: {if $mode EQ \'Update\'}{ts}Updated personal campaign page{/ts}{else}{ts}New personal campaign page{/ts}{/if}
 {ts}Personal Campaign Page Title{/ts}: {$pcpTitle}
 {ts}Current Status{/ts}: {$pcpStatus}
-{capture assign=pcpURL}{crmURL p="civicrm/contribute/pcp/info" q="reset=1&id=`$pcpId`" h=0 a=1}{/capture}
-{ts}View Page{/ts}:
->> {$pcpURL}
+{ts}View Page{/ts}: {capture assign=pcpURL}{crmURL p="civicrm/contribute/pcp/info" q="reset=1&id=`$pcpId`" h=0 a=1}{/capture}
+{$pcpURL}
 
 {ts}Supporter{/ts}: {$supporterName}
->> {$supporterUrl}
+{$supporterUrl}
 
-{ts}Linked to Contribution Page{/ts}: {$contribPageTitle}
->> {$contribPageUrl}
+{ts}Contribution Page{/ts}: {$contribPageTitle}
+{$contribPageUrl}
 
 {ts}Manage Personal Campaign Pages{/ts}:
->> {$managePCPUrl}
-
-', '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+{$managePCPUrl}', '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
- <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
- <title></title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title></title>
 </head>
 <body>
 
@@ -8775,7 +8775,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 {capture assign=pcpURL     }{crmURL p="civicrm/contribute/pcp/info" q="reset=1&id=`$pcpId`" h=0 a=1}{/capture}
 
 <center>
- <table width="620" border="0" cellpadding="0" cellspacing="0" id="crm-event_receipt" style="font-family: Arial, Verdana, sans-serif; text-align: left;">
+<table width="620" border="0" cellpadding="0" cellspacing="0" id="crm-event_receipt" style="font-family: Arial, Verdana, sans-serif; text-align: left;">
 
   <!-- BEGIN HEADER -->
   <!-- You can add table row(s) here with logo or other header elements -->
@@ -8784,137 +8784,114 @@ rule for Organizations to find the potential duplicates and merge them if approp
   <!-- BEGIN CONTENT -->
 
   <tr>
-   <td>
+    <td>
     <table style="border: 1px solid #999; margin: 1em 0em 1em; border-collapse: collapse; width:100%;">
-     <tr>
-      <th {$headerStyle}>
-       {ts}Personal Campaign Page Notification{/ts}
-      </th>
-     </tr>
-     <tr>
+      <tr>
+        <th {$headerStyle}>
+          {ts}Personal Campaign Page Notification{/ts}
+        </th>
+      </tr>
+      <tr>
       <td {$labelStyle}>
-       {ts}Action{/ts}:
+        {ts}Action{/ts}:
       </td>
       <td {$valueStyle}>
-       {if $mode EQ \'Update\'}
+      {if $mode EQ \'Update\'}
         {ts}Updated personal campaign page{/ts}
-       {else}
+      {else}
         {ts}New personal campaign page{/ts}
-       {/if}
+      {/if}
       </td>
-     </tr>
-     <tr>
+    </tr>
+    <tr>
       <td {$labelStyle}>
-       {ts}Personal Campaign Page Title{/ts}
+      {ts}Personal Campaign Page Title{/ts}
       </td>
       <td {$valueStyle}>
-       {$pcpTitle}
+      {$pcpTitle}
       </td>
-     </tr>
-     <tr>
+    </tr>
+    <tr>
       <td {$labelStyle}>
-       {ts}Current Status{/ts}
+      {ts}Current Status{/ts}
       </td>
       <td {$valueStyle}>
-       {$pcpStatus}
+      {$pcpStatus}
       </td>
-     </tr>
-
-     <tr>
-      <td rowspan="2" {$labelStyle}>
-       <a href="{$pcpURL}">{ts}View Page{/ts}</a>
-      </td>
-     </tr>
-     <tr>
+    </tr>
+    <tr>
       <td {$labelStyle}>
-       {ts}Supporter{/ts}
+        {ts}Personal Campaign Page{/ts}
       </td>
       <td {$valueStyle}>
-       <a href="{$supporterUrl}">{$supporterName}</a>
+        <a href="{$pcpURL}">{ts}View Page{/ts}</a>
       </td>
-     </tr>
-     <tr>
+    </tr>
+    <tr>
       <td {$labelStyle}>
-       {ts}Linked to Contribution Page{/ts}
+      {ts}Supporter{/ts}
       </td>
       <td {$valueStyle}>
-       <a href="{$contribPageUrl}">{$contribPageTitle}</a>
+      <a href="{$supporterUrl}">{$supporterName}</a>
       </td>
-     </tr>
-     <tr>
-      <td rowspan="2" {$labelStyle}>
-       <a href="{$managePCPUrl}">{ts}Manage Personal Campaign Pages{/ts}</a>
+    </tr>
+    <tr>
+      <td {$labelStyle}>
+      {ts}Contribution Page{/ts}
       </td>
-     </tr>
+      <td {$valueStyle}>
+      <a href="{$contribPageUrl}">{$contribPageTitle}</a>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2" {$labelStyle}>
+      <a href="{$managePCPUrl}">{ts}Manage Personal Campaign Pages{/ts}</a>
+      </td>
+    </tr>
 
     </table>
-   </td>
+  </td>
   </tr>
- </table>
+</table>
 </center>
 
 </body>
-</html>
-', @tpl_ovid_pcp_notify, 0,          1) ,      
+</html>', @tpl_ovid_pcp_notify, 0,          1) ,      
       
       
-      ('Personal Campaign Pages - Supporter Status Change Notification', '{ts 1=$contribPageTitle}Your Personal Campaign Page for %1{/ts}', '{if $pcpStatus eq \'Approved\'}
-============================
-{ts}Your Personal Campaign Page{/ts}
+      ('Personal Campaign Pages - Supporter Status Change Notification', '{ts 1=$contribPageTitle}Your Personal Campaign Page for %1{/ts} - {if $pcpStatus eq \'Approved\'}{ts}Is live{/ts}{elseif $pcpStatus eq \'Not Approved\'}{ts}Not Approved{/ts}{elseif $pcpStatus eq \'Draft\'}{ts}Revoke to Draft{/ts}{/if}', '{if $pcpStatus eq \'Approved\'}
+  {ts}Your Personal Campaign Page is now available for public access.{/ts} {ts}Congratulations!{/ts} {ts}You can now openly share the page to gather more donations for your fundraising campaign!{/ts}
+  {ts 1=$pcpInfoURL}Please copy your Personal Campign Page URL %1{/ts}. {ts}Subsequently, you can share your Personal Campaign Page link across various social media platforms to rally friends and family to support this fundraising initiative!{/ts}
+  {ts}Notice: If you are already logged in, clicking the above link will take you to the backend of your personal fundraising page for editing.{/ts} {ts}While general users who have not logged in, clicking the link will simply take them to the completed personal fundraising page where they can proceed to fill out the donation form as usual.{/ts}
 
-============================
+  {if $pcpNotifyEmailAddress}
+  {ts}Questions? Send email to{/ts}: {$pcpNotifyEmailAddress}
+  {/if}
 
-{ts}Your personal campaign page has been approved and is now live.{/ts}
-
-{ts}Whenever you want to preview, update or promote your page{/ts}:
-1. {ts}Login to your account at{/ts}:
-{$loginUrl}
-
-2. {ts}Click or paste this link into your browser to go to your page{/ts}:
-{$pcpInfoURL}
-
-{ts}When you view your campaign page WHILE LOGGED IN, the page includes links to edit
-your page, tell friends, and update your contact info.{/ts}
-
-{if $isTellFriendEnabled}
-
-{ts}After logging in, you can use this form to promote your fundraising page{/ts}:
-{$pcpTellFriendURL}
-
-{/if}
-
-{if $pcpNotifyEmailAddress}
-{ts}Questions? Send email to{/ts}:
-{$pcpNotifyEmailAddress}
-{/if}
-
-{* Rejected message *}
 {elseif $pcpStatus eq \'Not Approved\'}
-============================
-{ts}Your Personal Campaign Page{/ts}
-
-============================
-
-{ts}Your personal campaign page has been reviewed. There were some issues with the content
+  {ts}Your personal campaign page has been reviewed. There were some issues with the content
 which prevented us from approving the page. We are sorry for any inconvenience.{/ts}
-
-{if $pcpNotifyEmailAddress}
-
-{ts}Please contact our site administrator for more information{/ts}:
-{$pcpNotifyEmailAddress}
-{/if}
-
-{/if}
-', '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  {if $pcpNotifyEmailAddress}
+  {ts}Please contact our site administrator for more information{/ts}: {$pcpNotifyEmailAddress}
+  {/if}
+{elseif $pcpStatus eq \'Draft\'}
+  {ts}Your Personal Campaign Page has been reviewed by our administrators, and it has been determined that further modifications are needed.{/ts} {ts}As a result, it has been reverted to a draft status.{/ts}
+  {if $pcpNotifyEmailAddress}
+    {ts 1=pcpNotifyEmailAddress}We recommend reaching out to the administrator at %1 to understand the reasons for the required changes.{/ts}
+  {/if}
+  {ts}Afterward, you can log in to the system again to edit the page.{/ts} {ts}Once the editing is completed, you can resubmit it for administrator review.{/ts}
+  1. {ts}Login to your account{/ts}: {$loginUrl}
+  2. {ts}Edit personal campaign page{/ts}: {$pcpInfoURL}
+{/if}', '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
- <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
- <title></title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title></title>
 </head>
 <body>
 
 <center>
- <table width="620" border="0" cellpadding="0" cellspacing="0" id="crm-event_receipt" style="font-family: Arial, Verdana, sans-serif; text-align: left;">
+<table width="620" border="0" cellpadding="0" cellspacing="0" id="crm-event_receipt" style="font-family: Arial, Verdana, sans-serif; text-align: left;">
 
   <!-- BEGIN HEADER -->
   <!-- You can add table row(s) here with logo or other header elements -->
@@ -8923,105 +8900,69 @@ which prevented us from approving the page. We are sorry for any inconvenience.{
   <!-- BEGIN CONTENT -->
 
   <tr>
-   <td>
-
-    <h1>{ts}Your Personal Campaign Page{/ts}</h1>
-
+  <td>
     {if $pcpStatus eq \'Approved\'}
-
-     <p>{ts}Your personal campaign page has been approved and is now live.{/ts}</p>
-     <p>{ts}Whenever you want to preview, update or promote your page{/ts}:</p>
-     <ol>
-      <li><a href="{$loginUrl}">{ts}Login to your account{/ts}</a></li>
-      <li><a href="{$pcpInfoURL}">{ts}Go to your page{/ts}</a></li>
-     </ol>
-     <p>{ts}When you view your campaign page WHILE LOGGED IN, the page includes links to edit
-your page, tell friends, and update your contact info.{/ts}</p>
-
-     {if $isTellFriendEnabled}
-      <p><a href="{$pcpTellFriendURL}">{ts}After logging in, you can use this form to promote your fundraising page{/ts}</a></p>
-     {/if}
-
-     {if $pcpNotifyEmailAddress}
+      <p>{ts}Your Personal Campaign Page is now available for public access.{/ts} {ts}Congratulations!{/ts} {ts}You can now openly share the page to gather more donations for your fundraising campaign!{/ts}</p>
+      <p>{ts 1=$pcpInfoURL}Please copy your Personal Campign Page URL %1{/ts}. {ts}Subsequently, you can share your Personal Campaign Page link across various social media platforms to rally friends and family to support this fundraising initiative!{/ts}</p>
+      <p>{ts}Notice: If you are already logged in, clicking the above link will take you to the backend of your personal fundraising page for editing.{/ts} {ts}While general users who have not logged in, clicking the link will simply take them to the completed personal fundraising page where they can proceed to fill out the donation form as usual.{/ts}</p>
+      {if $pcpNotifyEmailAddress}
       <p>{ts}Questions? Send email to{/ts}: {$pcpNotifyEmailAddress}</p>
-     {/if}
+      {/if}
 
     {elseif $pcpStatus eq \'Not Approved\'}
-
-     <p>{ts}Your personal campaign page has been reviewed. There were some issues with the content
+      <p>{ts}Your personal campaign page has been reviewed. There were some issues with the content
 which prevented us from approving the page. We are sorry for any inconvenience.{/ts}</p>
-     {if $pcpNotifyEmailAddress}
+      {if $pcpNotifyEmailAddress}
       <p>{ts}Please contact our site administrator for more information{/ts}: {$pcpNotifyEmailAddress}</p>
-     {/if}
-
+      {/if}
+    {elseif $pcpStatus eq \'Draft\'}
+      <p>{ts}Your Personal Campaign Page has been reviewed by our administrators, and it has been determined that further modifications are needed.{/ts} {ts}As a result, it has been reverted to a draft status.{/ts}<p>
+      {if $pcpNotifyEmailAddress}
+      <p>{ts 1=$pcpNotifyEmailAddress}We recommend reaching out to the administrator at %1 to understand the reasons for the required changes.{/ts}</p>
+      {/if}
+      <p>{ts 1=$loginUrl 2=$pcpInfoURL}You can <a href="%1">log in</a> to the system again to <a href="%2">edit the page</a>.{/ts} {ts}Once the editing is completed, you can resubmit it for administrator review.{/ts}</p>
     {/if}
-
-   </td>
+  </td>
   </tr>
 
- </table>
+</table>
 </center>
 
 </body>
-</html>
-', @tpl_ovid_pcp_status_change, 1,          0),
-      ('Personal Campaign Pages - Supporter Status Change Notification', '{ts 1=$contribPageTitle}Your Personal Campaign Page for %1{/ts}', '{if $pcpStatus eq \'Approved\'}
-============================
-{ts}Your Personal Campaign Page{/ts}
+</html>', @tpl_ovid_pcp_status_change, 1,          0),
+      ('Personal Campaign Pages - Supporter Status Change Notification', '{ts 1=$contribPageTitle}Your Personal Campaign Page for %1{/ts} - {if $pcpStatus eq \'Approved\'}{ts}Is live{/ts}{elseif $pcpStatus eq \'Not Approved\'}{ts}Not Approved{/ts}{elseif $pcpStatus eq \'Draft\'}{ts}Revoke to Draft{/ts}{/if}', '{if $pcpStatus eq \'Approved\'}
+  {ts}Your Personal Campaign Page is now available for public access.{/ts} {ts}Congratulations!{/ts} {ts}You can now openly share the page to gather more donations for your fundraising campaign!{/ts}
+  {ts 1=$pcpInfoURL}Please copy your Personal Campign Page URL %1{/ts}. {ts}Subsequently, you can share your Personal Campaign Page link across various social media platforms to rally friends and family to support this fundraising initiative!{/ts}
+  {ts}Notice: If you are already logged in, clicking the above link will take you to the backend of your personal fundraising page for editing.{/ts} {ts}While general users who have not logged in, clicking the link will simply take them to the completed personal fundraising page where they can proceed to fill out the donation form as usual.{/ts}
 
-============================
+  {if $pcpNotifyEmailAddress}
+  {ts}Questions? Send email to{/ts}: {$pcpNotifyEmailAddress}
+  {/if}
 
-{ts}Your personal campaign page has been approved and is now live.{/ts}
-
-{ts}Whenever you want to preview, update or promote your page{/ts}:
-1. {ts}Login to your account at{/ts}:
-{$loginUrl}
-
-2. {ts}Click or paste this link into your browser to go to your page{/ts}:
-{$pcpInfoURL}
-
-{ts}When you view your campaign page WHILE LOGGED IN, the page includes links to edit
-your page, tell friends, and update your contact info.{/ts}
-
-{if $isTellFriendEnabled}
-
-{ts}After logging in, you can use this form to promote your fundraising page{/ts}:
-{$pcpTellFriendURL}
-
-{/if}
-
-{if $pcpNotifyEmailAddress}
-{ts}Questions? Send email to{/ts}:
-{$pcpNotifyEmailAddress}
-{/if}
-
-{* Rejected message *}
 {elseif $pcpStatus eq \'Not Approved\'}
-============================
-{ts}Your Personal Campaign Page{/ts}
-
-============================
-
-{ts}Your personal campaign page has been reviewed. There were some issues with the content
+  {ts}Your personal campaign page has been reviewed. There were some issues with the content
 which prevented us from approving the page. We are sorry for any inconvenience.{/ts}
-
-{if $pcpNotifyEmailAddress}
-
-{ts}Please contact our site administrator for more information{/ts}:
-{$pcpNotifyEmailAddress}
-{/if}
-
-{/if}
-', '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  {if $pcpNotifyEmailAddress}
+  {ts}Please contact our site administrator for more information{/ts}: {$pcpNotifyEmailAddress}
+  {/if}
+{elseif $pcpStatus eq \'Draft\'}
+  {ts}Your Personal Campaign Page has been reviewed by our administrators, and it has been determined that further modifications are needed.{/ts} {ts}As a result, it has been reverted to a draft status.{/ts}
+  {if $pcpNotifyEmailAddress}
+    {ts 1=pcpNotifyEmailAddress}We recommend reaching out to the administrator at %1 to understand the reasons for the required changes.{/ts}
+  {/if}
+  {ts}Afterward, you can log in to the system again to edit the page.{/ts} {ts}Once the editing is completed, you can resubmit it for administrator review.{/ts}
+  1. {ts}Login to your account{/ts}: {$loginUrl}
+  2. {ts}Edit personal campaign page{/ts}: {$pcpInfoURL}
+{/if}', '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
- <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
- <title></title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title></title>
 </head>
 <body>
 
 <center>
- <table width="620" border="0" cellpadding="0" cellspacing="0" id="crm-event_receipt" style="font-family: Arial, Verdana, sans-serif; text-align: left;">
+<table width="620" border="0" cellpadding="0" cellspacing="0" id="crm-event_receipt" style="font-family: Arial, Verdana, sans-serif; text-align: left;">
 
   <!-- BEGIN HEADER -->
   <!-- You can add table row(s) here with logo or other header elements -->
@@ -9030,113 +8971,66 @@ which prevented us from approving the page. We are sorry for any inconvenience.{
   <!-- BEGIN CONTENT -->
 
   <tr>
-   <td>
-
-    <h1>{ts}Your Personal Campaign Page{/ts}</h1>
-
+  <td>
     {if $pcpStatus eq \'Approved\'}
-
-     <p>{ts}Your personal campaign page has been approved and is now live.{/ts}</p>
-     <p>{ts}Whenever you want to preview, update or promote your page{/ts}:</p>
-     <ol>
-      <li><a href="{$loginUrl}">{ts}Login to your account{/ts}</a></li>
-      <li><a href="{$pcpInfoURL}">{ts}Go to your page{/ts}</a></li>
-     </ol>
-     <p>{ts}When you view your campaign page WHILE LOGGED IN, the page includes links to edit
-your page, tell friends, and update your contact info.{/ts}</p>
-
-     {if $isTellFriendEnabled}
-      <p><a href="{$pcpTellFriendURL}">{ts}After logging in, you can use this form to promote your fundraising page{/ts}</a></p>
-     {/if}
-
-     {if $pcpNotifyEmailAddress}
+      <p>{ts}Your Personal Campaign Page is now available for public access.{/ts} {ts}Congratulations!{/ts} {ts}You can now openly share the page to gather more donations for your fundraising campaign!{/ts}</p>
+      <p>{ts 1=$pcpInfoURL}Please copy your Personal Campign Page URL %1{/ts}. {ts}Subsequently, you can share your Personal Campaign Page link across various social media platforms to rally friends and family to support this fundraising initiative!{/ts}</p>
+      <p>{ts}Notice: If you are already logged in, clicking the above link will take you to the backend of your personal fundraising page for editing.{/ts} {ts}While general users who have not logged in, clicking the link will simply take them to the completed personal fundraising page where they can proceed to fill out the donation form as usual.{/ts}</p>
+      {if $pcpNotifyEmailAddress}
       <p>{ts}Questions? Send email to{/ts}: {$pcpNotifyEmailAddress}</p>
-     {/if}
+      {/if}
 
     {elseif $pcpStatus eq \'Not Approved\'}
-
-     <p>{ts}Your personal campaign page has been reviewed. There were some issues with the content
+      <p>{ts}Your personal campaign page has been reviewed. There were some issues with the content
 which prevented us from approving the page. We are sorry for any inconvenience.{/ts}</p>
-     {if $pcpNotifyEmailAddress}
+      {if $pcpNotifyEmailAddress}
       <p>{ts}Please contact our site administrator for more information{/ts}: {$pcpNotifyEmailAddress}</p>
-     {/if}
-
+      {/if}
+    {elseif $pcpStatus eq \'Draft\'}
+      <p>{ts}Your Personal Campaign Page has been reviewed by our administrators, and it has been determined that further modifications are needed.{/ts} {ts}As a result, it has been reverted to a draft status.{/ts}<p>
+      {if $pcpNotifyEmailAddress}
+      <p>{ts 1=$pcpNotifyEmailAddress}We recommend reaching out to the administrator at %1 to understand the reasons for the required changes.{/ts}</p>
+      {/if}
+      <p>{ts 1=$loginUrl 2=$pcpInfoURL}You can <a href="%1">log in</a> to the system again to <a href="%2">edit the page</a>.{/ts} {ts}Once the editing is completed, you can resubmit it for administrator review.{/ts}</p>
     {/if}
-
-   </td>
+  </td>
   </tr>
 
- </table>
+</table>
 </center>
 
 </body>
-</html>
-', @tpl_ovid_pcp_status_change, 0,          1) ,      
+</html>', @tpl_ovid_pcp_status_change, 0,          1) ,      
       
       
-      ('Personal Campaign Pages - Supporter Welcome', '{ts 1=$contribPageTitle}Your Personal Campaign Page for %1{/ts}', '{ts}Dear supporter{/ts},
-{ts 1="$contribPageTitle"}Thanks for creating a personal campaign page in support of %1.{/ts}
+      ('Personal Campaign Pages - Supporter Welcome', '{ts 1=$contribPageTitle}Your Personal Campaign Page for %1{/ts} - {if $pcpStatus eq \'Approved\'}{ts}Is live{/ts}{elseif $pcpStatus eq \'Waiting Review\'}{ts}Awaiting approval{/ts}{elseif $pcpStatus eq \'Draft\'}{ts}Draft{/ts}{/if}', '{ts 1="$contribPageTitle"}Thanks for creating a personal campaign page in support of %1.{/ts}
 
 {if $pcpStatus eq \'Approved\'}
-====================
-{ts}Promoting Your Page{/ts}
 
-====================
-{if $isTellFriendEnabled}
-
-{ts}You can begin your fundraising efforts using our "Tell a Friend" form{/ts}:
-
-1. {ts}Login to your account at{/ts}:
-{$loginUrl}
-
-2. {ts}Click or paste this link into your browser and follow the prompts{/ts}:
-{$pcpTellFriendURL}
-{else}
-
-{ts}Send email to family, friends and colleagues with a personal message about this campaign.{/ts}
-{ts}Include this link to your fundraising page in your emails{/ts}:
-{$pcpInfoURL}
-{/if}
-
-===================
-{ts}Managing Your Page{/ts}
-
-===================
-{ts}Whenever you want to preview, update or promote your page{/ts}:
-1. {ts}Login to your account at{/ts}:
-{$loginUrl}
-
-2. {ts}Click or paste this link into your browser to go to your page{/ts}:
-{$pcpInfoURL}
-
-{ts}When you view your campaign page WHILE LOGGED IN, the page includes links to edit
-your page, tell friends, and update your contact info.{/ts}
-
+{ts}Your Personal Campaign Page is now available for public access.{/ts} {ts}Congratulations!{/ts} {ts}You can now openly share the page to gather more donations for your fundraising campaign!{/ts}
+{ts 1=$pcpInfoURL}Please copy your Personal Campign Page URL %1{/ts}. {ts}Subsequently, you can share your Personal Campaign Page link across various social media platforms to rally friends and family to support this fundraising initiative!{/ts}
+{ts}Notice: If you are already logged in, clicking the above link will take you to the backend of your personal fundraising page for editing.{/ts} {ts}While general users who have not logged in, clicking the link will simply take them to the completed personal fundraising page where they can proceed to fill out the donation form as usual.{/ts}
 
 {elseif $pcpStatus EQ \'Waiting Review\'}
-{ts}Your page requires administrator review before you can begin your fundraising efforts.{/ts}
 
+{ts}Before you start sharing the Personal Campaign Page and commence fundraising, it needs to obtain approval from the administrator.{/ts}
+{ts}Currently, this page is undergoing the approval process.{/t} {ts 1=$pcpNotifyEmailAddress}Once the review is complete, you will soon receive an approval confirmation email from %1.{/ts} {ts}Upon receiving an approval email, you can begin sharing the page and start fundraising!{/ts}
 
-{ts}A notification email has been sent to the site administrator, and you will receive another notification from them as soon as the review process is complete.{/ts}
+{ts}If you wish to preview the edited fundraising page before administrator approval, please follow these steps:{/ts}
 
-
-{ts}You can still preview your page prior to approval{/ts}:
-1. {ts}Login to your account at{/ts}:
+{ts}Login to your account{/ts}
 {$loginUrl}
 
-2. {ts}Click or paste this link into your browser{/ts}:
+{ts}Preview your personal campaign page{/ts}
 {$pcpInfoURL}
 
-{/if}
 {if $pcpNotifyEmailAddress}
-{ts}Questions? Send email to{/ts}:
-{$pcpNotifyEmailAddress}
-{/if}
-', '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+{ts}Questions? Send email to{/ts}: {$pcpNotifyEmailAddress}
+{/if}', '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
- <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
- <title></title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title></title>
 </head>
 <body>
 
@@ -9145,7 +9039,7 @@ your page, tell friends, and update your contact info.{/ts}
 {capture assign=valueStyle }style="padding: 4px; border-bottom: 1px solid #999;"{/capture}
 
 <center>
- <table width="620" border="0" cellpadding="0" cellspacing="0" id="crm-event_receipt" style="font-family: Arial, Verdana, sans-serif; text-align: left;">
+<table width="620" border="0" cellpadding="0" cellspacing="0" id="crm-event_receipt" style="font-family: Arial, Verdana, sans-serif; text-align: left;">
 
   <!-- BEGIN HEADER -->
   <!-- You can add table row(s) here with logo or other header elements -->
@@ -9154,148 +9048,83 @@ your page, tell friends, and update your contact info.{/ts}
   <!-- BEGIN CONTENT -->
 
   <tr>
-   <td>
-    <p>{ts}Dear supporter{/ts},</p>
+    <td>
     <p>{ts 1="$contribPageTitle"}Thanks for creating a personal campaign page in support of %1.{/ts}</p>
-   </td>
+    </td>
   </tr>
 
   {if $pcpStatus eq \'Approved\'}
-
     <tr>
-     <td>
-      <table style="border: 1px solid #999; margin: 1em 0em 1em; border-collapse: collapse; width:100%;">
-       <tr>
-        <th {$headerStyle}>
-         {ts}Promoting Your Page{/ts}
-        </th>
-       </tr>
-       <tr>
-        <td colspan="2" {$valueStyle}>
-         {if $isTellFriendEnabled}
-          <p>{ts}You can begin your fundraising efforts using our "Tell a Friend" form{/ts}:</p>
-          <ol>
-           <li><a href="{$loginUrl}">{ts}Login to your account{/ts}</a></li>
-           <li><a href="{$pcpTellFriendURL}">{ts}Click this link and follow the prompts{/ts}</a></li>
-          </ol>
-         {else}
-          <p>{ts}Send email to family, friends and colleagues with a personal message about this campaign.{/ts} {ts}Include this link to your fundraising page in your emails{/ts}: {$pcpInfoURL}</p>
-         {/if}
-        </td>
-       </tr>
-       <tr>
-        <th {$headerStyle}>
-         {ts}Managing Your Page{/ts}
-        </th>
-       <tr>
-        <td colspan="2" {$valueStyle}>
-         <p>{ts}Whenever you want to preview, update or promote your page{/ts}:</p>
-         <ol>
-          <li><a href="{$loginUrl}">{ts}Login to your account{/ts}</a></li>
-          <li><a href="{$pcpInfoURL}">{ts}Go to your page{/ts}</a></li>
-         </ol>
-         <p>{ts}When you view your campaign page WHILE LOGGED IN, the page includes links to edit
-your page, tell friends, and update your contact info.{/ts}</p>
-        </td>
-       </tr>
-       </tr>
-      </table>
-     </td>
+      <td>
+      <p>{ts}Your Personal Campaign Page is now available for public access.{/ts} {ts}Congratulations!{/ts} {ts}You can now openly share the page to gather more donations for your fundraising campaign!{/ts}</p>
+      <p>{ts 1=$pcpInfoURL}Please copy your Personal Campign Page URL %1{/ts}. {ts}Subsequently, you can share your Personal Campaign Page link across various social media platforms to rally friends and family to support this fundraising initiative!{/ts}</p>
+      <p>{ts}Notice: If you are already logged in, clicking the above link will take you to the backend of your personal fundraising page for editing.{/ts} {ts}While general users who have not logged in, clicking the link will simply take them to the completed personal fundraising page where they can proceed to fill out the donation form as usual.{/ts}</p>
+      </td>
     </tr>
 
-   {elseif $pcpStatus EQ \'Waiting Review\'}
-
+  {elseif $pcpStatus eq \'Waiting Review\'}
     <tr>
-     <td>
-      <p>{ts}Your page requires administrator review before you can begin your fundraising efforts.{/ts}</p>
-      <p>{ts}A notification email has been sent to the site administrator, and you will receive another notification from them as soon as the review process is complete.{/ts}</p>
-      <p>{ts}You can still preview your page prior to approval{/ts}:</p>
+      <td>
+      <p>{ts}Before you start sharing the Personal Campaign Page and commence fundraising, it needs to obtain approval from the administrator.{/ts}</p>
+      <p>{ts}Currently, this page is undergoing the approval process.{/ts} {ts 1=$pcpNotifyEmailAddress}Once the review is complete, you will soon receive an approval confirmation email from %1.{/ts} {ts}Upon receiving an approval email, you can begin sharing the page and start fundraising!{/ts}</p>
+
+      <p>{ts}If you wish to preview the edited fundraising page before administrator approval, please follow these steps:{/ts}</p>
       <ol>
-       <li><a href="{$loginUrl}">{ts}Login to your account{/ts}</a></li>
-       <li><a href="{$pcpInfoURL}">{ts}Click this link{/ts}</a></li>
+        <li><a href="{$loginUrl}">{ts}Login to your account{/ts}</a></li>
+        <li><a href="{$pcpInfoURL}">{ts}Preview your personal campaign page{/ts}</a></li>
       </ol>
-     </td>
+
+      {if $pcpNotifyEmailAddress}
+        <tr>
+          <td>
+          <p>{ts}Questions? Send email to{/ts}: {$pcpNotifyEmailAddress}</p>
+          </td>
+        </tr>
+      {/if}
+    </td>
     </tr>
-
-   {/if}
-
-   {if $pcpNotifyEmailAddress}
+  {elseif $pcpStatus eq \'Draft\'}
     <tr>
-     <td>
-      <p>{ts}Questions? Send email to{/ts}: {$pcpNotifyEmailAddress}</p>
-     </td>
+      <td>
+      <p>{ts}You have currently saved this page as a draft and it has not been submitted yet.{/ts}</p>
+      <p>{ts 1=$loginUrl 2=$pcpInfoURL}To continue editing this page, please <a href="%1">log in</a> then you can further edit <a href="%2">your Personal Campaign Page</a>.{/ts}</p>
+      </td>
     </tr>
-   {/if}
+  {/if}
 
- </table>
+</table>
 </center>
 
 </body>
-</html>
-', @tpl_ovid_pcp_supporter_notify, 1,          0),
-      ('Personal Campaign Pages - Supporter Welcome', '{ts 1=$contribPageTitle}Your Personal Campaign Page for %1{/ts}', '{ts}Dear supporter{/ts},
-{ts 1="$contribPageTitle"}Thanks for creating a personal campaign page in support of %1.{/ts}
+</html>', @tpl_ovid_pcp_supporter_notify, 1,          0),
+      ('Personal Campaign Pages - Supporter Welcome', '{ts 1=$contribPageTitle}Your Personal Campaign Page for %1{/ts} - {if $pcpStatus eq \'Approved\'}{ts}Is live{/ts}{elseif $pcpStatus eq \'Waiting Review\'}{ts}Awaiting approval{/ts}{elseif $pcpStatus eq \'Draft\'}{ts}Draft{/ts}{/if}', '{ts 1="$contribPageTitle"}Thanks for creating a personal campaign page in support of %1.{/ts}
 
 {if $pcpStatus eq \'Approved\'}
-====================
-{ts}Promoting Your Page{/ts}
 
-====================
-{if $isTellFriendEnabled}
-
-{ts}You can begin your fundraising efforts using our "Tell a Friend" form{/ts}:
-
-1. {ts}Login to your account at{/ts}:
-{$loginUrl}
-
-2. {ts}Click or paste this link into your browser and follow the prompts{/ts}:
-{$pcpTellFriendURL}
-{else}
-
-{ts}Send email to family, friends and colleagues with a personal message about this campaign.{/ts}
-{ts}Include this link to your fundraising page in your emails{/ts}:
-{$pcpInfoURL}
-{/if}
-
-===================
-{ts}Managing Your Page{/ts}
-
-===================
-{ts}Whenever you want to preview, update or promote your page{/ts}:
-1. {ts}Login to your account at{/ts}:
-{$loginUrl}
-
-2. {ts}Click or paste this link into your browser to go to your page{/ts}:
-{$pcpInfoURL}
-
-{ts}When you view your campaign page WHILE LOGGED IN, the page includes links to edit
-your page, tell friends, and update your contact info.{/ts}
-
+{ts}Your Personal Campaign Page is now available for public access.{/ts} {ts}Congratulations!{/ts} {ts}You can now openly share the page to gather more donations for your fundraising campaign!{/ts}
+{ts 1=$pcpInfoURL}Please copy your Personal Campign Page URL %1{/ts}. {ts}Subsequently, you can share your Personal Campaign Page link across various social media platforms to rally friends and family to support this fundraising initiative!{/ts}
+{ts}Notice: If you are already logged in, clicking the above link will take you to the backend of your personal fundraising page for editing.{/ts} {ts}While general users who have not logged in, clicking the link will simply take them to the completed personal fundraising page where they can proceed to fill out the donation form as usual.{/ts}
 
 {elseif $pcpStatus EQ \'Waiting Review\'}
-{ts}Your page requires administrator review before you can begin your fundraising efforts.{/ts}
 
+{ts}Before you start sharing the Personal Campaign Page and commence fundraising, it needs to obtain approval from the administrator.{/ts}
+{ts}Currently, this page is undergoing the approval process.{/t} {ts 1=$pcpNotifyEmailAddress}Once the review is complete, you will soon receive an approval confirmation email from %1.{/ts} {ts}Upon receiving an approval email, you can begin sharing the page and start fundraising!{/ts}
 
-{ts}A notification email has been sent to the site administrator, and you will receive another notification from them as soon as the review process is complete.{/ts}
+{ts}If you wish to preview the edited fundraising page before administrator approval, please follow these steps:{/ts}
 
-
-{ts}You can still preview your page prior to approval{/ts}:
-1. {ts}Login to your account at{/ts}:
+{ts}Login to your account{/ts}
 {$loginUrl}
 
-2. {ts}Click or paste this link into your browser{/ts}:
+{ts}Preview your personal campaign page{/ts}
 {$pcpInfoURL}
 
-{/if}
 {if $pcpNotifyEmailAddress}
-{ts}Questions? Send email to{/ts}:
-{$pcpNotifyEmailAddress}
-{/if}
-', '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+{ts}Questions? Send email to{/ts}: {$pcpNotifyEmailAddress}
+{/if}', '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
- <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
- <title></title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title></title>
 </head>
 <body>
 
@@ -9304,7 +9133,7 @@ your page, tell friends, and update your contact info.{/ts}
 {capture assign=valueStyle }style="padding: 4px; border-bottom: 1px solid #999;"{/capture}
 
 <center>
- <table width="620" border="0" cellpadding="0" cellspacing="0" id="crm-event_receipt" style="font-family: Arial, Verdana, sans-serif; text-align: left;">
+<table width="620" border="0" cellpadding="0" cellspacing="0" id="crm-event_receipt" style="font-family: Arial, Verdana, sans-serif; text-align: left;">
 
   <!-- BEGIN HEADER -->
   <!-- You can add table row(s) here with logo or other header elements -->
@@ -9313,85 +9142,55 @@ your page, tell friends, and update your contact info.{/ts}
   <!-- BEGIN CONTENT -->
 
   <tr>
-   <td>
-    <p>{ts}Dear supporter{/ts},</p>
+    <td>
     <p>{ts 1="$contribPageTitle"}Thanks for creating a personal campaign page in support of %1.{/ts}</p>
-   </td>
+    </td>
   </tr>
 
   {if $pcpStatus eq \'Approved\'}
-
     <tr>
-     <td>
-      <table style="border: 1px solid #999; margin: 1em 0em 1em; border-collapse: collapse; width:100%;">
-       <tr>
-        <th {$headerStyle}>
-         {ts}Promoting Your Page{/ts}
-        </th>
-       </tr>
-       <tr>
-        <td colspan="2" {$valueStyle}>
-         {if $isTellFriendEnabled}
-          <p>{ts}You can begin your fundraising efforts using our "Tell a Friend" form{/ts}:</p>
-          <ol>
-           <li><a href="{$loginUrl}">{ts}Login to your account{/ts}</a></li>
-           <li><a href="{$pcpTellFriendURL}">{ts}Click this link and follow the prompts{/ts}</a></li>
-          </ol>
-         {else}
-          <p>{ts}Send email to family, friends and colleagues with a personal message about this campaign.{/ts} {ts}Include this link to your fundraising page in your emails{/ts}: {$pcpInfoURL}</p>
-         {/if}
-        </td>
-       </tr>
-       <tr>
-        <th {$headerStyle}>
-         {ts}Managing Your Page{/ts}
-        </th>
-       <tr>
-        <td colspan="2" {$valueStyle}>
-         <p>{ts}Whenever you want to preview, update or promote your page{/ts}:</p>
-         <ol>
-          <li><a href="{$loginUrl}">{ts}Login to your account{/ts}</a></li>
-          <li><a href="{$pcpInfoURL}">{ts}Go to your page{/ts}</a></li>
-         </ol>
-         <p>{ts}When you view your campaign page WHILE LOGGED IN, the page includes links to edit
-your page, tell friends, and update your contact info.{/ts}</p>
-        </td>
-       </tr>
-       </tr>
-      </table>
-     </td>
+      <td>
+      <p>{ts}Your Personal Campaign Page is now available for public access.{/ts} {ts}Congratulations!{/ts} {ts}You can now openly share the page to gather more donations for your fundraising campaign!{/ts}</p>
+      <p>{ts 1=$pcpInfoURL}Please copy your Personal Campign Page URL %1{/ts}. {ts}Subsequently, you can share your Personal Campaign Page link across various social media platforms to rally friends and family to support this fundraising initiative!{/ts}</p>
+      <p>{ts}Notice: If you are already logged in, clicking the above link will take you to the backend of your personal fundraising page for editing.{/ts} {ts}While general users who have not logged in, clicking the link will simply take them to the completed personal fundraising page where they can proceed to fill out the donation form as usual.{/ts}</p>
+      </td>
     </tr>
 
-   {elseif $pcpStatus EQ \'Waiting Review\'}
-
+  {elseif $pcpStatus eq \'Waiting Review\'}
     <tr>
-     <td>
-      <p>{ts}Your page requires administrator review before you can begin your fundraising efforts.{/ts}</p>
-      <p>{ts}A notification email has been sent to the site administrator, and you will receive another notification from them as soon as the review process is complete.{/ts}</p>
-      <p>{ts}You can still preview your page prior to approval{/ts}:</p>
+      <td>
+      <p>{ts}Before you start sharing the Personal Campaign Page and commence fundraising, it needs to obtain approval from the administrator.{/ts}</p>
+      <p>{ts}Currently, this page is undergoing the approval process.{/ts} {ts 1=$pcpNotifyEmailAddress}Once the review is complete, you will soon receive an approval confirmation email from %1.{/ts} {ts}Upon receiving an approval email, you can begin sharing the page and start fundraising!{/ts}</p>
+
+      <p>{ts}If you wish to preview the edited fundraising page before administrator approval, please follow these steps:{/ts}</p>
       <ol>
-       <li><a href="{$loginUrl}">{ts}Login to your account{/ts}</a></li>
-       <li><a href="{$pcpInfoURL}">{ts}Click this link{/ts}</a></li>
+        <li><a href="{$loginUrl}">{ts}Login to your account{/ts}</a></li>
+        <li><a href="{$pcpInfoURL}">{ts}Preview your personal campaign page{/ts}</a></li>
       </ol>
-     </td>
+
+      {if $pcpNotifyEmailAddress}
+        <tr>
+          <td>
+          <p>{ts}Questions? Send email to{/ts}: {$pcpNotifyEmailAddress}</p>
+          </td>
+        </tr>
+      {/if}
+    </td>
     </tr>
-
-   {/if}
-
-   {if $pcpNotifyEmailAddress}
+  {elseif $pcpStatus eq \'Draft\'}
     <tr>
-     <td>
-      <p>{ts}Questions? Send email to{/ts}: {$pcpNotifyEmailAddress}</p>
-     </td>
+      <td>
+      <p>{ts}You have currently saved this page as a draft and it has not been submitted yet.{/ts}</p>
+      <p>{ts 1=$loginUrl 2=$pcpInfoURL}To continue editing this page, please <a href="%1">log in</a> then you can further edit <a href="%2">your Personal Campaign Page</a>.{/ts}</p>
+      </td>
     </tr>
-   {/if}
+  {/if}
 
- </table>
+</table>
 </center>
 
 </body>
-</html>
-', @tpl_ovid_pcp_supporter_notify, 0,          1) ,      
+</html>', @tpl_ovid_pcp_supporter_notify, 0,          1) ,      
       
       
       ('Contributions - Recurring Failed Notification', '{ts}Recurring Failed Notification{/ts}', '{ts}Recurring Failed Notification{/ts}

@@ -964,9 +964,8 @@ class CRM_Utils_System {
     $config = CRM_Core_Config::singleton();
     $req_headers = CRM_Utils_System::getRequestHeaders();
     if ($config->enableSSL &&
-       (!isset($_SERVER['HTTPS']) || strtolower($_SERVER['HTTPS']) == 'off') &&
-       strtolower($req_headers['X_FORWARDED_PROTO']) != 'https'
-    ) {
+      (!isset($_SERVER['HTTPS']) || strtolower($_SERVER['HTTPS']) == 'off') &&
+      strtolower($req_headers['X_FORWARDED_PROTO']) != 'https' ) {
       // ensure that SSL is enabled on a civicrm url (for cookie reasons etc)
       $url = "https://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
       if (!self::checkURL($url, TRUE)) {
@@ -975,8 +974,6 @@ class CRM_Utils_System {
         }
         else {
           CRM_Core_Session::setStatus('HTTPS is not set up on this machine');
-          // admin should be the only one following this
-          // since we dont want the user stuck in a bad place
           return;
         }
       }
@@ -1577,7 +1574,7 @@ class CRM_Utils_System {
   /**
    * Get CMS public or private or temp dir
    *
-   * @return boolean.
+   * @return string
    */
   public static function cmsDir($type) {
     return CRM_Core_Config::$_userSystem->cmsDir($type);
@@ -1586,7 +1583,7 @@ class CRM_Utils_System {
   /**
    * Get CMS public or private or temp dir
    *
-   * @return boolean.
+   * @return string
    */
   public static function cmsRootPath() {
     return CRM_Core_Config::$_userSystem->cmsRootPath();
@@ -1700,22 +1697,24 @@ class CRM_Utils_System {
 
     $isUcBrowser = preg_match('/UCBrowser\//i', $useragent);
     if ($isUcBrowser) {
-      preg_match('/UCBrowser\/(\d+)\.(\d+)\.(\d+)[\.\d]* /i', $useragent, $ucVersion);
-      if ($ucVersion[1] < 12) { // major
-        return FALSE;
-      }
-      if ($ucVersion[2] < 13) { // minor
-        return FALSE;
-      }
-      if ($ucVersion[3] < 2) { // buil
-        return FALSE;
+      if(preg_match('/UCBrowser\/(\d+)\.(\d+)\.(\d+)[\.\d]* /i', $useragent, $ucVersion)) {
+        if ($ucVersion[1] < 12) { // major
+          return FALSE;
+        }
+        if ($ucVersion[2] < 13) { // minor
+          return FALSE;
+        }
+        if ($ucVersion[3] < 2) { // buil
+          return FALSE;
+        }
       }
     }
 
     if ($isChromiumBased) {
-      preg_match('/Chrome\/(\d+)\.(\d+)\.(\d+)[\.\d]* /i', $useragent, $chVersion);
-      if ($chVersion[1] >= 51 && $chVersion[1] <= 66) {
-        return FALSE;
+      if (preg_match('/Chrome\/(\d+)\.(\d+)\.(\d+)[\.\d]* /i', $useragent, $chVersion)) {
+        if ($chVersion[1] >= 51 && $chVersion[1] <= 66) {
+          return FALSE;
+        }
       }
     }
     return TRUE;

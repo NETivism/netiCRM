@@ -82,21 +82,9 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
     }
 
     $tableName = $this->get('importTableName');
-    $fileName = str_replace('civicrm_import_job_', 'import_', $tableName);
-    if ($invalidRowCount) {
-      $urlParams = 'type=' . CRM_Import_Parser::ERROR . '&parser=CRM_Import_Parser&file='.$fileName;
-      $this->set('downloadErrorRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
-    }
-
-    if ($conflictRowCount) {
-      $urlParams = 'type=' . CRM_Import_Parser::CONFLICT . '&parser=CRM_Import_Parser&file='.$fileName;
-      $this->set('downloadConflictRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
-    }
-
-    if ($mismatchCount) {
-      $urlParams = 'type=' . CRM_Import_Parser::NO_MATCH . '&parser=CRM_Import_Parser&file='.$fileName;
-      $this->set('downloadMismatchRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
-    }
+    $prefix = str_replace('civicrm_import_job', CRM_Import_Parser::ERROR_FILE_PREFIX, $tableName);
+    $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String', $this);
+    CRM_Import_Parser::setImportErrorFilenames($qfKey, array('error', 'conflict','no_match'), 'CRM_Import_Parser', $prefix, $this);
 
     $properties = array('mapper', 'locations', 'phones', 'ims',
       'dataValues', 'columnCount',
@@ -327,17 +315,6 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
       fclose($fd);
 
       $this->set('errorFile', $errorFile);
-
-      $tableName = $this->get('importTableName');
-      $fileName = str_replace('civicrm_import_job_', 'import_', $tableName);
-      $urlParams = 'type=' . CRM_Import_Parser::ERROR . '&parser=CRM_Import_Parser&file='.$fileName;
-      $this->set('downloadErrorRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
-
-      $urlParams = 'type=' . CRM_Import_Parser::CONFLICT . '&parser=CRM_Import_Parser&file='.$fileName;
-      $this->set('downloadConflictRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
-
-      $urlParams = 'type=' . CRM_Import_Parser::NO_MATCH . '&parser=CRM_Import_Parser&file='.$fileName;
-      $this->set('downloadMismatchRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
     }
 
     //do not drop table, leave it to auto purge

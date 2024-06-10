@@ -172,6 +172,12 @@ class CRM_Utils_Rule {
       $url = $scheme.'://' . $_SERVER['HTTP_HOST'] . $url;
     }
     $valid = (bool) filter_var($url, FILTER_VALIDATE_URL);
+    if (!$valid) {
+      $parts = parse_url($url);
+      if (!empty($parts['scheme']) && !empty($parts['host'])) {
+        $valid = TRUE;
+      }
+    }
 
     if (!in_array(substr($url, 0, 5), array('http:', 'https'))) {
       $valid = FALSE;
@@ -963,6 +969,34 @@ class CRM_Utils_Rule {
       }
     }
     return true;
+  }
+
+  /**
+   * Check Directory Name
+   *
+   * @param string $name
+   * @return bool
+   */
+  public static function directoryName($name) {
+    $dirName = CRM_Utils_File::sanitizeDirectoryName($name);
+    if ($dirName == $name) {
+      return TRUE;
+    }
+    return FALSE;
+  }
+
+  /**
+   * Check File Name
+   *
+   * @param string $name
+   * @return bool
+   */
+  public static function fileName($name) {
+    $fileName = CRM_Utils_File::sanitizeFileName($name);
+    if ($fileName == $name) {
+      return TRUE;
+    }
+    return FALSE;
   }
 }
 

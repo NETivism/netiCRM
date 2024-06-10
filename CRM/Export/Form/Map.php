@@ -140,7 +140,7 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
   static function formRule($fields, $values, $mappingTypeId) {
     $errors = array();
 
-    if (CRM_Utils_Array::value('saveMapping', $fields) && $fields['_qf_Map_next']) {
+    if (CRM_Utils_Array::value('saveMapping', $fields)) {
       $nameField = CRM_Utils_Array::value('saveMappingName', $fields);
       if (empty($nameField)) {
         $errors['saveMappingName'] = ts('Name is required to save Export Mapping');
@@ -219,12 +219,14 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
     }
 
     if ($buttonName1 == '_qf_Map_next') {
-      if ($this->get('mappingId') && !empty($params['saveMappingName'])) {
-        $params['mappingId'] = $this->get('mappingId');
-        $params['updateMapping'] = 1;
-        unset($params['saveMapping']);
+      if (!empty($params['saveMapping']) && !empty($params['saveMappingName'])) {
+        $params['updateMapping'] = 0;
+        $this->updateAndSaveMapping($params);
       }
-      $this->updateAndSaveMapping($params);
+      elseif (!empty($params['updateMapping']) && !empty($this->get('mappingId'))) {
+        $params['mappingId'] = $this->get('mappingId');
+        $this->updateAndSaveMapping($params);
+      }
     }
 
     //get the csv file

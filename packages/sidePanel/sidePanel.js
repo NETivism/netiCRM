@@ -194,21 +194,6 @@
             _nspContent = "<iframe src='" + _nspSrc + "' class='nsp-iframe' frameborder='0' allowfullscreen></iframe>";
           }
           break;
-
-        case "remote_dom":
-          if (_isValidHttpUrl(_nspSrc)) {
-            $.get(_nspSrc, function(data) {
-              if ($(data).find(".node__content .field--name-body").length) {
-                _nspContent = $(data).find(".node__content .field--name-body").html();
-              }
-
-              if ($(data).find(".field-name-body").length) {
-                _nspContent = $(data).find(".field-name-body").html();
-                $(_container).find(_content).find(_inner).html(_nspContent);
-              }
-            });
-          }
-          break;
       }
 
       $(_container).find(_content).find(_inner).html(_nspContent);

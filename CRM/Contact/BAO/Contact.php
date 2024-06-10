@@ -395,7 +395,7 @@ class CRM_Contact_BAO_Contact extends CRM_Contact_DAO_Contact {
     // #30818, we have serious deadlock issue, should never doing cache reset every contact create
     if (empty($config->doNotResetGroupContactCache)) {
       // check previous purge date from this source, trigger cache remove at least over 3 minutes
-      $createdTime = CRM_REQUEST_TIME - 60*CRM_Contact_BAO_GroupContactCache::SMARTGROUP_CACHE_TIMEOUT_MINIMAL;
+      $createdTime = CRM_REQUEST_TIME - CRM_Contact_BAO_GroupContactCache::SMARTGROUP_CACHE_TIMEOUT_MINIMAL;
       $alreadyPurged = CRM_Core_BAO_Cache::getItem('GroupContactCache', 'CreateContactPurgeFlag', $createdTime);
       if (empty($alreadyPurged)) {
         CRM_Contact_BAO_GroupContactCache::remove();
@@ -851,13 +851,13 @@ WHERE id={$id}; ";
     require_once 'CRM/Utils/Request.php';
     require_once 'CRM/Core/DAO.php';
 
-    $action = CRM_Utils_Request::retrieve('action', 'String', $this);
-    $cid = CRM_Utils_Request::retrieve('cid', 'Positive', $this);
+    $action = CRM_Utils_Request::retrieve('action', 'String', CRM_Core_DAO::$_nullObject);
+    $cid = CRM_Utils_Request::retrieve('cid', 'Positive', CRM_Core_DAO::$_nullObject);
     // retrieve contact id in case of Profile context
-    $id = CRM_Utils_Request::retrieve('id', 'Positive', $this);
+    $id = CRM_Utils_Request::retrieve('id', 'Positive', CRM_Core_DAO::$_nullObject);
     $cid = $cid ? $cid : $id;
     if ($action & CRM_Core_Action::DELETE) {
-      if (CRM_Utils_Request::retrieve('confirmed', 'Boolean', $this)) {
+      if (CRM_Utils_Request::retrieve('confirmed', 'Boolean',CRM_Core_DAO::$_nullObject)) {
         CRM_Contact_BAO_Contact::deleteContactImage($cid);
         CRM_Core_Session::setStatus(ts('Contact Image is deleted successfully'));
         $session = CRM_Core_Session::singleton();

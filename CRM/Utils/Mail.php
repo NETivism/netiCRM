@@ -36,6 +36,8 @@
 class CRM_Utils_Mail {
 
   const DMARC_MAIL_PROVIDERS = 'yahoo.com|gmail.com|msn.com|outlook.com|hotmail.com';
+  const DKIM_EXTERNAL_VERIFIED_FILE = 'verified_external_dkim.config';
+  const RFC_2822_SPECIAL_CHARS = '()<>[]:;@\,."';
 
   /**
    * Wrapper function to send mail in CiviCRM. Hooks are called from this function.
@@ -106,10 +108,18 @@ class CRM_Utils_Mail {
     }
 
     $headers = array();
-    $headers['From'] = $params['from'];
-    $headers['To'] = "{$params['toName']} <{$params['toEmail']}>";
-    $headers['Cc'] = CRM_Utils_Array::value('cc', $params);
-    $headers['Bcc'] = CRM_Utils_Array::value('bcc', $params);
+    if (self::checkRFC822Email($params['from'])) {
+      $headers['From'] = $params['from'];
+    }
+    else {
+      $fromName = self::pluckNameFromHeader($params['from']);
+      $fromEmail = self::pluckEmailFromHeader($params['from']);
+      $headers['From'] = self::formatRFC822Email($fromName, $fromEmail);
+    }
+    $headers['To'] = self::formatRFC822Email($params['toName'], $params['toEmail']);
+    // TODO: check cc / bcc have correct format
+    $headers['Cc'] = !empty($params['cc']) ? self::checkEmails(CRM_Utils_Array::value('cc', $params)) : '';
+    $headers['Bcc'] = !empty($params['bcc']) ? self::checkEmails(CRM_Utils_Array::value('bcc', $params)) : '';
     $headers['Subject'] = CRM_Utils_Array::value('subject', $params);
     $headers['Content-Type'] = $htmlMessage ? 'multipart/mixed; charset=utf-8' : 'text/plain; charset=utf-8';
     $headers['Content-Disposition'] = 'inline';
@@ -382,37 +392,95 @@ class CRM_Utils_Mail {
     return $message->get($params);
   }
 
-  static function formatRFC822Email($name, $email, $useQuote = FALSE) {
-    $result = NULL;
+  /**
+   * Check and remove incorrect emails
+   *
+   * @param string|array $mails
+   * @return string
+   */
+  public static function checkEmails($mails) {
+    $mailArray = array();
+    if (is_string($mails)) {
+      preg_match_all('/(?:"[^"]*"|[^,])+/u', $mails, $matches);
+      if (!empty($matches[0])) {
+        $mailArray = $matches[0];
+      }
+    }
+    elseif (is_array($mails)) {
+      $mailArray = $mails;
+    }
+    $checked = array();
+    foreach($mailArray as $address) {
+      $address = trim($address);
+      if (strstr($address, '<') && strstr($address, '>')) {
+        $name = self::pluckNameFromHeader($address);
+        $email = self::pluckEmailFromHeader($address);
+        $formatted = self::formatRFC822Email($name, $email);
+        if (!empty($formatted)) {
+          $checked[] = $formatted;
+        }
+      }
+      else {
+        if (CRM_Utils_Rule::email($address)) {
+          $checked[] = '<'.$address.'>';
+        }
+      }
+    }
+    if (!empty($checked)) {
+      return implode(', ', $checked);
+    }
+    return '';
+  }
 
-    $name = trim($name);
+  public static function checkRFC822Email($address) {
+    $address = trim($address);
+    if (strstr($address, '<') && strstr($address, '>')) {
+      $name = self::pluckNameFromHeader($address);
+      $email = self::pluckEmailFromHeader($address);
+    }
+    else {
+      $name = '';
+      $email = trim($address);
+    }
+    if (!empty($name) && preg_match('/[' . preg_quote(self::RFC_2822_SPECIAL_CHARS) . ']/u', $name)) {
+      // check the name already quoted
+      if (!preg_match('/^"[^"]+"\s*<[^>]+@[^>]+>/i', $address)) {
+        return FALSE;
+      }
+    }
+    if (!CRM_Utils_Rule::email($email)) {
+      return FALSE;
+    }
+    return TRUE;
+  }
+
+  static function formatRFC822Email($name, $email, $useQuote = TRUE) {
+    $result = '';
+    $email = CRM_Utils_Type::escape($email, 'Email', FALSE);
+    if (empty($email)) {
+      return '';
+    }
 
     // strip out double quotes if present at the beginning AND end
-    if (substr($name, 0, 1) == '"' &&
-      substr($name, -1, 1) == '"'
-    ) {
+    if (substr($name, 0, 1) == '"' && substr($name, -1, 1) == '"') {
       $name = substr($name, 1, -1);
     }
-
     if (!empty($name)) {
-      // escape the special characters
-      $name = str_replace(array('<', '"', '>'),
-        array('\<', '\"', '\>'),
-        $name
-      );
-      if (strpos($name, ',') !== FALSE ||
-        $useQuote
-      ) {
-        // quote the string if it has a comma
-        $name = '"' . $name . '"';
+      $name = self::sanitizeName($name);
+      if (!empty($name)) {
+        if (preg_match('/[' . preg_quote(self::RFC_2822_SPECIAL_CHARS) . ']/u', $name)) {
+          $useQuote = TRUE;
+        }
+        if ($useQuote) {
+          $name = '"' . $name . '"';
+        }
+        $result = $name.' ';
       }
-
-      $result = "$name ";
     }
-
     $result .= "<{$email}>";
     return $result;
   }
+
 
   static function checkMailProviders($email) {
     $mailProviders = str_replace('.', '\.', self::DMARC_MAIL_PROVIDERS);
@@ -583,6 +651,143 @@ class CRM_Utils_Mail {
       }
     }
     return FALSE;
+  }
+
+  /**
+   * Get valid DKIM domain list via verified from email addr
+   *
+   * @param string $savePath if given, list will save to specify file name into system path
+   * @return array
+   */
+  public static function validDKIMDomainList($externalOnly = FALSE, $saveFile = NULL) {
+    global $civicrm_conf;
+    if (empty($civicrm_conf['mailing_dkim_domain']) || empty($civicrm_conf['mailing_dkim_selector'])) {
+      return NULL;
+    }
+    $defaultFrom = CRM_Mailing_BAO_Mailing::defaultFromMail();
+    $defaultDomain = substr($defaultFrom, strpos($defaultFrom, '@')+1);
+    if ($saveFile) {
+      $confPath = CRM_Utils_System::cmsRootPath().DIRECTORY_SEPARATOR.CRM_Utils_System::confPath().DIRECTORY_SEPARATOR;
+      $savePath = $confPath.basename($saveFile);
+      $existsDomains = array();
+      if (file_exists($savePath)) {
+        $existsList = file_get_contents($savePath);
+        $existsDomains = explode("\n", $existsList);
+      }
+    }
+
+    $validType = CRM_Admin_Form_FromEmailAddress::VALID_EMAIL | CRM_Admin_Form_FromEmailAddress::VALID_SPF | CRM_Admin_Form_FromEmailAddress::VALID_DKIM;
+    $verifiedDomains = CRM_Admin_Form_FromEmailAddress::getVerifiedEmail($validType, 'domain');
+    foreach($verifiedDomains as $idx => $domain) {
+      if ($externalOnly && preg_match('/'.preg_quote($defaultDomain).'$/', $domain)) {
+        unset($verifiedDomains[$idx]);
+      }
+      $isValid = FALSE;
+
+      // do not trigger dns query when list exists
+      if (in_array($domain, $existsDomains)) {
+        $isValid = TRUE;
+      }
+      // this will do dns query
+      else {
+        $isValid = self::checkDKIM($domain);
+      }
+      if (!$isValid) {
+        unset($verifiedDomains[$idx]);
+      }
+    }
+    if (!empty($verifiedDomains)) {
+      if ($savePath) {
+        $addDomains = array_diff($verifiedDomains, $existsDomains);
+        if (!empty($addDomains)) {
+          $file = fopen($savePath, 'w');
+          if ($file !== FALSE) {
+            $written = fwrite($file, implode("\n", $verifiedDomains));
+            if (!$written) {
+              CRM_Core_Error::debug_log_message('File save failed: '.$savePath);
+            }
+            fclose($file);
+          }
+          else {
+            CRM_Core_Error::debug_log_message('Could not open file to save: '.$savePath);
+          }
+          if (file_exists($savePath)) {
+            CRM_Utils_File::chmod($savePath, 0666);
+          }
+        }
+      }
+      return $verifiedDomains;
+    }
+    return array();
+  }
+
+  /**
+   * Sanitize Email for compatible with RFC822 / RFC2822
+   *
+   * @param string $email
+   * @return string return empty string when false
+   */
+  public static function sanitizeEmail($email) {
+    $sanitized = '';
+    $email = trim($email);
+    $filtered = filter_var($email, FILTER_SANITIZE_EMAIL);
+
+    // still not ok, try sanitize harder
+    if (!CRM_Utils_Rule::email($filtered)) {
+      list($local, $domain) = explode('@', $filtered, 2);
+      $local = preg_replace('/[^a-zA-Z0-9!#$%&\'*+\/=?^_`{|}~\.-]/', '', $local);
+      $local = strtolower($local);
+
+      // no any name part left, definitely error
+      if ($local === '') {
+        return $sanitized;
+      }
+
+      $domain = trim($domain, " \t\n\r\0\x0B.");
+      if ($domain === '') {
+        return $sanitized;
+      }
+      if (!strstr($domain, '.')) {
+        return $sanitized;
+      }
+      $subs = explode('.', $domain);
+      $sanitizedDomain = array();
+      foreach($subs as $sub) {
+        $sub = trim($sub, " \t\n\r\0\x0B-" );
+        $sub = preg_replace('/[^a-z0-9-]+/i', '', $sub);
+        if ($sub !== '') {
+          $sanitizedDomain[] = strtolower($sub);
+        }
+      }
+      if (count($sanitizedDomain) < 2) {
+        return $sanitized;
+      }
+      $domain = implode('.', $sanitizedDomain);
+
+      $filtered = $local.'@'.$domain;
+      if (CRM_Utils_Rule::email($filtered)) {
+        $sanitized = $filtered;
+      }
+    }
+    else {
+      $sanitized = $filtered;
+    }
+
+    return $sanitized;
+  }
+
+  /**
+   * Sanitize Email Name to escape quote
+   *
+   * @param string $name
+   * @return string
+   */
+  public static function sanitizeName($name) {
+    $string = trim($name, '"');
+    if (strstr($string, '"')) {
+      $string = str_replace('"', '\\"', $string);
+    }
+    return $string;
   }
 }
 

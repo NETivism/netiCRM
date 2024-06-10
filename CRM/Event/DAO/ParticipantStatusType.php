@@ -242,13 +242,13 @@ class CRM_Event_DAO_ParticipantStatusType extends CRM_Core_DAO
   {
     if (!(self::$_import)) {
       self::$_import = array();
-      $fields = & self::fields();
+      $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
-            self::$_import['participant_status_type'] = & $fields[$name];
+            self::$_import['participant_status_type'] = &$fields[$name];
           } else {
-            self::$_import[$name] = & $fields[$name];
+            self::$_import[$name] = &$fields[$name];
           }
         }
       }
@@ -265,13 +265,13 @@ class CRM_Event_DAO_ParticipantStatusType extends CRM_Core_DAO
   {
     if (!(self::$_export)) {
       self::$_export = array();
-      $fields = & self::fields();
+      $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
-            self::$_export['participant_status_type'] = & $fields[$name];
+            self::$_export['participant_status_type'] = &$fields[$name];
           } else {
-            self::$_export[$name] = & $fields[$name];
+            self::$_export[$name] = &$fields[$name];
           }
         }
       }
@@ -321,7 +321,7 @@ class CRM_Event_DAO_ParticipantStatusType extends CRM_Core_DAO
    */
   static function addDisplayEnums(&$values)
   {
-    $enumFields = & CRM_Event_DAO_ParticipantStatusType::getEnums();
+    $enumFields = &CRM_Event_DAO_ParticipantStatusType::getEnums();
     foreach($enumFields as $enum) {
       if (isset($values[$enum])) {
         $values[$enum . '_display'] = CRM_Event_DAO_ParticipantStatusType::tsEnum($enum, $values[$enum]);

@@ -90,9 +90,24 @@
 <tr>
     <td class="nowrap" id="idPcp">&raquo; {ts}Personal Campaign Pages{/ts}</td>
     <td>{ts}Allow constituents to create their own personal fundraising pages linked to this contribution page.{/ts}<br>
-      <a href="{crmURL p='civicrm/admin/contribute/pcp' q="reset=1&action=update&id=`$id`"}"><i class="zmdi zmdi-link"></i> {ts}Personal Campaign Pages{/ts} - {ts}Settings{/ts}</a> <br>
-      <a href="{crmURL p="civicrm/admin/pcp" q="reset=1&contribution_page_id=`$id`"}" target="_blank"><i class="zmdi zmdi-link"></i> {ts}Manage Personal Campaign Pages{/ts}</a> <br>
-      <a href="{crmURL a=true p='civicrm/contribute/campaign' q="action=add&reset=1&cid=0&pageId=`$id`"}" target="_blank"><i class="zmdi zmdi-link"></i> {ts}Setup a Personal Campaign Page{/ts}</a>
+      <a href="{crmURL p='civicrm/admin/contribute/pcp' q="reset=1&action=update&id=`$id`"}"><i class="zmdi zmdi-settings"></i> {ts}Admin Basic Settings{/ts}</a> <br>
+      <a href="{crmURL p="civicrm/admin/pcp" q="reset=1&contribution_page_id=`$id`"}"><i class="zmdi zmdi-file"></i> {ts}Manage Personal Campaign Pages{/ts}</a> <br>
+      {if $pcp_is_active}
+      <div class="new-personal-campaign-wrap flex-general">
+        {capture assign=newPersonalCampaignURL}{crmURL a=true p='civicrm/contribute/campaign' q="action=add&reset=1&pageId=`$id`"}{/capture}
+        <div class="new-personal-campaign-link-wrap link-desc-wrap">
+          <a href="{crmURL a=true p='civicrm/contribute/campaign' q="action=add&reset=1&cid=0&pageId=`$id`"}" target="_blank"><i class="zmdi zmdi-plus-square"></i> {ts}New personal campaign page{/ts}</a>
+          <div class="description">{ts}You can provide this URL to supporters for creating new Personal Campaign Pages.{/ts}</div>
+        </div>
+        <textarea name="url_to_copy_new_personal_campaign" class="url_to_copy" cols="45" rows="1" onclick="this.select(); document.execCommand('copy');" data-url-original="{$newPersonalCampaignURL}">{if $shorten_pcp}{$shorten_pcp}{else}{$newPersonalCampaignURL}{/if}</textarea>
+        <span>
+        <a href="#" class="button url-copy" onclick="document.querySelector('textarea[name=url_to_copy_new_personal_campaign]').select(); document.execCommand('copy'); return false;"><i class="zmdi zmdi-link"></i> {ts}Copy{/ts}</a>
+        </span>
+        <span>
+        <a href="#" class="button url-shorten" data-url-shorten="url_to_copy_new_personal_campaign" data-page-id="{$id}" data-page-type="civicrm_pcp"><i class="zmdi zmdi-share"></i> {ts}Shorten URL{/ts}</a>
+        </span>
+      </div>
+      {/if}
     </td>
 </tr>
 <tr>

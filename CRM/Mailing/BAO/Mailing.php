@@ -1200,7 +1200,7 @@ AND civicrm_contact.is_opt_out =0";
     $unsubscribeUrl = str_replace(array('&amp;', 'http://'), array('&', 'https://'), $urls['unsubscribeUrl']);
     $headers = array(
       'List-Unsubscribe' => '<'.$unsubscribeUrl.'>'.' ,'."<mailto:{$verp['unsubscribe']}>",
-      'From' => "\"{$this->from_name}\" <{$this->from_email}>",
+      'From' => CRM_Utils_Mail::formatRFC822Email($this->from_name, $this->from_email),
       'Sender' => $verp['reply'],
       'Return-Path' => $verp['bounce'],
       'Subject' => $this->subject,
@@ -1255,12 +1255,12 @@ AND civicrm_contact.is_opt_out =0";
       $isForward
     );
     //set from email who is forwarding it and not original one.
-    if ($fromEmail) {
+    if ($fromEmail && CRM_Utils_Rule::email($fromEmail)) {
       unset($headers['From']);
-      $headers['From'] = "<{$fromEmail}>";
+      $headers['From'] = CRM_Utils_Mail::formatRFC822Email('', $fromEmail);
     }
 
-    if ($replyToEmail && ($fromEmail != $replyToEmail)) {
+    if ($replyToEmail && ($fromEmail != $replyToEmail) && CRM_Utils_Mail::checkRFC822Email($fromEmail)) {
       $headers['Reply-To'] = "{$replyToEmail}";
     }
 
@@ -1431,7 +1431,7 @@ AND civicrm_contact.is_opt_out =0";
       }
     }
 
-    $headers['To'] = "{$mailParams['toName']} <{$mailParams['toEmail']}>";
+    $headers['To'] = CRM_Utils_Mail::formatRFC822Email($mailParams['toName'], $mailParams['toEmail']);
     $headers['Precedence'] = 'bulk';
     // Will test in the mail processor if the X-VERP is set in the bounced email.
     // (As an option to replace real VERP for those that can't set it up)
@@ -2022,7 +2022,7 @@ AND civicrm_contact.is_opt_out =0";
         $row[$field] = $mailing->$field;
       }
 
-      if ($mailing->queue) {
+      if (!empty($mailing->queue) && !empty($mailing->delivered)) {
         $row['delivered_rate'] = (100.0 * $mailing->delivered) / $mailing->queue;
         $row['opened_rate'] = (100.0 * $row['opened']) / $mailing->delivered;
         $row['clicked_rate'] = (100.0 * $row['url']) / $mailing->delivered;

@@ -715,7 +715,9 @@ function _civicrm_api3_get_options_from_params(&$params, $queryObject = false, $
 function _civicrm_api3_apply_options_to_dao(&$params, &$dao, $entity) {
 
   $options = _civicrm_api3_get_options_from_params($params,false,$entity);
-  $dao->limit((int)$options['offset'], (int)$options['limit']);
+  if (!empty($options['limit'])) {
+    $dao->limit((int)$options['offset'], (int)$options['limit']);
+  }
   if (!empty($options['sort'])) {
     $dao->orderBy($options['sort']);
   }

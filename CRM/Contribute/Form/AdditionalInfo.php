@@ -353,12 +353,26 @@ class CRM_Contribute_Form_AdditionalInfo {
    * @return None.
    */
   static function emailReceipt(&$form, &$params, $ccContribution = FALSE) {
+    $config = CRM_Core_Config::singleton();
+    require_once 'CRM/Contact/BAO/Contact/Location.php';
+    list($contributorDisplayName,
+    $contributorEmail
+    ) = CRM_Contact_BAO_Contact_Location::getEmailDetails($params['contact_id']);
     if (!empty($params['is_attach_receipt'])) {
-      $config = CRM_Core_Config::singleton();
       $receiptEmailType = !empty($config->receiptEmailType) ? $config->receiptEmailType : 'copy_only';
       $receiptTask = new CRM_Contribute_Form_Task_PDF();
       $receiptTask->makeReceipt($params['contribution_id'], $receiptEmailType, TRUE);
-      $pdfFilePath = $receiptTask->makePDF(False);
+      //set encrypt password
+      if (!empty($config->receiptEmailEncryption) && $config->receiptEmailEncryption) {
+        $receiptPwd = $contributorEmail;
+        if (!empty($receiptTask->_lastSerialId) && preg_match('/^[A-Za-z]{1,2}\d{8,9}$|^\d{8}$/', $receiptTask->_lastSerialId)) {
+          $receiptPwd = $receiptTask->_lastSerialId;
+        }
+        $pdfFilePath = $receiptTask->makePDF(False, True, $receiptPwd);
+      }
+      else {
+        $pdfFilePath = $receiptTask->makePDF(False);
+      }
       $pdfFileName = strstr($pdfFilePath, 'Receipt');
       $pdfParams =  array(
         'fullPath' => $pdfFilePath,
@@ -446,8 +460,8 @@ class CRM_Contribute_Form_AdditionalInfo {
     else {
       //offline contribution
       //Retrieve the name and email from receipt is to be send
-      $params['receipt_from_name'] = $form->userDisplayName;
-      $params['receipt_from_email'] = $form->userEmail;
+      $params['receipt_from_name'] = $contributorDisplayName;
+      $params['receipt_from_email'] = $contributorEmail;
       // assigned various dates to the templates
       $form->assign('receipt_date', CRM_Utils_Date::processDate($params['receipt_date']));
       $form->assign('cancel_date', CRM_Utils_Date::processDate($params['cancel_date']));
@@ -507,11 +521,7 @@ class CRM_Contribute_Form_AdditionalInfo {
       $params['receipt_text'] = CRM_Contribute_BAO_ContributionPage::tokenize($params['contact_id'], $params['receipt_text']); 
     }
     $form->assign_by_ref('formValues', $params);
-    require_once 'CRM/Contact/BAO/Contact/Location.php';
     require_once 'CRM/Utils/Mail.php';
-    list($contributorDisplayName,
-      $contributorEmail
-    ) = CRM_Contact_BAO_Contact_Location::getEmailDetails($params['contact_id']);
     $form->assign('contactID', $params['contact_id']);
     $form->assign('contributionID', $params['contribution_id']);
     $form->assign('currency', $params['currency']);
@@ -540,6 +550,13 @@ class CRM_Contribute_Form_AdditionalInfo {
     if (!empty($params['is_attach_receipt'])) {
       $templateParams['attachments'][] = $pdfParams;
       $templateParams['tplParams']['pdf_receipt'] = 1;
+      if (!empty($config->receiptEmailEncryption)) {
+        $pdfReceiptDecryptInfo = $config->receiptEmailEncryptionText;
+        if (empty(trim($pdfReceiptDecryptInfo))) {
+          $pdfReceiptDecryptInfo = ts('Your PDF receipt is encrypted.').' '.ts('The password is either your tax certificate number or, if not provided, your email address.');
+        }
+        $templateParams['tplParams']['pdf_receipt_decrypt_info'] = $pdfReceiptDecryptInfo;
+      }
     }
     else {
       $templateParams['PDFFilename'] = 'receipt.pdf';
@@ -555,6 +572,7 @@ class CRM_Contribute_Form_AdditionalInfo {
       $activityId = CRM_Activity_BAO_Activity::addTransactionalActivity($contribution, 'Contribution Notification Email', $workflow['msg_title']);
     }
     $templateParams['activityId'] = $activityId;
+    $config = CRM_Core_Config::singleton();
     list($sendReceipt, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate($templateParams, CRM_Core_DAO::$_nullObject, array(
       0 => array('CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  array($activityId, TRUE)),
       1 => array('CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  array($activityId, FALSE)),

@@ -40,6 +40,12 @@ require_once 'CRM/Admin/Form.php';
  *
  */
 class CRM_Admin_Form_Mapping extends CRM_Admin_Form {
+  /**
+   * mapping object
+   *
+   * @var obj
+   */
+  public $_mapping;
 
   /**
    * Function to build the form
@@ -52,6 +58,7 @@ class CRM_Admin_Form_Mapping extends CRM_Admin_Form {
     $mapping = new CRM_Core_DAO_Mapping();
     $mapping->id = $this->_id;
     $mapping->find(TRUE);
+    $this->_mapping = $mapping;
     $this->assign('mappingName', $mapping->name);
   }
 
@@ -75,7 +82,7 @@ class CRM_Admin_Form_Mapping extends CRM_Admin_Form {
       require_once 'CRM/Core/PseudoConstant.php';
       $mappingType = $this->addElement('select', 'mapping_type_id', ts('Mapping Type'), CRM_Core_PseudoConstant::mappingTypes());
 
-      if ($this->_action == CRM_Core_Action::UPDATE) {
+      if ($this->_action == CRM_Core_Action::UPDATE && !empty($this->_mapping->mapping_type_id)) {
         $mappingType->freeze();
       }
     }

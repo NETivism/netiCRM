@@ -23,6 +23,13 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     5 => 'AMEX',
   );
 
+  public static $_cardCategory = array(
+    -1 => 'Unknown',
+    0 => 'Credit Card',
+    1 => 'Debit Card',
+    2 => 'Prepaid Card',
+  );
+
   public static $_allowRecurUnit = array('month');
 
   /**
@@ -86,6 +93,52 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     }
   }
 
+  static function getAdminFields($ppDAO){
+    $fields = array(
+      array(
+        'name' => 'user_name',
+        'label' => $ppDAO->user_name_label,
+      ),
+      array(
+        'name' => 'password',
+        'label' => $ppDAO->password_label,
+      ),
+      array(
+        'name' => 'signature',
+        'label' => $ppDAO->signature_label,
+      ),
+      array(
+        'name' => 'subject',
+        'label' => $ppDAO->subject_label,
+      ),
+      array(
+        'name' => 'url_site',
+        'label' => ts('啟用3D驗證'),
+        'msg' => ts(''),
+      ),
+    );
+    $nullObj = NULL;
+    $ppid = CRM_Utils_Request::retrieve('id', 'Positive', $nullObj);
+    if ($ppid) {
+      $params = array(
+        1 => array($ppid, 'Positive'),
+        2 => array(0, 'Integer'),
+      );
+      $paramsTest = array(
+        1 => array($ppid+1, 'Positive'),
+        2 => array(1, 'Integer'),
+      );
+      $sql = 'SELECT count(id) FROM civicrm_contribution WHERE payment_processor_id = %1 AND is_test = %2';
+      $isHavingContribution = CRM_Core_DAO::singleValueQuery($sql, $params);
+      $isHavingContributionTest = CRM_Core_DAO::singleValueQuery($sql, $paramsTest);
+      $smarty = CRM_Core_Smarty::singleton();
+      $smarty->assign('having_contribution', $isHavingContribution);
+      $smarty->assign('having_contribution_test', $isHavingContributionTest);
+    }
+    return $fields;
+  }
+
+
   function setExpressCheckOut(&$params) {
     CRM_Core_Error::fatal(ts('This function is not implemented'));
   }
@@ -138,7 +191,11 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     else {
       $paymentResult = self::payByPrime($params);
     }
-    if ($paymentResult['status'] == "0") {
+    if ($paymentResult['redirect']) {
+      // 3D secure validation.
+      CRM_Utils_System::redirect($paymentResult['redirect']);
+    }
+    elseif ($paymentResult['status'] == "0") {
       $thankyou = CRM_Utils_System::url($currentPath, '_qf_ThankYou_display=1&qfKey='.$params['qfKey'].'&payment_result_type=1');
     }
     else {
@@ -193,8 +250,29 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
           'national_id' => '', //optional
         ),
         'remember' => TRUE,
-        'contribution_id' => $id,
+        'contribution_id' => $payment['contributionID'],
       );
+      // third domain secure
+      $thankYouQuery = http_build_query(array(
+        '_qf_ThankYou_display' => "1",
+        'qfKey' => $payment['qfKey'],
+      ), '', '&');
+      $ids = CRM_Contribute_BAO_Contribution::buildIds($payment['contributionID']);
+      $ipnQuery = CRM_Contribute_BAO_Contribution::makeNotifyUrl($ids, NULL, $return_query = TRUE);
+      $goBackQuery = http_build_query(array(
+        '_qf_ThankYou_display' => "1",
+        'qfKey' => $payment['qfKey'],
+        'payment_result_type' => '4',
+      ), '', '&');
+      CRM_Core_Error::debug_var('paymentProcessor', $paymentProcessor);
+      if ($paymentProcessor['url_site']) {
+        $data['three_domain_secure'] = TRUE;
+        $data['result_url'] = array(
+          'frontend_redirect_url' => CRM_Utils_System::url(CRM_Utils_System::currentPath(), $thankYouQuery, TRUE, NULL, FALSE),
+          'backend_notify_url' => CRM_Utils_System::url('tappay/ipn', $ipnQuery, TRUE, NULL, FALSE),
+          'go_back_url' => CRM_Utils_System::url(CRM_Utils_System::currentPath(), $goBackQuery, TRUE, NULL, FALSE),
+        );
+      }
 
       // Allow further manipulation of the arguments via custom hooks ..
       $mode = $paymentProcessor['is_test'] ? 'test' : 'live';
@@ -204,11 +282,27 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       CRM_Utils_Hook::alterPaymentProcessorParams($paymentClass, $payment, $data);
 
       $result = $api->request($data);
+
+      // If 3D Secure Validation is on, don't do transaction.
+      if (!empty($result->transaction_method_details) && $result->transaction_method_details->transaction_method == 'THREE_DOMAIN_SECURE') {
+        $isPass = TRUE;
+        if (empty($result->payment_url)) {
+          // validate url has no special character
+          $url = CRM_Core_DAO::escapeString($result->payment_url);
+          if (!$url == $result->payment_url) {
+            $isPass = FALSE;
+          }
+        }
+        if ($isPass) {
+          $response = array('redirect' => $result->payment_url);
+          return $response;
+        }
+      }
       self::doTransaction($result, $payment['contributionID']);
 
       // update token status after transaction completed
       if ($result->status === 0 && !empty($contribution['contribution_recur_id'])) {
-        self::cardMetadata($payment['contributionID']); 
+        self::cardMetadata($payment['contributionID']);
       }
 
       $response = array('status' => $result->status, 'msg' => $result->msg);
@@ -247,19 +341,10 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
 
     if (empty($referContributionId)) {
       // Clone Contribution
-      $c = clone $firstContribution;
-      unset($c->id);
-      unset($c->receive_date);
-      unset($c->cancel_date);
-      unset($c->cancel_reason);
-      unset($c->invoice_id);
-      unset($c->receipt_date);
-      unset($c->receipt_id);
-      unset($c->trxn_id);
-      $c->contribution_status_id = 2;
-      $c->created_date = date('YmdHis');
+      // trxn_id will update after copy contribution.
+      $hash = hash('sha256', $firstContributionId);
+      $c = CRM_Core_Payment_BaseIPN::copyContribution($firstContribution, $recurringId, $hash);
       $c->total_amount = $contributionRecur->amount;
-      $c->save();
     }
     else {
       $c = new CRM_Contribute_DAO_Contribution();
@@ -569,6 +654,14 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     return FALSE;
   }
 
+  /**
+   * Make Transaction for certainly contribution.
+   * 
+   * @param Object $result The result object.
+   * @param Integer $contributionId The ID of contribution.
+   * @param Boolean $sendMail If TRUE, send mail for contact after finished.
+   * @return Boolean Is success or not.
+   */
   public static function doTransaction($result, $contributionId = NULL, $sendMail = TRUE) {
     $input = $ids = $objects = array();
 
@@ -1233,6 +1326,56 @@ LIMIT 0, 100
   }
 
   /**
+   * Execute ipn when called by tappay 3d validation.
+   *
+   * @param array $urlParams Default params in CiviCRM Router, Must be array('civicrm', 'mypay', 'ipn')
+   * @param string $request Bring post variables if you need test, format json.
+   * @param array $get Bring get variables if you need test.
+   * @param boolean $sendMail TRUE mean need sendmail after finished..
+   * @return void
+   */
+  public static function doIPN($params, $request = NULL, $get = NULL, $sendMail = TRUE) {
+    // Get Input
+    if (empty($request)) {
+      $input = file_get_contents('php://input');
+      $data = json_decode($input);
+    }
+    elseif (is_string($request)){
+      $input = $request;
+      $data = json_decode($request);
+    }
+    else {
+      $data = $request;
+    }
+
+    if (empty($data)) {
+      return 0;
+    }
+    $requestURL = CRM_Utils_System::isSSL() ? 'https://' : 'http://';
+    $requestURL .= $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+
+    $get = empty($get) ? $_GET : $get;
+    $contributionID = CRM_Utils_Type::escape($get['cid'], 'Integer', TRUE);
+    $module = $get['module'];
+
+    if (!empty($contributionID) && in_array($module, array('contribute', 'event'))) {
+      // Get contribution ids by token
+      $recordData = array(
+        'contribution_id' => $contributionID,
+        'url' => CRM_Core_DAO::escapeString($requestURL),
+        'date' => date('Y-m-d H:i:s'),
+        'post_data' => $input,
+      );
+      CRM_Core_Payment_TapPayAPI::writeRecord(NULL, $recordData);
+
+      // Execute original trasaction.
+      self::doTransaction($data, $contributionID, $sendMail);
+    }
+
+    return;
+  }
+
+  /**
    * Trigger when click transaction button.
    */
   public static function doRecurTransact($recurId = NULL, $sendMail = FALSE) {
@@ -1377,6 +1520,7 @@ LIMIT 0, 100
       $cardInfo = $tappayObject->card_info;
       $returnData[ts('Card Issuer')] = $cardInfo->issuer;
       $returnData[ts('Card Type')] = self::$_cardType[$cardInfo->type];
+      $returnData[ts('Card Category')] = ts(self::$_cardCategory[$cardInfo->funding]);
     }
     if (!empty($tappayDAO->contribution_recur_id)) {
       $autoRenew = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionRecur', $tappayDAO->contribution_recur_id, 'auto_renew');

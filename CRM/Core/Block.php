@@ -252,8 +252,7 @@ class CRM_Core_Block {
         $block[$id] = array(
           'info' => $value['info'],
           'cache' => $value['cache'],
-          'status' => $value['active'],
-          'region' => $value['region'],
+          'region' => !empty($value['region']) ? $value['region'] : NULL,
           'visibility' => $value['visibility'],
           'pages' => $value['pages'],
           'status' => $value['status'],

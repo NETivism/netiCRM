@@ -224,7 +224,7 @@ SELECT id
         foreach ($recurringPaymentProcessor as $ppid) {
           $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($ppid, '');
           $paymentClass = 'CRM_Core_'.$paymentProcessor['class_name'];
-          if (!empty($paymentClass::$_allowRecurUnit)) {
+          if (class_exists($paymentClass) && property_exists($paymentClass, '_allowRecurUnit')) {
             $paymentUnitsCount[$unit] += in_array($unit, $paymentClass::$_allowRecurUnit) ? 1 : 0;
           }
           else {

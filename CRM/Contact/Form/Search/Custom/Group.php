@@ -99,52 +99,40 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
       CRM_Utils_System::redirect($url);
     }
 
-    $inG = &$form->addElement('advmultiselect', 'includeGroups',
+    $inG = &$form->addElement('select', 'includeGroups',
       ts('Include Group(s)') . ' ', $groups,
       array('size' => 5,
-        'style' => 'width:240px',
-        'class' => 'advmultiselect',
+        'style' => 'width:400px',
+        'multiple' => 'multiple',
       )
     );
 
-    $outG = &$form->addElement('advmultiselect', 'excludeGroups',
+    $outG = &$form->addElement('select', 'excludeGroups',
       ts('Exclude Group(s)') . ' ', $groups,
       array('size' => 5,
-        'style' => 'width:240px',
-        'class' => 'advmultiselect',
+        'style' => 'width:400px',
+        'multiple' => 'multiple',
       )
     );
     $andOr = &$form->addElement('checkbox', 'andOr', 'Search with tag (check for AND, uncheck For OR)', NULL,
       array('checked' => 'checked')
     );
 
-    $int = &$form->addElement('advmultiselect', 'includeTags',
+    $int = &$form->addElement('select', 'includeTags',
       ts('Include Tag(s)') . ' ', $tags,
       array('size' => 5,
-        'style' => 'width:240px',
-        'class' => 'advmultiselect',
+        'style' => 'width:400px',
+        'multiple' => 'multiple',
       )
     );
 
-    $outt = &$form->addElement('advmultiselect', 'excludeTags',
+    $outt = &$form->addElement('select', 'excludeTags',
       ts('Exclude Tag(s)') . ' ', $tags,
       array('size' => 5,
-        'style' => 'width:240px',
-        'class' => 'advmultiselect',
+        'style' => 'width:400px',
+        'multiple' => 'multiple',
       )
     );
-
-    //add/remove buttons for groups
-    $inG->setButtonAttributes('add', array('value' => ts('Add >>')));;
-    $outG->setButtonAttributes('add', array('value' => ts('Add >>')));;
-    $inG->setButtonAttributes('remove', array('value' => ts('<< Remove')));;
-    $outG->setButtonAttributes('remove', array('value' => ts('<< Remove')));;
-
-    //add/remove buttons for tags
-    $int->setButtonAttributes('add', array('value' => ts('Add >>')));;
-    $outt->setButtonAttributes('add', array('value' => ts('Add >>')));;
-    $int->setButtonAttributes('remove', array('value' => ts('<< Remove')));;
-    $outt->setButtonAttributes('remove', array('value' => ts('<< Remove')));;
 
     $defaults = array(
       'andOr' => empty($this->_andOr) ? 0 : 1,
@@ -255,7 +243,7 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
       CRM_Core_DAO::executeQuery($sql);
 
       //used only when exclude group is selected
-      if ($xGroups != 0) {
+      if (!empty($xGroups)) {
         $excludeGroup = "INSERT INTO  Xg_{$this->_tableName} ( contact_id )
                   SELECT  DISTINCT civicrm_group_contact.contact_id
                   FROM civicrm_group_contact, civicrm_contact                    
@@ -395,7 +383,7 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
       CRM_Core_DAO::executeQuery($sql);
 
       //used only when exclude tag is selected
-      if ($xTags != 0) {
+      if (!empty($xTags)) {
         $excludeTag = "INSERT INTO  Xt_{$this->_tableName} ( contact_id )
                   SELECT  DISTINCT civicrm_entity_tag.entity_id
                   FROM civicrm_entity_tag, civicrm_contact                    

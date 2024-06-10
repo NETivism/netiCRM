@@ -192,7 +192,7 @@ class CRM_Contact_DAO_GroupContact extends CRM_Core_DAO
           'name' => 'status',
           'type' => CRM_Utils_Type::T_ENUM,
           'title' => ts('Status') ,
-          'enumValues' => 'Added, Removed, Pending',
+          'enumValues' => 'Added,Removed,Pending',
         ) ,
         'location_id' => array(
           'name' => 'location_id',
@@ -238,13 +238,13 @@ class CRM_Contact_DAO_GroupContact extends CRM_Core_DAO
   {
     if (!(self::$_import)) {
       self::$_import = array();
-      $fields = & self::fields();
+      $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
-            self::$_import['group_contact'] = & $fields[$name];
+            self::$_import['group_contact'] = &$fields[$name];
           } else {
-            self::$_import[$name] = & $fields[$name];
+            self::$_import[$name] = &$fields[$name];
           }
         }
       }
@@ -261,13 +261,13 @@ class CRM_Contact_DAO_GroupContact extends CRM_Core_DAO
   {
     if (!(self::$_export)) {
       self::$_export = array();
-      $fields = & self::fields();
+      $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
-            self::$_export['group_contact'] = & $fields[$name];
+            self::$_export['group_contact'] = &$fields[$name];
           } else {
-            self::$_export[$name] = & $fields[$name];
+            self::$_export[$name] = &$fields[$name];
           }
         }
       }
@@ -316,7 +316,7 @@ class CRM_Contact_DAO_GroupContact extends CRM_Core_DAO
    */
   static function addDisplayEnums(&$values)
   {
-    $enumFields = & CRM_Contact_DAO_GroupContact::getEnums();
+    $enumFields = &CRM_Contact_DAO_GroupContact::getEnums();
     foreach($enumFields as $enum) {
       if (isset($values[$enum])) {
         $values[$enum . '_display'] = CRM_Contact_DAO_GroupContact::tsEnum($enum, $values[$enum]);

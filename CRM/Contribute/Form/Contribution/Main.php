@@ -115,7 +115,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
           if ($this->_values['is_internal'] > 0) {
             $this->assign('isInternal', TRUE);
           }
-          
+
           // refs #29618, load contribution id and add defaultFromRequest again
           $this->loadDefaultFromOriginalId();
         }
@@ -282,12 +282,12 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
       $fields["email-Primary"] = 1;
 
       require_once "CRM/Core/BAO/UFGroup.php";
-      
+
       CRM_Core_BAO_UFGroup::setProfileDefaults($contactID, $fields, $this->_defaults);
       // refs #29618, add mask on default personal data
       if (!empty($this->_originalId) && empty($this->_ppType)) {
         foreach($fields as $name => $dontcare) {
-          if (isset($this->_elementIndex[$name]) && !in_array($name, array('last_name', 'first_name', 'middle_name')) && !preg_match('/amount|city|postal_code|email/', $name)) {
+          if (isset($this->_elementIndex[$name]) && !in_array($name, array('last_name', 'first_name', 'middle_name')) && !preg_match('/amount|city|postal_code|email/', $name) && !preg_match('/^custom_\d+.*/', $name)) {
             $ele = $this->getElement($name);
             $eleClass = get_class($ele);
             if ($ele->_type == 'text' && strstr($eleClass, 'HTML_QuickForm_text')) {
@@ -408,6 +408,13 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
               if (isset($this->_elementIndex[$name])) {
                 $ele = $this->getElement($name);
                 $ele->updateAttributes(array('data-mask' => $this->_defaults[$name]));
+              }
+              if (isset($this->_rules[$name])) {
+                foreach($this->_rules[$name] as $idx => &$rule) {
+                  if ($rule['type'] != 'xssString') {
+                    unset($this->_rules[$name][$idx]);
+                  }
+                }
               }
             }
           }
@@ -544,7 +551,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
         }
         if (!empty($this->_defaultFromRequest['ppid'])) {
           $this->_defaults['payment_processor'] = $this->_defaultFromRequest['ppid'];
-        } 
+        }
       }
     }
 
@@ -568,7 +575,6 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     if ($this->_ppType) {
       return CRM_Core_Payment_ProcessorForm::buildQuickForm($this);
     }
-
     $config = CRM_Core_Config::singleton();
 
     $this->applyFilter('__ALL__', 'trim');
@@ -779,9 +785,22 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     if(!empty($this->_submitValues['receipt_type'])){
       $this->assign('receipt_type',$this->_submitValues['receipt_type']);
     }
-    
+
     $achievement = CRM_Contribute_BAO_ContributionPage::goalAchieved($this->_id);
     $this->assign('achievement', $achievement);
+
+    $progress = array(
+      'type' => $achievement['type'],
+      'label' => $achievement['label'],
+      'goal' => $achievement['goal'],
+      'current' => $achievement['current'],
+      'achieved_percent' => $achievement['percent'],
+      'achieved_status' => $achievement['achieved'],
+      'fullwidth' => FALSE,
+      'display' => $achievement['goal'] ? TRUE : FALSE,
+      'link_display' => FALSE
+    );
+    $this->assign('progress', $progress);
 
     // hidden track id
     $this->addElement('hidden', 'track', $this->get('trackId'));
@@ -795,7 +814,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
    */
   function buildAmount($separateMembershipPayment = FALSE) {
     $elements = array();
-    $defaultFromRequestAmountId = NULL; 
+    $defaultFromRequestAmountId = NULL;
     // set default display
     if (!empty($this->_defaultFromRequest['grouping'])) {
       $this->_defaultAmountGrouping = $this->_defaultFromRequest['grouping'];
@@ -1061,7 +1080,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
         $units[$val] = ts($unitTrans[$val]);
       }
     }
-     
+
     if (count($units) > 1) {
       $this->add('select', 'frequency_unit', ts('Frequency'), $units);
       $recurOptionLabel = ts('Recurring contributions');
@@ -1089,7 +1108,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
         'style' => 'max-width:100px',
       );
       $this->addNumber('installments', ts('Installments'), $attributes['installments']);
-      if (isset($this->_defaultFromRequest['installments'])) { 
+      if (isset($this->_defaultFromRequest['installments'])) {
         $this->_defaults['installments'] = $this->_defaultFromRequest['installments'];
       }
       $this->addRule('installments', ts('Number of installments must be a whole number.'), 'integer');
@@ -1364,7 +1383,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     if ((float ) $amount <= 0.0) {
       return $errors;
     }
-    
+
     $self->addFieldRequiredRule($errors, $fields ,$files);
 
     // make sure that credit card number and cvv are valid

@@ -17,7 +17,12 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
     $objects = $ids = $input = array();
     $input = $this->_post;
     $this->getIds($ids, $component);
-    $input['component'] = $component;
+    if (!empty($ids['participant'])) {
+      $input['component'] = 'event';
+    }
+    else {
+      $input['component'] = 'contribute';
+    }
     $qfKey = CRM_Utils_Array::value('qfKey', $this->_get);
     $civi_base_url = $component == 'event' ? 'civicrm/event/register' : 'civicrm/contribute/transact';
 
@@ -81,19 +86,22 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
     // never for front-end user.
   }
 
-  function getIds( &$ids , $component){
-    $ids['contact'] = CRM_Utils_Array::value('contact_id', $this->_get);
-    $ids['contribution'] = CRM_Utils_Array::value('cid', $this->_get);
-    if ( $component == 'event' ) {
-      $ids['event'] = CRM_Utils_Array::value('eid', $this->_get);
-      $ids['participant'] = CRM_Utils_Array::value('pid', $this->_get);
+  function getIds(&$ids){
+    $contribId = CRM_Utils_Array::value('cid', $this->_get);
+    if (!empty($contribId) && CRM_Utils_Type::escape($contribId, 'Integer')) {
+      $ids = CRM_Contribute_BAO_Contribution::buildIds($contribId, FALSE);
+      if (empty($ids)) {
+        CRM_Core_Error::debug_log_message("Allpay: Could not found contribution id $contribId");
+        CRM_Utils_System::civiExit();
+      }
     }
-    else {
-      $ids['membership'] = CRM_Utils_Array::value('mid', $this->_get);
-      $ids['contributionRecur'] = CRM_Utils_Array::value('crid', $this->_get);
-      $ids['contributionPage'] = CRM_Utils_Array::value('cpid', $this->_get);
-      $ids['related_contact'] = CRM_Utils_Array::value('rid', $this->_get);
-      $ids['onbehalf_dupe_alert'] = CRM_Utils_Array::value('onbehalf_dupe_alert', $this->_get);
+    if (!empty($ids['participant'])) {
+      if (!empty($this->_get['rid'])) {
+        $ids['related_contact'] = CRM_Utils_Array::value('rid', $this->_get);
+      }
+      if (!empty($this->_get['onbehalf_dupe_alert'])) {
+        $ids['onbehalf_dupe_alert'] = CRM_Utils_Array::value('onbehalf_dupe_alert', $this->_get);
+      }
     }
   }
 
