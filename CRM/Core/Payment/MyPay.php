@@ -201,12 +201,17 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
     $params['trxn_id'] = $contribution->trxn_id;
     $params['contact_id'] = $contribution->contact_id;
 
+    $contributionPageId = $params['contributionPageID'];
+    $paramsQuery = array( 1 => array($contributionPageId, 'Positive'));
+    $params['is_internal'] = CRM_Core_DAO::singleValueQuery("SELECT is_internal FROM civicrm_contribution_page WHERE id = %1;", $paramsQuery);
+
     $arguments = $this->getOrderArgs($params, $component, $instrumentCode, $formKey);
+
     if ($params['is_recur'] && $params['is_internal']) {
       $encryptedArgs = array(
-        'agent_uid' => $arguments['store_uid'],
-        'service' => self::encryptArgs($arguments['service'], $this->_paymentProcessor['signature']),
-        'encry_data' => self::encryptArgs($arguments['encry_data'], $this->_paymentProcessor['signature']),
+        'agent_uid' => $this->_paymentProcessor['user_name'],
+        'service' => self::encryptArgs($arguments['service'], $this->_paymentProcessor['password']),
+        'encry_data' => self::encryptArgs($arguments['encry_data'], $this->_paymentProcessor['password']),
       );
       $actionUrl = $this->_paymentProcessor['url_recur'];
     }
@@ -396,6 +401,7 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
           $args['encry_data']['regular'] = '';
           $args['encry_data']['group_id'] = $vars['contributionRecurID'];
           if ($vars['is_internal']) {
+            $args['encry_data']['store_uid'] = $paymentProcessor['signature'];
             $args['service']['cmd'] = 'api/batchdebitcreator';
             $args['encry_data']['project_name'] = 'Recurring_'.$vars['trxn_id'];
           }
