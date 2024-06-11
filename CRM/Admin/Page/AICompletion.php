@@ -290,7 +290,9 @@ DESC
   }
 
   function getStats() {
-    $stats = array();
+    $stats = array(
+      'component' => array()
+    );
     $dao = CRM_Core_DAO::executeQuery("SELECT component, count(*) as count FROM civicrm_aicompletion WHERE created_date >= DATE_FORMAT(CURDATE(), '%Y-%m-01 00:00:00') AND created_date < DATE_FORMAT(DATE_ADD(CURDATE(), INTERVAL 1 MONTH), '%Y-%m-01 00:00:00') GROUP BY component");
     while($dao->fetch()) {
       $stats['component'][ts($dao->component)] = $dao->count;
