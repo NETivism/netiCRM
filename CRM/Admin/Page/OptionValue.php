@@ -208,11 +208,6 @@ class CRM_Admin_Page_OptionValue extends CRM_Core_Page_Basic {
         }
       }
 
-      // refs #39632. Prevent Flydove group type deletion
-      if ($this->_gName == 'group_type' && $dao->label == 'Flydove Smart Marketing') {
-        $action -= CRM_Core_Action::DELETE;
-      }
-
       $optionValue[$dao->id]['action'] = CRM_Core_Action::formLink(self::links(), $action,
         array('id' => $dao->id, 'gid' => $this->_gid)
       );
