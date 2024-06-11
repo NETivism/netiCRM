@@ -250,5 +250,21 @@ class CRM_Admin_Page_OptionValue extends CRM_Core_Page_Basic {
   function userContext($mode = NULL) {
     return 'civicrm/admin/optionValue';
   }
+
+  /**
+   * Redirect to Specific Option Value Editing
+   */
+  public static function redirect() {
+    $path = CRM_Utils_System::currentPath();
+    $args = explode('/', $path);
+    $groupName = isset($args[3]) ? $args[3] : NULL;
+    $value = isset($args[4]) ? $args[4] : NULL;
+    if (isset($groupName) && isset($value)) {
+      if(is_numeric($value)) {
+        CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin/optionValue', "action=update&group={$groupName}&value={$value}&reset=1"));
+      }
+    }
+    CRM_Utils_System::civiExit();
+  }
 }
 
