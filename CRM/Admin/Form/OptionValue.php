@@ -76,7 +76,10 @@ class CRM_Admin_Form_OptionValue extends CRM_Admin_Form {
     if ($this->_action & CRM_Core_Action::UPDATE){
       if(!is_numeric($this->_id)) {
         $value = CRM_Utils_Request::retrieve('value', 'String', $this, TRUE);
-        $optionId = CRM_Core_OptionGroup::getValue($this->_gName, $value, 'value', 'String', 'id');
+        $optionId = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_option_value WHERE option_group_id = %1 AND value = %2", array(
+          1 => array($this->_gid, 'Integer'),
+          2 => array($value, 'String'),
+        ));
         if (!empty($optionId)) {
           $this->_id = $optionId;
         }
