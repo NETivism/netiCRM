@@ -1004,11 +1004,13 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
     // detect variables
     if(empty($post)){
       CRM_Core_Error::debug_log_message( "civicrm_allpay: Could not find POST data from payment server", TRUE);
-      CRM_Utils_System::civiExit();
+      exit;
     }
     else{
       $component = $get['module'];
       if(!empty($component)){
+        // include_once(__DIR__.'/ALLPAYIPN.php');
+
         $ipn = new CRM_Core_Payment_ALLPAYIPN($post, $get);
         $result = $ipn->main($component, $instrument);
         if(!empty($result) && $print){
@@ -1022,7 +1024,6 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
         CRM_Core_Error::debug_log_message( "civicrm_allpay: Could not get module name from request url", TRUE);
       }
     }
-    CRM_Utils_System::civiExit();
   }
 }
 
