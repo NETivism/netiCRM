@@ -183,7 +183,7 @@ class CRM_Core_BAO_PaymentProcessor extends CRM_Core_DAO_PaymentProcessor {
       $dao->id = $paymentProcessorID;
       $dao->is_active = 1;
       if (!$dao->find(TRUE)) {
-        return NULL;
+        continue;
       }
 
       if ($mode == 'test') {
@@ -211,6 +211,9 @@ class CRM_Core_BAO_PaymentProcessor extends CRM_Core_DAO_PaymentProcessor {
       }
     }
     $paymentDAO = $paymentDefault + $paymentDAO;
+    if (empty($paymentDAO)) {
+      return NULL;
+    }
     return $paymentDAO;
   }
 
