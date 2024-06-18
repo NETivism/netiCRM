@@ -7,7 +7,7 @@ let element;
 
 var vars = {
     path: 'civicrm/contribute/transact',
-    query: 'reset=1&action=preview&id=3',
+    query: 'reset=1&action=preview&id=2',
     site_name: 'netiCRM',
 
     // you should add your own testing variables below
@@ -58,7 +58,7 @@ test.describe.serial('SPGATEWAY', () => {
             await utils.fillInput(page.locator(element), vars.amount);
 
             /* choose "SPGATEWAY" as the "Payment Method" */
-            element = '#CIVICRM_QFID_8_2';
+            element = '#CIVICRM_QFID_6_2';
             await utils.findElement(page, element);
             await utils.clickElement(page, page.locator(element));
             await expect(page.locator(element)).toBeChecked();

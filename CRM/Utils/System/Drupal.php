@@ -614,7 +614,8 @@ class CRM_Utils_System_Drupal {
     if ($version < 8 ) {
       return variable_get($name, $default);
     }
-    else {
+    else{
+      // no drupal 8+ equivilent func
       // exception
     }
   }

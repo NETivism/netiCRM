@@ -1,6 +1,7 @@
 <!-- Magnific Popup -->
 <link rel="stylesheet" href="{$config->resourceBase}packages/Magnific-Popup/dist/magnific-popup.css?v{$config->ver}">
-{js src=packages/Magnific-Popup/dist/jquery.magnific-popup.min.js group=999 weight=997}{/js}
+{js src=packages/Magnific-Popup/dist/jquery.magnific-popup.min.js group=999 weight=997 library=civicrm/civicrm-js-magnific-popup}{/js}
+
 
 <!-- #mdfi-docs -->
 <div id="mdif-docs" class="mdif-docs container">

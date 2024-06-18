@@ -2401,7 +2401,7 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
    * @return array
    * @access public
    */
-  function checkFieldsEmptyValues($gid, $cid, $params) {
+  public static function checkFieldsEmptyValues($gid, $cid, $params) {
     if ($gid) {
       require_once 'CRM/Core/BAO/UFGroup.php';
       if (CRM_Core_BAO_UFGroup::filterUFGroups($gid, $cid)) {
@@ -2438,7 +2438,7 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
    * @return void
    * @access public
    */
-  function profileDisplay($gid, $values, $template) {
+  public static function profileDisplay($gid, $values, $template) {
     $groupTitle = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_UFGroup', $gid, 'title');
     $template->assign("grouptitle", $groupTitle);
     if (count($values)) {

@@ -2022,7 +2022,7 @@ AND civicrm_contact.is_opt_out =0";
         $row[$field] = $mailing->$field;
       }
 
-      if ($mailing->queue) {
+      if (!empty($mailing->queue) && !empty($mailing->delivered)) {
         $row['delivered_rate'] = (100.0 * $mailing->delivered) / $mailing->queue;
         $row['opened_rate'] = (100.0 * $row['opened']) / $mailing->delivered;
         $row['clicked_rate'] = (100.0 * $row['url']) / $mailing->delivered;

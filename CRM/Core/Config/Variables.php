@@ -443,9 +443,16 @@ class CRM_Core_Config_Variables extends CRM_Core_Config_Defaults {
   public $cspRules = "";
 
   /**
-   *  AI Organization profile
+   * AI Organization profile
    */
   public $aiOrganizationIntro = '';
+
+  /**
+   * Webserver Log Dir
+   *
+   * It should only use for web server log processing cron jobs
+   */
+  public $webLogDir = 'log';
 
   /**
    * Provide addressSequence
