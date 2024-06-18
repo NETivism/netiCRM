@@ -301,7 +301,7 @@ class CRM_Core_I18n {
     }
 
     // replace the numbered %1, %2, etc. params if present
-    if (count($params)) {
+    if (is_array($params) && count($params)) {
       $text = $this->strarg($text, $params);
     }
 

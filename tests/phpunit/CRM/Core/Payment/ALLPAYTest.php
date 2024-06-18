@@ -166,7 +166,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
       'TradeDate' => date('Y-m-d H:i:s', $now),
       'SimulatePaid' => '1',
     );
-    CRM_Core_Payment_ALLPAY::doIPN('Credit', $post, $get);
+    $this->doIPN(array('allpay', 'ipn', 'Credit'), $post, $get, __LINE__);
 
     // verify contribution status after trigger
     $this->assertDBCompareValue(
@@ -266,7 +266,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
       'TradeDate' => date('Y-m-d H:i:s', $now),
       'SimulatePaid' => '1',
     );
-    CRM_Core_Payment_ALLPAY::doIPN('Credit', $post, $get);
+    $this->doIPN(array('allpay', 'ipn', 'Credit'), $post, $get, __LINE__);
 
     // verify contribution status after trigger
     $this->assertDBCompareValue(
@@ -313,7 +313,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
       'TotalSuccessTimes' => 2,
       'SimulatePaid' => '1',
     );
-    CRM_Core_Payment_ALLPAY::doIPN('Credit', $post, $get);
+    $this->doIPN(array('allpay', 'ipn', 'Credit'), $post, $get, __LINE__);
     $trxn_id2 = CRM_Core_Payment_ALLPAY::generateRecurTrxn($trxn_id, $gwsr1);
 
     // check second payment contribution exists
@@ -522,5 +522,19 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
     $_GET['q'] = 'allpay/record';
     CRM_Core_Payment_ALLPAYIPN::doRecordData(array('allpay', 'record', $cid));
     $this->assertDBQuery($cid, "SELECT cid FROM civicrm_contribution_allpay WHERE data LIKE '%#info%TEST1%' AND cid = $cid");
+  }
+
+  function doIPN($args, $post, $get, $line) {
+    try {
+      CRM_Core_Payment_ALLPAY::doIPN($args, $post, $get);
+    }
+    catch (CRM_Core_Exception $e) {
+      $message = $e->getMessage();
+      $data = $e->getErrorData();
+      $code = $e->getErrorCode();
+      if ($code != CRM_Core_Error::NO_ERROR) {
+        throw new Exception($message.' at line '.$line, $code);
+      }
+    }
   }
 }

@@ -64,7 +64,7 @@ class CRM_Utils_Recent {
     if (!self::$_recent) {
       $session = CRM_Core_Session::singleton();
       self::$_recent = $session->get(self::STORE_NAME);
-      if (!self::$_recent) {
+      if (empty(self::$_recent) || (!empty(self::$_recent) && !is_array(self::$_recent))) {
         self::$_recent = array();
       }
     }

@@ -143,6 +143,7 @@ $dao['ContributionSoft'] = 'CRM_Contribute_DAO_ContributionSoft';
 $dao['TapPay'] = 'CRM_Contribute_DAO_TapPay';
 $dao['TapPayLog'] = 'CRM_Contribute_DAO_TapPayLog';
 $dao['AllPay'] = 'CRM_Contribute_DAO_AllPay';
+$dao['SPGATEWAY'] = 'CRM_Contribute_DAO_SPGATEWAY';
 $dao['CouponTrack'] = 'CRM_Coupon_DAO_CouponTrack';
 $dao['MembershipPayment'] = 'CRM_Member_DAO_MembershipPayment';
 $dao['Event'] = 'CRM_Event_DAO_Event';

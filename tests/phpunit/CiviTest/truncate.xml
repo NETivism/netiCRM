@@ -287,6 +287,8 @@
 
   <civicrm_contribution_allpay />
 
+  <civicrm_contribution_spgateway />
+
   <civicrm_coupon_track />
 
   <civicrm_membership_payment />

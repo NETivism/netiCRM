@@ -1912,7 +1912,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
    * @param string $dateParam  index of params
    * @static
    */
-  function formatCustomDate(&$params, &$formatted, $dateType, $dateParam) {
+  public static function formatCustomDate(&$params, &$formatted, $dateType, $dateParam) {
     //fix for CRM-2687
     CRM_Utils_Date::convertToDefaultDate($params, $dateType, $dateParam);
 

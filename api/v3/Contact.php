@@ -918,3 +918,78 @@ function civicrm_api3_contact_checksum($params) {
   );
   return civicrm_api3_create_success($values, $params, 'contact', 'checksum');
 }
+
+function civicrm_api3_contact_duplicatecheck($params) {
+  if (empty($params['contact_type'])) {
+    return civicrm_api3_create_error('Missing required field in params: contact_type.');
+  }
+  if (empty($params['match'])) {
+    return civicrm_api3_create_error('Missing required fields in params: match.');
+  }
+
+  $dedupeParams = CRM_Dedupe_Finder::formatParams($params['match'], $params['contact_type']);
+  if (empty($dedupeParams['civicrm_contact'])) {
+    return civicrm_api3_create_error('Parameter check error. You need to specify at least 1 field to dedupe.');
+  }
+  if (isset($params['check_permission'])) {
+    $dedupeParams['check_permission'] = $params['check_permission'];
+  }
+
+  if (!empty($params['dedupe_rule_id'])) {
+    if (!is_numeric($params['dedupe_rule_id'])) {
+      return civicrm_api3_create_error('Please specify numeric rule id.');
+    }
+    $rgBao = new CRM_Dedupe_BAO_RuleGroup();
+    $rgBao->id = $params['dedupe_rule_id'];
+    $rgBao->contact_type = $params['contact_type'];
+    if (!$rgBao->find(TRUE)) {
+      return civicrm_api3_create_error('Please specify the correct rule ID corresponding to contact type.');
+    }
+    $foundDupes = CRM_Dedupe_Finder::dupesByParams($dedupeParams,
+      $params['contact_type'],
+      'Strict',
+      array(),
+      $params['dedupe_rule_id']
+    );
+  }
+  elseif(!empty($params['dedupe_rules']) && is_array($params['dedupe_rules'])) {
+    if (empty($params['threshold']) || !is_numeric($params['threshold']) || $params['threshold'] <= 0) {
+      return civicrm_api3_create_error('Please specify numeric threshold and greater than zero of this dedupe.');
+    }
+    $supportedFields = CRM_Dedupe_BAO_RuleGroup::supportedFields($params['contact_type']);
+    foreach($params['dedupe_rules'] as $rule) {
+      if (!empty($rule['table']) && !empty($rule['field']) && !empty($rule['weight'])) {
+        if (!isset($supportedFields[$rule['table']])) {
+          return civicrm_api3_create_error('Rule table should be in supported table. Your rule table: '.$rule['table']." doesn't be supported.");
+        }
+        else {
+          if (!isset($supportedFields[$rule['table']][$rule['field']])) {
+            return civicrm_api3_create_error('Your rule table: '.$rule['table'].', field:'.$rule['field']." doesn't be supported.");
+          }
+        }
+      }
+      else {
+        return civicrm_api3_create_error('Each rule should have three required data: table,field,weight.');
+      }
+    }
+    $foundDupes = CRM_Dedupe_Finder::dupesByRules(
+      $dedupeParams,
+      $params['contact_type'],
+      'Strict',
+      array(),
+      $params['dedupe_rules'],
+      $params['threshold']
+    );
+  }
+  else {
+    $foundDupes = CRM_Dedupe_Finder::dupesByParams($dedupeParams, $params['contact_type'], 'Strict', array());
+  }
+
+  if (empty($foundDupes)) {
+    $foundDupes = [];
+  }
+  if (count($foundDupes)) {
+    sort($foundDupes);
+  }
+  return civicrm_api3_create_success($foundDupes, $params, 'contact', 'duplicatecheck');
+}

@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__.'/extern.inc';
-$config = CRM_Core_Config::singleton();
+CRM_Core_Config::singleton();
 
 // to keep backward compatibility for URLs generated
 // by CiviCRM < 1.7, we check for the q variable as well
