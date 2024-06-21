@@ -87,6 +87,7 @@ abstract class CRM_Mailing_External_SmartMarketing {
             return array(
               'batch' => TRUE,
               'batch_id' => $batchId,
+              'result' => ts('Scheduled').':'.ts('Batch ID').'-'.$batchId,
             );
           }
           else {

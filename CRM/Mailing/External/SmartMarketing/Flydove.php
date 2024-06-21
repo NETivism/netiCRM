@@ -159,8 +159,10 @@ class CRM_Mailing_External_SmartMarketing_Flydove extends CRM_Mailing_External_S
     if (isset($remoteGroups[$destRemoteGroup])) {
       if (!empty(count($contactIds))) {
         $batch = new CRM_Batch_BAO_Batch();
+        $manually = php_sapi_name() === 'cli' ? 'Auto' : 'Manually Synchronize';
+        $batchTitle = ts('Flydove').': '.ts($manually).' - '.ts('Group ID').' '.$groupId;
         $batchParams = array(
-          'label' => ts('Flydove').': '.ts('Manually Synchronize'),
+          'label' => $batchTitle,
           'startCallback' => NULL,
           'startCallbackArgs' => NULL,
           'processCallback' => array($this, 'addContactToRemote'),
