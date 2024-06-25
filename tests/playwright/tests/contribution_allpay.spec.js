@@ -57,15 +57,15 @@ test.describe.serial('ALLPAY', () => {
 
             element = 'input[name="email-5"]';
             await utils.findElement(page, element);
-            await utils.fillInput(page.locator(element), vars.user_email);
+            await utils.fillInput(page.locator(element), vars.user_email, true);
 
             element = 'input[name="first_name"]';
             await utils.findElement(page, element);
-            await utils.fillInput(page.locator(element), vars.first_name);
+            await utils.fillInput(page.locator(element), vars.first_name, true);
 
             element = 'input[name="last_name"]';
             await utils.findElement(page, element);
-            await utils.fillInput(page.locator(element), vars.last_name);
+            await utils.fillInput(page.locator(element), vars.last_name, true);
 
             element = 'input[name="custom_1"][value="0"]';
             await utils.findElement(page, element);

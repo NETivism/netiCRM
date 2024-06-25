@@ -25,8 +25,16 @@ async function findElementByLabel(page, label) {
     return element;
 }
 
-async function fillInput(locator, text_input){
+async function fillInput(locator, text_input, force){
     await expect(locator).toBeEnabled();
+    if (await locator.getAttribute('readonly') && force) {
+      let eleHTML = await locator.evaluate((el) => { return el.outerHTML; });
+      await print('Element is readonly, force to change it.');
+      await print(' original => '+eleHTML);
+      await locator.evaluate((el) => { el.removeAttribute('readonly'); });
+      eleHTML = await locator.evaluate((el) => { return el.outerHTML; });
+      await print(' changed => '+eleHTML);
+    }
     await locator.click();
     await locator.fill(text_input);
     await expect(locator).toHaveValue(text_input);
