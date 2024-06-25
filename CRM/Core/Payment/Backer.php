@@ -331,10 +331,9 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
           array(),
           array(
             array('table' => 'civicrm_contact', 'field' => 'last_name', 'weight' => 2),
-            array('table' => 'civicrm_contact', 'field' => 'first_name', 'weight' => 8),
-            array('table' => 'civicrm_email', 'field' => 'email', 'weight' => 10),
-            array('table' => 'civicrm_phone', 'field' => 'phone', 'weight' => 7),
-            array('table' => 'civicrm_address', 'field' => 'street_address', 'weight' => 8),
+            array('table' => 'civicrm_contact', 'field' => 'first_name', 'weight' => 9),
+            array('table' => 'civicrm_email', 'field' => 'email', 'weight' => 9),
+            array('table' => 'civicrm_phone', 'field' => 'phone', 'weight' => 9),
           ),
           20
         );
