@@ -317,11 +317,10 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
       $backerRelationTypeId = $config->backerFounderRelationship;
       if (!empty($params['additional']['first_name']) && !empty($params['additional']['address']) && !empty($backerRelationTypeId)) {
         $dedupeParams = array(
-          'email' => $params['additional']['email'][0]['email'],
           'last_name' => $params['additional']['last_name'],
           'first_name' => $params['additional']['first_name'],
+          'email' => $params['additional']['email'][0]['email'],
           'phone' => $params['additional']['phone'][0]['phone'],
-          'street_address' => $params['additional']['address'][0]['street_address'],
         );
         $dedupeParams = CRM_Dedupe_Finder::formatParams($dedupeParams, 'Individual');
         $foundDupes = CRM_Dedupe_Finder::dupesByRules(
