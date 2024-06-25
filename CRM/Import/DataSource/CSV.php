@@ -140,8 +140,9 @@ class CRM_Import_DataSource_CSV extends CRM_Import_DataSource {
       $tableName = str_replace('.', '_', microtime(TRUE));
       $table = 'civicrm_import_job_' . $tableName;
     }
-
-    $db->query("DROP TABLE IF EXISTS $table");
+    elseif (strpos($table, 'civicrm_import_job_') !== FALSE) {
+      $db->query("DROP TABLE IF EXISTS $table");
+    }
 
     $numColumns = count($columns);
     $create = "CREATE TABLE $table (" . CRM_Utils_Array::implode(' text, ', $columns) . " text) ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci";
