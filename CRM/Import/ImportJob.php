@@ -44,6 +44,8 @@ class CRM_Import_ImportJob {
    */
   CONST BATCH_THRESHOLD = 2000, BATCH_LIMIT = 2000;
 
+  CONST TABLE_PREFIX = 'civicrm_import_job';
+
   protected $_tableName;
   protected $_primaryKeyName;
   protected $_statusFieldName;
@@ -75,7 +77,7 @@ class CRM_Import_ImportJob {
       // FIXME: we should regen this table's name if it exists rather than drop it
       if (!$tableName) {
         $tableName = str_replace('.', '_', microtime(TRUE));
-        $tableName = 'civicrm_import_job_' . $tableName;
+        $tableName = self::TABLE_PREFIX.'_' . $tableName;
       }
       $db->query("DROP TABLE IF EXISTS $tableName");
       $db->query("CREATE TABLE $tableName ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci $createSql");
@@ -124,9 +126,10 @@ class CRM_Import_ImportJob {
   public static function getIncompleteImportTables() {
     $dao = new CRM_Core_DAO();
     $database = $dao->database();
+    $tablePrefix = CRM_Import_ImportJob::TABLE_PREFIX;
     $query = "SELECT   TABLE_NAME FROM INFORMATION_SCHEMA
                   WHERE    TABLE_SCHEMA = ? AND
-                           TABLE_NAME LIKE 'civicrm_import_job_%'
+                           TABLE_NAME LIKE '{$tablePrefix}_%'
                   ORDER BY TABLE_NAME";
     $result = CRM_Core_DAO::executeQuery($query, array($database));
     $incompleteImportTables = array();

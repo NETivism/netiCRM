@@ -244,7 +244,7 @@ EOT;
   },
   "recipient": {
     "recipient_name": "陳先生",
-    "recipient_contact_email": "admintest2@example.com",
+    "recipient_contact_email": "admintest3@example.com",
     "recipient_cellphone": "+886900111333",
     "recipient_address": "三重路一段3號5樓",
     "recipient_postal_code": "302",

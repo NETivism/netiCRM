@@ -747,15 +747,16 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
     // CRM-5645
     require_once 'CRM/Contact/DAO/Contact.php';
     $dao = new CRM_Contact_DAO_Contact();
+    $importTablePrefix = CRM_Import_ImportJob::TABLE_PREFIX;
     $query = "
  SELECT TABLE_NAME as import_table
    FROM INFORMATION_SCHEMA.TABLES
-  WHERE TABLE_SCHEMA = %1 AND TABLE_NAME LIKE 'civicrm_import_job_%'";
+  WHERE TABLE_SCHEMA = %1 AND TABLE_NAME LIKE '{$importTablePrefix}_%'";
     $params = array(1 => array($dao->database(), 'String'));
     $tableDAO = CRM_Core_DAO::executeQuery($query, $params);
     $importTables = array();
     while ($tableDAO->fetch()) {
-      $microtime = str_replace('civicrm_import_job_', '', $tableDAO->import_table);
+      $microtime = str_replace($importTablePrefix.'_', '', $tableDAO->import_table);
       list($microtime) = explode('_', $microtime);
       // check if over 30 days
       if (is_numeric($microtime)) {

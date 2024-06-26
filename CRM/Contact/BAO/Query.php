@@ -2691,13 +2691,6 @@ WHERE  id IN ( $groupIDs )
     $group = CRM_Core_DAO::executeQuery($sql);
     $ssWhere = array();
     while ($group->fetch()) {
-      if ($tableAlias == NULL) {
-        $alias = "`civicrm_group_contact_cache_{$group->id}`";
-      }
-      else {
-        $alias = $tableAlias;
-      }
-
       $this->_useDistinct = TRUE;
 
       if (!$this->_smartGroupCache || $group->cache_date == NULL) {
@@ -2714,12 +2707,24 @@ WHERE  id IN ( $groupIDs )
         }
       }
 
-      $this->_tables[$alias] = $this->_whereTables[$alias] = " LEFT JOIN civicrm_group_contact_cache {$alias} ON {$joinTable}.id = {$alias}.contact_id ";
-      $ssWhere[] = "{$alias}.group_id = {$group->id}";
+      $groupIds[] = $group->id;
     }
 
-    if (!empty($ssWhere)) {
-      return CRM_Utils_Array::implode(' OR ', $ssWhere);
+    if (!empty($groupIds)) {
+      if ($tableAlias == NULL) {
+        $alias = '`cgcc`';
+      }
+      else {
+        $alias = $tableAlias;
+      }
+      $groupIds = implode(',', $groupIds);
+      $whereSql = <<<EOT
+        EXISTS (
+          SELECT 1 FROM civicrm_group_contact_cache {$alias}
+          WHERE cgcc.contact_id = contact_a.id AND cgcc.group_id IN ({$groupIds})
+        )
+      EOT;
+      return $whereSql;
     }
     return NULL;
   }

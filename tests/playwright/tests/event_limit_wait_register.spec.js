@@ -14,7 +14,7 @@ test.beforeAll(async () => {
   // check whether the number of participants is correct
   await utils.setParticipantNum(page, page_title, 3);
   //logout
-  await page.goto('/user/logout');
+  await utils.logoutUser(page);
 });
 
 test.afterAll(async () => {
