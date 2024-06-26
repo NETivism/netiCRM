@@ -552,7 +552,7 @@ abstract class CRM_Contribute_Import_Parser {
         }
       }
       $headers = array_merge(array(ts('Line Number'), ts('Reason')), $customHeaders);
-      $filenamePrefix = str_replace('civicrm_import_job', self::ERROR_FILE_PREFIX, $tableName);
+      $filenamePrefix = str_replace(CRM_Import_ImportJob::TABLE_PREFIX, self::ERROR_FILE_PREFIX, $tableName);
 
       if ($this->_invalidRowCount) {
         $this->_errorFileName = self::errorFileName(self::ERROR, $filenamePrefix);
