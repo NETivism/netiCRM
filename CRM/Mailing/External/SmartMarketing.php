@@ -47,13 +47,10 @@ abstract class CRM_Mailing_External_SmartMarketing {
             }
             CRM_Core_Error::debug_log_message("Smart Marketing - Processing $groupId");
             $syncResult[$groupId] = self::syncGroup($groupId);
+            CRM_Core_Error::debug_log_message("Smart Marketing - $groupId end");
             $civicrm_batch = NULL;
             // sleep 0.6s each group sync
             usleep(600000);
-
-            if (!empty($syncResult[$groupId]['result']['#report'])) {
-              CRM_Core_Error::debug_log_message(implode(' / ', $syncResult[$groupId]['result']['#report']));
-            }
           }
         }
       }
