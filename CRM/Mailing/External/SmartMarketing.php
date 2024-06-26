@@ -34,6 +34,7 @@ abstract class CRM_Mailing_External_SmartMarketing {
     }
     if (!empty($typeNames)) {
       $syncResult = array();
+      global $civicrm_batch;
       foreach($typeNames as $typeId => $class) {
         $groups = CRM_Core_PseudoConstant::allGroup($typeId);
         CRM_Core_Error::debug_log_message("Smart Marketing - found groups: ".implode(',', $groups));
@@ -46,6 +47,10 @@ abstract class CRM_Mailing_External_SmartMarketing {
             }
             CRM_Core_Error::debug_log_message("Smart Marketing - Processing $groupId");
             $syncResult[$groupId] = self::syncGroup($groupId);
+            $civicrm_batch = NULL;
+            // sleep 0.6s each group sync
+            usleep(600000);
+
             if (!empty($syncResult[$groupId]['result']['#report'])) {
               CRM_Core_Error::debug_log_message(implode(' / ', $syncResult[$groupId]['result']['#report']));
             }

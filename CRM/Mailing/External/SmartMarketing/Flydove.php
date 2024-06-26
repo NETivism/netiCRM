@@ -5,6 +5,11 @@ class CRM_Mailing_External_SmartMarketing_Flydove extends CRM_Mailing_External_S
   const BATCH_NUM = 500;
 
   /**
+   * Remote group cache
+   */
+  public static $_remoteGroups;
+
+  /**
    * Check initialized
    *
    * @var int
@@ -50,7 +55,10 @@ class CRM_Mailing_External_SmartMarketing_Flydove extends CRM_Mailing_External_S
     return FALSE;
   }
 
-  public function getRemoteGroups() {
+  public function getRemoteGroups($force = FALSE) {
+    if (!empty(self::$_remoteGroups) && empty($force)) {
+      return self::$_remoteGroups;
+    }
     $groups = array();
     try {
       $results = $this->apiRequestSend('GetGroupList');
@@ -64,6 +72,7 @@ class CRM_Mailing_External_SmartMarketing_Flydove extends CRM_Mailing_External_S
       CRM_Core_Error::debug_log_message("Flydove error - getRemoteGroups: $errorCode $errorMessage");
       CRM_Core_Session::setStatus(ts('Cannot retrieve remote group, try again later'), TRUE, 'warning');
     }
+    self::$_remoteGroups = $groups;
     return $groups;
   }
 
