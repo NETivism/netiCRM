@@ -2721,7 +2721,7 @@ WHERE  id IN ( $groupIDs )
       $whereSql = <<<EOT
         EXISTS (
           SELECT 1 FROM civicrm_group_contact_cache {$alias}
-          WHERE cgcc.contact_id = contact_a.id AND cgcc.group_id IN ({$groupIds})
+          WHERE {$alias}.contact_id = {$joinTable}.id AND {$alias}.group_id IN ({$groupIds})
         )
       EOT;
       return $whereSql;
