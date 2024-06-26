@@ -378,31 +378,35 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
     $this->saveBatch();
 
     // notify author of this batch by email
-    list($domainEmailName, $domainEmailAddress) = CRM_Core_BAO_Domain::getNameAndEmail();
-    list($toName, $toEmail) = CRM_Contact_BAO_Contact_Location::getEmailDetails($this->_batch->created_id, FALSE);
-    $sendTemplateParams = array(
-      'groupName' => 'msg_tpl_workflow_meta',
-      'valueName' => 'batch_complete_notification',
-      'contactId' => $this->_batch->created_id,
-      'from' => "$domainEmailName <$domainEmailAddress>",
-      'toName' => $toName,
-      'toEmail' => $toEmail,
-      'tplParams' => array(
-        'batch_id' => $this->_id, 
-        'label' => $this->_batch->label,
-        'description' => $this->_batch->description,
-        'created_id' => $this->_batch->created_id,
-        'created_date' => $this->_batch->created_date,
-        'modified_id' => $this->_batch->modified_id,
-        'modified_date' => $this->_batch->modified_date,
-        'expire_date' => date('Y-m-d H:i:s', strtotime($this->_batch->modified_date) + 86400*self::EXPIRE_DAY),
-        'status_id' => $this->_batch->status_id,
-      ),
-    );
-    if ($this->_batch->data['total']) {
-      $sendTemplateParams['tplParams']['total'] = $this->_batch->data['total'];
+    if (!empty($this->_batch->created_id)) {
+      list($domainEmailName, $domainEmailAddress) = CRM_Core_BAO_Domain::getNameAndEmail();
+      list($toName, $toEmail) = CRM_Contact_BAO_Contact_Location::getEmailDetails($this->_batch->created_id, FALSE);
+      if (!empty($toEmail)) {
+        $sendTemplateParams = array(
+          'groupName' => 'msg_tpl_workflow_meta',
+          'valueName' => 'batch_complete_notification',
+          'contactId' => $this->_batch->created_id,
+          'from' => "$domainEmailName <$domainEmailAddress>",
+          'toName' => $toName,
+          'toEmail' => $toEmail,
+          'tplParams' => array(
+            'batch_id' => $this->_id,
+            'label' => $this->_batch->label,
+            'description' => $this->_batch->description,
+            'created_id' => $this->_batch->created_id,
+            'created_date' => $this->_batch->created_date,
+            'modified_id' => $this->_batch->modified_id,
+            'modified_date' => $this->_batch->modified_date,
+            'expire_date' => date('Y-m-d H:i:s', strtotime($this->_batch->modified_date) + 86400*self::EXPIRE_DAY),
+            'status_id' => $this->_batch->status_id,
+          ),
+        );
+        if ($this->_batch->data['total']) {
+          $sendTemplateParams['tplParams']['total'] = $this->_batch->data['total'];
+        }
+        CRM_Core_BAO_MessageTemplates::sendTemplate($sendTemplateParams);
+      }
     }
-    CRM_Core_BAO_MessageTemplates::sendTemplate($sendTemplateParams);
   }
 
 
