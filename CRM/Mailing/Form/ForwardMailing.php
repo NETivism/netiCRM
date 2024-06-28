@@ -74,6 +74,11 @@ class CRM_Mailing_Form_ForwardMailing extends CRM_Core_Form {
     $this->set('queue_id', $queue_id);
     $this->set('job_id', $job_id);
     $this->set('hash', $hash);
+    $obj = array(
+      'type' => 'markup',
+      'markup' => '<meta name="robots" content="noindex" />'.PHP_EOL,
+    );
+    CRM_Utils_System::addHTMLHead($obj);
   }
 
   /**
