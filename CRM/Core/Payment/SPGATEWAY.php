@@ -1384,6 +1384,9 @@ EOT;
               $ipnResult->Result->AlreadyTimes = $period_times;
             }
             $ipnResult->Result->MerchantOrderNo = $first_id;
+            if (preg_match('/^r_/', $trxnId)) {
+              $ipnResult->Result->OrderNo = $trxnId;
+            }
             $ipnResult = json_encode($ipnResult);
             $ipnPost = array('Period' => CRM_Core_Payment_SPGATEWAYAPI::recurEncrypt($ipnResult, $paymentProcessor));
 
