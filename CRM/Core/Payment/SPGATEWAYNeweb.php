@@ -10,7 +10,7 @@ class CRM_Core_Payment_SPGATEWAYNeweb {
    * @param bool $isTest
    * @return void
    */
-  public static function transfer($post = NULL, $get = NULL, $print = TRUE, $isTest = FALSE) {
+  public static function transfer($args, $post = NULL, $get = NULL, $print = TRUE, $isTest = FALSE) {
     $post = !empty($post) ? $post : $_POST;
     CRM_Core_Error::debug_var('spgateway_neweb_transfer_post', $post);
     $ids = array();
