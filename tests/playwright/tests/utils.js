@@ -14,6 +14,18 @@ async function print(s){
     console.log(s);
 }
 
+async function logoutUser(page) {
+    await page.goto('/user/logout');
+    await wait(500);
+
+    const currentUrl = page.url();
+    if (currentUrl.match(/logout\/confirm/)) {
+      const confirmButton = await page.getByRole('button', {name:'Log out'});
+      confirmButton.click();
+      await wait(1500);
+    }
+}
+
 async function findElement(page, element){
     await page.locator(element).first().waitFor();
     await print('Find an element matching: ' + element);
@@ -193,5 +205,5 @@ async function setParticipantNum(page, page_title, event_id, full_participant='5
 }
 
 module.exports = {
-    makeid, print, findElement, findElementByLabel, fillInput, checkInput, selectOption, clickElement, selectDate, wait, getPageTitle, fillForm ,reLogin , setParticipantNum
+    makeid, print, logoutUser, findElement, findElementByLabel, fillInput, checkInput, selectOption, clickElement, selectDate, wait, getPageTitle, fillForm ,reLogin , setParticipantNum
 }

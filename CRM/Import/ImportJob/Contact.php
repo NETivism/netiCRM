@@ -53,7 +53,7 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
     $allArgs = func_get_args();
     if (empty($civicrm_batch)) {
       if ($this->_totalRowCount > CRM_Import_ImportJob::BATCH_THRESHOLD) {
-        $fileName = str_replace('civicrm_import_job_', '', $this->_tableName);
+        $fileName = str_replace(CRM_Import_ImportJob::TABLE_PREFIX.'_', '', $this->_tableName);
         $fileName = 'import_contact_'.$fileName.'.zip';
         $config = CRM_Core_Config::singleton();
         $file = $config->uploadDir.$fileName;
@@ -327,7 +327,7 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
 
       if ($zip->open($zipFile, ZipArchive::CREATE) == TRUE) {
         $config = CRM_Core_Config::singleton();
-        $fileName = str_replace('civicrm_import_job', CRM_Import_Parser::ERROR_FILE_PREFIX, $this->_tableName);
+        $fileName = str_replace(CRM_Import_ImportJob::TABLE_PREFIX, CRM_Import_Parser::ERROR_FILE_PREFIX, $this->_tableName);
         $errorFiles = array();
         $errorFiles[] = CRM_Import_Parser::errorFileName(CRM_Import_Parser::ERROR, $fileName);
         $errorFiles[] = CRM_Import_Parser::errorFileName(CRM_Import_Parser::CONFLICT, $fileName);

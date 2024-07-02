@@ -317,10 +317,10 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
       $backerRelationTypeId = $config->backerFounderRelationship;
       if (!empty($params['additional']['first_name']) && !empty($params['additional']['address']) && !empty($backerRelationTypeId)) {
         $dedupeParams = array(
-          'email' => $params['additional']['email'][0]['email'],
           'last_name' => $params['additional']['last_name'],
           'first_name' => $params['additional']['first_name'],
-          'phone' => $params['additional']['phone'][0]['phone']
+          'email' => $params['additional']['email'][0]['email'],
+          'phone' => $params['additional']['phone'][0]['phone'],
         );
         $dedupeParams = CRM_Dedupe_Finder::formatParams($dedupeParams, 'Individual');
         $foundDupes = CRM_Dedupe_Finder::dupesByRules(
@@ -330,9 +330,9 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
           array(),
           array(
             array('table' => 'civicrm_contact', 'field' => 'last_name', 'weight' => 2),
-            array('table' => 'civicrm_contact', 'field' => 'first_name', 'weight' => 8),
-            array('table' => 'civicrm_email', 'field' => 'email', 'weight' => 10),
-            array('table' => 'civicrm_phone', 'field' => 'phone', 'weight' => 7),
+            array('table' => 'civicrm_contact', 'field' => 'first_name', 'weight' => 9),
+            array('table' => 'civicrm_email', 'field' => 'email', 'weight' => 9),
+            array('table' => 'civicrm_phone', 'field' => 'phone', 'weight' => 9),
           ),
           20
         );

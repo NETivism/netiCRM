@@ -1163,10 +1163,11 @@ EOT;
           else {
             $trxnId = $inputTrxnId;
           }
+          $queryTrxnId = preg_replace('/^r_/', '', $trxnId);
           $data = array(
             'Amt' => floor($amount),
             'MerchantID' => $paymentProcessor['user_name'],
-            'MerchantOrderNo' => $trxnId,
+            'MerchantOrderNo' => $queryTrxnId,
             'RespondType' => self::RESPONSE_TYPE,
             'TimeStamp' => CRM_REQUEST_TIME,
             'Version' => self::QUERY_VERSION,
@@ -1345,10 +1346,12 @@ EOT;
         }
         else {
           $amount = CRM_Core_DAO::singleValueQuery('SELECT amount FROM civicrm_contribution_recur WHERE id = %1', array(1 => array($contribution->contribution_recur_id, 'Positive')));
+
+          $queryTrxnId = preg_replace('/^r_/', '', $trxnId);
           $data = array(
             'Amt' => floor($amount),
             'MerchantID' => $paymentProcessor['user_name'],
-            'MerchantOrderNo' => $trxnId,
+            'MerchantOrderNo' => $queryTrxnId,
             'RespondType' => self::RESPONSE_TYPE,
             'TimeStamp' => CRM_REQUEST_TIME,
             'Version' => self::QUERY_VERSION,
@@ -1381,6 +1384,9 @@ EOT;
               $ipnResult->Result->AlreadyTimes = $period_times;
             }
             $ipnResult->Result->MerchantOrderNo = $first_id;
+            if (preg_match('/^r_/', $trxnId)) {
+              $ipnResult->Result->OrderNo = $trxnId;
+            }
             $ipnResult = json_encode($ipnResult);
             $ipnPost = array('Period' => CRM_Core_Payment_SPGATEWAYAPI::recurEncrypt($ipnResult, $paymentProcessor));
 
@@ -1395,7 +1401,7 @@ EOT;
             $result->_response = self::doIPN(array('spgateway', 'ipn', 'Credit'), $ipnPost, $ipnGet, FALSE);
             $contribution = new CRM_Contribute_DAO_Contribution();
             $contribution->trxn_id = $parentTrxnId;
-            if ($contribution->find(TRUE) && strstr($trxnId, '_1')) {
+            if ($contribution->find(TRUE) && preg_match('/_1$/', $trxnId)) {
               // The case first contribution trxn_id not append '_1' in the end.
               CRM_Core_DAO::setFieldValue('CRM_Contribute_DAO_Contribution', $contribution->id, 'trxn_id', $trxnId);
             }

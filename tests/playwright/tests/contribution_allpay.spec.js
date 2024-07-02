@@ -40,7 +40,7 @@ test.describe.serial('ALLPAY', () => {
         await test.step('Contribution page', async () => {
 
             /* Step 1: Contribution page */
-            await page.goto('/user/logout');
+            await utils.logoutUser(page);
             await page.goto(`${vars.path}?${vars.query}`);
             const page_title = `${vars.page_title} | ${vars.site_name}`;
             await expect(page).toHaveTitle(page_title);

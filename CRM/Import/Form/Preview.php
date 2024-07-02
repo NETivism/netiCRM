@@ -82,7 +82,7 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
     }
 
     $tableName = $this->get('importTableName');
-    $prefix = str_replace('civicrm_import_job', CRM_Import_Parser::ERROR_FILE_PREFIX, $tableName);
+    $prefix = str_replace(CRM_Import_ImportJob::TABLE_PREFIX, CRM_Import_Parser::ERROR_FILE_PREFIX, $tableName);
     $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String', $this);
     CRM_Import_Parser::setImportErrorFilenames($qfKey, array('error', 'conflict','no_match'), 'CRM_Import_Parser', $prefix, $this);
 
@@ -577,7 +577,7 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
       $this->set('errorFile', $errorFile);
 
       $tableName = $this->get('importTableName');
-      $fileName = str_replace('civicrm_import_job_', 'import_', $tableName);
+      $fileName = str_replace(CRM_Import_ImportJob::TABLE_PREFIX.'_', 'import_', $tableName);
       $urlParams = 'type=' . CRM_Import_Parser::ERROR . '&parser=CRM_Import_Parser&file='.$fileName;
       $this->set('downloadErrorRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlparams));
 

@@ -73,10 +73,6 @@
         }
       }
     });
-    var clickSubmitButton;
-    $('#MailingOption').on('click', '.form-submit', function(e) {
-      clickSubmitButton = $(e.target);
-    });
 
     $("#MailingOption").submit(function(e){
       var button;
@@ -84,8 +80,9 @@
         button = $(this).data('action');
       }
       else {
-        button = clickSubmitButton.attr('name');
+        button = $(e.originalEvent.submitter).attr('name');
       }
+
       if (button == '_qf_MailingOption_next' && !confirmEmail) {
         $('#dialog-confirm-email').dialog('open');
       }

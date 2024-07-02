@@ -13,7 +13,7 @@ test.beforeAll(async () => {
   page_title = await utils.getPageTitle('有名額限制，不開放候補');
   await utils.setParticipantNum(page, page_title, 2);
   // logout
-  await page.goto('/user/logout');
+  await utils.logoutUser(page);
 });
 
 test.afterAll(async () => {
