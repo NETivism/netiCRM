@@ -321,7 +321,7 @@ class CRM_Group_Form_Edit extends CRM_Core_Form {
       // flydove doesn't support create group
       $remoteGroups = array_diff_key($remoteGroups, $this->_smartMarketingFreezed);
       $remoteGroups = array('' => ts('-- Select --')) + $remoteGroups;
-      $eleSmGroup = $this->addSelect('remote_group_id', ts('Smart Marketing Group'), $remoteGroups);
+      $eleSmGroup = $this->addSelect('remote_group_id', ts('Remote Group'), $remoteGroups);
       if (!empty($this->_groupValues['is_sync']) && !empty($this->_groupValues['sync_data'])) {
         $eleSmGroup->freeze();
       }
