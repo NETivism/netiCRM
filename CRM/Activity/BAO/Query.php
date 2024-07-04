@@ -310,6 +310,11 @@ class CRM_Activity_BAO_Query {
         $query->_qill[$grouping][] = ts('Activity Tag %1', array(1 => $op)) . ' ' . CRM_Utils_Array::implode(' ' . ts('OR') . ' ', $names);
         $query->_tables['civicrm_activity_tag'] = $query->_whereTables['civicrm_activity_tag'] = 1;
         break;
+
+      case 'parent_id':
+        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("civicrm_activity.parent_id", $op, $value, "Integer");
+        $query->_qill[$grouping][] = ts('Task Parent') . ' = ' . $value;
+        break;
     }
   }
 

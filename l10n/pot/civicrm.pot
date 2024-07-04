@@ -49449,7 +49449,6 @@ msgstr ""
 msgid "Smart Marketing Group"
 msgstr ""
 
-
 #: CRM/Mailing/External/SmartMarketing/Flydove.php
 msgid "Cannot retrieve remote group, try again later"
 msgstr ""
@@ -49543,4 +49542,8 @@ msgid "The will be synchronized at a fixed time every day."
 msgstr ""
 
 msgid "If there is an immediate need, you can click \"Manual Sync\"."
+msgstr ""
+
+#: CRM/Group/Form/Edit.php
+msgid "Remote Group"
 msgstr ""

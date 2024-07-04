@@ -929,6 +929,9 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
       CRM_Core_Session::setStatus(ts("Selected Activity has been deleted sucessfully."));
       return;
     }
+    if ($this->_action & CRM_Core_Action::VIEW) {
+      return;
+    }
 
     // store the submitted values in an array
     if (!$params) {
