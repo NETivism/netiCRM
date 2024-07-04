@@ -758,7 +758,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
               }
 
               // manually trigger ipn
-              self::doIPN('Credit', $post, $get, FALSE);
+              self::doIPN(array('allpay', 'ipn', 'Credit'), $post, $get, FALSE);
             }
           }
         }
@@ -844,7 +844,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
               $ipnPost['do_not_email'] = 1;
             }
             */
-            $result = self::doIPN('Credit', $ipnPost, $ipnGet, FALSE);
+            $result = self::doIPN(array('allpay', 'ipn', 'Credit'), $ipnPost, $ipnGet, FALSE);
             return $result;
           }
         }
@@ -985,7 +985,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
   /**
    * Execute ipn as called from allpay transaction. Original civicrm_allpay_ipn
    *
-   * @param string $instrument The code of used instrument like 'Credit' or 'ATM'.
+   * @param array $instrument The code of used instrument like 'Credit' or 'ATM'.
    * @param array $post Bring post variables if you need test.
    * @param array $get Bring get variables if you need test.
    * @param boolean $print Does server echo the result, or just return that. Default is TRUE.
@@ -1030,6 +1030,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
         CRM_Core_Error::debug_log_message( "civicrm_allpay: Could not get module name from request url", TRUE);
       }
     }
+    CRM_Utils_System::civiExit();
   }
 }
 

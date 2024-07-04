@@ -65,7 +65,7 @@ class CRM_Import_Form_Summary extends CRM_Core_Form {
     $unparsedAddressCount = $this->get('unparsedAddressCount');
 
     $tableName = $this->get('importTableName');
-    $prefix = str_replace('civicrm_import_job', CRM_Import_Parser::ERROR_FILE_PREFIX, $tableName);
+    $prefix = str_replace(CRM_Import_ImportJob::TABLE_PREFIX, CRM_Import_Parser::ERROR_FILE_PREFIX, $tableName);
     $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String', $this);
     CRM_Import_Parser::setImportErrorFilenames($qfKey, array('error', 'conflict','duplicate','no_match','unparsed_address_warning'), 'CRM_Import_Parser', $prefix, $this);
 
@@ -139,7 +139,7 @@ class CRM_Import_Form_Summary extends CRM_Core_Form {
 
     $importTableName = $this->get('importTableName');
     // do a basic sanity check here
-    if (strpos($importTableName, 'civicrm_import_job_') === 0) {
+    if (strpos($importTableName, CRM_Import_ImportJob::TABLE_PREFIX.'_') === 0) {
       $query = "DROP TABLE IF EXISTS $importTableName";
       $db->query($query);
     }

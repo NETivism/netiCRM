@@ -52,7 +52,7 @@ class CRM_Logging_Schema {
       $this->tables[] = $dao->toValue("Tables_in_{$dao->_database}_(civicrm_%)");
     }
     // do not log temp import and cache tables
-    $this->tables = preg_grep('/^civicrm_import_job_/', $this->tables, PREG_GREP_INVERT);
+    $this->tables = preg_grep('/^'.CRM_Import_ImportJob::TABLE_PREFIX.'_/', $this->tables, PREG_GREP_INVERT);
     $this->tables = preg_grep('/_cache$/', $this->tables, PREG_GREP_INVERT);
 
     $dao = CRM_Core_DAO::executeQuery("SHOW TABLES FROM {$this->loggingDB} LIKE 'log_civicrm_%'");

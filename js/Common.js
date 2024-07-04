@@ -865,7 +865,7 @@ function mdFormElement(type, label, attr){
   var id;
   for(i in attr) {
     if(type == 'select' && i == 'values') {
-      opt = values;
+      opt = attr[i];
       continue;
     }
     if(i == 'class') {

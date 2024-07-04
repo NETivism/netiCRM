@@ -442,7 +442,7 @@ class CRM_Utils_Mail {
       $name = '';
       $email = trim($address);
     }
-    if (!empty($name) && preg_match('/[' . preg_quote(self::RFC_2822_SPECIAL_CHARS) . ']/u', $name)) {
+    if (!empty($name) && preg_match('/[ ' . preg_quote(self::RFC_2822_SPECIAL_CHARS) . ']/u', $name)) {
       // check the name already quoted
       if (!preg_match('/^"[^"]+"\s*<[^>]+@[^>]+>/i', $address)) {
         return FALSE;

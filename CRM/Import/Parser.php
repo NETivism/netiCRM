@@ -487,7 +487,7 @@ abstract class CRM_Import_Parser {
         }
       }
 
-      $filenamePrefix = str_replace('civicrm_import_job', self::ERROR_FILE_PREFIX, $this->_tableName);
+      $filenamePrefix = str_replace(CRM_Import_ImportJob::TABLE_PREFIX, self::ERROR_FILE_PREFIX, $this->_tableName);
       if ($this->_invalidRowCount) {
         // removed view url for invlaid contacts
         $headers = array_merge(

@@ -716,6 +716,11 @@ return array(
     'class' => 'CRM_Contribute_DAO_AllPay',
     'table' => 'civicrm_contribution_allpay',
   ) ,
+  'CRM_Contribute_DAO_SPGATEWAY' => array(
+    'name' => 'SPGATEWAY',
+    'class' => 'CRM_Contribute_DAO_SPGATEWAY',
+    'table' => 'civicrm_contribution_spgateway',
+  ) ,
   'CRM_Coupon_DAO_CouponTrack' => array(
     'name' => 'CouponTrack',
     'class' => 'CRM_Coupon_DAO_CouponTrack',

@@ -1482,6 +1482,7 @@ class CRM_Contact_BAO_Query {
       case 'activity_engagement_level':
       case 'activity_id':
       case 'activity_record_id':
+      case 'parent_id':
         CRM_Activity_BAO_Query::whereClauseSingle($values, $this);
         return;
 
@@ -2691,13 +2692,6 @@ WHERE  id IN ( $groupIDs )
     $group = CRM_Core_DAO::executeQuery($sql);
     $ssWhere = array();
     while ($group->fetch()) {
-      if ($tableAlias == NULL) {
-        $alias = "`civicrm_group_contact_cache_{$group->id}`";
-      }
-      else {
-        $alias = $tableAlias;
-      }
-
       $this->_useDistinct = TRUE;
 
       if (!$this->_smartGroupCache || $group->cache_date == NULL) {
@@ -2714,12 +2708,24 @@ WHERE  id IN ( $groupIDs )
         }
       }
 
-      $this->_tables[$alias] = $this->_whereTables[$alias] = " LEFT JOIN civicrm_group_contact_cache {$alias} ON {$joinTable}.id = {$alias}.contact_id ";
-      $ssWhere[] = "{$alias}.group_id = {$group->id}";
+      $groupIds[] = $group->id;
     }
 
-    if (!empty($ssWhere)) {
-      return CRM_Utils_Array::implode(' OR ', $ssWhere);
+    if (!empty($groupIds)) {
+      if ($tableAlias == NULL) {
+        $alias = '`cgcc`';
+      }
+      else {
+        $alias = $tableAlias;
+      }
+      $groupIds = implode(',', $groupIds);
+      $whereSql = <<<EOT
+        EXISTS (
+          SELECT 1 FROM civicrm_group_contact_cache {$alias}
+          WHERE {$alias}.contact_id = {$joinTable}.id AND {$alias}.group_id IN ({$groupIds})
+        )
+      EOT;
+      return $whereSql;
     }
     return NULL;
   }

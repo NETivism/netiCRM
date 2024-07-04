@@ -204,7 +204,7 @@ class CRM_Contribute_Import_Form_UploadFile extends CRM_Core_Form {
     $this->_params['import_table_name'] = $this->get('importTableName');
     if (!$this->_params['import_table_name']) {
       $tableName = str_replace('.', '_', microtime(TRUE));
-      $this->_params['import_table_name'] = 'civicrm_import_job_' . $tableName;
+      $this->_params['import_table_name'] = CRM_Import_ImportJob::TABLE_PREFIX.'_' . $tableName;
     }
     CRM_Import_DataSource_CSV::postProcess($this, $this->_params, $db);
     $importTableName = $this->get('importTableName');
