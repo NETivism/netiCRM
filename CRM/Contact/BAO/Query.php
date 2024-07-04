@@ -1482,6 +1482,7 @@ class CRM_Contact_BAO_Query {
       case 'activity_engagement_level':
       case 'activity_id':
       case 'activity_record_id':
+      case 'parent_id':
         CRM_Activity_BAO_Query::whereClauseSingle($values, $this);
         return;
 
