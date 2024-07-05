@@ -12,6 +12,7 @@
         NSP_HEADER = "nsp-header",
         NSP_FOOTER = "nsp-footer",
         NSP_TRIGGER = "nsp-trigger",
+        NSP_USER_PREFERENCE_OPEN_STATUS = "nsp_user_preference_open_status",
         INNER_CLASS = "inner",
         ACTIVE_CLASS = "is-active",
         OPEN_CLASS = "is-opened",
@@ -248,9 +249,11 @@
       }
 
       let nspOpenedDefault = _nspOpened;
-      if (_nspUserPreference) {
-        if (typeof window.setCookie !== 'undefined') {
-          nspOpenedDefault = getCookie('nsp_user_preference_open_status');
+
+      if (_nspUserPreference && typeof window.getCookie !== 'undefined') {
+        const userPreferenceStatus = getCookie(NSP_USER_PREFERENCE_OPEN_STATUS);
+        if (userPreferenceStatus) {
+          nspOpenedDefault = userPreferenceStatus;
         }
       }
 
@@ -264,7 +267,7 @@
       $("body").addClass("nsp-" + OPEN_CLASS);
       if (_nspUserPreference) {
         if (typeof window.setCookie !== 'undefined') {
-          setCookie('nsp_user_preference_open_status', true, 86400*30, window.location.pathname);
+          setCookie(NSP_USER_PREFERENCE_OPEN_STATUS, true, 86400*30, window.location.pathname);
         }
       }
     },
@@ -274,7 +277,7 @@
       $("body").removeClass("nsp-" + OPEN_CLASS);
       if (_nspUserPreference) {
         if (typeof window.setCookie !== 'undefined') {
-          setCookie('nsp_user_preference_open_status', false, 86400*30, window.location.pathname);
+          setCookie(NSP_USER_PREFERENCE_OPEN_STATUS, false, 86400*30, window.location.pathname);
         }
       }
     },
