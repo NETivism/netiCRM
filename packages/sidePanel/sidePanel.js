@@ -54,6 +54,7 @@
     _nspOpened,
     _nspFullscreen,
     _nspContainerClass,
+    _nspUserPreference,
 		_nspAPI = window.location.origin + "/api/",
 		_container,
 		_content = "." + NSP_CONTENT,
@@ -246,19 +247,36 @@
         _cssVariablesUpdate("--nsp-width", _nspWidth);
       }
 
-      if (_nspOpened) {
+      let nspOpenedDefault = _nspOpened;
+      if (_nspUserPreference) {
+        if (typeof window.setCookie !== 'undefined') {
+          nspOpenedDefault = getCookie('nsp_user_preference_open_status');
+        }
+      }
+
+      if (nspOpenedDefault && nspOpenedDefault != 'false') {
         _nspMain.open();
       }
-		},
+    },
     open: function() {
       $(_container).addClass(OPEN_CLASS);
       $(_container).removeClass(CLOSE_CLASS);
       $("body").addClass("nsp-" + OPEN_CLASS);
+      if (_nspUserPreference) {
+        if (typeof window.setCookie !== 'undefined') {
+          setCookie('nsp_user_preference_open_status', true, 86400*30, window.location.pathname);
+        }
+      }
     },
     close: function() {
       $(_container).removeClass(OPEN_CLASS);
       $(_container).addClass(CLOSE_CLASS);
       $("body").removeClass("nsp-" + OPEN_CLASS);
+      if (_nspUserPreference) {
+        if (typeof window.setCookie !== 'undefined') {
+          setCookie('nsp_user_preference_open_status', false, 86400*30, window.location.pathname);
+        }
+      }
     },
     fullscreen: function() {
       _nspMain.open();
@@ -453,6 +471,7 @@
       _nspWidth = _nspOptions.width;
       _nspOpened = _nspOptions.opened;
       _nspFullscreen = _nspOptions.fullscreen;
+      _nspUserPreference = _nspOptions.userPreference;
 
       if (_debugMode) {
         $("html").addClass("is-debug");
