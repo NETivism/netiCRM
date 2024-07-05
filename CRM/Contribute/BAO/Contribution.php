@@ -2844,7 +2844,7 @@ WHERE c.id = $id";
       }
       elseif ($legalIDformat == 'partial') {
         if (strlen($legalID) >= 3) {
-          $resultLegalID = substr($legalID, 0, 6).str_repeat('*', 4);
+          $resultLegalID = substr($legalID, 0, 1).str_repeat('*', (strlen($legalID) - 2)).substr($legalID, -1, 1);
         }
         else {
           $resultLegalID = str_repeat('*', strlen($legalID));
