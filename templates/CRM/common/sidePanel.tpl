@@ -26,6 +26,7 @@
     neticrmSidePanelOpts.fullscreen = "{/literal}{$fullscreen}{literal}";
     neticrmSidePanelOpts.userPreference = "{/literal}{$userPreference}{literal}";
 		neticrmSidePanelOpts.debugMode = "{/literal}{$config->debug}{literal}";
+    window.neticrmSidePanelOptions = neticrmSidePanelOpts;
     window.neticrmSidePanelInstance = $(".nsp-container").neticrmSidePanel(".nsp-container", neticrmSidePanelOpts);
 	});
 })(cj);
