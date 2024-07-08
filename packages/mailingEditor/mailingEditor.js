@@ -1667,8 +1667,10 @@
           _checkPanelOpen();
         }
       });
-      // check default open
-      _checkPanelOpen();
+
+      if (!window.neticrmSidePanelOptions.userPreference) {
+        _checkPanelOpen();
+      }
 
       $("#Upload").off("click").on("click", ".form-submit", function(event) {
         $(this).closest("form").data("action", $(this).attr("name"));
@@ -3054,12 +3056,10 @@
       this.initialized = true;
     },
     open: function() {
-      $(_panels).addClass("is-opened");
-      $("body").addClass("nsp-is-opened");
+      window.neticrmSidePanelInstance ? window.neticrmSidePanelInstance.open() : $(_panels).addClass("is-opened");
     },
     close: function() {
-      $(_panels).removeClass("is-opened");
-      $("body").removeClass("nsp-is-opened");
+      window.neticrmSidePanelInstance ? window.neticrmSidePanelInstance.close() : $(_panels).removeClass("is-opened");
     }
   }
 
