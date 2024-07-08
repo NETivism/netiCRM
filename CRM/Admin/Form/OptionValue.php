@@ -58,18 +58,46 @@ class CRM_Admin_Form_OptionValue extends CRM_Admin_Form {
    */
   public function preProcess() {
     parent::preProcess();
-    require_once 'CRM/Utils/Request.php';
-    $this->_gid = CRM_Utils_Request::retrieve('gid', 'Positive',
-      $this, FALSE, 0
-    );
+    $this->_gid = CRM_Utils_Request::retrieve('gid', 'Positive', $this, FALSE, 0);
     //get optionGroup name in case of email/postal greeting or addressee, CRM-4575
     if (!empty($this->_gid)) {
       $this->_gName = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionGroup', $this->_gid, 'name');
+    }
+    else {
+      $this->_gName = CRM_Utils_Request::retrieve('group', 'String', $this, FALSE, 0);
+      if (!empty($this->_gName)) {
+        $this->_gid = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionGroup', $this->_gName, 'id', 'name');
+      }
+    }
+    if (empty($this->_gid)) {
+      CRM_Core_Error::fatal(ts('Missing required fields').': '.ts('Option Group Name'));
+    }
+    // get id from value
+    if ($this->_action & CRM_Core_Action::UPDATE){
+      if(!is_numeric($this->_id)) {
+        $value = CRM_Utils_Request::retrieve('value', 'String', $this, TRUE);
+        $optionId = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_option_value WHERE option_group_id = %1 AND value = %2", array(
+          1 => array($this->_gid, 'Integer'),
+          2 => array($value, 'String'),
+        ));
+        if (!empty($optionId)) {
+          $this->_id = $optionId;
+        }
+        else {
+          CRM_Core_Error::fatal(ts('Missing required fields').': '.ts('Option Value'));
+        }
+      }
+      $label = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionValue', $this->_id, 'label');
+      if (ts($label) !== $label) {
+        $label = ts($label)."($label)";
+      }
+      CRM_Utils_System::setTitle(ts('Edit %1 Option', array(1 => $label)));
     }
     $session = CRM_Core_Session::singleton();
     $url = CRM_Utils_System::url('civicrm/admin/optionValue', 'reset=1&action=browse&gid=' . $this->_gid);
     $session->pushUserContext($url);
     $this->assign('id', $this->_id);
+    $this->assign('gid', $this->_gid);
 
     require_once 'CRM/Core/OptionGroup.php';
     if ($this->_id && in_array($this->_gName, CRM_Core_OptionGroup::$_domainIDGroups)) {
@@ -157,6 +185,21 @@ class CRM_Admin_Form_OptionValue extends CRM_Admin_Form {
     $this->add('checkbox', 'is_default', ts('Default Option?'));
     $this->add('checkbox', 'is_optgroup', ts('Option Group?'));
     $ele = $this->add('checkbox', 'filter', ts('Filter'));
+
+    if (CRM_Core_Permission::check('administer neticrm')) {
+      $this->assign('show_details', TRUE);
+    }
+    else {
+      $this->getElement('label')->freeze();
+      $this->getElement('value')->freeze();
+      $this->getElement('name')->freeze();
+      $this->getElement('grouping')->freeze();
+      $this->getElement('description')->freeze();
+      $this->getElement('is_default')->freeze();
+      $this->getElement('is_optgroup')->freeze();
+      $this->getElement('weight')->freeze();
+    }
+
     if ($this->_gName = 'contact_edit_options') {
       $ele = $ele->freeze();
     }

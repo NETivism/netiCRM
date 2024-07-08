@@ -186,6 +186,12 @@ class CRM_Admin_Page_AJAX {
 
         case 'CRM_Contact_BAO_Group':
           $status = ts('Are you sure you want to disable this Group?');
+          if (!empty($recordID)) {
+            $provider = CRM_Mailing_External_SmartMarketing::getProviderByGroup($recordID);
+            if (!empty($provider)) {
+              $status .= '<br><br>'.ts('The smart markeintg journey is still in progress. To delete the contact or remove contact from group list, you need to go to the external smart marketing tool to proceed.');
+            }
+          }
           break;
 
         case 'CRM_Core_BAO_OptionGroup':

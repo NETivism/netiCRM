@@ -126,5 +126,98 @@ class CRM_Admin_Page_OptionGroup extends CRM_Core_Page_Basic {
   function userContext($mode = NULL) {
     return 'civicrm/admin/optionGroup';
   }
+
+  /**
+   * browse all entities.
+   *
+   * @param int $action
+   *
+   * @return void
+   * @access public
+   */
+  function browse() {
+    $thisArgs = func_get_args();
+    $action = isset($thisArgs[0]) ? $thisArgs[0] : NULL;
+    $sort = isset($thisArgs[1]) ? $thisArgs[1] : NULL;
+    $links = &$this->links();
+    if ($action == NULL) {
+      if (!empty($links)) {
+        $action = array_sum(array_keys($links));
+      }
+    }
+    if (!CRM_Core_Permission::check('administer neticrm')) {
+      $action = CRM_Core_Action::BROWSE;
+      $action -= CRM_Core_Action::DISABLE;
+    }
+    else {
+      $this->assign('show_add_link', TRUE);
+      if ($action & CRM_Core_Action::DISABLE) {
+        $action -= CRM_Core_Action::DISABLE;
+      }
+      if ($action & CRM_Core_Action::ENABLE) {
+        $action -= CRM_Core_Action::ENABLE;
+      }
+    }
+
+    $baoString = $this->getBAOName();
+    $object = new $baoString();
+
+    $values = array();
+
+    /*
+         * lets make sure we get the stuff sorted by name if it exists
+         */
+
+    $fields = &$object->fields();
+    $key = '';
+    if (CRM_Utils_Array::value('title', $fields)) {
+      $key = 'title';
+    }
+    elseif (CRM_Utils_Array::value('label', $fields)) {
+      $key = 'label';
+    }
+    elseif (CRM_Utils_Array::value('name', $fields)) {
+      $key = 'name';
+    }
+
+    if (trim($sort)) {
+      $object->orderBy($sort);
+    }
+    elseif ($key) {
+      $object->orderBy($key . ' asc');
+    }
+
+
+    // find all objects
+    $object->find();
+    while ($object->fetch()) {
+      if (!isset($object->mapping_type_id) ||
+        // "1 for Search Builder"
+        $object->mapping_type_id != 1
+      ) {
+        $permission = CRM_Core_Permission::EDIT;
+        if ($key) {
+          $permission = $this->checkPermission($object->id, $object->$key);
+        }
+        if ($permission) {
+          $values[$object->id] = array();
+          CRM_Core_DAO::storeValues($object, $values[$object->id]);
+
+          require_once 'CRM/Contact/DAO/RelationshipType.php';
+          CRM_Contact_DAO_RelationshipType::addDisplayEnums($values[$object->id]);
+
+          // populate action links
+          $this->action($object, $action, $values[$object->id], $links, $permission);
+
+          if (isset($object->mapping_type_id)) {
+            require_once 'CRM/Core/PseudoConstant.php';
+            $mappintTypes = CRM_Core_PseudoConstant::mappingTypes();
+            $values[$object->id]['mapping_type'] = $mappintTypes[$object->mapping_type_id];
+          }
+        }
+      }
+    }
+    $this->assign('rows', $values);
+  }
 }
 

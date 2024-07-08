@@ -203,4 +203,9 @@
      <access_arguments>approve mailings</access_arguments>     
      <weight>850</weight>
   </item>
+  <item>
+     <path>civicrm/ajax/addContactToRemote</path>
+     <page_callback>CRM_Mailing_Page_AJAX::addContactToRemote</page_callback>
+     <access_arguments>access CiviCRM,edit groups</access_arguments>
+  </item>
 </menu>

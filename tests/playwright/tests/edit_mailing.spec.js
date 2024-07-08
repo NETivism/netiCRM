@@ -127,7 +127,7 @@ test.describe.serial('Mailing Editing', () => {
         await test.step('Mailing Test.', async () => {
 
             /* Step 1: open "New Mailing" page */
-            await page.goto('civicrm/mailing/send');
+            await page.goto('civicrm/mailing/send?reset=1');
             await utils.wait(wait_secs);
             await expect(page.locator('.crm-error')).toHaveCount(0);
             await utils.findElement(page, 'form#Group');
