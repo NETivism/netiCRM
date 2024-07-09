@@ -67,7 +67,8 @@ class CRM_Event_Page_ParticipantListing_NameStatusAndDate extends CRM_Core_Page 
 
   function run() {
     $this->preProcess();
-
+    $countedStatus = CRM_Event_PseudoConstant::participantStatus(NULL, 'is_counted = 1');
+    $countedStatusIds = implode(',', array_keys($countedStatus));
     $fromClause = "
 FROM       civicrm_contact
 INNER JOIN civicrm_participant ON civicrm_contact.id = civicrm_participant.contact_id 
@@ -75,7 +76,9 @@ INNER JOIN civicrm_event       ON civicrm_participant.event_id = civicrm_event.i
 ";
 
     $whereClause = "
-WHERE    civicrm_event.id = %1";
+WHERE    civicrm_event.id = %1
+AND      civicrm_participant.is_test = 0
+AND      civicrm_participant.status_id IN ( $countedStatusIds )";
 
     $params = array(1 => array($this->_id, 'Integer'));
     $this->pager($fromClause, $whereClause, $params);
@@ -98,7 +101,7 @@ LIMIT    $offset, $rowCount";
     $rows = array();
     $object = CRM_Core_DAO::executeQuery($query, $params);
     require_once 'CRM/Event/PseudoConstant.php';
-    $statusLookup = CRM_Event_PseudoConstant::participantStatus();
+    $statusLookup = CRM_Event_PseudoConstant::participantStatus(NULL, NULL, 'label');
     while ($object->fetch()) {
       $row = array('id' => $object->contact_id,
         'participantID' => $object->participant_id,
@@ -107,7 +110,7 @@ LIMIT    $offset, $rowCount";
         'status' => CRM_Utils_Array::value($object->status_id,
           $statusLookup
         ),
-        'date' => $object->register_date,
+        'date' => CRM_Utils_Date::customFormat($object->register_date),
       );
       $rows[] = $row;
     }

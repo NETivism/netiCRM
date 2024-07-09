@@ -58,7 +58,8 @@ class CRM_Event_Page_ParticipantListing_Simple extends CRM_Core_Page {
 
   function run() {
     $this->preProcess();
-
+    $countedStatus = CRM_Event_PseudoConstant::participantStatus(NULL, 'is_counted = 1');
+    $countedStatusIds = implode(',', array_keys($countedStatus));
     $fromClause = "
 FROM       civicrm_contact
 INNER JOIN civicrm_participant ON civicrm_contact.id = civicrm_participant.contact_id 
@@ -69,7 +70,7 @@ LEFT JOIN  civicrm_email       ON ( civicrm_contact.id = civicrm_email.contact_i
     $whereClause = "
 WHERE    civicrm_event.id = %1
 AND      civicrm_participant.is_test = 0
-AND      civicrm_participant.status_id IN ( 1, 2 )";
+AND      civicrm_participant.status_id IN ( $countedStatusIds )";
     $params = array(1 => array($this->_id, 'Integer'));
     $this->pager($fromClause, $whereClause, $params);
     $orderBy = $this->orderBy();
