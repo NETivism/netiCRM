@@ -74,22 +74,27 @@
       var element_date   = "#{$elementId}";
       {if $timeElement}
           var element_time  = "#{$timeElement}";
-          var time_format   = cj( element_time ).attr('timeFormat');
+          var time_format   = cj(element_time).data('timeformat') ? cj(element_time).data('timeformat') : cj( element_time ).attr('timeFormat');
           {literal}
               cj(element_time).timeEntry({ show24Hours : time_format, spinnerImage: '' });
           {/literal}
       {/if}
       var currentYear = new Date().getFullYear();
-      var date_format = cj( element_date ).attr('format');
+      var date_format = cj(element_date).data('format') ? cj(element_date).data('format') : cj( element_date ).attr('format');
       var alt_field   = 'input#{$dateFormated}';
-      var yearRange   = currentYear - parseInt( cj( element_date ).attr('startOffset') );
+      var startOffset = cj(element_date).data('startoffset') ? cj(element_date).data('startoffset') : cj( element_date ).attr('startOffset');
+      var endOffset = cj(element_date).data('endoffset') ? cj(element_date).data('endoffset') : cj( element_date ).attr('endoffset');
+      var yearRange   = currentYear - parseInt( startOffset );
           yearRange  += ':';
-          yearRange  += currentYear + parseInt( cj( element_date ).attr('endOffset'  ) );
+          yearRange  += currentYear + parseInt( endOffset );
       {literal}
 
       var lcMessage = {/literal}"{$config->lcMessages}"{literal};
       var localisation = lcMessage.replace("_", "-");
-      var defaultDate = (cj( element_date ).attr('formattype') == "birth")?'-30y':'today';
+      var defaultDate = cj(element_date).data('defaultdate') ? cj(element_date).data('defaultdate') : cj(element_date).attr('defaultdate');
+      if (!defaultDate) {
+        defaultDate = (cj( element_date ).attr('formattype') == "birth") ? '-30y' : 'today';
+      }
       if(date_format.search('m') == -1){
         cj(element_date).click(function(){
           cj('.ui-datepicker-calendar').hide();
@@ -167,7 +172,7 @@
     });
 
     function hideYear( element ) {
-        var format = cj( element ).attr('format');
+        var format = cj(element).data('format') ? cj(element).data('format') : cj( element ).attr('format');
         if ( format == 'dd-mm' || format == 'mm/dd' ) {
             cj(".ui-datepicker-year").css( 'display', 'none' );
         }
