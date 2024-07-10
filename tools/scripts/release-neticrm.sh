@@ -2,7 +2,7 @@
 CALLEDPATH=`dirname $0`
 CIVICRMPATH=`cd $CALLEDPATH/../../ && pwd`
 LANGUAGE='zh_TW'
-MAJOR_VERSION='6.1'
+MAJOR_VERSION='6.2'
 
 neticrm_merge(){
   TAG=`git tag | grep "^$MAJOR_VERSION" | awk -F "." '{print $3}' | sort -nr | head -n 1`
@@ -15,10 +15,12 @@ neticrm_merge(){
   cd $CIVICRMPATH/neticrm
   echo -e "\n###### netiCRM-neticrm ######\n"
   do_merge $TAG 7.x
+  do_merge $TAG 10.x
 
   cd $CIVICRMPATH/drupal
   echo -e "\n###### netiCRM-drupal ######\n"
   do_merge $TAG 7.x
+  do_merge $TAG 10.x
 
   echo -e "\n###### netiCRM ######\n"
   cd $CIVICRMPATH

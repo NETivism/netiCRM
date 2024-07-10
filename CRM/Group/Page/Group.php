@@ -291,6 +291,13 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
     require_once 'CRM/Core/OptionGroup.php';
     $links = &$this->links();
     $allTypes = CRM_Core_OptionGroup::values('group_type');
+    $smartMarketingTypes = array();
+    foreach($allTypes as $typeId => $typeName) {
+      if (strstr($typeName, 'Smart Marketing')) {
+        $smartMarketingTypes[$typeId] = $typeName;
+      }
+    }
+
     $values = array();
 
     while ($object->fetch()) {
@@ -319,6 +326,13 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
           else {
             $action -= CRM_Core_Action::VIEW;
             $action -= CRM_Core_Action::DISABLE;
+          }
+        }
+        if (!empty($smartMarketingTypes)) {
+          foreach($smartMarketingTypes as $typeId => $typeName) {
+            if (strstr($object->group_type, CRM_Core_DAO::VALUE_SEPARATOR.$typeId.CRM_Core_DAO::VALUE_SEPARATOR)) {
+              $action -= CRM_Core_Action::DELETE;
+            }
           }
         }
 

@@ -123,7 +123,15 @@ class CRM_Admin_Page_OptionValue extends CRM_Core_Page_Basic {
 
     if ($this->_gid) {
       require_once 'CRM/Core/BAO/OptionGroup.php';
-      $groupTitle = CRM_Core_BAO_OptionGroup::getTitle($this->_gid);
+      $optionGroup = new CRM_Core_DAO_OptionGroup();
+      $optionGroup->id = $this->_gid;
+      $optionGroup->find(TRUE);
+      if (!empty($optionGroup->description)) {
+        $groupTitle = $optionGroup->description."($optionGroup->name)";
+      }
+      else {
+        $groupTitle = $optionGroup->name;
+      }
       CRM_Utils_System::setTitle(ts('%1 - Option Values', array(1 => $groupTitle)));
       //get optionGroup name in case of email/postal greeting or addressee, CRM-4575
       $this->_gName = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionGroup', $this->_gid, 'name');
@@ -171,6 +179,7 @@ class CRM_Admin_Page_OptionValue extends CRM_Core_Page_Basic {
       CRM_Core_DAO::storeValues($dao, $optionValue[$dao->id]);
       // form all action links
       $action = array_sum(array_keys($this->links()));
+
       if ($dao->is_default) {
         $optionValue[$dao->id]['default_value'] = '[x]';
       }
@@ -192,7 +201,8 @@ class CRM_Admin_Page_OptionValue extends CRM_Core_Page_Basic {
 
         if ((($this->_gName == 'encounter_medium') && in_array($dao->value, $mediumIds)) ||
           (($this->_gName == 'case_status') && in_array($dao->value, $caseStatusIds)) ||
-          (($this->_gName == 'case_type') && in_array($dao->value, $caseTypeIds))
+          (($this->_gName == 'case_type') && in_array($dao->value, $caseTypeIds)) ||
+          !CRM_Core_Permission::check('administer neticrm')
         ) {
           $action -= CRM_Core_Action::DELETE;
         }
@@ -204,6 +214,9 @@ class CRM_Admin_Page_OptionValue extends CRM_Core_Page_Basic {
     }
 
     $this->assign('rows', $optionValue);
+    if (CRM_Core_Permission::check('administer neticrm')) {
+      $this->assign('show_add_link', TRUE);
+    }
   }
 
   /**
@@ -231,6 +244,22 @@ class CRM_Admin_Page_OptionValue extends CRM_Core_Page_Basic {
    */
   function userContext($mode = NULL) {
     return 'civicrm/admin/optionValue';
+  }
+
+  /**
+   * Redirect to Specific Option Value Editing
+   */
+  public static function redirect() {
+    $path = CRM_Utils_System::currentPath();
+    $args = explode('/', $path);
+    $groupName = isset($args[3]) ? $args[3] : NULL;
+    $value = isset($args[4]) ? $args[4] : NULL;
+    if (isset($groupName) && isset($value)) {
+      if(is_numeric($value)) {
+        CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin/optionValue', "action=update&group={$groupName}&value={$value}&reset=1"));
+      }
+    }
+    CRM_Utils_System::civiExit();
   }
 }
 

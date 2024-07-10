@@ -254,10 +254,24 @@
                     </td>
                  </tr>
              {/if}
+            {if $rows && $action eq 4}
+              <tr class="crm-activity-form-block-folowup">
+                <td colspan="2">
+                  <div class="crm-accordion-wrapper crm-accordion-open">
+                    <div class="crm-accordion-header">
+                      <div class="zmdi crm-accordion-pointer"></div>{ts}Followup Activity{/ts}
+                    </div>
+                    <div class="crm-accordion-body">
+                    {include file="CRM/Activity/Form/Selector.tpl}
+                    </div>{*accordion-body*}
+                  </div>
+                </td>
+              </tr>
+            {/if}
              
              {if $action eq 4 AND $currentAttachmentURL}
                 {include file="CRM/Form/attachment.tpl"}{* For view action the include provides the row and cells. *}
-             {else if $action eq 1 OR $action eq 2}
+             {elseif $action eq 1 OR $action eq 2}
                  <tr class="crm-activity-form-block-attachment">
                     <td colspan="2">
                         {include file="CRM/Form/attachment.tpl"}
@@ -343,6 +357,7 @@
                     <a href="{crmURL p='civicrm/contact/view/activity' q=$urlParams}" class="delete button" title="{ts}Delete{/ts}"><span><div class="zmdi zmdi-delete"></div>{ts}Delete{/ts}</span></a>
                  {/if}
 	        {/if}
+
             {include file="CRM/common/formButtons.tpl" location="bottom"}
 	    </div>
 

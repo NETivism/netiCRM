@@ -59,14 +59,14 @@
         </table>
         {/strip}
 
-        {if $action ne 1 and $action ne 2}
+        {if $action ne 1 and $action ne 2 and $show_add_link}
 	    <div class="action-link-button">
     	<a href="{crmURL q="action=add&reset=1"}" id="newOptionGroup">&raquo; {ts}New Option Group{/ts}</a>
         </div>
         {/if}
     </div>
 </div>
-{elseif $action ne 1}
+{elseif $action ne 1 and $show_add_link}
     <div class="messages status">
         {capture assign=crmURL}{crmURL p='civicrm/admin/optionGroup' q="action=add&reset=1"}{/capture}
         {ts 1=$crmURL}There are no Option Group entered. You can <a href='%1'>add one</a>.{/ts}

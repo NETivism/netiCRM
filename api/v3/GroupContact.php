@@ -93,7 +93,8 @@ function civicrm_api3_group_contact_get($params) {
       $searchDescendentGroups = TRUE; // return sub-group contact
       $smartGroupCache = TRUE;
       $returnProperties = array('contact_id');
-      $query = new CRM_Contact_BAO_Query($queryParams, $returnProperties, NULL, FALSE, FALSE, CRM_Contact_BAO_Query::MODE_CONTACTS, FALSE, $searchDescendentGroups, $smartGroupCache);
+      $skipPermission = CRM_Utils_Array::value('check_permissions', $params) ? 0 : 1;
+      $query = new CRM_Contact_BAO_Query($queryParams, $returnProperties, NULL, FALSE, FALSE, CRM_Contact_BAO_Query::MODE_CONTACTS, $skipPermission, $searchDescendentGroups, $smartGroupCache);
       $offset = $rowCount = 0;
       $result = $query->searchQuery($offset, $rowCount);
       $contactIds = array();
