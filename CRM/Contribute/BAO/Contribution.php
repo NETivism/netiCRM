@@ -1405,7 +1405,8 @@ LEFT JOIN civicrm_option_value contribution_status ON (civicrm_contribution.cont
                        LEFT JOIN civicrm_contribution cc 
                               ON ccs.contribution_id = cc.id 
                   WHERE cc.is_test = {$isTest} AND 
-                        ccs.contact_id = {$contact_id}
+                        ccs.contact_id = {$contact_id} AND
+                        cc.contribution_status_id = 1
                   GROUP BY currency ";
 
     $cs = CRM_Core_DAO::executeQuery($query, CRM_Core_DAO::$_nullArray);
