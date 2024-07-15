@@ -2841,14 +2841,14 @@ WHERE c.id = $id";
     }
     else {
       if ($legalIDformat == 'hide') {
-        $resultLegalID = str_repeat('*', strlen($legalID));
+        $resultLegalID = CRM_Utils_String::mask($legalID, 'custom', 0, 0);
       }
       elseif ($legalIDformat == 'partial') {
         if (strlen($legalID) >= 3) {
-          $resultLegalID = substr($legalID, 0, 1).str_repeat('*', (strlen($legalID) - 2)).substr($legalID, -1, 1);
+          $resultLegalID = CRM_Utils_String::mask($legalID, 'custom', -4, 0);
         }
         else {
-          $resultLegalID = str_repeat('*', strlen($legalID));
+          $resultLegalID = CRM_Utils_String::mask($legalID, 'custom', 0, 0);
         }
       }
       else {
