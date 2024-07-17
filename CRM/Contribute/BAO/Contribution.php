@@ -1405,7 +1405,8 @@ LEFT JOIN civicrm_option_value contribution_status ON (civicrm_contribution.cont
                        LEFT JOIN civicrm_contribution cc 
                               ON ccs.contribution_id = cc.id 
                   WHERE cc.is_test = {$isTest} AND 
-                        ccs.contact_id = {$contact_id}
+                        ccs.contact_id = {$contact_id} AND
+                        cc.contribution_status_id = 1
                   GROUP BY currency ";
 
     $cs = CRM_Core_DAO::executeQuery($query, CRM_Core_DAO::$_nullArray);
@@ -2840,14 +2841,14 @@ WHERE c.id = $id";
     }
     else {
       if ($legalIDformat == 'hide') {
-        $resultLegalID = str_repeat('*', strlen($legalID));
+        $resultLegalID = CRM_Utils_String::mask($legalID, 'custom', 0, 0);
       }
       elseif ($legalIDformat == 'partial') {
         if (strlen($legalID) >= 3) {
-          $resultLegalID = substr($legalID, 0, 1).str_repeat('*', (strlen($legalID) - 2)).substr($legalID, -1, 1);
+          $resultLegalID = CRM_Utils_String::mask($legalID, 'custom', -4, 0);
         }
         else {
-          $resultLegalID = str_repeat('*', strlen($legalID));
+          $resultLegalID = CRM_Utils_String::mask($legalID, 'custom', 0, 0);
         }
       }
       else {
