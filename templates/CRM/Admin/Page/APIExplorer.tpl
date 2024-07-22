@@ -156,7 +156,7 @@ cj(function($) {
       json = JSON.stringify(json, null, 2); 
       previewHtml += '\nJSON preview:\n'+json;
     }
-    $("#preview").html(previewHtml);
+    $("#preview").text(previewHtml);
     $('#result').html('Press "GO" to run query');
 
     if (params.action == 'delete' && $('#selector a').length == 0) {
