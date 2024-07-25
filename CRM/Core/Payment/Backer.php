@@ -406,6 +406,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
           // create new contact
           $addContact = $params['additional'];
           $addContact['version'] = 3;
+          $addContact['log_data'] = ts('Updated contact').'-'.ts('Backer Auto Import');
           $result = civicrm_api('contact', 'create', $addContact);
           $additionalContactId = $result['id'];
         }
