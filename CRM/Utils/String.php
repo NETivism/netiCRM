@@ -749,6 +749,7 @@ class CRM_Utils_String {
       else {
         $repeat = $length - $start - $end;
       }
+      $repeat = $repeat < 0 ? 0 : $repeat;
       $str = mb_substr($str, 0, $start) . str_repeat(self::MASK, $repeat) . mb_substr($str, -1 * $end, $end);
     }
     else {
