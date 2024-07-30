@@ -80,11 +80,12 @@
 
   {if $progress.display == "2"} {* Display amount raised only *}
     {if $progress.type}
-    <div class="pcp-amount-goal pcp-amount-goal-top">
+    <div class="pcp-amount-raised pcp-amount-raised-top">
       {if $progress.type|strstr:"amount"}
-        {$progress.label} <span class="counter">{$progress.goal|crmMoney}</span>
-      {elseif $progress.type == "recurring"}
-        {$progress.label} <span class="counter">{$progress.goal}</span>{ts}People{/ts}
+        {capture assign=amount_achieved}<span class="counter">{$progress.current|crmMoney}</span>{/capture}
+        {ts 1=$amount_achieved}Raised %1{/ts}
+      {else}
+        <span class="counter">{$progress.current}</span> {ts}People{/ts}
       {/if}
     </div>
     {/if}
