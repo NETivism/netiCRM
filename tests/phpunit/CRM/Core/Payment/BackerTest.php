@@ -536,20 +536,26 @@ EOT;
     $this->assertEquals($formatted['phone'][0]['phone'], $result['values'][$result['id']]['phone']);
   }
 
-  function testBackerAdditionAddress(){
+  function testBackerAdditionalContact(){
     $now = time();
     $contributionResult = NULL;
 
-    // prepare data
+    // case 1, this should create additional contact
     $json = json_decode($this->_json[1], TRUE);
-    $json['recipient']['recipient_name'] = '王小明';
+    $json['transaction']['trade_no'] = CRM_Utils_String::createRandom(15);
+    $json['user']['id'] = mt_rand(100000, 999999);
+    $json['user']['email'] = 'admintest.main1@eaxmple.com';
+    $json['user']['name'] = '張小弟';
+    $json['user']['cellphone'] = '+886912445667';
+    $json['recipient']['recipient_name'] = '張大媽';
+    $json['recipient']['recipient_contact_email'] = 'admintest.other1@eaxmple.com';
+    $json['recipient']['recipient_cellphone'] = '0933444555';
     $json = json_encode($json);
     $formatted = CRM_Core_Payment_Backer::formatParams($json);
 
-    // run
-    $createdContributionId = $this->_processor->processContribution($json, $contributionResult);
+    $this->_processor->processContribution($json, $contributionResult);
     $createdContributionId = $contributionResult['contributionId'];
-    $this->assertNotEmpty($createdContributionId, "In line " . __LINE__);
+    $this->assertNotEmpty($createdContributionId, "Contribution not created. In line " . __LINE__);
     $contactId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $createdContributionId, 'contact_id');
 
     $params = array(
@@ -561,18 +567,110 @@ EOT;
     $this->assertAPISuccess($result);
     $this->assertGreaterThan(0 , $result['count'], 'Additional contact count should greater than zero. In line '.__LINE__);
     $additionalContact = reset($result['values']);
-    $additionalContactId = $additionalContact['contact_id'];
+    $additionalContactId1 = $additionalContact['contact_id'];
     $this->assertEquals($formatted['additional']['address'][0]['street_address'], $additionalContact['street_address']);
+    $this->assertEquals($formatted['additional']['phone'][0]['phone'], $additionalContact['phone']);
+    $this->assertEquals($formatted['additional']['email'][0]['email'], $additionalContact['email']);
 
     $params = array(
       'version' => 3,
       'contact_id_a' => $contactId,
-      'contact_id_b' => $additionalContactId,
+      'contact_id_b' => $additionalContactId1,
       'relationship_type_id' => $this->_rtypeId,
     );
     $relation = civicrm_api('contact', 'get', $params);
     $this->assertAPISuccess($relation);
     $this->assertGreaterThan(0 , $relation['count'], 'Relationship result should greater than zero. In line '.__LINE__);
+
+    // duplicate case 1, won't add another contact
+    $formatted = CRM_Core_Payment_Backer::formatParams($json);
+    $this->_processor->processContribution($json, $contributionResult);
+    $params = array(
+      'version' => 3,
+      'last_name' => $formatted['additional']['last_name'],
+      'first_name' => $formatted['additional']['first_name'],
+    );
+    $result = civicrm_api('contact', 'get', $params);
+    $this->assertAPISuccess($result);
+    $this->assertEquals(1 , $result['count'], 'Additional contact count should be 1. In line '.__LINE__);
+
+    $params = array(
+      'version' => 3,
+      'last_name' => $formatted['additional']['last_name'],
+      'first_name' => $formatted['additional']['first_name'],
+    );
+    $result = civicrm_api('contact', 'get', $params);
+    $this->assertAPISuccess($result);
+    $this->assertGreaterThan(0 , $result['count'], 'Additional contact count should greater than zero. In line '.__LINE__);
+    $additionalContact = reset($result['values']);
+    $additionalContactId1 = $additionalContact['contact_id'];
+    $this->assertEquals($formatted['additional']['address'][0]['street_address'], $additionalContact['street_address']);
+    $this->assertEquals($formatted['additional']['phone'][0]['phone'], $additionalContact['phone']);
+    $this->assertEquals($formatted['additional']['email'][0]['email'], $additionalContact['email']);
+
+    // case 2, additional contact shouldn't be create again when missing email
+    $json = json_decode($this->_json[1], TRUE);
+    $json['transaction']['trade_no'] = CRM_Utils_String::createRandom(15);
+    $json['user']['id'] = mt_rand(100000, 999999);
+    $json['user']['email'] = 'admintest.main2@eaxmple.com';
+    $json['user']['name'] = '陳小刀';
+    $json['user']['cellphone'] = '+886900111222';
+    $json['recipient']['recipient_name'] = '陳小刀';
+    unset($json['recipient']['recipient_contact_email']);
+    $json['recipient']['recipient_cellphone'] = '0900111222';
+    $json = json_encode($json);
+    $formatted = CRM_Core_Payment_Backer::formatParams($json);
+
+    $contributionResult = NULL;
+    $this->_processor->processContribution($json, $contributionResult);
+    $createdContributionId = $contributionResult['contributionId'];
+    $this->assertNotEmpty($createdContributionId, "Contribution not created. In line " . __LINE__);
+    $contactId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $createdContributionId, 'contact_id');
+
+    $params = array(
+      'version' => 3,
+      'last_name' => $formatted['additional']['last_name'],
+      'first_name' => $formatted['additional']['first_name'],
+    );
+    $result = civicrm_api('contact', 'get', $params);
+    $this->assertAPISuccess($result);
+    $this->assertEquals(1 , $result['count'], 'Additional contact count should be only 1. In line '.__LINE__);
+    $additionalContact = reset($result['values']);
+    $additionalContactId2 = $additionalContact['contact_id'];
+    $this->assertEquals($additionalContactId2, $contactId, 'Additional contact should be same contact as previous after dedupe. In line '.__LINE__);
+    $blockValue = $formatted['additional']['address'][0];
+    $blockValue['contact_id'] = $contactId;
+    CRM_Core_BAO_Address::valueExists($blockValue);
+    $this->assertNotEmpty($blockValue['id'], "Additional address should be added to same contact. In line " . __LINE__);
+
+    // case 3, this should dupe original contact, no additional contact should be created
+    $json = json_decode($this->_json[1], TRUE);
+    $json['transaction']['trade_no'] = CRM_Utils_String::createRandom(15);
+    $json['user']['id'] = mt_rand(100000, 999999);
+    $json['user']['email'] = 'admintest.noadd@eaxmple.com';
+    $json['user']['name'] = '陳未增';
+    $json['user']['cellphone'] = '+886966777888';
+    $json['recipient']['recipient_name'] = '陳未增';
+    $json['recipient']['recipient_contact_email'] = 'admintest.noadd@eaxmple.com';
+    $json['recipient']['recipient_cellphone'] = '0977777888';
+    $json = json_encode($json);
+    $formatted = CRM_Core_Payment_Backer::formatParams($json);
+
+    $contributionResult = NULL;
+    $createdContributionId = $this->_processor->processContribution($json, $contributionResult);
+    $createdContributionId = $contributionResult['contributionId'];
+    $this->assertNotEmpty($createdContributionId, "Contribution not created. In line " . __LINE__);
+    $contactId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $createdContributionId, 'contact_id');
+
+    $blockValue = $formatted['additional']['address'][0];
+    $blockValue['contact_id'] = $contactId;
+    CRM_Core_BAO_Address::valueExists($blockValue);
+    $this->assertNotEmpty($blockValue['id'], "Additional address should be added to same contact. In line " . __LINE__);
+
+    $blockValue = $formatted['additional']['phone'][0];
+    $blockValue['contact_id'] = $contactId;
+    CRM_Core_BAO_Phone::valueExists($blockValue);
+    $this->assertNotEmpty($blockValue['id'], "Additional phone should be added to same contact. In line " . __LINE__);
   }
 
   function testBackerReceiptNew(){
