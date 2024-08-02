@@ -2040,7 +2040,8 @@ table.campaign td,
   text-align: center;
   font-size: 1rem;
 }
-.crm-container .pcp-amount-goal-top {
+.crm-container .pcp-amount-goal-top,
+.crm-container .pcp-amount-raised-top {
   position: relative;
   margin: 50px 0 0 0;
   padding: 0;
@@ -2048,13 +2049,16 @@ table.campaign td,
   font-weight: bold;
   font-size: 20px;
 }
-.crm-container .pcp-amount-goal-top .counter {
+.crm-container .pcp-amount-goal-top .counter,
+.crm-container .pcp-amount-raised-top .counter {
   color: var(--color-crm-special-contribute-primary);
 }
-.crm-container .pcp-amount-goal-top + .pcp-donate {
+.crm-container .pcp-amount-goal-top + .pcp-donate,
+.crm-container .pcp-amount-raised-top + .pcp-donate {
   margin: 20px 0 0 0;
 }
-.crm-container .pcp-amount-goal-top + .pcp-donate + .pcp-donate-desc {
+.crm-container .pcp-amount-goal-top + .pcp-donate + .pcp-donate-desc,
+.crm-container .pcp-amount-raised-top + .pcp-donate + .pcp-donate-desc {
   margin-bottom: 30px;
 }
 .crm-container .pcp-campaign {
