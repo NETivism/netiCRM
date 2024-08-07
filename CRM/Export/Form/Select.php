@@ -87,7 +87,9 @@ class CRM_Export_Form_Select extends CRM_Core_Form {
     }
 
     $buttonName = $this->getButtonName('next');
+    // skip multiple query, but save export mode
     if ($buttonName === $this->controller->getButtonName() || $this->get('prevAction') === 'back') {
+      $this->_exportMode = $this->get('exportMode');
       return;
     }
     $customSearchID = $this->get('customSearchID');

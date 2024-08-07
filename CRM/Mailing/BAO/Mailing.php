@@ -2461,7 +2461,8 @@ LEFT JOIN civicrm_mailing_group g ON g.mailing_id   = m.id
     $returnProperties = NULL,
     $skipOnHold = TRUE,
     $skipDeceased = TRUE,
-    $extraParams = NULL
+    $extraParams = NULL,
+    $customHook = FALSE
   ) {
     $params = array();
     foreach ($contactIDs as $key => $contactID) {
@@ -2552,7 +2553,9 @@ LEFT JOIN civicrm_mailing_group g ON g.mailing_id   = m.id
     }
 
     // also call a hook and get token details
-    CRM_Utils_Hook::tokenValues($details[0], $contactIDs, NULL, array(), 'CRM_Mailing_BAO_Mailing_getDetails');
+    if (empty($customHook)) {
+      CRM_Utils_Hook::tokenValues($details[0], $contactIDs, NULL, array(), 'CRM_Mailing_BAO_Mailing_getDetails');
+    }
     return $details;
   }
 

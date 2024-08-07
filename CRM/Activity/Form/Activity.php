@@ -1020,6 +1020,9 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
     $this->beginPostProcess($params);
 
     $activity = CRM_Activity_BAO_Activity::create($params);
+    if ($this->_action == CRM_Core_Action::ADD) {
+      $this->_activityId = $activity->id;
+    }
 
     // add tags if exists
     $tagParams = array();

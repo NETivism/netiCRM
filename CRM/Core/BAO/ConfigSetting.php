@@ -497,7 +497,7 @@ WHERE  id = %1
       'userSystem',
       'userFrameworkDSN',
       'userFramework',
-      'userFrameworkBaseURL', 'userFrameworkClass', 'userHookClass',
+      'userFrameworkBaseURL', 'useFrameworkRelativeBase', 'userFrameworkClass', 'userHookClass',
       'userPermissionClass', 'userFrameworkURLVar', 'userFrameworkVersion',
       'newBaseURL', 'newBaseDir', 'newSiteName', 'configAndLogDir',
       'qfKey', 'gettextResourceDir', 'cleanURL',
