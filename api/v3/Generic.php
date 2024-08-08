@@ -199,7 +199,7 @@ function civicrm_api3_generic_getoptions($apiRequest) {
     'action' => 'create',
     'options' => array('get_options' => $apiRequest['params']['field'])
   );
-  
+
   $result = civicrm_api($apiRequest['entity'], 'getfields', $getFieldsArray);
 
   // add some exceptions for location related when entity is contact
@@ -278,8 +278,17 @@ function civicrm_api3_generic_getoptions($apiRequest) {
     }
     // check constant or option group name
     else {
+      $fieldName = $apiRequest['params']['field'];
+      // special case for participant
+      if ($entity == 'participant') {
+        $entity = 'event';
+        if (in_array($apiRequest['params']['field'], array('status_id', 'status', 'role_id', 'role'))) {
+          $fieldName = 'participant_'.$apiRequest['params']['field'];
+        }
+      }
+
       $constantEntities = _civicrm_api3_pseudoconstant_entity();
-      $fieldNameWithoutId = strtolower(preg_replace('/_id$/i', '', $apiRequest['params']['field']));
+      $fieldNameWithoutId = strtolower(preg_replace('/_id$/i', '', $fieldName));
 
       // constant api
       if (!empty($constantEntities[$entity])) {
