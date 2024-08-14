@@ -351,7 +351,7 @@ function _civicrm_api3_contact_check_params( &$params, $dupeCheck = true, $dupeE
     $dedupParams = CRM_Dedupe_Finder::formatParams($organizationParams, 'Organization');
 
     $dedupParams['check_permission'] = FALSE;
-    $dupeIds = CRM_Dedupe_Finder::dupesByParams($dedupParams, 'Organization', 'Fuzzy');
+    $dupeIds = CRM_Dedupe_Finder::dupesByParams($dedupParams, 'Organization', 'Strict');
 
     // check for mismatch employer name and id
     if (!empty($params['employer_id']) && !in_array($params['employer_id'], $dupeIds)) {

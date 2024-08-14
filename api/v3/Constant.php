@@ -98,13 +98,12 @@ function civicrm_api3_constant_get($params) {
   }
   $callable = "$className::$name";
   if (is_callable($callable)) {
-    if (empty($params)) {
-      $values = call_user_func(array($className, $name));
+    // #41306 only few constant return name instead label, dirty hack it
+    if ($params['class'] == 'CRM_Event_PseudoConstant' && $name == 'participantStatus') {
+      $values = call_user_func(array($className, $name), NULL, NULL, 'label');
     }
     else {
       $values = call_user_func(array($className, $name));
-      //@TODO XAV take out the param the COOKIE, Entity, Action and so there are only the "real param" in it
-      //$values = call_user_func_array( array( $className, $name ), $params );
     }
     return civicrm_api3_create_success($values, $params);
   }
