@@ -201,8 +201,10 @@ class CRM_Contribute_Page_PCPInfo extends CRM_Core_Page {
 
     $honor = CRM_Contribute_BAO_PCP::honorRoll($this->_id);
 
-    if ($file_id = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_EntityFile', $this->_id, 'file_id', 'entity_id')) {
-      list($src) = CRM_Core_BAO_File::url($file_id, $this->_id, 'civicrm_pcp');
+    $images = CRM_Contribute_BAO_PCP::getPcpImages($this->_id);
+    if (!empty($images)) {
+      $img = reset($images);
+      $src = $img[0];
       if ($src) {
         $bgFile = basename($src);
         $encodedSrc = str_replace($bgFile, urlencode($bgFile), $src);
