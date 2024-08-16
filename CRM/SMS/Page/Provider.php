@@ -129,6 +129,7 @@ class CRM_SMS_Page_Provider extends CRM_Core_Page_Basic {
    * @param array $action
    */
   public function browse($action = NULL) {
+    CRM_Core_BAO_Cache::deleteGroup('SMS Provider');
     $providers = CRM_SMS_BAO_Provider::getProviders();
     $rows = array();
     foreach ($providers as $provider) {
