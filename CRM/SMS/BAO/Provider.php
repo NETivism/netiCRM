@@ -136,6 +136,7 @@ class CRM_SMS_BAO_Provider extends CRM_SMS_DAO_Provider {
    * @return bool
    */
   public static function setIsActive($id, $is_active) {
+    CRM_Core_BAO_Cache::deleteGroup('SMS Provider');
     return CRM_Core_DAO::setFieldValue('CRM_SMS_DAO_Provider', $id, 'is_active', $is_active);
   }
 
