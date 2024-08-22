@@ -522,8 +522,11 @@ function _civicrm_api_replace_variables($entity, $action, &$params, &$parentResu
 
 
   foreach ($params as $field => $value) {
-    $hasReplacement = strpos($value, '$value.');
-    if (is_string($value) && $hasReplacement !== FALSE) {
+    $hasReplacement = FALSE;
+    if (is_string($value)) {
+      $hasReplacement = strpos($value, '$value.');
+    }
+    if ($hasReplacement !== FALSE) {
       if ($hasReplacement > 0) {
         $valuesubstitute = substr($value, $hasReplacement+7);
       }
