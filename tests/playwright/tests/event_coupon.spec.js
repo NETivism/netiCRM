@@ -11,9 +11,9 @@ test.beforeAll(async () => {
     page = await browser.newPage();
   });
   
-  test.afterAll(async () => {
-    await page.close();
-  });
+test.afterAll(async () => {
+  await page.close();
+});
 
 test.describe.serial('Using coupon in the event page', () => {
   test('Add price set', async() => {
