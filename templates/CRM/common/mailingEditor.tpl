@@ -279,7 +279,7 @@ window.nmEditor = {
 </div>
 <!-- mailingEditor HTML end -->
 
-{include file="CRM/common/sidePanel.tpl" type="inline" headerSelector="#nme-setting-panels-header" contentSelector="#nme-setting-panels-content" footerSelector="#nme-setting-panels-footer" containerClass="nme-setting-panels" opened="true" triggerText="Mailing Advanced Settings" width="500px" fullscreen="true"}
+{include file="CRM/common/sidePanel.tpl" type="inline" headerSelector="#nme-setting-panels-header" contentSelector="#nme-setting-panels-content" footerSelector="#nme-setting-panels-footer" containerClass="nme-setting-panels" opened="true" userPreference="true" triggerText="Mailing Advanced Settings" width="500px" fullscreen="true"}
 {js src=packages/mailingEditor/mailingEditor.js group=999 weight=998 library=civicrm/civicrm-js-mailingeditor}{/js}
 {literal}
 <script type="text/javascript">

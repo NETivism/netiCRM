@@ -143,6 +143,24 @@ class CRM_SMS_Page_Provider extends CRM_Core_Page_Basic {
 
       $apiTypes = CRM_Core_OptionGroup::values('sms_api_type', FALSE, FALSE, FALSE, NULL, 'label');
       $provider['api_type'] = $apiTypes[$provider['api_type']];
+      if ($provider['name'] == 'CRM_SMS_Provider_Flydove') {
+        $apiParams = json_decode($provider['api_params'], TRUE);
+        if (is_array($apiParams)) {
+          $provider['api_params'] = array();
+          foreach($apiParams as $key => $val) {
+            if (is_array($val)) {
+              $provider['api_params'][] = '<strong>'.$key.'</strong>';
+              foreach($val as $k => $v) {
+                $provider['api_params'][] = $k.":" . CRM_Utils_String::mask($v);
+              }
+            }
+            else {
+              $provider['api_params'][] = $key.":" . CRM_Utils_String::mask($val);
+            }
+          }
+          $provider['api_params'] = implode('<br>', $provider['api_params']);
+        }
+      }
 
       $provider['action'] = CRM_Core_Action::formLink(self::links(), $action,
         array('id' => $provider['id']),

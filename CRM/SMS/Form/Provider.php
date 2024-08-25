@@ -86,36 +86,65 @@ class CRM_SMS_Form_Provider extends CRM_Core_Form {
     $providerNames = CRM_Core_OptionGroup::values('sms_provider_name', FALSE, FALSE, FALSE, NULL, 'label');
     $apiTypes = CRM_Core_OptionGroup::values('sms_api_type', FALSE, FALSE, FALSE, NULL, 'label');
 
-    $this->add('select', 'name', ts('Name'), array('' => ts('-- Select --')) + $providerNames, TRUE);
+    $eleProviders = $this->addSelect('name', ts('Name'), array('' => ts('-- Select --')) + $providerNames, TRUE);
+    if ($this->_action & CRM_Core_Action::UPDATE) {
+      $eleProviders->freeze();
+    }
 
     $this->add('text', 'title', ts('Title'),
       $attributes['title'], TRUE
     );
 
-    $this->addRule('title', ts('This Title already exists in Database.'), 'objectExists', array(
+    $this->addRule('title', ts('This title already exists in Database.'), 'objectExists', array(
       'CRM_SMS_DAO_Provider',
       $this->_id,
     ));
 
-    $this->add('text', 'username', ts('Username'),
-      $attributes['username'], TRUE
-    );
+    $this->add('text', 'username', ts('Username'), $attributes['username']);
 
-    $this->add('password', 'password', ts('Password'),
-      $attributes['password'], TRUE
-    );
+    $this->add('password', 'password', ts('Password'), $attributes['password']);
 
     $this->add('select', 'api_type', ts('API Type'), $apiTypes, TRUE);
 
     $this->add('text', 'api_url', ts('API URL'), $attributes['api_url'], TRUE);
 
-    $this->add('textarea', 'api_params', ts('API Parameters'),
-      "cols=50 rows=6"
-    );
+    $this->add('textarea', 'api_params', ts('API Parameters'), "cols=50 rows=6");
 
     $this->add('checkbox', 'is_active', ts('Is this provider active?'));
 
     $this->add('checkbox', 'is_default', ts('Is this a default provider?'));
+
+    $this->addFormRule(array('CRM_SMS_Form_Provider', 'formRule'));
+  }
+
+  /**
+   * Form rule
+   *
+   * @param array $fields
+   * @return array
+   */
+  public static function formRule($fields) {
+    $errors = array();
+    if ($fields['name'] == 'CRM_SMS_Provider_Mitake') {
+      // check requirement of these fields
+      $checkFields = array(
+        'username' => ts('Username'),
+        'password' => ts('Password'),
+      );
+      foreach(array_keys($checkFields) as $field) {
+        if (empty($fields[$field])) {
+          $errors[$field] = ts('%1 is a required field.', array(1 => $checkFields[$field]));
+        }
+      }
+    }
+    if ($fields['name'] === 'CRM_SMS_Provider_Flydove' && !empty($fields['flydove_api_token'])) {
+      foreach($fields['flydove_api_token'] as $token) {
+        if (!preg_match('/^[0-9a-zA-Z]*$/', $token)) {
+          $errors['qfKey'] = ts('Invalid value for field(s)');
+        }
+      }
+    }
+    return $errors;
   }
 
   /**
@@ -134,7 +163,11 @@ class CRM_SMS_Form_Provider extends CRM_Core_Form {
     }
 
     if (!$this->_id) {
-      $defaults['is_active'] = $defaults['is_default'] = 1;
+      $defaults['is_active'] = 1;
+      $providers = CRM_SMS_BAO_Provider::getProviders();
+      if (empty($providers)) {
+        $defaults['is_default'] = 1;
+      }
       return $defaults;
     }
 
@@ -150,6 +183,13 @@ class CRM_SMS_Form_Provider extends CRM_Core_Form {
     }
 
     CRM_Core_DAO::storeValues($dao, $defaults);
+
+    if ($defaults['name'] == 'CRM_SMS_Provider_Flydove' && !empty($defaults['api_params'])) {
+      $apiParams = json_decode($defaults['api_params'], TRUE);
+      if (!empty($apiParams) && is_array($apiParams['tokens'])) {
+        $this->assign('flydove_api_token', $apiParams['tokens']);
+      }
+    }
 
     return $defaults;
   }
@@ -168,6 +208,12 @@ class CRM_SMS_Form_Provider extends CRM_Core_Form {
     }
 
     $recData = $values = $this->controller->exportValues($this->_name);
+    if ($recData['name'] === 'CRM_SMS_Provider_Flydove' && !empty($this->_submitValues['flydove_api_token'])) {
+      $apiParams = array(
+        'tokens' => $this->_submitValues['flydove_api_token'],
+      );
+      $recData['api_params'] = json_encode($apiParams);
+    }
     $recData['is_active'] = CRM_Utils_Array::value('is_active', $recData, 0);
     $recData['is_default'] = CRM_Utils_Array::value('is_default', $recData, 0);
     $domainID = CRM_Core_Config::domainID();

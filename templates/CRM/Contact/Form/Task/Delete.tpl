@@ -26,16 +26,19 @@
 {* Confirmation of contact deletes  *}
 <div class="crm-block crm-form-block crm-contact-task-delete-form-block">
 <div class="messages status {if $delete_permanatly}error{/if}">
-  &nbsp;
-      {if $restore}
-        {ts}Are you sure you want to restore the selected contact(s)? The contact(s) and all related data will be fully restored.{/ts}
-      {elseif $trash}
-        {ts}Are you sure you want to delete the selected contact(s)?{/ts} {ts}The contact(s) and all related data will be moved to trash and only users with the relevant permission will be able to restore it.{/ts}
-      {else}
-        {ts}Are you sure you want to delete the selected contact(s)?{/ts} {ts}The contact(s) and all related data will be permanently removed.{/ts} <i class="zmdi zmdi-alert-polygon" style="color:white"></i>{ts}This operation cannot be undone.{/ts} <i class="zmdi zmdi-alert-polygon" style="color:white"></i>
-      {/if}
+  {if $restore}
+    {ts}Are you sure you want to restore the selected contact(s)? The contact(s) and all related data will be fully restored.{/ts}
+  {elseif $trash}
+    {ts}Are you sure you want to delete the selected contact(s)?{/ts} {ts}The contact(s) and all related data will be moved to trash and only users with the relevant permission will be able to restore it.{/ts}
+  {else}
+    {ts}Are you sure you want to delete the selected contact(s)?{/ts} {ts}The contact(s) and all related data will be permanently removed.{/ts} <i class="zmdi zmdi-alert-polygon" style="color:white"></i>{ts}This operation cannot be undone.{/ts} <i class="zmdi zmdi-alert-polygon" style="color:white"></i>
+  {/if}
+</div>
+{if $smart_marketing_hint}
+  <div class="messages status warning">
+    {ts}The smart markeintg journey is still in progress. To delete the contact or remove contact from group list, you need to go to the external smart marketing tool to proceed.{/ts}
   </div>
-
+{/if}
 
     <h3>{include file="CRM/Contact/Form/Task.tpl"}</h3>
 	<div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl"}</div>

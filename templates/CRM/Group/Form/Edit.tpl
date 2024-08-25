@@ -56,7 +56,97 @@
 	    </tr>
 	{/if}
     
-        <tr class="crm-group-form-block-visibility">
+  {if $form.remote_group_id}
+	<tr class="crm-group-form-block-remote_group_id">
+		<td class="label">{$form.remote_group_id.label}</td>
+		<td>
+      <div>
+      {$form.remote_group_id.html}
+      {if $smart_marketing_sync}
+        <input class="form-submit default smart-marketing-button" name="sync_{$smart_marketing_vendor}" value="{ts}Manually Synchronize{/ts}" type="button" id="sync-{$smart_marketing_vendor}">
+        <div id="smart-marketing-sync-confirm" class="hide-block">
+          {ts}The automated marketing journey does not start immediately and it needs to follow the external tool to schedule.{/ts}
+        </div>
+      {/if}
+      </div>
+      <div class="description">
+        <div>{ts}After binding a group, the system will lock this group, preventing any edits.{/ts} {docURL page="Smart Marketing Group"}</div>
+        <div>{ts}The will be synchronized at a fixed time every day.{/ts}</div>
+        <div>{ts}If there is an immediate need, you can click "Manual Sync".{/ts}</div>
+      </div>
+<script>{literal}
+cj(function($){
+  $('.crm-group-form-block-remote_group_id').hide();
+  if ($('.crm-group-form-block-remote_group_id input[type=hidden][name=remote_group_id]').length) {
+    $('.crm-group-form-block-remote_group_id').show();
+  }
+  $('input[name*=group_type]').each(function(){
+    if($(this).data('filter') && $(this).data('filter').match('Smart-Marketing')) {
+      if ($(this).prop("checked")) {
+        $('.crm-group-form-block-remote_group_id').show();
+      }
+      $(this).click(function(){
+        if ($(this).prop("checked")) {
+          $('.crm-group-form-block-remote_group_id').show();
+        }
+        else {
+          $('.crm-group-form-block-remote_group_id').hide();
+        }
+      });
+    }
+  });
+  $('.smart-marketing-button').click(function(e){
+    e.preventDefault();
+    let dialogCls = "smart-marketing-sync-confirm-box";
+    $("#smart-marketing-sync-confirm").dialog({
+      title: "{/literal}{ts}Manually Synchronize{/ts}{literal}",
+      autoOpen: false,
+      modal: true,
+      dialogClass: dialogCls,
+      open: function(event, ui ) {
+        let isSynced = $(this).dialog("option", 'synced');
+        if (isSynced) {
+          $('.'+dialogCls).find('.ui-dialog-buttonset button').eq(0).attr('disabled', true).addClass('ui-state-disabled');
+        }
+      },
+      buttons: {
+        "{/literal}{ts}Sync Now{/ts}{literal}": function() {
+          $(this).dialog("option", 'synced', true);
+          $('.'+dialogCls).find('.ui-dialog-buttonset button').eq(0).attr("disabled", true).addClass("ui-state-disabled");
+          let dataURL = "{/literal}{crmURL p='civicrm/ajax/addContactToRemote' q='snippet=5'}{literal}";
+          let groupId = "{/literal}{$group.id}{literal}";
+          let runningStr= "{/literal}{ts}Running{/ts}{literal}";
+          $('#smart-marketing-sync-confirm').html(runningStr+'<i class="zmdi zmdi-rotate-right zmdi-hc-spin"></i>');
+          $.ajax({
+            url: dataURL,
+            type: "POST",
+            data: {"group_id":groupId},
+            dataType: "json",
+            success: function(data) {
+              if (data.success) {
+                $('#smart-marketing-sync-confirm').html(data.message);
+              }
+              else {
+                $('#smart-marketing-sync-confirm').html('<i class="zmdi zmdi-refresh-sync-alert"></i> '+data.message);
+              }
+            }
+          });
+          return true;
+        },
+        "{/literal}{ts}Close{/ts}{literal}": function() {
+          $(this).dialog("close");
+          return false;
+        }
+      }
+    });
+    cj("#smart-marketing-sync-confirm").dialog('open');
+  });
+});
+{/literal}</script>
+    </td>
+	</tr>
+  {/if}
+  <tr class="crm-group-form-block-visibility">
 	    <td class="label">{$form.visibility.label}</td>
 	    <td>{$form.visibility.html|crmReplace:class:huge} {help id="id-group-visibility" file="CRM/Group/Page/Group.hlp"}</td>
 	</tr>
@@ -150,4 +240,5 @@ cj('#organization').autocomplete( dataUrl, {
 </script>
 {/literal}
 </div>
+
 {include file="CRM/common/chosen.tpl" selector="#parents"}

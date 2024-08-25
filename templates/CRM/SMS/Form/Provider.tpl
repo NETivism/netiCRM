@@ -38,7 +38,7 @@
         {ts}Are you sure you would like to execute this job?{/ts}
   </div>
 {else}
-  <table class="form-layout-compressed">
+  <table class="form-layout-compressed sms-provider-table">
     <tr class="crm-job-form-block-name">
         <td class="label">{$form.name.label}</td><td>{$form.name.html}</td>
     </tr>
@@ -60,10 +60,18 @@
     <tr class="crm-job-form-block-api_params">
         <td class="label">{$form.api_params.label}</td><td>{$form.api_params.html}</td>
     </tr>
+    <tr class="crm-job-form-block-flydove hide-row">
+        <td class="label"><label>{ts}Flydove Settings{/ts}</label></td>
+        <td>
+          <div><label>{ts}Flydove File Import API Token{/ts} <input type="text" name="flydove_api_token[import]" class="huge" value="{$flydove_api_token.import}" /></label></div>
+          <div><label>{ts}Flydove Subscribe API Token{/ts} <input type="text" name="flydove_api_token[subscribe]" class="huge" value="{$flydove_api_token.subscribe}"/></label></div>
+          <div><label>{ts}Flydove Group Management API Token{/ts} <input type="text" name="flydove_api_token[group]" class="huge" value="{$flydove_api_token.group}"/></label></div>
+        </td>
+    </tr>
     <tr class="crm-job-form-block-is_active">
         <td></td><td>{$form.is_active.html}&nbsp;{$form.is_active.label}</td>
     </tr>
-   <tr class="crm-job-form-block-is_active">
+   <tr class="crm-job-form-block-is_default">
         <td></td><td>{$form.is_default.html}&nbsp;{$form.is_default.label}</td>
    </tr>
   </table>
@@ -73,16 +81,28 @@
   </fieldset>
 </div>
 
-{if $action eq 1  or $action eq 2}
 <script type="text/javascript" >
 {literal}
-  CRM.$(function($) {
-    var $form = $("form.{/literal}{$form.formClass}{literal}");
-    $('select[name=name]', $form).change(function() {
-      var url = {/literal}"{$refreshURL}"{literal} + "&key=" + this.value;
-      $(this).closest('.crm-ajax-container, #crm-main-content-wrapper').crmSnippet({url: url}).crmSnippet('refresh');
-    });
+cj(document).ready(function($){
+  var showHideProviderFields = function(providerName) {
+    if (providerName == 'Flydove') {
+      $('.crm-job-form-block-username, .crm-job-form-block-password, .crm-job-form-block-api_params, .crm-job-form-block-is_default').hide();
+
+      $('.crm-job-form-block-flydove').removeClass('hide-row');
+    }
+    else if(providerName == 'Mitake') {
+      $('.crm-job-form-block-username, .crm-job-form-block-password, .crm-job-form-block-api_params, .crm-job-form-block-is_default').show();
+      $('.crm-job-form-block-flydove').addClass('hide-row');
+    }
+  }
+  $('#name').change(function(){
+    let className = $(this).val();
+    let providerName = className.replace('CRM_SMS_Provider_', '');
+    showHideProviderFields(providerName);
   });
+  let className = $('#name').val();
+  let providerName = className.replace('CRM_SMS_Provider_', '');
+  showHideProviderFields(providerName);
+});
 {/literal}
 </script>
-{/if}
