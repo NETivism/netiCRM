@@ -1234,7 +1234,10 @@ CREATE TABLE civicrm_mailing (
 ,
     PRIMARY KEY ( id )
  
- 
+    ,     INDEX UI_is_hidden(
+        is_hidden
+  )
+  
 ,      
      CONSTRAINT FK_civicrm_mailing_domain_id FOREIGN KEY (domain_id) REFERENCES civicrm_domain(id) ON DELETE SET NULL,      
      CONSTRAINT FK_civicrm_mailing_header_id FOREIGN KEY (header_id) REFERENCES civicrm_mailing_component(id) ON DELETE SET NULL,      
@@ -1320,7 +1323,13 @@ CREATE TABLE civicrm_mailing_job (
 ,
     PRIMARY KEY ( id )
  
- 
+    ,     INDEX UI_start_date(
+        start_date
+  )
+  ,     INDEX UI_is_test(
+        is_test
+  )
+  
 ,      
      CONSTRAINT FK_civicrm_mailing_job_mailing_id FOREIGN KEY (mailing_id) REFERENCES civicrm_mailing(id) ON DELETE CASCADE,      
      CONSTRAINT FK_civicrm_mailing_job_parent_id FOREIGN KEY (parent_id) REFERENCES civicrm_mailing_job(id) ON DELETE CASCADE  

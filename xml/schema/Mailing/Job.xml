@@ -36,6 +36,11 @@
       <type>datetime</type>
       <comment>date on which this job was started.</comment>
   </field>
+  <index>
+      <name>UI_start_date</name>
+      <fieldName>start_date</fieldName>
+      <add>4.0</add>
+  </index>
   <field>
       <name>end_date</name>
       <type>datetime</type>
@@ -54,6 +59,11 @@
       <comment>Is this job for a test mail?</comment>
       <add>1.9</add>
   </field>
+  <index>
+      <name>UI_is_test</name>
+      <fieldName>is_test</fieldName>
+      <add>4.0</add>
+  </index>
   <field>
       <name>job_type</name>
       <type>varchar</type>
