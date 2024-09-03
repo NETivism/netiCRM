@@ -128,7 +128,7 @@ class CRM_Utils_Mail {
     $headers['Reply-To'] = CRM_Utils_Array::value('replyTo', $params, $from);
 
     if (isset($config->enableDMARC) && !empty($config->enableDMARC)) {
-      unset($headers['Sender']);
+      $headers['Sender'] = self::pluckEmailFromHeader($params['from']);
     }
     else {
       $headers['Sender'] = CRM_Utils_Array::value('returnPath', $params);
