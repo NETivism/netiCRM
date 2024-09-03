@@ -210,7 +210,7 @@ class CRM_Utils_Mail {
     CRM_Core_Error::ignoreException();
     if (is_object($mailer)) {
       // refs #30289, for valid DKIM
-      if (empty(CRM_Core_Config::singleton()->enableDMARC) && empty($headers['Sender']) && !empty($mailer->_mailSetting['return_path'])) {
+      if (empty($headers['Sender']) && !empty($mailer->_mailSetting['return_path'])) {
         $headers['Sender'] = $mailer->_mailSetting['return_path'];
         $headers['Return-Path'] = $mailer->_mailSetting['return_path'];
       }
