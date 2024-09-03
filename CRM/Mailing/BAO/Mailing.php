@@ -1205,6 +1205,10 @@ AND civicrm_contact.is_opt_out =0";
       'Return-Path' => $verp['bounce'],
       'Subject' => $this->subject,
     );
+    if (isset($config->enableDMARC) && !empty($config->enableDMARC)) {
+      // TODO: logic to check current DMARC available options
+      unset($headers['Sender']);
+    }
     $headers['Reply-To'] = $headers['From'];
 		self::addMessageIdHeader($headers, 'm', $job_id, $event_queue_id, $hash);
 
