@@ -692,6 +692,11 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
       }
       unset($ruleFields['sort_name']);
       unset($ruleFields['display_name']);
+      // refs #40854, Rename source to contact_source in ruleFields for mapping contact field when import contribution.
+      if ($ruleFields['source']) {
+        $ruleFields['contact_source'] = $ruleFields['source'];
+        unset($ruleFields['source']);
+      }
       $weightSum = 0;
       foreach ($importKeys as $key => $val) {
         if (CRM_Utils_Array::arrayKeyExists($val, $ruleFields)) {

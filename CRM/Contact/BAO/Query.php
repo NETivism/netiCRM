@@ -549,7 +549,7 @@ class CRM_Contact_BAO_Query {
 
       // if this is a hierarchical name, we ignore it
       $names = explode('-', $name);
-      if (is_array($name) && count($names > 1) && isset($names[1]) && is_numeric($names[1])) {
+      if (is_array($name) && count($names) > 1 && isset($names[1]) && is_numeric($names[1])) {
         continue;
       }
 
@@ -3854,6 +3854,7 @@ civicrm_relationship.start_date > {$today}
           'legal_name' => 1,
           'sic_code' => 1,
           'current_employer' => 1,
+          'current_employer_id' => 1,
           // FIXME: should we use defaultHierReturnProperties() for the below?
           'do_not_email' => 1,
           'do_not_mail' => 1,

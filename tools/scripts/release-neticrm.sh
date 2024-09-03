@@ -15,10 +15,12 @@ neticrm_merge(){
   cd $CIVICRMPATH/neticrm
   echo -e "\n###### netiCRM-neticrm ######\n"
   do_merge $TAG 7.x
+  do_merge $TAG 10.x
 
   cd $CIVICRMPATH/drupal
   echo -e "\n###### netiCRM-drupal ######\n"
   do_merge $TAG 7.x
+  do_merge $TAG 10.x
 
   echo -e "\n###### netiCRM ######\n"
   cd $CIVICRMPATH
