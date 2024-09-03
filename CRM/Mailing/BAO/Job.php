@@ -608,7 +608,7 @@ VALUES (%1, %2, %3, %4, %5, %6, %7)
       }
 
       // refs #30289, for valid DKIM
-      if (empty(CRM_Core_Config::singleton()->enableDMARC) && empty($headers['Sender']) && !empty($mailer->_mailSetting['return_path'])) {
+      if (empty($headers['Sender']) && !empty($mailer->_mailSetting['return_path'])) {
         $headers['Sender'] = $mailer->_mailSetting['return_path'];
       }
 
