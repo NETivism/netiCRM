@@ -1522,6 +1522,13 @@ EOT;
                       $firstRecurring = TRUE;
                     }
                     $amount = isset($ipnResult['AuthAmt']) ? $ipnResult['AuthAmt'] : $ipnResult['PeriodAmt'];
+                    $receiveDate = '';
+                    if (!empty($ipnResult['AuthDate'])) {
+                      $receiveDate = date('c', strtotime($ipnResult['AuthDate']));
+                    }
+                    elseif (!empty($ipnResult['AuthTime'])) {
+                      $receiveDate = date('c', strtotime($ipnResult['AuthTime']));
+                    }
                     $ordersByMerchant[$ipnResult['MerchantID']][$idx] = array(
                       'recurring' => TRUE,
                       'first_recurring' => $firstRecurring,
@@ -1530,7 +1537,7 @@ EOT;
                       'success' => (isset($postParams['Status']) && $postParams['Status'] === 'SUCCESS') ? TRUE : FALSE,
                       'total_amount' => $amount,
                       'trxn_id' => $orderNumber,
-                      'receive_date' => isset($ipnResult['AuthTime']) ? date('c', strtotime($ipnResult['AuthTime'])) : '',
+                      'receive_date' => !empty($receiveDate) ? $receiveDate : '',
                       'ipn_date' => $isoDate,
                     );
                   }
