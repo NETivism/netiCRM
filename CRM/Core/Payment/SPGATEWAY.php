@@ -861,7 +861,8 @@ EOT;
         }
       }
 
-      $result = self::recurSyncTransaction($trxn_id, TRUE);
+      // this must be manually triggered
+      $result = self::recurSyncTransaction($trxn_id, TRUE, NULL, TRUE);
       $session = CRM_Core_Session::singleton();
       if (!empty($result)) {
         if ($isAddedNewContribution) {
@@ -1282,7 +1283,7 @@ EOT;
    * @param string $order
    * @return object|bool
    */
-  public static function recurSyncTransaction($trxnId, $createContribution = FALSE, $order = NULL) {
+  public static function recurSyncTransaction($trxnId, $createContribution = FALSE, $order = NULL, $manually = FALSE) {
     $parentTrxnId = 0;
     $paymentProcessorId = 0;
     if (strstr($trxnId, '_')) {
@@ -1386,6 +1387,17 @@ EOT;
             $ipnResult->Result->MerchantOrderNo = $first_id;
             if (preg_match('/^r_/', $trxnId)) {
               $ipnResult->Result->OrderNo = $trxnId;
+            }
+            $processDate = NULL;
+            if (isset($ipnResult->Result->AuthDate)) {
+              $processDate = $ipnResult->Result->AuthDate;
+            }
+            elseif (isset($ipnResult->Result->AuthTime)) {
+              $processDate = $ipnResult->Result->AuthTime;
+            }
+            if (!empty($processDate) && strtotime($processDate) < strtotime('today')) {
+              $ipnResult->Result->do_not_email = 1;
+              $ipnResult->Result->do_not_receipt = 1;
             }
             $ipnResult = json_encode($ipnResult);
             $ipnPost = array('Period' => CRM_Core_Payment_SPGATEWAYAPI::recurEncrypt($ipnResult, $paymentProcessor));
