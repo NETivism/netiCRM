@@ -149,7 +149,8 @@ cj(function($) {
 
     // generate preview
     var RESTquery = resourceBase + "extern/rest.php"+ query.substring(restURL.length,query.length);
-    var previewHtml = 'Rest URL Preview: \n'+ encodeURI(location.origin+RESTquery) + '\n';
+    var restURLPreview = (location.protocol == 'https:') ? RESTquery : location.origin+RESTquery;
+    var previewHtml = 'Rest URL Preview: \n'+ encodeURI(restURLPreview) + '\n';
     var json = fetchJson();
     if (json) {
       json = JSON.parse(json);
