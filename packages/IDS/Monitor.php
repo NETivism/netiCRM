@@ -444,7 +444,7 @@ class Monitor
      */
     private function jsonConcatContents($value, $key)
     {
-        if (json_decode($value)) {
+        if (is_string($value) && json_decode($value)) {
             $this->jsonDecodeValues($key, $value);
         }
         elseif (is_string($key) && is_string($value)) {
