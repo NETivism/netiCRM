@@ -1,10 +1,10 @@
 const { test, expect, chromium } = require('@playwright/test');
-const utils = require('./utils.js');
 
 /** @type {import('@playwright/test').Page} */
 let page;
-const wait_secs = 2000;
-let page_title;
+const priceValue = 200;
+const discountedFee = 1;
+const total = priceValue - discountedFee;
 
 test.beforeAll(async () => {
     const browser = await chromium.launch();
@@ -23,7 +23,7 @@ test.describe.serial('Using coupon in the event page', () => {
     await page.getByLabel('Event').check();
     await page.locator('[id="_qf_Set_next-bottom"]').click();
     await page.getByLabel('Field Label\n     *').fill('A');
-    await page.getByLabel('Price').fill('200');
+    await page.getByLabel('Price').fill(`${priceValue}`);
     await page.locator('[id="_qf_Field_next-bottom"]').click();
     await expect(page.locator('#crm-container')).toContainText('Price Field \'A\' has been saved.');
   });
@@ -60,7 +60,7 @@ test.describe.serial('Using coupon in the event page', () => {
     await page.getByLabel('Description\n     *').fill('test');
     await page.getByRole('row', { name: 'Limited on Events' }).getByPlaceholder('-- Select --').click();
     await page.locator('#select2-civicrm_event-results > li').nth(0).click();
-    await page.getByLabel('Discounted Fees*').fill('1');
+    await page.getByLabel('Discounted Fees*').fill(`${discountedFee}`);
     await page.getByLabel('Minimum Amount\n     *').fill('1');
     await page.getByRole('button', { name: 'Save' }).click();
     await expect(page.getByRole('table')).toContainText('testCoupon');
@@ -84,6 +84,6 @@ test.describe.serial('Using coupon in the event page', () => {
     await page3.locator('[id="\\#coupon_valid"]').click();
     await page3.getByRole('button', { name: 'Continue >>' }).click();
     await expect(page3).toHaveTitle('Confirm Your Registration Information | netiCRM');
-    await expect(page3.getByText('Total Amount: NT$ 199.00')).toBeVisible();
+    await expect(page3.getByText(`Total Amount: NT$ ${total}.00`)).toBeVisible();
   });
 });
