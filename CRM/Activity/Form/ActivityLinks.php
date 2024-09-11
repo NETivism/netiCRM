@@ -63,7 +63,7 @@ class CRM_Activity_Form_ActivityLinks extends CRM_Core_Form {
     $providersCount = CRM_SMS_BAO_Provider::activeProviderCount();
     if ($providersCount) {
       $phones = CRM_Core_BAO_Phone::allPhones($contactId, FALSE, ts('Mobile'));
-      if (count($phones)) {
+      if (!empty($phones)) {
         $activityTypes[4] = ts('Send SMS');
       }
     }
