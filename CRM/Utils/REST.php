@@ -634,8 +634,10 @@ class CRM_Utils_REST {
   /**
    * validate sort parameter
    *
-   * @param  $sort
-   * @return void
+   * @param string $sort The sort parameter to validate. Can be a single field
+   *                     or multiple fields separated by commas (`,`), optionally
+   *                     followed by ASC or DESC.
+   * @return boolean true if valid, else false
    */
   public static function validateSortParameter($sort) {
     if (empty($sort) || !is_string($sort)) {
