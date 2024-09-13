@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Core/Page.php';
-require_once 'CRM/Case/BAO/Case.php';
+
+
 
 /**
  * This class handle case related functions
@@ -55,7 +55,7 @@ class CRM_Case_Page_Tab extends CRM_Core_Page {
     $this->_contactId = CRM_Utils_Request::retrieve('cid', 'Positive', $this);
 
     //validate case configuration.
-    require_once 'CRM/Case/BAO/Case.php';
+
     $configured = CRM_Case_BAO_Case::isCaseConfigured($this->_contactId);
     $this->assign('notConfigured', !$configured['configured']);
     $this->assign('allowToAddNewCase', $configured['allowToAddNewCase']);
@@ -70,7 +70,7 @@ class CRM_Case_Page_Tab extends CRM_Core_Page {
     if ($this->_contactId) {
       $this->assign('contactId', $this->_contactId);
       // check logged in user permission
-      require_once 'CRM/Contact/Page/View.php';
+
       if ($this->_id && ($this->_action & CRM_Core_Action::VIEW)) {
         //user might have special permissions to view this case, CRM-5666
         if (!CRM_Core_Permission::check('access all cases and activities')) {
@@ -119,8 +119,8 @@ class CRM_Case_Page_Tab extends CRM_Core_Page {
     $controller->run();
 
     $this->assign('caseId', $this->_id);
-    require_once 'CRM/Activity/Selector/Activity.php';
-    require_once 'CRM/Core/Selector/Controller.php';
+
+
     $output = CRM_Core_Selector_Controller::SESSION;
     $selector = new CRM_Activity_Selector_Activity($this->_contactId, $this->_permission, FALSE, 'case');
     $controller = new CRM_Core_Selector_Controller($selector, $this->get(CRM_Utils_Pager::PAGE_ID),
@@ -154,7 +154,7 @@ class CRM_Case_Page_Tab extends CRM_Core_Page {
     $controller->run();
 
     if ($this->_contactId) {
-      require_once 'CRM/Contact/BAO/Contact.php';
+
       $displayName = CRM_Contact_BAO_Contact::displayName($this->_contactId);
       $this->assign('displayName', $displayName);
     }
@@ -256,7 +256,7 @@ class CRM_Case_Page_Tab extends CRM_Core_Page {
 
     $qfKey = CRM_Utils_Request::retrieve('key', 'String', $this);
     //validate the qfKey
-    require_once 'CRM/Utils/Rule.php';
+
     if (!CRM_Utils_Rule::qfKey($qfKey)) {
       $qfKey = NULL;
     }

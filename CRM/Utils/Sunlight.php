@@ -33,13 +33,13 @@
  *
  */
 
-require_once 'CRM/Core/Error.php';
+
 class CRM_Utils_Sunlight {
   static $_apiURL = 'http://api.sunlightlabs.com/';
   static $_apiKey = NULL;
 
   static function makeAPICall($uri) {
-    require_once 'HTTP/Request.php';
+
     $params = array('method' => HTTP_REQUEST_METHOD_GET,
       'allowRedirects' => FALSE,
     );

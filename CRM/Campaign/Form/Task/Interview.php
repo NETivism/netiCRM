@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Campaign/Form/Task.php';
+
 
 /**
  * This class provides the functionality to record voter's interview.
@@ -100,7 +100,7 @@ class CRM_Campaign_Form_Task_Interview extends CRM_Campaign_Form_Task {
     }
 
     //get the contact read only fields to display.
-    require_once 'CRM/Core/BAO/Preferences.php';
+
     $readOnlyFields = array_merge(array('contact_type' => '',
         'sort_name' => ts('Name'),
       ),
@@ -114,7 +114,7 @@ class CRM_Campaign_Form_Task_Interview extends CRM_Campaign_Form_Task {
     $returnProperties['contact_sub_type'] = TRUE;
 
     //get the profile id.
-    require_once 'CRM/Core/BAO/UFJoin.php';
+
     $ufJoinParams = array('entity_id' => $this->_surveyId,
       'entity_table' => 'civicrm_survey',
       'module' => 'CiviCampaign',
@@ -123,12 +123,12 @@ class CRM_Campaign_Form_Task_Interview extends CRM_Campaign_Form_Task {
 
     //validate all voters for required activity.
     //get the survey activities for given voters.
-    require_once 'CRM/Campaign/BAO/Survey.php';
+
     $this->_surveyActivityIds = CRM_Campaign_BAO_Survey::voterActivityDetails($this->_surveyId,
       $this->_contactIds,
       $this->_interviewerId
     );
-    require_once 'CRM/Core/PseudoConstant.php';
+
     $activityStatus = CRM_Core_PseudoConstant::activityStatus('name');
     $scheduledStatusId = array_search('Scheduled', $activityStatus);
 
@@ -174,7 +174,7 @@ class CRM_Campaign_Form_Task_Interview extends CRM_Campaign_Form_Task {
     if (!is_array($this->_surveyValues)) {
       $this->_surveyValues = array();
       if ($this->_surveyId) {
-        require_once 'CRM/Campaign/BAO/Survey.php';
+
         $surveyParams = array('id' => $this->_surveyId);
         CRM_Campaign_BAO_Survey::retrieve($surveyParams, $this->_surveyValues);
       }
@@ -187,7 +187,7 @@ class CRM_Campaign_Form_Task_Interview extends CRM_Campaign_Form_Task {
     if (!is_array($this->_resultOptions)) {
       $this->_resultOptions = array();
       if ($resultOptionId = CRM_Utils_Array::value('result_id', $this->_surveyValues)) {
-        require_once 'CRM/Core/OptionGroup.php';
+
         $this->_resultOptions = CRM_Core_OptionGroup::valuesByID($resultOptionId);
       }
       $this->set('resultOptions', $this->_resultOptions);
@@ -197,14 +197,14 @@ class CRM_Campaign_Form_Task_Interview extends CRM_Campaign_Form_Task {
     $this->validateIds();
 
     //append breadcrumb to survey dashboard.
-    require_once 'CRM/Campaign/BAO/Campaign.php';
+
     if (CRM_Campaign_BAO_Campaign::accessCampaignDashboard()) {
       $url = CRM_Utils_System::url('civicrm/campaign', 'reset=1&subPage=survey');
       CRM_Utils_System::appendBreadCrumb(array(array('title' => ts('Survey(s)'), 'url' => $url)));
     }
 
     //set the title.
-    require_once 'CRM/Core/PseudoConstant.php';
+
     $activityTypes = CRM_Core_PseudoConstant::activityType(FALSE, TRUE, FALSE, 'label', TRUE);
     $this->_surveyTypeId = CRM_Utils_Array::value('activity_type_id', $this->_surveyValues);
     CRM_Utils_System::setTitle(ts('Record %1 Responses', array(1 => $activityTypes[$this->_surveyTypeId])));
@@ -244,7 +244,7 @@ class CRM_Campaign_Form_Task_Interview extends CRM_Campaign_Form_Task {
     //pickup the uf fields.
     $this->_surveyFields = array();
     if ($this->_ufGroupId) {
-      require_once 'CRM/Core/BAO/UFGroup.php';
+
       $this->_surveyFields = CRM_Core_BAO_UFGroup::getFields($this->_ufGroupId,
         FALSE, CRM_Core_Action::VIEW
       );
@@ -360,7 +360,7 @@ class CRM_Campaign_Form_Task_Interview extends CRM_Campaign_Form_Task {
     $params = $this->controller->exportValues($this->_name);
 
     //process survey.
-    require_once 'CRM/Activity/BAO/Activity.php';
+
     foreach ($params['field'] as $voterId => & $values) {
       $values['voter_id'] = $voterId;
       $values['interviewer_id'] = $this->_interviewerId;
@@ -379,7 +379,7 @@ class CRM_Campaign_Form_Task_Interview extends CRM_Campaign_Form_Task {
 
     static $surveyFields;
     if (!is_array($surveyFields)) {
-      require_once 'CRM/Core/BAO/CustomField.php';
+
       $surveyFields = CRM_Core_BAO_CustomField::getFields('Activity',
         FALSE,
         FALSE,
@@ -392,7 +392,7 @@ class CRM_Campaign_Form_Task_Interview extends CRM_Campaign_Form_Task {
 
     static $statusId;
     if (!$statusId) {
-      require_once 'CRM/Core/PseudoConstant.php';
+
       $statusId = array_search('Completed', CRM_Core_PseudoConstant::activityStatus('name'));
     }
 
@@ -402,11 +402,11 @@ class CRM_Campaign_Form_Task_Interview extends CRM_Campaign_Form_Task {
       $activityId,
       'Activity'
     );
-    require_once 'CRM/Core/BAO/CustomValueTable.php';
+
     CRM_Core_BAO_CustomValueTable::store($customParams, 'civicrm_activity', $activityId);
 
     //update activity record.
-    require_once 'CRM/Activity/DAO/Activity.php';
+
     $activity = new CRM_Activity_DAO_Activity();
     $activity->id = $activityId;
 
@@ -444,7 +444,7 @@ class CRM_Campaign_Form_Task_Interview extends CRM_Campaign_Form_Task {
     }
     if (!$this->_surveyId) {
       // use default survey id
-      require_once 'CRM/Campaign/DAO/Survey.php';
+
       $dao = new CRM_Campaign_DAO_Survey();
       $dao->is_active = 1;
       $dao->is_default = 1;
@@ -455,13 +455,13 @@ class CRM_Campaign_Form_Task_Interview extends CRM_Campaign_Form_Task {
     $this->_contactIds = $this->get('contactIds');
     if (!is_array($this->_contactIds)) {
       //get the survey activities.
-      require_once 'CRM/Core/PseudoConstant.php';
+
       $activityStatus = CRM_Core_PseudoConstant::activityStatus('name');
       $statusIds = array();
       if ($statusId = array_search('Scheduled', $activityStatus)) {
         $statusIds[] = $statusId;
       }
-      require_once 'CRM/Campaign/BAO/Survey.php';
+
       $surveyActivities = CRM_Campaign_BAO_Survey::getSurveyVoterInfo($this->_surveyId,
         $this->_interviewerId,
         $statusIds

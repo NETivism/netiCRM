@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Page.php';
+
 class CRM_Contact_Page_View_Log extends CRM_Core_Page {
 
   /**
@@ -43,7 +43,7 @@ class CRM_Contact_Page_View_Log extends CRM_Core_Page {
    * @access public
    */
   function browse() {
-    require_once 'CRM/Core/DAO/Log.php';
+
 
     $log = new CRM_Core_DAO_Log();
 
@@ -74,7 +74,7 @@ class CRM_Contact_Page_View_Log extends CRM_Core_Page {
     $this->assign('contactId', $this->_contactId);
 
     // check logged in url permission
-    require_once 'CRM/Contact/Page/View.php';
+
     CRM_Contact_Page_View::checkUserPermission($this);
 
     $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE, 'browse');

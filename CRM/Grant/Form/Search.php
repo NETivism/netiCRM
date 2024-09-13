@@ -36,10 +36,10 @@
 /**
  * Files required
  */
-require_once 'CRM/Grant/PseudoConstant.php';
-require_once 'CRM/Grant/Selector/Search.php';
-require_once 'CRM/Core/Selector/Controller.php';
-require_once 'CRM/Contact/BAO/SavedSearch.php';
+
+
+
+
 
 /**
  * This file is for civigrant search
@@ -193,7 +193,7 @@ class CRM_Grant_Form_Search extends CRM_Core_Form {
       );
     }
 
-    require_once 'CRM/Contact/BAO/Query.php';
+
     $this->_queryParams = &CRM_Contact_BAO_Query::convertFormValues($this->_formValues);
     $selector = new CRM_Grant_Selector_Search($this->_queryParams,
       $this->_action,
@@ -234,7 +234,7 @@ class CRM_Grant_Form_Search extends CRM_Core_Form {
   function buildQuickForm() {
     $this->addElement('text', 'sort_name', ts('Name or Email'), CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Contact', 'sort_name'));
 
-    require_once 'CRM/Grant/BAO/Query.php';
+
     CRM_Grant_BAO_Query::buildSearchForm($this);
 
     /* 
@@ -255,10 +255,10 @@ class CRM_Grant_Form_Search extends CRM_Core_Form {
 
       $total = $cancel = 0;
 
-      require_once "CRM/Core/Permission.php";
+
       $permission = CRM_Core_Permission::getPermission();
 
-      require_once 'CRM/Grant/Task.php';
+
       $tasks = array('' => ts('- actions -'));
       $permissionedTask = CRM_Grant_Task::permissionedTaskTitles($permission);
       if (is_array($permissionedTask) && !CRM_Utils_System::isNull($permissionedTask)) {
@@ -327,7 +327,7 @@ class CRM_Grant_Form_Search extends CRM_Core_Form {
       $this->_formValues = CRM_Contact_BAO_SavedSearch::getFormValues($this->_ssID);
     }
 
-    require_once 'CRM/Contact/BAO/Query.php';
+
     $this->_queryParams = &CRM_Contact_BAO_Query::convertFormValues($this->_formValues);
 
     $this->set('formValues', $this->_formValues);
@@ -351,7 +351,7 @@ class CRM_Grant_Form_Search extends CRM_Core_Form {
       );
     }
 
-    require_once 'CRM/Contact/BAO/Query.php';
+
 
     $selector = new CRM_Grant_Selector_Search($this->_queryParams,
       $this->_action,

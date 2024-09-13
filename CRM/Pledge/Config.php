@@ -36,6 +36,6 @@
  *
  */
 
-require_once 'CRM/Core/Component/Config.php';
+
 class CRM_Pledge_Config extends CRM_Core_Component_Config {}
 

@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Contact/Form/Task.php';
+
 
 /**
  * This class provides the functionality to group
@@ -106,7 +106,7 @@ class CRM_Contact_Form_Task_AddToGroup extends CRM_Contact_Form_Task {
         CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Group', 'description')
       );
 
-      require_once 'CRM/Core/OptionGroup.php';
+
       $groupTypes = CRM_Core_OptionGroup::values('group_type', TRUE);
       if (!CRM_Core_Permission::access('CiviMail')) {
         unset($groupTypes['Mailing List']);
@@ -223,7 +223,7 @@ class CRM_Contact_Form_Task_AddToGroup extends CRM_Contact_Form_Task {
       }
       $groupParams['is_active'] = 1;
 
-      require_once 'CRM/Contact/BAO/Group.php';
+
       $createdGroup = &CRM_Contact_BAO_Group::create($groupParams);
       $groupID = $createdGroup->id;
       $groupName = $groupParams['title'];

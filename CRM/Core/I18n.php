@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Config.php';
+
 class CRM_Core_I18n {
 
   /**
@@ -118,7 +118,7 @@ class CRM_Core_I18n {
     static $enabled = NULL;
 
     if (!$all) {
-      require_once 'CRM/Core/I18n/PseudoConstant.php';
+
       $all = &CRM_Core_I18n_PseudoConstant::languages();
 
       // check which ones are available; add them to $all if not there already

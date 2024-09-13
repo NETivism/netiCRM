@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
+
 
 /**
  * customize the output to meet our specific requirements
@@ -52,7 +52,7 @@ class CRM_Admin_Form_Persistent extends CRM_Core_Form {
   }
 
   public function setDefaultValues() {
-    require_once 'CRM/Core/BAO/Persistent.php';
+
     $defaults = array();
 
     if ($this->_indexID && ($this->_action & (CRM_Core_Action::UPDATE))) {
@@ -82,7 +82,7 @@ class CRM_Admin_Form_Persistent extends CRM_Core_Form {
   }
 
   public function postProcess() {
-    require_once "CRM/Core/BAO/Persistent.php";
+
     $params = $ids = array();
     $params = $this->controller->exportValues($this->_name);
 

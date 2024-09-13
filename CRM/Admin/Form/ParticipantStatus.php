@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Admin/Form.php';
-require_once 'CRM/Event/BAO/ParticipantStatusType.php';
+
+
 class CRM_Admin_Form_ParticipantStatus extends CRM_Admin_Form {
   public function buildQuickForm() {
     parent::buildQuickForm();
@@ -64,14 +64,14 @@ class CRM_Admin_Form_ParticipantStatus extends CRM_Admin_Form {
 
     $this->add('text', 'weight', ts('Weight'), $attributes['weight'], TRUE);
 
-    require_once 'CRM/Core/PseudoConstant.php';
+
     $this->add('select', 'visibility_id', ts('Visibility'), CRM_Core_PseudoConstant::visibility(), TRUE);
   }
 
   function setDefaultValues() {
     $defaults = parent::setDefaultValues();
     if (!CRM_Utils_Array::value('weight', $defaults)) {
-      require_once 'CRM/Utils/Weight.php';
+
       $defaults['weight'] = CRM_Utils_Weight::getDefaultWeight('CRM_Event_DAO_ParticipantStatusType');
     }
     $this->_isReserved = $defaults['is_reserved'];
@@ -113,7 +113,7 @@ class CRM_Admin_Form_ParticipantStatus extends CRM_Admin_Form {
 
     }
 
-    require_once 'CRM/Utils/Weight.php';
+
     if ($this->_id) {
       $oldWeight = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_ParticipantStatusType', $this->_id, 'weight', 'id');
     }

@@ -50,7 +50,7 @@ class CRM_Contact_BAO_Contact_Utils {
 
       $typeInfo = array();
       $params = array('name' => $contactType);
-      require_once 'CRM/Contact/BAO/ContactType.php';
+
       CRM_Contact_BAO_ContactType::retrieve($params, $typeInfo);
 
       if (CRM_Utils_Array::value('image_URL', $typeInfo)) {
@@ -198,7 +198,7 @@ WHERE  id IN ( $idString )
    */
   static function maxLocations($contactId) {
     // find the system config related location blocks
-    require_once 'CRM/Core/BAO/Preferences.php';
+
     $locationCount = CRM_Core_BAO_Preferences::value('location_count');
 
     $contactLocations = array();
@@ -233,7 +233,7 @@ UNION
    * @static
    */
   static function createCurrentEmployerRelationship($contactID, $organization) {
-    require_once 'CRM/Contact/BAO/Relationship.php';
+
     $organizationId = NULL;
 
     // if organization id is passed.
@@ -247,7 +247,7 @@ UNION
       $organizationParams = array();
       $organizationParams['organization_name'] = $orgName[0];
 
-      require_once 'CRM/Dedupe/Finder.php';
+
       $dedupeParams = CRM_Dedupe_Finder::formatParams($organizationParams, 'Organization');
 
       $dedupeParams['check_permission'] = FALSE;
@@ -323,7 +323,7 @@ UNION
 
     //we do not know that triggered relationship record is active.
     if ($duplicate) {
-      require_once 'CRM/Contact/DAO/Relationship.php';
+
       $relationship = new CRM_Contact_DAO_Relationship();
       $relationship->contact_id_a = $contactID;
       $relationship->contact_id_b = $employerID;
@@ -406,7 +406,7 @@ WHERE id={$contactId}; ";
 
       //get relationship id.
       if (CRM_Contact_BAO_Relationship::checkDuplicateRelationship($relMembershipParams, $contactId, $employerId)) {
-        require_once 'CRM/Contact/DAO/Relationship.php';
+
         $relationship = new CRM_Contact_DAO_Relationship();
         $relationship->contact_id_a = $contactId;
         $relationship->contact_id_b = $employerId;
@@ -446,7 +446,7 @@ WHERE id={$contactId}; ";
       $title = ts('Contact Information');
     }
 
-    require_once 'CRM/Contact/Form/Location.php';
+
     $config = CRM_Core_Config::singleton();
 
     $form->assign('contact_type', $contactType);
@@ -461,7 +461,7 @@ WHERE id={$contactId}; ";
         $contactID = $session->get('userID');
 
         if ($contactID) {
-          require_once 'CRM/Contact/BAO/Relationship.php';
+
           $employers = CRM_Contact_BAO_Relationship::getPermissionedEmployer($contactID);
         }
 
@@ -548,7 +548,7 @@ WHERE id={$contactId}; ";
       )
     );
     //build the address block
-    require_once 'CRM/Contact/Form/Edit/Address.php';
+
     CRM_Contact_Form_Edit_Address::buildQuickForm($form);
 
     // also fix the state country selector
@@ -593,8 +593,8 @@ UPDATE civicrm_contact
     }
 
     // does contact has sufficient permissions.
-    require_once 'CRM/Core/Permission.php';
-    require_once 'CRM/Contact/BAO/Contact/Permission.php';
+
+
     $permissions = array('view' => 'view all contacts',
       'edit' => 'edit all contacts',
       'merge' => 'administer CiviCRM',
@@ -699,7 +699,7 @@ LEFT JOIN  civicrm_email ce ON ( ce.contact_id=c.id AND ce.is_primary = 1 )
     }
 
     if (empty($returnProperties)) {
-      require_once 'CRM/Core/BAO/Preferences.php';
+
       $autocompleteContactSearch = CRM_Core_BAO_Preferences::valueOptions('contact_autocomplete_options');
       $returnProperties = array_fill_keys(array_merge(array('sort_name'),
           array_keys($autocompleteContactSearch)

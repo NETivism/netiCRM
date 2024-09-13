@@ -34,8 +34,8 @@
  *
  */
 
-require_once 'CRM/Core/Config.php';
-require_once 'CRM/Core/Extensions.php';
+
+
 class CRM_Core_Extensions_ExtensionType {
 
   /**
@@ -63,7 +63,7 @@ class CRM_Core_Extensions_ExtensionType {
   public function moveFiles($id, $key, $deleteOrginal = FALSE) {
     $e = self::$_extensions;
     if ($e['per_id'][$id]['status'] === 'uploaded') {
-      require_once ('CRM/Utils/File.php');
+
       CRM_Utils_File::copyDir($e['per_id'][$id]['path'], $this->extDir . DIRECTORY_SEPARATOR . $e['per_id'][$id]['type'] . DIRECTORY_SEPARATOR . $e['per_id'][$id]['key']);
 
       if ($deleteOrginal) {
@@ -95,7 +95,7 @@ class CRM_Core_Extensions_ExtensionType {
   public function deleteEntry($id, $key) {
     $e = self::$_extensions;
     if ($e['per_id'][$id]['status'] === 'enabled') {
-      require_once ('CRM/Core/DAO/OptionValue.php');
+
       $optionValue = new CRM_Core_DAO_OptionValue();
       $optionValue->id = $id;
       return $optionValue->delete();
@@ -104,7 +104,7 @@ class CRM_Core_Extensions_ExtensionType {
   }
 
   public function deleteFiles($id, $key) {
-    require_once ('CRM/Utils/File.php');
+
     $e = self::$_extensions;
     CRM_Utils_File::cleanDir($e['per_id'][$id]['path']);
   }

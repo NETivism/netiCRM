@@ -39,7 +39,7 @@
  * $Id$
  */
 
-require_once 'CRM/Core/Payment.php';
+
 class CRM_Core_Payment_Realex extends CRM_Core_Payment {
   CONST AUTH_APPROVED = '00';
 
@@ -420,7 +420,7 @@ class CRM_Core_Payment_Realex extends CRM_Core_Payment {
    * @return bool                  True if ID exists, else false
    */
   function _checkDupe($invoiceId) {
-    require_once 'CRM/Contribute/DAO/Contribution.php';
+
     $contribution = new CRM_Contribute_DAO_Contribution();
     $contribution->invoice_id = $invoiceId;
     return $contribution->find();

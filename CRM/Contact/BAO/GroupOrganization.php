@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Contact/DAO/GroupOrganization.php';
+
 class CRM_Contact_BAO_GroupOrganization extends CRM_Contact_DAO_GroupOrganization {
 
   /**
@@ -146,7 +146,7 @@ class CRM_Contact_BAO_GroupOrganization extends CRM_Contact_DAO_GroupOrganizatio
    */
   function delete($groupOrganizationID = NULL) {
     $results = NULL;
-    require_once 'CRM/Contact/DAO/GroupOrganization.php';
+
     $groupOrganization = new CRM_Contact_DAO_GroupOrganization();
     $groupOrganization->id = $groupOrganizationID;
 

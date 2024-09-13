@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Mailing/DAO/Component.php';
+
 class CRM_Mailing_BAO_Component extends CRM_Mailing_DAO_Component {
 
   /**

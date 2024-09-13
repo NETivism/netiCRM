@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Contact/Form/Task/SaveSearch.php';
+
 
 /**
  * This class provides the functionality to update a saved search
@@ -74,7 +74,7 @@ class CRM_Contact_Form_Task_SaveSearch_Update extends CRM_Contact_Form_Task_Save
     $params = array();
 
     $params = array('saved_search_id' => $this->_id);
-    require_once 'CRM/Contact/BAO/Group.php';
+
     CRM_Contact_BAO_Group::retrieve($params, $defaults);
 
     return $defaults;

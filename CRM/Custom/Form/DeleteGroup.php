@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
-require_once 'CRM/Core/BAO/CustomGroup.php';
+
+
 
 /**
  * This class is to build the form for Deleting Group
@@ -69,7 +69,7 @@ class CRM_Custom_Form_DeleteGroup extends CRM_Core_Form {
     CRM_Core_BAO_CustomGroup::retrieve($params, $defaults);
     $this->_title = $defaults['title'];
 
-    require_once 'CRM/Core/BAO/CustomField.php';
+
     //check wheter this contain any custom fields
     $customField = new CRM_Core_DAO_CustomField();
     $customField->custom_group_id = $this->_id;

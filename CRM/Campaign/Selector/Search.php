@@ -33,13 +33,13 @@
  *
  */
 
-require_once 'CRM/Core/Selector/Base.php';
-require_once 'CRM/Core/Selector/API.php';
 
-require_once 'CRM/Utils/Pager.php';
-require_once 'CRM/Utils/Sort.php';
 
-require_once 'CRM/Contact/BAO/Query.php';
+
+
+
+
+
 
 /**
  * This class is used to retrieve and display a range of
@@ -239,7 +239,7 @@ class CRM_Campaign_Selector_Search extends CRM_Core_Selector_Base implements CRM
    * @return int   the total number of rows for this action
    */
   function &getRows($action, $offset, $rowCount, $sort, $output = NULL) {
-    require_once 'CRM/Contact/BAO/Contact/Utils.php';
+
     $result = $this->_query->searchQuery($offset, $rowCount, $sort,
       FALSE, FALSE,
       FALSE, FALSE,
@@ -247,7 +247,7 @@ class CRM_Campaign_Selector_Search extends CRM_Core_Selector_Base implements CRM
       $this->_campaignClause
     );
 
-    require_once 'CRM/Contact/BAO/Contact/Utils.php';
+
 
     // process the result of the query
     $rows = array();

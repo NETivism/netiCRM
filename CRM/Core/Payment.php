@@ -87,7 +87,7 @@ abstract class CRM_Core_Payment {
     if (self::$_singleton === NULL) {
       $config = CRM_Core_Config::singleton();
 
-      require_once 'CRM/Core/Extensions.php';
+
       $ext = new CRM_Core_Extensions();
 
       if ($ext->isExtensionKey($paymentProcessor['class_name'])) {
@@ -192,12 +192,12 @@ abstract class CRM_Core_Payment {
 
     $mode = ($action == 1024) ? 'test' : 'live';
 
-    require_once 'CRM/Core/BAO/PaymentProcessor.php';
+
     $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($ppID, $mode);
 
     echo json_encode($paymentProcessor);
 
-    require_once 'CRM/Utils/System.php';
+
     CRM_Utils_System::civiExit();
   }
 

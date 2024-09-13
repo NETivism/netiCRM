@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Report/Form.php';
-require_once 'CRM/Contribute/PseudoConstant.php';
+
+
 class CRM_Report_Form_Pledge_Pbnp extends CRM_Report_Form {
   protected $_charts = array('' => 'Tabular',
     'barChart' => 'Bar Chart',

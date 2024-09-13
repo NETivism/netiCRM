@@ -32,7 +32,7 @@
  *
  */
 
-require_once 'CRM/Event/Form/Task.php';
+
 
 /**
  * This class provides the functionality to save a search

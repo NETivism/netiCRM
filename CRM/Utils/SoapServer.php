@@ -42,8 +42,8 @@
  *
  */
 
-require_once 'api/v2/utils.php';
-require_once 'api/v2/Mailer.php';
+
+
 class CRM_Utils_SoapServer {
 
   /**
@@ -220,7 +220,7 @@ class CRM_Utils_SoapServer {
 
   public function get_contact($key, $params) {
     $this->verify($key);
-    require_once 'api/v2/Contact.php';
+
     return civicrm_contact_get($params);
   }
 }

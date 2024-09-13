@@ -37,8 +37,8 @@
  * Files required
  */
 
-require_once 'CRM/Core/Form.php';
-require_once 'CRM/Core/Session.php';
+
+
 class CRM_Contact_Form_Search_Simple extends CRM_Core_Form {
   protected $_params;
 

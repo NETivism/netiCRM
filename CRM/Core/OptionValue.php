@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Core/BAO/OptionValue.php';
-require_once 'CRM/Core/BAO/OptionGroup.php';
+
+
 class CRM_Core_OptionValue {
 
   /**
@@ -101,7 +101,7 @@ class CRM_Core_OptionValue {
     if ($optionGroupID) {
       $dao->option_group_id = $optionGroupID;
 
-      require_once 'CRM/Core/OptionGroup.php';
+
       if (in_array($groupName, CRM_Core_OptionGroup::$_domainIDGroups)) {
         $dao->domain_id = CRM_Core_Config::domainID();
       }
@@ -110,7 +110,7 @@ class CRM_Core_OptionValue {
       $dao->find();
     }
 
-    require_once 'CRM/Case/BAO/Case.php';
+
     if ($groupName == 'case_type') {
       $caseTypeIds = CRM_Case_BAO_Case::getUsedCaseType();
     }
@@ -118,7 +118,7 @@ class CRM_Core_OptionValue {
       $caseStatusIds = CRM_Case_BAO_Case::getUsedCaseStatuses();
     }
 
-    require_once 'CRM/Core/Component.php';
+
     $componentNames = CRM_Core_Component::getNames();
     $visibilityLabels = CRM_Core_PseudoConstant::visibility();
     while ($dao->fetch()) {
@@ -202,7 +202,7 @@ class CRM_Core_OptionValue {
    * @static
    */
   static function addOptionValue(&$params, &$groupParams, &$action, &$optionValueID) {
-    require_once 'CRM/Utils/Weight.php';
+
     $params['is_active'] = CRM_Utils_Array::value('is_active', $params, FALSE);
     // checking if the group name with the given id or name (in $groupParams) exists
     if (!empty($groupParams)) {
@@ -230,7 +230,7 @@ class CRM_Core_OptionValue {
     }
     $params['option_group_id'] = $optionGroupID;
 
-    require_once 'CRM/Core/Action.php';
+
     if (($action & CRM_Core_Action::ADD) && !CRM_Utils_Array::value('value', $params)) {
       $fieldValues = array('option_group_id' => $optionGroupID);
       // use the next available value
@@ -301,7 +301,7 @@ class CRM_Core_OptionValue {
     if (empty(self::$_fields[$key]) || !self::$_fields[$key]) {
       self::$_fields[$key] = array();
 
-      require_once "CRM/Core/DAO/OptionValue.php";
+
       $option = CRM_Core_DAO_OptionValue::import();
 
       foreach (array_keys($option) as $id) {
@@ -461,7 +461,7 @@ FROM
       $params[2] = array($groupName, 'String');
     }
 
-    require_once 'CRM/Core/OptionGroup.php';
+
     if (in_array($groupName, CRM_Core_OptionGroup::$_domainIDGroups)) {
       $where .= " AND option_value.domain_id = " . CRM_Core_Config::domainID();
     }

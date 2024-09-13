@@ -33,11 +33,11 @@
  *
  */
 
-require_once 'CRM/Core/SelectValues.php';
-require_once 'CRM/Core/Action.php';
-require_once 'CRM/Core/Permission.php';
 
-require_once 'CRM/Utils/Request.php';
+
+
+
+
 
 /**
  * A Page is basically data in a nice pretty format.
@@ -202,7 +202,7 @@ class CRM_Core_Page {
     self::$_template->assign('tplFile', $pageTemplateFile);
 
     // invoke the pagRun hook, CRM-3906
-    require_once 'CRM/Utils/Hook.php';
+
     CRM_Utils_Hook::pageRun($this);
 
     if ($this->_print) {

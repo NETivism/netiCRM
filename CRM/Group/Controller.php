@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Controller.php';
+
 class CRM_Group_Controller extends CRM_Core_Controller {
 
   /**
@@ -42,7 +42,7 @@ class CRM_Group_Controller extends CRM_Core_Controller {
   function __construct($title = NULL, $action = CRM_Core_Action::NONE, $modal = TRUE) {
     parent::__construct($title, $modal);
 
-    require_once 'CRM/Group/StateMachine.php';
+
     $this->_stateMachine = new CRM_Group_StateMachine($this, $action);
 
     // create and instantiate the pages
@@ -56,7 +56,7 @@ class CRM_Group_Controller extends CRM_Core_Controller {
 
     // to handle file type custom data
     $uploadDir = $config->uploadDir;
-    require_once 'CRM/Core/BAO/File.php';
+
 
     $uploadNames = $this->get('uploadNames');
     if (!empty($uploadNames)) {

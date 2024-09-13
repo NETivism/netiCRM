@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/DAO/Email.php';
+
 
 /**
  * This class contains functions for email handling

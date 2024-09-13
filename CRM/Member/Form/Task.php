@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
+
 
 /**
  * Class for civimember task actions
@@ -134,7 +134,7 @@ class CRM_Member_Form_Task extends CRM_Core_Form {
     $session = CRM_Core_Session::singleton();
 
     $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String', $form);
-    require_once 'CRM/Utils/Rule.php';
+
     $urlParams = 'force=1';
     if (CRM_Utils_Rule::qfKey($qfKey)) {
       $urlParams .= "&qfKey=$qfKey";

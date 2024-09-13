@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Import/DataSource.php';
+
 class CRM_Import_DataSource_CSV extends CRM_Import_DataSource {
   CONST NUM_ROWS_TO_INSERT = 100;
   function getInfo() {

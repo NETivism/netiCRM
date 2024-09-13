@@ -203,8 +203,8 @@ class CRM_Utils_Mail_Incoming {
         ));
     }
 
-    require_once 'ezc/Base/src/ezc_bootstrap.php';
-    require_once 'ezc/autoload/mail_autoload.php';
+
+
 
     // explode email to digestable format
     $set = new ezcMailFileSet(array($file));
@@ -225,9 +225,9 @@ class CRM_Utils_Mail_Incoming {
   }
 
   static function parseMailingObject(&$mail) {
-    require_once 'CRM/Core/Config.php';
-    require_once 'api/v2/Activity.php';
-    require_once 'api/v2/Contact.php';
+
+
+
 
     $config = CRM_Core_Config::singleton();
 
@@ -257,7 +257,7 @@ class CRM_Utils_Mail_Incoming {
 
     // format and move attachments to the civicrm area
     if (!empty($attachments)) {
-      require_once 'CRM/Utils/File.php';
+
       $date = date('Ymdhis');
       $config = CRM_Core_Config::singleton();
       for ($i = 0; $i < count($attachments); $i++) {
@@ -312,7 +312,7 @@ class CRM_Utils_Mail_Incoming {
    * create one with this email
    */
   function getContactID($email, $name = NULL, $create = TRUE) {
-    require_once 'CRM/Contact/BAO/Contact.php';
+
     $dao = CRM_Contact_BAO_Contact::matchContactOnEmail($email, 'Individual');
     if ($dao) {
       return $dao->contact_id;
@@ -327,7 +327,7 @@ class CRM_Utils_Mail_Incoming {
       'email-Primary' => $email,
     );
 
-    require_once 'CRM/Utils/String.php';
+
     CRM_Utils_String::extractName($name, $params);
 
     return CRM_Contact_BAO_Contact::createProfileContact($params,

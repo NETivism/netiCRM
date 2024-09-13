@@ -105,7 +105,7 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
     $copyCouponEntity = &CRM_Core_DAO::copyGeneric('CRM_Coupon_DAO_CouponEntity', array('coupon_id' => $id), array('coupon_id' => $copy->id));
     $copy->save();
 
-    require_once 'CRM/Utils/Hook.php';
+
     CRM_Utils_Hook::copy('Coupon', $copy);
     return $copy;
   }

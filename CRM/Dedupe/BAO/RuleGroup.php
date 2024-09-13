@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Dedupe/DAO/RuleGroup.php';
+
 
 /**
  * The CiviCRM duplicate discovery engine is based on an
@@ -93,8 +93,8 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
         'civicrm_im', 'civicrm_note', 'civicrm_openid', 'civicrm_phone',
       );
 
-      require_once 'CRM/Contact/BAO/Contact.php';
-      require_once 'CRM/Core/BAO/CustomGroup.php';
+
+
       foreach (array('Individual', 'Organization', 'Household') as $ctype) {
         // take the table.field pairs and their titles from importableFields() if the table is supported
         foreach (CRM_Contact_BAO_Contact::importableFields($ctype) as $iField) {
@@ -339,7 +339,7 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
    *
    */
   function thresholdQuery($checkPermission = TRUE) {
-    require_once 'CRM/Contact/BAO/Contact/Permission.php';
+
     $this->_aclFrom = '';
     // CRM-6603: anonymous dupechecks side-step ACLs
     $this->_aclWhere = ' AND is_deleted = 0 ';

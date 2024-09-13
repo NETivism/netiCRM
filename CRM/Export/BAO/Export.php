@@ -128,7 +128,7 @@ class CRM_Export_BAO_Export {
         $queryMode = CRM_Contact_BAO_Query::MODE_ACTIVITY;
         break;
     }
-    require_once 'CRM/Core/BAO/CustomField.php';
+
     if ($fields) {
       //construct return properties
       $locationTypes = CRM_Core_PseudoConstant::locationType();
@@ -308,14 +308,14 @@ class CRM_Export_BAO_Export {
           break;
 
         case CRM_Contact_BAO_Query::MODE_PLEDGE:
-          require_once 'CRM/Pledge/BAO/Query.php';
+
           $extraReturnProperties = CRM_Pledge_BAO_Query::extraReturnProperties($queryMode);
           $paymentFields = TRUE;
           $paymentTableId = "pledge_payment_id";
           break;
 
         case CRM_Contact_BAO_Query::MODE_CASE:
-          require_once 'CRM/Case/BAO/Query.php';
+
           $extraReturnProperties = CRM_Case_BAO_Query::extraReturnProperties($queryMode);
           break;
       }
@@ -562,11 +562,11 @@ class CRM_Export_BAO_Export {
     $countQuery .=  $groupBy;
 
     //hack for student data
-    require_once 'CRM/Core/OptionGroup.php';
+
     $multipleSelectFields = array('preferred_communication_method' => 1);
 
     if (CRM_Core_Permission::access('Quest')) {
-      require_once 'CRM/Quest/BAO/Student.php';
+
       $studentFields = array();
       $studentFields = CRM_Quest_BAO_Student::$multipleSelectFields;
       $multipleSelectFields = array_merge($multipleSelectFields, $studentFields);
@@ -584,7 +584,7 @@ class CRM_Export_BAO_Export {
       );
 
       // get payment related in for event and members
-      require_once 'CRM/Contribute/BAO/Contribution.php';
+
       $paymentDetails = CRM_Contribute_BAO_Contribution::getContributionDetails($exportMode, $ids);
       if (!empty($paymentDetails)) {
         $addPaymentHeader = TRUE;
@@ -1199,7 +1199,7 @@ class CRM_Export_BAO_Export {
     }
 
     // call export hook
-    require_once 'CRM/Utils/Hook.php';
+
     CRM_Utils_Hook::export($exportTempTable, $headerRows, $sqlColumns, $exportMode, $mappingId);
 
     // now write the CSV file
@@ -1323,7 +1323,7 @@ class CRM_Export_BAO_Export {
   }
 
   static function exportCustom($customSearchClass, $formValues, $order, $primaryIDName = FALSE, $returnRows = TRUE, $exportFile = FALSE) {
-    require_once "CRM/Core/Extensions.php";
+
     $ext = new CRM_Core_Extensions();
     if (!$ext->isExtensionClass($customSearchClass)) {
       if(!class_exists($customSearchClass)){

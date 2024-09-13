@@ -34,7 +34,7 @@
  *
  */
 
-require_once 'CRM/Utils/Hook.php';
+
 class CRM_Utils_Hook_Drupal extends CRM_Utils_Hook {
 
   static function availableHooks($hook) {

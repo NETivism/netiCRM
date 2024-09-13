@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Admin/Form.php';
+
 
 /**
  * This class generates form components for Extensions
@@ -50,7 +50,7 @@ class CRM_Admin_Form_Extensions extends CRM_Admin_Form {
   public function preProcess() {
     parent::preProcess();
 
-    require_once 'CRM/Utils/Request.php';
+
     $this->_key = CRM_Utils_Request::retrieve('key', 'String',
       $this, FALSE, 0
     );
@@ -61,7 +61,7 @@ class CRM_Admin_Form_Extensions extends CRM_Admin_Form {
     $this->assign('id', $this->_id);
     $this->assign('key', $this->_key);
 
-    require_once "CRM/Core/Extensions.php";
+
     $ext = new CRM_Core_Extensions();
     $extension = $ext->getExtensionsByKey(TRUE);
 
@@ -140,14 +140,14 @@ class CRM_Admin_Form_Extensions extends CRM_Admin_Form {
    */
   public function postProcess() {
     if ($this->_action & CRM_Core_Action::DELETE) {
-      require_once ('CRM/Core/Extensions.php');
+
       $ext = new CRM_Core_Extensions();
       $ext->uninstall($this->_id, $this->_key);
       CRM_Core_Session::setStatus(ts('Extension has been uninstalled.'));
     }
 
     if ($this->_action & CRM_Core_Action::ADD) {
-      require_once ('CRM/Core/Extensions.php');
+
       $ext = new CRM_Core_Extensions();
       $ext->install($this->_id, $this->_key);
       CRM_Core_Session::setStatus(ts('Extension has been installed.'));

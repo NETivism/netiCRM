@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
-require_once 'CRM/Core/BAO/CustomGroup.php';
+
+
 
 /**
  * This class is to build the form for Deleting Group
@@ -204,7 +204,7 @@ WHERE  id IN ( %1, %2 )
    */
   public function postProcess() {
     // step 1: copy and create dstField and column
-    require_once 'CRM/Core/BAO/CustomField.php';
+
     $field = new CRM_Core_DAO_CustomField();
     $field->id = $this->_srcFID;
     if (!$field->find(TRUE)) {
@@ -223,7 +223,7 @@ ON DUPLICATE KEY UPDATE $dstColumn = $srcColumn";
     CRM_Core_DAO::query($query, CRM_Core_DAO::$_nullArray);
 
     // step 3: remove srcField (which should also delete the srcColumn
-    require_once 'CRM/Core/BAO/CustomField.php';
+
     $field = new CRM_Core_DAO_CustomField();
     $field->id = $this->_srcFID;
     CRM_Core_BAO_CustomField::deleteField($field);

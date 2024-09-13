@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Core/SelectValues.php';
-require_once 'CRM/Core/Form.php';
+
+
 
 /**
  * This class generates form components for groupContact

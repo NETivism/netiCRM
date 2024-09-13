@@ -265,7 +265,7 @@ class CRM_Contact_Form_Merge extends CRM_Core_Form {
     if (!$cid || !$oid) {
       return;
     }
-    require_once 'CRM/Dedupe/DAO/Exception.php';
+
     $exception = new CRM_Dedupe_DAO_Exception();
     $exception->contact_id1 = $cid;
     $exception->contact_id2 = $oid;

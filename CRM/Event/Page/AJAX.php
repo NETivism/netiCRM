@@ -42,7 +42,7 @@ class CRM_Event_Page_AJAX {
    * Function for building Event combo box
    */
   static function event() {
-    require_once 'CRM/Utils/Type.php';
+
     $name = trim(CRM_Utils_Type::escape($_GET['name'], 'String'));
     $whereClause = " title LIKE '%$name%' AND ( civicrm_event.is_template IS NULL OR civicrm_event.is_template = 0 )";
 
@@ -68,7 +68,7 @@ LIMIT 0, 50
    * Function for building Event Type combo box
    */
   static function eventType() {
-    require_once 'CRM/Utils/Type.php';
+
     $name = trim(CRM_Utils_Type::escape($_GET['name'], 'String'));
     $whereClause = " v.label LIKE '%$name%' ";
 
@@ -95,7 +95,7 @@ ORDER by v.weight";
    * Function for building EventFee combo box
    */
   static function eventFee() {
-    require_once 'CRM/Utils/Type.php';
+
     $name = trim(CRM_Utils_Type::escape($_GET['s'], 'String'));
     if (!$name) {
       $name = '%';
@@ -118,7 +118,7 @@ WHERE cg.name LIKE 'civicrm_event.amount%'
   }
 
   static function eventList() {
-    require_once "CRM/Event/BAO/Event.php";
+
     $events = CRM_Event_BAO_Event::getEvents(TRUE);
 
     $elements = array(array('name' => ts('- select -'),
@@ -130,7 +130,7 @@ WHERE cg.name LIKE 'civicrm_event.amount%'
       );
     }
 
-    require_once "CRM/Utils/JSON.php";
+
     echo json_encode($elements);
     CRM_Utils_System::civiExit();
   }
@@ -140,7 +140,7 @@ WHERE cg.name LIKE 'civicrm_event.amount%'
    */
   static function participantRole() {
 
-    require_once 'CRM/Utils/Type.php';
+
 
     $eventID = $_GET['eventId'];
     if (!CRM_Utils_Rule::positiveInteger($eventID)) {
@@ -152,7 +152,7 @@ WHERE cg.name LIKE 'civicrm_event.amount%'
       'default_role_id',
       'id'
     );
-    require_once "CRM/Utils/JSON.php";
+
     $participantRole = array('role' => $defaultRoleId);
     echo json_encode($participantRole);
     CRM_Utils_System::civiExit();

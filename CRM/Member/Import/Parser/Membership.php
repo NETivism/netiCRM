@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'api/v2/Membership.php';
+
 
 /**
  * class to parse membership csv files
@@ -215,7 +215,7 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
     $response = $this->setActiveFieldValues($values, $erroneousField);
 
     $params = &$this->getActiveFieldParams();
-    require_once 'CRM/Import/Parser/Contact.php';
+
     $errorMessage = NULL;
 
     $errorRequired = FALSE;

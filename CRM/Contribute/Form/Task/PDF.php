@@ -32,7 +32,7 @@
  *
  */
 
-require_once 'CRM/Contribute/Form/Task.php';
+
 
 /**
  * This class provides the functionality to email a group of

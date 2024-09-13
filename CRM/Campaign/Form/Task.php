@@ -33,10 +33,10 @@
  *
  */
 
-require_once 'CRM/Core/SelectValues.php';
-require_once 'CRM/Campaign/Task.php';
-require_once 'CRM/Core/Form.php';
-require_once 'CRM/Contact/BAO/Query.php';
+
+
+
+
 
 /**
  * This class generates form components for relationship
@@ -132,7 +132,7 @@ class CRM_Campaign_Form_Task extends CRM_Core_Form {
 
     //set the context for redirection for any task actions
     $session = CRM_Core_Session::singleton();
-    require_once 'CRM/Utils/Rule.php';
+
     $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String', $this);
     $urlParams = 'force=1';
     if (CRM_Utils_Rule::qfKey($qfKey)) {

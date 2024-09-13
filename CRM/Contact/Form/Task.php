@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Core/SelectValues.php';
-require_once 'CRM/Core/Form.php';
+
+
 
 /**
  * This class generates form components for relationship
@@ -121,7 +121,7 @@ class CRM_Contact_Form_Task extends CRM_Core_Form {
 
     //set the user context for redirection of task actions
     $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String', $form);
-    require_once 'CRM/Utils/Rule.php';
+
     $urlParams = 'force=1';
     if (CRM_Utils_Rule::qfKey($qfKey)) {
       $urlParams .= "&qfKey=$qfKey";
@@ -131,7 +131,7 @@ class CRM_Contact_Form_Task extends CRM_Core_Form {
     $session = CRM_Core_Session::singleton();
     $session->replaceUserContext($url);
 
-    require_once 'CRM/Contact/Task.php';
+
     $form->_task = CRM_Utils_Array::value('task', $values);
     $crmContactTaskTasks = CRM_Contact_Task::taskTitles();
     $form->assign('taskName', CRM_Utils_Array::value($form->_task, $crmContactTaskTasks));
@@ -174,7 +174,7 @@ class CRM_Contact_Form_Task extends CRM_Core_Form {
 
       $fv = $form->get('formValues');
       $customClass = $form->get('customSearchClass');
-      require_once "CRM/Core/BAO/Mapping.php";
+
       $returnProperties = CRM_Core_BAO_Mapping::returnProperties($values);
       $selector = new $selectorName($customClass, $fv, NULL, $returnProperties);
 

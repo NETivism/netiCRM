@@ -34,7 +34,7 @@
  *
  */
 
-require_once 'CRM/Core/Config.php';
+
 class CRM_Core_Extensions_Search {
 
   /**

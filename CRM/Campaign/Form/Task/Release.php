@@ -33,9 +33,9 @@
  *
  */
 
-require_once 'CRM/Campaign/Form/Task.php';
-require_once 'CRM/Campaign/BAO/Survey.php';
-require_once 'CRM/Core/PseudoConstant.php';
+
+
+
 
 /**
  * This class provides the functionality to add contacts for
@@ -108,7 +108,7 @@ class CRM_Campaign_Form_Task_Release extends CRM_Campaign_Form_Task {
     $params = array('id' => $this->_surveyId);
     $this->_surveyDetails = CRM_Campaign_BAO_Survey::retrieve($params, $surveyDetails);
 
-    require_once 'CRM/Core/PseudoConstant.php';
+
     $activityStatus = CRM_Core_PseudoConstant::activityStatus('name');
     $statusIds = array();
     foreach (array('Scheduled') as $name) {
@@ -129,7 +129,7 @@ class CRM_Campaign_Form_Task_Release extends CRM_Campaign_Form_Task {
     $this->assign('surveyTitle', $surveyDetails['title']);
 
     //append breadcrumb to survey dashboard.
-    require_once 'CRM/Campaign/BAO/Campaign.php';
+
     if (CRM_Campaign_BAO_Campaign::accessCampaignDashboard()) {
       $url = CRM_Utils_System::url('civicrm/campaign', 'reset=1&subPage=survey');
       CRM_Utils_System::appendBreadCrumb(array(array('title' => ts('Survey(s)'), 'url' => $url)));

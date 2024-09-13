@@ -34,10 +34,10 @@
  */
 
 
-require_once 'CRM/Utils/String.php';
-require_once 'CRM/Utils/Type.php';
 
-require_once 'CRM/Member/Import/Field.php';
+
+
+
 
 abstract class CRM_Member_Import_Parser {
   CONST MAX_ERRORS = 250, MAX_WARNINGS = 25, VALID = 1, WARNING = 2, ERROR = 4, CONFLICT = 8, STOP = 16, DUPLICATE = 32, MULTIPLE_DUPE = 64, NO_MATCH = 128;
@@ -492,7 +492,7 @@ abstract class CRM_Member_Import_Parser {
   function setActiveFields($fieldKeys) {
     if (!empty($fieldKeys)) {
       $this->_activeFieldCount = count($fieldKeys);
-      require_once 'CRM/Member/Import/Field.php';
+
       foreach ($fieldKeys as $key) {
         if (empty($this->_fields[$key])) {
           $this->_activeFields[] = new CRM_Member_Import_Field('', ts('- do not import -'));
@@ -687,7 +687,7 @@ abstract class CRM_Member_Import_Parser {
         $this->_fields[$name] = new CRM_Member_Import_Field($name, $title, $type, $headerPattern, $dataPattern);
       }
       else {
-        require_once 'CRM/Import/Field.php';
+
         $this->_fields[$name] = new CRM_Import_Field($name, $title, $type, $headerPattern, $dataPattern, $hasLocationType);
       }
     }

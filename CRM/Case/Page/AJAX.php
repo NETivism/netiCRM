@@ -32,7 +32,7 @@
  *
  */
 
-require_once 'CRM/Utils/Type.php';
+
 
 /**
  * This class contains all case related functions that are called using AJAX (jQuery)
@@ -61,7 +61,7 @@ class CRM_Case_Page_AJAX {
       $excludeCaseIds = explode(',', $excludeIdStr);
       CRM_Utils_Type::escapeAll($excludeCaseIds, 'Integer');
     }
-    require_once 'CRM/Case/BAO/Case.php';
+
     $unclosedCases = CRM_Case_BAO_Case::getUnclosedCases($params, $excludeCaseIds);
 
     foreach ($unclosedCases as $caseId => $details) {
@@ -72,7 +72,7 @@ class CRM_Case_Page_AJAX {
   }
 
   function processCaseTags() {
-    require_once 'CRM/Core/BAO/EntityTag.php';
+
 
     $caseId = CRM_Utils_Type::escape($_POST['case_id'], 'Integer');
     $tags = CRM_Utils_Type::escape($_POST['tag'], 'String');
@@ -100,8 +100,8 @@ class CRM_Case_Page_AJAX {
 
     $session = &CRM_Core_Session::singleton();
 
-    require_once "CRM/Activity/BAO/Activity.php";
-    require_once "CRM/Core/OptionGroup.php";
+
+
     $activityParams = array();
 
     $activityParams['source_contact_id'] = $session->get('userID');
@@ -114,7 +114,7 @@ class CRM_Case_Page_AJAX {
 
     $activity = CRM_Activity_BAO_Activity::create($activityParams);
 
-    require_once "CRM/Case/BAO/Case.php";
+
     $caseParams = array('activity_id' => $activity->id,
       'case_id' => $caseId,
     );
@@ -128,7 +128,7 @@ class CRM_Case_Page_AJAX {
   function caseDetails() {
     $caseId = CRM_Utils_Type::escape($_GET['caseId'], 'Integer');
     $contactId = CRM_Utils_Type::escape($_GET['contactId'], 'Integer');
-    require_once 'CRM/Case/BAO/Case.php';
+
     $sql = "SELECT * FROM civicrm_case where id = %1";
     $dao = CRM_Core_DAO::executeQuery($sql, array(1 => array($caseId, 'Integer')));
 

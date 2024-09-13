@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Report/Form.php';
-require_once 'CRM/Contribute/PseudoConstant.php';
+
+
 class CRM_Report_Form_Contribute_TopDonor extends CRM_Report_Form {
 
   protected $_summary = NULL;
@@ -352,7 +352,7 @@ class CRM_Report_Form_Contribute_TopDonor extends CRM_Report_Form {
   }
 
   function limit($rowCount = CRM_Report_Form::ROW_COUNT_LIMIT) {
-    require_once 'CRM/Utils/Pager.php';
+
     // lets do the pager if in html mode
     $this->_limit = NULL;
     if ($this->_outputMode == 'html' || $this->_outputMode == 'group') {

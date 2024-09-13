@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Page.php';
+
 
 /**
  * Create a page for displaying Price Sets.
@@ -143,7 +143,7 @@ class CRM_Price_Page_Set extends CRM_Core_Page {
     );
 
     if ($sid) {
-      require_once 'CRM/Price/BAO/Set.php';
+
       CRM_Price_BAO_Set::checkPermission($sid);
     }
     // what action to take ?
@@ -159,8 +159,8 @@ class CRM_Price_Page_Set extends CRM_Core_Page {
       $this->copy();
     }
     else {
-      require_once 'CRM/Price/BAO/Set.php';
-      require_once 'CRM/Price/BAO/Field.php';
+
+
 
       // if action is delete do the needful.
       if ($action & (CRM_Core_Action::DELETE)) {
@@ -260,7 +260,7 @@ class CRM_Price_Page_Set extends CRM_Core_Page {
   function browse($action = NULL) {
     // get all price sets
     $priceSet = array();
-    require_once 'CRM/Core/Component.php';
+
     $comps = array('CiviEvent' => ts('Event'),
       'CiviContribute' => ts('Contribution'),
     );
@@ -311,7 +311,7 @@ class CRM_Price_Page_Set extends CRM_Core_Page {
       $this, TRUE, 0, 'GET'
     );
 
-    require_once 'CRM/Price/BAO/Set.php';
+
     CRM_Price_BAO_Set::copy($id);
 
     CRM_Utils_System::redirect(CRM_Utils_System::url(CRM_Utils_System::currentPath(), 'reset=1'));

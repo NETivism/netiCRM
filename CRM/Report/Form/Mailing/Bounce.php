@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Report/Form.php';
+
 class CRM_Report_Form_Mailing_Bounce extends CRM_Report_Form {
 
   protected $_summary = NULL;
@@ -416,7 +416,7 @@ class CRM_Report_Form_Mailing_Bounce extends CRM_Report_Form {
   }
 
   function mailing_select() {
-    require_once ('CRM/Mailing/BAO/Mailing.php');
+
 
     $data = array();
 
@@ -432,7 +432,7 @@ class CRM_Report_Form_Mailing_Bounce extends CRM_Report_Form {
   }
 
   function bounce_type() {
-    require_once ('CRM/Mailing/DAO/BounceType.php');
+
 
     $data = array('' => '--Please Select--');
 

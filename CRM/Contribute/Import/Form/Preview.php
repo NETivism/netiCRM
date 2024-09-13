@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
-require_once 'CRM/Contribute/Import/Parser/Contribution.php';
+
+
 
 /**
  * This class previews the uploaded file and returns summary

@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Member/DAO/MembershipLog.php';
+
 class CRM_Member_BAO_MembershipLog extends CRM_Member_DAO_MembershipLog {
 
   /**

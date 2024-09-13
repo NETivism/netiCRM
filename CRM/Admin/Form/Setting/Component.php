@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Admin/Form/Setting.php';
+
 
 /**
  * This class generates form components for Component
@@ -93,7 +93,7 @@ class CRM_Admin_Form_Setting_Component extends CRM_Admin_Form_Setting {
 
   private function _getComponentSelectValues() {
     $ret = array();
-    require_once 'CRM/Core/Component.php';
+
     $this->_components = CRM_Core_Component::getComponents();
     foreach ($this->_components as $name => $object) {
       $ret[$name] = $object->info['translatedName'];
@@ -114,7 +114,7 @@ class CRM_Admin_Form_Setting_Component extends CRM_Admin_Form_Setting {
     parent::commonProcess($params);
 
     // reset navigation when components are enabled / disabled
-    require_once 'CRM/Core/BAO/Navigation.php';
+
     CRM_Core_BAO_Navigation::resetNavigation();
   }
 }

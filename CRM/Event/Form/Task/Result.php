@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Event/Form/Task.php';
+
 
 /**
  * Used for displaying results
@@ -61,7 +61,7 @@ class CRM_Event_Form_Task_Result extends CRM_Event_Form_Task {
       $path .= "&reset=1&ssID={$ssID}";
     }
     $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String', $this);
-    require_once 'CRM/Utils/Rule.php';
+
     if (CRM_Utils_Rule::qfKey($qfKey)) {
       $path .= "&qfKey=$qfKey";
     }

@@ -1,6 +1,6 @@
 <?php
 date_default_timezone_set('Asia/Taipei');
-require_once 'CRM/Core/Payment.php';
+
 class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
   const ALLPAY_REAL_DOMAIN = 'https://payment.ecpay.com.tw';
   const ALLPAY_TEST_DOMAIN = 'https://payment-stage.ecpay.com.tw';

@@ -33,9 +33,9 @@
  *
  */
 
-require_once 'CRM/Core/DAO/Address.php';
-require_once 'CRM/Core/DAO/Phone.php';
-require_once 'CRM/Core/DAO/Email.php';
+
+
+
 
 /**
  * This class is a heart of search query building mechanism.
@@ -419,7 +419,7 @@ class CRM_Contact_BAO_Query {
       $this->_fields = array_merge($this->_fields, $fields);
 
       // add activity fields
-      require_once ("CRM/Activity/BAO/Activity.php");
+
       $fields = CRM_Activity_BAO_Activity::exportableFields();
       $this->_fields = array_merge($this->_fields, $fields);
     }
@@ -520,7 +520,7 @@ class CRM_Contact_BAO_Query {
    * @access public
    */
   function selectClause() {
-    require_once ("CRM/Activity/BAO/Query.php");
+
     $properties = array();
 
     $this->addSpecialFields();
@@ -920,7 +920,7 @@ class CRM_Contact_BAO_Query {
             $this->_element["{$tName}_id"] = 1;
             if (substr($tName, -15) == '-state_province') {
               // FIXME: hack to fix CRM-1900
-              require_once 'CRM/Core/BAO/Preferences.php';
+
               $a = CRM_Core_BAO_Preferences::value('address_format');
 
               if (substr_count($a, 'state_province_name') > 0) {
@@ -2157,7 +2157,7 @@ class CRM_Contact_BAO_Query {
   function fromClause($tables, $inner = NULL, $right = NULL) {
     $mode = isset($this->_mode) ? $this->_mode : self::MODE_CONTACTS;
     $primaryLocation = isset($this->_primaryLocation) ? $this->_primaryLocation : TRUE;
-    require_once ("CRM/Core/TableHierarchy.php");
+
 
     $from = ' FROM civicrm_contact contact_a';
     if (empty($tables)) {

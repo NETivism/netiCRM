@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Activity/Form/Task.php';
-require_once 'CRM/Activity/BAO/Activity.php';
+
+
 
 /**
  * This class provides the functionality to delete a group of
@@ -82,7 +82,7 @@ class CRM_Activity_Form_Task_Delete extends CRM_Activity_Form_Task {
   public function postProcess() {
     $deletedActivities = 0;
     foreach ($this->_activityHolderIds as $activityId['id']) {
-      require_once 'CRM/Case/BAO/Case.php';
+
       $moveToTrash = CRM_Case_BAO_Case::isCaseActivity($activityId['id']);
       if (CRM_Activity_BAO_Activity::deleteActivity($activityId, $moveToTrash)) {
         $deletedActivities++;

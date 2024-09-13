@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Report/Form.php';
-require_once 'CRM/Contribute/PseudoConstant.php';
+
+
 class CRM_Report_Form_Contribute_HouseholdSummary extends CRM_Report_Form {
 
   protected $_addressField = FALSE;
@@ -311,7 +311,7 @@ class CRM_Report_Form_Contribute_HouseholdSummary extends CRM_Report_Form {
   }
 
   function validRelationships() {
-    require_once ("api/v2/RelationshipType.php");
+
     $this->relationTypes = $relationTypes = array();
 
     $params = array('contact_type_b' => 'Household');

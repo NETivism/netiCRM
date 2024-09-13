@@ -33,11 +33,11 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
-require_once 'CRM/Core/BAO/CustomGroup.php';
-require_once 'CRM/Core/DAO/CustomField.php';
-require_once 'CRM/Core/BAO/CustomOption.php';
-require_once 'CRM/Core/BAO/CustomField.php';
+
+
+
+
+
 
 /**
  * This class generates form components for previewing custom data
@@ -109,7 +109,7 @@ class CRM_Custom_Form_Preview extends CRM_Core_Form {
   function &setDefaultValues() {
     $defaults = array();
 
-    require_once 'CRM/Core/BAO/CustomGroup.php';
+
     CRM_Core_BAO_CustomGroup::setDefaults($this->_groupTree, $defaults, FALSE, FALSE);
 
     return $defaults;

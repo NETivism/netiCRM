@@ -1,5 +1,5 @@
 <?php
-require_once 'CRM/Contact/Form/Search/Interface.php';
+
 class CRM_Contact_Form_Search_Custom_LegalId implements CRM_Contact_Form_Search_Interface {
   protected $_formValues; function __construct(&$formValues) {
     $this->_formValues = $formValues;

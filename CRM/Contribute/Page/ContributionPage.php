@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Core/Page.php';
-require_once 'CRM/Contribute/BAO/ContributionPage.php';
+
+
 
 /**
  * Create a page for displaying Contribute Pages
@@ -230,7 +230,7 @@ class CRM_Contribute_Page_ContributionPage extends CRM_Core_Page {
   function &contributionLinks() {
     if (!isset(self::$_contributionLinks)) {
       //get contribution dates.
-      require_once 'CRM/Contribute/BAO/Contribution.php';
+
       $dates = CRM_Contribute_BAO_Contribution::getContributionDates();
       foreach (array('now', 'yearDate', 'monthDate') as $date) {
         $$date = $dates[$date];
@@ -313,7 +313,7 @@ class CRM_Contribute_Page_ContributionPage extends CRM_Core_Page {
           'action=browse&reset=1'
         ));
 
-      require_once 'CRM/Contribute/Controller/ContributionPage.php';
+
       $controller = new CRM_Contribute_Controller_ContributionPage(NULL, $action);
       CRM_Utils_System::setTitle(ts('Manage Contribution Page'));
       CRM_Utils_System::appendBreadCrumb($breadCrumb);
@@ -468,7 +468,7 @@ WHERE       cp.contribution_page_id = {$id}";
     list($offset, $rowCount) = $this->_pager->getOffsetAndRowCount();
 
     //check for delete CRM-4418
-    require_once 'CRM/Core/Permission.php';
+
     $allowToDelete = CRM_Core_Permission::check('delete in CiviContribute');
 
     $query = "
@@ -621,7 +621,7 @@ ORDER BY is_active DESC, id ASC
   }
 
   function pager($whereClause, $whereParams) {
-    require_once 'CRM/Utils/Pager.php';
+
 
     $params['status'] = ts('Contribution %%StatusMessage%%');
     $params['csvString'] = NULL;
@@ -644,7 +644,7 @@ SELECT count(id)
   }
 
   function pagerAtoZ($whereClause, $whereParams) {
-    require_once 'CRM/Utils/PagerAToZ.php';
+
 
     $query = "
    SELECT DISTINCT UPPER(LEFT(title, 1)) as sort_name

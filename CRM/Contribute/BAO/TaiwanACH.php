@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Contribute/DAO/TaiwanACH.php';
+
 class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
 
   static $_txtFormat = array();
@@ -229,7 +229,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
   static function add(&$params) {
 
     // pre-processing hooks
-    require_once 'CRM/Utils/Hook.php';
+
     if (CRM_Utils_Array::value('id', $params)) {
       CRM_Utils_Hook::pre('edit', 'TaiwanACH', $params['id'], $params);
     }

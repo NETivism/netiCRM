@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
+
 
 /**
  * form to process actions on the field aspect of Custom
@@ -86,19 +86,19 @@ class CRM_Price_Form_Option extends CRM_Core_Form {
   function setDefaultValues() {
     $defaults = array();
 
-    require_once 'CRM/Price/BAO/FieldValue.php';
+
     if (isset($this->_oid)) {
       $params = array('id' => $this->_oid);
 
       CRM_Price_BAO_FieldValue::retrieve($params, $defaults);
 
       // fix the display of the monetary value, CRM-4038
-      require_once 'CRM/Utils/Money.php';
+
       $defaults['value'] = CRM_Utils_Money::format($defaults['value'], NULL, '%a');
     }
 
-    require_once 'CRM/Core/DAO.php';
-    require_once 'CRM/Utils/Weight.php';
+
+
 
     if (!isset($defaults['weight']) || !$defaults['weight']) {
       $fieldValues = array('price_field_id' => $this->_fid);
@@ -261,7 +261,7 @@ class CRM_Price_Form_Option extends CRM_Core_Form {
    * @access public
    */
   public function postProcess() {
-    require_once 'CRM/Price/BAO/FieldValue.php';
+
     if ($this->_action == CRM_Core_Action::DELETE) {
       $fieldValues = array('price_field_id' => $this->_fid);
       $wt = CRM_Utils_Weight::delWeight('CRM_Price_DAO_FieldValue', $this->_oid, $fieldValues);

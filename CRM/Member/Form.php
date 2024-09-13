@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
+
 
 /**
  * This class generates form components generic to Mobile provider
@@ -83,7 +83,7 @@ class CRM_Member_Form extends CRM_Core_Form {
     }
 
     if (isset($defaults['minimum_fee'])) {
-      require_once 'CRM/Utils/Money.php';
+
       $defaults['minimum_fee'] = CRM_Utils_Money::format($defaults['minimum_fee'], NULL, '%a');
     }
 

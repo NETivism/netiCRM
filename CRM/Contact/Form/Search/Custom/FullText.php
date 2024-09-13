@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Contact/Form/Search/Custom/Base.php';
+
 class CRM_Contact_Form_Search_Custom_FullText implements CRM_Contact_Form_Search_Interface {
 
   protected $_formValues;
@@ -209,7 +209,7 @@ CREATE TEMPORARY TABLE {$this->_entityIDTableName} (
   }
 
   function fillTable() {
-    require_once 'CRM/Core/Permission.php';
+
     $config = CRM_Core_Config::singleton();
 
     if ((!$this->_table ||
@@ -265,7 +265,7 @@ CREATE TEMPORARY TABLE {$this->_entityIDTableName} (
       $contactID = 0;
     }
 
-    require_once 'CRM/Contact/BAO/Contact/Permission.php';
+
     CRM_Contact_BAO_Contact_Permission::cache($contactID);
 
     $params = array(1 => array($contactID, 'Integer'));
@@ -659,7 +659,7 @@ WHERE      c.sort_name LIKE {$this->_text}
   }
 
   function buildForm(&$form) {
-    require_once 'CRM/Core/Permission.php';
+
     $config = CRM_Core_Config::singleton();
 
     $form->applyFilter('__ALL__', 'trim');
@@ -725,7 +725,7 @@ WHERE      c.sort_name LIKE {$this->_text}
     $dao = CRM_Core_DAO::executeQuery($sql);
 
     $activityTypes = CRM_Core_PseudoConstant::activityType(TRUE, TRUE);
-    require_once 'CRM/Event/PseudoConstant.php';
+
     $roleIds = CRM_Event_PseudoConstant::participantRole();
     while ($dao->fetch()) {
       $row = array();

@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Contribute/Form/ContributionPage.php';
-require_once 'CRM/Contribute/PseudoConstant.php';
+
+
 
 /**
  * form to process actions on Premiums

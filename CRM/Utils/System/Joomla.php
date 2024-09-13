@@ -125,7 +125,7 @@ class CRM_Utils_System_Joomla {
     }
 
     if ($includeAll) {
-      require_once 'CRM/Core/Config.php';
+
       $config = CRM_Core_Config::singleton();
 
       $document->addStyleSheet("{$config->resourceBase}css/deprecate.css");
@@ -273,7 +273,7 @@ class CRM_Utils_System_Joomla {
    * @static
    */
   static function authenticate($name, $password) {
-    require_once 'DB.php';
+
 
     $config = CRM_Core_Config::singleton();
 
@@ -288,7 +288,7 @@ class CRM_Utils_System_Joomla {
     $query = $dbJoomla->query($sql);
 
     $user = NULL;
-    require_once 'CRM/Core/BAO/UFMatch.php';
+
     if ($row = $query->fetchRow(DB_FETCHMODE_ASSOC)) {
       if (version_compare(JVERSION, '2.5.18', 'lt') || (version_compare(JVERSION, '3.0', 'ge') && version_compare(JVERSION, '3.2.1', 'lt'))) {
         // now check password

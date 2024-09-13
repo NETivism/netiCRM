@@ -42,7 +42,7 @@ class CRM_Pledge_Page_AJAX {
    * Function for building Pledge Name combo box
    */
   static function pledgeName(&$config) {
-    require_once 'CRM/Utils/Type.php';
+
 
     $getRecords = FALSE;
     if (isset($_GET['name']) && $_GET['name']) {
@@ -84,7 +84,7 @@ WHERE {$whereClause}
       );
     }
 
-    require_once "CRM/Utils/JSON.php";
+
     echo CRM_Utils_JSON::encode($elements, 'value');
     CRM_Utils_System::civiExit();
   }

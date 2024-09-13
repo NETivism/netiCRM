@@ -44,7 +44,7 @@ class CRM_Contribute_Form_AdditionalInfo {
   static function buildPremium(&$form) {
     //premium section
     $form->add('hidden', 'hidden_Premium', 1);
-    require_once 'CRM/Contribute/DAO/Product.php';
+
     $sel1 = $sel2 = array();
 
     $dao = new CRM_Contribute_DAO_Product();
@@ -231,7 +231,7 @@ class CRM_Contribute_Form_AdditionalInfo {
    * @return None
    */
   static function processPremium(&$params, $contributionID, $premiumID = NULL, &$options = NULL) {
-    require_once 'CRM/Contribute/DAO/ContributionProduct.php';
+
     $dao = new CRM_Contribute_DAO_ContributionProduct();
     $dao->contribution_id = $contributionID;
     $dao->product_id = $params['product_name'][0];
@@ -266,7 +266,7 @@ class CRM_Contribute_Form_AdditionalInfo {
    */
   static function processNote(&$params, $contactID, $contributionID, $contributionNoteID = NULL) {
     //process note
-    require_once 'CRM/Core/BAO/Note.php';
+
     $noteParams = array('entity_table' => 'civicrm_contribution',
       'note' => $params['note'],
       'entity_id' => $contributionID,
@@ -313,7 +313,7 @@ class CRM_Contribute_Form_AdditionalInfo {
     }
 
     if (CRM_Utils_Array::value('honor_type_id', $params)) {
-      require_once 'CRM/Contribute/BAO/Contribution.php';
+
       if ($params['honorID']) {
         $honorId = CRM_Contribute_BAO_Contribution::createHonorContact($params, $params['honorID']);
       }
@@ -354,7 +354,7 @@ class CRM_Contribute_Form_AdditionalInfo {
    */
   static function emailReceipt(&$form, &$params, $ccContribution = FALSE) {
     $config = CRM_Core_Config::singleton();
-    require_once 'CRM/Contact/BAO/Contact/Location.php';
+
     list($contributorDisplayName,
     $contributorEmail
     ) = CRM_Contact_BAO_Contact_Location::getEmailDetails($params['contact_id']);
@@ -387,7 +387,7 @@ class CRM_Contribute_Form_AdditionalInfo {
       $params['contribution_type_id']
     );
     if (CRM_Utils_Array::value('payment_instrument_id', $params)) {
-      require_once 'CRM/Contribute/PseudoConstant.php';
+
       $paymentInstrument = CRM_Contribute_PseudoConstant::paymentInstrument();
       $params['paidBy'] = $paymentInstrument[$params['payment_instrument_id']];
     }
@@ -413,7 +413,7 @@ class CRM_Contribute_Form_AdditionalInfo {
       }
       //fix for crm-4584
       if (!empty($params['product_name'])) {
-        require_once 'CRM/Contribute/DAO/Product.php';
+
         $productDAO = new CRM_Contribute_DAO_Product();
         $productDAO->id = $params['product_name'][0];
         $productDAO->find(TRUE);
@@ -446,7 +446,7 @@ class CRM_Contribute_Form_AdditionalInfo {
       foreach ($addressParts as $name => $field) {
         $addressFields[$name] = CRM_Utils_Array::value($field, $params);
       }
-      require_once 'CRM/Utils/Address.php';
+
       $form->assign('address', CRM_Utils_Address::format($addressFields));
 
       $date = CRM_Utils_Date::format($params['credit_card_exp_date']);
@@ -521,7 +521,7 @@ class CRM_Contribute_Form_AdditionalInfo {
       $params['receipt_text'] = CRM_Contribute_BAO_ContributionPage::tokenize($params['contact_id'], $params['receipt_text']); 
     }
     $form->assign_by_ref('formValues', $params);
-    require_once 'CRM/Utils/Mail.php';
+
     $form->assign('contactID', $params['contact_id']);
     $form->assign('contributionID', $params['contribution_id']);
     $form->assign('currency', $params['currency']);
@@ -537,7 +537,7 @@ class CRM_Contribute_Form_AdditionalInfo {
       $fromEmailAddress = "$userName <$userEmail>";
     }
 
-    require_once 'CRM/Core/BAO/MessageTemplates.php';
+
     $templateParams = array(
       'groupName' => 'msg_tpl_workflow_contribution',
       'valueName' => 'contribution_offline_receipt',
@@ -596,8 +596,8 @@ class CRM_Contribute_Form_AdditionalInfo {
       return;
     }
 
-    require_once 'CRM/Price/BAO/Set.php';
-    require_once 'CRM/Price/BAO/LineItem.php';
+
+
     foreach ($lineItem as $priceSetId => $values) {
       if (!$priceSetId) {
         continue;

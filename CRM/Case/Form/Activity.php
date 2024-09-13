@@ -33,13 +33,13 @@
  *
  */
 
-require_once 'CRM/Core/OptionGroup.php';
-require_once "CRM/Case/PseudoConstant.php";
-require_once "CRM/Case/BAO/Case.php";
-require_once 'CRM/Case/XMLProcessor/Process.php';
-require_once "CRM/Activity/Form/Activity.php";
-require_once 'CRM/Contact/BAO/Contact.php';
-require_once 'CRM/Activity/BAO/ActivityAssignment.php';
+
+
+
+
+
+
+
 
 /**
  * This class create activities for a case
@@ -144,7 +144,7 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
     $this->_caseType = CRM_Case_BAO_Case::getCaseType($this->_caseId, 'name');
     $this->assign('caseType', $this->_caseType);
 
-    require_once 'CRM/Case/XMLProcessor/Process.php';
+
     $xmlProcessorProcess = new CRM_Case_XMLProcessor_Process();
     $isMultiClient = $xmlProcessorProcess->getAllowMultipleCaseClients();
     $this->assign('multiClient', $isMultiClient);
@@ -174,7 +174,7 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
       );
     }
     if (!$this->_activityId) {
-      require_once 'CRM/Case/PseudoConstant.php';
+
       $caseTypes = CRM_Case_PseudoConstant::caseType();
 
       if (empty($caseTypes) && ($this->_activityTypeName == 'Change Case Type') && !$this->_caseId) {
@@ -265,7 +265,7 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
     }
     elseif (empty($this->_defaults['medium_id'])) {
       // set default encounter medium CRM-4816
-      require_once "CRM/Core/OptionGroup.php";
+
       $medium = CRM_Core_OptionGroup::values('encounter_medium', FALSE, FALSE, FALSE, 'AND is_default = 1');
       if (count($medium) == 1) {
         $this->_defaults['medium_id'] = key($medium);
@@ -395,7 +395,7 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
         $statusMsg = ts("Selected Activity cannot be deleted.");
       }
 
-      require_once 'CRM/Core/BAO/EntityTag.php';
+
       $tagParams = array('entity_table' => 'civicrm_activity',
         'entity_id' => $this->_activityId,
       );
@@ -434,7 +434,7 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
     $params['activity_date_time'] = CRM_Utils_Date::processDate($params['activity_date_time'], $params['activity_date_time_time']);
     $params['activity_type_id'] = $this->_activityTypeId;
 
-    require_once 'CRM/Case/XMLProcessor/Process.php';
+
     $xmlProcessorProcess = new CRM_Case_XMLProcessor_Process();
     $isMultiClient = $xmlProcessorProcess->getAllowMultipleCaseClients();
     $this->assign('multiClient', $isMultiClient);
@@ -585,12 +585,12 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
       }
 
       //save static tags
-      require_once 'CRM/Core/BAO/EntityTag.php';
+
       CRM_Core_BAO_EntityTag::create($tagParams, 'civicrm_activity', $activity->id);
 
       //save free tags
       if (isset($params['taglist']) && !empty($params['taglist'])) {
-        require_once 'CRM/Core/Form/Tag.php';
+
         CRM_Core_Form_Tag::postProcess($params['taglist'], $activity->id, 'civicrm_activity', $this);
       }
     }

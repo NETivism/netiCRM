@@ -33,7 +33,7 @@
   */
 
 
-require_once 'CRM/Core/Payment/BaseIPN.php';
+
 
 define('GOOGLE_DEBUG_PP', 0);
 class CRM_Core_Payment_GoogleIPN extends CRM_Core_Payment_BaseIPN {
@@ -147,7 +147,7 @@ class CRM_Core_Payment_GoogleIPN extends CRM_Core_Payment_BaseIPN {
       return FALSE;
     }
 
-    require_once 'CRM/Core/Transaction.php';
+
     $transaction = new CRM_Core_Transaction();
 
     // fix for CRM-2842
@@ -196,7 +196,7 @@ class CRM_Core_Payment_GoogleIPN extends CRM_Core_Payment_BaseIPN {
     // CRM_Core_Error::debug_var( "$status, $component", $dataRoot );
     $orderNo = $dataRoot['google-order-number']['VALUE'];
 
-    require_once 'CRM/Contribute/DAO/Contribution.php';
+
     $contribution = new CRM_Contribute_DAO_Contribution();
     $contribution->invoice_id = $orderNo;
     if (!$contribution->find(TRUE)) {
@@ -238,7 +238,7 @@ class CRM_Core_Payment_GoogleIPN extends CRM_Core_Payment_BaseIPN {
 
     $this->loadObjects($input, $ids, $objects);
 
-    require_once 'CRM/Core/Transaction.php';
+
     $transaction = new CRM_Core_Transaction();
 
     // CRM_Core_Error::debug_var( 'c', $contribution );
@@ -282,7 +282,7 @@ class CRM_Core_Payment_GoogleIPN extends CRM_Core_Payment_BaseIPN {
    * @access public
    */
   function getAmount($orderNo) {
-    require_once 'CRM/Contribute/DAO/Contribution.php';
+
     $contribution = new CRM_Contribute_DAO_Contribution();
     $contribution->invoice_id = $orderNo;
     if (!$contribution->find(TRUE)) {
@@ -305,7 +305,7 @@ class CRM_Core_Payment_GoogleIPN extends CRM_Core_Payment_BaseIPN {
    * @static
    */
   static function getContext($xml_response, $privateData, $orderNo, $root) {
-    require_once 'CRM/Contribute/DAO/Contribution.php';
+
 
     $isTest = NULL;
     $module = NULL;
@@ -378,7 +378,7 @@ class CRM_Core_Payment_GoogleIPN extends CRM_Core_Payment_BaseIPN {
 
       // we are in event mode
       // make sure event exists and is valid
-      require_once 'CRM/Event/DAO/Event.php';
+
       $event = new CRM_Event_DAO_Event();
       $event->id = $eventID;
       if (!$event->find(TRUE)) {
@@ -406,10 +406,10 @@ class CRM_Core_Payment_GoogleIPN extends CRM_Core_Payment_BaseIPN {
    *
    */
   static function main($xml_response) {
-    require_once ('Google/library/googleresponse.php');
-    require_once ('Google/library/googlemerchantcalculations.php');
-    require_once ('Google/library/googleresult.php');
-    require_once ('Google/library/xml-processing/xmlparser.php');
+
+
+
+
 
     $config = CRM_Core_Config::singleton();
 
@@ -418,7 +418,7 @@ class CRM_Core_Payment_GoogleIPN extends CRM_Core_Payment_BaseIPN {
       $xml_response = stripslashes($xml_response);
     }
 
-    require_once 'CRM/Utils/System.php';
+
     $headers = CRM_Utils_System::getAllHeaders();
 
     if (GOOGLE_DEBUG_PP) {
@@ -439,7 +439,7 @@ class CRM_Core_Payment_GoogleIPN extends CRM_Core_Payment_BaseIPN {
     list($mode, $module, $paymentProcessorID) = self::getContext($xml_response, $privateData, $orderNo, $root);
     $mode = $mode ? 'test' : 'live';
 
-    require_once 'CRM/Core/BAO/PaymentProcessor.php';
+
     $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($paymentProcessorID,
       $mode
     );

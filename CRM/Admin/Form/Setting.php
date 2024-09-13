@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
+
 
 /**
  * This class generates form components generic to CiviCRM settings
@@ -67,12 +67,12 @@ class CRM_Admin_Form_Setting extends CRM_Core_Form {
         $this->_defaults[$name] = $value;
       }
 
-      require_once "CRM/Core/OptionGroup.php";
+
       $list = array_flip(CRM_Core_OptionGroup::values('contact_autocomplete_options',
           FALSE, FALSE, TRUE, NULL, 'name'
         ));
 
-      require_once "CRM/Core/BAO/Preferences.php";
+
       $listEnabled = CRM_Core_BAO_Preferences::valueOptions('contact_autocomplete_options');
 
       $autoSearchFields = array();
@@ -154,7 +154,7 @@ class CRM_Admin_Form_Setting extends CRM_Core_Form {
     $config = CRM_Core_Config::singleton(TRUE, TRUE);
 
     // rebuild menu items
-    require_once 'CRM/Core/Menu.php';
+
     CRM_Core_Menu::store();
   }
 }

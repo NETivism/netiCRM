@@ -37,7 +37,7 @@
  * Main page for viewing contact.
  *
  */
-require_once 'CRM/Core/Page.php';
+
 class CRM_Profile_Page_View extends CRM_Core_Page {
 
   /**
@@ -94,7 +94,7 @@ class CRM_Profile_Page_View extends CRM_Core_Page {
       }
 
       // check if we are rendering mixed profiles
-      require_once 'CRM/Core/BAO/UFGroup.php';
+
       if (CRM_Core_BAO_UFGroup::checkForMixProfiles($profileIds)) {
          return CRM_Core_Error::statusBounce(ts('You cannot combine profiles of multiple types.'));
       }
@@ -108,7 +108,7 @@ class CRM_Profile_Page_View extends CRM_Core_Page {
 
     $anyContent = TRUE;
     if ($this->_gid) {
-      require_once 'CRM/Profile/Page/Dynamic.php';
+
       $page = new CRM_Profile_Page_Dynamic($this->_id, $this->_gid, 'Profile', FALSE, $profileIds);
       $profileGroup = array();
       $profileGroup['title'] = NULL;
@@ -133,12 +133,12 @@ class CRM_Profile_Page_View extends CRM_Core_Page {
       }
     }
     else {
-      require_once 'CRM/Core/BAO/UFGroup.php';
+
       $ufGroups = &CRM_Core_BAO_UFGroup::getModuleUFGroup('Profile');
 
       $profileGroups = array();
       foreach ($ufGroups as $groupid => $group) {
-        require_once 'CRM/Profile/Page/Dynamic.php';
+
         $page = new CRM_Profile_Page_Dynamic($this->_id, $groupid, 'Profile', FALSE, $profileIds);
         $profileGroup = array();
         $profileGroup['title'] = $group['title'];

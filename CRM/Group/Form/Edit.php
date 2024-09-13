@@ -33,10 +33,10 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
-require_once "CRM/Custom/Form/CustomData.php";
-require_once 'CRM/Contact/BAO/GroupNesting.php';
-require_once 'CRM/Core/BAO/Domain.php';
+
+
+
+
 
 /**
  * This class is to build the form for adding Group
@@ -211,7 +211,7 @@ class CRM_Group_Form_Edit extends CRM_Core_Form {
       if (defined('CIVICRM_MULTISITE') && CIVICRM_MULTISITE &&
         CRM_Core_Permission::check('administer Multiple Organizations')
       ) {
-        require_once 'CRM/Contact/BAO/GroupOrganization.php';
+
         CRM_Contact_BAO_GroupOrganization::retrieve($this->_id, $defaults);
 
         if (CRM_Utils_Array::value('group_organization', $defaults)) {
@@ -271,7 +271,7 @@ class CRM_Group_Form_Edit extends CRM_Core_Form {
       CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Group', 'description')
     );
 
-    require_once 'CRM/Core/OptionGroup.php';
+
     $groupTypes = CRM_Core_OptionGroup::values('group_type', TRUE);
     $config = CRM_Core_Config::singleton();
     if ((isset($this->_id) &&
@@ -359,7 +359,7 @@ class CRM_Group_Form_Edit extends CRM_Core_Form {
     $this->assign_by_ref('parent_groups', $parentGroupElements);
 
     if (isset($this->_id)) {
-      require_once 'CRM/Contact/BAO/GroupNestingCache.php';
+
       $potentialParentGroupIds = CRM_Contact_BAO_GroupNestingCache::getPotentialCandidates($this->_id,
         $groupNames
       );
@@ -535,7 +535,7 @@ AND    id <> %3
         }
       }
 
-      require_once 'CRM/Contact/BAO/Group.php';
+
       $group = &CRM_Contact_BAO_Group::create($params);
 
       /*
@@ -569,7 +569,7 @@ AND    id <> %3
 
     // update the nesting cache
     if ($updateNestingCache) {
-      require_once 'CRM/Contact/BAO/GroupNestingCache.php';
+
       CRM_Contact_BAO_GroupNestingCache::update();
     }
   }

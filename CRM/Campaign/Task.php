@@ -92,7 +92,7 @@ class CRM_Campaign_Task {
       );
     }
 
-    require_once 'CRM/Utils/Hook.php';
+
     CRM_Utils_Hook::searchTasks('campaign', self::$_tasks);
 
     asort(self::$_tasks);

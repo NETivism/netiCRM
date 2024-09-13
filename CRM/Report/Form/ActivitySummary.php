@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Report/Form.php';
+
 class CRM_Report_Form_ActivitySummary extends CRM_Report_Form {
 
   protected $_emailField = FALSE;

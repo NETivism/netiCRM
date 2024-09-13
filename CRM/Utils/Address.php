@@ -56,7 +56,7 @@ class CRM_Utils_Address {
     $tokenFields = NULL
   ) {
     static $config = NULL;
-    require_once 'CRM/Core/BAO/Preferences.php';
+
 
     if (!$format) {
       $format = CRM_Core_BAO_Preferences::value('address_format');
@@ -89,7 +89,7 @@ class CRM_Utils_Address {
 
     $contactName = CRM_Utils_Array::value('display_name', $fields);
     if (!$individualFormat) {
-      require_once "CRM/Contact/BAO/Contact.php";
+
       if (isset($fields['id'])) {
         $type = CRM_Contact_BAO_Contact::getContactType($fields['id']);
       }

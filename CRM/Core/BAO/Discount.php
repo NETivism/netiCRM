@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/DAO/Discount.php';
+
 class CRM_Core_BAO_Discount extends CRM_Core_DAO_Discount {
 
   /**
@@ -94,7 +94,7 @@ class CRM_Core_BAO_Discount extends CRM_Core_DAO_Discount {
    */
   static function getOptionGroup($entityId, $entityTable) {
     $optionGroupIDs = array();
-    require_once 'CRM/Core/DAO/Discount.php';
+
     $dao = new CRM_Core_DAO_Discount();
     $dao->entity_id = $entityId;
     $dao->entity_table = $entityTable;
@@ -123,13 +123,13 @@ class CRM_Core_BAO_Discount extends CRM_Core_DAO_Discount {
       return NULL;
     }
 
-    require_once 'CRM/Core/DAO/Discount.php';
+
     $dao = new CRM_Core_DAO_Discount();
     $dao->entity_id = $entityID;
     $dao->entity_table = $entityTable;
     $dao->find();
 
-    require_once "CRM/Utils/Date.php";
+
     while ($dao->fetch()) {
       $endDate = $dao->end_date;
       // if end date is not we consider current date as end date

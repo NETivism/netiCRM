@@ -228,7 +228,7 @@ SELECT label, value
             $this->_options[$dao->id][$option->value] = $option->label;
           }
         }
-        require_once 'CRM/Utils/Hook.php';
+
         $options = $this->_options[$dao->id];
         //unset attributes to avoid confussion
         unset($options['attributes']);
@@ -351,7 +351,7 @@ SELECT label, value
             // if we are coming in from listings,
             // for checkboxes the value is already in the right format and is NOT an array
             if (empty($field['is_search_range']) && is_array($value)) {
-              require_once 'CRM/Core/BAO/CustomOption.php';
+
 
               //ignoring $op value for checkbox and multi select
               $sqlValue = array();
@@ -502,7 +502,7 @@ SELECT label, value
           case 'Money':
             if ($field['is_search_range'] && is_array($value)) {
               foreach ($value as $key => $val) {
-                require_once "CRM/Utils/Rule.php";
+
                 $moneyFormat = CRM_Utils_Rule::cleanMoney($value[$key]);
                 $value[$key] = $moneyFormat;
               }

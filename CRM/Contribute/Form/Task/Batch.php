@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Profile/Form.php';
-require_once 'CRM/Contribute/Form/Task.php';
+
+
 
 /**
  * This class provides the functionality for batch profile update for contributions
@@ -112,8 +112,8 @@ class CRM_Contribute_Form_Task_Batch extends CRM_Contribute_Form_Task {
     if (!$ufGroupId) {
       CRM_Core_Error::fatal('ufGroupId is missing');
     }
-    require_once "CRM/Core/BAO/UFGroup.php";
-    require_once "CRM/Core/BAO/CustomGroup.php";
+
+
     $this->_title = ts('Batch Update for Contributions') . ' - ' . CRM_Core_BAO_UFGroup::getTitle($ufGroupId);
     CRM_Utils_System::setTitle($this->_title);
 
@@ -158,7 +158,7 @@ class CRM_Contribute_Form_Task_Batch extends CRM_Contribute_Form_Task {
     $fileFieldExists = FALSE;
 
     //fix for CRM-2752
-    require_once "CRM/Core/BAO/CustomField.php";
+
     $customFields = CRM_Core_BAO_CustomField::getFields('Contribution');
     foreach ($this->_contributionIds as $contributionId) {
       $typeId = CRM_Core_DAO::getFieldValue("CRM_Contribute_DAO_Contribution", $contributionId, 'contribution_type_id');
@@ -264,7 +264,7 @@ class CRM_Contribute_Form_Task_Batch extends CRM_Contribute_Form_Task {
         if (CRM_Utils_Array::value('custom', $value) &&
           is_array($value['custom'])
         ) {
-          require_once 'CRM/Core/BAO/CustomValueTable.php';
+
           CRM_Core_BAO_CustomValueTable::store($value['custom'], 'civicrm_contribution', $contribution->id);
         }
       }

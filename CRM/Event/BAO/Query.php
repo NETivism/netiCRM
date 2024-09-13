@@ -37,8 +37,8 @@ class CRM_Event_BAO_Query {
 
   static function &getFields() {
     $fields = array();
-    require_once 'CRM/Event/DAO/Event.php';
-    require_once 'CRM/Core/DAO/Discount.php';
+
+
     $fields = array_merge($fields, CRM_Event_DAO_Event::import());
     $fields = array_merge($fields, self::getParticipantFields());
     $fields = array_merge($fields, CRM_Core_DAO_Discount::export());
@@ -48,7 +48,7 @@ class CRM_Event_BAO_Query {
   }
 
   static function &getParticipantFields($onlyParticipant = FALSE) {
-    require_once 'CRM/Event/BAO/Participant.php';
+
     $fields = &CRM_Event_BAO_Participant::importableFields('Individual', TRUE, $onlyParticipant);
     return $fields;
   }
@@ -267,8 +267,8 @@ class CRM_Event_BAO_Query {
         return;
 
       case 'event_type_id':
-        require_once 'CRM/Core/OptionGroup.php';
-        require_once 'CRM/Utils/Array.php';
+
+
 
         $eventTypes = CRM_Core_OptionGroup::values("event_type");
         $query->_where[$grouping][] = "civicrm_participant.event_id = civicrm_event.id and civicrm_event.event_type_id $op {$value}";
@@ -406,7 +406,7 @@ class CRM_Event_BAO_Query {
         $status = CRM_Utils_Array::implode(",", $val);
         $status = "({$status})";
 
-        require_once 'CRM/Event/PseudoConstant.php';
+
         $names = array();
         if (!empty($val)) {
           foreach ($val as $id => $dontCare) {
@@ -437,7 +437,7 @@ class CRM_Event_BAO_Query {
           $value = array($value => 1);
         }
 
-        require_once 'CRM/Event/PseudoConstant.php';
+
         $roleTypes = CRM_Event_PseudoConstant::participantRole();
 
         $names = array();
@@ -602,7 +602,7 @@ class CRM_Event_BAO_Query {
       );
 
       // also get all the custom participant properties
-      require_once "CRM/Core/BAO/CustomField.php";
+
       $fields = CRM_Core_BAO_CustomField::getFieldsForImport('Participant');
       if (!empty($fields)) {
         foreach ($fields as $name => $dontCare) {
@@ -663,7 +663,7 @@ class CRM_Event_BAO_Query {
     $form->addDate('participant_register_date_low', ts('Registered - From'), FALSE, array('formatType' => 'searchDate'));
     $form->addDate('participant_register_date_high', ts('To'), FALSE, array('formatType' => 'searchDate'));
 
-    require_once 'CRM/Event/PseudoConstant.php';
+
     $attrs = array('multiple' => 'multiple');
     $status = CRM_Event_PseudoConstant::participantStatus(NULL, NULL, 'label');
     asort($status);
@@ -681,11 +681,11 @@ class CRM_Event_BAO_Query {
     $form->addRule('participant_fee_amount_low', ts('Please enter a valid money value.'), 'money');
     $form->addRule('participant_fee_amount_high', ts('Please enter a valid money value.'), 'money');
     // add all the custom  searchable fields
-    require_once 'CRM/Core/BAO/CustomGroup.php';
+
     $extends = array('Participant');
     $groupDetails = CRM_Core_BAO_CustomGroup::getGroupDetail(NULL, TRUE, $extends);
     if ($groupDetails) {
-      require_once 'CRM/Core/BAO/CustomField.php';
+
       $form->assign('participantGroupTree', $groupDetails);
       foreach ($groupDetails as $group) {
         foreach ($group['fields'] as $field) {

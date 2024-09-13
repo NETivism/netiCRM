@@ -34,7 +34,7 @@
  *
  */
 
-require_once 'CRM/Event/Form/Registration.php';
+
 
 /**
  * This class generates form components for processing Event
@@ -222,7 +222,7 @@ class CRM_Event_Form_Registration_ThankYou extends CRM_Event_Form_Registration {
 
     $this->setDefaults($defaults);
 
-    require_once 'CRM/Friend/BAO/Friend.php';
+
 
     $params['entity_id'] = $this->_eventId;
     $params['entity_table'] = 'civicrm_event';
@@ -258,7 +258,7 @@ class CRM_Event_Form_Registration_ThankYou extends CRM_Event_Form_Registration {
     $this->assign('isRequireApproval', $isRequireApproval);
 
     // Assign Participant Count to Lineitem Table
-    require_once "CRM/Price/BAO/Set.php";
+
     $this->assign('pricesetFieldsCount', CRM_Price_BAO_Set::getPricesetCount($this->_priceSetId));
 
     $this->assign('usedOptionsDiscount', $this->_usedOptionsDiscount);

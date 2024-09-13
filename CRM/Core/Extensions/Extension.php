@@ -34,8 +34,8 @@
  *
  */
 
-require_once 'CRM/Core/Config.php';
-require_once 'CRM/Core/Extensions.php';
+
+
 class CRM_Core_Extensions_Extension {
 
   /**

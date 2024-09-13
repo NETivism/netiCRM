@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Core/Page/Basic.php';
-require_once 'CRM/Member/BAO/MembershipType.php';
+
+
 
 /**
  * Page for displaying list of membership types
@@ -144,13 +144,13 @@ class CRM_Member_Page_MembershipType extends CRM_Core_Page_Basic {
   function browse() {
     // get all membership types sorted by weight
     $membershipType = array();
-    require_once 'CRM/Member/DAO/MembershipType.php';
+
     $dao = new CRM_Member_DAO_MembershipType();
 
     $dao->orderBy('weight');
     $dao->find();
 
-    require_once 'CRM/Utils/Money.php';
+
 
     while ($dao->fetch()) {
       $membershipType[$dao->id] = array();
@@ -195,7 +195,7 @@ class CRM_Member_Page_MembershipType extends CRM_Core_Page_Basic {
     }
 
     $returnURL = CRM_Utils_System::url('civicrm/admin/member/membershipType', "reset=1&action=browse");
-    require_once 'CRM/Utils/Weight.php';
+
     CRM_Utils_Weight::addOrder($membershipType, 'CRM_Member_DAO_MembershipType',
       'id', $returnURL
     );

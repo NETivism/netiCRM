@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Contact/Page/View/UserDashBoard.php';
+
 class CRM_Contribute_Page_UserDashboard extends CRM_Contact_Page_View_UserDashBoard {
 
   /**
@@ -54,7 +54,7 @@ class CRM_Contribute_Page_UserDashboard extends CRM_Contact_Page_View_UserDashBo
     $controller->run();
 
     //add honor block
-    require_once 'CRM/Contribute/BAO/Contribution.php';
+
     $params = array();
     $params = CRM_Contribute_BAO_Contribution::getHonorContacts($this->_contactId);
 
@@ -64,8 +64,8 @@ class CRM_Contribute_Page_UserDashboard extends CRM_Contact_Page_View_UserDashBo
       $this->assign('honor', TRUE);
     }
 
-    require_once 'CRM/Contribute/Form/ContributionBase.php';
-    require_once 'CRM/Contribute/BAO/ContributionRecur.php';
+
+
 
     $recur = new CRM_Contribute_DAO_ContributionRecur();
     $recur->contact_id = $this->_contactId;
@@ -76,8 +76,8 @@ class CRM_Contribute_Page_UserDashboard extends CRM_Contact_Page_View_UserDashBo
 
     $recurStatus = CRM_Contribute_PseudoConstant::contributionStatus();
 
-    require_once 'CRM/Core/Payment.php';
-    require_once 'api/v2/utils.php';
+
+
     $recurRow = array();
     $recurIDs = array();
     while ($recur->fetch()) {

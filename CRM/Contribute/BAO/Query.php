@@ -52,7 +52,7 @@ class CRM_Contribute_BAO_Query {
     if (!self::$_contributionFields) {
       self::$_contributionFields = array();
 
-      require_once 'CRM/Contribute/BAO/Contribution.php';
+
       $fields = &CRM_Contribute_BAO_Contribution::exportableFields();
 
       unset($fields['contribution_contact_id']);
@@ -358,7 +358,7 @@ class CRM_Contribute_BAO_Query {
         return;
 
       case 'contribution_page_id':
-        require_once 'CRM/Contribute/PseudoConstant.php';
+
         $cPage = $value;
         $pages = CRM_Contribute_PseudoConstant::contributionPage();    
         if (is_array($cPage)) {
@@ -385,7 +385,7 @@ class CRM_Contribute_BAO_Query {
         return;
 
       case 'contribution_pcp_made_through_id':
-        require_once 'CRM/Contribute/PseudoConstant.php';
+
         $pcPage = $value;
         $pcpages = CRM_Contribute_PseudoConstant::pcPage();
         $query->_where[$grouping][] = "civicrm_contribution_soft.pcp_id = $pcPage";
@@ -395,7 +395,7 @@ class CRM_Contribute_BAO_Query {
 
       case 'contribution_payment_instrument_id':
       case 'contribution_payment_instrument':
-        require_once 'CRM/Contribute/PseudoConstant.php';
+
         $pis = CRM_Contribute_PseudoConstant::paymentInstrument();
         if (is_array($value)) {
           foreach ($value as $k => $v) {
@@ -454,7 +454,7 @@ class CRM_Contribute_BAO_Query {
 
       case 'contribution_status_id':
       case 'contribution_status':
-        require_once "CRM/Core/OptionGroup.php";
+
         $statusValues = CRM_Core_OptionGroup::values("contribution_status");
         if ($name == 'contribution_status') {
           $statusIndex = null;
@@ -922,7 +922,7 @@ class CRM_Contribute_BAO_Query {
       );
 
       // also get all the custom contribution properties
-      require_once "CRM/Core/BAO/CustomField.php";
+
       $fields = CRM_Core_BAO_CustomField::getFieldsForImport('Contribution');
       if (!empty($fields)) {
         foreach ($fields as $name => $dontCare) {
@@ -942,7 +942,7 @@ class CRM_Contribute_BAO_Query {
    * @static
    */
   static function buildSearchForm(&$form) {
-    require_once 'CRM/Utils/Money.php';
+
 
     //added contribution source
     $form->addNumber('contribution_id', ts('Contribution ID'));
@@ -1059,11 +1059,11 @@ class CRM_Contribute_BAO_Query {
     $form->addYesNo('contribution_pcp_display_in_roll', ts('Personal Campaign Page').' - '.ts('Display In Roll ?'));
 
     // add all the custom  searchable fields
-    require_once 'CRM/Core/BAO/CustomGroup.php';
+
     $contribution = array('Contribution');
     $groupDetails = CRM_Core_BAO_CustomGroup::getGroupDetail(NULL, TRUE, $contribution);
     if ($groupDetails) {
-      require_once 'CRM/Core/BAO/CustomField.php';
+
       $form->assign('contributeGroupTree', $groupDetails);
       foreach ($groupDetails as $group) {
         foreach ($group['fields'] as $field) {
@@ -1099,7 +1099,7 @@ class CRM_Contribute_BAO_Query {
     $form->addElement('text', 'contribution_utm_content', 'UTM Content');
 
     // premium filters
-    require_once 'CRM/Contribute/DAO/Product.php';
+
     $product_dao = new CRM_Contribute_DAO_Product();
     $product_dao->is_active = 1;
     $product_dao->find();

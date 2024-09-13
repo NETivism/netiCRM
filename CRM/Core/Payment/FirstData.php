@@ -55,7 +55,7 @@ future.
 
 
 
-require_once 'CRM/Core/Payment.php';
+
 class CRM_Core_Payment_FirstData extends CRM_Core_Payment {
   # (not used, implicit in the API, might need to convert?)
   CONST CHARSET = 'UFT-8';
@@ -181,7 +181,7 @@ class CRM_Core_Payment_FirstData extends CRM_Core_Payment {
     /**********************************************************
      * create FirstData request object
      **********************************************************/
-    require_once 'FirstData/lphp.php';
+
     //	$mylphp=new lphp;
 
     /**********************************************************
@@ -330,7 +330,7 @@ class CRM_Core_Payment_FirstData extends CRM_Core_Payment {
    * @return bool                  True if ID exists, else false
    */
   function _checkDupe($invoiceId) {
-    require_once 'CRM/Contribute/DAO/Contribution.php';
+
     $contribution = new CRM_Contribute_DAO_Contribution();
     $contribution->invoice_id = $invoiceId;
     return $contribution->find();

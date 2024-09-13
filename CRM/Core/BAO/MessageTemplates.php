@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'Mail/mime.php';
-require_once 'CRM/Core/DAO/MessageTemplates.php';
+
+
 class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
 
   /**

@@ -33,13 +33,13 @@
  *
  */
 
-require_once 'CRM/Contact/Form/Task.php';
-require_once 'CRM/Contact/Form/Task/PDFLetterCommon.php';
 
-require_once 'CRM/Core/Menu.php';
-require_once 'CRM/Core/BAO/CustomGroup.php';
-require_once 'CRM/Contact/BAO/Contact.php';
-require_once 'CRM/Activity/BAO/Activity.php';
+
+
+
+
+
+
 
 /**
  * This class provides the functionality to create PDF letter for a group of

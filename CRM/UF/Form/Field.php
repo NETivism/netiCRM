@@ -33,10 +33,10 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
-require_once 'CRM/Contact/BAO/Contact.php';
-require_once 'CRM/Activity/BAO/Activity.php';
-require_once 'CRM/Core/BAO/UFField.php';
+
+
+
+
 
 /**
  * form to process actions on the field aspect of Custom
@@ -192,7 +192,7 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
 
     $this->assign('fieldId', $this->_id);
     if ($this->_id) {
-      require_once 'CRM/Core/DAO.php';
+
       $fieldTitle = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_UFField', $this->_id, 'label');
       $this->assign('fieldTitle', $fieldTitle);
     }
@@ -285,7 +285,7 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
       'title' => ts('Current Employer'),
     );
 
-    require_once 'CRM/Core/BAO/Preferences.php';
+
     $addressOptions = CRM_Core_BAO_Preferences::valueOptions('address_options', TRUE, NULL, TRUE);
 
     if (!$addressOptions['county']) {
@@ -354,7 +354,7 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
     }
 
     //group selected and unwanted fields list
-    require_once 'CRM/Core/BAO/UFGroup.php';
+
     $groupFieldList = array_merge(CRM_Core_BAO_UFGroup::getFields($this->_gid, FALSE, NULL, NULL, NULL, TRUE, NULL, TRUE),
       array('note', 'email_greeting_custom', 'postal_greeting_custom', 'addressee_custom', 'id')
     );
@@ -375,7 +375,7 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
     unset($subTypes);
 
     if (CRM_Core_Permission::access('Quest')) {
-      require_once 'CRM/Quest/BAO/Student.php';
+
       $fields['Student'] = &CRM_Quest_BAO_Student::exportableFields();
     }
 
@@ -426,7 +426,7 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
     }
 
     if (CRM_Core_Permission::access('CiviMember')) {
-      require_once 'CRM/Member/BAO/Membership.php';
+
       $membershipFields = &CRM_Member_BAO_Membership::getMembershipFields();
       unset($membershipFields['membership_id']);
       unset($membershipFields['join_date']);
@@ -472,7 +472,7 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
     foreach ($fields as $key => $value) {
       foreach ($value as $key1 => $value1) {
         //CRM-2676, replacing the conflict for same custom field name from different custom group.
-        require_once 'CRM/Core/BAO/CustomField.php';
+
         if ($customFieldId = CRM_Core_BAO_CustomField::getKeyID($key1)) {
           $customGroupId = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_CustomField', $customFieldId, 'custom_group_id');
           $customGroupName = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_CustomGroup', $customGroupId, 'title');
@@ -502,7 +502,7 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
     }
     $this->assign('noSearchable', $noSearchable);
 
-    require_once 'CRM/Core/BAO/LocationType.php';
+
     $this->_location_types = CRM_Core_PseudoConstant::locationType();
     $defaultLocationType = CRM_Core_BAO_LocationType::getDefault();
     $this->_website_types = CRM_Core_PseudoConstant::websiteType();
@@ -916,7 +916,7 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
     $config = CRM_Core_Config::singleton();
     if ($config->profileDoubleOptIn) {
       if ($fields['field_name'][1] == 'group') {
-        require_once 'CRM/Core/BAO/UFField.php';
+
         $dao = new CRM_Core_BAO_UFField();
         $dao->uf_group_id = $fields['group_id'];
         $dao->find();

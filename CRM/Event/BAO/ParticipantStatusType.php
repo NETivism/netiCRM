@@ -34,7 +34,7 @@
  */
 
 
-require_once 'CRM/Event/DAO/ParticipantStatusType.php';
+
 class CRM_Event_BAO_ParticipantStatusType extends CRM_Event_DAO_ParticipantStatusType {
   static function add(&$params) {
     if (empty($params)) {
@@ -46,7 +46,7 @@ class CRM_Event_BAO_ParticipantStatusType extends CRM_Event_DAO_ParticipantStatu
   }
 
   static function &create(&$params) {
-    require_once 'CRM/Core/Transaction.php';
+
     $transaction = new CRM_Core_Transaction;
     $statusType = self::add($params);
     if (is_a($statusType, 'CRM_Core_Error')) {
@@ -59,14 +59,14 @@ class CRM_Event_BAO_ParticipantStatusType extends CRM_Event_DAO_ParticipantStatu
 
   static function deleteParticipantStatusType($id) {
     // return early if there are participants with this status
-    require_once 'CRM/Event/DAO/Participant.php';
+
     $participant = new CRM_Event_DAO_Participant;
     $participant->status_id = $id;
     if ($participant->find()) {
       return FALSE;
     }
 
-    require_once 'CRM/Utils/Weight.php';
+
     CRM_Utils_Weight::delWeight('CRM_Event_DAO_ParticipantStatusType', $id);
 
     $dao = new CRM_Event_DAO_ParticipantStatusType;

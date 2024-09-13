@@ -1,5 +1,5 @@
 <?php
-require_once 'CRM/Contact/Form/Task.php';
+
 class CRM_Contact_Form_Task_Unhold extends CRM_Contact_Form_Task {
 
   /**

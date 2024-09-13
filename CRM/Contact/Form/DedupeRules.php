@@ -33,9 +33,9 @@
  *
  */
 
-require_once 'CRM/Admin/Form.php';
-require_once 'CRM/Dedupe/DAO/Rule.php';
-require_once 'CRM/Dedupe/BAO/RuleGroup.php';
+
+
+
 
 /**
  * This class generates form components for DedupeRules
@@ -56,8 +56,8 @@ class CRM_Contact_Form_DedupeRules extends CRM_Admin_Form {
    */
   function preProcess() {
     // Ensure user has permission to be here
-    require_once 'CRM/Core/Permission.php';
-    require_once 'CRM/Contact/BAO/ContactType.php';
+
+
     if (!CRM_Core_Permission::check('administer dedupe rules')) {
       CRM_Utils_System::permissionDenied();
       CRM_Utils_System::civiExit();
@@ -255,7 +255,7 @@ UPDATE civicrm_dedupe_rule_group
 
     // also create an index for this dedupe rule
     // CRM-3837
-    require_once 'CRM/Core/BAO/SchemaHandler.php';
+
     CRM_Core_BAO_SchemaHandler::createIndexes($tables, 'dedupe_index', $substrLenghts);
   }
 }

@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Report/Form.php';
+
 class CRM_Report_Form_Mailing_Opened extends CRM_Report_Form {
 
   protected $_summary = NULL;
@@ -342,7 +342,7 @@ class CRM_Report_Form_Mailing_Opened extends CRM_Report_Form {
   }
 
   function mailing_select() {
-    require_once ('CRM/Mailing/BAO/Mailing.php');
+
 
     $data = array();
     $mailing = new CRM_Mailing_BAO_Mailing();

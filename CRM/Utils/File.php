@@ -116,7 +116,7 @@ class CRM_Utils_File {
         $docLink = CRM_Utils_System::docURL2('Moving an Existing Installation to a New Server or Location', FALSE, 'Moving an Existing Installation to a New Server or Location');
         echo "Error: Could not create directory: $path.<p>If you have moved an existing CiviCRM installation from one location or server to another there are several steps you will need to follow. They are detailed on this CiviCRM wiki page - {$docLink}. A fix for the specific problem that caused this error message to be displayed is to set the value of the config_backend column in the civicrm_domain table to NULL. However we strongly recommend that you review and follow all the steps in that document.</p>";
 
-        require_once 'CRM/Utils/System.php';
+
         CRM_Utils_System::civiExit();
       }
       else {
@@ -186,7 +186,7 @@ class CRM_Utils_File {
    * @access public
    */
   static function toUtf8($name) {
-    require_once 'CRM/Core/Config.php';
+
     static $config = NULL;
     static $legacyEncoding = NULL;
     if ($config == NULL) {
@@ -248,7 +248,7 @@ class CRM_Utils_File {
   }
 
   static function sourceSQLFile($dsn, $fileName, $prefix = NULL, $isQueryString = FALSE, $dieOnErrors = TRUE) {
-    require_once 'DB.php';
+
 
     $db = &DB::connect($dsn);
     if (PEAR::isError($db)) {
@@ -288,14 +288,14 @@ class CRM_Utils_File {
   static function isExtensionSafe($ext) {
     static $extensions = NULL;
     if (!$extensions) {
-      require_once 'CRM/Core/OptionGroup.php';
+
       $extensions = CRM_Core_OptionGroup::values('safe_file_extension', TRUE);
 
       //make extensions to lowercase
       $extensions = array_change_key_case($extensions, CASE_LOWER);
       // allow html/htm extension ONLY if the user is admin
       // and/or has access CiviMail
-      require_once 'CRM/Core/Permission.php';
+
       if (!CRM_Core_Permission::check('access CiviMail') &&
         !CRM_Core_Permission::check('administer CiviCRM')
       ) {
@@ -389,7 +389,7 @@ class CRM_Utils_File {
 HTACCESS;
       $file = $dir . '.htaccess';
       if (file_put_contents($file, $htaccess) === FALSE) {
-        require_once 'CRM/Core/Error.php';
+
         CRM_Core_Error::movedSiteError($file);
       }
     }
@@ -529,7 +529,7 @@ HTACCESS;
       }
       else {
         $outputFile = preg_replace('/\.xlsx$/', "_encrypt.xlsx", $filePath);
-        require_once 'secure-spreadsheet/autoload.php';
+
         if ($config->decryptExcelOption == 1) {
           // Get the user's primary email address
           $session = CRM_Core_Session::singleton();

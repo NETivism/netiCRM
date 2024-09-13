@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/DAO/Website.php';
+
 
 /**
  * This class contain function for Website handling

@@ -34,7 +34,7 @@
  *
  */
 
-require_once 'CRM/Event/Form/Registration.php';
+
 
 /**
  * This class generates form components for processing Event
@@ -60,7 +60,7 @@ class CRM_Event_Form_Registration_ParticipantCancel extends CRM_Event_Form_Regis
     $values = array();
     $csContactID = $eventId = NULL;
     if ($this->_participantId) {
-      require_once 'CRM/Event/BAO/Participant.php';
+
       $params = array('id' => $this->_participantId);
       CRM_Core_DAO::commonRetrieve('CRM_Event_DAO_Participant', $params, $values,
         array('contact_id', 'event_id', 'status_id')
@@ -79,7 +79,7 @@ class CRM_Event_Form_Registration_ParticipantCancel extends CRM_Event_Form_Regis
         $this->_csContactID = $csContactId;
       }
       else {
-        require_once 'CRM/Contact/BAO/Contact/Permission.php';
+
         if (CRM_Contact_BAO_Contact_Permission::validateChecksumContact($csContactId, $this)) {
           //since we have landing page so get this contact
           //id in session if user really want to walk wizard.
@@ -147,7 +147,7 @@ class CRM_Event_Form_Registration_ParticipantCancel extends CRM_Event_Form_Regis
     $this->assign('isShowLocation', CRM_Utils_Array::value('is_show_location', $values['event']));
 
     $params = array('entity_id' => $this->_eventId, 'entity_table' => 'civicrm_event');
-    require_once 'CRM/Core/BAO/Location.php';
+
     $values['location'] = CRM_Core_BAO_Location::getValues($params, TRUE);
 
     //To show the event location on maps directly on event info page
@@ -226,8 +226,8 @@ class CRM_Event_Form_Registration_ParticipantCancel extends CRM_Event_Form_Regis
 
     if ($buttonName == '_qf_ParticipantCancel_next') {
       //need to registration status to 'cancelled'.
-      require_once 'CRM/Event/PseudoConstant.php';
-      require_once 'CRM/Event/BAO/Participant.php';
+
+
       $cancelledId = array_search('Cancelled', CRM_Event_PseudoConstant::participantStatus(NULL, "class = 'Negative'"));
       $additionalParticipantIds = CRM_Event_BAO_Participant::getAdditionalParticipantIds($participantId);
 

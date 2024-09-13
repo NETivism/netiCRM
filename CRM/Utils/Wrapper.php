@@ -38,8 +38,8 @@
  *
  */
 
-require_once 'CRM/Core/Base.php';
-require_once 'CRM/Core/Controller/Simple.php';
+
+
 class CRM_Utils_Wrapper {
 
   /**

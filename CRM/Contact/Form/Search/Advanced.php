@@ -37,11 +37,11 @@
  * Files required
  */
 
-require_once 'CRM/Core/ShowHideBlocks.php';
-require_once 'CRM/Core/BAO/CustomGroup.php';
-require_once 'CRM/Core/BAO/CustomOption.php';
 
-require_once 'CRM/Contact/Form/Search.php';
+
+
+
+
 
 /**
  * advanced search, extends basic search
@@ -69,11 +69,11 @@ class CRM_Contact_Form_Search_Advanced extends CRM_Contact_Form_Search {
    */
   function buildQuickForm() {
     $this->set('context', 'advanced');
-    require_once 'CRM/Contact/Form/Search/Criteria.php';
+
 
     $this->_searchPane = CRM_Utils_Array::value('searchPane', $_GET);
 
-    require_once 'CRM/Core/BAO/Preferences.php';
+
     $this->_searchOptions = CRM_Core_BAO_Preferences::valueOptions('advanced_search_options');
 
     if (!$this->_searchPane || $this->_searchPane == 'basic') {
@@ -109,7 +109,7 @@ class CRM_Contact_Form_Search_Advanced extends CRM_Contact_Form_Search {
       }
     }
 
-    require_once 'CRM/Core/Component.php';
+
     $components = CRM_Core_Component::getEnabledComponents();
 
     $componentPanes = array();
@@ -123,7 +123,7 @@ class CRM_Contact_Form_Search_Advanced extends CRM_Contact_Form_Search {
       }
     }
 
-    require_once 'CRM/Utils/Sort.php';
+
     usort($componentPanes, array('CRM_Utils_Sort', 'cmpFunc'));
 
     foreach ($componentPanes as $name => $pane) {
@@ -298,10 +298,10 @@ class CRM_Contact_Form_Search_Advanced extends CRM_Contact_Form_Search {
       }
     }
 
-    require_once 'CRM/Core/BAO/CustomValue.php';
+
     CRM_Core_BAO_CustomValue::fixFieldValueOfTypeMemo($this->_formValues);
 
-    require_once 'CRM/Contact/BAO/Query.php';
+
     $this->_params = &CRM_Contact_BAO_Query::convertFormValues($this->_formValues);
     $this->_returnProperties = &$this->returnProperties();
     parent::postProcess();

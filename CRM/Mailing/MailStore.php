@@ -61,24 +61,24 @@ class CRM_Mailing_MailStore {
 
     switch ($protocols[$setting['protocol']]) {
       case 'IMAP':
-        require_once 'CRM/Mailing/MailStore/Imap.php';
+
         return new CRM_Mailing_MailStore_Imap($setting['server'], $setting['username'], $setting['password'], (bool) $setting['is_ssl'], $setting['source']);
       case 'POP3':
-        require_once 'CRM/Mailing/MailStore/Pop3.php';
+
         return new CRM_Mailing_MailStore_Pop3($setting['server'], $setting['username'], $setting['password'], (bool) $setting['is_ssl']);
       case 'Maildir':
-        require_once 'CRM/Mailing/MailStore/Maildir.php';
+
         return new CRM_Mailing_MailStore_Maildir($setting['source']);
 
       case 'Localdir':
-        require_once 'CRM/Mailing/MailStore/Localdir.php';
+
         return new CRM_Mailing_MailStore_Localdir($setting['source']);
 
       // DO NOT USE the mbox transport for anything other than testing
       // in particular, it does not clear the mbox afterwards
 
       case 'mbox':
-        require_once 'CRM/Mailing/MailStore/Mbox.php';
+
         return new CRM_Mailing_MailStore_Mbox($setting['source']);
 
       default:

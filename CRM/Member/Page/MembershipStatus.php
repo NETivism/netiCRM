@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Page/Basic.php';
+
 
 /**
  * Page for displaying list of membership types
@@ -140,7 +140,7 @@ class CRM_Member_Page_MembershipStatus extends CRM_Core_Page_Basic {
   function browse() {
     // get all custom groups sorted by weight
     $membershipStatus = array();
-    require_once 'CRM/Member/DAO/MembershipStatus.php';
+
     $dao = new CRM_Member_DAO_MembershipStatus();
 
     $dao->orderBy('weight');
@@ -172,7 +172,7 @@ class CRM_Member_Page_MembershipStatus extends CRM_Core_Page_Basic {
     }
     // Add order changing widget to selector
     $returnURL = CRM_Utils_System::url('civicrm/admin/member/membershipStatus', "reset=1&action=browse");
-    require_once 'CRM/Utils/Weight.php';
+
     CRM_Utils_Weight::addOrder($membershipStatus, 'CRM_Member_DAO_MembershipStatus',
       'id', $returnURL
     );

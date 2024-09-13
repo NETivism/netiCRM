@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Core/Page.php';
-require_once 'CRM/Event/BAO/Event.php';
+
+
 
 /**
  * Page for displaying list of events
@@ -247,13 +247,13 @@ ORDER BY start_date desc
           TRUE
         );
 
-        require_once 'CRM/Friend/BAO/Friend.php';
+
         $manageEvent[$dao->id]['friend'] = CRM_Friend_BAO_Friend::getValues($params);
       }
     }
     $this->assign('rows', $manageEvent);
 
-    require_once 'CRM/Event/PseudoConstant.php';
+
     $statusTypes = CRM_Event_PseudoConstant::participantStatus(NULL, 'is_counted = 1', 'label');
     $statusTypesPending = CRM_Event_PseudoConstant::participantStatus(NULL, 'is_counted = 0', 'label');
     $findParticipants['statusCounted'] = CRM_Utils_Array::implode(', ', array_values($statusTypes));
@@ -272,7 +272,7 @@ ORDER BY start_date desc
     $id = CRM_Utils_Request::retrieve('id', 'Positive', $this, TRUE, 0, 'GET');
 
     $urlString = 'civicrm/event/manage';
-    require_once 'CRM/Event/BAO/Event.php';
+
     $copyEvent = CRM_Event_BAO_Event::copy($id);
     $urlParams = 'reset=1';
     // Redirect to Copied Event Configuration
@@ -340,7 +340,7 @@ ORDER BY start_date desc
   }
 
   function pager($whereClause, $whereParams) {
-    require_once 'CRM/Utils/Pager.php';
+
 
     $params['status'] = ts('Event %%StatusMessage%%');
     $params['csvString'] = NULL;

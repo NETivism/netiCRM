@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Contribute/Import/Parser.php';
-require_once 'api/v2/Contribution.php';
+
+
 
 /**
  * class to parse contribution csv files
@@ -93,7 +93,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
    * @access public
    */
   function init() {
-    require_once 'CRM/Contribute/BAO/Contribution.php';
+
     $fields = &CRM_Contribute_BAO_Contribution::importableFields($this->_contactType, FALSE);
     $this->_importableContactFields = $fields;
 
@@ -298,7 +298,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
     $response = $this->setActiveFieldValues($values, $erroneousField);
 
     $params = &$this->getActiveFieldParams();
-    require_once 'CRM/Import/Parser/Contact.php';
+
     $errorMessage = NULL;
     $statusFieldName = $this->_statusFieldName;
 
@@ -520,7 +520,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
 
     static $indieFields = NULL;
     if ($indieFields == NULL) {
-      require_once ('CRM/Contribute/DAO/Contribution.php');
+
       $tempIndieFields = &CRM_Contribute_DAO_Contribution::import();
       $indieFields = $tempIndieFields;
     }
@@ -608,7 +608,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
           if ($paramValues['note']) {
             $noteID = array();
             $contactID = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $ids['contribution'], 'contact_id');
-            require_once 'CRM/Core/BAO/Note.php';
+
             $daoNote = new CRM_Core_BAO_Note();
             $daoNote->entity_table = 'civicrm_contribution';
             $daoNote->entity_id = $ids['contribution'];
@@ -828,7 +828,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
         'contribution_id', $formatted['contribution_id']
       );
 
-      require_once 'CRM/Pledge/BAO/Payment.php';
+
       CRM_Pledge_BAO_Payment::updatePledgePaymentStatus($formatted['pledge_id'], array($formatted['pledge_payment_id']), $completeStatusID, NULL, $formatted['total_amount']);
 
       $importRecordParams = array($statusFieldName => CRM_Contribute_Import_Parser::PLEDGE_PAYMENT, "${statusFieldName}Msg" => '');

@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
-require_once "CRM/Custom/Form/CustomData.php";
+
+
 
 /**
  * This class generates form components for processing a case
@@ -85,7 +85,7 @@ class CRM_Grant_Form_Grant extends CRM_Core_Form {
 
     $this->_noteId = NULL;
     if ($this->_id) {
-      require_once 'CRM/Core/BAO/Note.php';
+
       $noteDAO = new CRM_Core_BAO_Note();
       $noteDAO->entity_table = 'civicrm_grant';
       $noteDAO->entity_id = $this->_id;
@@ -114,7 +114,7 @@ class CRM_Grant_Form_Grant extends CRM_Core_Form {
       CRM_Grant_BAO_Grant::retrieve($params, $defaults);
 
       // fix the display of the monetary value, CRM-4038
-      require_once 'CRM/Utils/Money.php';
+
       if (isset($defaults['amount_total'])) {
         $defaults['amount_total'] = CRM_Utils_Money::format($defaults['amount_total'], NULL, '%a');
       }
@@ -138,7 +138,7 @@ class CRM_Grant_Form_Grant extends CRM_Core_Form {
       }
     }
     else {
-      require_once 'CRM/Utils/Date.php';
+
       list($defaults['application_received_date']) = CRM_Utils_Date::setDateDefaults();
     }
 
@@ -169,8 +169,8 @@ class CRM_Grant_Form_Grant extends CRM_Core_Form {
       return;
     }
 
-    require_once 'CRM/Core/OptionGroup.php';
-    require_once 'CRM/Grant/BAO/Grant.php';
+
+
     $attributes = CRM_Core_DAO::getAttribute('CRM_Grant_DAO_Grant');
     $grantType = CRM_Core_OptionGroup::values('grant_type');
     $this->add('select', 'grant_type_id', ts('Grant Type'),
@@ -205,7 +205,7 @@ class CRM_Grant_Form_Grant extends CRM_Core_Form {
     CRM_Custom_Form_Customdata::buildQuickForm($this);
 
     // add attachments part
-    require_once 'CRM/Core/BAO/File.php';
+
     CRM_Core_BAO_File::buildAttachment($this,
       'civicrm_grant',
       $this->_id
@@ -230,7 +230,7 @@ class CRM_Grant_Form_Grant extends CRM_Core_Form {
     );
 
     if ($this->_context == 'standalone') {
-      require_once 'CRM/Contact/Form/NewContact.php';
+
       CRM_Contact_Form_NewContact::buildQuickForm($this);
       $this->addFormRule(array('CRM_Grant_Form_Grant', 'formRule'), $this);
     }
@@ -267,7 +267,7 @@ class CRM_Grant_Form_Grant extends CRM_Core_Form {
    */
   public function postProcess() {
     if ($this->_action & CRM_Core_Action::DELETE) {
-      require_once 'CRM/Grant/BAO/Grant.php';
+
       CRM_Grant_BAO_Grant::del($this->_id);
       return;
     }
@@ -320,7 +320,7 @@ class CRM_Grant_Form_Grant extends CRM_Core_Form {
       $this->_id
     );
 
-    require_once 'CRM/Grant/BAO/Grant.php';
+
     $grant = CRM_Grant_BAO_Grant::create($params, $ids);
 
     $buttonName = $this->controller->getButtonName();

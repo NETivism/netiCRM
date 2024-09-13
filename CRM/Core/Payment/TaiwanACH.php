@@ -90,7 +90,7 @@ class CRM_Core_Payment_TaiwanACH extends CRM_Core_Payment {
   }
 
   static function addNote($note, &$contribution){
-    require_once 'CRM/Core/BAO/Note.php';
+
     $note = date("Y/m/d H:i:s "). ts("Transaction record")."Trxn ID: {$contribution->trxn_id} \n\n".$note;
     CRM_Core_Error::debug_log_message( $note );
   }

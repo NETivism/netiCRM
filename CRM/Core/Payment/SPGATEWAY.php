@@ -1,6 +1,6 @@
 <?php
 date_default_timezone_set('Asia/Taipei');
-require_once 'CRM/Core/Payment.php';
+
 class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
   const EXPIRE_DAY = 7;
   const MAX_EXPIRE_DAY = 180;

@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Page.php';
+
 
 /**
  * Main page for viewing activities
@@ -49,10 +49,10 @@ class CRM_Activity_Page_Tab extends CRM_Core_Page {
    * @access public
    */
   function browse() {
-    require_once 'CRM/Core/Selector/Controller.php';
+
 
     $output = CRM_Core_Selector_Controller::SESSION;
-    require_once 'CRM/Activity/Selector/Activity.php';
+
     $selector = new CRM_Activity_Selector_Activity($this->_contactId, $this->_permission);
     $currentPath = CRM_Utils_System::currentPath();
     if (!empty($this->_contactId) && strstr($currentPath, 'civicrm/contact/view')) {
@@ -75,7 +75,7 @@ class CRM_Activity_Page_Tab extends CRM_Core_Page {
     $controller->moveFromSessionToTemplate();
 
     // check if case is enabled
-    require_once 'CRM/Core/BAO/Preferences.php';
+
     $viewOptions = CRM_Core_BAO_Preferences::valueOptions('contact_view_options', TRUE, NULL, TRUE);
 
     $enableCase = FALSE;
@@ -99,7 +99,7 @@ class CRM_Activity_Page_Tab extends CRM_Core_Page {
     $activityTypeId = CRM_Utils_Request::retrieve('atype', 'Positive', $this);
 
     // Email and Create Letter activities use a different form class
-    require_once 'CRM/Core/OptionGroup.php';
+
     $emailTypeValue = CRM_Core_OptionGroup::getValue('activity_type',
       'Email',
       'name'
@@ -165,7 +165,7 @@ class CRM_Activity_Page_Tab extends CRM_Core_Page {
     $this->assign('contactId', $this->_contactId);
 
     // check logged in url permission
-    require_once 'CRM/Contact/Page/View.php';
+
     CRM_Contact_Page_View::checkUserPermission($this);
 
     // set page title
@@ -210,7 +210,7 @@ class CRM_Activity_Page_Tab extends CRM_Core_Page {
     if ($this->_id &&
       in_array($action, array(CRM_Core_Action::UPDATE, CRM_Core_Action::VIEW))
     ) {
-      require_once 'CRM/Activity/BAO/Activity.php';
+
       if (!CRM_Activity_BAO_Activity::checkPermission($this->_id, $action)) {
         return CRM_Core_Error::statusBounce(ts('You are not authorized to access this page.'));
       }
@@ -233,7 +233,7 @@ class CRM_Activity_Page_Tab extends CRM_Core_Page {
       $activityTypeId = CRM_Utils_Request::retrieve('atype', 'Positive', $this);
 
       // Email and Create Letter activities use a different form class
-      require_once 'CRM/Core/OptionGroup.php';
+
       $emailTypeValue = CRM_Core_OptionGroup::getValue('activity_type',
         'Email',
         'name'

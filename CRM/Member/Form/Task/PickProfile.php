@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Profile/Form.php';
-require_once 'CRM/Member/Form/Task.php';
+
+
 
 /**
  * This class provides the functionality for batch profile update for membership
@@ -98,7 +98,7 @@ class CRM_Member_Form_Task_PickProfile extends CRM_Member_Form_Task {
    * @return void
    */
   function buildQuickForm() {
-    require_once "CRM/Core/BAO/UFGroup.php";
+
     $types = array('Membership');
     $profiles = CRM_Core_BAO_UFGroup::getProfiles($types, TRUE);
 

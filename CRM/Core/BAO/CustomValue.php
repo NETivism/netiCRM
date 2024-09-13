@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/DAO.php';
+
 
 /**
  * Business objects for managing custom data values.
@@ -52,7 +52,7 @@ class CRM_Core_BAO_CustomValue extends CRM_Core_DAO {
    * @static
    */
   public static function typecheck($type, $value) {
-    require_once 'CRM/Utils/Rule.php';
+
     switch ($type) {
       case 'Memo':
         return TRUE;

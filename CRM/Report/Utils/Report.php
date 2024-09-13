@@ -60,7 +60,7 @@ class CRM_Report_Utils_Report {
     $optionVal = self::getValueFromUrl($instanceID);
 
     if ($optionVal) {
-      require_once 'CRM/Core/OptionGroup.php';
+
       $templateInfo = CRM_Core_OptionGroup::getRowValues('report_template', "{$optionVal}", 'value');
       return array($templateInfo['id'], $optionVal);
     }
@@ -142,7 +142,7 @@ WHERE  inst.report_id = %1";
     $url = "Report Url: {$url} ";
     $fileContent = $url . $fileContent;
 
-    require_once 'CRM/Core/BAO/Domain.php';
+
     list($domainEmailName,
       $domainEmailAddress
     ) = CRM_Core_BAO_Domain::getNameAndEmail();
@@ -166,13 +166,13 @@ WHERE  inst.report_id = %1";
     $params['text'] = '';
     $params['html'] = $fileContent;
 
-    require_once "CRM/Utils/Mail.php";
+
     $params['mailerType'] = array_search('Transaction Notification', CRM_Core_BAO_MailSettings::$_usedFor);
     return CRM_Utils_Mail::send($params);
   }
 
   static function export2xls(&$form, &$rows, $fileName = NULL) {
-    require_once 'CRM/Utils/Money.php';
+
     $config = CRM_Core_Config::singleton();
 
     //Output headers if this is the first row.
@@ -237,7 +237,7 @@ WHERE  inst.report_id = %1";
 
     if (is_numeric($groupID) && isset($form->_aliases['civicrm_contact'])) {
 
-      require_once 'CRM/Contact/BAO/GroupContact.php';
+
       $sql = "SELECT DISTINCT {$form->_aliases['civicrm_contact']}.id AS contact_id {$form->_from} {$form->_where} ";
       $dao = CRM_Core_DAO::executeQuery($sql);
 
@@ -256,7 +256,7 @@ WHERE  inst.report_id = %1";
     $config = CRM_Core_Config::singleton();
     $arg = explode('/', $_GET[$config->userFrameworkURLVar]);
 
-    require_once 'CRM/Utils/Rule.php';
+
     if ($arg[1] == 'report' &&
       CRM_Utils_Array::value(2, $arg) == 'instance'
     ) {

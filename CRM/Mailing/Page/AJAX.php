@@ -42,10 +42,10 @@ class CRM_Mailing_Page_AJAX {
    * Function to fetch the template text/html messages
    */
   static function template() {
-    require_once 'CRM/Utils/Type.php';
+
     $templateId = CRM_Utils_Type::escape($_POST['tid'], 'Integer');
 
-    require_once "CRM/Core/DAO/MessageTemplates.php";
+
     $messageTemplate = new CRM_Core_DAO_MessageTemplates();
     $messageTemplate->id = $templateId;
     $messageTemplate->selectAdd();

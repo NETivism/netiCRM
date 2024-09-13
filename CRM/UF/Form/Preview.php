@@ -33,9 +33,9 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
-require_once 'CRM/Profile/Form.php';
-require_once 'CRM/Core/BAO/UFGroup.php';
+
+
+
 
 /**
  * This class generates form components
@@ -78,7 +78,7 @@ class CRM_UF_Form_Preview extends CRM_Core_Form {
 
     if ($field) {
       $this->_fields = CRM_Core_BAO_UFGroup::getFields($this->_gid, FALSE, NULL, NULL, NULL, TRUE);
-      require_once 'CRM/Core/DAO/UFField.php';
+
       $fieldDAO = new CRM_Core_DAO_UFField();
       $fieldDAO->id = $this->get('fieldId');
       $fieldDAO->find(TRUE);
@@ -153,7 +153,7 @@ class CRM_UF_Form_Preview extends CRM_Core_Form {
 
     // also take care of state country widget
     if (!empty($stateCountryMap)) {
-      require_once 'CRM/Core/BAO/Address.php';
+
       CRM_Core_BAO_Address::addStateCountryMap($stateCountryMap, $defaults);
     }
 
@@ -161,7 +161,7 @@ class CRM_UF_Form_Preview extends CRM_Core_Form {
     CRM_Core_BAO_UFGroup::setRegisterDefaults($this->_fields, $defaults);
 
     // now fix all state country selectors
-    require_once 'CRM/Core/BAO/Address.php';
+
     CRM_Core_BAO_Address::fixAllStateSelects($this, $defaults);
 
     return $defaults;

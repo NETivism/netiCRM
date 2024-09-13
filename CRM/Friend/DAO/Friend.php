@@ -31,8 +31,8 @@
  * $Id$
  *
  */
-require_once 'CRM/Core/DAO.php';
-require_once 'CRM/Utils/Type.php';
+
+
 class CRM_Friend_DAO_Friend extends CRM_Core_DAO
 {
   /**

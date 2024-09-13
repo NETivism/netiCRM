@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Report/Form.php';
+
 class CRM_Report_Form_Contact_LoggingSummary extends CRM_Report_Form {
   private $loggingDB; function __construct() {
     // don’t display the ‘Add these Contacts to Group’ button

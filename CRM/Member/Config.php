@@ -33,6 +33,6 @@
  *
  */
 
-require_once 'CRM/Core/Component/Config.php';
+
 class CRM_Member_Config extends CRM_Core_Component_Config {}
 

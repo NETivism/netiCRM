@@ -33,10 +33,10 @@
  *
  */
 
-require_once 'CRM/Core/SelectValues.php';
-require_once 'CRM/Core/Form.php';
-require_once 'CRM/Contact/Form/Edit/Notes.php';
-require_once 'CRM/Custom/Form/CustomData.php';
+
+
+
+
 
 /**
  * This class generates form components for relationship
@@ -158,7 +158,7 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form {
     }
     $this->assign("rtype", $this->_rtype);
 
-    require_once 'CRM/Core/PseudoConstant.php';
+
 
     //use name as it remain constant, CRM-3336
     $this->_allRelationshipNames = CRM_Core_PseudoConstant::relationshipType('name');
@@ -410,7 +410,7 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form {
     $this->assign('searchDone', $searchDone);
 
     if ($this->get('contact_type')) {
-      require_once 'CRM/Contact/BAO/ContactType.php';
+
       $typeLabel = CRM_Contact_BAO_ContactType::getLabel($this->get('contact_type'));
       $this->assign('contact_type', $this->get('contact_type'));
       $this->assign('contact_type_display', $typeLabel);
@@ -552,7 +552,7 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form {
     // if this is called from case view,
     //create an activity for case role removal.CRM-4480
     if ($this->_caseId) {
-      require_once "CRM/Case/BAO/Case.php";
+
       CRM_Case_BAO_Case::createCaseRoleActivity($this->_caseId, $relationshipIds, $params['contact_check'], $this->_contactId);
     }
 
@@ -614,7 +614,7 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form {
           CRM_Utils_Array::value('current_employer_id', $this->_values)
         ) {
           //clear current employer.
-          require_once 'CRM/Contact/BAO/Contact/Utils.php';
+
           CRM_Contact_BAO_Contact_Utils::clearCurrentEmployer($this->_contactId);
         }
       }
@@ -622,7 +622,7 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form {
       //set current employer
       if ($orgId) {
         $currentEmpParams[$this->_contactId] = $orgId;
-        require_once 'CRM/Contact/BAO/Contact/Utils.php';
+
         CRM_Contact_BAO_Contact_Utils::setCurrentEmployer($currentEmpParams);
       }
     }
@@ -643,7 +643,7 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form {
           CRM_Utils_Array::value('current_employee_id', $this->_values)
         ) {
           // clear current employee
-          require_once 'CRM/Contact/BAO/Contact/Utils.php';
+
           CRM_Contact_BAO_Contact_Utils::clearCurrentEmployer($ids['contactTarget']);
         }
       }
@@ -656,7 +656,7 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form {
           $currentEmpParams[$Id] = $this->_contactId;
         }
 
-        require_once 'CRM/Contact/BAO/Contact/Utils.php';
+
         CRM_Contact_BAO_Contact_Utils::setCurrentEmployer($currentEmpParams);
       }
     }
@@ -762,7 +762,7 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form {
 
         $contact_type = '<img src="' . $config->resourceBase . 'i/contact_';
 
-        require_once ('CRM/Contact/BAO/Contact/Utils.php');
+
         $searchRows[$contactID]['type'] = CRM_Contact_BAO_Contact_Utils::getImage($result->contact_sub_type ?
           $result->contact_sub_type : $result->contact_type
         );

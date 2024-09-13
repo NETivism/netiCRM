@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Controller.php';
+
 class CRM_Event_Import_Controller extends CRM_Core_Controller {
 
   /**
@@ -47,7 +47,7 @@ class CRM_Event_Import_Controller extends CRM_Core_Controller {
       set_time_limit(0);
     }
 
-    require_once 'CRM/Event/Import/StateMachine.php';
+
     $this->_stateMachine = new CRM_Event_Import_StateMachine($this, $action);
 
     // create and instantiate the pages

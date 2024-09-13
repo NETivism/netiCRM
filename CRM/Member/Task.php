@@ -100,7 +100,7 @@ class CRM_Member_Task {
         unset(self::$_tasks[1]);
       }
     }
-    require_once 'CRM/Utils/Hook.php';
+
     CRM_Utils_Hook::searchTasks('membership', self::$_tasks);
     asort(self::$_tasks);
     return self::$_tasks;

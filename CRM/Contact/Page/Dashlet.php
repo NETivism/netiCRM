@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Page.php';
+
 
 /**
  * CiviCRM Dashlet
@@ -53,7 +53,7 @@ class CRM_Contact_Page_Dashlet extends CRM_Core_Page {
     $this->assign('admin', CRM_Core_Permission::check('administer CiviCRM'));
 
     // get all dashlets
-    require_once 'CRM/Core/BAO/Dashboard.php';
+
     $allDashlets = CRM_Core_BAO_Dashboard::getDashlets(FALSE);
 
     // get dashlets for logged in contact

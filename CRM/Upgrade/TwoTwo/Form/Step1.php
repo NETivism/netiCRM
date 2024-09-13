@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Upgrade/Form.php';
+
 class CRM_Upgrade_TwoTwo_Form_Step1 extends CRM_Upgrade_Form {
   function verifyPreDBState(&$errorMessage) {
     // check if log file is writable

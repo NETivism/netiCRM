@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Report/Form.php';
-require_once 'CRM/Contribute/PseudoConstant.php';
+
+
 class CRM_Report_Form_Contribute_Bookkeeping extends CRM_Report_Form {
   protected $_addressField = FALSE;
 

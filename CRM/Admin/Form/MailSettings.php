@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Admin/Form.php';
-require_once 'CRM/Core/BAO/MailSettings.php';
+
+
 
 /**
  * This class handles mail account settings.

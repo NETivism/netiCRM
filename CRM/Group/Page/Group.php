@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Page/Basic.php';
+
 class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
 
   /**
@@ -216,7 +216,7 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
    * @access public
    */
   function browse($action = NULL) {
-    require_once 'CRM/Contact/BAO/GroupNesting.php';
+
     $this->_sortByCharacter = CRM_Utils_Request::retrieve('sortByCharacter',
       'String',
       $this
@@ -288,7 +288,7 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
       $groupPermissions[] = CRM_Core_Permission::DELETE;
     }
 
-    require_once 'CRM/Core/OptionGroup.php';
+
     $links = &$this->links();
     $allTypes = CRM_Core_OptionGroup::values('group_type');
     $smartMarketingTypes = array();
@@ -489,7 +489,7 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
   }
 
   function pager($whereClause, $whereParams) {
-    require_once 'CRM/Utils/Pager.php';
+
 
     $params['status'] = ts('Group %%StatusMessage%%');
     $params['csvString'] = NULL;
@@ -522,7 +522,7 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
   }
 
   function pagerAtoZ($whereClause, $whereParams) {
-    require_once 'CRM/Utils/PagerAToZ.php';
+
 
     $query = "
         SELECT DISTINCT UPPER(LEFT(groups.title, 1)) as sort_name

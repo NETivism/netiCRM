@@ -34,7 +34,7 @@
  *
  */
 
-require_once 'CRM/Event/Form/Registration.php';
+
 
 /**
  * This class generates form components for processing Event
@@ -62,7 +62,7 @@ class CRM_Event_Form_Registration_ParticipantConfirm extends CRM_Event_Form_Regi
     $values = array();
     $csContactID = $eventId = NULL;
     if ($this->_participantId) {
-      require_once 'CRM/Event/BAO/Participant.php';
+
       $params = array('id' => $this->_participantId);
       CRM_Core_DAO::commonRetrieve('CRM_Event_DAO_Participant', $params, $values,
         array('contact_id', 'event_id', 'status_id', 'register_date')
@@ -92,7 +92,7 @@ class CRM_Event_Form_Registration_ParticipantConfirm extends CRM_Event_Form_Regi
         }
       }
       else {
-        require_once 'CRM/Contact/BAO/Contact/Permission.php';
+
         if (CRM_Contact_BAO_Contact_Permission::validateChecksumContact($csContactId, $this)) {
           //since we have landing page so get this contact
           //id in session if user really want to walk wizard.
@@ -136,8 +136,8 @@ class CRM_Event_Form_Registration_ParticipantConfirm extends CRM_Event_Form_Regi
     if (CRM_Utils_Array::arrayKeyExists($this->_participantStatusId, CRM_Event_PseudoConstant::participantStatus(NULL, "class = 'Pending'")) && !$expired) {
       //need to confirm that though participant confirming
       //registration - but is there enough space to confirm.
-      require_once 'CRM/Event/PseudoConstant.php';
-      require_once 'CRM/Event/BAO/Participant.php';
+
+
       $params = array( 1 => array($this->_participantId, 'Positive'));
       $isTest = CRM_Core_DAO::singleValueQuery("SELECT is_test FROM civicrm_participant WHERE id = %1", $params);
       if ($isTest == 1) {
@@ -190,7 +190,7 @@ class CRM_Event_Form_Registration_ParticipantConfirm extends CRM_Event_Form_Regi
     $this->assign('isShowLocation', CRM_Utils_Array::value('is_show_location', $values['event']));
 
     $params = array('entity_id' => $this->_eventId, 'entity_table' => 'civicrm_event');
-    require_once 'CRM/Core/BAO/Location.php';
+
     $values['location'] = CRM_Core_BAO_Location::getValues($params, TRUE);
 
     //To show the event location on maps directly on event info page
@@ -232,8 +232,8 @@ class CRM_Event_Form_Registration_ParticipantConfirm extends CRM_Event_Form_Regi
     }
     elseif ($buttonName == '_qf_ParticipantConfirm_submit') {
       //need to registration status to 'cancelled'.
-      require_once 'CRM/Event/PseudoConstant.php';
-      require_once 'CRM/Event/BAO/Participant.php';
+
+
       $cancelledId = array_search('Cancelled', CRM_Event_PseudoConstant::participantStatus(NULL, "class = 'Negative'"));
       $additionalParticipantIds = CRM_Event_BAO_Participant::getAdditionalParticipantIds($participantId);
 

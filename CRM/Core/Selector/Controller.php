@@ -40,11 +40,11 @@
  *
  */
 
-require_once 'CRM/Utils/Pager.php';
-require_once 'CRM/Utils/PagerAToZ.php';
-require_once 'CRM/Utils/Sort.php';
-require_once 'CRM/Core/Report/Excel.php';
-require_once 'CRM/Contact/Form/Task/Label.php';
+
+
+
+
+
 class CRM_Core_Selector_Controller {
 
   /**

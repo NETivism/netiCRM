@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Page.php';
+
 class CRM_Contact_Page_View_Relationship extends CRM_Core_Page {
 
   /**
@@ -62,7 +62,7 @@ class CRM_Contact_Page_View_Relationship extends CRM_Core_Page {
    * @access public
    */
   function view() {
-    require_once 'CRM/Core/DAO.php';
+
     $viewRelationship = CRM_Contact_BAO_Relationship::getRelationship($this->_contactId, NULL, NULL, NULL, $this->_id);
     //To check whether selected contact is a contact_id_a in
     //relationship type 'a_b' in relationship table, if yes then
@@ -98,13 +98,13 @@ class CRM_Contact_Page_View_Relationship extends CRM_Core_Page {
 
     $rType = CRM_Utils_Array::value('rtype', $viewRelationship[$this->_id]);
     // add viewed contribution to recent items list
-    require_once 'CRM/Utils/Recent.php';
+
     $url = CRM_Utils_System::url('civicrm/contact/view/rel',
       "action=view&reset=1&id={$viewRelationship[$this->_id]['id']}&cid={$this->_contactId}&context=home"
     );
 
-    require_once 'CRM/Core/Session.php';
-    require_once 'CRM/Contact/BAO/Contact/Permission.php';
+
+
 
     $session = CRM_Core_Session::singleton();
     $recentOther = array();
@@ -200,7 +200,7 @@ class CRM_Contact_Page_View_Relationship extends CRM_Core_Page {
       )) {
       if ($this->_caseId) {
         //create an activity for case role removal.CRM-4480
-        require_once "CRM/Case/BAO/Case.php";
+
         CRM_Case_BAO_Case::createCaseRoleActivity($this->_caseId, $this->_id);
         CRM_Core_Session::setStatus(ts('Case Role has been deleted successfully.'), FALSE);
       }
@@ -226,7 +226,7 @@ class CRM_Contact_Page_View_Relationship extends CRM_Core_Page {
     $this->assign('displayName', $displayName);
 
     // check logged in url permission
-    require_once 'CRM/Contact/Page/View.php';
+
     CRM_Contact_Page_View::checkUserPermission($this);
 
     // set page title

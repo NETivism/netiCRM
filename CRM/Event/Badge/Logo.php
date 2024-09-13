@@ -1,6 +1,6 @@
 <?php
-require_once 'CRM/Event/Badge.php';
-require_once 'CRM/Utils/Date.php';
+
+
 class CRM_Event_Badge_Logo extends CRM_Event_Badge {
   function __construct() {
     parent::__construct();

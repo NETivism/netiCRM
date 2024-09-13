@@ -33,9 +33,9 @@
  *
  */
 
-require_once 'CRM/Case/BAO/Case.php';
-require_once 'CRM/Case/Selector/Search.php';
-require_once 'CRM/Core/Selector/Controller.php';
+
+
+
 
 /**
  * This file is for Case search
@@ -145,7 +145,7 @@ class CRM_Case_Form_Search extends CRM_Core_Form {
     }
 
     //validate case configuration.
-    require_once 'CRM/Case/BAO/Case.php';
+
     $configured = CRM_Case_BAO_Case::isCaseConfigured();
     $this->assign('notConfigured', !$configured['configured']);
     if (!$configured['configured']) {
@@ -201,7 +201,7 @@ class CRM_Case_Form_Search extends CRM_Core_Form {
       );
     }
 
-    require_once 'CRM/Contact/BAO/Query.php';
+
 
     $this->_queryParams = &CRM_Contact_BAO_Query::convertFormValues($this->_formValues);
     $selector = new CRM_Case_Selector_Search($this->_queryParams,
@@ -244,7 +244,7 @@ class CRM_Case_Form_Search extends CRM_Core_Form {
   function buildQuickForm() {
     $this->addElement('text', 'sort_name', ts('Client Name or Email'), CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Contact', 'sort_name'));
 
-    require_once 'CRM/Case/BAO/Query.php';
+
     CRM_Case_BAO_Query::buildSearchForm($this);
 
     /* 
@@ -265,10 +265,10 @@ class CRM_Case_Form_Search extends CRM_Core_Form {
 
       $total = $cancel = 0;
 
-      require_once "CRM/Core/Permission.php";
+
       $permission = CRM_Core_Permission::getPermission();
 
-      require_once 'CRM/Case/Task.php';
+
       $tasks = array('' => ts('- actions -')) + CRM_Case_Task::permissionedTaskTitles($permission);
 
       if (CRM_Utils_Array::value('case_deleted', $this->_formValues)) {
@@ -361,10 +361,10 @@ class CRM_Case_Form_Search extends CRM_Core_Form {
     if (!CRM_Utils_Array::value('case_deleted', $this->_formValues)) {
       $this->_formValues['case_deleted'] = 0;
     }
-    require_once 'CRM/Core/BAO/CustomValue.php';
+
     CRM_Core_BAO_CustomValue::fixFieldValueOfTypeMemo($this->_formValues);
 
-    require_once 'CRM/Contact/BAO/Query.php';
+
     $this->_queryParams = &CRM_Contact_BAO_Query::convertFormValues($this->_formValues);
 
     $this->set('formValues', $this->_formValues);
@@ -388,7 +388,7 @@ class CRM_Case_Form_Search extends CRM_Core_Form {
       );
     }
 
-    require_once 'CRM/Contact/BAO/Query.php';
+
     $this->_queryParams = &CRM_Contact_BAO_Query::convertFormValues($this->_formValues);
 
     $selector = new CRM_Case_Selector_Search($this->_queryParams,
@@ -512,7 +512,7 @@ class CRM_Case_Form_Search extends CRM_Core_Form {
     if ($cid) {
       $cid = CRM_Utils_Type::escape($cid, 'Integer');
       if ($cid > 0) {
-        require_once 'CRM/Contact/BAO/Contact.php';
+
         $this->_formValues['contact_id'] = $cid;
         list($display, $image) = CRM_Contact_BAO_Contact::getDisplayAndImage($cid);
         $this->_defaults['sort_name'] = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $cid,

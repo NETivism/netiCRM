@@ -33,10 +33,10 @@
  *
  */
 
-require_once 'CRM/Member/Form.php';
-require_once 'CRM/Member/PseudoConstant.php';
-require_once "CRM/Custom/Form/CustomData.php";
-require_once "CRM/Core/BAO/CustomGroup.php";
+
+
+
+
 
 /**
  * This class generates form components for Membership Type
@@ -95,8 +95,8 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
       $processors = CRM_Core_PseudoConstant::paymentProcessor(FALSE, FALSE, "billing_mode IN ( 1, 3 ) AND payment_processor_type != 'TaiwanACH'");
 
       foreach ($processors as $ppID => $label) {
-        require_once 'CRM/Core/BAO/PaymentProcessor.php';
-        require_once 'CRM/Core/Payment.php';
+
+
         $paymentProcessor = &CRM_Core_BAO_PaymentProcessor::getPayment($ppID, $this->_mode);
         if ($paymentProcessor['payment_processor_type'] == 'PayPal' && !$paymentProcessor['user_name']) {
           continue;
@@ -131,7 +131,7 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
 
       $this->_fields = array();
 
-      require_once 'CRM/Core/Payment/Form.php';
+
       CRM_Core_Payment_Form::setCreditCardFields($this);
 
       // this required to show billing block
@@ -154,7 +154,7 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
     // CRM-4395, get the online pending contribution id.
     $this->_onlinePendingContributionId = NULL;
     if (!$this->_mode && $this->_id && ($this->_action & CRM_Core_Action::UPDATE)) {
-      require_once 'CRM/Contribute/BAO/Contribution.php';
+
       $this->_onlinePendingContributionId = CRM_Contribute_BAO_Contribution::checkOnlinePendingContribution($this->_id, 'Membership');
     }
     $this->assign('onlinePendingContributionId', $this->_onlinePendingContributionId);
@@ -219,7 +219,7 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
       $contributionParams = array('id' => $defaults['record_contribution']);
       $contributionIds = array();
 
-      require_once "CRM/Contribute/BAO/Contribution.php";
+
       CRM_Contribute_BAO_Contribution::getValues($contributionParams, $defaults, $contributionIds);
 
       list($defaults['receive_date']) = CRM_Utils_Date::setDateDefaults($defaults['receive_date']);
@@ -264,7 +264,7 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
       $fields["email-Primary"] = 1;
 
       if ($this->_contactID) {
-        require_once "CRM/Core/BAO/UFGroup.php";
+
         CRM_Core_BAO_UFGroup::setProfileDefaults($this->_contactID, $fields, $this->_defaults);
       }
 
@@ -329,7 +329,7 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
     }
 
     if ($this->_context == 'standalone') {
-      require_once 'CRM/Contact/Form/NewContact.php';
+
       CRM_Contact_Form_NewContact::buildQuickForm($this);
     }
 
@@ -408,7 +408,7 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
 
       $this->addElement('checkbox', 'record_contribution', ts('Record Membership Payment?'));
 
-      require_once 'CRM/Contribute/PseudoConstant.php';
+
       $this->add('select', 'contribution_type_id',
         ts('Contribution Type'),
         array('' => ts('- select -')) + CRM_Contribute_PseudoConstant::contributionType()
@@ -468,13 +468,13 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
     if ($this->_mode) {
 
       $this->add('select', 'payment_processor_id', ts('Payment Processor'), $this->_processors, TRUE);
-      require_once 'CRM/Core/Payment/Form.php';
+
       CRM_Core_Payment_Form::buildCreditCard($this, TRUE);
     }
 
     // Retrieve the name and email of the contact - this will be the TO for receipt email
     if ($this->_contactID) {
-      require_once 'CRM/Contact/BAO/Contact/Location.php';
+
       list($this->_memberDisplayName,
         $this->_memberEmail
       ) = CRM_Contact_BAO_Contact_Location::getEmailDetails($this->_contactID);
@@ -485,7 +485,7 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
 
     $this->addFormRule(array('CRM_Member_Form_Membership', 'formRule'), $this);
 
-    require_once "CRM/Core/BAO/Preferences.php";
+
     $mailingInfo = &CRM_Core_BAO_Preferences::mailingPreferences();
     $this->assign('outBound_option', $mailingInfo['outBound_option']);
 
@@ -516,7 +516,7 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
       CRM_Utils_Array::value('payment_processor_id', $params)
     ) {
       // make sure that credit card number and cvv are valid
-      require_once 'CRM/Utils/Rule.php';
+
       if (CRM_Utils_Array::value('credit_card_type', $params)) {
         if (CRM_Utils_Array::value('credit_card_number', $params) &&
           !CRM_Utils_Rule::creditCardNumber($params['credit_card_number'], $params['credit_card_type'])
@@ -539,7 +539,7 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
 
     if (CRM_Utils_Array::value('join_date', $params)) {
       $joinDate = CRM_Utils_Date::processDate($params['join_date']);
-      require_once 'CRM/Member/BAO/MembershipType.php';
+
       $membershipDetails = CRM_Member_BAO_MembershipType::getMembershipTypeDetails($params['membership_type_id'][1]);
 
       $startDate = NULL;
@@ -593,7 +593,7 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
 
       //CRM-3724, check for availability of valid membership status.
       if (!CRM_Utils_Array::value('is_override', $params)) {
-        require_once 'CRM/Member/BAO/MembershipStatus.php';
+
         $calcStatus = CRM_Member_BAO_MembershipStatus::getMembershipStatusByDate($startDate,
           $endDate,
           $joinDate,
@@ -654,9 +654,9 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
    * @return None
    */
   public function postProcess() {
-    require_once 'CRM/Member/BAO/Membership.php';
-    require_once 'CRM/Member/BAO/MembershipType.php';
-    require_once 'CRM/Member/BAO/MembershipStatus.php';
+
+
+
 
     if ($this->_action & CRM_Core_Action::DELETE) {
       CRM_Member_BAO_Membership::deleteRelatedMemberships($this->_id);
@@ -771,7 +771,7 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
     );
 
     // Retrieve the name and email of the current user - this will be the FROM for the receipt email
-    require_once 'CRM/Contact/BAO/Contact/Location.php';
+
     list($userName, $userEmail) = CRM_Contact_BAO_Contact_Location::getEmailDetails($ids['userId']);
 
     if (CRM_Utils_Array::value('record_contribution', $formValues)) {
@@ -807,12 +807,12 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
       $params['contribution_type_id'] = CRM_Core_DAO::getFieldValue('CRM_Member_DAO_MembershipType',
         $params['membership_type_id'], 'contribution_type_id'
       );
-      require_once 'CRM/Core/BAO/PaymentProcessor.php';
+
       $this->_paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($formValues['payment_processor_id'],
         $this->_mode
       );
 
-      require_once "CRM/Contact/BAO/Contact.php";
+
 
       $now = date('YmdHis');
       $fields = array();
@@ -870,7 +870,7 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
         $paymentParams['email'] = $this->_memberEmail;
       }
 
-      require_once 'CRM/Core/Payment/Form.php';
+
       CRM_Core_Payment_Form::mapParams($this->_bltID, $this->_params, $paymentParams, TRUE);
 
       $payment = &CRM_Core_Payment::singleton($this->_mode, $this->_paymentProcessor, $this);
@@ -933,7 +933,7 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
       if ($this->_onlinePendingContributionId && CRM_Utils_Array::value('record_contribution', $formValues)) {
 
         // update membership as well as contribution object, CRM-4395
-        require_once 'CRM/Contribute/Form/Contribution.php';
+
         $params['contribution_id'] = $this->_onlinePendingContributionId;
         $params['componentId'] = $params['id'];
         $params['componentName'] = 'contribute';
@@ -949,7 +949,7 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
           //display end date w/ status message.
           $endDate = $membership->end_date;
 
-          require_once 'CRM/Member/PseudoConstant.php';
+
           if (!in_array($membership->status_id, array(array_search('Cancelled', $membershipStatuses),
                 array_search('Expired', $membershipStatuses),
               ))) {
@@ -989,7 +989,7 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
       }
 
       // retrieve custom data
-      require_once "CRM/Core/BAO/UFGroup.php";
+
       $customFields = $customValues = array();
       foreach ($this->_groupTree as $groupID => $group) {
         if ($groupID == 'info') {
@@ -1034,7 +1034,7 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
             $addressFields[$n] = $this->_params['billing_' . $part];
           }
         }
-        require_once 'CRM/Utils/Address.php';
+
         $this->assign('address', CRM_Utils_Address::format($addressFields));
 
         $date = CRM_Utils_Date::format($this->_params['credit_card_exp_date']);
@@ -1096,7 +1096,7 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
       }
     }
     elseif (($this->_action & CRM_Core_Action::ADD)) {
-      require_once 'CRM/Core/DAO.php';
+
       $memType = CRM_Core_DAO::getFieldValue('CRM_Member_DAO_MembershipType',
         $params['membership_type_id']
       );

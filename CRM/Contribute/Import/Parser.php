@@ -33,10 +33,10 @@
  *
  */
 
-require_once 'CRM/Utils/String.php';
-require_once 'CRM/Utils/Type.php';
 
-require_once 'CRM/Contribute/Import/Field.php';
+
+
+
 
 abstract class CRM_Contribute_Import_Parser {
   CONST MAX_ERRORS = 250, MAX_WARNINGS = 25;
@@ -981,7 +981,7 @@ abstract class CRM_Contribute_Import_Parser {
       case CRM_Contribute_Import_Parser::CONFLICT:
       case CRM_Contribute_Import_Parser::DUPLICATE:
         //here constants get collides.
-        require_once 'CRM/Import/Parser.php';
+
         if ($type == CRM_Contribute_Import_Parser::ERROR) {
           $type = CRM_Import_Parser::ERROR;
         }

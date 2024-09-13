@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Contribute/Form/ContributionBase.php';
+
 
 /**
  * form for thank-you / success page - 3rd step of online contribution process
@@ -188,7 +188,7 @@ class CRM_Contribute_Form_Contribution_ThankYou extends CRM_Contribute_Form_Cont
     }
 
     if ($productID) {
-      require_once 'CRM/Contribute/BAO/Premium.php';
+
       CRM_Contribute_BAO_Premium::buildPremiumBlock($this, $this->_id, FALSE, $productID, $option);
     }
 
@@ -205,7 +205,7 @@ class CRM_Contribute_Form_Contribution_ThankYou extends CRM_Contribute_Form_Cont
       $this->assign('honor_block_is_active', $honor_block_is_active);
       $this->assign('honor_block_title', CRM_Utils_Array::value('honor_block_title', $this->_values));
 
-      require_once "CRM/Core/PseudoConstant.php";
+
       $prefix = CRM_Core_PseudoConstant::individualPrefix();
       $honor = CRM_Core_PseudoConstant::honor();
       $this->assign('honor_type', $honor[$params["honor_type_id"]]);
@@ -253,7 +253,7 @@ class CRM_Contribute_Form_Contribution_ThankYou extends CRM_Contribute_Form_Cont
     $defaults = array();
     $options = array();
     $fields = array();
-    require_once "CRM/Core/BAO/CustomGroup.php";
+
     $removeCustomFieldTypes = array('Contribution');
     foreach ($this->_fields as $name => $dontCare) {
       $fields[$name] = 1;
@@ -300,7 +300,7 @@ class CRM_Contribute_Form_Contribution_ThankYou extends CRM_Contribute_Form_Cont
 
     $this->_submitValues = array_merge($this->_submitValues, $defaults);
     $this->setDefaults($defaults);
-    require_once 'CRM/Friend/BAO/Friend.php';
+
     $values['entity_id'] = $this->_id;
     $values['entity_table'] = 'civicrm_contribution_page';
 

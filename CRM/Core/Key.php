@@ -82,7 +82,7 @@ class CRM_Core_Key {
    * @access private
    */
   static function privateKey() {
-    require_once('random_compat/lib/random.php');
+
     if (!self::$_key) {
       $session = CRM_Core_Session::singleton();
       self::$_key = $session->get('qfPrivateKey');

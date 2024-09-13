@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
-require_once 'CRM/Contribute/Import/Parser/Contribution.php';
+
+
 
 /**
  * This class gets the name of the file to upload

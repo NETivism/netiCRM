@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Page.php';
+
 
 /**
  * Page for displaying list of Payment-Instrument
@@ -57,7 +57,7 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
     if(empty($this->is_custom_date)){
       // Check for admin permission to see if we should include the Manage Contribution Pages action link
       $isAdmin = 0;
-      require_once 'CRM/Core/Permission.php';
+
       if (CRM_Core_Permission::check('administer CiviCRM')) {
         $isAdmin = 1;
       }

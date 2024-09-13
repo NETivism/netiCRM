@@ -92,7 +92,7 @@
  **/
 
 
-require_once 'CRM/Core/Payment.php';
+
 class CRM_Core_Payment_eWAY extends CRM_Core_Payment {
   # (not used, implicit in the API, might need to convert?)
   CONST CHARSET = 'UTF-8';
@@ -115,8 +115,8 @@ class CRM_Core_Payment_eWAY extends CRM_Core_Payment {
    **********************************************************/
   function __construct($mode, &$paymentProcessor) {
     // require Standaard eWAY API libraries
-    require_once 'eWAY/eWAY_GatewayRequest.php';
-    require_once 'eWAY/eWAY_GatewayResponse.php';
+
+
 
     // live or test
     $this->_mode = $mode;
@@ -423,7 +423,7 @@ class CRM_Core_Payment_eWAY extends CRM_Core_Payment {
    * @return bool                 True if ID exists, else false
    */
   function _checkDupe($invoiceId) {
-    require_once 'CRM/Contribute/DAO/Contribution.php';
+
     $contribution = new CRM_Contribute_DAO_Contribution();
     $contribution->invoice_id = $invoiceId;
     return $contribution->find();
@@ -501,8 +501,8 @@ class CRM_Core_Payment_eWAY extends CRM_Core_Payment {
     // Initialization call is required to use CiviCRM APIs.
     civicrm_initialize(TRUE);
 
-    require_once 'CRM/Utils/Mail.php';
-    require_once 'CRM/Core/BAO/Domain.php';
+
+
 
     list($fromName, $fromEmail) = CRM_Core_BAO_Domain::getNameAndEmail();
     $from = "$fromName <$fromEmail>";

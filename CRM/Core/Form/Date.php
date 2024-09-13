@@ -51,7 +51,7 @@ Class CRM_Core_Form_Date {
 
     $dateOptions = array();
 
-    require_once "CRM/Utils/System.php";
+
     if (CRM_Utils_System::getClassName($form) == 'CRM_Activity_Import_Form_UploadFile') {
       $dateText = ts('yyyy-mm-dd OR yyyy-mm-dd HH:mm OR yyyymmdd OR yyyymmdd HH:mm (1998-12-25 OR 1998-12-25 15:33 OR 19981225 OR 19981225 10:30 OR ( 2008-9-1 OR 2008-9-1 15:33 OR 20080901 15:33)');
     }
@@ -115,7 +115,7 @@ Class CRM_Core_Form_Date {
       'ending.week' => ts('From 1 Week Ago'),
     );
     if ($addReportFilters) {
-      require_once 'CRM/Report/Form.php';
+
       $selector += CRM_Report_Form::getOperationPair(CRM_Report_Form::OP_DATE);
     }
     $config = CRM_Core_Config::singleton();

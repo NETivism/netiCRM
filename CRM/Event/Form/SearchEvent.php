@@ -33,14 +33,14 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
-require_once 'CRM/Core/OptionGroup.php';
+
+
 class CRM_Event_Form_SearchEvent extends CRM_Core_Form {
   function setDefaultValues() {
     $defaults = array();
     $defaults['eventsByDates'] = 0;
 
-    require_once 'CRM/Core/ShowHideBlocks.php';
+
     $this->_showHide = new CRM_Core_ShowHideBlocks();
     if (!CRM_Utils_Array::value('eventsByDates', $defaults)) {
       $this->_showHide->addHide('id_fromToDates');

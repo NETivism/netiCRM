@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Contribute/BAO/PCP.php';
-require_once 'CRM/Core/Page/Basic.php';
+
+
 
 /**
  * Page for displaying list of contribution types
@@ -241,7 +241,7 @@ class CRM_Contribute_Page_PCP extends CRM_Core_Page_Basic {
 
         CRM_Core_DAO::storeValues($dao, $pcpSummary[$dao->id]);
 
-        require_once 'CRM/Contact/BAO/Contact.php';
+
         $contact = CRM_Contact_BAO_Contact::getDisplayAndImage($dao->contact_id);
 
         $class = '';

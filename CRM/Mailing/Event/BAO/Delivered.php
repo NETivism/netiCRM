@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Mailing/Event/DAO/Delivered.php';
+
 class CRM_Mailing_Event_BAO_Delivered extends CRM_Mailing_Event_DAO_Delivered {
 
   /**

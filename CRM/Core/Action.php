@@ -36,7 +36,7 @@
  *
  */
 
-require_once 'CRM/Utils/Array.php';
+
 class CRM_Core_Action {
 
   /**
@@ -282,7 +282,7 @@ class CRM_Core_Action {
       }
     }
 
-    require_once 'CRM/Utils/String.php';
+
 
     $result = '';
     $mainLinks = $url;

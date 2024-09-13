@@ -189,7 +189,7 @@ class CRM_Utils_System {
   static function updateCategories() {
     $config = CRM_Core_Config::singleton();
     if ($config->userFramework == 'Drupal') {
-      require_once 'CRM/Utils/System/Drupal.php';
+
       CRM_Utils_System_Drupal::updateCategories();
     }
   }
@@ -799,7 +799,7 @@ class CRM_Utils_System {
 
   static function checkURL($url, $addCookie = FALSE) {
     CRM_Core_Error::ignoreException();
-    require_once 'HTTP/Request.php';
+
     $params = array('method' => 'GET');
     $request = new HTTP_Request($url, $params);
     if ($addCookie) {
@@ -1151,7 +1151,7 @@ class CRM_Utils_System {
    *  @static  */
   static function getServerResponse($url, $addCookie = TRUE) {
     CRM_Core_Error::ignoreException();
-    require_once 'HTTP/Request.php';
+
     $request = new HTTP_Request($url);
 
     if ($addCookie) {
@@ -1177,7 +1177,7 @@ class CRM_Utils_System {
   }
 
   static function isDBVersionValid(&$errorMessage) {
-    require_once 'CRM/Core/BAO/Domain.php';
+
     $dbVersion = CRM_Core_BAO_Domain::version();
 
     if (!$dbVersion) {

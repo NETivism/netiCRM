@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Profile/Form.php';
+
 
 /**
  * This class generates form components for custom data
@@ -98,10 +98,10 @@ class CRM_Profile_Form_Edit extends CRM_Profile_Form {
       $userID = $session->get('userID');
       $id = CRM_Utils_Request::retrieve('id', 'Positive', $this, FALSE, $userID);
 
-      require_once 'CRM/Contact/BAO/Contact/Utils.php';
+
       if ($id != $userID) {
         // do not allow edit for anon users in joomla frontend, CRM-4668, unless u have checksum CRM-5228
-        require_once 'CRM/Contact/BAO/Contact/Permission.php';
+
         $config = CRM_Core_Config::singleton();
         if ($config->userFrameworkFrontend) {
           CRM_Contact_BAO_Contact_Permission::validateOnlyChecksum($id, $this);

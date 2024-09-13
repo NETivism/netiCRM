@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
-require_once 'CRM/Friend/BAO/Friend.php';
+
+
 
 /**
  * This class generates form components for Tell A Friend Form For End User
@@ -139,7 +139,7 @@ class CRM_Friend_Form extends CRM_Core_Form {
     $this->assign('intro', CRM_Utils_Array::value('intro', $defaults));
     $this->assign('message', CRM_Utils_Array::value('suggested_message', $defaults));
 
-    require_once "CRM/Contact/BAO/Contact.php";
+
     list($fromName, $fromEmail) = CRM_Contact_BAO_Contact::getContactDetails($this->_contactID);
 
     $defaults['from_name'] = $fromName;
@@ -272,7 +272,7 @@ class CRM_Friend_Form extends CRM_Core_Form {
     }
     elseif ($this->_entityTable == 'civicrm_contribution_page') {
       // If this is tell a friend after contributing, give donor link to create their own fundraising page
-      require_once 'CRM/Contribute/BAO/PCP.php';
+
       if ($linkText = CRM_Contribute_BAO_PCP::getPcpBlockStatus($defaults['entity_id'])) {
 
         $linkTextUrl = CRM_Utils_System::url('civicrm/contribute/campaign',

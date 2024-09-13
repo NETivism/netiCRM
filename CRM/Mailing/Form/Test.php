@@ -46,7 +46,7 @@ class CRM_Mailing_Form_Test extends CRM_Core_Form {
    */
   public function preProcess() {
     //when user come from search context.
-    require_once 'CRM/Contact/Form/Search.php';
+
     $this->_searchBasedMailing = CRM_Contact_Form_Search::isSearchContext($this->get('context'));
   }
 
@@ -77,7 +77,7 @@ class CRM_Mailing_Form_Test extends CRM_Core_Form {
 
     $this->add('submit', 'sendtest', ts('Send a Test Mailing'));
     $name = ts('Next >>');
-    require_once 'CRM/Mailing/Info.php';
+
     if (CRM_Mailing_Info::workflowEnabled()) {
       if (!CRM_Core_Permission::check('schedule mailings') &&
         CRM_Core_Permission::check('create mailings')
@@ -142,7 +142,7 @@ class CRM_Mailing_Form_Test extends CRM_Core_Form {
       $preview['html_link'] = CRM_Utils_System::url('civicrm/mailing/preview', "type=html&qfKey=$qfKey");
     }
 
-    require_once 'CRM/Core/BAO/File.php';
+
     $preview['attachment'] = CRM_Core_BAO_File::attachmentInfo('civicrm_mailing',
       $mailingID
     );
@@ -155,7 +155,7 @@ class CRM_Mailing_Form_Test extends CRM_Core_Form {
     }
     $session->getVars($options, $prefix);
 
-    require_once 'CRM/Mailing/BAO/Mailing.php';
+
     $mailing = new CRM_Mailing_BAO_Mailing();
     $mailing->id = $options['mailing_id'];
     $mailing->find(TRUE);
@@ -165,7 +165,7 @@ class CRM_Mailing_Form_Test extends CRM_Core_Form {
     $fromEmail = $mailing->from_email;
     $replyToEmail = $mailing->replyto_email;
 
-    require_once 'CRM/Core/BAO/File.php';
+
     $attachments = &CRM_Core_BAO_File::getEntityFile('civicrm_mailing',
       $mailing->id
     );
@@ -288,7 +288,7 @@ class CRM_Mailing_Form_Test extends CRM_Core_Form {
       }
     }
 
-    require_once 'CRM/Mailing/Info.php';
+
     if (CRM_Mailing_Info::workflowEnabled()) {
       if (!CRM_Core_Permission::check('schedule mailings') &&
         CRM_Core_Permission::check('create mailings')
@@ -306,7 +306,7 @@ class CRM_Mailing_Form_Test extends CRM_Core_Form {
       return $error;
     }
 
-    require_once 'CRM/Mailing/BAO/Job.php';
+
     $job = new CRM_Mailing_BAO_Job();
     $job->mailing_id = $self->get('mailing_id');
     $job->is_test = TRUE;
@@ -349,7 +349,7 @@ class CRM_Mailing_Form_Test extends CRM_Core_Form {
               ),
             ),
           );
-          require_once 'CRM/Contact/BAO/Contact.php';
+
           $contact = CRM_Contact_BAO_Contact::create($params);
           $emailId = $contact->email[0]->id;
           $contactId = $contact->id;
@@ -360,7 +360,7 @@ class CRM_Mailing_Form_Test extends CRM_Core_Form {
           'email_id' => $emailId,
           'contact_id' => $contactId,
         );
-        require_once 'CRM/Mailing/Event/BAO/Queue.php';
+
         CRM_Mailing_Event_BAO_Queue::create($params);
       }
     }
@@ -370,7 +370,7 @@ class CRM_Mailing_Form_Test extends CRM_Core_Form {
     CRM_Mailing_BAO_Job::runJobs($testParams);
 
     if (CRM_Utils_Array::value('sendtest', $testParams)) {
-      require_once 'CRM/Mailing/Info.php';
+
       $status = 'Your test message has been sent.';
       if (CRM_Mailing_Info::workflowEnabled()) {
         if ((CRM_Core_Permission::check('schedule mailings') &&

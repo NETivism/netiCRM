@@ -65,7 +65,7 @@ class CRM_Utils_Geocode_Google {
    * @static
    */
   static function format(&$values, $stateName = FALSE) {
-    require_once 'CRM/Utils/Array.php';
+
     // we need a valid country, else we ignore
     if (!CRM_Utils_Array::value('country', $values)) {
       return FALSE;
@@ -126,7 +126,7 @@ class CRM_Utils_Geocode_Google {
       $query = 'https://' . self::$_server . self::$_uri . $add;
     }
 
-    require_once 'HTTP/Request.php';
+
     $request = new HTTP_Request($query);
     $request->sendRequest();
     $string = $request->getResponseBody();

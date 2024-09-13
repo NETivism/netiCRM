@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Contact/Form/Search/Interface.php';
+
 class CRM_Contact_Form_Search_Custom_ContributionAggregate implements CRM_Contact_Form_Search_Interface {
 
   protected $_formValues; function __construct(&$formValues) {

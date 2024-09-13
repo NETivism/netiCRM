@@ -37,8 +37,8 @@
  *
  */
 
-require_once 'CRM/Core/Controller.php';
-require_once 'CRM/Core/StateMachine.php';
+
+
 class CRM_Core_Controller_Simple extends CRM_Core_Controller {
 
   /**
@@ -93,7 +93,7 @@ class CRM_Core_Controller_Simple extends CRM_Core_Controller {
     else {
       // always allow a single upload file with same name
       if ($attachUpload) {
-        require_once 'CRM/Core/BAO/File.php';
+
         $this->addActions($config->uploadDir,
           CRM_Core_BAO_File::uploadNames()
         );

@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Contact/Form/Search/Interface.php';
+
 class CRM_Contact_Form_Search_Custom_ContribSYBNT extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
 
   protected $_formValues;

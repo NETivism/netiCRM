@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Contribute/Form/ContributionPage.php';
+
 
 /**
  * This class is to build the form for Deleting Group
@@ -70,7 +70,7 @@ class CRM_Contribute_Form_ContributionPage_Delete extends CRM_Contribute_Form_Co
        return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
     }
 
-    require_once 'CRM/Contribute/DAO/Contribution.php';
+
     $dao = new CRM_Contribute_DAO_Contribution();
     $dao->contribution_page_id = $this->_id;
 
@@ -114,11 +114,11 @@ class CRM_Contribute_Form_ContributionPage_Delete extends CRM_Contribute_Form_Co
    * @access public
    */
   public function postProcess() {
-    require_once 'CRM/Core/Transaction.php';
+
     $transaction = new CRM_Core_Transaction();
 
     // first delete the join entries associated with this contribution page
-    require_once 'CRM/Core/DAO/UFJoin.php';
+
     $dao = new CRM_Core_DAO_UFJoin();
 
     $params = array('entity_table' => 'civicrm_contribution_page',
@@ -127,34 +127,34 @@ class CRM_Contribute_Form_ContributionPage_Delete extends CRM_Contribute_Form_Co
     $dao->copyValues($params);
     $dao->delete();
 
-    require_once 'CRM/Core/OptionGroup.php';
+
     $groupName = "civicrm_contribution_page.amount.{$this->_id}";
     CRM_Core_OptionGroup::deleteAssoc($groupName);
 
     //next delete the membership block fields
-    require_once 'CRM/Member/DAO/MembershipBlock.php';
+
     $dao = new CRM_Member_DAO_MembershipBlock();
     $dao->entity_table = 'civicrm_contribution_page';
     $dao->entity_id = $this->_id;
     $dao->delete();
 
     //next delete the pcp block fields
-    require_once 'CRM/Contribute/DAO/PCPBlock.php';
+
     $dao = new CRM_Contribute_DAO_PCPBlock();
     $dao->entity_table = 'civicrm_contribution_page';
     $dao->entity_id = $this->_id;
     $dao->delete();
 
     // need to delete premiums. CRM-4586
-    require_once 'CRM/Contribute/BAO/Premium.php';
+
     CRM_Contribute_BAO_Premium::deletePremium($this->_id);
 
     // price set cleanup, CRM-5527
-    require_once 'CRM/Price/BAO/Set.php';
+
     CRM_Price_BAO_Set::removeFrom('civicrm_contribution_page', $this->_id);
 
     // finally delete the contribution page
-    require_once 'CRM/Contribute/DAO/ContributionPage.php';
+
     $dao = new CRM_Contribute_DAO_ContributionPage();
     $dao->id = $this->_id;
     $dao->delete();

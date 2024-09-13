@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Admin/Form/Preferences.php';
+
 
 /**
  * This class generates form components for Address Section

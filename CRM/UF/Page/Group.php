@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Page.php';
+
 
 /**
  * Create a page for displaying UF Groups.
@@ -168,11 +168,11 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
     else {
       // if action is enable or disable do the needful.
       if ($action & CRM_Core_Action::ENABLE) {
-        require_once "CRM/Core/BAO/UFGroup.php";
+
         CRM_Core_BAO_UFGroup::setIsActive($id, 1);
 
         // update cms integration with registration / my account
-        require_once 'CRM/Utils/System.php';
+
         CRM_Utils_System::updateCategories();
       }
       elseif ($action & CRM_Core_Action::PROFILE) {
@@ -203,7 +203,7 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
       $this, TRUE, 0, 'GET'
     );
 
-    require_once 'CRM/Core/BAO/UFGroup.php';
+
     $copy = CRM_Core_BAO_UFGroup::copy($gid);
 
     CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin/uf/group/update', 'reset=1&action=update&id=' . $copy->id));
@@ -277,13 +277,13 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
   function browse($action = NULL) {
     $ufGroup = array();
     $allUFGroups = array();
-    require_once 'CRM/Core/BAO/UFGroup.php';
+
     $allUFGroups = CRM_Core_BAO_UFGroup::getModuleUFGroup();
     if (empty($allUFGroups)) {
       return;
     }
 
-    require_once 'CRM/Utils/Hook.php';
+
     $ufGroups = CRM_Core_PseudoConstant::ufGroup();
     CRM_Utils_Hook::aclGroup(CRM_Core_Permission::ADMIN, NULL, 'civicrm_uf_group', $ufGroups, $allUFGroups);
     $restrictType = array(

@@ -42,7 +42,7 @@ class CRM_Admin_Page_AJAX {
    * Function to build menu tree
    */
   static function getNavigationList() {
-    require_once 'CRM/Core/BAO/Navigation.php';
+
     echo CRM_Core_BAO_Navigation::buildNavigation(TRUE);
     CRM_Utils_System::civiExit();
   }
@@ -51,7 +51,7 @@ class CRM_Admin_Page_AJAX {
    * Function to process drag/move action for menu tree
    */
   static function menuTree() {
-    require_once 'CRM/Core/BAO/Navigation.php';
+
     echo CRM_Core_BAO_Navigation::processNavigation($_GET);
     CRM_Utils_System::civiExit();
   }
@@ -303,7 +303,7 @@ class CRM_Admin_Page_AJAX {
 
     $tagID = $_POST['tagID'];
 
-    require_once 'CRM/Core/BAO/EntityTag.php';
+
     $tagInfo = array();
     // if action is select
     if ($action == 'select') {
@@ -315,7 +315,7 @@ class CRM_Admin_Page_AJAX {
           'parent_id' => $parentId,
         );
 
-        require_once 'CRM/Core/BAO/Tag.php';
+
         $tagObject = CRM_Core_BAO_Tag::add($params, CRM_Core_DAO::$_nullArray);
 
         $tagInfo = array('name' => $tagID,

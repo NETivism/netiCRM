@@ -35,7 +35,7 @@
  *
  */
 
-require_once 'CRM/Core/Payment.php';
+
 class CRM_Core_Payment_IATS extends CRM_Core_Payment {
   # (not used, implicit in the API, might need to convert?)
   CONST CHARSET = 'UFT-8';

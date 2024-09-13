@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Report/Form.php';
+
 class CRM_Report_Form_Walklist extends CRM_Report_Form {
   protected $_addressField = FALSE;
 

@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Core/DAO/FinancialTrxn.php';
-require_once 'CRM/Core/DAO/EntityFinancialTrxn.php';
+
+
 class CRM_Core_BAO_FinancialTrxn extends CRM_Core_DAO_FinancialTrxn {
   function __construct() {
     parent::__construct();
@@ -53,9 +53,9 @@ class CRM_Core_BAO_FinancialTrxn extends CRM_Core_DAO_FinancialTrxn {
     $trxn = new CRM_Core_DAO_FinancialTrxn();
     $trxn->copyValues($params);
 
-    require_once 'CRM/Utils/Rule.php';
+
     if (!CRM_Utils_Rule::currencyCode($trxn->currency)) {
-      require_once 'CRM/Core/Config.php';
+
       $config = CRM_Core_Config::singleton();
       $trxn->currency = $config->defaultCurrency;
     }

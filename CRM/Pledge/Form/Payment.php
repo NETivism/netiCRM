@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
-require_once 'CRM/Contribute/PseudoConstant.php';
+
+
 
 /**
  * This class generates form components for processing a pledge payment
@@ -77,7 +77,7 @@ class CRM_Pledge_Form_Payment extends CRM_Core_Form {
     $defaults = array();
     if ($this->_id) {
       $params['id'] = $this->_id;
-      require_once 'CRM/Pledge/BAO/Payment.php';
+
       CRM_Pledge_BAO_Payment::retrieve($params, $defaults);
       list($defaults['scheduled_date']) = CRM_Utils_Date::setDateDefaults($defaults['scheduled_date']);
       if (isset($defaults['contribution_id'])) {
@@ -159,7 +159,7 @@ class CRM_Pledge_Form_Payment extends CRM_Core_Form {
     $params['id'] = $this->_id;
     $pledgeId = CRM_Core_DAO::getFieldValue('CRM_Pledge_DAO_Payment', $params['id'], 'pledge_id');
 
-    require_once 'CRM/Pledge/BAO/Payment.php';
+
     CRM_Pledge_BAO_Payment::add($params);
     $adjustTotalAmount = FALSE;
     if (CRM_Utils_Array::value('option_type', $formValues) == 2) {

@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Page.php';
+
 
 /**
  * Event Info Page - Summmary about the event
@@ -56,7 +56,7 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
     $this->_id = CRM_Utils_Request::retrieve('id', 'Positive', $this, TRUE);
     $this->track();
     $config = CRM_Core_Config::singleton();
-    require_once 'CRM/Event/BAO/Event.php';
+
     // ensure that the user has permission to see this page
     if (!CRM_Core_Permission::event(CRM_Core_Permission::VIEW,
         $this->_id
@@ -95,7 +95,7 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
     $this->assign('isShowLocation', CRM_Utils_Array::value('is_show_location', $values['event']));
 
     // show event fees.
-    require_once 'CRM/Price/BAO/Set.php';
+
     if ($this->_id && CRM_Utils_Array::value('is_monetary', $values['event'])) {
       $values['feeBlock'] = self::feeBlock($this->_id);
       if (!empty($values['feeBlock']['price_set_id'])) {
@@ -104,11 +104,11 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
     }
 
     $params = array('entity_id' => $this->_id, 'entity_table' => 'civicrm_event');
-    require_once 'CRM/Core/BAO/Location.php';
+
     $values['location'] = CRM_Core_BAO_Location::getValues($params, TRUE);
 
     //retrieve custom field information
-    require_once 'CRM/Core/BAO/CustomGroup.php';
+
     $groupTree = &CRM_Core_BAO_CustomGroup::getTree("Event", $this, $this->_id, 0, $values['event']['event_type_id']);
     CRM_Core_BAO_CustomGroup::buildCustomDataView($this, $groupTree);
     $this->assign('action', CRM_Core_Action::VIEW);
@@ -120,7 +120,7 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
       $this->assign('mapProvider', $config->mapProvider);
       $this->assign('mapKey', $config->mapAPIKey);
     }
-    require_once 'CRM/Event/BAO/Participant.php';
+
     $eventFullMessage = CRM_Event_BAO_Participant::eventFull($this->_id);
     $contactID = NULL;
     $contactID = $this->getContactID();
@@ -274,7 +274,7 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
     $userChecksum = CRM_Utils_Request::retrieve('cs', 'String', $this);
     if ($userChecksum) {
       //check for anonymous user.
-      require_once 'CRM/Contact/BAO/Contact/Utils.php';
+
       $validUser = CRM_Contact_BAO_Contact_Utils::validChecksum($tempID, $userChecksum);
       if ($validUser) {
         return $tempID;

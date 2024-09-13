@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
-require_once 'CRM/Mailing/BAO/Mailing.php';
+
+
 
 /**
  *
@@ -48,7 +48,7 @@ class CRM_Mailing_Form_Schedule extends CRM_Core_Form {
    * @access public
    */
   public function preProcess() {
-    require_once 'CRM/Mailing/Info.php';
+
     if (CRM_Mailing_Info::workflowEnabled() &&
       !CRM_Core_Permission::check('schedule mailings')
     ) {
@@ -57,7 +57,7 @@ class CRM_Mailing_Form_Schedule extends CRM_Core_Form {
     }
 
     //when user come from search context.
-    require_once 'CRM/Contact/Form/Search.php';
+
     $this->_searchBasedMailing = CRM_Contact_Form_Search::isSearchContext($this->get('context'));
 
     $this->_mailingID = $this->get('mailing_id');
@@ -187,7 +187,7 @@ class CRM_Mailing_Form_Schedule extends CRM_Core_Form {
       );
       $preview['viewURL'] = CRM_Utils_System::url('civicrm/mailing/view', "reset=1&id={$this->_mailingID}");
 
-      require_once 'CRM/Core/BAO/File.php';
+
       $preview['attachment'] = CRM_Core_BAO_File::attachmentInfo('civicrm_mailing',
         $this->_mailingID
       );

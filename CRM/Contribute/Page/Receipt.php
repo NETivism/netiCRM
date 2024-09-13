@@ -19,7 +19,7 @@ class CRM_Contribute_Page_Receipt extends CRM_Core_Page{
     }
 
     // check logged in url permission
-    require_once 'CRM/Contact/Page/View.php';
+
     CRM_Contact_Page_View::checkUserPermission($this);
 
     if ($this->_permission == CRM_Core_Permission::EDIT && !CRM_Core_Permission::check('edit contributions')) {

@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Case/Form/Task.php';
+
 
 /**
  * This class provides the functionality to restore a group of
@@ -80,7 +80,7 @@ class CRM_Case_Form_Task_Restore extends CRM_Case_Form_Task {
    */
   public function postProcess() {
     $restoredCases = 0;
-    require_once 'CRM/Case/BAO/Case.php';
+
     foreach ($this->_caseIds as $caseId) {
       if (CRM_Case_BAO_Case::restoreCase($caseId)) {
         $restoredCases++;

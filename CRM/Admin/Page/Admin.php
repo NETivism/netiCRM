@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Page.php';
+
 
 /**
  * Page for displaying Administer CiviCRM Control Panel
@@ -75,10 +75,10 @@ class CRM_Admin_Page_Admin extends CRM_Core_Page {
       $groups['CiviCampaign'] = ts('CiviCampaign');
     }
 
-    require_once 'CRM/Core/Menu.php';
+
     $values = &CRM_Core_Menu::getAdminLinks();
 
-    require_once 'CRM/Core/ShowHideBlocks.php';
+
     $this->_showHide = new CRM_Core_ShowHideBlocks();
     foreach ($groups as $group => $title) {
       $this->_showHide->addShow("id_{$group}_show");

@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Report/Form.php';
+
 class CRM_Report_Form_Activity extends CRM_Report_Form {
 
   protected $_emailField = FALSE;
@@ -371,8 +371,8 @@ class CRM_Report_Form_Activity extends CRM_Report_Form {
     //contact/assignee or target also it may be null )
 
     /*
-        require_once 'CRM/Core/Permission.php';
-        require_once 'CRM/Contact/BAO/Contact/Permission.php';
+
+
         if ( CRM_Core_Permission::check( 'view all contacts' ) ) {
             $this->_aclFrom = $this->_aclWhere = null;
             return;
@@ -410,7 +410,7 @@ class CRM_Report_Form_Activity extends CRM_Report_Form {
     $activityStatus = CRM_Core_PseudoConstant::activityStatus();
     $viewLinks = FALSE;
 
-    require_once 'CRM/Core/Permission.php';
+
     if (CRM_Core_Permission::check('access CiviCRM')) {
       $viewLinks = TRUE;
       $onHover = ts('View Contact Summary for this Contact');
@@ -436,7 +436,7 @@ class CRM_Report_Form_Activity extends CRM_Report_Form {
       ) {
         $assignee = array();
         //retrieve all contact assignees and build list with links
-        require_once 'CRM/Activity/BAO/ActivityAssignment.php';
+
         $activity_assignment_ids = CRM_Activity_BAO_ActivityAssignment::getAssigneeNames($row['civicrm_activity_id'], FALSE, TRUE);
         foreach ($activity_assignment_ids as $cid => $assignee_name) {
           if ($viewLinks) {
@@ -455,7 +455,7 @@ class CRM_Report_Form_Activity extends CRM_Report_Form {
       ) {
         $target = array();
         //retrieve all contact targets and build list with links
-        require_once 'CRM/Activity/BAO/ActivityTarget.php';
+
         $activity_target_ids = CRM_Activity_BAO_ActivityTarget::getTargetNames($row['civicrm_activity_id']);
         foreach ($activity_target_ids as $cid => $target_name) {
           if ($viewLinks) {

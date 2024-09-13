@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Event/Form/Task.php';
+
 
 /**
  * This class provides the functionality for cancel registration for event participations
@@ -92,7 +92,7 @@ class CRM_Event_Form_Task_Cancel extends CRM_Event_Form_Task {
 
       // Cancelled status id = 4
       $value['status_id'] = 4;
-      require_once 'CRM/Event/BAO/Participant.php';
+
       CRM_Event_BAO_Participant::create($value);
     }
   }

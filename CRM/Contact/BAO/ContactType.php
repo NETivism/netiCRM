@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Contact/DAO/ContactType.php';
-require_once 'CRM/Core/BAO/Navigation.php';
+
+
 class CRM_Contact_BAO_ContactType extends CRM_Contact_DAO_ContactType {
 
   /**
@@ -497,7 +497,7 @@ WHERE  subtype.name IN ('" . CRM_Utils_Array::implode("','", $subType) . "' )";
    *
    */
   static function getCreateNewList() {
-    require_once 'CRM/Core/DAO.php';
+
     $shortCuts = array();
     $contactTypes = self::getSelectElements();
     foreach ($contactTypes as $key => $value) {
@@ -534,8 +534,8 @@ WHERE  subtype.name IN ('" . CRM_Utils_Array::implode("','", $subType) . "' )";
       return FALSE;
     }
 
-    require_once 'CRM/Core/DAO/CustomGroup.php';
-    require_once 'CRM/Contact/DAO/Contact.php';
+
+
     $params = array('id' => $contactTypeId);
     self::retrieve($params, $typeInfo);
     $name = $typeInfo['name'];

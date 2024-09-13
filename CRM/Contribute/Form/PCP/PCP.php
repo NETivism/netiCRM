@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
+
 
 /**
  * Administer Personal Campaign Pages - Search form
@@ -155,7 +155,7 @@ class CRM_Contribute_Form_PCP_PCP extends CRM_Core_Form {
       );
     }
     else {
-      require_once 'CRM/Contribute/PseudoConstant.php';
+
       $status = array_merge(
         array('' => ts('- select -')),
         CRM_Contribute_PseudoConstant::pcpstatus()
@@ -215,7 +215,7 @@ class CRM_Contribute_Form_PCP_PCP extends CRM_Core_Form {
    */
   public function postProcess() {
     if ($this->_action & CRM_Core_Action::DELETE) {
-      require_once 'CRM/Contribute/BAO/PCP.php';
+
       CRM_Contribute_BAO_PCP::deleteById($this->_id);
       CRM_Core_Session::setStatus(ts("The Campaign Page '%1' has been deleted.", array(1 => $this->_title)));
     }

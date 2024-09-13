@@ -36,8 +36,8 @@
  *
  */
 
-require_once 'CRM/Core/Error.php';
-require_once 'CRM/Core/I18n.php';
+
+
 class CRM_Core_Base {
 
   /**

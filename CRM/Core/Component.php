@@ -78,7 +78,7 @@ class CRM_Core_Component {
     if (!$_cache || $force) {
       $_cache = array();
 
-      require_once 'CRM/Core/DAO/Component.php';
+
       $cr = new CRM_Core_DAO_Component();
       $cr->find(FALSE);
       while ($cr->fetch()) {

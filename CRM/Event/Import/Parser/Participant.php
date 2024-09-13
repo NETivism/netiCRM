@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Event/Import/Parser.php';
+
 
 /**
  * class to parse membership csv files
@@ -72,10 +72,10 @@ class CRM_Event_Import_Parser_Participant extends CRM_Event_Import_Parser {
    * @access public
    */
   function init() {
-    require_once 'CRM/Event/BAO/Participant.php';
+
     $fields = &CRM_Event_BAO_Participant::importableFields($this->_contactType, FALSE);
     $fields['event_id']['title'] = "Event ID";
-    require_once 'CRM/Event/BAO/Event.php';
+
     $eventfields = &CRM_Event_BAO_Event::fields();
     $fields['event_title'] = $eventfields['event_title'];
 
@@ -187,7 +187,7 @@ class CRM_Event_Import_Parser_Participant extends CRM_Event_Import_Parser {
     }
     $params = &$this->getActiveFieldParams();
 
-    require_once 'CRM/Import/Parser/Contact.php';
+
     if (!(($index < 0) || ($this->_participantStatusIndex < 0))) {
       $errorRequired = !CRM_Utils_Array::value($this->_participantStatusIndex, $values);
       if ((!$params['event_id'] && !$params['event_title'])) {
@@ -344,7 +344,7 @@ class CRM_Event_Import_Parser_Participant extends CRM_Event_Import_Parser {
     //date-Format part ends
     static $indieFields = NULL;
     if ($indieFields == NULL) {
-      require_once ('CRM/Event/BAO/Participant.php');
+
       $indieFields = &CRM_Event_BAO_Participant::import();
     }
 
@@ -358,7 +358,7 @@ class CRM_Event_Import_Parser_Participant extends CRM_Event_Import_Parser {
     }
 
     $formatError = _civicrm_participant_formatted_param($formatValues, $formatted, TRUE);
-    require_once "api/v2/Participant.php";
+
 
     if ($formatError) {
       array_unshift($values, $formatError['error_message']);
@@ -379,7 +379,7 @@ class CRM_Event_Import_Parser_Participant extends CRM_Event_Import_Parser {
     }
     else {
       if ($formatValues['participant_id']) {
-        require_once 'CRM/Event/BAO/Participant.php';
+
         $dao = new CRM_Event_BAO_Participant();
         $dao->id = $formatValues['participant_id'];
 
@@ -540,7 +540,7 @@ class CRM_Event_Import_Parser_Participant extends CRM_Event_Import_Parser {
     $dateKey = 'date';
     $dateParams = array($dateKey => $date);
 
-    require_once 'CRM/Utils/Date.php';
+
     CRM_Utils_Date::convertToDefaultDate($dateParams, $dateType, $dateKey);
     return $dateParams[$dateKey];
   }

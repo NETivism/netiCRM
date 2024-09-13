@@ -33,8 +33,8 @@
  *
  */
 
-require_once "CRM/Core/Form.php";
-require_once "CRM/Custom/Form/CustomData.php";
+
+
 
 /**
  * This class generates form components for OpenCase Activity
@@ -52,7 +52,7 @@ class CRM_Case_Form_Activity_OpenCase {
 
   static function preProcess(&$form) {
     //get multi client case configuration
-    require_once 'CRM/Case/XMLProcessor/Process.php';
+
     $xmlProcessorProcess = new CRM_Case_XMLProcessor_Process();
     $form->_allowMultiClient = (bool)$xmlProcessorProcess->getAllowMultipleCaseClients();
 
@@ -78,20 +78,20 @@ class CRM_Case_Form_Activity_OpenCase {
       return $defaults;
     }
 
-    require_once 'CRM/Utils/Date.php';
+
     list($defaults['start_date']) = CRM_Utils_Date::setDateDefaults();
 
     // set case status to 'ongoing'
     $defaults['status_id'] = 1;
 
     // set default encounter medium, location type and phone type defaults are set in DB
-    require_once "CRM/Core/OptionGroup.php";
+
     $medium = CRM_Core_OptionGroup::values('encounter_medium', FALSE, FALSE, FALSE, 'AND is_default = 1');
     if (count($medium) == 1) {
       $defaults['medium_id'] = key($medium);
     }
 
-    require_once 'CRM/Core/BAO/LocationType.php';
+
     $defaultLocationType = &CRM_Core_BAO_LocationType::getDefault();
     if ($defaultLocationType->id) {
       $defaults['location[1][location_type_id]'] = $defaultLocationType->id;
@@ -110,11 +110,11 @@ class CRM_Case_Form_Activity_OpenCase {
       return;
     }
     if ($form->_context == 'standalone') {
-      require_once 'CRM/Contact/Form/NewContact.php';
+
       CRM_Contact_Form_NewContact::buildQuickForm($form);
     }
 
-    require_once 'CRM/Case/PseudoConstant.php';
+
     $caseType = CRM_Case_PseudoConstant::caseType();
     $form->add('select', 'case_type_id', ts('Case Type'),
       $caseType, TRUE
@@ -128,7 +128,7 @@ class CRM_Case_Form_Activity_OpenCase {
     $form->add('text', 'duration', ts('Duration'), array('size' => 4, 'maxlength' => 8));
     $form->addRule('duration', ts('Please enter the duration as number of minutes (integers only).'), 'positiveInteger');
 
-    require_once "CRM/Contact/BAO/Contact.php";
+
     if ($form->_currentlyViewedContactId) {
       list($displayName) = CRM_Contact_BAO_Contact::getDisplayAndImage($form->_currentlyViewedContactId);
       $form->assign('clientName', $displayName);
@@ -187,7 +187,7 @@ class CRM_Case_Form_Activity_OpenCase {
 
     // for open case start date should be set to current date
     $params['start_date'] = CRM_Utils_Date::processDate($params['start_date'], date('Hi'));
-    require_once 'CRM/Case/PseudoConstant.php';
+
     $caseStatus = CRM_Case_PseudoConstant::caseStatus('name');
     // for resolved case the end date should set to now
     if ($params['status_id'] == array_search('Closed', $caseStatus)) {
@@ -238,7 +238,7 @@ class CRM_Case_Form_Activity_OpenCase {
     }
 
 
-    require_once 'CRM/Case/XMLProcessor/Process.php';
+
     $xmlProcessorProcess = new CRM_Case_XMLProcessor_Process();
     $isMultiClient = $xmlProcessorProcess->getAllowMultipleCaseClients();
 

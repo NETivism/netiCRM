@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
-require_once 'CRM/Core/BAO/UFGroup.php';
+
+
 
 /**
  *  This class is for UF Group
@@ -235,7 +235,7 @@ class CRM_UF_Form_Group extends CRM_Core_Form {
    */
   function setDefaultValues() {
     $defaults = array();
-    require_once 'CRM/Core/ShowHideBlocks.php';
+
     $showHide = new CRM_Core_ShowHideBlocks();
 
     if ($this->_action == CRM_Core_Action::ADD) {
@@ -324,7 +324,7 @@ class CRM_UF_Form_Group extends CRM_Core_Form {
       $ufJoinParams = array('uf_group_id' => $this->_id);
       CRM_Core_BAO_UFGroup::delUFJoin($ufJoinParams);
 
-      require_once "CRM/Core/BAO/UFGroup.php";
+
       CRM_Core_BAO_UFGroup::setIsActive($this->_id, 0);
     }
     else {
@@ -392,7 +392,7 @@ class CRM_UF_Form_Group extends CRM_Core_Form {
     }
 
     // update cms integration with registration / my account
-    require_once 'CRM/Utils/System.php';
+
     CRM_Utils_System::updateCategories();
   }
 }

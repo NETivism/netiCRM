@@ -33,12 +33,12 @@
  *
  */
 
-require_once 'CRM/Core/Page.php';
-require_once 'CRM/Core/Permission.php';
-require_once 'CRM/Campaign/PseudoConstant.php';
-require_once 'CRM/Campaign/BAO/Survey.php';
-require_once 'CRM/Campaign/BAO/Petition.php';
-require_once 'CRM/Campaign/BAO/Campaign.php';
+
+
+
+
+
+
 
 /**
  * Page for displaying Campaigns
@@ -310,7 +310,7 @@ class CRM_Campaign_Page_DashBoard extends CRM_Core_Page {
   }
 
   function run() {
-    require_once 'CRM/Campaign/BAO/Campaign.php';
+
     if (!CRM_Campaign_BAO_Campaign::accessCampaignDashboard()) {
       CRM_Utils_System::permissionDenied();
     }

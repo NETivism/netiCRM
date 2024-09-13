@@ -33,9 +33,9 @@
  *
  */
 
-require_once 'CRM/Contribute/DAO/PCP.php';
-require_once 'CRM/Contribute/DAO/PCPBlock.php';
-require_once 'CRM/Contribute/DAO/Contribution.php';
+
+
+
 class CRM_Contribute_BAO_PCP extends CRM_Contribute_DAO_PCP {
 
   /**
@@ -62,14 +62,14 @@ class CRM_Contribute_BAO_PCP extends CRM_Contribute_DAO_PCP {
   static function add(&$params, $pcpBlock = TRUE) {
     if ($pcpBlock) {
       // action is taken depending upon the mode
-      require_once 'CRM/Contribute/DAO/PCPBlock.php';
+
       $dao = new CRM_Contribute_DAO_PCPBlock();
       $dao->copyValues($params);
       $dao->save();
       return $dao;
     }
     else {
-      require_once 'CRM/Contribute/DAO/PCP.php';
+
       $dao = new CRM_Contribute_DAO_PCP();
       $dao->copyValues($params);
 
@@ -122,7 +122,7 @@ WHERE  civicrm_pcp.contact_id = civicrm_contact.id
    */
   static function getPcpDashboardInfo($contactId) {
     $links = self::pcpLinks();
-    require_once 'CRM/Contribute/PseudoConstant.php';
+
 
     $query = "
         SELECT pg.start_date, pg.end_date, pg.title as pageTitle, pcp.id as pcpId, 
@@ -288,7 +288,7 @@ WHERE pcp.id = %1 AND cc.contribution_status_id =1 AND cc.is_test = 0";
             GROUP BY cc.contact_id, cc.contribution_recur_id, cs.pcp_roll_nickname";
     $dao = CRM_Core_DAO::executeQuery($query, CRM_Core_DAO::$_nullArray);
     $honor = array();
-    require_once 'CRM/Utils/Money.php';
+
     while ($dao->fetch()) {
       $honor[$dao->id]['nickname'] = ucwords($dao->pcp_roll_nickname);
       $honor[$dao->id]['total_amount'] = CRM_Utils_Money::format($dao->total_amount, $dao->currency);
@@ -366,10 +366,10 @@ WHERE pcp.id = %1 AND cc.contribution_status_id =1 AND cc.is_test = 0";
    *
    */
   static function deleteById($id = NULL) {
-    require_once 'CRM/Utils/Hook.php';
+
     CRM_Utils_Hook::pre('delete', 'Campaign', $id, CRM_Core_DAO::$_nullArray);
 
-    require_once 'CRM/Core/Transaction.php';
+
     $transaction = new CRM_Core_Transaction();
 
     // delete from pcp table
@@ -516,7 +516,7 @@ WHERE pcp.id = %1 AND cc.contribution_status_id =1 AND cc.is_test = 0";
 
     $tplName = $isInitial ? 'pcp_supporter_notify' : 'pcp_status_change';
 
-    require_once 'CRM/Core/BAO/MessageTemplates.php';
+
     list($sent, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate(
       array(
         'groupName' => 'msg_tpl_workflow_contribution',

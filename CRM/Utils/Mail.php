@@ -85,7 +85,7 @@ class CRM_Utils_Mail {
     $params['returnPath'] = $returnPath;
 
     // first call the mail alter hook
-    require_once 'CRM/Utils/Hook.php';
+
     $params['alterTag'] = 'mail';
     CRM_Utils_Hook::alterMailParams($params);
     unset($params['alterTag']);
@@ -155,7 +155,7 @@ class CRM_Utils_Mail {
     }
     CRM_Mailing_BAO_Mailing::addMessageIdHeader($headers);
 
-    require_once 'Mail/mime.php';
+
     $msg = new Mail_mime("\n");
     if ($textMessage) {
       $msg->setTxtBody($textMessage);
@@ -357,7 +357,7 @@ class CRM_Utils_Mail {
    * @static
    */
   static function validOutBoundMail() {
-    require_once "CRM/Core/BAO/Preferences.php";
+
     $mailingInfo = &CRM_Core_BAO_Preferences::mailingPreferences();
     if ($mailingInfo['outBound_option'] == 3) {
       return TRUE;
@@ -523,7 +523,7 @@ class CRM_Utils_Mail {
         return 'Cannot resolve IP address of provided host: '.$host.'. Abort SPF verification.';
       }
       if (CRM_Utils_System::checkPHPVersion(7.1)) {
-        require_once 'SPFLib/autoload.php';
+
         $checker = new SPFLib\Checker();
         $checkResult = $checker->check(new SPFLib\Check\Environment($ip, $domain));
         $result = $checkResult->getCode();
@@ -549,7 +549,7 @@ class CRM_Utils_Mail {
         }
       }
       else {
-        require_once 'SPFCheck/autoload.php';
+
         $checker = new Mika56\SPFCheck\SPFCheck(new Mika56\SPFCheck\DNSRecordGetter());
         $result = $checker->isIPAllowed($ip, $domain);
         if ($result === Mika56\SPFCheck\SPFCheck::RESULT_PASS) {

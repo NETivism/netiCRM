@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Page.php';
+
 class CRM_Contribute_Page_Tab extends CRM_Core_Page {
 
   /**
@@ -132,9 +132,9 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page {
    * @access public
    */
   function browse() {
-    require_once 'CRM/Contribute/BAO/Contribution.php';
-    require_once 'CRM/Contribute/BAO/ContributionRecur.php';
-    require_once 'CRM/Core/BAO/PaymentProcessor.php';
+
+
+
 
     // add annual contribution
     $annual = array();
@@ -233,7 +233,7 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page {
     }
 
     if ($this->_contactId) {
-      require_once 'CRM/Contact/BAO/Contact.php';
+
       $displayName = CRM_Contact_BAO_Contact::displayName($this->_contactId);
       $this->assign('displayName', $displayName);
     }
@@ -291,7 +291,7 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page {
       $this->assign('contactId', $this->_contactId);
 
       // check logged in url permission
-      require_once 'CRM/Contact/Page/View.php';
+
       CRM_Contact_Page_View::checkUserPermission($this);
 
       // set page title
@@ -361,7 +361,7 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page {
 
     // make sure we dont get tricked with a bad key
     // so check format
-    require_once 'CRM/Core/Key.php';
+
     if (!CRM_Core_Key::valid($qfKey)) {
       $qfKey = NULL;
     }

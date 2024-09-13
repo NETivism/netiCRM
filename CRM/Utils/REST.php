@@ -346,7 +346,7 @@ class CRM_Utils_REST {
 
     if ($_SERVER['REQUEST_METHOD'] == 'GET' && !strstr(strtolower((string)$args[2]), 'get') && strtolower((string)$args[2]) != 'check') {
       // get only valid for non destructive methods
-      require_once 'api/v3/utils.php';
+
       return civicrm_api3_create_error("SECURITY: All requests that modify the database must be http POST, not GET.",
         array(
           'IP' => CRM_Utils_System::ipAddress(),
@@ -526,7 +526,7 @@ class CRM_Utils_REST {
    * works for POST & GET (POST recommended)
    **/
   static function ajaxJson() {
-    require_once 'api/v3/utils.php';
+
     if (!$config->debug && (!CRM_Utils_Array::arrayKeyExists('HTTP_X_REQUESTED_WITH', $_SERVER) ||
         $_SERVER['HTTP_X_REQUESTED_WITH'] != "XMLHttpRequest"
       )) {
@@ -586,7 +586,7 @@ class CRM_Utils_REST {
         $_SERVER['HTTP_X_REQUESTED_WITH'] != "XMLHttpRequest"
       )
     ) {
-      require_once 'api/v3/utils.php';
+
       $error = civicrm_api3_create_error("SECURITY ALERT: Ajax requests can only be issued by javascript clients, eg. $().crmAPI().",
         array(
           'IP' => CRM_Utils_System::ipAddress(),

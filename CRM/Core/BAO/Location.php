@@ -33,12 +33,12 @@
  *
  */
 
-require_once 'CRM/Core/BAO/Phone.php';
-require_once 'CRM/Core/BAO/Email.php';
-require_once 'CRM/Core/BAO/IM.php';
-require_once 'CRM/Core/BAO/OpenID.php';
-require_once 'CRM/Core/BAO/Address.php';
-require_once 'CRM/Core/BAO/Block.php';
+
+
+
+
+
+
 
 /**
  * This class handle creation of location block elements
@@ -164,7 +164,7 @@ WHERE e.id = %1";
    * @static
    */
   static function addLocBlock(&$params) {
-    require_once 'CRM/Core/DAO/LocBlock.php';
+
     $locBlock = new CRM_Core_DAO_LocBlock();
 
     $locBlock->copyValues($params);
@@ -187,7 +187,7 @@ WHERE e.id = %1";
       return;
     }
 
-    require_once 'CRM/Core/DAO/LocBlock.php';
+
     $locBlock = new CRM_Core_DAO_LocBlock();
     $locBlock->id = $locBlockId;
 
@@ -257,7 +257,15 @@ WHERE e.id = %1";
 
     //get all the blocks for this contact
     foreach (self::$blocks as $block) {
-      $name = 'CRM_Core_BAO_'.ucfirst($block);
+      if (strcasecmp('im', $block) === 0) {
+        $name = 'CRM_Core_BAO_IM';
+      }
+      elseif (strcasecmp('openid', $block) === 0) {
+        $name = 'CRM_Core_BAO_OpenID';
+      }
+      else {
+        $name = 'CRM_Core_BAO_'.ucfirst($block);
+      }
       $blocks[$block] = $name::getValues( $entityBlock, $microformat );
     }
     return $blocks;
@@ -291,7 +299,7 @@ WHERE e.id = %1";
 
     static $blocks = array('Address', 'Phone', 'IM', 'OpenID', 'Email');
 
-    require_once "CRM/Core/BAO/Block.php";
+
     $params = array('contact_id' => $contactId, 'location_type_id' => $locationTypeId);
     foreach ($blocks as $name) {
       CRM_Core_BAO_Block::blockDelete($name, $params);
@@ -359,7 +367,7 @@ WHERE e.id = %1";
     }
 
     // get the loc block ids.
-    require_once 'CRM/Contact/BAO/Contact.php';
+
     $primaryLocBlockIds = CRM_Contact_BAO_Contact::getLocBlockIds($contactId, array('is_primary' => 1));
     $nonPrimaryBlockIds = CRM_Contact_BAO_Contact::getLocBlockIds($contactId, array('is_primary' => 0));
 

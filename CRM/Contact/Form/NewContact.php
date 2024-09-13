@@ -60,7 +60,7 @@ class CRM_Contact_Form_NewContact {
       CRM_Core_Permission::check('add contacts')
     ) {
       // build select for new contact
-      require_once 'CRM/Core/BAO/UFGroup.php';
+
       $contactProfiles = CRM_Core_BAO_UFGroup::getReservedProfiles('Contact', $extraProfiles);
       $form->add('select', "profiles[{$blockNo}]", ts('Create New Contact'),
         array('' => ts('- create new contact -')) + $contactProfiles,

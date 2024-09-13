@@ -33,10 +33,10 @@
  *
  */
 
-require_once 'CRM/Core/SelectValues.php';
-require_once 'CRM/Core/Form.php';
-require_once 'CRM/Core/BAO/Tag.php';
-require_once 'CRM/Core/BAO/EntityTag.php';
+
+
+
+
 
 /**
  * This class generates form components for tags
@@ -108,8 +108,8 @@ class CRM_Tag_Form_Tag extends CRM_Core_Form {
     $this->assign('tag', $allTag);
 
     //build tag widget
-    require_once 'CRM/Core/Form/Tag.php';
-    require_once 'CRM/Core/BAO/Tag.php';
+
+
     $parentNames = CRM_Core_BAO_Tag::getTagSet('civicrm_contact');
     CRM_Core_Form_Tag::buildQuickForm($this, $parentNames, $this->_entityTable, $this->_entityID);
 

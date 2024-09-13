@@ -20,7 +20,7 @@
  */
 
 
-require_once 'CRM/Core/Payment.php';
+
 class CRM_Core_Payment_Dummy extends CRM_Core_Payment {
   CONST CHARSET = 'iso-8859-1';
 

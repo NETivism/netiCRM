@@ -33,9 +33,9 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
-require_once 'CRM/Core/BAO/OptionGroup.php';
-require_once 'CRM/Core/BAO/OptionValue.php';
+
+
+
 class CRM_Report_Form_Register extends CRM_Core_Form {
   public $_id;
   protected $_values = NULL;
@@ -100,7 +100,7 @@ class CRM_Report_Form_Register extends CRM_Core_Form {
     $this->add('text', 'description', ts('Description'), array('size' => 40), TRUE);
 
     $this->add('checkbox', 'is_active', ts('Enabled?'));
-    require_once 'CRM/Core/Component.php';
+
     $this->_components = CRM_Core_Component::getComponents();
     //unset the report component
     unset($this->_components['CiviReport']);
@@ -180,7 +180,7 @@ class CRM_Report_Form_Register extends CRM_Core_Form {
       $ids = array();
 
       $groupParams = array('name' => ('report_template'));
-      require_once 'CRM/Core/OptionValue.php';
+
       $optionValue = CRM_Core_OptionValue::addOptionValue($params, $groupParams, $this->_action, $this->_id);
       CRM_Core_Session::setStatus(ts('The %1 \'%2\' has been saved.', array(1 => 'Report Template', 2 => $optionValue->label)));
       CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin/report/options/report_template', "reset=1"));

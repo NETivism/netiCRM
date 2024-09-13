@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Admin/Form.php';
+
 
 /**
  * This class generates form components for Navigation
@@ -78,7 +78,7 @@ class CRM_Admin_Form_Navigation extends CRM_Admin_Form {
     );
 
     $this->add('text', 'url', ts('Url'), CRM_Core_DAO::getAttribute('CRM_Core_DAO_Navigation', 'url'));
-    require_once 'CRM/Core/Permission.php';
+
     $permissions = CRM_Core_Permission::basicPermissions(TRUE);
     $include = &$this->addElement('advmultiselect', 'permission',
       ts('Permission') . ' ', $permissions,
@@ -157,7 +157,7 @@ class CRM_Admin_Form_Navigation extends CRM_Admin_Form {
     $navigation = CRM_Core_BAO_Navigation::add($params);
 
     // also reset navigation
-    require_once 'CRM/Core/BAO/Navigation.php';
+
     CRM_Core_BAO_Navigation::resetNavigation();
 
     CRM_Core_Session::setStatus(ts('Menu \'%1\' has been saved.',

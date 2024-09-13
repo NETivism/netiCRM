@@ -37,18 +37,18 @@
  * Files required
  */
 
-require_once 'CRM/Core/Form.php';
-require_once 'CRM/Contact/Form/Search.php';
 
-require_once 'CRM/Core/Session.php';
-require_once 'CRM/Core/PseudoConstant.php';
 
-require_once 'CRM/Utils/PagerAToZ.php';
 
-require_once 'CRM/Contact/Selector/Controller.php';
-require_once 'CRM/Contact/Selector.php';
-require_once 'CRM/Contact/Task.php';
-require_once 'CRM/Contact/BAO/SavedSearch.php';
+
+
+
+
+
+
+
+
+
 
 /**
  * Base Search / View form for *all* listing of multiple
@@ -77,11 +77,11 @@ class CRM_Contact_Form_Search_Basic extends CRM_Contact_Form_Search {
     $this->add('text', 'sort_name', ts('Name, Phone or Email'));
     $this->add('text', 'legal_identifier', ts('Legal Identifier'));
 
-    require_once 'CRM/Core/BAO/Preferences.php';
+
     $searchOptions = CRM_Core_BAO_Preferences::valueOptions('advanced_search_options');
 
     if (CRM_Utils_Array::value('contactType', $searchOptions)) {
-      require_once 'CRM/Contact/BAO/ContactType.php';
+
       $contactTypes = array('' => ts('- any contact type -')) + CRM_Contact_BAO_ContactType::getSelectElements();
       $this->add('select', 'contact_type',
         ts('is...'),
