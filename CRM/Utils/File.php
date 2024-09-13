@@ -529,7 +529,7 @@ HTACCESS;
       }
       else {
         $outputFile = preg_replace('/\.xlsx$/', "_encrypt.xlsx", $filePath);
-
+        require_once 'secure-spreadsheet/autoload.php';
         if ($config->decryptExcelOption == 1) {
           // Get the user's primary email address
           $session = CRM_Core_Session::singleton();

@@ -26,6 +26,7 @@
 */
 
 
+require_once 'Spout/Autoloader/autoload.php';
 
 use Box\Spout\Writer\WriterFactory;
 use Box\Spout\Reader\ReaderFactory;

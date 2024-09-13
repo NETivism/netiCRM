@@ -523,7 +523,7 @@ class CRM_Utils_Mail {
         return 'Cannot resolve IP address of provided host: '.$host.'. Abort SPF verification.';
       }
       if (CRM_Utils_System::checkPHPVersion(7.1)) {
-
+        require_once 'SPFLib/autoload.php';
         $checker = new SPFLib\Checker();
         $checkResult = $checker->check(new SPFLib\Check\Environment($ip, $domain));
         $result = $checkResult->getCode();
@@ -549,7 +549,7 @@ class CRM_Utils_Mail {
         }
       }
       else {
-
+        require_once 'SPFCheck/autoload.php';
         $checker = new Mika56\SPFCheck\SPFCheck(new Mika56\SPFCheck\DNSRecordGetter());
         $result = $checker->isIPAllowed($ip, $domain);
         if ($result === Mika56\SPFCheck\SPFCheck::RESULT_PASS) {

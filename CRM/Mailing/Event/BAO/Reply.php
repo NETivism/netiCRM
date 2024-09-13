@@ -34,13 +34,8 @@
  */
 
 
-
-
-
-
-
-
-
+require_once 'ezc/Base/src/ezc_bootstrap.php';
+require_once 'ezc/autoload/mail_autoload.php';
 
 
 class CRM_Mailing_Event_BAO_Reply extends CRM_Mailing_Event_DAO_Reply {

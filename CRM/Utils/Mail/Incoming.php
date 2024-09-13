@@ -203,8 +203,8 @@ class CRM_Utils_Mail_Incoming {
         ));
     }
 
-
-
+    require_once 'ezc/Base/src/ezc_bootstrap.php';
+    require_once 'ezc/autoload/mail_autoload.php';
 
     // explode email to digestable format
     $set = new ezcMailFileSet(array($file));
@@ -225,9 +225,8 @@ class CRM_Utils_Mail_Incoming {
   }
 
   static function parseMailingObject(&$mail) {
-
-
-
+    require_once 'api/v2/Activity.php';
+    require_once 'api/v2/Contact.php';
 
     $config = CRM_Core_Config::singleton();
 
