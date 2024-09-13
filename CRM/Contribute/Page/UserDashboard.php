@@ -90,7 +90,7 @@ class CRM_Contribute_Page_UserDashboard extends CRM_Contact_Page_View_UserDashBo
       // note that we are passing a CRM_Core_Page object ($this) as if it were a form here:
       $paymentObject = &CRM_Core_Payment::singleton($mode, $paymentProcessor, $this);
 
-      _civicrm_object_to_array($recur, $values);
+      _civicrm_api3_object_to_array($recur, $values);
       $values['cancelSubscriptionUrl'] = $paymentObject->cancelSubscriptionURL();
       $values['recur_status'] = $recurStatus[$values['contribution_status_id']];
       $values['installments'] = empty($values['installments']) ? ts('Until expires') : $values['installments'];

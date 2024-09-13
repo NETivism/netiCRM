@@ -95,7 +95,7 @@ class CRM_Grant_Form_Grant extends CRM_Core_Form {
     }
 
     //build custom data
-    CRM_Custom_Form_Customdata::preProcess($this, NULL, NULL, 1, 'Grant', $this->_id);
+    CRM_Custom_Form_CustomData::preProcess($this, NULL, NULL, 1, 'Grant', $this->_id);
   }
 
   function setDefaultValues() {
@@ -143,7 +143,7 @@ class CRM_Grant_Form_Grant extends CRM_Core_Form {
     }
 
     // custom data set defaults
-    $defaults += CRM_Custom_Form_Customdata::setDefaultValues($this);
+    $defaults += CRM_Custom_Form_CustomData::setDefaultValues($this);
     return $defaults;
   }
 
@@ -202,7 +202,7 @@ class CRM_Grant_Form_Grant extends CRM_Core_Form {
     $this->add('textarea', 'note', ts('Notes'), $noteAttrib['note']);
 
     //build custom data
-    CRM_Custom_Form_Customdata::buildQuickForm($this);
+    CRM_Custom_Form_CustomData::buildQuickForm($this);
 
     // add attachments part
 

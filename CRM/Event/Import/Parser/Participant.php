@@ -358,7 +358,7 @@ class CRM_Event_Import_Parser_Participant extends CRM_Event_Import_Parser {
     }
 
     $formatError = _civicrm_participant_formatted_param($formatValues, $formatted, TRUE);
-
+    require_once "api/v2/Participant.php";
 
     if ($formatError) {
       array_unshift($values, $formatError['error_message']);

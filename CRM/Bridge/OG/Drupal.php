@@ -68,7 +68,7 @@ class CRM_Bridge_OG_Drupal {
     $params['id'] = CRM_Bridge_OG_Utils::groupID($params['source'], $params['title'], $abort);
 
     if ($op == 'add') {
-
+      require_once 'api/v2/Group.php';
       if ($groupType) {
         $params['group_type'] = $groupType;
       }
@@ -189,7 +189,7 @@ SELECT v.id
   }
 
   static function og(&$params, $op) {
-
+    require_once 'api/v2/GroupContact.php';
 
     $contactID = CRM_Bridge_OG_Utils::contactID($params['uf_id']);
     if (!$contactID) {

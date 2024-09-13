@@ -659,6 +659,7 @@ AND civicrm_group_contact.group_id = %2";
       'return.contact_id' => 1,
     );
 
+    require_once 'api/v2/Contact.php';
     $contacts = civicrm_contact_search($params);
 
     if (!empty($contacts)) {

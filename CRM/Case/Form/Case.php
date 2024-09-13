@@ -174,7 +174,7 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
     $this->_currentUserId = $session->get('userID');
 
     //when custom data is included in this page
-    CRM_Custom_Form_Customdata::preProcess($this, NULL, $this->_activityTypeId, 1, 'Activity');
+    CRM_Custom_Form_CustomData::preProcess($this, NULL, $this->_activityTypeId, 1, 'Activity');
     $className = "CRM_Case_Form_Activity_{$this->_activityTypeFile}";
     $className::preProcess( $this );
   }
@@ -193,7 +193,7 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
     }
     $className = "CRM_Case_Form_Activity_{$this->_activityTypeFile}";
     $defaults = $className::setDefaultValues($this);
-    $defaults = array_merge($defaults, CRM_Custom_Form_Customdata::setDefaultValues($this));
+    $defaults = array_merge($defaults, CRM_Custom_Form_CustomData::setDefaultValues($this));
     return $defaults;
   }
 
@@ -223,7 +223,7 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
       return;
     }
 
-    CRM_Custom_Form_Customdata::buildQuickForm($this);
+    CRM_Custom_Form_CustomData::buildQuickForm($this);
     // we don't want to show button on top of custom form
     $this->assign('noPreCustomButton', TRUE);
 

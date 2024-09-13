@@ -34,8 +34,8 @@
  */
 
 
-
-
+require_once 'api/v2/utils.php';
+require_once 'api/v2/Activity.php';
 
 /**
  * class to parse activity csv files

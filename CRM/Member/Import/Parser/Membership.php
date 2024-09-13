@@ -33,7 +33,7 @@
  *
  */
 
-
+require_once 'api/v2/Membership.php';
 
 /**
  * class to parse membership csv files

@@ -33,9 +33,7 @@
  *
  */
 
-
-
-
+require_once 'api/v2/utils.php';
 
 /**
  * class to parse contact csv files
@@ -1743,6 +1741,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
     //get the prefix id etc if exists
     CRM_Contact_BAO_Contact::resolveDefaults($formatted, TRUE);
 
+    require_once 'api/v2/Contact.php';
 
     // setting required check to false, CRM-2839
     // plus we do our own required check in import

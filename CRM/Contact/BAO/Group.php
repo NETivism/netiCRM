@@ -232,6 +232,7 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group {
     $params['sort'] = NULL;
     $params['smartGroupCache'] = $useCache;
 
+    require_once 'api/v2/Contact.php';
 
     $contacts = civicrm_contact_search($params);
 

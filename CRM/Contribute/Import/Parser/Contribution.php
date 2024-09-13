@@ -33,8 +33,7 @@
  *
  */
 
-
-
+require_once 'api/v2/Contribution.php';
 
 /**
  * class to parse contribution csv files
