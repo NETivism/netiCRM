@@ -1,4 +1,6 @@
 <?php
+
+require_once __DIR__.'/../../functions.php';
 class CRM_Core_ClassLoader {
   /**
    * We only need one instance of this object. So we use the singleton
