@@ -37,17 +37,7 @@
  */
 /* we must load db first, never delete this require */
 
-
-/* these may be delete future */
-
-
-
-
-
-
-
-
-
+require_once 'api/api.php';
 
 define('CRM_REQUEST_TIME', (int) $_SERVER['REQUEST_TIME']);
 

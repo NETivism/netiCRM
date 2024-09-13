@@ -40,6 +40,7 @@
  *
  */
 
+require_once 'api/Wrapper.php';
 
 class CRM_Core_HTMLInputCoder implements API_Wrapper {
   private static $skipFields = NULL;
