@@ -450,7 +450,7 @@ class CRM_Contact_BAO_GroupContact extends CRM_Contact_DAO_GroupContact {
                       civicrm_email.email as email";
     }
     else {
-      $query = "SELECT DISTINCT(contact_a.id) as contact_id , $grpStatus as status,";
+      $query = "SELECT DISTINCT(contact_a.id) as contact_id,";
       $query .= CRM_Utils_Array::implode(',', $returnProperties);
     }
 
