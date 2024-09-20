@@ -40,6 +40,10 @@
 class CRM_Core_Payment_Google extends CRM_Core_Payment {
 
   /**
+   * @var mixed
+   */
+  public $_processorName;
+  /**
    * mode of operation: live or test
    *
    * @var object

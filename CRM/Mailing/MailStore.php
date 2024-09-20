@@ -34,6 +34,7 @@
  */
 
 class CRM_Mailing_MailStore {
+  public $_transport;
   // flag to decide whether to print debug messages
   var $_debug = FALSE;
 

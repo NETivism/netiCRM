@@ -1,6 +1,7 @@
 <?php
 class CRM_Contact_Form_Task_TaiwanACHExport extends CRM_Contact_Form_Task {
 
+  public $_additionalIds;
   protected $_achDatas = array();
 
   protected $_paymentType = NULL;

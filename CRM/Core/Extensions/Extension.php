@@ -38,6 +38,13 @@
 
 class CRM_Core_Extensions_Extension {
 
+  public $key;
+  public $name;
+  public $label;
+  public $file;
+  public $is_active;
+  public $id;
+  public $urls;
   /**
    *
    */

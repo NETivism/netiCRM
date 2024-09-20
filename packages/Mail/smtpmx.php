@@ -60,6 +60,7 @@ require_once 'Net/SMTP.php';
  */
 class Mail_smtpmx extends Mail {
 
+    public $_port;
     /**
      * SMTP connection object.
      *

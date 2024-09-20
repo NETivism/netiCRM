@@ -48,6 +48,10 @@
  */
 class CRM_Import_Form_MapField extends CRM_Core_Form {
 
+  public $_importTableName;
+  public $_dedupeRuleGroupId;
+  public $_contactType;
+  public $_location_types;
   /**
    * cache of preview data values
    *

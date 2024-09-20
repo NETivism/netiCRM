@@ -41,6 +41,8 @@
  */
 class CRM_Contribute_Import_Form_UploadFile extends CRM_Core_Form {
 
+  public $_submitValues;
+  public $_params;
   private $_dedupeRuleGroups;
   private $_dedupeRuleFields;
   private $_contactTypes;

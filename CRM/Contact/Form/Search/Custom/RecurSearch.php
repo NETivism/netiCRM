@@ -35,6 +35,9 @@
 
 class CRM_Contact_Form_Search_Custom_RecurSearch  extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
 
+  public $_mode;
+  public $_queryColumns;
+  public $_isExport;
   protected $_formValues;
   protected $_cstatus = NULL;
   protected $_gender = NULL;

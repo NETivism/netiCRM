@@ -34,6 +34,8 @@ require_once 'api/v3/GroupContact.php';
 require_once 'CiviTest/CiviUnitTestCase.php';
 class api_v3_GroupContactTest extends CiviUnitTestCase {
 
+  public $_groupId2;
+  public $_group;
   protected $_contactId;
   protected $_contactId1;
   protected $_apiversion;

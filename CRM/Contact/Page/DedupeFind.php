@@ -34,6 +34,18 @@
  */
 
 class CRM_Contact_Page_DedupeFind extends CRM_Core_Page_Basic {
+  public $_context;
+  public $_currentPage;
+  public $_numPerPage;
+  public $_contactIds;
+  public $_cachePath;
+  public $action;
+  /**
+   * @var int[]
+   */
+  public $_cids;
+  public $_cidString;
+  public $_pager;
   /**
    * queue name
    */

@@ -48,6 +48,27 @@
  */
 class CRM_Event_Form_Participant extends CRM_Contact_Form_Task {
 
+  public $_showFeeBlock;
+  public $_context;
+  public $_eventTitle;
+  public $_eventTypeCustomDataTypeID;
+  public $_paymentProcessor;
+  public $_processors;
+  public $_bltID;
+  public $_fields;
+  public $_cdType;
+  public $_registeredById;
+  public $_onlinePendingContributionId;
+  public $_discountId;
+  /**
+   * @var mixed
+   */
+  public $_params;
+  public $_contributorDisplayName;
+  public $_contributorEmail;
+  public $_toDoNotEmail;
+  public $_fromEmails;
+  public $_defaultValues;
   /**
    * the values for the contribution db object
    *

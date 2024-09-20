@@ -43,6 +43,8 @@
  */
 class CRM_Admin_Form_Options extends CRM_Admin_Form {
 
+  public $_gid;
+  public $_defaultValues;
   /**
    * The option group name
    *

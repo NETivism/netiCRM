@@ -44,6 +44,10 @@
  *
  */
 class CRM_Profile_Form extends CRM_Core_Form {
+  public $_duplicateButtonName;
+  public $_disallowed;
+  public $_fieldset;
+  public $_mail;
   CONST MODE_REGISTER = 1, MODE_SEARCH = 2, MODE_CREATE = 4, MODE_EDIT = 8;
 
   protected $_mode;

@@ -40,6 +40,13 @@
  */
 class CRM_Contribute_Form_Contribution_ThankYou extends CRM_Contribute_Form_ContributionBase {
 
+  public $_lineItem;
+  public $_paymentInstrument;
+  public $_separateMembershipPayment;
+  /**
+   * @var mixed[]
+   */
+  public $_submitValues;
   /**
    * Function to set variables up before form is built
    *

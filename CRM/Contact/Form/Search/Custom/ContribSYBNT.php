@@ -36,6 +36,12 @@
 
 class CRM_Contact_Form_Search_Custom_ContribSYBNT extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
 
+  public $_amounts;
+  public $_dates;
+  public $exclude_start_date;
+  public $exclude_end_date;
+  public $include_start_date;
+  public $include_end_date;
   protected $_formValues;
 
   protected $_contribution_type_id;

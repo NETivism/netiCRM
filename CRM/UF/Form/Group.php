@@ -42,6 +42,10 @@
 class CRM_UF_Form_Group extends CRM_Core_Form {
 
   /**
+   * @var string
+   */
+  public $_context;
+  /**
    * the form id saved to the session for an update
    *
    * @var int

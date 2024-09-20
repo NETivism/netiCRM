@@ -43,6 +43,22 @@
  *
  */
 class CRM_Member_Form_Membership extends CRM_Member_Form {
+  public $_cdType;
+  public $_contactID;
+  public $_context;
+  public $_paymentProcessor;
+  public $_processors;
+  public $_bltID;
+  public $_fields;
+  public $_defaults;
+  public $_values;
+  public $_memberDisplayName;
+  public $_memberEmail;
+  /**
+   * @var mixed
+   */
+  public $_params;
+  public $_groupTree;
   protected $_memType = NULL;
 
   protected $_onlinePendingContributionId;

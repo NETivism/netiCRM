@@ -43,6 +43,15 @@
  *
  */
 class CRM_Pledge_Form_Pledge extends CRM_Core_Form {
+  public $_context;
+  public $userDisplayName;
+  public $userEmail;
+  /**
+   * @var string|null
+   */
+  public $_contributionID;
+  public $_formType;
+  public $paymentId;
   public $_action;
 
   /**

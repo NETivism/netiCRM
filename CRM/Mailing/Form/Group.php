@@ -42,6 +42,8 @@
  */
 class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
 
+  public $_searchBasedMailing;
+  public $_resultSelectOption;
   /**
    * Function to set variables up before form is built
    *

@@ -46,6 +46,7 @@
  */
 class CRM_Mailing_Form_Browse extends CRM_Core_Form {
 
+  public $_mailingId;
   /**
    * Heart of the viewing process. The runner gets all the meta data for
    * the contact and calls the appropriate type of page to view.

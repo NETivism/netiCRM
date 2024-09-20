@@ -280,6 +280,8 @@ define('PEAR_PACKAGEFILE_ERROR_INVALID_FILENAME', 52);
  */
 class PEAR_PackageFile_v1
 {
+    public $_config;
+    public $_packageName;
     /**
      * @access private
      * @var PEAR_ErrorStack

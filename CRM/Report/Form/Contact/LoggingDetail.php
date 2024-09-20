@@ -35,6 +35,10 @@
 
 
 class CRM_Report_Form_Contact_LoggingDetail extends CRM_Report_Form {
+  /**
+   * @var array<string, array<'title', mixed>>
+   */
+  public $_columnHeaders;
   private $loggingDB;
 
   private $log_conn_id;

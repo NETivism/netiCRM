@@ -39,6 +39,7 @@
  * Page for displaying Administer CiviCRM Control Panel
  */
 class CRM_Admin_Page_Admin extends CRM_Core_Page {
+  public $_showHide;
   function run() {
     $groups = array('Customize' => ts('Customize'),
       'Configure' => ts('Configure'),

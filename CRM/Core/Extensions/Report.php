@@ -37,6 +37,9 @@
 
 class CRM_Core_Extensions_Report {
 
+  public $ext;
+  public $groupId;
+  public $customReports;
   /**
    *
    */

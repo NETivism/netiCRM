@@ -44,6 +44,7 @@
  */
 class CRM_Mailing_Page_Browse extends CRM_Core_Page {
 
+  public $_createdId;
   /**
    * all the fields that are listings related
    *

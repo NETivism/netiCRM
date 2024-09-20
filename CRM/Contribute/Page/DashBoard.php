@@ -40,6 +40,15 @@
  */
 class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
 
+  public $is_custom_date;
+  public $end_date;
+  public $start_date;
+  public $last_start_date;
+  public $last_end_date;
+  public $duration_array;
+  public $days;
+  public $params_duration;
+  public $params_last_duration;
   /**
    * Heart of the viewing process. The runner gets all the meta data for
    * the contact and calls the appropriate type of page to view.

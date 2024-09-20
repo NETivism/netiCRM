@@ -54,6 +54,15 @@
  * contacts
  */
 class CRM_Contact_Form_Search extends CRM_Core_Form {
+  public $_reset;
+  /**
+   * @var string
+   */
+  public $_tagID;
+  /**
+   * @var object
+   */
+  public $selector;
   /*
      * list of valid contexts
      *

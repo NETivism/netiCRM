@@ -81,7 +81,7 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
         $this->addNote($note, $objects['contribution']);
       }
     }
-    
+
     // error stage: doesn't goto and not the background posturl
     // never for front-end user.
   }

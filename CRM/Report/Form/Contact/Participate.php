@@ -39,6 +39,20 @@
 
 class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
 
+  public $_aliases;
+  public $_from;
+  public $_where;
+  /**
+   * @var never[]
+   */
+  public $_columnHeaders;
+  public $_groupBy;
+  public $groupBy;
+  /**
+   * @var string
+   */
+  public $_orderBy;
+  public $_absoluteUrl;
   protected $_summary = NULL;
 
   protected $_customGroupExtends = array('Participant'); function __construct() {

@@ -39,6 +39,15 @@ require_once 'api/v2/utils.php';
  * class to parse contact csv files
  */
 class CRM_Import_Parser_Contact extends CRM_Import_Parser {
+  public $_mapperRelatedContactLocType;
+  public $_mapperRelatedContactPhoneType;
+  public $_contactSubType;
+  public $_emailIndex;
+  /**
+   * @var mixed[]
+   */
+  public $_dedupeRuleFieldsLabel;
+  public $_dateFormats;
   protected $_mapperKeys;
   protected $_mapperLocType;
   protected $_mapperPhoneType;

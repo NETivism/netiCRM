@@ -34,14 +34,24 @@
  */
 
 class CRM_Contact_Form_Merge extends CRM_Core_Form {
+  public $_hasError;
+  public $_rgid;
+  /**
+   * @var string
+   */
+  public $_gid;
+  /**
+   * @var string
+   */
+  public $_mergeId;
   // the id of the contact that tere's a duplicate for; this one will
   // possibly inherit some of $_oid's properties and remain in the system
-  var $_cid = NULL;
+  public $_cid = NULL;
 
   // the id of the other contact - the duplicate one that will get deleted
-  var $_oid = NULL;
+  public $_oid = NULL;
 
-  var $_contactType = NULL;
+  public $_contactType = NULL;
 
   // variable to keep all location block ids.
   protected $_locBlockIds = array();
@@ -50,7 +60,7 @@ class CRM_Contact_Form_Merge extends CRM_Core_Form {
   // see HTML_QuickForm_advcheckbox::setValues() - but patching that doesn't
   // help, as QF doesn't put the 0-value elements in exportValues() anyway...
   // to side-step this, we use the below UUID as a (re)placeholder
-  var $_qfZeroBug = 'e8cddb72-a257-11dc-b9cc-0016d3330ee9';
+  public $_qfZeroBug = 'e8cddb72-a257-11dc-b9cc-0016d3330ee9';
 
   function preProcess() {
     $this->_hasError = FALSE;

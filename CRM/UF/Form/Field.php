@@ -43,6 +43,16 @@
  */
 class CRM_UF_Form_Field extends CRM_Core_Form {
 
+  public $_location_types;
+  /**
+   * @var mixed[]
+   */
+  public $_website_types;
+  public $_mapperFields;
+  /**
+   * @var never[]
+   */
+  public $_defaults;
   /**
    * the uf group id saved to the session for an update
    *

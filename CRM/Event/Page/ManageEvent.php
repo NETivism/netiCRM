@@ -41,6 +41,16 @@
  */
 class CRM_Event_Page_ManageEvent extends CRM_Core_Page {
 
+  public $_force;
+  /**
+   * @var string
+   */
+  public $_searchResult;
+  /**
+   * @var string
+   */
+  public $_event_type_id;
+  public $_action;
   /**
    * The action links that we need to display for the browse screen
    *

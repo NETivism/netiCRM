@@ -47,6 +47,7 @@
  */
 class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
 
+  public $_encounterMedium;
   /**
    * The default variable defined
    *

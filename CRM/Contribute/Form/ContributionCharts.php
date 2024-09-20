@@ -35,6 +35,7 @@
 
 class CRM_Contribute_Form_ContributionCharts extends CRM_Core_Form {
 
+  public $_years;
   /**
    *  Year of chart
    *

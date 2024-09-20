@@ -35,6 +35,20 @@
 
 
 class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
+  /**
+   * @var never[]
+   */
+  public $_columnHeaders;
+  public $_component;
+  public $_aliases;
+  public $_selectComponent;
+  public $_from;
+  public $_formComponent;
+  public $_where;
+  public $_contactSelected;
+  public $_columnHeadersComponent;
+  public $_absoluteUrl;
+  public $_absoluteUr;
   CONST ROW_COUNT_LIMIT = 1;
 
   protected $_summary = NULL;

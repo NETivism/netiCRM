@@ -36,6 +36,9 @@
 
 class CRM_Contact_Form_Search_Custom_MultipleValues extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
 
+  public $_group;
+  public $_tag;
+  public $_customGroupIDs;
   protected $_groupTree;
   protected $_tables;
   protected $_options; function __construct(&$formValues) {

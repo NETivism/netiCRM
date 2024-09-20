@@ -40,6 +40,8 @@
  */
 class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
 
+  public $_fields;
+  public $_defaults;
   /**
    *Variable defined for Contribution Page Id
    *

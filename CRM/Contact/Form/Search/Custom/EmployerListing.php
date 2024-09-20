@@ -36,6 +36,7 @@
 
 class CRM_Contact_Form_Search_Custom_EmployerListing implements CRM_Contact_Form_Search_Interface {
 
+  public $_columns;
   protected $_formValues; function __construct(&$formValues) {
     $this->_formValues = $formValues;
 

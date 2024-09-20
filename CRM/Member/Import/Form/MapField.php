@@ -45,6 +45,9 @@
  */
 class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
 
+  public $_onDuplicate;
+  public $_locationFields;
+  public $_location_types;
   /**
    * cache of preview data values
    *

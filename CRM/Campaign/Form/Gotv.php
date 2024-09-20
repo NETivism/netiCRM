@@ -40,6 +40,15 @@
 
 class CRM_Campaign_Form_Gotv extends CRM_Core_Form {
 
+  public $_search;
+  public $_surveyId;
+  /**
+   * @var string
+   */
+  public $_interviewerId;
+  public $_subVotingTab;
+  public $_searchParams;
+  public $_elements;
   /**
    * Are we forced to run a search
    *

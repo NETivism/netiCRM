@@ -51,6 +51,10 @@
  */
 class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Selector_API {
 
+  public $_refresh;
+  public $_context;
+  public $_customFields;
+  public $_options;
   /**
    * This defines two actions- View and Edit.
    *

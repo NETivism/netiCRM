@@ -41,6 +41,10 @@
  */
 class CRM_Member_Import_Form_UploadFile extends CRM_Core_Form {
 
+  public $_contactTypes;
+  public $_dedupeRuleFields;
+  public $_dedupeRuleGroups;
+  public $_submitValues;
   /**
    * Function to set variables up before form is built
    *

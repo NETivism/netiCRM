@@ -23,6 +23,7 @@
  */
 class ezcMailPop3Set implements ezcMailParserSet
 {
+    public $connection;
     /**
      * Holds the list of messages that the user wants to retrieve from the server.
      *

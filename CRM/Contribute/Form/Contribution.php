@@ -44,6 +44,16 @@
  *
  */
 class CRM_Contribute_Form_Contribution extends CRM_Core_Form {
+  public $_priceSetId;
+  public $_submitValues;
+  public $userDisplayName;
+  public $userEmail;
+  public $_multiContribComponent;
+  public $_priceSet;
+  /**
+   * @var mixed
+   */
+  public $_params;
   public $_mode;
 
   public $_action;

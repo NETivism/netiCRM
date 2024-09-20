@@ -49,6 +49,7 @@
  */
 class CRM_Member_Selector_MembershipLog extends CRM_Core_Selector_Base implements CRM_Core_Selector_API {
 
+  public $_where;
   /**
    * This defines two actions- View and Edit.
    *

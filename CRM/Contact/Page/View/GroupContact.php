@@ -36,6 +36,8 @@
 
 class CRM_Contact_Page_View_GroupContact extends CRM_Core_Page {
 
+  public $_contactId;
+  public $_action;
   /**
    * This function is called when action is browse
    *

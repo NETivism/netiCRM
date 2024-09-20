@@ -41,6 +41,7 @@
  */
 class CRM_Contribute_Form_Task_Batch extends CRM_Contribute_Form_Task {
 
+  public $_fields;
   /**
    * the title of the group
    *
@@ -94,7 +95,7 @@ class CRM_Contribute_Form_Task_Batch extends CRM_Contribute_Form_Task {
       $contactDetails[$contributionDAO->contribution_id]['trxn_id'] = $contributionDAO->trxn_id;
       $contactDetails[$contributionDAO->contribution_id]['receipt_id'] = $contributionDAO->receipt_id;
     }
-    
+
     $this->assign('contactDetails', $contactDetails);
     $this->assign('readOnlyFields', $readOnlyFields);
   }

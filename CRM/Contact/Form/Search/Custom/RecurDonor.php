@@ -1,6 +1,16 @@
 <?php
 class CRM_Contact_Form_Search_Custom_RecurDonor extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
 
+  /**
+   * @var mixed[]
+   */
+  public $_cstatus;
+  public $_cpage;
+  public $_ctype;
+  public $_criteria;
+  public $_queryColumns;
+  public $_filled;
+  public $_isExport;
   protected $_tableName = NULL;
 
   function __construct(&$formValues){

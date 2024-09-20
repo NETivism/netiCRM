@@ -39,6 +39,7 @@
  * contacts.
  */
 class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
+  public $_enableEmailReceipt;
   CONST PDF_BATCH_THRESHOLD = 100;
 
   /**

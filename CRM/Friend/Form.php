@@ -42,6 +42,8 @@
  */
 class CRM_Friend_Form extends CRM_Core_Form {
 
+  public $_pcpBlockId;
+  public $_mailLimit;
   /**
    * Constants for number of friend contacts
    */

@@ -35,6 +35,24 @@
 
 class CRM_Report_Form_Contribute_TaiwanTax extends CRM_Report_Form {
 
+  public $_specialCase;
+  public $_columnHeaders;
+  /**
+   * @var string
+   */
+  public $_from;
+  public $_where;
+  /**
+   * @var string
+   */
+  public $_groupBy;
+  /**
+   * @var string
+   */
+  public $_orderBy;
+  public $_aliases;
+  public $_outputMode;
+  public $_receiptColumn;
   protected $_summary = NULL;
   protected $_customGroupExtends = array('Contribution');
   protected $_receiptTitle = NULL;

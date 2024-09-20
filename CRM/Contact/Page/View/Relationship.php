@@ -36,6 +36,8 @@
 
 class CRM_Contact_Page_View_Relationship extends CRM_Core_Page {
 
+  public $_id;
+  public $_action;
   /**
    * The action links that we need to display for the browse screen
    *

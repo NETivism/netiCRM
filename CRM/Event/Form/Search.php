@@ -46,6 +46,17 @@
  */
 class CRM_Event_Form_Search extends CRM_Core_Form {
 
+  public $_exportButtonName;
+  /**
+   * @var never[]
+   */
+  public $defaults;
+  /**
+   * @var string
+   */
+  public $_reset;
+  public $_eventId;
+  public $_defaultValues;
   /**
    * Are we forced to run a search
    *

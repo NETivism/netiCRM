@@ -41,6 +41,8 @@
  */
 class CRM_Contact_Page_View_CustomData extends CRM_Core_Page {
 
+  public $_contactId;
+  public $_action;
   /**
    * the id of the object being viewed (note/relationship etc)
    *

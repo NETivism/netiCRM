@@ -42,6 +42,13 @@
  */
 class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
 
+  public $_amount;
+  public $_usedOptionsDiscount;
+  public $_totalDiscount;
+  public $_coupon;
+  public $_part;
+  public $_checkoutButtonName;
+  public $_isOnWaitlist;
   /**
    * the values for the contribution db object
    *

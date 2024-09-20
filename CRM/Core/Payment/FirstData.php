@@ -57,6 +57,7 @@ future.
 
 
 class CRM_Core_Payment_FirstData extends CRM_Core_Payment {
+  public $_mode;
   # (not used, implicit in the API, might need to convert?)
   CONST CHARSET = 'UFT-8';
 

@@ -36,6 +36,14 @@
 
 class CRM_Contact_Form_Search_Custom_DateAdded extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
 
+  public $_includeGroups;
+  public $_excludeGroups;
+  /**
+   * @var bool
+   */
+  public $_allSearch;
+  public $_groups;
+  public $_tableName;
   protected $_debug = 0; function __construct(&$formValues) {
     parent::__construct($formValues);
 

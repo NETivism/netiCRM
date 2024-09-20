@@ -42,6 +42,18 @@
  */
 class CRM_Event_Form_Registration_ThankYou extends CRM_Event_Form_Registration {
 
+  public $_part;
+  public $_totalAmount;
+  public $_receiveDate;
+  public $_trxnId;
+  public $_isOnWaitlist;
+  /**
+   * @var mixed[]
+   */
+  public $_submitValues;
+  public $_usedOptionsDiscount;
+  public $_totalDiscount;
+  public $_coupon;
   /**
    * Function to set variables up before form is built
    *

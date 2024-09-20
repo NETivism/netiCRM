@@ -42,6 +42,8 @@
  */
 class CRM_Case_Form_EditClient extends CRM_Core_Form {
 
+  public $_contactId;
+  public $_caseId;
   /**
    * build all the data structures needed to build the form
    *

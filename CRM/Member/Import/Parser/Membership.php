@@ -40,6 +40,49 @@ require_once 'api/v2/Membership.php';
  */
 class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
 
+  public $_mapperLocType;
+  public $_mapperPhoneType;
+  public $_mapperWebsiteType;
+  public $_mapperImProvider;
+  /**
+   * @var int|int
+   */
+  public $_phoneIndex;
+  /**
+   * @var int|int
+   */
+  public $_emailIndex;
+  /**
+   * @var int|int
+   */
+  public $_firstNameIndex;
+  /**
+   * @var int|int
+   */
+  public $_lastNameIndex;
+  /**
+   * @var int|int
+   */
+  public $_householdNameIndex;
+  /**
+   * @var int|int
+   */
+  public $_organizationNameIndex;
+  /**
+   * @var int|int
+   */
+  public $_externalIdentifierIndex;
+  /**
+   * @var never[]
+   */
+  public $_allEmails;
+  /**
+   * @var never[]
+   */
+  public $_allExternalIdentifiers;
+  public $_dedupeRuleFields;
+  public $_contactSubType;
+  public $_dataReferenceField;
   protected $_mapperKeys;
 
   private $_contactIdIndex;

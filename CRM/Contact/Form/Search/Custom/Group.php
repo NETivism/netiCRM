@@ -37,6 +37,14 @@
 
 class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
 
+  public $_includeGroups;
+  public $_excludeGroups;
+  public $_includeTags;
+  public $_excludeTags;
+  public $_allSearch;
+  public $_groups;
+  public $_tags;
+  public $_andOr;
   protected $_formValues;
 
   protected $_tableName = NULL;

@@ -42,6 +42,13 @@
  */
 class CRM_Event_Form_Registration extends CRM_Core_Form {
 
+  public $_totalParticipantCount;
+  public $_usedOptionsDiscount;
+  public $_totalDiscount;
+  public $_coupon;
+  public $_paymentProcessors;
+  public $_isOnWaitlist;
+  public $_waitlistMsg;
   /**
    * how many locationBlocks should we display?
    *

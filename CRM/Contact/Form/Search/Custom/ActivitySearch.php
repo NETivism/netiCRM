@@ -36,6 +36,8 @@
 
 class CRM_Contact_Form_Search_Custom_ActivitySearch implements CRM_Contact_Form_Search_Interface {
 
+  public $_columns;
+  public $_groupId;
   protected $_formValues; function __construct(&$formValues) {
     $this->_formValues = $formValues;
 

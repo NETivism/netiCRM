@@ -39,6 +39,7 @@
 
 
 class CRM_Mailing_BAO_Job extends CRM_Mailing_DAO_Job {
+  public $dedupe_email;
   CONST MAX_CONTACTS_TO_PROCESS = 1000;
 
   /**

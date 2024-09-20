@@ -41,6 +41,7 @@
  */
 class CRM_Contact_Form_Task_RemoveFromTag extends CRM_Contact_Form_Task {
 
+  public $_tagElement;
   /**
    * name of the tag
    *

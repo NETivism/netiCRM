@@ -37,6 +37,8 @@
 
 class CRM_Core_Extensions_Payment {
 
+  public $ext;
+  public $paymentProcessorTypes;
   public function __construct($ext) {
     $this->ext = $ext;
     $this->paymentProcessorTypes = $this->_getAllPaymentProcessorTypes('class_name');

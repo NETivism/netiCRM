@@ -29,6 +29,7 @@ require_once 'PEAR/ErrorStack.php';
 class PEAR_PackageFile_v2
 {
 
+    public $_scripts;
     /**
      * Parsed package information
      * @var array

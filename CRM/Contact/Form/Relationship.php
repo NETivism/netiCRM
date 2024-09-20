@@ -44,6 +44,8 @@
  */
 class CRM_Contact_Form_Relationship extends CRM_Core_Form {
 
+  public $_cdType;
+  public $_callAjax;
   /**
    * max number of contacts we will display for a relationship
    */

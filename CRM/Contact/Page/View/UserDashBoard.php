@@ -42,6 +42,7 @@
  *
  */
 class CRM_Contact_Page_View_UserDashBoard extends CRM_Core_Page {
+  public $_userOptions;
   public $_contactId = NULL;
 
   /*

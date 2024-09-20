@@ -36,6 +36,7 @@
 
 class CRM_Group_Controller extends CRM_Core_Controller {
 
+  public $_pages;
   /**
    * class constructor
    */

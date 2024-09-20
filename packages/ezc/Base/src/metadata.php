@@ -18,6 +18,7 @@
  */
 class ezcBaseMetaData
 {
+    public $reader;
     /**
      * Creates a ezcBaseMetaData object
      *

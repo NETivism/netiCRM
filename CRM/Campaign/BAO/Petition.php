@@ -36,6 +36,7 @@
 
 
 Class CRM_Campaign_BAO_Petition extends CRM_Campaign_BAO_Survey {
+  public $cookieExpire;
   function __construct() {
     parent::__construct();
     // expire cookie in one day

@@ -39,6 +39,13 @@
 
 
 abstract class CRM_Contribute_Import_Parser {
+  /**
+   * @var mixed[]
+   */
+  public $_contributionPages;
+  public $_tableName;
+  public $_primaryKeyName;
+  public $_statusFieldName;
   CONST MAX_ERRORS = 250, MAX_WARNINGS = 25;
   CONST PENDING = 0, VALID = 1, WARNING = 2, ERROR = 4, CONFLICT = 8, STOP = 16, DUPLICATE = 32, MULTIPLE_DUPE = 64, NO_MATCH = 128, UNPARSED_ADDRESS_WARNING = 256, SOFT_CREDIT_ERROR = 512, PLEDGE_PAYMENT_ERROR = 1024, PCP_ERROR = 2048;
   CONST SOFT_CREDIT = 65536, PLEDGE_PAYMENT = 131072, PCP = 262144; 

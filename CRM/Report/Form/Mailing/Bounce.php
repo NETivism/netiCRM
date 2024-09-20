@@ -36,6 +36,19 @@
 
 class CRM_Report_Form_Mailing_Bounce extends CRM_Report_Form {
 
+  /**
+   * @var never[]
+   */
+  public $_columnHeaders;
+  public $_from;
+  public $_aliases;
+  public $relationshipId;
+  public $_where;
+  /**
+   * @var string
+   */
+  public $_groupBy;
+  public $_absoluteUrl;
   protected $_summary = NULL;
 
   protected $_emailField = FALSE;

@@ -42,6 +42,7 @@ require_once 'api/v3/DeprecatedUtils.php';
  * @package   CiviCRM
  */
 class api_v3_UtilsTest extends CiviUnitTestCase {
+  public $_contactID;
   protected $_apiversion;
   public $DBResetRequired = FALSE;
 

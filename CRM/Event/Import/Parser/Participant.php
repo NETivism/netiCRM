@@ -39,6 +39,12 @@
  * class to parse membership csv files
  */
 class CRM_Event_Import_Parser_Participant extends CRM_Event_Import_Parser {
+  public $_dedupeRuleGroupId;
+  public $_dedupeRuleFields;
+  /**
+   * @var mixed[]
+   */
+  public $_newParticipant;
   protected $_mapperKeys;
 
   private $_contactIdIndex;

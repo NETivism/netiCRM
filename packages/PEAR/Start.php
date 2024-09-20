@@ -6,6 +6,11 @@ require_once 'PEAR/Command.php';
 require_once 'PEAR/Common.php';
 class PEAR_Start extends PEAR
 {
+    /**
+     * @var string
+     */
+    public $doc_dir;
+    public $registry;
     var $bin_dir;
     var $data_dir;
     var $cfg_dir;

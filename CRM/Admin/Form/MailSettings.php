@@ -42,6 +42,7 @@
  */
 class CRM_Admin_Form_MailSettings extends CRM_Admin_Form {
 
+  public $_elementIndex;
   /**
    * Function to build the form
    *

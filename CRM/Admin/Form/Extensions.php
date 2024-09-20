@@ -41,6 +41,7 @@
  */
 class CRM_Admin_Form_Extensions extends CRM_Admin_Form {
 
+  public $_key;
   /**
    * Function to for pre-processing
    *

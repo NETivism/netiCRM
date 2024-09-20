@@ -20,6 +20,8 @@ require_once 'CiviTest/CiviUnitTestCase.php';
  *  @package   CiviCRM
  */
 class api_v3_ActivityTest extends CiviUnitTestCase {
+  public $_individualId;
+  public $test_activity_type_id;
   protected $_params;
   protected $_params2;
   protected $_entity = 'activity';

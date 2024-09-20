@@ -41,6 +41,10 @@
  */
 class CRM_Event_Form_Task_Batch extends CRM_Event_Form_Task {
 
+  public $_fields;
+  public $_roleCustomDataTypeID;
+  public $_eventNameCustomDataTypeID;
+  public $_customFields;
   /**
    * the title of the group
    *

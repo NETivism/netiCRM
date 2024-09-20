@@ -41,6 +41,9 @@ define('PEAR_INSTALLER_NOBINARY', -240);
  */
 class PEAR_Installer extends PEAR_Downloader
 {
+    public $source_files;
+    public $_dirtree;
+    public $_dependencyDB;
     // {{{ properties
 
     /** name of the package directory, for example Foo-1.0

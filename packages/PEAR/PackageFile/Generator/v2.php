@@ -36,7 +36,8 @@ require_once 'XML/Util.php';
  */
 class PEAR_PackageFile_Generator_v2
 {
-   /**
+   public $_curdir;
+    /**
     * default options for the serialization
     * @access private
     * @var array $_defaultOptions

@@ -37,6 +37,7 @@
 
 class CRM_Core_Payment_PaymentExpressIPN extends CRM_Core_Payment_BaseIPN {
 
+  public $_paymentProcessor;
   /**
    * We only need one instance of this object. So we use the singleton
    * pattern and cache the instance in this variable

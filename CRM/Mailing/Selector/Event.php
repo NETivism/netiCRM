@@ -50,6 +50,7 @@
  */
 class CRM_Mailing_Selector_Event extends CRM_Core_Selector_Base implements CRM_Core_Selector_API {
 
+  public $_event_type;
   /**
    * array of supported links, currenly null
    *

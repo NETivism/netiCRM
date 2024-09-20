@@ -36,6 +36,18 @@
 
 class CRM_Report_Form_Activity extends CRM_Report_Form {
 
+  /**
+   * @var never[]
+   */
+  public $_columnHeaders;
+  public $_from;
+  public $_aliases;
+  public $_where;
+  /**
+   * @var never[]|mixed[]|string[]|string
+   */
+  public $_groupBy;
+  public $_absoluteUrl;
   protected $_emailField = FALSE;
   protected $_customGroupExtends = array('Activity'); function __construct() {
     $config = CRM_Core_Config::singleton();
@@ -377,20 +389,20 @@ class CRM_Report_Form_Activity extends CRM_Report_Form {
             $this->_aclFrom = $this->_aclWhere = null;
             return;
         }
-        
+
         $session = CRM_Core_Session::singleton( );
         $contactID =  $session->get( 'userID' );
         if ( ! $contactID ) {
             $contactID = 0;
         }
         $contactID = CRM_Utils_Type::escape( $contactID, 'Integer' );
-        
+
         CRM_Contact_BAO_Contact_Permission::cache( $contactID );
         $clauses = array();
         foreach( $tableAlias as $k => $alias ) {
             $clauses[] = " INNER JOIN civicrm_acl_contact_cache aclContactCache_{$k} ON ( {$alias}.id = aclContactCache_{$k}.contact_id OR {$alias}.id IS NULL ) AND aclContactCache_{$k}.user_id = $contactID ";  
         }
-        
+
         $this->_aclFrom  = CRM_Utils_Array::implode(" ", $clauses );
         $this->_aclWhere = null;
         */

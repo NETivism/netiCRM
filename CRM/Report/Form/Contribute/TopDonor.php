@@ -37,6 +37,18 @@
 
 class CRM_Report_Form_Contribute_TopDonor extends CRM_Report_Form {
 
+  public $_columnHeaders;
+  public $_from;
+  public $_aliases;
+  /**
+   * @var string
+   */
+  public $_tempClause;
+  public $_outerCluase;
+  public $_where;
+  public $_groupBy;
+  public $_outputMode;
+  public $_absoluteUrl;
   protected $_summary = NULL;
 
   protected $_phoneField = FALSE;

@@ -41,6 +41,7 @@
  */
 class CRM_Contact_Form_DedupeFind extends CRM_Admin_Form {
 
+  public $rgid;
   /**
    * defined defaults
    *

@@ -38,6 +38,7 @@
  */
 class CRM_Contribute_Form_Payment_ThankYou extends CRM_Contribute_Form_Payment {
 
+  public $_values;
   /**
    * Function to set variables up before form is built
    *

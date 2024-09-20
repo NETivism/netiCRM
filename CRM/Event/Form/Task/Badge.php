@@ -41,6 +41,7 @@
  */
 class CRM_Event_Form_Task_Badge extends CRM_Event_Form_Task {
 
+  public $_context;
   /**
    * Are we operating in "single mode", i.e. sending email to one
    * specific contact?

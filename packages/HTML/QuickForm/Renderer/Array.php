@@ -114,6 +114,10 @@ require_once 'HTML/QuickForm/Renderer.php';
  */
 class HTML_QuickForm_Renderer_Array extends HTML_QuickForm_Renderer
 {
+   /**
+     * @var int
+     */
+    public $_elementIdx;
    /**#@+
     * @access private
     */

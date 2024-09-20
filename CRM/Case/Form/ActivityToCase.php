@@ -41,6 +41,8 @@
  */
 class CRM_Case_Form_ActivityToCase extends CRM_Core_Form {
 
+  public $_activityId;
+  public $_currentCaseId;
   /**
    * build all the data structures needed to build the form.
    *

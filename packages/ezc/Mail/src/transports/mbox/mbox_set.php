@@ -20,6 +20,7 @@
  */
 class ezcMailMboxSet implements ezcMailParserSet
 {
+    public $currentMessagePosition;
     /**
      * Holds the filepointer to the mbox
      *

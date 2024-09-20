@@ -37,6 +37,7 @@
 
 class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_ContributionPage {
 
+  public $_cdType;
   protected $_contributionType = NULL;
 
   /**

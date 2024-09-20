@@ -47,6 +47,7 @@
 
 class CRM_Core_Selector_Controller {
 
+  public $_case;
   /**
    * constants to determine if we should store
    * the output in the session or template

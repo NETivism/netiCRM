@@ -35,6 +35,26 @@
 
 
 class CRM_Report_Form extends CRM_Core_Form {
+  public $_section;
+  /**
+   * @var string|null
+   */
+  public $_description;
+  public $_aliases;
+  public $_charts;
+  public $_columnHeaders;
+  public $_grandFlag;
+  public $_interval;
+  public $_where;
+  public $_sendmail;
+  /**
+   * @var bool
+   */
+  public $_absoluteUrl;
+  public $_outputMode;
+  public $_from;
+  public $_groupBy;
+  public $_orderBy;
   CONST ROW_COUNT_LIMIT = 50;
 
   /**

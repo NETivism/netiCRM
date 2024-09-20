@@ -41,6 +41,15 @@
  */
 class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
 
+  public $_mid;
+  /**
+   * @var int
+   */
+  public $_defaultMemTypeId;
+  public $_paymentProcessors;
+  public $_contributeMode;
+  public $_ppType;
+  public $_defaultFromRequest;
   /**
    * the id of the contribution page that we are proceessing
    *

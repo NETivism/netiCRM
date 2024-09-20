@@ -42,6 +42,22 @@ require_once 'api/api.php';
 define('CRM_REQUEST_TIME', (int) $_SERVER['REQUEST_TIME']);
 
 class CRM_Core_Config extends CRM_Core_Config_Variables {
+  /**
+   * @var mixed
+   */
+  public $userFrameworkVersion;
+  /**
+   * @var string
+   */
+  public $customFileUploadURL;
+  /**
+   * @var string
+   */
+  public $version;
+  /**
+   * @var string
+   */
+  public $ver;
   ///
   /// BASE SYSTEM PROPERTIES (CIVICRM.SETTINGS.PHP)
   ///

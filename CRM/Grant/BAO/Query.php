@@ -34,6 +34,7 @@
  *
  */
 class CRM_Grant_BAO_Query {
+  public $_qill;
   static function &getFields() {
     $fields = array();
 

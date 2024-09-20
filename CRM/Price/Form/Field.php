@@ -41,6 +41,7 @@
  */
 class CRM_Price_Form_Field extends CRM_Core_Form {
 
+  public $_cdType;
   /**
    * Constants for number of options for data types of multiple option.
    */

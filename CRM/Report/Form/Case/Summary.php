@@ -37,6 +37,35 @@
 
 class CRM_Report_Form_Case_Summary extends CRM_Report_Form {
 
+  /**
+   * @var mixed[]
+   */
+  public $case_statuses;
+  /**
+   * @var mixed[]
+   */
+  public $rel_types;
+  /**
+   * @var mixed[]
+   */
+  public $deleted_labels;
+  /**
+   * @var never[]
+   */
+  public $_columnHeaders;
+  public $_aliases;
+  /**
+   * @var string
+   */
+  public $_from;
+  /**
+   * @var string
+   */
+  public $_where;
+  /**
+   * @var string
+   */
+  public $_groupBy;
   protected $_summary = NULL;
   protected $_relField = FALSE; function __construct() {
     $this->case_statuses = CRM_Case_PseudoConstant::caseStatus();

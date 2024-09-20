@@ -36,6 +36,8 @@
 
 class CRM_Contact_Form_Search_Custom extends CRM_Contact_Form_Search {
 
+  public $selector;
+  public $_elementIndex;
   protected $_customClass = NULL;
 
   public function preProcess() {

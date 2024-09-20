@@ -40,6 +40,7 @@
 
 class CRM_Mailing_Event_BAO_Queue extends CRM_Mailing_Event_DAO_Queue {
 
+  public $email;
   /**
    * class constructor
    */

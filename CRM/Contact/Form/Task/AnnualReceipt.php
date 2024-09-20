@@ -5,6 +5,7 @@
  */
 class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
 
+  public $option;
   /**
    * Are we operating in "single mode", i.e. updating the task of only
    * one specific contribution?

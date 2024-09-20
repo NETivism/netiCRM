@@ -40,6 +40,11 @@
  */
 class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_ContributionBase {
 
+  public $_lineItem;
+  public $_contributeMode;
+  public $_rules;
+  public $_separateMembershipPayment;
+  public $_checkoutButtonName;
   /**
    * Function to set variables up before form is built
    *

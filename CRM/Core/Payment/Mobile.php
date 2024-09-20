@@ -36,6 +36,12 @@
 
 
 class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
+  /**
+   * @var mixed
+   */
+  public $_processorName;
+  public $_instrumentType;
+  public $_mobilePayment;
   CONST CHARSET = 'iso-8859-1';
   static protected $_mode = NULL;
   static protected $_params = array();

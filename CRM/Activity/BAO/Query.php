@@ -35,6 +35,7 @@
  */
 class CRM_Activity_BAO_Query {
 
+  public $_qill;
   /**
    * build select for Case
    *

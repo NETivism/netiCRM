@@ -40,6 +40,19 @@
  */
 class CRM_Core_BAO_Address extends CRM_Core_DAO_Address {
 
+  public $_name;
+  public $state_name;
+  public $state;
+  public $country;
+  public $world_region;
+  /**
+   * @var string
+   */
+  public $display;
+  /**
+   * @var string
+   */
+  public $display_text;
   /**
    * Should we overwrite existing address, total hack for now
    * Please do not use this hack in other places, its totally gross

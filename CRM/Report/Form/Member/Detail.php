@@ -37,6 +37,19 @@
 
 class CRM_Report_Form_Member_Detail extends CRM_Report_Form {
 
+  /**
+   * @var never[]
+   */
+  public $_columnHeaders;
+  public $_from;
+  public $_aliases;
+  public $_where;
+  /**
+   * @var string
+   */
+  public $_groupBy;
+  public $_outputMode;
+  public $_absoluteUrl;
   protected $_addressField = FALSE;
 
   protected $_emailField = FALSE;

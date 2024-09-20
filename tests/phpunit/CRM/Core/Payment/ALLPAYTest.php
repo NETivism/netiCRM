@@ -3,6 +3,7 @@
 require_once 'CiviTest/CiviUnitTestCase.php';
 
 class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
+  public $_cid;
   public $DBResetRequired = FALSE;
   protected $_apiversion;
   protected $_processor;

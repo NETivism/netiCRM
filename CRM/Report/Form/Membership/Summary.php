@@ -37,6 +37,14 @@
 
 class CRM_Report_Form_Membership_Summary extends CRM_Report_Form {
 
+  public $_columnHeaders;
+  public $_addressField;
+  public $_emailField;
+  public $_from;
+  public $_aliases;
+  public $_where;
+  public $_groupBy;
+  public $_interval;
   protected $_summary = NULL;
 
   protected $_charts = array('' => 'Tabular',

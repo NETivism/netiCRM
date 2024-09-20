@@ -93,6 +93,7 @@ if (!isset($GLOBALS['_DB_TABLE']['qf_class_name'])) {
 class DB_Table_QuickForm {
     
     
+    public $table;
     /**
     * 
     * Build a form based on DB_Table column definitions.

@@ -42,6 +42,12 @@
  */
 class CRM_Case_Page_Tab extends CRM_Core_Page {
 
+  public $_action;
+  public $_id;
+  /**
+   * @var string
+   */
+  public $_context;
   /**
    * The action links that we need to display for the browse screen
    *

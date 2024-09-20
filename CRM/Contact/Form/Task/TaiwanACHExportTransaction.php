@@ -1,6 +1,8 @@
 <?php
 
 class CRM_Contact_Form_Task_TaiwanACHExportTransaction extends CRM_Contact_Form_Task_TaiwanACHExport {
+  public $_exportParams;
+  public $_additionalIds;
   function preProcess() {
     parent::preProcess();
     $this->_exportParams = array();

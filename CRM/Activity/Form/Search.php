@@ -46,6 +46,14 @@
 class CRM_Activity_Form_Search extends CRM_Core_Form {
 
   /**
+   * @var never[]
+   */
+  public $defaults;
+  /**
+   * @var string
+   */
+  public $_reset;
+  /**
    * Are we forced to run a search
    *
    * @var int

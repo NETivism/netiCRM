@@ -38,6 +38,8 @@
 
 
 class CRM_Report_Form_Event_Income extends CRM_Report_Form {
+  public $_setVariable;
+  public $_outputMode;
   CONST ROW_COUNT_LIMIT = 2;
 
   protected $_summary = NULL;

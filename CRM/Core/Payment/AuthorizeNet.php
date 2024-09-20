@@ -22,6 +22,10 @@
 
 
 class CRM_Core_Payment_AuthorizeNet extends CRM_Core_Payment {
+  /**
+   * @var mixed
+   */
+  public $_processorName;
   CONST CHARSET = 'iso-8859-1';
   CONST AUTH_APPROVED = 1;
   CONST AUTH_DECLINED = 2;

@@ -1,6 +1,8 @@
 <?php
 
 class CRM_Contribute_Form_TaiwanACH_Summary extends CRM_Core_Form {
+  public $_parseResult;
+  public $_processResult;
   protected $_contactId = NULL;
   protected $_id = NULL;
   protected $_contributionRecurId = NULL;

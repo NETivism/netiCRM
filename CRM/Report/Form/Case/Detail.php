@@ -38,6 +38,29 @@
 
 class CRM_Report_Form_Case_Detail extends CRM_Report_Form {
 
+  /**
+   * @var mixed[]
+   */
+  public $case_statuses;
+  /**
+   * @var mixed[]
+   */
+  public $case_types;
+  /**
+   * @var mixed[]
+   */
+  public $rel_types;
+  /**
+   * @var never[]|\non-empty-array<\mixed, \mixed>
+   */
+  public $_columnHeaders;
+  public $_aliases;
+  public $_from;
+  public $_where;
+  /**
+   * @var string
+   */
+  public $_groupBy;
   protected $_relField = FALSE;
 
   protected $_addressField = FALSE;

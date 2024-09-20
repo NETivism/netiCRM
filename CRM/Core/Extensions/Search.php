@@ -37,6 +37,9 @@
 
 class CRM_Core_Extensions_Search {
 
+  public $ext;
+  public $groupId;
+  public $customSearches;
   /**
    *
    */

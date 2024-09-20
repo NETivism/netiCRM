@@ -47,6 +47,13 @@ require_once 'PEAR.php';
  */
 class DB_common extends PEAR
 {
+    public $connection;
+    public $autocommit;
+    public $dsn;
+    public $phptype;
+    public $dbsyntax;
+    public $features;
+    public $errorcode_map;
     // {{{ properties
 
     /**

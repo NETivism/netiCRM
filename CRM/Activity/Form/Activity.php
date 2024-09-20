@@ -47,6 +47,14 @@
  */
 class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
 
+  public $_cdType;
+  public $_atypefile;
+  public $_addAssigneeContact;
+  public $_addTargetContact;
+  public $_urlPath;
+  public $_groupTree;
+  public $_activityTypeName;
+  public $_values;
   /**
    * The id of the object being edited / created
    *

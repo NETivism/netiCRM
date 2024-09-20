@@ -34,6 +34,18 @@
  */
 class CRM_Mailing_BAO_Mailing extends CRM_Mailing_DAO_Mailing {
 
+  public $delivered;
+  public $entity_table;
+  public $group_id;
+  public $mailing_id;
+  public $group_type;
+  /**
+   * @var string
+   */
+  public $mailing_name;
+  public $group_hidden;
+  public $queue;
+  public $count;
   /**
    * An array that holds the complete templates
    * including any headers or footers that need to be prepended

@@ -15,6 +15,10 @@
 class HTMLPurifier_AttrTransform_SafeParam extends HTMLPurifier_AttrTransform
 {
     /**
+     * @var \HTMLPurifier_AttrDef_Enum
+     */
+    public $wmode;
+    /**
      * @type string
      */
     public $name = "SafeParam";

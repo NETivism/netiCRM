@@ -40,6 +40,7 @@
  */
 class CRM_Event_Page_EventInfo extends CRM_Core_Page {
 
+  public $_id;
   /**
    * Run the page.
    *

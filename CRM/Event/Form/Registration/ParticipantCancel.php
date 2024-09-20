@@ -41,6 +41,8 @@
  *
  */
 class CRM_Event_Form_Registration_ParticipantCancel extends CRM_Event_Form_Registration {
+  public $_participantStatusId;
+  public $_csContactID;
   // optional credit card return status code
   // CRM-6060
   protected $_cc = NULL;

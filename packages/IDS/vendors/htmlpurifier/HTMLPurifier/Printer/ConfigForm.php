@@ -6,6 +6,7 @@
 class HTMLPurifier_Printer_ConfigForm extends HTMLPurifier_Printer
 {
 
+    public $genConfig;
     /**
      * Printers for specific fields.
      * @type HTMLPurifier_Printer[]

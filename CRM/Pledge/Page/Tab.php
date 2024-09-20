@@ -35,6 +35,8 @@
 
 
 class CRM_Pledge_Page_Tab extends CRM_Core_Page {
+  public $_action;
+  public $_id;
   public $_permission = NULL;
   public $_contactId = NULL;
 

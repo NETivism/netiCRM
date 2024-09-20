@@ -38,6 +38,9 @@ require_once 'ezc/autoload/mail_autoload.php';
 
 class CRM_Mailing_MailStore_Maildir extends CRM_Mailing_MailStore {
 
+  public $_dir;
+  public $_ignored;
+  public $_processed;
   /**
    * Connect to the supplied dir and make sure the two mail dirs exist
    *

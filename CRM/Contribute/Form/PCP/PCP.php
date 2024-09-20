@@ -40,6 +40,8 @@
  */
 class CRM_Contribute_Form_PCP_PCP extends CRM_Core_Form {
 
+  public $_id;
+  public $_submitValues;
   /**
    * Function to set variables up before form is built
    *

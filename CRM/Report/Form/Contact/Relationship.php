@@ -38,6 +38,19 @@
 
 class CRM_Report_Form_Contact_Relationship extends CRM_Report_Form {
 
+  /**
+   * @var never[]
+   */
+  public $_columnHeaders;
+  public $_from;
+  public $_aliases;
+  public $_where;
+  /**
+   * @var string
+   */
+  public $_groupBy;
+  public $relationType;
+  public $_absoluteUrl;
   protected $_summary = NULL;
   protected $_emailField_a = FALSE;
   protected $_emailField_b = FALSE;

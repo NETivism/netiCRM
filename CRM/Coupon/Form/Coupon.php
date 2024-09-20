@@ -1,6 +1,9 @@
 <?php
 class CRM_Coupon_Form_Coupon extends CRM_Core_Form {
   
+  public $_batch;
+  public $_prefix;
+  public $_defaults;
   /**
    * the set id saved to the session for an update
    *

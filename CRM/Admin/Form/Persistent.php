@@ -40,6 +40,11 @@
  */
 class CRM_Admin_Form_Persistent extends CRM_Core_Form {
 
+  public $_indexID;
+  /**
+   * @var string
+   */
+  public $_config;
   public function preProcess() {
     $this->_indexID = CRM_Utils_Request::retrieve('id', 'Integer', $this, FALSE);
     $this->_config = CRM_Utils_Request::retrieve('config', 'Integer', $this, 0);

@@ -42,6 +42,14 @@
  *
  */
 class CRM_Campaign_Form_Petition_Signature extends CRM_Core_Form {
+  public $forceEmailConfirmed;
+  public $bao;
+  public $petition;
+  /**
+   * @var mixed[]
+   */
+  public $_fields;
+  public $thankyou;
   CONST EMAIL_THANK = 1, EMAIL_CONFIRM = 2, MODE_CREATE = 4;
 
   protected $_mode;

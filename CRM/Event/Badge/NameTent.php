@@ -40,6 +40,17 @@
 
 
 class CRM_Event_Badge_NameTent extends CRM_Event_Badge {
+  /**
+   * @var int
+   */
+  public $lMargin;
+  public $tMargin;
+  public $lMarging;
+  /**
+   * @var array<string, float|int|string>
+   */
+  public $format;
+  public $pdf;
   function __construct() {
     parent::__construct();
     // A4

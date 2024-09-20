@@ -42,6 +42,8 @@
  */
 class CRM_Case_Form_Activity_OpenCase {
 
+  public $_context;
+  public $controller;
   /**
    * the id of the client associated with this case
    *

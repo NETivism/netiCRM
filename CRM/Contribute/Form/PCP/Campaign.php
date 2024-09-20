@@ -38,6 +38,7 @@
  *
  */
 class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
+  public $_elementIndex;
   public $_context;
 
   private $_key;

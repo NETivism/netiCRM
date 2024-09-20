@@ -34,6 +34,7 @@
  *
  */
 class CRM_Pledge_BAO_Query {
+  public $_qill;
   static function &getFields() {
 
     $fields = CRM_Pledge_BAO_Pledge::exportableFields();

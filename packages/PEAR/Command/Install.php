@@ -35,6 +35,8 @@ require_once 'PEAR/Command/Common.php';
  */
 class PEAR_Command_Install extends PEAR_Command_Common
 {
+    public $installer;
+    public $downloader;
     // {{{ properties
 
     var $commands = array(

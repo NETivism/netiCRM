@@ -1,5 +1,9 @@
 <?php
 class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
+  public $_totalRowCount;
+  public $_contactType;
+  public $_statusID;
+  public $_contactSubType;
   protected $_doGeocodeAddress;
 
   public $_newGroupName;

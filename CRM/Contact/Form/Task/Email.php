@@ -46,6 +46,12 @@
 class CRM_Contact_Form_Task_Email extends CRM_Contact_Form_Task {
 
   /**
+   * @var string
+   */
+  public $_caseId;
+  public $_context;
+  public $_templateDefault;
+  /**
    * Are we operating in "single mode", i.e. sending email to one
    * specific contact?
    *

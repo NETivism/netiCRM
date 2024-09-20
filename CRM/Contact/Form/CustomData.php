@@ -47,6 +47,11 @@
  */
 class CRM_Contact_Form_CustomData extends CRM_Core_Form {
 
+  public $_cdType;
+  public $_tableID;
+  public $_contactType;
+  public $_contactSubType;
+  public $_groupTree;
   /**
    * The table id, used when editing/creating custom data
    *

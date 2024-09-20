@@ -39,6 +39,8 @@
 
 
 abstract class CRM_Import_Parser {
+  public $_contactSubType;
+  public $_unparsedAddresses;
   CONST MAX_ERRORS = 5000, MAX_WARNINGS = 25;
   CONST PENDING = 0, VALID = 1, WARNING = 2, ERROR = 4, CONFLICT = 8, STOP = 16, DUPLICATE = 32, MULTIPLE_DUPE = 64, NO_MATCH = 128, UNPARSED_ADDRESS_WARNING = 256;
 

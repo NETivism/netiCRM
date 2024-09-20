@@ -34,6 +34,7 @@
  */
 
 class CRM_Contact_Form_Search_Custom_AnnualReceipt extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
+  public $_year;
   function __construct(&$formValues) {
     parent::__construct($formValues);
 

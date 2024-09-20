@@ -44,6 +44,14 @@
  *
  */
 class CRM_Case_Form_CaseView extends CRM_Core_Form {
+  public $_showRelatedCases;
+  public $_hasAccessToAllCases;
+  public $_contactID;
+  public $_caseID;
+  public $_userCases;
+  public $_caseDetails;
+  public $_caseType;
+  public $_uid;
   /*
      * check for merge cases.
      */

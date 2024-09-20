@@ -43,6 +43,7 @@
  */
 class ezcMailStorageSet implements ezcMailParserSet
 {
+    public $set;
     /**
      * Holds the pointer to the current file which holds the mail source.
      *

@@ -36,6 +36,10 @@
 
 
 class CRM_Core_Payment_PayPalImpl extends CRM_Core_Payment {
+  /**
+   * @var mixed
+   */
+  public $_processorName;
   CONST CHARSET = 'iso-8859-1';
 
   protected $_mode = NULL;

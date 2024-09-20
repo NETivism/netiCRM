@@ -1,6 +1,7 @@
 <?php
 class CRM_Contribute_Page_Receipt extends CRM_Core_Page{
 
+  public $_id;
   public $_permission = NULL;
   public $_contactId = NULL;
   public $_type = NULL;

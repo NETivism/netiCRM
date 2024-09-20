@@ -40,6 +40,47 @@ require_once 'api/v2/Contribution.php';
  */
 class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Parser {
 
+  /**
+   * @var int|int
+   */
+  public $_phoneIndex;
+  /**
+   * @var int|int
+   */
+  public $_emailIndex;
+  /**
+   * @var int|int
+   */
+  public $_firstNameIndex;
+  /**
+   * @var int|int
+   */
+  public $_lastNameIndex;
+  /**
+   * @var int|int
+   */
+  public $_householdNameIndex;
+  /**
+   * @var int|int
+   */
+  public $_organizationNameIndex;
+  /**
+   * @var int|int
+   */
+  public $_externalIdentifierIndex;
+  /**
+   * @var never[]
+   */
+  public $_allEmails;
+  /**
+   * @var never[]
+   */
+  public $_allExternalIdentifiers;
+  public $_dedupeRuleFields;
+  public $_statusFieldName;
+  public $_dateFormats;
+  public $_contributionPages;
+  public $_contactSubType;
   protected $_mapperKeys;
   protected $_mapperLocType;
   protected $_mapperPhoneType;

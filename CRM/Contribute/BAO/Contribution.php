@@ -41,6 +41,8 @@
 
 class CRM_Contribute_BAO_Contribution extends CRM_Contribute_DAO_Contribution {
 
+  public $trxn_result_code;
+  public $payment_processor;
   /**
    * static field for all the contribution information that we can potentially import
    *

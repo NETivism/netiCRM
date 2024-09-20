@@ -39,6 +39,14 @@
 
 class Net_URL
 {
+    /**
+     * @var string
+     */
+    public $user;
+    /**
+     * @var string
+     */
+    public $pass;
     var $options = array('encode_query_keys' => false);
     /**
     * Full url

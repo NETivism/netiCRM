@@ -42,6 +42,7 @@
  */
 class CRM_Activity_Form_ActivityView extends CRM_Core_Form {
 
+  public $_mailing_id;
   /**
    * Function to set variables up before form is built
    *

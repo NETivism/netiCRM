@@ -52,6 +52,7 @@ elseif(PHP_MAJOR_VERSION >= 7) {
 
 class CiviUnitTestCase extends CiviUnitTestBase {
 
+  public $_apiversion;
   /**
    *  Database has been initialized
    *

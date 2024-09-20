@@ -40,6 +40,7 @@
  */
 class CRM_Custom_Form_Option extends CRM_Core_Form {
 
+  public $_parent;
   /**
    * the custom field id saved to the session for an update
    *

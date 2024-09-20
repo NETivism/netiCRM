@@ -36,6 +36,19 @@
 
 
 class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
+  /**
+   * @var array<string, array<'no_display', bool>>
+   */
+  public $_columnHeaders;
+  public $_interval;
+  public $_from;
+  public $_aliases;
+  /**
+   * @var string
+   */
+  public $_groupBy;
+  public $_where;
+  public $_absoluteUrl;
   protected $_addressField = FALSE;
 
   protected $_charts = array('' => 'Tabular',

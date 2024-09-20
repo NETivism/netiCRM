@@ -36,6 +36,24 @@
 
 class CRM_Report_Form_Contact_Log extends CRM_Report_Form {
 
+  public $activityTypes;
+  /**
+   * @var never[]
+   */
+  public $_columnHeaders;
+  /**
+   * @var string
+   */
+  public $_from;
+  /**
+   * @var string
+   */
+  public $_where;
+  /**
+   * @var string
+   */
+  public $_orderBy;
+  public $_absoluteUrl;
   protected $_summary = NULL; function __construct() {
 
     $this->activityTypes = CRM_Core_PseudoConstant::activityType(TRUE, TRUE);

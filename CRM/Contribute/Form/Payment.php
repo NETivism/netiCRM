@@ -2,6 +2,8 @@
 
 class CRM_Contribute_Form_Payment extends CRM_Core_Form {
 
+  public $_values;
+  public $_paymentProcessor;
   public $_id;
 
   public $_entityId;

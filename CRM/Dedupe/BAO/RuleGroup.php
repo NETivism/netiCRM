@@ -41,6 +41,8 @@
  */
 class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
 
+  public $_aclFrom;
+  public $_aclWhere;
   /**
    * ids of the contacts to limit the SQL queries (whole-database queries otherwise)
    */

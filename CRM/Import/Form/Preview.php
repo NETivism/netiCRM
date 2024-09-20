@@ -42,6 +42,7 @@
  */
 class CRM_Import_Form_Preview extends CRM_Core_Form {
 
+  public $_dedupeRuleGroupId;
   /**
    * Function to set variables up before form is built
    *

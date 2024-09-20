@@ -42,6 +42,25 @@
  */
 class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
 
+  public $_contactID;
+  public $_memType;
+  public $_memTypeDetails;
+  public $_endDate;
+  public $_mode;
+  public $_paymentProcessor;
+  public $_processors;
+  public $_bltID;
+  public $_fields;
+  public $_defaults;
+  public $_values;
+  public $_contributorDisplayName;
+  public $_contributorEmail;
+  /**
+   * @var mixed
+   */
+  public $_params;
+  public $_membershipId;
+  public $_groupTree;
   public function preProcess() {
     // check for edit permission
     if (!CRM_Core_Permission::check('edit memberships')) {

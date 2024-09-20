@@ -42,6 +42,15 @@
 class CRM_Pledge_Form_Search extends CRM_Core_Form {
 
   /**
+   * @var never[]
+   */
+  public $defaults;
+  /**
+   * @var string
+   */
+  public $_reset;
+  public $_ssID;
+  /**
    * Are we forced to run a search
    *
    * @var int

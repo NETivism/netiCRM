@@ -41,6 +41,10 @@
  */
 class CRM_Mailing_Form_Schedule extends CRM_Core_Form {
 
+  public $_searchBasedMailing;
+  public $_mailingID;
+  public $_scheduleFormOnly;
+  public $_recipientsCount;
   /**
    * Function to set variables up before form is built
    *

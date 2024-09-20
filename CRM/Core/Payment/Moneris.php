@@ -37,6 +37,15 @@
 
 
 class CRM_Core_Payment_Moneris extends CRM_Core_Payment {
+  /**
+   * @var string
+   */
+  public $_mode;
+  /**
+   * @var mixed
+   */
+  public $_processorName;
+  public $_profile;
   # (not used, implicit in the API, might need to convert?)
   CONST CHARSET = 'UFT-8';
 

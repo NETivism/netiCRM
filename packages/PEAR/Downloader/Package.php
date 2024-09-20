@@ -56,6 +56,10 @@ define('PEAR_DOWNLOADER_PACKAGE_PHPVERSION', -1004);
 class PEAR_Downloader_Package
 {
     /**
+     * @var bool
+     */
+    public $_isvalid;
+    /**
      * @var PEAR_Downloader
      */
     var $_downloader;

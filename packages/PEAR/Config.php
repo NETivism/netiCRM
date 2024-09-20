@@ -270,6 +270,8 @@ if (getenv('PHP_PEAR_SIG_KEYDIR')) {
  */
 class PEAR_Config extends PEAR
 {
+    public $lastError;
+    public $_ftp;
     /**
      * Array of config files used.
      *

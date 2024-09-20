@@ -1,6 +1,11 @@
 <?php
 class CRM_Contribute_Import_ImportJob_Contribution extends CRM_Import_ImportJob {
 
+  public $_totalRowCount;
+  public $_dedupeRuleGroupId;
+  public $_contactType;
+  public $_statusID;
+  public $_createContactOption;
   protected $_mapperSoftCredit;
   protected $_mapperPCP;
 

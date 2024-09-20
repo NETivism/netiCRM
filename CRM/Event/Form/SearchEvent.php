@@ -36,6 +36,8 @@
 
 
 class CRM_Event_Form_SearchEvent extends CRM_Core_Form {
+  public $_showHide;
+  public $_event_type_id;
   function setDefaultValues() {
     $defaults = array();
     $defaults['eventsByDates'] = 0;

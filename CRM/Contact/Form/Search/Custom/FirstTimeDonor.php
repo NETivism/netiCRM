@@ -2,6 +2,16 @@
 
 class CRM_Contact_Form_Search_Custom_FirstTimeDonor extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
 
+  /**
+   * @var mixed[]
+   */
+  public $_instruments;
+  /**
+   * @var mixed[]
+   */
+  public $_contributionType;
+  public $_queryColumns;
+  public $_isExport;
   protected $_formValues;
   protected $_cstatus = NULL;
   protected $_config;

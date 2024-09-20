@@ -42,6 +42,7 @@
  */
 class CRM_Contact_Form_GroupContact extends CRM_Core_Form {
 
+  public $_context;
   /**
    * The groupContact id, used when editing the groupContact
    *

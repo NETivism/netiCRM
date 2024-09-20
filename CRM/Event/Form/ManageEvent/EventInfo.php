@@ -45,6 +45,11 @@
  */
 class CRM_Event_Form_ManageEvent_EventInfo extends CRM_Event_Form_ManageEvent {
 
+  public $_cdType;
+  public $_showHide;
+  public $_type;
+  public $_subType;
+  public $_groupCount;
   /**
    * Event type
    */

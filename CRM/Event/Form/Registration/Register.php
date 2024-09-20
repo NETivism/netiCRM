@@ -43,6 +43,19 @@
  */
 class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
 
+  public $_paymentProcessors;
+  public $_feeBlock;
+  public $_contactId;
+  /**
+   * @var int|null
+   */
+  public $_discountId;
+  public $_elementIndex;
+  public $_isOnWaitlist;
+  public $_usedOptionsDiscount;
+  public $_totalDiscount;
+  public $_coupon;
+  public $_expressButtonName;
   /**
    * The fields involved in this page
    *

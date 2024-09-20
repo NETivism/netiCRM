@@ -41,6 +41,10 @@
 class CRM_Report_Page_Options extends CRM_Core_Page_Basic {
 
   /**
+   * @var string
+   */
+  public $_id;
+  /**
    * The action links that we need to display for the browse screen
    *
    * @var array

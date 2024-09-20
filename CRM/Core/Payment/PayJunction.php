@@ -18,6 +18,15 @@
 
 
 class CRM_Core_Payment_PayJunction extends CRM_Core_Payment {
+  /**
+   * @var string
+   */
+  public $_mode;
+  /**
+   * @var mixed
+   */
+  public $_processorName;
+  public $_params;
   # (not used, implicit in the API, might need to convert?)
   CONST CHARSET = 'UFT-8';
 

@@ -36,6 +36,8 @@
 
 class CRM_Case_XMLProcessor_Report extends CRM_Case_XMLProcessor {
 
+  public $_redactionRegexRules;
+  public $_redactionStringRules;
   /**
    * The default variable defined
    *

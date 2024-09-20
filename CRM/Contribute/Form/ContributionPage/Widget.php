@@ -35,6 +35,9 @@
 
 
 class CRM_Contribute_Form_ContributionPage_Widget extends CRM_Contribute_Form_ContributionPage {
+  public $_fields;
+  public $_colorFields;
+  public $_refreshButtonName;
   protected $_colors;
 
   protected $_widget;

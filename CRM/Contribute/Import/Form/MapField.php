@@ -45,6 +45,11 @@
  */
 class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
 
+  public $_importTableName;
+  public $_onDuplicate;
+  public $_dedupeFields;
+  public $_locationFields;
+  public $_location_types;
   /**
    * cache of preview data values
    *

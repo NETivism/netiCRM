@@ -50,6 +50,14 @@
 class CRM_Member_Selector_Search extends CRM_Core_Selector_Base implements CRM_Core_Selector_API {
 
   /**
+   * @var bool
+   */
+  public $_isPaymentProcessor;
+  /**
+   * @var bool
+   */
+  public $_accessContribution;
+  /**
    * This defines two actions- View and Edit.
    *
    * @var array

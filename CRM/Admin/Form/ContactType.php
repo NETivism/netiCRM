@@ -41,6 +41,7 @@
  */
 class CRM_Admin_Form_ContactType extends CRM_Admin_Form {
 
+  public $_parentId;
   /**
    * Function to build the form
    *

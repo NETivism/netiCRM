@@ -13,6 +13,15 @@
 require_once 'CiviTest/CiviUnitTestCase.php';
 class api_v3_ParticipantTest extends CiviUnitTestCase {
 
+  /**
+   * @var int
+   */
+  public $_participantID2;
+  /**
+   * @var int
+   */
+  public $_participantID3;
+  public $_contributionTypeId;
   protected $_apiversion;
   protected $_entity;
   protected $_contactID;

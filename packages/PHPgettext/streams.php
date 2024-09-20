@@ -82,6 +82,10 @@ class StringReader {
 
 
 class FileReader {
+  /**
+   * @var int
+   */
+  public $error;
   var $_pos;
   var $_fd;
   var $_length;
@@ -143,6 +147,10 @@ class FileReader {
 // Preloads entire file in memory first, then creates a StringReader
 // over it (it assumes knowledge of StringReader internals)
 class CachedFileReader extends StringReader {
+  /**
+   * @var int
+   */
+  public $error;
   function __construct($filename) {
     if (file_exists($filename)) {
 

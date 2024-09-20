@@ -46,6 +46,27 @@
  *
  */
 class CRM_Event_Badge {
+  /**
+   * @var array<string, int[]|float|string>
+   */
+  public $style;
+  /**
+   * @var string
+   */
+  public $format;
+  public $imgExtension;
+  public $imgRes;
+  public $event;
+  public $debug;
+  /**
+   * @var int|string
+   */
+  public $border;
+  public $pdf;
+  /**
+   * @var float|int
+   */
+  public $lMarginLogo;
   function __construct() {
     $this->style = array('width' => 0.1, 'cap' => 'round', 'join' => 'round', 'dash' => '2,2', 'color' => array(0, 0, 200));
     $this->format = '5160';

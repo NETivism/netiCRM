@@ -42,6 +42,12 @@
 class CRM_Grant_Form_GrantView extends CRM_Core_Form {
 
   /**
+   * @var string
+   */
+  public $_contactID;
+  public $_id;
+  public $_noteId;
+  /**
    * Function to set variables up before form is built
    *
    * @return void

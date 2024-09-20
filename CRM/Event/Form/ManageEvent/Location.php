@@ -45,6 +45,7 @@
  */
 class CRM_Event_Form_ManageEvent_Location extends CRM_Event_Form_ManageEvent {
 
+  public $_addBlockName;
   /**
    * how many locationBlocks should we display?
    *

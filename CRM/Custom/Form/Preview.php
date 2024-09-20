@@ -49,6 +49,8 @@
  */
 class CRM_Custom_Form_Preview extends CRM_Core_Form {
 
+  public $_groupId;
+  public $_fieldId;
   /**
    * the group tree data
    *

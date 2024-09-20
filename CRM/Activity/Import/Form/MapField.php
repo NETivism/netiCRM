@@ -45,6 +45,7 @@
  */
 class CRM_Activity_Import_Form_MapField extends CRM_Core_Form {
 
+  public $_location_types;
   /**
    * cache of preview data values
    *

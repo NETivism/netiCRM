@@ -40,6 +40,7 @@
  * Page for voting tab interface.
  */
 class CRM_Campaign_Page_Vote extends CRM_Core_Page {
+  public $_tabs;
   private $_surveyId;
   private $_interviewerId; function reserve() {
     //build ajax voter search and selector.

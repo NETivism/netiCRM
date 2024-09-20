@@ -42,6 +42,7 @@
  */
 class CRM_Import_Form_DataSource extends CRM_Core_Form {
 
+  public $_params;
   private $_dataSource;
 
   private $_dataSourceIsValid = FALSE;

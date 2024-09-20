@@ -45,6 +45,9 @@
  */
 class CRM_Contact_Form_Task_Delete extends CRM_Contact_Form_Task {
 
+  public $_searchKey;
+  public $_skipUndelete;
+  public $_restore;
   /**
    * Are we operating in "single mode", i.e. sending email to one
    * specific contact?

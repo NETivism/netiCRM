@@ -42,6 +42,7 @@
  */
 class CRM_Grant_Form_Grant extends CRM_Core_Form {
 
+  public $_noteId;
   /**
    * the id of the case that we are proceessing
    *

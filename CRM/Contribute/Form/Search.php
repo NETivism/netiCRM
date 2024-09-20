@@ -46,6 +46,16 @@
  */
 class CRM_Contribute_Form_Search extends CRM_Core_Form {
 
+  public $_exportButtonName;
+  /**
+   * @var never[]
+   */
+  public $defaults;
+  /**
+   * @var string
+   */
+  public $_reset;
+  public $_pageId;
   /**
    * Are we forced to run a search
    *

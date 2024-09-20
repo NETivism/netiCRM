@@ -51,6 +51,7 @@
  */
 class CRM_Contact_Selector_Custom extends CRM_Core_Selector_Base implements CRM_Core_Selector_API {
 
+  public $_includeContactIds;
   /**
    * This defines two actions- View and Edit.
    *

@@ -36,6 +36,7 @@
 
 
 class CRM_Case_XMLProcessor_Process extends CRM_Case_XMLProcessor {
+  public $_isMultiClient;
   function run($caseType,
     &$params
   ) {

@@ -37,6 +37,9 @@
 
 abstract class CRM_Core_Component_Info {
 
+  public $name;
+  public $namespace;
+  public $componentID;
   /*
      * Name of the class (minus component namespace path) 
      * of the component invocation class'es name. 

@@ -42,6 +42,23 @@
  */
 class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_ContributionBase {
 
+  public $_defaultFromRequest;
+  /**
+   * @var mixed
+   */
+  public $_invalidChecksumMessage;
+  /**
+   * @var string
+   */
+  public $_invalidChecksumRedirect;
+  public $_onbehalf;
+  public $_elementIndex;
+  public $_rules;
+  public $_separateMembershipPayment;
+  public $_mid;
+  public $_submitValues;
+  public $_defaultAmountGrouping;
+  public $_expressButtonName;
   /**
    *Define default MembershipType Id
    *

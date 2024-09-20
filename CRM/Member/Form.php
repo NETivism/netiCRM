@@ -41,6 +41,7 @@
  */
 class CRM_Member_Form extends CRM_Core_Form {
 
+  public $_defaults;
   /**
    * The id of the object being edited / created
    *

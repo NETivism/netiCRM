@@ -27,6 +27,7 @@
 
 class CRM_Contact_Form_Search_Custom_UpcomingBirthdays implements CRM_Contact_Form_Search_Interface {
 
+  public $_columns;
   protected $_formValues;
   protected $_tableName = NULL; function __construct(&$formValues) {
     $this->_formValues = $formValues;

@@ -45,6 +45,7 @@
  */
 class CRM_UF_Page_Field extends CRM_Core_Page {
 
+  public $_ufGroup;
   /**
    * The group id of the field
    *

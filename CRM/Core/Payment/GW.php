@@ -4,6 +4,14 @@ date_default_timezone_set('Asia/Taipei');
 class CRM_Core_Payment_GW extends CRM_Core_Payment {
 
   /**
+   * @var mixed
+   */
+  public $_processorName;
+  /**
+   * @var object
+   */
+  public $_config;
+  /**
    * mode of operation: live or test
    *
    * @var object

@@ -37,6 +37,12 @@
 
 
 class CRM_Report_Form_Register extends CRM_Core_Form {
+  /**
+   * @var string|null
+   */
+  public $_opID;
+  public $_components;
+  public $_GName;
   public $_id;
   protected $_values = NULL;
 

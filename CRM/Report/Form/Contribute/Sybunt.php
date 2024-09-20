@@ -37,6 +37,13 @@
 
 class CRM_Report_Form_Contribute_Sybunt extends CRM_Report_Form {
 
+  public $_columnHeaders;
+  public $_from;
+  public $_where;
+  public $_statusClause;
+  public $_groupBy;
+  public $_aliases;
+  public $_absoluteUrl;
   protected $_charts = array('' => 'Tabular',
     'barChart' => 'Bar Chart',
     'pieChart' => 'Pie Chart',

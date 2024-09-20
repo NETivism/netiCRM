@@ -36,6 +36,18 @@
 
 class CRM_Contact_Form_Search_Custom_RandomSegment extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
 
+  public $_segmentSize;
+  public $_includeGroups;
+  public $_excludeGroups;
+  /**
+   * @var bool
+   */
+  public $_allSearch;
+  /**
+   * @var bool
+   */
+  public $_groups;
+  public $_tableName;
   protected $_debug = 0; function __construct(&$formValues) {
     parent::__construct($formValues);
 

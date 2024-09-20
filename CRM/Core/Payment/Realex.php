@@ -41,6 +41,10 @@
 
 
 class CRM_Core_Payment_Realex extends CRM_Core_Payment {
+  /**
+   * @var mixed
+   */
+  public $_processorName;
   CONST AUTH_APPROVED = '00';
 
   static protected $_mode = NULL;

@@ -48,6 +48,11 @@
 class CRM_Contact_Form_Task_PDF extends CRM_Contact_Form_Task {
 
   /**
+   * @var string
+   */
+  public $_caseId;
+  public $_activityId;
+  /**
    * all the existing templates in the system
    *
    * @var array

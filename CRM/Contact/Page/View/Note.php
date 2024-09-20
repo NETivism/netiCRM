@@ -41,6 +41,10 @@
  */
 class CRM_Contact_Page_View_Note extends CRM_Core_Page {
 
+  public $_permission;
+  public $_contactId;
+  public $_action;
+  public $_id;
   /**
    * The action links for notes that we need to display for the browse screen
    *

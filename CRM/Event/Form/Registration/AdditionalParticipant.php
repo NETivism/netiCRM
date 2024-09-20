@@ -42,6 +42,24 @@
  */
 class CRM_Event_Form_Registration_AdditionalParticipant extends CRM_Event_Form_Registration {
 
+  public $_additionalParticipantId;
+  public $_lastParticipant;
+  public $_feeBlock;
+  /**
+   * @var int|null
+   */
+  public $_discountId;
+  /**
+   * @var mixed
+   */
+  public $_pId;
+  /**
+   * @var string|null
+   */
+  public $_contactId;
+  public $_attributes;
+  public $_resetAllowWaitlist;
+  public $_isOnWaitlist;
   /**
    * The defaults involved in this page
    *

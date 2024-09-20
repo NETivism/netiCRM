@@ -42,6 +42,8 @@
  */
 class CRM_Contact_Page_View_Summary extends CRM_Contact_Page_View {
 
+  public $_editOptions;
+  public $_viewOptions;
   /**
    * Heart of the viewing process. The runner gets all the meta data for
    * the contact and calls the appropriate type of page to view.

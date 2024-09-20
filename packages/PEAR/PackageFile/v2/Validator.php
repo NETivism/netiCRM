@@ -27,6 +27,7 @@
  */
 class PEAR_PackageFile_v2_Validator
 {
+    public $_packageName;
     /**
      * @var array
      */

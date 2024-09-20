@@ -41,6 +41,14 @@
  */
 class CRM_Activity_Page_Tab extends CRM_Core_Page {
 
+  public $_contactId;
+  public $_permission;
+  public $_id;
+  /**
+   * @var string
+   */
+  public $_caseId;
+  public $_action;
   /**
    * Browse all activities for a particular contact
    *

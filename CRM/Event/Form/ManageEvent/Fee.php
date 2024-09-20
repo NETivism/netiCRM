@@ -43,6 +43,8 @@
  */
 class CRM_Event_Form_ManageEvent_Fee extends CRM_Event_Form_ManageEvent {
 
+  public $_submitValues;
+  public $_showHide;
   /**
    * Constants for number of options for data types of multiple option.
    */

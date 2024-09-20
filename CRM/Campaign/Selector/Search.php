@@ -49,6 +49,7 @@
  */
 class CRM_Campaign_Selector_Search extends CRM_Core_Selector_Base implements CRM_Core_Selector_API {
 
+  public $_campaignClause;
   /**
    * This defines two actions- View and Edit.
    *

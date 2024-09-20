@@ -71,7 +71,7 @@ class api_v3_ContributionTest extends CiviUnitTestCase {
   }
 
   function tearDown() {
-    
+
   }
 
   /**
@@ -585,7 +585,7 @@ class api_v3_ContributionTest extends CiviUnitTestCase {
     $values = array();
     // add api call to include api/v3/Contribution.php
     civicrm_api('contribution', 'get', array('id' => 1));
-    
+
     $result = _civicrm_api3_contribute_format_params($params, $values, TRUE);
     $this->assertEquals($values['total_amount'], 100.00, 'In line ' . __LINE__);
     $this->assertEquals($values['contribution_status_id'], 1, 'In line ' . __LINE__);

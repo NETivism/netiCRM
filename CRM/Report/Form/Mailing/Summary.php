@@ -36,6 +36,29 @@
 
 class CRM_Report_Form_Mailing_Summary extends CRM_Report_Form {
 
+  /**
+   * @var never[]
+   */
+  public $_columnHeaders;
+  /**
+   * @var string
+   */
+  public $_from;
+  public $_aliases;
+  public $relationshipId;
+  /**
+   * @var string
+   */
+  public $_where;
+  /**
+   * @var string
+   */
+  public $_groupBy;
+  /**
+   * @var string
+   */
+  public $_orderBy;
+  public $_absoluteUrl;
   protected $_summary = NULL;
 
   # just a toggle we use to build the from

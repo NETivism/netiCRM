@@ -40,6 +40,8 @@
  */
 class CRM_Campaign_Form_Task_Interview extends CRM_Campaign_Form_Task {
 
+  public $_reserveToInterview;
+  public $_surveyId;
   /**
    * the title of the group
    *

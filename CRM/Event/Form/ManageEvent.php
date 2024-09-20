@@ -41,6 +41,7 @@
  */
 class CRM_Event_Form_ManageEvent extends CRM_Core_Form {
 
+  public $_doneUrl;
   /**
    * the id of the event we are proceessing
    *

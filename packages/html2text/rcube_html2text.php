@@ -97,6 +97,7 @@
  */
 class rcube_html2text
 {
+    public $pre_content;
     /**
      * Contains the HTML content to convert.
      *

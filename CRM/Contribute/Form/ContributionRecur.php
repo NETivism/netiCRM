@@ -391,7 +391,7 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
           $resultParams = $paymentClass->doUpdateRecur($requestParams, $config->debug);
           CRM_Core_Error::debug('ContributionRecur_PostProcess_resultParams', $resultParams);
           if ($resultParams['msg']) {
-            
+
             CRM_Core_Session::setStatus($resultParams['msg']);
           }
           if ($resultParams['is_error']) {

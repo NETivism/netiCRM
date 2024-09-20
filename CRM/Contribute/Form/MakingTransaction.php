@@ -46,6 +46,10 @@
 class CRM_Contribute_Form_MakingTransaction extends CRM_Core_Form {
 
   /**
+   * @var bool
+   */
+  public $_preventMultipleSubmission;
+  /**
    * The recurring contribution id, used when editing the recurring contribution
    *
    * @var int
@@ -74,7 +78,7 @@ class CRM_Contribute_Form_MakingTransaction extends CRM_Core_Form {
    * @return None
    */
   function setDefaultValues() {
-    
+
     return $defaults;
   }
 

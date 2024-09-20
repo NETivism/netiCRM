@@ -36,6 +36,9 @@
 
 class CRM_Pledge_Page_Payment extends CRM_Core_Page {
 
+  public $_action;
+  public $_context;
+  public $_contactId;
   /**
    * This function is the main function that is called when the page loads, it decides the which action has to be taken for the page.
    *

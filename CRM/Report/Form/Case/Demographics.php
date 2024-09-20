@@ -36,6 +36,25 @@
 
 class CRM_Report_Form_Case_Demographics extends CRM_Report_Form {
 
+  /**
+   * @var mixed[]
+   */
+  public $_genders;
+  /**
+   * @var never[]
+   */
+  public $_columnHeaders;
+  public $_from;
+  public $_aliases;
+  /**
+   * @var string
+   */
+  public $_where;
+  /**
+   * @var string
+   */
+  public $_groupBy;
+  public $_absoluteUrl;
   protected $_summary = NULL;
 
   protected $_emailField = FALSE;
