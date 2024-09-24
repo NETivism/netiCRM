@@ -41,7 +41,6 @@ class CRM_Report_Form extends CRM_Core_Form {
    */
   public $_description;
   public $_aliases;
-  public $_charts;
   public $_columnHeaders;
   public $_grandFlag;
   public $_interval;
@@ -55,6 +54,9 @@ class CRM_Report_Form extends CRM_Core_Form {
   public $_from;
   public $_groupBy;
   public $_orderBy;
+
+  protected $_charts;
+
   CONST ROW_COUNT_LIMIT = 50;
 
   /**
