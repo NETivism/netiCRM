@@ -89,7 +89,17 @@ var eventUrl = "{/literal}{$dataURLEvent}{literal}";
   var eventPrepopulate = '';
 {/if}
 {literal}
-cj("#event_id").tokenInput( eventUrl, { prePopulate: eventPrepopulate, classes: tokenClass, hintText: hintText });
+
+cj(".crm-accordion-wrapper").on("crmaccordion:open", function() {
+  if (!cj(".crm-accordion-wrapper #event_id ~ .token-input-list-facebook").length) {
+    cj(".crm-accordion-wrapper #event_id").tokenInput( eventUrl, { prePopulate: eventPrepopulate, classes: tokenClass, hintText: hintText });
+  }
+});
+cj(document).ajaxSuccess(function(event, jqxhr, settings) {
+  if (jqxhr.responseText.indexOf('id="event_id"') != -1 && !cj("#event_id ~ .token-input-list-facebook").length) {
+    cj("#event_id").tokenInput( eventUrl, { prePopulate: eventPrepopulate, classes: tokenClass, hintText: hintText });
+  }
+});
 
 var typeUrl  = "{/literal}{$dataURLEventType}{literal}";
 {/literal}
