@@ -72,7 +72,6 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
    * The status message that user view.
    *
    */
-  protected $_waitlistMsg = NULL;
   protected $_requireApprovalMsg = NULL;
 
   protected $_ppType;

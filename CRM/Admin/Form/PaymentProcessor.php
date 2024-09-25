@@ -40,7 +40,8 @@
  *
  */
 class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
-  public $_ppType;
+  protected $_ppType = NULL;
+
   protected $_id = NULL;
 
   protected $_testID = NULL;

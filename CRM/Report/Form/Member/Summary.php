@@ -49,8 +49,8 @@ class CRM_Report_Form_Member_Summary extends CRM_Report_Form {
   public $_groupBy;
   public $_aliases;
   public $_absoluteUrl;
+  public $_interval = NULL;
   protected $_summary = NULL;
-  protected $_interval = NULL;
   protected $_charts = array('' => 'Tabular',
     'barChart' => 'Bar Chart',
     'pieChart' => 'Pie Chart',

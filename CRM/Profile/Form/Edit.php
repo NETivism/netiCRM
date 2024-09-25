@@ -44,7 +44,6 @@
  *
  */
 class CRM_Profile_Form_Edit extends CRM_Profile_Form {
-  public $_errors;
   protected $_postURL = NULL;
   protected $_cancelURL = NULL;
   protected $_errorURL = NULL;
