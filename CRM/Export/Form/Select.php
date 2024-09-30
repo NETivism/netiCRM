@@ -83,7 +83,7 @@ class CRM_Export_Form_Select extends CRM_Core_Form {
     $this->_exportMode = self::CONTACT_EXPORT;
     if (in_array($componentName[1], $components)) {
       $modeVar = strtoupper($componentName[1]) . '_EXPORT';
-      $this->_exportMode = constant("self::$modeVar");
+      $this->_exportMode = constant("CRM_Export_Form_Select::$modeVar");
     }
 
     $buttonName = $this->getButtonName('next');
