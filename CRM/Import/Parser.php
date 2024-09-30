@@ -950,8 +950,8 @@ abstract class CRM_Import_Parser {
     $primaryKeyName = $this->_primaryKeyName;
 
     if ($statusFieldName && $primaryKeyName && is_numeric($id)) {
-      $msg = !empty($params["${statusFieldName}Msg"]) ? $params["${statusFieldName}Msg"] : '';
-      $query = "UPDATE {$this->_tableName} SET {$statusFieldName} = %1, ${statusFieldName}Msg = %2 WHERE {$primaryKeyName} = %3";
+      $msg = !empty($params["{$statusFieldName}Msg"]) ? $params["{$statusFieldName}Msg"] : '';
+      $query = "UPDATE {$this->_tableName} SET {$statusFieldName} = %1, {$statusFieldName}Msg = %2 WHERE {$primaryKeyName} = %3";
       CRM_Core_DAO::executeQuery($query, array(
         1 => array($params[$statusFieldName], 'String'),
         2 => array($msg, 'String'),

@@ -198,9 +198,10 @@ class CRM_Contact_BAO_Relationship extends CRM_Contact_DAO_Relationship {
     // expolode the string with _ to get the relationship type id and to know which contact has to be inserted in
     // contact_id_a and which one in contact_id_b
     list($type, $first, $second) = explode('_', $relationshipTypes);
-
-    ${'contact_' . $first} = CRM_Utils_Array::value('contact', $ids);
-    ${'contact_' . $second} = $contactId;
+    $firstVar = 'contact_'.$first;
+    $secondVar = 'contact_'.$second;
+    $$firstVar = CRM_Utils_Array::value('contact', $ids);
+    $$secondVar = $contactId;
 
     //check if the relationship type is Head of Household then update the household's primary contact with this contact.
     if ($type == 6) {
@@ -563,8 +564,11 @@ class CRM_Contact_BAO_Relationship extends CRM_Contact_DAO_Relationship {
     // get the string of relationship type
     $relationshipTypes = CRM_Utils_Array::value('relationship_type_id', $params);
     list($type, $first, $second) = explode('_', $relationshipTypes);
-    ${'contact_' . $first} = CRM_Utils_Array::value('contact', $ids);
-    ${'contact_' . $second} = $contactId;
+    $firstVar = 'contact_'.$first;
+    $secondVar = 'contact_'.$second;
+    $$firstVar = CRM_Utils_Array::value('contact', $ids);
+    $$secondVar = $contactId;
+
     // function to check if the relationship selected is correct
     // i.e. employer relationship can exit between Individual and Organization (not between Individual and Individual)
     if (!CRM_Contact_BAO_Relationship::checkRelationshipType($contact_a, $contact_b, $type)) {

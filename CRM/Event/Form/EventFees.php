@@ -464,11 +464,11 @@ SELECT  id, html_type
           }
           if ($htmlType == "CheckBox") {
             $defaults["price_{$fieldId}"][$optionId] = TRUE;
-            $defaults["price_{$fieldId}_${optionId}_count"] = $items['qty'];
+            $defaults["price_{$fieldId}_{$optionId}_count"] = $items['qty'];
           }
           elseif ($htmlType == "Radio" && $items['qty']) {
             $defaults["price_{$fieldId}"] = $optionId;
-            $defaults["price_{$fieldId}_${optionId}_count"] = $items['qty'];
+            $defaults["price_{$fieldId}_{$optionId}_count"] = $items['qty'];
           }
           else {
             $defaults["price_{$fieldId}"] = $optionId;

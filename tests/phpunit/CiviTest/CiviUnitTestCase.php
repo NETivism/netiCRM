@@ -2110,7 +2110,7 @@ AND    ( TABLE_NAME LIKE 'civicrm_value_%' )
       unset($request['sequential']);
     }
     $filename = basename($filepath, ".php");
-    $file = fopen($civicrm_root . "/docMaker/unit_test_results/${filename}_{$functionName}-request.json", "w");
+    $file = fopen($civicrm_root . "/docMaker/unit_test_results/{$filename}_{$functionName}-request.json", "w");
     if ($file) {
       fwrite($file, json_encode($request, JSON_PRETTY_PRINT));
       fclose($file);
@@ -2120,7 +2120,7 @@ AND    ( TABLE_NAME LIKE 'civicrm_value_%' )
   function docMakerResponse($response, $filepath, $functionName) {
     global $civicrm_root;
     $filename = basename($filepath, ".php");
-    $file = fopen($civicrm_root . "/docMaker/unit_test_results/${filename}_{$functionName}-response.json", "w");
+    $file = fopen($civicrm_root . "/docMaker/unit_test_results/{$filename}_{$functionName}-response.json", "w");
     if ($file) {
       fwrite($file, json_encode($response, JSON_PRETTY_PRINT));
       fclose($file);

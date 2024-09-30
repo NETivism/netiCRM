@@ -1612,7 +1612,7 @@ class XML_RPC_Value extends XML_RPC_Base
         }
         $typeof = $GLOBALS['XML_RPC_Types'][$type];
         if ($typeof != 1) {
-            $this->raiseError("Not a scalar type (${typeof})",
+            $this->raiseError("Not a scalar type ({$typeof})",
                               XML_RPC_ERROR_INVALID_TYPE);
             return 0;
         }
@@ -1726,7 +1726,7 @@ class XML_RPC_Value extends XML_RPC_Base
             $rs .= "<struct>\n";
             reset($val);
             foreach ($val as $key2 => $val2) {
-                $rs .= "<member><name>${key2}</name>\n";
+                $rs .= "<member><name>{$key2}</name>\n";
                 $rs .= $this->serializeval($val2);
                 $rs .= "</member>\n";
             }
@@ -1745,16 +1745,16 @@ class XML_RPC_Value extends XML_RPC_Base
         case 1:
             switch ($typ) {
             case $GLOBALS['XML_RPC_Base64']:
-                $rs .= "<${typ}>" . base64_encode($val) . "</${typ}>";
+                $rs .= "<{$typ}>" . base64_encode($val) . "</{$typ}>";
                 break;
             case $GLOBALS['XML_RPC_Boolean']:
-                $rs .= "<${typ}>" . ($val ? '1' : '0') . "</${typ}>";
+                $rs .= "<{$typ}>" . ($val ? '1' : '0') . "</{$typ}>";
                 break;
             case $GLOBALS['XML_RPC_String']:
-                $rs .= "<${typ}>" . htmlspecialchars($val). "</${typ}>";
+                $rs .= "<{$typ}>" . htmlspecialchars($val). "</{$typ}>";
                 break;
             default:
-                $rs .= "<${typ}>${val}</${typ}>";
+                $rs .= "<{$typ}>{$val}</{$typ}>";
             }
         }
         return $rs;

@@ -559,7 +559,7 @@ class CRM_Profile_Selector_Listings extends CRM_Core_Selector_Base implements CR
           $typeId = substr($name, 0, -4) . "-website_type_id";
           $typeName = $websiteTypes[$result->$typeId];
           if ($typeName) {
-            $row[] = "<a href=\"$url\">{$result->$name} (${typeName})</a>";
+            $row[] = "<a href=\"$url\">{$result->$name} ({$typeName})</a>";
           }
         }
         elseif ($name == 'preferred_language') {
