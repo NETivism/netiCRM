@@ -1691,8 +1691,6 @@ class CRM_Contact_BAO_Query {
 
     $setTables = TRUE;
 
-    $strtolower = function_exists('mb_strtolower') ? 'mb_strtolower' : 'strtolower';
-
     if (substr($name, 0, 14) === 'state_province') {
       if (isset($locType[1]) &&
         is_numeric($locType[1])
@@ -1868,7 +1866,7 @@ class CRM_Contact_BAO_Query {
       }
     }
     elseif ($name === 'name') {
-      $value = $strtolower(CRM_Core_DAO::escapeString($value));
+      $value = mb_strtolower(CRM_Core_DAO::escapeString($value), 'UTF-8');
       if ($wildcard) {
         $value = "%$value%";
         $op = 'LIKE';
@@ -1878,7 +1876,7 @@ class CRM_Contact_BAO_Query {
       $this->_qill[$grouping][] = "$field[title] $op \"$value\"";
     }
     elseif ($name === 'current_employer') {
-      $value = $strtolower(CRM_Core_DAO::escapeString($value));
+      $value = mb_strtolower(CRM_Core_DAO::escapeString($value), 'UTF-8');
       if ($wildcard) {
         $value = "%$value%";
         $op = 'LIKE';
@@ -1922,7 +1920,7 @@ class CRM_Contact_BAO_Query {
     elseif (substr($name, 0, 4) === 'url-') {
       $tName = 'civicrm_website';
       $this->_whereTables[$tName] = $this->_tables[$tName] = "\nLEFT JOIN civicrm_website ON ( civicrm_website.contact_id = contact_a.id )";
-      $value = $strtolower(CRM_Core_DAO::escapeString($value));
+      $value = mb_strtolower(CRM_Core_DAO::escapeString($value), 'UTF-8');
       if ($wildcard) {
         $value = "%$value%";
         $op = 'LIKE';
@@ -1944,7 +1942,7 @@ class CRM_Contact_BAO_Query {
 
       if (!empty($field['where'])) {
         if ($op != 'IN') {
-          $value = $strtolower(CRM_Core_DAO::escapeString($value));
+          $value = mb_strtolower(CRM_Core_DAO::escapeString($value), 'UTF-8');
         }
         if ($wildcard) {
           $value = "%$value%";
@@ -2827,9 +2825,8 @@ WHERE  id IN ( $groupIDs )
     $this->_tables['civicrm_note'] = $this->_whereTables['civicrm_note'] = " LEFT JOIN civicrm_note ON ( civicrm_note.entity_table = 'civicrm_contact' AND
                                           contact_a.id = civicrm_note.entity_id ) ";
 
-    $strtolower = function_exists('mb_strtolower') ? 'mb_strtolower' : 'strtolower';
     $n = trim($value);
-    $value = $strtolower(CRM_Core_DAO::escapeString($n));
+    $value = mb_strtolower(CRM_Core_DAO::escapeString($n), 'UTF-8');
     if ($wildcard || $op == 'LIKE') {
       if (strpos($value, '%') !== FALSE) {
         // only add wild card if not there
@@ -2924,14 +2921,12 @@ WHERE  id IN ( $groupIDs )
     //By default, $sub elements should be joined together with OR statements (don't change this variable).
     $subGlue = ' OR ';
 
-    $strtolower = function_exists('mb_strtolower') ? 'mb_strtolower' : 'strtolower';
-
     if (substr($name, 0, 1) == '"' &&
       substr($name, -1, 1) == '"'
     ) {
       //If name is encased in double quotes, the value should be taken to be the string in entirety and the
       $value = substr($name, 1, -1);
-      $value = $strtolower(CRM_Core_DAO::escapeString($value));
+      $value = mb_strtolower(CRM_Core_DAO::escapeString($value), 'UTF-8');
       $wc = ($newName == 'sort_name') ? 'LOWER(contact_a.sort_name)' : 'LOWER(contact_a.display_name)';
       $sub[] = " ( $wc = '$value' ) ";
       if ($config->includeEmailInName) {
@@ -2942,7 +2937,7 @@ WHERE  id IN ( $groupIDs )
     }
     elseif (strpos($name, ',') !== FALSE) {
       // if we have a comma in the string, search for the entire string
-      $value = $strtolower(CRM_Core_DAO::escapeString($name));
+      $value = mb_strtolower(CRM_Core_DAO::escapeString($name), 'UTF-8');
       if ($wildcard) {
         if ($config->includeWildCardInName) {
           $value = "'%$value%'";
@@ -3005,7 +3000,7 @@ WHERE  id IN ( $groupIDs )
         $pieces = explode(' ', $name);
       }
       foreach ($pieces as $piece) {
-        $value = $strtolower(CRM_Core_DAO::escapeString(trim($piece)));
+        $value = mb_strtolower(CRM_Core_DAO::escapeString(trim($piece)), 'UTF-8');
         $pieceVal = $value;
         if (strlen($value)) {
           // Added If as a sanitization - without it, when you do an OR search, any string with
@@ -3094,12 +3089,12 @@ WHERE  id IN ( $groupIDs )
         substr($n, -1, 1) == '"'
       ) {
         $n = substr($n, 1, -1);
-        $value = strtolower(CRM_Core_DAO::escapeString($n));
+        $value = mb_strtolower(CRM_Core_DAO::escapeString($n), 'UTF-8');
         $value = "'$value'";
         $op = '=';
       }
       else {
-        $value = strtolower(CRM_Core_DAO::escapeString($n));
+        $value = mb_strtolower(CRM_Core_DAO::escapeString($n), 'UTF-8');
         if ($wildcard) {
           if (strpos($value, '%') !== FALSE) {
             $value = "'$value'";
@@ -3142,7 +3137,7 @@ WHERE  id IN ( $groupIDs )
     $n = trim($value);
 
     if ($n) {
-      $value = strtolower(CRM_Core_DAO::escapeString($n));
+      $value = mb_strtolower(CRM_Core_DAO::escapeString($n), 'UTF-8');
       if (strpos($value, '%') !== FALSE) {
         $value = "'$value'";
         // only add wild card if not there
@@ -3186,7 +3181,7 @@ WHERE  id IN ( $groupIDs )
       $this->_qill[$grouping][] = ts('Street Number is even');
     }
     else {
-      $value = strtolower(CRM_Core_DAO::escapeString($n));
+      $value = mb_strtolower(CRM_Core_DAO::escapeString($n), 'UTF-8');
       $value = "'$value'";
 
       $this->_where[$grouping][] = " ( LOWER(civicrm_address.street_number) $op $value )";
@@ -3206,7 +3201,7 @@ WHERE  id IN ( $groupIDs )
     list($name, $op, $value, $grouping, $wildcard) = $values;
 
     $name = trim($value);
-    $cond = " contact_a.sort_name LIKE '" . strtolower(CRM_Core_DAO::escapeWildCardString($name)) . "%'";
+    $cond = " contact_a.sort_name LIKE '" . mb_strtolower(CRM_Core_DAO::escapeWildCardString($name), 'UTF-8') . "%'";
     $this->_where[$grouping][] = $cond;
     $this->_qill[$grouping][] = ts('Showing only Contacts starting with: \'%1\'', array(1 => $name));
   }
@@ -3494,7 +3489,7 @@ WHERE  id IN ( $groupIDs )
     }
 
     $name = trim($targetName[2]);
-    $name = strtolower(CRM_Core_DAO::escapeString($name));
+    $name = mb_strtolower(CRM_Core_DAO::escapeString($name), 'UTF-8');
     $name = $targetName[4] ? "%$name%" : $name;
     $this->_where[$grouping][] = "contact_b_log.sort_name LIKE '%$name%'";
     $this->_tables['civicrm_log'] = $this->_whereTables['civicrm_log'] = 1;
@@ -3701,11 +3696,11 @@ WHERE  id IN ( $groupIDs )
         substr($name, -1, 1) == '"'
       ) {
         $name = substr($name, 1, -1);
-        $name = strtolower(CRM_Core_DAO::escapeString($name));
+        $name = mb_strtolower(CRM_Core_DAO::escapeString($name), 'UTF-8');
         $nameClause = "= '$name'";
       }
       else {
-        $name = strtolower(CRM_Core_DAO::escapeString($name));
+        $name = mb_strtolower(CRM_Core_DAO::escapeString($name), 'UTF-8');
         $nameClause = "LIKE '%{$name}%'";
       }
     }
@@ -4694,7 +4689,7 @@ SELECT COUNT( cc.total_amount ) as cancel_count,
           $value = CRM_Utils_Type::escape($value, $dataType);
         }
         if ($dataType == 'String') {
-          $value = "'" . strtolower($value) . "'";
+          $value = "'" . mb_strtolower($value, 'UTF-8') . "'";
         }
         return "$clause $value";
     }

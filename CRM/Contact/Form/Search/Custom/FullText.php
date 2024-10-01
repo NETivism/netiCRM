@@ -78,8 +78,7 @@ class CRM_Contact_Form_Search_Custom_FullText implements CRM_Contact_Form_Search
         $this->_textID = $this->_text;
       }
 
-      $strtolower = function_exists('mb_strtolower') ? 'mb_strtolower' : 'strtolower';
-      $this->_text = $strtolower(CRM_Core_DAO::escapeString($this->_text));
+      $this->_text = mb_strtolower(CRM_Core_DAO::escapeString($this->_text), 'UTF-8');
       if (strpos($this->_text, '%') === FALSE) {
         $this->_text = "'%{$this->_text}%'";
       }

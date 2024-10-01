@@ -945,13 +945,11 @@ AND    option_group_id = %2";
       $params['weight'] = CRM_Utils_Weight::updateOtherWeights('CRM_Core_DAO_CustomField', $oldWeight, $params['weight'], $fieldValues);
     }
 
-    $strtolower = function_exists('mb_strtolower') ? 'mb_strtolower' : 'strtolower';
-
     //store the primary key for State/Province or Country as default value.
     if (strlen(trim($params['default_value']))) {
       switch ($params['data_type']) {
         case 'StateProvince':
-          $fieldStateProvince = $strtolower($params['default_value']);
+          $fieldStateProvince = mb_strtolower($params['default_value'], 'UTF-8');
           $query = "
 SELECT id
   FROM civicrm_state_province 
@@ -964,7 +962,7 @@ SELECT id
           break;
 
         case 'Country':
-          $fieldCountry = $strtolower($params['default_value']);
+          $fieldCountry = mb_strtolower($params['default_value'], 'UTF-8');
           $query = "
 SELECT id
   FROM civicrm_country

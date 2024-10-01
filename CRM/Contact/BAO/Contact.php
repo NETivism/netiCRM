@@ -1972,8 +1972,7 @@ ORDER BY civicrm_email.is_primary DESC";
    * @static
    */
   static function &matchContactOnEmail($mail, $ctype = NULL) {
-    $strtolower = function_exists('mb_strtolower') ? 'mb_strtolower' : 'strtolower';
-    $mail = $strtolower(trim($mail));
+    $mail = mb_strtolower(trim($mail), 'UTF-8');
     $query = "
 SELECT     civicrm_contact.id as contact_id,
            civicrm_contact.hash as hash,
@@ -2022,8 +2021,7 @@ WHERE      civicrm_email.email = %1 AND civicrm_contact.is_deleted=0";
    * @static
    */
   static function &matchContactOnOpenId($openId, $ctype = NULL) {
-    $strtolower = function_exists('mb_strtolower') ? 'mb_strtolower' : 'strtolower';
-    $openId = $strtolower(trim($openId));
+    $openId = mb_strtolower(trim($openId), 'UTF-8');
     $query = "
 SELECT     civicrm_contact.id as contact_id,
            civicrm_contact.hash as hash,

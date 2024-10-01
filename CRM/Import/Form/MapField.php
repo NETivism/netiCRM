@@ -544,7 +544,7 @@ class CRM_Import_Form_MapField extends CRM_Core_Form {
                 }
               }
 
-              $contactDetails = strtolower(str_replace(" ", "_", $mappingName[$i]));
+              $contactDetails = mb_strtolower(str_replace(" ", "_", $mappingName[$i]), 'UTF-8');
               $websiteTypeId = isset($mappingWebsiteType[$i]) ? $mappingWebsiteType[$i] : NULL;
               $locationId = isset($mappingLocation[$i]) ? $mappingLocation[$i] : 0;
               $phoneType = isset($mappingPhoneType[$i]) ? $mappingPhoneType[$i] : NULL;

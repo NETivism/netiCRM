@@ -112,10 +112,10 @@ class CRM_Contact_Page_AJAX {
     $config = CRM_Core_Config::singleton();
 
     if ($config->includeWildCardInName) {
-      $strSearch = "%".strtolower($name)."%";
+      $strSearch = "%".mb_strtolower($name, 'UTF-8')."%";
     }
     else {
-      $strSearch = strtolower($name)."%";
+      $strSearch = mb_strtolower($name, 'UTF-8')."%";
     }
 
     $whereClauses = array();

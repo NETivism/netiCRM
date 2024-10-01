@@ -186,8 +186,7 @@ class CRM_Member_BAO_Query {
         return;
 
       case 'member_source':
-        $strtolower = function_exists('mb_strtolower') ? 'mb_strtolower' : 'strtolower';
-        $value = $strtolower(CRM_Core_DAO::escapeString(trim($value)));
+        $value = mb_strtolower(CRM_Core_DAO::escapeString(trim($value)), 'UTF-8');
 
         $query->_where[$grouping][] = "civicrm_membership.source $op '{$value}'";
         $query->_qill[$grouping][] = ts('Source %2 %1', array(1 => $value, 2 => $op));

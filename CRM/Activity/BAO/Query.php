@@ -168,7 +168,6 @@ class CRM_Activity_BAO_Query {
   static function whereClauseSingle(&$values, &$query) {
     list($name, $op, $value, $grouping, $wildcard) = $values;
 
-    $strtolower = function_exists('mb_strtolower') ? 'mb_strtolower' : 'strtolower';
     $query->_tables['civicrm_activity'] = $query->_whereTables['civicrm_activity'] = 1;
     if ($query->_mode & CRM_Contact_BAO_Query::MODE_ACTIVITY) {
       $query->_skipDeleteClause = TRUE;
@@ -223,7 +222,7 @@ class CRM_Activity_BAO_Query {
         }
         else {
           $name = trim($activityTargetName[2]);
-          $name = strtolower(CRM_Core_DAO::escapeString($name));
+          $name = mb_strtolower(CRM_Core_DAO::escapeString($name), 'UTF-8');
         }
 
         $query->_tables['civicrm_activity_contact'] = $query->_whereTables['civicrm_activity_contact'] = 1;
@@ -261,7 +260,7 @@ class CRM_Activity_BAO_Query {
 
       case 'activity_subject':
         $n = trim($value);
-        $value = strtolower(CRM_Core_DAO::escapeString($n));
+        $value = mb_strtolower(CRM_Core_DAO::escapeString($n), 'UTF-8');
         if ($wildcard) {
           if (strpos($value, '%') !== FALSE) {
             // only add wild card if not there

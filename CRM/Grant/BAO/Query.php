@@ -112,7 +112,6 @@ class CRM_Grant_BAO_Query {
   }
 
   static function whereClauseSingle(&$values, &$query) {
-    $strtolower = function_exists('mb_strtolower') ? 'mb_strtolower' : 'strtolower';
     list($name, $op, $value, $grouping, $wildcard) = $values;
     switch ($name) {
       case 'grant_money_transfer_date_low':
@@ -173,7 +172,7 @@ class CRM_Grant_BAO_Query {
 
       case 'grant_type_id':
 
-        $value = $strtolower(CRM_Core_DAO::escapeString(trim($value)));
+        $value = mb_strtolower(CRM_Core_DAO::escapeString(trim($value)), 'UTF-8');
 
         $query->_where[$grouping][] = "civicrm_grant.grant_type_id $op '{$value}'";
 
@@ -187,7 +186,7 @@ class CRM_Grant_BAO_Query {
 
       case 'grant_status_id':
 
-        $value = $strtolower(CRM_Core_DAO::escapeString(trim($value)));
+        $value = mb_strtolower(CRM_Core_DAO::escapeString(trim($value)), 'UTF-8');
 
         $query->_where[$grouping][] = "civicrm_grant.status_id $op '{$value}'";
 

@@ -75,8 +75,7 @@ class CRM_Mailing_Event_BAO_Subscribe extends CRM_Mailing_Event_DAO_Subscribe {
       return $success;
     }
 
-    $strtolower = function_exists('mb_strtolower') ? 'mb_strtolower' : 'strtolower';
-    $email = $strtolower($email);
+    $email = mb_strtolower($email, 'UTF-8');
 
     // process the query only if no contactId
     if ($contactId) {
@@ -345,8 +344,7 @@ SELECT     civicrm_email.id as email_id
       $params = array(1 => array($contactID, 'Integer'));
     }
     else {
-      $strtolower = function_exists('mb_strtolower') ? 'mb_strtolower' : 'strtolower';
-      $email = $strtolower($email);
+      $email = mb_strtolower($email, 'UTF-8');
 
       $query = "
                  SELECT DISTINCT group_a.group_id, group_a.status, civicrm_group.title 

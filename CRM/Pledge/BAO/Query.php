@@ -371,12 +371,11 @@ class CRM_Pledge_BAO_Query {
         return;
 
       case 'pledge_in_honor_of':
-        $strtolower = function_exists('mb_strtolower') ? 'mb_strtolower' : 'strtolower';
         $name = trim($value);
         $newName = str_replace(',', " ", $name);
         $pieces = explode(' ', $newName);
         foreach ($pieces as $piece) {
-          $value = $strtolower(CRM_Core_DAO::escapeString(trim($piece)));
+          $value = mb_strtolower(CRM_Core_DAO::escapeString(trim($piece)), 'UTf-8');
           $value = "'%$value%'";
           $sub[] = " ( pledge_contact_b.sort_name LIKE $value )";
         }

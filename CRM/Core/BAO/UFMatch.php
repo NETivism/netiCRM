@@ -372,8 +372,7 @@ AND    domain_id    = %4
    * @static
    */
   static function updateContactEmail($contactId, $emailAddress) {
-    $strtolower = function_exists('mb_strtolower') ? 'mb_strtolower' : 'strtolower';
-    $emailAddress = $strtolower($emailAddress);
+    $emailAddress = mb_strtolower($emailAddress, 'UTF-8');
 
     $ufmatch = new CRM_Core_DAO_UFMatch();
     $ufmatch->contact_id = $contactId;
