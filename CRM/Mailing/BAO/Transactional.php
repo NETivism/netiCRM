@@ -180,7 +180,7 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
         CRM_Core_Error::ignoreException();
 
         // refs #30289, for valid DKIM
-        if (!strstr($headers['Sender'], $mailer->host) && $mailer->_mailSetting['return_path']) {
+        if (empty($headers['Sender']) && !empty($mailer->_mailSetting['return_path'])) {
           $headers['Sender'] = $mailer->_mailSetting['return_path'];
         }
 
