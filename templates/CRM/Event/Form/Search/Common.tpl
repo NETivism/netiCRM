@@ -90,6 +90,9 @@ var eventUrl = "{/literal}{$dataURLEvent}{literal}";
 {/if}
 {literal}
 
+if (!cj(".crm-accordion-wrapper #event_id ~ .token-input-list-facebook").length) {
+  cj(".crm-accordion-wrapper #event_id").tokenInput( eventUrl, { prePopulate: eventPrepopulate, classes: tokenClass, hintText: hintText });
+}
 cj(".crm-accordion-wrapper").on("crmaccordion:open", function() {
   if (!cj(".crm-accordion-wrapper #event_id ~ .token-input-list-facebook").length) {
     cj(".crm-accordion-wrapper #event_id").tokenInput( eventUrl, { prePopulate: eventPrepopulate, classes: tokenClass, hintText: hintText });
