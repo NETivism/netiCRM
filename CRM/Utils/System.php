@@ -40,6 +40,7 @@
 class CRM_Utils_System {
 
   static $_callbacks = NULL;
+  static $_shutdowned = NULL;
 
   /**
    * Compose a new url string from the current url string
@@ -1289,6 +1290,11 @@ class CRM_Utils_System {
   }
 
   static function civiBeforeShutdown() {
+    // make sure we call this only once
+    if (self::$_shutdowned) {
+      return;
+    }
+    self::$_shutdowned = TRUE;
     // now we register shutdown functions here
     if (!empty(CRM_Core_Config::$_shutdownCallbacks)) {
       $registerFastcgiFinishRequest = FALSE;
