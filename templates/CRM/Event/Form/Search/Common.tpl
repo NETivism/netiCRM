@@ -90,14 +90,27 @@ var eventUrl = "{/literal}{$dataURLEvent}{literal}";
 {/if}
 {literal}
 
-cj(".crm-accordion-wrapper").on("crmaccordion:open", function() {
-  if (!cj(".crm-accordion-wrapper #event_id ~ .token-input-list-facebook").length) {
-    cj(".crm-accordion-wrapper #event_id").tokenInput( eventUrl, { prePopulate: eventPrepopulate, classes: tokenClass, hintText: hintText });
+function tokeninputInit() {
+  var $eventId = cj('#event_id');
+  var $accordions = $eventId.parents('.crm-accordion-wrapper');
+  var isAllOpen = $accordions.length > 0 && $accordions.length === $accordions.filter('.crm-accordion-open').length;
+
+  if (isAllOpen && !$eventId.next('.token-input-list-facebook').length) {
+    $eventId.tokenInput(eventUrl, {prePopulate: eventPrepopulate, classes: tokenClass, hintText: hintText});
   }
+}
+
+cj(document).ready(function() {
+  tokeninputInit();
+
+  cj(".crm-accordion-wrapper").on("crmaccordion:open", function() {
+    tokeninputInit();
+  });
 });
+
 cj(document).ajaxSuccess(function(event, jqxhr, settings) {
-  if (jqxhr.responseText.indexOf('id="event_id"') != -1 && !cj("#event_id ~ .token-input-list-facebook").length) {
-    cj("#event_id").tokenInput( eventUrl, { prePopulate: eventPrepopulate, classes: tokenClass, hintText: hintText });
+  if (jqxhr.responseText.indexOf('id="event_id"') != -1) {
+    tokeninputInit();
   }
 });
 
