@@ -155,10 +155,9 @@ function civicrm_api3_contribution_get($params) {
   $mode = CRM_Contact_BAO_Query::MODE_CONTRIBUTE;
   $additionalOptions = _civicrm_api3_get_options_from_params($params, TRUE);
   $returnProperties = CRM_Contribute_BAO_Query::defaultReturnProperties($mode);
-  $groupBy = 'civicrm_contribution.id';
 
   // Get the contributions based on parameters passed in
-  $contributions = _civicrm_api3_get_using_query_object('Contribution', $params, $additionalOptions, NULL, $mode, $returnProperties, $groupBy);
+  $contributions = _civicrm_api3_get_using_query_object('Contribution', $params, $additionalOptions, NULL, $mode, $returnProperties, TRUE);
   if (!empty($contributions)) {
     foreach ($contributions as $id => $contribution) {
       $soft_params = array('contribution_id' => $id);

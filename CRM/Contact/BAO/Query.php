@@ -3939,7 +3939,12 @@ civicrm_relationship.start_date > {$today}
     $sql = "$select $from $where $having";
     // add group by
     if ($query->_useGroupBy || $groupBy) {
-      $sql .= ' GROUP BY contact_a.id';
+      if (isset($query->_groupByComponentClause) && !empty($query->_groupByComponentClause)) {
+        $sql .= $query->_groupByComponentClause;
+      }
+      else {
+        $sql .= ' GROUP BY contact_a.id';
+      }
     }
     if (!empty($sort)) {
       $sql .= " ORDER BY $sort ";
