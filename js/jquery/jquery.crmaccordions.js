@@ -38,6 +38,12 @@ $.fn.crmaccordions = function() {
           case "click":
               $wrapper.toggleClass("crm-accordion-open");
               $wrapper.toggleClass("crm-accordion-closed");
+
+              if ($wrapper.hasClass("crm-accordion-open")) {
+                $wrapper.trigger("crmaccordion:open");
+              } else {
+                $wrapper.trigger("crmaccordion:close");
+              }
               return false; 
             break;
 

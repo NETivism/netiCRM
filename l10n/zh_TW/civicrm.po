@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: 馮 佳今, 2022-2024\n"
+"Last-Translator: CC Chu <poliphilonet@gmail.com>, 2020-2024\n"
 "Language-Team: Chinese (Taiwan) (http://app.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50106,3 +50106,21 @@ msgstr "若有需要，你可點擊「手動同步」"
 #: CRM/Group/Form/Edit.php
 msgid "Remote Group"
 msgstr "遠端群組"
+
+#: CRM/Contribute/Form/Contribution/Main.php
+msgid "Message for your supported contribution page"
+msgstr "留言給你支持的募款頁"
+
+#: CRM/Contribute/Form/Contribution/Main.php
+msgid "Name or nickname to display on the contribution page"
+msgstr "顯示於募款頁的姓名或暱稱"
+
+#: CRM/Contribute/Form/Contribution/Main.php
+msgid "Your message to display on the contribution page"
+msgstr "顯示於募款頁的留言"
+
+#: templates/CRM/Contribute/Form/Contribution/Main.tpl
+msgid ""
+"Your message will be displayed on the contribution page, allowing others to "
+"see why you support this contribution."
+msgstr "您的留言將會顯示於募款頁中，讓大家可以看到你支持募款的緣由。"

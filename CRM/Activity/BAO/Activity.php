@@ -1542,7 +1542,6 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
       $activityParams['activity_type_id'] = CRM_Utils_Array::key('SMS', CRM_Core_PseudoConstant::activityType(TRUE, TRUE, FALSE, 'name', TRUE));
     }
 
-
     // CRM-4575
     // token replacement of addressee/email/postal greetings
     // get the tokens added in subject and message
@@ -1591,8 +1590,28 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
         unset($details["{$contactId}"]['phone_type_id']);
         $values = array_merge($values, $details["{$contactId}"]);
       }
+      $eachActivityParams['source_contact_id'] = $userID;
+      $eachActivityParams['activity_date_time'] = date('YmdHis');
+      $eachActivityParams['status_id'] = CRM_Utils_Array::key('Scheduled', CRM_Core_PseudoConstant::activityStatus('name'));
+      $activity = self::create($eachActivityParams);
 
-      CRM_Utils_Hook::tokenValues($values, $contactId, NULL, $messageToken, 'CRM_Activity_BAO_Activity::sendSMS');
+      $tokenDetail = array(
+        0 => array(),
+        $contactId => $values,
+      );
+      $values[0]['activity'] = array();
+      $values[0]['activity']['id'] = $activity->id;
+      $values[0]['activity']['parent_id'] = $eachActivityParams['parent_id'];
+      foreach($activityParams as $idx => $val) {
+        if (isset($activity->$idx)) {
+          $tokenDetail[0]['activity'][$idx] = $activity->$idx;
+        }
+      }
+      $tokenContact = array(
+        $contactId,
+      );
+      CRM_Utils_Hook::tokenValues($tokenDetail, $tokenContact, NULL, $messageToken, __CLASS__.'::'.__METHOD__);
+      $values = $tokenDetail[$contactId];
 
       $tokenText = CRM_Utils_Token::replaceContactTokens($text, $values, FALSE, $messageToken, FALSE, $escapeSmarty);
       $tokenText = CRM_Utils_Token::replaceComponentTokens($tokenText, $values, $messageToken, TRUE);
@@ -1607,16 +1626,12 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
       else {
         $smsParams['phone'] = '';
       }
-
+      $activity->details = ts("Body") . ": " . $smsMessage;
       if (!empty($eachActivityParams['activity_subject']) && empty($eachActivityParams['subject'])) {
-        $eachActivityParams['subject'] = $eachActivityParams['activity_subject'];
+        $activity->subject = $eachActivityParams['activity_subject'];
       }
-      $eachActivityParams['source_contact_id'] = $userID;
-      $eachActivityParams['activity_date_time'] = date('YmdHis');
-      $eachActivityParams['details'] = ts("Body") . ": " . $smsMessage;
-      $eachActivityParams['status_id'] = CRM_Utils_Array::key('Scheduled', CRM_Core_PseudoConstant::activityStatus('name'));
-
-      $activity = self::create($eachActivityParams);
+      // update body and subject after token replacement
+      $activity->save();
 
       // add activity target record for every sms *BEFORE* sms send
       $activityTargetParams = array(
@@ -1673,6 +1688,85 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
         'results' => $results,
       );
     }
+  }
+
+  /**
+   * Send SMS via specific template
+   *
+   * @param int $fromId
+   * @param int $toId
+   * @param int $templateId
+   * @param bool $check
+   * @param int $parentId
+   * @return bool
+   */
+  public static function sendSMSTemplate(
+    $fromId,
+    $toId,
+    $templateId,
+    $check,
+    $parentId
+  ) {
+    $providers = CRM_SMS_BAO_Provider::getProviders(NULL, NULL, TRUE, 'is_default desc');
+    if (empty($providers)) {
+      CRM_Core_Session::setStatus(ts("There is no SMS Provider Configured. You can add here <a href='%1'>Add SMS Provider</a>", CRM_Utils_System::url('civicrm/admin/sms/provider', 'reset=1')), TRUE, 'warning');
+      return FALSE;
+    }
+
+    $returnProperties = array(
+      'sort_name' => 1,
+      'phone' => 1,
+      'do_not_phone' => 1,
+      'is_deceased' => 1,
+      'display_name' => 1,
+    );
+    $getDetails = array($toId);
+    if (is_numeric($fromId)) {
+      $fromId = $fromId;
+      $getDetails[] = $fromId;
+      $from = NULL;
+    }
+    else {
+      $fromId = NULL;
+    }
+    list($details) = CRM_Mailing_BAO_Mailing::getDetails($getDetails, $returnProperties, FALSE, FALSE, NULL, TRUE);
+    if (!empty($details)) {
+      $toDetails = $details[$toId];
+      if ($check) {
+        if ($toDetails['do_not_phone'] || empty($toDetails['phone']) || !empty($toDetails['is_deceased'])) {
+          return FALSE;
+        }
+      }
+
+      $params = array('id' => $templateId);
+      $template = array();
+      CRM_Core_BAO_MessageTemplates::retrieve($params, $template);
+      $subject = $template['msg_subject'];
+      $text = !empty($template['msg_text']) ? $template['msg_text'] : '';
+      $activityParams = array(
+        'activity_subject' => $subject,
+        'sms_text_message' => $text,
+      );
+      if (!empty($parentId)) {
+        $activityParams['parent_id'] = $parentId;
+      }
+      $smsParams = array(
+        'provider_id' => '1',
+      );
+      $contactDetails = array($toId => $toDetails);
+      $contactIds = array($toId);
+      list($sent) = self::sendSMS(
+        $contactDetails,
+        $activityParams,
+        $smsParams,
+        $contactIds,
+        $fromId
+      );
+      if ($sent) {
+        return TRUE;
+      }
+    }
+    return FALSE;
   }
 
   /**

@@ -311,7 +311,9 @@ class CRM_Utils_REST {
       $params = &self::buildParamList();
     }
 
-    $params['check_permissions'] = TRUE;
+    if (!isset($params['check_permissions'])) {
+      $params['check_permissions'] = TRUE;
+    }
     $fnName = $apiFile = NULL;
     // clean up all function / class names. they should be alphanumeric and _ only
     for ($i = 1; $i <= 3; $i++) {
@@ -634,8 +636,10 @@ class CRM_Utils_REST {
   /**
    * validate sort parameter
    *
-   * @param  $sort
-   * @return void
+   * @param string $sort The sort parameter to validate. Can be a single field
+   *                     or multiple fields separated by commas (`,`), optionally
+   *                     followed by ASC or DESC.
+   * @return boolean true if valid, else false
    */
   public static function validateSortParameter($sort) {
     if (empty($sort) || !is_string($sort)) {

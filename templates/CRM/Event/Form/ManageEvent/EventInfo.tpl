@@ -71,9 +71,15 @@
 		<tr class="crm-event-manage-eventinfo-form-block-participant_listing_id">
 			<td class="label">{$form.participant_listing_id.label}</td>
 			<td>{$form.participant_listing_id.html}<br />
-			<span class="description"> {ts}To allow users to see a listing of participants, set this field to 'Name' (list names only), 'Name and Email', or 'Name, Status and Register Date'.{/ts} 
+			<span class="description"> {ts}To allow users to see a listing of participants, set this field to 'Name' (list names only), 'Name and Email', or 'Name, Status and Register Date'.{/ts}
 			{help id="id-listing"} </span></td>
 		</tr>
+		{if $form.created_id}
+			<tr class="crm-event-manage-eventinfo-form-block-created_id">
+				<td class="label">{$form.created_id.label}</td>
+				<td>{$form.created_id.html}</td>
+			</tr>
+		{/if}
 		<tr class="crm-event-manage-eventinfo-form-block-title">
 			<td class="label">{$form.title.label} {if $action == 2}{include file='CRM/Core/I18n/Dialog.tpl' table='civicrm_event' field='title' id=$eventID}{/if}</td>
 			<td>{$form.title.html}<br />
