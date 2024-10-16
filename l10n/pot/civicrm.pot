@@ -49547,3 +49547,19 @@ msgstr ""
 #: CRM/Group/Form/Edit.php
 msgid "Remote Group"
 msgstr ""
+
+#: CRM/Contribute/Form/Contribution/Main.php
+msgid "Message for your supported contribution page"
+msgstr ""
+
+#: CRM/Contribute/Form/Contribution/Main.php
+msgid "Name or nickname to display on the contribution page"
+msgstr ""
+
+#: CRM/Contribute/Form/Contribution/Main.php
+msgid "Your message to display on the contribution page"
+msgstr ""
+
+#: templates/CRM/Contribute/Form/Contribution/Main.tpl
+msgid "Your message will be displayed on the contribution page, allowing others to see why you support this contribution."
+msgstr ""
