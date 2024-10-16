@@ -67,7 +67,7 @@
                     <th scope="col">
                         {if $header.sort}
                             {assign var='key' value=$header.sort}
-                            {$sort->_response.$key.link}
+                            {if $sort->_response.$key}{$sort->_response.$key.link}{else}{$header.name}{/if}
                         {else}
                             {$header.name}
                         {/if}

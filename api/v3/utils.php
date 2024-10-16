@@ -410,7 +410,7 @@ function _civicrm_api3_store_values(&$fields, &$params, &$values) {
  * @param array $returnProperties the element want to return
  * 
  */
-function _civicrm_api3_get_using_query_object($entity, $params, $additional_options = array(), $getCount = NULL, $mode = CRM_Contact_BAO_Query::MODE_CONTACTS, $returnProperties = array()){
+function _civicrm_api3_get_using_query_object($entity, $params, $additional_options = array(), $getCount = NULL, $mode = CRM_Contact_BAO_Query::MODE_CONTACTS, $returnProperties = array(), $groupBy = FALSE){
 
   // Convert id to e.g. contact_id
   $entityLower = strtolower($entity);
@@ -470,7 +470,7 @@ function _civicrm_api3_get_using_query_object($entity, $params, $additional_opti
     $offset ,
     $limit,
     $smartGroupCache,
-    FALSE,
+    $groupBy,
     $skipPermissions,
     $mode
   );
