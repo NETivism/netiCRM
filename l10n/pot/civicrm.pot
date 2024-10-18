@@ -49563,3 +49563,7 @@ msgstr ""
 #: templates/CRM/Contribute/Form/Contribution/Main.tpl
 msgid "Your message will be displayed on the contribution page, allowing others to see why you support this contribution."
 msgstr ""
+
+#: templats/CRM/Contribute/Form/PCP/Campaign.tpl
+msgid "Are you sure you want to replace your current image?"
+msgstr ""
