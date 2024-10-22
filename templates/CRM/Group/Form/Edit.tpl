@@ -148,7 +148,12 @@ cj(function($){
   {/if}
   <tr class="crm-group-form-block-visibility">
 	    <td class="label">{$form.visibility.label}</td>
-	    <td>{$form.visibility.html|crmReplace:class:huge} {help id="id-group-visibility" file="CRM/Group/Page/Group.hlp"}</td>
+	    <td>
+        {$form.visibility.html|crmReplace:class:huge}
+        <div class="description">
+          {ts}Select 'User and User Admin Only' if joining this group is controlled by authorized CiviCRM users only. If you want to allow contacts to join and remove themselves from this group via the Registration and Account Profile forms, select 'Public Pages'.{/ts}
+          </div>
+      </td>
 	</tr>
 	
 	<tr>
@@ -193,6 +198,16 @@ cj(function($){
     {/if} 
 	
     <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
+
+    {capture assign=subsUrl}{crmURL p="civicrm/mailing/subscribe" q="reset=1"}{/capture}
+    <div id="dialog-confirm-groupname" title="{ts}Confirm public group name{/ts}" style="display:none;">
+      <p><span class="zmdi zmdi-alert-circle" style="margin: 0 7px 0 0;"></span>{ts 1=$subsUrl 2="[[placeholder]]"}The public group will be displayed on the <a href="%1" target="_blank">mailing list subscription</a> page for the general public to browse. Please check if this group name "%2" is correct.{/ts}</p>
+      <p>{ts}Are you sure you want to continue?{/ts}</p>
+    </div>
+    <div id="dialog-confirm-disablesubs" title="{ts}Removing the last public group{/ts}" style="display:none;">
+      <p><span class="zmdi zmdi-alert-circle" style="margin: 0 7px 0 0;"></span>{ts 1="$subsUrl"}The group you selected is the last public newsletter group. After removal, the <a href="%1" target="_blank">mailing list subscription</a> function will be disabled.{/ts}</p>
+      <p>{ts}Are you sure you want to continue?{/ts}</p>
+    </div>
     {if $action neq 1}
 	<div class="action-link-button">
 	    <a href="{$crmURL}">&raquo; {ts}Contacts in this Group{/ts}</a>
@@ -211,6 +226,60 @@ cj(function($){
 
 {literal}
 <script type="text/javascript">
+cj(document).ready( function($) {
+  let lastPublicSubsGroup = "{/literal}{$lastPublicSubsGroup}{literal}";
+  $("input[name=_qf_Edit_upload]").on("click", function(e){
+    e.preventDefault();
+    let thisform = $(this).closest('form');
+    if ($("#group_type\\\[2\\\]").prop('checked') && $("#visibility").val() === 'Public Pages') {
+      let groupName = $('input[name=title]').val();
+      $('#dialog-confirm-groupname').html($('#dialog-confirm-groupname').html().replace('[[placeholder]]', groupName));
+      $("#dialog-confirm-groupname").dialog({
+        autoOpen: false,
+        resizable: false,
+        width:500,
+        height:300,
+        modal: true,
+        buttons: {
+          "{/literal}{ts}OK{/ts}{literal}": function() {
+            $(this).dialog("close");
+            thisform.submit();
+            return true;
+          },
+          "{/literal}{ts}Cancel{/ts}{literal}": function() {
+            $(this).dialog("close");
+            $("input[name=_qf_Edit_upload]").removeAttr('readonly');
+          }
+        }
+      });
+      $('#dialog-confirm-groupname').dialog('open');
+    }
+    else if(lastPublicSubsGroup && ($("#group_type\\\[2\\\]").prop('checked') === false || $("#visibility").val() === 'Public Pages')) {
+      $("#dialog-confirm-disablesubs").dialog({
+        autoOpen: false,
+        resizable: false,
+        width:500,
+        height:300,
+        modal: true,
+        buttons: {
+          "{/literal}{ts}OK{/ts}{literal}": function() {
+            $(this).dialog("close");
+            thisform.submit();
+            return true;
+          },
+          "{/literal}{ts}Cancel{/ts}{literal}": function() {
+            $(this).dialog("close");
+            $("input[name=_qf_Edit_upload]").removeAttr('readonly');
+          }
+        }
+      });
+      $('#dialog-confirm-disablesubs').dialog('open');
+    }
+    else {
+      thisform.submit();
+    }
+  });
+});
 {/literal}{if $organizationID}{literal}
     cj(document).ready( function() { 
 	//group organzation default setting
@@ -237,6 +306,7 @@ cj('#organization').autocomplete( dataUrl, {
                                                        htmlDiv = data[0].replace( /::/gi, ' ');
                                                        cj('div#organization_address').html(htmlDiv);
 						      });
+
 </script>
 {/literal}
 </div>

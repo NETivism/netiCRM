@@ -32846,7 +32846,7 @@ msgid ""
 "authorized CiviCRM users only. If you want to allow contacts to join and "
 "remove themselves from this group via the Registration and Account Profile "
 "forms, select 'Public Pages'."
-msgstr "如該群組只可由已授權的使用者控制，請選「使用者與使用者管理員」。如您容許聯絡人自由參加群組，請選「公開頁面」。 "
+msgstr "「公開頁面」的群組名稱，將呈現於活動報名、募款頁、資料表單，讓人可以自行加入。若不希望公開呈現，請選「使用者與使用者管理員」，將僅供登入的使用者可存取。"
 
 #: templates/CRM/Group/Page/Group.hlp
 msgid ""
@@ -50128,3 +50128,29 @@ msgstr "您的留言將會顯示於募款頁中，讓大家可以看到你支持
 #: templats/CRM/Contribute/Form/PCP/Campaign.tpl
 msgid "Are you sure you want to replace your current image?"
 msgstr "你確定要取代現有的圖片嗎？"
+
+#: templats/CRM/Group/Form/Edit.tpl
+msgid "Confirm public group name"
+msgstr "確認公開顯示的群組名稱"
+
+#: templats/CRM/Group/Form/Edit.tpl
+msgid ""
+"The public group will be displayed on the <a href=\"%1\" "
+"target=\"_blank\">mailing list subscription</a> page for the general public "
+"to browse. Please check if this group name \"%2\" is correct."
+msgstr "公開群組將會顯示於 <a href=\"%1\" target=\"_blank\">訂閱電子報</a> 的頁面給一般民眾瀏覽，請檢查此群組名稱「%2」是否正確。"
+
+#: templats/CRM/Group/Form/Edit.tpl
+msgid "Removing the last public group"
+msgstr "您正在移除最後一個公開群組"
+
+#: templats/CRM/Group/Form/Edit.tpl
+msgid ""
+"The group you selected is the last public newsletter group. After removal, "
+"the <a href=\"%1\" target=\"_blank\">mailing list subscription</a> function "
+"will be disabled."
+msgstr "你選擇的群組是最後一個公開的電子報群組，移除後將停用<a href=\"%1\" target=\"_blank\">電子報訂閱</a>功能。"
+
+#: templates/CRM/Group/Page/Group.tpl
+msgid "Public Mailing List Group"
+msgstr "公開的電子報訂閱群組"
