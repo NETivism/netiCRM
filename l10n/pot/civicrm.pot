@@ -49563,3 +49563,27 @@ msgstr ""
 #: templates/CRM/Contribute/Form/Contribution/Main.tpl
 msgid "Your message will be displayed on the contribution page, allowing others to see why you support this contribution."
 msgstr ""
+
+#: templats/CRM/Contribute/Form/PCP/Campaign.tpl
+msgid "Are you sure you want to replace your current image?"
+msgstr ""
+
+#: templats/CRM/Group/Form/Edit.tpl
+msgid "Confirm public group name"
+msgstr ""
+
+#: templats/CRM/Group/Form/Edit.tpl
+msgid "The public group will be displayed on the <a href=\"%1\" target=\"_blank\">mailing list subscription</a> page for the general public to browse. Please check if this group name \"%2\" is correct."
+msgstr ""
+
+#: templats/CRM/Group/Form/Edit.tpl
+msgid "Removing the last public group"
+msgstr ""
+
+#: templats/CRM/Group/Form/Edit.tpl
+msgid "The group you selected is the last public newsletter group. After removal, the <a href=\"%1\" target=\"_blank\">mailing list subscription</a> function will be disabled."
+msgstr ""
+
+#: templates/CRM/Group/Page/Group.tpl
+msgid "Public Mailing List Group"
+msgstr ""
