@@ -44,14 +44,19 @@
   function SelectAll() { }
   SelectAll.prototype.render = function (decorated) {
     var self = this,
+      translate = self.options.get('translations').get.bind(self.options.get('translations')),
       $rendered = decorated.call(this),
       $selectAll = $(
-        '<button class="btn btn-xs btn-default" type="button" style="margin-left:6px;"><i class="fa fa-check-square-o"></i> Select All</button>'
+        '<button class="btn" type="button" style="margin-left:6px;">' +
+        '<i class="zmdi zmdi-check-square"></i> ' + translate('selectAll')() +
+        '</button>'
       ),
       $unselectAll = $(
-        '<button class="btn btn-xs btn-default" type="button" style="margin-left:6px;"><i class="fa fa-square-o"></i> Unselect All</button>'
+        '<button class="btn" type="button" style="margin-left:6px;">' +
+        '<i class="zmdi zmdi-square-o"></i> ' + translate('unselectAll')() +
+        '</button>'
       ),
-      $btnContainer = $('<div style="margin-top:3px;">').append($selectAll).append($unselectAll);
+      $btnContainer = $('<div class="select2-selectall-actions" style="margin-top:3px; text-align:center;">').append($selectAll).append($unselectAll);
     if (!this.$element.prop("multiple")) {
       // This isn't a multi-select, don't add the buttons
       return $rendered;
