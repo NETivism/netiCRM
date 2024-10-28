@@ -635,6 +635,23 @@ WHERE pcp.id = %1";
   }
 
   /**
+   * Get image urls
+   *
+   * @param int $pcpId
+   * @return array
+   */
+  public static function getPcpImages($pcpId) {
+    $dao = CRM_Core_DAO::executeQuery("SELECT file_id FROM civicrm_entity_file WHERE entity_table = 'civicrm_pcp' AND entity_id = %1", array(
+      1 => array($pcpId, 'Integer'),
+    ));
+    $files = array();
+    while($dao->fetch()) {
+      $files[] = CRM_Core_BAO_File::url($dao->file_id, $pcpId, 'civicrm_pcp');
+    }
+    return $files;
+  }
+
+  /**
    * Function to get pcp block & entity id given pcp id
    *
    * @param int $id campaign page id

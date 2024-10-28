@@ -287,7 +287,12 @@ WHERE  id = %1
         $idName = 'contact_id';
       }
       else {
-        $additionalWhereClause = " contact_a.id NOT IN ( SELECT contact_id FROM civicrm_group_contact WHERE civicrm_group_contact.status = 'Removed' AND civicrm_group_contact.group_id = $groupID )";
+        $additionalWhereClause = <<<EOT
+          NOT EXISTS (
+            SELECT 1 FROM civicrm_group_contact cgc_removed
+            WHERE cgc_removed.contact_id = contact_a.id AND cgc_removed.group_id = {$groupID} AND cgc_removed.status = 'Removed'
+          )
+        EOT;
         $formValues = CRM_Contact_BAO_SavedSearch::getFormValues($savedSearchID);
 
         $query = new CRM_Contact_BAO_Query(

@@ -50102,3 +50102,7 @@ msgstr "將於每日固定時間會同步名單。"
 
 msgid "If there is an immediate need, you can click \"Manual Sync\"."
 msgstr "若有需要，你可點擊「手動同步」"
+
+#: CRM/Group/Form/Edit.php
+msgid "Remote Group"
+msgstr "遠端群組"

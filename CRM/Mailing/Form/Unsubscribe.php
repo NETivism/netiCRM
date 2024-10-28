@@ -34,6 +34,11 @@ class CRM_Mailing_Form_Unsubscribe extends CRM_Core_Form {
       }
     }
     $this->assign('groupExist', $groupExist);
+    $obj = array(
+      'type' => 'markup',
+      'markup' => '<meta name="robots" content="noindex" />'.PHP_EOL,
+    );
+    CRM_Utils_System::addHTMLHead($obj);
   }
 
   public function buildQuickForm() {

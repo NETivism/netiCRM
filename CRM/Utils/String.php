@@ -724,7 +724,7 @@ class CRM_Utils_String {
    *
    * @param  string $str string need to modify
    * @param  string $mode auto or custom, if use custom, need further parameter
-   * @param  int    $start when mode = custom, specify mask start position
+   * @param  int    $start when mode = custom, specify mask start position, can be negative which calc from end of str
    * @param  int    $end   when mode = custom, specify mask end position calculate from end of string
    *
    * @return string A masked string
@@ -738,14 +738,19 @@ class CRM_Utils_String {
     }
     $length = mb_strlen($str);
     if ($length <= 1) {
-      return $str;
+      return self::MASK;
     }
 
     if ($mode == 'custom' && is_int($start) && is_int($end)) {
-      $str = mb_substr($str, 0, $start) . str_repeat(self::MASK, $length - $end - 1) . mb_substr($str, -1 * $end, $end);
-      if ($start == 0) {
-        $str = self::MASK.$str;
+      $end = abs($end);
+      if ($start < 0) {
+        $repeat = abs($start) - $end;
       }
+      else {
+        $repeat = $length - $start - $end;
+      }
+      $repeat = $repeat < 0 ? 0 : $repeat;
+      $str = mb_substr($str, 0, $start) . str_repeat(self::MASK, $repeat) . mb_substr($str, -1 * $end, $end);
     }
     else {
       switch($length) {

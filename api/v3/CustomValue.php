@@ -217,7 +217,7 @@ function civicrm_api3_custom_value_get($params) {
         $id = $fieldNumber;
       }
       $values[$id]['entity_id'] = $getParams['entityID'];
-      if (CRM_Utils_Array::value('entityType', $getParams)) {
+      if (CRM_Utils_Array::value('entityType', $getParams) && empty($params['sequential'])) {
         $values[$n]['entity_table'] = $getParams['entityType'];
       }
       //set 'latest' -useful for multi fields but set for single for consistency

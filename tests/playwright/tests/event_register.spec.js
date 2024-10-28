@@ -40,7 +40,7 @@ test.afterAll(async () => {
 
 test.describe.serial('Event register page', () => {
   test('Normal registration', async () => {
-    await page.goto('/user/logout');
+    await utils.logoutUser(page);
     var page_title = getPageTitle(item.event_name_1);
     await test.step("Check can visit page.", async () =>{
       await page.goto('/civicrm/event/register?reset=1&id=1&cid=0');

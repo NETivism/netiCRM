@@ -310,17 +310,16 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
       civicrm_api('contact', 'create', $contact);
     }
 
-    // process recurring or contribution
     if ($contactId) {
       $contributionResult['contactId']  = $contactId;
       // create additional contact if needed
       $backerRelationTypeId = $config->backerFounderRelationship;
       if (!empty($params['additional']['first_name']) && !empty($params['additional']['address']) && !empty($backerRelationTypeId)) {
         $dedupeParams = array(
-          'email' => $params['additional']['email'][0]['email'],
           'last_name' => $params['additional']['last_name'],
           'first_name' => $params['additional']['first_name'],
-          'phone' => $params['additional']['phone'][0]['phone']
+          'email' => $params['additional']['email'][0]['email'],
+          'phone' => $params['additional']['phone'][0]['phone'],
         );
         $dedupeParams = CRM_Dedupe_Finder::formatParams($dedupeParams, 'Individual');
         $foundDupes = CRM_Dedupe_Finder::dupesByRules(
@@ -330,9 +329,9 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
           array(),
           array(
             array('table' => 'civicrm_contact', 'field' => 'last_name', 'weight' => 2),
-            array('table' => 'civicrm_contact', 'field' => 'first_name', 'weight' => 8),
-            array('table' => 'civicrm_email', 'field' => 'email', 'weight' => 10),
-            array('table' => 'civicrm_phone', 'field' => 'phone', 'weight' => 7),
+            array('table' => 'civicrm_contact', 'field' => 'first_name', 'weight' => 9),
+            array('table' => 'civicrm_email', 'field' => 'email', 'weight' => 9),
+            array('table' => 'civicrm_phone', 'field' => 'phone', 'weight' => 9),
           ),
           20
         );
@@ -340,49 +339,66 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
           sort($foundDupes);
           $additionalContactId = reset($foundDupes);
         }
-        else {
-          $dedupeParams = array(
-            'last_name' => $params['additional']['last_name'],
-            'first_name' => $params['additional']['first_name'],
-          );
-          $dedupeParams = CRM_Dedupe_Finder::formatParams($dedupeParams, 'Individual');
-          $foundDupes = CRM_Dedupe_Finder::dupesByRules(
-            $dedupeParams,
-            'Individual',
-            'Strict',
-            array(),
-            array(
-              array('table' => 'civicrm_contact', 'field' => 'sort_name', 'weight' => 10),
-            ),
-            10
-          );
-        }
         if ($additionalContactId) {
           $params['additional']['id'] = $additionalContactId;
-          // only process address
+          $otherLocationTypeId = array_search('Other', $locationType);
+          $addContact = array();
+
+          // check addr exists
           $blockValue = $params['additional']['address'][0];
           $blockValue['contact_id'] = $additionalContactId;
           CRM_Core_BAO_Address::valueExists($blockValue);
           if (empty($blockValue['id'])) {
-            $otherLocationTypeId = array_search('Other', $locationType);
-            $billingLocationTypeId = array_search('Billing', $locationType);
-            if ($otherLocationTypeId && $billingLocationTypeId) {
-              $existsBillingAddr = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_address WHERE location_type_id = '$billingLocationTypeId' AND contact_id = %1", array(
+            if ($otherLocationTypeId) {
+              $existsAddr = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_address WHERE contact_id = %1", array(
                 1 => array($additionalContactId, 'Integer')
               ));
-              if ($existsBillingAddr) {
-                CRM_Core_DAO::executeQuery("UPDATE civicrm_address SET location_type_id = '$otherLocationTypeId' WHERE id = %1", array(
-                  1 => array($existsBillingAddr, 'Integer')
-                ));
+              if ($existsAddr) {
+                $params['additional']['address'][0]['location_type_id'] = $otherLocationTypeId;
               }
             }
-            $addContact = array(
-              'version' => 3,
-              'id' => $additionalContactId,
-              'address' => $params['additional']['address'],
-              'log_data' => ts('Updated contact').'-'.ts('Backer Auto Import'),
-            );
-            // log exists
+            $addContact['address'] = $params['additional']['address'];
+          }
+
+          // check phone exists
+          $blockValue = $params['additional']['phone'][0];
+          $blockValue['contact_id'] = $additionalContactId;
+          CRM_Core_BAO_Phone::valueExists($blockValue);
+          if (empty($blockValue['id'])) {
+            if ($otherLocationTypeId) {
+              $existsPhone = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_phone WHERE contact_id = %1", array(
+                1 => array($additionalContactId, 'Integer')
+              ));
+              if ($existsPhone) {
+                $params['additional']['phone'][0]['location_type_id'] = $otherLocationTypeId;
+                $params['additional']['phone'][0]['is_primary'] = 0;
+              }
+            }
+            $addContact['phone'] = $params['additional']['phone'];
+          }
+
+          // check email exists
+          $blockValue = $params['additional']['email'][0];
+          $blockValue['contact_id'] = $additionalContactId;
+          CRM_Core_BAO_Email::valueExists($blockValue);
+          if (empty($blockValue['id'])) {
+            if ($otherLocationTypeId) {
+              $existsEmail = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_email WHERE contact_id = %1", array(
+                1 => array($additionalContactId, 'Integer')
+              ));
+              if ($existsEmail) {
+                $params['additional']['email'][0]['location_type_id'] = $otherLocationTypeId;
+                $params['additional']['email'][0]['is_primary'] = 0;
+              }
+            }
+            $addContact['email'] = $params['additional']['email'];
+          }
+
+          // only update contact when value different
+          if (!empty($addContact)) {
+            $addContact['id'] = $additionalContactId;
+            $addContact['version'] = 3;
+            $addContact['log_data'] = ts('Updated contact').'-'.ts('Backer Auto Import');
             civicrm_api('contact', 'create', $addContact);
           }
         }
@@ -390,11 +406,12 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
           // create new contact
           $addContact = $params['additional'];
           $addContact['version'] = 3;
+          $addContact['log_data'] = ts('Updated contact').'-'.ts('Backer Auto Import');
           $result = civicrm_api('contact', 'create', $addContact);
           $additionalContactId = $result['id'];
         }
 
-        if ($additionalContactId) {
+        if ($additionalContactId && $additionalContactId != $contactId) {
           $addContactParams = array(
             'version' => 3,
             'contact_id_a' => $contactId,
@@ -578,6 +595,9 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
         2 => array($countryId, 'Integer'),
       ));
     }
+
+    // #40812#note-10 , do not remove recipient data in form data stage
+    $params['additional'] = array();
     $address = array(
       'country' => ($json['recipient']['recipient_country'] == 'TW') ? 'Taiwan' : '',
       'postal_code' => $json['recipient']['recipient_postal_code'] ? $json['recipient']['recipient_postal_code'] : '',
@@ -586,47 +606,41 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
       'street_address' => $json['recipient']['recipient_address'] ? $json['recipient']['recipient_address'] : '',
       'location_type_id' => array_search('Home', $locationType),
     );
-    if (trim($json['recipient']['recipient_name']) == trim($json['user']['name'])) {
-      $params['address'][] = $address;
-    }
-    else {
-      $params['additional'] = array();
-      $addName = self::explodeName(trim($json['recipient']['recipient_name']));
-      if ($addName === FALSE) {
-        $addName= array(
-          '',    // sure name
-          $json['recipient']['recipient_name'], // given name
-        );
-      }
-      $params['additional'] = array(
-        'contact_type' => 'Individual',
-        'last_name' => $addName[0],
-        'first_name' => $addName[1],
+    $addName = self::explodeName(trim($json['recipient']['recipient_name']));
+    if ($addName === FALSE) {
+      $addName= array(
+        '',    // sure name
+        $json['recipient']['recipient_name'], // given name
       );
-      if ($json['recipient']['recipient_contact_email'] && CRM_Utils_Rule::email(trim($json['recipient']['recipient_contact_email']))) {
-        $params['additional']['email'][0] = array(
-          'email' => trim($json['recipient']['recipient_contact_email']),
-          'location_type_id' => array_search('Home', $locationType),
-          'is_primary' => 1,
-          'append' => TRUE,
-        );
-      }
-      if (!empty($json['recipient']['recipient_cellphone'])) {
-        $params['additional']['phone'][0] = array(
-          'phone' => trim($json['recipient']['recipient_cellphone']),
-          'phone_type_id' => 5, // other 
-          'location_type_id' => array_search('Home', $locationType),
-          'is_primary' => 1,
-          'append' => TRUE,
-        );
-        $addPhone = self::validateMobilePhone(trim($json['recipient']['recipient_cellphone']));
-        if ($addPhone) {
-          $params['additional']['phone'][0]['phone_type_id'] = 2;
-          $params['additional']['phone'][0]['phone'] = $addPhone;
-        }
-      }
-      $params['additional']['address'][0] = $address;
     }
+    $params['additional'] = array(
+      'contact_type' => 'Individual',
+      'last_name' => $addName[0],
+      'first_name' => $addName[1],
+    );
+    if ($json['recipient']['recipient_contact_email'] && CRM_Utils_Rule::email(trim($json['recipient']['recipient_contact_email']))) {
+      $params['additional']['email'][0] = array(
+        'email' => trim($json['recipient']['recipient_contact_email']),
+        'location_type_id' => array_search('Home', $locationType),
+        'is_primary' => 1,
+        'append' => TRUE,
+      );
+    }
+    if (!empty($json['recipient']['recipient_cellphone'])) {
+      $params['additional']['phone'][0] = array(
+        'phone' => trim($json['recipient']['recipient_cellphone']),
+        'phone_type_id' => 5, // other
+        'location_type_id' => array_search('Home', $locationType),
+        'is_primary' => 1,
+        'append' => TRUE,
+      );
+      $addPhone = self::validateMobilePhone(trim($json['recipient']['recipient_cellphone']));
+      if ($addPhone) {
+        $params['additional']['phone'][0]['phone_type_id'] = 2;
+        $params['additional']['phone'][0]['phone'] = $addPhone;
+      }
+    }
+    $params['additional']['address'][0] = $address;
   }
 
   public static function formatRecurring($json, &$params) {

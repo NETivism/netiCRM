@@ -11,7 +11,7 @@ test.beforeAll(async () => {
   page = await browser.newPage();
   page_title =  await utils.getPageTitle('無名額限制，需事先審核');
   //logout
-  await page.goto('/user/logout');
+  await utils.logoutUser(page);
 });
 
 test.afterAll(async () => {

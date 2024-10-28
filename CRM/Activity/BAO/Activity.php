@@ -1138,8 +1138,9 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
    * @param array  $attachments  the array of attachments if any
    * @param string $cc           cc recepient
    * @param string $bcc          bcc recepient
-   * @param array $contactIds    contact ids
-   * @param object form object for processing this email
+   * @param array  $contactIds    contact ids
+   * @param object $object form object for processing this email
+   * @param int    parent id to save this activity
    *
    * @return array               ( sent, activityId) if any email is sent and activityId
    * @access public
@@ -1157,7 +1158,8 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
     $cc = NULL,
     $bcc = NULL,
     &$contactIds = NULL,
-    &$object = NULL
+    &$object = NULL,
+    $parentId = NULL
   ) {
     $class = is_object($object) ? get_class($object) : 'CRM_Activity_BAO_Activity';
     if (empty($contactIds)) {
@@ -1217,6 +1219,12 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
       // FIXME: check for name Completed and get ID from that lookup
       'status_id' => 2,
     );
+    if (!empty($parentId)) {
+      $exists = CRM_Core_DAO::getFieldValue('CRM_Activity_DAO_Activity', $parentId, 'id');
+      if ($exists) {
+        $activityParams['parent_id'] = $parentId;
+      }
+    }
 
     // CRM-5916: strip [case #…] before saving the activity (if present in subject)
     $activityParams['subject'] = preg_replace('/\[case #([0-9a-h]{7})\] /', '', $activityParams['subject']);
@@ -1250,13 +1258,25 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
         $returnProperties,
         NULL, NULL, FALSE,
         $flatten,
-        $class
+        $class,
+        TRUE
       );
     }
 
     // call token hook
     $tokens = array();
     CRM_Utils_Hook::tokens($tokens);
+    if (!empty($details)) {
+      // prepare activity relative parameters
+      $details[0]['activity'] = array();
+      $details[0]['activity']['id'] = $activity->id;
+      foreach($activityParams as $idx => $val) {
+        if (isset($activity->$idx)) {
+          $details[0]['activity'][$idx] = $activity->$idx;
+        }
+      }
+      CRM_Utils_Hook::tokenValues($details, $contactIds, NULL, $tokens, __CLASS__.'::'.__METHOD__);
+    }
     $categories = array_keys($tokens);
 
     $escapeSmarty = FALSE;
@@ -1326,8 +1346,9 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
    * @param int  $toId       to contact id
    * @param int  $templateId message template id
    * @param int  $check      check if mail should be send on hold, desease or do not email
+   * @param int  $parentId   parent activity ID that will save this email activity
    */
-  public static function sendEmailTemplate($from, $toId, $template_id, $check = FALSE) {
+  public static function sendEmailTemplate($from, $toId, $templateId, $check = FALSE, $parentId = NULL) {
     $returnProperties = array(
       'sort_name' => 1,
       'email' => 1,
@@ -1346,7 +1367,7 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
     else {
       $fromId = NULL;
     }
-    list($details) = CRM_Mailing_BAO_Mailing::getDetails($getDetails, $returnProperties, FALSE, FALSE);
+    list($details) = CRM_Mailing_BAO_Mailing::getDetails($getDetails, $returnProperties, FALSE, FALSE, NULL, TRUE);
     if (!empty($details)) {
       $toDetails = $details[$toId];
       $contactIds = array($toId);
@@ -1358,7 +1379,7 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
       }
 
       $toDetails = array($details[$toId]);
-      $params = array('id' => $template_id);
+      $params = array('id' => $templateId);
       $template = array();
       CRM_Core_BAO_MessageTemplates::retrieve($params, $template);
       $subject = $template['msg_subject'];
@@ -1375,7 +1396,9 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
         NULL, // attachments
         NULL, // cc
         NULL, // bcc
-        $contactIds // contact_id
+        $contactIds, // contact_id
+        CRM_Core_DAO::$_nullObject, // object
+        $parentId, // parent_id
       );
       if ($sent) {
         return TRUE;
@@ -1543,7 +1566,8 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
         $returnProperties,
         NULL, NULL, FALSE,
         $messageToken,
-        'CRM_Activity_BAO_Activity'
+        'CRM_Activity_BAO_Activity',
+        TRUE
       );
     }
 

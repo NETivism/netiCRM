@@ -1023,6 +1023,8 @@ class CRM_Utils_Token {
    * @param  boolean $skipDeceased     don't return deceased contact info.
    * @param  array   $extraParams      extra params
    * @param  array   $tokens           the list of tokens we've extracted from the content
+   * @param  string  $className        context to call hook_tokenValues
+   * @param  bool    $customHook       skip hook call
    *
    * @return array
    * @access public
@@ -1034,7 +1036,8 @@ class CRM_Utils_Token {
     $skipDeceased = TRUE,
     $extraParams = NULL,
     $tokens = array(),
-    $className = NULL
+    $className = NULL,
+    $customHook = FALSE
   ) {
     if (empty($contactIDs)) {
       // putting a fatal here so we can track if/when this happens
@@ -1137,13 +1140,14 @@ class CRM_Utils_Token {
     }
 
     // also call a hook and get token details
-    require_once 'CRM/Utils/Hook.php';
-    CRM_Utils_Hook::tokenValues($details[0],
-      $contactIDs,
-      NULL,
-      $tokens,
-      $className
-    );
+    if (empty($customHook)) {
+      CRM_Utils_Hook::tokenValues($details[0],
+        $contactIDs,
+        NULL,
+        $tokens,
+        $className
+      );
+    }
     return $details;
   }
 

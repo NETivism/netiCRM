@@ -73,13 +73,16 @@
         }
       }
     });
+
     $("#MailingOption").submit(function(e){
+      var button;
       if ($(this).data('action')) {
-        var button = $(this).data('action');
+        button = $(this).data('action');
       }
       else {
-        var button = $(document.activeElement).attr('name');
+        button = $(e.originalEvent.submitter).attr('name');
       }
+
       if (button == '_qf_MailingOption_next' && !confirmEmail) {
         $('#dialog-confirm-email').dialog('open');
       }

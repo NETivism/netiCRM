@@ -3298,7 +3298,10 @@ CREATE TABLE civicrm_group (
      cache_date datetime    COMMENT 'Date when we created the cache for a smart group',
      parents text    COMMENT 'IDs of the parent(s)',
      children text    COMMENT 'IDs of the child(ren)',
-     is_hidden tinyint   DEFAULT 0 COMMENT 'Is this group hidden?' 
+     is_hidden tinyint   DEFAULT 0 COMMENT 'Is this group hidden?',
+     is_sync tinyint    COMMENT 'Indicates whether the group is synchronized.',
+     sync_data text    COMMENT 'Stores JSON format data from the remote group, such as remote group ID, name, creation time.',
+     last_sync datetime    COMMENT 'Stores the last sync time with the remote group.' 
 ,
     PRIMARY KEY ( id )
  

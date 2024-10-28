@@ -193,7 +193,7 @@ class CRM_Contact_Page_AJAX {
         }
         else {
           if (!empty($dao->legal_identifier)) {
-            $d = ' :: ' . substr($dao->legal_identifier, 0, 1) . str_repeat('*', strlen($dao->legal_identifier) - 7) . substr($dao->legal_identifier, -6, 6);
+            $d = ' :: ' . CRM_Utils_String::mask($dao->legal_identifier, 'custom', 6, 0);
           }
         }
       }

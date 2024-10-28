@@ -177,6 +177,24 @@ class CRM_Contact_DAO_Group extends CRM_Core_DAO
    */
   public $is_hidden;
   /**
+   * Indicates whether the group is synchronized.
+   *
+   * @var boolean
+   */
+  public $is_sync;
+  /**
+   * Stores JSON format data from the remote group, such as remote group ID, name, creation time.
+   *
+   * @var text
+   */
+  public $sync_data;
+  /**
+   * Stores the last sync time with the remote group.
+   *
+   * @var datetime
+   */
+  public $last_sync;
+  /**
    * class constructor
    *
    * @access public
@@ -320,6 +338,20 @@ class CRM_Contact_DAO_Group extends CRM_Core_DAO
         'is_hidden' => array(
           'name' => 'is_hidden',
           'type' => CRM_Utils_Type::T_BOOLEAN,
+        ) ,
+        'is_sync' => array(
+          'name' => 'is_sync',
+          'type' => CRM_Utils_Type::T_BOOLEAN,
+        ) ,
+        'sync_data' => array(
+          'name' => 'sync_data',
+          'type' => CRM_Utils_Type::T_TEXT,
+          'title' => ts('Sync Data') ,
+        ) ,
+        'last_sync' => array(
+          'name' => 'last_sync',
+          'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
+          'title' => ts('Last Sync') ,
         ) ,
       );
     }

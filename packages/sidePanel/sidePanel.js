@@ -12,6 +12,7 @@
         NSP_HEADER = "nsp-header",
         NSP_FOOTER = "nsp-footer",
         NSP_TRIGGER = "nsp-trigger",
+        NSP_USER_PREFERENCE_OPEN_STATUS = "nsp_user_preference_open_status",
         INNER_CLASS = "inner",
         ACTIVE_CLASS = "is-active",
         OPEN_CLASS = "is-opened",
@@ -54,6 +55,7 @@
     _nspOpened,
     _nspFullscreen,
     _nspContainerClass,
+    _nspUserPreference,
 		_nspAPI = window.location.origin + "/api/",
 		_container,
 		_content = "." + NSP_CONTENT,
@@ -246,19 +248,38 @@
         _cssVariablesUpdate("--nsp-width", _nspWidth);
       }
 
-      if (_nspOpened) {
+      let nspOpenedDefault = _nspOpened;
+
+      if (_nspUserPreference && typeof window.getCookie !== 'undefined') {
+        const userPreferenceStatus = getCookie(NSP_USER_PREFERENCE_OPEN_STATUS);
+        if (userPreferenceStatus) {
+          nspOpenedDefault = userPreferenceStatus;
+        }
+      }
+
+      if (nspOpenedDefault && nspOpenedDefault != 'false') {
         _nspMain.open();
       }
-		},
+    },
     open: function() {
       $(_container).addClass(OPEN_CLASS);
       $(_container).removeClass(CLOSE_CLASS);
       $("body").addClass("nsp-" + OPEN_CLASS);
+      if (_nspUserPreference) {
+        if (typeof window.setCookie !== 'undefined') {
+          setCookie(NSP_USER_PREFERENCE_OPEN_STATUS, true, 86400*30, window.location.pathname);
+        }
+      }
     },
     close: function() {
       $(_container).removeClass(OPEN_CLASS);
       $(_container).addClass(CLOSE_CLASS);
       $("body").removeClass("nsp-" + OPEN_CLASS);
+      if (_nspUserPreference) {
+        if (typeof window.setCookie !== 'undefined') {
+          setCookie(NSP_USER_PREFERENCE_OPEN_STATUS, false, 86400*30, window.location.pathname);
+        }
+      }
     },
     fullscreen: function() {
       _nspMain.open();
@@ -453,6 +474,7 @@
       _nspWidth = _nspOptions.width;
       _nspOpened = _nspOptions.opened;
       _nspFullscreen = _nspOptions.fullscreen;
+      _nspUserPreference = _nspOptions.userPreference;
 
       if (_debugMode) {
         $("html").addClass("is-debug");
