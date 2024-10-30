@@ -100,15 +100,15 @@ function singleSelect( object ) {
     var execBlock  = '#' + element['0'] + '-' + block + '-html Input[id*="' + element['2'] + '"]';
 
     //element to check for checkbox
-    var elementChecked =  cj( '#' + object ).attr('checked');
+    var elementChecked =  cj( '#' + object ).prop('checked');
     if ( elementChecked ) {
         cj( execBlock ).each( function() {
             if ( cj(this).attr('id') != object ) {
-                cj(this).attr( 'checked', false );
+                cj(this).prop( 'checked', false );
             }
         });
     } else {
-        cj( '#' + object ).attr( 'checked', false );
+        cj( '#' + object ).prop( 'checked', false );
     }
 
 	//check if non of elements is set Primary / Allowed to Login.
@@ -120,7 +120,7 @@ function singleSelect( object ) {
 			}
 		});
 		if( ! primary ) {
-			cj('#' + object).attr( 'checked', true );
+			cj('#' + object).prop( 'checked', true );
 		}
 	}
 }
