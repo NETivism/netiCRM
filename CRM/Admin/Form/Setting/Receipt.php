@@ -75,6 +75,7 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
     // Refs #38829, Add receipt Email Encryption option
     $this->add('checkbox', 'receiptEmailEncryption', ts('Email Receipt Password'));
     $this->addElement('text', 'receiptEmailEncryptionText', ts('Email Receipt Password Explanation Text'));
+    $this->addFormRule(array(get_class($this), 'formRule'));
   }
 
   function setDefaultValues() {
@@ -139,6 +140,14 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
     }
 
     parent::commonProcess($params);
+  }
+
+  static function formRule($fields, $files, $self) {
+    $errors = [];
+    if ((!empty($fields['receiptDisplayLegalID']) && $fields['receiptDisplayLegalID'] !== 'complete') && (!empty($fields['receiptEmailEncryption']) && $fields['receiptEmailEncryption'] === '1')) {
+        $errors['receiptEmailEncryption'] = ts('When the legal ID display option is not set to complete display, email receipt encryption cannot be enabled.');
+    }
+    return empty($errors) ? true : $errors;
   }
 
   /**
