@@ -186,7 +186,9 @@ class CRM_Core_Payment_LinePay {
     $ids['contribution'] = $contribution->id;
     $ids['contact'] = $contribution->contact_id;
     $validate_result = $ipn->validateData($input, $ids, $objects, FALSE);
-    if($validate_result && $this->_linePayAPI->_response->returnCode != '1172'){ // Refs #31598, 1172 means duplicated order, often means trigger twice.
+    // Refs #31598, 1172 means duplicated order, often means trigger twice.
+    // Refs #41790, 1198 means duplicate API requests.
+    if($validate_result && ($this->_linePayAPI->_response->returnCode != '1172' || $this->_linePayAPI->_response->returnCode != '1198')){
       $transaction = new CRM_Core_Transaction();
       if($is_success){
         $input['payment_instrument_id'] = $contribution->payment_instrument_id;
