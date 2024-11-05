@@ -202,10 +202,11 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
       if ($batch->id) {
         if (isset($batch->data['download']['file']) && file_exists($batch->data['download']['file'])) {
           @unlink($batch->data['download']['file']);
+          $expires[] = $dao->id;
         }
-        // $batch->delete(); // do not delete batch db record, purge file only
-        $expires[] = $dao->id;
       }
+      // refs #41959, free memory of batch result to prevent memory leak
+      $batch->free();
     }
     if (count($expires)) {
       $msg = 'Batch ids in '.CRM_Utils_Array::implode(",", $expires).' has been expires';
