@@ -170,17 +170,15 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
         $message = ts('Success processing queuing batch.');
       }
     }
-    if (date('G') >= 3 && date('G') <= 6) {
-      self::expireBatch();
-    }
     return $message;
   }
 
   /**
-   * Run last queuing batching
+   * Expire batches over expire days
+   * This will delete data column and purge download file to prevent db growing
    *
    * @return string
-   *   message that indicate current running status
+   *   message that indicate expires
    */
   public static function expireBatch() {
     $type = self::batchType();
@@ -188,7 +186,7 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
     unset($status['Running']);
     unset($status['Pending']);
     $purgeDay = self::EXPIRE_DAY*4;
-    $sql = "SELECT id FROM civicrm_batch WHERE type_id = %1 AND status_id IN (".CRM_Utils_Array::implode(',', $status).") AND DATE_ADD(modified_date, INTERVAL ".$purgeDay." DAY) < NOW() AND modified_date IS NOT NULL ORDER BY modified_date ASC";
+    $sql = "SELECT id FROM civicrm_batch WHERE type_id = %1 AND status_id IN (".CRM_Utils_Array::implode(',', $status).") AND DATE_ADD(modified_date, INTERVAL ".$purgeDay." DAY) < NOW() AND modified_date IS NOT NULL AND data IS NOT NULL ORDER BY modified_date ASC";
     $dao = CRM_Core_DAO::executeQuery($sql, array(
       1 => array($type['Auto'], 'Integer'),
     ));
@@ -204,9 +202,11 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
           @unlink($batch->data['download']['file']);
           $expires[] = $dao->id;
         }
+        CRM_Core_DAO::executeQuery("UPDATE civicrm_batch SET data = NULL WHERE id = %1", array(1 => array($dao->id, 'Integer')));
       }
       // refs #41959, free memory of batch result to prevent memory leak
       $batch->free();
+      unset($batch);
     }
     if (count($expires)) {
       $msg = 'Batch ids in '.CRM_Utils_Array::implode(",", $expires).' has been expires';
