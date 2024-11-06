@@ -30,7 +30,7 @@ cj( function( ) {
     {if $generateAjaxRequest}
         {foreach from=$ajaxRequestBlocks key="blockName" item="instances"}
             {foreach from=$instances key="instance" item="active"}
-                buildAdditionalBlocks( '{$blockName}', '{$className}' );
+                buildAdditionalBlocks( '{$blockName}', '{$className}', '{$instance}');
             {/foreach}  	
         {/foreach}
     {/if}
@@ -43,12 +43,16 @@ cj( function( ) {
     {literal}
 });
 
-function buildAdditionalBlocks( blockName, className ) {
+function buildAdditionalBlocks( blockName, className , $instance = null ) {
     var element = blockName + '_Block_';
 
     //get blockcount of last element of relevant blockName
     var previousInstance = cj( '[id^="'+ element +'"]:last' ).attr('id').slice( element.length );
-    var currentInstance  = parseInt( previousInstance ) + 1;
+    if (!$instance) {
+        var currentInstance  = parseInt( previousInstance ) + 1;
+    } else {
+        var currentInstance = $instance;
+    }
 
     //show primary option if block count = 2
     if ( currentInstance == 2) {

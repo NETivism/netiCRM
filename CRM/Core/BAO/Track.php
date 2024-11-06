@@ -131,6 +131,9 @@ class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
             break;
           case CRM_Utils_Type::T_STRING:
           default:
+            if (is_array($value)) {
+              $params[$key] = (string) reset($value);
+            }
             if (!CRM_Utils_Type::validate($value, 'String', FALSE)) {
               unset($params[$key]);
             }
