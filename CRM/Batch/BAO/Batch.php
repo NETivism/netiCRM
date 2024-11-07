@@ -242,7 +242,7 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
       if ($dao->data) {
         $meta = unserialize($dao->data);
         // after 4 hours without any progress, cancel it
-        if (is_array($meta) && empty($meta['processed'])) {
+        if (is_array($meta) && empty($meta['processed']) && !empty($dao->modified_date)) {
           $lastSuccessTime = strtotime($dao->modified_date);
           if (CRM_REQUEST_TIME - $lastSuccessTime > 3600 * self::EXPIRE_HOUR) {
             CRM_Core_Error::debug_log_message("Canceled running batch id {$dao->id} due to zero progress over ".self::EXPIRE_HOUR." hours.");
