@@ -74,6 +74,8 @@ abstract class CRM_Core_Payment {
 
   protected $_paymentForm = NULL;
 
+  public static $_editableFields = array();
+
   /**
    * singleton function used to manage this object
    *
