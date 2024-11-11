@@ -1672,5 +1672,6 @@ function _civicrm_api3_pseudoconstant_entity() {
     'contribution' => 'Contribute',
     'event' => 'Event',
     'membership' => 'Member',
+    'activity' => 'Activity',
   );
 }

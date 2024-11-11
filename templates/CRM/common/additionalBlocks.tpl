@@ -30,7 +30,7 @@ cj( function( ) {
     {if $generateAjaxRequest}
         {foreach from=$ajaxRequestBlocks key="blockName" item="instances"}
             {foreach from=$instances key="instance" item="active"}
-                buildAdditionalBlocks( '{$blockName}', '{$className}' );
+                buildAdditionalBlocks( '{$blockName}', '{$className}', '{$instance}');
             {/foreach}  	
         {/foreach}
     {/if}
@@ -43,12 +43,16 @@ cj( function( ) {
     {literal}
 });
 
-function buildAdditionalBlocks( blockName, className ) {
+function buildAdditionalBlocks( blockName, className , $instance = null ) {
     var element = blockName + '_Block_';
 
     //get blockcount of last element of relevant blockName
     var previousInstance = cj( '[id^="'+ element +'"]:last' ).attr('id').slice( element.length );
-    var currentInstance  = parseInt( previousInstance ) + 1;
+    if (!$instance) {
+        var currentInstance  = parseInt( previousInstance ) + 1;
+    } else {
+        var currentInstance = $instance;
+    }
 
     //show primary option if block count = 2
     if ( currentInstance == 2) {
@@ -100,15 +104,15 @@ function singleSelect( object ) {
     var execBlock  = '#' + element['0'] + '-' + block + '-html Input[id*="' + element['2'] + '"]';
 
     //element to check for checkbox
-    var elementChecked =  cj( '#' + object ).attr('checked');
+    var elementChecked =  cj( '#' + object ).prop('checked');
     if ( elementChecked ) {
         cj( execBlock ).each( function() {
             if ( cj(this).attr('id') != object ) {
-                cj(this).attr( 'checked', false );
+                cj(this).prop( 'checked', false );
             }
         });
     } else {
-        cj( '#' + object ).attr( 'checked', false );
+        cj( '#' + object ).prop( 'checked', false );
     }
 
 	//check if non of elements is set Primary / Allowed to Login.
@@ -120,7 +124,7 @@ function singleSelect( object ) {
 			}
 		});
 		if( ! primary ) {
-			cj('#' + object).attr( 'checked', true );
+			cj('#' + object).prop( 'checked', true );
 		}
 	}
 }

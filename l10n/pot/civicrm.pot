@@ -49587,3 +49587,12 @@ msgstr ""
 #: templates/CRM/Group/Page/Group.tpl
 msgid "Public Mailing List Group"
 msgstr ""
+
+#: CRM/Admin/Form/Setting/Receipt.php
+#: templates/CRM/Admin/Form/Setting/Receipt.tpl
+msgid "When the legal ID display option is not set to complete display, email receipt encryption cannot be enabled."
+msgstr ""
+
+#: CRM/Batch/BAO/Batch.php
+msgid "Batch running failed. Contact the site administrator for assistance."
+msgstr ""
