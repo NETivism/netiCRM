@@ -638,7 +638,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
    */
   public static function recurCheck($rid, $order = NULL) {
     $now = time();
-    $query = "SELECT c.id as cid, c.contact_id, c.is_test, c.trxn_id, c.payment_processor_id as pid, c.contribution_status_id, r.id as rid, r.contribution_status_id as recurring_status FROM civicrm_contribution_recur r INNER JOIN civicrm_contribution c ON r.id = c.contribution_recur_id WHERE r.id = %1 c.payment_processor_id IS NOT NULL ORDER BY c.id ASC";
+    $query = "SELECT c.id as cid, c.contact_id, c.is_test, c.trxn_id, c.payment_processor_id as pid, c.contribution_status_id, r.id as rid, r.contribution_status_id as recurring_status FROM civicrm_contribution_recur r INNER JOIN civicrm_contribution c ON r.id = c.contribution_recur_id WHERE r.id = %1 AND c.payment_processor_id IS NOT NULL ORDER BY c.id ASC";
     $result = CRM_Core_DAO::executeQuery($query, array(1 => array($rid, 'Integer')));
 
     // fetch first contribution
