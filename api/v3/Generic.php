@@ -286,6 +286,12 @@ function civicrm_api3_generic_getoptions($apiRequest) {
           $fieldName = 'participant_'.$apiRequest['params']['field'];
         }
       }
+      // special case for activity 
+      if ($entity == 'activity') {
+        if (in_array($apiRequest['params']['field'], array('status_id', 'type_id', 'status', 'type'))) {
+          $fieldName = 'activity_'.$apiRequest['params']['field'];
+        }
+      }
 
       $constantEntities = _civicrm_api3_pseudoconstant_entity();
       $fieldNameWithoutId = strtolower(preg_replace('/_id$/i', '', $fieldName));

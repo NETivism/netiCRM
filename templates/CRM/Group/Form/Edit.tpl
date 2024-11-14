@@ -231,7 +231,7 @@ cj(document).ready( function($) {
   $("input[name=_qf_Edit_upload]").on("click", function(e){
     e.preventDefault();
     let thisform = $(this).closest('form');
-    if ($("#group_type\\\[2\\\]").prop('checked') && $("#visibility").val() === 'Public Pages') {
+    if ($("#visibility").val() === 'Public Pages') {
       let groupName = $('input[name=title]').val();
       $('#dialog-confirm-groupname').html($('#dialog-confirm-groupname').html().replace('[[placeholder]]', groupName));
       $("#dialog-confirm-groupname").dialog({
