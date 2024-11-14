@@ -254,7 +254,7 @@ cj(document).ready( function($) {
       });
       $('#dialog-confirm-groupname').dialog('open');
     }
-    else if(lastPublicSubsGroup && ($("#group_type\\\[2\\\]").prop('checked') === false || $("#visibility").val() === 'Public Pages')) {
+    else if(lastPublicSubsGroup && ($("#group_type\\\[2\\\]").prop('checked') === false || $("#visibility").val() !== 'Public Pages')) {
       $("#dialog-confirm-disablesubs").dialog({
         autoOpen: false,
         resizable: false,
