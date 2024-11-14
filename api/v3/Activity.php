@@ -153,6 +153,18 @@ function civicrm_api3_activity_create($params) {
       return civicrm_api3_create_error(ts("Unable to create new revision of case activity."), NULL, CRM_Core_DAO::$_nullObject);
     }
   }
+  elseif (!empty($params['id'])) {
+    // prefill activity value when update exists activity
+    $oldActivityValues = array();
+    $oldActivityParams = array('id' => $params['id']);
+    CRM_Activity_BAO_Activity::retrieve($oldActivityParams, $oldActivityValues);
+    if (!empty($oldActivityValues['status_id']) && empty($params['status_id'])) {
+      $params['status_id'] = $oldActivityValues['status_id'];
+    }
+    if (!empty($oldActivityValues['priority_id']) && empty($params['priority_id'])) {
+      $params['priority_id'] = $oldActivityValues['priority_id'];
+    }
+  }
 
   // create activity
   $activityBAO = CRM_Activity_BAO_Activity::create($params);
