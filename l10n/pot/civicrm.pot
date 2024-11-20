@@ -49596,3 +49596,7 @@ msgstr ""
 #: CRM/Batch/BAO/Batch.php
 msgid "Batch running failed. Contact the site administrator for assistance."
 msgstr ""
+
+#: CRM/Core/Payment/TapPay.php
+msgid "The recurring have been suspended due to TapPay Notify token status is %1."
+msgstr ""

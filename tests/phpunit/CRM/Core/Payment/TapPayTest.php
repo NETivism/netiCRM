@@ -758,5 +758,29 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     while($dao->fetch()) {
       $this->assertEquals('2030-12-31', $dao->expiry_date,  "In line " . __LINE__);
     }
+    sleep(2);
+
+    $notifyJson = '{
+  "status" : 0,
+  "msg" : "OK",
+  "card_token" : ["'.$this->_cardToken.'"],
+  "card_info" : {
+    "bin_code" : "123456",
+    "last_four" : "4321",
+    "issuer" : "Ignore",
+    "funding" : "Ignore",
+    "type" : "Ignore",
+    "level" : "Ignore",
+    "country" : "Ignore",
+    "country_code" : "Ignore",
+    "expiry_date" : "203012",
+    "token_status" : "SUSPENDED"
+  }
+}';
+    $_SERVER['REQUEST_URI'] = '/civicrm/tappay/cardnotify';
+    CRM_Core_Payment_TapPay::cardNotify(NULL, $notifyJson);
+    $contributionRecurID = CRM_Core_DAO::singleValueQuery("SELECT contribution_recur_id FROM civicrm_contribution_tappay WHERE card_token = %1 ORDER BY id DESC", array( 1 => array($this->_cardToken, 'String')));
+    $contributionStatusId = CRM_Core_DAO::singleValueQuery("SELECT contribution_status_id FROM civicrm_contribution_recur WHERE id = %1", array( 1 => array($contributionRecurID, 'Integer')));
+    $this->assertEquals('7', $contributionStatusId,  "In line " . __LINE__);
   }
 }

@@ -18909,7 +18909,7 @@ msgstr "修改至"
 #: templates/CRM/Event/Page/EventInfo.tpl
 #: templates/CRM/Event/Page/ICalendar.tpl
 msgid "When"
-msgstr "何時"
+msgstr ""
 
 #: CRM/Report/Form/Contact/LoggingSummary.php
 msgid "Altered Contact"
@@ -50165,3 +50165,8 @@ msgstr "當身分證字號呈現方式不是完全顯示時，無法啟用電子
 #: CRM/Batch/BAO/Batch.php
 msgid "Batch running failed. Contact the site administrator for assistance."
 msgstr "批次執行失敗。請聯繫網站管理員以取得協助。"
+
+#: CRM/Core/Payment/TapPay.php
+msgid ""
+"The recurring have been suspended due to TapPay Notify token status is %1."
+msgstr "這個定期已暫停，因為 TapPay 拋送通知卡片代號狀態（token status）為 %1。"
