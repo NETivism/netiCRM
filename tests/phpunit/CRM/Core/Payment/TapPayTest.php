@@ -760,10 +760,12 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     }
     sleep(2);
 
+    $dao = CRM_Core_DAO::executeQuery("SELECT contribution_recur_id,card_token FROM civicrm_contribution_tappay WHERE card_token IS NOT NULL AND contribution_recur_id IS NOT NULL");
+    $dao->fetch();
     $notifyJson = '{
   "status" : 0,
   "msg" : "OK",
-  "card_token" : ["'.$this->_cardToken.'"],
+  "card_token" : ["'.$dao->card_token.'"],
   "card_info" : {
     "bin_code" : "123456",
     "last_four" : "4321",
@@ -779,8 +781,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
 }';
     $_SERVER['REQUEST_URI'] = '/civicrm/tappay/cardnotify';
     CRM_Core_Payment_TapPay::cardNotify(NULL, $notifyJson);
-    $contributionRecurID = CRM_Core_DAO::singleValueQuery("SELECT contribution_recur_id FROM civicrm_contribution_tappay WHERE card_token = %1 AND contribution_id IS NOT NULL AND contribution_recur_id IS NOT NULL ORDER BY id DESC", array( 1 => array($this->_cardToken, 'String')));
-    $contributionStatusId = CRM_Core_DAO::singleValueQuery("SELECT contribution_status_id FROM civicrm_contribution_recur WHERE id = %1", array( 1 => array($contributionRecurID, 'Integer')));
+    $contributionStatusId = CRM_Core_DAO::singleValueQuery("SELECT contribution_status_id FROM civicrm_contribution_recur WHERE id = %1", array( 1 => array($dao->contribution_recur_id, 'Integer')));
     $this->assertEquals('7', $contributionStatusId,  "In line " . __LINE__);
   }
 }
