@@ -5,6 +5,36 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
   static $_input = NULL;
   public $_post = NULL;
   public $_get = NULL;
+
+  public static $_successMessage = array(
+    "250" => "Payment Successful",
+    "290" => "Transaction Successful, Mismatched Information",
+    "600" => "Checkout Complete",
+    "B200" => "Execution Successful",
+  );
+  public static $_ignoredMessage = array(
+    "200" => "Data Correct",
+    "245" => "Authorization Successful",
+    "247" => "Payment Processing",
+    "260" => "Payment Incomplete",
+    "265" => "Order Bound",
+    "270" => "Transaction Successful, Payment Incomplete",
+    "275" => "Cardless Installment - Awaiting Approval",
+    "280" => "Transaction Successful, Payment Incomplete",
+    "282" => "Order Created, Pending Payment Review, Payment Incomplete",
+    "284" => "Order Created, Pending Payment Request, Payment Incomplete",
+    "A0001" => "Transaction Pending Confirmation",
+  );
+  public static $_errorMessage = array(
+    "100" => "Data Error",
+    "220" => "Cancellation Successful",
+    "230" => "Refund Successful",
+    "300" => "Transaction Failed",
+    "380" => "Expired Transaction",
+    "400" => "System Error Message",
+    "A0002" => "Transaction Abandoned",
+    "B500" => "Execution Failed",
+  );
   /**
    * @param array $post Input $_POST alternative.
    * @param array $get Input $_GET alternative.
@@ -14,7 +44,7 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
     $this->_post = $post;
     $this->_get = $get;
   }
-  
+
   /**
    * Main function
    *
@@ -49,12 +79,12 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
     self::$_payment_processor =& $objects['paymentProcessor'];
     self::$_input = $input;
     $result = NULL;
-    if ($objects['contribution']->contribution_status_id == 1 && empty($input['nois']) && $input['prc'] == '250') {
+    if ($objects['contribution']->contribution_status_id == 1 && empty($input['nois']) && CRM_Utils_Array::arrayKeyExists($input['prc'], self::$_successMessage)) {
       // Single contribution or first contribution, already completed, skip
       CRM_Core_Error::debug_log_message("MyPay: The transaction uid: {$input['uid']}, associated with the contribution {$objects['contribution']->trxn_id}, has been successfully processed before. Skipped.");
       $result = '8888';
     }
-    elseif (!empty($input['nois']) && $input['prc'] == '250') {
+    elseif (!empty($input['nois']) && CRM_Utils_Array::arrayKeyExists($input['prc'], self::$_successMessage)) {
       // Recurring and finished.
       $trxnId = CRM_Core_Payment_MyPay::getTrxnIdByPost($input);
       $sql = "SELECT contribution_status_id FROM civicrm_contribution WHERE trxn_id = %1";
@@ -97,7 +127,7 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
         $this->addNote($note, $objects['contribution']);
       }
     }
-    
+
     // error stage: doesn't goto and not the background posturl
     // never for front-end user.
   }
@@ -157,7 +187,7 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
       if($this->_post['group_id']){
         $query_params = array(1 => array($recur->id, 'Integer'));
         $new_trxn_id = CRM_Core_Payment_MyPay::getTrxnIdByPost($input);
-        if($input['prc'] != '250'){
+        if(CRM_Utils_Array::arrayKeyExists($input['prc'], self::$_errorMessage)){
           $contribution->contribution_status_id = 4; // Failed
           $id_from_trxn_id = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution WHERE trxn_id = %1", array(
             1 => array($new_trxn_id, 'String'),
@@ -216,7 +246,7 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
         else{
           // is first time
           if ($input['nois'] == 1) {
-            if ($input['prc'] == '250'){
+            if (CRM_Utils_Array::arrayKeyExists($input['prc'], self::$_successMessage)) {
               $params['id'] = $recur->id;
               $params['start_date'] = $input['finishtime'];
               $params['contribution_status_id'] = 5; // from pending to processing
@@ -231,7 +261,7 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
       }
     }
     // process fail response
-    if($input['prc'] != "250" && $pass){
+    if(CRM_Utils_Array::arrayKeyExists($input['prc'], self::$_errorMessage)){
       if (!empty($input['finishtime'])) {
         $time = strtotime($input['finishtime']);
         $objects['contribution']->cancel_date = date('YmdHis', $time);
@@ -273,7 +303,7 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
     else{
       $note_id = NULL;
     }
-    
+
     $noteParams = array(
       'entity_table'  => 'civicrm_contribution',
       'note'          => $note,
