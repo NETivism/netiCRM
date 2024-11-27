@@ -29,6 +29,12 @@
 <h3>{ts}Delete Group {/ts}</h3>
     <div class="messages status">
     {ts 1=$title}Are you sure you want to delete the group %1?{/ts}<br /><br />
+
+    {if $lastPublicSubsGroup}
+      {capture assign=subsUrl}{crmURL p="civicrm/mailing/subscribe" q="reset=1"}{/capture}
+      {ts 1="$subsUrl"}The group you selected is the last public newsletter group. After removal, the <a href="%1" target="_blank">mailing list subscription</a> function will be disabled.{/ts}<br><br>
+    {/if}
+
     {if $count}
         {ts count=$count plural='This group currently has %count members in it.'}This group currently has one member in it.{/ts}
     {/if}
