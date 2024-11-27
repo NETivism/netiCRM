@@ -1072,10 +1072,10 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
         //include attachments while sendig a copy of activity.
         $attachments = &CRM_Core_BAO_File::getEntityFile('civicrm_activity', $activity->id);
 
-        if (in_array("CiviCase", $config->enableComponents)) {
-          CRM_Case_BAO_Case::sendActivityCopy(NULL, $activity->id, $mailToContacts, $attachments, NULL);
-          $mailStatus .= ts("A copy of the activity has also been sent to assignee contacts(s).");
-        }
+        require_once "CRM/Case/BAO/Case.php";
+        $result = CRM_Case_BAO_Case::sendActivityCopy(NULL, $activity->id, $mailToContacts, $attachments, NULL);
+
+        $mailStatus .= ts("A copy of the activity has also been sent to assignee contacts(s).");
       }
     }
 
