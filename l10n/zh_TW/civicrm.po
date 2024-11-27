@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>, 2013,2015-2024\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>, 2016-2024\n"
 "Language-Team: Chinese (Taiwan) (http://app.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50170,3 +50170,70 @@ msgstr "批次執行失敗。請聯繫網站管理員以取得協助。"
 msgid ""
 "The recurring have been suspended due to TapPay Notify token status is %1."
 msgstr "這個定期已暫停，因為 TapPay 拋送通知卡片代號狀態（token status）為 %1。"
+
+#: CRM/Core/Payment/MyPay.php
+msgid "Payment Successful"
+msgstr "付款成功"
+
+msgid "Transaction Successful, Mismatched Information"
+msgstr "交易成功, 但資訊不符"
+
+msgid "Checkout Complete"
+msgstr "結帳完成"
+
+msgid "Execution Successful"
+msgstr "執行成功"
+
+msgid "Data Correct"
+msgstr "資料正確"
+
+msgid "Authorization Successful"
+msgstr "授權成功"
+
+msgid "Payment Processing"
+msgstr "請款進行中"
+
+msgid "Payment Incomplete"
+msgstr "交易成功, 尚未付款完成"
+
+msgid "Order Bound"
+msgstr "訂單綁定"
+
+msgid "Transaction Successful, Payment Incomplete"
+msgstr "交易成功, 尚未付款完成"
+
+msgid "Cardless Installment - Awaiting Approval"
+msgstr "無卡分期-請等候審查通過"
+
+msgid "Order Created, Pending Payment Review, Payment Incomplete"
+msgstr "訂單成立待後付款審核確認, 尚未付款完成"
+
+msgid "Order Created, Pending Payment Request, Payment Incomplete"
+msgstr "訂單成立後付款待請款, 尚未付款完成"
+
+msgid "Transaction Pending Confirmation"
+msgstr "訂單成立後付款待請款, 尚未付款完成"
+
+msgid "Data Error"
+msgstr "資料錯誤"
+
+msgid "Cancellation Successful"
+msgstr "取消成功"
+
+msgid "Refund Successful"
+msgstr "退款成功"
+
+msgid "Transaction Failed"
+msgstr "交易失敗"
+
+msgid "Expired Transaction"
+msgstr "逾期交易"
+
+msgid "System Error Message"
+msgstr "系統錯誤訊息"
+
+msgid "Transaction Abandoned"
+msgstr "放棄交易"
+
+msgid "Execution Failed"
+msgstr "執行失敗"
