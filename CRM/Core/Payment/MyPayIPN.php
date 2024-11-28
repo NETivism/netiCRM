@@ -99,7 +99,7 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
     if ($updateStatus) {
       // start validation
       $note = '';
-      if( $validateResult = $this->validateOthers($input, $ids, $objects, $note, $instrument) ){
+      if( $this->validateOthers($input, $ids, $objects, $note, $instrument) ){
         $contribution =& $objects['contribution'];
         if(empty($contribution->receive_date)){
           if (!empty($input['finishtime'])) {
@@ -117,14 +117,23 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
         $note .= "\n".ts('Completed').' - '.$input['retmsg']."({$input['prc']}: ".ts(self::$_successMessage[$input['prc']]).")\n";
         $this->addNote($note, $contribution);
       }
-      elseif ($validateResult === 0) {
-        $note .= ts('Response Message').': '.$input['retmsg']."(".ts('Response Code').$input['prc'].": ".ts(self::$_ignoredMessage[$input['prc']]).")";
-        $this->addNote($note, $objects['contribution']);
-      }
-      else{
-        $note .= "\n".ts('Failed')."\n";
-        $note .= ts("Payment Information").": ".ts("Failed").' - '.ts('Error Message').': '.$input['retmsg']."(".ts('Error Code:').$input['prc'].": ".ts(self::$_errorMessage[$input['prc']]).")";
-        $this->addNote($note, $objects['contribution']);
+      else {
+        // Record error message.
+        $errorMsg = '';
+        // In ignored case, record message.
+        if (self::$_ignoredMessage[$input['prc']]) {
+          $note .= ts('Response Message').': '.$input['retmsg']."(".ts('Response Code').$input['prc'].": ".ts(self::$_ignoredMessage[$input['prc']]).")";
+          $this->addNote($note, $objects['contribution']);
+        }
+        else {
+          // In other case, record error message.
+          if (self::$_errorMessage[$input['prc']]) {
+            $errorMsg = ": ".ts(self::$_errorMessage[$input['prc']]);
+          }
+          $note .= "\n".ts('Failed')."\n";
+          $note .= ts("Payment Information").": ".ts("Failed").' - '.ts('Error Message').': '.$input['retmsg']."(".ts('Error Code:').$input['prc'].$errorMsg.")";
+          $this->addNote($note, $objects['contribution']);
+        }
       }
     }
 
@@ -261,12 +270,8 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
         }
       }
     }
-    // process bypass response
-    if(CRM_Utils_Array::arrayKeyExists($input['prc'], self::$_ignoredMessage)){
-      $pass = 0;
-    }
     // process fail response
-    if(CRM_Utils_Array::arrayKeyExists($input['prc'], self::$_errorMessage)){
+    if(!CRM_Utils_Array::arrayKeyExists($input['prc'], self::$_successMessage) && $pass){
       if (!empty($input['finishtime'])) {
         $time = strtotime($input['finishtime']);
         $objects['contribution']->cancel_date = date('YmdHis', $time);
@@ -277,8 +282,11 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
       // $response_msg .= "\n".CRM_Core_Payment_MyPay::getErrorMsg($response_code);
       $failedReason = ts('Error Message').': '.$responseMsg.' ('.ts('Error Code:').$responseCode.': '.$codeMessage.')';
       $note .= $failedReason;
-      $transaction = new CRM_Core_Transaction();
-      $this->failed($objects, $transaction, $failedReason);
+      // Only in error code, we need to process failed.
+      if (CRM_Utils_Array::arrayKeyExists($input['prc'], self::$_errorMessage)) {
+        $transaction = new CRM_Core_Transaction();
+        $this->failed($objects, $transaction, $failedReason);
+      }
       $pass = FALSE;
     }
 
