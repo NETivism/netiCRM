@@ -31,7 +31,7 @@
   {/if}
 {if $rows}
   <span id='fileOnCaseStatusMsg' style="display:none;"></span>
-  <form title="activity_pager" action="{crmURL}" method="post">
+  <form title="activity_pager" action="{if $pagerURL}{$pagerURL}{else}{crmURL}{/if}" method="post">
   {include file="CRM/common/pager.tpl" location="top"}
 
   {strip}

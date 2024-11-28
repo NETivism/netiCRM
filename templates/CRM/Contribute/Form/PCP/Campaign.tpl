@@ -106,6 +106,21 @@ cj(document).ready(function($){
       return false;
     }
   });
+    
+  $("#attachFile_").change(function(e){
+    let hasImg = $('td.current-attachments img');
+    if (hasImg.length > 0 && e.target.files.length > 0) {
+      let confirmed = confirm("{/literal}{ts}Are you sure you want to replace your current image?{/ts} {ts}This operation cannot be undone.{/ts}{literal}");
+      if (confirmed) {
+        $('#is_delete_attachment').prop('checked', true);
+        hasImg.css({"opacity":".3", "max-width":"5%"});
+      }
+      else {
+        $(this).val('');
+        hasImg.css({"opacity":"1", "max-width":"18%"});
+      }
+    }
+  });
 });
 {/literal}</script>
 

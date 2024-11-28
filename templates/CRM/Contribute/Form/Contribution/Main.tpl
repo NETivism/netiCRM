@@ -288,7 +288,7 @@
           <div class="label">{$form.pcp_personal_note.label}</div>
           <div class="content">
             {$form.pcp_personal_note.html}
-                <div class="description">{ts}Enter a message to accompany this contribution.{/ts}</div>
+                <div class="description">{ts}Your message will be displayed on the contribution page, allowing others to see why you support this contribution.{/ts}</div>
           </div>
           <div class="clear"></div>
       </div>

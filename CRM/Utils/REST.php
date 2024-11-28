@@ -116,7 +116,7 @@ class CRM_Utils_REST {
   }
 
   // Generates values needed for error messages
-  function error($message = 'Unknown Error') {
+  public static function error($message = 'Unknown Error') {
 
     $values = array(
       'error_message' => $message,
@@ -311,7 +311,9 @@ class CRM_Utils_REST {
       $params = &self::buildParamList();
     }
 
-    $params['check_permissions'] = TRUE;
+    if (!isset($params['check_permissions'])) {
+      $params['check_permissions'] = TRUE;
+    }
     $fnName = $apiFile = NULL;
     // clean up all function / class names. they should be alphanumeric and _ only
     for ($i = 1; $i <= 3; $i++) {
@@ -369,7 +371,11 @@ class CRM_Utils_REST {
     if (isset($params['options'])) {
       $options =& $params['options'];
       // don't allow sort for query security concern
-      if (isset($options['sort'])) unset($options['sort']);
+      if (isset($options['sort'])) {
+        if (!self::validateSortParameter($options['sort'])) {
+          return self::error("sort in options is invalid. format: field_name DESC|ASC");
+        }
+      }
 
       if (isset($options['limit']) && !CRM_Utils_Rule::integer($options['limit'])) {
         return self::error('limit in options should be integer.');
@@ -625,6 +631,41 @@ class CRM_Utils_REST {
     echo self::output($result);
 
     CRM_Utils_System::civiExit();
+  }
+
+  /**
+   * validate sort parameter
+   *
+   * @param string $sort The sort parameter to validate. Can be a single field
+   *                     or multiple fields separated by commas (`,`), optionally
+   *                     followed by ASC or DESC.
+   * @return boolean true if valid, else false
+   */
+  public static function validateSortParameter($sort) {
+    if (empty($sort) || !is_string($sort)) {
+      return FALSE;
+    }
+    $sort = trim($sort);
+    $sortFields = explode(',', $sort);
+
+    foreach ($sortFields as $field) {
+      $field = trim($field);
+
+      if (preg_match('/^(.*?)\s+(ASC|DESC)$/i', $field, $matches)) {
+        $fieldName = trim($matches[1]);
+      }
+      else {
+        $fieldName = $field;
+      }
+      if (!preg_match('/^[0-9A-Za-z_.]+$/', $fieldName)) {
+        return FALSE;
+      }
+      if ($fieldName === '') {
+        return FALSE;
+      }
+    }
+
+    return TRUE;
   }
 }
 

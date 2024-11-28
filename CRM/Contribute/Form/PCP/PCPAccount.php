@@ -244,15 +244,17 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
   static function formRule($fields, $files, $self) {
     $errors = array();
     require_once "CRM/Utils/Rule.php";
-    foreach ($fields as $key => $value) {
-      if (strpos($key, 'email-') !== FALSE && !empty($value)) {
-        $ufContactId = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_UFMatch', $value, 'contact_id', 'uf_name');
-        if ($ufContactId && $ufContactId != $self->_contactID) {
-          $errors[$key] = ts('There is already an user associated with this email address. Please enter different email address.');
+    if (!CRM_Core_Permission::check('access CiviContribute')) {
+      foreach ($fields as $key => $value) {
+        if (strpos($key, 'email-') !== FALSE && !empty($value)) {
+          $ufContactId = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_UFMatch', $value, 'contact_id', 'uf_name');
+          if ($ufContactId && $ufContactId != $self->_contactID) {
+            $errors[$key] = ts('There is already an user associated with this email address. Please enter different email address.');
+          }
         }
       }
     }
-    return empty($errors) ? TRUE : $errors;
+    return $errors;
   }
 
   /**

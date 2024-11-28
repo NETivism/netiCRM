@@ -897,7 +897,7 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
         }
         elseif ($name == 'legal_identifier' || $name == 'custom_'.$customSerial) {
           $params[$index] = $details->$name;
-          $values[$index] = $maskType ? CRM_Utils_String::mask($details->$name) : $details->$name;
+          $values[$index] = $maskType ? CRM_Utils_String::mask($details->$name, 'custom', 1, 0) : $details->$name;
         }
         else {
           $processed = FALSE;

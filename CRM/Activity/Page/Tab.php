@@ -54,6 +54,11 @@ class CRM_Activity_Page_Tab extends CRM_Core_Page {
     $output = CRM_Core_Selector_Controller::SESSION;
     require_once 'CRM/Activity/Selector/Activity.php';
     $selector = new CRM_Activity_Selector_Activity($this->_contactId, $this->_permission);
+    $currentPath = CRM_Utils_System::currentPath();
+    if (!empty($this->_contactId) && strstr($currentPath, 'civicrm/contact/view')) {
+      $pagerURL = CRM_Utils_System::url('civicrm/contact/view/activity', "cid={$this->_contactId}&force=1");
+      $this->assign('pagerURL', $pagerURL);
+    }
     $sortID = NULL;
     if ($this->get(CRM_Utils_Sort::SORT_ID)) {
       $sortID = CRM_Utils_Sort::sortIDValue($this->get(CRM_Utils_Sort::SORT_ID),

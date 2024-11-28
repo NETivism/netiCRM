@@ -76,7 +76,7 @@ class CRM_Utils_Mail {
    * @return boolean true if a mail was sent, else false
    */
   static function send(&$params, $callback = NULL) {
-    require_once 'CRM/Core/BAO/MailSettings.php';
+    $config = CRM_Core_Config::singleton();
     $returnPath = CRM_Core_BAO_MailSettings::defaultReturnPath();
     $from = CRM_Utils_Array::value('from', $params);
     if (!$returnPath) {
@@ -126,7 +126,13 @@ class CRM_Utils_Mail {
     $headers['Content-Transfer-Encoding'] = 'quoted-printable';
     $headers['Return-Path'] = CRM_Utils_Array::value('returnPath', $params);
     $headers['Reply-To'] = CRM_Utils_Array::value('replyTo', $params, $from);
-    $headers['Sender'] = CRM_Utils_Array::value('returnPath', $params);
+
+    if (isset($config->enableDMARC) && !empty($config->enableDMARC)) {
+      $headers['Sender'] = self::pluckEmailFromHeader($params['from']);
+    }
+    else {
+      $headers['Sender'] = CRM_Utils_Array::value('returnPath', $params);
+    }
     $headers['Date'] = date('r');
     if (CRM_Utils_Array::value('autoSubmitted', $params)) {
       $headers['Auto-Submitted'] = "Auto-Generated";
@@ -204,7 +210,7 @@ class CRM_Utils_Mail {
     CRM_Core_Error::ignoreException();
     if (is_object($mailer)) {
       // refs #30289, for valid DKIM
-      if (!strstr($headers['Sender'], $mailer->host) && $mailer->_mailSetting['return_path']) {
+      if (empty($headers['Sender']) && !empty($mailer->_mailSetting['return_path'])) {
         $headers['Sender'] = $mailer->_mailSetting['return_path'];
         $headers['Return-Path'] = $mailer->_mailSetting['return_path'];
       }

@@ -15,6 +15,11 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
   const EXPIRE_DAY = 8;
 
   /**
+   * stuck expire hour
+   */
+  const EXPIRE_HOUR = 4;
+
+  /**
    * Batch id to load
    * @var int
    */
@@ -170,17 +175,15 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
         $message = ts('Success processing queuing batch.');
       }
     }
-    if (date('G') >= 3 && date('G') <= 6) {
-      self::expireBatch();
-    }
     return $message;
   }
 
   /**
-   * Run last queuing batching
+   * Expire batches over expire days
+   * This will delete data column and purge download file to prevent db growing
    *
    * @return string
-   *   message that indicate current running status
+   *   message that indicate expires
    */
   public static function expireBatch() {
     $type = self::batchType();
@@ -188,7 +191,7 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
     unset($status['Running']);
     unset($status['Pending']);
     $purgeDay = self::EXPIRE_DAY*4;
-    $sql = "SELECT id FROM civicrm_batch WHERE type_id = %1 AND status_id IN (".CRM_Utils_Array::implode(',', $status).") AND DATE_ADD(modified_date, INTERVAL ".$purgeDay." DAY) < NOW() AND modified_date IS NOT NULL ORDER BY modified_date ASC";
+    $sql = "SELECT id FROM civicrm_batch WHERE type_id = %1 AND status_id IN (".CRM_Utils_Array::implode(',', $status).") AND DATE_ADD(modified_date, INTERVAL ".$purgeDay." DAY) < NOW() AND modified_date IS NOT NULL AND data IS NOT NULL ORDER BY modified_date ASC";
     $dao = CRM_Core_DAO::executeQuery($sql, array(
       1 => array($type['Auto'], 'Integer'),
     ));
@@ -202,10 +205,13 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
       if ($batch->id) {
         if (isset($batch->data['download']['file']) && file_exists($batch->data['download']['file'])) {
           @unlink($batch->data['download']['file']);
+          $expires[] = $dao->id;
         }
-        // $batch->delete(); // do not delete batch db record, purge file only
-        $expires[] = $dao->id;
+        CRM_Core_DAO::executeQuery("UPDATE civicrm_batch SET data = NULL WHERE id = %1", array(1 => array($dao->id, 'Integer')));
       }
+      // refs #41959, free memory of batch result to prevent memory leak
+      $batch->free();
+      unset($batch);
     }
     if (count($expires)) {
       $msg = 'Batch ids in '.CRM_Utils_Array::implode(",", $expires).' has been expires';
@@ -213,6 +219,73 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
       return $msg;
     }
     return '';
+  }
+
+  /**
+   * Auto remove stuck batch
+   *
+   * @return null
+   */
+  public static function cancelStuckBatch() {
+    $type = self::batchType();
+    $status = self::batchStatus();
+    $statusRunning = $status['Running'];
+    $statusCanceled = $status['Canceled'];
+
+    $sql = "SELECT id, data, modified_date, description FROM civicrm_batch WHERE type_id = %1 AND status_id = %2 ORDER BY created_date ASC LIMIT 1";
+    $dao = CRM_Core_DAO::executeQuery($sql, array(
+      1 => array($type['Auto'], 'Integer'),
+      2 => array($statusRunning, 'Integer'),
+    ));
+    $dao->fetch();
+    if (!empty($dao->id)) {
+      if ($dao->data) {
+        $meta = unserialize($dao->data);
+        // after 4 hours without any progress, cancel it
+        if (is_array($meta) && empty($meta['processed']) && !empty($dao->modified_date)) {
+          $lastSuccessTime = strtotime($dao->modified_date);
+          if (CRM_REQUEST_TIME - $lastSuccessTime > 3600 * self::EXPIRE_HOUR) {
+            CRM_Core_Error::debug_log_message("Canceled running batch id {$dao->id} due to zero progress over ".self::EXPIRE_HOUR." hours.");
+            CRM_Core_DAO::executeQuery("UPDATE civicrm_batch SET status_id = %1, description = %2 WHERE id = %3", array(
+              1 => array($statusCanceled, 'Integer'),
+              2 => array(ts('Batch running failed. Contact the site administrator for assistance.'), 'String'),
+              3 => array($dao->id, 'Integer'),
+            ));
+          }
+        }
+        elseif(!empty($meta['processed'])){
+          if (!empty($dao->description)) {
+            $processHistories = explode(':', $dao->description);
+          }
+          else {
+            $processHistories = array();
+          }
+          $stuck = 0;
+          foreach($processHistories as $lastProcessed) {
+            if ((int)$meta['processed'] == (int)$lastProcessed) {
+              $stuck++;
+            }
+          }
+          if ($stuck <= self::EXPIRE_HOUR) {
+            array_unshift($processHistories, $meta['processed']);
+            $processHistories = array_slice($processHistories, 0, self::EXPIRE_HOUR+2);
+            CRM_Core_DAO::executeQuery("UPDATE civicrm_batch SET description = %1 WHERE id = %2", array(
+              1 => array(implode(':', $processHistories), 'String'),
+              2 => array($dao->id, 'Integer'),
+            ));
+          }
+          else {
+            // no progress after 4 times(have same processed records), cancel it
+            CRM_Core_Error::debug_log_message("Canceled running batch id {$dao->id} due to stuck in progress {$meta['processed']} for {$stuck} times.");
+            CRM_Core_DAO::executeQuery("UPDATE civicrm_batch SET status_id = %1, description = %2 WHERE id = %3", array(
+              1 => array($statusCanceled, 'Integer'),
+              2 => array(ts('Batch running failed. Contact the site administrator for assistance.').' ('.$dao->description.')', 'String'),
+              3 => array($dao->id, 'Integer'),
+            ));
+          }
+        }
+      }
+    }
   }
 
   /**
