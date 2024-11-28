@@ -116,7 +116,7 @@ class CRM_Core_Page_AJAX_Location {
     CRM_Utils_System::civiExit();
   }
 
-  function getLocBlock() {
+  static function getLocBlock() {
     // i wish i could retrieve loc block info based on loc_block_id,
     // Anyway, lets retrieve an event which has loc_block_id set to 'lbid'.
     if ($_POST['lbid']) {

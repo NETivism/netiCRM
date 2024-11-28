@@ -137,6 +137,14 @@ cj(document).ready(function() {
             cj('#'+i).val(data[i]);
           }
         }
+        if (typeof jQuery === 'function' && typeof jQuery.prototype.twzipcode === 'function') {
+          let $ = jQuery;
+          let city = $('#address_1_city').val();
+          let zipcode = $('#address_1_postal_code').val();
+          $('#address_1_state_province_id').trigger('change');
+          $('[name="_address[1][city]"]').val(city).trigger('change');
+          $('#address_1_postal_code').val(zipcode);
+        }
       }
     });
     return false;
