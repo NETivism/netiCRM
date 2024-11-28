@@ -78,11 +78,11 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
     // set global variable for paymentProcessor
     self::$_payment_processor =& $objects['paymentProcessor'];
     self::$_input = $input;
-    $result = NULL;
+    $updateStatus = TRUE;
     if ($objects['contribution']->contribution_status_id == 1 && empty($input['nois']) && CRM_Utils_Array::arrayKeyExists($input['prc'], self::$_successMessage)) {
       // Single contribution or first contribution, already completed, skip
       CRM_Core_Error::debug_log_message("MyPay: The transaction uid: {$input['uid']}, associated with the contribution {$objects['contribution']->trxn_id}, has been successfully processed before. Skipped.");
-      $result = '8888';
+      $updateStatus = FALSE;
     }
     elseif (!empty($input['nois']) && CRM_Utils_Array::arrayKeyExists($input['prc'], self::$_successMessage)) {
       // Recurring and finished.
@@ -93,16 +93,13 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
       if ($contributionStatusID == 1) {
         // already completed, skip
         CRM_Core_Error::debug_log_message("MyPay: The transaction uid: {$input['uid']}, associated with the contribution {$trxnId}, has been successfully processed before. Skipped.");
-        $result = '8888';
+        $updateStatus = FALSE;
       }
     }
-    if ($result) {
-      return $result;
-    }
-    else {
+    if ($updateStatus) {
       // start validation
       $note = '';
-      if( $this->validateOthers($input, $ids, $objects, $note, $instrument) ){
+      if( $validateResult = $this->validateOthers($input, $ids, $objects, $note, $instrument) ){
         $contribution =& $objects['contribution'];
         if(empty($contribution->receive_date)){
           if (!empty($input['finishtime'])) {
@@ -117,19 +114,23 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
         $input['trxn_id'] = $objects['contribution']->trxn_id;
         $transaction = new CRM_Core_Transaction();
         $this->completeTransaction( $input, $ids, $objects, $transaction, $isRecur );
-        $note .= "\n".ts('Completed')."\n";
+        $note .= "\n".ts('Completed').' - '.$input['retmsg']."({$input['prc']}: ".ts(self::$_successMessage[$input['prc']]).")\n";
         $this->addNote($note, $contribution);
-        return '8888';
+      }
+      elseif ($validateResult === 0) {
+        $note .= ts('Response Message').': '.$input['retmsg']."(".ts('Response Code').$input['prc'].": ".ts(self::$_ignoredMessage[$input['prc']]).")";
+        $this->addNote($note, $objects['contribution']);
       }
       else{
         $note .= "\n".ts('Failed')."\n";
-        $note .= ts("Payment Information").": ".ts("Failed").' - '.$input['RtnMsg']."({$input['RtnCode']})";
+        $note .= ts("Payment Information").": ".ts("Failed").' - '.ts('Error Message').': '.$input['retmsg']."(".ts('Error Code:').$input['prc'].": ".ts(self::$_errorMessage[$input['prc']]).")";
         $this->addNote($note, $objects['contribution']);
       }
     }
 
     // error stage: doesn't goto and not the background posturl
     // never for front-end user.
+    return '8888';
   }
 
   function validateOthers(&$input, &$ids, &$objects, &$note, $instrument) {
@@ -260,6 +261,10 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
         }
       }
     }
+    // process bypass response
+    if(CRM_Utils_Array::arrayKeyExists($input['prc'], self::$_ignoredMessage)){
+      $pass = 0;
+    }
     // process fail response
     if(CRM_Utils_Array::arrayKeyExists($input['prc'], self::$_errorMessage)){
       if (!empty($input['finishtime'])) {
@@ -268,8 +273,9 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
       }
       $responseCode = $input['prc'];
       $responseMsg = $input['retmsg'];
+      $codeMessage = ts(self::$_errorMessage[$responseCode]);
       // $response_msg .= "\n".CRM_Core_Payment_MyPay::getErrorMsg($response_code);
-      $failedReason = $responseMsg.' ('.ts('Error Code:').$responseCode.')';
+      $failedReason = ts('Error Message').': '.$responseMsg.' ('.ts('Error Code:').$responseCode.': '.$codeMessage.')';
       $note .= $failedReason;
       $transaction = new CRM_Core_Transaction();
       $this->failed($objects, $transaction, $failedReason);
