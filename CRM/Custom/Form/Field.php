@@ -531,7 +531,7 @@ class CRM_Custom_Form_Field extends CRM_Core_Form {
       $current_external_membership_id_field_id = $config->externalMembershipIdFieldId;
       if(!empty($current_external_membership_id_field_id) && $current_external_membership_id_field_id != $this->_id){
         $sql = "SELECT f.label AS field_label, g.title AS group_title, f.custom_group_id FROM civicrm_custom_field f INNER JOIN civicrm_custom_group g ON f.custom_group_id = g.id WHERE f.id = %1";
-        $param = array(1 => array($current_external_membership_id_field_id, Integer));
+        $param = array(1 => array($current_external_membership_id_field_id, 'Integer'));
         $dao = CRM_Core_DAO::executeQuery($sql, $param);
         if($dao->fetch()){
           $this->assign('current_external_membership_id_field_title', $dao->field_label);
