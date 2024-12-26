@@ -78,11 +78,15 @@ class CRM_Contribute_Page_ContributionPage extends CRM_Core_Page {
       $deleteExtra = ts('Are you sure you want to delete this Contribution page?');
       $copyExtra = ts('Are you sure you want to make a copy of this Contribution page?');
 
+      $session = CRM_Core_Session::singleton();
+      $pageKey = $this->_scope;
+      $qfKey = $session->get('qfKey', $pageKey);
+
       self::$_actionLinks = array(
         CRM_Core_Action::COPY => array(
           'name' => ts('Make a Copy'),
           'url' => CRM_Utils_System::currentPath(),
-          'qs' => 'action=copy&gid=%%id%%',
+          'qs' => 'action=copy&gid=%%id%%&qfKey=' . $qfKey,
           'title' => ts('Make a Copy of CiviCRM Contribution Page'),
           'extra' => 'onclick = "return confirm(\'' . $copyExtra . '\');"',
         ),
@@ -423,6 +427,15 @@ WHERE       cp.contribution_page_id = {$id}";
    * @access public
    */
   function copy() {
+    $session = CRM_Core_Session::singleton();
+    $pageKey = $this->_scope;
+    $qfKey = $session->get('qfKey', $pageKey);
+
+    $requestKey = CRM_Utils_Request::retrieve('qfKey', 'String', $this);
+    if (!$qfKey || $qfKey !== $requestKey) {
+      CRM_Core_Error::fatal(ts('Invalid CSRF token when copying contribution page'));
+    }
+
     $gid = CRM_Utils_Request::retrieve('gid', 'Positive',
       $this, TRUE, 0, 'GET'
     );
