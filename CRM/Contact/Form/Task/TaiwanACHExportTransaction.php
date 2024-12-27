@@ -43,7 +43,7 @@ class CRM_Contact_Form_Task_TaiwanACHExportTransaction extends CRM_Contact_Form_
     return $defaults;
   }
 
-  public function formRule($fields, $files, $self) {
+  public static function formRule($fields, $files, $self) {
     return parent::formRule($fields, $files, $self);
   }
   public function postProcess() {
