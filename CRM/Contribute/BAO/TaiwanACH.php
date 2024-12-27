@@ -1138,7 +1138,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
 
   static function doProcessVerification($recurId, $parsedData, $isPreview = TRUE) {
     // Consider type is Bank or Post
-    $arrayLen = max(array_keys($parsedData))+1;
+    $arrayLen = !empty($parsedData) ? (intval(max(array_filter(array_keys($parsedData), 'is_numeric'))) + 1) : 0;
     if ($arrayLen == 18 ) {
       $processType = self::BANK;
     }
@@ -1223,7 +1223,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
 
   static function doProcessTransaction($contributionId, $parsedData, $isPreview = TRUE) {
     // Consider type is Bank or Post
-    $arrayLen = max(array_keys($parsedData))+1;
+    $arrayLen = !empty($parsedData) ? (intval(max(array_filter(array_keys($parsedData), 'is_numeric'))) + 1) : 0;
     if ($arrayLen == 20 ) {
       $processType = self::POST;
       $errorCode = $parsedData[15];
@@ -1340,6 +1340,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       if($pass){
         // Solve the contribution.
         $result['executed'] = TRUE;
+        $note = '';
         if ($isSuccess) {
           // Run completeTrransaction.
 
@@ -1371,7 +1372,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
           $note = $result['cancel_reason'];
         }
         // Finish or not, add note.
-        self::addNote($note, $objects['contribution']);
+        self::addNote($note, '');
       }
       else {
         $result['executed'] = FALSE;

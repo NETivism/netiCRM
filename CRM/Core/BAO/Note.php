@@ -248,7 +248,7 @@ class CRM_Core_BAO_Note extends CRM_Core_DAO_Note {
    */
   static function dataExists(&$params) {
     // return if no data present
-    if (!strlen($params['note']) && !strlen($params['subject'])) {
+    if (!empty($params['note']) && !empty($params['subject'])) {
       return FALSE;
     }
     return TRUE;
