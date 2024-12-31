@@ -86,7 +86,7 @@ class CRM_Contribute_Page_ContributionPage extends CRM_Core_Page {
         CRM_Core_Action::COPY => array(
           'name' => ts('Make a Copy'),
           'url' => CRM_Utils_System::currentPath(),
-          'qs' => 'action=copy&gid=%%id%%&qfKey=' . $qfKey,
+          'qs' => 'action=copy&gid=%%id%%&key=%%key%%',
           'title' => ts('Make a Copy of CiviCRM Contribution Page'),
           'extra' => 'onclick = "return confirm(\'' . $copyExtra . '\');"',
         ),
@@ -427,13 +427,13 @@ WHERE       cp.contribution_page_id = {$id}";
    * @access public
    */
   function copy() {
-    $session = CRM_Core_Session::singleton();
-    $pageKey = $this->_scope;
-    $qfKey = $session->get('qfKey', $pageKey);
+    $key = CRM_Utils_Request::retrieve('key', 'String',
+      CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST'
+    );
 
-    $requestKey = CRM_Utils_Request::retrieve('qfKey', 'String', $this);
-    if (!$qfKey || $qfKey !== $requestKey) {
-      CRM_Core_Error::fatal(ts('Invalid CSRF token when copying contribution page'));
+    $name = get_class($this);
+    if (!CRM_Core_Key::validate($key, $name)) {
+      return CRM_Core_Error::statusBounce(ts('Sorry, we cannot process this request for security reasons. The request may have expired or is invalid. Please return to the contribution page list and try again.'));
     }
 
     $gid = CRM_Utils_Request::retrieve('gid', 'Positive',
@@ -511,6 +511,12 @@ ORDER BY is_active DESC, id ASC
 
     $contributionTypes = CRM_Contribute_PseudoConstant::contributionType(NULl, NULL, TRUE);
     $contributionPage = array();
+
+    // Add key for action validation.
+    $name = get_class($this);
+    $key = CRM_Core_Key::get($name);
+    $this->assign('key', $key);
+
     while ($dao->fetch()) {
       $contributionPage[$dao->id] = array();
       CRM_Core_DAO::storeValues($dao, $contributionPage[$dao->id]);
@@ -549,7 +555,10 @@ ORDER BY is_active DESC, id ASC
       //build the normal action links.
       $contributionPage[$dao->id]['action'] = CRM_Core_Action::formLink(self::actionLinks(),
         $action,
-        array('id' => $dao->id),
+        array(
+          'id' => $dao->id,
+          'key' => $key
+        ),
         ts('more'),
         TRUE
       );
