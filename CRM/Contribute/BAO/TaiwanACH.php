@@ -1138,7 +1138,8 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
 
   static function doProcessVerification($recurId, $parsedData, $isPreview = TRUE) {
     // Consider type is Bank or Post
-    $arrayLen = !empty($parsedData) ? (intval(max(array_filter(array_keys($parsedData), 'is_numeric'))) + 1) : 0;
+    $keys = array_filter(array_keys($parsedData), 'is_numeric');
+    $arrayLen = !empty($parsedData) && !empty($keys) ? (intval(max($keys)) + 1) : 0;
     if ($arrayLen == 18 ) {
       $processType = self::BANK;
     }
@@ -1223,7 +1224,8 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
 
   static function doProcessTransaction($contributionId, $parsedData, $isPreview = TRUE) {
     // Consider type is Bank or Post
-    $arrayLen = !empty($parsedData) ? (intval(max(array_filter(array_keys($parsedData), 'is_numeric'))) + 1) : 0;
+    $keys = array_filter(array_keys($parsedData), 'is_numeric');
+    $arrayLen = !empty($parsedData) && !empty($keys) ? (intval(max($keys)) + 1) : 0;
     if ($arrayLen == 20 ) {
       $processType = self::POST;
       $errorCode = $parsedData[15];
