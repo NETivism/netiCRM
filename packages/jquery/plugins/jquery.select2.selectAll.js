@@ -45,16 +45,15 @@
   SelectAll.prototype.render = function (decorated) {
     var self = this,
       translations = self.options.get('translations'),
-      translate = translations.get.bind(translations),
       $rendered = decorated.call(this),
       $selectAll = $(
         '<button class="btn" type="button" style="margin-left:6px;">' +
-        '<i class="zmdi zmdi-check-square"></i> ' + translate('selectAll')() +
+        '<i class="zmdi zmdi-check-square"></i> ' + translations.get('selectAll') +
         '</button>'
       ),
       $unselectAll = $(
         '<button class="btn" type="button" style="margin-left:6px;">' +
-        '<i class="zmdi zmdi-square-o"></i> ' + translate('unselectAll')() +
+        '<i class="zmdi zmdi-square-o"></i> ' + translations.get('unselectAll') +
         '</button>'
       ),
       $btnContainer = $('<div class="select2-selectall-actions" style="margin-top:3px; text-align:center;">').append($selectAll).append($unselectAll);
