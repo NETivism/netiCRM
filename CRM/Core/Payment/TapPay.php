@@ -400,7 +400,8 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
           'card_key' => $tappayData->card_key,
           'card_token' => $tappayData->card_token,
           'partner_key' => $paymentProcessor['password'],
-          'merchant_id' => $paymentProcessor['user_name'],
+          // #39372, #42445: special case for 3d verify, change merchant id when match rule
+          'merchant_id' => preg_match('/5808001$/', $paymentProcessor['user_name']) ? str_replace('5808001', '5808002', $paymentProcessor['user_name']) : $paymentProcessor['user_name'],
           'amount' => $amount,
           'currency' => $contributionRecur->currency,
           'order_number' => $contribution['trxn_id'],
