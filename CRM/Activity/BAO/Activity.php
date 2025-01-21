@@ -1755,14 +1755,14 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
       );
       $contactDetails = array($toId => $toDetails);
       $contactIds = array($toId);
-      list($sent) = self::sendSMS(
+      $result = self::sendSMS(
         $contactDetails,
         $activityParams,
         $smsParams,
         $contactIds,
         $fromId
       );
-      if ($sent) {
+      if (!empty($result['sent'])) {
         return TRUE;
       }
     }
