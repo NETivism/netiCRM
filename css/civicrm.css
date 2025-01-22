@@ -6680,9 +6680,7 @@ tbody.scrollContent tr.alternateRow {
   outline: 2px solid #3F51B5 !important;
   box-shadow: 1px 1px 8px 1px #3F51B5 !important;
 }
-a:focus-visible,
-.crm-container-md .crm-form-radio:focus-within,
-.crm-container-md .crm-form-checkbox:focus-within {
+a:focus-visible {
   outline: 2px solid #3F51B5 !important;
   box-shadow: 1px 1px 8px 1px #3F51B5 !important;
 }
