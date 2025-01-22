@@ -1721,12 +1721,7 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
       'display_name' => 1,
     );
     $getDetails = array($toId);
-    if (is_numeric($fromId)) {
-      $fromId = $fromId;
-      $getDetails[] = $fromId;
-      $from = NULL;
-    }
-    else {
+    if (!is_numeric($fromId)) {
       $fromId = NULL;
     }
     list($details) = CRM_Mailing_BAO_Mailing::getDetails($getDetails, $returnProperties, FALSE, FALSE, NULL, TRUE);
