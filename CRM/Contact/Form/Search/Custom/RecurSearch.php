@@ -316,13 +316,13 @@ $having
 
     $contributionPage = $this->_cpage;
     $attrs = array('multiple' => 'multiple');
-    $form->addElement('select', 'contribution_page', ts('Contribution Page'), $contributionPage, $attrs);
+    $form->addElement('select', 'contribution_page_id', ts('Contribution Page'), $contributionPage, $attrs);
 
     /**
      * If you are using the sample template, this array tells the template fields to render
      * for the search form.
      */
-    $form->assign('elements', array('status', 'installments', 'sort_name', 'email', 'contribution_page'));
+    $form->assign('elements', array('status', 'installments', 'sort_name', 'email', 'contribution_page_id'));
   }
 
   function setDefaultValues() {
