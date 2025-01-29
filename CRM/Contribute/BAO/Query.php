@@ -358,12 +358,13 @@ class CRM_Contribute_BAO_Query {
         return;
 
       case 'contribution_page_id':
+      case 'contribution_page':
         require_once 'CRM/Contribute/PseudoConstant.php';
         $cPage = $value;
         $pages = CRM_Contribute_PseudoConstant::contributionPage();    
         if (is_array($cPage)) {
           foreach ($cPage as $k => $v) {
-            if ($v) {
+            if (is_numeric($v)) {
               $val[$v] = $v;
             }
           }
