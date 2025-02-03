@@ -3162,7 +3162,7 @@ CREATE TABLE civicrm_timezone (
      name varchar(64)    COMMENT 'Timezone full name',
      abbreviation char(3)    COMMENT 'ISO Code for timezone abbreviation',
      gmt varchar(64)    COMMENT 'GMT name of the timezone',
-     offset int    ,
+     `offset` int    ,
      country_id int unsigned NOT NULL   COMMENT 'Country Id' 
 ,
     PRIMARY KEY ( id )
