@@ -107,7 +107,7 @@ class CRM_Price_Page_Set extends CRM_Core_Page {
         CRM_Core_Action::COPY => array(
           'name' => ts('Copy Price Set'),
           'url' => CRM_Utils_System::currentPath(),
-          'qs' => 'action=copy&sid=%%sid%%',
+          'qs' => 'action=copy&sid=%%sid%%&key=%%key%%',
           'title' => ts('Make a Copy of Price Set'),
           'extra' => 'onclick = "return confirm(\'' . $copyExtra . '\');"',
         ),
@@ -270,6 +270,11 @@ class CRM_Price_Page_Set extends CRM_Core_Page {
       $dao->domain_id = CRM_Core_Config::domainID();
     }
     $dao->find();
+
+    $name = get_class($this);
+    $key = CRM_Core_Key::get($name);
+    $this->assign('key', $key);
+
     while ($dao->fetch()) {
       $priceSet[$dao->id] = array();
       CRM_Core_DAO::storeValues($dao, $priceSet[$dao->id]);
@@ -293,7 +298,10 @@ class CRM_Price_Page_Set extends CRM_Core_Page {
       }
 
       $priceSet[$dao->id]['action'] = CRM_Core_Action::formLink(self::actionLinks(), $action,
-        array('sid' => $dao->id)
+        array(
+          'sid' => $dao->id,
+          'key' => $key
+        )
       );
     }
     $this->assign('rows', $priceSet);
@@ -307,6 +315,15 @@ class CRM_Price_Page_Set extends CRM_Core_Page {
    * @access public
    */
   function copy() {
+    $key = CRM_Utils_Request::retrieve('key', 'String',
+      CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST'
+    );
+
+    $name = get_class($this);
+    if (!CRM_Core_Key::validate($key, $name)) {
+      return CRM_Core_Error::statusBounce(ts('Sorry, we cannot process this request for security reasons. The request may have expired or is invalid. Please return to the price field list and try again.'));
+    }
+
     $id = CRM_Utils_Request::retrieve('sid', 'Positive',
       $this, TRUE, 0, 'GET'
     );
