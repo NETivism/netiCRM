@@ -103,7 +103,7 @@ jobs:
       - name: Frontend - Report Page Checking - Playwright
         run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/report_check.spec.js"
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: playwright-report-test7
@@ -212,7 +212,7 @@ jobs:
       - name: Frontend - Report Page Checking - Playwright
         run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/report_check.spec.js"
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: playwright-report-test8
@@ -325,7 +325,7 @@ jobs:
 
 
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: playwright-report-test8-d10
