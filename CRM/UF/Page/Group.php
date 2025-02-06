@@ -119,7 +119,7 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
         CRM_Core_Action::COPY => array(
           'name' => ts('Copy Profile'),
           'url' => 'civicrm/admin/uf/group',
-          'qs' => 'action=copy&gid=%%id%%',
+          'qs' => 'action=copy&gid=%%id%%&key=%%key%%',
           'title' => ts('Make a Copy of CiviCRM Profile Group'),
           'extra' => 'onclick = "return confirm(\'' . $copyExtra . '\');"',
         ),
@@ -199,6 +199,15 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
    * @access public
    */
   function copy() {
+    $key = CRM_Utils_Request::retrieve('key', 'String',
+      CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST'
+    );
+
+    $name = get_class($this);
+    if (!CRM_Core_Key::validate($key, $name)) {
+      return CRM_Core_Error::statusBounce(ts('Sorry, we cannot process this request for security reasons. The request may have expired or is invalid. Please return to the profile list and try again.'));
+    }
+
     $gid = CRM_Utils_Request::retrieve('gid', 'Positive',
       $this, TRUE, 0, 'GET'
     );
@@ -283,6 +292,11 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
       return;
     }
 
+    // Add key for action validation
+    $name = get_class($this);
+    $key = CRM_Core_Key::get($name);
+    $this->assign('key', $key);
+
     require_once 'CRM/Utils/Hook.php';
     $ufGroups = CRM_Core_PseudoConstant::ufGroup();
     CRM_Utils_Hook::aclGroup(CRM_Core_Permission::ADMIN, NULL, 'civicrm_uf_group', $ufGroups, $allUFGroups);
@@ -353,7 +367,10 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
       }
 
       $ufGroup[$id]['action'] = CRM_Core_Action::formLink(self::actionLinks(), $action,
-        array('id' => $id)
+        array(
+          'id' => $id,
+          'key' => $key
+        )
       );
 
 
