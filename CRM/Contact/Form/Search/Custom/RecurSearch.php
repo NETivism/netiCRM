@@ -250,7 +250,7 @@ $having
       $clauses[] = "(r.installments IS NULL OR r.installments = 0)";
     }
 
-    $contributionPage = $this->_formValues['contribution_page'];
+    $contributionPage = $this->_formValues['contribution_page_id'];
     if (!empty($contributionPage)) {
       $clauses[] = "c.contribution_page_id IN (".CRM_Utils_Array::implode(",", $contributionPage).")";
     }
