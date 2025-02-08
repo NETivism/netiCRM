@@ -38,6 +38,8 @@ class CRM_Contact_Form_Search_Custom_PriceSet extends CRM_Contact_Form_Search_Cu
 
   protected $_eventID = NULL;
 
+  protected $_filled = NULL;
+
   protected $_tableName = NULL;
 
   public static $_primaryIDName = 'id';
@@ -261,6 +263,15 @@ AND    p.entity_id    = e.id
 
   function summary() {
     return NULL;
+  }
+
+  function count(){
+    if(!$this->_filled){
+      $this->fillTable();
+      $this->_filled = TRUE;
+    }
+    $value = CRM_Core_DAO::singleValueQuery("SELECT count(*) FROM {$this->_tableName}");
+    return $value;
   }
 
   function all($offset = 0, $rowcount = 0, $sort = NULL,

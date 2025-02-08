@@ -480,7 +480,7 @@ $having
     return 'CRM/Contact/Form/Search/Custom/TaiwanACHSearch.tpl';
   }
 
-  function tasks() {
+  public static function tasks() {
     return array(
       1001 => array(
         'title' => ts('Export ACH Stamp Verification File'),

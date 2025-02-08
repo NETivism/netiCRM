@@ -1261,7 +1261,7 @@ SELECT $select
 
           case 'CheckBox':
             if (!empty($v)) {
-              $customValue = array_keys($v);
+              $customValue = is_array($v) ? array_keys($v) : [];
               $groupTree[$groupID]['fields'][$fieldId]['customValue']['data'] = CRM_Core_DAO::VALUE_SEPARATOR . CRM_Utils_Array::implode(CRM_Core_DAO::VALUE_SEPARATOR, $customValue) . CRM_Core_DAO::VALUE_SEPARATOR;
             }
             else {

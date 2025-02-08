@@ -49596,3 +49596,74 @@ msgstr ""
 #: CRM/Batch/BAO/Batch.php
 msgid "Batch running failed. Contact the site administrator for assistance."
 msgstr ""
+
+#: CRM/Core/Payment/TapPay.php
+msgid "The recurring have been suspended due to TapPay Notify token status is %1."
+msgstr ""
+
+#: CRM/Core/Payment/MyPay.php
+msgid "Payment Successful"
+msgstr ""
+
+msgid "Transaction Successful, Mismatched Information"
+msgstr ""
+
+msgid "Checkout Complete"
+msgstr ""
+
+msgid "Execution Successful"
+msgstr ""
+
+msgid "Data Correct"
+msgstr ""
+
+msgid "Authorization Successful"
+msgstr ""
+
+msgid "Payment Processing"
+msgstr ""
+
+msgid "Payment Incomplete"
+msgstr ""
+
+msgid "Order Bound"
+msgstr ""
+
+msgid "Transaction Successful, Payment Incomplete"
+msgstr ""
+
+msgid "Cardless Installment - Awaiting Approval"
+msgstr ""
+
+msgid "Order Created, Pending Payment Review, Payment Incomplete"
+msgstr ""
+
+msgid "Order Created, Pending Payment Request, Payment Incomplete"
+msgstr ""
+
+msgid "Transaction Pending Confirmation"
+msgstr ""
+
+msgid "Data Error"
+msgstr ""
+
+msgid "Cancellation Successful"
+msgstr ""
+
+msgid "Refund Successful"
+msgstr ""
+
+msgid "Transaction Failed"
+msgstr ""
+
+msgid "Expired Transaction"
+msgstr ""
+
+msgid "System Error Message"
+msgstr ""
+
+msgid "Transaction Abandoned"
+msgstr ""
+
+msgid "Execution Failed"
+msgstr ""

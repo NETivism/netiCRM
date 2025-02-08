@@ -234,6 +234,21 @@ class CRM_Utils_REST {
     // If the function isn't in the civicrm namespace, reject the request.
     $args = array();
 
+    // check from IP address when allowed list defined
+    if (defined('CIVICRM_API_ALLOWED_IP')) {
+      $allowedIPs = explode(',', CIVICRM_API_ALLOWED_IP);
+      if (!empty($allowedIPs)) {
+        $match = FALSE;
+        $remoteIP = CRM_Utils_System::ipAddress();
+        if (!empty($remoteIP)) {
+          $match = CRM_Utils_Rule::checkIp($remoteIP, $allowedIPs);
+        }
+        if (!$match) {
+          return self::error("FATAL: Your IP is not in allowed list.");
+        }
+      }
+    }
+
     // or the new format (entity+action)
     $args[1] = CRM_Utils_Request::retrieve('entity', 'String', CRM_Core_DAO::$_nullObject, FALSE, NULL, 'REQUEST');
     $args[2] = CRM_Utils_Array::value('action', $_REQUEST);
