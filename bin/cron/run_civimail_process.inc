@@ -60,6 +60,7 @@ class CiviMailProcessor {
 
         $dao = CRM_Core_BAO_MailSettings::defaultDAO();
         $name ? $dao->name = $name : $dao->is_default = 1;
+        $times = 0;
         if (empty($dao->domain)) {
             throw new Exception("Could not find entry named $name in civicrm_mail_settings");
         }

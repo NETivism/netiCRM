@@ -146,6 +146,7 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
    */
   function tableQuery() {
     $queries = array();
+    $idx = 0;
     if ($this->rules) {
       foreach($this->rules as $rule) {
         $bao = new CRM_Dedupe_BAO_Rule();

@@ -145,7 +145,7 @@ class CRM_Contact_Form_CustomData extends CRM_Core_Form {
 
     // when custom data is included in this page
     if (CRM_Utils_Array::value("hidden_custom", $_POST)) {
-      for ($i; $i <= $_POST['hidden_custom_group_count'][$this->_groupID]; $i++) {
+      for ($i = 0; $i <= $_POST['hidden_custom_group_count'][$this->_groupID]; $i++) {
         CRM_Custom_Form_CustomData::preProcess($this, NULL, NULL, $i);
         CRM_Custom_Form_CustomData::buildQuickForm($this);
         CRM_Custom_Form_CustomData::setDefaultValues($this);
