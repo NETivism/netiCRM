@@ -201,7 +201,7 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
       $contributionId = CRM_Core_DAO::singleValueQuery($sql, $params);
       $paymentClass = CRM_Contribute_BAO_Contribution::getPaymentClass($contributionId);
 
-      if (is_object($paymentClass)) {
+      if (is_string($paymentClass)) {
         if ((method_exists($paymentClass, 'doRecurTransact') || method_exists($paymentClass, 'doRecurUpdate')) && CRM_Core_Permission::check('edit contributions')) {
           $controllerTransact = new CRM_Core_Controller_Simple('CRM_Contribute_Form_MakingTransaction', NULL, CRM_Core_Action::NONE);
           $controllerTransact->setEmbedded(TRUE);

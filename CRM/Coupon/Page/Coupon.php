@@ -35,7 +35,7 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
         CRM_Core_Action::COPY => array(
           'name' => ts('Copy'),
           'url' => CRM_Utils_System::currentPath(),
-          'qs' => 'action=copy&id=%%id%%',
+          'qs' => 'action=copy&id=%%id%%&key=%%key%%',
           'extra' => 'onclick = "return confirm(\'' . $copyExtra . '\');"',
         ),
         CRM_Core_Action::DISABLE => array(
@@ -202,7 +202,18 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
         $action -= CRM_Core_Action::DISABLE;
       }
 
-      $coupon[$dao->id]['action'] = CRM_Core_Action::formLink(self::actionLinks(), $action, array('id' => $dao->id));
+      $name = get_class($this);
+      $key = CRM_Core_Key::get($name);
+      $this->assign('key', $key);
+
+      $coupon[$dao->id]['action'] = CRM_Core_Action::formLink(
+        self::actionLinks(),
+        $action,
+        array(
+          'id' => $dao->id,
+          'key' => $key
+        )
+      );
     }
     $couponIds = array_keys($coupon);
     $couponUses = CRM_Coupon_BAO_Coupon::getCouponUsed($couponIds);
@@ -296,6 +307,15 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
    * @access public
    */
   function copy() {
+    $key = CRM_Utils_Request::retrieve('key', 'String',
+      CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST'
+    );
+
+    $name = get_class($this);
+    if (!CRM_Core_Key::validate($key, $name)) {
+      return CRM_Core_Error::statusBounce(ts('Sorry, we cannot process this request for security reasons. The request may have expired or is invalid. Please return to the coupon list and try again.'));
+    }
+
     $id = CRM_Utils_Request::retrieve('id', 'Positive',
       $this, TRUE, 0, 'GET'
     );

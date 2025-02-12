@@ -573,7 +573,7 @@ VALUES (%1, %2, %3, %4, %5, %6, %7)
 
     $details = CRM_Utils_Token::getTokenDetails($params,
       $returnProperties,
-      TRUE, TRUE, NULL,
+      FALSE, TRUE, NULL,
       $mailing->getFlattenedTokens(),
       get_class($this)
     );
@@ -594,6 +594,20 @@ VALUES (%1, %2, %3, %4, %5, %6, %7)
         $recipient, FALSE, $details[0][$contactID], $attachments,
         FALSE, NULL, $replyToEmail
       );
+
+      // handling compose failing
+      if (empty($message) || !is_object($message) || !is_a($message, 'Mail_mime')) {
+        CRM_Core_Error::debug_log_message("Failed to compose message for queue: {$field['id']}, contact {$field['contact_id']}, email {$field['email']}");
+        $params = array(
+          'event_queue_id' => $field['id'],
+          'job_id' => $this->id,
+          'hash' => $field['hash'],
+        );
+        $params = array_merge($params, CRM_Mailing_BAO_BouncePattern::match('Mailing compose system error, check system log for detail.'));
+        CRM_Mailing_Event_BAO_Bounce::create($params);
+
+        continue;
+      }
 
       /* Send the mailing */
       $body = &$message->get();
