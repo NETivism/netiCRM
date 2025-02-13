@@ -1,6 +1,6 @@
 # 
 # Translators:
-# CC Chu <poliphilonet@gmail.com>, 2020-2024
+# CC Chu <poliphilonet@gmail.com>, 2020-2025
 # Chang Shu-huai <junsuwhy@gmail.com>, 2016-2024
 # Charles Chuang, 2022-2024
 # CHUNLIAN WU <susanna@netivism.com.tw>, 2017
@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>, 2016-2024\n"
+"Last-Translator: CC Chu <poliphilonet@gmail.com>, 2020-2025\n"
 "Language-Team: Chinese (Taiwan) (http://app.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -9863,7 +9863,6 @@ msgid "Edit Note"
 msgstr "編輯註記"
 
 #: CRM/Contact/Page/View/Note.php
-#: templates/CRM/Mailing/Form/ForwardMailing.tpl
 msgid "Add Comment"
 msgstr "加入評語"
 
@@ -50237,3 +50236,7 @@ msgstr "放棄交易"
 
 msgid "Execution Failed"
 msgstr "執行失敗"
+
+#: templates/CRM/Mailing/Form/ForwardMailing.tpl
+msgid "Add Personal Message"
+msgstr "加入給朋友的訊息"
