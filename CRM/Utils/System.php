@@ -42,8 +42,6 @@ class CRM_Utils_System {
   static $_callbacks = NULL;
   static $_shutdowned = NULL;
 
-  static $_shutdowned = NULL;
-
   /**
    * Compose a new url string from the current url string
    * Used by all the framework components, specifically,
