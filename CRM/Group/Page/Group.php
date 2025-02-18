@@ -341,6 +341,11 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
         $values[$object->id]['visibility'] = CRM_Contact_DAO_Group::tsEnum('visibility',
           $values[$object->id]['visibility']
         );
+        $values[$object->id]['is_public'] = $object->visibility == 'Public Pages' ? TRUE : FALSE;
+
+        if (strstr($object->group_type, CRM_Core_DAO::VALUE_SEPARATOR.'2'.CRM_Core_DAO::VALUE_SEPARATOR) && $object->visibility == 'Public Pages') {
+          $values[$object->id]['subscription'] = true;
+        }
         if (isset($values[$object->id]['group_type'])) {
           $groupTypes = explode(CRM_Core_DAO::VALUE_SEPARATOR,
             substr($values[$object->id]['group_type'], 1, -1)

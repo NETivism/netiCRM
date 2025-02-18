@@ -37,6 +37,10 @@
 
 class CRM_Contact_Form_Search_Custom_PriceSetContribution extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
 
+  public static $_primaryIDName = 'entity_id';
+
+  protected $_filled = NULL;
+
   protected $_price_set_id = NULL;
 
   protected $_tableName = NULL;
@@ -263,6 +267,15 @@ WHERE p.extends LIKE '%2%'
 
   function summary() {
     return NULL;
+  }
+
+  function count(){
+    if(!$this->_filled){
+      $this->fillTable();
+      $this->_filled = TRUE;
+    }
+    $value = CRM_Core_DAO::singleValueQuery("SELECT count(*) FROM {$this->_tableName}");
+    return $value;
   }
 
   function all($offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE) {

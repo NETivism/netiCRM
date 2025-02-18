@@ -144,5 +144,21 @@ class CRM_Core_Page_AJAX {
         return FALSE;
     }
   }
+  /**
+   * Guards against CSRF by validating the request method appears to be an ajax request
+   */
+  public static function validateAjaxRequestMethod() {
+    if (!CRM_Utils_REST::isWebServiceRequest()) {
+      http_response_code(400);
+      CRM_Core_Error::debug_log_message('SECURITY ALERT: Ajax requests can only be issued by javascript clients.');
+      CRM_Core_Error::debug_var('ajax_request_info', array(
+          'IP' => CRM_Utils_System::ipAddress(),
+          'level' => 'security',
+          'referer' => $_SERVER['HTTP_REFERER'] ? $_SERVER['HTTP_REFERER'] : '',
+          'reason' => 'CSRF suspected',
+      ));
+      throw new CRM_Core_Exception('SECURITY ALERT: Ajax requests can only be issued by javascript clients.');
+    }
+  }
 }
 

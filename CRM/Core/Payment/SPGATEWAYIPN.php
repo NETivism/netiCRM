@@ -230,16 +230,23 @@ class CRM_Core_Payment_SPGATEWAYIPN extends CRM_Core_Payment_BaseIPN {
       // not the first time (PeriodReturnURL)
       if(!empty($input['AlreadyTimes'])){
         $trxn_id = $input['OrderNo'];
+        $alreadyExistsId = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution WHERE trxn_id = %1", array(
+          1 => array($trxn_id, 'String'),
+        ));
         if($input['Status'] != 'SUCCESS'){
           $contribution->contribution_status_id = 4; // Failed
-          $c = self::copyContribution($contribution, $ids['contributionRecur'], $trxn_id);
+          if (!$alreadyExistsId) {
+            $c = self::copyContribution($contribution, $ids['contributionRecur'], $trxn_id);
+          }
+          else {
+            $c = new CRM_Contribute_DAO_Contribution();
+            $c->id = $alreadyExistsId;
+            $c->find(TRUE);
+          }
         }
         else{
           $contribution->contribution_status_id = 1; // Completed
           // Check if trxn_id is existed or not.
-          $alreadyExistsId = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution WHERE trxn_id = %1", array(
-            1 => array($trxn_id, 'String'),
-          ));
           if (!$alreadyExistsId) {
             // Trxn_id is not existed, clone contribution.
             $c = self::copyContribution($contribution, $ids['contributionRecur'], $trxn_id);

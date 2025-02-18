@@ -831,7 +831,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
         $importRecordParams = array($statusFieldName => $contactImportResult, "{$statusFieldName}Msg" => $errDisp);
         $this->updateImportStatus($values[count($values) - 1], $importRecordParams);
         array_unshift($values, $importRecordParams[$statusFieldName.'Msg']);
-        return $contactImportResult;
+        return CRM_Import_Parser::ERROR;
       }
     }
     else {

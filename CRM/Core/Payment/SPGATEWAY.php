@@ -1477,6 +1477,7 @@ EOT;
                     'contribution_id' => !empty($getParams['cid']) ? $getParams['cid'] : '',
                     'contact_id' => !empty($getParams['contact_id']) ? $getParams['contact_id'] : '',
                     'success' => (isset($postParams['Status']) && $postParams['Status'] === 'SUCCESS') ? TRUE : FALSE,
+                    'message' => isset($postParams['Message']) ? $postParams['Message'] : '',
                     'total_amount' => isset($ipnResult['Amt']) ? (float)$ipnResult['Amt'] : 0,
                     'trxn_id' => isset($ipnResult['MerchantOrderNo']) ? $ipnResult['MerchantOrderNo'] : '',
                     'receive_date' => isset($ipnResult['PayTime']) ? date('c', strtotime($ipnResult['PayTime'])) : '',
@@ -1535,10 +1536,15 @@ EOT;
                       'contribution_id' => !empty($getParams['cid']) ? $getParams['cid'] : '',
                       'contact_id' => !empty($getParams['contact_id']) ? $getParams['contact_id'] : '',
                       'success' => (isset($postParams['Status']) && $postParams['Status'] === 'SUCCESS') ? TRUE : FALSE,
+                      'message' => isset($postParams['Message']) ? $postParams['Message'] : '',
                       'total_amount' => $amount,
                       'trxn_id' => $orderNumber,
                       'receive_date' => !empty($receiveDate) ? $receiveDate : '',
                       'ipn_date' => $isoDate,
+                      'original_request' => [
+                        'get' => $getParams,
+                        'post' => $postParams,
+                      ],
                     );
                   }
                 }
@@ -1565,9 +1571,17 @@ EOT;
                 ));
               }
               if ($order['recurring']) {
+                if (!empty($order['original_request']['post'])) {
+                  CRM_Core_Error::debug_var("spgateway_weblog_sync", $order['original_request']);
+                }
                 if (empty($current_status_id)) {
-                  CRM_Core_Error::debug_log_message("spgateway: weblog sync recur create for trxn_id {$order['trxn_id']}");
-                  self::recurSyncTransaction($order['trxn_id'], TRUE);
+                  if (!$order['first_recurring'] && !$order['success']) {
+                    CRM_Core_Error::debug_log_message("spgateway: weblog sync trxn_id {$order['trxn_id']} failed, skipped. Reason: ".$order['message']);
+                  }
+                  else {
+                    CRM_Core_Error::debug_log_message("spgateway: weblog sync recur create for trxn_id {$order['trxn_id']}");
+                    self::recurSyncTransaction($order['trxn_id'], TRUE);
+                  }
                 }
                 elseif($current_status_id == 2) {
                   CRM_Core_Error::debug_log_message("spgateway: weblog sync recur status for trxn_id {$order['trxn_id']}");

@@ -3934,7 +3934,12 @@ civicrm_relationship.start_date > {$today}
     $sql = "$select $from $where $having";
     // add group by
     if ($query->_useGroupBy || $groupBy) {
-      $sql .= ' GROUP BY contact_a.id';
+      if (isset($query->_groupByComponentClause) && !empty($query->_groupByComponentClause)) {
+        $sql .= $query->_groupByComponentClause;
+      }
+      else {
+        $sql .= ' GROUP BY contact_a.id';
+      }
     }
     if (!empty($sort)) {
       $sql .= " ORDER BY $sort ";
@@ -4273,7 +4278,7 @@ SELECT COUNT( cc.total_amount ) as total_count,
     $whereForTotal = $where;
     $whereForTotal .= " AND civicrm_contribution.contribution_status_id = 1 ";
     if ($context == 'search') {
-      $where .= " AND contact_a.is_deleted = 0 ";
+      $whereForTotal .= " AND contact_a.is_deleted = 0 ";
     }
 
     $summary = array();
@@ -4310,7 +4315,7 @@ SELECT COUNT( cc.total_amount ) as cancel_count,
     $whereForCancel = $where;
     $whereForCancel .= " AND civicrm_contribution.contribution_status_id = 3 ";
     if ($context == 'search') {
-      $where .= " AND contact_a.is_deleted = 0 ";
+      $whereForCancel .= " AND contact_a.is_deleted = 0 ";
     }
 
     $query = "$select FROM (SELECT civicrm_contribution.total_amount, civicrm_contribution.currency $from $whereForCancel GROUP BY civicrm_contribution.id) cc GROUP BY cc.currency";

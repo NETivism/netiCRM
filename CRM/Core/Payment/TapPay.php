@@ -400,7 +400,8 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
           'card_key' => $tappayData->card_key,
           'card_token' => $tappayData->card_token,
           'partner_key' => $paymentProcessor['password'],
-          'merchant_id' => $paymentProcessor['user_name'],
+          // #39372, #42445: special case for 3d verify, change merchant id when match rule
+          'merchant_id' => preg_match('/5808001$/', $paymentProcessor['user_name']) ? str_replace('5808001', '5808002', $paymentProcessor['user_name']) : $paymentProcessor['user_name'],
           'amount' => $amount,
           'currency' => $contributionRecur->currency,
           'order_number' => $contribution['trxn_id'],
@@ -1286,38 +1287,63 @@ LIMIT 0, 100
       if (empty($token)) {
         continue;
       }
-      $sql = "SELECT contribution_id, contribution_recur_id, expiry_date FROM civicrm_contribution_tappay WHERE card_token = %1";
+      $sql = "SELECT contribution_id, contribution_recur_id, expiry_date FROM civicrm_contribution_tappay WHERE card_token = %1 ORDER BY contribution_id DESC";
       $params = array(
         1 => array($token, 'String'),
       );
       $dao = CRM_Core_DAO::executeQuery($sql, $params);
+      $written = FALSE;
       while ($dao->fetch()) {
-        $recordData = array(
-          'contribution_id' => $dao->contribution_id,
-          'url' => $requestURL,
-          'date' => date('Y-m-d H:i:s'),
-          'post_data' => $input,
-        );
-        CRM_Core_Payment_TapPayAPI::writeRecord(NULL, $recordData);
-
+        if (!$written) {
+          $recordData = array(
+            'contribution_id' => $dao->contribution_id,
+            'url' => $requestURL,
+            'date' => date('Y-m-d H:i:s'),
+            'post_data' => $input,
+          );
+          CRM_Core_Payment_TapPayAPI::writeRecord(NULL, $recordData);
+          $written = TRUE;
+        }
         // Update contribution_tappay for new expiry_date only. *DO NOT* touch other fields
-        $year = $month = $expiry_date = NULL;
+        $year = $month = $expiryDate = NULL;
         if ($data->card_info->expiry_date) {
           $year = substr($data->card_info->expiry_date, 0, 4);
           $month = substr($data->card_info->expiry_date, 4, 2);
-					$expiry_date = date('Y-m-d', strtotime('last day of this month', strtotime($year.'-'.$month.'-01')));
-          if ($expiry_date != $dao->expiry_date  && strtotime($expiry_date) > strtotime($dao->expiry_date)) {
+					$expiryDate = date('Y-m-d', strtotime('last day of this month', strtotime($year.'-'.$month.'-01')));
+
+          // update status
+          if (strtolower($data->card_info->token_status) !== 'active') {
+            $tokenStatus = strtolower($data->card_info->token_status);
+            $params = array(
+              'id' => $dao->contribution_recur_id,
+              'contribution_status_id' => 7, // suspend
+              'auto_renew' => 9,
+              'message' => ts("The recurring have been suspended due to TapPay Notify token status is %1.", array(1 => $tokenStatus)),
+            );
+            CRM_Contribute_BAO_ContributionRecur::add($params, CRM_Core_DAO::$_nullObject);
+            $noteTitle = ts('TapPay Payment').': '.ts('Credit Card Information').' '.ts('updated');
+            CRM_Contribute_BAO_ContributionRecur::addNote($dao->contribution_recur_id, $noteTitle, $params['message']);
+            break;
+          }
+          elseif ($expiryDate != $dao->expiry_date  && strtotime($expiryDate ) > strtotime($dao->expiry_date)) {
+            // check token_status
             $sql = "UPDATE civicrm_contribution_tappay SET expiry_date = %1 WHERE card_token = %2";
             CRM_Core_DAO::executeQuery($sql, array(
-              1 => array($expiry_date, 'String'),
+              1 => array($expiryDate, 'String'),
               2 => array($token, 'String'),
             ));
             $params = array(
               'id' => $dao->contribution_recur_id,
               'auto_renew' => 2,
-              'message' => ts("Update expiry date from {$dao->expiry_date} to $expiry_date"),
+              'message' => ts("Expiry date updated from %1 to %2", array(
+                1 => $dao->expiry_date,
+                2 => $expiryDate
+              )),
             );
             CRM_Contribute_BAO_ContributionRecur::add($params, CRM_Core_DAO::$_nullObject);
+            $noteTitle = ts('TapPay Payment').': '.ts('Card Expiry Date').' '.ts('updated');
+            CRM_Contribute_BAO_ContributionRecur::addNote($dao->contribution_recur_id, $noteTitle, ts("From").': '.$dao->expiry_date);
+            break;
           }
         }
       }

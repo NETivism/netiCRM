@@ -1481,8 +1481,8 @@ cj(function() {
     }
 
     // also store lineitem stuff here
-    if (($this->_lineItem & $this->_action & CRM_Core_Action::ADD) ||
-      ($this->_lineItem && CRM_Core_Action::UPDATE && !$this->_paymentId)
+    if ((!empty($this->_lineItem) && ($this->_action & CRM_Core_Action::ADD)) ||
+      (!empty($this->_lineItem) && ($this->_action & CRM_Core_Action::UPDATE) && !$this->_paymentId)
     ) {
 
       foreach ($this->_contactIds as $num => $contactID) {

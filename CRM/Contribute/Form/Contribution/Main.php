@@ -740,7 +740,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     }
     if ($this->_pcpId) {
       $this->assign('pcp', TRUE);
-      $this->add('checkbox', 'pcp_display_in_roll', ts('Show my contribution in the public honor roll'), NULL, NULL,
+      $this->add('checkbox', 'pcp_display_in_roll', ts('Message for your supported contribution page'), NULL, NULL,
         array('onclick' => "showHideByValue('pcp_display_in_roll','','nameID|nickID|personalNoteID','block','radio',false); pcpAnonymous( );")
       );
       $extraOption = array('onclick' => "return pcpAnonymous( );");
@@ -751,8 +751,8 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
       $this->_defaults['pcp_is_anonymous'] = 0;
       $this->_defaults['pcp_display_in_roll'] = 1;
 
-      $this->add('text', 'pcp_roll_nickname', ts('Name'), array('maxlength' => 30));
-      $this->add('textarea', "pcp_personal_note", ts('Personal Note'), array('style' => 'height: 3em; width: 40em;'));
+      $this->add('text', 'pcp_roll_nickname', ts('Name or nickname to display on the contribution page'), array('maxlength' => 30));
+      $this->add('textarea', "pcp_personal_note", ts('Your message to display on the contribution page'), array('style' => 'height: 3em; width: 40em;'));
     }
 
     //we have to load confirm contribution button in template

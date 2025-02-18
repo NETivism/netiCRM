@@ -101,7 +101,7 @@ class CRM_Event_Page_ManageEvent extends CRM_Core_Page {
         CRM_Core_Action::COPY => array(
           'name' => ts('Copy'),
           'url' => CRM_Utils_System::currentPath(),
-          'qs' => 'reset=1&action=copy&id=%%id%%',
+          'qs' => 'reset=1&action=copy&id=%%id%%&key=%%key%%',
           'extra' => 'onclick = "return confirm(\'' . $copyExtra . '\');"',
           'title' => ts('Copy Event'),
         ),
@@ -207,6 +207,10 @@ class CRM_Event_Page_ManageEvent extends CRM_Core_Page {
 
     list($offset, $rowCount) = $this->_pager->getOffsetAndRowCount();
 
+    $name = get_class($this);
+    $key = CRM_Core_Key::get($name);
+    $this->assign('key', $key);
+
     // get all custom groups sorted by weight
     $manageEvent = array();
 
@@ -252,7 +256,10 @@ ORDER BY start_date desc
 
         $manageEvent[$dao->id]['action'] = CRM_Core_Action::formLink(self::links(),
           $action,
-          array('id' => $dao->id),
+          array(
+            'id' => $dao->id,
+            'key' => $key
+          ),
           ts('Operation'),
           TRUE
         );
@@ -279,6 +286,15 @@ ORDER BY start_date desc
    * @access public
    */
   function copy() {
+    $key = CRM_Utils_Request::retrieve('key', 'String',
+      CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST'
+    );
+
+    $name = get_class($this);
+    if (!CRM_Core_Key::validate($key, $name)) {
+      return CRM_Core_Error::statusBounce(ts('Sorry, we cannot process this request...'));
+    }
+
     $id = CRM_Utils_Request::retrieve('id', 'Positive', $this, TRUE, 0, 'GET');
 
     $urlString = 'civicrm/event/manage';

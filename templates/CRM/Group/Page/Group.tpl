@@ -98,7 +98,17 @@
             </td>
             <td>{$row.mode}</td>	
             <td>{$row.group_type}</td>	
-            <td>{$row.visibility}</td>
+            <td>
+              {if $row.is_public}
+                <i class="zmdi zmdi-lock-open"></i> {$row.visibility}
+              {else}
+                <i class="zmdi zmdi-lock"></i> {$row.visibility}
+              {/if}
+              {if $row.subscription}
+                <br>
+                <i class="zmdi zmdi-collection-text"></i> {ts}Public Mailing List Group{/ts}
+              {/if}
+            </td>
             {if $groupOrg}
     	    <td><a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$row.org_id`"}">{$row.org_name}</a></td>
             {/if}

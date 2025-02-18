@@ -677,6 +677,7 @@ class CRM_Core_Payment_BaseIPN {
     }
 
     CRM_Core_Error::debug_log_message("Success: {$contribution->id} - Database updated");
+    CRM_Core_Error::debug_log_message("ipn debug pre for {$contribution->id}");
     CRM_Utils_Hook::ipnPost('complete', $objects, $input, $ids, $values);
 
     // #25671, add support for hook change mailing notification trigger
@@ -687,6 +688,7 @@ class CRM_Core_Payment_BaseIPN {
       self::sendMail($input, $ids, $objects, $values, $recur, FALSE);
       CRM_Core_Error::debug_log_message("Success: {$contribution->id} - Database updated and mail sent");
     }
+    CRM_Core_Error::debug_log_message("ipn debug post for {$contribution->id}");
 
     if ($sendMail && $values['is_send_sms'] && CRM_SMS_BAO_Provider::activeProviderCount()) {
       $sendSMS = TRUE;

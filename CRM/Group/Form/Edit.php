@@ -229,6 +229,17 @@ class CRM_Group_Form_Edit extends CRM_Core_Form {
           $defaults['remote_group_id'] = $data['remote_group_id'];
         }
       }
+
+      // last public mailing list group
+      if (!empty($this->_id) && !empty($defaults['group_type'][2])){
+        $publicSubsGroupCount = CRM_Core_DAO::singleValueQuery("SELECT count(*) FROM civicrm_group WHERE visibility = 'Public Pages' AND id != %1 AND group_type LIKE CONCAT('%', CHAR(1), '2', CHAR(1), '%')", array(
+          1 => array($this->_id, 'Integer')
+        ));
+        if ($publicSubsGroupCount == 0) {
+          $this->assign('lastPublicSubsGroup', 1);
+        }
+      }
+
     }
 
     if (!CRM_Utils_Array::value('parents', $defaults)) {

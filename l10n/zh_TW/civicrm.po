@@ -1,6 +1,6 @@
 # 
 # Translators:
-# CC Chu <poliphilonet@gmail.com>, 2020-2024
+# CC Chu <poliphilonet@gmail.com>, 2020-2025
 # Chang Shu-huai <junsuwhy@gmail.com>, 2016-2024
 # Charles Chuang, 2022-2024
 # CHUNLIAN WU <susanna@netivism.com.tw>, 2017
@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: 馮 佳今, 2022-2024\n"
+"Last-Translator: CC Chu <poliphilonet@gmail.com>, 2020-2025\n"
 "Language-Team: Chinese (Taiwan) (http://app.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3133,7 +3133,7 @@ msgstr "至"
 #: CRM/Contact/Form/Search/Custom/Basic.php CRM/Contact/Selector.php
 #: templates/CRM/Contact/Form/Task/Print.tpl
 msgid "Postal"
-msgstr "郵件"
+msgstr "郵遞區號"
 
 #: CRM/Contact/Form/Search/Custom/Basic.php
 #: CRM/Contact/Form/Search/Custom/MultipleValues.php
@@ -9863,7 +9863,6 @@ msgid "Edit Note"
 msgstr "編輯註記"
 
 #: CRM/Contact/Page/View/Note.php
-#: templates/CRM/Mailing/Form/ForwardMailing.tpl
 msgid "Add Comment"
 msgstr "加入評語"
 
@@ -18909,7 +18908,7 @@ msgstr "修改至"
 #: templates/CRM/Event/Page/EventInfo.tpl
 #: templates/CRM/Event/Page/ICalendar.tpl
 msgid "When"
-msgstr "何時"
+msgstr ""
 
 #: CRM/Report/Form/Contact/LoggingSummary.php
 msgid "Altered Contact"
@@ -32846,7 +32845,7 @@ msgid ""
 "authorized CiviCRM users only. If you want to allow contacts to join and "
 "remove themselves from this group via the Registration and Account Profile "
 "forms, select 'Public Pages'."
-msgstr "如該群組只可由已授權的使用者控制，請選「使用者與使用者管理員」。如您容許聯絡人自由參加群組，請選「公開頁面」。 "
+msgstr "「公開頁面」的群組名稱，將呈現於活動報名、募款頁、資料表單，讓人可以自行加入。若不希望公開呈現，請選「使用者與使用者管理員」，將僅供登入的使用者可存取。"
 
 #: templates/CRM/Group/Page/Group.hlp
 msgid ""
@@ -49699,13 +49698,13 @@ msgid ""
 "receipt includes tax filing credentials (such as ID number or Uniform "
 "Number), encryption will be done using these credentials. If these fields "
 "are not present, the recipient's email address will be used for encryption."
-msgstr "啟用後，將會為電子郵件收據加上密碼，若收據中有包含報稅憑證（例如身份證字號、統一編號），將會用報稅憑證進行加密；若沒有該欄位的值，將會用收件人 Email 地址加密。"
+msgstr "啟用後，將會為電子郵件收據加上密碼，若收據中有包含報稅憑證（例如身份證字號、統一編號），將會用報稅憑證進行加密；若沒有該欄位的值，將會使用聯絡人的身份證字號進行加密；若聯絡人資料中無填寫身分證字號，將會用收件人 Email 地址加密。"
 
 msgid ""
 "If no specific text is set, the default text will be: Your PDF receipt is "
 "encrypted. The password is either your tax certificate number or, if not "
 "provided, your email address."
-msgstr "若未設定文案，預設文案為「您的PDF收據已加密。密碼是您的報稅憑證，若未提供此號碼，則使用您的電子郵件地址作為密碼。」"
+msgstr "若未設定文案，預設文案為「您的PDF收據已加密。密碼是您的報稅憑證；若未提供此號碼，則使用您的身分證字號；若上述兩項皆為未提供；則使用您的電子郵件地址作為密碼。」"
 
 #: CRM/Admin/Form/Setting/Miscellaneous.php
 msgid "Path to qpdf executable"
@@ -50106,3 +50105,138 @@ msgstr "若有需要，你可點擊「手動同步」"
 #: CRM/Group/Form/Edit.php
 msgid "Remote Group"
 msgstr "遠端群組"
+
+#: CRM/Contribute/Form/Contribution/Main.php
+msgid "Message for your supported contribution page"
+msgstr "留言給你支持的募款頁"
+
+#: CRM/Contribute/Form/Contribution/Main.php
+msgid "Name or nickname to display on the contribution page"
+msgstr "顯示於募款頁的姓名或暱稱"
+
+#: CRM/Contribute/Form/Contribution/Main.php
+msgid "Your message to display on the contribution page"
+msgstr "顯示於募款頁的留言"
+
+#: templates/CRM/Contribute/Form/Contribution/Main.tpl
+msgid ""
+"Your message will be displayed on the contribution page, allowing others to "
+"see why you support this contribution."
+msgstr "您的留言將會顯示於募款頁中，讓大家可以看到你支持募款的緣由。"
+
+#: templats/CRM/Contribute/Form/PCP/Campaign.tpl
+msgid "Are you sure you want to replace your current image?"
+msgstr "你確定要取代現有的圖片嗎？"
+
+#: templats/CRM/Group/Form/Edit.tpl
+msgid "Confirm public group name"
+msgstr "確認公開顯示的群組名稱"
+
+#: templats/CRM/Group/Form/Edit.tpl
+msgid ""
+"The public group will be displayed on the <a href=\"%1\" "
+"target=\"_blank\">mailing list subscription</a> page for the general public "
+"to browse. Please check if this group name \"%2\" is correct."
+msgstr "公開群組將會顯示於 <a href=\"%1\" target=\"_blank\">訂閱電子報</a> 的頁面給一般民眾瀏覽，請檢查此群組名稱「%2」是否正確。"
+
+#: templats/CRM/Group/Form/Edit.tpl
+msgid "Removing the last public group"
+msgstr "您正在移除最後一個公開群組"
+
+#: templats/CRM/Group/Form/Edit.tpl
+msgid ""
+"The group you selected is the last public newsletter group. After removal, "
+"the <a href=\"%1\" target=\"_blank\">mailing list subscription</a> function "
+"will be disabled."
+msgstr "你選擇的群組是最後一個公開的電子報群組，移除後將停用<a href=\"%1\" target=\"_blank\">電子報訂閱</a>功能。"
+
+#: templates/CRM/Group/Page/Group.tpl
+msgid "Public Mailing List Group"
+msgstr "公開的電子報訂閱群組"
+
+#: CRM/Admin/Form/Setting/Receipt.php
+#: templates/CRM/Admin/Form/Setting/Receipt.tpl
+msgid ""
+"When the legal ID display option is not set to complete display, email "
+"receipt encryption cannot be enabled."
+msgstr "當身分證字號呈現方式不是完全顯示時，無法啟用電子收據加密功能"
+
+#: CRM/Batch/BAO/Batch.php
+msgid "Batch running failed. Contact the site administrator for assistance."
+msgstr "批次執行失敗。請聯繫網站管理員以取得協助。"
+
+#: CRM/Core/Payment/TapPay.php
+msgid ""
+"The recurring have been suspended due to TapPay Notify token status is %1."
+msgstr "這個定期已暫停，因為 TapPay 拋送通知卡片代號狀態（token status）為 %1。"
+
+#: CRM/Core/Payment/MyPay.php
+msgid "Payment Successful"
+msgstr "付款成功"
+
+msgid "Transaction Successful, Mismatched Information"
+msgstr "交易成功, 但資訊不符"
+
+msgid "Checkout Complete"
+msgstr "結帳完成"
+
+msgid "Execution Successful"
+msgstr "執行成功"
+
+msgid "Data Correct"
+msgstr "資料正確"
+
+msgid "Authorization Successful"
+msgstr "授權成功"
+
+msgid "Payment Processing"
+msgstr "請款進行中"
+
+msgid "Payment Incomplete"
+msgstr "交易成功, 尚未付款完成"
+
+msgid "Order Bound"
+msgstr "訂單綁定"
+
+msgid "Transaction Successful, Payment Incomplete"
+msgstr "交易成功, 尚未付款完成"
+
+msgid "Cardless Installment - Awaiting Approval"
+msgstr "無卡分期-請等候審查通過"
+
+msgid "Order Created, Pending Payment Review, Payment Incomplete"
+msgstr "訂單成立待後付款審核確認, 尚未付款完成"
+
+msgid "Order Created, Pending Payment Request, Payment Incomplete"
+msgstr "訂單成立後付款待請款, 尚未付款完成"
+
+msgid "Transaction Pending Confirmation"
+msgstr "訂單成立後付款待請款, 尚未付款完成"
+
+msgid "Data Error"
+msgstr "資料錯誤"
+
+msgid "Cancellation Successful"
+msgstr "取消成功"
+
+msgid "Refund Successful"
+msgstr "退款成功"
+
+msgid "Transaction Failed"
+msgstr "交易失敗"
+
+msgid "Expired Transaction"
+msgstr "逾期交易"
+
+msgid "System Error Message"
+msgstr "系統錯誤訊息"
+
+msgid "Transaction Abandoned"
+msgstr "放棄交易"
+
+msgid "Execution Failed"
+msgstr "執行失敗"
+
+#: templates/CRM/Mailing/Form/ForwardMailing.tpl
+msgid "Add Personal Message"
+msgstr "加入給朋友的訊息"

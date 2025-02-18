@@ -102,7 +102,7 @@ class CRM_Price_Page_Field extends CRM_Core_Page {
         CRM_Core_Action::COPY => array(
           'name' => ts('Copy'),
           'url' => CRM_Utils_System::currentPath(),
-          'qs' => 'action=copy&sid=%%sid%%&fid=%%fid%%',
+          'qs' => 'action=copy&sid=%%sid%%&fid=%%fid%%&key=%%key%%',
           'title' => ts('Make a Copy of Price Field'),
           'extra' => 'onclick = "return confirm(\'' . $copyExtra . '\');"',
         ),
@@ -135,6 +135,10 @@ class CRM_Price_Page_Field extends CRM_Core_Page {
     $priceFieldBAO->price_set_id = $this->_sid;
     $priceFieldBAO->orderBy('weight, label');
     $priceFieldBAO->find();
+
+    $name = get_class($this);
+    $key = CRM_Core_Key::get($name);
+    $this->assign('key', $key);
 
     while ($priceFieldBAO->fetch()) {
       $priceField[$priceFieldBAO->id] = array();
@@ -174,8 +178,10 @@ class CRM_Price_Page_Field extends CRM_Core_Page {
       $priceField[$priceFieldBAO->id]['html_type'] = $htmlTypes[$priceField[$priceFieldBAO->id]['html_type']];
       $priceField[$priceFieldBAO->id]['order'] = $priceField[$priceFieldBAO->id]['weight'];
       $priceField[$priceFieldBAO->id]['action'] = CRM_Core_Action::formLink(self::actionLinks(), $action,
-        array('fid' => $priceFieldBAO->id,
+        array(
+          'fid' => $priceFieldBAO->id,
           'sid' => $this->_sid,
+          'key' => $key
         )
       );
     }
@@ -223,6 +229,15 @@ class CRM_Price_Page_Field extends CRM_Core_Page {
    * @access public
    */
   function copy() {
+    $key = CRM_Utils_Request::retrieve('key', 'String',
+      CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST'
+    );
+
+    $name = get_class($this);
+    if (!CRM_Core_Key::validate($key, $name)) {
+      return CRM_Core_Error::statusBounce(ts('Sorry, we cannot process this request for security reasons. The request may have expired or is invalid. Please return to the price field list and try again.'));
+    }
+
     $sid = CRM_Utils_Request::retrieve('sid', 'Positive',
       $this, TRUE, 0, 'GET'
     );

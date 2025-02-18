@@ -36,7 +36,7 @@
                 </tr>
             {/foreach}
         </table>
-        {include file="CRM/common/chosen.tpl" selector="select#contribution_page"}
+        {include file="CRM/common/chosen.tpl" selector="select#contribution_page_id"}
         <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
     </div><!-- /.crm-accordion-body -->
 </div><!-- /.crm-accordion-wrapper -->
@@ -80,7 +80,7 @@
                     <th scope="col">
                         {if $header.sort}
                             {assign var='key' value=$header.sort}
-                            {$sort->_response.$key.link}
+                            {if $sort->_response.$key}{$sort->_response.$key.link}{else}{$header.name}{/if}
                         {else}
                             {$header.name}
                         {/if}

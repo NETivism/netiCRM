@@ -9850,7 +9850,6 @@ msgid "Edit Note"
 msgstr ""
 
 #: CRM/Contact/Page/View/Note.php
-#: templates/CRM/Mailing/Form/ForwardMailing.tpl
 msgid "Add Comment"
 msgstr ""
 
@@ -49546,4 +49545,128 @@ msgstr ""
 
 #: CRM/Group/Form/Edit.php
 msgid "Remote Group"
+msgstr ""
+
+#: CRM/Contribute/Form/Contribution/Main.php
+msgid "Message for your supported contribution page"
+msgstr ""
+
+#: CRM/Contribute/Form/Contribution/Main.php
+msgid "Name or nickname to display on the contribution page"
+msgstr ""
+
+#: CRM/Contribute/Form/Contribution/Main.php
+msgid "Your message to display on the contribution page"
+msgstr ""
+
+#: templates/CRM/Contribute/Form/Contribution/Main.tpl
+msgid "Your message will be displayed on the contribution page, allowing others to see why you support this contribution."
+msgstr ""
+
+#: templats/CRM/Contribute/Form/PCP/Campaign.tpl
+msgid "Are you sure you want to replace your current image?"
+msgstr ""
+
+#: templats/CRM/Group/Form/Edit.tpl
+msgid "Confirm public group name"
+msgstr ""
+
+#: templats/CRM/Group/Form/Edit.tpl
+msgid "The public group will be displayed on the <a href=\"%1\" target=\"_blank\">mailing list subscription</a> page for the general public to browse. Please check if this group name \"%2\" is correct."
+msgstr ""
+
+#: templats/CRM/Group/Form/Edit.tpl
+msgid "Removing the last public group"
+msgstr ""
+
+#: templats/CRM/Group/Form/Edit.tpl
+msgid "The group you selected is the last public newsletter group. After removal, the <a href=\"%1\" target=\"_blank\">mailing list subscription</a> function will be disabled."
+msgstr ""
+
+#: templates/CRM/Group/Page/Group.tpl
+msgid "Public Mailing List Group"
+msgstr ""
+
+#: CRM/Admin/Form/Setting/Receipt.php
+#: templates/CRM/Admin/Form/Setting/Receipt.tpl
+msgid "When the legal ID display option is not set to complete display, email receipt encryption cannot be enabled."
+msgstr ""
+
+#: CRM/Batch/BAO/Batch.php
+msgid "Batch running failed. Contact the site administrator for assistance."
+msgstr ""
+
+#: CRM/Core/Payment/TapPay.php
+msgid "The recurring have been suspended due to TapPay Notify token status is %1."
+msgstr ""
+
+#: CRM/Core/Payment/MyPay.php
+msgid "Payment Successful"
+msgstr ""
+
+msgid "Transaction Successful, Mismatched Information"
+msgstr ""
+
+msgid "Checkout Complete"
+msgstr ""
+
+msgid "Execution Successful"
+msgstr ""
+
+msgid "Data Correct"
+msgstr ""
+
+msgid "Authorization Successful"
+msgstr ""
+
+msgid "Payment Processing"
+msgstr ""
+
+msgid "Payment Incomplete"
+msgstr ""
+
+msgid "Order Bound"
+msgstr ""
+
+msgid "Transaction Successful, Payment Incomplete"
+msgstr ""
+
+msgid "Cardless Installment - Awaiting Approval"
+msgstr ""
+
+msgid "Order Created, Pending Payment Review, Payment Incomplete"
+msgstr ""
+
+msgid "Order Created, Pending Payment Request, Payment Incomplete"
+msgstr ""
+
+msgid "Transaction Pending Confirmation"
+msgstr ""
+
+msgid "Data Error"
+msgstr ""
+
+msgid "Cancellation Successful"
+msgstr ""
+
+msgid "Refund Successful"
+msgstr ""
+
+msgid "Transaction Failed"
+msgstr ""
+
+msgid "Expired Transaction"
+msgstr ""
+
+msgid "System Error Message"
+msgstr ""
+
+msgid "Transaction Abandoned"
+msgstr ""
+
+msgid "Execution Failed"
+msgstr ""
+
+#: templates/CRM/Mailing/Form/ForwardMailing.tpl
+msgid "Add Personal Message"
 msgstr ""

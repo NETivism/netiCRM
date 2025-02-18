@@ -303,7 +303,7 @@ GROUP BY receipt_title, receipt_serial";
     parent::postProcess();
   }
 
-  function endPostProcess($rows) {
+  function endPostProcess(&$rows = NULL) {
     if ($this->_outputMode == 'csv') {
       $year = $rows[0]['civicrm_contribution_receive_date'];
       CRM_Report_Utils_Report::export2xls($this, $rows, $year . '_' . ts('Your SIC Code'). '.xlsx');

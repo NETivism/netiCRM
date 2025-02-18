@@ -154,6 +154,18 @@
             $('[name='+deleteFieldName+']').val(1);
             $(this).parent().find('img').css('filter','brightness(50%)');
         });
+        $('input[name^="receiptDisplayLegalID"]').click(function() {
+            const selectedValue = $('input[name^="receiptDisplayLegalID"]:checked').val();
+            $('.crm-form-block-receiptEmailEncryption .warning-message').remove();
+            if (selectedValue !== 'complete') {
+                $('input[name="receiptEmailEncryption"]').prop('checked', false);
+                $('.crm-form-block-receiptEmailEncryption .description').after(
+                    '<span class="description warning-message font-red"; display: block; margin-top: 5px;">' +
+                    '{/literal}{ts}When the legal ID display option is not set to complete display, email receipt encryption cannot be enabled.{/ts}{literal}' +
+                    '</span>'
+                );
+            }
+        });
     })
 </script>
 <style type="text/css">

@@ -89,7 +89,30 @@ var eventUrl = "{/literal}{$dataURLEvent}{literal}";
   var eventPrepopulate = '';
 {/if}
 {literal}
-cj("#event_id").tokenInput( eventUrl, { prePopulate: eventPrepopulate, classes: tokenClass, hintText: hintText });
+
+function tokeninputInit() {
+  var $eventId = cj('#event_id');
+  var $accordions = $eventId.parents('.crm-accordion-wrapper');
+  var isAllOpen = $accordions.length > 0 && $accordions.length === $accordions.filter('.crm-accordion-open').length;
+
+  if (isAllOpen && !$eventId.next('.token-input-list-facebook').length) {
+    $eventId.tokenInput(eventUrl, {prePopulate: eventPrepopulate, classes: tokenClass, hintText: hintText});
+  }
+}
+
+cj(document).ready(function() {
+  tokeninputInit();
+
+  cj(".crm-accordion-wrapper").on("crmaccordion:open", function() {
+    tokeninputInit();
+  });
+});
+
+cj(document).ajaxSuccess(function(event, jqxhr, settings) {
+  if (jqxhr.responseText.indexOf('id="event_id"') != -1) {
+    tokeninputInit();
+  }
+});
 
 var typeUrl  = "{/literal}{$dataURLEventType}{literal}";
 {/literal}

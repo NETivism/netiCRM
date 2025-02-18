@@ -118,6 +118,7 @@ if ( {/literal}"{$locUsed}"{literal} ) {
 
 cj(document).ready(function() {
   cj('#loc_event_id').change(function() {
+    let twzipcodeJQ = null;
     cj.ajax({
       url: locBlockURL, 
       type: 'POST',
@@ -136,6 +137,20 @@ cj(document).ready(function() {
           } else {
             cj('#'+i).val(data[i]);
           }
+        }
+        if (typeof jQuery === 'function' && typeof jQuery.prototype.twzipcode === 'function') {
+          twzipcodeJQ = jQuery;
+        }
+        if (typeof cj === 'function' && typeof cj.prototype.twzipcode === 'function') {
+          twzipcodeJQ = cj;
+        }
+        if (typeof twzipcodeJQ === 'function' && typeof twzipcodeJQ.prototype.twzipcode === 'function') {
+          let $ = twzipcodeJQ;
+          let city = $('#address_1_city').val();
+          let zipcode = $('#address_1_postal_code').val();
+          $('#address_1_state_province_id').trigger('change');
+          $('[name="_address[1][city]"]').val(city).trigger('change');
+          $('#address_1_postal_code').val(zipcode);
         }
       }
     });

@@ -1174,6 +1174,9 @@ body .crm-container div.display-block {
 #pcp_personal_note {
   width: 100% !important;
 }
+.crm-container .pcp-section .display_in_roll-section label {
+  font-size: 1.25rem;
+}
 .page-civicrm-contribute .description a,
 .page-civicrm-contribute .description a:hover {
   color: var(--color-crm-special-contribute-primary);
