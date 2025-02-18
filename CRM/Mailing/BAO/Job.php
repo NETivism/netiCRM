@@ -573,7 +573,7 @@ VALUES (%1, %2, %3, %4, %5, %6, %7)
 
     $details = CRM_Utils_Token::getTokenDetails($params,
       $returnProperties,
-      TRUE, TRUE, NULL,
+      FALSE, TRUE, NULL,
       $mailing->getFlattenedTokens(),
       get_class($this)
     );
