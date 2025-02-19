@@ -9850,7 +9850,6 @@ msgid "Edit Note"
 msgstr ""
 
 #: CRM/Contact/Page/View/Note.php
-#: templates/CRM/Mailing/Form/ForwardMailing.tpl
 msgid "Add Comment"
 msgstr ""
 
@@ -49666,4 +49665,8 @@ msgid "Transaction Abandoned"
 msgstr ""
 
 msgid "Execution Failed"
+msgstr ""
+
+#: templates/CRM/Mailing/Form/ForwardMailing.tpl
+msgid "Add Personal Message"
 msgstr ""
