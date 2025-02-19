@@ -186,6 +186,11 @@ class CRM_Price_Form_Set extends CRM_Core_Form {
     // is this set active ?
     $this->addElement('checkbox', 'is_active', ts('Is this Price Set active?'));
 
+    // If price set is being used, freeze the is_active field
+    if (!empty($priceSetUsedTables)) {
+      $this->getElement('is_active')->freeze();
+    }
+
     $js = array('data' => 'click-once');
     $this->addButtons(array(
         array('type' => 'next',
