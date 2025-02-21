@@ -64,26 +64,6 @@
             <td class="label">{$form.receiptDonorCredit.label}</td><td>{$form.receiptDonorCredit.html}<br />
             <span class="description">{ts}When use custom field to record donor credit, use this to select the field.{/ts}</span></td>
         </tr>
-        <tr class="crm-form-block-forbidCustomDonorCredit">
-            <td class="label">{$form.forbidCustomDonorCredit.label}</td><td>{$form.forbidCustomDonorCredit.html}<br />
-            <span class="description">{ts}If checked, the name used of donor acknowledgement can't be customized by contributor. The options will be "Full Name" and "Part of Name".{/ts}</span></td>
-        </tr>
-        <script type="text/javascript">
-        {literal}
-          cj(function($){
-            var doChangeFields = function(){
-              if ($('#receiptDonorCredit').val() == 0) {
-                $('.crm-form-block-forbidCustomDonorCredit').hide();
-              }
-              else {
-                $('.crm-form-block-forbidCustomDonorCredit').show();
-              }
-            }
-            $('#receiptDonorCredit').change(doChangeFields);
-            doChangeFields();
-          });
-        {/literal}
-        </script>
         <tr class="crm-form-block-receiptAddrType">
             <td class="label">{$form.receiptAddrType.label}</td>
             <td>{$form.receiptAddrType.html}</td>
