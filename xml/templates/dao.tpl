@@ -34,8 +34,6 @@
  *
  */
 
-
-
 {if $table.foreignKey} 
   {foreach from=$table.foreignKey item=foreign} 
      {if $foreign.import}

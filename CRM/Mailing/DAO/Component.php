@@ -31,8 +31,6 @@
  * $Id$
  *
  */
-
-
 class CRM_Mailing_DAO_Component extends CRM_Core_DAO
 {
   /**

@@ -31,8 +31,6 @@
  * $Id$
  *
  */
-
-
 class CRM_Event_DAO_Event extends CRM_Core_DAO
 {
   /**

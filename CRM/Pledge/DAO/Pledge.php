@@ -31,8 +31,6 @@
  * $Id$
  *
  */
-
-
 class CRM_Pledge_DAO_Pledge extends CRM_Core_DAO
 {
   /**

@@ -31,8 +31,6 @@
  * $Id$
  *
  */
-
-
 class CRM_Standalone_OpenID_DAO_Nonce extends CRM_Core_DAO
 {
   /**

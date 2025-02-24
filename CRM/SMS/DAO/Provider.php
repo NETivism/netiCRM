@@ -31,8 +31,6 @@
  * $Id$
  *
  */
-
-
 class CRM_SMS_DAO_Provider extends CRM_Core_DAO
 {
   /**

@@ -31,8 +31,6 @@
  * $Id$
  *
  */
-
-
 class CRM_Price_DAO_Set extends CRM_Core_DAO
 {
   /**

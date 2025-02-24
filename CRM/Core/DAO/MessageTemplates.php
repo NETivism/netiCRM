@@ -31,8 +31,6 @@
  * $Id$
  *
  */
-
-
 class CRM_Core_DAO_MessageTemplates extends CRM_Core_DAO
 {
   /**

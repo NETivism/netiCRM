@@ -31,8 +31,6 @@
  * $Id$
  *
  */
-
-
 class CRM_Campaign_DAO_Survey extends CRM_Core_DAO
 {
   /**

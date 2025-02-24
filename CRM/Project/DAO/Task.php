@@ -31,8 +31,6 @@
  * $Id$
  *
  */
-
-
 class CRM_Project_DAO_Task extends CRM_Core_DAO
 {
   /**

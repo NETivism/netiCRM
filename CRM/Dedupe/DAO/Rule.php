@@ -31,8 +31,6 @@
  * $Id$
  *
  */
-
-
 class CRM_Dedupe_DAO_Rule extends CRM_Core_DAO
 {
   /**

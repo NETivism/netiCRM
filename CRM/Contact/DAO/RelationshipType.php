@@ -31,8 +31,6 @@
  * $Id$
  *
  */
-
-
 class CRM_Contact_DAO_RelationshipType extends CRM_Core_DAO
 {
   /**

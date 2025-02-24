@@ -31,8 +31,6 @@
  * $Id$
  *
  */
-
-
 class CRM_Contact_DAO_Contact extends CRM_Core_DAO
 {
   /**
@@ -123,6 +121,11 @@ class CRM_Contact_DAO_Contact extends CRM_Core_DAO
    * @var boolean
    */
   public $do_not_trade;
+  /**
+   *
+   * @var boolean
+   */
+  public $do_not_notify;
   /**
    * Has the contact opted out from receiving all bulk email from the organization or site domain?
    *
@@ -508,6 +511,16 @@ class CRM_Contact_DAO_Contact extends CRM_Core_DAO
           'import' => true,
           'where' => 'civicrm_contact.do_not_trade',
           'headerPattern' => '/d(o )?(not )?(trade)/i',
+          'dataPattern' => '/^\d{1,}$/',
+          'export' => true,
+        ) ,
+        'do_not_notify' => array(
+          'name' => 'do_not_notify',
+          'type' => CRM_Utils_Type::T_BOOLEAN,
+          'title' => ts('Do Not Notify') ,
+          'import' => true,
+          'where' => 'civicrm_contact.do_not_notify',
+          'headerPattern' => '/d(o )?(not )?(notify)/i',
           'dataPattern' => '/^\d{1,}$/',
           'export' => true,
         ) ,

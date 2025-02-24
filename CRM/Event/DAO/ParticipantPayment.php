@@ -31,8 +31,6 @@
  * $Id$
  *
  */
-
-
 class CRM_Event_DAO_ParticipantPayment extends CRM_Core_DAO
 {
   /**

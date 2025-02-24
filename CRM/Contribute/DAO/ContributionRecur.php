@@ -31,8 +31,6 @@
  * $Id$
  *
  */
-
-
 class CRM_Contribute_DAO_ContributionRecur extends CRM_Core_DAO
 {
   /**

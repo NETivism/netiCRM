@@ -31,8 +31,6 @@
  * $Id$
  *
  */
-
-
 class CRM_Report_DAO_Instance extends CRM_Core_DAO
 {
   /**

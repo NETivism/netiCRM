@@ -31,8 +31,6 @@
  * $Id$
  *
  */
-
-
 class CRM_Contact_DAO_GroupContactCache extends CRM_Core_DAO
 {
   /**

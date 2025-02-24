@@ -31,8 +31,6 @@
  * $Id$
  *
  */
-
-
 class CRM_AI_DAO_AICompletion extends CRM_Core_DAO
 {
   /**

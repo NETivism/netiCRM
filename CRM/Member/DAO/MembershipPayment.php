@@ -31,8 +31,6 @@
  * $Id$
  *
  */
-
-
 class CRM_Member_DAO_MembershipPayment extends CRM_Core_DAO
 {
   /**

@@ -31,8 +31,6 @@
  * $Id$
  *
  */
-
-
 class CRM_ACL_DAO_EntityRole extends CRM_Core_DAO
 {
   /**

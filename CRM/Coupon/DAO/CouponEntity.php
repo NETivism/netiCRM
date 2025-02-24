@@ -31,8 +31,6 @@
  * $Id$
  *
  */
-
-
 class CRM_Coupon_DAO_CouponEntity extends CRM_Core_DAO
 {
   /**

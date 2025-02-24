@@ -31,11 +31,9 @@
  * $Id$
  *
  */
-
-
-
-
-
+require_once 'CRM/Core/DAO/County.php';
+require_once 'CRM/Core/DAO/StateProvince.php';
+require_once 'CRM/Core/DAO/Country.php';
 class CRM_Core_DAO_Address extends CRM_Core_DAO
 {
   /**

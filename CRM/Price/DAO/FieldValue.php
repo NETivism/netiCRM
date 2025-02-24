@@ -31,8 +31,6 @@
  * $Id$
  *
  */
-
-
 class CRM_Price_DAO_FieldValue extends CRM_Core_DAO
 {
   /**

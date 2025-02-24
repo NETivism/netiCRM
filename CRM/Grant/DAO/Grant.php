@@ -31,8 +31,6 @@
  * $Id$
  *
  */
-
-
 class CRM_Grant_DAO_Grant extends CRM_Core_DAO
 {
   /**

@@ -31,8 +31,6 @@
  * $Id$
  *
  */
-
-
 class CRM_Friend_DAO_Friend extends CRM_Core_DAO
 {
   /**

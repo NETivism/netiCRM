@@ -31,8 +31,6 @@
  * $Id$
  *
  */
-
-
 class CRM_Batch_DAO_EntityBatch extends CRM_Core_DAO
 {
   /**

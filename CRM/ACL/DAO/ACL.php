@@ -31,8 +31,6 @@
  * $Id$
  *
  */
-
-
 class CRM_ACL_DAO_ACL extends CRM_Core_DAO
 {
   /**

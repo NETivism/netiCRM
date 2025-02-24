@@ -31,8 +31,6 @@
  * $Id$
  *
  */
-
-
 class CRM_Mailing_Event_DAO_Subscribe extends CRM_Core_DAO
 {
   /**

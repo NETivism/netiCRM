@@ -31,8 +31,6 @@
  * $Id$
  *
  */
-
-
 class CRM_Core_DAO_Persistent extends CRM_Core_DAO
 {
   /**
