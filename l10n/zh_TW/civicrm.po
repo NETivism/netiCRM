@@ -11,6 +11,7 @@
 # jimyhuang <jimmy@netivism.com.tw>, 2013,2015-2024
 # Chang Shu-huai <junsuwhy@gmail.com>, 2015-2016
 # peggy chiu, 2024
+# Seal Shen, 2025
 # SharonKwan <sharon@netivism.com.tw>, 2015-2017
 # SIAOLING HUANG, 2024
 # charlesc <yeouhsin@gmail.com>, 2013-2014,2016,2020,2022
@@ -5263,20 +5264,20 @@ msgstr "會籍開始日期"
 #: CRM/Member/DAO/MembershipStatus.php CRM/Member/Form/MembershipStatus.php
 #: templates/CRM/Member/Page/MembershipStatus.tpl
 msgid "Start Event"
-msgstr "開始日期"
+msgstr "開始事件"
 
 #: CRM/Member/DAO/MembershipStatus.php CRM/Member/Form/MembershipStatus.php
 msgid "Start Event Adjust Interval"
-msgstr "開始日期調整間隔"
+msgstr "開始事件調整間隔"
 
 #: CRM/Member/DAO/MembershipStatus.php CRM/Member/Form/MembershipStatus.php
 #: templates/CRM/Member/Page/MembershipStatus.tpl
 msgid "End Event"
-msgstr "結束日期"
+msgstr "結束事件"
 
 #: CRM/Member/DAO/MembershipStatus.php CRM/Member/Form/MembershipStatus.php
 msgid "End Event Adjust Interval"
-msgstr "結束活動調整間隔"
+msgstr "結束事件調整間隔"
 
 #: CRM/Member/DAO/MembershipStatus.php CRM/Member/Form/MembershipStatus.php
 msgid "Current Membership?"
@@ -17492,11 +17493,11 @@ msgstr "基本會員編號"
 
 #: CRM/Member/DAO/MembershipStatus.php
 msgid "Start Event Adjust Unit"
-msgstr "開始日期調整單位"
+msgstr "開始事件調整單位"
 
 #: CRM/Member/DAO/MembershipStatus.php
 msgid "End Event Adjust Unit"
-msgstr "結束活動調整單位"
+msgstr "結束事件調整單位"
 
 #: CRM/Member/DAO/MembershipStatus.php
 msgid "Admin Assigned Only?"
@@ -17712,11 +17713,11 @@ msgstr "此會籍狀態名稱已存在。請設定不同的名稱。"
 
 #: CRM/Member/Form/MembershipStatus.php
 msgid "Start Event Adjustment"
-msgstr "開始日期調整"
+msgstr "開始事件調整"
 
 #: CRM/Member/Form/MembershipStatus.php
 msgid "End Event Adjustment"
-msgstr "結束時間調整"
+msgstr "結束事件調整"
 
 #: CRM/Member/Form/MembershipStatus.php
 msgid "Administrator Only?"
@@ -34068,7 +34069,7 @@ msgid ""
 "Optional adjustment period added or subtracted from the Start Event. "
 "EXAMPLE: <strong>Current</strong> status might begin at 'join date' PLUS 3 "
 "months (to distinguish Current from New members)."
-msgstr "可以選擇延長或提早開始日期？舉例來說：<strong>現有會員</strong>狀態可以設定為於原加入日期的三個月後（以區隔新會員和現有會員）。"
+msgstr "可以選擇延長或提早開始事件？舉例來說：<strong>現有會員</strong>狀態可以設定為於原加入日期的3個月後（以區隔新會員和現有會員）。"
 
 #: templates/CRM/Member/Form/MembershipStatus.tpl
 msgid ""
@@ -34080,7 +34081,7 @@ msgstr "此狀態何時結束？舉例來說：<strong>現在</strong>狀態會�
 msgid ""
 "Optional adjustment period added or subtracted from the End Event. EXAMPLE: "
 "<strong>Grace</strong> status might end at 'end date' PLUS 1 month."
-msgstr "可以選擇延長或提早結束日期？舉例來說：<strong>寬限期</strong>狀態可以設定為結束於原截止日期的一個月。"
+msgstr "可以選擇延長或提早結束事件？舉例來說：<strong>寬限期</strong>狀態可以設定為結束於原截止日期的 1 個月。"
 
 #: templates/CRM/Member/Form/MembershipStatus.tpl
 msgid ""
@@ -34097,7 +34098,7 @@ msgid ""
 "and End Event settings are ignored for Administrator statuses. EXAMPLE: This"
 " setting can be useful for special case statuses like 'Non-expiring', "
 "'Barred' or 'Expelled', etc."
-msgstr "如果此狀態只讓管理工作人員使用，請勾選此框。若勾選，系統不會自動指派此狀態。當新增或編輯會籍記錄，可勾選「<strong>是否覆蓋掉會員狀態？</strong>」，就可以將此狀態指派到聯絡人的會籍。此狀態的開始及結束活動設定會被忽略。例如：此設定可以被用於特別個案狀態如「非過期」、「禁止」或「開除」等。"
+msgstr "如果此狀態只讓管理工作人員使用，請勾選此框。若勾選，系統不會自動指派此狀態。當新增或編輯會籍記錄，可勾選「<strong>是否覆蓋掉會員狀態？</strong>」，就可以將此狀態指派到聯絡人的會籍。此狀態的開始及結束事件設定會被忽略。例如：此設定可以被用於特別個案狀態如「非過期」、「禁止」或「開除」等。"
 
 #: templates/CRM/Member/Form/MembershipStatus.tpl
 msgid ""
@@ -50240,3 +50241,33 @@ msgstr "執行失敗"
 #: templates/CRM/Mailing/Form/ForwardMailing.tpl
 msgid "Add Personal Message"
 msgstr "加入給朋友的訊息"
+
+#: CRM/Admin/Form/Setting/Receipt.php
+msgid "Donor Credit Name Options"
+msgstr "捐款徵信的名稱選項"
+
+#: CRM/Admin/Form/Setting/Receipt.php
+msgid "Partial Name"
+msgstr "部分名稱"
+
+#: CRM/Admin/Form/Setting/Receipt.php
+msgid "I don't agree to disclose name"
+msgstr "我不同意公開名稱"
+
+#: CRM/Admin/Form/Setting/Receipt.php
+msgid "Default name when donor doesn't agree to disclose"
+msgstr "選擇「我不同意公開名稱」時的預設名稱"
+
+#: templates/CRM/Admin/Form/Setting/Receipt.tpl
+msgid "Select which options to show to donors when they make contributions."
+msgstr "選擇捐款人進行捐款時可選用的徵信名稱選項。"
+
+#: templates/CRM/Admin/Form/Setting/Receipt.tpl
+msgid ""
+"This name will be used when donor selects \"I don't agree to disclose "
+"name\". Examples: \"Anonymous\", \"Kind-hearted Person\", etc."
+msgstr "可自訂一個預設名稱，如「善心人士」、「OO之友」等，若未設定，則預設名稱為「匿名」。"
+
+#: templates/CRM/Admin/Form/Setting/Receipt.tpl
+msgid "Please enter a default name for anonymous donors."
+msgstr "請輸入匿名捐款人的預設名稱。"
