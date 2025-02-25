@@ -33,11 +33,11 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
       ts('Full Name') => 'full_name',
       ts('Partial Name') => 'partial_name',
       ts('Custom Name') => 'custom_name',
-      ts('I don\'t agree to disclose name') => 'anonymous'
+      ts("I don't agree to disclose name") => 'anonymous'
     );
     $this->addCheckBox('customDonorCredit', ts('Donor Credit Name Options'), $donorCreditOptions);
 
-    $this->addElement('text', 'anonymousDonorCreditDefault', ts('Default name when donor doesn\'t agree to disclose'));
+    $this->addElement('text', 'anonymousDonorCreditDefault', ts("Default name when donor doesn't agree to disclose"));
 
     // refs #28471, switch to auto send receipt on email
     $haveAttachReceiptOption = CRM_Core_OptionGroup::getValue('activity_type', 'Email Receipt', 'name');
