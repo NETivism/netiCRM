@@ -28,6 +28,17 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
     $this->addElement('select', 'receiptSerial', ts('Field for receipt serial number'), $option);
     $this->addElement('select', 'receiptDonorCredit', ts('Field for the name used of donor acknowledgement'), $option);
 
+    // refs #42235, add customDonorCredit options
+    $donorCreditOptions = array(
+      ts('Full Name') => 'full_name',
+      ts('Partial Name') => 'partial_name',
+      ts('Custom Name') => 'custom_name',
+      ts('I don\'t agree to disclose name') => 'anonymous'
+    );
+    $this->addCheckBox('customDonorCredit', ts('Donor Credit Name Options'), $donorCreditOptions);
+
+    $this->addElement('text', 'anonymousDonorCreditDefault', ts('Default name when donor doesn\'t agree to disclose'));
+
     // refs #28471, switch to auto send receipt on email
     $haveAttachReceiptOption = CRM_Core_OptionGroup::getValue('activity_type', 'Email Receipt', 'name');
     if (!empty($haveAttachReceiptOption)) {
@@ -125,8 +136,12 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
       $error = true;
     }
 
-    if (empty($params['forbidCustomDonorCredit'])) {
-      $params['forbidCustomDonorCredit'] = FALSE;
+    if (empty($params['customDonorCredit'])) {
+      $params['customDonorCredit'] = array();
+    }
+
+    if (empty($params['customDonorCredit']['anonymous'])) {
+      $params['anonymousDonorCreditDefault'] = '';
     }
 
     // refs #28471, switch to auto send receipt on email

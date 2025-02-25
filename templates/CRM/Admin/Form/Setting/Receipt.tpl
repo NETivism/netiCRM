@@ -64,6 +64,46 @@
             <td class="label">{$form.receiptDonorCredit.label}</td><td>{$form.receiptDonorCredit.html}<br />
             <span class="description">{ts}When use custom field to record donor credit, use this to select the field.{/ts}</span></td>
         </tr>
+        <tr class="crm-form-block-customDonorCredit">
+            <td class="label">{$form.customDonorCredit.label}</td>
+            <td>{$form.customDonorCredit.html}<br />
+              <span class="description">{ts}Select which options to show to donors when they make contributions.{/ts}</span>
+            </td>
+        </tr>
+        <tr class="crm-form-block-anonymousDonorCreditDefault" id="anonymousDonorCreditDefault-tr">
+            <td class="label">{$form.anonymousDonorCreditDefault.label} <span class="crm-marker">*</span></td>
+            <td>{$form.anonymousDonorCreditDefault.html}<br />
+              <span class="description">{ts}This name will be used when donor selects "I don't agree to disclose name". Examples: "Anonymous", "Kind-hearted Person", etc.{/ts}</span>
+            </td>
+        </tr>
+        <script type="text/javascript">
+        {literal}
+          cj(function($){
+            function toggleAnonymousField() {
+              if ($('input[name="customDonorCredit[anonymous]"]').is(':checked')) {
+                $('#anonymousDonorCreditDefault-tr').show();
+                $('#anonymousDonorCreditDefault').addClass('required');
+              } else {
+                $('#anonymousDonorCreditDefault-tr').hide();
+                $('#anonymousDonorCreditDefault').removeClass('required');
+              }
+            }
+
+            toggleAnonymousField();
+            $('input[name="customDonorCredit[anonymous]"]').change(toggleAnonymousField);
+
+            $('form').submit(function() {
+              if ($('input[name="customDonorCredit[anonymous]"]').is(':checked') && 
+                  !$('#anonymousDonorCreditDefault').val()) {
+                alert("{/literal}{ts escape='js'}Please enter a default name for anonymous donors.{/ts}{literal}");
+                $('#anonymousDonorCreditDefault').focus();
+                return false;
+              }
+              return true;
+            });
+          });
+        {/literal}
+        </script>
         <tr class="crm-form-block-receiptAddrType">
             <td class="label">{$form.receiptAddrType.label}</td>
             <td>{$form.receiptAddrType.html}</td>
