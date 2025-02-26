@@ -419,7 +419,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
           }
           $args['PeriodReturnURL'] = $notify_url.'&is_recur=1';
         }
-        if(CRM_Utils_System::getUFLocale() == 'en'){
+        if(CRM_Utils_System::getUFLocale() == 'en_US'){
           $args['Language'] = 'ENG';
         }
         # Recurring
