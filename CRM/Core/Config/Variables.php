@@ -455,6 +455,13 @@ class CRM_Core_Config_Variables extends CRM_Core_Config_Defaults {
   public $webLogDir = 'log';
 
   /**
+   * Default donor name display options
+   *
+   * @var array
+   */
+  public $customDonorCredit = array('full_name', 'partial_name', 'custom_name');
+
+  /**
    * Provide addressSequence
    *
    * @param
