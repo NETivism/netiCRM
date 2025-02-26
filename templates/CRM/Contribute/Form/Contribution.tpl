@@ -123,9 +123,9 @@
         {if $contributionMode}
             {if $email and $outBound_option != 2}
                 <tr class="crm-contribution-form-block-is_email_receipt"><td class="label">{$form.is_email_receipt.label}</td><td>{$form.is_email_receipt.html}</td></tr>
-                <tr><td class="label">&nbsp;</td><td class="description">{ts 1=$email}Automatically email a payment notification for this contribution to %1?{/ts}</td></tr>
+                <tr><td class="label">&nbsp;</td><td class="description">{if $do_not_notify}<span class="font-red">{ts}Contact labelled as do not notification.{/ts}</span>{else}{ts 1=$email}Automatically email a payment notification for this contribution to %1?{/ts}{/if}</td></tr>
             {elseif $context eq 'standalone' and $outBound_option != 2 }
-                <tr id="email-receipt" style="display:none;" class="crm-contribution-form-block-is_email_receipt"><td class="label">{$form.is_email_receipt.label}</td><td>{$form.is_email_receipt.html} <span class="description">{ts}Automatically email a payment notification for this contribution to {/ts}<span id="email-address"></span>?</span></td></tr>
+                <tr id="email-receipt" style="display:none;" class="crm-contribution-form-block-is_email_receipt"><td class="label">{$form.is_email_receipt.label}</td><td>{$form.is_email_receipt.html} <span class="description">{if $do_not_notify}<span class="font-red">{ts}Contact labelled as do not notification.{/ts}</span>{else}{ts}Automatically email a payment notification for this contribution to {/ts}<span id="email-address"></span>?{/if}</span></td></tr>
             {/if}
             <tr id="from_email_address" class="crm-contribution-form-block-from_email_address">
                 <td class="label">{$form.from_email_address.label}</td>
@@ -174,12 +174,12 @@
                   {if $email and $outBound_option != 2}
                     <div class="crm-receipt-option crm-contribution-form-block-is_email_receipt">
                       <div class="label">{$form.is_email_receipt.label}</div>
-                      <div>{$form.is_email_receipt.html} <span class="description">{ts 1=$email}Automatically email a payment notification for this contribution to %1?{/ts}</span></div>
+                      <div>{$form.is_email_receipt.html} <span class="description">{if $do_not_notify}<span class="font-red">{ts}Contact labelled as do not notification.{/ts}</span>{else}{ts 1=$email}Automatically email a payment notification for this contribution to %1?{/ts}{/if}</span></div>
                     </div>
                   {elseif $context eq 'standalone' and $outBound_option != 2}
                     <div id="email-receipt" style="display:none;" class="crm-contribution-form-block-is_email_receipt">
                       <div class="label">{$form.is_email_receipt.label}</div>
-                      <div>{$form.is_email_receipt.html} <span class="description">{ts}Automatically email a payment notification for this contribution to {/ts}<span id="email-address"></span>?</span></div>
+                      <div>{$form.is_email_receipt.html} <span class="description">{if $do_not_notify}<span class="font-red">{ts}Contact labelled as do not notification.{/ts}</span>{else}{ts}Automatically email a payment notification for this contribution to {/ts}<span id="email-address"></span>?{/if}</span></div>
                     </div>
                   {/if}
                   <div id="from_email_address" class="crm-contribution-form-block-from_email_address">
@@ -341,7 +341,7 @@ function loadPanes( id ) {
         var contactID = cj("input[name='contact_select_id[1]']").val();
         if ( contactID ) {
             var postUrl = "{/literal}{crmURL p='civicrm/ajax/getemail' h=0}{literal}";
-            cj.post( postUrl, {contact_id: contactID},
+            cj.post( postUrl, {contact_id: contactID, check_can_notify: true},
                 function ( response ) {
                     if ( response ) {
                         cj("#email-receipt").show( );
