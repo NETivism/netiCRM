@@ -97,6 +97,21 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
     }
     $defaults['receiptDescription'] = htmlspecialchars_decode($defaults['receiptDescription']);
     $defaults['receiptOrgInfo'] = htmlspecialchars_decode($defaults['receiptOrgInfo']);
+
+    if (empty($defaults['customDonorCredit'])) {
+      $config = CRM_Core_Config::singleton();
+      $forbidCustomDonorCredit = !empty($config->forbidCustomDonorCredit) ? 1 : 0;
+
+      $defaults['customDonorCredit'] = array(
+        'full_name' => 1,
+        'partial_name' => 1
+      );
+
+      if ($forbidCustomDonorCredit == 0) {
+        $defaults['customDonorCredit']['custom_name'] = 1;
+      }
+    }
+
     return $defaults;
   }
 
