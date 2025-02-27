@@ -793,6 +793,22 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     $this->assign('receiptDonorCredit',$config->receiptDonorCredit);
     $this->assign('forbidCustomDonorCredit',$config->forbidCustomDonorCredit);
 
+    if (!empty($config->customDonorCredit['full_name'])) {
+      $this->assign('donor_full_name', $config->customDonorCredit['full_name']);
+    }
+    if (!empty($config->customDonorCredit['partial_name'])) {
+      $this->assign('donor_partial_name', $config->customDonorCredit['partial_name']);
+    }
+    if (!empty($config->customDonorCredit['custom_name'])) {
+      $this->assign('donor_custom_name', $config->customDonorCredit['custom_name']);
+    }
+    if (!empty($config->customDonorCredit['anonymous'])) {
+      $this->assign('donor_anonymous', $config->customDonorCredit['anonymous']);
+    }
+    if ($config->anonymousDonorCreditDefault) {
+      $this->assign('donor_anonymous_default', $config->anonymousDonorCreditDefault);
+    }
+
     if(!empty($this->_submitValues['same_as_post'])){
       $this->assign('same_as',$this->_submitValues['same_as_post']);
     }
