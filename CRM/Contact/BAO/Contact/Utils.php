@@ -235,6 +235,7 @@ UNION
   static function createCurrentEmployerRelationship($contactID, $organization) {
 
     $organizationId = NULL;
+    $organizationAddressee = 3;
 
     // if organization id is passed.
     if (is_numeric($organization)) {
@@ -265,6 +266,7 @@ UNION
         $newOrg = array(
           'contact_type' => 'Organization',
           'organization_name' => trim($orgName[0]),
+          'addressee_id' => $organizationAddressee,
         );
         $org = CRM_Contact_BAO_Contact::add($newOrg);
         $organizationId = $org->id;
