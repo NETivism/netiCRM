@@ -37,6 +37,11 @@ class CRM_Utils_REST {
   const RATE_LIMIT = 0.2;
 
   /**
+   * Response row limit per request
+   */
+  static $limitRows = 100;
+
+  /**
    * Number of seconds we should let a REST process idle
    * @static
    */
@@ -395,8 +400,11 @@ class CRM_Utils_REST {
       if (isset($options['limit']) && !CRM_Utils_Rule::integer($options['limit'])) {
         return self::error('limit in options should be integer.');
       }
-      if (isset($options['limit']) && $options['limit'] > 100) {
-        return self::error('limit in options can\'t not larger than 100.');
+      if (defined('CIVICRM_REST_LIMIT_ROWS') && CRM_Utils_Rule::positiveInteger(CIVICRM_REST_LIMIT_ROWS) && CIVICRM_REST_LIMIT_ROWS > self::$limitRows) {
+        self::$limitRows = CIVICRM_REST_LIMIT_ROWS;
+      }
+      if (isset($options['limit']) && $options['limit'] > self::$limitRows) {
+        return self::error('limit in options can\'t not larger than '.self::$limitRows.'.');
       }
       if (isset($options['offset']) && !CRM_Utils_Rule::integer($options['offset'])) {
         return self::error('offset in options should be integer.');
