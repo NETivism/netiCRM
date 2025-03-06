@@ -301,14 +301,19 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
     else if($action == 'upload') {
       // #28472, batch sending email pdf receipt
       $params = $this->controller->exportValues($this->_name);
-      foreach($this->_contributionIds as $idx => $contributionId) {
-        if (in_array($this->_contactIds[$idx], $this->_suppressedDoNotEmail)) {
-          unset($this->_contributionIds[$idx]);
-          unset($this->_componentIds[$idx]);
+      $dao = CRM_Core_DAO::executeQuery("SELECT id, contact_id FROM civicrm_contribution WHERE id IN(%1)", array(
+        1 => array(implode(',', $this->_contributionIds), 'CommaSeparatedIntegers'),
+      ));
+      $skipList = array();
+      while($dao->fetch()) {
+        if (in_array($dao->contact_id, $this->_suppressedDoNotEmail)) {
+          $skipList[$dao->id] = $dao->contact_id;
         }
       }
       foreach($this->_contributionIds as $contributionId) {
-        CRM_Contribute_BAO_Contribution::sendPDFReceipt($contributionId, $params['from_email'], $params['window_envelope'], $params['receipt_text']);
+        if (empty($skipList[$contributionId])) {
+          CRM_Contribute_BAO_Contribution::sendPDFReceipt($contributionId, $params['from_email'], $params['window_envelope'], $params['receipt_text']);
+        }
       }
     }
   }
