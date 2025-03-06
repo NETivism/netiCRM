@@ -117,6 +117,7 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
 
   // FROM : /CRM/Contribute/Form/ManagePremiums.php#L291-L321
   public function postProcess() {
+    $config = CRM_Core_Config::singleton();
     $params = $this->controller->exportValues($this->_name);
     $uploadBigStamp = CRM_Utils_Array::value('uploadBigStamp', $params);
     $uploadBigStamp = $uploadBigStamp['name'];
@@ -151,8 +152,19 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
       $error = true;
     }
 
-    if (empty($params['customDonorCredit'])) {
-      $params['customDonorCredit'] = array();
+    if (empty($params['customDonorCredit']) || count($params['customDonorCredit']) == 0) {
+      $forbidCustomDonorCredit = !empty($config->forbidCustomDonorCredit) ? 1 : 0;
+
+      $params['customDonorCredit'] = array(
+        'full_name' => 1,
+        'partial_name' => 1
+      );
+
+      if ($forbidCustomDonorCredit == 0) {
+        $params['customDonorCredit']['custom_name'] = 1;
+      }
+
+      CRM_Core_Session::setStatus(ts('All donor credit options were unchecked. Default options have been applied automatically.'));
     }
 
     if (empty($params['customDonorCredit']['anonymous'])) {
