@@ -376,7 +376,7 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
       $contactDetail = CRM_Contact_BAO_Contact::getContactDetails($contactID);
       if (isset($contactDeatil[5]) && !empty($contactDetail[5])) {
         CRM_Core_Error::debug_log_message("Skipped email notify {$sendTemplateParams['valueName']} for contact $contactID due to do_not_notify marked");
-        $message = ts('Email has NOT been sent to %1 contact(s) - communication preferences specify DO NOT NOTIFY OR valid Email is NOT present. ', array(1 => '1'));
+        $message = ts('Email has NOT been sent to %1 contact(s) - communication preferences specify DO NOT NOTIFY OR valid Email is NOT present.', array(1 => '1'));
         CRM_Core_Session::singleton()->setStatus($message);
         return;
       }

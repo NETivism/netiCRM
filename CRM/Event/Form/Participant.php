@@ -1665,6 +1665,10 @@ cj(function() {
         $this->_contributorDisplayName = $contactDetails[0];
         $this->_contributorEmail = $contactDetails[1];
         $this->_toDoNotNotify = $contactDetails[5];
+        if (!empty($this->_toDoNotNotify)) {
+          $notSent[] = $contactID;
+          continue;
+        }
 
         $this->_contributorDisplayName = ($this->_contributorDisplayName == ' ') ? $this->_contributorEmail : $this->_contributorDisplayName;
         $this->assign('contactID', $contactID);
@@ -1809,10 +1813,10 @@ cj(function() {
       else {
         $statusMsg = ts('Total Participant(s) added to event: %1.', array(1 => count($this->_contactIds)));
         if (count($notSent) > 0) {
-          $statusMsg .= ' ' . ts('Email has NOT been sent to %1 contact(s) - communication preferences specify DO NOT EMAIL OR valid Email is NOT present. ', array(1 => count($notSent)));
+          $statusMsg .= '<br>' . ts('Email has NOT been sent to %1 contact(s) - communication preferences specify DO NOT NOTIFY OR valid Email is NOT present.', array(1 => count($notSent)));
         }
         elseif (isset($params['send_receipt'])) {
-          $statusMsg .= ' ' . ts('A confirmation email has been scheduled to sent to ALL participants');
+          $statusMsg .= '<br>' . ts('A confirmation email has been scheduled to sent to ALL participants');
         }
       }
     }
