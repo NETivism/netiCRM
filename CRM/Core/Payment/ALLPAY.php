@@ -350,7 +350,9 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
     if ($hours < 24) {
       $hours = 24;
     }
-  
+    if(CRM_Utils_System::getUFLocale() == 'en_US'){
+      $args['Language'] = 'ENG';
+    }
     switch($instrument_code){
       case 'ATM':
         $args['ExpireDate'] = ceil($hours/24) > 60 ? 60 : ceil($hours/24);
@@ -426,9 +428,6 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
             $args['ExecTimes'] = empty($vars['installments']) ? 99 : $vars['installments']; // support endless
           }
           $args['PeriodReturnURL'] = $notify_url.'&is_recur=1';
-        }
-        if(CRM_Utils_System::getUFLocale() == 'en_US'){
-          $args['Language'] = 'ENG';
         }
         # Recurring
         break;
