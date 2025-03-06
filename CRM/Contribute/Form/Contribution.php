@@ -947,8 +947,8 @@ WHERE  contribution_id = {$this->_id}
       'onclick' => "showHideByValue('is_email_receipt',1,'from_email_address','block','radio',false);showHideByValue('is_email_receipt',1,'is_attach_receipt','block','radio',false);",
     ));
     if (!empty($this->_contactID)) {
-      $doNotNotify = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $this->_contactID, 'do_not_notify');
-      if (!empty($doNotNotify)) {
+      $contactDetail = CRM_Contact_BAO_Contact::getContactDetails($this->_contactID);
+      if (!empty($contactDetail[5])) {
         $receiptEle->freeze();
         $this->assign('do_not_notify', 1);
       }

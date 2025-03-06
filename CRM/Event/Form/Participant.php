@@ -66,7 +66,7 @@ class CRM_Event_Form_Participant extends CRM_Contact_Form_Task {
   public $_params;
   public $_contributorDisplayName;
   public $_contributorEmail;
-  public $_toDoNotEmail;
+  public $_toDoNotNotify;
   public $_fromEmails;
   public $_defaultValues;
   /**
@@ -1201,7 +1201,10 @@ cj(function() {
 
       // set email for primary location.
       $fields["email-Primary"] = 1;
-      list($this->_contributorDisplayName, $this->_contributorEmail, $this->_toDoNotEmail) = CRM_Contact_BAO_Contact::getContactDetails($this->_contactId);
+      $contactDetails = CRM_Contact_BAO_Contact::getContactDetails($this->_contactId);
+      $this->_contributorDisplayName = $contactDetails[0];
+      $this->_contributorEmail = $contactDetails[1];
+      $this->_toDoNotNotify = $contactDetails[5];
       $params["email-Primary"] = $params["email-{$this->_bltID}"] = $this->_contributorEmail;
 
       $params['register_date'] = $now;
@@ -1658,7 +1661,10 @@ cj(function() {
 
       foreach ($this->_contactIds as $num => $contactID) {
         // Retrieve the name and email of the contact - this will be the TO for receipt email
-        list($this->_contributorDisplayName, $this->_contributorEmail, $this->_toDoNotEmail) = CRM_Contact_BAO_Contact::getContactDetails($contactID);
+        $contactDetails = CRM_Contact_BAO_Contact::getContactDetails($contactID);
+        $this->_contributorDisplayName = $contactDetails[0];
+        $this->_contributorEmail = $contactDetails[1];
+        $this->_toDoNotNotify = $contactDetails[5];
 
         $this->_contributorDisplayName = ($this->_contributorDisplayName == ' ') ? $this->_contributorEmail : $this->_contributorDisplayName;
         $this->assign('contactID', $contactID);
