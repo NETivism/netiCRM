@@ -268,7 +268,7 @@
     <add>4.0</add>
   </field>
   <index>
-      <name>UI_is_hidden</name>
+      <name>index_is_hidden</name>
       <fieldName>is_hidden</fieldName>
       <add>4.0</add>
   </index>

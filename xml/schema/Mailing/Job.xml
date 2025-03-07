@@ -37,7 +37,7 @@
       <comment>date on which this job was started.</comment>
   </field>
   <index>
-      <name>UI_start_date</name>
+      <name>index_start_date</name>
       <fieldName>start_date</fieldName>
       <add>4.0</add>
   </index>
@@ -60,7 +60,7 @@
       <add>1.9</add>
   </field>
   <index>
-      <name>UI_is_test</name>
+      <name>index_is_test</name>
       <fieldName>is_test</fieldName>
       <add>4.0</add>
   </index>
@@ -71,6 +71,11 @@
       <comment>Type of mailling job: null | child </comment>
       <add>3.3</add>
   </field>
+  <index>
+      <name>index_job_type</name>
+      <fieldName>job_type</fieldName>
+      <add>4.0</add>
+  </index>
   <field>
       <name>parent_id</name>
       <type>int unsigned</type>
