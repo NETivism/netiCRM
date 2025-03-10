@@ -479,7 +479,8 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
       $this->getElement('receipt_date_time')->freeze();
     }
 
-    $this->addElement('checkbox', 'send_receipt', ts('Send Confirmation and Receipt?'), NULL, array('onclick' => "return showHideByValue('send_receipt','','notice','table-row','radio',false);"));
+    $sendReceiptEle = $this->addElement('checkbox', 'send_receipt', ts('Send Confirmation and Receipt?'), NULL, array('onclick' => "return showHideByValue('send_receipt','','notice','table-row','radio',false);"));
+
     $this->add('textarea', 'receipt_text_signup', ts('Receipt Message'));
     if ($this->_mode) {
 
@@ -497,6 +498,13 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
 
       $this->assign('emailExists', $this->_memberEmail);
       $this->assign('displayName', $this->_memberDisplayName);
+
+      // do_not_notify check
+      $contactDetail = CRM_Contact_BAO_Contact::getContactDetails($this->_contactID);
+      if (!empty($contactDetail[5])) {
+        $sendReceiptEle->freeze();
+        $this->assign('do_not_notify', TRUE);
+      }
     }
 
     $this->addFormRule(array('CRM_Member_Form_Membership', 'formRule'), $this);

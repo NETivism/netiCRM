@@ -156,12 +156,21 @@
                     {if $emailExists and $outBound_option != 2 }
                         <div class="crm-receipt-option crm-membership-form-block-send_receipt">
                             <div class="label">{$form.send_receipt.label}</div><div>{$form.send_receipt.html}
-                            <span class="description">{ts 1=$emailExists}Automatically email a membership confirmation and receipt to %1?{/ts}</span></div>
+                            {if $do_not_notify}
+                              <span class="font-red">{ts}Contact labelled as do not notification.{/ts}</span>
+                            {else}
+                              <span class="description">{ts 1=$emailExists}Automatically email a membership confirmation and receipt to %1?{/ts}</span></div>
+                            {/if}
                         </div>
                     {elseif $context eq 'standalone' and $outBound_option != 2 }
                         <div id="email-receipt" style="display:none;">
-                            <div class="label">{$form.send_receipt.label}</div><div>{$form.send_receipt.html}<br />
-                            <span class="description">{ts}Automatically email a membership confirmation and receipt to {/ts}<span id="email-address"></span>?</span></div>
+                          <div class="label">{$form.send_receipt.label}</div><div>{$form.send_receipt.html}<br />
+                            {if $do_not_notify}
+                              <span class="font-red">{ts}Contact labelled as do not notification.{/ts}</span>
+                            {else}
+                              <span class="description">{ts}Automatically email a membership confirmation and receipt to {/ts}<span id="email-address"></span>?</span>
+                            {/if}
+                          </div>
                         </div>
                     {/if}    
                         <div id='notice' style="display:none;">
