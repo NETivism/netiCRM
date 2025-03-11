@@ -281,8 +281,16 @@ class CRM_Friend_BAO_Friend extends CRM_Friend_DAO_Friend {
    * @access public
    */
   static function sendMail($contactID, &$values) {
-
-    list($fromName, $email) = CRM_Contact_BAO_Contact::getContactDetails($contactID);
+    // do_not_notify check
+    $detail = CRM_Contact_BAO_Contact::getContactDetails($contactID);
+    if (!empty($detail[5])) {
+      CRM_Core_Error::debug_log_message("Skipped email notify msg_tpl_workflow_friend-friend for contact $contactID due to do_not_notify marked");
+      $message = ts('Email has NOT been sent to %1 contact(s) - communication preferences specify DO NOT NOTIFY OR valid Email is NOT present.', array(1 => '1'));
+      CRM_Core_Session::singleton()->setStatus($message);
+      return;
+    }
+    $fromName = $detail[0];
+    $email = $detail[1];
     // if no $fromName (only email collected from originating contact) - list returns single space
     if (trim($fromName) == '') {
       $fromName = $email;
