@@ -64,7 +64,7 @@ class CRM_Contact_BAO_Contact extends CRM_Contact_DAO_Contact {
    *
    * @var array
    */
-  static $_commPrefs = array('do_not_phone', 'do_not_email', 'do_not_mail', 'do_not_sms', 'do_not_trade', 'is_opt_out');
+  static $_commPrefs = array('do_not_phone', 'do_not_email', 'do_not_mail', 'do_not_sms', 'do_not_trade', 'do_not_notify', 'is_opt_out');
 
   /**
    * types of greetings
@@ -1448,11 +1448,12 @@ WHERE  civicrm_contact.id = %1 ";
   }
 
   /**
-   * function to get the display name, primary email and location type of a contact
+   * function to get the sort name, primary email and should we email of a contact
    *
    * @param  int    $id id of the contact
    *
-   * @return array  of display_name, email if found, do_not_email or (null,null,null)
+   * @return array
+   *   sort_name, email, do_not_email(bool), on_hold(bool), deceased(bool), do_not_notify(bool)
    * @static
    * @access public
    */
@@ -1463,7 +1464,7 @@ WHERE  civicrm_contact.id = %1 ";
     $nameFields = ($contactType == 'Individual') ? "civicrm_contact.first_name, civicrm_contact.last_name, civicrm_contact.sort_name" : "civicrm_contact.sort_name";
 
     $sql = "
-SELECT $nameFields, civicrm_email.email, civicrm_contact.do_not_email, civicrm_email.on_hold, civicrm_contact.is_deceased
+SELECT $nameFields, civicrm_email.email, civicrm_contact.do_not_email, civicrm_contact.do_not_notify, civicrm_email.on_hold, civicrm_contact.is_deceased
 FROM   civicrm_contact LEFT JOIN civicrm_email ON (civicrm_contact.id = civicrm_email.contact_id)
 WHERE  civicrm_contact.id = %1
 ORDER BY civicrm_email.is_primary DESC";
@@ -1476,9 +1477,10 @@ ORDER BY civicrm_email.is_primary DESC";
       $doNotEmail = $dao->do_not_email ? TRUE : FALSE;
       $onHold = $dao->on_hold ? TRUE : FALSE;
       $isDeceased = $dao->is_deceased ? TRUE : FALSE;
-      return array($name, $email, $doNotEmail, $onHold, $isDeceased);
+      $doNotNotify = $dao->do_not_notify ? TRUE : FALSE;
+      return array($name, $email, $doNotEmail, $onHold, $isDeceased, $doNotNotify);
     }
-    return array(NULL, NULL, NULL, NULL, NULL);
+    return array(NULL, NULL, NULL, NULL, NULL, NULL);
   }
 
   /**

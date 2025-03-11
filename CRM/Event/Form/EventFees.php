@@ -611,7 +611,7 @@ SELECT  id, html_type
 
     $form->assign("paid", $form->_isPaidEvent);
 
-    $form->addElement('checkbox',
+    $sendReceiptEle = $form->addElement('checkbox',
       'send_receipt',
       ts('Send Confirmation?'), NULL,
       array('onclick' => "showHideByValue('send_receipt','','notice','table-row','radio',false); showHideByValue('send_receipt','','from-email','table-row','radio',false);")
@@ -628,6 +628,13 @@ SELECT  id, html_type
           $form->_contributorEmail
         ) = CRM_Contact_BAO_Contact_Location::getEmailDetails($form->_contactId);
         $form->assign('email', $form->_contributorEmail);
+
+        // do_not_notify check
+        $contactDetail = CRM_Contact_BAO_Contact::getContactDetails($form->_contactId);
+        if (!empty($contactDetail[5])) {
+          $sendReceiptEle->freeze();
+          $form->assign('do_not_notify', TRUE);
+        }
       }
       else {
         //show email block for batch update for event

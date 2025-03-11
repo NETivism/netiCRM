@@ -2693,11 +2693,19 @@ WHERE c.id = $id";
       if($sendMail){
         $sendParams['toName'] = $displayName;
         $sendParams['toEmail'] = $email;
+        // do_not_notify check
+        $detail = CRM_Contact_BAO_Contact::getContactDetails($contribution->contact_id);
+        if (!empty($detail[5])) {
+          CRM_Core_Error::debug_log_message("Skipped email notify contribution_invoice_notify for contact {$contribution->contact_id} due to do_not_notify marked");
+          $message = ts('Email has NOT been sent to %1 contact(s) - communication preferences specify DO NOT NOTIFY OR valid Email is NOT present.', array(1 => '1'));
+          CRM_Core_Session::singleton()->setStatus($message);
+          return;
+        }
       }
 
       $config = CRM_Core_Config::singleton();
       $tplParams = array(
-        'contact_id' => $contact_id,
+        'contact_id' => $contribution->contact_id,
         'contribution' => (array)$contribution,
         'message' => $message,
         'payment_info' => $paymentInfo,

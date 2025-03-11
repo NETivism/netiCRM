@@ -2343,6 +2343,13 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
       return;
     }
 
+    // do_not_notify check
+    $detail = CRM_Contact_BAO_Contact::getContactDetails($contactID);
+    if (!empty($detail[5])) {
+      CRM_Core_Error::debug_log_message("Skipped email notify uf_notify for contact {$contactID} due to do_not_notify marked");
+      return;
+    }
+
     $template = CRM_Core_Smarty::singleton();
 
     $displayName = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact',

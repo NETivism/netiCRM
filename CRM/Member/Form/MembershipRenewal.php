@@ -312,9 +312,19 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
       $this->getElement('receipt_date')->freeze();
       $this->getElement('receipt_date_time')->freeze();
     }
-    $this->addElement('checkbox', 'send_receipt', ts('Send Confirmation and Receipt?'), NULL,
+    $sendReceiptEle = $this->addElement('checkbox', 'send_receipt', ts('Send Confirmation and Receipt?'), NULL,
       array('onclick' => "return showHideByValue('send_receipt','','notice','table-row','radio',false);")
     );
+
+      // do_not_notify check
+    if (!empty($this->_contactID)) {
+      $contactDetail = CRM_Contact_BAO_Contact::getContactDetails($this->_contactID);
+      if (!empty($contactDetail[5])) {
+        $sendReceiptEle->freeze();
+        $this->assign('do_not_notify', TRUE);
+      }
+    }
+
     $this->add('textarea', 'receipt_text_renewal', ts('Renewal Message'));
 
     if ($this->_mode) {

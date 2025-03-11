@@ -47,9 +47,6 @@
   {if !empty($form.email_pdf_receipt.html)}
   <span class="description">{ts}Add receipt as attachment in email.{/ts}</span>
   {/if}
-  {if $emptyEmailList}
-  <span class="description">{$emptyEmailList}{ts}Doesn't have email. Would not generate receipt and send email.{/ts}</span>
-  {/if}
 </div>
 <table class="form-layout-compressed pdf-receipt-table" style="display:none;">
 <tr class="form-item">
@@ -67,6 +64,20 @@
   <td class="label"><label>{$form.receipt_text.label}</label></td>
   <td>{$form.receipt_text.html}</td>
 </tr>
+{if $suppressed_no_email}
+<tr class="form-item">
+  <td colspan="2">
+    <span class="font-red">{ts count=$suppressed_no_email plural='Email will NOT be sent to %count contacts - (no email address on file, or communication preferences specify DO NOT NOTIFY, or contact is deceased).'}Email will NOT be sent to %count contact - (no email address on file, or communication preferences specify DO NOT NOTIFY, or contact is deceased).{/ts}</span>
+    {if $empty_email_list}
+      <ul>
+      {foreach from=$empty_email_list item=sort_name}
+        <li><span class="font-red">{$sort_name}</span></li>
+      {/foreach}
+      </ul>
+    {/if}
+  </td>
+</tr>
+{/if}
 </table>
 
 <div id="dialog-confirm-download" title="{ts}Procceed Receipt Generation?{/ts}" style="display:none;">

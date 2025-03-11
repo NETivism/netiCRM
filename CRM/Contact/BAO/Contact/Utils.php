@@ -752,6 +752,15 @@ LEFT JOIN  civicrm_email ce ON ( ce.contact_id=c.id AND ce.is_primary = 1 )
           }
           $from[$value] = " LEFT JOIN civicrm_{$value} {$value} ON ( address.{$value}_id = {$value}.id  ) ";
           break;
+        case 'do_not_email':
+        case 'do_not_phone':
+        case 'do_not_mail':
+        case 'do_not_sms':
+        case 'do_not_trade':
+        case 'do_not_notify':
+        case 'is_opt_out':
+          $select[] = "$property as $property";
+          break;
       }
     }
 

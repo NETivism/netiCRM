@@ -97,30 +97,41 @@ class CRM_Contact_DAO_Contact extends CRM_Core_DAO
    */
   public $contact_sub_type;
   /**
+   * Contact who do not want to receive bulk email or personal email.
    *
    * @var boolean
    */
   public $do_not_email;
   /**
+   * Contact who do not want to receive real phone call.
    *
    * @var boolean
    */
   public $do_not_phone;
   /**
+   * Contact who do not want to receive real world mail.
    *
    * @var boolean
    */
   public $do_not_mail;
   /**
+   * Contact who do not want to receive SMS.
    *
    * @var boolean
    */
   public $do_not_sms;
   /**
+   * Contact who do not want doing trade.
    *
    * @var boolean
    */
   public $do_not_trade;
+  /**
+   * Contact who do not want to receive workflow related notification.
+   *
+   * @var boolean
+   */
+  public $do_not_notify;
   /**
    * Has the contact opted out from receiving all bulk email from the organization or site domain?
    *

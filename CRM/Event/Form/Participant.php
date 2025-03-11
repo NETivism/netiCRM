@@ -66,7 +66,7 @@ class CRM_Event_Form_Participant extends CRM_Contact_Form_Task {
   public $_params;
   public $_contributorDisplayName;
   public $_contributorEmail;
-  public $_toDoNotEmail;
+  public $_toDoNotNotify;
   public $_fromEmails;
   public $_defaultValues;
   /**
@@ -902,7 +902,15 @@ cj(function() {
       $checkCancelledJs
     );
 
-    $this->addElement('checkbox', 'is_notify', ts('Send Notification'), NULL);
+    $isNotifyEle = $this->addElement('checkbox', 'is_notify', ts('Send Notification'), NULL);
+    if (!empty($this->_contactId)) {
+      // do_not_notify check
+      $contactDetail = CRM_Contact_BAO_Contact::getContactDetails($this->_contactId);
+      if (!empty($contactDetail[5])) {
+        $isNotifyEle->freeze();
+        $this->assign('do_not_notify', TRUE);
+      }
+    }
 
     $this->add('text', 'source', ts('Event Source'));
 
@@ -1201,7 +1209,10 @@ cj(function() {
 
       // set email for primary location.
       $fields["email-Primary"] = 1;
-      list($this->_contributorDisplayName, $this->_contributorEmail, $this->_toDoNotEmail) = CRM_Contact_BAO_Contact::getContactDetails($this->_contactId);
+      $contactDetails = CRM_Contact_BAO_Contact::getContactDetails($this->_contactId);
+      $this->_contributorDisplayName = $contactDetails[0];
+      $this->_contributorEmail = $contactDetails[1];
+      $this->_toDoNotNotify = $contactDetails[5];
       $params["email-Primary"] = $params["email-{$this->_bltID}"] = $this->_contributorEmail;
 
       $params['register_date'] = $now;
@@ -1658,7 +1669,14 @@ cj(function() {
 
       foreach ($this->_contactIds as $num => $contactID) {
         // Retrieve the name and email of the contact - this will be the TO for receipt email
-        list($this->_contributorDisplayName, $this->_contributorEmail, $this->_toDoNotEmail) = CRM_Contact_BAO_Contact::getContactDetails($contactID);
+        $contactDetails = CRM_Contact_BAO_Contact::getContactDetails($contactID);
+        $this->_contributorDisplayName = $contactDetails[0];
+        $this->_contributorEmail = $contactDetails[1];
+        $this->_toDoNotNotify = $contactDetails[5];
+        if (!empty($this->_toDoNotNotify)) {
+          $notSent[] = $contactID;
+          continue;
+        }
 
         $this->_contributorDisplayName = ($this->_contributorDisplayName == ' ') ? $this->_contributorEmail : $this->_contributorDisplayName;
         $this->assign('contactID', $contactID);
@@ -1803,10 +1821,10 @@ cj(function() {
       else {
         $statusMsg = ts('Total Participant(s) added to event: %1.', array(1 => count($this->_contactIds)));
         if (count($notSent) > 0) {
-          $statusMsg .= ' ' . ts('Email has NOT been sent to %1 contact(s) - communication preferences specify DO NOT EMAIL OR valid Email is NOT present. ', array(1 => count($notSent)));
+          $statusMsg .= '<br>' . ts('Email has NOT been sent to %1 contact(s) - communication preferences specify DO NOT NOTIFY OR valid Email is NOT present.', array(1 => count($notSent)));
         }
         elseif (isset($params['send_receipt'])) {
-          $statusMsg .= ' ' . ts('A confirmation email has been scheduled to sent to ALL participants');
+          $statusMsg .= '<br>' . ts('A confirmation email has been scheduled to sent to ALL participants');
         }
       }
     }

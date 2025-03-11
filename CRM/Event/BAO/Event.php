@@ -1197,6 +1197,14 @@ WHERE civicrm_event.is_active = 1
           );
         }
         else {
+          // do_not_notify check
+          $contactDetail = CRM_Contact_BAO_Contact::getContactDetails($contactID);
+          if (!empty($contactDetail[5])) {
+            CRM_Core_Error::debug_log_message("Skipped email notify {$sendTemplateParams['valueName']} for contact $contactID due to do_not_notify marked");
+            $message = ts('Email has NOT been sent to %1 contact(s) - communication preferences specify DO NOT NOTIFY OR valid Email is NOT present.', array(1 => '1'));
+            CRM_Core_Session::singleton()->setStatus($message);
+            return;
+          }
           $sendTemplateParams['from'] = "{$values['event']['confirm_from_name']} <{$values['event']['confirm_from_email']}>";
           $sendTemplateParams['toName'] = $displayName;
           $sendTemplateParams['toEmail'] = $email;

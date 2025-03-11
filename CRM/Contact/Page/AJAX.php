@@ -663,10 +663,17 @@ WHERE sort_name LIKE '%$name%'";
       CRM_Utils_System::civiExit();
     }
     $contactID = CRM_Utils_Request::retrieve('contact_id', 'Positive', CRM_Core_DAO::$_nullObject, FALSE, NULL, 'POST');
+    $checkCanNotify = CRM_Utils_Request::retrieve('check_can_notify', 'Boolean', CRM_Core_DAO::$_nullObject, FALSE, NULL, 'POST');
     if (!empty($contactID)) {
       list($displayName, $userEmail) = CRM_Contact_BAO_Contact_Location::getEmailDetails($contactID);
+      $doNotNotify = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $contactID, 'do_not_notify');
       if ($userEmail) {
-        echo $userEmail;
+        if ($checkCanNotify && $doNotNotify) {
+           // do not notify
+        }
+        else {
+          echo $userEmail;
+        }
       }
     }
     else {

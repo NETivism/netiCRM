@@ -57,10 +57,11 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
    */
   public $_lastSerialId = '';
 
-
   protected $_tmpreceipt;
 
   protected $_rows;
+
+  private $_suppressedDoNotEmail = array();
 
   /**
    * build all the data structures needed to build the form
@@ -125,28 +126,40 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
 
     $activityTypeId = CRM_Core_OptionGroup::getValue('activity_type', 'Email Receipt', 'name');
     if (!empty($activityTypeId)) {
-
       $this->_enableEmailReceipt = TRUE;
       CRM_Utils_System::setTitle(ts('Print or Email Contribution Receipts'));
     }
-    // Check contact email
-    $emailIsEmpty = FALSE;
-    $contactId = intval($this->_contactIds);
-    $emptyEmail = array();
+
+    $queryParams = array();
+    $returnProperties = array(
+      'sort_name' => 1,
+      'do_not_notify' => 1,
+      'is_deceased' => 1,
+      'email' => 1,
+    );
     foreach ($this->_contactIds as $contactId) {
-      $contributorDisplayName = CRM_Contact_BAO_Contact_Location::getEmailDetails($contactId);
-      $result = CRM_Core_BAO_Email::allEmails($contactId);
-      $array = array_values($result);
-      $email = $array[0]['email'];
-      if (empty($email)) {
-        $emailIsEmpty = TRUE;
-        array_push($emptyEmail,$contributorDisplayName[0]);
+      $queryParams[] = array(
+        CRM_Core_Form::CB_PREFIX . $contactId, '=', 0, 0, 0,
+      );
+    }
+    $numberofContacts = count($this->_contactIds);
+    $emptyEmail = array();
+    $details = CRM_Contact_BAO_Query::apiQuery($queryParams, $returnProperties, NULL, NULL, 0, $numberofContacts, TRUE, TRUE);
+
+    if (!empty($details[0])) {
+      foreach ($details[0] as $contactDetail) {
+        if (!empty($contactDetail['is_deceased']) || !empty($contactDetail['do_not_notify']) || empty($contactDetail['email'])) {
+          $this->_suppressedDoNotEmail[] = $contactDetail['contact_id'];
+          $contributorDisplayName = CRM_Contact_BAO_Contact_Location::getEmailDetails($contactDetail['contact_id']);
+          $emptyEmail[] = $contributorDisplayName[0];
+        }
       }
     }
-    $emptyEmailList = CRM_Utils_Array::implode(",", $emptyEmail);
+
     $actionName = $this->controller->getActionName($this->_name);
-    if ($emailIsEmpty && $actionName[1] == 'display') {
-      $this->assign('emptyEmailList', $emptyEmailList);
+    if ($actionName[1] == 'display' && count($emptyEmail)) {
+      $this->assign('empty_email_list', $emptyEmail);
+      $this->assign('suppressed_no_email', count($this->_suppressedDoNotEmail));
     }
   }
 
@@ -288,8 +301,19 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
     else if($action == 'upload') {
       // #28472, batch sending email pdf receipt
       $params = $this->controller->exportValues($this->_name);
+      $dao = CRM_Core_DAO::executeQuery("SELECT id, contact_id FROM civicrm_contribution WHERE id IN(%1)", array(
+        1 => array(implode(',', $this->_contributionIds), 'CommaSeparatedIntegers'),
+      ));
+      $skipList = array();
+      while($dao->fetch()) {
+        if (in_array($dao->contact_id, $this->_suppressedDoNotEmail)) {
+          $skipList[$dao->id] = $dao->contact_id;
+        }
+      }
       foreach($this->_contributionIds as $contributionId) {
-        CRM_Contribute_BAO_Contribution::sendPDFReceipt($contributionId, $params['from_email'], $params['window_envelope'], $params['receipt_text']);
+        if (empty($skipList[$contributionId])) {
+          CRM_Contribute_BAO_Contribution::sendPDFReceipt($contributionId, $params['from_email'], $params['window_envelope'], $params['receipt_text']);
+        }
       }
     }
   }

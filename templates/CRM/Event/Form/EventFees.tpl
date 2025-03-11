@@ -138,7 +138,12 @@
 		 <tr class="crm-event-eventfees-form-block-send_receipt"> 
             <td class="label">{ts}Send Confirmation{/ts}</td>
             <td>{$form.send_receipt.html}<br>
-                <span class="description">{ts 1=$email}Automatically email a confirmation to %1?{/ts}</span></td>
+              {if $do_not_notify}
+                <span class="font-red">{ts}Contact labelled as do not notification.{/ts}</span>
+              {else}
+                <span class="description">{ts 1=$email}Automatically email a confirmation to %1?{/ts}</span>
+              {/if}
+            </td
         </tr>
 	<tr id="from-email" class="crm-event-eventfees-form-block-from_email_address">
             <td class="label">{$form.from_email_address.label}</td>
