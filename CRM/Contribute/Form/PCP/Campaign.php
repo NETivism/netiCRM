@@ -387,16 +387,26 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
         $to = trim($emailArray[0]);
         unset($emailArray[0]);
         $cc = CRM_Utils_Array::implode(',', $emailArray);
-        list($sent, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate(
-          array(
-            'groupName' => 'msg_tpl_workflow_contribution',
-            'valueName' => 'pcp_notify',
-            'contactId' => $contactID,
-            'from' => CRM_Utils_Mail::formatRFC822Email($domainEmailName, $domainEmailAddress),
-            'toEmail' => $to,
-            'cc' => $cc,
-          )
-        );
+
+        // do_not_notify check
+        $detail = CRM_Contact_BAO_Contact::getContactDetails($contactID);
+        if (!empty($detail[5])) {
+          CRM_Core_Error::debug_log_message("Skipped email notify pcp_notify for contact {$contactID} due to do_not_notify marked");
+          $message = ts('Email has NOT been sent to %1 contact(s) - communication preferences specify DO NOT NOTIFY OR valid Email is NOT present.', array(1 => '1'));
+          CRM_Core_Session::singleton()->setStatus($message);
+        }
+        else {
+          list($sent, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate(
+            array(
+              'groupName' => 'msg_tpl_workflow_contribution',
+              'valueName' => 'pcp_notify',
+              'contactId' => $contactID,
+              'from' => CRM_Utils_Mail::formatRFC822Email($domainEmailName, $domainEmailAddress),
+              'toEmail' => $to,
+              'cc' => $cc,
+            )
+          );
+        }
       }
     }
 

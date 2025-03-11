@@ -440,6 +440,7 @@ WHERE pcp.id = %1 AND cc.contribution_status_id =1 AND cc.is_test = 0";
    *
    */
   static function sendStatusUpdate($pcpId, $newStatus, $isInitial = FALSE) {
+    $tplName = $isInitial ? 'pcp_supporter_notify' : 'pcp_status_change';
     $pcpStatus = CRM_Contribute_PseudoConstant::pcpStatus('name');
     $pcpStatusLabel = CRM_Contribute_PseudoConstant::pcpStatus();
     $config = CRM_Core_Config::singleton();
@@ -480,6 +481,15 @@ WHERE pcp.id = %1 AND cc.contribution_status_id =1 AND cc.is_test = 0";
     // get recipient (supporter) name and email
     $params = array('id' => $pcpId);
     CRM_Core_DAO::commonRetrieve('CRM_Contribute_DAO_PCP', $params, $pcpInfo);
+
+    // do_not_notify check
+    $detail = CRM_Contact_BAO_Contact::getContactDetails($pcpInfo['contact_id']);
+    if (!empty($detail[5])) {
+      CRM_Core_Error::debug_log_message("Skipped email notify {$tplName} for contact {$pcpInfo['contact_id']} due to do_not_notify marked");
+      $message = ts('Email has NOT been sent to %1 contact(s) - communication preferences specify DO NOT NOTIFY OR valid Email is NOT present.', array(1 => '1'));
+      CRM_Core_Session::singleton()->setStatus($message);
+      return;
+    }
     list($name, $address) = CRM_Contact_BAO_Contact_Location::getEmailDetails($pcpInfo['contact_id']);
 
     // get pcp block info
@@ -513,8 +523,6 @@ WHERE pcp.id = %1 AND cc.contribution_status_id =1 AND cc.is_test = 0";
     $tplParams['pcpStatus'] = $pcpStatus[$newStatus];
     $tplParams['pcpStatusLabel'] = $pcpStatusLabel[$newStatus];
     $tplParams['pcpTitle'] = $pcpInfo['title'];
-
-    $tplName = $isInitial ? 'pcp_supporter_notify' : 'pcp_status_change';
 
 
     list($sent, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate(
