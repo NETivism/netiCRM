@@ -91,7 +91,7 @@ class CRM_Event_Form_Task_Batch extends CRM_Event_Form_Task {
       'participant_id' => ts('Participant ID'),
     );
     // get the read only field data.
-    $returnProperties = array('sort_name' => 1);
+    $returnProperties = array('sort_name' => 1, 'do_not_notify' => 1);
     $contactDetails = CRM_Contact_BAO_Contact_Utils::contactDetails($this->_participantIds, 'CiviEvent', $returnProperties);
     $participantDAO = new CRM_Event_DAO_Participant();
     $participantDAO->whereAdd("id IN (".CRM_Utils_Array::implode(',', $this->_participantIds).")");
@@ -103,6 +103,14 @@ class CRM_Event_Form_Task_Batch extends CRM_Event_Form_Task {
     }
     $this->assign('contactDetails', $contactDetails);
     $this->assign('readOnlyFields', $readOnlyFields);
+
+    $suppressEmail = array();
+    foreach($contactDetails as $detail) {
+      if (!empty($detail['do_not_notify'])) {
+        $suppressEmail[] = $detail['contact_id'];
+      }
+    }
+    $this->assign('suppress_email_count', count($suppressEmail));
   }
 
   /**
@@ -143,6 +151,15 @@ class CRM_Event_Form_Task_Batch extends CRM_Event_Form_Task {
         $this->_fields[$name]['attributes']['size'] = 19;
       }
     }
+
+    // assign will notify status to batch front end
+    $participantStatuses = CRM_Event_PseudoConstant::participantStatus();
+    $notifyStatus = array();
+    $notifyStatus[] = array_search('Cancelled', $participantStatuses);
+    $notifyStatus[] = array_search('Pending from waitlist', $participantStatuses);
+    $notifyStatus[] = array_search('Pending from approval', $participantStatuses);
+    $notifyStatus[] = array_search('Expired', $participantStatuses);
+    $this->assign('notify_status', implode(',', $notifyStatus));
 
     $this->_fields = array_slice($this->_fields, 0, $this->_maxFields);
 

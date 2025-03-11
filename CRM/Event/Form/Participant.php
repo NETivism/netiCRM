@@ -902,7 +902,15 @@ cj(function() {
       $checkCancelledJs
     );
 
-    $this->addElement('checkbox', 'is_notify', ts('Send Notification'), NULL);
+    $isNotifyEle = $this->addElement('checkbox', 'is_notify', ts('Send Notification'), NULL);
+    if (!empty($this->_contactId)) {
+      // do_not_notify check
+      $contactDetail = CRM_Contact_BAO_Contact::getContactDetails($this->_contactId);
+      if (!empty($contactDetail[5])) {
+        $isNotifyEle->freeze();
+        $this->assign('do_not_notify', TRUE);
+      }
+    }
 
     $this->add('text', 'source', ts('Event Source'));
 
