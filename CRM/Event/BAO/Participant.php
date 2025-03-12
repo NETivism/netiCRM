@@ -1521,7 +1521,7 @@ UPDATE  civicrm_participant
 
       // do_not_notify check
       $contactDetail = CRM_Contact_BAO_Contact::getContactDetails($participantValues['contact_id']);
-      if (isset($contactDeatil[5]) && !empty($contactDetail[5])) {
+      if (isset($contactDetail[5]) && !empty($contactDetail[5])) {
         $mtype = strtolower($mailType);
         CRM_Core_Error::debug_log_message("Skipped email notify participant_{$mtype} for contact {$participantValues['contact_id']} due to do_not_notify marked");
         $message = ts('Email has NOT been sent to %1 contact(s) - communication preferences specify DO NOT NOTIFY OR valid Email is NOT present.', array(1 => '1'));
