@@ -136,6 +136,9 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page {
     require_once 'CRM/Contribute/BAO/ContributionRecur.php';
     require_once 'CRM/Core/BAO/PaymentProcessor.php';
 
+    // Check permission have "edit contributions"
+    $this->assign('editContributionPermission', CRM_Core_Permission::check('edit contributions'));
+
     // add annual contribution
     $annual = array();
     list($annual['count'],

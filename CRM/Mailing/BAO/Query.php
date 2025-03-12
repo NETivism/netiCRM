@@ -284,17 +284,29 @@ class CRM_Mailing_BAO_Query {
         $query->_tables['civicrm_mailing_recipients'] = $query->_whereTables['civicrm_mailing_recipients'] = 1;
         return;
 
-      case 'mailing_date':
       case 'mailing_date_low':
       case 'mailing_date_high':
-        // process to / from date
-        $query->_tables['civicrm_mailing'] = $query->_whereTables['civicrm_mailing'] = 1;
-        $query->_tables['civicrm_mailing_event_queue'] = $query->_whereTables['civicrm_mailing_event_queue'] = 1;
-        $query->_tables['civicrm_mailing_job'] = $query->_whereTables['civicrm_mailing_job'] = 1;
-        $query->_tables['civicrm_mailing_recipients'] = $query->_whereTables['civicrm_mailing_recipients'] = 1;
-        $query->dateQueryBuilder($values,
-          'civicrm_mailing_job', 'mailing_date', 'start_date', ts('Date of delivery')
-        );
+        $subWhere = array();
+        foreach($query->_params as $param) {
+          $value = $param[2];
+          if ($param[0] == 'mailing_date_low') {
+            $date = CRM_Utils_Date::processDate($value.' 00:00:00');
+            $dateFormat = CRM_Utils_Date::customFormat($date);
+            $subWhere[] = "cmj.start_date >= '{$date}'";
+            $query->_qill[$grouping][$param[0]] = ts('Date of delivery') . " - " . ts('greater than or equal to \'%1\'' ,array(1 => "$dateFormat"));
+          }
+          if ($param[0] == 'mailing_date_high') {
+            $date = CRM_Utils_Date::processDate($value.' 23:59:59');
+            $dateFormat = CRM_Utils_Date::customFormat($date);
+            $subWhere[] = "cmj.start_date <= '{$date}'";
+            $query->_qill[$grouping][$param[0]] = ts('Date of delivery') . " - " . ts('less than or equal to \'%1\'' ,array(1 => "$dateFormat"));
+          }
+        }
+        if (!empty($subWhere)) {
+          $subQuery = "SELECT cmj.mailing_id FROM civicrm_mailing_job as cmj WHERE cmj.is_test != 1 AND cmj.parent_id IS NULL AND ".implode(' AND ', $subWhere)." GROUP BY mailing_id";
+          $query->_where[$grouping]['mailing_date'] = "civicrm_mailing_recipients.mailing_id IN ($subQuery)";
+          $query->_tables['civicrm_mailing_recipients'] = $query->_whereTables['civicrm_mailing_recipients'] = 1;
+        }
         return;
 
       case 'mailing_delivery_status':
@@ -398,14 +410,12 @@ class CRM_Mailing_BAO_Query {
 
       case 'mailing_job_status':
         if (!empty($value)) {
-          if ($value != 'Scheduled' && $value != 'Canceled') {
-            $query->_tables['civicrm_mailing_event_queue'] = $query->_whereTables['civicrm_mailing_event_queue'] = 1;
-          }
-          $query->_tables['civicrm_mailing'] = $query->_whereTables['civicrm_mailing'] = 1;
-          $query->_tables['civicrm_mailing_job'] = $query->_whereTables['civicrm_mailing_job'] = 1;
+          $subWhere = array();
+          $subWhere[] = "cmj.status = '{$value}'";
+          $subQuery = "SELECT cmj.mailing_id FROM civicrm_mailing_job as cmj WHERE cmj.is_test != 1 AND cmj.parent_id IS NULL AND ".implode(' AND ', $subWhere)." GROUP BY mailing_id";
+          $query->_where[$grouping]['mailing_job_status'] = "civicrm_mailing_recipients.mailing_id IN ($subQuery)";
           $query->_tables['civicrm_mailing_recipients'] = $query->_whereTables['civicrm_mailing_recipients'] = 1;
 
-          $query->_where[$grouping][] = " civicrm_mailing_job.status = '{$value}' ";
           $query->_qill[$grouping][] = ts("Mailing Status")." - ".ts($value);
         }
         return;
