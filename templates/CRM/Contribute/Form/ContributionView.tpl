@@ -205,8 +205,8 @@
       </td>
   </tr>
   {/if}
-
-	{if $payment_instrument eq 'Check'}
+  {$payment_instrument}
+	{if $payment_instrument_id eq '4'} // If payment_instrument is check
         <tr>
             <td class="label">{ts}Check Number{/ts}</td>
             <td>{$check_number}</td>
