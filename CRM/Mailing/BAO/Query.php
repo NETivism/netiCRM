@@ -55,16 +55,9 @@ class CRM_Mailing_BAO_Query {
    * @param $query
    */
   public static function select(&$query) {
-    // if Mailing mode add mailing id
     if ($query->_mode & CRM_Contact_BAO_Query::MODE_MAILING) {
       $query->_select['mailing_id'] = "civicrm_mailing.id as mailing_id";
       $query->_element['mailing_id'] = 1;
-
-      // base table is contact, so join recipients to it
-      $query->_tables['civicrm_mailing_recipients'] = $query->_whereTables['civicrm_mailing_recipients']
-        = " INNER JOIN civicrm_mailing_recipients ON civicrm_mailing_recipients.contact_id = contact_a.id ";
-
-      $query->_tables['civicrm_mailing'] = $query->_whereTables['civicrm_mailing'] = 1;
 
       // get mailing name
       if (!empty($query->_returnProperties['mailing_name'])) {
@@ -80,27 +73,25 @@ class CRM_Mailing_BAO_Query {
 
       // get mailing status
       if (!empty($query->_returnProperties['mailing_job_status'])) {
-        $query->_tables['civicrm_mailing_job'] = $query->_whereTables['civicrm_mailing_job']
-          = " LEFT JOIN civicrm_mailing_job ON civicrm_mailing_job.mailing_id = civicrm_mailing.id AND civicrm_mailing_job.parent_id IS NULL AND civicrm_mailing_job.is_test != 1 ";
         $query->_select['mailing_job_status'] = "civicrm_mailing_job.status as mailing_job_status";
         $query->_element['mailing_job_status'] = 1;
       }
 
-      // get email on hold
+      // get email on hold - only include if needed
       if (!empty($query->_returnProperties['email_on_hold'])) {
         $query->_select['email_on_hold'] = "recipient_email.on_hold as email_on_hold";
         $query->_element['email_on_hold'] = 1;
         $query->_tables['recipient_email'] = $query->_whereTables['recipient_email'] = 1;
       }
 
-      // get recipient email
+      // get recipient email - only include if needed
       if (!empty($query->_returnProperties['email'])) {
         $query->_select['email'] = "recipient_email.email as email";
         $query->_element['email'] = 1;
         $query->_tables['recipient_email'] = $query->_whereTables['recipient_email'] = 1;
       }
 
-      // get user opt out
+      // get user opt out - direct from contact table
       if (!empty($query->_returnProperties['contact_opt_out'])) {
         $query->_select['contact_opt_out'] = "contact_a.is_opt_out as contact_opt_out";
         $query->_element['contact_opt_out'] = 1;
@@ -108,22 +99,21 @@ class CRM_Mailing_BAO_Query {
 
       // mailing job end date / completed date
       if (!empty($query->_returnProperties['mailing_job_end_date'])) {
-        $query->_tables['civicrm_mailing_job'] = $query->_whereTables['civicrm_mailing_job']
-          = " LEFT JOIN civicrm_mailing_job ON civicrm_mailing_job.mailing_id = civicrm_mailing.id AND civicrm_mailing_job.parent_id IS NULL AND civicrm_mailing_job.is_test != 1 ";
         $query->_select['mailing_job_end_date'] = "civicrm_mailing_job.end_date as mailing_job_end_date";
         $query->_element['mailing_job_end_date'] = 1;
       }
 
+      // Only add mailing recipients ID if specifically requested
       if (!empty($query->_returnProperties['mailing_recipients_id'])) {
         $query->_select['mailing_recipients_id'] = " civicrm_mailing_recipients.id as mailing_recipients_id";
         $query->_element['mailing_recipients_id'] = 1;
       }
-    }
 
-    if (CRM_Utils_Array::value('mailing_campaign_id', $query->_returnProperties)) {
-      $query->_select['mailing_campaign_id'] = 'civicrm_mailing.campaign_id as mailing_campaign_id';
-      $query->_element['mailing_campaign_id'] = 1;
-      $query->_tables['civicrm_campaign'] = 1;
+      if (CRM_Utils_Array::value('mailing_campaign_id', $query->_returnProperties)) {
+        $query->_select['mailing_campaign_id'] = 'civicrm_mailing.campaign_id as mailing_campaign_id';
+        $query->_element['mailing_campaign_id'] = 1;
+        $query->_tables['civicrm_campaign'] = 1;
+      }
     }
   }
 
@@ -143,7 +133,6 @@ class CRM_Mailing_BAO_Query {
         }
         $grouping = $query->_params[$id][3];
         self::whereClauseSingle($query->_params[$id], $query);
-
         if (!$excluded) {
           // refs #33948, restrict hidden mailing report
           $query->_tables['civicrm_mailing'] = $query->_whereTables['civicrm_mailing'] = 1;
@@ -175,18 +164,17 @@ class CRM_Mailing_BAO_Query {
         break;
 
       case 'civicrm_mailing_event_queue':
-        // this is tightly binded so as to do a check WRT actual job recipients ('child' type jobs)
-        $from = " INNER JOIN civicrm_mailing_event_queue ON
-          civicrm_mailing_event_queue.contact_id = civicrm_mailing_recipients.contact_id
-          AND civicrm_mailing_event_queue.job_id = civicrm_mailing_job.id AND civicrm_mailing_job.job_type = 'child'";
+        // Add a direct join to contact rather than going through recipients when possible
+        $from = " INNER JOIN civicrm_mailing_event_queue ON civicrm_mailing_event_queue.contact_id = contact_a.id";
         break;
 
       case 'civicrm_mailing':
-        $from = " $side JOIN civicrm_mailing ON civicrm_mailing.id = civicrm_mailing_recipients.mailing_id ";
+        // Optimize the join by directly connecting to mailing job when possible
+        $from = " $side JOIN civicrm_mailing ON civicrm_mailing.id = civicrm_mailing_job.mailing_id AND civicrm_mailing.is_hidden = 0";
         break;
 
       case 'civicrm_mailing_job':
-        $from = " $side JOIN civicrm_mailing_job ON civicrm_mailing_job.mailing_id = civicrm_mailing.id AND civicrm_mailing_job.is_test != 1 ";
+        $from = " $side JOIN civicrm_mailing_job ON civicrm_mailing_event_queue.job_id = civicrm_mailing_job.id AND civicrm_mailing_job.is_test != 1 and civicrm_mailing_job.job_type = 'child'";
         break;
 
       case 'civicrm_mailing_event_bounce':
@@ -196,17 +184,18 @@ class CRM_Mailing_BAO_Query {
       case 'civicrm_mailing_event_unsubscribe':
       case 'civicrm_mailing_event_forward':
       case 'civicrm_mailing_event_trackable_url_open':
-        $from = " $side JOIN $name ON $name.event_queue_id = civicrm_mailing_event_queue.id";
+        // Use LEFT JOIN for better performance on "NOT IN" type queries
+        $joinType = ($side == 'LEFT' || strpos($name, '_delivered') !== false) ? 'LEFT' : $side;
+        $from = " $joinType JOIN $name ON $name.event_queue_id = civicrm_mailing_event_queue.id";
         break;
 
       case 'recipient_email':
-        $from = " $side JOIN civicrm_email recipient_email ON recipient_email.id = civicrm_mailing_recipients.email_id";
+        $from = " $side JOIN civicrm_email recipient_email ON recipient_email.id = civicrm_mailing_event_queue.email_id";
         break;
 
       case 'civicrm_mailing_trackable_url':
         $from = " $side JOIN civicrm_mailing_trackable_url ON civicrm_mailing_trackable_url.id = civicrm_mailing_event_trackable_url_open.trackable_url_id";
         break;
-
     }
 
     return $from;
@@ -268,8 +257,9 @@ class CRM_Mailing_BAO_Query {
         $selectedMailings = CRM_Utils_Array::implode(' '.ts('or').' ', $selectedMailings);
 
         $query->_qill[$grouping][] = ts("Mailing Name")." - \"$selectedMailings\"";
+        $query->_tables['civicrm_mailing_event_queue'] = $query->_whereTables['civicrm_mailing_event_queue'] = 1;
+        $query->_tables['civicrm_mailing_job'] = $query->_whereTables['civicrm_mailing_job'] = 1;
         $query->_tables['civicrm_mailing'] = $query->_whereTables['civicrm_mailing'] = 1;
-        $query->_tables['civicrm_mailing_recipients'] = $query->_whereTables['civicrm_mailing_recipients'] = 1;
         return;
 
       case 'mailing_name':
@@ -280,8 +270,9 @@ class CRM_Mailing_BAO_Query {
         }
         $query->_where[$grouping][] = "LOWER(civicrm_mailing.name) $op '$value'";
         $query->_qill[$grouping][] = ts("Mailing Name")." - \"$value\"";
+        $query->_tables['civicrm_mailing_event_queue'] = $query->_whereTables['civicrm_mailing_event_queue'] = 1;
+        $query->_tables['civicrm_mailing_job'] = $query->_whereTables['civicrm_mailing_job'] = 1;
         $query->_tables['civicrm_mailing'] = $query->_whereTables['civicrm_mailing'] = 1;
-        $query->_tables['civicrm_mailing_recipients'] = $query->_whereTables['civicrm_mailing_recipients'] = 1;
         return;
 
       case 'mailing_date_low':
@@ -303,9 +294,16 @@ class CRM_Mailing_BAO_Query {
           }
         }
         if (!empty($subWhere)) {
-          $subQuery = "SELECT cmj.mailing_id FROM civicrm_mailing_job as cmj WHERE cmj.is_test != 1 AND cmj.parent_id IS NULL AND ".implode(' AND ', $subWhere)." GROUP BY mailing_id";
-          $query->_where[$grouping]['mailing_date'] = "civicrm_mailing_recipients.mailing_id IN ($subQuery)";
-          $query->_tables['civicrm_mailing_recipients'] = $query->_whereTables['civicrm_mailing_recipients'] = 1;
+          // Use a more efficient subquery approach to filter by mailing date
+          $subQuery = "SELECT cmj.mailing_id FROM civicrm_mailing_job as cmj WHERE cmj.is_test != 1 AND cmj.parent_id IS NULL AND ".implode(' AND ', $subWhere)." GROUP BY cmj.mailing_id";
+          
+          // Set the query directly on mailing_id for better performance
+          $query->_where[$grouping]['mailing_date'] = "civicrm_mailing.id IN ($subQuery)";
+          
+          // Ensure necessary tables are included
+          $query->_tables['civicrm_mailing_event_queue'] = $query->_whereTables['civicrm_mailing_event_queue'] = 1;
+          $query->_tables['civicrm_mailing_job'] = $query->_whereTables['civicrm_mailing_job'] = 1;
+          $query->_tables['civicrm_mailing'] = $query->_whereTables['civicrm_mailing'] = 1;
         }
         return;
 
@@ -317,7 +315,7 @@ class CRM_Mailing_BAO_Query {
           self::mailingEventQueryBuilder($query, $values,
             'civicrm_mailing_event_delivered',
             'mailing_delivery_status',
-            ts('Mailing Delivery'),
+            ts('Delivery Status'),
             $options
           );
         }
@@ -327,7 +325,7 @@ class CRM_Mailing_BAO_Query {
           self::mailingEventQueryBuilder($query, $values,
             'civicrm_mailing_event_bounce',
             'mailing_delivery_status',
-            ts('Mailing Delivery'),
+            ts('Delivery Status'),
             $options
           );
         }
@@ -364,10 +362,9 @@ class CRM_Mailing_BAO_Query {
         $query->_where[$grouping][] = "civicrm_mailing_trackable_url.url $op '$value'";
         $query->_qill[$grouping][] = ts("URL")." - \"$value\"";
 
-        $query->_tables['civicrm_mailing'] = $query->_whereTables['civicrm_mailing'] = 1;
-        $query->_tables['civicrm_mailing_job'] = $query->_whereTables['civicrm_mailing_job'] = 1;
         $query->_tables['civicrm_mailing_event_queue'] = $query->_whereTables['civicrm_mailing_event_queue'] = 1;
-        $query->_tables['civicrm_mailing_recipients'] = $query->_whereTables['civicrm_mailing_recipients'] = 1;
+        $query->_tables['civicrm_mailing_job'] = $query->_whereTables['civicrm_mailing_job'] = 1;
+        $query->_tables['civicrm_mailing'] = $query->_whereTables['civicrm_mailing'] = 1;
         $query->_tables['civicrm_mailing_event_trackable_url_open'] = $query->_whereTables['civicrm_mailing_event_trackable_url_open'] = 1;
         $query->_tables['civicrm_mailing_trackable_url'] = $query->_whereTables['civicrm_mailing_trackable_url'] = 1;
         return;
@@ -413,8 +410,9 @@ class CRM_Mailing_BAO_Query {
           $subWhere = array();
           $subWhere[] = "cmj.status = '{$value}'";
           $subQuery = "SELECT cmj.mailing_id FROM civicrm_mailing_job as cmj WHERE cmj.is_test != 1 AND cmj.parent_id IS NULL AND ".implode(' AND ', $subWhere)." GROUP BY mailing_id";
-          $query->_where[$grouping]['mailing_job_status'] = "civicrm_mailing_recipients.mailing_id IN ($subQuery)";
-          $query->_tables['civicrm_mailing_recipients'] = $query->_whereTables['civicrm_mailing_recipients'] = 1;
+          $query->_where[$grouping]['mailing_job_status'] = "civicrm_mailing_job.mailing_id IN ($subQuery)";
+          $query->_tables['civicrm_mailing_event_queue'] = $query->_whereTables['civicrm_mailing_event_queue'] = 1;
+          $query->_tables['civicrm_mailing_job'] = $query->_whereTables['civicrm_mailing_job'] = 1;
 
           $query->_qill[$grouping][] = ts("Mailing Status")." - ".ts($value);
         }
@@ -507,10 +505,14 @@ class CRM_Mailing_BAO_Query {
     }
 
     if ($value == 'Y') {
-      $query->_where[$grouping][] = $tableName . ".id is not null ";
+      // Use EXISTS subquery for better performance with delivery status
+      $subquery = "EXISTS (SELECT 1 FROM $tableName WHERE $tableName.event_queue_id = civicrm_mailing_event_queue.id)";
+      $query->_where[$grouping][] = $subquery;
     }
     elseif ($value == 'N') {
-      $query->_where[$grouping][] = $tableName . ".id is null ";
+      // Use NOT EXISTS subquery for better performance with delivery status
+      $subquery = "NOT EXISTS (SELECT 1 FROM $tableName WHERE $tableName.event_queue_id = civicrm_mailing_event_queue.id)";
+      $query->_where[$grouping][] = $subquery;
     }
 
     if (is_array($value)) {
@@ -521,10 +523,12 @@ class CRM_Mailing_BAO_Query {
       $query->_qill[$grouping][] = $fieldTitle . ' - ' . $valueTitles[$value];
     }
 
-    $query->_tables['civicrm_mailing'] = $query->_whereTables['civicrm_mailing'] = 1;
-    $query->_tables['civicrm_mailing_job'] = $query->_whereTables['civicrm_mailing_job'] = 1;
+    // Always include these required tables
     $query->_tables['civicrm_mailing_event_queue'] = $query->_whereTables['civicrm_mailing_event_queue'] = 1;
-    $query->_tables['civicrm_mailing_recipients'] = $query->_whereTables['civicrm_mailing_recipients'] = 1;
+    $query->_tables['civicrm_mailing_job'] = $query->_whereTables['civicrm_mailing_job'] = 1;
+    $query->_tables['civicrm_mailing'] = $query->_whereTables['civicrm_mailing'] = 1;
+
+    // Include the specific event table
     $query->_tables[$tableName] = $query->_whereTables[$tableName] = 1;
   }
 
