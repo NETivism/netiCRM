@@ -459,7 +459,12 @@ class CRM_Core_Config_Variables extends CRM_Core_Config_Defaults {
    *
    * @var array
    */
-  public $customDonorCredit = array('full_name', 'partial_name', 'custom_name');
+  public $customDonorCredit = array(
+    'full_name' => 1,
+    'partial_name' => 1,
+    'custom_name' => 1,
+    'anonymous' => 0
+  );
 
   /**
    * Provide addressSequence
