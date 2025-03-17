@@ -71,6 +71,10 @@ test.describe.serial('ALLPAY', () => {
             await utils.findElement(page, element);
             await utils.clickElement(page, page.locator(element));
 
+            element = 'input[name="receipt_name"][value="r_name_full"]';
+            await utils.findElement(page, element);
+            await utils.clickElement(page, page.locator(element));
+
             element = '#_qf_Main_upload-bottom';
             await utils.findElement(page, element);
             await utils.clickElement(page, page.locator(element), {notExist: '.crm-error'});
