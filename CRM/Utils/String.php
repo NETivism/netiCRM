@@ -661,6 +661,9 @@ class CRM_Utils_String {
 
   static function toNumber($str) {
     $str = trim($str);
+    if (preg_match('/[eE]/', $str)) {
+      return $str;
+    }
     if (is_numeric($str)) {
       // leading zero and no any other sign
       if (preg_match('/^0\d+$/', $str)) {

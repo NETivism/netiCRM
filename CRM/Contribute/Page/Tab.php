@@ -138,6 +138,9 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page {
 
 
 
+    // Check permission have "edit contributions"
+    $this->assign('editContributionPermission', CRM_Core_Permission::check('edit contributions'));
+
     // add annual contribution
     $annual = array();
     list($annual['count'],
