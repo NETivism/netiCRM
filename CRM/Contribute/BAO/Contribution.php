@@ -2060,6 +2060,9 @@ SELECT source_contact_id
       $sic_code = self::getFormatLegalID($sic_code);
       $template->assign('serial_id', $sic_code);
     }
+    if ($receipt_logo && !(substr($receipt_logo, 0, 7) == 'http://' || substr($receipt_logo, 0, 8) == 'https://')) {
+      $receipt_logo = $config->imageUploadDir . $receipt_logo;
+    }
 
     $addressee = !empty($contact->addressee_custom) ? $contact->addressee_custom : (!empty($contact->addressee_display) ? $contact->addressee_display : $contact->sort_name);
     $template->assign('id' , $contribution->id);
@@ -2178,6 +2181,9 @@ SELECT source_contact_id
     $sort_name = $contact['sort_name'];
     $addressee = !empty($contact['addressee_custom']) ? $contact['addressee_custom'] : (!empty($contact['addressee_display']) ? $contact['addressee_display'] : $sort_name);
     $receipt_logo = $config->receiptLogo;
+    if ($receipt_logo && !(substr($receipt_logo, 0, 7) == 'http://' || substr($receipt_logo, 0, 8) == 'https://')) {
+      $receipt_logo = $config->imageUploadURL . $receipt_logo;
+    }
 
     $addrParams = array('contact_id' => $contact_id);
     $addresses = CRM_Core_BAO_Address::getValues($addrParams);
@@ -2704,6 +2710,10 @@ WHERE c.id = $id";
       }
 
       $config = CRM_Core_Config::singleton();
+      $receipt_logo = $config->receiptLogo;
+      if ($receipt_logo && !(substr($receipt_logo, 0, 7) == 'http://' || substr($receipt_logo, 0, 8) == 'https://')) {
+        $receipt_logo = $config->imageUploadDir . $receipt_logo;
+      }
       $tplParams = array(
         'contact_id' => $contribution->contact_id,
         'contribution' => (array)$contribution,
@@ -2712,7 +2722,7 @@ WHERE c.id = $id";
         'component' => !empty($ids['component']) ? $ids['component'] : '',
         'page' => $pageValues,
         'title' => $pageValues['title'],
-        'logo' => !empty($config->receiptLogo) ? $config->receiptLogo : '',
+        'logo' => !empty($receipt_logo) ? $receipt_logo : '',
       );
 
       // use either the contribution or membership receipt, based on whether it’s a membership-related contrib or not

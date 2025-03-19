@@ -27,8 +27,16 @@
 <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>                         
       <table class="form-layout-compressed">
         <tr class="crm-form-block-receiptLogo">
-            <td class="label">{$form.receiptLogo.label}</td><td>{$form.receiptLogo.html}<br />    
-            <span class="description">{ts}Paste logo url. Start with http://{/ts}</span></td>
+            <td class="label">{$form.receiptLogo.label}</td>
+            <td class="value">
+                {if $receiptLogoUrl}
+                <img style="max-height: 103px;" src="{$receiptLogoUrl}">
+                <a class="delete-image" href="javascript:void(0);" data-field="deleteReceiptLogo">{ts}Delete{/ts}</a>
+                <br/>
+                {/if}
+                {$form.receiptLogo.html}<br />
+                <span class="description">{ts}Upload a logo image to appear on the receipt.{/ts}</span>
+            </td>
         </tr>
         <tr class="crm-form-block-receiptPrefix">
             <td class="label">{$form.receiptPrefix.label}</td><td>{$form.receiptPrefix.html}<br />    

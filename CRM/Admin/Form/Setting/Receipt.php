@@ -13,7 +13,7 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
    */
   public function buildQuickForm() {
     CRM_Utils_System::setTitle(ts('Settings - Contribution Receipt'));
-    $this->addElement('text', 'receiptLogo', ts('Logo'));
+    $this->addElement('file', 'receiptLogo', ts('Logo'));
     $this->addElement('text', 'receiptPrefix', ts('Prefix of Receipt ID'));
     $this->addElement('textarea', 'receiptDescription', ts('Description of Receipt Footer'));
     $this->addElement('textarea', 'receiptOrgInfo', ts('Organization info'));
@@ -59,7 +59,7 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
     $this->add('file', 'uploadBigStamp', ts('The stamp of organization.'));
     $this->add('file', 'uploadSmallStamp', ts('The stamp of the person in charge.'));
     $config = CRM_Core_Config::singleton();
-    $this->controller->addActions($config->imageUploadDir, array('uploadBigStamp', 'uploadSmallStamp'));
+    $this->controller->addActions($config->imageUploadDir, array('uploadBigStamp', 'uploadSmallStamp', 'receiptLogo'));
 
     if($config->imageBigStampName){
       $this->assign('imageBigStampUrl', $config->imageUploadURL . $config->imageBigStampName);
@@ -67,10 +67,20 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
     if($config->imageSmallStampName){
       $this->assign('imageSmallStampUrl', $config->imageUploadURL . $config->imageSmallStampName);
     }
+    $receiptLogo = $config->receiptLogo;
+    if ($receiptLogo) {
+      if (substr($receiptLogo, 0, 7) == 'http://' || substr($receiptLogo, 0, 8) == 'https://') {
+        $this->assign('receiptLogoUrl', $receiptLogo);
+      }
+      else if ($receiptLogo) {
+        $this->assign('receiptLogoUrl', $config->imageUploadURL . $receiptLogo);
+      }
+    }
 
     $this->assign('stampDocUrl', CRM_Utils_System::docURL2('Receipt Stamp', TRUE));
     $this->add('hidden', 'deleteBigStamp');
     $this->add('hidden', 'deleteSmallStamp');
+    $this->add('hidden', 'deleteReceiptLogo');
 
     $displayLegalIDOptions = array('complete' => ts('Complete display'), 'partial' => ts('Partial hide'), 'hide' => ts('Complete hide'));
     $this->addRadio('receiptDisplayLegalID', ts('The way displays legal ID in receipt.'), $displayLegalIDOptions);
@@ -92,6 +102,7 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
     $defaults = parent::setDefaultValues();
     $defaults['deleteBigStamp'] = '';
     $defaults['deleteSmallStamp'] = '';
+    $defaults['deleteReceiptLogo'] = '';
     if (empty($defaults['receiptDisplayLegalID'])) {
       $defaults['receiptDisplayLegalID'] = 'complete';
     }
@@ -125,16 +136,24 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
     $uploadSmallStamp = CRM_Utils_Array::value('uploadSmallStamp', $params);
     $uploadSmallStamp = $uploadSmallStamp['name'];
 
+    $uploadReceiptLogo = CRM_Utils_Array::value('receiptLogo', $params);
+    $uploadReceiptLogo = $uploadReceiptLogo['name'];
+
     $deleteBigStamp = CRM_Utils_Array::value('deleteBigStamp', $params);
     $deleteSmallStamp = CRM_Utils_Array::value('deleteSmallStamp', $params);
+    $deleteReceiptLogo = CRM_Utils_Array::value('deleteReceiptLogo', $params);
     unset($params['deleteBigStamp']);
     unset($params['deleteSmallStamp']);
+    unset($params['deleteReceiptLogo']);
 
     if($deleteBigStamp){
       $params['imageBigStampName'] = '';
     }
     if($deleteSmallStamp){
       $params['imageSmallStampName'] = '';
+    }
+    if($deleteReceiptLogo){
+      $params['receiptLogo'] = '';
     }
 
     // to check wether GD is installed or not
@@ -147,6 +166,10 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
       if ($uploadSmallStamp) {
         $error = false;
         $params['imageSmallStampName'] = $this->_resizeImage($uploadSmallStamp, "_full", 800, 200);
+      }
+      if ($uploadReceiptLogo) {
+        $error = false;
+        $params['receiptLogo'] = $this->_resizeImage($uploadReceiptLogo, "_full", 800, 200);
       }
     }else{
       $error = true;
@@ -258,4 +281,3 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
   }
 
 }
-
