@@ -35,7 +35,7 @@
                 <br/>
                 {/if}
                 {$form.receiptLogo.html}<br />
-                <span class="description">{ts}Upload a logo image to appear on the receipt.{/ts}</span>
+                <span class="description">{ts}Please upload the logo image to be displayed on the receipt.{/ts}</span>
             </td>
         </tr>
         <tr class="crm-form-block-receiptPrefix">
