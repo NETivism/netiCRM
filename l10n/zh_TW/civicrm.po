@@ -17,12 +17,12 @@
 # charlesc <yeouhsin@gmail.com>, 2013-2014,2016,2020,2022
 # 淑涵 詹 <amy0222@netivism.com.tw>, 2020-2021
 # 花玉婷 <klavier1976@netivism.com.tw>, 2016-2019,2021-2024
-# 馮 佳今, 2022-2024
+# 馮 佳今, 2022-2025
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: CC Chu <poliphilonet@gmail.com>, 2020-2025\n"
+"Last-Translator: 馮 佳今, 2022-2025\n"
 "Language-Team: Chinese (Taiwan) (http://app.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -14372,7 +14372,7 @@ msgstr "建立新的選項系列"
 
 #: CRM/Custom/Form/Field.php
 msgid "Reuse an existing set"
-msgstr "重複使用一個現有系列"
+msgstr "共用一個現有系列"
 
 #: CRM/Custom/Form/Field.php
 msgid "Multiple Choice Option Sets"
@@ -14469,7 +14469,7 @@ msgstr "請輸入一個有效的數字。"
 msgid ""
 "You must select a Multiple Choice Option set if you chose Reuse an existing "
 "set."
-msgstr "如果您選擇重覆使用現有的設定，您必需選擇一個多選選項組。"
+msgstr "如果您選擇共用現有的設定，您必需選擇一個多選選項組。"
 
 #: CRM/Custom/Form/Field.php
 msgid ""
@@ -35541,7 +35541,7 @@ msgid ""
 "invoked, this URL will deliver email to the recipients specified for this "
 "report.) The cron job will also need to include authentication parameters "
 "which can be set by providing user-name, password and site key."
-msgstr "您的網站管理者將需要設置一個伺服器的「排程工作」（cron job，自動執行排定的工作），定期創建報表並寄送。這個排程工作應使用此網址：<strong><em>%1/%2 %3</em></strong>（此範例網址適用於報表 ID = 3。當存取這個網址時，系統會將這份報表寄送給指定收件人）。設定排程工作還需要輸入一些認證參數，像是使用者名稱、密碼與網站金鑰。"
+msgstr ""
 
 #: templates/CRM/Report/Form/Settings.hlp
 msgid ""
@@ -50271,3 +50271,7 @@ msgstr "可自訂一個預設名稱，如「善心人士」、「OO之友」等�
 #: templates/CRM/Admin/Form/Setting/Receipt.tpl
 msgid "Please enter a default name for anonymous donors."
 msgstr "請輸入匿名捐款人的預設名稱。"
+
+#: templates/CRM/Admin/Form/Setting/Receipt.tpl
+msgid "Please upload the logo image to be displayed on the receipt."
+msgstr "請上傳將顯示在收據上的 Logo 圖片。"

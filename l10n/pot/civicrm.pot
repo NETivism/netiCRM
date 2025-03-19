@@ -49698,3 +49698,7 @@ msgstr ""
 #: templates/CRM/Admin/Form/Setting/Receipt.tpl
 msgid "Please enter a default name for anonymous donors."
 msgstr ""
+
+#: templates/CRM/Admin/Form/Setting/Receipt.tpl
+msgid "Please upload the logo image to be displayed on the receipt."
+msgstr ""

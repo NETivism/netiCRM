@@ -281,6 +281,19 @@
         $('.contrib-step-'+exec_step)
           .append(this.createStepBtnBlock(['last-step']).addClass('hide-as-show-all').addClass('crm-section'))
           .append($('.crm-submit-buttons'));
+
+        const $recaptchaSection = $('.crm-section.recaptcha-section');
+        if ($recaptchaSection.length) {
+          const $submitContainer = $('.crm-container .contrib-step:has(.crm-submit-buttons)');
+          const $actionWrapper = $submitContainer.find('.step-action-wrapper');
+
+          if ($actionWrapper.length) {
+            $actionWrapper.before($recaptchaSection);
+          } else {
+            $submitContainer.before($recaptchaSection);
+          }
+        }
+
         $('.crm-contribution-main-form-block').hide();
 
         if($("#billing-payment-block").length == 0){
