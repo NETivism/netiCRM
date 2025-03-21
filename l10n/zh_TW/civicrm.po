@@ -50289,3 +50289,9 @@ msgstr "Email 無法寄送給 %1 位聯絡人，因為聯絡人的偏好選項�
 #: templates/CRM/Admin/Form/Setting/Receipt.tpl
 msgid "Please upload the logo image to be displayed on the receipt."
 msgstr "請上傳將顯示在收據上的 Logo 圖片。"
+
+#: CRM/Contribute/Form/Task/PDF.php
+msgid ""
+"Email will NOT be sent to %1 contact(s) - communication preferences specify "
+"DO NOT NOTIFY or valid Email is NOT present"
+msgstr "Email 不會寄送給 %1 位聯絡人（聯絡人沒有 Email，或已設定為「不要收到系統流程信件」）。"
