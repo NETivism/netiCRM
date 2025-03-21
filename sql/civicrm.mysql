@@ -1235,7 +1235,7 @@ CREATE TABLE civicrm_mailing (
 ,
     PRIMARY KEY ( id )
  
-    ,     INDEX UI_is_hidden(
+    ,     INDEX index_is_hidden(
         is_hidden
   )
   
@@ -1324,11 +1324,14 @@ CREATE TABLE civicrm_mailing_job (
 ,
     PRIMARY KEY ( id )
  
-    ,     INDEX UI_start_date(
+    ,     INDEX index_start_date(
         start_date
   )
-  ,     INDEX UI_is_test(
+  ,     INDEX index_is_test(
         is_test
+  )
+  ,     INDEX index_job_type(
+        job_type
   )
   
 ,      
