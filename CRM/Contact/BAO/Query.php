@@ -1517,6 +1517,7 @@ class CRM_Contact_BAO_Query {
       case 'do_not_mail':
       case 'do_not_sms':
       case 'do_not_trade':
+      case 'do_not_notify':
       case 'is_opt_out':
         $this->privacy($values);
         return;
@@ -3856,6 +3857,7 @@ civicrm_relationship.start_date > {$today}
           'do_not_sms' => 1,
           'do_not_phone' => 1,
           'do_not_trade' => 1,
+          'do_not_notify' => 1,
           'is_opt_out' => 1,
           'contact_is_deleted' => 1,
           'contact_created_date' => 1,
@@ -4387,6 +4389,7 @@ SELECT COUNT( cc.total_amount ) as cancel_count,
         'do_not_mail' => 1,
         'do_not_sms' => 1,
         'do_not_trade' => 1,
+        'do_not_notify' => 1,
         'contact_created_date' => 1,
         'contact_modified_date' => 1,
         'location' =>
