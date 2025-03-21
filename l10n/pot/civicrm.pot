@@ -49716,4 +49716,5 @@ msgid "Please upload the logo image to be displayed on the receipt."
 msgstr ""
 
 #: CRM/Contribute/Form/Task/PDF.php
-msgid "Email will NOT be sent to %1 contact(s) - communication preferences specify DO NOT NOTIFY or valid Email is NOT present.
+msgid "Email will NOT be sent to %1 contact(s) - communication preferences specify DO NOT NOTIFY or valid Email is NOT present."
+msgstr ""
