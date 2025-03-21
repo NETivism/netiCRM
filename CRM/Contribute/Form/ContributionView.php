@@ -65,6 +65,9 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
     $instrument_options = CRM_Core_OptionGroup::values('payment_instrument', FALSE);
     $no_expire_date = array(ts('Convenient Store'), ts('Convenient Store code'), ts('ATM'));
     $instrument = $instrument_options[$values['payment_instrument_id']];
+    if ($instrument == ts('Check')) {
+      $this->assign('payment_instrument_name', 'Check');
+    }
     if($values['payment_instrument_id'] != 1 && $instrument != 'Web ATM'){
       $this->assign('has_expire_date', TRUE);
       $this->assign('expire_date', $values['expire_date']);

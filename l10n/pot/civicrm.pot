@@ -49710,3 +49710,7 @@ msgstr ""
 #: CRM/Event/BAO/Event.php
 msgid "Email has NOT been sent to %1 contact(s) - communication preferences specify DO NOT NOTIFY OR valid Email is NOT present."
 msgstr ""
+
+#: templates/CRM/Admin/Form/Setting/Receipt.tpl
+msgid "Please upload the logo image to be displayed on the receipt."
+msgstr ""
