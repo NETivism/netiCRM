@@ -49699,6 +49699,18 @@ msgstr ""
 msgid "Please enter a default name for anonymous donors."
 msgstr ""
 
+#: CRM/Core/SelectValues.php
+msgid "Do not notify"
+msgstr ""
+
+#: templates/CRM/Contribute/Form/Contribution.tpl
+msgid "Contact labelled as do not notification."
+msgstr ""
+
+#: CRM/Event/BAO/Event.php
+msgid "Email has NOT been sent to %1 contact(s) - communication preferences specify DO NOT NOTIFY OR valid Email is NOT present."
+msgstr ""
+
 #: templates/CRM/Admin/Form/Setting/Receipt.tpl
 msgid "Please upload the logo image to be displayed on the receipt."
 msgstr ""

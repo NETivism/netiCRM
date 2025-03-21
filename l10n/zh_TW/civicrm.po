@@ -8,7 +8,7 @@
 # Harry Lin <harry@netivism.com.tw>, 2023
 # IreneLin, 2013
 # IreneLin, 2013
-# jimyhuang <jimmy@netivism.com.tw>, 2013,2015-2024
+# jimyhuang <jimmy@netivism.com.tw>, 2013,2015-2025
 # Chang Shu-huai <junsuwhy@gmail.com>, 2015-2016
 # peggy chiu, 2024
 # Seal Shen, 2025
@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: 馮 佳今, 2022-2025\n"
+"Last-Translator: jimyhuang <jimmy@netivism.com.tw>, 2013,2015-2025\n"
 "Language-Team: Chinese (Taiwan) (http://app.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50271,6 +50271,20 @@ msgstr "可自訂一個預設名稱，如「善心人士」、「OO之友」等�
 #: templates/CRM/Admin/Form/Setting/Receipt.tpl
 msgid "Please enter a default name for anonymous donors."
 msgstr "請輸入匿名捐款人的預設名稱。"
+
+#: CRM/Core/SelectValues.php
+msgid "Do not notify"
+msgstr "不要收到系統流程信件"
+
+#: templates/CRM/Contribute/Form/Contribution.tpl
+msgid "Contact labelled as do not notification."
+msgstr "聯絡人標示為不要收到系統流程信件"
+
+#: CRM/Event/BAO/Event.php
+msgid ""
+"Email has NOT been sent to %1 contact(s) - communication preferences specify"
+" DO NOT NOTIFY OR valid Email is NOT present."
+msgstr "Email 無法寄送給 %1 位聯絡人，因為聯絡人的偏好選項設定為「不要收到系統流程信件」、或是未設定有效的 Email。"
 
 #: templates/CRM/Admin/Form/Setting/Receipt.tpl
 msgid "Please upload the logo image to be displayed on the receipt."
