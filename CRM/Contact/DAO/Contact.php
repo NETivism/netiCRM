@@ -520,6 +520,16 @@ class CRM_Contact_DAO_Contact extends CRM_Core_DAO
           'dataPattern' => '/^\d{1,}$/',
           'export' => true,
         ) ,
+        'do_not_notify' => array(
+          'name' => 'do_not_notify',
+          'type' => CRM_Utils_Type::T_BOOLEAN,
+          'title' => ts('Do Not Notify') ,
+          'import' => true,
+          'where' => 'civicrm_contact.do_not_notify',
+          'headerPattern' => '/d(o )?(not )?(notify)/i',
+          'dataPattern' => '/^\d{1,}$/',
+          'export' => true,
+        ) ,
         'is_opt_out' => array(
           'name' => 'is_opt_out',
           'type' => CRM_Utils_Type::T_BOOLEAN,
