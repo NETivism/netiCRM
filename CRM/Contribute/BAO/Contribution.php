@@ -1053,8 +1053,8 @@ GROUP BY p.id
     $honorDAO->find();
 
     require_once 'CRM/Contribute/PseudoConstant.php';
-    $status = CRM_Contribute_Pseudoconstant::contributionStatus($honorDAO->contribution_status_id);
-    $type = CRM_Contribute_Pseudoconstant::contributionType();
+    $status = CRM_Contribute_PseudoConstant::contributionStatus($honorDAO->contribution_status_id);
+    $type = CRM_Contribute_PseudoConstant::contributionType();
 
     while ($honorDAO->fetch()) {
       $params[$honorDAO->id]['honorId'] = $honorDAO->contact_id;
@@ -1373,7 +1373,7 @@ LEFT JOIN civicrm_option_value contribution_status ON (civicrm_contribution.cont
 
     $cs = CRM_Core_DAO::executeQuery($query, CRM_Core_DAO::$_nullArray);
     require_once "CRM/Contribute/PseudoConstant.php";
-    $contributionStatus = CRM_Contribute_Pseudoconstant::contributionStatus();
+    $contributionStatus = CRM_Contribute_PseudoConstant::contributionStatus();
     $result = array();
     while ($cs->fetch()) {
       $result[$cs->id]['amount'] = $cs->amount;
