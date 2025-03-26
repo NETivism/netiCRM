@@ -532,7 +532,7 @@ class CRM_Core_BAO_Address extends CRM_Core_DAO_Address {
     );
 
     if (isset($this->county_id) && $this->county_id) {
-      $fields['county'] = CRM_Core_Pseudoconstant::county($this->county_id);
+      $fields['county'] = CRM_Core_PseudoConstant::county($this->county_id);
     }
     else {
       $fields['county'] = NULL;
