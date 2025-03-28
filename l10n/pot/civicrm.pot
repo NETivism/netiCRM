@@ -49722,3 +49722,7 @@ msgstr ""
 #: templates/CRM/Admin/Form/Setting/Receipt.tpl
 msgid "Save to apply changes."
 msgstr ""
+
+#: CRM/Contribute/xml/Menu/Contribute.xml
+msgid "Import Fee and Transaction Date"
+msgstr ""
