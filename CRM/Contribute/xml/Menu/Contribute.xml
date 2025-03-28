@@ -334,7 +334,15 @@
   </item>
   <item>
      <path>civicrm/contribute/newebpay/import</path>
-     <title>Import Contributions</title>
+     <title>Import Fee and Transaction Date</title>
+     <page_callback>CRM_Contribute_Controller_NewebpayImport</page_callback>
+     <access_arguments>access CiviContribute,edit contributions</access_arguments>
+     <page_type>1</page_type>
+     <weight>520</weight>
+  </item>
+  <item>
+     <path>civicrm/contribute/fee/import</path>
+     <title>Import Fee and Transaction Date</title>
      <page_callback>CRM_Contribute_Controller_NewebpayImport</page_callback>
      <access_arguments>access CiviContribute,edit contributions</access_arguments>
      <page_type>1</page_type>
