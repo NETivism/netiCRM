@@ -49718,3 +49718,7 @@ msgstr ""
 #: CRM/Contribute/Form/Task/PDF.php
 msgid "Email will NOT be sent to %1 contact(s) - communication preferences specify DO NOT NOTIFY or valid Email is NOT present."
 msgstr ""
+
+#: templates/CRM/Admin/Form/Setting/Receipt.tpl
+msgid "Save to apply changes."
+msgstr ""
