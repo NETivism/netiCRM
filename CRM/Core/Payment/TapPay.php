@@ -1413,34 +1413,18 @@ LIMIT 0, 100
 
     $sql = "SELECT count(*) FROM civicrm_contribution WHERE contribution_recur_id = %1";
     $params = array(1 => array($recurId, 'Positive'));
-    $countCountribution = CRM_Core_DAO::singleValueQuery($sql, $params);
-
-    if (!empty($resultNote) &&  $countCountribution != 1) {
-      $sql = "SELECT id FROM civicrm_contribution_tappay
-      WHERE contribution_recur_id = %1
-      ORDER BY id DESC LIMIT 1";
-
-      $params = array(1 => array($recurId, 'Positive'));
-      $tappayId = CRM_Core_DAO::singleValueQuery($sql, $params);
-
+    $sql = "SELECT id FROM civicrm_contribution_tappay
+    WHERE contribution_recur_id = %1
+    ORDER BY id DESC LIMIT 1";
+    $params = array(1 => array($recurId, 'Positive'));
+    $tappayId = CRM_Core_DAO::singleValueQuery($sql, $params);
     if ($tappayId) {
       $tappayData = new CRM_Contribute_DAO_TapPay();
       $tappayData->id = $tappayId;
       $tappayData->find(TRUE);
-      $origData = array();
-      if (!empty($tappayData->data)) {
-        $parsedData = json_decode($tappayData->data, TRUE);
-        if (is_array($parsedData)) {
-          $origData = $parsedData;
-        }
-      }
-      $origData['triggered_by'] = $userId;
-      $origData['triggered_time'] = date('Y-m-d H:i:s');
-      $origData['trigger_method'] = 'manual';
-      $tappayData->data = json_encode($origData);
+      $tappayData->created_id = $userId;
       $tappayData->save();
     }
-  }
     return $resultNote;
   }
 
@@ -1577,7 +1561,7 @@ LIMIT 0, 100
     $returnData[ts('Response Code')] = $tappayObject->status;
     $returnData[ts('Response Message')] = $tappayObject->msg;
 
-    $drupal_user_id = $tappayObject->triggered_by;
+    $drupal_user_id = $tappayDAO->created_id;
     $contact_id = CRM_Core_BAO_UFMatch::getContactId($drupal_user_id);
     if ($contact_id) {
       $contactName = CRM_Contact_BAO_Contact::displayName($contact_id);
