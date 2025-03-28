@@ -343,7 +343,7 @@ jobs:
         run: echo "::set-output name=sha_short::${GITHUB_SHA::7}"
 
       - name: Notification
-        uses: dawidd6/action-send-mail@4226df7daafa6fc901a43789c49bf7ab309066e7
+        uses: dawidd6/action-send-mail@v3
         with:
           server_address: ${{secrets.NETIVISM_EMAIL_HOST}}
           server_port: ${{secrets.NETIVISM_EMAIL_PORT}}
