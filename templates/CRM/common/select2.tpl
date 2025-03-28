@@ -10,7 +10,8 @@ $(document).ready(function(){
       "dropdownAutoWidth": true,
       {/literal}{if $select_width}"width": "{$select_width}",{/if}{literal}
       "placeholder": "{/literal}{ts}-- Select --{/ts}{literal}",
-      "language": "{/literal}{if $config->lcMessages}{$config->lcMessages|replace:'_':'-'}{else}en{/if}{literal}"
+      "language": "{/literal}{if $config->lcMessages}{$config->lcMessages|replace:'_':'-'}{else}en{/if}{literal}",
+      "selectAllButton": {/literal}{if $select_all_button}true{else}false{/if}{literal}
     };
 
     if ($this.is('select[multiple]')) {

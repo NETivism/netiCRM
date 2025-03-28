@@ -145,4 +145,4 @@
     </div>
 <div class="spacer"></div>
 </div>
-{include file="CRM/common/chosen.tpl" selector="form#Localization select"}
+{include file="CRM/common/chosen.tpl" selector="form#Localization select" select_all_button=1}

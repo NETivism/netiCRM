@@ -43,47 +43,50 @@
 
   function SelectAll() { }
   SelectAll.prototype.render = function (decorated) {
-    var self = this,
-      translations = self.options.get('translations'),
-      $rendered = decorated.call(this),
-      $selectAll = $(
-        '<button class="btn" type="button" style="margin-left:6px;">' +
-        '<i class="zmdi zmdi-check-square"></i> ' + translations.get('selectAll') +
-        '</button>'
-      ),
-      $unselectAll = $(
-        '<button class="btn" type="button" style="margin-left:6px;">' +
-        '<i class="zmdi zmdi-square-o"></i> ' + translations.get('unselectAll') +
-        '</button>'
-      ),
-      $btnContainer = $('<div class="select2-selectall-actions" style="margin-top:3px; text-align:center;">').append($selectAll).append($unselectAll);
+    let self = this;
+    var $rendered = decorated.call(this);
+    if (self.options.get('selectAllButton')) {
+      let translations = self.options.get('translations'),
+        $selectAll = $(
+          '<button class="btn" type="button" style="margin-left:6px;">' +
+          '<i class="zmdi zmdi-check-square"></i> ' + translations.dict.selectAll() +
+          '</button>'
+        ),
+        $unselectAll = $(
+          '<button class="btn" type="button" style="margin-left:6px;">' +
+          '<i class="zmdi zmdi-square-o"></i> ' + translations.dict.unselectAll() +
+          '</button>'
+        ),
+        $btnContainer = $('<div class="select2-selectall-actions" style="margin-top:3px; text-align:center;">').append($selectAll).append($unselectAll);
 
-    if (!this.$element.prop("multiple")) {
-      // This isn't a multi-select, don't add the buttons
+      if (!this.$element.prop("multiple")) {
+        // This isn't a multi-select, don't add the buttons
+        return $rendered;
+      }
+      $rendered.find('.select2-dropdown').prepend($btnContainer);
+      $selectAll.on('click', function (e) {
+        e.preventDefault();
+        var $options = self.$element.find('option');
+        var values = [];
+
+        $options.each(function() {
+          if (!this.disabled) {
+            values.push(this.value);
+          }
+        });
+
+        self.$element.val(values);
+        self.$element.trigger('change');
+        self.trigger('close');
+      });
+      $unselectAll.on('click', function (e) {
+        e.preventDefault();
+        self.$element.val([]);
+        self.$element.trigger('change');
+        self.trigger('close');
+      });
       return $rendered;
     }
-    $rendered.find('.select2-dropdown').prepend($btnContainer);
-    $selectAll.on('click', function (e) {
-      e.preventDefault();
-      var $options = self.$element.find('option');
-      var values = [];
-
-      $options.each(function() {
-        if (!this.disabled) {
-          values.push(this.value);
-        }
-      });
-
-      self.$element.val(values);
-      self.$element.trigger('change');
-      self.trigger('close');
-    });
-    $unselectAll.on('click', function (e) {
-      e.preventDefault();
-      self.$element.val([]);
-      self.$element.trigger('change');
-      self.trigger('close');
-    });
     return $rendered;
   };
 
