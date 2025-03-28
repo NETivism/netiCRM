@@ -67,7 +67,7 @@
 {if $suppressed_no_email}
 <tr class="form-item">
   <td colspan="2">
-    <span class="font-red">{ts count=$suppressed_no_email plural='Email will NOT be sent to %count contacts - (no email address on file, or communication preferences specify DO NOT NOTIFY, or contact is deceased).'}Email will NOT be sent to %count contact - (no email address on file, or communication preferences specify DO NOT NOTIFY, or contact is deceased).{/ts}</span>
+    <span class="font-red">{ts 1=$suppressed_no_email}Email will NOT be sent to %1 contact(s) - communication preferences specify DO NOT NOTIFY or valid Email is NOT present.{/ts}</span>
     {if $empty_email_list}
       <ul>
       {foreach from=$empty_email_list item=sort_name}

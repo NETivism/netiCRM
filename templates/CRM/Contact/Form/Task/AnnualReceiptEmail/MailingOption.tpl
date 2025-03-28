@@ -14,7 +14,7 @@
         </ul>
       </li>
       {if $suppressed_no_email}
-      <li>{ts count=$suppressed_no_email plural='Email will NOT be sent to %count contacts - (no email address on file, or communication preferences specify DO NOT NOTIFY, or contact is deceased).'}Email will NOT be sent to %count contact - (no email address on file, or communication preferences specify DO NOT NOTIFY, or contact is deceased).{/ts}</li>
+      <li>{ts 1=$suppressed_no_email}Email will NOT be sent to %1 contact(s) - communication preferences specify DO NOT NOTIFY or valid Email is NOT present.{/ts}</li>
       {/if}
       {if $suppressed_no_record}
       <li>{ts count=$suppressed_no_record plural='Email will NOT be sent to %count contacts.'}Email will NOT be sent to %count contact.{/ts}{ts}There were no contributions during the selected year.{/ts}</li>

@@ -178,9 +178,29 @@
 <script type="text/javascript">
     cj(function($){
         $('.delete-image').click(function(){
-            deleteFieldName = $(this).attr('data-field');
+            var deleteFieldName = $(this).attr('data-field');
+            var imageElement = $(this).parent().find('img');
             $('[name='+deleteFieldName+']').val(1);
-            $(this).parent().find('img').css('filter','brightness(50%)');
+            var messageDiv = $('<div class="pending-change-message" style="color: #0074bd; text-align: center; border: 1px dashed #ccc; display: flex; align-items: center; justify-content: center; width: 120px; height: 100px;">{/literal}{ts}Save to apply changes.{/ts}{literal}</div>');
+            imageElement.hide();
+            $(this).hide();
+            imageElement.after(messageDiv);
+        });
+        $('input[type="file"]').change(function() {
+            if (this.files && this.files.length > 0) {
+                var container = $(this).closest('td.value, td');
+                var imageElement = container.find('img');
+                container.find('.pending-change-message').remove();
+                if (imageElement.length > 0) {
+                    var messageDiv = $('<div class="pending-change-message" style="color: #0074bd; text-align: center; border: 1px dashed #ccc; display: flex; align-items: center; justify-content: center; width: 120px; height: 100px;">Save to apply changes.</div>');
+                    imageElement.hide();
+                    container.find('.delete-image').hide();
+                    imageElement.after(messageDiv);
+                } else {
+                    var messageDiv = $('<div class="pending-change-message" style="color: #0074bd; text-align: center; border: 1px dashed #ccc; display: flex; align-items: center; justify-content: center; width: 120px; height: 100px; margin-bottom: 5px;">Save to apply changes.</div>');
+                    $(this).before(messageDiv);
+                }
+            }
         });
         $('input[name^="receiptDisplayLegalID"]').click(function() {
             const selectedValue = $('input[name^="receiptDisplayLegalID"]:checked').val();

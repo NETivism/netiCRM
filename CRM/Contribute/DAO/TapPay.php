@@ -151,6 +151,12 @@ class CRM_Contribute_DAO_TapPay extends CRM_Core_DAO
    */
   public $token_status;
   /**
+   * FK to civicrm_contact, who created this contribution
+   *
+   * @var int unsigned
+   */
+  public $created_id;
+  /**
    * class constructor
    *
    * @access public
@@ -172,6 +178,7 @@ class CRM_Contribute_DAO_TapPay extends CRM_Core_DAO
       self::$_links = array(
         'contribution_id' => 'civicrm_contribution:id',
         'contribution_recur_id' => 'civicrm_contribution_recur:id',
+        'created_id' => 'civicrm_contact:id',
       );
     }
     return self::$_links;
@@ -188,6 +195,7 @@ class CRM_Contribute_DAO_TapPay extends CRM_Core_DAO
       Civi::$statics[__CLASS__]['links'] = static ::createReferenceColumns(__CLASS__);
       Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'contribution_id', 'civicrm_contribution', 'id');
       Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'contribution_recur_id', 'civicrm_contribution_recur', 'id');
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'created_id', 'civicrm_contact', 'id');
     }
     return Civi::$statics[__CLASS__]['links'];
   }
@@ -278,6 +286,11 @@ class CRM_Contribute_DAO_TapPay extends CRM_Core_DAO
           'title' => ts('Token Status') ,
           'maxlength' => 32,
           'size' => CRM_Utils_Type::MEDIUM,
+        ) ,
+        'created_id' => array(
+          'name' => 'created_id',
+          'type' => CRM_Utils_Type::T_INT,
+          'FKClassName' => 'CRM_Contact_DAO_Contact',
         ) ,
       );
     }
