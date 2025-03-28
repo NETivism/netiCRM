@@ -551,7 +551,7 @@ INNER JOIN  civicrm_membership_type type ON ( type.id = membership.membership_ty
     $transaction = new CRM_Core_Transaction();
     $results = NULL;
     //delete activity record
-    $activityTypes = CRM_Core_Pseudoconstant::activityType(TRUE, FALSE, FALSE, 'name');
+    $activityTypes = CRM_Core_PseudoConstant::activityType(TRUE, FALSE, FALSE, 'name');
     $membershipActivityTypeId = array_search('Membership Renewal', $activityTypes);
 
 

@@ -510,7 +510,7 @@ WHERE  v.option_group_id = g.id
      *
      * Since there appears to be some inconsistency
      * (@todo remove inconsistency) around the pseudoconstant operations
-     * (for example CRM_Contribution_Pseudoconstant::paymentInstrument doesn't specify isActive
+     * (for example CRM_Contribution_PseudoConstant::paymentInstrument doesn't specify isActive
      * which is part of the cache key
      * will do a couple of variations & aspire to someone cleaning it up later
      */

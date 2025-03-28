@@ -559,7 +559,7 @@ class CRM_Activity_BAO_Activity extends CRM_Activity_DAO_Activity {
 
         $recentContactDisplay = CRM_Contact_BAO_Contact::displayName($recentContactId);
         // add the recently created Activity
-        $activityTypes = CRM_Core_Pseudoconstant::activityType(TRUE, TRUE);
+        $activityTypes = CRM_Core_PseudoConstant::activityType(TRUE, TRUE);
         $activitySubject = CRM_Core_DAO::getFieldValue('CRM_Activity_DAO_Activity', $activity->id, 'subject');
 
         $title = "";

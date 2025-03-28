@@ -289,7 +289,7 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
     $recurDAO->contact_id = $contactId;
     $recurDAO->find();
 
-    $contributionStatus = CRM_Contribute_Pseudoconstant::contributionStatus();
+    $contributionStatus = CRM_Contribute_PseudoConstant::contributionStatus();
     $paymentProcessors = CRM_Core_PseudoConstant::paymentProcessor();
 
     while ($recurDAO->fetch()) {

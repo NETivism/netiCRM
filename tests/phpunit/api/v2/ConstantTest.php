@@ -155,7 +155,7 @@ class api_v2_ConstantTest extends CiviUnitTestCase {
    */
   public function testLocationType() {
     // needed to get rid of cached values from previous tests
-    CRM_Core_Pseudoconstant::flush('locationType');
+    CRM_Core_PseudoConstant::flush('locationType');
 
     $dataset = new PHPUnit_Extensions_Database_DataSet_XMLDataSet(
       dirname(__FILE__) . '/dataset/location_type_data.xml'
@@ -186,7 +186,7 @@ class api_v2_ConstantTest extends CiviUnitTestCase {
    */
   public function testLocationTypeAll() {
     // needed to get rid of cached values from previous tests
-    CRM_Core_Pseudoconstant::flush('locationType');
+    CRM_Core_PseudoConstant::flush('locationType');
 
     //  Testing on default set provided by civicrm_data.mysql
 

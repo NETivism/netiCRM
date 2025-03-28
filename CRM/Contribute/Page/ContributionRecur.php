@@ -58,9 +58,7 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
    * @access public
    */
   function view() {
-
-
-    $status = CRM_Contribute_Pseudoconstant::contributionStatus();
+    $status = CRM_Contribute_PseudoConstant::contributionStatus();
 
     $recur = new CRM_Contribute_DAO_ContributionRecur();
     $recur->id = $this->_id;

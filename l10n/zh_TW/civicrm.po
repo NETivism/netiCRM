@@ -10488,7 +10488,7 @@ msgstr "請輸入一個有效的額外提醒日期。"
 msgid ""
 "This contribution has already been submitted. Click <a href='%1'>here</a> if"
 " you want to make another contribution."
-msgstr "你的捐款已經提送。若果你想繼續捐款，請按 <a href='%1'>這裡</a>。"
+msgstr "資料已送出，請從您選擇的付款工具確認是否已完成付款，若未成功，請點 <a href='%1'>這裡</a>。"
 
 #: CRM/Contribute/Form/ContributionBase.php
 msgid ""
@@ -50295,3 +50295,11 @@ msgid ""
 "Email will NOT be sent to %1 contact(s) - communication preferences specify "
 "DO NOT NOTIFY or valid Email is NOT present."
 msgstr "Email 不會寄送給 %1 位聯絡人（聯絡人沒有 Email，或已設定為「不要收到系統流程信件」）。"
+
+#: templates/CRM/Admin/Form/Setting/Receipt.tpl
+msgid "Save to apply changes."
+msgstr "儲存後才會生效"
+
+#: CRM/Contribute/xml/Menu/Contribute.xml
+msgid "Import Fee and Transaction Date"
+msgstr "匯入手續費與撥款日"

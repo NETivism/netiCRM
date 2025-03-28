@@ -459,7 +459,7 @@ WHERE  $whereCond
       $params[$honorDAO->id] = array(
         'honorId' => $honorDAO->contact_id,
         'amount' => $honorDAO->amount,
-        'status' => CRM_Contribute_Pseudoconstant::contributionStatus($honorDAO->status_id),
+        'status' => CRM_Contribute_PseudoConstant::contributionStatus($honorDAO->status_id),
         'create_date' => $honorDAO->create_date,
         'acknowledge_date' => $honorDAO->acknowledge_date,
         'type' => CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionType',
