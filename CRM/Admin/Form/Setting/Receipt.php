@@ -109,17 +109,27 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
     $defaults['receiptDescription'] = htmlspecialchars_decode($defaults['receiptDescription']);
     $defaults['receiptOrgInfo'] = htmlspecialchars_decode($defaults['receiptOrgInfo']);
 
-    if (empty($defaults['customDonorCredit'])) {
-      $config = CRM_Core_Config::singleton();
-      $forbidCustomDonorCredit = !empty($config->forbidCustomDonorCredit) ? 1 : 0;
+    $config = CRM_Core_Config::singleton();
 
-      $defaults['customDonorCredit'] = array(
-        'full_name' => 1,
-        'partial_name' => 1
-      );
+    // refs #42235, compatibility handling for old sites that initially don't have customDonorCredit
+    // default values for new sites are set in CRM/Core/Config/Variables.php
+    if (!isset($config->customDonorCredit) || !is_array($config->customDonorCredit)) {
+      if (isset($config->forbidCustomDonorCredit)) {
+        $forbidCustomDonorCredit = !empty($config->forbidCustomDonorCredit) ? 1 : 0;
+        $defaults['customDonorCredit'] = array(
+          'full_name' => 1,
+          'partial_name' => 1
+        );
 
-      if ($forbidCustomDonorCredit == 0) {
-        $defaults['customDonorCredit']['custom_name'] = 1;
+        if ($forbidCustomDonorCredit == 0) {
+          $defaults['customDonorCredit']['custom_name'] = 1;
+        }
+      } else {
+        $defaults['customDonorCredit'] = array(
+          'full_name' => 1,
+          'partial_name' => 1,
+          'custom_name' => 1
+        );
       }
     }
 
@@ -175,19 +185,11 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
       $error = true;
     }
 
-    if (empty($params['customDonorCredit']) || count($params['customDonorCredit']) == 0) {
-      $forbidCustomDonorCredit = !empty($config->forbidCustomDonorCredit) ? 1 : 0;
-
-      $params['customDonorCredit'] = array(
-        'full_name' => 1,
-        'partial_name' => 1
-      );
-
-      if ($forbidCustomDonorCredit == 0) {
-        $params['customDonorCredit']['custom_name'] = 1;
-      }
-
-      CRM_Core_Session::setStatus(ts('All donor credit options were unchecked. Default options have been applied automatically.'));
+    // refs #42235, compatibility handling for old sites
+    if (!empty($config->forbidCustomDonorCredit)) {
+      $configParams = get_object_vars($config);
+      $configParams['forbidCustomDonorCredit'] = 0;
+      CRM_Core_BAO_ConfigSetting::add($configParams);
     }
 
     if (empty($params['customDonorCredit']['anonymous'])) {
@@ -279,5 +281,4 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
     $config = CRM_Core_Config::singleton();
     return basename($newFilename);
   }
-
 }
