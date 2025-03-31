@@ -69,7 +69,7 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
     }
     $receiptLogo = $config->receiptLogo;
     if ($receiptLogo) {
-      if (substr($receiptLogo, 0, 7) == 'http://' || substr($receiptLogo, 0, 8) == 'https://') {
+      if (preg_match('/^https?:\/\//i', $receiptLogo)  || substr($receiptLogo, 0, 13) === '/var/www/html') {
         $this->assign('receiptLogoUrl', $receiptLogo);
       }
       else if ($receiptLogo) {
