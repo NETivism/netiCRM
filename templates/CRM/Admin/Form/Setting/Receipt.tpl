@@ -177,11 +177,12 @@
 {literal}
 <script type="text/javascript">
     cj(function($){
+        let saveNotice = "{/literal}{ts}Save to apply changes.{/ts}{literal}";
         $('.delete-image').click(function(){
             var deleteFieldName = $(this).attr('data-field');
             var imageElement = $(this).parent().find('img');
             $('[name='+deleteFieldName+']').val(1);
-            var messageDiv = $('<div class="pending-change-message" style="color: #0074bd; text-align: center; border: 1px dashed #ccc; display: flex; align-items: center; justify-content: center; width: 120px; height: 100px;">{/literal}{ts}Save to apply changes.{/ts}{literal}</div>');
+            var messageDiv = $('<div class="pending-change-message" style="color: #0074bd; text-align: center; border: 1px dashed #ccc; display: flex; align-items: center; justify-content: center; width: 120px; height: 100px;">'+saveNotice+'</div>');
             imageElement.hide();
             $(this).hide();
             imageElement.after(messageDiv);
@@ -192,12 +193,12 @@
                 var imageElement = container.find('img');
                 container.find('.pending-change-message').remove();
                 if (imageElement.length > 0) {
-                    var messageDiv = $('<div class="pending-change-message" style="color: #0074bd; text-align: center; border: 1px dashed #ccc; display: flex; align-items: center; justify-content: center; width: 120px; height: 100px;">Save to apply changes.</div>');
+                    var messageDiv = $('<div class="pending-change-message" style="color: #0074bd; text-align: center; border: 1px dashed #ccc; display: flex; align-items: center; justify-content: center; width: 120px; height: 100px;">'+saveNotice+'</div>');
                     imageElement.hide();
                     container.find('.delete-image').hide();
                     imageElement.after(messageDiv);
                 } else {
-                    var messageDiv = $('<div class="pending-change-message" style="color: #0074bd; text-align: center; border: 1px dashed #ccc; display: flex; align-items: center; justify-content: center; width: 120px; height: 100px; margin-bottom: 5px;">Save to apply changes.</div>');
+                    var messageDiv = $('<div class="pending-change-message" style="color: #0074bd; text-align: center; border: 1px dashed #ccc; display: flex; align-items: center; justify-content: center; width: 120px; height: 100px; margin-bottom: 5px;">'+saveNotice+'</div>');
                     $(this).before(messageDiv);
                 }
             }
