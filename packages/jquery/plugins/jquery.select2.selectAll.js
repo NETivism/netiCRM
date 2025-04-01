@@ -46,18 +46,37 @@
     let self = this;
     var $rendered = decorated.call(this);
     if (self.options.get('selectAllButton')) {
-      let translations = self.options.get('translations'),
-        $selectAll = $(
-          '<button class="btn" type="button" style="margin-left:6px;">' +
-          '<i class="zmdi zmdi-check-square"></i> ' + translations.dict.selectAll() +
-          '</button>'
-        ),
-        $unselectAll = $(
-          '<button class="btn" type="button" style="margin-left:6px;">' +
-          '<i class="zmdi zmdi-square-o"></i> ' + translations.dict.unselectAll() +
-          '</button>'
-        ),
-        $btnContainer = $('<div class="select2-selectall-actions" style="margin-top:3px; text-align:center;">').append($selectAll).append($unselectAll);
+      let translations = self.options.get('translations');
+      let selectAllText = "Select All";
+      let unselectAllText = "Unselect All";
+
+      try {
+        if (translations.dict) {
+          if (typeof translations.dict.selectAll === 'function') {
+            selectAllText = translations.dict.selectAll();
+            unselectAllText = translations.dict.unselectAll();
+          }
+          if (typeof translations.dict.unselectAll === 'function') {
+            unselectAllText = translations.dict.unselectAll();
+          }
+        }
+      } catch (e) {
+        console.warn('Error getting translation for selectAll/unselectAll:', e);
+      }
+
+      let $selectAll = $(
+        '<button class="btn" type="button" style="margin-left:6px;">' +
+        '<i class="zmdi zmdi-check-square"></i> ' + selectAllText +
+        '</button>'
+      );
+
+      let $unselectAll = $(
+        '<button class="btn" type="button" style="margin-left:6px;">' +
+        '<i class="zmdi zmdi-square-o"></i> ' + unselectAllText +
+        '</button>'
+      );
+
+      let $btnContainer = $('<div class="select2-selectall-actions" style="margin-top:3px; text-align:center;">').append($selectAll).append($unselectAll);
 
       if (!this.$element.prop("multiple")) {
         // This isn't a multi-select, don't add the buttons
