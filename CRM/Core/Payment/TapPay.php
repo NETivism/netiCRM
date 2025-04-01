@@ -1407,7 +1407,7 @@ LIMIT 0, 100
   public static function doRecurTransact($recurId = NULL, $sendMail = FALSE) {
     // Get current user
     $session = CRM_Core_Session::singleton();
-    $userId = $session->get('userID');
+    $contactId = $session->get('userID');
 
     $resultNote = self::payByToken($recurId, NULL, $sendMail);
 
@@ -1422,7 +1422,7 @@ LIMIT 0, 100
       $tappayData = new CRM_Contribute_DAO_TapPay();
       $tappayData->id = $tappayId;
       $tappayData->find(TRUE);
-      $tappayData->created_id = $userId;
+      $tappayData->created_id = $contactId;
       $tappayData->save();
     }
     return $resultNote;
@@ -1561,8 +1561,7 @@ LIMIT 0, 100
     $returnData[ts('Response Code')] = $tappayObject->status;
     $returnData[ts('Response Message')] = $tappayObject->msg;
 
-    $drupal_user_id = $tappayDAO->created_id;
-    $contact_id = CRM_Core_BAO_UFMatch::getContactId($drupal_user_id);
+    $contact_id = $tappayDAO->created_id;
     if ($contact_id) {
       $contactName = CRM_Contact_BAO_Contact::displayName($contact_id);
       $returnData[ts('Added By')] = array('id' => $contact_id, 'name' => $contactName);
