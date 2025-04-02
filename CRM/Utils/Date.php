@@ -248,14 +248,32 @@ class CRM_Utils_Date {
     return $fullMonthNames;
   }
 
-  static function unixTime($string) {
+  /**
+   * Convert date string to Unix timestamp
+   *
+   * If seconds exist in input: Uses original seconds
+   * If no seconds specified: Uses 0 by default, or 59 if $useEndOfMinute=true
+   *
+   * @param string $string Date string (YYYY-MM-DD HH:MM:SS)
+   * @param bool $useEndOfMinute If true, sets seconds to 59 when not specified
+   * @return int Unix timestamp
+   *
+   */
+  static function unixTime($string, $useEndOfMinute = false) {
     if (empty($string)) {
       return 0;
     }
     $parsedDate = date_parse($string);
+
+    if (isset($parsedDate['second']) && $parsedDate['second'] > 0) {
+      $second = CRM_Utils_Array::value('second', $parsedDate, 0);
+    } else {
+      $second = $useEndOfMinute ? 59 : 0;
+    }
+
     return mktime(CRM_Utils_Array::value('hour', $parsedDate),
       CRM_Utils_Array::value('minute', $parsedDate),
-      59,
+      $second,
       CRM_Utils_Array::value('month', $parsedDate),
       CRM_Utils_Array::value('day', $parsedDate),
       CRM_Utils_Array::value('year', $parsedDate)

@@ -1809,8 +1809,8 @@ WHERE  ce.loc_block_id = $locBlockId";
 
   static function validRegistrationDate(&$values, $contactID) {
     // make sure that we are between  registration start date and registration end date
-    $startDate = strtotime(CRM_Utils_Array::value('registration_start_date', $values));
-    $endDate = strtotime(CRM_Utils_Array::value('registration_end_date', $values));
+    $startDate = CRM_Utils_Date::unixTime(CRM_Utils_Array::value('registration_start_date', $values));
+    $endDate = CRM_Utils_Date::unixTime(CRM_Utils_Array::value('registration_end_date', $values), true);
     $now = time();
     $validDate = TRUE;
     if ($startDate && $startDate >= $now) {

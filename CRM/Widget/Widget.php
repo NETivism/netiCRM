@@ -139,7 +139,7 @@ WHERE  id = %1";
       }
 
       if ($dao->end_date) {
-        $endDate = CRM_Utils_Date::unixTime($dao->end_date);
+        $endDate = CRM_Utils_Date::unixTime($dao->end_date, true);
         if ($endDate &&
           $endDate < $now
         ) {
