@@ -133,6 +133,10 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
       }
     }
 
+    if (!empty($defaults['customDonorCredit']['anonymous']) && empty($defaults['anonymousDonorCreditDefault'])) {
+      $defaults['anonymousDonorCreditDefault'] = ts('Anonymous');
+    }
+
     return $defaults;
   }
 

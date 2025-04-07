@@ -91,6 +91,10 @@
               if ($('input[name="customDonorCredit[anonymous]"]').is(':checked')) {
                 $('#anonymousDonorCreditDefault-tr').show();
                 $('#anonymousDonorCreditDefault').addClass('required');
+
+                if (!$('#anonymousDonorCreditDefault').val()) {
+                  $('#anonymousDonorCreditDefault').val("{/literal}{ts escape='js'}Anonymous{/ts}{literal}");
+                }
               } else {
                 $('#anonymousDonorCreditDefault-tr').hide();
                 $('#anonymousDonorCreditDefault').removeClass('required');
