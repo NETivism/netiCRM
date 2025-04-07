@@ -50307,3 +50307,9 @@ msgstr "匯入手續費與撥款日"
 #: CRM/Admin/Form/Setting/Recurring.php
 msgid "Default contribution page for one-time renewal link"
 msgstr "一次續捐連結預設募款頁"
+
+#: templates/CRM/Admin/Form/Setting/Recurring.tpl
+msgid ""
+"If the linked page is unavailable or the contact has no donation history, "
+"the system will redirect to this default contribution page."
+msgstr "當一次性續捐連結所對應的募款頁失效、被停用，或聯絡人沒有過往捐款紀錄時，系統會自動導向此預設募款頁。"

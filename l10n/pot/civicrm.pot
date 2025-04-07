@@ -49730,3 +49730,7 @@ msgstr ""
 #: CRM/Admin/Form/Setting/Recurring.php
 msgid "Default contribution page for one-time renewal link"
 msgstr ""
+
+#: templates/CRM/Admin/Form/Setting/Recurring.tpl
+msgid "If the linked page is unavailable or the contact has no donation history, the system will redirect to this default contribution page."
+msgstr ""
