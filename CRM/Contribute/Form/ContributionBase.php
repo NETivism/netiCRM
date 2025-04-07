@@ -499,7 +499,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
 
       //start and end date of the contribution page
       $startDate = CRM_Utils_Date::unixTime(CRM_Utils_Array::value('start_date', $this->_values));
-      $endDate = CRM_Utils_Date::unixTime(CRM_Utils_Array::value('end_date', $this->_values));
+      $endDate = CRM_Utils_Date::unixTime(CRM_Utils_Array::value('end_date', $this->_values), true);
       $now = time();
 
       if ($pcpInfo['contribution_page_id'] != $this->_values['id']) {

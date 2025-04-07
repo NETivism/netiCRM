@@ -1100,7 +1100,7 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
         if(!$this->_values['event']['is_monetary'] && $this->_values['event']['allow_cancel_by_link']){
           $checksumLife = 'inf';
           if ($endDate = CRM_Utils_Array::value('end_date', $this->_values['event'])) {
-            $checksumLife = (CRM_Utils_Date::unixTime($endDate) - time()) / (60 * 60);
+            $checksumLife = (CRM_Utils_Date::unixTime($endDate, true) - time()) / (60 * 60);
           }
           $checksumValue = CRM_Contact_BAO_Contact_Utils::generateChecksum($contactId, NULL, $checksumLife);
           $this->assign('hasCancelLink', TRUE);

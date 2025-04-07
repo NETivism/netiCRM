@@ -1536,7 +1536,7 @@ UPDATE  civicrm_participant
 
         $checksumLife = 'inf';
         if ($endDate = CRM_Utils_Array::value('end_date', $eventDetails)) {
-          $checksumLife = (CRM_Utils_Date::unixTime($endDate) - time()) / (60 * 60);
+          $checksumLife = (CRM_Utils_Date::unixTime($endDate, true) - time()) / (60 * 60);
         }
         $checksumValue = CRM_Contact_BAO_Contact_Utils::generateChecksum($contactId, NULL, $checksumLife);
       }

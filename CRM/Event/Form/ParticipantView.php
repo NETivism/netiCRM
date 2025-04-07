@@ -83,7 +83,7 @@ class CRM_Event_Form_ParticipantView extends CRM_Core_Form {
       $checksumLife = 'inf';
       $endDate = CRM_Utils_Array::value('end_date', $eventDetails);
       if ($endDate) {
-        $checksumLife = (CRM_Utils_Date::unixTime($endDate) - time()) / (60 * 60);
+        $checksumLife = (CRM_Utils_Date::unixTime($endDate, true) - time()) / (60 * 60);
       }
       $checksumValue = CRM_Contact_BAO_Contact_Utils::generateChecksum($contactID, NULL, $checksumLife);
       $values[$participantID]['checksum'] = $checksumValue;
