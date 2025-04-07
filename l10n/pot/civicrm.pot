@@ -49726,3 +49726,7 @@ msgstr ""
 #: CRM/Contribute/xml/Menu/Contribute.xml
 msgid "Import Fee and Transaction Date"
 msgstr ""
+
+#: CRM/Admin/Form/Setting/Recurring.php
+msgid "Default contribution page for one-time renewal link"
+msgstr ""
