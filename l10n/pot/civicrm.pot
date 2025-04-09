@@ -49734,3 +49734,8 @@ msgstr ""
 #: templates/CRM/Admin/Form/Setting/Recurring.tpl
 msgid "If the linked page is unavailable or the contact has no donation history, the system will redirect to this default contribution page."
 msgstr ""
+
+#: CRM/Core/SelectValues.php
+#: CRM/Contact/BAO/Contact/Utils.php
+msgid "Recurring Contribution Renewal Link"
+msgstr ""
