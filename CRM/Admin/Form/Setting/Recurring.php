@@ -45,7 +45,7 @@ class CRM_Admin_Form_Setting_Recurring extends CRM_Admin_Form_Setting {
       foreach($pages as $id => &$page) {
         $page .= " ($id)";
       }
-      $this->addSelect('contribution_page_id', ts('Default contribution page for one-time renewal link'), array('' => ts('-- Select --')) + $pages);
+      $this->addSelect('defaultRenewalPageId', ts('Default contribution page for one-time renewal link'), array('' => ts('-- Select --')) + $pages);
     }
 
     parent::buildQuickForm($check);

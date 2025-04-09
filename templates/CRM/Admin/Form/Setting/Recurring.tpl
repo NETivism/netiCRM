@@ -49,11 +49,11 @@
     </div>
   </div>
   {/if}
-  {if $form.contribution_page_id}
+  {if $form.defaultRenewalPageId}
   <div class="crm-section">
-    <div class="label">{$form.contribution_page_id.label}</div>
+    <div class="label">{$form.defaultRenewalPageId.label}</div>
     <div class="content">
-      {$form.contribution_page_id.html}
+      {$form.defaultRenewalPageId.html}
       <div class="description">{ts}If the linked page is unavailable or the contact has no donation history, the system will redirect to this default contribution page.{/ts}</div>
     </div>
   </div>
