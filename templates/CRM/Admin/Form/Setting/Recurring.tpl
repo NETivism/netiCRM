@@ -49,4 +49,13 @@
     </div>
   </div>
   {/if}
+  {if $form.defaultRenewalPageId}
+  <div class="crm-section">
+    <div class="label">{$form.defaultRenewalPageId.label}</div>
+    <div class="content">
+      {$form.defaultRenewalPageId.html}
+      <div class="description">{ts}If the linked page is unavailable or the contact has no donation history, the system will redirect to this default contribution page.{/ts}</div>
+    </div>
+  </div>
+  {/if}
 <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>     
