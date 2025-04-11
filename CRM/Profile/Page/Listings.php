@@ -192,7 +192,7 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
     $this->_params = array();
 
     $resetArray = array('group', 'tag', 'preferred_communication_method', 'do_not_phone',
-      'do_not_email', 'do_not_mail', 'do_not_sms', 'do_not_trade', 'gender',
+      'do_not_email', 'do_not_mail', 'do_not_sms', 'do_not_trade', 'do_not_notify', 'gender',
     );
 
     foreach ($this->_fields as $name => $field) {

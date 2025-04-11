@@ -133,6 +133,7 @@ class CRM_Utils_Address {
         'do_not_mail' => CRM_Utils_Array::value('do_not_mail', $fields),
         'do_not_sms' => CRM_Utils_Array::value('do_not_sms', $fields),
         'do_not_trade' => CRM_Utils_Array::value('do_not_trade', $fields),
+        'do_not_notify' => CRM_Utils_Array::value('do_not_notify', $fields),
         'job_title' => CRM_Utils_Array::value('job_title', $fields),
         'birth_date' => CRM_Utils_Array::value('birth_date', $fields),
         'gender' => CRM_Utils_Array::value('gender', $fields),
