@@ -567,7 +567,7 @@ class CRM_Utils_Token {
       /* This should come from UF */
 
       self::$_tokens[$key] = array_merge(array_keys(CRM_Contact_BAO_Contact::exportableFields('All')),
-        array('checksum', 'contact_id', 'state_province_name')
+        array('checksum', 'contact_id', 'state_province_name', 'recurring_renewal_link')
       );
     }
 
@@ -598,7 +598,7 @@ class CRM_Utils_Token {
       /* This should come from UF */
 
       self::$_tokens['contact'] = array_merge(array_keys(CRM_Contact_BAO_Contact::exportableFields('All')),
-        array('checksum', 'contact_id', 'state_province_name')
+        array('checksum', 'contact_id', 'state_province_name', 'recurring_renewal_link')
       );
     }
 
@@ -621,6 +621,45 @@ class CRM_Utils_Token {
     elseif ($token == 'state_province_name') {
       $value = CRM_Utils_Array::retrieveValueRecursive($contact, $token);
       $value = ts($value);
+    }
+    elseif ($token == 'recurring_renewal_link' && defined('ONE_TIME_RENEWAL_ENABLED')) {
+      $contactId = $contact['contact_id'];
+      $oid = 0;
+      $pageId = null;
+
+      $sql = "
+      SELECT
+        c.id as contribution_id,
+        c.contribution_page_id as page_id,
+        r.id as recur_id
+      FROM civicrm_contribution_recur r
+      JOIN civicrm_contribution c ON c.contribution_recur_id = r.id
+      JOIN civicrm_contribution_page p ON c.contribution_page_id = p.id
+      WHERE r.contact_id = %1
+      AND p.is_active != 0
+      ORDER BY r.id DESC, c.id DESC
+      LIMIT 1";
+      $params = array(
+        1 => array($contactId, 'Integer')
+      );
+      $dao = CRM_Core_DAO::executeQuery($sql, $params);
+      if ($dao->fetch()) {
+        $oid = $dao->contribution_id;
+        $pageId = $dao->page_id;
+      } else {
+        $config = CRM_Core_Config::singleton();
+        $pageId = $config->default_renewal_contribution_page_id;
+      }
+
+      if ($pageId) {
+        $contactTypeSql = "SELECT contact_type FROM civicrm_contact WHERE id = %1";
+        $contactTypeParams = array(1 => array($contactId, 'Integer'));
+        $contactType = CRM_Core_DAO::singleValueQuery($contactTypeSql, $contactTypeParams);
+        if ($contactType == 'Individual') {
+          $cs = CRM_Contact_BAO_Contact_Utils::generateChecksum($contactId);
+          $value = "<a href='".CRM_Utils_System::url('civicrm/contribute/transact', "reset=1&id=$pageId&cid=$contactId&oid=$oid&cs=$cs", TRUE)."' target='_blank'>".ts("Recurring Contribution Renewal Link")."</a>";
+        }
+      }
     }
     else {
       $value = CRM_Utils_Array::retrieveValueRecursive($contact, $token);
