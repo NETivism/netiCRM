@@ -231,7 +231,7 @@ function checkEmail( ) {
     var contactID = window.contact_select_id;
     if ( contactID ) {
         var postUrl = "{/literal}{crmURL p='civicrm/ajax/getemail' h=0}{literal}";
-        cj.post( postUrl, {contact_id: contactID},
+        cj.post( postUrl, {contact_id: contactID, check_can_notify: true},
             function ( response ) {
                 if ( response ) {
                     cj("#email-receipt").show( );
