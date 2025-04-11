@@ -95,6 +95,15 @@ class CRM_Contribute_Form_Contribution_ThankYou extends CRM_Contribute_Form_Cont
           $dao->insert();
         }
       }
+      // do_not_notify check
+      $contributionContactId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $this->_contributionID, 'contact_id');
+      if (!empty($contributionContactId)) {
+        $detail = CRM_Contact_BAO_Contact::getContactDetails($contributionContactId);
+        if (!empty($detail[5])) {
+          CRM_Core_Error::debug_log_message("Skipped email notify contribution_thankyou for contact {$contributionContactId} due to do_not_notify marked");
+          $this->assign('do_not_notify', TRUE);
+        }
+      }
     }
 
     // add dataLayer for gtm
