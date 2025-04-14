@@ -383,7 +383,7 @@ cj(function($){
       $('#custom_{/literal}{$receiptSerial}{literal}').removeAttr('readonly');
     }
 
-    //Full Name
+    // Full Name
     if($('#r_name_full:checked').val()){
       if($('#last_name,#first_name').length>1){
         if (is_for_organization) {
@@ -392,13 +392,13 @@ cj(function($){
         else {
           $('#custom_{/literal}{$receiptDonorCredit}{literal}').val($('#last_name').val()+$('#first_name').val());
         }
-        $('#custom_{/literal}{$receiptDonorCredit}{literal}').attr('readonly','readonly');
+        $('#custom_{/literal}{$receiptDonorCredit}{literal}').prop('readonly', true);
       }
       else {
         if (is_for_organization) {
           $('#custom_{/literal}{$receiptDonorCredit}{literal}').val($('#organization_name').val());
         }
-        $('#custom_{/literal}{$receiptDonorCredit}{literal}').attr('readonly','readonly');
+        $('#custom_{/literal}{$receiptDonorCredit}{literal}').prop('readonly', true);
       }
     }
 
@@ -446,28 +446,34 @@ cj(function($){
       }
       if (name) {
         $('#custom_{/literal}{$receiptDonorCredit}{literal}').val(name);
-        $('#custom_{/literal}{$receiptDonorCredit}{literal}').attr('readonly','readonly');
+        $('#custom_{/literal}{$receiptDonorCredit}{literal}').prop('readonly', true);
       }
     }
 
     // Custom Name
     else if($('#r_name_custom:checked').val()){
       if($('#last_name,#first_name').length>1){
-        $('#custom_{/literal}{$receiptDonorCredit}{literal}').val($('#last_name').val()+$('#first_name').val());
-        $('#custom_{/literal}{$receiptDonorCredit}{literal}').removeAttr('readonly');
+        if (is_for_organization) {
+          $('#custom_{/literal}{$receiptDonorCredit}{literal}').val($('#organization_name').val());
+        }
+        else {
+          $('#custom_{/literal}{$receiptDonorCredit}{literal}').val($('#last_name').val()+$('#first_name').val());
+        }
+        $('#custom_{/literal}{$receiptDonorCredit}{literal}').prop('readonly', false);
       }
       else if ($is_for_organization) {
         $('#custom_{/literal}{$receiptDonorCredit}{literal}').val($('#organization_name').val());
-        $('#custom_{/literal}{$receiptDonorCredit}{literal}').removeAttr('readonly');
+        $('#custom_{/literal}{$receiptDonorCredit}{literal}').prop('readonly', false);
       }
     }
 
     // I don't agree to disclose name
     else if($('#r_name_anonymous:checked').val()){
       $('#custom_{/literal}{$receiptDonorCredit}{literal}').val('{/literal}{$donor_anonymous_default}{literal}');
+      $('#custom_{/literal}{$receiptDonorCredit}{literal}').prop('readonly', true);
     }
     else {
-      $('#custom_{/literal}{$receiptDonorCredit}{literal}').attr('readonly','readonly');
+      $('#custom_{/literal}{$receiptDonorCredit}{literal}').prop('readonly', true);
     }
 
     $('#custom_{/literal}{$receiptTitle}{literal} input.required:visible:not([type=checkbox])').trigger('blur');
