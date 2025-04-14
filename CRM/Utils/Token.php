@@ -648,7 +648,7 @@ class CRM_Utils_Token {
         $pageId = $dao->page_id;
       } else {
         $config = CRM_Core_Config::singleton();
-        $pageId = $config->default_renewal_contribution_page_id;
+        $pageId = $config->defaultRenewalPageId;
       }
 
       if ($pageId) {
@@ -657,7 +657,7 @@ class CRM_Utils_Token {
         $contactType = CRM_Core_DAO::singleValueQuery($contactTypeSql, $contactTypeParams);
         if ($contactType == 'Individual') {
           $cs = CRM_Contact_BAO_Contact_Utils::generateChecksum($contactId);
-          $value = "<a href='".CRM_Utils_System::url('civicrm/contribute/transact', "reset=1&id=$pageId&cid=$contactId&oid=$oid&cs=$cs", TRUE)."' target='_blank'>".ts("Recurring Contribution Renewal Link")."</a>";
+          $value = CRM_Utils_System::url('civicrm/contribute/transact', "reset=1&id=$pageId&cid=$contactId&oid=$oid&cs=$cs",true);
         }
       }
     }
