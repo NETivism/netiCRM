@@ -328,7 +328,10 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       if (!$this->_values['is_active']) {
         if ($this->_action != CRM_Core_Action::PREVIEW || !CRM_Core_Permission::check('access CiviContribute')) {
           // form is inactive, die a fatal death
-          return CRM_Core_Error::statusBounce(ts('The page you requested is currently unavailable.'));
+          // Refs #43078 10f, redirect to default contribution page.
+          $config = CRM_Core_Config::singleton();
+          $pageId = $config->defaultRenewalPageId;
+          CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/contribute/transact', 'reset=1&id='.$pageId));
         }
       }
       else {

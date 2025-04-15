@@ -31791,7 +31791,7 @@ msgstr "當交易成功之後，電子郵件確認信將會寄送到 %1。"
 msgid ""
 "Your registration has been processed successfully. Please print this page "
 "for your records."
-msgstr "已成功記錄了您的報名資料。請保存此信件，作為存查之用。"
+msgstr "已成功記錄了您的報名資料。請列印保存此頁面，作為存查之用。"
 
 #: templates/CRM/Event/Form/Registration/ThankYou.tpl
 msgid "A registration confirmation email has also been sent to %1"
@@ -50321,3 +50321,18 @@ msgstr "定期定額續捐連結"
 #: CRM/Core/SelectValues.php
 msgid "Do Not Notify"
 msgstr "不要收到系統流程信件"
+
+#: templates/CRM/Contribute/Form/ContributionPage/Delete.tpl
+msgid ""
+"This contribution page is set as the default page for one-time recurring "
+"contribution links and cannot be deleted or disable.<br/>Please go to <a "
+"href='%1'>Administer >> CiviContribute >> Recurring Settings</a> and update "
+"the Default contribution page for one-time renewal link field before trying "
+"again."
+msgstr "此募款頁是一次續捐連結的預設募款頁，無法刪除或停用。<br/>請前往<a href='%1'>設定 >> 捐款 >> 定期定額設定</a>並更新「一次續捐連結預設募款頁」欄位後再試一次。"
+
+#: templates/CRM/Event/Form/Registration/ThankYou.tpl
+msgid ""
+"To ensure that you receive event registration notifications, we recommend "
+"contacting the administrator."
+msgstr "為了讓您順利收到後續的活動報名通知，建議您聯繫管理員。"

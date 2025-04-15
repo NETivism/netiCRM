@@ -55,6 +55,13 @@ class CRM_Contribute_Form_ContributionPage_Delete extends CRM_Contribute_Form_Co
   protected $_relatedContributions;
 
   /**
+   * Check if default renewal page
+   *
+   */
+  protected $_defaulRenwaltPage;
+
+
+  /**
    * Function to set variables up before form is built
    *
    * @return void
@@ -78,6 +85,15 @@ class CRM_Contribute_Form_ContributionPage_Delete extends CRM_Contribute_Form_Co
       $this->_relatedContributions = TRUE;
       $this->assign('relatedContributions', TRUE);
     }
+
+    $config = CRM_Core_Config::singleton();
+    $defaultPageId = $config->defaultRenewalPageId;
+    if ($this->_id == $defaultPageId) {
+      $this->_defaulRenwaltPage = TRUE;
+      $this->assign('defaultContributionPage', TRUE);
+      $recurringSettingURL = CRM_Utils_System::url('civicrm/admin/recurring', 'reset=1');
+      $this->assign('recurringSettingURL', $recurringSettingURL);
+    }
   }
 
   /**
@@ -93,7 +109,7 @@ class CRM_Contribute_Form_ContributionPage_Delete extends CRM_Contribute_Form_Co
     //if there are contributions related to Contribution Page
     //then onle cancel button is displayed
     $buttons = array();
-    if (!$this->_relatedContributions) {
+    if (!$this->_relatedContributions && !$this->_defaulRenwaltPage) {
       $buttons[] = array('type' => 'next',
         'name' => ts('Delete Contribution Page'),
         'isDefault' => TRUE,
