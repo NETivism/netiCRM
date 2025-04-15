@@ -90,6 +90,15 @@ class CRM_Event_Form_Registration_ThankYou extends CRM_Event_Form_Registration {
       }
     }
 
+    $participantContactId = $this->get('participantContactId');
+    if (!empty($contactId)) {
+      $detail = CRM_Contact_BAO_Contact::getContactDetails($participantContactId);
+      if (!empty($detail[5])) {
+        CRM_Core_Error::debug_log_message("Skipped email notify contribution_thankyou for contact {$participantContactId} due to do_not_notify marked");
+        $this->assign('do_not_notify', TRUE);
+      }
+    }
+
     // add dataLayer for gtm
     if (!$this->get('dataLayerAdded')) {
       if ($this->_trxnId) {

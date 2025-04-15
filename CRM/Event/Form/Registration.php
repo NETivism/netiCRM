@@ -989,6 +989,9 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
         $this->fixLocationFields($value, $fields);
 
         $contactID = $this->updateContactFields($contactID, $value, $fields);
+        if (CRM_Utils_Array::value('is_primary', $value)) {
+          $this->set('participantContactID', $contactID);
+        }
 
         // lets store the contactID in the session
         // we dont store in userID in case the user is doing multiple
@@ -999,7 +1002,6 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
         }
 
         //lets get the status if require approval or waiting.
-
         $waitingStatuses = CRM_Event_PseudoConstant::participantStatus(NULL, "class = 'Waiting'");
         if ($this->_isOnWaitlist && !$this->_allowConfirmation) {
           $value['participant_status_id'] = array_search('On waitlist', $waitingStatuses);
