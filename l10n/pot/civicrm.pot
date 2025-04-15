@@ -49745,5 +49745,5 @@ msgid "Do Not Notify"
 msgstr ""
 
 #: templates/CRM/Contribute/Form/ContributionPage/Delete.tpl
-msgid "This contribution page is set as the default page for one-time recurring contribution links and cannot be deleted.<br/>Please go to <a href='%1'>Administer >> CiviContribute >> Recurring Settings</a> and update the Default contribution page for one-time renewal link field before trying again."
+msgid "This contribution page is set as the default page for one-time recurring contribution links and cannot be deleted or disable.<br/>Please go to <a href='%1'>Administer >> CiviContribute >> Recurring Settings</a> and update the Default contribution page for one-time renewal link field before trying again."
 msgstr ""

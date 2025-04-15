@@ -28,12 +28,11 @@
       
           {if $relatedContributions}
            {ts 1=$title}You cannot delete this Contribution Page because it has already been used to submit a contribution or membership payment. It is recommended that your disable the page instead of deleting it, to preserve the integrity of your contribution records. If you do want to completely delete this contribution page, you first need to search for and delete all of the contribution transactions associated with this page in CiviContribute.{/ts}
+          {elseif $defaultContributionPage}
+           {ts 1=$recurringSettingURL}This contribution page is set as the default page for one-time recurring contribution links and cannot be deleted or disable.<br/>Please go to <a href='%1'>Administer >> CiviContribute >> Recurring Settings</a> and update the Default contribution page for one-time renewal link field before trying again.{/ts}
           {else}
            WARNING: Are you sure you want to Delete the selected Contribution Page? A Delete operation cannot be undone. Do you want to continue?
         {/if} 
-        {if $defaultContributionPage}
-        {ts 1=$recurringSettingURL}This contribution page is set as the default page for one-time recurring donation links and cannot be deleted.<br/>Please go to <a href='%1'>Administer >> CiviContribute >> Recurring Settings</a> and update the "Default contribution page for one-time renewal link" field before trying again.{/ts}
-        {/if}
       </div>
 <div class="form-item">
     {include file="CRM/common/formButtons.tpl"}
