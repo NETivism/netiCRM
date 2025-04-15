@@ -31,6 +31,9 @@
           {else}
            WARNING: Are you sure you want to Delete the selected Contribution Page? A Delete operation cannot be undone. Do you want to continue?
         {/if} 
+        {if $defaultContributionPage}
+        {ts 1=$recurringSettingURL}This contribution page is set as the default page for one-time recurring donation links and cannot be deleted.<br/>Please go to <a href='%1'>Administer >> CiviContribute >> Recurring Settings</a> and update the "Default contribution page for one-time renewal link" field before trying again.{/ts}
+        {/if}
       </div>
 <div class="form-item">
     {include file="CRM/common/formButtons.tpl"}
