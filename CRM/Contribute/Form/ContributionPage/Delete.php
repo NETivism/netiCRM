@@ -88,7 +88,7 @@ class CRM_Contribute_Form_ContributionPage_Delete extends CRM_Contribute_Form_Co
 
     $config = CRM_Core_Config::singleton();
     $defaultPageId = $config->defaultRenewalPageId;
-    if ($this->_id == $defaultPageId) {
+    if ($this->_id == $defaultPageId && defined('ONE_TIME_RENEWAL_ENABLED')) {
       $this->_defaulRenwaltPage = TRUE;
       $this->assign('defaultContributionPage', TRUE);
       $recurringSettingURL = CRM_Utils_System::url('civicrm/admin/recurring', 'reset=1');
