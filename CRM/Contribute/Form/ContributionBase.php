@@ -328,10 +328,24 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       if (!$this->_values['is_active']) {
         if ($this->_action != CRM_Core_Action::PREVIEW || !CRM_Core_Permission::check('access CiviContribute')) {
           // form is inactive, die a fatal death
-          // Refs #43078 10f, redirect to default contribution page.
-          $config = CRM_Core_Config::singleton();
-          $pageId = $config->defaultRenewalPageId;
-          CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/contribute/transact', 'reset=1&id='.$pageId));
+          if (defined('ONE_TIME_RENEWAL_ENABLED')) {
+            $config = CRM_Core_Config::singleton();
+            $pageId = $config->defaultRenewalPageId;
+            // Handle utm params
+            $utmParams = ['utm_source', 'utm_medium', 'utm_term', 'utm_content', 'utm_campaign'];
+            $queryParts = [];
+            foreach ($utmParams as $param) {
+              if (!empty($_GET[$param])) {
+                $queryParts[] = $param . '=' . urlencode($_GET[$param]);
+              }
+            }
+            $queryParts[] = 'reset=1';
+            $queryParts[] = 'id=' . $pageId;
+            $queryString = implode('&', $queryParts);
+            CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/contribute/transact', $queryString));
+          } else {
+            return CRM_Core_Error::statusBounce(ts('The page you requested is currently unavailable.'));
+          }
         }
       }
       else {
