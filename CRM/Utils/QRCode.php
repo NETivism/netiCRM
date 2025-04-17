@@ -5,6 +5,7 @@ class CRM_Utils_QRcode {
   private $_data;
   
   function __construct($string, $format = 'png') {
+    require_once 'phpqrcode/phpqrcode.php';
 
     ob_start();
     switch($format) {
