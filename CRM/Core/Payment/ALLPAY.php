@@ -1,7 +1,15 @@
 <?php
 date_default_timezone_set('Asia/Taipei');
-require_once 'CRM/Core/Payment.php';
+
 class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
+  /**
+   * @var mixed
+   */
+  public $_processorName;
+  /**
+   * @var object
+   */
+  public $_config;
   const ALLPAY_REAL_DOMAIN = 'https://payment.ecpay.com.tw';
   const ALLPAY_TEST_DOMAIN = 'https://payment-stage.ecpay.com.tw';
   const ALLPAY_URL_SITE = '/Cashier/AioCheckOut';

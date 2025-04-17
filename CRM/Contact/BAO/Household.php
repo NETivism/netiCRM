@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Contact/DAO/Contact.php';
+
 class CRM_Contact_BAO_Household extends CRM_Contact_DAO_Contact {
 
   /**

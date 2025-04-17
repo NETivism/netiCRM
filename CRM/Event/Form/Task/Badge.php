@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Event/Form/Task.php';
+
 
 /**
  * This class helps to print the labels for contacts
@@ -41,6 +41,7 @@ require_once 'CRM/Event/Form/Task.php';
  */
 class CRM_Event_Form_Task_Badge extends CRM_Event_Form_Task {
 
+  public $_context;
   /**
    * Are we operating in "single mode", i.e. sending email to one
    * specific contact?
@@ -90,7 +91,7 @@ class CRM_Event_Form_Task_Badge extends CRM_Event_Form_Task {
     CRM_Utils_System::setTitle(ts('Make Name Badges'));
 
     //add select for label
-    require_once 'CRM/Core/OptionGroup.php';
+
     $label = CRM_Core_OptionGroup::values('event_badge');
 
     $this->add('select',
@@ -115,8 +116,8 @@ class CRM_Event_Form_Task_Badge extends CRM_Event_Form_Task {
     $params = $this->controller->exportValues($this->_name);
     $config = CRM_Core_Config::singleton();
 
-    require_once 'CRM/Event/BAO/Query.php';
-    require_once 'CRM/Contact/BAO/Query.php';
+
+
 
     $returnProperties = &CRM_Event_BAO_Query::defaultReturnProperties(CRM_Contact_BAO_Query::MODE_EVENT);
     $additionalFields = array('sort_name', 'current_employer');
@@ -155,7 +156,7 @@ class CRM_Event_Form_Task_Badge extends CRM_Event_Form_Task {
     }
 
     // get the class name from the participantListingID
-    require_once 'CRM/Core/OptionGroup.php';
+
     $className = CRM_Core_OptionGroup::getValue('event_badge',
       $params['badge_id'],
       'value',

@@ -124,6 +124,10 @@ define('IT_UNKNOWN_OPTION',            -6);
 class HTML_Template_IT
 {
     /**
+     * @var string[]
+     */
+    public $blockparents;
+    /**
      * Contains the error objects
      * @var      array
      * @access   public

@@ -35,6 +35,7 @@
  */
 class CRM_Activity_BAO_Query {
 
+  public $_qill;
   /**
    * build select for Case
    *
@@ -167,7 +168,6 @@ class CRM_Activity_BAO_Query {
   static function whereClauseSingle(&$values, &$query) {
     list($name, $op, $value, $grouping, $wildcard) = $values;
 
-    $strtolower = function_exists('mb_strtolower') ? 'mb_strtolower' : 'strtolower';
     $query->_tables['civicrm_activity'] = $query->_whereTables['civicrm_activity'] = 1;
     if ($query->_mode & CRM_Contact_BAO_Query::MODE_ACTIVITY) {
       $query->_skipDeleteClause = TRUE;
@@ -222,7 +222,7 @@ class CRM_Activity_BAO_Query {
         }
         else {
           $name = trim($activityTargetName[2]);
-          $name = strtolower(CRM_Core_DAO::escapeString($name));
+          $name = mb_strtolower(CRM_Core_DAO::escapeString($name), 'UTF-8');
         }
 
         $query->_tables['civicrm_activity_contact'] = $query->_whereTables['civicrm_activity_contact'] = 1;
@@ -260,7 +260,7 @@ class CRM_Activity_BAO_Query {
 
       case 'activity_subject':
         $n = trim($value);
-        $value = strtolower(CRM_Core_DAO::escapeString($n));
+        $value = mb_strtolower(CRM_Core_DAO::escapeString($n), 'UTF-8');
         if ($wildcard) {
           if (strpos($value, '%') !== FALSE) {
             // only add wild card if not there
@@ -295,7 +295,7 @@ class CRM_Activity_BAO_Query {
         break;
 
       case 'activity_tags':
-        require_once 'CRM/Core/BAO/Tag.php';
+
         $value = array_keys($value);
         $activityTags = CRM_Core_BAO_Tag::getTagsUsedFor('civicrm_activity');
 
@@ -409,15 +409,15 @@ class CRM_Activity_BAO_Query {
       $form->addSelect('activity_tags', ts('Activity Tag(s)'), $activity_tags, $attrmultiple);
     }
 
-    require_once ('CRM/Campaign/BAO/Survey.php');
+
     $surveys = array('' => ts('- none -')) + CRM_Campaign_BAO_Survey::getSurveyList();
     $form->add('select', 'activity_survey_id', ts('Survey'), $surveys, FALSE);
 
-    require_once 'CRM/Core/BAO/CustomGroup.php';
+
     $extends = array('Activity');
     $groupDetails = CRM_Core_BAO_CustomGroup::getGroupDetail(NULL, TRUE, $extends);
     if ($groupDetails) {
-      require_once 'CRM/Core/BAO/CustomField.php';
+
       $form->assign('activityGroupTree', $groupDetails);
       foreach ($groupDetails as $group) {
         foreach ($group['fields'] as $field) {
@@ -456,7 +456,7 @@ class CRM_Activity_BAO_Query {
       );
 
       // also get all the custom activity properties
-      require_once "CRM/Core/BAO/CustomField.php";
+
       $fields = CRM_Core_BAO_CustomField::getFieldsForImport('Activity');
       if (!empty($fields)) {
         foreach ($fields as $name => $dontCare) {

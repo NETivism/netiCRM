@@ -34,8 +34,8 @@
  *
  */
 
-require_once 'CRM/Event/Form/ManageEvent.php';
-require_once 'CRM/Event/BAO/Event.php';
+
+
 
 /**
  * This class generates form components for processing Event
@@ -81,7 +81,7 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
         $defaults['is_multiple_registrations_max'] = $defaults['is_multiple_registrations'];
       }
 
-      require_once 'CRM/Core/BAO/UFJoin.php';
+
       $ufJoinParams = array('entity_table' => 'civicrm_event',
         'module' => 'CiviEvent',
         'entity_id' => $eventId,
@@ -142,7 +142,7 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
    * @return void
    */
   function setShowHide(&$defaults) {
-    require_once 'CRM/Core/ShowHideBlocks.php';
+
     $this->_showHide = new CRM_Core_ShowHideBlocks(array('registration' => 1), '');
     if (empty($defaults)) {
       $this->_showHide->addShow('registration_screen_show');
@@ -216,7 +216,7 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
 
     $this->addElement('checkbox', 'allow_same_participant_emails', ts('Allow multiple registrations from the same email address?'));
 
-    require_once 'CRM/Event/PseudoConstant.php';
+
     $participantStatuses = &CRM_Event_PseudoConstant::participantStatus();
     if (in_array('Awaiting approval', $participantStatuses) &&
         in_array('Pending from approval', $participantStatuses) &&
@@ -255,8 +255,8 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
     // explicit height and width.
     $form->addWysiwyg('footer_text', ts('Footer Text'), array('rows' => 2, 'cols' => 40));
 
-    require_once "CRM/Core/BAO/UFGroup.php";
-    require_once "CRM/Contact/BAO/ContactType.php";
+
+
     $types = array_merge(array('Contact', 'Individual', 'Participant'),
       CRM_Contact_BAO_ContactType::subTypes('Individual')
     );
@@ -463,7 +463,7 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
       );
     }
 
-    require_once 'CRM/Event/BAO/Event.php';
+
     CRM_Event_BAO_Event::add($params);
 
     // also update the ProfileModule tables
@@ -473,7 +473,7 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
       'entity_id' => $this->_id,
     );
 
-    require_once 'CRM/Core/BAO/UFJoin.php';
+
 
     // first delete all past entries
     CRM_Core_BAO_UFJoin::deleteAll($ufJoinParams);

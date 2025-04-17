@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Utils/Money.php';
+
 
 /**
  * Format the given monetary amount (and currency) for display

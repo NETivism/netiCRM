@@ -24,7 +24,7 @@ class CRM_Utils_System_Drupal6 {
       return FALSE;
     }
     chdir($cmsPath);
-    require_once "$cmsPath/includes/bootstrap.inc";
+
     @drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
     // explicitly setting error reporting, since we cannot handle drupal related notices
     // @todo 1 = E_ERROR, but more to the point setting error reporting deep in code

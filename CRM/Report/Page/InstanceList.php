@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Core/Page.php';
-require_once 'CRM/Report/Utils/Report.php';
+
+
 
 /**
  * Page for invoking report instances

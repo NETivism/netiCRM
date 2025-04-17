@@ -33,9 +33,20 @@
  *
  */
 
-require_once 'CRM/Report/Form.php';
+
 class CRM_Report_Form_Contact_Summary extends CRM_Report_Form {
 
+  /**
+   * @var never[]
+   */
+  public $_columnHeaders;
+  public $_from;
+  public $_aliases;
+  /**
+   * @var string
+   */
+  public $_groupBy;
+  public $_absoluteUrl;
   protected $_summary = NULL;
 
   protected $_emailField = FALSE;

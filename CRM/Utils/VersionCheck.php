@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Config.php';
+
 class CRM_Utils_VersionCheck {
   // timeout for when the connection or the server is slow
   CONST LATEST_VERSION_AT = '',

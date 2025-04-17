@@ -3,6 +3,9 @@
 class CRM_Contribute_Form_NewebpayImport_Upload extends CRM_Core_Form {
 
   function preProcess() {
+    if (strstr(CRM_Utils_System::currentPath(), '/newebpay/')) {
+      CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/contribute/fee/import', 'reset=1'));
+    }
     $this->addFormRule(array('CRM_Contribute_Form_NewebpayImport_Upload', 'formRule'), $this);
   }
 

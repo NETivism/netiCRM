@@ -30,6 +30,12 @@ require_once 'PEAR/Task/Windowseol.php';
  */
 class PEAR_Task_Windowseol_rw extends PEAR_Task_Windowseol
 {
+    public $_contents;
+    public $_pkg;
+    /**
+     * @var never[]
+     */
+    public $_params;
     function __construct(&$pkg, &$config, &$logger, $fileXml)
     {
         parent::__construct($config, $logger, PEAR_TASK_PACKAGE);

@@ -34,11 +34,15 @@
  *
  */
 
-require_once 'CRM/Core/Payment.php';
-require_once 'Google/library/googlecart.php';
-require_once 'Google/library/googleitem.php';
+
+
+
 class CRM_Core_Payment_Google extends CRM_Core_Payment {
 
+  /**
+   * @var mixed
+   */
+  public $_processorName;
   /**
    * mode of operation: live or test
    *
@@ -191,7 +195,7 @@ class CRM_Core_Payment_Google extends CRM_Core_Payment {
       'signature' => $signatureVal,
     );
 
-    require_once 'HTTP/Request.php';
+
     $params = array('method' => HTTP_REQUEST_METHOD_POST,
       'allowRedirects' => FALSE,
     );
@@ -305,7 +309,7 @@ class CRM_Core_Payment_Google extends CRM_Core_Payment {
   }
 
   static function getArrayFromXML($xmlData) {
-    require_once 'Google/library/xml-processing/xmlparser.php';
+
     $xmlParser = new XmlParser($xmlData);
     $root = $xmlParser->GetRoot();
     $data = $xmlParser->GetData();

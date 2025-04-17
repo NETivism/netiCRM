@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Admin/Form.php';
-require_once 'CRM/Core/BAO/MailSettings.php';
+
+
 
 /**
  * This class handles mail account settings.
@@ -42,6 +42,7 @@ require_once 'CRM/Core/BAO/MailSettings.php';
  */
 class CRM_Admin_Form_MailSettings extends CRM_Admin_Form {
 
+  public $_elementIndex;
   /**
    * Function to build the form
    *

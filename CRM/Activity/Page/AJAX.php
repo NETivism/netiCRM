@@ -61,10 +61,10 @@ class CRM_Activity_Page_AJAX {
     $params['rp'] = $rowCount;
 
     // get the activities related to given case
-    require_once "CRM/Case/BAO/Case.php";
+
     $activities = CRM_Case_BAO_Case::getCaseActivity($caseID, $params, $contactID, $context, $userID);
 
-    require_once "CRM/Utils/JSON.php";
+
     $iFilteredTotal = $iTotal = $params['total'];
     $selectorElements = array('display_date', 'subject', 'type', 'with_contacts', 'reporter', 'status', 'links', 'class');
 
@@ -83,7 +83,7 @@ class CRM_Activity_Page_AJAX {
       CRM_Utils_System::civiExit();
     }
 
-    require_once "CRM/Activity/DAO/Activity.php";
+
     $otherActivity = new CRM_Activity_DAO_Activity();
     $otherActivity->id = $activityID;
     if (!$otherActivity->find(TRUE)) {
@@ -112,7 +112,7 @@ class CRM_Activity_Page_AJAX {
 
     $mainActivity->save();
     $mainActivityId = $mainActivity->id;
-    require_once 'CRM/Activity/BAO/Activity.php';
+
     CRM_Activity_BAO_Activity::logActivityAction($mainActivity);
     $mainActivity->free();
 
@@ -124,7 +124,7 @@ class CRM_Activity_Page_AJAX {
     }
     $otherActivity->free();
 
-    require_once "CRM/Activity/BAO/Activity.php";
+
     $targetContacts = array();
     if (!empty($targetContactIds)) {
       $targetContacts = array_unique(explode(',', $targetContactIds));
@@ -137,7 +137,7 @@ class CRM_Activity_Page_AJAX {
     }
 
     //attach newly created activity to case.
-    require_once "CRM/Case/DAO/CaseActivity.php";
+
     $caseActivity = new CRM_Case_DAO_CaseActivity();
     $caseActivity->case_id = $caseID;
     $caseActivity->activity_id = $mainActivityId;

@@ -236,7 +236,7 @@ class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache {
     $dao->delete();
 
     // also reset ACL Cache
-    require_once 'CRM/ACL/BAO/Cache.php';
+
     CRM_ACL_BAO_Cache::resetCache();
   }
 

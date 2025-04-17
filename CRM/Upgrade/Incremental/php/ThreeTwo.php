@@ -49,7 +49,7 @@ class CRM_Upgrade_Incremental_php_ThreeTwo {
         'access my cases and activities',
         'access all cases and activities',
       );
-      require_once 'CRM/ACL/DAO/ACL.php';
+
       $aclParams = array('name' => 'Core ACL',
         'deny' => 0,
         'acl_id' => NULL,
@@ -199,7 +199,7 @@ class CRM_Upgrade_Incremental_php_ThreeTwo {
       ),
     );
 
-    require_once 'CRM/Member/DAO/MembershipStatus.php';
+
     $statusIds = array();
     $insertedNewRecord = FALSE;
     foreach ($statuses as $status) {
@@ -259,7 +259,7 @@ UPDATE  civicrm_membership_status
     }
     // CRM-6563: restrict access to the upload dir, tighten access to the config-and-log dir
     $config = &CRM_Core_Config::singleton();
-    require_once 'CRM/Utils/File.php';
+
     CRM_Utils_File::restrictAccess($config->uploadDir);
     CRM_Utils_File::restrictAccess($config->configAndLogDir);
     $upgrade = new CRM_Upgrade_Form;

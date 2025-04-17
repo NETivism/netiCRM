@@ -33,9 +33,9 @@
  *
  */
 
-require_once 'CRM/Admin/Form.php';
-require_once 'CRM/Core/BAO/OptionValue.php';
-require_once 'CRM/Core/BAO/OptionGroup.php';
+
+
+
 
 /**
  * This class generates form components for Options
@@ -43,6 +43,8 @@ require_once 'CRM/Core/BAO/OptionGroup.php';
  */
 class CRM_Admin_Form_Options extends CRM_Admin_Form {
 
+  public $_gid;
+  public $_defaultValues;
   /**
    * The option group name
    *
@@ -98,7 +100,7 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
 			$this->assign('default_from_value', '"'.$config->domain->name.'" <'.$defaultFromMail.'>');
     }
 
-    require_once 'CRM/Core/OptionGroup.php';
+
     if ($this->_id && in_array($this->_gName, CRM_Core_OptionGroup::$_domainIDGroups)) {
       $domainID = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionValue', $this->_id, 'domain_id', 'id');
       if (CRM_Core_Config::domainID() != $domainID) {
@@ -239,12 +241,12 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
 
     // If CiviCase enabled AND "Add" mode OR "edit" mode for non-reserved activities, only allow user to pick Core or CiviCase component.
     // FIXME: Each component should define whether adding new activity types is allowed.
-    require_once 'CRM/Core/Config.php';
+
     $config = CRM_Core_Config::singleton();
     if ($this->_gName == 'activity_type' && in_array("CiviCase", $config->enableComponents) &&
       (($this->_action & CRM_Core_Action::ADD) || !$isReserved)
     ) {
-      require_once 'CRM/Core/Component.php';
+
       $caseID = CRM_Core_Component::getComponentID('CiviCase');
       $components = array('' => ts('Contact'), $caseID => 'CiviCase');
       $this->add('select',
@@ -281,7 +283,7 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
     if ($this->_gName == 'participant_status') {
       // For Participant Status options, expose the 'filter' field to track which statuses are "Counted", and the Visibility field
       $element = $this->add('checkbox', 'filter', ts('Counted?'));
-      require_once "CRM/Core/PseudoConstant.php";
+
       $this->add('select', 'visibility_id', ts('Visibility'), CRM_Core_PseudoConstant::visibility());
     }
     if ($this->_gName == 'participant_role') {
@@ -327,7 +329,7 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
     }
 
     if ($self->_gName == 'from_email_address') {
-      require_once 'CRM/Utils/Mail.php';
+
       $formEmail = CRM_Utils_Mail::pluckEmailFromHeader($fields['label']);
       if (!CRM_Utils_Rule::email($formEmail)) {
         $errors['label'] = ts('Please enter the valid email address.');
@@ -363,7 +365,7 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
 
       if (CRM_Core_BAO_OptionValue::del($this->_id)) {
         if ($this->_gName == 'phone_type') {
-          require_once 'CRM/Core/BAO/Phone.php';
+
           CRM_Core_BAO_Phone::setOptionToNull(CRM_Utils_Array::value('value', $this->_defaultValues));
         }
 
@@ -401,7 +403,7 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
       }
 
       $groupParams = array('name' => ($this->_gName));
-      require_once 'CRM/Core/OptionValue.php';
+
       $optionValue = CRM_Core_OptionValue::addOptionValue($params, $groupParams, $this->_action, $this->_id);
 
       CRM_Core_Session::setStatus(ts('The %1 \'%2\' has been saved.', array(1 => $this->_GName, 2 => $optionValue->label)));

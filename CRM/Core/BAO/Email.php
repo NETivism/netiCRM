@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/DAO/Email.php';
+
 
 /**
  * This class contains functions for email handling
@@ -54,8 +54,7 @@ class CRM_Core_BAO_Email extends CRM_Core_DAO_Email {
     $email->copyValues($params);
 
     // lower case email field to optimize queries
-    $strtolower = function_exists('mb_strtolower') ? 'mb_strtolower' : 'strtolower';
-    $email->email = $strtolower($email->email);
+    $email->email = mb_strtolower($email->email, 'UTF-8');
     self::holdEmail($email);
 
     return $email->save();

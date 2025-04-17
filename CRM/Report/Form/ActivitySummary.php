@@ -33,9 +33,22 @@
  *
  */
 
-require_once 'CRM/Report/Form.php';
+
 class CRM_Report_Form_ActivitySummary extends CRM_Report_Form {
 
+  /**
+   * @var array<string, array<'no_display', bool>>
+   */
+  public $_columnHeaders;
+  public $_interval;
+  public $_from;
+  public $_aliases;
+  public $_where;
+  /**
+   * @var never[]|mixed[]|string[]|string
+   */
+  public $_groupBy;
+  public $_outputMode;
   protected $_emailField = FALSE;
   protected $_phoneField = FALSE; function __construct() {
     $this->_columns = array(

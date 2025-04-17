@@ -59,7 +59,7 @@ class CRM_Core_BAO_ConfigSetting {
       $params['civiRelativeURL']
     );
 
-    require_once "CRM/Core/DAO/Domain.php";
+
     $domain = new CRM_Core_DAO_Domain();
     $domain->id = CRM_Core_Config::domainID();
     $domain->find(TRUE);
@@ -83,7 +83,7 @@ class CRM_Core_BAO_ConfigSetting {
       unset($params[$var]);
     }
 
-    require_once 'CRM/Core/BAO/Preferences.php';
+
     CRM_Core_BAO_Preferences::fixAndStoreDirAndURL($params);
 
     // also skip all Dir Params, we dont need to store those in the DB!
@@ -161,7 +161,7 @@ class CRM_Core_BAO_ConfigSetting {
    * @static
    */
   static function retrieve(&$defaults) {
-    require_once "CRM/Core/DAO/Domain.php";
+
     $domain = new CRM_Core_BAO_Domain();
     $domain->selectAdd();
 
@@ -216,7 +216,7 @@ class CRM_Core_BAO_ConfigSetting {
 
       // on multi-lang sites based on request and civicrm_uf_match
       if ($multiLang) {
-        require_once 'CRM/Utils/Request.php';
+
         $lcMessagesRequest = CRM_Utils_Request::retrieve('lcMessages', 'String', CRM_Core_DAO::$_nullObject);
         $languageLimit = array();
         if (CRM_Utils_Array::arrayKeyExists('languageLimit', $defaults) && is_array($defaults['languageLimit'])) {
@@ -241,7 +241,7 @@ class CRM_Core_BAO_ConfigSetting {
         }
 
         if ($lcMessagesRequest) {
-          require_once 'CRM/Core/DAO/UFMatch.php';
+
           $ufm = new CRM_Core_DAO_UFMatch();
           $ufm->contact_id = $session->get('userID');
           if ($ufm->find(TRUE)) {
@@ -252,7 +252,7 @@ class CRM_Core_BAO_ConfigSetting {
         }
 
         if (!$lcMessages and $session->get('userID')) {
-          require_once 'CRM/Core/DAO/UFMatch.php';
+
           $ufm = new CRM_Core_DAO_UFMatch();
           $ufm->contact_id = $session->get('userID');
           if ($ufm->find(TRUE) &&
@@ -266,9 +266,9 @@ class CRM_Core_BAO_ConfigSetting {
 
       // if unset and the install is so configured, try to inherit the language from the hosting CMS
       if ($lcMessages === NULL and CRM_Utils_Array::value('inheritLocale', $defaults)) {
-        require_once 'CRM/Utils/System.php';
+
         $lcMessages = CRM_Utils_System::getUFLocale();
-        require_once 'CRM/Core/BAO/CustomOption.php';
+
         if ($domain->locales and !in_array($lcMessages, explode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, $domain->locales))) {
           $lcMessages = NULL;
         }
@@ -310,7 +310,7 @@ class CRM_Core_BAO_ConfigSetting {
     // dont add if its empty
     if (!empty($defaults)) {
       // retrieve directory and url preferences also
-      require_once 'CRM/Core/BAO/Preferences.php';
+
       CRM_Core_BAO_Preferences::retrieveDirectoryAndURLPreferences($defaults);
     }
   }
@@ -388,7 +388,7 @@ class CRM_Core_BAO_ConfigSetting {
     list($oldURL, $oldDir, $oldSiteName, $oldSiteRoot) = self::getConfigSettings();
     list($newURL, $newDir, $newSiteName, $newSiteRoot) = self::getBestGuessSettings();
 
-    require_once 'CRM/Utils/Request.php';
+
 
     // retrieve these values from the argument list
     $variables = array('URL', 'Dir', 'SiteName', 'SiteRoot', 'Val_1', 'Val_2', 'Val_3');

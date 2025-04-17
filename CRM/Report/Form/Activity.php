@@ -33,9 +33,21 @@
  *
  */
 
-require_once 'CRM/Report/Form.php';
+
 class CRM_Report_Form_Activity extends CRM_Report_Form {
 
+  /**
+   * @var never[]
+   */
+  public $_columnHeaders;
+  public $_from;
+  public $_aliases;
+  public $_where;
+  /**
+   * @var never[]|mixed[]|string[]|string
+   */
+  public $_groupBy;
+  public $_absoluteUrl;
   protected $_emailField = FALSE;
   protected $_customGroupExtends = array('Activity'); function __construct() {
     $config = CRM_Core_Config::singleton();
@@ -371,26 +383,26 @@ class CRM_Report_Form_Activity extends CRM_Report_Form {
     //contact/assignee or target also it may be null )
 
     /*
-        require_once 'CRM/Core/Permission.php';
-        require_once 'CRM/Contact/BAO/Contact/Permission.php';
+
+
         if ( CRM_Core_Permission::check( 'view all contacts' ) ) {
             $this->_aclFrom = $this->_aclWhere = null;
             return;
         }
-        
+
         $session = CRM_Core_Session::singleton( );
         $contactID =  $session->get( 'userID' );
         if ( ! $contactID ) {
             $contactID = 0;
         }
         $contactID = CRM_Utils_Type::escape( $contactID, 'Integer' );
-        
+
         CRM_Contact_BAO_Contact_Permission::cache( $contactID );
         $clauses = array();
         foreach( $tableAlias as $k => $alias ) {
             $clauses[] = " INNER JOIN civicrm_acl_contact_cache aclContactCache_{$k} ON ( {$alias}.id = aclContactCache_{$k}.contact_id OR {$alias}.id IS NULL ) AND aclContactCache_{$k}.user_id = $contactID ";  
         }
-        
+
         $this->_aclFrom  = CRM_Utils_Array::implode(" ", $clauses );
         $this->_aclWhere = null;
         */
@@ -410,7 +422,7 @@ class CRM_Report_Form_Activity extends CRM_Report_Form {
     $activityStatus = CRM_Core_PseudoConstant::activityStatus();
     $viewLinks = FALSE;
 
-    require_once 'CRM/Core/Permission.php';
+
     if (CRM_Core_Permission::check('access CiviCRM')) {
       $viewLinks = TRUE;
       $onHover = ts('View Contact Summary for this Contact');
@@ -436,7 +448,7 @@ class CRM_Report_Form_Activity extends CRM_Report_Form {
       ) {
         $assignee = array();
         //retrieve all contact assignees and build list with links
-        require_once 'CRM/Activity/BAO/ActivityAssignment.php';
+
         $activity_assignment_ids = CRM_Activity_BAO_ActivityAssignment::getAssigneeNames($row['civicrm_activity_id'], FALSE, TRUE);
         foreach ($activity_assignment_ids as $cid => $assignee_name) {
           if ($viewLinks) {
@@ -455,7 +467,7 @@ class CRM_Report_Form_Activity extends CRM_Report_Form {
       ) {
         $target = array();
         //retrieve all contact targets and build list with links
-        require_once 'CRM/Activity/BAO/ActivityTarget.php';
+
         $activity_target_ids = CRM_Activity_BAO_ActivityTarget::getTargetNames($row['civicrm_activity_id']);
         foreach ($activity_target_ids as $cid => $target_name) {
           if ($viewLinks) {

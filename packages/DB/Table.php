@@ -528,6 +528,7 @@ if (!isset($GLOBALS['_DB_TABLE']['disable_length_check'])) {
 class DB_Table extends DB_Table_Base 
 {
     
+    public $frm;
     /**
      * The table or view in the database to which this object binds.
      * 

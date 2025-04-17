@@ -435,7 +435,7 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
       }
 
       // also call the hook to get contact details
-      require_once 'CRM/Utils/Hook.php';
+
       $contactIds = array($contactId);
       CRM_Utils_Hook::tokenValues($contactArray, $contactIds, $job_id, array(), 'CRM_Mailing_BAO_Mailing_compose');
     }

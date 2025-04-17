@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
+
 
 /**
  * This class generates form components for Payment-Instrument
@@ -59,7 +59,7 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
     $this->assign('compContext', $compContext);
     $this->assign('compId', $compId);
 
-    require_once 'CRM/Contribute/BAO/Contribution.php';
+
     CRM_Contribute_BAO_Contribution::getValues($params, $values, $ids);
 
     $instrument_options = CRM_Core_OptionGroup::values('payment_instrument', FALSE);
@@ -145,7 +145,7 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
 
     $premiumId = NULL;
     if ($id) {
-      require_once 'CRM/Contribute/DAO/ContributionProduct.php';
+
       $dao = new CRM_Contribute_DAO_ContributionProduct();
       $dao->contribution_id = $id;
       if ($dao->find(TRUE)) {
@@ -155,7 +155,7 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
     }
 
     if ($premiumId) {
-      require_once 'CRM/Contribute/DAO/Product.php';
+
       $productDAO = new CRM_Contribute_DAO_Product();
       $productDAO->id = $productID;
       $productDAO->find(TRUE);
@@ -193,10 +193,10 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
       $values = array_merge($values, $softContribution);
     }
 
-    require_once 'CRM/Price/BAO/Set.php';
+
     $lineItems = array();
     if ($id && CRM_Price_BAO_Set::getFor('civicrm_contribution', $id)) {
-      require_once 'CRM/Price/BAO/LineItem.php';
+
       $lineItems[] = CRM_Price_BAO_LineItem::getLineItems($id, 'contribution');
     }
     $this->assign('lineItem', empty($lineItems) ? FALSE : $lineItems);
@@ -217,9 +217,9 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
     }
 
     // add viewed contribution to recent items list
-    require_once 'CRM/Utils/Recent.php';
-    require_once 'CRM/Utils/Money.php';
-    require_once 'CRM/Contact/BAO/Contact.php';
+
+
+
     $url = CRM_Utils_System::url('civicrm/contact/view/contribution',
       "action=view&reset=1&id={$values['id']}&cid={$values['contact_id']}&context=home"
     );

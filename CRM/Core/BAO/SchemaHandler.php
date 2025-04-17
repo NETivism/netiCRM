@@ -37,7 +37,7 @@
  *  This file contains functions for creating and altering CiviCRM-tables.
  */
 
-require_once 'CRM/Core/DAO.php';
+
 
 /**
  * structure, similar to what is used in GenCode.php
@@ -79,7 +79,7 @@ class CRM_Core_BAO_SchemaHandler {
     $dao->free();
 
     // logging support
-    require_once 'CRM/Logging/Schema.php';
+
     $logging = new CRM_Logging_Schema;
     $logging->fixSchemaDifferencesFor($params['name']);
 
@@ -290,7 +290,7 @@ ALTER TABLE {$tableName}
 
     // logging support: if we’re adding a column (but only then!) make sure the potential relevant log table gets a column as well
     if ($params['operation'] == 'add') {
-      require_once 'CRM/Logging/Schema.php';
+
       $logging = new CRM_Logging_Schema;
       $logging->fixSchemaDifferencesFor($params['table_name'], array($params['name']));
     }
@@ -341,9 +341,9 @@ ADD UNIQUE INDEX `unique_entity_id` ( `entity_id` )";
 
     // if we're multilingual, cache the information on internationalised fields
     static $columns = NULL;
-    require_once 'CRM/Utils/System.php';
+
     if (!CRM_Utils_System::isNull($locales) and $columns === NULL) {
-      require_once 'CRM/Core/I18n/SchemaStructure.php';
+
       $columns = &CRM_Core_I18n_SchemaStructure::columns();
     }
 

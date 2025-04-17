@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Core/Page/Basic.php';
-require_once 'CRM/Core/DAO/Navigation.php';
+
+
 
 /**
  * Page for displaying list of location types

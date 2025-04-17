@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Page.php';
+
 
 /**
  * Page for synchronizing CMS users
@@ -56,7 +56,7 @@ class CRM_Admin_Page_CMSUser extends CRM_Core_Page {
     if (CRM_Utils_Request::retrieve('confirmed', 'Boolean',
         $this, '', '', 'GET'
       )) {
-      require_once 'CRM/Core/BAO/CMSUser.php';
+
       CRM_Core_BAO_CMSUser::synchronize();
       return;
     }

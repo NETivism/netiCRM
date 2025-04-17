@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/DAO/UFField.php';
+
 
 /**
  * This class contains function for UFField
@@ -202,7 +202,7 @@ class CRM_Core_BAO_UFField extends CRM_Core_DAO_UFField {
       $oldWeight = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_UFField', $params['field_id'], 'weight', 'id');
     }
     $fieldValues = array('uf_group_id' => $params['group_id']);
-    require_once 'CRM/Utils/Weight.php';
+
     $ufField->weight = CRM_Utils_Weight::updateOtherWeights('CRM_Core_DAO_UFField', $oldWeight, $params['weight'], $fieldValues);
 
     // need the FKEY - uf group id
@@ -333,12 +333,12 @@ class CRM_Core_BAO_UFField extends CRM_Core_DAO_UFField {
   static function checkUFStatus($UFFieldId) {
     $fieldName = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_UFField', $UFFieldId, 'field_name');
     // return if field is not a custom field
-    require_once 'CRM/Core/BAO/CustomField.php';
+
     if (!$customFieldId = CRM_Core_BAO_CustomField::getKeyID($fieldName)) {
       return TRUE;
     }
 
-    require_once "CRM/Core/DAO/CustomField.php";
+
     $customField = new CRM_Core_DAO_CustomField();
     $customField->id = $customFieldId;
     // if uf field is custom field
@@ -482,7 +482,7 @@ class CRM_Core_BAO_UFField extends CRM_Core_DAO_UFField {
     }
 
     // suppress any subtypes if present
-    require_once "CRM/Contact/BAO/ContactType.php";
+
     CRM_Contact_BAO_ContactType::suppressSubTypes($profileTypes);
 
     $contactTypes = array('Contact', 'Individual', 'Household', 'Organization');
@@ -527,12 +527,12 @@ class CRM_Core_BAO_UFField extends CRM_Core_DAO_UFField {
   static function getProfileType($ufGroupId, $returnMixType = TRUE, $onlyPure = FALSE, $skipComponentType = FALSE) {
     // profile types
     $contactTypes = array('Contact', 'Individual', 'Household', 'Organization');
-    require_once 'CRM/Contact/BAO/ContactType.php';
+
     $subTypes = CRM_Contact_BAO_ContactType::subTypes();
 
     $components = array('Contribution', 'Participant', 'Membership');
 
-    require_once 'CRM/Core/DAO/UFGroup.php';
+
     $ufGroup = new CRM_Core_DAO_UFGroup();
     $ufGroup->id = $ufGroupId;
     $ufGroup->is_active = 1;

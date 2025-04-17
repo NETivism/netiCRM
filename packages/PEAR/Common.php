@@ -125,6 +125,8 @@ $GLOBALS['_PEAR_Common_script_phases'] = array('pre-install', 'post-install', 'p
  */
 class PEAR_Common extends PEAR
 {
+    public $debug;
+    public $_packageName;
     /**
      * User Interface object (PEAR_Frontend_* class).  If null,
      * the log() method uses print.

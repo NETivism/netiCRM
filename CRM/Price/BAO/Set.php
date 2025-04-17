@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Price/DAO/Set.php';
-require_once 'CRM/Price/BAO/Field.php';
+
+
 
 /**
  * Business object for managing price sets
@@ -208,7 +208,7 @@ WHERE     ct.id = cp.contribution_type_id AND
     // remove from all inactive forms
     $usedBy = &self::getUsedBy($id);
     if (isset($usedBy['civicrm_event'])) {
-      require_once 'CRM/Event/DAO/Event.php';
+
       foreach ($usedBy['civicrm_event'] as $eventId => $unused) {
         $eventDAO = new CRM_Event_DAO_Event();
         $eventDAO->id = $eventId;
@@ -251,7 +251,7 @@ WHERE     ct.id = cp.contribution_type_id AND
     }
     unset($dao);
 
-    require_once 'CRM/Price/DAO/SetEntity.php';
+
     $dao = new CRM_Price_DAO_SetEntity();
     // find if this already exists
     $dao->entity_id = $entityId;
@@ -270,7 +270,7 @@ WHERE     ct.id = cp.contribution_type_id AND
    * @param integer $entityId
    */
   public static function removeFrom($entityTable, $entityId) {
-    require_once 'CRM/Price/DAO/SetEntity.php';
+
     $dao = new CRM_Price_DAO_SetEntity();
     $dao->entity_table = $entityTable;
     $dao->entity_id = $entityId;
@@ -290,7 +290,7 @@ WHERE     ct.id = cp.contribution_type_id AND
       return FALSE;
     }
 
-    require_once 'CRM/Price/DAO/SetEntity.php';
+
     $dao = new CRM_Price_DAO_SetEntity();
     $dao->entity_table = $entityTable;
     $dao->entity_id = $entityId;
@@ -312,9 +312,9 @@ WHERE     ct.id = cp.contribution_type_id AND
   public static function getSetId(&$params) {
     $fid = NULL;
 
-    require_once 'CRM/Utils/Array.php';
+
     if ($oid = CRM_Utils_Array::value('oid', $params)) {
-      require_once 'CRM/Price/DAO/FieldValue.php';
+
       $fieldValue = new CRM_Price_DAO_FieldValue();
       $fieldValue->id = $oid;
       if ($fieldValue->find(TRUE)) {
@@ -495,7 +495,7 @@ WHERE  id = %1";
         }
 
         if ($entityId && $entity) {
-          require_once 'CRM/Price/BAO/LineItem.php';
+
           $form->_values['line_items'] = CRM_Price_BAO_LineItem::getLineItems($entityId, $entity);
         }
         $required = FALSE;
@@ -511,7 +511,7 @@ WHERE  id = %1";
 
       //get the price set fields participant count.
       if ($entityTable == 'civicrm_event') {
-        require_once "CRM/Price/BAO/Set.php";
+
 
         //get option count info.
         $form->_priceSet['optionsCountTotal'] = self::getPricesetCount($priceSetId);
@@ -560,7 +560,7 @@ WHERE  id = %1";
     $totalPrice = 0;
     $radioLevel = $checkboxLevel = $selectLevel = $textLevel = array();
 
-    require_once 'CRM/Price/BAO/LineItem.php';
+
     foreach ($fields as $id => $field) {
       if (empty($params["price_{$id}"]) && $params["price_{$id}"] == NULL) {
         // skip if nothing was submitted for this field
@@ -652,7 +652,7 @@ WHERE  id = %1";
     $priceSet = self::getSetDetail($priceSetId, TRUE);
     $form->_priceSet = CRM_Utils_Array::value($priceSetId, $priceSet);
     $form->assign('priceSet', $form->_priceSet);
-    require_once 'CRM/Core/PseudoConstant.php';
+
     $className = CRM_Utils_System::getClassName($form);
 
     if ($className == 'CRM_Contribute_Form_Contribution_Main') {
@@ -663,7 +663,7 @@ WHERE  id = %1";
     }
 
     // call the hook.
-    require_once 'CRM/Utils/Hook.php';
+
     CRM_Utils_Hook::buildAmount('contribution', $form, $feeBlock);
 
     $hasField = false;
@@ -757,7 +757,7 @@ WHERE  id = %1";
     }
     $copy->save();
 
-    require_once 'CRM/Utils/Hook.php';
+
     CRM_Utils_Hook::copy('Set', $copy);
     return $copy;
   }

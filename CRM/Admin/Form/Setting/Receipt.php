@@ -13,7 +13,7 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
    */
   public function buildQuickForm() {
     CRM_Utils_System::setTitle(ts('Settings - Contribution Receipt'));
-    $this->addElement('text', 'receiptLogo', ts('Logo'));
+    $this->addElement('file', 'receiptLogo', ts('Logo'));
     $this->addElement('text', 'receiptPrefix', ts('Prefix of Receipt ID'));
     $this->addElement('textarea', 'receiptDescription', ts('Description of Receipt Footer'));
     $this->addElement('textarea', 'receiptOrgInfo', ts('Organization info'));
@@ -27,7 +27,17 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
     $this->addElement('select', 'receiptTitle', ts('Field for receipt title'), $option);
     $this->addElement('select', 'receiptSerial', ts('Field for receipt serial number'), $option);
     $this->addElement('select', 'receiptDonorCredit', ts('Field for the name used of donor acknowledgement'), $option);
-    $this->add('checkbox', 'forbidCustomDonorCredit', ts('Forbid above name field from being customized'));
+
+    // refs #42235, add customDonorCredit options
+    $donorCreditOptions = array(
+      ts('Full Name') => 'full_name',
+      ts('Partial Name') => 'partial_name',
+      ts('Custom Name') => 'custom_name',
+      ts("I don't agree to disclose name") => 'anonymous'
+    );
+    $this->addCheckBox('customDonorCredit', ts('Donor Credit Name Options'), $donorCreditOptions);
+
+    $this->addElement('text', 'anonymousDonorCreditDefault', ts("Default name when donor doesn't agree to disclose"));
 
     // refs #28471, switch to auto send receipt on email
     $haveAttachReceiptOption = CRM_Core_OptionGroup::getValue('activity_type', 'Email Receipt', 'name');
@@ -49,7 +59,7 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
     $this->add('file', 'uploadBigStamp', ts('The stamp of organization.'));
     $this->add('file', 'uploadSmallStamp', ts('The stamp of the person in charge.'));
     $config = CRM_Core_Config::singleton();
-    $this->controller->addActions($config->imageUploadDir, array('uploadBigStamp', 'uploadSmallStamp'));
+    $this->controller->addActions($config->imageUploadDir, array('uploadBigStamp', 'uploadSmallStamp', 'receiptLogo'));
 
     if($config->imageBigStampName){
       $this->assign('imageBigStampUrl', $config->imageUploadURL . $config->imageBigStampName);
@@ -57,10 +67,20 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
     if($config->imageSmallStampName){
       $this->assign('imageSmallStampUrl', $config->imageUploadURL . $config->imageSmallStampName);
     }
+    $receiptLogo = $config->receiptLogo;
+    if ($receiptLogo) {
+      if (preg_match('/^https?:\/\//i', $receiptLogo)  || substr($receiptLogo, 0, 13) === '/var/www/html') {
+        $this->assign('receiptLogoUrl', $receiptLogo);
+      }
+      else if ($receiptLogo) {
+        $this->assign('receiptLogoUrl', $config->imageUploadURL . $receiptLogo);
+      }
+    }
 
     $this->assign('stampDocUrl', CRM_Utils_System::docURL2('Receipt Stamp', TRUE));
     $this->add('hidden', 'deleteBigStamp');
     $this->add('hidden', 'deleteSmallStamp');
+    $this->add('hidden', 'deleteReceiptLogo');
 
     $displayLegalIDOptions = array('complete' => ts('Complete display'), 'partial' => ts('Partial hide'), 'hide' => ts('Complete hide'));
     $this->addRadio('receiptDisplayLegalID', ts('The way displays legal ID in receipt.'), $displayLegalIDOptions);
@@ -82,16 +102,47 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
     $defaults = parent::setDefaultValues();
     $defaults['deleteBigStamp'] = '';
     $defaults['deleteSmallStamp'] = '';
+    $defaults['deleteReceiptLogo'] = '';
     if (empty($defaults['receiptDisplayLegalID'])) {
       $defaults['receiptDisplayLegalID'] = 'complete';
     }
     $defaults['receiptDescription'] = htmlspecialchars_decode($defaults['receiptDescription']);
     $defaults['receiptOrgInfo'] = htmlspecialchars_decode($defaults['receiptOrgInfo']);
+
+    $config = CRM_Core_Config::singleton();
+
+    // refs #42235, compatibility handling for old sites that initially don't have customDonorCredit
+    // default values for new sites are set in CRM/Core/Config/Variables.php
+    if (!isset($config->customDonorCredit) || !is_array($config->customDonorCredit)) {
+      if (isset($config->forbidCustomDonorCredit)) {
+        $forbidCustomDonorCredit = !empty($config->forbidCustomDonorCredit) ? 1 : 0;
+        $defaults['customDonorCredit'] = array(
+          'full_name' => 1,
+          'partial_name' => 1
+        );
+
+        if ($forbidCustomDonorCredit == 0) {
+          $defaults['customDonorCredit']['custom_name'] = 1;
+        }
+      } else {
+        $defaults['customDonorCredit'] = array(
+          'full_name' => 1,
+          'partial_name' => 1,
+          'custom_name' => 1
+        );
+      }
+    }
+
+    if (!empty($defaults['customDonorCredit']['anonymous']) && empty($defaults['anonymousDonorCreditDefault'])) {
+      $defaults['anonymousDonorCreditDefault'] = ts('Anonymous');
+    }
+
     return $defaults;
   }
 
   // FROM : /CRM/Contribute/Form/ManagePremiums.php#L291-L321
   public function postProcess() {
+    $config = CRM_Core_Config::singleton();
     $params = $this->controller->exportValues($this->_name);
     $uploadBigStamp = CRM_Utils_Array::value('uploadBigStamp', $params);
     $uploadBigStamp = $uploadBigStamp['name'];
@@ -99,16 +150,24 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
     $uploadSmallStamp = CRM_Utils_Array::value('uploadSmallStamp', $params);
     $uploadSmallStamp = $uploadSmallStamp['name'];
 
+    $uploadReceiptLogo = CRM_Utils_Array::value('receiptLogo', $params);
+    $uploadReceiptLogo = $uploadReceiptLogo['name'];
+
     $deleteBigStamp = CRM_Utils_Array::value('deleteBigStamp', $params);
     $deleteSmallStamp = CRM_Utils_Array::value('deleteSmallStamp', $params);
+    $deleteReceiptLogo = CRM_Utils_Array::value('deleteReceiptLogo', $params);
     unset($params['deleteBigStamp']);
     unset($params['deleteSmallStamp']);
+    unset($params['deleteReceiptLogo']);
 
     if($deleteBigStamp){
       $params['imageBigStampName'] = '';
     }
     if($deleteSmallStamp){
       $params['imageSmallStampName'] = '';
+    }
+    if($deleteReceiptLogo){
+      $params['receiptLogo'] = '';
     }
 
     // to check wether GD is installed or not
@@ -122,12 +181,23 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
         $error = false;
         $params['imageSmallStampName'] = $this->_resizeImage($uploadSmallStamp, "_full", 800, 200);
       }
+      if ($uploadReceiptLogo) {
+        $error = false;
+        $params['receiptLogo'] = $this->_resizeImage($uploadReceiptLogo, "_full", 800, 200);
+      }
     }else{
       $error = true;
     }
 
-    if (empty($params['forbidCustomDonorCredit'])) {
-      $params['forbidCustomDonorCredit'] = FALSE;
+    // refs #42235, compatibility handling for old sites
+    if (!empty($config->forbidCustomDonorCredit)) {
+      $configParams = get_object_vars($config);
+      $configParams['forbidCustomDonorCredit'] = 0;
+      CRM_Core_BAO_ConfigSetting::add($configParams);
+    }
+
+    if (empty($params['customDonorCredit']['anonymous'])) {
+      $params['anonymousDonorCreditDefault'] = '';
     }
 
     // refs #28471, switch to auto send receipt on email
@@ -215,6 +285,4 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
     $config = CRM_Core_Config::singleton();
     return basename($newFilename);
   }
-
 }
-

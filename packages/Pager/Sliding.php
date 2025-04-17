@@ -54,6 +54,7 @@ require_once 'Pager/Common.php';
  */
 class Pager_Sliding extends Pager_Common
 {
+    public $_pageData;
     // {{{ Pager_Sliding()
 
     /**

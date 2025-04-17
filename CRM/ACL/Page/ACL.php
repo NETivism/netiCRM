@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Page/Basic.php';
+
 
 /**
  *
@@ -159,7 +159,7 @@ class CRM_ACL_Page_ACL extends CRM_Core_Page_Basic {
    * @static
    */
   function browse() {
-    require_once 'CRM/ACL/DAO/ACL.php';
+
 
     // get all acl's sorted by weight
     $acl = array();
@@ -173,7 +173,7 @@ ORDER BY entity_id
       CRM_Core_DAO::$_nullArray
     );
 
-    require_once 'CRM/Core/OptionGroup.php';
+
     $roles = CRM_Core_OptionGroup::values('acl_role');
 
     $group = array('-1' => ts('- select -'),
@@ -186,7 +186,7 @@ ORDER BY entity_id
       '0' => ts('All Profiles'),
     ) + CRM_Core_PseudoConstant::ufGroup();
 
-    require_once 'CRM/Event/PseudoConstant.php';
+
     $event = array('-1' => ts('- select -'),
       '0' => ts('All Events'),
     ) + CRM_Event_PseudoConstant::event();

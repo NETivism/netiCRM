@@ -62,7 +62,7 @@ class CRM_ACL_API {
       $contactID = 0;
     }
 
-    require_once 'CRM/ACL/BAO/ACL.php';
+
     return CRM_ACL_BAO_ACL::check($str, $contactID);
   }
 
@@ -111,7 +111,7 @@ class CRM_ACL_API {
       $contactID = 0;
     }
 
-    require_once 'CRM/ACL/BAO/ACL.php';
+
     $whereACL = CRM_ACL_BAO_ACL::whereClause($type, $tables, $whereTables, $contactID);
     if (!$skipDeleteClause) {
       if (CRM_Core_Permission::check('access deleted contacts') and $onlyDeleted) {
@@ -150,7 +150,7 @@ class CRM_ACL_API {
       $contactID = 0;
     }
 
-    require_once 'CRM/ACL/BAO/ACL.php';
+
     return CRM_ACL_BAO_ACL::group($type, $contactID, $tableName, $allGroups, $includedGroups);
   }
 

@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Page.php';
+
 
 
 
@@ -257,14 +257,14 @@ abstract class CRM_Core_Page_Basic extends CRM_Core_Page {
           $values[$object->id] = array();
           CRM_Core_DAO::storeValues($object, $values[$object->id]);
 
-          require_once 'CRM/Contact/DAO/RelationshipType.php';
+
           CRM_Contact_DAO_RelationshipType::addDisplayEnums($values[$object->id]);
 
           // populate action links
           $this->action($object, $action, $values[$object->id], $links, $permission);
 
           if (isset($object->mapping_type_id)) {
-            require_once 'CRM/Core/PseudoConstant.php';
+
             $mappintTypes = CRM_Core_PseudoConstant::mappingTypes();
             $values[$object->id]['mapping_type'] = $mappintTypes[$object->mapping_type_id];
           }
@@ -295,7 +295,7 @@ abstract class CRM_Core_Page_Basic extends CRM_Core_Page {
 
     if (!empty($values['name']) && in_array($values['name'], array('encounter_medium', 'case_type', 'case_status'))) {
       static $caseCount = NULL;
-      require_once 'CRM/Case/BAO/Case.php';
+
       if (!isset($caseCount)) {
         $caseCount = CRM_Case_BAO_Case::caseCount(NULL, FALSE);
       }

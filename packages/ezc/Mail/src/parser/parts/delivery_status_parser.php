@@ -17,6 +17,9 @@
  */
 class ezcMailDeliveryStatusParser extends ezcMailPartParser
 {
+    public $headers;
+    public $lastParsedHeader;
+    public $headerValue;
     /**
      * This mail part will be returned by the method finish().
      *

@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
-require_once 'CRM/Case/BAO/Case.php';
+
+
 
 /**
  * This class assigns the current case to another client
@@ -42,6 +42,8 @@ require_once 'CRM/Case/BAO/Case.php';
  */
 class CRM_Case_Form_EditClient extends CRM_Core_Form {
 
+  public $_contactId;
+  public $_caseId;
   /**
    * build all the data structures needed to build the form
    *
@@ -54,7 +56,7 @@ class CRM_Case_Form_EditClient extends CRM_Core_Form {
     $context = CRM_Utils_Request::retrieve('context', 'String', $this);
 
     //get current client name.
-    require_once 'CRM/Contact/BAO/Contact.php';
+
     $this->assign('currentClientName', CRM_Contact_BAO_Contact::displayName($this->_contactId));
 
     //set the context.
@@ -62,7 +64,7 @@ class CRM_Case_Form_EditClient extends CRM_Core_Form {
     if ($context == 'search') {
       $qfKey = CRM_Utils_Request::retrieve('key', 'String', $this);
       //validate the qfKey
-      require_once 'CRM/Utils/Rule.php';
+
       $urlParams = 'force=1';
       if (CRM_Utils_Rule::qfKey($qfKey)) {
         $urlParams .= "&qfKey=$qfKey";

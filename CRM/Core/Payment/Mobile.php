@@ -34,8 +34,14 @@
  */
 
 
-require_once 'CRM/Core/Payment.php';
+
 class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
+  /**
+   * @var mixed
+   */
+  public $_processorName;
+  public $_instrumentType;
+  public $_mobilePayment;
   CONST CHARSET = 'iso-8859-1';
   static protected $_mode = NULL;
   static protected $_params = array();
@@ -396,7 +402,7 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
   }
 
   static function addNote($note, &$contribution){
-    require_once 'CRM/Core/BAO/Note.php';
+
     $note = date("Y/m/d H:i:s "). ts("Transaction record").": \n\n".$note."\n===============================\n";
     $note_exists = CRM_Core_BAO_Note::getNote( $contribution->id, 'civicrm_contribution' );
     if(count($note_exists)){

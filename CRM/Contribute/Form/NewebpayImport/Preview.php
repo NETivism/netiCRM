@@ -276,7 +276,7 @@ class CRM_Contribute_Form_NewebpayImport_Preview extends CRM_Core_Form {
   }
 
   static private function addNote($note, &$contributionRow){
-    require_once 'CRM/Core/BAO/Note.php';
+
     $note = date("Y/m/d H:i:s"). ts("Transaction record").": \n".$note."\n===============================\n";
     $note_exists = CRM_Core_BAO_Note::getNote( $contributionRow['id'], 'civicrm_contribution' );
     if(count($note_exists)){

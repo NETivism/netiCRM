@@ -33,9 +33,22 @@
  *
  */
 
-require_once 'CRM/Report/Form.php';
+
 class CRM_Report_Form_Mailing_Opened extends CRM_Report_Form {
 
+  /**
+   * @var never[]
+   */
+  public $_columnHeaders;
+  public $_from;
+  public $_aliases;
+  public $relationshipId;
+  public $_where;
+  /**
+   * @var string
+   */
+  public $_groupBy;
+  public $_absoluteUrl;
   protected $_summary = NULL;
 
   protected $_emailField = FALSE;
@@ -342,7 +355,7 @@ class CRM_Report_Form_Mailing_Opened extends CRM_Report_Form {
   }
 
   function mailing_select() {
-    require_once ('CRM/Mailing/BAO/Mailing.php');
+
 
     $data = array();
     $mailing = new CRM_Mailing_BAO_Mailing();

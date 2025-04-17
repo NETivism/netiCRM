@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/ACL/DAO/ACL.php';
+
 
 /**
  *  Access Control List
@@ -386,9 +386,9 @@ class CRM_ACL_BAO_ACL extends CRM_ACL_DAO_ACL {
 
     $rule = new CRM_ACL_BAO_ACL();
 
-    require_once 'CRM/Contact/BAO/Group.php';
-    require_once 'CRM/Contact/BAO/GroupContact.php';
-    require_once 'CRM/Contact/BAO/Contact.php';
+
+
+
 
     $acl = self::getTableName();
     $contact = CRM_Contact_BAO_Contact::getTableName();
@@ -448,7 +448,7 @@ class CRM_ACL_BAO_ACL extends CRM_ACL_DAO_ACL {
 
     $rule = new CRM_ACL_BAO_ACL();
 
-    require_once 'CRM/ACL/DAO/EntityRole.php';
+
     $acl = self::getTableName();
     $aclRole = 'civicrm_acl_role';
     $aclRoleJoin = CRM_ACL_DAO_EntityRole::getTableName();
@@ -511,8 +511,8 @@ class CRM_ACL_BAO_ACL extends CRM_ACL_DAO_ACL {
 
     $rule = new CRM_ACL_BAO_ACL();
 
-    require_once 'CRM/Contact/BAO/GroupContact.php';
-    require_once 'CRM/Contact/BAO/Group.php';
+
+
 
     $acl = self::getTableName();
     $c2g = CRM_Contact_BAO_GroupContact::getTableName();
@@ -561,7 +561,7 @@ INNER JOIN  $c2g
     $acl = self::getTableName();
     $aclRole = 'civicrm_acl_role';
 
-    require_once 'CRM/ACL/DAO/EntityRole.php';
+
 
     $aclER = CRM_ACL_DAO_EntityRole::getTableName();
     $c2g = CRM_Contact_BAO_GroupContact::getTableName();
@@ -661,7 +661,7 @@ SELECT $acl.*
    * @static
    */
   static function setIsActive($id, $is_active) {
-    require_once 'CRM/Core/BAO/Cache.php';
+
     // note this also resets any ACL cache
     CRM_Core_BAO_Cache::deleteGroup('contact fields');
 
@@ -669,7 +669,7 @@ SELECT $acl.*
   }
 
   static function check($str, $contactID) {
-    require_once 'CRM/ACL/BAO/Cache.php';
+
 
     $acls = &CRM_ACL_BAO_Cache::build($contactID);
 
@@ -696,7 +696,7 @@ SELECT count( a.id )
   }
 
   public static function whereClause($type, &$tables, &$whereTables, $contactID = NULL) {
-    require_once 'CRM/ACL/BAO/Cache.php';
+
 
     $acls = &CRM_ACL_BAO_Cache::build($contactID);
     //CRM_Core_Error::debug( "a: $contactID", $acls );
@@ -764,7 +764,7 @@ SELECT g.*
             ) &&
             $dao->cache_date == NULL
           ) {
-            require_once 'CRM/Contact/BAO/GroupContactCache.php';
+
             CRM_Contact_BAO_GroupContactCache::load($dao);
           }
         }
@@ -776,7 +776,7 @@ SELECT g.*
     }
 
     // call the hook to get additional whereClauses
-    require_once 'CRM/Utils/Hook.php';
+
     CRM_Utils_Hook::aclWhereClause($type, $tables, $whereTables, $contactID, $whereClause);
 
     if (empty($whereClause)) {
@@ -792,7 +792,7 @@ SELECT g.*
     $allGroups = NULL,
     $includedGroups = NULL
   ) {
-    require_once 'CRM/ACL/BAO/Cache.php';
+
 
     $acls = &CRM_ACL_BAO_Cache::build($contactID);
 
@@ -840,7 +840,7 @@ ORDER BY a.object_id
       }
     }
 
-    require_once 'CRM/Utils/Hook.php';
+
     CRM_Utils_Hook::aclGroup($type, $contactID, $tableName, $allGroups, $ids);
 
     return $ids;
@@ -912,7 +912,7 @@ ORDER BY a.object_id
    */
   static function del($aclId) {
     // delete all entries from the acl cache
-    require_once 'CRM/ACL/BAO/Cache.php';
+
     CRM_ACL_BAO_Cache::resetCache();
 
     $acl = new CRM_ACL_DAO_ACL();

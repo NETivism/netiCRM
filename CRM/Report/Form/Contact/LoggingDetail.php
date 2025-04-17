@@ -33,8 +33,12 @@
  *
  */
 
-require_once 'CRM/Report/Form.php';
+
 class CRM_Report_Form_Contact_LoggingDetail extends CRM_Report_Form {
+  /**
+   * @var array<string, array<'title', mixed>>
+   */
+  public $_columnHeaders;
   private $loggingDB;
 
   private $log_conn_id;
@@ -94,7 +98,7 @@ class CRM_Report_Form_Contact_LoggingDetail extends CRM_Report_Form {
     $this->assign('log_date', $this->log_date);
 
     // link back to summary report
-    require_once 'CRM/Report/Utils/Report.php';
+
     $this->assign('summaryReportURL', CRM_Report_Utils_Report::getNextUrl('logging/contact/summary', 'reset=1', FALSE, TRUE));
 
     // we look for the last change in the given connection that happended less than 10 seconds later than log_date to catch multi-query changes
@@ -106,7 +110,7 @@ class CRM_Report_Form_Contact_LoggingDetail extends CRM_Report_Form {
     $originalSQL = "SELECT * FROM {$this->loggingDB}.log_civicrm_contact WHERE log_conn_id != %1 AND log_date < %2 AND id = %3 ORDER BY log_date DESC LIMIT 1";
     $original = $this->sqlToArray($originalSQL, $params);
 
-    require_once 'CRM/Contact/DAO/Contact.php';
+
     $dao = new CRM_Contact_DAO_Contact;
     $fields = &$dao->fields();
 

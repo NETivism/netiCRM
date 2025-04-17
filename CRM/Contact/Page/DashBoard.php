@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Page.php';
+
 
 /**
  * CiviCRM Dashboard
@@ -51,7 +51,7 @@ class CRM_Contact_Page_DashBoard extends CRM_Core_Page {
     $resetCache = CRM_Utils_Request::retrieve('resetCache', 'Positive', CRM_Core_DAO::$_nullObject);
 
     if ($resetCache) {
-      require_once 'CRM/Core/BAO/Dashboard.php';
+
       CRM_Core_BAO_Dashboard::resetDashletCache();
     }
 
@@ -60,7 +60,7 @@ class CRM_Contact_Page_DashBoard extends CRM_Core_Page {
     $contactID = $session->get('userID');
 
     // call hook to get html from other modules
-    require_once 'CRM/Utils/Hook.php';
+
     // ignored but needed to prevent warnings
     $contentPlacement = CRM_Utils_Hook::DASHBOARD_BELOW;
     $html = CRM_Utils_Hook::dashboard($contactID, $contentPlacement);

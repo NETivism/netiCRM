@@ -71,6 +71,7 @@ packages/jquery/plugins/jquery.chosen.js
 packages/jquery/css/jquery.chosen.css
 
 packages/jquery/plugins/jquery.select2.js
+packages/jquery/plugins/jquery.select2.selectAll.js
 packages/jquery/css/jquery.select2.css
 
 packages/jquery/plugins/jquery.modal.min.js

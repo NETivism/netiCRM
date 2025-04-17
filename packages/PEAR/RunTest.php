@@ -43,6 +43,10 @@ putenv("PHP_PEAR_RUNTESTS=1");
  */
 class PEAR_RunTest
 {
+    /**
+     * @var never[]
+     */
+    public $headers;
     var $_headers = array();
     var $_logger;
     var $_options;

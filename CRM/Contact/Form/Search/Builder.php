@@ -33,14 +33,15 @@
  *
  */
 
-require_once 'CRM/Contact/Form/Search.php';
-require_once "CRM/Core/BAO/Mapping.php";
+
+
 
 /**
  * This class if for search builder processing
  */
 class CRM_Contact_Form_Search_Builder extends CRM_Contact_Form_Search {
 
+  public $_loadedMappingId;
   /**
    * number of columns in where
    *
@@ -132,13 +133,13 @@ class CRM_Contact_Form_Search_Builder extends CRM_Contact_Form_Search {
     if (CRM_Utils_Array::value('addMore', $values) || CRM_Utils_Array::value('addBlock', $values)) {
       return TRUE;
     }
-    require_once 'CRM/Contact/BAO/Contact.php';
+
     $fields = array();
     $fields = CRM_Contact_BAO_Contact::exportableFields('All', FALSE, TRUE);
 
-    require_once 'CRM/Core/Component.php';
+
     $compomentFields = &CRM_Core_Component::getQueryFields();
-    require_once 'CRM/Activity/BAO/Activity.php';
+
     $activityFields = CRM_Activity_BAO_Activity::exportableFields();
     $compomentFields = array_merge($compomentFields, $activityFields);
     $fields = array_merge($fields, $compomentFields);
@@ -146,7 +147,7 @@ class CRM_Contact_Form_Search_Builder extends CRM_Contact_Form_Search {
     $fld = array();
     $fld = CRM_Core_BAO_Mapping::formattedFields($values, TRUE);
 
-    require_once 'CRM/Utils/Type.php';
+
     $errorMsg = array();
     foreach ($fld as $k => $v) {
       if (!$v[1]) {
@@ -350,7 +351,7 @@ class CRM_Contact_Form_Search_Builder extends CRM_Contact_Form_Search {
       }
 
       if (!$checkEmpty) {
-        require_once 'CRM/Utils/System.php';
+
         CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/contact/search/builder', '_qf_Builder_display=true'));
       }
     }

@@ -52,7 +52,7 @@ class CRM_Contribute_BAO_Query {
     if (!self::$_contributionFields) {
       self::$_contributionFields = array();
 
-      require_once 'CRM/Contribute/BAO/Contribution.php';
+
       $fields = &CRM_Contribute_BAO_Contribution::exportableFields();
 
       unset($fields['contribution_contact_id']);
@@ -249,8 +249,6 @@ class CRM_Contribute_BAO_Query {
       $quoteValue = str_replace('\_', '_', $quoteValue);
     }
 
-    $strtolower = function_exists('mb_strtolower') ? 'mb_strtolower' : 'strtolower';
-
     switch ($name) {
       case 'contribution_created_date':
       case 'contribution_created_date_low':
@@ -386,7 +384,7 @@ class CRM_Contribute_BAO_Query {
         return;
 
       case 'contribution_pcp_made_through_id':
-        require_once 'CRM/Contribute/PseudoConstant.php';
+
         $pcPage = $value;
         $pcpages = CRM_Contribute_PseudoConstant::pcPage();
         $query->_where[$grouping][] = "civicrm_contribution_soft.pcp_id = $pcPage";
@@ -396,7 +394,7 @@ class CRM_Contribute_BAO_Query {
 
       case 'contribution_payment_instrument_id':
       case 'contribution_payment_instrument':
-        require_once 'CRM/Contribute/PseudoConstant.php';
+
         $pis = CRM_Contribute_PseudoConstant::paymentInstrument();
         if (is_array($value)) {
           foreach ($value as $k => $v) {
@@ -442,7 +440,7 @@ class CRM_Contribute_BAO_Query {
         $newName = str_replace(',', " ", $name);
         $pieces = explode(' ', $newName);
         foreach ($pieces as $piece) {
-          $value = $strtolower(CRM_Core_DAO::escapeString(trim($piece)));
+          $value = mb_strtolower(CRM_Core_DAO::escapeString(trim($piece)), 'UTF-8');
           $value = "'%$value%'";
           $sub[] = " ( contact_b.sort_name LIKE $value )";
         }
@@ -455,7 +453,7 @@ class CRM_Contribute_BAO_Query {
 
       case 'contribution_status_id':
       case 'contribution_status':
-        require_once "CRM/Core/OptionGroup.php";
+
         $statusValues = CRM_Core_OptionGroup::values("contribution_status");
         if ($name == 'contribution_status') {
           $statusIndex = null;
@@ -518,7 +516,7 @@ class CRM_Contribute_BAO_Query {
         return;
 
       case 'contribution_source':
-        $value = $strtolower(CRM_Core_DAO::escapeString($value));
+        $value = mb_strtolower(CRM_Core_DAO::escapeString($value), 'UTF-8');
         if ($wildcard) {
           $value = "%$value%";
           $op = 'LIKE';
@@ -527,20 +525,6 @@ class CRM_Contribute_BAO_Query {
         $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause($wc, $op, $value, "String");
         $query->_qill[$grouping][] = ts('Contribution Source %1 %2', array(1 => $op, 2 => $quoteValue));
         $query->_tables['civicrm_contribution'] = $query->_whereTables['civicrm_contribution'] = 1;
-        return;
-
-      case 'contribution_source':
-        /*
-        $value = $strtolower(CRM_Core_DAO::escapeString($value));
-        if ($wildcard) {
-          $value = "%$value%";
-          $op = 'LIKE';
-        }
-        $wc = ($op != 'LIKE') ? "LOWER(civicrm_contribution.source)" : "civicrm_contribution.source";
-        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause($wc, $op, $value, "String");
-        $query->_qill[$grouping][] = ts('Contribution Source %1 %2', array(1 => $op, 2 => $quoteValue));
-        $query->_tables['civicrm_contribution'] = $query->_whereTables['civicrm_contribution'] = 1;
-        */
         return;
 
       case 'contribution_trxn_id':
@@ -637,7 +621,7 @@ class CRM_Contribute_BAO_Query {
         return;
 
       case 'contribution_note':
-        $value = $strtolower(CRM_Core_DAO::escapeString($value));
+        $value = mb_strtolower(CRM_Core_DAO::escapeString($value), 'UTF-8');
         if ($wildcard) {
           $value = "%$value%";
           $op = 'LIKE';
@@ -923,7 +907,7 @@ class CRM_Contribute_BAO_Query {
       );
 
       // also get all the custom contribution properties
-      require_once "CRM/Core/BAO/CustomField.php";
+
       $fields = CRM_Core_BAO_CustomField::getFieldsForImport('Contribution');
       if (!empty($fields)) {
         foreach ($fields as $name => $dontCare) {
@@ -943,7 +927,7 @@ class CRM_Contribute_BAO_Query {
    * @static
    */
   static function buildSearchForm(&$form) {
-    require_once 'CRM/Utils/Money.php';
+
 
     //added contribution source
     $form->addNumber('contribution_id', ts('Contribution ID'));
@@ -1060,11 +1044,11 @@ class CRM_Contribute_BAO_Query {
     $form->addYesNo('contribution_pcp_display_in_roll', ts('Personal Campaign Page').' - '.ts('Display In Roll ?'));
 
     // add all the custom  searchable fields
-    require_once 'CRM/Core/BAO/CustomGroup.php';
+
     $contribution = array('Contribution');
     $groupDetails = CRM_Core_BAO_CustomGroup::getGroupDetail(NULL, TRUE, $contribution);
     if ($groupDetails) {
-      require_once 'CRM/Core/BAO/CustomField.php';
+
       $form->assign('contributeGroupTree', $groupDetails);
       foreach ($groupDetails as $group) {
         foreach ($group['fields'] as $field) {
@@ -1100,7 +1084,7 @@ class CRM_Contribute_BAO_Query {
     $form->addElement('text', 'contribution_utm_content', 'UTM Content');
 
     // premium filters
-    require_once 'CRM/Contribute/DAO/Product.php';
+
     $product_dao = new CRM_Contribute_DAO_Product();
     $product_dao->is_active = 1;
     $product_dao->find();

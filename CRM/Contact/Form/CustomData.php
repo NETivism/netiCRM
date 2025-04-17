@@ -33,9 +33,9 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
-require_once 'CRM/Core/ShowHideBlocks.php';
-require_once 'CRM/Custom/Form/CustomData.php';
+
+
+
 
 /**
  * This class generates form components for custom data
@@ -47,6 +47,11 @@ require_once 'CRM/Custom/Form/CustomData.php';
  */
 class CRM_Contact_Form_CustomData extends CRM_Core_Form {
 
+  public $_cdType;
+  public $_tableID;
+  public $_contactType;
+  public $_contactSubType;
+  public $_groupTree;
   /**
    * The table id, used when editing/creating custom data
    *
@@ -130,7 +135,7 @@ class CRM_Contact_Form_CustomData extends CRM_Core_Form {
     $this->_groupID = CRM_Utils_Request::retrieve('groupId', 'Positive', $this, TRUE);
     $this->_tableID = CRM_Utils_Request::retrieve('tableId', 'Positive', $this, TRUE);
 
-    require_once "CRM/Contact/BAO/Contact.php";
+
     $this->_contactType = CRM_Contact_BAO_Contact::getContactType($this->_tableID);
     $this->_contactSubType = CRM_Contact_BAO_Contact::getContactSubType($this->_tableID);
     $this->assign('contact_type', $this->_contactType);
@@ -140,7 +145,7 @@ class CRM_Contact_Form_CustomData extends CRM_Core_Form {
 
     // when custom data is included in this page
     if (CRM_Utils_Array::value("hidden_custom", $_POST)) {
-      for ($i; $i <= $_POST['hidden_custom_group_count'][$this->_groupID]; $i++) {
+      for ($i = 0; $i <= $_POST['hidden_custom_group_count'][$this->_groupID]; $i++) {
         CRM_Custom_Form_CustomData::preProcess($this, NULL, NULL, $i);
         CRM_Custom_Form_CustomData::buildQuickForm($this);
         CRM_Custom_Form_CustomData::setDefaultValues($this);
@@ -224,7 +229,7 @@ class CRM_Contact_Form_CustomData extends CRM_Core_Form {
   public function postProcess() {
     // Get the form values and groupTree
     $params = $this->controller->exportValues($this->_name);
-    require_once 'CRM/Core/BAO/CustomValueTable.php';
+
     CRM_Core_BAO_CustomValueTable::postProcess($params,
       $this->_groupTree[$this->_groupID]['fields'],
       'civicrm_contact',
@@ -233,7 +238,7 @@ class CRM_Contact_Form_CustomData extends CRM_Core_Form {
     );
 
     // reset the group contact cache for this group
-    require_once 'CRM/Contact/BAO/GroupContactCache.php';
+
     CRM_Contact_BAO_GroupContactCache::remove();
   }
 }

@@ -36,6 +36,7 @@ require_once 'System.php';
  */
 class PEAR_Packager extends PEAR_Common
 {
+    public $debug;
     /**
      * @var PEAR_Registry
      */

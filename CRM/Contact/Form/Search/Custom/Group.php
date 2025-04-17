@@ -33,10 +33,18 @@
  *
  */
 
-require_once 'CRM/Contact/Form/Search/Custom/Base.php';
-require_once 'CRM/Contact/BAO/SavedSearch.php';
+
+
 class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
 
+  public $_includeGroups;
+  public $_excludeGroups;
+  public $_includeTags;
+  public $_excludeTags;
+  public $_allSearch;
+  public $_groups;
+  public $_tags;
+  public $_andOr;
   protected $_formValues;
 
   protected $_tableName = NULL;
@@ -213,7 +221,7 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
     //block for Group search
     $smartGroup = array();
     if ($this->_groups || $this->_allSearch) {
-      require_once 'CRM/Contact/DAO/Group.php';
+
       $group = new CRM_Contact_DAO_Group();
       $group->is_active = 1;
       $group->find();
@@ -423,7 +431,7 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
     //block for Tags search
     if ($this->_tags || $this->_allSearch) {
       //find all tags
-      require_once 'CRM/Core/DAO/Tag.php';
+
       $tag = new CRM_Core_DAO_Tag();
       $tag->is_active = 1;
       $tag->find();

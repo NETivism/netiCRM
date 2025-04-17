@@ -57,7 +57,7 @@
             </tr>
           </thead>
             {foreach from=$componentIds item=pid}
-             <tr class="{cycle values="odd-row,even-row"}">
+            <tr class="{cycle values="odd-row,even-row"}">
 	      {foreach from=$readOnlyFields item=fTitle key=fName}
 	         <td>{$contactDetails.$pid.$fName}</td>
 	      {/foreach}
@@ -68,22 +68,65 @@
                 {if ( $fields.$n.data_type eq 'Date') or ( $n eq 'participant_register_date' ) }
                    <td class="compressed">{include file="CRM/common/jcalendar.tpl" elementName=$n elementIndex=$pid batchUpdate=1}</td>
                 {else}
-                	<td class="compressed">{$form.field.$pid.$n.html}</td> 
+                	<td class="compressed">
+                    {$form.field.$pid.$n.html}
+                    {if $field.name eq 'participant_status_id' and $contactDetails.$pid.do_not_notify eq '1'}
+                      <span class="do-not-notify hide-block">
+                        <i class="font-red zmdi zmdi-notifications-off" title="{ts}Contact labelled as do not notification.{/ts}"></i>
+                      </span>
+                    {/if}
+                  </td>
                 {/if}
               {/foreach}
-             </tr>
+            </tr>
             {/foreach}
-           </tr>
-           <tr>
-              <td>&nbsp;</td>
-              <td>&nbsp;</td>
-              <td> {if $fields}{$form._qf_Batch_refresh.html}{/if}{include file="CRM/common/formButtons.tpl"}
-              </td>
-           </tr>
-         </table>
-        
+          </tr>
+          <tr class="do-not-notify hide-row">
+            <td colspan="5">
+              <div>
+                <i class="zmdi zmdi-notifications-active"></i>
+                {ts 1=$notifyingStatuses}Participants whose status is changed TO any of the following will be automatically notified via email: %1.{/ts}</div>
+              {if $suppress_email_count}
+              <div class="description font-red">
+                <i class="font-red zmdi zmdi-notifications-off"></i>
+                {ts count=$suppress_email_count plural='Email will NOT be sent to %count contacts - (no email address on file, or communication preferences specify DO NOT NOTIFY, or contact is deceased).'}Email will NOT be sent to %count contact - (no email address on file, or communication preferences specify DO NOT NOTIFY, or contact is deceased).{/ts}
+              </div>
+              {/if}
+            </td>
+          </tr>
+        </table>
+
+        <div class="crm-submit-buttons">
+          {if $fields}{$form._qf_Batch_refresh.html}{/if}{include file="CRM/common/formButtons.tpl"}
+        </div>
 </fieldset>
 </div>
+<script>{literal}
+cj(document).ready(function($) {
+  let notify_status = [{/literal}{$notify_status}{literal}];
+  $('select[name*="participant_status_id"]').change(function(){
+    $('.batch-update table .do-not-notify.hide-row .description').hide();
+    let selected = parseInt($(this).val());
+    if (notify_status.indexOf(selected) != -1) {
+      $(this).closest('.crm-form-select-single').next('.do-not-notify').show();
+    }
+    else {
+      $(this).closest('.crm-form-select-single').next('.do-not-notify').hide();
+    }
+  });
+  $('select[name=status_change]').change(function(){
+    let selected = parseInt($(this).val());
+    $('td.compressed').find('.do-not-notify').hide();
+    if (notify_status.indexOf(selected) != -1) {
+      $('.batch-update table .do-not-notify.hide-row').show();
+      $('.batch-update table .do-not-notify.hide-row .description').show();
+    }
+    else {
+      $('.batch-update table .do-not-notify.hide-row').hide();
+    }
+  });
+});
+{/literal}</script>
 
 {*include batch copy js js file*}
 {include file="CRM/common/batchCopy.tpl"}

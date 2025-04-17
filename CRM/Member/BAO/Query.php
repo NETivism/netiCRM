@@ -36,7 +36,7 @@
 class CRM_Member_BAO_Query {
 
   static function &getFields() {
-    require_once 'CRM/Member/BAO/Membership.php';
+
     $fields = &CRM_Member_BAO_Membership::exportableFields();
     return $fields;
   }
@@ -186,8 +186,7 @@ class CRM_Member_BAO_Query {
         return;
 
       case 'member_source':
-        $strtolower = function_exists('mb_strtolower') ? 'mb_strtolower' : 'strtolower';
-        $value = $strtolower(CRM_Core_DAO::escapeString(trim($value)));
+        $value = mb_strtolower(CRM_Core_DAO::escapeString(trim($value)), 'UTF-8');
 
         $query->_where[$grouping][] = "civicrm_membership.source $op '{$value}'";
         $query->_qill[$grouping][] = ts('Source %2 %1', array(1 => $value, 2 => $op));
@@ -346,7 +345,7 @@ class CRM_Member_BAO_Query {
       );
 
       // also get all the custom membership properties
-      require_once "CRM/Core/BAO/CustomField.php";
+
       $fields = CRM_Core_BAO_CustomField::getFieldsForImport('Membership');
       if (!empty($fields)) {
         foreach ($fields as $name => $dontCare) {
@@ -358,7 +357,7 @@ class CRM_Member_BAO_Query {
   }
 
   static function buildSearchForm(&$form) {
-    require_once 'CRM/Member/PseudoConstant.php';
+
     $attrs = array('multiple' => 'multiple');
     $membership_type = CRM_Member_PseudoConstant::membershipType();
     $form->addElement('select', 'member_membership_type_id', 'Membership Type', $membership_type, $attrs);
@@ -386,11 +385,11 @@ class CRM_Member_BAO_Query {
     $form->addElement('checkbox', 'member_pay_later', ts('Find Pay Later Memberships?'));
 
     // add all the custom  searchable fields
-    require_once 'CRM/Custom/Form/CustomData.php';
+
     $extends = array('Membership');
     $groupDetails = CRM_Core_BAO_CustomGroup::getGroupDetail(NULL, TRUE, $extends);
     if ($groupDetails) {
-      require_once 'CRM/Core/BAO/CustomField.php';
+
       $form->assign('membershipGroupTree', $groupDetails);
       foreach ($groupDetails as $group) {
         foreach ($group['fields'] as $field) {

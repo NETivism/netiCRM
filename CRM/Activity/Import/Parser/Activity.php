@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Activity/Import/Parser.php';
+
 require_once 'api/v2/utils.php';
 require_once 'api/v2/Activity.php';
 
@@ -71,8 +71,8 @@ class CRM_Activity_Import_Parser_Activity extends CRM_Activity_Import_Parser {
    * @access public
    */
   function init() {
-    require_once 'CRM/Activity/BAO/Activity.php';
-    require_once 'CRM/Activity/BAO/ActivityTarget.php';
+
+
     $fields = array_merge(CRM_Activity_BAO_Activity::importableFields(),
       CRM_Activity_BAO_ActivityTarget::import()
     );
@@ -183,7 +183,7 @@ class CRM_Activity_Import_Parser_Activity extends CRM_Activity_Import_Parser {
     $params = &$this->getActiveFieldParams();
 
 
-    require_once 'CRM/Import/Parser/Contact.php';
+
     $errorMessage = NULL;
 
     //for date-Formats
@@ -312,7 +312,7 @@ class CRM_Activity_Import_Parser_Activity extends CRM_Activity_Import_Parser {
           'contact_type' => 'Individual',
           'level' => 'Strict',
         );
-        require_once 'CRM/Dedupe/BAO/Rule.php';
+
         $fieldsArray = CRM_Dedupe_BAO_Rule::dedupeRuleFields($ruleParams);
 
         foreach ($fieldsArray as $value) {
@@ -394,7 +394,7 @@ class CRM_Activity_Import_Parser_Activity extends CRM_Activity_Import_Parser {
     $dateKey = 'date';
     $dateParams = array($dateKey => $date);
 
-    require_once 'CRM/Utils/Date.php';
+
     CRM_Utils_Date::convertToDefaultDate($dateParams, $dateType, $dateKey);
     return $dateParams[$dateKey];
   }

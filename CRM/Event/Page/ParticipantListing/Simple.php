@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Page.php';
+
 class CRM_Event_Page_ParticipantListing_Simple extends CRM_Core_Page {
 
   protected $_id;
@@ -103,7 +103,7 @@ LIMIT    $offset, $rowCount";
   }
 
   function pager($fromClause, $whereClause, $whereParams) {
-    require_once 'CRM/Utils/Pager.php';
+
 
     $params = array();
 
@@ -129,7 +129,7 @@ SELECT count( civicrm_contact.id )
 
   function orderBy() {
     static $headers = NULL;
-    require_once 'CRM/Utils/Sort.php';
+
     if (!$headers) {
       $headers = array();
       $headers[1] = array('name' => ts('Name'),

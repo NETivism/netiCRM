@@ -33,7 +33,6 @@
  *
  */
 
-require_once 'CRM/Contribute/Import/Parser.php';
 require_once 'api/v2/Contribution.php';
 
 /**
@@ -41,6 +40,47 @@ require_once 'api/v2/Contribution.php';
  */
 class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Parser {
 
+  /**
+   * @var int|int
+   */
+  public $_phoneIndex;
+  /**
+   * @var int|int
+   */
+  public $_emailIndex;
+  /**
+   * @var int|int
+   */
+  public $_firstNameIndex;
+  /**
+   * @var int|int
+   */
+  public $_lastNameIndex;
+  /**
+   * @var int|int
+   */
+  public $_householdNameIndex;
+  /**
+   * @var int|int
+   */
+  public $_organizationNameIndex;
+  /**
+   * @var int|int
+   */
+  public $_externalIdentifierIndex;
+  /**
+   * @var never[]
+   */
+  public $_allEmails;
+  /**
+   * @var never[]
+   */
+  public $_allExternalIdentifiers;
+  public $_dedupeRuleFields;
+  public $_statusFieldName;
+  public $_dateFormats;
+  public $_contributionPages;
+  public $_contactSubType;
   protected $_mapperKeys;
   protected $_mapperLocType;
   protected $_mapperPhoneType;
@@ -93,7 +133,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
    * @access public
    */
   function init() {
-    require_once 'CRM/Contribute/BAO/Contribution.php';
+
     $fields = &CRM_Contribute_BAO_Contribution::importableFields($this->_contactType, FALSE);
     $this->_importableContactFields = $fields;
 
@@ -298,7 +338,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
     $response = $this->setActiveFieldValues($values, $erroneousField);
 
     $params = &$this->getActiveFieldParams();
-    require_once 'CRM/Import/Parser/Contact.php';
+
     $errorMessage = NULL;
     $statusFieldName = $this->_statusFieldName;
 
@@ -439,7 +479,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
 
     if ($errorMessage) {
       $tempMsg = ts('Invalid value for field(s)').': '. $errorMessage;
-      $importRecordParams = array($statusFieldName => CRM_Import_Parser::ERROR, "${statusFieldName}Msg" => $tempMsg);
+      $importRecordParams = array($statusFieldName => CRM_Import_Parser::ERROR, "{$statusFieldName}Msg" => $tempMsg);
       $this->updateImportStatus($values[count($values) - 1], $importRecordParams);
       array_unshift($values, $tempMsg);
       $errorMessage = NULL;
@@ -520,7 +560,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
 
     static $indieFields = NULL;
     if ($indieFields == NULL) {
-      require_once ('CRM/Contribute/DAO/Contribution.php');
+
       $tempIndieFields = &CRM_Contribute_DAO_Contribution::import();
       $indieFields = $tempIndieFields;
     }
@@ -561,25 +601,25 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
     if (civicrm_error($formatError)) {
       $errorMsg = $formatError['error_message'];
       if (CRM_Utils_Array::value('error_data', $formatError) == 'soft_credit') {
-        $importRecordParams = array($statusFieldName => CRM_Contribute_Import_Parser::SOFT_CREDIT_ERROR, "${statusFieldName}Msg" => $errorMsg);
+        $importRecordParams = array($statusFieldName => CRM_Contribute_Import_Parser::SOFT_CREDIT_ERROR, "{$statusFieldName}Msg" => $errorMsg);
         $this->updateImportStatus($values[count($values) - 1], $importRecordParams);
         array_unshift($values, $importRecordParams[$statusFieldName.'Msg']);
         return CRM_Contribute_Import_Parser::SOFT_CREDIT_ERROR;
       }
       elseif (CRM_Utils_Array::value('error_data', $formatError) == 'pledge_payment') {
-        $importRecordParams = array($statusFieldName => CRM_Contribute_Import_Parser::PLEDGE_PAYMENT_ERROR, "${statusFieldName}Msg" => $errorMsg);
+        $importRecordParams = array($statusFieldName => CRM_Contribute_Import_Parser::PLEDGE_PAYMENT_ERROR, "{$statusFieldName}Msg" => $errorMsg);
         $this->updateImportStatus($values[count($values) - 1], $importRecordParams);
         array_unshift($values, $importRecordParams[$statusFieldName.'Msg']);
         return CRM_Contribute_Import_Parser::PLEDGE_PAYMENT_ERROR;
       }
       elseif (CRM_Utils_Array::value('error_data', $formatError) == 'pcp_creator') {
-        $importRecordParams = array($statusFieldName => CRM_Contribute_Import_Parser::PCP_ERROR, "${statusFieldName}Msg" => $errorMsg);
+        $importRecordParams = array($statusFieldName => CRM_Contribute_Import_Parser::PCP_ERROR, "{$statusFieldName}Msg" => $errorMsg);
         $this->updateImportStatus($values[count($values) - 1], $importRecordParams);
         array_unshift($values, $importRecordParams[$statusFieldName.'Msg']);
         return CRM_Contribute_Import_Parser::PCP_ERROR;
       }
       else {
-        $importRecordParams = array($statusFieldName => CRM_Contribute_Import_Parser::ERROR, "${statusFieldName}Msg" => $errorMsg);
+        $importRecordParams = array($statusFieldName => CRM_Contribute_Import_Parser::ERROR, "{$statusFieldName}Msg" => $errorMsg);
         $this->updateImportStatus($values[count($values) - 1], $importRecordParams);
         array_unshift($values, $importRecordParams[$statusFieldName.'Msg']);
         return CRM_Contribute_Import_Parser::ERROR;
@@ -608,7 +648,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
           if ($paramValues['note']) {
             $noteID = array();
             $contactID = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $ids['contribution'], 'contact_id');
-            require_once 'CRM/Core/BAO/Note.php';
+
             $daoNote = new CRM_Core_BAO_Note();
             $daoNote->entity_table = 'civicrm_contribution';
             $daoNote->entity_id = $ids['contribution'];
@@ -642,19 +682,19 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
 
           //return soft valid since we need to show how soft credits were added
           if (CRM_Utils_Array::value('soft_credit_to', $formatted)) {
-            $importRecordParams = array($statusFieldName => CRM_Contribute_Import_Parser::SOFT_CREDIT, "${statusFieldName}Msg" => '');
+            $importRecordParams = array($statusFieldName => CRM_Contribute_Import_Parser::SOFT_CREDIT, "{$statusFieldName}Msg" => '');
             $this->updateImportStatus($values[count($values) - 1], $importRecordParams);
             return CRM_Contribute_Import_Parser::SOFT_CREDIT;
           }
 
           if (CRM_Utils_Array::value('pcp_creator_id', $formatted)) {
-            $importRecordParams = array($statusFieldName => CRM_Contribute_Import_Parser::PCP, "${statusFieldName}Msg" => '');
+            $importRecordParams = array($statusFieldName => CRM_Contribute_Import_Parser::PCP, "{$statusFieldName}Msg" => '');
             array_unshift($values, $importRecordParams[$statusFieldName.'Msg']);
             return CRM_Contribute_Import_Parser::PCP;
           }
 
           // process pledge payment assoc w/ the contribution
-          $importRecordParams = array($statusFieldName => CRM_Contribute_Import_Parser::VALID, "${statusFieldName}Msg" => '');
+          $importRecordParams = array($statusFieldName => CRM_Contribute_Import_Parser::VALID, "{$statusFieldName}Msg" => '');
           $this->updateImportStatus($values[count($values) - 1], $importRecordParams);
           return $this->processPledgePayments($formatted);
         }
@@ -672,7 +712,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
         }
       }
       $errorMsg = CRM_Utils_Array::implode(' AND ', $errorMsg);
-      $importRecordParams = array($statusFieldName => CRM_Contribute_Import_Parser::ERROR, "${statusFieldName}Msg" => "Matching Contribution record not found for " . $errorMsg . ". Row was skipped.");
+      $importRecordParams = array($statusFieldName => CRM_Contribute_Import_Parser::ERROR, "{$statusFieldName}Msg" => "Matching Contribution record not found for " . $errorMsg . ". Row was skipped.");
       $this->updateImportStatus($values[count($values) - 1], $importRecordParams);
       array_unshift($values, $importRecordParams[$statusFieldName.'Msg']);
       return CRM_Contribute_Import_Parser::ERROR;
@@ -708,7 +748,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
       if (civicrm_duplicate($found)) {
         $matchedIDs = explode(',', $found['error_message']['params'][0]);
         if (count($matchedIDs) > 1) {
-          $importRecordParams = array($statusFieldName => CRM_Contribute_Import_Parser::ERROR, "${statusFieldName}Msg" => ts('Record duplicates multiple contacts'));
+          $importRecordParams = array($statusFieldName => CRM_Contribute_Import_Parser::ERROR, "{$statusFieldName}Msg" => ts('Record duplicates multiple contacts'));
           $this->updateImportStatus($values[count($values) - 1], $importRecordParams);
           array_unshift($values, $importRecordParams[$statusFieldName.'Msg']);
           return CRM_Contribute_Import_Parser::ERROR;
@@ -788,7 +828,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
       }
       else {
         $errDisp = "Contact Import Error: ".$contactValues[0];
-        $importRecordParams = array($statusFieldName => CRM_Import_Parser::ERROR, "${statusFieldName}Msg" => $errDisp);
+        $importRecordParams = array($statusFieldName => $contactImportResult, "{$statusFieldName}Msg" => $errDisp);
         $this->updateImportStatus($values[count($values) - 1], $importRecordParams);
         array_unshift($values, $importRecordParams[$statusFieldName.'Msg']);
         return CRM_Import_Parser::ERROR;
@@ -806,7 +846,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
     }
 
     // catach all for CRM_Contribute_Import_Parser::DUPLICATE_SKIP
-    $importRecordParams = array($statusFieldName => CRM_Contribute_Import_Parser::ERROR, "${statusFieldName}Msg" => $errDisp);
+    $importRecordParams = array($statusFieldName => CRM_Contribute_Import_Parser::ERROR, "{$statusFieldName}Msg" => $errDisp);
     $this->updateImportStatus($values[count($values) - 1], $importRecordParams);
     array_unshift($values, $importRecordParams[$statusFieldName.'Msg']);
     return CRM_Contribute_Import_Parser::ERROR;
@@ -828,10 +868,10 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
         'contribution_id', $formatted['contribution_id']
       );
 
-      require_once 'CRM/Pledge/BAO/Payment.php';
+
       CRM_Pledge_BAO_Payment::updatePledgePaymentStatus($formatted['pledge_id'], array($formatted['pledge_payment_id']), $completeStatusID, NULL, $formatted['total_amount']);
 
-      $importRecordParams = array($statusFieldName => CRM_Contribute_Import_Parser::PLEDGE_PAYMENT, "${statusFieldName}Msg" => '');
+      $importRecordParams = array($statusFieldName => CRM_Contribute_Import_Parser::PLEDGE_PAYMENT, "{$statusFieldName}Msg" => '');
       $this->updateImportStatus($values[count($values) - 1], $importRecordParams);
       return CRM_Contribute_Import_Parser::PLEDGE_PAYMENT;
     }
@@ -863,14 +903,14 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
           // original message will be "Duplicate error - existing contribution record(s) have a matching Transaction ID or Invoice ID." or
           // "Duplicate error - existing contribution record(s) have a matching Receipt ID."
           $duplicateField = strstr($newContribution['error_message']['message'], 'Transaction ID') ? ts('Transaction ID').'/'.ts('Invoice ID') : ts('Receipt ID');
-          $importRecordParams = array($statusFieldName => CRM_Contribute_Import_Parser::DUPLICATE, "${statusFieldName}Msg" => $duplicateField.'-'.ts('On duplicate entries').":".ts("Contribution ID").$newContribution['error_message']['params'][0]);
+          $importRecordParams = array($statusFieldName => CRM_Contribute_Import_Parser::DUPLICATE, "{$statusFieldName}Msg" => $duplicateField.'-'.ts('On duplicate entries').":".ts("Contribution ID").$newContribution['error_message']['params'][0]);
           $this->updateImportStatus($values[count($values) - 1], $importRecordParams);
           array_unshift($values, $importRecordParams[$statusFieldName.'Msg']);
           return CRM_Contribute_Import_Parser::DUPLICATE;
         }
       }
       else {
-        $importRecordParams = array($statusFieldName => CRM_Contribute_Import_Parser::ERROR, "${statusFieldName}Msg" => $newContribution['error_message']);
+        $importRecordParams = array($statusFieldName => CRM_Contribute_Import_Parser::ERROR, "{$statusFieldName}Msg" => $newContribution['error_message']);
         $this->updateImportStatus($values[count($values) - 1], $importRecordParams);
         array_unshift($values, $newContribution['error_message']);
         return CRM_Contribute_Import_Parser::ERROR;
@@ -881,12 +921,12 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
 
     //return soft valid since we need to show how soft credits were added
     if (CRM_Utils_Array::value('soft_credit_to', $formatted)) {
-      $importRecordParams = array($statusFieldName => CRM_Contribute_Import_Parser::SOFT_CREDIT, "${statusFieldName}Msg" => '');
+      $importRecordParams = array($statusFieldName => CRM_Contribute_Import_Parser::SOFT_CREDIT, "{$statusFieldName}Msg" => '');
       $this->updateImportStatus($values[count($values) - 1], $importRecordParams);
       return CRM_Contribute_Import_Parser::SOFT_CREDIT;
     }
 
-    $importRecordParams = array($statusFieldName => CRM_Contribute_Import_Parser::VALID, "${statusFieldName}Msg" => '');
+    $importRecordParams = array($statusFieldName => CRM_Contribute_Import_Parser::VALID, "{$statusFieldName}Msg" => '');
     $this->updateImportStatus($values[count($values) - 1], $importRecordParams);
 
     // process pledge payment assoc w/ the contribution

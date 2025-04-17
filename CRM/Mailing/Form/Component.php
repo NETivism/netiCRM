@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
+
 
 /**
  * This class generates form components for Location Type
@@ -153,7 +153,7 @@ class CRM_Mailing_Form_Component extends CRM_Core_Form {
       $ids['id'] = $this->_id;
     }
 
-    require_once 'CRM/Mailing/BAO/Component.php';
+
     CRM_Mailing_BAO_Component::add($params, $ids);
   }
   //end of function

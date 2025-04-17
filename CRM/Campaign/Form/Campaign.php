@@ -33,10 +33,10 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
-require_once 'CRM/Campaign/BAO/Campaign.php';
-require_once 'CRM/Campaign/PseudoConstant.php';
-require_once 'CRM/Campaign/DAO/CampaignGroup.php';
+
+
+
+
 
 /**
  * This class generates form components for processing a campaign
@@ -67,7 +67,7 @@ class CRM_Campaign_Form_Campaign extends CRM_Core_Form {
   protected $_campaignId;
 
   public function preProcess() {
-    require_once 'CRM/Campaign/BAO/Campaign.php';
+
     if (!CRM_Campaign_BAO_Campaign::accessCampaignDashboard()) {
       CRM_Utils_System::permissionDenied();
     }
@@ -111,7 +111,7 @@ class CRM_Campaign_Form_Campaign extends CRM_Core_Form {
     // if we are editing
     if (isset($this->_campaignId)) {
       $params = array('id' => $this->_campaignId);
-      require_once 'CRM/Campaign/BAO/Campaign.php';
+
       CRM_Campaign_BAO_Campaign::retrieve($params, $defaults);
     }
 
@@ -205,7 +205,7 @@ class CRM_Campaign_Form_Campaign extends CRM_Core_Form {
     );
 
     // add Campaign Parent Id
-    require_once 'CRM/Campaign/BAO/Campaign.php';
+
     $campaigns = CRM_Campaign_BAO_Campaign::getAllCampaign($this->_campaignId);
 
     if ($campaigns) {
@@ -328,7 +328,7 @@ class CRM_Campaign_Form_Campaign extends CRM_Core_Form {
       $dao->delete();
     }
 
-    require_once 'CRM/Campaign/BAO/Campaign.php';
+
     $result = CRM_Campaign_BAO_Campaign::create($params);
 
     if ($result) {

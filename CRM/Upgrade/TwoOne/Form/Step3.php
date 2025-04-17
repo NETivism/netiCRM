@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Upgrade/Form.php';
+
 class CRM_Upgrade_TwoOne_Form_Step3 extends CRM_Upgrade_Form {
   function verifyPreDBState(&$errorMessage) {
     $errorMessage = ts('Pre-condition failed for upgrade step %1.', array(1 => '3'));

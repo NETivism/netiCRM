@@ -55,6 +55,7 @@ class CRM_Core_FieldHierarchy {
       'do_not_sms' => 1,
       'do_not_mail' => 1,
       'do_not_phone' => 1,
+      'do_not_notify' => 1,
       'email_greeting' => 1,
       'email_greeting_custom' => 1,
       'addressee' => 1,

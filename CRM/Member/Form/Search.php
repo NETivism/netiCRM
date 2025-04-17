@@ -36,14 +36,22 @@
 /**
  * Files required
  */
-require_once 'CRM/Member/Selector/Search.php';
-require_once 'CRM/Core/Selector/Controller.php';
+
+
 
 /**
  * This file is for civimember search
  */
 class CRM_Member_Form_Search extends CRM_Core_Form {
 
+  /**
+   * @var never[]
+   */
+  public $defaults;
+  /**
+   * @var string
+   */
+  public $_reset;
   /**
    * Are we forced to run a search
    *
@@ -185,7 +193,7 @@ class CRM_Member_Form_Search extends CRM_Core_Form {
       );
     }
 
-    require_once 'CRM/Contact/BAO/Query.php';
+
     $this->_queryParams = &CRM_Contact_BAO_Query::convertFormValues($this->_formValues);
     $selector = new CRM_Member_Selector_Search($this->_queryParams,
       $this->_action,
@@ -227,7 +235,7 @@ class CRM_Member_Form_Search extends CRM_Core_Form {
   function buildQuickForm() {
     $this->addElement('text', 'sort_name', ts('Member Name, Phone or Email'), CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Contact', 'sort_name'));
 
-    require_once 'CRM/Member/BAO/Query.php';
+
     CRM_Member_BAO_Query::buildSearchForm($this);
 
     /* 
@@ -246,10 +254,10 @@ class CRM_Member_Form_Search extends CRM_Core_Form {
 
       $total = $cancel = 0;
 
-      require_once "CRM/Core/Permission.php";
+
       $permission = CRM_Core_Permission::getPermission();
 
-      require_once 'CRM/Member/Task.php';
+
       $tasks = array('' => ts('- actions -')) + CRM_Member_Task::permissionedTaskTitles($permission);
       $this->add('select', 'task', ts('Actions:') . ' ', $tasks);
       $this->add('submit', $this->_actionButtonName, ts('Go'),
@@ -320,10 +328,10 @@ class CRM_Member_Form_Search extends CRM_Core_Form {
       $this->_formValues["member_test"] = 0;
     }
 
-    require_once 'CRM/Core/BAO/CustomValue.php';
+
     CRM_Core_BAO_CustomValue::fixFieldValueOfTypeMemo($this->_formValues);
 
-    require_once 'CRM/Contact/BAO/Query.php';
+
     $this->_queryParams = &CRM_Contact_BAO_Query::convertFormValues($this->_formValues);
 
     $this->set('formValues', $this->_formValues);
@@ -347,10 +355,10 @@ class CRM_Member_Form_Search extends CRM_Core_Form {
       );
     }
 
-    require_once 'CRM/Contact/BAO/Query.php';
+
     $this->_queryParams = &CRM_Contact_BAO_Query::convertFormValues($this->_formValues);
 
-    require_once "CRM/Member/Selector/Search.php";
+
     $selector = new CRM_Member_Selector_Search($this->_queryParams,
       $this->_action,
       NULL,
@@ -436,7 +444,7 @@ class CRM_Member_Form_Search extends CRM_Core_Form {
       $cid = CRM_Utils_Type::escape($cid, 'Integer');
       if ($cid > 0) {
         $this->_formValues['contact_id'] = $cid;
-        require_once 'CRM/Contact/BAO/Contact.php';
+
         list($display, $image) = CRM_Contact_BAO_Contact::getDisplayAndImage($cid);
         $this->_defaults['sort_name'] = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $cid,
           'sort_name'

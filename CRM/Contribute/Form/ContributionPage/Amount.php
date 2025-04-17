@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Contribute/Form/ContributionPage.php';
+
 
 /**
  * form to process actions on the group aspect of Custom Data
@@ -60,7 +60,7 @@ class CRM_Contribute_Form_ContributionPage_Amount extends CRM_Contribute_Form_Co
    * @access public
    */
   public function buildQuickForm() {
-    require_once 'CRM/Utils/Money.php';
+
 
     // do u want to allow a free form text field for amount
     $this->addElement('checkbox', 'is_allow_other_amount', ts('Allow other amounts'), NULL, array('onclick' => "minMax(this);showHideAmountBlock( this, 'is_allow_other_amount' );"));
@@ -129,7 +129,7 @@ SELECT id
     );
 
 
-    require_once "CRM/Contribute/BAO/ContributionPage.php";
+
 
     //check if selected payment processor supports recurring payment
     if (!empty($recurringPaymentProcessor)) {
@@ -166,7 +166,7 @@ SELECT id
       FALSE
     );
     // add price set fields
-    require_once 'CRM/Price/BAO/Set.php';
+
     $price = CRM_Price_BAO_Set::getAssoc(FALSE, 'CiviContribute');
     if (CRM_Utils_System::isNull($price)) {
       $this->assign('price', FALSE);
@@ -182,7 +182,7 @@ SELECT id
     $config = CRM_Core_Config::singleton();
     if (in_array('CiviPledge', $config->enableComponents)) {
       $this->assign('civiPledge', TRUE);
-      require_once 'CRM/Core/OptionGroup.php';
+
       $this->addElement('checkbox', 'is_pledge_active', ts('Pledges'),
         NULL, array('onclick' => "showHideAmountBlock( this, 'is_pledge_active' ); return showHideByValue('is_pledge_active',true,'pledgeFields','table-row','radio',false);")
       );
@@ -276,7 +276,7 @@ SELECT id
         return $defaults;
       }
 
-      require_once 'CRM/Core/OptionGroup.php';
+
       CRM_Core_OptionGroup::getAssoc("civicrm_contribution_page.amount.{$this->_id}", $this->_amountBlock);
       $hasAmountBlock = FALSE;
       if (!empty($this->_amountBlock)) {
@@ -304,7 +304,7 @@ SELECT id
     }
 
     // fix the display of the monetary value, CRM-4038
-    require_once 'CRM/Utils/Money.php';
+
     if (isset($defaults['min_amount'])) {
       $defaults['min_amount'] = CRM_Utils_Money::format($defaults['min_amount'], NULL, '%a');
     }
@@ -359,7 +359,7 @@ SELECT id
     //if so disable first separate membership payment option
     //then disable contribution amount section. CRM-3801,
 
-    require_once 'CRM/Member/DAO/MembershipBlock.php';
+
     $membershipBlock = new CRM_Member_DAO_MembershipBlock();
     $membershipBlock->entity_table = 'civicrm_contribution_page';
     $membershipBlock->entity_id = $self->_id;
@@ -501,7 +501,7 @@ SELECT id
       $params['pay_later_receipt'] = 'null';
     }
 
-    require_once 'CRM/Contribute/BAO/ContributionPage.php';
+
     $contributionPage = CRM_Contribute_BAO_ContributionPage::create($params);
     $contributionPageID = $contributionPage->id;
 
@@ -518,9 +518,9 @@ SELECT id
     }
 
     if ($contributionPageID) {
-      require_once 'CRM/Price/BAO/Set.php';
-      require_once 'CRM/Core/OptionGroup.php';
-      require_once 'CRM/Pledge/BAO/PledgeBlock.php';
+
+
+
 
       if (CRM_Utils_Array::value('amount_block_is_active', $params)) {
         // handle price set.
@@ -581,7 +581,7 @@ SELECT id
               $params, FALSE
             );
             // create pledge block.
-            require_once 'CRM/Pledge/BAO/PledgeBlock.php';
+
             CRM_Pledge_BAO_PledgeBlock::create($pledgeBlockParams);
           }
         }

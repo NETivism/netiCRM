@@ -16,8 +16,17 @@
  *
  */
 
-require_once 'CRM/Core/Payment.php';
+
 class CRM_Core_Payment_PayJunction extends CRM_Core_Payment {
+  /**
+   * @var string
+   */
+  public $_mode;
+  /**
+   * @var mixed
+   */
+  public $_processorName;
+  public $_params;
   # (not used, implicit in the API, might need to convert?)
   CONST CHARSET = 'UFT-8';
 
@@ -39,7 +48,7 @@ class CRM_Core_Payment_PayJunction extends CRM_Core_Payment {
    */
   function __construct($mode, &$paymentProcessor) {
     //require PayJunction API library
-    require_once 'PayJunction/pjClasses.php';
+
 
     $this->_mode = $mode;
     $this->_paymentProcessor = $paymentProcessor;

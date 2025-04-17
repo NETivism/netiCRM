@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Core/Page.php';
-require_once 'CRM/Case/BAO/Case.php';
+
+
 
 /**
  * This page is for Case Dashboard
@@ -56,7 +56,7 @@ class CRM_Case_Page_DashBoard extends CRM_Core_Page {
     }
 
     //validate case configuration.
-    require_once 'CRM/Case/BAO/Case.php';
+
     $configured = CRM_Case_BAO_Case::isCaseConfigured();
     $this->assign('notConfigured', !$configured['configured']);
     $this->assign('allowToAddNewCase', $configured['allowToAddNewCase']);
@@ -89,7 +89,7 @@ class CRM_Case_Page_DashBoard extends CRM_Core_Page {
     ) {
       $this->assign('newClient', TRUE);
     }
-    require_once 'CRM/Case/BAO/Case.php';
+
     $summary = CRM_Case_BAO_Case::getCasesSummary($allCases, $userID);
     $upcoming = CRM_Case_BAO_Case::getCases($allCases, $userID, 'upcoming');
     $recent = CRM_Case_BAO_Case::getCases($allCases, $userID, 'recent');

@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
-require_once 'CRM/Campaign/DAO/Campaign.php';
+
+
 Class CRM_Campaign_BAO_Campaign extends CRM_Campaign_DAO_Campaign {
 
   /**
@@ -78,7 +78,7 @@ Class CRM_Campaign_BAO_Campaign extends CRM_Campaign_DAO_Campaign {
     /* Create the campaign group record */
 
     $groupTableName = CRM_Contact_BAO_Group::getTableName();
-    require_once 'CRM/Campaign/DAO/CampaignGroup.php';
+
     $dao = new CRM_Campaign_DAO_CampaignGroup();
 
     if (CRM_Utils_Array::value('include', $params['groups']) && is_array($params['groups']['include'])) {
@@ -189,7 +189,7 @@ WHERE c.title IS NOT NULL" . $whereClause;
       return $campaignGroups;
     }
 
-    require_once 'CRM/Campaign/DAO/CampaignGroup.php';
+
     $campGrp = new CRM_Campaign_DAO_CampaignGroup();
     $campGrp->campaign_id = $campaignId;
     $campGrp->group_type = 'Include';

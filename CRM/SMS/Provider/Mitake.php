@@ -2,6 +2,8 @@
 
 class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
 
+  public $_providerInfo;
+  public $_mitakeStatusesMapping;
   /**
    * We only need one instance of this object. So we use the singleton
    * pattern and cache the instance in this variable

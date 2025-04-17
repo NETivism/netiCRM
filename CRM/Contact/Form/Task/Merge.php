@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Contact/Form/Task.php';
+
 
 /**
  * This class provides the functionality to Merge Contacts.
@@ -105,7 +105,7 @@ class CRM_Contact_Form_Task_Merge extends CRM_Contact_Form_Task {
       $level = 'Fuzzy';
       $cType = key($contactTypes);
 
-      require_once 'CRM/Dedupe/DAO/RuleGroup.php';
+
       $rgBao = new CRM_Dedupe_DAO_RuleGroup();
       $rgBao->level = $level;
       $rgBao->is_default = 1;

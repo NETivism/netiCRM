@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Activity/Form/Task.php';
+
 
 /**
  * This class provides the functionality to email a group of contacts
@@ -146,7 +146,7 @@ class CRM_Activity_Form_Task_PickOption extends CRM_Activity_Form_Task {
     $this->_contacts = array();
     //get assignee contacts
     if ($params['assigned_to']) {
-      require_once 'CRM/Activity/BAO/ActivityAssignment.php';
+
       foreach ($this->_activityHolderIds as $key => $id) {
         $ids = array_keys(CRM_Activity_BAO_ActivityAssignment::getAssigneeNames($id));
         $this->_contacts = array_merge($this->_contacts, $ids);
@@ -154,7 +154,7 @@ class CRM_Activity_Form_Task_PickOption extends CRM_Activity_Form_Task {
     }
     //get target contacts
     if ($params['with_contact']) {
-      require_once 'CRM/Activity/BAO/ActivityTarget.php';
+
       foreach ($this->_activityHolderIds as $key => $id) {
         $ids = array_keys(CRM_Activity_BAO_ActivityTarget::getTargetNames($id));
         $this->_contacts = array_merge($this->_contacts, $ids);

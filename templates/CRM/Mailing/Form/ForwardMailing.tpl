@@ -37,7 +37,7 @@
 
 </table>
 <div id="comment_show">
-    <a href="#" class="button" onclick="hide('comment_show'); show('comment'); document.getElementById('forward_comment').focus(); return false;"><span>&raquo; {ts}Add Comment{/ts}</span></a>
+    <a href="#" class="button" onclick="hide('comment_show'); show('comment'); document.getElementById('forward_comment').focus(); return false;"><span>&raquo; {ts}Add Personal Message{/ts}</span></a>
 </div><div class="spacer"></div>
 <div id="comment" style="display:none">
             <table class="form-layout">

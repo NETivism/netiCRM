@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
-require_once 'CRM/Core/ShowHideBlocks.php';
+
+
 
 /**
  * form to process actions on the field aspect of Custom
@@ -115,7 +115,7 @@ class CRM_Custom_Form_Field extends CRM_Core_Form {
    * @access public
    */
   public function preProcess() {
-    require_once 'CRM/Core/BAO/CustomField.php';
+
     if (!(self::$_dataTypeKeys)) {
       self::$_dataTypeKeys = array_keys(CRM_Core_BAO_CustomField::dataType());
       self::$_dataTypeValues = array_values(CRM_Core_BAO_CustomField::dataType());
@@ -814,7 +814,7 @@ AND    option_group_id = %2";
       }
     }
 
-    require_once 'CRM/Core/Page.php';
+
     $assignError = new CRM_Core_Page();
     if ($_rowError) {
       $_showHide->addToTemplate();
@@ -945,13 +945,11 @@ AND    option_group_id = %2";
       $params['weight'] = CRM_Utils_Weight::updateOtherWeights('CRM_Core_DAO_CustomField', $oldWeight, $params['weight'], $fieldValues);
     }
 
-    $strtolower = function_exists('mb_strtolower') ? 'mb_strtolower' : 'strtolower';
-
     //store the primary key for State/Province or Country as default value.
     if (strlen(trim($params['default_value']))) {
       switch ($params['data_type']) {
         case 'StateProvince':
-          $fieldStateProvince = $strtolower($params['default_value']);
+          $fieldStateProvince = mb_strtolower($params['default_value'], 'UTF-8');
           $query = "
 SELECT id
   FROM civicrm_state_province 
@@ -964,7 +962,7 @@ SELECT id
           break;
 
         case 'Country':
-          $fieldCountry = $strtolower($params['default_value']);
+          $fieldCountry = mb_strtolower($params['default_value'], 'UTF-8');
           $query = "
 SELECT id
   FROM civicrm_country
@@ -996,7 +994,7 @@ SELECT id
     $customField = CRM_Core_BAO_CustomField::create($params);
 
     // reset the cache
-    require_once 'CRM/Core/BAO/Cache.php';
+
     CRM_Core_BAO_Cache::deleteGroup('contact fields');
 
     // reset memcache

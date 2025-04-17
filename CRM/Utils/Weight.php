@@ -26,7 +26,7 @@
 */
 
 
-require_once 'CRM/Core/DAO.php';
+
 class CRM_Utils_Weight {
 
   /**
@@ -264,7 +264,7 @@ class CRM_Utils_Weight {
     $orderBy = NULL,
     $groupBy = NULL
   ) {
-    require_once 'CRM/Utils/Type.php';
+
 
     require_once (str_replace('_', DIRECTORY_SEPARATOR, $daoName) . ".php");
 

@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/DAO/PaymentProcessorType.php';
+
 class CRM_Core_BAO_PaymentProcessorType extends CRM_Core_DAO_PaymentProcessorType {
 
   /**

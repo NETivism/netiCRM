@@ -26,8 +26,8 @@
 */
 
 
-require_once 'CRM/Core/Config.php';
-require_once 'CRM/Core/Extensions/ExtensionType.php';
+
+
 
 /**
  * This class stores logic for managing CiviCRM extensions.
@@ -216,8 +216,8 @@ class CRM_Core_Extensions {
    * @return array list of extensions
    */
   private function _discoverInstalled($fullInfo = FALSE) {
-    require_once 'CRM/Core/OptionValue.php';
-    require_once 'CRM/Core/Extensions/Extension.php';
+
+
     $result = array();
     $groupParams = array('name' => self::OPTION_GROUP_NAME);
     $links = array();
@@ -246,7 +246,7 @@ class CRM_Core_Extensions {
    * @return array list of extensions
    */
   private function _discoverAvailable() {
-    require_once 'CRM/Core/Extensions/Extension.php';
+
     $result = array();
     $e = scandir($this->_extDir);
     foreach ($e as $dc => $name) {
@@ -381,7 +381,7 @@ class CRM_Core_Extensions {
   public function isExtensionClass($clazz) {
 
     if (substr($clazz, 0, 4) != 'CRM_') {
-      require_once 'CRM/Core/PseudoConstant.php';
+
       $extensions = CRM_Core_PseudoConstant::getExtensions();
       if (CRM_Utils_Array::arrayKeyExists($this->classToKey($clazz), $extensions)) {
         return TRUE;

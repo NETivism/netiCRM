@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Core/Session.php';
-require_once 'CRM/Core/DAO/UFMatch.php';
+
+
 
 /**
  * The basic class that interfaces with the external user framework
@@ -136,7 +136,7 @@ class CRM_Core_BAO_UFMatch extends CRM_Core_DAO_UFMatch {
 
     // add current contact to recentlty viewed
     if ($ufmatch->contact_id) {
-      require_once 'CRM/Contact/BAO/Contact.php';
+
       list($displayName, $contactImage, $contactType, $contactSubtype, $contactImageUrl) = CRM_Contact_BAO_Contact::getDisplayAndImage($ufmatch->contact_id, TRUE, TRUE);
 
       $otherRecent = array('imageUrl' => $contactImageUrl,
@@ -267,7 +267,7 @@ AND    domain_id    = %4
         4 => array($ufmatch->domain_id, 'Integer'),
       );
 
-      require_once 'CRM/Core/DAO.php';
+
       $conflict = CRM_Core_DAO::singleValueQuery($sql, $params);
 
       if (!$conflict) {
@@ -357,7 +357,7 @@ AND    domain_id    = %4
     $ufmatch->uf_name = $ufName;
     $ufmatch->save();
 
-    require_once 'CRM/Core/BAO/CMSUser.php';
+
     $config->userSystem->updateCMSName($ufmatch->uf_id, $ufName);
   }
 
@@ -372,8 +372,7 @@ AND    domain_id    = %4
    * @static
    */
   static function updateContactEmail($contactId, $emailAddress) {
-    $strtolower = function_exists('mb_strtolower') ? 'mb_strtolower' : 'strtolower';
-    $emailAddress = $strtolower($emailAddress);
+    $emailAddress = mb_strtolower($emailAddress, 'UTF-8');
 
     $ufmatch = new CRM_Core_DAO_UFMatch();
     $ufmatch->contact_id = $contactId;
@@ -386,7 +385,7 @@ AND    domain_id    = %4
       //check if the primary email for the contact exists
       //$contactDetails[1] - email
       //$contactDetails[3] - email id
-      require_once 'CRM/Contact/BAO/Contact/Location.php';
+
       $contactDetails = CRM_Contact_BAO_Contact_Location::getEmailDetails($contactId);
 
       if (trim($contactDetails[1])) {
@@ -402,7 +401,7 @@ AND    domain_id    = %4
       }
       else {
         //else insert a new email record
-        require_once 'CRM/Core/DAO/Email.php';
+
         $email = new CRM_Core_DAO_Email();
         $email->contact_id = $contactId;
         $email->is_primary = 1;
@@ -411,7 +410,7 @@ AND    domain_id    = %4
         $emailID = $email->id;
       }
 
-      require_once 'CRM/Core/BAO/Log.php';
+
       CRM_Core_BAO_Log::register($contactId,
         'civicrm_email',
         $emailID

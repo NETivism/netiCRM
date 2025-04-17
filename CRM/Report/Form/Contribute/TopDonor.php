@@ -33,10 +33,22 @@
  *
  */
 
-require_once 'CRM/Report/Form.php';
-require_once 'CRM/Contribute/PseudoConstant.php';
+
+
 class CRM_Report_Form_Contribute_TopDonor extends CRM_Report_Form {
 
+  public $_columnHeaders;
+  public $_from;
+  public $_aliases;
+  /**
+   * @var string
+   */
+  public $_tempClause;
+  public $_outerCluase;
+  public $_where;
+  public $_groupBy;
+  public $_outputMode;
+  public $_absoluteUrl;
   protected $_summary = NULL;
 
   protected $_phoneField = FALSE;
@@ -352,7 +364,7 @@ class CRM_Report_Form_Contribute_TopDonor extends CRM_Report_Form {
   }
 
   function limit($rowCount = CRM_Report_Form::ROW_COUNT_LIMIT) {
-    require_once 'CRM/Utils/Pager.php';
+
     // lets do the pager if in html mode
     $this->_limit = NULL;
     if ($this->_outputMode == 'html' || $this->_outputMode == 'group') {

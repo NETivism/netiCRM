@@ -37,6 +37,9 @@
 
 abstract class CRM_Core_Component_Info {
 
+  public $name;
+  public $namespace;
+  public $componentID;
   /*
      * Name of the class (minus component namespace path) 
      * of the component invocation class'es name. 
@@ -194,7 +197,7 @@ abstract class CRM_Core_Component_Info {
    *
    */
   public function isEnabled() {
-    require_once 'CRM/Core/Config.php';
+
     $config = CRM_Core_Config::singleton();
     if (in_array($this->info['name'], $config->enableComponents)) {
       return TRUE;

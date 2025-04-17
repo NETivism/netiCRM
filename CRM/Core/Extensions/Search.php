@@ -34,9 +34,12 @@
  *
  */
 
-require_once 'CRM/Core/Config.php';
+
 class CRM_Core_Extensions_Search {
 
+  public $ext;
+  public $groupId;
+  public $customSearches;
   /**
    *
    */

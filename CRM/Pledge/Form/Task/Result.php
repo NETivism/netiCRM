@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Pledge/Form/Task.php';
+
 
 /**
  * Used for displaying results

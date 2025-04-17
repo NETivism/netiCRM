@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Core/ShowHideBlocks.php';
-require_once 'CRM/Core/PseudoConstant.php';
+
+
 
 /**
  * Auxilary class to provide support to the Contact Form class. Does this by implementing

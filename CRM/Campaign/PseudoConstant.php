@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/OptionGroup.php';
+
 
 /**
  * This class holds all the Pseudo constants those
@@ -73,7 +73,7 @@ class CRM_Campaign_PseudoConstant extends CRM_Core_PseudoConstant {
   public static function &activityType($all = TRUE, $includeCaseActivities = FALSE, $reset = FALSE, $returnColumn = 'label', $includeCampaignActivities = FALSE) {
     $cacheKey = $returnColumn;
     if (!isset(self::$activityType[$cacheKey])) {
-      require_once 'CRM/Core/OptionGroup.php';
+
       $campaingCompId = CRM_Core_Component::getComponentID('CiviCampaign');
       if ($campaingCompId) {
         self::$activityType[$cacheKey] = CRM_Core_OptionGroup::values('activity_type',
@@ -100,7 +100,7 @@ class CRM_Campaign_PseudoConstant extends CRM_Core_PseudoConstant {
    */
   public static function &campaignType() {
     if (!self::$campaignType) {
-      require_once 'CRM/Core/OptionGroup.php';
+
       self::$campaignType = CRM_Core_OptionGroup::values('campaign_type');
     }
     return self::$campaignType;
@@ -119,7 +119,7 @@ class CRM_Campaign_PseudoConstant extends CRM_Core_PseudoConstant {
    */
   public static function &campaignStatus() {
     if (!self::$campaignStatus) {
-      require_once 'CRM/Core/OptionGroup.php';
+
       self::$campaignStatus = CRM_Core_OptionGroup::values('campaign_status');
     }
     return self::$campaignStatus;

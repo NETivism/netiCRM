@@ -33,13 +33,26 @@
  *
  */
 
-require_once 'CRM/Core/DAO/Address.php';
+
 
 /**
  * This is class to handle address related functions
  */
 class CRM_Core_BAO_Address extends CRM_Core_DAO_Address {
 
+  public $_name;
+  public $state_name;
+  public $state;
+  public $country;
+  public $world_region;
+  /**
+   * @var string
+   */
+  public $display;
+  /**
+   * @var string
+   */
+  public $display_text;
   /**
    * Should we overwrite existing address, total hack for now
    * Please do not use this hack in other places, its totally gross
@@ -83,7 +96,7 @@ class CRM_Core_BAO_Address extends CRM_Core_DAO_Address {
 
     $isPrimary = $isBilling = TRUE;
     $blocks = array();
-    require_once "CRM/Core/BAO/Block.php";
+
     foreach ($params['address'] as $key => $value) {
       if (!is_array($value)) {
         continue;
@@ -160,8 +173,8 @@ class CRM_Core_BAO_Address extends CRM_Core_DAO_Address {
 
     if ($address->id) {
       if (!$customFields) {
-        require_once 'CRM/Core/BAO/CustomField.php';
-        require_once 'CRM/Core/BAO/CustomValueTable.php';
+
+
         $customFields = CRM_Core_BAO_CustomField::getFields('Address', FALSE, TRUE);
       }
       if (!empty($customFields)) {
@@ -338,11 +351,11 @@ class CRM_Core_BAO_Address extends CRM_Core_DAO_Address {
 
     $config = CRM_Core_Config::singleton();
 
-    require_once 'CRM/Core/BAO/Preferences.php';
+
     $asp = CRM_Core_BAO_Preferences::value('address_standardization_provider');
     // clean up the address via USPS web services if enabled
     if ($asp === 'USPS') {
-      require_once 'CRM/Utils/Address/USPS.php';
+
       CRM_Utils_Address_USPS::checkAddress($params);
     }
 
@@ -513,7 +526,7 @@ class CRM_Core_BAO_Address extends CRM_Core_DAO_Address {
    *
    */
   function addDisplay($microformat = FALSE) {
-    require_once 'CRM/Utils/Address.php';
+
     $fields = array(
       // added this for CRM 1200
       'address_id' => $this->id,
@@ -650,7 +663,7 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
         if (CRM_Utils_Array::arrayKeyExists('state_province', $match) &&
           CRM_Utils_Array::arrayKeyExists('country', $match)
         ) {
-          require_once 'CRM/Contact/Form/Edit/Address.php';
+
           CRM_Contact_Form_Edit_Address::fixStateSelect($form,
             $match['country'],
             $match['state_province'],
@@ -829,7 +842,7 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
   static function validateAddressOptions($fields) {
     static $addressOptions = NULL;
     if (!$addressOptions) {
-      require_once 'CRM/Core/BAO/Preferences.php';
+
       $addressOptions = CRM_Core_BAO_Preferences::valueOptions('address_options', TRUE, NULL, TRUE);
     }
 
@@ -934,7 +947,7 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
 
     // create relationship between ontacts who share an address
     if ($sharedContactType == 'Organization') {
-      require_once 'CRM/Contact/BAO/Contact/Utils.php';
+
       return CRM_Contact_BAO_Contact_Utils::createCurrentEmployerRelationship($currentContactId, $sharedContactId);
     }
     else {
@@ -956,7 +969,7 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
       'contact_check' => array($sharedContactId => TRUE),
     );
 
-    require_once 'CRM/Contact/BAO/Relationship.php';
+
     list($valid, $invalid, $duplicate,
       $saved, $relationshipIds
     ) = CRM_Contact_BAO_Relationship::create($relationshipParams, $cid);

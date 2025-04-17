@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
-require_once 'CRM/Contribute/PseudoConstant.php';
+
+
 class CRM_Contribute_Form_SearchContribution extends CRM_Core_Form {
 
   /**

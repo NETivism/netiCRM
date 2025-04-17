@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/DAO/Domain.php';
+
 
 /**
  *
@@ -163,7 +163,7 @@ class CRM_Core_BAO_Domain extends CRM_Core_DAO_Domain {
     if (!empty($config->domain->from) && !empty($config->domain->email)) {
       return array($config->domain->from, $config->domain->email);
     }
-    require_once 'CRM/Core/OptionGroup.php';
+
     $fromEmailAddress = CRM_Core_OptionGroup::values('from_email_address', NULL, NULL, NULL, ' AND is_default = 1');
     if (empty($fromEmailAddress)) {
       $fromEmailAddress = CRM_Core_OptionGroup::values('from_email_address', NULL, NULL, NULL);
@@ -186,7 +186,7 @@ class CRM_Core_BAO_Domain extends CRM_Core_DAO_Domain {
 
     if ($groupID) {
       $contactIDs = array($contactID);
-      require_once 'CRM/Contact/DAO/GroupContact.php';
+
       CRM_Contact_BAO_GroupContact::addContactsToGroup($contactIDs, $groupID);
 
       return $groupID;
@@ -217,7 +217,7 @@ class CRM_Core_BAO_Domain extends CRM_Core_DAO_Domain {
           'is_active' => 1,
           'no_parent' => 1,
         );
-        require_once 'CRM/Contact/BAO/Group.php';
+
         $group = CRM_Contact_BAO_Group::create($groupParams);
         $groupID = $group->id;
       }
@@ -235,7 +235,7 @@ class CRM_Core_BAO_Domain extends CRM_Core_DAO_Domain {
     $childGrps = array();
 
     if ($domainGroupID) {
-      require_once 'CRM/Contact/BAO/GroupNesting.php';
+
       $childGrps = CRM_Contact_BAO_GroupNesting::getChildGroupIds($domainGroupID);
       $childGrps[] = $domainGroupID;
     }

@@ -36,16 +36,16 @@
  *
  */
 
-require_once 'HTML/QuickForm/Page.php';
 
-require_once 'CRM/Utils/Rule.php';
-require_once 'CRM/Utils/Request.php';
-require_once 'CRM/Utils/Weight.php';
-require_once 'CRM/Core/Permission.php';
-require_once 'CRM/Core/Smarty.php';
-require_once 'CRM/Core/Form/Renderer.php';
-require_once 'CRM/Core/SelectValues.php';
-require_once 'CRM/Utils/String.php';
+
+
+
+
+
+
+
+
+
 class CRM_Core_Form extends HTML_QuickForm_Page {
 
   /**
@@ -310,7 +310,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
   function validate() {
     $error = parent::validate();
 
-    require_once 'CRM/Utils/Hook.php';
+
     $hookErrors = CRM_Utils_Hook::validate(get_class($this),
       $this->_submitValues, $this->_submitFiles, $this
     );
@@ -596,7 +596,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
    * @access public
    */
   function getTemplateFileName() {
-    require_once ('CRM/Core/Extensions.php');
+
     $ext = new CRM_Core_Extensions();
     if ($ext->isExtensionClass(CRM_Utils_System::getClassName($this))) {
       $filename = $ext->getTemplateName(CRM_Utils_System::getClassName($this));
@@ -886,7 +886,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
   function addWysiwyg($name, $label, $attributes, $forceTextarea = FALSE) {
     // 1. Get configuration option for editor (tinymce, ckeditor, pure textarea)
     // 2. Based on the option, initialise proper editor
-    require_once 'CRM/Core/BAO/Preferences.php';
+
     $editor = strtolower(CRM_Utils_Array::value(CRM_Core_BAO_Preferences::value('editor_id'),
         CRM_Core_PseudoConstant::wysiwygEditor()
       ));
@@ -1198,7 +1198,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
     $required = TRUE,
     $defaultCurrency = NULL
   ) {
-    require_once 'CRM/Core/OptionGroup.php';
+
     $currencies = CRM_Core_OptionGroup::values('currencies_enabled');
     if (!$required) {
       $currencies = array( ''=> ts( '- select -' ) ) + $currencies;

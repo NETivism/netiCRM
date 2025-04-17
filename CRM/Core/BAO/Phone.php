@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/DAO/Phone.php';
+
 
 /**
  * Class contains functions for phone
@@ -90,7 +90,7 @@ class CRM_Core_BAO_Phone extends CRM_Core_DAO_Phone {
 
     $cond = NULL;
     if ($type) {
-      require_once 'CRM/Core/PseudoConstant.php';
+
       $phoneTypeId = array_search($type, CRM_Core_PseudoConstant::phoneType());
       if ($phoneTypeId) {
         $cond = " AND civicrm_phone.phone_type_id = $phoneTypeId";
@@ -147,7 +147,7 @@ ORDER BY civicrm_phone.is_primary DESC,  phone_id ASC ";
 
     $cond = NULL;
     if ($type) {
-      require_once 'CRM/Core/PseudoConstant.php';
+
       $phoneTypeId = array_search($type, CRM_Core_PseudoConstant::phoneType());
       if ($phoneTypeId) {
         $cond = " AND civicrm_phone.phone_type_id = $phoneTypeId";

@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Member/Form/Task.php';
+
 
 /**
  * Used for displaying results

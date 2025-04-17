@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/DAO/CustomGroup.php';
+
 
 /**
  * Business object for managing custom data groups
@@ -63,7 +63,7 @@ class CRM_Core_BAO_CustomGroup extends CRM_Core_DAO_CustomGroup {
     // create custom group dao, populate fields and then save.
     $group = new CRM_Core_DAO_CustomGroup();
     $group->title = $params['title'];
-    require_once 'CRM/Utils/String.php';
+
     if (isset($params['name'])) {
       $group->name = $params['name'];
     }
@@ -123,7 +123,7 @@ class CRM_Core_BAO_CustomGroup extends CRM_Core_DAO_CustomGroup {
     else {
       $oldWeight = 0;
     }
-    require_once 'CRM/Utils/Weight.php';
+
     $group->weight = CRM_Utils_Weight::updateOtherWeights('CRM_Core_DAO_CustomGroup', $oldWeight, CRM_Utils_Array::value('weight', $params, FALSE));
     $fields = array('style', 'collapse_display', 'collapse_adv_display', 'help_pre', 'help_post', 'is_active', 'is_multiple');
     foreach ($fields as $field) {
@@ -153,7 +153,7 @@ class CRM_Core_BAO_CustomGroup extends CRM_Core_DAO_CustomGroup {
       $group->created_id = CRM_Utils_Array::value('created_id', $params);
       $group->created_date = CRM_Utils_Array::value('created_date', $params);
 
-      require_once 'CRM/Utils/String.php';
+
 
       // lets create the table associated with the group and save it
       $tableName = $group->table_name = "civicrm_value_" . strtolower(CRM_Utils_String::munge($group->title, '_', 32));
@@ -163,7 +163,7 @@ class CRM_Core_BAO_CustomGroup extends CRM_Core_DAO_CustomGroup {
     }
 
     // enclose the below in a transaction
-    require_once 'CRM/Core/Transaction.php';
+
     $transaction = new CRM_Core_Transaction();
 
     $group->save();
@@ -182,7 +182,7 @@ class CRM_Core_BAO_CustomGroup extends CRM_Core_DAO_CustomGroup {
       self::createTable($group);
     }
     elseif ($oldTableName) {
-      require_once 'CRM/Core/BAO/SchemaHandler.php';
+
       CRM_Core_BAO_SchemaHandler::changeUniqueToIndex($oldTableName, CRM_Utils_Array::value('is_multiple', $params));
     }
     if (CRM_Utils_Array::value('overrideFKConstraint', $params) == 1) {
@@ -190,13 +190,13 @@ class CRM_Core_BAO_CustomGroup extends CRM_Core_DAO_CustomGroup {
         $params['id'],
         'table_name'
       );
-      require_once 'CRM/Core/BAO/SchemaHandler.php';
+
       CRM_Core_BAO_SchemaHandler::changeFKConstraint($table, self::mapTableName($params['extends'][0]));
     }
     $transaction->commit();
     CRM_Utils_System::flushCache();
 
-    require_once 'CRM/Utils/Hook.php';
+
     if ($tableName) {
       CRM_Utils_Hook::post('create', 'CustomGroup', $group->id, $group);
     }
@@ -239,7 +239,7 @@ class CRM_Core_BAO_CustomGroup extends CRM_Core_DAO_CustomGroup {
     // reset the cache
     CRM_Core_BAO_Cache::deleteGroup('contact fields');
 
-    require_once 'CRM/Core/BAO/UFField.php';
+
     if ($is_active) {
       //CRM_Core_BAO_UFField::setUFFieldStatus($id, $is_active);
     }
@@ -296,7 +296,7 @@ class CRM_Core_BAO_CustomGroup extends CRM_Core_DAO_CustomGroup {
       }
     }
 
-    require_once 'CRM/Core/Action.php';
+
     // create a new tree
     $groupTree = array();
     $strWhere = $orderBy = '';
@@ -413,7 +413,7 @@ WHERE civicrm_custom_group.is_active = 1
       $strWhere .= " AND civicrm_custom_group.style = 'Inline'";
     }
 
-    require_once 'CRM/Core/Permission.php';
+
     // ensure that the user has access to these custom groups
     $strWhere .= " AND " . CRM_Core_Permission::customGroupClause(CRM_Core_Permission::VIEW,
       'civicrm_custom_group.'
@@ -587,7 +587,7 @@ SELECT $select
                 $dataType = $groupTree[$groupID]['fields'][$fieldID]['data_type'];
                 if ($dataType == 'File') {
                   if (isset($dao->$fieldName)) {
-                    require_once 'CRM/Core/DAO/File.php';
+
                     $config = CRM_Core_Config::singleton();
                     $fileDAO = new CRM_Core_DAO_File();
                     $fileDAO->id = $dao->$fieldName;
@@ -824,7 +824,7 @@ SELECT $select
       }
     }
 
-    require_once 'CRM/Core/Permission.php';
+
     // ensure that the user has access to these custom groups
     $where .= " AND " . CRM_Core_Permission::customGroupClause(CRM_Core_Permission::VIEW,
       'civicrm_custom_group.'
@@ -1029,7 +1029,7 @@ SELECT $select
     }
 
     if ($addSubtypeClause) {
-      require_once 'CRM/Contact/BAO/Contact.php';
+
       $csType = is_numeric($entityID) ? CRM_Contact_BAO_Contact::getContactSubType($entityID) : FALSE;
 
       if ($csType) {
@@ -1055,7 +1055,7 @@ SELECT $select
    *
    */
   public static function deleteGroup($group, $force = FALSE) {
-    require_once 'CRM/Core/BAO/CustomField.php';
+
 
     //check wheter this contain any custom fields
     $customField = new CRM_Core_DAO_CustomField();
@@ -1072,20 +1072,20 @@ SELECT $select
     }
 
     // drop the table associated with this custom group
-    require_once 'CRM/Core/BAO/SchemaHandler.php';
+
     CRM_Core_BAO_SchemaHandler::dropTable($group->table_name);
 
     //delete  custom group
     $group->delete();
 
-    require_once 'CRM/Utils/Hook.php';
+
     CRM_Utils_Hook::post('delete', 'CustomGroup', $group->id, $group);
 
     return TRUE;
   }
 
   static function setDefaults(&$groupTree, &$defaults, $viewMode = FALSE, $inactiveNeeded = FALSE, $action = CRM_Core_Action::NONE) {
-    require_once 'CRM/Core/BAO/CustomOption.php';
+
     foreach ($groupTree as $id => $group) {
       if (!isset($group['fields'])) {
         continue;
@@ -1202,7 +1202,7 @@ SELECT $select
 
           case 'Autocomplete-Select':
             if ($field['data_type'] == "ContactReference") {
-              require_once 'CRM/Contact/BAO/Contact.php';
+
               if (is_numeric($value)) {
                 $defaults[$elementName . '_id'] = $value;
                 $defaults[$elementName] = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $value, 'sort_name');
@@ -1220,7 +1220,7 @@ SELECT $select
               $defaults[$elementName] = (float)$value;
             }
             elseif ($field['data_type'] == 'Money') {
-              require_once 'CRM/Utils/Money.php';
+
               $defaults[$elementName] = CRM_Utils_Money::format($value, NULL, '%a');
             }
             else {
@@ -1300,7 +1300,7 @@ SELECT $select
               $fileParams['id'] = $groupTree[$groupID]['fields'][$fieldId]['customValue']['fid'];
             }
             if (!empty($v)) {
-              require_once 'CRM/Core/BAO/File.php';
+
               $fileParams['uri'] = $v['name'];
               $fileParams['mime_type'] = $v['type'];
               CRM_Core_BAO_File::filePostProcess($v['name'],
@@ -1353,8 +1353,8 @@ SELECT $select
     $groupCount = 1,
     $prefix = ''
   ) {
-    require_once 'CRM/Core/BAO/CustomField.php';
-    require_once 'CRM/Core/BAO/CustomOption.php';
+
+
 
     $form->assign_by_ref("{$prefix}groupTree", $groupTree);
     $sBlocks = array();
@@ -1363,7 +1363,7 @@ SELECT $select
     // this is fix for date field
     $form->assign('currentYear', date('Y'));
 
-    require_once 'CRM/Core/ShowHideBlocks.php';
+
     foreach ($groupTree as $id => $group) {
 
       CRM_Core_ShowHideBlocks::links($form, $group['title'], '', '');
@@ -1385,7 +1385,7 @@ SELECT $select
 
         $fieldId = $field['id'];
         $elementName = $field['element_name'];
-        require_once "CRM/Core/BAO/CustomField.php";
+
         CRM_Core_BAO_CustomField::addQuickFormElement($form, $elementName, $fieldId, $inactiveNeeded, $required);
       }
     }
@@ -1465,7 +1465,7 @@ SELECT $select
             }
           }
           elseif ($field['data_type'] == 'Date') {
-            require_once 'CRM/Utils/Date.php';
+
             if (!empty($value)) {
               $time = NULL;
               if (CRM_Utils_Array::value('time_format', $field)) {
@@ -1586,10 +1586,10 @@ SELECT IF( EXISTS(SELECT name FROM civicrm_contact_type WHERE name like %1), 1, 
       'extends_name' => self::mapTableName($group->extends),
     );
 
-    require_once 'CRM/Core/BAO/CustomField.php';
+
     $tableParams = &CRM_Core_BAO_CustomField::defaultCustomTableSchema($params);
 
-    require_once 'CRM/Core/BAO/SchemaHandler.php';
+
     CRM_Core_BAO_SchemaHandler::createTable($tableParams);
   }
 
@@ -1811,7 +1811,7 @@ SELECT IF( EXISTS(SELECT name FROM civicrm_contact_type WHERE name like %1), 1, 
         }
       case 'Money':
         if ($htmlType == 'Text') {
-          require_once 'CRM/Utils/Money.php';
+
           $retValue = CRM_Utils_Money::format($value, NULL, '%a');
           break;
         }
@@ -1893,7 +1893,7 @@ SELECT IF( EXISTS(SELECT name FROM civicrm_contact_type WHERE name like %1), 1, 
           CRM_Core_Error::fatal(ts('You have hit issue CRM-4716. Please post a report with as much detail as possible on the CiviCRM forums. You can truncate civicr_cache to get around this problem'));
         }
 
-        require_once 'CRM/Utils/Hook.php';
+
         CRM_Utils_Hook::customFieldOptions($field['id'], $options, FALSE);
 
         $retValue = NULL;

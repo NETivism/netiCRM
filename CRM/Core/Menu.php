@@ -34,7 +34,7 @@
  *
  */
 
-require_once 'CRM/Core/I18n.php';
+
 class CRM_Core_Menu {
 
   /**
@@ -79,7 +79,7 @@ class CRM_Core_Menu {
       );
 
       // lets call a hook and get any additional files if needed
-      require_once 'CRM/Utils/Hook.php';
+
       CRM_Utils_Hook::xmlMenu($files);
 
       self::$_items = array();
@@ -252,7 +252,7 @@ class CRM_Core_Menu {
 
     self::build($menuArray);
 
-    require_once "CRM/Core/DAO/Menu.php";
+
 
     $config = CRM_Core_Config::singleton();
 
@@ -396,7 +396,7 @@ class CRM_Core_Menu {
     }
 
     // check permissions for the rest
-    require_once 'CRM/Core/Permission.php';
+
     $activeChildren = array();
 
     foreach ($values as $weight => $v) {
@@ -590,7 +590,7 @@ UNION (
 ";
     }
 
-    require_once "CRM/Core/DAO/Menu.php";
+
     $menu = new CRM_Core_DAO_Menu();
     $menu->query($query);
 

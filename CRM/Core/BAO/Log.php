@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/DAO/Log.php';
+
 
 /**
  * BAO object for crm_log table
@@ -73,7 +73,7 @@ class CRM_Core_BAO_Log extends CRM_Core_DAO_Log {
    * @static
    */
   static function add(&$params) {
-    require_once 'CRM/Core/DAO/Log.php';
+
 
     $log = new CRM_Core_DAO_Log();
     $log->copyValues($params);

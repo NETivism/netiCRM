@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Page.php';
+
 
 /**
  * a page for mailing preview
@@ -46,7 +46,7 @@ class CRM_Mailing_Page_Preview extends CRM_Core_Page {
    * @return void
    */
   function run() {
-    require_once 'CRM/Mailing/BAO/Mailing.php';
+
 
     $session = CRM_Core_Session::singleton();
 
@@ -77,7 +77,7 @@ class CRM_Mailing_Page_Preview extends CRM_Core_Page {
     // refs #32614, disable smarty evaluation functions
 
     // get and format attachments
-    require_once 'CRM/Core/BAO/File.php';
+
     $attachments = &CRM_Core_BAO_File::getEntityFile('civicrm_mailing',
       $mailing->id
     );

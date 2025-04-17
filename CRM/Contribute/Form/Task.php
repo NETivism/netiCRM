@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Core/SelectValues.php';
-require_once 'CRM/Core/Form.php';
+
+
 
 /**
  * This class generates form components for relationship
@@ -157,7 +157,7 @@ class CRM_Contribute_Form_Task extends CRM_Core_Form {
     $session = CRM_Core_Session::singleton();
 
     $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String', $form);
-    require_once 'CRM/Utils/Rule.php';
+
     $urlParams = 'force=1';
     if (CRM_Utils_Rule::qfKey($qfKey)) {
       $urlParams .= "&qfKey=$qfKey";

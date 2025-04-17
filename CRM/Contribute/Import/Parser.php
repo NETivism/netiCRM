@@ -33,12 +33,19 @@
  *
  */
 
-require_once 'CRM/Utils/String.php';
-require_once 'CRM/Utils/Type.php';
 
-require_once 'CRM/Contribute/Import/Field.php';
+
+
+
 
 abstract class CRM_Contribute_Import_Parser {
+  /**
+   * @var mixed[]
+   */
+  public $_contributionPages;
+  public $_tableName;
+  public $_primaryKeyName;
+  public $_statusFieldName;
   CONST MAX_ERRORS = 250, MAX_WARNINGS = 25;
   CONST PENDING = 0, VALID = 1, WARNING = 2, ERROR = 4, CONFLICT = 8, STOP = 16, DUPLICATE = 32, MULTIPLE_DUPE = 64, NO_MATCH = 128, UNPARSED_ADDRESS_WARNING = 256, SOFT_CREDIT_ERROR = 512, PLEDGE_PAYMENT_ERROR = 1024, PCP_ERROR = 2048;
   CONST SOFT_CREDIT = 65536, PLEDGE_PAYMENT = 131072, PCP = 262144; 
@@ -935,9 +942,9 @@ abstract class CRM_Contribute_Import_Parser {
     $primaryKeyName = $this->_primaryKeyName;
 
     if ($statusFieldName && $primaryKeyName && is_numeric($id)) {
-      $msg = !empty($params["${statusFieldName}Msg"]) ? $params["${statusFieldName}Msg"] : '';
+      $msg = !empty($params["{$statusFieldName}Msg"]) ? $params["{$statusFieldName}Msg"] : '';
       $status = isset($params[$statusFieldName]) ? $params[$statusFieldName] : '';
-      $query = "UPDATE {$this->_tableName} SET {$statusFieldName} = %1, ${statusFieldName}Msg = %2 WHERE {$primaryKeyName} = %3";
+      $query = "UPDATE {$this->_tableName} SET {$statusFieldName} = %1, {$statusFieldName}Msg = %2 WHERE {$primaryKeyName} = %3";
       if ($status === '') {
         CRM_Core_Error::debug_var('updateImportStatus_id', $id);
         CRM_Core_Error::debug_var('updateImportStatus_params', $params);
@@ -981,7 +988,7 @@ abstract class CRM_Contribute_Import_Parser {
       case CRM_Contribute_Import_Parser::CONFLICT:
       case CRM_Contribute_Import_Parser::DUPLICATE:
         //here constants get collides.
-        require_once 'CRM/Import/Parser.php';
+
         if ($type == CRM_Contribute_Import_Parser::ERROR) {
           $type = CRM_Import_Parser::ERROR;
         }

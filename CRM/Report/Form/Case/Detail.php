@@ -33,11 +33,34 @@
  *
  */
 
-require_once 'CRM/Report/Form.php';
-require_once 'CRM/Case/BAO/Case.php';
-require_once 'CRM/Case/PseudoConstant.php';
+
+
+
 class CRM_Report_Form_Case_Detail extends CRM_Report_Form {
 
+  /**
+   * @var mixed[]
+   */
+  public $case_statuses;
+  /**
+   * @var mixed[]
+   */
+  public $case_types;
+  /**
+   * @var mixed[]
+   */
+  public $rel_types;
+  /**
+   * @var never[]|\non-empty-array<\mixed, \mixed>
+   */
+  public $_columnHeaders;
+  public $_aliases;
+  public $_from;
+  public $_where;
+  /**
+   * @var string
+   */
+  public $_groupBy;
   protected $_relField = FALSE;
 
   protected $_addressField = FALSE;
@@ -292,16 +315,16 @@ class CRM_Report_Form_Case_Detail extends CRM_Report_Form {
 
     $this->_from = "
              FROM civicrm_case $cc
- LEFT join civicrm_case_contact $ccc on ${ccc}.case_id = ${cc}.id
- LEFT join civicrm_contact $c on ${c}.id=${ccc}.contact_id
+ LEFT join civicrm_case_contact $ccc on {$ccc}.case_id = {$cc}.id
+ LEFT join civicrm_contact $c on {$c}.id={$ccc}.contact_id
  ";
     if ($this->_relField) {
       $this->_from = "
              FROM civicrm_contact $c 
- inner join civicrm_relationship $cr on {$c}.id = ${cr}.contact_id_a
- inner join civicrm_case $cc on ${cc}.id = ${cr}.case_id
- inner join civicrm_relationship_type $crt on ${crt}.id=${cr}.relationship_type_id
- inner join civicrm_case_contact $ccc on ${ccc}.case_id = ${cc}.id
+ inner join civicrm_relationship $cr on {$c}.id = {$cr}.contact_id_a
+ inner join civicrm_case $cc on {$cc}.id = {$cr}.case_id
+ inner join civicrm_relationship_type $crt on {$crt}.id={$cr}.relationship_type_id
+ inner join civicrm_case_contact $ccc on {$ccc}.case_id = {$cc}.id
  ";
     }
 

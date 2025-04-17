@@ -33,14 +33,15 @@
  *
  */
 
-require_once 'CRM/Profile/Form.php';
-require_once 'CRM/Member/Form/Task.php';
+
+
 
 /**
  * This class provides the functionality for batch profile update for members
  */
 class CRM_Member_Form_Task_Batch extends CRM_Member_Form_Task {
 
+  public $_fields;
   /**
    * the title of the group
    *
@@ -74,7 +75,7 @@ class CRM_Member_Form_Task_Batch extends CRM_Member_Form_Task {
     parent::preProcess();
 
     //get the contact read only fields to display.
-    require_once 'CRM/Core/BAO/Preferences.php';
+
     $readOnlyFields = array(
       'contact_id' => ts('Contact ID'),
       'sort_name' => ts('Name'),
@@ -122,8 +123,8 @@ class CRM_Member_Form_Task_Batch extends CRM_Member_Form_Task {
     if (!$ufGroupId) {
       CRM_Core_Error::fatal('ufGroupId is missing');
     }
-    require_once "CRM/Core/BAO/UFGroup.php";
-    require_once "CRM/Core/BAO/CustomGroup.php";
+
+
     $this->_title = ts('Batch Update for Members') . ' - ' . CRM_Core_BAO_UFGroup::getTitle($ufGroupId);
     CRM_Utils_System::setTitle($this->_title);
 
@@ -167,7 +168,7 @@ class CRM_Member_Form_Task_Batch extends CRM_Member_Form_Task {
     $this->assign('componentIds', $this->_memberIds);
     $fileFieldExists = FALSE;
 
-    require_once "CRM/Core/BAO/CustomField.php";
+
     $customFields = CRM_Core_BAO_CustomField::getFields('Membership');
     foreach ($this->_memberIds as $memberId) {
       $typeId = CRM_Core_DAO::getFieldValue("CRM_Member_DAO_Membership", $memberId, 'membership_type_id');
@@ -277,7 +278,7 @@ class CRM_Member_Form_Task_Batch extends CRM_Member_Form_Task {
         if (CRM_Utils_Array::value('custom', $value) &&
           is_array($value['custom'])
         ) {
-          require_once 'CRM/Core/BAO/CustomValueTable.php';
+
           CRM_Core_BAO_CustomValueTable::store($value['custom'], 'civicrm_membership', $membership->id);
         }
       }

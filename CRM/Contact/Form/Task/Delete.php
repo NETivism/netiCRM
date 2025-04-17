@@ -33,10 +33,10 @@
  *
  */
 
-require_once 'CRM/Contact/Form/Task.php';
-require_once 'CRM/Core/Menu.php';
-require_once 'CRM/Core/BAO/CustomGroup.php';
-require_once 'CRM/Contact/BAO/Contact.php';
+
+
+
+
 
 /**
  * This class provides the functionality to delete a group of
@@ -45,6 +45,9 @@ require_once 'CRM/Contact/BAO/Contact.php';
  */
 class CRM_Contact_Form_Task_Delete extends CRM_Contact_Form_Task {
 
+  public $_searchKey;
+  public $_skipUndelete;
+  public $_restore;
   /**
    * Are we operating in "single mode", i.e. sending email to one
    * specific contact?
@@ -80,7 +83,7 @@ class CRM_Contact_Form_Task_Delete extends CRM_Contact_Form_Task {
     // sort out whether it’s a delete-to-trash, delete-into-oblivion or restore (and let the template know)
     $config = &CRM_Core_Config::singleton();
     $values = $this->controller->exportValues();
-    require_once 'CRM/Contact/Task.php';
+
     $this->_skipUndelete = (CRM_Core_Permission::check('access deleted contacts') and (CRM_Utils_Request::retrieve('skip_undelete', 'Boolean', $this) or CRM_Utils_Array::value('task', $values) == CRM_Contact_Task::DELETE_PERMANENTLY));
 
     if ($this->_skipUndelete && !CRM_Core_Permission::check('delete contacts permanantly')) {
@@ -93,7 +96,7 @@ class CRM_Contact_Form_Task_Delete extends CRM_Contact_Form_Task {
 
     $contactName = '';
     if ($cid) {
-      require_once 'CRM/Contact/BAO/Contact/Permission.php';
+
       if (!CRM_Contact_BAO_Contact_Permission::allow($cid, CRM_Core_Permission::EDIT)) {
          return CRM_Core_Error::statusBounce(ts('You do not have permission to delete this contact. Note: you can delete contacts if you can edit them.'));
       }
@@ -122,7 +125,7 @@ class CRM_Contact_Form_Task_Delete extends CRM_Contact_Form_Task {
     $this->_sharedAddressMessage = $this->get('sharedAddressMessage');
     if (!$this->_restore && !$this->_sharedAddressMessage) {
       // we check for each contact for shared contact address
-      require_once 'CRM/Core/BAO/Address.php';
+
       $sharedContactList = array();
       $sharedAddressCount = 0;
       foreach ($this->_contactIds as $contactId) {

@@ -32,8 +32,8 @@
  * $Id$
  *
  */
-require_once 'CRM/Core/BAO/Navigation.php';
-require_once 'CRM/Core/Permission.php';
+
+
 class CRM_Report_Form_Instance {
 
   static function buildForm(&$form) {
@@ -132,7 +132,7 @@ class CRM_Report_Form_Instance {
   static function setDefaultValues(&$form, &$defaults) {
     $instanceID = $form->getVar('_id');
     $navigationDefaults = array();
-    require_once 'CRM/Core/Config.php';
+
     $config = CRM_Core_Config::singleton();
     $defaults['report_header'] = $report_header = "<html>
   <head>
@@ -220,7 +220,7 @@ class CRM_Report_Form_Instance {
       unset($params['addToDashboard']);
     }
 
-    require_once 'CRM/Report/DAO/Instance.php';
+
     $dao = new CRM_Report_DAO_Instance();
     $dao->copyValues($params);
 
@@ -242,7 +242,7 @@ class CRM_Report_Form_Instance {
       $dao->id = $instanceID;
     }
 
-    require_once 'CRM/Report/Utils/Report.php';
+
     $dao->report_id = CRM_Report_Utils_Report::getValueFromUrl($instanceID);
 
     $dao->save();
@@ -277,7 +277,7 @@ class CRM_Report_Form_Instance {
 
         $dashletParams['url'] = "civicrm/report/instance/{$dao->id}&reset=1&section={$section}&snippet=4{$chart}";
         $dashletParams['instanceURL'] = "civicrm/report/instance/{$dao->id}";
-        require_once 'CRM/Core/BAO/Dashboard.php';
+
         CRM_Core_BAO_Dashboard::addDashlet($dashletParams);
       }
 

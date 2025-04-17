@@ -34,6 +34,8 @@ require_once 'PEAR/PackageFile/v2.php';
  */
 class PEAR_PackageFile_Generator_v1
 {
+    public $_dirs;
+    public $_isExtension;
     /**
      * @var PEAR_PackageFile_v1
      */

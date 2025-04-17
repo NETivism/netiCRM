@@ -31,8 +31,6 @@
  * $Id$
  *
  */
-require_once 'CRM/Core/DAO.php';
-require_once 'CRM/Utils/Type.php';
 require_once 'CRM/Core/DAO/County.php';
 require_once 'CRM/Core/DAO/StateProvince.php';
 require_once 'CRM/Core/DAO/Country.php';

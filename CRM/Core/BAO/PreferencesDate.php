@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/DAO/PreferencesDate.php';
+
 class CRM_Core_BAO_PreferencesDate extends CRM_Core_DAO_PreferencesDate {
 
   /**

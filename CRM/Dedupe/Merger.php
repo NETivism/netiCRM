@@ -424,7 +424,7 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
     CRM_Utils_Hook::merge('sqls', $sqls, $mainId, $otherId, $tables);
 
     // call the SQL queries in one transaction
-    require_once 'CRM/Core/Transaction.php';
+
     $transaction = new CRM_Core_Transaction();
     foreach ($sqls as $sql) {
       CRM_Core_DAO::executeQuery($sql,

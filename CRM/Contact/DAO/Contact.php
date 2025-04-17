@@ -31,8 +31,6 @@
  * $Id$
  *
  */
-require_once 'CRM/Core/DAO.php';
-require_once 'CRM/Utils/Type.php';
 class CRM_Contact_DAO_Contact extends CRM_Core_DAO
 {
   /**
@@ -99,30 +97,41 @@ class CRM_Contact_DAO_Contact extends CRM_Core_DAO
    */
   public $contact_sub_type;
   /**
+   * Contact who do not want to receive bulk email or personal email.
    *
    * @var boolean
    */
   public $do_not_email;
   /**
+   * Contact who do not want to receive real phone call.
    *
    * @var boolean
    */
   public $do_not_phone;
   /**
+   * Contact who do not want to receive real world mail.
    *
    * @var boolean
    */
   public $do_not_mail;
   /**
+   * Contact who do not want to receive SMS.
    *
    * @var boolean
    */
   public $do_not_sms;
   /**
+   * Contact who do not want doing trade.
    *
    * @var boolean
    */
   public $do_not_trade;
+  /**
+   * Contact who do not want to receive workflow related notification.
+   *
+   * @var boolean
+   */
+  public $do_not_notify;
   /**
    * Has the contact opted out from receiving all bulk email from the organization or site domain?
    *
@@ -508,6 +517,16 @@ class CRM_Contact_DAO_Contact extends CRM_Core_DAO
           'import' => true,
           'where' => 'civicrm_contact.do_not_trade',
           'headerPattern' => '/d(o )?(not )?(trade)/i',
+          'dataPattern' => '/^\d{1,}$/',
+          'export' => true,
+        ) ,
+        'do_not_notify' => array(
+          'name' => 'do_not_notify',
+          'type' => CRM_Utils_Type::T_BOOLEAN,
+          'title' => ts('Do Not Notify') ,
+          'import' => true,
+          'where' => 'civicrm_contact.do_not_notify',
+          'headerPattern' => '/d(o )?(not )?(notify)/i',
           'dataPattern' => '/^\d{1,}$/',
           'export' => true,
         ) ,

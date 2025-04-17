@@ -26,7 +26,7 @@
 */
 
 
-require_once 'CRM/Utils/Type.php';
+
 class CRM_Import_Field {
 
   /**#@+

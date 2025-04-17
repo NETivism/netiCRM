@@ -86,7 +86,7 @@ class CRM_Grant_Task {
     if (!CRM_Core_Permission::check('delete in CiviGrant')) {
       unset(self::$_tasks[1]);
     }
-    require_once 'CRM/Utils/Hook.php';
+
     CRM_Utils_Hook::searchTasks('grant', self::$_tasks);
     asort(self::$_tasks);
     return self::$_tasks;

@@ -133,7 +133,7 @@ class CRM_Event_Task {
       }
     }
 
-    require_once 'CRM/Utils/Hook.php';
+
     CRM_Utils_Hook::searchTasks('event', self::$_tasks);
     asort(self::$_tasks);
     return self::$_tasks;

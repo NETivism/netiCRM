@@ -33,8 +33,22 @@
  *
  */
 
-require_once 'CRM/Report/Form.php';
+
 class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
+  /**
+   * @var never[]
+   */
+  public $_columnHeaders;
+  public $_component;
+  public $_aliases;
+  public $_selectComponent;
+  public $_from;
+  public $_formComponent;
+  public $_where;
+  public $_contactSelected;
+  public $_columnHeadersComponent;
+  public $_absoluteUrl;
+  public $_absoluteUr;
   CONST ROW_COUNT_LIMIT = 1;
 
   protected $_summary = NULL;
@@ -540,7 +554,7 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
 
     if (CRM_Utils_Array::value('relationship_civireport', $this->_selectComponent)) {
 
-      require_once 'CRM/Contact/BAO/Relationship.php';
+
       $relTypes = CRM_Contact_BAO_Relationship::getContactRelationshipType(NULL, 'null', NULL, NULL, TRUE);
 
       $val = 'relationship_civireport';
@@ -761,7 +775,7 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
 
   function alterComponentDisplay(&$componentRows) {
     // custom code to alter rows
-    require_once 'CRM/Core/PseudoConstant.php';
+
     $activityTypes = CRM_Core_PseudoConstant::activityType(TRUE, FALSE);
     $activityStatus = CRM_Core_PseudoConstant::activityStatus();
 
@@ -771,7 +785,7 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
         foreach ($rows as $rowNum => $row) {
           // handle contribution
           if ($component == 'contribution_civireport') {
-            require_once 'CRM/Contribute/PseudoConstant.php';
+
             if ($val = CRM_Utils_Array::value('civicrm_contribution_contribution_type_id', $row)) {
               $componentRows[$contactID][$component][$rowNum]['civicrm_contribution_contribution_type_id'] = CRM_Contribute_PseudoConstant::contributionType($val);
             }
@@ -783,7 +797,7 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
           }
 
           if ($component == 'membership_civireport') {
-            require_once 'CRM/Member/PseudoConstant.php';
+
             if ($val = CRM_Utils_Array::value('civicrm_membership_membership_type_id', $row)) {
               $componentRows[$contactID][$component][$rowNum]['civicrm_membership_membership_type_id'] = CRM_Member_PseudoConstant::membershipType($val, FALSE);
             }
@@ -795,7 +809,7 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
           }
 
           if ($component == 'participant_civireport') {
-            require_once 'CRM/Event/PseudoConstant.php';
+
             if ($val = CRM_Utils_Array::value('civicrm_participant_event_id', $row)) {
               $componentRows[$contactID][$component][$rowNum]['civicrm_participant_event_id'] = CRM_Event_PseudoConstant::event($val, FALSE);
               $url = CRM_Report_Utils_Report::getNextUrl('event/income',

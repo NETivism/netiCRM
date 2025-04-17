@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Core/Menu.php';
-require_once 'CRM/Core/Permission.php';
+
+
 
 /**
  * defines a simple implemenation of a drupal block.
@@ -284,7 +284,7 @@ class CRM_Core_Block {
         break;
 
       case self::ADD:
-        require_once "CRM/Core/BAO/LocationType.php";
+
         $defaultLocation = &CRM_Core_BAO_LocationType::getDefault();
         $defaultPrimaryLocationId = $defaultLocation->id;
 
@@ -305,7 +305,7 @@ class CRM_Core_Block {
         break;
 
       case self::RECENTLY_VIEWED:
-        require_once 'CRM/Utils/Recent.php';
+
         $recent = &CRM_Utils_Recent::get();
         self::setProperty(self::RECENTLY_VIEWED, 'templateValues', array('recentlyViewed' => $recent));
         break;
@@ -330,7 +330,7 @@ class CRM_Core_Block {
     if (!($shortCuts)) {
       if (CRM_Core_Permission::check('add contacts')) {
         if (CRM_Core_Permission::giveMeAllACLs()) {
-          require_once 'CRM/Contact/BAO/ContactType.php';
+
           $shortCuts = CRM_Contact_BAO_ContactType::getCreateNewList();
         }
         if (CRM_Core_Permission::access('Quest')) {
@@ -349,7 +349,7 @@ class CRM_Core_Block {
             'title' => ts('Activity'),
           )));
 
-      require_once 'CRM/Core/Component.php';
+
       $components = CRM_Core_Component::getEnabledComponents();
 
       if (!empty($config->enableComponents)) {
@@ -403,7 +403,7 @@ class CRM_Core_Block {
     }
 
     // call links hook to add user defined links
-    require_once 'CRM/Utils/Hook.php';
+
     CRM_Utils_Hook::links('create.new.shorcuts', NULL, CRM_Core_DAO::$_nullObject, $values);
 
     self::setProperty(self::CREATE_NEW, 'templateValues', array('shortCuts' => $values));
@@ -500,7 +500,7 @@ class CRM_Core_Block {
   private static function setTemplateEventValues() {
     $config = CRM_Core_Config::singleton();
 
-    require_once 'CRM/Event/BAO/Event.php';
+
     $info = CRM_Event_BAO_Event::getCompleteInfo();
 
     if ($info) {

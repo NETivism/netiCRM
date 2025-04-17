@@ -85,7 +85,7 @@ class CRM_Utils_Mail {
     $params['returnPath'] = $returnPath;
 
     // first call the mail alter hook
-    require_once 'CRM/Utils/Hook.php';
+
     $params['alterTag'] = 'mail';
     CRM_Utils_Hook::alterMailParams($params);
     unset($params['alterTag']);
@@ -155,7 +155,7 @@ class CRM_Utils_Mail {
     }
     CRM_Mailing_BAO_Mailing::addMessageIdHeader($headers);
 
-    require_once 'Mail/mime.php';
+
     $msg = new Mail_mime("\n");
     if ($textMessage) {
       $msg->setTxtBody($textMessage);
@@ -357,7 +357,7 @@ class CRM_Utils_Mail {
    * @static
    */
   static function validOutBoundMail() {
-    require_once "CRM/Core/BAO/Preferences.php";
+
     $mailingInfo = &CRM_Core_BAO_Preferences::mailingPreferences();
     if ($mailingInfo['outBound_option'] == 3) {
       return TRUE;

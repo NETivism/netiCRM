@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
-require_once "CRM/Activity/BAO/Activity.php";
+
+
 
 /**
  * This class handle activity view mode
@@ -42,6 +42,7 @@ require_once "CRM/Activity/BAO/Activity.php";
  */
 class CRM_Activity_Form_ActivityView extends CRM_Core_Form {
 
+  public $_mailing_id;
   /**
    * Function to set variables up before form is built
    *
@@ -75,7 +76,7 @@ class CRM_Activity_Form_ActivityView extends CRM_Core_Form {
     CRM_Activity_BAO_Activity::retrieve($params, $defaults);
 
     //set activity type name and description to template
-    require_once 'CRM/Core/BAO/OptionValue.php';
+
     list($activityTypeName, $activityTypeDescription, $activityTypeMachineName) = CRM_Core_BAO_OptionValue::getActivityTypeDetails($defaults['activity_type_id']);
 
     $this->assign('activityTypeName', $activityTypeName);
@@ -85,7 +86,7 @@ class CRM_Activity_Form_ActivityView extends CRM_Core_Form {
 
     if (CRM_Utils_Array::value('mailingId', $defaults)) {
       $this->_mailing_id = CRM_Utils_Array::value('source_record_id', $defaults);
-      require_once 'CRM/Mailing/BAO/Mailing.php';
+
       $mailingReport = &CRM_Mailing_BAO_Mailing::report($this->_mailing_id, TRUE);
       CRM_Mailing_BAO_Mailing::getMailingContent($mailingReport, $this);
       $this->assign('mailingReport', $mailingReport);
@@ -102,7 +103,7 @@ class CRM_Activity_Form_ActivityView extends CRM_Core_Form {
       }
     }
 
-    require_once 'CRM/Core/BAO/File.php';
+
     $values['attachment'] = CRM_Core_BAO_File::attachmentInfo('civicrm_activity',
       $activityId
     );

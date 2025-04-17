@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Contribute/DAO/ContributionPage.php';
+
 
 /**
  * This class contains Contribution Page related functions.
@@ -84,12 +84,12 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
     CRM_Core_DAO::commonRetrieve('CRM_Contribute_DAO_ContributionPage', $params, $values);
 
     // get the amounts and the label
-    require_once 'CRM/Core/OptionGroup.php';
+
     $values['amount'] = array();
     CRM_Core_OptionGroup::getAssoc("civicrm_contribution_page.amount.{$id}", $values['amount'], TRUE);
 
     // get the profile ids
-    require_once 'CRM/Core/BAO/UFJoin.php';
+
     $ufJoinParams = array('entity_table' => 'civicrm_contribution_page',
       'entity_id' => $id,
     );
@@ -156,7 +156,7 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
     }
     if (!$returnMessageText) {
       //send notification email if field values are set (CRM-1941)
-      require_once 'CRM/Core/BAO/UFGroup.php';
+
       foreach ($gIds as $key => $gId) {
         $email = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_UFGroup', $gId, 'notify');
         if ($email) {
@@ -180,7 +180,7 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
       $contributionTypeId = CRM_Utils_Array::value('contribution_type_id', $values);
       $deductible = CRM_Contribute_BAO_ContributionType::deductible($contributionTypeId, TRUE);
 
-      require_once 'CRM/Contact/BAO/Contact/Location.php';
+
       if (!CRM_Utils_Array::arrayKeyExists('related_contact', $values)) {
         list($displayName, $email) = CRM_Contact_BAO_Contact_Location::getEmailDetails($contactID, FALSE, $billingLocationTypeId);
       }
@@ -220,7 +220,7 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
       else {
         // presence of related contact implies onbehalf of org case,
         // where location type is set to default.
-        require_once 'CRM/Core/BAO/LocationType.php';
+
         $locType = CRM_Core_BAO_LocationType::getDefault();
         $billingLocationTypeId = $locType->id;
       }
@@ -232,7 +232,7 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
       //If profile GROUP contain the Individual type then consider the
       //profile is of Individual ( including the custom data of membership/contribution )
       //IF Individual type not present in profile then it is consider as Organization data.
-      require_once 'CRM/Core/BAO/UFGroup.php';
+
       $userID = $contactID;
       $template->clear_assign(array('customPre', 'customPost'));
       if ($preID = CRM_Utils_Array::value('custom_pre_id', $values)) {
@@ -372,6 +372,15 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
         );
       }
 
+      // do_not_notify check
+      $contactDetail = CRM_Contact_BAO_Contact::getContactDetails($contactID);
+      if (isset($contactDetail[5]) && !empty($contactDetail[5])) {
+        CRM_Core_Error::debug_log_message("Skipped email notify {$sendTemplateParams['valueName']} for contact $contactID due to do_not_notify marked");
+        $message = ts('Email has NOT been sent to %1 contact(s) - communication preferences specify DO NOT NOTIFY OR valid Email is NOT present.', array(1 => '1'));
+        CRM_Core_Session::singleton()->setStatus($message);
+        return;
+      }
+
       if ($values['is_email_receipt']) {
         $sendTemplateParams['from'] = CRM_Utils_Array::value('receipt_from_name', $values) . ' <' . $values['receipt_from_email'] . '>';
         $sendTemplateParams['toName'] = $displayName;
@@ -438,9 +447,9 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
 
     $recur_fail_notify = CRM_Utils_Array::value('recur_fail_notify', $values);
     $emailList = explode(',', $recur_fail_notify);
-    require_once 'CRM/Core/BAO/Domain.php';
+
     list($domainEmailName, $domainEmailAddress) = CRM_Core_BAO_Domain::getNameAndEmail();
-    require_once 'CRM/Core/BAO/MessageTemplates.php';
+
     foreach ($emailList as $emailTo) {
       // FIXME: take the below out of the foreach loop
       list($sent, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate(
@@ -489,10 +498,10 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
     );
     if ($value[$pageID]['is_email_receipt']) {
       $receiptFrom = '"' . CRM_Utils_Array::value('receipt_from_name', $value[$pageID]) . '" <' . $value[$pageID]['receipt_from_email'] . '>';
-      require_once 'CRM/Contact/BAO/Contact/Location.php';
+
       list($displayName, $email) = CRM_Contact_BAO_Contact_Location::getEmailDetails($contactID, FALSE);
 
-      require_once 'CRM/Core/BAO/MessageTemplates.php';
+
       list($sent, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate(
         array(
           'groupName' => 'msg_tpl_workflow_contribution',
@@ -539,7 +548,7 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
    */
   static function buildCustomDisplay($gid, $name, $cid, &$template, &$params) {
     if ($gid) {
-      require_once 'CRM/Core/BAO/UFGroup.php';
+
       if (CRM_Core_BAO_UFGroup::filterUFGroups($gid, $cid)) {
         $values = array();
         $groupTitle = NULL;
@@ -629,7 +638,7 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
 
 
     //copy option group and values
-    require_once "CRM/Core/BAO/OptionGroup.php";
+
     $copy->default_amount_id = CRM_Core_BAO_OptionGroup::copyValue('contribution',
       $id,
       $copy->id,
@@ -675,7 +684,7 @@ WHERE entity_table = 'civicrm_contribution_page'
     }
 
     //copy custom data
-    require_once 'CRM/Core/BAO/CustomGroup.php';
+
     $extends = array('contributionPage');
     $groupTree = CRM_Core_BAO_CustomGroup::getGroupDetail(NULL, NULL, $extends);
     if ($groupTree) {
@@ -703,7 +712,7 @@ WHERE entity_table = 'civicrm_contribution_page'
     $copy->save();
     $copy->originId = $id;
 
-    require_once 'CRM/Utils/Hook.php';
+
     CRM_Utils_Hook::copy('ContributionPage', $copy);
 
     return $copy;

@@ -33,13 +33,25 @@
  *
  */
 
-require_once 'CRM/Report/Form.php';
-require_once 'CRM/Event/PseudoConstant.php';
-require_once 'CRM/Core/OptionGroup.php';
-require_once 'CRM/Event/BAO/Participant.php';
-require_once 'CRM/Contact/BAO/Contact.php';
+
+
+
+
+
 class CRM_Report_Form_Event_ParticipantListing extends CRM_Report_Form {
 
+  /**
+   * @var never[]
+   */
+  public $_columnHeaders;
+  /**
+   * @var string
+   */
+  public $_from;
+  public $_where;
+  public $_groupBy;
+  public $_aliases;
+  public $_absoluteUrl;
   protected $_summary = NULL;
 
   protected $_customGroupExtends = array('Participant'); function __construct() {

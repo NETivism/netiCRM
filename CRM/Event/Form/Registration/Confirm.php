@@ -34,7 +34,7 @@
  *
  */
 
-require_once 'CRM/Event/Form/Registration.php';
+
 
 /**
  * This class generates form components for processing Event
@@ -42,6 +42,13 @@ require_once 'CRM/Event/Form/Registration.php';
  */
 class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
 
+  public $_amount;
+  public $_usedOptionsDiscount;
+  public $_totalDiscount;
+  public $_coupon;
+  public $_part;
+  public $_checkoutButtonName;
+  public $_isOnWaitlist;
   /**
    * the values for the contribution db object
    *
@@ -87,7 +94,7 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
       $this->_paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($this->_params[0]['payment_processor'], $this->_mode);
     }
 
-    require_once 'CRM/Utils/Hook.php';
+
     CRM_Utils_Hook::eventDiscount($this, $this->_params);
 
     if (CRM_Utils_Array::value('discount', $this->_params[0]) &&
@@ -107,7 +114,7 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
 
       //we lost rfp in case of additional participant. So set it explicitly.
       if ($rfp || CRM_Utils_Array::value('additional_participants', $this->_params[0], FALSE)) {
-        require_once 'CRM/Core/Payment.php';
+
         $payment = &CRM_Core_Payment::singleton($this->_mode, $this->_paymentProcessor, $this);
         $expressParams = $payment->getExpressCheckoutDetails($this->get('token'));
 
@@ -115,7 +122,7 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
         $params['payer_id'] = $expressParams['payer_id'];
         $params['payer_status'] = $expressParams['payer_status'];
 
-        require_once 'CRM/Core/Payment/Form.php';
+
         CRM_Core_Payment_Form::mapParams($this->_bltID, $expressParams, $params, FALSE);
 
         // fix state and country id if present
@@ -297,7 +304,7 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
 
     $this->assign('lineItem', $this->_lineItem);
     //display additional participants profile.
-    require_once 'CRM/Event/BAO/Event.php';
+
     $participantParams = $this->_params;
     $formattedValues = array();
     $count = 1;
@@ -442,7 +449,7 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
     }
 
     // now fix all state country selectors
-    require_once 'CRM/Core/BAO/Address.php';
+
     CRM_Core_BAO_Address::fixAllStateSelects($this, $defaults);
 
     $this->setDefaults($defaults);
@@ -453,7 +460,7 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
     $this->assign('isRequireApproval', $this->_requireApproval);
 
     // Assign Participant Count to Lineitem Table
-    require_once "CRM/Price/BAO/Set.php";
+
     $this->assign('pricesetFieldsCount', CRM_Price_BAO_Set::getPricesetCount($this->_priceSetId));
 
     $this->addFormRule(array('CRM_Event_Form_Registration_Confirm', 'formRule'), $this);
@@ -512,7 +519,7 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
    * @return None
    */
   public function postProcess() {
-    require_once 'CRM/Event/BAO/Participant.php';
+
     $now = date('YmdHis');
     $config = CRM_Core_Config::singleton();
     $session = CRM_Core_Session::singleton();
@@ -671,7 +678,7 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
 
       // required only if paid event
       if ($this->_values['event']['is_monetary']) {
-        require_once 'CRM/Core/Payment.php';
+
         if (is_array($this->_paymentProcessor)) {
           $payment = &CRM_Core_Payment::singleton($this->_mode, $this->_paymentProcessor, $this);
         }
@@ -717,7 +724,7 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
           if ($value['amount'] != 0) {
             $pending = TRUE;
             //get the participant statuses.
-            require_once 'CRM/Event/PseudoConstant.php';
+
             $pendingStatuses = CRM_Event_PseudoConstant::participantStatus(NULL, "class = 'Pending'");
             $status = CRM_Utils_Array::value('is_pay_later', $value) ? 'Pending from pay later' : 'Pending from incomplete transaction';
             $value['participant_status_id'] = array_search($status, $pendingStatuses);
@@ -727,7 +734,7 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
           $result = &$payment->doExpressCheckout($value);
         }
         elseif (CRM_Utils_Array::value('is_primary', $value)) {
-          require_once 'CRM/Core/Payment/Form.php';
+
           CRM_Core_Payment_Form::mapParams($this->_bltID, $value, $value, TRUE);
           $result = &$payment->doDirectPayment($value);
         }
@@ -830,7 +837,7 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
 
     // create line items, CRM-5313
     if ($this->_priceSetId && !empty($this->_lineItem)) {
-      require_once 'CRM/Price/BAO/LineItem.php';
+
 
       // take all processed participant ids.
       $allParticipantIds = $this->_participantIDS;
@@ -863,8 +870,8 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
 
     //update status and send mail to cancelled additonal participants, CRM-4320
     if ($this->_allowConfirmation && is_array($cancelledIds) && !empty($cancelledIds)) {
-      require_once 'CRM/Event/BAO/Participant.php';
-      require_once 'CRM/Event/PseudoConstant.php';
+
+
       $cancelledId = array_search('Cancelled',
         CRM_Event_PseudoConstant::participantStatus(NULL, "class = 'Negative'")
       );
@@ -877,7 +884,7 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
     }
 
     // for Transfer checkout.
-    require_once "CRM/Event/BAO/Event.php";
+
     if (($this->_contributeMode == 'checkout' || $this->_contributeMode == 'notify' || $this->_contributeMode == 'iframe') &&
       !CRM_Utils_Array::value('is_pay_later', $params[0]) &&
       !$this->_isOnWaitlist && !$this->_requireApproval &&
@@ -912,7 +919,7 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
       $primaryContactId = $this->get('primaryContactId');
 
       //build an array of cId/pId of participants
-      require_once "CRM/Event/BAO/Event.php";
+
       $additionalIDs = CRM_Event_BAO_Event::buildCustomProfile($registerByID,
         NULL, $primaryContactId, $isTest,
         TRUE
@@ -1002,7 +1009,7 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
   static function processContribution(&$form, $params, $result, $contactID,
     $pending = FALSE, $isAdditionalAmount = FALSE
   ) {
-    require_once 'CRM/Core/Transaction.php';
+
     $transaction = new CRM_Core_Transaction();
 
     $config = CRM_Core_Config::singleton();
@@ -1050,7 +1057,7 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
       );
     }
 
-    require_once 'CRM/Contribute/PseudoConstant.php';
+
     $allStatuses = CRM_Contribute_PseudoConstant::contributionStatus(NULL, 'name');
     $contribParams["contribution_status_id"] = array_search('Completed', $allStatuses);
     if ($pending) {
@@ -1077,7 +1084,7 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
       $contribParams['id'] = $contribID;
     }
 
-    require_once 'CRM/Contribute/BAO/Contribution.php';
+
     //create an contribution address
     if ($form->_contributeMode != 'notify' && !CRM_Utils_Array::value('is_pay_later', $params)) {
       $contribParams['address_id'] = CRM_Contribute_BAO_Contribution::createAddress($params, $form->_bltID);

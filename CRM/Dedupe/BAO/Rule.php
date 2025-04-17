@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Dedupe/DAO/Rule.php';
+
 
 /**
  * The CiviCRM duplicate discovery engine is based on an

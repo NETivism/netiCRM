@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
+
 class CRM_Upgrade_Form extends CRM_Core_Form {
 
   protected $_config;
@@ -85,7 +85,7 @@ class CRM_Upgrade_Form extends CRM_Core_Form {
     // latest ver in 2.1 series
     $this->latestVersion = '2.1.6';
 
-    require_once "CRM/Core/DAO/Domain.php";
+
     $domain = new CRM_Core_DAO_Domain();
     $domain->find(TRUE);
 
@@ -146,7 +146,7 @@ class CRM_Upgrade_Form extends CRM_Core_Form {
   }
 
   function source($fileName, $isQueryString = FALSE) {
-    require_once 'CRM/Utils/File.php';
+
 
     CRM_Utils_File::sourceSQLFile($this->_config->dsn,
       $fileName, NULL, $isQueryString
@@ -225,7 +225,7 @@ SET    version = '$version'
     if ($newVersion) {
       $oldVersion = CRM_Core_BAO_Domain::version();
 
-      require_once 'CRM/Core/BAO/Log.php';
+
       $session = CRM_Core_Session::singleton();
       $logParams = array(
         'entity_table' => 'civicrm_domain',
@@ -282,7 +282,7 @@ SET    version = '$version'
     $this->source($smarty->fetch($tplFile), TRUE);
 
     if ($this->multilingual) {
-      require_once 'CRM/Core/I18n/Schema.php';
+
       CRM_Core_I18n_Schema::rebuildMultilingualSchema($this->locales, $rev);
     }
     return $this->multilingual;

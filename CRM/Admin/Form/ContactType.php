@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Admin/Form.php';
+
 
 /**
  * This class generates form components for ContactSub Type
@@ -41,6 +41,7 @@ require_once 'CRM/Admin/Form.php';
  */
 class CRM_Admin_Form_ContactType extends CRM_Admin_Form {
 
+  public $_parentId;
   /**
    * Function to build the form
    *

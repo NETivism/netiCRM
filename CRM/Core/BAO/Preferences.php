@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/DAO/Preferences.php';
+
 
 /**
  *
@@ -150,7 +150,7 @@ class CRM_Core_BAO_Preferences extends CRM_Core_DAO_Preferences {
     }
 
     $optionValue = $object->$name;
-    require_once 'CRM/Core/OptionGroup.php';
+
     $groupValues = CRM_Core_OptionGroup::values($name, FALSE, FALSE, $localize, $condition, $returnField);
 
     //enabled name => label require for new contact edit form, CRM-4605
@@ -172,7 +172,7 @@ class CRM_Core_BAO_Preferences extends CRM_Core_DAO_Preferences {
     }
 
     if ($optionValue && !empty($groupValues)) {
-      require_once 'CRM/Core/BAO/CustomOption.php';
+
       $dbValues = explode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
         substr($optionValue, 1, -1)
       );
@@ -204,7 +204,7 @@ class CRM_Core_BAO_Preferences extends CRM_Core_DAO_Preferences {
       $object->$name = 'NULL';
     }
     elseif (is_array($value)) {
-      require_once 'CRM/Core/OptionGroup.php';
+
       $groupValues = CRM_Core_OptionGroup::values($name, FALSE, FALSE, FALSE, NULL, $keyField);
 
       $cbValues = array();
@@ -279,7 +279,7 @@ AND    v.option_group_id = g.id
 AND    v.name = %3
 ";
 
-    require_once 'CRM/Utils/File.php';
+
     foreach ($params as $name => $value) {
       // always try to store relative directory or url from CMS root
       if ($type == 'directory') {
@@ -311,7 +311,7 @@ AND    v.option_group_id = g.id
 AND    v.is_active = 1
 ";
 
-    require_once 'CRM/Utils/File.php';
+
 
     $dao = CRM_Core_DAO::executeQuery($sql);
     while ($dao->fetch()) {

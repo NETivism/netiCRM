@@ -252,7 +252,7 @@ class CRM_Utils_Token {
         return $addressCache[$cache_key];
       }
 
-      require_once 'CRM/Utils/Address.php';
+
       $value = NULL;
       /* Construct the address token */
 
@@ -335,7 +335,7 @@ class CRM_Utils_Token {
         }
       }
       elseif ($token == 'checksum') {
-        require_once 'CRM/Contact/BAO/Contact/Utils.php';
+
         $cs = CRM_Contact_BAO_Contact_Utils::generateChecksum($org['contact_id']);
         $value = "cs={$cs}";
       }
@@ -439,13 +439,13 @@ class CRM_Utils_Token {
         break;
 
       case 'html':
-        require_once 'CRM/Mailing/Page/View.php';
+
         $page = new CRM_Mailing_Page_View();
         $value = $page->run($mailing->id, NULL, FALSE);
         break;
 
       case 'approvalStatus':
-        require_once 'CRM/Mailing/PseudoConstant.php';
+
         $mailApprovalStatus = CRM_Mailing_PseudoConstant::approvalStatus();
         $value = $mailApprovalStatus[$mailing->approval_status_id];
         break;
@@ -614,7 +614,7 @@ class CRM_Utils_Token {
       $value = "{contact.$token}";
     }
     elseif ($token == 'checksum') {
-      require_once 'CRM/Contact/BAO/Contact/Utils.php';
+
       $cs = CRM_Contact_BAO_Contact_Utils::generateChecksum($contact['contact_id']);
       $value = "cs={$cs}";
     }
@@ -648,7 +648,7 @@ class CRM_Utils_Token {
         $pageId = $dao->page_id;
       } else {
         $config = CRM_Core_Config::singleton();
-        $pageId = $config->default_renewal_contribution_page_id;
+        $pageId = $config->defaultRenewalPageId;
       }
 
       if ($pageId) {
@@ -657,7 +657,7 @@ class CRM_Utils_Token {
         $contactType = CRM_Core_DAO::singleValueQuery($contactTypeSql, $contactTypeParams);
         if ($contactType == 'Individual') {
           $cs = CRM_Contact_BAO_Contact_Utils::generateChecksum($contactId);
-          $value = "<a href='".CRM_Utils_System::url('civicrm/contribute/transact', "reset=1&id=$pageId&cid=$contactId&oid=$oid&cs=$cs", TRUE)."' target='_blank'>".ts("Recurring Contribution Renewal Link")."</a>";
+          $value = CRM_Utils_System::url('civicrm/contribute/transact', "reset=1&id=$pageId&cid=$contactId&oid=$oid&cs=$cs",true);
         }
       }
     }
@@ -942,7 +942,7 @@ class CRM_Utils_Token {
       foreach ($matches as $key => $value) {
         $gid = substr($value, 18, -1);
         $config = CRM_Core_Config::singleton();
-        require_once 'CRM/Core/BAO/MailSettings.php';
+
         $domain = CRM_Core_BAO_MailSettings::defaultDomain();
         $localpart = CRM_Core_BAO_MailSettings::defaultLocalpart();
         // we add the 0.0000000000000000 part to make this match the other email patterns (with action, two ids and a hash)
@@ -1084,7 +1084,7 @@ class CRM_Utils_Token {
     }
 
     $params = array();
-    require_once 'CRM/Core/Form.php';
+
     foreach ($contactIDs as $key => $contactID) {
       $params[] = array(
         CRM_Core_Form::CB_PREFIX . $contactID,
@@ -1108,7 +1108,7 @@ class CRM_Utils_Token {
 
     // if return properties are not passed then get all return properties
     if (empty($returnProperties)) {
-      require_once 'CRM/Contact/BAO/Contact.php';
+
       $fields = array_merge(array_keys(CRM_Contact_BAO_Contact::exportableFields()),
         array('display_name', 'checksum', 'contact_id')
       );
@@ -1118,7 +1118,7 @@ class CRM_Utils_Token {
     }
 
     $custom = array();
-    require_once 'CRM/Core/BAO/CustomField.php';
+
     foreach ($returnProperties as $name => $dontCare) {
       $cfID = CRM_Core_BAO_CustomField::getKeyID($name);
       if ($cfID) {
@@ -1130,7 +1130,7 @@ class CRM_Utils_Token {
     $numberofContacts = count($contactIDs);
 
 
-    require_once 'CRM/Contact/BAO/Query.php';
+
     $query = new CRM_Contact_BAO_Query($params, $returnProperties);
 
     $details = $query->apiQuery($params, $returnProperties, NULL, NULL, 0, $numberofContacts, $smartyCache = TRUE, $groupBy = TRUE);
@@ -1142,11 +1142,11 @@ class CRM_Utils_Token {
         if (CRM_Utils_Array::value('preferred_communication_method', $returnProperties) == 1
           && CRM_Utils_Array::arrayKeyExists('preferred_communication_method', $contactDetails[$contactID])
         ) {
-          require_once 'CRM/Core/PseudoConstant.php';
+
           $pcm = CRM_Core_PseudoConstant::pcm();
 
           // communication Prefferance
-          require_once 'CRM/Core/BAO/CustomOption.php';
+
           $contactPcm = explode(CRM_Core_DAO::VALUE_SEPARATOR,
             $contactDetails[$contactID]['preferred_communication_method']
           );
@@ -1290,12 +1290,12 @@ class CRM_Utils_Token {
 
     switch ($objectName) {
       case 'permission':
-        require_once 'CRM/Core/Permission.php';
+
         $value = CRM_Core_Permission::permissionEmails($objectValue);
         break;
 
       case 'role':
-        require_once 'CRM/Core/Permission.php';
+
         $value = CRM_Core_Permission::roleEmails($objectValue);
         break;
     }

@@ -202,6 +202,10 @@ class DB_DataObject_Overload
  
 class DB_DataObject extends DB_DataObject_Overload
 {
+   public $_database_fields;
+    public $_database_keys;
+    public $id;
+    public $col;
    /**
     * The Version - use this to check feature changes
     *

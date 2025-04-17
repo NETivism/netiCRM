@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Mailing/DAO/Recipients.php';
+
 class CRM_Mailing_BAO_Recipients extends CRM_Mailing_DAO_Recipients {
 
   /**

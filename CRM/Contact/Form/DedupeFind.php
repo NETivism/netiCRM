@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Admin/Form.php';
+
 
 /**
  * This class generates form components for DedupeRules
@@ -41,6 +41,7 @@ require_once 'CRM/Admin/Form.php';
  */
 class CRM_Contact_Form_DedupeFind extends CRM_Admin_Form {
 
+  public $rgid;
   /**
    * defined defaults
    *

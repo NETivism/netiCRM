@@ -132,6 +132,19 @@
     <comment>Used in 3JTSP cards, correspond to auto_renew column in contribution_recur.</comment>
     <add>4.0</add>
   </field>
+  <field>
+    <name>created_id</name>
+    <type>int unsigned</type>
+    <comment>FK to civicrm_contact, who created this contribution</comment>
+    <add>3.0</add>
+  </field>
+  <foreignKey>
+    <name>created_id</name>
+    <table>civicrm_contact</table>
+    <key>id</key>
+    <add>3.0</add>
+    <onDelete>SET NULL</onDelete>
+  </foreignKey>
   <index>
     <name>UI_bin_code</name>
     <fieldName>bin_code</fieldName>

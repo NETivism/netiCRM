@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Page.php';
+
 
 /**
  * Main page for viewing Recurring Contributions.
@@ -41,6 +41,12 @@ require_once 'CRM/Core/Page.php';
  */
 class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
 
+  public $_id;
+  public $_action;
+  /**
+   * @var array<string, mixed>
+   */
+  public $_values;
   static $_links = NULL;
   public $_permission = NULL;
   public $_contactId = NULL;
@@ -52,8 +58,6 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
    * @access public
    */
   function view() {
-    require_once 'CRM/Contribute/DAO/ContributionRecur.php';
-    require_once 'CRM/Contribute/PseudoConstant.php';
     $status = CRM_Contribute_PseudoConstant::contributionStatus();
 
     $recur = new CRM_Contribute_DAO_ContributionRecur();
@@ -262,7 +266,7 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
     $this->assign('contributionRecurId', $this->_id);
 
     // check logged in url permission
-    require_once 'CRM/Contact/Page/View.php';
+
     CRM_Contact_Page_View::checkUserPermission($this);
 
     // set page title

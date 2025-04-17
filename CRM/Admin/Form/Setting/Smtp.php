@@ -33,9 +33,9 @@
  *
  */
 
-require_once 'CRM/Admin/Form/Setting.php';
-require_once 'CRM/Utils/Mail.php';
-require_once "CRM/Core/BAO/Preferences.php";
+
+
+
 
 /**
  * This class generates form components for Smtp Server
@@ -91,15 +91,15 @@ class CRM_Admin_Form_Setting_Smtp extends CRM_Admin_Form_Setting {
       else {
         $session = CRM_Core_Session::singleton();
         $userID = $session->get('userID');
-        require_once 'CRM/Contact/BAO/Contact.php';
+
         list($toDisplayName, $toEmail, $toDoNotEmail) = CRM_Contact_BAO_Contact::getContactDetails($userID);
 
         //get the default domain email address.CRM-4250
-        require_once 'CRM/Core/BAO/Domain.php';
+
         list($domainEmailName, $domainEmailAddress) = CRM_Core_BAO_Domain::getNameAndEmail();
 
         if (!$domainEmailAddress || $domainEmailAddress == 'info@FIXME.ORG') {
-          require_once 'CRM/Utils/System.php';
+
           $fixUrl = CRM_Utils_System::url("civicrm/admin/domain", 'action=update&reset=1');
           return CRM_Core_Error::statusBounce(ts('The site administrator needs to enter a valid \'FROM Email Address\' in <a href="%1">Administer CiviCRM &raquo; Configure &raquo; Domain Information</a>. The email address used may need to be a valid mail account with your email service provider.', array(1 => $fixUrl)));
         }
@@ -176,7 +176,7 @@ class CRM_Admin_Form_Setting_Smtp extends CRM_Admin_Form_Setting {
 
     // if password is present, encrypt it
     if (!empty($formValues['smtpPassword'])) {
-      require_once 'CRM/Utils/Crypt.php';
+
       $formValues['smtpPassword'] = CRM_Utils_Crypt::encrypt($formValues['smtpPassword']);
     }
 
@@ -234,14 +234,14 @@ class CRM_Admin_Form_Setting_Smtp extends CRM_Admin_Form_Setting {
     if (!$this->_defaults) {
       $this->_defaults = array();
 
-      require_once "CRM/Core/DAO/Preferences.php";
+
       $mailingPref = CRM_Core_BAO_Preferences::mailingPreferences();
 
       if (!empty($mailingPref)) {
         $this->_defaults = $mailingPref;
 
         if (!empty($this->_defaults['smtpPassword'])) {
-          require_once 'CRM/Utils/Crypt.php';
+
           $this->_defaults['smtpPassword'] = CRM_Utils_Crypt::decrypt($this->_defaults['smtpPassword']);
         }
       }

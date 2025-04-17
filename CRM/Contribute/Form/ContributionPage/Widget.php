@@ -33,8 +33,11 @@
  *
  */
 
-require_once 'CRM/Contribute/Form/ContributionPage.php';
+
 class CRM_Contribute_Form_ContributionPage_Widget extends CRM_Contribute_Form_ContributionPage {
+  public $_fields;
+  public $_colorFields;
+  public $_refreshButtonName;
   protected $_colors;
 
   protected $_widget;
@@ -42,7 +45,7 @@ class CRM_Contribute_Form_ContributionPage_Widget extends CRM_Contribute_Form_Co
   function preProcess() {
     parent::preProcess();
 
-    require_once 'CRM/Contribute/DAO/Widget.php';
+
     $this->_widget = new CRM_Contribute_DAO_Widget();
     $this->_widget->contribution_page_id = $this->_id;
     if (!$this->_widget->find(TRUE)) {
@@ -157,7 +160,7 @@ class CRM_Contribute_Form_ContributionPage_Widget extends CRM_Contribute_Form_Co
       );
     }
 
-    require_once 'CRM/Core/ShowHideBlocks.php';
+
     $showHide = new CRM_Core_ShowHideBlocks();
     $showHide->addHide("id-colors");
     $showHide->addToTemplate();
@@ -249,7 +252,7 @@ class CRM_Contribute_Form_ContributionPage_Widget extends CRM_Contribute_Form_Co
     $params['is_active'] = CRM_Utils_Array::value('is_active', $params, FALSE);
     $params['url_homepage'] = 'null';
 
-    require_once 'CRM/Contribute/DAO/Widget.php';
+
     $widget = new CRM_Contribute_DAO_Widget();
     $widget->copyValues($params);
     $widget->save();

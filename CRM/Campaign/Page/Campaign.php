@@ -1,3 +1,4 @@
+<?php
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -22,7 +23,7 @@
  | GNU Affero General Public License or the licensing of CiviCRM,     |
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
- */<?php +
+ */
 
 /**
  *
@@ -32,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Core/Page.php';
-require_once 'CRM/Campaign/BAO/Campaign.php';
+
+
 
 /**
  * Page for displaying Campaigns
@@ -88,12 +89,12 @@ class CRM_Campaign_Page_Campaign extends CRM_Core_Page {
   }
 
   function browse() {
-    require_once 'CRM/Core/Permission.php';
+
 
     $campaigns = CRM_Campaign_BAO_Campaign::getCampaign(TRUE);
 
     if (!empty($campaigns)) {
-      require_once 'CRM/Campaign/BAO/Campaign.php';
+
       $campaignType = CRM_Core_PseudoConstant::campaignType();
       $campaignStatus = CRM_Core_PseudoConstant::campaignStatus();
 

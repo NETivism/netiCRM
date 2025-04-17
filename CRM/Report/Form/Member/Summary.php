@@ -33,15 +33,24 @@
  *
  */
 
-require_once 'CRM/Report/Form.php';
-require_once 'CRM/Member/PseudoConstant.php';
-require_once "CRM/Member/BAO/MembershipType.php";
-require_once "CRM/Member/BAO/Membership.php";
-require_once 'CRM/Contribute/PseudoConstant.php';
+
+
+
+
+
 class CRM_Report_Form_Member_Summary extends CRM_Report_Form {
 
+  public $_columnHeaders;
+  public $_from;
+  public $_where;
+  /**
+   * @var string
+   */
+  public $_groupBy;
+  public $_aliases;
+  public $_absoluteUrl;
+  public $_interval = NULL;
   protected $_summary = NULL;
-  protected $_interval = NULL;
   protected $_charts = array('' => 'Tabular',
     'barChart' => 'Bar Chart',
     'pieChart' => 'Pie Chart',

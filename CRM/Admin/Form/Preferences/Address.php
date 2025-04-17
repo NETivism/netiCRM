@@ -33,12 +33,13 @@
  *
  */
 
-require_once 'CRM/Admin/Form/Preferences.php';
+
 
 /**
  * This class generates form components for Address Section
  */
 class CRM_Admin_Form_Preferences_Address extends CRM_Admin_Form_Preferences {
+  public $addressSequence;
   function preProcess() {
     parent::preProcess();
 

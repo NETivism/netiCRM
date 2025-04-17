@@ -131,7 +131,7 @@ class CRM_Core_Permission {
       $defaultGroups = array_keys($customGroups);
     }
 
-    require_once 'CRM/ACL/API.php';
+
     return CRM_ACL_API::group($type, NULL, 'civicrm_custom_group', $customGroups, $defaultGroups);
   }
 
@@ -192,7 +192,7 @@ class CRM_Core_Permission {
         break;
     }
 
-    require_once 'CRM/ACL/API.php';
+
     return CRM_ACL_API::group($type, NULL, 'civicrm_uf_group', $ufGroups);
   }
 
@@ -210,7 +210,7 @@ class CRM_Core_Permission {
   }
 
   public static function event($type = CRM_Core_Permission::VIEW, $eventID = NULL) {
-    require_once 'CRM/Event/PseudoConstant.php';
+
     $events = CRM_Event_PseudoConstant::event(NULL, TRUE);
     $includeEvents = array();
 
@@ -225,7 +225,7 @@ class CRM_Core_Permission {
       $includeEvents = array_keys($events);
     }
 
-    require_once 'CRM/ACL/API.php';
+
     $permissionedEvents = CRM_ACL_API::group($type, NULL, 'civicrm_event', $events, $includeEvents);
     if (!$eventID) {
       return $permissionedEvents;
@@ -252,7 +252,7 @@ class CRM_Core_Permission {
 
     if ($checkPermission) {
       if ($module == 'CiviCase') {
-        require_once 'CRM/Case/BAO/Case.php';
+
         return CRM_Case_BAO_Case::accessCiviCase();
       }
       else {
@@ -288,7 +288,7 @@ class CRM_Core_Permission {
     }
 
     if ($module == 'CiviCase' && !$permissionName) {
-      require_once 'CRM/Case/BAO/Case.php';
+
       return CRM_Case_BAO_Case::accessCiviCase();
     }
     else {
@@ -346,7 +346,7 @@ class CRM_Core_Permission {
     // check whether the following Ajax requests submitted the right key
     // FIXME: this should be integrated into ACLs proper
     if ($item['page_type'] == 3) {
-      require_once 'CRM/Core/Key.php';
+
       if (!CRM_Core_Key::validate($_REQUEST['key'], $item['path'])) {
         return FALSE;
       }
@@ -409,7 +409,7 @@ class CRM_Core_Permission {
       }
 
       $config = CRM_Core_Config::singleton();
-      require_once 'CRM/Core/Component.php';
+
 
       if (!$all) {
         $components = CRM_Core_Component::getEnabledComponents();
@@ -486,7 +486,7 @@ class CRM_Core_Permission {
 
     static $allCompPermissions;
     if (!is_array($allCompPermissions)) {
-      require_once 'CRM/Core/Component.php';
+
       $components = CRM_Core_Component::getComponents();
       foreach ($components as $name => $comp) {
         $allCompPermissions[$name] = $comp->getPermissions();

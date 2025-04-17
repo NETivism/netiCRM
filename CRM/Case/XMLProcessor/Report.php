@@ -33,9 +33,11 @@
  *
  */
 
-require_once 'CRM/Case/XMLProcessor.php';
+
 class CRM_Case_XMLProcessor_Report extends CRM_Case_XMLProcessor {
 
+  public $_redactionRegexRules;
+  public $_redactionStringRules;
   /**
    * The default variable defined
    *
@@ -57,11 +59,11 @@ class CRM_Case_XMLProcessor_Report extends CRM_Case_XMLProcessor {
       $this
     );
 
-    require_once 'CRM/Case/Audit/Audit.php';
+
     return Audit::run($contents, $clientID, $caseID);
 
     /******
-     require_once 'CRM/Utils/System.php';
+
      CRM_Utils_System::download( "{$case['clientName']} {$case['caseType']}",
      'text/xml',
      $contents,
@@ -70,7 +72,7 @@ class CRM_Case_XMLProcessor_Report extends CRM_Case_XMLProcessor {
   }
 
   function &getRedactionRules() {
-    require_once "CRM/Case/PseudoConstant.php";
+
     foreach (array('redactionStringRules', 'redactionRegexRules') as $key => $rule) {
       $$rule = CRM_Case_PseudoConstant::redactionRule($key);
 
@@ -120,7 +122,7 @@ class CRM_Case_XMLProcessor_Report extends CRM_Case_XMLProcessor {
 
     $case['clientName'] = $this->redact($client);
 
-    require_once 'CRM/Case/DAO/Case.php';
+
     $dao = new CRM_Case_DAO_Case();
     $dao->id = $caseID;
     if ($dao->find(TRUE)) {
@@ -138,7 +140,7 @@ class CRM_Case_XMLProcessor_Report extends CRM_Case_XMLProcessor {
         $dao->case_type_id
       );
 
-      require_once 'CRM/Case/BAO/Case.php';
+
       $case['caseType'] = CRM_Case_BAO_Case::getCaseType($caseID);
       $case['caseTypeName'] = CRM_Case_BAO_Case::getCaseType($caseID, 'name');
       $case['status'] = CRM_Core_OptionGroup::getLabel('case_status', $dao->status_id, FALSE);
@@ -190,7 +192,7 @@ class CRM_Case_XMLProcessor_Report extends CRM_Case_XMLProcessor {
     }
 
     // get all core activities
-    require_once "CRM/Case/PseudoConstant.php";
+
     $coreActivityTypes = CRM_Case_PseudoConstant::caseActivityType(FALSE, TRUE);
 
     foreach ($coreActivityTypes as $aType) {
@@ -229,7 +231,7 @@ AND    ac.case_id = %1
       $this->getRedactionRules();
     }
 
-    require_once 'CRM/Core/OptionGroup.php';
+
 
     $index = $activityID . '_' . (int) $anyActivity;
 
@@ -285,7 +287,7 @@ WHERE      a.id = %1
     &$activityTypeInfo
   ) {
 
-    require_once 'CRM/Core/OptionGroup.php';
+
     if (empty($this->_redactionStringRules)) {
       $this->_redactionStringRules = array();
     }
@@ -324,7 +326,7 @@ WHERE      a.id = %1
     if ($activityDAO->targetID) {
       // Re-lookup the target ID since the DAO only has the first recipient if there are multiple.
       // Maybe not the best solution.
-      require_once 'CRM/Activity/BAO/ActivityTarget.php';
+
       $targetNames = CRM_Activity_BAO_ActivityTarget::getTargetNames($activityDAO->id);
       $processTarget = FALSE;
       $label = ts('With Contact(s)');
@@ -417,7 +419,7 @@ WHERE      a.id = %1
 
     if ($activityDAO->assigneeID) {
       //allow multiple assignee contacts.CRM-4503.
-      require_once 'CRM/Activity/BAO/ActivityAssignment.php';
+
       $assignee_contact_names = CRM_Activity_BAO_ActivityAssignment::getAssigneeNames($activityDAO->id, TRUE);
 
       foreach ($assignee_contact_names as & $assignee) {
@@ -453,7 +455,7 @@ WHERE      a.id = %1
       'type' => 'Date',
     );
 
-    require_once 'CRM/Utils/String.php';
+
     $activity['fields'][] = array('label' => 'Details',
       'value' => $this->redact(CRM_Utils_String::stripAlternatives($activityDAO->details)),
       'type' => 'Memo',
@@ -497,7 +499,7 @@ WHERE      a.id = %1
 
     $params = array(1 => array($activityDAO->id, 'Integer'));
 
-    require_once "CRM/Core/BAO/CustomField.php";
+
     $customGroups = array();
     foreach ($sql as $tableName => $sqlClause) {
       $dao = CRM_Core_DAO::executeQuery($sqlClause, $params);
@@ -632,7 +634,7 @@ LIMIT  1
   }
 
   private function redact($string, $printReport = FALSE, $replaceString = array()) {
-    require_once 'CRM/Utils/String.php';
+
     if ($printReport) {
       return CRM_Utils_String::redaction($string, $replaceString);
     }
@@ -644,9 +646,9 @@ LIMIT  1
   }
 
   function getCaseReport($clientID, $caseID, $activitySetName, $params, $form) {
-    require_once 'CRM/Core/OptionGroup.php';
-    require_once 'CRM/Contact/BAO/Contact.php';
-    require_once 'CRM/Core/BAO/CustomField.php';
+
+
+
 
     $template = CRM_Core_Smarty::singleton();
 
@@ -676,7 +678,7 @@ LIMIT  1
 
     $xml = $form->retrieve($case['caseTypeName']);
 
-    require_once ('CRM/Case/XMLProcessor/Process.php');
+
     $activitySetNames = CRM_Case_XMLProcessor_Process::activitySets($xml->ActivitySets);
     $pageTitle = CRM_Utils_Array::value($activitySetName, $activitySetNames);
     $template->assign('pageTitle', $pageTitle);
@@ -729,11 +731,11 @@ LIMIT  1
     $template = CRM_Core_Smarty::singleton();
 
     //get case related relationships (Case Role)
-    require_once ('CRM/Case/BAO/Case.php');
+
     $caseRelationships = CRM_Case_BAO_Case::getCaseRoles($clientID, $caseID);
     $caseType = CRM_Case_BAO_Case::getCaseType($caseID, 'name');
 
-    require_once ('CRM/Case/XMLProcessor/Process.php');
+
     $xmlProcessor = new CRM_Case_XMLProcessor_Process();
     $caseRoles = $xmlProcessor->get($caseType, 'CaseRoles');
     foreach ($caseRelationships as $key => & $value) {
@@ -799,7 +801,7 @@ LIMIT  1
     }
 
     // Retrieve ALL client relationships
-    require_once ('CRM/Contact/BAO/Relationship.php');
+
     $relClient = CRM_Contact_BAO_Relationship::getRelationship($clientID,
       CRM_Contact_BAO_Relationship::CURRENT,
       0, 0, 0, NULL, NULL, FALSE
@@ -885,7 +887,7 @@ LIMIT  1
       $params,
       $report
     );
-    require_once 'CRM/Case/Audit/Audit.php';
+
     $printReport = Audit::run($contents, $clientID, $caseID, TRUE);
     echo $printReport;
     CRM_Utils_System::civiExit();

@@ -112,7 +112,7 @@ abstract class CRM_SMS_Provider {
     if (!isset(self::$_singleton[$cacheKey]) || $force) {
       $providerClass = $providerName;
       $providerFile = str_replace('_', '/', $providerName);
-      require_once "{$providerFile}.php";
+
 
       self::$_singleton[$cacheKey] = $providerClass::singleton($providerParams, $force);
     }

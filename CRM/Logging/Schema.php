@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/DAO.php';
+
 class CRM_Logging_Schema {
   private $logs = array();
   private $tables = array();
@@ -154,14 +154,14 @@ class CRM_Logging_Schema {
     $dao = &CRM_Core_DAO::executeQuery("UPDATE civicrm_option_value SET is_active = 1 WHERE value = 'logging/contact/summary' OR value = 'logging/contact/detail'");
 
     // return early if the logging report templates are missing
-    require_once 'CRM/Core/OptionGroup.php';
+
     $templates = CRM_Core_OptionGroup::values('report_template');
     if (!isset($templates['logging/contact/summary']) or
       !isset($templates['logging/contact/detail'])
     ) return;
 
     // add report instances
-    require_once 'CRM/Report/BAO/Instance.php';
+
 
     $bao = new CRM_Report_BAO_Instance;
     $bao->domain_id = CRM_Core_Config::domainID();
@@ -276,7 +276,7 @@ COLS;
     $dao = &CRM_Core_DAO::executeQuery("UPDATE civicrm_option_value SET is_active = 0 WHERE value = 'logging/contact/summary' OR value = 'logging/contact/detail'");
 
     // delete report instances
-    require_once 'CRM/Report/DAO/Instance.php';
+
 
     $bao = new CRM_Report_DAO_Instance;
     $bao->domain_id = CRM_Core_Config::domainID();

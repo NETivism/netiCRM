@@ -34,7 +34,7 @@
  *
  */
 
-require_once 'CRM/Utils/Hook.php';
+
 class CRM_Utils_Hook_UnitTests extends CRM_Utils_Hook {
 
   static function invoke($numParams,

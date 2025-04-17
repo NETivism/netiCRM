@@ -33,16 +33,17 @@
  *
  */
 
-require_once 'CRM/Case/XMLProcessor.php';
-require_once 'CRM/Utils/Date.php';
+
+
 class CRM_Case_XMLProcessor_Process extends CRM_Case_XMLProcessor {
+  public $_isMultiClient;
   function run($caseType,
     &$params
   ) {
     $xml = $this->retrieve($caseType);
 
     if ($xml === FALSE) {
-      require_once 'CRM/Utils/System.php';
+
       $docLink = CRM_Utils_System::docURL2("CiviCase Configuration");
       CRM_Core_Error::fatal(ts("Configuration file could not be retrieved for case type = '%1' %2.",
           array(1 => $caseType, 2 => $docLink)
@@ -50,7 +51,7 @@ class CRM_Case_XMLProcessor_Process extends CRM_Case_XMLProcessor {
       return FALSE;
     }
 
-    require_once 'CRM/Case/XMLProcessor/Process.php';
+
     $xmlProcessorProcess = new CRM_Case_XMLProcessor_Process();
     $this->_isMultiClient = $xmlProcessorProcess->getAllowMultipleCaseClients();
 
@@ -62,7 +63,7 @@ class CRM_Case_XMLProcessor_Process extends CRM_Case_XMLProcessor {
   ) {
     $xml = $this->retrieve($caseType);
     if ($xml === FALSE) {
-      require_once 'CRM/Utils/System.php';
+
       $docLink = CRM_Utils_System::docURL2("CiviCase Configuration");
       CRM_Core_Error::fatal(ts("Unable to load configuration file for the referenced case type: '%1' %2.",
           array(1 => $caseType, 2 => $docLink)
@@ -223,7 +224,7 @@ class CRM_Case_XMLProcessor_Process extends CRM_Case_XMLProcessor {
   }
 
   function createRelationship(&$params) {
-    require_once 'CRM/Contact/DAO/Relationship.php';
+
 
     $dao = new CRM_Contact_DAO_Relationship();
     $dao->copyValues($params);
@@ -272,7 +273,7 @@ class CRM_Case_XMLProcessor_Process extends CRM_Case_XMLProcessor {
     }
 
     // call option value hook
-    require_once 'CRM/Utils/Hook.php';
+
     CRM_Utils_Hook::optionValues($result, 'case_activity_type');
 
     return $result;
@@ -323,7 +324,7 @@ AND        a.is_deleted = 0
     $activityTypeInfo = CRM_Utils_Array::value($activityTypeName, $activityTypes);
 
     if (!$activityTypeInfo) {
-      require_once 'CRM/Utils/System.php';
+
       $docLink = CRM_Utils_System::docURL2("CiviCase Configuration");
       CRM_Core_Error::fatal(ts('Activity type %1, found in case configuration file, is not present in the database %2',
           array(1 => $activityTypeName, 2 => $docLink)
@@ -346,7 +347,7 @@ AND        a.is_deleted = 0
       $client = array(1 => $params['clientID']);
     }
 
-    require_once 'CRM/Core/OptionGroup.php';
+
     if ($activityTypeName == 'Open Case') {
       $activityParams = array('activity_type_id' => $activityTypeID,
         'source_contact_id' => $params['creatorID'],
@@ -407,7 +408,7 @@ AND        a.is_deleted = 0
               $caseActivityParams[$referenceSelect] = 1;
             }
 
-            require_once 'CRM/Case/BAO/Case.php';
+
             $referenceActivity = CRM_Case_BAO_Case::getCaseActivityDates($params['caseID'], $caseActivityParams, TRUE);
 
             if (is_array($referenceActivity)) {
@@ -445,7 +446,7 @@ AND        a.is_deleted = 0
       $activityParams['skipRecentView'] = TRUE;
     }
 
-    require_once 'CRM/Activity/BAO/Activity.php';
+
     $activity = CRM_Activity_BAO_Activity::create($activityParams);
 
     if (!$activity) {
@@ -457,7 +458,7 @@ AND        a.is_deleted = 0
     $caseParams = array('activity_id' => $activity->id,
       'case_id' => $params['caseID'],
     );
-    require_once 'CRM/Case/BAO/Case.php';
+
     CRM_Case_BAO_Case::processCaseActivity($caseParams);
     return TRUE;
   }

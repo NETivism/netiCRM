@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/DAO/OpenID.php';
+
 
 /**
  * This class contains function for Open Id

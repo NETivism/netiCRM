@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Admin/Form.php';
+
 
 /**
  * This class generates form components for Option Group
@@ -90,7 +90,7 @@ class CRM_Campaign_Form_SurveyType extends CRM_Admin_Form {
     $url = CRM_Utils_System::url('civicrm/admin/campaign/surveyType', 'reset=1');
     $session->pushUserContext($url);
 
-    require_once 'CRM/Core/OptionGroup.php';
+
     if ($this->_id && in_array($this->_gName, CRM_Core_OptionGroup::$_domainIDGroups)) {
       $domainID = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionValue', $this->_id, 'domain_id', 'id');
       if (CRM_Core_Config::domainID() != $domainID) {
@@ -160,7 +160,7 @@ class CRM_Campaign_Form_SurveyType extends CRM_Admin_Form {
    * @return None
    */
   public function postProcess() {
-    require_once 'CRM/Core/OptionValue.php';
+
 
     if ($this->_action & CRM_Core_Action::DELETE) {
       $fieldValues = array('option_group_id' => $this->_gid);
@@ -180,7 +180,7 @@ class CRM_Campaign_Form_SurveyType extends CRM_Admin_Form {
       }
 
       $groupParams = array('name' => ($this->_gName));
-      require_once 'CRM/Core/OptionValue.php';
+
       $params['component_id'] = CRM_Core_Component::getComponentID('CiviCampaign');
       $optionValue = CRM_Core_OptionValue::addOptionValue($params, $groupParams, $this->_action, $this->_id);
 

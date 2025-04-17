@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
+
 class CRM_Custom_Form_DeleteFile extends CRM_Core_Form {
 
   /**
@@ -58,7 +58,7 @@ class CRM_Custom_Form_DeleteFile extends CRM_Core_Form {
   protected $_fid;
   
   function preProcess() {
-    require_once 'CRM/Utils/Request.php';
+
     $this->_id = CRM_Utils_Request::retrieve('id', 'Positive', $this, TRUE);
     $this->_eid = CRM_Utils_Request::retrieve('eid', 'Positive', $this, TRUE);
     $this->_fid = CRM_Utils_Request::retrieve('fid', 'Positive', $this, TRUE);
@@ -91,7 +91,7 @@ class CRM_Custom_Form_DeleteFile extends CRM_Core_Form {
    * @access public
    */
   public function postProcess() {
-    require_once 'CRM/Core/BAO/File.php';
+
     CRM_Core_BAO_File::del($this->_id, $this->_eid, $this->_fid);
     CRM_Core_Session::setStatus(ts('The attached file has been deleted.'));
 

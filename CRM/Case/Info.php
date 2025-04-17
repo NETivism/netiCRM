@@ -26,7 +26,7 @@
 */
 
 
-require_once 'CRM/Core/Component/Info.php';
+
 
 /**
  * This class introduces component to the system and provides all the
@@ -93,7 +93,7 @@ class CRM_Case_Info extends CRM_Core_Component_Info {
     if (CRM_Core_Permission::check('access all cases and activities') &&
       CRM_Core_Permission::check('add contacts')
     ) {
-      require_once 'CRM/Core/OptionGroup.php';
+
       $atype = CRM_Core_OptionGroup::getValue('activity_type',
         'Open Case',
         'name'

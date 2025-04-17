@@ -42,7 +42,7 @@ class CRM_Admin_Page_AJAX {
    * Function to build menu tree
    */
   static function getNavigationList() {
-    require_once 'CRM/Core/BAO/Navigation.php';
+
     echo CRM_Core_BAO_Navigation::buildNavigation(TRUE);
     CRM_Utils_System::civiExit();
   }
@@ -51,7 +51,7 @@ class CRM_Admin_Page_AJAX {
    * Function to process drag/move action for menu tree
    */
   static function menuTree() {
-    require_once 'CRM/Core/BAO/Navigation.php';
+
     echo CRM_Core_BAO_Navigation::processNavigation($_GET);
     CRM_Utils_System::civiExit();
   }
@@ -244,7 +244,19 @@ class CRM_Admin_Page_AJAX {
             }
           }
           break;
-
+        case 'CRM_Contribute_BAO_ContributionPage':
+          if (defined('ONE_TIME_RENEWAL_ENABLED')) {
+            $config = CRM_Core_Config::singleton();
+            $defaultPageId = $config->defaultRenewalPageId;
+            if ($defaultPageId == $recordID) {
+              $recurringSettingURL = CRM_Utils_System::url('civicrm/admin/recurring', 'reset=1');
+              $status = ts("This contribution page is set as the default page for one-time recurring contribution links and cannot be deleted or disable.<br/>Please go to <a href='%1'>Administer >> CiviContribute >> Recurring Settings</a> and update the Default contribution page for one-time renewal link field before trying again.", array(1 => $recurringSettingURL));
+              $show = "noButton";
+              break;
+            }
+          }
+          $status = ts('Are you sure you want to disable this record?');
+          break;
         default:
           $status = ts('Are you sure you want to disable this record?');
           break;
@@ -303,7 +315,7 @@ class CRM_Admin_Page_AJAX {
 
     $tagID = $_POST['tagID'];
 
-    require_once 'CRM/Core/BAO/EntityTag.php';
+
     $tagInfo = array();
     // if action is select
     if ($action == 'select') {
@@ -315,7 +327,7 @@ class CRM_Admin_Page_AJAX {
           'parent_id' => $parentId,
         );
 
-        require_once 'CRM/Core/BAO/Tag.php';
+
         $tagObject = CRM_Core_BAO_Tag::add($params, CRM_Core_DAO::$_nullArray);
 
         $tagInfo = array('name' => $tagID,

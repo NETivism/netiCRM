@@ -33,10 +33,20 @@
  *
  */
 
-require_once 'CRM/Report/Form.php';
-require_once 'CRM/Contribute/PseudoConstant.php';
+
+
 class CRM_Report_Form_Contribute_SoftCredit extends CRM_Report_Form {
 
+  public $_columnHeaders;
+  public $_from;
+  /**
+   * @var string
+   */
+  public $_groupBy;
+  public $_where;
+  public $_aliases;
+  public $_absoluteUrl;
+  public $_outputMode;
   protected $_emailField = FALSE;
   protected $_emailFieldCredit = FALSE;
   protected $_phoneField = FALSE;

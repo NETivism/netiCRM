@@ -542,7 +542,7 @@ class CRM_Core_PseudoConstant {
     $index .= '_' . (int)$includeCampaignActivities;
 
     if (!CRM_Utils_Array::arrayKeyExists($index, self::$activityType) || $reset) {
-      require_once 'CRM/Core/OptionGroup.php';
+
       $condition = NULL;
       if (!$all) {
         $condition = 'AND filter = 0';
@@ -550,7 +550,7 @@ class CRM_Core_PseudoConstant {
       $componentClause = " v.component_id IS NULL";
 
       $componentIds = array();
-      require_once 'CRM/Core/Component.php';
+
       $compInfo = CRM_Core_Component::getEnabledComponents();
 
       // build filter for listing activity types only if their
@@ -599,7 +599,7 @@ class CRM_Core_PseudoConstant {
    */
   public static function &individualPrefix() {
     if (!self::$individualPrefix) {
-      require_once 'CRM/Core/OptionGroup.php';
+
       self::$individualPrefix = CRM_Core_OptionGroup::values('individual_prefix');
     }
     return self::$individualPrefix;
@@ -629,7 +629,7 @@ class CRM_Core_PseudoConstant {
    */
   public static function &phoneType() {
     if (!self::$phoneType) {
-      require_once 'CRM/Core/OptionGroup.php';
+
       self::$phoneType = CRM_Core_OptionGroup::values('phone_type');
     }
     return self::$phoneType;
@@ -650,7 +650,7 @@ class CRM_Core_PseudoConstant {
    */
   public static function &individualSuffix() {
     if (!self::$individualSuffix) {
-      require_once 'CRM/Core/OptionGroup.php';
+
       self::$individualSuffix = CRM_Core_OptionGroup::values('individual_suffix');
     }
     return self::$individualSuffix;
@@ -679,7 +679,7 @@ class CRM_Core_PseudoConstant {
    */
   public static function &gender() {
     if (!self::$gender) {
-      require_once 'CRM/Core/OptionGroup.php';
+
       self::$gender = CRM_Core_OptionGroup::values('gender');
     }
     return self::$gender;
@@ -702,7 +702,7 @@ class CRM_Core_PseudoConstant {
    */
   public static function &IMProvider() {
     if (!self::$imProvider) {
-      require_once 'CRM/Core/OptionGroup.php';
+
       self::$imProvider = CRM_Core_OptionGroup::values('instant_messenger_service');
     }
     return self::$imProvider;
@@ -733,7 +733,7 @@ class CRM_Core_PseudoConstant {
    */
   public static function &websiteType() {
     if (!self::$websiteType) {
-      require_once 'CRM/Core/OptionGroup.php';
+
       self::$websiteType = CRM_Core_OptionGroup::values('website_type');
     }
     return self::$websiteType;
@@ -758,7 +758,7 @@ class CRM_Core_PseudoConstant {
    */
   public static function &fromEmailAddress($separateNameEmail = FALSE, $refresh = FALSE) {
     if (!self::$fromEmailAddress || $refresh) {
-      require_once 'CRM/Core/OptionGroup.php';
+
       $default = CRM_Core_OptionGroup::values('from_email_address', NULL, NULL, NULL, ' AND is_default = 1', 'label', TRUE, $refresh);
       $others = CRM_Core_OptionGroup::values('from_email_address', NULL, NULL, NULL, ' AND is_default = 0', 'label', TRUE, $refresh);
       if(!empty($default)){
@@ -797,7 +797,7 @@ class CRM_Core_PseudoConstant {
    */
   public static function &mailProtocol() {
     if (!self::$mailProtocol) {
-      require_once 'CRM/Core/OptionGroup.php';
+
       self::$mailProtocol = CRM_Core_OptionGroup::values('mail_protocol');
     }
     return self::$mailProtocol;
@@ -1065,7 +1065,7 @@ WHERE  id = %1";
    *
    */
   public static function &allGroup($groupType = NULL, $excludeHidden = TRUE) {
-    require_once 'CRM/Contact/BAO/Group.php';
+
     $condition = CRM_Contact_BAO_Group::groupTypeCondition($groupType, $excludeHidden);
 
     if (!self::$group) {
@@ -1115,7 +1115,7 @@ WHERE  id = %1";
              and iterates nested groups in a logical manner for us
             */
 
-      require_once 'CRM/Contact/BAO/GroupNesting.php';
+
       self::$groupIterator = new CRM_Contact_BAO_GroupNesting($styledLabels);
     }
     return self::$groupIterator;
@@ -1140,7 +1140,7 @@ WHERE  id = %1";
    *
    */
   public static function group($groupType = NULL, $excludeHidden = TRUE) {
-    require_once 'CRM/Core/Permission.php';
+
     return CRM_Core_Permission::group($groupType, $excludeHidden);
   }
 
@@ -1168,7 +1168,7 @@ WHERE  id = %1";
         $condition .= " AND visibility != 'User and User Admin Only'";
       }
       if ($groupType) {
-        require_once 'CRM/Contact/BAO/Group.php';
+
         $condition .= ' AND ' . CRM_Contact_BAO_Group::groupTypeCondition($groupType);
       }
 
@@ -1246,7 +1246,7 @@ WHERE  id = %1";
       $column_a_b = "{$valueColumnName}_a_b";
       $column_b_a = "{$valueColumnName}_b_a";
 
-      require_once 'CRM/Contact/DAO/RelationshipType.php';
+
       $relationshipTypeDAO = new CRM_Contact_DAO_RelationshipType();
       $relationshipTypeDAO->selectAdd();
       $relationshipTypeDAO->selectAdd("id, {$column_a_b}, {$column_b_a}, contact_type_a, contact_type_b, contact_sub_type_a, contact_sub_type_b");
@@ -1363,7 +1363,7 @@ WHERE  id = %1";
    */
   public static function &pcm() {
     if (!self::$pcm) {
-      require_once 'CRM/Core/OptionGroup.php';
+
       self::$pcm = CRM_Core_OptionGroup::values('preferred_communication_method');
     }
     return self::$pcm;
@@ -1461,7 +1461,7 @@ WHERE  id = %1";
    */
   public static function &honor() {
     if (!self::$honorType) {
-      require_once 'CRM/Core/OptionGroup.php';
+
       self::$honorType = CRM_Core_OptionGroup::values('honor_type');
     }
     return self::$honorType;
@@ -1481,7 +1481,7 @@ WHERE  id = %1";
     if (!CRM_Utils_Array::arrayKeyExists($column, self::$activityStatus)) {
       self::$activityStatus[$column] = array();
 
-      require_once 'CRM/Core/OptionGroup.php';
+
       self::$activityStatus[$column] = CRM_Core_OptionGroup::values('activity_status', FALSE,
         FALSE, FALSE, NULL, $column
       );
@@ -1502,7 +1502,7 @@ WHERE  id = %1";
    */
   public static function &priority() {
     if (!self::$priority) {
-      require_once 'CRM/Core/OptionGroup.php';
+
       self::$priority = CRM_Core_OptionGroup::values('priority');
     }
 
@@ -1521,7 +1521,7 @@ WHERE  id = %1";
    */
   public static function &wysiwygEditor() {
     if (!self::$wysiwygEditor) {
-      require_once 'CRM/Core/OptionGroup.php';
+
       self::$wysiwygEditor = CRM_Core_OptionGroup::values('wysiwyg_editor');
     }
     return self::$wysiwygEditor;
@@ -1540,7 +1540,7 @@ WHERE  id = %1";
    */
   public static function &visibility($column = 'label') {
     if (!self::$visibility) {
-      require_once 'CRM/Core/OptionGroup.php';
+
       self::$visibility = CRM_Core_OptionGroup::values('visibility', FALSE, FALSE, FALSE, NULL, $column);
       if ($column == 'label') {
         foreach (self::$visibility as $k => $v) {
@@ -1560,7 +1560,7 @@ WHERE  id = %1";
    */
   public static function &mappingTypes() {
     if (!self::$mappingType) {
-      require_once 'CRM/Core/OptionGroup.php';
+
       self::$mappingType = CRM_Core_OptionGroup::values('mapping_type');
     }
     return self::$mappingType;
@@ -1605,7 +1605,7 @@ ORDER BY name";
    *
    */
   public static function greeting($filter, $columnName = 'label') {
-    $index = $filter['greeting_type'] . '_' . $columnName;
+    $index = $filter['greeting_type'] . '_' . $filter['contact_type'] . '_' . $columnName;
     $filterCondition = NULL;
     if (!CRM_Utils_Array::value($index, self::$greeting)) {
       if (CRM_Utils_Array::value('contact_type', $filter)) {
@@ -1626,7 +1626,7 @@ ORDER BY name";
         $filterCondition .= "AND (v.filter = 0 OR {$filterVal}) ";
       }
 
-      require_once 'CRM/Core/OptionGroup.php';
+
       self::$greeting[$index] = CRM_Core_OptionGroup::values($filter['greeting_type'], NULL, NULL, NULL,
         $filterCondition, $columnName
       );
@@ -1644,7 +1644,7 @@ ORDER BY name";
    *
    */
   public static function &languages() {
-    require_once 'CRM/Core/I18n/PseudoConstant.php';
+
     return CRM_Core_I18n_PseudoConstant::languages();
   }
 
@@ -1660,7 +1660,7 @@ ORDER BY name";
    */
   public static function &getExtensions() {
     if (!self::$extensions) {
-      require_once 'CRM/Core/OptionGroup.php';
+
       self::$extensions = CRM_Core_OptionGroup::values('system_extensions');
     }
 

@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Page/Basic.php';
+
 
 /**
  * Page for displaying list of Option Groups
@@ -203,14 +203,14 @@ class CRM_Admin_Page_OptionGroup extends CRM_Core_Page_Basic {
           $values[$object->id] = array();
           CRM_Core_DAO::storeValues($object, $values[$object->id]);
 
-          require_once 'CRM/Contact/DAO/RelationshipType.php';
+
           CRM_Contact_DAO_RelationshipType::addDisplayEnums($values[$object->id]);
 
           // populate action links
           $this->action($object, $action, $values[$object->id], $links, $permission);
 
           if (isset($object->mapping_type_id)) {
-            require_once 'CRM/Core/PseudoConstant.php';
+
             $mappintTypes = CRM_Core_PseudoConstant::mappingTypes();
             $values[$object->id]['mapping_type'] = $mappintTypes[$object->mapping_type_id];
           }

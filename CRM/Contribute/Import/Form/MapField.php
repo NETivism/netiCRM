@@ -33,18 +33,23 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
 
-require_once 'CRM/Core/DAO/Mapping.php';
-require_once 'CRM/Core/DAO/MappingField.php';
 
-require_once 'CRM/Contribute/Import/Parser/Contribution.php';
+
+
+
+
 
 /**
  * This class gets the name of the file to upload
  */
 class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
 
+  public $_importTableName;
+  public $_onDuplicate;
+  public $_dedupeFields;
+  public $_locationFields;
+  public $_location_types;
   /**
    * cache of preview data values
    *
@@ -289,8 +294,8 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
    * @access public
    */
   public function buildQuickForm() {
-    require_once "CRM/Core/BAO/Mapping.php";
-    require_once "CRM/Core/OptionGroup.php";
+
+
     //to save the current mappings
     if (!$this->get('savedMapping')) {
       $saveDetailsName = ts('Save this field mapping');
@@ -412,7 +417,7 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
     $contactType = $contactTypes[$contactTypeId];
 
     // get imporatable fields for contact type
-    require_once 'CRM/Contact/BAO/Contact.php';
+
     $contactFields = CRM_Contact_BAO_Contact::importableFields($contactType, NULL);
 
     // get the Dedupe rule for this contact type and build soft credit array
@@ -420,7 +425,7 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
       'contact_type' => $contactType,
       'level' => 'Strict',
     );
-    require_once 'CRM/Dedupe/BAO/Rule.php';
+
     $fieldsArray = $this->_dedupeFields;
     $softCreditFields = $pcpCreatorFields = array();
     if (is_array($fieldsArray)) {
@@ -680,7 +685,7 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
           'level' => 'Strict',
         );
       }
-      require_once 'CRM/Dedupe/BAO/RuleGroup.php';
+
       list($ruleFields, $threshold) = CRM_Dedupe_BAO_RuleGroup::dedupeRuleFieldsWeight($ruleParams);
       if ($ruleFields['sort_name']) {
         $ruleFields['last_name'] = $ruleFields['sort_name'] / 2;
@@ -771,7 +776,7 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
     if (!empty($errors)) {
       if (!empty($errors['saveMappingName'])) {
         $_flag = 1;
-        require_once 'CRM/Core/Page.php';
+
         $assignError = new CRM_Core_Page();
         $assignError->assign('mappingDetailsError', $_flag);
       }

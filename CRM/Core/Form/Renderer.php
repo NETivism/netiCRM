@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'HTML/QuickForm/Renderer/ArraySmarty.php';
+
 
 /**
  * customize the output to meet our specific requirements

@@ -33,8 +33,20 @@
  *
  */
 
-require_once 'CRM/Report/Form.php';
+
 class CRM_Report_Form_Walklist extends CRM_Report_Form {
+  /**
+   * @var never[]
+   */
+  public $_columnHeaders;
+  public $_from;
+  public $_aliases;
+  public $_where;
+  /**
+   * @var mixed[]|string
+   */
+  public $_orderBy;
+  public $_absoluteUrl;
   protected $_addressField = FALSE;
 
   protected $_emailField = FALSE;

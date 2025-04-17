@@ -33,6 +33,24 @@
  */
 class Smarty_Compiler extends Smarty {
 
+    public $_dvar_math_regexp;
+    /**
+     * @var string
+     */
+    public $_dvar_math_var_regexp;
+    /**
+     * @var string
+     */
+    public $_obj_restricted_param_regexp;
+    /**
+     * @var string
+     */
+    public $_obj_single_param_regexp;
+    public $_param_regexp;
+    /**
+     * @var string
+     */
+    public $_plugins_code;
     // internal vars
     /**#@+
      * @access private

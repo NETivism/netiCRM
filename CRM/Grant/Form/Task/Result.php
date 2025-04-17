@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Grant/Form/Task.php';
+
 
 /**
  * Used for displaying results
@@ -57,7 +57,7 @@ class CRM_Grant_Form_Task_Result extends CRM_Grant_Form_Task {
     if (isset($ssID)) {
       $urlParams = 'reset=1&force=1&ssID=' . $ssID;
       $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String', $this);
-      require_once 'CRM/Utils/Rule.php';
+
       if (CRM_Utils_Rule::qfKey($qfKey)) {
         $urlParams .= "&qfKey=$qfKey";
       }

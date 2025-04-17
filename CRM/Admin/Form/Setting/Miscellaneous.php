@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Admin/Form/Setting.php';
+
 
 /**
  * This class generates form components for Miscellaneous
@@ -101,7 +101,7 @@ class CRM_Admin_Form_Setting_Miscellaneous extends CRM_Admin_Form_Setting {
 
     // handle logging
     // FIXME: do it only if the setting changed
-    require_once 'CRM/Logging/Schema.php';
+
     $values = $this->exportValues();
     $logging = new CRM_Logging_Schema;
     $values['logging'] ? $logging->enableLogging() : $logging->disableLogging();

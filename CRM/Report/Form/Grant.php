@@ -33,10 +33,21 @@
  *
  */
 
-require_once 'CRM/Report/Form.php';
-require_once 'CRM/Grant/PseudoConstant.php';
+
+
 class CRM_Report_Form_Grant extends CRM_Report_Form {
 
+  /**
+   * @var never[]
+   */
+  public $_columnHeaders;
+  public $_from;
+  public $_aliases;
+  /**
+   * @var string
+   */
+  public $_where;
+  public $_groupBy;
   protected $_addressField = FALSE;
 
   protected $_customGroupExtends = array('Grant'); function __construct() {

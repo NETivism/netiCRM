@@ -40,6 +40,7 @@ require_once 'HTML/Template/IT_Error.php';
 */
 class HTML_Template_ITX extends HTML_Template_IT
 {
+    public $blockparents;
     /**
     * Array with all warnings.
     * @var    array

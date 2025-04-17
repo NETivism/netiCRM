@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
-require_once 'CRM/Contribute/Import/Parser/Contribution.php';
+
+
 
 /**
  * This class previews the uploaded file and returns summary
@@ -42,6 +42,8 @@ require_once 'CRM/Contribute/Import/Parser/Contribution.php';
  */
 class CRM_Contribute_Import_Form_Preview extends CRM_Core_Form {
 
+  public $_dataValues;
+  public $_columnHeaders;
   /**
    * Function to set variables up before form is built
    *

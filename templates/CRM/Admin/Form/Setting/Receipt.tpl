@@ -27,8 +27,16 @@
 <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>                         
       <table class="form-layout-compressed">
         <tr class="crm-form-block-receiptLogo">
-            <td class="label">{$form.receiptLogo.label}</td><td>{$form.receiptLogo.html}<br />    
-            <span class="description">{ts}Paste logo url. Start with http://{/ts}</span></td>
+            <td class="label">{$form.receiptLogo.label}</td>
+            <td class="value">
+                {if $receiptLogoUrl}
+                <img style="max-height: 103px;" src="{$receiptLogoUrl}">
+                <a class="delete-image" href="javascript:void(0);" data-field="deleteReceiptLogo">{ts}Delete{/ts}</a>
+                <br/>
+                {/if}
+                {$form.receiptLogo.html}<br />
+                <span class="description">{ts}Please upload the logo image to be displayed on the receipt.{/ts}</span>
+            </td>
         </tr>
         <tr class="crm-form-block-receiptPrefix">
             <td class="label">{$form.receiptPrefix.label}</td><td>{$form.receiptPrefix.html}<br />    
@@ -64,23 +72,47 @@
             <td class="label">{$form.receiptDonorCredit.label}</td><td>{$form.receiptDonorCredit.html}<br />
             <span class="description">{ts}When use custom field to record donor credit, use this to select the field.{/ts}</span></td>
         </tr>
-        <tr class="crm-form-block-forbidCustomDonorCredit">
-            <td class="label">{$form.forbidCustomDonorCredit.label}</td><td>{$form.forbidCustomDonorCredit.html}<br />
-            <span class="description">{ts}If checked, the name used of donor acknowledgement can't be customized by contributor. The options will be "Full Name" and "Part of Name".{/ts}</span></td>
+        <tr class="crm-form-block-customDonorCredit">
+            <td class="label">{$form.customDonorCredit.label}</td>
+            <td>{$form.customDonorCredit.html}<br />
+              <span class="description">{ts}Select which options to show to donors when they make contributions.{/ts}</span>
+            </td>
+        </tr>
+        <tr class="crm-form-block-anonymousDonorCreditDefault" id="anonymousDonorCreditDefault-tr">
+            <td class="label">{$form.anonymousDonorCreditDefault.label} <span class="crm-marker">*</span></td>
+            <td>{$form.anonymousDonorCreditDefault.html}<br />
+              <span class="description">{ts}This name will be used when donor selects "I don't agree to disclose name". Examples: "Anonymous", "Kind-hearted Person", etc.{/ts}</span>
+            </td>
         </tr>
         <script type="text/javascript">
         {literal}
           cj(function($){
-            var doChangeFields = function(){
-              if ($('#receiptDonorCredit').val() == 0) {
-                $('.crm-form-block-forbidCustomDonorCredit').hide();
-              }
-              else {
-                $('.crm-form-block-forbidCustomDonorCredit').show();
+            function toggleAnonymousField() {
+              if ($('input[name="customDonorCredit[anonymous]"]').is(':checked')) {
+                $('#anonymousDonorCreditDefault-tr').show();
+                $('#anonymousDonorCreditDefault').addClass('required');
+
+                if (!$('#anonymousDonorCreditDefault').val()) {
+                  $('#anonymousDonorCreditDefault').val("{/literal}{ts escape='js'}Anonymous{/ts}{literal}");
+                }
+              } else {
+                $('#anonymousDonorCreditDefault-tr').hide();
+                $('#anonymousDonorCreditDefault').removeClass('required');
               }
             }
-            $('#receiptDonorCredit').change(doChangeFields);
-            doChangeFields();
+
+            toggleAnonymousField();
+            $('input[name="customDonorCredit[anonymous]"]').change(toggleAnonymousField);
+
+            $('form').submit(function() {
+              if ($('input[name="customDonorCredit[anonymous]"]').is(':checked') && 
+                  !$('#anonymousDonorCreditDefault').val()) {
+                alert("{/literal}{ts escape='js'}Please enter a default name for anonymous donors.{/ts}{literal}");
+                $('#anonymousDonorCreditDefault').focus();
+                return false;
+              }
+              return true;
+            });
           });
         {/literal}
         </script>
@@ -149,10 +181,31 @@
 {literal}
 <script type="text/javascript">
     cj(function($){
+        let saveNotice = "{/literal}{ts}Save to apply changes.{/ts}{literal}";
         $('.delete-image').click(function(){
-            deleteFieldName = $(this).attr('data-field');
+            var deleteFieldName = $(this).attr('data-field');
+            var imageElement = $(this).parent().find('img');
             $('[name='+deleteFieldName+']').val(1);
-            $(this).parent().find('img').css('filter','brightness(50%)');
+            var messageDiv = $('<div class="pending-change-message" style="color: #0074bd; text-align: center; border: 1px dashed #ccc; display: flex; align-items: center; justify-content: center; width: 120px; height: 100px;">'+saveNotice+'</div>');
+            imageElement.hide();
+            $(this).hide();
+            imageElement.after(messageDiv);
+        });
+        $('input[type="file"]').change(function() {
+            if (this.files && this.files.length > 0) {
+                var container = $(this).closest('td.value, td');
+                var imageElement = container.find('img');
+                container.find('.pending-change-message').remove();
+                if (imageElement.length > 0) {
+                    var messageDiv = $('<div class="pending-change-message" style="color: #0074bd; text-align: center; border: 1px dashed #ccc; display: flex; align-items: center; justify-content: center; width: 120px; height: 100px;">'+saveNotice+'</div>');
+                    imageElement.hide();
+                    container.find('.delete-image').hide();
+                    imageElement.after(messageDiv);
+                } else {
+                    var messageDiv = $('<div class="pending-change-message" style="color: #0074bd; text-align: center; border: 1px dashed #ccc; display: flex; align-items: center; justify-content: center; width: 120px; height: 100px; margin-bottom: 5px;">'+saveNotice+'</div>');
+                    $(this).before(messageDiv);
+                }
+            }
         });
         $('input[name^="receiptDisplayLegalID"]').click(function() {
             const selectedValue = $('input[name^="receiptDisplayLegalID"]:checked').val();

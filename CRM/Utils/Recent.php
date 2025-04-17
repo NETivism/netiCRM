@@ -136,7 +136,7 @@ class CRM_Utils_Recent {
       array_pop(self::$_recent);
     }
 
-    require_once 'CRM/Utils/Hook.php';
+
     CRM_Utils_Hook::recent(self::$_recent);
 
     $session->set(self::STORE_NAME, self::$_recent);

@@ -35,8 +35,13 @@
  *
  */
 
-require_once 'CRM/Core/Payment.php';
+
 class CRM_Core_Payment_IATS extends CRM_Core_Payment {
+  /**
+   * @var mixed
+   */
+  public $_processorName;
+  public $_profile;
   # (not used, implicit in the API, might need to convert?)
   CONST CHARSET = 'UFT-8';
   /* check IATS website for additional supported currencies */

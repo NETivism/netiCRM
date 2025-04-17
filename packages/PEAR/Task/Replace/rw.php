@@ -29,6 +29,9 @@ require_once 'PEAR/Task/Replace.php';
  */
 class PEAR_Task_Replace_rw extends PEAR_Task_Replace
 {
+    public $_contents;
+    public $_pkg;
+    public $_params;
     public function __construct(&$pkg, &$config, &$logger, $fileXml)
     {
         parent::__construct($config, $logger, PEAR_TASK_PACKAGE);

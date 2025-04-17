@@ -46,7 +46,7 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
    * @access public
    */
   static function preProcess(&$form) {
-    require_once 'CRM/Core/BAO/MessageTemplates.php';
+
     $messageText = array();
     $messageSubject = array();
     $dao = new CRM_Core_BAO_MessageTemplates();
@@ -64,7 +64,7 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
   static function preProcessSingle(&$form, $cid) {
     $form->_contactIds = array($cid);
     // put contact display name in title for single contact mode
-    require_once 'CRM/Contact/Page/View.php';
+
     CRM_Contact_Page_View::setTitle($cid);
   }
 
@@ -81,7 +81,7 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
     }
     $form->assign('totalSelectedContacts', count($form->_contactIds));
 
-    require_once "CRM/Mailing/BAO/Mailing.php";
+
     CRM_Mailing_BAO_Mailing::commonLetterCompose($form);
     if ($form->_single) {
       $cancelURL = CRM_Utils_System::url('civicrm/contact/view',
@@ -151,7 +151,7 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
     $formValues = $form->controller->exportValues($form->getName());
 
     // process message template
-    require_once 'CRM/Core/BAO/MessageTemplates.php';
+
     if (CRM_Utils_Array::value('saveTemplate', $formValues) || CRM_Utils_Array::value('updateTemplate', $formValues)) {
       $messageTemplate = array('msg_text' => NULL,
         'msg_html' => $formValues['html_message'],

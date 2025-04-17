@@ -33,11 +33,27 @@
  *
  */
 
-require_once 'CRM/Report/Form.php';
-require_once 'CRM/Event/PseudoConstant.php';
-require_once 'CRM/Core/OptionGroup.php';
+
+
+
 class CRM_Report_Form_Event_Summary extends CRM_Report_Form {
 
+  /**
+   * @var string
+   */
+  public $_from;
+  public $_participantWhere;
+  /**
+   * @var string
+   */
+  public $_where;
+  /**
+   * @var string
+   */
+  public $_groupBy;
+  public $_columnHeaders;
+  public $_interval;
+  public $_absoluteUrl;
   protected $_summary = NULL;
 
   protected $_charts = array('' => 'Tabular',

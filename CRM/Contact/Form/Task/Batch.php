@@ -33,13 +33,14 @@
  *
  */
 
-require_once 'CRM/Profile/Form.php';
+
 
 /**
  * This class provides the functionality for batch profile update
  */
 class CRM_Contact_Form_Task_Batch extends CRM_Contact_Form_Task {
 
+  public $_fields;
   /**
    * the title of the group
    *
@@ -97,7 +98,7 @@ class CRM_Contact_Form_Task_Batch extends CRM_Contact_Form_Task {
     if (!$ufGroupId) {
       CRM_Core_Error::fatal('ufGroupId is missing');
     }
-    require_once "CRM/Core/BAO/UFGroup.php";
+
     $this->_title = ts('Batch Update') . ' - ' . CRM_Core_BAO_UFGroup::getTitle($ufGroupId);
     CRM_Utils_System::setTitle($this->_title);
 

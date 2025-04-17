@@ -33,8 +33,26 @@
  *
  */
 
-require_once 'CRM/Report/Form.php';
+
 class CRM_Report_Form_Case_TimeSpent extends CRM_Report_Form {
+  public $activityTypes;
+  /**
+   * @var mixed[]
+   */
+  public $activityStatuses;
+  /**
+   * @var never[]
+   */
+  public $_columnHeaders;
+  public $has_grouping;
+  public $has_activity_type;
+  /**
+   * @var string
+   */
+  public $_from;
+  public $_where;
+  public $_aliases;
+  public $_groupBy;
   function __construct() {
 
     $this->activityTypes = CRM_Core_PseudoConstant::activityType(TRUE, TRUE);

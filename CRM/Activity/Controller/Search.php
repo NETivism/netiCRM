@@ -32,8 +32,8 @@
  *
  */
 
-require_once 'CRM/Core/Controller.php';
-require_once 'CRM/Core/Session.php';
+
+
 
 /**
  * This class is used by the Search functionality.
@@ -52,7 +52,7 @@ class CRM_Activity_Controller_Search extends CRM_Core_Controller {
    * class constructor
    */
   function __construct($title = NULL, $modal = TRUE, $action = CRM_Core_Action::NONE) {
-    require_once 'CRM/Activity/StateMachine/Search.php';
+
 
     parent::__construct($title, $modal);
 

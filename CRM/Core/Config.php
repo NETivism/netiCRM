@@ -36,22 +36,28 @@
  *
  */
 /* we must load db first, never delete this require */
-require_once 'DB.php';
 
-/* these may be delete future */
-require_once 'Log.php';
-require_once 'Mail.php';
-
-require_once 'CRM/Core/DAO.php';
-require_once 'CRM/Utils/System.php';
-require_once 'CRM/Utils/File.php';
-require_once 'CRM/Core/Session.php';
-require_once 'CRM/Core/Config/Variables.php';
 require_once 'api/api.php';
 
 define('CRM_REQUEST_TIME', (int) $_SERVER['REQUEST_TIME']);
 
 class CRM_Core_Config extends CRM_Core_Config_Variables {
+  /**
+   * @var mixed
+   */
+  public $userFrameworkVersion;
+  /**
+   * @var string
+   */
+  public $customFileUploadURL;
+  /**
+   * @var string
+   */
+  public $version;
+  /**
+   * @var string
+   */
+  public $ver;
   ///
   /// BASE SYSTEM PROPERTIES (CIVICRM.SETTINGS.PHP)
   ///
@@ -293,7 +299,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
 
       // call the hook so other modules can add to the config
       // again doing this at the very very end
-      require_once 'CRM/Utils/Hook.php';
+
       CRM_Utils_Hook::config(self::$_singleton);
 
       // make sure session is always initialised
@@ -391,7 +397,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
     // initialize component registry early to avoid "race"
     // between CRM_Core_Config and CRM_Core_Component (they
     // are co-dependant)
-    require_once 'CRM/Core/Component.php';
+
     $this->componentRegistry = new CRM_Core_Component();
   }
 
@@ -461,11 +467,11 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
 
       // Step 2. get default values (with settings file overrides if
       // available - handled in CRM_Core_Config_Defaults)
-      require_once 'CRM/Core/Config/Defaults.php';
+
       CRM_Core_Config_Defaults::setValues($variables);
 
       // retrieve directory and url preferences also
-      require_once 'CRM/Core/BAO/Preferences.php';
+
       CRM_Core_BAO_Preferences::retrieveDirectoryAndURLPreferences($defaults);
 
       // add component specific settings
@@ -593,7 +599,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
       if (defined('CIVICRM_MAILER_SPOOL') &&
         CIVICRM_MAILER_SPOOL
       ) {
-        require_once 'CRM/Mailing/BAO/Spool.php';
+
         self::$_mail[$mailerType] = new CRM_Mailing_BAO_Spool();
       }
       elseif ($mailingInfo['outBound_option'] == 0) {
@@ -607,7 +613,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
         $params['port'] = $mailingInfo['smtpPort'] ? $mailingInfo['smtpPort'] : 25;
 
         if ($mailingInfo['smtpAuth']) {
-          require_once 'CRM/Utils/Crypt.php';
+
           $params['username'] = $mailingInfo['smtpUsername'];
           $params['password'] = CRM_Utils_Crypt::decrypt($mailingInfo['smtpPassword']);
           $params['auth'] = TRUE;
@@ -745,7 +751,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
    */
   function clearTempTables() {
     // CRM-5645
-    require_once 'CRM/Contact/DAO/Contact.php';
+
     $dao = new CRM_Contact_DAO_Contact();
     $importTablePrefix = CRM_Import_ImportJob::TABLE_PREFIX;
     $query = "

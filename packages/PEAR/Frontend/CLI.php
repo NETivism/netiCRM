@@ -32,6 +32,7 @@ require_once 'PEAR/Frontend.php';
  */
 class PEAR_Frontend_CLI extends PEAR_Frontend
 {
+    public $_skipSections;
     /**
      * What type of user interface this frontend is for.
      * @var string

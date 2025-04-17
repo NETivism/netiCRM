@@ -53,6 +53,8 @@ require_once 'Net/Socket.php';
  */
 class Net_SMTP
 {
+    public $gssapi_principal;
+    public $gssapi_cname;
     /**
      * The server to connect to.
      * @var string

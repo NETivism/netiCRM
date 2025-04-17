@@ -49739,3 +49739,15 @@ msgstr ""
 #: CRM/Contact/BAO/Contact/Utils.php
 msgid "Recurring Contribution Renewal Link"
 msgstr ""
+
+#: CRM/Core/SelectValues.php
+msgid "Do Not Notify"
+msgstr ""
+
+#: templates/CRM/Contribute/Form/ContributionPage/Delete.tpl
+msgid "This contribution page is set as the default page for one-time recurring contribution links and cannot be deleted or disable.<br/>Please go to <a href='%1'>Administer >> CiviContribute >> Recurring Settings</a> and update the Default contribution page for one-time renewal link field before trying again."
+msgstr ""
+
+#: templates/CRM/Event/Form/Registration/ThankYou.tpl
+msgid "To ensure that you receive event registration notifications, we recommend contacting the administrator."
+msgstr ""

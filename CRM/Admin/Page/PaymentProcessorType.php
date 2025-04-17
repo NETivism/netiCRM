@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Core/Page/Basic.php';
-require_once 'CRM/Core/DAO/PaymentProcessorType.php';
+
+
 
 /**
  * Page for displaying list of payment processors

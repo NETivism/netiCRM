@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/ACL/DAO/Cache.php';
+
 
 /**
  *  Access Control Cache
@@ -58,7 +58,7 @@ class CRM_ACL_BAO_Cache extends CRM_ACL_DAO_Cache {
       return self::$_cache[$id];
     }
 
-    require_once 'CRM/ACL/BAO/ACL.php';
+
     self::$_cache[$id] = CRM_ACL_BAO_ACL::getAllByContact($id);
     self::store($id, self::$_cache[$id]);
     return self::$_cache[$id];
@@ -120,7 +120,7 @@ WHERE contact_id = %1
     self::build($id);
 
     // rebuilds civicrm_acl_contact_cache
-    require_once "CRM/Contact/BAO/Contact/Permission.php";
+
     CRM_Contact_BAO_Contact_Permission::cache($id, CRM_Core_Permission::VIEW, TRUE);
   }
 

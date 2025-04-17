@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Utils/Type.php';
-require_once 'CRM/Contribute/PseudoConstant.php';
+
+
 class CRM_Contribute_Import_Field {
 
   /**#@+

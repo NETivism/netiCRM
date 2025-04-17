@@ -33,8 +33,9 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
+
 class CRM_Mailing_Form_ForwardMailing extends CRM_Core_Form {
+  public $_fromEmail;
   function preProcess() {
     $job_id = CRM_Utils_Request::retrieve('jid', 'Positive',
       $this, NULL
@@ -46,7 +47,7 @@ class CRM_Mailing_Form_ForwardMailing extends CRM_Core_Form {
       $this, NULL
     );
 
-    require_once 'CRM/Mailing/Event/BAO/Queue.php';
+
     $q = CRM_Mailing_Event_BAO_Queue::verify($job_id, $queue_id, $hash);
 
     if ($q == NULL) {
@@ -165,7 +166,7 @@ class CRM_Mailing_Form_ForwardMailing extends CRM_Core_Form {
       $status = ts('Mailing is forwarded successfully to %count email address.', array('count' => $forwarded, 'plural' => 'Mailing is forwarded successfully to %count email addresses.'));
     }
 
-    require_once 'CRM/Utils/System.php';
+
     CRM_Utils_System::setUFMessage($status);
 
     // always redirect to front page of url

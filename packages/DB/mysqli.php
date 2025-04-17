@@ -681,7 +681,7 @@ class DB_mysqli extends DB_common
                 // so fill it and return 1
                 // Obtain a user-level lock
                 $result = $this->getOne('SELECT GET_LOCK('
-                                        . "'${seqname}_lock', 10)");
+                                        . "'{$seqname}_lock', 10)");
                 if (DB::isError($result)) {
                     return $this->raiseError($result);
                 }
@@ -698,7 +698,7 @@ class DB_mysqli extends DB_common
 
                 // Release the lock
                 $result = $this->getOne('SELECT RELEASE_LOCK('
-                                        . "'${seqname}_lock')");
+                                        . "'{$seqname}_lock')");
                 if (DB::isError($result)) {
                     return $this->raiseError($result);
                 }
@@ -756,7 +756,7 @@ class DB_mysqli extends DB_common
             return $res;
         }
         // insert yields value 1, nextId call will generate ID 2
-        return $this->query("INSERT INTO ${seqname} (id) VALUES (0)");
+        return $this->query("INSERT INTO {$seqname} (id) VALUES (0)");
     }
 
     // }}}
@@ -795,7 +795,7 @@ class DB_mysqli extends DB_common
         // Obtain a user-level lock... this will release any previous
         // application locks, but unlike LOCK TABLES, it does not abort
         // the current transaction and is much less frequently used.
-        $result = $this->getOne("SELECT GET_LOCK('${seqname}_lock',10)");
+        $result = $this->getOne("SELECT GET_LOCK('{$seqname}_lock',10)");
         if (DB::isError($result)) {
             return $result;
         }
@@ -805,7 +805,7 @@ class DB_mysqli extends DB_common
             return $this->mysqliRaiseError(DB_ERROR_NOT_LOCKED);
         }
 
-        $highest_id = $this->getOne("SELECT MAX(id) FROM ${seqname}");
+        $highest_id = $this->getOne("SELECT MAX(id) FROM {$seqname}");
         if (DB::isError($highest_id)) {
             return $highest_id;
         }
@@ -822,7 +822,7 @@ class DB_mysqli extends DB_common
         // If another thread has been waiting for this lock,
         // it will go thru the above procedure, but will have no
         // real effect
-        $result = $this->getOne("SELECT RELEASE_LOCK('${seqname}_lock')");
+        $result = $this->getOne("SELECT RELEASE_LOCK('{$seqname}_lock')");
         if (DB::isError($result)) {
             return $result;
         }

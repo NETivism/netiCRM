@@ -119,7 +119,7 @@ LEFT JOIN civicrm_phone ON ( civicrm_phone.contact_id = civicrm_contact.id )
    * @access public
    */
   static function &getMapInfo($ids, $locationTypeID = NULL, $imageUrlOnly = FALSE) {
-    require_once 'CRM/Utils/Address.php';
+
     $idString = ' ( ' . CRM_Utils_Array::implode(',', $ids) . ' ) ';
     $sql = "
    SELECT civicrm_contact.id as contact_id,
@@ -207,7 +207,7 @@ WHERE civicrm_contact.id IN $idString ";
       $location['displayAddress'] = str_replace('<br />', ', ', $address);
       $location['url'] = CRM_Utils_System::url('civicrm/contact/view', 'reset=1&cid=' . $dao->contact_id);
       $location['location_type'] = $dao->location_type;
-      require_once 'CRM/Contact/BAO/Contact/Utils.php';
+
       $location['image'] = CRM_Contact_BAO_Contact_Utils::getImage(isset($dao->contact_sub_type) ?
         $dao->contact_sub_type : $dao->contact_type, $imageUrlOnly, $dao->contact_id
       );

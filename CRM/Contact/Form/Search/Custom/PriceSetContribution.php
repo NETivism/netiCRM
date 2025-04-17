@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Contact/Form/Search/Custom/Base.php';
-require_once 'CRM/Contribute/PseudoConstant.php';
+
+
 class CRM_Contact_Form_Search_Custom_PriceSetContribution extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
 
   public static $_primaryIDName = 'entity_id';
@@ -245,7 +245,7 @@ WHERE p.extends LIKE '%2%'
     }
 
     // get all the fields and all the option values associated with it
-    require_once 'CRM/Price/BAO/Set.php';
+
     $priceSet = CRM_Price_BAO_Set::getSetDetail($dao->price_set_id, TRUE, FALSE);
     if (is_array($priceSet[$dao->price_set_id])) {
       foreach ($priceSet[$dao->price_set_id]['fields'] as $key => $value) {

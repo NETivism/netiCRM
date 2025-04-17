@@ -32,11 +32,25 @@
  *
  */
 
-require_once 'CRM/Report/Form.php';
-require_once 'CRM/Event/PseudoConstant.php';
-require_once 'CRM/Core/OptionGroup.php';
+
+
+
 class CRM_Report_Form_Event_IncomeCountSummary extends CRM_Report_Form {
 
+  public $_from;
+  /**
+   * @var string
+   */
+  public $_participantWhere;
+  public $_where;
+  public $_aliases;
+  /**
+   * @var string
+   */
+  public $_groupBy;
+  public $_columnHeaders;
+  public $_interval;
+  public $_absoluteUrl;
   protected $_summary = NULL;
 
   protected $_charts = array('' => 'Tabular',

@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Contact/Form/Search/Custom/Base.php';
+
 class CRM_Contact_Form_Search_Custom_ZipCodeRange extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
   function __construct(&$formValues) {
     parent::__construct($formValues);

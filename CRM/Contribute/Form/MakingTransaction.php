@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
+
 
 /**
  * This class generates form components generic to recurring contributions
@@ -45,6 +45,10 @@ require_once 'CRM/Core/Form.php';
  */
 class CRM_Contribute_Form_MakingTransaction extends CRM_Core_Form {
 
+  /**
+   * @var bool
+   */
+  public $_preventMultipleSubmission;
   /**
    * The recurring contribution id, used when editing the recurring contribution
    *
@@ -74,7 +78,7 @@ class CRM_Contribute_Form_MakingTransaction extends CRM_Core_Form {
    * @return None
    */
   function setDefaultValues() {
-    
+
     return $defaults;
   }
 

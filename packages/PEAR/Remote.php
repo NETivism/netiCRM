@@ -69,7 +69,7 @@ class PEAR_Remote extends PEAR
 
     // }}}
     // {{{ setRegistry()
-    
+
     function setRegistry(&$reg)
     {
         $this->_registry = &$reg;

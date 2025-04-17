@@ -2,6 +2,26 @@
 class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Core_Selector_API {
 
   /**
+   * @var mixed
+   */
+  public $_scope;
+  /**
+   * @var string
+   */
+  public $_base;
+  public $_allowedGet;
+  public $_drillDown;
+  public $_pageTypes;
+  public $_pageUrl;
+  /**
+   * @var array<string, mixed>
+   */
+  public $_referencedRecordType;
+  public $_referencedRecordUrl;
+  public $_trackState;
+  public $_referrerTypes;
+  public $_utm;
+  /**
    * array of supported links, currenly null
    *
    * @var array
@@ -441,7 +461,7 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
       //Added "||$rowCount" to avoid displaying all records on first page
       $query .= ' LIMIT ' . CRM_Utils_Type::escape($offset, 'Integer') . ', ' . CRM_Utils_Type::escape($rowCount, 'Integer');
     }
-    
+
     $dao = CRM_Core_DAO::executeQuery($query, $args);
     return $dao;
   }

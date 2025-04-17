@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Admin/Form.php';
+
 
 /**
  * This class generates form components for Tag
@@ -79,7 +79,7 @@ class CRM_Admin_Form_Tag extends CRM_Admin_Form {
         $this->_isTagSet = TRUE;
       }
 
-      require_once 'CRM/Core/BAO/Tag.php';
+
       $allTag = array('' => '- ' . ts('select') . ' -') + CRM_Core_BAO_Tag::getTagsNotInTagset();
 
       if ($this->_id) {
@@ -108,7 +108,7 @@ class CRM_Admin_Form_Tag extends CRM_Admin_Form {
 
       $isReserved = $this->add('checkbox', 'is_reserved', ts('Reserved?'));
 
-      require_once 'CRM/Core/OptionGroup.php';
+
       $usedFor = $this->add('select', 'used_for', ts('Used For'),
         CRM_Core_OptionGroup::values('tag_used_for')
       );

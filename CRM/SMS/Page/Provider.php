@@ -36,6 +36,10 @@
  */
 class CRM_SMS_Page_Provider extends CRM_Core_Page_Basic {
 
+  /**
+   * @var string
+   */
+  public $_id;
   public $useLivePageJS = TRUE;
 
   /**
