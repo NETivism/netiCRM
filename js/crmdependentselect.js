@@ -50,21 +50,30 @@
 
   // Constructor for the plugin object
   function CrmDependentSelect(element, options) {
-      // Select the element and validate it
+    if (typeof element === 'string') {
       this.element = document.querySelector(element);
-      if (!this.element) {
-        console.warn('The specified element does not exist.');
-        return;
-      }
-      this.validateElement();
+    } else if (element instanceof HTMLElement) {
+      this.element = element;
+    } else {
+      console.warn('Invalid element parameter: must be a CSS selector or DOM element.');
+      return;
+    }
 
-      // Merge user options with default options
-      this.settings = Object.assign({}, defaultOptions, options);
-      try {
-        this.init();
-      } catch (e) {
-        console.error('An error occurred while initializing crmDependentSelect:', e);
-      }
+    if (!this.element) {
+      console.warn('The specified element does not exist.');
+      return;
+    }
+
+    this.validateElement();
+
+    // Merge user options with default options
+    this.settings = Object.assign({}, defaultOptions, options);
+
+    try {
+      this.init();
+    } catch (e) {
+      console.error('An error occurred while initializing crmDependentSelect:', e);
+    }
   }
 
   // Method to get parent information of the element
@@ -109,38 +118,49 @@
 
   // Method to setup the dependent select element
   CrmDependentSelect.prototype.setupDependentSelect = function() {
-      // Ensure native methods aren't overridden
-      if (Array.prototype.forEach !== originalForEach) {
-        throw new Error('Array\'s forEach method seems to be overridden.');
-      }
+    // Make sure native Array.forEach method is not overridden
+    if (Array.prototype.forEach !== originalForEach) {
+      throw new Error('Array\'s forEach method seems to be overridden.');
+    }
 
-      // Get all the original options of the select element
-      const originalOptions = Array.from(this.container.querySelectorAll('option'));
-      this.container.classList.add("depended");
+    // Get all original options from the select element
+    const originalOptions = Array.from(this.container.querySelectorAll('option'));
+    this.container.classList.add("depended");
 
-      const { parent } = this.getParentInfo();
+    const { parent } = this.getParentInfo();
 
-      // Function to update the child options based on the parent value
-      const updateChildOptions = (parentVal) => {
-          // Clear all options
-          this.container.innerHTML = '';
+    // Function to update child options based on parent value
+    const updateChildOptions = (parentVal) => {
+      // Clear all current options
+      this.container.innerHTML = '';
 
-          // Append options that either have no 'data-parent-filter' attribute or have a 'data-parent-filter'
-          // attribute equal to the parent value
-          originalOptions.forEach(option => {
-              if (!option.getAttribute('data-parent-filter') || option.getAttribute('data-parent-filter') === parentVal) {
-                  this.container.appendChild(option.cloneNode(true));
-              }
-          });
-      }
-
-      // Update child options with the current parent value
-      updateChildOptions(parent.value);
-
-      // Update child options whenever the parent value changes
-      parent.addEventListener('change', function() {
-          updateChildOptions(parent.value);
+      // Add options that either have no parent filter or match the current parent value
+      originalOptions.forEach(option => {
+        if (!option.getAttribute('data-parent-filter') || option.getAttribute('data-parent-filter') === parentVal) {
+          this.container.appendChild(option.cloneNode(true));
+        }
       });
+
+      // Reset selection to first option (avoid selecting non-existent options)
+      if (this.container.options.length > 0) {
+        this.container.selectedIndex = 0;
+      }
+
+      // Trigger change event to update dependent child selects
+      // Using setTimeout to avoid potential event loop issues
+      setTimeout(() => {
+        const event = new Event('change', { bubbles: true });
+        this.container.dispatchEvent(event);
+      }, 0);
+    }
+
+    // Initialize child options with current parent value
+    updateChildOptions(parent.value);
+
+    // Listen for parent value changes
+    parent.addEventListener('change', function() {
+      updateChildOptions(parent.value);
+    });
   }
 
   // Return the plugin constructor
