@@ -828,6 +828,7 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
       }
       $this->assign('register_date', $registerDate);
 
+      // add participant
       $this->confirmPostProcess($contactID, $contribution, $payment);
     }
     //handle if no additional participant.
