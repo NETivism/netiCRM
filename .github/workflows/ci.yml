@@ -103,7 +103,7 @@ jobs:
       - name: Frontend - Report Page Checking - Playwright
         run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/report_check.spec.js"
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: playwright-report-test7
@@ -212,7 +212,7 @@ jobs:
       - name: Frontend - Report Page Checking - Playwright
         run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/report_check.spec.js"
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: playwright-report-test8
@@ -237,8 +237,8 @@ jobs:
 
       - name: Prepare container
         run: |
-          docker pull ghcr.io/netivism/docker-neticrm-ci:drone-php8
-          docker run -d --name neticrm-ci -p 8080:8080 -v $GITHUB_WORKSPACE:/mnt/neticrm-10/civicrm -e "DRUPAL=10" -e "TZ=Asia/Taipei" -e "RUNPORT=8080" -e "DRUPAL_ROOT=/var/www/html" -e "CIVICRM_TEST_DSN=mysql://root@localhost/neticrmci" ghcr.io/netivism/docker-neticrm-ci:drone-php8-d10
+          docker pull ghcr.io/netivism/docker-neticrm-ci:drone-php83-d10
+          docker run -d --name neticrm-ci -p 8080:8080 -v $GITHUB_WORKSPACE:/mnt/neticrm-10/civicrm -e "DRUPAL=10" -e "TZ=Asia/Taipei" -e "RUNPORT=8080" -e "DRUPAL_ROOT=/var/www/html" -e "CIVICRM_TEST_DSN=mysql://root@localhost/neticrmci" ghcr.io/netivism/docker-neticrm-ci:drone-php83-d10
 
       - name: Install netiCRM
         run: |
@@ -325,7 +325,7 @@ jobs:
 
 
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: playwright-report-test8-d10

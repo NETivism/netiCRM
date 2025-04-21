@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Pledge/Form/Task.php';
+
 
 /**
  * This class provides the functionality to delete a group of
@@ -84,7 +84,7 @@ class CRM_Pledge_Form_Task_Delete extends CRM_Pledge_Form_Task {
    */
   public function postProcess() {
     $deletedPledges = 0;
-    require_once 'CRM/Pledge/BAO/Pledge.php';
+
     foreach ($this->_pledgeIds as $pledgeId) {
       if (CRM_Pledge_BAO_Pledge::deletePledge($pledgeId)) {
         $deletedPledges++;

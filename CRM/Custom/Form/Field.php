@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
-require_once 'CRM/Core/ShowHideBlocks.php';
+
+
 
 /**
  * form to process actions on the field aspect of Custom
@@ -115,7 +115,7 @@ class CRM_Custom_Form_Field extends CRM_Core_Form {
    * @access public
    */
   public function preProcess() {
-    require_once 'CRM/Core/BAO/CustomField.php';
+
     if (!(self::$_dataTypeKeys)) {
       self::$_dataTypeKeys = array_keys(CRM_Core_BAO_CustomField::dataType());
       self::$_dataTypeValues = array_values(CRM_Core_BAO_CustomField::dataType());
@@ -531,7 +531,7 @@ class CRM_Custom_Form_Field extends CRM_Core_Form {
       $current_external_membership_id_field_id = $config->externalMembershipIdFieldId;
       if(!empty($current_external_membership_id_field_id) && $current_external_membership_id_field_id != $this->_id){
         $sql = "SELECT f.label AS field_label, g.title AS group_title, f.custom_group_id FROM civicrm_custom_field f INNER JOIN civicrm_custom_group g ON f.custom_group_id = g.id WHERE f.id = %1";
-        $param = array(1 => array($current_external_membership_id_field_id, Integer));
+        $param = array(1 => array($current_external_membership_id_field_id, 'Integer'));
         $dao = CRM_Core_DAO::executeQuery($sql, $param);
         if($dao->fetch()){
           $this->assign('current_external_membership_id_field_title', $dao->field_label);
@@ -814,7 +814,7 @@ AND    option_group_id = %2";
       }
     }
 
-    require_once 'CRM/Core/Page.php';
+
     $assignError = new CRM_Core_Page();
     if ($_rowError) {
       $_showHide->addToTemplate();
@@ -945,13 +945,11 @@ AND    option_group_id = %2";
       $params['weight'] = CRM_Utils_Weight::updateOtherWeights('CRM_Core_DAO_CustomField', $oldWeight, $params['weight'], $fieldValues);
     }
 
-    $strtolower = function_exists('mb_strtolower') ? 'mb_strtolower' : 'strtolower';
-
     //store the primary key for State/Province or Country as default value.
     if (strlen(trim($params['default_value']))) {
       switch ($params['data_type']) {
         case 'StateProvince':
-          $fieldStateProvince = $strtolower($params['default_value']);
+          $fieldStateProvince = mb_strtolower($params['default_value'], 'UTF-8');
           $query = "
 SELECT id
   FROM civicrm_state_province 
@@ -964,7 +962,7 @@ SELECT id
           break;
 
         case 'Country':
-          $fieldCountry = $strtolower($params['default_value']);
+          $fieldCountry = mb_strtolower($params['default_value'], 'UTF-8');
           $query = "
 SELECT id
   FROM civicrm_country
@@ -996,7 +994,7 @@ SELECT id
     $customField = CRM_Core_BAO_CustomField::create($params);
 
     // reset the cache
-    require_once 'CRM/Core/BAO/Cache.php';
+
     CRM_Core_BAO_Cache::deleteGroup('contact fields');
 
     // reset memcache

@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Member/Form/Task.php';
-require_once 'CRM/Member/BAO/Membership.php';
+
+
 
 /**
  * This class provides the functionality to delete a group of

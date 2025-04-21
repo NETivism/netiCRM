@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Pledge/DAO/Payment.php';
+
 class CRM_Pledge_BAO_Payment extends CRM_Pledge_DAO_Payment {
 
   /**
@@ -93,8 +93,8 @@ WHERE     pledge_id = %1
   }
 
   static function create($params) {
-    require_once 'CRM/Contribute/PseudoConstant.php';
-    require_once 'CRM/Core/Transaction.php';
+
+
     $transaction = new CRM_Core_Transaction();
     $date = array();
     $scheduled_date = CRM_Utils_Date::processDate($params['scheduled_date']);
@@ -198,7 +198,7 @@ WHERE     pledge_id = %1
    * @static
    */
   static function add($params) {
-    require_once 'CRM/Pledge/DAO/Payment.php';
+
     $payment = new CRM_Pledge_DAO_Payment();
     $payment->copyValues($params);
 
@@ -247,12 +247,12 @@ WHERE     pledge_id = %1
    *
    */
   static function deletePayments($id) {
-    require_once 'CRM/Utils/Rule.php';
+
     if (!CRM_Utils_Rule::positiveInteger($id)) {
       return FALSE;
     }
 
-    require_once 'CRM/Core/Transaction.php';
+
     $transaction = new CRM_Core_Transaction();
 
     $payment = new CRM_Pledge_DAO_Payment();
@@ -262,7 +262,7 @@ WHERE     pledge_id = %1
       while ($payment->fetch()) {
         //also delete associated contribution.
         if ($payment->contribution_id) {
-          require_once 'CRM/Contribute/BAO/Contribution.php';
+
           CRM_Contribute_BAO_Contribution::deleteContribution($payment->contribution_id);
         }
         $payment->delete();
@@ -284,10 +284,10 @@ WHERE     pledge_id = %1
    */
   static function resetPledgePayment($contributionID) {
     //get all status
-    require_once 'CRM/Contribute/PseudoConstant.php';
+
     $allStatus = CRM_Contribute_PseudoConstant::contributionStatus(NULL, 'name');
 
-    require_once 'CRM/Core/Transaction.php';
+
     $transaction = new CRM_Core_Transaction();
 
     $payment = new CRM_Pledge_DAO_Payment();
@@ -330,7 +330,7 @@ WHERE     pledge_id = %1
     $isScriptUpdate = FALSE
   ) {
     //get all status
-    require_once 'CRM/Contribute/PseudoConstant.php';
+
     $allStatus = CRM_Contribute_PseudoConstant::contributionStatus(NULL, 'name');
 
     // if we get do not get contribution id means we are editing the scheduled payment.
@@ -486,7 +486,7 @@ WHERE  civicrm_pledge.id = %2
    * @static
    */
   static function calculatePledgeStatus($pledgeId) {
-    require_once 'CRM/Contribute/PseudoConstant.php';
+
     $paymentStatusTypes = CRM_Contribute_PseudoConstant::contributionStatus(NULL, 'name');
 
     //retrieve all pledge payments for this particular pledge
@@ -553,7 +553,7 @@ WHERE  civicrm_pledge_payment.pledge_id = %1
 ";
 
     //get all status
-    require_once 'CRM/Contribute/PseudoConstant.php';
+
     $params = array(1 => array($pledgeId, 'Integer'));
 
     $dao = CRM_Core_DAO::executeQuery($query, $params);

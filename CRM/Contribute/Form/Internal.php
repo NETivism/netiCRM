@@ -1,5 +1,8 @@
 <?php
 class CRM_Contribute_Form_Internal extends CRM_Core_Form {
+  public $_contactId;
+  public $_pageId;
+  public $_ajax;
   /**
    * Function to set variables up before form is built
    *

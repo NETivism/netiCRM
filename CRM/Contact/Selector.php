@@ -33,15 +33,15 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
-require_once 'CRM/Core/Selector/Base.php';
-require_once 'CRM/Core/Selector/API.php';
 
-require_once 'CRM/Utils/Pager.php';
-require_once 'CRM/Utils/Sort.php';
 
-require_once 'CRM/Contact/BAO/Contact.php';
-require_once 'CRM/Contact/BAO/Query.php';
+
+
+
+
+
+
+
 
 /**
  * This class is used to retrieve and display a range of
@@ -51,6 +51,10 @@ require_once 'CRM/Contact/BAO/Query.php';
  */
 class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Selector_API {
 
+  public $_refresh;
+  public $_context;
+  public $_customFields;
+  public $_options;
   /**
    * This defines two actions- View and Edit.
    *
@@ -183,7 +187,7 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
     $this->_ufGroupID = CRM_Utils_Array::value('uf_group_id', $this->_formValues);
 
     if ($this->_ufGroupID) {
-      require_once 'CRM/Core/BAO/UFGroup.php';
+
       $this->_fields = CRM_Core_BAO_UFGroup::getListingFields(CRM_Core_Action::VIEW,
         CRM_Core_BAO_UFGroup::PUBLIC_VISIBILITY |
         CRM_Core_BAO_UFGroup::LISTINGS_VISIBILITY |
@@ -339,7 +343,7 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
   }
   //end of function
   function &getColHeads($action = NULL, $output = NULL) {
-    require_once 'CRM/Contact/BAO/Group.php';
+
 
     $colHeads = self::_getColumnHeaders();
 
@@ -402,7 +406,7 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
           ),
         );
 
-        require_once 'CRM/Core/PseudoConstant.php';
+
         $locationTypes = CRM_Core_PseudoConstant::locationType();
 
         foreach ($this->_fields as $name => $field) {
@@ -570,7 +574,7 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
     $gc = CRM_Core_SelectValues::groupContactStatus();
 
     if ($this->_ufGroupID) {
-      require_once 'CRM/Core/PseudoConstant.php';
+
       $locationTypes = CRM_Core_PseudoConstant::locationType(false, 'name');
 
       $names = array();
@@ -623,11 +627,11 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
     //hack for student data (checkboxs)
     $multipleSelectFields = array('preferred_communication_method' => 1);
     if (CRM_Core_Permission::access('Quest')) {
-      require_once 'CRM/Quest/BAO/Student.php';
+
       $multipleSelectFields = CRM_Quest_BAO_Student::$multipleSelectFields;
     }
 
-    require_once 'CRM/Core/OptionGroup.php';
+
     $links = &self::links($this->_context, $this->_contextMenu, $this->_key);
 
     //check explicitly added contact to a Smart Group.
@@ -640,7 +644,7 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
       $row = array();
 
       // for CRM-3157 purposes
-      require_once 'CRM/Core/PseudoConstant.php';
+
       if (in_array('country', $names)) {
         $countries = &CRM_Core_PseudoConstant::country();
       }
@@ -801,7 +805,7 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
         CRM_Core_Component::searchAction($row, $result->contact_id);
 
 
-        require_once ('CRM/Contact/BAO/Contact/Utils.php');
+
         $row['contact_type'] = CRM_Contact_BAO_Contact_Utils::getImage($result->contact_sub_type ?
           $result->contact_sub_type : $result->contact_type,
           FALSE,

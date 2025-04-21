@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/DAO/MailSettings.php';
+
 class CRM_Core_BAO_MailSettings extends CRM_Core_DAO_MailSettings {
   public static $_mailerTypes = array(
     3 => 'Transaction Notification',
@@ -179,7 +179,7 @@ class CRM_Core_BAO_MailSettings extends CRM_Core_DAO_MailSettings {
    * @static
    */
   static function &create(&$params) {
-    require_once 'CRM/Core/Transaction.php';
+
     $transaction = new CRM_Core_Transaction();
 
     $mailSettings = self::add($params);
@@ -204,7 +204,7 @@ class CRM_Core_BAO_MailSettings extends CRM_Core_DAO_MailSettings {
    */
   static function deleteMailSettings($id) {
     $results = NULL;
-    require_once 'CRM/Core/Transaction.php';
+
     $transaction = new CRM_Core_Transaction();
 
     $mailSettings = new CRM_Core_DAO_MailSettings();

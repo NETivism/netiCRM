@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Case/BAO/Case.php';
+
 
 /**
  * This class generates form components for OpenCase Activity

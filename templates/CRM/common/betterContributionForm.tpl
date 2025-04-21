@@ -92,10 +92,53 @@ cj(function($){
   // Display Donor Credit
   if($('#custom_{/literal}{$receiptDonorCredit}{literal}').length>=1){
     var hornor_name = [
-      mdFormElement('radio', '{/literal}{ts}Full Name{/ts}{literal}', {name:'receipt_name', id:'r_name_full', value:'r_name_full'{/literal}{if $receipt_name eq 'r_name_full'}, checked: 'checked'{/if}{literal}}),
-      mdFormElement('radio', '{/literal}{ts}Part of Name{/ts}{literal}', {name:'receipt_name', id:'r_name_half', value:'r_name_half'{/literal}{if $receipt_name eq 'r_name_half'}, checked: 'checked'{/if}{literal}}),
-      {/literal}{if !$forbidCustomDonorCredit}{literal}
-      mdFormElement('radio', '{/literal}{ts}Custom Name{/ts}{literal}', {name:'receipt_name', id:'r_name_custom', value:'r_name_custom'{/literal}{if $receipt_name eq 'r_name_custom'}, checked: 'checked'{/if}{literal}})
+      {/literal}{if $donor_full_name}{literal}
+      mdFormElement(
+        'radio',
+        '{/literal}{ts}Full Name{/ts}{literal}',
+        {
+          name: 'receipt_name',
+          id: 'r_name_full',
+          value: 'r_name_full'
+          {/literal}{if $receipt_name eq 'r_name_full'}, checked: 'checked'{/if}{literal}
+        }
+      ),
+      {/literal}{/if}{literal}
+      {/literal}{if $donor_partial_name}{literal}
+      mdFormElement(
+        'radio',
+        '{/literal}{ts}Part of Name{/ts}{literal}',
+        {
+          name: 'receipt_name',
+          id: 'r_name_half',
+          value: 'r_name_half'
+          {/literal}{if $receipt_name eq 'r_name_half'}, checked: 'checked'{/if}{literal}
+        }
+      ),
+      {/literal}{/if}{literal}
+      {/literal}{if $donor_custom_name}{literal}
+      mdFormElement(
+        'radio',
+        '{/literal}{ts}Custom Name{/ts}{literal}',
+        {
+          name: 'receipt_name',
+          id: 'r_name_custom',
+          value: 'r_name_custom'
+          {/literal}{if $receipt_name eq 'r_name_custom'}, checked: 'checked'{/if}{literal}
+        }
+      ),
+      {/literal}{/if}{literal}
+      {/literal}{if $donor_anonymous}{literal}
+      mdFormElement(
+        'radio',
+        "{/literal}{ts}I don't agree to disclose name{/ts}{literal}",
+        {
+          name: 'receipt_name',
+          id: 'r_name_anonymous',
+          value: 'r_name_anonymous'
+          {/literal}{if $receipt_name eq 'r_name_anonymous'}, checked: 'checked'{/if}{literal}
+        }
+      ),
       {/literal}{/if}{literal}
     ];
     var items = hornor_name.join('');
@@ -340,7 +383,7 @@ cj(function($){
       $('#custom_{/literal}{$receiptSerial}{literal}').removeAttr('readonly');
     }
 
-    //Full Name
+    // Full Name
     if($('#r_name_full:checked').val()){
       if($('#last_name,#first_name').length>1){
         if (is_for_organization) {
@@ -349,13 +392,13 @@ cj(function($){
         else {
           $('#custom_{/literal}{$receiptDonorCredit}{literal}').val($('#last_name').val()+$('#first_name').val());
         }
-        $('#custom_{/literal}{$receiptDonorCredit}{literal}').attr('readonly','readonly');
+        $('#custom_{/literal}{$receiptDonorCredit}{literal}').prop('readonly', true);
       }
       else {
         if (is_for_organization) {
           $('#custom_{/literal}{$receiptDonorCredit}{literal}').val($('#organization_name').val());
         }
-        $('#custom_{/literal}{$receiptDonorCredit}{literal}').attr('readonly','readonly');
+        $('#custom_{/literal}{$receiptDonorCredit}{literal}').prop('readonly', true);
       }
     }
 
@@ -403,23 +446,34 @@ cj(function($){
       }
       if (name) {
         $('#custom_{/literal}{$receiptDonorCredit}{literal}').val(name);
-        $('#custom_{/literal}{$receiptDonorCredit}{literal}').attr('readonly','readonly');
+        $('#custom_{/literal}{$receiptDonorCredit}{literal}').prop('readonly', true);
       }
     }
 
     // Custom Name
     else if($('#r_name_custom:checked').val()){
       if($('#last_name,#first_name').length>1){
-        $('#custom_{/literal}{$receiptDonorCredit}{literal}').val($('#last_name').val()+$('#first_name').val());
-        $('#custom_{/literal}{$receiptDonorCredit}{literal}').removeAttr('readonly');
+        if (is_for_organization) {
+          $('#custom_{/literal}{$receiptDonorCredit}{literal}').val($('#organization_name').val());
+        }
+        else {
+          $('#custom_{/literal}{$receiptDonorCredit}{literal}').val($('#last_name').val()+$('#first_name').val());
+        }
+        $('#custom_{/literal}{$receiptDonorCredit}{literal}').prop('readonly', false);
       }
       else if ($is_for_organization) {
         $('#custom_{/literal}{$receiptDonorCredit}{literal}').val($('#organization_name').val());
-        $('#custom_{/literal}{$receiptDonorCredit}{literal}').removeAttr('readonly');
+        $('#custom_{/literal}{$receiptDonorCredit}{literal}').prop('readonly', false);
       }
     }
+
+    // I don't agree to disclose name
+    else if($('#r_name_anonymous:checked').val()){
+      $('#custom_{/literal}{$receiptDonorCredit}{literal}').val('{/literal}{$donor_anonymous_default}{literal}');
+      $('#custom_{/literal}{$receiptDonorCredit}{literal}').prop('readonly', true);
+    }
     else {
-      $('#custom_{/literal}{$receiptDonorCredit}{literal}').attr('readonly','readonly');
+      $('#custom_{/literal}{$receiptDonorCredit}{literal}').prop('readonly', true);
     }
 
     $('#custom_{/literal}{$receiptTitle}{literal} input.required:visible:not([type=checkbox])').trigger('blur');

@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Page.php';
+
 
 /**
  * Main page for viewing Recurring Contributions.
@@ -41,6 +41,12 @@ require_once 'CRM/Core/Page.php';
  */
 class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
 
+  public $_id;
+  public $_action;
+  /**
+   * @var array<string, mixed>
+   */
+  public $_values;
   static $_links = NULL;
   public $_permission = NULL;
   public $_contactId = NULL;
@@ -52,9 +58,7 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
    * @access public
    */
   function view() {
-    require_once 'CRM/Contribute/DAO/ContributionRecur.php';
-    require_once 'CRM/Contribute/PseudoConstant.php';
-    $status = CRM_Contribute_Pseudoconstant::contributionStatus();
+    $status = CRM_Contribute_PseudoConstant::contributionStatus();
 
     $recur = new CRM_Contribute_DAO_ContributionRecur();
     $recur->id = $this->_id;
@@ -201,24 +205,24 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
       $contributionId = CRM_Core_DAO::singleValueQuery($sql, $params);
       $paymentClass = CRM_Contribute_BAO_Contribution::getPaymentClass($contributionId);
 
-      if ((method_exists($paymentClass, 'doRecurTransact') || method_exists($paymentClass, 'doRecurUpdate')) && CRM_Core_Permission::check('edit contributions')) {
-        $controllerTransact = new CRM_Core_Controller_Simple('CRM_Contribute_Form_MakingTransaction', NULL, CRM_Core_Action::NONE);
-        $controllerTransact->setEmbedded(TRUE);
-        $controllerTransact->set('recurId', $recur->id);
-        $controllerTransact->set('contributionId', $contributionId);
-        $controllerTransact->set('contactId', $recur->contact_id);
-        $controllerTransact->process();
-        $controllerTransact->run();
-      }
-
-      if (method_exists($paymentClass, 'getRecordDetail')) {
-        $recordDetail = $paymentClass::getRecordDetail($contributionId);
-        $this->assign('record_detail', $recordDetail);
-      }
-
-      // Get payment processor
-      if (!empty($paymentClass) && !empty($paymentClass::$_hideFields)) {
-        $this->assign('hide_fields', $paymentClass::$_hideFields);
+      if (is_string($paymentClass)) {
+        if ((method_exists($paymentClass, 'doRecurTransact') || method_exists($paymentClass, 'doRecurUpdate')) && CRM_Core_Permission::check('edit contributions')) {
+          $controllerTransact = new CRM_Core_Controller_Simple('CRM_Contribute_Form_MakingTransaction', NULL, CRM_Core_Action::NONE);
+          $controllerTransact->setEmbedded(TRUE);
+          $controllerTransact->set('recurId', $recur->id);
+          $controllerTransact->set('contributionId', $contributionId);
+          $controllerTransact->set('contactId', $recur->contact_id);
+          $controllerTransact->process();
+          $controllerTransact->run();
+        }
+        if (method_exists($paymentClass, 'getRecordDetail')) {
+          $recordDetail = $paymentClass::getRecordDetail($contributionId);
+          $this->assign('record_detail', $recordDetail);
+        }
+        // Get payment processor
+        if (!empty($paymentClass) && !empty($paymentClass::$_hideFields)) {
+          $this->assign('hide_fields', $paymentClass::$_hideFields);
+        }
       }
 
       // show 'edit' button depends on permission.
@@ -262,7 +266,7 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
     $this->assign('contributionRecurId', $this->_id);
 
     // check logged in url permission
-    require_once 'CRM/Contact/Page/View.php';
+
     CRM_Contact_Page_View::checkUserPermission($this);
 
     // set page title

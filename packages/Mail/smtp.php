@@ -74,6 +74,11 @@ define('PEAR_MAIL_SMTP_ERROR_DATA', 10006);
 class Mail_smtp extends Mail {
 
     /**
+     * @var string
+     */
+    public $queued_as;
+    public $greeting;
+    /**
      * SMTP connection object.
      *
      * @var object

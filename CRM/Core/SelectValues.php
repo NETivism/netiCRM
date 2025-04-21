@@ -85,6 +85,7 @@ class CRM_Core_SelectValues {
         'do_not_mail' => ts('Do not mail'),
         'do_not_sms' => ts('Do not sms'),
         'do_not_trade' => ts('Do not trade'),
+        'do_not_notify' => ts('Do not notify'),
         'is_opt_out' => ts('No bulk emails (User Opt Out)'),
       );
     }
@@ -98,7 +99,7 @@ class CRM_Core_SelectValues {
   static function &contactType() {
     static $contactType = NULL;
     if (!$contactType) {
-      require_once 'CRM/Contact/BAO/ContactType.php';
+
       $contactType = array('' => ts('- any contact type -'));
       $contactType = $contactType + CRM_Contact_BAO_ContactType::basicTypePairs();
     }
@@ -353,7 +354,7 @@ class CRM_Core_SelectValues {
     }
     else {
       if ($type) {
-        require_once 'CRM/Core/DAO/PreferencesDate.php';
+
         $dao = new CRM_Core_DAO_PreferencesDate();
         $dao->name = $type;
         if (!$dao->find(TRUE)) {
@@ -505,12 +506,17 @@ class CRM_Core_SelectValues {
   static function &contactTokens() {
     static $tokens = NULL;
     if (!$tokens) {
-      require_once 'CRM/Contact/BAO/Contact.php';
-      require_once 'CRM/Core/BAO/CustomField.php';
+
+
       $additionalFields = array(
         'checksum' => array('title' => ts('Checksum')),
         'contact_id' => array('title' => ts('Internal Contact ID')),
       );
+      if (defined('ONE_TIME_RENEWAL_ENABLED')) {
+        $additionalFields['recurring_renewal_link'] = array(
+          'title' => ts('Recurring Contribution Renewal Link')
+        );
+      }
       $exportFields = array_merge(CRM_Contact_BAO_Contact::exportableFields(), $additionalFields);
       $exportFields['state_province_name'] = $exportFields['state_province'];
       $exportFields['state_province']['title'] = ts('State Abbreviation');

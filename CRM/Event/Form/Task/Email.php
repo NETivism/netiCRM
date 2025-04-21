@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Event/Form/Task.php';
-require_once 'CRM/Contact/Form/Task/EmailCommon.php';
+
+
 
 /**
  * This class provides the functionality to email a group of

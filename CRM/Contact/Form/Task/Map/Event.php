@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Contact/Form/Task/Map.php';
+
 
 /**
  * This class provides the functionality to map

@@ -1,6 +1,8 @@
 <?php
 class CRM_Contact_Form_Task_TaiwanACHExportVerification extends CRM_Contact_Form_Task_TaiwanACHExport {
 
+  public $_exportParams;
+  public $_additionalIds;
   function preProcess() {
     parent::preProcess();
     $this->_exportParams = array();
@@ -57,7 +59,7 @@ class CRM_Contact_Form_Task_TaiwanACHExportVerification extends CRM_Contact_Form
     return $defaults;
   }
 
-  public function formRule($fields, $files, $self) {
+  public static function formRule($fields, $files, $self) {
     return parent::formRule($fields, $files, $self);
   }
 

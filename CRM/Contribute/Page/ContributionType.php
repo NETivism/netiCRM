@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Page/Basic.php';
+
 
 /**
  * Page for displaying list of contribution types
@@ -138,7 +138,7 @@ class CRM_Contribute_Page_ContributionType extends CRM_Core_Page_Basic {
   function browse() {
     // get all custom groups sorted by weight
     $contributionType = array();
-    require_once 'CRM/Contribute/DAO/ContributionType.php';
+
     $dao = new CRM_Contribute_DAO_ContributionType();
 
     $dao->orderBy('name');

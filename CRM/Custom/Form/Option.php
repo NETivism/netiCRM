@@ -33,13 +33,14 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
+
 
 /**
  * form to process actions on the field aspect of Custom
  */
 class CRM_Custom_Form_Option extends CRM_Core_Form {
 
+  public $_parent;
   /**
    * the custom field id saved to the session for an update
    *
@@ -156,7 +157,7 @@ class CRM_Custom_Form_Option extends CRM_Core_Form {
       $defaults['is_active'] = 1;
     }
 
-    require_once 'CRM/Core/DAO.php';
+
     if ($this->_action & CRM_Core_Action::ADD) {
       $fieldValues = array('option_group_id' => $this->_optionGroupID);
       $defaults['weight'] = CRM_Utils_Weight::getDefaultWeight('CRM_Core_DAO_OptionValue', $fieldValues);
@@ -413,8 +414,8 @@ SELECT count(*)
     $params = $this->controller->exportValues('Option');
 
     // set values for custom field properties and save
-    require_once 'CRM/Core/DAO/OptionValue.php';
-    require_once 'CRM/Utils/String.php';
+
+
     $customOption = new CRM_Core_DAO_OptionValue();
     $customOption->label = $params['label'];
     $customOption->name = CRM_Utils_String::titleToVar($params['label']);
@@ -482,7 +483,7 @@ SELECT count(*)
     else {
       switch ($customField->data_type) {
         case 'Money':
-          require_once 'CRM/Utils/Rule.php';
+
           $customOption->value = CRM_Utils_Rule::cleanMoney($customOption->value);
           break;
 

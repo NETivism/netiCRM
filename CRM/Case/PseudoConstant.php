@@ -92,7 +92,7 @@ class CRM_Case_PseudoConstant extends CRM_Core_PseudoConstant {
   public static function caseStatus($column = 'label', $onlyActive = TRUE) {
     $cacheKey = "{$column}_" . (int)$onlyActive;
     if (!isset(self::$caseStatus[$cacheKey])) {
-      require_once 'CRM/Core/OptionGroup.php';
+
       self::$caseStatus[$cacheKey] = CRM_Core_OptionGroup::values('case_status',
         FALSE, FALSE, FALSE, NULL,
         $column, $onlyActive
@@ -125,7 +125,7 @@ class CRM_Case_PseudoConstant extends CRM_Core_PseudoConstant {
       $condition = NULL;
     }
 
-    require_once 'CRM/Core/OptionGroup.php';
+
     self::$redactionRule = CRM_Core_OptionGroup::values('redaction_rule', TRUE, FALSE, FALSE, $condition);
     // }
     return self::$redactionRule;
@@ -142,7 +142,7 @@ class CRM_Case_PseudoConstant extends CRM_Core_PseudoConstant {
   public static function caseType($column = 'label', $onlyActive = TRUE) {
     $cacheKey = "{$column}_" . (int)$onlyActive;
     if (!isset(self::$caseType[$cacheKey])) {
-      require_once 'CRM/Core/OptionGroup.php';
+
       self::$caseType[$cacheKey] = CRM_Core_OptionGroup::values('case_type',
         FALSE, FALSE, FALSE, NULL,
         $column, $onlyActive
@@ -163,7 +163,7 @@ class CRM_Case_PseudoConstant extends CRM_Core_PseudoConstant {
   public static function encounterMedium($column = 'label', $onlyActive = TRUE) {
     $cacheKey = "{$column}_" . (int)$onlyActive;
     if (!isset(self::$encounterMedium[$cacheKey])) {
-      require_once 'CRM/Core/OptionGroup.php';
+
       self::$encounterMedium[$cacheKey] = CRM_Core_OptionGroup::values('encounter_medium',
         FALSE, FALSE, FALSE, NULL,
         $column, $onlyActive
@@ -245,7 +245,7 @@ class CRM_Case_PseudoConstant extends CRM_Core_PseudoConstant {
       return FALSE;
     }
 
-    require_once ('CRM/Case/BAO/Case.php');
+
     if (!CRM_Utils_Array::arrayKeyExists($caseId, self::$caseTypePair) || empty(self::$caseTypePair[$caseId][$column])) {
       $caseTypes = self::caseType($column);
       $caseTypeIds = CRM_Core_DAO::getFieldValue('CRM_Case_DAO_Case',

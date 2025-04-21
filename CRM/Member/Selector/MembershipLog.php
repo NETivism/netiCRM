@@ -33,13 +33,13 @@
  *
  */
 
-require_once 'CRM/Core/Selector/Base.php';
-require_once 'CRM/Core/Selector/API.php';
 
-require_once 'CRM/Utils/Pager.php';
-require_once 'CRM/Utils/Sort.php';
 
-require_once 'CRM/Contact/BAO/Query.php';
+
+
+
+
+
 
 /**
  * This class is used to retrieve and display a range of
@@ -49,6 +49,7 @@ require_once 'CRM/Contact/BAO/Query.php';
  */
 class CRM_Member_Selector_MembershipLog extends CRM_Core_Selector_Base implements CRM_Core_Selector_API {
 
+  public $_where;
   /**
    * This defines two actions- View and Edit.
    *

@@ -79,7 +79,7 @@ function smarty_function_help($params, &$smarty) {
   if ($id == 'accesskeys') {
     $file = 'CRM/common/accesskeys.hlp';
   }
-  require_once 'CRM/Core/Config.php';
+
   $config = CRM_Core_Config::singleton();
   $smarty->assign('id', $params['id']);
   if (!$help) {

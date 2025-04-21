@@ -33,15 +33,16 @@
  *
  */
 
-require_once 'CRM/Profile/Form.php';
-require_once 'CRM/Activity/Form/Task.php';
-require_once 'CRM/Activity/BAO/Activity.php';
+
+
+
 
 /**
  * This class provides the functionality for batch profile update for Activities
  */
 class CRM_Activity_Form_Task_Batch extends CRM_Activity_Form_Task {
 
+  public $_fields;
   /**
    * the title of the group
    *
@@ -75,7 +76,7 @@ class CRM_Activity_Form_Task_Batch extends CRM_Activity_Form_Task {
     parent::preProcess();
 
     //get the contact read only fields to display.
-    require_once 'CRM/Core/BAO/Preferences.php';
+
     $readOnlyFields = array_merge(array('sort_name' => ts('Name')),
       CRM_Core_BAO_Preferences::valueOptions('contact_autocomplete_options',
         TRUE, NULL, FALSE, 'name', TRUE
@@ -84,7 +85,7 @@ class CRM_Activity_Form_Task_Batch extends CRM_Activity_Form_Task {
 
     //get the read only field data.
     $returnProperties = array_fill_keys(array_keys($readOnlyFields), 1);
-    require_once 'CRM/Contact/BAO/Contact/Utils.php';
+
     $contactDetails = CRM_Contact_BAO_Contact_Utils::contactDetails($this->_activityHolderIds,
       'Activity', $returnProperties
     );
@@ -105,8 +106,8 @@ class CRM_Activity_Form_Task_Batch extends CRM_Activity_Form_Task {
     if (!$ufGroupId) {
       CRM_Core_Error::fatal('ufGroupId is missing');
     }
-    require_once "CRM/Core/BAO/UFGroup.php";
-    require_once "CRM/Core/BAO/CustomGroup.php";
+
+
     $this->_title = ts('Batch Update for Activities') . ' - ' . CRM_Core_BAO_UFGroup::getTitle($ufGroupId);
     CRM_Utils_System::setTitle($this->_title);
 
@@ -151,7 +152,7 @@ class CRM_Activity_Form_Task_Batch extends CRM_Activity_Form_Task {
     $fileFieldExists = FALSE;
 
 
-    require_once "CRM/Core/BAO/CustomField.php";
+
     $customFields = CRM_Core_BAO_CustomField::getFields('Activity');
 
     foreach ($this->_activityHolderIds as $activityId) {
@@ -267,14 +268,14 @@ WHERE  id = %1";
         // Get Conatct ID
         $value['source_contact_id'] = $dao->source_contact_id;
 
-        require_once 'api/v2/Activity.php';
+
         $activityId = civicrm_activity_update($value);
 
         // add custom field values
         if (CRM_Utils_Array::value('custom', $value) &&
           is_array($value['custom'])
         ) {
-          require_once 'CRM/Core/BAO/CustomValueTable.php';
+
           CRM_Core_BAO_CustomValueTable::store($value['custom'], 'civicrm_activity', $activityId->id);
         }
       }

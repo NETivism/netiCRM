@@ -101,7 +101,7 @@ class CRM_Mailing_PseudoConstant extends CRM_Core_PseudoConstant {
         // we need to add an additional filter for $type
         self::$component[$name] = array();
 
-        require_once 'CRM/Mailing/DAO/Component.php';
+
 
         $object = new CRM_Mailing_DAO_Component();
         $object->component_type = $type;
@@ -172,7 +172,7 @@ class CRM_Mailing_PseudoConstant extends CRM_Core_PseudoConstant {
    */
   public static function &completed() {
     if (!self::$completed) {
-      require_once 'CRM/Mailing/BAO/Mailing.php';
+
       $mailingACL = CRM_Mailing_BAO_Mailing::mailingACL();
       CRM_Core_PseudoConstant::populate(self::$completed,
         'CRM_Mailing_DAO_Mailing',
@@ -198,7 +198,7 @@ class CRM_Mailing_PseudoConstant extends CRM_Core_PseudoConstant {
    */
   public static function &approvalStatus() {
     if (!self::$approvalStatus) {
-      require_once 'CRM/Core/OptionGroup.php';
+
       self::$approvalStatus = CRM_Core_OptionGroup::values('mail_approval_status');
     }
     return self::$approvalStatus;

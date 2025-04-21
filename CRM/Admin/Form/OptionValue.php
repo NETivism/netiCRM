@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Admin/Form.php';
+
 
 /**
  * This class generates form components for Option Value
@@ -99,7 +99,7 @@ class CRM_Admin_Form_OptionValue extends CRM_Admin_Form {
     $this->assign('id', $this->_id);
     $this->assign('gid', $this->_gid);
 
-    require_once 'CRM/Core/OptionGroup.php';
+
     if ($this->_id && in_array($this->_gName, CRM_Core_OptionGroup::$_domainIDGroups)) {
       $domainID = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionValue', $this->_id, 'domain_id', 'id');
       if (CRM_Core_Config::domainID() != $domainID) {
@@ -235,7 +235,7 @@ class CRM_Admin_Form_OptionValue extends CRM_Admin_Form {
 
     //don't allow duplicate value within group.
     $optionValues = array();
-    require_once 'CRM/Core/OptionValue.php';
+
     CRM_Core_OptionValue::getValues(array('id' => $self->_gid), $optionValues);
     foreach ($optionValues as $values) {
       if ($values['id'] != $self->_id) {
@@ -258,7 +258,7 @@ class CRM_Admin_Form_OptionValue extends CRM_Admin_Form {
    */
   public function postProcess() {
     $params = $this->exportValues();
-    require_once 'CRM/Core/BAO/OptionValue.php';
+
     if ($this->_action & CRM_Core_Action::DELETE) {
       CRM_Core_BAO_OptionValue::del($this->_id);
       CRM_Core_Session::setStatus(ts('Selected option value has been deleted.'));

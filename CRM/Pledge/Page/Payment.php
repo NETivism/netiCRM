@@ -33,9 +33,12 @@
  *
  */
 
-require_once 'CRM/Core/Page.php';
+
 class CRM_Pledge_Page_Payment extends CRM_Core_Page {
 
+  public $_action;
+  public $_context;
+  public $_contactId;
   /**
    * This function is the main function that is called when the page loads, it decides the which action has to be taken for the page.
    *
@@ -51,19 +54,19 @@ class CRM_Pledge_Page_Payment extends CRM_Core_Page {
 
     $this->_contactId = CRM_Utils_Request::retrieve('cid', 'Positive', $this);
 
-    require_once 'CRM/Pledge/Page/Tab.php';
+
     $this->setContext();
 
     if ($this->_action & CRM_Core_Action::UPDATE) {
       $this->edit();
       // set page title
-      require_once 'CRM/Contact/Page/View.php';
+
       CRM_Contact_Page_View::setTitle($this->_contactId);
     }
     else {
       $pledgeId = CRM_Utils_Request::retrieve('pledgeId', 'Positive', $this);
 
-      require_once 'CRM/Pledge/BAO/Payment.php';
+
       $paymentDetails = CRM_Pledge_BAO_Payment::getPledgePayments($pledgeId);
 
       $this->assign('rows', $paymentDetails);
@@ -117,7 +120,7 @@ class CRM_Pledge_Page_Payment extends CRM_Core_Page {
 
     $qfKey = CRM_Utils_Request::retrieve('key', 'String', $this);
     //validate the qfKey
-    require_once 'CRM/Utils/Rule.php';
+
     if (!CRM_Utils_Rule::qfKey($qfKey)) {
       $qfKey = NULL;
     }

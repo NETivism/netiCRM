@@ -63,7 +63,7 @@
       {* PayPal_Standard sets contribution_mode to 'notify'. We don't know if transaction is successful until we receive the IPN (payment notification) *}
       {if $payment_result_type eq 1 && $is_monetary}
         <h3>{ts}Congratulations! Your payment has been completed!{/ts}</h3>
-        {if $is_email_receipt}
+        {if $is_email_receipt && !$do_not_notify}
           <div>
           {ts}You will receive an email acknowledgement of this payment.{/ts} 
 
@@ -101,7 +101,7 @@
           {ts}Please note the expiration date of payment, you could pay with chosen payment payment method due to the date. If you have overdue payment, or if your payment method has expired, it might require you to do again.{/ts}
         {/if}
         </div>
-        {if $is_email_receipt}
+        {if $is_email_receipt && !$do_not_notify}
           <div>
           {if $onBehalfEmail AND ($onBehalfEmail neq $email)}
             <!-- {ts 1=$email 2=$onBehalfEmail}Remider email has been sent to %1 and to %2.{/ts} -->
@@ -112,7 +112,7 @@
         {/if}{*is_email_receipt*}
       {elseif $contributeMode EQ 'notify' OR ($contributeMode EQ 'direct' && $is_recur) }
         <div>{ts 1=$paymentProcessor.name}Your contribution has been submitted to %1 for processing. Please print this page for your records.{/ts}</div>
-        {if $is_email_receipt}
+        {if $is_email_receipt && !$do_not_notify}
           <div>
           {if $onBehalfEmail AND ($onBehalfEmail neq $email)}
             {ts 1=$email 2=$onBehalfEmail}An email receipt will be sent to %1 and to %2 once the transaction is processed successfully.{/ts}
@@ -124,7 +124,7 @@
       {else}
         <div>
         {ts}Your transaction has been processed successfully. Please print this page for your records.{/ts}</div>
-        {if $is_email_receipt}
+        {if $is_email_receipt && !$do_not_notify}
           <div>		    
           {if $onBehalfEmail AND ($onBehalfEmail neq $email)}
             {ts 1=$email 2=$onBehalfEmail}An email with details has been sent to %1 and to %2.{/ts}
@@ -183,7 +183,7 @@
                     <p><strong>{ts 1=$frequency_interval 2=$frequency_unit}This recurring contribution will be automatically processed every %1 %2(s).{/ts}</strong></p>
                 {/if}
                 <p>
-                {if $is_email_receipt}
+                {if $is_email_receipt && !$do_not_notify}
                     {ts}You will receive an email receipt for each recurring contribution.{/ts}
                 {/if}
                 {if $contributeMode EQ 'notify'}

@@ -47,6 +47,7 @@ define('PEAR_DEPENDENCY_UPGRADE_MAJOR_OPTIONAL',  -9);
  */
 class PEAR_Dependency
 {
+    public $registry;
     // {{{ constructor
     /**
      * Constructor

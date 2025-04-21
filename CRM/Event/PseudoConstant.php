@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/PseudoConstant.php';
+
 
 /**
  * This class holds all the Pseudo constants that are specific to Event. This avoids
@@ -179,7 +179,7 @@ class CRM_Event_PseudoConstant extends CRM_Core_PseudoConstant {
     $index = $cond ? $cond : 'No Condition';
     if (!CRM_Utils_Array::value($index, self::$participantRole)) {
       self::$participantRole[$index] = array();
-      require_once "CRM/Core/OptionGroup.php";
+
       $condition = NULL;
 
       if ($cond) {
@@ -208,7 +208,7 @@ class CRM_Event_PseudoConstant extends CRM_Core_PseudoConstant {
   public static function &participantListing($id = NULL) {
     if (!self::$participantListing) {
       self::$participantListing = array();
-      require_once "CRM/Core/OptionGroup.php";
+
       self::$participantListing = CRM_Core_OptionGroup::values("participant_listing");
     }
 
@@ -230,7 +230,7 @@ class CRM_Event_PseudoConstant extends CRM_Core_PseudoConstant {
   public static function &eventType($id = NULL) {
     if (!self::$eventType) {
       self::$eventType = array();
-      require_once "CRM/Core/OptionGroup.php";
+
       self::$eventType = CRM_Core_OptionGroup::values("event_type");
     }
 

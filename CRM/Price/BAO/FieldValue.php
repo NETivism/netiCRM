@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Price/DAO/FieldValue.php';
+
 
 /**
  * Business objects for managing price fields values.

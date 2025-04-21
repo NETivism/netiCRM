@@ -33,9 +33,9 @@
  *
  */
 
-require_once 'CRM/Core/DAO.php';
-require_once 'CRM/Contact/BAO/Group.php';
-require_once 'CRM/Dedupe/BAO/RuleGroup.php';
+
+
+
 
 /**
  * The CiviCRM duplicate discovery engine is based on an
@@ -289,7 +289,7 @@ class CRM_Dedupe_Finder {
     }
 
     // handle custom data
-    require_once 'CRM/Core/BAO/CustomGroup.php';
+
     $tree = &CRM_Core_BAO_CustomGroup::getTree($ctype, CRM_Core_DAO::$_nullObject, NULL, -1);
     CRM_Core_BAO_CustomGroup::postProcess($tree, $fields, TRUE);
     foreach ($tree as $key => $cg) {

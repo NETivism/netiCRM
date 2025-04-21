@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Contribute/Form/Task.php';
-require_once 'CRM/Contribute/BAO/Contribution.php';
+
+
 
 /**
  * This class provides the functionality to delete a group of

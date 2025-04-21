@@ -33,14 +33,14 @@
  *
  */
 
-require_once 'CRM/Core/Config.php';
-require_once 'CRM/Core/Error.php';
-require_once 'CRM/Core/Page.php';
+
+
+
 class CRM_Mailing_Page_Common extends CRM_Core_Page {
   protected $_type = NULL;
   
   function run() {
-    require_once 'CRM/Utils/Request.php';
+
     $job_id = CRM_Utils_Request::retrieve('jid', 'Integer', CRM_Core_DAO::$_nullObject);
     $queue_id = CRM_Utils_Request::retrieve('qid', 'Integer', CRM_Core_DAO::$_nullObject);
     $hash = CRM_Utils_Request::retrieve('h', 'String', CRM_Core_DAO::$_nullObject);
@@ -53,7 +53,7 @@ class CRM_Mailing_Page_Common extends CRM_Core_Page {
       CRM_Core_Error::fatal(ts("Missing input parameters"));
     }
 
-    require_once 'CRM/Mailing/Event/BAO/Queue.php';
+
 
     // verify that the three numbers above match
     $q = CRM_Mailing_Event_BAO_Queue::verify($job_id, $queue_id, $hash);
@@ -79,7 +79,7 @@ class CRM_Mailing_Page_Common extends CRM_Core_Page {
     $this->assign('email', $email);
     $this->assign('confirm', $confirm);
 
-    require_once 'CRM/Mailing/Event/BAO/Unsubscribe.php';
+
     $groups = CRM_Mailing_Event_BAO_Unsubscribe::unsub_from_mailing($job_id, $queue_id, $hash, TRUE);
     $this->assign('groups', $groups);
     $groupExist = NULL;
@@ -104,7 +104,7 @@ class CRM_Mailing_Page_Common extends CRM_Core_Page {
         }
       }
       elseif ($this->_type == 'resubscribe') {
-        require_once 'CRM/Mailing/Event/BAO/Resubscribe.php';
+
         $groups = CRM_Mailing_Event_BAO_Resubscribe::resub_to_mailing($job_id, $queue_id, $hash);
         if (count($groups)) {
           CRM_Mailing_Event_BAO_Resubscribe::send_resub_response($queue_id, $groups, FALSE, $job_id);

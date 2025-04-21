@@ -56,6 +56,7 @@ require_once 'Pager/Common.php';
  */
 class Pager_Jumping extends Pager_Common
 {
+    public $_pageData;
     // {{{ Pager_Jumping()
 
     /**

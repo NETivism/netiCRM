@@ -33,10 +33,36 @@
  *
  */
 
-require_once 'CRM/Report/Form.php';
-require_once 'CRM/Contribute/PseudoConstant.php';
+
+
 class CRM_Report_Form_Contribute_HouseholdSummary extends CRM_Report_Form {
 
+  /**
+   * @var never[]
+   */
+  public $_columnHeaders;
+  public $_from;
+  public $_aliases;
+  public $relationshipId;
+  public $_where;
+  /**
+   * @var string
+   */
+  public $_groupBy;
+  /**
+   * @var string
+   */
+  public $householdContact;
+  /**
+   * @var string
+   */
+  public $otherContact;
+  /**
+   * @var never[]|array<string, mixed>
+   */
+  public $relationTypes;
+  public $_outputMode;
+  public $_absoluteUrl;
   protected $_addressField = FALSE;
 
   protected $_emailField = FALSE;

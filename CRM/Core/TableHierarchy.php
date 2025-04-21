@@ -70,9 +70,9 @@ class CRM_Core_TableHierarchy {
     'civicrm_activity' => '33',
     'civicrm_mailing_summary' => '35',
     'civicrm_mailing_recipients' => '36',
-    'civicrm_mailing' => '37',
+    'civicrm_mailing_event_queue' => '37',
     'civicrm_mailing_job' => '38',
-    'civicrm_mailing_event_queue' => '39',
+    'civicrm_mailing' => '39',
     'civicrm_mailing_event_bounce' => '40',
     'civicrm_mailing_event_opened' => '41',
     'civicrm_mailing_event_reply' => '42',
@@ -82,7 +82,7 @@ class CRM_Core_TableHierarchy {
 
   static function &info() {
     //get the campaign related tables.
-    require_once 'CRM/Campaign/BAO/Query.php';
+
     CRM_Campaign_BAO_Query::info(self::$info);
 
     return self::$info;

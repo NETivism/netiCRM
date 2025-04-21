@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Contact/DAO/SavedSearch.php';
+
 
 /**
  * Business object for Saved searches
@@ -112,14 +112,14 @@ class CRM_Contact_BAO_SavedSearch extends CRM_Contact_DAO_SavedSearch {
     $fv = &self::getFormValues($id);
     //check if the saved seach has mapping id
     if (CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_SavedSearch', $id, 'mapping_id')) {
-      require_once 'CRM/Core/BAO/Mapping.php';
+
       return CRM_Core_BAO_Mapping::formattedFields($fv);
     }
     elseif (CRM_Utils_Array::value('customSearchID', $fv)) {
       return $fv;
     }
     else {
-      require_once 'CRM/Contact/BAO/Query.php';
+
       return CRM_Contact_BAO_Query::convertFormValues($fv);
     }
   }
@@ -147,7 +147,7 @@ class CRM_Contact_BAO_SavedSearch extends CRM_Contact_DAO_SavedSearch {
     $params = &self::getSearchParams($id);
     if ($params) {
       if (CRM_Utils_Array::value('customSearchID', $params)) {
-        require_once 'CRM/Contact/BAO/SearchCustom.php';
+
         return CRM_Contact_BAO_SearchCustom::contactIDSQL(NULL, $id);
       }
     }
@@ -168,7 +168,7 @@ WHERE  $where";
 
     if ($params) {
       if (CRM_Utils_Array::value('customSearchID', $params)) {
-        require_once 'CRM/Contact/BAO/SearchCustom.php';
+
         return CRM_Contact_BAO_SearchCustom::fromWhereEmail(NULL, $id);
       }
       else {
@@ -191,11 +191,11 @@ WHERE  $where";
     $fv = unserialize($this->form_values);
 
     if ($this->mapping_id) {
-      require_once 'CRM/Core/BAO/Mapping.php';
+
       $params = CRM_Core_BAO_Mapping::formattedFields($fv);
     }
     else {
-      require_once 'CRM/Contact/BAO/Query.php';
+
       $params = CRM_Contact_BAO_Query::convertFormValues($fv);
     }
 
@@ -230,7 +230,7 @@ WHERE  $where";
    * @static
    */
   static function getName($id, $value = 'name') {
-    require_once 'CRM/Contact/DAO/Group.php';
+
     $group = new CRM_Contact_DAO_Group();
     $group->saved_search_id = $id;
     if ($group->find(TRUE)) {

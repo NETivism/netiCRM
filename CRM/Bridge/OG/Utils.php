@@ -71,7 +71,7 @@ class CRM_Bridge_OG_Utils {
   }
 
   static function contactID($ufID) {
-    require_once 'api/v2/UFGroup.php';
+
     $contactID = civicrm_uf_match_id_get($ufID);
     if ($contactID) {
       return $contactID;
@@ -83,7 +83,7 @@ class CRM_Bridge_OG_Utils {
       'email' => $user->mail,
     );
 
-    require_once 'api/v2/Contact.php';
+
     $values = civicrm_contact_add($params);
     if ($values['is_error']) {
       CRM_Core_Error::fatal();

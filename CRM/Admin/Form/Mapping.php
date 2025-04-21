@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Admin/Form.php';
+
 
 /**
  * This class generates form components for Mapping
@@ -79,7 +79,7 @@ class CRM_Admin_Form_Mapping extends CRM_Admin_Form {
         CRM_Core_DAO::getAttribute('CRM_Core_DAO_Mapping', 'description')
       );
 
-      require_once 'CRM/Core/PseudoConstant.php';
+
       $mappingType = $this->addElement('select', 'mapping_type_id', ts('Mapping Type'), CRM_Core_PseudoConstant::mappingTypes());
 
       if ($this->_action == CRM_Core_Action::UPDATE && !empty($this->_mapping->mapping_type_id)) {

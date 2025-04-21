@@ -140,7 +140,7 @@ class CRM_Core_OptionGroup {
     $cache->set($cacheKey, $var);
 
     // call option value hook
-    require_once 'CRM/Utils/Hook.php';
+
     CRM_Utils_Hook::optionValues($var, $name);
 
     self::$_cache[$cacheKey] = $var;
@@ -226,7 +226,7 @@ WHERE  v.option_group_id = g.id
    * @static
    */
   static function lookupValues(&$params, &$names, $flip = FALSE) {
-    require_once "CRM/Core/BAO/CustomOption.php";
+
     foreach ($names as $postName => $value) {
       // See if $params field is in $names array (i.e. is a value that we need to lookup)
       if (CRM_Utils_Array::value($postName, $params)) {
@@ -367,7 +367,7 @@ WHERE  v.option_group_id = g.id
   static function createAssoc($groupName, &$values, &$defaultID, $groupLabel = NULL) {
     self::deleteAssoc($groupName);
     if (!empty($values)) {
-      require_once 'CRM/Core/DAO/OptionGroup.php';
+
       $group = new CRM_Core_DAO_OptionGroup();
       $group->name = $groupName;
       $group->label = $groupLabel;
@@ -375,7 +375,7 @@ WHERE  v.option_group_id = g.id
       $group->is_active = 1;
       $group->save();
 
-      require_once 'CRM/Core/DAO/OptionValue.php';
+
       foreach ($values as $v) {
         $value = new CRM_Core_DAO_OptionValue();
         $value->option_group_id = $group->id;
@@ -510,7 +510,7 @@ WHERE  v.option_group_id = g.id
      *
      * Since there appears to be some inconsistency
      * (@todo remove inconsistency) around the pseudoconstant operations
-     * (for example CRM_Contribution_Pseudoconstant::paymentInstrument doesn't specify isActive
+     * (for example CRM_Contribution_PseudoConstant::paymentInstrument doesn't specify isActive
      * which is part of the cache key
      * will do a couple of variations & aspire to someone cleaning it up later
      */

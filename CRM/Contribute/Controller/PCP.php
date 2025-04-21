@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Core/Controller.php';
-require_once 'CRM/Core/Session.php';
+
+
 
 /**
  * This class is used by the Search functionality.
@@ -53,7 +53,7 @@ class CRM_Contribute_Controller_PCP extends CRM_Core_Controller {
    * class constructor
    */
   function __construct($title = NULL, $action = CRM_Core_Action::NONE, $modal = TRUE) {
-    require_once 'CRM/Contribute/StateMachine/PCP.php';
+
 
     parent::__construct($title, $modal);
 

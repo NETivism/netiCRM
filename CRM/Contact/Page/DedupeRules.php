@@ -33,9 +33,9 @@
  *
  */
 
-require_once 'CRM/Core/Page/Basic.php';
-require_once 'CRM/Dedupe/DAO/Rule.php';
-require_once 'CRM/Dedupe/DAO/RuleGroup.php';
+
+
+
 class CRM_Contact_Page_DedupeRules extends CRM_Core_Page_Basic {
 
   /**
@@ -67,7 +67,7 @@ class CRM_Contact_Page_DedupeRules extends CRM_Core_Page_Basic {
 
       // helper variable for nicer formatting
       $links = array();
-      require_once 'CRM/Core/Permission.php';
+
 
       if (CRM_Core_Permission::check('merge duplicate contacts')) {
         $links[CRM_Core_Action::VIEW] = array(
@@ -118,7 +118,7 @@ class CRM_Contact_Page_DedupeRules extends CRM_Core_Page_Basic {
     $id = CRM_Utils_Request::retrieve('id', 'Positive', $this, FALSE, 0);
 
     // assign permissions vars to template
-    require_once 'CRM/Core/Permission.php';
+
     $this->assign('hasperm_administer_dedupe_rules', CRM_Core_Permission::check('administer dedupe rules'));
     $this->assign('hasperm_merge_duplicate_contacts', CRM_Core_Permission::check('merge duplicate contacts'));
 

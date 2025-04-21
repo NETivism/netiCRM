@@ -941,11 +941,12 @@ CREATE TABLE civicrm_contact (
      id int unsigned NOT NULL AUTO_INCREMENT  COMMENT 'Unique Contact ID',
      contact_type varchar(64)    COMMENT 'Type of Contact.',
      contact_sub_type varchar(64)    COMMENT 'May be used to over-ride contact view and edit templates.',
-     do_not_email tinyint   DEFAULT 0 ,
-     do_not_phone tinyint   DEFAULT 0 ,
-     do_not_mail tinyint   DEFAULT 0 ,
-     do_not_sms tinyint   DEFAULT 0 ,
-     do_not_trade tinyint   DEFAULT 0 ,
+     do_not_email tinyint   DEFAULT 0 COMMENT 'Contact who do not want to receive bulk email or personal email.',
+     do_not_phone tinyint   DEFAULT 0 COMMENT 'Contact who do not want to receive real phone call.',
+     do_not_mail tinyint   DEFAULT 0 COMMENT 'Contact who do not want to receive real world mail.',
+     do_not_sms tinyint   DEFAULT 0 COMMENT 'Contact who do not want to receive SMS.',
+     do_not_trade tinyint   DEFAULT 0 COMMENT 'Contact who do not want doing trade.',
+     do_not_notify tinyint   DEFAULT 0 COMMENT 'Contact who do not want to receive workflow related notification.',
      is_opt_out tinyint NOT NULL  DEFAULT 0 COMMENT 'Has the contact opted out from receiving all bulk email from the organization or site domain?',
      legal_identifier varchar(32)    COMMENT 'May be used for SSN, EIN/TIN, Household ID (census) or other applicable unique legal/government ID.',
      external_identifier varchar(128)    COMMENT 'Unique trusted external ID (generally from a legacy app/datasource). Particularly useful for deduping operations.',
@@ -1236,7 +1237,10 @@ CREATE TABLE civicrm_mailing (
 ,
     PRIMARY KEY ( id )
  
- 
+    ,     INDEX index_is_hidden(
+        is_hidden
+  )
+  
 ,      
      CONSTRAINT FK_civicrm_mailing_domain_id FOREIGN KEY (domain_id) REFERENCES civicrm_domain(id) ON DELETE SET NULL,      
      CONSTRAINT FK_civicrm_mailing_header_id FOREIGN KEY (header_id) REFERENCES civicrm_mailing_component(id) ON DELETE SET NULL,      
@@ -1322,7 +1326,16 @@ CREATE TABLE civicrm_mailing_job (
 ,
     PRIMARY KEY ( id )
  
- 
+    ,     INDEX index_start_date(
+        start_date
+  )
+  ,     INDEX index_is_test(
+        is_test
+  )
+  ,     INDEX index_job_type(
+        job_type
+  )
+  
 ,      
      CONSTRAINT FK_civicrm_mailing_job_mailing_id FOREIGN KEY (mailing_id) REFERENCES civicrm_mailing(id) ON DELETE CASCADE,      
      CONSTRAINT FK_civicrm_mailing_job_parent_id FOREIGN KEY (parent_id) REFERENCES civicrm_mailing_job(id) ON DELETE CASCADE  
@@ -4737,7 +4750,8 @@ CREATE TABLE civicrm_contribution_tappay (
      last_four varchar(32)    COMMENT 'The last four words of card number.',
      expiry_date date    COMMENT 'Used date time of this coupon track.',
      data text    COMMENT 'Newest return data.',
-     token_status varchar(32)    COMMENT 'Used in 3JTSP cards, correspond to auto_renew column in contribution_recur.' 
+     token_status varchar(32)    COMMENT 'Used in 3JTSP cards, correspond to auto_renew column in contribution_recur.',
+     created_id int unsigned    COMMENT 'FK to civicrm_contact, who created this contribution' 
 ,
     PRIMARY KEY ( id )
  
@@ -4759,7 +4773,8 @@ CREATE TABLE civicrm_contribution_tappay (
   
 ,      
      CONSTRAINT FK_civicrm_contribution_tappay_contribution_id FOREIGN KEY (contribution_id) REFERENCES civicrm_contribution(id) ON DELETE SET NULL,      
-     CONSTRAINT FK_civicrm_contribution_tappay_contribution_recur_id FOREIGN KEY (contribution_recur_id) REFERENCES civicrm_contribution_recur(id) ON DELETE SET NULL  
+     CONSTRAINT FK_civicrm_contribution_tappay_contribution_recur_id FOREIGN KEY (contribution_recur_id) REFERENCES civicrm_contribution_recur(id) ON DELETE SET NULL,      
+     CONSTRAINT FK_civicrm_contribution_tappay_created_id FOREIGN KEY (created_id) REFERENCES civicrm_contact(id) ON DELETE SET NULL  
 )  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************

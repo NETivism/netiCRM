@@ -105,6 +105,11 @@ function civicrm_api3_group_get($params) {
   if (!empty($returnProperties)) {
     $returnProperties[] = 'id';
   }
+  foreach($params as $key => $val) {
+    if (substr($key, 0, 4) === 'api.') {
+      unset($params[$key]);
+    }
+  }
 
   $groupObjects = CRM_Contact_BAO_Group::getGroups($params, $returnProperties);
   if (empty($groupObjects)) {

@@ -33,10 +33,16 @@
  *
  */
 
-require_once 'CRM/Report/Form.php';
-require_once 'CRM/Member/PseudoConstant.php';
+
+
 class CRM_Report_Form_Member_Lapse extends CRM_Report_Form {
 
+  public $_columnHeaders;
+  public $_from;
+  public $_aliases;
+  public $_where;
+  public $_outputMode;
+  public $_absoluteUrl;
   protected $_summary = NULL;
   protected $_addressField = FALSE;
   protected $_emailField = FALSE;

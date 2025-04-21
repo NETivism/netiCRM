@@ -33,11 +33,13 @@
  *
  */
 
-require_once 'CRM/Report/Form.php';
-require_once 'CRM/Event/PseudoConstant.php';
-require_once 'CRM/Contribute/PseudoConstant.php';
-require_once 'CRM/Core/OptionGroup.php';
+
+
+
+
 class CRM_Report_Form_Event_Income extends CRM_Report_Form {
+  public $_setVariable;
+  public $_outputMode;
   CONST ROW_COUNT_LIMIT = 2;
 
   protected $_summary = NULL;
@@ -80,8 +82,8 @@ class CRM_Report_Form_Event_Income extends CRM_Report_Form {
 
     $rows = $eventSummary = $roleRows = $statusRows = $instrumentRows = $count = array();
 
-    require_once 'CRM/Utils/Money.php';
-    require_once 'CRM/Core/DAO/OptionGroup.php';
+
+
     $optionGroupDAO = new CRM_Core_DAO_OptionGroup();
     $optionGroupDAO->name = 'event_type';
     $optionGroupId = NULL;
@@ -282,7 +284,7 @@ class CRM_Report_Form_Event_Income extends CRM_Report_Form {
   }
 
   function setPager($rowCount = null) {
-    require_once 'CRM/Utils/Pager.php';
+
     $params = array('total' => $this->_rowsFound,
       'rowCount' => self::ROW_COUNT_LIMIT,
       'status' => ts('Records %%StatusMessage%%'),

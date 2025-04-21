@@ -33,10 +33,11 @@
  *
  */
 
-require_once 'Mail/mime.php';
-require_once 'CRM/Core/DAO/MessageTemplates.php';
+
+
 class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
 
+  public $N;
   /**
    * Takes a bunch of params that are needed to match certain criteria and
    * retrieves the relevant objects. Typically the valid params are only

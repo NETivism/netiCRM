@@ -44,7 +44,7 @@ class CRM_Contact_Form_Task_AnnualReceiptEmail_MailingOption extends CRM_Contact
     $queryParams = array();
     $returnProperties = array(
       'sort_name' => 1,
-      'do_not_email' => 1,
+      'do_not_notify' => 1,
       'is_deceased' => 1,
       'email' => 1,
     );
@@ -53,14 +53,13 @@ class CRM_Contact_Form_Task_AnnualReceiptEmail_MailingOption extends CRM_Contact
         CRM_Core_Form::CB_PREFIX . $contactId, '=', 1, 0, 0,
       );
     }
-    $query = new CRM_Contact_BAO_Query($queryParams, $returnProperties);
     $numberofContacts = count($this->_contactIds);
     $suppressedDoNotEmail = array();
     $suppressedNoRecords = array();
-    $details = $query->apiQuery($queryParams, $returnProperties, NULL, NULL, 0, $numberofContacts, TRUE, TRUE);
+    $details = CRM_Contact_BAO_Query::apiQuery($queryParams, $returnProperties, NULL, NULL, 0, $numberofContacts, TRUE, TRUE);
     if (!empty($details[0])) {
       foreach ($details[0] as $contactDetail) {
-        if (!empty($contactDetail['is_deceased']) || !empty($contactDetail['do_not_email']) || empty($contactDetail['email'])) {
+        if (!empty($contactDetail['is_deceased']) || !empty($contactDetail['do_not_notify']) || empty($contactDetail['email'])) {
           $suppressedDoNotEmail[] = $contactDetail['contact_id'];
         }
         else {

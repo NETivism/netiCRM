@@ -33,14 +33,15 @@
  *
  */
 
-require_once 'CRM/Contact/Form/Task.php';
-require_once 'CRM/Core/BAO/EntityTag.php';
+
+
 
 /**
  * This class provides the functionality to remove tags of contact(s).
  */
 class CRM_Contact_Form_Task_RemoveFromTag extends CRM_Contact_Form_Task {
 
+  public $_tagElement;
   /**
    * name of the tag
    *
@@ -69,8 +70,8 @@ class CRM_Contact_Form_Task_RemoveFromTag extends CRM_Contact_Form_Task {
       $this->_tagElement = &$this->addElement('checkbox', "tag[$tagID]", NULL, $tagName);
     }
 
-    require_once 'CRM/Core/Form/Tag.php';
-    require_once 'CRM/Core/BAO/Tag.php';
+
+
     $parentNames = CRM_Core_BAO_Tag::getTagSet('civicrm_contact');
     CRM_Core_Form_Tag::buildQuickForm($this, $parentNames, 'civicrm_contact', NULL, TRUE);
 

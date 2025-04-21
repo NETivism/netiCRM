@@ -29,6 +29,30 @@ require_once 'PEAR/PackageFile/v1.php';
  */
 class PEAR_PackageFile_Parser_v1
 {
+    public $element_stack;
+    public $_packageInfo;
+    public $current_element;
+    public $dir_install;
+    public $filelist;
+    public $dir_names;
+    public $in_changelog;
+    public $d_i;
+    public $cdata;
+    /**
+     * @var bool
+     */
+    public $_isValid;
+    public $prev_element;
+    public $current_attributes;
+    public $dir_role;
+    /**
+     * @var string
+     */
+    public $current_path;
+    public $m_i;
+    public $current_maintainer;
+    public $c_i;
+    public $current_release;
     var $_registry;
     var $_config;
     var $_logger;

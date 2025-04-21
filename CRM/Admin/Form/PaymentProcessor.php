@@ -33,13 +33,15 @@
  *
  */
 
-require_once 'CRM/Admin/Form.php';
+
 
 /**
  * This class generates form components for Location Type
  *
  */
 class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
+  protected $_ppType = NULL;
+
   protected $_id = NULL;
 
   protected $_testID = NULL;
@@ -75,7 +77,7 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
     }
 
     $this->assign('ppType', $this->_ppType);
-    require_once 'CRM/Core/DAO/PaymentProcessorType.php';
+
     $this->_ppDAO = new CRM_Core_DAO_PaymentProcessorType();
     $this->_ppDAO->name = $this->_ppType;
 

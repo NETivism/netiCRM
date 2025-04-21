@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
+
 
 /**
  * This class generates form components for Location Type
@@ -64,7 +64,7 @@ class CRM_Admin_Form_Preferences extends CRM_Core_Form {
 
     $session = CRM_Core_Session::singleton();
 
-    require_once 'CRM/Core/DAO/Preferences.php';
+
     $this->_config = new CRM_Core_DAO_Preferences();
     $this->_config->domain_id = CRM_Core_Config::domainID();
 
@@ -95,7 +95,7 @@ class CRM_Admin_Form_Preferences extends CRM_Core_Form {
   }
 
   function cbsDefaultValues(&$defaults) {
-    require_once 'CRM/Core/BAO/CustomOption.php';
+
     foreach ($this->_cbs as $name => $title) {
       if (isset($this->_config->$name) &&
         $this->_config->$name
@@ -122,7 +122,7 @@ class CRM_Admin_Form_Preferences extends CRM_Core_Form {
   public function buildQuickForm() {
     parent::buildQuickForm();
 
-    require_once 'CRM/Core/OptionGroup.php';
+
     foreach ($this->_cbs as $name => $title) {
       $options = array_flip(CRM_Core_OptionGroup::values($name, FALSE, FALSE, TRUE));
       $newOptions = array();

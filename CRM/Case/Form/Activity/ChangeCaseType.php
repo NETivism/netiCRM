@@ -33,7 +33,7 @@
  *
  */
 
-require_once "CRM/Core/Form.php";
+
 
 /**
  * This class generates form components for OpenCase Activity
@@ -68,7 +68,7 @@ class CRM_Case_Form_Activity_ChangeCaseType {
   }
 
   static function buildQuickForm(&$form) {
-    require_once 'CRM/Case/PseudoConstant.php';
+
     $form->_caseType = CRM_Case_PseudoConstant::caseType();
     $caseTypeId = explode(CRM_Case_BAO_Case::VALUE_SEPARATOR, CRM_Core_DAO::getFieldValue('CRM_Case_DAO_Case',
         $form->_caseId,
@@ -135,7 +135,7 @@ class CRM_Case_Form_Activity_ChangeCaseType {
       return;
     }
 
-    require_once 'CRM/Case/PseudoConstant.php';
+
     $caseTypes = CRM_Case_PseudoConstant::caseType('name');
     $allCaseTypes = CRM_Case_PseudoConstant::caseType('label', FALSE);
 

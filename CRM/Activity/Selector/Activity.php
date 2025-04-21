@@ -33,12 +33,12 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
-require_once 'CRM/Core/Selector/Base.php';
-require_once 'CRM/Core/Selector/API.php';
-require_once 'CRM/Utils/Pager.php';
-require_once 'CRM/Utils/Sort.php';
-require_once 'CRM/Activity/BAO/Activity.php';
+
+
+
+
+
+
 
 /**
  * This class is used to retrieve and display activities for a contact
@@ -92,7 +92,7 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
     $this->_context = $context;
 
     // get all enabled view componentc (check if case is enabled)
-    require_once 'CRM/Core/BAO/Preferences.php';
+
     $this->_viewOptions = CRM_Core_BAO_Preferences::valueOptions('contact_view_options', TRUE, NULL, TRUE);
   }
 
@@ -253,7 +253,7 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
       );
     }
 
-    require_once 'CRM/Case/BAO/Case.php';
+
     if (CRM_Case_BAO_Case::checkPermission($activityId, 'File On Case', $activityTypeId)) {
       self::$_actionLinks = self::$_actionLinks + array(CRM_Core_Action::ADD =>
         array(
@@ -356,7 +356,7 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
    * @access public
    */
   function getTotalCount($action, $case = NULL) {
-    require_once 'CRM/Activity/BAO/Activity.php';
+
     return CRM_Activity_BAO_Activity::getActivitiesCount($this->_contactId, $this->_admin, $case, $this->_context);
   }
 

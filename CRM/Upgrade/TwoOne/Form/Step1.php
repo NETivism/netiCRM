@@ -33,13 +33,13 @@
  *
  */
 
-require_once 'CRM/Upgrade/Form.php';
+
 class CRM_Upgrade_TwoOne_Form_Step1 extends CRM_Upgrade_Form {
   function verifyPreDBState(&$errorMessage) {
     $config = CRM_Core_Config::singleton();
 
     // Let's first update the config defaults
-    require_once "CRM/Core/DAO/Domain.php";
+
     $domain = new CRM_Core_DAO_Domain();
     $domain->selectAdd();
     $domain->selectAdd('config_backend');

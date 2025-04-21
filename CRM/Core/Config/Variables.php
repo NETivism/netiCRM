@@ -36,7 +36,7 @@
  *
  */
 
-require_once 'CRM/Core/Config/Defaults.php';
+
 class CRM_Core_Config_Variables extends CRM_Core_Config_Defaults {
 
   /**
@@ -455,6 +455,18 @@ class CRM_Core_Config_Variables extends CRM_Core_Config_Defaults {
   public $webLogDir = 'log';
 
   /**
+   * Default donor name display options
+   *
+   * @var array
+   */
+  public $customDonorCredit = array(
+    'full_name' => 1,
+    'partial_name' => 1,
+    'custom_name' => 1,
+    'anonymous' => 0
+  );
+
+  /**
    * Provide addressSequence
    *
    * @param
@@ -462,7 +474,7 @@ class CRM_Core_Config_Variables extends CRM_Core_Config_Defaults {
    * @return string
    */
   public function addressSequence() {
-    require_once 'CRM/Core/BAO/Preferences.php';
+
     return CRM_Core_BAO_Preferences::value('address_sequence');
   }
 
@@ -477,7 +489,7 @@ class CRM_Core_Config_Variables extends CRM_Core_Config_Defaults {
     static $cachedSymbol = NULL;
     if (!$cachedSymbol || $defaultCurrency) {
       if ($this->defaultCurrency || $defaultCurrency) {
-        require_once "CRM/Core/PseudoConstant.php";
+
         $currencySymbolName = CRM_Core_PseudoConstant::currencySymbols('name');
         $currencySymbol = CRM_Core_PseudoConstant::currencySymbols();
 

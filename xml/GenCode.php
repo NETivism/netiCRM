@@ -56,16 +56,17 @@ class CRM_GenCode_Util_File {
 }
 
 class CRM_GenCode_Main {
-  var $buildVersion;
-  var $compileDir;
-  var $classNames;
+  public $beautifier;
+  public $buildVersion;
+  public $compileDir;
+  public $classNames;
 
-  var $CoreDAOCodePath;
-  var $sqlCodePath;
-  var $phpCodePath;
-  var $tplCodePath;
+  public $CoreDAOCodePath;
+  public $sqlCodePath;
+  public $phpCodePath;
+  public $tplCodePath;
 
-  var $smarty;
+  public $smarty;
   function __construct($CoreDAOCodePath, $sqlCodePath, $phpCodePath, $tplCodePath) {
     $this->CoreDAOCodePath = $CoreDAOCodePath;
     $this->sqlCodePath = $sqlCodePath;

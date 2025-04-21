@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Profile/Form.php';
-require_once 'CRM/Event/Form/Task.php';
+
+
 
 /**
  * This class provides the functionality for batch profile update for event participations
@@ -99,7 +99,7 @@ class CRM_Event_Form_Task_PickProfile extends CRM_Event_Form_Task {
    * @return void
    */
   function buildQuickForm() {
-    require_once "CRM/Core/BAO/UFGroup.php";
+
     $types = array('Participant');
     $profiles = CRM_Core_BAO_UFGroup::getProfiles($types, TRUE);
 

@@ -42,6 +42,7 @@ define('PEAR_REGISTRY_ERROR_CHANNEL_FILE', -6);
  */
 class PEAR_Registry extends PEAR
 {
+    public $install_dir;
     /**
      * File containing all channel information.
      * @var string

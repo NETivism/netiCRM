@@ -1,14 +1,26 @@
 {if !$nowrapper}<script type="text/javascript"> {/if}
 {literal}
 (function ($) {
-cj(document).ready(function(){
-  $('{/literal}{$selector}{literal}').select2({
-    "allowClear": true,
-    "dropdownAutoWidth": true,
-    {/literal}{if $select_width}"width": "{$select_width}",{/if}{literal}
-    "placeholder": "{/literal}{ts}-- Select --{/ts}{literal}",
-    "language": "{/literal}{if $config->lcMessages}{$config->lcMessages|replace:'_':'-'}{else}en{/if}{literal}"
+$(document).ready(function(){
+  let $elements = $('{/literal}{$selector}{literal}');
+  $elements.each(function() {
+    let $this = $(this);
+    let options = {
+      "allowClear": true,
+      "dropdownAutoWidth": true,
+      {/literal}{if $select_width}"width": "{$select_width}",{/if}{literal}
+      "placeholder": "{/literal}{ts}-- Select --{/ts}{literal}",
+      "language": "{/literal}{if $config->lcMessages}{$config->lcMessages|replace:'_':'-'}{else}en{/if}{literal}",
+      "selectAllButton": {/literal}{if $select_all_button}true{else}false{/if}{literal}
+    };
+
+    if ($this.is('select[multiple]')) {
+      options.dropdownAdapter = $.fn.select2.amd.require('select2/selectAllAdapter');
+    }
+
+    $this.select2(options);
   });
+
   $(document).on('select2:open select2:close', (e) => {
     let thisSelect = e.target,
         $thisSelect = $(thisSelect),

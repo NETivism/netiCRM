@@ -10,6 +10,7 @@
 
 require_once 'CiviTest/CiviUnitTestCase.php';
 class api_v3_MembershipTest extends CiviUnitTestCase {
+  public $_membershipID;
   protected $_apiversion;
   protected $_contactID;
   protected $_membershipTypeID;

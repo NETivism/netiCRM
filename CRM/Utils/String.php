@@ -74,7 +74,7 @@ class CRM_Utils_String {
   static function titleToVar($title, $maxLength = 31) {
     $variable = self::munge($title, '_', $maxLength);
 
-    require_once "CRM/Utils/Rule.php";
+
     if (CRM_Utils_Rule::title($variable, $maxLength)) {
       return $variable;
     }
@@ -661,6 +661,9 @@ class CRM_Utils_String {
 
   static function toNumber($str) {
     $str = trim($str);
+    if (preg_match('/[eE]/', $str)) {
+      return $str;
+    }
     if (is_numeric($str)) {
       // leading zero and no any other sign
       if (preg_match('/^0\d+$/', $str)) {

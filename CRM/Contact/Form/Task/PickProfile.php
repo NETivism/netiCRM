@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Profile/Form.php';
+
 
 /**
  * This class provides the functionality for batch profile update
@@ -88,7 +88,7 @@ class CRM_Contact_Form_Task_PickProfile extends CRM_Contact_Form_Task {
       $validate = TRUE;
     }
 
-    require_once 'CRM/Contact/BAO/Contact/Utils.php';
+
     if (CRM_Contact_BAO_Contact_Utils::checkContactType($this->_contactIds)) {
       CRM_Core_Session::setStatus(ts("Batch update requires that all selected contacts be the same type (e.g. all Individuals OR all Organizations...). Please modify your selected contacts and try again."));
       $validate = TRUE;
@@ -121,7 +121,7 @@ class CRM_Contact_Form_Task_PickProfile extends CRM_Contact_Form_Task {
     //add Contact type profiles
     $this->_contactTypes[] = 'Contact';
 
-    require_once "CRM/Core/BAO/UFGroup.php";
+
     $profiles = CRM_Core_BAO_UFGroup::getProfiles($this->_contactTypes);
 
     if (empty($profiles)) {
@@ -155,7 +155,7 @@ class CRM_Contact_Form_Task_PickProfile extends CRM_Contact_Form_Task {
    * @access public
    */
   static function formRule($fields) {
-    require_once "CRM/Core/BAO/UFField.php";
+
     if (CRM_Core_BAO_UFField::checkProfileType($fields['uf_group_id'])) {
       $errorMsg['uf_group_id'] = "You cannot select mix profile for batch update.";
     }

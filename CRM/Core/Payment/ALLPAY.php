@@ -1,7 +1,15 @@
 <?php
 date_default_timezone_set('Asia/Taipei');
-require_once 'CRM/Core/Payment.php';
+
 class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
+  /**
+   * @var mixed
+   */
+  public $_processorName;
+  /**
+   * @var object
+   */
+  public $_config;
   const ALLPAY_REAL_DOMAIN = 'https://payment.ecpay.com.tw';
   const ALLPAY_TEST_DOMAIN = 'https://payment-stage.ecpay.com.tw';
   const ALLPAY_URL_SITE = '/Cashier/AioCheckOut';
@@ -342,7 +350,9 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
     if ($hours < 24) {
       $hours = 24;
     }
-  
+    if(CRM_Utils_System::getUFLocale() == 'en_US'){
+      $args['Language'] = 'ENG';
+    }
     switch($instrument_code){
       case 'ATM':
         $args['ExpireDate'] = ceil($hours/24) > 60 ? 60 : ceil($hours/24);
@@ -418,9 +428,6 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
             $args['ExecTimes'] = empty($vars['installments']) ? 99 : $vars['installments']; // support endless
           }
           $args['PeriodReturnURL'] = $notify_url.'&is_recur=1';
-        }
-        if(CRM_Utils_System::getUFLocale() == 'en'){
-          $args['Language'] = 'ENG';
         }
         # Recurring
         break;

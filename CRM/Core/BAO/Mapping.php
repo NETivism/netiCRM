@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/DAO/Mapping.php';
+
 class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
 
   /**
@@ -79,7 +79,7 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
    */
   static function del($id) {
     // delete from mapping_field table
-    require_once "CRM/Core/DAO/MappingField.php";
+
     $mappingField = new CRM_Core_DAO_MappingField();
     $mappingField->mapping_id = $id;
     $mappingField->find();
@@ -151,7 +151,7 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
    */
   static function getMappingFields($mappingId) {
     //mapping is to be loaded from database
-    require_once "CRM/Core/DAO/MappingField.php";
+
     $mapping = new CRM_Core_DAO_MappingField();
     $mapping->mapping_id = $mappingId;
     $mapping->orderBy('column_number');
@@ -276,9 +276,9 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
     }
 
     //get the saved mapping details
-    require_once 'CRM/Core/DAO/Mapping.php';
-    require_once 'CRM/Contact/BAO/Contact.php';
-    require_once 'CRM/Core/BAO/LocationType.php';
+
+
+
 
     if ($mappingType == 'Export') {
       $form->applyFilter('saveMappingName', 'trim');
@@ -327,7 +327,7 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
       $required = FALSE;
     }
 
-    require_once 'CRM/Core/BAO/Address.php';
+
     $contactType = array('Individual', 'Household', 'Organization');
     foreach ($contactType as $value) {
       $contactFields = CRM_Contact_BAO_Contact::exportableFields($value, FALSE, $required);
@@ -368,14 +368,14 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
     $compArray = array();
 
     if (CRM_Core_Permission::access('Quest')) {
-      require_once 'CRM/Quest/BAO/Student.php';
+
       $fields['Student'] = &CRM_Quest_BAO_Student::exportableFields();
       $compArray['Student'] = 'Student';
     }
 
     if (($mappingType == 'Search Builder') || ($exportMode == CRM_Export_Form_Select::CONTRIBUTE_EXPORT)) {
       if (CRM_Core_Permission::access('CiviContribute')) {
-        require_once 'CRM/Contribute/BAO/Contribution.php';
+
         $fields['Contribution'] = &CRM_Contribute_BAO_Contribution::exportableFields();
         unset($fields['Contribution']['contribution_contact_id']);
         $compArray['Contribution'] = ts('Contribution');
@@ -384,7 +384,7 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
 
     if (($mappingType == 'Search Builder') || ($exportMode == CRM_Export_Form_Select::EVENT_EXPORT)) {
       if (CRM_Core_Permission::access('CiviEvent')) {
-        require_once 'CRM/Event/BAO/Participant.php';
+
         $fields['Participant'] = &CRM_Event_BAO_Participant::exportableFields();
         unset($fields['Participant']['participant_contact_id']);
         $compArray['Participant'] = ts('Participant');
@@ -393,7 +393,7 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
 
     if (($mappingType == 'Search Builder') || ($exportMode == CRM_Export_Form_Select::MEMBER_EXPORT)) {
       if (CRM_Core_Permission::access('CiviMember')) {
-        require_once 'CRM/Member/BAO/Membership.php';
+
         $fields['Membership'] = &CRM_Member_BAO_Membership::getMembershipFields();
         unset($fields['Membership']['membership_contact_id']);
         $compArray['Membership'] = ts('Membership');
@@ -402,7 +402,7 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
 
     if (($mappingType == 'Search Builder') || ($exportMode == CRM_Export_Form_Select::PLEDGE_EXPORT)) {
       if (CRM_Core_Permission::access('CiviPledge')) {
-        require_once 'CRM/Pledge/BAO/Pledge.php';
+
         $fields['Pledge'] = &CRM_Pledge_BAO_Pledge::exportableFields();
         unset($fields['Pledge']['pledge_contact_id']);
         $compArray['Pledge'] = ts('Pledge');
@@ -411,11 +411,11 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
 
     if (($mappingType == 'Search Builder') || ($exportMode == CRM_Export_Form_Select::CASE_EXPORT)) {
       if (CRM_Core_Permission::access('CiviCase')) {
-        require_once 'CRM/Case/BAO/Case.php';
+
         $fields['Case'] = &CRM_Case_BAO_Case::exportableFields();
         $compArray['Case'] = ts('Case');
 
-        require_once 'CRM/Activity/BAO/Activity.php';
+
         $fields['Activity'] = &CRM_Activity_BAO_Activity::exportableFields('Case');
         $compArray['Activity'] = ts('Case Activity');
 
@@ -424,7 +424,7 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
     }
     if (($mappingType == 'Search Builder') || ($exportMode == CRM_Export_Form_Select::GRANT_EXPORT)) {
       if (CRM_Core_Permission::access('CiviGrant')) {
-        require_once 'CRM/Grant/BAO/Grant.php';
+
         $fields['Grant'] = &CRM_Grant_BAO_Grant::exportableFields();
         unset($fields['Grant']['grant_contact_id']);
         $compArray['Grant'] = ts('Grant');
@@ -432,7 +432,7 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
     }
 
     if (($mappingType == 'Search Builder') || ($exportMode == CRM_Export_Form_Select::ACTIVITY_EXPORT)) {
-      require_once 'CRM/Activity/BAO/Activity.php';
+
       $fields['Activity'] = &CRM_Activity_BAO_Activity::exportableFields('Activity');
       $compArray['Activity'] = ts('Activity');
     }
@@ -575,7 +575,7 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
               $relationshipCustomFields = self::getRelationTypeCustomGroupData($id);
               asort($relationshipCustomFields);
 
-              require_once 'CRM/Contact/BAO/RelationshipType.php';
+
               $relationshipType = new CRM_Contact_BAO_RelationshipType();
               $relationshipType->id = $id;
               if ($relationshipType->find(TRUE)) {
@@ -1109,7 +1109,7 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
    */
   static function saveMappingFields(&$params, $mappingId) {
     //delete mapping fields records for exixting mapping
-    require_once "CRM/Core/DAO/MappingField.php";
+
     $mappingFields = new CRM_Core_DAO_MappingField();
     $mappingFields->mapping_id = $mappingId;
     $mappingFields->delete();

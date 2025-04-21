@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Page/Basic.php';
+
 
 /**
  * Dashboard page for managing Access Control

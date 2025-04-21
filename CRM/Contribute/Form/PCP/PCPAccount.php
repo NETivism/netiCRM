@@ -32,7 +32,7 @@
  * $Id$
  *
  */
-require_once 'CRM/Core/Form.php';
+
 
 /**
  * This class generates form components for processing a ontribution
@@ -40,6 +40,8 @@ require_once 'CRM/Core/Form.php';
  */
 class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
 
+  public $_fields;
+  public $_defaults;
   /**
    *Variable defined for Contribution Page Id
    *
@@ -140,11 +142,11 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
       $fields[$name] = 1;
     }
 
-    require_once "CRM/Core/BAO/UFGroup.php";
+
     CRM_Core_BAO_UFGroup::setProfileDefaults($this->_contactID, $fields, $this->_defaults);
 
     //set custom field defaults
-    require_once "CRM/Core/BAO/CustomField.php";
+
     foreach ($this->_fields as $name => $field) {
       if ($customFieldID = CRM_Core_BAO_CustomField::getKeyID($name)) {
         if (!isset($this->_defaults[$name])) {
@@ -171,7 +173,7 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
       $this->assign('profileDisplay', TRUE);
     }
     $fields = NULL;
-    require_once "CRM/Core/BAO/UFGroup.php";
+
     if ($this->_contactID) {
       if (CRM_Core_BAO_UFGroup::filterUFGroups($id, $this->_contactID)) {
         $fields = CRM_Core_BAO_UFGroup::getFields($id, FALSE, CRM_Core_Action::ADD);
@@ -197,14 +199,14 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
       }
 
       if ($addCaptcha) {
-        require_once 'CRM/Utils/ReCAPTCHA.php';
+
         $captcha = &CRM_Utils_ReCAPTCHA::singleton();
         $captcha->add($this);
         $this->assign("isCaptcha", TRUE);
       }
     }
 
-    require_once "CRM/Contribute/PseudoConstant.php";
+
     $this->assign('campaignName', CRM_Contribute_PseudoConstant::contributionPage($this->_pageId));
 
     if ($this->_single) {
@@ -243,7 +245,6 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
    */
   static function formRule($fields, $files, $self) {
     $errors = array();
-    require_once "CRM/Utils/Rule.php";
     if (!CRM_Core_Permission::check('access CiviContribute')) {
       foreach ($fields as $key => $value) {
         if (strpos($key, 'email-') !== FALSE && !empty($value)) {
@@ -277,7 +278,7 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
           list($fieldName, $locTypeId) = CRM_Utils_System::explode('-', $key, 2);
           $isPrimary = 0;
           if ($locTypeId == 'Primary') {
-            require_once "CRM/Core/BAO/LocationType.php";
+
             $locTypeId = &CRM_Core_BAO_LocationType::getDefault();
             $isPrimary = 1;
           }
@@ -290,7 +291,7 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
       }
     }
 
-    require_once 'CRM/Dedupe/Finder.php';
+
     $dedupeParams = CRM_Dedupe_Finder::formatParams($params, 'Individual');
     $ids = CRM_Dedupe_Finder::dupesByParams($dedupeParams, 'Individual', 'Strict');
     if ($ids) {

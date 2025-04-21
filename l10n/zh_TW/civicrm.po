@@ -1,6 +1,6 @@
 # 
 # Translators:
-# CC Chu <poliphilonet@gmail.com>, 2020-2024
+# CC Chu <poliphilonet@gmail.com>, 2020-2025
 # Chang Shu-huai <junsuwhy@gmail.com>, 2016-2024
 # Charles Chuang, 2022-2024
 # CHUNLIAN WU <susanna@netivism.com.tw>, 2017
@@ -8,20 +8,21 @@
 # Harry Lin <harry@netivism.com.tw>, 2023
 # IreneLin, 2013
 # IreneLin, 2013
-# jimyhuang <jimmy@netivism.com.tw>, 2013,2015-2024
+# jimyhuang <jimmy@netivism.com.tw>, 2013,2015-2025
 # Chang Shu-huai <junsuwhy@gmail.com>, 2015-2016
 # peggy chiu, 2024
+# Seal Shen, 2025
 # SharonKwan <sharon@netivism.com.tw>, 2015-2017
 # SIAOLING HUANG, 2024
 # charlesc <yeouhsin@gmail.com>, 2013-2014,2016,2020,2022
 # 淑涵 詹 <amy0222@netivism.com.tw>, 2020-2021
 # 花玉婷 <klavier1976@netivism.com.tw>, 2016-2019,2021-2024
-# 馮 佳今, 2022-2024
+# 馮 佳今, 2022-2025
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>, 2016-2024\n"
+"Last-Translator: jimyhuang <jimmy@netivism.com.tw>, 2013,2015-2025\n"
 "Language-Team: Chinese (Taiwan) (http://app.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -5263,20 +5264,20 @@ msgstr "會籍開始日期"
 #: CRM/Member/DAO/MembershipStatus.php CRM/Member/Form/MembershipStatus.php
 #: templates/CRM/Member/Page/MembershipStatus.tpl
 msgid "Start Event"
-msgstr "開始日期"
+msgstr "開始事件"
 
 #: CRM/Member/DAO/MembershipStatus.php CRM/Member/Form/MembershipStatus.php
 msgid "Start Event Adjust Interval"
-msgstr "開始日期調整間隔"
+msgstr "開始事件調整間隔"
 
 #: CRM/Member/DAO/MembershipStatus.php CRM/Member/Form/MembershipStatus.php
 #: templates/CRM/Member/Page/MembershipStatus.tpl
 msgid "End Event"
-msgstr "結束日期"
+msgstr "結束事件"
 
 #: CRM/Member/DAO/MembershipStatus.php CRM/Member/Form/MembershipStatus.php
 msgid "End Event Adjust Interval"
-msgstr "結束活動調整間隔"
+msgstr "結束事件調整間隔"
 
 #: CRM/Member/DAO/MembershipStatus.php CRM/Member/Form/MembershipStatus.php
 msgid "Current Membership?"
@@ -9863,7 +9864,6 @@ msgid "Edit Note"
 msgstr "編輯註記"
 
 #: CRM/Contact/Page/View/Note.php
-#: templates/CRM/Mailing/Form/ForwardMailing.tpl
 msgid "Add Comment"
 msgstr "加入評語"
 
@@ -10488,7 +10488,7 @@ msgstr "請輸入一個有效的額外提醒日期。"
 msgid ""
 "This contribution has already been submitted. Click <a href='%1'>here</a> if"
 " you want to make another contribution."
-msgstr "你的捐款已經提送。若果你想繼續捐款，請按 <a href='%1'>這裡</a>。"
+msgstr "資料已送出，請從您選擇的付款工具確認是否已完成付款，若未成功，請點 <a href='%1'>這裡</a>。"
 
 #: CRM/Contribute/Form/ContributionBase.php
 msgid ""
@@ -14372,7 +14372,7 @@ msgstr "建立新的選項系列"
 
 #: CRM/Custom/Form/Field.php
 msgid "Reuse an existing set"
-msgstr "重複使用一個現有系列"
+msgstr "共用一個現有系列"
 
 #: CRM/Custom/Form/Field.php
 msgid "Multiple Choice Option Sets"
@@ -14469,7 +14469,7 @@ msgstr "請輸入一個有效的數字。"
 msgid ""
 "You must select a Multiple Choice Option set if you chose Reuse an existing "
 "set."
-msgstr "如果您選擇重覆使用現有的設定，您必需選擇一個多選選項組。"
+msgstr "如果您選擇共用現有的設定，您必需選擇一個多選選項組。"
 
 #: CRM/Custom/Form/Field.php
 msgid ""
@@ -17493,11 +17493,11 @@ msgstr "基本會員編號"
 
 #: CRM/Member/DAO/MembershipStatus.php
 msgid "Start Event Adjust Unit"
-msgstr "開始日期調整單位"
+msgstr "開始事件調整單位"
 
 #: CRM/Member/DAO/MembershipStatus.php
 msgid "End Event Adjust Unit"
-msgstr "結束活動調整單位"
+msgstr "結束事件調整單位"
 
 #: CRM/Member/DAO/MembershipStatus.php
 msgid "Admin Assigned Only?"
@@ -17713,11 +17713,11 @@ msgstr "此會籍狀態名稱已存在。請設定不同的名稱。"
 
 #: CRM/Member/Form/MembershipStatus.php
 msgid "Start Event Adjustment"
-msgstr "開始日期調整"
+msgstr "開始事件調整"
 
 #: CRM/Member/Form/MembershipStatus.php
 msgid "End Event Adjustment"
-msgstr "結束時間調整"
+msgstr "結束事件調整"
 
 #: CRM/Member/Form/MembershipStatus.php
 msgid "Administrator Only?"
@@ -31791,7 +31791,7 @@ msgstr "當交易成功之後，電子郵件確認信將會寄送到 %1。"
 msgid ""
 "Your registration has been processed successfully. Please print this page "
 "for your records."
-msgstr "已成功記錄了您的報名資料。請保存此信件，作為存查之用。"
+msgstr "已成功記錄了您的報名資料。請列印保存此頁面，作為存查之用。"
 
 #: templates/CRM/Event/Form/Registration/ThankYou.tpl
 msgid "A registration confirmation email has also been sent to %1"
@@ -34069,7 +34069,7 @@ msgid ""
 "Optional adjustment period added or subtracted from the Start Event. "
 "EXAMPLE: <strong>Current</strong> status might begin at 'join date' PLUS 3 "
 "months (to distinguish Current from New members)."
-msgstr "可以選擇延長或提早開始日期？舉例來說：<strong>現有會員</strong>狀態可以設定為於原加入日期的三個月後（以區隔新會員和現有會員）。"
+msgstr "可以選擇延長或提早開始事件？舉例來說：<strong>現有會員</strong>狀態可以設定為於原加入日期的3個月後（以區隔新會員和現有會員）。"
 
 #: templates/CRM/Member/Form/MembershipStatus.tpl
 msgid ""
@@ -34081,7 +34081,7 @@ msgstr "此狀態何時結束？舉例來說：<strong>現在</strong>狀態會�
 msgid ""
 "Optional adjustment period added or subtracted from the End Event. EXAMPLE: "
 "<strong>Grace</strong> status might end at 'end date' PLUS 1 month."
-msgstr "可以選擇延長或提早結束日期？舉例來說：<strong>寬限期</strong>狀態可以設定為結束於原截止日期的一個月。"
+msgstr "可以選擇延長或提早結束事件？舉例來說：<strong>寬限期</strong>狀態可以設定為結束於原截止日期的 1 個月。"
 
 #: templates/CRM/Member/Form/MembershipStatus.tpl
 msgid ""
@@ -34098,7 +34098,7 @@ msgid ""
 "and End Event settings are ignored for Administrator statuses. EXAMPLE: This"
 " setting can be useful for special case statuses like 'Non-expiring', "
 "'Barred' or 'Expelled', etc."
-msgstr "如果此狀態只讓管理工作人員使用，請勾選此框。若勾選，系統不會自動指派此狀態。當新增或編輯會籍記錄，可勾選「<strong>是否覆蓋掉會員狀態？</strong>」，就可以將此狀態指派到聯絡人的會籍。此狀態的開始及結束活動設定會被忽略。例如：此設定可以被用於特別個案狀態如「非過期」、「禁止」或「開除」等。"
+msgstr "如果此狀態只讓管理工作人員使用，請勾選此框。若勾選，系統不會自動指派此狀態。當新增或編輯會籍記錄，可勾選「<strong>是否覆蓋掉會員狀態？</strong>」，就可以將此狀態指派到聯絡人的會籍。此狀態的開始及結束事件設定會被忽略。例如：此設定可以被用於特別個案狀態如「非過期」、「禁止」或「開除」等。"
 
 #: templates/CRM/Member/Form/MembershipStatus.tpl
 msgid ""
@@ -35541,7 +35541,7 @@ msgid ""
 "invoked, this URL will deliver email to the recipients specified for this "
 "report.) The cron job will also need to include authentication parameters "
 "which can be set by providing user-name, password and site key."
-msgstr "您的網站管理者將需要設置一個伺服器的「排程工作」（cron job，自動執行排定的工作），定期創建報表並寄送。這個排程工作應使用此網址：<strong><em>%1/%2 %3</em></strong>（此範例網址適用於報表 ID = 3。當存取這個網址時，系統會將這份報表寄送給指定收件人）。設定排程工作還需要輸入一些認證參數，像是使用者名稱、密碼與網站金鑰。"
+msgstr ""
 
 #: templates/CRM/Report/Form/Settings.hlp
 msgid ""
@@ -50237,3 +50237,102 @@ msgstr "放棄交易"
 
 msgid "Execution Failed"
 msgstr "執行失敗"
+
+#: templates/CRM/Mailing/Form/ForwardMailing.tpl
+msgid "Add Personal Message"
+msgstr "加入給朋友的訊息"
+
+#: CRM/Admin/Form/Setting/Receipt.php
+msgid "Donor Credit Name Options"
+msgstr "捐款徵信的名稱選項"
+
+#: CRM/Admin/Form/Setting/Receipt.php
+msgid "Partial Name"
+msgstr "部分名稱"
+
+#: CRM/Admin/Form/Setting/Receipt.php
+msgid "I don't agree to disclose name"
+msgstr "我不同意公開名稱"
+
+#: CRM/Admin/Form/Setting/Receipt.php
+msgid "Default name when donor doesn't agree to disclose"
+msgstr "選擇「我不同意公開名稱」時的預設名稱"
+
+#: templates/CRM/Admin/Form/Setting/Receipt.tpl
+msgid "Select which options to show to donors when they make contributions."
+msgstr "選擇捐款人進行捐款時可選用的徵信名稱選項。"
+
+#: templates/CRM/Admin/Form/Setting/Receipt.tpl
+msgid ""
+"This name will be used when donor selects \"I don't agree to disclose "
+"name\". Examples: \"Anonymous\", \"Kind-hearted Person\", etc."
+msgstr "可自訂一個預設名稱，如「善心人士」、「OO之友」。"
+
+#: templates/CRM/Admin/Form/Setting/Receipt.tpl
+msgid "Please enter a default name for anonymous donors."
+msgstr "請輸入匿名捐款人的預設名稱。"
+
+#: CRM/Core/SelectValues.php
+msgid "Do not notify"
+msgstr "不要收到系統流程信件"
+
+#: templates/CRM/Contribute/Form/Contribution.tpl
+msgid "Contact labelled as do not notification."
+msgstr "聯絡人標示為不要收到系統流程信件"
+
+#: CRM/Event/BAO/Event.php
+msgid ""
+"Email has NOT been sent to %1 contact(s) - communication preferences specify"
+" DO NOT NOTIFY OR valid Email is NOT present."
+msgstr "Email 無法寄送給 %1 位聯絡人，因為聯絡人的偏好選項設定為「不要收到系統流程信件」、或是未設定有效的 Email。"
+
+#: templates/CRM/Admin/Form/Setting/Receipt.tpl
+msgid "Please upload the logo image to be displayed on the receipt."
+msgstr "請上傳將顯示在收據上的 Logo 圖片。"
+
+#: CRM/Contribute/Form/Task/PDF.php
+msgid ""
+"Email will NOT be sent to %1 contact(s) - communication preferences specify "
+"DO NOT NOTIFY or valid Email is NOT present."
+msgstr "Email 不會寄送給 %1 位聯絡人（聯絡人沒有 Email，或已設定為「不要收到系統流程信件」）。"
+
+#: templates/CRM/Admin/Form/Setting/Receipt.tpl
+msgid "Save to apply changes."
+msgstr "儲存後才會生效"
+
+#: CRM/Contribute/xml/Menu/Contribute.xml
+msgid "Import Fee and Transaction Date"
+msgstr "匯入手續費與撥款日"
+
+#: CRM/Admin/Form/Setting/Recurring.php
+msgid "Default contribution page for one-time renewal link"
+msgstr "一次續捐連結預設募款頁"
+
+#: templates/CRM/Admin/Form/Setting/Recurring.tpl
+msgid ""
+"If the linked page is unavailable or the contact has no donation history, "
+"the system will redirect to this default contribution page."
+msgstr "當一次性續捐連結所對應的募款頁失效、被停用，或聯絡人沒有過往捐款紀錄時，系統會自動導向此預設募款頁。"
+
+#: CRM/Core/SelectValues.php CRM/Contact/BAO/Contact/Utils.php
+msgid "Recurring Contribution Renewal Link"
+msgstr "定期定額續捐連結"
+
+#: CRM/Core/SelectValues.php
+msgid "Do Not Notify"
+msgstr "不要收到系統流程信件"
+
+#: templates/CRM/Contribute/Form/ContributionPage/Delete.tpl
+msgid ""
+"This contribution page is set as the default page for one-time recurring "
+"contribution links and cannot be deleted or disable.<br/>Please go to <a "
+"href='%1'>Administer >> CiviContribute >> Recurring Settings</a> and update "
+"the Default contribution page for one-time renewal link field before trying "
+"again."
+msgstr "此募款頁是一次續捐連結的預設募款頁，無法刪除或停用。<br/>請前往<a href='%1'>設定 >> 捐款 >> 定期定額設定</a>並更新「一次續捐連結預設募款頁」欄位後再試一次。"
+
+#: templates/CRM/Event/Form/Registration/ThankYou.tpl
+msgid ""
+"To ensure that you receive event registration notifications, we recommend "
+"contacting the administrator."
+msgstr "為了讓您順利收到後續的活動報名通知，建議您聯繫管理員。"

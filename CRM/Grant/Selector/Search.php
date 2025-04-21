@@ -33,13 +33,13 @@
  *
  */
 
-require_once 'CRM/Core/Selector/Base.php';
-require_once 'CRM/Core/Selector/API.php';
 
-require_once 'CRM/Utils/Pager.php';
-require_once 'CRM/Utils/Sort.php';
 
-require_once 'CRM/Contact/BAO/Query.php';
+
+
+
+
+
 
 /**
  * This class is used to retrieve and display a range of
@@ -319,7 +319,7 @@ class CRM_Grant_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
         )
       );
 
-      require_once ('CRM/Contact/BAO/Contact/Utils.php');
+
       $row['contact_type'] = CRM_Contact_BAO_Contact_Utils::getImage($result->contact_sub_type ?
         $result->contact_sub_type : $result->contact_type, FALSE, $result->contact_id
       );

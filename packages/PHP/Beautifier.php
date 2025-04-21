@@ -81,6 +81,7 @@ include_once 'Beautifier/StreamWrapper.php';
  */
 class PHP_Beautifier implements PHP_Beautifier_Interface
 {
+    public $sFile;
     // public
     
     /**

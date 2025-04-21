@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Core/Page.php';
-require_once 'CRM/Contribute/BAO/ContributionPage.php';
+
+
 
 /**
  * Create a page for displaying Contribute Pages
@@ -49,6 +49,7 @@ require_once 'CRM/Contribute/BAO/ContributionPage.php';
  */
 class CRM_Contribute_Page_ContributionPage extends CRM_Core_Page {
 
+  public $_action;
   /**
    * The action links that we need to display for the browse screen
    *
@@ -78,11 +79,15 @@ class CRM_Contribute_Page_ContributionPage extends CRM_Core_Page {
       $deleteExtra = ts('Are you sure you want to delete this Contribution page?');
       $copyExtra = ts('Are you sure you want to make a copy of this Contribution page?');
 
+      $session = CRM_Core_Session::singleton();
+      $pageKey = $this->_scope;
+      $qfKey = $session->get('qfKey', $pageKey);
+
       self::$_actionLinks = array(
         CRM_Core_Action::COPY => array(
           'name' => ts('Make a Copy'),
           'url' => CRM_Utils_System::currentPath(),
-          'qs' => 'action=copy&gid=%%id%%',
+          'qs' => 'action=copy&gid=%%id%%&key=%%key%%',
           'title' => ts('Make a Copy of CiviCRM Contribution Page'),
           'extra' => 'onclick = "return confirm(\'' . $copyExtra . '\');"',
         ),
@@ -230,7 +235,7 @@ class CRM_Contribute_Page_ContributionPage extends CRM_Core_Page {
   function &contributionLinks() {
     if (!isset(self::$_contributionLinks)) {
       //get contribution dates.
-      require_once 'CRM/Contribute/BAO/Contribution.php';
+
       $dates = CRM_Contribute_BAO_Contribution::getContributionDates();
       foreach (array('now', 'yearDate', 'monthDate') as $date) {
         $$date = $dates[$date];
@@ -313,7 +318,7 @@ class CRM_Contribute_Page_ContributionPage extends CRM_Core_Page {
           'action=browse&reset=1'
         ));
 
-      require_once 'CRM/Contribute/Controller/ContributionPage.php';
+
       $controller = new CRM_Contribute_Controller_ContributionPage(NULL, $action);
       CRM_Utils_System::setTitle(ts('Manage Contribution Page'));
       CRM_Utils_System::appendBreadCrumb($breadCrumb);
@@ -423,6 +428,15 @@ WHERE       cp.contribution_page_id = {$id}";
    * @access public
    */
   function copy() {
+    $key = CRM_Utils_Request::retrieve('key', 'String',
+      CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST'
+    );
+
+    $name = get_class($this);
+    if (!CRM_Core_Key::validate($key, $name)) {
+      return CRM_Core_Error::statusBounce(ts('Sorry, we cannot process this request for security reasons. The request may have expired or is invalid. Please return to the contribution page list and try again.'));
+    }
+
     $gid = CRM_Utils_Request::retrieve('gid', 'Positive',
       $this, TRUE, 0, 'GET'
     );
@@ -468,7 +482,7 @@ WHERE       cp.contribution_page_id = {$id}";
     list($offset, $rowCount) = $this->_pager->getOffsetAndRowCount();
 
     //check for delete CRM-4418
-    require_once 'CRM/Core/Permission.php';
+
     $allowToDelete = CRM_Core_Permission::check('delete in CiviContribute');
 
     $query = "
@@ -498,6 +512,12 @@ ORDER BY is_active DESC, id ASC
 
     $contributionTypes = CRM_Contribute_PseudoConstant::contributionType(NULl, NULL, TRUE);
     $contributionPage = array();
+
+    // Add key for action validation.
+    $name = get_class($this);
+    $key = CRM_Core_Key::get($name);
+    $this->assign('key', $key);
+
     while ($dao->fetch()) {
       $contributionPage[$dao->id] = array();
       CRM_Core_DAO::storeValues($dao, $contributionPage[$dao->id]);
@@ -536,7 +556,10 @@ ORDER BY is_active DESC, id ASC
       //build the normal action links.
       $contributionPage[$dao->id]['action'] = CRM_Core_Action::formLink(self::actionLinks(),
         $action,
-        array('id' => $dao->id),
+        array(
+          'id' => $dao->id,
+          'key' => $key
+        ),
         ts('more'),
         TRUE
       );
@@ -621,7 +644,7 @@ ORDER BY is_active DESC, id ASC
   }
 
   function pager($whereClause, $whereParams) {
-    require_once 'CRM/Utils/Pager.php';
+
 
     $params['status'] = ts('Contribution %%StatusMessage%%');
     $params['csvString'] = NULL;
@@ -644,7 +667,7 @@ SELECT count(id)
   }
 
   function pagerAtoZ($whereClause, $whereParams) {
-    require_once 'CRM/Utils/PagerAToZ.php';
+
 
     $query = "
    SELECT DISTINCT UPPER(LEFT(title, 1)) as sort_name

@@ -33,14 +33,24 @@
  *
  */
 
-require_once 'CRM/Core/Page.php';
-require_once 'CRM/Event/BAO/Event.php';
+
+
 
 /**
  * Page for displaying list of events
  */
 class CRM_Event_Page_ManageEvent extends CRM_Core_Page {
 
+  public $_force;
+  /**
+   * @var string
+   */
+  public $_searchResult;
+  /**
+   * @var string
+   */
+  public $_event_type_id;
+  public $_action;
   /**
    * The action links that we need to display for the browse screen
    *
@@ -91,7 +101,7 @@ class CRM_Event_Page_ManageEvent extends CRM_Core_Page {
         CRM_Core_Action::COPY => array(
           'name' => ts('Copy'),
           'url' => CRM_Utils_System::currentPath(),
-          'qs' => 'reset=1&action=copy&id=%%id%%',
+          'qs' => 'reset=1&action=copy&id=%%id%%&key=%%key%%',
           'extra' => 'onclick = "return confirm(\'' . $copyExtra . '\');"',
           'title' => ts('Copy Event'),
         ),
@@ -197,6 +207,10 @@ class CRM_Event_Page_ManageEvent extends CRM_Core_Page {
 
     list($offset, $rowCount) = $this->_pager->getOffsetAndRowCount();
 
+    $name = get_class($this);
+    $key = CRM_Core_Key::get($name);
+    $this->assign('key', $key);
+
     // get all custom groups sorted by weight
     $manageEvent = array();
 
@@ -242,18 +256,21 @@ ORDER BY start_date desc
 
         $manageEvent[$dao->id]['action'] = CRM_Core_Action::formLink(self::links(),
           $action,
-          array('id' => $dao->id),
+          array(
+            'id' => $dao->id,
+            'key' => $key
+          ),
           ts('Operation'),
           TRUE
         );
 
-        require_once 'CRM/Friend/BAO/Friend.php';
+
         $manageEvent[$dao->id]['friend'] = CRM_Friend_BAO_Friend::getValues($params);
       }
     }
     $this->assign('rows', $manageEvent);
 
-    require_once 'CRM/Event/PseudoConstant.php';
+
     $statusTypes = CRM_Event_PseudoConstant::participantStatus(NULL, 'is_counted = 1', 'label');
     $statusTypesPending = CRM_Event_PseudoConstant::participantStatus(NULL, 'is_counted = 0', 'label');
     $findParticipants['statusCounted'] = CRM_Utils_Array::implode(', ', array_values($statusTypes));
@@ -269,10 +286,19 @@ ORDER BY start_date desc
    * @access public
    */
   function copy() {
+    $key = CRM_Utils_Request::retrieve('key', 'String',
+      CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST'
+    );
+
+    $name = get_class($this);
+    if (!CRM_Core_Key::validate($key, $name)) {
+      return CRM_Core_Error::statusBounce(ts('Sorry, we cannot process this request...'));
+    }
+
     $id = CRM_Utils_Request::retrieve('id', 'Positive', $this, TRUE, 0, 'GET');
 
     $urlString = 'civicrm/event/manage';
-    require_once 'CRM/Event/BAO/Event.php';
+
     $copyEvent = CRM_Event_BAO_Event::copy($id);
     $urlParams = 'reset=1';
     // Redirect to Copied Event Configuration
@@ -340,7 +366,7 @@ ORDER BY start_date desc
   }
 
   function pager($whereClause, $whereParams) {
-    require_once 'CRM/Utils/Pager.php';
+
 
     $params['status'] = ts('Event %%StatusMessage%%');
     $params['csvString'] = NULL;

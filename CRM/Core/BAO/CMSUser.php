@@ -37,7 +37,7 @@
  *  this file contains functions for synchronizing cms users with CiviCRM contacts
  */
 
-require_once 'DB.php';
+
 class CRM_Core_BAO_CMSUser {
 
   /**
@@ -202,7 +202,7 @@ class CRM_Core_BAO_CMSUser {
           }
 
           $form->assign('isCMS', $required);
-          require_once 'CRM/Core/Action.php';
+
           if (!$userID || $action & CRM_Core_Action::PREVIEW || $action & CRM_Core_Action::PROFILE) {
             // for validate ajax
             $controllerName = CRM_Utils_System::getClassName($form->controller);
@@ -235,7 +235,7 @@ class CRM_Core_BAO_CMSUser {
     elseif ($isDrupal) {
       $loginUrl .= 'user/login';
       // For Drupal we can redirect user to current page after login by passing it as destination.
-      require_once 'CRM/Utils/System.php';
+
       $args = array('reset' => 1);
 
       $id = $form->get('id');

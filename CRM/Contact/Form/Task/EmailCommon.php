@@ -33,7 +33,7 @@
  *
  */
 
-require_once "CRM/Core/BAO/Email.php";
+
 
 /**
  * This class provides the common functionality for sending email to
@@ -165,7 +165,7 @@ class CRM_Contact_Form_Task_EmailCommon {
         'preferred_mail_format' => 1,
       );
 
-      require_once 'CRM/Mailing/BAO/Mailing.php';
+
 
       list($form->_contactDetails) = CRM_Mailing_BAO_Mailing::getDetails($form->_contactIds, $returnProperties, FALSE, FALSE);
 
@@ -209,11 +209,11 @@ class CRM_Contact_Form_Task_EmailCommon {
 
     $form->add('select', 'fromEmailAddress', ts('From'), $form->_fromEmails, TRUE);
 
-    require_once "CRM/Mailing/BAO/Mailing.php";
+
     CRM_Mailing_BAO_Mailing::commonCompose($form);
 
     // add attachments
-    require_once 'CRM/Core/BAO/File.php';
+
     CRM_Core_BAO_File::buildAttachment($form, NULL);
 
     if ($form->_single) {
@@ -307,7 +307,7 @@ class CRM_Contact_Form_Task_EmailCommon {
     }
 
     // process message template
-    require_once 'CRM/Core/BAO/MessageTemplates.php';
+
     if (CRM_Utils_Array::value('saveTemplate', $formValues) || CRM_Utils_Array::value('updateTemplate', $formValues)) {
       $messageTemplate = array('msg_text' => $formValues['text_message'],
         'msg_html' => $formValues['html_message'],
@@ -422,7 +422,7 @@ class CRM_Contact_Form_Task_EmailCommon {
       $caseParams = array('activity_id' => $activityId,
         'case_id' => $form->_caseId,
       );
-      require_once 'CRM/Case/BAO/Case.php';
+
       CRM_Case_BAO_Case::processCaseActivity($caseParams);
     }
 

@@ -58,6 +58,7 @@ class_exists('DB_DataObject') ? '' : require_once 'DB/DataObject.php';
  */
 class DB_DataObject_Generator extends DB_DataObject
 {
+    public $classname;
     /* =========================================================== */
     /*  Utility functions - for building db config files           */
     /* =========================================================== */

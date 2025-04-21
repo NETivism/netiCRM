@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Controller.php';
+
 class CRM_Upgrade_Controller extends CRM_Core_Controller {
 
   /**
@@ -45,7 +45,7 @@ class CRM_Upgrade_Controller extends CRM_Core_Controller {
   ) {
     parent::__construct($title, $modal);
 
-    require_once 'CRM/Upgrade/StateMachine.php';
+
     $this->_stateMachine = new CRM_Upgrade_StateMachine($this,
       $this->getPages(),
       $action

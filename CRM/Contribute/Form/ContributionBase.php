@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
+
 
 /**
  * This class generates form components for processing a ontribution
@@ -41,6 +41,14 @@ require_once 'CRM/Core/Form.php';
  */
 class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
 
+  public $_mid;
+  /**
+   * @var int
+   */
+  public $_defaultMemTypeId;
+  public $_paymentProcessors;
+  public $_contributeMode;
+  public $_defaultFromRequest;
   /**
    * the id of the contribution page that we are proceessing
    *
@@ -243,14 +251,14 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       }
       $this->_mid = CRM_Utils_Request::retrieve('mid', 'Positive', $this);
       if ($this->_mid) {
-        require_once 'CRM/Member/DAO/Membership.php';
+
         $membership = new CRM_Member_DAO_Membership();
         $membership->id = $this->_mid;
 
         if ($membership->find(TRUE)) {
           $this->_defaultMemTypeId = $membership->membership_type_id;
           if ($membership->contact_id != $this->_userID) {
-            require_once 'CRM/Contact/BAO/Relationship.php';
+
             $employers = CRM_Contact_BAO_Relationship::getPermissionedEmployer($this->_userID);
             if (CRM_Utils_Array::arrayKeyExists($membership->contact_id, $employers)) {
               $this->_membershipContactID = $membership->contact_id;
@@ -301,7 +309,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       $this->_values = array();
       $this->_fields = array();
 
-      require_once 'CRM/Contribute/BAO/ContributionPage.php';
+
       CRM_Contribute_BAO_ContributionPage::setValues($this->_id, $this->_values);
 
       $premiumParams = array(
@@ -320,7 +328,24 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       if (!$this->_values['is_active']) {
         if ($this->_action != CRM_Core_Action::PREVIEW || !CRM_Core_Permission::check('access CiviContribute')) {
           // form is inactive, die a fatal death
-          return CRM_Core_Error::statusBounce(ts('The page you requested is currently unavailable.'));
+          if (defined('ONE_TIME_RENEWAL_ENABLED')) {
+            $config = CRM_Core_Config::singleton();
+            $pageId = $config->defaultRenewalPageId;
+            // Handle utm params
+            $utmParams = ['utm_source', 'utm_medium', 'utm_term', 'utm_content', 'utm_campaign'];
+            $queryParts = [];
+            foreach ($utmParams as $param) {
+              if (!empty($_GET[$param])) {
+                $queryParts[] = $param . '=' . urlencode($_GET[$param]);
+              }
+            }
+            $queryParts[] = 'reset=1';
+            $queryParts[] = 'id=' . $pageId;
+            $queryString = implode('&', $queryParts);
+            CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/contribute/transact', $queryString));
+          } else {
+            return CRM_Core_Error::statusBounce(ts('The page you requested is currently unavailable.'));
+          }
         }
       }
       else {
@@ -353,7 +378,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
         }
 
         $ppIds = explode(CRM_Core_DAO::VALUE_SEPARATOR, $ppID);
-        require_once 'CRM/Core/BAO/PaymentProcessor.php';
+
         $this->_paymentProcessors = CRM_Core_BAO_PaymentProcessor::getPayments($ppIds, $this->_mode);
         $this->set('paymentProcessors', $this->_paymentProcessors);
 
@@ -391,7 +416,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
 
       // get price info
       // CRM-5095
-      require_once 'CRM/Price/BAO/Set.php';
+
       CRM_Price_BAO_Set::initSet($this, $this->_id, 'civicrm_contribution_page');
 
 
@@ -409,11 +434,11 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
 
       //check if Membership Block is enabled, if Membership Fields are included in profile
       //get membership section for this contribution page
-      require_once 'CRM/Member/BAO/Membership.php';
+
       $this->_membershipBlock = CRM_Member_BAO_Membership::getMembershipBlock($this->_id);
       $this->set('membershipBlock', $this->_membershipBlock);
 
-      require_once "CRM/Core/BAO/UFField.php";
+
       if ($this->_values['custom_pre_id']) {
         $preProfileType = CRM_Core_BAO_UFField::getProfileType($this->_values['custom_pre_id']);
       }
@@ -435,7 +460,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
          return CRM_Core_Error::statusBounce(ts('This page includes a Profile with Membership fields - but the Membership Block is NOT enabled. Please notify the site administrator.'));
       }
 
-      require_once 'CRM/Pledge/BAO/PledgeBlock.php';
+
       $pledgeBlock = CRM_Pledge_BAO_PledgeBlock::getPledgeBlock($this->_id);
 
       if ($pledgeBlock) {
@@ -471,16 +496,16 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       $this->assign_by_ref("viewCustomData", $this->_values['custom_data_view']);
     }
 
-    require_once 'CRM/Contribute/BAO/PCP.php';
+
     $pcpId = CRM_Utils_Request::retrieve('pcpId', 'Positive', $this);
     if ($pcpId) {
-      require_once 'CRM/Core/OptionGroup.php';
+
       $approvedId = CRM_Core_OptionGroup::getValue('pcp_status', 'Approved', 'name');
 
       $prms = array('entity_id' => $this->_values['id'],
         'entity_table' => 'civicrm_contribution_page',
       );
-      require_once 'CRM/Contribute/PseudoConstant.php';
+
       $pcpStatus = CRM_Contribute_PseudoConstant::pcpStatus();
       CRM_Core_DAO::commonRetrieve('CRM_Contribute_DAO_PCPBlock',
         $prms,
@@ -491,7 +516,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
 
       //start and end date of the contribution page
       $startDate = CRM_Utils_Date::unixTime(CRM_Utils_Array::value('start_date', $this->_values));
-      $endDate = CRM_Utils_Date::unixTime(CRM_Utils_Array::value('end_date', $this->_values));
+      $endDate = CRM_Utils_Date::unixTime(CRM_Utils_Array::value('end_date', $this->_values), true);
       $now = time();
 
       if ($pcpInfo['contribution_page_id'] != $this->_values['id']) {
@@ -573,7 +598,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
     $this->assign_by_ref('paymentProcessor', $this->_paymentProcessor);
 
     // check if one of the (amount , membership)  bloks is active or not
-    require_once 'CRM/Member/BAO/Membership.php';
+
     $this->_membershipBlock = $this->get('membershipBlock');
 
     if (!$this->_values['amount_block_is_active'] &&
@@ -754,7 +779,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       $addressFields[$n] = CRM_Utils_Array::value('billing_' . $part, $this->_params);
     }
 
-    require_once 'CRM/Utils/Address.php';
+
     $this->assign('address', CRM_Utils_Address::format($addressFields));
 
     if (CRM_Utils_Array::value('is_for_organization', $this->_params)) {
@@ -826,8 +851,8 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
     $stateCountryMap = array();
 
     if ($id) {
-      require_once 'CRM/Core/BAO/UFGroup.php';
-      require_once 'CRM/Profile/Form.php';
+
+
       $contactID = $this->_userID;
 
       // we don't allow conflicting fields to be
@@ -848,7 +873,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
 
       $fields = NULL;
       if ($contactID) {
-        require_once "CRM/Core/BAO/UFGroup.php";
+
         if (CRM_Core_BAO_UFGroup::filterUFGroups($id, $contactID)) {
           $fields = CRM_Core_BAO_UFGroup::getFields($id, FALSE, CRM_Core_Action::ADD);
         }
@@ -903,13 +928,13 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
           }
         }
 
-        require_once 'CRM/Core/BAO/Address.php';
+
         CRM_Core_BAO_Address::addStateCountryMap($stateCountryMap);
 
         if ($addCaptcha &&
           !$viewOnly
         ) {
-          require_once 'CRM/Utils/ReCAPTCHA.php';
+
           $captcha = &CRM_Utils_ReCAPTCHA::singleton();
           $captcha->add($this);
           $this->assign("isCaptcha", TRUE);
@@ -948,7 +973,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
     CRM_Core_DAO::commonRetrieve('CRM_Pledge_DAO_Pledge', $pledgeParams, $pledgeValues, $returnProperties);
 
     //get all status
-    require_once 'CRM/Contribute/PseudoConstant.php';
+
     $allStatus = CRM_Contribute_PseudoConstant::contributionStatus(NULL, 'name');
     $validStatus = array(array_search('Pending', $allStatus),
       array_search('In Progress', $allStatus),
@@ -964,7 +989,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
     }
     elseif ($userChecksum && $pledgeValues['contact_id']) {
       //check for anonymous user.
-      require_once 'CRM/Contact/BAO/Contact/Utils.php';
+
       $validUser = CRM_Contact_BAO_Contact_Utils::validChecksum($pledgeValues['contact_id'], $userChecksum);
 
       //make sure cid is same as pledge contact id
@@ -996,12 +1021,12 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       $recurId = CRM_Utils_Request::retrieve('recurId', 'Positive', CRM_Core_DAO::$_nullObject);
       //clean db for recurring contribution.
       if ($isRecur && $recurId) {
-        require_once 'CRM/Contribute/BAO/ContributionRecur.php';
+
         CRM_Contribute_BAO_ContributionRecur::deleteRecurContribution($recurId);
       }
       $contribId = CRM_Utils_Request::retrieve('contribId', 'Positive', CRM_Core_DAO::$_nullObject);
       if ($contribId) {
-        require_once 'CRM/Contribute/BAO/Contribution.php';
+
         CRM_Contribute_BAO_Contribution::deleteContribution($contribId);
       }
     }

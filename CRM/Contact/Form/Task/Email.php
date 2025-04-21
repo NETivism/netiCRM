@@ -33,11 +33,11 @@
  *
  */
 
-require_once 'CRM/Contact/Form/Task.php';
-require_once 'CRM/Contact/Form/Task/EmailCommon.php';
-require_once 'CRM/Core/Menu.php';
-require_once 'CRM/Core/BAO/CustomGroup.php';
-require_once 'CRM/Contact/BAO/Contact.php';
+
+
+
+
+
 
 /**
  * This class provides the functionality to email a group of
@@ -45,6 +45,12 @@ require_once 'CRM/Contact/BAO/Contact.php';
  */
 class CRM_Contact_Form_Task_Email extends CRM_Contact_Form_Task {
 
+  /**
+   * @var string
+   */
+  public $_caseId;
+  public $_context;
+  public $_templateDefault;
   /**
    * Are we operating in "single mode", i.e. sending email to one
    * specific contact?
@@ -94,7 +100,7 @@ class CRM_Contact_Form_Task_Email extends CRM_Contact_Form_Task {
     }
 
     $this->assign('single', $this->_single);
-    require_once 'CRM/Core/Permission.php';
+
     if (CRM_Core_Permission::check('administer CiviCRM')) {
       $this->assign('isAdmin', 1);
     }

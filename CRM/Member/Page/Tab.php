@@ -33,10 +33,15 @@
  *
  */
 
-require_once 'CRM/Core/Page.php';
-require_once 'CRM/Member/BAO/Membership.php';
+
+
 class CRM_Member_Page_Tab extends CRM_Core_Page {
 
+  public $_isPaymentProcessor;
+  public $_accessContribution;
+  public $_action;
+  public $_id;
+  public $_queryParams;
   /**
    * The action links that we need to display for the browse screen
    *
@@ -59,7 +64,7 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
     $links = &self::links('all', $this->_isPaymentProcessor, $this->_accessContribution);
 
     $membership = array();
-    require_once 'CRM/Member/DAO/Membership.php';
+
     $dao = new CRM_Member_DAO_Membership();
     $dao->contact_id = $this->_contactId;
     $dao->is_test = 0;
@@ -77,7 +82,7 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
     $mask = CRM_Core_Action::mask($permissions);
 
     // get deceased status id
-    require_once 'CRM/Member/PseudoConstant.php';
+
     $allStatus = CRM_Member_PseudoConstant::membershipStatus();
     $deceasedStatusId = array_search('Deceased', $allStatus);
 
@@ -150,7 +155,7 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
     $this->assign('membershipTypes', $membershipTypes);
 
     if ($this->_contactId) {
-      require_once 'CRM/Contact/BAO/Contact.php';
+
       $displayName = CRM_Contact_BAO_Contact::displayName($this->_contactId);
       $this->assign('displayName', $displayName);
     }
@@ -261,7 +266,7 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
       $this->assign('contactId', $this->_contactId);
 
       // check logged in url permission
-      require_once 'CRM/Contact/Page/View.php';
+
       CRM_Contact_Page_View::checkUserPermission($this);
 
       // set page title
@@ -332,7 +337,7 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
 
     $qfKey = CRM_Utils_Request::retrieve('key', 'String', $this);
     //validate the qfKey
-    require_once 'CRM/Utils/Rule.php';
+
     if (!CRM_Utils_Rule::qfKey($qfKey)) {
       $qfKey = NULL;
     }

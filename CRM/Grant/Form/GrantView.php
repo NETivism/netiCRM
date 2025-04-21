@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
+
 
 /**
  * This class generates form components for processing a Grant
@@ -41,6 +41,12 @@ require_once 'CRM/Core/Form.php';
  */
 class CRM_Grant_Form_GrantView extends CRM_Core_Form {
 
+  /**
+   * @var string
+   */
+  public $_contactID;
+  public $_id;
+  public $_noteId;
   /**
    * Function to set variables up before form is built
    *
@@ -55,9 +61,9 @@ class CRM_Grant_Form_GrantView extends CRM_Core_Form {
 
     $values = array();
     $params['id'] = $this->_id;
-    require_once 'CRM/Grant/BAO/Grant.php';
+
     CRM_Grant_BAO_Grant::retrieve($params, $values);
-    require_once 'CRM/Grant/PseudoConstant.php';
+
     $grantType = CRM_Grant_PseudoConstant::grantType();
     $grantStatus = CRM_Grant_PseudoConstant::grantStatus();
     $this->assign('grantType', $grantType[$values['grant_type_id']]);
@@ -72,7 +78,7 @@ class CRM_Grant_Form_GrantView extends CRM_Core_Form {
     }
 
     if (isset($this->_id)) {
-      require_once 'CRM/Core/BAO/Note.php';
+
       $noteDAO = new CRM_Core_BAO_Note();
       $noteDAO->entity_table = 'civicrm_grant';
       $noteDAO->entity_id = $this->_id;
@@ -87,9 +93,9 @@ class CRM_Grant_Form_GrantView extends CRM_Core_Form {
 
 
     // add Grant to Recent Items
-    require_once 'CRM/Utils/Recent.php';
-    require_once 'CRM/Contact/BAO/Contact.php';
-    require_once 'CRM/Utils/Money.php';
+
+
+
     $url = CRM_Utils_System::url('civicrm/contact/view/grant',
       "action=view&reset=1&id={$values['id']}&cid={$values['contact_id']}&context=home"
     );
@@ -116,7 +122,7 @@ class CRM_Grant_Form_GrantView extends CRM_Core_Form {
       $recentOther
     );
 
-    require_once 'CRM/Core/BAO/File.php';
+
     $attachment = CRM_Core_BAO_File::attachmentInfo('civicrm_grant',
       $this->_id
     );

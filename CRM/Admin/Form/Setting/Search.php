@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Admin/Form/Setting.php';
+
 
 /**
  * This class generates form components for Search Parameters
@@ -61,14 +61,14 @@ class CRM_Admin_Form_Setting_Search extends CRM_Admin_Form_Setting {
       array('size' => 3, 'maxlength' => 5)
     );
 
-    require_once "CRM/Core/BAO/UFGroup.php";
+
     $types = array('Contact', 'Individual', 'Organization', 'Household');
     $profiles = CRM_Core_BAO_UFGroup::getProfiles($types);
 
     $this->add('select', 'defaultSearchProfileID', ts('Default Contact Search Profile'),
       array('' => ts('- select -')) + $profiles
     );
-    require_once 'CRM/Core/OptionGroup.php';
+
     $options = array(ts('Contact Name') => 1) + array_flip(CRM_Core_OptionGroup::values('contact_autocomplete_options', FALSE, FALSE, TRUE));
     $this->addCheckBox('autocompleteContactSearch', ts('Autocomplete Contact Search'), $options);
     $element = $this->getElement('autocompleteContactSearch');

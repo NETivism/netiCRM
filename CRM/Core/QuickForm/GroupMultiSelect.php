@@ -34,8 +34,25 @@
  *
  */
 
-require_once 'CRM/Core/QuickForm/NestedAdvMultiSelect.php';
+
 class CRM_Core_QuickForm_GroupMultiSelect extends CRM_Core_QuickForm_NestedAdvMultiSelect {
+  public $_flagFrozen;
+  public $_elementTemplate;
+  public $_options;
+  public $_values;
+  public $_jsPrefix;
+  public $_jsPostfix;
+  public $_allButtonAttributes;
+  public $_noneButtonAttributes;
+  public $_toggleButtonAttributes;
+  public $_attributesUnselected;
+  public $_attributesSelected;
+  public $_attributesHidden;
+  public $_removeButtonAttributes;
+  public $_addButtonAttributes;
+  public $_upButtonAttributes;
+  public $_downButtonAttributes;
+  public $_tableAttributes;
   function toHtml() {
     if ($this->_flagFrozen) {
       return $this->getFrozenHtml();

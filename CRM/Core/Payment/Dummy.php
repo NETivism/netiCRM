@@ -20,8 +20,12 @@
  */
 
 
-require_once 'CRM/Core/Payment.php';
+
 class CRM_Core_Payment_Dummy extends CRM_Core_Payment {
+  /**
+   * @var mixed
+   */
+  public $_processorName;
   CONST CHARSET = 'iso-8859-1';
 
   static protected $_mode = NULL;

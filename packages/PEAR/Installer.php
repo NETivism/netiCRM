@@ -41,6 +41,9 @@ define('PEAR_INSTALLER_NOBINARY', -240);
  */
 class PEAR_Installer extends PEAR_Downloader
 {
+    public $source_files;
+    public $_dirtree;
+    public $_dependencyDB;
     // {{{ properties
 
     /** name of the package directory, for example Foo-1.0
@@ -1271,7 +1274,7 @@ class PEAR_Installer extends PEAR_Downloader
                 if (count($test)) {
                     $msg = "$channel/$pkgname: conflicting files found:\n";
                     $longest = max(array_map("strlen", array_keys($test)));
-                    $fmt = "%${longest}s (%s)\n";
+                    $fmt = "%{$longest}s (%s)\n";
                     foreach ($test as $file => $info) {
                         if (!is_array($info)) {
                             $info = array('pear.php.net', $info);

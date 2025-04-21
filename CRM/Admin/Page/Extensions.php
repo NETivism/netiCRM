@@ -34,7 +34,7 @@
  *
  */
 
-require_once 'CRM/Core/Page/Basic.php';
+
 
 /**
  * This page displays the list of extensions registered in the system.
@@ -61,7 +61,7 @@ class CRM_Admin_Page_Extensions extends CRM_Core_Page_Basic {
    *
    */
   function preProcess() {
-    require_once 'CRM/Core/Extensions.php';
+
     $ext = new CRM_Core_Extensions();
     if ($ext->enabled === TRUE) {
       self::$_extInstalled = $ext->getInstalled(TRUE);

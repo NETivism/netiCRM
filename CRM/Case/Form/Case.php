@@ -33,9 +33,9 @@
  *
  */
 
-require_once "CRM/Core/Form.php";
-require_once "CRM/Activity/BAO/Activity.php";
-require_once 'CRM/Custom/Form/CustomData.php';
+
+
+
 
 /**
  * This class generates form components for case activity
@@ -43,6 +43,7 @@ require_once 'CRM/Custom/Form/CustomData.php';
  */
 class CRM_Case_Form_Case extends CRM_Core_Form {
 
+  public $_dedupeButtonName;
   /**
    * The context
    *
@@ -93,7 +94,7 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
 
     if ($this->_action & CRM_Core_Action::ADD && !$this->_currentlyViewedContactId) {
       // check for add contacts permissions
-      require_once 'CRM/Core/Permission.php';
+
       if (!CRM_Core_Permission::check('add contacts')) {
         CRM_Utils_System::permissionDenied();
         return;
@@ -110,7 +111,7 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
     }
 
     if (!$this->_caseId) {
-      require_once 'CRM/Case/PseudoConstant.php';
+
       $caseAttributes = array('case_type' => CRM_Case_PseudoConstant::caseType(),
         'case_status' => CRM_Case_PseudoConstant::caseStatus(),
         'encounter_medium' => CRM_Case_PseudoConstant::encounterMedium(),
@@ -127,7 +128,7 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
     }
 
     if ($this->_action & CRM_Core_Action::ADD) {
-      require_once 'CRM/Core/OptionGroup.php';
+
       $this->_activityTypeId = CRM_Core_OptionGroup::getValue('activity_type',
         'Open Case',
         'name'
@@ -149,7 +150,7 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
         'Case'
       )
     ) {
-      require_once "CRM/Case/Form/Activity/{$this->_activityTypeFile}.php";
+
       $this->assign('activityTypeFile', $this->_activityTypeFile);
     }
 
@@ -160,7 +161,7 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
     $this->assign('activityTypeDescription', $details[$this->_activityTypeId]['description']);
 
     if (isset($this->_currentlyViewedContactId)) {
-      require_once 'CRM/Contact/BAO/Contact.php';
+
       $contact = new CRM_Contact_DAO_Contact();
       $contact->id = $this->_currentlyViewedContactId;
       if (!$contact->find(TRUE)) {
@@ -174,7 +175,7 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
     $this->_currentUserId = $session->get('userID');
 
     //when custom data is included in this page
-    CRM_Custom_Form_Customdata::preProcess($this, NULL, $this->_activityTypeId, 1, 'Activity');
+    CRM_Custom_Form_CustomData::preProcess($this, NULL, $this->_activityTypeId, 1, 'Activity');
     $className = "CRM_Case_Form_Activity_{$this->_activityTypeFile}";
     $className::preProcess( $this );
   }
@@ -193,13 +194,13 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
     }
     $className = "CRM_Case_Form_Activity_{$this->_activityTypeFile}";
     $defaults = $className::setDefaultValues($this);
-    $defaults = array_merge($defaults, CRM_Custom_Form_Customdata::setDefaultValues($this));
+    $defaults = array_merge($defaults, CRM_Custom_Form_CustomData::setDefaultValues($this));
     return $defaults;
   }
 
   public function buildQuickForm() {
 
-    require_once 'CRM/Case/XMLProcessor/Process.php';
+
     $xmlProcessorProcess = new CRM_Case_XMLProcessor_Process();
     $isMultiClient = $xmlProcessorProcess->getAllowMultipleCaseClients();
     $this->assign('multiClient', $isMultiClient);
@@ -223,7 +224,7 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
       return;
     }
 
-    CRM_Custom_Form_Customdata::buildQuickForm($this);
+    CRM_Custom_Form_CustomData::buildQuickForm($this);
     // we don't want to show button on top of custom form
     $this->assign('noPreCustomButton', TRUE);
 
@@ -235,7 +236,7 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
       array_merge($s, array('maxlength' => '128')), TRUE
     );
 
-    require_once 'CRM/Core/BAO/Tag.php';
+
     $tags = CRM_Core_BAO_Tag::getTags('civicrm_case');
     if (!empty($tags)) {
       $this->add('select', 'tag', ts('Select Tags'), $tags, FALSE,
@@ -244,7 +245,7 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
     }
 
     // build tag widget
-    require_once 'CRM/Core/Form/Tag.php';
+
     $parentNames = CRM_Core_BAO_Tag::getTagSet('civicrm_case');
     CRM_Core_Form_Tag::buildQuickForm($this, $parentNames, 'civicrm_case', NULL, FALSE, TRUE);
 
@@ -309,7 +310,7 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
 
     if ($this->_action & CRM_Core_Action::DELETE) {
       $statusMsg = NULL;
-      require_once 'CRM/Case/BAO/Case.php';
+
       $caseDelete = CRM_Case_BAO_Case::deleteCase($this->_caseId, TRUE);
       if ($caseDelete) {
         $statusMsg = ts('The selected case has been moved to the Trash. You can view and / or restore deleted cases by checking the "Deleted Cases" option under Find Cases.<br />');
@@ -320,7 +321,7 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
 
     if ($this->_action & CRM_Core_Action::RENEW) {
       $statusMsg = NULL;
-      require_once 'CRM/Case/BAO/Case.php';
+
       $caseRestore = CRM_Case_BAO_Case::restoreCase($this->_caseId);
       if ($caseRestore) {
         $statusMsg = ts('The selected case has been restored.<br />');
@@ -332,7 +333,7 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
     $params = $this->controller->exportValues($this->_name);
     $params['now'] = date("Ymd");
 
-    require_once 'CRM/Case/XMLProcessor/Process.php';
+
 
     // 1. call begin post process
     if ($this->_activityTypeFile) {
@@ -341,9 +342,9 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
     }
 
     // 2. create/edit case
-    require_once 'CRM/Case/BAO/Case.php';
+
     if (CRM_Utils_Array::value('case_type_id', $params)) {
-      require_once 'CRM/Case/PseudoConstant.php';
+
       $caseType = CRM_Case_PseudoConstant::caseType('name');
       $params['case_type'] = $caseType[$params['case_type_id']];
       $params['subject'] = $params['activity_subject'];
@@ -357,18 +358,18 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
     // add tags if exists
     $tagParams = array();
     if (!empty($params['tag'])) {
-      require_once 'CRM/Core/BAO/EntityTag.php';
+
       $tagParams = array();
       foreach ($params['tag'] as $tag) {
         $tagParams[$tag] = 1;
       }
     }
-    require_once 'CRM/Core/BAO/EntityTag.php';
+
     CRM_Core_BAO_EntityTag::create($tagParams, 'civicrm_case', $caseObj->id);
 
     //save free tags
     if (isset($params['taglist']) && !empty($params['taglist'])) {
-      require_once 'CRM/Core/Form/Tag.php';
+
       CRM_Core_Form_Tag::postProcess($params['taglist'], $caseObj->id, 'civicrm_case', $this);
     }
 

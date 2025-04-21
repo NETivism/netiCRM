@@ -33,9 +33,9 @@
  *
  */
 
-require_once "CRM/Core/Form.php";
-require_once "CRM/Activity/BAO/Activity.php";
-require_once "CRM/Activity/BAO/ActivityTarget.php";
+
+
+
 
 /**
  * This class does pre processing for viewing an activity or their revisions
@@ -72,11 +72,11 @@ class CRM_Case_Form_ActivityView extends CRM_Core_Form {
     $this->assign('caseID', $caseID);
     $this->assign('type', $type);
 
-    require_once 'CRM/Case/XMLProcessor/Report.php';
+
     $xmlProcessor = new CRM_Case_XMLProcessor_Report();
     $report = $xmlProcessor->getActivityInfo($contactID, $activityID, TRUE);
 
-    require_once 'CRM/Core/BAO/File.php';
+
     $attachmentUrl = CRM_Core_BAO_File::attachmentInfo('civicrm_activity', $activityID);
     if ($attachmentUrl) {
       $report['fields'][] = array('label' => 'Attachment(s)',
@@ -85,7 +85,7 @@ class CRM_Case_Form_ActivityView extends CRM_Core_Form {
       );
     }
 
-    require_once 'CRM/Core/BAO/EntityTag.php';
+
     $tags = CRM_Core_BAO_EntityTag::getTag($activityID, 'civicrm_activity');
     if (!empty($tags)) {
       $allTag = CRM_Core_PseudoConstant::tag();
@@ -147,15 +147,15 @@ class CRM_Case_Form_ActivityView extends CRM_Core_Form {
       $caseID = CRM_Core_DAO::getFieldValue('CRM_Case_DAO_CaseActivity', $activityID, 'case_id', 'activity_id');
     }
 
-    require_once 'CRM/Utils/Recent.php';
+
     $url = CRM_Utils_System::url('civicrm/case/activity/view',
       "reset=1&aid={$activityID}&cid={$recentContactId}&caseID={$caseID}&context=home"
     );
 
-    require_once 'CRM/Contact/BAO/Contact.php';
+
     $recentContactDisplay = CRM_Contact_BAO_Contact::displayName($recentContactId);
     // add the recently created Activity
-    $activityTypes = CRM_Core_Pseudoconstant::activityType(TRUE, TRUE);
+    $activityTypes = CRM_Core_PseudoConstant::activityType(TRUE, TRUE);
 
     $title = "";
     if (isset($activitySubject)) {
@@ -164,7 +164,7 @@ class CRM_Case_Form_ActivityView extends CRM_Core_Form {
 
     $title = $title . $recentContactDisplay . ' (' . $activityTypes[$activityTypeID] . ')';
 
-    require_once 'CRM/Case/BAO/Case.php';
+
     $recentOther = array();
     if (CRM_Case_BAO_Case::checkPermission($activityID, 'edit')) {
       $recentOther['editUrl'] = CRM_Utils_System::url('civicrm/case/activity',

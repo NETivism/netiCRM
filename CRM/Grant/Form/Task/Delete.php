@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Grant/Form/Task.php';
+
 
 /**
  * This class provides the functionality to delete a group of
@@ -85,7 +85,7 @@ class CRM_Grant_Form_Task_Delete extends CRM_Grant_Form_Task {
    */
   public function postProcess() {
     $deletedGrants = 0;
-    require_once 'CRM/Grant/BAO/Grant.php';
+
     foreach ($this->_grantIds as $grantId) {
       if (CRM_Grant_BAO_Grant::del($grantId)) {
         $deletedGrants++;

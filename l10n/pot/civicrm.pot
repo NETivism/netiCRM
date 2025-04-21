@@ -9850,7 +9850,6 @@ msgid "Edit Note"
 msgstr ""
 
 #: CRM/Contact/Page/View/Note.php
-#: templates/CRM/Mailing/Form/ForwardMailing.tpl
 msgid "Add Comment"
 msgstr ""
 
@@ -49666,4 +49665,89 @@ msgid "Transaction Abandoned"
 msgstr ""
 
 msgid "Execution Failed"
+msgstr ""
+
+#: templates/CRM/Mailing/Form/ForwardMailing.tpl
+msgid "Add Personal Message"
+msgstr ""
+
+#: CRM/Admin/Form/Setting/Receipt.php
+msgid "Donor Credit Name Options"
+msgstr ""
+
+#: CRM/Admin/Form/Setting/Receipt.php
+msgid "Partial Name"
+msgstr ""
+
+#: CRM/Admin/Form/Setting/Receipt.php
+msgid "I don't agree to disclose name"
+msgstr ""
+
+#: CRM/Admin/Form/Setting/Receipt.php
+msgid "Default name when donor doesn't agree to disclose"
+msgstr ""
+
+#: templates/CRM/Admin/Form/Setting/Receipt.tpl
+msgid "Select which options to show to donors when they make contributions."
+msgstr ""
+
+#: templates/CRM/Admin/Form/Setting/Receipt.tpl
+msgid "This name will be used when donor selects \"I don't agree to disclose name\". Examples: \"Anonymous\", \"Kind-hearted Person\", etc."
+msgstr ""
+
+#: templates/CRM/Admin/Form/Setting/Receipt.tpl
+msgid "Please enter a default name for anonymous donors."
+msgstr ""
+
+#: CRM/Core/SelectValues.php
+msgid "Do not notify"
+msgstr ""
+
+#: templates/CRM/Contribute/Form/Contribution.tpl
+msgid "Contact labelled as do not notification."
+msgstr ""
+
+#: CRM/Event/BAO/Event.php
+msgid "Email has NOT been sent to %1 contact(s) - communication preferences specify DO NOT NOTIFY OR valid Email is NOT present."
+msgstr ""
+
+#: templates/CRM/Admin/Form/Setting/Receipt.tpl
+msgid "Please upload the logo image to be displayed on the receipt."
+msgstr ""
+
+#: CRM/Contribute/Form/Task/PDF.php
+msgid "Email will NOT be sent to %1 contact(s) - communication preferences specify DO NOT NOTIFY or valid Email is NOT present."
+msgstr ""
+
+#: templates/CRM/Admin/Form/Setting/Receipt.tpl
+msgid "Save to apply changes."
+msgstr ""
+
+#: CRM/Contribute/xml/Menu/Contribute.xml
+msgid "Import Fee and Transaction Date"
+msgstr ""
+
+#: CRM/Admin/Form/Setting/Recurring.php
+msgid "Default contribution page for one-time renewal link"
+msgstr ""
+
+#: templates/CRM/Admin/Form/Setting/Recurring.tpl
+msgid "If the linked page is unavailable or the contact has no donation history, the system will redirect to this default contribution page."
+msgstr ""
+
+#: CRM/Core/SelectValues.php
+#: CRM/Contact/BAO/Contact/Utils.php
+msgid "Recurring Contribution Renewal Link"
+msgstr ""
+
+#: CRM/Core/SelectValues.php
+msgid "Do Not Notify"
+msgstr ""
+
+#: templates/CRM/Contribute/Form/ContributionPage/Delete.tpl
+msgid "This contribution page is set as the default page for one-time recurring contribution links and cannot be deleted or disable.<br/>Please go to <a href='%1'>Administer >> CiviContribute >> Recurring Settings</a> and update the Default contribution page for one-time renewal link field before trying again."
+msgstr ""
+
+#: templates/CRM/Event/Form/Registration/ThankYou.tpl
+msgid "To ensure that you receive event registration notifications, we recommend contacting the administrator."
 msgstr ""

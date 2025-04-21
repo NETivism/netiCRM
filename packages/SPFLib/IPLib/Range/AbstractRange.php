@@ -13,6 +13,7 @@ use IPLib\Factory;
  */
 abstract class AbstractRange implements RangeInterface
 {
+    public $rangeType;
     /**
      * {@inheritdoc}
      *

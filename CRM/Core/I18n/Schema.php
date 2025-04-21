@@ -33,9 +33,9 @@
  *
  */
 
-require_once 'CRM/Core/DAO.php';
-require_once 'CRM/Core/DAO/Domain.php';
-require_once 'CRM/Core/I18n/SchemaStructure.php';
+
+
+
 class CRM_Core_I18n_Schema {
 
   /**
@@ -264,11 +264,11 @@ class CRM_Core_I18n_Schema {
       $latest = str_replace('.', '_', $latest);
 
       $class = "CRM_Core_I18n_SchemaStructure_{$latest}";
-      require_once "CRM/Core/I18n/SchemaStructure_{$latest}.php";
+
     }
     else {
       $class = 'CRM_Core_I18n_SchemaStructure';
-      require_once 'CRM/Core/I18n/SchemaStructure.php';
+
     }
     $indices =& $class::indices();
     $tables  =& $class::tables();

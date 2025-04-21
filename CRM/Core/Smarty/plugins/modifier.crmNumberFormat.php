@@ -49,6 +49,10 @@
  * EXAMPLE:   {$number|crmNumberFormat:2:',':' '} for French notation - 1234.56 becomes 1 234,56
  */
 function smarty_modifier_crmNumberFormat($number, $decimals = NULL, $dec_point = NULL, $thousands_sep = NULL) {
+  // If $decimals is negative, treat it as 0 to mimic PHP 8.2 behavior
+  if ($decimals < 0) {
+    $decimals = 0;
+  }
   if (is_numeric($number)) {
     // Both dec_point AND thousands_sep are required if one is specified (this is how number_format works)
     if ($dec_point && $thousands_sep) {

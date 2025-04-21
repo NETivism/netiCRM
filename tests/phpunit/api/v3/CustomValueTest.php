@@ -108,9 +108,9 @@ class api_v3_CustomValueTest extends CiviUnitTestCase {
         $this->assertAPISuccess($result, 'In line ' . __LINE__ );
         $checkDeleted = civicrm_api('survey','get',array('version' =>3,));
         $this->assertEquals( 0, $checkDeleted['count'], 'In line ' . __LINE__ );
-        
+
     }
-    
+
    public function testGetCustomValueChainDelete () {
         $description = "demonstrates get + delete in the same call";
         $subfile     = 'ChainedGetDelete';

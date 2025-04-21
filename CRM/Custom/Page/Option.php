@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Page.php';
+
 
 /**
  * Create a page for displaying Custom Options.
@@ -227,7 +227,7 @@ ORDER BY weight, label
       "reset=1&action=browse&gid={$this->_gid}&fid={$this->_fid}"
     );
     $filter = "option_group_id = {$optionGroupID}";
-    require_once 'CRM/Utils/Weight.php';
+
     CRM_Utils_Weight::addOrder($customOption, 'CRM_Core_DAO_OptionValue',
       'id', $returnURL, $filter
     );
@@ -271,7 +271,7 @@ ORDER BY weight, label
    * @access public
    */
   function run() {
-    require_once 'CRM/Core/BAO/CustomField.php';
+
 
     // get the field id
     $this->_fid = CRM_Utils_Request::retrieve('fid', 'Positive',
@@ -324,7 +324,7 @@ ORDER BY weight, label
       $this->edit($action);
     }
     else {
-      require_once 'CRM/Core/BAO/OptionValue.php';
+
       $this->browse();
     }
     // Call the parents run method

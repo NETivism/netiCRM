@@ -454,6 +454,14 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
     if (!empty($this->_batch->created_id)) {
       list($domainEmailName, $domainEmailAddress) = CRM_Core_BAO_Domain::getNameAndEmail();
       list($toName, $toEmail) = CRM_Contact_BAO_Contact_Location::getEmailDetails($this->_batch->created_id, FALSE);
+
+      $detail = CRM_Contact_BAO_Contact::getContactDetails($this->_batch->created_id);
+      if (!empty($detail[5])) {
+        CRM_Core_Error::debug_log_message("Skipped email notify pcp_notify for contact {$this->_batch->created_id} due to do_not_notify marked");
+        $message = ts('Email has NOT been sent to %1 contact(s) - communication preferences specify DO NOT NOTIFY OR valid Email is NOT present.', array(1 => '1'));
+        CRM_Core_Session::singleton()->setStatus($message);
+        return;
+      }
       if (!empty($toEmail)) {
         $sendTemplateParams = array(
           'groupName' => 'msg_tpl_workflow_meta',

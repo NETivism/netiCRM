@@ -61,6 +61,7 @@
        <import>true</import>
        <headerPattern>/d(o )?(not )?(email)/i</headerPattern>
        <dataPattern>/^\d{1,}$/</dataPattern>
+       <comment>Contact who do not want to receive bulk email or personal email.</comment>
        <default>0</default>
        <add>1.1</add>
 </field>
@@ -71,6 +72,7 @@
        <import>true</import>
        <headerPattern>/d(o )?(not )?(call|phone)/i</headerPattern>
        <dataPattern>/^\d{1,}$/</dataPattern>
+       <comment>Contact who do not want to receive real phone call.</comment>
        <add>1.1</add>
  </field>
  <field>
@@ -79,6 +81,7 @@
        <import>true</import>
        <headerPattern>/^(d(o\s)?n(ot\s)?mail)|(\w*)?bulk\s?(\w*)$/i</headerPattern>
        <dataPattern>/^\d{1,}$/</dataPattern>
+       <comment>Contact who do not want to receive real world mail.</comment>
        <default>0</default>
        <add>1.1</add>
   </field>
@@ -89,6 +92,7 @@
        <headerPattern>/d(o )?(not )?(sms)/i</headerPattern>
        <dataPattern>/^\d{1,}$/</dataPattern>
        <default>0</default>
+       <comment>Contact who do not want to receive SMS.</comment>
        <add>3.0</add>
   </field>
   <field>
@@ -97,8 +101,19 @@
        <import>true</import>
        <headerPattern>/d(o )?(not )?(trade)/i</headerPattern>
        <dataPattern>/^\d{1,}$/</dataPattern>
+       <comment>Contact who do not want doing trade.</comment>
        <default>0</default>
        <add>1.1</add>
+  </field>
+  <field>
+       <name>do_not_notify</name>
+       <type>boolean</type>
+       <import>true</import>
+       <headerPattern>/d(o )?(not )?(notify)/i</headerPattern>
+       <dataPattern>/^\d{1,}$/</dataPattern>
+       <comment>Contact who do not want to receive workflow related notification.</comment>
+       <default>0</default>
+       <add>4.0</add>
   </field>
   <field>
     <name>is_opt_out</name>

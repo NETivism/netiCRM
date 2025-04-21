@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Contact/DAO/Group.php';
+
 class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group {
 
   /**
@@ -81,16 +81,16 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group {
    *
    */
   static function discard($id) {
-    require_once 'CRM/Utils/Hook.php';
-    require_once 'CRM/Contact/DAO/SubscriptionHistory.php';
+
+
     CRM_Utils_Hook::pre('delete', 'Group', $id, CRM_Core_DAO::$_nullArray);
 
-    require_once 'CRM/Core/Transaction.php';
+
     $transaction = new CRM_Core_Transaction();
 
     // added for CRM-1631 and CRM-1794
     // delete all subscribed mails with the selected group id
-    require_once 'CRM/Mailing/Event/BAO/Subscribe.php';
+
     $subscribe = new CRM_Mailing_Event_BAO_Subscribe();
     $subscribe->deleteGroup($id);
 
@@ -100,7 +100,7 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group {
     $subHistory->delete();
 
     // delete all crm_group_contact records with the selected group id
-    require_once 'CRM/Contact/DAO/GroupContact.php';
+
     $groupContact = new CRM_Contact_DAO_GroupContact();
     $groupContact->group_id = $id;
     $groupContact->delete();
@@ -115,7 +115,7 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group {
 
     if (defined('CIVICRM_MULTISITE') && CIVICRM_MULTISITE) {
       // clear any descendant groups cache if exists
-      require_once 'CRM/Core/BAO/Cache.php';
+
       $finalGroups = &CRM_Core_BAO_Cache::deleteGroup('descendant groups for an org');
     }
 
@@ -129,7 +129,7 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group {
     CRM_Utils_Hook::post('delete', 'Group', $id, $group);
 
     // delete the recently created Group
-    require_once 'CRM/Utils/Recent.php';
+
     $groupRecent = array(
       'id' => $id,
       'type' => 'Group',
@@ -233,6 +233,7 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group {
     $params['smartGroupCache'] = $useCache;
 
     require_once 'api/v2/Contact.php';
+
     $contacts = civicrm_contact_search($params);
 
     $aMembers = array();
@@ -302,8 +303,8 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group {
    * @static
    */
   static function checkPermission($id, $title) {
-    require_once 'CRM/ACL/API.php';
-    require_once 'CRM/Core/Permission.php';
+
+
 
     $allGroups = CRM_Core_PseudoConstant::allGroup();
 
@@ -344,7 +345,7 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group {
    * @static
    */
   public static function &create(&$params) {
-    require_once 'CRM/Utils/Hook.php';
+
 
     if (CRM_Utils_Array::value('id', $params)) {
       CRM_Utils_Hook::pre('edit', 'Group', $params['id'], $params);
@@ -405,14 +406,14 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group {
 
     // add custom field values
     if (CRM_Utils_Array::value('custom', $params)) {
-      require_once 'CRM/Core/BAO/CustomValueTable.php';
+
       CRM_Core_BAO_CustomValueTable::store($params['custom'], 'civicrm_group', $group->id);
     }
 
     // make the group, child of domain/site group by default.
-    require_once 'CRM/Contact/BAO/GroupContactCache.php';
-    require_once 'CRM/Core/BAO/Domain.php';
-    require_once 'CRM/Contact/BAO/GroupNesting.php';
+
+
+
     $domainGroupID = CRM_Core_BAO_Domain::getGroupId();
     if (CRM_Utils_Array::value('no_parent', $params) !== 1) {
       if (defined('CIVICRM_MULTISITE') && CIVICRM_MULTISITE &&
@@ -436,12 +437,12 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group {
       }
 
       // clear any descendant groups cache if exists
-      require_once 'CRM/Core/BAO/Cache.php';
+
       $finalGroups = &CRM_Core_BAO_Cache::deleteGroup('descendant groups for an org');
 
       // this is always required, since we don't know when a
       // parent group is removed
-      require_once 'CRM/Contact/BAO/GroupNestingCache.php';
+
       CRM_Contact_BAO_GroupNestingCache::update();
 
       // update group contact cache for all parent groups
@@ -452,7 +453,7 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group {
     }
 
     if (CRM_Utils_Array::value('organization_id', $params)) {
-      require_once 'CRM/Contact/BAO/GroupOrganization.php';
+
       $groupOrg = array();
       $groupOrg = $params;
       $groupOrg['group_id'] = $group->id;
@@ -475,7 +476,7 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group {
       $recentOther['deleteUrl'] = CRM_Utils_System::url('civicrm/group', 'reset=1&action=delete&id=' . $group->id);
     }
 
-    require_once 'CRM/Utils/Recent.php';
+
     // add the recently added group (unless hidden: CRM-6432)
     if (!$group->is_hidden) {
       CRM_Utils_Recent::add($group->title,
@@ -499,7 +500,7 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group {
 
     if (!empty($params)) {
       $tables = $whereTables = array();
-      require_once 'CRM/Contact/BAO/Query.php';
+
       $this->where_clause = CRM_Contact_BAO_Query::getWhereClause($params, NULL, $tables, $whereTables);
       if (!empty($tables)) {
         $this->select_tables = serialize($tables);
@@ -605,7 +606,7 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group {
     $mappingId = NULL;
     if ($params['search_context'] == 'builder') {
       //save the mapping for search builder
-      require_once "CRM/Core/BAO/Mapping.php";
+
       if (!$ssId) {
         //save record in mapping table
         $temp = array();
@@ -615,7 +616,7 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group {
       }
       else {
         //get the mapping id from saved search
-        require_once "CRM/Contact/BAO/SavedSearch.php";
+
         $savedSearch = new CRM_Contact_BAO_SavedSearch();
         $savedSearch->id = $ssId;
         $savedSearch->find(TRUE);
@@ -653,7 +654,7 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group {
         'saved_search_id' => $ssId,
       );
 
-      require_once 'CRM/Contact/BAO/Group.php';
+
       $smartGroup = self::create($groupParams);
       $smartGroupId = $smartGroup->id;
     }

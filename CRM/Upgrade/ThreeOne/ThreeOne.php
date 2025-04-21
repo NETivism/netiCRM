@@ -33,9 +33,9 @@
  *
  */
 
-require_once 'CRM/Upgrade/Form.php';
-require_once 'CRM/Core/OptionGroup.php';
-require_once 'CRM/Core/OptionValue.php';
+
+
+
 class CRM_Upgrade_ThreeOne_ThreeOne extends CRM_Upgrade_Form {
   function verifyPreDBState(&$errorMessage) {
     $latestVer = CRM_Utils_System::version();
@@ -114,7 +114,7 @@ class CRM_Upgrade_ThreeOne_ThreeOne extends CRM_Upgrade_Form {
 
     // fix for CRM-5162
     // we need to encrypt all smtpPasswords if present
-    require_once "CRM/Core/DAO/Preferences.php";
+
     $mailingDomain = new CRM_Core_DAO_Preferences();
     $mailingDomain->find();
     while ($mailingDomain->fetch()) {
@@ -122,7 +122,7 @@ class CRM_Upgrade_ThreeOne_ThreeOne extends CRM_Upgrade_Form {
         $values = unserialize($mailingDomain->mailing_backend);
 
         if (isset($values['smtpPassword'])) {
-          require_once 'CRM/Utils/Crypt.php';
+
           $values['smtpPassword'] = CRM_Utils_Crypt::encrypt($values['smtpPassword']);
           $mailingDomain->mailing_backend = serialize($values);
           $mailingDomain->save();
@@ -130,7 +130,7 @@ class CRM_Upgrade_ThreeOne_ThreeOne extends CRM_Upgrade_Form {
       }
     }
 
-    require_once "CRM/Core/DAO/Domain.php";
+
     $domain = new CRM_Core_DAO_Domain();
     $domain->selectAdd();
     $domain->selectAdd('config_backend');

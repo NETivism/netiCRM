@@ -52,21 +52,29 @@
         {if $isOnWaitlist}
             <p>
                 <span class="bold">{ts}You have been added to the WAIT LIST for this event.{/ts}</span>
-                {ts}If space becomes available you will receive an email with a link to a web page where you can complete your registration.{/ts}
+                {if $do_not_notify}
+                  {ts}To ensure that you receive event registration notifications, we recommend contacting the administrator.{/ts}
+                {else}
+                  {ts}If space becomes available you will receive an email with a link to a web page where you can complete your registration.{/ts}
+                {/if}
              </p> 
         {elseif $isRequireApproval}
             <p>
                 <span class="bold">{ts}Your registration has been submitted.{/ts}
-                {ts}Once your registration has been reviewed, you will receive an email with a link to a web page where you can complete the registration process.{/ts}</span>
+                {if $do_not_notify}
+                  {ts}To ensure that you receive event registration notifications, we recommend contacting the administrator.{/ts}
+                {else}
+                  {ts}Once your registration has been reviewed, you will receive an email with a link to a web page where you can complete the registration process.{/ts}</span>
+                {/if}
             </p>
         {elseif $payment_result_type eq 1 and $paidEvent}
           <h3>{ts}Congratulations! Your payment has been completed!{/ts}</h3>
-          {if $is_email_confirm}
+          {if $is_email_confirm && !$do_not_notify}
             <div>
-            {if $is_email_confirm}
                <p>{ts}You will receive an email acknowledgement of this payment.{/ts}</p>
-            {/if}
             </div>
+          {else}
+            {ts}To ensure that you receive event registration notifications, we recommend contacting the administrator.{/ts}
           {/if}
         {elseif $payment_result_type eq 4 and $paidEvent}
           <h3>{ts}Payment failed.{/ts}</h3>
@@ -82,18 +90,24 @@
         {elseif $is_pay_later and $paidEvent}
           <h3>{ts}Keep supporting it. Payment has not been completed yet with entire process.{/ts}</h3>
             <div class="bold">{$pay_later_receipt}</div>
-            {if $is_email_confirm}
-                <p>{ts 1=$email}An email with event details has been sent to %1.{/ts}</p>
+            {if $is_email_confirm && !$do_not_notify}
+              <p>{ts 1=$email}An email with event details has been sent to %1.{/ts}</p>
+            {else}
+              <p>{ts}To ensure that you receive event registration notifications, we recommend contacting the administrator.{/ts}</p>
             {/if}
         {elseif $contributeMode EQ 'notify' and $paidEvent}
             <p>{ts 1=$paymentProcessor.name}Your registration payment has been submitted to %1 for processing. Please print this page for your records.{/ts}</p>
-            {if $is_email_confirm}
-                <p>{ts 1=$email}A registration confirmation email will be sent to %1 once the transaction is processed successfully.{/ts}</p>
+            {if $is_email_confirm && !$do_not_notify}
+              <p>{ts 1=$email}A registration confirmation email will be sent to %1 once the transaction is processed successfully.{/ts}</p>
+            {else}
+              <p>{ts}To ensure that you receive event registration notifications, we recommend contacting the administrator.{/ts}</p>
             {/if}
         {else}
             <p class="msg-register-success">{ts}Your registration has been processed successfully. Please print this page for your records.{/ts}</p>
-            {if $is_email_confirm}
-                <p>{ts 1=$email}A registration confirmation email has also been sent to %1{/ts}</p>
+            {if $is_email_confirm && !$do_not_notify}
+              <p>{ts 1=$email}A registration confirmation email has also been sent to %1{/ts}</p>
+            {else}
+              <p>{ts}To ensure that you receive event registration notifications, we recommend contacting the administrator.{/ts}</p>
             {/if}
         {/if}
     </div>

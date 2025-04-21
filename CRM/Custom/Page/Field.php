@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Page.php';
+
 
 /**
  * Create a page for displaying Custom Fields.
@@ -124,7 +124,7 @@ class CRM_Custom_Page_Field extends CRM_Core_Page {
    * @access public
    */
   function browse() {
-    require_once 'CRM/Core/BAO/CustomField.php';
+
     $customField = array();
     $customFieldBAO = new CRM_Core_BAO_CustomField();
 
@@ -179,7 +179,7 @@ class CRM_Custom_Page_Field extends CRM_Core_Page {
 
     $returnURL = CRM_Utils_System::url('civicrm/admin/custom/group/field', "reset=1&action=browse&gid={$this->_gid}");
     $filter = "custom_group_id = {$this->_gid}";
-    require_once 'CRM/Utils/Weight.php';
+
     CRM_Utils_Weight::addOrder($customField, 'CRM_Core_DAO_CustomField',
       'id', $returnURL, $filter
     );
@@ -223,7 +223,7 @@ class CRM_Custom_Page_Field extends CRM_Core_Page {
    * @access public
    */
   function run() {
-    require_once 'CRM/Core/BAO/CustomGroup.php';
+
 
     // get the group id
     $this->_gid = CRM_Utils_Request::retrieve('gid', 'Positive',
@@ -273,8 +273,8 @@ class CRM_Custom_Page_Field extends CRM_Core_Page {
       $this->preview($id);
     }
     else {
-      require_once 'CRM/Core/BAO/CustomField.php';
-      require_once 'CRM/Core/BAO/UFField.php';
+
+
       $this->browse();
     }
 

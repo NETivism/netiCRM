@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Campaign/DAO/Survey.php';
+
 Class CRM_Campaign_BAO_Survey extends CRM_Campaign_DAO_Survey {
 
   /**
@@ -116,7 +116,7 @@ Class CRM_Campaign_BAO_Survey extends CRM_Campaign_DAO_Survey {
     $defaultOnly = FALSE
   ) {
 
-    require_once 'CRM/Core/OptionGroup.php';
+
     $petitionTypeID = CRM_Core_OptionGroup::getValue('activity_type', 'petition', 'name');
 
     $survey = array();
@@ -149,7 +149,7 @@ Class CRM_Campaign_BAO_Survey extends CRM_Campaign_DAO_Survey {
    * @static
    */
   static function getSurveyList($all = FALSE) {
-    require_once 'CRM/Campaign/BAO/Campaign.php';
+
 
     $survey = array();
     $dao = new CRM_Campaign_DAO_Survey();
@@ -173,7 +173,7 @@ Class CRM_Campaign_BAO_Survey extends CRM_Campaign_DAO_Survey {
    * @static
    */
   static function getSurveyActivityType() {
-    require_once 'CRM/Core/OptionGroup.php';
+
     $activityTypes = array();
 
     $campaignCompId = CRM_Core_Component::getComponentID('CiviCampaign');
@@ -270,7 +270,7 @@ Class CRM_Campaign_BAO_Survey extends CRM_Campaign_DAO_Survey {
     }
 
     if (empty($returnProperties)) {
-      require_once 'CRM/Core/BAO/Preferences.php';
+
       $autocompleteContactSearch = CRM_Core_BAO_Preferences::valueOptions('contact_autocomplete_options');
       $returnProperties = array_fill_keys(array_merge(array('contact_type',
             'contact_sub_type',
@@ -323,7 +323,7 @@ Class CRM_Campaign_BAO_Survey extends CRM_Campaign_DAO_Survey {
 Group By  contact.id";
 
       $contact = CRM_Core_DAO::executeQuery($query);
-      require_once 'CRM/Contact/BAO/Contact/Utils.php';
+
       while ($contact->fetch()) {
         $voterDetails[$contact->contactId]['contact_id'] = $contact->contactId;
         foreach ($returnProperties as $property => $ignore) {
@@ -529,7 +529,7 @@ INNER JOIN  civicrm_activity_assignment activityAssignment ON ( activityAssignme
       return $isSurveyActivity;
     }
 
-    require_once 'CRM/Activity/DAO/Activity.php';
+
     $activity = new CRM_Activity_DAO_Activity();
     $activity->id = $activityId;
     $activity->selectAdd('source_record_id, activity_type_id');
@@ -561,7 +561,7 @@ INNER JOIN  civicrm_activity_assignment activityAssignment ON ( activityAssignme
 
     $resultId = CRM_Core_DAO::getFieldValue('CRM_Campaign_DAO_Survey', $surveyId, 'result_id');
     if ($resultId) {
-      require_once 'CRM/Core/OptionGroup.php';
+
       $responseOptions = CRM_Core_OptionGroup::valuesByID($resultId);
     }
 
@@ -583,7 +583,7 @@ INNER JOIN  civicrm_activity_assignment activityAssignment ON ( activityAssignme
 
     static $voterLinks = array();
     if (empty($voterLinks)) {
-      require_once 'CRM/Core/Permission.php';
+
       $permissioned = FALSE;
       if (CRM_Core_Permission::check('manage campaign') ||
         CRM_Core_Permission::check('administer CiviCampaign')
@@ -614,7 +614,7 @@ INNER JOIN  civicrm_activity_assignment activityAssignment ON ( activityAssignme
       }
     }
 
-    require_once 'CRM/Core/Action.php';
+
     $ids = array('id' => $surveyId);
     foreach ($voterLinks as $link) {
       if (CRM_Utils_Array::value('qs', $link) &&

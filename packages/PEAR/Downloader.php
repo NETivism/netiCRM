@@ -45,6 +45,7 @@ define('PEAR_INSTALLER_ERROR_NO_PREF_STATE', 2);
  */
 class PEAR_Downloader extends PEAR_Common
 {
+    public $_depTree;
     /**
      * @var PEAR_Registry
      * @access private

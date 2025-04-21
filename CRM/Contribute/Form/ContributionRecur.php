@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
+
 
 /**
  * This class generates form components generic to recurring contributions
@@ -305,7 +305,7 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
     );
 
     //retrieve custom field information
-    require_once 'CRM/Core/BAO/CustomGroup.php';
+
     $groupTree = &CRM_Core_BAO_CustomGroup::getTree("ContributionRecur", $this, $this->_id, 0);
     CRM_Core_BAO_CustomGroup::buildCustomDataView($this, $groupTree);
 
@@ -391,7 +391,7 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
           $resultParams = $paymentClass->doUpdateRecur($requestParams, $config->debug);
           CRM_Core_Error::debug('ContributionRecur_PostProcess_resultParams', $resultParams);
           if ($resultParams['msg']) {
-            
+
             CRM_Core_Session::setStatus($resultParams['msg']);
           }
           if ($resultParams['is_error']) {
@@ -443,7 +443,7 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
       // Update contribution recur
       
       $ids = array();
-      require_once 'CRM/Contribute/BAO/ContributionRecur.php';
+
       CRM_Contribute_BAO_ContributionRecur::add($params, $ids);
       CRM_Core_Session::setStatus(ts('Your recurring contribution has been saved.'));
     

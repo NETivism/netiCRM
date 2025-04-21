@@ -33,18 +33,21 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
 
-require_once 'CRM/Core/DAO/Mapping.php';
-require_once 'CRM/Core/DAO/MappingField.php';
 
-require_once 'CRM/Member/Import/Parser/Membership.php';
+
+
+
+
 
 /**
  * This class gets the name of the file to upload
  */
 class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
 
+  public $_onDuplicate;
+  public $_locationFields;
+  public $_location_types;
   /**
    * cache of preview data values
    *
@@ -244,8 +247,8 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
    * @access public
    */
   public function buildQuickForm() {
-    require_once "CRM/Core/BAO/Mapping.php";
-    require_once "CRM/Core/OptionGroup.php";
+
+
     //to save the current mappings
     if (!$this->get('savedMapping')) {
       $saveDetailsName = ts('Save this field mapping');
@@ -369,7 +372,7 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
     $contactType = $contactTypes[$contactTypeId];
 
     // get imporatable fields for contact type
-    require_once 'CRM/Contact/BAO/Contact.php';
+
     $contactFields = CRM_Contact_BAO_Contact::importableFields($contactType, NULL);
 
     $sel2[''] = NULL;
@@ -584,7 +587,7 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
             'level' => 'Strict',
           );
         }
-        require_once 'CRM/Dedupe/BAO/RuleGroup.php';
+
         list($ruleFields, $threshold) = CRM_Dedupe_BAO_RuleGroup::dedupeRuleFieldsWeight($ruleParams);
         $weightSum = 0;
         foreach ($importKeys as $key => $val) {
@@ -640,7 +643,7 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
     if (!empty($errors)) {
       if (!empty($errors['saveMappingName'])) {
         $_flag = 1;
-        require_once 'CRM/Core/Page.php';
+
         $assignError = new CRM_Core_Page();
         $assignError->assign('mappingDetailsError', $_flag);
       }

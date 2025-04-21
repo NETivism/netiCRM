@@ -36,7 +36,7 @@
                 </tr>
             {/foreach}
         </table>
-        {include file="CRM/common/chosen.tpl" selector="select#contribution_page"}
+        {include file="CRM/common/chosen.tpl" selector="select#contribution_page_id"}
         <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
     </div><!-- /.crm-accordion-body -->
 </div><!-- /.crm-accordion-wrapper -->

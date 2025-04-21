@@ -55,6 +55,7 @@ require_once 'HTML/QuickForm/Renderer/Object.php';
  */
 class HTML_QuickForm_Renderer_ObjectFlexy extends HTML_QuickForm_Renderer_Object
 {
+   public $_label;
    /**#@+
     * @access private
     */

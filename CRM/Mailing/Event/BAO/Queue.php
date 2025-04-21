@@ -33,13 +33,14 @@
  *
  */
 
-require_once 'CRM/Mailing/Event/DAO/Queue.php';
-require_once 'CRM/Mailing/BAO/Job.php';
-require_once 'CRM/Mailing/BAO/Mailing.php';
 
-require_once 'CRM/Contact/BAO/Contact.php';
+
+
+
+
 class CRM_Mailing_Event_BAO_Queue extends CRM_Mailing_Event_DAO_Queue {
 
+  public $email;
   /**
    * class constructor
    */

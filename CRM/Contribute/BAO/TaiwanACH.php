@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Contribute/DAO/TaiwanACH.php';
+
 class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
 
   static $_txtFormat = array();
@@ -229,7 +229,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
   static function add(&$params) {
 
     // pre-processing hooks
-    require_once 'CRM/Utils/Hook.php';
+
     if (CRM_Utils_Array::value('id', $params)) {
       CRM_Utils_Hook::pre('edit', 'TaiwanACH', $params['id'], $params);
     }
@@ -1138,7 +1138,8 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
 
   static function doProcessVerification($recurId, $parsedData, $isPreview = TRUE) {
     // Consider type is Bank or Post
-    $arrayLen = max(array_keys($parsedData))+1;
+    $keys = array_filter(array_keys($parsedData), 'is_numeric');
+    $arrayLen = !empty($parsedData) && !empty($keys) ? (intval(max($keys)) + 1) : 0;
     if ($arrayLen == 18 ) {
       $processType = self::BANK;
     }
@@ -1223,7 +1224,8 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
 
   static function doProcessTransaction($contributionId, $parsedData, $isPreview = TRUE) {
     // Consider type is Bank or Post
-    $arrayLen = max(array_keys($parsedData))+1;
+    $keys = array_filter(array_keys($parsedData), 'is_numeric');
+    $arrayLen = !empty($parsedData) && !empty($keys) ? (intval(max($keys)) + 1) : 0;
     if ($arrayLen == 20 ) {
       $processType = self::POST;
       $errorCode = $parsedData[15];
@@ -1340,6 +1342,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       if($pass){
         // Solve the contribution.
         $result['executed'] = TRUE;
+        $note = '';
         if ($isSuccess) {
           // Run completeTrransaction.
 
@@ -1371,7 +1374,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
           $note = $result['cancel_reason'];
         }
         // Finish or not, add note.
-        self::addNote($note, $objects['contribution']);
+        self::addNote($note, '');
       }
       else {
         $result['executed'] = FALSE;

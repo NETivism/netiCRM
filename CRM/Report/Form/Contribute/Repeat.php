@@ -33,9 +33,15 @@
  *
  */
 
-require_once 'CRM/Report/Form.php';
-require_once 'CRM/Contribute/PseudoConstant.php';
+
+
 class CRM_Report_Form_Contribute_Repeat extends CRM_Report_Form {
+  public $_columnHeaders;
+  public $_groupBy;
+  public $_aliases;
+  public $_from;
+  public $_where;
+  public $_absoluteUrl;
   function __construct() {
     $this->_columns = array('civicrm_contact' =>
       array('dao' => 'CRM_Contact_DAO_Contact',

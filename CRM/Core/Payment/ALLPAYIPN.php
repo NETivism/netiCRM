@@ -13,7 +13,7 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
 
   function main($component, $instrument){
     // get the contribution and contact ids from the GET params
-    require_once 'CRM/Utils/Request.php';
+
     $objects = $ids = $input = array();
     $input = $this->_post;
     $this->getIds($ids, $component);
@@ -81,7 +81,7 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
         $this->addNote($note, $objects['contribution']);
       }
     }
-    
+
     // error stage: doesn't goto and not the background posturl
     // never for front-end user.
   }
@@ -240,7 +240,7 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
   }
 
   function addNote($note, &$contribution){
-    require_once 'CRM/Core/BAO/Note.php';
+
     $note = date("Y/m/d H:i:s"). ts("Transaction record").": \n".$note."\n===============================\n";
     $note_exists = CRM_Core_BAO_Note::getNote( $contribution->id, 'civicrm_contribution' );
     if(count($note_exists)){

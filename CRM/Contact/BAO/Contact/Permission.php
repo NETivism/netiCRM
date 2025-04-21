@@ -60,10 +60,10 @@ class CRM_Contact_BAO_Contact_Permission {
       return TRUE;
     }
 
-    require_once 'CRM/ACL/API.php';
+
     $permission = CRM_ACL_API::whereClause($type, $tables, $whereTables);
 
-    require_once "CRM/Contact/BAO/Query.php";
+
     $from = CRM_Contact_BAO_Query::getFromClause($whereTables);
 
     $query = "
@@ -121,10 +121,10 @@ AND    $operationClause
     $tables = array();
     $whereTables = array();
 
-    require_once 'CRM/ACL/API.php';
+
     $permission = CRM_ACL_API::whereClause($type, $tables, $whereTables, $userID);
 
-    require_once "CRM/Contact/BAO/Query.php";
+
     $from = CRM_Contact_BAO_Query::getFromClause($whereTables);
 
     $query = "
@@ -236,7 +236,7 @@ WHERE  (( contact_id_a = %1 AND contact_id_b = %2 AND is_permission_a_b = 1 ) OR
 
   static function validateOnlyChecksum($contactID, &$form) {
     // check if this is of the format cs=XXX
-    require_once 'CRM/Contact/BAO/Contact/Utils.php';
+
     if (!CRM_Contact_BAO_Contact_Utils::validChecksum($contactID,
         CRM_Utils_Request::retrieve('cs', 'String', $form, FALSE)
       )) {

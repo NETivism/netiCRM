@@ -1,8 +1,16 @@
 <?php
 date_default_timezone_set('Asia/Taipei');
-require_once 'CRM/Core/Payment.php';
+
 class CRM_Core_Payment_GW extends CRM_Core_Payment {
 
+  /**
+   * @var mixed
+   */
+  public $_processorName;
+  /**
+   * @var object
+   */
+  public $_config;
   /**
    * mode of operation: live or test
    *

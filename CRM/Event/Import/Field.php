@@ -27,8 +27,8 @@
 
 
 
-require_once 'CRM/Utils/Type.php';
-require_once 'CRM/Event/PseudoConstant.php';
+
+
 class CRM_Event_Import_Field {
 
   /**#@+

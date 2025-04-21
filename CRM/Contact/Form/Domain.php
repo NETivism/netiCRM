@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
-require_once 'CRM/Contact/Form/Location.php';
+
+
 
 /**
  * This class is to build the form for adding Group
@@ -84,7 +84,7 @@ class CRM_Contact_Form_Domain extends CRM_Core_Form {
      */
   function setDefaultValues() {
 
-    require_once 'CRM/Core/BAO/Domain.php';
+
 
     $defaults = array();
     $params = array();
@@ -95,8 +95,8 @@ class CRM_Contact_Form_Domain extends CRM_Core_Form {
       CRM_Core_BAO_Domain::retrieve($params, $domainDefaults);
 
       //get the default domain from email address. fix CRM-3552
-      require_once 'CRM/Utils/Mail.php';
-      require_once 'CRM/Core/OptionValue.php';
+
+
       $optionValues = array();
       $grpParams['name'] = 'from_email_address';
       CRM_Core_OptionValue::getValues($grpParams, $optionValues);
@@ -111,7 +111,7 @@ class CRM_Contact_Form_Domain extends CRM_Core_Form {
 
       unset($params['id']);
       $locParams = $params + array('entity_id' => $this->_id, 'entity_table' => 'civicrm_domain');
-      require_once 'CRM/Core/BAO/Location.php';
+
       $defaults = CRM_Core_BAO_Location::getValues($locParams);
 
       $config = CRM_Core_Config::singleton();
@@ -217,7 +217,7 @@ class CRM_Contact_Form_Domain extends CRM_Core_Form {
 
   public function postProcess() {
 
-    require_once 'CRM/Core/BAO/Domain.php';
+
 
     $params = array();
 
@@ -226,7 +226,7 @@ class CRM_Contact_Form_Domain extends CRM_Core_Form {
     $params['entity_table'] = CRM_Core_BAO_Domain::getTableName();
     $domain = CRM_Core_BAO_Domain::edit($params, $this->_id);
 
-    require_once 'CRM/Core/BAO/LocationType.php';
+
     $defaultLocationType = &CRM_Core_BAO_LocationType::getDefault();
 
     $location = array();
@@ -238,7 +238,7 @@ class CRM_Contact_Form_Domain extends CRM_Core_Form {
 
     $params['loc_block_id'] = $location['id'];
 
-    require_once 'CRM/Core/BAO/Domain.php';
+
     CRM_Core_BAO_Domain::edit($params, $this->_id);
 
     CRM_Core_Session::setStatus(ts('Domain information for \'%1\' has been saved.', array(1 => $domain->name)));

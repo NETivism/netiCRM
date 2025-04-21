@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Page.php';
+
 
 /**
  * ICalendar class
@@ -52,7 +52,7 @@ class CRM_Event_Page_ICalendar extends CRM_Core_Page {
    */
   function run() {
 
-    require_once "CRM/Utils/Request.php";
+
     $id = CRM_Utils_Request::retrieve('id', 'Positive', $this, FALSE, NULL, 'GET');
     $type = CRM_Utils_Request::retrieve('type', 'Positive', $this, FALSE, 0);
     $start = CRM_Utils_Request::retrieve('start', 'Positive', $this, FALSE, 0);
@@ -62,7 +62,7 @@ class CRM_Event_Page_ICalendar extends CRM_Core_Page {
     $html = CRM_Utils_Request::retrieve('html', 'Positive', $this, FALSE, 0);
     $rss = CRM_Utils_Request::retrieve('rss', 'Positive', $this, FALSE, 0);
 
-    require_once "CRM/Event/BAO/Event.php";
+
     $info = CRM_Event_BAO_Event::getCompleteInfo($start, $type, $id, $end);
     $this->assign('events', $info);
 
@@ -85,7 +85,7 @@ class CRM_Event_Page_ICalendar extends CRM_Core_Page {
     }
 
     // Push output for feed or download
-    require_once "CRM/Utils/ICalendar.php";
+
     if ($iCalPage == 1) {
       if ($gData || $rss) {
         CRM_Utils_ICalendar::send($calendar, 'text/xml', 'UTF-8');

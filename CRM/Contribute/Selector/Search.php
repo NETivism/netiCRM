@@ -33,13 +33,13 @@
  *
  */
 
-require_once 'CRM/Core/Selector/Base.php';
-require_once 'CRM/Core/Selector/API.php';
 
-require_once 'CRM/Utils/Pager.php';
-require_once 'CRM/Utils/Sort.php';
 
-require_once 'CRM/Contact/BAO/Query.php';
+
+
+
+
+
 
 /**
  * This class is used to retrieve and display a range of
@@ -329,8 +329,8 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
 
     // process the result of the query
     $rows = array();
-    require_once 'CRM/Event/BAO/Participant.php';
-    require_once 'CRM/Contact/BAO/Contact/Utils.php';
+
+
 
     //CRM-4418 check for view/edit/delete
     $permissions = array(CRM_Core_Permission::VIEW);

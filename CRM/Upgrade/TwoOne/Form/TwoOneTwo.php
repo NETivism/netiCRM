@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Upgrade/Form.php';
+
 class CRM_Upgrade_TwoOne_Form_TwoOneTwo extends CRM_Upgrade_Form {
   function __construct($version) {
     parent::__construct();

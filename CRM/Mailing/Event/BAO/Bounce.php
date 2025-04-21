@@ -32,12 +32,14 @@
  * $Id$
  *
  */
-require_once 'CRM/Mailing/Event/DAO/Bounce.php';
-require_once 'CRM/Mailing/DAO/BounceType.php';
-require_once 'CRM/Core/BAO/Email.php';
-require_once 'CRM/Mailing/Event/BAO/Queue.php';
+
+
+
+
 class CRM_Mailing_Event_BAO_Bounce extends CRM_Mailing_Event_DAO_Bounce {
 
+  public $bounces;
+  public $threshold;
   /**
    * class constructor
    */
@@ -59,7 +61,7 @@ class CRM_Mailing_Event_BAO_Bounce extends CRM_Mailing_Event_DAO_Bounce {
       return $success;
     }
 
-    require_once 'CRM/Core/Transaction.php';
+
     $transaction = new CRM_Core_Transaction();
     $bounce = new CRM_Mailing_Event_BAO_Bounce();
     $bounce->time_stamp = date('YmdHis');

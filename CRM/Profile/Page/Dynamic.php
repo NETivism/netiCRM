@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Page.php';
+
 
 /**
  * Create a page for displaying CiviCRM Profile Fields.
@@ -143,7 +143,7 @@ class CRM_Profile_Page_Dynamic extends CRM_Core_Page {
       );
       $config = CRM_Core_Config::singleton();
       if ($limitListingsGroupsID) {
-        require_once 'CRM/Contact/BAO/GroupContact.php';
+
 
         if (!CRM_Contact_BAO_GroupContact::isContactInGroup($this->_id,
             $limitListingsGroupsID
@@ -153,7 +153,7 @@ class CRM_Profile_Page_Dynamic extends CRM_Core_Page {
         }
       }
 
-      require_once 'CRM/Core/BAO/UFGroup.php';
+
       $values = array();
       $fields = CRM_Core_BAO_UFGroup::getFields($this->_profileIds, FALSE, CRM_Core_Action::VIEW,
         NULL, NULL, FALSE, $this->_restrict,
@@ -162,7 +162,7 @@ class CRM_Profile_Page_Dynamic extends CRM_Core_Page {
       );
 
 
-      require_once 'CRM/Contact/BAO/Contact/Permission.php';
+
 
       // make sure we dont expose all fields based on permission
       $admin = FALSE;
@@ -233,7 +233,7 @@ class CRM_Profile_Page_Dynamic extends CRM_Core_Page {
     }
 
     // invoke the pagRun hook, CRM-3906
-    require_once 'CRM/Utils/Hook.php';
+
     CRM_Utils_Hook::pageRun($this);
 
     return trim($template->fetch($this->getHookedTemplateFileName()));

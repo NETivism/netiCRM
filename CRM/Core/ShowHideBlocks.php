@@ -224,12 +224,12 @@ class CRM_Core_ShowHideBlocks {
     else {
       $next = $index + 1;
       if ($elementType) {
-        $showCode = "show('${prefix}_${next}_show','table-row'); return false;";
+        $showCode = "show('{$prefix}_{$next}_show','table-row'); return false;";
         if ($hideLink) {
           $hideCode = $hideLink;
         }
         else {
-          $hideCode = "hide('${prefix}_${next}_show','table-row'); hide('${prefix}_${next}'); return false;";
+          $hideCode = "hide('{$prefix}_{$next}_show','table-row'); hide('{$prefix}_{$next}'); return false;";
         }
       }
       else {
@@ -240,18 +240,18 @@ class CRM_Core_ShowHideBlocks {
 
     self::setIcons();
     if ($elementType) {
-      $form->addElement('link', "${prefix}[${index}][show]", NULL, "#${prefix}_${index}", self::$_showIcon . $showLinkText,
-        array('onclick' => "hide('${prefix}_${index}_show'); show('${prefix}_${index}','table-row');" . $showCode)
+      $form->addElement('link', "{$prefix}[{$index}][show]", NULL, "#{$prefix}_{$index}", self::$_showIcon . $showLinkText,
+        array('onclick' => "hide('{$prefix}_{$index}_show'); show('{$prefix}_{$index}','table-row');" . $showCode)
       );
-      $form->addElement('link', "${prefix}[${index}][hide]", NULL, "#${prefix}_${index}", self::$_hideIcon . $hideLinkText,
-        array('onclick' => "hide('${prefix}_${index}'); show('${prefix}_${index}_show');" . $hideCode)
+      $form->addElement('link', "{$prefix}[{$index}][hide]", NULL, "#{$prefix}_{$index}", self::$_hideIcon . $hideLinkText,
+        array('onclick' => "hide('{$prefix}_{$index}'); show('{$prefix}_{$index}_show');" . $hideCode)
       );
     }
     else {
-      $form->addElement('link', "${prefix}[${index}][show]", NULL, "#${prefix}_${index}", self::$_showIcon . $showLinkText,
+      $form->addElement('link', "{$prefix}[{$index}][show]", NULL, "#{$prefix}_{$index}", self::$_showIcon . $showLinkText,
         array('onclick' => "hide('{$showHidePrefix}_{$index}_show'); show('{$showHidePrefix}_{$index}');" . $showCode)
       );
-      $form->addElement('link', "${prefix}[${index}][hide]", NULL, "#${prefix}_${index}", self::$_hideIcon . $hideLinkText,
+      $form->addElement('link', "{$prefix}[{$index}][hide]", NULL, "#{$prefix}_{$index}", self::$_hideIcon . $hideLinkText,
         array('onclick' => "hide('{$showHidePrefix}_{$index}'); show('{$showHidePrefix}_{$index}_show');" . $hideCode)
       );
     }

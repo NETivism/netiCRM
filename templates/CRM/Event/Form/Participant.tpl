@@ -227,7 +227,12 @@
         <tr class="crm-participant-form-block-status_id">
           <td class="label">{$form.status_id.label}</td>
       <td>{$form.status_id.html}{if $event_is_test} {ts}(test){/ts}{/if}
-              <div id="notify">{$form.is_notify.html}{$form.is_notify.label}</div>
+        <div id="notify">
+          {$form.is_notify.html}{$form.is_notify.label}
+          {if $do_not_notify}
+            <div class="font-red">{ts}Contact labelled as do not notification.{/ts}</div>
+          {/if}
+        </div>
       </td>
         </tr>
         <tr class="crm-participant-form-block-source">

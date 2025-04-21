@@ -35,6 +35,8 @@
 
 class CRM_Contact_Form_Search_Custom_TaiwanACHSearch extends CRM_Contact_Form_Search_Custom_RecurSearch implements CRM_Contact_Form_Search_Interface {
 
+  public $_queryColumns;
+  public $_isExport;
   protected $_formValues;
   protected $_cstatus = NULL;
   protected $_gender = NULL;
@@ -480,7 +482,7 @@ $having
     return 'CRM/Contact/Form/Search/Custom/TaiwanACHSearch.tpl';
   }
 
-  function tasks() {
+  public static function tasks() {
     return array(
       1001 => array(
         'title' => ts('Export ACH Stamp Verification File'),

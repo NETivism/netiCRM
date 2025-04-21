@@ -27,6 +27,7 @@
 
 
 require_once 'Spout/Autoloader/autoload.php';
+
 use Box\Spout\Writer\WriterFactory;
 use Box\Spout\Reader\ReaderFactory;
 use Box\Spout\Common\Type;
@@ -195,7 +196,7 @@ class CRM_Core_Report_Excel {
   // end of the 'getTableCsv()' function
   function writeHTMLFile($fileName, &$header, &$rows, $titleHeader = NULL, $outputHeader = TRUE) {
     if ($outputHeader) {
-      require_once 'CRM/Utils/System.php';
+
       CRM_Utils_System::download(CRM_Utils_String::munge($fileName),
         'application/vnd.ms-excel',
         CRM_Core_DAO::$_nullObject,

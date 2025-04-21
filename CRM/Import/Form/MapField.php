@@ -33,21 +33,25 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
 
-require_once 'CRM/Core/DAO/Mapping.php';
-require_once 'CRM/Core/DAO/MappingField.php';
-require_once 'CRM/Contact/DAO/RelationshipType.php';
 
-require_once 'CRM/Core/BAO/LocationType.php';
 
-require_once 'CRM/Import/Parser/Contact.php';
+
+
+
+
+
+
 
 /**
  * This class gets the name of the file to upload
  */
 class CRM_Import_Form_MapField extends CRM_Core_Form {
 
+  public $_importTableName;
+  public $_dedupeRuleGroupId;
+  public $_contactType;
+  public $_location_types;
   /**
    * cache of preview data values
    *
@@ -282,8 +286,8 @@ class CRM_Import_Form_MapField extends CRM_Core_Form {
    * @access public
    */
   public function buildQuickForm() {
-    require_once "CRM/Core/BAO/Mapping.php";
-    require_once "CRM/Core/OptionGroup.php";
+
+
     //to save the current mappings
     if (!$this->get('savedMapping')) {
       $saveDetailsName = ts('Save this field mapping');
@@ -540,7 +544,7 @@ class CRM_Import_Form_MapField extends CRM_Core_Form {
                 }
               }
 
-              $contactDetails = strtolower(str_replace(" ", "_", $mappingName[$i]));
+              $contactDetails = mb_strtolower(str_replace(" ", "_", $mappingName[$i]), 'UTF-8');
               $websiteTypeId = isset($mappingWebsiteType[$i]) ? $mappingWebsiteType[$i] : NULL;
               $locationId = isset($mappingLocation[$i]) ? $mappingLocation[$i] : 0;
               $phoneType = isset($mappingPhoneType[$i]) ? $mappingPhoneType[$i] : NULL;
@@ -729,7 +733,7 @@ class CRM_Import_Form_MapField extends CRM_Core_Form {
 
     if (!empty($errors)) {
       $_flag = 1;
-      require_once 'CRM/Core/Page.php';
+
       $assignError = new CRM_Core_Page();
       $assignError->assign('mappingDetailsError', $_flag);
       return $errors;
@@ -1081,14 +1085,14 @@ class CRM_Import_Form_MapField extends CRM_Core_Form {
     //CRM-2676, replacing the conflict for same custom field name from different custom group.
     $fieldIds = $formattedFieldNames = array();
     foreach ($fields as $key => $value) {
-      require_once 'CRM/Core/BAO/CustomField.php';
+
       if ($customFieldId = CRM_Core_BAO_CustomField::getKeyID($key)) {
         $fieldIds[] = $customFieldId;
       }
     }
 
     if (!empty($fieldIds) && is_array($fieldIds)) {
-      require_once 'CRM/Core/BAO/CustomGroup.php';
+
       $groupTitles = CRM_Core_BAO_CustomGroup::getGroupTitles($fieldIds);
 
       if (!empty($groupTitles)) {

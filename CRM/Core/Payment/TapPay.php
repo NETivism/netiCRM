@@ -400,7 +400,8 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
           'card_key' => $tappayData->card_key,
           'card_token' => $tappayData->card_token,
           'partner_key' => $paymentProcessor['password'],
-          'merchant_id' => $paymentProcessor['user_name'],
+          // #39372, #42445: special case for 3d verify, change merchant id when match rule
+          'merchant_id' => preg_match('/5808001$/', $paymentProcessor['user_name']) ? str_replace('5808001', '5808002', $paymentProcessor['user_name']) : $paymentProcessor['user_name'],
           'amount' => $amount,
           'currency' => $contributionRecur->currency,
           'order_number' => $contribution['trxn_id'],
@@ -1404,8 +1405,26 @@ LIMIT 0, 100
    * Trigger when click transaction button.
    */
   public static function doRecurTransact($recurId = NULL, $sendMail = FALSE) {
+    // Get current user
+    $session = CRM_Core_Session::singleton();
+    $contactId = $session->get('userID');
+
     $resultNote = self::payByToken($recurId, NULL, $sendMail);
 
+    $sql = "SELECT count(*) FROM civicrm_contribution WHERE contribution_recur_id = %1";
+    $params = array(1 => array($recurId, 'Positive'));
+    $sql = "SELECT id FROM civicrm_contribution_tappay
+    WHERE contribution_recur_id = %1
+    ORDER BY id DESC LIMIT 1";
+    $params = array(1 => array($recurId, 'Positive'));
+    $tappayId = CRM_Core_DAO::singleValueQuery($sql, $params);
+    if ($tappayId) {
+      $tappayData = new CRM_Contribute_DAO_TapPay();
+      $tappayData->id = $tappayId;
+      $tappayData->find(TRUE);
+      $tappayData->created_id = $contactId;
+      $tappayData->save();
+    }
     return $resultNote;
   }
 
@@ -1541,6 +1560,12 @@ LIMIT 0, 100
     $returnData[ts('Card Expiry Date')] = date('Y/m',strtotime($newestExpiryDate)).$updateCardmetaButton;
     $returnData[ts('Response Code')] = $tappayObject->status;
     $returnData[ts('Response Message')] = $tappayObject->msg;
+
+    $contact_id = $tappayDAO->created_id;
+    if ($contact_id) {
+      $contactName = CRM_Contact_BAO_Contact::displayName($contact_id);
+      $returnData[ts('Added By')] = array('id' => $contact_id, 'name' => $contactName);
+    }
     if (!empty($tappayObject->card_info)) {
       $cardInfo = $tappayObject->card_info;
       $returnData[ts('Card Issuer')] = $cardInfo->issuer;
@@ -1599,7 +1624,7 @@ LIMIT 0, 100
   }
 
   static function addNote($note, &$contribution){
-    require_once 'CRM/Core/BAO/Note.php';
+
     $note = date("Y/m/d H:i:s "). ts("Transaction record")."Trxn ID: {$contribution->trxn_id} \n\n".$note;
     CRM_Core_Error::debug_log_message( $note );
   }

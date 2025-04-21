@@ -33,14 +33,18 @@
  *
  */
 
-require_once 'CRM/Profile/Form.php';
-require_once 'CRM/Event/Form/Task.php';
+
+
 
 /**
  * This class provides the functionality for batch profile update for events
  */
 class CRM_Event_Form_Task_Batch extends CRM_Event_Form_Task {
 
+  public $_fields;
+  public $_roleCustomDataTypeID;
+  public $_eventNameCustomDataTypeID;
+  public $_customFields;
   /**
    * the title of the group
    *
@@ -80,14 +84,14 @@ class CRM_Event_Form_Task_Batch extends CRM_Event_Form_Task {
     parent::preProcess();
 
     //get the contact read only fields to display.
-    require_once 'CRM/Core/BAO/Preferences.php';
+
     $readOnlyFields = array(
       'contact_id' => ts('Contact ID'),
       'sort_name' => ts('Name'),
       'participant_id' => ts('Participant ID'),
     );
     // get the read only field data.
-    $returnProperties = array('sort_name' => 1);
+    $returnProperties = array('sort_name' => 1, 'do_not_notify' => 1);
     $contactDetails = CRM_Contact_BAO_Contact_Utils::contactDetails($this->_participantIds, 'CiviEvent', $returnProperties);
     $participantDAO = new CRM_Event_DAO_Participant();
     $participantDAO->whereAdd("id IN (".CRM_Utils_Array::implode(',', $this->_participantIds).")");
@@ -99,6 +103,14 @@ class CRM_Event_Form_Task_Batch extends CRM_Event_Form_Task {
     }
     $this->assign('contactDetails', $contactDetails);
     $this->assign('readOnlyFields', $readOnlyFields);
+
+    $suppressEmail = array();
+    foreach($contactDetails as $detail) {
+      if (!empty($detail['do_not_notify'])) {
+        $suppressEmail[] = $detail['contact_id'];
+      }
+    }
+    $this->assign('suppress_email_count', count($suppressEmail));
   }
 
   /**
@@ -115,7 +127,7 @@ class CRM_Event_Form_Task_Batch extends CRM_Event_Form_Task {
       CRM_Core_Error::fatal('ufGroupId is missing');
     }
 
-    require_once "CRM/Core/BAO/UFGroup.php";
+
     $this->_title = ts('Batch Update for Events') . ' - ' . CRM_Core_BAO_UFGroup::getTitle($ufGroupId);
     CRM_Utils_System::setTitle($this->_title);
     $this->addDefaultButtons(ts('Save'));
@@ -140,6 +152,15 @@ class CRM_Event_Form_Task_Batch extends CRM_Event_Form_Task {
       }
     }
 
+    // assign will notify status to batch front end
+    $participantStatuses = CRM_Event_PseudoConstant::participantStatus();
+    $notifyStatus = array();
+    $notifyStatus[] = array_search('Cancelled', $participantStatuses);
+    $notifyStatus[] = array_search('Pending from waitlist', $participantStatuses);
+    $notifyStatus[] = array_search('Pending from approval', $participantStatuses);
+    $notifyStatus[] = array_search('Expired', $participantStatuses);
+    $this->assign('notify_status', implode(',', $notifyStatus));
+
     $this->_fields = array_slice($this->_fields, 0, $this->_maxFields);
 
     $this->addButtons(array(
@@ -159,7 +180,7 @@ class CRM_Event_Form_Task_Batch extends CRM_Event_Form_Task {
     $fileFieldExists = FALSE;
 
     //fix for CRM-2752
-    require_once "CRM/Core/BAO/CustomField.php";
+
     // get the option value for custom data type
     $this->_roleCustomDataTypeID = CRM_Core_OptionGroup::getValue('custom_data_type', 'ParticipantRole', 'name');
     $this->_eventNameCustomDataTypeID = CRM_Core_OptionGroup::getValue('custom_data_type', 'ParticipantEventName', 'name');
@@ -236,7 +257,7 @@ class CRM_Event_Form_Task_Batch extends CRM_Event_Form_Task {
     foreach ($this->_participantIds as $participantId) {
       $details[$participantId] = array();
 
-      require_once 'CRM/Event/BAO/Participant.php';
+
       $details[$participantId] = CRM_Event_BAO_Participant::participantDetails($participantId);
       CRM_Core_BAO_UFGroup::setProfileDefaults(NULL, $this->_fields, $defaults, FALSE, $participantId, 'Event');
 
@@ -337,7 +358,7 @@ class CRM_Event_Form_Task_Batch extends CRM_Event_Form_Task {
       return;
     }
 
-    require_once 'CRM/Contribute/BAO/Contribution.php';
+
     $contributionId = CRM_Contribute_BAO_Contribution::checkOnlinePendingContribution($participantId,
       'Event'
     );
@@ -349,8 +370,8 @@ class CRM_Event_Form_Task_Batch extends CRM_Event_Form_Task {
     //1. participant - positive => contribution - completed.
     //2. participant - negative => contribution - cancelled.
 
-    require_once 'CRM/Event/PseudoConstant.php';
-    require_once 'CRM/Contribute/PseudoConstant.php';
+
+
     $positiveStatuses = CRM_Event_PseudoConstant::participantStatus(NULL, "class = 'Positive'");
     $negativeStatuses = CRM_Event_PseudoConstant::participantStatus(NULL, "class = 'Negative'");
     $contributionStatuses = CRM_Contribute_PseudoConstant::contributionStatus(NULL, 'name');
@@ -374,7 +395,7 @@ class CRM_Event_Form_Task_Batch extends CRM_Event_Form_Task {
     );
 
     //change related contribution status.
-    require_once 'CRM/Core/Payment/BaseIPN.php';
+
     $updatedStatusId = CRM_Core_Payment_BaseIPN::updateContributionStatus($params);
 
     return $updatedStatusId;

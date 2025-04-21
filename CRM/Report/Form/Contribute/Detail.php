@@ -33,9 +33,26 @@
  *
  */
 
-require_once 'CRM/Report/Form.php';
-require_once 'CRM/Contribute/PseudoConstant.php';
+
+
 class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
+  /**
+   * @var never[]
+   */
+  public $_columnHeaders;
+  public $_from;
+  public $_aliases;
+  /**
+   * @var string
+   */
+  public $_groupBy;
+  /**
+   * @var string
+   */
+  public $_orderBy;
+  public $_where;
+  public $_outputMode;
+  public $_absoluteUrl;
   protected $_addressField = FALSE;
 
   protected $_emailField = FALSE;

@@ -40,7 +40,7 @@
         </div>
     
         <div class="action-link-button">
-          {if $action eq 16 and $permission EQ 'edit'}
+          {if $action eq 16 and $editContributionPermission}
             {capture assign=newContribURL}{crmURL p="civicrm/contact/view/contribution" q="reset=1&action=add&cid=`$contactId`&context=contribution"}{/capture}
             <a accesskey="N" href="{$newContribURL}" class="button">{ts}Record Contribution (Check, Cash, EFT ...){/ts}</a>
             {if $newCredit}

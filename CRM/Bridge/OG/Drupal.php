@@ -35,9 +35,9 @@
 class CRM_Bridge_OG_Drupal {
 
   static function nodeapi(&$params, $op) {
-    require_once 'CRM/Bridge/OG/Utils.php';
 
-    require_once 'CRM/Core/Transaction.php';
+
+
     $transaction = new CRM_Core_Transaction();
 
     // first create or update the CiviCRM group
@@ -81,7 +81,7 @@ class CRM_Bridge_OG_Drupal {
     else {
       // do this only if we have a valid id
       if ($params['id']) {
-        require_once 'CRM/Contact/BAO/Group.php';
+
         CRM_Contact_BAO_Group::discard($params['id']);
         $params['group_id'] = $params['id'];
       }
@@ -103,7 +103,7 @@ class CRM_Bridge_OG_Drupal {
   }
 
   static function updateCiviACLRole(&$params, $op) {
-    require_once 'CRM/Core/DAO/OptionValue.php';
+
 
     $optionGroupID = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionGroup',
       'acl_role',
@@ -147,7 +147,7 @@ SELECT v.id
   }
 
   static function updateCiviACLEntityRole(&$params, $op) {
-    require_once 'CRM/ACL/DAO/EntityRole.php';
+
     $dao = new CRM_ACL_DAO_EntityRole();
 
     $dao->entity_table = 'civicrm_group';
@@ -166,7 +166,7 @@ SELECT v.id
   }
 
   static function updateCiviACL(&$params, $op) {
-    require_once 'CRM/ACL/DAO/ACL.php';
+
     $dao = new CRM_ACL_DAO_ACL();
 
     $dao->object_table = 'civicrm_saved_search';
@@ -189,7 +189,7 @@ SELECT v.id
   }
 
   static function og(&$params, $op) {
-    require_once 'CRM/Bridge/OG/Utils.php';
+    require_once 'api/v2/GroupContact.php';
 
     $contactID = CRM_Bridge_OG_Utils::contactID($params['uf_id']);
     if (!$contactID) {
@@ -205,7 +205,7 @@ SELECT v.id
       'group_id' => $groupID,
     );
 
-    require_once 'api/v2/GroupContact.php';
+
     if ($op == 'add') {
       $groupParams['status'] = $params['is_active'] ? 'Added' : 'Pending';
       civicrm_group_contact_add($groupParams);

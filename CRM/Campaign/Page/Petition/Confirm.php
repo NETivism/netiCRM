@@ -33,12 +33,12 @@
  *
  */
 
-require_once 'CRM/Core/Config.php';
-require_once 'CRM/Core/Error.php';
-require_once 'CRM/Core/Page.php';
+
+
+
 class CRM_Campaign_Page_Petition_Confirm extends CRM_Core_Page {
   function run() {
-    require_once 'CRM/Utils/Request.php';
+
     $contact_id = CRM_Utils_Request::retrieve('cid', 'Integer', CRM_Core_DAO::$_nullObject);
     $subscribe_id = CRM_Utils_Request::retrieve('sid', 'Integer', CRM_Core_DAO::$_nullObject);
     $hash = CRM_Utils_Request::retrieve('h', 'String', CRM_Core_DAO::$_nullObject);
@@ -52,7 +52,7 @@ class CRM_Campaign_Page_Petition_Confirm extends CRM_Core_Page {
       CRM_Core_Error::fatal(ts("Missing input parameters"));
     }
 
-    require_once 'CRM/Mailing/Event/BAO/Confirm.php';
+
     $result = $this->confirm($contact_id, $subscribe_id, $hash, $activity_id, $petition_id);
     if ($result === FALSE) {
       $this->assign('success', $result);
@@ -62,7 +62,7 @@ class CRM_Campaign_Page_Petition_Confirm extends CRM_Core_Page {
       // $this->assign( 'group'  , $result );
     }
 
-    require_once 'CRM/Contact/BAO/Contact/Location.php';
+
     list($displayName, $email) = CRM_Contact_BAO_Contact_Location::getEmailDetails($contact_id);
     $this->assign('display_name', $displayName);
     $this->assign('email', $email);
@@ -71,7 +71,7 @@ class CRM_Campaign_Page_Petition_Confirm extends CRM_Core_Page {
     $this->assign('survey_id', $petition_id);
 
     // send thank you email
-    require_once 'CRM/Campaign/Form/Petition/Signature.php';
+
     $params['contactId'] = $contact_id;
     $params['email-Primary'] = $email;
     $params['sid'] = $petition_id;
@@ -93,14 +93,14 @@ class CRM_Campaign_Page_Petition_Confirm extends CRM_Core_Page {
    * @static
    */
   public static function confirm($contact_id, $subscribe_id, $hash, $activity_id, $petition_id) {
-    require_once 'CRM/Mailing/Event/BAO/Subscribe.php';
+
     $se = &CRM_Mailing_Event_BAO_Subscribe::verify($contact_id, $subscribe_id, $hash);
 
     if (!$se) {
       return FALSE;
     }
 
-    require_once 'CRM/Core/Transaction.php';
+
     $transaction = new CRM_Core_Transaction();
 
     $ce = new CRM_Mailing_Event_BAO_Confirm();
@@ -109,12 +109,12 @@ class CRM_Campaign_Page_Petition_Confirm extends CRM_Core_Page {
     $ce->save();
 
 
-    require_once 'CRM/Contact/BAO/GroupContact.php';
+
     CRM_Contact_BAO_GroupContact::updateGroupMembershipStatus($contact_id, $se->group_id,
       'Email', $ce->id
     );
 
-    require_once 'CRM/Campaign/BAO/Petition.php';
+
     $bao = new CRM_Campaign_BAO_Petition();
     $bao->confirmSignature($activity_id, $contact_id, $petition_id);
   }

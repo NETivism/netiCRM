@@ -34,6 +34,7 @@ require_once 'PEAR.php';
  */
 class PEAR_Command_Common extends PEAR
 {
+    public $commands;
     /**
      * PEAR_Config object used to pass user system and configuration
      * on when executing commands

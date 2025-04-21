@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Mailing/Event/DAO/Forward.php';
-require_once 'CRM/Core/BAO/Domain.php';
+
+
 class CRM_Mailing_Event_BAO_Forward extends CRM_Mailing_Event_DAO_Forward {
 
   /**
@@ -90,7 +90,7 @@ class CRM_Mailing_Event_BAO_Forward extends CRM_Mailing_Event_DAO_Forward {
 
     $dao->fetch();
 
-    require_once 'CRM/Core/Transaction.php';
+
     $transaction = new CRM_Core_Transaction();
 
     if (isset($dao->queue_id) ||
@@ -103,7 +103,7 @@ class CRM_Mailing_Event_BAO_Forward extends CRM_Mailing_Event_DAO_Forward {
       return $successfulForward;
     }
 
-    require_once 'api/api.php';
+
     $contactParams = array(
       'email' => $forward_email,
       'version' => 3,
@@ -112,7 +112,7 @@ class CRM_Mailing_Event_BAO_Forward extends CRM_Mailing_Event_DAO_Forward {
     $count = $contactValues['count'];
 
     if ($count == 0) {
-      require_once 'CRM/Core/BAO/LocationType.php';
+
       /* If the contact does not exist, create one. */
 
 
@@ -125,9 +125,9 @@ class CRM_Mailing_Event_BAO_Forward extends CRM_Mailing_Event_DAO_Forward {
         'email' => $forward_email,
         'location_type_id' => $locationType->id,
       );
-      require_once 'api/v3/DeprecatedUtils.php';
+
       _civicrm_api3_deprecated_add_formatted_param($value, $formatted);
-      require_once 'CRM/Import/Parser.php';
+
       $formatted['onDuplicate'] = CRM_Import_Parser::DUPLICATE_SKIP;
       $formatted['fixAddress'] = TRUE;
       $contact = civicrm_api('contact', 'create', $formatted);

@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Page.php';
+
 
 /**
  * This is page is for Grant Dashboard
@@ -51,7 +51,7 @@ class CRM_Grant_Page_DashBoard extends CRM_Core_Page {
   function preProcess() {
     $admin = CRM_Core_Permission::check('administer CiviCRM');
 
-    require_once 'CRM/Grant/BAO/Grant.php';
+
     $grantSummary = CRM_Grant_BAO_Grant::getGrantSummary($admin);
 
     $this->assign('grantAdmin', $admin);

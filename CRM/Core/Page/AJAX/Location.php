@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Config.php';
+
 
 /**
  * This class contains all the function that are called using AJAX
@@ -54,7 +54,7 @@ class CRM_Core_Page_AJAX_Location {
     }
     $cid = CRM_Utils_Type::escape($_GET['cid'], 'Integer');
 
-    require_once 'CRM/Core/BAO/Location.php';
+
     $entityBlock = array('contact_id' => $cid);
     $location = &CRM_Core_BAO_Location::getValues($entityBlock);
 
@@ -126,13 +126,13 @@ class CRM_Core_Page_AJAX_Location {
     // now lets use the event-id obtained above, to retrieve loc block information.
     if ($eventId) {
       $params = array('entity_id' => $eventId, 'entity_table' => 'civicrm_event');
-      require_once 'CRM/Core/BAO/Location.php';
+
       // second parameter is of no use, but since required, lets use the same variable.
       $location = CRM_Core_BAO_Location::getValues($params, $params);
     }
 
     $result = array();
-    require_once 'CRM/Core/BAO/Preferences.php';
+
     $addressOptions = CRM_Core_BAO_Preferences::valueOptions('address_options', TRUE, NULL, TRUE);
     // lets output only required fields.
     foreach ($addressOptions as $element => $isSet) {
@@ -161,7 +161,7 @@ class CRM_Core_Page_AJAX_Location {
     }
 
     // set the message if loc block is being used by more than one event.
-    require_once 'CRM/Event/BAO/Event.php';
+
     $result['count_loc_used'] = CRM_Event_BAO_Event::countEventsUsingLocBlockId($_POST['lbid']);
 
     echo json_encode($result);

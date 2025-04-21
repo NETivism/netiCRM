@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Core/Page.php';
-require_once 'CRM/Contact/BAO/Contact.php';
+
+
 
 /**
  * CMS User Dashboard
@@ -42,6 +42,7 @@ require_once 'CRM/Contact/BAO/Contact.php';
  *
  */
 class CRM_Contact_Page_View_UserDashBoard extends CRM_Core_Page {
+  public $_userOptions;
   public $_contactId = NULL;
 
   /*
@@ -79,7 +80,7 @@ class CRM_Contact_Page_View_UserDashBoard extends CRM_Core_Page {
       $this->_contactId = $userID;
     }
     elseif ($this->_contactId != $userID) {
-      require_once 'CRM/Contact/BAO/Contact/Permission.php';
+
       if (!CRM_Contact_BAO_Contact_Permission::allow($this->_contactId, CRM_Core_Permission::VIEW)) {
          return CRM_Core_Error::statusBounce(ts('You do not have permission to view this contact'));
       }
@@ -123,7 +124,7 @@ class CRM_Contact_Page_View_UserDashBoard extends CRM_Core_Page {
     $dashboardElements = array();
     $config = CRM_Core_Config::singleton();
 
-    require_once 'CRM/Core/BAO/Preferences.php';
+
     $this->_userOptions = CRM_Core_BAO_Preferences::valueOptions('user_dashboard_options');
 
     $components = CRM_Core_Component::getEnabledComponents();
@@ -166,7 +167,7 @@ class CRM_Contact_Page_View_UserDashBoard extends CRM_Core_Page {
     }
 
     if ($this->_userOptions['PCP']) {
-      require_once 'CRM/Contribute/BAO/PCP.php';
+
       $dashboardElements[] = array('templatePath' => 'CRM/Contribute/Page/PcpUserDashboard.tpl',
         'sectionTitle' => ts('Personal Campaign Pages'),
         'weight' => 40,
@@ -176,14 +177,14 @@ class CRM_Contact_Page_View_UserDashBoard extends CRM_Core_Page {
       $this->assign('pcpInfo', $pcpInfo);
     }
 
-    require_once 'CRM/Utils/Sort.php';
+
     usort($dashboardElements, array('CRM_Utils_Sort', 'cmpFunc'));
     $this->assign('dashboardElements', $dashboardElements);
 
     if ($this->_userOptions['Groups']) {
       $this->assign('showGroup', TRUE);
       //build group selector
-      require_once "CRM/Contact/Page/View/UserDashBoard/GroupContact.php";
+
       $gContact = new CRM_Contact_Page_View_UserDashBoard_GroupContact();
       $gContact->run();
     }
@@ -246,7 +247,7 @@ class CRM_Contact_Page_View_UserDashBoard extends CRM_Core_Page {
     }
 
     // call the hook so we can modify it
-    require_once 'CRM/Utils/Hook.php';
+
     CRM_Utils_Hook::links('view.contact.userDashBoard', 'Contact',
       CRM_Core_DAO::$_nullObject, self::$_links
     );

@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Contact/Form/Task.php';
+
 
 /**
  * This class helps to print the labels for contacts
@@ -118,7 +118,7 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
     $config = CRM_Core_Config::singleton();
     $locName = NULL;
     //get the address format sequence from the config file
-    require_once 'CRM/Core/BAO/Preferences.php';
+
 
     $sequence = CRM_Core_BAO_Preferences::value('mailing_sequence');
     foreach ($sequence as $v) {
@@ -202,7 +202,7 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
 
     //get the total number of contacts to fetch from database.
     $numberofContacts = count($this->_contactIds);
-    require_once 'CRM/Contact/BAO/Query.php';
+
     $query = new CRM_Contact_BAO_Query($params, $returnProperties);
     $details = $query->apiQuery($params, $returnProperties, NULL, NULL, 0, $numberofContacts);
 
@@ -264,7 +264,7 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
 
         $valuesothers = array();
         $paramsothers = array('contact_id' => $value);
-        require_once 'CRM/Core/BAO/Location.php';
+
         $valuesothers = CRM_Core_BAO_Location::getValues($paramsothers, $valuesothers);
         if (CRM_Utils_Array::value('location_type_id', $fv)) {
           foreach ($valuesothers as $vals) {
@@ -338,10 +338,10 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
     }
 
     // format the addresses according to CIVICRM_ADDRESS_FORMAT (CRM-1327)
-    require_once 'CRM/Utils/Address.php';
+
     foreach ($rows as $id => $row) {
       if ($commMethods = CRM_Utils_Array::value('preferred_communication_method', $row)) {
-        require_once 'CRM/Core/PseudoConstant.php';
+
         $val = array_filter(explode(CRM_Core_DAO::VALUE_SEPARATOR, $commMethods));
         $comm = CRM_Core_PseudoConstant::pcm();
         $temp = array();
@@ -371,8 +371,8 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
    * @access  public
    */
   function createLabel(&$contactRows, &$format) {
-    require_once 'CRM/Utils/String.php';
-    require_once 'CRM/Utils/PDF/Label.php';
+
+
 
     $pdf = new CRM_Utils_PDF_Label($format, 'mm');
     $pdf->Open();
@@ -483,7 +483,7 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
     }
 
     # exclude individuals belonging to selected households
-    require_once 'CRM/Contact/DAO/Relationship.php';
+
     foreach ($households as $household_id => $row) {
       $dao = new CRM_Contact_DAO_Relationship();
       $dao->contact_id_b = $household_id;

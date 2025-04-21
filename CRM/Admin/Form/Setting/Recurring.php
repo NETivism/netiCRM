@@ -39,6 +39,15 @@ class CRM_Admin_Form_Setting_Recurring extends CRM_Admin_Form_Setting {
     $session = CRM_Core_Session::singleton();
     $session->pushUserContext(CRM_Utils_System::url('civicrm/admin', 'reset=1'));
 
+    if (defined('ONE_TIME_RENEWAL_ENABLED')) {
+      $pages = array();
+      CRM_Core_PseudoConstant::populate($pages, 'CRM_Contribute_DAO_ContributionPage', FALSE, 'title', 'is_active');
+      foreach($pages as $id => &$page) {
+        $page .= " ($id)";
+      }
+      $this->addSelect('defaultRenewalPageId', ts('Default contribution page for one-time renewal link'), array('' => ts('-- Select --')) + $pages);
+    }
+
     parent::buildQuickForm($check);
   }
 }

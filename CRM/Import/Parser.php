@@ -33,12 +33,14 @@
  *
  */
 
-require_once 'CRM/Utils/String.php';
-require_once 'CRM/Utils/Type.php';
 
-require_once 'CRM/Import/Field.php';
+
+
+
 
 abstract class CRM_Import_Parser {
+  public $_contactSubType;
+  public $_unparsedAddresses;
   CONST MAX_ERRORS = 5000, MAX_WARNINGS = 25;
   CONST PENDING = 0, VALID = 1, WARNING = 2, ERROR = 4, CONFLICT = 8, STOP = 16, DUPLICATE = 32, MULTIPLE_DUPE = 64, NO_MATCH = 128, UNPARSED_ADDRESS_WARNING = 256;
 
@@ -948,8 +950,8 @@ abstract class CRM_Import_Parser {
     $primaryKeyName = $this->_primaryKeyName;
 
     if ($statusFieldName && $primaryKeyName && is_numeric($id)) {
-      $msg = !empty($params["${statusFieldName}Msg"]) ? $params["${statusFieldName}Msg"] : '';
-      $query = "UPDATE {$this->_tableName} SET {$statusFieldName} = %1, ${statusFieldName}Msg = %2 WHERE {$primaryKeyName} = %3";
+      $msg = !empty($params["{$statusFieldName}Msg"]) ? $params["{$statusFieldName}Msg"] : '';
+      $query = "UPDATE {$this->_tableName} SET {$statusFieldName} = %1, {$statusFieldName}Msg = %2 WHERE {$primaryKeyName} = %3";
       CRM_Core_DAO::executeQuery($query, array(
         1 => array($params[$statusFieldName], 'String'),
         2 => array($msg, 'String'),

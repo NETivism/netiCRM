@@ -228,7 +228,7 @@ SELECT label, value
             $this->_options[$dao->id][$option->value] = $option->label;
           }
         }
-        require_once 'CRM/Utils/Hook.php';
+
         $options = $this->_options[$dao->id];
         //unset attributes to avoid confussion
         unset($options['attributes']);
@@ -322,8 +322,6 @@ SELECT label, value
         continue;
       }
 
-      $strtolower = function_exists('mb_strtolower') ? 'mb_strtolower' : 'strtolower';
-
       foreach ($values as $tuple) {
         list($name, $op, $value, $grouping, $wildcard) = $tuple;
 
@@ -351,7 +349,7 @@ SELECT label, value
             // if we are coming in from listings,
             // for checkboxes the value is already in the right format and is NOT an array
             if (empty($field['is_search_range']) && is_array($value)) {
-              require_once 'CRM/Core/BAO/CustomOption.php';
+
 
               //ignoring $op value for checkbox and multi select
               $sqlValue = array();
@@ -443,11 +441,11 @@ SELECT label, value
                   $val = CRM_Utils_Type::escape($value, 'String');
                 }
                 else {
-                  $val = CRM_Utils_Type::escape($strtolower(trim($value)), 'String');
+                  $val = CRM_Utils_Type::escape(mb_strtolower(trim($value), 'UTF-8'), 'String');
                 }
 
                 if ($wildcard) {
-                  $val = $strtolower(CRM_Core_DAO::escapeString($val));
+                  $val = mb_strtolower(CRM_Core_DAO::escapeString($val), 'UTF-8');
                   $val = "%$val%";
                   $op = 'LIKE';
                 }
@@ -502,7 +500,7 @@ SELECT label, value
           case 'Money':
             if ($field['is_search_range'] && is_array($value)) {
               foreach ($value as $key => $val) {
-                require_once "CRM/Utils/Rule.php";
+
                 $moneyFormat = CRM_Utils_Rule::cleanMoney($value[$key]);
                 $value[$key] = $moneyFormat;
               }

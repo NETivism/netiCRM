@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
+
 
 /**
  * This class generates form components generic to note
@@ -188,7 +188,7 @@ class CRM_Note_Form_Note extends CRM_Core_Form {
     }
 
     $ids = array();
-    require_once 'CRM/Core/BAO/Note.php';
+
     CRM_Core_BAO_Note::add($params, $ids);
     CRM_Core_Session::setStatus(ts('Your Note has been saved.'));
   }

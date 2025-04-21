@@ -205,8 +205,7 @@
       </td>
   </tr>
   {/if}
-
-	{if $payment_instrument eq 'Check'}
+	{if $payment_instrument_name eq 'Check'}
         <tr>
             <td class="label">{ts}Check Number{/ts}</td>
             <td>{$check_number}</td>
@@ -248,6 +247,7 @@
 	{/if}	
   {if $record_detail}
     {capture assign="card_expiry_date"}{ts}Card Expiry Date{/ts}{/capture}
+    {capture assign="added_by"}{ts}Added By{/ts}{/capture}
     {include file="CRM/common/clickToShow.tpl"}
     {foreach from=$record_detail key=label item=value}
       <tr>
@@ -255,6 +255,8 @@
           <td>
           {if $label eq $card_expiry_date}
             <div class="click-to-show"><a href="#" class="click-to-show-trigger">{ts}Please pay attention to protect credit card information.{/ts} {ts}Click to show details{/ts} *******</a><span class="click-to-show-info">{$value}</span></div>
+          {elseif $label eq $added_by}
+            <a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$value.id`" h=0 a=1 fe=1}">{$value.name}</a>
           {else}
             {$value}
           {/if}

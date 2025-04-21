@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Core/OptionGroup.php';
-require_once 'CRM/Core/PseudoConstant.php';
+
+
 
 /**
  * This class holds all the Pseudo constants that are specific to Contributions. This avoids
@@ -257,7 +257,7 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
    */
   public static function products($pageID = NULL) {
     $products = array();
-    require_once 'CRM/Contribute/DAO/Product.php';
+
     $dao = new CRM_Contribute_DAO_Product();
     $dao->is_active = 1;
     $dao->orderBy('id');
@@ -267,7 +267,7 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
       $products[$dao->id] = $dao->name;
     }
     if ($pageID) {
-      require_once 'CRM/Contribute/DAO/Premium.php';
+
       $dao = new CRM_Contribute_DAO_Premium();
       $dao->entity_table = 'civicrm_contribution_page';
       $dao->entity_id = $pageID;
@@ -276,7 +276,7 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
 
       $productID = array();
 
-      require_once 'CRM/Contribute/DAO/PremiumsProduct.php';
+
       $dao = new CRM_Contribute_DAO_PremiumsProduct();
       $dao->premiums_id = $premiumID;
       $dao->find();

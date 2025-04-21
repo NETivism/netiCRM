@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Utils/Recent.php';
+
 
 /**
  * Fix for bug CRM-392. Not sure if this is the best fix or it will impact
@@ -111,7 +111,7 @@ class CRM_Core_Smarty extends Smarty {
     // check default editor and assign to template, store it in session to reduce db calls
     $defaultWysiwygEditor = $session->get('defaultWysiwygEditor');
     if (!$defaultWysiwygEditor && !CRM_Core_Config::isUpgradeMode()) {
-      require_once 'CRM/Core/BAO/Preferences.php';
+
       $defaultWysiwygEditor = CRM_Core_BAO_Preferences::value('editor_id');
       $session->set('defaultWysiwygEditor', $defaultWysiwygEditor);
     }
@@ -138,7 +138,7 @@ class CRM_Core_Smarty extends Smarty {
     $this->assign('buildNavigation', $buildNavigation);
 
     if (!CRM_Core_Config::isUpgradeMode() && $buildNavigation) {
-      require_once 'CRM/Core/BAO/Navigation.php';
+
       $contactID = $session->get('userID');
       if ($contactID) {
         $navigation = CRM_Core_BAO_Navigation::createNavigation($contactID);
@@ -200,7 +200,7 @@ class CRM_Core_Smarty extends Smarty {
    * @param boolean $display
    */
   function fetch($resource_name, $cache_id = NULL, $compile_id = NULL, $display = FALSE) {
-    require_once 'CRM/Core/Menu.php';
+
     $all_vars =& $this->get_template_vars();
     CRM_Utils_Hook::alterTemplateVars($resource_name, $all_vars);
     return parent::fetch($resource_name, $cache_id, $compile_id, $display);

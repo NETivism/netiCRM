@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/StateMachine.php';
+
 class CRM_Group_StateMachine extends CRM_Core_StateMachine {
 
   /**

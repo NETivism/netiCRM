@@ -50,6 +50,7 @@ namespace IDS;
  */
 class Filter
 {
+    public $id;
     /**
      * Filter rule
      *

@@ -35,6 +35,7 @@
  * SMS Form.
  */
 class CRM_SMS_Form_Provider extends CRM_Core_Form {
+  public $_submitValues;
   protected $_id = NULL;
 
   public function preProcess() {

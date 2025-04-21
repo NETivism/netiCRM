@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Core/Page.php';
-require_once 'CRM/Report/Utils/Report.php';
+
+
 
 /**
  * Page for invoking report templates
@@ -55,7 +55,7 @@ class CRM_Report_Page_Report extends CRM_Core_Page {
 
 
 
-    require_once 'CRM/Core/OptionGroup.php';
+
     $templateInfo = CRM_Core_OptionGroup::getRowValues('report_template', "{$optionVal}", 'value',
       'String', FALSE
     );
@@ -65,7 +65,7 @@ class CRM_Report_Page_Report extends CRM_Core_Page {
     $reportClass = NULL;
 
     if ($extKey !== FALSE) {
-      require_once ('CRM/Core/Extensions.php');
+
       $ext = new CRM_Core_Extensions();
       $reportClass = $ext->keyToClass($templateInfo['name'], 'report');
       $templateInfo['name'] = $reportClass;

@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Admin/Form/Setting.php';
+
 
 /**
  * This class generates form components for Localization
@@ -58,7 +58,7 @@ class CRM_Admin_Form_Setting_Localization extends CRM_Admin_Form_Setting {
 
     $locales = &CRM_Core_I18n::languages();
 
-    require_once 'CRM/Core/DAO/Domain.php';
+
     $domain = new CRM_Core_DAO_Domain();
     $domain->find(TRUE);
     if ($domain->locales) {
@@ -201,7 +201,7 @@ class CRM_Admin_Form_Setting_Localization extends CRM_Admin_Form_Setting {
 
     //cache contact fields retaining localized titles
     //though we changed localization, so reseting cache.
-    require_once 'CRM/Core/BAO/Cache.php';
+
     CRM_Core_BAO_Cache::deleteGroup('contact fields');
 
     // we do this only to initialize monetary decimal point and thousand separator
@@ -246,24 +246,24 @@ class CRM_Admin_Form_Setting_Localization extends CRM_Admin_Form_Setting {
 
     // make the site multi-lang if requested
     if (CRM_Utils_Array::value('makeMultilingual', $values)) {
-      require_once 'CRM/Core/I18n/Schema.php';
+
       CRM_Core_I18n_Schema::makeMultilingual($values['lcMessages']);
       $values['languageLimit'][$values['lcMessages']] = 1;
       // make the site single-lang if requested
     }
     elseif (CRM_Utils_Array::value('makeSinglelingual', $values)) {
-      require_once 'CRM/Core/I18n/Schema.php';
+
       CRM_Core_I18n_Schema::makeSinglelingual($values['lcMessages']);
       $values['languageLimit'] = '';
     }
 
     // add a new db locale if the requested language is not yet supported by the db
     if (!CRM_Utils_Array::value('makeSinglelingual', $values) and CRM_Utils_Array::value('addLanguage', $values)) {
-      require_once 'CRM/Core/DAO/Domain.php';
+
       $domain = new CRM_Core_DAO_Domain();
       $domain->find(TRUE);
       if (!substr_count($domain->locales, $values['addLanguage'])) {
-        require_once 'CRM/Core/I18n/Schema.php';
+
         CRM_Core_I18n_Schema::addLocale($values['addLanguage'], $values['lcMessages']);
       }
       $values['languageLimit'][$values['addLanguage']] = 1;

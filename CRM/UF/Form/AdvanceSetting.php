@@ -33,9 +33,9 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
 
-require_once 'CRM/UF/Form/Group.php';
+
+
 class CRM_UF_Form_AdvanceSetting extends CRM_UF_Form_Group {
 
   /**

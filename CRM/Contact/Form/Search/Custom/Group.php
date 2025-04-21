@@ -33,10 +33,18 @@
  *
  */
 
-require_once 'CRM/Contact/Form/Search/Custom/Base.php';
-require_once 'CRM/Contact/BAO/SavedSearch.php';
+
+
 class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
 
+  public $_includeGroups;
+  public $_excludeGroups;
+  public $_includeTags;
+  public $_excludeTags;
+  public $_allSearch;
+  public $_groups;
+  public $_tags;
+  public $_andOr;
   protected $_formValues;
 
   protected $_tableName = NULL;
@@ -213,7 +221,7 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
     //block for Group search
     $smartGroup = array();
     if ($this->_groups || $this->_allSearch) {
-      require_once 'CRM/Contact/DAO/Group.php';
+
       $group = new CRM_Contact_DAO_Group();
       $group->is_active = 1;
       $group->find();
@@ -258,14 +266,47 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
         foreach ($this->_excludeGroups as $keys => $values) {
           if (in_array($values, $smartGroup)) {
             $contactIdField = "contact_a.id";
-            $ssId = CRM_Utils_Array::key($values, $smartGroup);
+            // $ssId = CRM_Utils_Array::key($values, $smartGroup);
+            $joinTable = "contact_a";
+            $groupIds = $values;
+            $group = new CRM_Contact_DAO_Group();
+            $group->id = $values;
+            $group->find(TRUE);
+            $smartSql = <<<EOT
+            SELECT contact_a.id
+            FROM civicrm_contact contact_a
+            WHERE
+            EOT;
 
-            $smartSql = CRM_Contact_BAO_SavedSearch::contactIDsSQL($ssId);
-            if (strstr($smartSql, "contact_a.contact_id")) {
-              $contactIdField = "contact_a.contact_id";
+            if (!$this->_smartGroupCache || $group->cache_date == NULL) {
+              if (!empty($group->cache_date)) {
+                // refs #31308, do not refresh smart group too often
+                $config = CRM_Core_Config::singleton();
+                $minimalCacheTime = CRM_Contact_BAO_GroupContactCache::SMARTGROUP_CACHE_TIMEOUT_MINIMAL;
+                if (CRM_REQUEST_TIME - $minimalCacheTime > strtotime($group->cache_date)) {
+                  CRM_Contact_BAO_GroupContactCache::load($group);
+                }
+              }
+              else {
+                CRM_Contact_BAO_GroupContactCache::load($group);
+              }
             }
+            if (!empty($groupIds)) {
+              if ($tableAlias == NULL) {
+                $alias = '`cgcc`';
+              }
+              else {
+                $alias = $tableAlias;
+              }
+            }
+            $whereSql = <<<EOT
+             EXISTS (
+            SELECT 1 FROM civicrm_group_contact_cache {$alias}
+            WHERE {$alias}.contact_id = {$joinTable}.id AND {$alias}.group_id IN ({$groupIds})
+            )
+            EOT;
 
-            $smartSql = $smartSql . " AND $contactIdField NOT IN (
+            $smartSql .= $whereSql . " AND $contactIdField NOT IN (
                               SELECT contact_id FROM civicrm_group_contact 
                               WHERE civicrm_group_contact.group_id = {$values} AND civicrm_group_contact.status = 'Removed')";
 
@@ -322,14 +363,48 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
         if (in_array($values, $smartGroup)) {
 
           $contactIdField = "contact_a.id";
-          $ssId = CRM_Utils_Array::key($values, $smartGroup);
+          $joinTable = "contact_a";
+          $groupIds = $values;
+          $group = new CRM_Contact_DAO_Group();
+          $group->id = $values;
+          $group->find(TRUE);
+          $smartSql = <<<EOT
+          SELECT contact_a.id
+          FROM civicrm_contact contact_a
+          WHERE
+          EOT;
 
-          $smartSql = CRM_Contact_BAO_SavedSearch::contactIDsSQL($ssId);
-          if (strstr($smartSql, "contact_a.contact_id")) {
-            $contactIdField = "contact_a.contact_id";
+          if (!$this->_smartGroupCache || $group->cache_date == NULL) {
+            if (!empty($group->cache_date)) {
+              // refs #31308, do not refresh smart group too often
+              $config = CRM_Core_Config::singleton();
+              $minimalCacheTime = CRM_Contact_BAO_GroupContactCache::SMARTGROUP_CACHE_TIMEOUT_MINIMAL;
+              if (CRM_REQUEST_TIME - $minimalCacheTime > strtotime($group->cache_date)) {
+                CRM_Contact_BAO_GroupContactCache::load($group);
+              }
+            }
+            else {
+              CRM_Contact_BAO_GroupContactCache::load($group);
+            }
           }
 
-          $smartSql .= " AND $contactIdField NOT IN (
+          if (!empty($groupIds)) {
+            if ($tableAlias == NULL) {
+              $alias = '`cgcc`';
+            }
+            else {
+              $alias = $tableAlias;
+            }
+          }
+
+          $whereSql = <<<EOT
+           EXISTS (
+            SELECT 1 FROM civicrm_group_contact_cache {$alias}
+            WHERE {$alias}.contact_id = {$joinTable}.id AND {$alias}.group_id IN ({$groupIds})
+          )
+          EOT;
+
+          $smartSql .= $whereSql." AND $contactIdField NOT IN (
                               SELECT contact_id FROM civicrm_group_contact
                               WHERE civicrm_group_contact.group_id = {$values} AND civicrm_group_contact.status = 'Removed')";
 
@@ -356,7 +431,7 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
     //block for Tags search
     if ($this->_tags || $this->_allSearch) {
       //find all tags
-      require_once 'CRM/Core/DAO/Tag.php';
+
       $tag = new CRM_Core_DAO_Tag();
       $tag->is_active = 1;
       $tag->find();

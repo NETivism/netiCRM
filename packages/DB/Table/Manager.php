@@ -216,7 +216,8 @@ $GLOBALS['_DB_TABLE']['mdb2_type'] = array(
 class DB_Table_Manager {
 
 
-   /**
+   public $db;
+    /**
     * 
     * Create the table based on DB_Table column and index arrays.
     * 

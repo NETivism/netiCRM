@@ -34,8 +34,12 @@
  */
 
 
-require_once 'CRM/Core/Payment.php';
+
 class CRM_Core_Payment_PaymentExpress extends CRM_Core_Payment {
+  /**
+   * @var mixed
+   */
+  public $_processorName;
   CONST CHARSET = 'iso-8859-1';
   static protected $_mode = NULL;
 
@@ -188,7 +192,7 @@ class CRM_Core_Payment_PaymentExpress extends CRM_Core_Payment {
              * This contains the XML/Curl functions we'll need to generate the XML request
              */
 
-      require_once 'CRM/Core/Payment/PaymentExpressUtils.php';
+
 
       // Build a valid XML string to pass to DPS
       $generateRequest = _valueXml(array(
@@ -232,7 +236,7 @@ class CRM_Core_Payment_PaymentExpress extends CRM_Core_Payment {
     }
     else {
       $processortype = "pxaccess";
-      require_once ('PaymentExpress/pxaccess.inc.php');
+
       // URL
       $PxAccess_Url = $this->_paymentProcessor['url_site'];
       // User ID

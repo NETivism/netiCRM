@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Contribute/DAO/ContributionRecur.php';
+
 class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_ContributionRecur {
 
   /**
@@ -54,7 +54,7 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
     $transaction = new CRM_Core_Transaction();
 
     // pre-processing hooks
-    require_once 'CRM/Utils/Hook.php';
+
     if (CRM_Utils_Array::value('id', $params)) {
       CRM_Utils_Hook::pre('edit', 'ContributionRecur', $params['id'], $params);
     }
@@ -242,7 +242,7 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
     if (!$recurId) {
       return FALSE;
     }
-    require_once 'CRM/Contribute/PseudoConstant.php';
+
     // for now, we use pending for cancel id, because we need further response to make sure the contribution is cancelled.
     // $contributionStatus = CRM_Contribute_PseudoConstant::contributionStatus( null, 'name' );
     // $canceledId         = array_search( 'Cancelled', $contributionStatus );
@@ -250,7 +250,7 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
     $recur = new CRM_Contribute_DAO_ContributionRecur();
     $recur->id = $recurId;
     if ($recur->find(TRUE)) {
-      require_once 'CRM/Core/Transaction.php';
+
       $transaction = new CRM_Core_Transaction();
       $recur->contribution_status_id = $canceledId;
       $recur->start_date = CRM_Utils_Date::isoToMysql($recur->start_date);
@@ -264,7 +264,7 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
         return TRUE;
       }
       else {
-        require_once 'CRM/Core/Payment/BaseIPN.php';
+
         $baseIPN = new CRM_Core_Payment_BaseIPN();
         return $baseIPN->cancelled($objects, $transaction);
       }
@@ -284,12 +284,12 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
    */
   static function getRecurContributions($contactId) {
     $params = array();
-    require_once 'CRM/Contribute/DAO/ContributionRecur.php';
+
     $recurDAO = new CRM_Contribute_DAO_ContributionRecur();
     $recurDAO->contact_id = $contactId;
     $recurDAO->find();
-    require_once 'CRM/Contribute/PseudoConstant.php';
-    $contributionStatus = CRM_Contribute_Pseudoconstant::contributionStatus();
+
+    $contributionStatus = CRM_Contribute_PseudoConstant::contributionStatus();
     $paymentProcessors = CRM_Core_PseudoConstant::paymentProcessor();
 
     while ($recurDAO->fetch()) {

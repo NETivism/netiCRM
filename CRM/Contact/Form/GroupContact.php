@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Core/SelectValues.php';
-require_once 'CRM/Core/Form.php';
+
+
 
 /**
  * This class generates form components for groupContact
@@ -42,6 +42,7 @@ require_once 'CRM/Core/Form.php';
  */
 class CRM_Contact_Form_GroupContact extends CRM_Core_Form {
 
+  public $_context;
   /**
    * The groupContact id, used when editing the groupContact
    *

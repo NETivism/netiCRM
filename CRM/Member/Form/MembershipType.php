@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Member/Form.php';
+
 
 /**
  * This class generates form components for Membership Type
@@ -147,12 +147,12 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form {
     // required in form rule
     $this->add('hidden', 'action', $this->_action);
 
-    require_once 'CRM/Contribute/PseudoConstant.php';
+
     $this->add('select', 'contribution_type_id', ts('Contribution Type'),
       array('' => ts('- select -')) + CRM_Contribute_PseudoConstant::contributionType()
     );
 
-    require_once 'CRM/Contact/BAO/Relationship.php';
+
     $relTypeInd = CRM_Contact_BAO_Relationship::getContactRelationshipType(NULL, NULL, NULL, NULL, TRUE);
     if (is_array($relTypeInd)) {
       asort($relTypeInd);
@@ -166,7 +166,7 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form {
     );
     $this->add('checkbox', 'is_active', ts('Enabled?'));
 
-    require_once "CRM/Core/BAO/MessageTemplates.php";
+
     $msgTemplates = CRM_Core_BAO_MessageTemplates::getMessageTemplates(FALSE);
     if (!empty($msgTemplates)) {
       $reminderMsg = $this->add('select', 'renewal_msg_id', ts('Renewal Reminder Message'), array('' => ts('- select -')) + $msgTemplates);
@@ -217,7 +217,7 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form {
     }
     $membershipRecords = FALSE;
     if ($this->_action & CRM_Core_Action::UPDATE) {
-      require_once 'CRM/Member/BAO/Membership.php';
+
       $membershipType = new CRM_Member_BAO_Membership();
       $membershipType->membership_type_id = $this->_id;
       if ($membershipType->find(TRUE)) {
@@ -270,7 +270,7 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form {
    * @static
    */
   static function formRule($params) {
-    require_once 'CRM/Utils/Rule.php';
+
     $errors = array();
     if (!isset($params['_qf_MembershipType_refresh']) || !$params['_qf_MembershipType_refresh']) {
       if (!$params['name']) {
@@ -365,7 +365,7 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form {
    * @return None
    */
   public function postProcess() {
-    require_once 'CRM/Member/BAO/MembershipType.php';
+
     if ($this->_action & CRM_Core_Action::DELETE) {
       CRM_Utils_Weight::delWeight('CRM_Member_DAO_MembershipType', $this->_id);
       CRM_Member_BAO_MembershipType::del($this->_id);
@@ -427,7 +427,7 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form {
         }
         if (!empty($relIds)) {
           $hasRelTypeVal = TRUE;
-          require_once 'CRM/Core/DAO.php';
+
           $params['relationship_type_id'] = CRM_Utils_Array::implode(CRM_Core_DAO::VALUE_SEPARATOR, $relIds);
           $params['relationship_direction'] = CRM_Utils_Array::implode(CRM_Core_DAO::VALUE_SEPARATOR, $relDirection);
         }
@@ -544,7 +544,7 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form {
     $searchValues[] = array('contact_type', '=', 'organization', 0, 0);
 
     // get the count of contact
-    require_once 'CRM/Contact/BAO/Contact.php';
+
     $contactBAO = new CRM_Contact_BAO_Contact();
     $query = new CRM_Contact_BAO_Query($searchValues);
     $searchCount = $query->searchQuery(0, 0, NULL, TRUE);

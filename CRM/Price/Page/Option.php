@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Page.php';
+
 
 /**
  * Create a page for displaying Custom Options.
@@ -126,7 +126,7 @@ class CRM_Price_Page_Option extends CRM_Core_Page {
   function browse() {
     $customOption = array();
 
-    require_once 'CRM/Price/BAO/FieldValue.php';
+
     CRM_Price_BAO_FieldValue::getValues($this->_fid, $customOption);
 
     $config = CRM_Core_Config::singleton();
@@ -157,7 +157,7 @@ class CRM_Price_Page_Option extends CRM_Core_Page {
     // Add order changing widget to selector
     $returnURL = CRM_Utils_System::url('civicrm/admin/price/field/option', "action=browse&reset=1&fid={$this->_fid}&sid={$this->_sid}");
     $filter = "price_field_id = {$this->_fid}";
-    require_once 'CRM/Utils/Weight.php';
+
     CRM_Utils_Weight::addOrder($customOption, 'CRM_Price_DAO_FieldValue',
       'id', $returnURL, $filter
     );
@@ -182,10 +182,10 @@ class CRM_Price_Page_Option extends CRM_Core_Page {
     $params = array();
     if ($oid) {
       $params['oid'] = $oid;
-      require_once 'CRM/Price/BAO/Set.php';
+
       $sid = CRM_Price_BAO_Set::getSetId($params);
 
-      require_once 'CRM/Price/BAO/Set.php';
+
       $usedBy = &CRM_Price_BAO_Set::getUsedBy($sid);
     }else{
       $params['fid'] = $this->_fid;
@@ -209,7 +209,7 @@ class CRM_Price_Page_Option extends CRM_Core_Page {
 
     if ($action & CRM_Core_Action::DELETE) {
       // add breadcrumb
-      require_once 'CRM/Core/BAO/OptionValue.php';
+
       $url = CRM_Utils_System::url('civicrm/admin/price/field/option', 'reset=1');
       CRM_Utils_System::appendBreadCrumb(array(array('title' => ts('Price Option'), 'url' => $url)));
       $this->assign('usedPriceSetTitle', CRM_Core_BAO_OptionValue::getTitle($oid));
@@ -239,7 +239,7 @@ class CRM_Price_Page_Option extends CRM_Core_Page {
    * @access public
    */
   function run() {
-    require_once 'CRM/Price/BAO/Field.php';
+
 
     // get the field id
     $this->_fid = CRM_Utils_Request::retrieve('fid', 'Positive',
@@ -251,7 +251,7 @@ class CRM_Price_Page_Option extends CRM_Core_Page {
     }
 
     if ($this->_sid) {
-      require_once 'CRM/Price/BAO/Set.php';
+
       CRM_Price_BAO_Set::checkPermission($this->_sid);
       $this->assign('sid', $this->_sid);
     }
@@ -295,7 +295,7 @@ class CRM_Price_Page_Option extends CRM_Core_Page {
       $this->edit($action);
     }
     else {
-      require_once 'CRM/Core/BAO/OptionValue.php';
+
       $this->browse();
     }
     // Call the parents run method

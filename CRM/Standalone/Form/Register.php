@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
+
 class CRM_Standalone_Form_Register extends CRM_Core_Form {
 
   protected $_profileID;
@@ -48,7 +48,7 @@ class CRM_Standalone_Form_Register extends CRM_Core_Form {
       CRM_Utils_System::redirect();
     }
     // pick the first profile ID that has user register checked
-    require_once 'CRM/Core/BAO/UFGroup.php';
+
     $ufGroups = &CRM_Core_BAO_UFGroup::getModuleUFGroup('User Registration');
 
     if (count($ufGroups) > 1) {
@@ -59,7 +59,7 @@ class CRM_Standalone_Form_Register extends CRM_Core_Form {
       $this->_profileID = $id;
     }
 
-    require_once 'CRM/Core/Session.php';
+
     $session = CRM_Core_Session::singleton();
     $this->_openID = $session->get('openid');
   }
@@ -95,7 +95,7 @@ class CRM_Standalone_Form_Register extends CRM_Core_Form {
     );
     $this->assign('custom', $fields);
 
-    require_once 'CRM/Profile/Form.php';
+
     foreach ($fields as $key => $field) {
       CRM_Core_BAO_UFGroup::buildProfile($this,
         $field,
@@ -119,9 +119,9 @@ class CRM_Standalone_Form_Register extends CRM_Core_Form {
   function postProcess() {
     $formValues = $this->controller->exportValues($this->_name);
 
-    require_once 'CRM/Standalone/User.php';
-    require_once 'CRM/Utils/System/Standalone.php';
-    require_once 'CRM/Core/BAO/OpenID.php';
+
+
+
 
     $user = new CRM_Standalone_User($formValues['user_unique_id'],
       $formValues['email'],
@@ -130,7 +130,7 @@ class CRM_Standalone_Form_Register extends CRM_Core_Form {
     );
     CRM_Utils_System_Standalone::getUserID($user);
 
-    require_once 'CRM/Core/Session.php';
+
     $session = CRM_Core_Session::singleton();
     $contactId = $session->get('userID');
 
@@ -147,8 +147,8 @@ class CRM_Standalone_Form_Register extends CRM_Core_Form {
 
     // add first user to admin group
     if ($ufCount == 1) {
-      require_once 'CRM/Contact/BAO/GroupContact.php';
-      require_once 'CRM/Contact/DAO/Group.php';
+
+
       $group = new CRM_Contact_DAO_Group();
       $group->name = 'Administrators';
       $group->is_active = 1;

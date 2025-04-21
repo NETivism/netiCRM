@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Friend/BAO/Friend.php';
-require_once 'CRM/Event/Form/ManageEvent.php';
+
+
 
 /**
  * This class generates form components for Tell A Friend

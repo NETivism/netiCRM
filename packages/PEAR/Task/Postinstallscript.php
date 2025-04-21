@@ -33,6 +33,8 @@ require_once 'PEAR/Task/Common.php';
  */
 class PEAR_Task_Postinstallscript extends PEAR_Task_Common
 {
+    public $_filename;
+    public $_lastversion;
     public $type = 'script';
     public $_class;
     public $_params;

@@ -37,7 +37,7 @@
  * Class to retrieve information about a contribution page
  */
 
-require_once 'CRM/Contribute/DAO/Widget.php';
+
 class CRM_Contribute_BAO_Widget extends CRM_Contribute_DAO_Widget {
 
   /**
@@ -62,7 +62,7 @@ class CRM_Contribute_BAO_Widget extends CRM_Contribute_DAO_Widget {
       return $data;
     }
 
-    require_once 'CRM/Contribute/DAO/Widget.php';
+
     $widget = new CRM_Contribute_DAO_Widget();
     $widget->contribution_page_id = $contributionPageID;
     if (!$widget->find(TRUE)) {
@@ -127,7 +127,7 @@ class CRM_Contribute_BAO_Widget extends CRM_Contribute_DAO_Widget {
         }
 
         if ($page['end_date']) {
-          $endDate = CRM_Utils_Date::unixTime($page['end_date']);
+          $endDate = CRM_Utils_Date::unixTime($page['end_date'], true);
           if ($endDate && $endDate < $now) {
             $data['is_active'] = FALSE;
           }
@@ -147,7 +147,7 @@ class CRM_Contribute_BAO_Widget extends CRM_Contribute_DAO_Widget {
       $data['is_active'] = FALSE;
     }
 
-    require_once 'CRM/Utils/Money.php';
+
     $data['money_raised_percentage'] = 0;
     if ($achievement['goal'] > 0) {
       $data['goal_type'] = $achievement['type'];
@@ -189,7 +189,7 @@ class CRM_Contribute_BAO_Widget extends CRM_Contribute_DAO_Widget {
     $data['colors']["bg"] = $widget->color_bg;
     $data['colors']["about_link"] = $widget->color_about_link;
 
-    require_once 'CRM/Core/Error.php';
+
     return $data;
   }
 }

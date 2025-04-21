@@ -33,9 +33,17 @@
  *
  */
 
-require_once 'CRM/Report/Form.php';
+
 class CRM_Report_Form_Pledge_Summary extends CRM_Report_Form {
 
+  public $_columnHeaders;
+  public $_addressField;
+  public $_emailField;
+  public $_from;
+  public $_aliases;
+  public $_where;
+  public $_outputMode;
+  public $_absoluteUrl;
   protected $_summary = NULL;
   protected $_totalPaid = FALSE;
   protected $_customGroupExtends = array('Pledge'); function __construct() {

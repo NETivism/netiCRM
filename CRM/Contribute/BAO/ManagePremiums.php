@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Contribute/DAO/Product.php';
+
 class CRM_Contribute_BAO_ManagePremiums extends CRM_Contribute_DAO_Product {
 
   /**
@@ -84,7 +84,7 @@ class CRM_Contribute_BAO_ManagePremiums extends CRM_Contribute_DAO_Product {
    */
   static function setIsActive($id, $is_active) {
     if (!$is_active) {
-      require_once 'CRM/Contribute/DAO/PremiumsProduct.php';
+
       $dao = new CRM_Contribute_DAO_PremiumsProduct();
       $dao->product_id = $id;
       $dao->delete();
@@ -133,7 +133,7 @@ class CRM_Contribute_BAO_ManagePremiums extends CRM_Contribute_DAO_Product {
 
   static function del($productID) {
     //check dependencies
-    require_once 'CRM/Contribute/DAO/PremiumsProduct.php';
+
     $premiumsProduct = new CRM_Contribute_DAO_PremiumsProduct();
     $premiumsProduct->product_id = $productID;
     if ($premiumsProduct->find(TRUE)) {
@@ -144,7 +144,7 @@ class CRM_Contribute_BAO_ManagePremiums extends CRM_Contribute_DAO_Product {
     }
 
     //delete from contribution Type table
-    require_once 'CRM/Contribute/DAO/Product.php';
+
     $premium = new CRM_Contribute_DAO_Product();
     $premium->id = $productID;
     $premium->delete();

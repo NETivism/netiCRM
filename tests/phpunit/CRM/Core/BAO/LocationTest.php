@@ -41,6 +41,7 @@ require_once 'CiviTest/Event.php';
 class CRM_Core_BAO_LocationTest extends CiviUnitTestCase 
 {
     
+    public $_contactId;
     function get_info( ) 
     {
         return array(

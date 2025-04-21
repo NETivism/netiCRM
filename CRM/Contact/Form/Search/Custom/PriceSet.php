@@ -33,10 +33,12 @@
  *
  */
 
-require_once 'CRM/Contact/Form/Search/Custom/Base.php';
+
 class CRM_Contact_Form_Search_Custom_PriceSet extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
 
   protected $_eventID = NULL;
+
+  protected $_filled = NULL;
 
   protected $_tableName = NULL;
 
@@ -239,7 +241,7 @@ AND    p.entity_id    = e.id
     }
 
     // get all the fields and all the option values associated with it
-    require_once 'CRM/Price/BAO/Set.php';
+
     $priceSet = CRM_Price_BAO_Set::getSetDetail($dao->price_set_id, TRUE, FALSE);
     if (is_array($priceSet[$dao->price_set_id])) {
       foreach ($priceSet[$dao->price_set_id]['fields'] as $key => $value) {
@@ -261,6 +263,15 @@ AND    p.entity_id    = e.id
 
   function summary() {
     return NULL;
+  }
+
+  function count(){
+    if(!$this->_filled){
+      $this->fillTable();
+      $this->_filled = TRUE;
+    }
+    $value = CRM_Core_DAO::singleValueQuery("SELECT count(*) FROM {$this->_tableName}");
+    return $value;
   }
 
   function all($offset = 0, $rowcount = 0, $sort = NULL,

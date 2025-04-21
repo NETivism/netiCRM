@@ -2,6 +2,11 @@
 
 class CRM_Event_Form_Registration_ParticipantCheckin extends CRM_Event_Form_Registration {
 
+  public $_csString;
+  public $_contactId;
+  public $_statusId;
+  public $_event;
+  public $_perm;
   /**
    * Function to set variables up before form is built
    *

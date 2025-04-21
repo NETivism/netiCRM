@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Admin/Form.php';
+
 
 /**
  * This class generates form components for Option Group
@@ -76,7 +76,7 @@ class CRM_Admin_Form_OptionGroup extends CRM_Admin_Form {
     if ($this->_action & CRM_Core_Action::UPDATE) {
       if (in_array($this->_values['name'], array('encounter_medium', 'case_type', 'case_status'))) {
         static $caseCount = NULL;
-        require_once 'CRM/Case/BAO/Case.php';
+
         if (!isset($caseCount)) {
           $caseCount = CRM_Case_BAO_Case::caseCount(NULL, FALSE);
         }
@@ -102,7 +102,7 @@ class CRM_Admin_Form_OptionGroup extends CRM_Admin_Form {
    */
   public function postProcess() {
     $params = $this->exportValues();
-    require_once 'CRM/Core/BAO/OptionGroup.php';
+
     if ($this->_action & CRM_Core_Action::DELETE) {
       CRM_Core_BAO_OptionGroup::del($this->_id);
       CRM_Core_Session::setStatus(ts('Selected option group has been deleted.'));

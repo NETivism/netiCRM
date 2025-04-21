@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Upgrade/Controller.php';
+
 class CRM_Upgrade_TwoTwo_Controller extends CRM_Upgrade_Controller {
   function &getPages() {
     $pages = array('CRM_Upgrade_TwoTwo_Form_Step1' => NULL,

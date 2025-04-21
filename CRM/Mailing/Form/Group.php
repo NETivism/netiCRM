@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
-require_once 'CRM/Contact/Form/Task.php';
+
+
 
 /**
  * Choose include / exclude groups and mailings
@@ -42,6 +42,8 @@ require_once 'CRM/Contact/Form/Task.php';
  */
 class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
 
+  public $_searchBasedMailing;
+  public $_resultSelectOption;
   /**
    * Function to set variables up before form is built
    *
@@ -49,13 +51,13 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
    * @access public
    */
   public function preProcess() {
-    require_once 'CRM/Core/BAO/MailSettings.php';
+
     if (CRM_Core_BAO_MailSettings::defaultDomain() == "FIXME.ORG") {
       CRM_Core_Session::setStatus(ts('The <a href="%1">default mailbox</a> has not been configured. You will find <a href="%2">more info in our online user and administrator guide.</a>', array(1 => CRM_Utils_System::url('civicrm/admin/mailSettings', 'reset=1'), 2 => "http://book.civicrm.org/user/basic-setup/email-system-configuration")));
       return;
     }
     //when user come from search context.
-    require_once 'CRM/Contact/Form/Search.php';
+
     $this->_searchBasedMailing = CRM_Contact_Form_Search::isSearchContext($this->get('context'));
     if ($this->_searchBasedMailing) {
       $searchParams = $this->controller->exportValues();
@@ -90,7 +92,7 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
     $reschedule = CRM_Utils_Request::retrieve('reschedule', 'Integer', $this, FALSE, NULL);
 
     // check that the user has permission to access mailing id
-    require_once 'CRM/Mailing/BAO/Mailing.php';
+
     CRM_Mailing_BAO_Mailing::checkPermission($mailingID);
 
     $defaults = array();
@@ -139,7 +141,7 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
       $defaults['campaign_id'] = $mailing->campaign_id;
       $defaults['dedupe_email'] = $mailing->dedupe_email;
 
-      require_once 'CRM/Mailing/DAO/Group.php';
+
       $dao = new CRM_Mailing_DAO_Group();
 
       $mailingGroups = array();
@@ -163,7 +165,7 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
     }
 
     //when the context is search hide the mailing recipients.
-    require_once 'CRM/Core/ShowHideBlocks.php';
+
     $showHide = new CRM_Core_ShowHideBlocks();
     $showGroupSelector = TRUE;
 
@@ -199,7 +201,7 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
    * @access public
    */
   public function buildQuickForm() {
-    require_once 'CRM/Mailing/PseudoConstant.php';
+
 
     //get the context
     $context = $this->get('context');
@@ -216,7 +218,7 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
     /*
     //CRM-7362 --add campaigns.
     $mailingId = CRM_Utils_Request::retrieve('mid', 'Integer', $this, FALSE, NULL);
-    require_once 'CRM/Campaign/BAO/Campaign.php';
+
     $campaignId = NULL;
     if ($mailingId) {
       $campaignId = CRM_Core_DAO::getFieldValue('CRM_Mailing_DAO_Mailing', $mailingId, 'campaign_id');
@@ -237,7 +239,7 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
     }
 
     // run the groups through a hook so users can trim it if needed
-    require_once 'CRM/Utils/Hook.php';
+
     CRM_Utils_Hook::mailingGroups($this, $groups, $mailings);
 
     //when the context is search add base group's.
@@ -318,7 +320,7 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
     $rules = array();
     if ($this->_searchBasedMailing && $this->_contactIds) {
       $session = CRM_Core_Session::singleton();
-      require_once "CRM/Contact/BAO/Group.php";
+
 
       if ($this->_resultSelectOption == 'ts_sel') {
         // create a static grp if only a subset of result set was selected:
@@ -413,7 +415,7 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
         'clicked' =>  CRM_Mailing_Event_BAO_TrackableURLOpen::getTableName(),
       );
       // delete previous includes/excludes, if mailing already existed
-      require_once 'CRM/Contact/DAO/Group.php';
+
       foreach ($tables as $entity => $table) {
         $mg = new CRM_Mailing_DAO_Group();
         $mg->mailing_id = $ids['mailing_id'];
@@ -431,7 +433,7 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
       $params['created_date'] = date('YmdHis');
     }
 
-    require_once 'CRM/Mailing/BAO/Mailing.php';
+
     $mailing = CRM_Mailing_BAO_Mailing::create($params, $ids);
     $this->set('mailing_id', $mailing->id);
 
@@ -449,7 +451,7 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
       $dedupeEmail
     );
 
-    require_once 'CRM/Mailing/BAO/Recipients.php';
+
     $count = CRM_Mailing_BAO_Recipients::mailingSize($mailing->id);
     $this->set('count', $count);
     $this->assign('count', $count);

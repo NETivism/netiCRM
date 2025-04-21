@@ -30,6 +30,13 @@
 
 require_once 'CiviTest/CiviUnitTestCase.php';
 class api_v3_EventTest extends CiviUnitTestCase {
+  /**
+   * @var never[]
+   */
+  public $events;
+  public $eventIds;
+  public $_events;
+  public $_eventIds;
   protected $_params;
   protected $_apiversion;
   protected $_entity; function get_info() {

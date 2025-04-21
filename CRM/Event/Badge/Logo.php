@@ -1,7 +1,13 @@
 <?php
-require_once 'CRM/Event/Badge.php';
-require_once 'CRM/Utils/Date.php';
+
+
 class CRM_Event_Badge_Logo extends CRM_Event_Badge {
+  public $format;
+  public $lMarginLogo;
+  public $tMarginName;
+  public $logo;
+  public $pdf;
+  public $border;
   function __construct() {
     parent::__construct();
     $config = CRM_Core_Config::singleton();
@@ -16,7 +22,11 @@ class CRM_Event_Badge_Logo extends CRM_Event_Badge {
     );
     $this->lMarginLogo = 20;
     $this->tMarginName = 20;
-    $this->logo = $config->receiptLogo;
+    $receipt_logo = $config->receiptLogo;
+    if ($receipt_logo && !(substr($receipt_logo, 0, 7) == 'http://' || substr($receipt_logo, 0, 8) == 'https://')) {
+      $receipt_logo = $config->imageUploadDir . $receipt_logo;
+    }
+    $this->logo = $receipt_logo;
   }
 
   public function generateLabel($participant) {

@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
-require_once 'CRM/Price/BAO/Set.php';
+
+
 
 /**
  * form to process actions on Price Sets
@@ -129,8 +129,8 @@ class CRM_Price_Form_Set extends CRM_Core_Form {
       $priceSetUsedTables = CRM_Price_BAO_Set::getUsedBy($this->_sid, TRUE);
     }
 
-    require_once 'CRM/Core/Config.php';
-    require_once 'CRM/Core/Component.php';
+
+
     $config = CRM_Core_Config::singleton();
     $components = array('CiviEvent' => array('title' => ts('Event'),
         'extend' => CRM_Core_Component::getComponentID('CiviEvent'),
@@ -185,6 +185,11 @@ class CRM_Price_Form_Set extends CRM_Core_Form {
 
     // is this set active ?
     $this->addElement('checkbox', 'is_active', ts('Is this Price Set active?'));
+
+    // If price set is being used, freeze the is_active field
+    if (!empty($priceSetUsedTables)) {
+      $this->getElement('is_active')->freeze();
+    }
 
     $js = array('data' => 'click-once');
     $this->addButtons(array(

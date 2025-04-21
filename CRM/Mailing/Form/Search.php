@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
+
 class CRM_Mailing_Form_Search extends CRM_Core_Form {
 
   public function preProcess() {
@@ -52,7 +52,7 @@ class CRM_Mailing_Form_Search extends CRM_Core_Form {
     $this->add('text', 'sort_name', ts('Created or Sent by'));
 
     /*
-    require_once 'CRM/Campaign/BAO/Campaign.php';
+
     CRM_Campaign_BAO_Campaign::addCampaignInComponentSearch($this);
 */
 

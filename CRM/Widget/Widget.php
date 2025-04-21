@@ -74,7 +74,7 @@ class CRM_Widget_Widget {
       return $data;
     }
 
-    require_once 'CRM/Contribute/DAO/Widget.php';
+
     $widget = new CRM_Contribute_DAO_Widget();
     $widget->contribution_page_id = $contributionPageID;
     if (!$widget->find(TRUE)) {
@@ -122,7 +122,7 @@ WHERE  id = %1";
     $params = array(1 => array($contributionPageID, 'Integer'));
     $dao = CRM_Core_DAO::executeQuery($query, $params);
     if ($dao->fetch()) {
-      require_once 'CRM/Utils/Date.php';
+
       $data->money_target = $dao->goal_amount;
       $data->campaign_start = CRM_Utils_Date::customFormat($dao->start_date, $config->dateformatFull);
       $data->campaign_end = CRM_Utils_Date::customFormat($dao->end_date, $config->dateformatFull);
@@ -139,7 +139,7 @@ WHERE  id = %1";
       }
 
       if ($dao->end_date) {
-        $endDate = CRM_Utils_Date::unixTime($dao->end_date);
+        $endDate = CRM_Utils_Date::unixTime($dao->end_date, true);
         if ($endDate &&
           $endDate < $now
         ) {
@@ -171,7 +171,7 @@ WHERE  id = %1";
     $data->colors["about_link"] = str_replace('#', $hexPrefix, $widget->color_about_link);
     $data->colors["homepage_link"] = str_replace('#', $hexPrefix, $widget->color_homepage_link);
 
-    require_once 'CRM/Core/Error.php';
+
     return $data;
   }
 

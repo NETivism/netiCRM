@@ -307,7 +307,7 @@ class CRM_Core_IDS {
 
       // also create the .htaccess file so we prevent the reading of the log and ini files
       // via a browser, CRM-3875
-      require_once 'CRM/Utils/File.php';
+
       CRM_Utils_File::restrictAccess($config->configAndLogDir);
     }
   }

@@ -33,12 +33,21 @@
  *
  */
 
-require_once 'CRM/Report/Form.php';
-require_once 'CRM/Event/PseudoConstant.php';
-require_once 'CRM/Core/OptionGroup.php';
-require_once 'CRM/Event/BAO/Participant.php';
+
+
+
+
 class CRM_Report_Form_Event_ParticipantListCount extends CRM_Report_Form {
 
+  public $_aliases;
+  public $_from;
+  public $_where;
+  /**
+   * @var never[]
+   */
+  public $_columnHeaders;
+  public $_groupBy;
+  public $_absoluteUrl;
   protected $_summary = NULL;
 
   protected $_customGroupExtends = array('Participant'); function __construct() {

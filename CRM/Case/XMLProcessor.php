@@ -35,8 +35,8 @@
 class CRM_Case_XMLProcessor {
 
   static protected $_xml; function retrieve($caseType) {
-    require_once 'CRM/Utils/String.php';
-    require_once 'CRM/Utils/Array.php';
+
+
 
     // trim all spaces from $caseType
     $caseType = str_replace('_', ' ', $caseType);
@@ -93,7 +93,7 @@ class CRM_Case_XMLProcessor {
   function &allActivityTypes($indexName = TRUE, $all = FALSE) {
     static $activityTypes = NULL;
     if (!$activityTypes) {
-      require_once 'CRM/Case/PseudoConstant.php';
+
       $activityTypes = CRM_Case_PseudoConstant::caseActivityType($indexName, $all);
     }
     return $activityTypes;
@@ -103,7 +103,7 @@ class CRM_Case_XMLProcessor {
     static $relationshipTypes = array();
 
     if (!$relationshipTypes) {
-      require_once 'CRM/Core/PseudoConstant.php';
+
       $relationshipInfo = CRM_Core_PseudoConstant::relationshipType();
 
       $relationshipTypes = array();

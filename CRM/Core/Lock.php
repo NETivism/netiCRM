@@ -34,6 +34,7 @@
  */
 class CRM_Core_Lock {
 
+  public $_timeout;
   // lets have a 1 second timeout for now
   CONST TIMEOUT = 1;
 

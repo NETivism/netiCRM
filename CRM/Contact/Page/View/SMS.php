@@ -33,10 +33,10 @@
  *
  */
 
-require_once 'CRM/Core/Page.php';
-require_once 'CRM/Core/DAO/ActivityHistory.php';
-require_once 'CRM/SMS/DAO/History.php';
-require_once 'CRM/Contact/BAO/Contact.php';
+
+
+
+
 
 /**
  * Dummy page for details of SMS
@@ -69,7 +69,7 @@ class CRM_Contact_Page_View_SMS extends CRM_Core_Page {
       $cid = $dao->entity_id;
     }
 
-    require_once 'CRM/SMS/DAO/History.php';
+
     $dao = new CRM_SMS_DAO_History();
     $dao->id = $id;
 
@@ -94,7 +94,7 @@ class CRM_Contact_Page_View_SMS extends CRM_Core_Page {
 
       CRM_Utils_System::setTitle($contactImage . ' ' . $displayName);
 
-      require_once 'CRM/Core/Menu.php';
+
       // also add the cid params to the Menu array
       CRM_Core_Menu::addParam('cid', $cid);
     }

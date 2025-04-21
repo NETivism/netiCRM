@@ -40,6 +40,7 @@ require_once 'System.php';
  */
 class PEAR_Builder extends PEAR_Common
 {
+    public $debug;
     var $php_api_version = 0;
     var $zend_module_api_no = 0;
     var $zend_extension_api_no = 0;

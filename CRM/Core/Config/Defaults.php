@@ -41,6 +41,55 @@
  *
  */
 class CRM_Core_Config_Defaults {
+  /**
+   * @var string
+   */
+  public $smartyDir;
+  /**
+   * @var string
+   */
+  public $pluginsDir;
+  /**
+   * @var non-falsy-string[]
+   */
+  public $templateDir;
+  /**
+   * @var string
+   */
+  public $importDataSourceDir;
+  /**
+   * @var string
+   */
+  public $gettextResourceDir;
+  /**
+   * @var bool
+   */
+  public $sunlight;
+  /**
+   * @var bool
+   */
+  public $groupTree;
+  /**
+   * @var never[]
+   */
+  public $revampPages;
+  /**
+   * @var bool
+   */
+  public $profileDoubleOptIn;
+  public $enableComponents;
+  /**
+   * @var bool
+   */
+  public $activityAssigneeNotification;
+  /**
+   * @var bool
+   */
+  public $useIDS;
+  /**
+   * @var int
+   */
+  public $maxImportFileSize;
   function setCoreVariables() {
     global $civicrm_root;
     $crm_root = rtrim($civicrm_root, DIRECTORY_SEPARATOR);

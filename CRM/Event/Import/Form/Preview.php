@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
+
 
 /**
  * This class previews the uploaded file and returns summary
@@ -60,7 +60,7 @@ class CRM_Event_Import_Form_Preview extends CRM_Core_Form {
     //get the mapping name displayed if the mappingId is set
     $mappingId = $this->get('loadMappingId');
     if ($mappingId) {
-      require_once 'CRM/Core/DAO/Mapping.php';
+
       $mapDAO = new CRM_Core_DAO_Mapping();
       $mapDAO->id = $mappingId;
       $mapDAO->find(TRUE);
@@ -158,7 +158,7 @@ class CRM_Event_Import_Form_Preview extends CRM_Core_Form {
       $mapperKeys[$key] = $mapper[$key][0];
     }
 
-    require_once 'CRM/Event/Import/Parser/Participant.php';
+
     $parser = new CRM_Event_Import_Parser_Participant($mapperKeys);
 
     $mapFields = $this->get('fields');

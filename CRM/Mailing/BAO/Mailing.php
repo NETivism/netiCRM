@@ -34,6 +34,18 @@
  */
 class CRM_Mailing_BAO_Mailing extends CRM_Mailing_DAO_Mailing {
 
+  public $delivered;
+  public $entity_table;
+  public $group_id;
+  public $mailing_id;
+  public $group_type;
+  /**
+   * @var string
+   */
+  public $mailing_name;
+  public $group_hidden;
+  public $queue;
+  public $count;
   /**
    * An array that holds the complete templates
    * including any headers or footers that need to be prepended
@@ -115,7 +127,7 @@ class CRM_Mailing_BAO_Mailing extends CRM_Mailing_DAO_Mailing {
     $email = CRM_Core_DAO_Email::getTableName();
     $contact = CRM_Contact_DAO_Contact::getTableName();
 
-    require_once 'CRM/Contact/DAO/Group.php';
+
     $group = CRM_Contact_DAO_Group::getTableName();
     $g2contact = CRM_Contact_DAO_GroupContact::getTableName();
 
@@ -267,7 +279,7 @@ WHERE      $mg.entity_table = '$group'
     $groupDAO = CRM_Core_DAO::executeQuery($sql);
     while ($groupDAO->fetch()) {
       if ($groupDAO->cache_date == NULL) {
-        require_once 'CRM/Contact/BAO/GroupContactCache.php';
+
         CRM_Contact_BAO_GroupContactCache::load($groupDAO);
       }
 
@@ -456,7 +468,7 @@ WHERE      $mg.entity_table = '$group'
     $groupDAO = CRM_Core_DAO::executeQuery($sql);
     while ($groupDAO->fetch()) {
       if ($groupDAO->cache_date == NULL) {
-        require_once 'CRM/Contact/BAO/GroupContactCache.php';
+
         CRM_Contact_BAO_GroupContactCache::load($groupDAO);
       }
 
@@ -489,7 +501,7 @@ WHERE  $mg.search_id IS NOT NULL
 AND    $mg.mailing_id = {$mailing_id}
 ";
     $dao = CRM_Core_DAO::executeQuery($query);
-    require_once 'CRM/Contact/BAO/SearchCustom.php';
+
     while ($dao->fetch()) {
       $customSQL = CRM_Contact_BAO_SearchCustom::civiMailSQL($dao->search_id,
         $dao->search_args,
@@ -565,7 +577,7 @@ AND    $mg.mailing_id = {$mailing_id}
 
     $eq = new CRM_Mailing_Event_BAO_Queue();
 
-    require_once 'CRM/Contact/BAO/Contact/Permission.php';
+
     list($aclFrom, $aclWhere) = CRM_Contact_BAO_Contact_Permission::cacheClause();
     $aclWhere = $aclWhere ? "WHERE {$aclWhere}" : '';
     $limitString = NULL;
@@ -706,7 +718,7 @@ ORDER BY   i.contact_id, i.email_id
         'contact' => NULL,
       );
 
-      require_once 'CRM/Utils/Hook.php';
+
       CRM_Utils_Hook::tokens($_categories);
       $_categoryString = CRM_Utils_Array::implode('|', array_keys($_categories));
     }
@@ -807,7 +819,7 @@ ORDER BY   i.contact_id, i.email_id
    *
    **/
   protected function &getTemplates() {
-    require_once ('CRM/Utils/String.php');
+
     if (!$this->templates) {
       $this->getHeaderFooter();
       $this->templates = array();
@@ -1045,7 +1057,7 @@ AND civicrm_contact.is_opt_out =0";
    */
   static function getVerpAndUrls($job_id, $event_queue_id, $hash, $email) {
     // create a skeleton object and set its properties that are required by getVerpAndUrlsAndHeaders()
-    require_once 'CRM/Core/BAO/Domain.php';
+
     $config = CRM_Core_Config::singleton();
     $bao = new CRM_Mailing_BAO_Mailing();
     $bao->_domain = CRM_Core_BAO_Domain::getDomain();
@@ -1150,7 +1162,7 @@ AND civicrm_contact.is_opt_out =0";
       'optOut' => 'o',
     );
 
-    require_once 'CRM/Core/BAO/MailSettings.php';
+
     $localpart = CRM_Core_BAO_MailSettings::defaultLocalpart();
     $emailDomain = CRM_Core_BAO_MailSettings::defaultDomain();
 
@@ -1243,12 +1255,12 @@ AND civicrm_contact.is_opt_out =0";
       CRM_Core_Error::fatal('Mailing is hidden. We can not compose hidden mailing by job.');
       return;
     }
-    require_once 'CRM/Activity/BAO/Activity.php';
+
     $config = CRM_Core_Config::singleton();
     $knownTokens = $this->getTokens();
 
     if ($this->_domain == NULL) {
-      require_once 'CRM/Core/BAO/Domain.php';
+
       $this->_domain = CRM_Core_BAO_Domain::getDomain();
     }
 
@@ -1289,7 +1301,7 @@ AND civicrm_contact.is_opt_out =0";
       }
 
       // also call the hook to get contact details
-      require_once 'CRM/Utils/Hook.php';
+
       $contactIds = array($contactId);
       CRM_Utils_Hook::tokenValues($contactArray, $contactIds, $job_id, array(), 'CRM_Mailing_BAO_Mailing_compose');
     }
@@ -1474,7 +1486,7 @@ AND civicrm_contact.is_opt_out =0";
    *
    */
   static function tokenReplace(&$mailing) {
-    require_once 'CRM/Core/BAO/Domain.php';
+
     $domain = CRM_Core_BAO_Domain::getDomain();
 
     foreach (array(
@@ -1544,7 +1556,7 @@ AND civicrm_contact.is_opt_out =0";
       $data = CRM_Utils_Token::getActionTokenReplacement($token, $verp, $urls, $html);
     }
     elseif ($type == 'domain') {
-      require_once 'CRM/Core/BAO/Domain.php';
+
       $domain = CRM_Core_BAO_Domain::getDomain();
       $data = CRM_Utils_Token::getDomainTokenReplacement($token, $domain, $html);
     }
@@ -1717,7 +1729,7 @@ AND civicrm_contact.is_opt_out =0";
       return $mailing;
     }
 
-    require_once 'CRM/Contact/BAO/Group.php';
+
 
     $groupTableName = CRM_Contact_BAO_Group::getTableName();
     $mailingTableName = CRM_Mailing_BAO_Mailing::getTableName();
@@ -1759,7 +1771,7 @@ AND civicrm_contact.is_opt_out =0";
     }
 
     // check and attach and files as needed
-    require_once 'CRM/Core/BAO/File.php';
+
     CRM_Core_BAO_File::processAttachment($params, 'civicrm_mailing', $mailing->id);
 
     $transaction->commit();
@@ -1782,12 +1794,12 @@ AND civicrm_contact.is_opt_out =0";
 
     $mailing = new CRM_Mailing_BAO_Mailing();
 
-    require_once 'CRM/Mailing/Event/BAO/Opened.php';
-    require_once 'CRM/Mailing/Event/BAO/Reply.php';
-    require_once 'CRM/Mailing/Event/BAO/Unsubscribe.php';
-    require_once 'CRM/Mailing/Event/BAO/Forward.php';
-    require_once 'CRM/Mailing/Event/BAO/TrackableURLOpen.php';
-    require_once 'CRM/Mailing/BAO/Spool.php';
+
+
+
+
+
+
     $t = array(
       'mailing' => self::getTableName(),
       'mailing_group' => CRM_Mailing_DAO_Group::getTableName(),
@@ -1830,7 +1842,7 @@ AND civicrm_contact.is_opt_out =0";
     //get the campaign
     /*
     if ($campaignId = CRM_Utils_Array::value('campaign_id', $report['mailing'])) {
-      require_once 'CRM/Campaign/BAO/Campaign.php';
+
       $campaigns = CRM_Campaign_BAO_Campaign::getCampaigns($campaignId);
       $report['mailing']['campaign'] = $campaigns[$campaignId];
     }
@@ -2084,7 +2096,7 @@ AND civicrm_contact.is_opt_out =0";
       $report['jobs'][] = $row;
     }
 
-    require_once 'CRM/Mailing/BAO/Recipients.php';
+
     $newTableSize = CRM_Mailing_BAO_Recipients::mailingSize($mailing_id);
 
     // we need to do this for backward compatibility, since old mailings did not
@@ -2385,7 +2397,7 @@ LEFT JOIN civicrm_mailing_group g ON g.mailing_id   = m.id
     }
 
     // delete all file attachments
-    require_once 'CRM/Core/BAO/File.php';
+
     CRM_Core_BAO_File::deleteEntityFile('civicrm_mailing',
       $id
     );
@@ -2491,7 +2503,7 @@ LEFT JOIN civicrm_mailing_group g ON g.mailing_id   = m.id
 
     // if return properties are not passed then get all return properties
     if (empty($returnProperties)) {
-      require_once 'CRM/Contact/BAO/Contact.php';
+
       $fields = array_merge(array_keys(CRM_Contact_BAO_Contact::exportableFields()),
         array('display_name', 'checksum', 'contact_id')
       );
@@ -2511,7 +2523,7 @@ LEFT JOIN civicrm_mailing_group g ON g.mailing_id   = m.id
     //get the total number of contacts to fetch from database.
     $numberofContacts = count($contactIDs);
 
-    require_once 'CRM/Contact/BAO/Query.php';
+
     $details = CRM_Contact_BAO_Query::apiQuery( $params, $returnProperties, NULL, NULL, 0, $numberofContacts, TRUE, TRUE);
 
     $contactDetails = &$details[0];
@@ -2522,11 +2534,11 @@ LEFT JOIN civicrm_mailing_group g ON g.mailing_id   = m.id
         if (CRM_Utils_Array::value('preferred_communication_method', $returnProperties) == 1
           && CRM_Utils_Array::arrayKeyExists('preferred_communication_method', $contactDetails[$contactID])
         ) {
-          require_once 'CRM/Core/PseudoConstant.php';
+
           $pcm = CRM_Core_PseudoConstant::pcm();
 
           // communication Prefferance
-          require_once 'CRM/Core/BAO/CustomOption.php';
+
           $contactPcm = explode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
             $contactDetails[$contactID]['preferred_communication_method']
           );
@@ -2811,7 +2823,7 @@ LEFT JOIN civicrm_mailing_group g ON g.mailing_id   = m.id
       )
     );
 
-    require_once 'CRM/Core/BAO/MessageTemplates.php';
+
     $form->_templates = CRM_Core_BAO_MessageTemplates::getMessageTemplates(FALSE);
     if (!empty($form->_templates)) {
       $form->assign('templates', TRUE);
@@ -2882,7 +2894,7 @@ SELECT  $mailing.id as mailing_id
     $htmlHeader = $textHeader = NULL;
     $htmlFooter = $textFooter = NULL;
 
-    require_once 'CRM/Mailing/BAO/Component.php';
+
     if ($report['mailing']['header_id']) {
       $header = new CRM_Mailing_BAO_Component();
       $header->id = $report['mailing']['header_id'];
@@ -2930,7 +2942,7 @@ SELECT  $mailing.id as mailing_id
       $form->assign('htmlViewURL', $popup);
     }
 
-    require_once 'CRM/Core/BAO/File.php';
+
     $report['mailing']['attachment'] = CRM_Core_BAO_File::attachmentInfo('civicrm_mailing',
       $form->_mailing_id
     );
@@ -2954,11 +2966,11 @@ WHERE  civicrm_mailing_job.id = %1
   }
 
   static function processQueue() {
-    require_once 'CRM/Core/Config.php';
+
     $config = &CRM_Core_Config::singleton();
     CRM_Core_Error::debug_log_message("Beginning processQueue run: {$config->mailerJobsMax}, {$config->mailerJobSize}");
 
-    require_once 'CRM/Core/BAO/MailSettings.php';
+
     if (CRM_Core_BAO_MailSettings::defaultDomain() == "FIXME.ORG") {
       CRM_Core_Session::setStatus(ts('The <a href="%1">default mailbox</a> has not been configured. You will find <a href="%2">more info in our online user and administrator guide.</a>', array(1 => CRM_Utils_System::url('civicrm/admin/mailSettings', 'reset=1'), 2 => "http://book.civicrm.org/user/basic-setup/email-system-configuration")));
       return;
@@ -2968,7 +2980,7 @@ WHERE  civicrm_mailing_job.id = %1
     // CRM-8460
     $gotCronLock = FALSE;
     if ($config->mailerJobsMax && $config->mailerJobsMax > 1) {
-      require_once 'CRM/Core/Lock.php';
+
 
       $lockArray = range(1, $config->mailerJobsMax);
       shuffle($lockArray);
@@ -2997,7 +3009,7 @@ WHERE  civicrm_mailing_job.id = %1
 
 
     // load bootstrap to call hooks
-    require_once 'CRM/Mailing/BAO/Job.php';
+
 
     // Split up the parent jobs into multiple child jobs
     CRM_Mailing_BAO_Job::runJobs_pre($config->mailerJobSize);

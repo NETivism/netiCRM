@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Page.php';
+
 
 /**
  * Create a page for displaying UF Groups.
@@ -119,7 +119,7 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
         CRM_Core_Action::COPY => array(
           'name' => ts('Copy Profile'),
           'url' => 'civicrm/admin/uf/group',
-          'qs' => 'action=copy&gid=%%id%%',
+          'qs' => 'action=copy&gid=%%id%%&key=%%key%%',
           'title' => ts('Make a Copy of CiviCRM Profile Group'),
           'extra' => 'onclick = "return confirm(\'' . $copyExtra . '\');"',
         ),
@@ -168,11 +168,11 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
     else {
       // if action is enable or disable do the needful.
       if ($action & CRM_Core_Action::ENABLE) {
-        require_once "CRM/Core/BAO/UFGroup.php";
+
         CRM_Core_BAO_UFGroup::setIsActive($id, 1);
 
         // update cms integration with registration / my account
-        require_once 'CRM/Utils/System.php';
+
         CRM_Utils_System::updateCategories();
       }
       elseif ($action & CRM_Core_Action::PROFILE) {
@@ -199,11 +199,20 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
    * @access public
    */
   function copy() {
+    $key = CRM_Utils_Request::retrieve('key', 'String',
+      CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST'
+    );
+
+    $name = get_class($this);
+    if (!CRM_Core_Key::validate($key, $name)) {
+      return CRM_Core_Error::statusBounce(ts('Sorry, we cannot process this request for security reasons. The request may have expired or is invalid. Please return to the profile list and try again.'));
+    }
+
     $gid = CRM_Utils_Request::retrieve('gid', 'Positive',
       $this, TRUE, 0, 'GET'
     );
 
-    require_once 'CRM/Core/BAO/UFGroup.php';
+
     $copy = CRM_Core_BAO_UFGroup::copy($gid);
 
     CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin/uf/group/update', 'reset=1&action=update&id=' . $copy->id));
@@ -277,13 +286,18 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
   function browse($action = NULL) {
     $ufGroup = array();
     $allUFGroups = array();
-    require_once 'CRM/Core/BAO/UFGroup.php';
+
     $allUFGroups = CRM_Core_BAO_UFGroup::getModuleUFGroup();
     if (empty($allUFGroups)) {
       return;
     }
 
     require_once 'CRM/Utils/Hook.php';
+    // Add key for action validation
+    $name = get_class($this);
+    $key = CRM_Core_Key::get($name);
+    $this->assign('key', $key);
+
     $ufGroups = CRM_Core_PseudoConstant::ufGroup();
     CRM_Utils_Hook::aclGroup(CRM_Core_Permission::ADMIN, NULL, 'civicrm_uf_group', $ufGroups, $allUFGroups);
     $restrictType = array(
@@ -353,7 +367,10 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
       }
 
       $ufGroup[$id]['action'] = CRM_Core_Action::formLink(self::actionLinks(), $action,
-        array('id' => $id)
+        array(
+          'id' => $id,
+          'key' => $key
+        )
       );
 
 

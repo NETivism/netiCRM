@@ -33,8 +33,25 @@
  *
  */
 
-require_once 'CRM/Report/Form.php';
+
 class CRM_Report_Form_Contact_LoggingSummary extends CRM_Report_Form {
+  /**
+   * @var never[]
+   */
+  public $_columnHeaders;
+  /**
+   * @var string
+   */
+  public $_from;
+  /**
+   * @var string
+   */
+  public $_groupBy;
+  /**
+   * @var string
+   */
+  public $_orderBy;
+  public $_where;
   private $loggingDB; function __construct() {
     // don’t display the ‘Add these Contacts to Group’ button
     $this->_add2groupSupported = FALSE;

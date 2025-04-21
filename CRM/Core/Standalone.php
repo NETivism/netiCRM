@@ -51,7 +51,7 @@ class CRM_Core_Standalone {
   static function sidebarLeft() {
     $config = CRM_Core_Config::singleton();
 
-    require_once 'CRM/Core/Block.php';
+
     $blockIds = array(
       CRM_Core_Block::CREATE_NEW,
       CRM_Core_Block::RECENTLY_VIEWED,
@@ -67,7 +67,7 @@ class CRM_Core_Standalone {
       $blocks[] = CRM_Core_Block::getContent($id);
     }
 
-    require_once 'CRM/Core/Smarty.php';
+
     $template = CRM_Core_Smarty::singleton();
     $template->assign_by_ref('blocks', $blocks);
     $sidebarLeft = $template->fetch('CRM/Block/blocks.tpl');

@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
+
 
 /**
  * This class generates form components for Participant
@@ -48,8 +48,8 @@ class CRM_Event_Form_ParticipantView extends CRM_Core_Form {
    * @access public
    */
   public function preProcess() {
-    require_once 'CRM/Event/BAO/Participant.php';
-    require_once 'CRM/Core/DAO.php';
+
+
     $values = $ids = array();
     $participantID = CRM_Utils_Request::retrieve('id', 'Positive', $this, TRUE);
     $contactID = CRM_Utils_Request::retrieve('cid', 'Positive', $this, TRUE);
@@ -64,7 +64,7 @@ class CRM_Event_Form_ParticipantView extends CRM_Core_Form {
     );
 
     if (empty($values)) {
-      require_once 'CRM/Core/Error.php';
+
        return CRM_Core_Error::statusBounce(ts('The requested participant record does not exist (possibly the record was deleted).'));
     }
     $contactID = $values[$participantID]['contact_id'];
@@ -83,7 +83,7 @@ class CRM_Event_Form_ParticipantView extends CRM_Core_Form {
       $checksumLife = 'inf';
       $endDate = CRM_Utils_Array::value('end_date', $eventDetails);
       if ($endDate) {
-        $checksumLife = (CRM_Utils_Date::unixTime($endDate) - time()) / (60 * 60);
+        $checksumLife = (CRM_Utils_Date::unixTime($endDate, true) - time()) / (60 * 60);
       }
       $checksumValue = CRM_Contact_BAO_Contact_Utils::generateChecksum($contactID, NULL, $checksumLife);
       $values[$participantID]['checksum'] = $checksumValue;
@@ -102,7 +102,7 @@ class CRM_Event_Form_ParticipantView extends CRM_Core_Form {
 
     $values[$participantID]['note'] = array_values($noteValue);
 
-    require_once 'CRM/Price/BAO/LineItem.php';
+
 
     // Get Line Items
     $lineItem = CRM_Price_BAO_LineItem::getLineItems($participantID);
@@ -144,7 +144,7 @@ class CRM_Event_Form_ParticipantView extends CRM_Core_Form {
         $values[$participantID]['participant_registered_by_id'],
         'contact_id', 'id'
       );
-      require_once 'CRM/Contact/BAO/Contact.php';
+
       $values[$participantID]['registered_by_display_name'] = CRM_Contact_BAO_Contact::displayName($values[$participantID]['registered_by_contact_id']);
     }
 
@@ -184,8 +184,8 @@ class CRM_Event_Form_ParticipantView extends CRM_Core_Form {
     $this->assign($values[$participantID]);
 
     // add viewed participant to recent items list
-    require_once 'CRM/Utils/Recent.php';
-    require_once 'CRM/Contact/BAO/Contact.php';
+
+
     $url = CRM_Utils_System::url('civicrm/contact/view/participant',
       "action=view&reset=1&id={$values[$participantID]['id']}&cid={$values[$participantID]['contact_id']}&context=home"
     );
@@ -218,7 +218,7 @@ class CRM_Event_Form_ParticipantView extends CRM_Core_Form {
 
     $title = $displayName . ' (' . $participantRoles[$values[$participantID]['role_id']] . ' - ' . $eventTitle . ')';
 
-    require_once 'CRM/Core/DAO.php';
+
     $sep = CRM_Core_DAO::VALUE_SEPARATOR;
     $viewRoles = array();
     foreach (explode($sep, $values[$participantID]['role_id']) as $k => $v) {

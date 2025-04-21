@@ -33,14 +33,14 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
-require_once 'CRM/Core/Selector/Base.php';
-require_once 'CRM/Core/Selector/API.php';
 
-require_once 'CRM/Utils/Pager.php';
-require_once 'CRM/Utils/Sort.php';
 
-require_once 'CRM/Contact/BAO/Contact.php';
+
+
+
+
+
+
 
 /**
  * This class is used to retrieve and display a range of
@@ -304,7 +304,7 @@ class CRM_Profile_Selector_Listings extends CRM_Core_Selector_Base implements CR
         ),
       );
 
-      require_once 'CRM/Core/PseudoConstant.php';
+
       $locationTypes = CRM_Core_PseudoConstant::locationType();
 
       foreach ($this->_fields as $name => $field) {
@@ -451,7 +451,7 @@ class CRM_Profile_Selector_Listings extends CRM_Core_Selector_Base implements CR
     }
     $links = &self::links($this->_map, $this->_editLink, $this->_linkToUF, $this->_profileIds);
 
-    require_once 'CRM/Core/PseudoConstant.php';
+
     $locationTypes = CRM_Core_PseudoConstant::locationType();
 
     $names = array();
@@ -507,22 +507,22 @@ class CRM_Profile_Selector_Listings extends CRM_Core_Selector_Base implements CR
       }
     }
 
-    require_once "CRM/Core/OptionGroup.php";
+
 
     $multipleSelectFields = array('preferred_communication_method' => 1);
     if (CRM_Core_Permission::access('Quest')) {
-      require_once 'CRM/Quest/BAO/Student.php';
+
       $multipleSelectFields = CRM_Quest_BAO_Student::$multipleSelectFields;
     }
 
     if ($this->_linkToUF) {
-      require_once 'api/v2/UFGroup.php';
+
     }
 
     $imProviders = CRM_Core_PseudoConstant::IMProvider();
     $websiteTypes = CRM_Core_PseudoConstant::websiteType();
     $languages = CRM_Core_PseudoConstant::languages();
-    require_once 'CRM/Contact/BAO/Contact/Utils.php';
+
     while ($result->fetch()) {
       if (isset($result->country)) {
         // the query returns the untranslated country name
@@ -559,7 +559,7 @@ class CRM_Profile_Selector_Listings extends CRM_Core_Selector_Base implements CR
           $typeId = substr($name, 0, -4) . "-website_type_id";
           $typeName = $websiteTypes[$result->$typeId];
           if ($typeName) {
-            $row[] = "<a href=\"$url\">{$result->$name} (${typeName})</a>";
+            $row[] = "<a href=\"$url\">{$result->$name} ({$typeName})</a>";
           }
         }
         elseif ($name == 'preferred_language') {

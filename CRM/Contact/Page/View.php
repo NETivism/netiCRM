@@ -33,15 +33,15 @@
  *
  */
 
-require_once 'CRM/Core/Page.php';
-require_once 'CRM/Core/BAO/CustomGroup.php';
-require_once 'CRM/Core/BAO/CustomOption.php';
 
-require_once 'CRM/Utils/Recent.php';
 
-require_once 'CRM/Contact/BAO/Contact.php';
-require_once 'CRM/Core/BAO/UFMatch.php';
-require_once 'CRM/Core/Menu.php';
+
+
+
+
+
+
+
 
 /**
  * Main page for viewing contact.
@@ -96,7 +96,7 @@ class CRM_Contact_Page_View extends CRM_Core_Page {
 
     $qfKey = CRM_Utils_Request::retrieve('key', 'String', $this);
     //validate the qfKey
-    require_once 'CRM/Utils/Rule.php';
+
     if (!CRM_Utils_Rule::qfKey($qfKey)) {
       $qfKey = NULL;
     }
@@ -149,7 +149,7 @@ class CRM_Contact_Page_View extends CRM_Core_Page {
     $this->set('contactSubtype', $contactSubtype);
 
     // see if other modules want to add a link activtity bar
-    require_once 'CRM/Utils/Hook.php';
+
     $hookLinks = CRM_Utils_Hook::links('view.contact.activity', 'Contact',
       $this->_contactId, CRM_Core_DAO::$_nullObject
     );
@@ -165,7 +165,7 @@ class CRM_Contact_Page_View extends CRM_Core_Page {
       'isDeleted' => $isDeleted,
     );
 
-    require_once 'CRM/Contact/BAO/Contact/Permission.php';
+
 
     if (($session->get('userID') == $this->_contactId) ||
       CRM_Contact_BAO_Contact_Permission::allow($this->_contactId, CRM_Core_Permission::EDIT)
@@ -193,7 +193,7 @@ class CRM_Contact_Page_View extends CRM_Core_Page {
     self::setTitle($this->_contactId, $isDeleted);
 
     $config = CRM_Core_Config::singleton();
-    require_once 'CRM/Core/BAO/UFMatch.php';
+
     if ($uid = CRM_Core_BAO_UFMatch::getUFId($this->_contactId)) {
       if ($config->userFramework == 'Drupal') {
         $userRecordUrl = CRM_Utils_System::url('user/' . $uid);
@@ -220,7 +220,7 @@ class CRM_Contact_Page_View extends CRM_Core_Page {
       $contactType == 'Organization' &&
       CRM_Core_Permission::check('administer Multiple Organizations')
     ) {
-      require_once 'CRM/Contact/BAO/GroupOrganization.php';
+
       //check is any relationship between the organization and groups
       $groupOrg = CRM_Contact_BAO_GroupOrganization::hasGroupAssociated($this->_contactId);
       if ($groupOrg) {
@@ -253,7 +253,7 @@ class CRM_Contact_Page_View extends CRM_Core_Page {
     $this->assign('context', $context);
 
     //validate the qfKey
-    require_once 'CRM/Utils/Rule.php';
+
     if (!CRM_Utils_Rule::qfKey($qfKey)) {
       $qfKey = NULL;
     }
@@ -306,7 +306,7 @@ class CRM_Contact_Page_View extends CRM_Core_Page {
     // things easier in dashboard
     $session = CRM_Core_Session::singleton();
 
-    require_once 'CRM/Contact/BAO/Contact/Permission.php';
+
     if ($session->get('userID') == $page->_contactId) {
       $page->assign('permission', 'edit');
       $page->_permission = CRM_Core_Permission::EDIT;

@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
-require_once 'CRM/Import/Parser/Contact.php';
+
+
 
 /**
  * This class delegates to the chosen DataSource to grab the data to be
@@ -42,6 +42,7 @@ require_once 'CRM/Import/Parser/Contact.php';
  */
 class CRM_Import_Form_DataSource extends CRM_Core_Form {
 
+  public $_params;
   private $_dataSource;
 
   private $_dataSourceIsValid = FALSE;
@@ -189,8 +190,8 @@ class CRM_Import_Form_DataSource extends CRM_Core_Form {
       ts('For Duplicate Contacts')
     );
 
-    require_once "CRM/Core/BAO/Mapping.php";
-    require_once "CRM/Core/OptionGroup.php";
+
+
     $mappingArray = CRM_Core_BAO_Mapping::getMappings(CRM_Core_OptionGroup::getValue('mapping_type',
         'Import Contact',
         'name'
@@ -237,7 +238,7 @@ class CRM_Import_Form_DataSource extends CRM_Core_Form {
       $this->setDefaults(array('dedupeRuleGroupId' => $dedupeRuleGroupId));
     }
 
-    require_once 'CRM/Core/Form/Date.php';
+
     CRM_Core_Form_Date::buildAllowedDateFormats($this);
 
     $config = CRM_Core_Config::singleton();

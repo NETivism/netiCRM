@@ -267,4 +267,9 @@
     <comment>Is this mailing hidden?</comment>
     <add>4.0</add>
   </field>
+  <index>
+      <name>index_is_hidden</name>
+      <fieldName>is_hidden</fieldName>
+      <add>4.0</add>
+  </index>
 </table>

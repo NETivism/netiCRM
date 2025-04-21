@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
+
 #require_once 'CRM/Import/Parser/Contact.php';
 
 /**
@@ -84,7 +84,7 @@ abstract class CRM_Import_DataSource {
   public static function prepareImportTable($tableName, $statusFieldName = '_status', $primaryKeyName = '_id') {
     $alterQuery = "ALTER TABLE $tableName
       ADD COLUMN $statusFieldName INT DEFAULT 0 NOT NULL,
-      ADD COLUMN ${statusFieldName}Msg TEXT,
+      ADD COLUMN {$statusFieldName}Msg TEXT,
       ADD COLUMN $primaryKeyName INT PRIMARY KEY NOT NULL
       AUTO_INCREMENT";
     CRM_Core_DAO::executeQuery($alterQuery);

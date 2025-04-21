@@ -73,6 +73,8 @@ define('ERROR_PAGER_NOT_IMPLEMENTED',     -5);
  */
 class Pager_Common
 {
+    public $_pageData;
+    public $_url;
     // {{{ class vars
 
     /**

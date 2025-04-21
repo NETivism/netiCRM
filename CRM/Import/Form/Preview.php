@@ -33,8 +33,8 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
-require_once 'CRM/Import/Parser/Contact.php';
+
+
 
 /**
  * This class previews the uploaded file and returns summary
@@ -42,6 +42,7 @@ require_once 'CRM/Import/Parser/Contact.php';
  */
 class CRM_Import_Form_Preview extends CRM_Core_Form {
 
+  public $_dedupeRuleGroupId;
   /**
    * Function to set variables up before form is built
    *
@@ -281,14 +282,14 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
     // update cache before starting with runImport
     $session = &CRM_Core_Session::singleton();
     $userID = $session->get('userID');
-    require_once 'CRM/ACL/BAO/Cache.php';
+
     CRM_ACL_BAO_Cache::updateEntry($userID);
 
     // run the import
     $importJob->runImport($this);
 
     // update cache after we done with runImport
-    require_once 'CRM/ACL/BAO/Cache.php';
+
     CRM_ACL_BAO_Cache::updateEntry($userID);
 
     // add all the necessary variables to the form
@@ -511,7 +512,7 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
         'description' => $newTagDesc,
         'is_active' => TRUE,
       );
-      require_once 'CRM/Core/BAO/Tag.php';
+
       $id = array();
       $addedTag = &CRM_Core_BAO_Tag::add($tagParams, $id);
       $tag[$addedTag->id] = 1;
@@ -521,7 +522,7 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
     if (is_array($tag)) {
 
       $tagAdditions = array();
-      require_once "CRM/Core/BAO/EntityTag.php";
+
       foreach ($tag as $tagId => $val) {
         $addTagCount = &CRM_Core_BAO_EntityTag::addContactsToTag($contactIds, $tagId);
         if (!empty($relatedContactIds)) {

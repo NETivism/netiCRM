@@ -198,6 +198,10 @@ foreach ($GLOBALS['_DB_TABLE_GENERATOR']['default_error'] as $code => $message) 
 class DB_Table_Generator
 {
 
+    /**
+     * @var array<string, mixed>|array<string, mixed>
+     */
+    public $columns;
     // {{{ Properties
 
     /**

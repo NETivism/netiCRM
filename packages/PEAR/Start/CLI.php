@@ -3,6 +3,7 @@ require_once 'PEAR/Start.php';
 class PEAR_Start_CLI extends PEAR_Start
 {
 
+    public $doc_dir;
     var $descLength;
     var $descFormat;
     var $first;

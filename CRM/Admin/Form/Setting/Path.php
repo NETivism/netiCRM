@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Admin/Form/Setting.php';
+
 
 /**
  * This class generates form components for File System Path

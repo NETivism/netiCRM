@@ -34,7 +34,7 @@
  */
 
 
-require_once 'CRM/Mailing/Event/DAO/TrackableURLOpen.php';
+
 class CRM_Mailing_Event_BAO_TrackableURLOpen extends CRM_Mailing_Event_DAO_TrackableURLOpen {
 
   /**
@@ -56,9 +56,9 @@ class CRM_Mailing_Event_BAO_TrackableURLOpen extends CRM_Mailing_Event_DAO_Track
    * @static
    */
   public static function track($queue_id, $url_id) {
-    require_once 'CRM/Mailing/BAO/TrackableURL.php';
-    require_once 'CRM/Mailing/Event/BAO/Queue.php';
-    require_once 'CRM/Mailing/BAO/Job.php';
+
+
+
 
     $search = new CRM_Mailing_BAO_TrackableURL();
 

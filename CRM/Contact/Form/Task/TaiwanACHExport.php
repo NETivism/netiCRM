@@ -1,6 +1,7 @@
 <?php
 class CRM_Contact_Form_Task_TaiwanACHExport extends CRM_Contact_Form_Task {
 
+  public $_additionalIds;
   protected $_achDatas = array();
 
   protected $_paymentType = NULL;
@@ -103,7 +104,7 @@ class CRM_Contact_Form_Task_TaiwanACHExport extends CRM_Contact_Form_Task {
     }
   }
 
-  public function formRule($fields, $files, $self) {
+  public static function formRule($fields, $files, $self) {
     $errors = array();
     if (!empty($fields['payment_type'])) {
       $paymentType = $fields['payment_type'];

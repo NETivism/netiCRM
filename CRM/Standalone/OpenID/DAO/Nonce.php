@@ -31,8 +31,6 @@
  * $Id$
  *
  */
-require_once 'CRM/Core/DAO.php';
-require_once 'CRM/Utils/Type.php';
 class CRM_Standalone_OpenID_DAO_Nonce extends CRM_Core_DAO
 {
   /**

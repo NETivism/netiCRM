@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
+
 
 /**
  * This class generates form components for building activity to a case
@@ -41,6 +41,8 @@ require_once 'CRM/Core/Form.php';
  */
 class CRM_Case_Form_ActivityToCase extends CRM_Core_Form {
 
+  public $_activityId;
+  public $_currentCaseId;
   /**
    * build all the data structures needed to build the form.
    *
@@ -70,7 +72,7 @@ class CRM_Case_Form_ActivityToCase extends CRM_Core_Form {
     $targetContactValues = $defaults = array();
     $params = array('id' => $this->_activityId);
 
-    require_once 'CRM/Activity/BAO/Activity.php';
+
     CRM_Activity_BAO_Activity::retrieve($params, $defaults);
     $defaults['case_activity_subject'] = $defaults['subject'];
     if (!CRM_Utils_Array::isEmpty($defaults['target_contact'])) {

@@ -31,8 +31,6 @@
  * $Id$
  *
  */
-require_once 'CRM/Core/DAO.php';
-require_once 'CRM/Utils/Type.php';
 class CRM_Mailing_DAO_Mailing extends CRM_Core_DAO
 {
   /**

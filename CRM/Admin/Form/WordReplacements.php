@@ -33,8 +33,9 @@
  *
  */
 
-require_once 'CRM/Core/Form.php';
+
 class CRM_Admin_Form_WordReplacements extends CRM_Core_Form {
+  public $_soInstance;
   protected $_numStrings = 10;
 
   protected $_stringName = NULL;
@@ -243,12 +244,12 @@ class CRM_Admin_Form_WordReplacements extends CRM_Core_Form {
     $params = array('locale_custom_strings' => $stringOverride);
     $id = CRM_Core_Config::domainID();
 
-    require_once 'CRM/Core/BAO/Domain.php';
+
     $wordReplacementSettings = CRM_Core_BAO_Domain::edit($params, $id);
 
     if ($wordReplacementSettings) {
       //reset navigation
-      require_once 'CRM/Core/BAO/Navigation.php';
+
       CRM_Core_BAO_Navigation::resetNavigation();
 
       CRM_Core_Session::setStatus("Your Settings have been saved");

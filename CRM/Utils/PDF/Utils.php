@@ -88,7 +88,7 @@ class CRM_Utils_PDF_Utils {
     else {
       // or fallback to tcpdf version
       define('PDF_FONT_NAME_MAIN', 'droidsansfallback');
-      require_once 'tcpdf/tcpdf.php';
+
       $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, $paperSize, TRUE, 'UTF-8', FALSE);
 
       // set header and footer fonts
@@ -251,7 +251,13 @@ class CRM_Utils_PDF_Utils {
     $html = preg_replace("/<!--(.*?)-->/Us", "", $html);
 
     $dom = new DOMDocument();
-    $dom->loadHTML(mb_convert_encoding($html, 'HTML-ENTITIES', "UTF-8"));
+
+    // to convert all chars to &# format html entities
+    $html = preg_replace_callback('/[\x{80}-\x{10FFFF}]/u', function ($m) {
+      $char = $m[0];
+      return sprintf("&#%d;", mb_ord($char, 'UTF-8'));
+    }, $html);
+    $dom->loadHTML($html);
     $xpath = new DOMXPath($dom);
 
     $ele_a = $xpath->query('//style');

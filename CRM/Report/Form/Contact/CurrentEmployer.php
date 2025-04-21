@@ -33,9 +33,25 @@
  *
  */
 
-require_once 'CRM/Report/Form.php';
+
 class CRM_Report_Form_Contact_CurrentEmployer extends CRM_Report_Form {
 
+  /**
+   * @var never[]
+   */
+  public $_columnHeaders;
+  /**
+   * @var string
+   */
+  public $_from;
+  public $_where;
+  /**
+   * @var string
+   */
+  public $_groupBy;
+  public $_aliases;
+  public $_absoluteUrl;
+  public $_outputMode;
   protected $_summary = NULL;
 
   protected $_customGroupExtends = array('Contact', 'Individual'); function __construct() {

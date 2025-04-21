@@ -34,10 +34,10 @@
  *
  */
 
-require_once 'CRM/Event/Form/ManageEvent.php';
-require_once 'CRM/Event/BAO/Event.php';
-require_once 'CRM/Contact/Form/Location.php';
-require_once 'CRM/Core/SelectValues.php';
+
+
+
+
 
 /**
  * This class generates form components for processing Event Location
@@ -45,6 +45,7 @@ require_once 'CRM/Core/SelectValues.php';
  */
 class CRM_Event_Form_ManageEvent_Location extends CRM_Event_Form_ManageEvent {
 
+  public $_addBlockName;
   /**
    * how many locationBlocks should we display?
    *
@@ -94,7 +95,7 @@ class CRM_Event_Form_ManageEvent_Location extends CRM_Event_Form_ManageEvent {
       $params = array('entity_id' => $this->_id,
         'entity_table' => 'civicrm_event',
       );
-      require_once 'CRM/Core/BAO/Location.php';
+
       $this->_values = CRM_Core_BAO_Location::getValues($params);
 
       //get event values.
@@ -131,7 +132,7 @@ class CRM_Event_Form_ManageEvent_Location extends CRM_Event_Form_ManageEvent {
       $defaults['address'][1]['country_id'] = $config->defaultContactCountry;
     }
 
-    require_once 'CRM/Contact/Form/Edit/Address.php';
+
     if (!empty($defaults['address'])) {
       foreach ($defaults['address'] as $key => $value) {
         CRM_Contact_Form_Edit_Address::fixStateSelect($this,
@@ -284,7 +285,7 @@ class CRM_Event_Form_ManageEvent_Location extends CRM_Event_Form_ManageEvent {
     $params['entity_table'] = 'civicrm_event';
     $params['entity_id'] = $this->_id;
 
-    require_once 'CRM/Core/BAO/LocationType.php';
+
     $defaultLocationType = &CRM_Core_BAO_LocationType::getDefault();
     foreach (array('address', 'phone', 'email') as $block) {
       if (!CRM_Utils_Array::value($block, $params) || !is_array($params[$block])) {
@@ -299,13 +300,13 @@ class CRM_Event_Form_ManageEvent_Location extends CRM_Event_Form_ManageEvent {
     }
 
     // create/update event location
-    require_once 'CRM/Core/BAO/Location.php';
+
     $location = CRM_Core_BAO_Location::create($params, TRUE, 'event');
     $params['loc_block_id'] = $location['id'];
 
     // finally update event params
     $params['id'] = $this->_id;
-    require_once 'CRM/Event/BAO/Event.php';
+
     CRM_Event_BAO_Event::add($params);
 
     parent::endPostProcess();
