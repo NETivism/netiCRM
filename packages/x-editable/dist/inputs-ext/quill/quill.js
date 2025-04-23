@@ -224,7 +224,6 @@ $(function(){
 
             // Output HTML to x-editable
             $(element).html(html);
-
             // Replace quill emoji blot to simple emoji entity
             $(element).find(".ql-emojiblot").each(function() {
                 var $emojiBlot = $(this),
@@ -233,6 +232,23 @@ $(function(){
                 $emojiBlot.after(emoji);
                 $emojiBlot.remove();
             });
+
+            // Replace quill placeholder tokens to simple token strings
+            $(element).find(".ql-placeholder-content").each(function() {
+              var $placeholderContent = $(this),
+                  tokenValue = $placeholderContent.attr('data-id');
+
+              // If we can't get the token value from data-id, try to extract it from the inner text
+              if (!tokenValue || tokenValue === "") {
+                  tokenValue = typeof $placeholderContent.context !== "undefined" ? 
+                              $placeholderContent.context.innerText.trim() : 
+                              $placeholderContent[0].innerText.trim();
+              }
+
+              // Insert the token value directly and remove the placeholder element
+              $placeholderContent.after(tokenValue);
+              $placeholderContent.remove();
+          });
         },
 
         // Call after initializing x-editable
