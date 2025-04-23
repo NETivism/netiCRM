@@ -217,6 +217,10 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
         }
         if (method_exists($paymentClass, 'getRecordDetail')) {
           $recordDetail = $paymentClass::getRecordDetail($contributionId);
+          // Only show Added by in tappay contribution view page.
+          if (isset($recordDetail[ts('Added By')])) {
+            unset($recordDetail[ts('Added By')]);
+          }
           $this->assign('record_detail', $recordDetail);
         }
         // Get payment processor

@@ -24,8 +24,11 @@ $(document).ready(function(){
     }
   }
 
-  if (document.querySelector('.crm-container select[data-parent]')) {
-    new crmDependentSelect('.crm-container select[data-parent]');
+  const dependentSelects = document.querySelectorAll('.crm-container select[data-parent]');
+  if (dependentSelects.length > 0) {
+    dependentSelects.forEach(select => {
+      new crmDependentSelect(select);
+    });
   }
   $().crmtooltip();
 });

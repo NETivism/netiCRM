@@ -2396,6 +2396,41 @@
       }
     }
 
+    var placeholderTokenExist = function(html) {
+      var result = false;
+
+      if (typeof html !== "undefined" && html.indexOf("ql-placeholder-content") != -1) {
+        result = true;
+      }
+
+      return result;
+    }
+
+    var replacePlaceholderToken = function($item) {
+      var result = "";
+
+      if ($item.length) {
+        $item.find(".ql-placeholder-content").each(function() {
+          var $placeholderContent = $(this),
+              tokenValue = $placeholderContent.attr('data-id');
+
+          // If we can't get the token value from data-id, try to extract it from the inner text
+          if (!tokenValue || tokenValue === "") {
+            tokenValue = typeof $placeholderContent.context !== "undefined" ? 
+                        $placeholderContent.context.innerText.trim() : 
+                        $placeholderContent[0].innerText.trim();
+            }
+
+          // Insert the token value directly and remove the placeholder element
+          $placeholderContent.after(tokenValue);
+          $placeholderContent.remove();
+        });
+
+        result = _htmlEscape($item.html());
+        return result;
+      }
+    }
+
     var saveToData = function($item, value) {
       $item = typeof $item !== "undefined" ? $item : null;
       value = typeof value !== "undefined" ? value : "";
@@ -2426,6 +2461,12 @@
                   value = replaceEmojiBlot($item);
                 }
 
+                if (placeholderTokenExist(value)) {
+                  tempContent = _htmlDecode(value);
+                  $item.html(tempContent);
+                  value = replacePlaceholderToken($item);
+                }
+
                 _data["sections"][section]["blocks"][parentID]["data"][index]["blocks"][blockID]["data"]["html"] = value;
                 _nmeData.update();
               }
@@ -2444,6 +2485,12 @@
                 tempContent = _htmlDecode(value);
                 $item.html(tempContent);
                 value = replaceEmojiBlot($item);
+              }
+
+              if (placeholderTokenExist(value)) {
+                tempContent = _htmlDecode(value);
+                $item.html(tempContent);
+                value = replacePlaceholderToken($item);
               }
 
               _data["sections"][section]["blocks"][blockID]["data"]["html"] = value;

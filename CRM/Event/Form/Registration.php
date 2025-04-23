@@ -1675,6 +1675,9 @@ WHERE  v.option_group_id = g.id
       // disable permission based on cache since event registration is public page/feature.
       $dedupeParams['check_permission'] = FALSE;
       $ids = CRM_Dedupe_Finder::dupesByParams($dedupeParams, 'Individual');
+      if (empty($ids) && defined('CIVICRM_ENABLE_DEDUPE_DEBUG') && CIVICRM_ENABLE_DEDUPE_DEBUG > 0) {
+        CRM_Core_Error::debug_var('registeration_dedupe', $dedupeParams);
+      }
 
       // if we find more than one contact, use the first one
       $contact_id = $ids[0];
