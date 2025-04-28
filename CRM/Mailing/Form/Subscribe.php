@@ -200,7 +200,6 @@ ORDER BY title";
     }
     else {
       // create contact by params
-
       $formatted = array(
         'contact_type' => 'Individual',
         'version' => 3,
@@ -213,6 +212,7 @@ ORDER BY title";
         'location_type_id' => $locationType->id,
         'is_bulkmail' => 1,
       );
+      require_once 'api/v3/DeprecatedUtils.php';
       _civicrm_api3_deprecated_add_formatted_param($value, $formatted);
 
       $formatted['onDuplicate'] = CRM_Import_Parser::DUPLICATE_SKIP;
