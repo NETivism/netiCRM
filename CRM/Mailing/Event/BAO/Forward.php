@@ -126,6 +126,7 @@ class CRM_Mailing_Event_BAO_Forward extends CRM_Mailing_Event_DAO_Forward {
         'location_type_id' => $locationType->id,
       );
 
+      require_once 'api/v3/DeprecatedUtils.php';
       _civicrm_api3_deprecated_add_formatted_param($value, $formatted);
 
       $formatted['onDuplicate'] = CRM_Import_Parser::DUPLICATE_SKIP;
