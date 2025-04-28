@@ -357,7 +357,7 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
     }
 
     // validate additional
-    if (count($additionalVerify)) {
+    if (!empty($additionalVerify) && is_array($additionalVerify)) {
       foreach($additionalVerify as $entityTable => $entityIds) {
         $matches = array();
         if (!is_array($entityIds)) {
