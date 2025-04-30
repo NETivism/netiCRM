@@ -4230,7 +4230,6 @@ civicrm_relationship.start_date > {$today}
     if ($this->_displayRelationshipType) {
       $this->filterRelatedContacts($from, $where, $having);
       $groupBy = '';
-      $limit = '';
     }
 
     if ($skipOrderAndLimit) {
