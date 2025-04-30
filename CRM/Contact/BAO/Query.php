@@ -4163,6 +4163,9 @@ civicrm_relationship.start_date > {$today}
           }
         }
       }
+      if ($this->_displayRelationshipType) {
+        $doOpt = FALSE;
+      }
 
 
       if ($rowCount > 0 && $offset >= 0) {
@@ -4226,6 +4229,8 @@ civicrm_relationship.start_date > {$today}
     // use the $from, $where and $having to get the contact ID
     if ($this->_displayRelationshipType) {
       $this->filterRelatedContacts($from, $where, $having);
+      $groupBy = '';
+      $limit = '';
     }
 
     if ($skipOrderAndLimit) {
@@ -4235,7 +4240,7 @@ civicrm_relationship.start_date > {$today}
       $query = "$select $from $where $having $groupBy $order $limit";
     }
 
-    // CRM_Core_Error::debug('query', $query);
+    CRM_Core_Error::debug('query', $query);
     // CRM_Core_Error::debug('query', $where);
     // CRM_Core_Error::debug('this', $this );
 
