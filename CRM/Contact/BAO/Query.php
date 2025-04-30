@@ -4240,7 +4240,7 @@ civicrm_relationship.start_date > {$today}
       $query = "$select $from $where $having $groupBy $order $limit";
     }
 
-    CRM_Core_Error::debug('query', $query);
+    // CRM_Core_Error::debug('query', $query);
     // CRM_Core_Error::debug('query', $where);
     // CRM_Core_Error::debug('this', $this );
 
