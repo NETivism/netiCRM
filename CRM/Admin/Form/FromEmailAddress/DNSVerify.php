@@ -68,7 +68,7 @@ class CRM_Admin_Form_FromEmailAddress_DNSVerify extends CRM_Admin_Form_FromEmail
       $errorMsg = array();
       list($user, $domain) = explode('@', trim($self->_values['email']));
 
-      if (isset($civicrm_conf['mailing_spf_skip'])) {
+      if (!empty($civicrm_conf['mailing_spf_skip'])) {
         $self->assign('spf_status', TRUE);
       }
       else {
