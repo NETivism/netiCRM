@@ -61,31 +61,43 @@ class CRM_Admin_Form_FromEmailAddress_DNSVerify extends CRM_Admin_Form_FromEmail
    * @return array array of errors / empty array.
    */
   static function formRule($fields, $files, $self) {
+    global $civicrm_conf;
     $errors = array();
     // verify on every submission
     if (!empty($self->_values['email'])) {
       $errorMsg = array();
       list($user, $domain) = explode('@', trim($self->_values['email']));
-      $result = CRM_Utils_Mail::checkSPF($domain);
-      $filter = $self->_values['filter'];
-      if ($result !== TRUE) {
-        $failReason = $result;
-        $errorMsg['spf'] = ts('Your %1 validation failed.', array(1 => 'SPF')).' '.ts("Reason").": ".$failReason;
-        $filter = $filter & ~(self::VALID_SPF);
-      }
-      else {
-        $filter = $filter | self::VALID_SPF;
+
+      if (isset($civicrm_conf['mailing_spf_skip'])) {
         $self->assign('spf_status', TRUE);
       }
+      else {
+        $result = CRM_Utils_Mail::checkSPF($domain);
+        $filter = $self->_values['filter'];
+        if ($result !== TRUE) {
+          $failReason = $result;
+          $errorMsg['spf'] = ts('Your %1 validation failed.', array(1 => 'SPF')).' '.ts("Reason").": ".$failReason;
+          $filter = $filter & ~(self::VALID_SPF);
+        }
+        else {
+          $filter = $filter | self::VALID_SPF;
+          $self->assign('spf_status', TRUE);
+        }
+      }
 
-      $result = CRM_Utils_Mail::checkDKIM($domain);
-      if ($result === FALSE) {
-        $errorMsg['dkim'] = ts('Your %1 validation failed.', array(1 => 'DKIM'));
-        $filter = $filter & ~(self::VALID_DKIM);
+      if (empty($civicrm_conf['mailing_dkim_domain'])) {
+        $self->assign('dkim_status', TRUE);
       }
       else {
-        $filter = $filter | self::VALID_DKIM;
-        $self->assign('dkim_status', TRUE);
+        $result = CRM_Utils_Mail::checkDKIM($domain);
+        if ($result === FALSE) {
+          $errorMsg['dkim'] = ts('Your %1 validation failed.', array(1 => 'DKIM'));
+          $filter = $filter & ~(self::VALID_DKIM);
+        }
+        else {
+          $filter = $filter | self::VALID_DKIM;
+          $self->assign('dkim_status', TRUE);
+        }
       }
 
       if (!empty($errorMsg)) {
