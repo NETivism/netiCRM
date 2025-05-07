@@ -1125,7 +1125,10 @@ class CRM_Export_BAO_Export {
         $exportCustomVars['customSearchClass'],
         $exportCustomVars['formValues'],
         $exportCustomVars['order'],
-        $exportCustomVars['pirmaryIDName']
+        $exportCustomVars['pirmaryIDName'],
+        TRUE,
+        FALSE,
+        $exportMode
       );
 
       $customHeader = $exportCustomResult['header'];
@@ -1322,7 +1325,10 @@ class CRM_Export_BAO_Export {
     CRM_Utils_System::civiExit();
   }
 
-  static function exportCustom($customSearchClass, $formValues, $order, $primaryIDName = FALSE, $returnRows = TRUE, $exportFile = FALSE) {
+  static function exportCustom($customSearchClass, $formValues, $order, $primaryIDName = FALSE, $returnRows = TRUE, $exportFile = FALSE, $exportMode = NULL) {
+    if ($exportMode === NULL) {
+      $exportMode = CRM_Export_Form_Select::CONTACT_EXPORT;
+    }
 
     $ext = new CRM_Core_Extensions();
     if (!$ext->isExtensionClass($customSearchClass)) {
@@ -1427,12 +1433,12 @@ class CRM_Export_BAO_Export {
     }
 
     if ($exportFile) {
-      // 1. Create SQL column definitions
       $sqlColumns = array();
 
       // Since there is no CRM_Contact_BAO_Query object created in the exportCustom method,
       // we are currently using a workaround by parsing the sqlColumnDefn method logic to create a minimal query object
       $query = new stdClass();
+
       // Empty field definition, the sqlColumnDefn method will handle this situation
       $query->_fields = array();
 
@@ -1440,20 +1446,10 @@ class CRM_Export_BAO_Export {
         self::sqlColumnDefn($query, $sqlColumns, $key);
       }
 
-      // 2. Create temporary table using standard method
       $exportTempTable = self::createTempTable($sqlColumns);
-
-      // 3. Write data to temporary table
       self::writeDetailsToTable($exportTempTable, $rows, $sqlColumns);
-
-      // 4. Set standard export mode
-      $exportMode = CRM_Export_Form_Select::CONTACT_EXPORT;
-
-      // 5. Call export hook
       CRM_Utils_Hook::export($exportTempTable, $customHeader, $sqlColumns, $exportMode, NULL);
-
-      // 6. Write to file
-      self::writeCSVFromTable($exportTempTable, $customHeader, $sqlColumns, $exportMode, self::getExportFileName());
+      self::writeCSVFromTable($exportTempTable, $customHeader, $sqlColumns, $exportMode, self::getExportFileName($exportMode));
       CRM_Utils_System::civiExit();
     }
     else {

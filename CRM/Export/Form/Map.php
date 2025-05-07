@@ -261,7 +261,8 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
           $this->get(CRM_Utils_Sort::SORT_ORDER), 
           $primaryIDName, 
           TRUE,
-          TRUE
+          TRUE,
+          $this->get('exportMode')
         );
       }
     }
