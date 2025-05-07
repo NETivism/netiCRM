@@ -1427,7 +1427,33 @@ class CRM_Export_BAO_Export {
     }
 
     if ($exportFile) {
-      CRM_Core_Report_Excel::writeExcelFile(self::getExportFileName(), $header, $rows);
+      // 1. Create SQL column definitions
+      $sqlColumns = array();
+
+      // Since there is no CRM_Contact_BAO_Query object created in the exportCustom method,
+      // we are currently using a workaround by parsing the sqlColumnDefn method logic to create a minimal query object
+      $query = new stdClass();
+      // Empty field definition, the sqlColumnDefn method will handle this situation
+      $query->_fields = array();
+
+      foreach ($customHeader as $key => $value) {
+        self::sqlColumnDefn($query, $sqlColumns, $key);
+      }
+
+      // 2. Create temporary table using standard method
+      $exportTempTable = self::createTempTable($sqlColumns);
+
+      // 3. Write data to temporary table
+      self::writeDetailsToTable($exportTempTable, $rows, $sqlColumns);
+
+      // 4. Set standard export mode
+      $exportMode = CRM_Export_Form_Select::CONTACT_EXPORT;
+
+      // 5. Call export hook
+      CRM_Utils_Hook::export($exportTempTable, $customHeader, $sqlColumns, $exportMode, NULL);
+
+      // 6. Write to file
+      self::writeCSVFromTable($exportTempTable, $customHeader, $sqlColumns, $exportMode, self::getExportFileName());
       CRM_Utils_System::civiExit();
     }
     else {
