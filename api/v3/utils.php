@@ -433,10 +433,33 @@ function _civicrm_api3_get_using_query_object($entity, $params, $additional_opti
     $returnProperties = null;
   }
   if(!empty($params['check_permissions'])){
+
     // we will filter query object against getfields
     $fields = civicrm_api($entity, 'getfields', array('version' => 3, 'action' => 'get'));
     // we need to add this in as earlier in this function 'id' was unset in favour of $entity_id
     $fields['values'][$entity . '_id'] = array();
+
+    // get form name to retrieve available searchable field
+    $searchableFormFields = array();
+    if (strtolower($entity) == 'contribution') {
+      $queryClass = 'CRM_Contribute_BAO_Query';
+    }
+    else {
+      $queryClass = 'CRM_'.ucfirst($entity).'_BAO_Query';
+    }
+    $searchForm = 'buildSearchForm';
+    if (is_callable(array($queryClass, $searchForm))) {
+      $qform = new CRM_Core_Form();
+      $queryClass::$searchForm($qform);
+      $searchableFormFields = $qform->_elementIndex;
+      unset($qform);
+    }
+    foreach($searchableFormFields as $fieldName => $dontcare) {
+      if (!isset($fields['values'][$fieldName])) {
+        $fields['values'][$fieldName] = 1;
+      }
+    }
+
     $varsToFilter = array('returnProperties', 'inputParams');
     foreach ($varsToFilter as $varToFilter){
       if(!is_array($$varToFilter)){
@@ -449,6 +472,7 @@ function _civicrm_api3_get_using_query_object($entity, $params, $additional_opti
       $$varToFilter = array_intersect_key($$varToFilter, $fields['values']);
     }
   }
+
   $options = array_merge($options,$additional_options);
   $sort             = CRM_Utils_Array::value('sort', $options, NULL);
   $offset             = CRM_Utils_Array::value('offset', $options, NULL);
