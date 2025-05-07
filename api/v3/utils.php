@@ -441,18 +441,32 @@ function _civicrm_api3_get_using_query_object($entity, $params, $additional_opti
 
     // get form name to retrieve available searchable field
     $searchableFormFields = array();
-    if (strtolower($entity) == 'contribution') {
-      $queryClass = 'CRM_Contribute_BAO_Query';
-    }
-    else {
-      $queryClass = 'CRM_'.ucfirst($entity).'_BAO_Query';
-    }
-    $searchForm = 'buildSearchForm';
-    if (is_callable(array($queryClass, $searchForm))) {
-      $qform = new CRM_Core_Form();
-      $queryClass::$searchForm($qform);
+    if (strtolower($entity) === 'contact') {
+      $controller = new CRM_Contact_Controller_Search('Advanced Search', TRUE, CRM_Core_Action::ADVANCED, NULL, FALSE);
+      $qform = $controller->_pages['Advanced'];
+      $qform->buildForm();
+      CRM_Contact_Form_Search_Criteria::location($qform);
+      CRM_Contact_Form_Search_Criteria::relationship($qform);
+      CRM_Contact_Form_Search_Criteria::demographics($qform);
+      CRM_Contact_Form_Search_Criteria::notes($qform);
       $searchableFormFields = $qform->_elementIndex;
       unset($qform);
+      unset($controller);
+    }
+    else {
+      if (strtolower($entity) === 'contribution') {
+        $queryClass = 'CRM_Contribute_BAO_Query';
+      }
+      else {
+        $queryClass = 'CRM_'.ucfirst($entity).'_BAO_Query';
+      }
+      $searchForm = 'buildSearchForm';
+      if (is_callable(array($queryClass, $searchForm))) {
+        $qform = new CRM_Core_Form();
+        $queryClass::$searchForm($qform);
+        $searchableFormFields = $qform->_elementIndex;
+        unset($qform);
+      }
     }
     foreach($searchableFormFields as $fieldName => $dontcare) {
       if (!isset($fields['values'][$fieldName])) {
