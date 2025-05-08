@@ -1125,7 +1125,10 @@ class CRM_Export_BAO_Export {
         $exportCustomVars['customSearchClass'],
         $exportCustomVars['formValues'],
         $exportCustomVars['order'],
-        $exportCustomVars['pirmaryIDName']
+        $exportCustomVars['pirmaryIDName'],
+        TRUE,
+        FALSE,
+        $exportMode
       );
 
       $customHeader = $exportCustomResult['header'];
@@ -1322,7 +1325,10 @@ class CRM_Export_BAO_Export {
     CRM_Utils_System::civiExit();
   }
 
-  static function exportCustom($customSearchClass, $formValues, $order, $primaryIDName = FALSE, $returnRows = TRUE, $exportFile = FALSE) {
+  static function exportCustom($customSearchClass, $formValues, $order, $primaryIDName = FALSE, $returnRows = TRUE, $exportFile = FALSE, $exportMode = NULL) {
+    if ($exportMode === NULL) {
+      $exportMode = CRM_Export_Form_Select::CONTACT_EXPORT;
+    }
 
     $ext = new CRM_Core_Extensions();
     if (!$ext->isExtensionClass($customSearchClass)) {
@@ -1427,7 +1433,23 @@ class CRM_Export_BAO_Export {
     }
 
     if ($exportFile) {
-      CRM_Core_Report_Excel::writeExcelFile(self::getExportFileName(), $header, $rows);
+      $sqlColumns = array();
+
+      // Since there is no CRM_Contact_BAO_Query object created in the exportCustom method,
+      // we are currently using a workaround by parsing the sqlColumnDefn method logic to create a minimal query object
+      $query = new stdClass();
+
+      // Empty field definition, the sqlColumnDefn method will handle this situation
+      $query->_fields = array();
+
+      foreach ($customHeader as $key => $value) {
+        self::sqlColumnDefn($query, $sqlColumns, $key);
+      }
+
+      $exportTempTable = self::createTempTable($sqlColumns);
+      self::writeDetailsToTable($exportTempTable, $rows, $sqlColumns);
+      CRM_Utils_Hook::export($exportTempTable, $customHeader, $sqlColumns, $exportMode, NULL);
+      self::writeCSVFromTable($exportTempTable, $customHeader, $sqlColumns, $exportMode, self::getExportFileName($exportMode));
       CRM_Utils_System::civiExit();
     }
     else {

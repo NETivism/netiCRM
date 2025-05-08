@@ -239,9 +239,13 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
     if ($force && $this->_context == 'smog' && $gid && $this->_refresh) {
       $smartGroupCache = FALSE;
     }
+    $displayRelationshipType = NULL;
+    if(!empty($this->_formValues['display_relationship_type'])) {
+      $displayRelationshipType = $this->_formValues['display_relationship_type'];
+    }
     $this->_query = new CRM_Contact_BAO_Query($this->_params,
       $this->_returnProperties, NULL, $includeContactIds,
-      FALSE, CRM_Contact_BAO_Query::MODE_CONTACTS, FALSE, $searchDescendentGroups, $smartGroupCache
+      FALSE, CRM_Contact_BAO_Query::MODE_CONTACTS, FALSE, $searchDescendentGroups, $smartGroupCache, $displayRelationshipType
     );
     $this->_options = &$this->_query->_options;
   }

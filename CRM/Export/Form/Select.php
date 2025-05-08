@@ -103,7 +103,9 @@ class CRM_Export_Form_Select extends CRM_Core_Form {
         $this->get('formValues'),
         $this->get(CRM_Utils_Sort::SORT_ORDER), 
         $primaryIDName, 
-        FALSE
+        FALSE,
+        FALSE,
+        $this->_exportMode
       );
       $header = $exportCustomResult['header'];
       foreach ($header as $i => $headerName) {
