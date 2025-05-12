@@ -637,6 +637,7 @@ class CRM_Utils_Token {
       JOIN civicrm_contribution_page p ON c.contribution_page_id = p.id
       WHERE r.contact_id = %1
       AND p.is_active != 0
+      AND p.is_internal IS NULL
       ORDER BY r.id DESC, c.id DESC
       LIMIT 1";
       $params = array(
