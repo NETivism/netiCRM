@@ -116,7 +116,7 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
     $class = $this->_ppDAO->class_name;
     $class = 'CRM_Core_'.$class;
     if (method_exists($class, 'getAdminFields')) {
-      $this->_fields = $class::getAdminFields($this->_ppDAO);
+      $this->_fields = $class::getAdminFields($this->_ppDAO, $this);
     }
     else{
       $this->_fields = array(

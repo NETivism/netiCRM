@@ -422,7 +422,7 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
     CRM_Core_BAO_Note::add( $noteParams, $note_id );
   }
 
-  static function getAdminFields($ppDAO){
+  static function getAdminFields($ppDAO, $form){
     $text = ts('If the provider needs server IP address, the IP address of this website is %1', array(1 => gethostbyname($_SERVER['HTTP_HOST'])));
     CRM_Core_Session::setStatus($text);
     return array(

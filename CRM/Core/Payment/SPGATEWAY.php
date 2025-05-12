@@ -6,6 +6,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
   const MAX_EXPIRE_DAY = 180;
   const RESPONSE_TYPE = 'JSON';
   const MPG_VERSION = '1.2';
+  const AGREEMENT_VERSION = '1.5';
   const RECUR_VERSION = '1.0';
   const QUERY_VERSION = '1.1';
   const REAL_DOMAIN = 'https://core.newebpay.com';
@@ -67,6 +68,64 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     $this->_processorName = ts('Spgateway');
     $config = &CRM_Core_Config::singleton();
     $this->_config = $config;
+  }
+
+  static function getAdminFields($ppDAO, $form){
+    $fields = array(
+      array(
+        'name' => 'user_name',
+        'label' => $ppDAO->user_name_label,
+      ),
+      array(
+        'name' => 'password',
+        'label' => $ppDAO->password_label,
+      ),
+      array(
+        'name' => 'signature',
+        'label' => $ppDAO->signature_label,
+      ),
+      array(
+        'name' => 'subject',
+        'label' => ts('Order Comment'),
+      ),
+      array(
+        'name' => 'url_recur',
+        'label' => ts('Enable Neweb Recurring API'),
+      ),
+      array(
+        'name' => 'url_api',
+        'label' => ts('Credit Card Agreement'),
+      ),
+    );
+    $nullObj = NULL;
+    $ppid = CRM_Utils_Request::retrieve('id', 'Positive', $nullObj);
+    if ($ppid) {
+      $params = array(
+        1 => array($ppid, 'Positive'),
+        2 => array(0, 'Integer'),
+      );
+      $paramsTest = array(
+        1 => array($ppid+1, 'Positive'),
+        2 => array(1, 'Integer'),
+      );
+      $sql = 'SELECT count(id) FROM civicrm_contribution WHERE payment_processor_id = %1 AND is_test = %2';
+      $isHavingContribution = CRM_Core_DAO::singleValueQuery($sql, $params);
+      $isHavingContributionTest = CRM_Core_DAO::singleValueQuery($sql, $paramsTest);
+      $smarty = CRM_Core_Smarty::singleton();
+      $smarty->assign('having_contribution', $isHavingContribution);
+      $smarty->assign('having_contribution_test', $isHavingContributionTest);
+    }
+
+    // remove form rules
+    $noRuleElement = array('url_recur', 'url_api', 'test_url_recur', 'test_url_api');
+    foreach($noRuleElement as $ele) {
+      foreach ($form->_rules[$ele] as $key => $rule) {
+        if ($rule['type'] == 'url') {
+          unset($form->_rules['url_recur'][$key]);
+        }
+      }
+    }
+    return $fields;
   }
 
   public static function getEditableFields($paymentProcessor = NULL, $form = NULL) {
@@ -371,7 +430,57 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     $itemDescription .= ':'.floatval($vars['amount']);
     $itemDescription = preg_replace('/[^[:alnum:][:space:]]/u', ' ', $itemDescription);
 
-    if(!$vars['is_recur']){
+    if(!empty($this->_paymentProcessor['url_api']) && $this->_paymentProcessor['url_api'] > 0) {
+      $tradeInfo = array(
+        'MerchantID' => $this->_paymentProcessor['user_name'],
+        'RespondType' => self::RESPONSE_TYPE,
+        'TimeStamp' => time(),
+        'Version' => self::AGREEMENT_VERSION,
+        'Amt' => $amount,
+        'ItemDesc' => $itemDescription,
+        'MerchantOrderNo' => $vars['trxn_id'],
+        'ReturnURL' => $thankyouURL,
+        'NotifyURL' => $notifyURL,
+        // 'ClientBackURL' => $thankyouURL, // For cancellation
+        'Email' => $vars['email-5'],
+        'EmailModify' => 0, // Default to not allowing email modification
+        'LoginType' => 0,
+        'LangType' => ($tsLocale == CRM_Core_Config::SYSTEM_LANG) ? 'en' : 'zh-tw',
+        'P3D' => '1',  // Default to non-3D transaction
+        'CREDITAGREEMENT' => 1, // For credit card token payment
+        'OrderComment' => !empty($this->_paymentProcessor['subject']) ? $this->_paymentProcessor['subject'] : '',
+        'TokenTerm' => $vars['email-5'], // Default to using email as token term
+        'TokenLife' => '', // Default empty to the card expire date
+      );
+
+      // Use hook_civicrm_alterPaymentProcessorParams
+      $mode = $this->_paymentProcessor['is_test'] ? 'test' : 'live';
+      $paymentClass = CRM_Core_Payment::singleton($mode, $this->_paymentProcessor, CRM_Core_DAO::$_nullObject);
+      CRM_Utils_Hook::alterPaymentProcessorParams($paymentClass, $vars, $tradeInfo);
+
+      // Encrypt Recurring Request.
+      CRM_Core_Error::debug_var('spgateway_agreement_args', $tradeInfo);
+      $tradeInfoStr = http_build_query($tradeInfo, '', '&');
+      $tradeInfoEncrypted  = CRM_Core_Payment_SPGATEWAYAPI::recurEncrypt($tradeInfoStr, $this->_paymentProcessor);
+      $tradeSha = CRM_Core_Payment_SPGATEWAYAPI::tradeSha($tradeInfoEncrypted, $this->_paymentProcessor);
+
+      // Create final args
+      $args = array(
+        'MerchantID' => $this->_paymentProcessor['user_name'],
+        'TradeInfo' => $tradeInfoEncrypted,
+        'TradeSha' => $tradeSha,
+        'Version' => self::AGREEMENT_VERSION,
+      );
+      // $args['PostData_'] = $tradeInfoEncrypted;
+      // $args['MerchantID_'] = $this->_paymentProcessor['user_name'];
+      if ($this->_paymentProcessor['is_test']) {
+        $args['#url'] = self::TEST_DOMAIN.self::URL_SITE;
+      }
+      else {
+        $args['#url'] = self::REAL_DOMAIN.self::URL_SITE;
+      }
+    }
+    elseif(!$vars['is_recur']){
       $args = array(
         'MerchantID' => $this->_paymentProcessor['user_name'],
         'RespondType' => self::RESPONSE_TYPE,
@@ -397,14 +506,12 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
           $day = !empty($values['expiration_day']) ? $values['expiration_day'] : self::EXPIRE_DAY;
           $args['ExpireDate'] = date('Ymd',strtotime("+$day day"));
           $args['CustomerURL'] = $thankyouURL;
-          // $args['ReturnURL'] = url('spgateway/record/'.$vars['contributionID'], array('absolute' => true));
           break;
         case 'BARCODE':
           $args['BARCODE'] = 1;
           $day = !empty($values['expiration_day']) ? $values['expiration_day'] : self::EXPIRE_DAY;
           $args['ExpireDate'] = date('Ymd',strtotime("+$day day"));
           $args['CustomerURL'] = $thankyouURL;
-          // $args['ReturnURL'] = url('spgateway/record/'.$vars['contributionID'], array('absolute' => true));
           break;
         case 'CVS':
           $args['CVS'] = 1;
@@ -412,13 +519,6 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
             $day = !empty($values['expiration_day']) ? $values['expiration_day'] : self::EXPIRE_DAY;
             $args['ExpireDate'] = date('Ymd',strtotime("+$day day"));
           }
-          // $args['ReturnURL'] = url('spgateway/record/'.$vars['contributionID'], array('absolute' => true));
-          // $args['Desc_1'] = '';
-          // $args['Desc_2'] = '';
-          // $args['Desc_3'] = '';
-          // $args['Desc_4'] = '';
-
-          #ATM / CVS / BARCODE
           $args['CustomerURL'] = $thankyouURL;
           break;
         case 'WebATM':
@@ -480,7 +580,6 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
       if(empty($frequency_interval)){
         $frequency_interval = 1;
       }
-      // $data['PeriodTimes'] = $frequency_interval;
       if($vars['frequency_unit'] == 'year'){
         $data['PeriodTimes'] = empty($vars['installments']) ? 9 : $vars['installments'];
       }else{
@@ -506,10 +605,8 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
       }
     }
 
-
-    return $args ;
+    return $args;
   }
-
 
   private function redirectForm($vars){
     header('Pragma: no-cache');

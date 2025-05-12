@@ -512,6 +512,25 @@ class CRM_Core_Payment_SPGATEWAYAPI {
   }
 
   /**
+   * tradeSha for agreement payment
+   *
+   * @param string $aesString
+   * @param object $paymentProcessor
+   */
+  public static function tradeSha($aesString, $paymentProcessor) {
+    $hashKey = $paymentProcessor['password'];
+    self::checkKeyIV($hashKey);
+    $hashIV = $paymentProcessor['signature'];
+    self::checkKeyIV($hashIV);
+    $sha = hash("sha256", implode('&', array(
+      'HashKey='.$hashKey,
+      $aesString,
+      'HashIV='.$hashIV,
+    )));
+    return strtoupper($sha);
+  }
+
+  /**
    * Migrate from _civicrm_spgateway_recur_encrypt
    *
    * @param string $str

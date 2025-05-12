@@ -201,3 +201,80 @@
         {/literal}
     </script>
 {/if}
+
+{if $ppType eq 'SPGATEWAY'}
+<script>{literal}
+  jQuery(document).ready(function($){
+    $('[class*=url_site]').hide();
+    $('[class*=url_api]').hide();
+    $('[class*=url_recur]').hide();
+
+    function addApiCheckbox($element, label) {
+      if (!$element.length) {
+        console.error('Element not found');
+        return;
+      }
+
+      // make sure className exist in original class
+      const elementClass = $element[0].className || 'default-class';
+      const trClass = elementClass + '-api-checkbox-wrapper';
+      const inputId = elementClass + '-api-checkbox';
+
+      const $originalUrlInput = $element.find('input').first();
+      if (!$originalUrlInput.length) {
+        console.error('Original input field not found within the element');
+        return;
+      }
+
+      const $newRow = $('<tr></tr>')
+        .addClass(trClass)
+        .append(
+          $('<td></td>')
+            .addClass('label')
+            .append(
+              $('<label></label>')
+                .attr('for', inputId)
+                .text(label || '')
+            )
+        )
+        .append(
+          $('<td></td>').append(
+            $('<input></input>')
+              .attr({
+                'type': 'checkbox',
+                'id': inputId
+              })
+              .prop('checked', $originalUrlInput.val() === '1')
+              .on('change', function() {
+                $originalUrlInput.val($(this).prop('checked') ? '1' : '');
+              })
+          )
+        );
+
+      $element.before($newRow);
+      return $newRow;
+    }
+    $('fieldset [class^="crm-paymentProcessor-"][class$="url_recur"]').each(function(i, element) {
+      addApiCheckbox($(this), '{/literal}{ts}Enable Neweb Recurring API{/ts}{literal}');
+    });
+    $('fieldset [class^="crm-paymentProcessor-"][class$="url_api"]').each(function(i, element) {
+      addApiCheckbox($(this), '{/literal}{ts}Credit Card Agreement{/ts}{literal}');
+      const $subject = $(this).closest('table').find('[class^="crm-paymentProcessor-"][class$=subject]');
+      $subject.insertAfter($(this));
+      $subject.hide();
+      const $apiCheckbox = $(this).closest('table').find('input[id$=url_api-api-checkbox]');
+      if ($apiCheckbox.prop('checked')) {
+        $subject.show();
+      }
+      $apiCheckbox.change(function(){
+        if ($(this).prop('checked')) {
+          $subject.show();
+        }
+        else {
+          $subject.hide();
+        }
+      });
+    });
+  });
+{/literal}</script>
+{/if}

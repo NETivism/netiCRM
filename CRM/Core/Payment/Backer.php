@@ -59,7 +59,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
     }
   }
 
-  static function getAdminFields($ppDAO){
+  static function getAdminFields($ppDAO, $form){
     $pages = CRM_Contribute_PseudoConstant::contributionPage();
     foreach($pages as $id => $page) {
       $pages[$id] .= " ($id)";
