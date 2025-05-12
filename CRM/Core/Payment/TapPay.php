@@ -93,7 +93,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     }
   }
 
-  static function getAdminFields($ppDAO){
+  static function getAdminFields($ppDAO, $form){
     $fields = array(
       array(
         'name' => 'user_name',
