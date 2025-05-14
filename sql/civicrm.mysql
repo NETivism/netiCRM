@@ -4748,7 +4748,7 @@ CREATE TABLE civicrm_contribution_tappay (
      rec_trade_id varchar(255)    COMMENT 'Record Trade ID',
      bin_code varchar(32)    COMMENT 'The first 6 words of card number.',
      last_four varchar(32)    COMMENT 'The last four words of card number.',
-     expiry_date date    COMMENT 'Used date time of this coupon track.',
+     expiry_date date    COMMENT 'Credit card expiry date.',
      data text    COMMENT 'Newest return data.',
      token_status varchar(32)    COMMENT 'Used in 3JTSP cards, correspond to auto_renew column in contribution_recur.',
      created_id int unsigned    COMMENT 'FK to civicrm_contact, who created this contribution' 
@@ -4758,16 +4758,16 @@ CREATE TABLE civicrm_contribution_tappay (
     ,     INDEX tappay_order_number(
         order_number
   )
-  ,     INDEX UI_rec_trade_id(
+  ,     INDEX index_rec_trade_id(
         rec_trade_id
   )
-  ,     INDEX UI_bin_code(
+  ,     INDEX index_bin_code(
         bin_code
   )
-  ,     INDEX UI_last_four(
+  ,     INDEX index_last_four(
         last_four
   )
-  ,     INDEX UI_expiry_date(
+  ,     INDEX index_expiry_date(
         expiry_date
   )
   

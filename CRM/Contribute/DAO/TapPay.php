@@ -133,7 +133,7 @@ class CRM_Contribute_DAO_TapPay extends CRM_Core_DAO
    */
   public $last_four;
   /**
-   * Used date time of this coupon track.
+   * Credit card expiry date.
    *
    * @var date
    */
