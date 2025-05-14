@@ -41,7 +41,7 @@ class CRM_Admin_Form_Setting_Recurring extends CRM_Admin_Form_Setting {
 
     if (defined('ONE_TIME_RENEWAL_ENABLED')) {
       $pages = array();
-      CRM_Core_PseudoConstant::populate($pages, 'CRM_Contribute_DAO_ContributionPage', FALSE, 'title', 'is_active');
+      CRM_Core_PseudoConstant::populate($pages, 'CRM_Contribute_DAO_ContributionPage', FALSE, 'title', 'is_active','is_internal is NULL');
       foreach($pages as $id => &$page) {
         $page .= " ($id)";
       }
