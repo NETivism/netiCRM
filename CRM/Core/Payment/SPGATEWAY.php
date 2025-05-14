@@ -262,6 +262,8 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
    *
    */
   function doTransferCheckout(&$params, $component) {
+    dpr($params);
+    exit;
     $component = strtolower($component);
     if ($component != 'contribute' && $component != 'event') {
       CRM_Core_Error::fatal(ts('Component is invalid'));
@@ -449,7 +451,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
         'P3D' => '1',  // Default to non-3D transaction
         'CREDITAGREEMENT' => 1, // For credit card token payment
         'OrderComment' => !empty($this->_paymentProcessor['subject']) ? $this->_paymentProcessor['subject'] : '',
-        'TokenTerm' => preg_replace('/\+[^@]*(?=@)/', '', $vars['email-5']), // Default to using email as token term, do not allow +
+        'TokenTerm' => isset($vars['is_recur']) && !empty($vars['contributionRecurID']) ? $vars['contributionRecurID'] : $vars['contactID'],
         'TokenLife' => '', // Default empty to the card expire date
       );
 
