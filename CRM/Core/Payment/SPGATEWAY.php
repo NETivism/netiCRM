@@ -449,7 +449,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
         'P3D' => '1',  // Default to non-3D transaction
         'CREDITAGREEMENT' => 1, // For credit card token payment
         'OrderComment' => !empty($this->_paymentProcessor['subject']) ? $this->_paymentProcessor['subject'] : '',
-        'TokenTerm' => $vars['email-5'], // Default to using email as token term
+        'TokenTerm' => preg_replace('/\+[^@]*(?=@)/', '', $vars['email-5']), // Default to using email as token term, do not allow +
         'TokenLife' => '', // Default empty to the card expire date
       );
 
@@ -1154,7 +1154,9 @@ EOT;
     }
     else{
       // validate some post
-      if (!empty($post['JSONData']) || !empty($post['Period']) || !empty($post['Result'])) {
+      if (!empty($post['JSONData']) || !empty($post['Period']) || !empty($post['Result']) ||
+        (!empty($post['Version']) && $post['Version'] === self::AGREEMENT_VERSION && !empty($post['TradeInfo']))
+      ) {
         $ipn = new CRM_Core_Payment_SPGATEWAYIPN($post, $get);
         $result = $ipn->main($instrument);
         if(is_string($result) && $print){

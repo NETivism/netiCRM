@@ -15,12 +15,37 @@ class CRM_Core_Payment_SPGATEWAYIPN extends CRM_Core_Payment_BaseIPN {
   function main($instrument){
     $objects = $ids = $input = array();
     $this->getIds($ids);
-    if(empty($ids['contributionRecur'])){
+    // agreement
+    if (!empty($this->_post['TradeInfo']) && !empty($this->_post['Version']) && $this->_post['Version'] === CRM_Core_Payment_SPGATEWAY::AGREEMENT_VERSION) {
+      $ppid = NULL;
+      $recur = FALSE;
+      if (!empty($ids['contributionRecur'])) {
+        $recur = TRUE;
+        $sql = 'SELECT processor_id FROM civicrm_contribution_recur WHERE id = %1';
+        $ppid = CRM_Core_DAO::singleValueQuery($sql, array(1 => array($ids['contributionRecur'], 'Integer')));
+      }
+      if (empty($ppid)) {
+        $sql = 'SELECT payment_processor_id FROM civicrm_contribution WHERE id = %1';
+        $ppid = CRM_Core_DAO::singleValueQuery($sql, array(1 => array($ids['contribution'], 'Integer')));
+      }
+      if (empty($ppid)) {
+        CRM_Core_Error::debug_log_message("Spgateway: could not find payment processor id on this contribution {$ids['contribution']}");
+        CRM_Utils_System::civiExit();
+      }
+      $isTest = CRM_Core_DAO::singleValueQuery("SELECT is_test FROM civicrm_payment_processor WHERE id = %1", array(1 => array($ppid, 'Integer')));
+      $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($ppid, $isTest ? 'test' : 'live');
+      $this->_post = CRM_Core_Payment_SPGATEWAYAPI::recurDecrypt($this->_post['TradeInfo'], $paymentProcessor);
+      CRM_Core_Payment_SPGATEWAYAPI::writeRecord($ids['contribution'], $this->_post);
+      $input = CRM_Core_Payment_SPGATEWAYAPI::dataDecode($this->_post);
+    }
+    // common credit card
+    elseif(empty($ids['contributionRecur'])){
       $recur = FALSE;
       // get the contribution and contact ids from the GET params
       $input = CRM_Core_Payment_SPGATEWAYAPI::dataDecode($this->_post);
       CRM_Core_Payment_SPGATEWAYAPI::writeRecord($ids['contribution'], $this->_post);
     }
+    // recurring 1.0 or 1.1
     else{
       $recur = TRUE;
       // Refs #35316, recur.proessor_id => contribution.payment_processor_id => $_GET['ppid']
@@ -161,7 +186,11 @@ class CRM_Core_Payment_SPGATEWAYIPN extends CRM_Core_Payment_BaseIPN {
     }else{
       $validValue['MerchantOrderNo'] = $input['MerOrderNo'];
     }
-    if(!empty($ids['contributionRecur'])){
+    // for credit card agreement
+    if (!empty($input['TokenLife'])) {
+      $validValue['Amt'] = !empty($input['Amt']) ? $input['Amt'] : '0';
+    }
+    elseif(!empty($ids['contributionRecur'])){
       if(!empty($input['AuthAmt'])){
         // after the first recurring
         $validValue['Amt'] = $input['AuthAmt'];
