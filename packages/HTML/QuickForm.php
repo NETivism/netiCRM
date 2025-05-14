@@ -632,7 +632,7 @@ class HTML_QuickForm extends HTML_Common
         // Add the element if it is not an incompatible duplicate
         if (!empty($elementName) && isset($this->_elementIndex[$elementName])) {
             if ($this->_elements[$this->_elementIndex[$elementName]]->getType() ==
-                $elementObject->getType()) {
+                $elementObject->getType() || $element == "advcheckbox") {
                 $this->_elements[] =& $elementObject;
                 $elKeys = array_keys($this->_elements);
                 $this->_duplicateIndex[$elementName][] = end($elKeys);
