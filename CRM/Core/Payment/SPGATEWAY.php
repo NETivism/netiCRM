@@ -262,8 +262,6 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
    *
    */
   function doTransferCheckout(&$params, $component) {
-    dpr($params);
-    exit;
     $component = strtolower($component);
     if ($component != 'contribute' && $component != 'event') {
       CRM_Core_Error::fatal(ts('Component is invalid'));
@@ -309,9 +307,17 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
       1 => array($params['contributionID'], 'Integer'),
     ));
     if (!$exists) {
-      CRM_Core_DAO::executeQuery("INSERT INTO civicrm_contribution_spgateway (cid) VALUES (%1)", array(
-        1 => array($params['contributionID'], 'Integer'),
-      ));
+      if (!empty($params['contributionRecurID'])) {
+        CRM_Core_DAO::executeQuery("INSERT INTO civicrm_contribution_spgateway (cid, contribution_recur_id) VALUES (%1, %2)", array(
+          1 => array($params['contributionID'], 'Integer'),
+          2 => array($params['contributionRecurID'], 'Integer'),
+        ));
+      }
+      else {
+        CRM_Core_DAO::executeQuery("INSERT INTO civicrm_contribution_spgateway (cid) VALUES (%1)", array(
+          1 => array($params['contributionID'], 'Integer'),
+        ));
+      }
     }
 
     if($instrumentCode == 'Credit' || $instrumentCode == 'WebATM'){

@@ -274,17 +274,56 @@ class CRM_Core_Payment_SPGATEWAYAPI {
       $exists = CRM_Core_DAO::singleValueQuery("SELECT cid FROM civicrm_contribution_spgateway WHERE cid = %1", array(
         1 => array($cid, 'Integer'),
       ));
+      if (!is_string($data)) {
+        $data = json_encode($data);
+      }
+      $columns = array(
+        'data' => $data,
+      );
+      if (is_string($data)) {
+        $checkData = json_decode($data);
+        if (!empty($checkData)) {
+          if (isset($checkData->Result) && isset($checkData->Result->TokenValue)) {
+            $columns['trade_no'] = $checkData->Result->TradeNo;
+            $columns['token_value'] = $checkData->Result->TokenValue;
+            $columns['token_life'] = $checkData->Result->TokenLife;
+            $columns['last_four'] = $checkData->Result->Card4No;
+            $columns['expiry_date'] = $checkData->Result->TokenLife;
+          }
+        }
+      }
+
+      $sqlParams = array();
+      $counter = 1;
       if ($exists) {
-        CRM_Core_DAO::executeQuery("UPDATE civicrm_contribution_spgateway SET data = %1 WHERE cid = %2", array(
-          1 => array(json_encode($data), 'String'),
-          2 => array($cid, 'Integer')
-        ));
+
+        $updateFields = array();
+        foreach ($columns as $field => $value) {
+          $updateFields[] = "$field = %$counter";
+          $sqlParams[$counter] = array($value, 'String');
+          $counter++;
+        }
+        $sqlParams[$counter] = array($cid, 'Integer');
+        $sql = "UPDATE civicrm_contribution_spgateway SET " . implode(', ', $updateFields) . " WHERE cid = %$counter";
+
+        CRM_Core_DAO::executeQuery($sql, $sqlParams);
       }
       else {
-        CRM_Core_DAO::executeQuery("INSERT INTO civicrm_contribution_spgateway (cid, data) VALUES(%2, %1) ", array(
-          1 => array(json_encode($data), 'String'),
-          2 => array($cid, 'Integer')
-        ));
+        $fields = array_keys($columns);
+        $values = array();
+
+        foreach ($columns as $value) {
+          $values[] = "%$counter";
+          $sqlParams[$counter] = array($value, 'String');
+          $counter++;
+        }
+
+        $fields[] = 'cid';
+        $values[] = "%$counter";
+        $sqlParams[$counter] = array($cid, 'Integer');
+
+        $sql = "INSERT INTO civicrm_contribution_spgateway (" . implode(', ', $fields) . ") VALUES (" . implode(', ', $values) . ")";
+        CRM_Core_DAO::executeQuery($sql, $sqlParams);
       }
 
       // Set expire time
