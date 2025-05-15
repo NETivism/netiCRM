@@ -22,12 +22,44 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
 
   function __construct(&$formValues){
     parent::__construct($formValues);
+
+    $this->_recurringStatus = array(
+      2 => ts('All'),
+      1 => ts("Recurring Contribution"),
+      0 => ts("Non-recurring Contribution"),
+    );
   }
 
   function buildColumn(){
   }
 
   function buildForm(&$form){
+    $form->addDateRange('receive_date', ts('Receive Date').' - '.ts('From'), NULL, FALSE);
+    $form->addRadio('recurring', ts('Recurring Contribution'), $this->_recurringStatus);
+    $form->assign('elements', array('receive_date', 'recurring'));
+
+
+    $form->addNumber('rfm_r_value', ts('Recency (days since last donation)'), array(
+      'size' => 5,
+      'maxlength' => 5,
+      'min' => 0,
+      'placeholder' => ts('e.g., 210'),
+      'class' => 'rfm-input'
+    ));
+    $form->addNumber('rfm_f_value', ts('Frequency (number of donations)'), array(
+      'size' => 5,
+      'maxlength' => 5,
+      'min' => 0,
+      'placeholder' => ts('e.g., 3'),
+      'class' => 'rfm-input'
+    ));
+    $form->addNumber('rfm_m_value', ts('Monetary (total donation amount)'), array(
+      'size' => 12,
+      'maxlength' => 12,
+      'min' => 0,
+      'placeholder' => ts('e.g., 21600'),
+      'class' => 'rfm-input'
+    ));
   }
 
   function setDefaultValues() {

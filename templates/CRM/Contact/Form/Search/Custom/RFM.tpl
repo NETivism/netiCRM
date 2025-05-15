@@ -9,21 +9,86 @@
     </div><!-- /.crm-accordion-header -->
     <div class="crm-accordion-body">
         <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>
-        <table class="form-layout-compressed">
+            <table class="form-layout-compressed">
                 <tr class="crm-contact-custom-search-form-row-receive_date">
                     <td class="label">{$form.receive_date_from.label}</td>
                     <td>{include file="CRM/common/jcalendar.tpl" elementName=receive_date_from} <span>{$form.receive_date_to.label}</span>
                         {include file="CRM/common/jcalendar.tpl" elementName=receive_date_to}
                     </td>
                 </tr>
-            {* Loop through all defined search criteria fields (defined in the buildForm() function). *}
-            {foreach from=$elements item=element}
+                {* Loop through all defined search criteria fields (defined in the buildForm() function). *}
+                {foreach from=$elements item=element}
                 <tr class="crm-contact-custom-search-form-row-{$element}">
                     <td class="label">{$form.$element.label}</td>
                     <td>{$form.$element.html}</td>
                 </tr>
-            {/foreach}
-        </table>
+                {/foreach}
+            </table>
+            {* RFM fields START *}
+            <div class="rfm-container">
+              <h4 class="rfm-section-title">{ts}RFM Analysis Filters{/ts}</h4>
+              {* R - Recency (days since last donation) *}
+              <div class="rfm-field-wrapper">
+                <div class="rfm-field-header">
+                  <span class="rfm-icon">🕐</span>
+                  <span class="rfm-label">{$form.rfm_r_value.label}</span>
+                  <span class="rfm-threshold-label">{ts}Threshold:{/ts}</span>
+                </div>
+                <div class="rfm-slider-container">
+                  <div class="rfm-input-section">
+                    <div class="rfm-input-container">
+                      {$form.rfm_r_value.html}
+                    </div>
+                  </div>
+                  <div class="rfm-range-section">
+                    <span class="rfm-range-label-left">{ts}Old R ↓{/ts}</span>
+                    <div class="rfm-slider-track"></div>
+                    <span class="rfm-range-label-right">{ts}Recent R ↑{/ts}</span>
+                  </div>
+                </div>
+              </div>
+              {* F - Frequency (number of donations) *}
+              <div class="rfm-field-wrapper">
+                <div class="rfm-field-header">
+                  <span class="rfm-icon">🏆</span>
+                  <span class="rfm-label">{$form.rfm_f_value.label}</span>
+                  <span class="rfm-threshold-label">{ts}Threshold:{/ts}</span>
+                </div>
+                <div class="rfm-slider-container">
+                  <div class="rfm-input-section">
+                    <div class="rfm-input-container">
+                      {$form.rfm_f_value.html}
+                    </div>
+                  </div>
+                  <div class="rfm-range-section">
+                    <span class="rfm-range-label-left">{ts}Low F ↓{/ts}</span>
+                    <div class="rfm-slider-track"></div>
+                    <span class="rfm-range-label-right">{ts}High F ↑{/ts}</span>
+                  </div>
+                </div>
+              </div>
+              {* M - Monetary (total donation amount) *}
+              <div class="rfm-field-wrapper">
+                <div class="rfm-field-header">
+                  <span class="rfm-icon">💲</span>
+                  <span class="rfm-label">{$form.rfm_m_value.label}</span>
+                  <span class="rfm-threshold-label">{ts}Threshold:{/ts}</span>
+                </div>
+                <div class="rfm-slider-container">
+                  <div class="rfm-input-section">
+                    <div class="rfm-input-container">
+                      {$form.rfm_m_value.html}
+                    </div>
+                  </div>
+                  <div class="rfm-range-section">
+                    <span class="rfm-range-label-left">{ts}Low M ↓{/ts}</span>
+                    <div class="rfm-slider-track"></div>
+                    <span class="rfm-range-label-right">{ts}High M ↑{/ts}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {* RFM fields END *}
         <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
     </div><!-- /.crm-accordion-body -->
 </div><!-- /.crm-accordion-wrapper -->
