@@ -262,7 +262,7 @@ class CRM_Core_Payment_SPGATEWAYAPI {
    * @param array $data
    * @return void
    */
-  public static function writeRecord($cid, $data = null){
+  public static function writeRecord($cid, $data = null, $recurringId = NULL){
     if(is_numeric($cid)){
       if(empty($data) && !empty($_POST)){
         $data = $_POST;
@@ -291,6 +291,9 @@ class CRM_Core_Payment_SPGATEWAYAPI {
             $columns['expiry_date'] = $checkData->Result->TokenLife;
           }
         }
+      }
+      if (!empty($recurringId)) {
+        $columns['contribution_recur_id'] = $recurringId;
       }
 
       $sqlParams = array();

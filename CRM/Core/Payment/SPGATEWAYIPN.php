@@ -35,7 +35,7 @@ class CRM_Core_Payment_SPGATEWAYIPN extends CRM_Core_Payment_BaseIPN {
       $isTest = CRM_Core_DAO::singleValueQuery("SELECT is_test FROM civicrm_payment_processor WHERE id = %1", array(1 => array($ppid, 'Integer')));
       $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($ppid, $isTest ? 'test' : 'live');
       $this->_post = CRM_Core_Payment_SPGATEWAYAPI::recurDecrypt($this->_post['TradeInfo'], $paymentProcessor);
-      CRM_Core_Payment_SPGATEWAYAPI::writeRecord($ids['contribution'], $this->_post);
+      CRM_Core_Payment_SPGATEWAYAPI::writeRecord($ids['contribution'], $this->_post, $ids['contributionRecur'] ?? $ids['contributionRecur']);
       $input = CRM_Core_Payment_SPGATEWAYAPI::dataDecode($this->_post);
     }
     // common credit card
@@ -68,7 +68,7 @@ class CRM_Core_Payment_SPGATEWAYIPN extends CRM_Core_Payment_BaseIPN {
       // we will save record later if this is recurring after second times.
       if(empty($input['AlreadyTimes'])){
         // First time recurring
-        CRM_Core_Payment_SPGATEWAYAPI::writeRecord($ids['contribution'], $this->_post);
+        CRM_Core_Payment_SPGATEWAYAPI::writeRecord($ids['contribution'], $this->_post, $ids['contributionRecur']);
       }
     }
     $input['component'] = !empty($ids['participant']) ? 'event' : 'contribute';
