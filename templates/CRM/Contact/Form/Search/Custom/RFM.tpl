@@ -141,7 +141,7 @@
 {literal}
 <script type="text/javascript">
   cj(function() {
-    cj().crmaccordions(); 
+    cj().crmaccordions();
   });
 </script>
 {/literal}
@@ -216,14 +216,20 @@
       {* RFM fields end *}
     </div>
     <div class="rfm-popup-footer">
-      <button type="button" class="crm-button rfm-save-btn">
-        <i class="zmdi zmdi-check"></i> {ts}Save Thresholds{/ts}
-      </button>
+      <button type="button" class="crm-button rfm-cancel-btn">{ts}Cancel{/ts}</button>
+      <button type="button" class="crm-button rfm-save-btn">{ts}Save{/ts}</button>
     </div>
   </div>
 </div>
 {literal}
 <script type="text/javascript">
+let originalValues = {
+  recency: 0,
+  frequency: 0,
+  monetary: 0
+};
+let valuesSaved = false;
+
 (function ($) {
   function updateThresholdValues() {
     const rValue = $('#rfm_r_value').val();
@@ -237,10 +243,25 @@
     $('output[data-threshold-type="monetary"]').text(formattedMValue);
   }
 
+  function saveOriginalValues() {
+    originalValues.recency = $('#rfm_r_value').val();
+    originalValues.frequency = $('#rfm_f_value').val();
+    originalValues.monetary = $('#rfm_m_value').val();
+    valuesSaved = false;
+  }
+
+  function restoreOriginalValues() {
+    $('#rfm_r_value').val(originalValues.recency);
+    $('#rfm_f_value').val(originalValues.frequency);
+    $('#rfm_m_value').val(originalValues.monetary);
+  }
+
   $(function () {
     if ($.fn.magnificPopup && $('#rfm-popup').length) {
       $('.crm-container').on('click', '.rfm-popup-open-link', function(e) {
         e.preventDefault();
+
+        saveOriginalValues();
 
         $.magnificPopup.open({
           items: {
@@ -254,6 +275,11 @@
             open: function() {
               $('body').addClass('rfm-popup-active mfp-is-active');
             },
+            beforeClose: function() {
+              if (!valuesSaved) {
+                restoreOriginalValues();
+              }
+            },
             close: function() {
               $('body').removeClass('rfm-popup-active mfp-is-active');
             }
@@ -263,10 +289,11 @@
 
       $('body').on('click', '.rfm-save-btn', function() {
           updateThresholdValues();
+          valuesSaved = true;
           $.magnificPopup.close();
         });
 
-      $('body').on('click', '.rfm-popup-close', function() {
+      $('body').on('click', '.rfm-cancel-btn, .rfm-popup-close', function() {
         $.magnificPopup.close();
       });
     }
