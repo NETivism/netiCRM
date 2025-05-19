@@ -19,6 +19,11 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
   protected $_filled = NULL;
   protected $_recurringStatus = array();
   protected $_contributionPage = NULL;
+  protected $_defaultThresholds = [
+    'recency' => 210,
+    'frequency' => 3,
+    'monetary' => 21600
+  ];
 
   function __construct(&$formValues){
     parent::__construct($formValues);
@@ -37,7 +42,6 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
     $form->addDateRange('receive_date', ts('Receive Date').' - '.ts('From'), NULL, FALSE);
     $form->addRadio('recurring', ts('Recurring Contribution'), $this->_recurringStatus);
     $form->assign('elements', array('receive_date', 'recurring'));
-
 
     $form->addNumber('rfm_r_value', ts('Recency (days since last donation)'), array(
       'size' => 5,
@@ -60,6 +64,14 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
       'placeholder' => ts('e.g., 21600'),
       'class' => 'rfm-input'
     ));
+
+    $form->setDefaults([
+      'rfm_r_value' => $this->_defaultThresholds['recency'],
+      'rfm_f_value' => $this->_defaultThresholds['frequency'],
+      'rfm_m_value' => $this->_defaultThresholds['monetary']
+    ]);
+
+    $form->assign('rfmThresholds', $this->_defaultThresholds);
   }
 
   function setDefaultValues() {
