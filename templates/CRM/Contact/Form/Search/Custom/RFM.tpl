@@ -24,71 +24,37 @@
                 </tr>
                 {/foreach}
             </table>
-            {* RFM fields START *}
-            <div class="rfm-container">
-              <h4 class="rfm-section-title">{ts}RFM Analysis Filters{/ts}</h4>
-              {* R - Recency (days since last donation) *}
-              <div class="rfm-field-wrapper">
-                <div class="rfm-field-header">
-                  <span class="rfm-icon">🕐</span>
-                  <span class="rfm-label">{$form.rfm_r_value.label}</span>
-                  <span class="rfm-threshold-label">{ts}Threshold:{/ts}</span>
-                </div>
-                <div class="rfm-slider-container">
-                  <div class="rfm-input-section">
-                    <div class="rfm-input-container">
-                      {$form.rfm_r_value.html}
-                    </div>
-                  </div>
-                  <div class="rfm-range-section">
-                    <span class="rfm-range-label-left">{ts}Old R ↓{/ts}</span>
-                    <div class="rfm-slider-track"></div>
-                    <span class="rfm-range-label-right">{ts}Recent R ↑{/ts}</span>
-                  </div>
-                </div>
+            <div class="rfm-thresholds">
+              <div class="rfm-thresholds-header">
+                <h2 class="rfm-thresholds-title">🔍 {ts}RFM Thresholds{/ts}</h2>
+                <a class="rfm-thresholds-edit rfm-popup-open-link" href="#rfm-popup">{ts}Edit Thresholds{/ts}</a>
               </div>
-              {* F - Frequency (number of donations) *}
-              <div class="rfm-field-wrapper">
-                <div class="rfm-field-header">
-                  <span class="rfm-icon">🏆</span>
-                  <span class="rfm-label">{$form.rfm_f_value.label}</span>
-                  <span class="rfm-threshold-label">{ts}Threshold:{/ts}</span>
-                </div>
-                <div class="rfm-slider-container">
-                  <div class="rfm-input-section">
-                    <div class="rfm-input-container">
-                      {$form.rfm_f_value.html}
-                    </div>
+              <div class="rfm-thresholds-content">
+                <dl class="rfm-thresholds-list">
+                  <div class="rfm-thresholds-item">
+                    <dt class="rfm-thresholds-term">{ts}Recency:{/ts}</dt>
+                    <dd class="rfm-thresholds-definition">
+                      <output class="rfm-thresholds-value" data-threshold-type="recency">{$rfmThresholds.recency}</output>
+                      <span class="rfm-thresholds-unit">{ts}days{/ts}</span>
+                    </dd>
                   </div>
-                  <div class="rfm-range-section">
-                    <span class="rfm-range-label-left">{ts}Low F ↓{/ts}</span>
-                    <div class="rfm-slider-track"></div>
-                    <span class="rfm-range-label-right">{ts}High F ↑{/ts}</span>
+                  <div class="rfm-thresholds-item">
+                    <dt class="rfm-thresholds-term">{ts}Frequency:{/ts}</dt>
+                    <dd class="rfm-thresholds-definition">
+                      <output class="rfm-thresholds-value" data-threshold-type="frequency">{$rfmThresholds.frequency}</output>
+                      <span class="rfm-thresholds-unit">{ts}times{/ts}</span>
+                    </dd>
                   </div>
-                </div>
-              </div>
-              {* M - Monetary (total donation amount) *}
-              <div class="rfm-field-wrapper">
-                <div class="rfm-field-header">
-                  <span class="rfm-icon">💲</span>
-                  <span class="rfm-label">{$form.rfm_m_value.label}</span>
-                  <span class="rfm-threshold-label">{ts}Threshold:{/ts}</span>
-                </div>
-                <div class="rfm-slider-container">
-                  <div class="rfm-input-section">
-                    <div class="rfm-input-container">
-                      {$form.rfm_m_value.html}
-                    </div>
+                  <div class="rfm-thresholds-item">
+                    <dt class="rfm-thresholds-term">{ts}Monetary:{/ts}</dt>
+                    <dd class="rfm-thresholds-definition">
+                      <output class="rfm-thresholds-value" data-threshold-type="monetary">{$rfmThresholds.monetary|number_format:0:".":","}</output>
+                      <span class="rfm-thresholds-unit">{ts}TWD{/ts}</span>
+                    </dd>
                   </div>
-                  <div class="rfm-range-section">
-                    <span class="rfm-range-label-left">{ts}Low M ↓{/ts}</span>
-                    <div class="rfm-slider-track"></div>
-                    <span class="rfm-range-label-right">{ts}High M ↑{/ts}</span>
-                  </div>
-                </div>
+                </dl>
               </div>
             </div>
-            {* RFM fields END *}
         <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
     </div><!-- /.crm-accordion-body -->
 </div><!-- /.crm-accordion-wrapper -->
@@ -174,8 +140,138 @@
 {/if}
 {literal}
 <script type="text/javascript">
-cj(function() {
-   cj().crmaccordions(); 
-});
+  cj(function() {
+    cj().crmaccordions(); 
+  });
 </script>
 {/literal}
+
+{* RFM popup start *}
+<link rel="stylesheet" href="{$config->resourceBase}packages/Magnific-Popup/dist/magnific-popup.css?v{$config->ver}">
+{js src=packages/Magnific-Popup/dist/jquery.magnific-popup.min.js group=999 weight=997 library=civicrm/civicrm-js-magnific-popup}{/js}
+<div id="rfm-popup" class="rfm-popup crm-preview-popup mfp-hide">
+  <div class="rfm-popup-inner">
+    <div class="rfm-popup-header">
+      <div class="rfm-popup-title">{ts}RFM Thresholds Settings{/ts}</div>
+      <button type="button" class="rfm-popup-close"><i class="zmdi zmdi-close"></i></button>
+    </div>
+    <div class="rfm-popup-content">
+      {* RFM fields start *}
+      <div class="rfm-threshold-editor">
+        {* R - Recency (days since last donation) *}
+        <div class="rfm-threshold-editor-field">
+          <div class="rfm-threshold-editor-field-header">
+            <span class="rfm-threshold-editor-icon">🕐</span>
+            <span class="rfm-threshold-editor-label">{$form.rfm_r_value.label}</span>
+            <span class="rfm-threshold-editor-threshold-label">{ts}Threshold:{/ts}</span>
+          </div>
+          <div class="rfm-threshold-editor-slider">
+            <div class="rfm-threshold-editor-input-wrapper">
+              {$form.rfm_r_value.html}
+            </div>
+            <div class="rfm-threshold-editor-range">
+              <span class="rfm-threshold-editor-range-min">{ts}Old R ↓{/ts}</span>
+              <div class="rfm-threshold-editor-track"></div>
+              <span class="rfm-threshold-editor-range-max">{ts}Recent R ↑{/ts}</span>
+            </div>
+          </div>
+        </div>
+        {* F - Frequency (number of donations) *}
+        <div class="rfm-threshold-editor-field">
+          <div class="rfm-threshold-editor-field-header">
+            <span class="rfm-threshold-editor-icon">🏆</span>
+            <span class="rfm-threshold-editor-label">{$form.rfm_f_value.label}</span>
+            <span class="rfm-threshold-editor-threshold-label">{ts}Threshold:{/ts}</span>
+          </div>
+          <div class="rfm-threshold-editor-slider">
+            <div class="rfm-threshold-editor-input-wrapper">
+              {$form.rfm_f_value.html}
+            </div>
+            <div class="rfm-threshold-editor-range">
+              <span class="rfm-threshold-editor-range-min">{ts}Low F ↓{/ts}</span>
+              <div class="rfm-threshold-editor-track"></div>
+              <span class="rfm-threshold-editor-range-max">{ts}High F ↑{/ts}</span>
+            </div>
+          </div>
+        </div>
+        {* M - Monetary (total donation amount) *}
+        <div class="rfm-threshold-editor-field">
+          <div class="rfm-threshold-editor-field-header">
+            <span class="rfm-threshold-editor-icon">💲</span>
+            <span class="rfm-threshold-editor-label">{$form.rfm_m_value.label}</span>
+            <span class="rfm-threshold-editor-threshold-label">{ts}Threshold:{/ts}</span>
+          </div>
+          <div class="rfm-threshold-editor-slider">
+            <div class="rfm-threshold-editor-input-wrapper">
+              {$form.rfm_m_value.html}
+            </div>
+            <div class="rfm-threshold-editor-range">
+              <span class="rfm-threshold-editor-range-min">{ts}Low M ↓{/ts}</span>
+              <div class="rfm-threshold-editor-track"></div>
+              <span class="rfm-threshold-editor-range-max">{ts}High M ↑{/ts}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      {* RFM fields end *}
+    </div>
+    <div class="rfm-popup-footer">
+      <button type="button" class="crm-button rfm-save-btn">
+        <i class="zmdi zmdi-check"></i> {ts}Save Thresholds{/ts}
+      </button>
+    </div>
+  </div>
+</div>
+{literal}
+<script type="text/javascript">
+(function ($) {
+  function updateThresholdValues() {
+    const rValue = $('#rfm_r_value').val();
+    $('output[data-threshold-type="recency"]').text(rValue);
+
+    const fValue = $('#rfm_f_value').val();
+    $('output[data-threshold-type="frequency"]').text(fValue);
+
+    const mValue = $('#rfm_m_value').val();
+    const formattedMValue = Number(mValue).toLocaleString('zh-TW');
+    $('output[data-threshold-type="monetary"]').text(formattedMValue);
+  }
+
+  $(function () {
+    if ($.fn.magnificPopup && $('#rfm-popup').length) {
+      $('.crm-container').on('click', '.rfm-popup-open-link', function(e) {
+        e.preventDefault();
+
+        $.magnificPopup.open({
+          items: {
+            src: '#rfm-popup'
+          },
+          type: 'inline',
+          mainClass: 'mfp-rfm-popup',
+          preloader: true,
+          showCloseBtn: false,
+          callbacks: {
+            open: function() {
+              $('body').addClass('rfm-popup-active mfp-is-active');
+            },
+            close: function() {
+              $('body').removeClass('rfm-popup-active mfp-is-active');
+            }
+          }
+        });
+      });
+
+      $('body').on('click', '.rfm-save-btn', function() {
+          updateThresholdValues();
+          $.magnificPopup.close();
+        });
+
+      $('body').on('click', '.rfm-popup-close', function() {
+        $.magnificPopup.close();
+      });
+    }
+  });
+})(cj);
+</script>
+{/literal}
+{* RFM popup end *}
