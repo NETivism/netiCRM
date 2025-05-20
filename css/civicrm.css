@@ -14,6 +14,20 @@
   --pcp-progress-amount-height: 40px;
   --pcp-progress-bar-height: 30px;
   --pcp-leading-height: calc(100dvh - var(--header-min-height) - var(--pcp-progress-padding) - var(--pcp-progress-amount-height) - var(--pcp-progress-bar-height));
+  --rfm-card-bg: #fff;
+  --rfm-card-border-color: #ccc;
+  --rfm-card-border-radius: .625rem;
+  --rfm-card-shadow: rgba(0, 0, 0, .07) 0 1px 8px;
+  --rfm-primary-blue: #4a7bbb;
+  --rfm-text-dark: #333;
+  --rfm-spacing-base: clamp(.75rem, 2vw, 1.25rem);
+  --rfm-line-height: 1.5;
+  --rfm-input-border: #ddd;
+  --rfm-input-bg: #fcfcfc;
+  --rfm-track-bg: #e9e9e9;
+  --rfm-track-height: 4px;
+  --rfm-icon-size: 1.75rem;
+  --rfm-field-gap: 1.5rem;
 }
 
 /* Visually hidden helper (bootstrap 5) */

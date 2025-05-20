@@ -65,16 +65,15 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
       'class' => 'rfm-input'
     ));
 
-    $form->setDefaults([
-      'rfm_r_value' => $this->_defaultThresholds['recency'],
-      'rfm_f_value' => $this->_defaultThresholds['frequency'],
-      'rfm_m_value' => $this->_defaultThresholds['monetary']
-    ]);
-
     $form->assign('rfmThresholds', $this->_defaultThresholds);
   }
 
   function setDefaultValues() {
+    return [
+      'rfm_r_value' => $this->_defaultThresholds['recency'],
+      'rfm_f_value' => $this->_defaultThresholds['frequency'],
+      'rfm_m_value' => $this->_defaultThresholds['monetary']
+    ];
   }
 
   function qill(){
