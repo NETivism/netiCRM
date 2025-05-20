@@ -2111,4 +2111,53 @@ EOT;
     }
     return $response;
   }
+
+  public static function checkProceedRecur($recurId) {
+    $recur = new CRM_Contribute_DAO_ContributionRecur();
+    $recur->id = $recurId;
+    if ($recur->find(TRUE) && !empty($recur->processor_id)) {
+      $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($recur->processor_id, $recur->is_test ? 'test': 'live');
+      if (!empty($paymentProcessor['url_api'])) {
+        return TRUE;
+      }
+    }
+    return FALSE;
+  }
+
+  /**
+   * Trigger when click transaction button.
+   */
+  public static function doRecurTransact($recurId = NULL, $sendMail = FALSE) {
+    if (empty($recurId) || !CRM_Utils_Type::validate($recurId, 'Positive')) {
+      CRM_Core_Error::statusBounce(ts('Missing required field: %1', array(1 => 'Recurring Id')));
+      return;
+    }
+
+    $resultNote = '';
+    $recur = new CRM_Contribute_DAO_ContributionRecur();
+    $recur->id = $recurId;
+    if ($recur->find(TRUE) && !empty($recur->processor_id)) {
+      $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($recur->processor_id, $recur->is_test ? 'test': 'live');
+      if (!empty($paymentProcessor['url_api'])) {
+        // Get current user
+        $session = CRM_Core_Session::singleton();
+        $contactId = $session->get('userID');
+
+        $resultNote = self::payByToken($recurId, NULL, $sendMail);
+
+        $sql = "SELECT id FROM civicrm_contribution_spgateway WHERE contribution_recur_id = %1 ORDER BY id DESC LIMIT 1";
+        $params = array(1 => array($recurId, 'Positive'));
+        $spgatewayId = CRM_Core_DAO::singleValueQuery($sql, $params);
+        if ($spgatewayId) {
+          $spgatewayData = new CRM_Contribute_DAO_SPGATEWAY();
+          $spgatewayData->id = $spgatewayId;
+          $spgatewayData->find(TRUE);
+          $spgatewayData->created_id = $contactId;
+          $spgatewayData->save();
+        }
+      }
+    }
+
+    return $resultNote;
+  }
 }

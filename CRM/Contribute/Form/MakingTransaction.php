@@ -103,9 +103,15 @@ class CRM_Contribute_Form_MakingTransaction extends CRM_Core_Form {
       $this->assign('update_notify', $name);
     }
     if (method_exists($paymentClass, 'doRecurTransact')) {
-      $name = $this->getButtonName('submit');
-      $submit = $this->addElement('submit', $name, ts('Process now'), array('onclick' => "return confirm('".ts("Are you sure you want to process a transaction of %1?", array(1 => $id))."')"));
-      $this->assign('submit_name', $name);
+      $showButton = TRUE;
+      if (method_exists($paymentClass, 'checkProceedRecur')) {
+        $showButton = $paymentClass::checkProceedRecur($id);
+      }
+      if ($showButton) {
+        $name = $this->getButtonName('submit');
+        $this->addElement('submit', $name, ts('Process now'), array('onclick' => "return confirm('".ts("Are you sure you want to process a transaction of %1?", array(1 => $id))."')"));
+        $this->assign('submit_name', $name);
+      }
     }
   }
 
