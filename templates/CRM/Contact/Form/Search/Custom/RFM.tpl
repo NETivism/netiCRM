@@ -149,13 +149,13 @@
 {* RFM popup start *}
 <link rel="stylesheet" href="{$config->resourceBase}packages/Magnific-Popup/dist/magnific-popup.css?v{$config->ver}">
 {js src=packages/Magnific-Popup/dist/jquery.magnific-popup.min.js group=999 weight=997 library=civicrm/civicrm-js-magnific-popup}{/js}
-<div id="rfm-popup" class="rfm-popup crm-preview-popup mfp-hide">
-  <div class="rfm-popup-inner">
-    <div class="rfm-popup-header">
-      <div class="rfm-popup-title">{ts}RFM Thresholds Settings{/ts}</div>
-      <button type="button" class="rfm-popup-close"><i class="zmdi zmdi-close"></i></button>
+<div id="rfm-popup" class="rfm-popup crm-popup-sm crm-popup mfp-hide">
+  <div class="crm-popup-inner">
+    <div class="crm-popup-header">
+      <div class="crm-popup-title">{ts}RFM Thresholds Settings{/ts}</div>
+      <button type="button" class="rfm-popup-close crm-popup-close"><i class="zmdi zmdi-close"></i></button>
     </div>
-    <div class="rfm-popup-content">
+    <div class="crm-popup-content">
       {* RFM fields start *}
       <div class="rfm-threshold-editor">
         {* R - Recency (days since last donation) *}
@@ -170,9 +170,9 @@
               {$form.rfm_r_value.html}
             </div>
             <div class="rfm-threshold-editor-range">
-              <span class="rfm-threshold-editor-range-min">{ts}Old R ↓{/ts}</span>
+              <span class="rfm-threshold-editor-range-min">{ts}Old R{/ts} ↓</span>
               <div class="rfm-threshold-editor-track"></div>
-              <span class="rfm-threshold-editor-range-max">{ts}Recent R ↑{/ts}</span>
+              <span class="rfm-threshold-editor-range-max">{ts}Recent R{/ts} ↑</span>
             </div>
           </div>
         </div>
@@ -188,9 +188,9 @@
               {$form.rfm_f_value.html}
             </div>
             <div class="rfm-threshold-editor-range">
-              <span class="rfm-threshold-editor-range-min">{ts}Low F ↓{/ts}</span>
+              <span class="rfm-threshold-editor-range-min">{ts}Low F{/ts} ↓</span>
               <div class="rfm-threshold-editor-track"></div>
-              <span class="rfm-threshold-editor-range-max">{ts}High F ↑{/ts}</span>
+              <span class="rfm-threshold-editor-range-max">{ts}High F{/ts} ↑</span>
             </div>
           </div>
         </div>
@@ -206,18 +206,24 @@
               {$form.rfm_m_value.html}
             </div>
             <div class="rfm-threshold-editor-range">
-              <span class="rfm-threshold-editor-range-min">{ts}Low M ↓{/ts}</span>
+              <span class="rfm-threshold-editor-range-min">{ts}Low M{/ts} ↓</span>
               <div class="rfm-threshold-editor-track"></div>
-              <span class="rfm-threshold-editor-range-max">{ts}High M ↑{/ts}</span>
+              <span class="rfm-threshold-editor-range-max">{ts}High M{/ts} ↑</span>
             </div>
           </div>
         </div>
       </div>
       {* RFM fields end *}
     </div>
-    <div class="rfm-popup-footer">
-      <button type="button" class="crm-button rfm-cancel-btn">{ts}Cancel{/ts}</button>
-      <button type="button" class="crm-button rfm-save-btn">{ts}Save{/ts}</button>
+    <div class="crm-popup-footer">
+      <div class="crm-submit-buttons">
+        <span class="crm-button crm-button-type-upload">
+          <button type="button" class="form-submit rfm-save-btn">{ts}Save{/ts}</button>
+        </span>
+        <span class="crm-button crm-button-type-cancel">
+          <button type="button" class="form-submit rfm-cancel-btn">{ts}Cancel{/ts}</button>
+        </span>
+      </div>
     </div>
   </div>
 </div>
