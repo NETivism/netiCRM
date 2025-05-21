@@ -208,6 +208,10 @@
     $('[class*=url_site]').hide();
     $('[class*=url_api]').hide();
     $('[class*=url_recur]').hide();
+    let having_contribution = 0;
+    let having_contribution_test = 0;
+    {/literal}{if $having_contribution}having_contribution = 1;{/if}{literal}
+    {/literal}{if $having_contribution_test}having_contribution_test = 1;{/if}{literal}
 
     function addApiCheckbox($element, label) {
       if (!$element.length) {
@@ -215,40 +219,53 @@
         return;
       }
 
-      // make sure className exist in original class
       const elementClass = $element[0].className || 'default-class';
       const trClass = elementClass + '-api-checkbox-wrapper';
       const inputId = elementClass + '-api-checkbox';
 
       const $originalUrlInput = $element.find('input').first();
       if (!$originalUrlInput.length) {
-        console.error('Original input field not found within the element');
+        console.error('Original input field not found within the element', $element);
         return;
       }
 
-      const $newRow = $('<tr></tr>')
+      // Determine if this checkbox should be disabled
+      const isTestElement = (elementClass.indexOf('-test_') !== -1);
+      let shouldBeDisabled = false;
+      if (isTestElement && having_contribution_test) {
+        shouldBeDisabled = true;
+      } else if (!isTestElement && having_contribution) {
+        shouldBeDisabled = true;
+      }
+
+      const $checkbox = $('<input>')
+        .attr({
+          'type': 'checkbox',
+          'id': inputId
+        })
+        .prop('checked', $originalUrlInput.val() === '1');
+
+      if (shouldBeDisabled) {
+        $checkbox.prop('disabled', true);
+      }
+
+      $checkbox.on('change', function() {
+        if ($(this).prop('disabled')) return;
+      });
+
+      const $newRow = $('<tr>')
         .addClass(trClass)
         .append(
-          $('<td></td>')
+          $('<td>')
             .addClass('label')
             .append(
-              $('<label></label>')
+              $('<label>')
                 .attr('for', inputId)
                 .text(label || '')
             )
         )
         .append(
-          $('<td></td>').append(
-            $('<input></input>')
-              .attr({
-                'type': 'checkbox',
-                'id': inputId
-              })
-              .prop('checked', $originalUrlInput.val() === '1')
-              .on('change', function() {
-                $originalUrlInput.val($(this).prop('checked') ? '1' : '');
-              })
-          )
+          $('<td>').append($checkbox)
         );
 
       $element.before($newRow);
