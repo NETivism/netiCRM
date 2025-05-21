@@ -1729,6 +1729,15 @@ EOT;
    * @return void
    */
   public static function doExecuteAllRecur($time = NULL) {
+    $paymentProcessorDAO = new CRM_Core_DAO_PaymentProcessor();
+    $paymentProcessorDAO->payment_processor_type = 'SPGATEWAY';
+    $paymentProcessorDAO->is_active = 1;
+    $paymentProcessorDAO->whereAdd("url_api IS NOT NULL AND url_api != ''");
+    $found = $paymentProcessorDAO->find();
+    if ($found <= 0) {
+        return;
+    }
+
     // Check sequence;
     $seq = new CRM_Core_DAO_Sequence();
     $seq->name = self::QUEUE_NAME;
