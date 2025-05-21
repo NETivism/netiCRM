@@ -133,12 +133,11 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     if (empty($paymentProcessor)) {
       $returnArray = array();
     }
-    else {
-      if ($paymentProcessor['url_recur'] == 1) {
-        // $returnArray = array('contribution_status_id', 'amount', 'cycle_day', 'frequency_unit', 'recurring', 'installments', 'note_title', 'note_body');
-        // Enable Installments field after spgateway update.
-        $returnArray = array('contribution_status_id', 'amount', 'cycle_day', 'frequency_unit', 'recurring', 'installments', 'note_title', 'note_body');
-      }
+    elseif (!empty($paymentProcessor['url_recur'])) {
+      $returnArray = array('contribution_status_id', 'amount', 'cycle_day', 'frequency_unit', 'recurring', 'installments', 'note_title', 'note_body');
+    }
+    elseif (!empty($paymentProcessor['url_api'])) {
+      $returnArray = array('contribution_status_id', 'amount', 'cycle_day', 'recurring', 'installments', 'note_title', 'note_body', 'end_date');
     }
     if (!empty($form)) {
       $recur_id = $form->get('id');
@@ -150,7 +149,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
           $returnArray[] = 'trxn_id';
         }
         // Refs 35835, recur should switch to in_process as canceled, and no use neweb recur IPN.
-        if ($paymentProcessor['url_recur'] != 1) {
+        if (empty($paymentProcessor['url_recur']) && empty($paymentProcessor['url_api'])) {
           $sql = "SELECT contribution_status_id FROM civicrm_contribution_recur WHERE id = %1";
           $statusId = CRM_Core_DAO::singleValueQuery($sql, $params);
           if ($statusId == 3) {
@@ -729,7 +728,7 @@ EOT;
       CRM_Core_Error::debug('SPGATEWAY doUpdateRecur $params', $params);
     }
     // For no use neweb recur API condition, return original parameters.
-    if ($this->_paymentProcessor['url_recur'] != 1) {
+    if (empty($this->_paymentProcessor['url_recur'])) {
       return $params;
     }
     if (empty($params['contribution_recur_id'])) {
@@ -904,7 +903,7 @@ EOT;
     $params = array( 1 => array($recurID, 'Positive'));
     $dao = CRM_Core_DAO::executeQuery($sql, $params);
     while ($dao->fetch()) {
-      if ($dao->payment_processor_type == 'SPGATEWAY' && $dao->url_recur == 1 ) {
+      if ($dao->payment_processor_type == 'SPGATEWAY' && $dao->url_recur > 0) {
         $msg = '<p>'.ts("You have enable NewebPay recurring API. Please use edit page to cancel recurring contribution.").'</p><script>cj(".ui-dialog-buttonset button").hide();</script>';
         return $msg;
       }
@@ -924,11 +923,15 @@ EOT;
    * @return array The label as the key to value.
    */
   public static function getRecordDetail($contributionId) {
-    require_once 'CRM/Core/Smarty/resources/String.php';
-    $smarty = CRM_Core_Smarty::singleton();
-    civicrm_smarty_register_string_resource();
-    $returnTables[ts("Manually Synchronize")] = $smarty->fetch('string: {$form.$update_notify.html}');
-    return $returnTables;
+    $table = array();
+    $syncMsg = self::getSyncNowMessage($contributionId);
+    if (!empty($syncMsg)) {
+      require_once 'CRM/Core/Smarty/resources/String.php';
+      $smarty = CRM_Core_Smarty::singleton();
+      civicrm_smarty_register_string_resource();
+      $table[ts("Manually Synchronize")] = $smarty->fetch('string: {$form.$update_notify.html}');
+    }
+    return $table;
   }
 
   /**
@@ -2159,5 +2162,38 @@ EOT;
     }
 
     return $resultNote;
+  }
+
+  /**
+   * Get the message as pressing "Sync Now" button.
+   * Called by MakingTransaction form.
+   *
+   * @param int $contributionId The contribution id of the page.
+   * @param int $recurId The recurring id of the page.
+   * @return string The message
+   */
+  public static function getSyncNowMessage($contributionId, $recurId = NULL) {
+    // check payment processor to see if we can show this button
+    if (!empty($recurId)) {
+      $recur = new CRM_Contribute_DAO_ContributionRecur();
+      $recur->id = $recurId;
+      if ($recur->find(TRUE) && !empty($recur->processor_id)) {
+        $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($recur->processor_id, $recur->is_test);
+        if (!empty($paymentProcessor['url_api'])) {
+          return '';
+        }
+      }
+    }
+    elseif (!empty($contributionId)) {
+      $contrib = new CRM_Contribute_DAO_Contribution();
+      $contrib->id = $contributionId;
+      if ($contrib->find(TRUE) && !empty($contrib->payment_processor_id)) {
+        $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($contrib->payment_processor_id, $contrib->is_test);
+        if (!empty($paymentProcessor['url_api'])) {
+          return '';
+        }
+      }
+    }
+    return ts("Are you sure you want to sync the recurring status and check the contributions?");
   }
 }

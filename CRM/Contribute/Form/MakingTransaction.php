@@ -99,8 +99,10 @@ class CRM_Contribute_Form_MakingTransaction extends CRM_Core_Form {
       if (method_exists($paymentClass, 'getSyncNowMessage')) {
         $message = $paymentClass::getSyncNowMessage($contributionId, $id);
       }
-      $this->addElement('submit', $name, ts("Sync Now"), array('onclick' => "return confirm('".$message."')"));
-      $this->assign('update_notify', $name);
+      if (!empty($message)) {
+        $this->addElement('submit', $name, ts("Sync Now"), array('onclick' => "return confirm('".$message."')"));
+        $this->assign('update_notify', $name);
+      }
     }
     if (method_exists($paymentClass, 'doRecurTransact')) {
       $showButton = TRUE;

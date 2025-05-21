@@ -360,9 +360,11 @@
           }
 
           var freq = $('input#frequency_unit').val();
-          $('input#frequency_unit').closest('td').append($('<select id="fake_frequency_unit"><option value="month">{/literal}{ts}monthly{/ts}{literal}</option><option value="year">{/literal}{ts}yearly{/ts}{literal}</option></select>'));
-          $('select#fake_frequency_unit [value='+freq+']').attr('selected', 'selected');
-          $('#frequency_interval_block').hide();
+          if ($('input#frequency_unit').attr('type') == 'text') {
+            $('input#frequency_unit').closest('td').append($('<select id="fake_frequency_unit"><option value="month">{/literal}{ts}monthly{/ts}{literal}</option><option value="year">{/literal}{ts}yearly{/ts}{literal}</option></select>'));
+            $('select#fake_frequency_unit [value='+freq+']').attr('selected', 'selected');
+            $('#frequency_interval_block').hide();
+          }
 
           // Set default value when type is year.
           if ($('input#frequency_unit').val() == 'year') {
@@ -386,10 +388,11 @@
               $('#fake_frequency_unit').val($('input#frequency_unit').val()).attr('disabled','disabled');
             }
 
-            $('input#frequency_unit').val($('#fake_frequency_unit').val());
+            if ($('#fake_frequency_unit').length) {
+              $('input#frequency_unit').val($('#fake_frequency_unit').val());
+            }
 
             if ($('input#frequency_unit').val() == 'month') {
-              console.log($('input#cycle_day').val());
               $('input#cycle_day').show();
               $('#cycle_day_date_block').hide();
               if (window.origin_type == 'year') {
