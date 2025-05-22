@@ -49,7 +49,7 @@
                     <dt class="rfm-thresholds-term">{ts}Monetary:{/ts}</dt>
                     <dd class="rfm-thresholds-definition">
                       <output class="rfm-thresholds-value" data-threshold-type="monetary">{$rfmThresholds.monetary|number_format:0:".":","}</output>
-                      <span class="rfm-thresholds-unit">{ts}TWD{/ts}</span>
+                      <span class="rfm-thresholds-unit">${TODO: Get the current country's currency}</span>
                     </dd>
                   </div>
                 </dl>
