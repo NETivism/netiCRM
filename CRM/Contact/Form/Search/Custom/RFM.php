@@ -159,4 +159,48 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
   function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
     return $this->all($offset, $rowcount, $sort, FALSE, TRUE);
   }
+  
+  /**
+   * Parse RFM segment ID to extract R, F, M level values
+   * 
+   * RFM Segment Mapping Table:
+   * +--------+--------+---+---+---+------------------+
+   * | Seg ID | Binary | R | F | M | Donor Type       |
+   * +--------+--------+---+---+---+------------------+
+   * |   0    |  000   | L | L | L | Hibernating Small|
+   * |   1    |  001   | L | L | H | Hibernating Big  |
+   * |   2    |  010   | L | H | L | At Risk Small    |
+   * |   3    |  011   | L | H | H | At Risk Big      |
+   * |   4    |  100   | H | L | L | New Small        |
+   * |   5    |  101   | H | L | H | New Big          |
+   * |   6    |  110   | H | H | L | Loyal Small      |
+   * |   7    |  111   | H | H | H | Champions        |
+   * +--------+--------+---+---+---+------------------+
+   * 
+   * Binary representation: First bit = R, Second bit = F, Third bit = M
+   * H = High (above threshold), L = Low (below threshold)
+   * 
+   * @param int $segmentId Segment ID (0-7)
+   * @return array|null Array with recency, frequency, monetary levels ('high'/'low')
+   *                    Returns null for invalid segment IDs
+   * 
+   * @example
+   * parseRfmSegment(0) => ['recency' => 'low', 'frequency' => 'low', 'monetary' => 'low']
+   * parseRfmSegment(7) => ['recency' => 'high', 'frequency' => 'high', 'monetary' => 'high']
+   * parseRfmSegment(8) => null (invalid)
+   */
+  private static function parseRfmSegment($segmentId) {
+    if (!isset($segmentId) || $segmentId < 0 || $segmentId > 7) {
+      return null;
+    }
+    
+    // Convert to 3-bit binary and extract R, F, M values
+    $binary = str_pad(decbin($segmentId), 3, '0', STR_PAD_LEFT);
+    
+    return [
+      'recency' => $binary[0] ? 'high' : 'low',   // Recent vs Old
+      'frequency' => $binary[1] ? 'high' : 'low', // Frequent vs Rare
+      'monetary' => $binary[2] ? 'high' : 'low'   // Big vs Small
+    ];
+  }
 }
