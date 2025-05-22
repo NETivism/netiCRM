@@ -66,6 +66,9 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
     ));
 
     $form->assign('rfmThresholds', $this->_defaultThresholds);
+
+    $rfmSegments = $this->prepareRfmSegments();
+    $form->assign('rfmSegments', $rfmSegments);
   }
 
   function setDefaultValues() {
@@ -201,6 +204,64 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
       'recency' => $binary[0] ? 'high' : 'low',   // Recent vs Old
       'frequency' => $binary[1] ? 'high' : 'low', // Frequent vs Rare
       'monetary' => $binary[2] ? 'high' : 'low'   // Big vs Small
+    ];
+  }
+
+  /**
+   * Prepare RFM segment data for quick search links
+   *
+   * @return array Array of segment data with ID, name, and CSS class
+   */
+  private function prepareRfmSegments() {
+    return [
+      [
+        'id' => 0,
+        'name' => ts('RFM Hibernating Small'),
+        'rfm_code' => ts('R Low F Low M Low'),
+        'css_class' => 'rfm-segment-hibernating-small'
+      ],
+      [
+        'id' => 1,
+        'name' => ts('RFM Hibernating Big'),
+        'rfm_code' => ts('R Low F Low M High'),
+        'css_class' => 'rfm-segment-hibernating-big'
+      ],
+      [
+        'id' => 2,
+        'name' => ts('RFM At Risk Small'),
+        'rfm_code' => ts('R Low F High M Low'),
+        'css_class' => 'rfm-segment-at-risk-small'
+      ],
+      [
+        'id' => 3,
+        'name' => ts('RFM At Risk Big'),
+        'rfm_code' => ts('R Low F High M High'),
+        'css_class' => 'rfm-segment-at-risk-big'
+      ],
+      [
+        'id' => 4,
+        'name' => ts('RFM New Small'),
+        'rfm_code' => ts('R High F Low M Low'),
+        'css_class' => 'rfm-segment-new-small'
+      ],
+      [
+        'id' => 5,
+        'name' => ts('RFM New Big'),
+        'rfm_code' => ts('R High F Low M High'),
+        'css_class' => 'rfm-segment-new-big'
+      ],
+      [
+        'id' => 6,
+        'name' => ts('RFM Loyal Small'),
+        'rfm_code' => ts('R High F High M Low'),
+        'css_class' => 'rfm-segment-loyal-small'
+      ],
+      [
+        'id' => 7,
+        'name' => ts('RFM Champions'),
+        'rfm_code' => ts('R High F High M High'),
+        'css_class' => 'rfm-segment-champions'
+      ]
     ];
   }
 }
