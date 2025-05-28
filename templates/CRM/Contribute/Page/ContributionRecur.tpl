@@ -340,6 +340,7 @@
     <script>
       (function($){
         $(function(){
+          let agreement = "{/literal}{$spgateway_agreement}{literal}";
           {/literal}{if $set_active_only}{literal}
             var allowStatusId = ["3", "5"];
           {/literal}{else}{literal}
@@ -426,15 +427,16 @@
           });
           $('#cycle_day_date').on('change', updateFormStatusEnable);
           $('input#cycle_day, select#fake_frequency_unit').change(updateFormStatusEnable);
-          $('select#contribution_status_id').change(function(e){
-            if (window.confirm("{/literal}{ts}If you set recurring status to 'Pause' or 'Finished'. It will send API request to payment processor provider. And all other change in this page will be recover. Are you sure to change this? {/ts}{literal}")) {
-              updateFormStatusEnable();
-            }
-            else {
-              e.target.value = window.origin_status_id;
-            }
-          })
-
+          if (!agreement) {
+            $('select#contribution_status_id').change(function(e){
+              if (window.confirm("{/literal}{ts}If you set recurring status to 'Pause' or 'Finished'. It will send API request to payment processor provider. And all other change in this page will be recover. Are you sure to change this? {/ts}{literal}")) {
+                updateFormStatusEnable();
+              }
+              else {
+                e.target.value = window.origin_status_id;
+              }
+            })
+          }
         });
       })(cj);
     </script>

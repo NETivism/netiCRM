@@ -130,6 +130,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
   }
 
   public static function getEditableFields($paymentProcessor = NULL, $form = NULL) {
+    $form->assign('spgateway_agreement', FALSE);
     if (empty($paymentProcessor)) {
       $returnArray = array();
     }
@@ -137,6 +138,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
       $returnArray = array('contribution_status_id', 'amount', 'cycle_day', 'frequency_unit', 'recurring', 'installments', 'note_title', 'note_body');
     }
     elseif (!empty($paymentProcessor['url_api'])) {
+      $form->assign('spgateway_agreement', TRUE);
       $returnArray = array('contribution_status_id', 'amount', 'cycle_day', 'recurring', 'installments', 'note_title', 'note_body', 'end_date');
     }
     if (!empty($form)) {
