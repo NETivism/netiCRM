@@ -131,7 +131,9 @@ class CRM_Contribute_Form_MakingTransaction extends CRM_Core_Form {
     $recurId = $this->get('recurId');
     $contributionId = $this->get('contributionId');
 
-    $isActionUpdate = $this->exportValue('_qf_MakingTransaction_upload');
+    if (isset($this->_elementIndex['_qf_MakingTransaction_upload'])) {
+      $isActionUpdate = TRUE;
+    }
 
     $paymentClass = CRM_Contribute_BAO_Contribution::getPaymentClass($contributionId);
     if ($isActionUpdate) {
