@@ -386,6 +386,7 @@ class CRM_Core_Permission {
         'administer CiviCRM' => ts('administer CiviCRM'),
         'administer Reserved Option' => ts('administer Reserved Option'),
         'access uploaded files' => ts('access uploaded files'),
+        'upload and post images' => ts('upload and post images'),
         'profile listings and forms' => ts('profile listings and forms'),
         'profile listings' => ts('profile listings'),
         'profile create' => ts('profile create'),

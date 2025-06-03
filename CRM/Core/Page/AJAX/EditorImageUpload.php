@@ -10,18 +10,23 @@ class CRM_Core_Page_AJAX_EditorImageUpload {
    * @return void
    */
   public static function upload() {
-    if (!CRM_Core_Permission::check('access CiviCRM')) {
-      self::responseError([
-        'status' => 0,
-        'message' => 'Permission denied. Access CiviCRM permission required.'
-      ]);
-    }
-
+    // Check request method
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
       self::responseError([
         'status' => 0,
         'message' => 'Only POST method is allowed.'
       ]);
+      return;
+    }
+
+    // Check permissions
+    if (!CRM_Core_Permission::check('access CiviCRM') || 
+        !CRM_Core_Permission::check('upload and post images')) {
+      self::responseError([
+        'status' => 0,
+        'message' => 'Permission denied.'
+      ]);
+      return;
     }
     
     self::responseSuccess([
