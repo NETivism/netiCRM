@@ -45,14 +45,14 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
 
   function buildColumn(){
     $this->_queryColumns = array(
-      'contact.id' => 'id',
-      'contact.sort_name' => 'sort_name',
-      'contact.display_name' => 'display_name',
+      'contact_a.id' => 'id',
+      'contact_a.sort_name' => 'sort_name',
+      'contact_a.display_name' => 'display_name',
       'rfm.R' => 'recency_days',
       'rfm.F' => 'frequency_count',
       'rfm.M' => 'monetary_amount',
-      'contact.email' => 'email',
-      'contact.phone' => 'phone',
+      'email.email' => 'email',
+      'phone.phone' => 'phone',
     );
     $this->_columns = array(
       ts('Contact ID') => 'id',
@@ -99,6 +99,8 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
   }
 
   function setDefaultValues() {
+    $rfmSegment = CRM_Utils_Request::retrieve('rfm_segment', 'String', CRM_Core_DAO::$_nullObject, false);
+    //todo rfmSegment
     return [
       'rfm_r_value' => $this->_defaultThresholds['recency'],
       'rfm_f_value' => $this->_defaultThresholds['frequency'],
@@ -140,9 +142,14 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
   }
 
   function sql($selectClause, $offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $groupBy = NULL) {
+    if ($selectClause == '*') {
+      $select = array();
+      foreach ($this->_queryColumns as $tableDotColumn => $alias) {
+        $select[] = "$tableDotColumn as $alias";
+      }
+      $selectClause = implode(', ', $select);
+    }
     $sql = "SELECT $selectClause " . $this->from() . " WHERE ". $this->where($includeContactIDs);
-    // [todo] Update this sql
-
     if ($groupBy) {
       $sql .= " $groupBy ";
     }
@@ -155,15 +162,19 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
    */
   function from() {
     //TODO JOIN RFM table (rfm table / contact table)
-    return "FROM {$this->_tableName} contact_a";
+    $from = "
+    FROM civicrm_contact contact_a
+    INNER JOIN {$this->_tableName} rfm ON contact_a.id = rfm.contact_id
+    LEFT JOIN civicrm_email email ON contact_a.id = email.contact_id AND email.is_primary = 1
+    LEFT JOIN civicrm_phone phone ON contact_a.id = phone.contact_id AND phone.is_primary = 1
+    ";
+    return $from;
   }
 
   function where($includeContactIDs = false) {
     $sql = '';
     $clauses = array();
-    $clauses[] = "id > 0";
-    // TODO rfmSegment
-    $rfmSegment = CRM_Utils_Request::retrieve('rfm_segment', 'String', $this, false);
+    $clauses[] = "contact_a.is_deleted = 0";
 
     if ($includeContactIDs) {
       $this->includeContactIDs($sql, $this->_formValues);
@@ -207,12 +218,13 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
     }
     $count = $this->count();
     $sql = "
-    SELECT COUNT(*) as total_contacts,
-      AVG(recency_days) as avg_recency,
-      AVG(frequency_count) as avg_frequency,
-      AVG(monetary_amount) as avg_monetary,
-      SUM(monetary_amount) as total_monetary
-    FROM {$this->_tableName}";
+    SELECT COUNT(DISTINCT contact_a.id) as total_contacts,
+    AVG(rfm.R) as avg_recency,
+    AVG(rfm.F) as avg_frequency,
+    AVG(rfm.M) as avg_monetary,
+    SUM(rfm.M) as total_monetary
+  FROM civicrm_contact contact_a
+  INNER JOIN {$this->_tableName} rfm ON contact_a.id = rfm.contact_id";
   $whereClause = $this->where();
   if (!empty($whereClause) && $whereClause !== '(1)') {
     $sql .= " WHERE $whereClause";
@@ -366,7 +378,6 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
   }
 
   function fillTable(){
-    $this->buildTempTable();
     // Get threshold value
     $rThreshold = CRM_Utils_Array::value('rfm_r_value', $this->_formValues, $this->_defaultThresholds['recency']);
     $fThreshold = CRM_Utils_Array::value('rfm_f_value', $this->_formValues, $this->_defaultThresholds['frequency']);
@@ -379,9 +390,8 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
     $suffix = CRM_Utils_String::createRandom(6);
     $rfm = new CRM_Contact_BAO_RFM($suffix, $dateString, $rThreshold, $fThreshold, $mThreshold, $thresholdType);
     $result = $rfm->calcRFM();
-    $rfmTempTable = $result['table'];
-    $this->copyToSearchTable($rfmTempTable);
-
+    $this->_tableName = $result['table'];
+    // $this->copyToSearchTable();
   }
 
   /**
@@ -403,11 +413,11 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
   }
 
   /**
-   * copy RfmToSearchTable
+   * copy to search table
    */
-  protected function copyToSearchTable($rfmTempTable) {
+  protected function copyToSearchTable() {
     $sql = "
-    INSERT INTO {$this->_tableName} (id, sort_name, display_name, email, phone)
+    INSERT INTO {$this->_tableName} (contact_id , sort_name, display_name, email, phone)
     SELECT
       contact.id,
       contact.sort_name,
@@ -418,25 +428,6 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
     LEFT JOIN civicrm_email email ON contact.id = email.contact_id AND email.is_primary = 1
     LEFT JOIN civicrm_phone phone ON contact.id = phone.contact_id AND phone.is_primary = 1
     WHERE contact.is_deleted = 0";
-    CRM_Core_DAO::executeQuery($sql);
-  }
-
-  function buildTempTable() {
-    $sql = "
-      CREATE TEMPORARY TABLE IF NOT EXISTS {$this->_tableName} (
-        id int unsigned NOT NULL,
-        sort_name VARCHAR(128) default '',
-        display_name VARCHAR(128) default '',
-        recency_days INT(10) default 0,
-        frequency_count INT(10) default 0,
-        monetary_amount DECIMAL(20,2) default 0.00,
-        email VARCHAR(254) default '',
-        phone VARCHAR(32) default '',
-        PRIMARY KEY (id),
-        INDEX idx_recency (recency_days),
-        INDEX idx_frequency (frequency_count),
-        INDEX idx_monetary (monetary_amount)
-      ) ENGINE=HEAP DEFAULT CHARSET=utf8mb4";
     CRM_Core_DAO::executeQuery($sql);
   }
 }
