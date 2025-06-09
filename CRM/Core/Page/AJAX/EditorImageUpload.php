@@ -29,117 +29,85 @@ class CRM_Core_Page_AJAX_EditorImageUpload {
       return;
     }
 
-    // Get the posted data
-    $input = file_get_contents('php://input');
-    $data = json_decode($input, true);
-
-    // Check if image data exists
-    if (empty($data['image'])) {
+    // Check if image blob was received via FormData
+    if (!isset($_FILES['image']) || $_FILES['image']['error'] !== UPLOAD_ERR_OK) {
       self::responseError([
         'status' => 0,
-        'message' => 'No image data provided.'
+        'message' => 'No valid image file received',
+        'debug_info' => [
+          'files_received' => array_keys($_FILES),
+          'post_data' => array_keys($_POST),
+          'upload_error' => isset($_FILES['image']) ? $_FILES['image']['error'] : 'No file'
+        ]
       ]);
       return;
     }
 
-    $imageData = $data['image'];
+    $uploadedFile = $_FILES['image'];
 
-    // Validate data URL format
-    if (!self::isValidDataURL($imageData)) {
+    // Validate file information
+    $fileInfo = [
+      'original_name' => $uploadedFile['name'],
+      'tmp_name' => $uploadedFile['tmp_name'],
+      'size' => $uploadedFile['size'],
+      'mime_type' => $uploadedFile['type'],
+      'timestamp' => $_POST['timestamp'] ?? null
+    ];
+
+    // Validate MIME type against whitelist
+    $allowedMimeTypes = [
+      'image/jpeg',
+      'image/jpg',
+      'image/png',
+      'image/gif'
+    ];
+
+    if (!in_array($fileInfo['mime_type'], $allowedMimeTypes)) {
       self::responseError([
         'status' => 0,
-        'message' => 'Invalid image data format.'
+        'message' => 'Unsupported image format: ' . $fileInfo['mime_type'],
+        'allowed_formats' => $allowedMimeTypes
       ]);
       return;
     }
 
-    // Extract image info
-    $imageInfo = self::parseDataURL($imageData);
-
-    if (!$imageInfo) {
+    // Validate file size (max 10MB)
+    $maxFileSize = 10 * 1024 * 1024; // 10MB
+    if ($fileInfo['size'] > $maxFileSize) {
       self::responseError([
         'status' => 0,
-        'message' => 'Failed to parse image data.'
+        'message' => 'File too large. Maximum size: ' . ($maxFileSize / 1024 / 1024) . 'MB',
+        'received_size' => round($fileInfo['size'] / 1024 / 1024, 2) . 'MB'
       ]);
       return;
     }
 
-    // Validate image type
-    $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-    if (!in_array($imageInfo['mime_type'], $allowedTypes)) {
+    // Additional security check: verify it's actually an image
+    $imageInfo = getimagesize($uploadedFile['tmp_name']);
+    if ($imageInfo === false) {
       self::responseError([
         'status' => 0,
-        'message' => 'Unsupported image type: ' . $imageInfo['mime_type']
+        'message' => 'Invalid image file'
       ]);
       return;
     }
 
-    // Validate image size (optional - basic size check)
-    $imageSize = strlen($imageInfo['data']);
-    $maxSize = 5 * 1024 * 1024; // 5MB limit
-
-    if ($imageSize > $maxSize) {
-      self::responseError([
-        'status' => 0,
-        'message' => 'Image size too large. Maximum allowed: 5MB'
-      ]);
-      return;
-    }
-
-    // Log successful reception (for development/debugging)
-    CRM_Core_Error::debug_log_message('Editor image upload received: ' .
-      $imageInfo['mime_type'] . ', size: ' . number_format($imageSize / 1024, 2) . 'KB');
-
-    // Return success response with image info
+    // SUCCESS: Blob received and validated
     self::responseSuccess([
       'status' => 1,
-      'message' => 'Image received successfully.',
-      'data' => [
-        'mime_type' => $imageInfo['mime_type'],
-        'size_kb' => round($imageSize / 1024, 2),
-        'original_data_url' => $imageData // Return original for now
-      ]
+      'message' => 'Image blob received and validated successfully',
+      'file_info' => [
+        'name' => $fileInfo['original_name'],
+        'tmp_name' => $fileInfo['tmp_name'],
+        'size' => $fileInfo['size'],
+        'type' => $fileInfo['mime_type'],
+        'dimensions' => $imageInfo[0] . 'x' . $imageInfo[1],
+        'timestamp' => $fileInfo['timestamp']
+      ],
+      'next_steps' => 'TODO: File is ready for processing and storage'
     ]);
-  }
 
-  /**
-   * Validate if string is a valid data URL
-   *
-   * @param string $dataUrl
-   * @return bool
-   */
-  private static function isValidDataURL($dataUrl) {
-    // Check basic data URL format: data:[mediatype][;base64],data
-    return preg_match('/^data:image\/[a-zA-Z+]+;base64,/', $dataUrl) === 1;
-  }
-
-  /**
-   * Parse data URL and extract components
-   *
-   * @param string $dataUrl
-   * @return array|false
-   */
-  private static function parseDataURL($dataUrl) {
-    // Match data URL pattern
-    if (!preg_match('/^data:([^;]+);base64,(.+)$/', $dataUrl, $matches)) {
-      return false;
-    }
-
-    $mimeType = $matches[1];
-    $base64Data = $matches[2];
-
-    // Decode base64 data
-    $decodedData = base64_decode($base64Data, true);
-
-    if ($decodedData === false) {
-      return false;
-    }
-
-    return [
-      'mime_type' => $mimeType,
-      'data' => $decodedData,
-      'base64' => $base64Data
-    ];
+    // TODO: Implement actual file processing and storaged
   }
 
   /**
