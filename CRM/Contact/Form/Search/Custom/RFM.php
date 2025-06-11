@@ -27,15 +27,42 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
 
   function __construct(&$formValues){
     parent::__construct($formValues);
-
+    $this->_filled = FALSE;
+    $this->_tableName = 'civicrm_temp_custom_RFM_' . CRM_Utils_String::createRandom(6);
+    $statuses = CRM_Contribute_PseudoConstant::contributionStatus();
+    $this->_cstatus = $statuses;
     $this->_recurringStatus = array(
       2 => ts('All'),
       1 => ts("Recurring Contribution"),
       0 => ts("Non-recurring Contribution"),
     );
+    $this->_contributionPage = CRM_Contribute_PseudoConstant::contributionPage();
+    $this->_instruments = CRM_Contribute_PseudoConstant::paymentInstrument();
+    $this->_contributionType = CRM_Contribute_PseudoConstant::contributionType();
+    $this->_config = CRM_Core_Config::singleton();
+    $this->buildColumn();
   }
 
   function buildColumn(){
+    $this->_queryColumns = array(
+      'contact_a.id' => 'id',
+      'contact_a.sort_name' => 'sort_name',
+      'contact_a.display_name' => 'display_name',
+      'rfm.R' => 'recency_days',
+      'rfm.F' => 'frequency_count',
+      'rfm.M' => 'monetary_amount',
+      'email.email' => 'email',
+      'phone.phone' => 'phone',
+    );
+    $this->_columns = array(
+      ts('Contact ID') => 'id',
+      ts('Name') => 'sort_name',
+      ts('Recency (Days)') => 'recency_days',
+      ts('Frequency (Times)') => 'frequency_count',
+      ts('Monetary (Amount)') => 'monetary_amount',
+      ts('Email') => 'email',
+      ts('Phone') => 'phone',
+    );
   }
 
   function buildForm(&$form){
@@ -72,6 +99,8 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
   }
 
   function setDefaultValues() {
+    $rfmSegment = CRM_Utils_Request::retrieve('rfm_segment', 'String', CRM_Core_DAO::$_nullObject, false);
+    //todo rfmSegment
     return [
       'rfm_r_value' => $this->_defaultThresholds['recency'],
       'rfm_f_value' => $this->_defaultThresholds['frequency'],
@@ -89,6 +118,13 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
   }
 
   function count(){
+    if(!$this->_filled){
+      $this->fillTable();
+      $this->_filled = TRUE;
+    }
+    $sql = $this->all();
+    $dao = CRM_Core_DAO::executeQuery($sql, CRM_Core_DAO::$_nullArray);
+    return $dao->N;
   }
 
 
@@ -96,12 +132,24 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
    * Construct the search query
    */
   function all($offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $onlyIDs = FALSE){
+    $fields = !$onlyIDs ? "*" : "contact_a.id as contact_id" ;
+    if(!$this->_filled){
+      // prepare rfm talbe
+      $this->fillTable();
+      $this->_filled = TRUE;
+    }
     return $this->sql($fields, $offset, $rowcount, $sort, $includeContactIDs);
   }
 
   function sql($selectClause, $offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $groupBy = NULL) {
+    if ($selectClause == '*') {
+      $select = array();
+      foreach ($this->_queryColumns as $tableDotColumn => $alias) {
+        $select[] = "$tableDotColumn as $alias";
+      }
+      $selectClause = implode(', ', $select);
+    }
     $sql = "SELECT $selectClause " . $this->from() . " WHERE ". $this->where($includeContactIDs);
-
     if ($groupBy) {
       $sql .= " $groupBy ";
     }
@@ -113,11 +161,30 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
    * Functions below generally don't need to be modified
    */
   function from() {
-    return "FROM {$this->_tableName} contact_a";
+    //TODO JOIN RFM table (rfm table / contact table)
+    $from = "
+    FROM civicrm_contact contact_a
+    INNER JOIN {$this->_tableName} rfm ON contact_a.id = rfm.contact_id
+    LEFT JOIN civicrm_email email ON contact_a.id = email.contact_id AND email.is_primary = 1
+    LEFT JOIN civicrm_phone phone ON contact_a.id = phone.contact_id AND phone.is_primary = 1
+    ";
+    return $from;
   }
 
   function where($includeContactIDs = false) {
     $sql = '';
+    $clauses = array();
+    $clauses[] = "contact_a.is_deleted = 0";
+
+    if ($includeContactIDs) {
+      $this->includeContactIDs($sql, $this->_formValues);
+    }
+    if (count($clauses)) {
+      $sql = '('.CRM_Utils_Array::implode(' AND ', $clauses).')';
+    }
+    else {
+      $sql = '(1)';
+    }
     return $sql;
   }
 
@@ -145,11 +212,56 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
   }
 
   function summary(){
-    $summary = array();
+    if(!$this->_filled){
+      $this->fillTable();
+      $this->_filled = TRUE;
+    }
+    $count = $this->count();
+    $sql = "
+    SELECT COUNT(DISTINCT contact_a.id) as total_contacts,
+    AVG(rfm.R) as avg_recency,
+    AVG(rfm.F) as avg_frequency,
+    AVG(rfm.M) as avg_monetary,
+    SUM(rfm.M) as total_monetary
+  FROM civicrm_contact contact_a
+  INNER JOIN {$this->_tableName} rfm ON contact_a.id = rfm.contact_id";
+  $whereClause = $this->where();
+  if (!empty($whereClause) && $whereClause !== '(1)') {
+    $sql .= " WHERE $whereClause";
+  }
+  $query = CRM_Core_DAO::executeQuery($sql);
+  $query->fetch();
+  $summary = array();
+  $summary['search_results'] = array(
+    'label' => ts('RFM Analysis Results'),
+    'value' => '',
+  );
+  $totalAmount = '$' . CRM_Utils_Money::format($query->total_monetary, ' ');
+  $avgAmount = '$' . CRM_Utils_Money::format($query->avg_monetary, ' ');
+  $avgRecency = round($query->avg_recency, 1);
+  $avgFrequency = round($query->avg_frequency, 1);
+
+  $summary['search_results']['value'] =
+    ts('Total: %1 contacts', array(1 => $count)) . ' | ' .
+    ts('Total Amount: %1', array(1 => $totalAmount)) . ' | ' .
+    ts('Avg Amount: %1', array(1 => $avgAmount)) . ' | ' .
+    ts('Avg Recency: %1 days', array(1 => $avgRecency)) . ' | ' .
+    ts('Avg Frequency: %1 times', array(1 => $avgFrequency));
     return $summary;
   }
 
   function alterRow(&$row) {
+    if (!empty($row['monetary_amount']) && empty($this->_isExport)) {
+      $row['monetary_amount'] = CRM_Utils_Money::format($row['monetary_amount']);
+    }
+    if ($this->_isExport) {
+      if (empty($row['email'])) {
+        $row['email'] = '';
+      }
+      if (empty($row['phone'])) {
+        $row['phone'] = '';
+      }
+    }
   }
 
   /**
@@ -263,5 +375,59 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
         'css_class' => 'rfm-segment-champions'
       ]
     ];
+  }
+
+  function fillTable(){
+    // Get threshold value
+    $rThreshold = CRM_Utils_Array::value('rfm_r_value', $this->_formValues, $this->_defaultThresholds['recency']);
+    $fThreshold = CRM_Utils_Array::value('rfm_f_value', $this->_formValues, $this->_defaultThresholds['frequency']);
+    $mThreshold = CRM_Utils_Array::value('rfm_m_value', $this->_formValues, $this->_defaultThresholds['monetary']);
+
+    // Creaet date string
+    $dateString = $this->buildDateString();
+
+    $thresholdType = CRM_Utils_Array::value('recurring', $this->_formValues, 'all');
+    $suffix = CRM_Utils_String::createRandom(6);
+    $rfm = new CRM_Contact_BAO_RFM($suffix, $dateString, $rThreshold, $fThreshold, $mThreshold, $thresholdType);
+    $result = $rfm->calcRFM();
+    $this->_tableName = $result['table'];
+    // $this->copyToSearchTable();
+  }
+
+  /**
+   * Creaet date string
+   */
+  protected function buildDateString() {
+    $dateFrom = CRM_Utils_Array::value('receive_date_from', $this->_formValues);
+    $dateTo = CRM_Utils_Array::value('receive_date_to', $this->_formValues);
+    if (empty($dateFrom) && empty($dateTo)) {
+      return 'last 365 days';
+    }
+    if (!empty($dateFrom) && !empty($dateTo)) {
+      return $dateFrom . '_to_' . $dateTo;
+    }
+    if (!empty($dateFrom)) {
+      return $dateFrom . '_to_' . date('Y-m-d');
+    }
+    return '1970-01-01_to_' . $dateTo;
+  }
+
+  /**
+   * copy to search table
+   */
+  protected function copyToSearchTable() {
+    $sql = "
+    INSERT INTO {$this->_tableName} (contact_id , sort_name, display_name, email, phone)
+    SELECT
+      contact.id,
+      contact.sort_name,
+      contact.display_name,
+      email.email,
+      phone.phone
+    FROM civicrm_contact contact
+    LEFT JOIN civicrm_email email ON contact.id = email.contact_id AND email.is_primary = 1
+    LEFT JOIN civicrm_phone phone ON contact.id = phone.contact_id AND phone.is_primary = 1
+    WHERE contact.is_deleted = 0";
+    CRM_Core_DAO::executeQuery($sql);
   }
 }

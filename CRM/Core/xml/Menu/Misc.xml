@@ -207,4 +207,9 @@
      <is_ssl>true</is_ssl>
      <is_public>true</is_public>
   </item>
+<item>
+   <path>civicrm/ajax/editor/image-upload</path>
+   <page_callback>CRM_Core_Page_AJAX_EditorImageUpload::upload</page_callback>
+   <access_arguments>upload and post images,access CiviCRM</access_arguments>
+</item>
 </menu>
