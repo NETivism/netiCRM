@@ -350,6 +350,21 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       }
       else {
         if ($this->_values['is_internal'] > 0 && !CRM_Core_Permission::check('access CiviContribute')) {
+          if (defined('ONE_TIME_RENEWAL_ENABLED')) {
+            $config = CRM_Core_Config::singleton();
+            $pageId = $config->defaultRenewalPageId;
+            $contactId = CRM_Utils_Request::retrieve('cid', 'Positive', $this);
+            if ($pageId && $contactId) {
+              $oid = 0;
+              $contactTypeSql = "SELECT contact_type FROM civicrm_contact WHERE id = %1";
+              $contactTypeParams = array(1 => array($contactId, 'Integer'));
+              $contactType = CRM_Core_DAO::singleValueQuery($contactTypeSql, $contactTypeParams);
+              if ($contactType == 'Individual') {
+                $cs = CRM_Contact_BAO_Contact_Utils::generateChecksum($contactId);
+                CRM_Utils_System::redirect( CRM_Utils_System::url('civicrm/contribute/transact', "reset=1&id=$pageId&cid=$contactId&oid=$oid&cs=$cs",true));
+              }
+            }
+          }
           return CRM_Core_Error::statusBounce(ts('The page you requested is currently unavailable.'));
         }
       }
