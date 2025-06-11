@@ -203,7 +203,9 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
 
     $contributionPageId = $params['contributionPageID'];
     $paramsQuery = array( 1 => array($contributionPageId, 'Positive'));
-    $params['is_internal'] = CRM_Core_DAO::singleValueQuery("SELECT is_internal FROM civicrm_contribution_page WHERE id = %1;", $paramsQuery);
+    if ($component !== 'event') {
+      $params['is_internal'] = CRM_Core_DAO::singleValueQuery("SELECT is_internal FROM civicrm_contribution_page WHERE id = %1;", $paramsQuery);
+    }
 
     $arguments = $this->getOrderArgs($params, $component, $instrumentCode, $formKey);
 
