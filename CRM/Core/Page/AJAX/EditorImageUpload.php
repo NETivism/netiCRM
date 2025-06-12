@@ -1,6 +1,6 @@
 <?php
 /**
- * AJAX handler for editor image upload functionality
+ * AJAX handler for editor image upload functionality with proper filename handling
  */
 class CRM_Core_Page_AJAX_EditorImageUpload {
 
@@ -45,14 +45,31 @@ class CRM_Core_Page_AJAX_EditorImageUpload {
 
     $uploadedFile = $_FILES['image'];
 
+    // Get filename information from POST data
+    $originalFilename = isset($_POST['original_filename']) ? trim($_POST['original_filename']) : '';
+    $suggestedFilename = isset($_POST['suggested_filename']) ? trim($_POST['suggested_filename']) : '';
+    $timestamp = isset($_POST['timestamp']) ? $_POST['timestamp'] : null;
+
     // Validate file information
     $fileInfo = [
-      'original_name' => $uploadedFile['name'],
-      'tmp_name' => $uploadedFile['tmp_name'],
+      'temp_name' => $uploadedFile['tmp_name'],
       'size' => $uploadedFile['size'],
       'mime_type' => $uploadedFile['type'],
-      'timestamp' => $_POST['timestamp'] ?? null
+      'uploaded_name' => $uploadedFile['name'], // This is the temp name from frontend
+      'original_filename' => $originalFilename,
+      'suggested_filename' => $suggestedFilename,
+      'timestamp' => $timestamp
     ];
+
+    // Determine the best display name for logging and response
+    $displayName = '';
+    if (!empty($originalFilename)) {
+      $displayName = $originalFilename;
+      $fileInfo['source'] = 'file_drop';
+    } else {
+      $displayName = $suggestedFilename;
+      $fileInfo['source'] = 'clipboard_paste';
+    }
 
     // Validate MIME type against whitelist
     $allowedMimeTypes = [
@@ -92,22 +109,26 @@ class CRM_Core_Page_AJAX_EditorImageUpload {
       return;
     }
 
-    // SUCCESS: Blob received and validated
+    // SUCCESS: Blob received and validated with proper filename handling
     self::responseSuccess([
       'status' => 1,
       'message' => 'Image blob received and validated successfully',
       'file_info' => [
-        'name' => $fileInfo['original_name'],
-        'tmp_name' => $fileInfo['tmp_name'],
+        'original_filename' => $originalFilename, // Real original name if available
+        'suggested_filename' => $suggestedFilename, // Frontend generated name
+        'display_name' => $displayName, // Best name for display
+        'tmp_name' => $fileInfo['temp_name'], // Server temp file path
         'size' => $fileInfo['size'],
         'type' => $fileInfo['mime_type'],
         'dimensions' => $imageInfo[0] . 'x' . $imageInfo[1],
-        'timestamp' => $fileInfo['timestamp']
+        'source' => $fileInfo['source'], // 'clipboard_paste' or 'file_drop'
+        'timestamp' => $timestamp
       ],
+      'title_attribute' => $displayName . ' | ' . basename($fileInfo['temp_name']),
       'next_steps' => 'TODO: File is ready for processing and storage'
     ]);
 
-    // TODO: Implement actual file processing and storaged
+    // TODO: Implement actual file processing and storage
   }
 
   /**
