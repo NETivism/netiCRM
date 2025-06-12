@@ -96,16 +96,33 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
 
     $rfmSegments = $this->prepareRfmSegments();
     $form->assign('rfmSegments', $rfmSegments);
+
+    if (!empty($this->_formValues['rfm_segment_filter'])) {
+        $form->assign('selectedSegment', $this->_formValues['rfm_segment_filter']);
+    }
   }
 
   function setDefaultValues() {
-    $rfmSegment = CRM_Utils_Request::retrieve('rfm_segment', 'String', CRM_Core_DAO::$_nullObject, false);
-    //todo rfmSegment
-    return [
+    $defaults  = [
       'rfm_r_value' => $this->_defaultThresholds['recency'],
       'rfm_f_value' => $this->_defaultThresholds['frequency'],
       'rfm_m_value' => $this->_defaultThresholds['monetary']
     ];
+    $rfmSegment = CRM_Utils_Request::retrieve('rfm_segment', 'String', CRM_Core_DAO::$_nullObject, false);
+    if (isset($rfmSegment) && $rfmSegment !== null && is_numeric($rfmSegment)) {
+      $segmentId = (int)$rfmSegment;
+      $segment = self::parseRfmSegment($rfmSegment);
+      if ($segment) {
+        $this->_formValues['rfm_segment_filter'] = [
+          'id' => $segmentId,
+          'recency' => $segment['recency'],
+          'frequency' => $segment['frequency'],
+          'monetary' => $segment['monetary']
+        ];
+        $defaults['selected_rfm_segment'] = $segmentId;
+      }
+    }
+    return $defaults;
   }
 
   function qill(){
@@ -175,6 +192,28 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
     $sql = '';
     $clauses = array();
     $clauses[] = "contact_a.is_deleted = 0";
+
+    if (!empty($this->_formValues['rfm_segment_filter'])) {
+        $segment = $this->_formValues['rfm_segment_filter'];
+        $rThreshold = CRM_Utils_Array::value('rfm_r_value', $this->_formValues, $this->_defaultThresholds['recency']);
+        $fThreshold = CRM_Utils_Array::value('rfm_f_value', $this->_formValues, $this->_defaultThresholds['frequency']);
+        $mThreshold = CRM_Utils_Array::value('rfm_m_value', $this->_formValues, $this->_defaultThresholds['monetary']);
+        if ($segment['recency'] === 'high') {
+            $clauses[] = "rfm.R <= " . (int)$rThreshold;
+        } else {
+            $clauses[] = "rfm.R > " . (int)$rThreshold;
+        }
+        if ($segment['frequency'] === 'high') {
+            $clauses[] = "rfm.F >= " . (int)$fThreshold;
+        } else {
+            $clauses[] = "rfm.F < " . (int)$fThreshold;
+        }
+        if ($segment['monetary'] === 'high') {
+            $clauses[] = "rfm.M >= " . (int)$mThreshold;
+        } else {
+            $clauses[] = "rfm.M < " . (int)$mThreshold;
+        }
+    }
 
     if ($includeContactIDs) {
       $this->includeContactIDs($sql, $this->_formValues);
@@ -391,7 +430,6 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
     $rfm = new CRM_Contact_BAO_RFM($suffix, $dateString, $rThreshold, $fThreshold, $mThreshold, $thresholdType);
     $result = $rfm->calcRFM();
     $this->_tableName = $result['table'];
-    // $this->copyToSearchTable();
   }
 
   /**
@@ -410,24 +448,5 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
       return $dateFrom . '_to_' . date('Y-m-d');
     }
     return '1970-01-01_to_' . $dateTo;
-  }
-
-  /**
-   * copy to search table
-   */
-  protected function copyToSearchTable() {
-    $sql = "
-    INSERT INTO {$this->_tableName} (contact_id , sort_name, display_name, email, phone)
-    SELECT
-      contact.id,
-      contact.sort_name,
-      contact.display_name,
-      email.email,
-      phone.phone
-    FROM civicrm_contact contact
-    LEFT JOIN civicrm_email email ON contact.id = email.contact_id AND email.is_primary = 1
-    LEFT JOIN civicrm_phone phone ON contact.id = phone.contact_id AND phone.is_primary = 1
-    WHERE contact.is_deleted = 0";
-    CRM_Core_DAO::executeQuery($sql);
   }
 }
