@@ -301,7 +301,6 @@ WHERE  id = %1
           TRUE, TRUE,
           FALSE,
           CRM_Utils_Array::value('display_relationship_type', $formValues),
-          CRM_Utils_Array::value('operator', $formValues, 'AND')
         );
         $query->_useDistinct = FALSE;
         $query->_useGroupBy = TRUE;
