@@ -1,6 +1,8 @@
 <?php
 
 class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
+  const RECURRING_NONRECURRING = 2, RECURRING = 1, NONRECURRING = 0;
+  const DATE_RANGE_DEFAULT = 'last 1 years to today';
 
   /**
    * @var mixed[]
@@ -12,6 +14,7 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
   public $_contributionType;
   public $_queryColumns;
   public $_isExport;
+  protected $_form;
   protected $_formValues;
   protected $_cstatus = NULL;
   protected $_config;
@@ -19,11 +22,8 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
   protected $_filled = NULL;
   protected $_recurringStatus = array();
   protected $_contributionPage = NULL;
-  protected $_defaultThresholds = [
-    'recency' => 210,
-    'frequency' => 3,
-    'monetary' => 21600
-  ];
+  protected $_defaultThresholds = [];
+
 
   function __construct(&$formValues){
     parent::__construct($formValues);
@@ -32,9 +32,9 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
     $statuses = CRM_Contribute_PseudoConstant::contributionStatus();
     $this->_cstatus = $statuses;
     $this->_recurringStatus = array(
-      2 => ts('All'),
-      1 => ts("Recurring Contribution"),
-      0 => ts("Non-recurring Contribution"),
+      self::RECURRING_NONRECURRING => ts('All'),
+      self::RECURRING => ts("Recurring Contribution"),
+      self::NONRECURRING => ts("Non-recurring Contribution"),
     );
     $this->_contributionPage = CRM_Contribute_PseudoConstant::contributionPage();
     $this->_instruments = CRM_Contribute_PseudoConstant::paymentInstrument();
@@ -66,62 +66,70 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
   }
 
   function buildForm(&$form){
-    $form->addDateRange('receive_date', ts('Receive Date').' - '.ts('From'), NULL, FALSE);
-    $form->addRadio('recurring', ts('Recurring Contribution'), $this->_recurringStatus);
-    $form->assign('elements', array('receive_date', 'recurring'));
+    $this->_form = $form;
+    $this->_form->addDateRange('receive_date', ts('Receive Date').' - '.ts('From'), NULL, FALSE);
+    $this->_form->addRadio('recurring', ts('Recurring Contribution'), $this->_recurringStatus);
+    $this->_form->assign('elements', array('receive_date', 'recurring'));
 
-    $form->addNumber('rfm_r_value', ts('Recency (days since last donation)'), array(
+    $this->_form->addNumber('rfm_r_value', ts('Recency (days since last donation)'), array(
       'size' => 5,
       'maxlength' => 5,
       'min' => 0,
       'placeholder' => ts('e.g., 210'),
       'class' => 'rfm-input'
     ));
-    $form->addNumber('rfm_f_value', ts('Frequency (number of donations)'), array(
+    $this->_form->addNumber('rfm_f_value', ts('Frequency (number of donations)'), array(
       'size' => 5,
       'maxlength' => 5,
       'min' => 0,
       'placeholder' => ts('e.g., 3'),
       'class' => 'rfm-input'
     ));
-    $form->addNumber('rfm_m_value', ts('Monetary (total donation amount)'), array(
+    $this->_form->addNumber('rfm_m_value', ts('Monetary (total donation amount)'), array(
       'size' => 12,
       'maxlength' => 12,
       'min' => 0,
       'placeholder' => ts('e.g., 21600'),
       'class' => 'rfm-input'
     ));
-
-    $form->assign('rfmThresholds', $this->_defaultThresholds);
+    $this->_form->add('hidden', 'segment', '');
 
     $rfmSegments = $this->prepareRfmSegments();
-    $form->assign('rfmSegments', $rfmSegments);
-
-    if (!empty($this->_formValues['rfm_segment_filter'])) {
-        $form->assign('selectedSegment', $this->_formValues['rfm_segment_filter']);
-    }
+    $this->_form->assign('rfmSegments', $rfmSegments);
   }
 
   function setDefaultValues() {
-    $defaults  = [
-      'rfm_r_value' => $this->_defaultThresholds['recency'],
-      'rfm_f_value' => $this->_defaultThresholds['frequency'],
-      'rfm_m_value' => $this->_defaultThresholds['monetary']
-    ];
-    $rfmSegment = CRM_Utils_Request::retrieve('rfm_segment', 'String', CRM_Core_DAO::$_nullObject, false);
-    if (isset($rfmSegment) && $rfmSegment !== null && is_numeric($rfmSegment)) {
-      $segmentId = (int)$rfmSegment;
-      $segment = self::parseRfmSegment($rfmSegment);
-      if ($segment) {
-        $this->_formValues['rfm_segment_filter'] = [
-          'id' => $segmentId,
-          'recency' => $segment['recency'],
-          'frequency' => $segment['frequency'],
-          'monetary' => $segment['monetary']
-        ];
-        $defaults['selected_rfm_segment'] = $segmentId;
-      }
+    // default from form values
+    // nothing to do
+
+    // default from url
+    $segment = CRM_Utils_Request::retrieve('segment', 'String', CRM_Core_DAO::$_nullObject, FALSE, '');
+    $parsedSegment = self::parseRfmSegment($segment);
+    if ($parsedSegment) {
+      $defaults['segment'] = $segment;
     }
+
+    // default when nothing
+    if (empty($segment)) {
+      $dateRange = self::DATE_RANGE_DEFAULT;
+      $filter = CRM_Utils_Date::strtodate($dateRange);
+      $defaultThresholds = CRM_Contact_BAO_RFM::defaultThresholds($dateRange, 'all');
+      $defaults = [
+        'rfm_r_value' => $defaultThresholds['r'],
+        'rfm_f_value' => $defaultThresholds['f'],
+        'rfm_m_value' => $defaultThresholds['m'],
+        'recurring' => self::RECURRING_NONRECURRING,
+        'receive_date_from' => $filter['start'],
+        'receive_date_to' => $filter['end'],
+      ];
+    }
+    $this->_defaultThresholds = [
+      'r' => $defaults['rfm_r_value'],
+      'f' => $defaults['rfm_f_value'],
+      'm' => $defaults['rfm_m_value'],
+    ];
+    $this->_form->assign('rfmThresholds', $this->_defaultThresholds);
+
     return $defaults;
   }
 
@@ -193,26 +201,29 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
     $clauses = array();
     $clauses[] = "contact_a.is_deleted = 0";
 
-    if (!empty($this->_formValues['rfm_segment_filter'])) {
-        $segment = $this->_formValues['rfm_segment_filter'];
-        $rThreshold = CRM_Utils_Array::value('rfm_r_value', $this->_formValues, $this->_defaultThresholds['recency']);
-        $fThreshold = CRM_Utils_Array::value('rfm_f_value', $this->_formValues, $this->_defaultThresholds['frequency']);
-        $mThreshold = CRM_Utils_Array::value('rfm_m_value', $this->_formValues, $this->_defaultThresholds['monetary']);
-        if ($segment['recency'] === 'high') {
-            $clauses[] = "rfm.R <= " . (int)$rThreshold;
-        } else {
-            $clauses[] = "rfm.R > " . (int)$rThreshold;
-        }
-        if ($segment['frequency'] === 'high') {
-            $clauses[] = "rfm.F >= " . (int)$fThreshold;
-        } else {
-            $clauses[] = "rfm.F < " . (int)$fThreshold;
-        }
-        if ($segment['monetary'] === 'high') {
-            $clauses[] = "rfm.M >= " . (int)$mThreshold;
-        } else {
-            $clauses[] = "rfm.M < " . (int)$mThreshold;
-        }
+    if (!empty($this->_formValues['segment'])) {
+      $segment = self::parseRfmSegment($this->_formValues['segment']);
+      $rThreshold = CRM_Utils_Array::value('rfm_r_value', $this->_formValues, $this->_defaultThresholds['r']);
+      $fThreshold = CRM_Utils_Array::value('rfm_f_value', $this->_formValues, $this->_defaultThresholds['f']);
+      $mThreshold = CRM_Utils_Array::value('rfm_m_value', $this->_formValues, $this->_defaultThresholds['m']);
+      if ($segment['r'] === 'high') {
+        $clauses[] = "rfm.R <= " . (int)$rThreshold;
+      }
+      else {
+        $clauses[] = "rfm.R > " . (int)$rThreshold;
+      }
+      if ($segment['f'] === 'high') {
+        $clauses[] = "rfm.F >= " . (int)$fThreshold;
+      }
+      else {
+        $clauses[] = "rfm.F < " . (int)$fThreshold;
+      }
+      if ($segment['m'] === 'high') {
+        $clauses[] = "rfm.M >= " . (int)$mThreshold;
+      }
+      else {
+        $clauses[] = "rfm.M < " . (int)$mThreshold;
+      }
     }
 
     if ($includeContactIDs) {
@@ -313,48 +324,28 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
   function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
     return $this->all($offset, $rowcount, $sort, FALSE, TRUE);
   }
-  
+
   /**
-   * Parse RFM segment ID to extract R, F, M level values
-   * 
-   * RFM Segment Mapping Table:
-   * +--------+--------+---+---+---+------------------+
-   * | Seg ID | Binary | R | F | M | Donor Type       |
-   * +--------+--------+---+---+---+------------------+
-   * |   0    |  000   | L | L | L | Hibernating Small|
-   * |   1    |  001   | L | L | H | Hibernating Big  |
-   * |   2    |  010   | L | H | L | At Risk Small    |
-   * |   3    |  011   | L | H | H | At Risk Big      |
-   * |   4    |  100   | H | L | L | New Small        |
-   * |   5    |  101   | H | L | H | New Big          |
-   * |   6    |  110   | H | H | L | Loyal Small      |
-   * |   7    |  111   | H | H | H | Champions        |
-   * +--------+--------+---+---+---+------------------+
-   * 
-   * Binary representation: First bit = R, Second bit = F, Third bit = M
-   * H = High (above threshold), L = Low (below threshold)
-   * 
-   * @param int $segmentId Segment ID (0-7)
-   * @return array|null Array with recency, frequency, monetary levels ('high'/'low')
-   *                    Returns null for invalid segment IDs
-   * 
-   * @example
-   * parseRfmSegment(0) => ['recency' => 'low', 'frequency' => 'low', 'monetary' => 'low']
-   * parseRfmSegment(7) => ['recency' => 'high', 'frequency' => 'high', 'monetary' => 'high']
-   * parseRfmSegment(8) => null (invalid)
+   * parseRfmSegment
+   *
+   * @param  string $segment
+   * @return array|null
    */
-  private static function parseRfmSegment($segmentId) {
-    if (!isset($segmentId) || $segmentId < 0 || $segmentId > 7) {
+  public static function parseRfmSegment(string $segment): array|null {
+    if (!isset($segment) || strlen($segment) !== 6) {
       return null;
     }
     
-    // Convert to 3-bit binary and extract R, F, M values
-    $binary = str_pad(decbin($segmentId), 3, '0', STR_PAD_LEFT);
+    // Parse format like "RlMhFl" -> ['r' => 'low', 'm' => 'high', 'f' => 'low']
+    $pattern = '/^R([lh])M([lh])F([lh])$/i';
+    if (!preg_match($pattern, $segment, $matches)) {
+      return null;
+    }
     
     return [
-      'recency' => $binary[0] ? 'high' : 'low',   // Recent vs Old
-      'frequency' => $binary[1] ? 'high' : 'low', // Frequent vs Rare
-      'monetary' => $binary[2] ? 'high' : 'low'   // Big vs Small
+      'r' => strtolower($matches[1]) === 'l' ? 'low' : 'high',
+      'm' => strtolower($matches[2]) === 'l' ? 'low' : 'high',
+      'f' => strtolower($matches[3]) === 'l' ? 'low' : 'high'
     ];
   }
 
@@ -366,51 +357,51 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
   private function prepareRfmSegments() {
     return [
       [
-        'id' => 0,
+        'id' => 'RlFlMl',
         'name' => ts('RFM Hibernating Small'),
-        'rfm_code' => ts('R Low F Low M Low'),
+        'rfm_code' => ts('R %1 F %2 M %3', [1 => 'low', 2 => 'low', 3 => 'low']),
         'css_class' => 'rfm-segment-hibernating-small'
       ],
       [
-        'id' => 1,
+        'id' => 'RlFlMh',
         'name' => ts('RFM Hibernating Big'),
-        'rfm_code' => ts('R Low F Low M High'),
+        'rfm_code' => ts('R %1 F %2 M %3', [1 => 'low', 2 => 'low', 3 => 'high']),
         'css_class' => 'rfm-segment-hibernating-big'
       ],
       [
-        'id' => 2,
+        'id' => 'RlFhMl',
         'name' => ts('RFM At Risk Small'),
-        'rfm_code' => ts('R Low F High M Low'),
+        'rfm_code' => ts('R %1 F %2 M %3', [1 => 'low', 2 => 'high', 3 => 'low']),
         'css_class' => 'rfm-segment-at-risk-small'
       ],
       [
-        'id' => 3,
+        'id' => 'RlFhMh',
         'name' => ts('RFM At Risk Big'),
-        'rfm_code' => ts('R Low F High M High'),
+        'rfm_code' => ts('R %1 F %2 M %3', [1 => 'low', 2 => 'high', 3 => 'high']),
         'css_class' => 'rfm-segment-at-risk-big'
       ],
       [
-        'id' => 4,
+        'id' => 'RhFlMl',
         'name' => ts('RFM New Small'),
-        'rfm_code' => ts('R High F Low M Low'),
+        'rfm_code' => ts('R %1 F %2 M %3', [1 => 'high', 2 => 'low', 3 => 'low']),
         'css_class' => 'rfm-segment-new-small'
       ],
       [
-        'id' => 5,
+        'id' => 'RhFlMh',
         'name' => ts('RFM New Big'),
-        'rfm_code' => ts('R High F Low M High'),
+        'rfm_code' => ts('R %1 F %2 M %3', [1 => 'high', 2 => 'low', 3 => 'high']),
         'css_class' => 'rfm-segment-new-big'
       ],
       [
-        'id' => 6,
+        'id' => 'RhFhMl',
         'name' => ts('RFM Loyal Small'),
-        'rfm_code' => ts('R High F High M Low'),
+        'rfm_code' => ts('R %1 F %2 M %3', [1 => 'high', 2 => 'high', 3 => 'low']),
         'css_class' => 'rfm-segment-loyal-small'
       ],
       [
-        'id' => 7,
+        'id' => 'RhFhMh',
         'name' => ts('RFM Champions'),
-        'rfm_code' => ts('R High F High M High'),
+        'rfm_code' => ts('R %1 F %2 M %3', [1 => 'high', 2 => 'high', 3 => 'high']),
         'css_class' => 'rfm-segment-champions'
       ]
     ];
@@ -418,12 +409,22 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
 
   function fillTable(){
     // Get threshold value
-    $rThreshold = CRM_Utils_Array::value('rfm_r_value', $this->_formValues, $this->_defaultThresholds['recency']);
-    $fThreshold = CRM_Utils_Array::value('rfm_f_value', $this->_formValues, $this->_defaultThresholds['frequency']);
-    $mThreshold = CRM_Utils_Array::value('rfm_m_value', $this->_formValues, $this->_defaultThresholds['monetary']);
+    $rThreshold = CRM_Utils_Array::value('rfm_r_value', $this->_formValues, $this->_defaultThresholds['r']);
+    $fThreshold = CRM_Utils_Array::value('rfm_f_value', $this->_formValues, $this->_defaultThresholds['f']);
+    $mThreshold = CRM_Utils_Array::value('rfm_m_value', $this->_formValues, $this->_defaultThresholds['m']);
 
     // Creaet date string
-    $dateString = $this->buildDateString();
+    $dateFrom = CRM_Utils_Array::value('receive_date_from', $this->_formValues);
+    $dateTo = CRM_Utils_Array::value('receive_date_to', $this->_formValues);
+    if (!empty($dateFrom) && !empty($dateTo)) {
+      $dateString = $dateFrom . '_to_' . $dateTo;
+    }
+    if (!empty($dateFrom)) {
+      $dateString = $dateFrom . '_to_' . date('Y-m-d');
+    }
+    if (empty($dateString)) {
+      $dateString = self::DATE_RANGE_DEFAULT;
+    }
 
     $thresholdType = CRM_Utils_Array::value('recurring', $this->_formValues, 'all');
     $suffix = CRM_Utils_String::createRandom(6);
@@ -432,21 +433,4 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
     $this->_tableName = $result['table'];
   }
 
-  /**
-   * Creaet date string
-   */
-  protected function buildDateString() {
-    $dateFrom = CRM_Utils_Array::value('receive_date_from', $this->_formValues);
-    $dateTo = CRM_Utils_Array::value('receive_date_to', $this->_formValues);
-    if (empty($dateFrom) && empty($dateTo)) {
-      return 'last 365 days';
-    }
-    if (!empty($dateFrom) && !empty($dateTo)) {
-      return $dateFrom . '_to_' . $dateTo;
-    }
-    if (!empty($dateFrom)) {
-      return $dateFrom . '_to_' . date('Y-m-d');
-    }
-    return '1970-01-01_to_' . $dateTo;
-  }
 }

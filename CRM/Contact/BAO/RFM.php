@@ -65,7 +65,7 @@ class CRM_Contact_BAO_RFM {
    *                                   If zero, include all data without threshold
    * @param string $thresholdType Threshold type: 'recurring', 'non-recurring', 'all'
    */
-  public function __construct($suffix, $dateString = '', $rThreshold = null, $fThreshold = null, $mThreshold = null, $thresholdType = 'all') {
+  public function __construct(string $suffix, string $dateString = '', float|int|null $rThreshold = null, float|int|null $fThreshold = null, float|int|null $mThreshold = null, string $thresholdType = 'all') {
     if (empty($suffix)) {
       // Generate random suffix
       $this->_suffix = CRM_Utils_String::createRandom(6);
@@ -116,7 +116,7 @@ class CRM_Contact_BAO_RFM {
    * @param bool $reverse Whether to use reverse comparison
    * @return array Array containing temporary table name and threshold value
    */
-  public function calcR($position = 0.5, $reverse = FALSE) {
+  public function calcR(float|int $position = 0.5, bool $reverse = FALSE): array {
     if ($this->_thresholds['r'] !== null) {
       $position = $this->_thresholds['r'];
       $reverse = $this->_reverse['r'];
@@ -132,7 +132,7 @@ class CRM_Contact_BAO_RFM {
    * @param bool $reverse Whether to use reverse comparison
    * @return array Array containing temporary table name and threshold value
    */
-  public function calcF($position = 0.5, $reverse = FALSE) {
+  public function calcF(float|int $position = 0.5, bool $reverse = FALSE): array {
     if ($this->_thresholds['f'] !== null) {
       $position = $this->_thresholds['f'];
       $reverse = $this->_reverse['f'];
@@ -148,7 +148,7 @@ class CRM_Contact_BAO_RFM {
    * @param bool $reverse Whether to use reverse comparison
    * @return array Array containing temporary table name and threshold value
    */
-  public function calcM($position = 0.5, $reverse = FALSE) {
+  public function calcM(float|int $position = 0.5, bool $reverse = FALSE): array {
     if ($this->_thresholds['m'] !== null) {
       $position = $this->_thresholds['m'];
       $reverse = $this->_reverse['m'];
@@ -167,7 +167,7 @@ class CRM_Contact_BAO_RFM {
    * @param string $aggregateFunc Aggregate function expression
    * @return array Array containing temporary table name and threshold value
    */
-  protected function calcMetric($metricType, $position, $reverse, $columnName, $aggregateFunc) {
+  protected function calcMetric(string $metricType, float|int $position, bool $reverse, string $columnName, string $aggregateFunc): array {
     $order = $reverse ? 'DESC' : 'ASC';
     $dateFilterSQL = '';
     
@@ -256,7 +256,7 @@ class CRM_Contact_BAO_RFM {
    * @param string $recurFilterSQL Recur filter SQL
    * @return float|int Calculated threshold value
    */
-  protected function calculateThreshold($position, $metricType, $aggregateFunc, $dateFilterSQL, $recurFilterSQL = '') {
+  protected function calculateThreshold(float|int $position, string $metricType, string $aggregateFunc, string $dateFilterSQL, string $recurFilterSQL = ''): float|int {
     if ($position > 1) {
       return (float) $position;
     }
@@ -292,7 +292,7 @@ class CRM_Contact_BAO_RFM {
    * @param string $thresholdType Threshold type: 'recurring', 'non-recurring', 'all'
    * @return string SQL WHERE clause for recur filtering
    */
-  protected function getRecurFilterSQL($thresholdType) {
+  protected function getRecurFilterSQL(string $thresholdType): string {
     switch ($thresholdType) {
       case 'recurring':
         return " AND contrib.contribution_recur_id IS NOT NULL ";
@@ -309,7 +309,7 @@ class CRM_Contact_BAO_RFM {
    * 
    * @return array Array containing temporary table name and record data
    */
-  public function calcRFM() {
+  public function calcRFM(): array {
     // Check if R, F, M have been calculated
     if (!$this->_tables['r'] || !$this->_tables['f'] || !$this->_tables['m']) {
       // If not calculated but thresholds are set, calculate automatically
@@ -381,9 +381,10 @@ class CRM_Contact_BAO_RFM {
    * Export RFM data to CSV
    * 
    * @param string $filename Custom filename (optional)
+   * @param  bool $download Bool to indicate print to browser or not
    * @return string Path to the exported CSV file
    */
-  public function exportToCSV($filename = null) {
+  public function exportToCSV(string $filename = null, bool $download = TRUE): string {
     if (!$this->_tables['rfm']) {
       $r = $this->calcRFM();
     }
@@ -393,7 +394,7 @@ class CRM_Contact_BAO_RFM {
       $rLabel = 'R' . ($this->_reverse['r'] ? 'n' : 'p') . '_' . abs($this->_thresholds['r']);
       $fLabel = 'F' . ($this->_reverse['f'] ? 'n' : 'p') . '_' . abs($this->_thresholds['f']);
       $mLabel = 'M' . ($this->_reverse['m'] ? 'n' : 'p') . '_' . abs($this->_thresholds['m']);
-      $filename = __DIR__ . '/RFM_' . $rLabel . '_' . $fLabel . '_' . $mLabel . '_'.$this->_suffix.'.csv';
+      $filename = 'RFM_' . $rLabel . '_' . $fLabel . '_' . $mLabel . '_'.$this->_suffix.'.csv';
     }
     
     $sqlSelectTempTable = "
@@ -401,8 +402,7 @@ class CRM_Contact_BAO_RFM {
     ";
     $result = CRM_Core_DAO::executeQuery($sqlSelectTempTable);
     
-    
-    // Write data
+    $data = [];
     while ($result->fetch()) {
       $fields = [
         $result->contact_id,
@@ -410,118 +410,17 @@ class CRM_Contact_BAO_RFM {
         $result->F,
         $result->M,
       ];
-      file_put_contents($filename, implode(',' , $fields)."\n", FILE_APPEND);
+      $data[] = $fields;
     }
+    $header = [ts('Contact ID'), ts('Recency'), ts('Frequency'), ts('Monetary')];
+    CRM_Core_Report_Excel::writeCSVFile($filename, $header, $data, $download);
     
-    return $filename;
+    if (!$download) {
+      return $filename;
+    }
+    return '';
   }
   
-  /**
-   * Parse date filter
-   * 
-   * @param string $dateFilter Date filter string
-   * @param bool $returnTotalDays Whether to return total days
-   * @return array Array containing start date, end date, total days and total months
-   */
-  protected function getDateFilter($dateFilter, $returnTotalDays = false) {
-    $dateFilterSQL = '';
-    $today = new DateTime();
-    $startDate = null;
-    $endDate = null;
-    
-    // Parse `last/next N days/weeks/months/years to today`
-    if (preg_match('/^(last|next) (\d+) (days|weeks|months|years) to today$/', strtolower($dateFilter), $matches)) {
-      $direction = $matches[1]; // last or next
-      $amount = (int)$matches[2]; // number
-      $unit = $matches[3]; // time unit
-      
-      if ($direction === 'last') {
-        $startDate = (clone $today)->modify("-{$amount} {$unit}")->format('Y-m-d');
-        $endDate = $today->format('Y-m-d');
-      } else {
-        $startDate = $today->format('Y-m-d');
-        $endDate = (clone $today)->modify("+{$amount} {$unit}")->format('Y-m-d');
-      }
-    }
-    // Parse `last/next N days/weeks/months/years` (without `to today`)
-    elseif (preg_match('/^(last|next) (\d+) (days|weeks|months|years)$/', strtolower($dateFilter), $matches)) {
-      $direction = $matches[1];
-      $amount = (int)$matches[2];
-      $unit = $matches[3];
-      
-      if ($direction === 'last') {
-        $startDate = (clone $today)->modify("-{$amount} {$unit}")->format('Y-m-d');
-        $endDate = $today->format('Y-m-d');
-      } else {
-        $startDate = $today->format('Y-m-d');
-        $endDate = (clone $today)->modify("+{$amount} {$unit}")->format('Y-m-d');
-      }
-    }
-    // Parse `this week`, `last month`, `this year`, `last year`
-    elseif (preg_match('/^(this|last) (week|month|year)$/', strtolower($dateFilter), $matches)) {
-      $modifier = $matches[1]; // this or last
-      $unit = $matches[2]; // week, month, year
-      
-      if ($unit === 'week') {
-        if ($modifier === 'this') {
-          $startDate = (clone $today)->modify('monday this week')->format('Y-m-d');
-          $endDate = $today->format('Y-m-d');
-        } else {
-          $startDate = (clone $today)->modify('monday last week')->format('Y-m-d');
-          $endDate = (clone $today)->modify('sunday last week')->format('Y-m-d');
-        }
-      } elseif ($unit === 'month') {
-        if ($modifier === 'this') {
-          $startDate = (clone $today)->modify('first day of this month')->format('Y-m-d');
-          $endDate = $today->format('Y-m-d');
-        } else {
-          $startDate = (clone $today)->modify('first day of last month')->format('Y-m-d');
-          $endDate = (clone $today)->modify('last day of last month')->format('Y-m-d');
-        }
-      } elseif ($unit === 'year') {
-        if ($modifier === 'this') {
-          $startDate = (clone $today)->modify('first day of January this year')->format('Y-m-d');
-          $endDate = $today->format('Y-m-d');
-        } else {
-          $startDate = (clone $today)->modify('first day of January last year')->format('Y-m-d');
-          $endDate = (clone $today)->modify('last day of December last year')->format('Y-m-d');
-        }
-      }
-    }
-    // Special fixed values
-    elseif ($dateFilter === 'today') {
-      $startDate = $today->format('Y-m-d');
-      $endDate = $today->format('Y-m-d');
-    } elseif ($dateFilter === 'yesterday') {
-      $startDate = (clone $today)->modify('-1 day')->format('Y-m-d');
-      $endDate = $startDate;
-    }
-    // Parse single day yyyy-mm-dd
-    elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $dateFilter)) {
-      $startDate = $dateFilter;
-      $endDate = $dateFilter;
-    }
-    // Parse range yyyy-mm-dd_to_yyyy-mm-dd
-    elseif (preg_match('/^\d{4}-\d{2}-\d{2}_to_\d{4}-\d{2}-\d{2}$/', $dateFilter)) {
-      list($startDate, $endDate) = explode('_to_', $dateFilter);
-    }
-    
-    $startDateTime = new DateTime($startDate);
-    $endDateTime = new DateTime($endDate);
-    $interval = $startDateTime->diff($endDateTime);
-    $totalDays = $interval->days + 1;
-    $totalMonths = ($interval->y * 12) + $interval->m;
-    if ($interval->d > 0) {
-      $totalMonths++;
-    }
-    
-    return [
-      'start' => $startDate,
-      'end' => $endDate,
-      'day' => $totalDays,
-      'month' => $totalMonths,
-    ];
-  }
   
   /**
    * Generate date filter SQL
@@ -529,8 +428,8 @@ class CRM_Contact_BAO_RFM {
    * @param string $dateFilter Date filter string
    * @return string Date filter SQL statement
    */
-  protected function getDateFilterSQL($dateFilter) {
-    $filter = $this->getDateFilter($dateFilter);
+  protected function getDateFilterSQL(string $dateFilter): string {
+    $filter = CRM_Utils_Date::strtodate($dateFilter);
     $startDate = $filter['start'];
     $endDate = $filter['end'];
     
@@ -547,10 +446,8 @@ class CRM_Contact_BAO_RFM {
    * @param string $thresholdType Threshold type (recurring, non-recurring, all)
    * @return array Array containing r, f, m thresholds
    */
-  public static function defaultThreshold($rangeString, $thresholdType) {
-    $suffix = '';
-    $rfm = new self($suffix);
-    $filter = $rfm->getDateFilter($rangeString, true);
+  public static function defaultThresholds(string $rangeString, string $thresholdType): array {
+    $filter = CRM_Utils_Date::strtodate($rangeString);
     $totalDays = $filter['day'];
     $totalMonths = $filter['month'];
     $totalYears = ceil($filter['day']/365);

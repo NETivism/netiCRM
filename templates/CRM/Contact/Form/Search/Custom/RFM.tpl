@@ -34,22 +34,22 @@
                   <div class="rfm-thresholds-item">
                     <dt class="rfm-thresholds-term">{ts}Recency:{/ts}</dt>
                     <dd class="rfm-thresholds-definition">
-                      <output class="rfm-thresholds-value" data-threshold-type="recency">{$rfmThresholds.recency}</output>
+                      <output class="rfm-thresholds-value" data-threshold-type="recency">{$rfmThresholds.r}</output>
                       <span class="rfm-thresholds-unit">{ts}days{/ts}</span>
                     </dd>
                   </div>
                   <div class="rfm-thresholds-item">
                     <dt class="rfm-thresholds-term">{ts}Frequency:{/ts}</dt>
                     <dd class="rfm-thresholds-definition">
-                      <output class="rfm-thresholds-value" data-threshold-type="frequency">{$rfmThresholds.frequency}</output>
+                      <output class="rfm-thresholds-value" data-threshold-type="frequency">{$rfmThresholds.f}</output>
                       <span class="rfm-thresholds-unit">{ts}times{/ts}</span>
                     </dd>
                   </div>
                   <div class="rfm-thresholds-item">
                     <dt class="rfm-thresholds-term">{ts}Monetary:{/ts}</dt>
                     <dd class="rfm-thresholds-definition">
-                      <output class="rfm-thresholds-value" data-threshold-type="monetary">{$rfmThresholds.monetary|number_format:0:".":","}</output>
-                      <span class="rfm-thresholds-unit">${TODO: Get the current country's currency}</span>
+                      <output class="rfm-thresholds-value" data-threshold-type="monetary">{$rfmThresholds.m|crmMoney}</output>
+                      <span class="rfm-thresholds-unit"></span>
                     </dd>
                   </div>
                 </dl>

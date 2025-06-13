@@ -1536,5 +1536,110 @@ class CRM_Utils_Date {
     date_default_timezone_set($originalTimezone);
     return $now;
   }
+
+  /**
+   * Parse date filter
+   *
+   * @param string $dateFilter Date filter string
+   * @return array Array containing start date, end date, total days and total months
+   */
+  public static function strtodate(string $dateFilter): array {
+    $today = new DateTime();
+    $startDate = null;
+    $endDate = null;
+
+    // Parse `last/next N days/weeks/months/years to today`
+    if (preg_match('/^(last|next) (\d+) (days|weeks|months|years) to today$/', strtolower($dateFilter), $matches)) {
+      $direction = $matches[1]; // last or next
+      $amount = (int)$matches[2]; // number
+      $unit = $matches[3]; // time unit
+
+      if ($direction === 'last') {
+        $startDate = (clone $today)->modify("-{$amount} {$unit}")->format('Y-m-d');
+        $endDate = $today->format('Y-m-d');
+      } else {
+        $startDate = $today->format('Y-m-d');
+        $endDate = (clone $today)->modify("+{$amount} {$unit}")->format('Y-m-d');
+      }
+    }
+    // Parse `last/next N days/weeks/months/years` (without `to today`)
+    elseif (preg_match('/^(last|next) (\d+) (days|weeks|months|years)$/', strtolower($dateFilter), $matches)) {
+      $direction = $matches[1];
+      $amount = (int)$matches[2];
+      $unit = $matches[3];
+
+      if ($direction === 'last') {
+        $startDate = (clone $today)->modify("-{$amount} {$unit}")->format('Y-m-d');
+        $endDate = $today->format('Y-m-d');
+      } else {
+        $startDate = $today->format('Y-m-d');
+        $endDate = (clone $today)->modify("+{$amount} {$unit}")->format('Y-m-d');
+      }
+    }
+    // Parse `this week`, `last month`, `this year`, `last year`
+    elseif (preg_match('/^(this|last) (week|month|year)$/', strtolower($dateFilter), $matches)) {
+      $modifier = $matches[1]; // this or last
+      $unit = $matches[2]; // week, month, year
+
+      if ($unit === 'week') {
+        if ($modifier === 'this') {
+          $startDate = (clone $today)->modify('monday this week')->format('Y-m-d');
+          $endDate = $today->format('Y-m-d');
+        } else {
+          $startDate = (clone $today)->modify('monday last week')->format('Y-m-d');
+          $endDate = (clone $today)->modify('sunday last week')->format('Y-m-d');
+        }
+      } elseif ($unit === 'month') {
+        if ($modifier === 'this') {
+          $startDate = (clone $today)->modify('first day of this month')->format('Y-m-d');
+          $endDate = $today->format('Y-m-d');
+        } else {
+          $startDate = (clone $today)->modify('first day of last month')->format('Y-m-d');
+          $endDate = (clone $today)->modify('last day of last month')->format('Y-m-d');
+        }
+      } elseif ($unit === 'year') {
+        if ($modifier === 'this') {
+          $startDate = (clone $today)->modify('first day of January this year')->format('Y-m-d');
+          $endDate = $today->format('Y-m-d');
+        } else {
+          $startDate = (clone $today)->modify('first day of January last year')->format('Y-m-d');
+          $endDate = (clone $today)->modify('last day of December last year')->format('Y-m-d');
+        }
+      }
+    }
+    // Special fixed values
+    elseif ($dateFilter === 'today') {
+      $startDate = $today->format('Y-m-d');
+      $endDate = $today->format('Y-m-d');
+    } elseif ($dateFilter === 'yesterday') {
+      $startDate = (clone $today)->modify('-1 day')->format('Y-m-d');
+      $endDate = $startDate;
+    }
+    // Parse single day yyyy-mm-dd
+    elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $dateFilter)) {
+      $startDate = $dateFilter;
+      $endDate = $dateFilter;
+    }
+    // Parse range yyyy-mm-dd_to_yyyy-mm-dd
+    elseif (preg_match('/^\d{4}-\d{2}-\d{2}_to_\d{4}-\d{2}-\d{2}$/', $dateFilter)) {
+      list($startDate, $endDate) = explode('_to_', $dateFilter);
+    }
+
+    $startDateTime = new DateTime($startDate);
+    $endDateTime = new DateTime($endDate);
+    $interval = $startDateTime->diff($endDateTime);
+    $totalDays = $interval->days + 1;
+    $totalMonths = ($interval->y * 12) + $interval->m;
+    if ($interval->d > 0) {
+      $totalMonths++;
+    }
+
+    return [
+      'start' => $startDate,
+      'end' => $endDate,
+      'day' => $totalDays,
+      'month' => $totalMonths,
+    ];
+  }
 }
 
