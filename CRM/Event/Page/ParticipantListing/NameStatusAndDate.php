@@ -104,9 +104,9 @@ LIMIT    $offset, $rowCount";
         'participantID' => $object->participant_id,
         'name' => $object->name,
         'email' => $object->email,
-        'status' => CRM_Utils_Array::value($object->status_id,
+        'status' => ts(CRM_Utils_Array::value($object->status_id,
           $statusLookup
-        ),
+        )),
         'date' => $object->register_date,
       );
       $rows[] = $row;

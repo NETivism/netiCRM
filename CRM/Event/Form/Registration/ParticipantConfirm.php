@@ -146,8 +146,8 @@ class CRM_Event_Form_Registration_ParticipantConfirm extends CRM_Event_Form_Regi
         $emptySeats = NULL;
       }
       else {
-        $emptySeats = CRM_Event_BAO_participant::pendingToConfirmSpaces($this->_eventId);
-        $additonalIds = CRM_Event_BAO_participant::getAdditionalParticipantIds($this->_participantId);
+        $emptySeats = CRM_Event_BAO_Participant::pendingToConfirmSpaces($this->_eventId);
+        $additonalIds = CRM_Event_BAO_Participant::getAdditionalParticipantIds($this->_participantId);
         $requireSpace = 1 + count($additonalIds);
       }
       if ($emptySeats !== NULL && ($requireSpace > $emptySeats)) {

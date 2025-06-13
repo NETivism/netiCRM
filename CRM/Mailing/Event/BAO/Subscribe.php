@@ -120,6 +120,7 @@ LEFT JOIN civicrm_email ON contact_a.id = civicrm_email.contact_id
         'location_type_id' => $locationType->id,
         'is_bulkmail' => 1,
       );
+      require_once 'api/v3/DeprecatedUtils.php';
       _civicrm_api3_deprecated_add_formatted_param($value, $formatted);
 
 

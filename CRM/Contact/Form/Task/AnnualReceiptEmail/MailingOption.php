@@ -114,6 +114,9 @@ class CRM_Contact_Form_Task_AnnualReceiptEmail_MailingOption extends CRM_Contact
       ts('Default') => $fromEmails['default'],
       ts('Your Email') => $fromEmails['contact'],
     );
+    if (!empty($fromEmails['domain'])) {
+      $emails[ts('Other')] = $fromEmails['domain'];
+    }
     $this->addSelect('receipt_from_email', ts('From Email'), array('' => ts('- select -')) + $emails, NULL, TRUE);
     $this->addWysiwyg(
       'receipt_text',

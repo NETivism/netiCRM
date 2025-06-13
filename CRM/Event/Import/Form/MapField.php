@@ -426,6 +426,16 @@ class CRM_Event_Import_Form_MapField extends CRM_Core_Form {
       );
 
       list($ruleFields, $threshold) = CRM_Dedupe_BAO_RuleGroup::dedupeRuleFieldsWeight($params);
+      if ($ruleFields['sort_name']) {
+        $ruleFields['last_name'] = $ruleFields['sort_name'] / 2;
+        $ruleFields['first_name'] = $ruleFields['sort_name'] / 2;
+      }
+      if ($ruleFields['display_name']) {
+        $ruleFields['last_name'] = $ruleFields['display_name'] / 2;
+        $ruleFields['first_name'] = $ruleFields['display_name'] / 2;
+      }
+      unset($ruleFields['sort_name']);
+      unset($ruleFields['display_name']);
       $weightSum = 0;
       foreach ($importKeys as $key => $val) {
         if (CRM_Utils_Array::arrayKeyExists($val, $ruleFields)) {

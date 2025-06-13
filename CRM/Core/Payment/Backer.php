@@ -444,6 +444,9 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
         $recur['version'] = "3";
         $recurResult = civicrm_api('ContributionRecur', 'create', $recur);
         $contributionResult['recur_contribution_id']  = $recurResult['id'];
+        if (!empty($recur['trxn_id'])) {
+          self::updateContributionRecurId($recur['trxn_id']);
+        }
         $contributionResult['status'] = "ContributionRecur ID already created.";
       }
 
@@ -961,4 +964,29 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
     return $phone;
   }
 
+  /**
+   * Attempts to backfill the missing contribution_recur_id on a contribution
+   * by matching the beginning of the invoice_id with the given trxn_id.
+   */
+  public static function updateContributionRecurId($trxn_id) {
+    $sql = "
+            SELECT c.id, r.id AS recur_id
+            FROM civicrm_contribution_recur r
+            JOIN civicrm_contribution c
+              ON c.invoice_id LIKE CONCAT(r.trxn_id, '%')
+            WHERE c.contribution_recur_id IS NULL
+              AND r.trxn_id = %1
+            LIMIT 1
+            ";
+    $dao = CRM_Core_DAO::executeQuery($sql, array(1 => array($trxn_id, 'String')));
+    while ($dao->fetch()) {
+      $updateQuery = "UPDATE civicrm_contribution SET contribution_recur_id = %1 WHERE id = %2";
+      $params = array(
+        1 => array($dao->recur_id, 'Integer'),
+        2 => array($dao->id, 'Integer'),
+      );
+      CRM_Core_DAO::executeQuery($updateQuery, $params);
+      CRM_Core_Error::debug_log_message("Recur id: {$dao->recur_id} already update for contribution  {$dao->id}");
+    }
+  }
 }

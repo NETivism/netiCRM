@@ -43,7 +43,7 @@
 </div>
   {if $event.participant_listing_id}
   <div class="flex-general">
-    <a class="crm-participant-listing" href="{$participantListingURL}" target="_blank">
+    <a class="crm-participant-listing" href="{crmURL p='civicrm/event/participant' q="reset=1&id=`$id`"}"  target="_blank">
       <i class="zmdi zmdi-assignment-account"></i>
       {ts}Public Participant Listing{/ts}
     </a>

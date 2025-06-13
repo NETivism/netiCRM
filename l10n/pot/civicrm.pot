@@ -49751,3 +49751,7 @@ msgstr ""
 #: templates/CRM/Event/Form/Registration/ThankYou.tpl
 msgid "To ensure that you receive event registration notifications, we recommend contacting the administrator."
 msgstr ""
+
+#: msgctxt "menu"
+msgid "New Taipei City"
+msgstr ""

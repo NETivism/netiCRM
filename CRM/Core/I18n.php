@@ -76,6 +76,7 @@ class CRM_Core_I18n {
 
         $locale .= '.utf8';
         putenv("LANG=$locale");
+        putenv("LANGUAGE=$locale");
         setlocale(LC_ALL, $locale);
 
         bindtextdomain('civicrm', $gettextResourceDir);
