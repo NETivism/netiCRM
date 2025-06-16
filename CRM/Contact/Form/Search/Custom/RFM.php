@@ -23,10 +23,12 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
   protected $_recurringStatus = array();
   protected $_contributionPage = NULL;
   protected $_defaultThresholds = [];
+  protected $_template;
 
 
   function __construct(&$formValues){
     parent::__construct($formValues);
+    $this->_template = CRM_Core_Smarty::singleton();
     $this->_filled = FALSE;
     $this->_tableName = 'civicrm_temp_custom_RFM_' . CRM_Utils_String::createRandom(6);
     $statuses = CRM_Contribute_PseudoConstant::contributionStatus();
@@ -103,32 +105,44 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
     // nothing to do
 
     // default from url
+    $date = CRM_Utils_Request::retrieve('date', 'String', CRM_Core_DAO::$_nullObject, FALSE, '');
+    if (!empty($date)) {
+      $dateRange = $date;
+    }
+    else {
+      $dateRange = self::DATE_RANGE_DEFAULT;
+    }
+    $dateFilter = CRM_Utils_Date::strtodate($dateRange);
+
     $segment = CRM_Utils_Request::retrieve('segment', 'String', CRM_Core_DAO::$_nullObject, FALSE, '');
     $parsedSegment = self::parseRfmSegment($segment);
     if ($parsedSegment) {
       $defaults['segment'] = $segment;
     }
 
+    $recurring = CRM_Utils_Request::retrieve('recurring', 'Integer', CRM_Core_DAO::$_nullObject, FALSE, self::RECURRING_NONRECURRING);
+
+    $rv = CRM_Utils_Request::retrieve('rv', 'Float', CRM_Core_DAO::$_nullObject);
+    $fv = CRM_Utils_Request::retrieve('fv', 'Float', CRM_Core_DAO::$_nullObject);
+    $mv = CRM_Utils_Request::retrieve('mv', 'Float', CRM_Core_DAO::$_nullObject);
+
     // default when nothing
-    if (empty($segment)) {
-      $dateRange = self::DATE_RANGE_DEFAULT;
-      $filter = CRM_Utils_Date::strtodate($dateRange);
-      $defaultThresholds = CRM_Contact_BAO_RFM::defaultThresholds($dateRange, 'all');
-      $defaults = [
-        'rfm_r_value' => $defaultThresholds['r'],
-        'rfm_f_value' => $defaultThresholds['f'],
-        'rfm_m_value' => $defaultThresholds['m'],
-        'recurring' => self::RECURRING_NONRECURRING,
-        'receive_date_from' => $filter['start'],
-        'receive_date_to' => $filter['end'],
-      ];
-    }
+    $defaultThresholds = CRM_Contact_BAO_RFM::defaultThresholds($dateRange, 'all');
+    $defaults = [
+      'rfm_r_value' => $rv ?? $defaultThresholds['r'],
+      'rfm_f_value' => $fv ?? $defaultThresholds['f'],
+      'rfm_m_value' => $mv ?? $defaultThresholds['m'],
+      'recurring' => $recurring,
+      'receive_date_from' => $dateFilter['start'],
+      'receive_date_to' => $dateFilter['end'],
+      'segment' => $segment ?? '', // empty for landing page
+    ];
     $this->_defaultThresholds = [
       'r' => $defaults['rfm_r_value'],
       'f' => $defaults['rfm_f_value'],
       'm' => $defaults['rfm_m_value'],
     ];
-    $this->_form->assign('rfmThresholds', $this->_defaultThresholds);
+    $this->_template->assign('rfmThresholds', $this->_defaultThresholds);
 
     return $defaults;
   }
@@ -200,31 +214,6 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
     $sql = '';
     $clauses = array();
     $clauses[] = "contact_a.is_deleted = 0";
-
-    if (!empty($this->_formValues['segment'])) {
-      $segment = self::parseRfmSegment($this->_formValues['segment']);
-      $rThreshold = CRM_Utils_Array::value('rfm_r_value', $this->_formValues, $this->_defaultThresholds['r']);
-      $fThreshold = CRM_Utils_Array::value('rfm_f_value', $this->_formValues, $this->_defaultThresholds['f']);
-      $mThreshold = CRM_Utils_Array::value('rfm_m_value', $this->_formValues, $this->_defaultThresholds['m']);
-      if ($segment['r'] === 'high') {
-        $clauses[] = "rfm.R <= " . (int)$rThreshold;
-      }
-      else {
-        $clauses[] = "rfm.R > " . (int)$rThreshold;
-      }
-      if ($segment['f'] === 'high') {
-        $clauses[] = "rfm.F >= " . (int)$fThreshold;
-      }
-      else {
-        $clauses[] = "rfm.F < " . (int)$fThreshold;
-      }
-      if ($segment['m'] === 'high') {
-        $clauses[] = "rfm.M >= " . (int)$mThreshold;
-      }
-      else {
-        $clauses[] = "rfm.M < " . (int)$mThreshold;
-      }
-    }
 
     if ($includeContactIDs) {
       $this->includeContactIDs($sql, $this->_formValues);
@@ -336,16 +325,16 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
       return null;
     }
     
-    // Parse format like "RlMhFl" -> ['r' => 'low', 'm' => 'high', 'f' => 'low']
-    $pattern = '/^R([lh])M([lh])F([lh])$/i';
+    // Parse format like "RlFhMl" -> ['r' => 'low', 'f' => 'high', 'm' => 'low']
+    $pattern = '/^R([lh])F([lh])M([lh])$/i';
     if (!preg_match($pattern, $segment, $matches)) {
       return null;
     }
     
     return [
       'r' => strtolower($matches[1]) === 'l' ? 'low' : 'high',
+      'f' => strtolower($matches[3]) === 'l' ? 'low' : 'high',
       'm' => strtolower($matches[2]) === 'l' ? 'low' : 'high',
-      'f' => strtolower($matches[3]) === 'l' ? 'low' : 'high'
     ];
   }
 
@@ -408,29 +397,53 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
   }
 
   function fillTable(){
-    // Get threshold value
-    $rThreshold = CRM_Utils_Array::value('rfm_r_value', $this->_formValues, $this->_defaultThresholds['r']);
-    $fThreshold = CRM_Utils_Array::value('rfm_f_value', $this->_formValues, $this->_defaultThresholds['f']);
-    $mThreshold = CRM_Utils_Array::value('rfm_m_value', $this->_formValues, $this->_defaultThresholds['m']);
-
+    $currentDefaults = [];
+    if (empty($this->_defaultThresholds) && CRM_Utils_Request::retrieve('force', 'Integer', CRM_Core_DAO::$_nullObject)) {
+      // duplicate call default values because parent preprocess will handler later
+      $currentDefaults = $this->setDefaultValues();
+    }
+    else {
+      $currentDefaults = $this->_formValues;
+    }
     // Creaet date string
-    $dateFrom = CRM_Utils_Array::value('receive_date_from', $this->_formValues);
-    $dateTo = CRM_Utils_Array::value('receive_date_to', $this->_formValues);
+    $dateFrom = CRM_Utils_Array::value('receive_date_from', $currentDefaults);
+    $dateTo = CRM_Utils_Array::value('receive_date_to', $currentDefaults);
+    $dateString = '';
     if (!empty($dateFrom) && !empty($dateTo)) {
       $dateString = $dateFrom . '_to_' . $dateTo;
     }
-    if (!empty($dateFrom)) {
+    elseif (!empty($dateFrom)) {
       $dateString = $dateFrom . '_to_' . date('Y-m-d');
     }
-    if (empty($dateString)) {
+    else {
       $dateString = self::DATE_RANGE_DEFAULT;
     }
 
-    $thresholdType = CRM_Utils_Array::value('recurring', $this->_formValues, 'all');
+    $thresholdType = CRM_Utils_Array::value('recurring', $currentDefaults);
+
+    $segment = $currentDefaults['segment'];
+    $parsedSegment = self::parseRfmSegment($segment);
+    if (!empty($parsedSegment)) {
+      $rThreshold = CRM_Utils_Array::value('rfm_r_value', $currentDefaults);
+      $fThreshold = CRM_Utils_Array::value('rfm_f_value', $currentDefaults);
+      $mThreshold = CRM_Utils_Array::value('rfm_m_value', $currentDefaults);
+      
+      // Use parsedSegment to make thresholds positive or negative
+      if ($parsedSegment['r'] === 'low') $rThreshold = -abs($rThreshold);
+      else $rThreshold = abs($rThreshold);
+      
+      if ($parsedSegment['f'] === 'low') $fThreshold = -abs($fThreshold);
+      else $fThreshold = abs($fThreshold);
+      
+      if ($parsedSegment['m'] === 'low') $mThreshold = -abs($mThreshold);
+      else $mThreshold = abs($mThreshold);
+    }
+    else {
+      $rThreshold = $fThreshold = $mThreshold = 0.0;
+    }
     $suffix = CRM_Utils_String::createRandom(6);
     $rfm = new CRM_Contact_BAO_RFM($suffix, $dateString, $rThreshold, $fThreshold, $mThreshold, $thresholdType);
     $result = $rfm->calcRFM();
     $this->_tableName = $result['table'];
   }
-
 }
