@@ -109,6 +109,17 @@ class CRM_Core_Page_AJAX_EditorImageUpload {
       return;
     }
 
+    // Save file to temp directory
+    $saveResult = self::saveToTempDirectory($fileInfo, $displayName);
+
+    if (!$saveResult['success']) {
+      self::responseError([
+        'status' => 0,
+        'message' => $saveResult['message']
+      ]);
+      return;
+    }
+
     // SUCCESS: Blob received and validated with proper filename handling
     self::responseSuccess([
       'status' => 1,
@@ -124,11 +135,93 @@ class CRM_Core_Page_AJAX_EditorImageUpload {
         'source' => $fileInfo['source'], // 'clipboard_paste' or 'file_drop'
         'timestamp' => $timestamp
       ],
+      'save_result' => $saveResult,
       'title_attribute' => $displayName . ' | ' . basename($fileInfo['temp_name']),
-      'next_steps' => 'TODO: File is ready for processing and storage'
     ]);
+  }
 
-    // TODO: Implement actual file processing and storage
+  /**
+   * Save uploaded file to backend temp directory for later processing
+   *
+   * @param array $fileInfo File information
+   * @param string $displayName Display name for the file
+   * @return array Result with success status and file details
+   */
+  private static function saveToTempDirectory($fileInfo, $displayName) {
+    try {
+      // Get CiviCRM temp directory (for backend processing, not web accessible)
+      $tempDir = CRM_Utils_System::cmsDir('temp');
+
+      // Fallback to system temp if CiviCRM temp not available
+      if (!$tempDir || !is_dir($tempDir)) {
+        $tempDir = sys_get_temp_dir();
+      }
+
+      // Ensure temp directory exists and is writable
+      if (!is_dir($tempDir)) {
+        if (!mkdir($tempDir, 0755, true)) {
+          return [
+            'success' => false,
+            'message' => 'Cannot create temp directory: ' . $tempDir
+          ];
+        }
+      }
+
+      if (!is_writable($tempDir)) {
+        return [
+          'success' => false,
+          'message' => 'Temp directory not writable: ' . $tempDir
+        ];
+      }
+
+      // Use PHP temp filename as base and add extension
+      $phpTempName = basename($fileInfo['temp_name']);
+      $extension = self::getFileExtension($fileInfo['mime_type']);
+      $filename = $phpTempName . '.' . $extension;
+      $filepath = $tempDir . DIRECTORY_SEPARATOR . $filename;
+
+      // Move uploaded file to temp directory
+      if (move_uploaded_file($fileInfo['temp_name'], $filepath)) {
+        // Set proper file permissions for backend access
+        chmod($filepath, 0644);
+
+        return [
+          'success' => true,
+          'filename' => $filename,
+          'filepath' => $filepath,
+          'temp_dir' => $tempDir,
+          'message' => 'File saved to backend temp directory'
+        ];
+      } else {
+        return [
+          'success' => false,
+          'message' => 'Failed to move uploaded file to: ' . $filepath
+        ];
+      }
+
+    } catch (Exception $e) {
+      return [
+        'success' => false,
+        'message' => 'Error saving file: ' . $e->getMessage()
+      ];
+    }
+  }
+
+  /**
+   * Get file extension from MIME type
+   *
+   * @param string $mimeType MIME type
+   * @return string File extension
+   */
+  private static function getFileExtension($mimeType) {
+    $extensions = [
+      'image/jpeg' => 'jpg',
+      'image/jpg' => 'jpg',
+      'image/png' => 'png',
+      'image/gif' => 'gif'
+    ];
+
+    return isset($extensions[$mimeType]) ? $extensions[$mimeType] : 'jpg';
   }
 
   /**
