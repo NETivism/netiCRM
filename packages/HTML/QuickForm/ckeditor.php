@@ -65,7 +65,7 @@ class HTML_QuickForm_CKeditor extends HTML_QuickForm_textarea
         else {
           $config = CRM_Core_Config::singleton();
           if (CRM_Utils_System::isUserLoggedIn()) {
-            $plugins = array('widget', 'lineutils',  'mediaembed', 'tableresize', 'image2');
+            $plugins = array('widget', 'lineutils',  'mediaembed', 'tableresize', 'image2', 'clipboard_image');
             foreach($plugins as $name){
               $extraPlugins[] = 'CKEDITOR.plugins.addExternal("'.$name.'", "'.$config->resourceBase.'/packages/ckeditor/extraplugins/'.$name.'/", "plugin.js");';
             }
