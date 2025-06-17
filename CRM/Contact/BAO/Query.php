@@ -2206,8 +2206,42 @@ class CRM_Contact_BAO_Query {
     foreach ($tables as $key => $value) {
       $k = 99;
       if (strpos($key, '-') !== FALSE) {
-        $keyArray = explode('-', $key);
-        $k = CRM_Utils_Array::value('civicrm_' . $keyArray[1], $info, 99);
+         if (strpos($key, 'phone') !== FALSE) {
+          $k = CRM_Utils_Array::value('civicrm_phone', $info, 99);
+        }
+        elseif (strpos($key, 'email') !== FALSE) {
+          $k = CRM_Utils_Array::value('civicrm_email', $info, 99);
+        }
+        elseif (strpos($key, 'im') !== FALSE) {
+          $k = CRM_Utils_Array::value('civicrm_im', $info, 99);
+        }
+        elseif (strpos($key, 'openid') !== FALSE) {
+          $k = CRM_Utils_Array::value('civicrm_openid', $info, 99);
+        }
+        elseif (strpos($key, 'address') !== FALSE ||
+        strpos($key, 'street') !== FALSE ||
+        strpos($key, 'city') !== FALSE ||
+        strpos($key, 'postal') !== FALSE ||
+        strpos($key, 'supplemental') !== FALSE) {
+          $k = CRM_Utils_Array::value('civicrm_address', $info, 99);
+        }
+        elseif (strpos($key, 'state_province') !== FALSE) {
+          $k = CRM_Utils_Array::value('civicrm_state_province', $info, 99);
+        }
+        elseif (strpos($key, 'country') !== FALSE) {
+          $k = CRM_Utils_Array::value('civicrm_country', $info, 99);
+        }
+        elseif (strpos($key, 'county') !== FALSE) {
+          $k = CRM_Utils_Array::value('civicrm_county', $info, 99);
+        }
+         elseif (strpos($key, 'location_type') !== FALSE) {
+          $k = CRM_Utils_Array::value('civicrm_location_type', $info, 99);
+        }
+        else {
+          // default
+          $keyArray = explode('-', $key);
+          $k = CRM_Utils_Array::value('civicrm_' . $keyArray[1], $info, 99);
+        }
       }
       elseif (strpos($key, '_') !== FALSE) {
         $keyArray = explode('_', $key);
