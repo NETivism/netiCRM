@@ -36,6 +36,7 @@
 
 define('PDF_FONT_NAME_MAIN', 'droidsansfallback');
 
+require_once 'tcpdf/tcpdf.php';
 class CRM_Utils_PDF_Label extends TCPDF {
 
   // make these properties public due to
