@@ -2225,16 +2225,7 @@ class CRM_Contact_BAO_Query {
         strpos($key, 'supplemental') !== FALSE) {
           $k = CRM_Utils_Array::value('civicrm_address', $info, 99);
         }
-        elseif (strpos($key, 'state_province') !== FALSE) {
-          $k = CRM_Utils_Array::value('civicrm_state_province', $info, 99);
-        }
-        elseif (strpos($key, 'country') !== FALSE) {
-          $k = CRM_Utils_Array::value('civicrm_country', $info, 99);
-        }
-        elseif (strpos($key, 'county') !== FALSE) {
-          $k = CRM_Utils_Array::value('civicrm_county', $info, 99);
-        }
-         elseif (strpos($key, 'location_type') !== FALSE) {
+        elseif (strpos($key, 'location_type') !== FALSE) {
           $k = CRM_Utils_Array::value('civicrm_location_type', $info, 99);
         }
         else {
