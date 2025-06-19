@@ -666,29 +666,37 @@ class CRM_Utils_Image {
           );
 
           if ($movedFile['success']) {
-            // TODO: Replace blob URL with permanent URL in img tag
-            // TODO: Update title attribute to remove temp file reference
-            // TODO: Add file record to CiviCRM file system if needed
-            // TODO: Generate proper public URL for the moved file
+            // Generate public URL for the moved file
+            $urlResult = self::generatePublicUrl($movedFile['final_path']);
 
-            $result['moved_files'][] = array(
-              'field' => $fieldName,
-              'original_name' => $originalName,
-              'temp_name' => $tempFileName,
-              'final_path' => $movedFile['final_path'],
-              'final_name' => $movedFile['final_name']
-            );
+            if ($urlResult['success']) {
+              // TODO: Replace blob URL with permanent URL in img tag
+              // TODO: Update title attribute to remove temp file reference
+              $publicUrl = $urlResult['url'];
 
-            CRM_Core_Error::debug('Blob image moved successfully', array(
-              'field' => $fieldName,
-              'temp_file' => $tempFileName,
-              'final_file' => $movedFile['final_name']
-            ));
+              $result['moved_files'][] = array(
+                'field' => $fieldName,
+                'original_name' => $originalName,
+                'temp_name' => $tempFileName,
+                'final_path' => $movedFile['final_path'],
+                'final_name' => $movedFile['final_name'],
+                'public_url' => $publicUrl
+              );
+            } else {
+              $result['warnings'][] = "Generated URL failed for field '{$fieldName}': " . $urlResult['error'];
 
+              $result['moved_files'][] = array(
+                'field' => $fieldName,
+                'original_name' => $originalName,
+                'temp_name' => $tempFileName,
+                'final_path' => $movedFile['final_path'],
+                'final_name' => $movedFile['final_name'],
+                'public_url' => null  // URL 產生失敗
+              );
+            }
           } else {
             $result['errors'][] = "Failed to move file for field '{$fieldName}': " . $movedFile['error'];
           }
-
         } catch (Exception $e) {
           $result['errors'][] = "Exception processing image in field '{$fieldName}': " . $e->getMessage();
           CRM_Core_Error::debug('Exception in processBlobImagesInField', array(
@@ -827,5 +835,74 @@ class CRM_Utils_Image {
     }
 
     return $fileName;
+  }
+
+  /**
+   * Generate public URL from file path using CMS public directory API
+   *
+   * @param string $filePath Full file path
+   * @return array Result with success status and URL
+   */
+  private static function generatePublicUrl($filePath) {
+    $result = array('success' => false, 'url' => '', 'error' => '');
+
+    try {
+      // Get CMS public directory
+      $cmsPublicDir = CRM_Utils_System::cmsDir('public');
+      if (!$cmsPublicDir || !is_dir($cmsPublicDir)) {
+        $result['error'] = 'CMS public directory not found';
+        return $result;
+      }
+
+      // Normalize paths for comparison
+      $normalizedPublicDir = rtrim(str_replace('\\', '/', realpath($cmsPublicDir)), '/');
+      $normalizedFilePath = str_replace('\\', '/', realpath($filePath));
+
+      // Check if file is within public directory
+      if (strpos($normalizedFilePath, $normalizedPublicDir) !== 0) {
+        $result['error'] = 'File is not in public directory';
+        return $result;
+      }
+
+      // Calculate relative path from public directory
+      $relativePath = substr($normalizedFilePath, strlen($normalizedPublicDir));
+      $relativePath = ltrim($relativePath, '/');
+
+      // Get base URL without language prefix
+      $config = CRM_Core_Config::singleton();
+      $baseUrl = $config->userFrameworkBaseURL;
+
+      // Remove language prefix using CRM_Utils_System_Drupal method
+      $baseUrlWithoutLang = CRM_Utils_System_Drupal::languageNegotiationURL(
+        $baseUrl,
+        false,  // addLanguagePart = false
+        true    // removeLanguagePart = true
+      );
+
+      // For Drupal, public files are accessed via sites/default/files/
+      $publicUrlPath = 'sites/default/files/' . $relativePath;
+      $publicUrl = rtrim($baseUrlWithoutLang, '/') . '/' . $publicUrlPath;
+
+      // Verify URL format
+      if (filter_var($publicUrl, FILTER_VALIDATE_URL)) {
+        $result['success'] = true;
+        $result['url'] = $publicUrl;
+
+        // Debug log the URL generation process
+        CRM_Core_Error::debug('URL generation details', array(
+          'original_base_url' => $baseUrl,
+          'base_url_without_lang' => $baseUrlWithoutLang,
+          'relative_path' => $relativePath,
+          'final_url' => $publicUrl
+        ));
+      } else {
+        $result['error'] = 'Generated URL is not valid: ' . $publicUrl;
+      }
+
+    } catch (Exception $e) {
+      $result['error'] = 'Exception in generatePublicUrl: ' . $e->getMessage();
+    }
+
+    return $result;
   }
 }
