@@ -50,8 +50,8 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
 
   /**
    * Override public variable for HTML_QuickForm_Page
-   * 
-   * @var      CRM_Core_Controller 
+   *
+   * @var      CRM_Core_Controller
    * @access   public
    */
   public $controller = null;
@@ -255,6 +255,10 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
    * This function is just a wrapper, so that we can call all the hook functions
    */
   function mainProcess() {
+    // Process blob images from CKeditor fields before data persistence
+    // Convert temporary blob URLs to permanent file storage
+    $blobImagesProcessResult = $this->processBlobImages();
+
     CRM_Utils_Hook::preSave(get_class($this), $this);
 
     // before postProcess, count submission at form object
@@ -614,7 +618,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
   /**
    * A wrapper for getTemplateFileName that includes calling the hook to
    * prevent us from having to copy & paste the logic of calling the hook
-   */ 
+   */
   function getHookedTemplateFileName() {
     $pageTemplateFile = $this->getTemplateFileName();
     CRM_Utils_Hook::alterTemplateFile(get_class($this), $this, 'page', $pageTemplateFile);
@@ -723,7 +727,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
    *
    * @param string $name  name  of variable
    * @param mixed $value value of varaible, if value will check equality
-   *        default only check isset 
+   *        default only check isset
    *
    * @return void
    * @access public
@@ -878,7 +882,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
       return $ele;
     }
   }
-  
+
   function addTextarea($name, $label, $attributes = NULL, $required = NULL) {
     return $this->add('textarea', $name, $label, $attributes, $required);
   }
@@ -1286,6 +1290,13 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
       }
     }
     return array($id, $additionalID);
+  }
+
+  private function processBlobImages() {
+    return CRM_Utils_Image::processBlobImagesInContent(
+      $this->_submitValues,
+      $this->_elements
+    );
   }
 }
 
