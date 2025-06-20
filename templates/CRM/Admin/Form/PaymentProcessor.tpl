@@ -294,18 +294,26 @@
     $('fieldset [class^="crm-paymentProcessor-"][class$="url_api"]').each(function(i, element) {
       addApiCheckbox($(this), '{/literal}{ts}Credit Card Agreement{/ts}{literal}');
       const $subject = $(this).closest('table').find('[class^="crm-paymentProcessor-"][class$=subject]');
+      const $urlSite = $(this).closest('table').find('[class^="crm-paymentProcessor-"][class$=url_site]');
+      
       $subject.insertAfter($(this));
+      $urlSite.insertAfter($subject);
       $subject.hide();
+      $urlSite.hide();
+      
       const $apiCheckbox = $(this).closest('table').find('input[id$=url_api-api-checkbox]');
       if ($apiCheckbox.prop('checked')) {
         $subject.show();
+        $urlSite.show();
       }
       $apiCheckbox.change(function(){
         if ($(this).prop('checked')) {
           $subject.show();
+          $urlSite.show();
         }
         else {
           $subject.hide();
+          $urlSite.hide();
         }
       });
     });

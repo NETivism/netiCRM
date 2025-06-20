@@ -97,6 +97,10 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
         'name' => 'url_api',
         'label' => ts('Credit Card Agreement'),
       ),
+      array(
+        'name' => 'url_site',
+        'label' => ts('Merchant ID').'('.ts('No 3D secure support').')',
+      ),
     );
     $nullObj = NULL;
     $ppid = CRM_Utils_Request::retrieve('id', 'Positive', $nullObj);
@@ -118,7 +122,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     }
 
     // remove form rules
-    $noRuleElement = array('url_recur', 'url_api', 'test_url_recur', 'test_url_api');
+    $noRuleElement = array('url_recur', 'url_api', 'url_site', 'test_url_recur', 'test_url_api', 'test_url_site');
     foreach($noRuleElement as $ele) {
       foreach ($form->_rules[$ele] as $key => $rule) {
         if ($rule['type'] == 'url') {
