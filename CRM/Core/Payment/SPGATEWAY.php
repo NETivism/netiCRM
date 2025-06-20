@@ -119,6 +119,26 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
       $smarty = CRM_Core_Smarty::singleton();
       $smarty->assign('having_contribution', $isHavingContribution);
       $smarty->assign('having_contribution_test', $isHavingContributionTest);
+
+      // Get all available payment processors for select options
+      $paymentProcessorsLive = CRM_Core_BAO_PaymentProcessor::getPaymentsByType('spgateway', 'live');
+      $paymentProcessorsTest = CRM_Core_BAO_PaymentProcessor::getPaymentsByType('spgateway', 'test');
+
+      $processorOptionsLive = array('' => ts('-- Select --'));
+      foreach ($paymentProcessorsLive as $id => $processor) {
+        if ($id != $ppid) {
+          $processorOptionsLive[$id] = $processor['name'];
+        }
+      }
+      $smarty->assign('spgateway_processor_options_live', json_encode($processorOptionsLive));
+
+      $processorOptionsTest = array('' => ts('-- Select --'));
+      foreach ($paymentProcessorsTest as $id => $processor) {
+        if ($id != $ppid+1) {
+          $processorOptionsTest[$id] = $processor['name'];
+        }
+      }
+      $smarty->assign('spgateway_processor_options_test', json_encode($processorOptionsTest));
     }
 
     // remove form rules
@@ -2036,7 +2056,15 @@ EOT;
     $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($ppid, $mode);
 
     $response = array('status' => 0, 'msg' => 'Unknown error');
+
     if ($paymentProcessor && !empty($paymentProcessor['url_api'])) {
+      // Load another payment processor if url_site is set and contains a processor ID
+      if ($paymentProcessor && !empty($paymentProcessor['url_site']) && is_numeric($paymentProcessor['url_site'])) {
+        $alternateProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($paymentProcessor['url_site'], $mode);
+        if (!empty($alternateProcessor)) {
+          $paymentProcessor = $alternateProcessor;
+        }
+      }
       $trxnId = self::generateTrxnId($findContribution->is_test, 0);
 
       if (empty($referContributionId)) {

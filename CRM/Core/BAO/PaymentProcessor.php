@@ -217,6 +217,33 @@ class CRM_Core_BAO_PaymentProcessor extends CRM_Core_DAO_PaymentProcessor {
     return $paymentDAO;
   }
 
+  static function getPaymentsByType($processorType, $mode) {
+    if (!$processorType) {
+      return array();
+    }
+
+    $paymentDAO = array();
+
+    // Query to get all processors with the specified type (case insensitive)
+    $dao = new CRM_Core_DAO_PaymentProcessor();
+    $dao->whereAdd("LOWER(payment_processor_type) = '" . strtolower($processorType) . "'");
+    $dao->is_active = 1;
+    $dao->find();
+
+    while ($dao->fetch()) {
+      if ($mode == 'test' && $dao->is_test) {
+        $paymentDAO[$dao->id] = self::buildPayment($dao);
+      }
+      elseif($mode != 'test' && !$dao->is_test) {
+        $paymentDAO[$dao->id] = self::buildPayment($dao);
+      }
+    }
+
+    // Return default processors first, then others
+    $paymentDAO = $paymentDAO;
+    return $paymentDAO;
+  }
+
   /**
    * Function to build payment processor details
    *

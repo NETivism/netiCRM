@@ -212,6 +212,8 @@
     let having_contribution_test = 0;
     {/literal}{if $having_contribution}having_contribution = 1;{/if}{literal}
     {/literal}{if $having_contribution_test}having_contribution_test = 1;{/if}{literal}
+    let spgateway_processor_options_live = {/literal}{$spgateway_processor_options_live};{literal}
+    let spgateway_processor_options_test= {/literal}{$spgateway_processor_options_test};{literal}
 
     function addApiCheckbox($element, label) {
       if (!$element.length) {
@@ -291,10 +293,56 @@
     $('fieldset [class^="crm-paymentProcessor-"][class$="url_recur"]').each(function(i, element) {
       addApiCheckbox($(this), '{/literal}{ts}Enable Neweb Recurring API{/ts}{literal}');
     });
+    function createUrlSiteSelect($urlSiteElement) {
+      const $originalInput = $urlSiteElement.find('input').first();
+      const currentValue = $originalInput.val();
+      const elementClass = $urlSiteElement[0].className || 'default-class';
+      const selectId = elementClass + '-select';
+      const isTestElement = (elementClass.indexOf('-test_') !== -1);
+
+      // Hide the original input
+      $originalInput.hide();
+
+      // Create select dropdown
+      const $select = $('<select>')
+        .attr('id', selectId)
+        .addClass('form-select');
+
+      // Determine which options to use based on test/live
+      const options = isTestElement ? spgateway_processor_options_test : spgateway_processor_options_live;
+      
+      // Add options to select
+      if (options) {
+        for (let value in options) {
+          if (options.hasOwnProperty(value)) {
+            const $option = $('<option>')
+              .attr('value', value)
+              .text(options[value]);
+            $select.append($option);
+          }
+        }
+      }
+      
+      // Set current value
+      $select.val(currentValue);
+
+      // Sync select value with hidden input
+      $select.on('change', function() {
+        $originalInput.val($(this).val());
+      });
+
+      $select.insertAfter($originalInput);
+
+      return $select;
+    }
+
     $('fieldset [class^="crm-paymentProcessor-"][class$="url_api"]').each(function(i, element) {
       addApiCheckbox($(this), '{/literal}{ts}Credit Card Agreement{/ts}{literal}');
       const $subject = $(this).closest('table').find('[class^="crm-paymentProcessor-"][class$=subject]');
       const $urlSite = $(this).closest('table').find('[class^="crm-paymentProcessor-"][class$=url_site]');
+      
+      // Create select for url_site
+      const $urlSiteSelect = createUrlSiteSelect($urlSite);
       
       $subject.insertAfter($(this));
       $urlSite.insertAfter($subject);
