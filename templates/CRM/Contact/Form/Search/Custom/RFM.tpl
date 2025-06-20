@@ -61,7 +61,7 @@
                 {foreach from=$rfmSegments item=segment}
                   <div class="rfm-segment-item {$segment.css_class}">
                     <div class="rfm-segment-name">
-                      <a href="{crmURL p='civicrm/search/RFM' q="segment=`$segment.id`&reset=1"}">{$segment.name}</a>
+                      <a href="{crmURL p='civicrm/contact/search/custom' q="reset=`$urlParams.reset`&csid=`$urlParams.csid`&force=`$urlParams.force`&date=`$urlParams.date`&recurring=`$urlParams.recurring`&rv=`$urlParams.rv`&fv=`$urlParams.fv`&mv=`$urlParams.mv`&segment=`$segment.id`"}">{$segment.name}</a>
                     </div>
                     <div class="rfm-segment-code">{$segment.rfm_code}</div>
                   </div>

@@ -98,6 +98,12 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
 
     $rfmSegments = $this->prepareRfmSegments();
     $this->_form->assign('rfmSegments', $rfmSegments);
+    $formValues = $this->_formValues;
+    if (empty($formValues)) {
+      $formValues = $this->setDefaultValues();
+    }
+    $urlParams = $this->prepareUrlParams($formValues);
+    $this->_form->assign('urlParams', $urlParams);
   }
 
   function setDefaultValues() {
@@ -445,5 +451,35 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
     $rfm = new CRM_Contact_BAO_RFM($suffix, $dateString, $rThreshold, $fThreshold, $mThreshold, $thresholdType);
     $result = $rfm->calcRFM();
     $this->_tableName = $result['table'];
+  }
+
+  function prepareUrlParams($formValues) {
+    $dateFrom = CRM_Utils_Array::value('receive_date_from', $formValues);
+    $dateTo = CRM_Utils_Array::value('receive_date_to', $formValues);
+    $dateParam = '';
+    if (!empty($dateFrom) && !empty($dateTo)) {
+      $dateParam = $dateFrom . '_to_' . $dateTo;
+    } elseif (!empty($dateFrom)) {
+      $dateParam = $dateFrom . '_to_' . date('Y-m-d');
+    } else {
+      $dateParam = self::DATE_RANGE_DEFAULT;
+    }
+
+    $recurring = CRM_Utils_Array::value('recurring', $formValues, self::RECURRING_NONRECURRING);
+    $rv = CRM_Utils_Array::value('rfm_r_value', $formValues, $this->_defaultThresholds['r'] ?? 0);
+    $fv = CRM_Utils_Array::value('rfm_f_value', $formValues, $this->_defaultThresholds['f'] ?? 0);
+    $mv = CRM_Utils_Array::value('rfm_m_value', $formValues, $this->_defaultThresholds['m'] ?? 0);
+    $customSearchID = CRM_Utils_Request::retrieve('csid', 'Integer', CRM_Core_DAO::$_nullObject, FALSE, '');
+
+    return [
+      'reset' => 1,
+      'csid' => $customSearchID,
+      'force' => 1,
+      'date' => $dateParam,
+      'recurring' => $recurring,
+      'rv' => $rv,
+      'fv' => $fv,
+      'mv' => $mv
+    ];
   }
 }
