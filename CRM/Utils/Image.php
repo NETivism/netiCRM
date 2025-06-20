@@ -469,4 +469,440 @@ class CRM_Utils_Image {
     return $template->fetch('CRM/common/modal.tpl');
   }
 
+  /**
+   * Process blob images in form content and move temporary files to permanent directories
+   *
+   * @param array $submitValues Reference to form submit values
+   * @param array $formElements Form elements array to identify CKeditor fields
+   * @param int $userId Optional user ID, if not provided will get current logged in user
+   * @return array Result array with success status and details
+   */
+  public static function processBlobImagesInContent(&$submitValues, $formElements, $userId = null) {
+    $result = array(
+      'success' => true,
+      'processed_fields' => array(),
+      'moved_files' => array(),
+      'errors' => array(),
+      'warnings' => array()
+    );
+
+    try {
+      // Get user ID using Drupal system
+      if (empty($userId)) {
+        $userId = CRM_Utils_System_Drupal::getBestUFID();
+        if (empty($userId)) {
+          $result['success'] = false;
+          $result['errors'][] = 'User not logged in or user ID not available';
+          return $result;
+        }
+      }
+
+      // Get directory paths
+      $tempDir = CRM_Utils_System::cmsDir('temp');
+      if (!$tempDir || !is_dir($tempDir)) {
+        $result['success'] = false;
+        $result['errors'][] = 'Temporary directory not found or not accessible';
+        return $result;
+      }
+
+      // Get CiviCRM public directory (based on existing upload structure)
+      $config = CRM_Core_Config::singleton();
+      $civiPublicDir = $config->customFileUploadDir;
+
+      // Fallback: try to construct path from CMS public dir
+      if (empty($civiPublicDir)) {
+        $cmsPublicDir = CRM_Utils_System::cmsDir('public');
+        if ($cmsPublicDir) {
+          $civiPublicDir = $cmsPublicDir . DIRECTORY_SEPARATOR . 'civicrm';
+        }
+      }
+
+      if (!$civiPublicDir) {
+        $result['success'] = false;
+        $result['errors'][] = 'CiviCRM public directory not found';
+        return $result;
+      }
+
+      // Create user-specific directory: u[uid]
+      $userDir = $civiPublicDir . DIRECTORY_SEPARATOR . 'u' . $userId;
+      if (!is_dir($userDir)) {
+        if (!mkdir($userDir, 0755, true)) {
+          $result['success'] = false;
+          $result['errors'][] = 'Cannot create user directory: ' . $userDir;
+          return $result;
+        }
+      }
+
+      // Check if user directory is writable
+      if (!is_writable($userDir)) {
+        $result['success'] = false;
+        $result['errors'][] = 'User directory not writable: ' . $userDir;
+        return $result;
+      }
+
+      // Field identification strategy: Only process CKeditor fields
+      $ckeditorFields = self::identifyCKeditorFields($formElements);
+
+      if (empty($ckeditorFields)) {
+        $result['warnings'][] = 'No CKeditor fields found in form';
+        return $result;
+      }
+
+      // Process only CKeditor fields
+      foreach ($ckeditorFields as $fieldName) {
+        if (isset($submitValues[$fieldName]) &&
+            is_string($submitValues[$fieldName]) &&
+            !empty($submitValues[$fieldName])) {
+
+          $processedContent = self::processBlobImagesInField(
+            $fieldName,
+            $submitValues[$fieldName],
+            $tempDir,
+            $userDir,
+            $userId,
+            $result
+          );
+
+          // Update the submit value if content was modified
+          if ($processedContent !== $submitValues[$fieldName]) {
+            $submitValues[$fieldName] = $processedContent;
+            $result['processed_fields'][] = $fieldName;
+          }
+        }
+      }
+
+      // Log success summary
+      if (!empty($result['moved_files'])) {
+        CRM_Core_Error::debug('Blob images processed successfully', array(
+          'user_id' => $userId,
+          'ckeditor_fields' => $ckeditorFields,
+          'processed_fields' => $result['processed_fields'],
+          'moved_files_count' => count($result['moved_files'])
+        ));
+      }
+
+    } catch (Exception $e) {
+      $result['success'] = false;
+      $result['errors'][] = 'Exception in blob image processing: ' . $e->getMessage();
+      CRM_Core_Error::debug('Exception in processBlobImagesInContent', $e);
+    }
+
+    return $result;
+  }
+
+  /**
+   * Identify CKeditor fields from form elements
+   *
+   * @param array $formElements Form elements array from $this->_elements
+   * @return array Array of field names that are CKeditor type
+   */
+  private static function identifyCKeditorFields($formElements) {
+    $ckeditorFields = array();
+
+    if (!is_array($formElements)) {
+      return $ckeditorFields;
+    }
+
+    foreach ($formElements as $element) {
+      // Check if element is CKeditor type
+      if (is_object($element) &&
+          isset($element->_type) &&
+          $element->_type === 'CKeditor') {
+
+        // Get field name from element attributes
+        $fieldName = null;
+        if (isset($element->_attributes['name'])) {
+          $fieldName = $element->_attributes['name'];
+        } elseif (isset($element->_name)) {
+          $fieldName = $element->_name;
+        }
+
+        if (!empty($fieldName)) {
+          $ckeditorFields[] = $fieldName;
+        }
+      }
+    }
+
+    return $ckeditorFields;
+  }
+
+  /**
+   * Process blob images in a single field content
+   *
+   * @param string $fieldName Field name for logging
+   * @param string $content HTML content to process
+   * @param string $tempDir Temporary directory path
+   * @param string $userDir User's permanent directory path
+   * @param int $userId User ID
+   * @param array $result Reference to result array for logging
+   * @return string Processed content with updated image paths
+   */
+  private static function processBlobImagesInField($fieldName, $content, $tempDir, $userDir, $userId, &$result) {
+    // Blob image parsing strategy: match img tags with blob URLs and title attributes
+    $pattern = '/
+      <img\s+                               # img tag start
+      [^>]*                                 # any attributes before src
+      src="blob:[^"]*"                      # blob URL in src attribute
+      [^>]*                                 # any attributes between src and title
+      title="([^|]+)\s*\|\s*([^"]+)"        # title with "original_name | temp_name" format
+      [^>]*                                 # any remaining attributes
+      >/ix';
+
+    // Find all blob images in the content
+    if (preg_match_all($pattern, $content, $matches, PREG_SET_ORDER)) {
+      foreach ($matches as $match) {
+        $fullImgTag = $match[0];
+        $originalName = trim($match[1]);
+        $tempFileName = trim($match[2]);
+
+        try {
+          // File moving strategy: locate and move temporary file
+          $movedFile = self::moveTemporaryFile(
+            $tempFileName,
+            $originalName,
+            $tempDir,
+            $userDir,
+            $userId
+          );
+
+          if ($movedFile['success']) {
+            // Generate public URL for the moved file
+            $urlResult = self::generatePublicUrl($movedFile['final_path']);
+
+            if ($urlResult['success']) {
+              // TODO: Replace blob URL with permanent URL in img tag
+              // TODO: Update title attribute to remove temp file reference
+              $publicUrl = $urlResult['url'];
+
+              $result['moved_files'][] = array(
+                'field' => $fieldName,
+                'original_name' => $originalName,
+                'temp_name' => $tempFileName,
+                'final_path' => $movedFile['final_path'],
+                'final_name' => $movedFile['final_name'],
+                'public_url' => $publicUrl
+              );
+            } else {
+              $result['warnings'][] = "Generated URL failed for field '{$fieldName}': " . $urlResult['error'];
+
+              $result['moved_files'][] = array(
+                'field' => $fieldName,
+                'original_name' => $originalName,
+                'temp_name' => $tempFileName,
+                'final_path' => $movedFile['final_path'],
+                'final_name' => $movedFile['final_name'],
+                'public_url' => null  // URL 產生失敗
+              );
+            }
+          } else {
+            $result['errors'][] = "Failed to move file for field '{$fieldName}': " . $movedFile['error'];
+          }
+        } catch (Exception $e) {
+          $result['errors'][] = "Exception processing image in field '{$fieldName}': " . $e->getMessage();
+          CRM_Core_Error::debug('Exception in processBlobImagesInField', array(
+            'field' => $fieldName,
+            'temp_file' => $tempFileName,
+            'error' => $e->getMessage()
+          ));
+        }
+      }
+    }
+
+    return $content; // TODO: Return modified content with updated URLs
+  }
+
+  /**
+   * Move temporary file to permanent user directory
+   *
+   * @param string $tempFileName Temporary file name from title attribute
+   * @param string $originalName Original file name from title attribute
+   * @param string $tempDir Temporary directory path
+   * @param string $userDir User's permanent directory path
+   * @param int $userId User ID for logging
+   * @return array Result with success status and file details
+   */
+  private static function moveTemporaryFile($tempFileName, $originalName, $tempDir, $userDir, $userId) {
+    $result = array('success' => false, 'error' => '');
+
+    try {
+      // Find temporary file with any extension (from EditorImageUpload.php processing)
+      $tempFilePattern = $tempDir . DIRECTORY_SEPARATOR . $tempFileName . '.*';
+      $tempFiles = glob($tempFilePattern);
+
+      if (empty($tempFiles)) {
+        $result['error'] = 'Temporary file not found: ' . $tempFileName;
+        return $result;
+      }
+
+      $sourceFile = $tempFiles[0]; // Use first match
+      if (!is_file($sourceFile)) {
+        $result['error'] = 'Source file does not exist: ' . $sourceFile;
+        return $result;
+      }
+
+      // Generate final filename with conflict resolution
+      $finalFileName = self::generateFinalFileName($originalName, $userDir, $sourceFile);
+      $finalPath = $userDir . DIRECTORY_SEPARATOR . $finalFileName;
+
+      // Ensure target file doesn't exist (additional safety check)
+      if (file_exists($finalPath)) {
+        $finalFileName = self::resolveFileNameConflict($finalFileName, $userDir);
+        $finalPath = $userDir . DIRECTORY_SEPARATOR . $finalFileName;
+      }
+
+      // Move file from temp to permanent location
+      if (rename($sourceFile, $finalPath)) {
+        // Set appropriate file permissions
+        chmod($finalPath, 0644);
+
+        $result['success'] = true;
+        $result['final_path'] = $finalPath;
+        $result['final_name'] = $finalFileName;
+        $result['source_file'] = $sourceFile;
+
+        CRM_Core_Error::debug('File moved successfully', array(
+          'source' => $sourceFile,
+          'destination' => $finalPath,
+          'user_id' => $userId
+        ));
+
+      } else {
+        $result['error'] = 'Failed to move file from ' . $sourceFile . ' to ' . $finalPath;
+      }
+
+    } catch (Exception $e) {
+      $result['error'] = 'Exception in moveTemporaryFile: ' . $e->getMessage();
+    }
+
+    return $result;
+  }
+
+  /**
+   * Generate final filename based on original name or temp name
+   *
+   * @param string $originalName Original filename from title attribute
+   * @param string $userDir User directory path
+   * @param string $sourceFile Source file path to get extension
+   * @return string Final filename
+   */
+  private static function generateFinalFileName($originalName, $userDir, $sourceFile) {
+    // Get file extension from source file
+    $sourceExtension = pathinfo($sourceFile, PATHINFO_EXTENSION);
+
+    if (!empty($originalName) && $originalName !== '') {
+      // Use original name if available
+      $baseName = pathinfo($originalName, PATHINFO_FILENAME);
+      $originalExtension = pathinfo($originalName, PATHINFO_EXTENSION);
+
+      // Use original extension if available, otherwise use source extension
+      $extension = !empty($originalExtension) ? $originalExtension : $sourceExtension;
+      $finalFileName = $baseName . '.' . $extension;
+    } else {
+      // Generate name based on timestamp if no original name
+      $timestamp = date('Y-m-d_H-i-s');
+      $finalFileName = 'uploaded_image_' . $timestamp . '.' . $sourceExtension;
+    }
+
+    // Sanitize filename to prevent path traversal and invalid characters
+    $finalFileName = preg_replace('/[^a-zA-Z0-9._-]/', '_', $finalFileName);
+    $finalFileName = preg_replace('/_{2,}/', '_', $finalFileName); // Remove multiple underscores
+
+    return $finalFileName;
+  }
+
+  /**
+   * Resolve filename conflicts by adding numeric suffix
+   *
+   * @param string $fileName Original filename
+   * @param string $directory Target directory
+   * @return string Unique filename
+   */
+  private static function resolveFileNameConflict($fileName, $directory) {
+    $pathInfo = pathinfo($fileName);
+    $baseName = $pathInfo['filename'];
+    $extension = isset($pathInfo['extension']) ? '.' . $pathInfo['extension'] : '';
+
+    $counter = 1;
+    while (file_exists($directory . DIRECTORY_SEPARATOR . $fileName)) {
+      $fileName = $baseName . '_' . $counter . $extension;
+      $counter++;
+
+      // Prevent infinite loop
+      if ($counter > 1000) {
+        $fileName = $baseName . '_' . time() . $extension;
+        break;
+      }
+    }
+
+    return $fileName;
+  }
+
+  /**
+   * Generate public URL from file path using CMS public directory API
+   *
+   * @param string $filePath Full file path
+   * @return array Result with success status and URL
+   */
+  private static function generatePublicUrl($filePath) {
+    $result = array('success' => false, 'url' => '', 'error' => '');
+
+    try {
+      // Get CMS public directory
+      $cmsPublicDir = CRM_Utils_System::cmsDir('public');
+      if (!$cmsPublicDir || !is_dir($cmsPublicDir)) {
+        $result['error'] = 'CMS public directory not found';
+        return $result;
+      }
+
+      // Normalize paths for comparison
+      $normalizedPublicDir = rtrim(str_replace('\\', '/', realpath($cmsPublicDir)), '/');
+      $normalizedFilePath = str_replace('\\', '/', realpath($filePath));
+
+      // Check if file is within public directory
+      if (strpos($normalizedFilePath, $normalizedPublicDir) !== 0) {
+        $result['error'] = 'File is not in public directory';
+        return $result;
+      }
+
+      // Calculate relative path from public directory
+      $relativePath = substr($normalizedFilePath, strlen($normalizedPublicDir));
+      $relativePath = ltrim($relativePath, '/');
+
+      // Get base URL without language prefix
+      $config = CRM_Core_Config::singleton();
+      $baseUrl = $config->userFrameworkBaseURL;
+
+      // Remove language prefix using CRM_Utils_System_Drupal method
+      $baseUrlWithoutLang = CRM_Utils_System_Drupal::languageNegotiationURL(
+        $baseUrl,
+        false,  // addLanguagePart = false
+        true    // removeLanguagePart = true
+      );
+
+      // For Drupal, public files are accessed via sites/default/files/
+      $publicUrlPath = 'sites/default/files/' . $relativePath;
+      $publicUrl = rtrim($baseUrlWithoutLang, '/') . '/' . $publicUrlPath;
+
+      // Verify URL format
+      if (filter_var($publicUrl, FILTER_VALIDATE_URL)) {
+        $result['success'] = true;
+        $result['url'] = $publicUrl;
+
+        // Debug log the URL generation process
+        CRM_Core_Error::debug('URL generation details', array(
+          'original_base_url' => $baseUrl,
+          'base_url_without_lang' => $baseUrlWithoutLang,
+          'relative_path' => $relativePath,
+          'final_url' => $publicUrl
+        ));
+      } else {
+        $result['error'] = 'Generated URL is not valid: ' . $publicUrl;
+      }
+
+    } catch (Exception $e) {
+      $result['error'] = 'Exception in generatePublicUrl: ' . $e->getMessage();
+    }
+
+    return $result;
+  }
 }
