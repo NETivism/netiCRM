@@ -53,8 +53,6 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
       'rfm.R' => 'recency_days',
       'rfm.F' => 'frequency_count',
       'rfm.M' => 'monetary_amount',
-      'email.email' => 'email',
-      'phone.phone' => 'phone',
     );
     $this->_columns = array(
       ts('Contact ID') => 'id',
@@ -62,8 +60,6 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
       ts('Recency (Days)') => 'recency_days',
       ts('Frequency (Times)') => 'frequency_count',
       ts('Monetary (Amount)') => 'monetary_amount',
-      ts('Email') => 'email',
-      ts('Phone') => 'phone',
     );
   }
 
@@ -155,6 +151,45 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
 
   function qill(){
     $qill = array();
+    $from = !empty($this->_formValues['receive_date_from']) ? $this->_formValues['receive_date_from'] : NULL;
+    $to = !empty($this->_formValues['receive_date_to']) ? $this->_formValues['receive_date_to'] : NULL;
+    if ($from || $to) {
+      $to = empty($to) ? ts('no limit') : $to;
+      $from = empty($from) ? ' ... ' : $from;
+      $qill[1]['receiveDateRange'] = ts("Receive Date").': '. $from . ' ~ ' . $to;
+    }
+    else {
+      $qill[1]['receiveDateRange'] = ts("Receive Date").': '. self::DATE_RANGE_DEFAULT;
+    }
+    $segment = CRM_Utils_Array::value('segment', $this->_formValues, '');
+    $rfmModel = '';
+    if (!empty($segment)) {
+      $parsedSegment = self::parseRfmSegment($segment);
+      if ($parsedSegment) {
+        $segments = $this->prepareRfmSegments();
+        foreach ($segments as $segmentData) {
+          if ($segmentData['id'] === $segment) {
+            $rfmModel = $segmentData['name'];
+            break;
+          }
+        }
+      }
+    }
+    if (empty($rfmModel)) {
+      $rfmModel = ts('Custom');
+      $rValue = CRM_Utils_Array::value('rfm_r_value', $this->_formValues, 0);
+      $fValue = CRM_Utils_Array::value('rfm_f_value', $this->_formValues, 0);
+      $mValue = CRM_Utils_Array::value('rfm_m_value', $this->_formValues, 0);
+      $rfmModel .= " (R: {$rValue}, F: {$fValue}, M: {$mValue})";
+    }
+    $qill[1]['rfmModel'] = ts('RFM Model').': '. $rfmModel;
+
+    // 定期捐款狀態
+    $recurring = CRM_Utils_Array::value('recurring', $this->_formValues, self::RECURRING_NONRECURRING);
+    if (isset($this->_recurringStatus[$recurring])) {
+      $qill[1]['recurring'] = ts('Recurring Contribution').': '.$this->_recurringStatus[$recurring];
+    }
+
     return $qill;
   }
 
@@ -206,12 +241,9 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
    * Functions below generally don't need to be modified
    */
   function from() {
-    //TODO JOIN RFM table (rfm table / contact table)
     $from = "
     FROM civicrm_contact contact_a
     INNER JOIN {$this->_tableName} rfm ON contact_a.id = rfm.contact_id
-    LEFT JOIN civicrm_email email ON contact_a.id = email.contact_id AND email.is_primary = 1
-    LEFT JOIN civicrm_phone phone ON contact_a.id = phone.contact_id AND phone.is_primary = 1
     ";
     return $from;
   }
@@ -261,7 +293,6 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
       $this->fillTable();
       $this->_filled = TRUE;
     }
-    $count = $this->count();
     $sql = "
     SELECT COUNT(DISTINCT contact_a.id) as total_contacts,
     AVG(rfm.R) as avg_recency,
@@ -277,35 +308,27 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
   $query = CRM_Core_DAO::executeQuery($sql);
   $query->fetch();
   $summary = array();
-  $summary['search_results'] = array(
-    'label' => ts('RFM Analysis Results'),
-    'value' => '',
-  );
-  $totalAmount = '$' . CRM_Utils_Money::format($query->total_monetary, ' ');
-  $avgAmount = '$' . CRM_Utils_Money::format($query->avg_monetary, ' ');
-  $avgRecency = round($query->avg_recency, 1);
-  $avgFrequency = round($query->avg_frequency, 1);
-
-  $summary['search_results']['value'] =
-    ts('Total: %1 contacts', array(1 => $count)) . ' | ' .
-    ts('Total Amount: %1', array(1 => $totalAmount)) . ' | ' .
-    ts('Avg Amount: %1', array(1 => $avgAmount)) . ' | ' .
-    ts('Avg Recency: %1 days', array(1 => $avgRecency)) . ' | ' .
-    ts('Avg Frequency: %1 times', array(1 => $avgFrequency));
+  if ($query->total_contacts) {
+    $summary['search_results'] = array(
+      'label' => ts('RFM Analysis Results'),
+      'value' => '',
+    );
+    $totalAmount = '$' . CRM_Utils_Money::format($query->total_monetary, ' ');
+    $avgAmount = '$' . CRM_Utils_Money::format($query->avg_monetary, ' ');
+    $avgRecency = round($query->avg_recency, 1);
+    $avgFrequency = round($query->avg_frequency, 1);
+    $summary['search_results']['value'] =
+      ts('Total Amount: %1', array(1 => $totalAmount)) . ' / ' .
+      ts('Avg Amount: %1', array(1 => $avgAmount)) . ' / ' .
+      ts('Avg Recency: %1 days', array(1 => $avgRecency)) . ' / ' .
+      ts('Avg Frequency: %1 times', array(1 => $avgFrequency));
+    }
     return $summary;
   }
 
   function alterRow(&$row) {
     if (!empty($row['monetary_amount']) && empty($this->_isExport)) {
       $row['monetary_amount'] = CRM_Utils_Money::format($row['monetary_amount']);
-    }
-    if ($this->_isExport) {
-      if (empty($row['email'])) {
-        $row['email'] = '';
-      }
-      if (empty($row['phone'])) {
-        $row['phone'] = '';
-      }
     }
   }
 
