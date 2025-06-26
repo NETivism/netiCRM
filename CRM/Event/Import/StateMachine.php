@@ -52,12 +52,12 @@ class CRM_Event_Import_StateMachine extends CRM_Core_StateMachine {
   function __construct($controller, $action = CRM_Core_Action::NONE) {
     parent::__construct($controller, $action);
 
-    $this->_pages = array(
+    $this->_pages = [
       'CRM_Event_Import_Form_UploadFile' => NULL,
       'CRM_Event_Import_Form_MapField' => NULL,
       'CRM_Event_Import_Form_Preview' => NULL,
       'CRM_Event_Import_Form_Summary' => NULL,
-    );
+    ];
 
     $this->addSequentialPages($this->_pages);
   }

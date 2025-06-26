@@ -9,8 +9,8 @@ class CRM_Core_ClassLoader {
    * @static
    */
   private static $_singleton = NULL;
-  private static $_composer_classmap = array();
-  private static $_include_paths = array();
+  private static $_composer_classmap = [];
+  private static $_include_paths = [];
 
   /**
    * @param bool $force
@@ -62,7 +62,7 @@ class CRM_Core_ClassLoader {
     if ($this->_registered) {
       return;
     }
-    spl_autoload_register(array($this, 'loadClass'), TRUE, $prepend);
+    spl_autoload_register([$this, 'loadClass'], TRUE, $prepend);
     $this->_registered = TRUE;
 
   }

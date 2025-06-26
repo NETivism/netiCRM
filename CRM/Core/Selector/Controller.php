@@ -179,7 +179,7 @@ class CRM_Core_Selector_Controller {
    * @var array
    * @static
    */
-  public static $_properties = array('columnHeaders', 'rows', 'rowsEmpty');
+  public static $_properties = ['columnHeaders', 'rows', 'rowsEmpty'];
 
   /**
    * Class constructor
@@ -210,9 +210,9 @@ class CRM_Core_Selector_Controller {
       $this->_sortID .= '_u';
     }
 
-    $params = array(
+    $params = [
       'pageID' => $this->_pageID,
-    );
+    ];
 
     // let the constructor initialize this, should happen only once
     if (!isset(self::$_template)) {

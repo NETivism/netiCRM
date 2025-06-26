@@ -49,15 +49,15 @@ class CRM_Admin_Form_CMSUser extends CRM_Core_Form {
    */
   public function buildQuickForm() {
 
-    $this->addButtons(array(
-        array('type' => 'next',
+    $this->addButtons([
+        ['type' => 'next',
           'name' => ts('OK'),
           'isDefault' => TRUE,
-        ),
-        array('type' => 'cancel',
+        ],
+        ['type' => 'cancel',
           'name' => ts('Cancel'),
-        ),
-      )
+        ],
+      ]
     );
   }
 

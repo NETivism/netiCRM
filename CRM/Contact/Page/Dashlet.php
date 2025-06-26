@@ -58,24 +58,24 @@ class CRM_Contact_Page_Dashlet extends CRM_Core_Page {
 
     // get dashlets for logged in contact
     $currentDashlets = CRM_Core_BAO_Dashboard::getContactDashlets();
-    $contactDashlets = $availableDashlets = array();
+    $contactDashlets = $availableDashlets = [];
 
     foreach ($currentDashlets as $columnNo => $values) {
       foreach ($values as $val => $isMinimized) {
         list($weight, $dashletID) = explode('-', $val);
         $key = "{$dashletID}-{$isMinimized}";
-        $contactDashlets[$columnNo][$key] = array('label' => $allDashlets[$dashletID]['label'],
+        $contactDashlets[$columnNo][$key] = ['label' => $allDashlets[$dashletID]['label'],
           'is_reserved' => $allDashlets[$dashletID]['is_reserved'],
-        );
+        ];
         unset($allDashlets[$dashletID]);
       }
     }
 
     foreach ($allDashlets as $dashletID => $values) {
       $key = "{$dashletID}-0";
-      $availableDashlets[$key] = array('label' => $values['label'],
+      $availableDashlets[$key] = ['label' => $values['label'],
         'is_reserved' => $values['is_reserved'],
-      );
+      ];
     }
 
     $this->assign('contactDashlets', $contactDashlets);

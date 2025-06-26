@@ -49,7 +49,7 @@ class CRM_Utils_JSON {
    * @static
    */
   static function encode($params, $identifier = 'id') {
-    $buildObject = array();
+    $buildObject = [];
     foreach ($params as $value) {
       $name = addslashes($value['name']);
       $buildObject[] = "{ name: \"$name\", {$identifier}:\"{$value[$identifier]}\"}";

@@ -47,113 +47,113 @@ class CRM_Report_Form_Member_Lapse extends CRM_Report_Form {
   protected $_addressField = FALSE;
   protected $_emailField = FALSE;
   protected $_phoneField = FALSE;
-  protected $_charts = array('' => 'Tabular');
-  protected $_customGroupExtends = array('Membership'); function __construct() {
+  protected $_charts = ['' => 'Tabular'];
+  protected $_customGroupExtends = ['Membership']; function __construct() {
     // UI for selecting columns to appear in the report list
     // array conatining the columns, group_bys and filters build and provided to Form
-    $this->_columns = array('civicrm_contact' =>
-      array('dao' => 'CRM_Contact_DAO_Contact',
+    $this->_columns = ['civicrm_contact' =>
+      ['dao' => 'CRM_Contact_DAO_Contact',
         'fields' =>
-        array('display_name' =>
-          array('title' => ts('Member Name'),
+        ['display_name' =>
+          ['title' => ts('Member Name'),
             'no_repeat' => TRUE,
             'required' => TRUE,
-          ),
+          ],
           'id' =>
-          array('no_display' => TRUE,
+          ['no_display' => TRUE,
             'required' => TRUE,
-          ),
-        ),
+          ],
+        ],
         'grouping' => 'contact-fields',
-      ),
+      ],
       'civicrm_membership_type' =>
-      array('dao' => 'CRM_Member_DAO_MembershipType',
+      ['dao' => 'CRM_Member_DAO_MembershipType',
         'grouping' => 'member-fields',
         'filters' =>
-        array('tid' =>
-          array('name' => 'id',
+        ['tid' =>
+          ['name' => 'id',
             'title' => ts('Membership Types'),
             'operatorType' => CRM_Report_Form::OP_MULTISELECT,
             'options' => CRM_Member_PseudoConstant::membershipType(),
-          ),
-        ),
-      ),
+          ],
+        ],
+      ],
       'civicrm_membership' =>
-      array('dao' => 'CRM_Member_DAO_Membership',
+      ['dao' => 'CRM_Member_DAO_Membership',
         'grouping' => 'member-fields',
         'fields' =>
-        array('membership_type_id' =>
-          array('title' => 'Membership Type',
+        ['membership_type_id' =>
+          ['title' => 'Membership Type',
             'required' => TRUE,
             'type' => CRM_Utils_Type::T_STRING,
-          ),
-          'membership_start_date' => array('title' => ts('Current Cycle Start Date'),
-          ),
-          'membership_end_date' => array('title' => ts('Membership Lapse Date'),
+          ],
+          'membership_start_date' => ['title' => ts('Current Cycle Start Date'),
+          ],
+          'membership_end_date' => ['title' => ts('Membership Lapse Date'),
             'required' => TRUE,
-          ),
-        ),
+          ],
+        ],
         'filters' =>
-        array('membership_end_date' =>
-          array('title' => 'Lapsed Memberships',
+        ['membership_end_date' =>
+          ['title' => 'Lapsed Memberships',
             'operatorType' => CRM_Report_Form::OP_DATE,
-          ),
-        ),
-      ),
+          ],
+        ],
+      ],
       'civicrm_membership_status' =>
-      array('dao' => 'CRM_Member_DAO_MembershipStatus',
+      ['dao' => 'CRM_Member_DAO_MembershipStatus',
         'alias' => 'mem_status',
         'fields' =>
-        array(
-          'name' => array('title' => ts('Current Status'),
+        [
+          'name' => ['title' => ts('Current Status'),
             'required' => TRUE,
-          ),
-        ),
+          ],
+        ],
         'grouping' => 'member-fields',
-      ),
+      ],
       'civicrm_address' =>
-      array('dao' => 'CRM_Core_DAO_Address',
+      ['dao' => 'CRM_Core_DAO_Address',
         'fields' =>
-        array('street_address' => NULL,
+        ['street_address' => NULL,
           'city' => NULL,
           'postal_code' => NULL,
           'state_province_id' =>
-          array('title' => ts('State/Province'),
-          ),
+          ['title' => ts('State/Province'),
+          ],
           'country_id' =>
-          array('title' => ts('Country'),
+          ['title' => ts('Country'),
             'default' => TRUE,
-          ),
-        ),
+          ],
+        ],
         'grouping' => 'contact-fields',
-      ),
+      ],
       'civicrm_phone' =>
-      array('dao' => 'CRM_Core_DAO_Phone',
+      ['dao' => 'CRM_Core_DAO_Phone',
         'alias' => 'phone',
         'fields' =>
-        array('phone' => NULL),
+        ['phone' => NULL],
         'grouping' => 'contact-fields',
-      ),
+      ],
       'civicrm_email' =>
-      array('dao' => 'CRM_Core_DAO_Email',
+      ['dao' => 'CRM_Core_DAO_Email',
         'fields' =>
-        array('email' => NULL),
+        ['email' => NULL],
         'grouping' => 'contact-fields',
-      ),
+      ],
       'civicrm_group' =>
-      array('dao' => 'CRM_Contact_DAO_GroupContact',
+      ['dao' => 'CRM_Contact_DAO_GroupContact',
         'alias' => 'cgroup',
         'filters' =>
-        array('gid' =>
-          array('name' => 'group_id',
+        ['gid' =>
+          ['name' => 'group_id',
             'title' => ts('Group'),
             'operatorType' => CRM_Report_Form::OP_MULTISELECT,
             'group' => TRUE,
             'options' => CRM_Core_PseudoConstant::group(),
-          ),
-        ),
-      ),
-    );
+          ],
+        ],
+      ],
+    ];
 
     $this->_tagFilter = TRUE;
     parent::__construct();
@@ -164,8 +164,8 @@ class CRM_Report_Form_Member_Lapse extends CRM_Report_Form {
   }
 
   function select() {
-    $select = array();
-    $this->_columnHeaders = array();
+    $select = [];
+    $this->_columnHeaders = [];
     foreach ($this->_columns as $tableName => $table) {
       if (CRM_Utils_Array::arrayKeyExists('fields', $table)) {
         foreach ($table['fields'] as $fieldName => $field) {
@@ -193,7 +193,7 @@ class CRM_Report_Form_Member_Lapse extends CRM_Report_Form {
   }
 
   static function formRule($fields, $files, $self) {
-    $errors = $grouping = array();
+    $errors = $grouping = [];
     //check for searching combination of dispaly columns and
     //grouping criteria
 
@@ -239,7 +239,7 @@ class CRM_Report_Form_Member_Lapse extends CRM_Report_Form {
   }
 
   function where() {
-    $clauses = array();
+    $clauses = [];
     foreach ($this->_columns as $tableName => $table) {
       if (CRM_Utils_Array::arrayKeyExists('filters', $table)) {
         foreach ($table['filters'] as $fieldName => $field) {
@@ -297,10 +297,10 @@ class CRM_Report_Form_Member_Lapse extends CRM_Report_Form {
     $sql = $this->buildQuery(TRUE);
 
     $dao = CRM_Core_DAO::executeQuery($sql);
-    $rows = $graphRows = array();
+    $rows = $graphRows = [];
     $count = 0;
     while ($dao->fetch()) {
-      $row = array();
+      $row = [];
       foreach ($this->_columnHeaders as $key => $value) {
         $row[$key] = $dao->$key;
       }
@@ -318,7 +318,7 @@ class CRM_Report_Form_Member_Lapse extends CRM_Report_Form {
   function alterDisplay(&$rows) {
     // custom code to alter rows
     $entryFound = FALSE;
-    $checkList = array();
+    $checkList = [];
 
     foreach ($rows as $rowNum => $row) {
 

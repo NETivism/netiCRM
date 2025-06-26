@@ -38,24 +38,24 @@ class CRM_Contact_Form_Search_Custom_PostalMailing extends CRM_Contact_Form_Sear
   function __construct(&$formValues) {
     parent::__construct($formValues);
 
-    $this->_columns = array(ts('Contact Id') => 'contact_id',
+    $this->_columns = [ts('Contact Id') => 'contact_id',
       ts('Address') => 'address',
       ts('Contact Type') => 'contact_type',
       ts('Name') => 'sort_name',
       ts('State') => 'state_province',
-    );
+    ];
   }
 
   function buildForm(&$form) {
 
-    $groups = array('' => ts('- select group -')) + CRM_Core_PseudoConstant::allGroup();
+    $groups = ['' => ts('- select group -')] + CRM_Core_PseudoConstant::allGroup();
     $form->addElement('select', 'group_id', ts('Group'), $groups);
 
     /**
      * if you are using the standard template, this array tells the template what elements
      * are part of the search criteria
      */
-    $form->assign('elements', array('group_id'));
+    $form->assign('elements', ['group_id']);
   }
 
   function all($offset = 0, $rowcount = 0, $sort = NULL,
@@ -85,15 +85,15 @@ LEFT JOIN civicrm_state_province state_province ON  state_province.id = address.
   }
 
   function where($includeContactIDs = FALSE) {
-    $params = array();
+    $params = [];
 
     $count = 1;
-    $clause = array();
+    $clause = [];
     $groupID = CRM_Utils_Array::value('group_id',
       $this->_formValues
     );
     if ($groupID) {
-      $params[$count] = array($groupID, 'Integer');
+      $params[$count] = [$groupID, 'Integer'];
       $clause[] = "cgc.group_id = %{$count}";
     }
 

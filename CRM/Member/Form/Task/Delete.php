@@ -91,10 +91,10 @@ class CRM_Member_Form_Task_Delete extends CRM_Member_Form_Task {
       }
     }
 
-    $status = array(
-      ts('Deleted Member(s): %1', array(1 => $deletedMembers)),
-      ts('Total Selected Membership(s): %1', array(1 => count($this->_memberIds))),
-    );
+    $status = [
+      ts('Deleted Member(s): %1', [1 => $deletedMembers]),
+      ts('Total Selected Membership(s): %1', [1 => count($this->_memberIds)]),
+    ];
     CRM_Core_Session::setStatus($status);
   }
 }

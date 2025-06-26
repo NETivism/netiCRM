@@ -70,7 +70,7 @@ class CRM_Core_Smarty extends Smarty {
     $config = CRM_Core_Config::singleton();
 
     if (isset($config->customTemplateDir) && $config->customTemplateDir) {
-      $this->template_dir = array_merge(array($config->customTemplateDir),
+      $this->template_dir = array_merge([$config->customTemplateDir],
         $config->templateDir
       );
     }
@@ -96,10 +96,10 @@ class CRM_Core_Smarty extends Smarty {
     }
 
     if ($customPluginsDir) {
-      $this->plugins_dir = array($customPluginsDir, $config->smartyDir . 'plugins', $config->pluginsDir);
+      $this->plugins_dir = [$customPluginsDir, $config->smartyDir . 'plugins', $config->pluginsDir];
     }
     else {
-      $this->plugins_dir = array($config->smartyDir . 'plugins', $config->pluginsDir);
+      $this->plugins_dir = [$config->smartyDir . 'plugins', $config->pluginsDir];
     }
 
     // add the session and the config here
@@ -146,11 +146,11 @@ class CRM_Core_Smarty extends Smarty {
       }
     }
 
-    $this->register_function('crmURL', array('CRM_Utils_System', 'crmURL'));
+    $this->register_function('crmURL', ['CRM_Utils_System', 'crmURL']);
 
     if(CRM_Utils_System::isUserLoggedIn() || $this->isAssigned('browserPrint')) {
       $printerFriendly = CRM_Utils_System::makeURL('snippet', FALSE, FALSE) . '2';
-      $printerFriendly = str_replace(array('&#60;', '&#62;', '#gt;', '&lt;', '<', '>'), '', $printerFriendly);
+      $printerFriendly = str_replace(['&#60;', '&#62;', '#gt;', '&lt;', '<', '>'], '', $printerFriendly);
     }
     else {
       $printerFriendly = 'javascript:window.print()';
@@ -158,17 +158,17 @@ class CRM_Core_Smarty extends Smarty {
     $this->assign('printerFriendly', $printerFriendly);
 
     // Add class to crm container
-    $crm_container_class_arr = array("crm-container");
+    $crm_container_class_arr = ["crm-container"];
     $current_path = CRM_Utils_System::currentPath();
 
-    $md_allow_path = array(
+    $md_allow_path = [
       "civicrm/event/register",
       "civicrm/event/info",
       "civicrm/contribute/transact",
       "civicrm/profile/create",
       "civicrm/event/confirm",
       "civicrm/event/cancel"
-    );
+    ];
 
     if (in_array($current_path, $md_allow_path)) {
       $crm_container_class_arr[] = 'crm-container-md';
@@ -242,7 +242,7 @@ class CRM_Core_Smarty extends Smarty {
     return FALSE;
   }
 
-  function addTemplateDirs($dirs = array()) {
+  function addTemplateDirs($dirs = []) {
     if (!empty($dirs) && is_array($dirs)) {
       $this->template_dir = array_merge($dirs, $this->template_dir);
     }

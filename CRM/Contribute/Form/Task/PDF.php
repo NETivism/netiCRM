@@ -61,7 +61,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
 
   protected $_rows;
 
-  private $_suppressedDoNotEmail = array();
+  private $_suppressedDoNotEmail = [];
 
   /**
    * build all the data structures needed to build the form
@@ -72,7 +72,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
   function preProcess() {
     $id = CRM_Utils_Request::retrieve('id', 'Positive', $this, FALSE);
     if ($id) {
-      $this->_contributionIds = array($id);
+      $this->_contributionIds = [$id];
       $this->_componentClause = " civicrm_contribution.id IN ( $id ) ";
       $this->_single = TRUE;
       $this->assign('totalSelectedContributions', 1);
@@ -81,7 +81,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
       parent::preProcess();
     }
 
-    $deductible_type_id = array();
+    $deductible_type_id = [];
     $sql = "SELECT * FROM civicrm_contribution_type WHERE is_deductible = 0";
     $dao = CRM_Core_DAO::executeQuery($sql);
     while($dao->fetch()){
@@ -97,7 +97,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
     if ($count != 0) {
       $msg = ts('Contribution need to match conditions below in order to generate receipt(and receipt serial id number)');
       $cond1 = ts('Contribution record must dedutible.(base on <a href="%1">Contribution type</a> settings)',
-        array(1 => CRM_Utils_System::url('civicrm/admin/contribute/contributionType','reset=1'))
+        [1 => CRM_Utils_System::url('civicrm/admin/contribute/contributionType','reset=1')]
         );
       $cond2 = ts('Contribution record must completed.');
       $str = "<label>$msg</label>;
@@ -119,7 +119,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
     }
 
     $url = CRM_Utils_System::url('civicrm/contribute/search', $urlParams);
-    $breadCrumb = array(array('url' => $url, 'title' => ts('Search Results')));
+    $breadCrumb = [['url' => $url, 'title' => ts('Search Results')]];
 
     CRM_Utils_System::appendBreadCrumb($breadCrumb);
     CRM_Utils_System::setTitle(ts('Print Contribution Receipts'));
@@ -130,20 +130,20 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
       CRM_Utils_System::setTitle(ts('Print or Email Contribution Receipts'));
     }
 
-    $queryParams = array();
-    $returnProperties = array(
+    $queryParams = [];
+    $returnProperties = [
       'sort_name' => 1,
       'do_not_notify' => 1,
       'is_deceased' => 1,
       'email' => 1,
-    );
+    ];
     foreach ($this->_contactIds as $contactId) {
-      $queryParams[] = array(
+      $queryParams[] = [
         CRM_Core_Form::CB_PREFIX . $contactId, '=', 0, 0, 0,
-      );
+      ];
     }
     $numberofContacts = count($this->_contactIds);
-    $emptyEmail = array();
+    $emptyEmail = [];
     $details = CRM_Contact_BAO_Query::apiQuery($queryParams, $returnProperties, NULL, NULL, 0, $numberofContacts, TRUE, TRUE);
 
     if (!empty($details[0])) {
@@ -172,9 +172,9 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
    */
   public function buildQuickForm() {
     if (count($this->_contributionIds) > self::PDF_BATCH_THRESHOLD) {
-      $msg = ts('You have selected more than %1 contributions.', array(1 => self::PDF_BATCH_THRESHOLD)).' ';
+      $msg = ts('You have selected more than %1 contributions.', [1 => self::PDF_BATCH_THRESHOLD]).' ';
       $msg .= ts('To prevent large volumn email being sent and blocked by recipients, we got to turn off receipt function.').' ';
-      $msg .= ts('To enable this, please search again and select under %1 contributions.', array(1 => self::PDF_BATCH_THRESHOLD));
+      $msg .= ts('To enable this, please search again and select under %1 contributions.', [1 => self::PDF_BATCH_THRESHOLD]);
       CRM_Core_Session::setStatus($msg);
 
       $this->assign("isBatch", TRUE);
@@ -184,14 +184,14 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
     $options = self::getPrintingTypes();
     $config = CRM_Core_Config::singleton();
     if ($config->debug) {
-      $this->addCheckBox('nopdf', '', array('Debug: print html' => 1));
+      $this->addCheckBox('nopdf', '', ['Debug: print html' => 1]);
     }
     $this->addRadio( 'window_envelope', ts('Apply to window envelope'), $options,null,'<br/>',true );
 
     if (count($this->_contributionIds) <= self::PDF_BATCH_THRESHOLD && $this->_enableEmailReceipt) {
-      $this->addCheckBox('email_pdf_receipt', '', array(ts('Send an Email') => 1));
+      $this->addCheckBox('email_pdf_receipt', '', [ts('Send an Email') => 1]);
       $fromEmails = CRM_Contact_BAO_Contact_Utils::fromEmailAddress();
-      $emails = array();
+      $emails = [];
       if (!empty($fromEmails['system'])) {
         $emails[ts('Default').' '.ts('(built-in)')] = $fromEmails['system'];
       }
@@ -202,40 +202,40 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
       if (CRM_Core_Permission::check('access CiviContribute') && !empty($fromEmails['domain'])) {
         $emails[ts('Other')] = $fromEmails['domain'];
       }
-      $this->addSelect('from_email', ts('From Email'), array('' => ts('- select -')) + $emails);
+      $this->addSelect('from_email', ts('From Email'), ['' => ts('- select -')] + $emails);
       $this->addWysiwyg('receipt_text',
         ts('Body Html'),
-        array(
+        [
           'cols' => '80',
           'rows' => '4',
-        )
+        ]
       );
     }
 
-    $buttons = array();
+    $buttons = [];
     if (count($this->_contributionIds) <= self::PDF_BATCH_THRESHOLD && $this->_enableEmailReceipt) {
-      $buttons[] = array(
+      $buttons[] = [
         'type' => 'upload',
         'name' => ts('Email Receipt'),
-      );
+      ];
     }
-    $buttons[] = array(
+    $buttons[] = [
       'type' => 'next',
       'name' => ts('Download Receipt(s)'),
       'isDefault' => TRUE,
-    );
-    $buttons[] = array(
+    ];
+    $buttons[] = [
       'type' => 'back',
       'name' => ts('Cancel'),
-    );
+    ];
     $this->addButtons($buttons);
-    $this->addFormRule(array('CRM_Contribute_Form_Task_PDF', 'formRule'), $this);
+    $this->addFormRule(['CRM_Contribute_Form_Task_PDF', 'formRule'], $this);
   }
 
   static public function formRule($fields, $files, $self) {
-    $errors = array();
+    $errors = [];
     if (!empty($fields['email_pdf_receipt'][1]) && empty($fields['from_email'])) {
-      $errors['from_email'] = ts('%1 is a required field.', array(1 => ts('From Email')));
+      $errors['from_email'] = ts('%1 is a required field.', [1 => ts('From Email')]);
       // make receipt not popup when error detect
     }
     return $errors;
@@ -256,10 +256,10 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
     if ($action == 'next') {
       $totalNumPDF = count($this->_contributionIds);
       $params = $this->controller->exportValues($this->_name);
-      $args = array(
+      $args = [
         $this->_contributionIds,
         $params,
-      );
+      ];
       if (count($this->_contributionIds) > self::PDF_BATCH_THRESHOLD) {
         // start batch
         $config = CRM_Core_Config::singleton();
@@ -267,27 +267,27 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
         $fileName = CRM_Utils_String::safeFilename('Receipt-Batch-'.$rand.'-'.date('YmdHi')).'.zip';
         $file = $config->uploadDir.$fileName;
         $batch = new CRM_Batch_BAO_Batch();
-        $batchParams = array(
+        $batchParams = [
           'label' => ts('Receipt').': '.$fileName,
           'startCallback' => NULL,
           'startCallbackArgs' => NULL,
-          'processCallback' => array($this, 'batchPDF'),
+          'processCallback' => [$this, 'batchPDF'],
           'processCallbackArgs' => $args,
-          'finishCallback' => array($this, 'batchFinishCallback'),
+          'finishCallback' => [$this, 'batchFinishCallback'],
           'finishCallbackArgs' => NULL,
           'exportFile' => $file,
-          'download' => array(
-            'header' => array(
+          'download' => [
+            'header' => [
               'Content-Type: application/zip',
               'Content-Transfer-Encoding: Binary',
               'Content-Disposition: attachment;filename="'.$fileName.'"',
-            ),
+            ],
             'file' => $file,
-          ),
+          ],
           'actionPermission' => '',
           'total' => $totalNumPDF,
           'processed' => 0,
-        );
+        ];
         $batch->start($batchParams);
 
         // redirect to notice page
@@ -301,10 +301,10 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
     else if($action == 'upload') {
       // #28472, batch sending email pdf receipt
       $params = $this->controller->exportValues($this->_name);
-      $dao = CRM_Core_DAO::executeQuery("SELECT id, contact_id FROM civicrm_contribution WHERE id IN(%1)", array(
-        1 => array(implode(',', $this->_contributionIds), 'CommaSeparatedIntegers'),
-      ));
-      $skipList = array();
+      $dao = CRM_Core_DAO::executeQuery("SELECT id, contact_id FROM civicrm_contribution WHERE id IN(%1)", [
+        1 => [implode(',', $this->_contributionIds), 'CommaSeparatedIntegers'],
+      ]);
+      $skipList = [];
       while($dao->fetch()) {
         if (in_array($dao->contact_id, $this->_suppressedDoNotEmail)) {
           $skipList[$dao->id] = $dao->contact_id;
@@ -362,7 +362,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
       $prefix .= '_';
       $zipFile = $civicrm_batch->data['download']['file'];
       $zip = new ZipArchive();
-      $files = array();
+      $files = [];
       if ($zip->open($zipFile, ZipArchive::CREATE) == TRUE) {
         foreach(glob($prefix."*.pdf") as $fileName) {
           if (is_file($fileName)) {
@@ -395,7 +395,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
     $template->assign('pages', $pages);
     $pages = $template->fetch('CRM/common/Receipt.tpl');
     $pdf_real_filename = CRM_Utils_PDF_Utils::html2pdf($pages, 'Receipt.pdf', 'portrait', 'a4', $download);
-    $encryptPwd = str_replace(array('\'', '"'), '', $encryptPwd);
+    $encryptPwd = str_replace(['\'', '"'], '', $encryptPwd);
     if ($encryptWhenPossible) {
       $pdf_real_filename = self::encryptPDF($pdf_real_filename, $encryptPwd);
     }
@@ -451,30 +451,30 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
 
     switch ($window_envelope) {
       case 'single_page_letter':
-        $print_type = array(
+        $print_type = [
           'copy' => ts('Copy Receipts'),
-        );
+        ];
         break;
       case 'single_page_letter_with_copied':
-        $print_type = array(
+        $print_type = [
           'copy' => ts('Copy Receipts'),
           'original' => ts('Original Receipts'),
-        );
+        ];
         break;
       // refs #28069, to respect default template
       // we need this workaround to print copy only receipt
       case 'copy_only':
-        $print_type = array(
+        $print_type = [
           'copy' => ts('Copy Receipts'),
-        );
+        ];
         $window_envelope = '';
         break;
       case 'none':
       default:
-        $print_type = array(
+        $print_type = [
           'original' => ts('Original Receipts'),
           'copy' => ts('Copy Receipts'),
-        );
+        ];
         $window_envelope = '';
         break;
     }
@@ -486,7 +486,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
     $count = 0;
 
     foreach ($details as $contribID => $detail) {
-      $input = $ids = $objects = array();
+      $input = $ids = $objects = [];
       $input['component'] = $detail['component'];
       $ids['contact'] = $detail['contact'];
       $ids['contribution'] = $contribID;
@@ -532,7 +532,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
       $input['trxn_id'] = $contribution->trxn_id;
       $input['trxn_date'] = isset($contribution->trxn_date) ? $contribution->trxn_date : NULL;
 
-      $values = array();
+      $values = [];
       if ($count) {
         $html = '<div style="page-break-after: always;"></div>';
       }
@@ -572,9 +572,9 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
           $userID = $session->get('userID');
         }
         $statusId = CRM_Core_OptionGroup::getValue('activity_status', 'Completed', 'name');
-        $receiptId = CRM_Core_DAO::singleValueQuery("SELECT receipt_id FROM civicrm_contribution WHERE id = %1", array(1 => array($contributeId, 'Positive')));
+        $receiptId = CRM_Core_DAO::singleValueQuery("SELECT receipt_id FROM civicrm_contribution WHERE id = %1", [1 => [$contributeId, 'Positive']]);
         $subject = $receiptId ? ts('Receipt ID') . " : ".$receiptId : ts('Print Contribution Receipts');
-        $activityParams = array(
+        $activityParams = [
           'activity_type_id' => $activityTypeId,
           'activity_date_time' => date('Y-m-d H:i:s'),
           'source_record_id' => $contributeId,
@@ -582,19 +582,19 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
           'subject' => $subject,
           'assignee_contact_id' => $details[$contributeId]['contact'],
           'source_contact_id' => $userID,
-        );
+        ];
         CRM_Activity_BAO_Activity::create($activityParams);
       }
     }
   }
 
   static public function getPrintingTypes(){
-    return array(
+    return [
       'copy_only' => ts('Copied receipt only'),
       'none' => ts('Contain copied receipt without address'),
       'single_page_letter' => ts('Single page with address letter'),
       'single_page_letter_with_copied' => ts('Single page with address letter and copied receipt'),
-    );
+    ];
   }
 
   static public function validateData(&$input, &$ids, &$objects, $required = TRUE, $paymentProcessorID = NULL) {
@@ -673,7 +673,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
       }
 
       if (isset($ids['pledge_payment'])) {
-        $objects['pledge_payment'] = array();
+        $objects['pledge_payment'] = [];
         foreach ($ids['pledge_payment'] as $key => $paymentID) {
           $payment = new CRM_Pledge_DAO_Payment();
           $payment->id = $paymentID;

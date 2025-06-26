@@ -24,10 +24,10 @@ class CRM_Mailing_Form_Optout extends CRM_Core_Form {
     $this->assign('display_name', $displayName);
     $this->assign('email', $email);
     $this->assign('confirm', $confirm);
-    $obj = array(
+    $obj = [
       'type' => 'markup',
       'markup' => '<meta name="robots" content="noindex" />'.PHP_EOL,
-    );
+    ];
     CRM_Utils_System::addHTMLHead($obj);
   }
 
@@ -44,17 +44,17 @@ class CRM_Mailing_Form_Optout extends CRM_Core_Form {
       $captcha->add($this);
     }
 
-    $this->addButtons(array(
-        array(
+    $this->addButtons([
+        [
           'type' => 'next',
           'name' => ts('Optout'),
           'isDefault' => TRUE,
-        ),
-        array(
+        ],
+        [
           'type' => 'cancel',
           'name' => ts('Cancel'),
-        ),
-      )
+        ],
+      ]
     );
   }
 

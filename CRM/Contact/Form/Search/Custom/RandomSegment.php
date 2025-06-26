@@ -51,11 +51,11 @@ class CRM_Contact_Form_Search_Custom_RandomSegment extends CRM_Contact_Form_Sear
   protected $_debug = 0; function __construct(&$formValues) {
     parent::__construct($formValues);
 
-    $this->_columns = array(ts('Contact Id') => 'contact_id',
+    $this->_columns = [ts('Contact Id') => 'contact_id',
       ts('Contact Type') => 'contact_type',
       ts('Name') => 'sort_name',
       ts('Email') => 'email',
-    );
+    ];
 
     $this->initialize();
   }
@@ -91,24 +91,24 @@ class CRM_Contact_Form_Search_Custom_RandomSegment extends CRM_Contact_Form_Sear
     $groups = &CRM_Core_PseudoConstant::group();
     $inG = &$form->addElement('advmultiselect', 'includeGroups',
       ts('Include Group(s)') . ' ', $groups,
-      array('size' => 5,
+      ['size' => 5,
         'style' => 'width:240px',
         'class' => 'advmultiselect',
-      )
+      ]
     );
 
     $outG = &$form->addElement('advmultiselect', 'excludeGroups',
       ts('Exclude Group(s)') . ' ', $groups,
-      array('size' => 5,
+      ['size' => 5,
         'style' => 'width:240px',
         'class' => 'advmultiselect',
-      )
+      ]
     );
 
-    $inG->setButtonAttributes('add', array('value' => ts('Add >>')));
-    $outG->setButtonAttributes('add', array('value' => ts('Add >>')));
-    $inG->setButtonAttributes('remove', array('value' => ts('<< Remove')));
-    $outG->setButtonAttributes('remove', array('value' => ts('<< Remove')));
+    $inG->setButtonAttributes('add', ['value' => ts('Add >>')]);
+    $outG->setButtonAttributes('add', ['value' => ts('Add >>')]);
+    $inG->setButtonAttributes('remove', ['value' => ts('<< Remove')]);
+    $outG->setButtonAttributes('remove', ['value' => ts('<< Remove')]);
 
     $form->setTitle('Create a random segment of contacts');
 
@@ -116,7 +116,7 @@ class CRM_Contact_Form_Search_Custom_RandomSegment extends CRM_Contact_Form_Sear
      * if you are using the standard template, this array tells the template what elements
      * are part of the search criteria
      */
-    $form->assign('elements', array('segmentSize', 'includeGroups', 'excludeGroups'));
+    $form->assign('elements', ['segmentSize', 'includeGroups', 'excludeGroups']);
   }
 
   function summary() {
@@ -143,7 +143,7 @@ class CRM_Contact_Form_Search_Custom_RandomSegment extends CRM_Contact_Form_Sear
     $this->_tableName = "civicrm_temp_custom_{$randomNum}";
 
     //block for Group search
-    $smartGroup = array();
+    $smartGroup = [];
 
     $group = new CRM_Contact_DAO_Group();
     $group->is_active = 1;

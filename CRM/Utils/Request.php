@@ -107,7 +107,7 @@ class CRM_Utils_Request {
     }
 
     if (!isset($value) && $abort) {
-       return CRM_Core_Error::statusBounce(ts("Could not find valid value for %1", array(1 => $name)));
+       return CRM_Core_Error::statusBounce(ts("Could not find valid value for %1", [1 => $name]));
     }
 
     if (!isset($value) && $default !== NULL) {

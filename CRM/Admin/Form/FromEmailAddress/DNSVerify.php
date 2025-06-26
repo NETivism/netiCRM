@@ -22,7 +22,7 @@ class CRM_Admin_Form_FromEmailAddress_DNSVerify extends CRM_Admin_Form_FromEmail
    * @return string
    */
   public function getTitle() {
-    return ts('Verify %1', array(1 => ts('Domain')));
+    return ts('Verify %1', [1 => ts('Domain')]);
   }
 
   /**
@@ -48,7 +48,7 @@ class CRM_Admin_Form_FromEmailAddress_DNSVerify extends CRM_Admin_Form_FromEmail
       $this->_dkimStatus = FALSE;
     }
 
-    $this->addFormRule(array('CRM_Admin_Form_FromEmailAddress_DNSVerify', 'formRule'), $this);
+    $this->addFormRule(['CRM_Admin_Form_FromEmailAddress_DNSVerify', 'formRule'], $this);
   }
 
   /**
@@ -62,10 +62,10 @@ class CRM_Admin_Form_FromEmailAddress_DNSVerify extends CRM_Admin_Form_FromEmail
    */
   static function formRule($fields, $files, $self) {
     global $civicrm_conf;
-    $errors = array();
+    $errors = [];
     // verify on every submission
     if (!empty($self->_values['email'])) {
-      $errorMsg = array();
+      $errorMsg = [];
       list($user, $domain) = explode('@', trim($self->_values['email']));
 
       if (!empty($civicrm_conf['mailing_spf_skip'])) {
@@ -76,7 +76,7 @@ class CRM_Admin_Form_FromEmailAddress_DNSVerify extends CRM_Admin_Form_FromEmail
         $filter = $self->_values['filter'];
         if ($result !== TRUE) {
           $failReason = $result;
-          $errorMsg['spf'] = ts('Your %1 validation failed.', array(1 => 'SPF')).' '.ts("Reason").": ".$failReason;
+          $errorMsg['spf'] = ts('Your %1 validation failed.', [1 => 'SPF']).' '.ts("Reason").": ".$failReason;
           $filter = $filter & ~(self::VALID_SPF);
         }
         else {
@@ -91,7 +91,7 @@ class CRM_Admin_Form_FromEmailAddress_DNSVerify extends CRM_Admin_Form_FromEmail
       else {
         $result = CRM_Utils_Mail::checkDKIM($domain);
         if ($result === FALSE) {
-          $errorMsg['dkim'] = ts('Your %1 validation failed.', array(1 => 'DKIM'));
+          $errorMsg['dkim'] = ts('Your %1 validation failed.', [1 => 'DKIM']);
           $filter = $filter & ~(self::VALID_DKIM);
         }
         else {
@@ -119,7 +119,7 @@ class CRM_Admin_Form_FromEmailAddress_DNSVerify extends CRM_Admin_Form_FromEmail
    * the default values are retrieved from the database
    */
   function setDefaultValues() {
-    $defaults = array();
+    $defaults = [];
     return $defaults;
   }
 
@@ -134,7 +134,7 @@ class CRM_Admin_Form_FromEmailAddress_DNSVerify extends CRM_Admin_Form_FromEmail
 
     $spfRecord = CRM_Utils_Mail::getSPF($this->_values['email']);
     if (!empty($spfRecord)) {
-      $record = array();
+      $record = [];
       foreach($spfRecord as $spf) {
         $record[] = $spf['host'].' '.$spf['type'].' '.$spf['txt'];
       }
@@ -154,32 +154,32 @@ class CRM_Admin_Form_FromEmailAddress_DNSVerify extends CRM_Admin_Form_FromEmail
     }
 
     if ($this->_spfStatus && $this->_dkimStatus) {
-      $this->addButtons(array(
-          array(
+      $this->addButtons([
+          [
             'type' => 'back',
             'name' => ts('<< Previous'),
             'isDefault' => TRUE,
-          ),
-          array(
+          ],
+          [
             'type' => 'next',
             'name' => ts('Next >>'),
             'isDefault' => TRUE,
-          ),
-          array(
+          ],
+          [
             'type' => 'cancel',
             'name' => ts('Cancel'),
-          ),
-        )
+          ],
+        ]
       );
     }
     else {
       $this->addButton('refresh', ts('Refresh'));
-      $this->addButtons(array(
-          array(
+      $this->addButtons([
+          [
             'type' => 'cancel',
             'name' => ts('Cancel'),
-          ),
-        )
+          ],
+        ]
       );
     }
   }

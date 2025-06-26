@@ -55,9 +55,9 @@ LIMIT 0, 50
 ";
 
     $dao = CRM_Core_DAO::executeQuery($query);
-    $results = array();
+    $results = [];
     while ($dao->fetch()) {
-      $e = array('id' => $dao->id, 'name' => $dao->title);
+      $e = ['id' => $dao->id, 'name' => $dao->title];
       $results[] = $e;
     }
     echo json_encode($results);
@@ -84,7 +84,7 @@ ORDER by v.weight";
 
     $dao = CRM_Core_DAO::executeQuery($query);
     while ($dao->fetch()) {
-      $e = array('id' => $dao->value, 'name' => $dao->label);
+      $e = ['id' => $dao->value, 'name' => $dao->label];
       $results[] = $e;
     }
     echo json_encode($results);
@@ -121,13 +121,13 @@ WHERE cg.name LIKE 'civicrm_event.amount%'
 
     $events = CRM_Event_BAO_Event::getEvents(TRUE);
 
-    $elements = array(array('name' => ts('- select -'),
+    $elements = [['name' => ts('- select -'),
         'value' => '',
-      ));
+      ]];
     foreach ($events as $id => $name) {
-      $elements[] = array('name' => $name,
+      $elements[] = ['name' => $name,
         'value' => $id,
-      );
+      ];
     }
 
 
@@ -153,7 +153,7 @@ WHERE cg.name LIKE 'civicrm_event.amount%'
       'id'
     );
 
-    $participantRole = array('role' => $defaultRoleId);
+    $participantRole = ['role' => $defaultRoleId];
     echo json_encode($participantRole);
     CRM_Utils_System::civiExit();
   }
@@ -163,7 +163,7 @@ WHERE cg.name LIKE 'civicrm_event.amount%'
    */
   static function eventFull() {
     $id = $_GET['id'] ? $_GET['id'] : ($_GET['eventId'] ? $_GET['eventId'] : NULL);
-    $info = array();
+    $info = [];
     if (CRM_Utils_Rule::positiveInteger($id)) {
       $seat = CRM_Event_BAO_Participant::eventFull($id, TRUE);
       $info['seat'] = $seat;

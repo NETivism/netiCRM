@@ -180,9 +180,9 @@ class CRM_Core_DAO_Dashboard extends CRM_Core_DAO
   function &links()
   {
     if (!(self::$_links)) {
-      self::$_links = array(
+      self::$_links = [
         'domain_id' => 'civicrm_domain:id',
-      );
+      ];
     }
     return self::$_links;
   }
@@ -209,84 +209,84 @@ class CRM_Core_DAO_Dashboard extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'id' => array(
+      self::$_fields = [
+        'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'domain_id' => array(
+        ] ,
+        'domain_id' => [
           'name' => 'domain_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
           'FKClassName' => 'CRM_Core_DAO_Domain',
-        ) ,
-        'label' => array(
+        ] ,
+        'label' => [
           'name' => 'label',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Label') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'url' => array(
+        ] ,
+        'url' => [
           'name' => 'url',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Url') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'content' => array(
+        ] ,
+        'content' => [
           'name' => 'content',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Content') ,
-        ) ,
-        'permission' => array(
+        ] ,
+        'permission' => [
           'name' => 'permission',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Permission') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'permission_operator' => array(
+        ] ,
+        'permission_operator' => [
           'name' => 'permission_operator',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Permission Operator') ,
           'maxlength' => 3,
           'size' => CRM_Utils_Type::FOUR,
-        ) ,
-        'column_no' => array(
+        ] ,
+        'column_no' => [
           'name' => 'column_no',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Column No') ,
-        ) ,
-        'is_minimized' => array(
+        ] ,
+        'is_minimized' => [
           'name' => 'is_minimized',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ) ,
-        'is_fullscreen' => array(
+        ] ,
+        'is_fullscreen' => [
           'name' => 'is_fullscreen',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'default' => '',
-        ) ,
-        'is_active' => array(
+        ] ,
+        'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ) ,
-        'is_reserved' => array(
+        ] ,
+        'is_reserved' => [
           'name' => 'is_reserved',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ) ,
-        'weight' => array(
+        ] ,
+        'weight' => [
           'name' => 'weight',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Weight') ,
-        ) ,
-        'created_date' => array(
+        ] ,
+        'created_date' => [
           'name' => 'created_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Created Date') ,
-        ) ,
-      );
+        ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -320,7 +320,7 @@ class CRM_Core_DAO_Dashboard extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -343,7 +343,7 @@ class CRM_Core_DAO_Dashboard extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {

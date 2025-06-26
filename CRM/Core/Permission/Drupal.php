@@ -76,7 +76,7 @@ class CRM_Core_Permission_Drupal {
    */
   public static function &group($groupType = NULL, $excludeHidden = TRUE) {
     if (!isset(self::$_viewPermissionedGroups)) {
-      self::$_viewPermissionedGroups = self::$_editPermissionedGroups = array();
+      self::$_viewPermissionedGroups = self::$_editPermissionedGroups = [];
 
       $groups = &CRM_Core_PseudoConstant::allGroup($groupType, $excludeHidden);
 
@@ -140,7 +140,7 @@ class CRM_Core_Permission_Drupal {
         $clause = ' ( 0 ) ';
       }
       else {
-        $clauses = array();
+        $clauses = [];
         $groups = CRM_Utils_Array::implode(', ', self::$_editPermissionedGroups);
         $clauses[] = ' ( civicrm_group_contact.group_id IN ( ' . CRM_Utils_Array::implode(', ', array_keys(self::$_editPermissionedGroups)) . " ) ) ";
         $tables['civicrm_group_contact'] = 1;
@@ -174,7 +174,7 @@ class CRM_Core_Permission_Drupal {
         $clause = ' ( 0 ) ';
       }
       else {
-        $clauses = array();
+        $clauses = [];
         $groups = CRM_Utils_Array::implode(', ', self::$_viewPermissionedGroups);
         $clauses[] = ' ( civicrm_group_contact.group_id IN (' . CRM_Utils_Array::implode(', ', array_keys(self::$_viewPermissionedGroups)) . " ) ) ";
         $tables['civicrm_group_contact'] = 1;

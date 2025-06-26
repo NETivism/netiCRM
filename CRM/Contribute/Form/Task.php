@@ -90,7 +90,7 @@ class CRM_Contribute_Form_Task extends CRM_Core_Form {
   }
 
   static function preProcessCommon(&$form, $useTable = FALSE) {
-    $form->_contributionIds = array();
+    $form->_contributionIds = [];
 
     $values = $form->controller->exportValues($form->get('searchFormName'));
 
@@ -98,7 +98,7 @@ class CRM_Contribute_Form_Task extends CRM_Core_Form {
     $contributeTasks = CRM_Contribute_Task::tasks();
     $form->assign('taskName', $contributeTasks[$form->_task]);
 
-    $ids = array();
+    $ids = [];
     $rowCount = $form->get('rowCount');
     if ($values['radio_ts'] == 'ts_sel') {
       foreach ($values as $name => $value) {
@@ -195,15 +195,15 @@ class CRM_Contribute_Form_Task extends CRM_Core_Form {
    * @access public
    */
   function addDefaultButtons($title, $nextType = 'next', $backType = 'back', $submitOnce = null) {
-    $this->addButtons(array(
-        array('type' => $nextType,
+    $this->addButtons([
+        ['type' => $nextType,
           'name' => $title,
           'isDefault' => TRUE,
-        ),
-        array('type' => $backType,
+        ],
+        ['type' => $backType,
           'name' => ts('Cancel'),
-        ),
-      )
+        ],
+      ]
     );
   }
 }

@@ -5,12 +5,12 @@ class CRM_Contact_Form_Task_TaiwanACHExportTransaction extends CRM_Contact_Form_
   public $_additionalIds;
   function preProcess() {
     parent::preProcess();
-    $this->_exportParams = array();
+    $this->_exportParams = [];
     CRM_Utils_System::setTitle(ts("Export ACH Transaction File"));
     $isError = FALSE;
-    $unverified = array();
-    $notInProcess = array();
-    $msgs = array();
+    $unverified = [];
+    $notInProcess = [];
+    $msgs = [];
     foreach ($this->_achDatas as $id => $achData) {
       if ($achData['contribution_status_id'] != 5) {
         $notInProcess[] = $achData['id'];
@@ -23,10 +23,10 @@ class CRM_Contact_Form_Task_TaiwanACHExportTransaction extends CRM_Contact_Form_
     }
     if (!empty($isError)) {
       if (!empty($notInProcess)) {
-        $msgs[] = ts('All selected recurrings must be in process. There are %1 recurrings not in process.', array(1 => count($notInProcess)));
+        $msgs[] = ts('All selected recurrings must be in process. There are %1 recurrings not in process.', [1 => count($notInProcess)]);
       }
       if (!empty($unverified)) {
-        $msgs[] = ts('All selected recurrings must be verified. There are %1 recurrings yet verified.', array(1 => count($unverified)));
+        $msgs[] = ts('All selected recurrings must be verified. There are %1 recurrings yet verified.', [1 => count($unverified)]);
       }
       $msg = CRM_Utils_Array::implode('<br/>', $msgs);
        return CRM_Core_Error::statusBounce($msg);
@@ -35,13 +35,13 @@ class CRM_Contact_Form_Task_TaiwanACHExportTransaction extends CRM_Contact_Form_
 
   public function buildQuickForm() {
     parent::buildQuickForm();
-    $this->addDate('transact_date', ts('Process Date'), TRUE, array('formatType' => 'searchDate'));
+    $this->addDate('transact_date', ts('Process Date'), TRUE, ['formatType' => 'searchDate']);
   }
 
   function setDefaultValues() {
-    $defaults = array(
+    $defaults = [
       'transact_date' => date('Y-m-d', strtotime('+1 day')),
-    );
+    ];
     return $defaults;
   }
 

@@ -53,8 +53,8 @@ class CRM_Admin_Form_Setting extends CRM_Core_Form {
    */
    function setDefaultValues() {
     if (!$this->_defaults) {
-      $this->_defaults = array();
-      $formArray = array('Component', 'Localization');
+      $this->_defaults = [];
+      $formArray = ['Component', 'Localization'];
       $formMode = FALSE;
       if (in_array($this->_name, $formArray)) {
         $formMode = TRUE;
@@ -75,13 +75,13 @@ class CRM_Admin_Form_Setting extends CRM_Core_Form {
 
       $listEnabled = CRM_Core_BAO_Preferences::valueOptions('contact_autocomplete_options');
 
-      $autoSearchFields = array();
+      $autoSearchFields = [];
       if (!empty($list) && !empty($listEnabled)) {
         $autoSearchFields = array_combine($list, $listEnabled);
       }
 
       //Set sort_name for default
-      $this->_defaults['autocompleteContactSearch'] = array('1' => 1) + $autoSearchFields;
+      $this->_defaults['autocompleteContactSearch'] = ['1' => 1] + $autoSearchFields;
     }
     return $this->_defaults;
   }
@@ -93,15 +93,15 @@ class CRM_Admin_Form_Setting extends CRM_Core_Form {
    * @access public
    */
   public function buildQuickForm() {
-    $this->addButtons(array(
-        array('type' => 'upload',
+    $this->addButtons([
+        ['type' => 'upload',
           'name' => ts('Save'),
           'isDefault' => TRUE,
-        ),
-        array('type' => 'cancel',
+        ],
+        ['type' => 'cancel',
           'name' => ts('Cancel'),
-        ),
-      )
+        ],
+      ]
     );
   }
 

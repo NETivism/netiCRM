@@ -46,8 +46,8 @@ class CRM_Mailing_Form_Search extends CRM_Core_Form {
     );
     $this->add('text', 'mailing_subject', ts('Mailing Subject'), CRM_Core_DAO::getAttribute('CRM_Mailing_DAO_Mailing', 'subject'));
 
-    $this->addDate('mailing_from', ts('From'), FALSE, array('formatType' => 'searchDate'));
-    $this->addDate('mailing_to', ts('To'), FALSE, array('formatType' => 'searchDate'));
+    $this->addDate('mailing_from', ts('From'), FALSE, ['formatType' => 'searchDate']);
+    $this->addDate('mailing_to', ts('To'), FALSE, ['formatType' => 'searchDate']);
 
     $this->add('text', 'sort_name', ts('Created or Sent by'));
 
@@ -57,28 +57,28 @@ class CRM_Mailing_Form_Search extends CRM_Core_Form {
 */
 
 
-    $status = array(
+    $status = [
       '' => ts('- none -'),
       'Scheduled' => ts('Scheduled'),
       'Complete' => ts('Complete'),
       'Running' => ts('Running'),
-    );
+    ];
     $this->addElement('select', 'mailing_status', NULL, $status);
 
-    $this->addButtons(array(
-        array(
+    $this->addButtons([
+        [
           'type' => 'refresh',
           'name' => ts('Search'),
           'isDefault' => TRUE,
-        ),
-      ));
+        ],
+      ]);
   }
 
   function setDefaultValues() {
-    $defaults = array();
-    foreach (array(
+    $defaults = [];
+    foreach ([
         'Scheduled', 'Complete', 'Running',
-      ) as $status) {
+      ] as $status) {
       $defaults['mailing_status'][$status] = 1;
     }
     return $defaults;
@@ -89,14 +89,14 @@ class CRM_Mailing_Form_Search extends CRM_Core_Form {
 
     $parent = $this->controller->getParent();
     if (!empty($params)) {
-      $fields = array('mailing_name', 'mailing_from', 'mailing_to', 'sort_name', 'campaign_id', 'mailing_status', 'mailing_subject');
+      $fields = ['mailing_name', 'mailing_from', 'mailing_to', 'sort_name', 'campaign_id', 'mailing_status', 'mailing_subject'];
       foreach ($fields as $field) {
         if (isset($params[$field]) &&
           !CRM_Utils_System::isNull($params[$field])
         ) {
-          if (in_array($field, array(
+          if (in_array($field, [
                 'mailing_from', 'mailing_to',
-              ))) {
+              ])) {
             $time = ($field == 'mailing_to') ? '235959' : NULL;
             $parent->set($field, CRM_Utils_Date::processDate($params[$field], $time));
           }

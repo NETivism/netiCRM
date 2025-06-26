@@ -45,22 +45,22 @@ class CRM_Grant_Info extends CRM_Core_Component_Info {
 
   // docs inherited from interface
   public function getInfo() {
-    return array('name' => 'CiviGrant',
+    return ['name' => 'CiviGrant',
       'translatedName' => ts('CiviGrant'),
       'title' => 'CiviCRM Grant Management Engine',
       'path' => 'CRM_Grant_',
       'search' => 1,
       'showActivitiesInCore' => 1,
-    );
+    ];
   }
 
 
   // docs inherited from interface
   public function getPermissions() {
-    return array('access CiviGrant',
+    return ['access CiviGrant',
       'edit grants',
       'delete in CiviGrant',
-    );
+    ];
   }
 
   // docs inherited from interface
@@ -77,17 +77,17 @@ class CRM_Grant_Info extends CRM_Core_Component_Info {
 
   // docs inherited from interface
   public function registerTab() {
-    return array('title' => ts('Grants'),
+    return ['title' => ts('Grants'),
       'url' => 'grant',
       'weight' => 50,
-    );
+    ];
   }
 
   // docs inherited from interface
   public function registerAdvancedSearchPane() {
-    return array('title' => ts('Grants'),
+    return ['title' => ts('Grants'),
       'weight' => 50,
-    );
+    ];
   }
 
   // docs inherited from interface
@@ -100,11 +100,11 @@ class CRM_Grant_Info extends CRM_Core_Component_Info {
     if (CRM_Core_Permission::check('access CiviGrant') &&
       CRM_Core_Permission::check('edit grants')
     ) {
-      $shortCuts = array_merge($shortCuts, array(array('path' => 'civicrm/grant/add',
+      $shortCuts = array_merge($shortCuts, [['path' => 'civicrm/grant/add',
             'query' => "reset=1&action=add&context=standalone",
             'ref' => 'new-grant',
             'title' => ts('Grant'),
-          )));
+          ]]);
     }
   }
 }

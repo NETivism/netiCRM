@@ -303,10 +303,10 @@ abstract class CRM_Import_Parser {
     $this->_invalidRowCount = $this->_validCount = 0;
     $this->_totalCount = $this->_conflictCount = 0;
 
-    $this->_errors = array();
-    $this->_warnings = array();
-    $this->_conflicts = array();
-    $this->_unparsedAddresses = array();
+    $this->_errors = [];
+    $this->_warnings = [];
+    $this->_conflicts = [];
+    $this->_unparsedAddresses = [];
 
     $status = '';
 
@@ -315,7 +315,7 @@ abstract class CRM_Import_Parser {
     $this->_statusFieldName = $statusFieldName;
 
     if ($mode == self::MODE_MAPFIELD) {
-      $this->_rows = array();
+      $this->_rows = [];
     }
     else {
       $this->_activeFieldCount = count($this->_activeFields);
@@ -337,7 +337,7 @@ abstract class CRM_Import_Parser {
       $config = CRM_Core_Config::singleton();
       $statusFile = "{$config->uploadDir}status_{$statusID}.txt";
       $status = "<div class='description'>&nbsp; " . ts('No processing status reported yet.') . "</div>";
-      $contents = json_encode(array(0, $status));
+      $contents = json_encode([0, $status]);
 
       file_put_contents($statusFile, $contents);
 
@@ -399,7 +399,7 @@ abstract class CRM_Import_Parser {
           $timeFormatted .= round($estimatedTime) . ' ' . ts('seconds');
           $processedPercent = (int )(($this->_rowCount * 100) / $totalRowCount);
           $statusMsg = ts('%1 of %2 records - %3 remaining',
-            array(1 => $this->_rowCount, 2 => $totalRowCount, 3 => $timeFormatted)
+            [1 => $this->_rowCount, 2 => $totalRowCount, 3 => $timeFormatted]
           );
           $status = "
 <div class=\"description\">
@@ -407,7 +407,7 @@ abstract class CRM_Import_Parser {
 </div>
 ";
 
-          $contents = json_encode(array($processedPercent, $status));
+          $contents = json_encode([$processedPercent, $status]);
 
           file_put_contents($statusFile, $contents);
 
@@ -493,7 +493,7 @@ abstract class CRM_Import_Parser {
       if ($this->_invalidRowCount) {
         // removed view url for invlaid contacts
         $headers = array_merge(
-          array(ts('Line Number'), ts('Reason')),
+          [ts('Line Number'), ts('Reason')],
           $customHeaders
         );
         $this->_errorFileName = self::errorFileName(self::ERROR, $filenamePrefix);
@@ -501,7 +501,7 @@ abstract class CRM_Import_Parser {
       }
       if ($this->_conflictCount) {
         $headers = array_merge(
-          array(ts('Line Number'), ts('Reason')),
+          [ts('Line Number'), ts('Reason')],
           $customHeaders
         );
         $this->_conflictFileName = self::errorFileName(self::CONFLICT, $filenamePrefix);
@@ -509,7 +509,7 @@ abstract class CRM_Import_Parser {
       }
       if ($this->_duplicateCount) {
         $headers = array_merge(
-          array(ts('Line Number'), ts('View Contact URL')),
+          [ts('Line Number'), ts('View Contact URL')],
           $customHeaders
         );
 
@@ -518,7 +518,7 @@ abstract class CRM_Import_Parser {
       }
       if ($this->_unMatchCount) {
         $headers = array_merge(
-          array(ts('Line Number'), ts('Reason')),
+          [ts('Line Number'), ts('Reason')],
           $customHeaders
         );
 
@@ -527,7 +527,7 @@ abstract class CRM_Import_Parser {
       }
       if ($this->_unparsedAddressCount) {
         $headers = array_merge(
-          array(ts('Line Number'), ts('Contact Edit URL')),
+          [ts('Line Number'), ts('Contact Edit URL')],
           $customHeaders
         );
         $this->_unparsedAddressFileName = self::errorFileName(self::UNPARSED_ADDRESS_WARNING, $filenamePrefix);
@@ -699,7 +699,7 @@ abstract class CRM_Import_Parser {
    * @access public
    */
   function &getActiveFieldParams() {
-    $params = array();
+    $params = [];
 
     //CRM_Core_Error::debug( 'Count', $this->_activeFieldCount );
     for ($i = 0; $i < $this->_activeFieldCount; $i++) {
@@ -710,15 +710,15 @@ abstract class CRM_Import_Parser {
       if (isset($this->_activeFields[$i]->_value)) {
         if (isset($this->_activeFields[$i]->_hasLocationType)) {
           if (!isset($params[$this->_activeFields[$i]->_name])) {
-            $params[$this->_activeFields[$i]->_name] = array();
+            $params[$this->_activeFields[$i]->_name] = [];
           }
 
-          $value = array(
+          $value = [
             $this->_activeFields[$i]->_name =>
             $this->_activeFields[$i]->_value,
             'location_type_id' =>
             $this->_activeFields[$i]->_hasLocationType,
-          );
+          ];
 
           if (isset($this->_activeFields[$i]->_phoneType)) {
             $value['phone_type_id'] = $this->_activeFields[$i]->_phoneType;
@@ -732,9 +732,9 @@ abstract class CRM_Import_Parser {
           $params[$this->_activeFields[$i]->_name][] = $value;
         }
         elseif (isset($this->_activeFields[$i]->_websiteType)) {
-          $value = array($this->_activeFields[$i]->_name => $this->_activeFields[$i]->_value,
+          $value = [$this->_activeFields[$i]->_name => $this->_activeFields[$i]->_value,
             'website_type_id' => $this->_activeFields[$i]->_websiteType,
-          );
+          ];
 
           $params[$this->_activeFields[$i]->_name][] = $value;
         }
@@ -748,7 +748,7 @@ abstract class CRM_Import_Parser {
         //minor fix for CRM-4062
         if (isset($this->_activeFields[$i]->_related)) {
           if (!isset($params[$this->_activeFields[$i]->_related])) {
-            $params[$this->_activeFields[$i]->_related] = array();
+            $params[$this->_activeFields[$i]->_related] = [];
           }
 
           if (!isset($params[$this->_activeFields[$i]->_related]['contact_type']) && !empty($this->_activeFields[$i]->_relatedContactType)) {
@@ -757,11 +757,11 @@ abstract class CRM_Import_Parser {
 
           if (isset($this->_activeFields[$i]->_relatedContactLocType) && !empty($this->_activeFields[$i]->_value)) {
             if (!is_array($params[$this->_activeFields[$i]->_related][$this->_activeFields[$i]->_relatedContactDetails])) {
-              $params[$this->_activeFields[$i]->_related][$this->_activeFields[$i]->_relatedContactDetails] = array();
+              $params[$this->_activeFields[$i]->_related][$this->_activeFields[$i]->_relatedContactDetails] = [];
             }
-            $value = array($this->_activeFields[$i]->_relatedContactDetails => $this->_activeFields[$i]->_value,
+            $value = [$this->_activeFields[$i]->_relatedContactDetails => $this->_activeFields[$i]->_value,
               'location_type_id' => $this->_activeFields[$i]->_relatedContactLocType,
-            );
+            ];
 
             if (isset($this->_activeFields[$i]->_relatedContactPhoneType)) {
               $value['phone_type_id'] = $this->_activeFields[$i]->_relatedContactPhoneType;
@@ -775,9 +775,9 @@ abstract class CRM_Import_Parser {
             $params[$this->_activeFields[$i]->_related][$this->_activeFields[$i]->_relatedContactDetails][] = $value;
           }
           elseif (isset($this->_activeFields[$i]->_relatedContactWebsiteType)) {
-            $params[$this->_activeFields[$i]->_related][$this->_activeFields[$i]->_relatedContactDetails][] = array('url' => $this->_activeFields[$i]->_value,
+            $params[$this->_activeFields[$i]->_related][$this->_activeFields[$i]->_relatedContactDetails][] = ['url' => $this->_activeFields[$i]->_value,
               'website_type_id' => $this->_activeFields[$i]->_relatedContactWebsiteType,
-            );
+            ];
           }
           else {
             $params[$this->_activeFields[$i]->_related][$this->_activeFields[$i]->_relatedContactDetails] = $this->_activeFields[$i]->_value;
@@ -790,7 +790,7 @@ abstract class CRM_Import_Parser {
   }
 
   function getSelectValues() {
-    $values = array();
+    $values = [];
     foreach ($this->_fields as $name => $field) {
       $values[$name] = $field->_title;
     }
@@ -798,7 +798,7 @@ abstract class CRM_Import_Parser {
   }
 
   function getSelectTypes() {
-    $values = array();
+    $values = [];
     foreach ($this->_fields as $name => $field) {
       $values[$name] = $field->_hasLocationType;
     }
@@ -806,7 +806,7 @@ abstract class CRM_Import_Parser {
   }
 
   function getColumnPatterns() {
-    $values = array();
+    $values = [];
     foreach ($this->_fields as $name => $field) {
       $values[$name] = $field->_columnPattern;
     }
@@ -814,7 +814,7 @@ abstract class CRM_Import_Parser {
   }
 
   function getDataPatterns() {
-    $values = array();
+    $values = [];
     foreach ($this->_fields as $name => $field) {
       $values[$name] = $field->_dataPattern;
     }
@@ -917,7 +917,7 @@ abstract class CRM_Import_Parser {
    */
   static function exportCSV($fileName, $header, $data) {
     // remove '_status', '_statusMsg' and '_id' from error file
-    $errorValues = array();
+    $errorValues = [];
     $firstRow = reset($data);
     $colNum = count($firstRow);
     foreach ($data as $rowCount => $values) {
@@ -952,17 +952,17 @@ abstract class CRM_Import_Parser {
     if ($statusFieldName && $primaryKeyName && is_numeric($id)) {
       $msg = !empty($params["{$statusFieldName}Msg"]) ? $params["{$statusFieldName}Msg"] : '';
       $query = "UPDATE {$this->_tableName} SET {$statusFieldName} = %1, {$statusFieldName}Msg = %2 WHERE {$primaryKeyName} = %3";
-      CRM_Core_DAO::executeQuery($query, array(
-        1 => array($params[$statusFieldName], 'String'),
-        2 => array($msg, 'String'),
-        3 => array($id, 'Integer'),
-      ));
+      CRM_Core_DAO::executeQuery($query, [
+        1 => [$params[$statusFieldName], 'String'],
+        2 => [$msg, 'String'],
+        3 => [$id, 'Integer'],
+      ]);
     }
   }
 
   public static function statusName($status = NULL) {
     if (empty(self::$_statusNames)) {
-      self::$_statusNames = array(
+      self::$_statusNames = [
         self::PENDING => ts('Pending'),
         self::VALID => ts('Records Imported'),
         self::WARNING => ts('Warning'),
@@ -973,7 +973,7 @@ abstract class CRM_Import_Parser {
         self::MULTIPLE_DUPE => ts('Mutiple Duplicate'),
         self::NO_MATCH => ts('Mismatched Rows (skipped)'),
         self::UNPARSED_ADDRESS_WARNING => ts('Unparsed Address'),
-      );
+      ];
     }
     if ($status) {
       return self::$_statusNames[$status];
@@ -1058,7 +1058,7 @@ abstract class CRM_Import_Parser {
    * @return void
    */
   public static function setImportErrorFilenames($qfKey, $urlMap, $parserClass, $prefix, $form){
-    $defaultUrlMap = array(
+    $defaultUrlMap = [
       // defaults
       self::ERROR => 'downloadErrorRecordsUrl',
       self::CONFLICT => 'downloadConflictRecordsUrl',
@@ -1070,25 +1070,25 @@ abstract class CRM_Import_Parser {
       CRM_Contribute_Import_Parser::SOFT_CREDIT_ERROR => 'downloadSoftCreditErrorRecordsUrl',
       CRM_Contribute_Import_Parser::PLEDGE_PAYMENT_ERROR => 'downloadPledgePaymentErrorRecordsUrl',
       CRM_Contribute_Import_Parser::PCP_ERROR => 'downloadPCPErrorRecordsUrl',
-    );
+    ];
     $session = CRM_Core_Session::singleton();
     $scope = 'import-'.$qfKey;
 
     foreach($urlMap as $idx => $type) {
       $type = strtoupper($type);
-      if (is_callable(array($parserClass, 'errorFileName')) && defined($parserClass.'::'.$type)) {
+      if (is_callable([$parserClass, 'errorFileName']) && defined($parserClass.'::'.$type)) {
         $constType = constant($parserClass.'::'.$type);
         if (is_numeric($constType)) {
           $name = $parserClass.'-'.$constType;
-          $filename = call_user_func(array($parserClass, 'errorFileName'), $constType, $prefix);
+          $filename = call_user_func([$parserClass, 'errorFileName'], $constType, $prefix);
           if (!empty($filename)) {
             $session->set($name, $filename, $scope);
           }
-          $urlParams = http_build_query(array(
+          $urlParams = http_build_query([
             'type' => $constType,
             'parser' => $parserClass,
             'qfKey' => $qfKey,
-          ), '', '&');
+          ], '', '&');
           $tplVarName = is_numeric($idx) ? $defaultUrlMap[$constType] : $idx;
           $form->set($tplVarName, CRM_Utils_System::url('civicrm/export', $urlParams));
         }

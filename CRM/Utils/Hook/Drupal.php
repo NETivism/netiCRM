@@ -42,14 +42,14 @@ class CRM_Utils_Hook_Drupal extends CRM_Utils_Hook {
   }
 
   static function invoke($numParams, &$arg1, &$arg2, &$arg3, &$arg4, &$arg5, $fnSuffix, $fnPrefix = '') {
-    static $functions = array();
+    static $functions = [];
     $config = CRM_Core_Config::singleton();
-    $result = array();
+    $result = [];
     if ($config->userSystem->version < 8 ){
       // copied from user_module_invoke
       if (function_exists('module_list')) {
         $procceed = FALSE;
-        $functions[$fnSuffix] = array();
+        $functions[$fnSuffix] = [];
         $r = FALSE;
         foreach (module_list() as $module) {
           $fnName = "{$module}_{$fnSuffix}";
@@ -77,7 +77,7 @@ class CRM_Utils_Hook_Drupal extends CRM_Utils_Hook {
       $implements = CRM_Utils_System::moduleImplements($fnSuffix);
       foreach ($implements as $module) {
         $fnName = "{$module}_{$fnSuffix}";
-        $array = array(&$arg1, &$arg2, &$arg3, &$arg4, &$arg5);
+        $array = [&$arg1, &$arg2, &$arg3, &$arg4, &$arg5];
         $r = call_user_func_array($fnName, $array);
         if (is_array($r)) {
           $result = array_merge($result, $r);

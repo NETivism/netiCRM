@@ -181,10 +181,10 @@ class CRM_Member_DAO_MembershipBlock extends CRM_Core_DAO
   function &links()
   {
     if (!(self::$_links)) {
-      self::$_links = array(
+      self::$_links = [
         'entity_id' => 'civicrm_contribution_page:id',
         'membership_type_default' => 'civicrm_membership_type:id',
-      );
+      ];
     }
     return self::$_links;
   }
@@ -212,90 +212,90 @@ class CRM_Member_DAO_MembershipBlock extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'id' => array(
+      self::$_fields = [
+        'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'entity_table' => array(
+        ] ,
+        'entity_table' => [
           'name' => 'entity_table',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Entity Table') ,
           'maxlength' => 64,
           'size' => CRM_Utils_Type::BIG,
-        ) ,
-        'entity_id' => array(
+        ] ,
+        'entity_id' => [
           'name' => 'entity_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
           'FKClassName' => 'CRM_Contribute_DAO_ContributionPage',
-        ) ,
-        'membership_types' => array(
+        ] ,
+        'membership_types' => [
           'name' => 'membership_types',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Membership Types') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'membership_type_default' => array(
+        ] ,
+        'membership_type_default' => [
           'name' => 'membership_type_default',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Membership Type Default') ,
           'FKClassName' => 'CRM_Member_DAO_MembershipType',
-        ) ,
-        'display_min_fee' => array(
+        ] ,
+        'display_min_fee' => [
           'name' => 'display_min_fee',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Display Min Fee') ,
           'default' => '',
-        ) ,
-        'is_separate_payment' => array(
+        ] ,
+        'is_separate_payment' => [
           'name' => 'is_separate_payment',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'default' => '',
-        ) ,
-        'new_title' => array(
+        ] ,
+        'new_title' => [
           'name' => 'new_title',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('New Title') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'new_text' => array(
+        ] ,
+        'new_text' => [
           'name' => 'new_text',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('New Text') ,
-        ) ,
-        'renewal_title' => array(
+        ] ,
+        'renewal_title' => [
           'name' => 'renewal_title',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Renewal Title') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'renewal_text' => array(
+        ] ,
+        'renewal_text' => [
           'name' => 'renewal_text',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Renewal Text') ,
-        ) ,
-        'is_required' => array(
+        ] ,
+        'is_required' => [
           'name' => 'is_required',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Is Required') ,
-        ) ,
-        'is_active' => array(
+        ] ,
+        'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Is Active') ,
           'default' => '',
-        ) ,
-        'is_renewal_only' => array(
+        ] ,
+        'is_renewal_only' => [
           'name' => 'is_renewal_only',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Is Renewal Only') ,
-        ) ,
-      );
+        ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -329,7 +329,7 @@ class CRM_Member_DAO_MembershipBlock extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -352,7 +352,7 @@ class CRM_Member_DAO_MembershipBlock extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {

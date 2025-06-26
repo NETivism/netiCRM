@@ -112,7 +112,7 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
     $this->last_start_date =  $last_start_date;
     $this->last_end_date = $last_end_date;
 
-    $duration_array = array();
+    $duration_array = [];
     $count_date_stamp = strtotime($this->start_date);
     while($count_date_stamp <= strtotime($this->end_date)){
       $duration_array[] = date('Y-m-d', $count_date_stamp);
@@ -122,14 +122,14 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
 
     $this->days = ceil(($end_timestamp - $start_timestamp) / 86400) + 1;
 
-    $this->params_duration = array(
-      1 => array($start_date . ' 00:00:00', 'String'),
-      2 => array($end_date . ' 23:59:59', 'String'),
-    );
-    $this->params_last_duration = array(
-      1 => array($last_start_date . ' 00:00:00', 'String'),
-      2 => array($last_end_date . ' 23:59:59', 'String'),
-    );
+    $this->params_duration = [
+      1 => [$start_date . ' 00:00:00', 'String'],
+      2 => [$end_date . ' 23:59:59', 'String'],
+    ];
+    $this->params_last_duration = [
+      1 => [$last_start_date . ' 00:00:00', 'String'],
+      2 => [$last_end_date . ' 23:59:59', 'String'],
+    ];
 
     $this->assign('days', $this->days);
     $this->assign('start_date', $this->start_date);
@@ -145,23 +145,23 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
     }
 
     // refs #22871 add chart data
-    $filter_time = array('start_date' => $this->start_date, 'end_date' => $this->end_date);
-    $filter_all_year = array('start_date' => date('Y').'-01-01', 'end_date' => date('Y-m-d'));
+    $filter_time = ['start_date' => $this->start_date, 'end_date' => $this->end_date];
+    $filter_all_year = ['start_date' => date('Y').'-01-01', 'end_date' => date('Y-m-d')];
 
-    $filter_recur = array('contribution_recur_id' => TRUE);
-    $filter_not_recur = array('contribution_recur_id' => FALSE);
+    $filter_recur = ['contribution_recur_id' => TRUE];
+    $filter_not_recur = ['contribution_recur_id' => FALSE];
 
 
-    $summary_contrib['LastDurationContrib']['recur'] = CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::CONTRIBUTION_RECEIVE_DATE,array('interval' => 'DAY'), array('contribution' => $filter_time+$filter_recur));
-    $summary_contrib['LastDurationContrib']['not_recur'] = CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::CONTRIBUTION_RECEIVE_DATE,array('interval' => 'DAY'), array('contribution' => $filter_time+$filter_not_recur));
+    $summary_contrib['LastDurationContrib']['recur'] = CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::CONTRIBUTION_RECEIVE_DATE,['interval' => 'DAY'], ['contribution' => $filter_time+$filter_recur]);
+    $summary_contrib['LastDurationContrib']['not_recur'] = CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::CONTRIBUTION_RECEIVE_DATE,['interval' => 'DAY'], ['contribution' => $filter_time+$filter_not_recur]);
 
-    $summary_contrib['LastDurationProvince']['recur'] = CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::PROVINCE, array('contribution' => 1, 'seperate_other' => 1), array('contribution' => $filter_time+$filter_recur));
-    $summary_contrib['LastDurationProvince']['not_recur'] = CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::PROVINCE,array('contribution' => 1, 'seperate_other' => 1), array('contribution' => $filter_time+$filter_not_recur));
+    $summary_contrib['LastDurationProvince']['recur'] = CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::PROVINCE, ['contribution' => 1, 'seperate_other' => 1], ['contribution' => $filter_time+$filter_recur]);
+    $summary_contrib['LastDurationProvince']['not_recur'] = CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::PROVINCE,['contribution' => 1, 'seperate_other' => 1], ['contribution' => $filter_time+$filter_not_recur]);
 
     if (empty($this->is_custom_date)) {
-      $summary_contrib['ContribThisYear']['recur'] = CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::CONTRIBUTION_RECEIVE_DATE,array('interval' => 'MONTH'), array('contribution' => $filter_all_year+$filter_recur));
-      $summary_contrib['ContribThisYear']['not_recur'] = CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::CONTRIBUTION_RECEIVE_DATE,array('interval' => 'MONTH'), array('contribution' => $filter_all_year+$filter_not_recur));
-      $one_year_label = $year_month_label = array();
+      $summary_contrib['ContribThisYear']['recur'] = CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::CONTRIBUTION_RECEIVE_DATE,['interval' => 'MONTH'], ['contribution' => $filter_all_year+$filter_recur]);
+      $summary_contrib['ContribThisYear']['not_recur'] = CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::CONTRIBUTION_RECEIVE_DATE,['interval' => 'MONTH'], ['contribution' => $filter_all_year+$filter_not_recur]);
+      $one_year_label = $year_month_label = [];
       for ($month=1; $month <= 12 ; $month++) {
         $one_year_label[] = $month.'月';
         $year_month = date('Y').'-'.sprintf('%02d',$month);
@@ -187,56 +187,56 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
         }
       }
 
-      $chart = array(
+      $chart = [
         'id' => 'chart-one-year',
         'selector' => '#chart-one-year',
         'type' => 'Line',
         'labels' => json_encode($one_year_label),
-        'series' => json_encode(array($recur_year_sum, $not_recur_year_sum)),
+        'series' => json_encode([$recur_year_sum, $not_recur_year_sum]),
         'seriesUnit' => '$ ',
         'seriesUnitPosition'=> 'prefix',
         'withToolTip' => true,
         'withVerticalHint' => true,
-        'legends' => json_encode(array(ts("Recurring Contribution"), ts("Non-Recurring Contribution"))),
+        'legends' => json_encode([ts("Recurring Contribution"), ts("Non-Recurring Contribution")]),
         'stackLines' => true,
-      );
+      ];
       $this->assign('chart_this_year', $chart);
     }
 
     $recur_duration_sum = self::getDataForChart($this->duration_array, $summary_contrib['LastDurationContrib']['recur']);
     $not_recur_duration_sum = self::getDataForChart($this->duration_array, $summary_contrib['LastDurationContrib']['not_recur']);
 
-    $chart = array(
+    $chart = [
       'id' => 'chart-duration-sum',
       'selector' => '#chart-duration-sum',
       'type' => 'Line',
       'labels' => json_encode($this->duration_array),
-      'series' => json_encode(array($recur_duration_sum, $not_recur_duration_sum)),
+      'series' => json_encode([$recur_duration_sum, $not_recur_duration_sum]),
       'seriesUnit' => '$ ',
       'seriesUnitPosition'=> 'prefix',
       'withVerticalHint' => true,
-      'legends' => json_encode(array(ts("Recurring Contribution"), ts("Non-Recurring Contribution"))),
+      'legends' => json_encode([ts("Recurring Contribution"), ts("Non-Recurring Contribution")]),
       'withToolTip' => true,
       'autoDateLabel' => true,
       'withLegend' => true,
-    );
+    ];
     $this->assign('chart_duration_sum', $chart);
 
 
     $referrerTypes = CRM_Core_PseudoConstant::referrerTypes();
     $referrerTypesIdx = array_values($referrerTypes);
-    $referrerTypesAvailable = array();
-    $durationTrack = array();
+    $referrerTypesAvailable = [];
+    $durationTrack = [];
     foreach($this->duration_array as $idx => $d) {
       foreach($referrerTypesIdx as $k => $type) {
         $durationTrack[$k][$idx] = 0;
        }
      }
-    $params = array(
+    $params = [
       'pageType' => 'civicrm_contribution_page',
       'visitDateStart' => $this->params_duration[1][0],
       'visitDateEnd' => $this->params_duration[2][0],
-    );
+    ];
     $selector = new CRM_Track_Selector_Track($params);
     $dao = $selector->getQuery("referrer_type, count(id) as `count`, DATE_FORMAT(visit_date,'%Y-%m-%d') visit_day", 'GROUP BY visit_day, referrer_type');
     while($dao->fetch()){
@@ -253,7 +253,7 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
     $durationTrack = array_values($durationTrack);
     $referrerTypesIdx = array_values($referrerTypesIdx);
 
-    $chart = array(
+    $chart = [
       'id' => 'chart-duration-track',
       'selector' => '#chart-duration-track',
       'type' => 'Bar',
@@ -267,28 +267,28 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
       'stackBars' => true,
       'withLegend' => true,
       'onlyIntegerY' => true,
-    );
+    ];
     $this->assign('chart_duration_track', $chart);
 
-    $duration_province_recur_label = empty($summary_contrib['LastDurationProvince']['recur']) ? array() : $summary_contrib['LastDurationProvince']['recur']['label'];
-    $duration_province_not_recur_label = empty($summary_contrib['LastDurationProvince']['not_recur']) ? array() : $summary_contrib['LastDurationProvince']['not_recur']['label'];
+    $duration_province_recur_label = empty($summary_contrib['LastDurationProvince']['recur']) ? [] : $summary_contrib['LastDurationProvince']['recur']['label'];
+    $duration_province_not_recur_label = empty($summary_contrib['LastDurationProvince']['not_recur']) ? [] : $summary_contrib['LastDurationProvince']['not_recur']['label'];
     $duration_province_label =  array_unique(array_merge($duration_province_recur_label, $duration_province_not_recur_label));
     $duration_province_recur_sum = self::getDataForChart($duration_province_label, $summary_contrib['LastDurationProvince']['recur']);
     $duration_province_not_recur_sum = self::getDataForChart($duration_province_label, $summary_contrib['LastDurationProvince']['not_recur']);
 
-    $chart = array(
+    $chart = [
       'id' => 'chart-duration-province-sum',
       'selector' => '#chart-duration-province-sum',
       'type' => 'Bar',
-      'legends' => json_encode(array(ts("Recurring Contribution"), ts("Non-Recurring Contribution"))),
+      'legends' => json_encode([ts("Recurring Contribution"), ts("Non-Recurring Contribution")]),
       'labels' => json_encode(array_values($duration_province_label)), // array_values to let key to integer not string
-      'series' => json_encode(array($duration_province_recur_sum, $duration_province_not_recur_sum)),
+      'series' => json_encode([$duration_province_recur_sum, $duration_province_not_recur_sum]),
       'seriesUnit' => '$ ',
       'seriesUnitPosition'=> 'prefix',
       'withToolTip' => true,
       'stackBars' => true,
       'withLegend' => true,
-    );
+    ];
     $this->assign('chart_duration_province_sum', $chart);
 
     // First contribtion contact in last 30 days, Used sql by firstTimeDonor.php
@@ -404,21 +404,21 @@ SELECT COUNT(fst_donor.id) as ct, SUM(fst_donor.amount) as sum FROM
       INNER JOIN civicrm_contact c ON cc.contact_id = c.id
       WHERE cc.contribution_status_id = 1 AND cc.is_test = 0 AND cc.receive_date >= %1 AND cc.receive_date <= %2 AND cc.contribution_recur_id IS NULL ORDER BY receive_date DESC LIMIT 5 ";
     $dao = CRM_Core_DAO::executeQuery($sql, $this->params_duration);
-    $non_recur_contributions = array();
+    $non_recur_contributions = [];
     while($dao->fetch()){
-      $contribution = array(
+      $contribution = [
         'id' => $dao->id,
         'contact_id' => $dao->contact_id,
         'name' => $dao->name, 
         'date' => date('Y-m-d', strtotime($dao->receive_date)),
         'amount' => $dao->amount,
-      );
+      ];
       if(!empty($dao->instrument_id)){
         $sql = "SELECT ov.label FROM civicrm_option_value ov WHERE ov.value = %1 AND ov.option_group_id = %2";
-        $params_ov = array(
-          1 => array($dao->instrument_id, 'Integer'),
-          2 => array($instrument_option_group_id, 'Integer'),
-        );
+        $params_ov = [
+          1 => [$dao->instrument_id, 'Integer'],
+          2 => [$instrument_option_group_id, 'Integer'],
+        ];
         $contribution['instrument'] = CRM_Core_DAO::singleValueQuery($sql, $params_ov);
       }
       $non_recur_contributions[] = $contribution;
@@ -430,15 +430,15 @@ SELECT COUNT(fst_donor.id) as ct, SUM(fst_donor.amount) as sum FROM
       INNER JOIN civicrm_contribution_recur cr ON cr.id = cc.contribution_recur_id
       WHERE cc.payment_processor_id IS NOT NULL AND cc.contribution_status_id = 1 AND cc.is_test = 0 AND start_date >= %1 AND start_date <= %2 AND cc.contribution_recur_id IS NOT NULL GROUP BY cr.id ORDER BY start_date DESC LIMIT 5 ";
     $dao = CRM_Core_DAO::executeQuery($sql, $this->params_duration);
-    $recur_contributions = array();
+    $recur_contributions = [];
     while($dao->fetch()){
-      $recur = array(
+      $recur = [
         'id' => $dao->id,
         'contact_id' => $dao->contact_id,
         'name' => $dao->name, 
         'date' => date('Y-m-d', strtotime($dao->start_date)),
         'amount' => $dao->amount,
-      );
+      ];
       if($dao->installments){
         $recur['installments'] = $dao->installments;
       }else{
@@ -448,9 +448,9 @@ SELECT COUNT(fst_donor.id) as ct, SUM(fst_donor.amount) as sum FROM
     }
     $this->assign('recur_contributions', $recur_contributions);
 
-    $params_last_month = array(
-      1 => array(date('Y-m-d', strtotime("-1 month")), 'String'),
-    );
+    $params_last_month = [
+      1 => [date('Y-m-d', strtotime("-1 month")), 'String'],
+    ];
     $sql = "SELECT * FROM (SELECT c.id contact_id, c.display_name name, cr.amount amount, cr.end_date end_date, cr.id recur_id, c.id contribution_id, cr.installments installments, COUNT(cc.id) cc_total, MAX(cc.receive_date) last_receive_date
       FROM civicrm_contribution cc 
       INNER JOIN civicrm_contact c ON cc.contact_id = c.id 
@@ -459,9 +459,9 @@ SELECT COUNT(fst_donor.id) as ct, SUM(fst_donor.amount) as sum FROM
       GROUP BY cr.id ) cr WHERE (cc_total + 1) = installments AND last_receive_date > %1 
       ORDER BY last_receive_date ASC LIMIT 5";
     $dao = CRM_Core_DAO::executeQuery($sql, $params_last_month);
-    $due_recur = array();
+    $due_recur = [];
     while($dao->fetch()){
-      $recur = array();
+      $recur = [];
       $recur['contact_id'] = $dao->contact_id;
       $recur['name'] = $dao->name;
       $recur['amount'] = $dao->amount;
@@ -477,17 +477,17 @@ SELECT COUNT(fst_donor.id) as ct, SUM(fst_donor.amount) as sum FROM
     $last_end_date = date('Y-m-d', strtotime($start_date) - 86400);
     $duration_stamp = strtotime($end_date) - strtotime($start_date);
     $last_start_date = date('Y-m-d', strtotime($last_end_date) - $duration_stamp);
-    return array($last_start_date, $last_end_date);
+    return [$last_start_date, $last_end_date];
   }
 
   public static function getContributionPageStatistics($pid, $start_date = NULL, $end_date = NULL) {
     $pid = (int)$pid;
-    $page = $track = $achievement = $duration = array();
+    $page = $track = $achievement = $duration = [];
 
     // contribution page profile
     CRM_Contribute_BAO_ContributionPage::setValues($pid, $page);
     $sql = "SELECT COUNT(c.id) as `count`, SUM(c.total_amount) as `total_amount` FROM civicrm_contribution c WHERE c.contribution_page_id = %1 AND c.contribution_status_id = 1 AND c.is_test = 0";
-    $dao = CRM_Core_DAO::executeQuery($sql, array(1 => array($pid, 'Integer')));
+    $dao = CRM_Core_DAO::executeQuery($sql, [1 => [$pid, 'Integer']]);
     if($dao->fetch()){
       $page['total_count'] = $dao->count;
       $page['total_amount'] = $dao->total_amount;
@@ -496,12 +496,12 @@ SELECT COUNT(fst_donor.id) as ct, SUM(fst_donor.amount) as sum FROM
     // track
     $track = CRM_Core_BAO_Track::referrerTypeByPage('civicrm_contribution_page', $pid, $start_date, $end_date);
     if (count($track) > 4) {
-      $other = array(
+      $other = [
         'name' => 'other',
         'label' => ts('Other'),
         'count' => 0,
         'percent' => 0,
-      );
+      ];
       $i = 0;
       foreach($track as $referType => $t) {
         if ($i > 3 && $referType != 'other') {
@@ -525,21 +525,21 @@ SELECT COUNT(fst_donor.id) as ct, SUM(fst_donor.amount) as sum FROM
         $end_date = date('Y-m-d');
       }
       $sql = "SELECT COUNT(id) FROM civicrm_contribution c WHERE contribution_page_id = %1 AND receive_date >= %2 AND receive_date <= %3 AND contribution_status_id = 1 AND c.is_test = 0 ";
-      $params = array(
-        1 => array($pid, 'Integer'),
-        2 => array($start_date . ' 00:00:00' , 'String'),
-        3 => array($end_date . ' 23:59:59' , 'String'),
-      );
+      $params = [
+        1 => [$pid, 'Integer'],
+        2 => [$start_date . ' 00:00:00' , 'String'],
+        3 => [$end_date . ' 23:59:59' , 'String'],
+      ];
       $duration_count = CRM_Core_DAO::singleValueQuery($sql, $params);
       $duration['count'] = $duration_count;
 
       list($last_start_date, $last_end_date) = self::getLastDurationTime($start_date, $end_date);
       $sql = "SELECT COUNT(id) FROM civicrm_contribution c WHERE contribution_page_id = %1 AND receive_date >= %2 AND receive_date <= %3 AND contribution_status_id = 1 AND c.is_test = 0 ";
-      $params = array(
-        1 => array($pid, 'Integer'),
-        2 => array($last_start_date . ' 00:00:00' , 'String'),
-        3 => array($last_end_date . ' 23:59:59' , 'String'),
-      );
+      $params = [
+        1 => [$pid, 'Integer'],
+        2 => [$last_start_date . ' 00:00:00' , 'String'],
+        3 => [$last_end_date . ' 23:59:59' , 'String'],
+      ];
       $last_duration_count = CRM_Core_DAO::singleValueQuery($sql, $params);
 
       if($last_duration_count > 1){
@@ -548,19 +548,19 @@ SELECT COUNT(fst_donor.id) as ct, SUM(fst_donor.amount) as sum FROM
       }
     }
 
-    $return = array(
+    $return = [
       'page' => $page,
       'track' => $track,
       'achievement' => $achievement,
       'duration' => $duration,
-    );
+    ];
     return $return;
   }
 
   private static function getDataForChart($label_array, $summary_array, $type='sum') {
-    $return_array = array();
+    $return_array = [];
     if (!is_array($summary_array['label'])) {
-      $summary_array['label'] = array();
+      $summary_array['label'] = [];
     }
     foreach ($label_array as $label) {
       $recur_index = array_search($label, $summary_array['label']);

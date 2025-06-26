@@ -62,7 +62,7 @@ class CRM_Contact_Form_Edit_Household {
     $form->addRule('external_identifier',
       ts('External ID already exists in Database.'),
       'objectExists',
-      array('CRM_Contact_DAO_Contact', $form->_contactId, 'external_identifier')
+      ['CRM_Contact_DAO_Contact', $form->_contactId, 'external_identifier']
     );
   }
 
@@ -76,7 +76,7 @@ class CRM_Contact_Form_Edit_Household {
    * @public
    */
   static function formRule($fields, $files, $contactID = NULL) {
-    $errors = array();
+    $errors = [];
 
     $primaryID = CRM_Contact_Form_Contact::formRule($fields, $errors, $contactID);
 

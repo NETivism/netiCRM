@@ -54,10 +54,10 @@ class CRM_Contact_Form_Search_Custom_MultipleValues extends CRM_Contact_Form_Sea
 
     $this->_tag = CRM_Utils_Array::value('tag', $this->_formValues);
 
-    $this->_columns = array(ts('Contact Id') => 'contact_id',
+    $this->_columns = [ts('Contact Id') => 'contact_id',
       ts('Contact Type') => 'contact_type',
       ts('Name') => 'sort_name',
-    );
+    ];
 
     $this->_customGroupIDs = CRM_Utils_Array::value('custom_group', $formValues);
 
@@ -68,7 +68,7 @@ class CRM_Contact_Form_Search_Custom_MultipleValues extends CRM_Contact_Form_Sea
 
   function addColumns() {
     // add all the fields for chosen groups
-    $this->_tables = $this->_options = array();
+    $this->_tables = $this->_options = [];
     foreach ($this->_groupTree as $groupID => $group) {
       if (!CRM_Utils_Array::value($groupID, $this->_customGroupIDs)) {
         continue;
@@ -78,12 +78,12 @@ class CRM_Contact_Form_Search_Custom_MultipleValues extends CRM_Contact_Form_Sea
       foreach ($group['fields'] as $fieldID => $field) {
         $this->_columns[$field['label']] = "custom_{$field['id']}";
         if (!CRM_Utils_Array::arrayKeyExists($group['table_name'], $this->_tables)) {
-          $this->_tables[$group['table_name']] = array();
+          $this->_tables[$group['table_name']] = [];
         }
         $this->_tables[$group['table_name']][$field['id']] = $field['column_name'];
 
         // also build the option array
-        $this->_options[$field['id']] = array();
+        $this->_options[$field['id']] = [];
         CRM_Core_BAO_CustomField::buildOption($field,
           $this->_options[$field['id']]
         );
@@ -95,15 +95,15 @@ class CRM_Contact_Form_Search_Custom_MultipleValues extends CRM_Contact_Form_Sea
     $form->add('text', 'sort_name', ts('Contact Name'), TRUE);
 
     // add select for contact type
-    $contactTypes = array('' => ts('- any contact type -')) + CRM_Contact_BAO_ContactType::getSelectElements();
+    $contactTypes = ['' => ts('- any contact type -')] + CRM_Contact_BAO_ContactType::getSelectElements();
     $form->add('select', 'contact_type', ts('Find...'), $contactTypes);
 
     // add select for groups
-    $group = array('' => ts('- any group -')) + CRM_Core_PseudoConstant::group();
+    $group = ['' => ts('- any group -')] + CRM_Core_PseudoConstant::group();
     $form->addElement('select', 'group', ts('in'), $group);
 
     // add select for tags
-    $tag = array('' => ts('- any tag -')) + CRM_Core_PseudoConstant::tag();
+    $tag = ['' => ts('- any tag -')] + CRM_Core_PseudoConstant::tag();
     $form->addElement('select', 'tag', ts('Tagged'), $tag);
 
     if (empty($this->_groupTree)) {
@@ -144,7 +144,7 @@ contact_a.contact_type as contact_type,
 contact_a.sort_name    as sort_name,
 ";
 
-    $customClauses = array();
+    $customClauses = [];
     foreach ($this->_tables as $tableName => $fields) {
       foreach ($fields as $fieldID => $fieldName) {
         $customClauses[] = "{$tableName}.{$fieldName} as custom_{$fieldID}";
@@ -160,7 +160,7 @@ contact_a.sort_name    as sort_name,
 
   function from() {
     $from = "FROM civicrm_contact contact_a";
-    $customFrom = array();
+    $customFrom = [];
     // lets do an INNER JOIN so we get only relevant values rather than all values
     if (!empty($this->_tables)) {
       foreach ($this->_tables as $tableName => $fields) {
@@ -185,8 +185,8 @@ contact_a.sort_name    as sort_name,
 
   function where($includeContactIDs = FALSE) {
     $count = 1;
-    $clause = array();
-    $params = array();
+    $clause = [];
+    $params = [];
     $name = CRM_Utils_Array::value('sort_name',
       $this->_formValues
     );
@@ -194,7 +194,7 @@ contact_a.sort_name    as sort_name,
       if (strpos($name, '%') === FALSE) {
         $name = "%{$name}%";
       }
-      $params[$count] = array($name, 'String');
+      $params[$count] = [$name, 'String'];
       $clause[] = "contact_a.sort_name LIKE %{$count}";
       $count++;
     }
@@ -233,14 +233,14 @@ contact_a.sort_name    as sort_name,
   }
 
   function setDefaultValues() {
-    return array();
+    return [];
   }
 
   function alterRow(&$row) {
     foreach ($this->_options as $fieldID => $values) {
-      $customVal = $valueSeparatedArray = array();
+      $customVal = $valueSeparatedArray = [];
       if (in_array($values['attributes']['html_type'],
-          array('Radio', 'Select', 'Autocomplete-Select')
+          ['Radio', 'Select', 'Autocomplete-Select']
         )) {
         if ($values['attributes']['data_type'] == 'ContactReference' && $row["custom_{$fieldID}"]) {
           $row["custom_{$fieldID}"] = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', (int)$row["custom_{$fieldID}"], 'display_name');
@@ -254,7 +254,7 @@ contact_a.sort_name    as sort_name,
         }
       }
       elseif (in_array($values['attributes']['html_type'],
-          array('CheckBox', 'Multi-Select', 'AdvMulti-Select')
+          ['CheckBox', 'Multi-Select', 'AdvMulti-Select']
         )) {
         $valueSeparatedArray = array_filter(explode(CRM_Core_DAO::VALUE_SEPARATOR, $row["custom_{$fieldID}"]));
         foreach ($valueSeparatedArray as $val) {
@@ -263,7 +263,7 @@ contact_a.sort_name    as sort_name,
         $row["custom_{$fieldID}"] = CRM_Utils_Array::implode(', ', $customVal);
       }
       elseif (in_array($values['attributes']['html_type'],
-          array('Multi-Select State/Province', 'Select State/Province')
+          ['Multi-Select State/Province', 'Select State/Province']
         )) {
         $valueSeparatedArray = array_filter(explode(CRM_Core_DAO::VALUE_SEPARATOR, $row["custom_{$fieldID}"]));
         $stateName = CRM_Core_PseudoConstant::stateProvince();
@@ -273,7 +273,7 @@ contact_a.sort_name    as sort_name,
         $row["custom_{$fieldID}"] = CRM_Utils_Array::implode(', ', $customVal);
       }
       elseif (in_array($values['attributes']['html_type'],
-          array('Multi-Select Country', 'Select Country')
+          ['Multi-Select Country', 'Select Country']
         )) {
         $valueSeparatedArray = array_filter(explode(CRM_Core_DAO::VALUE_SEPARATOR, $row["custom_{$fieldID}"]));
         CRM_Core_PseudoConstant::populate($countryNames, 'CRM_Core_DAO_Country',

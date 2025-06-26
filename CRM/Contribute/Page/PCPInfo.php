@@ -77,7 +77,7 @@ class CRM_Contribute_Page_PCPInfo extends CRM_Core_Page {
 
     $this->assign('is_embed', $isEmbed);
 
-    $prms = array('id' => $this->_id);
+    $prms = ['id' => $this->_id];
 
     CRM_Core_DAO::commonRetrieve('CRM_Contribute_DAO_PCP', $prms, $pcpInfo);
     if (empty($pcpInfo)) {
@@ -87,7 +87,7 @@ class CRM_Contribute_Page_PCPInfo extends CRM_Core_Page {
       );
     }
 
-    $contributionPageParams = array('id' => $pcpInfo['contribution_page_id']);
+    $contributionPageParams = ['id' => $pcpInfo['contribution_page_id']];
     CRM_Core_DAO::commonRetrieve('CRM_Contribute_DAO_ContributionPage', $contributionPageParams, $contributionPageInfo);
     $this->assign('contribution_page', $contributionPageInfo);
 
@@ -97,10 +97,10 @@ class CRM_Contribute_Page_PCPInfo extends CRM_Core_Page {
     $currentUrl = CRM_Utils_System::url(CRM_Utils_System::currentPath(), 'id=' . $this->_id . '&reset=1', ['absolute' => TRUE]);
     $this->assign('currentUrl', $currentUrl);
 
-    $shareData = array(
+    $shareData = [
       'url' => urlencode($currentUrl),
       'title' => urlencode($pcpInfo['title']),
-    );
+    ];
     $this->assign('share_data', $shareData);
 
     $pcpStatus = CRM_Contribute_PseudoConstant::pcpStatus();
@@ -147,10 +147,10 @@ class CRM_Contribute_Page_PCPInfo extends CRM_Core_Page {
       }
     }
 
-    $default = array();
+    $default = [];
 
     CRM_Core_DAO::commonRetrieveAll('CRM_Contribute_DAO_ContributionPage', 'id',
-      $pcpInfo['contribution_page_id'], $default, array('start_date', 'end_date')
+      $pcpInfo['contribution_page_id'], $default, ['start_date', 'end_date']
     );
 
     $this->assign('pageName', CRM_Contribute_PseudoConstant::contributionPage($pcpInfo['contribution_page_id'], TRUE));
@@ -174,20 +174,20 @@ class CRM_Contribute_Page_PCPInfo extends CRM_Core_Page {
         unset($link['all'][CRM_Core_Action::DISABLE]);
         unset($link['all'][CRM_Core_Action::ENABLE]);
       }
-      $hints = array(
+      $hints = [
         CRM_Core_Action::UPDATE => ts('Change the content and appearance of your page'),
         CRM_Core_Action::DETACH => ts('Send emails inviting your friends to support your campaign!'),
         CRM_Core_Action::BROWSE => ts('Update your personal contact information'),
         CRM_Core_Action::DISABLE => ts('De-activate the page (you can re-activate it later)'),
-      );
+      ];
       CRM_Core_DAO::commonRetrieveAll('CRM_Contribute_DAO_PCPBlock', $pcpInfo['contribution_page_id'],
-        'entity_id', $blockValues, array('is_tellfriend_enabled')
+        'entity_id', $blockValues, ['is_tellfriend_enabled']
       );
 
       $blockId = array_pop($blockValues);
-      $replace = array('id' => $this->_id,
+      $replace = ['id' => $this->_id,
         'block' => $blockId['id'],
-      );
+      ];
       if (!CRM_Utils_Array::value('is_tellfriend_enabled', $blockId) ||
         CRM_Utils_Array::value('status_id', $pcpInfo) != $approvedId
       ) {
@@ -208,13 +208,13 @@ class CRM_Contribute_Page_PCPInfo extends CRM_Core_Page {
       if ($src) {
         $bgFile = basename($src);
         $encodedSrc = str_replace($bgFile, urlencode($bgFile), $src);
-        $meta = array(
+        $meta = [
           'tag' => 'meta',
-          'attributes' => array(
+          'attributes' => [
             'property' => 'og:image',
             'content' => $encodedSrc,
-          ),
-        );
+          ],
+        ];
         CRM_Utils_System::addHTMLHead($meta);
         $this->assign('pcp_image_src', $encodedSrc);
       }
@@ -267,7 +267,7 @@ class CRM_Contribute_Page_PCPInfo extends CRM_Core_Page {
     }
     $this->assign('contribute_url', $contributeURL);
 
-    $progress = array(
+    $progress = [
       'type' => 'amount',
       'label' => ts('Goal Amount'),
       'goal' => $pcpInfo['goal_amount'],
@@ -278,7 +278,7 @@ class CRM_Contribute_Page_PCPInfo extends CRM_Core_Page {
       'achieved_percent' => floor($achieved),
       'achieved_status'=> floor($achieved) >= 100 ? TRUE : FALSE,
       'contribution_page_is_active' => $contributionPageInfo['is_active']
-    );
+    ];
 
     if ($contributeURL) {
       $linkDisplay = TRUE;

@@ -126,7 +126,7 @@ class CRM_Contact_Form_Search_Custom extends CRM_Contact_Form_Search {
       // re-build tasks drop down select
       CRM_Contact_Task::initTasks($tasks);
       $permission = CRM_Core_Permission::getPermission();
-      $tasks = array('' => ts('- actions -'));
+      $tasks = ['' => ts('- actions -')];
       $tasks += CRM_Contact_Task::permissionedTaskTitles($permission);
       $this->removeElement('task');
       $this->add('select', 'task', ts('Actions:') . ' ', $tasks);

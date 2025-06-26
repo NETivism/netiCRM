@@ -52,12 +52,12 @@ class CRM_Mailing_StateMachine_Send extends CRM_Core_StateMachine {
   function __construct($controller, $action = CRM_Core_Action::NONE) {
     parent::__construct($controller, $action);
 
-    $this->_pages = array(
+    $this->_pages = [
       'CRM_Mailing_Form_Group' => NULL,
       'CRM_Mailing_Form_Settings' => NULL,
       'CRM_Mailing_Form_Upload' => NULL,
       'CRM_Mailing_Form_Test' => NULL,
-    );
+    ];
 
 
     if (CRM_Mailing_Info::workflowEnabled()) {

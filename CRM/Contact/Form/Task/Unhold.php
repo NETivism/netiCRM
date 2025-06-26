@@ -27,7 +27,7 @@ WHERE on_hold = 1 AND hold_date is not null AND contact_id in (" . CRM_Utils_Arr
       $sql = "SELECT ROW_COUNT( )";
       $result = CRM_Core_DAO::singleValueQuery($sql);
       if ($result) {
-        $status = array(ts('%1 emails were found on hold and updated.', array(1 => $result)));
+        $status = [ts('%1 emails were found on hold and updated.', [1 => $result])];
       }
       else {
         $status = ts('No contact found with email on hold status.');

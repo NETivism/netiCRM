@@ -50,7 +50,7 @@ class CRM_Contact_Form_Task_Merge extends CRM_Contact_Form_Task {
   function preProcess() {
     parent::preProcess();
     $statusMsg = NULL;
-    $contactIds = array();
+    $contactIds = [];
     if (is_array($this->_contactIds)) {
       $contactIds = array_unique($this->_contactIds);
     }
@@ -61,7 +61,7 @@ class CRM_Contact_Form_Task_Merge extends CRM_Contact_Form_Task {
     // do check for contact is admin or not
     foreach ($contactIds as $key => $id) {
       $sql = "SELECT uf_id FROM `civicrm_uf_match` where contact_id = %1";
-      $params = array( 1 => array($id, 'Integer'));
+      $params = [ 1 => [$id, 'Integer']];
       $uid = CRM_Core_DAO::singleValueQuery($sql, $params);
       if ($uid == 1) {
         $statusMsg = ts('Cannot merge with the administrator, please recheck the selected contacts.');
@@ -69,7 +69,7 @@ class CRM_Contact_Form_Task_Merge extends CRM_Contact_Form_Task {
     }
 
     // do check for same contact type.
-    $contactTypes = array();
+    $contactTypes = [];
     if (!$statusMsg) {
       $sql = "SELECT contact_type FROM civicrm_contact WHERE id IN (" . CRM_Utils_Array::implode(',', $contactIds) . ")";
       $contact = CRM_Core_DAO::executeQuery($sql);

@@ -228,11 +228,11 @@ class CRM_Core_DAO_UFGroup extends CRM_Core_DAO
   function &links()
   {
     if (!(self::$_links)) {
-      self::$_links = array(
+      self::$_links = [
         'limit_listings_group_id' => 'civicrm_group:id',
         'add_to_group_id' => 'civicrm_group:id',
         'created_id' => 'civicrm_contact:id',
-      );
+      ];
     }
     return self::$_links;
   }
@@ -261,18 +261,18 @@ class CRM_Core_DAO_UFGroup extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'id' => array(
+      self::$_fields = [
+        'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'is_active' => array(
+        ] ,
+        'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'default' => '',
-        ) ,
-        'group_type' => array(
+        ] ,
+        'group_type' => [
           'name' => 'group_type',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Group Type') ,
@@ -283,108 +283,108 @@ class CRM_Core_DAO_UFGroup extends CRM_Core_DAO
           'headerPattern' => '',
           'dataPattern' => '',
           'export' => true,
-        ) ,
-        'title' => array(
+        ] ,
+        'title' => [
           'name' => 'title',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Title') ,
           'maxlength' => 64,
           'size' => CRM_Utils_Type::BIG,
-        ) ,
-        'help_pre' => array(
+        ] ,
+        'help_pre' => [
           'name' => 'help_pre',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Help Pre') ,
           'rows' => 4,
           'cols' => 80,
-        ) ,
-        'help_post' => array(
+        ] ,
+        'help_post' => [
           'name' => 'help_post',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Help Post') ,
           'rows' => 4,
           'cols' => 80,
-        ) ,
-        'limit_listings_group_id' => array(
+        ] ,
+        'limit_listings_group_id' => [
           'name' => 'limit_listings_group_id',
           'type' => CRM_Utils_Type::T_INT,
           'FKClassName' => 'CRM_Contact_DAO_Group',
-        ) ,
-        'post_URL' => array(
+        ] ,
+        'post_URL' => [
           'name' => 'post_URL',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Post Url') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'add_to_group_id' => array(
+        ] ,
+        'add_to_group_id' => [
           'name' => 'add_to_group_id',
           'type' => CRM_Utils_Type::T_INT,
           'FKClassName' => 'CRM_Contact_DAO_Group',
-        ) ,
-        'add_captcha' => array(
+        ] ,
+        'add_captcha' => [
           'name' => 'add_captcha',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Add Captcha') ,
-        ) ,
-        'is_map' => array(
+        ] ,
+        'is_map' => [
           'name' => 'is_map',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ) ,
-        'is_edit_link' => array(
+        ] ,
+        'is_edit_link' => [
           'name' => 'is_edit_link',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ) ,
-        'is_uf_link' => array(
+        ] ,
+        'is_uf_link' => [
           'name' => 'is_uf_link',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ) ,
-        'is_update_dupe' => array(
+        ] ,
+        'is_update_dupe' => [
           'name' => 'is_update_dupe',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ) ,
-        'cancel_URL' => array(
+        ] ,
+        'cancel_URL' => [
           'name' => 'cancel_URL',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Cancel Url') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'is_cms_user' => array(
+        ] ,
+        'is_cms_user' => [
           'name' => 'is_cms_user',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ) ,
-        'notify' => array(
+        ] ,
+        'notify' => [
           'name' => 'notify',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Notify') ,
-        ) ,
-        'is_reserved' => array(
+        ] ,
+        'is_reserved' => [
           'name' => 'is_reserved',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ) ,
-        'name' => array(
+        ] ,
+        'name' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Name') ,
           'maxlength' => 64,
           'size' => CRM_Utils_Type::BIG,
-        ) ,
-        'created_id' => array(
+        ] ,
+        'created_id' => [
           'name' => 'created_id',
           'type' => CRM_Utils_Type::T_INT,
           'FKClassName' => 'CRM_Contact_DAO_Contact',
-        ) ,
-        'created_date' => array(
+        ] ,
+        'created_date' => [
           'name' => 'created_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('UF Group Created Date') ,
-        ) ,
-        'is_proximity_search' => array(
+        ] ,
+        'is_proximity_search' => [
           'name' => 'is_proximity_search',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ) ,
-      );
+        ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -418,7 +418,7 @@ class CRM_Core_DAO_UFGroup extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -441,7 +441,7 @@ class CRM_Core_DAO_UFGroup extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {

@@ -115,10 +115,10 @@ class CRM_Event_DAO_ParticipantPayment extends CRM_Core_DAO
   function &links()
   {
     if (!(self::$_links)) {
-      self::$_links = array(
+      self::$_links = [
         'participant_id' => 'civicrm_participant:id',
         'contribution_id' => 'civicrm_contribution:id',
-      );
+      ];
     }
     return self::$_links;
   }
@@ -146,27 +146,27 @@ class CRM_Event_DAO_ParticipantPayment extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'id' => array(
+      self::$_fields = [
+        'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Payment ID') ,
           'required' => true,
-        ) ,
-        'participant_id' => array(
+        ] ,
+        'participant_id' => [
           'name' => 'participant_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Participant ID') ,
           'required' => true,
           'FKClassName' => 'CRM_Event_DAO_Participant',
-        ) ,
-        'contribution_id' => array(
+        ] ,
+        'contribution_id' => [
           'name' => 'contribution_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
           'FKClassName' => 'CRM_Contribute_DAO_Contribution',
-        ) ,
-      );
+        ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -199,7 +199,7 @@ class CRM_Event_DAO_ParticipantPayment extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -222,7 +222,7 @@ class CRM_Event_DAO_ParticipantPayment extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {

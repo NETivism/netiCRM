@@ -56,7 +56,7 @@ class CRM_Case_Form_Activity_ChangeCaseStartDate {
    * @return None
    */
   function setDefaultValues(&$form) {
-    $defaults = array();
+    $defaults = [];
     list($defaults['start_date']) = CRM_Utils_Date::setDateDefaults();
     return $defaults;
   }
@@ -64,7 +64,7 @@ class CRM_Case_Form_Activity_ChangeCaseStartDate {
   static function buildQuickForm(&$form) {
     $currentStartDate = CRM_Core_DAO::getFieldValue('CRM_Case_DAO_Case', $form->_caseId, 'start_date');
     $form->assign('current_start_date', $currentStartDate);
-    $form->addDate('start_date', ts('New Start Date'), FALSE, array('formatType' => 'birth'));
+    $form->addDate('start_date', ts('New Start Date'), FALSE, ['formatType' => 'birth']);
   }
 
   /**
@@ -116,7 +116,7 @@ LEFT JOIN civicrm_option_value cov_type ON
 ( civicrm_case.case_type_id = cov_type.value AND cog_type.id = cov_type.option_group_id ) 
 WHERE civicrm_case.id=  %1";
 
-      $queryParams = array(1 => array($form->_caseId, 'Integer'));
+      $queryParams = [1 => [$form->_caseId, 'Integer']];
       $caseType = CRM_Core_DAO::singleValueQuery($query, $queryParams);
     }
 
@@ -140,7 +140,7 @@ WHERE civicrm_case.id=  %1";
     $activity->save();
     // 2. initiate xml processor
     $xmlProcessor = new CRM_Case_XMLProcessor_Process();
-    $xmlProcessorParams = array(
+    $xmlProcessorParams = [
       'clientID' => $form->_currentlyViewedContactId,
       'creatorID' => $form->_currentUserId,
       'standardTimeline' => 0,
@@ -150,7 +150,7 @@ WHERE civicrm_case.id=  %1";
       'activityTypeName' => 'Change Case Start Date',
       'activitySetName' => 'standard_timeline',
       'resetTimeline' => 1,
-    );
+    ];
 
     $xmlProcessor->run($caseType, $xmlProcessorParams);
 

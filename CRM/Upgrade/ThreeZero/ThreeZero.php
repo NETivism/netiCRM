@@ -40,12 +40,12 @@ class CRM_Upgrade_ThreeZero_ThreeZero extends CRM_Upgrade_Form {
   function verifyPreDBState(&$errorMessage) {
     $latestVer = CRM_Utils_System::version();
 
-    $errorMessage = ts('Pre-condition failed for upgrade to %1.', array(1 => $latestVer));
+    $errorMessage = ts('Pre-condition failed for upgrade to %1.', [1 => $latestVer]);
     // check table, if the db is 3.0
     if (CRM_Core_DAO::checkTableExists('civicrm_navigation') &&
       CRM_Core_DAO::checkTableExists('civicrm_participant_status_type')
     ) {
-      $errorMessage = ts("Database check failed - it looks like you have already upgraded to the latest version (v%1) of the database. OR If you think this message is wrong, it is very likely that this a partially upgraded db and you will need to reload the correct db on which upgrade was never tried.", array(1 => $latestVer));
+      $errorMessage = ts("Database check failed - it looks like you have already upgraded to the latest version (v%1) of the database. OR If you think this message is wrong, it is very likely that this a partially upgraded db and you will need to reload the correct db on which upgrade was never tried.", [1 => $latestVer]);
       return FALSE;
     }
     // check table-column, if the db is 3.0
@@ -57,7 +57,7 @@ class CRM_Upgrade_ThreeZero_ThreeZero extends CRM_Upgrade_Form {
       CRM_Core_DAO::checkFieldExists('civicrm_payment_processor_type', 'payment_type')
     ) {
 
-      $errorMessage = ts("Database check failed - it looks like you have already upgraded to the latest version (v%1) of the database. OR If you think this message is wrong, it is very likely that this a partially upgraded db and you will need to reload the correct db on which upgrade was never tried.", array(1 => $latestVer));
+      $errorMessage = ts("Database check failed - it looks like you have already upgraded to the latest version (v%1) of the database. OR If you think this message is wrong, it is very likely that this a partially upgraded db and you will need to reload the correct db on which upgrade was never tried.", [1 => $latestVer]);
       return FALSE;
     }
 
@@ -125,7 +125,7 @@ class CRM_Upgrade_ThreeZero_ThreeZero extends CRM_Upgrade_Form {
 
     if ($bulkEmailID) {
 
-      $mailingActivityIds = array();
+      $mailingActivityIds = [];
       $query = " 
             SELECT max( ca.id ) as aid, 
                    ca.source_record_id sid
@@ -133,7 +133,7 @@ class CRM_Upgrade_ThreeZero_ThreeZero extends CRM_Upgrade_Form {
             WHERE ca.activity_type_id = %1 
             GROUP BY ca.source_record_id";
 
-      $params = array(1 => array($bulkEmailID, 'Integer'));
+      $params = [1 => [$bulkEmailID, 'Integer']];
       $dao = CRM_Core_DAO::executeQuery($query, $params);
 
       while ($dao->fetch()) {
@@ -146,7 +146,7 @@ class CRM_Upgrade_ThreeZero_ThreeZero extends CRM_Upgrade_Form {
                       ca.source_record_id = {$dao->sid} AND 
                       ca.id = cat.activity_id";
 
-        $updateParams = array(1 => array($bulkEmailID, 'Integer'));
+        $updateParams = [1 => [$bulkEmailID, 'Integer']];
         CRM_Core_DAO::executeQuery($updateQuery, $updateParams);
 
         $deleteQuery = " 
@@ -157,7 +157,7 @@ class CRM_Upgrade_ThreeZero_ThreeZero extends CRM_Upgrade_Form {
                       ca.id <> {$dao->aid}             AND 
                       ca.source_record_id = {$dao->sid}";
 
-        $deleteParams = array(1 => array($bulkEmailID, 'Integer'));
+        $deleteParams = [1 => [$bulkEmailID, 'Integer']];
         CRM_Core_DAO::executeQuery($deleteQuery, $deleteParams);
       }
     }
@@ -231,17 +231,17 @@ class CRM_Upgrade_ThreeZero_ThreeZero extends CRM_Upgrade_Form {
         'name'
       );
 
-      $optionValueParams = array('label' => $individualNameFormat,
+      $optionValueParams = ['label' => $individualNameFormat,
         'is_active' => 1,
         'contactOptions' => 1,
         'filter' => 1,
         'is_default' => 1,
-        'reset_default_for' => array('filter' => "0, 1"),
-      );
+        'reset_default_for' => ['filter' => "0, 1"],
+      ];
 
       $action = CRM_Core_Action::ADD;
-      $addresseeGroupParams = array('name' => 'addressee');
-      $fieldValues = array('option_group_id' => $addresseeGroupId);
+      $addresseeGroupParams = ['name' => 'addressee'];
+      $fieldValues = ['option_group_id' => $addresseeGroupId];
       $weight = CRM_Utils_Weight::getDefaultWeight('CRM_Core_DAO_OptionValue', $fieldValues);
 
       $optionValueParams['weight'] = $weight;
@@ -249,10 +249,10 @@ class CRM_Upgrade_ThreeZero_ThreeZero extends CRM_Upgrade_Form {
         $action, $optionId = NULL
       );
 
-      $afterUpgradeMessage = ts("During this upgrade, Postal Addressee values have been stored for each contact record using the system default format - %2.You will need to run the included command-line script to update your Individual contact records to use the \"Individual Name Format\" previously specified for your site %1", array(1 => $docURL, 2 => array_pop($defaultAddressee)));
+      $afterUpgradeMessage = ts("During this upgrade, Postal Addressee values have been stored for each contact record using the system default format - %2.You will need to run the included command-line script to update your Individual contact records to use the \"Individual Name Format\" previously specified for your site %1", [1 => $docURL, 2 => array_pop($defaultAddressee)]);
     }
     else {
-      $afterUpgradeMessage = ts("Email Greeting, Postal Greeting and Postal Addressee values have been stored for all contact records based on the system default formats. If you want to use a different format for any of these contact fields - you can run the provided command line script to update contacts to a different format %1 ", array(1 => $docURL));
+      $afterUpgradeMessage = ts("Email Greeting, Postal Greeting and Postal Addressee values have been stored for all contact records based on the system default formats. If you want to use a different format for any of these contact fields - you can run the provided command line script to update contacts to a different format %1 ", [1 => $docURL]);
     }
 
     //replace contact.contact_name with contact.addressee in civicrm_preference.mailing_format

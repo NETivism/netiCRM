@@ -45,32 +45,32 @@ class CRM_Campaign_Page_Survey extends CRM_Core_Page {
     // check if variable _actionsLinks is populated
     if (!isset(self::$_actionLinks)) {
 
-      self::$_actionLinks = array(
-        CRM_Core_Action::UPDATE => array(
+      self::$_actionLinks = [
+        CRM_Core_Action::UPDATE => [
           'name' => ts('Edit'),
           'url' => 'civicrm/survey/add',
           'qs' => 'action=update&id=%%id%%&reset=1',
           'title' => ts('Update Survey'),
-        ),
-        CRM_Core_Action::DISABLE => array(
+        ],
+        CRM_Core_Action::DISABLE => [
           'name' => ts('Disable'),
           'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_Campaign_BAO_Survey' . '\',\'' . 'enable-disable' . '\' );"',
           'ref' => 'disable-action',
           'title' => ts('Disable Survey'),
-        ),
-        CRM_Core_Action::ENABLE => array(
+        ],
+        CRM_Core_Action::ENABLE => [
           'name' => ts('Enable'),
           'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_Campaign_BAO_Survey' . '\',\'' . 'disable-enable' . '\' );"',
           'ref' => 'enable-action',
           'title' => ts('Enable Survey'),
-        ),
-        CRM_Core_Action::DELETE => array(
+        ],
+        CRM_Core_Action::DELETE => [
           'name' => ts('Delete'),
           'url' => 'civicrm/survey/add',
           'qs' => 'action=delete&id=%%id%%&reset=1',
           'title' => ts('Delete Survey'),
-        ),
-      );
+        ],
+      ];
     }
     return self::$_actionLinks;
   }
@@ -99,7 +99,7 @@ class CRM_Campaign_Page_Survey extends CRM_Core_Page {
           $action -= CRM_Core_Action::DISABLE;
         }
 
-        $surveys[$sid]['action'] = CRM_Core_Action::formLink($this->actionLinks(), $action, array('id' => $sid));
+        $surveys[$sid]['action'] = CRM_Core_Action::formLink($this->actionLinks(), $action, ['id' => $sid]);
       }
     }
 

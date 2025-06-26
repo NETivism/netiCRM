@@ -133,9 +133,9 @@ class CRM_Core_DAO_OpenID extends CRM_Core_DAO
   function &links()
   {
     if (!(self::$_links)) {
-      self::$_links = array(
+      self::$_links = [
         'contact_id' => 'civicrm_contact:id',
-      );
+      ];
     }
     return self::$_links;
   }
@@ -162,39 +162,39 @@ class CRM_Core_DAO_OpenID extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'id' => array(
+      self::$_fields = [
+        'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'contact_id' => array(
+        ] ,
+        'contact_id' => [
           'name' => 'contact_id',
           'type' => CRM_Utils_Type::T_INT,
           'FKClassName' => 'CRM_Contact_DAO_Contact',
-        ) ,
-        'location_type_id' => array(
+        ] ,
+        'location_type_id' => [
           'name' => 'location_type_id',
           'type' => CRM_Utils_Type::T_INT,
-        ) ,
-        'openid' => array(
+        ] ,
+        'openid' => [
           'name' => 'openid',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Openid') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'allowed_to_login' => array(
+        ] ,
+        'allowed_to_login' => [
           'name' => 'allowed_to_login',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Allowed To Login') ,
           'required' => true,
-        ) ,
-        'is_primary' => array(
+        ] ,
+        'is_primary' => [
           'name' => 'is_primary',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ) ,
-      );
+        ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -227,7 +227,7 @@ class CRM_Core_DAO_OpenID extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -250,7 +250,7 @@ class CRM_Core_DAO_OpenID extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {

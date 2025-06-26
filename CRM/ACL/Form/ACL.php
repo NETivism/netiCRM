@@ -133,23 +133,23 @@ class CRM_ACL_Form_ACL extends CRM_Admin_Form {
     $this->add('text', 'name', ts('Description'), CRM_Core_DAO::getAttribute('CRM_ACL_DAO_ACL', 'name'), TRUE);
 
 
-    $operations = array('' => ts('- select -')) + CRM_ACL_BAO_ACL::operation();
+    $operations = ['' => ts('- select -')] + CRM_ACL_BAO_ACL::operation();
     $this->add('select',
       'operation',
       ts('Operation'),
       $operations, TRUE
     );
 
-    $objTypes = array('1' => ts('A group of contacts'),
+    $objTypes = ['1' => ts('A group of contacts'),
       '2' => ts('A profile'),
       '3' => ts('A set of custom data fields'),
-    );
+    ];
 
     if (CRM_Core_Permission::access('CiviEvent')) {
       $objTypes['4'] = ts('Events');
     }
 
-    $extra = array('onclick' => "showObjectSelect();");
+    $extra = ['onclick' => "showObjectSelect();"];
     $this->addRadio('object_type',
       ts('Type of Data'),
       $objTypes,
@@ -160,27 +160,27 @@ class CRM_ACL_Form_ACL extends CRM_Admin_Form {
 
 
     $label = ts('Role');
-    $role = array('-1' => ts('- select role -'),
+    $role = ['-1' => ts('- select role -'),
       '0' => ts('Everyone'),
-    ) + CRM_Core_OptionGroup::values('acl_role');
+    ] + CRM_Core_OptionGroup::values('acl_role');
     $this->add('select', 'entity_id', $label, $role, TRUE);
 
-    $group = array('-1' => ts('- select -'),
+    $group = ['-1' => ts('- select -'),
       '0' => ts('All Groups'),
-    ) + CRM_Core_PseudoConstant::group();
+    ] + CRM_Core_PseudoConstant::group();
 
-    $customGroup = array('-1' => ts('- select -'),
+    $customGroup = ['-1' => ts('- select -'),
       '0' => ts('All Custom Groups'),
-    ) + CRM_Core_PseudoConstant::customGroup();
+    ] + CRM_Core_PseudoConstant::customGroup();
 
-    $ufGroup = array('-1' => ts('- select -'),
+    $ufGroup = ['-1' => ts('- select -'),
       '0' => ts('All Profiles'),
-    ) + CRM_Core_PseudoConstant::ufGroup();
+    ] + CRM_Core_PseudoConstant::ufGroup();
 
 
-    $event = array('-1' => ts('- select -'),
+    $event = ['-1' => ts('- select -'),
       '0' => ts('All Events'),
-    ) + CRM_Event_PseudoConstant::event(NULL, FALSE, "( is_template IS NULL OR is_template != 1 )");
+    ] + CRM_Event_PseudoConstant::event(NULL, FALSE, "( is_template IS NULL OR is_template != 1 )");
 
     $this->add('select', 'group_id', ts('Group'), $group);
     $this->add('select', 'custom_group_id', ts('Custom Data'), $customGroup);
@@ -189,7 +189,7 @@ class CRM_ACL_Form_ACL extends CRM_Admin_Form {
 
     $this->add('checkbox', 'is_active', ts('Enabled?'));
 
-    $this->addFormRule(array('CRM_ACL_Form_ACL', 'formRule'));
+    $this->addFormRule(['CRM_ACL_Form_ACL', 'formRule']);
   }
 
 
@@ -201,7 +201,7 @@ class CRM_ACL_Form_ACL extends CRM_Admin_Form {
       $errors['entity_id'] = ts('Please assign this permission to a Role.');
     }
 
-    $validOperations = array('View', 'Edit');
+    $validOperations = ['View', 'Edit'];
     $operationMessage = ts("Only 'View' and 'Edit' operations are valid for this type of data");
 
     // Figure out which type of object we're permissioning on and make sure user has selected a value.

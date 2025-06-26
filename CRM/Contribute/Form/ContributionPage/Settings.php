@@ -90,7 +90,7 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
 
     if ($this->_id) {
       $title = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage', $this->_id, 'title');
-      CRM_Utils_System::setTitle(ts('Title and Settings (%1)', array(1 => $title)));
+      CRM_Utils_System::setTitle(ts('Title and Settings (%1)', [1 => $title]));
 
       $background_URL = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage', $this->_id, 'background_URL');
       $this->assign('background_URL', $background_URL);
@@ -137,7 +137,7 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
       ts('Contribution Type'),
       CRM_Contribute_PseudoConstant::contributionType(NULL, FALSE, TRUE),
       TRUE,
-      array('onChange' => "buildCustomData( 'ContributionPage', this.value );")
+      ['onChange' => "buildCustomData( 'ContributionPage', this.value );"]
     );
 
     $this->addWysiwyg('intro_text', ts('Introductory Message'), $attributes['intro_text']);
@@ -145,22 +145,22 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
     $this->addWysiwyg('footer_text', ts('Footer Message'), $attributes['footer_text']);
 
     // is on behalf of an organization ?
-    $this->addElement('checkbox', 'is_organization', ts('Allow individuals to contribute and / or signup for membership on behalf of an organization?'), NULL, array('onclick' => "showHideByValue('is_organization',true,'for_org_text','table-row','radio',false);showHideByValue('is_organization',true,'for_org_option','table-row','radio',false);"));
-    $options = array();
+    $this->addElement('checkbox', 'is_organization', ts('Allow individuals to contribute and / or signup for membership on behalf of an organization?'), NULL, ['onclick' => "showHideByValue('is_organization',true,'for_org_text','table-row','radio',false);showHideByValue('is_organization',true,'for_org_option','table-row','radio',false);"]);
+    $options = [];
     $options[] = $this->createElement('radio', NULL, NULL, ts('Optional'), 1);
     $options[] = $this->createElement('radio', NULL, NULL, ts('Required'), 2);
     $this->addGroup($options, 'is_for_organization', ts(''));
     $this->add('textarea', 'for_organization', ts('On behalf of Label'), $attributes['for_organization']);
 
     // collect goal amount
-    $this->addElement('checkbox', 'display_progress_bar', ts('Progress Bar'), NULL, array('onclick' => "showHideByValue('display_progress_bar',true,'goal_amount_row','table-row','radio',false);"));
-    $this->add('number', 'goal_amount', ts('Goal Amount'), array('min' => 0));
-    $this->add('number', 'goal_recurring', ts('Goal Subscription'), array('min' => 0));
-    $this->add('number', 'goal_recuramount', ts('Goal Recurring Amount'), array('min' => 0));
-    $this->addRule('goal_amount', ts('Please enter a valid money value (e.g. %1).', array(1 => CRM_Utils_Money::format('99.99', ' '))), 'money');
+    $this->addElement('checkbox', 'display_progress_bar', ts('Progress Bar'), NULL, ['onclick' => "showHideByValue('display_progress_bar',true,'goal_amount_row','table-row','radio',false);"]);
+    $this->add('number', 'goal_amount', ts('Goal Amount'), ['min' => 0]);
+    $this->add('number', 'goal_recurring', ts('Goal Subscription'), ['min' => 0]);
+    $this->add('number', 'goal_recuramount', ts('Goal Recurring Amount'), ['min' => 0]);
+    $this->addRule('goal_amount', ts('Please enter a valid money value (e.g. %1).', [1 => CRM_Utils_Money::format('99.99', ' ')]), 'money');
 
     // is this page active ?
-    $this->addElement('checkbox', 'is_active', ts('Is this Online Contribution Page Active?'), NULL, array('onclick' => "showSpecial()"));
+    $this->addElement('checkbox', 'is_active', ts('Is this Online Contribution Page Active?'), NULL, ['onclick' => "showSpecial()"]);
     // check if table field exists
     $checkQuery = "SELECT column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = 'civicrm_contribution_page' AND column_name = 'is_internal'";
     $exists = CRM_Core_DAO::singleValueQuery($checkQuery);
@@ -170,10 +170,10 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
     }
 
 
-    $this->addElement('checkbox', 'is_special', ts('Is this Online Contribution Page in the Special Style?'), NULL, array('onclick' => "showSpecial()"));
+    $this->addElement('checkbox', 'is_special', ts('Is this Online Contribution Page in the Special Style?'), NULL, ['onclick' => "showSpecial()"]);
 
     // should the honor be enabled
-    $this->addElement('checkbox', 'honor_block_is_active', ts('Honoree Section Enabled'), NULL, array('onclick' => "showHonor()"));
+    $this->addElement('checkbox', 'honor_block_is_active', ts('Honoree Section Enabled'), NULL, ['onclick' => "showHonor()"]);
 
     $this->add('text', 'honor_block_title', ts('Honoree Section Title'), $attributes['honor_block_title']);
 
@@ -183,7 +183,7 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
     $this->addDateTime('start_date', ts('Contribution Widget').ts('Start Date'));
     $this->addDateTime('end_date', ts('Contribution Widget').ts('End Date'));
 
-    $this->addFormRule(array('CRM_Contribute_Form_ContributionPage_Settings', 'formRule'));
+    $this->addFormRule(['CRM_Contribute_Form_ContributionPage_Settings', 'formRule']);
 
 
     $this->addElement('file', 'uploadBackgroundImage', ts('Background image'));
@@ -218,7 +218,7 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
    * @access public
    */
   static function formRule($values, $files, $self) {
-    $errors = array();
+    $errors = [];
 
     //CRM-4286
     if (strstr($values['title'], '/')) {

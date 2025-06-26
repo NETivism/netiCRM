@@ -109,18 +109,18 @@ class CRM_Contact_Page_View_Relationship extends CRM_Core_Page {
 
 
     $session = CRM_Core_Session::singleton();
-    $recentOther = array();
+    $recentOther = [];
 
     if (($session->get('userID') == $this->_contactId) ||
       CRM_Contact_BAO_Contact_Permission::allow($this->_contactId, CRM_Core_Permission::EDIT)
     ) {
-      $recentOther = array('editUrl' => CRM_Utils_System::url('civicrm/contact/view/rel',
+      $recentOther = ['editUrl' => CRM_Utils_System::url('civicrm/contact/view/rel',
           "action=update&reset=1&id={$viewRelationship[$this->_id]['id']}&cid={$this->_contactId}&rtype={$rType}&context=home"
         ),
         'deleteUrl' => CRM_Utils_System::url('civicrm/contact/view/rel',
           "action=delete&reset=1&id={$viewRelationship[$this->_id]['id']}&cid={$this->_contactId}&rtype={$rType}&context=home"
         ),
-      );
+      ];
     }
 
 
@@ -147,7 +147,7 @@ class CRM_Contact_Page_View_Relationship extends CRM_Core_Page {
     $links = &self::links();
 
     //CRM-4418, handling edit and delete separately.
-    $permissions = array($this->_permission);
+    $permissions = [$this->_permission];
     if ($this->_permission == CRM_Core_Permission::EDIT) {
       //previously delete was subset of edit
       //so for consistency lets grant delete also.
@@ -323,41 +323,41 @@ class CRM_Contact_Page_View_Relationship extends CRM_Core_Page {
       $disableExtra = ts('Are you sure you want to disable this relationship?');
       $enableExtra = ts('Are you sure you want to re-enable this relationship?');
 
-      self::$_links = array(
-        CRM_Core_Action::VIEW => array(
+      self::$_links = [
+        CRM_Core_Action::VIEW => [
           'name' => ts('View'),
           'url' => 'civicrm/contact/view/rel',
           'qs' => 'action=view&reset=1&cid=%%cid%%&id=%%id%%&rtype=%%rtype%%&selectedChild=rel',
           'title' => ts('View Relationship'),
-        ),
-        CRM_Core_Action::UPDATE => array(
+        ],
+        CRM_Core_Action::UPDATE => [
           'name' => ts('Edit'),
           'url' => 'civicrm/contact/view/rel',
           'qs' => 'action=update&reset=1&cid=%%cid%%&id=%%id%%&rtype=%%rtype%%',
           'title' => ts('Edit Relationship'),
-        ),
-        CRM_Core_Action::ENABLE => array(
+        ],
+        CRM_Core_Action::ENABLE => [
           'name' => ts('Enable'),
           'url' => 'civicrm/contact/view/rel',
           'qs' => 'action=enable&reset=1&cid=%%cid%%&id=%%id%%&rtype=%%rtype%%&selectedChild=rel',
           'extra' => 'onclick = "return confirm(\'' . $enableExtra . '\');"',
           'title' => ts('Enable Relationship'),
-        ),
-        CRM_Core_Action::DISABLE => array(
+        ],
+        CRM_Core_Action::DISABLE => [
           'name' => ts('Disable'),
           'url' => 'civicrm/contact/view/rel',
           'qs' => 'action=disable&reset=1&cid=%%cid%%&id=%%id%%&rtype=%%rtype%%&selectedChild=rel',
           'extra' => 'onclick = "return confirm(\'' . $disableExtra . '\');"',
           'title' => ts('Disable Relationship'),
-        ),
-        CRM_Core_Action::DELETE => array(
+        ],
+        CRM_Core_Action::DELETE => [
           'name' => ts('Delete'),
           'url' => 'civicrm/contact/view/rel',
           'qs' => 'action=delete&reset=1&cid=%%cid%%&id=%%id%%&rtype=%%rtype%%',
           'extra' => 'onclick = "if (confirm(\'' . $deleteExtra . '\') ) {  this.href+=\'&amp;confirmed=1\'; else return false;}"',
           'title' => ts('Delete Relationship'),
-        ),
-      );
+        ],
+      ];
     }
     return self::$_links;
   }

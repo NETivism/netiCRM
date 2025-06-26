@@ -8,7 +8,7 @@ class CRM_Admin_Form_FromEmailAddress_EmailVerify extends CRM_Admin_Form_FromEma
    * @return string
    */
   public function getTitle() {
-    return ts('Verify %1', array(1 => ts('Email')));
+    return ts('Verify %1', [1 => ts('Email')]);
   }
 
   /**
@@ -25,7 +25,7 @@ class CRM_Admin_Form_FromEmailAddress_EmailVerify extends CRM_Admin_Form_FromEma
    * the default values are retrieved from the database
    */
   function setDefaultValues() {
-    $defaults = array();
+    $defaults = [];
     return $defaults;
   }
 
@@ -37,34 +37,34 @@ class CRM_Admin_Form_FromEmailAddress_EmailVerify extends CRM_Admin_Form_FromEma
 
     if ($this->_values['filter'] & self::VALID_EMAIL) {
       $this->assign('email_status', TRUE);
-      $this->addButtons(array(
-          array('type' => 'back',
+      $this->addButtons([
+          ['type' => 'back',
             'name' => ts('<< Previous'),
             'isDefault' => TRUE,
-          ),
-          array('type' => 'next',
+          ],
+          ['type' => 'next',
             'name' => ts('Next >>'),
             'isDefault' => TRUE,
-          ),
-          array('type' => 'cancel',
+          ],
+          ['type' => 'cancel',
             'name' => ts('Cancel'),
-          ),
-        )
+          ],
+        ]
       );
     }
     else {
       $this->assign('email_status', FALSE);
       $this->addButton('refresh', ts('Re-send Validation Email'));
-      $this->addButtons(array(
-          array(
+      $this->addButtons([
+          [
             'type' => 'jump',
             'name' => ts('Refresh'),
             'isDefault' => TRUE,
-          ),
-          array('type' => 'cancel',
+          ],
+          ['type' => 'cancel',
             'name' => ts('Cancel'),
-          ),
-        )
+          ],
+        ]
       );
     }
   }

@@ -83,19 +83,19 @@ class CRM_Contact_Form_Search_Advanced extends CRM_Contact_Form_Search {
       CRM_Contact_Form_Search_Criteria::basic($this);
     }
 
-    $allPanes = array();
-    $paneNames = array(ts('Address Fields') => 'location',
+    $allPanes = [];
+    $paneNames = [ts('Address Fields') => 'location',
       ts('Custom Fields') => 'custom',
       ts('Activities') => 'activity',
       ts('Relationships') => 'relationship',
       ts('Demographics') => 'demographics',
       ts('Notes') => 'notes',
       ts('Change Log') => 'changeLog',
-    );
+    ];
 
     //check if there are any custom data searchable fields
-    $groupDetails = array();
-    $extends = array_merge(array('Contact', 'Individual', 'Household', 'Organization'),
+    $groupDetails = [];
+    $extends = array_merge(['Contact', 'Individual', 'Household', 'Organization'],
       CRM_Contact_BAO_ContactType::subTypes()
     );
     $groupDetails = CRM_Core_BAO_CustomGroup::getGroupDetail(NULL, TRUE,
@@ -115,7 +115,7 @@ class CRM_Contact_Form_Search_Advanced extends CRM_Contact_Form_Search {
 
     $components = CRM_Core_Component::getEnabledComponents();
 
-    $componentPanes = array();
+    $componentPanes = [];
     foreach ($components as $name => $component) {
       if (in_array($name, array_keys($this->_searchOptions)) &&
         $this->_searchOptions[$name] &&
@@ -127,25 +127,25 @@ class CRM_Contact_Form_Search_Advanced extends CRM_Contact_Form_Search {
     }
 
 
-    usort($componentPanes, array('CRM_Utils_Sort', 'cmpFunc'));
+    usort($componentPanes, ['CRM_Utils_Sort', 'cmpFunc']);
 
     foreach ($componentPanes as $name => $pane) {
       // FIXME: we should change the use of $name here to keyword
       $paneNames[$pane['title']] = $pane['name'];
     }
 
-    $this->_paneTemplatePath = array();
+    $this->_paneTemplatePath = [];
     foreach ($paneNames as $name => $type) {
       if (!$this->_searchOptions[$type]) {
         continue;
       }
 
-      $allPanes[$name] = array('url' => CRM_Utils_System::url('civicrm/contact/search/advanced',
+      $allPanes[$name] = ['url' => CRM_Utils_System::url('civicrm/contact/search/advanced',
           "snippet=1&searchPane=$type&qfKey={$this->controller->_key}"
         ),
         'open' => 'false',
         'id' => $type,
-      );
+      ];
 
       // see if we need to include this paneName in the current form
       if ($this->_searchPane == $type ||
@@ -240,7 +240,7 @@ class CRM_Contact_Form_Search_Advanced extends CRM_Contact_Form_Search {
       // FIXME: couldn't figure out a good place to do this,
       // FIXME: so leaving this as a dependency for now
       if (CRM_Utils_Array::arrayKeyExists('contribution_amount_low', $this->_formValues)) {
-        foreach (array('contribution_amount_low', 'contribution_amount_high') as $f) {
+        foreach (['contribution_amount_low', 'contribution_amount_high'] as $f) {
           $this->_formValues[$f] = CRM_Utils_Rule::cleanMoney($this->_formValues[$f]);
         }
       }
@@ -254,11 +254,11 @@ class CRM_Contact_Form_Search_Advanced extends CRM_Contact_Form_Search {
       }
 
       // support multiple drop down select
-      $convert = array('participant_status_id', 'participant_role_id', 'member_membership_type_id', 'member_status_id');
+      $convert = ['participant_status_id', 'participant_role_id', 'member_membership_type_id', 'member_status_id'];
       foreach ($convert as $ele) {
         if (is_array($this->_formValues[$ele])) {
           $ary = $this->_formValues[$ele];
-          $this->_formValues[$ele] = array();
+          $this->_formValues[$ele] = [];
           foreach ($ary as $value) {
             $this->_formValues[$ele][$value] = $value;
           }
@@ -272,7 +272,7 @@ class CRM_Contact_Form_Search_Advanced extends CRM_Contact_Form_Search {
     }
 
     if (isset($this->_groupID) && !CRM_Utils_Array::value('group', $this->_formValues)) {
-      $this->_formValues['group'] = array($this->_groupID => 1);
+      $this->_formValues['group'] = [$this->_groupID => 1];
     }
 
 
@@ -374,11 +374,11 @@ class CRM_Contact_Form_Search_Advanced extends CRM_Contact_Form_Search {
    */
   function normalizeDefaultValues(&$defaults) {
     if (!is_array($defaults)) {
-      $defaults = array();
+      $defaults = [];
     }
 
     if ($this->_ssID && empty($_POST)) {
-      $fields = array('contact_type', 'group', 'contact_tags');
+      $fields = ['contact_type', 'group', 'contact_tags'];
 
       foreach ($fields as $field) {
         $fieldValues = CRM_Utils_Array::value($field, $defaults);

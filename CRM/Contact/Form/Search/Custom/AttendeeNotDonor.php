@@ -8,10 +8,10 @@ class CRM_Contact_Form_Search_Custom_AttendeeNotDonor extends CRM_Contact_Form_S
   protected $_tableName = NULL;
   protected $_filled = NULL;
 
-  protected $_participantStatuses = array(
+  protected $_participantStatuses = [
     'Registered',
     'Attended'
-  );
+  ];
   
   function __construct(&$formValues){
     parent::__construct($formValues);
@@ -24,17 +24,17 @@ class CRM_Contact_Form_Search_Custom_AttendeeNotDonor extends CRM_Contact_Form_S
   }
 
   function buildColumn(){
-    $this->_queryColumns = array( 
+    $this->_queryColumns = [ 
       'contact.id' => 'id',
       'p.contact_id' => 'contact_id',
       'contact.sort_name' => 'sort_name',
       'COUNT(p.id)' => 'register_count',
-    );
-    $this->_columns = array(
+    ];
+    $this->_columns = [
       ts('ID') => 'id',
       ts('Name') => 'sort_name',
       ts('register count') => 'register_count',
-    );
+    ];
   }
   function buildTempTable() {
     $sql = "
@@ -43,7 +43,7 @@ CREATE TEMPORARY TABLE IF NOT EXISTS {$this->_tableName} (
 ";
 
     foreach ($this->_queryColumns as $field) {
-      if (in_array($field, array('id'))) {
+      if (in_array($field, ['id'])) {
         continue;
       }
       if(strstr($field, '_id') || strstr($field, 'count')){
@@ -74,7 +74,7 @@ PRIMARY KEY (id)
    */
   function fillTable(){
     $this->buildTempTable();
-    $select = array();
+    $select = [];
     foreach($this->_queryColumns as $k => $v){
       $select[] = $k.' as '.$v;
     }
@@ -97,7 +97,7 @@ $having
     $dao = CRM_Core_DAO::executeQuery($sql, CRM_Core_DAO::$_nullArray);
 
     while ($dao->fetch()) {
-      $values = array();
+      $values = [];
       foreach($this->_queryColumns as $name){
         if($name == 'id'){
           $values[] = CRM_Utils_Type::escape($dao->id, 'Integer');
@@ -133,7 +133,7 @@ $having
   function tempWhere(){
     $from = !empty($this->_formValues['register_date_from']) ? $this->_formValues['register_date_from'] : NULL;
     $to = !empty($this->_formValues['register_date_to']) ? $this->_formValues['register_date_to'] : NULL;
-    $clauses = array();
+    $clauses = [];
     $clauses[] = "contact.is_deleted = 0";
     $clauses[] = "c.id IS NULL";
     if ($from) {
@@ -148,7 +148,7 @@ $having
 
   function tempHaving(){
     $attended = $this->_formValues['attended'];
-    $clauses = array();
+    $clauses = [];
     $clauses[] = 'COUNT(p.id) >= '.$attended;
     return CRM_Utils_Array::implode(' AND ', $clauses);
   }
@@ -163,13 +163,13 @@ $having
   }
 
   function setDefaultValues() {
-    return array(
+    return [
       'attended' => 1,
-    );
+    ];
   }
 
   function qill(){
-    $qill = array();
+    $qill = [];
 
     $attendeeStatus = array_map('ts', $this->_participantStatuses);
     $qill[1][] = ts('Participant Statuses').': '.CRM_Utils_Array::implode(', ', $attendeeStatus);
@@ -240,7 +240,7 @@ $having
   }
 
   static function includeContactIDs(&$sql, &$formValues, $isExport = FALSE) {
-    $contactIDs = array();
+    $contactIDs = [];
     foreach ($formValues as $id => $value) {
       list($contactID, $additionalID) = CRM_Core_Form::cbExtract($id);
       if ($value && !empty($contactID)) {

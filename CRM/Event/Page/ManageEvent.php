@@ -78,34 +78,34 @@ class CRM_Event_Page_ManageEvent extends CRM_Core_Page {
       $copyExtra = ts('Are you sure you want to make a copy of this Event?');
       $deleteExtra = ts('Are you sure you want to delete this Event?');
 
-      self::$_actionLinks = array(
-        CRM_Core_Action::DISABLE => array(
+      self::$_actionLinks = [
+        CRM_Core_Action::DISABLE => [
           'name' => ts('Disable'),
           'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_Event_BAO_Event' . '\',\'' . 'enable-disable' . '\' );"',
           'ref' => 'disable-action',
           'title' => ts('Disable Event'),
-        ),
-        CRM_Core_Action::ENABLE => array(
+        ],
+        CRM_Core_Action::ENABLE => [
           'name' => ts('Enable'),
           'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_Event_BAO_Event' . '\',\'' . 'disable-enable' . '\' );"',
           'ref' => 'enable-action',
           'title' => ts('Enable Event'),
-        ),
-        CRM_Core_Action::DELETE => array(
+        ],
+        CRM_Core_Action::DELETE => [
           'name' => ts('Delete'),
           'url' => CRM_Utils_System::currentPath(),
           'qs' => 'action=delete&id=%%id%%',
           'extra' => 'onclick = "return confirm(\'' . $deleteExtra . '\');"',
           'title' => ts('Delete Event'),
-        ),
-        CRM_Core_Action::COPY => array(
+        ],
+        CRM_Core_Action::COPY => [
           'name' => ts('Copy'),
           'url' => CRM_Utils_System::currentPath(),
           'qs' => 'reset=1&action=copy&id=%%id%%&key=%%key%%',
           'extra' => 'onclick = "return confirm(\'' . $copyExtra . '\');"',
           'title' => ts('Copy Event'),
-        ),
-      );
+        ],
+      ];
     }
     return self::$_actionLinks;
   }
@@ -143,7 +143,7 @@ class CRM_Event_Page_ManageEvent extends CRM_Core_Page {
     }
 
     if (!$this->_isTemplate && $id) {
-      $breadCrumb = array(array('title' => ts('Manage Events'), 'url' => CRM_Utils_System::url(CRM_Utils_System::currentPath(), 'reset=1')));
+      $breadCrumb = [['title' => ts('Manage Events'), 'url' => CRM_Utils_System::url(CRM_Utils_System::currentPath(), 'reset=1')]];
       CRM_Utils_System::appendBreadCrumb($breadCrumb);
     }
 
@@ -193,12 +193,12 @@ class CRM_Event_Page_ManageEvent extends CRM_Core_Page {
     $this->search();
 
 
-    $params = array();
+    $params = [];
     $this->_force = CRM_Utils_Request::retrieve('force', 'Boolean', $this, FALSE);
     $this->_searchResult = CRM_Utils_Request::retrieve('searchResult', 'Boolean', $this);
     $this->_event_type_id = CRM_Utils_Request::retrieve('event_type_id', 'String', $this);
 
-    $params = array();
+    $params = [];
     $whereClause = $this->whereClause($params, TRUE, $this->_force);
     // because is_template != 1 would be to simple
     $whereClause .= ' AND (is_template = 0 OR is_template IS NULL)';
@@ -212,7 +212,7 @@ class CRM_Event_Page_ManageEvent extends CRM_Core_Page {
     $this->assign('key', $key);
 
     // get all custom groups sorted by weight
-    $manageEvent = array();
+    $manageEvent = [];
 
     $query = "
   SELECT *
@@ -227,7 +227,7 @@ ORDER BY start_date desc
 
     while ($dao->fetch()) {
       if (in_array($dao->id, $permissions[CRM_Core_Permission::VIEW])) {
-        $manageEvent[$dao->id] = array();
+        $manageEvent[$dao->id] = [];
         CRM_Core_DAO::storeValues($dao, $manageEvent[$dao->id]);
 
         $manageEvent[$dao->id]['event_type'] = $eventType[$dao->event_type_id];
@@ -256,10 +256,10 @@ ORDER BY start_date desc
 
         $manageEvent[$dao->id]['action'] = CRM_Core_Action::formLink(self::links(),
           $action,
-          array(
+          [
             'id' => $dao->id,
             'key' => $key
-          ),
+          ],
           ts('Operation'),
           TRUE
         );
@@ -328,8 +328,8 @@ ORDER BY start_date desc
   }
 
   function whereClause(&$params, $sortBy, $force) {
-    $values = array();
-    $clauses = array();
+    $values = [];
+    $clauses = [];
     $title = $this->get('title');
     $createdId = $this->get('cid');
 
@@ -339,11 +339,11 @@ ORDER BY start_date desc
 
     if ($title) {
       $clauses[] = "title LIKE %1";
-      $params[1] = array(trim($title), 'String', TRUE);
+      $params[1] = [trim($title), 'String', TRUE];
     }
 
     $value = $this->get('event_type_id');
-    $val = array();
+    $val = [];
     if ($value) {
       if (is_array($value)) {
         foreach ($value as $k => $v) {

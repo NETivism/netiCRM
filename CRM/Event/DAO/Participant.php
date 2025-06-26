@@ -179,13 +179,13 @@ class CRM_Event_DAO_Participant extends CRM_Core_DAO
   function &links()
   {
     if (!(self::$_links)) {
-      self::$_links = array(
+      self::$_links = [
         'contact_id' => 'civicrm_contact:id',
         'event_id' => 'civicrm_event:id',
         'status_id' => 'civicrm_participant_status_type:id',
         'registered_by_id' => 'civicrm_participant:id',
         'discount_id' => 'civicrm_discount:id',
-      );
+      ];
     }
     return self::$_links;
   }
@@ -216,8 +216,8 @@ class CRM_Event_DAO_Participant extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'participant_id' => array(
+      self::$_fields = [
+        'participant_id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Participant ID') ,
@@ -228,8 +228,8 @@ class CRM_Event_DAO_Participant extends CRM_Core_DAO
           'dataPattern' => '',
           'export' => true,
           'usage' => 'System',
-        ) ,
-        'participant_contact_id' => array(
+        ] ,
+        'participant_contact_id' => [
           'name' => 'contact_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Contact ID') ,
@@ -240,8 +240,8 @@ class CRM_Event_DAO_Participant extends CRM_Core_DAO
           'export' => true,
           'FKClassName' => 'CRM_Contact_DAO_Contact',
           'usage' => 'System',
-        ) ,
-        'event_id' => array(
+        ] ,
+        'event_id' => [
           'name' => 'event_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Event') ,
@@ -252,8 +252,8 @@ class CRM_Event_DAO_Participant extends CRM_Core_DAO
           'export' => true,
           'FKClassName' => 'CRM_Event_DAO_Event',
           'usage' => 'System',
-        ) ,
-        'participant_status_id' => array(
+        ] ,
+        'participant_status_id' => [
           'name' => 'status_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Participant Status Id') ,
@@ -266,8 +266,8 @@ class CRM_Event_DAO_Participant extends CRM_Core_DAO
           'default' => '',
           'FKClassName' => 'CRM_Event_DAO_ParticipantStatusType',
           'usage' => 'System',
-        ) ,
-        'participant_role_id' => array(
+        ] ,
+        'participant_role_id' => [
           'name' => 'role_id',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Participant Role Id') ,
@@ -280,8 +280,8 @@ class CRM_Event_DAO_Participant extends CRM_Core_DAO
           'export' => false,
           'default' => 'UL',
           'usage' => 'System',
-        ) ,
-        'participant_register_date' => array(
+        ] ,
+        'participant_register_date' => [
           'name' => 'register_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Register date') ,
@@ -291,8 +291,8 @@ class CRM_Event_DAO_Participant extends CRM_Core_DAO
           'dataPattern' => '',
           'export' => true,
           'usage' => 'System',
-        ) ,
-        'participant_source' => array(
+        ] ,
+        'participant_source' => [
           'name' => 'source',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Participant Source') ,
@@ -303,8 +303,8 @@ class CRM_Event_DAO_Participant extends CRM_Core_DAO
           'headerPattern' => '/(participant.)?(source)$/i',
           'dataPattern' => '',
           'export' => true,
-        ) ,
-        'participant_fee_level' => array(
+        ] ,
+        'participant_fee_level' => [
           'name' => 'fee_level',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Fee level') ,
@@ -313,8 +313,8 @@ class CRM_Event_DAO_Participant extends CRM_Core_DAO
           'headerPattern' => '/^(f(ee\s)?level)$/i',
           'dataPattern' => '',
           'export' => true,
-        ) ,
-        'participant_is_test' => array(
+        ] ,
+        'participant_is_test' => [
           'name' => 'is_test',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Test') ,
@@ -324,8 +324,8 @@ class CRM_Event_DAO_Participant extends CRM_Core_DAO
           'dataPattern' => '',
           'export' => true,
           'usage' => 'System',
-        ) ,
-        'participant_is_pay_later' => array(
+        ] ,
+        'participant_is_pay_later' => [
           'name' => 'is_pay_later',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Is Pay Later') ,
@@ -335,8 +335,8 @@ class CRM_Event_DAO_Participant extends CRM_Core_DAO
           'dataPattern' => '',
           'export' => true,
           'usage' => 'System',
-        ) ,
-        'participant_fee_amount' => array(
+        ] ,
+        'participant_fee_amount' => [
           'name' => 'fee_amount',
           'type' => CRM_Utils_Type::T_MONEY,
           'title' => ts('Fee Amount') ,
@@ -346,8 +346,8 @@ class CRM_Event_DAO_Participant extends CRM_Core_DAO
           'dataPattern' => '/^\d+(\.\d{2})?$/',
           'export' => true,
           'usage' => 'System',
-        ) ,
-        'participant_registered_by_id' => array(
+        ] ,
+        'participant_registered_by_id' => [
           'name' => 'registered_by_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Registered By ID') ,
@@ -359,15 +359,15 @@ class CRM_Event_DAO_Participant extends CRM_Core_DAO
           'default' => 'UL',
           'FKClassName' => 'CRM_Event_DAO_Participant',
           'usage' => 'System',
-        ) ,
-        'participant_discount_id' => array(
+        ] ,
+        'participant_discount_id' => [
           'name' => 'discount_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Discount ID') ,
           'default' => 'UL',
           'FKClassName' => 'CRM_Core_DAO_Discount',
-        ) ,
-        'participant_fee_currency' => array(
+        ] ,
+        'participant_fee_currency' => [
           'name' => 'fee_currency',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Fee Currency') ,
@@ -380,8 +380,8 @@ class CRM_Event_DAO_Participant extends CRM_Core_DAO
           'export' => true,
           'default' => 'UL',
           'usage' => 'System',
-        ) ,
-      );
+        ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -414,7 +414,7 @@ class CRM_Event_DAO_Participant extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -437,7 +437,7 @@ class CRM_Event_DAO_Participant extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {

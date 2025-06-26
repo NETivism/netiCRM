@@ -77,9 +77,9 @@ class CRM_Utils_System {
    */
   static function getLinksUrl($urlVar, $includeReset = FALSE, $includeForce = TRUE) {
     // Sort out query string to prevent messy urls
-    $querystring = array();
-    $qs = array();
-    $arrays = array();
+    $querystring = [];
+    $qs = [];
+    $arrays = [];
 
     $config = CRM_Core_Config::singleton();
     if (!empty($_SERVER['QUERY_STRING'])) {
@@ -473,7 +473,7 @@ class CRM_Utils_System {
     if ($config->userFramework == 'Drupal') {
       return CRM_Core_Config::$_userSystem->moduleImplements($hook);
     }
-    return array();
+    return [];
   }
 
   /**
@@ -653,7 +653,7 @@ class CRM_Utils_System {
     $s = preg_replace('/<th[^>]*>([^<]+)<\/th>/', "<info>\\1</info>", $s);
     $s = preg_replace('/<td[^>]*>([^<]+)<\/td>/', "<info>\\1</info>", $s);
     $vTmp = preg_split('/(<h2>[^<]+<\/h2>)/', $s, -1, PREG_SPLIT_DELIM_CAPTURE);
-    $vModules = array();
+    $vModules = [];
     for ($i = 1; $i < count($vTmp); $i++) {
       if (preg_match('/<h2>([^<]+)<\/h2>/', $vTmp[$i], $vMat)) {
         $vName = trim($vMat[1]);
@@ -664,7 +664,7 @@ class CRM_Utils_System {
           $vPat2 = "/$vPat\s*$vPat/";
           // 3cols
           if (preg_match($vPat3, $vOne, $vMat)) {
-            $vModules[$vName][trim($vMat[1])] = array(trim($vMat[2]), trim($vMat[3]));
+            $vModules[$vName][trim($vMat[1])] = [trim($vMat[2]), trim($vMat[3])];
             // 2cols
           }
           elseif (preg_match($vPat2, $vOne, $vMat)) {
@@ -755,7 +755,7 @@ class CRM_Utils_System {
    * @static  */
   static function validCallback($callback) {
     if (self::$_callbacks === NULL) {
-      self::$_callbacks = array();
+      self::$_callbacks = [];
     }
 
     if (!CRM_Utils_Array::arrayKeyExists($callback, self::$_callbacks)) {
@@ -801,7 +801,7 @@ class CRM_Utils_System {
   static function checkURL($url, $addCookie = FALSE) {
     CRM_Core_Error::ignoreException();
 
-    $params = array('method' => 'GET');
+    $params = ['method' => 'GET'];
     $request = new HTTP_Request($url, $params);
     if ($addCookie) {
       foreach ($_COOKIE as $name => $value) {
@@ -835,7 +835,7 @@ class CRM_Utils_System {
     }
 
     if ($abort) {
-      CRM_Core_Error::fatal(ts('This feature requires PHP Version %1 or greater', array(1 => $ver)));
+      CRM_Core_Error::fatal(ts('This feature requires PHP Version %1 or greater', [1 => $ver]));
     }
     return FALSE;
   }
@@ -895,7 +895,7 @@ class CRM_Utils_System {
 
     if (!$version) {
       $verFile = CRM_Utils_Array::implode(DIRECTORY_SEPARATOR,
-        array(dirname(__FILE__), '..', '..', 'civicrm-version.txt')
+        [dirname(__FILE__), '..', '..', 'civicrm-version.txt']
       );
       if (file_exists($verFile)) {
         $str = file_get_contents($verFile);
@@ -905,7 +905,7 @@ class CRM_Utils_System {
       else {
         // svn installs don't have version.txt by default. In that case version.xml should help -
         $verFile = CRM_Utils_Array::implode(DIRECTORY_SEPARATOR,
-          array(dirname(__FILE__), '..', '..', 'xml', 'version.xml')
+          [dirname(__FILE__), '..', '..', 'xml', 'version.xml']
         );
         if (file_exists($verFile)) {
           $str = file_get_contents($verFile);
@@ -936,7 +936,7 @@ class CRM_Utils_System {
 
     // emulate get all headers
     // http://www.php.net/manual/en/function.getallheaders.php#66335
-    $headers = array();
+    $headers = [];
     foreach ($_SERVER as $name => $value) {
       if (substr($name, 0, 5) == 'HTTP_') {
         $headers[str_replace(' ',
@@ -1039,7 +1039,7 @@ class CRM_Utils_System {
    */
   static function getTrustedHostsPatterns() {
     global $civicrm_conf;
-    $patterns = array();
+    $patterns = [];
     if (!empty($civicrm_conf['trustedHostsPatterns'])) {
       $patterns[] = trim($civicrm_conf['trustedHostsPatterns']);
     }
@@ -1079,13 +1079,13 @@ class CRM_Utils_System {
       }
     }
     else {
-      $params = array(
+      $params = [
         'page' => $page,
         'URLonly' => $URLonly,
         'text' => $text,
         'title' => $title,
         'style' => $style,
-      );
+      ];
       return self::docURL($params);
     }
   }
@@ -1193,7 +1193,7 @@ class CRM_Utils_System {
     elseif (stripos($dbVersion, 'upgrade')) {
       // if db.ver indicates a partially upgraded db
       $upgradeUrl = CRM_Utils_System::url("civicrm/upgrade", "reset=1");
-      $errorMessage = ts('Database check failed - the database looks to have been partially upgraded. You may want to reload the database with the backup and try the <a href=\'%1\'>upgrade process</a> again.', array(1 => $upgradeUrl));
+      $errorMessage = ts('Database check failed - the database looks to have been partially upgraded. You may want to reload the database with the backup and try the <a href=\'%1\'>upgrade process</a> again.', [1 => $upgradeUrl]);
       return FALSE;
     }
     else {
@@ -1245,7 +1245,7 @@ class CRM_Utils_System {
       // let symfony router handling this
       // will trigger event(KernelEvents::TERMINATE at controller
       // set default null exception handler to prevent no catch after this
-      set_exception_handler(array('CRM_Core_Exception', 'nullExceptionHandler'));
+      set_exception_handler(['CRM_Core_Exception', 'nullExceptionHandler']);
       throw new CRM_Core_Exception('', CRM_Core_Error::NO_ERROR);
     }
 
@@ -1308,7 +1308,7 @@ class CRM_Utils_System {
               $args = $ele['args'];
             }
             else {
-              $args = array();
+              $args = [];
             }
             call_user_func_array($callback, $args);
           }
@@ -1417,7 +1417,7 @@ class CRM_Utils_System {
   static function loadBootStrap($params, $throwError = TRUE) {
     $config = CRM_Core_Config::singleton();
     require_once (str_replace('_', DIRECTORY_SEPARATOR, $config->userFrameworkClass) . '.php');
-    return call_user_func(array($config->userFrameworkClass, "loadBootStrap"), $params, $throwError);
+    return call_user_func([$config->userFrameworkClass, "loadBootStrap"], $params, $throwError);
   }
 
   /**
@@ -1622,44 +1622,44 @@ class CRM_Utils_System {
     extract($params);
 
     // Set params to meta attributes array.
-    $metaAttributes[] = array(
+    $metaAttributes[] = [
       'name' => 'description',
       'content' => $description,
-    );
+    ];
 
-    $metaAttributes[] =  array(
+    $metaAttributes[] =  [
       'property' => 'og:description',
       'content' => $description,
-    );
-    $metaAttributes[] = array(
+    ];
+    $metaAttributes[] = [
       'property' => 'og:title',
       'content' => $title,
-    );
-    $metaAttributes[] = array(
+    ];
+    $metaAttributes[] = [
       'property' => 'og:image',
       'content' => $image,
-    );
+    ];
 
-    $metaAttributes[] = array(
+    $metaAttributes[] = [
       'name' => 'twitter:card',
       'content' => 'summary_large_image',
-    );
-    $metaAttributes[] = array(
+    ];
+    $metaAttributes[] = [
       'name' => 'twitter:site',
       'content' => $site,
-    );
-    $metaAttributes[] = array(
+    ];
+    $metaAttributes[] = [
       'name' => 'twitter:title',
       'content' => $title,
-    );
-    $metaAttributes[] =  array(
+    ];
+    $metaAttributes[] =  [
       'name' => 'twitter:description',
       'content' => $description,
-    );
-    $metaAttributes[] = array(
+    ];
+    $metaAttributes[] = [
       'name' => 'twitter:image',
       'content' => $image,
-    );
+    ];
 
     // Use html head utils to inject tags
     foreach ($metaAttributes as $value) {
@@ -1671,10 +1671,10 @@ class CRM_Utils_System {
         //     'attributeName' => 'attributeValue',
         //   ),
         // )
-        CRM_Utils_System::addHTMLHead(array(
+        CRM_Utils_System::addHTMLHead([
           'tag' => 'meta',
           'attributes' => $value,
-        ));
+        ]);
       }
     }
   }

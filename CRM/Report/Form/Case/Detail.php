@@ -79,187 +79,187 @@ class CRM_Report_Form_Case_Detail extends CRM_Report_Form {
       $this->rel_types[$relid] = $v['label_b_a'];
     }
 
-    $this->_columns = array(
+    $this->_columns = [
       'civicrm_case' =>
-      array('dao' => 'CRM_Case_DAO_Case',
+      ['dao' => 'CRM_Case_DAO_Case',
         'fields' =>
-        array(
+        [
           'id' =>
-          array('title' => ts('Case ID'),
+          ['title' => ts('Case ID'),
             'no_display' => TRUE,
             'required' => TRUE,
-          ),
+          ],
           'subject' =>
-          array('title' => ts('Subject'),
+          ['title' => ts('Subject'),
             'required' => TRUE,
-          ),
+          ],
           'start_date' =>
-          array('title' => ts('Start Date'),
-          ),
+          ['title' => ts('Start Date'),
+          ],
           'end_date' =>
-          array('title' => ts('End Date'),
-          ),
+          ['title' => ts('End Date'),
+          ],
           'status_id' =>
-          array('title' => ts('Case Status'),
-          ),
+          ['title' => ts('Case Status'),
+          ],
           'case_type_id' =>
-          array('title' => ts('Case Type'),
-          ),
-        ),
+          ['title' => ts('Case Type'),
+          ],
+        ],
         'filters' =>
-        array(
+        [
           'start_date' =>
-          array('title' => ts('Start Date'),
+          ['title' => ts('Start Date'),
             'operatorType' => CRM_Report_Form::OP_DATE,
             'type' => CRM_Utils_Type::T_DATE,
-          ),
+          ],
           'end_date' =>
-          array('title' => ts('End Date'),
+          ['title' => ts('End Date'),
             'operatorType' => CRM_Report_Form::OP_DATE,
             'type' => CRM_Utils_Type::T_DATE,
-          ),
+          ],
           'status_id' =>
-          array('title' => ts('Case Status'),
+          ['title' => ts('Case Status'),
             'operatorType' => CRM_Report_Form::OP_MULTISELECT,
             'options' => $this->case_statuses,
-          ),
+          ],
           'case_type_id' =>
-          array('title' => ts('Case Type'),
+          ['title' => ts('Case Type'),
             'operatorType' => CRM_Report_Form::OP_MULTISELECT,
             'options' => $this->case_types,
-          ),
-        ),
-      ),
+          ],
+        ],
+      ],
       'civicrm_contact' =>
-      array('dao' => 'CRM_Contact_DAO_Contact',
+      ['dao' => 'CRM_Contact_DAO_Contact',
         'fields' =>
-        array(
+        [
           'display_name' =>
-          array('title' => ts('Client Name'),
+          ['title' => ts('Client Name'),
             'required' => TRUE,
-          ),
+          ],
           'id' =>
-          array('no_display' => TRUE,
+          ['no_display' => TRUE,
             'required' => TRUE,
-          ),
-        ),
+          ],
+        ],
         'filters' =>
-        array(
+        [
           'display_name' =>
-          array('title' => ts('Client Name'),
-          ),
-        ),
-      ),
+          ['title' => ts('Client Name'),
+          ],
+        ],
+      ],
       'civicrm_relationship' =>
-      array('dao' => 'CRM_Contact_DAO_Relationship',
+      ['dao' => 'CRM_Contact_DAO_Relationship',
         'fields' =>
-        array('relationship_type_id' =>
-          array('title' => ts('Case Role'),
-          ),
-        ),
+        ['relationship_type_id' =>
+          ['title' => ts('Case Role'),
+          ],
+        ],
         'filters' =>
-        array('relationship_type_id' =>
-          array('title' => ts('Case Role'),
+        ['relationship_type_id' =>
+          ['title' => ts('Case Role'),
             'operatorType' => CRM_Report_Form::OP_MULTISELECT,
             'options' => $this->rel_types,
-          ),
-        ),
-      ),
+          ],
+        ],
+      ],
       'civicrm_relationship_type' =>
-      array('dao' => 'CRM_Contact_DAO_RelationshipType',
-      ),
+      ['dao' => 'CRM_Contact_DAO_RelationshipType',
+      ],
       'civicrm_email' =>
-      array('dao' => 'CRM_Core_DAO_Email',
+      ['dao' => 'CRM_Core_DAO_Email',
         'fields' =>
-        array('email' =>
-          array('title' => ts('Email'),
+        ['email' =>
+          ['title' => ts('Email'),
             'no_repeat' => TRUE,
-          ),
-        ),
+          ],
+        ],
         'grouping' => 'contact-fields',
-      ),
+      ],
       'civicrm_phone' =>
-      array('dao' => 'CRM_Core_DAO_Phone',
+      ['dao' => 'CRM_Core_DAO_Phone',
         'fields' =>
-        array('phone' =>
-          array('title' => ts('Phone'),
+        ['phone' =>
+          ['title' => ts('Phone'),
             'no_repeat' => TRUE,
-          ),
-        ),
+          ],
+        ],
         'grouping' => 'contact-fields',
-      ),
+      ],
       'civicrm_address' =>
-      array('dao' => 'CRM_Core_DAO_Address',
+      ['dao' => 'CRM_Core_DAO_Address',
         'fields' =>
-        array('street_address' => NULL,
+        ['street_address' => NULL,
           'state_province_id' =>
-          array('title' => ts('State/Province'),
-          ),
+          ['title' => ts('State/Province'),
+          ],
           'country_id' =>
-          array('title' => ts('Country'),
-          ),
-        ),
+          ['title' => ts('Country'),
+          ],
+        ],
         'grouping' => 'contact-fields',
         'filters' =>
-        array('country_id' =>
-          array('title' => ts('Country'),
+        ['country_id' =>
+          ['title' => ts('Country'),
             'type' => CRM_Utils_Type::T_INT,
             'operatorType' => CRM_Report_Form::OP_MULTISELECT,
             'options' => CRM_Core_PseudoConstant::country(),
-          ),
+          ],
           'state_province_id' =>
-          array('title' => ts('State/Province'),
+          ['title' => ts('State/Province'),
             'type' => CRM_Utils_Type::T_INT,
             'operatorType' => CRM_Report_Form::OP_MULTISELECT,
             'options' => CRM_Core_PseudoConstant::stateProvince(),
-          ),
-        ),
-      ),
+          ],
+        ],
+      ],
       'civicrm_worldregion' =>
-      array('dao' => 'CRM_Core_DAO_Worldregion',
+      ['dao' => 'CRM_Core_DAO_Worldregion',
         'filters' =>
-        array(
+        [
           'worldregion_id' =>
-          array(
+          [
             'name' => 'id',
             'title' => ts('WorldRegion'),
             'type' => CRM_Utils_Type::T_INT,
             'operatorType' => CRM_Report_Form::OP_MULTISELECT,
             'options' => CRM_Core_PseudoConstant::worldRegion(),
-          ),
-        ),
-      ),
+          ],
+        ],
+      ],
       'civicrm_country' =>
-      array('dao' => 'CRM_Core_DAO_Country',
-      ),
+      ['dao' => 'CRM_Core_DAO_Country',
+      ],
       'civicrm_activity' =>
-      array('dao' => 'CRM_Activity_DAO_Activity',
+      ['dao' => 'CRM_Activity_DAO_Activity',
         'fields' =>
-        array(
+        [
           'activity_subject' =>
-          array(
+          [
             'name' => 'subject',
             'title' => ts('Activity Subject'),
             'no_display' => TRUE,
-          ),
-        ),
+          ],
+        ],
         'filters' =>
-        array('activity_date_time' =>
-          array(
+        ['activity_date_time' =>
+          [
             'title' => ts('Last Action Date'),
             'operatorType' => CRM_Report_Form::OP_DATE,
-          ),
-        ),
-      ),
+          ],
+        ],
+      ],
       'civicrm_case_contact' =>
-      array('dao' => 'CRM_Case_DAO_CaseContact',
-      ),
-    );
-    $this->_options = array('my_cases' =>
-      array('title' => ts('My Cases'),
+      ['dao' => 'CRM_Case_DAO_CaseContact',
+      ],
+    ];
+    $this->_options = ['my_cases' =>
+      ['title' => ts('My Cases'),
         'type' => 'checkbox',
-      ),
-    );
+      ],
+    ];
     parent::__construct();
   }
 
@@ -268,8 +268,8 @@ class CRM_Report_Form_Case_Detail extends CRM_Report_Form {
   }
 
   function select() {
-    $select = array();
-    $this->_columnHeaders = array();
+    $select = [];
+    $this->_columnHeaders = [];
     foreach ($this->_columns as $tableName => $table) {
       if (CRM_Utils_Array::arrayKeyExists('fields', $table)) {
         foreach ($table['fields'] as $fieldName => $field) {
@@ -361,7 +361,7 @@ class CRM_Report_Form_Case_Detail extends CRM_Report_Form {
   }
 
   function where() {
-    $clauses = array();
+    $clauses = [];
     $this->_having = '';
     foreach ($this->_columns as $tableName => $table) {
       if (CRM_Utils_Array::arrayKeyExists('filters', $table)) {
@@ -445,14 +445,14 @@ class CRM_Report_Form_Case_Detail extends CRM_Report_Form {
         }
       }
     }
-    $statistics['counts']['case'] = array(
+    $statistics['counts']['case'] = [
       'title' => ts('Total Number of Cases '),
       'value' => isset($statistics['counts']['rowsFound']) ? $statistics['counts']['rowsFound']['value'] : count($rows),
-    );
-    $statistics['counts']['country'] = array(
+    ];
+    $statistics['counts']['country'] = [
       'title' => ts('Total Number of Countries '),
       'value' => $countryCount,
-    );
+    ];
 
     return $statistics;
   }
@@ -476,15 +476,15 @@ class CRM_Report_Form_Case_Detail extends CRM_Report_Form {
     $sql = $this->buildQuery(TRUE);
 
 
-    $rows = $graphRows = array();
+    $rows = $graphRows = [];
     $this->buildRows($sql, $rows);
 
     $this->formatDisplay($rows);
     if ($this->_params['activity_date_time_relative']) {
       $this->_columnHeaders = array_merge($this->_columnHeaders,
-        array('civicrm_activity_activity_subject' =>
-          array('type' => '2', 'title' => 'Last Action Activity Subject'),
-        )
+        ['civicrm_activity_activity_subject' =>
+          ['type' => '2', 'title' => 'Last Action Activity Subject'],
+        ]
       );
     }
 

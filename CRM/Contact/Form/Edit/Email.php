@@ -80,29 +80,29 @@ class CRM_Contact_Form_Edit_Email {
       //On-hold checkbox
       $onHoldEle = $form->addElement('advcheckbox', "email[$blockId][on_hold]", NULL);
       if ($isSpamReport) {
-        $spamReportEmail = array(
+        $spamReportEmail = [
           $blockId => '1'
-        );
+        ];
         $form->assign('isSpamReport', $spamReportEmail);
         $onHoldEle->freeze();
       }
 
       //Bulkmail checkbox
-      $js = array('id' => "Email_" . $blockId . "_IsBulkmail", 'onClick' => 'singleSelect( this.id );');
+      $js = ['id' => "Email_" . $blockId . "_IsBulkmail", 'onClick' => 'singleSelect( this.id );'];
       $form->addElement('advcheckbox', "email[$blockId][is_bulkmail]", NULL, '', $js);
 
       //is_Primary radio
-      $js = array('id' => "Email_" . $blockId . "_IsPrimary", 'onClick' => 'singleSelect( this.id );');
+      $js = ['id' => "Email_" . $blockId . "_IsPrimary", 'onClick' => 'singleSelect( this.id );'];
       $form->addElement('radio', "email[$blockId][is_primary]", '', '', '1', $js);
 
       if (CRM_Utils_System::getClassName($form) == 'CRM_Contact_Form_Contact') {
 
         $form->add('textarea', "email[$blockId][signature_text]", ts('Signature (Text)'),
-          array('rows' => 2, 'cols' => 40)
+          ['rows' => 2, 'cols' => 40]
         );
 
         $form->addWysiwyg("email[$blockId][signature_html]", ts('Signature (HTML)'),
-          array('rows' => 2, 'cols' => 40)
+          ['rows' => 2, 'cols' => 40]
         );
       }
     }

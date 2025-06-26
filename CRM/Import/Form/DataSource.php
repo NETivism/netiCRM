@@ -77,10 +77,10 @@ class CRM_Import_Form_DataSource extends CRM_Core_Form {
       CRM_Core_Error::fatal(ts('Database Configuration Error: Insufficient permissions. Import requires that the CiviCRM database user has permission to create temporary tables. Contact your site administrator for assistance.'));
     }
 
-    $results = array();
+    $results = [];
     $config = CRM_Core_Config::singleton();
     $handler = opendir($config->uploadDir);
-    $errorFiles = array('sqlImport.errors', 'sqlImport.conflicts', 'sqlImport.duplicates', 'sqlImport.mismatch');
+    $errorFiles = ['sqlImport.errors', 'sqlImport.conflicts', 'sqlImport.duplicates', 'sqlImport.mismatch'];
 
     while ($file = readdir($handler)) {
       if ($file != '.' && $file != '..' &&
@@ -91,7 +91,7 @@ class CRM_Import_Form_DataSource extends CRM_Core_Form {
     }
     closedir($handler);
     if (!empty($results)) {
-      CRM_Core_Error::fatal(ts('<b>%1</b> file(s) in %2 directory are not writable. Listed file(s) might be used during the import to log the errors occurred during Import process. Contact your site administrator for assistance.', array(1 => CRM_Utils_Array::implode(', ', $results), 2 => $config->uploadDir)));
+      CRM_Core_Error::fatal(ts('<b>%1</b> file(s) in %2 directory are not writable. Listed file(s) might be used during the import to log the errors occurred during Import process. Contact your site administrator for assistance.', [1 => CRM_Utils_Array::implode(', ', $results), 2 => $config->uploadDir]));
     }
 
     $this->_dataSourceIsValid = FALSE;
@@ -142,7 +142,7 @@ class CRM_Import_Form_DataSource extends CRM_Core_Form {
       }
     }
 
-    $dedupeGroupParams = array('level' => 'Strict');
+    $dedupeGroupParams = ['level' => 'Strict'];
     $this->_dedupeRuleGroups = CRM_Dedupe_BAO_RuleGroup::getDetailsByParams($dedupeGroupParams);
   }
 
@@ -169,10 +169,10 @@ class CRM_Import_Form_DataSource extends CRM_Core_Form {
     $this->assign('urlPathVar', 'snippet=4');
 
     $this->add('select', 'dataSource', ts('Data Source'), $dataSources, TRUE);
-    $this->setDefaults(array('dataSource' => 'CRM_Import_DataSource_CSV'));
+    $this->setDefaults(['dataSource' => 'CRM_Import_DataSource_CSV']);
 
     // duplicate handling options
-    $duplicateOptions = array();
+    $duplicateOptions = [];
     $duplicateOptions[] = $this->createElement('radio',
       NULL, NULL, ts('Skip'), CRM_Import_Parser::DUPLICATE_SKIP
     );
@@ -198,17 +198,17 @@ class CRM_Import_Form_DataSource extends CRM_Core_Form {
       ));
 
     $this->assign('savedMapping', $mappingArray);
-    $this->addElement('select', 'savedMapping', ts('Mapping Option'), array('' => ts('- select -')) + $mappingArray);
+    $this->addElement('select', 'savedMapping', ts('Mapping Option'), ['' => ts('- select -')] + $mappingArray);
 
     if ($loadeMapping = $this->get('loadedMapping')) {
       $this->assign('loadedMapping', $loadeMapping);
-      $this->setDefaults(array('savedMapping' => $loadeMapping));
+      $this->setDefaults(['savedMapping' => $loadeMapping]);
     }
 
-    $this->setDefaults(array('onDuplicate' => CRM_Import_Parser::DUPLICATE_SKIP));
+    $this->setDefaults(['onDuplicate' => CRM_Import_Parser::DUPLICATE_SKIP]);
 
     // contact types option
-    $contactOptions = array();
+    $contactOptions = [];
     foreach($this->_contactTypes as $type => $tsName) {
       $contactOptions[] = $this->createElement('radio', NULL, NULL, $tsName, $type, $js);
     }
@@ -216,12 +216,12 @@ class CRM_Import_Form_DataSource extends CRM_Core_Form {
 
     $this->addElement('select', 'subType', ts('Subtype'));
 
-    $this->setDefaults(array('contactType' =>
+    $this->setDefaults(['contactType' =>
         CRM_Import_Parser::CONTACT_INDIVIDUAL,
-      ));
+      ]);
 
     foreach ($this->_dedupeRuleGroups as $dedupegroup_id => $groupValues) {
-      $fields = array();
+      $fields = [];
       foreach($groupValues['fields'] as $name){
         if (isset($this->_dedupeRuleFields[$name])) {
           $fields[] = $this->_dedupeRuleFields[$name];
@@ -235,7 +235,7 @@ class CRM_Import_Form_DataSource extends CRM_Core_Form {
     }
     $this->addSelect('dedupeRuleGroupId', ts('Dedupe Rule of Contact'), $dedupeRule);
     if ($dedupeRuleGroupId = $this->get('dedupeRuleGroupId')) {
-      $this->setDefaults(array('dedupeRuleGroupId' => $dedupeRuleGroupId));
+      $this->setDefaults(['dedupeRuleGroupId' => $dedupeRuleGroupId]);
     }
 
 
@@ -249,16 +249,16 @@ class CRM_Import_Form_DataSource extends CRM_Core_Form {
     }
     $this->assign('geoCode', $geoCode);
 
-    $this->addButtons(array(
-        array('type' => 'upload',
+    $this->addButtons([
+        ['type' => 'upload',
           'name' => ts('Continue >>'),
           'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
           'isDefault' => TRUE,
-        ),
-        array('type' => 'cancel',
+        ],
+        ['type' => 'cancel',
           'name' => ts('Cancel'),
-        ),
-      )
+        ],
+      ]
     );
   }
 
@@ -266,7 +266,7 @@ class CRM_Import_Form_DataSource extends CRM_Core_Form {
     // Open the data source dir and scan it for class files
     $config = CRM_Core_Config::singleton();
     $dataSourceDir = $config->importDataSourceDir;
-    $dataSources = array();
+    $dataSources = [];
     if (!is_dir($dataSourceDir)) {
       CRM_Core_Error::fatal("Import DataSource directory $dataSourceDir does not exist");
     }
@@ -276,7 +276,7 @@ class CRM_Import_Form_DataSource extends CRM_Core_Form {
 
     while (($dataSourceFile = readdir($dataSourceHandle)) !== FALSE) {
       $fileType = filetype($dataSourceDir . $dataSourceFile);
-      $matches = array();
+      $matches = [];
       if (($fileType == 'file' || $fileType == 'link') &&
         preg_match('/^(.+)\.php$/', $dataSourceFile, $matches)
       ) {
@@ -340,7 +340,7 @@ class CRM_Import_Form_DataSource extends CRM_Core_Form {
       $importTableName = $this->get('importTableName');
       $primaryKeyName = $this->get('primaryKeyName');
       $statusFieldName = $this->get('statusFieldName');
-      $mapper = array();
+      $mapper = [];
 
       $parser = new CRM_Import_Parser_Contact($mapper);
       $parser->setMaxLinesToProcess(100);

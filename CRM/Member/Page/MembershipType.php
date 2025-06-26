@@ -65,32 +65,32 @@ class CRM_Member_Page_MembershipType extends CRM_Core_Page_Basic {
    */
   function &links() {
     if (!(self::$_links)) {
-      self::$_links = array(
-        CRM_Core_Action::UPDATE => array(
+      self::$_links = [
+        CRM_Core_Action::UPDATE => [
           'name' => ts('Edit'),
           'url' => 'civicrm/admin/member/membershipType',
           'qs' => 'action=update&id=%%id%%&reset=1',
           'title' => ts('Edit Membership Type'),
-        ),
-        CRM_Core_Action::DISABLE => array(
+        ],
+        CRM_Core_Action::DISABLE => [
           'name' => ts('Disable'),
           'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_Member_BAO_MembershipType' . '\',\'' . 'enable-disable' . '\' );"',
           'ref' => 'disable-action',
           'title' => ts('Disable Membership Type'),
-        ),
-        CRM_Core_Action::ENABLE => array(
+        ],
+        CRM_Core_Action::ENABLE => [
           'name' => ts('Enable'),
           'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_Member_BAO_MembershipType' . '\',\'' . 'disable-enable' . '\' );"',
           'ref' => 'enable-action',
           'title' => ts('Enable Membership Type'),
-        ),
-        CRM_Core_Action::DELETE => array(
+        ],
+        CRM_Core_Action::DELETE => [
           'name' => ts('Delete'),
           'url' => 'civicrm/admin/member/membershipType',
           'qs' => 'action=delete&id=%%id%%',
           'title' => ts('Delete Membership Type'),
-        ),
-      );
+        ],
+      ];
     }
     return self::$_links;
   }
@@ -143,7 +143,7 @@ class CRM_Member_Page_MembershipType extends CRM_Core_Page_Basic {
    */
   function browse() {
     // get all membership types sorted by weight
-    $membershipType = array();
+    $membershipType = [];
 
     $dao = new CRM_Member_DAO_MembershipType();
 
@@ -153,7 +153,7 @@ class CRM_Member_Page_MembershipType extends CRM_Core_Page_Basic {
 
 
     while ($dao->fetch()) {
-      $membershipType[$dao->id] = array();
+      $membershipType[$dao->id] = [];
       CRM_Core_DAO::storeValues($dao, $membershipType[$dao->id]);
 
       // fix the display of the monetary value, CRM-4038
@@ -189,7 +189,7 @@ class CRM_Member_Page_MembershipType extends CRM_Core_Page_Basic {
         }
         $membershipType[$dao->id]['order'] = $membershipType[$dao->id]['weight'];
         $membershipType[$dao->id]['action'] = CRM_Core_Action::formLink(self::links(), $action,
-          array('id' => $dao->id)
+          ['id' => $dao->id]
         );
       }
     }

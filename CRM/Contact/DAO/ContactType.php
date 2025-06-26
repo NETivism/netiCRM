@@ -145,9 +145,9 @@ class CRM_Contact_DAO_ContactType extends CRM_Core_DAO
   function &links()
   {
     if (!(self::$_links)) {
-      self::$_links = array(
+      self::$_links = [
         'parent_id' => 'civicrm_contact_type:id',
-      );
+      ];
     }
     return self::$_links;
   }
@@ -174,54 +174,54 @@ class CRM_Contact_DAO_ContactType extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'id' => array(
+      self::$_fields = [
+        'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'name' => array(
+        ] ,
+        'name' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Name') ,
           'maxlength' => 64,
           'size' => CRM_Utils_Type::BIG,
-        ) ,
-        'label' => array(
+        ] ,
+        'label' => [
           'name' => 'label',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Label') ,
           'maxlength' => 64,
           'size' => CRM_Utils_Type::BIG,
-        ) ,
-        'description' => array(
+        ] ,
+        'description' => [
           'name' => 'description',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Description') ,
           'rows' => 2,
           'cols' => 60,
-        ) ,
-        'image_URL' => array(
+        ] ,
+        'image_URL' => [
           'name' => 'image_URL',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Image Url') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'parent_id' => array(
+        ] ,
+        'parent_id' => [
           'name' => 'parent_id',
           'type' => CRM_Utils_Type::T_INT,
           'FKClassName' => 'CRM_Contact_DAO_ContactType',
-        ) ,
-        'is_active' => array(
+        ] ,
+        'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ) ,
-        'is_reserved' => array(
+        ] ,
+        'is_reserved' => [
           'name' => 'is_reserved',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ) ,
-      );
+        ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -255,7 +255,7 @@ class CRM_Contact_DAO_ContactType extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -278,7 +278,7 @@ class CRM_Contact_DAO_ContactType extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {

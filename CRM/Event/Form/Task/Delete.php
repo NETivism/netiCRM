@@ -79,14 +79,14 @@ class CRM_Event_Form_Task_Delete extends CRM_Event_Form_Task {
    * @return void
    */
   function buildQuickForm() {
-    $deleteParticipants = array(
+    $deleteParticipants = [
       1 => ts('Delete this participant record along with associated participant record(s).'),
       2 => ts('Delete only this participant record.'),
-    );
+    ];
 
 
     $this->addRadio('delete_participant', NULL, $deleteParticipants, NULL, '<br />');
-    $this->setDefaults(array('delete_participant' => 1));
+    $this->setDefaults(['delete_participant' => 1]);
     $this->assign("additionalParticipant", $additionalParticipant);
 
     $this->addDefaultButtons(ts('Delete Participations'), 'done');
@@ -104,7 +104,7 @@ class CRM_Event_Form_Task_Delete extends CRM_Event_Form_Task {
 
 
     if (CRM_Utils_Array::value('delete_participant', $params) == 2) {
-      $links = array();
+      $links = [];
       foreach ($this->_participantIds as $participantId) {
         $additionalId = (CRM_Event_BAO_Participant::getAdditionalParticipantIds($participantId));
         $participantLinks = (CRM_Event_BAO_Participant::getAdditionalParticipantUrl($additionalId));
@@ -129,10 +129,10 @@ class CRM_Event_Form_Task_Delete extends CRM_Event_Form_Task {
       }
     }
 
-    $status = array(
-      ts('Deleted Participation(s): %1', array(1 => $deletedParticipants)),
-      ts('Total Selected Participation(s): %1', array(1 => $deletedParticipants)),
-    );
+    $status = [
+      ts('Deleted Participation(s): %1', [1 => $deletedParticipants]),
+      ts('Total Selected Participation(s): %1', [1 => $deletedParticipants]),
+    ];
 
 
     if (!empty($participantLinks)) {

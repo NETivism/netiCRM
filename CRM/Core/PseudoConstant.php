@@ -88,7 +88,7 @@ class CRM_Core_PseudoConstant {
    * @var array
    * @static
    */
-  private static $activityType = array();
+  private static $activityType = [];
 
   /**
    * individual prefix
@@ -284,14 +284,14 @@ class CRM_Core_PseudoConstant {
    * @var array
    * @static
    */
-  private static $activityStatus = array();
+  private static $activityStatus = [];
 
   /**
    * priority
    * @var array
    * @static
    */
-  private static $priority = array();
+  private static $priority = [];
 
   /**
    * wysiwyg Editor
@@ -333,28 +333,28 @@ class CRM_Core_PseudoConstant {
    * @var array
    * @static
    */
-  private static $greeting = array();
+  private static $greeting = [];
 
   /**
    * Extensions
    * @var array
    * @static
    */
-  private static $extensions = array();
+  private static $extensions = [];
 
   /**
    * TrackState
    * @var array
    * @static
    */
-  private static $trackState = array();
+  private static $trackState = [];
 
   /**
    * Referrer Types
    * @var array
    * @static
    */
-  private static $referrerTypes = array();
+  private static $referrerTypes = [];
 
   /**
    * populate the object from the database. generic populate
@@ -406,7 +406,7 @@ class CRM_Core_PseudoConstant {
     }
 
     $object->find();
-    $var = array();
+    $var = [];
     while ($object->fetch()) {
       $var[$object->$key] = $object->$retrieve;
     }
@@ -457,24 +457,24 @@ class CRM_Core_PseudoConstant {
     if (!self::$contactSubType) {
       $types = CRM_Contact_BAO_ContactType::subTypeInfo();
       foreach($types as $type => $info) {
-        self::$contactSubType[$info['id']] = array(
+        self::$contactSubType[$info['id']] = [
           'id' => $info['id'],
           'name' => $info['name'],
           'label' => $info['label'],
           'parent' => $info['parent'],
-        );
+        ];
       }
     }
     if ($parentType) {
-      $return = array();
+      $return = [];
       foreach(self::$contactSubType as $type => $info) {
         if ($info['parent'] == $parentType) {
-          $return[$info['id']] = array(
+          $return[$info['id']] = [
             'id' => $info['id'],
             'name' => $info['name'],
             'label' => $info['label'],
             'parent' => $info['parent'],
-          );
+          ];
         }
       }
       return $return;
@@ -549,7 +549,7 @@ class CRM_Core_PseudoConstant {
       }
       $componentClause = " v.component_id IS NULL";
 
-      $componentIds = array();
+      $componentIds = [];
 
       $compInfo = CRM_Core_Component::getEnabledComponents();
 
@@ -762,13 +762,13 @@ class CRM_Core_PseudoConstant {
       $default = CRM_Core_OptionGroup::values('from_email_address', NULL, NULL, NULL, ' AND is_default = 1', 'label', TRUE, $refresh);
       $others = CRM_Core_OptionGroup::values('from_email_address', NULL, NULL, NULL, ' AND is_default = 0', 'label', TRUE, $refresh);
       if(!empty($default)){
-        $default_mail = array('default' => reset($default));
+        $default_mail = ['default' => reset($default)];
         $others = array_merge($default_mail, $others);
       }
       self::$fromEmailAddress = $others;
     }
     if ($separateNameEmail) {
-      $pluckedFromEmail = array();
+      $pluckedFromEmail = [];
       foreach(self::$fromEmailAddress as $idx => $addr) {
         preg_match('/"([^"]+)"\s*<([^<]*)>$/', $addr, $matches);
         $pluckedFromEmail[$idx]['name'] = trim($matches[1]);
@@ -828,7 +828,7 @@ class CRM_Core_PseudoConstant {
         // limit the state/province list to the countries specified in CIVICRM_PROVINCE_LIMIT
         $countryIsoCodes = self::countryIsoCode();
         $limitCodes = $config->provinceLimit();
-        $limitIds = array();
+        $limitIds = [];
         foreach ($limitCodes as $code) {
           $limitIds = array_merge($limitIds, array_keys($countryIsoCodes, $code));
         }
@@ -845,7 +845,7 @@ class CRM_Core_PseudoConstant {
       global $tsLocale;
       if ($tsLocale != '' and $tsLocale != CRM_Core_Config::SYSTEM_LANG) {
         $i18n = CRM_Core_I18n::singleton();
-        $i18n->localizeArray(self::$stateProvince, array('context' => 'province'));
+        $i18n->localizeArray(self::$stateProvince, ['context' => 'province']);
         asort(self::$stateProvince);
       }
     }
@@ -879,7 +879,7 @@ class CRM_Core_PseudoConstant {
 SELECT abbreviation
 FROM   civicrm_state_province
 WHERE  id = %1";
-      $params = array(1 => array($id, 'Integer'));
+      $params = [1 => [$id, 'Integer']];
       return CRM_Core_DAO::singleValueQuery($query, $params);
     }
 
@@ -892,7 +892,7 @@ WHERE  id = %1";
         $config = CRM_Core_Config::singleton();
         $countryIsoCodes = self::countryIsoCode();
         $limitCodes = $config->provinceLimit();
-        $limitIds = array();
+        $limitIds = [];
         foreach ($limitCodes as $code) {
           $tmpArray = array_keys($countryIsoCodes, $code);
 
@@ -940,7 +940,7 @@ WHERE  id = %1";
     if (($id && !CRM_Utils_Array::value($id, self::$country)) || !self::$country || !$id) {
 
       $config = CRM_Core_Config::singleton();
-      $limitCodes = array();
+      $limitCodes = [];
 
       if ($applyLimit) {
         // limit the country list to the countries specified in CIVICRM_COUNTRY_LIMIT
@@ -948,7 +948,7 @@ WHERE  id = %1";
         // K/P: We need to fix this, i dont think it works with new setting files
         $limitCodes = $config->countryLimit();
         if (!is_array($limitCodes)) {
-          $limitCodes = array($config->countryLimit => 1);
+          $limitCodes = [$config->countryLimit => 1];
         }
 
         $limitCodes = array_intersect(self::countryIsoCode(), $limitCodes);
@@ -977,7 +977,7 @@ WHERE  id = %1";
       global $tsLocale;
       if ($tsLocale != '' and $tsLocale != CRM_Core_Config::SYSTEM_LANG) {
         $i18n = CRM_Core_I18n::singleton();
-        $i18n->localizeArray(self::$country, array('context' => 'country'));
+        $i18n->localizeArray(self::$country, ['context' => 'country']);
         asort(self::$country);
       }
     }
@@ -1069,7 +1069,7 @@ WHERE  id = %1";
     $condition = CRM_Contact_BAO_Group::groupTypeCondition($groupType, $excludeHidden);
 
     if (!self::$group) {
-      self::$group = array();
+      self::$group = [];
     }
 
     $groupKey = $groupType ? $groupType : 'null';
@@ -1089,7 +1089,7 @@ WHERE  id = %1";
     }
     $condition = CRM_Contact_BAO_Group::groupTypeCondition($groupType);
 
-    self::$publicGroup = array();
+    self::$publicGroup = [];
     self::populate(self::$publicGroup, 'CRM_Contact_DAO_Group', FALSE, 'title', 'is_active', "$condition AND visibility Like 'Public Pages'");
     return self::$publicGroup;
   }
@@ -1240,7 +1240,7 @@ WHERE  id = %1";
    */
   public static function &relationshipType($valueColumnName = 'label') {
     if (!CRM_Utils_Array::value($valueColumnName, self::$relationshipType)) {
-      self::$relationshipType[$valueColumnName] = array();
+      self::$relationshipType[$valueColumnName] = [];
 
       //now we have name/label columns CRM-3336
       $column_a_b = "{$valueColumnName}_a_b";
@@ -1254,13 +1254,13 @@ WHERE  id = %1";
       $relationshipTypeDAO->find();
       while ($relationshipTypeDAO->fetch()) {
 
-        self::$relationshipType[$valueColumnName][$relationshipTypeDAO->id] = array($column_a_b => $relationshipTypeDAO->$column_a_b,
+        self::$relationshipType[$valueColumnName][$relationshipTypeDAO->id] = [$column_a_b => $relationshipTypeDAO->$column_a_b,
           $column_b_a => $relationshipTypeDAO->$column_b_a,
           'contact_type_a' => "$relationshipTypeDAO->contact_type_a",
           'contact_type_b' => "$relationshipTypeDAO->contact_type_b",
           'contact_sub_type_a' => "$relationshipTypeDAO->contact_sub_type_a",
           'contact_sub_type_b' => "$relationshipTypeDAO->contact_sub_type_b",
-        );
+        ];
       }
     }
 
@@ -1292,7 +1292,7 @@ WHERE  id = %1";
    */
   public static function &currencyCode() {
     if (!self::$currencyCode) {
-      self::$currencyCode = array('AFN', 'ALL', 'DZD', 'USD', 'EUR', 'AOA', 'XCD', 'XCD', 'ARS', 'AMD',
+      self::$currencyCode = ['AFN', 'ALL', 'DZD', 'USD', 'EUR', 'AOA', 'XCD', 'XCD', 'ARS', 'AMD',
         'AWG', 'AUD', 'EUR', 'AZM', 'BSD', 'BHD', 'BDT', 'BBD', 'BYR', 'EUR', 'BZD', 'XOF', 'BMD', 'INR',
         'BTN', 'BOB', 'BOV', 'BAM', 'BWP', 'NOK', 'BRL', 'USD', 'BND', 'BGN', 'XOF', 'BIF', 'KHR', 'XAF',
         'CAD', 'CVE', 'KYD', 'XAF', 'XAF', 'CLP', 'CLF', 'CNY', 'AUD', 'AUD', 'COP', 'COU', 'KMF', 'XAF',
@@ -1312,7 +1312,7 @@ WHERE  id = %1";
         'AUD', 'UGX', 'UAH', 'AED', 'GBP', 'USD', 'USS', 'USN', 'USD', 'UYU', 'UZS', 'VUV', 'VEB', 'VND',
         'USD', 'USD', 'XPF', 'MAD', 'YER', 'ZMK', 'ZWD', 'XAU', 'XBA', 'XBB', 'XBC', 'XBD', 'XPD', 'XPT',
         'XAG', 'XFU', 'XFO', 'XTS', 'XXX',
-      );
+      ];
     }
     return self::$currencyCode;
   }
@@ -1479,7 +1479,7 @@ WHERE  id = %1";
    */
   public static function &activityStatus($column = 'label') {
     if (!CRM_Utils_Array::arrayKeyExists($column, self::$activityStatus)) {
-      self::$activityStatus[$column] = array();
+      self::$activityStatus[$column] = [];
 
 
       self::$activityStatus[$column] = CRM_Core_OptionGroup::values('activity_status', FALSE,
@@ -1572,11 +1572,11 @@ SELECT civicrm_state_province.name name, civicrm_state_province.id id
   FROM civicrm_state_province
 WHERE country_id = %1
 ORDER BY name";
-    $params = array(1 => array($countryID, 'Integer'));
+    $params = [1 => [$countryID, 'Integer']];
 
     $dao = CRM_Core_DAO::executeQuery($query, $params);
 
-    $result = array();
+    $result = [];
     while ($dao->fetch()) {
       $result[$dao->id] = $dao->name;
     }
@@ -1669,20 +1669,20 @@ ORDER BY name";
 
   public static function &trackState() {
     if (!self::$trackState) {
-      self::$trackState = array(
+      self::$trackState = [
         0 => ts('Information Screen'),
         1 => ts('Form Screen'),
         2 => ts('Confirmation Screen'),
         3 => ts('Payment Screen'),
         4 => ts('Thank You Screen'),
-      );
+      ];
     }
     return self::$trackState;
   }
 
   public static function &referrerTypes() {
     if (!self::$referrerTypes) {
-      self::$referrerTypes =  array(
+      self::$referrerTypes =  [
         'ad' => ts('ads'),
         'direct' => ts('direct'),
         'email' => ts('Email clients'),
@@ -1692,7 +1692,7 @@ ORDER BY name";
         'social' => ts('social'),
         'unknown' => ts('Unknown'),
         'internal' => ts('internal'),
-      );
+      ];
     }
     return self::$referrerTypes;
   }

@@ -94,7 +94,7 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
       return $priceField;
     }
 
-    $options = $optionsIds = array();
+    $options = $optionsIds = [];
 
     $maxIndex = CRM_Price_Form_Field::NUM_OPTION;
 
@@ -110,7 +110,7 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
         $optionsIds['id'] = $fieldValue->id;
       }
     }
-    $defaultArray = array();
+    $defaultArray = [];
     if ($params['html_type'] == 'CheckBox' && isset($params['default_checkbox_option'])) {
       $tempArray = array_keys($params['default_checkbox_option']);
       foreach ($tempArray as $v) {
@@ -131,7 +131,7 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
       if (CRM_Utils_Array::value($index, $params['option_label']) &&
         !CRM_Utils_System::isNull($params['option_amount'][$index])
       ) {
-        $options = array(
+        $options = [
           'price_field_id' => $priceField->id,
           'label' => trim($params['option_label'][$index]),
           'name' => CRM_Utils_String::munge($params['option_label'][$index], '_', 64),
@@ -143,7 +143,7 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
           'is_member' => $params['option_member'][$index],
           'is_active' => 1,
           'is_default' => CRM_Utils_Array::value($index, $defaultArray),
-        );
+        ];
         CRM_Price_BAO_FieldValue::add($options, $optionsIds);
       }
     }
@@ -223,7 +223,7 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
     $useRequired = TRUE,
     $label = NULL,
     $fieldOptions = NULL,
-    $freezeOptions = array()
+    $freezeOptions = []
   ) {
 
     $field = new CRM_Price_DAO_Field();
@@ -264,8 +264,8 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
 
     // validate member related fields
     static $optionMemberJson;
-    $optionMember = array();
-    $backendForm = array('CRM_Event_Form_Participant', 'CRM_Contribute_Form_Contribution');
+    $optionMember = [];
+    $backendForm = ['CRM_Event_Form_Participant', 'CRM_Contribute_Form_Contribution'];
     $formClass = get_class($qf);
     if (!in_array($formClass, $backendForm)) {
       foreach ($customOption as $optId => $opt) {
@@ -299,7 +299,7 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
     //use value field.
     $valueFieldName = 'amount';
     $seperator = '|';
-    $disabledOptions = array();
+    $disabledOptions = [];
 
     if (!empty($optionMember) && !$isMember) {
       foreach($optionMember as $optId => $opt){
@@ -326,7 +326,7 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
         $optionKey = key($customOption);
         $count = CRM_Utils_Array::value('count', $customOption[$optionKey], '');
         $max_value = CRM_Utils_Array::value('max_value', $customOption[$optionKey], '');
-        $priceVal = CRM_Utils_Array::implode($seperator, array($customOption[$optionKey][$valueFieldName], $count, $max_value));
+        $priceVal = CRM_Utils_Array::implode($seperator, [$customOption[$optionKey][$valueFieldName], $count, $max_value]);
 
         //check for label.
         if (CRM_Utils_Array::value('label', $fieldOptions[$optionKey])) {
@@ -338,14 +338,14 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
           $label .= CRM_Utils_Money::format(CRM_Utils_Array::value($valueFieldName, $customOption[$optionKey]));
         }
 
-        $attributes = array(
+        $attributes = [
           'size' => "4",
           'min' => 0,
           'step' => 1,
-          'price' => json_encode(array($optionKey, $priceVal)),
+          'price' => json_encode([$optionKey, $priceVal]),
           'inputmode' => 'numeric',
-          'placeholder' => ts('Please enter %1', array(1 => ts('Quantity'))),
-        );
+          'placeholder' => ts('Please enter %1', [1 => ts('Quantity')]),
+        ];
         $qf->addNumber($elementName, $label, $attributes,
           $useRequired && $field->is_required
         );
@@ -357,11 +357,11 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
         }
 
         // integers will have numeric rule applied to them.
-        $qf->addRule($elementName, ts('%1 must be an integer (whole number).', array(1 => $label)), 'positiveInteger');
+        $qf->addRule($elementName, ts('%1 must be an integer (whole number).', [1 => $label]), 'positiveInteger');
         break;
 
       case 'Radio':
-        $choice = array();
+        $choice = [];
 
         foreach ($customOption as $opId => $opt) {
           if ($field->is_display_amounts) {
@@ -370,22 +370,22 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
           }
           $count = CRM_Utils_Array::value('count', $opt, '');
           $max_value = CRM_Utils_Array::value('max_value', $opt, '');
-          $priceVal = CRM_Utils_Array::implode($seperator, array($opt[$valueFieldName], $count, $max_value));
+          $priceVal = CRM_Utils_Array::implode($seperator, [$opt[$valueFieldName], $count, $max_value]);
 
           $choice[$opId] = $qf->createElement('radio', NULL, '', $opt['label'], $opt['id'],
-            array('price' => json_encode(array($elementName, $priceVal)))
+            ['price' => json_encode([$elementName, $priceVal])]
           );
 
           // only enable qty / participant selection when specify max value
           if (!empty($field->max_value) || $field->max_value == '0') {
-            $attr = array(
+            $attr = [
               'size' => "1",
               'min' => 1,
               'step' => 1,
-              'price' => json_encode(array($elementName, $opId)),
+              'price' => json_encode([$elementName, $opId]),
               'inputmode' => 'numeric',
               'placeholder' => ts('Quantity'),
-            );
+            ];
             $qf->addNumber($elementName.'_'.$opId.'_count', ts('Amount'), $attr);
             $participantCount[$opId] = $qf->getElement($elementName.'_'.$opId.'_count');
           }
@@ -403,24 +403,24 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
         if (!$field->is_required) {
           // add "none" option
           $choice[] = $qf->createElement('radio', NULL, '', ts('- none -'), '0',
-            array('price' => json_encode(array($elementName, "0")))
+            ['price' => json_encode([$elementName, "0"])]
           );
         }
 
         $element = &$qf->addGroup($choice, $elementName, $label);
 
         if ($useRequired && $field->is_required) {
-          $qf->addRule($elementName, ts('%1 is a required field.', array(1 => $label)), 'required');
+          $qf->addRule($elementName, ts('%1 is a required field.', [1 => $label]), 'required');
         }
         break;
 
       case 'Select':
-        $selectOption = $allowedOptions = $priceVal = array();
+        $selectOption = $allowedOptions = $priceVal = [];
 
         foreach ($customOption as $opt) {
           $count = CRM_Utils_Array::value('count', $opt, '');
           $max_value = CRM_Utils_Array::value('max_value', $opt, '');
-          $priceVal[$opt['id']] = CRM_Utils_Array::implode($seperator, array($opt[$valueFieldName], $count, $max_value));
+          $priceVal[$opt['id']] = CRM_Utils_Array::implode($seperator, [$opt[$valueFieldName], $count, $max_value]);
 
           if ($field->is_display_amounts) {
             $opt['label'] .= ' - ';
@@ -436,9 +436,9 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
           }
         }
         $element = &$qf->add('select', $elementName, $label,
-          array('' => ts('- select -')) + $selectOption,
+          ['' => ts('- select -')] + $selectOption,
           $useRequired && $field->is_required,
-          array('price' => json_encode($priceVal))
+          ['price' => json_encode($priceVal)]
         );
 
         // CRM-6902
@@ -450,29 +450,29 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
 
       case 'CheckBox':
 
-        $check = array();
+        $check = [];
         foreach ($customOption as $opId => $opt) {
           $count = CRM_Utils_Array::value('count', $opt, '');
           $max_value = CRM_Utils_Array::value('max_value', $opt, '');
-          $priceVal = CRM_Utils_Array::implode($seperator, array($opt[$valueFieldName], $count, $max_value));
+          $priceVal = CRM_Utils_Array::implode($seperator, [$opt[$valueFieldName], $count, $max_value]);
 
           if ($field->is_display_amounts) {
             $opt['label'] .= ' - ';
             $opt['label'] .= CRM_Utils_Money::format($opt[$valueFieldName]);
           }
           $check[$opId] = $qf->createElement('checkbox', $opt['id'], NULL, $opt['label'],
-            array('price' => json_encode(array($opt['id'], $priceVal)))
+            ['price' => json_encode([$opt['id'], $priceVal])]
           );
 
           if (!empty($field->max_value) || $field->max_value == '0') {
-            $attr = array(
+            $attr = [
               'size' => "1",
               'min' => 1,
               'step' => 1,
-              'price' => json_encode(array($elementName, $opId)),
+              'price' => json_encode([$elementName, $opId]),
               'inputmode' => 'numeric',
               'placeholder' => ts('Quantity'),
-            );
+            ];
             $qf->addNumber($elementName.'_'.$opId.'_count', ts('Amount'), $attr);
             $participantCount[$opId] = $qf->getElement($elementName.'_'.$opId.'_count');
           }
@@ -488,7 +488,7 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
         }
         $element = &$qf->addGroup($check, $elementName, $label);
         if ($useRequired && $field->is_required) {
-          $qf->addRule($elementName, ts('%1 is a required field.', array(1 => $label)), 'required');
+          $qf->addRule($elementName, ts('%1 is a required field.', [1 => $label]), 'required');
         }
         break;
     }
@@ -508,10 +508,10 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
    * @return array array of options
    */
   public static function getOptions($fieldId, $inactiveNeeded = FALSE, $reset = FALSE) {
-    static $options = array();
+    static $options = [];
 
     if ($reset || empty($options[$fieldId])) {
-      $values = array();
+      $values = [];
 
       CRM_Price_BAO_FieldValue::getValues($fieldId, $values, 'weight', !$inactiveNeeded);
       $options[$fieldId] = $values;
@@ -538,7 +538,7 @@ WHERE
     AND option_group.id    = option_value.option_group_id
     AND option_value.label = %2";
 
-    $dao = &CRM_Core_DAO::executeQuery($query, array(1 => array($optionGroupName, 'String'), 2 => array($optionLabel, 'String')));
+    $dao = &CRM_Core_DAO::executeQuery($query, [1 => [$optionGroupName, 'String'], 2 => [$optionLabel, 'String']]);
 
     while ($dao->fetch()) {
       return $dao->id;
@@ -566,7 +566,7 @@ WHERE
       CRM_Price_BAO_FieldValue::deleteValues($id);
 
       // reorder the weight before delete
-      $fieldValues = array('price_set_id' => $field->price_set_id);
+      $fieldValues = ['price_set_id' => $field->price_set_id];
 
 
       CRM_Utils_Weight::delWeight('CRM_Price_DAO_Field', $field->id, $fieldValues);
@@ -581,12 +581,12 @@ WHERE
   static function &htmlTypes() {
     static $htmlTypes = NULL;
     if (!$htmlTypes) {
-      $htmlTypes = array(
+      $htmlTypes = [
         'Text' => ts('Text / Numeric Quantity'),
         'Select' => ts('Select'),
         'Radio' => ts('Radio'),
         'CheckBox' => ts('CheckBox'),
-      );
+      ];
     }
     return $htmlTypes;
   }
@@ -610,7 +610,7 @@ WHERE
     $priceField->price_set_id = $priceSetId;
     $priceField->find();
 
-    $priceFields = array();
+    $priceFields = [];
 
     while ($priceField->fetch()) {
       $key = "price_{$priceField->id}";
@@ -626,16 +626,16 @@ SELECT  id, html_type
 FROM  civicrm_price_field 
 WHERE  id IN (" . CRM_Utils_Array::implode(',', array_keys($priceFields)) . ')';
       $fieldDAO = CRM_Core_DAO::executeQuery($sql);
-      $htmlTypes = array();
+      $htmlTypes = [];
       while ($fieldDAO->fetch()) {
         $htmlTypes[$fieldDAO->id] = $fieldDAO->html_type;
       }
 
-      $selectedAmounts = array();
+      $selectedAmounts = [];
 
 
       foreach ($htmlTypes as $fieldId => $type) {
-        $options = array();
+        $options = [];
         CRM_Price_BAO_FieldValue::getValues($fieldId, $options);
 
         if (empty($options)) {
@@ -664,7 +664,7 @@ WHERE  id IN (" . CRM_Utils_Array::implode(',', array_keys($priceFields)) . ')';
       // now we have all selected amount in hand.
       $totalAmount = array_sum($selectedAmounts);
       if ($totalAmount < 0) {
-        $error['_qf_default'] = ts('%1 amount can not be less than zero. Please select the options accordingly.', array(1 => $componentName));
+        $error['_qf_default'] = ts('%1 amount can not be less than zero. Please select the options accordingly.', [1 => $componentName]);
       }
     }
     else {
@@ -672,7 +672,7 @@ WHERE  id IN (" . CRM_Utils_Array::implode(',', array_keys($priceFields)) . ')';
     }
   }
 
-  static public function getPriceLevels($where = array()) {
+  static public function getPriceLevels($where = []) {
     if (empty($where)) {
       $where = " (1) ";
     }
@@ -711,7 +711,7 @@ WHERE $where
 ORDER BY ce.entity_id DESC, cf.id, cf.weight, cv.weight ASC
 ";
     $dao = CRM_Core_DAO::executeQuery($query);
-    $levels = $levelAll = array();
+    $levels = $levelAll = [];
     while ($dao->fetch()) {
       if ($dao->field_label) {
         if ($dao->field_label === $dao->label) {
@@ -748,13 +748,13 @@ ORDER BY ce.entity_id DESC, cf.id, cf.weight, cv.weight ASC
    * @static
    */
   static function copy($fid) {
-    $fieldsFix = array(
-      'suffix' => array(
+    $fieldsFix = [
+      'suffix' => [
         'label' => ' ' . ts("Copy"),
-      )
-    );
-    $copy = &CRM_Core_DAO::copyGeneric('CRM_Price_DAO_Field', array('id' => $fid), NULL, $fieldsFix);
-    $fieldValues = &CRM_Core_DAO::copyGeneric('CRM_Price_DAO_FieldValue', array('price_field_id' => $fid), array('price_field_id' => $copy->id));
+      ]
+    ];
+    $copy = &CRM_Core_DAO::copyGeneric('CRM_Price_DAO_Field', ['id' => $fid], NULL, $fieldsFix);
+    $fieldValues = &CRM_Core_DAO::copyGeneric('CRM_Price_DAO_FieldValue', ['price_field_id' => $fid], ['price_field_id' => $copy->id]);
 
 
     CRM_Utils_Hook::copy('PriceField', $copy);

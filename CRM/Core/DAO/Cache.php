@@ -138,9 +138,9 @@ class CRM_Core_DAO_Cache extends CRM_Core_DAO
   function &links()
   {
     if (!(self::$_links)) {
-      self::$_links = array(
+      self::$_links = [
         'component_id' => 'civicrm_component:id',
-      );
+      ];
     }
     return self::$_links;
   }
@@ -167,48 +167,48 @@ class CRM_Core_DAO_Cache extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'id' => array(
+      self::$_fields = [
+        'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'group_name' => array(
+        ] ,
+        'group_name' => [
           'name' => 'group_name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Group Name') ,
           'required' => true,
           'maxlength' => 32,
           'size' => CRM_Utils_Type::MEDIUM,
-        ) ,
-        'path' => array(
+        ] ,
+        'path' => [
           'name' => 'path',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Path') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'data' => array(
+        ] ,
+        'data' => [
           'name' => 'data',
           'type' => CRM_Utils_Type::T_LONGTEXT,
           'title' => ts('Data') ,
-        ) ,
-        'component_id' => array(
+        ] ,
+        'component_id' => [
           'name' => 'component_id',
           'type' => CRM_Utils_Type::T_INT,
           'FKClassName' => 'CRM_Core_DAO_Component',
-        ) ,
-        'created_date' => array(
+        ] ,
+        'created_date' => [
           'name' => 'created_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Created Date') ,
-        ) ,
-        'expired_date' => array(
+        ] ,
+        'expired_date' => [
           'name' => 'expired_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Expired Date') ,
-        ) ,
-      );
+        ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -241,7 +241,7 @@ class CRM_Core_DAO_Cache extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -264,7 +264,7 @@ class CRM_Core_DAO_Cache extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {

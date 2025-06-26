@@ -7,12 +7,12 @@ class CRM_Core_Payment_TapPayAPI {
   CONST TAPPAY_TEST = 'https://sandbox.tappaysdk.com';
   CONST TAPPAY_PROD = 'https://prod.tappaysdk.com';
 
-  public static $_currencies = array(
+  public static $_currencies = [
     'USD' => 'USD',
     'JPY' => 'JPY',
     'TWD' => 'TWD',
     'THB' => 'THB',
-  );
+  ];
 
   public $_request;
   public $_response;
@@ -24,7 +24,7 @@ class CRM_Core_Payment_TapPayAPI {
   protected $_apiType;
   protected $_partnerKey;
 
-  protected $_apiTypes = array(
+  protected $_apiTypes = [
     'pay_by_prime' => '/tpc/payment/pay-by-prime',
     'pay_by_token' => '/tpc/payment/pay-by-token',
     'record' => '/tpc/transaction/query',
@@ -39,9 +39,9 @@ class CRM_Core_Payment_TapPayAPI {
     'refund_cancel' => '/tpc/transaction/refund/cancel',
     'cap_cancel' => '/tpc/transaction/cap/cancel',
     */
-  );
+  ];
 
-  protected $_apiNeedSaveData = array('pay_by_prime', 'pay_by_token', 'trade_history', 'bind_card');
+  protected $_apiNeedSaveData = ['pay_by_prime', 'pay_by_token', 'trade_history', 'bind_card'];
 
   protected $_contribution_id; // this request relative contribution.
 
@@ -74,7 +74,7 @@ class CRM_Core_Payment_TapPayAPI {
 
   public function request($params) {
     $allowedFields = self::fields($this->_apiType);
-    $post = array();
+    $post = [];
     foreach ($params as $name => $value) {
       if (!in_array($name, $allowedFields)) {
         continue;
@@ -158,8 +158,8 @@ class CRM_Core_Payment_TapPayAPI {
     }
   }
 
-  public static function writeRecord($logId, $data = array()) {
-    $recordType = array('contribution_id', 'url', 'date', 'post_data', 'return_data');
+  public static function writeRecord($logId, $data = []) {
+    $recordType = ['contribution_id', 'url', 'date', 'post_data', 'return_data'];
 
     $record = new CRM_Contribute_DAO_TapPayLog();
     if(!empty($logId)) {
@@ -177,19 +177,19 @@ class CRM_Core_Payment_TapPayAPI {
   private function _curl() {
     $this->_success = FALSE;
     if (!empty(getenv('CIVICRM_TEST_DSN'))) {
-      return  array(
+      return  [
         'success' => FALSE,
         'status' => NULL,
         'curlError' => NULL,
-      );
+      ];
     }
     $ch = curl_init($this->_apiURL);
-    $opt = array();
+    $opt = [];
 
-    $opt[CURLOPT_HTTPHEADER] = array(
+    $opt[CURLOPT_HTTPHEADER] = [
       'Content-Type: application/json',
       'x-api-key: ' . $this->_partnerKey,
-    );
+    ];
     $opt[CURLOPT_RETURNTRANSFER] = TRUE;
     if($this->_apiMethod == 'POST'){
       $opt[CURLOPT_POST] = TRUE;
@@ -197,19 +197,19 @@ class CRM_Core_Payment_TapPayAPI {
     }
     curl_setopt_array($ch, $opt);
 
-    $recordData = array(
+    $recordData = [
       'contribution_id' => $this->_contribution_id,
       'url' => $this->_apiTypes[$this->_apiType],
       'date' => date('Y-m-d H:i:s'),
       'post_data' => $opt[CURLOPT_POSTFIELDS],
-    );
+    ];
     $lodId = self::writeRecord(NULL, $recordData);
 
     $result = curl_exec($ch);
 
-    $recordData = array(
+    $recordData = [
       'return_data' => $result,
-    );
+    ];
     self::writeRecord($lodId, $recordData);
 
     $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -223,10 +223,10 @@ class CRM_Core_Payment_TapPayAPI {
     if ($result === FALSE) {
       $errno = curl_errno($ch);
       $err = curl_error($ch);
-      $curlError = array($errno => $err);
+      $curlError = [$errno => $err];
     }
     else{
-      $curlError = array();
+      $curlError = [];
     }
     curl_close($ch);
     if (!empty($result)) {
@@ -237,11 +237,11 @@ class CRM_Core_Payment_TapPayAPI {
     else {
       $this->_response = NULL;
     }
-    $return = array(
+    $return = [
       'success' => $this->_success,
       'status' => $status,
       'curlError' => $curlError,
-    );
+    ];
     return $return;
   }
 
@@ -310,7 +310,7 @@ class CRM_Core_Payment_TapPayAPI {
    * API query fields
    */
   static public function fields($apiType, $is_required = FALSE) {
-    $fields = array();
+    $fields = [];
     switch($apiType){
       case 'pay_by_prime':
         $fields = explode(',', 'prime*,partner_key*,merchant_id*,amount*,currency,order_number,bank_transaction_id,details*,cardholder*,instalment,delay_capture_in_days,remember,three_domain_secure,result_url');
@@ -354,7 +354,7 @@ class CRM_Core_Payment_TapPayAPI {
     return FALSE;
   }
 
-  public static $_errorMessage = array(
+  public static $_errorMessage = [
     "-4" => "Unknown Error", 
     "-3" => "Unknown Error", 
     "-2" => "Unknown Error", 
@@ -698,5 +698,5 @@ class CRM_Core_Payment_TapPayAPI {
     "88006" => "No Apple Pay Setup Card.", 
     "88007" => "Input Form Not Set", 
 
-  );
+  ];
 }

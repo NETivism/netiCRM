@@ -68,12 +68,12 @@ class CRM_Core_BAO_File extends CRM_Core_DAO_File {
         }
 
         if (file_exists($path) && is_readable($path)) {
-          return array($path, $fileDAO->mime_type, $entityFileDAO->entity_table);
+          return [$path, $fileDAO->mime_type, $entityFileDAO->entity_table];
         }
       }
     }
 
-    return array(NULL, NULL, NULL);
+    return [NULL, NULL, NULL];
   }
 
   static function url($fileID, $entityID, $entityTable = NULL, $quest = FALSE) {
@@ -105,12 +105,12 @@ class CRM_Core_BAO_File extends CRM_Core_DAO_File {
             $path = $config->customFileUploadURL . $fileDAO->uri;
           }
 
-          return array($path, $fileDAO->mime_type, $entityFileDAO->entity_table);
+          return [$path, $fileDAO->mime_type, $entityFileDAO->entity_table];
         }
       }
     }
 
-    return array(NULL, NULL, NULL);
+    return [NULL, NULL, NULL];
   }
 
 
@@ -217,7 +217,7 @@ class CRM_Core_BAO_File extends CRM_Core_DAO_File {
 
     // also set the value to null of the table and column
     $query = "UPDATE $tableName SET $columnName = null WHERE $columnName = %1";
-    $params = array(1 => array($fileID, 'Integer'));
+    $params = [1 => [$fileID, 'Integer']];
     CRM_Core_DAO::executeQuery($query, $params);
   }
 
@@ -236,8 +236,8 @@ class CRM_Core_BAO_File extends CRM_Core_DAO_File {
 
     list($sql, $params) = self::sql($entityTable, $entityID, NULL);
     $dao = CRM_Core_DAO::executeQuery($sql, $params);
-    $cfIDs = array();
-    $cefIDs = array();
+    $cfIDs = [];
+    $cefIDs = [];
     while ($dao->fetch()) {
       unlink($config->customFileUploadDir . DIRECTORY_SEPARATOR . $dao->uri);
       $cfIDs[] = $dao->cfID;
@@ -262,7 +262,7 @@ class CRM_Core_BAO_File extends CRM_Core_DAO_File {
     $entityFileDAO->file_id = $fileID;
 
     if ($entityFileDAO->find(TRUE)) {
-      $return = array();
+      $return = [];
       CRM_Core_DAO::storeValues($entityFileDAO, $return);
       return $return;
     }
@@ -279,7 +279,7 @@ class CRM_Core_BAO_File extends CRM_Core_DAO_File {
       return $entityFiles[$entityTable][$entityID];
     }
     else {
-      $entityFiles[$entityTable][$entityID] = array();
+      $entityFiles[$entityTable][$entityID] = [];
     }
 
     list($sql, $params) = self::sql($entityTable, $entityID, NULL);
@@ -317,19 +317,19 @@ FROM      civicrm_file AS CF
 LEFT JOIN civicrm_entity_file AS CEF ON ( CEF.file_id = CF.id )
 WHERE     CEF.entity_table = %1
 AND       CEF.entity_id    = %2";
-    $params = array(1 => array($entityTable, 'String'),
-      2 => array($entityID, 'Integer'),
-    );
+    $params = [1 => [$entityTable, 'String'],
+      2 => [$entityID, 'Integer'],
+    ];
 
     if ($fileID !== NULL) {
       $sql .= " AND CF.file_type_id = %3";
-      $params[3] = array($fileID, 'Integer');
+      $params[3] = [$fileID, 'Integer'];
     }
 
-    return array($sql, $params);
+    return [$sql, $params];
   }
 
-  static function buildAttachment(&$form, $entityTable, $entityID = NULL, $numAttachments = NULL, $attr = array()) {
+  static function buildAttachment(&$form, $entityTable, $entityID = NULL, $numAttachments = NULL, $attr = []) {
 
     $config = CRM_Core_Config::singleton();
 
@@ -343,10 +343,10 @@ AND       CEF.entity_id    = %2";
     if ($numAttachments > 0 ) {
       // set default max file size as 2MB
       $maxFileSize = $config->maxFileSize ? $config->maxFileSize : 10;
-      $attributes = array(
+      $attributes = [
         'size' => 30,
         'maxlength' => 60,
-      );
+      ];
       if (is_array($attr) && !empty($attr)) {
         $attributes = array_merge($attributes, $attr);
       }
@@ -356,7 +356,7 @@ AND       CEF.entity_id    = %2";
       $form->addFile("attachFile[]", ts('Attach File'), $attributes);
       $form->setMaxFileSize($maxFileSize * 1024 * 1024);
       $form->assign('maxFileSize', $maxFileSize);
-      $form->addRule("attachFile[]", ts('File size should be less than %1 MByte(s)', array(1 => $maxFileSize)), 'maxfilesize', $maxFileSize * 1024 * 1024);
+      $form->addRule("attachFile[]", ts('File size should be less than %1 MByte(s)', [1 => $maxFileSize]), 'maxfilesize', $maxFileSize * 1024 * 1024);
       $form->addRule('attachFile[]', ts('Image could not be uploaded due to invalid type extension.'), 'imageFile', '2000x2000');
     }
 
@@ -377,7 +377,7 @@ AND       CEF.entity_id    = %2";
 
     $currentAttachments = self::getEntityFile($entityTable, $entityID);
     if (!empty($currentAttachments)) {
-      $currentAttachmentURL = array();
+      $currentAttachmentURL = [];
       foreach ($currentAttachments as $fileID => $attach) {
         if (!empty($attach['img'])) {
           $currentAttachmentURL[] = $attach['img'];
@@ -415,12 +415,12 @@ AND       CEF.entity_id    = %2";
     if (isset($formValues[$attachName]) && !empty($formValues[$attachName])) {
       for ($i = 0; $i < $numAttachments; $i++) {
         // ensure file is not empty
-        $fileParams = array(
+        $fileParams = [
           'uri' => $formValues[$attachName][$i]['name'],
           'type' => $formValues[$attachName][$i]['type'],
           'upload_date' => date('Ymdhis'),
           'location' => $formValues[$attachName][$i]['name'],
-        );
+        ];
         $params['attachFile_'.$i] = $fileParams;
       }
     }
@@ -459,11 +459,11 @@ AND       CEF.entity_id    = %2";
     $config = CRM_Core_Config::singleton();
     $numAttachments = 3;
 
-    $names = array(
+    $names = [
       "uploadFile",
       "attachFile",
       "attachFile[]",
-    );
+    ];
     for ($i = 0; $i < $numAttachments; $i++) {
       $names[] = "attachFile_{$i}";
     }

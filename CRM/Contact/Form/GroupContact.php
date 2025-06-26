@@ -71,8 +71,8 @@ class CRM_Contact_Form_GroupContact extends CRM_Core_Form {
    * @return None
    */
   function setDefaultValues() {
-    $defaults = array();
-    $params = array();
+    $defaults = [];
+    $params = [];
 
     return $defaults;
   }
@@ -126,12 +126,12 @@ class CRM_Contact_Form_GroupContact extends CRM_Core_Form {
 
       $this->add('select', 'group_id', $msg, $groupList, TRUE);
 
-      $this->addButtons(array(
-          array('type' => 'next',
+      $this->addButtons([
+          ['type' => 'next',
             'name' => ts('Add'),
             'isDefault' => TRUE,
-          ),
-        )
+          ],
+        ]
       );
     }
   }
@@ -143,7 +143,7 @@ class CRM_Contact_Form_GroupContact extends CRM_Core_Form {
    * @return None
    */
   public function postProcess() {
-    $contactID = array($this->_contactId);
+    $contactID = [$this->_contactId];
     $groupId = $this->controller->exportValue('GroupContact', 'group_id');
     $method = 'Admin';
     $method = ($this->_context == 'user') ? 'Web' : 'Admin';

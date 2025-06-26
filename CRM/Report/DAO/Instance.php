@@ -193,10 +193,10 @@ class CRM_Report_DAO_Instance extends CRM_Core_DAO
   function &links()
   {
     if (!(self::$_links)) {
-      self::$_links = array(
+      self::$_links = [
         'domain_id' => 'civicrm_domain:id',
         'navigation_id' => 'civicrm_navigation:id',
-      );
+      ];
     }
     return self::$_links;
   }
@@ -224,61 +224,61 @@ class CRM_Report_DAO_Instance extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'id' => array(
+      self::$_fields = [
+        'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'domain_id' => array(
+        ] ,
+        'domain_id' => [
           'name' => 'domain_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
           'FKClassName' => 'CRM_Core_DAO_Domain',
-        ) ,
-        'title' => array(
+        ] ,
+        'title' => [
           'name' => 'title',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Report Instance Title') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'report_id' => array(
+        ] ,
+        'report_id' => [
           'name' => 'report_id',
           'type' => CRM_Utils_Type::T_STRING,
           'required' => true,
           'maxlength' => 64,
           'size' => CRM_Utils_Type::BIG,
-        ) ,
-        'name' => array(
+        ] ,
+        'name' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Name') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'args' => array(
+        ] ,
+        'args' => [
           'name' => 'args',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Args') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'description' => array(
+        ] ,
+        'description' => [
           'name' => 'description',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Description') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'permission' => array(
+        ] ,
+        'permission' => [
           'name' => 'permission',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Permission') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'form_values' => array(
+        ] ,
+        'form_values' => [
           'name' => 'form_values',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Submitted Form Values') ,
@@ -287,43 +287,43 @@ class CRM_Report_DAO_Instance extends CRM_Core_DAO
           'headerPattern' => '',
           'dataPattern' => '',
           'export' => true,
-        ) ,
-        'is_active' => array(
+        ] ,
+        'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ) ,
-        'email_subject' => array(
+        ] ,
+        'email_subject' => [
           'name' => 'email_subject',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Email Subject') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'email_to' => array(
+        ] ,
+        'email_to' => [
           'name' => 'email_to',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Email To') ,
-        ) ,
-        'email_cc' => array(
+        ] ,
+        'email_cc' => [
           'name' => 'email_cc',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Email Cc') ,
-        ) ,
-        'header' => array(
+        ] ,
+        'header' => [
           'name' => 'header',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Header') ,
           'rows' => 4,
           'cols' => 60,
-        ) ,
-        'footer' => array(
+        ] ,
+        'footer' => [
           'name' => 'footer',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Footer') ,
           'rows' => 4,
           'cols' => 60,
-        ) ,
-        'navigation_id' => array(
+        ] ,
+        'navigation_id' => [
           'name' => 'navigation_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Navigation ID') ,
@@ -333,8 +333,8 @@ class CRM_Report_DAO_Instance extends CRM_Core_DAO
           'dataPattern' => '',
           'export' => true,
           'FKClassName' => 'CRM_Core_DAO_Navigation',
-        ) ,
-      );
+        ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -367,7 +367,7 @@ class CRM_Report_DAO_Instance extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -390,7 +390,7 @@ class CRM_Report_DAO_Instance extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {

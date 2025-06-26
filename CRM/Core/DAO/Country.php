@@ -151,10 +151,10 @@ class CRM_Core_DAO_Country extends CRM_Core_DAO
   function &links()
   {
     if (!(self::$_links)) {
-      self::$_links = array(
+      self::$_links = [
         'address_format_id' => 'civicrm_address_format:id',
         'region_id' => 'civicrm_worldregion:id',
-      );
+      ];
     }
     return self::$_links;
   }
@@ -182,13 +182,13 @@ class CRM_Core_DAO_Country extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'id' => array(
+      self::$_fields = [
+        'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'name' => array(
+        ] ,
+        'name' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Country') ,
@@ -199,51 +199,51 @@ class CRM_Core_DAO_Country extends CRM_Core_DAO
           'headerPattern' => '/country/i',
           'dataPattern' => '/^[A-Z][a-z]+\.?(\s+[A-Z][a-z]+){0,3}$/',
           'export' => true,
-        ) ,
-        'iso_code' => array(
+        ] ,
+        'iso_code' => [
           'name' => 'iso_code',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Iso Code') ,
           'maxlength' => 2,
           'size' => CRM_Utils_Type::TWO,
-        ) ,
-        'country_code' => array(
+        ] ,
+        'country_code' => [
           'name' => 'country_code',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Country Code') ,
           'maxlength' => 4,
           'size' => CRM_Utils_Type::FOUR,
-        ) ,
-        'address_format_id' => array(
+        ] ,
+        'address_format_id' => [
           'name' => 'address_format_id',
           'type' => CRM_Utils_Type::T_INT,
           'FKClassName' => 'CRM_Core_DAO_AddressFormat',
-        ) ,
-        'idd_prefix' => array(
+        ] ,
+        'idd_prefix' => [
           'name' => 'idd_prefix',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Idd Prefix') ,
           'maxlength' => 4,
           'size' => CRM_Utils_Type::FOUR,
-        ) ,
-        'ndd_prefix' => array(
+        ] ,
+        'ndd_prefix' => [
           'name' => 'ndd_prefix',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Ndd Prefix') ,
           'maxlength' => 4,
           'size' => CRM_Utils_Type::FOUR,
-        ) ,
-        'region_id' => array(
+        ] ,
+        'region_id' => [
           'name' => 'region_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
           'FKClassName' => 'CRM_Core_DAO_Worldregion',
-        ) ,
-        'is_province_abbreviated' => array(
+        ] ,
+        'is_province_abbreviated' => [
           'name' => 'is_province_abbreviated',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ) ,
-      );
+        ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -276,7 +276,7 @@ class CRM_Core_DAO_Country extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -299,7 +299,7 @@ class CRM_Core_DAO_Country extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {

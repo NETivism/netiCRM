@@ -74,10 +74,10 @@ class CRM_Admin_Page_AJAX {
         case 'CRM_Core_BAO_UFGroup':
           require_once (str_replace('_', DIRECTORY_SEPARATOR, $recordBAO) . ".php");
           $method = 'getUFJoinRecord';
-          $result = array($recordBAO, $method);
-          $ufJoin = call_user_func_array(($result), array($recordID, TRUE));
+          $result = [$recordBAO, $method];
+          $ufJoin = call_user_func_array(($result), [$recordID, TRUE]);
           if (!empty($ufJoin)) {
-            $status = ts('This profile is currently used for %1.', array(1 => CRM_Utils_Array::implode(', ', $ufJoin))) . ' <br/><br/>' . ts('If you disable the profile - it will be removed from these forms and/or modules. Do you want to continue?');
+            $status = ts('This profile is currently used for %1.', [1 => CRM_Utils_Array::implode(', ', $ufJoin)]) . ' <br/><br/>' . ts('If you disable the profile - it will be removed from these forms and/or modules. Do you want to continue?');
           }
           else {
             $status = ts('Are you sure you want to disable this profile?');
@@ -92,10 +92,10 @@ class CRM_Admin_Page_AJAX {
           if (!CRM_Utils_System::isNull($usedBy)) {
             $template = CRM_Core_Smarty::singleton();
             $template->assign('usedBy', $usedBy);
-            $comps = array("Event" => "civicrm_event",
+            $comps = ["Event" => "civicrm_event",
               "Contribution" => "civicrm_contribution_page",
-            );
-            $contexts = array();
+            ];
+            $contexts = [];
             foreach ($comps as $name => $table) {
               if (CRM_Utils_Array::arrayKeyExists($table, $usedBy)) {
                 $contexts[] = $name;
@@ -105,10 +105,10 @@ class CRM_Admin_Page_AJAX {
 
             $show = "noButton";
             $table = $template->fetch('CRM/Price/Page/table.tpl');
-            $status = ts('Unable to disable the \'%1\' price set - it is currently in use by one or more active events, contribution pages or contributions.', array(1 => $priceSet)) . "<br/> $table";
+            $status = ts('Unable to disable the \'%1\' price set - it is currently in use by one or more active events, contribution pages or contributions.', [1 => $priceSet]) . "<br/> $table";
           }
           else {
-            $status = ts('Are you sure you want to disable \'%1\' Price Set?', array(1 => $priceSet));
+            $status = ts('Are you sure you want to disable \'%1\' Price Set?', [1 => $priceSet]);
           }
           break;
 
@@ -205,7 +205,7 @@ class CRM_Admin_Page_AJAX {
         case 'CRM_Core_BAO_OptionValue':
           require_once (str_replace('_', DIRECTORY_SEPARATOR, $recordBAO) . ".php");
           $label = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionValue', $recordID, 'label');
-          $status = ts('Are you sure you want to disable this \'%1\' record ?', array(1 => $label));
+          $status = ts('Are you sure you want to disable this \'%1\' record ?', [1 => $label]);
           break;
 
         case 'CRM_Contribute_BAO_ContributionRecur':
@@ -214,7 +214,7 @@ class CRM_Admin_Page_AJAX {
           $processor_id = NULL;
           $is_test = 0;
           $sql = "SELECT processor_id, $is_test FROM civicrm_contribution_recur WHERE id = %1";
-          $params = array( 1 => array($recordID, 'Positive'));
+          $params = [ 1 => [$recordID, 'Positive']];
           $dao = CRM_Core_DAO::executeQuery($sql, $params);
           while ($dao->fetch()) {
             if ($dao->processor_id) {
@@ -250,7 +250,7 @@ class CRM_Admin_Page_AJAX {
             $defaultPageId = $config->defaultRenewalPageId;
             if ($defaultPageId == $recordID) {
               $recurringSettingURL = CRM_Utils_System::url('civicrm/admin/recurring', 'reset=1');
-              $status = ts("This contribution page is set as the default page for one-time recurring contribution links and cannot be deleted or disable.<br/>Please go to <a href='%1'>Administer >> CiviContribute >> Recurring Settings</a> and update the Default contribution page for one-time renewal link field before trying again.", array(1 => $recurringSettingURL));
+              $status = ts("This contribution page is set as the default page for one-time recurring contribution links and cannot be deleted or disable.<br/>Please go to <a href='%1'>Administer >> CiviContribute >> Recurring Settings</a> and update the Default contribution page for one-time renewal link field before trying again.", [1 => $recurringSettingURL]);
               $show = "noButton";
               break;
             }
@@ -274,21 +274,21 @@ class CRM_Admin_Page_AJAX {
     $name = CRM_Utils_Type::escape($_GET['name'], 'String');
     $parentId = CRM_Utils_Type::escape($_GET['parentId'], 'Integer');
 
-    $tags = array();
+    $tags = [];
 
     $query = "SELECT id, name FROM civicrm_tag WHERE parent_id = {$parentId} and name LIKE '%{$name}%'";
     $dao = CRM_Core_DAO::executeQuery($query);
 
     while ($dao->fetch()) {
-      $tags[] = array('name' => $dao->name,
+      $tags[] = ['name' => $dao->name,
         'id' => $dao->id,
-      );
+      ];
     }
 
     if (empty($tags)) {
-      $tags[] = array('name' => $name,
+      $tags[] = ['name' => $name,
         'id' => $name,
-      );
+      ];
     }
 
     echo json_encode($tags);
@@ -316,33 +316,33 @@ class CRM_Admin_Page_AJAX {
     $tagID = $_POST['tagID'];
 
 
-    $tagInfo = array();
+    $tagInfo = [];
     // if action is select
     if ($action == 'select') {
       // check the value of tagID
       // if numeric that means existing tag
       // else create new tag
       if (!$skipTagCreate && !is_numeric($tagID)) {
-        $params = array('name' => $tagID,
+        $params = ['name' => $tagID,
           'parent_id' => $parentId,
-        );
+        ];
 
 
         $tagObject = CRM_Core_BAO_Tag::add($params, CRM_Core_DAO::$_nullArray);
 
-        $tagInfo = array('name' => $tagID,
+        $tagInfo = ['name' => $tagID,
           'id' => $tagObject->id,
           'action' => $action,
-        );
+        ];
         $tagID = $tagObject->id;
       }
 
       if (!$skipEntityAction && $entityId) {
         // save this tag to contact
-        $params = array('entity_table' => $entityTable,
+        $params = ['entity_table' => $entityTable,
           'entity_id' => $entityId,
           'tag_id' => $tagID,
-        );
+        ];
 
         CRM_Core_BAO_EntityTag::add($params);
       }
@@ -354,16 +354,16 @@ class CRM_Admin_Page_AJAX {
       }
       if ($entityId) {
         // delete this tag entry for the entity
-        $params = array('entity_table' => $entityTable,
+        $params = ['entity_table' => $entityTable,
           'entity_id' => $entityId,
           'tag_id' => $tagID,
-        );
+        ];
 
         CRM_Core_BAO_EntityTag::del($params);
       }
-      $tagInfo = array('id' => $tagID,
+      $tagInfo = ['id' => $tagID,
         'action' => $action,
-      );
+      ];
     }
 
     echo json_encode($tagInfo);

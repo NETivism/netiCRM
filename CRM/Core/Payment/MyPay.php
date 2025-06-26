@@ -7,7 +7,7 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
   const MYPAY_URL_API = '/api/init';
   const MYPAY_RECUR_URL_API = '/api/agent';
 
-  public static $_allowRecurUnit = array('month', 'year');
+  public static $_allowRecurUnit = ['month', 'year'];
 
   /**
    * mode of operation: live or test
@@ -17,7 +17,7 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
    */
   static protected $_mode = NULL;
 
-  public static $_hideFields = array('invoice_id', 'trxn_id');
+  public static $_hideFields = ['invoice_id', 'trxn_id'];
 
   private $_contributionId = NULL;
 
@@ -91,7 +91,7 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
   {
     $config = CRM_Core_Config::singleton();
 
-    $error = array();
+    $error = [];
 
     if (empty($this->_paymentProcessor['user_name'])) {
       $error[] = ts('User Name is not set in the Administer CiviCRM &raquo; Payment Processor.');
@@ -180,8 +180,8 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
     $instrumentCode = $paymentInstruments[$instrumentName];
     $formKey = $component == 'event' ? 'CRM_Event_Controller_Registration_'.$params['qfKey'] : 'CRM_Contribute_Controller_Contribution_'.$params['qfKey'];
 
-    $contribParams = array('id' => $params['contributionID']);
-    $contribValues = $contribIds = array();
+    $contribParams = ['id' => $params['contributionID']];
+    $contribValues = $contribIds = [];
     CRM_Contribute_BAO_Contribution::getValues($contribParams, $contribValues, $contribIds);
     if($instrumentCode == 'Credit'){
       $contribValues['is_pay_later'] = FALSE;
@@ -202,7 +202,7 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
     $params['contact_id'] = $contribution->contact_id;
 
     $contributionPageId = $params['contributionPageID'];
-    $paramsQuery = array( 1 => array($contributionPageId, 'Positive'));
+    $paramsQuery = [ 1 => [$contributionPageId, 'Positive']];
     if ($component !== 'event') {
       $params['is_internal'] = CRM_Core_DAO::singleValueQuery("SELECT is_internal FROM civicrm_contribution_page WHERE id = %1;", $paramsQuery);
     }
@@ -210,35 +210,35 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
     $arguments = $this->getOrderArgs($params, $component, $instrumentCode, $formKey);
 
     if ($params['is_recur'] && $params['is_internal']) {
-      $encryptedArgs = array(
+      $encryptedArgs = [
         'agent_uid' => $this->_paymentProcessor['user_name'],
         'service' => self::encryptArgs($arguments['service'], $this->_paymentProcessor['password']),
         'encry_data' => self::encryptArgs($arguments['encry_data'], $this->_paymentProcessor['password']),
-      );
+      ];
       $actionUrl = $this->_paymentProcessor['url_recur'];
     }
     else {
-      $encryptedArgs = array(
+      $encryptedArgs = [
         'store_uid' => $arguments['store_uid'],
         'service' => self::encryptArgs($arguments['service'], $this->_paymentProcessor['password']),
         'encry_data' => self::encryptArgs($arguments['encry_data'], $this->_paymentProcessor['password']),
-      );
+      ];
       $actionUrl = $this->_paymentProcessor['url_api'];
     }
     // Record Data
     // 1. Record Log Data.
-    $saveData = array(
+    $saveData = [
       'contribution_id' => $contribParams['id'],
       'url' => $actionUrl,
       'cmd' => $arguments['service']['cmd'],
       'date' => date('Y-m-d H:i:s'),
       'post_data' => json_encode($arguments['encry_data']),
-    );
+    ];
     $this->_logId = self::writeLog(NULL, $saveData);
     // 2. Record usable data.
-    $data = array(
+    $data = [
       'create_post_data' => json_encode($arguments['encry_data']),
-    );
+    ];
     self::doRecordData($contribParams['id'], $data);
     // contribution_id is needed in postData
     $this->_contributionId = $params['contributionID'];
@@ -253,11 +253,11 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
       $contribution->cancel_date = date('Y-m-d H:i:s', CRM_REQUEST_TIME);
       $contribution->cancel_reason = "Code: {$result['code']}\nMessage: {$result['msg']}";
       $contribution->save();
-      $failureQuery = http_build_query(array(
+      $failureQuery = http_build_query([
         '_qf_ThankYou_display' => "1",
         'qfKey' => $params['qfKey'],
         'payment_result_type' => '4',
-      ), '', '&');
+      ], '', '&');
       $failureRedirectURL = CRM_Utils_System::url(CRM_Utils_System::currentPath(), $failureQuery, TRUE, NULL, FALSE);
       CRM_Utils_System::redirect($failureRedirectURL);
     }
@@ -273,9 +273,9 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
    * @return array The instruments used by mypay.
    */
   static function getInstruments($type = 'normal') {
-    $i = array(
-      'Credit Card' => array('label' => ts('Credit Card'), 'desc' => '', 'code' => 'Credit'),
-    );
+    $i = [
+      'Credit Card' => ['label' => ts('Credit Card'), 'desc' => '', 'code' => 'Credit'],
+    ];
     if ($type == 'form_name') {
       foreach ($i as $name => $data) {
         $form_name = preg_replace('/[^0-9a-z]+/i', '_', strtolower($name));
@@ -314,7 +314,7 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
       $trxnId = 'c_' . $contributionId . '_' . $rand;
     }
     if ($is_test) {
-      $trxnId = 'test' . substr(str_replace(array('.', '-'), '', $_SERVER['HTTP_HOST']), 0, 3).'_'.$trxnId;
+      $trxnId = 'test' . substr(str_replace(['.', '-'], '', $_SERVER['HTTP_HOST']), 0, 3).'_'.$trxnId;
     }
     return $trxnId;
   }
@@ -341,37 +341,37 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
     }
 
     // building vars
-    $successQuery = http_build_query(array(
+    $successQuery = http_build_query([
       '_qf_ThankYou_display' => "1",
       'qfKey' => $vars['qfKey'],
       'payment_result_type' => '1',
-    ), '', '&');
-    $failureQuery = http_build_query(array(
+    ], '', '&');
+    $failureQuery = http_build_query([
       '_qf_ThankYou_display' => "1",
       'qfKey' => $vars['qfKey'],
       'payment_result_type' => '4',
-    ), '', '&');
+    ], '', '&');
     $amount = $vars['currencyID'] == 'TWD' && strstr($vars['amount'], '.') ? substr($vars['amount'], 0, strpos($vars['amount'], '.')) : $vars['amount'];
 
     if ($vars['contributionRecurID']) {
-      $params = array(
+      $params = [
         1 => $vars['contributionRecurID'],
-        2 => $vars['installments'] ? ts("%1 Periods", array(1 => $vars['installments'])) : ts('no period'),
-      );
+        2 => $vars['installments'] ? ts("%1 Periods", [1 => $vars['installments']]) : ts('no period'),
+      ];
       $item = ts("Recur %1-%2", $params);
     }
     else {
-      $params = array(1 => $vars['contributionID']);
+      $params = [1 => $vars['contributionID']];
       $item = ts("Contribution %1", $params);
     }
 
-    $args = array(
+    $args = [
       'store_uid' => $paymentProcessor['user_name'],
-      'service' => array(
+      'service' => [
         'service_name' => 'api',
         'cmd' => 'api/orders',
-      ),
-      'encry_data' => array(
+      ],
+      'encry_data' => [
         'store_uid' => $paymentProcessor['user_name'],
         'user_id' => $vars['contact_id'],
         'currency' => $vars['currencyID'],
@@ -382,17 +382,17 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
         'ip' => CRM_Utils_System::ipAddress(),
         'echo_0' => $component,
         'echo_1' => $vars['contributionID'],
-        'items' => array( 0 => array(
+        'items' => [ 0 => [
           'id' => $vars['trxn_id'],
           'name' => $item,
           'cost' => (string) $amount,
           'total' => (string) $amount,
           'amount' => 1,
-        )),
+        ]],
         'success_returl' => CRM_Utils_System::url(CRM_Utils_System::currentPath(), $successQuery, TRUE, NULL, FALSE),
         'failure_returl' => CRM_Utils_System::url(CRM_Utils_System::currentPath(), $failureQuery, TRUE, NULL, FALSE),
-      ),
-    );
+      ],
+    ];
 
     echo $instrumentCode;
     switch ($instrumentCode) {
@@ -464,18 +464,18 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
     // Record all data
     // 1. Record log data.
     $resultArray = json_decode($result, TRUE);
-    $saveData = array(
+    $saveData = [
       'uid' => $resultArray['uid'],
       'return_data' => $result,
-    );
+    ];
     self::writeLog($this->_logId, $saveData);
     // 2. Record usable data.
     if ($this->_contributionId) {
-      $transationData = array(
+      $transationData = [
         'uid' => $resultArray['uid'], // serial number of transaction of MyPay
         'uid_key' => $resultArray['key'],
         'create_result_data' => $result,
-      );
+      ];
       self::doRecordData($this->_contributionId, $transationData);
     }
 
@@ -483,20 +483,20 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
       $errno = curl_errno($ch);
       $err = curl_error($ch);
       CRM_Core_Error::debug_log_message("MyPay postData: Contribution ID-{$this->_contributionId} :: httpstatus-$status :: error-$errno :: $err");
-      return array();
+      return [];
     }
     if ($result === FALSE) {
       $errno = curl_errno($ch);
       $err = curl_error($ch);
       CRM_Core_Error::debug_log_message("MyPay postData: Contribution ID-{$this->_contributionId} :: httpstatus-$status :: error-$errno :: $err");
-      return array();
+      return [];
     }
     curl_close($ch);
     if (!empty($result)) {
       $response = json_decode($result, TRUE);
       return $response;
     }
-    return array();
+    return [];
   }
 
   /**
@@ -581,24 +581,24 @@ EOT;
 
     if (!empty($post['uid']) && !empty($post['key']) && !empty($post['prc'])) {
       // Save Data to Log.
-      $saveData = array(
+      $saveData = [
         'uid' => $post['uid'],
         'date' => date('Y-m-d H:i:s'),
         'post_data' => json_encode($post),
-      );
+      ];
       $logId = self::writeLog(NULL, $saveData);
       if ($post['order_id']) {
         $contributionID = $post['echo_1'];
         if (empty($contributionID)) {
           $trxn_id = $post['order_id'];
-          $contributionID = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution WHERE trxn_id = %1", array(1 => array($trxn_id, 'String')));
+          $contributionID = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution WHERE trxn_id = %1", [1 => [$trxn_id, 'String']]);
         }
         $requestURL = CRM_Utils_System::isSSL() ? 'https://' : 'http://';
         $requestURL .= $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
-        $saveData = array(
+        $saveData = [
           'contribution_id' => $contributionID,
           'url' => CRM_Core_DAO::escapeString($requestURL),
-        );
+        ];
         self::writeLog($logId, $saveData);
       }
     }
@@ -660,8 +660,8 @@ EOT;
    * 
    * @return number $id The `id` of the row.
    */
-  public static function writeLog($logId, $data = array()) {
-    $recordType = array('contribution_id', 'uid', 'url', 'cmd', 'date', 'post_data', 'return_data');
+  public static function writeLog($logId, $data = []) {
+    $recordType = ['contribution_id', 'uid', 'url', 'cmd', 'date', 'post_data', 'return_data'];
 
     $record = new CRM_Contribute_DAO_MyPayLog();
     if(!empty($logId)) {
@@ -682,14 +682,14 @@ EOT;
    * 
    */
   static public function doRecordData($contributionId, $data, $apiType = '') {
-    $recordType = array(
+    $recordType = [
       'uid',
       'uid_key',
       'expired_date',
       'create_post_data',
       'create_result_data',
       'ipn_result_data'
-    );
+    ];
     $mypay = new CRM_Contribute_DAO_MyPay();
     $mypay->contribution_id = $contributionId;
     $mypay->find(TRUE);

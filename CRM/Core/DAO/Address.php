@@ -267,13 +267,13 @@ class CRM_Core_DAO_Address extends CRM_Core_DAO
   function &links()
   {
     if (!(self::$_links)) {
-      self::$_links = array(
+      self::$_links = [
         'contact_id' => 'civicrm_contact:id',
         'county_id' => 'civicrm_county:id',
         'state_province_id' => 'civicrm_state_province:id',
         'country_id' => 'civicrm_country:id',
         'master_id' => 'civicrm_address:id',
-      );
+      ];
     }
     return self::$_links;
   }
@@ -304,30 +304,30 @@ class CRM_Core_DAO_Address extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'id' => array(
+      self::$_fields = [
+        'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'contact_id' => array(
+        ] ,
+        'contact_id' => [
           'name' => 'contact_id',
           'type' => CRM_Utils_Type::T_INT,
           'FKClassName' => 'CRM_Contact_DAO_Contact',
-        ) ,
-        'location_type_id' => array(
+        ] ,
+        'location_type_id' => [
           'name' => 'location_type_id',
           'type' => CRM_Utils_Type::T_INT,
-        ) ,
-        'is_primary' => array(
+        ] ,
+        'is_primary' => [
           'name' => 'is_primary',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ) ,
-        'is_billing' => array(
+        ] ,
+        'is_billing' => [
           'name' => 'is_billing',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ) ,
-        'street_address' => array(
+        ] ,
+        'street_address' => [
           'name' => 'street_address',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Street Address') ,
@@ -338,8 +338,8 @@ class CRM_Core_DAO_Address extends CRM_Core_DAO
           'headerPattern' => '/(street|address)/i',
           'dataPattern' => '/^(\d{1,5}( [0-9A-Za-z]+)+)$|^(P\.?O\.\? Box \d{1,5})$/i',
           'export' => true,
-        ) ,
-        'street_number' => array(
+        ] ,
+        'street_number' => [
           'name' => 'street_number',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Street Number') ,
@@ -347,8 +347,8 @@ class CRM_Core_DAO_Address extends CRM_Core_DAO
           'where' => 'civicrm_address.street_number',
           'headerPattern' => '',
           'dataPattern' => '',
-        ) ,
-        'street_number_suffix' => array(
+        ] ,
+        'street_number_suffix' => [
           'name' => 'street_number_suffix',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Street Number Suffix') ,
@@ -358,15 +358,15 @@ class CRM_Core_DAO_Address extends CRM_Core_DAO
           'where' => 'civicrm_address.street_number_suffix',
           'headerPattern' => '',
           'dataPattern' => '',
-        ) ,
-        'street_number_predirectional' => array(
+        ] ,
+        'street_number_predirectional' => [
           'name' => 'street_number_predirectional',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Street Number Predirectional') ,
           'maxlength' => 8,
           'size' => CRM_Utils_Type::EIGHT,
-        ) ,
-        'street_name' => array(
+        ] ,
+        'street_name' => [
           'name' => 'street_name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Street Name') ,
@@ -376,22 +376,22 @@ class CRM_Core_DAO_Address extends CRM_Core_DAO
           'where' => 'civicrm_address.street_name',
           'headerPattern' => '',
           'dataPattern' => '',
-        ) ,
-        'street_type' => array(
+        ] ,
+        'street_type' => [
           'name' => 'street_type',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Street Type') ,
           'maxlength' => 8,
           'size' => CRM_Utils_Type::EIGHT,
-        ) ,
-        'street_number_postdirectional' => array(
+        ] ,
+        'street_number_postdirectional' => [
           'name' => 'street_number_postdirectional',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Street Number Postdirectional') ,
           'maxlength' => 8,
           'size' => CRM_Utils_Type::EIGHT,
-        ) ,
-        'street_unit' => array(
+        ] ,
+        'street_unit' => [
           'name' => 'street_unit',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Street Unit') ,
@@ -401,8 +401,8 @@ class CRM_Core_DAO_Address extends CRM_Core_DAO
           'where' => 'civicrm_address.street_unit',
           'headerPattern' => '',
           'dataPattern' => '',
-        ) ,
-        'supplemental_address_1' => array(
+        ] ,
+        'supplemental_address_1' => [
           'name' => 'supplemental_address_1',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Supplemental Address 1') ,
@@ -413,8 +413,8 @@ class CRM_Core_DAO_Address extends CRM_Core_DAO
           'headerPattern' => '/(supplemental(\s)?)?address(\s\d+)?/i',
           'dataPattern' => '/unit|ap(ar)?t(ment)?\s(\d|\w)+/i',
           'export' => true,
-        ) ,
-        'supplemental_address_2' => array(
+        ] ,
+        'supplemental_address_2' => [
           'name' => 'supplemental_address_2',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Supplemental Address 2') ,
@@ -425,15 +425,15 @@ class CRM_Core_DAO_Address extends CRM_Core_DAO
           'headerPattern' => '/(supplemental(\s)?)?address(\s\d+)?/i',
           'dataPattern' => '/unit|ap(ar)?t(ment)?\s(\d|\w)+/i',
           'export' => true,
-        ) ,
-        'supplemental_address_3' => array(
+        ] ,
+        'supplemental_address_3' => [
           'name' => 'supplemental_address_3',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Supplemental Address 3') ,
           'maxlength' => 96,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'city' => array(
+        ] ,
+        'city' => [
           'name' => 'city',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('City') ,
@@ -444,18 +444,18 @@ class CRM_Core_DAO_Address extends CRM_Core_DAO
           'headerPattern' => '/city/i',
           'dataPattern' => '/^[A-Za-z]+(\.?)(\s?[A-Za-z]+){0,2}$/',
           'export' => true,
-        ) ,
-        'county_id' => array(
+        ] ,
+        'county_id' => [
           'name' => 'county_id',
           'type' => CRM_Utils_Type::T_INT,
           'FKClassName' => 'CRM_Core_DAO_County',
-        ) ,
-        'state_province_id' => array(
+        ] ,
+        'state_province_id' => [
           'name' => 'state_province_id',
           'type' => CRM_Utils_Type::T_INT,
           'FKClassName' => 'CRM_Core_DAO_StateProvince',
-        ) ,
-        'postal_code_suffix' => array(
+        ] ,
+        'postal_code_suffix' => [
           'name' => 'postal_code_suffix',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Postal Code Suffix') ,
@@ -466,8 +466,8 @@ class CRM_Core_DAO_Address extends CRM_Core_DAO
           'headerPattern' => '/p(ostal)\sc(ode)\ss(uffix)/i',
           'dataPattern' => '/\d?\d{4}(-\d{4})?/',
           'export' => true,
-        ) ,
-        'postal_code' => array(
+        ] ,
+        'postal_code' => [
           'name' => 'postal_code',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Postal Code') ,
@@ -478,20 +478,20 @@ class CRM_Core_DAO_Address extends CRM_Core_DAO
           'headerPattern' => '/postal|zip/i',
           'dataPattern' => '/\d?\d{4}(-\d{4})?/',
           'export' => true,
-        ) ,
-        'usps_adc' => array(
+        ] ,
+        'usps_adc' => [
           'name' => 'usps_adc',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Usps Adc') ,
           'maxlength' => 32,
           'size' => CRM_Utils_Type::MEDIUM,
-        ) ,
-        'country_id' => array(
+        ] ,
+        'country_id' => [
           'name' => 'country_id',
           'type' => CRM_Utils_Type::T_INT,
           'FKClassName' => 'CRM_Core_DAO_Country',
-        ) ,
-        'geo_code_1' => array(
+        ] ,
+        'geo_code_1' => [
           'name' => 'geo_code_1',
           'type' => CRM_Utils_Type::T_FLOAT,
           'title' => ts('Geo Code 1') ,
@@ -500,8 +500,8 @@ class CRM_Core_DAO_Address extends CRM_Core_DAO
           'headerPattern' => '/geo/i',
           'dataPattern' => '',
           'export' => true,
-        ) ,
-        'geo_code_2' => array(
+        ] ,
+        'geo_code_2' => [
           'name' => 'geo_code_2',
           'type' => CRM_Utils_Type::T_FLOAT,
           'title' => ts('Geo Code 2') ,
@@ -510,15 +510,15 @@ class CRM_Core_DAO_Address extends CRM_Core_DAO
           'headerPattern' => '/geo/i',
           'dataPattern' => '',
           'export' => true,
-        ) ,
-        'timezone' => array(
+        ] ,
+        'timezone' => [
           'name' => 'timezone',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Timezone') ,
           'maxlength' => 8,
           'size' => CRM_Utils_Type::EIGHT,
-        ) ,
-        'address_name' => array(
+        ] ,
+        'address_name' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Address Name') ,
@@ -529,8 +529,8 @@ class CRM_Core_DAO_Address extends CRM_Core_DAO
           'headerPattern' => '/^location|(l(ocation\s)?name)$/i',
           'dataPattern' => '/^\w+$/',
           'export' => true,
-        ) ,
-        'master_id' => array(
+        ] ,
+        'master_id' => [
           'name' => 'master_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Master Address ID') ,
@@ -540,8 +540,8 @@ class CRM_Core_DAO_Address extends CRM_Core_DAO
           'dataPattern' => '',
           'export' => true,
           'FKClassName' => 'CRM_Core_DAO_Address',
-        ) ,
-      );
+        ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -575,7 +575,7 @@ class CRM_Core_DAO_Address extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -601,7 +601,7 @@ class CRM_Core_DAO_Address extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {

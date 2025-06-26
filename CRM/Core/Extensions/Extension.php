@@ -69,7 +69,7 @@ class CRM_Core_Extensions_Extension {
   }
 
   public function xmlObjToArray($obj) {
-    $arr = array();
+    $arr = [];
     if (is_object($obj)) {
       $obj = get_object_vars($obj);
     }
@@ -103,7 +103,7 @@ class CRM_Core_Extensions_Extension {
         $this->$attr = (string) $val;
       }
       elseif ($attr === 'urls') {
-        $this->urls = array();
+        $this->urls = [];
         foreach ($val->url as $url) {
           $urlAttr = (string) $url->attributes()->desc;
           $this->urls[$urlAttr] = (string) $url;
@@ -125,7 +125,7 @@ class CRM_Core_Extensions_Extension {
     else {
       CRM_Core_Error::fatal('Extension directory ' . $file . ' does not exist.');
     }
-    return array();
+    return [];
   }
 
   public function install() {
@@ -177,9 +177,9 @@ class CRM_Core_Extensions_Extension {
 
   private function _createExtensionEntry() {
     $groupId = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionGroup', self::OPTION_GROUP_NAME, 'id', 'name');
-    $weight = CRM_Utils_Weight::getDefaultWeight('CRM_Core_DAO_OptionValue', array('option_group_id' => $groupId));
+    $weight = CRM_Utils_Weight::getDefaultWeight('CRM_Core_DAO_OptionValue', ['option_group_id' => $groupId]);
 
-    $params = array('option_group_id' => $groupId,
+    $params = ['option_group_id' => $groupId,
       'weight' => $weight,
       'label' => $this->label,
       'name' => $this->name,
@@ -187,9 +187,9 @@ class CRM_Core_Extensions_Extension {
       'grouping' => $this->type,
       'description' => $this->file,
       'is_active' => 1,
-    );
+    ];
 
-    $ids = array();
+    $ids = [];
     $optionValue = CRM_Core_BAO_OptionValue::add($params, $ids);
   }
 }

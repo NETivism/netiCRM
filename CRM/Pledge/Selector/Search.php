@@ -68,7 +68,7 @@ class CRM_Pledge_Selector_Search extends CRM_Core_Selector_Base {
    * @var array
    * @static
    */
-  static $_properties = array(
+  static $_properties = [
     'contact_id',
     'sort_name',
     'display_name',
@@ -83,7 +83,7 @@ class CRM_Pledge_Selector_Search extends CRM_Core_Selector_Base {
     'pledge_status',
     'pledge_is_test',
     'pledge_contribution_page_id',
-  );
+  ];
 
   /**
    * are we restricting ourselves to a single contact
@@ -197,33 +197,33 @@ class CRM_Pledge_Selector_Search extends CRM_Core_Selector_Base {
     $extraParams = ($key) ? "&key={$key}" : NULL;
 
     $cancelExtra = ts('Cancelling this pledge will also cancel any scheduled (and not completed) pledge payments.') . ' ' . ts('This action cannot be undone.') . ' ' . ts('Do you want to continue?');
-    self::$_links = array(
-      CRM_Core_Action::VIEW => array(
+    self::$_links = [
+      CRM_Core_Action::VIEW => [
         'name' => ts('View'),
         'url' => 'civicrm/contact/view/pledge',
         'qs' => 'reset=1&id=%%id%%&cid=%%cid%%&action=view&context=%%cxt%%&selectedChild=pledge' . $extraParams,
         'title' => ts('View Pledge'),
-      ),
-      CRM_Core_Action::UPDATE => array(
+      ],
+      CRM_Core_Action::UPDATE => [
         'name' => ts('Edit'),
         'url' => 'civicrm/contact/view/pledge',
         'qs' => 'reset=1&action=update&id=%%id%%&cid=%%cid%%&context=%%cxt%%' . $extraParams,
         'title' => ts('Edit Pledge'),
-      ),
-      CRM_Core_Action::DETACH => array(
+      ],
+      CRM_Core_Action::DETACH => [
         'name' => ts('Cancel'),
         'url' => 'civicrm/contact/view/pledge',
         'qs' => 'reset=1&action=detach&id=%%id%%&cid=%%cid%%&context=%%cxt%%' . $extraParams,
         'extra' => 'onclick = "return confirm(\'' . $cancelExtra . '\');"',
         'title' => ts('Cancel Pledge'),
-      ),
-      CRM_Core_Action::DELETE => array(
+      ],
+      CRM_Core_Action::DELETE => [
         'name' => ts('Delete'),
         'url' => 'civicrm/contact/view/pledge',
         'qs' => 'reset=1&action=delete&id=%%id%%&cid=%%cid%%&context=%%cxt%%' . $extraParams,
         'title' => ts('Delete Pledge'),
-      ),
-    );
+      ],
+    ];
 
 
     if (in_array('Cancel', $hideOption)) {
@@ -291,7 +291,7 @@ class CRM_Pledge_Selector_Search extends CRM_Core_Selector_Base {
       $this->_additionalClause
     );
     // process the result of the query
-    $rows = array();
+    $rows = [];
 
     // get all pledge status
     $pledgeStatuses = CRM_Core_OptionGroup::values('contribution_status',
@@ -299,7 +299,7 @@ class CRM_Pledge_Selector_Search extends CRM_Core_Selector_Base {
     );
 
     //4418 check for view, edit and delete
-    $permissions = array(CRM_Core_Permission::VIEW);
+    $permissions = [CRM_Core_Permission::VIEW];
     if (CRM_Core_Permission::check('edit pledges')) {
       $permissions[] = CRM_Core_Permission::EDIT;
     }
@@ -309,7 +309,7 @@ class CRM_Pledge_Selector_Search extends CRM_Core_Selector_Base {
     $mask = CRM_Core_Action::mask($permissions);
 
     while ($result->fetch()) {
-      $row = array();
+      $row = [];
       // the columns we are interested in
       foreach (self::$_properties as $property) {
         if (isset($result->$property)) {
@@ -326,7 +326,7 @@ class CRM_Pledge_Selector_Search extends CRM_Core_Selector_Base {
         $row['pledge_status'] .= ' (test)';
       }
 
-      $hideOption = array();
+      $hideOption = [];
       if (CRM_Utils_Array::key('Cancelled', $row) ||
         CRM_Utils_Array::key('Completed', $row)
       ) {
@@ -337,10 +337,10 @@ class CRM_Pledge_Selector_Search extends CRM_Core_Selector_Base {
 
       $row['action'] = CRM_Core_Action::formLink(self::links($hideOption, $this->_key),
         $mask,
-        array('id' => $result->pledge_id,
+        ['id' => $result->pledge_id,
           'cid' => $result->contact_id,
           'cxt' => $this->_context,
-        )
+        ]
       );
 
 
@@ -377,52 +377,52 @@ class CRM_Pledge_Selector_Search extends CRM_Core_Selector_Base {
    */
   public function &getColumnHeaders($action = NULL, $output = NULL) {
     if (!isset(self::$_columnHeaders)) {
-      self::$_columnHeaders = array(
-        array(
+      self::$_columnHeaders = [
+        [
           'name' => ts('Pledged'),
           'sort' => 'pledge_amount',
           'direction' => CRM_Utils_Sort::DONTCARE,
-        ),
-        array(
+        ],
+        [
           'name' => ts('Total Paid'),
           'sort' => 'pledge_total_paid',
           'direction' => CRM_Utils_Sort::DONTCARE,
-        ),
-        array(
+        ],
+        [
           'name' => ts('Balance'),
-        ),
-        array(
+        ],
+        [
           'name' => ts('Pledge Made'),
           'sort' => 'pledge_create_date',
           'direction' => CRM_Utils_Sort::DESCENDING,
-        ),
-        array(
+        ],
+        [
           'name' => ts('Next Pay Date'),
           'sort' => 'pledge_next_pay_date',
           'direction' => CRM_Utils_Sort::DONTCARE,
-        ),
-        array(
+        ],
+        [
           'name' => ts('Next Amount'),
           'sort' => 'pledge_next_pay_amount',
           'direction' => CRM_Utils_Sort::DONTCARE,
-        ),
-        array(
+        ],
+        [
           'name' => ts('Status'),
           'sort' => 'pledge_status',
           'direction' => CRM_Utils_Sort::DONTCARE,
-        ),
-        array('desc' => ts('Actions')),
-      );
+        ],
+        ['desc' => ts('Actions')],
+      ];
 
       if (!$this->_single) {
-        $pre = array(
-          array('desc' => ts('Contact Id')),
-          array(
+        $pre = [
+          ['desc' => ts('Contact Id')],
+          [
             'name' => ts('Name'),
             'sort' => 'sort_name',
             'direction' => CRM_Utils_Sort::DONTCARE,
-          ),
-        );
+          ],
+        ];
 
         self::$_columnHeaders = array_merge($pre, self::$_columnHeaders);
       }

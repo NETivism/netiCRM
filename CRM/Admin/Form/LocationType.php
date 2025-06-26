@@ -51,8 +51,8 @@ class CRM_Admin_Form_LocationType extends CRM_Admin_Form {
    */
   function setDefaultValues() {
     if (isset($this->_id) && empty($this->_values)) {
-      $this->_values = array();
-      $params = array('id' => $this->_id);
+      $this->_values = [];
+      $params = ['id' => $this->_id];
       $baoName = $this->_BAOName;
       $baoName::retrieve( $params, $this->_values );
     }
@@ -102,10 +102,10 @@ class CRM_Admin_Form_LocationType extends CRM_Admin_Form {
 
     $this->applyFilter('__ALL__', 'trim');
     $this->add('text', 'label', ts('Label'), CRM_Core_DAO::getAttribute('CRM_Core_DAO_LocationType', 'label'), TRUE);
-    $this->addRule('label', ts('Lable already exists in Database.'), 'objectExists',  array('CRM_Core_DAO_LocationType', $this->_id));
+    $this->addRule('label', ts('Lable already exists in Database.'), 'objectExists',  ['CRM_Core_DAO_LocationType', $this->_id]);
     $this->add('text', 'name', ts('Name'), CRM_Core_DAO::getAttribute('CRM_Core_DAO_LocationType', 'name'), TRUE);
-    $this->addRule('name', ts('Name already exists in Database.'), 'objectExists',  array('CRM_Core_DAO_LocationType', $this->_id));
-    $this->addRule('name', ts('Name should only have alpha numeric characters.'), 'alphanumeric',  array('CRM_Core_DAO_LocationType', $this->_id));
+    $this->addRule('name', ts('Name already exists in Database.'), 'objectExists',  ['CRM_Core_DAO_LocationType', $this->_id]);
+    $this->addRule('name', ts('Name should only have alpha numeric characters.'), 'alphanumeric',  ['CRM_Core_DAO_LocationType', $this->_id]);
 
 
     $this->add('text', 'vcard_name', ts('vCard Name'), CRM_Core_DAO::getAttribute('CRM_Core_DAO_LocationType', 'vcard_name'));
@@ -115,7 +115,7 @@ class CRM_Admin_Form_LocationType extends CRM_Admin_Form {
     $this->add('checkbox', 'is_active', ts('Enabled?'));
     $this->add('checkbox', 'is_default', ts('Default?'));
     if ($this->_action == CRM_Core_Action::UPDATE && CRM_Core_DAO::getFieldValue('CRM_Core_DAO_LocationType', $this->_id, 'is_reserved')) {
-      $this->freeze(array('name', 'description', 'is_active'));
+      $this->freeze(['name', 'description', 'is_active']);
     }
   }
 
@@ -164,7 +164,7 @@ class CRM_Admin_Form_LocationType extends CRM_Admin_Form {
     $cache->delete('*CRM_Core_DAO_LocationType*');
 
     CRM_Core_Session::setStatus(ts('The location type \'%1\' has been saved.',
-        array(1 => $locationType->name)
+        [1 => $locationType->name]
       ));
   }
   //end of function

@@ -45,7 +45,7 @@ class CRM_Upgrade_TwoTwo_Form_Step1 extends CRM_Upgrade_Form {
       )
     ) {
       $errorMessage = ts('Log file CiviCRM.log is not writable. Make sure files directory is writable.',
-        array(1 => $config->uploadDir)
+        [1 => $config->uploadDir]
       );
       return FALSE;
     }
@@ -177,7 +177,7 @@ class CRM_Upgrade_TwoTwo_Form_Step1 extends CRM_Upgrade_Form {
   }
 
   function verifyPostDBState(&$errorMessage) {
-    $errorMessage = ts('Post-condition failed for upgrade step %1.', array(1 => '1'));
+    $errorMessage = ts('Post-condition failed for upgrade step %1.', [1 => '1']);
     return $this->checkVersion('2.1.101');
   }
 

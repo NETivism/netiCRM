@@ -41,7 +41,7 @@ class CRM_Contact_Form_Task_AnnualReceiptEmail_SearchOption extends CRM_Contact_
     CRM_Utils_System::setTitle(ts('Send Annual Receipt Email'));
     $cid = CRM_Utils_Request::retrieve('cid', 'Positive', $this, FALSE);
     if ($cid) {
-      $this->_contactIds = array($cid);
+      $this->_contactIds = [$cid];
     }
     else {
       parent::preProcess();
@@ -57,12 +57,12 @@ class CRM_Contact_Form_Task_AnnualReceiptEmail_SearchOption extends CRM_Contact_
    */
   public function buildQuickForm() {
     if (count($this->_contactIds) > self::BATCH_THRESHOLD) {
-      $msg = ts('You have selected more than %1 contacts.', array(1 => self::BATCH_THRESHOLD)).' ';
+      $msg = ts('You have selected more than %1 contacts.', [1 => self::BATCH_THRESHOLD]).' ';
       $msg .= ts('Because of the large amount of data you are about to perform, we will schedule this job for the batch process after you submit. You will receive an email notification when the work is completed.');
       CRM_Core_Session::setStatus($msg);
     }
 
-    $years = array();
+    $years = [];
     if(!empty($this->_year)){
       $years[$this->_year] = $this->_year;
       $ele = $this->addElement('select', 'year', ts('Receipt Year'), $years);
@@ -75,35 +75,35 @@ class CRM_Contact_Form_Task_AnnualReceiptEmail_SearchOption extends CRM_Contact_
     }
 
     $contributionTypes = CRM_Contribute_PseudoConstant::contributionType(NULL, 'is_deductible', TRUE);
-    $deductible = array( 0 => '- '.ts('All').' '.ts('Deductible').' -');
+    $deductible = [ 0 => '- '.ts('All').' '.ts('Deductible').' -'];
     $contributionTypes = $deductible + $contributionTypes;
-    $attrs = array('multiple' => 'multiple');
+    $attrs = ['multiple' => 'multiple'];
     $this->addElement('select', 'contribution_type_id', ts('Contribution Types'), $contributionTypes, $attrs);
 
-    $isRecur = array(
+    $isRecur = [
       '' => '- '.ts('All').' -' ,
       -1 => ts('Non-Recurring Contribution'),
       1 => ts('Recurring Contribution'),
-    );
+    ];
     $this->addElement('select', 'is_recur', ts('Find Recurring Contributions?'), $isRecur);
 
-    $this->addButtons(array(
-        array(
+    $this->addButtons([
+        [
           'type' => 'back',
           'name' => ts('<< Go Back'),
           'isDefault' => TRUE,
-        ),
-        array(
+        ],
+        [
           'type' => 'next',
           'name' => ts('Continue >>'),
           'isDefault' => TRUE,
-        ),
-      )
+        ],
+      ]
     );
   }
 
   function setDefaultValues() {
-    $defaults = array();
+    $defaults = [];
     $defaults['year'] = date('m') == '12' ? date('Y') : date('Y') - 1;
     return $defaults;
   }

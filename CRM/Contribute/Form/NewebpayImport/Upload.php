@@ -6,7 +6,7 @@ class CRM_Contribute_Form_NewebpayImport_Upload extends CRM_Core_Form {
     if (strstr(CRM_Utils_System::currentPath(), '/newebpay/')) {
       CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/contribute/fee/import', 'reset=1'));
     }
-    $this->addFormRule(array('CRM_Contribute_Form_NewebpayImport_Upload', 'formRule'), $this);
+    $this->addFormRule(['CRM_Contribute_Form_NewebpayImport_Upload', 'formRule'], $this);
   }
 
   function buildQuickForm() {
@@ -14,7 +14,7 @@ class CRM_Contribute_Form_NewebpayImport_Upload extends CRM_Core_Form {
 
     $this->addRule('uploadFile', ts('Input file must be in CSV format'), 'utf8File');
 
-    $customFields = array();
+    $customFields = [];
     $customFields[0] = ts('-- Select --');
     $sql = "SELECT cf.id, cf.label FROM civicrm_custom_field cf LEFT JOIN civicrm_custom_group cg ON cf.custom_group_id = cg.id WHERE data_type = 'Date' AND cg.extends = 'Contribution'";
     $dao = CRM_Core_DAO::executeQuery($sql);
@@ -23,26 +23,26 @@ class CRM_Contribute_Form_NewebpayImport_Upload extends CRM_Core_Form {
     }
     if (count($customFields) > 1) {
 
-      $this->addSelect('disbursementDate', ts('Disbursement Date'), $customFields, array());
+      $this->addSelect('disbursementDate', ts('Disbursement Date'), $customFields, []);
       // $this->add('Select', 'accounting_date', ts('Accounting date'), array(), )
     }
 
-    $this->addButtons(array(
-        array('type' => 'upload',
+    $this->addButtons([
+        ['type' => 'upload',
           'name' => ts('Continue'),
           'isDefault' => TRUE,
-        ),
-        array('type' => 'cancel',
+        ],
+        ['type' => 'cancel',
           'name' => ts('Cancel'),
-        ),
-      )
+        ],
+      ]
     );
   }
 
   public static function formRule($fields, $files, $self) {
-    $errors = array();
+    $errors = [];
     if (empty($files)) {
-      $errors['uploadFile'] = ts('Missing required field: %1', array(1 => ts('Import Data File')));
+      $errors['uploadFile'] = ts('Missing required field: %1', [1 => ts('Import Data File')]);
     }
 
     $typePass = FALSE;
@@ -55,14 +55,14 @@ class CRM_Contribute_Form_NewebpayImport_Upload extends CRM_Core_Form {
         break;
     }
     if (!$typePass) {
-      $errors['uploadFile'] = ts('File format must be one of these: %1', array(1 => 'csv, xlsx'));
+      $errors['uploadFile'] = ts('File format must be one of these: %1', [1 => 'csv, xlsx']);
     }
 
     return $errors;
   }
 
   function setDefaultValues() {
-    $defaults = array();
+    $defaults = [];
     return $defaults;
   }
 
@@ -86,7 +86,7 @@ class CRM_Contribute_Form_NewebpayImport_Upload extends CRM_Core_Form {
         $filePath = $file['name'];
         $fd = fopen($filePath, 'r');
         $config = CRM_Core_Config::singleton();
-        $rowsFromSheet = array();
+        $rowsFromSheet = [];
         $i = 1;
         while($row = fgetcsv($fd, 0, $config->fieldSeparator)) {
           $rowsFromSheet[$i] = $row;
@@ -96,14 +96,14 @@ class CRM_Contribute_Form_NewebpayImport_Upload extends CRM_Core_Form {
       if ($file['type'] == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
         $rowsFromSheet = CRM_Core_Report_Excel::readExcelFile($file['name']);
       }
-      $rows = array();
+      $rows = [];
       foreach ($rowsFromSheet as $rowNum => $row) {
         if ($rowNum == 1) {
           $header = $row;
           $rows[] = $header;
         }
         else {
-          $oneRow = array();
+          $oneRow = [];
           foreach ($row as $columnNum => $value) {
             $oneRow[$header[$columnNum]] = $value;
           }
@@ -113,7 +113,7 @@ class CRM_Contribute_Form_NewebpayImport_Upload extends CRM_Core_Form {
       return $rows;
     }
     else {
-      return array();
+      return [];
     }
   }
 

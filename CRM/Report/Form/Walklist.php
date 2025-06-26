@@ -55,75 +55,75 @@ class CRM_Report_Form_Walklist extends CRM_Report_Form {
 
   protected $_summary = NULL;
 
-  protected $_customGroupExtends = array('Contact', 'Individual', 'Household', 'Organization'); function __construct() {
-    $this->_columns = array('civicrm_contact' =>
-      array('dao' => 'CRM_Contact_DAO_Contact',
+  protected $_customGroupExtends = ['Contact', 'Individual', 'Household', 'Organization']; function __construct() {
+    $this->_columns = ['civicrm_contact' =>
+      ['dao' => 'CRM_Contact_DAO_Contact',
         'fields' =>
-        array('id' =>
-          array('title' => ts('Contact ID'),
+        ['id' =>
+          ['title' => ts('Contact ID'),
             'no_display' => TRUE,
             'required' => TRUE,
-          ),
+          ],
           'display_name' =>
-          array('title' => ts('Contact Name'),
+          ['title' => ts('Contact Name'),
             'required' => TRUE,
             'no_repeat' => TRUE,
-          ),
-        ),
+          ],
+        ],
         'filters' =>
-        array('sort_name' =>
-          array('title' => ts('Contact Name'),
+        ['sort_name' =>
+          ['title' => ts('Contact Name'),
             'operator' => 'like',
-          ),
-        ),
+          ],
+        ],
         'grouping' => 'contact-fields',
         'order_bys' =>
-        array('display_name' => array('title' => ts('Contact Name'),
+        ['display_name' => ['title' => ts('Contact Name'),
             'required' => TRUE,
-          )),
-      ),
+          ]],
+      ],
       'civicrm_address' =>
-      array('dao' => 'CRM_Core_DAO_Address',
+      ['dao' => 'CRM_Core_DAO_Address',
         'fields' =>
-        array(
-          'street_number' => array('title' => ts('Street Number'),
+        [
+          'street_number' => ['title' => ts('Street Number'),
             'type' => 1,
-          ),
+          ],
           'street_address' => NULL,
           'city' => NULL,
           'postal_code' => NULL,
           'state_province_id' =>
-          array('title' => ts('State/Province'),
+          ['title' => ts('State/Province'),
             'default' => TRUE,
-          ),
+          ],
           'country_id' =>
-          array('title' => ts('Country'),
-          ),
-        ),
+          ['title' => ts('Country'),
+          ],
+        ],
         'filters' =>
-        array(
-          'street_number' => array('title' => ts('Street Number'),
+        [
+          'street_number' => ['title' => ts('Street Number'),
             'type' => 1,
             'name' => 'street_number',
-          ),
+          ],
           'street_address' => NULL,
           'city' => NULL,
-        ),
+        ],
         'grouping' => 'location-fields',
-      ),
+      ],
       'civicrm_email' =>
-      array('dao' => 'CRM_Core_DAO_Email',
+      ['dao' => 'CRM_Core_DAO_Email',
         'fields' =>
-        array('email' => array('default' => TRUE)),
+        ['email' => ['default' => TRUE]],
         'grouping' => 'location-fields',
-      ),
+      ],
       'civicrm_phone' =>
-      array('dao' => 'CRM_Core_DAO_Phone',
+      ['dao' => 'CRM_Core_DAO_Phone',
         'fields' =>
-        array('phone' => NULL),
+        ['phone' => NULL],
         'grouping' => 'location-fields',
-      ),
-    );
+      ],
+    ];
     parent::__construct();
   }
 
@@ -132,9 +132,9 @@ class CRM_Report_Form_Walklist extends CRM_Report_Form {
   }
 
   function select() {
-    $select = array();
+    $select = [];
 
-    $this->_columnHeaders = array();
+    $this->_columnHeaders = [];
     foreach ($this->_columns as $tableName => $table) {
       foreach ($table['fields'] as $fieldName => $field) {
         if (CRM_Utils_Array::value('required', $field) ||
@@ -180,7 +180,7 @@ FROM       civicrm_contact {$this->_aliases['civicrm_contact']} {$this->_aclFrom
   }
 
   function where() {
-    $clauses = array();
+    $clauses = [];
     foreach ($this->_columns as $tableName => $table) {
       if (CRM_Utils_Array::arrayKeyExists('filters', $table)) {
         foreach ($table['filters'] as $fieldName => $field) {

@@ -117,9 +117,9 @@ class CRM_Contribute_Form_ContributionPage extends CRM_Core_Form {
         "action=update&reset=1&id={$this->_id}"
       );
 
-      $breadCrumb = array(array('title' => ts('Configure Contribution Page'),
+      $breadCrumb = [['title' => ts('Configure Contribution Page'),
           'url' => $url,
-        ));
+        ]];
       CRM_Utils_System::appendBreadCrumb($breadCrumb);
       if ($this->_action == CRM_Core_Action::UPDATE) {
         $this->_single = TRUE;
@@ -139,13 +139,13 @@ class CRM_Contribute_Form_ContributionPage extends CRM_Core_Form {
       $session->pushUserContext($url);
     }
     if ($this->_action == CRM_Core_Action::UPDATE) {
-      CRM_Utils_System::setTitle(ts('Configure Page - %1', array(1 => $title)));
+      CRM_Utils_System::setTitle(ts('Configure Page - %1', [1 => $title]));
     }
     elseif ($this->_action == CRM_Core_Action::VIEW) {
-      CRM_Utils_System::setTitle(ts('Preview Page - %1', array(1 => $title)));
+      CRM_Utils_System::setTitle(ts('Preview Page - %1', [1 => $title]));
     }
     elseif ($this->_action == CRM_Core_Action::DELETE) {
-      CRM_Utils_System::setTitle(ts('Delete Page - %1', array(1 => $title)));
+      CRM_Utils_System::setTitle(ts('Delete Page - %1', [1 => $title]));
     }
   }
 
@@ -159,34 +159,34 @@ class CRM_Contribute_Form_ContributionPage extends CRM_Core_Form {
     $this->applyFilter('__ALL__', 'trim');
 
     if ($this->_single) {
-      $this->addButtons(array(
-          array('type' => 'upload',
+      $this->addButtons([
+          ['type' => 'upload',
             'name' => ts('Save'),
             'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
             'isDefault' => TRUE,
-          ),
-          array('type' => 'cancel',
+          ],
+          ['type' => 'cancel',
             'name' => ts('Cancel'),
-          ),
-        )
+          ],
+        ]
       );
     }
     else {
-      $buttons = array();
+      $buttons = [];
       if (!$this->_first) {
-        $buttons[] = array('type' => 'back',
+        $buttons[] = ['type' => 'back',
           'name' => ts('<< Previous'),
           'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
-        );
+        ];
       }
-      $buttons[] = array('type' => 'upload',
+      $buttons[] = ['type' => 'upload',
         'name' => ts('Continue >>'),
         'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
         'isDefault' => TRUE,
-      );
-      $buttons[] = array('type' => 'cancel',
+      ];
+      $buttons[] = ['type' => 'cancel',
         'name' => ts('Cancel'),
-      );
+      ];
 
       $this->addButtons($buttons);
     }
@@ -194,7 +194,7 @@ class CRM_Contribute_Form_ContributionPage extends CRM_Core_Form {
     // views are implemented as frozen form
     if ($this->_action & CRM_Core_Action::VIEW) {
       $this->freeze();
-      $this->addElement('button', 'done', ts('Done'), array('onclick' => "location.href='civicrm/admin/custom/group?reset=1&action=browse'"));
+      $this->addElement('button', 'done', ts('Done'), ['onclick' => "location.href='civicrm/admin/custom/group?reset=1&action=browse'"]);
     }
   }
 
@@ -207,25 +207,25 @@ class CRM_Contribute_Form_ContributionPage extends CRM_Core_Form {
    * @return void
    */
   function setDefaultValues() {
-    $defaults = array();
+    $defaults = [];
     $config = CRM_Core_Config::singleton();
     if (isset($this->_id)) {
-      $params = array('id' => $this->_id);
+      $params = ['id' => $this->_id];
       CRM_Core_DAO::commonRetrieve('CRM_Contribute_DAO_ContributionPage', $params, $defaults);
 
       //set defaults for pledgeBlock values.
 
-      $pledgeBlockParams = array('entity_id' => $this->_id,
+      $pledgeBlockParams = ['entity_id' => $this->_id,
         'entity_table' => ts('civicrm_contribution_page'),
-      );
-      $pledgeBlockDefaults = array();
+      ];
+      $pledgeBlockDefaults = [];
       CRM_Pledge_BAO_PledgeBlock::retrieve($pledgeBlockParams, $pledgeBlockDefaults);
       if ($this->_pledgeBlockID = CRM_Utils_Array::value('id', $pledgeBlockDefaults)) {
         $defaults['is_pledge_active'] = TRUE;
       }
-      $pledgeBlock = array('is_pledge_interval', 'max_reminders',
+      $pledgeBlock = ['is_pledge_interval', 'max_reminders',
         'initial_reminder_day', 'additional_reminder_day',
-      );
+      ];
       foreach ($pledgeBlock as $key) {
         $defaults[$key] = CRM_Utils_Array::value($key, $pledgeBlockDefaults);
       }

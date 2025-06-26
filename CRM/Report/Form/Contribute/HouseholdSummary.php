@@ -71,110 +71,110 @@ class CRM_Report_Form_Contribute_HouseholdSummary extends CRM_Report_Form {
 
     $this->validRelationships();
 
-    $this->_columns = array(
+    $this->_columns = [
       'civicrm_contact_household' =>
-      array('dao' => 'CRM_Contact_DAO_Contact',
+      ['dao' => 'CRM_Contact_DAO_Contact',
         'fields' =>
-        array(
+        [
           'household_name' =>
-          array('title' => ts('Household Name'),
+          ['title' => ts('Household Name'),
             'required' => TRUE,
-          ),
+          ],
           'id' =>
-          array('no_display' => TRUE,
+          ['no_display' => TRUE,
             'required' => TRUE,
-          ),
-        ),
+          ],
+        ],
         'filters' =>
-        array(
+        [
           'household_name' =>
-          array('title' => ts('Household Name')),
-        ),
+          ['title' => ts('Household Name')],
+        ],
         'grouping' => 'household-fields',
-      ),
+      ],
       'civicrm_relationship' =>
-      array('dao' => 'CRM_Contact_DAO_Relationship',
+      ['dao' => 'CRM_Contact_DAO_Relationship',
         'fields' =>
-        array(
+        [
           'relationship_type_id' =>
-          array('title' => ts('Relationship Type'),
-          ),
-        ),
+          ['title' => ts('Relationship Type'),
+          ],
+        ],
         'filters' =>
-        array('relationship_type_id' =>
-          array(
+        ['relationship_type_id' =>
+          [
             'title' => ts('Relationship Type'),
             'type' => CRM_Utils_Type::T_INT,
             'operatorType' => CRM_Report_Form::OP_SELECT,
             'options' => $this->relationTypes,
-            'default' => array(1),
-          ),
-        ),
+            'default' => [1],
+          ],
+        ],
         'grouping' => 'household-fields',
-      ),
+      ],
       'civicrm_contact' =>
-      array('dao' => 'CRM_Contact_DAO_Contact',
+      ['dao' => 'CRM_Contact_DAO_Contact',
         'fields' =>
-        array('sort_name' =>
-          array('title' => ts('Contact Name'),
+        ['sort_name' =>
+          ['title' => ts('Contact Name'),
             'required' => TRUE,
-          ),
+          ],
           'id' =>
-          array('no_display' => TRUE,
+          ['no_display' => TRUE,
             'required' => TRUE,
-          ),
-        ),
+          ],
+        ],
         'grouping' => 'contact-fields',
-      ),
+      ],
       'civicrm_contribution' =>
-      array('dao' => 'CRM_Contribute_DAO_Contribution',
+      ['dao' => 'CRM_Contribute_DAO_Contribution',
         'fields' =>
-        array('total_amount' => array('title' => ts('Amount'),
+        ['total_amount' => ['title' => ts('Amount'),
             'required' => TRUE,
-          ),
-          'contribution_status_id' => array('title' => ts('Contribution Status'),
+          ],
+          'contribution_status_id' => ['title' => ts('Contribution Status'),
             'default' => TRUE,
-          ),
+          ],
           'trxn_id' => NULL,
-          'receive_date' => array('default' => TRUE),
+          'receive_date' => ['default' => TRUE],
           'receipt_date' => NULL,
-        ),
+        ],
         'filters' =>
-        array('receive_date' =>
-          array('operatorType' => CRM_Report_Form::OP_DATE),
+        ['receive_date' =>
+          ['operatorType' => CRM_Report_Form::OP_DATE],
           'total_amount' =>
-          array('title' => ts('Amount Between')),
+          ['title' => ts('Amount Between')],
           'contribution_status_id' =>
-          array('title' => ts('Contribution Status'),
+          ['title' => ts('Contribution Status'),
             'operatorType' => CRM_Report_Form::OP_MULTISELECT,
             'options' => CRM_Contribute_PseudoConstant::contributionStatus(),
-            'default' => array(1),
-          ),
-        ),
+            'default' => [1],
+          ],
+        ],
         'grouping' => 'contri-fields',
-      ),
+      ],
       'civicrm_address' =>
-      array('dao' => 'CRM_Core_DAO_Address',
+      ['dao' => 'CRM_Core_DAO_Address',
         'fields' =>
-        array('street_address' => NULL,
+        ['street_address' => NULL,
           'city' => NULL,
           'postal_code' => NULL,
           'state_province_id' =>
-          array('title' => ts('State/Province'),
-          ),
+          ['title' => ts('State/Province'),
+          ],
           'country_id' =>
-          array('title' => ts('Country'),
-          ),
-        ),
+          ['title' => ts('Country'),
+          ],
+        ],
         'grouping' => 'contact-fields',
-      ),
+      ],
       'civicrm_email' =>
-      array('dao' => 'CRM_Core_DAO_Email',
+      ['dao' => 'CRM_Core_DAO_Email',
         'fields' =>
-        array('email' => NULL),
+        ['email' => NULL],
         'grouping' => 'contact-fields',
-      ),
-    );
+      ],
+    ];
 
     parent::__construct();
   }
@@ -184,7 +184,7 @@ class CRM_Report_Form_Contribute_HouseholdSummary extends CRM_Report_Form {
   }
 
   function select() {
-    $this->_columnHeaders = $select = array();
+    $this->_columnHeaders = $select = [];
     foreach ($this->_columns as $tableName => $table) {
       if (CRM_Utils_Array::arrayKeyExists('fields', $table)) {
         foreach ($table['fields'] as $fieldName => $field) {
@@ -247,7 +247,7 @@ class CRM_Report_Form_Contribute_HouseholdSummary extends CRM_Report_Form {
   }
 
   function where() {
-    $clauses = array();
+    $clauses = [];
     foreach ($this->_columns as $tableName => $table) {
       if (CRM_Utils_Array::arrayKeyExists('filters', $table)) {
         foreach ($table['filters'] as $fieldName => $field) {
@@ -326,9 +326,9 @@ class CRM_Report_Form_Contribute_HouseholdSummary extends CRM_Report_Form {
       $this->householdContact = 'contact_id_a';
       $this->otherContact = 'contact_id_b';
     }
-    $this->buildACLClause(array($this->_aliases['civicrm_contact'], $this->_aliases['civicrm_contact_household']));
+    $this->buildACLClause([$this->_aliases['civicrm_contact'], $this->_aliases['civicrm_contact_household']]);
     $sql = $this->buildQuery(TRUE);
-    $rows = array();
+    $rows = [];
 
     $this->buildRows($sql, $rows);
     $this->formatDisplay($rows);
@@ -338,15 +338,15 @@ class CRM_Report_Form_Contribute_HouseholdSummary extends CRM_Report_Form {
 
   function validRelationships() {
     require_once ("api/v2/RelationshipType.php");
-    $this->relationTypes = $relationTypes = array();
+    $this->relationTypes = $relationTypes = [];
 
-    $params = array('contact_type_b' => 'Household');
+    $params = ['contact_type_b' => 'Household'];
     $typesA = civicrm_relationship_types_get($params);
     foreach ($typesA as $rel) {
       $relationTypes[$rel['id']][$rel['id'] . '_b_a'] = $rel['label_b_a'];
     }
 
-    $params = array('contact_type_a' => 'Household');
+    $params = ['contact_type_a' => 'Household'];
     $typesB = civicrm_relationship_types_get($params);
     foreach ($typesB as $rel) {
       $relationTypes[$rel['id']][$rel['id'] . '_a_b'] = $rel['label_a_b'];

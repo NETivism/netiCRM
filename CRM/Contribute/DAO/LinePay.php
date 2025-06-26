@@ -175,88 +175,88 @@ class CRM_Contribute_DAO_LinePay extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'linepay_id' => array(
+      self::$_fields = [
+        'linepay_id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('LinePay ID') ,
           'required' => true,
-        ) ,
-        'contribution_trxn_id' => array(
+        ] ,
+        'contribution_trxn_id' => [
           'name' => 'trxn_id',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Contribution Trxn ID') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'transaction_id' => array(
+        ] ,
+        'transaction_id' => [
           'name' => 'transaction_id',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Transaction ID') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'query' => array(
+        ] ,
+        'query' => [
           'name' => 'query',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Query') ,
           'default' => 'UL',
-        ) ,
-        'request' => array(
+        ] ,
+        'request' => [
           'name' => 'request',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Request') ,
           'default' => 'UL',
-        ) ,
-        'confirm' => array(
+        ] ,
+        'confirm' => [
           'name' => 'confirm',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Confirm') ,
           'default' => 'UL',
-        ) ,
-        'refund' => array(
+        ] ,
+        'refund' => [
           'name' => 'refund',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Refund') ,
           'default' => 'UL',
-        ) ,
-        'authorization' => array(
+        ] ,
+        'authorization' => [
           'name' => 'authorization',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Authorization') ,
           'default' => 'UL',
-        ) ,
-        'capture' => array(
+        ] ,
+        'capture' => [
           'name' => 'capture',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Capture') ,
           'default' => 'UL',
-        ) ,
-        'void' => array(
+        ] ,
+        'void' => [
           'name' => 'void',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Void') ,
           'default' => 'UL',
-        ) ,
-        'recurring_payment' => array(
+        ] ,
+        'recurring_payment' => [
           'name' => 'recurring_payment',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Recurring Payment') ,
           'default' => 'UL',
-        ) ,
-        'recurring_check' => array(
+        ] ,
+        'recurring_check' => [
           'name' => 'recurring_check',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Recurring Check') ,
           'default' => 'UL',
-        ) ,
-        'recurring_expire' => array(
+        ] ,
+        'recurring_expire' => [
           'name' => 'recurring_expire',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Recurring Expire') ,
           'default' => 'UL',
-        ) ,
-      );
+        ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -289,7 +289,7 @@ class CRM_Contribute_DAO_LinePay extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -312,7 +312,7 @@ class CRM_Contribute_DAO_LinePay extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {

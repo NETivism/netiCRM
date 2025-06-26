@@ -137,7 +137,7 @@ class CRM_Utils_File {
    * @static
    */
   public static function cleanDir($target, $rmdir = TRUE) {
-    static $exceptions = array('.', '..');
+    static $exceptions = ['.', '..'];
 
     if ($sourcedir = @opendir($target)) {
       while (FALSE !== ($sibling = readdir($sourcedir))) {
@@ -360,7 +360,7 @@ class CRM_Utils_File {
   static function getFilesByExtension($path, $ext) {
     $path = self::addTrailingSlash($path);
     $dh = opendir($path);
-    $files = array();
+    $files = [];
     while (FALSE !== ($elem = readdir($dh))) {
       if (substr($elem, -(strlen($ext) + 1)) == '.' . $ext) {
         $files[] .= $path . $elem;
@@ -462,7 +462,7 @@ HTACCESS;
 		$basename = preg_replace('/[\x00-\x1F]/u', '_', $basename);
 		if (substr(PHP_OS, 0, 3) == 'WIN') {
 			// These characters are not allowed in Windows filenames
-			$basename = str_replace(array(':', '*', '?', '"', '<', '>', '|'), '_', $basename);
+			$basename = str_replace([':', '*', '?', '"', '<', '>', '|'], '_', $basename);
 		}
 
 		if (file_exists($destination)) {

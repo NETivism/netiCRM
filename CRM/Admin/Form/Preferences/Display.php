@@ -44,16 +44,16 @@ class CRM_Admin_Form_Preferences_Display extends CRM_Admin_Form_Preferences {
     parent::preProcess();
     CRM_Utils_System::setTitle(ts('Settings - Site Preferences'));
     // add all the checkboxes
-    $this->_cbs = array(
+    $this->_cbs = [
       'contact_view_options' => ts('Viewing Contacts'),
       'contact_edit_options' => ts('Editing Contacts'),
       'advanced_search_options' => ts('Contact Search'),
       'user_dashboard_options' => ts('Contact Dashboard'),
-    );
+    ];
   }
 
   function setDefaultValues() {
-    $defaults = array();
+    $defaults = [];
 
     parent::cbsDefaultValues($defaults);
     if ($this->_config->editor_id) {
@@ -82,7 +82,7 @@ class CRM_Admin_Form_Preferences_Display extends CRM_Admin_Form_Preferences {
    * @access public
    */
   public function buildQuickForm() {
-    $wysiwyg_options = array('' => ts('Textarea')) + CRM_Core_PseudoConstant::wysiwygEditor();
+    $wysiwyg_options = ['' => ts('Textarea')] + CRM_Core_PseudoConstant::wysiwygEditor();
 
     $config = &CRM_Core_Config::singleton();
 
@@ -102,7 +102,7 @@ class CRM_Admin_Form_Preferences_Display extends CRM_Admin_Form_Preferences {
     $contactBlocks = CRM_Core_OptionGroup::values('contact_edit_options', FALSE, FALSE, FALSE, 'AND v.filter = 1');
     $this->assign('contactBlocks', $contactBlocks);
 
-    $this->addElement('hidden', 'contact_edit_prefences', NULL, array('id' => 'contact_edit_prefences'));
+    $this->addElement('hidden', 'contact_edit_prefences', NULL, ['id' => 'contact_edit_prefences']);
 
     parent::buildQuickForm();
   }

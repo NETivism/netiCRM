@@ -158,7 +158,7 @@ class CRM_Member_Form_Search extends CRM_Core_Form {
 
     $this->_done = FALSE;
 
-    $this->defaults = array();
+    $this->defaults = [];
 
     /* 
          * we allow the controller to set force/reset externally, useful when we are being 
@@ -258,24 +258,24 @@ class CRM_Member_Form_Search extends CRM_Core_Form {
       $permission = CRM_Core_Permission::getPermission();
 
 
-      $tasks = array('' => ts('- actions -')) + CRM_Member_Task::permissionedTaskTitles($permission);
+      $tasks = ['' => ts('- actions -')] + CRM_Member_Task::permissionedTaskTitles($permission);
       $this->add('select', 'task', ts('Actions:') . ' ', $tasks);
       $this->add('submit', $this->_actionButtonName, ts('Go'),
-        array('class' => 'form-submit',
+        ['class' => 'form-submit',
           'id' => 'Go',
           'onclick' => "return checkPerformAction('mark_x', '" . $this->getName() . "', 0);",
-        )
+        ]
       );
 
       $this->add('submit', $this->_printButtonName, ts('Print'),
-        array('class' => 'form-submit',
+        ['class' => 'form-submit',
           'onclick' => "return checkPerformAction('mark_x', '" . $this->getName() . "', 1);",
-        )
+        ]
       );
 
 
       // need to perform tasks on all or selected items ? using radio_ts(task selection) for it
-      $selectedRowsRadio = $this->addElement('radio', 'radio_ts', NULL, '', 'ts_sel', array('checked' => 'checked'));
+      $selectedRowsRadio = $this->addElement('radio', 'radio_ts', NULL, '', 'ts_sel', ['checked' => 'checked']);
       $this->assign('ts_sel_id', $selectedRowsRadio->_attributes['id']);
 
       $allRowsRadio = $this->addElement('radio', 'radio_ts', NULL, '', 'ts_all');
@@ -284,12 +284,12 @@ class CRM_Member_Form_Search extends CRM_Core_Form {
 
 
     // add buttons
-    $this->addButtons(array(
-        array('type' => 'refresh',
+    $this->addButtons([
+        ['type' => 'refresh',
           'name' => ts('Search'),
           'isDefault' => TRUE,
-        ),
-      ));
+        ],
+      ]);
   }
 
   /**
@@ -397,14 +397,14 @@ class CRM_Member_Form_Search extends CRM_Core_Form {
     // note that this means that GET over-rides POST :)
 
     if (!empty($_REQUEST['member_membership_type_id']) && is_array($_REQUEST['member_membership_type_id'])) {
-      $this->_formValues['member_membership_type_id'] = array();
+      $this->_formValues['member_membership_type_id'] = [];
       foreach ($_REQUEST['member_membership_type_id'] as $key => $value) {
         $this->_formValues['member_membership_type_id'][$value] = $value;
       }
     }
 
     if (!empty($_REQUEST['member_status_id']) && is_array($_REQUEST['member_status_id'])) {
-      $this->_formValues['member_status_id'] = array();
+      $this->_formValues['member_status_id'] = [];
       foreach ($_REQUEST['member_status_id'] as $key => $value) {
         $this->_formValues['member_status_id'][$value] = $value;
       }
@@ -417,7 +417,7 @@ class CRM_Member_Form_Search extends CRM_Core_Form {
     $status = CRM_Utils_Request::retrieve('status', 'String', CRM_Core_DAO::$_nullObject);
     if ($status) {
       $status = explode(',', $status);
-      $tempStatus = array();
+      $tempStatus = [];
       foreach ($status as $value) {
         $tempStatus[$value] = $value;
       }

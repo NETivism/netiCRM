@@ -74,7 +74,7 @@ class CRM_Pledge_Form_Payment extends CRM_Core_Form {
    * @return None
    */
   function setDefaultValues() {
-    $defaults = array();
+    $defaults = [];
     if ($this->_id) {
       $params['id'] = $this->_id;
 
@@ -103,32 +103,32 @@ class CRM_Pledge_Form_Payment extends CRM_Core_Form {
     $this->add('text',
       'scheduled_amount',
       ts('Scheduled Amount'),
-      array('READONLY' => TRUE,
+      ['READONLY' => TRUE,
         'style' => "background-color:#EBECE4",
-      ),
+      ],
       TRUE
     );
     $this->addRule('scheduled_amount', ts('Please enter a valid monetary amount.'), 'money');
-    $optionTypes = array('1' => ts('Adjust Pledge Payment Schedule?'),
+    $optionTypes = ['1' => ts('Adjust Pledge Payment Schedule?'),
       '2' => ts('Adjust Total Pledge Amount?'),
-    );
+    ];
     $element = $this->addRadio('option_type',
       NULL,
       $optionTypes,
-      array(), '<br/>'
+      [], '<br/>'
     );
 
-    $this->addButtons(array(
-        array('type' => 'next',
+    $this->addButtons([
+        ['type' => 'next',
           'name' => ts('Save'),
           'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
-          'js' => array('onclick' => "return verify( );"),
+          'js' => ['onclick' => "return verify( );"],
           'isDefault' => TRUE,
-        ),
-        array('type' => 'cancel',
+        ],
+        ['type' => 'cancel',
           'name' => ts('Cancel'),
-        ),
-      )
+        ],
+      ]
     );
   }
 
@@ -142,7 +142,7 @@ class CRM_Pledge_Form_Payment extends CRM_Core_Form {
   public function postProcess() {
     //get the submitted form values.
     $formValues = $this->controller->exportValues($this->_name);
-    $params = array();
+    $params = [];
     $formValues['scheduled_date'] = CRM_Utils_Date::processDate($formValues['scheduled_date']);
     $params['scheduled_date'] = CRM_Utils_Date::format($formValues['scheduled_date']);
 
@@ -182,7 +182,7 @@ class CRM_Pledge_Form_Payment extends CRM_Core_Form {
     }
     //update pledge status
     CRM_Pledge_BAO_Payment::updatePledgePaymentStatus($pledgeId,
-      array($params['id']),
+      [$params['id']],
       $params['status_id'],
       NULL,
       $formValues['scheduled_amount'],

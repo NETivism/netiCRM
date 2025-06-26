@@ -10,7 +10,7 @@ class Audit {
   }
 
   public function getActivities($printReport = FALSE) {
-    $retval = array();
+    $retval = [];
 
     /*
 		 * Loop through the activities in the file and add them to the appropriate region array.
@@ -29,16 +29,16 @@ class Audit {
       $activityindex = 0;
       $activityList = $doc->getElementsByTagName("Activity");
 
-      $caseActivities = array();
-      $activityStatusType = array();
+      $caseActivities = [];
+      $activityStatusType = [];
 
       foreach ($activityList as $activity) {
-        $retval[$activityindex] = array();
+        $retval[$activityindex] = [];
 
-        $ifBlankReplacements = array();
+        $ifBlankReplacements = [];
 
         $completed = FALSE;
-        $sortValues = array('1970-01-01');
+        $sortValues = ['1970-01-01'];
         $category = '';
         $fieldindex = 1;
         $fields = $activity->getElementsByTagName("Field");
@@ -76,7 +76,7 @@ class Audit {
             }
 
             if ($this->auditConfig->includeInRegion($label, $region)) {
-              $retval[$activityindex][$region][$fieldindex] = array();
+              $retval[$activityindex][$region][$fieldindex] = [];
               $retval[$activityindex][$region][$fieldindex]['label'] = $label;
               $retval[$activityindex][$region][$fieldindex]['datatype'] = $datatype;
               $retval[$activityindex][$region][$fieldindex]['value'] = $value;
@@ -86,14 +86,14 @@ class Audit {
 
               //CRM-4570
               if ($printReport) {
-                if (!in_array($label, array('Activity Type', 'Status'))) {
-                  $caseActivities[$activityindex][$fieldindex] = array();
+                if (!in_array($label, ['Activity Type', 'Status'])) {
+                  $caseActivities[$activityindex][$fieldindex] = [];
                   $caseActivities[$activityindex][$fieldindex]['label'] = $label;
                   $caseActivities[$activityindex][$fieldindex]['datatype'] = $datatype;
                   $caseActivities[$activityindex][$fieldindex]['value'] = $value;
                 }
                 else {
-                  $activityStatusType[$activityindex][$fieldindex] = array();
+                  $activityStatusType[$activityindex][$fieldindex] = [];
                   $activityStatusType[$activityindex][$fieldindex]['label'] = $label;
                   $activityStatusType[$activityindex][$fieldindex]['datatype'] = $datatype;
                   $activityStatusType[$activityindex][$fieldindex]['value'] = $value;
@@ -150,10 +150,10 @@ class Audit {
       }
 
       if ($printReport) {
-        uasort($caseActivities, array(&$this, "compareActivities"));
+        uasort($caseActivities, [&$this, "compareActivities"]);
       }
       else {
-        uasort($retval, array(&$this, "compareActivities"));
+        uasort($retval, [&$this, "compareActivities"]);
       }
     }
 

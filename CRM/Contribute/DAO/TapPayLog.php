@@ -133,9 +133,9 @@ class CRM_Contribute_DAO_TapPayLog extends CRM_Core_DAO
   function &links()
   {
     if (!(self::$_links)) {
-      self::$_links = array(
+      self::$_links = [
         'contribution_id' => 'civicrm_contribution:id',
-      );
+      ];
     }
     return self::$_links;
   }
@@ -162,43 +162,43 @@ class CRM_Contribute_DAO_TapPayLog extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'tappay_log_id' => array(
+      self::$_fields = [
+        'tappay_log_id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('TapPay Log ID') ,
           'required' => true,
-        ) ,
-        'contribution_id' => array(
+        ] ,
+        'contribution_id' => [
           'name' => 'contribution_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Contribuution ID') ,
           'default' => 'UL',
           'FKClassName' => 'CRM_Contribute_DAO_Contribution',
-        ) ,
-        'url' => array(
+        ] ,
+        'url' => [
           'name' => 'url',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Request URL') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'date' => array(
+        ] ,
+        'date' => [
           'name' => 'date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Date') ,
-        ) ,
-        'post_data' => array(
+        ] ,
+        'post_data' => [
           'name' => 'post_data',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Request Post Data') ,
-        ) ,
-        'return_data' => array(
+        ] ,
+        'return_data' => [
           'name' => 'return_data',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Request Return Data') ,
-        ) ,
-      );
+        ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -231,7 +231,7 @@ class CRM_Contribute_DAO_TapPayLog extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -254,7 +254,7 @@ class CRM_Contribute_DAO_TapPayLog extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {

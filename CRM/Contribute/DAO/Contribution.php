@@ -281,7 +281,7 @@ class CRM_Contribute_DAO_Contribution extends CRM_Core_DAO
   function &links()
   {
     if (!(self::$_links)) {
-      self::$_links = array(
+      self::$_links = [
         'contact_id' => 'civicrm_contact:id',
         'contribution_type_id' => 'civicrm_contribution_type:id',
         'contribution_page_id' => 'civicrm_contribution_page:id',
@@ -289,7 +289,7 @@ class CRM_Contribute_DAO_Contribution extends CRM_Core_DAO
         'contribution_recur_id' => 'civicrm_contribution_recur:id',
         'honor_contact_id' => 'civicrm_contact:id',
         'address_id' => 'civicrm_address:id',
-      );
+      ];
     }
     return self::$_links;
   }
@@ -322,8 +322,8 @@ class CRM_Contribute_DAO_Contribution extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'contribution_id' => array(
+      self::$_fields = [
+        'contribution_id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Contribution ID') ,
@@ -334,8 +334,8 @@ class CRM_Contribute_DAO_Contribution extends CRM_Core_DAO
           'dataPattern' => '',
           'export' => true,
           'usage' => 'System',
-        ) ,
-        'contribution_contact_id' => array(
+        ] ,
+        'contribution_contact_id' => [
           'name' => 'contact_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Contact ID') ,
@@ -347,8 +347,8 @@ class CRM_Contribute_DAO_Contribution extends CRM_Core_DAO
           'export' => true,
           'FKClassName' => 'CRM_Contact_DAO_Contact',
           'usage' => 'System',
-        ) ,
-        'contribution_type_id' => array(
+        ] ,
+        'contribution_type_id' => [
           'name' => 'contribution_type_id',
           'type' => CRM_Utils_Type::T_INT,
           'export' => false,
@@ -357,8 +357,8 @@ class CRM_Contribute_DAO_Contribution extends CRM_Core_DAO
           'dataPattern' => '',
           'FKClassName' => 'CRM_Contribute_DAO_ContributionType',
           'usage' => 'System',
-        ) ,
-        'contribution_page_id' => array(
+        ] ,
+        'contribution_page_id' => [
           'name' => 'contribution_page_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Contribution Page ID') ,
@@ -369,8 +369,8 @@ class CRM_Contribute_DAO_Contribution extends CRM_Core_DAO
           'export' => true,
           'FKClassName' => 'CRM_Contribute_DAO_ContributionPage',
           'usage' => 'System',
-        ) ,
-        'payment_processor_id' => array(
+        ] ,
+        'payment_processor_id' => [
           'name' => 'payment_processor_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Payment Processor') ,
@@ -380,13 +380,13 @@ class CRM_Contribute_DAO_Contribution extends CRM_Core_DAO
           'dataPattern' => '',
           'FKClassName' => 'CRM_Core_DAO_PaymentProcessor',
           'usage' => 'System',
-        ) ,
-        'payment_instrument_id' => array(
+        ] ,
+        'payment_instrument_id' => [
           'name' => 'payment_instrument_id',
           'type' => CRM_Utils_Type::T_INT,
           'usage' => 'System',
-        ) ,
-        'created_date' => array(
+        ] ,
+        'created_date' => [
           'name' => 'created_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Contribution Created Date') ,
@@ -396,8 +396,8 @@ class CRM_Contribute_DAO_Contribution extends CRM_Core_DAO
           'dataPattern' => '/^\d{4}-?\d{2}-?\d{2} ?(\d{2}:?\d{2}:?(\d{2})?)?$/',
           'export' => true,
           'usage' => 'System',
-        ) ,
-        'receive_date' => array(
+        ] ,
+        'receive_date' => [
           'name' => 'receive_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Receive Date') ,
@@ -407,8 +407,8 @@ class CRM_Contribute_DAO_Contribution extends CRM_Core_DAO
           'dataPattern' => '/^\d{4}-?\d{2}-?\d{2} ?(\d{2}:?\d{2}:?(\d{2})?)?$/',
           'export' => true,
           'usage' => 'System',
-        ) ,
-        'non_deductible_amount' => array(
+        ] ,
+        'non_deductible_amount' => [
           'name' => 'non_deductible_amount',
           'type' => CRM_Utils_Type::T_MONEY,
           'title' => ts('Non-deductible Amount') ,
@@ -418,8 +418,8 @@ class CRM_Contribute_DAO_Contribution extends CRM_Core_DAO
           'dataPattern' => '/^\d+(\.\d{2})?$/',
           'export' => true,
           'usage' => 'System',
-        ) ,
-        'total_amount' => array(
+        ] ,
+        'total_amount' => [
           'name' => 'total_amount',
           'type' => CRM_Utils_Type::T_MONEY,
           'title' => ts('Total Amount') ,
@@ -430,8 +430,8 @@ class CRM_Contribute_DAO_Contribution extends CRM_Core_DAO
           'dataPattern' => '/^\d+(\.\d{2})?$/',
           'export' => true,
           'usage' => 'System',
-        ) ,
-        'fee_amount' => array(
+        ] ,
+        'fee_amount' => [
           'name' => 'fee_amount',
           'type' => CRM_Utils_Type::T_MONEY,
           'title' => ts('Transaction Fee Amount') ,
@@ -441,8 +441,8 @@ class CRM_Contribute_DAO_Contribution extends CRM_Core_DAO
           'dataPattern' => '/^\d+(\.\d{2})?$/',
           'export' => true,
           'usage' => 'System',
-        ) ,
-        'net_amount' => array(
+        ] ,
+        'net_amount' => [
           'name' => 'net_amount',
           'type' => CRM_Utils_Type::T_MONEY,
           'title' => ts('Net Amount') ,
@@ -452,8 +452,8 @@ class CRM_Contribute_DAO_Contribution extends CRM_Core_DAO
           'dataPattern' => '/^\d+(\.\d{2})?$/',
           'export' => true,
           'usage' => 'System',
-        ) ,
-        'trxn_id' => array(
+        ] ,
+        'trxn_id' => [
           'name' => 'trxn_id',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Transaction ID') ,
@@ -465,8 +465,8 @@ class CRM_Contribute_DAO_Contribution extends CRM_Core_DAO
           'dataPattern' => '',
           'export' => true,
           'usage' => 'System',
-        ) ,
-        'invoice_id' => array(
+        ] ,
+        'invoice_id' => [
           'name' => 'invoice_id',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Invoice ID') ,
@@ -478,8 +478,8 @@ class CRM_Contribute_DAO_Contribution extends CRM_Core_DAO
           'dataPattern' => '',
           'export' => true,
           'usage' => 'System',
-        ) ,
-        'currency' => array(
+        ] ,
+        'currency' => [
           'name' => 'currency',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Currency') ,
@@ -492,8 +492,8 @@ class CRM_Contribute_DAO_Contribution extends CRM_Core_DAO
           'export' => true,
           'default' => 'UL',
           'usage' => 'System',
-        ) ,
-        'cancel_date' => array(
+        ] ,
+        'cancel_date' => [
           'name' => 'cancel_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Cancel Date') ,
@@ -503,8 +503,8 @@ class CRM_Contribute_DAO_Contribution extends CRM_Core_DAO
           'dataPattern' => '/^\d{4}-?\d{2}-?\d{2} ?(\d{2}:?\d{2}:?(\d{2})?)?$/',
           'export' => true,
           'usage' => 'System',
-        ) ,
-        'cancel_reason' => array(
+        ] ,
+        'cancel_reason' => [
           'name' => 'cancel_reason',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Cancel Reason') ,
@@ -514,8 +514,8 @@ class CRM_Contribute_DAO_Contribution extends CRM_Core_DAO
           'dataPattern' => '',
           'export' => true,
           'usage' => 'System',
-        ) ,
-        'receipt_date' => array(
+        ] ,
+        'receipt_date' => [
           'name' => 'receipt_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Receipt Date') ,
@@ -525,8 +525,8 @@ class CRM_Contribute_DAO_Contribution extends CRM_Core_DAO
           'dataPattern' => '/^\d{4}-?\d{2}-?\d{2} ?(\d{2}:?\d{2}:?(\d{2})?)?$/',
           'export' => true,
           'usage' => 'System',
-        ) ,
-        'thankyou_date' => array(
+        ] ,
+        'thankyou_date' => [
           'name' => 'thankyou_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Thank-you Date') ,
@@ -536,8 +536,8 @@ class CRM_Contribute_DAO_Contribution extends CRM_Core_DAO
           'dataPattern' => '/^\d{4}-?\d{2}-?\d{2} ?(\d{2}:?\d{2}:?(\d{2})?)?$/',
           'export' => true,
           'usage' => 'System',
-        ) ,
-        'contribution_source' => array(
+        ] ,
+        'contribution_source' => [
           'name' => 'source',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Contribution Source') ,
@@ -548,8 +548,8 @@ class CRM_Contribute_DAO_Contribution extends CRM_Core_DAO
           'headerPattern' => '/source/i',
           'dataPattern' => '',
           'export' => true,
-        ) ,
-        'amount_level' => array(
+        ] ,
+        'amount_level' => [
           'name' => 'amount_level',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Amount Label') ,
@@ -559,19 +559,19 @@ class CRM_Contribute_DAO_Contribution extends CRM_Core_DAO
           'dataPattern' => '',
           'export' => true,
           'usage' => 'System',
-        ) ,
-        'contribution_recur_id' => array(
+        ] ,
+        'contribution_recur_id' => [
           'name' => 'contribution_recur_id',
           'type' => CRM_Utils_Type::T_INT,
           'FKClassName' => 'CRM_Contribute_DAO_ContributionRecur',
-        ) ,
-        'honor_contact_id' => array(
+        ] ,
+        'honor_contact_id' => [
           'name' => 'honor_contact_id',
           'type' => CRM_Utils_Type::T_INT,
           'FKClassName' => 'CRM_Contact_DAO_Contact',
           'usage' => 'System',
-        ) ,
-        'is_test' => array(
+        ] ,
+        'is_test' => [
           'name' => 'is_test',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Test') ,
@@ -581,8 +581,8 @@ class CRM_Contribute_DAO_Contribution extends CRM_Core_DAO
           'dataPattern' => '',
           'export' => true,
           'usage' => 'System',
-        ) ,
-        'is_pay_later' => array(
+        ] ,
+        'is_pay_later' => [
           'name' => 'is_pay_later',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Is Pay Later') ,
@@ -592,8 +592,8 @@ class CRM_Contribute_DAO_Contribution extends CRM_Core_DAO
           'dataPattern' => '',
           'export' => true,
           'usage' => 'System',
-        ) ,
-        'contribution_status_id' => array(
+        ] ,
+        'contribution_status_id' => [
           'name' => 'contribution_status_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Contribution Status Id') ,
@@ -604,20 +604,20 @@ class CRM_Contribute_DAO_Contribution extends CRM_Core_DAO
           'export' => false,
           'default' => '',
           'usage' => 'System',
-        ) ,
-        'honor_type_id' => array(
+        ] ,
+        'honor_type_id' => [
           'name' => 'honor_type_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Honor Type') ,
           'usage' => 'System',
-        ) ,
-        'address_id' => array(
+        ] ,
+        'address_id' => [
           'name' => 'address_id',
           'type' => CRM_Utils_Type::T_INT,
           'FKClassName' => 'CRM_Core_DAO_Address',
           'usage' => 'System',
-        ) ,
-        'check_number' => array(
+        ] ,
+        'check_number' => [
           'name' => 'check_number',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Check Number') ,
@@ -629,8 +629,8 @@ class CRM_Contribute_DAO_Contribution extends CRM_Core_DAO
           'dataPattern' => '',
           'export' => true,
           'usage' => 'System',
-        ) ,
-        'receipt_id' => array(
+        ] ,
+        'receipt_id' => [
           'name' => 'receipt_id',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Receipt ID') ,
@@ -642,8 +642,8 @@ class CRM_Contribute_DAO_Contribution extends CRM_Core_DAO
           'dataPattern' => '',
           'export' => true,
           'usage' => 'System',
-        ) ,
-        'expire_date' => array(
+        ] ,
+        'expire_date' => [
           'name' => 'expire_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Expire Date') ,
@@ -653,8 +653,8 @@ class CRM_Contribute_DAO_Contribution extends CRM_Core_DAO
           'dataPattern' => '/^\d{4}-?\d{2}-?\d{2} ?(\d{2}:?\d{2}:?(\d{2})?)?$/',
           'export' => true,
           'usage' => 'System',
-        ) ,
-      );
+        ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -687,7 +687,7 @@ class CRM_Contribute_DAO_Contribution extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -710,7 +710,7 @@ class CRM_Contribute_DAO_Contribution extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {

@@ -100,7 +100,7 @@ class CRM_Core_StateMachine {
     $this->_controller = &$controller;
     $this->_action = $action;
 
-    $this->_states = array();
+    $this->_states = [];
   }
 
   /**
@@ -258,7 +258,7 @@ class CRM_Core_StateMachine {
     $this->_pages = &$pages;
     $numPages = count($pages);
 
-    $this->_pageNames = array();
+    $this->_pageNames = [];
     foreach ($pages as $tempName => $value) {
       if (CRM_Utils_Array::value('className', $value)) {
         $this->_pageNames[] = $tempName;

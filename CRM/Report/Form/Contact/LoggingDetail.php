@@ -61,11 +61,11 @@ class CRM_Report_Form_Contact_LoggingDetail extends CRM_Report_Form {
       $this->log_date = $dao->log_date;
     }
 
-    $this->_columnHeaders = array(
-      'field' => array('title' => ts('Field')),
-      'from' => array('title' => ts('Changed From')),
-      'to' => array('title' => ts('Changed To')),
-    );
+    $this->_columnHeaders = [
+      'field' => ['title' => ts('Field')],
+      'from' => ['title' => ts('Changed From')],
+      'to' => ['title' => ts('Changed To')],
+    ];
 
     parent::__construct();
   }
@@ -76,10 +76,10 @@ class CRM_Report_Form_Contact_LoggingDetail extends CRM_Report_Form {
       return;
     }
 
-    $params = array(
-      1 => array($this->log_conn_id, 'Integer'),
-      2 => array($this->log_date, 'String'),
-    );
+    $params = [
+      1 => [$this->log_conn_id, 'Integer'],
+      2 => [$this->log_date, 'String'],
+    ];
 
     // let the template know who updated whom when
     $sql = "
@@ -106,7 +106,7 @@ class CRM_Report_Form_Contact_LoggingDetail extends CRM_Report_Form {
     $changed = $this->sqlToArray($changedSQL, $params);
 
     // we look for the previous state (different log_conn_id) of the found id
-    $params[3] = array($changed['id'], 'Integer');
+    $params[3] = [$changed['id'], 'Integer'];
     $originalSQL = "SELECT * FROM {$this->loggingDB}.log_civicrm_contact WHERE log_conn_id != %1 AND log_date < %2 AND id = %3 ORDER BY log_date DESC LIMIT 1";
     $original = $this->sqlToArray($originalSQL, $params);
 
@@ -119,11 +119,11 @@ class CRM_Report_Form_Contact_LoggingDetail extends CRM_Report_Form {
       if (substr($diff, 0, 4) == 'log_') {
         continue;
       }
-      $rows[] = array(
+      $rows[] = [
         'field' => isset($fields[$diff]['title']) ? $fields[$diff]['title'] : $diff,
         'from' => $original[$diff],
         'to' => $changed[$diff],
-      );
+      ];
     }
   }
 

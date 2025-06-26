@@ -181,9 +181,9 @@ class CRM_Grant_DAO_Grant extends CRM_Core_DAO
   function &links()
   {
     if (!(self::$_links)) {
-      self::$_links = array(
+      self::$_links = [
         'contact_id' => 'civicrm_contact:id',
-      );
+      ];
     }
     return self::$_links;
   }
@@ -210,8 +210,8 @@ class CRM_Grant_DAO_Grant extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'grant_id' => array(
+      self::$_fields = [
+        'grant_id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Grant ID') ,
@@ -221,8 +221,8 @@ class CRM_Grant_DAO_Grant extends CRM_Core_DAO
           'headerPattern' => '',
           'dataPattern' => '',
           'export' => true,
-        ) ,
-        'grant_contact_id' => array(
+        ] ,
+        'grant_contact_id' => [
           'name' => 'contact_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Contact ID') ,
@@ -232,8 +232,8 @@ class CRM_Grant_DAO_Grant extends CRM_Core_DAO
           'headerPattern' => '',
           'dataPattern' => '',
           'FKClassName' => 'CRM_Contact_DAO_Contact',
-        ) ,
-        'application_received_date' => array(
+        ] ,
+        'application_received_date' => [
           'name' => 'application_received_date',
           'type' => CRM_Utils_Type::T_DATE,
           'title' => ts('Application received date') ,
@@ -241,8 +241,8 @@ class CRM_Grant_DAO_Grant extends CRM_Core_DAO
           'where' => 'civicrm_grant.application_received_date',
           'headerPattern' => '',
           'dataPattern' => '',
-        ) ,
-        'decision_date' => array(
+        ] ,
+        'decision_date' => [
           'name' => 'decision_date',
           'type' => CRM_Utils_Type::T_DATE,
           'title' => ts('Decision date') ,
@@ -251,8 +251,8 @@ class CRM_Grant_DAO_Grant extends CRM_Core_DAO
           'headerPattern' => '',
           'dataPattern' => '',
           'export' => true,
-        ) ,
-        'money_transfer_date' => array(
+        ] ,
+        'money_transfer_date' => [
           'name' => 'money_transfer_date',
           'type' => CRM_Utils_Type::T_DATE,
           'title' => ts('Grant Money transfer date') ,
@@ -261,13 +261,13 @@ class CRM_Grant_DAO_Grant extends CRM_Core_DAO
           'headerPattern' => '',
           'dataPattern' => '',
           'export' => true,
-        ) ,
-        'grant_due_date' => array(
+        ] ,
+        'grant_due_date' => [
           'name' => 'grant_due_date',
           'type' => CRM_Utils_Type::T_DATE,
           'title' => ts('Grant Due Date') ,
-        ) ,
-        'grant_report_received' => array(
+        ] ,
+        'grant_report_received' => [
           'name' => 'grant_report_received',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Grant report received') ,
@@ -276,8 +276,8 @@ class CRM_Grant_DAO_Grant extends CRM_Core_DAO
           'headerPattern' => '',
           'dataPattern' => '',
           'export' => true,
-        ) ,
-        'grant_type_id' => array(
+        ] ,
+        'grant_type_id' => [
           'name' => 'grant_type_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Grant Type Id') ,
@@ -286,8 +286,8 @@ class CRM_Grant_DAO_Grant extends CRM_Core_DAO
           'where' => 'civicrm_grant.grant_type_id',
           'headerPattern' => '',
           'dataPattern' => '',
-        ) ,
-        'amount_total' => array(
+        ] ,
+        'amount_total' => [
           'name' => 'amount_total',
           'type' => CRM_Utils_Type::T_MONEY,
           'title' => ts('Total Amount') ,
@@ -297,13 +297,13 @@ class CRM_Grant_DAO_Grant extends CRM_Core_DAO
           'headerPattern' => '',
           'dataPattern' => '/^\d+(\.\d{2})?$/',
           'export' => true,
-        ) ,
-        'amount_requested' => array(
+        ] ,
+        'amount_requested' => [
           'name' => 'amount_requested',
           'type' => CRM_Utils_Type::T_MONEY,
           'title' => ts('Amount Requested') ,
-        ) ,
-        'amount_granted' => array(
+        ] ,
+        'amount_granted' => [
           'name' => 'amount_granted',
           'type' => CRM_Utils_Type::T_MONEY,
           'title' => ts('Amount granted') ,
@@ -312,16 +312,16 @@ class CRM_Grant_DAO_Grant extends CRM_Core_DAO
           'headerPattern' => '',
           'dataPattern' => '/^\d+(\.\d{2})?$/',
           'export' => true,
-        ) ,
-        'currency' => array(
+        ] ,
+        'currency' => [
           'name' => 'currency',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Currency') ,
           'maxlength' => 8,
           'size' => CRM_Utils_Type::EIGHT,
           'default' => 'UL',
-        ) ,
-        'rationale' => array(
+        ] ,
+        'rationale' => [
           'name' => 'rationale',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Rationale') ,
@@ -332,8 +332,8 @@ class CRM_Grant_DAO_Grant extends CRM_Core_DAO
           'headerPattern' => '',
           'dataPattern' => '',
           'export' => true,
-        ) ,
-        'grant_status_id' => array(
+        ] ,
+        'grant_status_id' => [
           'name' => 'status_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Grant Status Id') ,
@@ -343,8 +343,8 @@ class CRM_Grant_DAO_Grant extends CRM_Core_DAO
           'headerPattern' => '',
           'dataPattern' => '',
           'export' => false,
-        ) ,
-      );
+        ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -377,7 +377,7 @@ class CRM_Grant_DAO_Grant extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -400,7 +400,7 @@ class CRM_Grant_DAO_Grant extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {

@@ -117,7 +117,7 @@ class CRM_Custom_Form_CustomData {
   }
 
   static function setDefaultValues(&$form) {
-    $defaults = array();
+    $defaults = [];
     CRM_Core_BAO_CustomGroup::setDefaults($form->_groupTree, $defaults, FALSE, FALSE, $form->get('action'));
     return $defaults;
   }

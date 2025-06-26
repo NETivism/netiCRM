@@ -56,7 +56,7 @@ class CRM_Contact_Form_Edit_Individual {
     //prefix
     $prefix = CRM_Core_PseudoConstant::individualPrefix();
     if (!empty($prefix)) {
-      $form->addElement('select', 'prefix_id', ts('Prefix'), array('' => '') + $prefix);
+      $form->addElement('select', 'prefix_id', ts('Prefix'), ['' => ''] + $prefix);
     }
 
     $attributes = CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Contact');
@@ -73,7 +73,7 @@ class CRM_Contact_Form_Edit_Individual {
     // suffix
     $suffix = CRM_Core_PseudoConstant::individualSuffix();
     if ($suffix) {
-      $form->addElement('select', 'suffix_id', ts('Suffix'), array('' => '') + $suffix);
+      $form->addElement('select', 'suffix_id', ts('Suffix'), ['' => ''] + $suffix);
     }
 
     // nick_name
@@ -91,7 +91,7 @@ class CRM_Contact_Form_Edit_Individual {
     $form->assign('employerDataURL', $employerDataURL);
 
     $form->addElement('text', 'current_employer', ts('Current Employer'), '');
-    $form->addElement('hidden', 'current_employer_id', '', array('id' => 'current_employer_id'));
+    $form->addElement('hidden', 'current_employer_id', '', ['id' => 'current_employer_id']);
     $form->addElement('text', 'contact_source', ts('Source'));
 
     $checkSimilar = defined('CIVICRM_CONTACT_AJAX_CHECK_SIMILAR') ? CIVICRM_CONTACT_AJAX_CHECK_SIMILAR : TRUE;
@@ -106,7 +106,7 @@ class CRM_Contact_Form_Edit_Individual {
     $form->addRule('external_identifier',
       ts('External ID already exists in Database.'),
       'objectExists',
-      array('CRM_Contact_DAO_Contact', $form->_contactId, 'external_identifier')
+      ['CRM_Contact_DAO_Contact', $form->_contactId, 'external_identifier']
     );
     $config = CRM_Core_Config::singleton();
     CRM_Core_ShowHideBlocks::links($form, 'demographics', '', '');
@@ -124,7 +124,7 @@ class CRM_Contact_Form_Edit_Individual {
    * @static
    */
   static function formRule($fields, $files, $contactID = NULL) {
-    $errors = array();
+    $errors = [];
     $primaryID = CRM_Contact_Form_Contact::formRule($fields, $errors, $contactID);
 
     // make sure that firstName and lastName or a primary OpenID is set

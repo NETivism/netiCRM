@@ -133,11 +133,11 @@ class CRM_Coupon_DAO_CouponTrack extends CRM_Core_DAO
   function &links()
   {
     if (!(self::$_links)) {
-      self::$_links = array(
+      self::$_links = [
         'coupon_id' => 'civicrm_coupon:id',
         'contact_id' => 'civicrm_contact:id',
         'contribution_id' => 'civicrm_contribution:id',
-      );
+      ];
     }
     return self::$_links;
   }
@@ -166,40 +166,40 @@ class CRM_Coupon_DAO_CouponTrack extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'id' => array(
+      self::$_fields = [
+        'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'coupon_id' => array(
+        ] ,
+        'coupon_id' => [
           'name' => 'coupon_id',
           'type' => CRM_Utils_Type::T_INT,
           'FKClassName' => 'CRM_Coupon_DAO_Coupon',
-        ) ,
-        'contact_id' => array(
+        ] ,
+        'contact_id' => [
           'name' => 'contact_id',
           'type' => CRM_Utils_Type::T_INT,
           'default' => 'UL',
           'FKClassName' => 'CRM_Contact_DAO_Contact',
-        ) ,
-        'contribution_id' => array(
+        ] ,
+        'contribution_id' => [
           'name' => 'contribution_id',
           'type' => CRM_Utils_Type::T_INT,
           'default' => 'UL',
           'FKClassName' => 'CRM_Contribute_DAO_Contribution',
-        ) ,
-        'used_date' => array(
+        ] ,
+        'used_date' => [
           'name' => 'used_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Used Date') ,
-        ) ,
-        'discount_amount' => array(
+        ] ,
+        'discount_amount' => [
           'name' => 'discount_amount',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Discount Amount') ,
-        ) ,
-      );
+        ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -232,7 +232,7 @@ class CRM_Coupon_DAO_CouponTrack extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -255,7 +255,7 @@ class CRM_Coupon_DAO_CouponTrack extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {

@@ -484,7 +484,7 @@ class CRM_Core_Payment_eWAY extends CRM_Core_Payment {
   //function checkConfig( $mode )          // CiviCRM V1.9 Declaration
   // CiviCRM V2.0 Declaration
   function checkConfig() {
-    $errorMsg = array();
+    $errorMsg = [];
 
     if (empty($this->_paymentProcessor['user_name'])) {
       $errorMsg[] = ts('eWAY CustomerID is not set for this payment processor');
@@ -543,7 +543,7 @@ The CiviCRM eWAY Payment Processor Module
     //$cc       = 'Name@Domain';
 
     // create the params array
-    $params = array();
+    $params = [];
 
     $params['groupName'] = 'eWay Email Sender';
     $params['from'] = $from;

@@ -69,7 +69,7 @@ class CRM_Core_Payment_NCCC extends CRM_Core_Payment {
   function checkConfig() {
     $config = CRM_Core_Config::singleton();
 
-    $error = array();
+    $error = [];
 
     if (empty($this->_paymentProcessor['user_name'])) {
       $error[] = ts('User Name is not set in the Administer CiviCRM &raquo; Payment Processor.');

@@ -59,7 +59,7 @@ class CRM_Grant_Form_GrantView extends CRM_Core_Form {
     $context = CRM_Utils_Request::retrieve('context', 'String', $this);
     $this->assign('context', $context);
 
-    $values = array();
+    $values = [];
     $params['id'] = $this->_id;
 
     CRM_Grant_BAO_Grant::retrieve($params, $values);
@@ -68,10 +68,10 @@ class CRM_Grant_Form_GrantView extends CRM_Core_Form {
     $grantStatus = CRM_Grant_PseudoConstant::grantStatus();
     $this->assign('grantType', $grantType[$values['grant_type_id']]);
     $this->assign('grantStatus', $grantStatus[$values['status_id']]);
-    $grantTokens = array('amount_total', 'amount_requested', 'amount_granted',
+    $grantTokens = ['amount_total', 'amount_requested', 'amount_granted',
       'rationale', 'grant_report_received', 'application_received_date',
       'decision_date', 'money_transfer_date', 'grant_due_date',
-    );
+    ];
 
     foreach ($grantTokens as $token) {
       $this->assign($token, CRM_Utils_Array::value($token, $values));
@@ -102,7 +102,7 @@ class CRM_Grant_Form_GrantView extends CRM_Core_Form {
 
     $title = CRM_Contact_BAO_Contact::displayName($values['contact_id']) . ' - ' . ts('Grant') . ': ' . CRM_Utils_Money::format($values['amount_total']) . ' (' . $grantType[$values['grant_type_id']] . ')';
 
-    $recentOther = array();
+    $recentOther = [];
     if (CRM_Core_Permission::checkActionPermission('CiviGrant', CRM_Core_Action::UPDATE)) {
       $recentOther['editUrl'] = CRM_Utils_System::url('civicrm/contact/view/grant',
         "action=update&reset=1&id={$values['id']}&cid={$values['contact_id']}&context=home"
@@ -141,13 +141,13 @@ class CRM_Grant_Form_GrantView extends CRM_Core_Form {
    * @access public
    */
   public function buildQuickForm() {
-    $this->addButtons(array(
-        array('type' => 'cancel',
+    $this->addButtons([
+        ['type' => 'cancel',
           'name' => ts('Done'),
           'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
           'isDefault' => TRUE,
-        ),
-      )
+        ],
+      ]
     );
   }
 }

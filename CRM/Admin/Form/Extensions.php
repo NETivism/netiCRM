@@ -78,7 +78,7 @@ class CRM_Admin_Form_Extensions extends CRM_Admin_Form {
    * @return None
    */
   function setDefaultValues() {
-    $defaults = array();
+    $defaults = [];
     return $defaults;
   }
 
@@ -90,27 +90,27 @@ class CRM_Admin_Form_Extensions extends CRM_Admin_Form {
    */
   public function buildQuickForm() {
     if ($this->_action & CRM_Core_Action::DELETE) {
-      $this->addButtons(array(
-          array('type' => 'next',
+      $this->addButtons([
+          ['type' => 'next',
             'name' => ts('Uninstall'),
             'isDefault' => TRUE,
-          ),
-          array('type' => 'cancel',
+          ],
+          ['type' => 'cancel',
             'name' => ts('Cancel'),
-          ),
-        )
+          ],
+        ]
       );
     }
     else {
-      $this->addButtons(array(
-          array('type' => 'next',
+      $this->addButtons([
+          ['type' => 'next',
             'name' => ts('Install'),
             'isDefault' => TRUE,
-          ),
-          array('type' => 'cancel',
+          ],
+          ['type' => 'cancel',
             'name' => ts('Cancel'),
-          ),
-        )
+          ],
+        ]
       );
     }
   }
@@ -127,7 +127,7 @@ class CRM_Admin_Form_Extensions extends CRM_Admin_Form {
    * @static
    */
   static function formRule($fields, $files, $self) {
-    $errors = array();
+    $errors = [];
 
     return empty($errors) ? TRUE : $errors;
   }

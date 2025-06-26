@@ -47,100 +47,100 @@ class CRM_Report_Form_Membership_Summary extends CRM_Report_Form {
   public $_interval;
   protected $_summary = NULL;
 
-  protected $_charts = array('' => 'Tabular',
+  protected $_charts = ['' => 'Tabular',
     'barChart' => 'Bar Chart',
     'pieChart' => 'Pie Chart',
-  ); function __construct() {
+  ]; function __construct() {
     // UI for selecting columns to appear in the report list
     // array conatining the columns, group_bys and filters build and provided to Form
-    $this->_columns = array('civicrm_contact' =>
-      array('dao' => 'CRM_Contact_DAO_Contact',
+    $this->_columns = ['civicrm_contact' =>
+      ['dao' => 'CRM_Contact_DAO_Contact',
         'fields' =>
-        array('display_name' =>
-          array('title' => ts('Member Name'),
+        ['display_name' =>
+          ['title' => ts('Member Name'),
             'no_repeat' => TRUE,
             'required' => TRUE,
-          ),
+          ],
           'id' =>
-          array('no_display' => TRUE,
+          ['no_display' => TRUE,
             'required' => TRUE,
-          ),
-        ),
+          ],
+        ],
         'group_bys' =>
-        array('id' =>
-          array('title' => ts('Contact ID')),
+        ['id' =>
+          ['title' => ts('Contact ID')],
           'display_name' =>
-          array('title' => ts('Contact Name'),
-          ),
-        ),
+          ['title' => ts('Contact Name'),
+          ],
+        ],
         'grouping' => 'contact-fields',
-      ),
+      ],
       'civicrm_membership_type' =>
-      array('dao' => 'CRM_Member_DAO_MembershipType',
+      ['dao' => 'CRM_Member_DAO_MembershipType',
         'grouping' => 'member-fields',
         'filters' =>
-        array('gid' =>
-          array('name' => 'id',
+        ['gid' =>
+          ['name' => 'id',
             'title' => ts('Membership Types'),
             'type' => CRM_Utils_Type::T_INT + CRM_Utils_Type::T_ENUM,
             'options' => CRM_Member_PseudoConstant::membershipType(),
-          ),
-        ),
-      ),
+          ],
+        ],
+      ],
       'civicrm_membership' =>
-      array('dao' => 'CRM_Member_DAO_Membership',
+      ['dao' => 'CRM_Member_DAO_Membership',
         'grouping' => 'member-fields',
         'fields' =>
-        array('membership_type_id' =>
-          array('title' => 'Membership Type',
+        ['membership_type_id' =>
+          ['title' => 'Membership Type',
             'required' => TRUE,
-          ),
+          ],
           'join_date' => NULL,
-          'start_date' => array('title' => ts('Current Cycle Start Date'),
-          ),
-          'end_date' => array('title' => ts('Current Cycle End Date'),
-          ),
-        ),
+          'start_date' => ['title' => ts('Current Cycle Start Date'),
+          ],
+          'end_date' => ['title' => ts('Current Cycle End Date'),
+          ],
+        ],
         'group_bys' =>
-        array('membership_type_id' =>
-          array('title' => ts('Membership Type')),
-        ),
+        ['membership_type_id' =>
+          ['title' => ts('Membership Type')],
+        ],
         'filters' =>
-        array('join_date' =>
-          array('type' => CRM_Utils_Type::T_DATE),
-        ),
-      ),
+        ['join_date' =>
+          ['type' => CRM_Utils_Type::T_DATE],
+        ],
+      ],
       'civicrm_address' =>
-      array('dao' => 'CRM_Core_DAO_Address',
+      ['dao' => 'CRM_Core_DAO_Address',
         'fields' =>
-        array('street_address' => NULL,
+        ['street_address' => NULL,
           'city' => NULL,
           'postal_code' => NULL,
           'state_province_id' =>
-          array('title' => ts('State/Province'),
-          ),
+          ['title' => ts('State/Province'),
+          ],
           'country_id' =>
-          array('title' => ts('Country'),
+          ['title' => ts('Country'),
             'default' => TRUE,
-          ),
-        ),
+          ],
+        ],
         'grouping' => 'contact-fields',
-      ),
+      ],
       'civicrm_email' =>
-      array('dao' => 'CRM_Core_DAO_Email',
+      ['dao' => 'CRM_Core_DAO_Email',
         'fields' =>
-        array('email' => NULL),
+        ['email' => NULL],
         'grouping' => 'contact-fields',
-      ),
+      ],
       'civicrm_contribution' =>
-      array('dao' => 'CRM_Contribute_DAO_Contribution',
+      ['dao' => 'CRM_Contribute_DAO_Contribution',
         'filters' =>
-        array('total_amount' =>
-          array('title' => ts('Contribution Amount'),
-          ),
-        ),
-      ),
-    );
+        ['total_amount' =>
+          ['title' => ts('Contribution Amount'),
+          ],
+        ],
+      ],
+    ];
     parent::__construct();
   }
 
@@ -154,8 +154,8 @@ class CRM_Report_Form_Membership_Summary extends CRM_Report_Form {
   }
 
   function select() {
-    $select = array();
-    $this->_columnHeaders = array();
+    $select = [];
+    $this->_columnHeaders = [];
     foreach ($this->_columns as $tableName => $table) {
       if (CRM_Utils_Array::arrayKeyExists('fields', $table)) {
         foreach ($table['fields'] as $fieldName => $field) {
@@ -181,7 +181,7 @@ class CRM_Report_Form_Membership_Summary extends CRM_Report_Form {
   }
 
   static function formRule($fields, $files, $self) {
-    $errors = $grouping = array();
+    $errors = $grouping = [];
     //check for searching combination of dispaly columns and
     //grouping criteria
 
@@ -212,7 +212,7 @@ LEFT  JOIN civicrm_contribution  {$this->_aliases['civicrm_contribution']}
   }
 
   function where() {
-    $clauses = array();
+    $clauses = [];
     foreach ($this->_columns as $tableName => $table) {
       if (CRM_Utils_Array::arrayKeyExists('filters', $table)) {
         foreach ($table['filters'] as $fieldName => $field) {
@@ -254,10 +254,10 @@ LEFT  JOIN civicrm_contribution  {$this->_aliases['civicrm_contribution']}
   }
 
   function statistics(&$rows) {
-    $statistics = array();
-    $statistics[] = array('title' => ts('Row(s) Listed'),
+    $statistics = [];
+    $statistics[] = ['title' => ts('Row(s) Listed'),
       'value' => count($rows),
-    );
+    ];
     return $statistics;
   }
 
@@ -310,10 +310,10 @@ LEFT  JOIN civicrm_contribution  {$this->_aliases['civicrm_contribution']}
     $sql = "{$this->_select} {$this->_from} {$this->_where} {$this->_groupBy}";
 
     $dao = CRM_Core_DAO::executeQuery($sql);
-    $rows = $graphRows = array();
+    $rows = $graphRows = [];
     $count = 0;
     while ($dao->fetch()) {
-      $row = array();
+      $row = [];
       foreach ($this->_columnHeaders as $key => $value) {
         $row[$key] = $dao->$key;
       }
@@ -336,7 +336,7 @@ LEFT  JOIN civicrm_contribution  {$this->_aliases['civicrm_contribution']}
     $this->assign('statistics', $this->statistics($rows));
 
     if (CRM_Utils_Array::value('charts', $this->_params)) {
-      foreach (array('receive_date', $this->_interval, 'value') as $ignore) {
+      foreach (['receive_date', $this->_interval, 'value'] as $ignore) {
         unset($graphRows[$ignore][$count - 1]);
       }
 
@@ -348,7 +348,7 @@ LEFT  JOIN civicrm_contribution  {$this->_aliases['civicrm_contribution']}
   function alterDisplay(&$rows) {
     // custom code to alter rows
     $entryFound = FALSE;
-    $checkList = array();
+    $checkList = [];
 
     foreach ($rows as $rowNum => $row) {
 

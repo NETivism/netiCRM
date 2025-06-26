@@ -16,11 +16,11 @@ class CRM_Contribute_StateMachine_TaiwanACHImport extends CRM_Core_StateMachine 
     $session = CRM_Core_Session::singleton();
     $session->set('singleForm', FALSE);
 
-    $this->_pages = array(
+    $this->_pages = [
       'CRM_Contribute_Form_TaiwanACH_Upload' => NULL,
       'CRM_Contribute_Form_TaiwanACH_Preview' => NULL,
       'CRM_Contribute_Form_TaiwanACH_Summary' => NULL,
-    );
+    ];
 
     $this->addSequentialPages($this->_pages);
   }

@@ -69,7 +69,7 @@ class CRM_Profile_Form_Search extends CRM_Profile_Form {
    * @return array the default array reference
    */
   function &setDefaultValues() {
-    $defaults = array();
+    $defaults = [];
     // note we intentionally overwrite value since we use it as defaults
     // and its all pass by value
     // we need to figure out the type, so we can either set an array element
@@ -78,7 +78,7 @@ class CRM_Profile_Form_Search extends CRM_Profile_Form {
       if (substr($key, 0, 7) == 'custom_' || $key == "preferred_communication_method") {
         if (strpos($value, CRM_Core_BAO_CustomOption::VALUE_SEPERATOR) !== FALSE) {
           $v = explode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, $value);
-          $value = array();
+          $value = [];
           foreach ($v as $item) {
             if ($item) {
               $value[$item] = $item;
@@ -88,12 +88,12 @@ class CRM_Profile_Form_Search extends CRM_Profile_Form {
       }
       elseif ($key == 'group' || $key == 'tag') {
         $v = explode(',', $value);
-        $value = array();
+        $value = [];
         foreach ($v as $item) {
           $value[$item] = 1;
         }
       }
-      elseif (in_array($key, array('birth_date', 'deceased_date'))) {
+      elseif (in_array($key, ['birth_date', 'deceased_date'])) {
         list($value) = CRM_Utils_Date::setDateDefaults($value);
       }
 
@@ -120,12 +120,12 @@ class CRM_Profile_Form_Search extends CRM_Profile_Form {
       CRM_Contact_Form_Task_ProximityCommon::buildQuickForm($this, $proxSearch);
     }
 
-    $this->addButtons(array(
-        array('type' => 'refresh',
+    $this->addButtons([
+        ['type' => 'refresh',
           'name' => ts('Search'),
           'isDefault' => TRUE,
-        ),
-      ));
+        ],
+      ]);
 
     parent::buildQuickForm();
   }

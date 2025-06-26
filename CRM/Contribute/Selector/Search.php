@@ -70,7 +70,7 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
    * @var array
    * @static
    */
-  static $_properties = array(
+  static $_properties = [
     'contact_id',
     'contribution_id',
     'contact_type',
@@ -99,7 +99,7 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
     'receipt_id',
     'membership_id',
     'currency',
-  );
+  ];
 
   /**
    * are we restricting ourselves to a single contact
@@ -236,34 +236,34 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
     }
 
     if (!(self::$_links)) {
-      self::$_links = array(
-        CRM_Core_Action::VIEW => array(
+      self::$_links = [
+        CRM_Core_Action::VIEW => [
           'name' => ts('View'),
           'url' => 'civicrm/contact/view/contribution',
           'qs' => "reset=1&id=%%id%%&cid=%%cid%%&action=view&context=%%cxt%%&selectedChild=contribute{$extraParams}",
           'title' => ts('View Contribution'),
-        ),
-        CRM_Core_Action::UPDATE => array(
+        ],
+        CRM_Core_Action::UPDATE => [
           'name' => ts('Edit'),
           'url' => 'civicrm/contact/view/contribution',
           'qs' => "reset=1&action=update&id=%%id%%&cid=%%cid%%&context=%%cxt%%{$extraParams}",
           'title' => ts('Edit Contribution'),
-        ),
-        CRM_Core_Action::PREVIEW => array(
+        ],
+        CRM_Core_Action::PREVIEW => [
           'name' => ts('Receipt'),
           'url' => 'civicrm/contact/view/contribution/receipt',
           'qs' => "reset=1&action=update&id=%%id%%&cid=%%cid%%&context=%%cxt%%",
           'title' => ts('Receipt'),
           'fe' => 1,
-        ),
-        CRM_Core_Action::FOLLOWUP => array(
+        ],
+        CRM_Core_Action::FOLLOWUP => [
           'name' => ts('Tax Receipt'),
           'url' => 'civicrm/contribute/taxreceipt',
           'qs' => "reset=1&action=update&id=%%id%%&cid=%%cid%%&context=%%cxt%%",
           'title' => ts('Receipt'),
           'fe' => 1,
-        ),
-      );
+        ],
+      ];
     }
     return self::$_links;
   }
@@ -328,12 +328,12 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
     //CRM_Core_Error::debugDatabaseProfiling();
 
     // process the result of the query
-    $rows = array();
+    $rows = [];
 
 
 
     //CRM-4418 check for view/edit/delete
-    $permissions = array(CRM_Core_Permission::VIEW);
+    $permissions = [CRM_Core_Permission::VIEW];
     if (CRM_Core_Permission::check('edit contributions')) {
       $permissions[] = CRM_Core_Permission::EDIT;
     }
@@ -366,9 +366,9 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
     $paymentInstruments = CRM_Contribute_PseudoConstant::paymentInstrument();
     $contributionTypes = CRM_Contribute_PseudoConstant::contributionType();
 
-    $ids = array();
+    $ids = [];
     while ($result->fetch()) {
-      $row = array();
+      $row = [];
       $ids[] = $result->id;
       // prepare result from pseudo element
       $result->payment_instrument = $paymentInstruments[$result->payment_instrument_id];
@@ -399,11 +399,11 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
 
       $row['checkbox'] = CRM_Core_Form::CB_PREFIX . $result->contribution_id;
 
-      $actions = array(
+      $actions = [
         'id' => $result->contribution_id,
         'cid' => $result->contact_id,
         'cxt' => $this->_context,
-      );
+      ];
 
       $links = self::links($componentId, $componentAction, $qfKey, $componentContext);
 
@@ -478,46 +478,46 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
    */
   public function &getColumnHeaders($action = NULL, $output = NULL) {
     if (!isset(self::$_columnHeaders)) {
-      self::$_columnHeaders = array(
-        array(
+      self::$_columnHeaders = [
+        [
           'name' => ts('Transaction ID'),
           'sort' => 'trxn_id',
           'direction' => CRM_Utils_Sort::DONTCARE,
-        ),
-        array(
+        ],
+        [
           'name' => ts('Receipt ID'),
           'sort' => 'receipt_id',
           'direction' => CRM_Utils_Sort::DONTCARE,
-        ),
-        array(
+        ],
+        [
           'name' => ts('Payment Instrument'),
           'sort' => 'payment_instrument_id',
           'direction' => CRM_Utils_Sort::DONTCARE,
-        ),
-        array(
+        ],
+        [
           'name' => ts('Amount'),
           'sort' => 'total_amount',
           'direction' => CRM_Utils_Sort::DONTCARE,
-        ),
-        array('name' => ts('Contribution Type'),
+        ],
+        ['name' => ts('Contribution Type'),
           'sort' => 'contribution_type_id',
           'direction' => CRM_Utils_Sort::DONTCARE,
-        ),
-        array(
+        ],
+        [
           'name' => ts('Source'),
           'sort' => 'contribution_source',
           'direction' => CRM_Utils_Sort::DONTCARE,
-        ),
-        array(
+        ],
+        [
           'name' => ts('Created Date'),
           'sort' => 'created_date',
           'direction' => CRM_Utils_Sort::DESCENDING,
-        ),
-        array(
+        ],
+        [
           'name' => ts('Received'),
           'sort' => 'receive_date',
           'direction' => CRM_Utils_Sort::DESCENDING,
-        ),
+        ],
         /*
                                           array(
                                                 'name'      => ts('Thank-you Sent'),
@@ -525,11 +525,11 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
                                                 'direction' => CRM_Utils_Sort::DONTCARE,
                                                 ),
                                           */
-        array(
+        [
           'name' => ts('Status'),
           'sort' => 'contribution_status_id',
           'direction' => CRM_Utils_Sort::DONTCARE,
-        ),
+        ],
         /*
                                           array(
                                                 'name'      => ts('Premium'),
@@ -537,35 +537,35 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
                                                 'direction' => CRM_Utils_Sort::DONTCARE,
                                                 ),
                                           */
-        array('desc' => ts('Actions')),
-      );
+        ['desc' => ts('Actions')],
+      ];
 
       if (!$this->_single) {
-        $pre = array(
-          array('desc' => ts('Contact Type')),
-          array(
+        $pre = [
+          ['desc' => ts('Contact Type')],
+          [
             'name' => '#',
             'title' => ts('Contribution ID'),
             'sort' => 'contribution_id',
             'direction' => CRM_Utils_Sort::DONTCARE,
-          ),
-          array(
+          ],
+          [
             'name' => ts('Name'),
             'sort' => 'sort_name',
             'direction' => CRM_Utils_Sort::DONTCARE,
-          ),
-        );
+          ],
+        ];
         self::$_columnHeaders = array_merge($pre, self::$_columnHeaders);
       }
       else {
-        $pre = array(
-          array(
+        $pre = [
+          [
             'name' => '#',
             'title' => ts('Contribution ID'),
             'sort' => 'contribution_id',
             'direction' => CRM_Utils_Sort::DONTCARE,
-          ),
-        );
+          ],
+        ];
         self::$_columnHeaders = array_merge($pre, self::$_columnHeaders);
       }
     }
@@ -610,7 +610,7 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
     // do not include queries when no product related search
     $includeProduct = FALSE;
     $includeReferrer = FALSE;
-    $includedCustoms = array();
+    $includedCustoms = [];
     foreach($queryParams as $query) {
       if ($query[0] === 'product_name') {
         $includeProduct = TRUE;
@@ -644,10 +644,10 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
 
   public static function getContributionPremiums($ids) {
     $sql = "SELECT cp.contribution_id, cp.product_option, p.name FROM civicrm_contribution_product cp INNER JOIN civicrm_product p ON p.id = cp.product_id WHERE cp.contribution_id IN (%1)";
-    $dao = CRM_Core_DAO::executeQuery($sql, array(
-      1 => array(CRM_Utils_Array::implode(',', $ids), 'CommaSeparatedIntegers')
-    ));
-    $premiums = array();
+    $dao = CRM_Core_DAO::executeQuery($sql, [
+      1 => [CRM_Utils_Array::implode(',', $ids), 'CommaSeparatedIntegers']
+    ]);
+    $premiums = [];
     while($dao->fetch()) {
       $premiums[$dao->contribution_id]['product_name'] = $dao->name;
       $premiums[$dao->contribution_id]['product_option'] = $dao->product_option;
@@ -656,13 +656,13 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
   }
 
   public static function getContributionReferrers($ids) {
-    $params = array(
+    $params = [
       'entityTable' => 'civicrm_contribution',
       'entityId' => $ids,
-    );
+    ];
     $selector = new CRM_Track_Selector_Track($params);
     $dao = $selector->getQuery("entity_id, referrer_type", 'GROUP BY entity_table, entity_id');
-    $referrer = array();
+    $referrer = [];
     while($dao->fetch()){
       $referrer[$dao->entity_id] = $dao->referrer_type;
     }

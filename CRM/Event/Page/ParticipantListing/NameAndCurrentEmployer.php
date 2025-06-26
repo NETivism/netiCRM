@@ -15,7 +15,7 @@ class CRM_Event_Page_ParticipantListing_NameAndCurrentEmployer extends CRM_Core_
 
     // retrieve Event Title and include it in page title
     $this->_eventTitle = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Event', $this->_id, 'title');
-    CRM_Utils_System::setTitle(ts('%1 - Participants', array(1 => $this->_eventTitle)));
+    CRM_Utils_System::setTitle(ts('%1 - Participants', [1 => $this->_eventTitle]));
 
     // we do not want to display recently viewed contacts since this is potentially a public page
     $this->assign('displayRecent', FALSE);
@@ -35,7 +35,7 @@ LEFT JOIN  civicrm_email       ON ( civicrm_contact.id = civicrm_email.contact_i
 WHERE    civicrm_event.id = %1
 AND      civicrm_participant.is_test = 0
 AND      civicrm_participant.status_id IN ( 1, 2 )";
-    $params = array(1 => array($this->_id, 'Integer'));
+    $params = [1 => [$this->_id, 'Integer']];
     $this->pager($fromClause, $whereClause, $params);
     $orderBy = $this->orderBy();
 
@@ -55,16 +55,16 @@ SELECT   civicrm_contact.id           as contact_id    ,
 ORDER BY $orderBy
 LIMIT    $offset, $rowCount";
 
-    $rows = array();
+    $rows = [];
     $object = CRM_Core_DAO::executeQuery($query, $params);
     $roles = CRM_Event_PseudoConstant::participantRole();
     while ($object->fetch()) {
-      $row = array('id' => $object->contact_id,
+      $row = ['id' => $object->contact_id,
         'participantID' => $object->participant_id,
         'name' => $object->name,
         'organization' => $object->employer,
         'role' => $roles[$object->role_id],
-      );
+      ];
       $rows[] = $row;
     }
     $this->assign_by_ref('rows', $rows);
@@ -78,7 +78,7 @@ GROUP BY civicrm_participant.role_id
 ORDER BY $orderBy
 LIMIT    $offset, $rowCount";
     $object = CRM_Core_DAO::executeQuery($query, $params);
-    $summary_item = array();
+    $summary_item = [];
     while($object->fetch()){
       $summary_item[] = $roles[$object->role_id] . ": ". $object->role_count;
     }
@@ -90,7 +90,7 @@ LIMIT    $offset, $rowCount";
   function pager($fromClause, $whereClause, $whereParams) {
 
 
-    $params = array();
+    $params = [];
 
     $params['status'] = ts('Group') . ' %%StatusMessage%%';
     $params['csvString'] = NULL;
@@ -116,23 +116,23 @@ SELECT count( civicrm_contact.id )
     static $headers = NULL;
 
     if (!$headers) {
-      $headers = array(
-        array(
+      $headers = [
+        [
           'name' => ts('Name'),
           'sort' => 'civicrm_contact.sort_name',
           'direction' => CRM_Utils_Sort::ASCENDING,
-        ),
-        array(
+        ],
+        [
           'name' => ts('Organization'),
           'sort' => 'civicrm_contact.employer_id',
           'direction' => CRM_Utils_Sort::DONTCARE,
-        ),
-        array(
+        ],
+        [
           'name' => ts('Type'),
           'sort' => 'civicrm_participant.role_id',
           'direction' => CRM_Utils_Sort::DONTCARE,
-        ),
-      );
+        ],
+      ];
     }
     $sortID = NULL;
     if ($this->get(CRM_Utils_Sort::SORT_ID)) {

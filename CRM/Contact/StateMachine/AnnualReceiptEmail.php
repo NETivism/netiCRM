@@ -16,11 +16,11 @@ class CRM_Contact_StateMachine_AnnualReceiptEmail extends CRM_Core_StateMachine 
     $session = CRM_Core_Session::singleton();
     $session->set('singleForm', FALSE);
 
-    $this->_pages = array(
+    $this->_pages = [
       'CRM_Contact_Form_Task_AnnualReceiptEmail_SearchOption' => NULL,
       'CRM_Contact_Form_Task_AnnualReceiptEmail_MailingOption' => NULL,
       'CRM_Contact_Form_Task_AnnualReceiptEmail_Finish' => NULL,
-    );
+    ];
 
     $this->addSequentialPages($this->_pages);
   }

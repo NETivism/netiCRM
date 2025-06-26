@@ -58,32 +58,32 @@ class CRM_Campaign_Page_Campaign extends CRM_Core_Page {
     // check if variable _actionsLinks is populated
     if (!isset(self::$_actionLinks)) {
       $deleteExtra = ts('Are you sure you want to delete this Campaign?');
-      self::$_actionLinks = array(
-        CRM_Core_Action::UPDATE => array(
+      self::$_actionLinks = [
+        CRM_Core_Action::UPDATE => [
           'name' => ts('Edit'),
           'url' => 'civicrm/campaign/add',
           'qs' => 'reset=1&action=update&id=%%id%%',
           'title' => ts('Update Campaign'),
-        ),
-        CRM_Core_Action::DISABLE => array(
+        ],
+        CRM_Core_Action::DISABLE => [
           'name' => ts('Disable'),
           'title' => ts('Disable Campaign'),
           'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_Campaign_BAO_Campaign' . '\',\'' . 'enable-disable' . '\' );"',
           'ref' => 'disable-action',
-        ),
-        CRM_Core_Action::ENABLE => array(
+        ],
+        CRM_Core_Action::ENABLE => [
           'name' => ts('Enable'),
           'title' => ts('Enable Campaign'),
           'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_Campaign_BAO_Campaign' . '\',\'' . 'disable-enable' . '\' );"',
           'ref' => 'enable-action',
-        ),
-        CRM_Core_Action::DELETE => array(
+        ],
+        CRM_Core_Action::DELETE => [
           'name' => ts('Delete'),
           'url' => 'civicrm/campaign/add',
           'qs' => 'action=delete&reset=1&id=%%id%%',
           'title' => ts('Delete Campaign'),
-        ),
-      );
+        ],
+      ];
     }
     return self::$_actionLinks;
   }
@@ -115,7 +115,7 @@ class CRM_Campaign_Page_Campaign extends CRM_Core_Page {
           $action -= CRM_Core_Action::DISABLE;
         }
         $campaigns[$cmpid]['action'] = CRM_Core_Action::formLink(self::actionLinks(), $action,
-          array('id' => $campaign['id'])
+          ['id' => $campaign['id']]
         );
       }
     }

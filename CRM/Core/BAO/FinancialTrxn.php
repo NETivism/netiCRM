@@ -66,15 +66,15 @@ class CRM_Core_BAO_FinancialTrxn extends CRM_Core_DAO_FinancialTrxn {
       $trxn->id = $fids['financialTrxnId'];
     }
     else {
-      $existsId = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_financial_trxn WHERE trxn_id = %1", array(
-        1 => array($trxn->trxn_id, 'String'),
-      ));
+      $existsId = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_financial_trxn WHERE trxn_id = %1", [
+        1 => [$trxn->trxn_id, 'String'],
+      ]);
       if ($existsId) {
         // #37595, something may wrong here, make sure override exists records is correct
-        $conflictContribution = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution WHERE trxn_id = %1 AND id != %2", array(
-          1 => array($trxn->trxn_id, 'String'),
-          2 => array($params['contribution_id'], 'Integer'),
-        ));
+        $conflictContribution = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution WHERE trxn_id = %1 AND id != %2", [
+          1 => [$trxn->trxn_id, 'String'],
+          2 => [$params['contribution_id'], 'Integer'],
+        ]);
         if ($conflictContribution) {
           CRM_Core_Error::debug_log_message(sprintf("Failed to add transaction record into civicrm_financial_trxn due to conflict between contribution %d:%d.", $conflictContribution, $params['contribution_id']));
           return FALSE;
@@ -92,14 +92,14 @@ class CRM_Core_BAO_FinancialTrxn extends CRM_Core_DAO_FinancialTrxn {
       $contributionAmount = $params['total_amount'];
     }
     // save to entity_financial_trxn table
-    $entity_financial_trxn_params = array(
+    $entity_financial_trxn_params = [
       'entity_table' => "civicrm_contribution",
       'entity_id' => $params['contribution_id'],
       'financial_trxn_id' => $trxn->id,
       //use net amount to include all received amount to the contribution
       'amount' => $contributionAmount,
       'currency' => $trxn->currency,
-    );
+    ];
     $entity_trxn = new CRM_Core_DAO_EntityFinancialTrxn();
     $entity_trxn->copyValues($entity_financial_trxn_params);
     if ($fids['entityFinancialTrxnId']) {
@@ -123,7 +123,7 @@ class CRM_Core_BAO_FinancialTrxn extends CRM_Core_DAO_FinancialTrxn {
    * @static
    */
   static function getFinancialTrxnIds($entity_id, $entity_table = 'civicrm_contribution') {
-    $ids = array('entityFinancialTrxnId' => NULL, 'financialTrxnId' => NULL);
+    $ids = ['entityFinancialTrxnId' => NULL, 'financialTrxnId' => NULL];
 
     $query = "
             SELECT id, financial_trxn_id
@@ -132,7 +132,7 @@ class CRM_Core_BAO_FinancialTrxn extends CRM_Core_DAO_FinancialTrxn {
             AND entity_table = %2
         ";
 
-    $sqlParams = array(1 => array($entity_id, 'Integer'), 2 => array($entity_table, 'String'));
+    $sqlParams = [1 => [$entity_id, 'Integer'], 2 => [$entity_table, 'String']];
     $dao = CRM_Core_DAO::executeQuery($query, $sqlParams);
     if ($dao->fetch()) {
       $ids['entityFinancialTrxnId'] = $dao->id;
@@ -157,13 +157,13 @@ class CRM_Core_BAO_FinancialTrxn extends CRM_Core_DAO_FinancialTrxn {
       $query = "
                 DELETE FROM civicrm_entity_financial_trxn
 	            WHERE financial_trxn_id = %1";
-      CRM_Core_DAO::executeQuery($query, array(1 => array($fids['financialTrxnId'], 'Integer')));
+      CRM_Core_DAO::executeQuery($query, [1 => [$fids['financialTrxnId'], 'Integer']]);
 
       // delete financial transaction
       $query = "
 	            DELETE FROM civicrm_financial_trxn
                 WHERE id = %1";
-      CRM_Core_DAO::executeQuery($query, array(1 => array($fids['financialTrxnId'], 'Integer')));
+      CRM_Core_DAO::executeQuery($query, [1 => [$fids['financialTrxnId'], 'Integer']]);
 
       return TRUE;
     }

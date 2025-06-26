@@ -107,7 +107,7 @@ class CRM_Event_Form_ManageEvent extends CRM_Core_Form {
       $this->add('hidden', 'id', $this->_id);
       $this->_single = TRUE;
 
-      $params = array('id' => $this->_id);
+      $params = ['id' => $this->_id];
 
       CRM_Event_BAO_Event::retrieve($params, $eventInfo);
       $this->_eventInfo = $eventInfo;
@@ -181,35 +181,35 @@ class CRM_Event_Form_ManageEvent extends CRM_Core_Form {
 
     // Set Done button URL and breadcrumb. Templates go back to Manage Templates,
     // otherwise go to Manage Event for new event or ManageEventEdit if event if exists.
-    $breadCrumb = array();
+    $breadCrumb = [];
     if (!$this->_isTemplate) {
       if ($this->_id) {
         $this->_doneUrl = CRM_Utils_System::url(CRM_Utils_System::currentPath(),
           "action=update&reset=1&id={$this->_id}"
         );
         if (!empty($eventInfo['event_title'])) {
-          $breadCrumb = array(
-            array(
+          $breadCrumb = [
+            [
               'title' => $eventInfo['event_title'],
               'url' => CRM_Utils_System::url('civicrm/event/search', 'reset=1&force=1&event=' . $this->_id),
-            ),
-          );
+            ],
+          ];
         }
       }
       else {
         $this->_doneUrl = CRM_Utils_System::url('civicrm/event/manage',
           'reset=1'
         );
-        $breadCrumb = array(array('title' => ts('Manage Events'),
+        $breadCrumb = [['title' => ts('Manage Events'),
             'url' => $this->_doneUrl,
-          ));
+          ]];
       }
     }
     else {
       $this->_doneUrl = CRM_Utils_System::url('civicrm/admin/eventTemplate', 'reset=1');
-      $breadCrumb = array(array('title' => ts('Manage Event Templates'),
+      $breadCrumb = [['title' => ts('Manage Event Templates'),
           'url' => $this->_doneUrl,
-        ));
+        ]];
     }
     CRM_Utils_System::appendBreadCrumb($breadCrumb);
   }
@@ -223,14 +223,14 @@ class CRM_Event_Form_ManageEvent extends CRM_Core_Form {
    * @return None
    */
   function setDefaultValues() {
-    $defaults = array();
+    $defaults = [];
     if (isset($this->_id)) {
-      $params = array('id' => $this->_id);
+      $params = ['id' => $this->_id];
 
       CRM_Event_BAO_Event::retrieve($params, $defaults);
     }
     elseif ($this->_templateId) {
-      $params = array('id' => $this->_templateId);
+      $params = ['id' => $this->_templateId];
 
       CRM_Event_BAO_Event::retrieve($params, $defaults);
       $defaults['is_template'] = $this->_isTemplate;
@@ -278,44 +278,44 @@ class CRM_Event_Form_ManageEvent extends CRM_Core_Form {
       $this->addElement('hidden', 'cancelURL', $this->_cancelURL);
     }
 
-    $buttons = array();
+    $buttons = [];
     if ($this->_single) {
       // make this form an upload since we dont know if the custom data injected dynamically
       // is of type file etc $uploadNames = $this->get( 'uploadNames' );
-      $buttons = array(
-        array('type' => 'upload',
+      $buttons = [
+        ['type' => 'upload',
           'name' => ts('Save'),
           'isDefault' => TRUE,
-        ),
-        array('type' => 'upload',
+        ],
+        ['type' => 'upload',
           'name' => ts('Save and Done'),
           'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
           'subName' => 'done',
-        ),
-        array('type' => 'cancel',
+        ],
+        ['type' => 'cancel',
           'name' => ts('Cancel'),
-        ),
-      );
+        ],
+      ];
       $this->addButtons($buttons);
     }
     else {
-      $buttons = array();
+      $buttons = [];
       if (!$this->_first) {
-        $buttons[] = array('type' => 'back',
+        $buttons[] = ['type' => 'back',
           'name' => ts('<< Previous'),
           'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
-        );
+        ];
       }
-      $js = array('data' => 'click-once');
-      $buttons[] = array('type' => 'upload',
+      $js = ['data' => 'click-once'];
+      $buttons[] = ['type' => 'upload',
         'name' => ts('Continue >>'),
         'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
         'isDefault' => TRUE,
         'js' => $js,
-      );
-      $buttons[] = array('type' => 'cancel',
+      ];
+      $buttons[] = ['type' => 'cancel',
         'name' => ts('Cancel'),
-      );
+      ];
 
       $this->addButtons($buttons);
     }
@@ -337,7 +337,7 @@ class CRM_Event_Form_ManageEvent extends CRM_Core_Form {
         $subPage = strtolower($className);
       }
 
-      CRM_Core_Session::setStatus(ts("'%1' information has been saved.", array(1 => ($subPage == 'friend') ? 'Friend' : $className)));
+      CRM_Core_Session::setStatus(ts("'%1' information has been saved.", [1 => ($subPage == 'friend') ? 'Friend' : $className]));
 
       if ($this->controller->getButtonName('submit') == "_qf_{$className}_upload_done") {
         if ($this->_isTemplate) {

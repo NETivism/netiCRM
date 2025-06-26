@@ -171,13 +171,13 @@ class CRM_Core_Invoke {
    * @access public
    */
   static function form($action, $contact_type, $contact_sub_type) {
-    CRM_Utils_System::setUserContext(array('civicrm/contact/search/basic', 'civicrm/contact/view'));
+    CRM_Utils_System::setUserContext(['civicrm/contact/search/basic', 'civicrm/contact/view']);
     $wrapper = new CRM_Utils_Wrapper();
 
 
     $properties = &CRM_Core_Component::contactSubTypeProperties($contact_sub_type, 'Edit');
     if ($properties) {
-      $wrapper->run($properties['class'], ts('New %1', array(1 => $contact_sub_type)), $action, TRUE);
+      $wrapper->run($properties['class'], ts('New %1', [1 => $contact_sub_type]), $action, TRUE);
     }
     else {
       $wrapper->run('CRM_Contact_Form_Contact', ts('New Contact'), $action, TRUE);
@@ -281,14 +281,14 @@ class CRM_Core_Invoke {
             setcookie('hasCookiePermission', 1, $lifetime, '/; domain='.$sparams['domain'].'; Secure; SameSite=None');
           }
           else {
-            setcookie('hasCookiePermission', 1, array(
+            setcookie('hasCookiePermission', 1, [
               'expires' => $lifetime,
               'path' => '/',
               'domain' => $sparams['domain'],
               'secure' => TRUE,
               'httponly' => FALSE,
               'samesite' => 'None',
-            ));
+            ]);
           }
           $sameOrigin = FALSE;
           if (!empty($_SERVER['HTTP_REFERER'])) {
@@ -311,9 +311,9 @@ class CRM_Core_Invoke {
           $wrapper = new CRM_Utils_Wrapper();
           $result = $wrapper->run('CRM_Profile_Form_Edit',
             ts('Create Profile'),
-            array('mode' => CRM_Core_Action::ADD,
+            ['mode' => CRM_Core_Action::ADD,
               'ignoreKey' => TRUE,
-            )
+            ]
           );
           return $result;
         }

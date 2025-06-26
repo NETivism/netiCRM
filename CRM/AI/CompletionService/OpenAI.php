@@ -158,10 +158,10 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
             // "You exceeded your current quota"
             // "That model is currently overloaded"
             echo 'data: '.json_encode(
-              array(
+              [
                 'is_error' => 1,
                 'message' => $decoded['error']['message'],
-              )
+              ]
             );
           }
           else {
@@ -169,9 +169,9 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
               // log response to variable
               $responseData['message'] .= $decoded["choices"][0]["delta"]["content"];
               // output data
-              $outputData = array(
+              $outputData = [
                 "message" => $decoded['choices'][0]['delta']['content'],
-              );
+              ];
               // change state
               if ($responseData['status_id'] == 2) {
                 $responseData['status_id'] = 5;
@@ -249,7 +249,7 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
    * @return array $fields An array contain needed fields.
    */
   static private function fields($apiType, $is_required = FALSE) {
-    $fields = array();
+    $fields = [];
     switch($apiType){
       case 'CHAT_COMPLETION':
         // Refs: https://platform.openai.com/docs/api-reference/chat/create

@@ -171,7 +171,7 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
     // else we clash with other users CRM-7059
     if (!empty($this->_key)) {
 
-      CRM_Core_Session::registerAndRetrieveSessionObjects(array("_{$name}_container", array('CiviCRM', $this->_scope)));
+      CRM_Core_Session::registerAndRetrieveSessionObjects(["_{$name}_container", ['CiviCRM', $this->_scope]]);
     }
 
     parent::__construct($name, $modal);
@@ -231,7 +231,7 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
 
   function fini() {
 
-    CRM_Core_BAO_Cache::storeSessionToCache(array("_{$this->_name}_container", array('CiviCRM', $this->_scope)), TRUE);
+    CRM_Core_BAO_Cache::storeSessionToCache(["_{$this->_name}_container", ['CiviCRM', $this->_scope]], TRUE);
   }
 
   function key($name, $addSequence = FALSE, $ignoreKey = FALSE) {
@@ -359,7 +359,7 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
    *
    */
   function addActions($uploadDirectory = NULL, $uploadNames = NULL) {
-    $names = array(
+    $names = [
       'display' => 'CRM_Core_QuickForm_Action_Display',
       'next' => 'CRM_Core_QuickForm_Action_Next',
       'back' => 'CRM_Core_QuickForm_Action_Back',
@@ -369,7 +369,7 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
       'done' => 'CRM_Core_QuickForm_Action_Done',
       'jump' => 'CRM_Core_QuickForm_Action_Jump',
       'submit' => 'CRM_Core_QuickForm_Action_Submit',
-    );
+    ];
 
     foreach ($names as $name => $classPath) {
       $action = new $classPath($this->_stateMachine);
@@ -562,12 +562,12 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
    * @access public
    */
   function wizardHeader($currentPageName) {
-    $wizard = array();
-    $wizard['steps'] = array();
+    $wizard = [];
+    $wizard['steps'] = [];
     $count = 0;
     foreach ($this->_pages as $name => $page) {
       $count++;
-      $wizard['steps'][] = array('name' => $name,
+      $wizard['steps'][] = ['name' => $name,
         'title' => $page->getTitle(),
         //'link'      => $page->getLink ( ),
         'link' => NULL,
@@ -575,7 +575,7 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
         'valid' => TRUE,
         'stepNumber' => $count,
         'collapsed' => FALSE,
-      );
+      ];
 
       if ($name == $currentPageName) {
         $wizard['currentStepNumber'] = $count;
@@ -593,7 +593,7 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
   }
 
   function addWizardStyle(&$wizard) {
-    $wizard['style'] = array('barClass' => '',
+    $wizard['style'] = ['barClass' => '',
       'stepPrefixCurrent' => '&raquo;',
       'stepPrefixPast' => '&#x2714;',
       'stepPrefixFuture' => ' ',
@@ -601,7 +601,7 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
       'subStepPrefixPast' => '&nbsp;&nbsp;',
       'subStepPrefixFuture' => '&nbsp;&nbsp;',
       'showTitle' => 1,
-    );
+    ];
   }
 
   /**

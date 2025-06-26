@@ -51,8 +51,8 @@ class CRM_Mailing_MailStore_Maildir extends CRM_Mailing_MailStore {
   function __construct($dir) {
     $this->_dir = $dir;
 
-    $this->_ignored = $this->maildir(CRM_Utils_Array::implode(DIRECTORY_SEPARATOR, array('CiviMail.ignored', date('Y'), date('m'), date('d'))));
-    $this->_processed = $this->maildir(CRM_Utils_Array::implode(DIRECTORY_SEPARATOR, array('CiviMail.processed', date('Y'), date('m'), date('d'))));
+    $this->_ignored = $this->maildir(CRM_Utils_Array::implode(DIRECTORY_SEPARATOR, ['CiviMail.ignored', date('Y'), date('m'), date('d')]));
+    $this->_processed = $this->maildir(CRM_Utils_Array::implode(DIRECTORY_SEPARATOR, ['CiviMail.processed', date('Y'), date('m'), date('d')]));
   }
 
   /**
@@ -64,14 +64,14 @@ class CRM_Mailing_MailStore_Maildir extends CRM_Mailing_MailStore {
    * @return array      array of ezcMail objects
    */
   function fetchNext($count = 0) {
-    $mails = array();
+    $mails = [];
     $parser = new ezcMailParser;
     //set property text attachment as file CRM-5408
     $parser->options->parseTextAttachmentsAsFiles = TRUE;
 
-    foreach (array(
+    foreach ([
         'cur', 'new',
-      ) as $subdir) {
+      ] as $subdir) {
       $dir = $this->_dir . DIRECTORY_SEPARATOR . $subdir;
       foreach (scandir($dir) as $file) {
         if ($file == '.' or $file == '..') {
@@ -84,7 +84,7 @@ class CRM_Mailing_MailStore_Maildir extends CRM_Mailing_MailStore {
           print "retrieving message $path\n";
         }
 
-        $set = new ezcMailFileSet(array($path));
+        $set = new ezcMailFileSet([$path]);
         $single = $parser->parseMail($set);
         $mails[$path] = $single[0];
       }

@@ -44,7 +44,7 @@ class CRM_Core_Extensions_ExtensionType {
    */
   CONST OPTION_GROUP_NAME = 'system_extensions';
 
-  private $allowedExtTypes = array('payment', 'search', 'report');
+  private $allowedExtTypes = ['payment', 'search', 'report'];
 
   protected static $_extensions = NULL; function __construct() {
     $ext = CRM_Core_Extensions::singleton();
@@ -76,20 +76,20 @@ class CRM_Core_Extensions_ExtensionType {
   public function createEntry($id, $key) {
     $e = self::$_extensions;
 
-    $ids = array();
+    $ids = [];
 
     $groupId = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionGroup', self::OPTION_GROUP_NAME, 'id', 'name');
 
-    $params = array('option_group_id' => $groupId,
+    $params = ['option_group_id' => $groupId,
       'weight' => CRM_Utils_Weight::getDefaultWeight('CRM_Core_DAO_OptionValue',
-        array('option_group_id' => $groupId)
+        ['option_group_id' => $groupId]
       ),
       'label' => $e['per_id'][$id]['label'],
       'name' => $e['per_id'][$id]['label'],
       'value' => $key,
       'grouping' => $e['per_id'][$id]['type'],
       'is_active' => 1,
-    );
+    ];
     $optionValue = CRM_Core_BAO_OptionValue::add($params, $ids);
   }
 

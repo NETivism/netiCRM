@@ -43,13 +43,13 @@ class CRM_Contact_Form_Search_Custom_TagContributions implements CRM_Contact_For
     /**
      * Define the columns for search result rows
      */
-    $this->_columns = array(ts('Contact Id') => 'contact_id',
+    $this->_columns = [ts('Contact Id') => 'contact_id',
       ts('Full Name') => 'sort_name',
       ts('First Name') => 'first_name',
       ts('Last Name') => 'last_name',
       ts('Tag') => 'tag_name',
       ts('Totals') => 'amount',
-    );
+    ];
   }
 
   function buildForm(&$form) {
@@ -58,16 +58,16 @@ class CRM_Contact_Form_Search_Custom_TagContributions implements CRM_Contact_For
      */
 
 
-    $form->addDate('start_date', ts('Contribution Date From'), FALSE, array('formatType' => 'custom'));
-    $form->addDate('end_date', ts('...through'), FALSE, array('formatType' => 'custom'));
-    $tag = array('' => ts('- any tag -')) + CRM_Core_PseudoConstant::tag();
+    $form->addDate('start_date', ts('Contribution Date From'), FALSE, ['formatType' => 'custom']);
+    $form->addDate('end_date', ts('...through'), FALSE, ['formatType' => 'custom']);
+    $tag = ['' => ts('- any tag -')] + CRM_Core_PseudoConstant::tag();
     $form->addElement('select', 'tag', ts('Tagged'), $tag);
 
     /**
      * If you are using the sample template, this array tells the template fields to render
      * for the search form.
      */
-    $form->assign('elements', array('start_date', 'end_date', 'tag'));
+    $form->assign('elements', ['start_date', 'end_date', 'tag']);
   }
 
   /**
@@ -142,7 +142,7 @@ GROUP BY civicrm_contact.id
   *
   */
   function where($includeContactIDs = FALSE) {
-    $clauses = array();
+    $clauses = [];
 
     $clauses[] = "civicrm_contact.contact_type = 'Individual'";
     $clauses[] = "civicrm_contribution.contact_id = civicrm_contact.id";
@@ -167,7 +167,7 @@ GROUP BY civicrm_contact.id
     }
 
     if ($includeContactIDs) {
-      $contactIDs = array();
+      $contactIDs = [];
       foreach ($this->_formValues as $id => $value) {
         list($contactID, $additionalID) = CRM_Core_Form::cbExtract($id);
         if ($value && !empty($contactID)) {

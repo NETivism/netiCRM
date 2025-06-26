@@ -67,7 +67,7 @@ class CRM_Import_Form_Summary extends CRM_Core_Form {
     $tableName = $this->get('importTableName');
     $prefix = str_replace(CRM_Import_ImportJob::TABLE_PREFIX, CRM_Import_Parser::ERROR_FILE_PREFIX, $tableName);
     $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String', $this);
-    CRM_Import_Parser::setImportErrorFilenames($qfKey, array('error', 'conflict','duplicate','no_match','unparsed_address_warning'), 'CRM_Import_Parser', $prefix, $this);
+    CRM_Import_Parser::setImportErrorFilenames($qfKey, ['error', 'conflict','duplicate','no_match','unparsed_address_warning'], 'CRM_Import_Parser', $prefix, $this);
 
     if ($duplicateRowCount <= 0 && !$mismatchCount) {
       $duplicateRowCount = 0;
@@ -102,7 +102,7 @@ class CRM_Import_Form_Summary extends CRM_Core_Form {
 
     $this->assign('dupeActionString', $dupeActionString);
 
-    $properties = array('totalRowCount', 'validRowCount', 'invalidRowCount', 'conflictRowCount', 'downloadConflictRecordsUrl', 'downloadErrorRecordsUrl', 'duplicateRowCount', 'downloadDuplicateRecordsUrl', 'downloadMismatchRecordsUrl', 'groupAdditions', 'tagAdditions', 'unMatchCount', 'unparsedAddressCount','downloadAddressRecordsUrl');
+    $properties = ['totalRowCount', 'validRowCount', 'invalidRowCount', 'conflictRowCount', 'downloadConflictRecordsUrl', 'downloadErrorRecordsUrl', 'duplicateRowCount', 'downloadDuplicateRecordsUrl', 'downloadMismatchRecordsUrl', 'groupAdditions', 'tagAdditions', 'unMatchCount', 'unparsedAddressCount','downloadAddressRecordsUrl'];
     foreach ($properties as $property) {
       $this->assign($property, $this->get($property));
     }
@@ -118,12 +118,12 @@ class CRM_Import_Form_Summary extends CRM_Core_Form {
    * @access public
    */
   public function buildQuickForm() {
-    $this->addButtons(array(
-        array('type' => 'next',
+    $this->addButtons([
+        ['type' => 'next',
           'name' => ts('Done'),
           'isDefault' => TRUE,
-        ),
-      )
+        ],
+      ]
     );
   }
 

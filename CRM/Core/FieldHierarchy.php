@@ -1,22 +1,22 @@
 <?php
 class CRM_Core_FieldHierarchy {
-  public static $hierarchy = array(
-    'reserved' => array(
+  public static $hierarchy = [
+    'reserved' => [
       'do_not_import' => 1,
       'id' => 1,
       'contact_id' => 1,
       'external_identifier' => 1,
       'checksum' => 1,
-    ),
-    'household' => array(
+    ],
+    'household' => [
       'household_name' => 1,
-    ),
-    'organization_info' => array(
+    ],
+    'organization_info' => [
       'organization_name' => 1,
       'legal_name' => 1,
       'sic_code' => 1,
-    ),
-    'individual_info' => array(
+    ],
+    'individual_info' => [
       'individual_prefix' => 1,
       'first_name' => 1,
       'middle_name' => 1,
@@ -29,14 +29,14 @@ class CRM_Core_FieldHierarchy {
       'nick_name' => 1,
       'legal_identifier' => 1,
       'job_title' => 1,
-    ),
-    'contact_info' => array(
+    ],
+    'contact_info' => [
       'email' => 1,
       'phone' => 1,
       'im' => 1,
       'url' => 1,
-    ),
-    'address' => array(
+    ],
+    'address' => [
       'postal_code' => 1,
       'postal_code_suffix' => 1,
       'state_province' => 1,
@@ -46,8 +46,8 @@ class CRM_Core_FieldHierarchy {
       'master_id' => 1,
       'geo_code_1' => 1,
       'geo_code_2' => 1,
-    ),
-    'privacy_info' => array(
+    ],
+    'privacy_info' => [
       'preferred_communication_method' => 1,
       'is_opt_out' => 1,
       'do_not_trade' => 1,
@@ -62,8 +62,8 @@ class CRM_Core_FieldHierarchy {
       'addressee_custom' => 1,
       'postal_greeting_custom' => 1,
       'postal_greeting_custom' => 1,
-    ),
-    'event' => array( // use component
+    ],
+    'event' => [ // use component
       'participant_id' => 1,
       'participant_register_date' => 1,
       'participant_fee_level' => 1,
@@ -75,8 +75,8 @@ class CRM_Core_FieldHierarchy {
       'participant_registered_by_id' => 1,
       'participant_note' => 1,
       'participant_is_test' => 1,
-    ),
-    'contribute' => array( // use component name
+    ],
+    'contribute' => [ // use component name
       'contribution_page_id' => 1,
       'contribution_id' => 1,
       'trxn_id' => 1,
@@ -104,17 +104,17 @@ class CRM_Core_FieldHierarchy {
       'contribution_start_date' => 1,
       'contribution_end_date' => 1,
       'is_test' => 1,
-    ),
-    'otherwise' => array(
+    ],
+    'otherwise' => [
       '/custom_.*/i' => 1,
-    ),
-  );
+    ],
+  ];
 
   public static function arrange($fields){
     $priority = self::$hierarchy;
     $names = array_keys($fields);
     $copy = $fields;
-    $new = array();
+    $new = [];
     foreach($priority as $group => $values){
       if(is_array($values)) {
         foreach($values as $key => $value) {

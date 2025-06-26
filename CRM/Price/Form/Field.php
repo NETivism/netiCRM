@@ -92,11 +92,11 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
     $this->_sid = CRM_Utils_Request::retrieve('sid', 'Positive', $this);
     $this->_fid = CRM_Utils_Request::retrieve('fid', 'Positive', $this);
     $url = CRM_Utils_System::url('civicrm/admin/price/field', "reset=1&action=browse&sid={$this->_sid}");
-    $breadCrumb = array(array('title' => ts('Price Set Fields'),
+    $breadCrumb = [['title' => ts('Price Set Fields'),
         'url' => $url,
-      ));
+      ]];
 
-    $this->_extendComponentId = array();
+    $this->_extendComponentId = [];
     $extendComponentId = CRM_Core_DAO::getFieldValue('CRM_Price_DAO_Set', $this->_sid, 'extends', 'id');
     if ($extendComponentId) {
       $this->_extendComponentId = explode(CRM_Core_DAO::VALUE_SEPARATOR, $extendComponentId);
@@ -136,18 +136,18 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
     if ($this->_cdType) {
       return CRM_Custom_Form_CustomData::setDefaultValues($this);
     }
-    $defaults = array();
+    $defaults = [];
 
     // is it an edit operation ?
     if (isset($this->_fid)) {
-      $params = array('id' => $this->_fid);
+      $params = ['id' => $this->_fid];
       $this->assign('id', $this->_fid);
       CRM_Price_BAO_Field::retrieve($params, $defaults);
       $this->_sid = $defaults['price_set_id'];
 
       // if text, retrieve price
       if ($defaults['html_type'] == 'Text') {
-        $valueParams = array('price_field_id' => $this->_fid);
+        $valueParams = ['price_field_id' => $this->_fid];
 
 
         CRM_Price_BAO_FieldValue::retrieve($valueParams, $fieldValues);
@@ -175,7 +175,7 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
 
     if ($this->_action & CRM_Core_Action::ADD) {
 
-      $fieldValues = array('price_set_id' => $this->_sid);
+      $fieldValues = ['price_set_id' => $this->_sid];
       $defaults['weight'] = CRM_Utils_Weight::getDefaultWeight('CRM_Price_DAO_Field', $fieldValues);
       $defaults['options_per_line'] = 1;
       $defaults['is_display_amounts'] = 1;
@@ -231,9 +231,9 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
       $this->add('text', 'count', ts('Participant Count'), $attributes['count']);
       $this->addRule('count', ts('Participant Count should be a positive number'), 'positiveInteger');
 
-      $this->addElement('checkbox', 'allow_count', ts('Allow Changing Count'), NULL, array('onclick' => 'onChangeAllowCount();'));
+      $this->addElement('checkbox', 'allow_count', ts('Allow Changing Count'), NULL, ['onclick' => 'onChangeAllowCount();']);
 
-      $this->addNumber('max_value', ts('Max Participants'), $attributes['max_value']+array('min' => 0));
+      $this->addNumber('max_value', ts('Max Participants'), $attributes['max_value']+['min' => 0]);
       $this->addRule('max_value', ts('Please enter a valid Max Participants.'), 'positiveInteger');
 
       $this->add('textArea', 'description', ts('Description'), $attributes['description']);
@@ -280,15 +280,15 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
 
       if (in_array($eventComponentId, $this->_extendComponentId)) {
         // count
-        $this->addNumber('option_count[' . $i . ']', ts('Participant Count'), array('min' => 0, 'size' => 4));
+        $this->addNumber('option_count[' . $i . ']', ts('Participant Count'), ['min' => 0, 'size' => 4]);
         $this->addRule('option_count[' . $i . ']', ts('Please enter a valid Participants Count.'), 'positiveInteger');
 
         // max_value
-        $this->addNumber('option_max_value[' . $i . ']', ts('Max Participants'), array('min' => 0, 'size' => 4));
+        $this->addNumber('option_max_value[' . $i . ']', ts('Max Participants'), ['min' => 0, 'size' => 4]);
         $this->addRule('option_max_value[' . $i . ']', ts('Please enter a valid Max Participants.'), 'positiveInteger');
 
         // description
-        $this->add('textArea', 'option_description[' . $i . ']', ts('Description'), array('rows' => 1, 'cols' => 20));
+        $this->add('textArea', 'option_description[' . $i . ']', ts('Description'), ['rows' => 1, 'cols' => 20]);
       }
 
       // weight
@@ -342,26 +342,26 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
     $this->add('checkbox', 'is_active', ts('Active?'));
 
     // add buttons
-    $this->addButtons(array(
-        array('type' => 'next',
+    $this->addButtons([
+        ['type' => 'next',
           'name' => ts('Save'),
           'isDefault' => TRUE,
-        ),
-        array('type' => 'next',
+        ],
+        ['type' => 'next',
           'name' => ts('Save and New'),
           'subName' => 'new',
-        ),
-        array('type' => 'cancel',
+        ],
+        ['type' => 'cancel',
           'name' => ts('Cancel'),
-        ),
-      )
+        ],
+      ]
     );
     // is public?
 
     $this->add('select', 'visibility_id', ts('Visibility'), CRM_Core_PseudoConstant::visibility());
 
     // add a form rule to check default value
-    $this->addFormRule(array('CRM_Price_Form_Field', 'formRule'), $this);
+    $this->addFormRule(['CRM_Price_Form_Field', 'formRule'], $this);
 
     // if view mode pls freeze it with the done button.
     if ($this->_action & CRM_Core_Action::VIEW) {
@@ -370,7 +370,7 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
       $this->addElement('button',
         'done',
         ts('Done'),
-        array('onclick' => "location.href='$url'")
+        ['onclick' => "location.href='$url'"]
       );
     }
   }
@@ -388,7 +388,7 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
   static function formRule($fields, $files, $form) {
 
     // all option fields are of type "money"
-    $errors = array();
+    $errors = [];
 
     /** Check the option values entered
      *  Appropriate values are required for the selected datatype
@@ -418,7 +418,7 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
         $errors['max_value'] = ts('must be a numeric value');
       }
       elseif($fields['max_value'] < 0){
-        $errors['max_value'] = ts("greater than or equal to '%1'", array(1 => 0));
+        $errors['max_value'] = ts("greater than or equal to '%1'", [1 => 0]);
       }
     }
 
@@ -539,11 +539,11 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
       }
 
       if (empty($fields['option_name'])) {
-        $fields['option_amount'] = array();
+        $fields['option_amount'] = [];
       }
 
       if (empty($fields['option_label'])) {
-        $fields['option_label'] = array();
+        $fields['option_label'] = [];
       }
     }
 
@@ -591,7 +591,7 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
 
 
     if ($this->_action & (CRM_Core_Action::UPDATE | CRM_Core_Action::ADD)) {
-      $fieldValues = array('price_set_id' => $this->_sid);
+      $fieldValues = ['price_set_id' => $this->_sid];
       $oldWeight = NULL;
       if ($this->_fid) {
         $oldWeight = CRM_Core_DAO::getFieldValue('CRM_Price_DAO_Field', $this->_fid, 'weight', 'id');
@@ -610,18 +610,18 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
       $params['is_enter_qty'] = 1;
       // modify params values as per the option group and option
       // value
-      $params['option_amount'] = array(1 => $params['price']);
-      $params['option_label'] = array(1 => $params['label']);
-      $params['option_count'] = array(1 => $params['count']);
-      $params['option_max_value'] = array(1 => $params['max_value']);
-      $params['option_description'] = array(1 => $params['description']);
-      $params['option_weight'] = array(1 => $params['weight']);
-      $params['option_member'] = array(1 => $params['is_member']);
-      $params['option_is_active'] = array(1 => 1);
+      $params['option_amount'] = [1 => $params['price']];
+      $params['option_label'] = [1 => $params['label']];
+      $params['option_count'] = [1 => $params['count']];
+      $params['option_max_value'] = [1 => $params['max_value']];
+      $params['option_description'] = [1 => $params['description']];
+      $params['option_weight'] = [1 => $params['weight']];
+      $params['option_member'] = [1 => $params['is_member']];
+      $params['option_is_active'] = [1 => 1];
       unset($params['max_value']);
     }
 
-    $ids = array();
+    $ids = [];
 
     if ($this->_fid) {
       $ids['id'] = $this->_fid;
@@ -632,7 +632,7 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
     $priceField = CRM_Price_BAO_Field::create($params, $ids);
 
     if (!is_a($priceField, 'CRM_Core_Error')) {
-      CRM_Core_Session::setStatus(ts('Price Field \'%1\' has been saved.', array(1 => $priceField->label)));
+      CRM_Core_Session::setStatus(ts('Price Field \'%1\' has been saved.', [1 => $priceField->label]));
     }
     $buttonName = $this->controller->getButtonName();
     $session = CRM_Core_Session::singleton();

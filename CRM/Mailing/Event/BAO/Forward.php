@@ -104,10 +104,10 @@ class CRM_Mailing_Event_BAO_Forward extends CRM_Mailing_Event_DAO_Forward {
     }
 
 
-    $contactParams = array(
+    $contactParams = [
       'email' => $forward_email,
       'version' => 3,
-    );
+    ];
     $contactValues = civicrm_api('contact', 'get', $contactParams);
     $count = $contactValues['count'];
 
@@ -116,15 +116,15 @@ class CRM_Mailing_Event_BAO_Forward extends CRM_Mailing_Event_DAO_Forward {
       /* If the contact does not exist, create one. */
 
 
-      $formatted = array(
+      $formatted = [
         'contact_type' => 'Individual',
         'version' => 3,
-      );
+      ];
       $locationType = CRM_Core_BAO_LocationType::getDefault();
-      $value = array(
+      $value = [
         'email' => $forward_email,
         'location_type_id' => $locationType->id,
-      );
+      ];
 
       require_once 'api/v3/DeprecatedUtils.php';
       _civicrm_api3_deprecated_add_formatted_param($value, $formatted);
@@ -148,11 +148,11 @@ class CRM_Mailing_Event_BAO_Forward extends CRM_Mailing_Event_DAO_Forward {
     /* Create a new queue event */
 
 
-    $queue_params = array(
+    $queue_params = [
       'email_id' => $email_id,
       'contact_id' => $contact_id,
       'job_id' => $job_id,
-    );
+    ];
 
     $queue = CRM_Mailing_Event_BAO_Queue::create($queue_params);
 
@@ -198,11 +198,11 @@ class CRM_Mailing_Event_BAO_Forward extends CRM_Mailing_Event_DAO_Forward {
       CRM_Core_Error::setCallback();
     }
 
-    $params = array(
+    $params = [
       'event_queue_id' => $queue->id,
       'job_id' => $job_id,
       'hash' => $queue->hash,
-    );
+    ];
     if (is_a($result, 'PEAR_Error')) {
       /* Register the bounce event */
 
@@ -357,7 +357,7 @@ class CRM_Mailing_Event_BAO_Forward extends CRM_Mailing_Event_DAO_Forward {
 
     $dao->query($query);
 
-    $results = array();
+    $results = [];
 
     while ($dao->fetch()) {
       $from_url = CRM_Utils_System::url('civicrm/contact/view',
@@ -366,12 +366,12 @@ class CRM_Mailing_Event_BAO_Forward extends CRM_Mailing_Event_DAO_Forward {
       $dest_url = CRM_Utils_System::url('civicrm/contact/view',
         "reset=1&cid={$dao->dest_id}"
       );
-      $results[] = array(
+      $results[] = [
         'from_name' => "<a href=\"$from_url\">{$dao->from_name}</a>",
         'from_email' => $dao->from_email,
         'dest_email' => "<a href=\"$dest_url\">{$dao->dest_email}</a>",
         'date' => CRM_Utils_Date::customFormat($dao->date),
-      );
+      ];
     }
     return $results;
   }

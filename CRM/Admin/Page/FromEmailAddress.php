@@ -52,20 +52,20 @@ class CRM_Admin_Page_FromEmailAddress extends CRM_Core_Page_Basic {
    */
   function &links() {
     if (!(self::$_links)) {
-      self::$_links = array(
-        CRM_Core_Action::UPDATE => array(
+      self::$_links = [
+        CRM_Core_Action::UPDATE => [
           'name' => ts('Edit'),
           'url' => 'civicrm/admin/from_email_address',
           'qs' => 'action=update&id=%%id%%&reset=1',
-          'title' => ts('Edit %1', array(1 => ts('From Email Address'))),
-        ),
-        CRM_Core_Action::DELETE => array(
+          'title' => ts('Edit %1', [1 => ts('From Email Address')]),
+        ],
+        CRM_Core_Action::DELETE => [
           'name' => ts('Delete'),
           'url' => 'civicrm/admin/from_email_address',
           'qs' => 'action=delete&id=%%id%%',
-          'title' => ts('Delete %1', array(1 => ts('From Email Address'))),
-        ),
-      );
+          'title' => ts('Delete %1', [1 => ts('From Email Address')]),
+        ],
+      ];
     }
     return self::$_links;
   }
@@ -132,19 +132,19 @@ class CRM_Admin_Page_FromEmailAddress extends CRM_Core_Page_Basic {
    * @static
    */
   function browse() {
-    $groupParams = array('name' => 'from_email_address');
+    $groupParams = ['name' => 'from_email_address'];
     $optionValues = CRM_Core_OptionValue::getRows($groupParams, $this->links(), 'component_id,weight');
     $returnURL = CRM_Utils_System::url("civicrm/admin/from_email_address", "reset=1");
     $filter = "option_group_id = " . self::$_optionGroupId;
     CRM_Utils_Weight::addOrder($optionValues, 'CRM_Core_DAO_OptionValue', 'id', $returnURL, $filter);
     foreach($optionValues as $idx => $val) {
       $email = CRM_Utils_Mail::pluckEmailFromHeader($val['name']);
-      $pageCount = CRM_Core_DAO::singleValueQuery("SELECT count(*) FROM civicrm_contribution_page WHERE receipt_from_email LIKE %1", array(
-        1 => array($email, 'String'),
-      ));
-      $eventCount = CRM_Core_DAO::singleValueQuery("SELECT count(*) FROM civicrm_event WHERE confirm_from_email LIKE %1", array(
-        1 => array($email, 'String'),
-      ));
+      $pageCount = CRM_Core_DAO::singleValueQuery("SELECT count(*) FROM civicrm_contribution_page WHERE receipt_from_email LIKE %1", [
+        1 => [$email, 'String'],
+      ]);
+      $eventCount = CRM_Core_DAO::singleValueQuery("SELECT count(*) FROM civicrm_event WHERE confirm_from_email LIKE %1", [
+        1 => [$email, 'String'],
+      ]);
       $optionValues[$idx]['used_for_page'] = $pageCount;
       $optionValues[$idx]['used_for_event'] = $eventCount;
 
@@ -152,11 +152,11 @@ class CRM_Admin_Page_FromEmailAddress extends CRM_Core_Page_Basic {
       if (($pageCount || $eventCount) && !$val['is_reserved']) {
         $this->links();
         $action = CRM_Core_Action::UPDATE;
-        $optionValues[$idx]['action'] = CRM_Core_Action::formLink($this->links(), $action, array(
+        $optionValues[$idx]['action'] = CRM_Core_Action::formLink($this->links(), $action, [
           'id' => $val['id'],
           'gid' => $val['option_group_id'],
           'value' => $val['value'],
-        ));
+        ]);
       }
     }
     $this->assign('rows', $optionValues);

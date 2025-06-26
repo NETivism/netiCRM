@@ -74,7 +74,7 @@ class CRM_Core_OptionValue {
    * @static
    */
   static function getRows($groupParams, $links, $orderBy = 'weight') {
-    $optionValue = array();
+    $optionValue = [];
 
     $optionGroupID = NULL;
     if (!isset($groupParams['id']) || !$groupParams['id']) {
@@ -122,7 +122,7 @@ class CRM_Core_OptionValue {
     $componentNames = CRM_Core_Component::getNames();
     $visibilityLabels = CRM_Core_PseudoConstant::visibility();
     while ($dao->fetch()) {
-      $optionValue[$dao->id] = array();
+      $optionValue[$dao->id] = [];
       CRM_Core_DAO::storeValues($dao, $optionValue[$dao->id]);
       // form all action links
       $action = array_sum(array_keys($links));
@@ -167,10 +167,10 @@ class CRM_Core_OptionValue {
       $optionValue[$dao->id]['label'] = htmlspecialchars($optionValue[$dao->id]['label']);
       $optionValue[$dao->id]['order'] = $optionValue[$dao->id]['weight'];
       $optionValue[$dao->id]['action'] = CRM_Core_Action::formLink($links, $action,
-        array('id' => $dao->id,
+        ['id' => $dao->id,
           'gid' => $optionGroupID,
           'value' => $dao->value,
-        )
+        ]
       );
 
       if (CRM_Utils_Array::value('component_id', $optionValue[$dao->id])) {
@@ -225,14 +225,14 @@ class CRM_Core_OptionValue {
       if ($optionValueID) {
         $oldWeight = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionValue', $optionValueID, 'weight', 'id');
       }
-      $fieldValues = array('option_group_id' => $optionGroupID);
+      $fieldValues = ['option_group_id' => $optionGroupID];
       $params['weight'] = CRM_Utils_Weight::updateOtherWeights('CRM_Core_DAO_OptionValue', $oldWeight, $params['weight'], $fieldValues);
     }
     $params['option_group_id'] = $optionGroupID;
 
 
     if (($action & CRM_Core_Action::ADD) && !CRM_Utils_Array::value('value', $params)) {
-      $fieldValues = array('option_group_id' => $optionGroupID);
+      $fieldValues = ['option_group_id' => $optionGroupID];
       // use the next available value
       /* CONVERT(value, DECIMAL) is used to convert varchar
                field 'value' to decimal->integer                    */
@@ -299,7 +299,7 @@ class CRM_Core_OptionValue {
   static function getFields($mode = '', $contactType = 'Individual') {
     $key = "$mode $contactType";
     if (empty(self::$_fields[$key]) || !self::$_fields[$key]) {
-      self::$_fields[$key] = array();
+      self::$_fields[$key] = [];
 
 
       $option = CRM_Core_DAO_OptionValue::import();
@@ -308,53 +308,53 @@ class CRM_Core_OptionValue {
         $optionName = $option[$id];
       }
 
-      $nameTitle = array();
+      $nameTitle = [];
       if ($mode == 'contribute') {
-        $nameTitle = array('payment_instrument' => array(
+        $nameTitle = ['payment_instrument' => [
           'name' => 'payment_instrument',
             'title' => ts('Payment Instrument'),
             'headerPattern' => '/^payment|(p(ayment\s)?instrument)$/i',
             'usage' => 'System',
-          ),
-        );
+          ],
+        ];
       }
       elseif ($mode == '') {
         //the fields email greeting and postal greeting are meant only for Individual and Household
         //the field addressee is meant for all contact types, CRM-4575
-        if (in_array($contactType, array('Individual', 'Household', 'Organization', 'All'))) {
-          $nameTitle = array('addressee' => array('name' => 'addressee',
+        if (in_array($contactType, ['Individual', 'Household', 'Organization', 'All'])) {
+          $nameTitle = ['addressee' => ['name' => 'addressee',
               'title' => ts('Addressee'),
               'headerPattern' => '/^addressee$/i',
-            ),
-          );
+            ],
+          ];
         }
         if ($contactType == 'Individual' || $contactType == 'Household' || $contactType == 'All') {
-          $title = array('email_greeting' => array('name' => 'email_greeting',
+          $title = ['email_greeting' => ['name' => 'email_greeting',
               'title' => ts('Email Greeting'),
               'headerPattern' => '/^email_greeting$/i',
-            ),
-            'postal_greeting' => array('name' => 'postal_greeting',
+            ],
+            'postal_greeting' => ['name' => 'postal_greeting',
               'title' => ts('Postal Greeting'),
               'headerPattern' => '/^postal_greeting$/i',
-            ),
-          );
+            ],
+          ];
           $nameTitle = array_merge($nameTitle, $title);
         }
 
         if ($contactType == 'Individual' || $contactType == 'All') {
-          $title = array('gender' => array('name' => 'gender',
+          $title = ['gender' => ['name' => 'gender',
               'title' => ts('Gender'),
               'headerPattern' => '/^gender$/i',
-            ),
-            'individual_prefix' => array('name' => 'individual_prefix',
+            ],
+            'individual_prefix' => ['name' => 'individual_prefix',
               'title' => ts('Individual Prefix'),
               'headerPattern' => '/^(prefix|title)/i',
-            ),
-            'individual_suffix' => array('name' => 'individual_suffix',
+            ],
+            'individual_suffix' => ['name' => 'individual_suffix',
               'title' => ts('Individual Suffix'),
               'headerPattern' => '/^suffix$/i',
-            ),
-          );
+            ],
+          ];
           $nameTitle = array_merge($nameTitle, $title);
         }
       }
@@ -448,7 +448,7 @@ FROM
 
     if ($groupId) {
       $where .= " AND option_group.id = %1";
-      $params[1] = array($groupId, 'Integer');
+      $params[1] = [$groupId, 'Integer'];
       if (!$groupName) {
         $groupName = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionGroup',
           $groupId, 'name', 'id'
@@ -458,7 +458,7 @@ FROM
 
     if ($groupName) {
       $where .= " AND option_group.name = %2";
-      $params[2] = array($groupName, 'String');
+      $params[2] = [$groupName, 'String'];
     }
 
 
@@ -471,7 +471,7 @@ FROM
     $dao = &CRM_Core_DAO::executeQuery($query, $params);
 
     while ($dao->fetch()) {
-      $values[$dao->id] = array('id' => $dao->id,
+      $values[$dao->id] = ['id' => $dao->id,
         'label' => $dao->label,
         'value' => $dao->value,
         'name' => $dao->name,
@@ -479,7 +479,7 @@ FROM
         'weight' => $dao->weight,
         'is_active' => $dao->is_active,
         'is_default' => $dao->is_default,
-      );
+      ];
     }
   }
 }

@@ -41,21 +41,21 @@ class CRM_Contact_Form_Task_AnnualReceiptEmail_MailingOption extends CRM_Contact
     CRM_Utils_System::setTitle(ts('Send Annual Receipt Email'));
     parent::preProcess();
 
-    $queryParams = array();
-    $returnProperties = array(
+    $queryParams = [];
+    $returnProperties = [
       'sort_name' => 1,
       'do_not_notify' => 1,
       'is_deceased' => 1,
       'email' => 1,
-    );
+    ];
     foreach ($this->_contactIds as $contactId) {
-      $queryParams[] = array(
+      $queryParams[] = [
         CRM_Core_Form::CB_PREFIX . $contactId, '=', 1, 0, 0,
-      );
+      ];
     }
     $numberofContacts = count($this->_contactIds);
-    $suppressedDoNotEmail = array();
-    $suppressedNoRecords = array();
+    $suppressedDoNotEmail = [];
+    $suppressedNoRecords = [];
     $details = CRM_Contact_BAO_Query::apiQuery($queryParams, $returnProperties, NULL, NULL, 0, $numberofContacts, TRUE, TRUE);
     if (!empty($details[0])) {
       foreach ($details[0] as $contactDetail) {
@@ -81,17 +81,17 @@ class CRM_Contact_Form_Task_AnnualReceiptEmail_MailingOption extends CRM_Contact
     $searchOptionDisplay = $searchOption;
     if (!empty($searchOption['contribution_type_id'])) {
       $contributionTypes = CRM_Contribute_PseudoConstant::contributionType(NULL, 'is_deductible', TRUE);
-      $deductible = array( 0 => '"'.ts('All').' '.ts('Deductible').'"');
+      $deductible = [ 0 => '"'.ts('All').' '.ts('Deductible').'"'];
       $contributionTypes = $deductible + $contributionTypes;
       foreach($searchOption['contribution_type_id'] as $typeId) {
         $searchOptionDisplay['contribution_types'][$typeId] = $contributionTypes[$typeId];
       }
     }
     if (!empty($searchOption['is_recur'])) {
-      $isRecur = array(
+      $isRecur = [
         -1 => ts('Non-Recurring Contribution'),
         1 => ts('Recurring Contribution'),
-      );
+      ];
       $searchOptionDisplay['recur'] =  $isRecur[$searchOption['is_recur']];
     }
     else {
@@ -110,45 +110,45 @@ class CRM_Contact_Form_Task_AnnualReceiptEmail_MailingOption extends CRM_Contact
   public function buildQuickForm()
   {
     $fromEmails = CRM_Contact_BAO_Contact_Utils::fromEmailAddress();
-    $emails = array(
+    $emails = [
       ts('Default') => $fromEmails['default'],
       ts('Your Email') => $fromEmails['contact'],
-    );
+    ];
     if (!empty($fromEmails['domain'])) {
       $emails[ts('Other')] = $fromEmails['domain'];
     }
-    $this->addSelect('receipt_from_email', ts('From Email'), array('' => ts('- select -')) + $emails, NULL, TRUE);
+    $this->addSelect('receipt_from_email', ts('From Email'), ['' => ts('- select -')] + $emails, NULL, TRUE);
     $this->addWysiwyg(
       'receipt_text',
       ts('Body Html'),
-      array(
+      [
         'cols' => '80',
         'rows' => '4',
-      )
+      ]
     );
     $this->addTextfield('bcc', ts('BCC'));
 
 
-    $buttons = array(
-      array(
+    $buttons = [
+      [
         'type' => 'back',
         'name' => ts('<< Go Back'),
         'isDefault' => TRUE,
-      ),
-    );
+      ],
+    ];
     if (!empty($this->_contactIds)) {
-      $buttons[] = array(
+      $buttons[] = [
         'type' => 'next',
         'name' => ts('Send Email'),
         'isDefault' => TRUE,
-      );
+      ];
     }
     $this->addButtons($buttons);
   }
 
   function setDefaultValues()
   {
-    $defaults = array();
+    $defaults = [];
     return $defaults;
   }
 
@@ -170,23 +170,23 @@ class CRM_Contact_Form_Task_AnnualReceiptEmail_MailingOption extends CRM_Contact
         $sent = self::sendAnnualReceiptEmails($this->_contactIds, $searchOption, $mailingOption);
         if ($sent) {
           list($displayName, $email) = CRM_Contact_BAO_Contact_Location::getEmailDetails(reset($this->_contactIds));
-          CRM_Core_Session::setStatus(ts('Email has been sent to : %1', array(1 => $displayName." ( $email )")));
+          CRM_Core_Session::setStatus(ts('Email has been sent to : %1', [1 => $displayName." ( $email )"]));
         }
       }
       else {
         $batch = new CRM_Batch_BAO_Batch();
-        $batchParams = array(
+        $batchParams = [
           'label' => ts('Send Annual Receipt Email') . ' - ' . date('YmdHi'),
           'startCallback' => NULL,
           'startCallbackArgs' => NULL,
-          'processCallback' => array($this, 'sendAnnualReceiptEmails'),
-          'processCallbackArgs' => array($this->_contactIds, $searchOption, $mailingOption),
+          'processCallback' => [$this, 'sendAnnualReceiptEmails'],
+          'processCallbackArgs' => [$this->_contactIds, $searchOption, $mailingOption],
           'finishCallback' => NULL,
           'finishCallbackArgs' => NULL,
           'actionPermission' => '',
           'total' => $totalNumContacts,
           'processed' => 0,
-        );
+        ];
         $batch->start($batchParams);
         CRM_Utils_Hook::postProcess(get_class($this), $this);
         // redirect to notice page
@@ -213,10 +213,10 @@ class CRM_Contact_Form_Task_AnnualReceiptEmail_MailingOption extends CRM_Contact
       $pageTemplate->assign('imageSmallStampUrl', $config->imageUploadDir . $config->imageSmallStampName);
     }
 
-    $searchOption = array_merge($searchOption, array(
+    $searchOption = array_merge($searchOption, [
       'workflow_group' => 'msg_tpl_workflow_receipt',
       'workflow_value' => 'email_receipt_letter_annual',
-    ));
+    ]);
     $pages = CRM_Contribute_BAO_Contribution::getAnnualReceipt($contactId, $searchOption, $pageTemplate);
 
     $htmlTemplate = new CRM_Core_Smarty();
@@ -253,23 +253,23 @@ class CRM_Contact_Form_Task_AnnualReceiptEmail_MailingOption extends CRM_Contact
     $pdfFileName = strstr($pdfFilePath, 'Receipt');
 
     // making email template
-    $sendTemplateParams = array();
-    $sendTemplateParams = array(
+    $sendTemplateParams = [];
+    $sendTemplateParams = [
       'groupName' => 'msg_tpl_workflow_receipt',
       'valueName' => 'email_receipt_content_annual',
-    );
-    $sendTemplateParams['attachments'][] = array(
+    ];
+    $sendTemplateParams['attachments'][] = [
       'fullPath' => $pdfFilePath,
       'mime_type' => 'application/pdf',
       'cleanName' => $pdfFileName,
-    );
+    ];
     $sendTemplateParams['tplParams']['pdf_receipt'] = 1;
 
     // special case to add Email Receipt without connect contribution(annual receipt connect contact only)
     $activityTypeId = CRM_Core_OptionGroup::getValue('activity_type', 'Email Receipt', 'name');
     $activityStatusId = CRM_Core_OptionGroup::getValue('activity_status', 'Scheduled', 'name');
     $workflow = CRM_Core_BAO_MessageTemplates::getMessageTemplateByWorkflow($sendTemplateParams['groupName'], $sendTemplateParams['valueName']);
-    $subject = array();
+    $subject = [];
     $subject[] = $workflow['msg_title'].'-'.$searchOption['year'];
     if (is_array($searchOption['contribution_type_id']) && array_search(0, $searchOption['contribution_type_id']) !== FALSE) {
       $subject[] = ts('Contribution Types').':'.CRM_Utils_Array::implode(',', $searchOption['contribution_type_id']);
@@ -277,7 +277,7 @@ class CRM_Contact_Form_Task_AnnualReceiptEmail_MailingOption extends CRM_Contact
     if (!empty($searchOption['is_recur'])) {
       $subject[] = $searchOption['is_recur'] > 0 ? ts('Recurring Contribution') : ts('Non-Recurring Contribution');
     }
-    $activityParams = array(
+    $activityParams = [
       'assignee_contact_id' => $contactId,
       'activity_type_id' => $activityTypeId,
       'subject' => CRM_Utils_Array::implode(' ', $subject),
@@ -285,7 +285,7 @@ class CRM_Contact_Form_Task_AnnualReceiptEmail_MailingOption extends CRM_Contact
       'is_test' => 0,
       'status_id' => $activityStatusId,
       'skipRecentView' => TRUE,
-    );
+    ];
     $session = CRM_Core_Session::singleton();
     $loggedUserId = $session->get('userID');
     if ($loggedUserId) {
@@ -302,16 +302,16 @@ class CRM_Contact_Form_Task_AnnualReceiptEmail_MailingOption extends CRM_Contact
       $sendTemplateParams['from'] = $mailingOption['receipt_from_email'];
       $sendTemplateParams['toName'] = $displayName;
       $sendTemplateParams['toEmail'] = $email;
-      $sendTemplateParams['tplParams'] = array(
+      $sendTemplateParams['tplParams'] = [
         'receipt_text' => $mailingOption['receipt_text'],
         'year' => $searchOption['year'],
-      );
+      ];
       $sendTemplateParams['bcc'] = $mailingOption['bcc'];
       $sendTemplateParams['activityId'] = $activity->id;
-      CRM_Core_BAO_MessageTemplates::sendTemplate($sendTemplateParams, CRM_Core_DAO::$_nullObject, array(
-        0 => array('CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  array($activityId, TRUE)),
-        1 => array('CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  array($activityId, FALSE)),
-      ));
+      CRM_Core_BAO_MessageTemplates::sendTemplate($sendTemplateParams, CRM_Core_DAO::$_nullObject, [
+        0 => ['CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  [$activityId, TRUE]],
+        1 => ['CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  [$activityId, FALSE]],
+      ]);
       return TRUE;
     }
     return FALSE;

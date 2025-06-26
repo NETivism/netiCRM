@@ -63,7 +63,7 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
     CRM_Utils_System::setTitle(ts('Make Mailing Labels'));
 
     //add select for label
-    $label = array("5160" => "5160",
+    $label = ["5160" => "5160",
       "5161" => "5161",
       "5162" => "5162",
       "5163" => "5163",
@@ -72,14 +72,14 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
       "L7160" => "L7160",
       "L7161" => "L7161",
       "L7163" => "L7163",
-    );
+    ];
 
-    $this->add('select', 'label_id', ts('Select Label'), array('' => ts('- select label -')) + $label, TRUE);
+    $this->add('select', 'label_id', ts('Select Label'), ['' => ts('- select label -')] + $label, TRUE);
 
 
     // add select for Location Type
     $this->addElement('select', 'location_type_id', ts('Select Location'),
-      array('' => ts('Primary')) + CRM_Core_PseudoConstant::locationType(), TRUE
+      ['' => ts('Primary')] + CRM_Core_PseudoConstant::locationType(), TRUE
     );
 
     // checkbox for SKIP contacts with Do Not Mail privacy option
@@ -100,7 +100,7 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
    * @access public
    */
   function setDefaultValues() {
-    $defaults = array();
+    $defaults = [];
     $defaults['do_not_mail'] = 1;
 
     return $defaults;
@@ -130,10 +130,10 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
     }
 
     //build the returnproperties
-    $returnProperties = array('display_name' => 1, 'contact_type' => 1, 'sort_name' => 1);
+    $returnProperties = ['display_name' => 1, 'contact_type' => 1, 'sort_name' => 1];
     $mailingFormat = CRM_Core_BAO_Preferences::value('mailing_format');
 
-    $mailingFormatProperties = array();
+    $mailingFormatProperties = [];
     if ($mailingFormat) {
       $mailingFormatProperties = self::getReturnProperties($mailingFormat);
       $returnProperties = array_merge($returnProperties, $mailingFormatProperties);
@@ -143,7 +143,7 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
       unset($mailingFormatProperties['addressee']);
     }
 
-    $customFormatProperties = array();
+    $customFormatProperties = [];
     if (stristr($mailingFormat, 'custom_')) {
       foreach ($mailingFormatProperties as $token => $true) {
         if (substr($token, 0, 7) == 'custom_') {
@@ -165,34 +165,34 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
     }
 
     //get the contacts information
-    $params = array();
+    $params = [];
     if (CRM_Utils_Array::value('location_type_id', $fv)) {
       $locType = CRM_Core_PseudoConstant::locationType();
       $locName = $locType[$fv['location_type_id']];
-      $location = array('location' => array("{$locName}" => $address));
+      $location = ['location' => ["{$locName}" => $address]];
       $returnProperties = array_merge($returnProperties, $location);
-      $params[] = array('location_type', '=', array($fv['location_type_id'] => 1), 0, 0);
+      $params[] = ['location_type', '=', [$fv['location_type_id'] => 1], 0, 0];
     }
     else {
       $returnProperties = array_merge($returnProperties, $address);
     }
 
-    $rows = array();
+    $rows = [];
 
     foreach ($this->_contactIds as $contactID) {
-      $params[] = array(CRM_Core_Form::CB_PREFIX . $contactID,
+      $params[] = [CRM_Core_Form::CB_PREFIX . $contactID,
         '=', 1, 0, 0,
-      );
+      ];
     }
 
     // fix for CRM-2651
     if (CRM_Utils_Array::value('do_not_mail', $fv)) {
-      $params[] = array('do_not_mail', '=', 0, 0, 0);
+      $params[] = ['do_not_mail', '=', 0, 0, 0];
     }
     // fix for CRM-2613
-    $params[] = array('is_deceased', '=', 0, 0, 0);
+    $params[] = ['is_deceased', '=', 0, 0, 0];
 
-    $custom = array();
+    $custom = [];
     foreach ($returnProperties as $name => $dontCare) {
       $cfID = CRM_Core_BAO_CustomField::getKeyID($name);
       if ($cfID) {
@@ -206,10 +206,10 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
     $query = new CRM_Contact_BAO_Query($params, $returnProperties);
     $details = $query->apiQuery($params, $returnProperties, NULL, NULL, 0, $numberofContacts);
 
-    $tokens = array();
+    $tokens = [];
     CRM_Utils_Hook::tokens($tokens);
     CRM_Utils_Hook::tokenValues($details[0], $this->_contactIds, NULL, $tokens, 'CRM_Contact_Form_Task_Label');
-    $tokenFields = array();
+    $tokenFields = [];
     foreach ($tokens as $category => $catTokens) {
       foreach ($catTokens as $token) {
         $tokenFields[] = $token;
@@ -262,15 +262,15 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
           $rows[$value][$field] = $fieldValue;
         }
 
-        $valuesothers = array();
-        $paramsothers = array('contact_id' => $value);
+        $valuesothers = [];
+        $paramsothers = ['contact_id' => $value];
 
         $valuesothers = CRM_Core_BAO_Location::getValues($paramsothers, $valuesothers);
         if (CRM_Utils_Array::value('location_type_id', $fv)) {
           foreach ($valuesothers as $vals) {
             if ($vals['location_type_id'] == CRM_Utils_Array::value('location_type_id', $fv)) {
               foreach ($vals as $k => $v) {
-                if (in_array($k, array('email', 'phone', 'im', 'openid'))) {
+                if (in_array($k, ['email', 'phone', 'im', 'openid'])) {
                   if ($k == 'im') {
                     $rows[$value][$k] = $v['1']['name'];
                   }
@@ -344,7 +344,7 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
 
         $val = array_filter(explode(CRM_Core_DAO::VALUE_SEPARATOR, $commMethods));
         $comm = CRM_Core_PseudoConstant::pcm();
-        $temp = array();
+        $temp = [];
         foreach ($val as $vals) {
           $temp[] = $comm[$vals];
         }
@@ -353,7 +353,7 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
       $row['id'] = $id;
       $formatted = CRM_Utils_Address::format($row, 'mailing_format', FALSE, TRUE, $individualFormat, $tokenFields);
 
-      $rows[$id] = array($formatted);
+      $rows[$id] = [$formatted];
     }
 
     //call function to create labels
@@ -402,8 +402,8 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
    * @access  public
    */
   function getReturnProperties(&$format) {
-    $returnProperties = array();
-    $matches = array();
+    $returnProperties = [];
+    $matches = [];
     preg_match_all('/(?<!\{|\\\\)\{(\w+\.\w+)\}(?!\})/',
       $format,
       $matches,
@@ -422,7 +422,7 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
   }
 
   function mergeSameAddress(&$rows) {
-    $uniqueAddress = array();
+    $uniqueAddress = [];
     foreach (array_keys($rows) as $rowID) {
       // load complete address as array key
       $address =
@@ -471,8 +471,8 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
 
   function mergeSameHousehold(&$rows) {
     # group selected contacts by type
-    $individuals = array();
-    $households = array();
+    $individuals = [];
+    $households = [];
     foreach ($rows as $contact_id => $row) {
       if ($row['contact_type'] == 'Household') {
         $households[$contact_id] = $row;

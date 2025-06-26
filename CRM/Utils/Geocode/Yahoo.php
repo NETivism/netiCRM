@@ -74,7 +74,7 @@ class CRM_Utils_Geocode_Yahoo {
 
     $config = CRM_Core_Config::singleton();
 
-    $arg = array();
+    $arg = [];
     $arg[] = "appid=" . urlencode($config->mapAPIKey);
 
     if (CRM_Utils_Array::value('street_address', $values)) {
@@ -122,11 +122,11 @@ class CRM_Utils_Geocode_Yahoo {
     $string = $request->getResponseBody();
     $xml = simplexml_load_string($string);
 
-    $ret = array();
+    $ret = [];
     $ret['precision'] = (string)$xml->Result['precision'];
 
     if (is_a($xml->Result, 'SimpleXMLElement')) {
-      $result = array();
+      $result = [];
       $result = get_object_vars($xml->Result);
 
       foreach ($result as $key => $val) {

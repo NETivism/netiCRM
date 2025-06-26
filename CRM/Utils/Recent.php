@@ -65,7 +65,7 @@ class CRM_Utils_Recent {
       $session = CRM_Core_Session::singleton();
       self::$_recent = $session->get(self::STORE_NAME);
       if (empty(self::$_recent) || (!empty(self::$_recent) && !is_array(self::$_recent))) {
-        self::$_recent = array();
+        self::$_recent = [];
       }
     }
   }
@@ -100,7 +100,7 @@ class CRM_Utils_Recent {
     $type,
     $contactId,
     $contactName,
-    $others = array()
+    $others = []
   ) {
     self::initialize();
     $session = CRM_Core_Session::singleton();
@@ -115,11 +115,11 @@ class CRM_Utils_Recent {
     }
 
     if (!is_array($others)) {
-      $others = array();
+      $others = [];
     }
 
     array_unshift(self::$_recent,
-      array('title' => $title,
+      ['title' => $title,
         'url' => $url,
         'id' => $id,
         'type' => $type,
@@ -130,7 +130,7 @@ class CRM_Utils_Recent {
         'image_url' => CRM_Utils_Array::value('imageUrl', $others),
         'edit_url' => CRM_Utils_Array::value('editUrl', $others),
         'delete_url' => CRM_Utils_Array::value('deleteUrl', $others),
-      )
+      ]
     );
     if (count(self::$_recent) > self::MAX_ITEMS) {
       array_pop(self::$_recent);
@@ -184,7 +184,7 @@ class CRM_Utils_Recent {
 
     $tempRecent = self::$_recent;
 
-    self::$_recent = array();
+    self::$_recent = [];
 
     // rebuild recent.
     for ($i = 0; $i < count($tempRecent); $i++) {

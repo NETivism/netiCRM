@@ -93,7 +93,7 @@ class CRM_Core_BAO_Discount extends CRM_Core_DAO_Discount {
    *
    */
   static function getOptionGroup($entityId, $entityTable) {
-    $optionGroupIDs = array();
+    $optionGroupIDs = [];
 
     $dao = new CRM_Core_DAO_Discount();
     $dao->entity_id = $entityId;

@@ -62,9 +62,9 @@ class CRM_Upgrade_Incremental_php_ThreeThree {
     while ($customField->fetch()) {
       $name = CRM_Utils_String::munge($customField->label, '_', 64);
       $fldCnt = CRM_Core_DAO::singleValueQuery($customFldCntQuery,
-        array(1 => array($name, 'String'),
-          2 => array($customField->id, 'Integer'),
-        ), TRUE, FALSE
+        [1 => [$name, 'String'],
+          2 => [$customField->id, 'Integer'],
+        ], TRUE, FALSE
       );
       if ($fldCnt) {
         $name = CRM_Utils_String::munge("{$name}_" . rand(), '_', 64);
@@ -74,9 +74,9 @@ Update `civicrm_custom_field`
 SET `name` = %1
 WHERE id = %2
 ";
-      $customFieldParams = array(1 => array($name, 'String'),
-        2 => array($customField->id, 'Integer'),
-      );
+      $customFieldParams = [1 => [$name, 'String'],
+        2 => [$customField->id, 'Integer'],
+      ];
       CRM_Core_DAO::executeQuery($customFieldQuery, $customFieldParams, TRUE, NULL, FALSE, FALSE);
     }
     $customField->free();
@@ -90,9 +90,9 @@ WHERE id = %2
     while ($customGroup->fetch()) {
       $name = CRM_Utils_String::munge($customGroup->title, '_', 64);
       $grpCnt = CRM_Core_DAO::singleValueQuery($customGrpCntQuery,
-        array(1 => array($name, 'String'),
-          2 => array($customGroup->id, 'Integer'),
-        )
+        [1 => [$name, 'String'],
+          2 => [$customGroup->id, 'Integer'],
+        ]
       );
       if ($grpCnt) {
         $name = CRM_Utils_String::munge("{$name}_" . rand(), '_', 64);
@@ -110,9 +110,9 @@ WHERE id = %2
     while ($ufGroup->fetch()) {
       $name = CRM_Utils_String::munge($ufGroup->title, '_', 64);
       $ufGrpCnt = CRM_Core_DAO::singleValueQuery($ufGrpCntQuery,
-        array(1 => array($name, 'String'),
-          2 => array($ufGroup->id, 'Integer'),
-        )
+        [1 => [$name, 'String'],
+          2 => [$ufGroup->id, 'Integer'],
+        ]
       );
       if ($ufGrpCnt) {
         $name = CRM_Utils_String::munge("{$name}_" . rand(), '_', 64);
@@ -126,7 +126,7 @@ WHERE id = %2
 
     // now modify the config so that the directories are stored in option group/value
     // CRM-6914
-    $params = array();
+    $params = [];
     CRM_Core_BAO_ConfigSetting::add($params);
   }
 
@@ -149,7 +149,7 @@ WHERE id = %2
 
     $priceFieldDAO = new CRM_Price_DAO_Field();
     $priceFieldDAO->find();
-    $ids = array();
+    $ids = [];
     while ($priceFieldDAO->fetch()) {
 
       $opGroupDAO = new CRM_Core_DAO_OptionGroup();
@@ -167,14 +167,14 @@ WHERE id = %2
       while ($opValueDAO->fetch()) {
         // FIX ME: not migrating description(?), there will
         // be a field description for each option.
-        $fieldValue = array('price_field_id' => $priceFieldDAO->id,
+        $fieldValue = ['price_field_id' => $priceFieldDAO->id,
           'label' => $opValueDAO->label,
           'name' => CRM_Utils_String::munge($opValueDAO->label, '_', 64),
           'amount' => $opValueDAO->name,
           'weight' => $opValueDAO->weight,
           'is_default' => $opValueDAO->is_default,
           'is_active' => $opValueDAO->is_active,
-        );
+        ];
 
         if ($priceFieldDAO->count) {
           // Migrate Participant Counts on option level.
@@ -214,12 +214,12 @@ WHERE id = %2
         // update civicrm_line_item for price_field_value_id.
         // Used query to avoid line by line update.
         if ($labelFound || $priceFound) {
-          $lineItemParams = array(1 => array($fieldValueDAO->id, 'Integer'),
-            2 => array($opValueDAO->label, 'String'),
-          );
+          $lineItemParams = [1 => [$fieldValueDAO->id, 'Integer'],
+            2 => [$opValueDAO->label, 'String'],
+          ];
           $updateLineItems = "UPDATE civicrm_line_item SET price_field_value_id = %1 WHERE label = %2";
           if ($priceFound) {
-            $lineItemParams[3] = array($opValueDAO->name, 'Float');
+            $lineItemParams[3] = [$opValueDAO->name, 'Float'];
             $updateLineItems .= " AND unit_price = %3";
           }
           CRM_Core_DAO::executeQuery($updateLineItems, $lineItemParams);
@@ -236,10 +236,10 @@ WHERE id = %2
     // Now drop option_group_id column from civicrm_line_item
     $updateLineItem2 = "ALTER TABLE civicrm_line_item DROP option_group_id,
                            ADD CONSTRAINT `FK_civicrm_price_field_value_id` FOREIGN KEY (price_field_value_id) REFERENCES civicrm_price_field_value(id) ON DELETE SET NULL;";
-    CRM_Core_DAO::executeQuery($updateLineItem2, array(), TRUE, NULL, FALSE, FALSE);
+    CRM_Core_DAO::executeQuery($updateLineItem2, [], TRUE, NULL, FALSE, FALSE);
 
     $updatePriceField = "ALTER TABLE civicrm_price_field DROP count";
-    CRM_Core_DAO::executeQuery($updatePriceField, array(), TRUE, NULL, FALSE, FALSE);
+    CRM_Core_DAO::executeQuery($updatePriceField, [], TRUE, NULL, FALSE, FALSE);
 
     // as the table 'civicrm_price_field' is localised and column 'count' is dropped
     // after the views are rebuild, we need to rebuild views to avoid invalid refrence of table.
@@ -251,8 +251,8 @@ WHERE id = %2
 
   function upgrade_3_3_beta3($rev) {
     // get the duplicate Ids of line item entries
-    $dupeLineItemIds = array();
-    $fields = array('entity_table', 'entity_id', 'price_field_id', 'price_field_value_id');
+    $dupeLineItemIds = [];
+    $fields = ['entity_table', 'entity_id', 'price_field_id', 'price_field_value_id'];
 
     $mainLineItem = new CRM_Price_BAO_LineItem();
     $mainLineItem->find(TRUE);
@@ -284,7 +284,7 @@ WHERE id = %2
 
     //CRM-7123 -lets activate needful languages.
     $config = CRM_Core_Config::singleton();
-    $locales = array();
+    $locales = [];
     if (is_dir($config->gettextResourceDir)) {
       $dir = opendir($config->gettextResourceDir);
       while ($filename = readdir($dir)) {
@@ -309,7 +309,7 @@ INNER JOIN  civicrm_option_group grp ON ( grp.id = val.option_group_id )
        AND  val.name IN ( ' . "'" . CRM_Utils_Array::implode("', '", $locales) . "' )";
 
       CRM_Core_DAO::executeQuery($sql,
-        array(1 => array('languages', 'String')),
+        [1 => ['languages', 'String']],
         TRUE, NULL, FALSE, FALSE
       );
     }

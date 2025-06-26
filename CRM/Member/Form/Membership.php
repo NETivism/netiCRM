@@ -106,8 +106,8 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
     if ($this->_mode) {
       $this->assign('membershipMode', $this->_mode);
 
-      $this->_paymentProcessor = array('billing_mode' => 1);
-      $validProcessors = array();
+      $this->_paymentProcessor = ['billing_mode' => 1];
+      $validProcessors = [];
       $processors = CRM_Core_PseudoConstant::paymentProcessor(FALSE, FALSE, "billing_mode IN ( 1, 3 ) AND payment_processor_type != 'TaiwanACH'");
 
       foreach ($processors as $ppID => $label) {
@@ -140,12 +140,12 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
       $locationTypes = CRM_Core_PseudoConstant::locationType(FALSE, 'name');
       $this->_bltID = array_search('Billing', $locationTypes);
       if (!$this->_bltID) {
-         return CRM_Core_Error::statusBounce(ts('Please set a location type of %1', array(1 => 'Billing')));
+         return CRM_Core_Error::statusBounce(ts('Please set a location type of %1', [1 => 'Billing']));
       }
       $this->set('bltID', $this->_bltID);
       $this->assign('bltID', $this->_bltID);
 
-      $this->_fields = array();
+      $this->_fields = [];
 
 
       CRM_Core_Payment_Form::setCreditCardFields($this);
@@ -191,7 +191,7 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
       return CRM_Custom_Form_CustomData::setDefaultValues($this);
     }
 
-    $defaults = array();
+    $defaults = [];
     $defaults = &parent::setDefaultValues();
 
     //setting default join date and receive date
@@ -201,7 +201,7 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
     }
 
     if (is_numeric($this->_memType)) {
-      $defaults["membership_type_id"] = array();
+      $defaults["membership_type_id"] = [];
       $defaults["membership_type_id"][0] = CRM_Core_DAO::getFieldValue('CRM_Member_DAO_MembershipType',
         $this->_memType,
         'member_of_contact_id',
@@ -232,8 +232,8 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
     }
 
     if (CRM_Utils_Array::value('record_contribution', $defaults) && !$this->_mode) {
-      $contributionParams = array('id' => $defaults['record_contribution']);
-      $contributionIds = array();
+      $contributionParams = ['id' => $defaults['record_contribution']];
+      $contributionIds = [];
 
 
       CRM_Contribute_BAO_Contribution::getValues($contributionParams, $defaults, $contributionIds);
@@ -262,15 +262,15 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
       $this->assign('is_pay_later', TRUE);
     }
     if ($this->_mode) {
-      $fields = array();
+      $fields = [];
 
       foreach ($this->_fields as $name => $dontCare) {
         $fields[$name] = 1;
       }
-      $names = array("first_name", "middle_name", "last_name", "street_address-{$this->_bltID}",
+      $names = ["first_name", "middle_name", "last_name", "street_address-{$this->_bltID}",
         "city-{$this->_bltID}", "postal_code-{$this->_bltID}", "country_id-{$this->_bltID}",
         "state_province_id-{$this->_bltID}",
-      );
+      ];
       foreach ($names as $name) {
         $fields[$name] = 1;
       }
@@ -298,7 +298,7 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
       }
     }
 
-    $dates = array('join_date', 'start_date', 'end_date');
+    $dates = ['join_date', 'start_date', 'end_date'];
     foreach ($dates as $key) {
       if (CRM_Utils_Array::value($key, $defaults)) {
         list($defaults[$key]) = CRM_Utils_Date::setDateDefaults(CRM_Utils_Array::value($key, $defaults));
@@ -330,16 +330,16 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
     $this->assign('entityID', $this->_id);
 
     if ($this->_action & CRM_Core_Action::DELETE) {
-      $this->addButtons(array(
-          array('type' => 'next',
+      $this->addButtons([
+          ['type' => 'next',
             'name' => ts('Delete'),
             'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
             'isDefault' => TRUE,
-          ),
-          array('type' => 'cancel',
+          ],
+          ['type' => 'cancel',
             'name' => ts('Cancel'),
-          ),
-        )
+          ],
+        ]
       );
       return;
     }
@@ -390,16 +390,16 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
     $sel = &$this->addElement('hierselect',
       'membership_type_id',
       ts('Membership Organization and Type'),
-      array('onChange' => "buildCustomData( 'Membership', this.value );")
+      ['onChange' => "buildCustomData( 'Membership', this.value );"]
     );
 
-    $sel->setOptions(array($selMemTypeOrg, $selOrgMemType));
+    $sel->setOptions([$selMemTypeOrg, $selOrgMemType]);
 
     $this->applyFilter('__ALL__', 'trim');
 
-    $this->addDate('join_date', ts('Join Date'), FALSE, array('formatType' => 'activityDate'));
-    $this->addDate('start_date', ts('Start Date'), FALSE, array('formatType' => 'activityDate'));
-    $this->addDate('end_date', ts('End Date'), FALSE, array('formatType' => 'activityDate'));
+    $this->addDate('join_date', ts('Join Date'), FALSE, ['formatType' => 'activityDate']);
+    $this->addDate('start_date', ts('Start Date'), FALSE, ['formatType' => 'activityDate']);
+    $this->addDate('end_date', ts('End Date'), FALSE, ['formatType' => 'activityDate']);
 
     $this->add('text', 'source', ts('Source'),
       CRM_Core_DAO::getAttribute('CRM_Member_DAO_Membership', 'source')
@@ -407,18 +407,18 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
 
     if (!$this->_mode) {
       $this->add('select', 'status_id', ts('Membership Status'),
-        array('' => ts('- select -')) + CRM_Member_PseudoConstant::membershipStatus(NULL, NULL, 'label')
+        ['' => ts('- select -')] + CRM_Member_PseudoConstant::membershipStatus(NULL, NULL, 'label')
       );
       $this->addElement('checkbox', 'is_override',
         ts('Status Override?'), NULL,
-        array('onClick' => 'showHideMemberStatus()')
+        ['onClick' => 'showHideMemberStatus()']
       );
 
       $membershipStatuses = CRM_Member_PseudoConstant::membershipStatus();
-      $skipStatusCalStatus = array_intersect($membershipStatuses, array('Pending', 'Expired', 'Cancelled'));
+      $skipStatusCalStatus = array_intersect($membershipStatuses, ['Pending', 'Expired', 'Cancelled']);
       if (!empty($skipStatusCalStatus[$this->_defaults['status_id']])) {
         $this->addElement('checkbox', 'skip_status_cal', ts('Skip status calculate'));
-        $defaults = array('skip_status_cal' => 1);
+        $defaults = ['skip_status_cal' => 1];
         $this->setDefaults($defaults);
       }
 
@@ -427,30 +427,30 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
 
       $this->add('select', 'contribution_type_id',
         ts('Contribution Type'),
-        array('' => ts('- select -')) + CRM_Contribute_PseudoConstant::contributionType()
+        ['' => ts('- select -')] + CRM_Contribute_PseudoConstant::contributionType()
       );
 
       $this->add('text', 'total_amount', ts('Amount'));
       $this->addRule('total_amount', ts('Please enter a valid amount.'), 'money');
 
-      $this->addDateTime('receive_date', ts('Receive Date'), FALSE, array('formatType' => 'activityDateTime'));
+      $this->addDateTime('receive_date', ts('Receive Date'), FALSE, ['formatType' => 'activityDateTime']);
 
       $this->add('select', 'payment_instrument_id',
         ts('Paid By'),
-        array('' => ts('- select -')) + CRM_Contribute_PseudoConstant::paymentInstrument(),
-        FALSE, array('onChange' => "return showHideByValue('payment_instrument_id','4','checkNumber','table-row','select',false);")
+        ['' => ts('- select -')] + CRM_Contribute_PseudoConstant::paymentInstrument(),
+        FALSE, ['onChange' => "return showHideByValue('payment_instrument_id','4','checkNumber','table-row','select',false);"]
       );
       $this->add('text', 'trxn_id', ts('Transaction ID'));
       $this->addRule('trxn_id', ts('Transaction ID already exists in Database.'),
-        'objectExists', array('CRM_Contribute_DAO_Contribution', $this->_id, 'trxn_id')
+        'objectExists', ['CRM_Contribute_DAO_Contribution', $this->_id, 'trxn_id']
       );
 
-      $allowStatuses = array();
+      $allowStatuses = [];
       $statuses = CRM_Contribute_PseudoConstant::contributionStatus();
       if ($this->_onlinePendingContributionId) {
         $statusNames = CRM_Contribute_PseudoConstant::contributionStatus(NULL, 'name');
         foreach ($statusNames as $val => $name) {
-          if (in_array($name, array('In Progress', 'Overdue'))) {
+          if (in_array($name, ['In Progress', 'Overdue'])) {
             continue;
           }
           $allowStatuses[$val] = $statuses[$val];
@@ -468,18 +468,18 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
     }
 
     // receipt
-    $receipt_attr = array('readonly' => 'readonly');
+    $receipt_attr = ['readonly' => 'readonly'];
     $this->add('text', 'receipt_id', ts('Receipt ID'), $receipt_attr);
-    $this->addRule('receipt_id', ts('This Receipt ID already exists in the database.'), 'objectExists', array('CRM_Contribute_DAO_Contribution', $this->_id, 'receipt_id'));
+    $this->addRule('receipt_id', ts('This Receipt ID already exists in the database.'), 'objectExists', ['CRM_Contribute_DAO_Contribution', $this->_id, 'receipt_id']);
     $this->assign('receipt_id_setting', CRM_Utils_System::url("civicrm/admin/receipt", 'reset=1'));
-    $this->addDateTime('receipt_date', ts('Receipt Date'), FALSE, array('formatType' => 'activityDateTime'));
+    $this->addDateTime('receipt_date', ts('Receipt Date'), FALSE, ['formatType' => 'activityDateTime']);
     if (!empty($this->_values['receipt_id'])) {
       $this->assign('receipt_id', $this->_values['receipt_id']);
       $this->getElement('receipt_date')->freeze();
       $this->getElement('receipt_date_time')->freeze();
     }
 
-    $sendReceiptEle = $this->addElement('checkbox', 'send_receipt', ts('Send Confirmation and Receipt?'), NULL, array('onclick' => "return showHideByValue('send_receipt','','notice','table-row','radio',false);"));
+    $sendReceiptEle = $this->addElement('checkbox', 'send_receipt', ts('Send Confirmation and Receipt?'), NULL, ['onclick' => "return showHideByValue('send_receipt','','notice','table-row','radio',false);"]);
 
     $this->add('textarea', 'receipt_text_signup', ts('Receipt Message'));
     if ($this->_mode) {
@@ -507,7 +507,7 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
       }
     }
 
-    $this->addFormRule(array('CRM_Member_Form_Membership', 'formRule'), $this);
+    $this->addFormRule(['CRM_Member_Form_Membership', 'formRule'], $this);
 
 
     $mailingInfo = &CRM_Core_BAO_Preferences::mailingPreferences();
@@ -526,7 +526,7 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
    * @static
    */
   public static function formRule($params, $files, $self) {
-    $errors = array();
+    $errors = [];
 
     //check if contact is selected in standalone mode
     if (isset($fields['contact_select_id'][1]) && !$fields['contact_select_id'][1]) {
@@ -627,7 +627,7 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
         if (empty($calcStatus)) {
           $url = CRM_Utils_System::url('civicrm/admin/member/membershipStatus', 'reset=1&action=browse');
           $errors['_qf_default'] = ts('There is no valid Membership Status available for selected membership dates.');
-          $status = ts('Oops, it looks like there is no valid membership status available for the given membership dates. You can <a href="%1">Configure Membership Status Rules</a>.', array(1 => $url));
+          $status = ts('Oops, it looks like there is no valid membership status available for the given membership dates. You can <a href="%1">Configure Membership Status Rules</a>.', [1 => $url]);
           if (!$self->_mode) {
             $status .= ' ' . ts('OR You can sign up by setting Status Override? to true.');
           }
@@ -693,8 +693,8 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
     // get the submitted form values.
     $this->_params = $formValues = $this->controller->exportValues($this->_name);
 
-    $params = array();
-    $ids = array();
+    $params = [];
+    $ids = [];
 
     // set the contact, when contact is selected
     if (CRM_Utils_Array::value('contact_select_id', $formValues)) {
@@ -703,11 +703,11 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
 
     $params['contact_id'] = $this->_contactID;
 
-    $fields = array(
+    $fields = [
       'status_id',
       'source',
       'is_override',
-    );
+    ];
 
     foreach ($fields as $f) {
       $params[$f] = CRM_Utils_Array::value($f, $formValues);
@@ -722,10 +722,10 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
     $params['membership_type_id'] = $formValues['membership_type_id'][1];
 
     // process date params to mysql date format.
-    $dateTypes = array('join_date' => 'joinDate',
+    $dateTypes = ['join_date' => 'joinDate',
       'start_date' => 'startDate',
       'end_date' => 'endDate',
-    );
+    ];
     foreach ($dateTypes as $dateField => $dateVariable) {
       $$dateVariable = CRM_Utils_Date::processDate($formValues[$dateField]);
     }
@@ -738,11 +738,11 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
     }
     $calcStatus = CRM_Member_BAO_MembershipStatus::getMembershipStatusByDate($startDate, $endDate, $joinDate, 'today', $excludeIsAdmin);
 
-    $dates = array('join_date',
+    $dates = ['join_date',
       'start_date',
       'end_date',
       'reminder_date',
-    );
+    ];
     $currentTime = getDate();
     $pendingId = array_search('Pending', $membershipStatuses);
     foreach ($dates as $d) {
@@ -767,7 +767,7 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
       $params['skipStatusCal'] = 1;
     }
 
-    $tdates = array('receive_date', 'receipt_date');
+    $tdates = ['receive_date', 'receipt_date'];
     foreach ($tdates as $d) {
       $params[$d] = CRM_Utils_Date::processDate($formValues[$d], $formValues[$d . '_time'], TRUE);
     }
@@ -799,9 +799,9 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
     list($userName, $userEmail) = CRM_Contact_BAO_Contact_Location::getEmailDetails($ids['userId']);
 
     if (CRM_Utils_Array::value('record_contribution', $formValues)) {
-      $recordContribution = array('total_amount', 'contribution_type_id', 'payment_instrument_id',
+      $recordContribution = ['total_amount', 'contribution_type_id', 'payment_instrument_id',
         'trxn_id', 'contribution_status_id', 'check_number',
-      );
+      ];
 
       foreach ($recordContribution as $f) {
         $params[$f] = CRM_Utils_Array::value($f, $formValues);
@@ -811,7 +811,7 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
         $formValues['membership_type_id'][1]
       );
       if (!$this->_onlinePendingContributionId) {
-        $params['contribution_source'] = "{$membershipType} " . ts("Membership: Offline membership signup (by %1)", array(1 => $userName));
+        $params['contribution_source'] = "{$membershipType} " . ts("Membership: Offline membership signup (by %1)", [1 => $userName]);
       }
 
       if (CRM_Utils_Array::value('send_receipt', $formValues) && empty($formValues['receipt_date'])) {
@@ -839,7 +839,7 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
 
 
       $now = date('YmdHis');
-      $fields = array();
+      $fields = [];
 
       // set email for primary location.
       $fields["email-Primary"] = 1;
@@ -862,7 +862,7 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
 
       $ctype = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $this->_contactID, 'contact_type');
 
-      $nameFields = array('first_name', 'middle_name', 'last_name');
+      $nameFields = ['first_name', 'middle_name', 'last_name'];
 
       foreach ($nameFields as $name) {
         $fields[$name] = 1;
@@ -937,7 +937,7 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
       $contribution->trxn_id = $result['trxn_id'];
       if ($contribution->find(TRUE)) {
         // next create the transaction record
-        $trxnParams = array(
+        $trxnParams = [
           'contribution_id' => $contribution->id,
           'trxn_date' => $now,
           'trxn_type' => 'Debit',
@@ -947,7 +947,7 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
           'currency' => $config->defaultCurrency,
           'payment_processor' => $this->_paymentProcessor['payment_processor_type'],
           'trxn_id' => $result['trxn_id'],
-        );
+        ];
 
         CRM_Core_BAO_FinancialTrxn::create($trxnParams);
       }
@@ -974,9 +974,9 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
           $endDate = $membership->end_date;
 
 
-          if (!in_array($membership->status_id, array(array_search('Cancelled', $membershipStatuses),
+          if (!in_array($membership->status_id, [array_search('Cancelled', $membershipStatuses),
                 array_search('Expired', $membershipStatuses),
-              ))) {
+              ])) {
             $cancelled = FALSE;
           }
         }
@@ -1014,7 +1014,7 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
 
       // retrieve custom data
 
-      $customFields = $customValues = array();
+      $customFields = $customValues = [];
       foreach ($this->_groupTree as $groupID => $group) {
         if ($groupID == 'info') {
           continue;
@@ -1024,10 +1024,10 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
           $customFields["custom_{$k}"] = $field;
         }
       }
-      $members = array(array('member_id', '=', $membership->id, 0, 0));
+      $members = [['member_id', '=', $membership->id, 0, 0]];
       // check whether its a test drive
       if ($this->_mode) {
-        $members[] = array('member_test', '=', 1, 0, 0);
+        $members[] = ['member_test', '=', 1, 0, 0];
       }
       CRM_Core_BAO_UFGroup::getValues($this->_contactID, $customFields, $customValues, FALSE, $members, CRM_Core_BAO_UFGroup::MASK_ALL);
       if ($this->_mode) {
@@ -1045,13 +1045,13 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
         $this->assign('billingName', $name);
 
         // assign the address formatted up for display
-        $addressParts = array("street_address-{$this->_bltID}",
+        $addressParts = ["street_address-{$this->_bltID}",
           "city-{$this->_bltID}",
           "postal_code-{$this->_bltID}",
           "state_province-{$this->_bltID}",
           "country-{$this->_bltID}",
-        );
-        $addressFields = array();
+        ];
+        $addressFields = [];
         foreach ($addressParts as $part) {
           list($n, $id) = explode('-', $part);
           if (isset($this->_params['billing_' . $part])) {
@@ -1089,7 +1089,7 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
       $workflow = CRM_Core_BAO_MessageTemplates::getMessageTemplateByWorkflow('msg_tpl_workflow_membership', 'membership_offline_receipt');
       $activityId = CRM_Activity_BAO_Activity::addTransactionalActivity($membership, 'Membership Notification Email', $workflow['msg_title']);
       list($mailSend, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate(
-        array(
+        [
           'activityId' => $activityId,
           'groupName' => 'msg_tpl_workflow_membership',
           'valueName' => 'membership_offline_receipt',
@@ -1098,25 +1098,25 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
           'toName' => $this->_memberDisplayName,
           'toEmail' => $this->_memberEmail,
           'isTest' => (bool)($this->_action & CRM_Core_Action::PREVIEW),
-        ),
+        ],
         CRM_Core_DAO::$_nullObject,
-        array(
-          0 => array('CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  array($activityId, TRUE)),
-          1 => array('CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  array($activityId, FALSE)),
-        )
+        [
+          0 => ['CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  [$activityId, TRUE]],
+          1 => ['CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  [$activityId, FALSE]],
+        ]
       );
     }
 
     //end date can be modified by hooks, so if end date is set then use it.
     $endDate = ($membership->end_date) ? $membership->end_date : $endDate;
     if (($this->_action & CRM_Core_Action::UPDATE)) {
-      $statusMsg = ts('Membership for %1 has been updated.', array(1 => $this->_memberDisplayName));
+      $statusMsg = ts('Membership for %1 has been updated.', [1 => $this->_memberDisplayName]);
       if ($endDate) {
         $endDate = CRM_Utils_Date::customFormat($endDate);
-        $statusMsg .= ' ' . ts('The membership End Date is %1.', array(1 => $endDate));
+        $statusMsg .= ' ' . ts('The membership End Date is %1.', [1 => $endDate]);
       }
       if ($receiptSend) {
-        $statusMsg .= ' ' . ts('A confirmation and receipt has been sent to %1.', array(1 => $this->_memberEmail));
+        $statusMsg .= ' ' . ts('A confirmation and receipt has been sent to %1.', [1 => $this->_memberEmail]);
       }
     }
     elseif (($this->_action & CRM_Core_Action::ADD)) {
@@ -1124,17 +1124,17 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
       $memType = CRM_Core_DAO::getFieldValue('CRM_Member_DAO_MembershipType',
         $params['membership_type_id']
       );
-      $statusMsg = ts('%1 membership for %2 has been added.', array(1 => $memType, 2 => $this->_memberDisplayName));
+      $statusMsg = ts('%1 membership for %2 has been added.', [1 => $memType, 2 => $this->_memberDisplayName]);
 
       //get the end date from calculated dates.
       $endDate = ($endDate) ? $endDate : CRM_Utils_Array::value('end_date', $calcDates);
 
       if ($endDate) {
         $endDate = CRM_Utils_Date::customFormat($endDate);
-        $statusMsg .= ' ' . ts('The new membership End Date is %1.', array(1 => $endDate));
+        $statusMsg .= ' ' . ts('The new membership End Date is %1.', [1 => $endDate]);
       }
       if ($receiptSend && $mailSend) {
-        $statusMsg .= ' ' . ts('A membership confirmation and receipt has been sent to %1.', array(1 => $this->_memberEmail));
+        $statusMsg .= ' ' . ts('A membership confirmation and receipt has been sent to %1.', [1 => $this->_memberEmail]);
       }
     }
     CRM_Core_Session::setStatus($statusMsg);

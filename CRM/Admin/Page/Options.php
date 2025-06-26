@@ -104,22 +104,22 @@ class CRM_Admin_Page_Options extends CRM_Core_Page_Basic {
     if (self::$_gName == 'acl_role') {
       CRM_Utils_System::setTitle(ts('Manage ACL Roles'));
       // set breadcrumb to append to admin/access
-      $breadCrumb = array(array('title' => ts('Access Control'),
+      $breadCrumb = [['title' => ts('Access Control'),
           'url' => CRM_Utils_System::url('civicrm/admin/access',
             'reset=1'
           ),
-        ));
+        ]];
       CRM_Utils_System::appendBreadCrumb($breadCrumb);
     }
     else {
-      CRM_Utils_System::setTitle(ts('%1 Options', array(1 => ts(self::$_GName))));
+      CRM_Utils_System::setTitle(ts('%1 Options', [1 => ts(self::$_GName)]));
     }
 
     // #30318, use new form for DKIM / SPF verification
     if (self::$_gName == 'from_email_address') {
       CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin/from_email', 'reset=1'));
     }
-    if (in_array(self::$_gName, array('email_greeting', 'postal_greeting', 'addressee', 'website_type'))) {
+    if (in_array(self::$_gName, ['email_greeting', 'postal_greeting', 'addressee', 'website_type'])) {
       $this->assign('showIsDefault', TRUE);
     }
     if (self::$_gName == 'participant_status') {
@@ -153,40 +153,40 @@ class CRM_Admin_Page_Options extends CRM_Core_Page_Basic {
    */
   function &links() {
     if (!(self::$_links)) {
-      self::$_links = array(
-        CRM_Core_Action::UPDATE => array(
+      self::$_links = [
+        CRM_Core_Action::UPDATE => [
           'name' => ts('Edit'),
           'url' => 'civicrm/admin/options/' . self::$_gName,
           'qs' => 'group=' . self::$_gName . '&action=update&id=%%id%%&reset=1',
-          'title' => ts('Edit %1', array(1 => self::$_gName)),
-        ),
-        CRM_Core_Action::DISABLE => array(
+          'title' => ts('Edit %1', [1 => self::$_gName]),
+        ],
+        CRM_Core_Action::DISABLE => [
           'name' => ts('Disable'),
           'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_Core_BAO_OptionValue' . '\',\'' . 'enable-disable' . '\' );"',
           'ref' => 'disable-action',
-          'title' => ts('Disable %1', array(1 => self::$_gName)),
-        ),
-        CRM_Core_Action::ENABLE => array(
+          'title' => ts('Disable %1', [1 => self::$_gName]),
+        ],
+        CRM_Core_Action::ENABLE => [
           'name' => ts('Enable'),
           'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_Core_BAO_OptionValue' . '\',\'' . 'disable-enable' . '\' );"',
           'ref' => 'enable-action',
-          'title' => ts('Enable %1', array(1 => self::$_gName)),
-        ),
-        CRM_Core_Action::DELETE => array(
+          'title' => ts('Enable %1', [1 => self::$_gName]),
+        ],
+        CRM_Core_Action::DELETE => [
           'name' => ts('Delete'),
           'url' => 'civicrm/admin/options/' . self::$_gName,
           'qs' => 'group=' . self::$_gName . '&action=delete&id=%%id%%',
-          'title' => ts('Delete %1 Type', array(1 => self::$_gName)),
-        ),
-      );
+          'title' => ts('Delete %1 Type', [1 => self::$_gName]),
+        ],
+      ];
 
       if (self::$_gName == 'custom_search') {
-        $runLink = array(CRM_Core_Action::FOLLOWUP => array(
+        $runLink = [CRM_Core_Action::FOLLOWUP => [
             'name' => ts('Run'),
             'url' => 'civicrm/contact/search/custom',
             'qs' => 'reset=1&csid=%%value%%',
-            'title' => ts('Run %1', array(1 => self::$_gName)),
-          ));
+            'title' => ts('Run %1', [1 => self::$_gName]),
+          ]];
         self::$_links = $runLink + self::$_links;
       }
     }
@@ -214,7 +214,7 @@ class CRM_Admin_Page_Options extends CRM_Core_Page_Basic {
   function browse() {
 
 
-    $groupParams = array('name' => self::$_gName);
+    $groupParams = ['name' => self::$_gName];
     $optionValue = CRM_Core_OptionValue::getRows($groupParams, $this->links(), 'component_id,weight');
     $gName = self::$_gName;
     $returnURL = CRM_Utils_System::url("civicrm/admin/options/$gName",

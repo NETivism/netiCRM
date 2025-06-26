@@ -155,7 +155,7 @@ class CRM_Pledge_Form_Search extends CRM_Core_Form {
     $this->_actionButtonName = $this->getButtonName('next', 'action');
 
     $this->_done = FALSE;
-    $this->defaults = array();
+    $this->defaults = [];
 
     /* 
          * we allow the controller to set force/reset externally, useful when we are being 
@@ -263,24 +263,24 @@ class CRM_Pledge_Form_Search extends CRM_Core_Form {
       $permission = CRM_Core_Permission::getPermission();
 
 
-      $tasks = array('' => ts('- actions -')) + CRM_Pledge_Task::permissionedTaskTitles($permission);
+      $tasks = ['' => ts('- actions -')] + CRM_Pledge_Task::permissionedTaskTitles($permission);
 
       $this->add('select', 'task', ts('Actions:') . ' ', $tasks);
       $this->add('submit', $this->_actionButtonName, ts('Go'),
-        array('class' => 'form-submit',
+        ['class' => 'form-submit',
           'id' => 'Go',
           'onclick' => "return checkPerformAction('mark_x', '" . $this->getName() . "', 0);",
-        )
+        ]
       );
 
       $this->add('submit', $this->_printButtonName, ts('Print'),
-        array('class' => 'form-submit',
+        ['class' => 'form-submit',
           'onclick' => "return checkPerformAction('mark_x', '" . $this->getName() . "', 1);",
-        )
+        ]
       );
 
       // need to perform tasks on all or selected items ? using radio_ts(task selection) for it
-      $selectedRowsRadio = $this->addElement('radio', 'radio_ts', NULL, '', 'ts_sel', array('checked' => 'checked'));
+      $selectedRowsRadio = $this->addElement('radio', 'radio_ts', NULL, '', 'ts_sel', ['checked' => 'checked']);
       $this->assign('ts_sel_id', $selectedRowsRadio->_attributes['id']);
 
       $allRowsRadio = $this->addElement('radio', 'radio_ts', NULL, '', 'ts_all');
@@ -288,12 +288,12 @@ class CRM_Pledge_Form_Search extends CRM_Core_Form {
     }
 
     // add buttons
-    $this->addButtons(array(
-        array('type' => 'refresh',
+    $this->addButtons([
+        ['type' => 'refresh',
           'name' => ts('Search'),
           'isDefault' => TRUE,
-        ),
-      ));
+        ],
+      ]);
   }
 
   /**
@@ -410,7 +410,7 @@ class CRM_Pledge_Form_Search extends CRM_Core_Form {
    * @see valid_date
    */
   function addRules() {
-    $this->addFormRule(array('CRM_Pledge_Form_Search', 'formRule'));
+    $this->addFormRule(['CRM_Pledge_Form_Search', 'formRule']);
   }
 
   /**
@@ -424,7 +424,7 @@ class CRM_Pledge_Form_Search extends CRM_Core_Form {
    * @access public
    */
   static function formRule($fields) {
-    $errors = array();
+    $errors = [];
 
     if (!empty($errors)) {
       return $errors;
@@ -441,7 +441,7 @@ class CRM_Pledge_Form_Search extends CRM_Core_Form {
    * @return array the default array reference
    */
   function &setDefaultValues() {
-    $defaults = array();
+    $defaults = [];
     $defaults = $this->_formValues;
     return $defaults;
   }
@@ -456,8 +456,8 @@ class CRM_Pledge_Form_Search extends CRM_Core_Form {
       CRM_Core_DAO::$_nullObject
     );
     if ($status) {
-      $this->_formValues['pledge_payment_status_id'] = array($status => 1);
-      $this->_defaults['pledge_payment_status_id'] = array($status => 1);
+      $this->_formValues['pledge_payment_status_id'] = [$status => 1];
+      $this->_defaults['pledge_payment_status_id'] = [$status => 1];
     }
 
     $fromDate = CRM_Utils_Request::retrieve('start', 'Date',
@@ -492,7 +492,7 @@ class CRM_Pledge_Form_Search extends CRM_Core_Form {
       // we need set all statuses except Cancelled
       unset($statusValues[$pledgeStatus]);
 
-      $statuses = array();
+      $statuses = [];
       foreach ($statusValues as $statusId => $value) {
         $statuses[$statusId] = 1;
       }

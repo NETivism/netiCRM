@@ -63,7 +63,7 @@ class CRM_Admin_Form_OptionGroup extends CRM_Admin_Form {
     $this->addRule('name',
       ts('Name already exists in Database.'),
       'objectExists',
-      array('CRM_Core_DAO_OptionGroup', $this->_id)
+      ['CRM_Core_DAO_OptionGroup', $this->_id]
     );
 
     $this->add('text',
@@ -74,7 +74,7 @@ class CRM_Admin_Form_OptionGroup extends CRM_Admin_Form {
 
     $element = $this->add('checkbox', 'is_active', ts('Enabled?'));
     if ($this->_action & CRM_Core_Action::UPDATE) {
-      if (in_array($this->_values['name'], array('encounter_medium', 'case_type', 'case_status'))) {
+      if (in_array($this->_values['name'], ['encounter_medium', 'case_type', 'case_status'])) {
         static $caseCount = NULL;
 
         if (!isset($caseCount)) {
@@ -86,7 +86,7 @@ class CRM_Admin_Form_OptionGroup extends CRM_Admin_Form {
         }
       }
       if ($this->_values['is_reserved']) {
-        $this->freeze(array('name', 'description', 'is_active'));
+        $this->freeze(['name', 'description', 'is_active']);
       }
     }
 
@@ -109,7 +109,7 @@ class CRM_Admin_Form_OptionGroup extends CRM_Admin_Form {
     }
     else {
 
-      $params = $ids = array();
+      $params = $ids = [];
       // store the submitted values in an array
       $params = $this->exportValues();
 
@@ -118,7 +118,7 @@ class CRM_Admin_Form_OptionGroup extends CRM_Admin_Form {
       }
 
       $optionGroup = CRM_Core_BAO_OptionGroup::add($params, $ids);
-      CRM_Core_Session::setStatus(ts('The Option Group \'%1\' has been saved.', array(1 => $optionGroup->name)));
+      CRM_Core_Session::setStatus(ts('The Option Group \'%1\' has been saved.', [1 => $optionGroup->name]));
     }
   }
 }

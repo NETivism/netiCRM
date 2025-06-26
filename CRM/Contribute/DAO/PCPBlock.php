@@ -156,10 +156,10 @@ class CRM_Contribute_DAO_PCPBlock extends CRM_Core_DAO
   function &links()
   {
     if (!(self::$_links)) {
-      self::$_links = array(
+      self::$_links = [
         'entity_id' => 'civicrm_contribution_page:id',
         'supporter_profile_id' => 'civicrm_uf_group:id',
-      );
+      ];
     }
     return self::$_links;
   }
@@ -188,69 +188,69 @@ class CRM_Contribute_DAO_PCPBlock extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'id' => array(
+      self::$_fields = [
+        'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'entity_table' => array(
+        ] ,
+        'entity_table' => [
           'name' => 'entity_table',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Entity Table') ,
           'maxlength' => 64,
           'size' => CRM_Utils_Type::BIG,
-        ) ,
-        'entity_id' => array(
+        ] ,
+        'entity_id' => [
           'name' => 'entity_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
           'FKClassName' => 'CRM_Contribute_DAO_ContributionPage',
-        ) ,
-        'supporter_profile_id' => array(
+        ] ,
+        'supporter_profile_id' => [
           'name' => 'supporter_profile_id',
           'type' => CRM_Utils_Type::T_INT,
           'default' => 'UL',
           'FKClassName' => 'CRM_Core_DAO_UFGroup',
-        ) ,
-        'is_approval_needed' => array(
+        ] ,
+        'is_approval_needed' => [
           'name' => 'is_approval_needed',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'default' => 'UL',
-        ) ,
-        'is_tellfriend_enabled' => array(
+        ] ,
+        'is_tellfriend_enabled' => [
           'name' => 'is_tellfriend_enabled',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'default' => 'UL',
-        ) ,
-        'tellfriend_limit' => array(
+        ] ,
+        'tellfriend_limit' => [
           'name' => 'tellfriend_limit',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Tellfriend Limit') ,
           'default' => 'UL',
-        ) ,
-        'link_text' => array(
+        ] ,
+        'link_text' => [
           'name' => 'link_text',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Link Text') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
           'default' => 'UL',
-        ) ,
-        'is_active' => array(
+        ] ,
+        'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'default' => '',
-        ) ,
-        'notify_email' => array(
+        ] ,
+        'notify_email' => [
           'name' => 'notify_email',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Notify Email') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
           'default' => 'UL',
-        ) ,
-      );
+        ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -283,7 +283,7 @@ class CRM_Contribute_DAO_PCPBlock extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -306,7 +306,7 @@ class CRM_Contribute_DAO_PCPBlock extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {

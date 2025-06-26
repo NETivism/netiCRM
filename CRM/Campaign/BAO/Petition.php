@@ -54,7 +54,7 @@ Class CRM_Campaign_BAO_Petition extends CRM_Campaign_BAO_Survey {
 
     $petitionTypeID = CRM_Core_OptionGroup::getValue('activity_type', 'petition', 'name');
 
-    $survey = array();
+    $survey = [];
     $dao = new CRM_Campaign_DAO_Survey();
 
     if (!$all) {
@@ -107,14 +107,14 @@ Class CRM_Campaign_BAO_Petition extends CRM_Campaign_BAO_Survey {
       // activity status id (from /civicrm/admin/optionValue?reset=1&action=browse&gid=25)
       // 1-Schedule, 2-Completed
 
-      $activityParams = array('source_contact_id' => $params['contactId'],
+      $activityParams = ['source_contact_id' => $params['contactId'],
         'target_contact_id' => $params['contactId'],
         'source_record_id' => $params['sid'],
         'subject' => $surveyInfo['title'],
         'activity_type_id' => $surveyInfo['activity_type_id'],
         'activity_date_time' => date("YmdHis"),
         'status_id' => $params['statusId'],
-      );
+      ];
 
       //activity creation
       // *** check for activity using source id - if already signed
@@ -178,7 +178,7 @@ Class CRM_Campaign_BAO_Petition extends CRM_Campaign_BAO_Survey {
    * @static
    */
   static function getPetitionSignatureTotalbyCountry($surveyId) {
-    $countries = array();
+    $countries = [];
     $sql = "
 SELECT count(civicrm_address.country_id) as total,
     IFNULL(country_id,'') as country_id,IFNULL(iso_code,'') as country_iso, IFNULL(civicrm_country.name,'') as country
@@ -194,10 +194,10 @@ WHERE
       $sql .= " AND status_id = " . (int) $status_id;
     }
     $sql .= " GROUP BY civicrm_address.country_id";
-    $fields = array('total', 'country_id', 'country_iso', 'country');
+    $fields = ['total', 'country_id', 'country_iso', 'country'];
     $dao = &CRM_Core_DAO::executeQuery($sql);
     while ($dao->fetch()) {
-      $row = array();
+      $row = [];
       foreach ($fields as $field) {
         $row[$field] = $dao->$field;
       }
@@ -216,7 +216,7 @@ WHERE
   static function getPetitionSignatureTotal($surveyId) {
     $surveyInfo = CRM_Campaign_BAO_Petition::getSurveyInfo((int) $surveyId);
     //$activityTypeID = $surveyInfo['activity_type_id'];
-    $signature = array();
+    $signature = [];
 
     $sql = "
 SELECT 
@@ -226,7 +226,7 @@ WHERE
 	source_record_id = " . (int) $surveyId . " AND activity_type_id = " . (int) $surveyInfo['activity_type_id'] . " GROUP BY status_id";
 
 
-    $statusTotal = array();
+    $statusTotal = [];
     $total = 0;
     $dao = &CRM_Core_DAO::executeQuery($sql);
     while ($dao->fetch()) {
@@ -239,7 +239,7 @@ WHERE
 
 
   public static function getSurveyInfo($surveyId = NULL) {
-    $surveyInfo = array();
+    $surveyInfo = [];
 
     $sql = "
 SELECT 	activity_type_id, 
@@ -275,7 +275,7 @@ AND og.name = 'activity_type'";
 
     // sql injection protection
     $surveyId = (int)$surveyId;
-    $signature = array();
+    $signature = [];
 
     $sql = "
 SELECT 	a.id,
@@ -301,12 +301,12 @@ WHERE
     if ($status_id) {
       $sql .= " AND status_id = " . (int) $status_id;
     }
-    $fields = array('id', 'survey_id', 'contact_id', 'activity_date_time', 'activity_type_id', 'status_id', 'first_name', 'last_name', 'sort_name', 'gender_id', 'country_id', 'state_province_id', 'country_iso', 'country');
+    $fields = ['id', 'survey_id', 'contact_id', 'activity_date_time', 'activity_type_id', 'status_id', 'first_name', 'last_name', 'sort_name', 'gender_id', 'country_id', 'state_province_id', 'country_iso', 'country'];
     $sql .= " ORDER BY  a.activity_date_time";
 
     $dao = &CRM_Core_DAO::executeQuery($sql);
     while ($dao->fetch()) {
-      $row = array();
+      $row = [];
       foreach ($fields as $field) {
         $row[$field] = $dao->$field;
       }
@@ -325,7 +325,7 @@ WHERE
    */
   function getEntitiesByTag($tag) {
 
-    $contactIds = array();
+    $contactIds = [];
     $entityTagDAO = new CRM_Core_DAO_EntityTag();
     $entityTagDAO->tag_id = $tag['id'];
     $entityTagDAO->find();
@@ -346,7 +346,7 @@ WHERE
   static function checkSignature($surveyId, $contactId) {
 
     $surveyInfo = CRM_Campaign_BAO_Petition::getSurveyInfo($surveyId);
-    $signature = array();
+    $signature = [];
 
     $sql = "
 SELECT 	a.id AS id,
@@ -423,7 +423,7 @@ WHERE 	a.source_record_id = " . $surveyId . "
 
     // get petition info
     $petitionParams['id'] = $params['sid'];
-    $petitionInfo = array();
+    $petitionInfo = [];
     CRM_Campaign_BAO_Survey::retrieve($petitionParams, $petitionInfo);
     if (empty($petitionInfo)) {
       CRM_Core_Error::fatal('Petition doesn\'t exist.');
@@ -459,7 +459,7 @@ WHERE 	a.source_record_id = " . $surveyId . "
 
         if ($params['email-Primary']) {
           CRM_Core_BAO_MessageTemplates::sendTemplate(
-            array(
+            [
               'groupName' => 'msg_tpl_workflow_petition',
               'valueName' => 'petition_sign',
               'contactId' => $params['contactId'],
@@ -470,7 +470,7 @@ WHERE 	a.source_record_id = " . $surveyId . "
               'replyTo' => $replyTo,
               'petitionId' => $params['sid'],
               'petitionTitle' => $petitionInfo['title'],
-            )
+            ]
           );
         }
         break;
@@ -491,11 +491,11 @@ WHERE 	a.source_record_id = " . $surveyId . "
 
 
         $replyTo = CRM_Utils_Array::implode($config->verpSeparator,
-          array($localpart . 'c',
+          [$localpart . 'c',
             $se->contact_id,
             $se->id,
             $se->hash,
-          )
+          ]
         ) . "@$emailDomain";
 
 
@@ -518,7 +518,7 @@ WHERE 	a.source_record_id = " . $surveyId . "
 
         if ($params['email-Primary']) {
           CRM_Core_BAO_MessageTemplates::sendTemplate(
-            array(
+            [
               'groupName' => 'msg_tpl_workflow_petition',
               'valueName' => 'petition_confirmation_needed',
               'contactId' => $params['contactId'],
@@ -530,7 +530,7 @@ WHERE 	a.source_record_id = " . $surveyId . "
               'petitionId' => $params['sid'],
               'petitionTitle' => $petitionInfo['title'],
               'confirmUrl' => $confirmUrl,
-            )
+            ]
           );
         }
         break;

@@ -48,19 +48,19 @@ class CRM_Core_BAO_Log extends CRM_Core_DAO_Log {
     $log->entity_id = $id;
     $log->orderBy('modified_date '.$order);
     $log->limit(1);
-    $result = array();
+    $result = [];
     if ($log->find(TRUE)) {
       if (!empty($log->modified_id)) {
         list($displayName, $contactImage) = CRM_Contact_BAO_Contact::getDisplayAndImage($log->modified_id);
       }
-      $result = array(
+      $result = [
         'log_id' => $log->id,
         'id' => $log->modified_id,
         'name' => $displayName,
         'image' => $contactImage,
         'date' => $log->modified_date,
         'data' => $log->data,
-      );
+      ];
     }
     return $result;
   }
@@ -83,7 +83,7 @@ class CRM_Core_BAO_Log extends CRM_Core_DAO_Log {
 
   static function register($contactID, $tableName, $tableID, $userID = NULL, $data = NULL) {
     if (!self::$_processed) {
-      self::$_processed = array();
+      self::$_processed = [];
     }
 
     if (!$userID) {
@@ -109,7 +109,7 @@ class CRM_Core_BAO_Log extends CRM_Core_DAO_Log {
       self::$_processed[$contactID][$userID] = 1;
     }
     else {
-      self::$_processed[$contactID] = array($userID => 1);
+      self::$_processed[$contactID] = [$userID => 1];
     }
 
     $logData = "$tableName,$tableID";

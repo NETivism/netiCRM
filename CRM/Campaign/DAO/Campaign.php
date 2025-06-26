@@ -187,11 +187,11 @@ class CRM_Campaign_DAO_Campaign extends CRM_Core_DAO
   function &links()
   {
     if (!(self::$_links)) {
-      self::$_links = array(
+      self::$_links = [
         'parent_id' => 'civicrm_campaign:id',
         'created_id' => 'civicrm_contact:id',
         'last_modified_id' => 'civicrm_contact:id',
-      );
+      ];
     }
     return self::$_links;
   }
@@ -220,8 +220,8 @@ class CRM_Campaign_DAO_Campaign extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'id' => array(
+      self::$_fields = [
+        'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Campaign ID') ,
@@ -231,8 +231,8 @@ class CRM_Campaign_DAO_Campaign extends CRM_Core_DAO
           'headerPattern' => '',
           'dataPattern' => '',
           'export' => true,
-        ) ,
-        'name' => array(
+        ] ,
+        'name' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Campaign Name') ,
@@ -244,8 +244,8 @@ class CRM_Campaign_DAO_Campaign extends CRM_Core_DAO
           'headerPattern' => '',
           'dataPattern' => '',
           'export' => true,
-        ) ,
-        'title' => array(
+        ] ,
+        'title' => [
           'name' => 'title',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Campaign Title') ,
@@ -256,15 +256,15 @@ class CRM_Campaign_DAO_Campaign extends CRM_Core_DAO
           'headerPattern' => '',
           'dataPattern' => '',
           'export' => true,
-        ) ,
-        'description' => array(
+        ] ,
+        'description' => [
           'name' => 'description',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Campaign Description') ,
           'rows' => 8,
           'cols' => 60,
-        ) ,
-        'start_date' => array(
+        ] ,
+        'start_date' => [
           'name' => 'start_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Campaign Start Date') ,
@@ -273,8 +273,8 @@ class CRM_Campaign_DAO_Campaign extends CRM_Core_DAO
           'headerPattern' => '/^start|(s(tart\s)?date)$/i',
           'dataPattern' => '',
           'export' => true,
-        ) ,
-        'end_date' => array(
+        ] ,
+        'end_date' => [
           'name' => 'end_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Campaign End Date') ,
@@ -283,8 +283,8 @@ class CRM_Campaign_DAO_Campaign extends CRM_Core_DAO
           'headerPattern' => '/^end|(e(nd\s)?date)$/i',
           'dataPattern' => '',
           'export' => true,
-        ) ,
-        'campaign_type_id' => array(
+        ] ,
+        'campaign_type_id' => [
           'name' => 'campaign_type_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Campaign Type ID') ,
@@ -294,8 +294,8 @@ class CRM_Campaign_DAO_Campaign extends CRM_Core_DAO
           'dataPattern' => '',
           'export' => true,
           'default' => 'UL',
-        ) ,
-        'status_id' => array(
+        ] ,
+        'status_id' => [
           'name' => 'status_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Campaign Status ID') ,
@@ -305,8 +305,8 @@ class CRM_Campaign_DAO_Campaign extends CRM_Core_DAO
           'dataPattern' => '',
           'export' => true,
           'default' => 'UL',
-        ) ,
-        'external_identifier' => array(
+        ] ,
+        'external_identifier' => [
           'name' => 'external_identifier',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('External Identifier') ,
@@ -317,8 +317,8 @@ class CRM_Campaign_DAO_Campaign extends CRM_Core_DAO
           'headerPattern' => '/external\s?id/i',
           'dataPattern' => '/^\d{11,}$/',
           'export' => true,
-        ) ,
-        'parent_id' => array(
+        ] ,
+        'parent_id' => [
           'name' => 'parent_id',
           'type' => CRM_Utils_Type::T_INT,
           'import' => true,
@@ -328,33 +328,33 @@ class CRM_Campaign_DAO_Campaign extends CRM_Core_DAO
           'export' => true,
           'default' => 'UL',
           'FKClassName' => 'CRM_Campaign_DAO_Campaign',
-        ) ,
-        'is_active' => array(
+        ] ,
+        'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'default' => '',
-        ) ,
-        'created_id' => array(
+        ] ,
+        'created_id' => [
           'name' => 'created_id',
           'type' => CRM_Utils_Type::T_INT,
           'FKClassName' => 'CRM_Contact_DAO_Contact',
-        ) ,
-        'created_date' => array(
+        ] ,
+        'created_date' => [
           'name' => 'created_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Campaign Created Date') ,
-        ) ,
-        'last_modified_id' => array(
+        ] ,
+        'last_modified_id' => [
           'name' => 'last_modified_id',
           'type' => CRM_Utils_Type::T_INT,
           'FKClassName' => 'CRM_Contact_DAO_Contact',
-        ) ,
-        'last_modified_date' => array(
+        ] ,
+        'last_modified_date' => [
           'name' => 'last_modified_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Last Modified Date') ,
-        ) ,
-      );
+        ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -387,7 +387,7 @@ class CRM_Campaign_DAO_Campaign extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -410,7 +410,7 @@ class CRM_Campaign_DAO_Campaign extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {

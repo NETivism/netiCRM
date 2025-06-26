@@ -43,11 +43,11 @@ class CRM_Contact_Form_Search_Custom_ContributionAggregate implements CRM_Contac
     /**
      * Define the columns for search result rows
      */
-    $this->_columns = array(ts('Contact Id') => 'contact_id',
+    $this->_columns = [ts('Contact Id') => 'contact_id',
       ts('Name') => 'sort_name',
       ts('Donation Count') => 'donation_count',
       ts('Donation Amount') => 'donation_amount',
-    );
+    ];
   }
 
   function buildForm(&$form) {
@@ -66,24 +66,24 @@ class CRM_Contact_Form_Search_Custom_ContributionAggregate implements CRM_Contac
     );
     $form->addRule('max_amount', ts('Please enter a valid amount (numbers and decimal point only).'), 'money');
 
-    $form->addDate('start_date', ts('Contribution Date From'), FALSE, array('formatType' => 'custom'));
-    $form->addDate('end_date', ts('...through'), FALSE, array('formatType' => 'custom'));
+    $form->addDate('start_date', ts('Contribution Date From'), FALSE, ['formatType' => 'custom']);
+    $form->addDate('end_date', ts('...through'), FALSE, ['formatType' => 'custom']);
 
     $form->add('text', 'top_contributors', ts('Amount of top contributors'));
 
-    $form->add('select', 'contribution_recurring', ts('Find Recurring Contributions?'), array(
+    $form->add('select', 'contribution_recurring', ts('Find Recurring Contributions?'), [
       'all' => ts('All'),
       'recur' => ts('Recurring Contribution'),
       'not_recur' => ts('Non-Recurring Contribution'),
-    ));
+    ]);
 
-    $form->setDefaults(array('top_contributors' => 100));
+    $form->setDefaults(['top_contributors' => 100]);
 
     /**
      * If you are using the sample template, this array tells the template fields to render
      * for the search form.
      */
-    $form->assign( 'elements', array( 'min_amount', 'max_amount', 'start_date', 'end_date','top_contributors','contribution_recurring') );
+    $form->assign( 'elements', [ 'min_amount', 'max_amount', 'start_date', 'end_date','top_contributors','contribution_recurring'] );
   }
 
   /**
@@ -179,7 +179,7 @@ civicrm_contact AS contact_a
       *
       */
   function where($includeContactIDs = FALSE) {
-    $clauses = array();
+    $clauses = [];
 
     $clauses[] = "contrib.contact_id = contact_a.id";
     $clauses[] = "contrib.contribution_status_id = 1";
@@ -197,7 +197,7 @@ civicrm_contact AS contact_a
     }
 
     if ($includeContactIDs) {
-      $contactIDs = array();
+      $contactIDs = [];
       foreach ($this->_formValues as $id => $value) {
         list($contactID, $additionalID) = CRM_Core_Form::cbExtract($id);
         if ($value && !empty($contactID)) {
@@ -215,7 +215,7 @@ civicrm_contact AS contact_a
   }
 
   function having($includeContactIDs = FALSE) {
-    $clauses = array();
+    $clauses = [];
     $min = CRM_Utils_Array::value('min_amount', $this->_formValues);
     if ($min) {
       $min = CRM_Utils_Rule::cleanMoney($min);

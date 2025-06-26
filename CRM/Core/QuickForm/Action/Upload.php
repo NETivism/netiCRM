@@ -94,7 +94,7 @@ class CRM_Core_QuickForm_Action_Upload extends CRM_Core_QuickForm_Action {
         $value = $element->getValue();
 
         if (is_array($value['name'])) {
-          $newName = array();
+          $newName = [];
           foreach($value['name'] as $idx => $name) {
             $newName[$idx] = CRM_Utils_File::makeFileName($name);
           }
@@ -104,21 +104,21 @@ class CRM_Core_QuickForm_Action_Upload extends CRM_Core_QuickForm_Action {
         }
         $movedFilename = $element->moveUploadedFile($this->_uploadDir, $newName);
         if (!$movedFilename) {
-          return CRM_Core_Error::statusBounce(ts('We could not move the uploaded file %1 to the upload directory %2. Please verify that the \'Temporary Files\' setting points to a valid path which is writable by your web server.', array(1 => $newName, 2 => $this->_uploadDir)));
+          return CRM_Core_Error::statusBounce(ts('We could not move the uploaded file %1 to the upload directory %2. Please verify that the \'Temporary Files\' setting points to a valid path which is writable by your web server.', [1 => $newName, 2 => $this->_uploadDir]));
         }
         if (is_array($newName)) {
           foreach($newName as $idx => $name) {
-            $data['values'][$pageName][$uploadName][$idx] = array(
+            $data['values'][$pageName][$uploadName][$idx] = [
               'name' => $this->_uploadDir . $name,
               'type' => $value['type'][$idx],
-            );
+            ];
           }
         }
         else {
-          $data['values'][$pageName][$uploadName] = array(
+          $data['values'][$pageName][$uploadName] = [
             'name' => $this->_uploadDir . $newName,
             'type' => $value['type'],
-          );
+          ];
         }
       }
     }

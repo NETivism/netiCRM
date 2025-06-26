@@ -55,7 +55,7 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form {
    * @return None
    */
   public function setDefaultValues() {
-    $defaults = array();
+    $defaults = [];
     $defaults = &parent::setDefaultValues();
 
     //finding default weight to be put
@@ -68,7 +68,7 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form {
       // Set values for relation type select box
       $relTypeIds = explode(CRM_Core_DAO::VALUE_SEPARATOR, $defaults['relationship_type_id']);
       $relDirections = explode(CRM_Core_DAO::VALUE_SEPARATOR, $defaults['relationship_direction']);
-      $defaults['relationship_type_id'] = array();
+      $defaults['relationship_type_id'] = [];
       foreach ($relTypeIds as $key => $value) {
         $defaults['relationship_type_id'][] = $value . '_' . $relDirections[$key];
       }
@@ -76,12 +76,12 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form {
 
     $config = CRM_Core_Config::singleton();
     //setting default fixed_period_start_day & fixed_period_rollover_day
-    $periods = array('fixed_period_start_day', 'fixed_period_rollover_day');
+    $periods = ['fixed_period_start_day', 'fixed_period_rollover_day'];
     foreach ($periods as $per) {
       if (isset($defaults[$per])) {
         $dat = $defaults[$per];
         $dat = ($dat < 999) ? '0' . $dat : $dat;
-        $defaults[$per] = array();
+        $defaults[$per] = [];
         $defaults[$per]['M'] = substr($dat, 0, 2);
         $defaults[$per]['d'] = substr($dat, 2, 3);
       }
@@ -111,7 +111,7 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form {
     $this->add('text', 'name', ts('Name'), CRM_Core_DAO::getAttribute('CRM_Member_DAO_MembershipType', 'name'), TRUE);
 
     $this->addRule('name', ts('A membership type with this name already exists. Please select another name.'),
-      'objectExists', array('CRM_Member_DAO_MembershipType', $this->_id)
+      'objectExists', ['CRM_Member_DAO_MembershipType', $this->_id]
     );
     $this->add('text', 'description', ts('Description'),
       CRM_Core_DAO::getAttribute('CRM_Member_DAO_MembershipType', 'description')
@@ -122,11 +122,11 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form {
     $this->addRule('minimum_fee', ts('Please enter a monetary value for the Minimum Fee.'), 'money');
 
     $this->addElement('select', 'duration_unit', ts('Duration') . ' ',
-      CRM_Core_SelectValues::unitList('duration'), array('onchange' => 'showHidePeriodSettings()')
+      CRM_Core_SelectValues::unitList('duration'), ['onchange' => 'showHidePeriodSettings()']
     );
     //period type
     $this->addElement('select', 'period_type', ts('Period Type'),
-      CRM_Core_SelectValues::periodType(), array('onchange' => 'showHidePeriodSettings()')
+      CRM_Core_SelectValues::periodType(), ['onchange' => 'showHidePeriodSettings()']
     );
 
     $this->add('text', 'duration_interval', ts('Duration Interval'),
@@ -149,7 +149,7 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form {
 
 
     $this->add('select', 'contribution_type_id', ts('Contribution Type'),
-      array('' => ts('- select -')) + CRM_Contribute_PseudoConstant::contributionType()
+      ['' => ts('- select -')] + CRM_Contribute_PseudoConstant::contributionType()
     );
 
 
@@ -157,7 +157,7 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form {
     if (is_array($relTypeInd)) {
       asort($relTypeInd);
     }
-    $memberRel = &$this->add('select', 'relationship_type_id', ts('Relationship Type'), array('' => ts('- select -')) + $relTypeInd);
+    $memberRel = &$this->add('select', 'relationship_type_id', ts('Relationship Type'), ['' => ts('- select -')] + $relTypeInd);
     $memberRel->setMultiple(TRUE);
 
     $this->add('select', 'visibility', ts('Visibility'), CRM_Core_SelectValues::memberVisibility());
@@ -169,7 +169,7 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form {
 
     $msgTemplates = CRM_Core_BAO_MessageTemplates::getMessageTemplates(FALSE);
     if (!empty($msgTemplates)) {
-      $reminderMsg = $this->add('select', 'renewal_msg_id', ts('Renewal Reminder Message'), array('' => ts('- select -')) + $msgTemplates);
+      $reminderMsg = $this->add('select', 'renewal_msg_id', ts('Renewal Reminder Message'), ['' => ts('- select -')] + $msgTemplates);
     }
     else {
       $this->assign('noMsgTemplates', TRUE);
@@ -187,12 +187,12 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form {
     $searchDone = $this->get('searchDone');
 
     if ($searchRows) {
-      $checkBoxes = array();
+      $checkBoxes = [];
       $chekFlag = 0;
       foreach ($searchRows as $id => $row) {
         $checked = '';
         if (!$chekFlag) {
-          $checked = array('checked' => NULL);
+          $checked = ['checked' => NULL];
           $chekFlag++;
         }
 
@@ -231,30 +231,30 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form {
     }
 
     if (($this->_action & CRM_Core_Action::UPDATE) && $reminderDay) {
-      $renewMessage = array();
-      $returnProperties = array('renewal_msg_id', 'renewal_reminder_day');
+      $renewMessage = [];
+      $returnProperties = ['renewal_msg_id', 'renewal_reminder_day'];
       CRM_Core_DAO::commonRetrieveAll('CRM_Member_DAO_MembershipType', 'id', $this->_id, $renewMessage, $returnProperties);
       if (CRM_Utils_Array::value('renewal_msg_id', $renewMessage[$this->_id]) &&
         CRM_Utils_Array::value('renewal_reminder_day', $renewMessage[$this->_id]) &&
         $membershipRecords
       ) {
         $reminderMsg = $this->add('select', 'renewal_msg_id', ts('Renewal Reminder Message'),
-          array('' => ts('- select -')) + $msgTemplates
+          ['' => ts('- select -')] + $msgTemplates
         );
       }
     }
 
-    $this->addElement('submit', $this->getButtonName('refresh'), $searchBtn, array('class' => 'form-submit'));
+    $this->addElement('submit', $this->getButtonName('refresh'), $searchBtn, ['class' => 'form-submit']);
 
-    $this->addFormRule(array('CRM_Member_Form_MembershipType', 'formRule'));
+    $this->addFormRule(['CRM_Member_Form_MembershipType', 'formRule']);
 
     $this->assign('membershipTypeId', $this->_id);
 
     // add current member count data
     if ($this->_id) {
-      $memberCount = CRM_Core_DAO::singleValueQuery("SELECT count(*) FROM civicrm_membership WHERE membership_type_id = %1 AND is_test = 0", array(
-        1 => array($this->_id, 'Integer')
-      ));
+      $memberCount = CRM_Core_DAO::singleValueQuery("SELECT count(*) FROM civicrm_membership WHERE membership_type_id = %1 AND is_test = 0", [
+        1 => [$this->_id, 'Integer']
+      ]);
       $this->assign('memberCount', $memberCount);
       $this->set('memberCount', $memberCount);
     }
@@ -271,7 +271,7 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form {
    */
   static function formRule($params) {
 
-    $errors = array();
+    $errors = [];
     if (!isset($params['_qf_MembershipType_refresh']) || !$params['_qf_MembershipType_refresh']) {
       if (!$params['name']) {
         $errors['name'] = ts('Please enter a membership type name.');
@@ -311,7 +311,7 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form {
       if (($params['period_type'] == 'fixed') &&
         ($params['duration_unit'] == 'year')
       ) {
-        $periods = array('fixed_period_start_day', 'fixed_period_rollover_day');
+        $periods = ['fixed_period_start_day', 'fixed_period_rollover_day'];
         foreach ($periods as $period) {
           $month = $params[$period]['M'];
           $date = $params[$period]['d'];
@@ -382,7 +382,7 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form {
         return;
       }
 
-      $fields = array('name',
+      $fields = ['name',
         'weight',
         'is_active',
         'member_org',
@@ -399,9 +399,9 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form {
         'contribution_type_id',
         'fixed_period_start_day',
         'fixed_period_rollover_day',
-      );
+      ];
 
-      $params = $ids = array();
+      $params = $ids = [];
       foreach ($fields as $fld) {
         $params[$fld] = CRM_Utils_Array::value($fld, $submitted, 'NULL');
       }
@@ -415,7 +415,7 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form {
       if (!CRM_Utils_System::isNull($submitted['relationship_type_id'])) {
         // To insert relation ids and directions with value separator
         $relTypeDirs = $submitted['relationship_type_id'];
-        $relIds = $relDirection = array();
+        $relIds = $relDirection = [];
         foreach ($relTypeDirs as $key => $value) {
           $relationId = explode('_', $value);
           if (count($relationId) == 3 &&
@@ -443,7 +443,7 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form {
       }
 
       $config = CRM_Core_Config::singleton();
-      $periods = array('fixed_period_start_day', 'fixed_period_rollover_day');
+      $periods = ['fixed_period_start_day', 'fixed_period_rollover_day'];
       foreach ($periods as $per) {
         if (CRM_Utils_Array::value('M', $params[$per]) &&
           CRM_Utils_Array::value('d', $params[$per])
@@ -475,14 +475,14 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form {
       }
 
       $membershipType = CRM_Member_BAO_MembershipType::add($params, $ids);
-      CRM_Core_Session::setStatus(ts('The membership type \'%1\' has been saved.', array(1 => $membershipType->name)));
+      CRM_Core_Session::setStatus(ts('The membership type \'%1\' has been saved.', [1 => $membershipType->name]));
 
       $originReminder = $this->get('origin_reminder_day');
       $memberCount = $this->get('memberCount');
       if ( (!empty($originReminder) || $originReminder == 0) && $originReminder != $params['renewal_reminder_day'] && $memberCount > 0 && $this->_id) {
-        $dao = CRM_Core_DAO::executeQuery("SELECT id, end_date, reminder_date FROM civicrm_membership WHERE membership_type_id = %1 AND end_date IS NOT NULL", array(
-          1 => array($this->_id, 'Integer')
-        ));
+        $dao = CRM_Core_DAO::executeQuery("SELECT id, end_date, reminder_date FROM civicrm_membership WHERE membership_type_id = %1 AND end_date IS NOT NULL", [
+          1 => [$this->_id, 'Integer']
+        ]);
         while($dao->fetch()) {
           if ($params['renewal_reminder_day'] != '' && !empty($dao->reminder_date)) {
             // we should trust reminder date exists means no notification sent recently
@@ -498,10 +498,10 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form {
             $reminderDate = CRM_Member_BAO_MembershipType::calcReminderDate($dao->end_date, $params['renewal_reminder_day']);
             if (!empty($reminderDate)) {
               $reminderActivityTypId = CRM_Core_OptionGroup::getValue('activity_type', 'Membership Renewal Reminder', 'name');
-              $lastRemindSentDate = CRM_Core_DAO::singleValueQuery("SELECT MAX(activity_date_time) FROM civicrm_activity WHERE source_record_id = %1 AND activity_type_id = %2 GROUP BY source_record_id", array(
-                1 => array($dao->id, 'Integer'),
-                2 => array($reminderActivityTypId, 'Integer'),
-              ));
+              $lastRemindSentDate = CRM_Core_DAO::singleValueQuery("SELECT MAX(activity_date_time) FROM civicrm_activity WHERE source_record_id = %1 AND activity_type_id = %2 GROUP BY source_record_id", [
+                1 => [$dao->id, 'Integer'],
+                2 => [$reminderActivityTypId, 'Integer'],
+              ]);
               if (empty($lastRemindSentDate)) {
                 CRM_Core_DAO::setFieldValue('CRM_Member_DAO_Membership', $dao->id, 'reminder_date', $reminderDate);
               }
@@ -537,11 +537,11 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form {
    */
   function search(&$params) {
     //max records that will be listed
-    $searchValues = array();
+    $searchValues = [];
     if (!empty($params['member_org'])) {
-      $searchValues[] = array('sort_name', 'LIKE', $params['member_org'], 0, 1);
+      $searchValues[] = ['sort_name', 'LIKE', $params['member_org'], 0, 1];
     }
-    $searchValues[] = array('contact_type', '=', 'organization', 0, 0);
+    $searchValues[] = ['contact_type', '=', 'organization', 0, 0];
 
     // get the count of contact
 
@@ -554,7 +554,7 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form {
       $result = $query->searchQuery(0, self::MAX_CONTACTS, NULL);
 
       $config = CRM_Core_Config::singleton();
-      $searchRows = array();
+      $searchRows = [];
 
       while ($result->fetch()) {
         $contactID = $result->contact_id;

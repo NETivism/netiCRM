@@ -50,13 +50,13 @@ class CRM_Event_Form_ParticipantView extends CRM_Core_Form {
   public function preProcess() {
 
 
-    $values = $ids = array();
+    $values = $ids = [];
     $participantID = CRM_Utils_Request::retrieve('id', 'Positive', $this, TRUE);
     $contactID = CRM_Utils_Request::retrieve('cid', 'Positive', $this, TRUE);
     $statusTypes = CRM_Event_PseudoConstant::participantStatus();
     $statusAttended = array_search('Attended', $statusTypes);
     $statusPositive = CRM_Event_PseudoConstant::participantStatus( null, "class = 'Positive'" );
-    $params = array('id' => $participantID);
+    $params = ['id' => $participantID];
 
     CRM_Event_BAO_Participant::getValues($params,
       $values,
@@ -74,9 +74,9 @@ class CRM_Event_Form_ParticipantView extends CRM_Core_Form {
     if (CRM_Utils_Array::value('fee_level', $values[$participantID])) {
       CRM_Event_BAO_Participant::fixEventLevel($values[$participantID]['fee_level']);
     }
-    $eventDetails = array();
+    $eventDetails = [];
     $eventId = $values[$participantID]['event_id'];
-    $eventParams = array('id' => $eventId);
+    $eventParams = ['id' => $eventId];
     CRM_Event_BAO_Event::retrieve($eventParams, $eventDetails);
     $statusLabel = $statusTypes[$values[$participantID]['status_id']];
     if ($statusLabel == 'Pending from waitlist' || $statusLabel == 'Pending from approval') {
@@ -111,7 +111,7 @@ class CRM_Event_Form_ParticipantView extends CRM_Core_Form {
     // same as CRM/Event/Form/EventFees.php
     $dao = new CRM_Event_DAO_ParticipantPayment();
     $dao->participant_id = $participantID;
-    $ids = array();
+    $ids = [];
     if ($dao->find()) {
       while($dao->fetch()) {
         $ids[] = $dao->contribution_id;
@@ -121,7 +121,7 @@ class CRM_Event_Form_ParticipantView extends CRM_Core_Form {
       $dao = CRM_Coupon_BAO_Coupon::getCouponUsedBy($ids, 'contribution_id');
       $dao->fetch();
       if ($dao->N > 0) {
-        $coupon = array();
+        $coupon = [];
         foreach($dao as $idx => $value) {
           if ($idx[0] != '_') {
             $coupon[$idx] = $value;
@@ -158,8 +158,8 @@ class CRM_Event_Form_ParticipantView extends CRM_Core_Form {
     $eventNameCustomDataTypeID = CRM_Core_OptionGroup::getValue('custom_data_type', 'ParticipantEventName', 'name');
     $eventTypeCustomDataTypeID = CRM_Core_OptionGroup::getValue('custom_data_type', 'ParticipantEventType', 'name');
     $allRoleIDs = explode(CRM_Core_DAO::VALUE_SEPARATOR, $values[$participantID]['role_id']);
-    $groupTree = array();
-    $finalTree = array();
+    $groupTree = [];
+    $finalTree = [];
 
     foreach ($allRoleIDs as $k => $v) {
       $roleGroupTree = &CRM_Core_BAO_CustomGroup::getTree('Participant', $this, $participantID, NULL, $v, $roleCustomDataTypeID);
@@ -190,7 +190,7 @@ class CRM_Event_Form_ParticipantView extends CRM_Core_Form {
       "action=view&reset=1&id={$values[$participantID]['id']}&cid={$values[$participantID]['contact_id']}&context=home"
     );
 
-    $recentOther = array();
+    $recentOther = [];
     if (CRM_Core_Permission::check('edit event participants')) {
       $recentOther['editUrl'] = CRM_Utils_System::url('civicrm/contact/view/participant',
         "action=update&reset=1&id={$values[$participantID]['id']}&cid={$values[$participantID]['contact_id']}&context=home"
@@ -205,7 +205,7 @@ class CRM_Event_Form_ParticipantView extends CRM_Core_Form {
     $participantRoles = CRM_Event_PseudoConstant::participantRole();
     $displayName = CRM_Contact_BAO_Contact::displayName($contactID);
 
-    $participantCount = array();
+    $participantCount = [];
     foreach ($lineItem as $k => $v) {
       if (CRM_Utils_Array::value('participant_count', $lineItem[$k]) > 0) {
         $participantCount[] = $lineItem['participant_count'];
@@ -220,7 +220,7 @@ class CRM_Event_Form_ParticipantView extends CRM_Core_Form {
 
 
     $sep = CRM_Core_DAO::VALUE_SEPARATOR;
-    $viewRoles = array();
+    $viewRoles = [];
     foreach (explode($sep, $values[$participantID]['role_id']) as $k => $v) {
       $viewRoles[] = $participantRoles[$v];
     }
@@ -244,13 +244,13 @@ class CRM_Event_Form_ParticipantView extends CRM_Core_Form {
    * @access public
    */
   public function buildQuickForm() {
-    $this->addButtons(array(
-        array('type' => 'cancel',
+    $this->addButtons([
+        ['type' => 'cancel',
           'name' => ts('Done'),
           'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
           'isDefault' => TRUE,
-        ),
-      )
+        ],
+      ]
     );
   }
 }

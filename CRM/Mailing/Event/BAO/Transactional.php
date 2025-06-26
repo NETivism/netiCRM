@@ -53,7 +53,7 @@ class CRM_Mailing_Event_BAO_Transactional extends CRM_Mailing_Event_DAO_Transact
     $ec = CRM_Mailing_Event_DAO_TrackableURLOpen::getTableName();
     $eu = CRM_Mailing_Event_DAO_Unsubscribe::getTableName();
 
-    $select = array();
+    $select = [];
     $select[] = "SELECT 'delivered' as act, $ed.time_stamp, '' as detail, '' as additional FROM $ed INNER JOIN $et ON $et.event_queue_id = $ed.event_queue_id WHERE $et.activity_id = %1";
     $select[] = "SELECT 'bounce' as act, $eb.time_stamp, $eb.bounce_reason as detail, CONCAT(bt.description, ' (',bt.name,')') as additional FROM $eb INNER JOIN civicrm_mailing_bounce_type bt ON bt.id = $eb.bounce_type_id INNER JOIN $et ON $et.event_queue_id = $eb.event_queue_id WHERE $et.activity_id = %1";
     $select[] = "SELECT 'opened' as act, $eo.time_stamp, '' as detail, '' as additional FROM $eo INNER JOIN $et ON $et.event_queue_id = $eo.event_queue_id WHERE $et.activity_id = %1";
@@ -62,17 +62,17 @@ class CRM_Mailing_Event_BAO_Transactional extends CRM_Mailing_Event_DAO_Transact
 
     $sql = CRM_Utils_Array::implode("\nUNION\n", $select);
     $sql .= "\nORDER BY time_stamp ASC";
-    $dao = CRM_Core_DAO::executeQuery($sql, array(
-      1 => array($activityId, 'Positive'),
-    ));
-    $rows = array();
+    $dao = CRM_Core_DAO::executeQuery($sql, [
+      1 => [$activityId, 'Positive'],
+    ]);
+    $rows = [];
     while($dao->fetch()) {
-      $rows[] = array(
+      $rows[] = [
         'act' => $dao->act,
         'time' => $dao->time_stamp,
         'detail' => $dao->detail,
         'additional' => $dao->additional,
-      );
+      ];
     }
     return $rows;
   }

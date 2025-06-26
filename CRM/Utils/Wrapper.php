@@ -72,7 +72,7 @@ class CRM_Utils_Wrapper {
       $ignoreKey = (bool) CRM_Utils_Array::value('ignoreKey', $arguments, FALSE);
     }
     else {
-      $arguments = array();
+      $arguments = [];
       $mode = NULL;
       $addSequence = $ignoreKey = $imageUpload = $attachUpload = FALSE;
     }

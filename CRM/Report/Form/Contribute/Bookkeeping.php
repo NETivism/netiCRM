@@ -58,94 +58,94 @@ class CRM_Report_Form_Contribute_Bookkeeping extends CRM_Report_Form {
 
   protected $_summary = NULL;
 
-  protected $_customGroupExtends = array('Membership'); function __construct() {
-    $this->_columns = array('civicrm_contact' =>
-      array('dao' => 'CRM_Contact_DAO_Contact',
+  protected $_customGroupExtends = ['Membership']; function __construct() {
+    $this->_columns = ['civicrm_contact' =>
+      ['dao' => 'CRM_Contact_DAO_Contact',
         'fields' =>
-        array('display_name' =>
-          array('title' => ts('Contact Name'),
+        ['display_name' =>
+          ['title' => ts('Contact Name'),
             'required' => TRUE,
             'no_repeat' => TRUE,
-          ),
+          ],
           'id' =>
-          array('no_display' => TRUE,
+          ['no_display' => TRUE,
             'required' => TRUE,
-          ),
-        ),
+          ],
+        ],
         'filters' =>
-        array('sort_name' =>
-          array('title' => ts('Contact Name'),
+        ['sort_name' =>
+          ['title' => ts('Contact Name'),
             'operator' => 'like',
-          ),
+          ],
           'id' =>
-          array('title' => ts('Contact ID'),
+          ['title' => ts('Contact ID'),
             'no_display' => TRUE,
-          ),
-        ),
+          ],
+        ],
         'grouping' => 'contact-fields',
-      ),
+      ],
       'civicrm_membership' =>
-      array('dao' => 'CRM_Member_DAO_Membership',
+      ['dao' => 'CRM_Member_DAO_Membership',
         'fields' =>
-        array('id' =>
-          array('title' => ts('Membership #'),
+        ['id' =>
+          ['title' => ts('Membership #'),
             'no_display' => TRUE,
             'required' => TRUE,
-          ),
-        ),
-      ),
+          ],
+        ],
+      ],
       'civicrm_contribution' =>
-      array('dao' => 'CRM_Contribute_DAO_Contribution',
+      ['dao' => 'CRM_Contribute_DAO_Contribution',
         'fields' =>
-        array(
-          'receive_date' => array('default' => TRUE),
-          'total_amount' => array('title' => ts('Amount'),
+        [
+          'receive_date' => ['default' => TRUE],
+          'total_amount' => ['title' => ts('Amount'),
             'required' => TRUE,
             'statistics' =>
-            array('sum' => ts('Amount')),
-          ),
-          'contribution_type_id' => array('title' => ts('Contribution Type'),
+            ['sum' => ts('Amount')],
+          ],
+          'contribution_type_id' => ['title' => ts('Contribution Type'),
             'default' => TRUE,
-          ),
-          'trxn_id' => array('title' => ts('Trans #'),
+          ],
+          'trxn_id' => ['title' => ts('Trans #'),
             'default' => TRUE,
-          ),
-          'invoice_id' => array('title' => ts('Invoice ID'),
+          ],
+          'invoice_id' => ['title' => ts('Invoice ID'),
             'default' => TRUE,
-          ),
-          'check_number' => array('title' => ts('Cheque #'),
+          ],
+          'check_number' => ['title' => ts('Cheque #'),
             'default' => TRUE,
-          ),
-          'payment_instrument_id' => array('title' => ts('Payment Instrument'),
+          ],
+          'payment_instrument_id' => ['title' => ts('Payment Instrument'),
             'default' => TRUE,
-          ),
-          'contribution_status_id' => array('title' => ts('Status'),
+          ],
+          'contribution_status_id' => ['title' => ts('Status'),
             'default' => TRUE,
-          ),
-          'id' => array('title' => ts('Contribution #'),
+          ],
+          'id' => ['title' => ts('Contribution #'),
             'default' => TRUE,
-          ),
-        ),
+          ],
+        ],
         'filters' =>
-        array('receive_date' =>
-          array('operatorType' => CRM_Report_Form::OP_DATE),
+        ['receive_date' =>
+          ['operatorType' => CRM_Report_Form::OP_DATE],
           'contribution_type_id' =>
-          array('title' => ts('Contribution Type'),
+          ['title' => ts('Contribution Type'),
             'operatorType' => CRM_Report_Form::OP_MULTISELECT,
             'options' => CRM_Contribute_PseudoConstant::contributionType(),
-          ),
+          ],
           'contribution_status_id' =>
-          array('title' => ts('Contribution Status'),
+          ['title' => ts('Contribution Status'),
             'operatorType' => CRM_Report_Form::OP_MULTISELECT,
             'options' => CRM_Contribute_PseudoConstant::contributionStatus(),
-            'default' => array(1),
-          ),
+            'default' => [1],
+          ],
           'total_amount' =>
-          array('title' => ts('Contribution Amount')),
-        ),
+          ['title' => ts('Contribution Amount')],
+        ],
         'grouping' => 'contri-fields',
-      ),
-    );
+      ],
+    ];
 
     parent::__construct();
   }
@@ -155,9 +155,9 @@ class CRM_Report_Form_Contribute_Bookkeeping extends CRM_Report_Form {
   }
 
   function select() {
-    $select = array();
+    $select = [];
 
-    $this->_columnHeaders = array();
+    $this->_columnHeaders = [];
     foreach ($this->_columns as $tableName => $table) {
       if (CRM_Utils_Array::arrayKeyExists('fields', $table)) {
         foreach ($table['fields'] as $fieldName => $field) {
@@ -216,14 +216,14 @@ class CRM_Report_Form_Contribute_Bookkeeping extends CRM_Report_Form {
     $dao = CRM_Core_DAO::executeQuery($sql);
 
     if ($dao->fetch()) {
-      $statistics['counts']['amount'] = array('value' => $dao->amount,
+      $statistics['counts']['amount'] = ['value' => $dao->amount,
         'title' => 'Total Amount',
         'type' => CRM_Utils_Type::T_MONEY,
-      );
-      $statistics['counts']['avg'] = array('value' => $dao->avg,
+      ];
+      $statistics['counts']['avg'] = ['value' => $dao->avg,
         'title' => 'Average',
         'type' => CRM_Utils_Type::T_MONEY,
-      );
+      ];
     }
 
     return $statistics;
@@ -231,7 +231,7 @@ class CRM_Report_Form_Contribute_Bookkeeping extends CRM_Report_Form {
 
   function alterDisplay(&$rows) {
     // custom code to alter rows
-    $checkList = array();
+    $checkList = [];
     $entryFound = FALSE;
     $display_flag = $prev_cid = $cid = 0;
     $contributionTypes = CRM_Contribute_PseudoConstant::contributionType();

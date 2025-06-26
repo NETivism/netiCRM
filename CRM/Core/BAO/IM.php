@@ -95,19 +95,19 @@ WHERE
   civicrm_contact.id = %1
 ORDER BY
   civicrm_im.is_primary DESC, im_id ASC ";
-    $params = array(1 => array($id, 'Integer'));
+    $params = [1 => [$id, 'Integer']];
 
-    $ims = $values = array();
+    $ims = $values = [];
     $dao = &CRM_Core_DAO::executeQuery($query, $params);
     $count = 1;
     while ($dao->fetch()) {
-      $values = array('locationType' => $dao->locationType,
+      $values = ['locationType' => $dao->locationType,
         'is_primary' => $dao->is_primary,
         'id' => $dao->im_id,
         'name' => $dao->im,
         'locationTypeId' => $dao->locationTypeId,
         'provider_id' => $dao->providerId,
-      );
+      ];
 
       if ($updateBlankLocInfo) {
         $ims[$count++] = $values;
@@ -147,17 +147,17 @@ AND   cim.id IN (loc.im_id, loc.im_2_id)
 AND   ltype.id = cim.location_type_id
 ORDER BY cim.is_primary DESC, im_id ASC ";
 
-    $params = array(1 => array($entityId, 'Integer'));
+    $params = [1 => [$entityId, 'Integer']];
 
-    $ims = array();
+    $ims = [];
     $dao = &CRM_Core_DAO::executeQuery($sql, $params);
     while ($dao->fetch()) {
-      $ims[$dao->im_id] = array('locationType' => $dao->locationType,
+      $ims[$dao->im_id] = ['locationType' => $dao->locationType,
         'is_primary' => $dao->is_primary,
         'id' => $dao->im_id,
         'name' => $dao->im,
         'locationTypeId' => $dao->locationTypeId,
-      );
+      ];
     }
     return $ims;
   }
@@ -172,11 +172,11 @@ ORDER BY cim.is_primary DESC, im_id ASC ";
    */
   static function valueExists(&$params) {
     if (empty($params['id']) && !empty($params['name']) && is_string($params['name']) && !empty($params['contact_id']) && !empty($params['provider_id'])) {
-      $params['id'] = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_im WHERE name LIKE %1 AND provider_id = %3 AND contact_id = %2", array(
-        1 => array($params['name'], 'String'),
-        2 => array($params['contact_id'], 'Integer'),
-        3 => array($params['provider_id'], 'Integer')
-      ));
+      $params['id'] = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_im WHERE name LIKE %1 AND provider_id = %3 AND contact_id = %2", [
+        1 => [$params['name'], 'String'],
+        2 => [$params['contact_id'], 'Integer'],
+        3 => [$params['provider_id'], 'Integer']
+      ]);
     }
   }
 }

@@ -69,10 +69,10 @@ class CRM_Core_Extensions_Report {
       CRM_Core_Error::fatal("Component for which you're trying to install the extension (" . $this->ext->typeInfo['component'] . ") is currently disabled.");
     }
     $weight = CRM_Utils_Weight::getDefaultWeight('CRM_Core_DAO_OptionValue',
-      array('option_group_id' => $this->groupId)
+      ['option_group_id' => $this->groupId]
     );
-    $ids = array();
-    $params = array('label' => $this->ext->label . ' (' . $this->ext->key . ')',
+    $ids = [];
+    $params = ['label' => $this->ext->label . ' (' . $this->ext->key . ')',
       'value' => $this->ext->typeInfo['reportUrl'],
       'name' => $this->ext->key,
       'weight' => $weight,
@@ -80,7 +80,7 @@ class CRM_Core_Extensions_Report {
       'component_id' => $compId,
       'option_group_id' => $this->groupId,
       'is_active' => 1,
-    );
+    ];
 
     $optionValue = CRM_Core_BAO_OptionValue::add($params, $ids);
   }

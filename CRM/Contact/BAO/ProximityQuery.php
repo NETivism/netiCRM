@@ -106,7 +106,7 @@ class CRM_Contact_BAO_ProximityQuery {
     $y = ($radius + $height) * $cosLat * $sinLong;
     $z = ($radius * (1 - self::$_earthEccentricitySQ) + $height) * $sinLat;
 
-    return array($x, $y, $z);
+    return [$x, $y, $z];
   }
 
   /**
@@ -155,9 +155,9 @@ class CRM_Contact_BAO_ProximityQuery {
       $maxLong = $maxLong - pi() * 2;
     }
 
-    return array(rad2deg($minLong),
+    return [rad2deg($minLong),
       rad2deg($maxLong),
-    );
+    ];
   }
 
   /**
@@ -193,9 +193,9 @@ class CRM_Contact_BAO_ProximityQuery {
       $maxLat = $rightangle;
     }
 
-    return array(rad2deg($minLat),
+    return [rad2deg($minLat),
       rad2deg($maxLat),
-    );
+    ];
   }
 
   /*
@@ -227,8 +227,8 @@ IFNULL( ACOS( $cosLat * COS( RADIANS( $latitude ) ) *
   static function where($latitude, $longitude, $distance, $tablePrefix = 'civicrm_address') {
     self::initialize();
 
-    $params = array();
-    $clause = array();
+    $params = [];
+    $clause = [];
 
     list($minLongitude, $maxLongitude) = self::earthLongitudeRange($longitude,
       $latitude,
@@ -256,16 +256,16 @@ $earthDistanceSQL  <= $distance
     list($name, $op, $distance, $grouping, $wildcard) = $values;
 
     // also get values array for all address related info
-    $proximityVars = array('street_address' => 1,
+    $proximityVars = ['street_address' => 1,
       'city' => 1,
       'postal_code' => 1,
       'state_province_id' => 0,
       'country_id' => 0,
       'distance_unit' => 0,
-    );
+    ];
 
-    $proximityAddress = array();
-    $qill = array();
+    $proximityAddress = [];
+    $qill = [];
     foreach ($proximityVars as $var => $recordQill) {
       $proximityValues = $query->getWhereValues("prox_{$var}", $grouping);
       if (!empty($proximityValues) &&
@@ -318,9 +318,9 @@ $earthDistanceSQL  <= $distance
     }
 
     $qill = ts('Proximity search to a distance of %1 from %2',
-      array(1 => $qillUnits,
+      [1 => $qillUnits,
         2 => CRM_Utils_Array::implode(', ', $qill),
-      )
+      ]
     );
 
     $query->_tables['civicrm_address'] = $query->_whereTables['civicrm_address'] = 1;

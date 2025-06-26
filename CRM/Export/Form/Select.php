@@ -79,7 +79,7 @@ class CRM_Export_Form_Select extends CRM_Core_Form {
     $stateMachine = $this->controller->getStateMachine();
     $formName = CRM_Utils_System::getClassName($stateMachine);
     $componentName = explode('_', $formName);
-    $components = array('Contribute', 'Member', 'Event', 'Pledge', 'Case', 'Grant', 'Activity');
+    $components = ['Contribute', 'Member', 'Event', 'Pledge', 'Case', 'Grant', 'Activity'];
     $this->_exportMode = self::CONTACT_EXPORT;
     if (in_array($componentName[1], $components)) {
       $modeVar = strtoupper($componentName[1]) . '_EXPORT';
@@ -150,28 +150,28 @@ class CRM_Export_Form_Select extends CRM_Core_Form {
 
         CRM_Contribute_Form_Task::preProcessCommon($this);
         $this->_exportMode = self::CONTRIBUTE_EXPORT;
-        $componentName = array('', 'Contribute');
+        $componentName = ['', 'Contribute'];
         break;
 
       case 3:
 
         CRM_Event_Form_Task::preProcessCommon($this);
         $this->_exportMode = self::EVENT_EXPORT;
-        $componentName = array('', 'Event');
+        $componentName = ['', 'Event'];
         break;
 
       case 4:
 
         CRM_Activity_Form_Task::preProcessCommon($this);
         $this->_exportMode = self::ACTIVITY_EXPORT;
-        $componentName = array('', 'Activity');
+        $componentName = ['', 'Activity'];
         break;
 
       case 5:
 
         CRM_Member_Form_Task::preProcessCommon($this);
         $this->_exportMode = self::MEMBER_EXPORT;
-        $componentName = array('', 'Member');
+        $componentName = ['', 'Member'];
         break;
     }
 
@@ -245,15 +245,15 @@ FROM   {$this->_componentTable}
    */
   public function buildQuickForm() {
     //export option
-    $exportOptions = $mergeHousehold = $mergeAddress = array();
-    foreach(array('customHeader', 'taskName', 'totalSelectedRecords') as $name) {
+    $exportOptions = $mergeHousehold = $mergeAddress = [];
+    foreach(['customHeader', 'taskName', 'totalSelectedRecords'] as $name) {
       $this->assign($name, $this->get($name));
     }
     $exportOptions[] = $this->createElement('radio',
       NULL, NULL,
       ts('Select fields for export'),
       self::EXPORT_SELECTED,
-      array('onClick' => 'showMappingOption( );')
+      ['onClick' => 'showMappingOption( );']
     );
 
     $mergeAddress[] = $this->createElement('advcheckbox',
@@ -274,25 +274,25 @@ FROM   {$this->_componentTable}
       $this->addGroup($mergeHousehold, 'merge_same_household', ts('Merge Same Household'), '<br/>');
     }
 
-    $options = array(
+    $options = [
       '1' => ts('Multi-value data can separate to multiple column.'),
-    );
+    ];
     $this->addCheckBox('separate_mode', ts('Multiple Value Handling'), $options, NULL, NULL, NULL, NULL, '', TRUE);
 
     $this->buildMapping();
 
-    $this->setDefaults(array('exportOption' => self::EXPORT_SELECTED));
+    $this->setDefaults(['exportOption' => self::EXPORT_SELECTED]);
 
-    $this->addButtons(array(
-        array('type' => 'next',
+    $this->addButtons([
+        ['type' => 'next',
           'name' => ts('Continue >>'),
           'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
           'isDefault' => TRUE,
-        ),
-        array('type' => 'cancel',
+        ],
+        ['type' => 'cancel',
           'name' => ts('Cancel'),
-        ),
-      )
+        ],
+      ]
     );
   }
 
@@ -417,7 +417,7 @@ FROM   {$this->_componentTable}
 
     $mappings = CRM_Core_BAO_Mapping::getMappings($mappingTypeId);
     if (!empty($mappings)) {
-      $this->add('select', 'mapping', ts('Use Saved Field Mapping'), array('' => ts('-select-')) + $mappings);
+      $this->add('select', 'mapping', ts('Use Saved Field Mapping'), ['' => ts('-select-')] + $mappings);
     }
   }
 }

@@ -135,7 +135,7 @@ class CRM_Core_Session {
     if (!isset($this->_session[$this->_key]) ||
       !is_array($this->_session[$this->_key])
     ) {
-      $this->_session[$this->_key] = array();
+      $this->_session[$this->_key] = [];
     }
     return;
   }
@@ -150,11 +150,11 @@ class CRM_Core_Session {
   function reset($all = 1) {
     if ($all != 1) {
       // to make certain we clear it, first initialize it to empty
-      $this->_session[$this->_key] = array();
+      $this->_session[$this->_key] = [];
       unset($this->_session[$this->_key]);
     }
     else {
-      $this->_session = array();
+      $this->_session = [];
     }
 
     return;
@@ -176,7 +176,7 @@ class CRM_Core_Session {
     }
 
     if (empty($this->_session[$this->_key][$prefix])) {
-      $this->_session[$this->_key][$prefix] = array();
+      $this->_session[$this->_key][$prefix] = [];
     }
   }
 
@@ -524,7 +524,7 @@ class CRM_Core_Session {
           else {
             $currentStatus = self::$_singleton->_session[self::$_singleton->_key]['status'][$type];
             // add an empty element to the beginning which will go in the <h3>
-            self::$_singleton->_session[self::$_singleton->_key]['status'][$type] = array('', $currentStatus) + $status;
+            self::$_singleton->_session[self::$_singleton->_key]['status'][$type] = ['', $currentStatus] + $status;
           }
         }
         else {
@@ -542,7 +542,7 @@ class CRM_Core_Session {
 
   static function registerAndRetrieveSessionObjects($names) {
     if (!is_array($names)) {
-      $names = array($names);
+      $names = [$names];
     }
 
     if (!self::$_managedNames) {

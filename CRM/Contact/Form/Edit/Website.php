@@ -63,9 +63,9 @@ class CRM_Contact_Form_Edit_Website {
     $form->addElement('text', "website[$blockId][url]", ts('Website'),
       array_merge(
         CRM_Core_DAO::getAttribute('CRM_Core_DAO_Website', 'url'),
-        array('onfocus' => "if (!this.value) {  this.value='http://';} else return false",
+        ['onfocus' => "if (!this.value) {  this.value='http://';} else return false",
           'onblur' => "if ( this.value == 'http://') {  this.value='';} else return false",
-        )
+        ]
       )
     );
 

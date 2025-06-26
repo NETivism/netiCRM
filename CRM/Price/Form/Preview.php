@@ -76,9 +76,9 @@ class CRM_Price_Form_Preview extends CRM_Core_Form {
       $this->_groupTree[$groupId]['fields'][$fieldId] = $groupTree[$groupId]['fields'][$fieldId];
       $this->assign('preview_type', 'field');
       $url = CRM_Utils_System::url('civicrm/admin/price/field', "reset=1&action=browse&sid={$groupId}");
-      $breadCrumb = array(array('title' => ts('Price Set Fields'),
+      $breadCrumb = [['title' => ts('Price Set Fields'),
           'url' => $url,
-        ));
+        ]];
     }
     else {
       // group preview
@@ -87,9 +87,9 @@ class CRM_Price_Form_Preview extends CRM_Core_Form {
       $this->assign('preview_type', 'group');
       $this->assign('setTitle', CRM_Price_BAO_Set::getTitle($groupId));
       $url = CRM_Utils_System::url('civicrm/admin/price', 'reset=1');
-      $breadCrumb = array(array('title' => ts('Price Sets'),
+      $breadCrumb = [['title' => ts('Price Sets'),
           'url' => $url,
-        ));
+        ]];
     }
     CRM_Utils_System::appendBreadCrumb($breadCrumb);
   }
@@ -103,7 +103,7 @@ class CRM_Price_Form_Preview extends CRM_Core_Form {
    * @access protected
    */
   function &setDefaultValues() {
-    $defaults = array();
+    $defaults = [];
     $groupId = $this->get('groupId');
     $fieldId = $this->get('fieldId');
     if (CRM_Utils_Array::value('fields', $this->_groupTree[$groupId])) {
@@ -147,12 +147,12 @@ class CRM_Price_Form_Preview extends CRM_Core_Form {
       }
     }
 
-    $this->addButtons(array(
-        array('type' => 'cancel',
+    $this->addButtons([
+        ['type' => 'cancel',
           'name' => ts('Done with Preview'),
           'isDefault' => TRUE,
-        ),
-      )
+        ],
+      ]
     );
   }
 }

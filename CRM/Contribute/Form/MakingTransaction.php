@@ -100,7 +100,7 @@ class CRM_Contribute_Form_MakingTransaction extends CRM_Core_Form {
         $message = $paymentClass::getSyncNowMessage($contributionId, $id);
       }
       if (!empty($message)) {
-        $this->addElement('submit', $name, ts("Sync Now"), array('onclick' => "return confirm('".$message."')"));
+        $this->addElement('submit', $name, ts("Sync Now"), ['onclick' => "return confirm('".$message."')"]);
         $this->assign('update_notify', $name);
       }
     }
@@ -111,7 +111,7 @@ class CRM_Contribute_Form_MakingTransaction extends CRM_Core_Form {
       }
       if ($showButton) {
         $name = $this->getButtonName('submit');
-        $this->addElement('submit', $name, ts('Process now'), array('onclick' => "return confirm('".ts("Are you sure you want to process a transaction of %1?", array(1 => $id))."')"));
+        $this->addElement('submit', $name, ts('Process now'), ['onclick' => "return confirm('".ts("Are you sure you want to process a transaction of %1?", [1 => $id])."')"]);
         $this->assign('submit_name', $name);
       }
     }
@@ -144,7 +144,7 @@ class CRM_Contribute_Form_MakingTransaction extends CRM_Core_Form {
     else {
       if (method_exists($paymentClass, 'doRecurTransact')) {
         $result = $paymentClass::doRecurTransact($recurId);
-        $resultMessage = ts("Total Payments: %1", array(1));
+        $resultMessage = ts("Total Payments: %1", [1]);
       }
     }
 

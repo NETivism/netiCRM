@@ -55,17 +55,17 @@ class CRM_Core_Page_AJAX_Location {
     $cid = CRM_Utils_Type::escape($_GET['cid'], 'Integer');
 
 
-    $entityBlock = array('contact_id' => $cid);
+    $entityBlock = ['contact_id' => $cid];
     $location = &CRM_Core_BAO_Location::getValues($entityBlock);
 
     $config = CRM_Core_Config::singleton();
     $addressSequence = array_flip($config->addressSequence());
 
-    $elements = array("phone_1_phone" =>
+    $elements = ["phone_1_phone" =>
       $location['phone'][1]['phone'],
       "email_1_email" =>
       $location['email'][1]['email'],
-    );
+    ];
 
     if (CRM_Utils_Array::arrayKeyExists('street_address', $addressSequence)) {
       $elements["address_1_street_address"] = $location['address'][1]['street_address'];
@@ -95,7 +95,7 @@ class CRM_Core_Page_AJAX_Location {
   }
 
   public static function jqState($config) {
-    $elements = array();
+    $elements = [];
     if (!isset($_GET['_value']) || empty($_GET['_value']) || !CRM_Utils_Type::validate($_GET['_value'], 'Positive', FALSE)) {
       echo json_encode($elements);
       CRM_Utils_System::civiExit();
@@ -103,13 +103,13 @@ class CRM_Core_Page_AJAX_Location {
 
     $result = &CRM_Core_PseudoConstant::stateProvinceForCountry($_GET['_value']);
 
-    $elements = array(array('name' => ts('- select a state-'),
+    $elements = [['name' => ts('- select a state-'),
         'value' => '',
-      ));
+      ]];
     foreach ($result as $id => $name) {
-      $elements[] = array('name' => $name,
+      $elements[] = ['name' => $name,
         'value' => $id,
-      );
+      ];
     }
 
     echo json_encode($elements);
@@ -120,24 +120,24 @@ class CRM_Core_Page_AJAX_Location {
     // i wish i could retrieve loc block info based on loc_block_id,
     // Anyway, lets retrieve an event which has loc_block_id set to 'lbid'.
     if ($_POST['lbid']) {
-      $params = array('1' => array($_POST['lbid'], 'Integer'));
+      $params = ['1' => [$_POST['lbid'], 'Integer']];
       $eventId = CRM_Core_DAO::singleValueQuery('SELECT id FROM civicrm_event WHERE loc_block_id=%1 LIMIT 1', $params);
     }
     // now lets use the event-id obtained above, to retrieve loc block information.
     if ($eventId) {
-      $params = array('entity_id' => $eventId, 'entity_table' => 'civicrm_event');
+      $params = ['entity_id' => $eventId, 'entity_table' => 'civicrm_event'];
 
       // second parameter is of no use, but since required, lets use the same variable.
       $location = CRM_Core_BAO_Location::getValues($params, $params);
     }
 
-    $result = array();
+    $result = [];
 
     $addressOptions = CRM_Core_BAO_Preferences::valueOptions('address_options', TRUE, NULL, TRUE);
     // lets output only required fields.
     foreach ($addressOptions as $element => $isSet) {
-      if ($isSet && (!in_array($element, array('im', 'openid')))) {
-        if (in_array($element, array('country', 'state_province', 'county'))) {
+      if ($isSet && (!in_array($element, ['im', 'openid']))) {
+        if (in_array($element, ['country', 'state_province', 'county'])) {
           $element .= '_id';
         }
         elseif ($element == 'address_name') {
@@ -146,17 +146,17 @@ class CRM_Core_Page_AJAX_Location {
         $fld = "address[1][{$element}]";
         $value = CRM_Utils_Array::value($element, $location['address'][1]);
         $value = $value ? $value : "";
-        $result[str_replace(array('][', '[', "]"), array('_', '_', ''), $fld)] = $value;
+        $result[str_replace(['][', '[', "]"], ['_', '_', ''], $fld)] = $value;
       }
     }
 
-    foreach (array('email', 'phone_type_id', 'phone') as $element) {
+    foreach (['email', 'phone_type_id', 'phone'] as $element) {
       $block = ($element == 'phone_type_id') ? 'phone' : $element;
       for ($i = 1; $i < 3; $i++) {
         $fld = "{$block}[{$i}][{$element}]";
         $value = CRM_Utils_Array::value($element, $location[$block][$i]);
         $value = $value ? $value : "";
-        $result[str_replace(array('][', '[', "]"), array('_', '_', ''), $fld)] = $value;
+        $result[str_replace(['][', '[', "]"], ['_', '_', ''], $fld)] = $value;
       }
     }
 

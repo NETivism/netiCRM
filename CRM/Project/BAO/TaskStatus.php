@@ -84,7 +84,7 @@ class CRM_Project_BAO_TaskStatus {
 
     $controller->assign($prefix, $taskStatus);
 
-    return array($taskStatusID, $taskStatus);
+    return [$taskStatusID, $taskStatus];
   }
 
   static function updateTaskStatus(&$form,

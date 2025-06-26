@@ -169,71 +169,71 @@ class CRM_Contribute_DAO_Premium extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'id' => array(
+      self::$_fields = [
+        'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'entity_table' => array(
+        ] ,
+        'entity_table' => [
           'name' => 'entity_table',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Entity Table') ,
           'required' => true,
           'maxlength' => 64,
           'size' => CRM_Utils_Type::BIG,
-        ) ,
-        'entity_id' => array(
+        ] ,
+        'entity_id' => [
           'name' => 'entity_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'premiums_active' => array(
+        ] ,
+        'premiums_active' => [
           'name' => 'premiums_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Premiums Active') ,
           'required' => true,
-        ) ,
-        'premiums_intro_title' => array(
+        ] ,
+        'premiums_intro_title' => [
           'name' => 'premiums_intro_title',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Title for Premiums section') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'premiums_intro_text' => array(
+        ] ,
+        'premiums_intro_text' => [
           'name' => 'premiums_intro_text',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Premiums Intro Text') ,
-        ) ,
-        'premiums_contact_email' => array(
+        ] ,
+        'premiums_contact_email' => [
           'name' => 'premiums_contact_email',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Premiums Contact Email') ,
           'maxlength' => 100,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'premiums_contact_phone' => array(
+        ] ,
+        'premiums_contact_phone' => [
           'name' => 'premiums_contact_phone',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Premiums Contact Phone') ,
           'maxlength' => 50,
           'size' => CRM_Utils_Type::BIG,
-        ) ,
-        'premiums_display_min_contribution' => array(
+        ] ,
+        'premiums_display_min_contribution' => [
           'name' => 'premiums_display_min_contribution',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Premiums Display Min Contribution') ,
           'required' => true,
-        ) ,
-        'premiums_nothanks_text' => array(
+        ] ,
+        'premiums_nothanks_text' => [
           'name' => 'premiums_nothanks_text',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Premiums Nothanks Text') ,
           'maxlength' => 128,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-      );
+        ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -267,7 +267,7 @@ class CRM_Contribute_DAO_Premium extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -290,7 +290,7 @@ class CRM_Contribute_DAO_Premium extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {

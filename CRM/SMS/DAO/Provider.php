@@ -158,9 +158,9 @@ class CRM_SMS_DAO_Provider extends CRM_Core_DAO
   function &links()
   {
     if (!(self::$_links)) {
-      self::$_links = array(
+      self::$_links = [
         'domain_id' => 'civicrm_domain:id',
-      );
+      ];
     }
     return self::$_links;
   }
@@ -187,76 +187,76 @@ class CRM_SMS_DAO_Provider extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'id' => array(
+      self::$_fields = [
+        'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('SMS Provider ID') ,
           'required' => true,
-        ) ,
-        'name' => array(
+        ] ,
+        'name' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('SMS Provider Name') ,
           'maxlength' => 64,
           'size' => CRM_Utils_Type::BIG,
-        ) ,
-        'title' => array(
+        ] ,
+        'title' => [
           'name' => 'title',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('SMS Provider Title') ,
           'maxlength' => 64,
           'size' => CRM_Utils_Type::BIG,
-        ) ,
-        'username' => array(
+        ] ,
+        'username' => [
           'name' => 'username',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('SMS Provider Username') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'password' => array(
+        ] ,
+        'password' => [
           'name' => 'password',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('SMS Provider Password') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'api_type' => array(
+        ] ,
+        'api_type' => [
           'name' => 'api_type',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('SMS Provider API') ,
           'required' => true,
-        ) ,
-        'api_url' => array(
+        ] ,
+        'api_url' => [
           'name' => 'api_url',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('SMS Provider API URL') ,
           'maxlength' => 128,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'api_params' => array(
+        ] ,
+        'api_params' => [
           'name' => 'api_params',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('SMS Provider API Params') ,
-        ) ,
-        'is_default' => array(
+        ] ,
+        'is_default' => [
           'name' => 'is_default',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('SMS Provider is Default?') ,
-        ) ,
-        'is_active' => array(
+        ] ,
+        'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('SMS Provider is Active?') ,
-        ) ,
-        'domain_id' => array(
+        ] ,
+        'domain_id' => [
           'name' => 'domain_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('SMS Domain') ,
           'FKClassName' => 'CRM_Core_DAO_Domain',
-        ) ,
-      );
+        ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -289,7 +289,7 @@ class CRM_SMS_DAO_Provider extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -312,7 +312,7 @@ class CRM_SMS_DAO_Provider extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {

@@ -126,17 +126,17 @@ class CRM_Activity_Page_Tab extends CRM_Core_Page {
     switch ($activityTypeId) {
       case $emailTypeValue:
         $wrapper = new CRM_Utils_Wrapper();
-        $arguments = array('attachUpload' => 1);
+        $arguments = ['attachUpload' => 1];
         return $wrapper->run('CRM_Contact_Form_Task_Email', ts('Email a Contact'), $arguments);
 
       case $letterTypeValue:
         $wrapper = new CRM_Utils_Wrapper();
-        $arguments = array('attachUpload' => 1);
+        $arguments = ['attachUpload' => 1];
         return $wrapper->run('CRM_Contact_Form_Task_PDF', ts('Create PDF Letter'), $arguments);
       
       case $SMSTypeValue:
         $wrapper = new CRM_Utils_Wrapper();
-        $arguments = array();
+        $arguments = [];
         return $wrapper->run('CRM_Contact_Form_Task_SMS', ts('Send SMS'), $arguments);
 
       default:
@@ -216,7 +216,7 @@ class CRM_Activity_Page_Tab extends CRM_Core_Page {
 
     //do check for view/edit operation.
     if ($this->_id &&
-      in_array($action, array(CRM_Core_Action::UPDATE, CRM_Core_Action::VIEW))
+      in_array($action, [CRM_Core_Action::UPDATE, CRM_Core_Action::VIEW])
     ) {
 
       if (!CRM_Activity_BAO_Activity::checkPermission($this->_id, $action)) {
@@ -257,16 +257,16 @@ class CRM_Activity_Page_Tab extends CRM_Core_Page {
         'name'
       );
 
-      if (in_array($activityTypeId, array($emailTypeValue, $letterTypeValue, $SMSTypeValue))) {
+      if (in_array($activityTypeId, [$emailTypeValue, $letterTypeValue, $SMSTypeValue])) {
         return;
       }
 
       // add children activity search result
       if ($this->_action & CRM_Core_Action::VIEW) {
         $sortID = NULL;
-        $filter = array(
+        $filter = [
           'parent_id' => $this->_id,
-        );
+        ];
         $queryParams = CRM_Contact_BAO_Query::convertFormValues($filter);
         $selector = new CRM_Activity_Selector_Search($queryParams, $this->_action);
         $controller2 = new CRM_Core_Selector_Controller($selector,

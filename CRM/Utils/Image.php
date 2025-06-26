@@ -79,19 +79,19 @@ class CRM_Utils_Image {
 
     $data = @getimagesize($this->_source);
     if (isset($data) && is_array($data)) {
-      $extensions = array('1' => 'gif', '2' => 'jpg', '3' => 'png');
+      $extensions = ['1' => 'gif', '2' => 'jpg', '3' => 'png'];
       $extension = isset($extensions[$data[2]]) ? $extensions[$data[2]] : '';
       $aspect = $data[1] / $data[0];
-      $this->_info = array(
+      $this->_info = [
         'width' => $data[0],
         'height' => $data[1],
         'extension' => $extension,
         'mime_type' => $data['mime'],
         'aspect' => $aspect
-      );
-      $this->_convert = array(
+      ];
+      $this->_convert = [
         'quality' => $quality,
-      );
+      ];
       $this->_prepared = TRUE;
     }
   }
@@ -132,7 +132,7 @@ class CRM_Utils_Image {
       $width = (int) round($widthCal);
       $height = (int) round($heightCal);
     }
-    return array($width, $height);
+    return [$width, $height];
   }
 
   /**
@@ -299,13 +299,13 @@ class CRM_Utils_Image {
    *
    * @return bool
    */
-  private function sharpen($matrix = array()) {
+  private function sharpen($matrix = []) {
     if (empty($matrix)) {
-      $matrix = array(
-        array(0, -2, 0),
-        array(-2, 11, -2),
-        array(0, -2, 0),
-      );
+      $matrix = [
+        [0, -2, 0],
+        [-2, 11, -2],
+        [0, -2, 0],
+      ];
     }
     $divisor = array_sum(array_map('array_sum', $matrix));
     $offset = 0;
@@ -445,15 +445,15 @@ class CRM_Utils_Image {
       $imageThumbHeight = $thumbWidth;
       $imageThumbWidth = $thumbWidth * $imageRatio;
     }
-    return array(
+    return [
       'url' => $file,
       'width' => $imageWidth,
       'height' => $imageHeight,
-      'thumb' => array(
+      'thumb' => [
         'width' => $imageThumbWidth,
         'height' => $imageThumbHeight,
-      ),
-    );
+      ],
+    ];
     return FALSE;
   }
 
@@ -478,13 +478,13 @@ class CRM_Utils_Image {
    * @return array Result array with success status and details
    */
   public static function processBlobImagesInContent(&$submitValues, $formElements, $userId = null) {
-    $result = array(
+    $result = [
       'success' => true,
-      'processed_fields' => array(),
-      'moved_files' => array(),
-      'errors' => array(),
-      'warnings' => array()
-    );
+      'processed_fields' => [],
+      'moved_files' => [],
+      'errors' => [],
+      'warnings' => []
+    ];
 
     try {
       // Get user ID using Drupal system
@@ -573,12 +573,12 @@ class CRM_Utils_Image {
 
       // Log success summary
       if (!empty($result['moved_files'])) {
-        CRM_Core_Error::debug('Blob images processed successfully', array(
+        CRM_Core_Error::debug('Blob images processed successfully', [
           'user_id' => $userId,
           'ckeditor_fields' => $ckeditorFields,
           'processed_fields' => $result['processed_fields'],
           'moved_files_count' => count($result['moved_files'])
-        ));
+        ]);
       }
 
     } catch (Exception $e) {
@@ -597,7 +597,7 @@ class CRM_Utils_Image {
    * @return array Array of field names that are CKeditor type
    */
   private static function identifyCKeditorFields($formElements) {
-    $ckeditorFields = array();
+    $ckeditorFields = [];
 
     if (!is_array($formElements)) {
       return $ckeditorFields;
@@ -674,36 +674,36 @@ class CRM_Utils_Image {
               // TODO: Update title attribute to remove temp file reference
               $publicUrl = $urlResult['url'];
 
-              $result['moved_files'][] = array(
+              $result['moved_files'][] = [
                 'field' => $fieldName,
                 'original_name' => $originalName,
                 'temp_name' => $tempFileName,
                 'final_path' => $movedFile['final_path'],
                 'final_name' => $movedFile['final_name'],
                 'public_url' => $publicUrl
-              );
+              ];
             } else {
               $result['warnings'][] = "Generated URL failed for field '{$fieldName}': " . $urlResult['error'];
 
-              $result['moved_files'][] = array(
+              $result['moved_files'][] = [
                 'field' => $fieldName,
                 'original_name' => $originalName,
                 'temp_name' => $tempFileName,
                 'final_path' => $movedFile['final_path'],
                 'final_name' => $movedFile['final_name'],
                 'public_url' => null  // URL 產生失敗
-              );
+              ];
             }
           } else {
             $result['errors'][] = "Failed to move file for field '{$fieldName}': " . $movedFile['error'];
           }
         } catch (Exception $e) {
           $result['errors'][] = "Exception processing image in field '{$fieldName}': " . $e->getMessage();
-          CRM_Core_Error::debug('Exception in processBlobImagesInField', array(
+          CRM_Core_Error::debug('Exception in processBlobImagesInField', [
             'field' => $fieldName,
             'temp_file' => $tempFileName,
             'error' => $e->getMessage()
-          ));
+          ]);
         }
       }
     }
@@ -722,7 +722,7 @@ class CRM_Utils_Image {
    * @return array Result with success status and file details
    */
   private static function moveTemporaryFile($tempFileName, $originalName, $tempDir, $userDir, $userId) {
-    $result = array('success' => false, 'error' => '');
+    $result = ['success' => false, 'error' => ''];
 
     try {
       // Find temporary file with any extension (from EditorImageUpload.php processing)
@@ -760,11 +760,11 @@ class CRM_Utils_Image {
         $result['final_name'] = $finalFileName;
         $result['source_file'] = $sourceFile;
 
-        CRM_Core_Error::debug('File moved successfully', array(
+        CRM_Core_Error::debug('File moved successfully', [
           'source' => $sourceFile,
           'destination' => $finalPath,
           'user_id' => $userId
-        ));
+        ]);
 
       } else {
         $result['error'] = 'Failed to move file from ' . $sourceFile . ' to ' . $finalPath;
@@ -844,7 +844,7 @@ class CRM_Utils_Image {
    * @return array Result with success status and URL
    */
   private static function generatePublicUrl($filePath) {
-    $result = array('success' => false, 'url' => '', 'error' => '');
+    $result = ['success' => false, 'url' => '', 'error' => ''];
 
     try {
       // Get CMS public directory
@@ -889,12 +889,12 @@ class CRM_Utils_Image {
         $result['url'] = $publicUrl;
 
         // Debug log the URL generation process
-        CRM_Core_Error::debug('URL generation details', array(
+        CRM_Core_Error::debug('URL generation details', [
           'original_base_url' => $baseUrl,
           'base_url_without_lang' => $baseUrlWithoutLang,
           'relative_path' => $relativePath,
           'final_url' => $publicUrl
-        ));
+        ]);
       } else {
         $result['error'] = 'Generated URL is not valid: ' . $publicUrl;
       }

@@ -80,9 +80,9 @@ class CRM_Core_Block {
     }
 
     if (!(self::$_properties)) {
-      self::$_properties = array(
+      self::$_properties = [
         // set status item to 0 to disable block by default (at install)
-        self::CREATE_NEW => array('template' => 'CreateNew.tpl',
+        self::CREATE_NEW => ['template' => 'CreateNew.tpl',
           'info' => ts('CiviCRM Create New Record'),
           'subject' => ts(''),
           'active' => TRUE,
@@ -91,8 +91,8 @@ class CRM_Core_Block {
           'weight' => -100,
           'status' => 0,
           'pages' => 'civicrm*',
-        ),
-        self::RECENTLY_VIEWED => array('template' => 'RecentlyViewed.tpl',
+        ],
+        self::RECENTLY_VIEWED => ['template' => 'RecentlyViewed.tpl',
           'info' => ts('CiviCRM Recent Items'),
           'subject' => ts('Recent Items'),
           'active' => TRUE,
@@ -101,8 +101,8 @@ class CRM_Core_Block {
           'weight' => -99,
           'status' => 0,
           'pages' => 'civicrm*',
-        ),
-        self::DASHBOARD => array('template' => 'Dashboard.tpl',
+        ],
+        self::DASHBOARD => ['template' => 'Dashboard.tpl',
           'info' => ts('CiviCRM Contact Dashboard'),
           'subject' => '',
           'active' => TRUE,
@@ -111,8 +111,8 @@ class CRM_Core_Block {
           'weight' => -98,
           'status' => 0,
           'pages' => 'civicrm*',
-        ),
-        self::ADD => array('template' => 'Add.tpl',
+        ],
+        self::ADD => ['template' => 'Add.tpl',
           'info' => ts('CiviCRM Quick Add'),
           'subject' => ts('New Individual'),
           'active' => TRUE,
@@ -121,30 +121,30 @@ class CRM_Core_Block {
           'weight' => -97,
           'status' => 0,
           'pages' => 'civicrm*',
-        ),
-        self::LANGSWITCH => array('template' => 'LangSwitch.tpl',
+        ],
+        self::LANGSWITCH => ['template' => 'LangSwitch.tpl',
           'info' => ts('CiviCRM Language Switcher'),
           'subject' => '',
-          'templateValues' => array(),
+          'templateValues' => [],
           'active' => TRUE,
           'cache' => BLOCK_NO_CACHE,
           'visibility' => 1,
           'weight' => -96,
           'status' => 0,
           'pages' => 'civicrm*',
-        ),
-        self::EVENT => array('template' => 'Event.tpl',
+        ],
+        self::EVENT => ['template' => 'Event.tpl',
           'info' => ts('CiviCRM Upcoming Events'),
           'subject' => ts('Upcoming Events'),
-          'templateValues' => array(),
+          'templateValues' => [],
           'active' => TRUE,
           'cache' => BLOCK_NO_CACHE,
           'visibility' => 1,
           'weight' => -95,
           'status' => 0,
           'pages' => 'civicrm*',
-        ),
-        self::FULLTEXT_SEARCH => array('template' => 'FullTextSearch.tpl',
+        ],
+        self::FULLTEXT_SEARCH => ['template' => 'FullTextSearch.tpl',
           'info' => ts('CiviCRM Full-text Search'),
           'subject' => ts('Full-text Search'),
           'active' => TRUE,
@@ -153,8 +153,8 @@ class CRM_Core_Block {
           'weight' => -94,
           'status' => 0,
           'pages' => 'civicrm*',
-        ),
-        self::AUTOCOMPLETE_SEARCH => array(
+        ],
+        self::AUTOCOMPLETE_SEARCH => [
           'template' => 'AutocompleteSearch.tpl',
           'info' => ts('Autocomplete Contact Search'),
           'subject' => '',
@@ -164,8 +164,8 @@ class CRM_Core_Block {
           'weight' => -93,
           'status' => 0,
           'pages' => 'civicrm*',
-        ),
-      );
+        ],
+      ];
 
       ksort(self::$_properties);
     }
@@ -222,10 +222,10 @@ class CRM_Core_Block {
    */
   static function getInfo() {
 
-    $block = array();
+    $block = [];
     foreach (self::properties() as $id => $value) {
       if ($value['active']) {
-        if (in_array($id, array(self::ADD, self::CREATE_NEW))) {
+        if (in_array($id, [self::ADD, self::CREATE_NEW])) {
           $hasAccess = TRUE;
           if (!CRM_Core_Permission::check('add contacts') &&
             !CRM_Core_Permission::check('edit groups')
@@ -249,7 +249,7 @@ class CRM_Core_Block {
           continue;
         }
 
-        $block[$id] = array(
+        $block[$id] = [
           'info' => $value['info'],
           'cache' => $value['cache'],
           'region' => !empty($value['region']) ? $value['region'] : NULL,
@@ -257,7 +257,7 @@ class CRM_Core_Block {
           'pages' => $value['pages'],
           'status' => $value['status'],
           'weight' => $value['weight'],
-        );
+        ];
       }
     }
 
@@ -288,9 +288,9 @@ class CRM_Core_Block {
         $defaultLocation = &CRM_Core_BAO_LocationType::getDefault();
         $defaultPrimaryLocationId = $defaultLocation->id;
 
-        $values = array('postURL' => CRM_Utils_System::url('civicrm/contact/add', 'reset=1&ct=Individual'),
+        $values = ['postURL' => CRM_Utils_System::url('civicrm/contact/add', 'reset=1&ct=Individual'),
           'primaryLocationType' => $defaultPrimaryLocationId,
-        );
+        ];
         self::setProperty(self::ADD,
           'templateValues',
           $values
@@ -298,16 +298,16 @@ class CRM_Core_Block {
         break;
 
       case self::FULLTEXT_SEARCH:
-        $urlArray = array('fullTextSearchID' => CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionValue',
+        $urlArray = ['fullTextSearchID' => CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionValue',
             'CRM_Contact_Form_Search_Custom_FullText', 'value', 'name'
-          ));
+          )];
         self::setProperty(self::FULLTEXT_SEARCH, 'templateValues', $urlArray);
         break;
 
       case self::RECENTLY_VIEWED:
 
         $recent = &CRM_Utils_Recent::get();
-        self::setProperty(self::RECENTLY_VIEWED, 'templateValues', array('recentlyViewed' => $recent));
+        self::setProperty(self::RECENTLY_VIEWED, 'templateValues', ['recentlyViewed' => $recent]);
         break;
 
       case self::EVENT:
@@ -325,7 +325,7 @@ class CRM_Core_Block {
   private static function setTemplateShortcutValues() {
     $config = CRM_Core_Config::singleton();
 
-    static $shortCuts = array();
+    static $shortCuts = [];
 
     if (!($shortCuts)) {
       if (CRM_Core_Permission::check('add contacts')) {
@@ -334,20 +334,20 @@ class CRM_Core_Block {
           $shortCuts = CRM_Contact_BAO_ContactType::getCreateNewList();
         }
         if (CRM_Core_Permission::access('Quest')) {
-          $shortCuts = array_merge($shortCuts, array(array('path' => 'civicrm/quest/search',
+          $shortCuts = array_merge($shortCuts, [['path' => 'civicrm/quest/search',
                 'query' => 'reset=1',
                 'ref' => 'quest-search',
                 'title' => ts('Quest Search'),
-              )));
+              ]]);
         }
       }
 
       // new activity (select target contact)
-      $shortCuts = array_merge($shortCuts, array(array('path' => 'civicrm/activity',
+      $shortCuts = array_merge($shortCuts, [['path' => 'civicrm/activity',
             'query' => 'action=add&reset=1&context=standalone',
             'ref' => 'new-activity',
             'title' => ts('Activity'),
-          )));
+          ]]);
 
 
       $components = CRM_Core_Component::getEnabledComponents();
@@ -361,26 +361,26 @@ class CRM_Core_Block {
       }
 
       // new email (select recipients)
-      $shortCuts = array_merge($shortCuts, array(array('path' => 'civicrm/activity/add',
+      $shortCuts = array_merge($shortCuts, [['path' => 'civicrm/activity/add',
             'query' => 'atype=3&action=add&reset=1&context=standalone',
             'ref' => 'new-email',
             'title' => ts('Email'),
-          )));
+          ]]);
 
       if (CRM_Core_Permission::check('edit groups')) {
-        $shortCuts = array_merge($shortCuts, array(array('path' => 'civicrm/group/add',
+        $shortCuts = array_merge($shortCuts, [['path' => 'civicrm/group/add',
               'query' => 'reset=1',
               'ref' => 'new-group',
               'title' => ts('Group'),
-            )));
+            ]]);
       }
 
       if (CRM_Core_Permission::check('administer CiviCRM')) {
-        $shortCuts = array_merge($shortCuts, array(array('path' => 'civicrm/admin/tag',
+        $shortCuts = array_merge($shortCuts, [['path' => 'civicrm/admin/tag',
               'query' => 'reset=1&action=add',
               'ref' => 'new-tag',
               'title' => ts('Tag'),
-            )));
+            ]]);
       }
 
       if (empty($shortCuts)) {
@@ -388,9 +388,9 @@ class CRM_Core_Block {
       }
     }
 
-    $values = array();
+    $values = [];
     foreach ($shortCuts as $short) {
-      $value = array();
+      $value = [];
       if (isset($short['url'])) {
         $value['url'] = $short['url'];
       }
@@ -406,7 +406,7 @@ class CRM_Core_Block {
 
     CRM_Utils_Hook::links('create.new.shorcuts', NULL, CRM_Core_DAO::$_nullObject, $values);
 
-    self::setProperty(self::CREATE_NEW, 'templateValues', array('shortCuts' => $values));
+    self::setProperty(self::CREATE_NEW, 'templateValues', ['shortCuts' => $values]);
   }
 
   /**
@@ -416,21 +416,21 @@ class CRM_Core_Block {
    * @access private
    */
   private static function setTemplateDashboardValues() {
-    static $dashboardLinks = array();
+    static $dashboardLinks = [];
     if (CRM_Core_Permission::check('access Contact Dashboard')) {
-      $dashboardLinks = array(array('path' => 'civicrm/user',
+      $dashboardLinks = [['path' => 'civicrm/user',
           'query' => 'reset=1',
           'title' => ts('My Contact Dashboard'),
-        ));
+        ]];
     }
 
     if (empty($dashboardLinks)) {
       return NULL;
     }
 
-    $values = array();
+    $values = [];
     foreach ($dashboardLinks as $dash) {
-      $value = array();
+      $value = [];
       if (isset($dash['url'])) {
         $value['url'] = $dash['url'];
       }
@@ -441,7 +441,7 @@ class CRM_Core_Block {
       $value['key'] = CRM_Utils_Array::value('key', $dash);
       $values[] = $value;
     }
-    self::setProperty(self::DASHBOARD, 'templateValues', array('dashboardLinks' => $values));
+    self::setProperty(self::DASHBOARD, 'templateValues', ['dashboardLinks' => $values]);
   }
 
   /**
@@ -454,25 +454,25 @@ class CRM_Core_Block {
     static $shortCuts = NULL;
 
     if (!($shortCuts)) {
-      $shortCuts = array(array('path' => 'civicrm/mailing/send',
+      $shortCuts = [['path' => 'civicrm/mailing/send',
           'query' => 'reset=1',
           'title' => ts('Send Mailing'),
-        ),
-        array('path' => 'civicrm/mailing/browse',
+        ],
+        ['path' => 'civicrm/mailing/browse',
           'query' => 'reset=1',
           'title' => ts('Browse Sent Mailings'),
-        ),
-      );
+        ],
+      ];
     }
 
-    $values = array();
+    $values = [];
     foreach ($shortCuts as $short) {
-      $value = array();
+      $value = [];
       $value['url'] = CRM_Utils_System::url($short['path'], $short['query']);
       $value['title'] = $short['title'];
       $values[] = $value;
     }
-    self::setProperty(self::MAIL, 'templateValues', array('shortCuts' => $values));
+    self::setProperty(self::MAIL, 'templateValues', ['shortCuts' => $values]);
   }
 
   /**
@@ -487,7 +487,7 @@ class CRM_Core_Block {
     $path = 'navigation';
     $values = &CRM_Core_Menu::getNavigation();
     if ($values) {
-      self::setProperty(self::MENU, 'templateValues', array('menu' => $values));
+      self::setProperty(self::MENU, 'templateValues', ['menu' => $values]);
     }
   }
 
@@ -512,7 +512,7 @@ class CRM_Core_Block {
         );
       }
 
-      self::setProperty(self::EVENT, 'templateValues', array('eventBlock' => $info));
+      self::setProperty(self::EVENT, 'templateValues', ['eventBlock' => $info]);
     }
   }
 
@@ -573,11 +573,11 @@ class CRM_Core_Block {
       }
     }
 
-    $block = array();
+    $block = [];
     $block['name'] = 'block-civicrm';
     $block['id'] = $block['name'] . '_' . $id;
     $block['subject'] = self::fetch($id, 'Subject.tpl',
-      array('subject' => self::getProperty($id, 'subject'))
+      ['subject' => self::getProperty($id, 'subject')]
     );
     $block['content'] = self::fetch($id, self::getProperty($id, 'template'),
       self::getProperty($id, 'templateValues')

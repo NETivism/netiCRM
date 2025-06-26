@@ -21,7 +21,7 @@ class CRM_Contact_Form_Search_Custom_SingleNotRecurring extends CRM_Contact_Form
   }
 
   function buildColumn(){
-    $this->_queryColumns = array( 
+    $this->_queryColumns = [ 
       'contact.id' => 'id',
       'c.contact_id' => 'contact_id',
       'contact.sort_name' => 'sort_name',
@@ -29,14 +29,14 @@ class CRM_Contact_Form_Search_Custom_SingleNotRecurring extends CRM_Contact_Form
       'ROUND(SUM(c.total_amount))' => 'receive_amount',
       'COUNT(c.id)' => 'completed_count',
       'MAX(c.contribution_recur_id)' => 'last_success_contribution_recur_id'
-    );
-    $this->_columns = array(
+    ];
+    $this->_columns = [
       ts('ID') => 'id',
       ts('Name') => 'sort_name',
       ts('Payment Instrument') => 'payment_instrument_id',
       ts('Total Receive Amount') => 'receive_amount',
       ts('Completed Donation') => 'completed_count',
-    );
+    ];
   }
   function buildTempTable() {
     $sql = "
@@ -45,7 +45,7 @@ CREATE TEMPORARY TABLE IF NOT EXISTS {$this->_tableName} (
 ";
 
     foreach ($this->_queryColumns as $field) {
-      if (in_array($field, array('id'))) {
+      if (in_array($field, ['id'])) {
         continue;
       }
       if(strstr($field,'amount') || strstr($field, 'count') || strstr($field, '_id')){
@@ -76,7 +76,7 @@ PRIMARY KEY (id)
    */
   function fillTable(){
     $this->buildTempTable();
-    $select = array();
+    $select = [];
     foreach($this->_queryColumns as $k => $v){
       $select[] = $k.' as '.$v;
     }
@@ -99,7 +99,7 @@ $having
     $dao = CRM_Core_DAO::executeQuery($sql, CRM_Core_DAO::$_nullArray);
 
     while ($dao->fetch()) {
-      $values = array();
+      $values = [];
       foreach($this->_queryColumns as $name){
         if($name == 'id'){
           $values[] = CRM_Utils_Type::escape($dao->id, 'Integer');
@@ -126,7 +126,7 @@ $having
    * WHERE clause is an array built from any required JOINS plus conditional filters based on search criteria field values
    */
   function tempWhere(){
-    $clauses = array();
+    $clauses = [];
     $clauses[] = "contact.is_deleted = 0";
 
     $from = !empty($this->_formValues['receive_date_from']) ? $this->_formValues['receive_date_from'] : NULL;
@@ -150,7 +150,7 @@ $having
 
   function tempHaving(){
     $count = $this->_formValues['contribution_count'];
-    $clauses = array();
+    $clauses = [];
     $clauses[] = "COUNT(c.id) >= $count";
     $clauses[] = "last_success_contribution_recur_id IS NULL";
     return CRM_Utils_Array::implode(' AND ', $clauses);
@@ -162,21 +162,21 @@ $having
       $option[$i] = $i;
     }
     $form->addSelect('contribution_count', ts('month'), $option);
-    $form->addSelect('payment_instrument_id', ts('Payment Instrument'), array('' => ts('- select -')) + $this->_instruments);
+    $form->addSelect('payment_instrument_id', ts('Payment Instrument'), ['' => ts('- select -')] + $this->_instruments);
     $form->addDateRange('receive_date', ts('Received Date').' - '.ts('From'), NULL, FALSE);
   }
 
   function setDefaultValues() {
-    return array(
+    return [
       'contribution_count' => 3,
-    );
+    ];
   }
 
   function qill(){
-    $qill = array();
+    $qill = [];
 
     $count = $this->_formValues['contribution_count'];
-    $qill[1]['count'] = ts('Single donation over %1 times', array(1 => $count));
+    $qill[1]['count'] = ts('Single donation over %1 times', [1 => $count]);
 
     $from = !empty($this->_formValues['receive_date_from']) ? $this->_formValues['receive_date_from'] : NULL;
     $to = !empty($this->_formValues['receive_date_to']) ? $this->_formValues['receive_date_to'] : NULL;
@@ -197,7 +197,7 @@ $having
 
   function setTitle(){
     $count = $this->_formValues['contribution_count'];
-    $title = ts('Single donation over %1 times', array(1 => $count));
+    $title = ts('Single donation over %1 times', [1 => $count]);
     CRM_Utils_System::setTitle($title);
   }
 
@@ -253,7 +253,7 @@ $having
   }
 
   static function includeContactIDs(&$sql, &$formValues, $isExport = FALSE) {
-    $contactIDs = array();
+    $contactIDs = [];
     foreach ($formValues as $id => $value) {
       list($contactID, $additionalID) = CRM_Core_Form::cbExtract($id);
       if ($value && !empty($contactID)) {

@@ -64,12 +64,12 @@ FROM      civicrm_contact
 LEFT JOIN civicrm_email ON ( civicrm_contact.id = civicrm_email.contact_id {$primaryClause} {$locationClause} )
 WHERE     civicrm_contact.id = %1 ORDER BY civicrm_email.is_primary DESC";
 
-    $params = array(1 => array($id, 'Integer'));
+    $params = [1 => [$id, 'Integer']];
     $dao = &CRM_Core_DAO::executeQuery($sql, $params);
     if ($dao->fetch()) {
-      return array($dao->display_name, $dao->email, $dao->location_type_id, $dao->id);
+      return [$dao->display_name, $dao->email, $dao->location_type_id, $dao->id];
     }
-    return array(NULL, NULL, NULL, NULL);
+    return [NULL, NULL, NULL, NULL];
   }
 
   /**
@@ -83,7 +83,7 @@ WHERE     civicrm_contact.id = %1 ORDER BY civicrm_email.is_primary DESC";
    */
   static function getPhoneDetails($id, $type = NULL) {
     if (!$id) {
-      return array(NULL, NULL);
+      return [NULL, NULL];
     }
 
     $cond = NULL;
@@ -100,12 +100,12 @@ LEFT JOIN civicrm_phone ON ( civicrm_phone.contact_id = civicrm_contact.id )
           $cond
       AND civicrm_contact.id = %1";
 
-    $params = array(1 => array($id, 'Integer'));
+    $params = [1 => [$id, 'Integer']];
     $dao = &CRM_Core_DAO::executeQuery($sql, $params);
     if ($dao->fetch()) {
-      return array($dao->display_name, $dao->phone);
+      return [$dao->display_name, $dao->phone];
     }
-    return array(NULL, NULL);
+    return [NULL, NULL];
   }
 
   /**
@@ -147,23 +147,23 @@ LEFT JOIN civicrm_country ON civicrm_address.country_id = civicrm_country.id
 LEFT JOIN civicrm_location_type ON civicrm_location_type.id = civicrm_address.location_type_id
 WHERE civicrm_contact.id IN $idString ";
 
-    $params = array();
+    $params = [];
     if (!$locationTypeID) {
       $sql .= " AND civicrm_address.is_primary = 1";
     }
     else {
       $sql .= " AND civicrm_address.location_type_id = %1";
-      $params[1] = array($locationTypeID, 'Integer');
+      $params[1] = [$locationTypeID, 'Integer'];
     }
     $dao = &CRM_Core_DAO::executeQuery($sql, $params);
 
-    $locations = array();
+    $locations = [];
     $config = CRM_Core_Config::singleton();
     $maxiumDecode = 10; // each search only decode 10 addersss
     $runDecode = 0;
 
     while ($dao->fetch()) {
-      $location = $reverseGeoDecode = array();
+      $location = $reverseGeoDecode = [];
       if (empty($dao->latitude) && empty($dao->longtude) && !empty($dao->street_address) && $runDecode < $maxiumDecode) {
         $reverseGeoDecode['street_address'] = $dao->street_address;
         $reverseGeoDecode['city'] = $dao->city;
@@ -171,13 +171,13 @@ WHERE civicrm_contact.id IN $idString ";
         $reverseGeoDecode['postal_code'] = $dao->postal_code;
         $reverseGeoDecode['country'] = $dao->country;
         $runDecode++;
-        call_user_func_array(array($config->geocodeMethod, 'format'), array(&$reverseGeoDecode));
+        call_user_func_array([$config->geocodeMethod, 'format'], [&$reverseGeoDecode]);
         if (!empty($reverseGeoDecode['geo_code_1']) && $reverseGeoDecode['geo_code_1'] != 'null') {
-          CRM_Core_DAO::executeQuery("UPDATE civicrm_address SET geo_code_1 = %1, geo_code_2 = %2 WHERE id = %3", array(
-            1 => array($reverseGeoDecode['geo_code_1'], 'Float'),
-            2 => array($reverseGeoDecode['geo_code_2'], 'Float'),
-            3 => array($dao->address_id, 'Integer'),
-          ));
+          CRM_Core_DAO::executeQuery("UPDATE civicrm_address SET geo_code_1 = %1, geo_code_2 = %2 WHERE id = %3", [
+            1 => [$reverseGeoDecode['geo_code_1'], 'Float'],
+            2 => [$reverseGeoDecode['geo_code_2'], 'Float'],
+            3 => [$dao->address_id, 'Integer'],
+          ]);
           $dao->latitude = $reverseGeoDecode['geo_code_1'];
           $dao->longitude = $reverseGeoDecode['geo_code_2'];
         }

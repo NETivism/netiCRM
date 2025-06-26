@@ -113,7 +113,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
 
     if ($dao->find(TRUE)) {
       $premiumID = $dao->id;
-      $premiumBlock = array();
+      $premiumBlock = [];
       CRM_Core_DAO::storeValues($dao, $premiumBlock);
 
 
@@ -122,8 +122,8 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
       $dao->orderBy('weight');
       $dao->find();
 
-      $products = array();
-      $radio = array();
+      $products = [];
+      $radio = [];
       while ($dao->fetch()) {
 
         $productDAO = new CRM_Contribute_DAO_Product();
@@ -155,14 +155,14 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
             CRM_Core_DAO::storeValues($productDAO, $products[$productDAO->id]);
           }
         }
-        $productAttr = array();
+        $productAttr = [];
         $productAttr['data-min-contribution'] = $products[$productDAO->id]['min_contribution'];
         $productAttr['data-min-contribution-recur'] = $products[$productDAO->id]['min_contribution_recur'];
         $productAttr['data-calculate-mode'] = $products[$productDAO->id]['calculate_mode'];
         $productAttr['data-installments'] = $products[$productDAO->id]['installments'];
         
         $radio[$productDAO->id] = $form->createElement('radio', NULL, NULL, ' ', $productDAO->id, $productAttr);
-        $options = $temp = array();
+        $options = $temp = [];
         $temp = explode(',', $productDAO->options);
         foreach ($temp as $value) {
           $options[trim($value)] = trim($value);
@@ -177,8 +177,8 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
           $radio[''] = $form->createElement('radio', NULL, NULL, ' ', 'no_thanks', NULL);
           $form->assign('no_thanks_label', ts('No thank you'));
           $form->addGroup($radio, 'selectProduct', NULL);
-          $form->addRule('selectProduct', ts('%1 is a required field.', array(1 => ts('Premium'))), 'required');
-          $default = array('selectProduct' => 'no_thanks');
+          $form->addRule('selectProduct', ts('%1 is a required field.', [1 => ts('Premium')]), 'required');
+          $default = ['selectProduct' => 'no_thanks'];
           $form->setDefaults($default);
         }
         $form->assign('showSelectOptions', $formItems);
@@ -212,7 +212,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
     }
 
     $radio[$productDAO->id] = $form->createElement('radio', NULL, NULL, NULL, $productDAO->id, NULL);
-    $options = $temp = array();
+    $options = $temp = [];
     $temp = explode(',', $productDAO->options);
     foreach ($temp as $value) {
       $options[$value] = $value;
@@ -246,9 +246,9 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
 
 
 
-    $params = array('entity_id' => $contributionPageID,
+    $params = ['entity_id' => $contributionPageID,
       'entity_table' => 'civicrm_contribution_page',
-    );
+    ];
 
     $premium = new CRM_Contribute_DAO_Premium();
     $premium->copyValues($params);

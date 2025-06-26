@@ -54,7 +54,7 @@ class CRM_Contact_Form_Search_Simple extends CRM_Core_Form {
     $this->add('select',
       'country_id',
       ts('Country'),
-      array('' => ts('- select -')) + CRM_Core_PseudoConstant::country()
+      ['' => ts('- select -')] + CRM_Core_PseudoConstant::country()
     );
 
     $countryID = isset($_POST['country_id']) ? $_POST['country_id'] : NULL;
@@ -65,28 +65,28 @@ class CRM_Contact_Form_Search_Simple extends CRM_Core_Form {
       $this->add('select',
         'state_province_id',
         ts('State'),
-        array('' => ts('- select a state -')) + CRM_Core_PseudoConstant::stateProvinceForCountry($countryID)
+        ['' => ts('- select a state -')] + CRM_Core_PseudoConstant::stateProvinceForCountry($countryID)
       );
     }
     else {
       $this->add('select',
         'state_province_id',
         ts('State'),
-        array('' => ts('- select a country first -'))
+        ['' => ts('- select a country first -')]
       );
     }
 
     $stateCountryURL = CRM_Utils_System::url('civicrm/ajax/jqState');
     $this->assign('stateCountryURL', $stateCountryURL);
-    $this->addButtons(array(
-        array('type' => 'refresh',
+    $this->addButtons([
+        ['type' => 'refresh',
           'name' => ts('Search'),
           'isDefault' => TRUE,
-        ),
-        array('type' => 'cancel',
+        ],
+        ['type' => 'cancel',
           'name' => ts('Cancel'),
-        ),
-      )
+        ],
+      ]
     );
   }
 

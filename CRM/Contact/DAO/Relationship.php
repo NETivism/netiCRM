@@ -165,12 +165,12 @@ class CRM_Contact_DAO_Relationship extends CRM_Core_DAO
   function &links()
   {
     if (!(self::$_links)) {
-      self::$_links = array(
+      self::$_links = [
         'contact_id_a' => 'civicrm_contact:id',
         'contact_id_b' => 'civicrm_contact:id',
         'relationship_type_id' => 'civicrm_relationship_type:id',
         'case_id' => 'civicrm_case:id',
-      );
+      ];
     }
     return self::$_links;
   }
@@ -200,67 +200,67 @@ class CRM_Contact_DAO_Relationship extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'id' => array(
+      self::$_fields = [
+        'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'contact_id_a' => array(
+        ] ,
+        'contact_id_a' => [
           'name' => 'contact_id_a',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
           'FKClassName' => 'CRM_Contact_DAO_Contact',
-        ) ,
-        'contact_id_b' => array(
+        ] ,
+        'contact_id_b' => [
           'name' => 'contact_id_b',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
           'FKClassName' => 'CRM_Contact_DAO_Contact',
-        ) ,
-        'relationship_type_id' => array(
+        ] ,
+        'relationship_type_id' => [
           'name' => 'relationship_type_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
           'FKClassName' => 'CRM_Contact_DAO_RelationshipType',
-        ) ,
-        'start_date' => array(
+        ] ,
+        'start_date' => [
           'name' => 'start_date',
           'type' => CRM_Utils_Type::T_DATE,
           'title' => ts('Start Date') ,
-        ) ,
-        'end_date' => array(
+        ] ,
+        'end_date' => [
           'name' => 'end_date',
           'type' => CRM_Utils_Type::T_DATE,
           'title' => ts('End Date') ,
-        ) ,
-        'is_active' => array(
+        ] ,
+        'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'default' => '',
-        ) ,
-        'description' => array(
+        ] ,
+        'description' => [
           'name' => 'description',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Description') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'is_permission_a_b' => array(
+        ] ,
+        'is_permission_a_b' => [
           'name' => 'is_permission_a_b',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ) ,
-        'is_permission_b_a' => array(
+        ] ,
+        'is_permission_b_a' => [
           'name' => 'is_permission_b_a',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ) ,
-        'case_id' => array(
+        ] ,
+        'case_id' => [
           'name' => 'case_id',
           'type' => CRM_Utils_Type::T_INT,
           'default' => 'UL',
           'FKClassName' => 'CRM_Case_DAO_Case',
-        ) ,
-      );
+        ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -293,7 +293,7 @@ class CRM_Contact_DAO_Relationship extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -316,7 +316,7 @@ class CRM_Contact_DAO_Relationship extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {

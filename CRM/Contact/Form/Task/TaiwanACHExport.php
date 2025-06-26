@@ -2,13 +2,13 @@
 class CRM_Contact_Form_Task_TaiwanACHExport extends CRM_Contact_Form_Task {
 
   public $_additionalIds;
-  protected $_achDatas = array();
+  protected $_achDatas = [];
 
   protected $_paymentType = NULL;
 
   protected $_hasProblem = NULL;
 
-  protected $_formValues = array();
+  protected $_formValues = [];
 
   function preProcess() {
     parent::preProcess();
@@ -20,12 +20,12 @@ class CRM_Contact_Form_Task_TaiwanACHExport extends CRM_Contact_Form_Task {
       $messages[] = ts('Sorry. No results found.');
     }
     else {
-      $messages[] = ts('Number of selected contributions: %1', array(1 => count($this->_additionalIds)));
+      $messages[] = ts('Number of selected contributions: %1', [1 => count($this->_additionalIds)]);
     }
     // Check is same processor id
     $this->_achDatas = CRM_Contribute_BAO_TaiwanACH::getTaiwanACHDatas($this->_additionalIds);
     $achDatas = &$this->_achDatas;
-    $unverificationIds = array();
+    $unverificationIds = [];
     foreach ($this->_additionalIds as $key => $recurringId) {
       $achData = $achDatas[$recurringId];
       // Check processor_id
@@ -73,51 +73,51 @@ class CRM_Contact_Form_Task_TaiwanACHExport extends CRM_Contact_Form_Task {
 
   public function buildQuickForm() {
     if (!$this->_hasProblem) {
-      $options = array(
+      $options = [
         '' => ts('-- select --'),
         'ACH Bank' => ts('Bank'),
         'ACH Post' => ts('Post Office'),
-      );
+      ];
       $ele = $this->addSelect('payment_type', ts('Payment Instrument'), $options, NULL, TRUE);
       if (!empty($this->_paymentType)) {
-        $this->setDefaults(array('payment_type' => $this->_paymentType));
+        $this->setDefaults(['payment_type' => $this->_paymentType]);
         $ele->freeze();
       }
 
-      $options = array(
+      $options = [
         'txt' => 'txt'.' - '.ts('Format that submit to bank.'),
         'xlsx' => 'xlsx'.' - '.ts('Format that human can read.'),
-      );
+      ];
       $this->addSelect('export_format', ts("Format"), $options, NULL, TRUE);
       $this->addDefaultButtons(ts('Export'));
 
       // add rules
-      $this->addFormRule(array('CRM_Contact_Form_Task_TaiwanACHExportVerification', 'formRule'), $this);
+      $this->addFormRule(['CRM_Contact_Form_Task_TaiwanACHExportVerification', 'formRule'], $this);
     }
     else {
-      $buttons = array();
-      $buttons[] = array(
+      $buttons = [];
+      $buttons[] = [
         'type' => 'back',
         'name' => ts('Previous'),
-      );
+      ];
       $this->addButtons($buttons);
     }
   }
 
   public static function formRule($fields, $files, $self) {
-    $errors = array();
+    $errors = [];
     if (!empty($fields['payment_type'])) {
       $paymentType = $fields['payment_type'];
       $ids = CRM_Utils_Array::implode(",", $self->_additionalIds);
-      $dao = CRM_Core_DAO::executeQuery("SELECT id FROM civicrm_contribution_taiwanach WHERE payment_type = %1 AND contribution_recur_id IN ($ids)", array(
-        1 => array($paymentType, 'String'),
-      ));
+      $dao = CRM_Core_DAO::executeQuery("SELECT id FROM civicrm_contribution_taiwanach WHERE payment_type = %1 AND contribution_recur_id IN ($ids)", [
+        1 => [$paymentType, 'String'],
+      ]);
       $dao->fetch();
       if ($dao->N != count($self->_additionalIds)) {
         $diff = count($self->_additionalIds) - $dao->N;
-        $errors['payment_type'] = ts("%1 ACH records you selected didn't match the payemnt type you choose.", array(
+        $errors['payment_type'] = ts("%1 ACH records you selected didn't match the payemnt type you choose.", [
           1 => $diff
-        ));
+        ]);
       }
     }
     return $errors;

@@ -138,7 +138,7 @@ class CRM_Contribute_BAO_ManagePremiums extends CRM_Contribute_DAO_Product {
     $premiumsProduct->product_id = $productID;
     if ($premiumsProduct->find(TRUE)) {
       $session = CRM_Core_Session::singleton();
-      $message .= ts('This Premium is being linked to <a href=\'%1\'>Online Contribution page</a>. Please remove it in order to delete this Premium.', array(1 => CRM_Utils_System::url('civicrm/admin/contribute', 'reset=1')));
+      $message .= ts('This Premium is being linked to <a href=\'%1\'>Online Contribution page</a>. Please remove it in order to delete this Premium.', [1 => CRM_Utils_System::url('civicrm/admin/contribute', 'reset=1')]);
       CRM_Core_Session::setStatus($message);
       return CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin/contribute/managePremiums', 'reset=1&action=browse'));
     }

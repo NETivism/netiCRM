@@ -25,7 +25,7 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
    *
    * @var array
    */
-  private $_additionalHeaders = array();
+  private $_additionalHeaders = [];
 
   /**
    * Send transactional mail
@@ -74,15 +74,15 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
       return CRM_Utils_Mail::send($params, $callback);
     }
     // validate required params
-    $required = array(
+    $required = [
       'contactId' => 'positiveInteger',
       'activityId' => 'positiveInteger',
       'toEmail' => 'email',
       'subject' => 'string',
       'html' => 'string',
-    );
+    ];
     foreach($required as $field => $type) {
-      $rule = array('CRM_Utils_Rule', $type);
+      $rule = ['CRM_Utils_Rule', $type];
       if (empty($params[$field])) {
         CRM_Core_Error::debug_log_message('Transactional Email Error: missing required field '.$field);
         return;
@@ -95,8 +95,8 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
     }
 
     // use CRM_Utils_Mail to send cc / bcc
-    $additionalRecipients = array();
-    foreach(array('cc', 'bcc') as $ccType) {
+    $additionalRecipients = [];
+    foreach(['cc', 'bcc'] as $ccType) {
       if (CRM_Utils_Array::value($ccType, $params)) {
         $aRecipients = explode(',', $params[$ccType]);
         unset($params[$ccType]);
@@ -122,10 +122,10 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
 
     }
 
-    $emailId = CRM_Core_DAO::singleValueQuery('SELECT id FROM civicrm_email WHERE contact_id = %1 AND email = %2 ORDER BY is_primary DESC', array(
-      1 => array($params['contactId'], 'Integer'),
-      2 => array($params['toEmail'], 'String'),
-    ));
+    $emailId = CRM_Core_DAO::singleValueQuery('SELECT id FROM civicrm_email WHERE contact_id = %1 AND email = %2 ORDER BY is_primary DESC', [
+      1 => [$params['contactId'], 'Integer'],
+      2 => [$params['toEmail'], 'String'],
+    ]);
 
     if (empty($emailId)) {
       CRM_Core_Error::debug_log_message('Transactional Email Error: contact '.$params['contactId'].' doesn\'t have email '.$params['toEmail']);
@@ -133,38 +133,38 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
     }
 
     // create mailing recipient
-    $recipient = array(
-      1 => array($tmail->id, 'Integer'),
-      2 => array($params['contactId'], 'Integer'),
-      3 => array($emailId, 'Integer'),
-    );
+    $recipient = [
+      1 => [$tmail->id, 'Integer'],
+      2 => [$params['contactId'], 'Integer'],
+      3 => [$emailId, 'Integer'],
+    ];
     CRM_Core_DAO::executeQuery("INSERT INTO civicrm_mailing_recipients (mailing_id, contact_id, email_id) VALUES (%1, %2, %3)", $recipient);
 
     // create mailing event queue
-    $queueParams = array(
+    $queueParams = [
       'job_id' => $tmail->_job->id,
       'email_id' => $emailId,
       'contact_id' => $params['contactId'],
-    );
+    ];
     $queue = CRM_Mailing_Event_BAO_Queue::create($queueParams);
 
     // create mailing event transactional
-    $transParams = array(
+    $transParams = [
       'job_id' => $tmail->_job->id,
       'event_queue_id' => $queue->id,
       'hash' => $queue->hash,
       'activity_id' => $params['activityId'],
-    );
+    ];
     $trans = CRM_Mailing_Event_BAO_Transactional::create($transParams);
 
     if ($queue->id && $trans->id) {
       $recipient = '';
       $attachments = CRM_Utils_Array::value('attachments', $params);
       $embedImages = CRM_Utils_Array::value('images', $params);
-      $attachFiles = array(
+      $attachFiles = [
         'attachments' => $attachments,
         'images' => $embedImages,
-      );
+      ];
       $message = $tmail->compose($tmail->_job->id, $queue->id, $queue->hash, $params['contactId'], $params['toEmail'], $recipient, FALSE, NULL, $attachFiles, $tmail->from_email);
       if (!empty($params['mailerType'])) {
         $mailer = &CRM_Core_Config::getMailer($params['mailerType']);
@@ -186,16 +186,16 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
 
         // only send non-blocking when there is a callback
         if (isset($callback) && is_array($callback)) {
-          $sendParams = array(
+          $sendParams = [
             'headers' => $headers,
             'to' => $recipient,
             'body' => $body,
             'callback' => $callback,
             'queue' => $queue,
-          );
+          ];
           // Non-blocking only make sense when there is fastcgi_finish_request
           if (php_sapi_name() === 'fpm-fcgi') {
-            CRM_Core_Config::addShutdownCallback('after', 'CRM_Mailing_BAO_Transactional::sendNonBlocking', array($mailer, $sendParams));
+            CRM_Core_Config::addShutdownCallback('after', 'CRM_Mailing_BAO_Transactional::sendNonBlocking', [$mailer, $sendParams]);
           }
           else {
             CRM_Mailing_BAO_Transactional::sendNonBlocking($mailer, $sendParams);
@@ -278,11 +278,11 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
    * @return void
    */
   public static function delivered($event_queue_id, $job_id, $hash) {
-    $params = array(
+    $params = [
       'event_queue_id' => $event_queue_id,
       'job_id' => $job_id,
       'hash' => $hash,
-    );
+    ];
     CRM_Mailing_Event_BAO_Delivered::create($params);
   }
 
@@ -298,11 +298,11 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
    * @return void
    */
   public static function bounced($event_queue_id, $job_id, $hash, $resultMessage) {
-    $params = array(
+    $params = [
       'event_queue_id' => $event_queue_id,
       'job_id' => $job_id,
       'hash' => $hash,
-    );
+    ];
     $params = array_merge($params, CRM_Mailing_BAO_BouncePattern::match($resultMessage));
     CRM_Mailing_Event_BAO_Bounce::create($params);
   }
@@ -314,9 +314,9 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
       if (CRM_Utils_Rule::email($email)) {
         $sendParams = $tidyParams;
         $sendParams['toEmail'] = $email;
-        CRM_Utils_Mail::send($sendParams, array(
-          0 => array('CRM_Utils_Callback::nullCallback' => array()),
-        ));
+        CRM_Utils_Mail::send($sendParams, [
+          0 => ['CRM_Utils_Callback::nullCallback' => []],
+        ]);
       }
     }
   }
@@ -421,7 +421,7 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
       $contact = $contactDetails;
     }
     else {
-      $params = array(array('contact_id', '=', $contactId, 0, 0));
+      $params = [['contact_id', '=', $contactId, 0, 0]];
       list($contactArray, $_) = CRM_Contact_BAO_Query::apiQuery($params);
 
       //CRM-4524
@@ -436,16 +436,16 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
 
       // also call the hook to get contact details
 
-      $contactIds = array($contactId);
-      CRM_Utils_Hook::tokenValues($contactArray, $contactIds, $job_id, array(), 'CRM_Mailing_BAO_Mailing_compose');
+      $contactIds = [$contactId];
+      CRM_Utils_Hook::tokenValues($contactArray, $contactIds, $job_id, [], 'CRM_Mailing_BAO_Mailing_compose');
     }
 
     $pTemplates = $this->getPreparedTemplates();
-    $pEmails = array();
+    $pEmails = [];
 
     foreach ($pTemplates as $type => $pTemplate) {
       $html = ($type == 'html') ? TRUE : FALSE;
-      $pEmails[$type] = array();
+      $pEmails[$type] = [];
       $pEmail = &$pEmails[$type];
       $template = &$pTemplates[$type]['template'];
       $tokens = &$pTemplates[$type]['tokens'];
@@ -531,7 +531,7 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
     if (empty($mailParams['text']) && empty($mailParams['html'])) {
       // CRM-9833
       // something went wrong, lets log it and return null (by reference)
-      CRM_Core_Error::debug_log_message(ts('CiviMail will not send an empty mail body, Skipping: %1', array(1 => $email)));
+      CRM_Core_Error::debug_log_message(ts('CiviMail will not send an empty mail body, Skipping: %1', [1 => $email]));
       $res = NULL;
       return $res;
     }
@@ -553,9 +553,9 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
     //cycle through mailParams and set headers array
     foreach ($mailParams as $paramKey => $paramValue) {
       //exclude values not intended for the header
-      if (!in_array($paramKey, array(
+      if (!in_array($paramKey, [
             'text', 'html', 'toName', 'toEmail', 'attachments', 'images'
-          ))) {
+          ])) {
         $headers[$paramKey] = $paramValue;
       }
     }
@@ -594,7 +594,7 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
     $headers['X-CiviMail-Bounce'] = $verp['bounce'];
 
     // refs #30565, add google feedback loop header
-    $campaignID = $this->id.'-'.substr(str_replace(array('.', '-'), '', $_SERVER['HTTP_HOST']), 0, 10);
+    $campaignID = $this->id.'-'.substr(str_replace(['.', '-'], '', $_SERVER['HTTP_HOST']), 0, 10);
     $identifier = "j{$job_id}q{$event_queue_id}";
     $senderID = 'civimail';
     $headers['Feedback-ID'] = "$campaignID:$contactId-$identifier:$senderID";
@@ -638,7 +638,7 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
     $ec = CRM_Mailing_Event_DAO_TrackableURLOpen::getTableName();
     $eu = CRM_Mailing_Event_DAO_Unsubscribe::getTableName();
 
-    $from = array();
+    $from = [];
     $from[] = "INNER JOIN $ea ON $ea.event_queue_id = $eq.id";
     $from[] = "LEFT JOIN $ed ON $ed.event_queue_id = $eq.id";
     $from[] = "LEFT JOIN $eo ON $eo.event_queue_id = $eq.id";
@@ -651,18 +651,18 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
     $from  = "\n FROM $eq ".CRM_Utils_Array::implode("\n ", $from);
     $where = "\n WHERE $eq.contact_id = %1 AND $ea.activity_id = %2";
     $sql = $select . $from . $where;
-    $dao = CRM_Core_DAO::executeQuery($sql, array(
-      1 => array($contactId, 'Positive'),
-      2 => array($activityId, 'Positive'),
-    ));
+    $dao = CRM_Core_DAO::executeQuery($sql, [
+      1 => [$contactId, 'Positive'],
+      2 => [$activityId, 'Positive'],
+    ]);
     $dao->fetch();
-    return array(
+    return [
       'Delivered' => $dao->delivered,
       'Opened' => $dao->opened,
       'Clicked' => $dao->clicks,
       'Bounced' => $dao->bounce,
       'Unsubscribed' => $dao->unsubscribe,
       'Opt-Outed' => $dao->optout,
-    );
+    ];
   }
 }

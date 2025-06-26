@@ -100,7 +100,7 @@ class CRM_Grant_Form_Grant extends CRM_Core_Form {
   }
 
   function setDefaultValues() {
-    $defaults = array();
+    $defaults = [];
     $defaults = parent::setDefaultValues();
 
     if ($this->_action & CRM_Core_Action::DELETE) {
@@ -126,11 +126,11 @@ class CRM_Grant_Form_Grant extends CRM_Core_Form {
         $defaults['amount_granted'] = CRM_Utils_Money::format($defaults['amount_granted'], NULL, '%a');
       }
 
-      $dates = array('application_received_date',
+      $dates = ['application_received_date',
         'decision_date',
         'money_transfer_date',
         'grant_due_date',
-      );
+      ];
 
       foreach ($dates as $key) {
         if (CRM_Utils_Array::value($key, $defaults)) {
@@ -156,16 +156,16 @@ class CRM_Grant_Form_Grant extends CRM_Core_Form {
    */
   public function buildQuickForm() {
     if ($this->_action & CRM_Core_Action::DELETE) {
-      $this->addButtons(array(
-          array('type' => 'next',
+      $this->addButtons([
+          ['type' => 'next',
             'name' => ts('Delete'),
             'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
             'isDefault' => TRUE,
-          ),
-          array('type' => 'cancel',
+          ],
+          ['type' => 'cancel',
             'name' => ts('Cancel'),
-          ),
-        )
+          ],
+        ]
       );
       return;
     }
@@ -175,18 +175,18 @@ class CRM_Grant_Form_Grant extends CRM_Core_Form {
     $attributes = CRM_Core_DAO::getAttribute('CRM_Grant_DAO_Grant');
     $grantType = CRM_Core_OptionGroup::values('grant_type');
     $this->add('select', 'grant_type_id', ts('Grant Type'),
-      array('' => ts('- select -')) + $grantType, TRUE
+      ['' => ts('- select -')] + $grantType, TRUE
     );
 
     $grantStatus = CRM_Core_OptionGroup::values('grant_status');
     $this->add('select', 'status_id', ts('Grant Status'),
-      array('' => ts('- select -')) + $grantStatus, TRUE
+      ['' => ts('- select -')] + $grantStatus, TRUE
     );
 
-    $this->addDate('application_received_date', ts('Application Received'), FALSE, array('formatType' => 'custom'));
-    $this->addDate('decision_date', ts('Grant Decision'), FALSE, array('formatType' => 'custom'));
-    $this->addDate('money_transfer_date', ts('Money Transferred'), FALSE, array('formatType' => 'custom'));
-    $this->addDate('grant_due_date', ts('Grant Report Due'), FALSE, array('formatType' => 'custom'));
+    $this->addDate('application_received_date', ts('Application Received'), FALSE, ['formatType' => 'custom']);
+    $this->addDate('decision_date', ts('Grant Decision'), FALSE, ['formatType' => 'custom']);
+    $this->addDate('money_transfer_date', ts('Money Transferred'), FALSE, ['formatType' => 'custom']);
+    $this->addDate('grant_due_date', ts('Grant Report Due'), FALSE, ['formatType' => 'custom']);
 
     $this->addElement('checkbox', 'grant_report_received', ts('Grant Report Received?'), NULL);
     $this->add('textarea', 'rationale', ts('Rationale'), $attributes['rationale']);
@@ -214,26 +214,26 @@ class CRM_Grant_Form_Grant extends CRM_Core_Form {
 
     // make this form an upload since we dont know if the custom data injected dynamically
     // is of type file etc $uploadNames = $this->get( 'uploadNames' );
-    $this->addButtons(array(
-        array('type' => 'upload',
+    $this->addButtons([
+        ['type' => 'upload',
           'name' => ts('Save'),
           'isDefault' => TRUE,
-        ),
-        array('type' => 'upload',
+        ],
+        ['type' => 'upload',
           'name' => ts('Save and New'),
-          'js' => array('onclick' => "return verify( );"),
+          'js' => ['onclick' => "return verify( );"],
           'subName' => 'new',
-        ),
-        array('type' => 'cancel',
+        ],
+        ['type' => 'cancel',
           'name' => ts('Cancel'),
-        ),
-      )
+        ],
+      ]
     );
 
     if ($this->_context == 'standalone') {
 
       CRM_Contact_Form_NewContact::buildQuickForm($this);
-      $this->addFormRule(array('CRM_Grant_Form_Grant', 'formRule'), $this);
+      $this->addFormRule(['CRM_Grant_Form_Grant', 'formRule'], $this);
     }
   }
 
@@ -249,7 +249,7 @@ class CRM_Grant_Form_Grant extends CRM_Core_Form {
    * @static
    */
   static function formRule($fields, $files, $self) {
-    $errors = array();
+    $errors = [];
 
     //check if contact is selected in standalone mode
     if (isset($fields['contact_select_id'][1]) && !$fields['contact_select_id'][1]) {
@@ -291,17 +291,17 @@ class CRM_Grant_Form_Grant extends CRM_Core_Form {
 
     $params['contact_id'] = $this->_contactID;
 
-    $dates = array('application_received_date',
+    $dates = ['application_received_date',
       'decision_date',
       'money_transfer_date',
       'grant_due_date',
-    );
+    ];
 
     foreach ($dates as $d) {
       $params[$d] = CRM_Utils_Date::processDate($params[$d], NULL, TRUE);
     }
 
-    $ids['note'] = array();
+    $ids['note'] = [];
     if ($this->_noteId) {
       $ids['note']['id'] = $this->_noteId;
     }

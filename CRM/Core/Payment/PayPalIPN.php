@@ -70,7 +70,7 @@ class CRM_Core_Payment_PayPalIPN extends CRM_Core_Payment_BaseIPN {
     }
 
     $recur = &$objects['contributionRecur'];
-    $recurParams = array();
+    $recurParams = [];
     $recurParams['id'] = $recur->id;
 
     // make sure the invoice ids match
@@ -84,7 +84,7 @@ class CRM_Core_Payment_PayPalIPN extends CRM_Core_Payment_BaseIPN {
     $now = date('YmdHis');
 
     // fix dates that already exist
-    $dates = array('create', 'start', 'end', 'cancel', 'modified');
+    $dates = ['create', 'start', 'end', 'cancel', 'modified'];
     foreach ($dates as $date) {
       $name = "{$date}_date";
       if ($recur->$name) {
@@ -259,7 +259,7 @@ class CRM_Core_Payment_PayPalIPN extends CRM_Core_Payment_BaseIPN {
 
 
 
-    $objects = $ids = $input = array();
+    $objects = $ids = $input = [];
     $input['component'] = $component;
 
     // get the contribution and contact ids from the GET params
@@ -316,14 +316,14 @@ class CRM_Core_Payment_PayPalIPN extends CRM_Core_Payment_BaseIPN {
     $input['reasonCode'] = self::retrieve('ReasonCode', 'String', 'POST', FALSE);
 
     $billingID = $ids['billing'];
-    $lookup = array("first_name" => 'first_name',
+    $lookup = ["first_name" => 'first_name',
       "last_name" => 'last_name',
       "street_address-{$billingID}" => 'address_street',
       "city-{$billingID}" => 'address_city',
       "state-{$billingID}" => 'address_state',
       "postal_code-{$billingID}" => 'address_zip',
       "country-{$billingID}" => 'address_country_code',
-    );
+    ];
     foreach ($lookup as $name => $paypalName) {
       $value = self::retrieve($paypalName, 'String', 'POST', FALSE);
       $input[$name] = $value ? $value : NULL;

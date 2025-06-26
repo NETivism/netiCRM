@@ -64,38 +64,38 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
    */
   function &links() {
     if (!(self::$_links)) {
-      self::$_links = array(
-        CRM_Core_Action::VIEW => array(
+      self::$_links = [
+        CRM_Core_Action::VIEW => [
           'name' => ts('Contacts'),
           'url' => 'civicrm/group/search',
           'qs' => 'reset=1&force=1&context=smog&gid=%%id%%',
           'title' => ts('Group Contacts'),
-        ),
-        CRM_Core_Action::UPDATE => array(
+        ],
+        CRM_Core_Action::UPDATE => [
           'name' => ts('Settings'),
           'url' => 'civicrm/group',
           'qs' => 'reset=1&action=update&id=%%id%%',
           'title' => ts('Edit Group'),
-        ),
-        CRM_Core_Action::DISABLE => array(
+        ],
+        CRM_Core_Action::DISABLE => [
           'name' => ts('Disable'),
           'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_Contact_BAO_Group' . '\',\'' . 'enable-disable' . '\' );"',
           'ref' => 'disable-action',
           'title' => ts('Disable Group'),
-        ),
-        CRM_Core_Action::ENABLE => array(
+        ],
+        CRM_Core_Action::ENABLE => [
           'name' => ts('Enable'),
           'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_Contact_BAO_Group' . '\',\'' . 'disable-enable' . '\' );"',
           'ref' => 'enable-action',
           'title' => ts('Enable Group'),
-        ),
-        CRM_Core_Action::DELETE => array(
+        ],
+        CRM_Core_Action::DELETE => [
           'name' => ts('Delete'),
           'url' => 'civicrm/group',
           'qs' => 'reset=1&action=delete&id=%%id%%',
           'title' => ts('Delete Group'),
-        ),
-      );
+        ],
+      ];
     }
     return self::$_links;
   }
@@ -109,26 +109,26 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
   function &savedSearchLinks() {
     if (!self::$_savedSearchLinks) {
       $deleteExtra = ts('Do you really want to remove this Smart Group?');
-      self::$_savedSearchLinks = array(
-        CRM_Core_Action::VIEW => array(
+      self::$_savedSearchLinks = [
+        CRM_Core_Action::VIEW => [
           'name' => ts('Show Group Members'),
           'url' => 'civicrm/contact/search/advanced',
           'qs' => 'reset=1&force=1&ssID=%%ssid%%',
           'title' => ts('Search'),
-        ),
-        CRM_Core_Action::UPDATE => array(
+        ],
+        CRM_Core_Action::UPDATE => [
           'name' => ts('Edit'),
           'url' => 'civicrm/group',
           'qs' => 'reset=1&action=update&id=%%id%%',
           'title' => ts('Edit Group'),
-        ),
-        CRM_Core_Action::DELETE => array(
+        ],
+        CRM_Core_Action::DELETE => [
           'name' => ts('Delete'),
           'url' => 'civicrm/contact/search/saved',
           'qs' => 'action=delete&id=%%ssid%%',
           'extra' => 'onclick="return confirm(\'' . $deleteExtra . '\');"',
-        ),
-      );
+        ],
+      ];
     }
     return self::$_savedSearchLinks;
   }
@@ -241,11 +241,11 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
 
     $config = CRM_Core_Config::singleton();
 
-    $params = array();
+    $params = [];
     $whereClause = $this->whereClause($params, FALSE);
     $this->pagerAToZ($whereClause, $params);
 
-    $params = array();
+    $params = [];
     $whereClause = $this->whereClause($params, TRUE);
     $this->pager($whereClause, $params);
 
@@ -282,7 +282,7 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
 
     //FIXME CRM-4418, now we are handling delete separately
     //if we introduce 'delete for group' make sure to handle here.
-    $groupPermissions = array(CRM_Core_Permission::VIEW);
+    $groupPermissions = [CRM_Core_Permission::VIEW];
     if (CRM_Core_Permission::check('edit groups')) {
       $groupPermissions[] = CRM_Core_Permission::EDIT;
       $groupPermissions[] = CRM_Core_Permission::DELETE;
@@ -291,20 +291,20 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
 
     $links = &$this->links();
     $allTypes = CRM_Core_OptionGroup::values('group_type');
-    $smartMarketingTypes = array();
+    $smartMarketingTypes = [];
     foreach($allTypes as $typeId => $typeName) {
       if (strstr($typeName, 'Smart Marketing')) {
         $smartMarketingTypes[$typeId] = $typeName;
       }
     }
 
-    $values = array();
+    $values = [];
 
     while ($object->fetch()) {
       $permission = $this->checkPermission($object->id, $object->title);
       if ($permission) {
         $newLinks = $links;
-        $values[$object->id] = array();
+        $values[$object->id] = [];
         CRM_Core_DAO::storeValues($object, $values[$object->id]);
         $values[$object->id]['mode'] = ts('Normal');
         if ($object->saved_search_id) {
@@ -350,7 +350,7 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
           $groupTypes = explode(CRM_Core_DAO::VALUE_SEPARATOR,
             substr($values[$object->id]['group_type'], 1, -1)
           );
-          $types = $tsTypes = array();
+          $types = $tsTypes = [];
           foreach ($groupTypes as $type) {
             $types[] = $allTypes[$type];
             $tsTypes[] = ts($allTypes[$type]);
@@ -359,9 +359,9 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
         }
         $values[$object->id]['action'] = CRM_Core_Action::formLink($newLinks,
           $action,
-          array('id' => $object->id,
+          ['id' => $object->id,
             'ssid' => $object->saved_search_id,
-          )
+          ]
         );
         if (property_exists($object, 'orgName')) {
           if ($object->orgName) {
@@ -405,17 +405,17 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
   }
 
   function whereClause(&$params, $sortBy = TRUE, $excludeHidden = TRUE) {
-    $values = array();
+    $values = [];
 
-    $clauses = array();
+    $clauses = [];
     $title = $this->get('title');
     if ($title) {
       $clauses[] = "groups.title LIKE %1";
       if (strpos($title, '%') !== FALSE) {
-        $params[1] = array($title, 'String', FALSE);
+        $params[1] = [$title, 'String', FALSE];
       }
       else {
-        $params[1] = array($title, 'String', TRUE);
+        $params[1] = [$title, 'String', TRUE];
       }
     }
 
@@ -426,27 +426,27 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
       if (!empty($types)) {
         $clauses[] = 'groups.group_type LIKE %2';
         $typeString = CRM_Core_DAO::VALUE_SEPARATOR . CRM_Utils_Array::implode(CRM_Core_DAO::VALUE_SEPARATOR, $types) . CRM_Core_DAO::VALUE_SEPARATOR;
-        $params[2] = array($typeString, 'String', TRUE);
+        $params[2] = [$typeString, 'String', TRUE];
       }
     }
 
     $visibility = $this->get('visibility');
     if ($visibility) {
       $clauses[] = 'groups.visibility = %3';
-      $params[3] = array($visibility, 'String');
+      $params[3] = [$visibility, 'String'];
     }
 
     $active_status = $this->get('active_status');
     $inactive_status = $this->get('inactive_status');
     if ($active_status && !$inactive_status) {
       $clauses[] = 'groups.is_active = 1';
-      $params[4] = array($active_status, 'Boolean');
+      $params[4] = [$active_status, 'Boolean'];
     }
 
 
     if ($inactive_status && !$active_status) {
       $clauses[] = 'groups.is_active = 0';
-      $params[5] = array($inactive_status, 'Boolean');
+      $params[5] = [$inactive_status, 'Boolean'];
     }
 
     if ($inactive_status && $active_status) {
@@ -468,7 +468,7 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
       $this->_sortByCharacter
     ) {
       $clauses[] = 'groups.title LIKE %6';
-      $params[6] = array($this->_sortByCharacter . '%', 'String');
+      $params[6] = [$this->_sortByCharacter . '%', 'String'];
     }
 
     // dont do a the below assignement when doing a

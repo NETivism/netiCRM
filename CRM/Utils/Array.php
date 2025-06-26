@@ -138,8 +138,8 @@ class CRM_Utils_Array {
     static $dst = NULL;
 
     if (!$src) {
-      $src = array('&', '<', '>', '');
-      $dst = array('&amp;', '&lt;', '&gt;', ',');
+      $src = ['&', '<', '>', ''];
+      $dst = ['&amp;', '&lt;', '&gt;', ','];
     }
 
     return str_replace($src, $dst, $value);
@@ -177,7 +177,7 @@ class CRM_Utils_Array {
       return $a1;
     }
 
-    $a3 = array();
+    $a3 = [];
     foreach ($a1 as $key => $value) {
       if (CRM_Utils_Array::arrayKeyExists($key, $a2) &&
         is_array($a2[$key]) && is_array($a1[$key])
@@ -225,7 +225,7 @@ class CRM_Utils_Array {
     if ($depth > $maxdepth) {
       return $array;
     }
-    $copy = array();
+    $copy = [];
     foreach ($array as $key => $value) {
       if (is_array($value)) {
         self::arrayDeepCopy($copy[$key], $maxdepth, ++$depth);
@@ -350,7 +350,7 @@ class CRM_Utils_Array {
     $look = $reverse ? array_flip($lookup) : $lookup;
 
     //trim lookup array, ignore . ( fix for CRM-1514 ), eg for prefix/suffix make sure Dr. and Dr both are valid
-    $newLook = array();
+    $newLook = [];
     foreach ($look as $k => $v) {
       $newLook[trim($k, ".")] = $v;
     }
@@ -377,7 +377,7 @@ class CRM_Utils_Array {
    *  @return boolean true is array is empty else false
    *  @static
    */
-  static function isEmpty($array = array()) {
+  static function isEmpty($array = []) {
     if (!is_array($array)) {
       return TRUE;
     }
@@ -399,7 +399,7 @@ class CRM_Utils_Array {
    *
    * @return array Sorted array.
    */
-  public static function asort($array = array()) {
+  public static function asort($array = []) {
     $lcMessages = CRM_Utils_System::getUFLocale();
 
     if ($lcMessages && $lcMessages != 'en_US' && class_exists('Collator')) {
@@ -470,7 +470,7 @@ class CRM_Utils_Array {
     $last = array_pop($pathParts);
     foreach ($pathParts as $part) {
       if (!isset($r[$part])) {
-        $r[$part] = array();
+        $r[$part] = [];
       }
       $r = &$r[$part];
     }
@@ -521,7 +521,7 @@ class CRM_Utils_Array {
    * @return bool
    * @static
    */
-  static function crmIsEmptyArray($array = array()) {
+  static function crmIsEmptyArray($array = []) {
     return self::isEmpty($array);
   }
 }

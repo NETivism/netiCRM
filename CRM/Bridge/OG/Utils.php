@@ -78,10 +78,10 @@ class CRM_Bridge_OG_Utils {
     }
 
     // else create a contact for this user
-    $user = user_load(array('uid' => $ufID));
-    $params = array('contact_type' => 'Individual',
+    $user = user_load(['uid' => $ufID]);
+    $params = ['contact_type' => 'Individual',
       'email' => $user->mail,
-    );
+    ];
 
 
     $values = civicrm_contact_add($params);
@@ -96,11 +96,11 @@ class CRM_Bridge_OG_Utils {
 SELECT id
   FROM civicrm_group
  WHERE source = %1";
-    $params = array(1 => array($source, 'String'));
+    $params = [1 => [$source, 'String']];
 
     if ($title) {
       $query .= " OR title = %2";
-      $params[2] = array($title, 'String');
+      $params[2] = [$title, 'String'];
     }
 
     $groupID = CRM_Core_DAO::singleValueQuery($query, $params);

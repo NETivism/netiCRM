@@ -225,7 +225,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
         return CRM_Core_Error::statusBounce(ts('We can\'t load the requested web page due to an incomplete link. This can be caused by using your browser\'s Back button or by using an incomplete or invalid link.'));
       }
       else {
-        return CRM_Core_Error::statusBounce(ts('This contribution has already been submitted. Click <a href=\'%1\'>here</a> if you want to make another contribution.', array(1 => CRM_Utils_System::url('civicrm/contribute/transact', 'reset=1&id=' . $pastContributionID))));
+        return CRM_Core_Error::statusBounce(ts('This contribution has already been submitted. Click <a href=\'%1\'>here</a> if you want to make another contribution.', [1 => CRM_Utils_System::url('civicrm/contribute/transact', 'reset=1&id=' . $pastContributionID)]));
       } 
     }
     else {
@@ -306,17 +306,17 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
 
     if (!$this->_values) {
       // get all the values from the dao object
-      $this->_values = array();
-      $this->_fields = array();
+      $this->_values = [];
+      $this->_fields = [];
 
 
       CRM_Contribute_BAO_ContributionPage::setValues($this->_id, $this->_values);
 
-      $premiumParams = array(
+      $premiumParams = [
         'entity_table' => 'civicrm_contribution_page',
         'entity_id' => $this->_id,
-      );
-      $premiumDefault = array();
+      ];
+      $premiumDefault = [];
       CRM_Contribute_BAO_Premium::commonRetrieve('CRM_Contribute_DAO_Premium', $premiumParams, $premiumDefault);
       if (!empty($premiumDefault['premiums_active'])) {
         $this->_values['premiums_active'] = $premiumDefault['premiums_active'];
@@ -357,7 +357,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
             if ($pageId && $contactId) {
               $oid = 0;
               $contactTypeSql = "SELECT contact_type FROM civicrm_contact WHERE id = %1";
-              $contactTypeParams = array(1 => array($contactId, 'Integer'));
+              $contactTypeParams = [1 => [$contactId, 'Integer']];
               $contactType = CRM_Core_DAO::singleValueQuery($contactTypeSql, $contactTypeParams);
               if ($contactType == 'Individual') {
                 $cs = CRM_Contact_BAO_Contact_Utils::generateChecksum($contactId);
@@ -378,7 +378,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       $locationTypes = CRM_Core_PseudoConstant::locationType(FALSE, 'name');
       $this->_bltID = array_search('Billing', $locationTypes);
       if (!$this->_bltID) {
-        return CRM_Core_Error::statusBounce(ts('Please set a location type of %1', array(1 => 'Billing')));
+        return CRM_Core_Error::statusBounce(ts('Please set a location type of %1', [1 => 'Billing']));
       }
       $this->set('bltID', $this->_bltID);
 
@@ -436,11 +436,11 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
 
 
       // this avoids getting E_NOTICE errors in php
-      $setNullFields = array('amount_block_is_active',
+      $setNullFields = ['amount_block_is_active',
         'honor_block_is_active',
         'is_allow_other_amount',
         'footer_text',
-      );
+      ];
       foreach ($setNullFields as $f) {
         if (!isset($this->_values[$f])) {
           $this->_values[$f] = NULL;
@@ -517,16 +517,16 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
 
       $approvedId = CRM_Core_OptionGroup::getValue('pcp_status', 'Approved', 'name');
 
-      $prms = array('entity_id' => $this->_values['id'],
+      $prms = ['entity_id' => $this->_values['id'],
         'entity_table' => 'civicrm_contribution_page',
-      );
+      ];
 
       $pcpStatus = CRM_Contribute_PseudoConstant::pcpStatus();
       CRM_Core_DAO::commonRetrieve('CRM_Contribute_DAO_PCPBlock',
         $prms,
         $pcpBlock
       );
-      $prms = array('id' => $pcpId);
+      $prms = ['id' => $pcpId];
       CRM_Core_DAO::commonRetrieve('CRM_Contribute_DAO_PCP', $prms, $pcpInfo);
 
       //start and end date of the contribution page
@@ -542,7 +542,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
           ));
       }
       elseif ($pcpInfo['status_id'] != $approvedId) {
-        $statusMessage = ts('The Personal Campaign Page you have just visited is currently %1. However you can still support the campaign by making a contribution here.', array(1 => $pcpStatus[$pcpInfo['status_id']]));
+        $statusMessage = ts('The Personal Campaign Page you have just visited is currently %1. However you can still support the campaign by making a contribution here.', [1 => $pcpStatus[$pcpInfo['status_id']]]);
          return CRM_Core_Error::statusBounce($statusMessage, CRM_Utils_System::url('civicrm/contribute/transact',
             "reset=1&id={$pcpInfo['contribution_page_id']}",
             FALSE, NULL, FALSE, TRUE
@@ -567,7 +567,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
         $customEndDate = CRM_Utils_Date::customFormat(CRM_Utils_Array::value('end_date', $this->_values));
         if ($startDate && $endDate) {
           $statusMessage = ts('The Personal Campaign Page you have just visited is only active between %1 to %2. However you can still support the campaign by making a contribution here.',
-            array(1 => $customStartDate, 2 => $customEndDate)
+            [1 => $customStartDate, 2 => $customEndDate]
           );
            return CRM_Core_Error::statusBounce($statusMessage, CRM_Utils_System::url('civicrm/contribute/transact',
               "reset=1&id={$pcpInfo['contribution_page_id']}",
@@ -575,14 +575,14 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
             ));
         }
         elseif ($startDate) {
-          $statusMessage = ts('The Personal Campaign Page you have just visited will be active beginning on %1. However you can still support the campaign by making a contribution here.', array(1 => $customStartDate));
+          $statusMessage = ts('The Personal Campaign Page you have just visited will be active beginning on %1. However you can still support the campaign by making a contribution here.', [1 => $customStartDate]);
            return CRM_Core_Error::statusBounce($statusMessage, CRM_Utils_System::url('civicrm/contribute/transact',
               "reset=1&id={$pcpInfo['contribution_page_id']}",
               FALSE, NULL, FALSE, TRUE
             ));
         }
         elseif ($endDate) {
-          $statusMessage = ts('The Personal Campaign Page you have just visited is not longer active (as of %1). However you can still support the campaign by making a contribution here.', array(1 => $customEndDate));
+          $statusMessage = ts('The Personal Campaign Page you have just visited is not longer active (as of %1). However you can still support the campaign by making a contribution here.', [1 => $customEndDate]);
            return CRM_Core_Error::statusBounce($statusMessage, CRM_Utils_System::url('civicrm/contribute/transact',
               "reset=1&id={$pcpInfo['contribution_page_id']}",
               FALSE, NULL, FALSE, TRUE
@@ -632,7 +632,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       (!($this->_paymentProcessor['billing_mode'] & CRM_Core_Payment::BILLING_MODE_FORM))
     ) {
        return CRM_Core_Error::statusBounce(ts('This contribution page is configured to support separate contribution and membership payments. This %1 plugin does not currently support multiple simultaneous payments. Please contact the site administrator and notify them of this error',
-          array(1 => $this->_paymentProcessor['payment_processor_type'])
+          [1 => $this->_paymentProcessor['payment_processor_type']]
         ));
     }
 
@@ -659,7 +659,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       $this->assign('title', $this->_values['title']);
       CRM_Utils_System::setTitle($this->_values['title']);
     }
-    $this->_defaults = array();
+    $this->_defaults = [];
 
     $this->_amount = $this->get('amount');
 
@@ -687,13 +687,13 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       $this->assign('special_style', 1);
       $this->assign('min_amount', (float) $this->_values['min_amount']);
       $this->assign('max_amount', (float) $this->_values['max_amount']);
-      $object = array(
+      $object = [
         'tag' => 'link',
-        'attributes' =>  array(
+        'attributes' =>  [
           'rel' => 'stylesheet',
           'href' => $config->resourceBase.'css/contribution_page.css?v'.$config->ver,
-        ),
-      );
+        ],
+      ];
       CRM_Utils_System::addHTMLHead($object);
     }
 
@@ -735,18 +735,18 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
 
     $this->assign('paymentProcessor', $this->_paymentProcessor);
 
-    $vars = array('amount', 'currencyID',
+    $vars = ['amount', 'currencyID',
       'credit_card_type', 'trxn_id', 'amount_level',
-    );
+    ];
 
     $config = CRM_Core_Config::singleton();
     if (isset($this->_values['is_recur']) &&
       $this->_paymentProcessor['is_recur']
     ) {
       $this->assign('is_recur_enabled', 1);
-      $vars = array_merge($vars, array('is_recur', 'frequency_interval', 'frequency_unit',
+      $vars = array_merge($vars, ['is_recur', 'frequency_interval', 'frequency_unit',
           'installments',
-        ));
+        ]);
     }
 
     if (in_array('CiviPledge', $config->enableComponents) &&
@@ -754,11 +754,11 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
     ) {
       $this->assign('pledge_enabled', 1);
 
-      $vars = array_merge($vars, array('is_pledge',
+      $vars = array_merge($vars, ['is_pledge',
           'pledge_frequency_interval',
           'pledge_frequency_unit',
           'pledge_installments',
-        ));
+        ]);
     }
 
     if (!empty($this->_params['amount_other']) || isset($this->_params['selectMembership'])) {
@@ -781,14 +781,14 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
     }
 
     // assign the address formatted up for display
-    $addressParts = array("street_address-{$this->_bltID}",
+    $addressParts = ["street_address-{$this->_bltID}",
       "city-{$this->_bltID}",
       "postal_code-{$this->_bltID}",
       "state_province-{$this->_bltID}",
       "country-{$this->_bltID}",
-    );
+    ];
 
-    $addressFields = array();
+    $addressFields = [];
     foreach ($addressParts as $part) {
       list($n, $id) = explode('-', $part);
       $addressFields[$n] = CRM_Utils_Array::value('billing_' . $part, $this->_params);
@@ -798,13 +798,13 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
     $this->assign('address', CRM_Utils_Address::format($addressFields));
 
     if (CRM_Utils_Array::value('is_for_organization', $this->_params)) {
-      $onBehalfParams = array(
+      $onBehalfParams = [
         ts("Organization Name") => $this->_params['organization_name'],
         ts('SIC Code') => $this->_params['sic_code'],
         ts("Email") => $this->_params['onbehalf_location']['email'][1]['email'],
         ts("Phone Number") => $this->_params['onbehalf_location']['phone'][1]['phone'],
         ts("Address") => CRM_Utils_Address::format($this->_params['onbehalf_location']['address'][1], NULL, FALSE, TRUE),
-      );
+      ];
       $this->assign('onBehalfParams', $onBehalfParams);
     }
 
@@ -863,7 +863,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
    * @access public
    */
   function buildCustom($id, $name, $viewOnly = FALSE) {
-    $stateCountryMap = array();
+    $stateCountryMap = [];
 
     if ($id) {
 
@@ -872,7 +872,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
 
       // we don't allow conflicting fields to be
       // configured via profile - CRM 2100
-      $fieldsToIgnore = array('receive_date' => 1,
+      $fieldsToIgnore = ['receive_date' => 1,
         'trxn_id' => 1,
         'invoice_id' => 1,
         'net_amount' => 1,
@@ -884,7 +884,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
         'payment_instrument' => 1,
         'check_number' => 1,
         'contribution_type' => 1,
-      );
+      ];
 
       $fields = NULL;
       if ($contactID) {
@@ -931,7 +931,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
           list($prefixName, $index) = CRM_Utils_System::explode('-', $key, 2);
           if ($prefixName == 'state_province' || $prefixName == 'country') {
             if (!CRM_Utils_Array::arrayKeyExists($index, $stateCountryMap)) {
-              $stateCountryMap[$index] = array();
+              $stateCountryMap[$index] = [];
             }
             $stateCountryMap[$index][$prefixName] = $key;
           }
@@ -982,18 +982,18 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
     $contactID = CRM_Utils_Request::retrieve('cid', 'Positive', $this);
 
     //get pledge status and contact id
-    $pledgeValues = array();
-    $pledgeParams = array('id' => $this->_values['pledge_id']);
-    $returnProperties = array('contact_id', 'status_id');
+    $pledgeValues = [];
+    $pledgeParams = ['id' => $this->_values['pledge_id']];
+    $returnProperties = ['contact_id', 'status_id'];
     CRM_Core_DAO::commonRetrieve('CRM_Pledge_DAO_Pledge', $pledgeParams, $pledgeValues, $returnProperties);
 
     //get all status
 
     $allStatus = CRM_Contribute_PseudoConstant::contributionStatus(NULL, 'name');
-    $validStatus = array(array_search('Pending', $allStatus),
+    $validStatus = [array_search('Pending', $allStatus),
       array_search('In Progress', $allStatus),
       array_search('Overdue', $allStatus),
-    );
+    ];
 
     $validUser = FALSE;
     if ($this->_userID &&
@@ -1019,7 +1019,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
 
     //check for valid pledge status.
     if (!in_array($pledgeValues['status_id'], $validStatus)) {
-      CRM_Core_Error::fatal(ts('Oops. You cannot make a payment for this pledge - pledge status is %1.', array(1 => CRM_Utils_Array::value($pledgeValues['status_id'], $allStatus))));
+      CRM_Core_Error::fatal(ts('Oops. You cannot make a payment for this pledge - pledge status is %1.', [1 => CRM_Utils_Array::value($pledgeValues['status_id'], $allStatus)]));
     }
   }
 
@@ -1054,18 +1054,18 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       list($pageName, $action) = $actionName;
     }
     $pageName = strtolower($pageName);
-    $state = array(
+    $state = [
       'main' => 1,
       'confirm' => 2,
       'payment' => 3,
       'thankyou' => 4
-    );
-    $params = array(
+    ];
+    $params = [
       'state' => $state[$pageName],
       'page_type' => 'civicrm_contribution_page',
       'page_id' => $page_id,
       'visit_date' => date('Y-m-d H:i:s'),
-    );
+    ];
     if (!empty($this->_contributionID)) {
       $params['entity_table'] = 'civicrm_contribution';
       $params['entity_id'] = $this->_contributionID;

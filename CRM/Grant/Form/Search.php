@@ -161,7 +161,7 @@ class CRM_Grant_Form_Search extends CRM_Core_Form {
     $this->_actionButtonName = $this->getButtonName('next', 'action');
 
     $this->_done = FALSE;
-    $this->defaults = array();
+    $this->defaults = [];
 
     /* 
          * we allow the controller to set force/reset externally, useful when we are being 
@@ -255,7 +255,7 @@ class CRM_Grant_Form_Search extends CRM_Core_Form {
     $rows = $this->get('rows');
     if (is_array($rows)) {
       if (!$this->_single) {
-        $this->addElement('checkbox', 'toggleSelect', NULL, NULL, array('onchange' => "toggleTaskAction( true ); return toggleCheckboxVals('mark_x_',this);"));
+        $this->addElement('checkbox', 'toggleSelect', NULL, NULL, ['onchange' => "toggleTaskAction( true ); return toggleCheckboxVals('mark_x_',this);"]);
         foreach ($rows as $row) {
           $this->addElement('checkbox', CRM_Utils_Array::value('checkbox', $row));
           $grant_id = $row['grant_id'];
@@ -268,7 +268,7 @@ class CRM_Grant_Form_Search extends CRM_Core_Form {
       $permission = CRM_Core_Permission::getPermission();
 
 
-      $tasks = array('' => ts('- actions -'));
+      $tasks = ['' => ts('- actions -')];
       $permissionedTask = CRM_Grant_Task::permissionedTaskTitles($permission);
       if (is_array($permissionedTask) && !CRM_Utils_System::isNull($permissionedTask)) {
         $tasks += $permissionedTask;
@@ -276,19 +276,19 @@ class CRM_Grant_Form_Search extends CRM_Core_Form {
 
       $this->add('select', 'task', ts('Actions:') . ' ', $tasks);
       $this->add('submit', $this->_actionButtonName, ts('Go'),
-        array('class' => 'form-submit',
+        ['class' => 'form-submit',
           'onclick' => "return checkPerformAction('mark_x', '" . $this->getName() . "', 0);",
-        )
+        ]
       );
 
       $this->add('submit', $this->_printButtonName, ts('Print'),
-        array('class' => 'form-submit',
+        ['class' => 'form-submit',
           'onclick' => "return checkPerformAction('mark_x', '" . $this->getName() . "', 1);",
-        )
+        ]
       );
 
       // need to perform tasks on all or selected items ? using radio_ts(task selection) for it
-      $selectedRowsRadio = $this->addElement('radio', 'radio_ts', NULL, '', 'ts_sel', array('checked' => 'checked'));
+      $selectedRowsRadio = $this->addElement('radio', 'radio_ts', NULL, '', 'ts_sel', ['checked' => 'checked']);
       $this->assign('ts_sel_id', $selectedRowsRadio->_attributes['id']);
 
       $allRowsRadio = $this->addElement('radio', 'radio_ts', NULL, '', 'ts_all');
@@ -296,12 +296,12 @@ class CRM_Grant_Form_Search extends CRM_Core_Form {
     }
 
     // add buttons
-    $this->addButtons(array(
-        array('type' => 'refresh',
+    $this->addButtons([
+        ['type' => 'refresh',
           'name' => ts('Search'),
           'isDefault' => TRUE,
-        ),
-      ));
+        ],
+      ]);
   }
 
   /**

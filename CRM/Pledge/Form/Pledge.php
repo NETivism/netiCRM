@@ -138,14 +138,14 @@ class CRM_Pledge_Form_Pledge extends CRM_Core_Form {
     //build custom data
     CRM_Custom_Form_CustomData::preProcess($this, NULL, NULL, 1, 'Pledge', $this->_id);
 
-    $this->_values = array();
+    $this->_values = [];
     // current pledge id
     if ($this->_id) {
       //get the contribution id
       $this->_contributionID = CRM_Core_DAO::getFieldValue('CRM_Pledge_DAO_Payment',
         $this->_id, 'contribution_id', 'pledge_id'
       );
-      $params = array('id' => $this->_id);
+      $params = ['id' => $this->_id];
 
       CRM_Pledge_BAO_Pledge::getValues($params, $this->_values);
 
@@ -164,12 +164,12 @@ class CRM_Pledge_Form_Pledge extends CRM_Core_Form {
         array_search('Overdue', $paymentStatusTypes)
       ) {
 
-        $allPledgePayments = array();
+        $allPledgePayments = [];
         CRM_Core_DAO::commonRetrieveAll('CRM_Pledge_DAO_Payment',
           'pledge_id',
           $this->_id,
           $allPledgePayments,
-          array('status_id')
+          ['status_id']
         );
 
         foreach ($allPledgePayments as $key => $value) {
@@ -200,7 +200,7 @@ class CRM_Pledge_Form_Pledge extends CRM_Core_Form {
   function setDefaultValues() {
     $defaults = $this->_values;
 
-    $fields = array();
+    $fields = [];
     if ($this->_action & CRM_Core_Action::DELETE) {
       return $defaults;
     }
@@ -270,8 +270,8 @@ class CRM_Pledge_Form_Pledge extends CRM_Core_Form {
     //honoree contact.
     if ($this->_honorID) {
 
-      $honorDefault = array();
-      $idParams = array('contact_id' => $this->_honorID);
+      $honorDefault = [];
+      $idParams = ['contact_id' => $this->_honorID];
       CRM_Contact_BAO_Contact::retrieve($idParams, $honorDefault);
       $honorType = CRM_Core_PseudoConstant::honor();
       $defaults["honor_prefix_id"] = $honorDefault["prefix_id"];
@@ -299,16 +299,16 @@ class CRM_Pledge_Form_Pledge extends CRM_Core_Form {
    */
   public function buildQuickForm() {
     if ($this->_action & CRM_Core_Action::DELETE) {
-      $this->addButtons(array(
-          array('type' => 'next',
+      $this->addButtons([
+          ['type' => 'next',
             'name' => ts('Delete'),
             'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
             'isDefault' => TRUE,
-          ),
-          array('type' => 'cancel',
+          ],
+          ['type' => 'cancel',
             'name' => ts('Cancel'),
-          ),
-        )
+          ],
+        ]
       );
       return;
     }
@@ -322,20 +322,20 @@ class CRM_Pledge_Form_Pledge extends CRM_Core_Form {
     $this->_formType = CRM_Utils_Array::value('formType', $_GET);
 
     //fix to load honoree pane on edit.
-    $defaults = array();
+    $defaults = [];
     if ($this->_honorID) {
       $defaults['hidden_Honoree'] = 1;
     }
 
-    $paneNames = array('Honoree Information' => 'Honoree',
+    $paneNames = ['Honoree Information' => 'Honoree',
       'Payment Reminders' => 'PaymentReminders',
-    );
+    ];
     foreach ($paneNames as $name => $type) {
       $urlParams = "snippet=4&formType={$type}";
-      $allPanes[$name] = array('url' => CRM_Utils_System::url('civicrm/contact/view/pledge', $urlParams),
+      $allPanes[$name] = ['url' => CRM_Utils_System::url('civicrm/contact/view/pledge', $urlParams),
         'open' => 'false',
         'id' => $type,
-      );
+      ];
       //see if we need to include this paneName in the current form
       if ($this->_formType == $type ||
         CRM_Utils_Array::value("hidden_{$type}", $_POST) ||
@@ -362,9 +362,9 @@ class CRM_Pledge_Form_Pledge extends CRM_Core_Form {
     $attributes = CRM_Core_DAO::getAttribute('CRM_Pledge_DAO_Pledge');
     $this->assign('isPending', $this->_isPending);
 
-    $js = array('onblur' => "calculatedPaymentAmount( );",
+    $js = ['onblur' => "calculatedPaymentAmount( );",
       'onkeyup' => "calculatedPaymentAmount( );",
-    );
+    ];
 
     $element = &$this->add('text', 'amount', ts('Total Pledge Amount'),
       array_merge($attributes['pledge_amount'], $js), TRUE
@@ -397,13 +397,13 @@ class CRM_Pledge_Form_Pledge extends CRM_Core_Form {
     }
 
     // Fix frequency unit display for use with frequency_interval
-    $freqUnitsDisplay = array();
+    $freqUnitsDisplay = [];
     foreach ($this->_freqUnits as $val => $label) {
-      $freqUnitsDisplay[$val] = ts('%1(s)', array(1 => $label));
+      $freqUnitsDisplay[$val] = ts('%1(s)', [1 => $label]);
     }
     $element = &$this->add('select', 'frequency_unit',
       ts('Frequency'),
-      array('' => ts('- select -')) + $freqUnitsDisplay,
+      ['' => ts('- select -')] + $freqUnitsDisplay,
       TRUE
     );
 
@@ -421,7 +421,7 @@ class CRM_Pledge_Form_Pledge extends CRM_Core_Form {
       $element->freeze();
     }
 
-    $this->add('text', 'eachPaymentAmount', ts('each'), array('size' => 10, 'style' => "background-color:#EBECE4", 'READONLY'));
+    $this->add('text', 'eachPaymentAmount', ts('each'), ['size' => 10, 'style' => "background-color:#EBECE4", 'READONLY']);
 
     //add various dates
     if (!$this->_id || $this->_isPending) {
@@ -441,27 +441,27 @@ class CRM_Pledge_Form_Pledge extends CRM_Core_Form {
       array_search('Cancelled', CRM_Contribute_PseudoConstant::contributionStatus(NULL, 'name'))
     ) {
 
-      $this->addElement('checkbox', 'is_acknowledge', ts('Send Acknowledgment?'), NULL, array('onclick' => "return showHideByValue('is_acknowledge','','acknowledgeDate','table-row','radio',true);"));
+      $this->addElement('checkbox', 'is_acknowledge', ts('Send Acknowledgment?'), NULL, ['onclick' => "return showHideByValue('is_acknowledge','','acknowledgeDate','table-row','radio',true);"]);
     }
 
     $this->addDate('acknowledge_date', ts('Acknowledgment Date'));
 
     $this->add('select', 'contribution_type_id',
       ts('Contribution Type'),
-      array('' => ts('- select -')) + CRM_Contribute_PseudoConstant::contributionType(),
+      ['' => ts('- select -')] + CRM_Contribute_PseudoConstant::contributionType(),
       TRUE
     );
-    $pageIds = array();
+    $pageIds = [];
     CRM_Core_DAO::commonRetrieveAll('CRM_Pledge_DAO_PledgeBlock', 'entity_table',
-      'civicrm_contribution_page', $pageIds, array('entity_id')
+      'civicrm_contribution_page', $pageIds, ['entity_id']
     );
     $pages = CRM_Contribute_PseudoConstant::contributionPage();
-    $pledgePages = array();
+    $pledgePages = [];
     foreach ($pageIds as $key => $value) {
       $pledgePages[$value['entity_id']] = $pages[$value['entity_id']];
     }
     $ele = $this->add('select', 'contribution_page_id', ts('Self-service Payments Page'),
-      array('' => ts('- select -')) + $pledgePages
+      ['' => ts('- select -')] + $pledgePages
     );
 
 
@@ -473,24 +473,24 @@ class CRM_Pledge_Form_Pledge extends CRM_Core_Form {
 
     // make this form an upload since we dont know if the custom data injected dynamically
     // is of type file etc $uploadNames = $this->get( 'uploadNames' );
-    $this->addButtons(array(
-        array('type' => 'upload',
+    $this->addButtons([
+        ['type' => 'upload',
           'name' => ts('Save'),
-          'js' => array('onclick' => "return verify( );"),
+          'js' => ['onclick' => "return verify( );"],
           'isDefault' => TRUE,
-        ),
-        array('type' => 'upload',
+        ],
+        ['type' => 'upload',
           'name' => ts('Save and New'),
-          'js' => array('onclick' => "return verify( );"),
+          'js' => ['onclick' => "return verify( );"],
           'subName' => 'new',
-        ),
-        array('type' => 'cancel',
+        ],
+        ['type' => 'cancel',
           'name' => ts('Cancel'),
-        ),
-      )
+        ],
+      ]
     );
 
-    $this->addFormRule(array('CRM_Pledge_Form_Pledge', 'formRule'), $this);
+    $this->addFormRule(['CRM_Pledge_Form_Pledge', 'formRule'], $this);
 
     if ($this->_action & CRM_Core_Action::VIEW) {
       $this->freeze();
@@ -509,7 +509,7 @@ class CRM_Pledge_Form_Pledge extends CRM_Core_Form {
    * @static
    */
   static function formRule($fields, $files, $self) {
-    $errors = array();
+    $errors = [];
 
     //check if contact is selected in standalone mode
     if (isset($fields['contact_select_id'][1]) && !$fields['contact_select_id'][1]) {
@@ -573,7 +573,7 @@ class CRM_Pledge_Form_Pledge extends CRM_Core_Form {
     //get All Payments status types.
     $paymentStatusTypes = CRM_Contribute_PseudoConstant::contributionStatus(NULL, 'name');
 
-    $fields = array(
+    $fields = [
       'frequency_unit',
       'frequency_interval',
       'frequency_day',
@@ -588,7 +588,7 @@ class CRM_Pledge_Form_Pledge extends CRM_Core_Form {
       'honor_last_name',
       'honor_email',
       'contribution_page_id',
-    );
+    ];
     foreach ($fields as $f) {
       $params[$f] = CRM_Utils_Array::value($f, $formValues);
     }
@@ -605,7 +605,7 @@ class CRM_Pledge_Form_Pledge extends CRM_Core_Form {
     $params['amount'] = CRM_Utils_Rule::cleanMoney(CRM_Utils_Array::value('amount', $formValues));
     $params['original_installment_amount'] = ($params['amount'] / $params['installments']);
 
-    $dates = array('create_date', 'start_date', 'acknowledge_date', 'cancel_date');
+    $dates = ['create_date', 'start_date', 'acknowledge_date', 'cancel_date'];
     foreach ($dates as $d) {
       if ($this->_id && !$this->_isPending) {
         if ($d == 'start_date') {
@@ -703,7 +703,7 @@ class CRM_Pledge_Form_Pledge extends CRM_Core_Form {
         ) = CRM_Contact_BAO_Contact_Location::getEmailDetails($this->_contactID);
       }
 
-      $statusMsg .= ' ' . ts("An acknowledgment email has been sent to %1.<br />", array(1 => $this->userEmail));
+      $statusMsg .= ' ' . ts("An acknowledgment email has been sent to %1.<br />", [1 => $this->userEmail]);
 
       //build the payment urls.
       if ($this->paymentId) {
@@ -717,10 +717,10 @@ class CRM_Pledge_Form_Pledge extends CRM_Core_Form {
           "billing_mode IN ( 1, 3 ) AND payment_processor_type != 'TaiwanACH'"
         );
         if (count($processors) > 0) {
-          $statusMsg .= ' ' . ts("If a payment is due now, you can record <a href='%1'>a check, EFT, or cash payment for this pledge</a> OR <a href='%2'>submit a credit card payment</a>.", array(1 => $contribURL, 2 => $creditURL));
+          $statusMsg .= ' ' . ts("If a payment is due now, you can record <a href='%1'>a check, EFT, or cash payment for this pledge</a> OR <a href='%2'>submit a credit card payment</a>.", [1 => $contribURL, 2 => $creditURL]);
         }
         else {
-          $statusMsg .= ' ' . ts("If a payment is due now, you can record <a href='%1'>a check, EFT, or cash payment for this pledge</a>.", array(1 => $contribURL));
+          $statusMsg .= ' ' . ts("If a payment is due now, you can record <a href='%1'>a check, EFT, or cash payment for this pledge</a>.", [1 => $contribURL]);
         }
       }
     }

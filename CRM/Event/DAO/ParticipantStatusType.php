@@ -151,13 +151,13 @@ class CRM_Event_DAO_ParticipantStatusType extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'id' => array(
+      self::$_fields = [
+        'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'participant_status' => array(
+        ] ,
+        'participant_status' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Participant Status') ,
@@ -168,44 +168,44 @@ class CRM_Event_DAO_ParticipantStatusType extends CRM_Core_DAO
           'headerPattern' => '',
           'dataPattern' => '',
           'export' => true,
-        ) ,
-        'label' => array(
+        ] ,
+        'label' => [
           'name' => 'label',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Label') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'class' => array(
+        ] ,
+        'class' => [
           'name' => 'class',
           'type' => CRM_Utils_Type::T_ENUM,
           'title' => ts('Class') ,
           'enumValues' => 'Positive, Pending, Waiting, Negative',
-        ) ,
-        'is_reserved' => array(
+        ] ,
+        'is_reserved' => [
           'name' => 'is_reserved',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ) ,
-        'is_active' => array(
+        ] ,
+        'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'default' => '',
-        ) ,
-        'is_counted' => array(
+        ] ,
+        'is_counted' => [
           'name' => 'is_counted',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ) ,
-        'weight' => array(
+        ] ,
+        'weight' => [
           'name' => 'weight',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Weight') ,
           'required' => true,
-        ) ,
-        'visibility_id' => array(
+        ] ,
+        'visibility_id' => [
           'name' => 'visibility_id',
           'type' => CRM_Utils_Type::T_INT,
-        ) ,
-      );
+        ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -239,7 +239,7 @@ class CRM_Event_DAO_ParticipantStatusType extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -262,7 +262,7 @@ class CRM_Event_DAO_ParticipantStatusType extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
@@ -283,9 +283,9 @@ class CRM_Event_DAO_ParticipantStatusType extends CRM_Core_DAO
    */
   static function &getEnums()
   {
-    static $enums = array(
+    static $enums = [
       'class',
-    );
+    ];
     return $enums;
   }
   /**
@@ -300,14 +300,14 @@ class CRM_Event_DAO_ParticipantStatusType extends CRM_Core_DAO
   {
     static $translations = null;
     if (!$translations) {
-      $translations = array(
-        'class' => array(
+      $translations = [
+        'class' => [
           'Positive' => ts('Positive') ,
           'Pending' => ts('Pending') ,
           'Waiting' => ts('Waiting') ,
           'Negative' => ts('Negative') ,
-        ) ,
-      );
+        ] ,
+      ];
     }
     return $translations[$field][$value];
   }

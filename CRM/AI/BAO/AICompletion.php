@@ -77,7 +77,7 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
    *
    * @return array ['token', 'id]
    */
-  public static function prepareChat($params = array()) {
+  public static function prepareChat($params = []) {
     // prepare saving data.
     $aicompletionData = $params;
     if (!isset($params['prompt'])) {
@@ -121,7 +121,7 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
    *
    * @return array result array.
    */
-  public static function chat($params = array()) {
+  public static function chat($params = []) {
 
     // Prepare follow parameters will be used.
     $requestData = self::validateChatParams($params);
@@ -151,7 +151,7 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
    * @throws Exception If the validation fails or required parameters are missing.
    */
   private static function validateChatParams($params) {
-    $aicompletion = array();
+    $aicompletion = [];
     $isPass = FALSE;
 
     // If prompt is in $params, just use it.
@@ -220,11 +220,11 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
     $used = CRM_Core_DAO::singleValueQuery("SELECT count(*) FROM civicrm_aicompletion WHERE created_date >= DATE_FORMAT(CURDATE(), '%Y-%m-01 00:00:00') AND created_date < DATE_FORMAT(DATE_ADD(CURDATE(), INTERVAL 1 MONTH), '%Y-%m-01 00:00:00');");
     $percent = $used < $config->openAICompletionQuota ? floor(($used/$config->openAICompletionQuota)*100) : 100;
 
-    return array(
+    return [
       'max' => $config->openAICompletionQuota,
       'used' => $used,
       'percent' => $percent,
-    );
+    ];
   }
 
   /**
@@ -272,10 +272,10 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
 
     CRM_Utils_Hook::post($op, 'AICompletion', $aicompletion->id, $aicompletion);
 
-    $params = array(
+    $params = [
       'id' => $aicompletion->id,
-    );
-    $defaults = array();
+    ];
+    $defaults = [];
     $aicompletion = self::retrieve($params, $defaults);
     return $aicompletion;
   }
@@ -293,10 +293,10 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
     elseif (!is_numeric($aiCompletionID)) {
       throw new CRM_Core_Exception("\$aiCompletionID is not number.");
     }
-    $params = array(
+    $params = [
       'id' => $aiCompletionID,
-    );
-    $returnArray = array();
+    ];
+    $returnArray = [];
     self::retrieve($params, $returnArray);
     return $returnArray;
   }
@@ -385,7 +385,7 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
    *
    * @return array AICompletion data rows.
    */
-  public static function getTemplateList($params = array()) {
+  public static function getTemplateList($params = []) {
     if (!is_array($params)) {
       throw new CRM_Core_Exception("params should be an Array.");
     }
@@ -394,11 +394,11 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
     $whereClause[] = 'is_template = 1';
     if (isset($params['component'])) {
       $whereClause[] = "component = %1";
-      $sqlParams[1] = array($params['component'], 'String');
+      $sqlParams[1] = [$params['component'], 'String'];
     }
     if (isset($params['field'])) {
       $whereClause[] = "field = %2";
-      $sqlParams[2] = array($params['field'], 'String');
+      $sqlParams[2] = [$params['field'], 'String'];
     }
 
     $sql = "SELECT * FROM civicrm_aicompletion WHERE ".implode(' AND ', $whereClause);
@@ -418,7 +418,7 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
     $return = [];
     $fields = CRM_AI_DAO_AICompletion::fields();
     while ($dao->fetch()) {
-      $aiCompletionData = array();
+      $aiCompletionData = [];
       // do not call retrieve again for save database load
       foreach ($fields as $field) {
         $dbName = $field['name'];
@@ -453,7 +453,7 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
     // Set is template.
     $setTemplateValue = $data['is_template'];
     $originalIsTemplate = CRM_Core_DAO::getFieldValue('CRM_AI_DAO_AICompletion', $acId, 'is_template');
-    $msg = array();
+    $msg = [];
     if ($originalIsTemplate != $setTemplateValue) {
       if (CRM_Core_DAO::getFieldValue('CRM_AI_DAO_AICompletion', $acId, 'id')) {
         $isSuccess = CRM_Core_DAO::setFieldValue('CRM_AI_DAO_AICompletion', $acId, 'is_template', $setTemplateValue);

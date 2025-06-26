@@ -70,7 +70,7 @@ class CRM_Mailing_Form_Component extends CRM_Core_Form {
     $this->add('text', 'name', ts('Name'),
       CRM_Core_DAO::getAttribute('CRM_Mailing_DAO_Component', 'name'), TRUE
     );
-    $this->addRule('name', ts('Name already exists in Database.'), 'objectExists', array('CRM_Mailing_DAO_Component', $this->_id));
+    $this->addRule('name', ts('Name already exists in Database.'), 'objectExists', ['CRM_Mailing_DAO_Component', $this->_id]);
 
     $this->add('select', 'component_type', ts('Component Type'), CRM_Core_SelectValues::mailingComponents());
 
@@ -90,28 +90,28 @@ class CRM_Mailing_Form_Component extends CRM_Core_Form {
     );
     $this->addWysiwyg('body_html',
     ts('Body - HTML Format'),
-    array(
+    [
       'cols' => '80',
       'rows' => '8',
-      )
+      ]
     );
 
     $this->add('checkbox', 'is_default', ts('Default?'));
     $this->add('checkbox', 'is_active', ts('Enabled?'));
 
-    $this->addFormRule(array('CRM_Mailing_Form_Component', 'dataRule'));
+    $this->addFormRule(['CRM_Mailing_Form_Component', 'dataRule']);
 
-    $this->addButtons(array(
-        array(
+    $this->addButtons([
+        [
           'type' => 'next',
           'name' => ts('Save'),
           'isDefault' => TRUE,
-        ),
-        array(
+        ],
+        [
           'type' => 'cancel',
           'name' => ts('Cancel'),
-        ),
-      )
+        ],
+      ]
     );
   }
 
@@ -123,11 +123,11 @@ class CRM_Mailing_Form_Component extends CRM_Core_Form {
    * @return None
    */
   function setDefaultValues() {
-    $defaults = array();
-    $params = array();
+    $defaults = [];
+    $params = [];
 
     if (isset($this->_id)) {
-      $params = array('id' => $this->_id);
+      $params = ['id' => $this->_id];
       $baoName = $this->_BAOName;
       $baoName::retrieve( $params, $defaults );
     }
@@ -147,7 +147,7 @@ class CRM_Mailing_Form_Component extends CRM_Core_Form {
     // store the submitted values in an array
     $params = $this->controller->exportValues($this->_name);
 
-    $ids = array();
+    $ids = [];
 
     if ($this->_action & CRM_Core_Action::UPDATE) {
       $ids['id'] = $this->_id;
@@ -169,29 +169,29 @@ class CRM_Mailing_Form_Component extends CRM_Core_Form {
    */
   static function dataRule($params, $files, $options) {
     if ($params['component_type'] == 'Header' || $params['component_type'] == 'Footer') {
-      $InvalidTokens = array();
+      $InvalidTokens = [];
     }
     else {
-      $InvalidTokens = array('action.forward' => ts("This token can only be used in send mailing context (body, header, footer).."));
+      $InvalidTokens = ['action.forward' => ts("This token can only be used in send mailing context (body, header, footer)..")];
     }
-    $errors = array();
-    foreach (array(
+    $errors = [];
+    foreach ([
         'text', 'html',
-      ) as $type) {
-      $dataErrors = array();
+      ] as $type) {
+      $dataErrors = [];
       foreach ($InvalidTokens as $token => $desc) {
         if ($params['body_' . $type]) {
           if (preg_match('/' . preg_quote('{' . $token . '}') . '/', $params['body_' . $type])) {
-            $dataErrors[] = '<li>' . ts('This message is having a invalid token - %1: %2', array(
+            $dataErrors[] = '<li>' . ts('This message is having a invalid token - %1: %2', [
                 1 => $token, 2 => $desc,
-              )) . '</li>';
+              ]) . '</li>';
           }
         }
       }
       if (!empty($dataErrors)) {
-        $errors['body_' . $type] = ts('The following errors were detected in %1 message:', array(
+        $errors['body_' . $type] = ts('The following errors were detected in %1 message:', [
             1 => $type,
-          )) . '<ul>' . CRM_Utils_Array::implode('', $dataErrors) . '</ul><br /><a href="' . CRM_Utils_System::docURL2('CiviMail Action Tokens', TRUE) . '">' . ts('More information on tokens...') . '</a>';
+          ]) . '<ul>' . CRM_Utils_Array::implode('', $dataErrors) . '</ul><br /><a href="' . CRM_Utils_System::docURL2('CiviMail Action Tokens', TRUE) . '">' . ts('More information on tokens...') . '</a>';
       }
     }
     if (!CRM_Utils_Array::value('body_html', $params)) {

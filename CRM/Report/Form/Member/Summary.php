@@ -51,101 +51,101 @@ class CRM_Report_Form_Member_Summary extends CRM_Report_Form {
   public $_absoluteUrl;
   public $_interval = NULL;
   protected $_summary = NULL;
-  protected $_charts = array('' => 'Tabular',
+  protected $_charts = ['' => 'Tabular',
     'barChart' => 'Bar Chart',
     'pieChart' => 'Pie Chart',
-  );
+  ];
   protected $_add2groupSupported = FALSE;
 
-  protected $_customGroupExtends = array('Membership');
+  protected $_customGroupExtends = ['Membership'];
   protected $_customGroupGroupBy = FALSE; function __construct() {
     // UI for selecting columns to appear in the report list
     // array conatining the columns, group_bys and filters build and provided to Form
 
-    $this->_columns = array(
+    $this->_columns = [
       'civicrm_membership' =>
-      array('dao' => 'CRM_Member_DAO_MembershipType',
+      ['dao' => 'CRM_Member_DAO_MembershipType',
         'grouping' => 'member-fields',
         'fields' =>
-        array('membership_type_id' =>
-          array('title' => 'Membership Type',
+        ['membership_type_id' =>
+          ['title' => 'Membership Type',
             'required' => TRUE,
-          ),
-        ),
+          ],
+        ],
         'filters' =>
-        array('join_date' =>
-          array('title' => 'Membership Join Date',
+        ['join_date' =>
+          ['title' => 'Membership Join Date',
             'type' => CRM_Utils_Type::T_DATE,
             'operatorType' => CRM_Report_Form::OP_DATE,
-          ),
+          ],
           'membership_type_id' =>
-          array('title' => ts('Membership Type'),
+          ['title' => ts('Membership Type'),
             'operatorType' => CRM_Report_Form::OP_MULTISELECT,
             'options' => CRM_Member_PseudoConstant::membershipType(),
-          ),
+          ],
           'status_id' =>
-          array('title' => ts('Membership Status'),
+          ['title' => ts('Membership Status'),
             'operatorType' => CRM_Report_Form::OP_MULTISELECT,
             'options' => CRM_Member_PseudoConstant::membershipStatus(NULL, NULL, 'label'),
-          ),
-        ),
+          ],
+        ],
         'group_bys' =>
-        array('join_date' =>
-          array('title' => ts('Join Date'),
+        ['join_date' =>
+          ['title' => ts('Join Date'),
             'default' => TRUE,
             'frequency' => TRUE,
             'chart' => TRUE,
             'type' => 12,
-          ),
+          ],
           'membership_type_id' =>
-          array('title' => 'Membership Type',
+          ['title' => 'Membership Type',
             'default' => TRUE,
             'chart' => TRUE,
-          ),
-        ),
-      ),
+          ],
+        ],
+      ],
       'civicrm_contact' =>
-      array('dao' => 'CRM_Contact_DAO_Contact',
+      ['dao' => 'CRM_Contact_DAO_Contact',
         'fields' =>
-        array('contact_id' =>
-          array('no_display' => TRUE,
-          ),
-        ),
-      ),
+        ['contact_id' =>
+          ['no_display' => TRUE,
+          ],
+        ],
+      ],
       'civicrm_contribution' =>
-      array('dao' => 'CRM_Contribute_DAO_Contribution',
+      ['dao' => 'CRM_Contribute_DAO_Contribution',
         'fields' =>
-        array('total_amount' =>
-          array('title' => ts('Amount Statistics'),
+        ['total_amount' =>
+          ['title' => ts('Amount Statistics'),
             'required' => TRUE,
             'statistics' =>
-            array('sum' => ts('Total Payments Made'),
+            ['sum' => ts('Total Payments Made'),
               'count' => ts('Contribution Count'),
               'avg' => ts('Average'),
-            ),
-          ),
-        ),
+            ],
+          ],
+        ],
         'filters' =>
-        array('contribution_status_id' =>
-          array('operatorType' => CRM_Report_Form::OP_MULTISELECT,
+        ['contribution_status_id' =>
+          ['operatorType' => CRM_Report_Form::OP_MULTISELECT,
             'options' => CRM_Contribute_PseudoConstant::contributionStatus(),
-          ),
-        ),
+          ],
+        ],
         'grouping' => 'member-fields',
-      ),
-    );
+      ],
+    ];
     parent::__construct();
   }
 
   function select() {
-    $select = array();
+    $select = [];
     $groupBys = FALSE;
-    $this->_columnHeaders = array();
+    $this->_columnHeaders = [];
     $select[] = " COUNT( DISTINCT {$this->_aliases['civicrm_membership']}.id ) as civicrm_membership_member_count";
     $select['joinDate'] = " {$this->_aliases['civicrm_membership']}.join_date  as civicrm_membership_member_join_date";
-    $this->_columnHeaders["civicrm_membership_member_join_date"] = array('title' => ts('Join Date'),
+    $this->_columnHeaders["civicrm_membership_member_join_date"] = ['title' => ts('Join Date'),
       'type' => CRM_Utils_Type::T_DATE,
-    );
+    ];
     foreach ($this->_columns as $tableName => $table) {
       if (CRM_Utils_Array::arrayKeyExists('group_bys', $table)) {
         foreach ($table['group_bys'] as $fieldName => $field) {
@@ -190,8 +190,8 @@ class CRM_Report_Form_Member_Summary extends CRM_Report_Form {
               // just to make sure these values are transfered to rows.
               // since we need that for calculation purpose,
               // e.g making subtotals look nicer or graphs
-              $this->_columnHeaders["{$tableName}_{$fieldName}_interval"] = array('no_display' => TRUE);
-              $this->_columnHeaders["{$tableName}_{$fieldName}_subtotal"] = array('no_display' => TRUE);
+              $this->_columnHeaders["{$tableName}_{$fieldName}_interval"] = ['no_display' => TRUE];
+              $this->_columnHeaders["{$tableName}_{$fieldName}_subtotal"] = ['no_display' => TRUE];
             }
             $groupBys = TRUE;
           }
@@ -253,9 +253,9 @@ class CRM_Report_Form_Member_Summary extends CRM_Report_Form {
           }
         }
       }
-      $this->_columnHeaders["civicrm_membership_member_count"] = array('title' => ts('Member Count'),
+      $this->_columnHeaders["civicrm_membership_member_count"] = ['title' => ts('Member Count'),
         'type' => CRM_Utils_Type::T_INT,
-      );
+      ];
     }
     //If grouping is availabled then remove join date from field
     if ($groupBys) {
@@ -280,7 +280,7 @@ class CRM_Report_Form_Member_Summary extends CRM_Report_Form {
   }
   // end of from
   function where() {
-    $clauses = array();
+    $clauses = [];
     foreach ($this->_columns as $tableName => $table) {
       if (CRM_Utils_Array::arrayKeyExists('filters', $table)) {
         foreach ($table['filters'] as $fieldName => $field) {
@@ -339,7 +339,7 @@ class CRM_Report_Form_Member_Summary extends CRM_Report_Form {
 
                 $append = "YEAR({$field['dbAlias']}),";
                 if (in_array(strtolower($this->_params['group_bys_freq'][$fieldName]),
-                    array('year')
+                    ['year']
                   )) {
                   $append = '';
                 }
@@ -376,20 +376,20 @@ class CRM_Report_Form_Member_Summary extends CRM_Report_Form {
     $dao = CRM_Core_DAO::executeQuery($sql);
 
     if ($dao->fetch()) {
-      $statistics['counts']['amount'] = array('value' => $dao->amount,
+      $statistics['counts']['amount'] = ['value' => $dao->amount,
         'title' => 'Total Amount',
         'type' => CRM_Utils_Type::T_MONEY,
-      );
-      $statistics['counts']['count '] = array('value' => $dao->count,
+      ];
+      $statistics['counts']['count '] = ['value' => $dao->count,
         'title' => 'Total Donations',
-      );
-      $statistics['counts']['memberCount'] = array('value' => $dao->memberCount,
+      ];
+      $statistics['counts']['memberCount'] = ['value' => $dao->memberCount,
         'title' => 'Total Members',
-      );
-      $statistics['counts']['avg   '] = array('value' => $dao->avg,
+      ];
+      $statistics['counts']['avg   '] = ['value' => $dao->avg,
         'title' => 'Average',
         'type' => CRM_Utils_Type::T_MONEY,
-      );
+      ];
 
       if (!(int)$statistics['counts']['amount']['value']) {
         //if total amount is zero then hide Chart Options
@@ -405,7 +405,7 @@ class CRM_Report_Form_Member_Summary extends CRM_Report_Form {
   }
 
   function buildChart(&$rows) {
-    $graphRows = array();
+    $graphRows = [];
     $count = 0;
     $membershipTypeValues = CRM_Member_PseudoConstant::membershipType();
     $isMembershipType = CRM_Utils_Array::value('membership_type_id', $this->_params['group_bys']);
@@ -463,10 +463,10 @@ class CRM_Report_Form_Member_Summary extends CRM_Report_Form {
       // build chart.
       if ($isMembershipType) {
         $graphRows['value'] = $display;
-        $chartInfo = array('legend' => 'Membership Summary',
+        $chartInfo = ['legend' => 'Membership Summary',
           'xname' => 'Join Date / Member Type',
           'yname' => 'Fees',
-        );
+        ];
       }
     }
     $this->assign('chartType', $this->_params['charts']);
@@ -485,7 +485,7 @@ class CRM_Report_Form_Member_Summary extends CRM_Report_Form {
 
         $dateStart = CRM_Utils_Date::customFormat($row['civicrm_membership_join_date_start'], '%Y%m%d');
         $endDate = new DateTime($dateStart);
-        $dateEnd = array();
+        $dateEnd = [];
 
         list($dateEnd['Y'], $dateEnd['M'], $dateEnd['d']) = explode(':', $endDate->format('Y:m:d'));
 

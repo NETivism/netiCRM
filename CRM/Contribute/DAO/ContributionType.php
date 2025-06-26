@@ -151,13 +151,13 @@ class CRM_Contribute_DAO_ContributionType extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'id' => array(
+      self::$_fields = [
+        'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'contribution_type' => array(
+        ] ,
+        'contribution_type' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Contribution Type') ,
@@ -169,8 +169,8 @@ class CRM_Contribute_DAO_ContributionType extends CRM_Core_DAO
           'dataPattern' => '/donation|member|campaign/i',
           'export' => true,
           'usage' => 'System',
-        ) ,
-        'accounting_code' => array(
+        ] ,
+        'accounting_code' => [
           'name' => 'accounting_code',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Accounting Code') ,
@@ -181,37 +181,37 @@ class CRM_Contribute_DAO_ContributionType extends CRM_Core_DAO
           'headerPattern' => '',
           'dataPattern' => '',
           'usage' => 'System',
-        ) ,
-        'description' => array(
+        ] ,
+        'description' => [
           'name' => 'description',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Description') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'tax_rate' => array(
+        ] ,
+        'tax_rate' => [
           'name' => 'tax_rate',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Tax Rate') ,
-        ) ,
-        'is_taxreceipt' => array(
+        ] ,
+        'is_taxreceipt' => [
           'name' => 'is_taxreceipt',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ) ,
-        'is_deductible' => array(
+        ] ,
+        'is_deductible' => [
           'name' => 'is_deductible',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'default' => '',
-        ) ,
-        'is_reserved' => array(
+        ] ,
+        'is_reserved' => [
           'name' => 'is_reserved',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ) ,
-        'is_active' => array(
+        ] ,
+        'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ) ,
-      );
+        ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -244,7 +244,7 @@ class CRM_Contribute_DAO_ContributionType extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -267,7 +267,7 @@ class CRM_Contribute_DAO_ContributionType extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {

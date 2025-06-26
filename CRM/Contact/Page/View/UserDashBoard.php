@@ -108,7 +108,7 @@ class CRM_Contact_Page_View_UserDashBoard extends CRM_Core_Page {
     $this->set('displayName', $displayName);
     $this->set('contactImage', $contactImage);
 
-    CRM_Utils_System::setTitle(ts('Dashboard - %1', array(1 => $displayName)));
+    CRM_Utils_System::setTitle(ts('Dashboard - %1', [1 => $displayName]));
 
     $this->assign('recentlyViewed', FALSE);
   }
@@ -121,7 +121,7 @@ class CRM_Contact_Page_View_UserDashBoard extends CRM_Core_Page {
    */
   function buildUserDashBoard() {
     //build component selectors
-    $dashboardElements = array();
+    $dashboardElements = [];
     $config = CRM_Core_Config::singleton();
 
 
@@ -142,20 +142,20 @@ class CRM_Contact_Page_View_UserDashBoard extends CRM_Core_Page {
       ) {
 
         $userDashboard = $component->getUserDashboardObject();
-        $dashboardElements[] = array('templatePath' => $userDashboard->getTemplateFileName(),
+        $dashboardElements[] = ['templatePath' => $userDashboard->getTemplateFileName(),
           'sectionTitle' => $elem['title'],
           'weight' => $elem['weight'],
-        );
+        ];
         $userDashboard->run();
       }
     }
 
     $sectionName = 'Permissioned Orgs';
     if ($this->_userOptions[$sectionName]) {
-      $dashboardElements[] = array('templatePath' => 'CRM/Contact/Page/View/Relationship.tpl',
+      $dashboardElements[] = ['templatePath' => 'CRM/Contact/Page/View/Relationship.tpl',
         'sectionTitle' => ts('Your Contacts / Organizations'),
         'weight' => 40,
-      );
+      ];
 
       $links = &self::links();
       $currentRelationships = CRM_Contact_BAO_Relationship::getRelationship($this->_contactId,
@@ -168,17 +168,17 @@ class CRM_Contact_Page_View_UserDashBoard extends CRM_Core_Page {
 
     if ($this->_userOptions['PCP']) {
 
-      $dashboardElements[] = array('templatePath' => 'CRM/Contribute/Page/PcpUserDashboard.tpl',
+      $dashboardElements[] = ['templatePath' => 'CRM/Contribute/Page/PcpUserDashboard.tpl',
         'sectionTitle' => ts('Personal Campaign Pages'),
         'weight' => 40,
-      );
+      ];
       list($pcpBlock, $pcpInfo) = CRM_Contribute_BAO_PCP::getPcpDashboardInfo($this->_contactId);
       $this->assign('pcpBlock', $pcpBlock);
       $this->assign('pcpInfo', $pcpInfo);
     }
 
 
-    usort($dashboardElements, array('CRM_Utils_Sort', 'cmpFunc'));
+    usort($dashboardElements, ['CRM_Utils_Sort', 'cmpFunc']);
     $this->assign('dashboardElements', $dashboardElements);
 
     if ($this->_userOptions['Groups']) {
@@ -218,31 +218,31 @@ class CRM_Contact_Page_View_UserDashBoard extends CRM_Core_Page {
       $disableExtra = ts('Are you sure you want to disable this relationship?');
       $enableExtra = ts('Are you sure you want to re-enable this relationship?');
 
-      self::$_links = array(
-        CRM_Core_Action::UPDATE => array(
+      self::$_links = [
+        CRM_Core_Action::UPDATE => [
           'name' => ts('Edit Contact Information'),
           'url' => 'civicrm/contact/relatedcontact',
           'qs' => 'action=update&reset=1&cid=%%cbid%%&rcid=%%cid%%',
           'title' => ts('Edit Relationship'),
-        ),
-        CRM_Core_Action::VIEW => array(
+        ],
+        CRM_Core_Action::VIEW => [
           'name' => ts('Dashboard'),
           'url' => 'civicrm/user',
           'qs' => 'reset=1&id=%%cbid%%',
           'title' => ts('View Relationship'),
-        ),
-      );
+        ],
+      ];
 
 
       if (CRM_Core_Permission::check('access CiviCRM')) {
-        self::$_links = array_merge(self::$_links, array(CRM_Core_Action::DISABLE => array(
+        self::$_links = array_merge(self::$_links, [CRM_Core_Action::DISABLE => [
               'name' => ts('Disable'),
               'url' => 'civicrm/contact/view/rel',
               'qs' => 'action=disable&reset=1&cid=%%cid%%&id=%%id%%&rtype=%%rtype%%&selectedChild=rel%%&context=dashboard',
               'extra' => 'onclick = "return confirm(\'' . $disableExtra . '\');"',
               'title' => ts('Disable Relationship'),
-            ),
-          ));
+            ],
+          ]);
       }
     }
 

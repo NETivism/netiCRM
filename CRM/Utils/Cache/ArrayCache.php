@@ -14,7 +14,7 @@ private $_cache;
  * @return void
  */
   function __construct($config) {
-  $this->_cache = array();
+  $this->_cache = [];
   }
 
   function set($key, &$value) {
@@ -31,7 +31,7 @@ private $_cache;
 
   function flush() {
     unset($this->_cache);
-    $this->_cache = array();
+    $this->_cache = [];
   }
 }
 

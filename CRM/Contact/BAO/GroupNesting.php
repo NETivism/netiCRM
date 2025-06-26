@@ -41,7 +41,7 @@ class CRM_Contact_BAO_GroupNesting extends CRM_Contact_DAO_GroupNesting implemen
 
   private $_current;
 
-  private $_parentStack = array();
+  private $_parentStack = [];
 
   private $_lastParentlessGroup;
 
@@ -86,7 +86,7 @@ class CRM_Contact_BAO_GroupNesting extends CRM_Contact_DAO_GroupNesting implemen
    * has no parent groups
    */
   function rewind() {
-    $this->_parentStack = array();
+    $this->_parentStack = [];
     // calling _getNextParentlessGroup w/ no arguments
     // makes it return the first parentless group
     $firstGroup = $this->_getNextParentlessGroup();
@@ -116,7 +116,7 @@ class CRM_Contact_BAO_GroupNesting extends CRM_Contact_DAO_GroupNesting implemen
 
   function key() {
     $group = &$this->_current;
-    $ids = array();
+    $ids = [];
     foreach ($this->_parentStack as $parentGroup) {
       $ids[] = $parentGroup->id;
     }
@@ -375,7 +375,7 @@ class CRM_Contact_BAO_GroupNesting extends CRM_Contact_DAO_GroupNesting implemen
 
   static function isParentGroup($groupIds, $checkGroupId) {
     if (!is_array($groupIds)) {
-      $groupIds = array($groupIds);
+      $groupIds = [$groupIds];
     }
     $dao = new CRM_Contact_DAO_GroupNesting();
     $query = "SELECT parent_group_id FROM civicrm_group_nesting WHERE child_group_id IN (" . CRM_Utils_Array::implode(',', $groupIds) . ")";
@@ -407,7 +407,7 @@ class CRM_Contact_BAO_GroupNesting extends CRM_Contact_DAO_GroupNesting implemen
   static function isChildGroup($groupIds, $checkGroupId) {
 
     if (!is_array($groupIds)) {
-      $groupIds = array($groupIds);
+      $groupIds = [$groupIds];
     }
     $dao = new CRM_Contact_DAO_GroupNesting();
     $query = "SELECT child_group_id FROM civicrm_group_nesting WHERE parent_group_id IN (" . CRM_Utils_Array::implode(',', $groupIds) . ")";
@@ -441,12 +441,12 @@ class CRM_Contact_BAO_GroupNesting extends CRM_Contact_DAO_GroupNesting implemen
 
   static function isAncestorGroup($groupIds, $checkGroupId) {
     if (!is_array($groupIds)) {
-      $groupIds = array($groupIds);
+      $groupIds = [$groupIds];
     }
     $dao = new CRM_Contact_DAO_GroupNesting();
     $query = "SELECT parent_group_id FROM civicrm_group_nesting WHERE child_group_id IN (" . CRM_Utils_Array::implode(',', $groupIds) . ")";
     $dao->query($query);
-    $nextGroupIds = array();
+    $nextGroupIds = [];
     $gotAtLeastOneResult = FALSE;
     while ($dao->fetch()) {
       $gotAtLeastOneResult = TRUE;
@@ -482,12 +482,12 @@ class CRM_Contact_BAO_GroupNesting extends CRM_Contact_DAO_GroupNesting implemen
 
   static function isDescendentGroup($groupIds, $checkGroupId) {
     if (!is_array($groupIds)) {
-      $groupIds = array($groupIds);
+      $groupIds = [$groupIds];
     }
     $dao = new CRM_Contact_DAO_GroupNesting();
     $query = "SELECT child_group_id FROM civicrm_group_nesting WHERE parent_group_id IN (" . CRM_Utils_Array::implode(',', $groupIds) . ")";
     $dao->query($query);
-    $nextGroupIds = array();
+    $nextGroupIds = [];
     $gotAtLeastOneResult = FALSE;
     while ($dao->fetch()) {
       $gotAtLeastOneResult = TRUE;
@@ -521,15 +521,15 @@ class CRM_Contact_BAO_GroupNesting extends CRM_Contact_DAO_GroupNesting implemen
 
   static function getAncestorGroupIds($groupIds, $includeSelf = TRUE) {
     if (!is_array($groupIds)) {
-      $groupIds = array($groupIds);
+      $groupIds = [$groupIds];
     }
     $dao = new CRM_Contact_DAO_GroupNesting();
     $query = "SELECT parent_group_id, child_group_id
                   FROM   civicrm_group_nesting
                   WHERE  child_group_id IN (" . CRM_Utils_Array::implode(',', $groupIds) . ")";
     $dao->query($query);
-    $tmpGroupIds = array();
-    $parentGroupIds = array();
+    $tmpGroupIds = [];
+    $parentGroupIds = [];
     if ($includeSelf) {
       $parentGroupIds = $groupIds;
     }
@@ -575,12 +575,12 @@ class CRM_Contact_BAO_GroupNesting extends CRM_Contact_DAO_GroupNesting implemen
 
   static function getChildGroupIds($groupIds) {
     if (!is_array($groupIds)) {
-      $groupIds = array($groupIds);
+      $groupIds = [$groupIds];
     }
     $dao = new CRM_Contact_DAO_GroupNesting();
     $query = "SELECT child_group_id FROM civicrm_group_nesting WHERE parent_group_id IN (" . CRM_Utils_Array::implode(',', $groupIds) . ")";
     $dao->query($query);
-    $childGroupIds = array();
+    $childGroupIds = [];
     while ($dao->fetch()) {
       $childGroupIds[] = $dao->child_group_id;
     }
@@ -599,12 +599,12 @@ class CRM_Contact_BAO_GroupNesting extends CRM_Contact_DAO_GroupNesting implemen
 
   static function getParentGroupIds($groupIds) {
     if (!is_array($groupIds)) {
-      $groupIds = array($groupIds);
+      $groupIds = [$groupIds];
     }
     $dao = new CRM_Contact_DAO_GroupNesting();
     $query = "SELECT parent_group_id FROM civicrm_group_nesting WHERE child_group_id IN (" . CRM_Utils_Array::implode(',', $groupIds) . ")";
     $dao->query($query);
-    $parentGroupIds = array();
+    $parentGroupIds = [];
     while ($dao->fetch()) {
       $parentGroupIds[] = $dao->parent_group_id;
     }
@@ -623,13 +623,13 @@ class CRM_Contact_BAO_GroupNesting extends CRM_Contact_DAO_GroupNesting implemen
 
   static function getDescendentGroupIds($groupIds, $includeSelf = TRUE) {
     if (!is_array($groupIds)) {
-      $groupIds = array($groupIds);
+      $groupIds = [$groupIds];
     }
     $dao = new CRM_Contact_DAO_GroupNesting();
     $query = "SELECT child_group_id, parent_group_id FROM civicrm_group_nesting WHERE parent_group_id IN (" . CRM_Utils_Array::implode(',', $groupIds) . ")";
     $dao->query($query);
-    $tmpGroupIds = array();
-    $childGroupIds = array();
+    $tmpGroupIds = [];
+    $childGroupIds = [];
     if ($includeSelf) {
       $childGroupIds = $groupIds;
     }
@@ -676,7 +676,7 @@ class CRM_Contact_BAO_GroupNesting extends CRM_Contact_DAO_GroupNesting implemen
   static function getPotentialChildGroupIds($groupId) {
 
     $groups = CRM_Contact_BAO_Group::getGroups();
-    $potentialChildGroupIds = array();
+    $potentialChildGroupIds = [];
     foreach ($groups as $group) {
       $potentialChildGroupId = $group->id;
       // print "Checking if $potentialChildGroupId is a descendent/ancestor of $groupId<br/><br/>";
@@ -693,7 +693,7 @@ class CRM_Contact_BAO_GroupNesting extends CRM_Contact_DAO_GroupNesting implemen
 
   static function getContainingGroups($contactId, $parentGroupId) {
     $groups = CRM_Contact_BAO_Group::getGroups();
-    $containingGroups = array();
+    $containingGroups = [];
     foreach ($groups as $group) {
       if (self::isDescendentGroup($parentGroupId, $group->id)) {
         $members = CRM_Contact_BAO_Group::getMember($group->id);

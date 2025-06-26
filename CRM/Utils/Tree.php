@@ -168,8 +168,8 @@ class CRM_Utils_Tree {
    */
   public function &createNode($name) {
     $node['name'] = $name;
-    $node['children'] = array();
-    $node['data'] = array();
+    $node['children'] = [];
+    $node['data'] = [];
 
     return $node;
   }

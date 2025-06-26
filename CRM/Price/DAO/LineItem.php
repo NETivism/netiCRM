@@ -157,10 +157,10 @@ class CRM_Price_DAO_LineItem extends CRM_Core_DAO
   function &links()
   {
     if (!(self::$_links)) {
-      self::$_links = array(
+      self::$_links = [
         'price_field_id' => 'civicrm_price_field:id',
         'price_field_value_id' => 'civicrm_price_field_value:id',
-      );
+      ];
     }
     return self::$_links;
   }
@@ -189,70 +189,70 @@ class CRM_Price_DAO_LineItem extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'id' => array(
+      self::$_fields = [
+        'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'entity_table' => array(
+        ] ,
+        'entity_table' => [
           'name' => 'entity_table',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Entity Table') ,
           'required' => true,
           'maxlength' => 64,
           'size' => CRM_Utils_Type::BIG,
-        ) ,
-        'entity_id' => array(
+        ] ,
+        'entity_id' => [
           'name' => 'entity_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'price_field_id' => array(
+        ] ,
+        'price_field_id' => [
           'name' => 'price_field_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
           'FKClassName' => 'CRM_Price_DAO_Field',
-        ) ,
-        'label' => array(
+        ] ,
+        'label' => [
           'name' => 'label',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Label') ,
           'required' => true,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'qty' => array(
+        ] ,
+        'qty' => [
           'name' => 'qty',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Qty') ,
           'required' => true,
-        ) ,
-        'unit_price' => array(
+        ] ,
+        'unit_price' => [
           'name' => 'unit_price',
           'type' => CRM_Utils_Type::T_MONEY,
           'title' => ts('Unit Price') ,
           'required' => true,
-        ) ,
-        'line_total' => array(
+        ] ,
+        'line_total' => [
           'name' => 'line_total',
           'type' => CRM_Utils_Type::T_MONEY,
           'title' => ts('Line Total') ,
           'required' => true,
-        ) ,
-        'participant_count' => array(
+        ] ,
+        'participant_count' => [
           'name' => 'participant_count',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Participant Count') ,
           'default' => 'UL',
-        ) ,
-        'price_field_value_id' => array(
+        ] ,
+        'price_field_value_id' => [
           'name' => 'price_field_value_id',
           'type' => CRM_Utils_Type::T_INT,
           'default' => 'UL',
           'FKClassName' => 'CRM_Price_DAO_FieldValue',
-        ) ,
-      );
+        ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -285,7 +285,7 @@ class CRM_Price_DAO_LineItem extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -308,7 +308,7 @@ class CRM_Price_DAO_LineItem extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {

@@ -75,7 +75,7 @@ class CRM_Core_BAO_SchemaHandler {
   static function createTable(&$params) {
     $sql = self::buildTableSQL($params);
     // do not i18n-rewrite
-    $dao = &CRM_Core_DAO::executeQuery($sql, array(), TRUE, NULL, FALSE, FALSE);
+    $dao = &CRM_Core_DAO::executeQuery($sql, [], TRUE, NULL, FALSE, FALSE);
     $dao->free();
 
     // logging support
@@ -222,7 +222,7 @@ ALTER TABLE {$tableName}
 ALTER TABLE {$tableName}
       ADD CONSTRAINT `FK_{$fkName}` FOREIGN KEY (`entity_id`) REFERENCES {$fkTableName} (`id`) ON DELETE CASCADE;";
     // CRM-7007: do not i18n-rewrite this query
-    $dao = CRM_Core_DAO::executeQuery($addFKSql, array(), TRUE, NULL, FALSE, FALSE);
+    $dao = CRM_Core_DAO::executeQuery($addFKSql, [], TRUE, NULL, FALSE, FALSE);
     $dao->free();
 
     return TRUE;
@@ -285,14 +285,14 @@ ALTER TABLE {$tableName}
     }
 
     // CRM-7007: do not i18n-rewrite this query
-    $dao = &CRM_Core_DAO::executeQuery($sql, array(), TRUE, NULL, FALSE, FALSE);
+    $dao = &CRM_Core_DAO::executeQuery($sql, [], TRUE, NULL, FALSE, FALSE);
     $dao->free();
 
     // logging support: if we’re adding a column (but only then!) make sure the potential relevant log table gets a column as well
     if ($params['operation'] == 'add') {
 
       $logging = new CRM_Logging_Schema;
-      $logging->fixSchemaDifferencesFor($params['table_name'], array($params['name']));
+      $logging->fixSchemaDifferencesFor($params['table_name'], [$params['name']]);
     }
 
     return TRUE;
@@ -332,8 +332,8 @@ ADD UNIQUE INDEX `unique_entity_id` ( `entity_id` )";
     $dao = &CRM_Core_DAO::executeQuery($sql);
   }
 
-  static function createIndexes(&$tables, $createIndexPrefix = 'index', $substrLenghts = array()) {
-    $queries = array();
+  static function createIndexes(&$tables, $createIndexPrefix = 'index', $substrLenghts = []) {
+    $queries = [];
 
     $domain = new CRM_Core_DAO_Domain;
     $domain->find(TRUE);
@@ -351,7 +351,7 @@ ADD UNIQUE INDEX `unique_entity_id` ( `entity_id` )";
       $query = "SHOW INDEX FROM $table";
       $dao = CRM_Core_DAO::executeQuery($query);
 
-      $currentIndexes = array();
+      $currentIndexes = [];
       while ($dao->fetch()) {
         $currentIndexes[] = $dao->Key_name;
       }
@@ -363,7 +363,7 @@ ADD UNIQUE INDEX `unique_entity_id` ( `entity_id` )";
         $lengthName = isset($substrLenghts[$table][$field]) ? "_{$substrLenghts[$table][$field]}" : '';
         $lengthSize = isset($substrLenghts[$table][$field]) ? "({$substrLenghts[$table][$field]})" : '';
 
-        $names = array("index_{$field}{$lengthName}", "FK_{$table}_{$field}{$lengthName}", "UI_{$field}{$lengthName}", "{$createIndexPrefix}_{$field}{$lengthName}");
+        $names = ["index_{$field}{$lengthName}", "FK_{$table}_{$field}{$lengthName}", "UI_{$field}{$lengthName}", "{$createIndexPrefix}_{$field}{$lengthName}"];
 
         // skip to the next $field if one of the above $names exists; handle multilingual for CRM-4126
         foreach ($names as $name) {

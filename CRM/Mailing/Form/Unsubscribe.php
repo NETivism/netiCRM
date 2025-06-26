@@ -34,10 +34,10 @@ class CRM_Mailing_Form_Unsubscribe extends CRM_Core_Form {
       }
     }
     $this->assign('groupExist', $groupExist);
-    $obj = array(
+    $obj = [
       'type' => 'markup',
       'markup' => '<meta name="robots" content="noindex" />'.PHP_EOL,
-    );
+    ];
     CRM_Utils_System::addHTMLHead($obj);
   }
 
@@ -54,17 +54,17 @@ class CRM_Mailing_Form_Unsubscribe extends CRM_Core_Form {
       $captcha->add($this);
     }
 
-    $this->addButtons(array(
-        array(
+    $this->addButtons([
+        [
           'type' => 'next',
           'name' => ts('Unsubscribe'),
           'isDefault' => TRUE,
-        ),
-        array(
+        ],
+        [
           'type' => 'cancel',
           'name' => ts('Cancel'),
-        ),
-      )
+        ],
+      ]
     );
   }
 

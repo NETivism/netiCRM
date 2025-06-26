@@ -86,9 +86,9 @@ class CRM_Contact_Form_Domain extends CRM_Core_Form {
 
 
 
-    $defaults = array();
-    $params = array();
-    $locParams = array();
+    $defaults = [];
+    $params = [];
+    $locParams = [];
 
     if (isset($this->_id)) {
       $params['id'] = $this->_id;
@@ -97,7 +97,7 @@ class CRM_Contact_Form_Domain extends CRM_Core_Form {
       //get the default domain from email address. fix CRM-3552
 
 
-      $optionValues = array();
+      $optionValues = [];
       $grpParams['name'] = 'from_email_address';
       CRM_Core_OptionValue::getValues($grpParams, $optionValues);
       foreach ($optionValues as $Id => $value) {
@@ -110,7 +110,7 @@ class CRM_Contact_Form_Domain extends CRM_Core_Form {
       }
 
       unset($params['id']);
-      $locParams = $params + array('entity_id' => $this->_id, 'entity_table' => 'civicrm_domain');
+      $locParams = $params + ['entity_id' => $this->_id, 'entity_table' => 'civicrm_domain'];
 
       $defaults = CRM_Core_BAO_Location::getValues($locParams);
 
@@ -144,8 +144,8 @@ class CRM_Contact_Form_Domain extends CRM_Core_Form {
 
   public function buildQuickForm() {
 
-    $this->add('text', 'name', ts('Domain Name'), array('size' => 25), TRUE);
-    $this->add('text', 'description', ts('Description'), array('size' => 25));
+    $this->add('text', 'name', ts('Domain Name'), ['size' => 25], TRUE);
+    $this->add('text', 'description', ts('Description'), ['size' => 25]);
 
     $eleName = $this->add('text', 'email_name', ts('FROM Name'), CRM_Core_DAO::getAttribute('CRM_Core_DAO_Email', 'email'), TRUE);
     $eleName->freeze();
@@ -157,16 +157,16 @@ class CRM_Contact_Form_Domain extends CRM_Core_Form {
     //build location blocks.
     CRM_Contact_Form_Location::buildQuickForm($this);
 
-    $this->addButtons(array(
-        array('type' => 'next',
+    $this->addButtons([
+        ['type' => 'next',
           'name' => ts('Save'),
           'subName' => 'view',
           'isDefault' => TRUE,
-        ),
-        array('type' => 'cancel',
+        ],
+        ['type' => 'cancel',
           'name' => ts('Cancel'),
-        ),
-      ));
+        ],
+      ]);
 
     if ($this->_action & CRM_Core_Action::VIEW) {
       $this->freeze();
@@ -182,7 +182,7 @@ class CRM_Contact_Form_Domain extends CRM_Core_Form {
    * @return void
    */
   function addRules() {
-    $this->addFormRule(array('CRM_Contact_Form_Domain', 'formRule'));
+    $this->addFormRule(['CRM_Contact_Form_Domain', 'formRule']);
   }
 
   /**
@@ -195,7 +195,7 @@ class CRM_Contact_Form_Domain extends CRM_Core_Form {
    * @access public
    */
   static function formRule($fields) {
-    $errors = array();
+    $errors = [];
     // check for state/country mapping
     CRM_Contact_Form_Edit_Address::formRule($fields, $errors);
 
@@ -219,7 +219,7 @@ class CRM_Contact_Form_Domain extends CRM_Core_Form {
 
 
 
-    $params = array();
+    $params = [];
 
     $params = $this->exportValues();
     $params['entity_id'] = $this->_id;
@@ -229,7 +229,7 @@ class CRM_Contact_Form_Domain extends CRM_Core_Form {
 
     $defaultLocationType = &CRM_Core_BAO_LocationType::getDefault();
 
-    $location = array();
+    $location = [];
     $params['address'][1]['location_type_id'] = $defaultLocationType->id;
     $params['phone'][1]['location_type_id'] = $defaultLocationType->id;
     $params['email'][1]['location_type_id'] = $defaultLocationType->id;
@@ -241,7 +241,7 @@ class CRM_Contact_Form_Domain extends CRM_Core_Form {
 
     CRM_Core_BAO_Domain::edit($params, $this->_id);
 
-    CRM_Core_Session::setStatus(ts('Domain information for \'%1\' has been saved.', array(1 => $domain->name)));
+    CRM_Core_Session::setStatus(ts('Domain information for \'%1\' has been saved.', [1 => $domain->name]));
     $session = CRM_Core_Session::singleton();
     $session->replaceUserContext(CRM_Utils_System::url('civicrm/admin', 'reset=1'));
   }

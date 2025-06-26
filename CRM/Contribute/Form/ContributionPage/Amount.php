@@ -46,7 +46,7 @@ class CRM_Contribute_Form_ContributionPage_Amount extends CRM_Contribute_Form_Co
    * @var array
    * @access protected
    */
-  protected $_amountBlock = array();
+  protected $_amountBlock = [];
 
   /**
    * Constants for number of options for data types of multiple option.
@@ -63,15 +63,15 @@ class CRM_Contribute_Form_ContributionPage_Amount extends CRM_Contribute_Form_Co
 
 
     // do u want to allow a free form text field for amount
-    $this->addElement('checkbox', 'is_allow_other_amount', ts('Allow other amounts'), NULL, array('onclick' => "minMax(this);showHideAmountBlock( this, 'is_allow_other_amount' );"));
-    $this->add('text', 'min_amount', ts('Minimum Amount'), array('size' => 8, 'maxlength' => 8));
-    $this->addRule('min_amount', ts('Please enter a valid money value (e.g. %1).', array(1 => CRM_Utils_Money::format('9.99', ' '))), 'money');
+    $this->addElement('checkbox', 'is_allow_other_amount', ts('Allow other amounts'), NULL, ['onclick' => "minMax(this);showHideAmountBlock( this, 'is_allow_other_amount' );"]);
+    $this->add('text', 'min_amount', ts('Minimum Amount'), ['size' => 8, 'maxlength' => 8]);
+    $this->addRule('min_amount', ts('Please enter a valid money value (e.g. %1).', [1 => CRM_Utils_Money::format('9.99', ' ')]), 'money');
 
-    $this->add('text', 'max_amount', ts('Maximum Amount'), array('size' => 8, 'maxlength' => 8));
-    $this->addRule('max_amount', ts('Please enter a valid money value (e.g. %1).', array(1 => CRM_Utils_Money::format('99.99', ' '))), 'money');
+    $this->add('text', 'max_amount', ts('Maximum Amount'), ['size' => 8, 'maxlength' => 8]);
+    $this->addRule('max_amount', ts('Please enter a valid money value (e.g. %1).', [1 => CRM_Utils_Money::format('99.99', ' ')]), 'money');
 
-    $filter = array();
-    $grouping = array('recurring' => ts('Recurring Contribution'), 'non-recurring' => ts('Non-recurring Contribution'));
+    $filter = [];
+    $grouping = ['recurring' => ts('Recurring Contribution'), 'non-recurring' => ts('Non-recurring Contribution')];
     if (!empty($this->_membershipBlock) && !empty($this->_membershipBlock['membership_types'])) {
       $membershipTypes = CRM_Member_PseudoConstant::membershipType();
       foreach($this->_membershipBlock['membership_types'] as $mTypeId) {
@@ -84,8 +84,8 @@ class CRM_Contribute_Form_ContributionPage_Amount extends CRM_Contribute_Form_Co
 
       // value
       $this->add('text', "value[$i]", ts('Value'));
-      $this->add('select', "grouping[$i]", ts('show'), array('' => ts('no limit')) + $grouping);
-      $this->addRule("value[$i]", ts('Please enter a valid money value (e.g. %1).', array(1 => CRM_Utils_Money::format('99.99', ' '))), 'money');
+      $this->add('select', "grouping[$i]", ts('show'), ['' => ts('no limit')] + $grouping);
+      $this->addRule("value[$i]", ts('Please enter a valid money value (e.g. %1).', [1 => CRM_Utils_Money::format('99.99', ' ')]), 'money');
 
       // default
       $filter[] = $this->createElement('checkbox', $i);
@@ -95,12 +95,12 @@ class CRM_Contribute_Form_ContributionPage_Amount extends CRM_Contribute_Form_Co
     $this->addGroup($filter, 'filter');
     $this->addGroup($default, 'default');
 
-    $this->addElement('checkbox', 'amount_block_is_active', ts('Contribution Amounts section enabled'), NULL, array('onclick' => "showHideAmountBlock( this, 'amount_block_is_active' );"));
+    $this->addElement('checkbox', 'amount_block_is_active', ts('Contribution Amounts section enabled'), NULL, ['onclick' => "showHideAmountBlock( this, 'amount_block_is_active' );"]);
 
-    $this->addElement('checkbox', 'is_monetary', ts('Execute real-time monetary transactions'),NULL,array('onclick' => "showHideAmountBlock( this, 'is_monetary' );"));
+    $this->addElement('checkbox', 'is_monetary', ts('Execute real-time monetary transactions'),NULL,['onclick' => "showHideAmountBlock( this, 'is_monetary' );"]);
 
     $paymentProcessor = &CRM_Core_PseudoConstant::paymentProcessor(FALSE, FALSE, "payment_processor_type != 'TaiwanACH' AND billing_mode != 7");
-    $recurringPaymentProcessor = array();
+    $recurringPaymentProcessor = [];
 
     if (!empty($paymentProcessor)) {
       $paymentProcessorIds = CRM_Utils_Array::implode(',', array_keys($paymentProcessor));
@@ -125,7 +125,7 @@ SELECT id
     $this->addCheckBox('payment_processor', ts('Payment Processor'),
       array_flip($paymentProcessor),
       NULL, NULL, NULL, NULL,
-      array('&nbsp;&nbsp;', '&nbsp;&nbsp;', '&nbsp;&nbsp;', '<br />')
+      ['&nbsp;&nbsp;', '&nbsp;&nbsp;', '&nbsp;&nbsp;', '<br />']
     );
 
 
@@ -134,7 +134,7 @@ SELECT id
     //check if selected payment processor supports recurring payment
     if (!empty($recurringPaymentProcessor)) {
       $this->addElement('checkbox', 'is_recur', ts('Recurring contributions'), NULL,
-        array('onclick' => "showHideByValue('is_recur',true,'recurFields','table-row','radio',false); showRecurInterval( );")
+        ['onclick' => "showHideByValue('is_recur',true,'recurFields','table-row','radio',false); showRecurInterval( );"]
       );
       $this->addElement('checkbox', 'is_recur_only', ts('Only allowed recurring contribution'), NULL);
       $recurFrequencyUnits = CRM_Core_OptionGroup::values('recur_frequency_units', TRUE, FALSE, FALSE, NULL, 'label');
@@ -142,20 +142,20 @@ SELECT id
       $this->addCheckBox('recur_frequency_unit', ts('Supported recurring units'),
         $recurFrequencyUnits,
         NULL, NULL, NULL, NULL,
-        array('&nbsp;&nbsp;')
+        ['&nbsp;&nbsp;']
       );
       // $this->addElement('checkbox', 'is_recur_interval', ts('Support recurring intervals'));
       $this->addElement('hidden', 'is_recur_interval', 0);
-      $options = array(
+      $options = [
         1 => ts('Yes'),
         0 => ts('No'),
-      );
+      ];
       $this->addRadio('show_installments_option', ts("Show Installments Option"), $options);
     }
 
     // add pay later options
     $this->addElement('checkbox', 'is_pay_later', ts('Pay later option'),
-      NULL, array('onclick' => "payLater(this);")
+      NULL, ['onclick' => "payLater(this);"]
     );
     $this->addElement('textarea', 'pay_later_text', ts('Pay later label'),
       CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionPage', 'pay_later_text'),
@@ -175,8 +175,8 @@ SELECT id
       $this->assign('price', TRUE);
     }
     $this->add('select', 'price_set_id', ts('Price Set'),
-      array('' => ts('- none -')) + $price,
-      NULL, array('onchange' => "showHideAmountBlock( this.value, 'price_set_id' );")
+      ['' => ts('- none -')] + $price,
+      NULL, ['onchange' => "showHideAmountBlock( this.value, 'price_set_id' );"]
     );
     //CiviPledge fields.
     $config = CRM_Core_Config::singleton();
@@ -184,21 +184,21 @@ SELECT id
       $this->assign('civiPledge', TRUE);
 
       $this->addElement('checkbox', 'is_pledge_active', ts('Pledges'),
-        NULL, array('onclick' => "showHideAmountBlock( this, 'is_pledge_active' ); return showHideByValue('is_pledge_active',true,'pledgeFields','table-row','radio',false);")
+        NULL, ['onclick' => "showHideAmountBlock( this, 'is_pledge_active' ); return showHideByValue('is_pledge_active',true,'pledgeFields','table-row','radio',false);"]
       );
       $this->addCheckBox('pledge_frequency_unit', ts('Supported pledge frequencies'),
         CRM_Core_OptionGroup::values("recur_frequency_units", FALSE, FALSE, FALSE, NULL, 'name'),
         NULL, NULL, NULL, NULL,
-        array('&nbsp;&nbsp;', '&nbsp;&nbsp;', '&nbsp;&nbsp;', '<br/>')
+        ['&nbsp;&nbsp;', '&nbsp;&nbsp;', '&nbsp;&nbsp;', '<br/>']
       );
       $this->addElement('checkbox', 'is_pledge_interval', ts('Allow frequency intervals'));
-      $this->addElement('text', 'initial_reminder_day', ts('Send payment reminder'), array('size' => 3));
-      $this->addElement('text', 'max_reminders', ts('Send up to'), array('size' => 3));
-      $this->addElement('text', 'additional_reminder_day', ts('Send additional reminders'), array('size' => 3));
+      $this->addElement('text', 'initial_reminder_day', ts('Send payment reminder'), ['size' => 3]);
+      $this->addElement('text', 'max_reminders', ts('Send up to'), ['size' => 3]);
+      $this->addElement('text', 'additional_reminder_day', ts('Send additional reminders'), ['size' => 3]);
     }
 
-    $params = array('id' => $this->_id);
-    CRM_Core_DAO::commonRetrieve('CRM_Contribute_DAO_ContributionPage', $params, $values, array('is_active'));
+    $params = ['id' => $this->_id];
+    CRM_Core_DAO::commonRetrieve('CRM_Contribute_DAO_ContributionPage', $params, $values, ['is_active']);
 
     if($values['is_active'] & CRM_Contribute_BAO_ContributionPage::IS_SPECIAL) {
       $this->assign('is_special', 1);
@@ -207,18 +207,18 @@ SELECT id
     //add currency element.
     $this->addCurrency('currency', ts('Currency'));
 
-    $this->addFormRule(array('CRM_Contribute_Form_ContributionPage_Amount', 'formRule'), $this);
+    $this->addFormRule(['CRM_Contribute_Form_ContributionPage_Amount', 'formRule'], $this);
 
     parent::buildQuickForm();
   }
 
-  private static function doShowHideFrequencyUnits(&$recurFrequencyUnits, $recurringPaymentProcessor = array()) {
+  private static function doShowHideFrequencyUnits(&$recurFrequencyUnits, $recurringPaymentProcessor = []) {
     if (empty($recurringPaymentProcessor)) {
       return ;
     }
     else {
       // If all recur processors don't allow certain unit, remove it.
-      $paymentUnitsCount = array();
+      $paymentUnitsCount = [];
       foreach ($recurFrequencyUnits as $index => $unit) {
         $paymentUnitsCount[$unit] = 0;
         foreach ($recurringPaymentProcessor as $ppid) {
@@ -249,7 +249,7 @@ SELECT id
   function setDefaultValues() {
     $defaults = parent::setDefaultValues();
     $title = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage', $this->_id, 'title');
-    CRM_Utils_System::setTitle(ts('Contribution Amounts (%1)', array(1 => $title)));
+    CRM_Utils_System::setTitle(ts('Contribution Amounts (%1)', [1 => $title]));
 
     if (!CRM_Utils_Array::value('pay_later_text', $defaults)) {
       $defaults['pay_later_text'] = ts('I will send payment by check');
@@ -327,7 +327,7 @@ SELECT id
    * @static
    */
   static function formRule($fields, $files, $self) {
-    $errors = array();
+    $errors = [];
 
     $minAmount = CRM_Utils_Array::value('min_amount', $fields);
     $maxAmount = CRM_Utils_Array::value('max_amount', $fields);
@@ -378,8 +378,8 @@ SELECT id
       if ($hasMembershipBlk) {
         $errors['price_set_id'] = ts('You cannot enable both Price Set and Membership Signup on the same online contribution page.');
       }
-      $params = array('id' => $self->_id);
-      CRM_Core_DAO::commonRetrieve('CRM_Contribute_DAO_ContributionPage', $params, $values, array('is_active'));
+      $params = ['id' => $self->_id];
+      CRM_Core_DAO::commonRetrieve('CRM_Contribute_DAO_ContributionPage', $params, $values, ['is_active']);
 
       if($values['is_active'] & CRM_Contribute_BAO_ContributionPage::IS_SPECIAL) {
         $errors['price_set_id'] = ts("Cause you use special style. You can't use price set mode.");
@@ -443,7 +443,7 @@ SELECT id
     $priceSetID = CRM_Utils_Array::value('price_set_id', $params);
 
     // get required fields.
-    $fields = array('id' => $this->_id,
+    $fields = ['id' => $this->_id,
       'is_recur' => FALSE,
       'min_amount' => "null",
       'max_amount' => "null",
@@ -454,14 +454,14 @@ SELECT id
       'default_amount_id' => "null",
       'is_allow_other_amount' => FALSE,
       'amount_block_is_active' => FALSE,
-    );
-    $resetFields = array();
+    ];
+    $resetFields = [];
     if ($priceSetID) {
-      $resetFields = array('min_amount', 'max_amount', 'is_allow_other_amount');
+      $resetFields = ['min_amount', 'max_amount', 'is_allow_other_amount'];
     }
 
     if (!CRM_Utils_Array::value('is_recur', $params)) {
-      $resetFields = array_merge($resetFields, array('is_recur_interval', 'recur_frequency_unit'));
+      $resetFields = array_merge($resetFields, ['is_recur_interval', 'recur_frequency_unit']);
     }
 
     foreach ($fields as $field => $defaultVal) {
@@ -470,7 +470,7 @@ SELECT id
         $val = $defaultVal;
       }
 
-      if (in_array($field, array('min_amount', 'max_amount'))) {
+      if (in_array($field, ['min_amount', 'max_amount'])) {
         $val = CRM_Utils_Rule::cleanMoney($val);
       }
 
@@ -540,19 +540,19 @@ SELECT id
           $default = CRM_Utils_Array::value('default', $params);
           $filter = CRM_Utils_Array::value('filter', $params);
 
-          $options = array();
+          $options = [];
           for ($i = 1; $i < self::NUM_OPTION; $i++) {
             if (isset($values[$i]) &&
               (strlen(trim($values[$i])) > 0)
             ) {
-              $options[] = array('label' => trim($labels[$i]),
+              $options[] = ['label' => trim($labels[$i]),
                 'value' => CRM_Utils_Rule::cleanMoney(trim($values[$i])),
                 'weight' => $i,
                 'grouping' => trim($grouping[$i]),
                 'is_active' => 1,
                 'is_default' => $default == $i,
                 'filter' => $filter[$i] == 1,
-              );
+              ];
             }
           }
           CRM_Core_OptionGroup::createAssoc("civicrm_contribution_page.amount.{$contributionPageID}", $options, $params['default_amount_id']);
@@ -565,15 +565,15 @@ SELECT id
 
           if (CRM_Utils_Array::value('is_pledge_active', $params)) {
             $deletePledgeBlk = FALSE;
-            $pledgeBlockParams = array('entity_id' => $contributionPageID,
+            $pledgeBlockParams = ['entity_id' => $contributionPageID,
               'entity_table' => ts('civicrm_contribution_page'),
-            );
+            ];
             if ($this->_pledgeBlockID) {
               $pledgeBlockParams['id'] = $this->_pledgeBlockID;
             }
-            $pledgeBlock = array('pledge_frequency_unit', 'max_reminders',
+            $pledgeBlock = ['pledge_frequency_unit', 'max_reminders',
               'initial_reminder_day', 'additional_reminder_day',
-            );
+            ];
             foreach ($pledgeBlock as $key) {
               $pledgeBlockParams[$key] = CRM_Utils_Array::value($key, $params);
             }

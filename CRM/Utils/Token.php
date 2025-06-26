@@ -39,8 +39,8 @@
 class CRM_Utils_Token {
   static $_requiredTokens = NULL;
 
-  static $_tokens = array(
-    'action' => array(
+  static $_tokens = [
+    'action' => [
       'forward',
       'optOut',
       'optOutUrl',
@@ -50,8 +50,8 @@ class CRM_Utils_Token {
       'resubscribe',
       'resubscribeUrl',
       'subscribeUrl',
-    ),
-    'mailing' => array(
+    ],
+    'mailing' => [
       'id',
       'name',
       'group',
@@ -64,28 +64,28 @@ class CRM_Utils_Token {
       'approveUrl',
       'creator',
       'creatorEmail',
-    ),
+    ],
     // populate this dynamically
     'contact' => NULL,
-    'domain' => array(
+    'domain' => [
       'name',
       'phone',
       'address',
       'email',
-    ),
-    'subscribe' => array(
+    ],
+    'subscribe' => [
       'group',
-    ),
-    'unsubscribe' => array(
+    ],
+    'unsubscribe' => [
       'group',
-    ),
-    'resubscribe' => array(
+    ],
+    'resubscribe' => [
       'group',
-    ),
-    'welcome' => array(
+    ],
+    'welcome' => [
       'group',
-    ),
-  );
+    ],
+  ];
 
   /**
    * Check a string (mailing body) for required tokens.
@@ -99,17 +99,17 @@ class CRM_Utils_Token {
    */
   public static function requiredTokens(&$str) {
     if (self::$_requiredTokens == NULL) {
-      self::$_requiredTokens = array(
+      self::$_requiredTokens = [
         'domain.address' => ts("Domain address - displays your organization's postal address."),
         'action.optOutUrl' =>
-        array(
+        [
           'action.optOut' => ts("'Opt out via email' - displays an email address for recipients to opt out of receiving emails from your organization."),
           'action.optOutUrl' => ts("'Opt out via web page' - creates a link for recipients to click if they want to opt out of receiving emails from your organization. Alternatively, you can include the 'Opt out via email' token."),
-        ),
-      );
+        ],
+      ];
     }
 
-    $missing = array();
+    $missing = [];
     foreach (self::$_requiredTokens as $token => $value) {
       if (!is_array($value)) {
         if (!preg_match('/(^|[^\{])' . preg_quote('{' . $token . '}') . '/', $str)) {
@@ -201,7 +201,7 @@ class CRM_Utils_Token {
    */
   private static function tokenEscapeSmarty($string) {
     // need to use negative look-behind, as both str_replace() and preg_replace() are sequential
-    return preg_replace(array('/{/', '/(?<!{ldelim)}/'), array('{ldelim}', '{rdelim}'), $string);
+    return preg_replace(['/{/', '/(?<!{ldelim)}/'], ['{ldelim}', '{rdelim}'], $string);
   }
 
   /**
@@ -245,7 +245,7 @@ class CRM_Utils_Token {
       $value = "{domain.$token}";
     }
     elseif ($token == 'address') {
-      static $addressCache = array();
+      static $addressCache = [];
 
       $cache_key = $html ? 'address-html' : 'address-text';
       if (CRM_Utils_Array::arrayKeyExists($cache_key, $addressCache)) {
@@ -302,7 +302,7 @@ class CRM_Utils_Token {
    */
   public static function &replaceOrgTokens($str, &$org, $html = FALSE, $escapeSmarty = FALSE) {
     self::$_tokens['org'] = array_merge(array_keys(CRM_Contact_BAO_Contact::importableFields('Organization')),
-      array('address', 'display_name', 'checksum', 'contact_id', 'state_province_name')
+      ['address', 'display_name', 'checksum', 'contact_id', 'state_province_name']
     );
 
     $cv = NULL;
@@ -342,7 +342,7 @@ class CRM_Utils_Token {
       elseif ($token == 'address') {
         /* Build the location values array */
 
-        $loc = array();
+        $loc = [];
         $loc['display_name'] = CRM_Utils_Array::retrieveValueRecursive($org, 'display_name');
         $loc['street_address'] = CRM_Utils_Array::retrieveValueRecursive($org, 'street_address');
         $loc['city'] = CRM_Utils_Array::retrieveValueRecursive($org, 'city');
@@ -409,7 +409,7 @@ class CRM_Utils_Token {
         break;
 
       case 'group':
-        $groups = $mailing ? $mailing->getGroupNames() : array('Mailing Groups');
+        $groups = $mailing ? $mailing->getGroupNames() : ['Mailing Groups'];
         $value = CRM_Utils_Array::implode(', ', $groups);
         break;
 
@@ -567,7 +567,7 @@ class CRM_Utils_Token {
       /* This should come from UF */
 
       self::$_tokens[$key] = array_merge(array_keys(CRM_Contact_BAO_Contact::exportableFields('All')),
-        array('checksum', 'contact_id', 'state_province_name', 'recurring_renewal_link')
+        ['checksum', 'contact_id', 'state_province_name', 'recurring_renewal_link']
       );
     }
 
@@ -598,7 +598,7 @@ class CRM_Utils_Token {
       /* This should come from UF */
 
       self::$_tokens['contact'] = array_merge(array_keys(CRM_Contact_BAO_Contact::exportableFields('All')),
-        array('checksum', 'contact_id', 'state_province_name', 'recurring_renewal_link')
+        ['checksum', 'contact_id', 'state_province_name', 'recurring_renewal_link']
       );
     }
 
@@ -640,9 +640,9 @@ class CRM_Utils_Token {
       AND p.is_internal IS NULL
       ORDER BY r.id DESC, c.id DESC
       LIMIT 1";
-      $params = array(
-        1 => array($contactId, 'Integer')
-      );
+      $params = [
+        1 => [$contactId, 'Integer']
+      ];
       $dao = CRM_Core_DAO::executeQuery($sql, $params);
       if ($dao->fetch()) {
         $oid = $dao->contribution_id;
@@ -654,7 +654,7 @@ class CRM_Utils_Token {
 
       if ($pageId) {
         $contactTypeSql = "SELECT contact_type FROM civicrm_contact WHERE id = %1";
-        $contactTypeParams = array(1 => array($contactId, 'Integer'));
+        $contactTypeParams = [1 => [$contactId, 'Integer']];
         $contactType = CRM_Core_DAO::singleValueQuery($contactTypeSql, $contactTypeParams);
         if ($contactType == 'Individual') {
           $cs = CRM_Contact_BAO_Contact_Utils::generateChecksum($contactId);
@@ -1031,8 +1031,8 @@ class CRM_Utils_Token {
    * @static
    */
   public static function getTokens($string) {
-    $matches = array();
-    $tokens = array();
+    $matches = [];
+    $tokens = [];
     preg_match_all('/(?<!\{|\\\\)\{(\w+\.\w+)\}(?!\})/',
       $string,
       $matches,
@@ -1044,7 +1044,7 @@ class CRM_Utils_Token {
         list($type, $name) = preg_split('/\./', $token, 2);
         if ($name && $type) {
           if (!isset($tokens[$type])) {
-            $tokens[$type] = array();
+            $tokens[$type] = [];
           }
           $tokens[$type][] = $name;
         }
@@ -1075,7 +1075,7 @@ class CRM_Utils_Token {
     $skipOnHold = TRUE,
     $skipDeceased = TRUE,
     $extraParams = NULL,
-    $tokens = array(),
+    $tokens = [],
     $className = NULL,
     $customHook = FALSE
   ) {
@@ -1084,23 +1084,23 @@ class CRM_Utils_Token {
       CRM_Core_Error::fatal();
     }
 
-    $params = array();
+    $params = [];
 
     foreach ($contactIDs as $key => $contactID) {
-      $params[] = array(
+      $params[] = [
         CRM_Core_Form::CB_PREFIX . $contactID,
         '=', 1, 0, 0,
-      );
+      ];
     }
 
     // fix for CRM-2613
     if ($skipDeceased) {
-      $params[] = array('is_deceased', '=', 0, 0, 0);
+      $params[] = ['is_deceased', '=', 0, 0, 0];
     }
 
     //fix for CRM-3798
     if ($skipOnHold) {
-      $params[] = array('on_hold', '=', 0, 0, 0);
+      $params[] = ['on_hold', '=', 0, 0, 0];
     }
 
     if ($extraParams) {
@@ -1111,14 +1111,14 @@ class CRM_Utils_Token {
     if (empty($returnProperties)) {
 
       $fields = array_merge(array_keys(CRM_Contact_BAO_Contact::exportableFields()),
-        array('display_name', 'checksum', 'contact_id')
+        ['display_name', 'checksum', 'contact_id']
       );
       foreach ($fields as $key => $val) {
         $returnProperties[$val] = 1;
       }
     }
 
-    $custom = array();
+    $custom = [];
 
     foreach ($returnProperties as $name => $dontCare) {
       $cfID = CRM_Core_BAO_CustomField::getKeyID($name);
@@ -1151,7 +1151,7 @@ class CRM_Utils_Token {
           $contactPcm = explode(CRM_Core_DAO::VALUE_SEPARATOR,
             $contactDetails[$contactID]['preferred_communication_method']
           );
-          $result = array();
+          $result = [];
           foreach ($contactPcm as $key => $val) {
             if ($val) {
               $result[$val] = $pcm[$val];
@@ -1169,9 +1169,9 @@ class CRM_Utils_Token {
         }
 
         //special case for greeting replacement
-        foreach (array(
+        foreach ([
             'email_greeting', 'postal_greeting', 'addressee',
-          ) as $val) {
+          ] as $val) {
           if (CRM_Utils_Array::value($val, $contactDetails[$contactID])) {
             $contactDetails[$contactID][$val] = $contactDetails[$contactID]["{$val}_display"];
           }
@@ -1218,7 +1218,7 @@ class CRM_Utils_Token {
       if (!empty($greetingTokens) && CRM_Utils_Array::arrayKeyExists('contact', $greetingTokens)) {
         $greetingsReturnProperties = array_flip(CRM_Utils_Array::value('contact', $greetingTokens));
         $greetingsReturnProperties = array_fill_keys(array_keys($greetingsReturnProperties), 1);
-        $contactParams = array('contact_id' => $contactId);
+        $contactParams = ['contact_id' => $contactId];
 
         $greetingDetails = CRM_Utils_Token::getTokenDetails($contactParams,
           $greetingsReturnProperties,
@@ -1238,15 +1238,15 @@ class CRM_Utils_Token {
   }
 
   static function flattenTokens(&$tokens) {
-    $flattenTokens = array();
+    $flattenTokens = [];
 
-    foreach (array('html', 'text', 'subject') as $prop) {
+    foreach (['html', 'text', 'subject'] as $prop) {
       if (!isset($tokens[$prop])) {
         continue;
       }
       foreach ($tokens[$prop] as $type => $names) {
         if (!isset($flattenTokens[$type])) {
-          $flattenTokens[$type] = array();
+          $flattenTokens[$type] = [];
         }
         foreach ($names as $name) {
           $flattenTokens[$type][$name] = 1;

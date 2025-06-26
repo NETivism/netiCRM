@@ -38,10 +38,10 @@ class CRM_Core_I18n_PseudoConstant {
   static function &languages() {
     static $languages = NULL;
     if ($languages === NULL) {
-      $rows = array();
-      CRM_Core_OptionValue::getValues(array('name' => 'languages'), $rows, 'weight', TRUE);
+      $rows = [];
+      CRM_Core_OptionValue::getValues(['name' => 'languages'], $rows, 'weight', TRUE);
 
-      $languages = array();
+      $languages = [];
       foreach ($rows as $row) {
         $languages[$row['name']] = $row['label'];
       }
@@ -57,10 +57,10 @@ class CRM_Core_I18n_PseudoConstant {
   static function &longForShortMapping() {
     static $longForShortMapping = NULL;
     if ($longForShortMapping === NULL) {
-      $rows = array();
-      CRM_Core_OptionValue::getValues(array('name' => 'languages'), $rows);
+      $rows = [];
+      CRM_Core_OptionValue::getValues(['name' => 'languages'], $rows);
 
-      $longForShortMapping = array();
+      $longForShortMapping = [];
       foreach ($rows as $row) {
         $longForShortMapping[$row['value']] = $row['name'];
       }

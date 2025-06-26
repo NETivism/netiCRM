@@ -94,7 +94,7 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
    * Store profile ids if multiple profile ids are passed using comma separated.
    * Currently lets implement this functionality only for dialog mode
    */
-  protected $_profileIds = array();
+  protected $_profileIds = [];
 
   /**
    * extracts the parameters from the request and constructs information for
@@ -155,7 +155,7 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
     else {
       $gids = $this->_profileIds;
     }
-    $gidsCheck = array();
+    $gidsCheck = [];
     if ($gids) {
       if (is_numeric($gids)) {
         $gidsCheck[] = $gids;
@@ -164,8 +164,8 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
         $gidsCheck = $gids;
       }
       foreach($gidsCheck as $gid) {
-        $ufGroup = array();
-        $ufGRoupParams = array('id' => $gid);
+        $ufGroup = [];
+        $ufGRoupParams = ['id' => $gid];
         CRM_Core_BAO_UFGroup::retrieve($ufGRoupParams, $ufGroup);
         if ($ufGroup['is_reserved'] && !CRM_Core_Permission::check('access CiviCRM')) {
           $idx = array_search($ufGroupd['id'], $gidsCheck);
@@ -189,11 +189,11 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
     );
 
     $this->_customFields = CRM_Core_BAO_CustomField::getFieldsForImport(NULL);
-    $this->_params = array();
+    $this->_params = [];
 
-    $resetArray = array('group', 'tag', 'preferred_communication_method', 'do_not_phone',
+    $resetArray = ['group', 'tag', 'preferred_communication_method', 'do_not_phone',
       'do_not_email', 'do_not_mail', 'do_not_sms', 'do_not_trade', 'do_not_notify', 'gender',
-    );
+    ];
 
     foreach ($this->_fields as $name => $field) {
       if ((substr($name, 0, 6) == 'custom') && CRM_Utils_Array::value('is_search_range', $field)) {
@@ -203,7 +203,7 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
         $to = CRM_Utils_Request::retrieve($name . '_to', 'String',
           $this, FALSE, NULL, 'REQUEST'
         );
-        $value = array();
+        $value = [];
         if ($from && $to) {
           $value['from'] = $from;
           $value['to'] = $to;
@@ -247,7 +247,7 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
 
       if (($name == 'group' || $name == 'tag') && !empty($value) && !is_array($value)) {
         $v = explode(',', $value);
-        $value = array();
+        $value = [];
         foreach ($v as $item) {
           $value[$item] = 1;
         }
@@ -259,7 +259,7 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
         if ($customField) {
           // reset checkbox/radio because a form does not send null checkbox values
           if (in_array($customField['html_type'],
-              array('Multi-Select', 'CheckBox', 'Multi-Select State/Province', 'Multi-Select Country', 'Radio')
+              ['Multi-Select', 'CheckBox', 'Multi-Select State/Province', 'Multi-Select Country', 'Radio']
             )) {
             // only reset on a POST submission if we dont see any value
             $value = NULL;
@@ -282,9 +282,9 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
 
     // set the prox params
     // need to ensure proximity searching is enabled
-    $proximityVars = array('street_address', 'city', 'postal_code', 'state_province_id',
+    $proximityVars = ['street_address', 'city', 'postal_code', 'state_province_id',
       'country_id', 'distance', 'distance_unit',
-    );
+    ];
     foreach ($proximityVars as $var) {
       $value = CRM_Utils_Request::retrieve("prox_{$var}",
         'String',
@@ -430,8 +430,8 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
     $session = CRM_Core_Session::singleton();
     $params = $session->get('profileParams');
 
-    $details = array();
-    $ufGroupParam = array('id' => $gid);
+    $details = [];
+    $ufGroupParam = ['id' => $gid];
 
     CRM_Core_BAO_UFGroup::retrieve($ufGroupParam, $details);
 
@@ -448,7 +448,7 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
         $params['group'][$groupId] = 1;
       }
       else {
-        $params['group'] = array($groupId => 1);
+        $params['group'] = [$groupId => 1];
       }
     }
 

@@ -6,13 +6,13 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
   public $_post = NULL;
   public $_get = NULL;
 
-  public static $_successMessage = array(
+  public static $_successMessage = [
     "250" => "Payment Successful",
     "290" => "Transaction Successful, Mismatched Information",
     "600" => "Checkout Complete",
     "B200" => "Execution Successful",
-  );
-  public static $_ignoredMessage = array(
+  ];
+  public static $_ignoredMessage = [
     "200" => "Data Correct",
     "245" => "Authorization Successful",
     "247" => "Payment Processing",
@@ -24,8 +24,8 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
     "282" => "Order Created, Pending Payment Review, Payment Incomplete",
     "284" => "Order Created, Pending Payment Request, Payment Incomplete",
     "A0001" => "Transaction Pending Confirmation",
-  );
-  public static $_errorMessage = array(
+  ];
+  public static $_errorMessage = [
     "100" => "Data Error",
     "220" => "Cancellation Successful",
     "230" => "Refund Successful",
@@ -34,12 +34,12 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
     "400" => "System Error Message",
     "A0002" => "Transaction Abandoned",
     "B500" => "Execution Failed",
-  );
+  ];
   /**
    * @param array $post Input $_POST alternative.
    * @param array $get Input $_GET alternative.
    */
-  function __construct($post = array(), $get = array()) {
+  function __construct($post = [], $get = []) {
     parent::__construct();
     $this->_post = $post;
     $this->_get = $get;
@@ -54,14 +54,14 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
    */
   function main($instrument){
     // get the contribution and contact ids from the GET params
-    $objects = $ids = $input = array();
+    $objects = $ids = $input = [];
     $this->getIds($ids);
     $input = $this->_post;
     $input['component'] = !empty($ids['participant']) ? 'event' : 'contribute';
 
     // Record data to db. If it's not recur or first contribution.
     if (empty($input['nois']) || $input['nois'] == 1) {
-      CRM_Core_Payment_MyPay::doRecordData($ids['contribution'], array('ipn_result_data' => json_encode($this->_post)));
+      CRM_Core_Payment_MyPay::doRecordData($ids['contribution'], ['ipn_result_data' => json_encode($this->_post)]);
     }
     if(empty($ids['contributionRecur'])){
       $isRecur = FALSE;
@@ -88,7 +88,7 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
       // Recurring and finished.
       $trxnId = CRM_Core_Payment_MyPay::getTrxnIdByPost($input);
       $sql = "SELECT contribution_status_id FROM civicrm_contribution WHERE trxn_id = %1";
-      $params = array( 1 => array($trxnId, 'String'));
+      $params = [ 1 => [$trxnId, 'String']];
       $contributionStatusID = CRM_Core_DAO::singleValueQuery($sql, $params);
       if ($contributionStatusID == 1) {
         // already completed, skip
@@ -183,7 +183,7 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
     // certainly this is recurring contribution
     if($ids['contributionRecur']){
       $recur = &$objects['contributionRecur'];
-      $params = $null = array();
+      $params = $null = [];
       // see if we are first time, if not first time, save new contribution
       // 6 - expired
       // 5 - processing
@@ -195,13 +195,13 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
       // Todo: Validate Recurring.
       // Is Recurring
       if($this->_post['group_id']){
-        $query_params = array(1 => array($recur->id, 'Integer'));
+        $query_params = [1 => [$recur->id, 'Integer']];
         $new_trxn_id = CRM_Core_Payment_MyPay::getTrxnIdByPost($input);
         if(CRM_Utils_Array::arrayKeyExists($input['prc'], self::$_errorMessage)){
           $contribution->contribution_status_id = 4; // Failed
-          $id_from_trxn_id = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution WHERE trxn_id = %1", array(
-            1 => array($new_trxn_id, 'String'),
-          ));
+          $id_from_trxn_id = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution WHERE trxn_id = %1", [
+            1 => [$new_trxn_id, 'String'],
+          ]);
           if (!$id_from_trxn_id) {
             // Trxn_id is not existed, clone contribution.
             $c = self::copyContribution($contribution, $ids['contributionRecur'], $new_trxn_id);
@@ -216,9 +216,9 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
         elseif($input['nois'] != '1'){
            // Completed
           $contribution->contribution_status_id = 1; // Completed
-          $id_from_trxn_id = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution WHERE trxn_id = %1", array(
-            1 => array($new_trxn_id, 'String'),
-          ));
+          $id_from_trxn_id = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution WHERE trxn_id = %1", [
+            1 => [$new_trxn_id, 'String'],
+          ]);
           if (!$id_from_trxn_id) {
             // Trxn_id is not existed, clone contribution.
             $c = self::copyContribution($contribution, $ids['contributionRecur'], $new_trxn_id);
@@ -234,11 +234,11 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
           unset($objects['contribution']);
           // After retrive contribution object, first save db data via contribution_id.
           if ($input['nois'] > 1) {
-            $data = array(
+            $data = [
               'uid' => $input['uid'],
               'uid_key' => $input['key'],
               'ipn_result_data' => json_encode($input),
-            );
+            ];
             CRM_Core_Payment_MyPay::doRecordData($c->id, $data);
           }
           $objects['contribution'] = $c;
@@ -297,9 +297,9 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
    * MyPay ids doesn't be carried in GET params.
    * If it's recurring, The contribution should be the first time one.
    */
-  function getIds(&$ids = array()) {
+  function getIds(&$ids = []) {
     $trxnId = $this->_post['order_id'];
-    $contributionId = CRM_Core_DAO::singleValueQuery('SELECT id FROM civicrm_contribution WHERE trxn_id = %1', array(1 => array($trxnId, 'String')));
+    $contributionId = CRM_Core_DAO::singleValueQuery('SELECT id FROM civicrm_contribution WHERE trxn_id = %1', [1 => [$trxnId, 'String']]);
     $ids = CRM_Contribute_BAO_Contribution::buildIds($contributionId, '');
   }
 
@@ -311,20 +311,20 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
     $note = date("Y/m/d H:i:s"). ts("Transaction record").": \n".$note."\n===============================\n";
     $note_exists = CRM_Core_BAO_Note::getNote( $contribution->id, 'civicrm_contribution' );
     if(count($note_exists)){
-      $note_id = array( 'id' => reset(array_keys($note_exists)) );
+      $note_id = [ 'id' => reset(array_keys($note_exists)) ];
       $note = $note . reset($note_exists);
     }
     else{
       $note_id = NULL;
     }
 
-    $noteParams = array(
+    $noteParams = [
       'entity_table'  => 'civicrm_contribution',
       'note'          => $note,
       'entity_id'     => $contribution->id,
       'contact_id'    => $contribution->contact_id,
       'modified_date' => date('Ymd')
-    );
+    ];
     CRM_Core_BAO_Note::add( $noteParams, $note_id );
   }
 }

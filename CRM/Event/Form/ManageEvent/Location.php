@@ -59,7 +59,7 @@ class CRM_Event_Form_ManageEvent_Location extends CRM_Event_Form_ManageEvent {
    *
    * @var array
    */
-  protected $_locationIds = array();
+  protected $_locationIds = [];
 
   /**
    * the variable, for storing location block id with event
@@ -72,7 +72,7 @@ class CRM_Event_Form_ManageEvent_Location extends CRM_Event_Form_ManageEvent {
    * get the db values for this form
    *
    */
-  public $_values = array();
+  public $_values = [];
 
   /**
    * Function to set variables up before form is built
@@ -92,14 +92,14 @@ class CRM_Event_Form_ManageEvent_Location extends CRM_Event_Form_ManageEvent {
     if ($this->_id && empty($this->_values)) {
 
       //get location values.
-      $params = array('entity_id' => $this->_id,
+      $params = ['entity_id' => $this->_id,
         'entity_table' => 'civicrm_event',
-      );
+      ];
 
       $this->_values = CRM_Core_BAO_Location::getValues($params);
 
       //get event values.
-      $params = array('id' => $this->_id);
+      $params = ['id' => $this->_id];
       CRM_Event_BAO_Event::retrieve($params, $this->_values);
       $this->set('values', $this->_values);
     }
@@ -157,7 +157,7 @@ class CRM_Event_Form_ManageEvent_Location extends CRM_Event_Form_ManageEvent {
    * @return void
    */
   function addRules() {
-    $this->addFormRule(array('CRM_Event_Form_ManageEvent_Location', 'formRule'));
+    $this->addFormRule(['CRM_Event_Form_ManageEvent_Location', 'formRule']);
   }
 
   /**
@@ -170,7 +170,7 @@ class CRM_Event_Form_ManageEvent_Location extends CRM_Event_Form_ManageEvent {
    * @access public
    */
   static function formRule($fields) {
-    $errors = array();
+    $errors = [];
     // check for state/country mapping
     CRM_Contact_Form_Edit_Address::formRule($fields, $errors);
 
@@ -221,19 +221,19 @@ class CRM_Event_Form_ManageEvent_Location extends CRM_Event_Form_ManageEvent {
       $locationEvents = array_unique($locationEvents);
     }
 
-    $events = array();
+    $events = [];
     if (!empty($locationEvents)) {
       $this->assign('locEvents', TRUE);
-      $optionTypes = array('1' => ts('Create new location'),
+      $optionTypes = ['1' => ts('Create new location'),
         '2' => ts('Use existing location'),
-      );
+      ];
 
       $this->addRadio('location_option', ts("Choose Location"), $optionTypes,
-        array('onclick' => "showLocFields();"), '<br/>', FALSE
+        ['onclick' => "showLocFields();"], '<br/>', FALSE
       );
 
       if (!isset($locationEvents[$this->_oldLocBlockId]) || (!$this->_oldLocBlockId)) {
-        $locationEvents = array('' => ts('- select -')) + $locationEvents;
+        $locationEvents = ['' => ts('- select -')] + $locationEvents;
       }
       $this->add('select', 'loc_event_id', ts('Use Location'), $locationEvents);
     }
@@ -287,7 +287,7 @@ class CRM_Event_Form_ManageEvent_Location extends CRM_Event_Form_ManageEvent {
 
 
     $defaultLocationType = &CRM_Core_BAO_LocationType::getDefault();
-    foreach (array('address', 'phone', 'email') as $block) {
+    foreach (['address', 'phone', 'email'] as $block) {
       if (!CRM_Utils_Array::value($block, $params) || !is_array($params[$block])) {
         continue;
       }

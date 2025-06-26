@@ -57,11 +57,11 @@ class CRM_Contribute_Import_Form_UploadFile extends CRM_Core_Form {
     $session = CRM_Core_Session::singleton();
     $session->pushUserContext(CRM_Utils_System::url('civicrm/contribute/import', 'reset=1'));
 
-    $this->_contactTypes = array(
+    $this->_contactTypes = [
       CRM_Contribute_Import_Parser::CONTACT_INDIVIDUAL,
       CRM_Contribute_Import_Parser::CONTACT_HOUSEHOLD,
       CRM_Contribute_Import_Parser::CONTACT_ORGANIZATION,
-    );
+    ];
     foreach ($this->_contactTypes as $type) {
       $supportFields = &CRM_Dedupe_BAO_RuleGroup::supportedFields($type);
       foreach($supportFields as $array) {
@@ -73,7 +73,7 @@ class CRM_Contribute_Import_Form_UploadFile extends CRM_Core_Form {
       }
     }
 
-    $dedupeGroupParams = array('level' => 'Strict');
+    $dedupeGroupParams = ['level' => 'Strict'];
     $this->_dedupeRuleGroups = CRM_Dedupe_BAO_RuleGroup::getDetailsByParams($dedupeGroupParams);
   }
 
@@ -88,21 +88,21 @@ class CRM_Contribute_Import_Form_UploadFile extends CRM_Core_Form {
     //Setting Upload File Size
     CRM_Import_DataSource_CSV::buildQuickForm($this);
 
-    $duplicateOptions = array(
+    $duplicateOptions = [
       CRM_Contribute_Import_Parser::DUPLICATE_SKIP => ts('Insert new contributions'),
       CRM_Contribute_Import_Parser::DUPLICATE_UPDATE => ts('Update existing contributions'),
-    );
+    ];
     $this->addRadio('onDuplicate', ts('Import mode'), $duplicateOptions, NULL, NULL, TRUE);
 
-    $duplicateContactOptions = array(
+    $duplicateContactOptions = [
       CRM_Contribute_Import_Parser::CONTACT_NOIDCREATE => ts('Create contact only on identifier not import'),
       CRM_Contribute_Import_Parser::CONTACT_AUTOCREATE => ts('Create contact when not found'),
       CRM_Contribute_Import_Parser::CONTACT_DONTCREATE => ts('Do not create or update contact'),
-    );
+    ];
     $this->addRadio('createContactOption', ts('Create New Contact'), $duplicateContactOptions, NULL, '<br>');
 
     //contact types option
-    $contactOptions = array();
+    $contactOptions = [];
     foreach($this->_contactTypes as $type) {
       if (CRM_Contact_BAO_ContactType::isActive($type)) {
         $contactOptions[$type] = ts($type);
@@ -111,7 +111,7 @@ class CRM_Contribute_Import_Form_UploadFile extends CRM_Core_Form {
     $this->addRadio('contactType', ts('Contact Type'), $contactOptions);
 
     foreach ($this->_dedupeRuleGroups as $dedupegroup_id => $groupValues) {
-      $fields = array();
+      $fields = [];
       foreach($groupValues['fields'] as $name){
         if (isset($this->_dedupeRuleFields[$name])) {
           $fields[] = $this->_dedupeRuleFields[$name];
@@ -128,22 +128,22 @@ class CRM_Contribute_Import_Form_UploadFile extends CRM_Core_Form {
     //get the saved mapping details
     $mappingArray = CRM_Core_BAO_Mapping::getMappings(CRM_Core_OptionGroup::getValue('mapping_type', 'Import Contribution', 'name'));
     $this->assign('savedMapping', $mappingArray);
-    $this->add('select', 'savedMapping', ts('Mapping Option'), array('' => ts('- select -')) + $mappingArray);
-    $this->addElement('submit', 'loadMapping', ts('Load Mapping'), NULL, array('onclick' => 'checkSelect()'));
+    $this->add('select', 'savedMapping', ts('Mapping Option'), ['' => ts('- select -')] + $mappingArray);
+    $this->addElement('submit', 'loadMapping', ts('Load Mapping'), NULL, ['onclick' => 'checkSelect()']);
 
     //build date formats
     CRM_Core_Form_Date::buildAllowedDateFormats($this);
 
-    $this->addButtons(array(
-        array('type' => 'upload',
+    $this->addButtons([
+        ['type' => 'upload',
           'name' => ts('Continue >>'),
           'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
           'isDefault' => TRUE,
-        ),
-        array('type' => 'cancel',
+        ],
+        ['type' => 'cancel',
           'name' => ts('Cancel'),
-        ),
-      )
+        ],
+      ]
     );
   }
 
@@ -213,7 +213,7 @@ class CRM_Contribute_Import_Form_UploadFile extends CRM_Core_Form {
     $primaryKeyName = $this->get('primaryKeyName');
     $statusFieldName = $this->get('statusFieldName');
 
-    $mapper = array();
+    $mapper = [];
 
     $parser = new CRM_Contribute_Import_Parser_Contribution($mapper);
     $parser->setMaxLinesToProcess(100);

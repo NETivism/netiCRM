@@ -64,7 +64,7 @@ class CRM_Upgrade_Form extends CRM_Core_Form {
    * @var array
    * @public
    */
-  static $_numberMap = array(0 => 'Zero',
+  static $_numberMap = [0 => 'Zero',
     1 => 'One',
     2 => 'Two',
     3 => 'Three',
@@ -74,7 +74,7 @@ class CRM_Upgrade_Form extends CRM_Core_Form {
     7 => 'Seven',
     8 => 'Eight',
     9 => 'Nine',
-  ); function __construct($state = NULL,
+  ]; function __construct($state = NULL,
     $action = CRM_Core_Action::NONE,
     $method = 'post',
     $name = NULL
@@ -107,7 +107,7 @@ class CRM_Upgrade_Form extends CRM_Core_Form {
   }
 
   static function &incrementalPhpObject($version) {
-    static $incrementalPhpObject = array();
+    static $incrementalPhpObject = [];
 
     $versionParts = explode('.', $version);
     $versionName = self::$_numberMap[$versionParts[0]] . self::$_numberMap[$versionParts[1]];
@@ -136,7 +136,7 @@ class CRM_Upgrade_Form extends CRM_Core_Form {
       else {
         $fail++;
       }
-      return array($pass, $fail);
+      return [$pass, $fail];
     }
   }
 
@@ -227,14 +227,14 @@ SET    version = '$version'
 
 
       $session = CRM_Core_Session::singleton();
-      $logParams = array(
+      $logParams = [
         'entity_table' => 'civicrm_domain',
         'entity_id' => 1,
         'data' => "upgrade:{$oldVersion}->{$newVersion}",
         // lets skip 'modified_id' for now, as it causes FK issues And
         // is not very important for now.
         'modified_date' => date('YmdHis'),
-      );
+      ];
       CRM_Core_BAO_Log::add($logParams);
       return TRUE;
     }
@@ -251,9 +251,9 @@ SET    version = '$version'
   }
 
   function getRevisionSequence() {
-    $revList = array();
+    $revList = [];
     $sqlDir = CRM_Utils_Array::implode(DIRECTORY_SEPARATOR,
-      array(dirname(__FILE__), 'Incremental', 'sql')
+      [dirname(__FILE__), 'Incremental', 'sql']
     );
     $sqlFiles = scandir($sqlDir);
 
@@ -290,9 +290,9 @@ SET    version = '$version'
 
   function processSQL($rev) {
     $sqlFile = CRM_Utils_Array::implode(DIRECTORY_SEPARATOR,
-      array(dirname(__FILE__), 'Incremental',
+      [dirname(__FILE__), 'Incremental',
         'sql', $rev . '.mysql',
-      )
+      ]
     );
     $tplFile = "$sqlFile.tpl";
 

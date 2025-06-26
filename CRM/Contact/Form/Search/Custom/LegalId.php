@@ -5,10 +5,10 @@ class CRM_Contact_Form_Search_Custom_LegalId implements CRM_Contact_Form_Search_
   protected $_formValues; function __construct(&$formValues) {
     $this->_formValues = $formValues;
 
-    $this->_columns = array(ts('Contact Id') => 'contact_id',
+    $this->_columns = [ts('Contact Id') => 'contact_id',
       ts('Name') => 'display_name',
       ts('Legal Identifier') => 'legal_identifier',
-    );
+    ];
   }
 
   function buildForm(&$form) {
@@ -40,7 +40,7 @@ class CRM_Contact_Form_Search_Custom_LegalId implements CRM_Contact_Form_Search_
   }
 
   function where($includeContactIDs = FALSE) {
-    $clauses = array();
+    $clauses = [];
 
     $legalid = CRM_Utils_Array::value('legal_identifier', $this->_formValues);
     if ($legalid) {

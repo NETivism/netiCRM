@@ -36,16 +36,16 @@
 
 class CRM_Upgrade_TwoTwo_Form_Step2 extends CRM_Upgrade_Form {
   function verifyPreDBState(&$errorMessage) {
-    $errorMessage = ts('Pre-condition failed for upgrade step %1.', array(1 => '2'));
+    $errorMessage = ts('Pre-condition failed for upgrade step %1.', [1 => '2']);
 
     return $this->checkVersion('2.1.101');
   }
 
   function upgrade() {
     $sqlFile = CRM_Utils_Array::implode(DIRECTORY_SEPARATOR,
-      array(dirname(__FILE__), '..', '..',
+      [dirname(__FILE__), '..', '..',
         'Incremental', 'sql', '2.2.alpha1.mysql',
-      )
+      ]
     );
     $tplFile = "$sqlFile.tpl";
 
@@ -104,7 +104,7 @@ class CRM_Upgrade_TwoTwo_Form_Step2 extends CRM_Upgrade_Form {
       return FALSE;
     }
 
-    $errorMessage = ts('Post-condition failed for upgrade step %1.', array(1 => '2'));
+    $errorMessage = ts('Post-condition failed for upgrade step %1.', [1 => '2']);
 
     return $this->checkVersion('2.1.102');
   }

@@ -75,15 +75,15 @@ class CRM_Contribute_Form_Task_Batch extends CRM_Contribute_Form_Task {
     parent::preProcess();
 
     //get the contact read only fields to display.
-    $readOnlyFields = array(
+    $readOnlyFields = [
       'contact_id' => ts('Contact ID'),
       'sort_name' => ts('Name'),
       'contribution_id' => ts('Contribution ID'),
       'trxn_id' => ts('Transaction ID'),
       'receipt_id' => ts('Receipt ID'),
-    );
+    ];
     //get the read only field data.
-    $returnProperties = array('sort_name' => 1);
+    $returnProperties = ['sort_name' => 1];
     $contactDetails = CRM_Contact_BAO_Contact_Utils::contactDetails($this->_contributionIds, 'CiviContribute', $returnProperties);
     $contributionDAO = new CRM_Contribute_DAO_Contribution();
     $contributionDAO->whereAdd("id IN (".CRM_Utils_Array::implode(',', $this->_contributionIds).")");
@@ -119,12 +119,12 @@ class CRM_Contribute_Form_Task_Batch extends CRM_Contribute_Form_Task {
     CRM_Utils_System::setTitle($this->_title);
 
     $this->addDefaultButtons(ts('Save'));
-    $this->_fields = array();
+    $this->_fields = [];
     $this->_fields = CRM_Core_BAO_UFGroup::getFields($ufGroupId, FALSE, CRM_Core_Action::VIEW);
 
     // remove file type field and then limit fields
     $suppressFields = FALSE;
-    $removehtmlTypes = array('File', 'Autocomplete-Select');
+    $removehtmlTypes = ['File', 'Autocomplete-Select'];
     foreach ($this->_fields as $name => $field) {
       if ($cfID = CRM_Core_BAO_CustomField::getKeyID($name) &&
         in_array($this->_fields[$name]['html_type'], $removehtmlTypes)
@@ -142,15 +142,15 @@ class CRM_Contribute_Form_Task_Batch extends CRM_Contribute_Form_Task {
 
     $this->_fields = array_slice($this->_fields, 0, $this->_maxFields);
 
-    $this->addButtons(array(
-        array('type' => 'submit',
+    $this->addButtons([
+        ['type' => 'submit',
           'name' => ts('Update Contribution(s)'),
           'isDefault' => TRUE,
-        ),
-        array('type' => 'cancel',
+        ],
+        ['type' => 'cancel',
           'name' => ts('Cancel'),
-        ),
-      )
+        ],
+      ]
     );
 
 
@@ -209,9 +209,9 @@ class CRM_Contribute_Form_Task_Batch extends CRM_Contribute_Form_Task {
       return;
     }
 
-    $defaults = array();
+    $defaults = [];
     foreach ($this->_contributionIds as $contributionId) {
-      $details[$contributionId] = array();
+      $details[$contributionId] = [];
       CRM_Core_BAO_UFGroup::setProfileDefaults(NULL, $this->_fields, $defaults, FALSE, $contributionId, 'Contribute');
     }
 
@@ -227,11 +227,11 @@ class CRM_Contribute_Form_Task_Batch extends CRM_Contribute_Form_Task {
    */
   public function postProcess() {
     $params = $this->exportValues();
-    $dates = array('receive_date',
+    $dates = ['receive_date',
       'receipt_date',
       'thankyou_date',
       'cancel_date',
-    );
+    ];
     if (isset($params['field'])) {
       foreach ($params['field'] as $key => $value) {
 

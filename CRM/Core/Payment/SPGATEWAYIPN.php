@@ -13,7 +13,7 @@ class CRM_Core_Payment_SPGATEWAYIPN extends CRM_Core_Payment_BaseIPN {
   }
 
   function main($instrument){
-    $objects = $ids = $input = array();
+    $objects = $ids = $input = [];
     $this->getIds($ids);
     // agreement
     if (!empty($this->_post['TradeInfo']) && !empty($this->_post['Version']) && $this->_post['Version'] === CRM_Core_Payment_SPGATEWAY::AGREEMENT_VERSION) {
@@ -22,17 +22,17 @@ class CRM_Core_Payment_SPGATEWAYIPN extends CRM_Core_Payment_BaseIPN {
       if (!empty($ids['contributionRecur'])) {
         $recur = TRUE;
         $sql = 'SELECT processor_id FROM civicrm_contribution_recur WHERE id = %1';
-        $ppid = CRM_Core_DAO::singleValueQuery($sql, array(1 => array($ids['contributionRecur'], 'Integer')));
+        $ppid = CRM_Core_DAO::singleValueQuery($sql, [1 => [$ids['contributionRecur'], 'Integer']]);
       }
       if (empty($ppid)) {
         $sql = 'SELECT payment_processor_id FROM civicrm_contribution WHERE id = %1';
-        $ppid = CRM_Core_DAO::singleValueQuery($sql, array(1 => array($ids['contribution'], 'Integer')));
+        $ppid = CRM_Core_DAO::singleValueQuery($sql, [1 => [$ids['contribution'], 'Integer']]);
       }
       if (empty($ppid)) {
         CRM_Core_Error::debug_log_message("Spgateway: could not find payment processor id on this contribution {$ids['contribution']}");
         CRM_Utils_System::civiExit();
       }
-      $isTest = CRM_Core_DAO::singleValueQuery("SELECT is_test FROM civicrm_payment_processor WHERE id = %1", array(1 => array($ppid, 'Integer')));
+      $isTest = CRM_Core_DAO::singleValueQuery("SELECT is_test FROM civicrm_payment_processor WHERE id = %1", [1 => [$ppid, 'Integer']]);
       $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($ppid, $isTest ? 'test' : 'live');
       $this->_post = CRM_Core_Payment_SPGATEWAYAPI::recurDecrypt($this->_post['TradeInfo'], $paymentProcessor);
       CRM_Core_Payment_SPGATEWAYAPI::writeRecord($ids['contribution'], $this->_post, $ids['contributionRecur'] ?? $ids['contributionRecur']);
@@ -50,18 +50,18 @@ class CRM_Core_Payment_SPGATEWAYIPN extends CRM_Core_Payment_BaseIPN {
       $recur = TRUE;
       // Refs #35316, recur.proessor_id => contribution.payment_processor_id => $_GET['ppid']
       $sql = 'SELECT processor_id FROM civicrm_contribution_recur WHERE id = %1';
-      $ppid = CRM_Core_DAO::singleValueQuery($sql, array(1 => array($ids['contributionRecur'], 'Integer')));
+      $ppid = CRM_Core_DAO::singleValueQuery($sql, [1 => [$ids['contributionRecur'], 'Integer']]);
       if (empty($ppid)) {
         $sql = 'SELECT payment_processor_id FROM civicrm_contribution WHERE id = %1';
-        $ppid = CRM_Core_DAO::singleValueQuery($sql, array(1 => array($ids['contribution'], 'Integer')));
+        $ppid = CRM_Core_DAO::singleValueQuery($sql, [1 => [$ids['contribution'], 'Integer']]);
       }
       if (empty($ppid)) {
         CRM_Core_Error::debug_log_message("Spgateway: could not find payment processor id on this contribution {$ids['contribution']}");
         CRM_Utils_System::civiExit();
       }
-      $isTest = CRM_Core_DAO::singleValueQuery("SELECT is_test FROM civicrm_payment_processor WHERE id = %1", array(
-        1 => array($ppid, 'Integer'),
-      ));
+      $isTest = CRM_Core_DAO::singleValueQuery("SELECT is_test FROM civicrm_payment_processor WHERE id = %1", [
+        1 => [$ppid, 'Integer'],
+      ]);
       $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($ppid, $isTest ? 'test' : 'live');
       $this->_post = CRM_Core_Payment_SPGATEWAYAPI::recurDecrypt($this->_post['Period'], $paymentProcessor);
       $input = CRM_Core_Payment_SPGATEWAYAPI::dataDecode($this->_post);
@@ -97,9 +97,9 @@ class CRM_Core_Payment_SPGATEWAYIPN extends CRM_Core_Payment_BaseIPN {
           }
         }
         else {
-          $alreadySuccessId = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution WHERE trxn_id = %1 AND contribution_status_id = 1", array(
-            1 => array($newTrxnId, 'String'),
-          ));
+          $alreadySuccessId = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution WHERE trxn_id = %1 AND contribution_status_id = 1", [
+            1 => [$newTrxnId, 'String'],
+          ]);
           if (!empty($alreadySuccessId)) {
             CRM_Core_Error::debug_log_message("Spgateway: The transaction {$newTrxnId}, associated with the contribution {$alreadySuccessId}, has been successfully processed before. Skipped.");
             return '1|OK';
@@ -125,9 +125,9 @@ class CRM_Core_Payment_SPGATEWAYIPN extends CRM_Core_Payment_BaseIPN {
         // assign trxn_id before complete transaction
         $recurContribCount = NULL;
         if (!empty($contribution->contribution_recur_id)) {
-          $recurContribCount = CRM_Core_DAO::singleValueQuery("SELECT count(id) FROM civicrm_contribution WHERE contribution_recur_id = %1", array(
-            1 => array($contribution->contribution_recur_id, 'Integer')
-          ));
+          $recurContribCount = CRM_Core_DAO::singleValueQuery("SELECT count(id) FROM civicrm_contribution WHERE contribution_recur_id = %1", [
+            1 => [$contribution->contribution_recur_id, 'Integer']
+          ]);
         }
         if(!empty($input['PeriodAmt']) && $recurContribCount == 1){
           // first contribution of recurring, update trxn_id.
@@ -180,7 +180,7 @@ class CRM_Core_Payment_SPGATEWAYIPN extends CRM_Core_Payment_BaseIPN {
   function validateOthers( &$input, &$ids, &$objects, &$note, $instrument = ''){
     $contribution = &$objects['contribution'];
     $pass = TRUE;
-    $validValue = array();
+    $validValue = [];
     if(!empty($input['MerchantOrderNo'])){
       $validValue['MerchantOrderNo'] = $input['MerchantOrderNo'];
     }else{
@@ -247,7 +247,7 @@ class CRM_Core_Payment_SPGATEWAYIPN extends CRM_Core_Payment_BaseIPN {
     // recurring validation
     if(!empty($ids['contributionRecur'])){
       $recur = &$objects['contributionRecur'];
-      $params = $null = array();
+      $params = $null = [];
       // see if we are first time, if not first time, save new contribution
       // 6 - expired
       // 5 - processing
@@ -259,9 +259,9 @@ class CRM_Core_Payment_SPGATEWAYIPN extends CRM_Core_Payment_BaseIPN {
       // not the first time (PeriodReturnURL)
       if(!empty($input['AlreadyTimes'])){
         $trxn_id = $input['OrderNo'];
-        $alreadyExistsId = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution WHERE trxn_id = %1", array(
-          1 => array($trxn_id, 'String'),
-        ));
+        $alreadyExistsId = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution WHERE trxn_id = %1", [
+          1 => [$trxn_id, 'String'],
+        ]);
         if($input['Status'] != 'SUCCESS'){
           $contribution->contribution_status_id = 4; // Failed
           if (!$alreadyExistsId) {
@@ -293,12 +293,12 @@ class CRM_Core_Payment_SPGATEWAYIPN extends CRM_Core_Payment_BaseIPN {
           CRM_Core_Payment_SPGATEWAYAPI::writeRecord($c->id, $this->_post);
           $objects['contribution'] = $c;
           if(isset($input['TotalTimes']) && $input['AlreadyTimes'] == $input['TotalTimes']){
-            $recurParam = array(
+            $recurParam = [
               'id' => $ids['contributionRecur'],
               'modified_date' => date('YmdHis'),
               'end_date' => date('YmdHis'),
               'contribution_status_id' => 1, // completed
-            );
+            ];
             CRM_Contribute_BAO_ContributionRecur::add($recurParam, $null);
           }
         }
@@ -354,20 +354,20 @@ class CRM_Core_Payment_SPGATEWAYIPN extends CRM_Core_Payment_BaseIPN {
     $note = date("Y/m/d H:i:s"). ts("Transaction record").": \n".$note."\n===============================\n";
     $noteExists = CRM_Core_BAO_Note::getNote( $contribution->id, 'civicrm_contribution' );
     if(count($noteExists)){
-      $noteId = array( 'id' => reset(array_keys($noteExists)) );
+      $noteId = [ 'id' => reset(array_keys($noteExists)) ];
       $note = $note . reset($noteExists);
     }
     else{
       $noteId = NULL;
     }
 
-    $noteParams = array(
+    $noteParams = [
       'entity_table'  => 'civicrm_contribution',
       'note'          => $note,
       'entity_id'     => $contribution->id,
       'contact_id'    => $contribution->contact_id,
       'modified_date' => date('Ymd')
-    );
+    ];
     CRM_Core_BAO_Note::add($noteParams, $noteId);
   }
 }

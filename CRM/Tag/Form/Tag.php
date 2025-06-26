@@ -85,15 +85,15 @@ class CRM_Tag_Form_Tag extends CRM_Core_Form {
     // need to append the array with the " checked " if contact is tagged with the tag
     foreach ($allTag as $tagID => $varValue) {
       if (in_array($tagID, $entityTag)) {
-        $tagAttribute = array('onclick' => "return changeRowColor(\"rowidtag_$tagID\")",
+        $tagAttribute = ['onclick' => "return changeRowColor(\"rowidtag_$tagID\")",
           'checked' => 'checked',
           'id' => "tag_{$tagID}",
-        );
+        ];
       }
       else {
-        $tagAttribute = array('onclick' => "return changeRowColor(\"rowidtag_$tagID\")",
+        $tagAttribute = ['onclick' => "return changeRowColor(\"rowidtag_$tagID\")",
           'id' => "tag_{$tagID}",
-        );
+        ];
       }
 
       $tagChk[$tagID] = $this->createElement('checkbox', $tagID, '', '', $tagAttribute);
@@ -117,15 +117,15 @@ class CRM_Tag_Form_Tag extends CRM_Core_Form {
       $this->freeze();
     }
     else {
-      $this->addButtons(array(
-          array('type' => 'next',
+      $this->addButtons([
+          ['type' => 'next',
             'name' => ts('Update Tags'),
             'isDefault' => TRUE,
-          ),
-          array('type' => 'cancel',
+          ],
+          ['type' => 'cancel',
             'name' => ts('Cancel'),
-          ),
-        )
+          ],
+        ]
       );
     }
   }

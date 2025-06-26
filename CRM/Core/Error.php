@@ -88,18 +88,18 @@ class CRM_Core_Error extends PEAR_ErrorStack {
     $this->setLogger($log);
 
     // PEAR<=1.9.0 does not declare "static" properly.
-    if (!is_callable(array('PEAR', '__callStatic'))) {
-      $this->setDefaultCallback(array($this, 'handlePES'));
+    if (!is_callable(['PEAR', '__callStatic'])) {
+      $this->setDefaultCallback([$this, 'handlePES']);
     }
     else {
-      PEAR_ErrorStack::setDefaultCallback(array($this, 'handlePES'));
+      PEAR_ErrorStack::setDefaultCallback([$this, 'handlePES']);
     }
   }
 
   static function getMessages(&$error, $separator = '<br />') {
     if (is_a($error, 'CRM_Core_Error')) {
       $errors = $error->getErrors();
-      $message = array();
+      $message = [];
       foreach ($errors as $e) {
         $message[] = $e['code'] . ':' . $e['message'];
       }
@@ -178,7 +178,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
     CRM_Core_Error::debug_var('backtrace', $backtrace);
 
     if ($config->initialized) {
-      $vars = array();
+      $vars = [];
       if ($debugMsg) {
         $vars['debug'] = $debugMsg;
       }
@@ -193,10 +193,10 @@ class CRM_Core_Error extends PEAR_ErrorStack {
 
     self::abend();
 
-    $errorData = array(
+    $errorData = [
       'object' => $pearError,
       'content' => $content,
-    );    
+    ];    
     throw new CRM_Core_Exception($error['message'].'|'.$error['user_info'], CRM_Core_Error::DATABASE_ERROR, $errorData);
   }
 
@@ -230,7 +230,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
    */
   static function fatal($message = NULL, $status = NULL, $suppress = NULL) {
     $config = CRM_Core_Config::singleton();
-    $vars = array();
+    $vars = [];
     if ($config->fatalErrorHandler && class_exists($config->fatalErrorHandler)) {
       $class = $config->fatalErrorHandler;
       // the call has been successfully handled
@@ -251,7 +251,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
 
     $content = self::output($config->fatalErrorTemplate, $vars);
     self::abend();
-    throw new CRM_Core_Exception($message, CRM_Core_Error::FATAL_ERROR, array('content' => $content));
+    throw new CRM_Core_Exception($message, CRM_Core_Error::FATAL_ERROR, ['content' => $content]);
   }
 
   /**
@@ -278,9 +278,9 @@ class CRM_Core_Error extends PEAR_ErrorStack {
    * @acess public
    */
   static function timeout($message){
-    $vars = array(
+    $vars = [
       'message' => $message,
-    );
+    ];
     self::output('CRM/common/timeout.tpl', $vars);
     CRM_Utils_System::civiExit();
   }
@@ -415,7 +415,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
       }
     }
 
-    $file_log = Log::singleton('file', $fileName, CRM_Utils_System::ipAddress(), array('timeFormat' => '%Y-%m-%dT%H:%M:%S%z'));
+    $file_log = Log::singleton('file', $fileName, CRM_Utils_System::ipAddress(), ['timeFormat' => '%Y-%m-%dT%H:%M:%S%z']);
     $file_log->log($message);
     if ($out) {
       echo $message;
@@ -426,13 +426,13 @@ class CRM_Core_Error extends PEAR_ErrorStack {
   static function backtrace($msg = 'backtrace', $log = TRUE) {
     $backTrace = debug_backtrace();
 
-    $msgs = array();
+    $msgs = [];
     foreach ($backTrace as $trace) {
       $msgs[] = CRM_Utils_Array::implode(', ',
-        array(CRM_Utils_Array::value('file', $trace),
+        [CRM_Utils_Array::value('file', $trace),
           CRM_Utils_Array::value('function', $trace),
           CRM_Utils_Array::value('line', $trace),
-        )
+        ]
       );
     }
 
@@ -445,7 +445,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
 
   static function createError($message, $code = 8000, $level = 'Fatal', $params = NULL) {
     $error = &CRM_Core_Error::singleton();
-    $error->push($code, $level, array($params), $message);
+    $error->push($code, $level, [$params], $message);
     return $error;
   }
 
@@ -469,9 +469,9 @@ class CRM_Core_Error extends PEAR_ErrorStack {
         }
       }
     }
-    throw new CRM_Core_Exception($message, self::STATUS_BOUNCE, array(
+    throw new CRM_Core_Exception($message, self::STATUS_BOUNCE, [
       'redirect' => $redirect
-    ));
+    ]);
     // shouldn't goes here
   }
 
@@ -483,14 +483,14 @@ class CRM_Core_Error extends PEAR_ErrorStack {
    */
   public static function reset() {
     $error = &self::singleton();
-    $error->_errors = array();
-    $error->_errorsByLevel = array();
+    $error->_errors = [];
+    $error->_errorsByLevel = [];
   }
 
 
   public static function ignoreException($callback = NULL) {
     if (!$callback) {
-      $callback = array('CRM_Core_Error', 'nullHandler');
+      $callback = ['CRM_Core_Error', 'nullHandler'];
     }
 
     $GLOBALS['_PEAR_default_error_mode'] = PEAR_ERROR_CALLBACK;
@@ -512,7 +512,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
    */
   public static function getErrorDetails($pearError) {
     // create the error array
-    $error = array();
+    $error = [];
     $error['callback'] = $pearError->getCallback();
     $error['code'] = $pearError->getCode();
     $error['message'] = $pearError->getMessage();
@@ -559,7 +559,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
    */
   public static function setCallback($callback = NULL) {
     if (!$callback) {
-      $callback = array('CRM_Core_Error', 'handle');
+      $callback = ['CRM_Core_Error', 'handle'];
     }
     $GLOBALS['_PEAR_default_error_mode'] = PEAR_ERROR_CALLBACK;
     $GLOBALS['_PEAR_default_error_options'] = $callback;
@@ -570,7 +570,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
       throw new Exception($msg, $data);
     }
 
-    $values = array();
+    $values = [];
 
     $values['is_error'] = 1;
     $values['error_message'] = $msg;
@@ -584,7 +584,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
   }
 
   public static function &createAPISuccess($result = 1) {
-    $values = array();
+    $values = [];
 
     $values['is_error'] = 0;
     $values['result'] = $result;
@@ -624,10 +624,10 @@ class CRM_Core_Error extends PEAR_ErrorStack {
       if($_GET['snippet'] == CRM_Core_Smarty::PRINT_SNIPPET ||
         $_GET['snippet'] == CRM_Core_Smarty::PRINT_NOFORM) {
         $content = $vars['message'];
-        $json = array(
+        $json = [
           'status' => '-1',
           'error' => "$content",
-        );
+        ];
         return json_encode($json);
       }
       else {
@@ -649,7 +649,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
     $config = CRM_Core_Config::singleton();
     $dir1 = $config->configAndLogDir;
     $dir2 = str_replace("smartycli", "smartyfpm-fcgi", $dir1);
-    foreach(array($dir1, $dir2) as $dir) {
+    foreach([$dir1, $dir2] as $dir) {
       $filename = "{$dir}CiviCRM.*.log";
       $files = glob($filename.'*');
       if (!empty($files)) {

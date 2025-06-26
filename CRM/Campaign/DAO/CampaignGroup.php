@@ -127,9 +127,9 @@ class CRM_Campaign_DAO_CampaignGroup extends CRM_Core_DAO
   function &links()
   {
     if (!(self::$_links)) {
-      self::$_links = array(
+      self::$_links = [
         'campaign_id' => 'civicrm_campaign:id',
-      );
+      ];
     }
     return self::$_links;
   }
@@ -157,39 +157,39 @@ class CRM_Campaign_DAO_CampaignGroup extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'id' => array(
+      self::$_fields = [
+        'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'campaign_id' => array(
+        ] ,
+        'campaign_id' => [
           'name' => 'campaign_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
           'FKClassName' => 'CRM_Campaign_DAO_Campaign',
-        ) ,
-        'group_type' => array(
+        ] ,
+        'group_type' => [
           'name' => 'group_type',
           'type' => CRM_Utils_Type::T_ENUM,
           'title' => ts('Group Type') ,
           'default' => 'UL',
           'enumValues' => 'Include, Exclude',
-        ) ,
-        'entity_table' => array(
+        ] ,
+        'entity_table' => [
           'name' => 'entity_table',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Entity Table') ,
           'maxlength' => 64,
           'size' => CRM_Utils_Type::BIG,
           'default' => 'UL',
-        ) ,
-        'entity_id' => array(
+        ] ,
+        'entity_id' => [
           'name' => 'entity_id',
           'type' => CRM_Utils_Type::T_INT,
           'default' => 'UL',
-        ) ,
-      );
+        ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -222,7 +222,7 @@ class CRM_Campaign_DAO_CampaignGroup extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -245,7 +245,7 @@ class CRM_Campaign_DAO_CampaignGroup extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
@@ -266,9 +266,9 @@ class CRM_Campaign_DAO_CampaignGroup extends CRM_Core_DAO
    */
   static function &getEnums()
   {
-    static $enums = array(
+    static $enums = [
       'group_type',
-    );
+    ];
     return $enums;
   }
   /**
@@ -283,12 +283,12 @@ class CRM_Campaign_DAO_CampaignGroup extends CRM_Core_DAO
   {
     static $translations = null;
     if (!$translations) {
-      $translations = array(
-        'group_type' => array(
+      $translations = [
+        'group_type' => [
           'Include' => ts('Include') ,
           'Exclude' => ts('Exclude') ,
-        ) ,
-      );
+        ] ,
+      ];
     }
     return $translations[$field][$value];
   }

@@ -35,7 +35,7 @@
 class CRM_Contact_BAO_SearchCustom {
 
   static function details($csID, $ssID = NULL, $gID = NULL) {
-    $error = array(NULL, NULL, NULL);
+    $error = [NULL, NULL, NULL];
 
     if (!$csID &&
       !$ssID &&
@@ -45,7 +45,7 @@ class CRM_Contact_BAO_SearchCustom {
     }
 
     $customSearchID = $csID;
-    $formValues = array();
+    $formValues = [];
     if ($ssID || $gID) {
       if ($gID) {
         $ssID = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Group', $gID, 'saved_search_id');
@@ -93,7 +93,7 @@ class CRM_Contact_BAO_SearchCustom {
       }
     }
 
-    return array($customSearchID, $customSearchClass, $formValues);
+    return [$customSearchID, $customSearchClass, $formValues];
   }
 
   static function customClass($csID, $ssID) {
@@ -119,7 +119,7 @@ class CRM_Contact_BAO_SearchCustom {
     $args = trim($args);
 
     $values = explode("\n", $args);
-    $formValues = array();
+    $formValues = [];
     foreach ($values as $value) {
       list($n, $v) = CRM_Utils_System::explode('=', $value, 2);
       if (!empty($v)) {
@@ -136,7 +136,7 @@ class CRM_Contact_BAO_SearchCustom {
     $where = $customClass->where();
 
 
-    return array($from, $where);
+    return [$from, $where];
   }
 }
 

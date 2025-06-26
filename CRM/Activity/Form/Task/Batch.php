@@ -77,7 +77,7 @@ class CRM_Activity_Form_Task_Batch extends CRM_Activity_Form_Task {
 
     //get the contact read only fields to display.
 
-    $readOnlyFields = array_merge(array('sort_name' => ts('Name')),
+    $readOnlyFields = array_merge(['sort_name' => ts('Name')],
       CRM_Core_BAO_Preferences::valueOptions('contact_autocomplete_options',
         TRUE, NULL, FALSE, 'name', TRUE
       )
@@ -112,12 +112,12 @@ class CRM_Activity_Form_Task_Batch extends CRM_Activity_Form_Task {
     CRM_Utils_System::setTitle($this->_title);
 
     $this->addDefaultButtons(ts('Save'));
-    $this->_fields = array();
+    $this->_fields = [];
     $this->_fields = CRM_Core_BAO_UFGroup::getFields($ufGroupId, FALSE, CRM_Core_Action::VIEW);
 
     // remove file type field and then limit fields
     $suppressFields = FALSE;
-    $removehtmlTypes = array('File', 'Autocomplete-Select');
+    $removehtmlTypes = ['File', 'Autocomplete-Select'];
     foreach ($this->_fields as $name => $field) {
       if ($cfID = CRM_Core_BAO_CustomField::getKeyID($name) &&
         in_array($this->_fields[$name]['html_type'], $removehtmlTypes)
@@ -135,15 +135,15 @@ class CRM_Activity_Form_Task_Batch extends CRM_Activity_Form_Task {
 
     $this->_fields = array_slice($this->_fields, 0, $this->_maxFields);
 
-    $this->addButtons(array(
-        array('type' => 'submit',
+    $this->addButtons([
+        ['type' => 'submit',
           'name' => ts('Update Activities'),
           'isDefault' => TRUE,
-        ),
-        array('type' => 'cancel',
+        ],
+        ['type' => 'cancel',
           'name' => ts('Cancel'),
-        ),
-      )
+        ],
+      ]
     );
 
 
@@ -202,9 +202,9 @@ class CRM_Activity_Form_Task_Batch extends CRM_Activity_Form_Task {
       return;
     }
 
-    $defaults = array();
+    $defaults = [];
     foreach ($this->_activityHolderIds as $activityId) {
-      $details[$activityId] = array();
+      $details[$activityId] = [];
       CRM_Core_BAO_UFGroup::setProfileDefaults(NULL, $this->_fields, $defaults, FALSE, $activityId, 'Activity');
     }
 
@@ -258,7 +258,7 @@ class CRM_Activity_Form_Task_Batch extends CRM_Activity_Form_Task {
 SELECT activity_type_id , source_contact_id 
 FROM   civicrm_activity 
 WHERE  id = %1";
-        $params = array(1 => array($key, 'Integer'));
+        $params = [1 => [$key, 'Integer']];
         $dao = CRM_Core_DAO::executeQuery($query, $params);
         $dao->fetch();
 

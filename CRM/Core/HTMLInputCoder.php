@@ -67,7 +67,7 @@ class CRM_Core_HTMLInputCoder implements API_Wrapper {
    */
   public static function getSkipFields() {
     if (self::$skipFields === NULL) {
-      self::$skipFields = array(
+      self::$skipFields = [
         'widget_code',
         'html_message',
         'body_html',
@@ -115,7 +115,7 @@ class CRM_Core_HTMLInputCoder implements API_Wrapper {
         'sqlQuery',
         'pcp_title',
         'pcp_intro_text',
-      );
+      ];
     }
     return self::$skipFields;
   }
@@ -152,7 +152,7 @@ class CRM_Core_HTMLInputCoder implements API_Wrapper {
       }
     }
     elseif ($castToString || is_string($values)) {
-      $values = str_replace(array('<', '>'), array('&lt;', '&gt;'), $values);
+      $values = str_replace(['<', '>'], ['&lt;', '&gt;'], $values);
     }
   }
 
@@ -163,7 +163,7 @@ class CRM_Core_HTMLInputCoder implements API_Wrapper {
       }
     }
     elseif ($castToString || is_string($values)) {
-      $values = str_replace(array('&lt;', '&gt;'), array('<', '>'), $values);
+      $values = str_replace(['&lt;', '&gt;'], ['<', '>'], $values);
     }
   }
 
@@ -172,7 +172,7 @@ class CRM_Core_HTMLInputCoder implements API_Wrapper {
    */
   public function fromApiInput($apiRequest) {
     $lowerAction = strtolower($apiRequest['action']);
-    if ($apiRequest['version'] == 3 && in_array($lowerAction, array('get', 'create'))) {
+    if ($apiRequest['version'] == 3 && in_array($lowerAction, ['get', 'create'])) {
       // note: 'getsingle', 'replace', 'update', and chaining all build on top of 'get'/'create'
       foreach ($apiRequest['params'] as $key => $value) {
         // Don't apply escaping to API control parameters (e.g. 'api.foo' or 'options.foo')
@@ -197,7 +197,7 @@ class CRM_Core_HTMLInputCoder implements API_Wrapper {
    */
   public function toApiOutput($apiRequest, $result) {
     $lowerAction = strtolower($apiRequest['action']);
-    if ($apiRequest['version'] == 3 && in_array($lowerAction, array('get', 'create', 'setvalue'))) {
+    if ($apiRequest['version'] == 3 && in_array($lowerAction, ['get', 'create', 'setvalue'])) {
       foreach ($result as $key => $value) {
         // Don't apply escaping to API control parameters (e.g. 'api.foo' or 'options.foo')
         // and don't apply to other skippable fields

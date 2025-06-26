@@ -65,40 +65,40 @@ class CRM_Admin_Page_ContactType extends CRM_Core_Page_Basic {
    */
   function &links() {
     if (!(self::$_links)) {
-      self::$_links = array(
+      self::$_links = [
         CRM_Core_Action::UPDATE =>
-        array(
+        [
           'name' => ts('Edit'),
           'url' => 'civicrm/admin/options/subtype',
           'qs' => 'action=update&id=%%id%%&reset=1',
           'title' => ts('Edit Contact Type'),
-        ),
+        ],
         CRM_Core_Action::DISABLE =>
-        array(
+        [
           'name' => ts('Disable'),
           'extra' => 'onclick = "enableDisable( %%id%%,\'' .
           'CRM_Contact_BAO_ContactType' . '\',\'' . 'enable-disable' .
           '\' );"',
           'ref' => 'disable-action',
           'title' => ts('Disable Contact Type'),
-        ),
+        ],
         CRM_Core_Action::ENABLE =>
-        array(
+        [
           'name' => ts('Enable'),
           'extra' => 'onclick = "enableDisable( %%id%%,\'' .
           'CRM_Contact_BAO_ContactType' . '\',\'' . 'disable-enable' .
           '\' );"',
           'ref' => 'enable-action',
           'title' => ts('Enable Contact Type'),
-        ),
+        ],
         CRM_Core_Action::DELETE =>
-        array(
+        [
           'name' => ts('Delete'),
           'url' => 'civicrm/admin/options/subtype',
           'qs' => 'action=delete&id=%%id%%',
           'title' => ts('Delete Contact Type'),
-        ),
-      );
+        ],
+      ];
     }
     return self::$_links;
   }
@@ -130,7 +130,7 @@ class CRM_Admin_Page_ContactType extends CRM_Core_Page_Basic {
         }
       }
       $rows[$key]['action'] = CRM_Core_Action::formLink(self::links(), $mask,
-        array('id' => $value['id'])
+        ['id' => $value['id']]
       );
     }
     $this->assign('rows', $rows);

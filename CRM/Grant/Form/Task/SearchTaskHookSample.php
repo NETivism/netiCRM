@@ -48,7 +48,7 @@ class CRM_Grant_Form_Task_SearchTaskHookSample extends CRM_Grant_Form_Task {
    */
   function preProcess() {
     parent::preProcess();
-    $rows = array();
+    $rows = [];
     // display name and grant details of all selectced contacts
     $grantIDs = CRM_Utils_Array::implode(',', $this->_grantIds);
 
@@ -64,12 +64,12 @@ INNER JOIN civicrm_contact ct ON ( grt.contact_id = ct.id )
     $dao = CRM_Core_DAO::executeQuery($query, CRM_Core_DAO::$_nullArray);
 
     while ($dao->fetch()) {
-      $rows[] = array(
+      $rows[] = [
         'display_name' => $dao->display_name,
         'decision_date' => $dao->decision_date,
         'amount_requested' => $dao->amount_total,
         'amount_granted' => $dao->amount_granted,
-      );
+      ];
     }
     $this->assign('rows', $rows);
   }
@@ -81,12 +81,12 @@ INNER JOIN civicrm_contact ct ON ( grt.contact_id = ct.id )
    * @access public
    */
   public function buildQuickForm() {
-    $this->addButtons(array(
-        array('type' => 'done',
+    $this->addButtons([
+        ['type' => 'done',
           'name' => ts('Done'),
           'isDefault' => TRUE,
-        ),
-      )
+        ],
+      ]
     );
   }
 }

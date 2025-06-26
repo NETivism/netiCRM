@@ -62,14 +62,14 @@ class CRM_Admin_Page_AICompletion extends CRM_Core_Page {
 
   function browse() {
     // filter
-    $filters = array();
+    $filters = [];
     $filters['is_template'] = CRM_Utils_Request::retrieve('is_template', 'Integer', $this);
     $filters['is_shared'] = CRM_Utils_Request::retrieve('is_shared', 'Integer', $this);
     $filters['role'] = CRM_Utils_Request::retrieve('role', 'String', $this);
     $filters['tone'] = CRM_Utils_Request::retrieve('tone', 'String', $this);
     $filters['component'] = CRM_Utils_Request::retrieve('component', 'String', $this);
     $this->validateFilters($filters);
-    $where = $params = array();
+    $where = $params = [];
     $this->buildWhere($filters, $where, $params);
     $this->assign('show_reset', TRUE);
     if (empty($where)) {
@@ -83,18 +83,18 @@ class CRM_Admin_Page_AICompletion extends CRM_Core_Page {
       // quota
       $quota = CRM_AI_BAO_AICompletion::quota();
       $this->assign('usage', $quota);
-      $this->assign('chartAICompletionQuota', array(
+      $this->assign('chartAICompletionQuota', [
         'id' => 'chart-pie-with-legend-aicompletion-usage',
-        'classes' => array('ct-chart-pie'),
+        'classes' => ['ct-chart-pie'],
         'selector' => '#chart-pie-with-legend-aicompletion-usage',
         'type' => 'Pie',
-        'series' => json_encode(array($quota['used'], $quota['max'])),
+        'series' => json_encode([$quota['used'], $quota['max']]),
         'isFillDonut' => true,
-      ));
+      ]);
       $stats = $this->getStats();
-      $this->assign('chartAICompletionUsedfor', array(
+      $this->assign('chartAICompletionUsedfor', [
         'id' => 'chart-pie-with-legend-aicompletion-usedfor',
-        'classes' => array('ct-chart-pie'),
+        'classes' => ['ct-chart-pie'],
         'selector' => '#chart-pie-with-legend-aicompletion-usedfor',
         'type' => 'Pie',
         'series' => json_encode(array_values($stats['component'])),
@@ -102,7 +102,7 @@ class CRM_Admin_Page_AICompletion extends CRM_Core_Page {
         'labelType' => 'percent',
         'withLegend' => true,
         'withToolTip' => true,
-      ));
+      ]);
     }
 
 
@@ -158,13 +158,13 @@ DESC
       }
 
       $itemLinks = $links;
-      $editTemplateLink = array();
+      $editTemplateLink = [];
       if ($dao->is_template) {
         $editTemplateLink[CRM_Core_Action::UPDATE] = $itemLinks[CRM_Core_Action::UPDATE];
       }
-      $action = CRM_Core_Action::formLink($itemLinks, NULL, array('id' => $dao->id));
-      $editTemplateAction = CRM_Core_Action::formLink($editTemplateLink, NULL, array('id' => $dao->id));
-      $rows[] = array(
+      $action = CRM_Core_Action::formLink($itemLinks, NULL, ['id' => $dao->id]);
+      $editTemplateAction = CRM_Core_Action::formLink($editTemplateLink, NULL, ['id' => $dao->id]);
+      $rows[] = [
         'id' => $dao->id,
         'contact_id' => $dao->contact_id,
         'display_name' => $details[0],
@@ -178,7 +178,7 @@ DESC
         'is_template' => $dao->is_template,
         'edit_template_link' => $editTemplateAction,
         'action' => $action,
-      );
+      ];
     }
 
     $this->assign('rows', $rows);
@@ -212,26 +212,26 @@ DESC
    */
   static function &links() {
     if (!(self::$_links)) {
-      self::$_links = array(
-        CRM_Core_Action::VIEW=> array(
+      self::$_links = [
+        CRM_Core_Action::VIEW=> [
           'name' => ts('View'),
           'url' => 'civicrm/admin/aicompletion',
           'qs' => 'action=view&reset=1&id=%%id%%',
           'title' => ts('Edit Note'),
-        ),
-        CRM_Core_Action::UPDATE => array(
+        ],
+        CRM_Core_Action::UPDATE => [
           'name' => ts('Edit'),
           'url' => 'civicrm/admin/aicompletion',
           'qs' => 'action=update&reset=1&id=%%id%%',
           'title' => ts('Edit Note'),
-        ),
-      );
+        ],
+      ];
     }
     return self::$_links;
   }
 
   function pager($total) {
-    $params = array(); 
+    $params = []; 
     $params['status'] = '';
     $params['csvString'] = NULL;
     $params['buttonTop'] = 'PagerTopButton';
@@ -252,28 +252,28 @@ DESC
       }
       elseif ($ele == 'tone') {
         $where[] = 'tone_style = %3';
-        $params[3] = array($filterValue, 'String');
+        $params[3] = [$filterValue, 'String'];
       }
       elseif ($ele == 'role') {
         $where[] = 'ai_role = %4';
-        $params[4] = array($filterValue, 'String');
+        $params[4] = [$filterValue, 'String'];
       }
       elseif ($ele == 'component') {
         $where[] = 'component = %5';
-        $params[5] = array($filterValue, 'String');
+        $params[5] = [$filterValue, 'String'];
       }
     }
   }
 
   function validateFilters(&$filters) {
     $filters = array_filter($filters);
-    $available = array();
+    $available = [];
     $available['role'] = CRM_Core_DAO::singleValueQuery("SELECT GROUP_CONCAT(ai_role) FROM civicrm_aicompletion GROUP BY ai_role");
     $available['tone'] = CRM_Core_DAO::singleValueQuery("SELECT GROUP_CONCAT(tone_style) FROM civicrm_aicompletion GROUP BY tone_style");
     $available['component'] = CRM_Core_DAO::singleValueQuery("SELECT GROUP_CONCAT(component) FROM civicrm_aicompletion GROUP BY component");
 
-    $unset = array();
-    foreach(array('role', 'tone', 'components') as $ele) {
+    $unset = [];
+    foreach(['role', 'tone', 'components'] as $ele) {
       if (!empty($available[$ele])) {
         $elements = explode(',', $available[$ele]);
         if (!in_array($filters['role'], $elements)) {
@@ -290,9 +290,9 @@ DESC
   }
 
   function getStats() {
-    $stats = array(
-      'component' => array()
-    );
+    $stats = [
+      'component' => []
+    ];
     $dao = CRM_Core_DAO::executeQuery("SELECT component, count(*) as count FROM civicrm_aicompletion WHERE created_date >= DATE_FORMAT(CURDATE(), '%Y-%m-01 00:00:00') AND created_date < DATE_FORMAT(DATE_ADD(CURDATE(), INTERVAL 1 MONTH), '%Y-%m-01 00:00:00') GROUP BY component");
     while($dao->fetch()) {
       $stats['component'][ts($dao->component)] = $dao->count;

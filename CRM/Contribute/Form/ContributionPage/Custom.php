@@ -49,7 +49,7 @@ class CRM_Contribute_Form_ContributionPage_Custom extends CRM_Contribute_Form_Co
   public function buildQuickForm() {
 
 
-    $types = array_merge(array('Contact', 'Individual', 'Contribution', 'Membership'),
+    $types = array_merge(['Contact', 'Individual', 'Contribution', 'Membership'],
       CRM_Contact_BAO_ContactType::subTypes('Individual')
     );
 
@@ -63,10 +63,10 @@ class CRM_Contribute_Form_ContributionPage_Custom extends CRM_Contribute_Form_Co
       $this->assign('noProfile', TRUE);
     }
 
-    $this->add('select', 'custom_pre_id', ts('Include Profile') . '<br />' . ts('(top of page)'), array('' => ts('- select -')) + $profiles);
-    $this->add('select', 'custom_post_id', ts('Include Profile') . '<br />' . ts('(bottom of page)'), array('' => ts('- select -')) + $profiles);
+    $this->add('select', 'custom_pre_id', ts('Include Profile') . '<br />' . ts('(top of page)'), ['' => ts('- select -')] + $profiles);
+    $this->add('select', 'custom_post_id', ts('Include Profile') . '<br />' . ts('(bottom of page)'), ['' => ts('- select -')] + $profiles);
 
-    $this->addFormRule(array('CRM_Contribute_Form_ContributionPage_Custom', 'formRule'), $this->_id);
+    $this->addFormRule(['CRM_Contribute_Form_ContributionPage_Custom', 'formRule'], $this->_id);
 
     parent::buildQuickForm();
   }
@@ -84,14 +84,14 @@ class CRM_Contribute_Form_ContributionPage_Custom extends CRM_Contribute_Form_Co
 
     if ($this->_id) {
       $title = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage', $this->_id, 'title');
-      CRM_Utils_System::setTitle(ts('Include Profiles (%1)', array(1 => $title)));
+      CRM_Utils_System::setTitle(ts('Include Profiles (%1)', [1 => $title]));
     }
 
 
 
-    $ufJoinParams = array('entity_table' => 'civicrm_contribution_page',
+    $ufJoinParams = ['entity_table' => 'civicrm_contribution_page',
       'entity_id' => $this->_id,
-    );
+    ];
     list($defaults['custom_pre_id'],
       $defaults['custom_post_id']
     ) = CRM_Core_BAO_UFJoin::getUFGroupIds($ufJoinParams);
@@ -117,11 +117,11 @@ class CRM_Contribute_Form_ContributionPage_Custom extends CRM_Contribute_Form_Co
     $transaction = new CRM_Core_Transaction();
 
     // also update uf join table
-    $ufJoinParams = array('is_active' => 1,
+    $ufJoinParams = ['is_active' => 1,
       'module' => 'CiviContribute',
       'entity_table' => 'civicrm_contribution_page',
       'entity_id' => $this->_id,
-    );
+    ];
 
 
     // first delete all past entries
@@ -164,7 +164,7 @@ class CRM_Contribute_Form_ContributionPage_Custom extends CRM_Contribute_Form_Co
    * @static
    */
   static function formRule($fields, $files, $contributionPageId) {
-    $errors = array();
+    $errors = [];
     $preProfileType = $postProfileType = NULL;
     // for membership profile make sure Membership section is enabled
     // get membership section for this contribution page

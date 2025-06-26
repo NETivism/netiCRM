@@ -20,7 +20,7 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
   protected $_config;
   protected $_tableName = NULL;
   protected $_filled = NULL;
-  protected $_recurringStatus = array();
+  protected $_recurringStatus = [];
   protected $_contributionPage = NULL;
   protected $_defaultThresholds = [];
   protected $_template;
@@ -33,11 +33,11 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
     $this->_tableName = 'civicrm_temp_custom_RFM_' . CRM_Utils_String::createRandom(6);
     $statuses = CRM_Contribute_PseudoConstant::contributionStatus();
     $this->_cstatus = $statuses;
-    $this->_recurringStatus = array(
+    $this->_recurringStatus = [
       self::RECURRING_NONRECURRING => ts('All'),
       self::RECURRING => ts("Recurring Contribution"),
       self::NONRECURRING => ts("Non-recurring Contribution"),
-    );
+    ];
     $this->_contributionPage = CRM_Contribute_PseudoConstant::contributionPage();
     $this->_instruments = CRM_Contribute_PseudoConstant::paymentInstrument();
     $this->_contributionType = CRM_Contribute_PseudoConstant::contributionType();
@@ -46,50 +46,50 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
   }
 
   function buildColumn(){
-    $this->_queryColumns = array(
+    $this->_queryColumns = [
       'contact_a.id' => 'id',
       'contact_a.sort_name' => 'sort_name',
       'contact_a.display_name' => 'display_name',
       'rfm.R' => 'recency_days',
       'rfm.F' => 'frequency_count',
       'rfm.M' => 'monetary_amount',
-    );
-    $this->_columns = array(
+    ];
+    $this->_columns = [
       ts('Contact ID') => 'id',
       ts('Name') => 'sort_name',
       ts('Recency (Days)') => 'recency_days',
       ts('Frequency (Times)') => 'frequency_count',
       ts('Monetary (Amount)') => 'monetary_amount',
-    );
+    ];
   }
 
   function buildForm(&$form){
     $this->_form = $form;
     $this->_form->addDateRange('receive_date', ts('Receive Date').' - '.ts('From'), NULL, FALSE);
     $this->_form->addRadio('recurring', ts('Recurring Contribution'), $this->_recurringStatus);
-    $this->_form->assign('elements', array('receive_date', 'recurring'));
+    $this->_form->assign('elements', ['receive_date', 'recurring']);
 
-    $this->_form->addNumber('rfm_r_value', ts('Recency (days since last donation)'), array(
+    $this->_form->addNumber('rfm_r_value', ts('Recency (days since last donation)'), [
       'size' => 5,
       'maxlength' => 5,
       'min' => 0,
       'placeholder' => ts('e.g., 210'),
       'class' => 'rfm-input'
-    ));
-    $this->_form->addNumber('rfm_f_value', ts('Frequency (number of donations)'), array(
+    ]);
+    $this->_form->addNumber('rfm_f_value', ts('Frequency (number of donations)'), [
       'size' => 5,
       'maxlength' => 5,
       'min' => 0,
       'placeholder' => ts('e.g., 3'),
       'class' => 'rfm-input'
-    ));
-    $this->_form->addNumber('rfm_m_value', ts('Monetary (total donation amount)'), array(
+    ]);
+    $this->_form->addNumber('rfm_m_value', ts('Monetary (total donation amount)'), [
       'size' => 12,
       'maxlength' => 12,
       'min' => 0,
       'placeholder' => ts('e.g., 21600'),
       'class' => 'rfm-input'
-    ));
+    ]);
     $this->_form->add('hidden', 'segment', '');
 
     $rfmSegments = $this->prepareRfmSegments();
@@ -150,7 +150,7 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
   }
 
   function qill(){
-    $qill = array();
+    $qill = [];
     $from = !empty($this->_formValues['receive_date_from']) ? $this->_formValues['receive_date_from'] : NULL;
     $to = !empty($this->_formValues['receive_date_to']) ? $this->_formValues['receive_date_to'] : NULL;
     if ($from || $to) {
@@ -223,7 +223,7 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
 
   function sql($selectClause, $offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $groupBy = NULL) {
     if ($selectClause == '*') {
-      $select = array();
+      $select = [];
       foreach ($this->_queryColumns as $tableDotColumn => $alias) {
         $select[] = "$tableDotColumn as $alias";
       }
@@ -250,7 +250,7 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
 
   function where($includeContactIDs = false) {
     $sql = '';
-    $clauses = array();
+    $clauses = [];
     $clauses[] = "contact_a.is_deleted = 0";
 
     if ($includeContactIDs) {
@@ -270,7 +270,7 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
   }
 
   static function includeContactIDs(&$sql, &$formValues, $isExport = FALSE) {
-    $contactIDs = array();
+    $contactIDs = [];
     foreach ($formValues as $id => $value) {
       list($contactID, $additionalID) = CRM_Core_Form::cbExtract($id);
       if ($value && !empty($contactID)) {
@@ -307,21 +307,21 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
   }
   $query = CRM_Core_DAO::executeQuery($sql);
   $query->fetch();
-  $summary = array();
+  $summary = [];
   if ($query->total_contacts) {
-    $summary['search_results'] = array(
+    $summary['search_results'] = [
       'label' => ts('RFM Analysis Results'),
       'value' => '',
-    );
+    ];
     $totalAmount = '$' . CRM_Utils_Money::format($query->total_monetary, ' ');
     $avgAmount = '$' . CRM_Utils_Money::format($query->avg_monetary, ' ');
     $avgRecency = round($query->avg_recency, 1);
     $avgFrequency = round($query->avg_frequency, 1);
     $summary['search_results']['value'] =
-      ts('Total Amount: %1', array(1 => $totalAmount)) . ' / ' .
-      ts('Avg Amount: %1', array(1 => $avgAmount)) . ' / ' .
-      ts('Avg Recency: %1 days', array(1 => $avgRecency)) . ' / ' .
-      ts('Avg Frequency: %1 times', array(1 => $avgFrequency));
+      ts('Total Amount: %1', [1 => $totalAmount]) . ' / ' .
+      ts('Avg Amount: %1', [1 => $avgAmount]) . ' / ' .
+      ts('Avg Recency: %1 days', [1 => $avgRecency]) . ' / ' .
+      ts('Avg Frequency: %1 times', [1 => $avgFrequency]);
     }
     return $summary;
   }

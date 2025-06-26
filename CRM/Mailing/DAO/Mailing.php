@@ -292,7 +292,7 @@ class CRM_Mailing_DAO_Mailing extends CRM_Core_DAO
   function &links()
   {
     if (!(self::$_links)) {
-      self::$_links = array(
+      self::$_links = [
         'domain_id' => 'civicrm_domain:id',
         'header_id' => 'civicrm_mailing_component:id',
         'footer_id' => 'civicrm_mailing_component:id',
@@ -302,7 +302,7 @@ class CRM_Mailing_DAO_Mailing extends CRM_Core_DAO
         'msg_template_id' => 'civicrm_msg_template:id',
         'created_id' => 'civicrm_contact:id',
         'scheduled_id' => 'civicrm_contact:id',
-      );
+      ];
     }
     return self::$_links;
   }
@@ -337,183 +337,183 @@ class CRM_Mailing_DAO_Mailing extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'id' => array(
+      self::$_fields = [
+        'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'domain_id' => array(
+        ] ,
+        'domain_id' => [
           'name' => 'domain_id',
           'type' => CRM_Utils_Type::T_INT,
           'FKClassName' => 'CRM_Core_DAO_Domain',
-        ) ,
-        'header_id' => array(
+        ] ,
+        'header_id' => [
           'name' => 'header_id',
           'type' => CRM_Utils_Type::T_INT,
           'FKClassName' => 'CRM_Mailing_DAO_Component',
-        ) ,
-        'footer_id' => array(
+        ] ,
+        'footer_id' => [
           'name' => 'footer_id',
           'type' => CRM_Utils_Type::T_INT,
           'FKClassName' => 'CRM_Mailing_DAO_Component',
-        ) ,
-        'reply_id' => array(
+        ] ,
+        'reply_id' => [
           'name' => 'reply_id',
           'type' => CRM_Utils_Type::T_INT,
           'FKClassName' => 'CRM_Mailing_DAO_Component',
-        ) ,
-        'unsubscribe_id' => array(
+        ] ,
+        'unsubscribe_id' => [
           'name' => 'unsubscribe_id',
           'type' => CRM_Utils_Type::T_INT,
           'FKClassName' => 'CRM_Mailing_DAO_Component',
-        ) ,
-        'resubscribe_id' => array(
+        ] ,
+        'resubscribe_id' => [
           'name' => 'resubscribe_id',
           'type' => CRM_Utils_Type::T_INT,
-        ) ,
-        'optout_id' => array(
+        ] ,
+        'optout_id' => [
           'name' => 'optout_id',
           'type' => CRM_Utils_Type::T_INT,
           'FKClassName' => 'CRM_Mailing_DAO_Component',
-        ) ,
-        'name' => array(
+        ] ,
+        'name' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Name') ,
           'maxlength' => 128,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'from_name' => array(
+        ] ,
+        'from_name' => [
           'name' => 'from_name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('From Name') ,
           'maxlength' => 128,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'from_email' => array(
+        ] ,
+        'from_email' => [
           'name' => 'from_email',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('From Email') ,
           'maxlength' => 128,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'replyto_email' => array(
+        ] ,
+        'replyto_email' => [
           'name' => 'replyto_email',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Replyto Email') ,
           'maxlength' => 128,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'subject' => array(
+        ] ,
+        'subject' => [
           'name' => 'subject',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Subject') ,
           'maxlength' => 128,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'body_preview' => array(
+        ] ,
+        'body_preview' => [
           'name' => 'body_preview',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Body Preview') ,
           'maxlength' => 128,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'body_text' => array(
+        ] ,
+        'body_text' => [
           'name' => 'body_text',
           'type' => CRM_Utils_Type::T_LONGTEXT,
           'title' => ts('Body Text') ,
-        ) ,
-        'body_html' => array(
+        ] ,
+        'body_html' => [
           'name' => 'body_html',
           'type' => CRM_Utils_Type::T_LONGTEXT,
           'title' => ts('Body Html') ,
-        ) ,
-        'body_json' => array(
+        ] ,
+        'body_json' => [
           'name' => 'body_json',
           'type' => CRM_Utils_Type::T_LONGTEXT,
           'title' => ts('Body Json') ,
-        ) ,
-        'url_tracking' => array(
+        ] ,
+        'url_tracking' => [
           'name' => 'url_tracking',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Url Tracking') ,
-        ) ,
-        'forward_replies' => array(
+        ] ,
+        'forward_replies' => [
           'name' => 'forward_replies',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Forward Replies') ,
-        ) ,
-        'auto_responder' => array(
+        ] ,
+        'auto_responder' => [
           'name' => 'auto_responder',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Auto Responder') ,
-        ) ,
-        'open_tracking' => array(
+        ] ,
+        'open_tracking' => [
           'name' => 'open_tracking',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Open Tracking') ,
-        ) ,
-        'is_completed' => array(
+        ] ,
+        'is_completed' => [
           'name' => 'is_completed',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ) ,
-        'msg_template_id' => array(
+        ] ,
+        'msg_template_id' => [
           'name' => 'msg_template_id',
           'type' => CRM_Utils_Type::T_INT,
           'FKClassName' => 'CRM_Core_DAO_MessageTemplates',
-        ) ,
-        'override_verp' => array(
+        ] ,
+        'override_verp' => [
           'name' => 'override_verp',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Override Verp') ,
-        ) ,
-        'created_id' => array(
+        ] ,
+        'created_id' => [
           'name' => 'created_id',
           'type' => CRM_Utils_Type::T_INT,
           'FKClassName' => 'CRM_Contact_DAO_Contact',
-        ) ,
-        'created_date' => array(
+        ] ,
+        'created_date' => [
           'name' => 'created_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Mailing Created Date') ,
-        ) ,
-        'scheduled_id' => array(
+        ] ,
+        'scheduled_id' => [
           'name' => 'scheduled_id',
           'type' => CRM_Utils_Type::T_INT,
           'FKClassName' => 'CRM_Contact_DAO_Contact',
-        ) ,
-        'scheduled_date' => array(
+        ] ,
+        'scheduled_date' => [
           'name' => 'scheduled_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Mailing Scheduled Date') ,
-        ) ,
-        'is_archived' => array(
+        ] ,
+        'is_archived' => [
           'name' => 'is_archived',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ) ,
-        'visibility' => array(
+        ] ,
+        'visibility' => [
           'name' => 'visibility',
           'type' => CRM_Utils_Type::T_ENUM,
           'title' => ts('Visibility') ,
           'default' => 'User and User Admin Only',
           'enumValues' => 'User and User Admin Only,Public Pages',
-        ) ,
-        'dedupe_email' => array(
+        ] ,
+        'dedupe_email' => [
           'name' => 'dedupe_email',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Dedupe Email') ,
-        ) ,
-        'sms_provider_id' => array(
+        ] ,
+        'sms_provider_id' => [
           'name' => 'sms_provider_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Mailing SMS Provider') ,
-        ) ,
-        'is_hidden' => array(
+        ] ,
+        'is_hidden' => [
           'name' => 'is_hidden',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ) ,
-      );
+        ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -547,7 +547,7 @@ class CRM_Mailing_DAO_Mailing extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -570,7 +570,7 @@ class CRM_Mailing_DAO_Mailing extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
@@ -591,9 +591,9 @@ class CRM_Mailing_DAO_Mailing extends CRM_Core_DAO
    */
   static function &getEnums()
   {
-    static $enums = array(
+    static $enums = [
       'visibility',
-    );
+    ];
     return $enums;
   }
   /**
@@ -608,12 +608,12 @@ class CRM_Mailing_DAO_Mailing extends CRM_Core_DAO
   {
     static $translations = null;
     if (!$translations) {
-      $translations = array(
-        'visibility' => array(
+      $translations = [
+        'visibility' => [
           'User and User Admin Only' => ts('User and User Admin Only') ,
           'Public Pages' => ts('Public Pages') ,
-        ) ,
-      );
+        ] ,
+      ];
     }
     return $translations[$field][$value];
   }

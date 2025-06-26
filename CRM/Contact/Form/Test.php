@@ -55,8 +55,8 @@ class CRM_Contact_Form_Test extends CRM_Core_Form {
    * @return None
    */
   function setDefaultValues() {
-    $defaults = array();
-    $params = array();
+    $defaults = [];
+    $params = [];
   }
 
   /**
@@ -72,7 +72,7 @@ class CRM_Contact_Form_Test extends CRM_Core_Form {
     $this->addElement('text', "state_id", ts('State / Province Id'));
     //$this->addElement('text', "country", ts('Country'));
     // $this->addElement('text', "country_id", ts('Country  Id'));
-    $this->addElement('select', "country", ts('Country'), array('' => ts('- select -')), 'onblur="getState(this,event, true);"');
+    $this->addElement('select', "country", ts('Country'), ['' => ts('- select -')], 'onblur="getState(this,event, true);"');
   }
 
   /**

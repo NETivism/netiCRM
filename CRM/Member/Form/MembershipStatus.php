@@ -50,7 +50,7 @@ class CRM_Member_Form_MembershipStatus extends CRM_Member_Form {
    * @return None
    */
   public function setDefaultValues() {
-    $defaults = array();
+    $defaults = [];
     $defaults = &parent::setDefaultValues();
 
     //finding default weight to be put
@@ -86,7 +86,7 @@ class CRM_Member_Form_MembershipStatus extends CRM_Member_Form {
       CRM_Core_DAO::getAttribute('CRM_Member_DAO_MembershipStatus', 'label'), TRUE
     );
     $this->addRule('label', ts('A membership status with this label already exists. Please select another label.'),
-      'objectExists', array('CRM_Member_DAO_MembershipStatus', $this->_id, 'name')
+      'objectExists', ['CRM_Member_DAO_MembershipStatus', $this->_id, 'name']
     );
 
     $this->add('select', 'start_event', ts('Start Event'), CRM_Core_SelectValues::eventDate(), TRUE);
@@ -124,7 +124,7 @@ class CRM_Member_Form_MembershipStatus extends CRM_Member_Form {
       CRM_Core_Session::setStatus(ts('Selected membership status has been deleted.'));
     }
     else {
-      $params = $ids = array();
+      $params = $ids = [];
       // store the submitted values in an array
       $params = $this->exportValues();
 
@@ -143,7 +143,7 @@ class CRM_Member_Form_MembershipStatus extends CRM_Member_Form {
 
       $membershipStatus = CRM_Member_BAO_MembershipStatus::add($params, $ids);
       CRM_Core_Session::setStatus(ts('The membership status \'%1\' has been saved.',
-          array(1 => $membershipStatus->label)
+          [1 => $membershipStatus->label]
         ));
     }
   }

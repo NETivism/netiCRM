@@ -211,9 +211,9 @@ class CRM_AI_DAO_AICompletion extends CRM_Core_DAO
   function &links()
   {
     if (!(self::$_links)) {
-      self::$_links = array(
+      self::$_links = [
         'contact_id' => 'civicrm_contact:id',
-      );
+      ];
     }
     return self::$_links;
   }
@@ -240,126 +240,126 @@ class CRM_AI_DAO_AICompletion extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'id' => array(
+      self::$_fields = [
+        'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'contact_id' => array(
+        ] ,
+        'contact_id' => [
           'name' => 'contact_id',
           'type' => CRM_Utils_Type::T_INT,
           'FKClassName' => 'CRM_Contact_DAO_Contact',
-        ) ,
-        'is_template' => array(
+        ] ,
+        'is_template' => [
           'name' => 'is_template',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'required' => true,
-        ) ,
-        'template_title' => array(
+        ] ,
+        'template_title' => [
           'name' => 'template_title',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Template Title') ,
           'maxlength' => 128,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'tone_style' => array(
+        ] ,
+        'tone_style' => [
           'name' => 'tone_style',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Tone Style') ,
           'required' => true,
           'maxlength' => 64,
           'size' => CRM_Utils_Type::BIG,
-        ) ,
-        'ai_role' => array(
+        ] ,
+        'ai_role' => [
           'name' => 'ai_role',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Ai Role') ,
           'required' => true,
           'maxlength' => 64,
           'size' => CRM_Utils_Type::BIG,
-        ) ,
-        'context' => array(
+        ] ,
+        'context' => [
           'name' => 'context',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Context') ,
           'required' => true,
-        ) ,
-        'output_text' => array(
+        ] ,
+        'output_text' => [
           'name' => 'output_text',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Output Text') ,
           'required' => true,
-        ) ,
-        'is_share_with_others' => array(
+        ] ,
+        'is_share_with_others' => [
           'name' => 'is_share_with_others',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'required' => true,
-        ) ,
-        'created_date' => array(
+        ] ,
+        'created_date' => [
           'name' => 'created_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Created Date') ,
           'required' => true,
-        ) ,
-        'prompt' => array(
+        ] ,
+        'prompt' => [
           'name' => 'prompt',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Prompt') ,
           'required' => true,
-        ) ,
-        'component' => array(
+        ] ,
+        'component' => [
           'name' => 'component',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Component') ,
           'required' => true,
           'maxlength' => 64,
           'size' => CRM_Utils_Type::BIG,
-        ) ,
-        'field' => array(
+        ] ,
+        'field' => [
           'name' => 'field',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Field') ,
           'required' => true,
           'maxlength' => 64,
           'size' => CRM_Utils_Type::BIG,
-        ) ,
-        'temperature' => array(
+        ] ,
+        'temperature' => [
           'name' => 'temperature',
           'type' => CRM_Utils_Type::T_FLOAT,
           'title' => ts('Temperature') ,
           'required' => true,
-        ) ,
-        'post_data' => array(
+        ] ,
+        'post_data' => [
           'name' => 'post_data',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Post Data') ,
           'required' => true,
-        ) ,
-        'return_data' => array(
+        ] ,
+        'return_data' => [
           'name' => 'return_data',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Return Data') ,
           'required' => true,
-        ) ,
-        'prompt_token' => array(
+        ] ,
+        'prompt_token' => [
           'name' => 'prompt_token',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Prompt Token') ,
           'required' => true,
-        ) ,
-        'completion_token' => array(
+        ] ,
+        'completion_token' => [
           'name' => 'completion_token',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Completion Token') ,
           'required' => true,
-        ) ,
-        'status_id' => array(
+        ] ,
+        'status_id' => [
           'name' => 'status_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-      );
+        ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -392,7 +392,7 @@ class CRM_AI_DAO_AICompletion extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -415,7 +415,7 @@ class CRM_AI_DAO_AICompletion extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {

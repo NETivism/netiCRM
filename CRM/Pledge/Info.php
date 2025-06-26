@@ -45,46 +45,46 @@ class CRM_Pledge_Info extends CRM_Core_Component_Info {
 
   // docs inherited from interface
   public function getInfo() {
-    return array('name' => 'CiviPledge',
+    return ['name' => 'CiviPledge',
       'translatedName' => ts('CiviPledge'),
       'title' => ts('CiviCRM Pledge Engine'),
       'search' => 1,
       'showActivitiesInCore' => 1,
-    );
+    ];
   }
 
 
   // docs inherited from interface
   public function getPermissions() {
-    return array('access CiviPledge',
+    return ['access CiviPledge',
       'edit pledges',
       'delete in CiviPledge',
-    );
+    ];
   }
 
   // docs inherited from interface
   public function getUserDashboardElement() {
-    return array('name' => ts('Pledges'),
+    return ['name' => ts('Pledges'),
       'title' => ts('Your Pledge(s)'),
       // we need to check this permission since you can click on contribution page link for making payment
-      'perm' => array('make online contributions'),
+      'perm' => ['make online contributions'],
       'weight' => 15,
-    );
+    ];
   }
 
   // docs inherited from interface
   public function registerTab() {
-    return array('title' => ts('Pledges'),
+    return ['title' => ts('Pledges'),
       'url' => 'pledge',
       'weight' => 25,
-    );
+    ];
   }
 
   // docs inherited from interface
   public function registerAdvancedSearchPane() {
-    return array('title' => ts('Pledges'),
+    return ['title' => ts('Pledges'),
       'weight' => 25,
-    );
+    ];
   }
 
   // docs inherited from interface
@@ -97,11 +97,11 @@ class CRM_Pledge_Info extends CRM_Core_Component_Info {
     if (CRM_Core_Permission::check('access CiviPledge') &&
       CRM_Core_Permission::check('edit pledges')
     ) {
-      $shortCuts = array_merge($shortCuts, array(array('path' => 'civicrm/pledge/add',
+      $shortCuts = array_merge($shortCuts, [['path' => 'civicrm/pledge/add',
             'query' => "reset=1&action=add&context=standalone",
             'ref' => 'new-pledge',
             'title' => ts('Pledge'),
-          )));
+          ]]);
     }
   }
 }

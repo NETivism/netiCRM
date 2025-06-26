@@ -38,7 +38,7 @@ abstract class CRM_SMS_Provider {
    *
    * @var object
    */
-  static private $_singleton = array();
+  static private $_singleton = [];
 
   /**
    * Each array element is a message constructor by provider prepared to send
@@ -47,14 +47,14 @@ abstract class CRM_SMS_Provider {
    *
    * @var array
    */
-  public $_sms = array();
+  public $_sms = [];
 
   /**
    * Each acitvity ID that SMS need to update after send
    *
    * @var array
    */
-  public $_activityId = array();
+  public $_activityId = [];
 
   /**
    * The result of this batch / process
@@ -68,14 +68,14 @@ abstract class CRM_SMS_Provider {
    *
    * @var array
    */
-  public $_response = array();
+  public $_response = [];
 
   /**
    * Provider info increase secret
    *
    * @var array
    */
-  private $_providerInfo = array();
+  private $_providerInfo = [];
 
   /**
    * Max SMS Characters to send in 1 message
@@ -95,7 +95,7 @@ abstract class CRM_SMS_Provider {
    *
    * @return object
    */
-  public static function &singleton($providerParams = array(), $force = FALSE) {
+  public static function &singleton($providerParams = [], $force = FALSE) {
     $providerID = CRM_Utils_Array::value('provider_id', $providerParams);
     $providerName = CRM_Utils_Array::value('provider', $providerParams);
 
@@ -139,10 +139,10 @@ abstract class CRM_SMS_Provider {
    * @return void
    */
   public function free() {
-    $this->_sms = array();
-    $this->_activityId = array();
+    $this->_sms = [];
+    $this->_activityId = [];
     $this->_success = NULL;
-    $this->_response = array();
-    $this->_activityId = array();
+    $this->_response = [];
+    $this->_activityId = [];
   }
 }

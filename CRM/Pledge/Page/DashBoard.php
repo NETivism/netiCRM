@@ -51,13 +51,13 @@ class CRM_Pledge_Page_DashBoard extends CRM_Core_Page {
   function preProcess() {
     CRM_Utils_System::setTitle(ts('CiviPledge'));
 
-    $startToDate = array();
-    $yearToDate = array();
-    $monthToDate = array();
-    $previousToDate = array();
+    $startToDate = [];
+    $yearToDate = [];
+    $monthToDate = [];
+    $previousToDate = [];
 
-    $prefixes = array('start', 'month', 'year', 'previous');
-    $status = array('Completed', 'Cancelled', 'Pending', 'In Progress', 'Overdue');
+    $prefixes = ['start', 'month', 'year', 'previous'];
+    $status = ['Completed', 'Cancelled', 'Pending', 'In Progress', 'Overdue'];
 
     // cumulative (since inception) - prefix = 'start'
     $startDate = NULL;
@@ -66,7 +66,7 @@ class CRM_Pledge_Page_DashBoard extends CRM_Core_Page {
     // current year - prefix = 'year'
     $config = CRM_Core_Config::singleton();
     $yearDate = $config->fiscalYearStart;
-    $year = array('Y' => date('Y'));
+    $year = ['Y' => date('Y')];
     $this->assign('curYear', $year['Y']);
     $yearDate = array_merge($year, $yearDate);
     $yearDate = CRM_Utils_Date::format($yearDate);

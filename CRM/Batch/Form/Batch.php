@@ -22,10 +22,10 @@ class CRM_Batch_Form_Batch extends CRM_Core_Form {
   protected $_batch = NULL;
   function preProcess() {
     $id = CRM_Utils_Request::retrieve('id', 'Positive', $this, TRUE);
-    $defaults = array();
-    $params = array(
+    $defaults = [];
+    $params = [
       'id' => $id
-    );
+    ];
     $batch = CRM_Batch_BAO_Batch::retrieve($params, $defaults);
     if ($batch) {
       $this->_batch = $batch;
@@ -39,16 +39,16 @@ class CRM_Batch_Form_Batch extends CRM_Core_Form {
     $batchStatus = CRM_Batch_BAO_Batch::batchStatus();
     $cancelStatus = $batchStatus['Canceled'];
     $batchStatusLabel = CRM_Core_OptionGroup::values('batch_status');
-    $this->addSelect('status_id', ts('Status'), array(
+    $this->addSelect('status_id', ts('Status'), [
       $this->_batch->status_id => $batchStatusLabel[$this->_batch->status_id], // current status
       $cancelStatus => $batchStatusLabel[$cancelStatus],
-    ), NULL, TRUE);
-    $this->addButtons(array(
-      array('type' => 'next', 'name' => ts('Save'), 'isDefault' => TRUE),
-      array('type' => 'cancel', 'name' => ts('Cancel')),
-    ));
+    ], NULL, TRUE);
+    $this->addButtons([
+      ['type' => 'next', 'name' => ts('Save'), 'isDefault' => TRUE],
+      ['type' => 'cancel', 'name' => ts('Cancel')],
+    ]);
 
-    $defaults = array();
+    $defaults = [];
     $defaults["label"] = $this->_batch->label;
     $defaults["description"] = $this->_batch->description;
     $defaults["status_id"] = $this->_batch->status_id;

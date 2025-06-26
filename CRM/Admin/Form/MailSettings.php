@@ -74,7 +74,7 @@ class CRM_Admin_Form_MailSettings extends CRM_Admin_Form {
 
     $this->add('select', 'protocol',
       ts('Protocol'),
-      array('' => ts('- select -')) + CRM_Core_PseudoConstant::mailProtocol() + array('smtp' => 'SMTP'),
+      ['' => ts('- select -')] + CRM_Core_PseudoConstant::mailProtocol() + ['smtp' => 'SMTP'],
       TRUE
     );
 
@@ -82,9 +82,9 @@ class CRM_Admin_Form_MailSettings extends CRM_Admin_Form {
 
     $this->add('text', 'port', ts('Port'), $attributes['port']);
 
-    $this->add('text', 'username', ts('Username'), array('autocomplete' => 'off'));
+    $this->add('text', 'username', ts('Username'), ['autocomplete' => 'off']);
 
-    $this->add('password', 'password', ts('Password'), array('autocomplete' => 'off'));
+    $this->add('password', 'password', ts('Password'), ['autocomplete' => 'off']);
 
     $this->add('text', 'source', ts('Source'), $attributes['source']);
 
@@ -104,11 +104,11 @@ class CRM_Admin_Form_MailSettings extends CRM_Admin_Form {
       }
     }
     $this->add('select', 'is_default', ts('Used For?'), $usedFor);
-    $this->addFormRule(array('CRM_Admin_Form_MailSettings', 'formRule'), $this);
+    $this->addFormRule(['CRM_Admin_Form_MailSettings', 'formRule'], $this);
   }
   
   static function formRule($fields, $files, $self) {
-    $errors = array();
+    $errors = [];
     if ($fields['is_default'] != 1 && !empty($fields['localpart'])) {
       $test = preg_match('/'.$fields['localpart'].'/i', 'test');
       if ($test === FALSE) {
@@ -157,7 +157,7 @@ class CRM_Admin_Form_MailSettings extends CRM_Admin_Form {
     $formValues = $this->controller->exportValues($this->_name);
 
     //form fields.
-    $fields = array('name',
+    $fields = ['name',
       'domain',
       'localpart',
       'server',
@@ -169,11 +169,11 @@ class CRM_Admin_Form_MailSettings extends CRM_Admin_Form {
       'source',
       'is_ssl',
       'is_default',
-    );
+    ];
 
-    $params = array();
+    $params = [];
     foreach ($fields as $f) {
-      if (in_array($f, array('is_default', 'is_ssl'))) {
+      if (in_array($f, ['is_default', 'is_ssl'])) {
         $params[$f] = CRM_Utils_Array::value($f, $formValues, FALSE);
       }
       else {

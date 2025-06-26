@@ -49,7 +49,7 @@ Class CRM_Core_Form_Date {
    */
   static function buildAllowedDateFormats(&$form) {
 
-    $dateOptions = array();
+    $dateOptions = [];
 
 
     if (CRM_Utils_System::getClassName($form) == 'CRM_Activity_Import_Form_UploadFile') {
@@ -64,7 +64,7 @@ Class CRM_Core_Form_Date {
     $dateOptions[] = $form->createElement('radio', NULL, NULL, ts('mm/dd/yyyy OR mm-dd-yyyy (12/25/1998 OR 12-25-1998) OR (9/1/2008 OR 9-1-2008)'), self::DATE_mm_dd_yyyy);
     $dateOptions[] = $form->createElement('radio', NULL, NULL, ts('dd/mm/yyyy (25/12/1998) OR (1/9/2008)'), self::DATE_dd_mm_yyyy);
     $form->addGroup($dateOptions, 'dateFormats', ts('Date Format'), '<br/>');
-    $form->setDefaults(array('dateFormats' => self::DATE_yyyy_mm_dd));
+    $form->setDefaults(['dateFormats' => self::DATE_yyyy_mm_dd]);
   }
 
   /**
@@ -76,7 +76,7 @@ Class CRM_Core_Form_Date {
    * @access public
    */
   static function buildDateRange(&$form, $fieldName, $count = 1, $required = FALSE, $addReportFilters = TRUE) {
-    $selector = array(ts('Choose Date Range'),
+    $selector = [ts('Choose Date Range'),
       'this.year' => ts('This Year'),
       'this.fiscal_year' => ts('This Fiscal Year'),
       'this.quarter' => ts('This Quarter'),
@@ -113,7 +113,7 @@ Class CRM_Core_Form_Date {
       'ending.quarter' => ts('From 3 Months Ago'),
       'ending.month' => ts('From 1 Month Ago'),
       'ending.week' => ts('From 1 Week Ago'),
-    );
+    ];
     if ($addReportFilters) {
 
       $selector += CRM_Report_Form::getOperationPair(CRM_Report_Form::OP_DATE);

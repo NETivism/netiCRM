@@ -44,7 +44,7 @@ class CRM_Case_XMLProcessor {
 
     if (!CRM_Utils_Array::value($caseType, self::$_xml)) {
       if (!self::$_xml) {
-        self::$_xml = array();
+        self::$_xml = [];
       }
 
       // first check custom templates directory
@@ -55,13 +55,13 @@ class CRM_Case_XMLProcessor {
       ) {
         // check if the file exists in the custom templates directory
         $fileName = CRM_Utils_Array::implode(DIRECTORY_SEPARATOR,
-          array($config->customTemplateDir,
+          [$config->customTemplateDir,
             'CRM',
             'Case',
             'xml',
             'configuration',
             "$caseType.xml",
-          )
+          ]
         );
       }
 
@@ -70,11 +70,11 @@ class CRM_Case_XMLProcessor {
       ) {
         // check if file exists locally
         $fileName = CRM_Utils_Array::implode(DIRECTORY_SEPARATOR,
-          array(dirname(__FILE__),
+          [dirname(__FILE__),
             'xml',
             'configuration',
             "$caseType.xml",
-          )
+          ]
         );
 
         if (!file_exists($fileName)) {
@@ -100,13 +100,13 @@ class CRM_Case_XMLProcessor {
   }
 
   function &allRelationshipTypes() {
-    static $relationshipTypes = array();
+    static $relationshipTypes = [];
 
     if (!$relationshipTypes) {
 
       $relationshipInfo = CRM_Core_PseudoConstant::relationshipType();
 
-      $relationshipTypes = array();
+      $relationshipTypes = [];
       foreach ($relationshipInfo as $id => $info) {
         $relationshipTypes[$id] = $info['label_b_a'];
       }

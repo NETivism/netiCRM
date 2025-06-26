@@ -190,9 +190,9 @@ class CRM_Contribute_DAO_Widget extends CRM_Core_DAO
   function &links()
   {
     if (!(self::$_links)) {
-      self::$_links = array(
+      self::$_links = [
         'contribution_page_id' => 'civicrm_contribution_page:id',
-      );
+      ];
     }
     return self::$_links;
   }
@@ -219,118 +219,118 @@ class CRM_Contribute_DAO_Widget extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'id' => array(
+      self::$_fields = [
+        'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'contribution_page_id' => array(
+        ] ,
+        'contribution_page_id' => [
           'name' => 'contribution_page_id',
           'type' => CRM_Utils_Type::T_INT,
           'FKClassName' => 'CRM_Contribute_DAO_ContributionPage',
-        ) ,
-        'is_active' => array(
+        ] ,
+        'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ) ,
-        'title' => array(
+        ] ,
+        'title' => [
           'name' => 'title',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Title') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'url_logo' => array(
+        ] ,
+        'url_logo' => [
           'name' => 'url_logo',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Url Logo') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'button_title' => array(
+        ] ,
+        'button_title' => [
           'name' => 'button_title',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Button Title') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'about' => array(
+        ] ,
+        'about' => [
           'name' => 'about',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('About') ,
-        ) ,
-        'url_homepage' => array(
+        ] ,
+        'url_homepage' => [
           'name' => 'url_homepage',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Url Homepage') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'color_title' => array(
+        ] ,
+        'color_title' => [
           'name' => 'color_title',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Color Title') ,
           'maxlength' => 10,
           'size' => CRM_Utils_Type::TWELVE,
-        ) ,
-        'color_button' => array(
+        ] ,
+        'color_button' => [
           'name' => 'color_button',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Color Button') ,
           'maxlength' => 10,
           'size' => CRM_Utils_Type::TWELVE,
-        ) ,
-        'color_bar' => array(
+        ] ,
+        'color_bar' => [
           'name' => 'color_bar',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Color Bar') ,
           'maxlength' => 10,
           'size' => CRM_Utils_Type::TWELVE,
-        ) ,
-        'color_main_text' => array(
+        ] ,
+        'color_main_text' => [
           'name' => 'color_main_text',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Color Main Text') ,
           'maxlength' => 10,
           'size' => CRM_Utils_Type::TWELVE,
-        ) ,
-        'color_main' => array(
+        ] ,
+        'color_main' => [
           'name' => 'color_main',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Color Main') ,
           'maxlength' => 10,
           'size' => CRM_Utils_Type::TWELVE,
-        ) ,
-        'color_main_bg' => array(
+        ] ,
+        'color_main_bg' => [
           'name' => 'color_main_bg',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Color Main Bg') ,
           'maxlength' => 10,
           'size' => CRM_Utils_Type::TWELVE,
-        ) ,
-        'color_bg' => array(
+        ] ,
+        'color_bg' => [
           'name' => 'color_bg',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Color Bg') ,
           'maxlength' => 10,
           'size' => CRM_Utils_Type::TWELVE,
-        ) ,
-        'color_about_link' => array(
+        ] ,
+        'color_about_link' => [
           'name' => 'color_about_link',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Color About Link') ,
           'maxlength' => 10,
           'size' => CRM_Utils_Type::TWELVE,
-        ) ,
-        'color_homepage_link' => array(
+        ] ,
+        'color_homepage_link' => [
           'name' => 'color_homepage_link',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Color Homepage Link') ,
           'maxlength' => 10,
           'size' => CRM_Utils_Type::TWELVE,
-        ) ,
-      );
+        ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -363,7 +363,7 @@ class CRM_Contribute_DAO_Widget extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -386,7 +386,7 @@ class CRM_Contribute_DAO_Widget extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {

@@ -15,7 +15,7 @@ class CRM_Utils_System_Drupal6 {
    * @return bool
    * @Todo Handle setting cleanurls configuration for CiviCRM?
    */
-  function loadBootStrap($params = array(), $loadUser = TRUE, $throwError = FALSE) {
+  function loadBootStrap($params = [], $loadUser = TRUE, $throwError = FALSE) {
     $cmsPath = CRM_Utils_System_Drupal::cmsRootPath();
     if (!file_exists("$cmsPath/includes/bootstrap.inc")) {
       if ($throwError) {
@@ -49,7 +49,7 @@ class CRM_Utils_System_Drupal6 {
         $pass = CRM_Utils_Array::value('pass', $params, FALSE) ? $params['pass'] : trim(CRM_Utils_Array::value('pass', $_REQUEST));
 
         if ($name) {
-          $user = user_authenticate(array('name' => $name, 'pass' => $pass));
+          $user = user_authenticate(['name' => $name, 'pass' => $pass]);
           if (empty($user->uid)) {
             if ($throwError) {
               throw new Exception('Sorry, unrecognized username or password.');
@@ -84,7 +84,7 @@ class CRM_Utils_System_Drupal6 {
    */
   function checkUserNameEmailExists($params, $emailName = 'email') {
     $config = CRM_Core_Config::singleton();
-    $errors = array();
+    $errors = [];
 
     $dao   = new CRM_Core_DAO();
     $name  = $dao->escape(CRM_Utils_Array::value('name', $params));
@@ -126,12 +126,12 @@ class CRM_Utils_System_Drupal6 {
       $dbEmail = CRM_Utils_Array::value(1, $row);
       if (strtolower($dbName) == strtolower($name)) {
         $errors['cms_name'] = ts('The username %1 is already taken. Please select another username.',
-          array(1 => $name)
+          [1 => $name]
         );
       }
       if (strtolower($dbEmail) == strtolower($email)) {
         $errors[$emailName] = ts('This email %1 is already registered. Please select another email.',
-          array(1 => $email)
+          [1 => $email]
         );
       }
     }
@@ -149,12 +149,12 @@ class CRM_Utils_System_Drupal6 {
    * @access public
    */
   function createUser($params, $mail) {
-    $form_state = array();
-    $form_state['values'] = array(
+    $form_state = [];
+    $form_state['values'] = [
       'name' => $params['cms_name'],
       'mail' => $params[$mail],
       'op' => 'Create new account',
-    );
+    ];
     if (!variable_get('user_email_verification', TRUE)) {
       $form_state['values']['pass']['pass1'] = $params['cms_pass'];
       $form_state['values']['pass']['pass2'] = $params['cms_pass'];
@@ -193,10 +193,10 @@ class CRM_Utils_System_Drupal6 {
   function updateCMSName($ufID, $ufName) {
     // CRM-5555
     if (function_exists('user_load')) {
-      $user = user_load(array('uid' => $ufID));
+      $user = user_load(['uid' => $ufID]);
       if ($user->mail != $ufName) {
-        user_save($user, array('mail' => $ufName));
-        $user = user_load(array('uid' => $ufID));
+        user_save($user, ['mail' => $ufName]);
+        $user = user_load(['uid' => $ufID]);
       }
     }
   }
@@ -214,10 +214,10 @@ class CRM_Utils_System_Drupal6 {
       //url prefix / path.
       if (isset($language->prefix) &&
         $language->prefix &&
-        in_array($mode, array(
+        in_array($mode, [
           LANGUAGE_NEGOTIATION_PATH,
             LANGUAGE_NEGOTIATION_PATH_DEFAULT,
-          ))
+          ])
       ) {
 
         if ($addLanguagePart) {
@@ -262,7 +262,7 @@ class CRM_Utils_System_Drupal6 {
    * @inheritDoc
    */
   public function authenticate($name, $password, $loadCMSBootstrap = FALSE, $realPath = NULL) {
-    $user = user_authenticate(array('name' => $name, 'pass' => $password));
+    $user = user_authenticate(['name' => $name, 'pass' => $password]);
     if (!empty($user->uid)) {
       if ($this->loadUserByName($name)) {
         $uid = $user->uid;
@@ -279,7 +279,7 @@ class CRM_Utils_System_Drupal6 {
    */
   public function loadUserByName($username) {
     if (!empty($username)) {
-      $account = user_load(array('name' => $username));
+      $account = user_load(['name' => $username]);
     }
     if ($account && $account->uid && $account->name == $username) {
       global $user;
@@ -301,7 +301,7 @@ class CRM_Utils_System_Drupal6 {
    */
   public function loadUserById($uid) {
     if (!empty($uid) && CRM_Utils_Rule::positiveInteger($uid)) {
-      $account = user_load(array('uid' => $uid));
+      $account = user_load(['uid' => $uid]);
     }
     if ($account && $account->uid == $uid) {
       global $user;

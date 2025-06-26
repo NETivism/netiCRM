@@ -47,8 +47,8 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
    */
   static function preProcess(&$form) {
 
-    $messageText = array();
-    $messageSubject = array();
+    $messageText = [];
+    $messageSubject = [];
     $dao = new CRM_Core_BAO_MessageTemplates();
     $dao->is_active = 1;
     $dao->find();
@@ -62,7 +62,7 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
   }
 
   static function preProcessSingle(&$form, $cid) {
-    $form->_contactIds = array($cid);
+    $form->_contactIds = [$cid];
     // put contact display name in title for single contact mode
 
     CRM_Contact_Page_View::setTitle($cid);
@@ -89,25 +89,25 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
         FALSE, NULL, FALSE
       );
       if ($form->get('action') == CRM_Core_Action::VIEW) {
-        $form->addButtons(array(
-            array('type' => 'cancel',
+        $form->addButtons([
+            ['type' => 'cancel',
               'name' => ts('Done'),
-              'js' => array('onclick' => "location.href='{$cancelURL}'; return false;"),
-            ),
-          )
+              'js' => ['onclick' => "location.href='{$cancelURL}'; return false;"],
+            ],
+          ]
         );
       }
       else {
-        $form->addButtons(array(
-            array('type' => 'submit',
+        $form->addButtons([
+            ['type' => 'submit',
               'name' => ts('Make PDF Letter'),
               'isDefault' => TRUE,
-            ),
-            array('type' => 'cancel',
+            ],
+            ['type' => 'cancel',
               'name' => ts('Done'),
-              'js' => array('onclick' => "location.href='{$cancelURL}'; return false;"),
-            ),
-          )
+              'js' => ['onclick' => "location.href='{$cancelURL}'; return false;"],
+            ],
+          ]
         );
       }
     }
@@ -115,7 +115,7 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
       $form->addDefaultButtons(ts('Make PDF Letters'));
     }
 
-    $form->addFormRule(array('CRM_Contact_Form_Task_PDFLetterCommon', 'formRule'), $form);
+    $form->addFormRule(['CRM_Contact_Form_Task_PDFLetterCommon', 'formRule'], $form);
   }
 
   /**
@@ -130,7 +130,7 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
    *
    */
   static function formRule($fields, $dontCare, $self) {
-    $errors = array();
+    $errors = [];
     $template = CRM_Core_Smarty::singleton();
 
     //Added for CRM-1393
@@ -153,11 +153,11 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
     // process message template
 
     if (CRM_Utils_Array::value('saveTemplate', $formValues) || CRM_Utils_Array::value('updateTemplate', $formValues)) {
-      $messageTemplate = array('msg_text' => NULL,
+      $messageTemplate = ['msg_text' => NULL,
         'msg_html' => $formValues['html_message'],
         'msg_subject' => NULL,
         'is_active' => TRUE,
-      );
+      ];
 
       if ($formValues['saveTemplate']) {
         $messageTemplate['msg_title'] = $formValues['saveTemplateName'];
@@ -175,7 +175,7 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
 
     $html = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><style>body { margin: 56px; }</style></head><body>';
 
-    $tokens = array();
+    $tokens = [];
     CRM_Utils_Hook::tokens($tokens);
     $categories = array_keys($tokens);
 
@@ -183,7 +183,7 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
     self::formatMessage($html_message);
 
     $messageToken = CRM_Utils_Token::getTokens($html_message);
-    $returnProperties = array();
+    $returnProperties = [];
     if (isset($messageToken['contact'])) {
       foreach ($messageToken['contact'] as $key => $value) {
         $returnProperties[$value] = 1;
@@ -196,7 +196,7 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
     $first = TRUE;
     $domain = CRM_Core_BAO_Domain::getDomain();
     foreach ($form->_contactIds as $contactId) {
-      $params = array('contact_id' => $contactId);
+      $params = ['contact_id' => $contactId];
 
       list($contact) = $mailing->getDetails($params, $returnProperties, FALSE);
 
@@ -222,20 +222,20 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
     $session = CRM_Core_Session::singleton();
     $userID = $session->get('userID');
     $activityTypeID = CRM_Core_OptionGroup::getValue('activity_type', 'Print PDF Letter', 'name');
-    $activityParams = array('source_contact_id' => $userID,
+    $activityParams = ['source_contact_id' => $userID,
       'activity_type_id' => $activityTypeID,
       'activity_date_time' => date('YmdHis'),
       'details' => $html_message,
-    );
+    ];
     if ($form->_activityId) {
-      $activityParams += array('id' => $form->_activityId);
+      $activityParams += ['id' => $form->_activityId];
     }
     if ($form->_cid) {
       $activity = CRM_Activity_BAO_Activity::create($activityParams);
     }
     else {
       // create  Print PDF activity for each selected contact. CRM-6886
-      $activityIds = array();
+      $activityIds = [];
       foreach ($form->_contactIds as $contactId) {
         $activityID = CRM_Activity_BAO_Activity::create($activityParams);
         $activityIds[$contactId] = $activityID->id;
@@ -243,9 +243,9 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
     }
 
     foreach ($form->_contactIds as $contactId) {
-      $activityTargetParams = array('activity_id' => empty($activity->id) ? $activityIds[$contactId] : $activity->id,
+      $activityTargetParams = ['activity_id' => empty($activity->id) ? $activityIds[$contactId] : $activity->id,
         'target_contact_id' => $contactId,
-      );
+      ];
       CRM_Activity_BAO_Activity::createActivityTarget($activityTargetParams);
     }
 
@@ -254,20 +254,20 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
   }
 
   static function formatMessage(&$message) {
-    $newLineOperators = array('p' => array('oper' => '<p>',
+    $newLineOperators = ['p' => ['oper' => '<p>',
         'pattern' => '/<(\s+)?p(\s+)?>/m',
-      ),
-      'br' => array('oper' => '<br />',
+      ],
+      'br' => ['oper' => '<br />',
         'pattern' => '/<(\s+)?br(\s+)?\/>/m',
-      ),
-    );
+      ],
+    ];
 
     $htmlMsg = preg_split($newLineOperators['p']['pattern'], $message);
     foreach ($htmlMsg as $k => & $m) {
       $messages = preg_split($newLineOperators['br']['pattern'], $m);
       foreach ($messages as $key => & $msg) {
         $msg = trim($msg);
-        $matches = array();
+        $matches = [];
         if (preg_match('/^(&nbsp;)+/', $msg, $matches)) {
           $spaceLen = strlen($matches[0]) / 6;
           $trimMsg = ltrim($msg, '&nbsp; ');

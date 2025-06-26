@@ -64,38 +64,38 @@ class CRM_Admin_Page_RelationshipType extends CRM_Core_Page_Basic {
    */
   function &links() {
     if (!(self::$_links)) {
-      self::$_links = array(
-        CRM_Core_Action::VIEW => array(
+      self::$_links = [
+        CRM_Core_Action::VIEW => [
           'name' => ts('View'),
           'url' => 'civicrm/admin/reltype',
           'qs' => 'action=view&id=%%id%%&reset=1',
           'title' => ts('View Relationship Type'),
-        ),
-        CRM_Core_Action::UPDATE => array(
+        ],
+        CRM_Core_Action::UPDATE => [
           'name' => ts('Edit'),
           'url' => 'civicrm/admin/reltype',
           'qs' => 'action=update&id=%%id%%&reset=1',
           'title' => ts('Edit Relationship Type'),
-        ),
-        CRM_Core_Action::DISABLE => array(
+        ],
+        CRM_Core_Action::DISABLE => [
           'name' => ts('Disable'),
           'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_Contact_BAO_RelationshipType' . '\',\'' . 'enable-disable' . '\' );"',
           'ref' => 'disable-action',
           'title' => ts('Disable Relationship Type'),
-        ),
-        CRM_Core_Action::ENABLE => array(
+        ],
+        CRM_Core_Action::ENABLE => [
           'name' => ts('Enable'),
           'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_Contact_BAO_RelationshipType' . '\',\'' . 'disable-enable' . '\' );"',
           'ref' => 'enable-action',
           'title' => ts('Enable Relationship Type'),
-        ),
-        CRM_Core_Action::DELETE => array(
+        ],
+        CRM_Core_Action::DELETE => [
           'name' => ts('Delete'),
           'url' => 'civicrm/admin/reltype',
           'qs' => 'action=delete&id=%%id%%',
           'title' => ts('Delete Reletionship Type'),
-        ),
-      );
+        ],
+      ];
     }
     return self::$_links;
   }

@@ -101,8 +101,8 @@ class CRM_Core_BAO_PaymentProcessor extends CRM_Core_DAO_PaymentProcessor {
    */
   static function &getDefault() {
     if (self::$_defaultPaymentProcessor == NULL) {
-      $params = array('is_default' => 1);
-      $defaults = array();
+      $params = ['is_default' => 1];
+      $defaults = [];
       self::$_defaultPaymentProcessor = self::retrieve($params, $defaults);
     }
     return self::$_defaultPaymentProcessor;
@@ -177,7 +177,7 @@ class CRM_Core_BAO_PaymentProcessor extends CRM_Core_DAO_PaymentProcessor {
     if (!$paymentProcessorIDs) {
       CRM_Core_Error::fatal(ts('Invalid value passed to getPayment function'));
     }
-    $paymentDefault = $paymentDAO = array();
+    $paymentDefault = $paymentDAO = [];
     foreach ($paymentProcessorIDs as $paymentProcessorID) {
       $dao = new CRM_Core_DAO_PaymentProcessor();
       $dao->id = $paymentProcessorID;
@@ -219,10 +219,10 @@ class CRM_Core_BAO_PaymentProcessor extends CRM_Core_DAO_PaymentProcessor {
 
   static function getPaymentsByType($processorType, $mode) {
     if (!$processorType) {
-      return array();
+      return [];
     }
 
-    $paymentDAO = array();
+    $paymentDAO = [];
 
     // Query to get all processors with the specified type (case insensitive)
     $dao = new CRM_Core_DAO_PaymentProcessor();
@@ -254,19 +254,19 @@ class CRM_Core_BAO_PaymentProcessor extends CRM_Core_DAO_PaymentProcessor {
    * @access public
    */
   static function buildPayment($dao) {
-    $fields = array(
+    $fields = [
       'id', 'name', 'description', 'payment_processor_type', 'user_name', 'password',
       'signature', 'url_site', 'url_api', 'url_recur', 'url_button',
       'subject', 'class_name', 'is_recur', 'is_test', 'billing_mode',
       'payment_type', 'is_default',
-    );
-    $result = array();
+    ];
+    $result = [];
 
     // allow class to pass default settings of payment processor
     if ($dao->class_name && strpos($dao->class_name, 'Payment_') === 0) {
       $class = 'CRM_Core_'.$dao->class_name;
       if (method_exists($class, 'buildPaymentDefault')) {
-        call_user_func_array(array($class, 'buildPaymentDefault'), array(&$result, $dao));
+        call_user_func_array([$class, 'buildPaymentDefault'], [&$result, $dao]);
       }
     }
     foreach ($fields as $name) {

@@ -89,10 +89,10 @@ class CRM_Activity_Form_Task_Delete extends CRM_Activity_Form_Task {
       }
     }
 
-    $status = array(
-      ts('Deleted Activities: %1', array(1 => $deletedActivities)),
-      ts('Total Selected Activities: %1', array(1 => count($this->_activityHolderIds))),
-    );
+    $status = [
+      ts('Deleted Activities: %1', [1 => $deletedActivities]),
+      ts('Total Selected Activities: %1', [1 => count($this->_activityHolderIds)]),
+    ];
     CRM_Core_Session::setStatus($status);
   }
 }

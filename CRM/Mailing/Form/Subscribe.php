@@ -65,7 +65,7 @@ SELECT   title, description
       $dao = CRM_Core_DAO::executeQuery($query, CRM_Core_DAO::$_nullArray);
       if ($dao->fetch()) {
         $this->assign('groupName', $dao->title);
-        CRM_Utils_System::setTitle(ts('Subscribe to Mailing List - %1', array(1 => $dao->title)));
+        CRM_Utils_System::setTitle(ts('Subscribe to Mailing List - %1', [1 => $dao->title]));
       }
       else {
          return CRM_Core_Error::statusBounce("The specified group is not configured for this action OR The group doesn't exist.");
@@ -107,9 +107,9 @@ SELECT   id, title, description
    AND   is_active = 1
 ORDER BY title";
       $dao = CRM_Core_DAO::executeQuery($query, CRM_Core_DAO::$_nullArray);
-      $rows = array();
+      $rows = [];
       while ($dao->fetch()) {
-        $row = array();
+        $row = [];
         $row['id'] = $dao->id;
         $row['title'] = $dao->title;
         $row['description'] = $dao->description;
@@ -126,7 +126,7 @@ ORDER BY title";
         $this->setDefaults($default);
       }
       $this->assign('rows', $rows);
-      $this->addFormRule(array('CRM_Mailing_Form_Subscribe', 'formRule'));
+      $this->addFormRule(['CRM_Mailing_Form_Subscribe', 'formRule']);
     }
 
     $addCaptcha = TRUE;
@@ -147,17 +147,17 @@ ORDER BY title";
     }
 
     $this->assign('browserPrint', TRUE);
-    $this->addButtons(array(
-        array(
+    $this->addButtons([
+        [
           'type' => 'next',
           'name' => ts('Subscribe'),
           'isDefault' => TRUE,
-        ),
-        array(
+        ],
+        [
           'type' => 'cancel',
           'name' => ts('Cancel'),
-        ),
-      )
+        ],
+      ]
     );
   }
 
@@ -167,7 +167,7 @@ ORDER BY title";
         return TRUE;
       }
     }
-    return array('_qf_default' => ts('%1 is a required field.', array(1 => ts('Subscribe'))));
+    return ['_qf_default' => ts('%1 is a required field.', [1 => ts('Subscribe')])];
   }
 
   /**
@@ -179,7 +179,7 @@ ORDER BY title";
   public function postProcess() {
     $params = $this->controller->exportValues($this->_name);
 
-    $groups = array();
+    $groups = [];
     if ($this->_groupID) {
       $groups[] = $this->_groupID;
     }
@@ -200,18 +200,18 @@ ORDER BY title";
     }
     else {
       // create contact by params
-      $formatted = array(
+      $formatted = [
         'contact_type' => 'Individual',
         'version' => 3,
         'last_name' => $params['last_name'],
         'first_name' => $params['first_name'],
-      );
+      ];
       $locationType = CRM_Core_BAO_LocationType::getDefault();
-      $value = array(
+      $value = [
         'email' => $params['email'],
         'location_type_id' => $locationType->id,
         'is_bulkmail' => 1,
-      );
+      ];
       require_once 'api/v3/DeprecatedUtils.php';
       _civicrm_api3_deprecated_add_formatted_param($value, $formatted);
 

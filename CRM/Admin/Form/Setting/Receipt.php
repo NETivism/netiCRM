@@ -19,7 +19,7 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
     $this->addElement('textarea', 'receiptOrgInfo', ts('Organization info'));
 
     $fields = CRM_Core_BAO_CustomField::getFields('Contribution');
-    $option = array(0 => ts('-- Select --'));
+    $option = [0 => ts('-- Select --')];
     foreach ($fields as $custom_id => $f) {
       $option[$custom_id] = $f['label'];
     }
@@ -29,12 +29,12 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
     $this->addElement('select', 'receiptDonorCredit', ts('Field for the name used of donor acknowledgement'), $option);
 
     // refs #42235, add customDonorCredit options
-    $donorCreditOptions = array(
+    $donorCreditOptions = [
       ts('Full Name') => 'full_name',
       ts('Partial Name') => 'partial_name',
       ts('Custom Name') => 'custom_name',
       ts("I don't agree to disclose name") => 'anonymous'
-    );
+    ];
     $this->addCheckBox('customDonorCredit', ts('Donor Credit Name Options'), $donorCreditOptions);
 
     $this->addElement('text', 'anonymousDonorCreditDefault', ts("Default name when donor doesn't agree to disclose"));
@@ -42,24 +42,24 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
     // refs #28471, switch to auto send receipt on email
     $haveAttachReceiptOption = CRM_Core_OptionGroup::getValue('activity_type', 'Email Receipt', 'name');
     if (!empty($haveAttachReceiptOption)) {
-      $this->addCheckBox('receiptEmailAuto', ts('Email Receipt'), array('' => 1));
+      $this->addCheckBox('receiptEmailAuto', ts('Email Receipt'), ['' => 1]);
     }
 
-    $addressFields = array(
+    $addressFields = [
       'is_primary' => ts('Is Primary Address'),
       'is_billing' => ts('Is Billing Address'),
-    );
+    ];
     $this->addElement('select', 'receiptAddrType', ts('Address Fields'), $addressFields);
 
     // default receipt type setting
     $receiptTypes = CRM_Contribute_Form_Task_PDF::getPrintingTypes();
-    $this->addElement('select', 'receiptTypeDefault', ts('Default Receipt Type'), array( '' => ts('-- Select --')) + $receiptTypes);
+    $this->addElement('select', 'receiptTypeDefault', ts('Default Receipt Type'), [ '' => ts('-- Select --')] + $receiptTypes);
 
     // https://github.com/NETivism/netiCRM/blob/develop/CRM/Contribute/Form/ManagePremiums.php#L291-L321
     $this->add('file', 'uploadBigStamp', ts('The stamp of organization.'));
     $this->add('file', 'uploadSmallStamp', ts('The stamp of the person in charge.'));
     $config = CRM_Core_Config::singleton();
-    $this->controller->addActions($config->imageUploadDir, array('uploadBigStamp', 'uploadSmallStamp', 'receiptLogo'));
+    $this->controller->addActions($config->imageUploadDir, ['uploadBigStamp', 'uploadSmallStamp', 'receiptLogo']);
 
     if($config->imageBigStampName){
       $this->assign('imageBigStampUrl', $config->imageUploadURL . $config->imageBigStampName);
@@ -82,7 +82,7 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
     $this->add('hidden', 'deleteSmallStamp');
     $this->add('hidden', 'deleteReceiptLogo');
 
-    $displayLegalIDOptions = array('complete' => ts('Complete display'), 'partial' => ts('Partial hide'), 'hide' => ts('Complete hide'));
+    $displayLegalIDOptions = ['complete' => ts('Complete display'), 'partial' => ts('Partial hide'), 'hide' => ts('Complete hide')];
     $this->addRadio('receiptDisplayLegalID', ts('The way displays legal ID in receipt.'), $displayLegalIDOptions);
 
     // redirect to Administer Section After hitting either Save or Cancel button.
@@ -95,7 +95,7 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
     // Refs #38829, Add receipt Email Encryption option
     $this->add('checkbox', 'receiptEmailEncryption', ts('Email Receipt Password'));
     $this->addElement('text', 'receiptEmailEncryptionText', ts('Email Receipt Password Explanation Text'));
-    $this->addFormRule(array(get_class($this), 'formRule'));
+    $this->addFormRule([get_class($this), 'formRule']);
   }
 
   function setDefaultValues() {
@@ -116,20 +116,20 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
     if (!isset($config->customDonorCredit) || !is_array($config->customDonorCredit)) {
       if (isset($config->forbidCustomDonorCredit)) {
         $forbidCustomDonorCredit = !empty($config->forbidCustomDonorCredit) ? 1 : 0;
-        $defaults['customDonorCredit'] = array(
+        $defaults['customDonorCredit'] = [
           'full_name' => 1,
           'partial_name' => 1
-        );
+        ];
 
         if ($forbidCustomDonorCredit == 0) {
           $defaults['customDonorCredit']['custom_name'] = 1;
         }
       } else {
-        $defaults['customDonorCredit'] = array(
+        $defaults['customDonorCredit'] = [
           'full_name' => 1,
           'partial_name' => 1,
           'custom_name' => 1
-        );
+        ];
       }
     }
 

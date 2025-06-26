@@ -90,16 +90,16 @@ class CRM_Contact_Form_Task_AddToGroup extends CRM_Contact_Form_Task {
   function buildQuickForm() {
 
     //create radio buttons to select existing group or add a new group
-    $options = array(ts('Add Contact To Existing Group'), ts('Create New Group'));
+    $options = [ts('Add Contact To Existing Group'), ts('Create New Group')];
 
     if (!$this->_id) {
-      $this->addRadio('group_option', ts('Group Options'), $options, array('onclick' => "return showElements();"));
+      $this->addRadio('group_option', ts('Group Options'), $options, ['onclick' => "return showElements();"]);
 
       $this->add('text', 'title', ts('Group Name:') . ' ',
         CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Group', 'title')
       );
       $this->addRule('title', ts('Name already exists in Database.'),
-        'objectExists', array('CRM_Contact_DAO_Group', $this->_id, 'title')
+        'objectExists', ['CRM_Contact_DAO_Group', $this->_id, 'title']
       );
 
       $this->add('textarea', 'description', ts('Description:') . ' ',
@@ -122,7 +122,7 @@ class CRM_Contact_Form_Task_AddToGroup extends CRM_Contact_Form_Task {
     }
 
     // add select for groups
-    $group = array('' => ts('- select group -')) + CRM_Core_PseudoConstant::group();
+    $group = ['' => ts('- select group -')] + CRM_Core_PseudoConstant::group();
 
     $groupElement = $this->add('select', 'group_id', ts('Select Group'), $group);
 
@@ -132,13 +132,13 @@ class CRM_Contact_Form_Task_AddToGroup extends CRM_Contact_Form_Task {
       $groupElement->freeze();
 
       // also set the group title
-      $groupValues = array('id' => $this->_id, 'title' => $this->_title);
+      $groupValues = ['id' => $this->_id, 'title' => $this->_title];
       $this->assign_by_ref('group', $groupValues);
     }
 
     // Set dynamic page title for 'Add Members Group (confirm)'
     if ($this->_id) {
-      CRM_Utils_System::setTitle(ts('Add Contacts: %1', array(1 => $this->_title)));
+      CRM_Utils_System::setTitle(ts('Add Contacts: %1', [1 => $this->_title]));
     }
     else {
       CRM_Utils_System::setTitle(ts('Add Contacts to A Group'));
@@ -155,7 +155,7 @@ class CRM_Contact_Form_Task_AddToGroup extends CRM_Contact_Form_Task {
    * @return array the default array reference
    */
   function &setDefaultValues() {
-    $defaults = array();
+    $defaults = [];
 
     if ($this->_context === 'amtg') {
       $defaults['group_id'] = $this->_id;
@@ -173,7 +173,7 @@ class CRM_Contact_Form_Task_AddToGroup extends CRM_Contact_Form_Task {
    * @return void
    */
   function addRules() {
-    $this->addFormRule(array('CRM_Contact_Form_task_AddToGroup', 'formRule'));
+    $this->addFormRule(['CRM_Contact_Form_task_AddToGroup', 'formRule']);
   }
 
   /**
@@ -186,7 +186,7 @@ class CRM_Contact_Form_Task_AddToGroup extends CRM_Contact_Form_Task {
    * @access public
    */
   static function formRule($params) {
-    $errors = array();
+    $errors = [];
 
     if ($params['group_option'] && !$params['title']) {
       $errors['title'] = "Group Name is a required field";
@@ -209,7 +209,7 @@ class CRM_Contact_Form_Task_AddToGroup extends CRM_Contact_Form_Task {
     $params = $this->controller->exportValues();
     $groupOption = $params['group_option'];
     if ($groupOption) {
-      $groupParams = array();
+      $groupParams = [];
       $groupParams['title'] = $params['title'];
       $groupParams['description'] = $params['description'];
       $groupParams['visibility'] = "User and User Admin Only";
@@ -236,15 +236,15 @@ class CRM_Contact_Form_Task_AddToGroup extends CRM_Contact_Form_Task {
 
     list($total, $added, $notAdded) = CRM_Contact_BAO_GroupContact::addContactsToGroup($this->_contactIds, $groupID);
 
-    $status = array(
-      ts('Added Contact(s) to %1', array(1 => $groupName)),
-      ts('Total Selected Contact(s): %1', array(1 => $total)),
-    );
+    $status = [
+      ts('Added Contact(s) to %1', [1 => $groupName]),
+      ts('Total Selected Contact(s): %1', [1 => $total]),
+    ];
     if ($added) {
-      $status[] = ts('Total Contact(s) added to group: %1', array(1 => $added));
+      $status[] = ts('Total Contact(s) added to group: %1', [1 => $added]);
     }
     if ($notAdded) {
-      $status[] = ts('Total Contact(s) already in group: %1', array(1 => $notAdded));
+      $status[] = ts('Total Contact(s) already in group: %1', [1 => $notAdded]);
     }
     $status = CRM_Utils_Array::implode('<br/>', $status);
     CRM_Core_Session::setStatus($status);

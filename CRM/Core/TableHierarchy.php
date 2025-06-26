@@ -41,7 +41,7 @@ class CRM_Core_TableHierarchy {
    * @var array
    * @static
    */
-  static $info = array(
+  static $info = [
     'civicrm_contact' => '01',
     'civicrm_address' => '09',
     'civicrm_county' => '10',
@@ -78,7 +78,7 @@ class CRM_Core_TableHierarchy {
     'civicrm_mailing_event_reply' => '42',
     'civicrm_mailing_event_trackable_url_open' => '43',
 
-  );
+  ];
 
   static function &info() {
     //get the campaign related tables.

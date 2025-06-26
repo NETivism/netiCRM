@@ -86,7 +86,7 @@ class CRM_Core_Payment_LinePay {
 
     // reserve
     $config = CRM_Core_Config::singleton();
-    $requestParams = array();
+    $requestParams = [];
     $requestParams['productImageUrl'] = $config->userFrameworkResourceURL.'i/whiteBg.png';
     $requestParams['orderId'] = $params['contributionID'];
     $requestParams['productName'] = strip_tags($description);
@@ -117,7 +117,7 @@ class CRM_Core_Payment_LinePay {
   /**
    * $url_params should be array('civicrm', 'contribute', 'transact')
    */
-  static function confirm($url_params, $get = array()){
+  static function confirm($url_params, $get = []){
     if(empty($get)){
       foreach ($_GET as $key => $value) {
         if ($key == 'q') continue;
@@ -146,7 +146,7 @@ class CRM_Core_Payment_LinePay {
     $contribution = self::prepareContribution($params['cid']);
 
     // confirm
-    $requestParams = array();
+    $requestParams = [];
     $requestParams['transactionId'] = $params['transactionId'];
     $requestParams['amount'] = (int)$contribution->total_amount; // integer
     $requestParams['currency'] = $config->defaultCurrency;
@@ -158,10 +158,10 @@ class CRM_Core_Payment_LinePay {
       sleep(10);
       $paymentProcessorId = $this->_paymentProcessId;
       $this->_linePayAPI = self::prepareLinePayAPI($paymentProcessorId, 'query');
-      $params = array(
+      $params = [
         'transactionId' => $params['transactionId'],
         'orderId' => $params['cid'],
-      );
+      ];
       $this->_linePayAPI->request($params);
       $triedTimes++;
     }
@@ -170,7 +170,7 @@ class CRM_Core_Payment_LinePay {
 
     // ipn transact
     $ipn = new CRM_Core_Payment_BaseIPN();
-    $input = $ids = $objects = array();
+    $input = $ids = $objects = [];
     if(!empty($params['pid']) && !empty($params['eid'])){
       $input['component'] = 'event';
       $ids['participant'] = $params['pid'];
@@ -216,7 +216,7 @@ class CRM_Core_Payment_LinePay {
    *   'id' => $contribution->id,
    * )
    */
-  static function query($url_params, $get = array()){
+  static function query($url_params, $get = []){
     if(empty($get)){
       foreach ($_GET as $key => $value) {
         if($key == 'q')continue;
@@ -232,10 +232,10 @@ class CRM_Core_Payment_LinePay {
       $ppid = $contribution->payment_processor_id;
       $linePay = new CRM_Core_Payment_LinePay($ppid, 'query');
 
-      $params = array(
+      $params = [
         'orderId' => $contribution->id,
         'transactionId' => $contribution->trxn_id,
-      );
+      ];
       $linePay->_linePayAPI->request($params);
       if(!empty($linePay->_linePayAPI->_response->info)){
         $info = $linePay->_linePayAPI->_response->info;
@@ -313,12 +313,12 @@ class CRM_Core_Payment_LinePay {
     $paymentProcessor->id = $paymentProcessorId;
     $paymentProcessor->find(TRUE);
 
-    $apiParams = array(
+    $apiParams = [
       'channelId' => $paymentProcessor->url_site,
       'channelSecret' => $paymentProcessor->url_api,
       'apiType' => $type,
       'isTest' => $paymentProcessor->is_test,
-    );
+    ];
     return new CRM_Core_Payment_LinePayAPI($apiParams);
   }
 

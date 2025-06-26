@@ -151,10 +151,10 @@ class CRM_Contribute_DAO_MyPay extends CRM_Core_DAO
   function &links()
   {
     if (!(self::$_links)) {
-      self::$_links = array(
+      self::$_links = [
         'contribution_id' => 'civicrm_contribution:id',
         'contribution_recur_id' => 'civicrm_contribution_recur:id',
-      );
+      ];
     }
     return self::$_links;
   }
@@ -182,61 +182,61 @@ class CRM_Contribute_DAO_MyPay extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'mypay_id' => array(
+      self::$_fields = [
+        'mypay_id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('MyPay ID') ,
           'required' => true,
-        ) ,
-        'contribution_id' => array(
+        ] ,
+        'contribution_id' => [
           'name' => 'contribution_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Contribuution ID') ,
           'default' => 'UL',
           'FKClassName' => 'CRM_Contribute_DAO_Contribution',
-        ) ,
-        'contribution_recur_id' => array(
+        ] ,
+        'contribution_recur_id' => [
           'name' => 'contribution_recur_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Contribuution Recur ID') ,
           'FKClassName' => 'CRM_Contribute_DAO_ContributionRecur',
-        ) ,
-        'uid' => array(
+        ] ,
+        'uid' => [
           'name' => 'uid',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('User Order ID') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'uid_key' => array(
+        ] ,
+        'uid_key' => [
           'name' => 'uid_key',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Uid Key') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'expired_date' => array(
+        ] ,
+        'expired_date' => [
           'name' => 'expired_date',
           'type' => CRM_Utils_Type::T_DATE,
           'title' => ts('Expired Date') ,
-        ) ,
-        'create_post_data' => array(
+        ] ,
+        'create_post_data' => [
           'name' => 'create_post_data',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Create Post Data') ,
-        ) ,
-        'create_result_data' => array(
+        ] ,
+        'create_result_data' => [
           'name' => 'create_result_data',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Create Result Data') ,
-        ) ,
-        'ipn_result_data' => array(
+        ] ,
+        'ipn_result_data' => [
           'name' => 'ipn_result_data',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Ipn Result Data') ,
-        ) ,
-      );
+        ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -269,7 +269,7 @@ class CRM_Contribute_DAO_MyPay extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -292,7 +292,7 @@ class CRM_Contribute_DAO_MyPay extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {

@@ -52,7 +52,7 @@ class CRM_Core_Page_AJAX {
     }
 
     if (!$className) {
-      CRM_Core_Error::fatal(ts('Invalid className: %1', array(1 => $className)));
+      CRM_Core_Error::fatal(ts('Invalid className: %1', [1 => $className]));
     }
 
     $fnName = NULL;
@@ -66,7 +66,7 @@ class CRM_Core_Page_AJAX {
 
     switch ($type) {
       case 'method':
-        call_user_func(array($className, $fnName));
+        call_user_func([$className, $fnName]);
         break;
 
       case 'page':
@@ -151,12 +151,12 @@ class CRM_Core_Page_AJAX {
     if (!CRM_Utils_REST::isWebServiceRequest()) {
       http_response_code(400);
       CRM_Core_Error::debug_log_message('SECURITY ALERT: Ajax requests can only be issued by javascript clients.');
-      CRM_Core_Error::debug_var('ajax_request_info', array(
+      CRM_Core_Error::debug_var('ajax_request_info', [
           'IP' => CRM_Utils_System::ipAddress(),
           'level' => 'security',
           'referer' => $_SERVER['HTTP_REFERER'] ? $_SERVER['HTTP_REFERER'] : '',
           'reason' => 'CSRF suspected',
-      ));
+      ]);
       throw new CRM_Core_Exception('SECURITY ALERT: Ajax requests can only be issued by javascript clients.');
     }
   }

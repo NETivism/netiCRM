@@ -49,17 +49,17 @@ class CRM_Contact_Form_Edit_Demographics {
    */
   static function buildQuickForm(&$form) {
     // radio button for gender
-    $genderOptions = array();
+    $genderOptions = [];
     $gender = CRM_Core_PseudoConstant::gender();
     foreach ($gender as $key => $var) {
       $genderOptions[$key] = $form->createElement('radio', NULL, ts('Gender'), $var, $key);
     }
     $form->addGroup($genderOptions, 'gender_id', ts('Gender'));
 
-    $form->addDate('birth_date', ts('Date of birth'), FALSE, array('formatType' => 'birth'));
+    $form->addDate('birth_date', ts('Date of birth'), FALSE, ['formatType' => 'birth']);
 
-    $form->addElement('checkbox', 'is_deceased', NULL, ts('Contact is deceased'), array('onclick' => "showDeceasedDate()"));
-    $form->addDate('deceased_date', ts('Deceased date'), FALSE, array('formatType' => 'birth'));
+    $form->addElement('checkbox', 'is_deceased', NULL, ts('Contact is deceased'), ['onclick' => "showDeceasedDate()"]);
+    $form->addDate('deceased_date', ts('Deceased date'), FALSE, ['formatType' => 'birth']);
   }
 
   /**

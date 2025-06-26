@@ -79,38 +79,38 @@ class CRM_Price_Page_Option extends CRM_Core_Page {
    */
   function &actionLinks() {
     if (!isset(self::$_actionLinks)) {
-      self::$_actionLinks = array(
-        CRM_Core_Action::UPDATE => array(
+      self::$_actionLinks = [
+        CRM_Core_Action::UPDATE => [
           'name' => ts('Edit Option'),
           'url' => 'civicrm/admin/price/field/option',
           'qs' => 'reset=1&action=update&oid=%%oid%%&fid=%%fid%%&sid=%%sid%%',
           'title' => ts('Edit Price Option'),
-        ),
-        CRM_Core_Action::VIEW => array(
+        ],
+        CRM_Core_Action::VIEW => [
           'name' => ts('View'),
           'url' => 'civicrm/admin/price/field/option',
           'qs' => 'action=view&oid=%%oid%%',
           'title' => ts('View Price Option'),
-        ),
-        CRM_Core_Action::DISABLE => array(
+        ],
+        CRM_Core_Action::DISABLE => [
           'name' => ts('Disable'),
           'extra' => 'onclick = "enableDisable( %%oid%%,\'' . 'CRM_Price_BAO_FieldValue' . '\',\'' . 'enable-disable' . '\' );"',
           'ref' => 'disable-action',
           'title' => ts('Disable Price Option'),
-        ),
-        CRM_Core_Action::ENABLE => array(
+        ],
+        CRM_Core_Action::ENABLE => [
           'name' => ts('Enable'),
           'extra' => 'onclick = "enableDisable( %%oid%%,\'' . 'CRM_Price_BAO_FieldValue' . '\',\'' . 'disable-enable' . '\' );"',
           'ref' => 'enable-action',
           'title' => ts('Enable Price Option'),
-        ),
-        CRM_Core_Action::DELETE => array(
+        ],
+        CRM_Core_Action::DELETE => [
           'name' => ts('Delete'),
           'url' => 'civicrm/admin/price/field/option',
           'qs' => 'action=delete&oid=%%oid%%',
           'title' => ts('Disable Price Option'),
-        ),
-      );
+        ],
+      ];
     }
     return self::$_actionLinks;
   }
@@ -124,7 +124,7 @@ class CRM_Price_Page_Option extends CRM_Core_Page {
    * @access public
    */
   function browse() {
-    $customOption = array();
+    $customOption = [];
 
 
     CRM_Price_BAO_FieldValue::getValues($this->_fid, $customOption);
@@ -148,10 +148,10 @@ class CRM_Price_Page_Option extends CRM_Core_Page {
       }
       $customOption[$id]['order'] = $customOption[$id]['weight'];
       $customOption[$id]['action'] = CRM_Core_Action::formLink(self::actionLinks(), $action,
-        array('oid' => $id,
+        ['oid' => $id,
           'fid' => $this->_fid,
           'sid' => $this->_sid,
-        )
+        ]
       );
     }
     // Add order changing widget to selector
@@ -179,7 +179,7 @@ class CRM_Price_Page_Option extends CRM_Core_Page {
     $oid = CRM_Utils_Request::retrieve('oid', 'Positive',
       $this, FALSE, 0
     );
-    $params = array();
+    $params = [];
     if ($oid) {
       $params['oid'] = $oid;
 
@@ -211,13 +211,13 @@ class CRM_Price_Page_Option extends CRM_Core_Page {
       // add breadcrumb
 
       $url = CRM_Utils_System::url('civicrm/admin/price/field/option', 'reset=1');
-      CRM_Utils_System::appendBreadCrumb(array(array('title' => ts('Price Option'), 'url' => $url)));
+      CRM_Utils_System::appendBreadCrumb([['title' => ts('Price Option'), 'url' => $url]]);
       $this->assign('usedPriceSetTitle', CRM_Core_BAO_OptionValue::getTitle($oid));
       $this->assign('usedBy', $usedBy);
-      $comps = array("Event" => "civicrm_event",
+      $comps = ["Event" => "civicrm_event",
         "Contribution" => "civicrm_contribution_page",
-      );
-      $priceSetContexts = array();
+      ];
+      $priceSetContexts = [];
       foreach ($comps as $name => $table) {
         if (CRM_Utils_Array::arrayKeyExists($table, $usedBy)) {
           $priceSetContexts[] = $name;
@@ -256,16 +256,16 @@ class CRM_Price_Page_Option extends CRM_Core_Page {
       $this->assign('sid', $this->_sid);
     }
     //as url contain $sid so append breadcrumb dynamically.
-    $breadcrumb = array(array('title' => ts('Price Fields'),
+    $breadcrumb = [['title' => ts('Price Fields'),
         'url' => CRM_Utils_System::url('civicrm/admin/price/field', 'reset=1&sid=' . $this->_sid),
-      ));
+      ]];
     CRM_Utils_System::appendBreadCrumb($breadcrumb);
 
     if ($this->_fid) {
       $fieldTitle = CRM_Price_BAO_Field::getTitle($this->_fid);
       $this->assign('fid', $this->_fid);
       $this->assign('fieldTitle', $fieldTitle);
-      CRM_Utils_System::setTitle(ts('%1 - Price Options', array(1 => $fieldTitle)));
+      CRM_Utils_System::setTitle(ts('%1 - Price Options', [1 => $fieldTitle]));
 
       $htmlType = CRM_Core_DAO::getFieldValue('CRM_Price_BAO_Field', $this->_fid, 'html_type');
       $this->assign('addMoreFields', TRUE);

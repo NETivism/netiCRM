@@ -175,11 +175,11 @@ class CRM_Contribute_DAO_TaiwanACH extends CRM_Core_DAO
   function &links()
   {
     if (!(self::$_links)) {
-      self::$_links = array(
+      self::$_links = [
         'contact_id' => 'civicrm_contact:id',
         'contribution_recur_id' => 'civicrm_contribution_recur:id',
         'contribution_page_id' => 'civicrm_contribution_page:id',
-      );
+      ];
     }
     return self::$_links;
   }
@@ -208,33 +208,33 @@ class CRM_Contribute_DAO_TaiwanACH extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'taiwanach_id' => array(
+      self::$_fields = [
+        'taiwanach_id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Taiwan ACH ID') ,
           'required' => true,
-        ) ,
-        'contribution_contact_id' => array(
+        ] ,
+        'contribution_contact_id' => [
           'name' => 'contact_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Contact ID') ,
           'required' => true,
           'FKClassName' => 'CRM_Contact_DAO_Contact',
-        ) ,
-        'contribution_recur_id' => array(
+        ] ,
+        'contribution_recur_id' => [
           'name' => 'contribution_recur_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
           'FKClassName' => 'CRM_Contribute_DAO_ContributionRecur',
-        ) ,
-        'contribution_page_id' => array(
+        ] ,
+        'contribution_page_id' => [
           'name' => 'contribution_page_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Contribution Page ID') ,
           'FKClassName' => 'CRM_Contribute_DAO_ContributionPage',
-        ) ,
-        'payment_type' => array(
+        ] ,
+        'payment_type' => [
           'name' => 'payment_type',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Payment Type') ,
@@ -244,8 +244,8 @@ class CRM_Contribute_DAO_TaiwanACH extends CRM_Core_DAO
           'where' => 'civicrm_contribution_taiwanach.payment_type',
           'headerPattern' => '',
           'dataPattern' => '',
-        ) ,
-        'bank_code' => array(
+        ] ,
+        'bank_code' => [
           'name' => 'bank_code',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Bank Code') ,
@@ -255,8 +255,8 @@ class CRM_Contribute_DAO_TaiwanACH extends CRM_Core_DAO
           'where' => 'civicrm_contribution_taiwanach.bank_code',
           'headerPattern' => '',
           'dataPattern' => '',
-        ) ,
-        'postoffice_acc_type' => array(
+        ] ,
+        'postoffice_acc_type' => [
           'name' => 'postoffice_acc_type',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Post Office Account Type') ,
@@ -266,8 +266,8 @@ class CRM_Contribute_DAO_TaiwanACH extends CRM_Core_DAO
           'where' => 'civicrm_contribution_taiwanach.postoffice_acc_type',
           'headerPattern' => '',
           'dataPattern' => '',
-        ) ,
-        'bank_branch' => array(
+        ] ,
+        'bank_branch' => [
           'name' => 'bank_branch',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Bank Branch') ,
@@ -277,8 +277,8 @@ class CRM_Contribute_DAO_TaiwanACH extends CRM_Core_DAO
           'where' => 'civicrm_contribution_taiwanach.bank_branch',
           'headerPattern' => '',
           'dataPattern' => '',
-        ) ,
-        'bank_account' => array(
+        ] ,
+        'bank_account' => [
           'name' => 'bank_account',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Bank Account') ,
@@ -288,8 +288,8 @@ class CRM_Contribute_DAO_TaiwanACH extends CRM_Core_DAO
           'where' => 'civicrm_contribution_taiwanach.bank_account',
           'headerPattern' => '',
           'dataPattern' => '',
-        ) ,
-        'identifier_number' => array(
+        ] ,
+        'identifier_number' => [
           'name' => 'identifier_number',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Identifier Number') ,
@@ -299,8 +299,8 @@ class CRM_Contribute_DAO_TaiwanACH extends CRM_Core_DAO
           'where' => 'civicrm_contribution_taiwanach.identifier_number',
           'headerPattern' => '',
           'dataPattern' => '',
-        ) ,
-        'order_number' => array(
+        ] ,
+        'order_number' => [
           'name' => 'order_number',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Order Number') ,
@@ -310,8 +310,8 @@ class CRM_Contribute_DAO_TaiwanACH extends CRM_Core_DAO
           'where' => 'civicrm_contribution_taiwanach.order_number',
           'headerPattern' => '',
           'dataPattern' => '',
-        ) ,
-        'stamp_verification' => array(
+        ] ,
+        'stamp_verification' => [
           'name' => 'stamp_verification',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Stamp Verification') ,
@@ -319,13 +319,13 @@ class CRM_Contribute_DAO_TaiwanACH extends CRM_Core_DAO
           'where' => 'civicrm_contribution_taiwanach.stamp_verification',
           'headerPattern' => '',
           'dataPattern' => '',
-        ) ,
-        'data' => array(
+        ] ,
+        'data' => [
           'name' => 'data',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Custom Data') ,
-        ) ,
-      );
+        ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -358,7 +358,7 @@ class CRM_Contribute_DAO_TaiwanACH extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -381,7 +381,7 @@ class CRM_Contribute_DAO_TaiwanACH extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {

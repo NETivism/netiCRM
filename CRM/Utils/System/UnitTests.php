@@ -42,7 +42,7 @@ class CRM_Utils_System_UnitTests {
   }
 
   static function authenticate($name, $password) {
-    $retVal = array(1, 1, 12345);
+    $retVal = [1, 1, 12345];
     return $retVal;
   }
 

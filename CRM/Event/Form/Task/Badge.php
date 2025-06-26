@@ -65,7 +65,7 @@ class CRM_Event_Form_Task_Badge extends CRM_Event_Form_Task {
 
       $participantID = CRM_Utils_Request::retrieve('id', 'Positive', $this, TRUE);
       $contactID = CRM_Utils_Request::retrieve('cid', 'Positive', $this, TRUE);
-      $this->_participantIds = array($participantID);
+      $this->_participantIds = [$participantID];
       $this->_componentClause = " civicrm_participant.id = $participantID ";
       $this->assign('totalSelectedParticipants', 1);
 
@@ -97,7 +97,7 @@ class CRM_Event_Form_Task_Badge extends CRM_Event_Form_Task {
     $this->add('select',
       'badge_id',
       ts('Name Badge Format'),
-      array('' => ts('- select -')) + $label, TRUE
+      ['' => ts('- select -')] + $label, TRUE
     );
 
     $next = 'next';
@@ -120,7 +120,7 @@ class CRM_Event_Form_Task_Badge extends CRM_Event_Form_Task {
 
 
     $returnProperties = &CRM_Event_BAO_Query::defaultReturnProperties(CRM_Contact_BAO_Query::MODE_EVENT);
-    $additionalFields = array('sort_name', 'current_employer');
+    $additionalFields = ['sort_name', 'current_employer'];
     foreach ($additionalFields as $field) {
       $returnProperties[$field] = 1;
     }
@@ -147,9 +147,9 @@ class CRM_Event_Form_Task_Badge extends CRM_Event_Form_Task {
     $queryString = "$select $from $where";
 
     $dao = CRM_Core_DAO::executeQuery($queryString);
-    $rows = array();
+    $rows = [];
     while ($dao->fetch()) {
-      $rows[$dao->participant_id] = array();
+      $rows[$dao->participant_id] = [];
       foreach ($returnProperties as $key => $dontCare) {
         $rows[$dao->participant_id][$key] = isset($dao->$key) ? $dao->$key : NULL;
       }

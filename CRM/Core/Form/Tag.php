@@ -53,14 +53,14 @@ class CRM_Core_Form_Tag {
    * @static
    */
   static function buildQuickForm(&$form, $parentNames, $entityTable, $entityId = NULL, $skipTagCreate = FALSE, $skipEntityAction = FALSE) {
-    $tagset = $form->_entityTagValues = array();
+    $tagset = $form->_entityTagValues = [];
 
     foreach ($parentNames as & $parentNameItem) {
       // get the parent id for tag list input for keyword
       $parentId = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_Tag', $parentNameItem, 'id', 'name');
 
       // check if parent exists
-      $entityTags = array();
+      $entityTags = [];
       if ($parentId) {
         $tagsetItem = 'parentId_' . $parentId;
         $tagset[$tagsetItem]['parentName'] = $parentNameItem;
@@ -99,9 +99,9 @@ class CRM_Core_Form_Tag {
               $tagName = $tagId;
             }
 
-            $entityTags[$tagId] = array('id' => $tagId,
+            $entityTags[$tagId] = ['id' => $tagId,
               'name' => $tagName,
-            );
+            ];
           }
         }
         elseif (!empty($form->_formValues['contact_tags'])) {
@@ -115,9 +115,9 @@ class CRM_Core_Form_Tag {
                 $tagName = $contactTags[$tagId];
               }
 
-              $entityTags[$tagId] = array('id' => $tagId,
+              $entityTags[$tagId] = ['id' => $tagId,
                 'name' => $tagName,
-              );
+              ];
             }
           }
         }
@@ -151,7 +151,7 @@ class CRM_Core_Form_Tag {
         continue;
       }
       $tagsIDs = explode(',', $value);
-      $insertValues = array();
+      $insertValues = [];
       $insertSQL = NULL;
       if (!empty($tagsIDs)) {
         foreach ($tagsIDs as $tagId) {

@@ -39,7 +39,7 @@ class CRM_Utils_Cache_SerializeCache implements CRM_Utils_Cache_Interface {
    * @return void
    */
   function __construct($config) {
-    $this->_cache = array();
+    $this->_cache = [];
   }
 
   function fileName($key) {
@@ -89,7 +89,7 @@ class CRM_Utils_Cache_SerializeCache implements CRM_Utils_Cache_Interface {
     }
     closedir($handle);
     unset($this->_cache);
-    $this->_cache = array();
+    $this->_cache = [];
   }
 }
 

@@ -40,7 +40,7 @@ class CRM_Admin_Page_AuditRecords extends CRM_Core_Page {
   function run() {
     $date = date('Ymd000000', strtotime('-30Day'));
     $sql = "SELECT l.*, c.sort_name AS user_contact_name, c_modify.sort_name AS modified_name FROM civicrm_log l LEFT JOIN civicrm_uf_match um ON l.entity_id = um.uf_id LEFT JOIN civicrm_contact c ON um.contact_id = c.id LEFT JOIN civicrm_contact c_modify ON l.modified_id = c_modify.id WHERE entity_table LIKE 'audit.%' AND l.modified_date > %1 ORDER BY l.modified_date DESC";
-    $dao = CRM_Core_DAO::executeQuery($sql, array(1 => array($date, 'String')));
+    $dao = CRM_Core_DAO::executeQuery($sql, [1 => [$date, 'String']]);
     while ($dao->fetch()) {
       $auditStatusName = '';
       $userId = '';
@@ -80,7 +80,7 @@ class CRM_Admin_Page_AuditRecords extends CRM_Core_Page {
           $auditStatusName = ts('Other');
           break;
       }
-      $rows[] = array(
+      $rows[] = [
         'audit_type' => $dao->entity_table,
         'state' => $auditStatusName,
         'user_contact_name' => $dao->user_contact_name,
@@ -90,7 +90,7 @@ class CRM_Admin_Page_AuditRecords extends CRM_Core_Page {
         'modified_name' => $dao->modified_name,
         'data' => $data,
         'entity_id' => $dao->entity_id,
-      );
+      ];
     }
     $smarty = CRM_Core_Smarty::singleton();
     $smarty->assign('rows', $rows);

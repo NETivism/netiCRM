@@ -42,7 +42,7 @@ class CRM_Upgrade_TwoOne_Page_Upgrade extends CRM_Core_Page {
     $message = ts('CiviCRM upgrade successful');
     if ($upgrade->checkVersion($upgrade->latestVersion)) {
       $message = ts('Your database has already been upgraded to CiviCRM %1',
-        array(1 => $upgrade->latestVersion)
+        [1 => $upgrade->latestVersion]
       );
     }
     elseif ($upgrade->checkVersion('2.1.2') ||
@@ -79,7 +79,7 @@ class CRM_Upgrade_TwoOne_Page_Upgrade extends CRM_Core_Page {
 
     $template->assign('message', $message);
     $template->assign('pageTitle', ts('Upgrade CiviCRM to Version %1',
-        array(1 => $upgrade->latestVersion)
+        [1 => $upgrade->latestVersion]
       ));
     $template->assign('menuRebuildURL',
       CRM_Utils_System::url('civicrm/menu/rebuild',

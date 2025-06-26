@@ -160,7 +160,7 @@ class CRM_Core_Page {
 
     // only use the civicrm cache if we have a valid key
     if (!empty($this->_scope) && strstr($this->_scope, 'CRM_Contribute_Page_Tab')) {
-      CRM_Core_Session::registerAndRetrieveSessionObjects(array(array('CiviCRM', $this->_scope)));
+      CRM_Core_Session::registerAndRetrieveSessionObjects([['CiviCRM', $this->_scope]]);
     }
 
     // let the constructor initialize this, should happen only once

@@ -81,7 +81,7 @@ class CRM_Profile_Page_Dynamic extends CRM_Core_Page {
    * Store profile ids if multiple profile ids are passed using comma separated.
    * Currently lets implement this functionality only for dialog mode
    */
-  protected $_profileIds = array();
+  protected $_profileIds = [];
 
   /**
    * Set title on page
@@ -107,7 +107,7 @@ class CRM_Profile_Page_Dynamic extends CRM_Core_Page {
       $this->_profileIds = $profileIds;
     }
     else {
-      $this->_profileIds = array($gid);
+      $this->_profileIds = [$gid];
     }
     parent::__construct();
   }
@@ -154,7 +154,7 @@ class CRM_Profile_Page_Dynamic extends CRM_Core_Page {
       }
 
 
-      $values = array();
+      $values = [];
       $fields = CRM_Core_BAO_UFGroup::getFields($this->_profileIds, FALSE, CRM_Core_Action::VIEW,
         NULL, NULL, FALSE, $this->_restrict,
         $this->_skipPermission, NULL,
@@ -189,8 +189,8 @@ class CRM_Profile_Page_Dynamic extends CRM_Core_Page {
       CRM_Core_BAO_UFGroup::getValues($this->_id, $fields, $values, TRUE, NULL, CRM_Core_BAO_UFGroup::MASK_NONE);
 
       // $profileFields array can be used for customized display of field labels and values in Profile/View.tpl
-      $profileFields = array();
-      $labels = array();
+      $profileFields = [];
+      $labels = [];
       $idx = 0;
       foreach ($fields as $name => $field) {
         $idx++;
@@ -207,10 +207,10 @@ class CRM_Profile_Page_Dynamic extends CRM_Core_Page {
       foreach ($values as $title => $value) {
         $idx++;
         $key = !empty($title) ? $title : $idx;
-        $profileFields[$key] = array(
+        $profileFields[$key] = [
           'label' => $title,
           'value' => $value,
-        );
+        ];
       }
 
       $template->assign_by_ref('row', $values);

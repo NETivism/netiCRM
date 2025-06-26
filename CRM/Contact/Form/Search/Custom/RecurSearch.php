@@ -87,7 +87,7 @@ class CRM_Contact_Form_Search_Custom_RecurSearch  extends CRM_Contact_Form_Searc
   }
 
   function buildColumn(){
-    $this->_queryColumns = array( 
+    $this->_queryColumns = [ 
       'r.id' => 'id',
       'contact.sort_name' => 'sort_name',
       'r.contact_id' => 'contact_id',
@@ -106,8 +106,8 @@ class CRM_Contact_Form_Search_Custom_RecurSearch  extends CRM_Contact_Form_Searc
       'lrd.last_receive_date' => 'last_receive_date',
       'lfd.last_failed_date' => 'last_failed_date',
       'c.contribution_page_id' => 'contribution_page_id',
-    );
-    $this->_columns = array(
+    ];
+    $this->_columns = [
       ts('ID') => 'id',
       ts('Name') => 'sort_name',
       ts('Amount') => 'amount',
@@ -124,7 +124,7 @@ class CRM_Contact_Form_Search_Custom_RecurSearch  extends CRM_Contact_Form_Searc
       ts('Last Failed Date') => 'last_failed_date',
       ts('Contribution Page ID') => 'contribution_page_id',
       0 => 'total_count',
-    );
+    ];
   }
 
   function buildTempTable() {
@@ -134,7 +134,7 @@ CREATE TEMPORARY TABLE IF NOT EXISTS {$this->_tableName} (
 ";
 
     foreach ($this->_queryColumns as $field) {
-      if (in_array($field, array('id'))) {
+      if (in_array($field, ['id'])) {
         continue;
       }
       if ($field == 'remain_installments' || strstr($field, 'amount') || strstr($field, '_id')) {
@@ -168,7 +168,7 @@ PRIMARY KEY (id)
     $this->dropTempTable();
     $this->buildTempTable();
 
-    $select = array();
+    $select = [];
     foreach($this->_queryColumns as $k => $v){
       $select[] = $k.' as '.$v;
     }
@@ -190,7 +190,7 @@ $having
     $dao = CRM_Core_DAO::executeQuery($sql, CRM_Core_DAO::$_nullArray);
 
     while ($dao->fetch()) {
-      $values = array();
+      $values = [];
       foreach($this->_queryColumns as $name){
         if($name == 'id'){
           $values[] = CRM_Utils_Type::escape($dao->id, 'Integer');
@@ -222,7 +222,7 @@ $having
    * WHERE clause is an array built from any required JOINS plus conditional filters based on search criteria field values
    */
   function tempWhere(){
-    $clauses = array();
+    $clauses = [];
     $clauses[] = "(r.contact_id = contact.id)";
     $clauses[] = "(r.is_test = 0)";
 
@@ -262,7 +262,7 @@ $having
   }
 
   function tempHaving(){
-    $clauses = array();
+    $clauses = [];
     $installments = $this->_formValues['installments'];
     if (is_numeric($installments) && $installments != 'none') {
       $installments = (int) $installments;
@@ -302,40 +302,40 @@ $having
     }
     
     $status = $this->_cstatus;
-    foreach(array(5,2,3,6,7,1) as $key) {
+    foreach([5,2,3,6,7,1] as $key) {
       $statuses[$key] = $status[$key];
     }
-    $form->addRadio('status', ts('Recurring Status'), $statuses, array('allowClear' => TRUE));
+    $form->addRadio('status', ts('Recurring Status'), $statuses, ['allowClear' => TRUE]);
 
-    $installments = array(
+    $installments = [
       '' => ts('- select -'),
       'none' => ts('no installments specified'),
       '0' => ts('Installments is full.'),
-    );
+    ];
     for ($i = 1; $i <= 6; $i++) {
-      $installments[$i] = ts('%1 installments left', array(1 => $i));
+      $installments[$i] = ts('%1 installments left', [1 => $i]);
     }
     $form->addElement('select', 'installments', ts('Installments Left'), $installments);
 
     $contributionPage = $this->_cpage;
-    $attrs = array('multiple' => 'multiple');
+    $attrs = ['multiple' => 'multiple'];
     $form->addElement('select', 'contribution_page_id', ts('Contribution Page'), $contributionPage, $attrs);
 
     /**
      * If you are using the sample template, this array tells the template fields to render
      * for the search form.
      */
-    $form->assign('elements', array('status', 'installments', 'sort_name', 'email', 'contribution_page_id'));
+    $form->assign('elements', ['status', 'installments', 'sort_name', 'email', 'contribution_page_id']);
   }
 
   function setDefaultValues() {
     if ($this->_mode == 'booster') {
-      return array(
+      return [
         'status' => 5,
         'installments' => '1',
-      );
+      ];
     }
-    return array();
+    return [];
   }
 
   function setTitle() {
@@ -423,7 +423,7 @@ $having
   }
 
   public static function includeContactIDs(&$sql, &$formValues, $isExport = FALSE) {
-    $contactIDs = array();
+    $contactIDs = [];
     foreach ($formValues as $id => $value) {
       list($contactID, $additionalID) = CRM_Core_Form::cbExtract($id);
       if ($isExport) {
@@ -452,23 +452,23 @@ $having
   }
   
   function summary(){
-    $summary = array();
+    $summary = [];
     if(!$this->_filled){
       $this->fillTable();
       $this->_filled = TRUE;
     }
     $count = $this->count();
 
-    $summary['search_results'] = array(
+    $summary['search_results'] = [
       'label' => ts('Search Results'),
-      'value' => ts('There are %1 recurring contributions.', array(1 => $count)),
-    );
+      'value' => ts('There are %1 recurring contributions.', [1 => $count]),
+    ];
     $query = CRM_Core_DAO::executeQuery("SELECT SUM(receive_amount) as amount FROM {$this->_tableName} WHERE 1");
     $query->fetch();
     
     if ($query->amount) {
       $amount = CRM_Utils_Money::format($query->amount);
-      $summary['search_results']['value'] .= ' '.ts('Total amount of completed contributions is %1.', array(1 => $amount));
+      $summary['search_results']['value'] .= ' '.ts('Total amount of completed contributions is %1.', [1 => $amount]);
     }
 
     return $summary;
@@ -485,7 +485,7 @@ $having
       $row['installments'] = $processedInstallments.' / '.$row['installments'];
     }
     if($row['remain_installments'] < 0){
-       $row['remain_installments'] = ts('Over %1',array( 1 => -$row['remain_installments']));
+       $row['remain_installments'] = ts('Over %1',[ 1 => -$row['remain_installments']]);
     }
     
     if ($row['completed_count']) {
@@ -497,14 +497,14 @@ $having
     unset($row['total_count']);
 
     if ($row['contribution_page_id'] && empty($this->_isExport)) {
-      $params = array(
+      $params = [
         'p' => 'civicrm/admin/contribute',
         'q' => "action=update&reset=1&id={$row['contribution_page_id']}",
-      );
+      ];
       $row['contribution_page_id'] = '<a href="'.CRM_Utils_System::crmURL($params).'" title="'. $this->_cpage[$row['contribution_page_id']].'">'. $row['contribution_page_id'].'</a>';
     }
 
-    $date = array('start_date', 'end_date', 'cancel_date');
+    $date = ['start_date', 'end_date', 'cancel_date'];
     foreach($date as $d){
       if(!empty($row[$d])){
         $row[$d] = CRM_Utils_Date::customFormat($row[$d], $this->_config->dateformatFull);
@@ -513,10 +513,10 @@ $having
 
     $action = array_sum(array_keys(CRM_Contribute_Page_Tab::recurLinks()));
     $row['action'] = CRM_Core_Action::formLink(CRM_Contribute_Page_Tab::recurLinks(), $action,
-      array('cid' => $row['contact_id'],
+      ['cid' => $row['contact_id'],
         'id' => $row['id'],
         'cxt' => 'contribution',
-      )
+      ]
     );
     // Refs #38855, Workaround for export error when there are NULL field.
     foreach ($row as $key => $value) {

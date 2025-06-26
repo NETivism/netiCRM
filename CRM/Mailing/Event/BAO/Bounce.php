@@ -249,7 +249,7 @@ class CRM_Mailing_Event_BAO_Bounce extends CRM_Mailing_Event_DAO_Bounce {
 
     $dao->query($query);
 
-    $results = array();
+    $results = [];
     $bounceType = CRM_Mailing_PseudoConstant::bounceType('name', 'description');
     $bounceType['Spam'] = ts('Message caught by a content filter');
 
@@ -257,7 +257,7 @@ class CRM_Mailing_Event_BAO_Bounce extends CRM_Mailing_Event_DAO_Bounce {
       $url = CRM_Utils_System::url('civicrm/contact/view',
         "reset=1&cid={$dao->contact_id}"
       );
-      $results[] = array(
+      $results[] = [
         'name' => "<a href=\"$url\">{$dao->display_name}</a>",
         'email' => $dao->email,
         // FIXME: translate this
@@ -266,25 +266,25 @@ class CRM_Mailing_Event_BAO_Bounce extends CRM_Mailing_Event_DAO_Bounce {
         ),
         'reason' => $dao->reason,
         'date' => CRM_Utils_Date::customFormat($dao->date),
-      );
+      ];
     }
     return $results;
   }
 
   public static function getEmailBounceType($queueId = NULL, $emailId = NULL, $bounceTypeFilter = NULL) {
-    $where = $params = array();
+    $where = $params = [];
     $select = "SELECT bt.id, bt.name, j.mailing_id FROM civicrm_mailing_event_bounce b INNER JOIN civicrm_mailing_event_queue q ON b.event_queue_id = q.id INNER JOIN civicrm_mailing_job j ON j.id = q.job_id INNER JOIN civicrm_mailing_bounce_type bt ON bt.id = b.bounce_type_id ";
     if ($queueId) {
       $where[] = "q.id = %1";
-      $params[1] = array($queueId, 'Integer');
+      $params[1] = [$queueId, 'Integer'];
     }
     if ($emailId) {
       $where[] = "q.email_id = %2";
-      $params[2] = array($emailId, 'Integer');
+      $params[2] = [$emailId, 'Integer'];
     }
     if ($bounceTypeFilter) {
       $where[] = "bt.name = %3";
-      $params[3] = array($bounceTypeFilter, 'String');
+      $params[3] = [$bounceTypeFilter, 'String'];
     }
     if (empty($where)) {
       return NULL;
@@ -299,14 +299,14 @@ class CRM_Mailing_Event_BAO_Bounce extends CRM_Mailing_Event_DAO_Bounce {
       $dao = CRM_Core_DAO::executeQuery($sql, $params);
       $dao->fetch();
       if ($dao->N) {
-        return array(
+        return [
           'bounce_type_id' => $dao->id,
           'bounce_type_name' => $dao->name,
           'mailing_id' => $dao->mailing_id,
-        );
+        ];
       }
     }
-    return array();
+    return [];
   }
 }
 

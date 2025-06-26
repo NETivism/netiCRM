@@ -64,7 +64,7 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
     $recur->id = $this->_id;
     if ($recur->find(TRUE)) {
       $config = CRM_Core_Config::singleton();
-      $values = array();
+      $values = [];
       CRM_Core_DAO::storeValues($recur, $values);
       // if there is a payment processor ID, get the name of the payment processor
       if (!empty($values['payment_processor_id'])) {
@@ -125,7 +125,7 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
 
       // log
       $noteDetail = CRM_Core_BAO_Note::getNoteDetail($this->_id, 'civicrm_contribution_recur');
-      $notes = array();
+      $notes = [];
       foreach ($noteDetail as $note) {
         if (!empty($note['modified_date'])) {
           $notes[$note['modified_date']] = $note;
@@ -146,11 +146,11 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
           list($displayName, $ignore) = CRM_Contact_Page_View::getContactDetails($logDAO->modified_id);
         }
         $data = unserialize($logDAO->data);
-        $log = array(
+        $log = [
           'modified_id' => $logDAO->modified_id,
           'modified_date' => $logDAO->modified_date,
           'modified_name' => $displayName,
-        );
+        ];
 
         if (is_array($data) && !empty($data['before']) && !empty($data['after'])) {
           $before = $data['before'];
@@ -201,7 +201,7 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
 
       // get newest contribution ID and payment processor.
       $sql = "SELECT id FROM civicrm_contribution WHERE contribution_recur_id = %1 ORDER BY id DESC LIMIT 1";
-      $params = array( 1 => array($recur->id, 'Positive'));
+      $params = [ 1 => [$recur->id, 'Positive']];
       $contributionId = CRM_Core_DAO::singleValueQuery($sql, $params);
       $paymentClass = CRM_Contribute_BAO_Contribution::getPaymentClass($contributionId);
 

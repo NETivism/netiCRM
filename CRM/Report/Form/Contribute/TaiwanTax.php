@@ -54,7 +54,7 @@ class CRM_Report_Form_Contribute_TaiwanTax extends CRM_Report_Form {
   public $_outputMode;
   public $_receiptColumn;
   protected $_summary = NULL;
-  protected $_customGroupExtends = array('Contribution');
+  protected $_customGroupExtends = ['Contribution'];
   protected $_receiptTitle = NULL;
   protected $_receiptSerial = NULL;
   protected $_columnSort = NULL;
@@ -67,111 +67,111 @@ class CRM_Report_Form_Contribute_TaiwanTax extends CRM_Report_Form {
         unset($contactTypes[$key]);
       }
     }
-    $this->_columns = array('civicrm_contact' =>
-      array('dao' => 'CRM_Contact_DAO_Contact',
+    $this->_columns = ['civicrm_contact' =>
+      ['dao' => 'CRM_Contact_DAO_Contact',
         'fields' =>
-        array(
+        [
           'id' =>
-          array(
+          [
             'no_display' => TRUE,
             'required' => TRUE,
-          ),
+          ],
           'sort_name' =>
-          array('title' => ts('Contact Name'),
+          ['title' => ts('Contact Name'),
             'required' => TRUE,
             'no_repeat' => FALSE,
-          ),
+          ],
           'contact_type' =>
-          array(
+          [
             'title' => ts('Contact Type'),
             'no_display' => TRUE,
             'required' => TRUE,
             'no_repeat' => FALSE,
-          ),
+          ],
           'contact_type' =>
-          array(
+          [
             'title' => ts('Contact Type'),
             'required' => TRUE,
             'no_repeat' => FALSE,
-          ),
+          ],
           'legal_identifier' =>
-          array(
+          [
             'title' => ts('Legal Identifier'),
             'required' => TRUE,
             'no_repeat' => FALSE,
-          ),
+          ],
           'sic_code' =>
-          array(
+          [
             'title' => ts('sic_code'),
             'required' => TRUE,
             'no_repeat' => FALSE,
-          ),
-        ),
+          ],
+        ],
         'filters' => 
-        array(
+        [
           'contact_type' =>
-          array('title' => ts('Contact Type'),
+          ['title' => ts('Contact Type'),
             'operatorType' => CRM_Report_Form::OP_MULTISELECT,
             'options' => $contactTypes,
-            'default' => array('Individual'),
-          ),
+            'default' => ['Individual'],
+          ],
           'legal_identifier' => 
-          array(
+          [
             'title' => ts('Legal Identifier'),
-            'operationPair' => array(
+            'operationPair' => [
               'nnll' => ts('Is not empty (Null)'),
               'nll' => ts('Is empty (Null)'),
-            ),
-          ),
-        ),
-      ),
+            ],
+          ],
+        ],
+      ],
       'civicrm_contribution' =>
-      array('dao' => 'CRM_Contribute_DAO_Contribution',
+      ['dao' => 'CRM_Contribute_DAO_Contribution',
         'fields' =>
-        array(
-          'receive_date' => array(
+        [
+          'receive_date' => [
             'default' => TRUE,
             'required' => TRUE,
-          ),
-          'total_amount' => array('title' => ts('Amount'),
+          ],
+          'total_amount' => ['title' => ts('Amount'),
             'required' => TRUE,
             'statistics' =>
-            array('sum' => ts('Amount')),
-          ),
-        ),
+            ['sum' => ts('Amount')],
+          ],
+        ],
         'filters' =>
-        array('receive_date' =>
-          array('default' => 'this.year',
+        ['receive_date' =>
+          ['default' => 'this.year',
             'operatorType' => CRM_Report_Form::OP_DATE,
-          ),
+          ],
           'contribution_type_id' =>
-          array('name' => 'contribution_type_id',
+          ['name' => 'contribution_type_id',
             'title' => ts('Contribution Type'),
             'operatorType' => CRM_Report_Form::OP_MULTISELECT,
             'options' => CRM_Contribute_PseudoConstant::contributionType(),
-          ),
+          ],
           'contribution_status_id' =>
-          array('title' => ts('Donation Status'),
+          ['title' => ts('Donation Status'),
             'operatorType' => CRM_Report_Form::OP_MULTISELECT,
             'options' => CRM_Contribute_PseudoConstant::contributionStatus(),
-            'default' => array(1),
-          ),
-        ),
-      ),
+            'default' => [1],
+          ],
+        ],
+      ],
       'civicrm_group' =>
-      array('dao' => 'CRM_Contact_DAO_GroupContact',
+      ['dao' => 'CRM_Contact_DAO_GroupContact',
         'alias' => 'cgroup',
         'filters' =>
-        array('gid' =>
-          array('name' => 'group_id',
+        ['gid' =>
+          ['name' => 'group_id',
             'title' => ts('Group'),
             'operatorType' => CRM_Report_Form::OP_MULTISELECT,
             'group' => TRUE,
             'options' => CRM_Core_PseudoConstant::group(),
-          ),
-        ),
-      ),
-    );
+          ],
+        ],
+      ],
+    ];
 
     $this->_tagFilter = TRUE;
     parent::__construct();
@@ -179,10 +179,10 @@ class CRM_Report_Form_Contribute_TaiwanTax extends CRM_Report_Form {
     // only allowed custom field
     $this->_receiptTitle = 'custom_'.$config->receiptTitle;
     $this->_receiptSerial = 'custom_'.$config->receiptSerial;
-    $allowedFields = array(
+    $allowedFields = [
       $this->_receiptTitle,
       $this->_receiptSerial,
-    );
+    ];
     foreach($this->_columns as $key => $column){
       if(isset($column['extends']) && $column['extends'] == 'Contribution' && !empty($column['fields'])){
         foreach($column['fields'] as $field_name => $values){
@@ -202,8 +202,8 @@ class CRM_Report_Form_Contribute_TaiwanTax extends CRM_Report_Form {
   }
 
   function select() {
-    $select = array();
-    $columnHeaders = array();
+    $select = [];
+    $columnHeaders = [];
     $this->_specialCase = '';
 
     foreach ($this->_columns as $tableName => $table) {
@@ -256,7 +256,7 @@ class CRM_Report_Form_Contribute_TaiwanTax extends CRM_Report_Form {
   }
 
   static function formRule($fields, $files, $self) {
-    $errors = array();
+    $errors = [];
 
     return $errors;
   }
@@ -316,14 +316,14 @@ GROUP BY receipt_title, receipt_serial";
   function alterDisplay(&$rows) {
     // change columnheader
     $columnHeaders = $this->_columnHeaders;
-    $this->_columnHeaders = array();
-    $this->_columnSort = array(
+    $this->_columnHeaders = [];
+    $this->_columnSort = [
       'receive_date' => '捐贈年度',
       'receipt_serial' => '捐贈者身分證統一編號',
       'receipt_title' => '捐贈者姓名',
       'total_amount' => '捐款金額',
       'other1' => '受捐贈單位統一編號',
-    );
+    ];
     foreach($this->_columnSort as $c => $name){
       foreach($columnHeaders as $header => $value){
         if(preg_match('/'.$c.'$/', $header)){
@@ -333,10 +333,10 @@ GROUP BY receipt_title, receipt_serial";
         }
       }
     }
-    $this->_columnHeaders['other1'] = array('type' => 2, 'title' => '受捐贈單位統一編號');
-    $this->_columnHeaders['other2'] = array('type' => 2, 'title' => '捐贈別');
-    $this->_columnHeaders['other3'] = array('type' => 2, 'title' => '受捐贈者名稱');
-    $this->_columnHeaders['other4'] = array('type' => 2, 'title' => '專案核准文號');
+    $this->_columnHeaders['other1'] = ['type' => 2, 'title' => '受捐贈單位統一編號'];
+    $this->_columnHeaders['other2'] = ['type' => 2, 'title' => '捐贈別'];
+    $this->_columnHeaders['other3'] = ['type' => 2, 'title' => '受捐贈者名稱'];
+    $this->_columnHeaders['other4'] = ['type' => 2, 'title' => '專案核准文號'];
 
     // custom code to alter rows
     $receiptSerial = $this->_receiptColumn[$this->_receiptSerial];

@@ -89,7 +89,7 @@ class CRM_Event_Import_Parser_Participant extends CRM_Event_Import_Parser {
       $this->addField($name, $field['title'], $field['type'], $field['headerPattern'], $field['dataPattern']);
     }
 
-    $this->_newParticipants = array();
+    $this->_newParticipants = [];
 
     $this->setActiveFields($this->_mapperKeys);
 
@@ -129,15 +129,15 @@ class CRM_Event_Import_Parser_Participant extends CRM_Event_Import_Parser {
     }
 
     if (!empty($this->_dedupeRuleGroupId)) {
-      $ruleParams = array(
+      $ruleParams = [
         'id' => $this->_dedupeRuleGroupId,
-      );
+      ];
     }
     else {
-      $ruleParams = array(
+      $ruleParams = [
         'contact_type' => $this->_contactType,
         'level' => 'Strict',
-      );
+      ];
     }
     $this->_dedupeRuleFields = CRM_Dedupe_BAO_Rule::dedupeRuleFieldsMapping($ruleParams);
   }
@@ -304,7 +304,7 @@ class CRM_Event_Import_Parser_Participant extends CRM_Event_Import_Parser {
     $params = &$this->getActiveFieldParams();
     $session = CRM_Core_Session::singleton();
     $dateType = $session->get('dateTypes');
-    $formatted = array();
+    $formatted = [];
     $customFields = CRM_Core_BAO_CustomField::getFields(CRM_Utils_Array::value('contact_type', $params));
 
     // don't add to recent items, CRM-4399
@@ -342,9 +342,9 @@ class CRM_Event_Import_Parser_Participant extends CRM_Event_Import_Parser {
       else {
         $eventTitle = $params['event_title'];
         $dao = new CRM_Core_DAO();
-        $params['participant_role_id'] = $dao->singleValueQuery("SELECT default_role_id FROM civicrm_event WHERE title = %1 ", array(
-          1 => array($eventTitle, 'String'),
-        ));
+        $params['participant_role_id'] = $dao->singleValueQuery("SELECT default_role_id FROM civicrm_event WHERE title = %1 ", [
+          1 => [$eventTitle, 'String'],
+        ]);
       }
     }
     //date-Format part ends
@@ -354,7 +354,7 @@ class CRM_Event_Import_Parser_Participant extends CRM_Event_Import_Parser {
       $indieFields = &CRM_Event_BAO_Participant::import();
     }
 
-    $formatValues = array();
+    $formatValues = [];
     foreach ($params as $key => $field) {
       if ($field == NULL || $field === '') {
         continue;
@@ -395,10 +395,10 @@ class CRM_Event_Import_Parser_Participant extends CRM_Event_Import_Parser {
           'Participant'
         );
         if ($dao->find(TRUE)) {
-          $ids = array(
+          $ids = [
             'participant' => $formatValues['participant_id'],
             'userId' => $session->get('userID'),
-          );
+          ];
           $newParticipant = civicrm_participant_check_params($formatted, FALSE);
           if ($newParticipant['error_message']) {
             if(is_array($newParticipant['error_message'])){
@@ -544,7 +544,7 @@ class CRM_Event_Import_Parser_Participant extends CRM_Event_Import_Parser {
     //4. If date and time then convert to default date time format.
 
     $dateKey = 'date';
-    $dateParams = array($dateKey => $date);
+    $dateParams = [$dateKey => $date];
 
 
     CRM_Utils_Date::convertToDefaultDate($dateParams, $dateType, $dateKey);

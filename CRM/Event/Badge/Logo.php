@@ -16,10 +16,10 @@ class CRM_Event_Badge_Logo extends CRM_Event_Badge {
     $ph = 297;
     $h = 60;
     $w = 90;
-    $this->format = array('name' => 'Sigel 3C', 'paper-size' => 'A4', 'metric' => 'mm', 'lMargin' => ($pw - $w * 2) / 2,
+    $this->format = ['name' => 'Sigel 3C', 'paper-size' => 'A4', 'metric' => 'mm', 'lMargin' => ($pw - $w * 2) / 2,
       'tMargin' => ($ph - $h * 4) / 2, 'NX' => 2, 'NY' => 4, 'SpaceX' => 0, 'SpaceY' => 0,
       'width' => $w, 'height' => $h, 'font-size' => 12,
-    );
+    ];
     $this->lMarginLogo = 20;
     $this->tMarginName = 20;
     $receipt_logo = $config->receiptLogo;
@@ -34,7 +34,7 @@ class CRM_Event_Badge_Logo extends CRM_Event_Badge {
     $y = $this->pdf->GetY();
     $y += 2;
     $this->printBackground($this->logo);
-    $this->pdf->SetLineStyle(array('width' => 0.1, 'cap' => 'butt', 'join' => 'miter', 'dash' => '0', 'color' => array(200, 200, 200)));
+    $this->pdf->SetLineStyle(['width' => 0.1, 'cap' => 'butt', 'join' => 'miter', 'dash' => '0', 'color' => [200, 200, 200]]);
     $this->pdf->Cell($this->format['width'], $this->format['height'], '', 1);
 
     $this->pdf->SetFontSize(8);

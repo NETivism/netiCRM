@@ -60,9 +60,9 @@ class CRM_Member_Form extends CRM_Core_Form {
     $this->_id = $this->get('id');
     $this->_BAOName = $this->get('BAOName');
     if (!empty($this->_id)) {
-      $defaults = array();
-      $params = array('id' => $this->_id);
-      call_user_func_array(array($this->_BAOName, 'retrieve'), array(&$params, &$defaults));
+      $defaults = [];
+      $params = ['id' => $this->_id];
+      call_user_func_array([$this->_BAOName, 'retrieve'], [&$params, &$defaults]);
       $this->_defaults = $defaults;
     }
   }
@@ -80,7 +80,7 @@ class CRM_Member_Form extends CRM_Core_Form {
       $defaults =& $this->_defaults;
     }
     else {
-      $defaults = array();
+      $defaults = [];
     }
 
     if (isset($defaults['minimum_fee'])) {
@@ -121,34 +121,34 @@ class CRM_Member_Form extends CRM_Core_Form {
       $name = ts('Save');
     }
 
-    $js = array('data' => 'click-once');
-    $this->addButtons(array(
-        array('type' => 'upload',
+    $js = ['data' => 'click-once'];
+    $this->addButtons([
+        ['type' => 'upload',
           'name' => $name,
           'isDefault' => TRUE,
           'js' => $js,
-        ),
-        array('type' => 'upload',
+        ],
+        ['type' => 'upload',
           'name' => ts('Save and New'),
           'subName' => 'new',
           'js' => $js,
-        ),
-        array('type' => 'cancel',
+        ],
+        ['type' => 'cancel',
           'name' => ts('Cancel'),
-        ),
-      )
+        ],
+      ]
     );
 
     if ($this->_action & CRM_Core_Action::DELETE) {
-      $this->addButtons(array(
-          array('type' => 'next',
+      $this->addButtons([
+          ['type' => 'next',
             'name' => ts('Delete'),
             'isDefault' => TRUE,
-          ),
-          array('type' => 'cancel',
+          ],
+          ['type' => 'cancel',
             'name' => ts('Cancel'),
-          ),
-        )
+          ],
+        ]
       );
     }
   }

@@ -89,7 +89,7 @@ abstract class CRM_Import_DataSource {
       AUTO_INCREMENT";
     CRM_Core_DAO::executeQuery($alterQuery);
 
-    return array('statusFieldName' => $statusFieldName, 'primaryKeyName' => $primaryKeyName);
+    return ['statusFieldName' => $statusFieldName, 'primaryKeyName' => $primaryKeyName];
   }
 
 }

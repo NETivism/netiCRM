@@ -101,7 +101,7 @@ class CRM_Contact_Form_Task_Delete extends CRM_Contact_Form_Task {
          return CRM_Core_Error::statusBounce(ts('You do not have permission to delete this contact. Note: you can delete contacts if you can edit them.'));
       }
 
-      $this->_contactIds = array($cid);
+      $this->_contactIds = [$cid];
       $this->_single = TRUE;
       $this->assign('totalSelectedContacts', 1);
       list($contactName) =  CRM_Contact_BAO_Contact::getContactDetails($cid);
@@ -126,7 +126,7 @@ class CRM_Contact_Form_Task_Delete extends CRM_Contact_Form_Task {
     if (!$this->_restore && !$this->_sharedAddressMessage) {
       // we check for each contact for shared contact address
 
-      $sharedContactList = array();
+      $sharedContactList = [];
       $sharedAddressCount = 0;
       foreach ($this->_contactIds as $contactId) {
         // check if a contact that is being deleted has any shared addresses
@@ -140,18 +140,18 @@ class CRM_Contact_Form_Task_Delete extends CRM_Contact_Form_Task {
         }
       }
 
-      $this->_sharedAddressMessage = array('count' => $sharedAddressCount,
+      $this->_sharedAddressMessage = ['count' => $sharedAddressCount,
         'contactList' => $sharedContactList,
-      );
+      ];
 
       if ($sharedAddressCount > 0) {
         if (count($this->_contactIds) > 1) {
           //more than one contact is deleted
-          CRM_Core_Session::setStatus(ts('Selected contact(s) has an address record which is shared with %1 other contact(s). Shared addresses will not be removed or altered but will no longer be shared.', array(1 => $sharedAddressCount)));
+          CRM_Core_Session::setStatus(ts('Selected contact(s) has an address record which is shared with %1 other contact(s). Shared addresses will not be removed or altered but will no longer be shared.', [1 => $sharedAddressCount]));
         }
         else {
           // only one contact is been deleted
-          CRM_Core_Session::setStatus(ts('This contact has an address record which is shared with %1 other contact(s). Shared addresses will not be removed or altered but will no longer be shared.', array(1 => $sharedAddressCount)));
+          CRM_Core_Session::setStatus(ts('This contact has an address record which is shared with %1 other contact(s). Shared addresses will not be removed or altered but will no longer be shared.', [1 => $sharedAddressCount]));
         }
       }
 
@@ -262,18 +262,18 @@ class CRM_Contact_Form_Task_Delete extends CRM_Contact_Form_Task {
     }
 
     if (!$this->_single) {
-      $label = $this->_restore ? ts('Restored Contact(s): %1', array(1 => $deletedContacts)) : ts('Deleted Contact(s): %1', array(1 => $deletedContacts));
-      $status = array(
+      $label = $this->_restore ? ts('Restored Contact(s): %1', [1 => $deletedContacts]) : ts('Deleted Contact(s): %1', [1 => $deletedContacts]);
+      $status = [
         $label,
-        ts('Total Selected Contact(s): %1', array(1 => count($this->_contactIds))),
-      );
+        ts('Total Selected Contact(s): %1', [1 => count($this->_contactIds)]),
+      ];
 
       if ($selfDelete) {
         $display_name = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact',
           $currentUserId,
           'display_name'
         );
-        $status[] = ts('The contact record which is linked to the currently logged in user account - \'%1\' - cannot be deleted.', array(1 => $display_name));
+        $status[] = ts('The contact record which is linked to the currently logged in user account - \'%1\' - cannot be deleted.', [1 => $display_name]);
       }
     }
     else {
@@ -288,15 +288,15 @@ class CRM_Contact_Form_Task_Delete extends CRM_Contact_Form_Task {
         }
       }
       else {
-        $status = array(
+        $status = [
           ts('Selected contact cannot be deleted.'),
-        );
+        ];
         if ($selfDelete) {
           $display_name = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact',
             $currentUserId,
             'display_name'
           );
-          $status[] = ts('This contact record is linked to the currently logged in user account - \'%1\' - and cannot be deleted.', array(1 => $display_name));
+          $status[] = ts('This contact record is linked to the currently logged in user account - \'%1\' - and cannot be deleted.', [1 => $display_name]);
         }
         else {
           $status[] = ts('The contact might be the Membership Organization of a Membership Type. You will need to edit the Membership Type and change the Membership Organization before you can delete this contact.');

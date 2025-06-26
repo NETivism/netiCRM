@@ -62,28 +62,28 @@ class CRM_Report_Utils_Report {
     if ($optionVal) {
 
       $templateInfo = CRM_Core_OptionGroup::getRowValues('report_template', "{$optionVal}", 'value');
-      return array($templateInfo['id'], $optionVal);
+      return [$templateInfo['id'], $optionVal];
     }
 
     return FALSE;
   }
 
   static function getInstanceIDForValue($optionVal) {
-    static $valId = array();
+    static $valId = [];
 
     if (!CRM_Utils_Array::arrayKeyExists($optionVal, $valId)) {
       $sql = "
 SELECT MAX(id) FROM civicrm_report_instance
 WHERE  report_id = %1";
 
-      $params = array(1 => array($optionVal, 'String'));
+      $params = [1 => [$optionVal, 'String']];
       $valId[$optionVal] = CRM_Core_DAO::singleValueQuery($sql, $params);
     }
     return $valId[$optionVal];
   }
 
   static function getInstanceIDForPath($path = NULL) {
-    static $valId = array();
+    static $valId = [];
 
     // if $path is null, try to get it from url
     $path = self::getInstancePath();
@@ -93,7 +93,7 @@ WHERE  report_id = %1";
 SELECT MAX(id) FROM civicrm_report_instance
 WHERE  TRIM(BOTH '/' FROM CONCAT(report_id, '/', name)) = %1";
 
-      $params = array(1 => array($path, 'String'));
+      $params = [1 => [$path, 'String']];
       $valId[$path] = CRM_Core_DAO::singleValueQuery($sql, $params);
     }
     return $valId[$path];
@@ -126,7 +126,7 @@ SELECT count(inst.id)
 FROM   civicrm_report_instance inst
 WHERE  inst.report_id = %1";
 
-    $params = array(1 => array($optionVal, 'String'));
+    $params = [1 => [$optionVal, 'String']];
     $count = CRM_Core_DAO::singleValueQuery($sql, $params);
     return $count;
   }
@@ -147,14 +147,14 @@ WHERE  inst.report_id = %1";
       $domainEmailAddress
     ) = CRM_Core_BAO_Domain::getNameAndEmail();
 
-    $params = array('id' => $instanceID);
-    $instanceInfo = array();
+    $params = ['id' => $instanceID];
+    $instanceInfo = [];
     CRM_Core_DAO::commonRetrieve('CRM_Report_DAO_Instance',
       $params,
       $instanceInfo
     );
 
-    $params = array();
+    $params = [];
     $params['groupName'] = 'Report Email Sender';
     $params['from'] = '"' . $domainEmailName . '" <' . $domainEmailAddress . '>';
     //$domainEmailName;
@@ -188,7 +188,7 @@ WHERE  inst.report_id = %1";
       }
     }
 
-    $displayRows = array();
+    $displayRows = [];
     $value = NULL;
     foreach ($rows as $i => $row) {
       foreach ($columnHeaders as $k => $v) {
@@ -241,7 +241,7 @@ WHERE  inst.report_id = %1";
       $sql = "SELECT DISTINCT {$form->_aliases['civicrm_contact']}.id AS contact_id {$form->_from} {$form->_where} ";
       $dao = CRM_Core_DAO::executeQuery($sql);
 
-      $contact_ids = array();
+      $contact_ids = [];
       // Add resulting contacts to group
       while ($dao->fetch()) {
         $contact_ids[] = $dao->contact_id;
@@ -284,8 +284,8 @@ WHERE  inst.report_id = %1";
       return TRUE;
     }
 
-    $instanceValues = array();
-    $params = array('id' => $instanceId);
+    $instanceValues = [];
+    $params = ['id' => $instanceId];
     CRM_Core_DAO::commonRetrieve('CRM_Report_DAO_Instance',
       $params,
       $instanceValues

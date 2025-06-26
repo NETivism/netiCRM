@@ -85,9 +85,9 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
     $tableName = $this->get('importTableName');
     $prefix = str_replace(CRM_Import_ImportJob::TABLE_PREFIX, CRM_Import_Parser::ERROR_FILE_PREFIX, $tableName);
     $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String', $this);
-    CRM_Import_Parser::setImportErrorFilenames($qfKey, array('error', 'conflict','no_match'), 'CRM_Import_Parser', $prefix, $this);
+    CRM_Import_Parser::setImportErrorFilenames($qfKey, ['error', 'conflict','no_match'], 'CRM_Import_Parser', $prefix, $this);
 
-    $properties = array('mapper', 'locations', 'phones', 'ims',
+    $properties = ['mapper', 'locations', 'phones', 'ims',
       'dataValues', 'columnCount',
       'totalRowCount', 'validRowCount',
       'invalidRowCount', 'conflictRowCount',
@@ -97,7 +97,7 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
       'related', 'relatedContactDetails', 'relatedContactLocType',
       'relatedContactPhoneType', 'relatedContactImProvider', 'websites',
       'relatedContactWebsiteType',
-    );
+    ];
 
     foreach ($properties as $property) {
       $this->assign($property, $this->get($property));
@@ -133,7 +133,7 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
     $groups = $this->get('groups');
 
     if (!empty($groups)) {
-      $this->addElement('select', 'groups', ts('Add imported records to existing group(s)'), $groups, array('multiple' => "multiple", 'size' => 5));
+      $this->addElement('select', 'groups', ts('Add imported records to existing group(s)'), $groups, ['multiple' => "multiple", 'size' => 5]);
     }
 
     //display new tag
@@ -156,32 +156,32 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
     $previousURL = CRM_Utils_System::url('civicrm/import/contact', $path, FALSE, NULL, FALSE);
     $cancelURL = CRM_Utils_System::url('civicrm/import/contact', 'reset=1');
 
-    $attr = array('onclick' => "return verify();");
+    $attr = ['onclick' => "return verify();"];
     $locked = CRM_Core_Lock::isUsed($this->get('importTableName'));
     if ($locked) {
       $attr['disabled'] = 'disabled';
       $this->assign('locked_import', TRUE);
     }
-    $buttons = array(
-      array('type' => 'back',
+    $buttons = [
+      ['type' => 'back',
         'name' => ts('<< Previous'),
-        'js' => array('onclick' => "location.href='{$previousURL}'; return false;"),
-      ),
-      array('type' => 'next',
+        'js' => ['onclick' => "location.href='{$previousURL}'; return false;"],
+      ],
+      ['type' => 'next',
         'name' => ts('Import Now >>'),
         'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
         'isDefault' => TRUE,
         'js' => $attr,
-      ),
-      array('type' => 'cancel',
+      ],
+      ['type' => 'cancel',
         'name' => ts('Cancel'),
-        'js' => array('onclick' => "location.href='{$cancelURL}'; return false;"),
-      ),
-    );
+        'js' => ['onclick' => "location.href='{$cancelURL}'; return false;"],
+      ],
+    ];
 
     $this->addButtons($buttons);
 
-    $this->addFormRule(array('CRM_Import_Form_Preview', 'formRule'), $this);
+    $this->addFormRule(['CRM_Import_Form_Preview', 'formRule'], $this);
   }
 
   /**
@@ -194,15 +194,15 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
    * @access public
    */
   static function formRule($fields, $files, $self) {
-    $errors = array();
+    $errors = [];
     $invalidTagName = $invalidGroupName = FALSE;
 
     if (CRM_Utils_Array::value('newTagName', $fields)) {
       if (!CRM_Utils_Rule::objectExists(trim($fields['newTagName']),
-          array('CRM_Core_DAO_Tag')
+          ['CRM_Core_DAO_Tag']
         )) {
         $errors['newTagName'] = ts('Tag \'%1\' already exists.',
-          array(1 => $fields['newTagName'])
+          [1 => $fields['newTagName']]
         );
         $invalidTagName = TRUE;
       }
@@ -212,12 +212,12 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
       $title = trim($fields['newGroupName']);
       $name = CRM_Utils_String::titleToVar($title);
       $query = 'select count(*) from civicrm_group where name like %1 OR title like %2';
-      $grpCnt = CRM_Core_DAO::singleValueQuery($query, array(1 => array($name, 'String'),
-          2 => array($title, 'String'),
-        ));
+      $grpCnt = CRM_Core_DAO::singleValueQuery($query, [1 => [$name, 'String'],
+          2 => [$title, 'String'],
+        ]);
       if ($grpCnt) {
         $invalidGroupName = TRUE;
-        $errors['newGroupName'] = ts('Group \'%1\' already exists.', array(1 => $fields['newGroupName']));
+        $errors['newGroupName'] = ts('Group \'%1\' already exists.', [1 => $fields['newGroupName']]);
       }
     }
 
@@ -250,7 +250,7 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
     if ($isCompleted) {
       return;
     }
-    $importJobParams = array(
+    $importJobParams = [
       'doGeocodeAddress' => $this->controller->exportValue('DataSource', 'doGeocodeAddress'),
       'invalidRowCount' => $this->get('invalidRowCount'),
       'conflictRowCount' => $this->get('conflictRowCount'),
@@ -273,7 +273,7 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
       'totalRowCount' => $this->get('totalRowCount'),
       'skipColumnHeader' => $this->get('skipColumnHeader'),
       'dateFormats' => $this->get('dateFormats'),
-    );
+    ];
 
     $tableName = $this->get('importTableName');
     $importJob = new CRM_Import_ImportJob_Contact($tableName);
@@ -299,7 +299,7 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
     $errorStack = &CRM_Core_Error::singleton();
     $errors = $errorStack->getErrors();
 
-    $errorMessage = array();
+    $errorMessage = [];
 
     if (is_array($errors)) {
       foreach ($errors as $key => $value) {
@@ -346,14 +346,14 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
 
     $mapper = $this->controller->exportValue('MapField', 'mapper');
 
-    $mapperKeys = array();
-    $mapperLocTypes = array();
-    $mapperPhoneTypes = array();
-    $mapperRelated = array();
-    $mapperRelatedContactType = array();
-    $mapperRelatedContactDetails = array();
-    $mapperRelatedContactLocType = array();
-    $mapperRelatedContactPhoneType = array();
+    $mapperKeys = [];
+    $mapperLocTypes = [];
+    $mapperPhoneTypes = [];
+    $mapperRelated = [];
+    $mapperRelatedContactType = [];
+    $mapperRelatedContactDetails = [];
+    $mapperRelatedContactLocType = [];
+    $mapperRelatedContactPhoneType = [];
 
     foreach ($mapper as $key => $value) {
       $mapperKeys[$key] = $mapper[$key][0];
@@ -404,7 +404,7 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
     $phoneTypes = CRM_Core_PseudoConstant::phoneType();
 
     foreach ($mapper as $key => $value) {
-      $header = array();
+      $header = [];
       list($id, $first, $second) = explode('_', $mapper[$key][0]);
       if (($first == 'a' && $second == 'b') || ($first == 'b' && $second == 'a')) {
         $relationType = new CRM_Contact_DAO_RelationshipType();
@@ -463,18 +463,18 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
     if ($newGroupName) {
       /* Create a new group */
 
-      $gParams = array(
+      $gParams = [
         'name' => $newGroupName,
         'title' => $newGroupName,
         'description' => $newGroupDesc,
         'is_active' => TRUE,
-      );
+      ];
       $group = &CRM_Contact_BAO_Group::create($gParams);
       $groups[] = $newGroupId = $group->id;
     }
 
     if (is_array($groups)) {
-      $groupAdditions = array();
+      $groupAdditions = [];
       foreach ($groups as $groupId) {
         $addCount = &CRM_Contact_BAO_GroupContact::addContactsToGroup($contactIds, $groupId);
         if (!empty($relatedContactIds)) {
@@ -489,7 +489,7 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
           $name = $allGroups[$groupId];
           $new = FALSE;
         }
-        $groupAdditions[] = array(
+        $groupAdditions[] = [
           'url' => CRM_Utils_System::url('civicrm/group/search',
             'reset=1&force=1&context=smog&gid=' . $groupId
           ),
@@ -497,7 +497,7 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
           'added' => $totalCount,
           'notAdded' => $addCount[2] + $addRelCount[2],
           'new' => $new,
-        );
+        ];
       }
       $this->set('groupAdditions', $groupAdditions);
     }
@@ -506,14 +506,14 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
     if ($newTagName) {
       /* Create a new Tag */
 
-      $tagParams = array(
+      $tagParams = [
         'name' => $newTagName,
         'title' => $newTagName,
         'description' => $newTagDesc,
         'is_active' => TRUE,
-      );
+      ];
 
-      $id = array();
+      $id = [];
       $addedTag = &CRM_Core_BAO_Tag::add($tagParams, $id);
       $tag[$addedTag->id] = 1;
     }
@@ -521,7 +521,7 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
 
     if (is_array($tag)) {
 
-      $tagAdditions = array();
+      $tagAdditions = [];
 
       foreach ($tag as $tagId => $val) {
         $addTagCount = &CRM_Core_BAO_EntityTag::addContactsToTag($contactIds, $tagId);
@@ -537,7 +537,7 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
           $tagName = $allTags[$tagId];
           $new = FALSE;
         }
-        $tagAdditions[] = array(
+        $tagAdditions[] = [
           'url' => CRM_Utils_System::url('civicrm/contact/search',
             'reset=1&force=1&context=smog&id=' . $tagId
           ),
@@ -545,7 +545,7 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
           'added' => $totalTagCount,
           'notAdded' => $addTagCount[2] + $addRelTagCount[2],
           'new' => $new,
-        );
+        ];
       }
       $this->set('tagAdditions', $tagAdditions);
     }
@@ -558,7 +558,7 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
     $errorStack = &CRM_Core_Error::singleton();
     $errors = $errorStack->getErrors();
 
-    $errorMessage = array();
+    $errorMessage = [];
 
 
     if (is_array($errors)) {

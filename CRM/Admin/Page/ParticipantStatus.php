@@ -43,38 +43,38 @@ class CRM_Admin_Page_ParticipantStatus extends CRM_Core_Page_Basic {
   function &links() {
     static $links = NULL;
     if ($links === NULL) {
-      $links = array(
-        CRM_Core_Action::UPDATE => array(
+      $links = [
+        CRM_Core_Action::UPDATE => [
           'name' => ts('Edit'),
           'url' => 'civicrm/admin/participant_status',
           'qs' => 'action=update&id=%%id%%&reset=1',
           'title' => ts('Edit Status'),
-        ),
-        CRM_Core_Action::DELETE => array(
+        ],
+        CRM_Core_Action::DELETE => [
           'name' => ts('Delete'),
           'url' => 'civicrm/admin/participant_status',
           'qs' => 'action=delete&id=%%id%%',
           'title' => ts('Delete Status'),
-        ),
-        CRM_Core_Action::DISABLE => array(
+        ],
+        CRM_Core_Action::DISABLE => [
           'name' => ts('Disable'),
           'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_Event_BAO_ParticipantStatusType' . '\',\'' . 'enable-disable' . '\' );"',
           'ref' => 'disable-action',
           'title' => ts('Disable Status'),
-        ),
-        CRM_Core_Action::ENABLE => array(
+        ],
+        CRM_Core_Action::ENABLE => [
           'name' => ts('Enable'),
           'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_Event_BAO_ParticipantStatusType' . '\',\'' . 'disable-enable' . '\' );"',
           'ref' => 'enable-action',
           'title' => ts('Enable Status'),
-        ),
-      );
+        ],
+      ];
     }
     return $links;
   }
 
   function browse() {
-    $statusTypes = array();
+    $statusTypes = [];
 
     $dao = new CRM_Event_DAO_ParticipantStatusType;
     $dao->orderBy('weight');
@@ -83,7 +83,7 @@ class CRM_Admin_Page_ParticipantStatus extends CRM_Core_Page_Basic {
     $visibilities = &CRM_Core_PseudoConstant::visibility();
 
     // these statuses are reserved, but disabled by default - so should be disablable after being enabled
-    $disablable = array('On waitlist', 'Awaiting approval', 'Pending from waitlist', 'Pending from approval', 'Rejected');
+    $disablable = ['On waitlist', 'Awaiting approval', 'Pending from waitlist', 'Pending from approval', 'Rejected'];
 
     while ($dao->fetch()) {
       CRM_Core_DAO::storeValues($dao, $statusTypes[$dao->id]);
@@ -95,7 +95,7 @@ class CRM_Admin_Page_ParticipantStatus extends CRM_Core_Page_Basic {
         }
       }
       $action -= $dao->is_active ? CRM_Core_Action::ENABLE : CRM_Core_Action::DISABLE;
-      $statusTypes[$dao->id]['action'] = CRM_Core_Action::formLink(self::links(), $action, array('id' => $dao->id));
+      $statusTypes[$dao->id]['action'] = CRM_Core_Action::formLink(self::links(), $action, ['id' => $dao->id]);
       $statusTypes[$dao->id]['visibility'] = $visibilities[$dao->visibility_id];
     }
     $this->assign('rows', $statusTypes);

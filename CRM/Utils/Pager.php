@@ -99,11 +99,11 @@ class CRM_Utils_Pager extends Pager_Sliding {
       $statusMessage = '';
     }
     else {
-      $statusMessage = ts('%1 - %2 of %3', array(1 => $start, 2 => $end, 3 => $params['total']));
+      $statusMessage = ts('%1 - %2 of %3', [1 => $start, 2 => $end, 3 => $params['total']]);
     }
     $params['status'] = str_replace('%%StatusMessage%%', $statusMessage, $params['status']);
 
-    $this->_response = array(
+    $this->_response = [
       'first' => $this->_printFirstPage(),
       'back' => str_replace('&nbsp;', '', $this->_getBackLink()),
       'next' => str_replace('&nbsp;', '', $this->_getNextLink()),
@@ -117,7 +117,7 @@ class CRM_Utils_Pager extends Pager_Sliding {
       'twentyfive' => $this->getPerPageLink(25),
       'fifty' => $this->getPerPageLink(50),
       'onehundred' => $this->getPerPageLink(100),
-    );
+    ];
 
     /**
      * A page cannot have two variables with the same form name. Hence in the
@@ -125,8 +125,8 @@ class CRM_Utils_Pager extends Pager_Sliding {
      * page variable, but a different form element for one at the bottom
      *
      */
-    $this->_response['titleTop'] = ts('Page %1 of %2', array(1 => '<input size="2" maxlength="5" name="' . self::PAGE_ID . '" type="text" value="' . $this->_response['currentPage'] . '" />', 2 => $this->_response['numPages']));
-    $this->_response['titleBottom'] = ts('Page %1 of %2', array(1 => '<input size="2" maxlength="5" name="' . self::PAGE_ID_BOTTOM . '" type="text" value="' . $this->_response['currentPage'] . '" />', 2 => $this->_response['numPages']));
+    $this->_response['titleTop'] = ts('Page %1 of %2', [1 => '<input size="2" maxlength="5" name="' . self::PAGE_ID . '" type="text" value="' . $this->_response['currentPage'] . '" />', 2 => $this->_response['numPages']]);
+    $this->_response['titleBottom'] = ts('Page %1 of %2', [1 => '<input size="2" maxlength="5" name="' . self::PAGE_ID_BOTTOM . '" type="text" value="' . $this->_response['currentPage'] . '" />', 2 => $this->_response['numPages']]);
   }
 
   /**
@@ -161,8 +161,8 @@ class CRM_Utils_Pager extends Pager_Sliding {
     $params['separator'] = '';
     $params['spacesBeforeSeparator'] = 1;
     $params['spacesAfterSeparator'] = 1;
-    $params['extraVars'] = array('force' => 1);
-    $params['excludeVars'] = array('reset', 'snippet');
+    $params['extraVars'] = ['force' => 1];
+    $params['excludeVars'] = ['reset', 'snippet'];
 
     // set previous and next text labels
     $params['prevImg'] = ' ' . ts('&lt; Previous');
@@ -264,7 +264,7 @@ class CRM_Utils_Pager extends Pager_Sliding {
 
     $offset = ($pageId - 1) * $this->_perPage;
 
-    return array($offset, $this->_perPage);
+    return [$offset, $this->_perPage];
   }
 
   /**
@@ -302,7 +302,7 @@ class CRM_Utils_Pager extends Pager_Sliding {
    */
   function _renderLink($altText, $linkText) {
     if ($this->_httpMethod == 'GET') {
-      $query = array();
+      $query = [];
       foreach($this->_linkData as $key => $val) {
         $val = CRM_Utils_String::xssFilter($val);
         $key = CRM_Utils_String::xssFilter($key);

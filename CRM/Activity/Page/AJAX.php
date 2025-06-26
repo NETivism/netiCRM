@@ -42,9 +42,9 @@ class CRM_Activity_Page_AJAX {
     $userID = CRM_Utils_Type::escape($_GET['userID'], 'Integer');
     $context = CRM_Utils_Type::escape(CRM_Utils_Array::value('context', $_GET), 'String');
 
-    $sortMapper = array(0 => 'display_date', 1 => 'ca.subject', 2 => 'ca.activity_type_id',
+    $sortMapper = [0 => 'display_date', 1 => 'ca.subject', 2 => 'ca.activity_type_id',
       3 => 'acc.sort_name', 4 => 'cc.sort_name', 5 => 'ca.status_id',
-    );
+    ];
 
     $sEcho = CRM_Utils_Type::escape($_REQUEST['sEcho'], 'Integer');
     $offset = isset($_REQUEST['iDisplayStart']) ? CRM_Utils_Type::escape($_REQUEST['iDisplayStart'], 'Integer') : 0;
@@ -66,20 +66,20 @@ class CRM_Activity_Page_AJAX {
 
 
     $iFilteredTotal = $iTotal = $params['total'];
-    $selectorElements = array('display_date', 'subject', 'type', 'with_contacts', 'reporter', 'status', 'links', 'class');
+    $selectorElements = ['display_date', 'subject', 'type', 'with_contacts', 'reporter', 'status', 'links', 'class'];
 
     echo CRM_Utils_JSON::encodeDataTableSelector($activities, $sEcho, $iTotal, $iFilteredTotal, $selectorElements);
     CRM_Utils_System::civiExit();
   }
 
   static function convertToCaseActivity() {
-    $params = array('caseID', 'activityID', 'contactID', 'newSubject', 'targetContactIds', 'mode');
+    $params = ['caseID', 'activityID', 'contactID', 'newSubject', 'targetContactIds', 'mode'];
     foreach ($params as $param) {
       $$param = CRM_Utils_Array::value($param, $_POST);
     }
 
     if (!$activityID || !$caseID) {
-      echo json_encode(array('error_msg' => 'required params missing.'));
+      echo json_encode(['error_msg' => 'required params missing.']);
       CRM_Utils_System::civiExit();
     }
 
@@ -87,14 +87,14 @@ class CRM_Activity_Page_AJAX {
     $otherActivity = new CRM_Activity_DAO_Activity();
     $otherActivity->id = $activityID;
     if (!$otherActivity->find(TRUE)) {
-      echo json_encode(array('error_msg' => 'activity record is missing.'));
+      echo json_encode(['error_msg' => 'activity record is missing.']);
       CRM_Utils_System::civiExit();
     }
     $actDateTime = CRM_Utils_Date::isoToMysql($otherActivity->activity_date_time);
 
     //create new activity record.
     $mainActivity = new CRM_Activity_DAO_Activity();
-    $mainActVals = array();
+    $mainActVals = [];
     CRM_Core_DAO::storeValues($otherActivity, $mainActVals);
 
     //get new activity subject.
@@ -117,7 +117,7 @@ class CRM_Activity_Page_AJAX {
     $mainActivity->free();
 
     //mark previous activity as deleted.
-    if (in_array($mode, array('move', 'file'))) {
+    if (in_array($mode, ['move', 'file'])) {
       $otherActivity->activity_date_time = $actDateTime;
       $otherActivity->is_deleted = 1;
       $otherActivity->save();
@@ -125,14 +125,14 @@ class CRM_Activity_Page_AJAX {
     $otherActivity->free();
 
 
-    $targetContacts = array();
+    $targetContacts = [];
     if (!empty($targetContactIds)) {
       $targetContacts = array_unique(explode(',', $targetContactIds));
     }
     foreach ($targetContacts as $key => $value) {
-      $params = array('activity_id' => $mainActivityId,
+      $params = ['activity_id' => $mainActivityId,
         'target_contact_id' => $value,
-      );
+      ];
       CRM_Activity_BAO_Activity::createActivityTarget($params);
     }
 
@@ -145,7 +145,7 @@ class CRM_Activity_Page_AJAX {
     $error_msg = $caseActivity->_lastError;
     $caseActivity->free();
 
-    echo json_encode(array('error_msg' => $error_msg));
+    echo json_encode(['error_msg' => $error_msg]);
     CRM_Utils_System::civiExit();
   }
 }

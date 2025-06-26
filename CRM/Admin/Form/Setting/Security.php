@@ -13,17 +13,17 @@ class CRM_Admin_Form_Setting_Security extends CRM_Admin_Form_Setting {
     $config = CRM_Core_Config::singleton();
 
     $label = ts("Export excel file encryption settings");
-    $decryptExcelOptions = array(
+    $decryptExcelOptions = [
       '0' => ts("No password set"),
       '1' => ts("Use the email of the exporting user as the password"),
       '2' => ts("Use a generic password")
-    );
+    ];
     $this->addRadio('decryptExcelOption', $label, $decryptExcelOptions, NULL, "<br>", FALSE);
     $this->addTextfield('decryptExcelPwd', ts("Generic Password"), NULL, FALSE);
 
-    $this->addTextarea('trustedHostsPatterns', ts('Trusted Host Settings'), array(
+    $this->addTextarea('trustedHostsPatterns', ts('Trusted Host Settings'), [
       'data-host' => $_SERVER['HTTP_HOST']
-    ));
+    ]);
     $this->assign('current_host', $_SERVER['HTTP_HOST']);
 
     $this->addElement('textarea', 'cspRules', ts('Content Security Policy'));
@@ -35,7 +35,7 @@ class CRM_Admin_Form_Setting_Security extends CRM_Admin_Form_Setting {
     }
 
     parent::buildQuickForm();
-    $this->addFormRule(array('CRM_Admin_Form_Setting_Security', 'formRule'));
+    $this->addFormRule(['CRM_Admin_Form_Setting_Security', 'formRule']);
   }
 
   /**
@@ -46,11 +46,11 @@ class CRM_Admin_Form_Setting_Security extends CRM_Admin_Form_Setting {
    * @return bool|array
    */
   public static function formRule($fields) {
-    $errors = array();
+    $errors = [];
     if (!empty(trim($fields['cspRules']))) {
       $csp = new CRM_Utils_CSP($fields['cspRules']);
       if (!count($csp->policies)) {
-        $errors['cspRules'] = ts('%1 has error on format.', array(1 => 'CSP'));
+        $errors['cspRules'] = ts('%1 has error on format.', [1 => 'CSP']);
       }
     }
     return $errors;
@@ -75,11 +75,11 @@ class CRM_Admin_Form_Setting_Security extends CRM_Admin_Form_Setting {
     $params = $this->controller->exportValues($this->_name);
     $params = $this->controller->exportValues($this->_name);
 
-    $decryptExcelOptions = array(
+    $decryptExcelOptions = [
       '0' => ts("No password set"),
       '1' => ts("Use the email of the exporting user as the password"),
       '2' => ts("Use a generic password")
-    );
+    ];
     $currentOption = CRM_Utils_Array::value('decryptExcelOption', $params);
     $currentPwd = CRM_Utils_Array::value('decryptExcelPwd', $params);
     if($currentOption != "2"){
@@ -99,17 +99,17 @@ class CRM_Admin_Form_Setting_Security extends CRM_Admin_Form_Setting {
     $previousPwd = $config->decryptExcelPwd;
     $serial = CRM_REQUEST_TIME;
     if ($currentOption != $previousOption) {
-      $optionChange = ts("Settings option changed from %1 to %2." , array(1 => $decryptExcelOptions[$previousOption], 2 => $decryptExcelOptions[$currentOption]));
-      $data = array(
+      $optionChange = ts("Settings option changed from %1 to %2." , [1 => $decryptExcelOptions[$previousOption], 2 => $decryptExcelOptions[$currentOption]]);
+      $data = [
         'event' => ts("Export excel file encryption settings option Changed"),
         'log' => $optionChange,
-      );
+      ];
       CRM_Core_BAO_Log::audit($serial, 'civicrm.security.option', json_encode($data));
     }
     if ($currentPwd !== $previousPwd) {
-      $data = array(
+      $data = [
         'event' => ts("Export excel file encryption settings password Changed"),
-      );
+      ];
       CRM_Core_BAO_Log::audit($serial, 'civicrm.security.pwd', json_encode($data));
     }
   }

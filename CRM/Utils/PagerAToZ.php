@@ -63,7 +63,7 @@ class CRM_Utils_PagerAToZ {
    */
 
   static function getStaticCharacters() {
-    $staticAlphabets = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z');
+    $staticAlphabets = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
     return $staticAlphabets;
   }
 
@@ -85,7 +85,7 @@ class CRM_Utils_PagerAToZ {
       return NULL;
     }
 
-    $dynamicAlphabets = array();
+    $dynamicAlphabets = [];
     while ($result->fetch()) {
       $dynamicAlphabets[] = $result->sort_name;
     }
@@ -117,13 +117,13 @@ class CRM_Utils_PagerAToZ {
 
     if(!empty($query->_formValues)){
       $qfKey = CRM_Utils_Array::value('qfKey', $query->_formValues);
-      $aToZBar = array();
+      $aToZBar = [];
       foreach ($AToZBar as $key => $link) {
         if (!$link) {
           continue;
         }
 
-        $element = array();
+        $element = [];
         if (in_array($link, $dynamicAlphabets)) {
           $klass = '';
           if ($link == $sortByCharacter) {
@@ -150,7 +150,7 @@ class CRM_Utils_PagerAToZ {
         CRM_Utils_System::url($path, "force=1&qfKey=$qfKey&sortByCharacter=1"),
         'All'
       );
-      $aToZBar[] = array('item' => $url);
+      $aToZBar[] = ['item' => $url];
       return $aToZBar;
     }
     else{

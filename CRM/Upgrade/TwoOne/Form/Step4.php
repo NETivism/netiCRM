@@ -36,7 +36,7 @@
 
 class CRM_Upgrade_TwoOne_Form_Step4 extends CRM_Upgrade_Form {
   function verifyPreDBState(&$errorMessage) {
-    $errorMessage = ts('Pre-condition failed for upgrade step %1.', array(1 => '2'));
+    $errorMessage = ts('Pre-condition failed for upgrade step %1.', [1 => '2']);
 
     if (!CRM_Core_DAO::checkTableExists('civicrm_cache') ||
       !CRM_Core_DAO::checkTableExists('civicrm_group_contact_cache') ||
@@ -90,7 +90,7 @@ class CRM_Upgrade_TwoOne_Form_Step4 extends CRM_Upgrade_Form {
     else {
       $upgradeDoc = 'http://wiki.civicrm.org/confluence/x/SoJH';
     }
-    return '<p><strong>' . ts('Your CiviCRM database has been successfully upgraded to v2.1.') . '</strong></p><p>' . ts('Please be sure to follow the remaining steps in the <a href=\'%1\' target=\'_blank\'><strong>Upgrade Instructions</strong></a>.', array(1 => $upgradeDoc)) . '</p><p>' . ts('Thank you for using CiviCRM.') . '</p>';
+    return '<p><strong>' . ts('Your CiviCRM database has been successfully upgraded to v2.1.') . '</strong></p><p>' . ts('Please be sure to follow the remaining steps in the <a href=\'%1\' target=\'_blank\'><strong>Upgrade Instructions</strong></a>.', [1 => $upgradeDoc]) . '</p><p>' . ts('Thank you for using CiviCRM.') . '</p>';
   }
 }
 

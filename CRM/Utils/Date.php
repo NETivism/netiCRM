@@ -316,13 +316,13 @@ class CRM_Utils_Date {
       $config = CRM_Core_Config::singleton();
 
       if ($dateParts) {
-        if (array_intersect(array('h', 'H'), $dateParts)) {
+        if (array_intersect(['h', 'H'], $dateParts)) {
           $format = $config->dateformatDatetime;
         }
-        elseif (array_intersect(array('d', 'j'), $dateParts)) {
+        elseif (array_intersect(['d', 'j'], $dateParts)) {
           $format = $config->dateformatFull;
         }
-        elseif (array_intersect(array('m', 'M'), $dateParts)) {
+        elseif (array_intersect(['m', 'M'], $dateParts)) {
           $format = $config->dateformatPartial;
         }
         else {
@@ -400,7 +400,7 @@ class CRM_Utils_Date {
         $type = 'PM';
       }
 
-      $date = array(
+      $date = [
         '%b' => CRM_Utils_Array::value($month, $abbrMonths),
         '%B' => CRM_Utils_Array::value($month, $fullMonths),
         '%d' => $day > 9 ? $day : '0' . $day,
@@ -419,7 +419,7 @@ class CRM_Utils_Date {
         '%P' => $type,
         '%A' => $type,
         '%Y' => $year,
-      );
+      ];
 
       return strtr($format, $date);
     }
@@ -476,7 +476,7 @@ class CRM_Utils_Date {
    * @static
    */
   static function isoToMysql($iso) {
-    $dropArray = array('-' => '', ':' => '', ' ' => '');
+    $dropArray = ['-' => '', ':' => '', ' ' => ''];
     return strtr($iso, $dropArray);
   }
 
@@ -776,7 +776,7 @@ class CRM_Utils_Date {
    * @access public
    */
   public static function calculateAge($birthDate) {
-    $results = array();
+    $results = [];
     $formatedBirthDate = CRM_Utils_Date::customFormat($birthDate, '%Y-%m-%d');
 
     $bDate = explode('-', $formatedBirthDate);
@@ -872,7 +872,7 @@ class CRM_Utils_Date {
 
     $scheduleDate = explode("-", date("n-j-Y-H-i-s", $date));
 
-    $date = array();
+    $date = [];
     $date['M'] = $scheduleDate[0];
     $date['d'] = $scheduleDate[1];
     $date['Y'] = $scheduleDate[2];
@@ -897,19 +897,19 @@ class CRM_Utils_Date {
       $birthDateFormat = self::getDateFormat('birth');
     }
 
-    $supportableFormats = array(
+    $supportableFormats = [
       'mm/dd' => '%B %E%f',
       'dd-mm' => '%E%f %B',
       'yy-mm' => '%Y %B',
       'M yy' => '%b %Y',
       'yy' => '%Y',
       'dd/mm/yy' => '%E%f %B %Y',
-    );
+    ];
 
     if (CRM_Utils_Array::arrayKeyExists($birthDateFormat, $supportableFormats)) {
-      $birthDateFormat = array('qfMapping' => $supportableFormats[$birthDateFormat],
+      $birthDateFormat = ['qfMapping' => $supportableFormats[$birthDateFormat],
         'dateParts' => $formatMapping,
-      );
+      ];
     }
 
     return $birthDateFormat;
@@ -926,7 +926,7 @@ class CRM_Utils_Date {
    */
   static function relativeToAbsolute($relativeTerm, $unit) {
     $now = getDate();
-    $from = $to = $dateRange = array();
+    $from = $to = $dateRange = [];
     $from['H'] = $from['i'] = $from['s'] = 0;
 
     switch ($unit) {
@@ -1335,7 +1335,7 @@ class CRM_Utils_Date {
         break;
     }
 
-    foreach (array('from', 'to') as $item) {
+    foreach (['from', 'to'] as $item) {
       if (!empty($$item)) {
         $dateRange[$item] = self::format($$item);
       }
@@ -1426,9 +1426,9 @@ class CRM_Utils_Date {
 
       $timeStamp = strtotime($date . ' ' . $time);
       if (empty($timeStamp)) {
-        CRM_Core_Session::setStatus(ts("%1 has error on format.", array(
+        CRM_Core_Session::setStatus(ts("%1 has error on format.", [
             1 => ts('Time')
-          )), TRUE, 'error'
+          ]), TRUE, 'error'
         );
       }
       $mysqlDate = date($format, $timeStamp);
@@ -1453,8 +1453,8 @@ class CRM_Utils_Date {
     $config = CRM_Core_Config::singleton();
     if ($formatType) {
       // get actual format
-      $params = array('name' => $formatType);
-      $values = array();
+      $params = ['name' => $formatType];
+      $values = [];
       CRM_Core_DAO::commonRetrieve('CRM_Core_DAO_PreferencesDate', $params, $values);
 
       if ($values['date_format']) {
@@ -1495,7 +1495,7 @@ class CRM_Utils_Date {
       $time = '0' . $time;
     }
 
-    return array($date, $time);
+    return [$date, $time];
   }
 
   /**

@@ -148,11 +148,11 @@ class CRM_Contribute_DAO_ContributionSoft extends CRM_Core_DAO
   function &links()
   {
     if (!(self::$_links)) {
-      self::$_links = array(
+      self::$_links = [
         'contribution_id' => 'civicrm_contribution:id',
         'contact_id' => 'civicrm_contact:id',
         'pcp_id' => 'civicrm_pcp:id',
-      );
+      ];
     }
     return self::$_links;
   }
@@ -181,8 +181,8 @@ class CRM_Contribute_DAO_ContributionSoft extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'contribution_soft_id' => array(
+      self::$_fields = [
+        'contribution_soft_id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Soft Contribution ID') ,
@@ -192,14 +192,14 @@ class CRM_Contribute_DAO_ContributionSoft extends CRM_Core_DAO
           'headerPattern' => '',
           'dataPattern' => '',
           'export' => true,
-        ) ,
-        'contribution_id' => array(
+        ] ,
+        'contribution_id' => [
           'name' => 'contribution_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
           'FKClassName' => 'CRM_Contribute_DAO_Contribution',
-        ) ,
-        'contribution_soft_contact_id' => array(
+        ] ,
+        'contribution_soft_contact_id' => [
           'name' => 'contact_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Contact ID') ,
@@ -210,8 +210,8 @@ class CRM_Contribute_DAO_ContributionSoft extends CRM_Core_DAO
           'dataPattern' => '/^\d+$/',
           'export' => true,
           'FKClassName' => 'CRM_Contact_DAO_Contact',
-        ) ,
-        'amount' => array(
+        ] ,
+        'amount' => [
           'name' => 'amount',
           'type' => CRM_Utils_Type::T_MONEY,
           'title' => ts('Amount') ,
@@ -221,43 +221,43 @@ class CRM_Contribute_DAO_ContributionSoft extends CRM_Core_DAO
           'headerPattern' => '/total(.?am(ou)?nt)?/i',
           'dataPattern' => '/^\d+(\.\d{2})?$/',
           'export' => true,
-        ) ,
-        'currency' => array(
+        ] ,
+        'currency' => [
           'name' => 'currency',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Currency') ,
           'maxlength' => 3,
           'size' => CRM_Utils_Type::FOUR,
           'default' => 'UL',
-        ) ,
-        'pcp_id' => array(
+        ] ,
+        'pcp_id' => [
           'name' => 'pcp_id',
           'type' => CRM_Utils_Type::T_INT,
           'default' => 'UL',
           'FKClassName' => 'CRM_Contribute_DAO_PCP',
-        ) ,
-        'pcp_display_in_roll' => array(
+        ] ,
+        'pcp_display_in_roll' => [
           'name' => 'pcp_display_in_roll',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Pcp Display In Roll') ,
-        ) ,
-        'pcp_roll_nickname' => array(
+        ] ,
+        'pcp_roll_nickname' => [
           'name' => 'pcp_roll_nickname',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Pcp Roll Nickname') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
           'default' => 'UL',
-        ) ,
-        'pcp_personal_note' => array(
+        ] ,
+        'pcp_personal_note' => [
           'name' => 'pcp_personal_note',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Pcp Personal Note') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
           'default' => 'UL',
-        ) ,
-      );
+        ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -290,7 +290,7 @@ class CRM_Contribute_DAO_ContributionSoft extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -313,7 +313,7 @@ class CRM_Contribute_DAO_ContributionSoft extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {

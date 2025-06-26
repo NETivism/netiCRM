@@ -57,7 +57,7 @@ class CRM_Mailing_BAO_TrackableURL extends CRM_Mailing_DAO_TrackableURL {
    */
   public static function getTrackerURL($url, $mailing_id, $queue_id) {
 
-    static $urlCache = array();
+    static $urlCache = [];
 
     if (CRM_Utils_Array::arrayKeyExists($url, $urlCache)) {
       return $urlCache[$url] . "&qid=$queue_id";
@@ -78,7 +78,7 @@ class CRM_Mailing_BAO_TrackableURL extends CRM_Mailing_DAO_TrackableURL {
       $config = CRM_Core_Config::singleton();
 
       $tracker = new CRM_Mailing_BAO_TrackableURL();
-      $atag = array();
+      $atag = [];
       if (preg_match('/^(<a\s+[^>]*)href/i', $url, $atag)) {
         $url = preg_replace('/<a\s+[^>]*href[ ]*=[ ]*[\'"](.*?)[\'"]?$/i', '$1', $url);
         $hrefExists = TRUE;

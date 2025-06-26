@@ -78,7 +78,7 @@ class CRM_Utils_System_Joomla {
     if (is_array($breadCrumbs)) {
       foreach ($breadCrumbs as $crumbs) {
         if (stripos($crumbs['url'], 'id%%')) {
-          $args = array('cid', 'mid');
+          $args = ['cid', 'mid'];
           foreach ($args as $a) {
             $val = CRM_Utils_Request::retrieve($a, 'Positive', CRM_Core_DAO::$_nullObject,
               FALSE, NULL, $_GET
@@ -303,7 +303,7 @@ class CRM_Utils_System_Joomla {
       if (!$contactID) {
         return FALSE;
       }
-      return array($contactID, $row['id'], mt_rand());
+      return [$contactID, $row['id'], mt_rand()];
     }
     return FALSE;
   }

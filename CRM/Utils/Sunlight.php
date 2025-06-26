@@ -40,9 +40,9 @@ class CRM_Utils_Sunlight {
 
   static function makeAPICall($uri) {
 
-    $params = array('method' => HTTP_REQUEST_METHOD_GET,
+    $params = ['method' => HTTP_REQUEST_METHOD_GET,
       'allowRedirects' => FALSE,
-    );
+    ];
 
     $request = new HTTP_Request(self::$_apiURL . $uri, $params);
     $result = $request->sendRequest();
@@ -51,7 +51,7 @@ class CRM_Utils_Sunlight {
     }
     if ($request->getResponseCode() != 200) {
       CRM_Core_Error::fatal(ts('Invalid response code received from Sunlight servers: %1',
-          array(1 => $request->getResponseCode())
+          [1 => $request->getResponseCode()]
         ));
     }
     $string = $request->getResponseBody();
@@ -63,7 +63,7 @@ class CRM_Utils_Sunlight {
     $uri = "places.getCityStateFromZip.php?zip={$zipcode}&apikey={$key}&output=xml";
     $xml = self::makeAPICall($uri);
 
-    return array($xml->city, $xml->state);
+    return [$xml->city, $xml->state];
   }
 
   static function getDetailedInfo($peopleID) {
@@ -71,8 +71,8 @@ class CRM_Utils_Sunlight {
     $uri = "people.getPersonInfo.php?id={$peopleID}&apikey={$key}&output=xml";
     $xml = self::makeAPICall($uri);
 
-    $result = array();
-    $fields = array('title' => 'title',
+    $result = [];
+    $fields = ['title' => 'title',
       'firstname' => 'first_name',
       'lastname' => 'last_name',
       'gender' => 'gender',
@@ -83,7 +83,7 @@ class CRM_Utils_Sunlight {
       'congresspedia' => 'url',
       'photo' => 'image_url',
       'webform' => 'contact_url',
-    );
+    ];
 
     foreach ($fields as $old => $new) {
       $result[$new] = (string ) $xml->$old;
@@ -97,7 +97,7 @@ class CRM_Utils_Sunlight {
   static function getPeopleInfo($uri) {
     $xml = self::makeAPICall($uri);
 
-    $result = array();
+    $result = [];
     foreach ($xml->entity_id_list->entity_id as $key => $value) {
       $result[] = self::getDetailedInfo($value);
     }
@@ -134,7 +134,7 @@ class CRM_Utils_Sunlight {
     $reps = self::getRepresentativeInfo($city, $state);
     $sens = self::getSenatorInfo($state);
 
-    $result = array();
+    $result = [];
     if (is_array($reps)) {
       $result = array_merge($result, $reps);
     }

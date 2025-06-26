@@ -87,10 +87,10 @@ class CRM_Case_Form_Task_Restore extends CRM_Case_Form_Task {
       }
     }
 
-    $status = array(
-      ts('Restored Case(s): %1', array(1 => $restoredCases)),
-      ts('Total Selected Case(s): %1', array(1 => count($this->_caseIds))),
-    );
+    $status = [
+      ts('Restored Case(s): %1', [1 => $restoredCases]),
+      ts('Total Selected Case(s): %1', [1 => count($this->_caseIds)]),
+    ];
     CRM_Core_Session::setStatus($status);
   }
 }

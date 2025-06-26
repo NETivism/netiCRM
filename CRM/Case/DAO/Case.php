@@ -144,8 +144,8 @@ class CRM_Case_DAO_Case extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'case_id' => array(
+      self::$_fields = [
+        'case_id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Case ID') ,
@@ -155,8 +155,8 @@ class CRM_Case_DAO_Case extends CRM_Core_DAO
           'headerPattern' => '',
           'dataPattern' => '',
           'export' => true,
-        ) ,
-        'case_type_id' => array(
+        ] ,
+        'case_type_id' => [
           'name' => 'case_type_id',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Case Type Id') ,
@@ -168,15 +168,15 @@ class CRM_Case_DAO_Case extends CRM_Core_DAO
           'headerPattern' => '',
           'dataPattern' => '',
           'export' => false,
-        ) ,
-        'subject' => array(
+        ] ,
+        'subject' => [
           'name' => 'subject',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Subject') ,
           'maxlength' => 128,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'case_start_date' => array(
+        ] ,
+        'case_start_date' => [
           'name' => 'start_date',
           'type' => CRM_Utils_Type::T_DATE,
           'title' => ts('Case Start Date') ,
@@ -185,8 +185,8 @@ class CRM_Case_DAO_Case extends CRM_Core_DAO
           'headerPattern' => '',
           'dataPattern' => '',
           'export' => true,
-        ) ,
-        'case_end_date' => array(
+        ] ,
+        'case_end_date' => [
           'name' => 'end_date',
           'type' => CRM_Utils_Type::T_DATE,
           'title' => ts('Case End Date') ,
@@ -195,15 +195,15 @@ class CRM_Case_DAO_Case extends CRM_Core_DAO
           'headerPattern' => '',
           'dataPattern' => '',
           'export' => true,
-        ) ,
-        'details' => array(
+        ] ,
+        'details' => [
           'name' => 'details',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Details') ,
           'rows' => 8,
           'cols' => 60,
-        ) ,
-        'case_status_id' => array(
+        ] ,
+        'case_status_id' => [
           'name' => 'status_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Case Status Id') ,
@@ -213,8 +213,8 @@ class CRM_Case_DAO_Case extends CRM_Core_DAO
           'headerPattern' => '',
           'dataPattern' => '',
           'export' => false,
-        ) ,
-        'case_deleted' => array(
+        ] ,
+        'case_deleted' => [
           'name' => 'is_deleted',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Case is in the Trash') ,
@@ -223,8 +223,8 @@ class CRM_Case_DAO_Case extends CRM_Core_DAO
           'headerPattern' => '',
           'dataPattern' => '',
           'export' => true,
-        ) ,
-      );
+        ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -257,7 +257,7 @@ class CRM_Case_DAO_Case extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -280,7 +280,7 @@ class CRM_Case_DAO_Case extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {

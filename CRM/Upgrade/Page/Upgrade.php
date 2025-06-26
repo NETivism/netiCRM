@@ -61,12 +61,12 @@ class CRM_Upgrade_Page_Upgrade extends CRM_Core_Page {
     }
 
     // hack to make past ver compatible /w new incremental upgrade process
-    $convertVer = array('2.1' => '2.1.0',
+    $convertVer = ['2.1' => '2.1.0',
       '2.2' => '2.2.alpha1',
       '2.2.alph' => '2.2.alpha3',
       // since 3.1.1 had domain.version set as 3.1.0
       '3.1.0' => '3.1.1',
-    );
+    ];
     if (isset($convertVer[$currentVer])) {
       $currentVer = $convertVer[$currentVer];
     }
@@ -92,14 +92,14 @@ class CRM_Upgrade_Page_Upgrade extends CRM_Core_Page {
     // end of hack
 
     CRM_Utils_System::setTitle(ts('Upgrade CiviCRM to Version %1',
-        array(1 => $latestVer)
+        [1 => $latestVer]
       ));
 
     $upgrade = new CRM_Upgrade_Form();
 
     $template = CRM_Core_Smarty::singleton();
     $template->assign('pageTitle', ts('Upgrade CiviCRM to Version %1',
-        array(1 => $latestVer)
+        [1 => $latestVer]
       ));
     $template->assign('menuRebuildURL',
       CRM_Utils_System::url('civicrm/menu/rebuild', 'reset=1')
@@ -112,13 +112,13 @@ class CRM_Upgrade_Page_Upgrade extends CRM_Core_Page {
       // DB version number is higher than codebase being upgraded to. This is unexpected condition-fatal error.
       $dbToolsLink = CRM_Utils_System::docURL2("Database Troubleshooting Tools", TRUE);
       $error = ts('Your database is marked with an unexpected version number: %1. The automated upgrade to version %2 can not be run - and the %2 codebase may not be compatible with your database state. You will need to determine the correct version corresponding to your current database state. The database tools utility at %3 may be helpful. You may want to revert to the codebase you were using prior to beginning this upgrade until you resolve this problem.',
-        array(1 => $currentVer, 2 => $latestVer, 3 => $dbToolsLink)
+        [1 => $currentVer, 2 => $latestVer, 3 => $dbToolsLink]
       );
       CRM_Core_Error::fatal($error);
     }
     elseif (version_compare($currentVer, $latestVer) == 0) {
       $message = ts('Your database has already been upgraded to CiviCRM %1',
-        array(1 => $latestVer)
+        [1 => $latestVer]
       );
       $template->assign('upgraded', TRUE);
     }
@@ -133,7 +133,7 @@ class CRM_Upgrade_Page_Upgrade extends CRM_Core_Page {
 
         if (is_array($subTypes) && !empty($subTypes)) {
           $config = CRM_Core_Config::singleton();
-          $subTypeTemplates = array();
+          $subTypeTemplates = [];
 
           if (isset($config->customTemplateDir)) {
             foreach ($subTypes as $key => $subTypeName) {
@@ -155,12 +155,12 @@ class CRM_Upgrade_Page_Upgrade extends CRM_Core_Page {
 
           if (!empty($subTypeTemplates)) {
             $subTypeTemplates = CRM_Utils_Array::implode(',', $subTypeTemplates);
-            $message .= '<br />' . ts('You are using custom template for contact subtypes: %1.', array(1 => $subTypeTemplates)) . '<br />' . ts('You need to move these subtype templates to the SubType directory in %1 and %2 respectively.', array(1 => 'CRM/Contact/Form/Edit', 2 => 'CRM/Contact/Page/View'));
+            $message .= '<br />' . ts('You are using custom template for contact subtypes: %1.', [1 => $subTypeTemplates]) . '<br />' . ts('You need to move these subtype templates to the SubType directory in %1 and %2 respectively.', [1 => 'CRM/Contact/Form/Edit', 2 => 'CRM/Contact/Page/View']);
           }
         }
       }
       elseif ($latestVer == '3.2.beta4') {
-        $statuses = array('New', 'Current', 'Grace', 'Expired', 'Pending', 'Cancelled', 'Deceased');
+        $statuses = ['New', 'Current', 'Grace', 'Expired', 'Pending', 'Cancelled', 'Deceased'];
         $sql = "
 SELECT  count( id ) as statusCount 
   FROM  civicrm_membership_status 
@@ -174,7 +174,7 @@ SELECT  count( id ) as statusCount
       $template->assign('currentVersion', $currentVer);
       $template->assign('newVersion', $latestVer);
       $template->assign('upgradeTitle', ts('Upgrade CiviCRM from v %1 To v %2',
-          array(1 => $currentVer, 2 => $latestVer)
+          [1 => $currentVer, 2 => $latestVer]
         ));
       $template->assign('upgraded', FALSE);
 
@@ -192,7 +192,7 @@ SELECT  count( id ) as statusCount
             // follow old upgrade process for all version
             // below 3.2.alpha1
             if (version_compare($rev, '3.2.alpha1') < 0) {
-              if (is_callable(array($this, $phpFunctionName))) {
+              if (is_callable([$this, $phpFunctionName])) {
                 $functionName = $this->$phpFunctionName;
                 $functionName($rev);
               }
@@ -207,7 +207,7 @@ SELECT  count( id ) as statusCount
 
               // predb check for major release.
               if ($upgrade->checkVersionRelease($rev, 'alpha1')) {
-                if (!(is_callable(array($versionObject, 'verifyPreDBstate')))) {
+                if (!(is_callable([$versionObject, 'verifyPreDBstate']))) {
                   CRM_Core_Error::fatal("verifyPreDBstate method was not found for $rev");
                 }
 
@@ -220,7 +220,7 @@ SELECT  count( id ) as statusCount
                 }
               }
 
-              if (is_callable(array($versionObject, $phpFunctionName))) {
+              if (is_callable([$versionObject, $phpFunctionName])) {
                 $versionObject->$phpFunctionName($rev);
               }
               else {
@@ -278,9 +278,9 @@ SELECT  count( id ) as statusCount
 
       $template = CRM_Core_Smarty::singleton();
 
-      $eventFees = array();
+      $eventFees = [];
       $query = "SELECT og.id ogid FROM civicrm_option_group og WHERE og.name LIKE  %1";
-      $params = array(1 => array('civicrm_event_page.amount%', 'String'));
+      $params = [1 => ['civicrm_event_page.amount%', 'String']];
       $dao = CRM_Core_DAO::executeQuery($query, $params);
       while ($dao->fetch()) {
         $eventFees[$dao->ogid] = $dao->ogid;

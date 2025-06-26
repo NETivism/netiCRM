@@ -35,13 +35,13 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
    * Status of batch
    * @var array
    */
-  public static $_batchStatus = array();
+  public static $_batchStatus = [];
 
   /**
    * Type of batch
    * @var array
    */
-  public static $_batchType = array();
+  public static $_batchType = [];
 
 
   /**
@@ -73,10 +73,10 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
 
     CRM_Utils_Hook::post($op, 'Batch', $batch->id, $batch);
 
-    $params = array(
+    $params = [
       'id' => $batch->id,
-    );
-    $defaults = array();
+    ];
+    $defaults = [];
     $batch = self::retrieve($params, $defaults);
     return $batch;
   }
@@ -140,9 +140,9 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
     unset($status['Completed']);
     unset($status['Canceled']);
     $sql = "SELECT id FROM civicrm_batch WHERE type_id = %1 AND status_id IN (".CRM_Utils_Array::implode(',', $status).") ORDER BY created_date ASC LIMIT 1";
-    $batchId = CRM_Core_DAO::singleValueQuery($sql, array(
-      1 => array($type['Auto'], 'Integer'),
-    ));
+    $batchId = CRM_Core_DAO::singleValueQuery($sql, [
+      1 => [$type['Auto'], 'Integer'],
+    ]);
 
     $message = '';
     if (!empty($batchId)) {
@@ -154,7 +154,7 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
       if (!empty($running) && $running->value) {
         if (CRM_REQUEST_TIME - $running->timestamp > 3600) {
           if ($batch->dupeDelete()) {
-            $message = ts('Found batch job number %1 running over 1 hour. We delete this job then start another batch job number %2.', array(1 => $running->value, 2 => $batch->_id));
+            $message = ts('Found batch job number %1 running over 1 hour. We delete this job then start another batch job number %2.', [1 => $running->value, 2 => $batch->_id]);
             CRM_Core_Error::debug_log_message($message);
             // start another process
             $batch->process();
@@ -192,22 +192,22 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
     unset($status['Pending']);
     $purgeDay = self::EXPIRE_DAY*4;
     $sql = "SELECT id FROM civicrm_batch WHERE type_id = %1 AND status_id IN (".CRM_Utils_Array::implode(',', $status).") AND DATE_ADD(modified_date, INTERVAL ".$purgeDay." DAY) < NOW() AND modified_date IS NOT NULL AND data IS NOT NULL ORDER BY modified_date ASC";
-    $dao = CRM_Core_DAO::executeQuery($sql, array(
-      1 => array($type['Auto'], 'Integer'),
-    ));
-    $expires = array();
+    $dao = CRM_Core_DAO::executeQuery($sql, [
+      1 => [$type['Auto'], 'Integer'],
+    ]);
+    $expires = [];
     while($dao->fetch()) {
-      $params = array(
+      $params = [
         'id' => $dao->id,
-      );
-      $defaults = array();
+      ];
+      $defaults = [];
       $batch = CRM_Batch_BAO_Batch::retrieve($params, $defaults);
       if ($batch->id) {
         if (isset($batch->data['download']['file']) && file_exists($batch->data['download']['file'])) {
           @unlink($batch->data['download']['file']);
           $expires[] = $dao->id;
         }
-        CRM_Core_DAO::executeQuery("UPDATE civicrm_batch SET data = NULL WHERE id = %1", array(1 => array($dao->id, 'Integer')));
+        CRM_Core_DAO::executeQuery("UPDATE civicrm_batch SET data = NULL WHERE id = %1", [1 => [$dao->id, 'Integer']]);
       }
       // refs #41959, free memory of batch result to prevent memory leak
       $batch->free();
@@ -233,10 +233,10 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
     $statusCanceled = $status['Canceled'];
 
     $sql = "SELECT id, data, modified_date, description FROM civicrm_batch WHERE type_id = %1 AND status_id = %2 ORDER BY created_date ASC LIMIT 1";
-    $dao = CRM_Core_DAO::executeQuery($sql, array(
-      1 => array($type['Auto'], 'Integer'),
-      2 => array($statusRunning, 'Integer'),
-    ));
+    $dao = CRM_Core_DAO::executeQuery($sql, [
+      1 => [$type['Auto'], 'Integer'],
+      2 => [$statusRunning, 'Integer'],
+    ]);
     $dao->fetch();
     if (!empty($dao->id)) {
       if ($dao->data) {
@@ -246,11 +246,11 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
           $lastSuccessTime = strtotime($dao->modified_date);
           if (CRM_REQUEST_TIME - $lastSuccessTime > 3600 * self::EXPIRE_HOUR) {
             CRM_Core_Error::debug_log_message("Canceled running batch id {$dao->id} due to zero progress over ".self::EXPIRE_HOUR." hours.");
-            CRM_Core_DAO::executeQuery("UPDATE civicrm_batch SET status_id = %1, description = %2 WHERE id = %3", array(
-              1 => array($statusCanceled, 'Integer'),
-              2 => array(ts('Batch running failed. Contact the site administrator for assistance.'), 'String'),
-              3 => array($dao->id, 'Integer'),
-            ));
+            CRM_Core_DAO::executeQuery("UPDATE civicrm_batch SET status_id = %1, description = %2 WHERE id = %3", [
+              1 => [$statusCanceled, 'Integer'],
+              2 => [ts('Batch running failed. Contact the site administrator for assistance.'), 'String'],
+              3 => [$dao->id, 'Integer'],
+            ]);
           }
         }
         elseif(!empty($meta['processed'])){
@@ -258,7 +258,7 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
             $processHistories = explode(':', $dao->description);
           }
           else {
-            $processHistories = array();
+            $processHistories = [];
           }
           $stuck = 0;
           foreach($processHistories as $lastProcessed) {
@@ -269,19 +269,19 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
           if ($stuck <= self::EXPIRE_HOUR) {
             array_unshift($processHistories, $meta['processed']);
             $processHistories = array_slice($processHistories, 0, self::EXPIRE_HOUR+2);
-            CRM_Core_DAO::executeQuery("UPDATE civicrm_batch SET description = %1 WHERE id = %2", array(
-              1 => array(implode(':', $processHistories), 'String'),
-              2 => array($dao->id, 'Integer'),
-            ));
+            CRM_Core_DAO::executeQuery("UPDATE civicrm_batch SET description = %1 WHERE id = %2", [
+              1 => [implode(':', $processHistories), 'String'],
+              2 => [$dao->id, 'Integer'],
+            ]);
           }
           else {
             // no progress after 4 times(have same processed records), cancel it
             CRM_Core_Error::debug_log_message("Canceled running batch id {$dao->id} due to stuck in progress {$meta['processed']} for {$stuck} times.");
-            CRM_Core_DAO::executeQuery("UPDATE civicrm_batch SET status_id = %1, description = %2 WHERE id = %3", array(
-              1 => array($statusCanceled, 'Integer'),
-              2 => array(ts('Batch running failed. Contact the site administrator for assistance.').' ('.$dao->description.')', 'String'),
-              3 => array($dao->id, 'Integer'),
-            ));
+            CRM_Core_DAO::executeQuery("UPDATE civicrm_batch SET status_id = %1, description = %2 WHERE id = %3", [
+              1 => [$statusCanceled, 'Integer'],
+              2 => [ts('Batch running failed. Contact the site administrator for assistance.').' ('.$dao->description.')', 'String'],
+              3 => [$dao->id, 'Integer'],
+            ]);
           }
         }
       }
@@ -301,8 +301,8 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
     self::batchStatus();
     if ($batchId) {
       $this->_id = $batchId;
-      $params = array('id' => $this->_id);
-      $defaults = array();
+      $params = ['id' => $this->_id];
+      $defaults = [];
       $this->_batch = self::retrieve($params, $defaults);
     }
   }
@@ -328,7 +328,7 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
     }
     $session = CRM_Core_Session::singleton();
     $currentContact = $session->get('userID');
-    $params = array(
+    $params = [
       'name' => 'batch-'.date('YmdHis').'.'.mt_rand(1,100),
       'label' => $arguments['label'],
       'description' => $arguments['description'],
@@ -339,7 +339,7 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
       'status_id' => $statusId,
       'type_id' => self::$_batchType['Auto'],
       'data' => $arguments,
-    );
+    ];
     $batch = self::create($params);
     $this->_batch = $batch;
     $this->_id = $batch->id;
@@ -350,7 +350,7 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
     // after saved start logic, trigger logic to handling before start warehousing
     // do not use start callback to process rows. use process instead.
     if (isset($this->_batch->data['startCallback'])) {
-      $args = array();
+      $args = [];
       if (!empty($this->_batch->data['startCallbackArgs'])) {
         foreach($this->_batch->data['startCallbackArgs'] as $idx => &$arg) {
           $args[$idx] = &$arg;
@@ -391,7 +391,7 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
 
     // real processing logic 
     if (isset($this->_batch->data['processCallback'])) {
-      $args = array();
+      $args = [];
       if (!empty($this->_batch->data['processCallbackArgs'])) {
         foreach($this->_batch->data['processCallbackArgs'] as $idx => &$arg) {
           $args[$idx] = &$arg;
@@ -429,7 +429,7 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
     $civicrm_batch = $this->_batch;
     // before finish, trigger logic to handling ending of batch
     if (isset($this->_batch->data['finishCallback'])) {
-      $args = array();
+      $args = [];
       if (!empty($this->_batch->data['finishCallbackArgs'])) {
         foreach($this->_batch->data['finishCallbackArgs'] as $idx => &$arg) {
           $args[$idx] = &$arg;
@@ -458,19 +458,19 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
       $detail = CRM_Contact_BAO_Contact::getContactDetails($this->_batch->created_id);
       if (!empty($detail[5])) {
         CRM_Core_Error::debug_log_message("Skipped email notify pcp_notify for contact {$this->_batch->created_id} due to do_not_notify marked");
-        $message = ts('Email has NOT been sent to %1 contact(s) - communication preferences specify DO NOT NOTIFY OR valid Email is NOT present.', array(1 => '1'));
+        $message = ts('Email has NOT been sent to %1 contact(s) - communication preferences specify DO NOT NOTIFY OR valid Email is NOT present.', [1 => '1']);
         CRM_Core_Session::singleton()->setStatus($message);
         return;
       }
       if (!empty($toEmail)) {
-        $sendTemplateParams = array(
+        $sendTemplateParams = [
           'groupName' => 'msg_tpl_workflow_meta',
           'valueName' => 'batch_complete_notification',
           'contactId' => $this->_batch->created_id,
           'from' => "$domainEmailName <$domainEmailAddress>",
           'toName' => $toName,
           'toEmail' => $toEmail,
-          'tplParams' => array(
+          'tplParams' => [
             'batch_id' => $this->_id,
             'label' => $this->_batch->label,
             'description' => $this->_batch->description,
@@ -480,8 +480,8 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
             'modified_date' => $this->_batch->modified_date,
             'expire_date' => date('Y-m-d H:i:s', strtotime($this->_batch->modified_date) + 86400*self::EXPIRE_DAY),
             'status_id' => $this->_batch->status_id,
-          ),
-        );
+          ],
+        ];
         if ($this->_batch->data['total']) {
           $sendTemplateParams['tplParams']['total'] = $this->_batch->data['total'];
         }
@@ -541,7 +541,7 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
   }
 
   public function saveBatch() {
-    $params = array();
+    $params = [];
     foreach($this->_batch as $key => $val) {
       $params[$key] = $val;
     }

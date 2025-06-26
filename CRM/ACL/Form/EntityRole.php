@@ -60,7 +60,7 @@ class CRM_ACL_Form_EntityRole extends CRM_Admin_Form {
     $attributes = CRM_Core_DAO::getAttribute('CRM_ACL_DAO_EntityRole');
 
 
-    $aclRoles = array('' => ts('- select -')) + CRM_Core_OptionGroup::values('acl_role');
+    $aclRoles = ['' => ts('- select -')] + CRM_Core_OptionGroup::values('acl_role');
     $this->add('select', 'acl_role_id', ts('ACL Role'),
       $aclRoles, TRUE
     );
@@ -69,7 +69,7 @@ class CRM_ACL_Form_EntityRole extends CRM_Admin_Form {
 
 
     $label = ts('Assigned To');
-    $group = array('' => ts('- select group -')) + CRM_Core_PseudoConstant::staticGroup(FALSE, 'Access');
+    $group = ['' => ts('- select group -')] + CRM_Core_PseudoConstant::staticGroup(FALSE, 'Access');
     $this->add('select', 'entity_id', $label, $group, TRUE);
 
     $this->add('checkbox', 'is_active', ts('Enabled?'));

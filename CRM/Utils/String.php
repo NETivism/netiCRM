@@ -49,14 +49,14 @@ class CRM_Utils_String {
   /**
    * Allowed HTML Tags
    */
-  const ALLOWED_TAGS = array(
+  const ALLOWED_TAGS = [
     'div[style]','b','strong','i','em','s','a[href|title]',
     'ul','ol','li','p[style]','blockquote','br','span[style]',
     'img[width|height|alt|src|style]','figure[class|style]',
     'figcaption','table[border|cellpadding|cellspacing|style]',
     'thead','tbody','tr','td[style]','th[style]','hr',
     'iframe[allow|allowfullscreen|frameborder|src|height|title|width]',
-  );
+  ];
 
   /**
    * Convert a display name into a potential variable
@@ -238,7 +238,7 @@ class CRM_Utils_String {
       return TRUE;
     }
     else {
-      $order = array('ASCII');
+      $order = ['ASCII'];
       if ($utf8) {
         $order[] = 'UTF-8';
       }
@@ -261,7 +261,7 @@ class CRM_Utils_String {
   static function regex($str, $regexRules) {
     //redact the regular expressions
     if (!empty($regexRules) && isset($str)) {
-      static $matches, $totalMatches, $match = array();
+      static $matches, $totalMatches, $match = [];
       foreach ($regexRules as $pattern => $replacement) {
         preg_match_all($pattern, $str, $matches);
         if (!empty($matches[0])) {
@@ -326,7 +326,7 @@ class CRM_Utils_String {
       // iconv('ISO-8859-1', 'UTF-8', $str);
     }
     else {
-      $enc = mb_detect_encoding($str, array('UTF-8'), TRUE);
+      $enc = mb_detect_encoding($str, ['UTF-8'], TRUE);
       return ($enc !== FALSE);
     }
   }
@@ -446,7 +446,7 @@ class CRM_Utils_String {
     return $converter->get_text();
   }
 
-  static function htmlPurifier($html, $allowedTags = array()) {
+  static function htmlPurifier($html, $allowedTags = []) {
     require_once 'packages/IDS/vendors/htmlpurifier/HTMLPurifier.auto.php';
     static $_purifier;
     $hash = md5(CRM_Utils_Array::implode(',', $allowedTags));
@@ -510,7 +510,7 @@ class CRM_Utils_String {
     $string = trim($string);
 
     $values = explode("\n", $string);
-    $result = array();
+    $result = [];
     foreach ($values as $value) {
       list($n, $v) = CRM_Utils_System::explode('=', $value, 2);
       if (!empty($v)) {
@@ -551,7 +551,7 @@ class CRM_Utils_String {
    * @return string       only the first alternative found (or the text without alternatives)
    */
   static function stripAlternatives($full) {
-    $matches = array();
+    $matches = [];
     preg_match('/-ALTERNATIVE ITEM 0-(.*?)-ALTERNATIVE ITEM 1-.*-ALTERNATIVE END-/s', $full, $matches);
 
     if (trim(strip_tags($matches[1])) != '') {
@@ -577,15 +577,15 @@ class CRM_Utils_String {
       return $string;
     }
 
-    $pat = array(0 => "/^\s+/",
+    $pat = [0 => "/^\s+/",
       1 => "/\s{2,}/",
       2 => "/\s+\$/",
-    );
+    ];
 
-    $rep = array(0 => "",
+    $rep = [0 => "",
       1 => " ",
       2 => "",
-    );
+    ];
 
     return preg_replace($pat, $rep, $string);
   }
@@ -630,12 +630,12 @@ class CRM_Utils_String {
     }
 
     if ($_searchChars == NULL) {
-      $_searchChars = array(
+      $_searchChars = [
         '&', ';', ',', '=', '$',
         '"', "'", '\\',
         '<', '>', '(', ')',
         ' ', "\r", "\r\n", "\n", "\t",
-      );
+      ];
       $_replaceChar = '_';
     }
 
@@ -687,11 +687,11 @@ class CRM_Utils_String {
   }
 
   static function parseUrlUtm($url) {
-    $utms = array();
+    $utms = [];
     $original = CRM_Utils_String::parseUrl($url);
     if (stristr($original['query'], 'utm_')) {
       $query = str_replace('&amp;', '&', $original['query']);
-      $get = array();
+      $get = [];
       parse_str($query, $get);
       foreach($get as $queryKey => $queryValue) {
         if (stristr($queryKey, 'utm_')) {
@@ -797,7 +797,7 @@ class CRM_Utils_String {
 
     if (!isset($tail_bytes)) {
       // Each UTF-8 head byte is followed by a certain number of tail bytes.
-      $tail_bytes = array();
+      $tail_bytes = [];
       for ($n = 0; $n < 256; $n++) {
         if ($n < 0xc0) {
           $remaining = 0;
@@ -932,7 +932,7 @@ class CRM_Utils_String {
   }
 
   private static function transliterationReplace($ord, $unknown = '?', $langcode = NULL) {
-    static $map = array();
+    static $map = [];
 
     if (!isset($langcode)) {
       $langcode = CRM_Utils_System::getUFLocale();
@@ -955,7 +955,7 @@ class CRM_Utils_String {
         }
       }
       else {
-        $map[$bank][$langcode] = array();
+        $map[$bank][$langcode] = [];
       }
     }
 

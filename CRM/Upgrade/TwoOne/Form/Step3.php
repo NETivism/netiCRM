@@ -36,7 +36,7 @@
 
 class CRM_Upgrade_TwoOne_Form_Step3 extends CRM_Upgrade_Form {
   function verifyPreDBState(&$errorMessage) {
-    $errorMessage = ts('Pre-condition failed for upgrade step %1.', array(1 => '3'));
+    $errorMessage = ts('Pre-condition failed for upgrade step %1.', [1 => '3']);
 
     return $this->checkVersion('2.02');
   }
@@ -45,7 +45,7 @@ class CRM_Upgrade_TwoOne_Form_Step3 extends CRM_Upgrade_Form {
     $currentDir = dirname(__FILE__);
 
     $sqlFile = CRM_Utils_Array::implode(DIRECTORY_SEPARATOR,
-      array($currentDir, '../sql', 'misc.mysql')
+      [$currentDir, '../sql', 'misc.mysql']
     );
     $this->source($sqlFile);
 
@@ -62,19 +62,19 @@ class CRM_Upgrade_TwoOne_Form_Step3 extends CRM_Upgrade_Form {
     $ufGroup = CRM_Core_DAO::executeQuery($query, CRM_Core_DAO::$_nullArray);
     while ($ufGroup->fetch()) {
       $query = "SELECT distinct `field_type` FROM `civicrm_uf_field` WHERE uf_group_id = %1";
-      $params = array(1 => array($ufGroup->id, 'Integer'));
+      $params = [1 => [$ufGroup->id, 'Integer']];
       $fieldType = CRM_Core_DAO::executeQuery($query, $params);
 
-      $types = array();
+      $types = [];
       while ($fieldType->fetch()) {
         $types[] = $fieldType->field_type;
       }
 
       if (count($types) >= 1) {
         $query = "UPDATE `civicrm_uf_group` SET group_type = %1 WHERE id = %2";
-        $params = array(1 => array(CRM_Utils_Array::implode(',', $types), 'String'),
-          2 => array($ufGroup->id, 'Integer'),
-        );
+        $params = [1 => [CRM_Utils_Array::implode(',', $types), 'String'],
+          2 => [$ufGroup->id, 'Integer'],
+        ];
         CRM_Core_DAO::executeQuery($query, $params);
       }
     }
@@ -108,7 +108,7 @@ class CRM_Upgrade_TwoOne_Form_Step3 extends CRM_Upgrade_Form {
       return FALSE;
     }
 
-    $errorMessage = ts('Post-condition failed for upgrade step %1.', array(1 => '1'));
+    $errorMessage = ts('Post-condition failed for upgrade step %1.', [1 => '1']);
 
     return $this->checkVersion('2.03');
   }

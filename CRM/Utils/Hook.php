@@ -296,9 +296,9 @@ class CRM_Utils_Hook {
     $config = CRM_Core_Config::singleton();
     $null = &CRM_Core_DAO::$_nullObject;
     require_once (str_replace('_', DIRECTORY_SEPARATOR, $config->userHookClass) . '.php');
-    return call_user_func_array(array($config->userHookClass, 'invoke'), array(
+    return call_user_func_array([$config->userHookClass, 'invoke'], [
       1, &$items, &$null, &$null, &$null, &$null, 'civicrm_menuItems'
-    ));
+    ]);
   }
 
   /**
@@ -404,7 +404,7 @@ class CRM_Utils_Hook {
    * @return null
    * @access public
    */
-  static function tokenValues(&$details, &$contactIDs, $job = NULL, $tokens = array(), $context = NULL) {
+  static function tokenValues(&$details, &$contactIDs, $job = NULL, $tokens = [], $context = NULL) {
     $config = CRM_Core_Config::singleton();
     $className = $config->userHookClass;
     return $className::invoke(  5, $details, $contactIDs, $job, $tokens, $context, 'civicrm_tokenValues' );
@@ -446,7 +446,7 @@ class CRM_Utils_Hook {
   static function invoke($numParams, &$arg1, &$arg2, &$arg3, &$arg4, &$arg5, $fnSuffix, $fnPrefix = '') {
     static $included = FALSE;
 
-    $result = array();
+    $result = [];
     $fnName = "{$fnPrefix}_{$fnSuffix}";
     if (!function_exists($fnName)) {
       if ($included) {
@@ -908,9 +908,9 @@ class CRM_Utils_Hook {
     require_once (str_replace('_', DIRECTORY_SEPARATOR, $config->userHookClass) . '.php');
     $null = &CRM_Core_DAO::$_nullObject;
 
-    return call_user_func_array(array($config->userHookClass, 'invoke'), array(
+    return call_user_func_array([$config->userHookClass, 'invoke'], [
       2, &$contributionId, &$receipt, &$null, &$null, &$null, 'civicrm_validateTaxReceipt'
-    ));
+    ]);
   }
 
   /**
@@ -923,9 +923,9 @@ class CRM_Utils_Hook {
     require_once (str_replace('_', DIRECTORY_SEPARATOR, $config->userHookClass) . '.php');
     $null = &CRM_Core_DAO::$_nullObject;
 
-    return call_user_func_array(array($config->userHookClass, 'invoke'), array(
+    return call_user_func_array([$config->userHookClass, 'invoke'], [
       5, &$contactID, &$fields, &$self, &$isAdditional, &$result, 'civicrm_checkRegistration'
-    ));
+    ]);
   }
 
   /**
@@ -938,9 +938,9 @@ class CRM_Utils_Hook {
     require_once (str_replace('_', DIRECTORY_SEPARATOR, $config->userHookClass) . '.php');
     $null = &CRM_Core_DAO::$_nullObject;
 
-    return call_user_func_array(array($config->userHookClass, 'invoke'), array(
+    return call_user_func_array([$config->userHookClass, 'invoke'], [
       4, &$response, &$object, &$provider, &$apiType, &$null, 'civicrm_alterTapPayResponse'
-    ));
+    ]);
   }
 
   /**

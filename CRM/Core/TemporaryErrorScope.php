@@ -25,11 +25,11 @@ class CRM_Core_TemporaryErrorScope {
   static $oldFrames;
 
   public static function useException() {
-    $newFrame = array(
+    $newFrame = [
       '_PEAR_default_error_mode' => PEAR_ERROR_CALLBACK,
-      '_PEAR_default_error_options' => array('CRM_Core_Error', 'exceptionHandler'),
+      '_PEAR_default_error_options' => ['CRM_Core_Error', 'exceptionHandler'],
       'modeException' => 1,
-    );
+    ];
     return new CRM_Core_TemporaryErrorScope($newFrame);
   }
 
@@ -47,11 +47,11 @@ class CRM_Core_TemporaryErrorScope {
    * Read the active error-handler settings
    */
   public static function getActive() {
-    return array(
+    return [
       '_PEAR_default_error_mode' => $GLOBALS['_PEAR_default_error_mode'],
       '_PEAR_default_error_options' => $GLOBALS['_PEAR_default_error_options'],
       'modeException' => CRM_Core_Error::$modeException,
-    );
+    ];
   }
 
   /**

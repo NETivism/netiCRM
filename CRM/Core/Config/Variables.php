@@ -97,14 +97,14 @@ class CRM_Core_Config_Variables extends CRM_Core_Config_Defaults {
    * 1228 is an id for United States.
    * @var string
    */
-  public $countryLimit = array('1228');
+  public $countryLimit = ['1228'];
 
   /**
    * List of country codes limiting the province list.
    * 1228 is an id for United States.
    * @var string
    */
-  public $provinceLimit = array('1228');
+  public $provinceLimit = ['1228'];
 
   /**
    * ISO code of default country for contact.
@@ -172,10 +172,10 @@ class CRM_Core_Config_Variables extends CRM_Core_Config_Defaults {
    *
    * @var array
    */
-  public $fiscalYearStart = array(
+  public $fiscalYearStart = [
     'M' => 01,
     'd' => 01,
-  );
+  ];
 
   /**
    * String format for monetary amounts
@@ -312,10 +312,10 @@ class CRM_Core_Config_Variables extends CRM_Core_Config_Defaults {
    *
    * @var array
    */
-  public $enableComponents = array('CiviContribute', 'CiviPledge', 'CiviMember',
+  public $enableComponents = ['CiviContribute', 'CiviPledge', 'CiviMember',
     'CiviEvent', 'CiviMail', 'CiviReport',
-  );
-  public $enableComponentIDs = array(1, 6, 2, 3, 4, 8);
+  ];
+  public $enableComponentIDs = [1, 6, 2, 3, 4, 8];
 
   /**
    * Should payments be accepted only via SSL?
@@ -459,12 +459,12 @@ class CRM_Core_Config_Variables extends CRM_Core_Config_Defaults {
    *
    * @var array
    */
-  public $customDonorCredit = array(
+  public $customDonorCredit = [
     'full_name' => 1,
     'partial_name' => 1,
     'custom_name' => 1,
     'anonymous' => 0
-  );
+  ];
 
   /**
    * Provide addressSequence
@@ -547,7 +547,7 @@ class CRM_Core_Config_Variables extends CRM_Core_Config_Defaults {
     static $cachedCountryLimit = NULL;
     if (!$cachedCountryLimit) {
       $countryIsoCodes = CRM_Core_PseudoConstant::countryIsoCode();
-      $country = array();
+      $country = [];
       if (is_array($this->countryLimit)) {
         foreach ($this->countryLimit as $val) {
           $country[] = $countryIsoCodes[$val];
@@ -572,7 +572,7 @@ class CRM_Core_Config_Variables extends CRM_Core_Config_Defaults {
     static $cachedProvinceLimit = NULL;
     if (!$cachedProvinceLimit) {
       $countryIsoCodes = CRM_Core_PseudoConstant::countryIsoCode();
-      $country = array();
+      $country = [];
       if (is_array($this->provinceLimit)) {
         foreach ($this->provinceLimit as $val) {
           $country[] = $countryIsoCodes[$val];

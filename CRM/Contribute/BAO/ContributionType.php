@@ -127,11 +127,11 @@ class CRM_Contribute_BAO_ContributionType extends CRM_Contribute_DAO_Contributio
     $check = FALSE;
 
     //check dependencies
-    $dependancy = array(
-      array('Contribute', 'Contribution'),
-      array('Contribute', 'ContributionPage'),
-      array('Member', 'MembershipType'),
-    );
+    $dependancy = [
+      ['Contribute', 'Contribution'],
+      ['Contribute', 'ContributionPage'],
+      ['Member', 'MembershipType'],
+    ];
     foreach ($dependancy as $name) {
       $baoName = 'CRM_' . $name[0] . '_BAO_' . $name[1];
       $bao = new $baoName();
@@ -167,7 +167,7 @@ class CRM_Contribute_BAO_ContributionType extends CRM_Contribute_DAO_Contributio
    * @return numeric when contribution type found. FALSE when not found.
    */
   static function deductible($contributionTypeId, $all = FALSE) {
-    $types = array();
+    $types = [];
     CRM_Core_PseudoConstant::populate($types, 'CRM_Contribute_DAO_ContributionType', $all, 'is_deductible');
     if (isset($types[$contributionTypeId])) {
       return $types[$contributionTypeId];

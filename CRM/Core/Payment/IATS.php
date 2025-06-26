@@ -262,7 +262,7 @@ class CRM_Core_Payment_IATS extends CRM_Core_Payment {
   }
 
   function errorString($error_id) {
-    $errors = array(
+    $errors = [
       1 => 'Agent Code has not been set up on the authorization system.',
       2 => 'Unable to process transaction. Verify and re-enter credit card information.',
       3 => 'Charge card expired.',
@@ -291,7 +291,7 @@ class CRM_Core_Payment_IATS extends CRM_Core_Payment {
       40 => 'Card not supported by Ticketmaster. Invalid cc number.',
       41 => 'Invalid Expiry date ',
       100 => 'Authorization system down. DO NOT REPROCESS.',
-    );
+    ];
     return ' <strong>' . $errors[(integer) $error_id] . '</strong>';
   }
 
@@ -304,7 +304,7 @@ class CRM_Core_Payment_IATS extends CRM_Core_Payment {
    * @public
    */
   function checkConfig() {
-    $error = array();
+    $error = [];
 
     if (empty($this->_paymentProcessor['signature'])) {
       $error[] = ts('Agent Code is not set in the Administer CiviCRM &raquo; Payment Processor.');

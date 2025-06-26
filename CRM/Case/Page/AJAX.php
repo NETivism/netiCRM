@@ -50,12 +50,12 @@ class CRM_Case_Page_AJAX {
       $limit = CRM_Utils_Type::escape($limit, 'Integer');
     }
 
-    $params = array('limit' => $limit,
+    $params = ['limit' => $limit,
       'case_type' => trim(CRM_Utils_Array::value(1, $criteria)),
       'sort_name' => trim(CRM_Utils_Array::value(0, $criteria)),
-    );
+    ];
 
-    $excludeCaseIds = array();
+    $excludeCaseIds = [];
     if ($caseIdStr = CRM_Utils_Array::value('excludeCaseIds', $_GET)) {
       $excludeIdStr = CRM_Utils_Type::escape($caseIdStr, 'String');
       $excludeCaseIds = explode(',', $excludeIdStr);
@@ -82,14 +82,14 @@ class CRM_Case_Page_AJAX {
       CRM_Utils_System::civiExit();
     }
 
-    $tagIds = array();
+    $tagIds = [];
     if ($tags) {
       $tagIds = explode(',', $tags);
     }
 
-    $params = array('entity_id' => $caseId,
+    $params = ['entity_id' => $caseId,
       'entity_table' => 'civicrm_case',
-    );
+    ];
 
     CRM_Core_BAO_EntityTag::del($params);
 
@@ -102,7 +102,7 @@ class CRM_Case_Page_AJAX {
 
 
 
-    $activityParams = array();
+    $activityParams = [];
 
     $activityParams['source_contact_id'] = $session->get('userID');
     $activityParams['activity_type_id'] = CRM_Core_OptionGroup::getValue('activity_type', 'Change Case Tags', 'name');
@@ -115,9 +115,9 @@ class CRM_Case_Page_AJAX {
     $activity = CRM_Activity_BAO_Activity::create($activityParams);
 
 
-    $caseParams = array('activity_id' => $activity->id,
+    $caseParams = ['activity_id' => $activity->id,
       'case_id' => $caseId,
-    );
+    ];
 
     CRM_Case_BAO_Case::processCaseActivity($caseParams);
 
@@ -130,7 +130,7 @@ class CRM_Case_Page_AJAX {
     $contactId = CRM_Utils_Type::escape($_GET['contactId'], 'Integer');
 
     $sql = "SELECT * FROM civicrm_case where id = %1";
-    $dao = CRM_Core_DAO::executeQuery($sql, array(1 => array($caseId, 'Integer')));
+    $dao = CRM_Core_DAO::executeQuery($sql, [1 => [$caseId, 'Integer']]);
 
     while ($dao->fetch()) {
       $caseType = CRM_Case_BAO_Case::getCaseType((str_replace(CRM_Case_BAO_Case::VALUE_SEPERATOR, "",

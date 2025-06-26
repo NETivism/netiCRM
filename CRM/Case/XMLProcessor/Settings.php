@@ -36,7 +36,7 @@
 
 class CRM_Case_XMLProcessor_Settings extends CRM_Case_XMLProcessor {
 
-  private $_settings = array();
+  private $_settings = [];
 
   // Input: The base filename without the .xml extension
   // Output: An array of settings.

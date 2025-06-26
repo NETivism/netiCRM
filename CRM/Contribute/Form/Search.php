@@ -171,7 +171,7 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
     $this->_exportButtonName = $this->getButtonName('next', 'task_4');
 
     $this->_done = FALSE;
-    $this->defaults = array();
+    $this->defaults = [];
 
     /* 
      * we allow the controller to set force/reset externally, useful when we are being 
@@ -295,31 +295,31 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
       $permission = CRM_Core_Permission::getPermission();
 
 
-      $tasks = array('' => ts('- actions -')) + CRM_Contribute_Task::permissionedTaskTitles($permission);
+      $tasks = ['' => ts('- actions -')] + CRM_Contribute_Task::permissionedTaskTitles($permission);
       $this->add('select', 'task', ts('Actions:') . ' ', $tasks);
       $this->add('submit', $this->_actionButtonName, ts('Go'),
-        array('class' => 'form-submit',
+        ['class' => 'form-submit',
           'id' => 'Go',
           'onclick' => "return checkPerformAction('mark_x', '" . $this->getName() . "', 0);",
-        )
+        ]
       );
 
       $this->add('submit', $this->_printButtonName, ts('Print'),
-        array('class' => 'form-submit',
+        ['class' => 'form-submit',
           'onclick' => "return checkPerformAction('mark_x', '" . $this->getName() . "', 1);",
-        )
+        ]
       );
 
       // override default task
       $this->addElement('hidden', 'task_force', 4);
       $this->add('submit', $this->_exportButtonName, ts('Export Contributions'),
-        array('class' => 'form-submit',
+        ['class' => 'form-submit',
           'id' => 'export',
-        )
+        ]
       );
 
       // need to perform tasks on all or selected items ? using radio_ts(task selection) for it
-      $selectedRowsRadio = $this->addElement('radio', 'radio_ts', NULL, '', 'ts_sel', array('checked' => 'checked'));
+      $selectedRowsRadio = $this->addElement('radio', 'radio_ts', NULL, '', 'ts_sel', ['checked' => 'checked']);
       $this->assign('ts_sel_id', $selectedRowsRadio->_attributes['id']);
       
       $allRowsRadio = $this->addElement('radio', 'radio_ts', NULL, '', 'ts_all');
@@ -327,12 +327,12 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
     }
 
     // add buttons
-    $this->addButtons(array(
-        array('type' => 'refresh',
+    $this->addButtons([
+        ['type' => 'refresh',
           'name' => ts('Search'),
           'isDefault' => TRUE,
-        ),
-      )
+        ],
+      ]
     );
   }
 
@@ -374,7 +374,7 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
       $this->_formValues["contribution_test"] = 0;
     }
 
-    foreach (array('contribution_amount_low', 'contribution_amount_high') as $f) {
+    foreach (['contribution_amount_low', 'contribution_amount_high'] as $f) {
       if (isset($this->_formValues[$f])) {
         $this->_formValues[$f] = CRM_Utils_Rule::cleanMoney($this->_formValues[$f]);
       }
@@ -474,8 +474,8 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
 
     $status = CRM_Utils_Request::retrieve('status', 'String', CRM_Core_DAO::$_nullObject);
     if ($status) {
-      $this->_formValues['contribution_status_id'] = array($status => 1);
-      $this->_defaults['contribution_status_id'] = array($status => 1);
+      $this->_formValues['contribution_status_id'] = [$status => 1];
+      $this->_defaults['contribution_status_id'] = [$status => 1];
     }
 
     $type = CRM_Utils_Request::retrieve('type', 'String', CRM_Core_DAO::$_nullObject);

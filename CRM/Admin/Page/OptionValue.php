@@ -74,32 +74,32 @@ class CRM_Admin_Page_OptionValue extends CRM_Core_Page_Basic {
    */
   function &links() {
     if (!(self::$_links)) {
-      self::$_links = array(
-        CRM_Core_Action::UPDATE => array(
+      self::$_links = [
+        CRM_Core_Action::UPDATE => [
           'name' => ts('Edit'),
           'url' => 'civicrm/admin/optionValue',
           'qs' => 'action=update&id=%%id%%&gid=%%gid%%&reset=1',
           'title' => ts('Edit Option Value'),
-        ),
-        CRM_Core_Action::DISABLE => array(
+        ],
+        CRM_Core_Action::DISABLE => [
           'name' => ts('Disable'),
           'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_Core_BAO_OptionValue' . '\',\'' . 'enable-disable' . '\' );"',
           'ref' => 'disable-action',
           'title' => ts('Disable Option Value'),
-        ),
-        CRM_Core_Action::ENABLE => array(
+        ],
+        CRM_Core_Action::ENABLE => [
           'name' => ts('Enable'),
           'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_Core_BAO_OptionValue' . '\',\'' . 'disable-enable' . '\' );"',
           'ref' => 'enable-action',
           'title' => ts('Enable Option Value'),
-        ),
-        CRM_Core_Action::DELETE => array(
+        ],
+        CRM_Core_Action::DELETE => [
           'name' => ts('Delete'),
           'url' => 'civicrm/admin/optionValue',
           'qs' => 'action=delete&id=%%id%%&gid=%%gid%%',
           'title' => ts('Delete Option Value'),
-        ),
-      );
+        ],
+      ];
     }
     return self::$_links;
   }
@@ -132,7 +132,7 @@ class CRM_Admin_Page_OptionValue extends CRM_Core_Page_Basic {
       else {
         $groupTitle = $optionGroup->name;
       }
-      CRM_Utils_System::setTitle(ts('%1 - Option Values', array(1 => $groupTitle)));
+      CRM_Utils_System::setTitle(ts('%1 - Option Values', [1 => $groupTitle]));
       //get optionGroup name in case of email/postal greeting or addressee, CRM-4575
       $this->_gName = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionGroup', $this->_gid, 'name');
     }
@@ -173,9 +173,9 @@ class CRM_Admin_Page_OptionValue extends CRM_Core_Page_Basic {
     $dao->orderBy('name');
     $dao->find();
 
-    $optionValue = array();
+    $optionValue = [];
     while ($dao->fetch()) {
-      $optionValue[$dao->id] = array();
+      $optionValue[$dao->id] = [];
       CRM_Core_DAO::storeValues($dao, $optionValue[$dao->id]);
       // form all action links
       $action = array_sum(array_keys($this->links()));
@@ -184,7 +184,7 @@ class CRM_Admin_Page_OptionValue extends CRM_Core_Page_Basic {
         $optionValue[$dao->id]['default_value'] = '[x]';
       }
       //do not show default option for email/postal greeting and addressee, CRM-4575
-      if (!in_array($this->_gName, array('email_greeting', 'postal_greeting', 'addressee'))) {
+      if (!in_array($this->_gName, ['email_greeting', 'postal_greeting', 'addressee'])) {
         $this->assign('showIsDefault', TRUE);
       }
       // update enable/disable links depending on if it is is_reserved or is_active
@@ -209,7 +209,7 @@ class CRM_Admin_Page_OptionValue extends CRM_Core_Page_Basic {
       }
 
       $optionValue[$dao->id]['action'] = CRM_Core_Action::formLink(self::links(), $action,
-        array('id' => $dao->id, 'gid' => $this->_gid)
+        ['id' => $dao->id, 'gid' => $this->_gid]
       );
     }
 

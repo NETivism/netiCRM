@@ -41,11 +41,11 @@ class CRM_Contribute_Form_NewebpayImport_Summary extends CRM_Core_Form {
   }
 
   function buildQuickForm() {
-    $this->addButtons(array(
-        array('type' => 'cancel',
+    $this->addButtons([
+        ['type' => 'cancel',
           'name' => ts('Done'),
-        ),
-      )
+        ],
+      ]
     );
   }
 

@@ -41,11 +41,11 @@
 class CRM_Admin_Page_Admin extends CRM_Core_Page {
   public $_showHide;
   function run() {
-    $groups = array('Customize' => ts('Customize'),
+    $groups = ['Customize' => ts('Customize'),
       'Configure' => ts('Configure'),
       'Manage' => ts('Manage'),
       'Option Lists' => ts('Option Lists'),
-    );
+    ];
 
     $config = CRM_Core_Config::singleton();
     if (in_array("CiviContribute", $config->enableComponents)) {

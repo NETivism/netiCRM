@@ -225,13 +225,13 @@ class CRM_Activity_DAO_Activity extends CRM_Core_DAO
   function &links()
   {
     if (!(self::$_links)) {
-      self::$_links = array(
+      self::$_links = [
         'source_contact_id' => 'civicrm_contact:id',
         'phone_id' => 'civicrm_phone:id',
         'parent_id' => 'civicrm_activity:id',
         'relationship_id' => 'civicrm_relationship:id',
         'original_id' => 'civicrm_activity:id',
-      );
+      ];
     }
     return self::$_links;
   }
@@ -262,8 +262,8 @@ class CRM_Activity_DAO_Activity extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'activity_id' => array(
+      self::$_fields = [
+        'activity_id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Activity ID') ,
@@ -273,8 +273,8 @@ class CRM_Activity_DAO_Activity extends CRM_Core_DAO
           'headerPattern' => '',
           'dataPattern' => '',
           'export' => true,
-        ) ,
-        'source_contact_id' => array(
+        ] ,
+        'source_contact_id' => [
           'name' => 'source_contact_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Source Contact') ,
@@ -284,12 +284,12 @@ class CRM_Activity_DAO_Activity extends CRM_Core_DAO
           'dataPattern' => '',
           'export' => true,
           'FKClassName' => 'CRM_Contact_DAO_Contact',
-        ) ,
-        'source_record_id' => array(
+        ] ,
+        'source_record_id' => [
           'name' => 'source_record_id',
           'type' => CRM_Utils_Type::T_INT,
-        ) ,
-        'activity_type_id' => array(
+        ] ,
+        'activity_type_id' => [
           'name' => 'activity_type_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Activity Type ID') ,
@@ -300,8 +300,8 @@ class CRM_Activity_DAO_Activity extends CRM_Core_DAO
           'dataPattern' => '',
           'export' => false,
           'default' => '',
-        ) ,
-        'activity_subject' => array(
+        ] ,
+        'activity_subject' => [
           'name' => 'subject',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Subject') ,
@@ -312,8 +312,8 @@ class CRM_Activity_DAO_Activity extends CRM_Core_DAO
           'headerPattern' => '/(activity.)?subject/i',
           'dataPattern' => '',
           'export' => true,
-        ) ,
-        'activity_date_time' => array(
+        ] ,
+        'activity_date_time' => [
           'name' => 'activity_date_time',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Activity Date') ,
@@ -322,8 +322,8 @@ class CRM_Activity_DAO_Activity extends CRM_Core_DAO
           'headerPattern' => '/(activity.)?date(.time$)?/i',
           'dataPattern' => '',
           'export' => true,
-        ) ,
-        'activity_duration' => array(
+        ] ,
+        'activity_duration' => [
           'name' => 'duration',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Duration') ,
@@ -332,8 +332,8 @@ class CRM_Activity_DAO_Activity extends CRM_Core_DAO
           'headerPattern' => '/(activity.)?duration(s)?$/i',
           'dataPattern' => '',
           'export' => true,
-        ) ,
-        'activity_location' => array(
+        ] ,
+        'activity_location' => [
           'name' => 'location',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Location') ,
@@ -344,20 +344,20 @@ class CRM_Activity_DAO_Activity extends CRM_Core_DAO
           'headerPattern' => '/(activity.)?location$/i',
           'dataPattern' => '',
           'export' => true,
-        ) ,
-        'phone_id' => array(
+        ] ,
+        'phone_id' => [
           'name' => 'phone_id',
           'type' => CRM_Utils_Type::T_INT,
           'FKClassName' => 'CRM_Core_DAO_Phone',
-        ) ,
-        'phone_number' => array(
+        ] ,
+        'phone_number' => [
           'name' => 'phone_number',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Phone Number') ,
           'maxlength' => 64,
           'size' => CRM_Utils_Type::BIG,
-        ) ,
-        'activity_details' => array(
+        ] ,
+        'activity_details' => [
           'name' => 'details',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Details') ,
@@ -368,8 +368,8 @@ class CRM_Activity_DAO_Activity extends CRM_Core_DAO
           'headerPattern' => '/(activity.)?detail(s)?$/i',
           'dataPattern' => '',
           'export' => true,
-        ) ,
-        'activity_status_id' => array(
+        ] ,
+        'activity_status_id' => [
           'name' => 'status_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Activity Status Id') ,
@@ -378,17 +378,17 @@ class CRM_Activity_DAO_Activity extends CRM_Core_DAO
           'headerPattern' => '/(activity.)?status(.label$)?/i',
           'dataPattern' => '',
           'export' => false,
-        ) ,
-        'priority_id' => array(
+        ] ,
+        'priority_id' => [
           'name' => 'priority_id',
           'type' => CRM_Utils_Type::T_INT,
-        ) ,
-        'parent_id' => array(
+        ] ,
+        'parent_id' => [
           'name' => 'parent_id',
           'type' => CRM_Utils_Type::T_INT,
           'FKClassName' => 'CRM_Activity_DAO_Activity',
-        ) ,
-        'activity_is_test' => array(
+        ] ,
+        'activity_is_test' => [
           'name' => 'is_test',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Test') ,
@@ -397,25 +397,25 @@ class CRM_Activity_DAO_Activity extends CRM_Core_DAO
           'headerPattern' => '/(is.)?test(.activity)?/i',
           'dataPattern' => '',
           'export' => true,
-        ) ,
-        'activity_medium_id' => array(
+        ] ,
+        'activity_medium_id' => [
           'name' => 'medium_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Activity Medium') ,
           'default' => 'UL',
-        ) ,
-        'is_auto' => array(
+        ] ,
+        'is_auto' => [
           'name' => 'is_auto',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Auto') ,
-        ) ,
-        'relationship_id' => array(
+        ] ,
+        'relationship_id' => [
           'name' => 'relationship_id',
           'type' => CRM_Utils_Type::T_INT,
           'default' => 'UL',
           'FKClassName' => 'CRM_Contact_DAO_Relationship',
-        ) ,
-        'is_current_revision' => array(
+        ] ,
+        'is_current_revision' => [
           'name' => 'is_current_revision',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Is this activity a current revision in versioning chain?') ,
@@ -425,20 +425,20 @@ class CRM_Activity_DAO_Activity extends CRM_Core_DAO
           'dataPattern' => '',
           'export' => true,
           'default' => '',
-        ) ,
-        'original_id' => array(
+        ] ,
+        'original_id' => [
           'name' => 'original_id',
           'type' => CRM_Utils_Type::T_INT,
           'FKClassName' => 'CRM_Activity_DAO_Activity',
-        ) ,
-        'activity_result' => array(
+        ] ,
+        'activity_result' => [
           'name' => 'result',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Result') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'is_deleted' => array(
+        ] ,
+        'is_deleted' => [
           'name' => 'is_deleted',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Activity is in the Trash') ,
@@ -447,8 +447,8 @@ class CRM_Activity_DAO_Activity extends CRM_Core_DAO
           'headerPattern' => '/(activity.)?(trash|deleted)/i',
           'dataPattern' => '',
           'export' => true,
-        ) ,
-      );
+        ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -481,7 +481,7 @@ class CRM_Activity_DAO_Activity extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -504,7 +504,7 @@ class CRM_Activity_DAO_Activity extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {

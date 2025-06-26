@@ -145,57 +145,57 @@ class CRM_Core_DAO_Domain extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'id' => array(
+      self::$_fields = [
+        'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'name' => array(
+        ] ,
+        'name' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Name') ,
           'maxlength' => 64,
           'size' => CRM_Utils_Type::BIG,
-        ) ,
-        'description' => array(
+        ] ,
+        'description' => [
           'name' => 'description',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Description') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'config_backend' => array(
+        ] ,
+        'config_backend' => [
           'name' => 'config_backend',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Config Backend') ,
           'rows' => 20,
           'cols' => 80,
-        ) ,
-        'version' => array(
+        ] ,
+        'version' => [
           'name' => 'version',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Version') ,
           'maxlength' => 32,
           'size' => CRM_Utils_Type::MEDIUM,
-        ) ,
-        'loc_block_id' => array(
+        ] ,
+        'loc_block_id' => [
           'name' => 'loc_block_id',
           'type' => CRM_Utils_Type::T_INT,
-        ) ,
-        'locales' => array(
+        ] ,
+        'locales' => [
           'name' => 'locales',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Locales') ,
-        ) ,
-        'locale_custom_strings' => array(
+        ] ,
+        'locale_custom_strings' => [
           'name' => 'locale_custom_strings',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Locale Custom Strings') ,
           'rows' => 20,
           'cols' => 80,
-        ) ,
-      );
+        ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -228,7 +228,7 @@ class CRM_Core_DAO_Domain extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -251,7 +251,7 @@ class CRM_Core_DAO_Domain extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {

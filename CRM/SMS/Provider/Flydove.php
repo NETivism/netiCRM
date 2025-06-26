@@ -15,7 +15,7 @@ class CRM_SMS_Provider_Flydove extends CRM_SMS_Provider {
 
   public $_bulkLimit = 500;
 
-  public static function &singleton($providerParams = array(), $force = FALSE) {
+  public static function &singleton($providerParams = [], $force = FALSE) {
     $providerId = CRM_Utils_Array::value('provider_id', $providerParams);
     $providerId = CRM_Utils_Type::validate($providerId, 'Integer');
     if (empty($providerId)) {
@@ -44,7 +44,7 @@ class CRM_SMS_Provider_Flydove extends CRM_SMS_Provider {
    * @return array response of self::doRequest
    */
   public function send(&$messages){
-    $response = array();
+    $response = [];
     return $response;
   }
 

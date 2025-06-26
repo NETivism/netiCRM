@@ -67,21 +67,21 @@ class CRM_Grant_Task {
    */
   static function &tasks() {
     if (!(self::$_tasks)) {
-      self::$_tasks = array(1 => array('title' => ts('Delete Grants'),
+      self::$_tasks = [1 => ['title' => ts('Delete Grants'),
           'class' => 'CRM_Grant_Form_Task_Delete',
           'result' => FALSE,
-        ),
-        2 => array('title' => ts('Print Grants'),
+        ],
+        2 => ['title' => ts('Print Grants'),
           'class' => 'CRM_Grant_Form_Task_Print',
           'result' => FALSE,
-        ),
-        3 => array('title' => ts('Export Grants'),
-          'class' => array('CRM_Export_Form_Select',
+        ],
+        3 => ['title' => ts('Export Grants'),
+          'class' => ['CRM_Export_Form_Select',
             'CRM_Export_Form_Map',
-          ),
+          ],
           'result' => FALSE,
-        ),
-      );
+        ],
+      ];
     }
     if (!CRM_Core_Permission::check('delete in CiviGrant')) {
       unset(self::$_tasks[1]);
@@ -101,7 +101,7 @@ class CRM_Grant_Task {
    */
   static function &taskTitles() {
     self::tasks();
-    $titles = array();
+    $titles = [];
     foreach (self::$_tasks as $id => $value) {
       // skip Print Grant task
       if ($id != 2) {
@@ -121,16 +121,16 @@ class CRM_Grant_Task {
    * @access public
    */
   static function &permissionedTaskTitles($permission) {
-    $tasks = array();
+    $tasks = [];
     if (($permission == CRM_Core_Permission::EDIT)
       || CRM_Core_Permission::check('edit grants')
     ) {
       $tasks = self::taskTitles();
     }
     else {
-      $tasks = array(
+      $tasks = [
         3 => self::$_tasks[3]['title'],
-      );
+      ];
       //CRM-4418,
       if (CRM_Core_Permission::check('delete in CiviGrant')) {
         $tasks[1] = self::$_tasks[1]['title'];
@@ -154,9 +154,9 @@ class CRM_Grant_Task {
       // make the print task by default
       $value = 2;
     }
-    return array(self::$_tasks[$value]['class'],
+    return [self::$_tasks[$value]['class'],
       self::$_tasks[$value]['result'],
-    );
+    ];
   }
 }
 

@@ -179,7 +179,7 @@ class CRM_Utils_Rule {
       }
     }
 
-    if (!in_array(substr($url, 0, 5), array('http:', 'https'))) {
+    if (!in_array(substr($url, 0, 5), ['http:', 'https'])) {
       $valid = FALSE;
     }
     $pureDomain = str_replace('/', '', $checkDomain);
@@ -430,7 +430,7 @@ class CRM_Utils_Rule {
 
   static function cleanMoney($value) {
     // first remove all white space
-    $value = str_replace(array(' ', "\t", "\n"), '', $value);
+    $value = str_replace([' ', "\t", "\n"], '', $value);
 
     $config = &CRM_Core_Config::singleton();
 
@@ -889,9 +889,9 @@ class CRM_Utils_Rule {
       return false;
     }
     if (!is_array($ips)) {
-      $ips = array(
+      $ips = [
         $ips,
-      );
+      ];
     }
     $method = substr_count($requestIp, ':') > 1 ? 'checkIp6' : 'checkIp4';
     foreach ($ips as $ip) {

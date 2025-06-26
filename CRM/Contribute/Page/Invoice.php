@@ -7,7 +7,7 @@ class CRM_Contribute_Page_Invoice extends CRM_Core_Page {
       $contribution->invoice_id = preg_replace('/[^0-9a-z]/i', '', $_GET['ii']);
       if($contribution->find(TRUE)) {
         $contribution_id = $contribution->id;
-        $tplParams = array();
+        $tplParams = [];
         $message = NULL;
         CRM_Utils_Hook::prepareInvoice($contribution_id, $tplParams, $message);
 

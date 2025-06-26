@@ -66,7 +66,7 @@ class CRM_Core_BAO_Navigation extends CRM_Core_DAO_Navigation {
    * @return array associated array
    */
   static function getMenus() {
-    $menus = array();
+    $menus = [];
 
 
     $menu = new CRM_Core_DAO_Menu();
@@ -205,7 +205,7 @@ SELECT id, label, parent_id, weight, is_active, name
 FROM civicrm_navigation WHERE domain_id = $domainID {$whereClause} ORDER BY parent_id, weight ASC";
       $result = CRM_Core_DAO::executeQuery($query);
 
-      $pidGroups = array();
+      $pidGroups = [];
       while ($result->fetch()) {
         $pidGroups[$result->parent_id][$result->label] = $result->id;
       }
@@ -214,7 +214,7 @@ FROM civicrm_navigation WHERE domain_id = $domainID {$whereClause} ORDER BY pare
         $pidGroups[''][$label] = self::_getNavigationValue($val, $pidGroups);
       }
 
-      $navigations = array();
+      $navigations = [];
       self::_getNavigationLabel($pidGroups[''], $navigations);
 
       CRM_Core_BAO_Cache::setItem($navigations, 'navigation', $cacheKeyString);
@@ -238,7 +238,7 @@ FROM civicrm_navigation WHERE domain_id = $domainID {$whereClause} ORDER BY pare
   // helper function for getNavigationList( )
   static function _getNavigationValue($val, &$pidGroups) {
     if (CRM_Utils_Array::arrayKeyExists($val, $pidGroups)) {
-      $list = array('navigation_id' => $val);
+      $list = ['navigation_id' => $val];
       foreach ($pidGroups[$val] as $label => $id) {
         $list[$label] = self::_getNavigationValue($id, $pidGroups);
       }
@@ -285,7 +285,7 @@ ORDER BY parent_id, weight";
       }
 
       // for each menu get their children
-      $navigationTree[$navigation->id] = array('attributes' => array('label' => $navigation->label,
+      $navigationTree[$navigation->id] = ['attributes' => ['label' => $navigation->label,
           'name' => $navigation->name,
           'url' => $navigation->url,
           'permission' => $navigation->permission,
@@ -294,7 +294,7 @@ ORDER BY parent_id, weight";
           'parentID' => $navigation->parent_id,
           'navID' => $navigation->id,
           'active' => $navigation->is_active,
-        ));
+        ]];
       self::buildNavigationTree($navigationTree[$navigation->id]['child'], $navigation->id);
     }
 
@@ -310,7 +310,7 @@ ORDER BY parent_id, weight";
    * @static
    */
   static function buildNavigation($json = FALSE) {
-    $navigations = array();
+    $navigations = [];
     self::buildNavigationTree($navigations, $parent = NULL);
     $navigationString = NULL;
 
@@ -319,7 +319,7 @@ ORDER BY parent_id, weight";
     CRM_Utils_Hook::navigationMenu($navigations);
 
     //skip children menu item if user don't have access to parent menu item
-    $skipMenuItems = array();
+    $skipMenuItems = [];
     foreach ($navigations as $key => $value) {
       if ($json) {
         if ($navigationString) {
@@ -337,7 +337,7 @@ ORDER BY parent_id, weight";
         if ($value['attributes']['name'] != 'Home') {
           $name = self::getMenuName($value, $skipMenuItems);
           if ($name) {
-            $removeCharacters = array('/', '!', '&', '*', ' ', '(', ')', '.');
+            $removeCharacters = ['/', '!', '&', '*', ' ', '(', ')', '.'];
             $navigationString .= '<li class="menumain crm-' . str_replace($removeCharacters, '_', $value['attributes']['label']) . '">' . $name;
           }
         }
@@ -406,7 +406,7 @@ ORDER BY parent_id, weight";
         foreach ($value['child'] as $val) {
           $name = self::getMenuName($val, $skipMenuItems);
           if ($name) {
-            $removeCharacters = array('/', '!', '&', '*', ' ', '(', ')', '.');
+            $removeCharacters = ['/', '!', '&', '*', ' ', '(', ')', '.'];
             $navigationString .= '<li class="crm-' . str_replace($removeCharacters, '_', $val['attributes']['label']) . '">' . $name;
             self::recurseNavigation($val, $navigationString, $json, $skipMenuItems);
           }
@@ -427,7 +427,7 @@ ORDER BY parent_id, weight";
     // want to use ts() as it would throw the ts-extractor off
     $i18n = &CRM_Core_I18n::singleton();
 
-    $name = $i18n->crm_translate($value['attributes']['label'], array('context' => 'menu'));
+    $name = $i18n->crm_translate($value['attributes']['label'], ['context' => 'menu']);
     $url = $value['attributes']['url'];
     $permission = $value['attributes']['permission'];
     $operator = $value['attributes']['operator'];
@@ -443,7 +443,7 @@ ORDER BY parent_id, weight";
 
     //we need to check core view/edit or supported acls.
 
-    if (in_array($menuName, array('Search...', 'Contacts'))) {
+    if (in_array($menuName, ['Search...', 'Contacts'])) {
       if (!CRM_Core_Permission::giveMeAllACLs()) {
         $skipMenuItems[] = $navID;
         return FALSE;
@@ -542,7 +542,7 @@ ORDER BY parent_id, weight";
       return "<!-- $config->lcMessages -->";
     }
 
-    $navParams = array('contact_id' => $contactID);
+    $navParams = ['contact_id' => $contactID];
     if (CRM_Core_DAO::checkFieldExists('civicrm_preferences', 'domain_id')) {
       // FIXME: if() condition check was required especially for upgrade
       // cases (2.2.x -> 3.0.x), CRM-5203
@@ -564,8 +564,8 @@ ORDER BY parent_id, weight";
       $appendSring = "<li id=\"menu-logout\" class=\"menumain\"><a href=\"{$logoutURL}\">" . ts('Logout') . "</a></li>";
 
       // get home menu from db
-      $homeParams = array('name' => 'Home');
-      $homeNav = array();
+      $homeParams = ['name' => 'Home'];
+      $homeNav = [];
       self::retrieve($homeParams, $homeNav);
       if ($homeNav) {
         $homeURL = CRM_Utils_System::url($homeNav['url']);
@@ -674,7 +674,7 @@ ORDER BY parent_id, weight";
     $oldParentClause = " parent_id = {$oldParentID}";
 
     // since we need to do multiple updates lets build sql array and then fire all with transaction
-    $sql = array();
+    $sql = [];
 
     // reorder was made, since parent are same
     if ($oldParentID == $newParentID) {
@@ -732,12 +732,12 @@ ORDER BY parent_id, weight";
    */
   static function getNavigationInfo($navigationID) {
     $query = "SELECT parent_id, weight FROM civicrm_navigation WHERE id = %1";
-    $params = array($navigationID, 'Integer');
-    $dao = &CRM_Core_DAO::executeQuery($query, array(1 => $params));
+    $params = [$navigationID, 'Integer'];
+    $dao = &CRM_Core_DAO::executeQuery($query, [1 => $params]);
     $dao->fetch();
-    return array('parent_id' => $dao->parent_id,
+    return ['parent_id' => $dao->parent_id,
       'weight' => $dao->weight,
-    );
+    ];
   }
 
   /**

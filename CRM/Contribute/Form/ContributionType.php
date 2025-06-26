@@ -56,22 +56,22 @@ class CRM_Contribute_Form_ContributionType extends CRM_Contribute_Form {
 
     $this->applyFilter('__ALL__', 'trim');
     $this->add('text', 'name', ts('Name'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionType', 'name'), TRUE);
-    $this->addRule('name', ts('A contribution type with this name already exists. Please select another name.'), 'objectExists', array('CRM_Contribute_DAO_ContributionType', $this->_id));
+    $this->addRule('name', ts('A contribution type with this name already exists. Please select another name.'), 'objectExists', ['CRM_Contribute_DAO_ContributionType', $this->_id]);
 
     $this->add('text', 'description', ts('Description'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionType', 'description'));
     $this->add('text', 'accounting_code', ts('Accounting Code'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionType', 'accounting_code'));
     $this->add('text', 'tax_rate', ts('Tax Rate'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionType', 'tax_rate'));
 
     $this->add('checkbox', 'is_deductible', ts('Tax-deductible?'));
-    $taxReceiptType = array(
+    $taxReceiptType = [
       '0' => ts('None'),
       '-1' => ts('Tax free'),
       '1' => ts('Normal tax or zero tax'),
-    );
+    ];
     $this->addRadio('is_taxreceipt', ts('Tax Receipt Type'), $taxReceiptType);
     $this->add('checkbox', 'is_active', ts('Enabled?'));
     if ($this->_action == CRM_Core_Action::UPDATE && CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionType', $this->_id, 'is_reserved')) {
-      $this->freeze(array('name', 'description', 'is_active'));
+      $this->freeze(['name', 'description', 'is_active']);
     }
   }
 
@@ -90,7 +90,7 @@ class CRM_Contribute_Form_ContributionType extends CRM_Contribute_Form {
     }
     else {
 
-      $params = $ids = array();
+      $params = $ids = [];
       // store the submitted values in an array
       $params = $this->exportValues();
 
@@ -99,7 +99,7 @@ class CRM_Contribute_Form_ContributionType extends CRM_Contribute_Form {
       }
 
       $contributionType = CRM_Contribute_BAO_ContributionType::add($params, $ids);
-      CRM_Core_Session::setStatus(ts('The contribution type \'%1\' has been saved.', array(1 => $contributionType->name)));
+      CRM_Core_Session::setStatus(ts('The contribution type \'%1\' has been saved.', [1 => $contributionType->name]));
     }
   }
 }

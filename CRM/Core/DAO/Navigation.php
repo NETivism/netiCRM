@@ -162,10 +162,10 @@ class CRM_Core_DAO_Navigation extends CRM_Core_DAO
   function &links()
   {
     if (!(self::$_links)) {
-      self::$_links = array(
+      self::$_links = [
         'domain_id' => 'civicrm_domain:id',
         'parent_id' => 'civicrm_navigation:id',
-      );
+      ];
     }
     return self::$_links;
   }
@@ -193,73 +193,73 @@ class CRM_Core_DAO_Navigation extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'id' => array(
+      self::$_fields = [
+        'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'domain_id' => array(
+        ] ,
+        'domain_id' => [
           'name' => 'domain_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
           'FKClassName' => 'CRM_Core_DAO_Domain',
-        ) ,
-        'label' => array(
+        ] ,
+        'label' => [
           'name' => 'label',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Label') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'name' => array(
+        ] ,
+        'name' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Name') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'url' => array(
+        ] ,
+        'url' => [
           'name' => 'url',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Url') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'permission' => array(
+        ] ,
+        'permission' => [
           'name' => 'permission',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Permission') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'permission_operator' => array(
+        ] ,
+        'permission_operator' => [
           'name' => 'permission_operator',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Permission Operator') ,
           'maxlength' => 3,
           'size' => CRM_Utils_Type::FOUR,
-        ) ,
-        'parent_id' => array(
+        ] ,
+        'parent_id' => [
           'name' => 'parent_id',
           'type' => CRM_Utils_Type::T_INT,
           'FKClassName' => 'CRM_Core_DAO_Navigation',
-        ) ,
-        'is_active' => array(
+        ] ,
+        'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ) ,
-        'has_separator' => array(
+        ] ,
+        'has_separator' => [
           'name' => 'has_separator',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Has Separator') ,
-        ) ,
-        'weight' => array(
+        ] ,
+        'weight' => [
           'name' => 'weight',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Weight') ,
-        ) ,
-      );
+        ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -292,7 +292,7 @@ class CRM_Core_DAO_Navigation extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -315,7 +315,7 @@ class CRM_Core_DAO_Navigation extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {

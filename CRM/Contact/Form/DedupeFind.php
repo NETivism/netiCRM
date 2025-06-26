@@ -75,28 +75,28 @@ class CRM_Contact_Form_DedupeFind extends CRM_Admin_Form {
     asort($groupList);
 
     $this->add('select', 'group_id', ts('Select Group'), $groupList);
-    $this->addButtons(array(
-        array('type' => 'next',
+    $this->addButtons([
+        ['type' => 'next',
           'name' => ts('Continue'),
           'isDefault' => TRUE,
-          'js' => array(
+          'js' => [
             'data' => 'click-once',
             'data-once-msg' => ts('Form processing. Do not reload page or you will loss your progress.'),
-          ),
-        ),
+          ],
+        ],
         //hack to support cancel button functionality
-        array('type' => 'submit',
+        ['type' => 'submit',
           'name' => ts('Cancel'),
-        ),
-      )
+        ],
+      ]
     );
-    $this->addFormRule(array('CRM_Contact_Form_DedupeFind', 'formRule'), $this);
+    $this->addFormRule(['CRM_Contact_Form_DedupeFind', 'formRule'], $this);
   }
 
   static function formRule($fields, $files, $form) {
-    $errors = array();
+    $errors = [];
     if ($form->rgid) {
-      $dedupeGroupParams = array('id' => $form->rgid);
+      $dedupeGroupParams = ['id' => $form->rgid];
       $ruleGroup = CRM_Dedupe_BAO_RuleGroup::getDetailsByParams($dedupeGroupParams);
       $ruleGroup = $ruleGroup[$form->rgid];
       if (!$ruleGroup['threshold']) {

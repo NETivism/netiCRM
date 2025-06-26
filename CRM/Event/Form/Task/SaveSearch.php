@@ -91,7 +91,7 @@ class CRM_Event_Form_Task_SaveSearch extends CRM_Event_Form_Task {
     // get the group id for the saved search
     $groupId = NULL;
     if (isset($this->_id)) {
-      $params = array('saved_search_id' => $this->_id);
+      $params = ['saved_search_id' => $this->_id];
 
       CRM_Contact_BAO_Group::retrieve($params, $values);
       $groupId = $values['id'];
@@ -103,7 +103,7 @@ class CRM_Event_Form_Task_SaveSearch extends CRM_Event_Form_Task {
     }
 
     $this->addRule('title', ts('Name already exists in Database.'),
-      'objectExists', array('CRM_Contact_DAO_Group', $groupId, 'title')
+      'objectExists', ['CRM_Contact_DAO_Group', $groupId, 'title']
     );
   }
 
@@ -128,10 +128,10 @@ class CRM_Event_Form_Task_SaveSearch extends CRM_Event_Form_Task {
     $savedSearch->mapping_id = $mappingId;
     $savedSearch->save();
     $this->set('ssID', $savedSearch->id);
-    CRM_Core_Session::setStatus(ts('Your smart group has been saved as \'%1\'.', array(1 => $formValues['title'])));
+    CRM_Core_Session::setStatus(ts('Your smart group has been saved as \'%1\'.', [1 => $formValues['title']]));
 
     // also create a group that is associated with this saved search only if new saved search
-    $params = array();
+    $params = [];
     $params['title'] = $formValues['title'];
     $params['description'] = $formValues['description'];
     $params['visibility'] = 'User and User Admin Only';

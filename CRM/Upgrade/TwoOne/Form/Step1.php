@@ -47,8 +47,8 @@ class CRM_Upgrade_TwoOne_Form_Step1 extends CRM_Upgrade_Form {
     if ($domain->config_backend) {
       $defaults = unserialize($domain->config_backend);
       // reset components
-      $defaults['enableComponents'] = array('CiviContribute', 'CiviPledge', 'CiviMember', 'CiviEvent', 'CiviMail');
-      $defaults['enableComponentIDs'] = array(1, 6, 2, 3, 4);
+      $defaults['enableComponents'] = ['CiviContribute', 'CiviPledge', 'CiviMember', 'CiviEvent', 'CiviMail'];
+      $defaults['enableComponentIDs'] = [1, 6, 2, 3, 4];
       $defaults['moneyvalueformat'] = '%!i';
       $defaults['fieldSeparator'] = ',';
       $defaults['fatalErrorTemplate'] = 'CRM/common/fatal.tpl';
@@ -76,7 +76,7 @@ class CRM_Upgrade_TwoOne_Form_Step1 extends CRM_Upgrade_Form {
     // check if log file is writable
     if (!is_writable($config->uploadDir . 'CiviCRM.log')) {
       $errorMessage = ts('Log file CiviCRM.log is not writable. Make sure files directory is writable.',
-        array(1 => $config->uploadDir)
+        [1 => $config->uploadDir]
       );
       return FALSE;
     }
@@ -249,7 +249,7 @@ class CRM_Upgrade_TwoOne_Form_Step1 extends CRM_Upgrade_Form {
 
     // 1. remove domain_ids from the entire db
     $sqlFile = CRM_Utils_Array::implode(DIRECTORY_SEPARATOR,
-      array($currentDir, '../sql', 'domain_ids.mysql')
+      [$currentDir, '../sql', 'domain_ids.mysql']
     );
     $this->source($sqlFile);
 
@@ -289,7 +289,7 @@ DROP domain_id;";
   }
 
   function verifyPostDBState(&$errorMessage) {
-    $errorMessage = ts('Post-condition failed for upgrade step %1.', array(1 => '1'));
+    $errorMessage = ts('Post-condition failed for upgrade step %1.', [1 => '1']);
     return $this->checkVersion('2.01');
   }
 

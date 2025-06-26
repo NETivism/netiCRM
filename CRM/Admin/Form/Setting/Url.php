@@ -61,7 +61,7 @@ class CRM_Admin_Form_Setting_Url extends CRM_Admin_Form_Setting {
     }
     $this->addElement('text', 'customCSSURL', ts('Custom CiviCRM CSS URL'));
 
-    $this->addFormRule(array('CRM_Admin_Form_Setting_Url', 'formRule'));
+    $this->addFormRule(['CRM_Admin_Form_Setting_Url', 'formRule']);
 
     parent::buildQuickForm();
   }
@@ -77,9 +77,9 @@ class CRM_Admin_Form_Setting_Url extends CRM_Admin_Form_Setting {
         )
       );
       if (!CRM_Utils_System::checkURL($url, TRUE)) {
-        $errors = array('enableSSL' =>
+        $errors = ['enableSSL' =>
           ts('You need to set up a secure server before you can use the Force Secure URLs option'),
-        );
+        ];
         return $errors;
       }
     }

@@ -140,7 +140,7 @@ class CRM_Core_Extensions_Payment {
   }
 
   private function _getAllPaymentProcessorTypes($attr) {
-    $ppt = array();
+    $ppt = [];
 
 
     $dao = new CRM_Core_DAO_PaymentProcessorType();

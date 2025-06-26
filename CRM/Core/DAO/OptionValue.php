@@ -192,11 +192,11 @@ class CRM_Core_DAO_OptionValue extends CRM_Core_DAO
   function &links()
   {
     if (!(self::$_links)) {
-      self::$_links = array(
+      self::$_links = [
         'option_group_id' => 'civicrm_option_group:id',
         'component_id' => 'civicrm_component:id',
         'domain_id' => 'civicrm_domain:id',
-      );
+      ];
     }
     return self::$_links;
   }
@@ -225,35 +225,35 @@ class CRM_Core_DAO_OptionValue extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'id' => array(
+      self::$_fields = [
+        'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'option_group_id' => array(
+        ] ,
+        'option_group_id' => [
           'name' => 'option_group_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
           'FKClassName' => 'CRM_Core_DAO_OptionGroup',
-        ) ,
-        'label' => array(
+        ] ,
+        'label' => [
           'name' => 'label',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Option Label') ,
           'required' => true,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'value' => array(
+        ] ,
+        'value' => [
           'name' => 'value',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Option Value') ,
           'required' => true,
           'maxlength' => 512,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'name' => array(
+        ] ,
+        'name' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Option Name') ,
@@ -264,65 +264,65 @@ class CRM_Core_DAO_OptionValue extends CRM_Core_DAO
           'headerPattern' => '',
           'dataPattern' => '',
           'export' => true,
-        ) ,
-        'grouping' => array(
+        ] ,
+        'grouping' => [
           'name' => 'grouping',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Option Grouping Name') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'filter' => array(
+        ] ,
+        'filter' => [
           'name' => 'filter',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Filter') ,
-        ) ,
-        'is_default' => array(
+        ] ,
+        'is_default' => [
           'name' => 'is_default',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ) ,
-        'weight' => array(
+        ] ,
+        'weight' => [
           'name' => 'weight',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Weight') ,
           'required' => true,
-        ) ,
-        'description' => array(
+        ] ,
+        'description' => [
           'name' => 'description',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Description') ,
           'rows' => 8,
           'cols' => 60,
-        ) ,
-        'is_optgroup' => array(
+        ] ,
+        'is_optgroup' => [
           'name' => 'is_optgroup',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ) ,
-        'is_reserved' => array(
+        ] ,
+        'is_reserved' => [
           'name' => 'is_reserved',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ) ,
-        'is_active' => array(
+        ] ,
+        'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'default' => '',
-        ) ,
-        'component_id' => array(
+        ] ,
+        'component_id' => [
           'name' => 'component_id',
           'type' => CRM_Utils_Type::T_INT,
           'FKClassName' => 'CRM_Core_DAO_Component',
-        ) ,
-        'domain_id' => array(
+        ] ,
+        'domain_id' => [
           'name' => 'domain_id',
           'type' => CRM_Utils_Type::T_INT,
           'FKClassName' => 'CRM_Core_DAO_Domain',
-        ) ,
-        'visibility_id' => array(
+        ] ,
+        'visibility_id' => [
           'name' => 'visibility_id',
           'type' => CRM_Utils_Type::T_INT,
           'default' => 'UL',
-        ) ,
-      );
+        ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -356,7 +356,7 @@ class CRM_Core_DAO_OptionValue extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -379,7 +379,7 @@ class CRM_Core_DAO_OptionValue extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {

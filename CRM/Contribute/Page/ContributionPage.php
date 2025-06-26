@@ -83,34 +83,34 @@ class CRM_Contribute_Page_ContributionPage extends CRM_Core_Page {
       $pageKey = $this->_scope;
       $qfKey = $session->get('qfKey', $pageKey);
 
-      self::$_actionLinks = array(
-        CRM_Core_Action::COPY => array(
+      self::$_actionLinks = [
+        CRM_Core_Action::COPY => [
           'name' => ts('Make a Copy'),
           'url' => CRM_Utils_System::currentPath(),
           'qs' => 'action=copy&gid=%%id%%&key=%%key%%',
           'title' => ts('Make a Copy of CiviCRM Contribution Page'),
           'extra' => 'onclick = "return confirm(\'' . $copyExtra . '\');"',
-        ),
-        CRM_Core_Action::DISABLE => array(
+        ],
+        CRM_Core_Action::DISABLE => [
           'name' => ts('Disable'),
           'title' => ts('Disable'),
           'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_Contribute_BAO_ContributionPage' . '\',\'' . 'enable-disable' . '\' );"',
           'ref' => 'disable-action',
-        ),
-        CRM_Core_Action::ENABLE => array(
+        ],
+        CRM_Core_Action::ENABLE => [
           'name' => ts('Enable'),
           'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_Contribute_BAO_ContributionPage' . '\',\'' . 'disable-enable' . '\' );"',
           'ref' => 'enable-action',
           'title' => ts('Enable'),
-        ),
-        CRM_Core_Action::DELETE => array(
+        ],
+        CRM_Core_Action::DELETE => [
           'name' => ts('Delete'),
           'url' => CRM_Utils_System::currentPath(),
           'qs' => 'action=delete&reset=1&id=%%id%%',
           'title' => ts('Delete Custom Field'),
           'extra' => 'onclick = "return confirm(\'' . $deleteExtra . '\');"',
-        ),
-      );
+        ],
+      ];
     }
     return self::$_actionLinks;
   }
@@ -127,71 +127,71 @@ class CRM_Contribute_Page_ContributionPage extends CRM_Core_Page {
       $urlString = 'civicrm/admin/contribute/';
       $urlParams = 'reset=1&action=update&id=%%id%%';
 
-      self::$_configureActionLinks = array(
-        CRM_Core_Action::ADD => array(
+      self::$_configureActionLinks = [
+        CRM_Core_Action::ADD => [
           'name' => ts('Title and Settings'),
           'title' => ts('Title and Settings'),
           'url' => $urlString . 'settings',
           'qs' => $urlParams,
           'uniqueName' => 'settings',
-        ),
-        CRM_Core_Action::UPDATE => array(
+        ],
+        CRM_Core_Action::UPDATE => [
           'name' => ts('Contribution Amounts'),
           'title' => ts('Contribution Amounts'),
           'url' => $urlString . 'amount',
           'qs' => $urlParams,
           'uniqueName' => 'amount',
-        ),
-        CRM_Core_Action::VIEW => array(
+        ],
+        CRM_Core_Action::VIEW => [
           'name' => ts('Membership Settings'),
           'title' => ts('Membership Settings'),
           'url' => $urlString . 'membership',
           'qs' => $urlParams,
           'uniqueName' => 'membership',
-        ),
-        CRM_Core_Action::PROFILE => array(
+        ],
+        CRM_Core_Action::PROFILE => [
           'name' => ts('Include Profiles'),
           'title' => ts('Include Profiles'),
           'url' => $urlString . 'custom',
           'qs' => $urlParams,
           'uniqueName' => 'custom',
-        ),
-        CRM_Core_Action::EXPORT => array(
+        ],
+        CRM_Core_Action::EXPORT => [
           'name' => ts('Thank-you and Receipting'),
           'title' => ts('Thank-you and Receipting'),
           'url' => $urlString . 'thankYou',
           'qs' => $urlParams,
           'uniqueName' => 'thankYou',
-        ),
-        CRM_Core_Action::BASIC => array(
+        ],
+        CRM_Core_Action::BASIC => [
           'name' => ts('Tell a Friend'),
           'title' => ts('Tell a Friend'),
           'url' => $urlString . 'friend',
           'qs' => $urlParams,
           'uniqueName' => 'friend',
-        ),
-        CRM_Core_Action::ADVANCED => array(
+        ],
+        CRM_Core_Action::ADVANCED => [
           'name' => ts('Personal Campaign Pages'),
           'title' => ts('Personal Campaign Pages'),
           'url' => $urlString . 'pcp',
           'qs' => $urlParams,
           'uniqueName' => 'pcp',
-        ),
-        CRM_Core_Action::MAP => array(
+        ],
+        CRM_Core_Action::MAP => [
           'name' => ts('Contribution Widget'),
           'title' => ts('Contribution Widget'),
           'url' => $urlString . 'widget',
           'qs' => $urlParams,
           'uniqueName' => 'widget',
-        ),
-        CRM_Core_Action::FOLLOWUP => array(
+        ],
+        CRM_Core_Action::FOLLOWUP => [
           'name' => ts('Premiums'),
           'title' => ts('Premiums'),
           'url' => $urlString . 'premium',
           'qs' => $urlParams,
           'uniqueName' => 'premium',
-        ),
-      );
+        ],
+      ];
     }
 
     return self::$_configureActionLinks;
@@ -205,22 +205,22 @@ class CRM_Contribute_Page_ContributionPage extends CRM_Core_Page {
    */
   function &onlineContributionLinks() {
     if (!isset(self::$_onlineContributionLinks)) {
-      self::$_onlineContributionLinks = array(
-        CRM_Core_Action::RENEW => array(
+      self::$_onlineContributionLinks = [
+        CRM_Core_Action::RENEW => [
           'name' => ts('Dashlets'),
           'title' => ts('Dashlets'),
           'url' => 'civicrm/admin/contribute',
           'qs' => 'action=update&reset=1&id=%%id%%',
           'uniqueName' => 'dashlets',
-        ),
-        CRM_Core_Action::REOPEN => array(
+        ],
+        CRM_Core_Action::REOPEN => [
           'name' => ts('Traffic Source'),
           'title' => ts('Test-drive'),
           'url' => 'civicrm/track/report',
           'qs' => 'reset=1&ptype=civicrm_contribution_page&pid=%%id%%',
           'uniqueName' => 'traffic_source',
-        ),
-      );
+        ],
+      ];
     }
 
     return self::$_onlineContributionLinks;
@@ -237,7 +237,7 @@ class CRM_Contribute_Page_ContributionPage extends CRM_Core_Page {
       //get contribution dates.
 
       $dates = CRM_Contribute_BAO_Contribution::getContributionDates();
-      foreach (array('now', 'yearDate', 'monthDate') as $date) {
+      foreach (['now', 'yearDate', 'monthDate'] as $date) {
         $$date = $dates[$date];
       }
       $yearNow = $yearDate + 10000;
@@ -245,36 +245,36 @@ class CRM_Contribute_Page_ContributionPage extends CRM_Core_Page {
       $urlString = 'civicrm/contribute/search';
       $urlParams = 'reset=1&pid=%%id%%&force=1&test=0';
 
-      self::$_contributionLinks = array(
-        CRM_Core_Action::BROWSE => array(
+      self::$_contributionLinks = [
+        CRM_Core_Action::BROWSE => [
           'name' => ts('All'),
           'title' => ts('All'),
           'url' => $urlString,
           'qs' => $urlParams,
           'uniqueName' => 'all_without_date',
-        ),
-        CRM_Core_Action::DETACH => array(
+        ],
+        CRM_Core_Action::DETACH => [
           'name' => ts('Current Month-To-Date'),
           'title' => ts('Current Month-To-Date'),
           'url' => $urlString,
           'qs' => "{$urlParams}&start={$monthDate}&end={$now}",
           'uniqueName' => 'current_month_to_date',
-        ),
-        CRM_Core_Action::REVERT => array(
+        ],
+        CRM_Core_Action::REVERT => [
           'name' => ts('Fiscal Year-To-Date'),
           'title' => ts('Fiscal Year-To-Date'),
           'url' => $urlString,
           'qs' => "{$urlParams}&start={$yearDate}&end={$yearNow}",
           'uniqueName' => 'fiscal_year_to_date',
-        ),
-        CRM_Core_Action::CLOSE=> array(
+        ],
+        CRM_Core_Action::CLOSE=> [
           'name' => ts('Export Contributions'),
           'title' => ts('Export Contributions'),
           'url' => 'civicrm/contribute/search',
           'qs' => 'reset=1&pid=%%id%%&force=1&test=0',
           'uniqueName' => 'export_contributions',
-        ),
-      );
+        ],
+      ];
     }
 
     return self::$_contributionLinks;
@@ -305,11 +305,11 @@ class CRM_Contribute_Page_ContributionPage extends CRM_Core_Page {
     );
 
     // set breadcrumb to append to 2nd layer pages
-    $breadCrumb = array(array('title' => ts('Manage Contribution Pages'),
+    $breadCrumb = [['title' => ts('Manage Contribution Pages'),
         'url' => CRM_Utils_System::url(CRM_Utils_System::currentPath(),
           'reset=1'
         ),
-      ));
+      ]];
 
     // what action to take ?
     if ($action & CRM_Core_Action::ADD) {
@@ -326,7 +326,7 @@ class CRM_Contribute_Page_ContributionPage extends CRM_Core_Page {
     }
     elseif ($action & CRM_Core_Action::UPDATE) {
       CRM_Utils_System::appendBreadCrumb($breadCrumb);
-      $page = array();
+      $page = [];
       CRM_Contribute_BAO_ContributionPage::setValues($id, $page);
       $session = CRM_Core_Session::singleton();
       $session->pushUserContext(CRM_Utils_System::url(CRM_Utils_System::currentPath(),
@@ -358,7 +358,7 @@ class CRM_Contribute_Page_ContributionPage extends CRM_Core_Page {
       $last3month = date('Y-m-01', strtotime('-3 months'));
       $pageStatistics = CRM_Contribute_Page_DashBoard::getContributionPageStatistics($id, $last3month);
       foreach($pageStatistics['track'] as &$track) {
-        $track['display'] = '<div>'.ts("%1 achieved", array(1 => "{$track['percent_goal']}% ({$track['count_goal']}".ts('People').")"))."</div><div style='color:grey'>".ts("Total")." {$track['percent']}% ({$track['count']}".ts('People').")</div>";
+        $track['display'] = '<div>'.ts("%1 achieved", [1 => "{$track['percent_goal']}% ({$track['count_goal']}".ts('People').")"])."</div><div style='color:grey'>".ts("Total")." {$track['percent']}% ({$track['count']}".ts('People').")</div>";
       }
       if ($track['start'] && $track['end']) {
         $this->assign('period_start', CRM_Utils_Date::customFormat($track['start'], $config->dateformatFull));
@@ -397,7 +397,7 @@ JOIN        civicrm_pcp cp ON ccp.id = cp.contribution_page_id
 WHERE       cp.contribution_page_id = {$id}";
 
       if ($pageTitle = CRM_Core_DAO::singleValueQuery($query)) {
-        CRM_Core_Session::setStatus(ts('The \'%1\' cannot be deleted! You must Delete all Personal Campaign Page(s) related with this contribution page prior to deleting the page.', array(1 => $pageTitle)));
+        CRM_Core_Session::setStatus(ts('The \'%1\' cannot be deleted! You must Delete all Personal Campaign Page(s) related with this contribution page prior to deleting the page.', [1 => $pageTitle]));
 
         CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin/contribute', 'reset=1'));
       }
@@ -471,11 +471,11 @@ WHERE       cp.contribution_page_id = {$id}";
 
     $this->search();
 
-    $params = array();
+    $params = [];
     $whereClause = $this->whereClause($params, FALSE);
     $this->pagerAToZ($whereClause, $params);
 
-    $params = array();
+    $params = [];
     $whereClause = $this->whereClause($params, TRUE);
     $this->pager($whereClause, $params);
 
@@ -491,7 +491,7 @@ WHERE       cp.contribution_page_id = {$id}";
    WHERE  $whereClause
    LIMIT  $offset, $rowCount";
     $contribPage = CRM_Core_DAO::executeQuery($query, $params, TRUE, 'CRM_Contribute_DAO_ContributionPage');
-    $contribPageIds = array();
+    $contribPageIds = [];
     while ($contribPage->fetch()) {
       $contribPageIds[$contribPage->id] = $contribPage->id;
     }
@@ -511,7 +511,7 @@ ORDER BY is_active DESC, id ASC
     $configureActionLinks = self::configureActionLinks();
 
     $contributionTypes = CRM_Contribute_PseudoConstant::contributionType(NULl, NULL, TRUE);
-    $contributionPage = array();
+    $contributionPage = [];
 
     // Add key for action validation.
     $name = get_class($this);
@@ -519,7 +519,7 @@ ORDER BY is_active DESC, id ASC
     $this->assign('key', $key);
 
     while ($dao->fetch()) {
-      $contributionPage[$dao->id] = array();
+      $contributionPage[$dao->id] = [];
       CRM_Core_DAO::storeValues($dao, $contributionPage[$dao->id]);
       $contributionPage[$dao->id]['contribution_type'] = $contributionTypes[$dao->contribution_type_id];
 
@@ -529,10 +529,10 @@ ORDER BY is_active DESC, id ASC
       $action = self::checkPerm($contributionPage[$dao->id]);
 
       //build the configure links.
-      $sectionsInfo = CRM_Utils_Array::value($dao->id, $contriPageSectionInfo, array());
+      $sectionsInfo = CRM_Utils_Array::value($dao->id, $contriPageSectionInfo, []);
       $contributionPage[$dao->id]['configureActionLinks'] = CRM_Core_Action::formLink(self::formatConfigureLinks($sectionsInfo),
         $action,
-        array('id' => $dao->id),
+        ['id' => $dao->id],
         ts('Configure'),
         TRUE
       );
@@ -540,7 +540,7 @@ ORDER BY is_active DESC, id ASC
       //build the contributions links.
       $contributionPage[$dao->id]['contributionLinks'] = CRM_Core_Action::formLink(self::contributionLinks(),
         $action,
-        array('id' => $dao->id),
+        ['id' => $dao->id],
         ts('Contributions'),
         TRUE
       );
@@ -548,7 +548,7 @@ ORDER BY is_active DESC, id ASC
       //build the online contribution links.
       $contributionPage[$dao->id]['onlineContributionLinks'] = CRM_Core_Action::formLink(self::onlineContributionLinks(),
         $action,
-        array('id' => $dao->id),
+        ['id' => $dao->id],
         ts('Links'),
         TRUE
       );
@@ -556,10 +556,10 @@ ORDER BY is_active DESC, id ASC
       //build the normal action links.
       $contributionPage[$dao->id]['action'] = CRM_Core_Action::formLink(self::actionLinks(),
         $action,
-        array(
+        [
           'id' => $dao->id,
           'key' => $key
-        ),
+        ],
         ts('more'),
         TRUE
       );
@@ -591,7 +591,7 @@ ORDER BY is_active DESC, id ASC
   }
 
   function whereClause(&$params, $sortBy = TRUE) {
-    $values = $clauses = array();
+    $values = $clauses = [];
     $title = $this->get('title');
     $createdId = $this->get('cid');
 
@@ -602,15 +602,15 @@ ORDER BY is_active DESC, id ASC
     if ($title) {
       $clauses[] = "title LIKE %1";
       if (strpos($title, '%') !== FALSE) {
-        $params[1] = array(trim($title), 'String', FALSE);
+        $params[1] = [trim($title), 'String', FALSE];
       }
       else {
-        $params[1] = array(trim($title), 'String', TRUE);
+        $params[1] = [trim($title), 'String', TRUE];
       }
     }
 
     $value = $this->get('contribution_type_id');
-    $val = array();
+    $val = [];
     if ($value) {
       if (is_array($value)) {
         foreach ($value as $k => $v) {
@@ -628,7 +628,7 @@ ORDER BY is_active DESC, id ASC
       $this->_sortByCharacter
     ) {
       $clauses[] = 'title LIKE %3';
-      $params[3] = array($this->_sortByCharacter . '%', 'String');
+      $params[3] = [$this->_sortByCharacter . '%', 'String'];
     }
 
     if (empty($clauses)) {
@@ -690,17 +690,17 @@ SELECT count(id)
         continue;
       }
 
-      $classes = array();
+      $classes = [];
       if (isset($link['class'])) {
         $classes = $link['class'];
       }
 
       if (!CRM_Utils_Array::value($sectionName, $sectionsInfo)) {
-        $classes = array();
+        $classes = [];
         if (isset($link['class'])) {
           $classes = $link['class'];
         }
-        $link['class'] = array_merge($classes, array('disabled'));
+        $link['class'] = array_merge($classes, ['disabled']);
       }
     }
 

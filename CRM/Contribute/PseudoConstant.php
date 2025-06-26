@@ -157,7 +157,7 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
       CRM_Core_PseudoConstant::populate(self::$deductibleType, 'CRM_Contribute_DAO_ContributionType', FALSE, 'is_deductible', 'is_active', 'is_deductible=1');
       CRM_Core_PseudoConstant::populate(self::$taxType, 'CRM_Contribute_DAO_ContributionType', FALSE, 'is_taxreceipt', 'is_active', 'is_taxreceipt <> 0');
     }
-    $types = array();
+    $types = [];
     if ($receiptType == 'is_deductible') {
       $types = array_intersect_key(self::$contributionType, self::$deductibleType);
     }
@@ -235,11 +235,11 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
    * @static
    */
   public static function &creditCard() {
-    $acceptCreditCard = array();
+    $acceptCreditCard = [];
     $creditCard = CRM_Core_OptionGroup::values('accept_creditcard');
 
     if (!$creditCard) {
-      $creditCard = array();
+      $creditCard = [];
     }
     foreach ($creditCard as $key => $value) {
       $acceptCreditCard[$value] = $value;
@@ -256,7 +256,7 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
    * @static
    */
   public static function products($pageID = NULL) {
-    $products = array();
+    $products = [];
 
     $dao = new CRM_Contribute_DAO_Product();
     $dao->is_active = 1;
@@ -274,7 +274,7 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
       $dao->find(TRUE);
       $premiumID = $dao->id;
 
-      $productID = array();
+      $productID = [];
 
 
       $dao = new CRM_Contribute_DAO_PremiumsProduct();
@@ -284,7 +284,7 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
         $productID[$dao->product_id] = $dao->product_id;
       }
 
-      $tempProduct = array();
+      $tempProduct = [];
       foreach ($products as $key => $value) {
         if (!CRM_Utils_Array::arrayKeyExists($key, $productID)) {
           $tempProduct[$key] = $value;
@@ -336,7 +336,7 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
    * @static
    */
   public static function &pcpStatus($columnName = 'label') {
-    self::$pcpStatus = array();
+    self::$pcpStatus = [];
     if (!self::$pcpStatus) {
       self::$pcpStatus = CRM_Core_OptionGroup::values("pcp_status", FALSE, FALSE, FALSE, NULL, $columnName);
     }
@@ -353,7 +353,7 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
    */
   public static function &pcPage($id = NULL) {
     if (!self::$pcPage) {
-      self::$pcPage = array();
+      self::$pcPage = [];
       $dao = CRM_Core_DAO::executeQuery("SELECT pcp.id, pcp.title, pcp.contact_id, c.sort_name, pcp.contact_id, c.external_identifier FROM civicrm_pcp pcp INNER JOIN civicrm_contact c ON c.id = pcp.contact_id");
       while($dao->fetch()){
         if ($dao->external_identifier) {
@@ -405,11 +405,11 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
   }
 
   public static function taiwanACHStampVerification() {
-    return array(
+    return [
       0 => ts('Pending'),
       1 => ts('Completed'),
       2 => ts('Failed'),
-    );
+    ];
   }
 
   /**

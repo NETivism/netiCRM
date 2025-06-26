@@ -169,43 +169,43 @@ class CRM_Friend_DAO_Friend extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'id' => array(
+      self::$_fields = [
+        'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'entity_table' => array(
+        ] ,
+        'entity_table' => [
           'name' => 'entity_table',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Entity Table') ,
           'required' => true,
           'maxlength' => 64,
           'size' => CRM_Utils_Type::BIG,
-        ) ,
-        'entity_id' => array(
+        ] ,
+        'entity_id' => [
           'name' => 'entity_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'title' => array(
+        ] ,
+        'title' => [
           'name' => 'title',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Title') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'intro' => array(
+        ] ,
+        'intro' => [
           'name' => 'intro',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Intro') ,
-        ) ,
-        'suggested_message' => array(
+        ] ,
+        'suggested_message' => [
           'name' => 'suggested_message',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Suggested Message') ,
-        ) ,
-        'general_link' => array(
+        ] ,
+        'general_link' => [
           'name' => 'general_link',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('General Link') ,
@@ -216,24 +216,24 @@ class CRM_Friend_DAO_Friend extends CRM_Core_DAO
           'headerPattern' => '',
           'dataPattern' => '',
           'export' => true,
-        ) ,
-        'thankyou_title' => array(
+        ] ,
+        'thankyou_title' => [
           'name' => 'thankyou_title',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Thankyou Title') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'thankyou_text' => array(
+        ] ,
+        'thankyou_text' => [
           'name' => 'thankyou_text',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Thankyou Text') ,
-        ) ,
-        'is_active' => array(
+        ] ,
+        'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ) ,
-      );
+        ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -267,7 +267,7 @@ class CRM_Friend_DAO_Friend extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -290,7 +290,7 @@ class CRM_Friend_DAO_Friend extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {

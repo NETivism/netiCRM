@@ -22,7 +22,7 @@ class CRM_Contact_Form_Search_Custom_FailedNoFurtherDonate extends CRM_Contact_F
   }
 
   function buildColumn(){
-    $this->_queryColumns = array( 
+    $this->_queryColumns = [ 
       'contact.id' => 'id',
       'failed.contact_id' => 'contact_id',
       'contact.sort_name' => 'sort_name',
@@ -30,13 +30,13 @@ class CRM_Contact_Form_Search_Custom_FailedNoFurtherDonate extends CRM_Contact_F
       'success.created_date' => 'created_date_success',
       'failed.total_amount' => 'total_amount_failed',
       'success.total_amount' => 'total_amount_success',
-    );
-    $this->_columns = array(
+    ];
+    $this->_columns = [
       ts('ID') => 'contact_id',
       ts('Name') => 'sort_name',
       ts('Created Date') => 'created_date_failed',
       ts('Amount') . ' - (' . ts("Failed") . ')' => 'total_amount_failed',
-    );
+    ];
   }
   function buildTempTable() {
     $sql = "
@@ -45,7 +45,7 @@ CREATE TEMPORARY TABLE IF NOT EXISTS {$this->_tableName} (
 ";
 
     foreach ($this->_queryColumns as $field) {
-      if (in_array($field, array('id'))) {
+      if (in_array($field, ['id'])) {
         continue;
       }
       if(strstr($field,'amount')){
@@ -76,7 +76,7 @@ PRIMARY KEY (id)
    */
   function fillTable(){
     $this->buildTempTable();
-    $select = array();
+    $select = [];
     foreach($this->_queryColumns as $k => $v){
       $select[] = $k.' as '.$v;
     }
@@ -99,7 +99,7 @@ $having
     $dao = CRM_Core_DAO::executeQuery($sql, CRM_Core_DAO::$_nullArray);
 
     while ($dao->fetch()) {
-      $values = array();
+      $values = [];
       foreach($this->_queryColumns as $name){
         if($name == 'id'){
           $values[] = CRM_Utils_Type::escape($dao->id, 'Integer');
@@ -131,7 +131,7 @@ $having
    */
   function tempWhere(){
     $days = $this->_formValues['days'] ? $this->_formValues['days'] : 7;
-    $clauses = array();
+    $clauses = [];
     $clauses[] = "contact.is_deleted = 0";
     $clauses[] = "(success.created_date IS NULL OR success.created_date > date_add(failed.created_date, INTERVAL $days DAY) OR success.created_date <= failed.created_date)";
 
@@ -150,9 +150,9 @@ $having
   }
 
   function setDefaultValues() {
-    return array(
+    return [
       'days' => 7,
-    );
+    ];
   }
 
   function setBreadcrumb() {
@@ -161,7 +161,7 @@ $having
 
   function setTitle() {
     $days = $this->_formValues['days']; 
-    CRM_Utils_System::setTitle(ts('After payment failed but not retry in %1 days', array(1 => $days)));
+    CRM_Utils_System::setTitle(ts('After payment failed but not retry in %1 days', [1 => $days]));
   }
 
   function count(){
@@ -257,7 +257,7 @@ $having
   }
 
   static function includeContactIDs(&$sql, &$formValues, $isExport = FALSE) {
-    $contactIDs = array();
+    $contactIDs = [];
     foreach ($formValues as $id => $value) {
       list($contactID, $additionalID) = CRM_Core_Form::cbExtract($id);
       if ($value && !empty($contactID)) {

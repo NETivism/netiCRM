@@ -70,7 +70,7 @@ class CRM_Utils_Mail_Incoming {
     }
 
     CRM_Core_Error::fatal(ts("No clue about the %1",
-        array(1 => get_class($part))
+        [1 => get_class($part)]
       ));
   }
 
@@ -97,7 +97,7 @@ class CRM_Utils_Mail_Incoming {
     }
 
     CRM_Core_Error::fatal(ts("No clue about the %1",
-        array(1 => get_class($part))
+        [1 => get_class($part)]
       ));
   }
 
@@ -167,17 +167,17 @@ class CRM_Utils_Mail_Incoming {
   }
 
   function formatMailFile($part, &$attachments) {
-    $attachments[] = array('dispositionType' => $part->dispositionType,
+    $attachments[] = ['dispositionType' => $part->dispositionType,
       'contentType' => $part->contentType,
       'mimeType' => $part->mimeType,
       'contentID' => $part->contentId,
       'fullName' => $part->fileName,
-    );
+    ];
     return NULL;
   }
 
   function formatAddresses($addresses) {
-    $fa = array();
+    $fa = [];
     foreach ($addresses as $address) {
       $fa[] = self::formatAddress($address);
     }
@@ -199,7 +199,7 @@ class CRM_Utils_Mail_Incoming {
       !trim(file_get_contents($file))
     ) {
       return CRM_Core_Error::createAPIError(ts('%1 does not exists or is empty',
-          array(1 => $file)
+          [1 => $file]
         ));
     }
 
@@ -207,13 +207,13 @@ class CRM_Utils_Mail_Incoming {
     require_once 'ezc/autoload/mail_autoload.php';
 
     // explode email to digestable format
-    $set = new ezcMailFileSet(array($file));
+    $set = new ezcMailFileSet([$file]);
     $parser = new ezcMailParser();
     $mail = $parser->parseMail($set);
 
     if (!$mail) {
       return CRM_Core_Error::createAPIError(ts('%1 could not be parsed',
-          array(1 => $file)
+          [1 => $file]
         ));
     }
 
@@ -232,12 +232,12 @@ class CRM_Utils_Mail_Incoming {
 
     // get ready for collecting data about this email
     // and put it in a standardized format
-    $params = array('is_error' => 0);
+    $params = ['is_error' => 0];
 
-    $params['from'] = array();
+    $params['from'] = [];
     self::parseAddress($mail->from, $field, $params['from']);
 
-    $emailFields = array('to', 'cc', 'bcc');
+    $emailFields = ['to', 'cc', 'bcc'];
     foreach ($emailFields as $field) {
       $value = $mail->$field;
       self::parseAddresses($value, $field, $params);
@@ -251,7 +251,7 @@ class CRM_Utils_Mail_Incoming {
     $params['date'] = date("YmdHi00",
       strtotime($mail->getHeader("Date"))
     );
-    $attachments = array();
+    $attachments = [];
     $params['body'] = self::formatMailPart($mail->body, $attachments);
 
     // format and move attachments to the civicrm area
@@ -270,11 +270,11 @@ class CRM_Utils_Mail_Incoming {
 
         $mimeType = "{$attachments[$i]['contentType']}/{$attachments[$i]['mimeType']}";
 
-        $params["attachFile_$attachNum"] = array('uri' => $fileName,
+        $params["attachFile_$attachNum"] = ['uri' => $fileName,
           'type' => $mimeType,
           'upload_date' => $date,
           'location' => $location,
-        );
+        ];
       }
     }
 
@@ -291,16 +291,16 @@ class CRM_Utils_Mail_Incoming {
     if (empty($subParam['id'])) {
       $params['is_error'] = 1;
       $params['error_message'] = ts("Contact with address %1 was not found / created",
-        array(1 => $subParam['email'])
+        [1 => $subParam['email']]
       );
     }
   }
 
   function parseAddresses(&$addresses, $token, &$params) {
-    $params[$token] = array();
+    $params[$token] = [];
 
     foreach ($addresses as $address) {
-      $subParam = array();
+      $subParam = [];
       self::parseAddress($address, $params, $subParam);
       $params[$token][] = $subParam;
     }
@@ -322,9 +322,9 @@ class CRM_Utils_Mail_Incoming {
     }
 
     // contact does not exist, lets create it
-    $params = array('contact_type' => 'Individual',
+    $params = ['contact_type' => 'Individual',
       'email-Primary' => $email,
-    );
+    ];
 
 
     CRM_Utils_String::extractName($name, $params);

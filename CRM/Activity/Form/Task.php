@@ -89,7 +89,7 @@ class CRM_Activity_Form_Task extends CRM_Core_Form {
   }
 
   static function preProcessCommon(&$form, $useTable = FALSE) {
-    $form->_activityHolderIds = array();
+    $form->_activityHolderIds = [];
 
     $values = $form->controller->exportValues($form->get('searchFormName'));
 
@@ -97,7 +97,7 @@ class CRM_Activity_Form_Task extends CRM_Core_Form {
     $activityTasks = CRM_Activity_Task::tasks();
     $form->assign('taskName', $activityTasks[$form->_task]);
 
-    $ids = array();
+    $ids = [];
     if ($values['radio_ts'] == 'ts_sel') {
       foreach ($values as $name => $value) {
         list($id, $additionalID) = CRM_Core_Form::cbExtract($name);
@@ -174,15 +174,15 @@ SELECT source_contact_id
    * @access public
    */
   function addDefaultButtons($title, $nextType = 'next', $backType = 'back', $submitOnce = null) {
-    $this->addButtons(array(
-        array('type' => $nextType,
+    $this->addButtons([
+        ['type' => $nextType,
           'name' => $title,
           'isDefault' => TRUE,
-        ),
-        array('type' => $backType,
+        ],
+        ['type' => $backType,
           'name' => ts('Cancel'),
-        ),
-      )
+        ],
+      ]
     );
   }
 }

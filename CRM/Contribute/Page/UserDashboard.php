@@ -55,7 +55,7 @@ class CRM_Contribute_Page_UserDashboard extends CRM_Contact_Page_View_UserDashBo
 
     //add honor block
 
-    $params = array();
+    $params = [];
     $params = CRM_Contribute_BAO_Contribution::getHonorContacts($this->_contactId);
 
     if (!empty($params)) {
@@ -78,8 +78,8 @@ class CRM_Contribute_Page_UserDashboard extends CRM_Contact_Page_View_UserDashBo
 
 
 
-    $recurRow = array();
-    $recurIDs = array();
+    $recurRow = [];
+    $recurIDs = [];
     while ($recur->fetch()) {
       $mode = $recur->is_test ? 'test' : 'live';
       $paymentProcessor = CRM_Contribute_BAO_ContributionRecur::getPaymentProcessor($recur->id, $mode);

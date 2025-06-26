@@ -115,10 +115,10 @@ class CRM_Contact_DAO_GroupNesting extends CRM_Core_DAO
   function &links()
   {
     if (!(self::$_links)) {
-      self::$_links = array(
+      self::$_links = [
         'child_group_id' => 'civicrm_group:id',
         'parent_group_id' => 'civicrm_group:id',
-      );
+      ];
     }
     return self::$_links;
   }
@@ -146,25 +146,25 @@ class CRM_Contact_DAO_GroupNesting extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'id' => array(
+      self::$_fields = [
+        'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'child_group_id' => array(
+        ] ,
+        'child_group_id' => [
           'name' => 'child_group_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
           'FKClassName' => 'CRM_Contact_DAO_Group',
-        ) ,
-        'parent_group_id' => array(
+        ] ,
+        'parent_group_id' => [
           'name' => 'parent_group_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
           'FKClassName' => 'CRM_Contact_DAO_Group',
-        ) ,
-      );
+        ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -197,7 +197,7 @@ class CRM_Contact_DAO_GroupNesting extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -220,7 +220,7 @@ class CRM_Contact_DAO_GroupNesting extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {

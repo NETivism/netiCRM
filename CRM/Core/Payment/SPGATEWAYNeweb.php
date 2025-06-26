@@ -13,7 +13,7 @@ class CRM_Core_Payment_SPGATEWAYNeweb {
   public static function transfer($args, $post = NULL, $get = NULL, $print = TRUE, $isTest = FALSE) {
     $post = !empty($post) ? $post : $_POST;
     CRM_Core_Error::debug_var('spgateway_neweb_transfer_post', $post);
-    $ids = array();
+    $ids = [];
 
     if (empty($pid)) {
       $pid = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_payment_processor WHERE payment_processor_type = 'SPGATEWAY'");
@@ -59,18 +59,18 @@ class CRM_Core_Payment_SPGATEWAYNeweb {
 
     if (!empty($decryptParams) && !empty($rid)) {
       // complex part to simulate spgateway ipn
-      $ipn_result = $ipn_get = $ipn_post = array();
+      $ipn_result = $ipn_get = $ipn_post = [];
 
       // prepare post, complex logic because recurring have different variable names
       $ipn_result['Result'] = $decryptParams;
-      $queryParams = array(1 => array($rid, 'Positive'));
+      $queryParams = [1 => [$rid, 'Positive']];
       $ipn_result['Result']['MerchantOrderNo'] = CRM_Core_DAO::singleValueQuery("SELECT trxn_id FROM civicrm_contribution WHERE contribution_recur_id = %1 ORDER BY id ASC LIMIT 1", $queryParams);
       $ipn_result['Status'] = $decryptParams['Status'];
       $ipn_result['Result']['OrderNo'] = 'r_'.$ipn_result['Result']['OrderNo'];
       $periodNo = $ipn_result['Result']['PeriodNo'];
       CRM_Core_Error::debug_var('spgateway_neweb_transfer_ipn_result', $ipn_result);
       $ipn_result = json_encode($ipn_result);
-      $ipn_post = array('Period' => CRM_Core_Payment_SPGATEWAYAPI::recurEncrypt($ipn_result, $paymentProcessor));
+      $ipn_post = ['Period' => CRM_Core_Payment_SPGATEWAYAPI::recurEncrypt($ipn_result, $paymentProcessor)];
       CRM_Core_Error::debug_var('spgateway_neweb_transfer_ipn_post', $ipn_post);
 
       // prepare get
@@ -86,18 +86,18 @@ class CRM_Core_Payment_SPGATEWAYNeweb {
       $result->_ipn_result = $ipn_result;
       $result->_post = $ipn_post;
       $result->_get = $ipn_get;
-      $result->_response = CRM_Core_Payment_SPGATEWAY::doIPN(array('spgateway', 'ipn', 'Credit'), $ipn_post, $ipn_get, FALSE);
+      $result->_response = CRM_Core_Payment_SPGATEWAY::doIPN(['spgateway', 'ipn', 'Credit'], $ipn_post, $ipn_get, FALSE);
       // If correct, it must return '1|OK'.
       if (!empty($result->_response)) {
         $query = "UPDATE civicrm_contribution SET payment_processor_id = %1 WHERE contribution_recur_id = %2 ORDER BY id DESC LIMIT 1";
-        $params = array(
-          1 => array($pid, 'Positive'),
-          2 => array($ids['contributionRecurID'], 'Positive'),
-        );
+        $params = [
+          1 => [$pid, 'Positive'],
+          2 => [$ids['contributionRecurID'], 'Positive'],
+        ];
         CRM_Core_DAO::executeQuery($query, $params);
         // Check processor_id, trxn_id of contribution_recur
         $sql = "SELECT trxn_id, processor_id FROM civicrm_contribution_recur WHERE id = %1";
-        $sqlParams = array( 1 => array($ids['contributionRecurID'], 'Positive'));
+        $sqlParams = [ 1 => [$ids['contributionRecurID'], 'Positive']];
         $recurDao = CRM_Core_DAO::executeQuery($sql, $sqlParams);
         while ($recurDao->fetch()) {
           if ($recurDao->processor_id != $pid) {
@@ -135,7 +135,7 @@ class CRM_Core_Payment_SPGATEWAYNeweb {
    * @param array $recurNo
    * @return void
    */
-  public static function resync($ppid_new, $day = '', $recurNo = array()) {
+  public static function resync($ppid_new, $day = '', $recurNo = []) {
     CRM_Core_Error::debug_log_message("SPGATEWAYNeweb: Start doResyncOldNewebRecur, ppid_new = {$ppid_new}, day = {$day}");
     $payment_processor = CRM_Core_BAO_PaymentProcessor::getPayment($ppid_new, 'live');
     if (!empty($payment_processor)) {
@@ -143,10 +143,10 @@ class CRM_Core_Payment_SPGATEWAYNeweb {
       if (empty($recurNo)) {
         $cycle_day = empty($day) ? date('j') : $day;
         $sql = "SELECT DISTINCT r.id AS rid from civicrm_contribution_recur r INNER JOIN civicrm_contribution c ON r.id = c.contribution_recur_id WHERE c.trxn_id LIKE 'r_%' AND r.cycle_day = %1 AND c.payment_processor_id = %2";
-        $params = array(
-          1 => array($cycle_day, 'Integer'),
-          2 => array($ppid_new, 'Integer'),
-        );
+        $params = [
+          1 => [$cycle_day, 'Integer'],
+          2 => [$ppid_new, 'Integer'],
+        ];
         $bao = CRM_Core_DAO::executeQuery($sql, $params);
         while($bao->fetch()) {
           $recurNo[] = $bao->rid;
@@ -161,7 +161,7 @@ class CRM_Core_Payment_SPGATEWAYNeweb {
   LEFT JOIN (SELECT contribution_recur_id AS rid, MAX(cancel_date) AS last_failed_date FROM civicrm_contribution WHERE contribution_status_id = 4 AND contribution_recur_id = %1 GROUP BY contribution_recur_id) lfd ON lfd.rid = r.id
   LEFT JOIN (SELECT contribution_recur_id AS rid, CONCAT('r_', contribution_recur_id, '_', MAX(CAST(REGEXP_SUBSTR(trxn_id, '[0-9]+$') as INT))) AS last_trxn_id FROM civicrm_contribution WHERE contribution_recur_id = %1 AND trxn_id LIKE CONCAT('r_', contribution_recur_id, '_%') GROUP BY contribution_recur_id) ltid ON ltid.rid = r.id
   WHERE r.id = %1";
-        $dao = CRM_Core_DAO::executeQuery($sql, array(1 => array($recurId, 'Integer')));
+        $dao = CRM_Core_DAO::executeQuery($sql, [1 => [$recurId, 'Integer']]);
         $dao->fetch();
 
         // Only execute the contributions last month have successed.

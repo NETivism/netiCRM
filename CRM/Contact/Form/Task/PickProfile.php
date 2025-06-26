@@ -129,7 +129,7 @@ class CRM_Contact_Form_Task_PickProfile extends CRM_Contact_Form_Task {
       CRM_Core_Session::setStatus("The contact type selected for Batch Update do not have corresponding profiles. Please make sure that {$types} has a profile and try again.");
       CRM_Utils_System::redirect($this->_userContext);
     }
-    $ufGroupElement = $this->add('select', 'uf_group_id', ts('Select Profile'), array('' => ts('- select profile -')) + $profiles, TRUE);
+    $ufGroupElement = $this->add('select', 'uf_group_id', ts('Select Profile'), ['' => ts('- select profile -')] + $profiles, TRUE);
 
     $this->addDefaultButtons(ts('Continue >>'));
   }
@@ -142,7 +142,7 @@ class CRM_Contact_Form_Task_PickProfile extends CRM_Contact_Form_Task {
    * @return void
    */
   function addRules() {
-    $this->addFormRule(array('CRM_Contact_Form_Task_PickProfile', 'formRule'));
+    $this->addFormRule(['CRM_Contact_Form_Task_PickProfile', 'formRule']);
   }
 
   /**

@@ -73,7 +73,7 @@ class CRM_Contact_Selector_Custom extends CRM_Core_Selector_Base implements CRM_
    * @var array
    * @static
    */
-  static $_properties = array('contact_id', 'contact_type', 'display_name');
+  static $_properties = ['contact_id', 'contact_type', 'display_name'];
 
   /**
    * formValues is the array returned by exportValues called on
@@ -178,29 +178,29 @@ class CRM_Contact_Selector_Custom extends CRM_Core_Selector_Base implements CRM_
   static function &links() {
 
     if (!(self::$_links)) {
-      self::$_links = array(
-        CRM_Core_Action::VIEW => array(
+      self::$_links = [
+        CRM_Core_Action::VIEW => [
           'name' => ts('View'),
           'url' => 'civicrm/contact/view',
           'qs' => 'reset=1&cid=%%id%%',
           'title' => ts('View Contact Details'),
-        ),
-        CRM_Core_Action::UPDATE => array(
+        ],
+        CRM_Core_Action::UPDATE => [
           'name' => ts('Edit'),
           'url' => 'civicrm/contact/add',
           'qs' => 'reset=1&action=update&cid=%%id%%',
           'title' => ts('Edit Contact Details'),
-        ),
-      );
+        ],
+      ];
 
       $config = CRM_Core_Config::singleton();
       if ($config->mapAPIKey && $config->mapProvider) {
-        self::$_links[CRM_Core_Action::MAP] = array(
+        self::$_links[CRM_Core_Action::MAP] = [
           'name' => ts('Map'),
           'url' => 'civicrm/contact/map',
           'qs' => 'reset=1&cid=%%id%%&searchType=custom',
           'title' => ts('Map Contact'),
-        );
+        ];
       }
     }
     return self::$_links;
@@ -244,16 +244,16 @@ class CRM_Contact_Selector_Custom extends CRM_Core_Selector_Base implements CRM_
       return array_keys($columns);
     }
     else {
-      $headers = array();
+      $headers = [];
       foreach ($columns as $name => $key) {
         if (!empty($name)) {
-          $headers[] = array('name' => $name,
+          $headers[] = ['name' => $name,
             'sort' => $key,
             'direction' => CRM_Utils_Sort::ASCENDING,
-          );
+          ];
         }
         else {
-          $headers[] = array();
+          $headers[] = [];
         }
       }
       return $headers;
@@ -302,7 +302,7 @@ class CRM_Contact_Selector_Custom extends CRM_Core_Selector_Base implements CRM_
     $columnNames = array_values($columns);
     $links = self::links();
 
-    $permissions = array(CRM_Core_Permission::getPermission());
+    $permissions = [CRM_Core_Permission::getPermission()];
     if (CRM_Core_Permission::check('delete contacts')) {
       $permissions[] = CRM_Core_Permission::DELETE;
     }
@@ -319,9 +319,9 @@ class CRM_Contact_Selector_Custom extends CRM_Core_Selector_Base implements CRM_
       $image = TRUE;
     }
     // process the result of the query
-    $rows = array();
+    $rows = [];
     while ($dao->fetch()) {
-      $row = array();
+      $row = [];
       $empty = TRUE;
 
       // the columns we are interested in
@@ -343,7 +343,7 @@ class CRM_Contact_Selector_Custom extends CRM_Core_Selector_Base implements CRM_
         $row['checkbox'] = CRM_Core_Form::CB_PREFIX . $cbID;
         $row['action'] = CRM_Core_Action::formLink($links,
           $mask,
-          array('id' => $contactID)
+          ['id' => $contactID]
         );
         $row['contact_id'] = $contactID;
         $row['#dao'] = (array) $dao;
@@ -403,14 +403,14 @@ class CRM_Contact_Selector_Custom extends CRM_Core_Selector_Base implements CRM_
   }
 
   function &contactIDQuery() {
-    $params = array();
+    $params = [];
     $sql = $this->_search->contactIDs($params);
 
     return CRM_Core_DAO::executeQuery($sql, $params);
   }
 
   function contactAdditionalIDQuery() {
-    $params = array();
+    $params = [];
     if (method_exists($this->_search, 'contactAdditionalIDs')) {
       $sql = $this->_search->contactAdditionalIDs($params);
     }

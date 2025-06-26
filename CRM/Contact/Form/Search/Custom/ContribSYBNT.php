@@ -51,24 +51,24 @@ class CRM_Contact_Form_Search_Custom_ContribSYBNT extends CRM_Contact_Form_Searc
 
     $this->_contribution_type_id = CRM_Contribute_PseudoConstant::contributionType();
 
-    $this->_columns = array(
+    $this->_columns = [
       ts('Contact Id') => 'contact_id',
       ts('Name') => 'display_name',
       ts('Completed Donation') => 'completed_count',
       ts('Total Receive Amount') => 'receive_amount',
-    );
+    ];
 
-    $this->_amounts = array(
+    $this->_amounts = [
       'include_min_amount' => ts('Min Amount'),
       'include_max_amount' => ts('Max Amount'),
-    );
+    ];
 
-    $this->_dates = array(
+    $this->_dates = [
       'include_start_date' => ts('Start Date'),
       'include_end_date' => ts('End Date'),
       'exclude_start_date' => ts('Exclusion Start Date'),
       'exclude_end_date' => ts('Exclusion End Date'),
-    );
+    ];
 
     foreach ($this->_amounts as $name => $title) {
       $this->{$name} = CRM_Utils_Array::value($name, $this->_formValues);
@@ -87,7 +87,7 @@ class CRM_Contact_Form_Search_Custom_ContribSYBNT extends CRM_Contact_Form_Searc
   }
 
   function buildForm(&$form) {
-    $form->addSelect('contribution_type_id', ts('Contribution Type'), $this->_contribution_type_id, array('multiple' => 'multiple'));
+    $form->addSelect('contribution_type_id', ts('Contribution Type'), $this->_contribution_type_id, ['multiple' => 'multiple']);
 
     foreach ($this->_amounts as $name => $title) {
       $form->add('text',
@@ -105,20 +105,20 @@ class CRM_Contact_Form_Search_Custom_ContribSYBNT extends CRM_Contact_Form_Searc
   function setDefaultValues($form) {
     $thisYear = date('Y');
     $lastYear = date('Y', strtotime('-1 year'));
-    $defaults = array(
+    $defaults = [
       'include_start_date' => $lastYear.'-01-01',
       'include_end_date' => $lastYear.'-12-31',
       'exclude_start_date' => $thisYear.'-01-01',
       'exclude_end_date' => $thisYear.'-12-31',
       'include_min_amount' => 100,
       'include_max_amount' => 0,
-    );
+    ];
     $form->set(CRM_Utils_Sort::SORT_ID, '4_d');
     return $defaults;
   }
 
   function qill() {
-    $qill = array();
+    $qill = [];
     if (!empty($this->_formValues['contribution_type_id'])) {
       foreach ($this->_formValues['contribution_type_id'] as $type_id) {
         $contribution_type[] = $this->_contribution_type_id[$type_id];
@@ -218,7 +218,7 @@ count(contrib_1.id) AS completed_count
   }
 
   function where($includeContactIDs = FALSE) {
-    $clauses = array();
+    $clauses = [];
     $clauses[] = "contrib_1.is_test = 0";
     $clauses[] = "contrib_1.contribution_status_id = 1";
 
@@ -243,7 +243,7 @@ count(contrib_1.id) AS completed_count
       $sql = "CREATE TEMPORARY TABLE XG_CustomSearch_SYBNT ( contact_id int primary key, sum_total int) ENGINE=HEAP";
       CRM_Core_DAO::executeQuery($sql);
 
-      $excludeClauses = array();
+      $excludeClauses = [];
       $excludeClauses[] = "c.contribution_status_id = 1";
       if ($this->exclude_start_date) {
         $excludeClauses[] = "c.receive_date >= {$this->exclude_start_date}";
@@ -282,7 +282,7 @@ GROUP BY contact.id
   }
 
   function having($includeContactIDs = FALSE) {
-    $clauses = array();
+    $clauses = [];
     $min = CRM_Utils_Array::value('include_min_amount', $this->_formValues);
     if ($min) {
       $clauses[] = "sum(contrib_1.total_amount) >= $min";

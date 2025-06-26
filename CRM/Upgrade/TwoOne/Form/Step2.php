@@ -36,7 +36,7 @@
 
 class CRM_Upgrade_TwoOne_Form_Step2 extends CRM_Upgrade_Form {
   function verifyPreDBState(&$errorMessage) {
-    $errorMessage = ts('Pre-condition failed for upgrade step %1.', array(1 => '2'));
+    $errorMessage = ts('Pre-condition failed for upgrade step %1.', [1 => '2']);
 
     return $this->checkVersion('2.01');
   }
@@ -46,7 +46,7 @@ class CRM_Upgrade_TwoOne_Form_Step2 extends CRM_Upgrade_Form {
 
     // 1. remove domain_ids from the entire db
     $sqlFile = CRM_Utils_Array::implode(DIRECTORY_SEPARATOR,
-      array($currentDir, '../sql', 'group_values.mysql')
+      [$currentDir, '../sql', 'group_values.mysql']
     );
     $this->source($sqlFile);
 
@@ -82,7 +82,7 @@ VALUES
 ( %1, 'csv', 10, NULL, NULL, 0, 0, 10, NULL, 0, 0, 1, NULL),
 ( %1, 'ppt', 11, NULL, NULL, 0, 0, 11, NULL, 0, 0, 1, NULL)
 ";
-        $params = array(1 => array($dao->id, 'Integer'));
+        $params = [1 => [$dao->id, 'Integer']];
         $dao = CRM_Core_DAO::executeQuery($query, $params);
       }
     }
@@ -96,7 +96,7 @@ FROM   `civicrm_option_value`
 WHERE  `option_group_id` = %1
 AND    `label` IN ('html', 'htm')
 ";
-      $params = array(1 => array($sfeGroup->id, 'Integer'));
+      $params = [1 => [$sfeGroup->id, 'Integer']];
       $dao = CRM_Core_DAO::executeQuery($query, $params);
     }
 
@@ -133,7 +133,7 @@ AND    `label` IN ('html', 'htm')
       $errorMessage .= ' Few important fields were found missing in civicrm_option_value table.';
       return FALSE;
     }
-    $errorMessage = ts('Post-condition failed for upgrade step %1.', array(1 => '1'));
+    $errorMessage = ts('Post-condition failed for upgrade step %1.', [1 => '1']);
 
     return $this->checkVersion('2.02');
   }

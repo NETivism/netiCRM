@@ -64,20 +64,20 @@ class CRM_Admin_Page_Tag extends CRM_Core_Page_Basic {
    */
   function &links() {
     if (!(self::$_links)) {
-      self::$_links = array(
-        CRM_Core_Action::UPDATE => array(
+      self::$_links = [
+        CRM_Core_Action::UPDATE => [
           'name' => ts('Edit'),
           'url' => 'civicrm/admin/tag',
           'qs' => 'action=update&id=%%id%%&reset=1',
           'title' => ts('Edit Tag'),
-        ),
-        CRM_Core_Action::DELETE => array(
+        ],
+        CRM_Core_Action::DELETE => [
           'name' => ts('Delete'),
           'url' => 'civicrm/admin/tag',
           'qs' => 'action=delete&id=%%id%%',
           'title' => ts('Delete Tag'),
-        ),
-      );
+        ],
+      ];
     }
     return self::$_links;
   }
@@ -146,7 +146,7 @@ class CRM_Admin_Page_Tag extends CRM_Core_Page_Basic {
                  GROUP BY t1.parent_id, t1.id";
 
     $tag = CRM_Core_DAO::executeQuery($query);
-    $values = array();
+    $values = [];
 
     $action = CRM_Core_Action::UPDATE + CRM_Core_Action::DELETE;
     $permission = CRM_Core_Permission::EDIT;
@@ -154,7 +154,7 @@ class CRM_Admin_Page_Tag extends CRM_Core_Page_Basic {
     while ($tag->fetch()) {
       $values[$tag->id] = (array) $tag;
 
-      $used = array();
+      $used = [];
       if ($values[$tag->id]['used_for']) {
         $usedArray = explode(",", $values[$tag->id]['used_for']);
         foreach ($usedArray as $key => $value) {

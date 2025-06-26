@@ -156,59 +156,59 @@ class CRM_Core_DAO_MessageTemplates extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'id' => array(
+      self::$_fields = [
+        'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'msg_title' => array(
+        ] ,
+        'msg_title' => [
           'name' => 'msg_title',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Msg Title') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'msg_subject' => array(
+        ] ,
+        'msg_subject' => [
           'name' => 'msg_subject',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Msg Subject') ,
-        ) ,
-        'msg_text' => array(
+        ] ,
+        'msg_text' => [
           'name' => 'msg_text',
           'type' => CRM_Utils_Type::T_LONGTEXT,
           'title' => ts('Msg Text') ,
-        ) ,
-        'msg_html' => array(
+        ] ,
+        'msg_html' => [
           'name' => 'msg_html',
           'type' => CRM_Utils_Type::T_LONGTEXT,
           'title' => ts('Msg Html') ,
-        ) ,
-        'is_active' => array(
+        ] ,
+        'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Is Active') ,
           'default' => '',
-        ) ,
-        'workflow_id' => array(
+        ] ,
+        'workflow_id' => [
           'name' => 'workflow_id',
           'type' => CRM_Utils_Type::T_INT,
-        ) ,
-        'is_default' => array(
+        ] ,
+        'is_default' => [
           'name' => 'is_default',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'default' => '',
-        ) ,
-        'is_reserved' => array(
+        ] ,
+        'is_reserved' => [
           'name' => 'is_reserved',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ) ,
-        'is_sms' => array(
+        ] ,
+        'is_sms' => [
           'name' => 'is_sms',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Message Template is used for SMS?') ,
-        ) ,
-      );
+        ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -241,7 +241,7 @@ class CRM_Core_DAO_MessageTemplates extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -264,7 +264,7 @@ class CRM_Core_DAO_MessageTemplates extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {

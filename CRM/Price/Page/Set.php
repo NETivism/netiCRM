@@ -66,52 +66,52 @@ class CRM_Price_Page_Set extends CRM_Core_Page {
       // helper variable for nicer formatting
       $deleteExtra = ts('Are you sure you want to delete this price set?');
       $copyExtra = ts('Are you sure you want to make a copy of this price set?');
-      self::$_actionLinks = array(
-        CRM_Core_Action::BROWSE => array(
+      self::$_actionLinks = [
+        CRM_Core_Action::BROWSE => [
           'name' => ts('View and Edit Price Fields'),
           'url' => 'civicrm/admin/price/field',
           'qs' => 'reset=1&action=browse&sid=%%sid%%',
           'title' => ts('View and Edit Price Fields'),
-        ),
-        CRM_Core_Action::PREVIEW => array(
+        ],
+        CRM_Core_Action::PREVIEW => [
           'name' => ts('Preview'),
           'url' => 'civicrm/admin/price',
           'qs' => 'action=preview&reset=1&sid=%%sid%%',
           'title' => ts('Preview Price Set'),
-        ),
-        CRM_Core_Action::UPDATE => array(
+        ],
+        CRM_Core_Action::UPDATE => [
           'name' => ts('Settings'),
           'url' => 'civicrm/admin/price',
           'qs' => 'action=update&reset=1&sid=%%sid%%',
           'title' => ts('Edit Price Set'),
-        ),
-        CRM_Core_Action::DISABLE => array(
+        ],
+        CRM_Core_Action::DISABLE => [
           'name' => ts('Disable'),
           'extra' => 'onclick = "enableDisable( %%sid%%,\'' . 'CRM_Price_BAO_Set' . '\',\'' . 'enable-disable' . '\' );"',
           'ref' => 'disable-action',
           'title' => ts('Disable Price Set'),
-        ),
-        CRM_Core_Action::ENABLE => array(
+        ],
+        CRM_Core_Action::ENABLE => [
           'name' => ts('Enable'),
           'extra' => 'onclick = "enableDisable( %%sid%%,\'' . 'CRM_Price_BAO_Set' . '\',\'' . 'disable-enable' . '\' );"',
           'ref' => 'enable-action',
           'title' => ts('Enable Price Set'),
-        ),
-        CRM_Core_Action::DELETE => array(
+        ],
+        CRM_Core_Action::DELETE => [
           'name' => ts('Delete'),
           'url' => 'civicrm/admin/price',
           'qs' => 'action=delete&reset=1&sid=%%sid%%',
           'title' => ts('Delete Price Set'),
           'extra' => 'onclick = "return confirm(\'' . $deleteExtra . '\');"',
-        ),
-        CRM_Core_Action::COPY => array(
+        ],
+        CRM_Core_Action::COPY => [
           'name' => ts('Copy Price Set'),
           'url' => CRM_Utils_System::currentPath(),
           'qs' => 'action=copy&sid=%%sid%%&key=%%key%%',
           'title' => ts('Make a Copy of Price Set'),
           'extra' => 'onclick = "return confirm(\'' . $copyExtra . '\');"',
-        ),
-      );
+        ],
+      ];
     }
     return self::$_actionLinks;
   }
@@ -180,13 +180,13 @@ class CRM_Price_Page_Set extends CRM_Core_Page {
         else {
           // add breadcrumb
           $url = CRM_Utils_System::url('civicrm/admin/price', 'reset=1');
-          CRM_Utils_System::appendBreadCrumb(array(array('title' => ts('Price Sets'), 'url' => $url)));
+          CRM_Utils_System::appendBreadCrumb([['title' => ts('Price Sets'), 'url' => $url]]);
           $this->assign('usedPriceSetTitle', CRM_Price_BAO_Set::getTitle($sid));
           $this->assign('usedBy', $usedBy);
-          $comps = array("Event" => "civicrm_event",
+          $comps = ["Event" => "civicrm_event",
             "Contribution" => "civicrm_contribution_page",
-          );
-          $priceSetContexts = array();
+          ];
+          $priceSetContexts = [];
           foreach ($comps as $name => $table) {
             if (CRM_Utils_Array::arrayKeyExists($table, $usedBy)) {
               $priceSetContexts[] = $name;
@@ -259,11 +259,11 @@ class CRM_Price_Page_Set extends CRM_Core_Page {
    */
   function browse($action = NULL) {
     // get all price sets
-    $priceSet = array();
+    $priceSet = [];
 
-    $comps = array('CiviEvent' => ts('Event'),
+    $comps = ['CiviEvent' => ts('Event'),
       'CiviContribute' => ts('Contribution'),
-    );
+    ];
 
     $dao = new CRM_Price_DAO_Set();
     if (defined('CIVICRM_EVENT_PRICE_SET_DOMAIN_ID') && CIVICRM_EVENT_PRICE_SET_DOMAIN_ID) {
@@ -276,13 +276,13 @@ class CRM_Price_Page_Set extends CRM_Core_Page {
     $this->assign('key', $key);
 
     while ($dao->fetch()) {
-      $priceSet[$dao->id] = array();
+      $priceSet[$dao->id] = [];
       CRM_Core_DAO::storeValues($dao, $priceSet[$dao->id]);
 
       $compIds = explode(CRM_Core_DAO::VALUE_SEPARATOR,
         CRM_Utils_Array::value('extends', $priceSet[$dao->id])
       );
-      $extends = array();
+      $extends = [];
       foreach ($compIds as $compId) $extends[] = $comps[CRM_Core_Component::getComponentName($compId)];
       $priceSet[$dao->id]['extends'] = CRM_Utils_Array::implode(', ', $extends);
 
@@ -298,10 +298,10 @@ class CRM_Price_Page_Set extends CRM_Core_Page {
       }
 
       $priceSet[$dao->id]['action'] = CRM_Core_Action::formLink(self::actionLinks(), $action,
-        array(
+        [
           'sid' => $dao->id,
           'key' => $key
-        )
+        ]
       );
     }
     $this->assign('rows', $priceSet);

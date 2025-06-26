@@ -75,7 +75,7 @@ class CRM_Mailing_PseudoConstant extends CRM_Core_PseudoConstant {
   /**
    * default component id's, indexed by component type
    */
-  private static $bounceType = array();
+  private static $bounceType = [];
 
   /**
    * Get all the mailing components of a particular type
@@ -91,7 +91,7 @@ class CRM_Mailing_PseudoConstant extends CRM_Core_PseudoConstant {
 
     if (!self::$component || !CRM_Utils_Array::arrayKeyExists($name, self::$component)) {
       if (!self::$component) {
-        self::$component = array();
+        self::$component = [];
       }
       if (!$type) {
         self::$component[$name] = NULL;
@@ -99,7 +99,7 @@ class CRM_Mailing_PseudoConstant extends CRM_Core_PseudoConstant {
       }
       else {
         // we need to add an additional filter for $type
-        self::$component[$name] = array();
+        self::$component[$name] = [];
 
 
 
@@ -138,7 +138,7 @@ class CRM_Mailing_PseudoConstant extends CRM_Core_PseudoConstant {
 
       $dao = CRM_Core_DAO::executeQuery($queryDefaultComponents);
 
-      self::$defaultComponent = array();
+      self::$defaultComponent = [];
       while ($dao->fetch()) {
         self::$defaultComponent[$dao->component_type] = $dao->id;
       }
@@ -214,29 +214,29 @@ class CRM_Mailing_PseudoConstant extends CRM_Core_PseudoConstant {
   public static function &yesNoOptions($field) {
     static $options;
     if (!$options) {
-      $options = array(
-        'delivered' => array(
+      $options = [
+        'delivered' => [
           'Y' => ts('Delivered'), 'N' => ts('Not delivered'),
-        ),
-        'bounce' => array(
+        ],
+        'bounce' => [
           'N' => ts('Successful'), 'Y' => ts('Bounced'),
-        ),
-        'open' => array(
+        ],
+        'open' => [
           'Y' => ts('Opened'), 'N' => ts('Unopened/Hidden'),
-        ),
-        'click' => array(
+        ],
+        'click' => [
           'Y' => ts('Clicked'), 'N' => ts('Not Clicked'),
-        ),
-        'reply' => array(
+        ],
+        'reply' => [
           'Y' => ts('Replied'), 'N' => ts('No Reply'),
-        ),
-      );
+        ],
+      ];
     }
     return $options[$field];
   }
 
   public static function bounceType($key = 'id', $label = 'name'){
-    $types = array();
+    $types = [];
     CRM_Core_DAO::commonRetrieveAll('CRM_Mailing_DAO_BounceType', 'id', NULL, $types);
     $bounceType = self::$bounceType;
     if(!isset($bounceType[$key.$label])){

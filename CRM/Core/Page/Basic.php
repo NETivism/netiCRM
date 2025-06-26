@@ -216,7 +216,7 @@ abstract class CRM_Core_Page_Basic extends CRM_Core_Page {
     $baoString = $this->getBAOName();
     $object = new $baoString();
 
-    $values = array();
+    $values = [];
 
     /*
          * lets make sure we get the stuff sorted by name if it exists
@@ -254,7 +254,7 @@ abstract class CRM_Core_Page_Basic extends CRM_Core_Page {
           $permission = $this->checkPermission($object->id, $object->$key);
         }
         if ($permission) {
-          $values[$object->id] = array();
+          $values[$object->id] = [];
           CRM_Core_DAO::storeValues($object, $values[$object->id]);
 
 
@@ -293,7 +293,7 @@ abstract class CRM_Core_Page_Basic extends CRM_Core_Page {
     $newAction = $action;
     $hasDelete = $hasDisable = TRUE;
 
-    if (!empty($values['name']) && in_array($values['name'], array('encounter_medium', 'case_type', 'case_status'))) {
+    if (!empty($values['name']) && in_array($values['name'], ['encounter_medium', 'case_type', 'case_status'])) {
       static $caseCount = NULL;
 
       if (!isset($caseCount)) {
@@ -332,7 +332,7 @@ abstract class CRM_Core_Page_Basic extends CRM_Core_Page {
     }
 
     //CRM-4418, handling edit and delete separately.
-    $permissions = array($permission);
+    $permissions = [$permission];
     if ($hasDelete && ($permission == CRM_Core_Permission::EDIT)) {
       //previously delete was subset of edit
       //so for consistency lets grant delete also.
@@ -342,7 +342,7 @@ abstract class CRM_Core_Page_Basic extends CRM_Core_Page {
     // make sure we only allow those actions that the user is permissioned for
     $newAction = $newAction & CRM_Core_Action::mask($permissions);
 
-    $values['action'] = CRM_Core_Action::formLink($links, $newAction, array('id' => $object->id));
+    $values['action'] = CRM_Core_Action::formLink($links, $newAction, ['id' => $object->id]);
   }
 
   /**

@@ -159,55 +159,55 @@ class CRM_Pledge_DAO_PledgeBlock extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'id' => array(
+      self::$_fields = [
+        'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'entity_table' => array(
+        ] ,
+        'entity_table' => [
           'name' => 'entity_table',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Entity Table') ,
           'maxlength' => 64,
           'size' => CRM_Utils_Type::BIG,
-        ) ,
-        'entity_id' => array(
+        ] ,
+        'entity_id' => [
           'name' => 'entity_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Entity Id') ,
           'required' => true,
-        ) ,
-        'pledge_frequency_unit' => array(
+        ] ,
+        'pledge_frequency_unit' => [
           'name' => 'pledge_frequency_unit',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Pledge Frequency Unit') ,
           'maxlength' => 128,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'is_pledge_interval' => array(
+        ] ,
+        'is_pledge_interval' => [
           'name' => 'is_pledge_interval',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ) ,
-        'max_reminders' => array(
+        ] ,
+        'max_reminders' => [
           'name' => 'max_reminders',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Maximum Number of Reminders') ,
           'default' => '',
-        ) ,
-        'initial_reminder_day' => array(
+        ] ,
+        'initial_reminder_day' => [
           'name' => 'initial_reminder_day',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Initial Reminder Day') ,
           'default' => '',
-        ) ,
-        'additional_reminder_day' => array(
+        ] ,
+        'additional_reminder_day' => [
           'name' => 'additional_reminder_day',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Additional Reminder Days') ,
           'default' => '',
-        ) ,
-      );
+        ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -240,7 +240,7 @@ class CRM_Pledge_DAO_PledgeBlock extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -263,7 +263,7 @@ class CRM_Pledge_DAO_PledgeBlock extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {

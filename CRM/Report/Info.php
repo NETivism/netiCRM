@@ -45,18 +45,18 @@ class CRM_Report_Info extends CRM_Core_Component_Info {
 
   // docs inherited from interface
   public function getInfo() {
-    return array('name' => 'CiviReport',
+    return ['name' => 'CiviReport',
       'translatedName' => ts('CiviReport'),
       'title' => 'CiviCRM Report Engine',
       'search' => 0,
       'showActivitiesInCore' => 1,
-    );
+    ];
   }
 
 
   // docs inherited from interface
   public function getPermissions() {
-    return array('access CiviReport', 'access Report Criteria', 'administer Reports');
+    return ['access CiviReport', 'access Report Criteria', 'administer Reports'];
   }
 
 

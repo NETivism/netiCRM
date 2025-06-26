@@ -73,7 +73,7 @@ class CRM_Contact_Form_Edit_Phone {
       $form->addElement('select', "phone[$blockId][location_type_id]", '', CRM_Core_PseudoConstant::locationType());
 
       //is_Primary radio
-      $js = array('id' => "Phone_" . $blockId . "_IsPrimary", 'onClick' => 'singleSelect( this.id );');
+      $js = ['id' => "Phone_" . $blockId . "_IsPrimary", 'onClick' => 'singleSelect( this.id );'];
       $form->addElement('radio', "phone[$blockId][is_primary]", '', '', '1', $js);
     }
     // TODO: set this up as a group, we need a valid phone_type_id if we have a  phone number

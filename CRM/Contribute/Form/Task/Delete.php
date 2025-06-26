@@ -91,10 +91,10 @@ class CRM_Contribute_Form_Task_Delete extends CRM_Contribute_Form_Task {
       }
     }
 
-    $status = array(
-      ts('Deleted Contribution(s): %1', array(1 => $deletedContributions)),
-      ts('Total Selected Contribution(s): %1', array(1 => count($this->_contributionIds))),
-    );
+    $status = [
+      ts('Deleted Contribution(s): %1', [1 => $deletedContributions]),
+      ts('Total Selected Contribution(s): %1', [1 => count($this->_contributionIds)]),
+    ];
     CRM_Core_Session::setStatus($status);
   }
 }

@@ -140,10 +140,10 @@ class CRM_Event_Form_Registration_ThankYou extends CRM_Event_Form_Registration {
         $dataLayer .= $smarty->fetch('CRM/common/DataLayer.tpl');
       }
       if (!empty($dataLayer)) {
-        $obj = array(
+        $obj = [
           'type' => 'markup',
           'markup' => $dataLayer."\n",
-        );
+        ];
         CRM_Utils_System::addHTMLHead($obj);
         $this->set('dataLayerAdded', true);
       }
@@ -199,8 +199,8 @@ class CRM_Event_Form_Registration_ThankYou extends CRM_Event_Form_Registration {
     if (CRM_Utils_Array::value('defaultRole', $this->_params[0]) == 1) {
       $this->assign('defaultRole', TRUE);
     }
-    $defaults = array();
-    $fields = array();
+    $defaults = [];
+    $fields = [];
     if (!empty($this->_fields)) {
       foreach ($this->_fields as $name => $dontCare) {
         $fields[$name] = 1;
@@ -228,7 +228,7 @@ class CRM_Event_Form_Registration_ThankYou extends CRM_Event_Form_Registration {
             }
           }
         }
-        elseif (in_array($name, array('addressee', 'email_greeting', 'postal_greeting'))
+        elseif (in_array($name, ['addressee', 'email_greeting', 'postal_greeting'])
           && CRM_Utils_Array::value($name . '_custom', $this->_params[0])
         ) {
           $defaults[$name . '_custom'] = $this->_params[0][$name . '_custom'];

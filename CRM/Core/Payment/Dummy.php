@@ -30,7 +30,7 @@ class CRM_Core_Payment_Dummy extends CRM_Core_Payment {
 
   static protected $_mode = NULL;
 
-  static protected $_params = array();
+  static protected $_params = [];
 
   /**
    * We only need one instance of this object. So we use the singleton
@@ -96,7 +96,7 @@ class CRM_Core_Payment_Dummy extends CRM_Core_Payment {
 
     if ($this->_mode == 'test') {
       $query = "SELECT MAX(trxn_id) FROM civicrm_contribution WHERE trxn_id LIKE 'test\\_%'";
-      $p = array();
+      $p = [];
       $trxn_id = strval(CRM_Core_DAO::singleValueQuery($query, $p));
       $trxn_id = str_replace('test_', '', $trxn_id);
       $trxn_id = intval($trxn_id) + 1;
@@ -104,7 +104,7 @@ class CRM_Core_Payment_Dummy extends CRM_Core_Payment {
     }
     else {
       $query = "SELECT MAX(trxn_id) FROM civicrm_contribution WHERE trxn_id LIKE 'live_%'";
-      $p = array();
+      $p = [];
       $trxn_id = strval(CRM_Core_DAO::singleValueQuery($query, $p));
       $trxn_id = str_replace('live_', '', $trxn_id);
       $trxn_id = intval($trxn_id) + 1;

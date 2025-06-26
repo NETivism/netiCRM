@@ -123,15 +123,15 @@ class CRM_Utils_Sort {
    * @access public
    */
   function __construct(&$vars, $defaultSortOrder = NULL) {
-    $this->_vars = array();
-    $this->_response = array();
+    $this->_vars = [];
+    $this->_response = [];
 
     foreach ($vars as $weight => $value) {
-      $this->_vars[$weight] = array(
+      $this->_vars[$weight] = [
         'name' => $value['sort'],
         'direction' => CRM_Utils_Array::value('direction', $value),
         'title' => $value['name'],
-      );
+      ];
     }
 
     $this->_currentSortID = 1;
@@ -229,12 +229,12 @@ class CRM_Utils_Sort {
   function initialize($defaultSortOrder) {
     $this->initSortID($defaultSortOrder);
 
-    $this->_response = array();
+    $this->_response = [];
 
     $current = $this->_currentSortID;
     foreach ($this->_vars as $index => $item) {
       $name = $item['name'];
-      $this->_response[$name] = array();
+      $this->_response[$name] = [];
 
       $newDirection = ($item['direction'] == self::ASCENDING) ? self::DESCENDING : self::ASCENDING;
 

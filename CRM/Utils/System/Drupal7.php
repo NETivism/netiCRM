@@ -11,7 +11,7 @@ class CRM_Utils_System_Drupal7 {
    * @return bool
    * @Todo Handle setting cleanurls configuration for CiviCRM?
    */
-  function loadBootStrap($params = array(), $loadUser = TRUE, $throwError = FALSE) {
+  function loadBootStrap($params = [], $loadUser = TRUE, $throwError = FALSE) {
     $cmsPath = CRM_Utils_System_Drupal::cmsRootPath();
     if (!file_exists("$cmsPath/includes/bootstrap.inc")) {
       if ($throwError) {
@@ -76,7 +76,7 @@ class CRM_Utils_System_Drupal7 {
    */
   function checkUserNameEmailExists($params, $emailName = 'email') {
     $config = CRM_Core_Config::singleton();
-    $errors = array();
+    $errors = [];
 
     $dao    = new CRM_Core_DAO();
     $name   = $dao->escape(CRM_Utils_Array::value('name', $params));
@@ -94,10 +94,10 @@ class CRM_Utils_System_Drupal7 {
       else {
         $uid = db_query(
           "SELECT uid FROM {users} WHERE name = :name",
-          array(':name' => $params['name'])
+          [':name' => $params['name']]
         )->fetchField();
         if ((bool) $uid) {
-          $errors['cms_name'] = ts('The username %1 is already taken. Please select another username.', array(1 => $params['name']));
+          $errors['cms_name'] = ts('The username %1 is already taken. Please select another username.', [1 => $params['name']]);
         }
       }
     }
@@ -109,11 +109,11 @@ class CRM_Utils_System_Drupal7 {
       else {
         $uid = db_query(
           "SELECT uid FROM {users} WHERE mail = :mail",
-          array(':mail' => $params['mail'])
+          [':mail' => $params['mail']]
         )->fetchField();
         if ((bool) $uid) {
           $errors[$emailName] = ts('This email %1 is already registered. Please select another email.',
-            array(1 => $params['mail'])
+            [1 => $params['mail']]
           );
         }
       }
@@ -133,22 +133,22 @@ class CRM_Utils_System_Drupal7 {
    *
    */
   function createUser($params, $mail) {
-    $form_state = array();
-    $form_state['input'] = array(
+    $form_state = [];
+    $form_state['input'] = [
       'name' => $params['cms_name'],
       'mail' => $params[$mail],
       'op' => 'Create new account',
-    );
+    ];
 
     $admin = user_access('administer users');
     if (!variable_get('user_email_verification', TRUE) || $admin) {
-            $form_state['input']['pass'] = array('pass1'=>$params['cms_pass'],'pass2'=>$params['cms_pass']);
+            $form_state['input']['pass'] = ['pass1'=>$params['cms_pass'],'pass2'=>$params['cms_pass']];
     }
 
     $form_state['rebuild'] = FALSE;
     $form_state['programmed'] = TRUE;
     $form_state['method'] = 'post';
-    $form_state['build_info']['args'] = array();
+    $form_state['build_info']['args'] = [];
 
     $config = CRM_Core_Config::singleton();
 
@@ -183,11 +183,11 @@ class CRM_Utils_System_Drupal7 {
       $user = user_load($ufID);
       if ($user->mail != $ufName) {
         // check if duplicated email on drupal
-        if ((bool) db_select('users')->fields('users', array('uid'))->condition('mail', db_like($ufName), 'LIKE')->range(0, 1)->execute()->fetchField()) {
+        if ((bool) db_select('users')->fields('users', ['uid'])->condition('mail', db_like($ufName), 'LIKE')->range(0, 1)->execute()->fetchField()) {
           // drupal user mail already be taken
         }
         else {
-          user_save($user, array('mail' => $ufName));
+          user_save($user, ['mail' => $ufName]);
           $user = user_load($ufID);
         }
       }

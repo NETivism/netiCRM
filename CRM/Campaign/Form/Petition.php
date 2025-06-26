@@ -59,7 +59,7 @@ class CRM_Campaign_Form_Petition extends CRM_Campaign_Form_Survey {
     $url = CRM_Utils_System::url('civicrm/campaign', 'reset=1&subPage=petition');
     $session->pushUserContext($url);
 
-    CRM_Utils_System::appendBreadCrumb(array(array('title' => ts('Petition Dashboard'), 'url' => $url)));
+    CRM_Utils_System::appendBreadCrumb([['title' => ts('Petition Dashboard'), 'url' => $url]]);
   }
 
   /**
@@ -75,10 +75,10 @@ class CRM_Campaign_Form_Petition extends CRM_Campaign_Form_Survey {
     $defaults = parent::setDefaultValues();
 
 
-    $ufJoinParams = array('entity_table' => 'civicrm_survey',
+    $ufJoinParams = ['entity_table' => 'civicrm_survey',
       'entity_id' => $this->_surveyId,
       'weight' => 2,
-    );
+    ];
 
     if ($ufGroupId = CRM_Core_BAO_UFJoin::findUFGroupId($ufJoinParams)) {
       $defaults['contact_profile_id'] = $ufGroupId;
@@ -92,15 +92,15 @@ class CRM_Campaign_Form_Petition extends CRM_Campaign_Form_Survey {
 
     if ($this->_action & CRM_Core_Action::DELETE) {
 
-      $this->addButtons(array(
-          array('type' => 'next',
+      $this->addButtons([
+          ['type' => 'next',
             'name' => ts('Delete'),
             'isDefault' => TRUE,
-          ),
-          array('type' => 'cancel',
+          ],
+          ['type' => 'cancel',
             'name' => ts('Cancel'),
-          ),
-        )
+          ],
+        ]
       );
       return;
     }
@@ -125,18 +125,18 @@ class CRM_Campaign_Form_Petition extends CRM_Campaign_Form_Survey {
     // Campaign id
 
     $campaigns = CRM_Campaign_BAO_Campaign::getAllCampaign();
-    $this->add('select', 'campaign_id', ts('Campaign'), array('' => ts('- select -')) + $campaigns);
+    $this->add('select', 'campaign_id', ts('Campaign'), ['' => ts('- select -')] + $campaigns);
 
-    $customContactProfiles = CRM_Core_BAO_UFGroup::getProfiles(array('Individual'));
+    $customContactProfiles = CRM_Core_BAO_UFGroup::getProfiles(['Individual']);
     // custom group id
     $this->add('select', 'contact_profile_id', ts('Contact Profile'),
-      array('' => ts('- select -')) + $customContactProfiles, TRUE
+      ['' => ts('- select -')] + $customContactProfiles, TRUE
     );
 
-    $customProfiles = CRM_Core_BAO_UFGroup::getProfiles(array('Activity'));
+    $customProfiles = CRM_Core_BAO_UFGroup::getProfiles(['Activity']);
     // custom group id
     $this->add('select', 'profile_id', ts('Activity Profile'),
-      array('' => ts('- select -')) + $customProfiles
+      ['' => ts('- select -')] + $customProfiles
     );
 
     // is active ?
@@ -146,23 +146,23 @@ class CRM_Campaign_Form_Petition extends CRM_Campaign_Form_Survey {
     $this->add('checkbox', 'is_default', ts('Is Default?'));
 
     // add buttons
-    $this->addButtons(array(
-        array('type' => 'next',
+    $this->addButtons([
+        ['type' => 'next',
           'name' => ts('Save'),
           'isDefault' => TRUE,
-        ),
-        array('type' => 'next',
+        ],
+        ['type' => 'next',
           'name' => ts('Save and New'),
           'subName' => 'new',
-        ),
-        array('type' => 'cancel',
+        ],
+        ['type' => 'cancel',
           'name' => ts('Cancel'),
-        ),
-      )
+        ],
+      ]
     );
 
     // add a form rule to check default value
-    $this->addFormRule(array('CRM_Campaign_Form_Survey', 'formRule'), $this);
+    $this->addFormRule(['CRM_Campaign_Form_Survey', 'formRule'], $this);
   }
 
 
@@ -199,11 +199,11 @@ class CRM_Campaign_Form_Petition extends CRM_Campaign_Form_Survey {
 
 
     // also update the ProfileModule tables
-    $ufJoinParams = array('is_active' => 1,
+    $ufJoinParams = ['is_active' => 1,
       'module' => 'CiviCampaign',
       'entity_table' => 'civicrm_survey',
       'entity_id' => $surveyId->id,
-    );
+    ];
 
     // first delete all past entries
     if ($this->_surveyId) {

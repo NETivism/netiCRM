@@ -39,7 +39,7 @@ class CRM_Event_Form_SearchEvent extends CRM_Core_Form {
   public $_showHide;
   public $_event_type_id;
   function setDefaultValues() {
-    $defaults = array();
+    $defaults = [];
     $defaults['eventsByDates'] = 0;
 
 
@@ -52,9 +52,9 @@ class CRM_Event_Form_SearchEvent extends CRM_Core_Form {
 
     $this->_event_type_id = CRM_Utils_Request::retrieve('event_type_id', 'String', $this);
     if ($this->_event_type_id && is_string($this->_event_type_id)) {
-      $this->setDefaults(array(
+      $this->setDefaults([
         'event_type_id' => explode(',', $this->_event_type_id),
-      ));
+      ]);
     }
     return $defaults;
   }
@@ -67,17 +67,17 @@ class CRM_Event_Form_SearchEvent extends CRM_Core_Form {
    * @return void
    */
   public function buildQuickForm() {
-    $this->add('text', 'title', ts('Find'), array(CRM_Core_DAO::getAttribute('CRM_Event_DAO_Event', 'title')));
+    $this->add('text', 'title', ts('Find'), [CRM_Core_DAO::getAttribute('CRM_Event_DAO_Event', 'title')]);
     $event_type = CRM_Core_OptionGroup::values('event_type', FALSE);
-    $attrs = array('multiple' => 'multiple');
+    $attrs = ['multiple' => 'multiple'];
     $this->addElement('select', 'event_type_id', 'Event Type', $event_type, $attrs);
-    $this->addButtons(array(
-        array(
+    $this->addButtons([
+        [
           'type' => 'refresh',
           'name' => ts('Search'),
           'isDefault' => TRUE,
-        ),
-      )
+        ],
+      ]
     );
   }
 
@@ -86,7 +86,7 @@ class CRM_Event_Form_SearchEvent extends CRM_Core_Form {
     $parent = $this->controller->getParent();
     $parent->set('searchResult', 1);
     if (!empty($params)) {
-      $fields = array('title', 'event_type_id');
+      $fields = ['title', 'event_type_id'];
       foreach ($fields as $field) {
         if (isset($params[$field]) && !CRM_Utils_System::isNull($params[$field])) {
           if ($field == 'event_type_id') {

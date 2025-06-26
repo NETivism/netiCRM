@@ -119,7 +119,7 @@ LEFT JOIN civicrm_price_field pf ON (pf.id = li.price_field_id )";
     $whereClause = "
 WHERE     %2.id = %1";
 
-    $lineItems = array();
+    $lineItems = [];
 
     if (!$entityId || !$entity || !$fromClause) {
 
@@ -127,16 +127,16 @@ WHERE     %2.id = %1";
 
     }
 
-    $params = array(1 => array($entityId, 'Integer'),
-      2 => array($entity, 'Text'),
-    );
+    $params = [1 => [$entityId, 'Integer'],
+      2 => [$entity, 'Text'],
+    ];
 
     $dao = CRM_Core_DAO::executeQuery("$selectClause $fromClause $whereClause", $params);
     while ($dao->fetch()) {
       if (!$dao->id) {
         continue;
       }
-      $lineItems[$dao->id] = array('qty' => $dao->qty,
+      $lineItems[$dao->id] = ['qty' => $dao->qty,
         'label' => $dao->label,
         'unit_price' => $dao->unit_price,
         'line_total' => $dao->line_total,
@@ -146,7 +146,7 @@ WHERE     %2.id = %1";
         'field_title' => $dao->field_title,
         'html_type' => $dao->html_type,
         'description' => $dao->description,
-      );
+      ];
     }
     return $lineItems;
   }
@@ -175,7 +175,7 @@ WHERE     %2.id = %1";
 
     //lets first check in fun parameter,
     //since user might modified w/ hooks.
-    $options = array();
+    $options = [];
     if (CRM_Utils_Array::arrayKeyExists('options', $fields)) {
       $options = $fields['options'];
     }
@@ -193,7 +193,7 @@ WHERE     %2.id = %1";
       $price = $options[$oid]['amount'];
       $participantsPerField = CRM_Utils_Array::value('count', $options[$oid], 0);
 
-      $values[$oid] = array('price_field_id' => $fid,
+      $values[$oid] = ['price_field_id' => $fid,
         'price_field_value_id' => $oid,
         'label' => $options[$oid]['label'],
         'field_title' => $fieldTitle,
@@ -204,7 +204,7 @@ WHERE     %2.id = %1";
         'participant_count' => $qty * $participantsPerField,
         'max_value' => CRM_Utils_Array::value('max_value', $options[$oid]),
         'html_type' => $fields['html_type'],
-      );
+      ];
     }
   }
 
@@ -224,7 +224,7 @@ WHERE     %2.id = %1";
     }
 
     if ($entityId && !is_array($entityId)) {
-      $entityId = array($entityId);
+      $entityId = [$entityId];
     }
 
     $query = "DELETE FROM civicrm_line_item where entity_id IN ('" . CRM_Utils_Array::implode("','", $entityId) . "') AND entity_table = '$entityTable'";

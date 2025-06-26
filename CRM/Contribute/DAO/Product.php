@@ -222,13 +222,13 @@ class CRM_Contribute_DAO_Product extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'id' => array(
+      self::$_fields = [
+        'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'product_name' => array(
+        ] ,
+        'product_name' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Product Name') ,
@@ -239,13 +239,13 @@ class CRM_Contribute_DAO_Product extends CRM_Core_DAO
           'where' => 'civicrm_product.name',
           'headerPattern' => '',
           'dataPattern' => '',
-        ) ,
-        'description' => array(
+        ] ,
+        'description' => [
           'name' => 'description',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Description') ,
-        ) ,
-        'sku' => array(
+        ] ,
+        'sku' => [
           'name' => 'sku',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('SKU') ,
@@ -255,111 +255,111 @@ class CRM_Contribute_DAO_Product extends CRM_Core_DAO
           'where' => 'civicrm_product.sku',
           'headerPattern' => '',
           'dataPattern' => '',
-        ) ,
-        'options' => array(
+        ] ,
+        'options' => [
           'name' => 'options',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Options') ,
-        ) ,
-        'image' => array(
+        ] ,
+        'image' => [
           'name' => 'image',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Image') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'thumbnail' => array(
+        ] ,
+        'thumbnail' => [
           'name' => 'thumbnail',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Thumbnail') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'price' => array(
+        ] ,
+        'price' => [
           'name' => 'price',
           'type' => CRM_Utils_Type::T_MONEY,
           'title' => ts('Price') ,
-        ) ,
-        'currency' => array(
+        ] ,
+        'currency' => [
           'name' => 'currency',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Currency') ,
           'maxlength' => 3,
           'size' => CRM_Utils_Type::FOUR,
           'default' => 'UL',
-        ) ,
-        'calculate_mode' => array(
+        ] ,
+        'calculate_mode' => [
           'name' => 'calculate_mode',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Calculate Mode') ,
           'maxlength' => 32,
           'size' => CRM_Utils_Type::MEDIUM,
           'default' => 'UL',
-        ) ,
-        'installments' => array(
+        ] ,
+        'installments' => [
           'name' => 'installments',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Installments') ,
-        ) ,
-        'min_contribution' => array(
+        ] ,
+        'min_contribution' => [
           'name' => 'min_contribution',
           'type' => CRM_Utils_Type::T_MONEY,
           'title' => ts('Minimum Contribution') ,
-        ) ,
-        'min_contribution_recur' => array(
+        ] ,
+        'min_contribution_recur' => [
           'name' => 'min_contribution_recur',
           'type' => CRM_Utils_Type::T_MONEY,
           'title' => ts('Minimum Contribution of Recurring') ,
-        ) ,
-        'cost' => array(
+        ] ,
+        'cost' => [
           'name' => 'cost',
           'type' => CRM_Utils_Type::T_MONEY,
           'title' => ts('Cost') ,
-        ) ,
-        'is_active' => array(
+        ] ,
+        'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Is Active') ,
           'required' => true,
-        ) ,
-        'period_type' => array(
+        ] ,
+        'period_type' => [
           'name' => 'period_type',
           'type' => CRM_Utils_Type::T_ENUM,
           'title' => ts('Period Type') ,
           'default' => 'rolling',
           'enumValues' => 'rolling,fixed',
-        ) ,
-        'fixed_period_start_day' => array(
+        ] ,
+        'fixed_period_start_day' => [
           'name' => 'fixed_period_start_day',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Fixed Period Start Day') ,
           'default' => '10',
-        ) ,
-        'duration_unit' => array(
+        ] ,
+        'duration_unit' => [
           'name' => 'duration_unit',
           'type' => CRM_Utils_Type::T_ENUM,
           'title' => ts('Duration Unit') ,
           'default' => 'year',
           'enumValues' => 'day,month,week,year',
-        ) ,
-        'duration_interval' => array(
+        ] ,
+        'duration_interval' => [
           'name' => 'duration_interval',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Duration Interval') ,
-        ) ,
-        'frequency_unit' => array(
+        ] ,
+        'frequency_unit' => [
           'name' => 'frequency_unit',
           'type' => CRM_Utils_Type::T_ENUM,
           'title' => ts('Frequency Unit') ,
           'default' => 'month',
           'enumValues' => 'day,month,week,year',
-        ) ,
-        'frequency_interval' => array(
+        ] ,
+        'frequency_interval' => [
           'name' => 'frequency_interval',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Frequency Interval') ,
-        ) ,
-      );
+        ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -393,7 +393,7 @@ class CRM_Contribute_DAO_Product extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -416,7 +416,7 @@ class CRM_Contribute_DAO_Product extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
@@ -437,11 +437,11 @@ class CRM_Contribute_DAO_Product extends CRM_Core_DAO
    */
   static function &getEnums()
   {
-    static $enums = array(
+    static $enums = [
       'period_type',
       'duration_unit',
       'frequency_unit',
-    );
+    ];
     return $enums;
   }
   /**
@@ -456,24 +456,24 @@ class CRM_Contribute_DAO_Product extends CRM_Core_DAO
   {
     static $translations = null;
     if (!$translations) {
-      $translations = array(
-        'period_type' => array(
+      $translations = [
+        'period_type' => [
           'rolling' => ts('rolling') ,
           'fixed' => ts('fixed') ,
-        ) ,
-        'duration_unit' => array(
+        ] ,
+        'duration_unit' => [
           'day' => ts('day') ,
           'month' => ts('month') ,
           'week' => ts('week') ,
           'year' => ts('year') ,
-        ) ,
-        'frequency_unit' => array(
+        ] ,
+        'frequency_unit' => [
           'day' => ts('day') ,
           'month' => ts('month') ,
           'week' => ts('week') ,
           'year' => ts('year') ,
-        ) ,
-      );
+        ] ,
+      ];
     }
     return $translations[$field][$value];
   }

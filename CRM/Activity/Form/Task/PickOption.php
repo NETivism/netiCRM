@@ -105,7 +105,7 @@ class CRM_Activity_Form_Task_PickOption extends CRM_Activity_Form_Task {
     $this->addElement('checkbox', 'with_contact', ts('With Contact'));
     $this->addElement('checkbox', 'assigned_to', ts('Assigned to Contact'));
     $this->addElement('checkbox', 'created_by', ts('Created by'));
-    $this->setDefaults(array('with_contact' => 1));
+    $this->setDefaults(['with_contact' => 1]);
     $this->addDefaultButtons(ts('Continue >>'));
   }
 
@@ -117,7 +117,7 @@ class CRM_Activity_Form_Task_PickOption extends CRM_Activity_Form_Task {
    * @return void
    */
   function addRules() {
-    $this->addFormRule(array('CRM_Activity_Form_Task_PickOption', 'formRule'));
+    $this->addFormRule(['CRM_Activity_Form_Task_PickOption', 'formRule']);
   }
 
   /**
@@ -143,7 +143,7 @@ class CRM_Activity_Form_Task_PickOption extends CRM_Activity_Form_Task {
 
   public function postProcess() {
     $params = $this->exportValues();
-    $this->_contacts = array();
+    $this->_contacts = [];
     //get assignee contacts
     if ($params['assigned_to']) {
 

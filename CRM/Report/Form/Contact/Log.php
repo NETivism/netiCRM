@@ -59,84 +59,84 @@ class CRM_Report_Form_Contact_Log extends CRM_Report_Form {
     $this->activityTypes = CRM_Core_PseudoConstant::activityType(TRUE, TRUE);
     asort($this->activityTypes);
 
-    $this->_columns = array('civicrm_contact' =>
-      array('dao' => 'CRM_Contact_DAO_Contact',
+    $this->_columns = ['civicrm_contact' =>
+      ['dao' => 'CRM_Contact_DAO_Contact',
         'fields' =>
-        array('display_name' =>
-          array('title' => ts('Modified By'),
+        ['display_name' =>
+          ['title' => ts('Modified By'),
             'required' => TRUE,
-          ),
+          ],
           'id' =>
-          array('no_display' => TRUE,
+          ['no_display' => TRUE,
             'required' => TRUE,
-          ),
-        ),
+          ],
+        ],
         'filters' =>
-        array('sort_name' =>
-          array('title' => ts('Modified By')),
-        ),
+        ['sort_name' =>
+          ['title' => ts('Modified By')],
+        ],
         'grouping' => 'contact-fields',
-      ),
+      ],
       'civicrm_contact_touched' =>
-      array('dao' => 'CRM_Contact_DAO_Contact',
+      ['dao' => 'CRM_Contact_DAO_Contact',
         'fields' =>
-        array('display_name_touched' =>
-          array('title' => ts('Touched Contact'),
+        ['display_name_touched' =>
+          ['title' => ts('Touched Contact'),
             'name' => 'display_name',
             'required' => TRUE,
-          ),
+          ],
           'id' =>
-          array('no_display' => TRUE,
+          ['no_display' => TRUE,
             'required' => TRUE,
-          ),
-        ),
+          ],
+        ],
         'filters' =>
-        array('sort_name_touched' =>
-          array('title' => ts('Touched Contact'),
+        ['sort_name_touched' =>
+          ['title' => ts('Touched Contact'),
             'name' => 'sort_name',
-          ),
-        ),
+          ],
+        ],
         'grouping' => 'contact-fields',
-      ),
+      ],
       'civicrm_activity' =>
-      array('dao' => 'CRM_Activity_DAO_Activity',
+      ['dao' => 'CRM_Activity_DAO_Activity',
         'fields' =>
-        array('id' => array('title' => ts('Activity ID'),
+        ['id' => ['title' => ts('Activity ID'),
             'no_display' => TRUE,
             'required' => TRUE,
-          ),
-          'subject' => array('title' => ts('Touched Activity'),
+          ],
+          'subject' => ['title' => ts('Touched Activity'),
             'required' => TRUE,
-          ),
-          'activity_type_id' => array('title' => ts('Activity Type'),
+          ],
+          'activity_type_id' => ['title' => ts('Activity Type'),
             'required' => TRUE,
-          ),
-          'source_contact_id' => array('no_display' => TRUE,
+          ],
+          'source_contact_id' => ['no_display' => TRUE,
             'required' => TRUE,
-          ),
-        ),
-      ),
+          ],
+        ],
+      ],
       'civicrm_log' =>
-      array('dao' => 'CRM_Core_DAO_Log',
+      ['dao' => 'CRM_Core_DAO_Log',
         'fields' =>
-        array('modified_date' =>
-          array('title' => ts('Modified Date'),
+        ['modified_date' =>
+          ['title' => ts('Modified Date'),
             'required' => TRUE,
-          ),
+          ],
           'data' =>
-          array('title' => ts('Description'),
-          ),
-        ),
+          ['title' => ts('Description'),
+          ],
+        ],
         'filters' =>
-        array('modified_date' =>
-          array('title' => ts('Modified Date'),
+        ['modified_date' =>
+          ['title' => ts('Modified Date'),
             'operatorType' => CRM_Report_Form::OP_DATE,
             'type' => CRM_Utils_Type::T_DATE,
             'default' => 'this.week',
-          ),
-        ),
-      ),
-    );
+          ],
+        ],
+      ],
+    ];
 
     parent::__construct();
   }
@@ -146,8 +146,8 @@ class CRM_Report_Form_Contact_Log extends CRM_Report_Form {
   }
 
   function select() {
-    $select = array();
-    $this->_columnHeaders = array();
+    $select = [];
+    $this->_columnHeaders = [];
     foreach ($this->_columns as $tableName => $table) {
       if (CRM_Utils_Array::arrayKeyExists('fields', $table)) {
         foreach ($table['fields'] as $fieldName => $field) {
@@ -167,7 +167,7 @@ class CRM_Report_Form_Contact_Log extends CRM_Report_Form {
   }
 
   static function formRule($fields, $files, $self) {
-    $errors = $grouping = array();
+    $errors = $grouping = [];
     return $errors;
   }
 
@@ -181,7 +181,7 @@ class CRM_Report_Form_Contact_Log extends CRM_Report_Form {
   }
 
   function where() {
-    $clauses = array();
+    $clauses = [];
     $this->_having = '';
     foreach ($this->_columns as $tableName => $table) {
       if (CRM_Utils_Array::arrayKeyExists('filters', $table)) {

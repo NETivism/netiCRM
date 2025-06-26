@@ -44,12 +44,12 @@ class CRM_Contact_BAO_Contact_Utils {
    * @static
    */
   static function getImage($contactType, $urlOnly = FALSE, $contactId = NULL) {
-    static $imageInfo = array();
+    static $imageInfo = [];
     if (!CRM_Utils_Array::arrayKeyExists($contactType, $imageInfo)) {
-      $imageInfo[$contactType] = array();
+      $imageInfo[$contactType] = [];
 
-      $typeInfo = array();
-      $params = array('name' => $contactType);
+      $typeInfo = [];
+      $params = ['name' => $contactType];
 
       CRM_Contact_BAO_ContactType::retrieve($params, $typeInfo);
 
@@ -201,7 +201,7 @@ WHERE  id IN ( $idString )
 
     $locationCount = CRM_Core_BAO_Preferences::value('location_count');
 
-    $contactLocations = array();
+    $contactLocations = [];
 
     // find number of location blocks for this contact and adjust value accordinly
     // get location type from email
@@ -245,7 +245,7 @@ UNION
       $orgName = explode('::', $organization);
       trim($orgName[0]);
 
-      $organizationParams = array();
+      $organizationParams = [];
       $organizationParams['organization_name'] = $orgName[0];
 
 
@@ -263,18 +263,18 @@ UNION
       }
       else {
         //create new organization
-        $newOrg = array(
+        $newOrg = [
           'contact_type' => 'Organization',
           'organization_name' => trim($orgName[0]),
           'addressee_id' => $organizationAddressee,
-        );
+        ];
         $org = CRM_Contact_BAO_Contact::add($newOrg);
         $organizationId = $org->id;
       }
     }
 
     if ($organizationId) {
-      $cid = array('contact' => $contactID);
+      $cid = ['contact' => $contactID];
 
       // get the relationship type id of "Employee of"
       $relTypeId = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_RelationshipType', 'Employee of', 'id', 'name_a_b');
@@ -283,10 +283,10 @@ UNION
       }
 
       // create employee of relationship
-      $relationshipParams = array('is_active' => TRUE,
+      $relationshipParams = ['is_active' => TRUE,
         'relationship_type_id' => $relTypeId . '_a_b',
-        'contact_check' => array($organizationId => TRUE),
-      );
+        'contact_check' => [$organizationId => TRUE],
+      ];
       list($valid, $invalid, $duplicate,
         $saved, $relationshipIds
       ) = CRM_Contact_BAO_Relationship::create($relationshipParams, $cid);
@@ -301,7 +301,7 @@ UNION
       }
 
       // set current employer
-      self::setCurrentEmployer(array($contactID => $organizationId));
+      self::setCurrentEmployer([$contactID => $organizationId]);
 
       // handle related meberships. CRM-3792
       self::currentEmployerRelatedMembership($contactID, $organizationId, $relationshipParams, $duplicate);
@@ -320,7 +320,7 @@ UNION
    * @static
    */
   static function currentEmployerRelatedMembership($contactID, $employerID, $relationshipParams, $duplicate = FALSE) {
-    $ids = array();
+    $ids = [];
     $action = CRM_Core_Action::ADD;
 
     //we do not know that triggered relationship record is active.
@@ -417,7 +417,7 @@ WHERE id={$contactId}; ";
         if ($relationship->find(TRUE)) {
           CRM_Contact_BAO_Relationship::setIsActive($relationship->id, FALSE);
           CRM_Contact_BAO_Relationship::relatedMemberships($contactId, $relMembershipParams,
-            $ids = array(), CRM_Core_Action::DELETE
+            $ids = [], CRM_Core_Action::DELETE
           );
         }
         $relationship->free();
@@ -484,11 +484,11 @@ WHERE id={$contactId}; ";
           $form->assign('SICUrl', $SICUrl);
 
           $form->add('text', 'organization_id', ts('Select an existing related Organization OR Enter a new one'));
-          $form->add('hidden', 'onbehalfof_id', '', array('id' => 'onbehalfof_id'));
-          $orgOptions = array('0' => ts('Create new organization'),
+          $form->add('hidden', 'onbehalfof_id', '', ['id' => 'onbehalfof_id']);
+          $orgOptions = ['0' => ts('Create new organization'),
             '1' => ts('Select existing organization'),
-          );
-          $orgOptionExtra = array('onclick' => "showHideByValue('org_option','true','select_org','table-row','radio',true);showHideByValue('org_option','true','create_org','table-row','radio',false);");
+          ];
+          $orgOptionExtra = ['onclick' => "showHideByValue('org_option','true','select_org','table-row','radio',true);showHideByValue('org_option','true','create_org','table-row','radio',false);"];
           $form->addRadio('org_option', ts('options'), $orgOptions, $orgOptionExtra);
           $form->assign('relatedOrganizationFound', TRUE);
         }
@@ -514,7 +514,7 @@ WHERE id={$contactId}; ";
       default:
         // individual
         $form->addElement('select', 'prefix_id', ts('Prefix'),
-          array('' => ts('- prefix -')) + CRM_Core_PseudoConstant::individualPrefix()
+          ['' => ts('- prefix -')] + CRM_Core_PseudoConstant::individualPrefix()
         );
         $form->addElement('text', 'first_name', ts('First Name'),
           $attributes['first_name']
@@ -526,7 +526,7 @@ WHERE id={$contactId}; ";
           $attributes['last_name']
         );
         $form->addElement('select', 'suffix_id', ts('Suffix'),
-          array('' => ts('- suffix -')) + CRM_Core_PseudoConstant::individualSuffix()
+          ['' => ts('- suffix -')] + CRM_Core_PseudoConstant::individualSuffix()
         );
     }
 
@@ -589,7 +589,7 @@ UPDATE civicrm_contact
    * @access public
    */
   static function formatContactIDSToLinks($contactIDs, $addViewLink = TRUE, $addEditLink = TRUE, $originalId = NULL) {
-    $contactLinks = array();
+    $contactLinks = [];
     if (!is_array($contactIDs) || empty($contactIDs)) {
       return $contactLinks;
     }
@@ -597,12 +597,12 @@ UPDATE civicrm_contact
     // does contact has sufficient permissions.
 
 
-    $permissions = array('view' => 'view all contacts',
+    $permissions = ['view' => 'view all contacts',
       'edit' => 'edit all contacts',
       'merge' => 'administer CiviCRM',
-    );
+    ];
 
-    $permissionedContactIds = array();
+    $permissionedContactIds = [];
     foreach ($permissions as $task => $permission) {
       // give permission.
       if (CRM_Core_Permission::check($permission)) {
@@ -613,7 +613,7 @@ UPDATE civicrm_contact
       }
 
       // check permission on acl basis.
-      if (in_array($task, array('view', 'edit'))) {
+      if (in_array($task, ['view', 'edit'])) {
         $aclPermission = CRM_Core_Permission::VIEW;
         if ($task == 'edit') {
           $aclPermission = CRM_Core_Permission::EDIT;
@@ -692,10 +692,10 @@ LEFT JOIN  civicrm_email ce ON ( ce.contact_id=c.id AND ce.is_primary = 1 )
    * @return $contactDetails array of contact info.
    * @static
    */
-  static function contactDetails($componentIds, $componentName, $returnProperties = array()) {
-    $contactDetails = array();
+  static function contactDetails($componentIds, $componentName, $returnProperties = []) {
+    $contactDetails = [];
     if (empty($componentIds) ||
-      !in_array($componentName, array('CiviContribute', 'CiviMember', 'CiviEvent', 'Activity'))
+      !in_array($componentName, ['CiviContribute', 'CiviMember', 'CiviEvent', 'Activity'])
     ) {
       return $contactDetails;
     }
@@ -703,7 +703,7 @@ LEFT JOIN  civicrm_email ce ON ( ce.contact_id=c.id AND ce.is_primary = 1 )
     if (empty($returnProperties)) {
 
       $autocompleteContactSearch = CRM_Core_BAO_Preferences::valueOptions('contact_autocomplete_options');
-      $returnProperties = array_fill_keys(array_merge(array('sort_name'),
+      $returnProperties = array_fill_keys(array_merge(['sort_name'],
           array_keys($autocompleteContactSearch)
         ), 1);
     }
@@ -722,9 +722,9 @@ LEFT JOIN  civicrm_email ce ON ( ce.contact_id=c.id AND ce.is_primary = 1 )
       $compTable = 'civicrm_participant';
     }
 
-    $select = $from = array();
+    $select = $from = [];
     foreach ($returnProperties as $property => $ignore) {
-      $value = (in_array($property, array('city', 'street_address'))) ? 'address' : $property;
+      $value = (in_array($property, ['city', 'street_address'])) ? 'address' : $property;
       switch ($property) {
         case 'sort_name':
           $select[] = "$property as $property";
@@ -813,8 +813,8 @@ Group By  componentId";
     //    Normal update process will automatically create new address with submitted values
 
     // 1. loop through entire subnitted address array
-    $masterAddress = array();
-    $skipFields = array('is_primary', 'location_type_id', 'is_billing', 'master_id');
+    $masterAddress = [];
+    $skipFields = ['is_primary', 'location_type_id', 'is_billing', 'master_id'];
     foreach ($address as & $values) {
       // 2. check if master id exists, if not continue
       if (!CRM_Utils_Array::value('master_id', $values) ||
@@ -849,9 +849,9 @@ Group By  componentId";
    * @static
    */
   static function getAddressShareContactNames(&$addresses) {
-    $contactNames = array();
+    $contactNames = [];
     // get the list of master id's for address
-    $masterAddressIds = array();
+    $masterAddressIds = [];
     foreach ($addresses as $key => $addressValue) {
       if (CRM_Utils_Array::value('master_id', $addressValue)) {
         $masterAddressIds[] = $addressValue['master_id'];
@@ -867,9 +867,9 @@ Group By  componentId";
 
       while ($dao->fetch()) {
         $contactViewUrl = CRM_Utils_System::url('civicrm/contact/view', "reset=1&cid={$dao->cid}");
-        $contactNames[$dao->id] = array('name' => "<a href='{$contactViewUrl}'>{$dao->display_name}</a>",
+        $contactNames[$dao->id] = ['name' => "<a href='{$contactViewUrl}'>{$dao->display_name}</a>",
           'is_deleted' => $dao->is_deleted,
-        );
+        ];
       }
     }
     return $contactNames;
@@ -884,7 +884,7 @@ Group By  componentId";
    * @return int or null
    */
   static function defaultGreeting($contactType, $greetingType) {
-    $contactTypeFilters = array('Individual' => 1, 'Household' => 2, 'Organization' => 3);
+    $contactTypeFilters = ['Individual' => 1, 'Household' => 2, 'Organization' => 3];
     if (!isset($contactTypeFilters[$contactType])) {
       return;
     }
@@ -905,7 +905,7 @@ Group By  componentId";
       $contactId = $session->get('userID');
     }
 
-    $email = $defaultEmail = $domainEmail = $onHold = array();
+    $email = $defaultEmail = $domainEmail = $onHold = [];
     $verifiedDomains = CRM_Admin_Form_FromEmailAddress::getVerifiedEmail(
       CRM_Admin_Form_FromEmailAddress::VALID_EMAIL | CRM_Admin_Form_FromEmailAddress::VALID_DKIM | CRM_Admin_Form_FromEmailAddress::VALID_SPF,
       'domain'
@@ -914,7 +914,7 @@ Group By  componentId";
     $contactEmail = CRM_Core_BAO_Email::allEmails($contactId);
     $fromDisplayName = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $contactId, 'display_name');
 
-    $emailAdded = array();
+    $emailAdded = [];
     foreach ($contactEmail as $item) {
       $mail = $item['email'];
       if ($mail) {
@@ -949,26 +949,26 @@ Group By  componentId";
     }
 
     // add default from address
-    $systemEmail = array();
+    $systemEmail = [];
     if (CRM_Utils_Mail::checkMailInDomains($default, $verifiedDomains)) {
-      $defaultEmail = array($default => htmlspecialchars($default));
+      $defaultEmail = [$default => htmlspecialchars($default)];
     }
     else {
-      $defaultEmail = array($default => htmlspecialchars($default));
+      $defaultEmail = [$default => htmlspecialchars($default)];
       // add system default when default is not system email
       $systemFromEmail = CRM_Mailing_BAO_Mailing::defaultFromMail();
       if (!strstr($default, '<'.$systemFromEmail.'>')) {
         $systemRFC822 = CRM_Utils_Mail::formatRFC822Email(CRM_Utils_Mail::pluckNameFromHeader($default), $systemFromEmail, TRUE);
-        $systemEmail = array($systemRFC822 => htmlspecialchars($systemRFC822));
+        $systemEmail = [$systemRFC822 => htmlspecialchars($systemRFC822)];
       }
     }
 
-    return array(
+    return [
       'contact' => $email,
       'default' => $defaultEmail,
       'domain' => $domainEmail,
       'system' => $systemEmail,
-    );
+    ];
   }
 }
 

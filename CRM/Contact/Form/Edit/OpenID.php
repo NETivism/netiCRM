@@ -65,12 +65,12 @@ class CRM_Contact_Form_Edit_OpenID {
 
     $config = CRM_Core_Config::singleton();
     if ($config->userFramework == 'Standalone') {
-      $js = array('id' => "OpenID_" . $blockId . "_IsLogin", 'onClick' => 'singleSelect( this.id );');
+      $js = ['id' => "OpenID_" . $blockId . "_IsLogin", 'onClick' => 'singleSelect( this.id );'];
       $form->addElement('advcheckbox', "openid[$blockId][allowed_to_login]", NULL, '', $js);
     }
 
     //is_Primary radio
-    $js = array('id' => "OpenID_" . $blockId . "_IsPrimary", 'onClick' => 'singleSelect( this.id );');
+    $js = ['id' => "OpenID_" . $blockId . "_IsPrimary", 'onClick' => 'singleSelect( this.id );'];
     $form->addElement('radio', "openid[$blockId][is_primary]", '', '', '1', $js);
   }
 }

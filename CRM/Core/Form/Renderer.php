@@ -55,7 +55,7 @@ class CRM_Core_Form_Renderer extends HTML_QuickForm_Renderer_ArraySmarty {
    * @var array
    * @static
    */
-  static $_sizeMapper = array(
+  static $_sizeMapper = [
     2 => 'two',
     4 => 'four',
     8 => 'eight',
@@ -63,7 +63,7 @@ class CRM_Core_Form_Renderer extends HTML_QuickForm_Renderer_ArraySmarty {
     20 => 'medium',
     30 => 'big',
     45 => 'huge',
-  );
+  ];
 
   /**
    * Constructor
@@ -141,12 +141,12 @@ class CRM_Core_Form_Renderer extends HTML_QuickForm_Renderer_ArraySmarty {
   static function updateAttributes(&$element, $required, $error) {
     // lets create an id for all input elements, so we can generate nice label tags
     // to make it nice and clean, we'll just use the elementName if it is non null
-    $attributes = array();
+    $attributes = [];
     if (!$element->getAttribute('id')) {
       $name = $element->getAttribute('name');
       if ($name) {
-        $attributes['id'] = str_replace(array(']', '['),
-          array('', '_'),
+        $attributes['id'] = str_replace([']', '['],
+          ['', '_'],
           $name
         );
       }

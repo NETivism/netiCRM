@@ -103,12 +103,12 @@ class CRM_Contact_Form_Task_Batch extends CRM_Contact_Form_Task {
     CRM_Utils_System::setTitle($this->_title);
 
     $this->addDefaultButtons(ts('Save'));
-    $this->_fields = array();
+    $this->_fields = [];
     $this->_fields = CRM_Core_BAO_UFGroup::getFields($ufGroupId, FALSE, CRM_Core_Action::VIEW);
 
     // remove file type field and then limit fields
     $suppressFields = FALSE;
-    $removehtmlTypes = array('File', 'Autocomplete-Select');
+    $removehtmlTypes = ['File', 'Autocomplete-Select'];
     foreach ($this->_fields as $name => $field) {
       if ($cfID = CRM_Core_BAO_CustomField::getKeyID($name) &&
         in_array($this->_fields[$name]['html_type'], $removehtmlTypes)
@@ -120,15 +120,15 @@ class CRM_Contact_Form_Task_Batch extends CRM_Contact_Form_Task {
 
     $this->_fields = array_slice($this->_fields, 0, $this->_maxFields);
 
-    $this->addButtons(array(
-        array('type' => 'submit',
+    $this->addButtons([
+        ['type' => 'submit',
           'name' => ts('Update Contact(s)'),
           'isDefault' => TRUE,
-        ),
-        array('type' => 'cancel',
+        ],
+        ['type' => 'cancel',
           'name' => ts('Cancel'),
-        ),
-      )
+        ],
+      ]
     );
 
 
@@ -137,10 +137,10 @@ class CRM_Contact_Form_Task_Batch extends CRM_Contact_Form_Task {
 
     // if below fields are missing we should not reset sort name / display name
     // CRM-6794
-    $preserveDefaultsArray = array('first_name', 'last_name', 'middle_name',
+    $preserveDefaultsArray = ['first_name', 'last_name', 'middle_name',
       'organization_name',
       'household_name',
-    );
+    ];
 
     foreach ($this->_contactIds as $contactId) {
       foreach ($this->_fields as $name => $field) {
@@ -162,7 +162,7 @@ class CRM_Contact_Form_Task_Batch extends CRM_Contact_Form_Task {
     }
 
     $this->addDefaultButtons(ts('Update Contacts'));
-    $this->addFormRule(array('CRM_Contact_Form_Task_Batch', 'formRule'));
+    $this->addFormRule(['CRM_Contact_Form_Task_Batch', 'formRule']);
   }
 
   /**
@@ -178,7 +178,7 @@ class CRM_Contact_Form_Task_Batch extends CRM_Contact_Form_Task {
     }
 
     foreach ($this->_contactIds as $contactId) {
-      $details[$contactId] = array();
+      $details[$contactId] = [];
 
       //build sortname
       $sortName[$contactId] = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact',
@@ -204,8 +204,8 @@ class CRM_Contact_Form_Task_Batch extends CRM_Contact_Form_Task {
    * @static
    */
   static function formRule($fields) {
-    $errors = array();
-    $externalIdentifiers = array();
+    $errors = [];
+    $externalIdentifiers = [];
     foreach ($fields['field'] as $componentId => $field) {
       foreach ($field as $fieldName => $fieldValue) {
         if ($fieldName == 'external_identifier') {
@@ -263,7 +263,7 @@ class CRM_Contact_Form_Task_Batch extends CRM_Contact_Form_Task {
     $statusMsg = ts("Your updates have been saved.");
 
     if ($inValidSubtypeCnt) {
-      $statusMsg .= ' ' . ts('Contact SubType field of %1 nunber of contact(s) has not been updated.', array(1 => $inValidSubtypeCnt));
+      $statusMsg .= ' ' . ts('Contact SubType field of %1 nunber of contact(s) has not been updated.', [1 => $inValidSubtypeCnt]);
     }
     CRM_Core_Session::setStatus("{$statusMsg}");
   }

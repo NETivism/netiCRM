@@ -82,7 +82,7 @@ class CRM_Core_I18n_Schema {
     // build the column-adding SQL queries
     $columns = &CRM_Core_I18n_SchemaStructure::columns();
     $indices = &CRM_Core_I18n_SchemaStructure::indices();
-    $queries = array();
+    $queries = [];
     foreach ($columns as $table => $hash) {
       // drop old indices
       if (isset($indices[$table])) {
@@ -135,7 +135,7 @@ class CRM_Core_I18n_Schema {
     // build the column-dropping SQL queries
     $columns = &CRM_Core_I18n_SchemaStructure::columns();
     $indices = &CRM_Core_I18n_SchemaStructure::indices();
-    $queries = array();
+    $queries = [];
     foreach ($columns as $table => $hash) {
       // drop old indices
       if (isset($indices[$table])) {
@@ -208,7 +208,7 @@ class CRM_Core_I18n_Schema {
     // build the required SQL queries
     $columns = &CRM_Core_I18n_SchemaStructure::columns();
     $indices = &CRM_Core_I18n_SchemaStructure::indices();
-    $queries = array();
+    $queries = [];
     foreach ($columns as $table => $hash) {
       // add new columns
       foreach ($hash as $column => $type) {
@@ -248,9 +248,9 @@ class CRM_Core_I18n_Schema {
   static function rebuildMultilingualSchema($locales, $version = NULL) {
     if ($version) {
       // fetch all the SchemaStructure versions we ship and sort by version
-      $schemas = array();
+      $schemas = [];
       foreach (scandir(dirname(__FILE__)) as $file) {
-        $matches = array();
+        $matches = [];
         if (preg_match('/^SchemaStructure_([0-9a-z_]+)\.php$/', $file, $matches)) {
           $schemas[] = str_replace('_', '.', $matches[1]);
         }
@@ -272,13 +272,13 @@ class CRM_Core_I18n_Schema {
     }
     $indices =& $class::indices();
     $tables  =& $class::tables();
-    $queries = array();
+    $queries = [];
     $dao = new CRM_Core_DAO;
 
     // get all of the already existing indices
-    $existing = array();
+    $existing = [];
     foreach (array_keys($indices) as $table) {
-      $existing[$table] = array();
+      $existing[$table] = [];
       $dao->query("SHOW INDEX FROM $table", FALSE);
       while ($dao->fetch()) {
         if (preg_match('/_[a-z][a-z]_[A-Z][A-Z]$/', $dao->Key_name)) {
@@ -349,10 +349,10 @@ class CRM_Core_I18n_Schema {
     $indices =& $class::indices();
     $columns =& $class::columns();
     if (!isset($indices[$table])) {
-      return array();
+      return [];
     }
 
-    $queries = array();
+    $queries = [];
     foreach ($indices[$table] as $index) {
       $unique = isset($index['unique']) && $index['unique'] ? 'UNIQUE' : '';
       foreach ($index['field'] as $i => $col) {
@@ -382,11 +382,11 @@ class CRM_Core_I18n_Schema {
    */
   private static function createTriggerQueries($locales, $locale, $class = 'CRM_Core_I18n_SchemaStructure') {
     $columns =& $class::columns();
-    $queries = array();
-    $namesTrigger = array();
-    $individualNamesTrigger = array();
+    $queries = [];
+    $namesTrigger = [];
+    $individualNamesTrigger = [];
 
-    foreach (array_merge($locales, array($locale)) as $loc) {
+    foreach (array_merge($locales, [$locale]) as $loc) {
       $namesTrigger[] = "IF NEW.contact_type = 'Household' THEN";
       $namesTrigger[] = "SET NEW.display_name_{$loc} = NEW.household_name_{$loc};";
       $namesTrigger[] = "SET NEW.sort_name_{$loc} = NEW.household_name_{$loc};";
@@ -419,7 +419,7 @@ class CRM_Core_I18n_Schema {
     foreach ($columns as $table => $hash) {
       $queries[] = "DROP TRIGGER IF EXISTS {$table}_before_insert";
 
-      $trigger = array();
+      $trigger = [];
       $trigger[] = "CREATE TRIGGER {$table}_before_insert BEFORE INSERT ON {$table} FOR EACH ROW BEGIN";
 
       if ($locales) {
@@ -434,7 +434,7 @@ class CRM_Core_I18n_Schema {
           }
           foreach ($locales as $old) {
             $trigger[] = "ELSEIF NEW.{$column}_{$old} IS NOT NULL THEN";
-            foreach (array_merge($locales, array($locale)) as $loc) {
+            foreach (array_merge($locales, [$locale]) as $loc) {
               if ($loc == $old) {
                 continue;
               }
@@ -467,7 +467,7 @@ class CRM_Core_I18n_Schema {
    */
   private static function createViewQuery($locale, $table, &$dao, $class = 'CRM_Core_I18n_SchemaStructure') {
     $columns =& $class::columns();
-    $cols = array();
+    $cols = [];
     $dao->query("DESCRIBE {$table}", FALSE);
     while ($dao->fetch()) {
       // view non-internationalized columns directly

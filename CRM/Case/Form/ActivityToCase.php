@@ -69,8 +69,8 @@ class CRM_Case_Form_ActivityToCase extends CRM_Core_Form {
    * @return None
    */
   function setDefaultValues() {
-    $targetContactValues = $defaults = array();
-    $params = array('id' => $this->_activityId);
+    $targetContactValues = $defaults = [];
+    $params = ['id' => $this->_activityId];
 
 
     CRM_Activity_BAO_Activity::retrieve($params, $defaults);
@@ -97,9 +97,9 @@ class CRM_Case_Form_ActivityToCase extends CRM_Core_Form {
     $this->assign('tokenUrl', $tokenUrl);
 
     $this->add('text', 'unclosed_cases', ts('Select Case'));
-    $this->add('hidden', 'unclosed_case_id', '', array('id' => 'open_case_id'));
+    $this->add('hidden', 'unclosed_case_id', '', ['id' => 'open_case_id']);
     $this->add('text', 'target_contact_id', ts('With Contact(s)'));
-    $this->add('text', 'case_activity_subject', ts('Subject'), array('size' => 50));
+    $this->add('text', 'case_activity_subject', ts('Subject'), ['size' => 50]);
   }
 }
 

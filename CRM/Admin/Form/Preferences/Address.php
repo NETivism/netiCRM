@@ -46,13 +46,13 @@ class CRM_Admin_Form_Preferences_Address extends CRM_Admin_Form_Preferences {
     CRM_Utils_System::setTitle(ts('Settings - Addresses'));
 
     // add all the checkboxes
-    $this->_cbs = array(
+    $this->_cbs = [
       'address_options' => ts('Address Fields'),
-    );
+    ];
   }
 
   function setDefaultValues() {
-    $defaults = array();
+    $defaults = [];
     $defaults['address_standardization_provider'] = $this->_config->address_standardization_provider;
     $defaults['address_standardization_userid'] = $this->_config->address_standardization_userid;
     $defaults['address_standardization_url'] = $this->_config->address_standardization_url;
@@ -110,7 +110,7 @@ class CRM_Admin_Form_Preferences_Address extends CRM_Admin_Form_Preferences {
     $this->addElement('text', 'address_standardization_userid', ts('User ID'));
     $this->addElement('text', 'address_standardization_url', ts('Web Service URL'));
 
-    $this->addFormRule(array('CRM_Admin_Form_Preferences_Address', 'formRule'));
+    $this->addFormRule(['CRM_Admin_Form_Preferences_Address', 'formRule']);
 
     parent::buildQuickForm();
   }
@@ -152,11 +152,11 @@ class CRM_Admin_Form_Preferences_Address extends CRM_Admin_Form_Preferences {
     $this->_params = $this->controller->exportValues($this->_name);
 
     // trim the format and unify line endings to LF
-    $format = array('address_format', 'mailing_format');
+    $format = ['address_format', 'mailing_format'];
     foreach ($format as $f) {
       if (!empty($this->_params[$f])) {
         $this->_params[$f] = trim($this->_params[$f]);
-        $this->_params[$f] = str_replace(array("\r\n", "\r"), "\n", $this->_params[$f]);
+        $this->_params[$f] = str_replace(["\r\n", "\r"], "\n", $this->_params[$f]);
       }
     }
 

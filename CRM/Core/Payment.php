@@ -74,7 +74,7 @@ abstract class CRM_Core_Payment {
 
   protected $_paymentForm = NULL;
 
-  public static $_editableFields = array();
+  public static $_editableFields = [];
 
   /**
    * singleton function used to manage this object
@@ -101,7 +101,7 @@ abstract class CRM_Core_Payment {
         require_once (str_replace('_', DIRECTORY_SEPARATOR, $paymentClass) . '.php');
       }
 
-      self::$_singleton = call_user_func_array(array($paymentClass, 'singleton'), array($mode, $paymentProcessor));
+      self::$_singleton = call_user_func_array([$paymentClass, 'singleton'], [$mode, $paymentProcessor]);
 
       if ($paymentForm !== NULL) {
         self::$_singleton->setForm($paymentForm);
@@ -205,7 +205,7 @@ abstract class CRM_Core_Payment {
 
   function prepareTransferCheckoutParams($contrib, $params){
     if(is_object($contrib)){
-      $values = array();
+      $values = [];
       if(strstr(get_class($contrib), 'DAO')){
         $contrib = CRM_Core_DAO::storeValues($contrib, $values);
       }
@@ -218,12 +218,12 @@ abstract class CRM_Core_Payment {
       $details = $this->_paymentForm->_ids;
     }
     else{
-      $details = CRM_Contribute_BAO_Contribution::getComponentDetails(array($values['id']));
+      $details = CRM_Contribute_BAO_Contribution::getComponentDetails([$values['id']]);
       $details = reset($details);
     }
 
     // prepare vars
-    $vars = array(
+    $vars = [
       'qfKey' => $params['qfKey'],
       'payment_processor' => $params['payment_processor'],
       'civicrm_instrument_id' => $params['civicrm_instrument_id'],
@@ -232,16 +232,16 @@ abstract class CRM_Core_Payment {
       'item_name' => $values['amount_level'] ? $values['amount_level'] : $values['total_amount'],
       'description' => $values['source'],
       'currencyID' => $values['currency'],
-    );
+    ];
 
     if(!empty($details['participant'])){
-      $vars += array(
+      $vars += [
         'contributionID' => $values['id'],
         'contributionTypeID' => $values['contribution_type_id'],
         'contactID' => $values['contact_id'],
         'eventID' => $details['event'],
         'participantID' => $details['participant'],
-      );
+      ];
     }
     elseif(!empty($details['membership'])){
       // TODO

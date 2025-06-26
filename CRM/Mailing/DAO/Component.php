@@ -143,55 +143,55 @@ class CRM_Mailing_DAO_Component extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'id' => array(
+      self::$_fields = [
+        'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'name' => array(
+        ] ,
+        'name' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Component Name') ,
           'maxlength' => 64,
           'size' => CRM_Utils_Type::BIG,
-        ) ,
-        'component_type' => array(
+        ] ,
+        'component_type' => [
           'name' => 'component_type',
           'type' => CRM_Utils_Type::T_ENUM,
           'title' => ts('Component Type') ,
           'enumValues' => 'Header, Footer, Subscribe, Welcome, Unsubscribe, OptOut, Reply, Resubscribe',
-        ) ,
-        'subject' => array(
+        ] ,
+        'subject' => [
           'name' => 'subject',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Subject') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'body_html' => array(
+        ] ,
+        'body_html' => [
           'name' => 'body_html',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Body Html') ,
           'rows' => 8,
           'cols' => 80,
-        ) ,
-        'body_text' => array(
+        ] ,
+        'body_text' => [
           'name' => 'body_text',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Body Text') ,
           'rows' => 8,
           'cols' => 80,
-        ) ,
-        'is_default' => array(
+        ] ,
+        'is_default' => [
           'name' => 'is_default',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ) ,
-        'is_active' => array(
+        ] ,
+        'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ) ,
-      );
+        ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -225,7 +225,7 @@ class CRM_Mailing_DAO_Component extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -248,7 +248,7 @@ class CRM_Mailing_DAO_Component extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
@@ -269,9 +269,9 @@ class CRM_Mailing_DAO_Component extends CRM_Core_DAO
    */
   static function &getEnums()
   {
-    static $enums = array(
+    static $enums = [
       'component_type',
-    );
+    ];
     return $enums;
   }
   /**
@@ -286,8 +286,8 @@ class CRM_Mailing_DAO_Component extends CRM_Core_DAO
   {
     static $translations = null;
     if (!$translations) {
-      $translations = array(
-        'component_type' => array(
+      $translations = [
+        'component_type' => [
           'Header' => ts('Header') ,
           'Footer' => ts('Footer') ,
           'Subscribe' => ts('Subscribe') ,
@@ -296,8 +296,8 @@ class CRM_Mailing_DAO_Component extends CRM_Core_DAO
           'OptOut' => ts('OptOut') ,
           'Reply' => ts('Reply') ,
           'Resubscribe' => ts('Resubscribe') ,
-        ) ,
-      );
+        ] ,
+      ];
     }
     return $translations[$field][$value];
   }

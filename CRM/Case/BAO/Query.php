@@ -38,7 +38,7 @@ class CRM_Case_BAO_Query {
   public $_qill;
   static function &getFields() {
 
-    $fields = array();
+    $fields = [];
     $fields = CRM_Case_BAO_Case::exportableFields();
 
     // add activity related fields
@@ -245,7 +245,7 @@ class CRM_Case_BAO_Query {
         $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("civicrm_case.status_id", $op, $value, 'Int');
 
         $value = $statuses[$value];
-        $query->_qill[$grouping][] = ts('Case Status %2 %1', array(1 => $value, 2 => $op));
+        $query->_qill[$grouping][] = ts('Case Status %2 %1', [1 => $value, 2 => $op]);
         $query->_tables['civicrm_case'] = $query->_whereTables['civicrm_case'] = 1;
         return;
 
@@ -253,8 +253,8 @@ class CRM_Case_BAO_Query {
 
         $caseTypes = CRM_Case_PseudoConstant::caseType('label', FALSE);
 
-        $names = array();
-        $val = array();
+        $names = [];
+        $val = [];
         if (is_array($value)) {
           foreach ($value as $k => $v) {
             if ($v) {
@@ -279,7 +279,7 @@ class CRM_Case_BAO_Query {
 
         $query->_where[$grouping][] = "(civicrm_case.case_type_id LIKE '%{$value}%')";
 
-        $query->_qill[$grouping][] = ts('Case Type %1', array(1 => $op)) . ' ' . CRM_Utils_Array::implode(' ' . ts('or') . ' ', $names);
+        $query->_qill[$grouping][] = ts('Case Type %1', [1 => $op]) . ' ' . CRM_Utils_Array::implode(' ' . ts('or') . ' ', $names);
         $query->_tables['civicrm_case'] = $query->_whereTables['civicrm_case'] = 1;
         return;
 
@@ -294,11 +294,11 @@ class CRM_Case_BAO_Query {
           $session = CRM_Core_Session::singleton();
           $userID = $session->get('userID');
           $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("case_relationship.contact_id_b", $op, $userID, 'Int');
-          $query->_qill[$grouping][] = ts('Case %1 My Cases', array(1 => $op));
+          $query->_qill[$grouping][] = ts('Case %1 My Cases', [1 => $op]);
           $query->_tables['case_relationship'] = $query->_whereTables['case_relationship'] = 1;
         }
         else {
-          $query->_qill[$grouping][] = ts('Case %1 All Cases', array(1 => $op));
+          $query->_qill[$grouping][] = ts('Case %1 All Cases', [1 => $op]);
           $query->_where[$grouping][] = "civicrm_case_contact.contact_id = contact_a.id";
         }
         $query->_tables['civicrm_case'] = $query->_whereTables['civicrm_case'] = 1;
@@ -315,7 +315,7 @@ class CRM_Case_BAO_Query {
 
       case 'case_subject':
         $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("case_activity.subject", $op, $value, 'String');
-        $query->_qill[$grouping][] = ts("Activity Subject %1 '%2'", array(1 => $op, 2 => $value));
+        $query->_qill[$grouping][] = ts("Activity Subject %1 '%2'", [1 => $op, 2 => $value]);
         $query->_tables['case_activity'] = $query->_whereTables['case_activity'] = 1;
         $query->_tables['civicrm_case'] = $query->_whereTables['civicrm_case'] = 1;
         $query->_tables['civicrm_case_contact'] = $query->_whereTables['civicrm_case_contact'] = 1;
@@ -323,7 +323,7 @@ class CRM_Case_BAO_Query {
 
       case 'case_source_contact_id':
         $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("civicrm_case_reporter.sort_name", $op, $value, 'String');
-        $query->_qill[$grouping][] = ts("Activity Reporter %1 '%2'", array(1 => $op, 2 => $value));
+        $query->_qill[$grouping][] = ts("Activity Reporter %1 '%2'", [1 => $op, 2 => $value]);
         $query->_tables['case_activity'] = $query->_whereTables['case_activity'] = 1;
         $query->_tables['civicrm_case_reporter'] = $query->_whereTables['civicrm_case_reporter'] = 1;
         $query->_tables['civicrm_case'] = $query->_whereTables['civicrm_case'] = 1;
@@ -335,7 +335,7 @@ class CRM_Case_BAO_Query {
         $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("case_activity.activity_date_time", $op, $date, 'Date');
         if ($date) {
           $date = CRM_Utils_Date::customFormat($date);
-          $query->_qill[$grouping][] = ts("Activity Actual Date %1 %2", array(1 => $op, 2 => $date));
+          $query->_qill[$grouping][] = ts("Activity Actual Date %1 %2", [1 => $op, 2 => $date]);
         }
         $query->_tables['case_activity'] = $query->_whereTables['case_activity'] = 1;
         $query->_tables['civicrm_case'] = $query->_whereTables['civicrm_case'] = 1;
@@ -347,7 +347,7 @@ class CRM_Case_BAO_Query {
         $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("case_activity.activity_date_time", $op, $date, 'Date');
         if ($date) {
           $date = CRM_Utils_Date::customFormat($date);
-          $query->_qill[$grouping][] = ts("Activity Schedule Date %1 %2", array(1 => $op, 2 => $date));
+          $query->_qill[$grouping][] = ts("Activity Schedule Date %1 %2", [1 => $op, 2 => $date]);
         }
         $query->_tables['case_activity'] = $query->_whereTables['case_activity'] = 1;
         $query->_tables['civicrm_case'] = $query->_whereTables['civicrm_case'] = 1;
@@ -362,7 +362,7 @@ class CRM_Case_BAO_Query {
         }
 
         $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("case_activity.activity_type_id", $op, $value, 'Int');
-        $query->_qill[$grouping][] = ts("Activity Type %1 %2", array(1 => $op, 2 => $names));
+        $query->_qill[$grouping][] = ts("Activity Type %1 %2", [1 => $op, 2 => $names]);
         $query->_tables['case_activity'] = $query->_whereTables['case_activity'] = 1;
         $query->_tables['civicrm_case'] = $query->_whereTables['civicrm_case'] = 1;
         $query->_tables['case_activity_type'] = 1;
@@ -378,7 +378,7 @@ class CRM_Case_BAO_Query {
         }
 
         $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("case_activity.status_id", $op, $value, 'Int');
-        $query->_qill[$grouping][] = ts("Activity Type %1 %2", array(1 => $op, 2 => $names));
+        $query->_qill[$grouping][] = ts("Activity Type %1 %2", [1 => $op, 2 => $names]);
         $query->_tables['case_activity'] = $query->_whereTables['case_activity'] = 1;
         $query->_tables['civicrm_case'] = $query->_whereTables['civicrm_case'] = 1;
         $query->_tables['case_activity_status'] = 1;
@@ -387,7 +387,7 @@ class CRM_Case_BAO_Query {
 
       case 'case_activity_duration':
         $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("case_activity.duration", $op, $value, 'Int');
-        $query->_qill[$grouping][] = ts("Activity Duration %1 %2", array(1 => $op, 2 => $value));
+        $query->_qill[$grouping][] = ts("Activity Duration %1 %2", [1 => $op, 2 => $value]);
         $query->_tables['case_activity'] = $query->_whereTables['case_activity'] = 1;
         $query->_tables['civicrm_case'] = $query->_whereTables['civicrm_case'] = 1;
         $query->_tables['civicrm_case_contact'] = $query->_whereTables['civicrm_case_contact'] = 1;
@@ -402,7 +402,7 @@ class CRM_Case_BAO_Query {
         }
 
         $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("case_activity.medium_id", $op, $value, 'Int');
-        $query->_qill[$grouping][] = ts("Activity Medium %1 %2", array(1 => $op, 2 => $names));
+        $query->_qill[$grouping][] = ts("Activity Medium %1 %2", [1 => $op, 2 => $names]);
         $query->_tables['case_activity'] = $query->_whereTables['case_activity'] = 1;
         $query->_tables['civicrm_case'] = $query->_whereTables['civicrm_case'] = 1;
         $query->_tables['case_activity_medium'] = 1;
@@ -411,7 +411,7 @@ class CRM_Case_BAO_Query {
 
       case 'case_activity_details':
         $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("case_activity.details", $op, $value, 'String');
-        $query->_qill[$grouping][] = ts("Activity Details %1 '%2'", array(1 => $op, 2 => $value));
+        $query->_qill[$grouping][] = ts("Activity Details %1 '%2'", [1 => $op, 2 => $value]);
         $query->_tables['case_activity'] = $query->_whereTables['case_activity'] = 1;
         $query->_tables['civicrm_case'] = $query->_whereTables['civicrm_case'] = 1;
         $query->_tables['civicrm_case_contact'] = $query->_whereTables['civicrm_case_contact'] = 1;
@@ -419,7 +419,7 @@ class CRM_Case_BAO_Query {
 
       case 'case_activity_is_auto':
         $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("case_activity.is_auto", $op, $value, 'Boolean');
-        $query->_qill[$grouping][] = ts("Activity Auto Genrated %1 '%2'", array(1 => $op, 2 => $value));
+        $query->_qill[$grouping][] = ts("Activity Auto Genrated %1 '%2'", [1 => $op, 2 => $value]);
         $query->_tables['case_activity'] = $query->_whereTables['case_activity'] = 1;
         $query->_tables['civicrm_case'] = $query->_whereTables['civicrm_case'] = 1;
         $query->_tables['civicrm_case_contact'] = $query->_whereTables['civicrm_case_contact'] = 1;
@@ -429,7 +429,7 @@ class CRM_Case_BAO_Query {
 
       case 'case_role':
         $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("case_relation_type.name_b_a", $op, $value, 'String');
-        $query->_qill[$grouping][] = ts("Role in Case  %1 '%2'", array(1 => $op, 2 => $value));
+        $query->_qill[$grouping][] = ts("Role in Case  %1 '%2'", [1 => $op, 2 => $value]);
         $query->_tables['case_relation_type'] = $query->_whereTables['case_relationship_type'] = 1;
         $query->_tables['civicrm_case'] = $query->_whereTables['civicrm_case'] = 1;
         $query->_tables['civicrm_case_contact'] = $query->_whereTables['civicrm_case_contact'] = 1;
@@ -437,10 +437,10 @@ class CRM_Case_BAO_Query {
 
       case 'case_tags':
 
-        $tags = CRM_Core_BAO_Tag::getTagsUsedFor(array('civicrm_case'), TRUE);
+        $tags = CRM_Core_BAO_Tag::getTagsUsedFor(['civicrm_case'], TRUE);
 
-        $names = array();
-        $val = array();
+        $names = [];
+        $val = [];
         if (is_array($value)) {
           foreach ($value as $k => $v) {
             if ($v) {
@@ -452,7 +452,7 @@ class CRM_Case_BAO_Query {
 
         $query->_where[$grouping][] = " civicrm_case_tag.tag_id IN (" . CRM_Utils_Array::implode(',', $val) . " )";
 
-        $query->_qill[$grouping][] = ts('Case Tags %1', array(1 => $op)) . ' ' . CRM_Utils_Array::implode(' ' . ts('or') . ' ', $names);
+        $query->_qill[$grouping][] = ts('Case Tags %1', [1 => $op]) . ' ' . CRM_Utils_Array::implode(' ' . ts('or') . ' ', $names);
         $query->_tables['civicrm_case_tag'] = $query->_whereTables['civicrm_case_tag'] = 1;
         return;
     }
@@ -539,7 +539,7 @@ case_relation_type.id = case_relationship.relationship_type_id )";
     $properties = NULL;
 
     if ($mode & CRM_Contact_BAO_Query::MODE_CASE) {
-      $properties = array(
+      $properties = [
         'contact_type' => 1,
         'contact_sub_type' => 1,
         'contact_id' => 1,
@@ -555,7 +555,7 @@ case_relation_type.id = case_relationship.relationship_type_id )";
         'case_scheduled_activity_date' => 1,
         'phone' => 1,
         // 'case_scheduled_activity_type'=>      1
-      );
+      ];
     }
     return $properties;
   }
@@ -567,7 +567,7 @@ case_relation_type.id = case_relationship.relationship_type_id )";
     $properties = NULL;
 
     if ($mode & CRM_Contact_BAO_Query::MODE_CASE) {
-      $properties = array(
+      $properties = [
         'case_start_date' => 1,
         'case_end_date' => 1,
         'case_subject' => 1,
@@ -577,18 +577,18 @@ case_relation_type.id = case_relationship.relationship_type_id )";
         'case_activity_medium_id' => 1,
         'case_activity_details' => 1,
         'case_activity_is_auto' => 1,
-      );
+      ];
     }
     return $properties;
   }
 
   static function tableNames(&$tables) {
     if (CRM_Utils_Array::value('civicrm_case', $tables)) {
-      $tables = array_merge(array('civicrm_case_contact' => 1), $tables);
+      $tables = array_merge(['civicrm_case_contact' => 1], $tables);
     }
 
     if (CRM_Utils_Array::value('case_relation_type', $tables)) {
-      $tables = array_merge(array('case_relationship' => 1), $tables);
+      $tables = array_merge(['case_relationship' => 1], $tables);
     }
   }
 
@@ -616,7 +616,7 @@ case_relation_type.id = case_relationship.relationship_type_id )";
 
     $statuses = CRM_Case_PseudoConstant::caseStatus('label', FALSE);
     $form->add('select', 'case_status_id', ts('Case Status'),
-      array('' => ts('- any status -')) + $statuses
+      ['' => ts('- any status -')] + $statuses
     );
 
     $form->assign('validCiviCase', TRUE);
@@ -625,18 +625,18 @@ case_relation_type.id = case_relationship.relationship_type_id )";
     $accessAllCases = FALSE;
     if (CRM_Core_Permission::check('access all cases and activities')) {
       $accessAllCases = TRUE;
-      $caseOwner = array(ts('My Cases'), ts('All Cases'));
+      $caseOwner = [ts('My Cases'), ts('All Cases')];
       $form->addRadio('case_owner', ts('Cases'), $caseOwner);
-      $form->setDefaults(array('case_owner' => 1));
+      $form->setDefaults(['case_owner' => 1]);
     }
     $form->assign('accessAllCases', $accessAllCases);
 
-    $caseOwner = array(ts('My Cases'), ts('All Cases'));
+    $caseOwner = [ts('My Cases'), ts('All Cases')];
     $form->addRadio('case_owner', ts('Cases'), $caseOwner);
-    $form->setDefaults(array('case_owner' => 1));
+    $form->setDefaults(['case_owner' => 1]);
 
 
-    $caseTags = CRM_Core_BAO_Tag::getTagsUsedFor(array('civicrm_case'));
+    $caseTags = CRM_Core_BAO_Tag::getTagsUsedFor(['civicrm_case']);
     if ($caseTags) {
       foreach ($caseTags as $tagID => $tagName) {
         $form->_tagElement = &$form->addElement('checkbox', "case_tags[$tagID]", NULL, $tagName);

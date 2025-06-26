@@ -55,7 +55,7 @@ WHERE     v.is_active = 1
 ORDER BY  v.weight";
 
     $dao = CRM_Core_DAO::executeQuery($sql);
-    $rows = array();
+    $rows = [];
     while ($dao->fetch()) {
       $url = 'civicrm/report/';
       $rows[$dao->component_name][$dao->value]['title'] = $dao->label;

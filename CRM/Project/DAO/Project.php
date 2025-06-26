@@ -157,68 +157,68 @@ class CRM_Project_DAO_Project extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'id' => array(
+      self::$_fields = [
+        'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'title' => array(
+        ] ,
+        'title' => [
           'name' => 'title',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Title') ,
           'maxlength' => 64,
           'size' => CRM_Utils_Type::BIG,
-        ) ,
-        'description' => array(
+        ] ,
+        'description' => [
           'name' => 'description',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Description') ,
           'rows' => 6,
           'cols' => 50,
-        ) ,
-        'logo' => array(
+        ] ,
+        'logo' => [
           'name' => 'logo',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Logo') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'owner_entity_table' => array(
+        ] ,
+        'owner_entity_table' => [
           'name' => 'owner_entity_table',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Owner Entity Table') ,
           'required' => true,
           'maxlength' => 64,
           'size' => CRM_Utils_Type::BIG,
-        ) ,
-        'owner_entity_id' => array(
+        ] ,
+        'owner_entity_id' => [
           'name' => 'owner_entity_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Project Owner ID') ,
           'required' => true,
-        ) ,
-        'start_date' => array(
+        ] ,
+        'start_date' => [
           'name' => 'start_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Start Date') ,
-        ) ,
-        'end_date' => array(
+        ] ,
+        'end_date' => [
           'name' => 'end_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('End Date') ,
-        ) ,
-        'is_active' => array(
+        ] ,
+        'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Active?') ,
-        ) ,
-        'status_id' => array(
+        ] ,
+        'status_id' => [
           'name' => 'status_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Status') ,
-        ) ,
-      );
+        ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -251,7 +251,7 @@ class CRM_Project_DAO_Project extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -274,7 +274,7 @@ class CRM_Project_DAO_Project extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
