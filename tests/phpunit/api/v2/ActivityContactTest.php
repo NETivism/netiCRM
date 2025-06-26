@@ -87,11 +87,11 @@ class api_v2_ActivityContactTest extends CiviUnitTestCase {
    * @access protected
    */
   function tearDown() {
-    $tablesToTruncate = array(
+    $tablesToTruncate = [
       'civicrm_contact',
       'civicrm_activity',
       'civicrm_option_group',
-    );
+    ];
     $this->quickCleanup($tablesToTruncate);
   }
 
@@ -101,7 +101,7 @@ class api_v2_ActivityContactTest extends CiviUnitTestCase {
   function testActivitiesContactGet() {
 
     //  Get activities associated with contact 17
-    $params = array('contact_id' => 17);
+    $params = ['contact_id' => 17];
     $result = civicrm_activity_contact_get($params);
     $this->assertEquals(0, $result['is_error'],
       "Error message: " . CRM_Utils_Array::value('error_message', $result)
@@ -126,7 +126,7 @@ class api_v2_ActivityContactTest extends CiviUnitTestCase {
    * check civicrm_activities_contact_get() with empty array
    */
   function testActivityContactGetEmpty() {
-    $params = array();
+    $params = [];
     $result = civicrm_activity_contact_get($params);
     $this->assertEquals($result['is_error'], 1,
       "In line " . __LINE__
@@ -148,19 +148,19 @@ class api_v2_ActivityContactTest extends CiviUnitTestCase {
    *  Test civicrm_activity_contact_get() with invalid Contact Id
    */
   function testActivitiesContactGetWithInvalidContactId() {
-    $params = array('contact_id' => NULL);
+    $params = ['contact_id' => NULL];
     $result = civicrm_activity_contact_get($params);
     $this->assertEquals($result['is_error'], 1,
       "In line " . __LINE__
     );
 
-    $params = array('contact_id' => 'contact');
+    $params = ['contact_id' => 'contact'];
     $result = civicrm_activity_contact_get($params);
     $this->assertEquals($result['is_error'], 1,
       "In line " . __LINE__
     );
 
-    $params = array('contact_id' => 2.4);
+    $params = ['contact_id' => 2.4];
     $result = civicrm_activity_contact_get($params);
     $this->assertEquals($result['is_error'], 1,
       "In line " . __LINE__
@@ -171,15 +171,15 @@ class api_v2_ActivityContactTest extends CiviUnitTestCase {
    *  Test civicrm_activity_contact_get() with contact having no Activity
    */
   function testActivitiesContactGetHavingNoActivity() {
-    $params = array(
+    $params = [
       'first_name' => 'dan',
       'last_name' => 'conberg',
       'email' => 'dan.conberg@w.co.in',
       'contact_type' => 'Individual',
-    );
+    ];
 
     $contact = &civicrm_contact_add($params);
-    $params  = array('contact_id' => $contact['contact_id']);
+    $params  = ['contact_id' => $contact['contact_id']];
     $result  = civicrm_activity_contact_get($params);
     $this->assertEquals($result['is_error'], 0);
     $this->assertEquals($result['result'],

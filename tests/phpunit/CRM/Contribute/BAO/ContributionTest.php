@@ -34,11 +34,11 @@ class CRM_Contribute_BAO_ContributionTest extends CiviUnitTestCase
 
     function get_info( ) 
     {
-        return array(
+        return [
                      'name'        => 'Contribution BAOs',
                      'description' => 'Test all Contribute_BAO_Contribution methods.',
                      'group'       => 'CiviCRM BAO Tests',
-                     );
+                     ];
     }
 
     /**
@@ -65,9 +65,9 @@ class CRM_Contribute_BAO_ContributionTest extends CiviUnitTestCase
     function testCreate( )
     {
         $contactId = Contact::createIndividual( );
-        $ids = array ('contribution' => null );
+        $ids =  ['contribution' => null ];
 
-        $params = array (
+        $params =  [
                          'contact_id'             => $contactId,
                          'currency'               => 'USD',
                          'contribution_type_id'   => 1,
@@ -84,7 +84,7 @@ class CRM_Contribute_BAO_ContributionTest extends CiviUnitTestCase
                          'trxn_id'                => '22ereerwww444444',
                          'invoice_id'             => '86ed39c9e9ee6ef6031621ce0eafe7eb81',
                          'thankyou_date'          => '20080522'
-                         );
+                         ];
 
         require_once 'CRM/Contribute/BAO/Contribution.php';
         $contribution = CRM_Contribute_BAO_Contribution::create( $params ,$ids );
@@ -93,7 +93,7 @@ class CRM_Contribute_BAO_ContributionTest extends CiviUnitTestCase
         $this->assertEquals( $contactId, $contribution->contact_id, 'Check for contact id  creation.' );
         
         //update contribution amount 
-        $ids = array ('contribution' => $contribution->id );
+        $ids =  ['contribution' => $contribution->id ];
         $params['fee_amount'] = 10;
         $params['net_amount'] = 190;
         
@@ -115,20 +115,20 @@ class CRM_Contribute_BAO_ContributionTest extends CiviUnitTestCase
     function testCreateWithCustomData( )
     {
         $contactId = Contact::createIndividual( );
-        $ids = array ('contribution' => null );
+        $ids =  ['contribution' => null ];
         
         //create custom data
-        $customGroup = Custom::createGroup( array(), 'Contribution' );
-        $fields = array(
+        $customGroup = Custom::createGroup( [], 'Contribution' );
+        $fields = [
                         'label'            => 'testFld',
                         'data_type'        => 'String',
                         'html_type'        => 'Text',
                         'is_active'        => 1,
                         'custom_group_id'  => $customGroup->id,
-                        );
+                        ];
         $customField = CRM_Core_BAO_CustomField::create( $fields );
         
-        $params = array (
+        $params =  [
                          'contact_id'             => $contactId,
                          'currency'               => 'USD',
                          'contribution_type_id'   => 1,
@@ -145,12 +145,12 @@ class CRM_Contribute_BAO_ContributionTest extends CiviUnitTestCase
                          'trxn_id'                => '22ereerwww322323',
                          'invoice_id'             => '22ed39c9e9ee6ef6031621ce0eafe6da70',
                          'thankyou_date'          => '20080522'
-                         );
+                         ];
         
         
-        $params['custom']= array(
-                                 $customField->id => array(
-                                                           -1 => array(
+        $params['custom']= [
+                                 $customField->id => [
+                                                           -1 => [
                                                                        'value'           => 'Test custom value',
                                                                        'type'            => 'String',
                                                                        'custom_field_id' => $customField->id,
@@ -158,18 +158,18 @@ class CRM_Contribute_BAO_ContributionTest extends CiviUnitTestCase
                                                                        'table_name'      => $customGroup->table_name,
                                                                        'column_name'     => $customField->column_name,
                                                                        'file_id'         => null
-                                                                       )
-                                                           )
-                                 );
+                                                                       ]
+                                                           ]
+                                 ];
         
         
         require_once 'CRM/Contribute/BAO/Contribution.php';
         $contribution = CRM_Contribute_BAO_Contribution::create( $params ,$ids );
         
         // Check that the custom field value is saved
-        $customValueParams = array( 'entityID'                  => $contribution->id,
+        $customValueParams = [ 'entityID'                  => $contribution->id,
                                     'custom_'.$customField->id  => 1 
-                                    );
+                                    ];
         $values = CRM_Core_BAO_CustomValueTable::getValues( $customValueParams );
         $this->assertEquals( 'Test custom value', $values['custom_'.$customField->id], 'Check the custom field value');
         
@@ -189,9 +189,9 @@ class CRM_Contribute_BAO_ContributionTest extends CiviUnitTestCase
     function testDeleteContribution( )
     {
         $contactId = Contact::createIndividual( );
-        $ids = array ('contribution' => null );
+        $ids =  ['contribution' => null ];
 
-        $params = array (
+        $params =  [
                          'contact_id'             => $contactId,
                          'currency'               => 'USD',
                          'contribution_type_id'   => 1,
@@ -208,7 +208,7 @@ class CRM_Contribute_BAO_ContributionTest extends CiviUnitTestCase
                          'trxn_id'                => '33ereerwww322323',
                          'invoice_id'             => '33ed39c9e9ee6ef6031621ce0eafe6da70',
                          'thankyou_date'          => '20080522'
-                         );
+                         ];
 
         require_once 'CRM/Contribute/BAO/Contribution.php';
         $contribution = CRM_Contribute_BAO_Contribution::create( $params ,$ids );
@@ -235,13 +235,13 @@ class CRM_Contribute_BAO_ContributionTest extends CiviUnitTestCase
         $email     = "{$firstName}.{$lastName}@example.com"; 
         
         $honorId = null;
-        $params  = array (
+        $params  =  [
                           'honor_type_id'    => 1,
                           'honor_prefix_id'  => 3,
                           'honor_first_name' => $firstName,
                           'honor_last_name'  => $lastName,
                           'honor_email'      => $email
-                          );
+                          ];
         require_once 'CRM/Contribute/BAO/Contribution.php';
         $contact = CRM_Contribute_BAO_Contribution::createHonorContact( $params, $honorId );
         
@@ -251,8 +251,8 @@ class CRM_Contribute_BAO_ContributionTest extends CiviUnitTestCase
 
         $contactId = Contact::createIndividual( );
 
-        $ids = array ('contribution' => null );
-        $param = array (
+        $ids =  ['contribution' => null ];
+        $param =  [
                         'contact_id'             => $contactId,
                         'currency'               => 'USD',
                         'contribution_type_id'   => 4,
@@ -261,7 +261,7 @@ class CRM_Contribute_BAO_ContributionTest extends CiviUnitTestCase
                         'total_amount'           => 66,
                         'honor_type_id'          => 1,
                         'honor_contact_id'       => $contact
-                        );
+                        ];
 
         require_once 'CRM/Contribute/BAO/Contribution.php';
         $contribution = CRM_Contribute_BAO_Contribution::create( $param ,$ids );
@@ -299,10 +299,10 @@ class CRM_Contribute_BAO_ContributionTest extends CiviUnitTestCase
      */
     function testsortName( ) 
     {
-        $params    =  array( 'first_name'   => 'Shane',     
+        $params    =  [ 'first_name'   => 'Shane',     
                              'last_name'    => 'Whatson',
                              'contact_type' => 'Individual'
-                             );
+                             ];
         
         require_once 'CRM/Contact/BAO/Contact.php';
         $contact = CRM_Contact_BAO_Contact::add( $params );
@@ -312,9 +312,9 @@ class CRM_Contribute_BAO_ContributionTest extends CiviUnitTestCase
         
         $contactId = $contact->id;
        
-        $ids = array ('contribution' => null );
+        $ids =  ['contribution' => null ];
 
-        $param = array (
+        $param =  [
                         'contact_id'             => $contactId,
                         'currency'               => 'USD',
                         'contribution_type_id'   => 1,
@@ -331,7 +331,7 @@ class CRM_Contribute_BAO_ContributionTest extends CiviUnitTestCase
                         'trxn_id'                => '22ereerwww323',
                         'invoice_id'             => '22ed39c9e9ee621ce0eafe6da70',
                         'thankyou_date'          => '20080522'
-                        );
+                        ];
 
         require_once 'CRM/Contribute/BAO/Contribution.php';
         $contribution = CRM_Contribute_BAO_Contribution::create( $param ,$ids );
@@ -358,12 +358,12 @@ class CRM_Contribute_BAO_ContributionTest extends CiviUnitTestCase
     {
         $contactId = Contact::createIndividual( );
 
-        $ids = array(
+        $ids = [
                      'premium' => null
-                     );
+                     ];
 
 
-        $params = array(
+        $params = [
                         'name'             => 'TEST Premium',
                         'sku'              => 111,
                         'imageOption'      => 'noImage',
@@ -372,15 +372,15 @@ class CRM_Contribute_BAO_ContributionTest extends CiviUnitTestCase
                         'cost'             => 90.00,
                         'min_contribution' => 100,
                         'is_active'        => 1
-                        );
+                        ];
         require_once 'CRM/Contribute/BAO/ManagePremiums.php';
        $premium = CRM_Contribute_BAO_ManagePremiums::add( $params,$ids );
 
        $this->assertEquals( 'TEST Premium', $premium->name, 'Check for premium  name.' );
 
-       $ids = array ('contribution' => null );
+       $ids =  ['contribution' => null ];
 
-       $param = array (
+       $param =  [
                        'contact_id'             => $contactId,
                        'currency'               => 'USD',
                        'contribution_type_id'   => 1,
@@ -397,7 +397,7 @@ class CRM_Contribute_BAO_ContributionTest extends CiviUnitTestCase
                        'trxn_id'                => '33erdfrwvw434',
                        'invoice_id'             => '98ed34f7u9hh672ce0eafe8fb92',
                        'thankyou_date'          => '20080522'
-                       );
+                       ];
 
        require_once 'CRM/Contribute/BAO/Contribution.php';
        $contribution = CRM_Contribute_BAO_Contribution::create( $param ,$ids );
@@ -406,12 +406,12 @@ class CRM_Contribute_BAO_ContributionTest extends CiviUnitTestCase
        $this->assertEquals( $contactId, $contribution->contact_id, 'Check for contact id  creation.' );
 
        //parameter for adding premium to contribution
-       $data = array(
+       $data = [
                      'product_id'      => $premium->id,
                      'contribution_id' => $contribution->id,
                      'product_option'  => null,
                      'quantity'        => 1,
-                     );
+                     ];
        $contributionProduct = CRM_Contribute_BAO_Contribution::addPremium( $data );
        $this->assertEquals( $contributionProduct->product_id, $premium->id, 'Check for Product id .' );
 
@@ -435,9 +435,9 @@ class CRM_Contribute_BAO_ContributionTest extends CiviUnitTestCase
     {
         $contactId = Contact::createIndividual( );
 
-        $ids = array ('contribution' => null );
+        $ids =  ['contribution' => null ];
 
-        $param = array (
+        $param =  [
                         'contact_id'             => $contactId,
                         'currency'               => 'USD',
                         'contribution_type_id'   => 1,
@@ -454,18 +454,18 @@ class CRM_Contribute_BAO_ContributionTest extends CiviUnitTestCase
                         'trxn_id'                => '76ereeswww835',
                         'invoice_id'             => '93ed39a9e9hd621bs0eafe3da82',
                         'thankyou_date'          => '20080522'
-                       );
+                       ];
 
         require_once 'CRM/Contribute/BAO/Contribution.php';
         $contribution = CRM_Contribute_BAO_Contribution::create( $param ,$ids );
         
         $this->assertEquals( $param['trxn_id'], $contribution->trxn_id, 'Check for transcation id creation.' );
         $this->assertEquals( $contactId, $contribution->contact_id, 'Check for contact id  creation.' );
-        $data = array(
+        $data = [
                       'id'         => $contribution->id,
                       'trxn_id'    => $contribution->trxn_id,
                       'invoice_id' => $contribution->invoice_id
-                      );
+                      ];
         $contributionID = CRM_Contribute_BAO_Contribution::checkDuplicateIds( $data );
         $this->assertEquals( $contributionID, $contribution->id, 'Check for duplicate transcation id .' );
         
@@ -500,12 +500,12 @@ class CRM_Contribute_BAO_ContributionTest extends CiviUnitTestCase
         }
         $contactId = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contact WHERE 1 ORDER BY id ASC");
         if (empty($contactId)) {
-          $createdContact = civicrm_api('Contact', 'create', array(
+          $createdContact = civicrm_api('Contact', 'create', [
             'version' => 3,
             'contact_type' => 'Individual',
             'last_name' => 'CI',
             'first_name' => 'Testing',
-          ));
+          ]);
           if ($createdContact['id']) {
             $contactId = $createdContact['id'];
           }
@@ -514,8 +514,8 @@ class CRM_Contribute_BAO_ContributionTest extends CiviUnitTestCase
         $receiptID = CRM_Contribute_BAO_Contribution::lastReceiptID($prefix);
         $val = rand(10000, 100000);
         $trxn_id = 'ut'.$val;
-        $ids = array ('contribution' => null );
-        $params = array (
+        $ids =  ['contribution' => null ];
+        $params =  [
             'contact_id'             => $contactId,
             'currency'               => 'USD',
             'contribution_type_id'   => 1,
@@ -532,7 +532,7 @@ class CRM_Contribute_BAO_ContributionTest extends CiviUnitTestCase
             'trxn_id'                => $trxn_id,
             'thankyou_date'          => '20080522',
             'receipt_id'             => $receiptID
-            );
+            ];
         require_once 'CRM/Contribute/BAO/Contribution.php';
         $contribution = CRM_Contribute_BAO_Contribution::create( $params ,$ids );
 
@@ -552,7 +552,7 @@ class CRM_Contribute_BAO_ContributionTest extends CiviUnitTestCase
         $prefix = 'testReceipt';
         $query = "SELECT receipt_id, receipt_date FROM civicrm_contribution WHERE receipt_id LIKE '{$prefix}%' ORDER BY id DESC LIMIT 2";
         $dao = CRM_Core_DAO::executeQuery($query);
-        $receiptId = array();
+        $receiptId = [];
         while ($dao->fetch()) {
             $receiptId[] = $dao->receipt_id;
             // print("The receipt_date of {$dao->receipt_id} is '{$dao->receipt_date}' \n");

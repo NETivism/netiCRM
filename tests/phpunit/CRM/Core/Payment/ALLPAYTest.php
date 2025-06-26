@@ -11,11 +11,11 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
   protected $_page_id;
 
   function get_info() {
-    return array(
+    return [
       'name' => 'ALLPAY payment processor',
       'description' => 'Test ALLPAY payment processor.',
       'group' => 'Payment Processor Tests',
-    );
+    ];
   }
 
   /**
@@ -30,25 +30,25 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
     $this->_is_test = 1;
 
     // get processor
-    $params = array(
+    $params = [
       'version' => 3,
       'class_name' => 'Payment_ALLPAY',
       'is_test' => $this->_is_test,
-    );
+    ];
     $result = civicrm_api('PaymentProcessor', 'get', $params);
     $this->assertAPISuccess($result);
     if(empty($result['count'])){
-      $payment_processors = array();
-      $params = array(
+      $payment_processors = [];
+      $params = [
         'version' => 3,
         'class_name' => 'Payment_ALLPAY',
-      );
+      ];
       $result = civicrm_api('PaymentProcessorType', 'get', $params);
       $this->assertAPISuccess($result);
       if(!empty($result['count'])){
         $domain_id = CRM_Core_Config::domainID();
         foreach($result['values'] as $type_id => $p){
-          $payment_processor = array(
+          $payment_processor = [
             'version' => 3,
             'domain_id' => $domain_id,
             'name' => 'AUTO payment '.$p['name'],
@@ -67,7 +67,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
             'billing_mode' => $p['billing_mode'],
             'is_recur' => $p['is_recur'],
             'payment_type' => $p['payment_type'],
-          );
+          ];
           $result = civicrm_api('PaymentProcessor', 'create', $payment_processor);
           $this->assertAPISuccess($result);
           if(is_numeric($result['id'])){
@@ -82,23 +82,23 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
         }
       }
     }
-    $params = array(
+    $params = [
       'version' => 3,
       'payment_processor_type' => 'ALLPAY',
       'is_test' => $this->_is_test,
-    );
+    ];
     $result = civicrm_api('PaymentProcessor', 'get', $params);
     $this->assertAPISuccess($result);
     $pp = reset($result['values']);
     $this->_processor = $pp;
 
     // get cid
-    $params = array(
+    $params = [
       'version' => 3,
-      'options' => array(
+      'options' => [
         'limit' => 1,
-      ),
-    );
+      ],
+    ];
     $result = civicrm_api('Contact', 'get', $params);
     $this->assertAPISuccess($result);
     if(!empty($result['count'])){
@@ -121,7 +121,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
     $amount = 111;
 
     // create contribution
-    $contrib = array(
+    $contrib = [
       'trxn_id' => $trxn_id,
       'contact_id' => $this->_cid,
       'contribution_contact_id' => $this->_cid,
@@ -140,21 +140,21 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
       'is_test' => $this->_is_test,
       'is_pay_later' => 0,
       'contribution_status_id' => 2,
-    );
+    ];
     $contribution = CRM_Contribute_BAO_Contribution::create($contrib, CRM_Core_DAO::$_nullArray);
     $this->assertNotEmpty($contribution->id, "In line " . __LINE__);
-    $params = array(
+    $params = [
       'is_test' => $this->_is_test,
       'id' => $contribution->id,
-    );
+    ];
     $this->assertDBState('CRM_Contribute_DAO_Contribution', $contribution->id, $params);
 
     // manually trigger ipn
-    $get = $post = $ids = array();
+    $get = $post = $ids = [];
     $ids = CRM_Contribute_BAO_Contribution::buildIds($contribution->id);
     $query = CRM_Contribute_BAO_Contribution::makeNotifyUrl($ids, NULL, $return_query = TRUE);
     parse_str($query, $get);
-    $post = array(
+    $post = [
       'MerchantID' => '2000132',
       'MerchantTradeNo' => $trxn_id,
       'RtnCode' => '1',
@@ -166,8 +166,8 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
       'PaymentTypeChargeFee' => '10',
       'TradeDate' => date('Y-m-d H:i:s', $now),
       'SimulatePaid' => '1',
-    );
-    $this->doIPN(array('allpay', 'ipn', 'Credit'), $post, $get, __LINE__);
+    ];
+    $this->doIPN(['allpay', 'ipn', 'Credit'], $post, $get, __LINE__);
 
     // verify contribution status after trigger
     $this->assertDBCompareValue(
@@ -191,7 +191,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
 
     // create recurring
     $date = date('YmdHis', $now);
-    $recur = array(
+    $recur = [
       'contact_id' => $this->_cid,
       'amount' => $amount,
       'frequency_unit' => 'month',
@@ -204,19 +204,19 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
       'invoice_id' => md5($now),
       'contribution_status_id' => 2,
       'trxn_id' => $trxn_id,
-    );
-    $ids = array();
+    ];
+    $ids = [];
     $recurring = &CRM_Contribute_BAO_ContributionRecur::add($recur, $ids);
 
     // verify recurring status
-    $params = array(
+    $params = [
       'id' => $recurring->id,
       'contribution_status_id' => 2,
-    );
+    ];
     $this->assertDBState('CRM_Contribute_DAO_ContributionRecur', $recurring->id, $params);
 
     // create contribution (first recurring)
-    $contrib = array(
+    $contrib = [
       'trxn_id' => $trxn_id,
       'contact_id' => $this->_cid,
       'contribution_contact_id' => $this->_cid,
@@ -236,25 +236,25 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
       'is_pay_later' => 0,
       'contribution_status_id' => 2,
       'contribution_recur_id' => $recurring->id,
-    );
+    ];
     $customValues = $this->customValueGenerate('Contribution', 'postProcess');
     if (!empty($customValues)) {
       $contrib['custom'] = $customValues;
     }
     $contribution = CRM_Contribute_BAO_Contribution::create($contrib, CRM_Core_DAO::$_nullArray);
     $this->assertNotEmpty($contribution->id, "In line " . __LINE__);
-    $params = array(
+    $params = [
       'is_test' => $this->_is_test,
       'id' => $contribution->id,
-    );
+    ];
     $this->assertDBState('CRM_Contribute_DAO_Contribution', $contribution->id, $params);
 
     // manually trigger ipn
-    $get = $post = $ids = array();
+    $get = $post = $ids = [];
     $ids = CRM_Contribute_BAO_Contribution::buildIds($contribution->id);
     $query = CRM_Contribute_BAO_Contribution::makeNotifyUrl($ids, NULL, $return_query = TRUE);
     parse_str($query, $get);
-    $post = array(
+    $post = [
       'MerchantID' => '2000132',
       'MerchantTradeNo' => $trxn_id,
       'RtnCode' => '1',
@@ -266,8 +266,8 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
       'PaymentTypeChargeFee' => '10',
       'TradeDate' => date('Y-m-d H:i:s', $now),
       'SimulatePaid' => '1',
-    );
-    $this->doIPN(array('allpay', 'ipn', 'Credit'), $post, $get, __LINE__);
+    ];
+    $this->doIPN(['allpay', 'ipn', 'Credit'], $post, $get, __LINE__);
 
     // verify contribution status after trigger
     $this->assertDBCompareValue(
@@ -284,21 +284,21 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
     $this->assertNotEmpty($cid, "In line " . __LINE__);
 
     // verify recurring status
-    $params = array(
+    $params = [
       'id' => $recurring->id,
       'contribution_status_id' => 5,
-    );
+    ];
     $this->assertDBState('CRM_Contribute_DAO_ContributionRecur', $recurring->id, $params);
 
     // second payment
     $now = time()+120;
     $gwsr1 = 111111;
-    $get = $post = $ids = array();
+    $get = $post = $ids = [];
     $ids = CRM_Contribute_BAO_Contribution::buildIds($contribution->id);
     $query = CRM_Contribute_BAO_Contribution::makeNotifyUrl($ids, NULL, $return_query = TRUE);
     parse_str($query, $get);
     $get['is_recur'] = 1;
-    $post = array(
+    $post = [
       'MerchantID' => '2000132',
       'MerchantTradeNo' => $trxn_id,
       'RtnCode' => '1',
@@ -313,25 +313,25 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
       'FirstAuthAmount' => $amount,
       'TotalSuccessTimes' => 2,
       'SimulatePaid' => '1',
-    );
-    $this->doIPN(array('allpay', 'ipn', 'Credit'), $post, $get, __LINE__);
+    ];
+    $this->doIPN(['allpay', 'ipn', 'Credit'], $post, $get, __LINE__);
     $trxn_id2 = CRM_Core_Payment_ALLPAY::generateRecurTrxn($trxn_id, $gwsr1);
 
     // check second payment contribution exists
-    $params = array(
+    $params = [
       'id' => $recurring->id,
       'contribution_status_id' => 5,
-    );
+    ];
     $this->assertDBState('CRM_Contribute_DAO_ContributionRecur', $recurring->id, $params);
 
-    $params = array(
-      1 => array($recurring->id, 'Integer'),
-    );
+    $params = [
+      1 => [$recurring->id, 'Integer'],
+    ];
     $this->assertDBQuery(2, "SELECT count(*) FROM civicrm_contribution WHERE contribution_recur_id = %1", $params);
 
-    $params = array(
-      1 => array($trxn_id2, 'String'),
-    );
+    $params = [
+      1 => [$trxn_id2, 'String'],
+    ];
     $this->assertDBQuery(1, "SELECT contribution_status_id FROM civicrm_contribution WHERE trxn_id = %1", $params);
     $cid2 = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution WHERE trxn_id = %1", $params);
 
@@ -349,8 +349,8 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
 
     // use CRM_Core_Payment_ALLPAY::recurCheck to insert third Payment_ALLPAY
     $gwsr2 = 222222;
-    $get = $post = $ids = array();
-    $order_base = (object)(array(
+    $get = $post = $ids = [];
+    $order_base = (object)([
       'ExecStatus' => '1',
       'MerchantID' => '2000132',
       'MerchantTradeNo' => $trxn_id,
@@ -368,76 +368,76 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
       'card6no' => '123456',
       'TotalSuccessTimes' => 3,
       'TotalSuccessAmount' => $amount*3,
-      'ExecLog' => array (
-        0 => (object)(array(
+      'ExecLog' =>  [
+        0 => (object)([
           'RtnCode' => 1,
           'amount' => $amount,
           'gwsr' => '000000',
           'process_date' => date('Y-m-d H:i:s', $now),
           'auth_code' => '777777',
-        )),
-        1 => (object)(array(
+        ]),
+        1 => (object)([
           'RtnCode' => 1,
           'amount' => $amount,
           'gwsr' => $gwsr1,
           'process_date' => date('Y-m-d H:i:s', $now+3600),
           'auth_code' => '777777',
-        )),
-        2 => (object)(array(
+        ]),
+        2 => (object)([
           'RtnCode' => 1,
           'amount' => $amount,
           'gwsr' => $gwsr2,
           'process_date' => date('Y-m-d H:i:s', $now+86400*2),
           'auth_code' => '777777',
-        )),
+        ]),
         // fail contribution from recurring
-        3 => (object)(array(
+        3 => (object)([
           'RtnCode' => '',
           'amount' => '',
           'gwsr' => '',
           'process_date' => date('Y-m-d H:i:s', $now+86400*3),
           'auth_code' => '',
-        )),
-        4 => (object)(array(
+        ]),
+        4 => (object)([
           'RtnCode' => '0',
           'amount' => $amount,
           'gwsr' => '',
           'process_date' => date('Y-m-d H:i:s', $now+86400*4),
           'auth_code' => '',
-        )),
+        ]),
         // normal contribution but empty gwsr
-        5 => (object)(array(
+        5 => (object)([
           'RtnCode' => '1',
           'amount' => $amount,
           'gwsr' => 0,
           'process_date' => date('Y-m-d H:i:s', $now+86400*5),
           'auth_code' => '',
-        )),
+        ]),
         // failed contribution and have gwsr
-        6 => (object)(array(
+        6 => (object)([
           'RtnCode' => '0',
           'amount' => $amount,
           'gwsr' => '11223344',
           'process_date' => date('Y-m-d H:i:s', $now+86400*6),
           'auth_code' => '',
-        )),
-      ),
-    ));
+        ]),
+      ],
+    ]);
     $trxn_id3 = CRM_Core_Payment_ALLPAY::generateRecurTrxn($trxn_id, $gwsr2);
     $order_json = json_encode($order_base);
     $order_sample = json_decode($order_json);
 
     // add new payment from recurring notification
     CRM_Core_Payment_ALLPAY::recurCheck($recurring->id, $order_sample);
-    $params = array(
+    $params = [
       'id' => $recurring->id,
       'contribution_status_id' => 5,
-    );
+    ];
     $this->assertDBState('CRM_Contribute_DAO_ContributionRecur', $recurring->id, $params);
 
-    $params = array(
-      1 => array($trxn_id3, 'String'),
-    );
+    $params = [
+      1 => [$trxn_id3, 'String'],
+    ];
     $this->assertDBQuery(1, "SELECT contribution_status_id FROM civicrm_contribution WHERE trxn_id = %1", $params);
     $this->assertDBQuery(1, "SELECT count(*) FROM civicrm_contribution WHERE trxn_id = %1 AND receive_date IS NOT NULL AND receive_date >= '".date('Y-m-d H:i:s', $now)."'", $params);
     $cid3 = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution WHERE trxn_id = %1", $params);
@@ -451,9 +451,9 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
     // fail contribution from recurring
     $hash = substr(md5(implode('', (array)$order_base->ExecLog[3])), 0, 8);
     $trxn_id4 = CRM_Core_Payment_ALLPAY::generateRecurTrxn($trxn_id, $hash);
-    $params = array(
-      1 => array($trxn_id4, 'String'),
-    );
+    $params = [
+      1 => [$trxn_id4, 'String'],
+    ];
     $this->assertDBQuery(4, "SELECT contribution_status_id FROM civicrm_contribution WHERE trxn_id = %1", $params);
     $this->assertDBQuery(1, "SELECT count(*) FROM civicrm_contribution WHERE trxn_id = %1 AND receive_date IS NULL AND cancel_date IS NOT NULL AND cancel_reason IS NOT NULL", $params);
     $cid4 = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution WHERE trxn_id = %1", $params);
@@ -463,65 +463,65 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
     // fail contribution from recurring (new version)
     $hash = substr(md5(implode('', (array)$order_base->ExecLog[4])), 0, 8);
     $trxn_id5 = CRM_Core_Payment_ALLPAY::generateRecurTrxn($trxn_id, $hash);
-    $params = array(
-      1 => array($trxn_id5, 'String'),
-    );
+    $params = [
+      1 => [$trxn_id5, 'String'],
+    ];
     $this->assertDBQuery(4, "SELECT contribution_status_id FROM civicrm_contribution WHERE trxn_id = %1", $params);
     $this->assertDBQuery(1, "SELECT count(*) FROM civicrm_contribution WHERE trxn_id = %1 AND receive_date IS NULL AND cancel_date IS NOT NULL AND cancel_reason IS NOT NULL", $params);
     $cid5 = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution WHERE trxn_id = %1", $params);
     $data = CRM_Core_DAO::singleValueQuery("SELECT data FROM civicrm_contribution_allpay WHERE cid = $cid5");
 
     $trxn_id6 = CRM_Core_Payment_ALLPAY::generateRecurTrxn($trxn_id, '11223344');
-    $params = array(
-      1 => array($trxn_id6, 'String'),
-    );
+    $params = [
+      1 => [$trxn_id6, 'String'],
+    ];
     $this->assertDBQuery(4, "SELECT contribution_status_id FROM civicrm_contribution WHERE trxn_id = %1", $params);
 
     // normal contribution but empty gwsr
     // execlog 5 will be skipped, so total number is 6
-    $params = array(
-      1 => array($recurring->id, 'Integer'),
-    );
+    $params = [
+      1 => [$recurring->id, 'Integer'],
+    ];
     $this->assertDBQuery(6, "SELECT count(*) FROM civicrm_contribution WHERE contribution_recur_id = %1", $params);
 
     // refs #21187, submit again but change gwsr data (simulate gw bad api)
     // we should still 6 records
     $order_base->ExecLog[6]->gwsr = 0;
     CRM_Core_Payment_ALLPAY::recurCheck($recurring->id, $order_base);
-    $params = array(
-      1 => array($recurring->id, 'Integer'),
-    );
+    $params = [
+      1 => [$recurring->id, 'Integer'],
+    ];
     $this->assertDBQuery(6, "SELECT count(*) FROM civicrm_contribution WHERE contribution_recur_id = %1", $params);
 
     // completed recurring
     $order_base->ExecStatus = 2;
     CRM_Core_Payment_ALLPAY::recurCheck($recurring->id, $order_base);
-    $params = array(
+    $params = [
       'id' => $recurring->id,
       'contribution_status_id' => 1,
-    );
+    ];
     $this->assertDBState('CRM_Contribute_DAO_ContributionRecur', $recurring->id, $params);
 
     // cancelled recurring
     $order_base->ExecStatus = 0;
     CRM_Core_Payment_ALLPAY::recurCheck($recurring->id, $order_base);
-    $params = array(
+    $params = [
       'id' => $recurring->id,
       'contribution_status_id' => 3,
-    );
+    ];
     $this->assertDBState('CRM_Contribute_DAO_ContributionRecur', $recurring->id, $params);
   }
 
   function testNonCreditNotify(){
     // update
     $cid = CRM_Core_DAO::singleValueQuery("SELECT cid FROM civicrm_contribution_allpay ORDER BY cid DESC LIMIT 0,1");
-    $_POST = array(
+    $_POST = [
       'MerchantID' => $cid,
       'TEST1' => 'AAA',
       'TEST2' => 'BBB',
-    );
+    ];
     $_GET['q'] = 'allpay/record';
-    CRM_Core_Payment_ALLPAYIPN::doRecordData(array('allpay', 'record', $cid));
+    CRM_Core_Payment_ALLPAYIPN::doRecordData(['allpay', 'record', $cid]);
     $this->assertDBQuery($cid, "SELECT cid FROM civicrm_contribution_allpay WHERE data LIKE '%#info%TEST1%' AND cid = $cid");
   }
 

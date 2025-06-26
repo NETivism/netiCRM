@@ -44,11 +44,11 @@ class CRM_Core_BAO_LocationTest extends CiviUnitTestCase
     public $_contactId;
     function get_info( ) 
     {
-        return array(
+        return [
                      'name'        => 'Location BAOs',
                      'description' => 'Test all Core_BAO_Location methods.',
                      'group'       => 'CiviCRM BAO Tests',
-                     );
+                     ];
     }
     
     function setUp( ) 
@@ -64,17 +64,17 @@ class CRM_Core_BAO_LocationTest extends CiviUnitTestCase
      */
     function tearDown()
     {
-        $tablesToTruncate = array( 'civicrm_contact',
+        $tablesToTruncate = [ 'civicrm_contact',
                                    'civicrm_openid',
-                                   'civicrm_loc_block' );
+                                   'civicrm_loc_block' ];
         $this->quickCleanup( $tablesToTruncate );
     }
 
     function testCreateWithMissingParams( )
     {
         $contactId = Contact::createIndividual( );
-        $params = array( 'contact_id'       => $contactId,
-                         'street_address' => 'Saint Helier St' );
+        $params = [ 'contact_id'       => $contactId,
+                         'street_address' => 'Saint Helier St' ];
         
         require_once 'CRM/Core/BAO/Location.php';
         CRM_Core_BAO_Location::create( $params );
@@ -99,9 +99,9 @@ class CRM_Core_BAO_LocationTest extends CiviUnitTestCase
         
         //create various element of location block 
         //like address, phone, email, openid, im.
-        $params = array ( 
-                          'address' =>  array ( 
-                                               '1' => array( 'street_address'            => 'Saint Helier St',
+        $params =  [ 
+                          'address' =>   [ 
+                                               '1' => [ 'street_address'            => 'Saint Helier St',
                                                              'supplemental_address_1'    => 'Hallmark Ct',
                                                              'supplemental_address_2'    => 'Jersey Village',
                                                              'city'                      => 'Newark',
@@ -112,42 +112,42 @@ class CRM_Core_BAO_LocationTest extends CiviUnitTestCase
                                                              'geo_code_2'                => '-105.00973',
                                                              'is_primary'                => 1,
                                                              'location_type_id'          => 1,
-                                                             ),
+                                                             ],
 
-                                                ),
-                          'email'   => array ( 
-                                              '1' => array ( 'email'            => 'john.smith@example.org',
+                                                ],
+                          'email'   =>  [ 
+                                              '1' =>  [ 'email'            => 'john.smith@example.org',
                                                              'is_primary'       => 1,
                                                              'location_type_id' => 1,
-                                                             ), 
-                                               ),
-                          'phone'   => array (
-                                              '1' => array (
+                                                             ], 
+                                               ],
+                          'phone'   =>  [
+                                              '1' =>  [
                                                             'phone_type_id' => 1,
                                                             'phone'         => '303443689',
                                                             'is_primary'                => 1,
                                                             'location_type_id'          => 1,
-                                                            ),
-                                              '2' => array (
+                                                            ],
+                                              '2' =>  [
                                                             'phone_type_id' => 2,
                                                             'phone'         => '9833910234',
                                                             'location_type_id'          => 1,
-                                                            ),
-                                              ),
-                          'openid'  => array (
-                                              '1' => array ( 'openid'      => 'http://civicrm.org/',
+                                                            ],
+                                              ],
+                          'openid'  =>  [
+                                              '1' =>  [ 'openid'      => 'http://civicrm.org/',
                                                              'location_type_id'          => 1,
                                                              'is_primary'              => 1,
-                                                             ),
-                                              ),
-                          'im'      => array (
-                                              '1' => array ( 'name'        => 'jane.doe',
+                                                             ],
+                                              ],
+                          'im'      =>  [
+                                              '1' =>  [ 'name'        => 'jane.doe',
                                                              'provider_id' => 1,
                                                              'location_type_id'          => 1,
                                                              'is_primary'              => 1,
-                                                             ),
-                                              ),
-                          );
+                                                             ],
+                                              ],
+                          ];
         
         $params['contact_id'] = $contactId;
         
@@ -157,10 +157,10 @@ class CRM_Core_BAO_LocationTest extends CiviUnitTestCase
         $locBlockId = CRM_Utils_Array::value( 'id', $location ); 
         
         //Now check DB for contact
-        $searchParams = array( 'contact_id'              => $contactId, 
+        $searchParams = [ 'contact_id'              => $contactId, 
                                'location_type_id'        => 1, 
-                               'is_primary'              => 1 );
-        $compareParams = array( 'street_address'         => 'Saint Helier St',
+                               'is_primary'              => 1 ];
+        $compareParams = [ 'street_address'         => 'Saint Helier St',
                                 'supplemental_address_1' => 'Hallmark Ct',
                                 'supplemental_address_2' => 'Jersey Village',
                                 'city'                   => 'Newark',
@@ -168,30 +168,30 @@ class CRM_Core_BAO_LocationTest extends CiviUnitTestCase
                                 'country_id'             => 1228,
                                 'state_province_id'      => 1029,
                                 'geo_code_1'             => '18.219023',
-                                'geo_code_2'             => '-105.00973' );
+                                'geo_code_2'             => '-105.00973' ];
         $this->assertDBCompareValues( 'CRM_Core_DAO_Address', $searchParams, $compareParams );
         
-        $compareParams = array( 'email'                  => 'john.smith@example.org' );
+        $compareParams = [ 'email'                  => 'john.smith@example.org' ];
         $this->assertDBCompareValues('CRM_Core_DAO_Email', $searchParams, $compareParams );
         
-        $compareParams = array ( 'openid'                => 'http://civicrm.org/' );
+        $compareParams =  [ 'openid'                => 'http://civicrm.org/' ];
         $this->assertDBCompareValues('CRM_Core_DAO_OpenID', $searchParams, $compareParams );
         
-        $compareParams = array( 'name'                   => 'jane.doe',
-                                'provider_id'            => 1 );
+        $compareParams = [ 'name'                   => 'jane.doe',
+                                'provider_id'            => 1 ];
         $this->assertDBCompareValues('CRM_Core_DAO_IM', $searchParams, $compareParams );
         
-        $searchParams = array( 'contact_id'              => $contactId, 
+        $searchParams = [ 'contact_id'              => $contactId, 
                                'location_type_id'        => 1, 
                                'is_primary'              => 1,
-                               'phone_type_id'           => 1 );
-        $compareParams = array( 'phone'                  => '303443689' );
+                               'phone_type_id'           => 1 ];
+        $compareParams = [ 'phone'                  => '303443689' ];
         $this->assertDBCompareValues('CRM_Core_DAO_Phone', $searchParams, $compareParams );
         
-        $searchParams = array( 'contact_id'              => $contactId, 
+        $searchParams = [ 'contact_id'              => $contactId, 
                                'location_type_id'        => 1, 
-                               'phone_type_id'              => 2 );
-        $compareParams = array( 'phone'                  => '9833910234' );
+                               'phone_type_id'              => 2 ];
+        $compareParams = [ 'phone'                  => '9833910234' ];
         $this->assertDBCompareValues('CRM_Core_DAO_Phone', $searchParams, $compareParams );
         
         //delete the location block
@@ -211,9 +211,9 @@ class CRM_Core_BAO_LocationTest extends CiviUnitTestCase
         $this->_contactId = Contact::createIndividual( );
         //create test event record.
         $eventId = Event::create( );
-        $params = array ( 
-                          'address' =>  array ( 
-                                               '1' => array( 'street_address'            => 'Saint Helier St',
+        $params =  [ 
+                          'address' =>   [ 
+                                               '1' => [ 'street_address'            => 'Saint Helier St',
                                                              'supplemental_address_1'    => 'Hallmark Ct',
                                                              'supplemental_address_2'    => 'Jersey Village',
                                                              'city'                      => 'Newark',
@@ -224,42 +224,42 @@ class CRM_Core_BAO_LocationTest extends CiviUnitTestCase
                                                              'geo_code_2'                => '-105.00973',
                                                              'is_primary'                => 1,
                                                              'location_type_id'          => 1,
-                                                             ),
+                                                             ],
 
-                                                ),
-                          'email'   => array ( 
-                                              '1' => array ( 'email'            => 'john.smith@example.org',
+                                                ],
+                          'email'   =>  [ 
+                                              '1' =>  [ 'email'            => 'john.smith@example.org',
                                                              'is_primary'       => 1,
                                                              'location_type_id' => 1,
-                                                             ), 
-                                               ),
-                          'phone'   => array (
-                                              '1' => array (
+                                                             ], 
+                                               ],
+                          'phone'   =>  [
+                                              '1' =>  [
                                                             'phone_type_id' => 1,
                                                             'phone'         => '303443689',
                                                             'is_primary'                => 1,
                                                             'location_type_id'          => 1,
-                                                            ),
-                                              '2' => array (
+                                                            ],
+                                              '2' =>  [
                                                             'phone_type_id' => 2,
                                                             'phone'         => '9833910234',
                                                             'location_type_id'          => 1,
-                                                            ),
-                                              ),
-                          'openid'  => array (
-                                              '1' => array ( 'openid'      => 'http://civicrm.org/',
+                                                            ],
+                                              ],
+                          'openid'  =>  [
+                                              '1' =>  [ 'openid'      => 'http://civicrm.org/',
                                                              'location_type_id'          => 1,
                                                              'is_primary'                => 1,
-                                                             ),
-                                              ),
-                          'im'      => array (
-                                              '1' => array ( 'name'        => 'jane.doe',
+                                                             ],
+                                              ],
+                          'im'      =>  [
+                                              '1' =>  [ 'name'        => 'jane.doe',
                                                              'provider_id' => 1,
                                                              'location_type_id'          => 1,
                                                              'is_primary'                => 1,
-                                                             ),
-                                              ),
-                          );
+                                                             ],
+                                              ],
+                          ];
         
         $params['entity_id']    = $eventId;
         $params['entity_table'] = 'civicrm_event';
@@ -273,8 +273,8 @@ class CRM_Core_BAO_LocationTest extends CiviUnitTestCase
 
         //update event record with location block id
         require_once 'CRM/Event/BAO/Event.php';
-        $eventParams = array( 'id'           => $eventId,
-                              'loc_block_id' => $locBlockId );
+        $eventParams = [ 'id'           => $eventId,
+                              'loc_block_id' => $locBlockId ];
         
         CRM_Event_BAO_Event::add( $eventParams );
         
@@ -287,16 +287,16 @@ class CRM_Core_BAO_LocationTest extends CiviUnitTestCase
                                     $locBlockId,
                                     'Checking database for the record.'
                                     );
-        $locElementIds = array( );
+        $locElementIds = [ ];
         CRM_Core_DAO::commonRetrieve( 'CRM_Core_DAO_LocBlock',
-                                      $locParams = array( 'id' => $locBlockId ), 
+                                      $locParams = [ 'id' => $locBlockId ], 
                                       $locElementIds );
 
         //Now check DB for location elements.
-        $searchParams = array( 'id'                      => CRM_Utils_Array::value( 'address_id', $locElementIds ), 
+        $searchParams = [ 'id'                      => CRM_Utils_Array::value( 'address_id', $locElementIds ), 
                                'location_type_id'        => 1, 
-                               'is_primary'              => 1 );
-        $compareParams = array( 'street_address'         => 'Saint Helier St',
+                               'is_primary'              => 1 ];
+        $compareParams = [ 'street_address'         => 'Saint Helier St',
                                 'supplemental_address_1' => 'Hallmark Ct',
                                 'supplemental_address_2' => 'Jersey Village',
                                 'city'                   => 'Newark',
@@ -304,34 +304,34 @@ class CRM_Core_BAO_LocationTest extends CiviUnitTestCase
                                 'country_id'             => 1228,
                                 'state_province_id'      => 1029,
                                 'geo_code_1'             => '18.219023',
-                                'geo_code_2'             => '-105.00973' );
+                                'geo_code_2'             => '-105.00973' ];
         $this->assertDBCompareValues( 'CRM_Core_DAO_Address', $searchParams, $compareParams );
         
-        $searchParams = array( 'id'                      => CRM_Utils_Array::value( 'email_id', $locElementIds ), 
+        $searchParams = [ 'id'                      => CRM_Utils_Array::value( 'email_id', $locElementIds ), 
                                'location_type_id'        => 1, 
-                               'is_primary'              => 1 );
-        $compareParams = array( 'email'                  => 'john.smith@example.org' );
+                               'is_primary'              => 1 ];
+        $compareParams = [ 'email'                  => 'john.smith@example.org' ];
         $this->assertDBCompareValues('CRM_Core_DAO_Email', $searchParams, $compareParams );
         
         
-        $searchParams = array( 'id'                      => CRM_Utils_Array::value( 'phone_id', $locElementIds ), 
+        $searchParams = [ 'id'                      => CRM_Utils_Array::value( 'phone_id', $locElementIds ), 
                                'location_type_id'        => 1, 
                                'is_primary'              => 1,
-                               'phone_type_id'           => 1 );
-        $compareParams = array( 'phone'                  => '303443689' );
+                               'phone_type_id'           => 1 ];
+        $compareParams = [ 'phone'                  => '303443689' ];
         $this->assertDBCompareValues('CRM_Core_DAO_Phone', $searchParams, $compareParams );
         
-        $searchParams = array( 'id'                      => CRM_Utils_Array::value( 'phone_2_id', $locElementIds ), 
+        $searchParams = [ 'id'                      => CRM_Utils_Array::value( 'phone_2_id', $locElementIds ), 
                                'location_type_id'        => 1, 
-                               'phone_type_id'           => 2 );
-        $compareParams = array( 'phone'                  => '9833910234' );
+                               'phone_type_id'           => 2 ];
+        $compareParams = [ 'phone'                  => '9833910234' ];
         $this->assertDBCompareValues('CRM_Core_DAO_Phone', $searchParams, $compareParams );
         
-        $searchParams = array( 'id'                      => CRM_Utils_Array::value( 'im_id', $locElementIds ), 
+        $searchParams = [ 'id'                      => CRM_Utils_Array::value( 'im_id', $locElementIds ), 
                                'location_type_id'        => 1, 
-                               'is_primary'              => 1 );
-        $compareParams = array( 'name'                   => 'jane.doe',
-                                'provider_id'            => 1 );
+                               'is_primary'              => 1 ];
+        $compareParams = [ 'name'                   => 'jane.doe',
+                                'provider_id'            => 1 ];
         $this->assertDBCompareValues('CRM_Core_DAO_IM', $searchParams, $compareParams );
         
         //delete the location block
@@ -354,9 +354,9 @@ class CRM_Core_BAO_LocationTest extends CiviUnitTestCase
         $this->_contactId = Contact::createIndividual( );
         //create test event record.
         $eventId = Event::create( );
-        $params['location'][1] = array ( 'location_type_id'                               => 1,
+        $params['location'][1] =  [ 'location_type_id'                               => 1,
                                          'is_primary'                                     => 1,
-                                         'address' =>  array ( 
+                                         'address' =>   [ 
                                                               'street_address'            => 'Saint Helier St',
                                                               'supplemental_address_1'    => 'Hallmark Ct',
                                                               'supplemental_address_2'    => 'Jersey Village',
@@ -366,26 +366,26 @@ class CRM_Core_BAO_LocationTest extends CiviUnitTestCase
                                                               'state_province_id'         => 1029,
                                                               'geo_code_1'                => '18.219023',
                                                               'geo_code_2'                => '-105.00973',
-                                                              ),
-                                         'email'   => array ( 
-                                                             '1' => array ( 'email'       => 'john.smith@example.org' ), 
-                                                             ),
-                                         'phone'   => array (
-                                                             '1' => array (
+                                                              ],
+                                         'email'   =>  [ 
+                                                             '1' =>  [ 'email'       => 'john.smith@example.org' ], 
+                                                             ],
+                                         'phone'   =>  [
+                                                             '1' =>  [
                                                                            'phone_type_id' => 1,
                                                                            'phone'         => '303443689',
-                                                                           ),
-                                                             '2' => array (
+                                                                           ],
+                                                             '2' =>  [
                                                                            'phone_type_id' => 2,
                                                                            'phone'         => '9833910234',
-                                                                           ),
-                                                             ),
-                                         'im'      => array (
-                                                             '1' => array ( 'name'        => 'jane.doe',
+                                                                           ],
+                                                             ],
+                                         'im'      =>  [
+                                                             '1' =>  [ 'name'        => 'jane.doe',
                                                                             'provider_id' => 1
-                                                                            ),
-                                                             ),
-                                         );
+                                                                            ],
+                                                             ],
+                                         ];
         $params['entity_id']    = $eventId;
         $params['entity_table'] = 'civicrm_event';
         
@@ -397,8 +397,8 @@ class CRM_Core_BAO_LocationTest extends CiviUnitTestCase
         $locBlockId = CRM_Utils_Array::value( 'id', $location );
         //update event record with location block id
         require_once 'CRM/Event/BAO/Event.php';
-        $eventParams = array( 'id'           => $eventId,
-                              'loc_block_id' => $locBlockId );
+        $eventParams = [ 'id'           => $eventId,
+                              'loc_block_id' => $locBlockId ];
         CRM_Event_BAO_Event::add( $eventParams );
         
         //delete the location block
@@ -440,9 +440,9 @@ class CRM_Core_BAO_LocationTest extends CiviUnitTestCase
         
         //create various element of location block 
         //like address, phone, email, openid, im.
-        $params = array ( 
-                          'address' =>  array ( 
-                                               '1' => array( 'street_address'            => 'Saint Helier St',
+        $params =  [ 
+                          'address' =>   [ 
+                                               '1' => [ 'street_address'            => 'Saint Helier St',
                                                              'supplemental_address_1'    => 'Hallmark Ct',
                                                              'supplemental_address_2'    => 'Jersey Village',
                                                              'city'                      => 'Newark',
@@ -453,42 +453,42 @@ class CRM_Core_BAO_LocationTest extends CiviUnitTestCase
                                                              'geo_code_2'                => '-105.00973',
                                                              'is_primary'                => 1,
                                                              'location_type_id'          => 1,
-                                                             ),
+                                                             ],
 
-                                                ),
-                          'email'   => array ( 
-                                              '1' => array ( 'email'            => 'john.smith@example.org',
+                                                ],
+                          'email'   =>  [ 
+                                              '1' =>  [ 'email'            => 'john.smith@example.org',
                                                              'is_primary'       => 1,
                                                              'location_type_id' => 1,
-                                                             ), 
-                                               ),
-                          'phone'   => array (
-                                              '1' => array (
+                                                             ], 
+                                               ],
+                          'phone'   =>  [
+                                              '1' =>  [
                                                             'phone_type_id' => 1,
                                                             'phone'         => '303443689',
                                                             'is_primary'                => 1,
                                                             'location_type_id'          => 1,
-                                                            ),
-                                              '2' => array (
+                                                            ],
+                                              '2' =>  [
                                                             'phone_type_id' => 2,
                                                             'phone'         => '9833910234',
                                                             'location_type_id'          => 1,
-                                                            ),
-                                              ),
-                          'openid'  => array (
-                                              '1' => array ( 'openid'      => 'http://civicrm.org/',
+                                                            ],
+                                              ],
+                          'openid'  =>  [
+                                              '1' =>  [ 'openid'      => 'http://civicrm.org/',
                                                              'location_type_id'          => 1,
                                                              'is_primary'              => 1,
-                                                             ),
-                                              ),
-                          'im'      => array (
-                                              '1' => array ( 'name'        => 'jane.doe',
+                                                             ],
+                                              ],
+                          'im'      =>  [
+                                              '1' =>  [ 'name'        => 'jane.doe',
                                                              'provider_id' => 1,
                                                              'location_type_id'          => 1,
                                                              'is_primary'              => 1,
-                                                             ),
-                                              ),
-                          );
+                                                             ],
+                                              ],
+                          ];
         
         $params['contact_id'] = $contactId;
                 

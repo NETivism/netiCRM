@@ -37,11 +37,11 @@ class CRM_Contribute_BAO_ContributionPageTest extends CiviUnitTestCase
     
     function get_info( ) 
     {
-        return array(
+        return [
                      'name'        => 'Contribution BAOs',
                      'description' => 'Test all Contribute_BAO_ContributionPage methods.',
                      'group'       => 'CiviCRM BAO Tests',
-                     );
+                     ];
     }
     
     function setUp( ) 
@@ -62,7 +62,7 @@ class CRM_Contribute_BAO_ContributionPageTest extends CiviUnitTestCase
     function testCreate( )
     {
         
-        $params = array (
+        $params =  [
                          'qfkey'                  => '9a3ef3c08879ad4c8c109b21c583400e',
                          'title'                  => 'Test Contribution Page',
                          'contribution_type_id'   => $this->_contributionTypeID,
@@ -79,7 +79,7 @@ class CRM_Contribute_BAO_ContributionPageTest extends CiviUnitTestCase
                          'end_date'               => '19700101000000',
                          'end_date_time'          => '',
                          'is_credit_card_only'    => '',
-                         );
+                         ];
         
 
          require_once 'CRM/Contribute/BAO/ContributionPage.php';
@@ -97,11 +97,11 @@ class CRM_Contribute_BAO_ContributionPageTest extends CiviUnitTestCase
     function testsetIsActive( )
     {
         
-        $params = array (
+        $params =  [
                          'title'                  => 'Test Contribution Page', 
                          'contribution_type_id'   => $this->_contributionTypeID,
                          'is_active'              => 1,
-                         );
+                         ];
             
         require_once 'CRM/Contribute/BAO/ContributionPage.php';
         $contributionpage = CRM_Contribute_BAO_ContributionPage::create( $params );
@@ -120,17 +120,17 @@ class CRM_Contribute_BAO_ContributionPageTest extends CiviUnitTestCase
     function testSetValues( )
     {
 
-        $params = array (
+        $params =  [
                          'title'                  => 'Test Contribution Page', 
                          'contribution_type_id'   => $this->_contributionTypeID,
                          'is_active'              => 1,
-                         );
+                         ];
             
         require_once 'CRM/Contribute/BAO/ContributionPage.php';
         $contributionpage = CRM_Contribute_BAO_ContributionPage::create( $params );
                 
         $id = $contributionpage->id;
-        $values = array ();
+        $values =  [];
         $setValues  = CRM_Contribute_BAO_ContributionPage::setValues($id , $values );
 
         $this->assertEquals( $params['title'] ,$values['title'] , 'Verify contribution title.');
@@ -146,7 +146,7 @@ class CRM_Contribute_BAO_ContributionPageTest extends CiviUnitTestCase
     
     function testcopy ( )
     {   
-        $params = array (
+        $params =  [
                          'qfkey'                  => '9a3ef3c08879ad4c8c109b21c583400e',
                          'title'                  => 'Test Contribution Page',
                          'contribution_type_id'   => $this->_contributionTypeID,
@@ -163,7 +163,7 @@ class CRM_Contribute_BAO_ContributionPageTest extends CiviUnitTestCase
                          'end_date'               => '19700101000000',
                          'end_date_time'          => '',
                          'is_credit_card_only'    => '',
-                         );
+                         ];
         
 
          require_once 'CRM/Contribute/BAO/ContributionPage.php';
@@ -183,12 +183,12 @@ class CRM_Contribute_BAO_ContributionPageTest extends CiviUnitTestCase
     function testcheckRecurPaymentProcessor( )
     { 
         $paymentProcessor = PaypalPro::create( );
-        $params = array (
+        $params =  [
                          'title'                  => 'Test Contribution Page', 
                          'contribution_type_id'   => $this->_contributionTypeID,
                          'is_active'              => 1,  
                          'payment_processor_id'   => $paymentProcessor
-                         );
+                         ];
         
         require_once 'CRM/Contribute/BAO/ContributionPage.php';
         

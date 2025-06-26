@@ -10,12 +10,12 @@ class api_v3_CampaignTest extends CiviUnitTestCase {
   public $_eNoticeCompliant = TRUE;
   public $DBResetRequired = FALSE; function setUp() {
     $this->_apiversion = 3;
-    $this->params = array(
+    $this->params = [
       'version' => 3,
       'title' => "campaign title",
       'description' => "Call people, ask for money",
       'created_date' => 'first sat of July 2008',
-    );
+    ];
     parent::setUp();
   }
 
@@ -28,7 +28,7 @@ class api_v3_CampaignTest extends CiviUnitTestCase {
     $this->assertEquals(0, $result['is_error'], 'In line ' . __LINE__);
     $this->assertEquals(1, $result['count'], 'In line ' . __LINE__);
     $this->assertNotNull($result['values'][$result['id']]['id'], 'In line ' . __LINE__);
-    $this->getAndCheck(array_merge($this->params, array('created_date' => '2008-07-05 00:00:00')), $result['id'], 'campaign', TRUE);
+    $this->getAndCheck(array_merge($this->params, ['created_date' => '2008-07-05 00:00:00']), $result['id'], 'campaign', TRUE);
   }
 
   public function testGetCampaign() {
@@ -43,14 +43,14 @@ class api_v3_CampaignTest extends CiviUnitTestCase {
 
   public function testDeleteCampaign() {
     $entity = civicrm_api('campaign', 'get', ($this->params));
-    $delete = array('version' => 3, 'id' => $entity['id']);
+    $delete = ['version' => 3, 'id' => $entity['id']];
     $result = civicrm_api('campaign', 'delete', $delete);
     $this->documentMe($delete, $result, __FUNCTION__, __FILE__);
     $this->assertEquals(0, $result['is_error'], 'In line ' . __LINE__);
 
-    $checkDeleted = civicrm_api('campaign', 'get', array(
+    $checkDeleted = civicrm_api('campaign', 'get', [
       'version' => 3,
-      ));
+      ]);
     $this->assertEquals(0, $checkDeleted['count'], 'In line ' . __LINE__);
   }
 }

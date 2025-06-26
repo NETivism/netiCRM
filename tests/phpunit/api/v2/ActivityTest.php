@@ -97,12 +97,12 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
    * @access protected
    */
   function tearDown() {
-    $tablesToTruncate = array(
+    $tablesToTruncate = [
       'civicrm_contact',
       'civicrm_activity',
       'civicrm_option_group',
       'civicrm_option_value',
-    );
+    ];
     $this->quickCleanup($tablesToTruncate, TRUE);
   }
 
@@ -120,7 +120,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
     );
 
     //  Get activities associated with contact 17
-    $params = array('contact_id' => 17);
+    $params = ['contact_id' => 17];
     $result = civicrm_activity_get_contact($params);
     $this->assertEquals(0, $result['is_error'],
       "Error message: " . CRM_Utils_Array::value('error_message', $result)
@@ -145,7 +145,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
    * check with empty array
    */
   function testActivityCreateEmpty() {
-    $params = array();
+    $params = [];
     $result = &civicrm_activity_create($params);
     $this->assertEquals($result['is_error'], 1,
       "In line " . __LINE__
@@ -156,10 +156,10 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
    * check if required fields are not passed
    */
   function testActivityCreateWithoutRequired() {
-    $params = array(
+    $params = [
       'subject' => 'this case should fail',
       'scheduled_date_time' => date('Ymd'),
-    );
+    ];
 
     $result = &civicrm_activity_create($params);
     $this->assertEquals($result['is_error'], 1,
@@ -171,7 +171,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
    *  Test civicrm_activity_create() with missing subject
    */
   function testActivityCreateMissingSubject() {
-    $params = array(
+    $params = [
       'source_contact_id' => 17,
       'activity_date_time' => date('Ymd'),
       'duration' => 120,
@@ -180,7 +180,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
       'status_id' => 1,
       'activity_name' => 'Test activity type',
       'scheduled_date_time' => date('Ymd'),
-    );
+    ];
 
     $result = civicrm_activity_create($params);
     $this->assertEquals($result['is_error'], 1,
@@ -193,7 +193,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
    *  and activity_name
    */
   function testActivityCreateMismatchNameType() {
-    $params = array(
+    $params = [
       'source_contact_id' => 17,
       'subject' => 'Test activity',
       'activity_date_time' => date('Ymd'),
@@ -204,7 +204,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
       'activity_name' => 'Fubar activity type',
       'activity_type_id' => 5,
       'scheduled_date_time' => date('Ymd'),
-    );
+    ];
 
     $result = civicrm_activity_create($params);
     $this->assertEquals($result['is_error'], 1,
@@ -216,7 +216,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
    *  Test civicrm_activity_id() with missing source_contact_id
    */
   function testActivityCreateWithMissingContactId() {
-    $params = array(
+    $params = [
       'subject' => 'Discussion on Apis for v2',
       'activity_date_time' => date('Ymd'),
       'duration' => 120,
@@ -224,7 +224,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
       'details' => 'a test activity',
       'status_id' => 1,
       'activity_name' => 'Test activity type',
-    );
+    ];
 
     $result = &civicrm_activity_create($params);
 
@@ -237,7 +237,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
    *  Test civicrm_activity_id() with non-numeric source_contact_id
    */
   function testActivityCreateWithNonNumericContactId() {
-    $params = array(
+    $params = [
       'source_contact_id' => 'fubar',
       'subject' => 'Discussion on Apis for v2',
       'activity_date_time' => date('Ymd'),
@@ -246,7 +246,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
       'details' => 'a test activity',
       'status_id' => 1,
       'activity_name' => 'Test activity type',
-    );
+    ];
 
     $result = &civicrm_activity_create($params);
 
@@ -283,7 +283,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
    * check with incorrect required fields
    */
   function testActivityCreateWithNonNumericActivityTypeId() {
-    $params = array(
+    $params = [
       'source_contact_id' => 17,
       'subject' => 'Discussion on Apis for v2',
       'activity_date_time' => date('Ymd'),
@@ -292,7 +292,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
       'details' => 'a test activity',
       'status_id' => 1,
       'activity_type_id' => 'Test activity type',
-    );
+    ];
 
     $result = civicrm_activity_create($params);
 
@@ -305,7 +305,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
    * check with incorrect required fields
    */
   function testActivityCreateWithUnknownActivityTypeId() {
-    $params = array(
+    $params = [
       'source_contact_id' => 17,
       'subject' => 'Discussion on Apis for v2',
       'activity_date_time' => date('Ymd'),
@@ -314,7 +314,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
       'details' => 'a test activity',
       'status_id' => 1,
       'activity_type_id' => 6,
-    );
+    ];
 
     $result = &civicrm_activity_create($params);
 
@@ -327,7 +327,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
    *  Test civicrm_activity_create() with valid parameters
    */
   function testActivityCreate() {
-    $params = array(
+    $params = [
       'source_contact_id' => 17,
       'subject' => 'Discussion on Apis for v2',
       'activity_date_time' => date('Ymd'),
@@ -336,7 +336,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
       'details' => 'a test activity',
       'status_id' => 1,
       'activity_name' => 'Test activity type',
-    );
+    ];
 
     $result = &civicrm_activity_create($params);
     $this->assertEquals($result['is_error'], 0,
@@ -412,7 +412,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
     CRM_Core_BAO_CustomField::createField($customField, 'add');
 
     //  Create an activity with custom data
-    $params = array(
+    $params = [
       'source_contact_id' => 17,
       'subject' => 'Discussion on Apis for v2',
       'activity_date_time' => date('Ymd'),
@@ -421,9 +421,9 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
       'details' => 'a test activity',
       'status_id' => 1,
       'activity_name' => 'Test activity type',
-      'custom' => array(
-        array(
-          array(
+      'custom' => [
+        [
+          [
             'value' => 'bite my test data',
             'type' => 'String',
             'custom_field_id' => 11,
@@ -432,9 +432,9 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
             'column_name' => 'activity_custom_11',
             'is_multiple' => 0,
             'file_id' => NULL,
-          ),
-        )),
-    );
+          ],
+        ]],
+    ];
     $result = civicrm_activity_create($params);
     $this->assertEquals(0, $result['is_error'],
       "Error message: " . CRM_Utils_Array::value('error_message', $result)
@@ -444,10 +444,10 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
     );
 
     //  Retrieve and check the activity created
-    $params = array(
+    $params = [
       'activity_id' => 1,
       'activity_type_id' => 1,
-    );
+    ];
     $result = civicrm_activity_get($params, TRUE);
     $this->assertEquals(0, $result['is_error'],
       "Error message: " . CRM_Utils_Array::value('error_message', $result)
@@ -497,7 +497,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
       )
     );
 
-    $params = array(
+    $params = [
       'source_contact_id' => 17,
       'subject' => 'Discussion on Apis for v2',
       'activity_date_time' => date('Ymd'),
@@ -506,7 +506,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
       'details' => 'a test activity',
       'status_id' => 'Invalid',
       'activity_name' => 'Test activity type',
-    );
+    ];
 
     $result = civicrm_activity_create($params);
 
@@ -546,7 +546,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
       )
     );
 
-    $params = array(
+    $params = [
       'source_contact_id' => 17,
       'subject' => 'Discussion on Apis for v2',
       'activity_date_time' => date('Ymd'),
@@ -555,7 +555,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
       'details' => 'a test activity',
       'status_id' => 'Scheduled',
       'activity_name' => 'Test activity type',
-    );
+    ];
 
     $result = civicrm_activity_create($params);
 
@@ -585,7 +585,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
     );
 
     //  Get activities associated with contact 17
-    $params = array('contact_id' => 17);
+    $params = ['contact_id' => 17];
     $result = civicrm_activity_get_contact($params);
     $this->assertEquals(0, $result['is_error'],
       "Error message: " . CRM_Utils_Array::value('error_message', $result)
@@ -610,7 +610,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
    *  Test civicrm_activity_get() with no params
    */
   function testActivityGetEmpty() {
-    $params = array();
+    $params = [];
     $result = civicrm_activity_get($params);
     $this->assertEquals(1, $result['is_error'], 'In line ' . __LINE__);
   }
@@ -619,7 +619,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
    *  Test civicrm_activity_get() with a non-numeric activity ID
    */
   function testActivityGetNonNumericID() {
-    $params = array('activity_id' => 'fubar');
+    $params = ['activity_id' => 'fubar'];
     $result = civicrm_activity_get($params);
     $this->assertEquals(1, $result['is_error'], 'In line ' . __LINE__);
   }
@@ -628,7 +628,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
    *  Test civicrm_activity_get() with a bad activity ID
    */
   function testActivityGetBadID() {
-    $params = array('activity_id' => 42);
+    $params = ['activity_id' => 42];
     $result = civicrm_activity_get($params);
     $this->assertEquals(1, $result['is_error'], 'In line ' . __LINE__);
   }
@@ -646,7 +646,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
       )
     );
 
-    $params = array('activity_id' => 13);
+    $params = ['activity_id' => 13];
     $result = civicrm_activity_get($params);
     $this->assertEquals(0, $result['is_error'],
       "Error message: " . CRM_Utils_Array::value('error_message', $result)
@@ -715,10 +715,10 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
     CRM_Core_DAO::executeQuery($query);
 
     //  Retrieve the test value
-    $params = array(
+    $params = [
       'activity_id' => 4,
       'activity_type_id' => 5,
-    );
+    ];
     $result = civicrm_activity_get($params, TRUE);
     $this->assertEquals(0, $result['is_error'],
       "Error message: " . CRM_Utils_Array::value('error_message', $result)
@@ -755,7 +755,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
    * check activity deletion with empty params
    */
   function testDeleteActivityForEmptyParams() {
-    $params = array();
+    $params = [];
     $result = &civicrm_activity_delete($params);
     $this->assertEquals($result['is_error'], 1,
       "In line " . __LINE__
@@ -766,7 +766,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
    * check activity deletion without activity id
    */
   function testDeleteActivityWithoutId() {
-    $params = array('activity_name' => 'Meeting');
+    $params = ['activity_name' => 'Meeting'];
     $result = &civicrm_activity_delete($params);
     $this->assertEquals($result['is_error'], 1,
       "In line " . __LINE__
@@ -777,7 +777,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
    * check activity deletion without activity type
    */
   function testDeleteActivityWithoutActivityType() {
-    $params = array('id' => 1);
+    $params = ['id' => 1];
     $result = &civicrm_activity_delete($params);
     $this->assertEquals($result['is_error'], 1,
       "In line " . __LINE__
@@ -788,10 +788,10 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
    * check activity deletion with incorrect data
    */
   function testDeleteActivityWithIncorrectActivityType() {
-    $params = array(
+    $params = [
       'id' => 1,
       'activity_name' => 'Test Activity',
-    );
+    ];
 
     $result = &civicrm_activity_delete($params);
     $this->assertEquals($result['is_error'], 1,
@@ -811,10 +811,10 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
         dirname(__FILE__) . '/dataset/activity_4_13.xml'
       )
     );
-    $params = array(
+    $params = [
       'id' => 13,
       'activity_type_id' => 1,
-    );
+    ];
 
     $result = &civicrm_activity_delete($params);
     $this->assertEquals($result['is_error'], 0,
@@ -916,7 +916,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
    * check with empty array
    */
   function testActivityUpdateEmpty() {
-    $params = array();
+    $params = [];
     $result = &civicrm_activity_update($params);
     $this->assertEquals($result['is_error'], 1,
       "In line " . __LINE__
@@ -927,10 +927,10 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
    * check if required fields are not passed
    */
   function testActivityUpdateWithoutRequired() {
-    $params = array(
+    $params = [
       'subject' => 'this case should fail',
       'scheduled_date_time' => date('Ymd'),
-    );
+    ];
 
     $result = &civicrm_activity_update($params);
     $this->assertEquals($result['is_error'], 1,
@@ -942,11 +942,11 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
    * check with incorrect required fields
    */
   function testActivityUpdateWithIncorrectData() {
-    $params = array(
+    $params = [
       'activity_name' => 'Meeting',
       'subject' => 'this case should fail',
       'scheduled_date_time' => date('Ymd'),
-    );
+    ];
 
     $result = &civicrm_activity_update($params);
     $this->assertEquals($result['is_error'], 1,
@@ -958,12 +958,12 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
    * Test civicrm_activity_update() with non-numeric id
    */
   function testActivityUpdateWithNonNumericId() {
-    $params = array(
+    $params = [
       'id' => 'lets break it',
       'activity_name' => 'Meeting',
       'subject' => 'this case should fail',
       'scheduled_date_time' => date('Ymd'),
-    );
+    ];
 
     $result = &civicrm_activity_update($params);
     $this->assertEquals($result['is_error'], 1,
@@ -975,12 +975,12 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
    * check with incorrect required fields
    */
   function testActivityUpdateWithIncorrectContactActivityType() {
-    $params = array(
+    $params = [
       'id' => 1,
       'activity_name' => 'Test Activity',
       'subject' => 'this case should fail',
       'scheduled_date_time' => date('Ymd'),
-    );
+    ];
 
     $result = &civicrm_activity_update($params);
     $this->assertEquals($result['is_error'], 1,
@@ -1001,7 +1001,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
       )
     );
 
-    $params = array(
+    $params = [
       'id' => 4,
       'subject' => 'Update Discussion on Apis for v2',
       'activity_date_time' => '20091011123456',
@@ -1012,7 +1012,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
       'activity_name' => 'Test activity type',
       'source_contact_id' => 17,
       'priority_id' => 1,
-    );
+    ];
 
     $result = &civicrm_activity_update($params);
 
@@ -1088,7 +1088,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
     $customFiledId = CRM_Core_BAO_CustomField::createField($customField, 'add');
 
     //  Create an activity with custom data
-    $params = array(
+    $params = [
       'source_contact_id' => 17,
       'subject' => 'Discussion on Activity Apis for v2',
       'activity_date_time' => date('Ymd'),
@@ -1097,9 +1097,9 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
       'details' => 'a test activity to check the update api',
       'status_id' => 1,
       'activity_name' => 'Test activity type',
-      'custom' => array(
-        array(
-          array(
+      'custom' => [
+        [
+          [
             'value' => 'bite my test data',
             'type' => 'String',
             'custom_field_id' => 11,
@@ -1108,9 +1108,9 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
             'column_name' => 'activity_custom_11',
             'is_multiple' => 0,
             'file_id' => NULL,
-          ),
-        )),
-    );
+          ],
+        ]],
+    ];
     $result = civicrm_activity_create($params);
     $this->assertEquals(0, $result['is_error'],
       "Error message: " . CRM_Utils_Array::value('error_message', $result)
@@ -1120,10 +1120,10 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
     );
 
     //  Retrieve and check the activity created
-    $params = array(
+    $params = [
       'activity_id' => 1,
       'activity_type_id' => 1,
-    );
+    ];
     $result = civicrm_activity_get($params, TRUE);
     $this->assertEquals(0, $result['is_error'],
       "Error message: " . CRM_Utils_Array::value('error_message', $result)
@@ -1137,21 +1137,21 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
     );
 
     //  Update the activity with custom data
-    $params = array(
+    $params = [
       'id' => $result['result']['id'],
       'source_contact_id' => 17,
       'subject' => 'Discussion on Apis for v2 - Activity Update',
       'status_id' => 1,
       'activity_name' => 'Test activity type',
       'custom_11' => 'Updated my test data',
-    );
+    ];
     $result = civicrm_activity_update($params);
 
     //  Retrieve and check the activity created
-    $params = array(
+    $params = [
       'activity_id' => $result['id'],
       'activity_type_id' => 1,
-    );
+    ];
     $result = civicrm_activity_get($params, TRUE);
 
     $this->assertEquals(0, $result['is_error'],
@@ -1163,10 +1163,10 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
     );
 
     // Check that the custom field value is update
-    $params = array(
+    $params = [
       'entityID' => $result['result']['id'],
       'custom_11' => 1,
-    );
+    ];
     $values = CRM_Core_BAO_CustomValueTable::getValues($params);
     // check for updated custom value
     $this->assertEquals('Updated my test data',
@@ -1188,7 +1188,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
       )
     );
     //
-    $params = array(
+    $params = [
       'id' => 4,
       'subject' => 'Update Discussion on Apis for v2',
       'duration' => 120,
@@ -1198,7 +1198,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
       'activity_name' => 'Test activity type',
       'source_contact_id' => 17,
       'priority_id' => 1,
-    );
+    ];
 
     $result = &civicrm_activity_update($params);
 
@@ -1250,13 +1250,13 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
         dirname(__FILE__) . '/dataset/activity_type_5.xml'
       )
     );
-    $params = array(
+    $params = [
       'id' => 4,
       'source_contact_id' => 17,
       'subject' => 'Hurry update works',
       'status_id' => 1,
       'activity_name' => 'Test activity type',
-    );
+    ];
 
     $result = &civicrm_activity_update($params);
     $this->assertNotContains('is_error', $result);

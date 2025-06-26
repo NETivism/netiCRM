@@ -40,11 +40,11 @@ require_once 'api/v3/GroupOrganization.php';
  */
 class api_v3_GroupOrganizationTest extends CiviUnitTestCase {
   protected $_apiversion; function get_info() {
-    return array(
+    return [
       'name' => 'Group Organization',
       'description' => 'Test all Group Organization API methods.',
       'group' => 'CiviCRM API Tests',
-    );
+    ];
   }
 
   /**
@@ -70,14 +70,14 @@ class api_v3_GroupOrganizationTest extends CiviUnitTestCase {
   protected function tearDown() {
     //  Truncate the tables
     $this->quickCleanup(
-      array(
+      [
         'civicrm_group',
         'civicrm_group_organization',
         'civicrm_contact',
         'civicrm_uf_group',
         'civicrm_uf_join',
         'civicrm_uf_match',
-      )
+      ]
     );
   }
 
@@ -88,16 +88,16 @@ class api_v3_GroupOrganizationTest extends CiviUnitTestCase {
    */
   public function testGroupOrganizationGet() {
 
-    $params = array(
+    $params = [
       'organization_id' => $this->_orgID,
       'group_id' => $this->_groupID,
       'version' => $this->_apiversion,
-    );
+    ];
     $result = civicrm_api('group_organization', 'create', $params);
-    $paramsGet = array(
+    $paramsGet = [
       'organization_id' => $result['id'],
       'version' => $this->_apiversion,
-    );
+    ];
     $result = civicrm_api('group_organization', 'get', $paramsGet);
     $this->documentMe($paramsGet, $result, __FUNCTION__, __FILE__);
     $this->assertEquals($result['is_error'], 0);
@@ -108,14 +108,14 @@ class api_v3_GroupOrganizationTest extends CiviUnitTestCase {
    */
   public function testGroupOrganizationGetWithGroupId() {
 
-    $params = array(
+    $params = [
       'organization_id' => $this->_orgID,
       'group_id' => $this->_groupID,
       'version' => $this->_apiversion,
-    );
+    ];
     $result = civicrm_api('group_organization', 'create', $params);
 
-    $paramsGet = array('organization_id' => $result['result']['organization_id']);
+    $paramsGet = ['organization_id' => $result['result']['organization_id']];
 
     $result = civicrm_api('group_organization', 'get', $params);
     $this->assertEquals($result['is_error'], 0);
@@ -125,9 +125,9 @@ class api_v3_GroupOrganizationTest extends CiviUnitTestCase {
    * Test civicrm_group_organization_get with empty params.
    */
   public function testGroupOrganizationGetWithEmptyParams() {
-    $params = array(
+    $params = [
       'version' => $this->_apiversion,
-    );
+    ];
     $result = civicrm_api('group_organization', 'get', $params);
 
     $this->assertEquals($result['is_error'], 0);
@@ -148,10 +148,10 @@ class api_v3_GroupOrganizationTest extends CiviUnitTestCase {
    * Test civicrm_group_organization_get invalid keys.
    */
   public function testGroupOrganizationGetWithInvalidKeys() {
-    $params = array(
+    $params = [
       'invalid_key' => 1,
       'version' => $this->_apiversion,
-    );
+    ];
     $result = civicrm_api('group_organization', 'get', $params);
 
     $this->assertEquals($result['is_error'], 0);
@@ -163,11 +163,11 @@ class api_v3_GroupOrganizationTest extends CiviUnitTestCase {
    * check with valid params
    */
   public function testGroupOrganizationCreate() {
-    $params = array(
+    $params = [
       'organization_id' => $this->_orgID,
       'group_id' => $this->_groupID,
       'version' => $this->_apiversion,
-    );
+    ];
     $result = civicrm_api('group_organization', 'create', $params);
     $this->documentMe($params, $result, __FUNCTION__, __FILE__);
     $this->assertAPISuccess($result, "in line " . __LINE__);
@@ -177,9 +177,9 @@ class api_v3_GroupOrganizationTest extends CiviUnitTestCase {
    * check with empty params array
    */
   public function testGroupOrganizationCreateWithEmptyParams() {
-    $params = array(
+    $params = [
       'version' => $this->_apiversion,
-    );
+    ];
     $result = civicrm_api('group_organization', 'create', $params);
 
     $this->assertEquals($result['is_error'], 1);
@@ -201,10 +201,10 @@ class api_v3_GroupOrganizationTest extends CiviUnitTestCase {
    * check with invalid params keys
    */
   public function testGroupOrganizationCreateWithInvalidKeys() {
-    $params = array(
+    $params = [
       'invalid_key' => 1,
       'version' => $this->_apiversion,
-    );
+    ];
     $result = civicrm_api('group_organization', 'create', $params);
 
     $this->assertEquals($result['is_error'], 1);
@@ -228,9 +228,9 @@ class api_v3_GroupOrganizationTest extends CiviUnitTestCase {
    * Test civicrm_group_organization_remove with empty params.
    */
   public function testGroupOrganizationDeleteWithEmptyParams() {
-    $params = array(
+    $params = [
       'version' => $this->_apiversion,
-    );
+    ];
     $result = civicrm_api('group_organization', 'delete', $params);
 
     $this->assertEquals($result['is_error'], 1);
@@ -241,17 +241,17 @@ class api_v3_GroupOrganizationTest extends CiviUnitTestCase {
    *  Test civicrm_group_organization_remove with valid params.
    */
   public function testGroupOrganizationDelete() {
-    $paramsC = array(
+    $paramsC = [
       'organization_id' => $this->_orgID,
       'group_id' => $this->_groupID,
       'version' => $this->_apiversion,
-    );
+    ];
     $result = civicrm_api('group_organization', 'create', $paramsC);
 
-    $params = array(
+    $params = [
       'id' => $result['id'],
       'version' => $this->_apiversion,
-    );
+    ];
     $result = civicrm_api('group_organization', 'delete', $params);
     $this->documentMe($params, $result, __FUNCTION__, __FILE__);
     $this->assertAPISuccess($result, "in line " . __LINE__);
@@ -261,10 +261,10 @@ class api_v3_GroupOrganizationTest extends CiviUnitTestCase {
    *  Test civicrm_group_organization_remove with invalid params key.
    */
   public function testGroupOrganizationDeleteWithInvalidKey() {
-    $paramsDelete = array(
+    $paramsDelete = [
       'invalid_key' => 1,
       'version' => $this->_apiversion,
-    );
+    ];
     $result = civicrm_api('group_organization', 'delete', $paramsDelete);
 
     $this->assertEquals($result['is_error'], 1);

@@ -40,19 +40,19 @@ class api_v3_EventTest extends CiviUnitTestCase {
   protected $_params;
   protected $_apiversion;
   protected $_entity; function get_info() {
-    return array(
+    return [
       'name' => 'Event Create',
       'description' => 'Test all Event Create API methods.',
       'group' => 'CiviCRM API Tests',
-    );
+    ];
   }
 
   function setUp() {
     parent::setUp();
     $this->_apiversion = 3;
     $this->_entity     = 'event';
-    $this->_params     = array(
-      array(
+    $this->_params     = [
+      [
         'title' => 'Annual CiviCRM meet',
         'summary' => 'If you have any CiviCRM realted issues or want to track where CiviCRM is heading, Sign up now',
         'description' => 'This event is intended to give brief idea about progess of CiviCRM and giving solutions to common user issues',
@@ -69,8 +69,8 @@ class api_v3_EventTest extends CiviUnitTestCase {
         'is_active' => 1,
         'is_show_location' => 0,
         'version' => $this->_apiversion,
-      ),
-      array(
+      ],
+      [
         'title' => 'Annual CiviCRM meet 2',
         'summary' => 'If you have any CiviCRM realted issues or want to track where CiviCRM is heading, Sign up now',
         'description' => 'This event is intended to give brief idea about progess of CiviCRM and giving solutions to common user issues',
@@ -87,26 +87,26 @@ class api_v3_EventTest extends CiviUnitTestCase {
         'is_active' => 1,
         'is_show_location' => 0,
         'version' => $this->_apiversion,
-      ),
-    );
+      ],
+    ];
 
-    $params = array(
-      array(
+    $params = [
+      [
         'title' => 'Annual CiviCRM meet',
         'event_type_id' => 1,
         'start_date' => 20081021,
         'version' => $this->_apiversion,
-      ),
-      array(
+      ],
+      [
         'title' => 'Annual CiviCRM meet 2',
         'event_type_id' => 1,
         'start_date' => 20101021,
         'version' => $this->_apiversion,
-      ),
-    );
+      ],
+    ];
 
-    $this->events = array();
-    $this->eventIds = array();
+    $this->events = [];
+    $this->eventIds = [];
     foreach ($params as $event) {
       $result            = civicrm_api('Event', 'Create', $event);
       $this->_events[]   = $result;
@@ -127,10 +127,10 @@ class api_v3_EventTest extends CiviUnitTestCase {
     */
 
 
-    $tablesToTruncate = array(
+    $tablesToTruncate = [
       'civicrm_participant',
       'civicrm_event',
-    );
+    ];
     $this->quickCleanup($tablesToTruncate, TRUE);
   }
 
@@ -143,27 +143,27 @@ class api_v3_EventTest extends CiviUnitTestCase {
   }
 
   function testGetEventEmptyParams() {
-    $params = array();
+    $params = [];
     $result = civicrm_api('event', 'get', $params);
 
     $this->assertEquals($result['is_error'], 1);
   }
 
   function testGetEventById() {
-    $params = array(
+    $params = [
       'id' => $this->_events[1]['id'],
       'version' => $this->_apiversion,
-    );
+    ];
     $result = civicrm_api('event', 'get', $params);
     $this->assertEquals($result['values'][$this->_eventIds[1]]['event_title'], 'Annual CiviCRM meet 2');
   }
 
   function testGetEventByEventTitle() {
 
-    $params = array(
+    $params = [
       'event_title' => 'Annual CiviCRM meet',
       'version' => $this->_apiversion,
-    );
+    ];
 
     $result = civicrm_api('event', 'get', $params);
     $this->documentMe($params, $result, __FUNCTION__, __FILE__);
@@ -172,39 +172,39 @@ class api_v3_EventTest extends CiviUnitTestCase {
   }
 
   function testGetEventByWrongTitle() {
-    $params = array(
+    $params = [
       'title' => 'No event with that title',
       'version' => $this->_apiversion,
-    );
+    ];
     $result = civicrm_api('Event', 'Get', $params);
     $this->assertEquals(0, $result['count']);
   }
   function testGetEventByIdSort() {
-  	$params = array(
+  	$params = [
       'return.sort' => 'id ASC',
       'return.max_results' => 1,
       'version' => $this->_apiversion,
-    );
+    ];
     $result = civicrm_api('Event', 'Get', $params);
     $this->assertEquals(1, $result['id'], ' in line ' . __LINE__);
-    $params = array(
-      'options' => array(
+    $params = [
+      'options' => [
         'sort' => 'id DESC',
         'limit' => 1,
-      ),
+      ],
       'version' => $this->_apiversion,
-    );
+    ];
 
     $result = civicrm_api('Event', 'Get', $params);
     $this->assertAPISuccess($result, ' in line ' . __LINE__);
     $this->assertEquals(2, $result['id'], ' in line ' . __LINE__);
-    $params = array(
-      'options' => array(
+    $params = [
+      'options' => [
         'sort' => 'id ASC',
         'limit' => 1,
-      ),
+      ],
       'version' => $this->_apiversion,
-    );
+    ];
     $result = civicrm_api('Event', 'Get', $params);
     $this->assertEquals(1, $result['id'], ' in line ' . __LINE__);
 
@@ -232,13 +232,13 @@ class api_v3_EventTest extends CiviUnitTestCase {
      * Test 'is.Current' option. Existing event is 'old' so only current should be returned
      */
   function testGetIsCurrent() {
-    $params = array(
+    $params = [
       'version' => $this->_apiversion,
       'isCurrent' => 1,
-    );
-    $currentEventParams = array('start_date' => date('Y-m-d', strtotime('+ 1 day')),
+    ];
+    $currentEventParams = ['start_date' => date('Y-m-d', strtotime('+ 1 day')),
       'end_date' => date('Y-m-d', strtotime('+ 1 week')),
-    );
+    ];
     $currentEventParams = array_merge($this->_params[1], $currentEventParams);
     $currentEvent       = civicrm_api('Event', 'Create', $currentEventParams);
     $description        = "demonstrates use of is.Current option";
@@ -246,8 +246,8 @@ class api_v3_EventTest extends CiviUnitTestCase {
     $result             = civicrm_api('Event', 'Get', $params);
 
     $this->documentMe($params, $result, __FUNCTION__, __FILE__, $description, $subfile);
-    $allEvents = civicrm_api('Event', 'Get', array('version' => 3));
-    civicrm_api('Event', 'Delete', array('version' => 3, 'id' => $currentEventParams['id']));
+    $allEvents = civicrm_api('Event', 'Get', ['version' => 3]);
+    civicrm_api('Event', 'Delete', ['version' => 3, 'id' => $currentEventParams['id']]);
     $this->assertEquals(1, $result['count'], 'confirm only one event found in line ' . __LINE__);
     $this->assertEquals(3, $allEvents['count'], 'confirm three events exist (ie. two not found) ' . __LINE__);
     $this->assertEquals($currentEvent['id'], $result['id'], '');
@@ -279,25 +279,25 @@ class api_v3_EventTest extends CiviUnitTestCase {
      */
   function testGetSingleReturnIsFull() {
     $contactID = $this->individualCreate();
-    $params = array(
+    $params = [
       'id' => $this->_eventIds[0],
       'version' => $this->_apiversion,
       'max_participants' => 1,
-    );
+    ];
     $result = civicrm_api('Event', 'Create', $params);
 
-    $getEventParams = array(
+    $getEventParams = [
       'id' => $this->_eventIds[0],
       'version' => $this->_apiversion,
       'return.is_full' => 1,
-    );
+    ];
 
     $currentEvent = civicrm_api('Event', 'getsingle', $getEventParams);
     $description  = "demonstrates use of return is_full ";
     $subfile      = "IsFullOption";
     $this->assertEquals(0, $currentEvent['is_full'], ' is full is set in line ' . __LINE__);
     $this->assertEquals(1, $currentEvent['available_places'], 'available places is set in line ' . __LINE__);
-    $participant = civicrm_api('Participant', 'create', array('version' => 3, 'participant_status' => 1, 'role_id' => 1, 'contact_id' => $contactID, 'event_id' => $this->_eventIds[0]));
+    $participant = civicrm_api('Participant', 'create', ['version' => 3, 'participant_status' => 1, 'role_id' => 1, 'contact_id' => $contactID, 'event_id' => $this->_eventIds[0]]);
     $currentEvent = civicrm_api('Event', 'getsingle', $getEventParams);
 
     $this->documentMe($getEventParams, $currentEvent, __FUNCTION__, __FILE__, $description, $subfile, 'getsingle');
@@ -325,12 +325,12 @@ class api_v3_EventTest extends CiviUnitTestCase {
     $this->documentMe($params, $result, __FUNCTION__, __FILE__);
     $this->assertNotEquals($result['is_error'], 1, $result['error_message'] . ' in line ' . __LINE__);
 
-    $check = civicrm_api($this->_entity, 'get', array('version' => 3, 'return.custom_' . $ids['custom_field_id'] => 1, 'id' => $result['id']));
+    $check = civicrm_api($this->_entity, 'get', ['version' => 3, 'return.custom_' . $ids['custom_field_id'] => 1, 'id' => $result['id']]);
     $this->assertEquals("custom string", $check['values'][$check['id']]['custom_' . $ids['custom_field_id']], ' in line ' . __LINE__);
 
     $this->customFieldDelete($ids['custom_field_id']);
     $this->customGroupDelete($ids['custom_group_id']);
-    civicrm_api($this->_entity, 'Delete', array('version' => 3, 'id' => $result['id']));
+    civicrm_api($this->_entity, 'Delete', ['version' => 3, 'id' => $result['id']]);
   }
 
   function testCreateEventParamsNotArray() {
@@ -340,7 +340,7 @@ class api_v3_EventTest extends CiviUnitTestCase {
   }
 
   function testCreateEventEmptyParams() {
-    $params = array();
+    $params = [];
     $result = civicrm_api('event', 'create', $params);
     $this->assertEquals($result['is_error'], 1);
   }
@@ -368,14 +368,14 @@ class api_v3_EventTest extends CiviUnitTestCase {
     $this->documentMe($this->_params[0], $result, __FUNCTION__, __FILE__);
     $this->assertEquals($result['is_error'], 0);
     $this->assertArrayHasKey('id', $result['values'][$result['id']], 'In line ' . __LINE__);
-    $result = civicrm_api($this->_entity, 'Get', array('version' => 3, 'id' => $result['id']));
-    civicrm_api($this->_entity, 'Delete', array('version' => 3, 'id' => $result['id']));
+    $result = civicrm_api($this->_entity, 'Get', ['version' => 3, 'id' => $result['id']]);
+    civicrm_api($this->_entity, 'Delete', ['version' => 3, 'id' => $result['id']]);
 
     $this->assertEquals('2008-10-21 00:00:00', $result['values'][$result['id']]['start_date'], 'start date is not set in line ' . __LINE__);
     $this->assertEquals('2008-10-23 00:00:00', $result['values'][$result['id']]['end_date'], 'end date is not set in line ' . __LINE__);
     $this->assertEquals('2008-06-01 00:00:00', $result['values'][$result['id']]['registration_start_date'], 'start date is not set in line ' . __LINE__);
     $this->assertEquals('2008-10-15 00:00:00', $result['values'][$result['id']]['registration_end_date'], 'end date is not set in line ' . __LINE__);
-    civicrm_api($this->_entity, 'Delete', array('version' => 3, 'id' => $result['id']));
+    civicrm_api($this->_entity, 'Delete', ['version' => 3, 'id' => $result['id']]);
   }
   /*
      * Test that passing in Unique field names works
@@ -388,8 +388,8 @@ class api_v3_EventTest extends CiviUnitTestCase {
     $result = civicrm_api('Event', 'Create', $this->_params[0]);
     $this->assertAPISuccess($result, 'In line ' . __LINE__);
     $this->assertArrayHasKey('id', $result['values'][$result['id']], 'In line ' . __LINE__);
-    $result = civicrm_api($this->_entity, 'Get', array('version' => 3, 'id' => $result['id']));
-    civicrm_api($this->_entity, 'Delete', array('version' => 3, 'id' => $result['id']));
+    $result = civicrm_api($this->_entity, 'Get', ['version' => 3, 'id' => $result['id']]);
+    civicrm_api($this->_entity, 'Delete', ['version' => 3, 'id' => $result['id']]);
 
     $this->assertEquals('2008-10-21 00:00:00', $result['values'][$result['id']]['start_date'], 'start date is not set in line ' . __LINE__);
     $this->assertEquals('2008-10-23 00:00:00', $result['values'][$result['id']]['end_date'], 'end date is not set in line ' . __LINE__);
@@ -397,23 +397,23 @@ class api_v3_EventTest extends CiviUnitTestCase {
     $this->assertEquals('2008-10-15 00:00:00', $result['values'][$result['id']]['registration_end_date'], 'end date is not set in line ' . __LINE__);
     $this->assertEquals($this->_params[0]['event_title'], $result['values'][$result['id']]['title'], 'end date is not set in line ' . __LINE__);
 
-    civicrm_api($this->_entity, 'Delete', array('version' => 3, 'id' => $result['id']));
+    civicrm_api($this->_entity, 'Delete', ['version' => 3, 'id' => $result['id']]);
   }
 
   function testUpdateEvent() {
     $result = civicrm_api('event', 'create', $this->_params[1]);
 
     $this->assertEquals($result['is_error'], 0);
-    $params = array(
+    $params = [
       'id' => $result['id'], 'version' => 3, 'max_participants' => 150,
-    );
+    ];
     civicrm_api('Event', 'Create', $params);
     $updated = civicrm_api('Event', 'Get', $params);
     $this->documentMe($this->_params, $updated, __FUNCTION__, __FILE__);
     $this->assertEquals($updated['is_error'], 0);
     $this->assertEquals(150, $updated['values'][$result['id']]['max_participants']);
     $this->assertEquals('Annual CiviCRM meet 2', $updated['values'][$result['id']]['title']);
-    civicrm_api($this->_entity, 'Delete', array('version' => 3, 'id' => $result['id']));
+    civicrm_api($this->_entity, 'Delete', ['version' => 3, 'id' => $result['id']]);
   }
 
   ///////////////// civicrm_event_delete methods
@@ -425,16 +425,16 @@ class api_v3_EventTest extends CiviUnitTestCase {
   }
 
   function testDeleteEmptyParams() {
-    $params = array();
+    $params = [];
     $result = civicrm_api('Event', 'Delete', $params);
     $this->assertEquals($result['is_error'], 1);
   }
 
   function testDelete() {
-    $params = array(
+    $params = [
       'id' => $this->_eventIds[0],
       'version' => $this->_apiversion,
-    );
+    ];
     $result = civicrm_api('Event', 'Delete', $params);
     $this->documentMe($params, $result, __FUNCTION__, __FILE__);
     $this->assertNotEquals($result['is_error'], 1);
@@ -443,10 +443,10 @@ class api_v3_EventTest extends CiviUnitTestCase {
      * check event_id still supported for delete
      */
   function testDeleteWithEventId() {
-    $params = array(
+    $params = [
       'event_id' => $this->_eventIds[0],
       'version' => $this->_apiversion,
-    );
+    ];
     $result = civicrm_api('Event', 'Delete', $params);
     $this->assertAPISuccess($result, 'in line ' . __LINE__);
   }
@@ -456,20 +456,20 @@ class api_v3_EventTest extends CiviUnitTestCase {
   function testDeleteWithExistingParticipant() {
     $contactID = $this->individualCreate(NULL);
     $participantID = $this->participantCreate(
-      array(
+      [
         'contactID' => $contactID,
         'eventID' => $this->_eventIds[0],
-      )
+      ]
     );
-    $result = civicrm_api('Event', 'Delete', array('version' => $this->_apiversion, 'id' => $this->_eventIds[0]));
+    $result = civicrm_api('Event', 'Delete', ['version' => $this->_apiversion, 'id' => $this->_eventIds[0]]);
     $this->assertEquals(0, $result['is_error'], "Deleting exist with participants");
   }
 
   function testDeleteWithWrongEventId() {
-    $params = array('event_id' => $this->_eventIds[0], 'version' => $this->_apiversion);
+    $params = ['event_id' => $this->_eventIds[0], 'version' => $this->_apiversion];
     $result = civicrm_api('Event', 'Delete', $params);
     // try to delete again - there's no such event anymore
-    $params = array('event_id' => $this->_eventIds[0]);
+    $params = ['event_id' => $this->_eventIds[0]];
     $result = civicrm_api('Event', 'Delete', $params);
     $this->assertEquals($result['is_error'], 1);
   }
@@ -492,10 +492,10 @@ class api_v3_EventTest extends CiviUnitTestCase {
   function testSearchEmptyParams() {
     $event = civicrm_api('event', 'create', $this->_params[1]);
 
-    $getparams = array(
+    $getparams = [
       'version' => $this->_apiversion,
       'sequential' => 1,
-    );
+    ];
     $result = civicrm_api('event', 'get', $getparams);
     $this->assertEquals($result['count'], 3, 'In line ' . __LINE__);
     $res = $result['values'][0];
@@ -507,13 +507,13 @@ class api_v3_EventTest extends CiviUnitTestCase {
    *  Test civicrm_event_search. Success expected.
    */
   function testSearch() {
-    $params = array(
+    $params = [
       'event_type_id' => 1,
       'return.title' => 1,
       'return.id' => 1,
       'return.start_date' => 1,
       'version' => $this->_apiversion,
-    );
+    ];
     $result = civicrm_api('event', 'get', $params);
 
     $this->assertEquals($result['values'][$this->_eventIds[0]]['id'], $this->_eventIds[0], 'In line ' . __LINE__);
@@ -526,26 +526,26 @@ class api_v3_EventTest extends CiviUnitTestCase {
    */
   function testSearchWithOffsetAndMaxResults() {
     $maxEvents = 5;
-    $events = array();
+    $events = [];
     while ($maxEvents > 0) {
-      $params = array(
+      $params = [
         'version' => $this->_apiversion,
         'title' => 'Test Event' . $maxEvents,
         'event_type_id' => 2,
         'start_date' => 20081021,
-      );
+      ];
 
       $events[$maxEvents] = civicrm_api('event', 'create', $params);
       $maxEvents--;
     }
-    $params = array(
+    $params = [
       'version' => $this->_apiversion,
       'event_type_id' => 2,
       'return.id' => 1,
       'return.title' => 1,
       'return.offset' => 2,
       'return.max_results' => 2,
-    );
+    ];
     $result = civicrm_api('event', 'get', $params);
     $this->assertAPISuccess($result);
     $this->assertEquals(2, $result['count'], ' 2 results returned In line ' . __LINE__);
@@ -553,24 +553,24 @@ class api_v3_EventTest extends CiviUnitTestCase {
 
   function testEventCreationPermissions() {
     require_once 'CRM/Core/Permission/UnitTests.php';
-    $params = array(
+    $params = [
       'event_type_id' => 1, 'start_date' => '2010-10-03', 'title' => 'le cake is a tie', 'check_permissions' => TRUE,
       'version' => $this->_apiversion,
-    );
+    ];
 
-    CRM_Core_Permission_UnitTests::$permissions = array('access CiviCRM');
+    CRM_Core_Permission_UnitTests::$permissions = ['access CiviCRM'];
     $result = civicrm_api('event', 'create', $params);
     $this->assertEquals(1, $result['is_error'], 'lacking permissions should not be enough to create an event');
     $this->assertEquals('API permission check failed for event/create call; missing permission: access CiviEvent.', $result['error_message'], 'lacking permissions should not be enough to create an event');
 
-    CRM_Core_Permission_UnitTests::$permissions = array('access CiviEvent', 'edit all events', 'access CiviCRM');
+    CRM_Core_Permission_UnitTests::$permissions = ['access CiviEvent', 'edit all events', 'access CiviCRM'];
     $result = civicrm_api('event', 'create', $params);
     $this->assertEquals(0, $result['is_error'], 'overfluous permissions should be enough to create an event');
   }
 
   function testgetfields() {
     $description = "demonstrate use of getfields to interogate api";
-    $params      = array('version' => 3, 'action' => 'create');
+    $params      = ['version' => 3, 'action' => 'create'];
     $result      = civicrm_api('event', 'getfields', $params);
     $this->assertEquals(1, $result['values']['title']['api.required'], 'in line ' . __LINE__);
   }
@@ -579,19 +579,19 @@ class api_v3_EventTest extends CiviUnitTestCase {
      */
   function testgetfieldsRest() {
     $description = "demonstrate use of getfields to interogate api";
-    $params      = array('version' => 3, 'api_action' => 'create');
+    $params      = ['version' => 3, 'api_action' => 'create'];
     $result      = civicrm_api('event', 'getfields', $params);
     $this->assertEquals(1, $result['values']['title']['api.required'], 'in line ' . __LINE__);
   }
   function testgetfieldsGet() {
     $description = "demonstrate use of getfields to interogate api";
-    $params      = array('version' => 3, 'action' => 'get');
+    $params      = ['version' => 3, 'action' => 'get'];
     $result      = civicrm_api('event', 'getfields', $params);
     $this->assertEquals('title', $result['values']['event_title']['name'], 'in line ' . __LINE__);
   }
   function testgetfieldsDelete() {
     $description = "demonstrate use of getfields to interogate api";
-    $params      = array('version' => 3, 'action' => 'delete');
+    $params      = ['version' => 3, 'action' => 'delete'];
     $result      = civicrm_api('event', 'getfields', $params);
     $this->assertEquals(1, $result['values']['id']['api.required']);
   }

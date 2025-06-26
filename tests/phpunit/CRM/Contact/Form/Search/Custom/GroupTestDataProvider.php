@@ -48,110 +48,110 @@ class CRM_Contact_Form_Search_Custom_GroupTestDataProvider
      *  IDs should be selected when the form values are applied to the
      *  database in dataset.xml
      */
-    private $dataset = array(
+    private $dataset = [
               //  Exclude static group 3
-              array( 'fv' => array( 'excludeGroups' => array( '3' ) ),
-                     'id' => array( '9', '10', '11', '12', '13', '14',
-                                    '15', '16' )
-                     ),
+              [ 'fv' => [ 'excludeGroups' => [ '3' ] ],
+                     'id' => [ '9', '10', '11', '12', '13', '14',
+                                    '15', '16' ]
+                     ],
 
               //  Include static group 3
-              array( 'fv' => array( 'includeGroups' => array( '3' ) ),
-                     'id' => array(  '17', '18', '19', '20', '21',
-                                     '22', '23', '24' )
-                     ),
+              [ 'fv' => [ 'includeGroups' => [ '3' ] ],
+                     'id' => [  '17', '18', '19', '20', '21',
+                                     '22', '23', '24' ]
+                     ],
 
               //  Include static group 5
-              array( 'fv' => array( 'includeGroups' => array( '5' ) ),
-                     'id' => array( '13', '14', '15', '16', '21',
-                                    '22', '23', '24' )
-                     ),
+              [ 'fv' => [ 'includeGroups' => [ '5' ] ],
+                     'id' => [ '13', '14', '15', '16', '21',
+                                    '22', '23', '24' ]
+                     ],
 
               //  Include static groups 3 and 5
-              array( 'fv' => array( 'includeGroups' => array( '3', '5' ) ),
-                     'id' => array( '13', '14', '15', '16', '17', '18',
-                                    '19', '20', '21', '22', '23', '24' )
-                     ),
+              [ 'fv' => [ 'includeGroups' => [ '3', '5' ] ],
+                     'id' => [ '13', '14', '15', '16', '17', '18',
+                                    '19', '20', '21', '22', '23', '24' ]
+                     ],
 
               //  Include static group 3, exclude static group 5
-              array( 'fv' => array( 'includeGroups' => array( '3' ),
-                                    'excludeGroups' => array( '5' ) ),
-                     'id' => array( '17', '18', '19', '20' )
-                     ),
+              [ 'fv' => [ 'includeGroups' => [ '3' ],
+                                    'excludeGroups' => [ '5' ] ],
+                     'id' => [ '17', '18', '19', '20' ]
+                     ],
 
               //  Exclude tag 7
-              array( 'fv' => array( 'excludeTags' => array( '7' ) ),
-                     'id' => array( '9', '10', '13', '14', '17', '18', '21', '22' )
-                     ),
+              [ 'fv' => [ 'excludeTags' => [ '7' ] ],
+                     'id' => [ '9', '10', '13', '14', '17', '18', '21', '22' ]
+                     ],
 
               //  Include tag 7
-              array( 'fv' => array( 'includeTags' => array( '7' ) ),
-                     'id' => array( '11', '12', '15', '16',
-                                    '19', '20', '23', '24' )
-                     ),
+              [ 'fv' => [ 'includeTags' => [ '7' ] ],
+                     'id' => [ '11', '12', '15', '16',
+                                    '19', '20', '23', '24' ]
+                     ],
 
               //  Include tag 9
-              array( 'fv' => array( 'includeTags' => array( '9' ) ),
-                     'id' => array( '10', '12', '14', '16',
-                                    '18', '20', '22', '24' )
-                     ),
+              [ 'fv' => [ 'includeTags' => [ '9' ] ],
+                     'id' => [ '10', '12', '14', '16',
+                                    '18', '20', '22', '24' ]
+                     ],
 
               //  Include tags 7 and 9
-              array( 'fv' => array( 'includeTags' => array( '7', '9' ) ),
-                     'id' => array( '10', '11', '12', '14', '15', '16',
-                                    '18', '19', '20', '22', '23', '24' )
-                     ),
+              [ 'fv' => [ 'includeTags' => [ '7', '9' ] ],
+                     'id' => [ '10', '11', '12', '14', '15', '16',
+                                    '18', '19', '20', '22', '23', '24' ]
+                     ],
 
               //  Include tag 7, exclude tag 9
-              array( 'fv' => array( 'includeTags' => array( '7'),
-                                    'excludeTags' => array( '9') ),
-                     'id' => array( '11', '15', '19', '23' )
-                     ),
+              [ 'fv' => [ 'includeTags' => [ '7'],
+                                    'excludeTags' => [ '9'] ],
+                     'id' => [ '11', '15', '19', '23' ]
+                     ],
 
               //  Include static group 3, include tag 7
-              array( 'fv' => array( 'includeGroups' => array( '3'),
-                                    'includeTags' => array( '7') ),
-                     'id' => array( '11', '12', '15', '16', '17', '18', '19',
-                                    '20', '21', '22', '23', '24' )
-                     ),
+              [ 'fv' => [ 'includeGroups' => [ '3'],
+                                    'includeTags' => [ '7'] ],
+                     'id' => [ '11', '12', '15', '16', '17', '18', '19',
+                                    '20', '21', '22', '23', '24' ]
+                     ],
 
               //  Include static group 3, exclude tag 7
-              array( 'fv' => array( 'includeGroups' => array( '3'),
-                                    'excludeTags' => array( '7') ),
-                     'id' => array( '9', '10', '13', '14', '17', '18', '19', '20', '21', '22', '23', '24' )
-                     ),
+              [ 'fv' => [ 'includeGroups' => [ '3'],
+                                    'excludeTags' => [ '7'] ],
+                     'id' => [ '9', '10', '13', '14', '17', '18', '19', '20', '21', '22', '23', '24' ]
+                     ],
 
               //  Include tag 9, exclude static group 5
-              array( 'fv' => array( 'includeTags' => array( '9'),
-                                    'excludeGroups' => array( '5') ),
-                     'id' => array( '9', '10', '11', '12', '14', '16', '17', '18', '19', '20', '22', '24' )
-                     ),
+              [ 'fv' => [ 'includeTags' => [ '9'],
+                                    'excludeGroups' => [ '5'] ],
+                     'id' => [ '9', '10', '11', '12', '14', '16', '17', '18', '19', '20', '22', '24' ]
+                     ],
 
               //  Exclude tag 9, exclude static group 5
-              array( 'fv' => array( 'excludeTags' => array( '9'),
-                                    'excludeGroups' => array( '5') ),
-                     'id' => array( '9', '10', '11', '12', '13', '15', '17', '18', '19', '20', '21', '23' )
-                     ),
+              [ 'fv' => [ 'excludeTags' => [ '9'],
+                                    'excludeGroups' => [ '5'] ],
+                     'id' => [ '9', '10', '11', '12', '13', '15', '17', '18', '19', '20', '21', '23' ]
+                     ],
 
               //  Include smart group 6
-              array( 'fv' => array( 'includeGroups' => array( '6') ),
-                     'id' => array('9', '10', '11', '12', '13', '14',
-                                   '15', '16' )
-                     ),
+              [ 'fv' => [ 'includeGroups' => [ '6'] ],
+                     'id' => ['9', '10', '11', '12', '13', '14',
+                                   '15', '16' ]
+                     ],
 
               //  Include smart group 4
-              array( 'fv' => array( 'includeGroups' => array( '4' ) ),
-                     'id' => array( '17', '18', '19', '20', '21',
-                                    '22', '23', '24' )
-                     ),
+              [ 'fv' => [ 'includeGroups' => [ '4' ] ],
+                     'id' => [ '17', '18', '19', '20', '21',
+                                    '22', '23', '24' ]
+                     ],
 
               //  Include smart group 4 and static group 5
-              array( 'fv' => array( 'includeGroups' => array( '4', '5' ) ),
-                     'id' => array( '13', '14', '15', '16', '17', '18',
-                                    '19', '20', '21', '22', '23', '24' )
-                     ),
+              [ 'fv' => [ 'includeGroups' => [ '4', '5' ] ],
+                     'id' => [ '13', '14', '15', '16', '17', '18',
+                                    '19', '20', '21', '22', '23', '24' ]
+                     ],
 
-            );
+            ];
 
     public function _construct( )
     {
@@ -167,14 +167,14 @@ class CRM_Contact_Form_Search_Custom_GroupTestDataProvider
     {
         $count = count( $this->dataset[$this->i]['id'] );
         $ids   = $this->dataset[$this->i]['id'];
-        $full  = array();
+        $full  = [];
         foreach( $this->dataset[$this->i]['id'] as $key => $value ) {
-            $full[] = array( 'contact_id' => $value,
+            $full[] = [ 'contact_id' => $value,
                              'contact_type' => 'Individual',
                              'sort_name'    => "Test Contact $value"
-                             );
+                             ];
         }
-        return array( $this->dataset[$this->i]['fv'], $count, $ids, $full );
+        return [ $this->dataset[$this->i]['fv'], $count, $ids, $full ];
     }
 
     public function key( )

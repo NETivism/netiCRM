@@ -42,11 +42,11 @@ class api_v2_NoteTest extends CiviUnitTestCase {
   }
 
   function get_info() {
-    return array(
+    return [
       'name' => 'Note Create',
       'description' => 'Test all Note Create API methods.',
       'group' => 'CiviCRM API Tests',
-    );
+    ];
   }
 
   function setUp() {
@@ -55,14 +55,14 @@ class api_v2_NoteTest extends CiviUnitTestCase {
 
     $this->_contactID = $this->organizationCreate();
 
-    $this->_params = array(
+    $this->_params = [
       'entity_table' => 'civicrm_contact',
       'entity_id' => $this->_contactID,
       'note' => 'Hello!!! m testing Note',
       'contact_id' => $this->_contactID,
       'modified_date' => date('Ymd'),
       'subject' => 'Test Note',
-    );
+    ];
 
     $this->_note = $this->noteCreate($this->_contactID);
     $this->_noteID = $this->_note['id'];
@@ -92,7 +92,7 @@ class api_v2_NoteTest extends CiviUnitTestCase {
    * Error expected
    */
   function testGetWithEmptyParams() {
-    $params = array();
+    $params = [];
     $note = &civicrm_note_get($params);
     $this->assertEquals($note['is_error'], 1);
     $this->assertEquals($note['error_message'], 'No input parameters present');
@@ -103,7 +103,7 @@ class api_v2_NoteTest extends CiviUnitTestCase {
    * Error expected
    */
   function testGetWithoutEntityId() {
-    $params = array('entity_table' => 'civicrm_contact');
+    $params = ['entity_table' => 'civicrm_contact'];
     $note = &civicrm_note_get($params);
     $this->assertEquals($note['is_error'], 1);
     $this->assertEquals($note['error_message'], 'Invalid entity ID');
@@ -114,10 +114,10 @@ class api_v2_NoteTest extends CiviUnitTestCase {
    */
   function testGet() {
 
-    $params = array(
+    $params = [
       'entity_table' => 'civicrm_contact',
       'entity_id' => $this->_contactID,
-    );
+    ];
     $result = civicrm_note_get($params);
     $this->assertEquals($result['is_error'], 0);
   }
@@ -143,7 +143,7 @@ class api_v2_NoteTest extends CiviUnitTestCase {
    * Error Expected
    */
   function testCreateWithEmptyParams() {
-    $params = array();
+    $params = [];
     $result = civicrm_note_create($params);
     $this->assertEquals($result['is_error'], 1);
     $this->assertEquals($result['error_message'], 'Required parameter missing');
@@ -168,7 +168,7 @@ class api_v2_NoteTest extends CiviUnitTestCase {
     $this->assertEquals($result['note'], 'Hello!!! m testing Note');
     $this->assertArrayHasKey('entity_id', $result);
     $this->assertEquals($result['is_error'], 0);
-    $note = array('id' => $result['id']);
+    $note = ['id' => $result['id']];
     $this->noteDelete($note);
   }
 
@@ -191,7 +191,7 @@ class api_v2_NoteTest extends CiviUnitTestCase {
    * Error expected
    */
   function testUpdateWithEmptyParams() {
-    $params = array();
+    $params = [];
     $note = &civicrm_note_update($params);
     $this->assertEquals($note['is_error'], 1);
     $this->assertEquals($note['error_message'], 'Required parameter missing');
@@ -202,10 +202,10 @@ class api_v2_NoteTest extends CiviUnitTestCase {
    * Error expected
    */
   function testUpdateWithoutContactId() {
-    $params = array(
+    $params = [
       'entity_id' => $this->_contactID,
       'entity_table' => 'civicrm_contact',
-    );
+    ];
     $note = &civicrm_note_update($params);
     $this->assertEquals($note['is_error'], 1);
     $this->assertEquals($note['error_message'], 'Required parameter missing');
@@ -215,14 +215,14 @@ class api_v2_NoteTest extends CiviUnitTestCase {
    * Check civicrm_note_update
    */
   function testUpdate() {
-    $params = array(
+    $params = [
       'id' => $this->_noteID,
       'contact_id' => $this->_contactID,
       'entity_id' => $this->_contactID,
       'entity_table' => 'civicrm_contribution',
       'note' => 'Note1',
       'subject' => 'Hello World',
-    );
+    ];
 
     //Update Note
     $note = &civicrm_note_update($params);
@@ -251,7 +251,7 @@ class api_v2_NoteTest extends CiviUnitTestCase {
    * Error expected
    */
   function testDeleteWithEmptyParams() {
-    $params = array();
+    $params = [];
     $deleteNote = &civicrm_note_delete($params);
     $this->assertEquals($deleteNote['is_error'], 1);
     $this->assertEquals($deleteNote['error_message'], 'Invalid or no value for Note ID');
@@ -262,7 +262,7 @@ class api_v2_NoteTest extends CiviUnitTestCase {
    * Error expected
    */
   function testDeleteWithWrongID() {
-    $params = array('id' => 0);
+    $params = ['id' => 0];
     $deleteNote = &civicrm_note_delete($params);
     $this->assertEquals($deleteNote['is_error'], 1);
     $this->assertEquals($deleteNote['error_message'], 'Invalid or no value for Note ID');
@@ -274,10 +274,10 @@ class api_v2_NoteTest extends CiviUnitTestCase {
   function testDelete() {
     $additionalNote = $this->noteCreate($this->_contactID);
 
-    $params = array(
+    $params = [
       'id' => $additionalNote['id'],
       'entity_id' => $this->_contactID,
-    );
+    ];
 
     $deleteNote = &civicrm_note_delete($params);
 

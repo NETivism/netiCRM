@@ -47,7 +47,7 @@ class Utils {
    */
   public function __construct( $host, $user, $pass ) {
     try {
-      $this->pdo = new PDO("mysql:host={$host}", $user, $pass, array(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true ));
+      $this->pdo = new PDO("mysql:host={$host}", $user, $pass, [PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true ]);
     }
     catch ( Exception $e ) {
       echo "Can't connect to MySQL server:" . PHP_EOL . $e->getMessage() . PHP_EOL;

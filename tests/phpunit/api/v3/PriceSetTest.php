@@ -6,13 +6,13 @@ class api_v3_PriceSetTest extends CiviUnitTestCase {
   protected $_apiversion = 3;
   protected $_params;
   protected $id = 0;
-  protected $contactIds = array();
+  protected $contactIds = [];
   protected $_entity = 'price_set';
   public $_eNoticeCompliant = TRUE;
   public $DBResetRequired = TRUE;
   public function setUp() {
     parent::setUp();
-    $this->_params = array(
+    $this->_params = [
       'version' => $this->_apiversion,
 #     [domain_id] =>
       'name' => 'default_goat_priceset',
@@ -24,7 +24,7 @@ class api_v3_PriceSetTest extends CiviUnitTestCase {
       'contribution_type_id' => 1,
       'is_quick_config' => 1,
       'is_reserved' => 1,
-    );
+    ];
   }
 
   function tearDown() {
@@ -41,10 +41,10 @@ class api_v3_PriceSetTest extends CiviUnitTestCase {
   }
 
   public function testGetBasicPriceSet() {
-    $getParams = array(
+    $getParams = [
       'version' => $this->_apiversion,
       'name' => 'default_contribution_amount',
-    );
+    ];
     $getResult = civicrm_api($this->_entity, 'get', $getParams);
     $this->documentMe($getParams, $getResult, __FUNCTION__, __FILE__);
     $this->assertAPISuccess($getResult, 'In line ' . __LINE__);
@@ -52,7 +52,7 @@ class api_v3_PriceSetTest extends CiviUnitTestCase {
   }
   
   public function testEventPriceSet() {
-    $event = civicrm_api('event', 'create', array(
+    $event = civicrm_api('event', 'create', [
       'version' => $this->_apiversion,
       'title' => 'Event with Price Set',
       'event_type_id' => 1,
@@ -60,53 +60,53 @@ class api_v3_PriceSetTest extends CiviUnitTestCase {
       'start_date' => 20151021,
       'end_date' => 20151023,
       'is_active' => 1,
-    ));
+    ]);
     $this->assertAPISuccess($event);
-    $createParams = array(
+    $createParams = [
       'version' => $this->_apiversion,
       'entity_table' => 'civicrm_event',
       'entity_id' => $event['id'],
       'name' => 'event price',
       'title' => 'event price',
       'extends' => 1,
-    );
+    ];
     $createResult = civicrm_api($this->_entity, 'create', $createParams);
     $this->documentMe($createParams, $createResult, __FUNCTION__, __FILE__);
     $this->assertAPISuccess($createResult, 'In line ' . __LINE__);
     $id = $createResult['id'];
-    $result = civicrm_api($this->_entity, 'get', array(
+    $result = civicrm_api($this->_entity, 'get', [
       'version' => $this->_apiversion,
       'id' => $id,
-    ));
-    $this->assertEquals(array('civicrm_event' => array($event['id'])), $result['values'][$id]['entity'], 'In line ' . __LINE__);
+    ]);
+    $this->assertEquals(['civicrm_event' => [$event['id']]], $result['values'][$id]['entity'], 'In line ' . __LINE__);
   }
 
   public function testDeletePriceSet() {
-    $startCount = civicrm_api($this->_entity, 'getcount', array(
+    $startCount = civicrm_api($this->_entity, 'getcount', [
       'version' => $this->_apiversion,
-      ));
+      ]);
     $createResult = civicrm_api($this->_entity, 'create', $this->_params);
-    $deleteParams = array('version' => $this->_apiversion, 'id' => $createResult['id']);
+    $deleteParams = ['version' => $this->_apiversion, 'id' => $createResult['id']];
     $deleteResult = civicrm_api($this->_entity, 'delete', $deleteParams);
     $this->documentMe($deleteParams, $deleteResult, __FUNCTION__, __FILE__);
     $this->assertAPISuccess($deleteResult, 'In line ' . __LINE__);
-    $endCount = civicrm_api($this->_entity, 'getcount', array(
+    $endCount = civicrm_api($this->_entity, 'getcount', [
       'version' => $this->_apiversion,
-      ));
+      ]);
     $this->assertEquals($startCount, $endCount, 'In line ' . __LINE__);
   }
 
   public function testGetFieldsPriceSet() {
-    $result = civicrm_api($this->_entity, 'getfields', array('version' => $this->_apiversion, 'action' => 'create'));
+    $result = civicrm_api($this->_entity, 'getfields', ['version' => $this->_apiversion, 'action' => 'create']);
     $this->assertAPISuccess($result, 'In line ' . __LINE__);
     $this->assertEquals(16, $result['values']['is_quick_config']['type']);
   }
 
   public static function tearDownAfterClass(){
-    $tablesToTruncate = array(
+    $tablesToTruncate = [
       'civicrm_contact',
       'civicrm_contribution',
-    );
+    ];
     $unitTest = new CiviUnitTestCase();
     $unitTest->quickCleanup($tablesToTruncate);
   }

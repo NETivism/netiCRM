@@ -32,11 +32,11 @@ class CRM_Contribute_BAO_ManagePremiumsTest extends CiviUnitTestCase
     
     function get_info( ) 
     {
-        return array(
+        return [
                      'name'        => 'ManagePremiums BAOs',
                      'description' => 'Test all Contribute_BAO_Contribution methods.',
                      'group'       => 'CiviCRM BAO Tests',
-                     );
+                     ];
     }
     
     function setUp( ) 
@@ -50,8 +50,8 @@ class CRM_Contribute_BAO_ManagePremiumsTest extends CiviUnitTestCase
      */
     function testAdd()
     {
-        $ids    = array( );
-        $params = array (
+        $ids    = [ ];
+        $params =  [
                          'name' => 'Test Product',
                          'sku'  => 'TP-10',
                          'imageOption' => 'noImage',
@@ -60,7 +60,7 @@ class CRM_Contribute_BAO_ManagePremiumsTest extends CiviUnitTestCase
                          'min_contribution' => 5,
                          'is_active' => 1,
 
-                        );
+                        ];
 
         $product = CRM_Contribute_BAO_ManagePremiums::add( $params, $ids );
 
@@ -76,8 +76,8 @@ class CRM_Contribute_BAO_ManagePremiumsTest extends CiviUnitTestCase
      */
     function testRetrieve( ) 
     {
-        $ids    = array( );
-        $params = array (
+        $ids    = [ ];
+        $params =  [
                          'name' => 'Test Product',
                          'sku'  => 'TP-10',
                          'imageOption' => 'noImage',
@@ -85,11 +85,11 @@ class CRM_Contribute_BAO_ManagePremiumsTest extends CiviUnitTestCase
                          'cost' => 5,
                          'min_contribution' => 5,
                          'is_active' => 1,
-                        );
+                        ];
 
         $product = CRM_Contribute_BAO_ManagePremiums::add( $params, $ids );
-        $params  = array( 'id' => $product->id );
-        $default = array( );
+        $params  = [ 'id' => $product->id ];
+        $default = [ ];
         $result  = CRM_Contribute_BAO_ManagePremiums::retrieve( $params, $default );
         $this->assertEquals( empty($result) , false , 'Verify products record.');
     } 
@@ -99,8 +99,8 @@ class CRM_Contribute_BAO_ManagePremiumsTest extends CiviUnitTestCase
      */
     function testSetIsActive( ) 
     { 
-        $ids    = array( );
-        $params = array (
+        $ids    = [ ];
+        $params =  [
                          'name' => 'Test Product',
                          'sku'  => 'TP-10',
                          'imageOption' => 'noImage',
@@ -108,7 +108,7 @@ class CRM_Contribute_BAO_ManagePremiumsTest extends CiviUnitTestCase
                          'cost' => 5,
                          'min_contribution' => 5,
                          'is_active' => 1,
-                        );
+                        ];
 
         $product = CRM_Contribute_BAO_ManagePremiums::add( $params, $ids );
         CRM_Contribute_BAO_ManagePremiums::setIsActive( $product->id , 0 );
@@ -126,8 +126,8 @@ class CRM_Contribute_BAO_ManagePremiumsTest extends CiviUnitTestCase
      */
     function testDel( ) 
     {
-        $ids    = array( );
-        $params = array (
+        $ids    = [ ];
+        $params =  [
                          'name' => 'Test Product',
                          'sku'  => 'TP-10',
                          'imageOption' => 'noImage',
@@ -135,14 +135,14 @@ class CRM_Contribute_BAO_ManagePremiumsTest extends CiviUnitTestCase
                          'cost' => 5,
                          'min_contribution' => 5,
                          'is_active' => 1,
-                        );
+                        ];
 
         $product = CRM_Contribute_BAO_ManagePremiums::add( $params, $ids );
         
         CRM_Contribute_BAO_ManagePremiums::del( $product->id );
 
-        $params  = array('id' => $product->id );
-        $default = array( );
+        $params  = ['id' => $product->id ];
+        $default = [ ];
         $result  = CRM_Contribute_BAO_ManagePremiums::retrieve( $params, $defaults );
 
         $this->assertEquals( empty($result), true, 'Verify product record deletion.');

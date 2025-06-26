@@ -35,11 +35,11 @@ require_once 'api/v2/Mailer.php';
 class api_v2_MailerTest extends CiviUnitTestCase {
   protected $_groupID;
   protected $_email; function get_info() {
-    return array(
+    return [
       'name' => 'Mailer',
       'description' => 'Test all Mailer methods.',
       'group' => 'CiviCRM API Tests',
-    );
+    ];
   }
 
   function setUp() {
@@ -68,7 +68,7 @@ class api_v2_MailerTest extends CiviUnitTestCase {
    * Test civicrm_mailer_event_subscribe with empty params.
    */
   public function testMailerSubscribeEmptyParams() {
-    $params = array();
+    $params = [];
     $result = &civicrm_mailer_event_subscribe($params);
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
     $this->assertEquals($result['error_message'], 'Input Parameters empty', 'In line ' . __LINE__);
@@ -78,10 +78,10 @@ class api_v2_MailerTest extends CiviUnitTestCase {
    * Test civicrm_mailer_event_subscribe with wrong params.
    */
   public function testMailerSubscribeWrongParams() {
-    $params = array(
+    $params = [
       'email' => $this->_email,
       'group_id' => 'Wrong Group ID',
-    );
+    ];
     $result = &civicrm_mailer_event_subscribe($params);
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
     if ($result['error_message'] != 'Subscription failed') {
@@ -96,19 +96,19 @@ class api_v2_MailerTest extends CiviUnitTestCase {
    * Test civicrm_mailer_event_subscribe with given contact ID.
    */
   public function testMailerSubscribeGivenContactId() {
-    $params = array(
+    $params = [
       'first_name' => 'Test',
       'last_name' => 'Test',
       'email' => $this->_email,
       'contact_type' => 'Individual',
-    );
+    ];
     $contactID = $this->individualCreate($params);
 
-    $params = array(
+    $params = [
       'email' => $this->_email,
       'group_id' => $this->_groupID,
       'contact_id' => $contactID,
-    );
+    ];
     $result = &civicrm_mailer_event_subscribe($params);
     $this->assertEquals($result['is_error'], 0);
     $this->assertEquals($result['contact_id'], $contactID);
@@ -132,7 +132,7 @@ class api_v2_MailerTest extends CiviUnitTestCase {
    * Test civicrm_mailer_event_confirm with empty params.
    */
   public function testMailerConfirmEmptyParams() {
-    $params = array();
+    $params = [];
     $result = &civicrm_mailer_event_confirm($params);
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
     $this->assertEquals($result['error_message'], 'Input Parameters empty', 'In line ' . __LINE__);
@@ -142,11 +142,11 @@ class api_v2_MailerTest extends CiviUnitTestCase {
    * Test civicrm_mailer_event_confirm with wrong params.
    */
   public function testMailerConfirmWrongParams() {
-    $params = array(
+    $params = [
       'contact_id' => 'Wrong ID',
       'subscribe_id' => 'Wrong ID',
       'hash' => 'Wrong Hash',
-    );
+    ];
     $result = &civicrm_mailer_event_confirm($params);
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
     $this->assertEquals($result['error_message'], 'Confirmation failed', 'In line ' . __LINE__);
@@ -169,7 +169,7 @@ class api_v2_MailerTest extends CiviUnitTestCase {
    * Test civicrm_mailer_event_bounce with empty params.
    */
   public function testMailerBounceEmptyParams() {
-    $params = array();
+    $params = [];
     $result = &civicrm_mailer_event_bounce($params);
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
     $this->assertEquals($result['error_message'], 'Input Parameters empty', 'In line ' . __LINE__);
@@ -179,12 +179,12 @@ class api_v2_MailerTest extends CiviUnitTestCase {
    * Test civicrm_mailer_event_bounce with wrong params.
    */
   public function testMailerBounceWrongParams() {
-    $params = array(
+    $params = [
       'job_id' => 'Wrong ID',
       'event_queue_id' => 'Wrong ID',
       'hash' => 'Wrong Hash',
       'body' => 'Body...',
-    );
+    ];
     $result = &civicrm_mailer_event_bounce($params);
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
     $this->assertEquals($result['error_message'], 'Queue event could not be found', 'In line ' . __LINE__);
@@ -209,7 +209,7 @@ class api_v2_MailerTest extends CiviUnitTestCase {
    * Test civicrm_mailer_event_unsubscribe with empty params.
    */
   public function testMailerUnsubscribeEmptyParams() {
-    $params = array();
+    $params = [];
     $result = &civicrm_mailer_event_unsubscribe($params);
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
     $this->assertEquals($result['error_message'], 'Input Parameters empty', 'In line ' . __LINE__);
@@ -219,11 +219,11 @@ class api_v2_MailerTest extends CiviUnitTestCase {
    * Test civicrm_mailer_event_unsubscribe with wrong params.
    */
   public function testMailerUnsubscribeWrongParams() {
-    $params = array(
+    $params = [
       'job_id' => 'Wrong ID',
       'event_queue_id' => 'Wrong ID',
       'hash' => 'Wrong Hash',
-    );
+    ];
     $result = &civicrm_mailer_event_unsubscribe($params);
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
     $this->assertEquals($result['error_message'], 'Queue event could not be found', 'In line ' . __LINE__);
@@ -247,7 +247,7 @@ class api_v2_MailerTest extends CiviUnitTestCase {
    * Test civicrm_mailer_event_domain_unsubscribe with empty params.
    */
   public function testMailerDomainUnsubscribeEmptyParams() {
-    $params = array();
+    $params = [];
     $result = &civicrm_mailer_event_domain_unsubscribe($params);
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
     $this->assertEquals($result['error_message'], 'Input Parameters empty', 'In line ' . __LINE__);
@@ -257,11 +257,11 @@ class api_v2_MailerTest extends CiviUnitTestCase {
    * Test civicrm_mailer_event_domain_unsubscribe with wrong params.
    */
   public function testMailerDomainUnsubscribeWrongParams() {
-    $params = array(
+    $params = [
       'job_id' => 'Wrong ID',
       'event_queue_id' => 'Wrong ID',
       'hash' => 'Wrong Hash',
-    );
+    ];
     $result = &civicrm_mailer_event_domain_unsubscribe($params);
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
     $this->assertEquals($result['error_message'], 'Queue event could not be found', 'In line ' . __LINE__);
@@ -284,7 +284,7 @@ class api_v2_MailerTest extends CiviUnitTestCase {
    * Test civicrm_mailer_event_resubscribe with empty params.
    */
   public function testMailerResubscribeEmptyParams() {
-    $params = array();
+    $params = [];
     $result = &civicrm_mailer_event_resubscribe($params);
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
     $this->assertEquals($result['error_message'], 'Input Parameters empty', 'In line ' . __LINE__);
@@ -294,11 +294,11 @@ class api_v2_MailerTest extends CiviUnitTestCase {
    * Test civicrm_mailer_event_resubscribe with wrong params.
    */
   public function testMailerResubscribeWrongParams() {
-    $params = array(
+    $params = [
       'job_id' => 'Wrong ID',
       'event_queue_id' => 'Wrong ID',
       'hash' => 'Wrong Hash',
-    );
+    ];
     $result = &civicrm_mailer_event_resubscribe($params);
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
     $this->assertEquals($result['error_message'], 'Queue event could not be found', 'In line ' . __LINE__);
@@ -321,7 +321,7 @@ class api_v2_MailerTest extends CiviUnitTestCase {
    * Test civicrm_mailer_event_reply with empty params.
    */
   public function testMailerReplyEmptyParams() {
-    $params = array();
+    $params = [];
     $result = &civicrm_mailer_event_reply($params);
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
     $this->assertEquals($result['error_message'], 'Input Parameters empty', 'In line ' . __LINE__);
@@ -331,13 +331,13 @@ class api_v2_MailerTest extends CiviUnitTestCase {
    * Test civicrm_mailer_event_reply with wrong params.
    */
   public function testMailerReplyWrongParams() {
-    $params = array(
+    $params = [
       'job_id' => 'Wrong ID',
       'event_queue_id' => 'Wrong ID',
       'hash' => 'Wrong Hash',
       'bodyTxt' => 'Body...',
       'replyTo' => $this->_email,
-    );
+    ];
     $result = &civicrm_mailer_event_reply($params);
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
     $this->assertEquals($result['error_message'], 'Queue event could not be found', 'In line ' . __LINE__);
@@ -360,7 +360,7 @@ class api_v2_MailerTest extends CiviUnitTestCase {
    * Test civicrm_mailer_event_forward with empty params.
    */
   public function testMailerForwardEmptyParams() {
-    $params = array();
+    $params = [];
     $result = &civicrm_mailer_event_forward($params);
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
     $this->assertEquals($result['error_message'], 'Input Parameters empty', 'In line ' . __LINE__);
@@ -370,12 +370,12 @@ class api_v2_MailerTest extends CiviUnitTestCase {
    * Test civicrm_mailer_event_forward with wrong params.
    */
   public function testMailerForwardWrongParams() {
-    $params = array(
+    $params = [
       'job_id' => 'Wrong ID',
       'event_queue_id' => 'Wrong ID',
       'hash' => 'Wrong Hash',
       'email' => $this->_email,
-    );
+    ];
     $result = &civicrm_mailer_event_forward($params);
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
     $this->assertEquals($result['error_message'], 'Queue event could not be found', 'In line ' . __LINE__);
@@ -398,7 +398,7 @@ class api_v2_MailerTest extends CiviUnitTestCase {
    * Test civicrm_mailer_event_click with empty params.
    */
   public function testMailerClickEmptyParams() {
-    $params = array();
+    $params = [];
     $result = &civicrm_mailer_event_click($params);
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
     $this->assertEquals($result['error_message'], 'Input Parameters empty', 'In line ' . __LINE__);
@@ -421,7 +421,7 @@ class api_v2_MailerTest extends CiviUnitTestCase {
    * Test civicrm_mailer_event_open with empty params.
    */
   public function testMailerOpenEmptyParams() {
-    $params = array();
+    $params = [];
     $result = &civicrm_mailer_event_open($params);
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
     $this->assertEquals($result['error_message'], 'Input Parameters empty', 'In line ' . __LINE__);
@@ -434,18 +434,18 @@ class api_v2_MailerTest extends CiviUnitTestCase {
    * Test civicrm_mailer_event_subscribe and civicrm_mailer_event_confirm functions - success expected.
    */
   public function testMailerProcess() {
-    $params = array(
+    $params = [
       'email' => $this->_email,
       'group_id' => $this->_groupID,
-    );
+    ];
     $result = &civicrm_mailer_event_subscribe($params);
     $this->assertEquals($result['is_error'], 0);
 
-    $params = array(
+    $params = [
       'contact_id' => $result['contact_id'],
       'subscribe_id' => $result['subscribe_id'],
       'hash' => $result['hash'],
-    );
+    ];
     $result = &civicrm_mailer_event_confirm($params);
     $this->assertEquals($result['is_error'], 0);
 

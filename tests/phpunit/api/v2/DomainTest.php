@@ -92,10 +92,10 @@ class api_v2_DomainTest extends CiviUnitTestCase {
    * Test civicrm_domain_create.
    */
   public function testCreate() {
-    $params = array(
+    $params = [
       'name' => 'New Domain',
       'description' => 'Description of a new domain',
-    );
+    ];
 
     $result = &civicrm_domain_create($params);
     $this->assertType('array', $result);
@@ -107,7 +107,7 @@ class api_v2_DomainTest extends CiviUnitTestCase {
    * Error expected.
    */
   public function testCreateWithEmptyParams() {
-    $params = array();
+    $params = [];
     $result = &civicrm_domain_create($params);
     $this->assertEquals($result['is_error'], 1,
       "In line " . __LINE__

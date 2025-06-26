@@ -49,13 +49,13 @@ class api_v3_UFMatchTest extends CiviUnitTestCase {
     parent::setUp();
     $this->_apiversion = 3;
     $this->quickCleanup(
-      array(
+      [
         'civicrm_group',
         'civicrm_contact',
         'civicrm_uf_group',
         'civicrm_uf_join',
         'civicrm_uf_match',
-      )
+      ]
     );
     $op = new PHPUnit_Extensions_Database_Operation_Insert;
     $op->execute(
@@ -67,13 +67,13 @@ class api_v3_UFMatchTest extends CiviUnitTestCase {
   function tearDown() {
     //  Truncate the tables
     $this->quickCleanup(
-      array(
+      [
         'civicrm_group',
         'civicrm_contact',
         'civicrm_uf_group',
         'civicrm_uf_join',
         'civicrm_uf_match',
-      )
+      ]
     );
   }
 
@@ -81,10 +81,10 @@ class api_v3_UFMatchTest extends CiviUnitTestCase {
    * fetch contact id by uf id
    */
   public function testGetUFMatchID() {
-    $params = array(
+    $params = [
       'uf_id' => 42,
       'version' => $this->_apiversion,
-    );
+    ];
     $result = civicrm_api('uf_match', 'get', $params);
     $this->assertEquals($result['values'][$result['id']]['contact_id'], 69);
     $this->assertEquals($result['is_error'], 0);
@@ -100,10 +100,10 @@ class api_v3_UFMatchTest extends CiviUnitTestCase {
    * fetch uf id by contact id
    */
   public function testGetUFID() {
-    $params = array(
+    $params = [
       'contact_id' => 69,
       'version' => $this->_apiversion,
-    );
+    ];
     $result = civicrm_api('uf_match', 'get', $params);
     $this->documentMe($params, $result, __FUNCTION__, __FILE__);
     $this->assertEquals($result['values'][$result['id']]['uf_id'], 42);

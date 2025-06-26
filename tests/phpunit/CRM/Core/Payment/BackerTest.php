@@ -14,11 +14,11 @@ class CRM_Core_Payment_BackerTest extends CiviUnitTestCase {
   static $_rtypeId;
 
   function get_info() {
-    return array(
+    return [
       'name' => 'Backer payment processor',
       'description' => 'Test Backer payment processor.',
       'group' => 'Payment Processor Tests',
-    );
+    ];
   }
 
   /**
@@ -26,7 +26,7 @@ class CRM_Core_Payment_BackerTest extends CiviUnitTestCase {
    */
   function setUpTest() {
     // login by user 1 to get customfield
-    CRM_Utils_System::loadUser(array('uid' => 1));
+    CRM_Utils_System::loadUser(['uid' => 1]);
     parent::setUp();
     $pages = CRM_Contribute_PseudoConstant::contributionPage();
     $this->_pageId = key($pages);
@@ -35,25 +35,25 @@ class CRM_Core_Payment_BackerTest extends CiviUnitTestCase {
     $this->_isTest = 1;
 
     // get processor
-    $params = array(
+    $params = [
       'version' => 3,
       'class_name' => 'Payment_Backer',
       'is_test' => $this->_isTest,
-    );
+    ];
     $result = civicrm_api('PaymentProcessor', 'get', $params);
     $this->assertAPISuccess($result);
     if(empty($result['count'])){
-      $payment_processors = array();
-      $params = array(
+      $payment_processors = [];
+      $params = [
         'version' => 3,
         'class_name' => 'Payment_Backer',
-      );
+      ];
       $result = civicrm_api('PaymentProcessorType', 'get', $params);
       $this->assertAPISuccess($result);
       if(!empty($result['count'])){
         $domain_id = CRM_Core_Config::domainID();
         foreach($result['values'] as $type_id => $p){
-          $payment_processor = array(
+          $payment_processor = [
             'version' => 3,
             'domain_id' => $domain_id,
             'name' => 'AUTO payment '.$p['name'],
@@ -73,7 +73,7 @@ class CRM_Core_Payment_BackerTest extends CiviUnitTestCase {
             'billing_mode' => $p['billing_mode'],
             'is_recur' => $p['is_recur'],
             'payment_type' => $p['payment_type'],
-          );
+          ];
           $result = civicrm_api('PaymentProcessor', 'create', $payment_processor);
           $this->assertAPISuccess($result);
 
@@ -83,11 +83,11 @@ class CRM_Core_Payment_BackerTest extends CiviUnitTestCase {
         }
       }
     }
-    $params = array(
+    $params = [
       'version' => 3,
       'class_name' => 'Payment_Backer',
       'is_test' => $this->_isTest,
-    );
+    ];
     $result = civicrm_api('PaymentProcessor', 'get', $params);
     $this->assertAPISuccess($result);
     $pp = reset($result['values']);
@@ -444,7 +444,7 @@ EOT;
     if (!$this->_rtypeId) {
       $rtypeId = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_relationship_type WHERE label_a_b = 'Orderer' AND label_b_a = 'Recipient'");
       if (!$rtypeId) {
-        $params = array(
+        $params = [
           'label_a_b' => 'Orderer',
           'label_b_a' => 'Recipient',
           'description' => "Used for".': '.'Backer Auto Import',
@@ -456,14 +456,14 @@ EOT;
           'contact_types_b' => '',
           'contact_sub_type_a' => '',
           'contact_sub_type_b' => '',
-        );
-        $ids = array();
+        ];
+        $ids = [];
         $saved = CRM_Contact_BAO_RelationshipType::add($params, $ids);
         $rtypeId = $saved->id;
       }
-      $params = array(
+      $params = [
         'backerFounderRelationship' => $rtypeId,
-      );
+      ];
       CRM_Core_BAO_ConfigSetting::add($params);
       $config =& CRM_Core_Config::singleton();
       $config->backerFounderRelationship = $rtypeId;
@@ -478,7 +478,7 @@ EOT;
   }
 
   function testBackerIPN(){
-    $contributionResult = array();
+    $contributionResult = [];
     $now = time();
     $hash = hash_hmac('sha1', $this->_json[1], $this->_payment['password']);
     $this->assertEquals($hash, $this->_signature[1]);
@@ -489,22 +489,22 @@ EOT;
     $this->assertNotEmpty($createdContributionId, "In line " . __LINE__);
 
     // verify all contribution saved data
-    $params = array(
+    $params = [
       'trxn_id' => $this->_trxnId[1],
       'payment_instrument_id' => $formatted['contribution']['payment_instrument_id'],
       'total_amount' => $formatted['contribution']['total_amount'],
       'contribution_status_id' => $formatted['contribution']['contribution_status_id'],
       'currency' => $formatted['contribution']['currency'],
       'payment_processor_id' => $this->_payment['id'],
-    );
+    ];
     $this->assertDBState('CRM_Contribute_DAO_Contribution', $createdContributionId, $params);
 
     // verify all custom fields saved correctly
-    $params = array(
+    $params = [
       'version' => 3,
       'entity_table' => 'civicrm_contribution',
       'entity_id' => $createdContributionId,
-    );
+    ];
     $result = civicrm_api('CustomValue', 'get', $params);
     $this->assertAPISuccess($result);
     foreach($formatted['contribution'] as $key => $value) {
@@ -515,18 +515,18 @@ EOT;
 
     // verify contact data
     $contactId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $createdContributionId, 'contact_id');
-    $params = array(
+    $params = [
       'id' => $contactId,
       'last_name' => $formatted['contact']['last_name'],
       'first_name' => $formatted['contact']['first_name'],
       'external_identifier' => $formatted['contact']['external_identifier'],
-    );
+    ];
     $this->assertDBState('CRM_Contact_DAO_Contact', $contactId, $params);
 
-    $params = array(
+    $params = [
       'version' => 3,
       'id' => $contactId,
-    );
+    ];
     $result = civicrm_api('contact', 'get', $params);
     $this->assertAPISuccess($result);
 
@@ -558,11 +558,11 @@ EOT;
     $this->assertNotEmpty($createdContributionId, "Contribution not created. In line " . __LINE__);
     $contactId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $createdContributionId, 'contact_id');
 
-    $params = array(
+    $params = [
       'version' => 3,
       'last_name' => $formatted['additional']['last_name'],
       'first_name' => $formatted['additional']['first_name'],
-    );
+    ];
     $result = civicrm_api('contact', 'get', $params);
     $this->assertAPISuccess($result);
     $this->assertGreaterThan(0 , $result['count'], 'Additional contact count should greater than zero. In line '.__LINE__);
@@ -572,12 +572,12 @@ EOT;
     $this->assertEquals($formatted['additional']['phone'][0]['phone'], $additionalContact['phone']);
     $this->assertEquals($formatted['additional']['email'][0]['email'], $additionalContact['email']);
 
-    $params = array(
+    $params = [
       'version' => 3,
       'contact_id_a' => $contactId,
       'contact_id_b' => $additionalContactId1,
       'relationship_type_id' => $this->_rtypeId,
-    );
+    ];
     $relation = civicrm_api('contact', 'get', $params);
     $this->assertAPISuccess($relation);
     $this->assertGreaterThan(0 , $relation['count'], 'Relationship result should greater than zero. In line '.__LINE__);
@@ -585,20 +585,20 @@ EOT;
     // duplicate case 1, won't add another contact
     $formatted = CRM_Core_Payment_Backer::formatParams($json);
     $this->_processor->processContribution($json, $contributionResult);
-    $params = array(
+    $params = [
       'version' => 3,
       'last_name' => $formatted['additional']['last_name'],
       'first_name' => $formatted['additional']['first_name'],
-    );
+    ];
     $result = civicrm_api('contact', 'get', $params);
     $this->assertAPISuccess($result);
     $this->assertEquals(1 , $result['count'], 'Additional contact count should be 1. In line '.__LINE__);
 
-    $params = array(
+    $params = [
       'version' => 3,
       'last_name' => $formatted['additional']['last_name'],
       'first_name' => $formatted['additional']['first_name'],
-    );
+    ];
     $result = civicrm_api('contact', 'get', $params);
     $this->assertAPISuccess($result);
     $this->assertGreaterThan(0 , $result['count'], 'Additional contact count should greater than zero. In line '.__LINE__);
@@ -627,11 +627,11 @@ EOT;
     $this->assertNotEmpty($createdContributionId, "Contribution not created. In line " . __LINE__);
     $contactId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $createdContributionId, 'contact_id');
 
-    $params = array(
+    $params = [
       'version' => 3,
       'last_name' => $formatted['additional']['last_name'],
       'first_name' => $formatted['additional']['first_name'],
-    );
+    ];
     $result = civicrm_api('contact', 'get', $params);
     $this->assertAPISuccess($result);
     $this->assertEquals(1 , $result['count'], 'Additional contact count should be only 1. In line '.__LINE__);
@@ -682,22 +682,22 @@ EOT;
     $this->assertNotEmpty($createdContributionId, "In line " . __LINE__);
 
     // verify all contribution saved data
-    $params = array(
+    $params = [
       'trxn_id' => $this->_trxnId[2],
       'payment_instrument_id' => $formatted['contribution']['payment_instrument_id'],
       'total_amount' => $formatted['contribution']['total_amount'],
       'contribution_status_id' => $formatted['contribution']['contribution_status_id'],
       'currency' => $formatted['contribution']['currency'],
       'payment_processor_id' => $this->_payment['id'],
-    );
+    ];
     $this->assertDBState('CRM_Contribute_DAO_Contribution', $createdContributionId, $params);
 
     // verify all custom fields saved correctly
-    $params = array(
+    $params = [
       'version' => 3,
       'entity_table' => 'civicrm_contribution',
       'entity_id' => $createdContributionId,
-    );
+    ];
     $result = civicrm_api('CustomValue', 'get', $params);
     $this->assertAPISuccess($result);
     foreach($formatted['contribution'] as $key => $value) {
@@ -708,18 +708,18 @@ EOT;
 
     // verify contact data
     $contactId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $createdContributionId, 'contact_id');
-    $params = array(
+    $params = [
       'id' => $contactId,
       'last_name' => $formatted['contact']['last_name'],
       'first_name' => $formatted['contact']['first_name'],
       'external_identifier' => $formatted['contact']['external_identifier'],
-    );
+    ];
     $this->assertDBState('CRM_Contact_DAO_Contact', $contactId, $params);
 
-    $params = array(
+    $params = [
       'version' => 3,
       'id' => $contactId,
-    );
+    ];
     $result = civicrm_api('contact', 'get', $params);
     $this->assertAPISuccess($result);
 
@@ -736,24 +736,24 @@ EOT;
     $this->_processor->processContribution($this->_json[3], $contributionResult);
 
     // verify recur contribution saved data
-    $params = array(
+    $params = [
       'trxn_id' => $formatted['recurring']['trxn_id'],
       'contribution_status_id' => $formatted['recurring']['contribution_status_id'],
-    );
+    ];
     $this->assertDBState('CRM_Contribute_DAO_ContributionRecur', $contributionResult['recur_contribution_id'], $params);
 
     //sub contribution
     if ($contributionResult['recur_contribution_id']) {
       $formatted = CRM_Core_Payment_Backer::formatParams($this->_json[4]);
       $this->_processor->processContribution($this->_json[4], $contributionResult);
-      $params = array(
+      $params = [
         'trxn_id' => $formatted['contribution']['trxn_id'],
         'payment_instrument_id' => $formatted['contribution']['payment_instrument_id'],
         'total_amount' => $formatted['contribution']['total_amount'],
         'contribution_status_id' => $formatted['contribution']['contribution_status_id'],
         'currency' => $formatted['contribution']['currency'],
         'payment_processor_id' => $this->_payment['id'],
-      );
+      ];
       $this->assertDBState('CRM_Contribute_DAO_Contribution', $contributionResult['contributionId'], $params);
     }
   }

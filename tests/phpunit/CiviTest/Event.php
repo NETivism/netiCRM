@@ -10,7 +10,7 @@ class Event extends PHPUnit_Framework_Testcase
     function create( ) 
     {
         require_once "CRM/Event/BAO/Event.php";        
-        $params = array('title'                    => 'Test Event',
+        $params = ['title'                    => 'Test Event',
                         'event_type_id'            => 1,
                         'default_role_id'          => 1,
                         'participant_listing_id'   => 1,
@@ -21,7 +21,7 @@ class Event extends PHPUnit_Framework_Testcase
                         'end_date'                 => '20080530200000',
                         'is_active'                => 1,
                         'contact_id'               => $this->_contactId,
-                        );
+                        ];
         
         
         $event = CRM_Event_BAO_Event::create( $params );

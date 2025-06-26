@@ -18,62 +18,62 @@ class CRM_Mailing_BAO_QueryTestDataProvider implements Iterator
      *  IDs should be selected when the form values are applied to the
      *  database in dataset.xml
      */
-    private $dataset = array(
-              array( 'fv' => array( 'mailing_name' => 'First%', 'mailing_open_status' => 'Y' ),
-                     'id' => array( 109, 110, 111, 112 ),
-                     ),
-              array( 'fv' => array( 'mailing_name' => 'First%', 'mailing_open_status' => 'N' ),
-                     'id' => array( 102, 103, 104, 105, 108 ),
-                     ),
-              array( 'fv' => array( 'mailing_name' => 'First%', 'mailing_delivery_status' /*bounce*/ => 'Y' ),
-                     'id' => array( 105 ),
-                     ),
-              array( 'fv' => array( 'mailing_name' => 'First%', 'mailing_delivery_status' /*bounce*/ => 'N' ),
-                     'id' => array( 102, 103, 104, 108, 109, 110, 111, 112 ),
-                     ),
-              array( 'fv' => array( 'mailing_name' => 'First%', 'mailing_reply_status' => 'Y' ),
-                     'id' => array( 103, 108, 110, 112 ),
-                     ),
-              array( 'fv' => array( 'mailing_name' => 'First%', 'mailing_reply_status' => 'N' ),
-                     'id' => array( 102, 104, 105, 109, 111 ),
-                     ),
-              array( 'fv' => array( 'mailing_name' => 'First%', 'mailing_click_status' => 'Y' ),
-                     'id' => array( 104, 108, 111, 112 ),
-                     ),
-              array( 'fv' => array( 'mailing_name' => 'First%', 'mailing_click_status' => 'N' ),
-                     'id' => array( 102, 103, 105, 109, 110 ),
-                     ),
-              array( 'fv' => array( 'mailing_name' => 'Second%', 'mailing_delivery_status' /*bounce*/ => 'Y' ),
-                     'id' => array( ),
-                     ),
-              array( 'fv' => array( 'mailing_name' => 'Second%', 'mailing_delivery_status' /*bounce*/ => 'N' ),
-                     'id' => array( 102, 103, 104, 108, 109, 110, 111, 112 ),
-                     ),
-              array( 'fv' => array( 'mailing_name' => 'Second%', 'mailing_reply_status' => 'Y' ),
-                     'id' => array( 103 ),
-                     ),
-              array( 'fv' => array( 'mailing_name' => 'Second%', 'mailing_click_status' => 'Y' ),
-                     'id' => array( 104 ),
-                     ),
-              array( 'fv' => array( 'mailing_name' => 'Second%', 'mailing_click_status' => 'N' ),
-                     'id' => array( 102, 103, 108, 109, 110, 111, 112 ),
-                     ),
-              array( 'fv' => array( 'mailing_date_high' => '2011-05-25', 'mailing_open_status' => 'Y' ),
-                     'id' => array( 109, 110, 111, 112 ),
-                     ),
-              array( 'fv' => array( 'mailing_date_high' => '2011-05-25', 'mailing_open_status' => 'N' ),
-                     'id' => array( 102, 103, 104, 105, 108 ),
-                     ),
-              array( 'fv' => array( 'mailing_date_low' => '2011-05-26', 'mailing_open_status' => 'Y' ),
-                     'id' => array( 102 ),
-                     ),
-              array( 'fv' => array( 'mailing_date_low' => '2011-05-26', 'mailing_open_status' => 'N' ),
-                     'id' => array( 103, 104, 108, 109, 110, 111, 112 ),
-                     ),
+    private $dataset = [
+              [ 'fv' => [ 'mailing_name' => 'First%', 'mailing_open_status' => 'Y' ],
+                     'id' => [ 109, 110, 111, 112 ],
+                     ],
+              [ 'fv' => [ 'mailing_name' => 'First%', 'mailing_open_status' => 'N' ],
+                     'id' => [ 102, 103, 104, 105, 108 ],
+                     ],
+              [ 'fv' => [ 'mailing_name' => 'First%', 'mailing_delivery_status' /*bounce*/ => 'Y' ],
+                     'id' => [ 105 ],
+                     ],
+              [ 'fv' => [ 'mailing_name' => 'First%', 'mailing_delivery_status' /*bounce*/ => 'N' ],
+                     'id' => [ 102, 103, 104, 108, 109, 110, 111, 112 ],
+                     ],
+              [ 'fv' => [ 'mailing_name' => 'First%', 'mailing_reply_status' => 'Y' ],
+                     'id' => [ 103, 108, 110, 112 ],
+                     ],
+              [ 'fv' => [ 'mailing_name' => 'First%', 'mailing_reply_status' => 'N' ],
+                     'id' => [ 102, 104, 105, 109, 111 ],
+                     ],
+              [ 'fv' => [ 'mailing_name' => 'First%', 'mailing_click_status' => 'Y' ],
+                     'id' => [ 104, 108, 111, 112 ],
+                     ],
+              [ 'fv' => [ 'mailing_name' => 'First%', 'mailing_click_status' => 'N' ],
+                     'id' => [ 102, 103, 105, 109, 110 ],
+                     ],
+              [ 'fv' => [ 'mailing_name' => 'Second%', 'mailing_delivery_status' /*bounce*/ => 'Y' ],
+                     'id' => [ ],
+                     ],
+              [ 'fv' => [ 'mailing_name' => 'Second%', 'mailing_delivery_status' /*bounce*/ => 'N' ],
+                     'id' => [ 102, 103, 104, 108, 109, 110, 111, 112 ],
+                     ],
+              [ 'fv' => [ 'mailing_name' => 'Second%', 'mailing_reply_status' => 'Y' ],
+                     'id' => [ 103 ],
+                     ],
+              [ 'fv' => [ 'mailing_name' => 'Second%', 'mailing_click_status' => 'Y' ],
+                     'id' => [ 104 ],
+                     ],
+              [ 'fv' => [ 'mailing_name' => 'Second%', 'mailing_click_status' => 'N' ],
+                     'id' => [ 102, 103, 108, 109, 110, 111, 112 ],
+                     ],
+              [ 'fv' => [ 'mailing_date_high' => '2011-05-25', 'mailing_open_status' => 'Y' ],
+                     'id' => [ 109, 110, 111, 112 ],
+                     ],
+              [ 'fv' => [ 'mailing_date_high' => '2011-05-25', 'mailing_open_status' => 'N' ],
+                     'id' => [ 102, 103, 104, 105, 108 ],
+                     ],
+              [ 'fv' => [ 'mailing_date_low' => '2011-05-26', 'mailing_open_status' => 'Y' ],
+                     'id' => [ 102 ],
+                     ],
+              [ 'fv' => [ 'mailing_date_low' => '2011-05-26', 'mailing_open_status' => 'N' ],
+                     'id' => [ 103, 104, 108, 109, 110, 111, 112 ],
+                     ],
 //              array( 'fv' => array( ),
 //                     'id' => array( ),
 //                     ),
-            );
+            ];
 
     public function _construct( )
     {
@@ -89,14 +89,14 @@ class CRM_Mailing_BAO_QueryTestDataProvider implements Iterator
     {
         $count = count( $this->dataset[$this->i]['id'] );
         $ids   = $this->dataset[$this->i]['id'];
-        $full  = array();
+        $full  = [];
         foreach( $this->dataset[$this->i]['id'] as $key => $value ) {
-            $full[] = array( 'contact_id' => $value,
+            $full[] = [ 'contact_id' => $value,
                              'contact_type' => 'Individual',
                              'sort_name'    => "Test Contact $value"
-                             );
+                             ];
         }
-        return array( $this->dataset[$this->i]['fv'], $count, $ids, $full );
+        return [ $this->dataset[$this->i]['fv'], $count, $ids, $full ];
     }
 
     public function key( )

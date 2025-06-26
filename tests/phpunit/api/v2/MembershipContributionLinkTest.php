@@ -39,11 +39,11 @@ class api_v2_MembershipContributionLinkTest extends CiviUnitTestCase {
   protected $_contributionTypeID;
   protected $_membershipTypeID;
   protected $_membershipStatusID; function get_info() {
-    return array(
+    return [
       'name' => 'Membership Contribution Link',
       'description' => 'Test all Membership API methods.',
       'group' => 'CiviCRM API Tests',
-    );
+    ];
   }
 
   function setUp() {
@@ -56,7 +56,7 @@ class api_v2_MembershipContributionLinkTest extends CiviUnitTestCase {
 
   function tearDown() {
     $this->membershipStatusDelete($this->_membershipStatusID);
-    $this->membershipTypeDelete(array('id' => $this->_membershipTypeID));
+    $this->membershipTypeDelete(['id' => $this->_membershipTypeID]);
     $this->contributionTypeDelete();
     $this->contactDelete($this->_contactID);
   }
@@ -76,7 +76,7 @@ class api_v2_MembershipContributionLinkTest extends CiviUnitTestCase {
    * Test civicrm_membershipcontributionlink_create with empty params.
    */
   public function testCreateEmptyParams() {
-    $params = array();
+    $params = [];
     $CreateEmptyParams = civicrm_membershipcontributionlink_create($params);
     $this->assertEquals($CreateEmptyParams['error_message'], 'No input parameters present');
   }
@@ -86,7 +86,7 @@ class api_v2_MembershipContributionLinkTest extends CiviUnitTestCase {
    */
   public function testCreate() {
     $contactId = Contact::createIndividual();
-    $params = array(
+    $params = [
       'contact_id' => $contactId,
       'currency' => 'USD',
       'contribution_type_id' => $this->_contributionTypeID,
@@ -101,11 +101,11 @@ class api_v2_MembershipContributionLinkTest extends CiviUnitTestCase {
       'trxn_id' => '22ereerwww322323',
       'invoice_id' => '22ed39c9e9ee6ef6031621ce0eafe6da70',
       'thankyou_date' => '20080522',
-    );
+    ];
 
     require_once 'CRM/Contribute/BAO/Contribution.php';
     $contribution = CRM_Contribute_BAO_Contribution::create($params, $ids);
-    $params = array(
+    $params = [
       'contact_id' => $contactId,
       'membership_type_id' => $this->_membershipTypeID,
       'join_date' => '2006-01-21',
@@ -114,14 +114,14 @@ class api_v2_MembershipContributionLinkTest extends CiviUnitTestCase {
       'source' => 'Payment',
       'is_override' => 1,
       'status_id' => $this->_membershipStatusID,
-    );
-    $ids = array();
+    ];
+    $ids = [];
     $membership = CRM_Member_BAO_Membership::create($params, $ids);
 
-    $params = array(
+    $params = [
       'contribution_id' => $contribution->id,
       'membership_id' => $membership->id,
-    );
+    ];
     $Create = civicrm_membershipcontributionlink_create($params);
     $this->assertEquals($Create['membership_id'], $membership->id, 'Check Membership Id');
     $this->assertEquals($Create['contribution_id'], $contribution->id, 'Check Contribution Id');
@@ -145,7 +145,7 @@ class api_v2_MembershipContributionLinkTest extends CiviUnitTestCase {
    * Test civicrm_membershipcontributionlink_get with empty params.
    */
   public function testGetEmptyParams() {
-    $params = array();
+    $params = [];
     $GetEmptyParams = civicrm_membershipcontributionlink_get($params);
     $this->assertEquals($GetEmptyParams['error_message'], 'No input parameters present');
   }
@@ -155,7 +155,7 @@ class api_v2_MembershipContributionLinkTest extends CiviUnitTestCase {
    */
   public function testGet() {
     $contactId = Contact::createIndividual();
-    $params = array(
+    $params = [
       'contact_id' => $contactId,
       'currency' => 'USD',
       'contribution_type_id' => $this->_contributionTypeID,
@@ -164,24 +164,24 @@ class api_v2_MembershipContributionLinkTest extends CiviUnitTestCase {
       'payment_instrument_id' => 1,
       'id' => NULL,
       'total_amount' => 200.00,
-    );
+    ];
 
     require_once 'CRM/Contribute/BAO/Contribution.php';
     $contribution = CRM_Contribute_BAO_Contribution::create($params, $ids);
-    $params = array(
+    $params = [
       'contact_id' => $contactId,
       'membership_type_id' => $this->_membershipTypeID,
       'source' => 'Payment',
       'is_override' => 1,
       'status_id' => $this->_membershipStatusID,
-    );
-    $ids = array();
+    ];
+    $ids = [];
     $membership = CRM_Member_BAO_Membership::create($params, $ids);
 
-    $params = array(
+    $params = [
       'contribution_id' => $contribution->id,
       'membership_id' => $membership->id,
-    );
+    ];
     $Create = civicrm_membershipcontributionlink_create($params);
 
     $GetParams = civicrm_membershipcontributionlink_get($params);

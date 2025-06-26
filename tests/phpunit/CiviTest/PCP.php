@@ -10,43 +10,43 @@ class PCPBlock extends PHPUnit_Framework_Testcase
      *
      */
     function create( $contributionPageId ) {
-        $profileParams = array(
+        $profileParams = [
                                'group_type' => 'Individual,Contact',
                                'title'      => 'Test Supprorter Profile',
                                'help_pre'   => 'Profle to PCP Contribution',
                                'is_active'  => 1,
                                'is_cms_user' => 2
-                               );
+                               ];
         
         $ufGroup   = civicrm_api('uf_group', 'create', $profileParams );
         $profileId = $ufGroup['id'];
 
-        $fieldsParams = array (
-                               array (
+        $fieldsParams =  [
+                                [
                                       'field_name'       => 'first_name',
                                       'field_type'       => 'Individual',
                                       'visibility'       => 'Public Pages and Listings',
                                       'weight'           => 1,
                                       'label'            => 'First Name',
                                       'is_required'      => 1,
-                                      'is_active'        => 1 ),
-                               array (
+                                      'is_active'        => 1 ],
+                                [
                                       'field_name'       => 'last_name',
                                       'field_type'       => 'Individual',
                                       'visibility'       => 'Public Pages and Listings',
                                       'weight'           => 2,
                                       'label'            => 'Last Name',
                                       'is_required'      => 1,
-                                      'is_active'        => 1 ),
-                               array (
+                                      'is_active'        => 1 ],
+                                [
                                       'field_name'       => 'email',
                                       'field_type'       => 'Contact',
                                       'visibility'       => 'Public Pages and Listings',
                                       'weight'           => 3,
                                       'label'            => 'Email',
                                       'is_required'      => 1,
-                                      'is_active'        => 1 )
-                               );
+                                      'is_active'        => 1 ]
+                               ];
         
         civicrm_api_include('uf_field');
         foreach( $fieldsParams as $value ){
@@ -60,17 +60,17 @@ class PCPBlock extends PHPUnit_Framework_Testcase
                 $ufField = civicrm_uf_field_create($profileId , $value );
             }
         }
-        $joinParams =  array(
+        $joinParams =  [
                              'module'       => 'Profile',
                              'entity_table' => 'civicrm_contribution_page',
                              'entity_id'    => 1,
                              'weight'       => 1,
                              'uf_group_id'  => $profileId ,
                              'is_active'    => 1
-                             );
+                             ];
         $ufJoin = civicrm_api('uf_join', 'create', $joinParams );
         
-        $params = array(
+        $params = [
                         'entity_table'          => 'civicrm_contribution_page',
                         'entity_id'             => $contributionPageId,
                         'supporter_profile_id'  => $profileId,
@@ -80,10 +80,10 @@ class PCPBlock extends PHPUnit_Framework_Testcase
                         'link_text'             => 'Create your own Personal Campaign Page!',
                         'is_active'             => 1,
                         'notify_email'          => 'info@civicrm.org'
-                        );
+                        ];
         require_once 'CRM/Contribute/BAO/PCP.php';
         $blockPCP = CRM_Contribute_BAO_PCP::add( $params);
-        return array( 'blockId' => $blockPCP->id, 'profileId' => $profileId );
+        return [ 'blockId' => $blockPCP->id, 'profileId' => $profileId ];
     }
     /*
      * Helper function to delete a PCP related stuff viz. Profile, PCP Block Entry
@@ -102,7 +102,7 @@ class PCPBlock extends PHPUnit_Framework_Testcase
             $resulProfile = civicrm_uf_group_delete($params['profileId']);
         }
         else {
-            $delete_params = array('id' => $params['profileId']);
+            $delete_params = ['id' => $params['profileId']];
             $resulProfile = civicrm_api('uf_group', 'delete', $delete_params );
         }
 

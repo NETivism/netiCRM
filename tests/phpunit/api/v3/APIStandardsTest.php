@@ -64,7 +64,7 @@ class api_v3_APIStandardsTest extends CiviUnitTestCase {
     parent::setUp();
     $this->_apiversion = 3;
     $this->_apiDir = "../api/v3/";
-    $this->_functionFiles = array('Entity.php', 'utils.php');
+    $this->_functionFiles = ['Entity.php', 'utils.php'];
 
     //should possibly insert variable rather than '3' in below
     $this->_regexForGettingAPIStdFunctions = '/^civicrm_api3_  #starts with civicrm_api_3 (ignore internal functions)
@@ -73,7 +73,7 @@ class api_v3_APIStandardsTest extends CiviUnitTestCase {
         																					(?:(?!getfields))/x';
     // functions to skip from utils.php mainly since they get sucked in via
     // a require chain in the include files
-    $this->_skipFunctionList = array(
+    $this->_skipFunctionList = [
       // location api is deprecated
       'civicrm_api3_location_create',
       'civicrm_api3_location_get',
@@ -91,7 +91,7 @@ class api_v3_APIStandardsTest extends CiviUnitTestCase {
       'civicrm_api3_error',
       'civicrm_api3_check_contact_dedupe',
       'civicrm_api3_api_check_permission',
-    );
+    ];
   }
 
   /*
@@ -133,7 +133,7 @@ class api_v3_APIStandardsTest extends CiviUnitTestCase {
      * @return array $files array of php files in the directory excluding helper files
      */
   function getAllFilesinAPIDir() {
-    $files = array();
+    $files = [];
     $handle = opendir($this->_apiDir);
 
     while (($file = readdir($handle)) !== FALSE) {

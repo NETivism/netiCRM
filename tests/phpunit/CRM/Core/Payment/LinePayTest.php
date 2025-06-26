@@ -10,11 +10,11 @@ class CRM_Core_Payment_LinePayTest extends CiviUnitTestCase {
   protected $_page_id;
 
   function get_info() {
-    return array(
+    return [
      'name' => 'LinePay Instrument of Mobile Payment Processor',
      'description' => 'Test LinePay instrument of Mobile payment processor.',
      'group' => 'Payment Processor Tests',
-    );
+    ];
   }
 
   /**
@@ -26,25 +26,25 @@ class CRM_Core_Payment_LinePayTest extends CiviUnitTestCase {
     $this->_is_test = 1;
 
     // get processor
-    $params = array(
+    $params = [
       'version' => 3,
       'class_name' => 'Payment_Mobile',
       'is_test' => $this->_is_test,
-    );
+    ];
     $result = civicrm_api('PaymentProcessor', 'get', $params);
     $this->assertAPISuccess($result);
     if(empty($result['count'])){
-      $payment_processors = array();
-      $params = array(
+      $payment_processors = [];
+      $params = [
         'version' => 3,
         'class_name' => 'Payment_Mobile',
-      );
+      ];
       $result = civicrm_api('PaymentProcessorType', 'get', $params);
       $this->assertAPISuccess($result);
       if(!empty($result['count'])){
         $domain_id = CRM_Core_Config::domainID();
         foreach($result['values'] as $type_id => $p){
-          $payment_processor = array(
+          $payment_processor = [
             'version' => 3,
             'domain_id' => $domain_id,
             'name' => 'AUTO payment '.$p['name'],
@@ -62,7 +62,7 @@ class CRM_Core_Payment_LinePayTest extends CiviUnitTestCase {
             'billing_mode' => $p['billing_mode'],
             'is_recur' => $p['is_recur'],
             'payment_type' => $p['payment_type'],
-          );
+          ];
           $result = civicrm_api('PaymentProcessor', 'create', $payment_processor);
           $this->assertAPISuccess($result);
           if(is_numeric($result['id'])){
@@ -77,23 +77,23 @@ class CRM_Core_Payment_LinePayTest extends CiviUnitTestCase {
         }
       }
     }
-    $params = array(
+    $params = [
       'version' => 3,
       'class_name' => 'Payment_Mobile',
       'is_test' => $this->_is_test,
-    );
+    ];
     $result = civicrm_api('PaymentProcessor', 'get', $params);
     $this->assertAPISuccess($result);
     $pp = reset($result['values']);
     $this->_processor = $pp;
 
     // get cid
-    $params = array(
+    $params = [
       'version' => 3,
-      'options' => array(
+      'options' => [
         'limit' => 1,
-      ),
-    );
+      ],
+    ];
     $result = civicrm_api('Contact', 'get', $params);
     $this->assertAPISuccess($result);
     if(!empty($result['count'])){

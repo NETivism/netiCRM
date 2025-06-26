@@ -51,7 +51,7 @@ class api_v2_ContributionTest extends CiviUnitTestCase {
   ///////////////// civicrm_contribution_get methods
   function testGetEmptyParamsContribution() {
 
-    $params = array();
+    $params = [];
     $contribution = &civicrm_contribution_get($params);
 
     $this->assertEquals($contribution['is_error'], 1);
@@ -66,7 +66,7 @@ class api_v2_ContributionTest extends CiviUnitTestCase {
   }
 
   function testGetContribution() {
-    $p = array(
+    $p = [
       'contact_id' => $this->_individualId,
       'receive_date' => date('Ymd'),
       'total_amount' => 100.00,
@@ -78,10 +78,10 @@ class api_v2_ContributionTest extends CiviUnitTestCase {
       'invoice_id' => 78910,
       'source' => 'SSF',
       'contribution_status_id' => 1,
-    );
+    ];
 
     $this->_contribution = &civicrm_contribution_add($p);
-    $params              = array('contribution_id' => $this->_contribution['id']);
+    $params              = ['contribution_id' => $this->_contribution['id']];
     $contribution        = &civicrm_contribution_get($params);
     $this->assertEquals($contribution['contact_id'], $this->_individualId);
     $this->assertEquals($contribution['contribution_type_id'], $this->_contributionTypeId);
@@ -94,14 +94,14 @@ class api_v2_ContributionTest extends CiviUnitTestCase {
     $this->assertEquals($contribution['contribution_source'], 'SSF');
     $this->assertEquals($contribution['contribution_status'], 'Completed');
 
-    $params2 = array('contribution_id' => $this->_contribution['id']);
+    $params2 = ['contribution_id' => $this->_contribution['id']];
 
     $this->contributionDelete($this->_contribution['id']);
   }
 
   ///////////////// civicrm_contribution_add
   function testCreateEmptyParamsContribution() {
-    $params = array();
+    $params = [];
     $contribution = civicrm_contribution_add($params);
     $this->assertEquals($contribution['is_error'], 1);
     $this->assertEquals($contribution['error_message'], 'Input Parameters empty');
@@ -115,14 +115,14 @@ class api_v2_ContributionTest extends CiviUnitTestCase {
   }
 
   function testCreateParamsWithoutRequiredKeys() {
-    $params = array('no_required' => 1);
+    $params = ['no_required' => 1];
     $contribution = &civicrm_contribution_add($params);
     $this->assertEquals($contribution['is_error'], 1);
     $this->assertEquals($contribution['error_message'], 'Required fields not found for contribution contact_id');
   }
 
   function testCreateContribution() {
-    $params = array(
+    $params = [
       'contact_id' => $this->_individualId,
       'receive_date' => date('Ymd'),
       'total_amount' => 100.00,
@@ -135,7 +135,7 @@ class api_v2_ContributionTest extends CiviUnitTestCase {
       'invoice_id' => 67890,
       'source' => 'SSF',
       'contribution_status_id' => 1,
-    );
+    ];
 
     $contribution = &civicrm_contribution_add($params);
 
@@ -153,7 +153,7 @@ class api_v2_ContributionTest extends CiviUnitTestCase {
     $this->assertEquals($contribution['contribution_status_id'], 1, 'In line ' . __LINE__);
     $this->_contribution = $contribution;
 
-    $contributionID = array('contribution_id' => $contribution['id']);
+    $contributionID = ['contribution_id' => $contribution['id']];
     $contribution = &civicrm_contribution_delete($contributionID);
 
     $this->assertEquals($contribution['is_error'], 0);
@@ -165,9 +165,9 @@ class api_v2_ContributionTest extends CiviUnitTestCase {
   //CHANGE: we require the API to do an incremental update
   function testCreateUpdateContribution() {
     $contributionID = $this->contributionCreate($this->_individualId, $this->_contributionTypeId);
-    $old_params = array(
+    $old_params = [
       'contribution_id' => $contributionID,
-    );
+    ];
     $original = &civicrm_contribution_get($old_params);
     //Make sure it came back
     $this->assertTrue(empty($original['is_error']), 'In line ' . __LINE__);
@@ -193,7 +193,7 @@ class api_v2_ContributionTest extends CiviUnitTestCase {
     $this->assertEquals($old_source, 'SSF', 'In line ' . __LINE__);
     $this->assertEquals($old_trxn_id, 12345, 'In line ' . __LINE__);
     $this->assertEquals($old_invoice_id, 67890, 'In line ' . __LINE__);
-    $params = array(
+    $params = [
       'id' => $contributionID,
       'contact_id' => $this->_individualId,
       'total_amount' => 110.00,
@@ -202,13 +202,13 @@ class api_v2_ContributionTest extends CiviUnitTestCase {
       'net_amount' => 100.00,
       'contribution_status_id' => 1,
       'note' => 'Donating for Nobel Cause',
-    );
+    ];
 
     $contribution = &civicrm_contribution_add($params);
 
-    $new_params = array(
+    $new_params = [
       'contribution_id' => $contribution['id'],
-    );
+    ];
     $contribution = &civicrm_contribution_get($new_params);
 
     $this->assertEquals($contribution['contact_id'], $this->_individualId, 'In line ' . __LINE__);
@@ -222,7 +222,7 @@ class api_v2_ContributionTest extends CiviUnitTestCase {
     $this->assertEquals($contribution['invoice_id'], $old_invoice_id, 'In line ' . __LINE__);
     $this->assertEquals($contribution['contribution_source'], $old_source, 'In line ' . __LINE__);
     $this->assertEquals($contribution['contribution_status'], 'Completed', 'In line ' . __LINE__);
-    $contributionID = array('contribution_id' => $contribution['contribution_id']);
+    $contributionID = ['contribution_id' => $contribution['contribution_id']];
     $contribution = &civicrm_contribution_delete($contributionID);
 
     $this->assertEquals($contribution['is_error'], 0);
@@ -231,7 +231,7 @@ class api_v2_ContributionTest extends CiviUnitTestCase {
 
   ///////////////// civicrm_contribution_delete methods
   function testDeleteEmptyParamsContribution() {
-    $params = array();
+    $params = [];
     $contribution = civicrm_contribution_delete($params);
     $this->assertEquals($contribution['is_error'], 1);
     $this->assertEquals($contribution['error_message'], 'Could not find contribution_id in input parameters');
@@ -245,7 +245,7 @@ class api_v2_ContributionTest extends CiviUnitTestCase {
   }
 
   function testDeleteWrongParamContribution() {
-    $params = array('contribution_source' => 'SSF');
+    $params = ['contribution_source' => 'SSF'];
     $contribution = &civicrm_contribution_delete($params);
     $this->assertEquals($contribution['is_error'], 1);
     $this->assertEquals($contribution['error_message'], 'Could not find contribution_id in input parameters');
@@ -253,7 +253,7 @@ class api_v2_ContributionTest extends CiviUnitTestCase {
 
   function testDeleteContribution() {
     $contributionID = $this->contributionCreate($this->_individualId, $this->_contributionTypeId);
-    $params         = array('contribution_id' => $contributionID);
+    $params         = ['contribution_id' => $contributionID];
     $contribution   = civicrm_contribution_delete($params);
     $this->assertEquals($contribution['is_error'], 0);
     $this->assertEquals($contribution['result'], 1);
@@ -277,9 +277,9 @@ class api_v2_ContributionTest extends CiviUnitTestCase {
    *  All available contributions expected.
    */
   function testSearchEmptyParams() {
-    $params = array();
+    $params = [];
 
-    $p = array(
+    $p = [
       'contact_id' => $this->_individualId,
       'receive_date' => date('Ymd'),
       'total_amount' => 100.00,
@@ -291,7 +291,7 @@ class api_v2_ContributionTest extends CiviUnitTestCase {
       'invoice_id' => 78910,
       'source' => 'SSF',
       'contribution_status_id' => 1,
-    );
+    ];
     $contribution = &civicrm_contribution_add($p);
     $contributionId = $contribution['id'];
 
@@ -318,17 +318,17 @@ class api_v2_ContributionTest extends CiviUnitTestCase {
    *  Test civicrm_contribution_search. Success expected.
    */
   function testSearch() {
-    $p1 = array(
+    $p1 = [
       'contact_id' => $this->_individualId,
       'receive_date' => date('Ymd'),
       'total_amount' => 100.00,
       'contribution_type_id' => $this->_contributionTypeId,
       'non_deductible_amount' => 10.00,
       'contribution_status_id' => 1,
-    );
+    ];
     $contribution1 = &civicrm_contribution_add($p1);
 
-    $p2 = array(
+    $p2 = [
       'contact_id' => $this->_individualId,
       'receive_date' => date('Ymd'),
       'total_amount' => 200.00,
@@ -339,10 +339,10 @@ class api_v2_ContributionTest extends CiviUnitTestCase {
       'fee_amount' => 50.00,
       'net_amount' => 60.00,
       'contribution_status_id' => 2,
-    );
+    ];
     $contribution2 = &civicrm_contribution_add($p2);
 
-    $params = array('contribution_id' => $contribution2['id']);
+    $params = ['contribution_id' => $contribution2['id']];
     $result = &civicrm_contribution_search($params);
     $res    = $result[$contribution2['id']];
 
@@ -367,7 +367,7 @@ class api_v2_ContributionTest extends CiviUnitTestCase {
    *  Test civicrm_contribution_format_creat with Empty params
    */
   function testFormatCreateEmptyParams() {
-    $params = array();
+    $params = [];
     $result = &civicrm_contribution_format_create($params);
 
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
@@ -389,13 +389,13 @@ class api_v2_ContributionTest extends CiviUnitTestCase {
    */
   function testFormatCreateInvalidData() {
     require_once 'CRM/Contribute/DAO/Contribution.php';
-    $validParams = array(
+    $validParams = [
       'contact_id' => $this->_individualId,
       'receive_date' => date('Ymd'),
       'total_amount' => 100.00,
       'contribution_type_id' => $this->_contributionTypeId,
       'contribution_status_id' => 1,
-    );
+    ];
     $params = $validParams;
     $params['receive_date'] = 'invalid';
     $result = &civicrm_contribution_format_create($params);
@@ -429,7 +429,7 @@ class api_v2_ContributionTest extends CiviUnitTestCase {
     require_once 'CRM/Contribute/DAO/Contribution.php';
     require_once 'CRM/Contribute/PseudoConstant.php';
 
-    $params = array(
+    $params = [
       'contact_id' => $this->_individualId,
       'receive_date' => date('Ymd'),
       'total_amount' => 100.00,
@@ -437,21 +437,21 @@ class api_v2_ContributionTest extends CiviUnitTestCase {
       'contribution_status_id' => 1,
       'contribution_type' => 'Prize',
       'note' => 'note',
-    );
+    ];
 
     $result = &civicrm_contribution_format_create($params);
 
     $this->assertEquals($result['total_amount'], 100.00, 'In line ' . __LINE__);
     $this->assertEquals($result['contribution_status_id'], 1, 'In line ' . __LINE__);
 
-    $params = array('contribution_id' => $result['id']);
+    $params = ['contribution_id' => $result['id']];
     $contribution = civicrm_contribution_delete($params);
   }
 
   /////////////////  _civicrm_contribute_format_params for $create
   function testFormatParams() {
     require_once 'CRM/Contribute/DAO/Contribution.php';
-    $params = array(
+    $params = [
       'contact_id' => $this->_individualId,
       'receive_date' => date('Ymd'),
       'total_amount' => 100.00,
@@ -460,9 +460,9 @@ class api_v2_ContributionTest extends CiviUnitTestCase {
       'contribution_type' => NULL,
       'note' => 'note',
       'contribution_source' => 'test',
-    );
+    ];
 
-    $values = array();
+    $values = [];
     $result = _civicrm_contribute_format_params($params, $values, TRUE);
     $this->assertEquals($values['total_amount'], 100.00, 'In line ' . __LINE__);
     $this->assertEquals($values['contribution_status_id'], 1, 'In line ' . __LINE__);

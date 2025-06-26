@@ -38,23 +38,23 @@ class CRM_Utils_TypeTest extends CiviUnitTestCase {
    * @return array
    */
   public static function validateDataProvider() {
-    return array(
-      array(10, 'Int', 10),
-      array('145E+3', 'Int', NULL),
-      array('10', 'Integer', 10),
-      array(-10, 'Int', -10),
-      array('-10', 'Integer', -10),
-      array('-10foo', 'Int', NULL),
-      array(10, 'Positive', 10),
-      array('145.0E+3', 'Positive', NULL),
-      array('10', 'Positive', 10),
-      array(-10, 'Positive', NULL),
-      array('-10', 'Positive', NULL),
-      array('-10foo', 'Positive', NULL),
-      array('a string', 'String', 'a string'),
-      array('{"contact":{"contact_id":205}}', 'Json', '{"contact":{"contact_id":205}}'),
-      array('{"contact":{"contact_id":!n†rude®}}', 'Json', NULL),
-    );
+    return [
+      [10, 'Int', 10],
+      ['145E+3', 'Int', NULL],
+      ['10', 'Integer', 10],
+      [-10, 'Int', -10],
+      ['-10', 'Integer', -10],
+      ['-10foo', 'Int', NULL],
+      [10, 'Positive', 10],
+      ['145.0E+3', 'Positive', NULL],
+      ['10', 'Positive', 10],
+      [-10, 'Positive', NULL],
+      ['-10', 'Positive', NULL],
+      ['-10foo', 'Positive', NULL],
+      ['a string', 'String', 'a string'],
+      ['{"contact":{"contact_id":205}}', 'Json', '{"contact":{"contact_id":205}}'],
+      ['{"contact":{"contact_id":!n†rude®}}', 'Json', NULL],
+    ];
   }
 
   /**
@@ -72,76 +72,76 @@ class CRM_Utils_TypeTest extends CiviUnitTestCase {
    * @return array
    */
   public static function escapeDataProvider() {
-    return array(
-      array(10, 'Int', 10),
-      array('145E+3', 'Int', NULL),
-      array('10', 'Integer', 10),
-      array(-10, 'Int', -10),
-      array(array(), 'Integer', NULL),
-      array('-10foo', 'Int', NULL),
-      array(10, 'Positive', 10),
-      array('145.0E+3', 'Positive', NULL),
-      array('10', 'Positive', 10),
-      array(-10, 'Positive', NULL),
-      array('-10', 'Positive', NULL),
-      array('-10foo', 'Positive', NULL),
-      array('', 'Timestamp', ''),
-      array('', 'ContactReference', ''),
-      array('3', 'ContactReference', 3),
-      array('-3', 'ContactReference', NULL),
+    return [
+      [10, 'Int', 10],
+      ['145E+3', 'Int', NULL],
+      ['10', 'Integer', 10],
+      [-10, 'Int', -10],
+      [[], 'Integer', NULL],
+      ['-10foo', 'Int', NULL],
+      [10, 'Positive', 10],
+      ['145.0E+3', 'Positive', NULL],
+      ['10', 'Positive', 10],
+      [-10, 'Positive', NULL],
+      ['-10', 'Positive', NULL],
+      ['-10foo', 'Positive', NULL],
+      ['', 'Timestamp', ''],
+      ['', 'ContactReference', ''],
+      ['3', 'ContactReference', 3],
+      ['-3', 'ContactReference', NULL],
       // Escape function is meant for sql, not xss
-      array('<p onclick="alert(\'xss\');">Hello</p>', 'Memo', '<p onclick=\\"alert(\\\'xss\\\');\\">Hello</p>'),
+      ['<p onclick="alert(\'xss\');">Hello</p>', 'Memo', '<p onclick=\\"alert(\\\'xss\\\');\\">Hello</p>'],
 
       # directory name
-      array("abc.def.com/../", 'DirectoryName', 'abc.def.com'),
-      array("abc.中テ험def.com/../", 'DirectoryName', 'abc.def.com'),
+      ["abc.def.com/../", 'DirectoryName', 'abc.def.com'],
+      ["abc.中テ험def.com/../", 'DirectoryName', 'abc.def.com'],
 
       # filename
       // Strings containing file system reserved characters
-      array("file|name.txt", 'FileName', 'filename.txt'),
-      array("file/name.txt", 'FileName', 'filename.txt'),
-      array("file<name>.txt", 'FileName', 'filename.txt'),
-      array("file:name.txt", 'FileName', 'filename.txt'),
-      array("file\"name.txt", 'FileName', 'filename.txt'),
-      array("file*name.txt", 'FileName', 'filename.txt'),
-      array("file?name.txt", 'FileName', 'filename.txt'),
-      array("file/../name.txt", 'FileName', 'filename.txt'),
+      ["file|name.txt", 'FileName', 'filename.txt'],
+      ["file/name.txt", 'FileName', 'filename.txt'],
+      ["file<name>.txt", 'FileName', 'filename.txt'],
+      ["file:name.txt", 'FileName', 'filename.txt'],
+      ["file\"name.txt", 'FileName', 'filename.txt'],
+      ["file*name.txt", 'FileName', 'filename.txt'],
+      ["file?name.txt", 'FileName', 'filename.txt'],
+      ["file/../name.txt", 'FileName', 'filename.txt'],
 
       // Strings containing control characters
-      array("file\x00name.txt", 'FileName', 'filename.txt'),
-      array("file\x1Fname.txt", 'FileName', 'filename.txt'),
+      ["file\x00name.txt", 'FileName', 'filename.txt'],
+      ["file\x1Fname.txt", 'FileName', 'filename.txt'],
 
       // Strings containing URI reserved characters
-      array("file#name.txt", 'FileName', 'filename.txt'),
-      array("file[name].txt", 'FileName', 'filename.txt'),
-      array("file@name.txt", 'FileName', 'filename.txt'),
-      array("file!name.txt", 'FileName', 'filename.txt'),
-      array('file$name.txt', 'FileName', 'filename.txt'),
-      array("file&name.txt", 'FileName', 'filename.txt'),
-      array("file'name.txt", 'FileName', 'filename.txt'),
-      array("file(name).txt", 'FileName', 'filename.txt'),
-      array("file+name.txt", 'FileName', 'filename.txt'),
-      array("file,name.txt", 'FileName', 'filename.txt'),
-      array("file;name.txt", 'FileName', 'filename.txt'),
-      array("file=name.txt", 'FileName', 'filename.txt'),
+      ["file#name.txt", 'FileName', 'filename.txt'],
+      ["file[name].txt", 'FileName', 'filename.txt'],
+      ["file@name.txt", 'FileName', 'filename.txt'],
+      ["file!name.txt", 'FileName', 'filename.txt'],
+      ['file$name.txt', 'FileName', 'filename.txt'],
+      ["file&name.txt", 'FileName', 'filename.txt'],
+      ["file'name.txt", 'FileName', 'filename.txt'],
+      ["file(name).txt", 'FileName', 'filename.txt'],
+      ["file+name.txt", 'FileName', 'filename.txt'],
+      ["file,name.txt", 'FileName', 'filename.txt'],
+      ["file;name.txt", 'FileName', 'filename.txt'],
+      ["file=name.txt", 'FileName', 'filename.txt'],
 
       // Strings containing URL unsafe characters
-      array("file{name}.txt", 'FileName', 'filename.txt'),
-      array("file^name.txt", 'FileName', 'filename.txt'),
-      array("file~name.txt", 'FileName', 'filename.txt'),
-      array("file`name.txt", 'FileName', 'filename.txt'),
+      ["file{name}.txt", 'FileName', 'filename.txt'],
+      ["file^name.txt", 'FileName', 'filename.txt'],
+      ["file~name.txt", 'FileName', 'filename.txt'],
+      ["file`name.txt", 'FileName', 'filename.txt'],
 
       // Strings starting with a dot, hyphen, or a combination of both
-      array(".filename.txt", 'FileName', 'filename.txt'),
-      array("..filename.txt", 'FileName', 'filename.txt'),
-      array("-filename.txt", 'FileName', 'filename.txt'),
-      array(".-filename.txt", 'FileName', 'filename.txt'),
+      [".filename.txt", 'FileName', 'filename.txt'],
+      ["..filename.txt", 'FileName', 'filename.txt'],
+      ["-filename.txt", 'FileName', 'filename.txt'],
+      [".-filename.txt", 'FileName', 'filename.txt'],
 
       // multi language
-      array("中文測試.txt", 'FileName', '中文測試.txt'),
-      array("日本語テスト.txt", 'FileName', '日本語テスト.txt'),
-      array("韓한국어 시험.txt", 'FileName', '韓한국어 시험.txt'),
-    );
+      ["中文測試.txt", 'FileName', '中文測試.txt'],
+      ["日本語テスト.txt", 'FileName', '日本語テスト.txt'],
+      ["韓한국어 시험.txt", 'FileName', '韓한국어 시험.txt'],
+    ];
   }
 
 }

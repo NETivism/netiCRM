@@ -8,11 +8,11 @@ class CRM_Utils_StringTest extends CiviUnitTestCase
     
     function get_info( ) 
     {
-        return array(
+        return [
                      'name'        => 'String Test',
                      'description' => 'Test String Functions',
                      'group'       => 'CiviCRM BAO Tests',
-                     );
+                     ];
     }
     
     function setUp( ) 
@@ -21,14 +21,14 @@ class CRM_Utils_StringTest extends CiviUnitTestCase
     }
 
     function testStripPathChars( ) {
-        $testSet = array( '' => '',
+        $testSet = [ '' => '',
                           null => null,
                           'civicrm' => 'civicrm',
                           'civicrm/dashboard' => 'civicrm/dashboard',
                           'civicrm/contribute/transact' => 'civicrm/contribute/transact',
                           'civicrm/<hack>attempt</hack>' => 'civicrm/_hack_attempt_/hack_',
                           'civicrm dashboard & force = 1,;' => 'civicrm_dashboard___force___1__'
-                          );
+                          ];
         
 
 
@@ -39,47 +39,47 @@ class CRM_Utils_StringTest extends CiviUnitTestCase
     }
 
     function testExtractName() {
-        $cases = array(
-                       Array(
+        $cases = [
+                       [
                              'full_name' => 'Alan',
                              'first_name' => 'Alan',
-                             ),
-                       array(
+                             ],
+                       [
                              'full_name' => 'Alan Arkin',
                              'first_name' => 'Alan',
                              'last_name' => 'Arkin',
-                             ),
-                       array(
+                             ],
+                       [
                              'full_name' => '"Alan Arkin"',
                              'first_name' => 'Alan',
                              'last_name' => 'Arkin',
-                             ),
-                       array(
+                             ],
+                       [
                              'full_name' => 'Alan A Arkin',
                              'first_name' => 'Alan',
                              'middle_name' => 'A',
                              'last_name' => 'Arkin',
-                             ),
-                       array(
+                             ],
+                       [
                              'full_name' => 'Adams, Amy',
                              'first_name' => 'Amy',
                              'last_name' => 'Adams',
-                             ),
-                       array(
+                             ],
+                       [
                              'full_name' => 'Adams, Amy A',
                              'first_name' => 'Amy',
                              'middle_name' => 'A',
                              'last_name' => 'Adams',
-                             ),
-                       array(
+                             ],
+                       [
                              'full_name' => '"Adams, Amy A"',
                              'first_name' => 'Amy',
                              'middle_name' => 'A',
                              'last_name' => 'Adams',
-                             ),
-                       );
+                             ],
+                       ];
         foreach ($cases as $case) {
-            $actual = array();
+            $actual = [];
             CRM_Utils_String::extractName($case['full_name'], $actual);
             $this->assertEquals($actual['first_name'], $case['first_name']);
             $this->assertEquals($actual['last_name'], $case['last_name']);

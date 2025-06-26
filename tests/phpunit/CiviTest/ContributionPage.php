@@ -10,7 +10,7 @@ class ContributionPage extends PHPUnit_Framework_Testcase
     function create( $id = null ) 
     {
         require_once "CRM/Contribute/BAO/ContributionPage.php";        
-        $params = array(
+        $params = [
                         'title'                    => 'Help Test CiviCRM!',
                         'intro_text'               => 'Created for Test Coverage Online Contribution Page',
                         'contribution_type_id'     => 1,
@@ -28,7 +28,7 @@ class ContributionPage extends PHPUnit_Framework_Testcase
                         'cc_receipt'               => 'receipt@example.com',
                         'bcc_receipt'              => 'bcc@example.com',
                         'is_active'                => 1
-                        );
+                        ];
         
         $contributionPage = CRM_Contribute_BAO_ContributionPage::create( $params );
         return $contributionPage->id;

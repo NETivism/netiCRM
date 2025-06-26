@@ -34,11 +34,11 @@ require_once 'api/v2/ActivityType.php';
  */
 class api_v2_ActivityTypeTest extends CiviUnitTestCase {
   function get_info() {
-    return array(
+    return [
       'name' => 'Activity Type',
       'description' => 'Test all ActivityType Get/Create/Delete methods.',
       'group' => 'CiviCRM API Tests',
-    );
+    ];
   }
 
   function setUp() {
@@ -67,9 +67,9 @@ class api_v2_ActivityTypeTest extends CiviUnitTestCase {
    */
   function testActivityTypeCreate() {
 
-    $params = array(
+    $params = [
       'weight' => '2',
-    );
+    ];
     $activitycreate = &civicrm_activity_type_create($params);
     $this->assertEquals($activitycreate['is_error'], 1);
     $this->assertEquals($activitycreate['error_message'], 'Required parameter "label / weight" not found');
@@ -80,10 +80,10 @@ class api_v2_ActivityTypeTest extends CiviUnitTestCase {
    */
   function testActivityTypeCreateCheckId() {
 
-    $params = array(
+    $params = [
       'label' => 'type_create',
       'weight' => '2',
-    );
+    ];
     $activityTypeCreate = &civicrm_activity_type_create($params);
     $activityTypeID = $activityTypeCreate['id'];
 
@@ -98,12 +98,12 @@ class api_v2_ActivityTypeTest extends CiviUnitTestCase {
    */
   function testActivityTypeDelete() {
 
-    $params = array(
+    $params = [
       'label' => 'type_create_delete',
       'weight' => '2',
-    );
+    ];
     $activityTypeCreate = $this->activityTypeCreate($params);
-    $params             = array('activity_type_id' => $activityTypeCreate['id']);
+    $params             = ['activity_type_id' => $activityTypeCreate['id']];
     $activityTypeDelete = civicrm_activity_type_delete($params);
     $this->assertEquals($activityTypeDelete, 1, 'In line ' . __LINE__);
   }

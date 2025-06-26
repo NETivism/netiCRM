@@ -32,11 +32,11 @@ class CRM_Core_BAO_AddressTest extends CiviUnitTestCase
 {
     function get_info( ) 
     {
-        return array(
+        return [
                      'name'        => 'Address BAOs',
                      'description' => 'Test all Core_BAO_Address methods.',
                      'group'       => 'CiviCRM BAO Tests',
-                     );
+                     ];
     }
    
     function setUp( ) 
@@ -51,8 +51,8 @@ class CRM_Core_BAO_AddressTest extends CiviUnitTestCase
     {
         $contactId = Contact::createIndividual( );
         
-        $params = array( );
-        $params['address']['1'] = array (
+        $params = [ ];
+        $params['address']['1'] =  [
                                          'street_address' => 'Oberoi Garden',
                                          'supplemental_address_1' => 'Attn: Accounting',
                                          'supplemental_address_2' => 'Powai',
@@ -65,7 +65,7 @@ class CRM_Core_BAO_AddressTest extends CiviUnitTestCase
                                          'location_type_id' => '1',
                                          'is_primary' => '1',
                                          'is_billing' =>'0' 
-                                         );
+                                         ];
                                        
         $params['contact_id'] = $contactId;
         
@@ -79,8 +79,8 @@ class CRM_Core_BAO_AddressTest extends CiviUnitTestCase
         
          // Now call add() to modify an existing  address
 
-        $params = array( );
-        $params['address']['1'] = array (
+        $params = [ ];
+        $params['address']['1'] =  [
                                          
                                          'id' => $addressId,
                                          'street_address' => '120 Terminal Road',
@@ -95,7 +95,7 @@ class CRM_Core_BAO_AddressTest extends CiviUnitTestCase
                                          'location_type_id' => '1',
                                          'is_primary' => '1',
                                          'is_billing' => '0'
-                                         );
+                                         ];
         $params['contact_id'] = $contactId;
         
         
@@ -116,7 +116,7 @@ class CRM_Core_BAO_AddressTest extends CiviUnitTestCase
     { 
         $contactId = Contact::createIndividual( );
         
-        $fixParams = array(
+        $fixParams = [
                            'street_address' => 'E 906N Pine Pl W',
                            'supplemental_address_1' => 'Editorial Dept',
                            'supplemental_address_2' => '',
@@ -131,7 +131,7 @@ class CRM_Core_BAO_AddressTest extends CiviUnitTestCase
                            'is_primary' => '1',
                            'is_billing' => '0',
                            'contact_id' => $contactId
-                           ); 
+                           ]; 
         
         require_once 'CRM/Core/BAO/Address.php';
         $addAddress = CRM_Core_BAO_Address::add( $fixParams, $fixAddress = true ) ;
@@ -155,7 +155,7 @@ class CRM_Core_BAO_AddressTest extends CiviUnitTestCase
     { 
         $contactId = Contact::createIndividual( );
         
-        $fixParams = array(
+        $fixParams = [
                            'street_address' => 'E 906N Pine Pl W',
                            'supplemental_address_1' => 'Editorial Dept',
                            'supplemental_address_2' => '',
@@ -170,14 +170,14 @@ class CRM_Core_BAO_AddressTest extends CiviUnitTestCase
                            'is_primary' => '1',
                            'is_billing' => '0',
                            'contact_id' => $contactId
-                           ); 
+                           ]; 
         
         require_once 'CRM/Core/BAO/Address.php';
         CRM_Core_BAO_Address::add( $fixParams, $fixAddress=true ) ;
         
         $addParams = $this->assertDBNotNull( 'CRM_Core_DAO_Address', $contactId , 'id', 'contact_id',
                                              'Database check for created contact address.' );
-        $fixParams = array(
+        $fixParams = [
                            'street_address' => 'SW 719B Beech Dr NW',
                            'supplemental_address_1' => 'C/o OPDC',
                            'supplemental_address_2' => '',
@@ -192,7 +192,7 @@ class CRM_Core_BAO_AddressTest extends CiviUnitTestCase
                            'is_primary' => '',
                            'is_billing' => '1',
                            'contact_id' => $contactId
-                           );
+                           ];
         
         require_once 'CRM/Core/BAO/Address.php';
         CRM_Core_BAO_Address::add( $fixParams, $fixAddress=true ) ;
@@ -214,7 +214,7 @@ class CRM_Core_BAO_AddressTest extends CiviUnitTestCase
     { 
         $contactId = Contact::createIndividual( );
         
-        $fixParams = array(
+        $fixParams = [
                            'street_address' => 'E 906N Pine Pl W',
                            'supplemental_address_1' => 'Editorial Dept',
                            'supplemental_address_2' => '',
@@ -229,7 +229,7 @@ class CRM_Core_BAO_AddressTest extends CiviUnitTestCase
                            'is_primary' => '1',
                            'is_billing' => '0',
                            'contact_id' => $contactId
-                           );
+                           ];
         
         require_once 'CRM/Core/BAO/Address.php';
         CRM_Core_BAO_Address::add( $fixParams, $fixAddress=true ) ;
@@ -255,8 +255,8 @@ class CRM_Core_BAO_AddressTest extends CiviUnitTestCase
     {
         $contactId = Contact::createIndividual( );
         
-        $params = array( );
-        $params['address']['1'] = array (
+        $params = [ ];
+        $params['address']['1'] =  [
                                          'street_address' => 'Oberoi Garden',
                                          'supplemental_address_1' => 'Attn: Accounting',
                                          'supplemental_address_2' => 'Powai',
@@ -269,7 +269,7 @@ class CRM_Core_BAO_AddressTest extends CiviUnitTestCase
                                          'location_type_id' => '1',
                                          'is_primary' => '1',
                                          'is_billing' =>'0' 
-                                         );
+                                         ];
         
         $params['contact_id'] = $contactId;
         
@@ -282,7 +282,7 @@ class CRM_Core_BAO_AddressTest extends CiviUnitTestCase
         $addressId = $this->assertDBNotNull( 'CRM_Core_DAO_Address', $contactId, 'id', 'contact_id',
                                              'Database check for created address.' );
         
-        $entityBlock = array( 'contact_id' => $contactId );
+        $entityBlock = [ 'contact_id' => $contactId ];
         $address =  CRM_Core_BAO_Address::getValues( $entityBlock );
         $this->assertEquals( $address[1]['id'], $addressId );
         $this->assertEquals( $address[1]['contact_id'], $contactId);

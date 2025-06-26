@@ -7,11 +7,11 @@ class CRM_Core_BAO_IMTest extends CiviUnitTestCase
 {
     function get_info( ) 
     {
-        return array(
+        return [
                      'name'        => 'IM BAOs',
                      'description' => 'Test all Core_BAO_IM methods.',
                      'group'       => 'CiviCRM BAO Tests',
-                     );
+                     ];
     }
     
     function setUp( ) 
@@ -26,12 +26,12 @@ class CRM_Core_BAO_IMTest extends CiviUnitTestCase
     {
         $contactId = Contact::createIndividual( );
 
-        $params = array( );
-        $params = array( 'name'             => 'jane.doe',
+        $params = [ ];
+        $params = [ 'name'             => 'jane.doe',
                          'provider_id'	    => 1,
                          'is_primary'       => 1,
                          'location_type_id' => 1,
-                         'contact_id'       => $contactId );
+                         'contact_id'       => $contactId ];
         
         require_once 'CRM/Core/BAO/IM.php';
         CRM_Core_BAO_IM::add( $params );
@@ -41,11 +41,11 @@ class CRM_Core_BAO_IMTest extends CiviUnitTestCase
 	
         // Now call add() to modify an existing IM
 
-        $params = array( );
-        $params = array( 'id'           => $imId,
+        $params = [ ];
+        $params = [ 'id'           => $imId,
                          'contact_id'   => $contactId,
                          'provider_id'	=> 3,
-                         'name'	        => 'doe.jane' );
+                         'name'	        => 'doe.jane' ];
         
         CRM_Core_BAO_IM::add( $params );
         

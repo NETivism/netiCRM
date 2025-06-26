@@ -77,7 +77,7 @@ class CiviTestCase extends PHPUnit_Framework_Testcase
             return $this->_browser->_page->getUrlsByLabel( $label );
         }
 
-        $matches = array();
+        $matches = [];
         foreach ($this->_browser->_page->_links as $link) {
             $text = $link->getText();
             if ( $text == $label ||
@@ -111,7 +111,7 @@ class CiviTestCase extends PHPUnit_Framework_Testcase
     }
 
     function getUrlsByToken( $token, $path = null ) {
-        $matches = array();
+        $matches = [];
         foreach ($this->_browser->_page->_links as $link) {
             $text = $link->getText();
             $url  = $this->_browser->_page->_getUrlFromLink($link)->asString( );
@@ -149,7 +149,7 @@ class CiviTestCase extends PHPUnit_Framework_Testcase
 
     function allPermissions( ) 
     {
-        return array(
+        return [
                      1 => 'add contacts'               ,
                      2 => 'view all contacts'          ,
                      3 => 'edit all contacts'          ,
@@ -162,13 +162,13 @@ class CiviTestCase extends PHPUnit_Framework_Testcase
                      10 => 'view all activities'        ,
                      11 => 'access CiviCRM'             ,
                      12 => 'access Contact Dashboard'   ,
-                     );
+                     ];
     }
 
     function errorPage( &$ret, &$url ) {
         // check if there is a civicrm error or warning message on the page
         // at a later stage, we should also check for CMS based errors
-        $this->assertTrue($ret, ts(' [browser] GET %1"', array('%1' => $url)));
+        $this->assertTrue($ret, ts(' [browser] GET %1"', ['%1' => $url]));
 
         $this->assertNoText( 'Sorry. A non-recoverable error has occurred', '[browser] fatal error page?' );
         $this->assertNoText( 'The requested page could not be found', '[browser] page not found?' );

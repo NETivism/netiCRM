@@ -37,11 +37,11 @@ class CRM_Contribute_BAO_PCPTest extends CiviUnitTestCase
 
     function get_info( ) 
     {
-        return array(
+        return [
                      'name'        => 'PCP BAOs',
                      'description' => 'Test all Contribute_BAO_PCP methods.',
                      'group'       => 'CiviCRM BAO Tests',
-                     );
+                     ];
     }
 
     /**
@@ -73,7 +73,7 @@ class CRM_Contribute_BAO_PCPTest extends CiviUnitTestCase
         $this->assertEquals( $params['is_active'], $pcpBlock->is_active, 'Check for is_active.' );
         // Delete our test object
         require_once 'CRM/Core/DAO.php';
-        $delParams = array( 'id' => $pcpBlock->id );
+        $delParams = [ 'id' => $pcpBlock->id ];
         // FIXME: Currently this delete fails with an FK constraint error: DELETE FROM civicrm_contribution_type  WHERE (  civicrm_contribution_type.id = 5 )
         // CRM_Core_DAO::deleteTestObjects( 'CRM_Contribute_DAO_PCPBlock', $delParams );
         
@@ -102,7 +102,7 @@ class CRM_Contribute_BAO_PCPTest extends CiviUnitTestCase
         
         // Delete our test object
         require_once 'CRM/Core/DAO.php';
-        $delParams = array( 'id' => $pcp->id );
+        $delParams = [ 'id' => $pcp->id ];
         // FIXME: Currently this delete fails with an FK constraint error: DELETE FROM civicrm_contribution_type  WHERE (  civicrm_contribution_type.id = 5 )
         // CRM_Core_DAO::deleteTestObjects( 'CRM_Contribute_DAO_PCP', $delParams );
         
@@ -132,7 +132,7 @@ class CRM_Contribute_BAO_PCPTest extends CiviUnitTestCase
 
         // Delete our test object
         require_once 'CRM/Core/DAO.php';
-        $delParams = array( 'id' => $pcp->id );
+        $delParams = [ 'id' => $pcp->id ];
         // FIXME: Currently this delete fails with an FK constraint error: DELETE FROM civicrm_contribution_type  WHERE (  civicrm_contribution_type.id = 5 )
         // CRM_Core_DAO::deleteTestObjects( 'CRM_Contribute_DAO_PCP', $delParams );
     }
@@ -162,7 +162,7 @@ class CRM_Contribute_BAO_PCPTest extends CiviUnitTestCase
         $supporterProfile = CRM_Core_DAO::createTestObject('CRM_Core_DAO_UFGroup');
         $supporterProfileId = $supporterProfile->id;
 
-        $params = array(
+        $params = [
             'entity_table' => 'civicrm_contribution_page',
             'entity_id' => $contribPageId,
             'supporter_profile_id' => $supporterProfileId,
@@ -171,7 +171,7 @@ class CRM_Contribute_BAO_PCPTest extends CiviUnitTestCase
             'tellfriend_limit' => 1,
             'link_text' => 'Create your own PCP',
             'is_active' => 1
-            );
+            ];
         
         return $params;
     }
@@ -188,7 +188,7 @@ class CRM_Contribute_BAO_PCPTest extends CiviUnitTestCase
         $contribPage = CRM_Core_DAO::createTestObject('CRM_Contribute_DAO_ContributionPage');
         $contribPageId = $contribPage->id;
 
-        $params = array(
+        $params = [
             'contact_id' => $contactId,
             'status_id' => '1',
             'title' => 'My PCP',
@@ -201,7 +201,7 @@ class CRM_Contribute_BAO_PCPTest extends CiviUnitTestCase
             'goal_amount' => 10000.00,
             'referer' => 'referrer value',
             'is_active' => 1,
-            );
+            ];
         
         return $params;
     }

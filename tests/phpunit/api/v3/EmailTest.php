@@ -23,14 +23,14 @@ class api_v3_EmailTest extends CiviUnitTestCase {
 
     $this->_contactID = $this->organizationCreate();
     $this->_locationType = $this->locationTypeCreate();
-    $this->_locationType2 = $this->locationTypeCreate(array(
+    $this->_locationType2 = $this->locationTypeCreate([
       'name' => 'New Location Type 2',
       'vcard_name' => 'New Location Type 2',
       'description' => 'Another Location Type',
       'is_active' => 1,
-    ));
+    ]);
 
-    $this->_params = array(
+    $this->_params = [
       'contact_id' => $this->_contactID,
       'location_type_id' => $this->_locationType->id,
       'email' => 'api.test@civicrm.test.org',
@@ -38,7 +38,7 @@ class api_v3_EmailTest extends CiviUnitTestCase {
       'sequential' => 1,
       'version' => $this->_apiversion,
       //TODO email_type_id
-    );
+    ];
   }
 
   function tearDown() {
@@ -74,7 +74,7 @@ class api_v3_EmailTest extends CiviUnitTestCase {
     $this->assertAPISuccess($get, 'In line ' . __LINE__);
     $this->assertEquals($get['count'], 1);
 
-    $delresult = civicrm_api('email', 'delete', array('id' => $result['id'], 'version' => 3));
+    $delresult = civicrm_api('email', 'delete', ['id' => $result['id'], 'version' => 3]);
     $this->assertAPISuccess($delresult, 'In line ' . __LINE__);
   }
 
@@ -98,10 +98,10 @@ class api_v3_EmailTest extends CiviUnitTestCase {
   public function testCreateEmail() {
     $params = $this->_params;
     //check there are no emails to start with
-    $get = civicrm_api('email', 'get', array(
+    $get = civicrm_api('email', 'get', [
       'version' => 3,
       'location_type_id' => $this->_locationType->id,
-    ));
+    ]);
     $this->assertEquals(0, $get['is_error'], 'In line ' . __LINE__);
     $this->assertEquals(0, $get['count'], 'Contact not successfully deleted In line ' . __LINE__);
 
@@ -128,11 +128,11 @@ class api_v3_EmailTest extends CiviUnitTestCase {
     $this->assertApiSuccess($email1, 'In line ' . __LINE__);
 
     //now we check & make sure it has been set to primary
-    $check = civicrm_api('email', 'getcount', array(
+    $check = civicrm_api('email', 'getcount', [
       'version' => 3,
       'is_primary' => 1,
       'id' => $email1['id'],
-    ));
+    ]);
     $this->assertEquals(1, $check);
   }
 
@@ -143,13 +143,13 @@ class api_v3_EmailTest extends CiviUnitTestCase {
     $email2 = civicrm_api('email', 'create', $this->_params);
     $this->assertApiSuccess($email2, 'In line ' . __LINE__);
 
-    $this->assertDBQuery(1, "SELECT count(*) FROM civicrm_email WHERE contact_id = %1 AND is_primary = 1", array(
-      1 => array($this->_contactID, 'Integer'),
-    ), 'In line '. __LINE__);
+    $this->assertDBQuery(1, "SELECT count(*) FROM civicrm_email WHERE contact_id = %1 AND is_primary = 1", [
+      1 => [$this->_contactID, 'Integer'],
+    ], 'In line '. __LINE__);
   }
 
   public function testCreateEmailWithoutEmail() {
-    $result = civicrm_api('Email', 'Create', array('contact_id' => 4, 'version' => 3));
+    $result = civicrm_api('Email', 'Create', ['contact_id' => 4, 'version' => 3]);
     $this->assertEquals(1, $result['is_error'], 'In line ' . __LINE__);
     $this->assertContains('missing', $result['error_message'], 'In line ' . __LINE__);
     $this->assertContains('email', $result['error_message'], 'In line ' . __LINE__);
@@ -175,10 +175,10 @@ class api_v3_EmailTest extends CiviUnitTestCase {
   public function testUpdateEmail() {
     $params = $this->_params;
     //check there are no emails to start with
-    $get = civicrm_api('email', 'get', array(
+    $get = civicrm_api('email', 'get', [
       'version' => 3,
       'location_type_id' => $this->_locationType->id,
-    ));
+    ]);
     $this->assertEquals(0, $get['is_error'], 'In line ' . __LINE__);
     $this->assertEquals(0, $get['count'], 'Contact not successfully deleted In line ' . __LINE__);
 
@@ -225,20 +225,20 @@ class api_v3_EmailTest extends CiviUnitTestCase {
    * @docmaker_end
    */
   public function testDeleteEmail() {
-    $params = array(
+    $params = [
       'contact_id' => $this->_contactID,
       'location_type_id' => $this->_locationType->id,
       'email' => 'api-test@civicrm.test.org',
       'is_primary' => 1,
       'version' => $this->_apiversion,
       //TODO email_type_id
-    );
+    ];
     //check there are no emails to start with
-    $get = civicrm_api('email', 'get', array(
+    $get = civicrm_api('email', 'get', [
       'version' => 3,
       'location_type_id' => $this->_locationType->id,
       'contact_id' => $this->_contactID,
-    ));
+    ]);
     $this->assertEquals(0, $get['is_error'], 'In line ' . __LINE__);
     $this->assertEquals(0, $get['count'], 'email already exists ' . __LINE__);
 
@@ -247,18 +247,18 @@ class api_v3_EmailTest extends CiviUnitTestCase {
     $this->assertEquals(0, $create['is_error'], 'In line ' . __LINE__);
 
     // delete one
-    $params = array('id' => $create['id'], 'version' => 3);
+    $params = ['id' => $create['id'], 'version' => 3];
     $this->docMakerRequest($params, __FILE__, __FUNCTION__);
     $result = civicrm_api('email', 'delete', $params);
     $this->docMakerResponse($result, __FILE__, __FUNCTION__);
 
     $this->assertAPISuccess($result, 'In line ' . __LINE__);
     $this->assertEquals(1, $result['count'], 'In line ' . __LINE__);
-    $get = civicrm_api('email', 'get', array(
+    $get = civicrm_api('email', 'get', [
       'version' => 3,
       'location_type_id' => $this->_locationType->id,
       'contact_id' => $this->_contactID,
-    ));
+    ]);
     $this->assertEquals(0, $get['is_error'], 'In line ' . __LINE__);
     $this->assertEquals(0, $get['count'], 'Contact not successfully deleted In line ' . __LINE__);
   }

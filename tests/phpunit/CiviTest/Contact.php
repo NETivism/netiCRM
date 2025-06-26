@@ -27,11 +27,11 @@ class Contact extends CiviUnitTestCase
             $first_name = 'John';
             $last_name  = 'Doe';
             $contact_source = 'Testing purpose';
-            $params = array(
+            $params = [
                             'first_name'     => $first_name,
                             'last_name'      => $last_name,
                             'contact_source' => $contact_source
-                            );
+                            ];
         }
         return self::create($params);
     }
@@ -46,8 +46,8 @@ class Contact extends CiviUnitTestCase
         //compose the params, when not passed
         if ( !$params ) {
             $household_name = "John Doe's home";
-            $params = array( 'household_name' => $household_name,
-                             'contact_type'   => 'Household' );
+            $params = [ 'household_name' => $household_name,
+                             'contact_type'   => 'Household' ];
         }
         require_once "CRM/Contact/BAO/Contact.php";
         $household = CRM_Contact_BAO_Contact::create( $params );
@@ -64,8 +64,8 @@ class Contact extends CiviUnitTestCase
         //compose the params, when not passed
         if ( !$params ) {
             $organization_name = "My Organization";
-            $params = array( 'organization_name' => $organization_name, 
-                             'contact_type'      => 'Organization' );
+            $params = [ 'organization_name' => $organization_name, 
+                             'contact_type'      => 'Organization' ];
         }
         require_once "CRM/Contact/BAO/Contact.php";
         $organization = CRM_Contact_BAO_Contact::create( $params );

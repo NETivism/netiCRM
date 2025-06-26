@@ -25,55 +25,55 @@ class CRM_Contact_BAO_DupeContactTest extends CiviUnitTestCase
         // will   - dale - will@example.com
 
         // create a group to hold contacts, so that dupe checks don't consider any other contacts in the DB
-        $params = array( 'name'        => 'Dupe Group',
+        $params = [ 'name'        => 'Dupe Group',
                          'title'       => 'New Test Dupe Group',
                          'domain_id'   => 1,
                          'is_active'   => 1,
                          'visibility'  => 'Public Pages',
                          'version'     => 3,
-                         );
+                         ];
         // TODO: This is not an API test!!
         $result  = &civicrm_api('group', 'create', $params );
         $groupId = $result['id'];
 
         // contact data set
         // FIXME: move create params to separate function
-        $params = array(
-                        array('first_name'   => 'robin',
+        $params = [
+                        ['first_name'   => 'robin',
                               'last_name'    => 'hood',
                               'email'        => 'robin@example.com',
-                              'contact_type' => 'Individual'),
+                              'contact_type' => 'Individual'],
 
-                        array('first_name'   => 'robin',
+                        ['first_name'   => 'robin',
                               'last_name'    => 'hood',
                               'email'        => 'hood@example.com',
-                              'contact_type' => 'Individual'),
+                              'contact_type' => 'Individual'],
 
-                        array('first_name'   => 'robin',
+                        ['first_name'   => 'robin',
                               'last_name'    => 'dale',
                               'email'        => 'robin@example.com',
-                              'contact_type' => 'Individual'),
+                              'contact_type' => 'Individual'],
 
-                        array('first_name'   => 'little',
+                        ['first_name'   => 'little',
                               'last_name'    => 'dale',
                               'email'        => 'dale@example.com',
-                              'contact_type' => 'Individual'),
+                              'contact_type' => 'Individual'],
 
-                        array('first_name'   => 'will',
+                        ['first_name'   => 'will',
                               'last_name'    => 'dale',
                               'email'        => 'dale@example.com',
-                              'contact_type' => 'Individual'),
+                              'contact_type' => 'Individual'],
 
-                        array('first_name'   => 'will',
+                        ['first_name'   => 'will',
                               'last_name'    => 'dale',
                               'email'        => 'will@example.com',
-                              'contact_type' => 'Individual'),
+                              'contact_type' => 'Individual'],
 
-                        array('first_name'   => 'will',
+                        ['first_name'   => 'will',
                               'last_name'    => 'dale',
                               'email'        => 'will@example.com',
-                              'contact_type' => 'Individual'),
-                         );
+                              'contact_type' => 'Individual'],
+                         ];
 
         $count = 1;
         // TODO: This is not an API test!!
@@ -82,9 +82,9 @@ class CRM_Contact_BAO_DupeContactTest extends CiviUnitTestCase
             $contact =& civicrm_api('contact', 'create', $param );
             $contactIds[$count++] = $contact['id'];
 
-            $grpParams = array( 'contact_id' => $contact['id'],
+            $grpParams = [ 'contact_id' => $contact['id'],
                                 'group_id'   => $groupId,
-                                'version'    => 3 );
+                                'version'    => 3 ];
             $res = civicrm_api('group_contact', 'create', $grpParams );
         }
 
@@ -174,7 +174,7 @@ class CRM_Contact_BAO_DupeContactTest extends CiviUnitTestCase
             Contact::delete( $contactId );
         }
         // delete dupe group
-        $params = array( 'id' => $groupId, 'version' => 3 );
+        $params = [ 'id' => $groupId, 'version' => 3 ];
         civicrm_api('group', 'delete', $params );
     }
 
@@ -193,42 +193,42 @@ class CRM_Contact_BAO_DupeContactTest extends CiviUnitTestCase
 
         // contact data set
         // FIXME: move create params to separate function
-        $params = array( 
-                        array('first_name'   => 'robin',     
+        $params = [ 
+                        ['first_name'   => 'robin',     
                               'last_name'    => 'hood',
                               'email'        => 'robin@example.com',
-                              'contact_type' => 'Individual'),
+                              'contact_type' => 'Individual'],
 
-                        array('first_name'   => 'robin',     
+                        ['first_name'   => 'robin',     
                               'last_name'    => 'hood',
                               'email'        => 'hood@example.com',
-                              'contact_type' => 'Individual'),
+                              'contact_type' => 'Individual'],
 
-                        array('first_name'   => 'robin',     
+                        ['first_name'   => 'robin',     
                               'last_name'    => 'dale',
                               'email'        => 'robin@example.com',
-                              'contact_type' => 'Individual'),
+                              'contact_type' => 'Individual'],
 
-                        array('first_name'   => 'little',     
+                        ['first_name'   => 'little',     
                               'last_name'    => 'dale',
                               'email'        => 'dale@example.com',
-                              'contact_type' => 'Individual'),
+                              'contact_type' => 'Individual'],
 
-                        array('first_name'   => 'will',     
+                        ['first_name'   => 'will',     
                               'last_name'    => 'dale',
                               'email'        => 'dale@example.com',
-                              'contact_type' => 'Individual'),
+                              'contact_type' => 'Individual'],
 
-                        array('first_name'   => 'will',     
+                        ['first_name'   => 'will',     
                               'last_name'    => 'dale',
                               'email'        => 'will@example.com',
-                              'contact_type' => 'Individual'),
+                              'contact_type' => 'Individual'],
 
-                        array('first_name'   => 'will',     
+                        ['first_name'   => 'will',     
                               'last_name'    => 'dale',
                               'email'        => 'will@example.com',
-                              'contact_type' => 'Individual'),
-                         );
+                              'contact_type' => 'Individual'],
+                         ];
 
         $count = 1;
         // TODO: This is not an API test!!
@@ -252,9 +252,9 @@ class CRM_Contact_BAO_DupeContactTest extends CiviUnitTestCase
         // ******** threshold = 20 ************ //
         $dao->threshold = 20;
         $dao->save();
-        $fields = array( 'first_name' => 'robin',
+        $fields = [ 'first_name' => 'robin',
                          'last_name'  => 'hood', 
-                         'email'      => 'hood@example.com' );
+                         'email'      => 'hood@example.com' ];
         $dedupeParams = CRM_Dedupe_Finder::formatParams($fields, 'Individual');
         $ids = CRM_Dedupe_Finder::dupesByParams($dedupeParams, 'Individual', 'Fuzzy' );
         // threshold 20 can only find full match
@@ -263,8 +263,8 @@ class CRM_Contact_BAO_DupeContactTest extends CiviUnitTestCase
         // ******** threshold = 17 ************ //
         $dao->threshold = 17;
         $dao->save();
-        $fields = array( 'last_name'  => 'dale', 
-                         'email'      => 'dale@example.com' );
+        $fields = [ 'last_name'  => 'dale', 
+                         'email'      => 'dale@example.com' ];
         $dedupeParams = CRM_Dedupe_Finder::formatParams($fields, 'Individual');
         $ids = CRM_Dedupe_Finder::dupesByParams($dedupeParams, 'Individual', 'Fuzzy' );
         $this->assertEquals( count($ids), 2, 'Check for dupe counts for threshold=17.' );
@@ -272,8 +272,8 @@ class CRM_Contact_BAO_DupeContactTest extends CiviUnitTestCase
         // ******** threshold = 15 ************ //
         $dao->threshold = 15;
         $dao->save();
-        $fields = array( 'first_name' => 'will', 
-                         'email'      => 'will@example.com' );
+        $fields = [ 'first_name' => 'will', 
+                         'email'      => 'will@example.com' ];
         $dedupeParams = CRM_Dedupe_Finder::formatParams($fields, 'Individual');
         $ids = CRM_Dedupe_Finder::dupesByParams($dedupeParams, 'Individual', 'Fuzzy' );
         $this->assertEquals( count($ids), 2, 'Check for dupe counts for threshold=15.' );
@@ -281,7 +281,7 @@ class CRM_Contact_BAO_DupeContactTest extends CiviUnitTestCase
         // ******** threshold = 12 ************ //
         $dao->threshold = 12;
         $dao->save();
-        $fields = array( 'email'  => 'dale@example.com' );
+        $fields = [ 'email'  => 'dale@example.com' ];
         $dedupeParams = CRM_Dedupe_Finder::formatParams($fields, 'Individual');
         $ids = CRM_Dedupe_Finder::dupesByParams($dedupeParams, 'Individual', 'Fuzzy' );
         $this->assertEquals( count($ids), 0, 'Check for dupe counts for threshold=12.' );
@@ -289,7 +289,7 @@ class CRM_Contact_BAO_DupeContactTest extends CiviUnitTestCase
         // ******** threshold = 10 ************ //
         $dao->threshold = 10;
         $dao->save();
-        $fields = array( 'email'  => 'dale@example.com' );
+        $fields = [ 'email'  => 'dale@example.com' ];
         $dedupeParams = CRM_Dedupe_Finder::formatParams($fields, 'Individual');
         $ids = CRM_Dedupe_Finder::dupesByParams($dedupeParams, 'Individual', 'Fuzzy' );
         $this->assertEquals( count($ids), 2, 'Check for dupe counts for threshold=10.' );
@@ -297,7 +297,7 @@ class CRM_Contact_BAO_DupeContactTest extends CiviUnitTestCase
         // ******** threshold = 7 ************ //
         $dao->threshold = 7;
         $dao->save();
-        $fields = array( 'last_name'  => 'dale' );
+        $fields = [ 'last_name'  => 'dale' ];
         $dedupeParams = CRM_Dedupe_Finder::formatParams($fields, 'Individual');
         $ids = CRM_Dedupe_Finder::dupesByParams($dedupeParams, 'Individual', 'Fuzzy' );
         $this->assertEquals( count($ids), 5, 'Check for dupe counts for threshold=7.' );

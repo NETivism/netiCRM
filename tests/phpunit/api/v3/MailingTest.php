@@ -35,11 +35,11 @@ class api_v3_MailingTest extends CiviUnitTestCase {
   protected $_groupID;
   protected $_email;
   protected $_apiversion; function get_info() {
-    return array(
+    return [
       'name' => 'Mailer',
       'description' => 'Test all Mailer methods.',
       'group' => 'CiviCRM API Tests',
-    );
+    ];
   }
 
   function setUp() {
@@ -59,14 +59,14 @@ class api_v3_MailingTest extends CiviUnitTestCase {
    * Test civicrm_mailing_event_bounce with wrong params.
    */
   public function testMailerBounceWrongParams() {
-    $params = array(
+    $params = [
       'job_id' => 'Wrong ID',
       'event_queue_id' => 'Wrong ID',
       'hash' => 'Wrong Hash',
       'body' => 'Body...',
       'version' => '3',
       'time_stamp' => '20111109212100',
-    );
+    ];
     $result = civicrm_api('mailing_event', 'bounce', $params);
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
     $this->assertEquals($result['error_message'], 'Queue event could not be found', 'In line ' . __LINE__);
@@ -78,14 +78,14 @@ class api_v3_MailingTest extends CiviUnitTestCase {
    * Test civicrm_mailing_event_confirm with wrong params.
    */
   public function testMailerConfirmWrongParams() {
-    $params = array(
+    $params = [
       'contact_id' => 'Wrong ID',
       'subscribe_id' => 'Wrong ID',
       'hash' => 'Wrong Hash',
       'event_subscribe_id' => '123',
       'time_stamp' => '20111111010101',
       'version' => 3,
-    );
+    ];
     $result = civicrm_api('mailing_event', 'confirm', $params);
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
     $this->assertEquals($result['error_message'], 'Confirmation failed', 'In line ' . __LINE__);
@@ -97,7 +97,7 @@ class api_v3_MailingTest extends CiviUnitTestCase {
    * Test civicrm_mailing_event_reply with wrong params.
    */
   public function testMailerReplyWrongParams() {
-    $params = array(
+    $params = [
       'job_id' => 'Wrong ID',
       'event_queue_id' => 'Wrong ID',
       'hash' => 'Wrong Hash',
@@ -105,7 +105,7 @@ class api_v3_MailingTest extends CiviUnitTestCase {
       'replyTo' => $this->_email,
       'time_stamp' => '20111111010101',
       'version' => 3,
-    );
+    ];
     $result = civicrm_api('mailing_event', 'reply', $params);
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
     $this->assertEquals($result['error_message'], 'Queue event could not be found', 'In line ' . __LINE__);
@@ -118,14 +118,14 @@ class api_v3_MailingTest extends CiviUnitTestCase {
    * Test civicrm_mailing_event_forward with wrong params.
    */
   public function testMailerForwardWrongParams() {
-    $params = array(
+    $params = [
       'job_id' => 'Wrong ID',
       'event_queue_id' => 'Wrong ID',
       'hash' => 'Wrong Hash',
       'email' => $this->_email,
       'time_stamp' => '20111111010101',
       'version' => 3,
-    );
+    ];
     $result = civicrm_api('mailing_event', 'forward', $params);
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
     $this->assertEquals($result['error_message'], 'Queue event could not be found', 'In line ' . __LINE__);

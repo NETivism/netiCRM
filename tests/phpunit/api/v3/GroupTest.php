@@ -13,11 +13,11 @@ require_once 'CiviTest/CiviUnitTestCase.php';
 class api_v3_GroupTest extends CiviUnitTestCase {
   protected $_apiversion;
   protected $_groupID; function get_info() {
-    return array(
+    return [
       'name' => 'Group Get',
       'description' => 'Test all Group Get API methods.',
       'group' => 'CiviCRM API Tests',
-    );
+    ];
   }
 
   /**
@@ -55,7 +55,7 @@ class api_v3_GroupTest extends CiviUnitTestCase {
    * @group CItesting
    */
   public function testCreateGroup() {
-    $params_create = array(
+    $params_create = [
       'name' => 'Test Group 1 For Create',
       'domain_id' => 1,
       'title' => 'New Test Group For Create',
@@ -64,7 +64,7 @@ class api_v3_GroupTest extends CiviUnitTestCase {
       'group_type' => '1,2',
       'visibility' => 'Public Pages',
       'version' => $this->_apiversion,
-    );
+    ];
     $result_create = civicrm_api('group', 'create', $params_create);
     $this->docMakerRequest($params_create, __FILE__, __FUNCTION__);
     $this->assertAPISuccess($result_create, 'In line ' . __LINE__);
@@ -90,14 +90,14 @@ class api_v3_GroupTest extends CiviUnitTestCase {
    * @group CItesting
    */
   public function testUpdateGroup() {
-    $params_update = array(
+    $params_update = [
       'id' => $this->_groupID,
       'title' => 'New Update title for title',
       'description' => 'New Update title for description',
       'is_active' => 1,
       'visibility' => 'Public Pages',
       'version' => $this->_apiversion,
-    );
+    ];
     $this->docMakerRequest($params_update, __FILE__, __FUNCTION__);
     $result = civicrm_api('group', 'create', $params_update);
     $this->assertAPISuccess($result, 'In line ' . __LINE__);
@@ -124,10 +124,10 @@ class api_v3_GroupTest extends CiviUnitTestCase {
    * @group CItesting
    */
   public function testDeleteGroup() {
-    $params = array(
+    $params = [
       'id' => $this->_groupID,
       'version' => $this->_apiversion,
-    );
+    ];
     $this->docMakerRequest($params, __FILE__, __FUNCTION__);
     $result = civicrm_api('group', 'delete', $params);
     $this->assertAPISuccess($result, 'In line ' . __LINE__);
@@ -135,23 +135,23 @@ class api_v3_GroupTest extends CiviUnitTestCase {
   }
 
   function testgroupCreateEmptyParams() {
-    $params = array();
+    $params = [];
     $group = civicrm_api('group', 'create', $params);
     $this->assertEquals($group['error_message'], 'Mandatory key(s) missing from params array: version, title');
   }
 
   function testgroupCreateNoTitle() {
-    $params = array(
+    $params = [
       'name' => 'Test Group No title ',
       'domain_id' => 1,
       'description' => 'New Test Group Created',
       'is_active' => 1,
       'visibility' => 'Public Pages',
-      'group_type' => array(
+      'group_type' => [
         '1' => 1,
         '2' => 1,
-      ),
-    );
+      ],
+    ];
 
     $group = civicrm_api('group', 'create', $params);
     $this->assertEquals($group['error_message'], 'Mandatory key(s) missing from params array: version, title');
@@ -165,7 +165,7 @@ class api_v3_GroupTest extends CiviUnitTestCase {
   }
 
   function testGetGroupWithEmptyParams() {
-    $params = array('version' => $this->_apiversion);
+    $params = ['version' => $this->_apiversion];
 
     $group = civicrm_api('group', 'get', $params);
 
@@ -192,7 +192,7 @@ class api_v3_GroupTest extends CiviUnitTestCase {
    * @group CItesting
    */
   function testGetGroupParamsWithGroupId() {
-    $params = array('version' => $this->_apiversion);
+    $params = ['version' => $this->_apiversion];
     $params['id'] = $this->_groupID;
     $group = civicrm_api('group', 'get', $params);
     $this->docMakerRequest($params, __FILE__, __FUNCTION__);
@@ -209,7 +209,7 @@ class api_v3_GroupTest extends CiviUnitTestCase {
   }
 
   function testGetGroupParamsWithGroupName() {
-    $params         = array('version' => $this->_apiversion);
+    $params         = ['version' => $this->_apiversion];
     $params['name'] = "Test Group 1_{$this->_groupID}";
     $group          = civicrm_api('group', 'get', $params);
     $this->documentMe($params, $group, __FUNCTION__, __FILE__);
@@ -225,7 +225,7 @@ class api_v3_GroupTest extends CiviUnitTestCase {
   }
 
   function testGetGroupParamsWithReturnName() {
-    $params = array('version' => $this->_apiversion);
+    $params = ['version' => $this->_apiversion];
     $params['id'] = $this->_groupID;
     $params['return.name'] = 1;
     $group = civicrm_api('group', 'get', $params);
@@ -235,7 +235,7 @@ class api_v3_GroupTest extends CiviUnitTestCase {
   }
 
   function testGetGroupParamsWithGroupTitle() {
-    $params          = array('version' => $this->_apiversion);
+    $params          = ['version' => $this->_apiversion];
     $params['title'] = 'New Test Group Created';
     $group           = civicrm_api('group', 'get', $params);
 
@@ -249,7 +249,7 @@ class api_v3_GroupTest extends CiviUnitTestCase {
   }
 
   function testGetNonExistingGroup() {
-    $params          = array('version' => $this->_apiversion);
+    $params          = ['version' => $this->_apiversion];
     $params['title'] = 'No such group Exist';
     $group           = civicrm_api('group', 'get', $params);
     $this->assertEquals(0, $group['is_error']);
@@ -262,14 +262,14 @@ class api_v3_GroupTest extends CiviUnitTestCase {
   }
 
   function testgroupdeleteParamsnoId() {
-    $params = array();
+    $params = [];
     $group = civicrm_api('group', 'delete', $params);
     $this->assertEquals($group['error_message'], 'Mandatory key(s) missing from params array: version, id');
   }
 
   function testgetfields() {
     $description = "demonstrate use of getfields to interogate api";
-    $params      = array('version' => 3, 'action' => 'create');
+    $params      = ['version' => 3, 'action' => 'create'];
     $result      = civicrm_api('group', 'getfields', $params);
     $this->documentMe($params, $result, __FUNCTION__, __FILE__, $description, 'getfields', 'getfields');
     $this->assertEquals(1, $result['values']['is_active']['api.default']);

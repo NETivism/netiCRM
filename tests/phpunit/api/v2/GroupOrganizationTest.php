@@ -36,11 +36,11 @@ require_once 'api/v2/GroupOrganization.php';
  */
 class api_v2_GroupOrganizationTest extends CiviUnitTestCase {
   function get_info() {
-    return array(
+    return [
       'name' => 'Group Organization',
       'description' => 'Test all Group Organization API methods.',
       'group' => 'CiviCRM API Tests',
-    );
+    ];
   }
 
   /**
@@ -64,12 +64,12 @@ class api_v2_GroupOrganizationTest extends CiviUnitTestCase {
    */
   protected function tearDown() {
     // truncate a few tables
-    $tablesToTruncate = array(
+    $tablesToTruncate = [
       'civicrm_contact',
       'civicrm_group',
       'civicrm_group_contact',
       'civicrm_subscription_history',
-    );
+    ];
 
     $this->quickCleanup($tablesToTruncate);
   }
@@ -81,13 +81,13 @@ class api_v2_GroupOrganizationTest extends CiviUnitTestCase {
    */
   public function testGroupOrganizationGet() {
 
-    $params = array(
+    $params = [
       'organization_id' => $this->_orgID,
       'group_id' => $this->_groupID,
-    );
+    ];
     $result = &civicrm_group_organization_create($params);
 
-    $paramsGet = array('organization_id' => $result['result']['organization_id']);
+    $paramsGet = ['organization_id' => $result['result']['organization_id']];
 
     $result = civicrm_group_organization_get($paramsGet);
     $this->assertEquals($result['is_error'], 0);
@@ -98,13 +98,13 @@ class api_v2_GroupOrganizationTest extends CiviUnitTestCase {
    */
   public function testGroupOrganizationGetWithGroupId() {
 
-    $params = array(
+    $params = [
       'organization_id' => $this->_orgID,
       'group_id' => $this->_groupID,
-    );
+    ];
     $result = &civicrm_group_organization_create($params);
 
-    $paramsGet = array('organization_id' => $result['result']['organization_id']);
+    $paramsGet = ['organization_id' => $result['result']['organization_id']];
 
     $result = civicrm_group_organization_get($params);
     $this->assertEquals($result['is_error'], 0);
@@ -114,7 +114,7 @@ class api_v2_GroupOrganizationTest extends CiviUnitTestCase {
    * Test civicrm_group_organization_get with empty params.
    */
   public function testGroupOrganizationGetWithEmptyParams() {
-    $params = array();
+    $params = [];
     $result = &civicrm_group_organization_get($params);
 
     $this->assertEquals($result['is_error'], 1);
@@ -136,7 +136,7 @@ class api_v2_GroupOrganizationTest extends CiviUnitTestCase {
    * Test civicrm_group_organization_get invalid keys.
    */
   public function testGroupOrganizationGetWithInvalidKeys() {
-    $params = array('invalid_key' => 1);
+    $params = ['invalid_key' => 1];
     $result = &civicrm_group_organization_get($params);
 
     $this->assertEquals($result['is_error'], 1);
@@ -149,10 +149,10 @@ class api_v2_GroupOrganizationTest extends CiviUnitTestCase {
    * check with valid params
    */
   public function testGroupOrganizationCreate() {
-    $params = array(
+    $params = [
       'organization_id' => $this->_orgID,
       'group_id' => $this->_groupID,
-    );
+    ];
     $result = &civicrm_group_organization_create($params);
 
     $this->assertEquals($result['is_error'], 0);
@@ -162,7 +162,7 @@ class api_v2_GroupOrganizationTest extends CiviUnitTestCase {
    * check with empty params array
    */
   public function testGroupOrganizationCreateWithEmptyParams() {
-    $params = array();
+    $params = [];
     $result = &civicrm_group_organization_create($params);
 
     $this->assertEquals($result['is_error'], 1);
@@ -184,7 +184,7 @@ class api_v2_GroupOrganizationTest extends CiviUnitTestCase {
    * check with invalid params keys
    */
   public function testGroupOrganizationCreateWithInvalidKeys() {
-    $params = array('invalid_key' => 1);
+    $params = ['invalid_key' => 1];
     $result = &civicrm_group_organization_create($params);
 
     $this->assertEquals($result['is_error'], 1);
@@ -208,7 +208,7 @@ class api_v2_GroupOrganizationTest extends CiviUnitTestCase {
    * Test civicrm_group_organization_remove with empty params.
    */
   public function testGroupOrganizationRemoveWithEmptyParams() {
-    $params = array();
+    $params = [];
     $result = &civicrm_group_organization_remove($params);
 
     $this->assertEquals($result['is_error'], 1);
@@ -219,13 +219,13 @@ class api_v2_GroupOrganizationTest extends CiviUnitTestCase {
    *  Test civicrm_group_organization_remove with valid params.
    */
   public function testGroupOrganizationRemove() {
-    $params = array(
+    $params = [
       'organization_id' => $this->_orgID,
       'group_id' => $this->_groupID,
-    );
+    ];
     $result = &civicrm_group_organization_create($params);
 
-    $paramsDelete = array('id' => $result['result']['id']);
+    $paramsDelete = ['id' => $result['result']['id']];
     $result = &civicrm_group_organization_remove($paramsDelete);
 
     $this->assertEquals($result['is_error'], 0);
@@ -235,7 +235,7 @@ class api_v2_GroupOrganizationTest extends CiviUnitTestCase {
    *  Test civicrm_group_organization_remove with invalid params key.
    */
   public function testGroupOrganizationRemoveWithInvalidKey() {
-    $paramsDelete = array('invalid_key' => 1);
+    $paramsDelete = ['invalid_key' => 1];
     $result = &civicrm_group_organization_remove($paramsDelete);
 
     $this->assertEquals($result['is_error'], 1);

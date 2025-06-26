@@ -13,7 +13,7 @@ class PaypalPro extends PHPUnit_Framework_Testcase
     {
 
         $paymentProcessor = new CRM_Core_DAO_PaymentProcessor( );
-        $paymentParams = array(
+        $paymentParams = [
                                'name'                   => 'demo',
                                'domain_id'              => CRM_Core_Config::domainID( ),
                                'payment_processor_type' => 'PayPal',
@@ -28,7 +28,7 @@ class PaypalPro extends PHPUnit_Framework_Testcase
                                'url_button'             => 'https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif',
                                'class_name'             => 'Payment_PayPalImpl',
                                'billing_mode'           => 3
-                               );
+                               ];
         $paymentProcessor->copyValues( $paymentParams );
         $paymentProcessor->save( );
         return $paymentProcessor->id;

@@ -35,7 +35,7 @@ class api_v3_MembershipPaymentTest extends CiviUnitTestCase {
   protected $_contributionTypeID;
   protected $_membershipTypeID;
   protected $_membershipStatusID;
-  protected $_contribution = array();
+  protected $_contribution = [];
   function setUp() {
     parent::setUp();
 
@@ -44,7 +44,7 @@ class api_v3_MembershipPaymentTest extends CiviUnitTestCase {
     $this->_membershipTypeID = $this->membershipTypeCreate($this->_contactID,$this->_contributionTypeID);
     $this->_membershipStatusID = $this->membershipStatusCreate('test status');
     $activityTypes = CRM_Core_PseudoConstant::activityType(TRUE, TRUE, TRUE, 'name');
-        $params = array(
+        $params = [
       'contact_id' => $this->_contactID,
       'currency' => 'USD',
       'contribution_type_id' => $this->_contributionTypeID,
@@ -60,13 +60,13 @@ class api_v3_MembershipPaymentTest extends CiviUnitTestCase {
       'invoice_id' => '22ed39c9e9ee6ef6031621ce0eafe6da70',
       'thankyou_date' => '20080522',
       'version' => 3,
-    );
+    ];
     $this->_contribution = civicrm_api('contribution','create', $params);
   }
 
   function tearDown() {
     $this->quickCleanup(
-      array(
+      [
         'civicrm_contact',
         'civicrm_contribution',
         'civicrm_membership',
@@ -74,7 +74,7 @@ class api_v3_MembershipPaymentTest extends CiviUnitTestCase {
         'civicrm_membership_status',
         'civicrm_membership_type',
         'civicrm_line_item',
-      )
+      ]
     );
     $this->contributionTypeDelete();
   }
@@ -85,7 +85,7 @@ class api_v3_MembershipPaymentTest extends CiviUnitTestCase {
    * Test civicrm_membership_payment_create with empty params.
    */
   public function testCreateEmptyParams() {
-    $params = array('version' => $this->_apiversion);
+    $params = ['version' => $this->_apiversion];
     $CreateEmptyParams = civicrm_api('membership_payment', 'create', $params);
     $this->assertEquals($CreateEmptyParams['error_message'], 'Mandatory key(s) missing from params array: membership_id, contribution_id');
   }
@@ -98,7 +98,7 @@ class api_v3_MembershipPaymentTest extends CiviUnitTestCase {
 
 
 
-    $params = array(
+    $params = [
       'contact_id' => $contactId,
       'membership_type_id' => $this->_membershipTypeID,
       'join_date' => '2006-01-21',
@@ -108,16 +108,16 @@ class api_v3_MembershipPaymentTest extends CiviUnitTestCase {
       'is_override' => 1,
       'status_id' => $this->_membershipStatusID,
       'version' => API_LATEST_VERSION,
-    );
+    ];
 
     $membership = civicrm_api('membership', 'create', $params);
     $this->assertAPISuccess($membership, "membership created in line " . __LINE__);
 
-    $params = array(
+    $params = [
       'contribution_id' => $this->_contribution['id'],
       'membership_id' => $membership['id'],
       'version' => $this->_apiversion,
-    );
+    ];
     $result = civicrm_api('membership_payment', 'create', $params);
     $this->documentMe($params, $result, __FUNCTION__, __FILE__);
     $this->assertEquals($result['values'][$result['id']]['membership_id'], $membership['id'], 'Check Membership Id in line ' . __LINE__);
@@ -141,7 +141,7 @@ class api_v3_MembershipPaymentTest extends CiviUnitTestCase {
    * Test civicrm_membershipPayment_get with empty params.
    */
   public function testGetEmptyParams() {
-    $params = array();
+    $params = [];
     $GetEmptyParams = civicrm_api('membership_payment', 'get', $params);
     $this->assertEquals($GetEmptyParams['error_message'], 'Mandatory key(s) missing from params array: version');
   }
@@ -151,22 +151,22 @@ class api_v3_MembershipPaymentTest extends CiviUnitTestCase {
    */
   public function testGet() {
     $contactId = $this->individualCreate(NULL);
-    $params = array(
+    $params = [
       'contact_id' => $contactId,
       'membership_type_id' => $this->_membershipTypeID,
       'source' => 'Payment',
       'is_override' => 1,
       'status_id' => $this->_membershipStatusID,
       'version' => $this->_apiversion,
-    );
-    $ids = array();
+    ];
+    $ids = [];
     $membership = CRM_Member_BAO_Membership::create($params, $ids);
 
-    $params = array(
+    $params = [
       'contribution_id' => $this->_contribution['id'],
       'membership_id' => $membership->id,
       'version' => $this->_apiversion,
-    );
+    ];
     civicrm_api('membership_payment', 'create', $params);
 
     $result = civicrm_api('membership_payment', 'get', $params);

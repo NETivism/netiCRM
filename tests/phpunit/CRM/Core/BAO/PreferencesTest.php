@@ -32,11 +32,11 @@ class CRM_Core_BAO_PreferencesTest extends CiviUnitTestCase
 {
     function get_info( ) 
     {
-        return array(
+        return [
                      'name'        => 'Preference BAO',
                      'description' => 'Test set/get on preference variables.',
                      'group'       => 'CiviCRM BAO Tests',
-                     );
+                     ];
     }
     
     function setUp( ) 

@@ -64,11 +64,11 @@ class CRM_Contact_Form_Search_Custom_GroupTest extends CiviUnitTestCase
 
     function get_info( ) 
     {
-        return array(
+        return [
                      'name'        => 'Contact Custom Search Group',
                      'description' => 'Test all CRM_Contact_Form_Search_Custom_Group methods.',
                      'group'       => 'CiviCRM Custom Search Tests',
-                     );
+                     ];
     }
     
     public function dataProvider()
@@ -121,13 +121,13 @@ class CRM_Contact_Form_Search_Custom_GroupTest extends CiviUnitTestCase
                              'In line ' . __LINE__  );
         
         // Truncate affected tables
-        $tablesToTruncate = array( 'civicrm_group_contact',
+        $tablesToTruncate = [ 'civicrm_group_contact',
                                    'civicrm_group',
                                    'civicrm_saved_search',
                                    'civicrm_entity_tag',
                                    'civicrm_tag',
                                    'civicrm_contact'
-                                   );
+                                   ];
         $this->quickCleanup( $tablesToTruncate );
     }
 
@@ -154,22 +154,22 @@ class CRM_Contact_Form_Search_Custom_GroupTest extends CiviUnitTestCase
         $this->assertTrue( is_string( $sql ), 'In line ' . __LINE__ );
         $dao =& CRM_Core_DAO::executeQuery( $sql );
         while ( $dao->fetch( ) ) {
-            $all[] = array( 'contact_id'   => $dao->contact_id,
+            $all[] = [ 'contact_id'   => $dao->contact_id,
                             'contact_type' => $dao->contact_type,
-                            'sort_name'    => $dao->sort_name );
+                            'sort_name'    => $dao->sort_name ];
 
         }
         asort( $all );
         $this->assertEquals( $full, $all, 'In line ' . __LINE__ );
         
         // Truncate affected tables
-        $tablesToTruncate = array( 'civicrm_group_contact',
+        $tablesToTruncate = [ 'civicrm_group_contact',
                                    'civicrm_group',
                                    'civicrm_saved_search',
                                    'civicrm_entity_tag',
                                    'civicrm_tag',
                                    'civicrm_contact'
-                                   );
+                                   ];
         $this->quickCleanup( $tablesToTruncate );
         
     }
@@ -197,7 +197,7 @@ class CRM_Contact_Form_Search_Custom_GroupTest extends CiviUnitTestCase
         $sql = $obj->contactIDs( );
         $this->assertTrue( is_string( $sql ), 'In line ' . __LINE__ );
         $dao =& CRM_Core_DAO::executeQuery( $sql );
-        $contacts = array( );
+        $contacts = [ ];
         while ( $dao->fetch( ) ) {
             $contacts[] = $dao->contact_id;
         }
@@ -205,13 +205,13 @@ class CRM_Contact_Form_Search_Custom_GroupTest extends CiviUnitTestCase
         $this->assertEquals( $ids, $contacts, 'In line ' . __LINE__ );
 
         // Truncate affected tables
-        $tablesToTruncate = array( 'civicrm_group_contact',
+        $tablesToTruncate = [ 'civicrm_group_contact',
                                    'civicrm_group',
                                    'civicrm_saved_search',
                                    'civicrm_entity_tag',
                                    'civicrm_tag',
                                    'civicrm_contact'
-                                   );
+                                   ];
         $this->quickCleanup( $tablesToTruncate );
     }
 
@@ -230,7 +230,7 @@ class CRM_Contact_Form_Search_Custom_GroupTest extends CiviUnitTestCase
      */
     public function testColumns()
     {
-        $formValues = array();
+        $formValues = [];
         $obj = new CRM_Contact_Form_Search_Custom_Group( $formValues );
         $columns = $obj->columns( );
         $this->assertTrue( is_array( $columns ), 'In line ' . __LINE__ );
@@ -254,7 +254,7 @@ class CRM_Contact_Form_Search_Custom_GroupTest extends CiviUnitTestCase
      */
     public function testSummary()
     {
-        $formValues = array();
+        $formValues = [];
         $obj = new CRM_Contact_Form_Search_Custom_Group( $formValues );
         $this->assertNull( $obj->summary( ), 'In line ' . __LINE__ );
     }
@@ -265,7 +265,7 @@ class CRM_Contact_Form_Search_Custom_GroupTest extends CiviUnitTestCase
      */
     public function testTemplateFile()
     {
-        $formValues = array();
+        $formValues = [];
         $obj = new CRM_Contact_Form_Search_Custom_Group( $formValues );
         $fileName = $obj->templateFile( );
         $this->assertTrue( is_string( $fileName ), 'In line ' . __LINE__ );
@@ -279,8 +279,8 @@ class CRM_Contact_Form_Search_Custom_GroupTest extends CiviUnitTestCase
      */
     public function testWhereNoArgs()
     {
-        $formValues = array( CRM_Core_Form::CB_PREFIX . '17' => true,
-                             CRM_Core_Form::CB_PREFIX . '23' => true);
+        $formValues = [ CRM_Core_Form::CB_PREFIX . '17' => true,
+                             CRM_Core_Form::CB_PREFIX . '23' => true];
         $obj = new CRM_Contact_Form_Search_Custom_Group( $formValues );
         $this->assertEquals( ' (1) ', $obj->where( ), 'In line ' . __LINE__ );
     }
@@ -291,8 +291,8 @@ class CRM_Contact_Form_Search_Custom_GroupTest extends CiviUnitTestCase
      */
     public function testWhereFalse()
     {
-        $formValues = array( CRM_Core_Form::CB_PREFIX . '17' => true,
-                             CRM_Core_Form::CB_PREFIX . '23' => true);
+        $formValues = [ CRM_Core_Form::CB_PREFIX . '17' => true,
+                             CRM_Core_Form::CB_PREFIX . '23' => true];
         $obj = new CRM_Contact_Form_Search_Custom_Group( $formValues );
         $this->assertEquals( ' (1) ', $obj->where( false ),
                              'In line ' . __LINE__ );
@@ -304,8 +304,8 @@ class CRM_Contact_Form_Search_Custom_GroupTest extends CiviUnitTestCase
      */
     public function testWhereTrue()
     {
-        $formValues = array( CRM_Core_Form::CB_PREFIX . '17' => true,
-                             CRM_Core_Form::CB_PREFIX . '23' => true);
+        $formValues = [ CRM_Core_Form::CB_PREFIX . '17' => true,
+                             CRM_Core_Form::CB_PREFIX . '23' => true];
         $obj = new CRM_Contact_Form_Search_Custom_Group( $formValues );
         $this->assertEquals( ' (1)  AND contact_a.id IN ( 17, 23 )', $obj->where( true ),
                              'In line ' . __LINE__ );

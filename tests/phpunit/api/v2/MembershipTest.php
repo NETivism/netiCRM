@@ -34,11 +34,11 @@ class api_v2_MembershipTest extends CiviUnitTestCase {
   protected $_contactID;
   protected $_membershipTypeID;
   protected $_membershipStatusID; function get_info() {
-    return array(
+    return [
       'name' => 'Membership',
       'description' => 'Test all Membership API methods.',
       'group' => 'CiviCRM API Tests',
-    );
+    ];
   }
 
   public function setUp() {
@@ -56,7 +56,7 @@ class api_v2_MembershipTest extends CiviUnitTestCase {
 
   function tearDown() {
     $this->membershipStatusDelete($this->_membershipStatusID);
-    $this->membershipTypeDelete(array('id' => $this->_membershipTypeID));
+    $this->membershipTypeDelete(['id' => $this->_membershipTypeID]);
     $this->contactDelete($this->_contactID);
   }
 
@@ -64,7 +64,7 @@ class api_v2_MembershipTest extends CiviUnitTestCase {
    *  Test civicrm_membership_delete()
    */
   function testMembershipDelete() {
-    $params = array(
+    $params = [
       'contact_id' => $this->_contactID,
       'membership_type_id' => $this->_membershipTypeID,
       'join_date' => '2009-01-21',
@@ -73,7 +73,7 @@ class api_v2_MembershipTest extends CiviUnitTestCase {
       'source' => 'Payment',
       'is_override' => 1,
       'status_id' => $this->_membershipStatusID,
-    );
+    ];
     $membershipID = $this->contactMembershipCreate($params);
 
     $result = civicrm_membership_delete($membershipID);
@@ -117,7 +117,7 @@ class api_v2_MembershipTest extends CiviUnitTestCase {
    */
   function testContactMembershipsGet() {
     $this->assertTrue(function_exists('civicrm_contact_memberships_get'));
-    $params = array();
+    $params = [];
     $result = civicrm_contact_memberships_get($params);
     $this->assertEquals(1, $result['is_error'],
       "In line " . __LINE__
@@ -126,7 +126,7 @@ class api_v2_MembershipTest extends CiviUnitTestCase {
 
   function testContactMembershipCreate() {
     $this->assertTrue(function_exists('civicrm_contact_membership_create'));
-    $params = array();
+    $params = [];
     $result = civicrm_contact_membership_create($params);
     $this->assertEquals(1, $result['is_error'],
       "In line " . __LINE__
@@ -135,7 +135,7 @@ class api_v2_MembershipTest extends CiviUnitTestCase {
 
   function testContactMembershipGet() {
     $this->assertTrue(function_exists('civicrm_membership_types_get'));
-    $params = array();
+    $params = [];
     $result = civicrm_membership_types_get($params);
     $this->assertEquals(1, $result['is_error'],
       "In line " . __LINE__

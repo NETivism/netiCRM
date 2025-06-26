@@ -71,10 +71,10 @@ class api_v3_ConstantTest extends CiviUnitTestCase {
    *  Test civicrm_constant_get( ) for unknown constant
    */
   public function testUnknownConstant() {
-    $result = civicrm_api('constant', 'get', array(
+    $result = civicrm_api('constant', 'get', [
       'name' => 'thisTypeDoesNotExist',
         'version' => $this->_apiversion,
-      ));
+      ]);
     $this->assertEquals(1, $result['is_error'], "In line " . __LINE__);
   }
 
@@ -83,10 +83,10 @@ class api_v3_ConstantTest extends CiviUnitTestCase {
    */
   public function testActivityStatus() {
 
-    $result = civicrm_api('constant', 'get', array(
+    $result = civicrm_api('constant', 'get', [
       'name' => 'activityStatus',
         'version' => $this->_apiversion,
-      ));
+      ]);
 
     $this->assertTrue($result['count'] > 5, "In line " . __LINE__);
     $this->assertContains('Scheduled', $result['values'], "In line " . __LINE__);
@@ -103,12 +103,12 @@ class api_v3_ConstantTest extends CiviUnitTestCase {
    */
   public function testActivityType() {
 
-    $parameters = array(TRUE, FALSE, TRUE);
+    $parameters = [TRUE, FALSE, TRUE];
 
-    $result = civicrm_api('constant', 'get', array(
+    $result = civicrm_api('constant', 'get', [
       'name' => 'activityType',
         'version' => $this->_apiversion,
-      ));
+      ]);
     $this->assertTrue($result['count'] > 2, "In line " . __LINE__);
     $this->assertContains('Meeting', $result['values'], "In line " . __LINE__);
     $this->assertTrue(empty($result['is_error']),
@@ -125,10 +125,10 @@ class api_v3_ConstantTest extends CiviUnitTestCase {
 
 
 
-    $params = array(
+    $params = [
       'name' => 'locationType',
       'version' => $this->_apiversion,
-    );
+    ];
     $result = civicrm_api('constant', 'get', $params);
     $this->documentMe($params, $result, __FUNCTION__, __FILE__);
     $this->assertTrue($result['count'] > 3, "In line " . __LINE__);
@@ -145,11 +145,11 @@ class api_v3_ConstantTest extends CiviUnitTestCase {
    *  Test civicrm_constant_get( 'phoneType' )
    */
   public function testPhoneType() {
-    $parameters = array(TRUE, FALSE, TRUE);
-    $result = civicrm_api('constant', 'get', array(
+    $parameters = [TRUE, FALSE, TRUE];
+    $result = civicrm_api('constant', 'get', [
       'name' => 'phoneType',
         'version' => $this->_apiversion,
-      ));
+      ]);
 
     $this->assertEquals(5, $result['count'], "In line " . __LINE__);
     $this->assertContains('Phone', $result['values'], "In line " . __LINE__);
@@ -169,12 +169,12 @@ class api_v3_ConstantTest extends CiviUnitTestCase {
   public function testmailProtocol() {
 
 
-    $parameters = array(TRUE, FALSE, TRUE);
+    $parameters = [TRUE, FALSE, TRUE];
 
-    $result = civicrm_api('constant', 'get', array(
+    $result = civicrm_api('constant', 'get', [
       'name' => 'mailProtocol',
         'version' => $this->_apiversion,
-      ));
+      ]);
 
     $this->assertEquals(4, $result['count'], "In line " . __LINE__);
     $this->assertContains('IMAP', $result['values'], "In line " . __LINE__);

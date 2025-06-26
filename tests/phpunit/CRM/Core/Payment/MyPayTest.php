@@ -10,11 +10,11 @@ class CRM_Core_Payment_MyPayTest extends CiviUnitTestCase {
   protected $_page_id;
 
   function get_info() {
-    return array(
+    return [
      'name' => 'MyPay payment processor',
      'description' => 'Test MyPay payment processor.',
      'group' => 'Payment Processor Tests',
-    );
+    ];
   }
 
   /**
@@ -29,25 +29,25 @@ class CRM_Core_Payment_MyPayTest extends CiviUnitTestCase {
     $this->_is_test = 1;
 
     // get processor
-    $params = array(
+    $params = [
       'version' => 3,
       'class_name' => 'Payment_MyPay',
       'is_test' => $this->_is_test,
-    );
+    ];
     $result = civicrm_api('PaymentProcessor', 'get', $params);
     $this->assertAPISuccess($result);
     if(empty($result['count'])){
-      $payment_processors = array();
-      $params = array(
+      $payment_processors = [];
+      $params = [
         'version' => 3,
         'class_name' => 'Payment_MyPay',
-      );
+      ];
       $result = civicrm_api('PaymentProcessorType', 'get', $params);
       $this->assertAPISuccess($result);
       if(!empty($result['count'])){
         $domain_id = CRM_Core_Config::domainID();
         foreach($result['values'] as $type_id => $p){
-          $payment_processor = array(
+          $payment_processor = [
             'version' => 3,
             'domain_id' => $domain_id,
             'name' => 'AUTO payment '.$p['name'],
@@ -65,7 +65,7 @@ class CRM_Core_Payment_MyPayTest extends CiviUnitTestCase {
             'billing_mode' => $p['billing_mode'],
             'is_recur' => $p['is_recur'],
             'payment_type' => $p['payment_type'],
-          );
+          ];
           $result = civicrm_api('PaymentProcessor', 'create', $payment_processor);
           $this->assertAPISuccess($result);
           if(is_numeric($result['id'])){
@@ -80,23 +80,23 @@ class CRM_Core_Payment_MyPayTest extends CiviUnitTestCase {
         }
       }
     }
-    $params = array(
+    $params = [
       'version' => 3,
       'payment_processor_type' => 'MyPay',
       'is_test' => $this->_is_test,
-    );
+    ];
     $result = civicrm_api('PaymentProcessor', 'get', $params);
     $this->assertAPISuccess($result);
     $pp = reset($result['values']);
     $this->_processor = $pp;
 
     // get cid
-    $params = array(
+    $params = [
       'version' => 3,
-      'options' => array(
+      'options' => [
         'limit' => 1,
-      ),
-    );
+      ],
+    ];
     $result = civicrm_api('Contact', 'get', $params);
     $this->assertAPISuccess($result);
     if(!empty($result['count'])){
@@ -117,7 +117,7 @@ class CRM_Core_Payment_MyPayTest extends CiviUnitTestCase {
     $amount = 111;
 
     // create contribution
-    $contrib = array(
+    $contrib = [
       'trxn_id' => $trxn_id,
       'contact_id' => $this->_cid,
       'contribution_contact_id' => $this->_cid,
@@ -136,28 +136,28 @@ class CRM_Core_Payment_MyPayTest extends CiviUnitTestCase {
       'is_test' => $this->_is_test,
       'is_pay_later' => 0,
       'contribution_status_id' => 2,
-    );
+    ];
     $contribution = CRM_Contribute_BAO_Contribution::create($contrib, CRM_Core_DAO::$_nullArray);
     $this->assertNotEmpty($contribution->id, "In line " . __LINE__);
-    $params = array(
+    $params = [
       'is_test' => $this->_is_test,
       'id' => $contribution->id,
-    );
+    ];
     $this->assertDBState('CRM_Contribute_DAO_Contribution', $contribution->id, $params);
 
     // manually trigger ipn
-    $get = $post = $ids = array();
+    $get = $post = $ids = [];
     $ids = CRM_Contribute_BAO_Contribution::buildIds($contribution->id);
     $query = CRM_Contribute_BAO_Contribution::makeNotifyUrl($ids, NULL, $return_query = TRUE);
     parse_str($query, $get);
     $uid = substr($now, -6);
     $uid_key = md5($trxn_id);
-    $transationData = array(
+    $transationData = [
       'uid' => $uid, // serial number of transaction of MyPay
       'uid_key' => $uid_key,
-    );
+    ];
     CRM_Core_Payment_MyPay::doRecordData($contribution->id, $transationData);
-    $post = array(
+    $post = [
       'uid' => $uid,
       'key' => $uid_key,
       'prc' => '250',
@@ -197,7 +197,7 @@ class CRM_Core_Payment_MyPayTest extends CiviUnitTestCase {
       'echo_2' => '',
       'echo_3' => '',
       'echo_4' => ''
-    );
+    ];
     CRM_Core_Payment_MyPay::doIPN(NULL, 'Credit', $post, $get);
 
     // verify contribution status after trigger
@@ -221,7 +221,7 @@ class CRM_Core_Payment_MyPayTest extends CiviUnitTestCase {
     $amount = 222;
 
     // create contribution
-    $contrib = array(
+    $contrib = [
       'trxn_id' => $trxn_id,
       'contact_id' => $this->_cid,
       'contribution_contact_id' => $this->_cid,
@@ -240,23 +240,23 @@ class CRM_Core_Payment_MyPayTest extends CiviUnitTestCase {
       'is_test' => $this->_is_test,
       'is_pay_later' => 0,
       'contribution_status_id' => 2,
-    );
+    ];
     $contribution = CRM_Contribute_BAO_Contribution::create($contrib, CRM_Core_DAO::$_nullArray);
     $this->assertNotEmpty($contribution->id, "In line " . __LINE__);
-    $params = array(
+    $params = [
       'is_test' => $this->_is_test,
       'id' => $contribution->id,
-    );
+    ];
     $this->assertDBState('CRM_Contribute_DAO_Contribution', $contribution->id, $params);
 
     // manually trigger ipn
-    $get = $post = $ids = array();
+    $get = $post = $ids = [];
     $ids = CRM_Contribute_BAO_Contribution::buildIds($contribution->id);
     $query = CRM_Contribute_BAO_Contribution::makeNotifyUrl($ids, NULL, $return_query = TRUE);
     parse_str($query, $get);
     $uid = substr($now, -6);
     $uid_key = md5($trxn_id);
-    $post = array(
+    $post = [
       'uid' => $uid,
       'key' => $uid_key,
       'prc' => '250',
@@ -296,7 +296,7 @@ class CRM_Core_Payment_MyPayTest extends CiviUnitTestCase {
       'echo_2' => '',
       'echo_3' => '',
       'echo_4' => ''
-    );
+    ];
     CRM_Core_Payment_MyPay::doIPN(NULL, 'Credit', $post, $get);
     $error_msg = CRM_Core_DAO::singleValueQuery("SELECT note FROM civicrm_note WHERE entity_id = $contribution->id");
     $this->assertNotEmpty($error_msg, "In line " . __LINE__);
