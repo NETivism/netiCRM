@@ -612,7 +612,7 @@ class CRM_Core_Payment_BaseIPN {
 
       $trxnParams = [
         'contribution_id' => $contribution->id,
-        'trxn_date' => isset($input['trxn_date']) ? $input['trxn_date'] : self::$_now,
+        'trxn_date' => $input['trxn_date'] ?? self::$_now,
         'trxn_type' => 'Debit',
         'total_amount' => $input['total_amount'] ? $input['total_amount'] : $input['amount'],
         'fee_amount' => $contribution->fee_amount,

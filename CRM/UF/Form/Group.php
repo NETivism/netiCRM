@@ -274,11 +274,11 @@ class CRM_UF_Form_Group extends CRM_Core_Form {
           $ufJoinChecked[$value] = 1;
         }
       }
-      $defaults['uf_group_type'] = isset($ufJoinChecked) ? $ufJoinChecked: "";
+      $defaults['uf_group_type'] = $ufJoinChecked?? "";
       if (!empty($ufJoinChecked['Profile'])) {
         $this->assign('onlineProfile', 1);
       }
-      $defaults['uf_group_type_user'] = isset($ufJoinCheckedUser) ? $ufJoinCheckedUser: "";
+      $defaults['uf_group_type_user'] = $ufJoinCheckedUser?? "";
 
       $showAdvanced = 0;
       $advFields = ['group', 'post_URL', 'cancel_URL',

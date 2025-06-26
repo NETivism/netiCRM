@@ -536,12 +536,12 @@ class CRM_Core_BAO_Address extends CRM_Core_DAO_Address {
       'supplemental_address_1' => $this->supplemental_address_1,
       'supplemental_address_2' => $this->supplemental_address_2,
       'city' => $this->city,
-      'state_province_name' => isset($this->state_name) ? $this->state_name : "",
-      'state_province' => isset($this->state) ? $this->state : "",
-      'postal_code' => isset($this->postal_code) ? $this->postal_code : "",
-      'postal_code_suffix' => isset($this->postal_code_suffix) ? $this->postal_code_suffix : "",
-      'country' => isset($this->country) ? $this->country : "",
-      'world_region' => isset($this->world_region) ? $this->world_region : "",
+      'state_province_name' => $this->state_name ?? "",
+      'state_province' => $this->state ?? "",
+      'postal_code' => $this->postal_code ?? "",
+      'postal_code_suffix' => $this->postal_code_suffix ?? "",
+      'country' => $this->country ?? "",
+      'world_region' => $this->world_region ?? "",
     ];
 
     if (isset($this->county_id) && $this->county_id) {

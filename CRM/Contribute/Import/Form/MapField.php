@@ -184,7 +184,7 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
     $this->_dataValues = $this->get('dataValues');
     $this->_importTableName = $this->get('importTableName');
     $skipColumnHeader = $this->controller->exportValue('UploadFile', 'skipColumnHeader');
-    $this->_onDuplicate = $this->get('onDuplicate', isset($onDuplicate) ? $onDuplicate : "");
+    $this->_onDuplicate = $this->get('onDuplicate', $onDuplicate ?? "");
     if ($this->_onDuplicate == 4) {
       // When user choose update contribution.
       $updateMapperFields = $this->get('fields');
@@ -475,27 +475,27 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
             // Otherwise, the field have no subtype, the subtype value should be NULL.
             $websiteTypeId = NULL;
             if ($mappingHeader == 'url') {
-              $websiteTypeId = isset($mappingWebsiteType[$i]) ? $mappingWebsiteType[$i] : 0;
+              $websiteTypeId = $mappingWebsiteType[$i] ?? 0;
             }
             $locationId = NULL;
             if ($contactFields[$mappingHeader]['hasLocationType']) {
-              $locationId = isset($mappingLocation[$i]) ? $mappingLocation[$i] : 0;
+              $locationId = $mappingLocation[$i] ?? 0;
             }
             $phoneType = NULL;
             if ($mappingHeader == 'phone') {
-              $phoneType = isset($mappingPhoneType[$i]) ? $mappingPhoneType[$i] : 0;
+              $phoneType = $mappingPhoneType[$i] ?? 0;
             }
             $imProvider = NULL;
             if ($mappingHeader == 'im') {
-              $imProvider = isset($mappingImProvider[$i]) ? $mappingImProvider[$i] : 0;
+              $imProvider = $mappingImProvider[$i] ?? 0;
             }
             $softField = NULL;
             if ($mapName == ts('Soft Credit')) {
-              $softField = isset($mappingContactType[$i]) ? $mappingContactType[$i] : 0;
+              $softField = $mappingContactType[$i] ?? 0;
             }
             $pcpField = NULL;
             if ($mapName == ts('Personal Campaign Page Creator')) {
-              $pcpField = isset($mappingContactType[$i]) ? $mappingContactType[$i] : 0;
+              $pcpField = $mappingContactType[$i] ?? 0;
             }
 
             // Set visibility of each fields and sub type selection.
@@ -927,14 +927,14 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
         $updateMappingFields->website_type_id = 'NULL';
 
         if (CRM_Utils_Array::value('0', $mapperKeys[$i]) == 'url') {
-          $updateMappingFields->website_type_id = isset($mapperKeys[$i][1]) ? $mapperKeys[$i][1] : 'NULL';
+          $updateMappingFields->website_type_id = $mapperKeys[$i][1] ?? 'NULL';
         }
         else {
           if (CRM_Utils_Array::value('0', $mapperKeys[$i]) == 'phone') {
-            $updateMappingFields->phone_type_id = isset($mapperKeys[$i][2]) ? $mapperKeys[$i][2] : 'NULL';
+            $updateMappingFields->phone_type_id = $mapperKeys[$i][2] ?? 'NULL';
           }
           elseif (CRM_Utils_Array::value('0', $mapperKeys[$i]) == 'im') {
-            $updateMappingFields->im_provider_id = isset($mapperKeys[$i][2]) ? $mapperKeys[$i][2] : 'NULL';
+            $updateMappingFields->im_provider_id = $mapperKeys[$i][2] ?? 'NULL';
           }
           $location = array_keys($locationTypes, $locations[$i]);
           $updateMappingFields->location_type_id = !empty($location) ? $location[0] : 'NULL';
@@ -976,14 +976,14 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
         $saveMappingFields->website_type_id = 'NULL';
 
         if (CRM_Utils_Array::value('0', $mapperKeys[$i]) == 'url') {
-          $saveMappingFields->website_type_id = isset($mapperKeys[$i][1]) ? $mapperKeys[$i][1] : 'NULL';
+          $saveMappingFields->website_type_id = $mapperKeys[$i][1] ?? 'NULL';
         }
         else {
           if (CRM_Utils_Array::value('0', $mapperKeys[$i]) == 'phone') {
-            $saveMappingFields->phone_type_id = isset($mapperKeys[$i][2]) ? $mapperKeys[$i][2] : 'NULL';
+            $saveMappingFields->phone_type_id = $mapperKeys[$i][2] ?? 'NULL';
           }
           elseif (CRM_Utils_Array::value('0', $mapperKeys[$i]) == 'im') {
-            $saveMappingFields->im_provider_id = isset($mapperKeys[$i][2]) ? $mapperKeys[$i][2] : 'NULL';
+            $saveMappingFields->im_provider_id = $mapperKeys[$i][2] ?? 'NULL';
           }
           $location = array_keys($locationTypes, $locations[$i]);
           $saveMappingFields->location_type_id = !empty($location) ? $location[0] : 'NULL';

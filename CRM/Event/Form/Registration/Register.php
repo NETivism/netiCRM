@@ -648,7 +648,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
     //if payment done, no need to build the fee block.
     if (isset($form->_paymentId) && $form->_paymentId && $form->_online) {
       //fix to diaplay line item in update mode.
-      $form->assign('priceSet', isset($form->_priceSet) ? $form->_priceSet : NULL);
+      $form->assign('priceSet', $form->_priceSet ?? NULL);
       return;
     }
 
@@ -822,7 +822,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
     $skipParticipants = $formattedPriceSetDefaults = [];
     if ($form->_allowConfirmation && (isset($form->_pId) || isset($form->_additionalParticipantId))) {
 
-      $participantId = isset($form->_pId) ? $form->_pId : $form->_additionalParticipantId;
+      $participantId = $form->_pId ?? $form->_additionalParticipantId;
       $pricesetDefaults = CRM_Event_Form_EventFees::setDefaultPriceSet($participantId,
         $form->_eventId
       );

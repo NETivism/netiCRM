@@ -452,7 +452,7 @@ class CRM_Core_BAO_Block {
    * @throws API_Exception
    */
   public static function handlePrimary(&$params, $class) {
-    $is_primary = isset($params['is_primary']) ? $params['is_primary'] : NULL;
+    $is_primary = $params['is_primary'] ?? NULL;
     if (isset($params['id']) && CRM_Utils_System::isNull($is_primary)) {
       // if id is set & is_primary isn't we can assume no change)
       return;
@@ -463,7 +463,7 @@ class CRM_Core_BAO_Block {
     }
 
     // contact_id in params might be empty or the string 'null' so cast to integer
-    $contactId = (int) (isset($params['contact_id']) ? $params['contact_id'] : 0);
+    $contactId = (int) ($params['contact_id'] ?? 0);
     // If id is set & we haven't been passed a contact_id, retrieve it
     if (!empty($params['id']) && !isset($params['contact_id'])) {
       $entity = new $class();

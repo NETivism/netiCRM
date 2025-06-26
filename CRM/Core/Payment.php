@@ -134,7 +134,7 @@ abstract class CRM_Core_Payment {
    *
    */
   function getVar($name) {
-    return isset($this->$name) ? $this->$name : NULL;
+    return $this->$name ?? NULL;
   }
 
   /**

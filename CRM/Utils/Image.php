@@ -80,7 +80,7 @@ class CRM_Utils_Image {
     $data = @getimagesize($this->_source);
     if (isset($data) && is_array($data)) {
       $extensions = ['1' => 'gif', '2' => 'jpg', '3' => 'png'];
-      $extension = isset($extensions[$data[2]]) ? $extensions[$data[2]] : '';
+      $extension = $extensions[$data[2]] ?? '';
       $aspect = $data[1] / $data[0];
       $this->_info = [
         'width' => $data[0],

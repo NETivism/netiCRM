@@ -144,9 +144,9 @@ abstract class CRM_Core_Page_Basic extends CRM_Core_Page {
   function run() {
     // what action do we want to perform ? (store it for smarty too.. :)
     $thisArgs = func_get_args();
-    $args = isset($thisArgs[0]) ? $thisArgs[0] : NULL;
-    $pageArgs = isset($thisArgs[1]) ? $thisArgs[1] : NULL;
-    $sort = isset($thisArgs[2]) ? $thisArgs[2] : NULL;
+    $args = $thisArgs[0] ?? NULL;
+    $pageArgs = $thisArgs[1] ?? NULL;
+    $sort = $thisArgs[2] ?? NULL;
 
     $this->_action = CRM_Utils_Request::retrieve('action', 'String',
       $this, FALSE, 'browse'
@@ -198,8 +198,8 @@ abstract class CRM_Core_Page_Basic extends CRM_Core_Page {
    */
   function browse() {
     $thisArgs = func_get_args();
-    $action = isset($thisArgs[0]) ? $thisArgs[0] : NULL;
-    $sort = isset($thisArgs[1]) ? $thisArgs[1] : NULL;
+    $action = $thisArgs[0] ?? NULL;
+    $sort = $thisArgs[1] ?? NULL;
     $links = &$this->links();
     if ($action == NULL) {
       if (!empty($links)) {

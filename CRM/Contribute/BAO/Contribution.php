@@ -844,7 +844,7 @@ INNER JOIN  civicrm_contact contact ON ( contact.id = civicrm_contribution.conta
    * static  */
   static function checkPaymentAvailable($id, $ids, $form = NULL){
     $return = FALSE;
-    $mode = isset($form->_mode) ? $form->_mode : 'live';
+    $mode = $form->_mode ?? 'live';
     switch($ids['component']){
       case 'event':
         $pending_status = CRM_Event_PseudoConstant::participantStatus(NULL, "class = 'Pending'", 'name'); 

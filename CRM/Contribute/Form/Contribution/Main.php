@@ -883,7 +883,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
 
         // set default price option
         $attributes = [
-          'data-grouping' => isset($amount['grouping']) ? $amount['grouping'] : '',
+          'data-grouping' => $amount['grouping'] ?? '',
           'data-default' => (!empty($amount['filter']) && empty($this->_defaultFromRequest['amt'])) ? 1 : 0,
           'onclick' => 'clearAmountOther();',
           'data-amount' => $amount['value'],

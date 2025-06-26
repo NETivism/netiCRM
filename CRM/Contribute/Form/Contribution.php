@@ -660,7 +660,7 @@ WHERE  contribution_id = {$this->_id}
     // for Premium section
     if ($this->_premiumID) {
       $this->assign('showOption', FALSE);
-      $options = isset($this->_options[$this->_productDAO->product_id]) ? $this->_options[$this->_productDAO->product_id] : "";
+      $options = $this->_options[$this->_productDAO->product_id] ?? "";
       if (!$options) {
         $this->assign('showOption', TRUE);
       }

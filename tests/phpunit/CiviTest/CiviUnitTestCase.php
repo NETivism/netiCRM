@@ -490,7 +490,7 @@ class CiviUnitTestCase extends CiviUnitTestBase {
   function assertArrayValueNotNull($key, &$list) {
     $this->assertArrayKeyExists($key, $list);
 
-    $value = isset($list[$key]) ? $list[$key] : NULL;
+    $value = $list[$key] ?? NULL;
     $this->assertTrue($value,
       ts("%1 element not null?",
         [1 => $key]
@@ -602,7 +602,7 @@ class CiviUnitTestCase extends CiviUnitTestBase {
     ) {
       throw new Exception('Could not create test contact, with message: ' . CRM_Utils_Array::value('error_message', $result));
     }
-    return isset($result['contact_id']) ? $result['contact_id'] : CRM_Utils_Array::value('id', $result);
+    return $result['contact_id'] ?? CRM_Utils_Array::value('id', $result);
   }
 
   function contactDelete($contactID) {

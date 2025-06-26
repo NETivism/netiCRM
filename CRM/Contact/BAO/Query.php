@@ -2154,8 +2154,8 @@ class CRM_Contact_BAO_Query {
    * @access public
    */
   function fromClause($tables, $inner = NULL, $right = NULL) {
-    $mode = isset($this->_mode) ? $this->_mode : self::MODE_CONTACTS;
-    $primaryLocation = isset($this->_primaryLocation) ? $this->_primaryLocation : TRUE;
+    $mode = $this->_mode ?? self::MODE_CONTACTS;
+    $primaryLocation = $this->_primaryLocation ?? TRUE;
 
 
     $from = ' FROM civicrm_contact contact_a';

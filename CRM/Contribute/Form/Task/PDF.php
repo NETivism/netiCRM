@@ -530,7 +530,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
       $input['fee_amount'] = $contribution->fee_amount;
       $input['net_amount'] = $contribution->net_amount;
       $input['trxn_id'] = $contribution->trxn_id;
-      $input['trxn_date'] = isset($contribution->trxn_date) ? $contribution->trxn_date : NULL;
+      $input['trxn_date'] = $contribution->trxn_date ?? NULL;
 
       $values = [];
       if ($count) {

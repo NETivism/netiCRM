@@ -1596,7 +1596,7 @@ EOT;
           }
 
           $getString = $logMatches[3];
-          $postString = isset($logMatches[4]) ? $logMatches[4] : '';
+          $postString = $logMatches[4] ?? '';
           $postString = preg_replace_callback('/\\\\x([0-9a-fA-F]{2})/', function ($strMatches) {
             return chr(hexdec($strMatches[1]));
           }, $postString);
@@ -1617,9 +1617,9 @@ EOT;
                     'contribution_id' => !empty($getParams['cid']) ? $getParams['cid'] : '',
                     'contact_id' => !empty($getParams['contact_id']) ? $getParams['contact_id'] : '',
                     'success' => (isset($postParams['Status']) && $postParams['Status'] === 'SUCCESS') ? TRUE : FALSE,
-                    'message' => isset($postParams['Message']) ? $postParams['Message'] : '',
+                    'message' => $postParams['Message'] ?? '',
                     'total_amount' => isset($ipnResult['Amt']) ? (float)$ipnResult['Amt'] : 0,
-                    'trxn_id' => isset($ipnResult['MerchantOrderNo']) ? $ipnResult['MerchantOrderNo'] : '',
+                    'trxn_id' => $ipnResult['MerchantOrderNo'] ?? '',
                     'receive_date' => isset($ipnResult['PayTime']) ? date('c', strtotime($ipnResult['PayTime'])) : '',
                     'ipn_date' => $isoDate,
                   ];
@@ -1662,7 +1662,7 @@ EOT;
                       $orderNumber = $ipnResult['MerchantOrderNo'];
                       $firstRecurring = TRUE;
                     }
-                    $amount = isset($ipnResult['AuthAmt']) ? $ipnResult['AuthAmt'] : $ipnResult['PeriodAmt'];
+                    $amount = $ipnResult['AuthAmt'] ?? $ipnResult['PeriodAmt'];
                     $receiveDate = '';
                     if (!empty($ipnResult['AuthDate'])) {
                       $receiveDate = date('c', strtotime($ipnResult['AuthDate']));
@@ -1676,7 +1676,7 @@ EOT;
                       'contribution_id' => !empty($getParams['cid']) ? $getParams['cid'] : '',
                       'contact_id' => !empty($getParams['contact_id']) ? $getParams['contact_id'] : '',
                       'success' => (isset($postParams['Status']) && $postParams['Status'] === 'SUCCESS') ? TRUE : FALSE,
-                      'message' => isset($postParams['Message']) ? $postParams['Message'] : '',
+                      'message' => $postParams['Message'] ?? '',
                       'total_amount' => $amount,
                       'trxn_id' => $orderNumber,
                       'receive_date' => !empty($receiveDate) ? $receiveDate : '',

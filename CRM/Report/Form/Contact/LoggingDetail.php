@@ -120,7 +120,7 @@ class CRM_Report_Form_Contact_LoggingDetail extends CRM_Report_Form {
         continue;
       }
       $rows[] = [
-        'field' => isset($fields[$diff]['title']) ? $fields[$diff]['title'] : $diff,
+        'field' => $fields[$diff]['title'] ?? $diff,
         'from' => $original[$diff],
         'to' => $changed[$diff],
       ];

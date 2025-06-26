@@ -371,7 +371,7 @@ class CRM_Core_Page {
   }
 
   function getVar($name) {
-    return isset($this->$name) ? $this->$name : NULL;
+    return $this->$name ?? NULL;
   }
 
   function setVar($name, $value) {

@@ -943,7 +943,7 @@ abstract class CRM_Contribute_Import_Parser {
 
     if ($statusFieldName && $primaryKeyName && is_numeric($id)) {
       $msg = !empty($params["{$statusFieldName}Msg"]) ? $params["{$statusFieldName}Msg"] : '';
-      $status = isset($params[$statusFieldName]) ? $params[$statusFieldName] : '';
+      $status = $params[$statusFieldName] ?? '';
       $query = "UPDATE {$this->_tableName} SET {$statusFieldName} = %1, {$statusFieldName}Msg = %2 WHERE {$primaryKeyName} = %3";
       if ($status === '') {
         CRM_Core_Error::debug_var('updateImportStatus_id', $id);

@@ -57,9 +57,9 @@ class CRM_Contact_Form_Search_Simple extends CRM_Core_Form {
       ['' => ts('- select -')] + CRM_Core_PseudoConstant::country()
     );
 
-    $countryID = isset($_POST['country_id']) ? $_POST['country_id'] : NULL;
+    $countryID = $_POST['country_id'] ?? NULL;
     if (!$countryID) {
-      $countryID = isset($this->_params['country_id']) ? $this->_params['country_id'] : NULL;
+      $countryID = $this->_params['country_id'] ?? NULL;
     }
     if ($countryID) {
       $this->add('select',

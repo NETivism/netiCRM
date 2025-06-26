@@ -137,8 +137,8 @@ class CRM_Admin_Page_OptionGroup extends CRM_Core_Page_Basic {
    */
   function browse() {
     $thisArgs = func_get_args();
-    $action = isset($thisArgs[0]) ? $thisArgs[0] : NULL;
-    $sort = isset($thisArgs[1]) ? $thisArgs[1] : NULL;
+    $action = $thisArgs[0] ?? NULL;
+    $sort = $thisArgs[1] ?? NULL;
     $links = &$this->links();
     if ($action == NULL) {
       if (!empty($links)) {

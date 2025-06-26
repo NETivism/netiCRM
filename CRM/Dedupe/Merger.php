@@ -773,7 +773,7 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
         if (isset($specialValues[$moniker][$field]) && is_string($specialValues[$moniker][$field])) {
           $value = CRM_Core_DAO::VALUE_SEPARATOR . trim($specialValues[$moniker][$field], CRM_Core_DAO::VALUE_SEPARATOR) . CRM_Core_DAO::VALUE_SEPARATOR;
         }
-        $label = isset($specialValues[$moniker]["{$field}_display"]) ? $specialValues[$moniker]["{$field}_display"] : $value;
+        $label = $specialValues[$moniker]["{$field}_display"] ?? $value;
         if (CRM_Utils_Array::value('type', $fields[$field]) && $fields[$field]['type'] == CRM_Utils_Type::T_DATE) {
           if ($value) {
             $value = str_replace('-', '', $value);

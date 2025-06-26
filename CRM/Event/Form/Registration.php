@@ -1169,8 +1169,7 @@ WHERE  v.option_group_id = g.id
         $params, $roleID
       ),
       'register_date' => ($registerDate) ? $registerDate : date('YmdHis'),
-      'source' => isset($params['participant_source']) ?
-      $params['participant_source'] : $params['description'],
+      'source' => $params['participant_source'] ?? $params['description'],
       'fee_level' => $params['amount_level'],
       'is_pay_later' => CRM_Utils_Array::value('is_pay_later', $params, 0),
       'fee_amount' => CRM_Utils_Array::value('fee_amount', $params),

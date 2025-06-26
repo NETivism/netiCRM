@@ -961,7 +961,7 @@ class CRM_Utils_String {
 
     $ord = $ord & 255;
 
-    return isset($map[$bank][$langcode][$ord]) ? $map[$bank][$langcode][$ord] : $unknown;
+    return $map[$bank][$langcode][$ord] ?? $unknown;
   }
 
   /**

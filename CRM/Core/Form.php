@@ -1066,7 +1066,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
   }
 
   function getVar($name) {
-    return isset($this->$name) ? $this->$name : NULL;
+    return $this->$name ?? NULL;
   }
 
   function setVar($name, $value) {
@@ -1222,7 +1222,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
     // or $this->_submitFiles['custom_4']['name'] is null.
     foreach ($this->_fields as $name => $fld) {
       if($fld['is_required']){
-        $data_type = isset($fld['data_type']) ? $fld['data_type'] : '';
+        $data_type = $fld['data_type'] ?? '';
         if (CRM_Utils_System::isNull(CRM_Utils_Array::value($name, $fields) && $data_type != 'File')) {
           $errors[$name] = ts('%1 is a required field.', [1 => $fld['title']]);
         }
@@ -1235,7 +1235,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
             if($data_type == 'File'){
               $customFieldID = CRM_Core_BAO_CustomField::getKeyID($name);
               $file = CRM_Core_BAO_CustomField::getFileURL($this->_id, $customFieldID);
-              $file = isset($file['file_id'])?$file['file_id']:FALSE;
+              $file = $file['file_id']??FALSE;
             }
             if($name == 'image_URL'){
               $file  = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $this->_id , 'image_URL');

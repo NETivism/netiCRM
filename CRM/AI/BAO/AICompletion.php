@@ -354,10 +354,10 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
     if (!is_array($params)) {
       throw new CRM_Core_Exception("params should be an Array.");
     }
-    $model = isset($params['model']) ? $params['model'] : self::COMPLETION_MODEL;
-    $maxToken = isset($params['max_token']) ? $params['max_token'] : self::COMPLETION_MAX_TOKENS;
+    $model = $params['model'] ?? self::COMPLETION_MODEL;
+    $maxToken = $params['max_token'] ?? self::COMPLETION_MAX_TOKENS;
     $completion = self::singleton(self::COMPLETION_SERVICE, $model, $maxToken);
-    $params['temperature'] = isset($params['temperature']) ? $params['temperature'] : self::TEMPERATURE_DEFAULT;
+    $params['temperature'] ??= self::TEMPERATURE_DEFAULT;
     $result = $completion->_serviceProvider->request($params);
     // format result
     return $result;

@@ -628,7 +628,7 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
       //skip those assignee contacts which are already assigned
       //while sending a copy.CRM-4509.
       $activityAssigned = array_flip($params['assignee_contact_id']);
-      $activityId = isset($this->_activityId) ? $this->_activityId : $activity->id;
+      $activityId = $this->_activityId ?? $activity->id;
       $assigneeContacts = CRM_Activity_BAO_ActivityAssignment::getAssigneeNames($activityId);
       $activityAssigned = array_diff_key($activityAssigned, $assigneeContacts);
 

@@ -151,7 +151,7 @@ class CRM_Event_Form_Task_Badge extends CRM_Event_Form_Task {
     while ($dao->fetch()) {
       $rows[$dao->participant_id] = [];
       foreach ($returnProperties as $key => $dontCare) {
-        $rows[$dao->participant_id][$key] = isset($dao->$key) ? $dao->$key : NULL;
+        $rows[$dao->participant_id][$key] = $dao->$key ?? NULL;
       }
     }
 

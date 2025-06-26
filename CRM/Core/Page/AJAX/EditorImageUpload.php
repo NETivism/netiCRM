@@ -48,7 +48,7 @@ class CRM_Core_Page_AJAX_EditorImageUpload {
     // Get filename information from POST data
     $originalFilename = isset($_POST['original_filename']) ? trim($_POST['original_filename']) : '';
     $suggestedFilename = isset($_POST['suggested_filename']) ? trim($_POST['suggested_filename']) : '';
-    $timestamp = isset($_POST['timestamp']) ? $_POST['timestamp'] : null;
+    $timestamp = $_POST['timestamp'] ?? null;
 
     // Validate file information
     $fileInfo = [
@@ -221,7 +221,7 @@ class CRM_Core_Page_AJAX_EditorImageUpload {
       'image/gif' => 'gif'
     ];
 
-    return isset($extensions[$mimeType]) ? $extensions[$mimeType] : 'jpg';
+    return $extensions[$mimeType] ?? 'jpg';
   }
 
   /**
