@@ -463,9 +463,9 @@ class CRM_Member_BAO_MembershipType extends CRM_Member_DAO_MembershipType {
       $startDate = $membershipDetails[$membershipId]->start_date;
       $date = explode('-', $membershipDetails[$membershipId]->end_date);
       $logStartDate = date('Y-m-d', mktime(0, 0, 0,
-          (double) $date[1],
-          (double)($date[2] + 1),
-          (double) $date[0]
+          (float) $date[1],
+          (float)($date[2] + 1),
+          (float) $date[0]
         ));
       $date = explode('-', $logStartDate);
 
@@ -518,8 +518,8 @@ class CRM_Member_BAO_MembershipType extends CRM_Member_DAO_MembershipType {
         $fixedStartDay = substr($membershipTypeDetails['fixed_period_start_day'], -2);
         $fixedStartMonth = substr($membershipTypeDetails['fixed_period_start_day'], 0, -2);
         $startDate = $logStartDate = date('Y-m-d', mktime(0, 0, 0,
-          (double) $fixedStartMonth,
-          (double) $fixedStartDay,
+          (float) $fixedStartMonth,
+          (float) $fixedStartDay,
           $yearValue
         ));
 
@@ -531,8 +531,8 @@ class CRM_Member_BAO_MembershipType extends CRM_Member_DAO_MembershipType {
         if (($rolloverMonth - $fixedStartMonth) < 0) {
           $rolloverDate = date('Ymd',
             mktime(0, 0, 0,
-              (double) $rolloverMonth,
-              (double) $rolloverDay,
+              (float) $rolloverMonth,
+              (float) $rolloverDay,
               $yearValue + 1
             )
           );
@@ -540,8 +540,8 @@ class CRM_Member_BAO_MembershipType extends CRM_Member_DAO_MembershipType {
         else {
           $rolloverDate = date('Ymd',
             mktime(0, 0, 0,
-              (double) $rolloverMonth,
-              (double) $rolloverDay,
+              (float) $rolloverMonth,
+              (float) $rolloverDay,
               $yearValue
             )
           );
@@ -555,9 +555,9 @@ class CRM_Member_BAO_MembershipType extends CRM_Member_DAO_MembershipType {
       // 2.
       $date = explode('-', $startDate);
 
-      $year = (double) $date[0];
-      $month = (double) $date[1];
-      $day = (double) $date[2];
+      $year = (float) $date[0];
+      $month = (float) $date[1];
+      $day = (float) $date[2];
 
       switch ($membershipTypeDetails['duration_unit']) {
         case 'year':

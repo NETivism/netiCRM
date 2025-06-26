@@ -239,7 +239,7 @@ class CRM_Core_Payment_Moneris extends CRM_Core_Payment {
 
     /* Success */
 
-    $params['trxn_result_code'] = (integer) $mpgResponse->getResponseCode();
+    $params['trxn_result_code'] = (int) $mpgResponse->getResponseCode();
     // todo: above assignment seems to be ignored, not getting stored in the civicrm_financial_trxn table
     $params['trxn_id'] = $mpgResponse->getTxnNumber();
     $params['gross_amount'] = $mpgResponse->getTransAmount();

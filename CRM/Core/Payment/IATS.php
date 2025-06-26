@@ -292,7 +292,7 @@ class CRM_Core_Payment_IATS extends CRM_Core_Payment {
       41 => 'Invalid Expiry date ',
       100 => 'Authorization system down. DO NOT REPROCESS.',
     ];
-    return ' <strong>' . $errors[(integer) $error_id] . '</strong>';
+    return ' <strong>' . $errors[(int) $error_id] . '</strong>';
   }
 
   /**

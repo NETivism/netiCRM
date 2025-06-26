@@ -119,7 +119,7 @@ class CRM_Case_XMLProcessor_Process extends CRM_Case_XMLProcessor {
     foreach ($xml->ActivitySets as $activitySetsXML) {
       foreach ($activitySetsXML->ActivitySet as $activitySetXML) {
         if ($standardTimeline) {
-          if ((boolean ) $activitySetXML->timeline) {
+          if ((bool ) $activitySetXML->timeline) {
             return $this->processStandardTimeline($activitySetXML,
               $params
             );
