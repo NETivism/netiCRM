@@ -16,7 +16,7 @@ function run_civimail_process(){
       CiviMailProcessor::cleanupDir($config->customFileUploadDir . DIRECTORY_SEPARATOR . 'CiviMail.processed');
       
       // if there are named sets of settings, use them - otherwise use the default (null)
-      $names = isset($_REQUEST['names']) && is_array($_REQUEST['names']) ? $_REQUEST['names'] : array( null );
+      $names = isset($_REQUEST['names']) && is_array($_REQUEST['names']) ? $_REQUEST['names'] : [ null ];
       
       foreach ($names as $name) {
           CiviMailProcessor::process($name);
@@ -95,7 +95,7 @@ class CiviMailProcessor {
             foreach ($mails as $key => $mail) {
 
                 // for every addressee: match address elements if it's to CiviMail
-                $matches = array();
+                $matches = [];
                 foreach ($mail->to as $address) {
                     if (preg_match($regex, $address->email, $matches)) {
                         list($match, $action, $job, $queue, $hash) = $matches;
@@ -156,39 +156,39 @@ class CiviMailProcessor {
                            }
                         }
                     }
-                    $params = array (
+                    $params =  [
                       'version' => 3,
                       'job_id' => $job,
                       'event_queue_id' => $queue,
                       'hash' => $hash,
                       'body' => $text,
-                    );
+                    ];
                     $result = civicrm_api('Mailing', 'event_bounce', $params);
                     break;
                 case 'c':
                 case 'confirm':
-                    $params = array (
+                    $params =  [
                       'version' => 3,
                       'job_id' => $job,
                       'subscribe_id' => $queue,
                       'hash' => $hash,
-                    );
+                    ];
                     $result = civicrm_api('Mailing', 'event_confirm', $params);
                     break;
                 case 'o':
                 case 'optOut':
-                    $params = array (
+                    $params =  [
                       'version' => 3,
                       'job_id' => $job,
                       'event_queue_id' => $queue,
                       'hash' => $hash,
-                    );
+                    ];
                     $result = civicrm_api('MailingGroup', 'event_domain_unsubscribe', $params);
                     break;
                 case 'r':
                 case 'reply':
                     // instead of text and HTML parts (4th and 6th params) send the whole email as the last param
-                    $params = array (
+                    $params =  [
                       'version' => 3,
                       'job_id' => $job,
                       'event_queue_id' => $queue,
@@ -197,37 +197,37 @@ class CiviMailProcessor {
                       'replyTo' => $replyTo,
                       'bodyHTML' => null,
                       'fullEmail' => $mail->generate()
-                    );
+                    ];
                     $result = civicrm_api('Mailing', 'event_reply', $params);
                     break;
                 case 'e':
                 case 're':
                 case 'resubscribe':
-                    $params = array (
+                    $params =  [
                       'version' => 3,
                       'job_id' => $job,
                       'event_queue_id' => $queue,
                       'hash' => $hash
-                    );
+                    ];
                     $result = civicrm_api('MailingGroup', 'event_resubscribe', $params);
                     break;
                 case 's':
                 case 'subscribe':
-                    $params = array (
+                    $params =  [
                       'version' => 3,
                       'email' => $mail->from->email,
                       'group_id' => $job
-                    );
+                    ];
                     $result = civicrm_api('MailingGroup', 'event_subscribe', $params);
                     break;
                 case 'u':
                 case 'unsubscribe':
-                    $params = array (
+                    $params =  [
                       'version' => 3,
                       'job_id' => $job,
                       'event_queue_id' => $queue,
                       'hash' => $hash
-                    );
+                    ];
                     $result = civicrm_api('MailingGroup', 'event_unsubscribe', $params);
                     break;
                 }

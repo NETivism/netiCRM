@@ -59,7 +59,7 @@ require_once 'CRM/Core/BAO/UFGroup.php';
  * @example UFFieldCreate.php
  */
 function civicrm_api3_uf_field_create($params) {
-  civicrm_api3_verify_one_mandatory($params, NULL, array('field_name', 'uf_group_id'));
+  civicrm_api3_verify_one_mandatory($params, NULL, ['field_name', 'uf_group_id']);
   $groupId = CRM_Utils_Array::value('uf_group_id', $params);
   if ((int) $groupId < 1) {
     return civicrm_api3_create_error('Params must be a field_name-carrying array and a positive integer.');
@@ -76,13 +76,13 @@ function civicrm_api3_uf_field_create($params) {
   }
   */
 
-  $params['field_name'] = array($field_type, $field_name, $location_type_id, $phone_type);
+  $params['field_name'] = [$field_type, $field_name, $location_type_id, $phone_type];
 
   if (!(CRM_Utils_Array::value('group_id', $params))) {
     $params['group_id'] = $groupId;
   }
 
-  $ids = array();
+  $ids = [];
   $ids['uf_group'] = $groupId;
 
   $fieldId = CRM_Utils_Array::value('id', $params);
@@ -120,10 +120,10 @@ function civicrm_api3_uf_field_create($params) {
  * @return array fields valid for other functions
  */
 function _civicrm_api3_uf_field_create_spec(&$params) {
-  $params['option.autoweight'] = array(
+  $params['option.autoweight'] = [
     'title' => "Automatically adjust weights in UFGroup to align with UFField",
     'type' => CRM_Utils_Type::T_BOOL
-  );
+  ];
 }
 
 /**
@@ -173,6 +173,6 @@ function civicrm_api3_uf_field_delete($params) {
  */
 function _civicrm_api3_uf_field_delete_spec(&$params) {
   // legacy support for field_id
-  $params['id']['api.aliases'] = array('field_id');
+  $params['id']['api.aliases'] = ['field_id'];
 }
 

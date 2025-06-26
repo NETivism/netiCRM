@@ -67,7 +67,7 @@ require_once 'CRM/Mailing/Event/BAO/TrackableURLOpen.php';
  * @return array
  */
 function civicrm_mailer_event_bounce($params) {
-  $errors = _civicrm_mailer_check_params($params, array('job_id', 'event_queue_id', 'hash', 'body'));
+  $errors = _civicrm_mailer_check_params($params, ['job_id', 'event_queue_id', 'hash', 'body']);
 
   if (!empty($errors)) {
     return $errors;
@@ -93,7 +93,7 @@ function civicrm_mailer_event_bounce($params) {
  * @return array
  */
 function civicrm_mailer_event_unsubscribe($params) {
-  $errors = _civicrm_mailer_check_params($params, array('job_id', 'event_queue_id', 'hash'));
+  $errors = _civicrm_mailer_check_params($params, ['job_id', 'event_queue_id', 'hash']);
 
   if (!empty($errors)) {
     return $errors;
@@ -121,7 +121,7 @@ function civicrm_mailer_event_unsubscribe($params) {
  * @return array
  */
 function civicrm_mailer_event_domain_unsubscribe($params) {
-  $errors = _civicrm_mailer_check_params($params, array('job_id', 'event_queue_id', 'hash'));
+  $errors = _civicrm_mailer_check_params($params, ['job_id', 'event_queue_id', 'hash']);
 
   if (!empty($errors)) {
     return $errors;
@@ -149,7 +149,7 @@ function civicrm_mailer_event_domain_unsubscribe($params) {
  * @return array
  */
 function civicrm_mailer_event_resubscribe($params) {
-  $errors = _civicrm_mailer_check_params($params, array('job_id', 'event_queue_id', 'hash'));
+  $errors = _civicrm_mailer_check_params($params, ['job_id', 'event_queue_id', 'hash']);
 
   if (!empty($errors)) {
     return $errors;
@@ -177,7 +177,7 @@ function civicrm_mailer_event_resubscribe($params) {
  * @return array
  */
 function civicrm_mailer_event_subscribe($params) {
-  $errors = _civicrm_mailer_check_params($params, array('email', 'group_id'));
+  $errors = _civicrm_mailer_check_params($params, ['email', 'group_id']);
 
   if (!empty($errors)) {
     return $errors;
@@ -202,7 +202,7 @@ function civicrm_mailer_event_subscribe($params) {
 
     $subscribe->send_confirm_request($email);
 
-    $values = array();
+    $values = [];
     $values['contact_id'] = $subscribe->contact_id;
     $values['subscribe_id'] = $subscribe->id;
     $values['hash'] = $subscribe->hash;
@@ -222,7 +222,7 @@ function civicrm_mailer_event_subscribe($params) {
  * @return array
  */
 function civicrm_mailer_event_confirm($params) {
-  $errors = _civicrm_mailer_check_params($params, array('contact_id', 'subscribe_id', 'hash'));
+  $errors = _civicrm_mailer_check_params($params, ['contact_id', 'subscribe_id', 'hash']);
 
   if (!empty($errors)) {
     return $errors;
@@ -249,7 +249,7 @@ function civicrm_mailer_event_confirm($params) {
  * @return array
  */
 function civicrm_mailer_event_reply($params) {
-  $errors = _civicrm_mailer_check_params($params, array('job_id', 'event_queue_id', 'hash', 'replyTo'));
+  $errors = _civicrm_mailer_check_params($params, ['job_id', 'event_queue_id', 'hash', 'replyTo']);
 
   if (!empty($errors)) {
     return $errors;
@@ -287,7 +287,7 @@ function civicrm_mailer_event_reply($params) {
  * @return array
  */
 function civicrm_mailer_event_forward($params) {
-  $errors = _civicrm_mailer_check_params($params, array('job_id', 'event_queue_id', 'hash', 'email'));
+  $errors = _civicrm_mailer_check_params($params, ['job_id', 'event_queue_id', 'hash', 'email']);
 
   if (!empty($errors)) {
     return $errors;
@@ -317,7 +317,7 @@ function civicrm_mailer_event_forward($params) {
  * @return array
  */
 function civicrm_mailer_event_click($params) {
-  $errors = _civicrm_mailer_check_params($params, array('event_queue_id', 'url_id'));
+  $errors = _civicrm_mailer_check_params($params, ['event_queue_id', 'url_id']);
 
   if (!empty($errors)) {
     return $errors;
@@ -328,7 +328,7 @@ function civicrm_mailer_event_click($params) {
 
   $url = CRM_Mailing_Event_BAO_TrackableURLOpen::track($queue, $url_id);
 
-  $values             = array();
+  $values             = [];
   $values['url']      = $url;
   $values['is_error'] = 0;
 
@@ -343,7 +343,7 @@ function civicrm_mailer_event_click($params) {
  * @return array
  */
 function civicrm_mailer_event_open($params) {
-  $errors = _civicrm_mailer_check_params($params, array('event_queue_id'));
+  $errors = _civicrm_mailer_check_params($params, ['event_queue_id']);
 
   if (!empty($errors)) {
     return $errors;
@@ -380,7 +380,7 @@ function _civicrm_mailer_check_params(&$params, $required) {
 
   foreach ($required as $name) {
     if (!CRM_Utils_Array::arrayKeyExists($name, $params) || !$params[$name]) {
-      return civicrm_create_error(ts('Required parameter missing: "%1"', array(1 => $name)));
+      return civicrm_create_error(ts('Required parameter missing: "%1"', [1 => $name]));
     }
   }
 

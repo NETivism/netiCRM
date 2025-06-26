@@ -64,7 +64,7 @@ function _civicrm_api3_uf_group_create_spec(&$params) {
  */
 function civicrm_api3_uf_group_create($params) {
 
-  $ids = array();
+  $ids = [];
   $ids['ufgroup'] = $params['id'];
 
 

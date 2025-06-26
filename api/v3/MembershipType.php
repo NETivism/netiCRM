@@ -63,7 +63,7 @@ function civicrm_api3_membership_type_create($params) {
 
   require_once 'CRM/Member/BAO/MembershipType.php';
   $membershipTypeBAO = CRM_Member_BAO_MembershipType::add($values, $ids);
-  $membershipType = array();
+  $membershipType = [];
   _civicrm_api3_object_to_array($membershipTypeBAO, $membershipType[$membershipTypeBAO->id]);
   CRM_Member_PseudoConstant::membershipType(NULL, TRUE);
   return civicrm_api3_create_success($membershipType, $params, 'membership_type', 'create', $membershipTypeBAO);

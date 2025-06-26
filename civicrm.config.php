@@ -68,7 +68,7 @@ function civicrm_conf_init() {
       $site_dir = $matches[3];
     }
 
-    $possibleConf = array();
+    $possibleConf = [];
     if (defined('CIVICRM_CONFDIR')) {
       $possibleConf[] = CIVICRM_CONFDIR;
     }

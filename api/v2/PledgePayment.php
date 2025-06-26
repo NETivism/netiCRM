@@ -82,7 +82,7 @@ function &civicrm_pledge_payment_create(&$params) {
     return $error;
   }
 
-  $values = array();
+  $values = [];
 
   require_once 'CRM/Pledge/BAO/PledgePayment.php';
   $error = _civicrm_pledgepayment_format_params($params, $values);
@@ -105,7 +105,7 @@ WHERE civicrm_pledge.id = civicrm_pledge_payment.pledge_id
   AND civicrm_pledge.id = %1
 LIMIT 0, 1  
 ";
-    $params[1]      = array($params['pledge_id'], 'Integer');
+    $params[1]      = [$params['pledge_id'], 'Integer'];
     $payment        = CRM_Core_DAO::executeQuery($query, $params);
     $paymentDetails = NULL;
     if ($payment->fetch()) {
@@ -177,9 +177,9 @@ function &civicrm_pledge_payment_search(&$params) {
     return civicrm_create_error(ts('Input parameters is not an array'));
   }
 
-  $inputParams      = array();
-  $returnProperties = array();
-  $otherVars        = array('sort', 'offset', 'rowCount');
+  $inputParams      = [];
+  $returnProperties = [];
+  $otherVars        = ['sort', 'offset', 'rowCount'];
 
   $sort     = NULL;
   $offset   = 0;
@@ -220,7 +220,7 @@ function &civicrm_pledge_payment_search(&$params) {
   $sql .= " LIMIT $offset, $rowCount ";
   $dao = CRM_Core_DAO::executeQuery($sql);
 
-  $pledge = array();
+  $pledge = [];
   while ($dao->fetch()) {
     $pledge[$dao->pledge_id] = $query->store($dao);
   }
@@ -247,7 +247,7 @@ function &civicrm_pledge_payment_format_create(&$params) {
   if (civicrm_error($error)) {
     return $error;
   }
-  $values = array();
+  $values = [];
   $error = _civicrm_pledge_format_params($params, $values);
   if (civicrm_error($error)) {
     return $error;
@@ -257,7 +257,7 @@ function &civicrm_pledge_payment_format_create(&$params) {
   if (civicrm_error($error)) {
     return $error;
   }
-  $ids = array();
+  $ids = [];
 
   CRM_Pledge_BAO_Pledge::resolveDefaults($params, TRUE);
 
@@ -279,9 +279,9 @@ function &civicrm_pledge_payment_format_create(&$params) {
  * @access private
  */
 function _civicrm_pledgepayment_check_params(&$params) {
-  static $required = array(
+  static $required = [
     'pledge_id',
-  );
+  ];
 
   // cannot create a pledge with empty params
   if (empty($params)) {
@@ -302,7 +302,7 @@ function _civicrm_pledgepayment_check_params(&$params) {
     return civicrm_create_error("Required fields not found for pledge $error");
   }
 
-  return array();
+  return [];
 }
 
 /**
@@ -364,7 +364,7 @@ function _civicrm_pledgepayment_format_params(&$params, &$values, $create = FALS
           return civicrm_create_error("contact_id not valid: $value");
         }
         $dao     = new CRM_Core_DAO();
-        $qParams = array();
+        $qParams = [];
         $svq     = $dao->singleValueQuery("SELECT id FROM civicrm_contact WHERE id = $value",
           $qParams
         );
@@ -446,7 +446,7 @@ function _civicrm_pledgepayment_format_params(&$params, &$values, $create = FALS
   if ($create) {
     // CRM_pledge_BAO_Pledge::add() handles Pledge_source
     // So, if $values contains Pledge_source, convert it to source
-    $changes = array('pledge_source' => 'source');
+    $changes = ['pledge_source' => 'source'];
 
     foreach ($changes as $orgVal => $changeVal) {
       if (isset($values[$orgVal])) {
@@ -456,7 +456,7 @@ function _civicrm_pledgepayment_format_params(&$params, &$values, $create = FALS
     }
   }
 
-  return array();
+  return [];
 }
 
 
@@ -466,10 +466,10 @@ function _civicrm_pledgepayment_format_params(&$params, &$values, $create = FALS
 // function at the moment doesn't have custom fields
 function civicrm_pledge_payment_interogate($params) {
   $fields = CRM_Pledge_DAO_Pledge::fields();
-  $fields['installment_amount'] = array(
+  $fields['installment_amount'] = [
     'name' => 'installment_amount',
     'title' => ts('Installment Amount'),
-  );
+  ];
   unset($fields['amount']);
   return $fields;
 }

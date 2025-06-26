@@ -60,13 +60,13 @@ function civicrm_api3_event_create($params) {
 
   _civicrm_api3_event_create_legacy_support_42($params);
   //format custom fields so they can be added
-  $value = array();
+  $value = [];
   _civicrm_api3_custom_format_params($params, $values, 'Event');
   $params = array_merge($values, $params);
   require_once 'CRM/Event/BAO/Event.php';
 
   $eventBAO = CRM_Event_BAO_Event::create($params);
-    $event = array();
+    $event = [];
     _civicrm_api3_object_to_array($eventBAO, $event[$eventBAO->id]);
   return civicrm_api3_create_success($event, $params);
 }
@@ -81,7 +81,7 @@ function _civicrm_api3_event_create_spec(&$params) {
   $params['start_date']['api.required'] = 1;
   $params['title']['api.required'] = 1;
   $params['is_active']['api.default'] = 1;
-  $params['financial_type_id']['api.aliases'] = array('contribution_type_id');
+  $params['financial_type_id']['api.aliases'] = ['contribution_type_id'];
 }
 /*
  * Support for schema changes made in 4.2
@@ -143,10 +143,10 @@ function civicrm_api3_event_get($params) {
   // @todo should replace all this with _civicrm_api3_dao_to_array($bao, $params, FALSE, $entity) - but we still have
   // the return.is_full to deal with.
   // NB the std dao_to_array function should only return custom if required.
-  $event = array();
+  $event = [];
   $eventDAO->find();
   while ($eventDAO->fetch()) {
-    $event[$eventDAO->id] = array();
+    $event[$eventDAO->id] = [];
     CRM_Core_DAO::storeValues($eventDAO, $event[$eventDAO->id]);
     _civicrm_api3_event_getisfull($event, $eventDAO->id);
     if ($eventDAO->is_show_location) {
@@ -167,7 +167,7 @@ function civicrm_api3_event_get($params) {
 * @param array $params array or parameters determined by getfields
 */
 function _civicrm_api3_event_get_spec(&$params) {
-  $params['financial_type_id']['api.aliases'] = array('contribution_type_id');
+  $params['financial_type_id']['api.aliases'] = ['contribution_type_id'];
 }
 /*
  * Support for schema changes made in 4.2
@@ -239,9 +239,9 @@ function _civicrm_api3_event_getisfull(&$event, $event_id) {
  *
  */
 function _civicrm_api3_event_getlocblock(&$event, $event_id){
-  $params = array('entity_id' => $event_id, 'entity_table' => 'civicrm_event');
+  $params = ['entity_id' => $event_id, 'entity_table' => 'civicrm_event'];
   $location = CRM_Core_BAO_Location::getValues($params);
-  foreach(array('address', 'phone', 'email') as $loc) {
+  foreach(['address', 'phone', 'email'] as $loc) {
     $value = reset($location[$loc]);
     switch($loc) {
       case 'address':
@@ -265,13 +265,13 @@ function _civicrm_api3_event_getlocblock(&$event, $event_id){
 function _civicrm_api3_event_getfee(&$event, $event_id) {
   if (!empty($event[$event_id]['is_monetary'])) {
     $fee = CRM_Event_Page_EventInfo::feeBlock($event_id);
-    $feeBlock = array();
+    $feeBlock = [];
     foreach($fee['label'] as $idx => $label) {
       if (isset($fee['value'][$idx]) && $fee['value'][$idx] !== '') {
-        $feeBlock[] = array(
+        $feeBlock[] = [
           'label' => $label,
           'value' => $fee['value'][$idx],
-        );
+        ];
       }
     }
     $event[$event_id]['is_discount'] = !empty($fee['is_discount']) ? 1 : 0;

@@ -60,13 +60,13 @@ function civicrm_api3_activity_create($params) {
     // an update does not require any mandatory parameters
     civicrm_api3_verify_one_mandatory($params,
       NULL,
-      array(
+      [
         'activity_name', 'activity_type_id', 'activity_label',
-      )
+      ]
     );
   }
 
-  $errors = array();
+  $errors = [];
 
   // check for various error and required conditions
   $errors = _civicrm_api3_activity_check_params($params);
@@ -77,7 +77,7 @@ function civicrm_api3_activity_create($params) {
 
 
   // processing for custom data
-  $values = array();
+  $values = [];
   _civicrm_api3_custom_format_params($params, $values, 'Activity');
 
   if (!empty($values['custom'])) {
@@ -90,11 +90,11 @@ function civicrm_api3_activity_create($params) {
   // and set it as an old revision. Also retrieve details we'll need.
   $case_id           = '';
   $createRevision    = FALSE;
-  $oldActivityValues = array();
+  $oldActivityValues = [];
   if (CRM_Utils_Array::value('case_id', $params)) {
     $case_id = $params['case_id'];
     if (CRM_Utils_Array::value('id', $params)) {
-      $oldActivityParams = array('id' => $params['id']);
+      $oldActivityParams = ['id' => $params['id']];
       if (!$oldActivityValues) {
         CRM_Activity_BAO_Activity::retrieve($oldActivityParams, $oldActivityValues);
       }
@@ -155,8 +155,8 @@ function civicrm_api3_activity_create($params) {
   }
   elseif (!empty($params['id'])) {
     // prefill activity value when update exists activity
-    $oldActivityValues = array();
-    $oldActivityParams = array('id' => $params['id']);
+    $oldActivityValues = [];
+    $oldActivityParams = ['id' => $params['id']];
     CRM_Activity_BAO_Activity::retrieve($oldActivityParams, $oldActivityValues);
     if (!empty($oldActivityValues['status_id']) && empty($params['status_id'])) {
       $params['status_id'] = $oldActivityValues['status_id'];
@@ -172,7 +172,7 @@ function civicrm_api3_activity_create($params) {
   if (isset($activityBAO->id)) {
     if ($case_id && !$createRevision) {
       // If this is a brand new case activity we need to add this
-      $caseActivityParams = array('activity_id' => $activityBAO->id, 'case_id' => $case_id);
+      $caseActivityParams = ['activity_id' => $activityBAO->id, 'case_id' => $case_id];
       require_once 'CRM/Case/BAO/Case.php';
       CRM_Case_BAO_Case::processCaseActivity($caseActivityParams);
     }
@@ -191,23 +191,23 @@ function _civicrm_api3_activity_create_spec(&$params) {
   //default for source_contact_id = currently logged in user
   $params['source_contact_id']['api.default'] = 'user_contact_id';
 
-  $params['assignee_contact_id'] = array(
+  $params['assignee_contact_id'] = [
     'name' => 'assignee_id',
     'title' => 'assigned to',
     'type' => 1,
     'FKClassName' => 'CRM_Activity_DAO_ActivityAssignment',
-  );
-  $params['target_contact_id'] = array(
+  ];
+  $params['target_contact_id'] = [
     'name' => 'target_id',
     'title' => 'Activity Target',
     'type' => 1,
     'FKClassName' => 'CRM_Activity_DAO_ActivityTarget',
-  );
-  $params['activity_status_id'] = array(
+  ];
+  $params['activity_status_id'] = [
     'name' => 'status_id',
     'title' => 'Status Id',
     'type' => 1,
-  );
+  ];
 }
 
 /**
@@ -296,15 +296,15 @@ function civicrm_api3_activity_delete($params) {
 function _civicrm_api3_activity_check_params(&$params) {
 
   $contactIDFields = array_intersect_key($params,
-    array(
+    [
       'source_contact_id' => 1,
       'assignee_contact_id' => 1,
       'target_contact_id' => 1,
-    )
+    ]
   );
 
   if (!empty($contactIDFields)) {
-    $contactIds = array();
+    $contactIds = [];
     foreach ($contactIDFields as $fieldname => $contactfield) {
       if (empty($contactfield)) {
         continue;
@@ -330,10 +330,10 @@ SELECT  count(*)
   }
 
 
-  $activityIds = array('activity' => CRM_Utils_Array::value('id', $params),
+  $activityIds = ['activity' => CRM_Utils_Array::value('id', $params),
     'parent' => CRM_Utils_Array::value('parent_id', $params),
     'original' => CRM_Utils_Array::value('original_id', $params),
-  );
+  ];
 
   foreach ($activityIds as $id => $value) {
     if ($value &&

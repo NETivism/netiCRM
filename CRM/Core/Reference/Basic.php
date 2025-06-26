@@ -83,10 +83,10 @@ class CRM_Core_Reference_Basic implements CRM_Core_Reference_Interface {
       1 => [$targetDao->$targetColumn, 'String'],
     ];
     $sql = <<<EOS
-SELECT {$select}
-FROM {$this->getReferenceTable()}
-WHERE {$this->getReferenceKey()} = %1
-EOS;
+    SELECT {$select}
+    FROM {$this->getReferenceTable()}
+    WHERE {$this->getReferenceKey()} = %1
+    EOS;
 
     $daoName = CRM_Core_DAO_AllCoreTables::getClassForTable($this->getReferenceTable());
     $result = CRM_Core_DAO::executeQuery($sql, $params, TRUE, $daoName);
@@ -104,10 +104,10 @@ EOS;
       1 => [$targetDao->$targetColumn, 'String'],
     ];
     $sql = <<<EOS
-SELECT count(*)
-FROM {$this->getReferenceTable()}
-WHERE {$this->getReferenceKey()} = %1
-EOS;
+    SELECT count(*)
+    FROM {$this->getReferenceTable()}
+    WHERE {$this->getReferenceKey()} = %1
+    EOS;
 
     return [
       'name' => CRM_Utils_Array::implode(':', ['sql', $this->getReferenceTable(), $this->getReferenceKey()]),

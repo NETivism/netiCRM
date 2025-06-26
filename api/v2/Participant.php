@@ -107,7 +107,7 @@ function civicrm_participant_create(&$params) {
 function &civicrm_participant_get(&$params) {
   _civicrm_initialize();
 
-  $values = array();
+  $values = [];
   if (empty($params)) {
     $error = civicrm_create_error(ts('No input parameters present'));
     return $error;
@@ -129,7 +129,7 @@ function &civicrm_participant_get(&$params) {
   if (count($participant) != 1 &&
     !CRM_Utils_Array::value('returnFirst', $params)
   ) {
-    $error = civicrm_create_error(ts('%1 participant matching input params', array(1 => count($participant))),
+    $error = civicrm_create_error(ts('%1 participant matching input params', [1 => count($participant)]),
       $participant
     );
     return $error;
@@ -159,9 +159,9 @@ function &civicrm_participant_search(&$params) {
     return civicrm_create_error('Params need to be of type array!');
   }
 
-  $inputParams      = array();
-  $returnProperties = array();
-  $otherVars        = array('sort', 'offset', 'rowCount');
+  $inputParams      = [];
+  $returnProperties = [];
+  $otherVars        = ['sort', 'offset', 'rowCount'];
 
   $sort     = NULL;
   $offset   = 0;
@@ -201,7 +201,7 @@ function &civicrm_participant_search(&$params) {
   $sql .= " LIMIT $offset, $rowCount ";
   $dao = CRM_Core_DAO::executeQuery($sql, CRM_Core_DAO::$_nullArray);
 
-  $participant = array();
+  $participant = [];
   while ($dao->fetch()) {
     $participant[$dao->participant_id] = $query->store($dao);
   }
@@ -238,7 +238,7 @@ function &civicrm_participant_update(&$params) {
   require_once 'CRM/Event/BAO/Participant.php';
   $participantBAO = CRM_Event_BAO_Participant::create($params);
 
-  $participant = array();
+  $participant = [];
   _civicrm_object_to_array($participantBAO, $participant);
   return $participant;
 }
@@ -339,7 +339,7 @@ function civicrm_participant_check_params(&$params, $checkDuplicate = FALSE) {
     }
   }
 
-  $result = array();
+  $result = [];
   if ($checkDuplicate) {
     if (CRM_Event_BAO_Participant::checkDuplicate($params, $result)) {
       $participantID = array_pop($result);
@@ -350,10 +350,10 @@ function civicrm_participant_check_params(&$params, $checkDuplicate = FALSE) {
       );
 
       return civicrm_create_error($error->pop(),
-        array(
+        [
           'contactID' => $params['contact_id'],
           'participantID' => $participantID,
-        )
+        ]
       );
     }
   }

@@ -61,8 +61,8 @@ require_once 'CRM/Core/BAO/Note.php';
  */
 function civicrm_api3_note_create($params) {
 
-  $ids     = array();
-  $ids     = array('id' => CRM_Utils_Array::value('id', $params));
+  $ids     = [];
+  $ids     = ['id' => CRM_Utils_Array::value('id', $params)];
   $noteBAO = CRM_Core_BAO_Note::add($params, $ids);
 
   if (is_a($noteBAO, 'CRM_Core_Error')) {
@@ -70,7 +70,7 @@ function civicrm_api3_note_create($params) {
     return $error;
   }
   else {
-    $note = array();
+    $note = [];
     _civicrm_api3_object_to_array($noteBAO, $note[$noteBAO->id]);
   }
   $result = civicrm_api3_create_success($note, $params);
@@ -140,7 +140,7 @@ function _civicrm_api3_note_get_spec(&$params) {
  */
 function &civicrm_api3_note_tree_get($params) {
 
-  civicrm_api3_verify_mandatory($params, NULL, array('id'));
+  civicrm_api3_verify_mandatory($params, NULL, ['id']);
 
   if (!is_numeric($params['id'])) {
     return civicrm_api3_create_error(ts("Invalid note ID"));

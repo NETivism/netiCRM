@@ -87,7 +87,7 @@ function civicrm_api3_address_create(&$params) {
     return civicrm_api3_create_error("Address is not created or updated ");
   }
   else {
-    $values = array();
+    $values = [];
     $values = _civicrm_api3_dao_to_array($addressBAO, $params);
     return civicrm_api3_create_success($values, $params, 'address', $addressBAO);
   }
@@ -101,8 +101,8 @@ function civicrm_api3_address_create(&$params) {
 function _civicrm_api3_address_create_spec(&$params) {
   $params['location_type_id']['api.required'] = 1;
   $params['contact_id']['api.required'] = 1;
-  $params['country'] = array('title' => 'Name or 2-letter abbreviation of country. Looked up in civicrm_country table');
-  $params['street_parsing'] = array('title' => 'optional param to indicate you want the street_address field parsed into individual params');
+  $params['country'] = ['title' => 'Name or 2-letter abbreviation of country. Looked up in civicrm_country table'];
+  $params['street_parsing'] = ['title' => 'optional param to indicate you want the street_address field parsed into individual params'];
 }
 
 /**

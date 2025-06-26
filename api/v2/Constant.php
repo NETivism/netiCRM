@@ -92,18 +92,18 @@ require_once 'api/v2/utils.php';
  *    <li>wysiwygEditor</li>
  *  </ul>
  */
-function civicrm_constant_get($name, $params = array(
-  )) {
+function civicrm_constant_get($name, $params = [
+  ]) {
   require_once 'CRM/Core/PseudoConstant.php';
   $className = 'CRM_Core_PseudoConstant';
   $callable = "$className::$name";
 
   if (is_callable($callable)) {
     if (empty($params)) {
-      $values = call_user_func(array($className, $name));
+      $values = call_user_func([$className, $name]);
     }
     else {
-      $values = call_user_func_array(array($className, $name), $params);
+      $values = call_user_func_array([$className, $name], $params);
     }
     return $values;
   }

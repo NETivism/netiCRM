@@ -85,14 +85,14 @@ function civicrm_api3_payment_processor_get($params) {
  * @return array
  */
 function _civicrm_api3_payment_processor_getlist_defaults(&$request) {
-  return array(
-    'description_field' => array(
+  return [
+    'description_field' => [
       'payment_processor_type_id',
       'description',
-    ),
-    'params' => array(
+    ],
+    'params' => [
       'is_test' => 0,
       'is_active' => 1,
-    ),
-  );
+    ],
+  ];
 }

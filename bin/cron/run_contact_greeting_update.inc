@@ -12,20 +12,20 @@ function run_contact_greeting_update($limit = 100){
   require_once 'CRM/Utils/Token.php';
 
   $config = CRM_Core_Config::singleton();
-  $process = array(
-     'Individual' =>  array( 'email_greeting', 'postal_greeting', 'addressee' ),
-     'Household' =>  array( 'email_greeting', 'postal_greeting', 'addressee' ),
-     'Organization' =>  array( 'addressee' ),
-  );
+  $process = [
+     'Individual' =>  [ 'email_greeting', 'postal_greeting', 'addressee' ],
+     'Household' =>  [ 'email_greeting', 'postal_greeting', 'addressee' ],
+     'Organization' =>  [ 'addressee' ],
+  ];
     
   foreach($process as $contactType => $greetings){
     foreach($greetings as $greeting){
       // if valueID is not passed use default value 
-      $contactTypeFilters = array( 1 => 'Individual', 2 => 'Household', 3 => 'Organization' );
+      $contactTypeFilters = [ 1 => 'Individual', 2 => 'Household', 3 => 'Organization' ];
       $filter = CRM_Utils_Array::key( $contactType, $contactTypeFilters );
       $defaulValueID = CRM_Core_OptionGroup::values( $greeting, null, null, null, " AND is_default = 1 AND ( filter = {$filter} OR filter = 0 )", "value");
       $valueID = array_pop( $defaulValueID );
-      $filter =  array( 'contact_type'  => $contactType, 'greeting_type' => $greeting );
+      $filter =  [ 'contact_type'  => $contactType, 'greeting_type' => $greeting ];
       $allGreetings   = CRM_Core_PseudoConstant::greeting( $filter );            
       $originalGreetingString = $greetingString = CRM_Utils_Array::value( $valueID, $allGreetings );
       if ( !$greetingString ) {
@@ -35,37 +35,37 @@ function run_contact_greeting_update($limit = 100){
       // build return properties based on tokens
       $greetingTokens = CRM_Utils_Token::getTokens( $greetingString );
       $tokens = CRM_Utils_Array::value( 'contact', $greetingTokens );
-      $greetingsReturnProperties = array( );
+      $greetingsReturnProperties = [ ];
       if ( is_array( $tokens ) ) {
         $greetingsReturnProperties = array_fill_keys( array_values( $tokens ), 1 );
       }
 
       //FIXME : apiQuery should handle these clause.
-      $filterContactFldIds = $filterIds = array( );
+      $filterContactFldIds = $filterIds = [ ];
       $idFldName = $displayFldName = null;
       if ( $greeting == 'email_greeting' || $greeting == 'postal_greeting' ||  $greeting == 'addressee' ) {
         $idFldName = $greeting . '_id';
         $displayFldName = $greeting . '_display';
       }
 
-      $filterContactFldIds = array();
+      $filterContactFldIds = [];
       if ( $idFldName ) {
         $sql = "SELECT DISTINCT id, $idFldName FROM civicrm_contact WHERE contact_type = %1 AND ( {$idFldName} IS NULL OR ( {$idFldName} IS NOT NULL AND {$displayFldName} IS NULL ) )";
         if($limit > 0){
           $sql .= ' LIMIT %2';
         }
 
-        $dao = CRM_Core_DAO::executeQuery( $sql, array( 1 => array( $contactType, 'String' ) , 2 => array($limit, 'Integer')) );
+        $dao = CRM_Core_DAO::executeQuery( $sql, [ 1 => [ $contactType, 'String' ] , 2 => [$limit, 'Integer']] );
         while ( $dao->fetch( ) ) {
           $filterContactFldIds[$dao->id] = $dao->$idFldName;
         }
       }
 
       // retrieve only required contact information
-      $extraParams[] = array( 'contact_type', '=', $contactType, 0, 0 );
+      $extraParams[] = [ 'contact_type', '=', $contactType, 0, 0 ];
       list($greetingDetails) = CRM_Mailing_BAO_Mailing::getDetails( array_keys( $filterContactFldIds ), $greetingsReturnProperties, false, false, $extraParams );
       // perform token replacement and build update SQL
-      $contactIds = $allContactIds = array( );
+      $contactIds = $allContactIds = [ ];
       $cacheFieldQuery = "UPDATE civicrm_contact SET {$greeting}_display = CASE id ";
 
       foreach($filterContactFldIds as $contactID => $greetingSetting){

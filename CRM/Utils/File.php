@@ -381,12 +381,12 @@ class CRM_Utils_File {
     // FIXME: we should do more checks here -
     if (!empty($dir)) {
       $htaccess = <<<HTACCESS
-<Files "*">
-  Order allow,deny
-  Deny from all
-</Files>
+      <Files "*">
+        Order allow,deny
+        Deny from all
+      </Files>
 
-HTACCESS;
+      HTACCESS;
       $file = $dir . '.htaccess';
       if (file_put_contents($file, $htaccess) === FALSE) {
 

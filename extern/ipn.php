@@ -43,7 +43,7 @@ exit;
 CRM_Core_Config::singleton();
 
 if ( empty( $_GET ) ) {
-    $rpInvoiceArray = array();
+    $rpInvoiceArray = [];
     $rpInvoiceArray = explode( '&' , $_POST['rp_invoice_id'] );
     foreach ( $rpInvoiceArray as $rpInvoiceValue ) {
         $rpValueArray = explode ( '=' , $rpInvoiceValue );

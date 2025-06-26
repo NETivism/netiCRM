@@ -242,7 +242,7 @@ function civicrm_uf_group_create($params) {
 
   _civicrm_initialize();
 
-  $ids = array();
+  $ids = [];
   require_once 'CRM/Core/BAO/UFGroup.php';
 
   $ufGroup = CRM_Core_BAO_UFGroup::add($params, $ids);
@@ -269,7 +269,7 @@ function civicrm_uf_group_update($params, $groupId) {
 
   _civicrm_initialize();
 
-  $ids = array();
+  $ids = [];
   $ids['ufgroup'] = $groupId;
 
   require_once 'CRM/Core/BAO/UFGroup.php';
@@ -304,13 +304,13 @@ function civicrm_uf_field_create($groupId, $params) {
   $location_type_id = CRM_Utils_Array::value('location_type_id', $params);
   $phone_type       = CRM_Utils_Array::value('phone_type', $params);
 
-  $params['field_name'] = array($field_type, $field_name, $location_type_id, $phone_type);
+  $params['field_name'] = [$field_type, $field_name, $location_type_id, $phone_type];
 
   if (!(CRM_Utils_Array::value('group_id', $params))) {
     $params['group_id'] = $groupId;
   }
 
-  $ids = array();
+  $ids = [];
   $ids['uf_group'] = $groupId;
 
   require_once 'CRM/Core/BAO/UFField.php';
@@ -353,7 +353,7 @@ function civicrm_uf_field_update($params, $fieldId) {
   $location_type_id = CRM_Utils_Array::value('location_type_id', $params);
   $phone_type       = CRM_Utils_Array::value('phone_type', $params);
 
-  $params['field_name'] = array($field_type, $field_name, $location_type_id, $phone_type);
+  $params['field_name'] = [$field_type, $field_name, $location_type_id, $phone_type];
 
   require_once 'CRM/Core/BAO/UFField.php';
   $UFField = new CRM_Core_BAO_UFField();
@@ -363,7 +363,7 @@ function civicrm_uf_field_update($params, $fieldId) {
     $params['group_id'] = $UFField->uf_group_id;
   }
 
-  $ids = array();
+  $ids = [];
 
   if ($UFField->find(TRUE)) {
     $ids['uf_group'] = $UFField->uf_group_id;

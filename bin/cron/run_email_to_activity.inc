@@ -174,9 +174,9 @@ function run( $supportedArgs, $context ) {
 
 // support command line arguements as well
 $context       = 'activity';
-$supportedArgs = array('case'     => 'case', 
+$supportedArgs = ['case'     => 'case', 
                        '--case'   => 'case', 
-                       '--case=1' => 'case');
+                       '--case=1' => 'case'];
 
 if ( isset($argv[1]) ) {
     if ( isset( $supportedArgs[strtolower($argv[1])] ) ) {

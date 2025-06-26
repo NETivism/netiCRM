@@ -658,20 +658,20 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     }
     $output .= '</form>';
     return <<<EOT
-  <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-  <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
-  <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  </head>
-  <body>
-    {$output}
-    <script type="text/javascript">
-    {$js}
-    </script>
-  </body>
-  <html>
-EOT;
+      <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+      <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+      <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+      </head>
+      <body>
+        {$output}
+        <script type="text/javascript">
+        {$js}
+        </script>
+      </body>
+      <html>
+    EOT;
   }
 
   public static function mobileCheckout($type, $post, $objects) {
@@ -1808,34 +1808,34 @@ EOT;
 
     // only trigger when current month doesn't have any contribution yet
     $sql = <<<EOT
-SELECT
-  r.id recur_id,
-  r.last_execute_date last_execute_date,
-  c.payment_processor_id payment_processor_id,
-  c.is_test is_test,
-  (SELECT MAX(created_date) FROM civicrm_contribution WHERE contribution_recur_id = r.id GROUP BY r.id) AS last_created_date,
-  '$currentDate' as current_month_start
-FROM
-  civicrm_contribution_recur r
-INNER JOIN
-  civicrm_contribution c
-ON
-  r.id = c.contribution_recur_id
-INNER JOIN
-  civicrm_payment_processor p
-ON
-  c.payment_processor_id = p.id
-WHERE
-  $cycleDayFilter AND
-  (SELECT MAX(created_date) FROM civicrm_contribution WHERE contribution_recur_id = r.id GROUP BY r.id) < '$currentDate'
-AND r.contribution_status_id = 5
-AND r.frequency_unit = 'month'
-AND p.payment_processor_type = 'SPGateway'
-AND COALESCE(p.url_api, '') != ''
-GROUP BY r.id
-ORDER BY r.id
-LIMIT 0, 100
-EOT;
+    SELECT
+      r.id recur_id,
+      r.last_execute_date last_execute_date,
+      c.payment_processor_id payment_processor_id,
+      c.is_test is_test,
+      (SELECT MAX(created_date) FROM civicrm_contribution WHERE contribution_recur_id = r.id GROUP BY r.id) AS last_created_date,
+      '$currentDate' as current_month_start
+    FROM
+      civicrm_contribution_recur r
+    INNER JOIN
+      civicrm_contribution c
+    ON
+      r.id = c.contribution_recur_id
+    INNER JOIN
+      civicrm_payment_processor p
+    ON
+      c.payment_processor_id = p.id
+    WHERE
+      $cycleDayFilter AND
+      (SELECT MAX(created_date) FROM civicrm_contribution WHERE contribution_recur_id = r.id GROUP BY r.id) < '$currentDate'
+    AND r.contribution_status_id = 5
+    AND r.frequency_unit = 'month'
+    AND p.payment_processor_type = 'SPGateway'
+    AND COALESCE(p.url_api, '') != ''
+    GROUP BY r.id
+    ORDER BY r.id
+    LIMIT 0, 100
+    EOT;
     $dao = CRM_Core_DAO::executeQuery($sql);
     while ($dao->fetch()) {
       // Check last execute date.

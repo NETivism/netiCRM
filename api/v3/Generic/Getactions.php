@@ -2,16 +2,16 @@
 // $Id$
 
 function civicrm_api3_generic_getActions($params) {
-  civicrm_api3_verify_mandatory($params, NULL, array('entity'));
-  $r = civicrm_api('Entity', 'Get', array('version' => 3));
+  civicrm_api3_verify_mandatory($params, NULL, ['entity']);
+  $r = civicrm_api('Entity', 'Get', ['version' => 3]);
   $entity = CRM_Utils_String::munge($params['entity']);
   if (!in_array($entity, $r['values'])) {
-    return civicrm_api3_create_error("Entity " . $entity . " invalid. Use api.entity.get to have the list", array('entity' => $r['values']));
+    return civicrm_api3_create_error("Entity " . $entity . " invalid. Use api.entity.get to have the list", ['entity' => $r['values']]);
   }
   _civicrm_api_loadEntity($entity);
 
   $functions     = get_defined_functions();
-  $actions       = array();
+  $actions       = [];
   $prefix        = 'civicrm_api3_' . strtolower($entity) . '_';
   $prefixGeneric = 'civicrm_api3_generic_';
   foreach ($functions['user'] as $fct) {

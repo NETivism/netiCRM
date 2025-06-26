@@ -77,7 +77,7 @@ function civicrm_activity_type_create($params) {
   }
 
   $action = 1;
-  $groupParams = array('name' => 'activity_type');
+  $groupParams = ['name' => 'activity_type'];
 
   if ($optionValueID = CRM_Utils_Array::value('option_value_id', $params)) {
     $action = 2;
@@ -85,7 +85,7 @@ function civicrm_activity_type_create($params) {
 
   require_once 'CRM/Core/OptionValue.php';
   $activityObject = CRM_Core_OptionValue::addOptionValue($params, $groupParams, $action, $optionValueID);
-  $activityType = array();
+  $activityType = [];
   _civicrm_object_to_array($activityObject, $activityType);
   return $activityType;
 }

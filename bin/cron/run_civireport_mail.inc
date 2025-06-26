@@ -30,8 +30,8 @@ class CiviReportMail {
         $templateInfo = CRM_Core_OptionGroup::getRowValues( 'report_template', $optionVal, 'value' );
         $obj = new CRM_Report_Page_Instance();            
         if ( strstr($templateInfo['name'], '_Form') ) {
-            $instanceInfo = array( );
-            CRM_Report_BAO_Instance::retrieve( array('id' => $instanceId), $instanceInfo );
+            $instanceInfo = [ ];
+            CRM_Report_BAO_Instance::retrieve( ['id' => $instanceId], $instanceInfo );
             
             if ( ! empty($instanceInfo['title']) ) {
                 $obj->assign( 'reportTitle', $instanceInfo['title'] );
@@ -40,10 +40,10 @@ class CiviReportMail {
             }
             
             $wrapper = new CRM_Utils_Wrapper( );
-            $arguments['urlToSession'] = array( array( 'urlVar'     => 'instanceId',
+            $arguments['urlToSession'] = [ [ 'urlVar'     => 'instanceId',
                                                        'type'       => 'Positive',
                                                        'sessionVar' => 'instanceId',
-                                                       'default'    => 'null' ) );
+                                                       'default'    => 'null' ] ];
             return $wrapper->run( $templateInfo['name'], null, $arguments );
         }
     }

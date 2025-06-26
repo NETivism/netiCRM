@@ -71,9 +71,9 @@ function civicrm_entity_tag_get(&$params) {
 
   require_once 'CRM/Core/BAO/EntityTag.php';
   $values = CRM_Core_BAO_EntityTag::getTag($entityID, $entityTable);
-  $result = array();
+  $result = [];
   foreach ($values as $v) {
-    $result[] = array('tag_id' => $v);
+    $result[] = ['tag_id' => $v];
   }
   return $result;
 }
@@ -106,7 +106,7 @@ function civicrm_entity_tag_display(&$params) {
 
   require_once 'CRM/Core/BAO/EntityTag.php';
   $values = CRM_Core_BAO_EntityTag::getTag($entityID, $entityTable);
-  $result = array();
+  $result = [];
   $tags   = CRM_Core_PseudoConstant::tag();
   foreach ($values as $v) {
     $result[] = $tags[$v];
@@ -181,8 +181,8 @@ function civicrm_entity_tag_delete(&$params) {
  * @return <type>
  */
 function civicrm_entity_tag_common(&$params, $op = 'add') {
-  $entityIDs   = array();
-  $tagsIDs     = array();
+  $entityIDs   = [];
+  $tagsIDs     = [];
   $entityTable = 'civicrm_contact';
   if (is_array($params)) {
     foreach ($params as $n => $v) {
@@ -206,7 +206,7 @@ function civicrm_entity_tag_common(&$params, $op = 'add') {
   }
 
   require_once 'CRM/Core/BAO/EntityTag.php';
-  $values = array('is_error' => 0);
+  $values = ['is_error' => 0];
   if ($op == 'add') {
     $values['total_count'] = $values['added'] = $values['not_added'] = 0;
     foreach ($tagIDs as $tagID) {

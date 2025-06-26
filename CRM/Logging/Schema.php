@@ -214,11 +214,11 @@ class CRM_Logging_Schema {
     // - set the ENGINE to ARCHIVE
     // - add log-specific columns (at the end of the table)
     $cols = <<<COLS
-            log_date    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            log_conn_id INTEGER,
-            log_user_id INTEGER,
-            log_action  ENUM('Initialization', 'Insert', 'Update', 'Delete')
-COLS;
+                log_date    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                log_conn_id INTEGER,
+                log_user_id INTEGER,
+                log_action  ENUM('Initialization', 'Insert', 'Update', 'Delete')
+    COLS;
     $query = preg_replace("/^CREATE TABLE `$table`/i", "CREATE TABLE {$this->loggingDB}.log_$table", $query);
     $query = preg_replace("/ AUTO_INCREMENT/i", '', $query);
     $query = preg_replace("/^  [^`].*$/m", '', $query);

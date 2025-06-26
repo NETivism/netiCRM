@@ -87,12 +87,12 @@ function civicrm_api3_custom_group_create($params) {
   _civicrm_api3_object_to_array($customGroup, $values[$customGroup->id]);
 
   if (CRM_Utils_Array::value('html_type', $params)) {
-    $fparams = array(
+    $fparams = [
       'custom_group_id' => $customGroup->id,
       'version' => $params['version'],
       // should put something cleverer here but this will do for now
       'label' => 'api created field',
-    );
+    ];
     require_once 'api/v3/CustomField.php';
     $fieldValues = civicrm_api3_custom_field_create($fparams);
     $values[$fieldValues['id']] = array_merge($values[$customGroup->id], $fieldValues['values'][$fieldValues['id']]);

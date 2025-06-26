@@ -19,19 +19,19 @@
  *   array to be passed to function
  */
 function civicrm_api($entity, $action, $params, $extra = NULL) {
-  $apiWrappers = array(CRM_Core_HTMLInputCoder::singleton());
+  $apiWrappers = [CRM_Core_HTMLInputCoder::singleton()];
   try {
     require_once ('api/v3/utils.php');
     require_once 'api/Exception.php';
 
-    $fields = array();
+    $fields = [];
     foreach ($params as $key => $value) {
       if(preg_match('/id$/', $key) && is_null($value)){
         $fields[] = $key;
       }
     }
     if(count($fields) > 0){
-      return civicrm_api3_create_error(ts("This can't be empty, please provide a value"), array("error_code" => "required", "field" => $fields));
+      return civicrm_api3_create_error(ts("This can't be empty, please provide a value"), ["error_code" => "required", "field" => $fields]);
     }
 
     if (!is_array($params)) {
@@ -41,7 +41,7 @@ function civicrm_api($entity, $action, $params, $extra = NULL) {
     $errorScope = CRM_Core_TemporaryErrorScope::useException();
     require_once 'CRM/Utils/String.php';
     require_once 'CRM/Utils/Array.php';
-    $apiRequest = array();
+    $apiRequest = [];
     $apiRequest['entity'] = CRM_Utils_String::munge($entity);
     $apiRequest['action'] = CRM_Utils_String::munge($action);
     $apiRequest['version'] = civicrm_get_api_version($params);
@@ -120,7 +120,7 @@ function civicrm_api($entity, $action, $params, $extra = NULL) {
     if (CRM_Utils_Array::value('format.is_success', $apiRequest['params']) == 1) {
       return 0;
     }
-    $data = array();
+    $data = [];
     $err = civicrm_api3_create_error($e->getMessage(), $data, $apiRequest);
     if (CRM_Utils_Array::value('debug', $apiRequest['params'])) {
       $err['trace'] = $e->getTraceSafe();
@@ -135,7 +135,7 @@ function civicrm_api($entity, $action, $params, $extra = NULL) {
   }
   catch (API_Exception $e){
     if(!isset($apiRequest)){
-      $apiRequest = array();
+      $apiRequest = [];
     }
     if (CRM_Utils_Array::value('format.is_success', CRM_Utils_Array::value('params',$apiRequest)) == 1) {
       return 0;
@@ -154,7 +154,7 @@ function civicrm_api($entity, $action, $params, $extra = NULL) {
     if (CRM_Utils_Array::value('format.is_success', $apiRequest['params']) == 1) {
       return 0;
     }
-    $data = array();
+    $data = [];
     $err = civicrm_api3_create_error($e->getMessage(), $data, $apiRequest);
     if (CRM_Utils_Array::value('debug', $apiRequest['params'])) {
       $err['trace'] = $e->getTraceAsString();
@@ -194,21 +194,21 @@ function _civicrm_api_resolve($apiRequest) {
   if (function_exists($stdFunction)) {
     // someone already loaded the appropriate file
     // FIXME: This has the affect of masking bugs in load order; this is included to provide bug-compatibility
-    $cache[$cachekey] = array('function' => $stdFunction, 'is_generic' => FALSE);
+    $cache[$cachekey] = ['function' => $stdFunction, 'is_generic' => FALSE];
     return $cache[$cachekey];
   }
 
-  $stdFiles = array(
+  $stdFiles = [
     // By convention, the $camelName.php is more likely to contain the function, so test it first
     'api/v' . $apiRequest['version'] . '/' . $camelName . '.php',
     'api/v' . $apiRequest['version'] . '/' . $camelName . '/' . $actionCamelName . '.php',
-  );
+  ];
   foreach ($stdFiles as $stdFile) {
     require_once 'CRM/Utils/File.php';
     if (CRM_Utils_File::isIncludable($stdFile)) {
       require_once $stdFile;
       if (function_exists($stdFunction)) {
-        $cache[$cachekey] = array('function' => $stdFunction, 'is_generic' => FALSE);
+        $cache[$cachekey] = ['function' => $stdFunction, 'is_generic' => FALSE];
         return $cache[$cachekey];
       }
     }
@@ -218,23 +218,23 @@ function _civicrm_api_resolve($apiRequest) {
   require_once 'api/v3/Generic.php';
   # $genericFunction = 'civicrm_api3_generic_' . $apiRequest['action'];
   $genericFunction = civicrm_api_get_function_name('generic', $apiRequest['action'], $apiRequest['version']);
-  $genericFiles = array(
+  $genericFiles = [
     // By convention, the Generic.php is more likely to contain the function, so test it first
     'api/v' . $apiRequest['version'] . '/Generic.php',
     'api/v' . $apiRequest['version'] . '/Generic/' . $actionCamelName . '.php',
-  );
+  ];
   foreach ($genericFiles as $genericFile) {
     require_once 'CRM/Utils/File.php';
     if (CRM_Utils_File::isIncludable($genericFile)) {
       require_once $genericFile;
       if (function_exists($genericFunction)) {
-        $cache[$cachekey] = array('function' => $genericFunction, 'is_generic' => TRUE);
+        $cache[$cachekey] = ['function' => $genericFunction, 'is_generic' => TRUE];
         return $cache[$cachekey];
       }
     }
   }
 
-  $cache[$cachekey] = array('function' => FALSE, 'is_generic' => FALSE);
+  $cache[$cachekey] = ['function' => FALSE, 'is_generic' => FALSE];
   return $cache[$cachekey];
 }
 
@@ -267,10 +267,10 @@ function _civicrm_api_loadEntity($entity, $version = 3) {
   }
 
   // Check for standalone action files; to match _civicrm_api_resolve(), only load the first one
-  $loaded_files = array(); // array($relativeFilePath => TRUE)
+  $loaded_files = []; // array($relativeFilePath => TRUE)
   $include_dirs = array_unique(explode(PATH_SEPARATOR, get_include_path()));
   foreach ($include_dirs as $include_dir) {
-    $action_dir = CRM_Utils_Array::implode(DIRECTORY_SEPARATOR, array($include_dir, 'api', "v{$version}", $camelName));
+    $action_dir = CRM_Utils_Array::implode(DIRECTORY_SEPARATOR, [$include_dir, 'api', "v{$version}", $camelName]);
     if (! is_dir($action_dir)) {
       continue;
     }
@@ -415,7 +415,7 @@ function _civicrm_api_call_nested_api(&$params, &$result, $action, $entity, $ver
     // $result to be a recursive array
     // $result['values'][0] = $result;
     $oldResult = $result;
-    $result = array('values' => array(0 => $oldResult));
+    $result = ['values' => [0 => $oldResult]];
   }
   foreach ($params as $field => $newparams) {
     if ((is_array($newparams) || $newparams === 1) && $field <> 'api.has_parent' && substr($field, 0, 3) == 'api') {
@@ -423,7 +423,7 @@ function _civicrm_api_call_nested_api(&$params, &$result, $action, $entity, $ver
 
       // 'api.participant.delete' => 1 is a valid options - handle 1 instead of an array
       if ($newparams === 1) {
-        $newparams = array('version' => $version);
+        $newparams = ['version' => $version];
       }
       // can be api_ or api.
       $separator = $field[3];
@@ -437,11 +437,11 @@ function _civicrm_api_call_nested_api(&$params, &$result, $action, $entity, $ver
       /**
        * @var array of parameters that will be applied to every chained request.
        */
-      $enforcedSubParams = array();
+      $enforcedSubParams = [];
       /**
        * @var array of parameters that provide defaults to every chained request, but which may be overridden by parameters in the chained request.
        */
-      $defaultSubParams = array();
+      $defaultSubParams = [];
 
       $subEntity = _civicrm_api_get_entity_name_from_camel($subAPI[1]);
 
@@ -592,7 +592,7 @@ function _civicrm_api_get_entity_name_from_camel($entity) {
  */
 function _civicrm_api_get_entity_name_from_dao($bao){
   $daoName = str_replace("BAO", "DAO", get_class($bao));
-  $dao = array();
+  $dao = [];
   require ('CRM/Core/DAO/.listAll.php');
   $daos = array_flip($dao);
   return _civicrm_api_get_entity_name_from_camel($daos[$daoName]);

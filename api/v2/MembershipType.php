@@ -86,9 +86,9 @@ function civicrm_membership_type_create(&$params) {
     return civicrm_create_error("Membership is not created");
   }
   else {
-    $membershipType = array();
+    $membershipType = [];
     _civicrm_object_to_array($membershipTypeBAO, $membershipType);
-    $values             = array();
+    $values             = [];
     $values['id']       = $membershipType['id'];
     $values['is_error'] = 0;
   }
@@ -127,7 +127,7 @@ function civicrm_membership_type_get(&$params) {
   }
 
   if ($membershipTypeBAO->find()) {
-    $membershipType = array();
+    $membershipType = [];
     while ($membershipTypeBAO->fetch()) {
       $obj = clone $membershipTypeBAO;
       _civicrm_object_to_array($obj, $membershipType);
@@ -176,7 +176,7 @@ function &civicrm_membership_type_update(&$params) {
     $membershipTypeBAO->save();
   }
 
-  $membershipType = array();
+  $membershipType = [];
   _civicrm_object_to_array($membershipTypeBAO, $membershipType);
   $membershipTypeBAO->free();
   return $membershipType;

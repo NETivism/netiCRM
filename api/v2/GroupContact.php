@@ -111,8 +111,8 @@ function civicrm_group_contact_common(&$params, $op = 'add') {
     return civicrm_create_error(ts('input parameter should be an array'));
   }
 
-  $contactIDs = array();
-  $groupIDs = array();
+  $contactIDs = [];
+  $groupIDs = [];
   foreach ($params as $n => $v) {
     if (substr($n, 0, 10) == 'contact_id') {
       $contactIDs[] = $v;
@@ -143,7 +143,7 @@ function civicrm_group_contact_common(&$params, $op = 'add') {
   $tracking = CRM_Utils_Array::value('tracking', $params);
 
   require_once 'CRM/Contact/BAO/GroupContact.php';
-  $values = array('is_error' => 0);
+  $values = ['is_error' => 0];
   if ($op == 'add' || $op == 'pending') {
     $values['total_count'] = $values['added'] = $values['not_added'] = 0;
     foreach ($groupIDs as $groupID) {

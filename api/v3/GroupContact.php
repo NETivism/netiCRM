@@ -59,7 +59,7 @@ function civicrm_api3_group_contact_get($params) {
   else {
     if (!empty($params['group_id'])) {
       // check group ids
-      $search = array();
+      $search = [];
       if (is_string($params['group_id']) || is_numeric($params['group_id'])) {
         if (CRM_Utils_Rule::positiveInteger($params['group_id'])) {
           $search['group'][$params['group_id']] = 1;
@@ -92,12 +92,12 @@ function civicrm_api3_group_contact_get($params) {
       $queryParams = CRM_Contact_BAO_Query::convertFormValues($search);
       $searchDescendentGroups = TRUE; // return sub-group contact
       $smartGroupCache = TRUE;
-      $returnProperties = array('contact_id');
+      $returnProperties = ['contact_id'];
       $skipPermission = CRM_Utils_Array::value('check_permissions', $params) ? 0 : 1;
       $query = new CRM_Contact_BAO_Query($queryParams, $returnProperties, NULL, FALSE, FALSE, CRM_Contact_BAO_Query::MODE_CONTACTS, $skipPermission, $searchDescendentGroups, $smartGroupCache);
       $offset = $rowCount = 0;
       $result = $query->searchQuery($offset, $rowCount);
-      $contactIds = array();
+      $contactIds = [];
       while($result->fetch()) {
         $contactIds[] = $result->contact_id;
       }
@@ -202,8 +202,8 @@ function civicrm_api3_group_contact_pending($params) {
  */
 function _civicrm_api3_group_contact_common($params, $op = 'Added') {
 
-  $contactIDs = array();
-  $groupIDs = array();
+  $contactIDs = [];
+  $groupIDs = [];
   foreach ($params as $n => $v) {
     if (substr($n, 0, 10) == 'contact_id') {
       $contactIDs[] = $v;
@@ -227,11 +227,11 @@ function _civicrm_api3_group_contact_common($params, $op = 'Added') {
   
 
   if ($op == 'Added' || $op == 'Pending') {
-    $extraReturnValues= array(
+    $extraReturnValues= [
       'total_count' => 0,
       'added' => 0,
       'not_added' => 0
-    );
+    ];
     foreach ($groupIDs as $groupID) {
       list($tc, $a, $na) = CRM_Contact_BAO_GroupContact::addContactsToGroup($contactIDs,
         $groupID,
@@ -245,11 +245,11 @@ function _civicrm_api3_group_contact_common($params, $op = 'Added') {
     }
   }
   else {
-    $extraReturnValues= array(
+    $extraReturnValues= [
       'total_count' => 0,
       'removed' => 0,
       'not_removed' => 0
-    );
+    ];
     foreach ($groupIDs as $groupID) {
       list($tc, $r, $nr) = CRM_Contact_BAO_GroupContact::removeContactsFromGroup($contactIDs, $groupID, $method, $status, $tracking);
       $extraReturnValues['total_count'] += $tc;
@@ -265,7 +265,7 @@ function _civicrm_api3_group_contact_common($params, $op = 'Added') {
  */
 function civicrm_api3_group_contact_update_status($params) {
 
-  civicrm_api3_verify_mandatory($params, NULL, array('contact_id', 'group_id'));
+  civicrm_api3_verify_mandatory($params, NULL, ['contact_id', 'group_id']);
 
   $method = CRM_Utils_Array::value('method', $params, 'API');
   $tracking = CRM_Utils_Array::value('tracking', $params);
