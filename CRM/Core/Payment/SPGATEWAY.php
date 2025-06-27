@@ -2058,13 +2058,6 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     $response = ['status' => 0, 'msg' => 'Unknown error'];
 
     if ($paymentProcessor && !empty($paymentProcessor['url_api'])) {
-      // Load another payment processor if url_site is set and contains a processor ID
-      if ($paymentProcessor && !empty($paymentProcessor['url_site']) && is_numeric($paymentProcessor['url_site'])) {
-        $alternateProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($paymentProcessor['url_site'], $mode);
-        if (!empty($alternateProcessor)) {
-          $paymentProcessor = $alternateProcessor;
-        }
-      }
       $trxnId = self::generateTrxnId($findContribution->is_test, 0);
 
       if (empty($referContributionId)) {
@@ -2077,6 +2070,15 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
         if (!$c->find(TRUE)) {
           $response = ['status' => 0, 'msg' => 'Error on finding referConitributionId'];
           return $response;
+        }
+      }
+      // Load another payment processor if url_site is set and contains a processor ID
+      if ($paymentProcessor && !empty($paymentProcessor['url_site']) && is_numeric($paymentProcessor['url_site'])) {
+        $alternateProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($paymentProcessor['url_site'], $mode);
+        if (!empty($alternateProcessor)) {
+          $paymentProcessor = $alternateProcessor;
+          $c->payment_processor_id = $alternateProcessor['id'];
+          $c->save();
         }
       }
 
