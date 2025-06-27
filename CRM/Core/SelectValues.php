@@ -512,11 +512,9 @@ class CRM_Core_SelectValues {
         'checksum' => ['title' => ts('Checksum')],
         'contact_id' => ['title' => ts('Internal Contact ID')],
       ];
-      if (defined('ONE_TIME_RENEWAL_ENABLED')) {
-        $additionalFields['recurring_renewal_link'] = [
-          'title' => ts('Recurring Contribution Renewal Link')
-        ];
-      }
+      $additionalFields['recurring_renewal_link'] = [
+        'title' => ts('Recurring Contribution Renewal Link')
+      ];
       $exportFields = array_merge(CRM_Contact_BAO_Contact::exportableFields(), $additionalFields);
       $exportFields['state_province_name'] = $exportFields['state_province'];
       $exportFields['state_province']['title'] = ts('State Abbreviation');

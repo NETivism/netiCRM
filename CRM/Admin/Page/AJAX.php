@@ -245,15 +245,13 @@ class CRM_Admin_Page_AJAX {
           }
           break;
         case 'CRM_Contribute_BAO_ContributionPage':
-          if (defined('ONE_TIME_RENEWAL_ENABLED')) {
-            $config = CRM_Core_Config::singleton();
-            $defaultPageId = $config->defaultRenewalPageId;
-            if ($defaultPageId == $recordID) {
-              $recurringSettingURL = CRM_Utils_System::url('civicrm/admin/recurring', 'reset=1');
-              $status = ts("This contribution page is set as the default page for one-time recurring contribution links and cannot be deleted or disable.<br/>Please go to <a href='%1'>Administer >> CiviContribute >> Recurring Settings</a> and update the Default contribution page for one-time renewal link field before trying again.", [1 => $recurringSettingURL]);
-              $show = "noButton";
-              break;
-            }
+          $config = CRM_Core_Config::singleton();
+          $defaultPageId = $config->defaultRenewalPageId;
+          if ($defaultPageId == $recordID) {
+            $recurringSettingURL = CRM_Utils_System::url('civicrm/admin/recurring', 'reset=1');
+            $status = ts("This contribution page is set as the default page for one-time recurring contribution links and cannot be deleted or disable.<br/>Please go to <a href='%1'>Administer >> CiviContribute >> Recurring Settings</a> and update the Default contribution page for one-time renewal link field before trying again.", [1 => $recurringSettingURL]);
+            $show = "noButton";
+            break;
           }
           $status = ts('Are you sure you want to disable this record?');
           break;

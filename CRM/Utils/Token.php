@@ -622,7 +622,7 @@ class CRM_Utils_Token {
       $value = CRM_Utils_Array::retrieveValueRecursive($contact, $token);
       $value = ts($value);
     }
-    elseif ($token == 'recurring_renewal_link' && defined('ONE_TIME_RENEWAL_ENABLED')) {
+    elseif ($token == 'recurring_renewal_link') {
       $contactId = $contact['contact_id'];
       $oid = 0;
       $pageId = null;
