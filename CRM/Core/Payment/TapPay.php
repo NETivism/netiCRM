@@ -1543,7 +1543,16 @@ LIMIT 0, 100
     $tappayDAO->find(TRUE);
     $tappayObject = json_decode($tappayDAO->data);
 
+    $contribution = new CRM_Contribute_DAO_Contribution();
+    $contribution->id = $contributionId;
+    $contribution->find(TRUE);
+    $is_test = $contribution->is_test ? 'test' : '';
+    $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($contribution->payment_processor_id, $is_test);
+    if (empty($contribution->payment_processor_id)) {
+      return NULL;
+    }
     $returnData = [];
+    $returnData[ts('Payment Processor')] = $paymentProcessor['name']." - ".ts('ID').$paymentProcessor['id'];
     $returnData[ts('Record Trade ID')] = $tappayDAO->rec_trade_id;
     $returnData[ts('Card Number')] = $tappayDAO->bin_code."**********".$tappayDAO->last_four;
     require_once 'CRM/Core/Smarty/resources/String.php';

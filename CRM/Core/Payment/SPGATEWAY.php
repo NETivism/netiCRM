@@ -950,6 +950,17 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
    */
   public static function getRecordDetail($contributionId) {
     $table = [];
+
+    $contribution = new CRM_Contribute_DAO_Contribution();
+    $contribution->id = $contributionId;
+    $contribution->find(TRUE);
+    $is_test = $contribution->is_test ? 'test' : '';
+    $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($contribution->payment_processor_id, $is_test);
+    if (empty($contribution->payment_processor_id)) {
+      return NULL;
+    }
+    $table[ts('Payment Processor')] = $paymentProcessor['name']." - ".ts('ID').$paymentProcessor['id'];
+
     $syncMsg = self::getSyncNowMessage($contributionId);
     if (!empty($syncMsg)) {
       require_once 'CRM/Core/Smarty/resources/String.php';
