@@ -1939,7 +1939,7 @@ SELECT IF( EXISTS(SELECT name FROM civicrm_contact_type WHERE name like %1), 1, 
       $retValue = $displayValues;
     }
 
-    $retValue ??= NULL;
+    $retValue = $retValue ?? NULL;
     return $retValue;
   }
 
