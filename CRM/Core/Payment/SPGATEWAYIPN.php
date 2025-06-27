@@ -63,17 +63,18 @@ class CRM_Core_Payment_SPGATEWAYIPN extends CRM_Core_Payment_BaseIPN {
         1 => [$ppid, 'Integer'],
       ]);
       $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($ppid, $isTest ? 'test' : 'live');
-      $this->_post = CRM_Core_Payment_SPGATEWAYAPI::recurDecrypt($this->_post['Period'], $paymentProcessor);
+      $post = CRM_Core_Payment_SPGATEWAYAPI::recurDecrypt($this->_post['Period'], $paymentProcessor);
       // special case for credit card agreement
       // first contribution and follow contribution have diffrent merchant id
-      if ($this->_post === FALSE) {
+      if ($post === FALSE) {
         $sql = 'SELECT payment_processor_id FROM civicrm_contribution WHERE id = %1';
         $ppid = CRM_Core_DAO::singleValueQuery($sql, [1 => [$ids['contribution'], 'Integer']]);
         if (!empty($ppid)) {
           $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($ppid, $isTest ? 'test' : 'live');
-          $this->_post = CRM_Core_Payment_SPGATEWAYAPI::recurDecrypt($this->_post['Period'], $paymentProcessor);
+          $post = CRM_Core_Payment_SPGATEWAYAPI::recurDecrypt($this->_post['Period'], $paymentProcessor);
         }
       }
+      $this->_post = $post;
       $input = CRM_Core_Payment_SPGATEWAYAPI::dataDecode($this->_post);
       // we will save record later if this is recurring after second times.
       if(empty($input['AlreadyTimes'])){
