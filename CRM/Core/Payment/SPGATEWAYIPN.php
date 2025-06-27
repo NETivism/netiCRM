@@ -34,7 +34,17 @@ class CRM_Core_Payment_SPGATEWAYIPN extends CRM_Core_Payment_BaseIPN {
       }
       $isTest = CRM_Core_DAO::singleValueQuery("SELECT is_test FROM civicrm_payment_processor WHERE id = %1", [1 => [$ppid, 'Integer']]);
       $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($ppid, $isTest ? 'test' : 'live');
-      $this->_post = CRM_Core_Payment_SPGATEWAYAPI::recurDecrypt($this->_post['TradeInfo'], $paymentProcessor);
+      $post = CRM_Core_Payment_SPGATEWAYAPI::recurDecrypt($this->_post['TradeInfo'], $paymentProcessor);
+      // special case for credit card agreement
+      // first contribution and follow contribution have diffrent merchant id
+      if (empty($post)) {
+        $sql = 'SELECT payment_processor_id FROM civicrm_contribution WHERE id = %1';
+        $ppid = CRM_Core_DAO::singleValueQuery($sql, [1 => [$ids['contribution'], 'Integer']]);
+        $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($ppid, $isTest ? 'test' : 'live');
+        $post = CRM_Core_Payment_SPGATEWAYAPI::recurDecrypt($this->_post['TradeInfo'], $paymentProcessor);
+      }
+      $this->_post = $post;
+
       CRM_Core_Payment_SPGATEWAYAPI::writeRecord($ids['contribution'], $this->_post, $ids['contributionRecur'] ?? $ids['contributionRecur']);
       $input = CRM_Core_Payment_SPGATEWAYAPI::dataDecode($this->_post);
     }
