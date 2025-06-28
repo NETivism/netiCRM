@@ -25,7 +25,6 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
   protected $_defaultThresholds = [];
   protected $_template;
 
-
   function __construct(&$formValues){
     parent::__construct($formValues);
     $this->_template = CRM_Core_Smarty::singleton();
@@ -92,14 +91,149 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
     ]);
     $this->_form->add('hidden', 'segment', '');
 
+    // Get RFM segments in original order (0→7)
     $rfmSegments = $this->prepareRfmSegments();
-    $this->_form->assign('rfmSegments', $rfmSegments);
+
+    // Sort segments by numeric_id DESC for display (7→0)
+    $sortedRfmSegments = $rfmSegments;
+    usort($sortedRfmSegments, function($a, $b) {
+      return $b['numeric_id'] - $a['numeric_id']; // DESC sorting
+    });
+
+    // Assign sorted segments to template
+    $this->_form->assign('rfmSegments', $sortedRfmSegments);
+
+    // Prepare RFM segment data for frontend
+    $rfmSegmentData = $this->prepareRfmSegmentDataForFrontend($rfmSegments);
+    $this->_form->assign('rfmSegmentDataJson', json_encode($rfmSegmentData, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE));
+
     $formValues = $this->_formValues;
     if (empty($formValues)) {
       $formValues = $this->setDefaultValues();
     }
     $urlParams = $this->prepareUrlParams($formValues);
     $this->_form->assign('urlParams', $urlParams);
+  }
+
+  /**
+   * Prepare RFM segment data for frontend consumption
+   * Transform backend format to frontend expected format
+   *
+   * @param array $segments RFM segments from prepareRfmSegments()
+   * @return array Frontend-formatted segment data (array indexed by numeric_id)
+   */
+  private function prepareRfmSegmentDataForFrontend($segments) {
+    $frontendData = [];
+
+    // Sort segments by numeric_id to ensure correct array order (0-7)
+    usort($segments, function($a, $b) {
+      return $a['numeric_id'] - $b['numeric_id'];
+    });
+
+    foreach ($segments as $segment) {
+      $frontendData[] = [
+        'title' => $segment['name'],
+        'content' => $segment['description'],
+        'rfm' => $segment['rfm_parsed']
+      ];
+    }
+
+    return $frontendData;
+  }
+
+  /**
+   * Parse RFM states from segment ID
+   * Extract R/F/M status (low/high) from ID like 'RlFlMl'
+   *
+   * @param string $segmentId RFM segment ID
+   * @return array RFM states array
+   */
+  private function parseRfmStatesFromId($segmentId) {
+    if (strlen($segmentId) !== 6) {
+      return ['r' => 'low', 'f' => 'low', 'm' => 'low']; // Default fallback
+    }
+
+    return [
+      'r' => substr($segmentId, 1, 1) === 'h' ? 'high' : 'low',  // Position 1: R value
+      'f' => substr($segmentId, 3, 1) === 'h' ? 'high' : 'low',  // Position 3: F value
+      'm' => substr($segmentId, 5, 1) === 'h' ? 'high' : 'low'   // Position 5: M value
+    ];
+  }
+
+  /**
+   * Prepare RFM segment data for quick search links
+   * Maintains original array order (by RFM binary sequence 0→7)
+   * Enhanced with description and parsed RFM states
+   *
+   * @return array Array of segment data with calculated numeric IDs
+   */
+  private function prepareRfmSegments() {
+    $segments = [
+      [
+        'id' => 'RlFlMl',
+        'name' => ts('RFM Hibernating Small'),
+        'rfm_code' => ts('R %1 F %2 M %3', [1 => 'low', 2 => 'low', 3 => 'low']),
+        'css_class' => 'rfm-segment-hibernating-small',
+        'description' => ts('These donors have not participated in donations for a long time, with low donation frequency and amounts. They may have reduced attention to the organization or experienced life changes. Recommend re-establishing contact through warm care messages, sharing recent organizational achievements and impact stories with simple, understandable content to rekindle their interest.')
+      ],
+      [
+        'id' => 'RlFlMh',
+        'name' => ts('RFM Hibernating Big'),
+        'rfm_code' => ts('R %1 F %2 M %3', [1 => 'low', 2 => 'low', 3 => 'high']),
+        'css_class' => 'rfm-segment-hibernating-big',
+        'description' => ts('Although they have not donated for a long time and have infrequent donations, they previously provided larger amounts of support, showing a certain level of recognition for the organization. This group has high reactivation potential. Recommend arranging personalized care contact to understand their current situation and invite them to important organizational events or sharing sessions.')
+      ],
+      [
+        'id' => 'RlFhMl',
+        'name' => ts('RFM At Risk Small'),
+        'rfm_code' => ts('R %1 F %2 M %3', [1 => 'low', 2 => 'high', 3 => 'low']),
+        'css_class' => 'rfm-segment-at-risk-small',
+        'description' => ts('Previously stable small-amount donors who participated regularly but recently stopped donating. They may be facing financial pressure or have concerns about the organization. Recommend proactively caring about their situation, emphasizing the importance of every small donation, and providing more flexible donation methods such as monthly small recurring donations.')
+      ],
+      [
+        'id' => 'RlFhMh',
+        'name' => ts('RFM At Risk Big'),
+        'rfm_code' => ts('R %1 F %2 M %3', [1 => 'low', 2 => 'high', 3 => 'high']),
+        'css_class' => 'rfm-segment-at-risk-big',
+        'description' => ts('Former important supporters who donated frequently with high amounts but recently stopped participating. This group requires special attention. Recommend senior management personally reach out, arrange face-to-face meetings to understand their thoughts and rebuild trust relationships.')
+      ],
+      [
+        'id' => 'RhFlMl',
+        'name' => ts('RFM New Small'),
+        'rfm_code' => ts('R %1 F %2 M %3', [1 => 'high', 2 => 'low', 3 => 'low']),
+        'css_class' => 'rfm-segment-new-small',
+        'description' => ts('New friends who just started following the organization. Although current donation amounts are small and infrequent, they represent the organization\'s future potential. Recommend welcome messages and regular educational content to help them better understand the organization\'s mission and gradually cultivate long-term support relationships.')
+      ],
+      [
+        'id' => 'RhFlMh',
+        'name' => ts('RFM New Big'),
+        'rfm_code' => ts('R %1 F %2 M %3', [1 => 'high', 2 => 'low', 3 => 'high']),
+        'css_class' => 'rfm-segment-new-big',
+        'description' => ts('Although donation frequency is low, they are willing to provide larger amounts of support at once, showing strong recognition of the organization. Recommend providing VIP-level service experience, inviting participation in organizational strategy discussions or advisory meetings, making them feel valued and having opportunities to develop into long-term major supporters.')
+      ],
+      [
+        'id' => 'RhFhMl',
+        'name' => ts('RFM Loyal Small'),
+        'rfm_code' => ts('R %1 F %2 M %3', [1 => 'high', 2 => 'high', 3 => 'low']),
+        'css_class' => 'rfm-segment-loyal-small',
+        'description' => ts('The organization\'s most stable foundation, continuously and frequently providing small support. They have deep emotional connections with the organization. Recommend regular expressions of gratitude, providing exclusive member benefits, and considering inviting them to become organizational volunteers or ambassadors to exert greater influence.')
+      ],
+      [
+        'id' => 'RhFhMh',
+        'name' => ts('RFM Champions'),
+        'rfm_code' => ts('R %1 F %2 M %3', [1 => 'high', 2 => 'high', 3 => 'high']),
+        'css_class' => 'rfm-segment-champions',
+        'description' => ts('The organization\'s most valuable partners, performing excellently in all aspects. They are spokespersons and important resources for the organization. Recommend providing the highest level of service, regularly inviting participation in organizational governance or strategic planning, and considering establishing named projects to make them feel their important contributions to organizational development.')
+      ]
+    ];
+
+    // Calculate numeric_id and parse RFM states for each segment
+    foreach ($segments as &$segment) {
+      $segment['numeric_id'] = self::rfmCodeToNumericId($segment['id']);
+      $segment['rfm_parsed'] = $this->parseRfmStatesFromId($segment['id']);
+    }
+
+    return $segments;
   }
 
   function setDefaultValues() {
@@ -184,7 +318,7 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
     }
     $qill[1]['rfmModel'] = ts('RFM Model').': '. $rfmModel;
 
-    // 定期捐款狀態
+    // Recurring contribution status
     $recurring = CRM_Utils_Array::value('recurring', $this->_formValues, self::RECURRING_NONRECURRING);
     if (isset($this->_recurringStatus[$recurring])) {
       $qill[1]['recurring'] = ts('Recurring Contribution').': '.$this->_recurringStatus[$recurring];
@@ -206,7 +340,6 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
     $dao = CRM_Core_DAO::executeQuery($sql, CRM_Core_DAO::$_nullArray);
     return $dao->N;
   }
-
 
   /**
    * Construct the search query
@@ -349,17 +482,17 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
    * @param  string $segment
    * @return array|null
    */
-  public static function parseRfmSegment(string $segment): array|null {
+  public static function parseRfmSegment(string $segment) {
     if (!isset($segment) || strlen($segment) !== 6) {
       return null;
     }
-    
+
     // Parse format like "RlFhMl" -> ['r' => 'low', 'f' => 'high', 'm' => 'low']
     $pattern = '/^R([lh])F([lh])M([lh])$/i';
     if (!preg_match($pattern, $segment, $matches)) {
       return null;
     }
-    
+
     return [
       'r' => strtolower($matches[1]) === 'l' ? 'low' : 'high',
       'f' => strtolower($matches[3]) === 'l' ? 'low' : 'high',
@@ -367,62 +500,44 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
     ];
   }
 
-  /**
-   * Prepare RFM segment data for quick search links
+/**
+   * Convert RFM code (e.g., "RlFlMl") to numeric ID (0-7)
+   * Using binary encoding: R×4 + F×2 + M×1
    *
-   * @return array Array of segment data with ID, name, and CSS class
+   * @param string $rfmCode RFM code in format "RlFlMl"
+   * @return int Numeric ID (0-7)
    */
-  private function prepareRfmSegments() {
-    return [
-      [
-        'id' => 'RlFlMl',
-        'name' => ts('RFM Hibernating Small'),
-        'rfm_code' => ts('R %1 F %2 M %3', [1 => 'low', 2 => 'low', 3 => 'low']),
-        'css_class' => 'rfm-segment-hibernating-small'
-      ],
-      [
-        'id' => 'RlFlMh',
-        'name' => ts('RFM Hibernating Big'),
-        'rfm_code' => ts('R %1 F %2 M %3', [1 => 'low', 2 => 'low', 3 => 'high']),
-        'css_class' => 'rfm-segment-hibernating-big'
-      ],
-      [
-        'id' => 'RlFhMl',
-        'name' => ts('RFM At Risk Small'),
-        'rfm_code' => ts('R %1 F %2 M %3', [1 => 'low', 2 => 'high', 3 => 'low']),
-        'css_class' => 'rfm-segment-at-risk-small'
-      ],
-      [
-        'id' => 'RlFhMh',
-        'name' => ts('RFM At Risk Big'),
-        'rfm_code' => ts('R %1 F %2 M %3', [1 => 'low', 2 => 'high', 3 => 'high']),
-        'css_class' => 'rfm-segment-at-risk-big'
-      ],
-      [
-        'id' => 'RhFlMl',
-        'name' => ts('RFM New Small'),
-        'rfm_code' => ts('R %1 F %2 M %3', [1 => 'high', 2 => 'low', 3 => 'low']),
-        'css_class' => 'rfm-segment-new-small'
-      ],
-      [
-        'id' => 'RhFlMh',
-        'name' => ts('RFM New Big'),
-        'rfm_code' => ts('R %1 F %2 M %3', [1 => 'high', 2 => 'low', 3 => 'high']),
-        'css_class' => 'rfm-segment-new-big'
-      ],
-      [
-        'id' => 'RhFhMl',
-        'name' => ts('RFM Loyal Small'),
-        'rfm_code' => ts('R %1 F %2 M %3', [1 => 'high', 2 => 'high', 3 => 'low']),
-        'css_class' => 'rfm-segment-loyal-small'
-      ],
-      [
-        'id' => 'RhFhMh',
-        'name' => ts('RFM Champions'),
-        'rfm_code' => ts('R %1 F %2 M %3', [1 => 'high', 2 => 'high', 3 => 'high']),
-        'css_class' => 'rfm-segment-champions'
-      ]
-    ];
+  public static function rfmCodeToNumericId($rfmCode) {
+    if (strlen($rfmCode) !== 6) {
+      return 0; // Default fallback
+    }
+
+    // Extract R, F, M values (l=0, h=1)
+    $r = (substr($rfmCode, 1, 1) === 'h') ? 1 : 0;  // Position 1: R value
+    $f = (substr($rfmCode, 3, 1) === 'h') ? 1 : 0;  // Position 3: F value
+    $m = (substr($rfmCode, 5, 1) === 'h') ? 1 : 0;  // Position 5: M value
+
+    // Binary to decimal: R×4 + F×2 + M×1
+    return ($r * 4) + ($f * 2) + ($m * 1);
+  }
+
+  /**
+   * Convert numeric ID (0-7) to RFM code (e.g., "RlFlMl")
+   *
+   * @param int $numericId Numeric ID (0-7)
+   * @return string RFM code in format "RlFlMl"
+   */
+  public static function numericIdToRfmCode($numericId) {
+    if ($numericId < 0 || $numericId > 7) {
+      return 'RlFlMl'; // Default fallback
+    }
+
+    // Convert to binary and extract R, F, M
+    $r = ($numericId & 4) ? 'h' : 'l';  // Bit 2 (4)
+    $f = ($numericId & 2) ? 'h' : 'l';  // Bit 1 (2)
+    $m = ($numericId & 1) ? 'h' : 'l';  // Bit 0 (1)
+
+    return "R{$r}F{$f}M{$m}";
   }
 
   function fillTable(){
@@ -456,14 +571,14 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
       $rThreshold = CRM_Utils_Array::value('rfm_r_value', $currentDefaults);
       $fThreshold = CRM_Utils_Array::value('rfm_f_value', $currentDefaults);
       $mThreshold = CRM_Utils_Array::value('rfm_m_value', $currentDefaults);
-      
+
       // Use parsedSegment to make thresholds positive or negative
       if ($parsedSegment['r'] === 'low') $rThreshold = -abs($rThreshold);
       else $rThreshold = abs($rThreshold);
-      
+
       if ($parsedSegment['f'] === 'low') $fThreshold = -abs($fThreshold);
       else $fThreshold = abs($fThreshold);
-      
+
       if ($parsedSegment['m'] === 'low') $mThreshold = -abs($mThreshold);
       else $mThreshold = abs($mThreshold);
     }
