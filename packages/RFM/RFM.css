@@ -77,7 +77,6 @@
   width: 100px;
   height: 100px;
   transform-style: preserve-3d;
-  cursor: pointer;
   transition: all 0.3s ease;
 }
 .cube-face {
@@ -115,42 +114,42 @@
 
 /* Cube colors by segment */
 .cube-1 .cube-face { background: var(--segment-3-color); opacity: var(--default-opacity); }
-.cube-1:hover .cube-face, .cube-1.is-active .cube-face {
+.cube-1.is-active .cube-face {
   background: var(--segment-3-hover); opacity: var(--hover-opacity);
   box-shadow: var(--hover-glow-size) var(--segment-3-glow);
 }
 .cube-2 .cube-face { background: var(--segment-7-color); opacity: var(--default-opacity); }
-.cube-2:hover .cube-face, .cube-2.is-active .cube-face {
+.cube-2.is-active .cube-face {
   background: var(--segment-7-hover); opacity: var(--hover-opacity);
   box-shadow: var(--hover-glow-size) var(--segment-7-glow);
 }
 .cube-3 .cube-face { background: var(--segment-1-color); opacity: var(--default-opacity); }
-.cube-3:hover .cube-face, .cube-3.is-active .cube-face {
+.cube-3.is-active .cube-face {
   background: var(--segment-1-hover); opacity: var(--hover-opacity);
   box-shadow: var(--hover-glow-size) var(--segment-1-glow);
 }
 .cube-4 .cube-face { background: var(--segment-5-color); opacity: var(--default-opacity); }
-.cube-4:hover .cube-face, .cube-4.is-active .cube-face {
+.cube-4.is-active .cube-face {
   background: var(--segment-5-hover); opacity: var(--hover-opacity);
   box-shadow: var(--hover-glow-size) var(--segment-5-glow);
 }
 .cube-5 .cube-face { background: var(--segment-2-color); opacity: var(--default-opacity); }
-.cube-5:hover .cube-face, .cube-5.is-active .cube-face {
+.cube-5.is-active .cube-face {
   background: var(--segment-2-hover); opacity: var(--hover-opacity);
   box-shadow: var(--hover-glow-size) var(--segment-2-glow);
 }
 .cube-6 .cube-face { background: var(--segment-6-color); opacity: var(--default-opacity); }
-.cube-6:hover .cube-face, .cube-6.is-active .cube-face {
+.cube-6.is-active .cube-face {
   background: var(--segment-6-hover); opacity: var(--hover-opacity);
   box-shadow: var(--hover-glow-size) var(--segment-6-glow);
 }
 .cube-7 .cube-face { background: var(--segment-0-color); opacity: var(--default-opacity); }
-.cube-7:hover .cube-face, .cube-7.is-active .cube-face {
+.cube-7.is-active .cube-face {
   background: var(--segment-0-hover); opacity: var(--hover-opacity);
   box-shadow: var(--hover-glow-size) var(--segment-0-glow);
 }
 .cube-8 .cube-face { background: var(--segment-4-color); opacity: var(--default-opacity); }
-.cube-8:hover .cube-face, .cube-8.is-active .cube-face {
+.cube-8.is-active .cube-face {
   background: var(--segment-4-hover); opacity: var(--hover-opacity);
   box-shadow: var(--hover-glow-size) var(--segment-4-glow);
 }
@@ -318,7 +317,6 @@
   padding: 6px;
   border-radius: 6px;
   transition: background 0.2s ease;
-  cursor: pointer;
   position: relative;
   color: #212121;
 }

@@ -152,11 +152,6 @@
     init: function() {
       var self = this;
 
-      // Cube events
-      this.cubes.on('mouseenter', function(e) { self.handleCubeHover(e); });
-      this.cubes.on('mouseleave', function(e) { self.handleCubeLeave(e); });
-      this.cubes.on('click', function(e) { self.handleCubeClick(e); });
-
       // Segment events
       this.segmentItems.on('mouseenter', function(e) { self.handleSegmentHover(e); });
       this.segmentItems.on('mouseleave', function(e) { self.handleSegmentLeave(e); });
@@ -164,45 +159,10 @@
       // Hide description when clicking outside
       $(document).on('click', function(e) {
         if (!$(e.target).closest('.segment-description').length &&
-            !$(e.target).closest('.small-cube').length &&
             !$(e.target).closest('.segment-item').length) {
           self.hideDescription();
         }
       });
-    },
-
-    handleCubeHover: function(event) {
-      var cubeElement = $(event.currentTarget);
-      var cubeClass = this.getCubeClass(cubeElement);
-      var numericId = this.cubeSegmentMap[cubeClass];
-
-      this.setState({
-        activeCube: cubeClass,
-        activeNumericId: numericId,
-        hasActiveElement: true
-      });
-
-      this.showDescription(numericId);
-    },
-
-    handleCubeLeave: function(event) {
-      var self = this;
-      var relatedTarget = event.relatedTarget;
-      if (relatedTarget && $(relatedTarget).closest('.segment-description').length) {
-        return;
-      }
-
-      this.setState({
-        activeCube: null,
-        activeNumericId: null,
-        hasActiveElement: false
-      });
-
-      setTimeout(function() {
-        if (!self.currentState.hasActiveElement) {
-          self.hideDescription();
-        }
-      }, 100);
     },
 
     handleSegmentHover: function(event) {
@@ -237,19 +197,6 @@
           self.hideDescription();
         }
       }, 100);
-    },
-
-    handleCubeClick: function(event) {
-      event.stopPropagation();
-      var cubeElement = $(event.currentTarget);
-      var cubeClass = this.getCubeClass(cubeElement);
-      var numericId = this.cubeSegmentMap[cubeClass];
-
-      // Find the corresponding segment link and trigger click
-      var segmentLink = $('.segment-item[data-segment="' + numericId + '"] .segment-link');
-      if (segmentLink.length) {
-        window.location.href = segmentLink.attr('href');
-      }
     },
 
     showDescription: function(numericId) {
@@ -303,7 +250,7 @@
         this.cubeContainer.removeClass('has-active');
       }
 
-      // Update cube states
+      // Update cube states (visual feedback when hovering segment panel)
       var self = this;
       this.cubes.each(function() {
         var cube = $(this);
