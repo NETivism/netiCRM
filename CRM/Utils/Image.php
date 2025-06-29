@@ -505,26 +505,18 @@ class CRM_Utils_Image {
         return $result;
       }
 
-      // Get CiviCRM public directory (based on existing upload structure)
-      $config = CRM_Core_Config::singleton();
-      $civiPublicDir = $config->customFileUploadDir;
-
-      // Fallback: try to construct path from CMS public dir
-      if (empty($civiPublicDir)) {
-        $cmsPublicDir = CRM_Utils_System::cmsDir('public');
-        if ($cmsPublicDir) {
-          $civiPublicDir = $cmsPublicDir . DIRECTORY_SEPARATOR . 'civicrm';
-        }
-      }
-
-      if (!$civiPublicDir) {
+      // Get CMS public directory - no fallback, strict error handling
+      $cmsPublicDir = CRM_Utils_System::cmsDir('public');
+      if (!$cmsPublicDir || !is_dir($cmsPublicDir)) {
         $result['success'] = false;
-        $result['errors'][] = 'CiviCRM public directory not found';
+        $result['errors'][] = 'CMS public directory not found or not accessible';
         return $result;
       }
 
-      // Create user-specific directory: u[uid]
-      $userDir = $civiPublicDir . DIRECTORY_SEPARATOR . 'u' . $userId;
+      // Create user-specific directory: u[uid] directly in CMS public dir
+      $userDir = $cmsPublicDir . DIRECTORY_SEPARATOR . 'u' . $userId;
+
+      // Check if user directory exists, create if not
       if (!is_dir($userDir)) {
         if (!mkdir($userDir, 0755, true)) {
           $result['success'] = false;
@@ -717,7 +709,7 @@ class CRM_Utils_Image {
    * @param string $tempFileName Temporary file name from title attribute
    * @param string $originalName Original file name from title attribute
    * @param string $tempDir Temporary directory path
-   * @param string $userDir User's permanent directory path
+   * @param string $userDir User's permanent directory path (u[uid])
    * @param int $userId User ID for logging
    * @return array Result with success status and file details
    */
@@ -763,7 +755,8 @@ class CRM_Utils_Image {
         CRM_Core_Error::debug('File moved successfully', [
           'source' => $sourceFile,
           'destination' => $finalPath,
-          'user_id' => $userId
+          'user_id' => $userId,
+          'user_dir' => basename($userDir) // Just log u[uid] part
         ]);
 
       } else {
@@ -838,7 +831,7 @@ class CRM_Utils_Image {
   }
 
   /**
-   * Generate public URL from file path using CMS public directory API
+   * Generate public URL from file path using dynamic path calculation
    *
    * @param string $filePath Full file path
    * @return array Result with success status and URL
@@ -864,43 +857,50 @@ class CRM_Utils_Image {
         return $result;
       }
 
-      // Calculate relative path from public directory
-      $relativePath = substr($normalizedFilePath, strlen($normalizedPublicDir));
-      $relativePath = ltrim($relativePath, '/');
+      // Calculate relative path from public directory to file
+      $fileRelativePath = substr($normalizedFilePath, strlen($normalizedPublicDir));
+      $fileRelativePath = ltrim($fileRelativePath, '/');
 
-      // Get base URL without language prefix
-      $config = CRM_Core_Config::singleton();
-      $baseUrl = $config->userFrameworkBaseURL;
+      // Calculate public directory relative to document root
+      $documentRoot = rtrim(str_replace('\\', '/', $_SERVER['DOCUMENT_ROOT']), '/');
 
-      // Remove language prefix using CRM_Utils_System_Drupal method
-      $baseUrlWithoutLang = CRM_Utils_System_Drupal::languageNegotiationURL(
-        $baseUrl,
-        false,  // addLanguagePart = false
-        true    // removeLanguagePart = true
-      );
+      // Check if public directory is within document root
+      if (strpos($normalizedPublicDir, $documentRoot) !== 0) {
+        $result['error'] = 'Public directory is not within document root';
+        return $result;
+      }
 
-      // For Drupal, public files are accessed via sites/default/files/
-      $publicUrlPath = 'sites/default/files/' . $relativePath;
-      $publicUrl = rtrim($baseUrlWithoutLang, '/') . '/' . $publicUrlPath;
+      $publicUrlPath = substr($normalizedPublicDir, strlen($documentRoot));
+      $publicUrlPath = ltrim($publicUrlPath, '/');
 
-      // Verify URL format
-      if (filter_var($publicUrl, FILTER_VALIDATE_URL)) {
+      // Generate final relative URL
+      $relativeUrl = '/' . $publicUrlPath . '/' . $fileRelativePath;
+      $relativeUrl = preg_replace('/\/+/', '/', $relativeUrl); // Clean up multiple slashes
+
+      // Verify URL format is reasonable
+      if (strlen($relativeUrl) > 0 && $relativeUrl !== '/') {
         $result['success'] = true;
-        $result['url'] = $publicUrl;
+        $result['url'] = $relativeUrl;
 
         // Debug log the URL generation process
         CRM_Core_Error::debug('URL generation details', [
-          'original_base_url' => $baseUrl,
-          'base_url_without_lang' => $baseUrlWithoutLang,
-          'relative_path' => $relativePath,
-          'final_url' => $publicUrl
+          'file_path' => $filePath,
+          'public_dir' => $normalizedPublicDir,
+          'document_root' => $documentRoot,
+          'file_relative_path' => $fileRelativePath,
+          'public_url_path' => $publicUrlPath,
+          'final_url' => $relativeUrl
         ]);
       } else {
-        $result['error'] = 'Generated URL is not valid: ' . $publicUrl;
+        $result['error'] = 'Generated URL is invalid: ' . $relativeUrl;
       }
 
     } catch (Exception $e) {
       $result['error'] = 'Exception in generatePublicUrl: ' . $e->getMessage();
+      CRM_Core_Error::debug('Exception in generatePublicUrl', [
+        'file_path' => $filePath,
+        'error' => $e->getMessage()
+      ]);
     }
 
     return $result;
