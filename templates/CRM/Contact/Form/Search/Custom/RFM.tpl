@@ -65,7 +65,68 @@
             {* RFM 3D Visualization Container START *}
             <div class="rfm-3d-container">
               <h2 class="rfm-3d-title">{ts}RFM 3D Analysis Model{/ts}</h2>
+              <div class="rfm-3d-sidebar">
+                {* Segment Info Panel *}
+                <div class="rfm-sidebar-usage">
+                  <div class="usage-instructions-header">
+                    <div class="usage-instructions-icon">?</div>
+                    <h4 class="usage-instructions-title">{ts}How to Use{/ts}</h4>
+                  </div>
+                  <div class="usage-instructions-content">
+                    {ts}Click on any RFM group below to view its search results.{/ts}
+                  </div>
+                </div>
+                <div class="segment-info">
+                  <div class="segment-title">{ts}RFM Customer Segments{/ts}</div>
 
+                  {* Generate segment items using Smarty loop - Data already sorted by numeric ID DESC (7->0) in buildForm() *}
+                  {foreach from=$rfmSegments item=segment}
+                    <div class="segment-item" data-segment="{$segment.numeric_id}">
+                      <a href="{crmURL p='civicrm/contact/search/custom' q="reset=`$urlParams.reset`&csid=`$urlParams.csid`&force=`$urlParams.force`&date=`$urlParams.date`&recurring=`$urlParams.recurring`&rv=`$urlParams.rv`&fv=`$urlParams.fv`&mv=`$urlParams.mv`&segment=`$segment.id`"}" class="segment-link">
+                        <div class="segment-color"></div>
+                        <div class="segment-text">
+                          <span class="segment-name">{$segment.name}</span>
+                          <div class="rfm-indicators">
+                            {assign var="rfm_code" value=$segment.id}
+                            {if $rfm_code|substr:1:1 eq 'h'}
+                              <span class="rfm-tag high">
+                                <span class="triangle up"></span>R
+                              </span>
+                            {else}
+                              <span class="rfm-tag low">
+                                <span class="triangle down"></span>R
+                              </span>
+                            {/if}
+                            {if $rfm_code|substr:3:1 eq 'h'}
+                              <span class="rfm-tag high">
+                                <span class="triangle up"></span>F
+                              </span>
+                            {else}
+                              <span class="rfm-tag low">
+                                <span class="triangle down"></span>F
+                              </span>
+                            {/if}
+                            {if $rfm_code|substr:5:1 eq 'h'}
+                              <span class="rfm-tag high">
+                                <span class="triangle up"></span>M
+                              </span>
+                            {else}
+                              <span class="rfm-tag low">
+                                <span class="triangle down"></span>M
+                              </span>
+                            {/if}
+                          </div>
+                          <div class="segment-counter">
+                            {ts 1=$record 2=$percent}
+                              Showing <output class="record">%1</output> records, which is <output class="percent">%2</output> of the search results
+                            {/ts}
+                          </div>
+                        </div>
+                      </a>
+                    </div>
+                  {/foreach}
+                </div>
+              </div>
               {* 3D Cube Visualization *}
               <div class="rfm-3d-wrapper">
                 <div class="cube-container">
@@ -155,8 +216,8 @@
                   {* R-axis (Recency - Last donation time) *}
                   <div class="axis r-axis">
                     <div class="axis-line"></div>
-                    <div class="axis-label label-left"><span class="rfm-label">R</span>{ts}Last Donation: Far{/ts}</div>
-                    <div class="axis-label label-right"><span class="rfm-label">R</span>{ts}Last Donation: Recent{/ts}</div>
+                    <div class="axis-label label-left"><span class="rfm-label">R</span>{ts}Recency: Far{/ts}</div>
+                    <div class="axis-label label-right"><span class="rfm-label">R</span>{ts}Recency: Recent{/ts}</div>
                   </div>
 
                   {* F-axis (Frequency - Donation frequency) *}
@@ -169,58 +230,23 @@
                   {* M-axis (Monetary - Donation amount) *}
                   <div class="axis m-axis">
                     <div class="axis-line"></div>
-                    <div class="axis-label label-back"><span class="rfm-label">M</span>{ts}Amount: Low{/ts}</div>
-                    <div class="axis-label label-front"><span class="rfm-label">M</span>{ts}Amount: High{/ts}</div>
+                    <div class="axis-label label-back"><span class="rfm-label">M</span>{ts}Monetary: Low{/ts}</div>
+                    <div class="axis-label label-front"><span class="rfm-label">M</span>{ts}Monetary: High{/ts}</div>
                   </div>
                 </div>
-
-                {* Segment Info Panel *}
-                <div class="segment-info">
-                  <div class="segment-title">{ts}RFM Customer Segments{/ts}</div>
-
-                  {* Generate segment items using Smarty loop - Data already sorted by numeric ID DESC (7->0) in buildForm() *}
-                  {foreach from=$rfmSegments item=segment}
-                    <div class="segment-item" data-segment="{$segment.numeric_id}">
-                      <a href="{crmURL p='civicrm/contact/search/custom' q="reset=`$urlParams.reset`&csid=`$urlParams.csid`&force=`$urlParams.force`&date=`$urlParams.date`&recurring=`$urlParams.recurring`&rv=`$urlParams.rv`&fv=`$urlParams.fv`&mv=`$urlParams.mv`&segment=`$segment.id`"}" class="segment-link">
-                        <div class="segment-color"></div>
-                        <div class="segment-text">
-                          <span class="segment-name">{$segment.name}</span>
-                          <div class="rfm-indicators">
-                            {assign var="rfm_code" value=$segment.id}
-                            {if $rfm_code|substr:1:1 eq 'h'}
-                              <span class="rfm-tag high">
-                                <span class="triangle up"></span>R
-                              </span>
-                            {else}
-                              <span class="rfm-tag low">
-                                <span class="triangle down"></span>R
-                              </span>
-                            {/if}
-                            {if $rfm_code|substr:3:1 eq 'h'}
-                              <span class="rfm-tag high">
-                                <span class="triangle up"></span>F
-                              </span>
-                            {else}
-                              <span class="rfm-tag low">
-                                <span class="triangle down"></span>F
-                              </span>
-                            {/if}
-                            {if $rfm_code|substr:5:1 eq 'h'}
-                              <span class="rfm-tag high">
-                                <span class="triangle up"></span>M
-                              </span>
-                            {else}
-                              <span class="rfm-tag low">
-                                <span class="triangle down"></span>M
-                              </span>
-                            {/if}
-                          </div>
-                          <div class="segment-counter" style="display: none;">{ts}Data loading...{/ts}</div>
-                        </div>
-                      </a>
+              </div>
+              {* Segment Description Panel *}
+              <div class="segment-description" id="segmentDescription">
+                <div class="segment-description-header">
+                  <div class="segment-description-color"></div>
+                  <div class="segment-description-title-area">
+                    <h3 class="segment-description-title" id="descriptionTitle"></h3>
+                    <div class="segment-description-rfm" id="descriptionRfm">
+                      {* RFM indicators will be inserted here *}
                     </div>
-                  {/foreach}
+                  </div>
                 </div>
+                <div class="segment-description-content" id="descriptionContent"></div>
               </div>
             </div>
             {* RFM 3D Visualization Container END *}
@@ -229,20 +255,6 @@
     </div><!-- /.crm-accordion-body -->
 </div><!-- /.crm-accordion-wrapper -->
 </div><!-- /.crm-form-block -->
-
-{* Segment Description Panel *}
-<div class="segment-description" id="segmentDescription">
-  <div class="segment-description-header">
-    <div class="segment-description-color"></div>
-    <div class="segment-description-title-area">
-      <h3 class="segment-description-title" id="descriptionTitle"></h3>
-      <div class="segment-description-rfm" id="descriptionRfm">
-        {* RFM indicators will be inserted here *}
-      </div>
-    </div>
-  </div>
-  <div class="segment-description-content" id="descriptionContent"></div>
-</div>
 
 {if $rowsEmpty || $rows}
 <div class="crm-content-block">
