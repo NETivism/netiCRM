@@ -408,7 +408,9 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
       $this->finish();
     }
     else {
-      $this->_batch->modified_date = date('YmdHis');
+      if (!empty($this->_batch->data['processed'])) {
+        $this->_batch->modified_date = date('YmdHis');
+      }
       $this->saveBatch();
     }
 
