@@ -32,30 +32,30 @@
             </table>
             <div class="rfm-thresholds">
               <div class="rfm-thresholds-header">
-                <h2 class="rfm-thresholds-title">🔍 {ts}RFM Thresholds{/ts}</h2>
+                <h2 class="rfm-thresholds-title">{ts}RFM Thresholds{/ts}</h2>
                 <a class="rfm-thresholds-edit rfm-popup-open-link" href="#rfm-popup">{ts}Edit Thresholds{/ts}</a>
               </div>
               <div class="rfm-thresholds-content">
                 <dl class="rfm-thresholds-list">
                   <div class="rfm-thresholds-item">
-                    <dt class="rfm-thresholds-term">{ts}Recency:{/ts}</dt>
+                    <dt class="rfm-thresholds-term">{ts}Recency{/ts}</dt>
                     <dd class="rfm-thresholds-definition">
                       <output class="rfm-thresholds-value" data-threshold-type="recency">{$rfmThresholds.r}</output>
                       <span class="rfm-thresholds-unit">{ts}days{/ts}</span>
                     </dd>
                   </div>
                   <div class="rfm-thresholds-item">
-                    <dt class="rfm-thresholds-term">{ts}Frequency:{/ts}</dt>
+                    <dt class="rfm-thresholds-term">{ts}Frequency{/ts}</dt>
                     <dd class="rfm-thresholds-definition">
                       <output class="rfm-thresholds-value" data-threshold-type="frequency">{$rfmThresholds.f}</output>
                       <span class="rfm-thresholds-unit">{ts}times{/ts}</span>
                     </dd>
                   </div>
                   <div class="rfm-thresholds-item">
-                    <dt class="rfm-thresholds-term">{ts}Monetary:{/ts}</dt>
+                    <dt class="rfm-thresholds-term">{ts}Monetary{/ts}</dt>
                     <dd class="rfm-thresholds-definition">
                       <output class="rfm-thresholds-value" data-threshold-type="monetary">{$rfmThresholds.m|crmMoney}</output>
-                      <span class="rfm-thresholds-unit"></span>
+                      <span class="rfm-thresholds-unit">{ts}above{/ts}</span>
                     </dd>
                   </div>
                 </dl>
