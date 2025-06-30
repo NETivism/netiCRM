@@ -432,7 +432,7 @@
 /* Segment Description Panel */
 .segment-description {
   position: absolute;
-  bottom: 110px;
+  top: 670px;
   right: 20px;
   max-width: calc(100% - 320px - 80px);
   width: 90%;
@@ -546,7 +546,7 @@
   grid-area: wrapper;
 }
 .rfm-3d-container:has(.segment-counter) .rfm-3d-wrapper {
-  margin-top: -200px;
+  margin-top: -300px;
 }
 .rfm-sidebar-usage {
   max-width: 320px;
@@ -700,7 +700,7 @@
 }
 
 .crm-container .rfm-thresholds-item .rfm-thresholds-term {
-  font-size: 0.875rem;
+  font-size: 1.25rem;
   font-weight: 600;
   color: #718096;
   text-transform: uppercase;
@@ -728,7 +728,8 @@
   display: block;
   line-height: 1;
 }
-.crm-container .rfm-thresholds-unit {
+.crm-container .rfm-thresholds-unit,
+.crm-container .rfm-thresholds-desc {
   font-size: 1rem;
   color: #718096;
   font-weight: 500;

@@ -41,21 +41,21 @@
                     <dt class="rfm-thresholds-term">{ts}Recency{/ts}</dt>
                     <dd class="rfm-thresholds-definition">
                       <output class="rfm-thresholds-value" data-threshold-type="recency">{$rfmThresholds.r}</output>
-                      <span class="rfm-thresholds-unit">{ts}days{/ts}</span>
+                      <span class="rfm-thresholds-desc">{ts}days since last donation{/ts}</span>
                     </dd>
                   </div>
                   <div class="rfm-thresholds-item">
                     <dt class="rfm-thresholds-term">{ts}Frequency{/ts}</dt>
                     <dd class="rfm-thresholds-definition">
                       <output class="rfm-thresholds-value" data-threshold-type="frequency">{$rfmThresholds.f}</output>
-                      <span class="rfm-thresholds-unit">{ts}times{/ts}</span>
+                      <span class="rfm-thresholds-desc">{ts}number of donations{/ts}</span>
                     </dd>
                   </div>
                   <div class="rfm-thresholds-item">
                     <dt class="rfm-thresholds-term">{ts}Monetary{/ts}</dt>
                     <dd class="rfm-thresholds-definition">
                       <output class="rfm-thresholds-value" data-threshold-type="monetary">{$rfmThresholds.m|crmMoney}</output>
-                      <span class="rfm-thresholds-unit">{ts}above{/ts}</span>
+                      <span class="rfm-thresholds-desc">{ts}total donation amount{/ts}</span>
                     </dd>
                   </div>
                 </dl>
