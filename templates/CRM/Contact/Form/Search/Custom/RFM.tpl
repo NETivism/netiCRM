@@ -256,7 +256,7 @@
 </div><!-- /.crm-accordion-wrapper -->
 </div><!-- /.crm-form-block -->
 
-{if $rowsEmpty || $rows}
+{if $showResults && ($rowsEmpty || $rows)}
 <div class="crm-content-block">
 {if $rowsEmpty}
     {include file="CRM/Contact/Form/Search/Custom/EmptyResults.tpl"}

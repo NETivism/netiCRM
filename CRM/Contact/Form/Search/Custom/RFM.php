@@ -25,6 +25,7 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
   protected $_defaultThresholds = [];
   protected $_template;
   protected $_segmentStats = [];
+  protected $_showResults = TRUE;
 
   function __construct(&$formValues){
     parent::__construct($formValues);
@@ -68,6 +69,7 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
     $this->_form->addDateRange('receive_date', ts('Receive Date').' - '.ts('From'), NULL, FALSE);
     $this->_form->addRadio('recurring', ts('Recurring Contribution'), $this->_recurringStatus);
     $this->_form->assign('elements', ['receive_date', 'recurring']);
+    $this->_form->assign('showResults', $this->_showResults);
 
     $this->_form->addNumber('rfm_r_value', ts('Recency (days since last donation)'), [
       'size' => 5,
@@ -265,9 +267,14 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
     $dateFilter = CRM_Utils_Date::strtodate($dateRange);
 
     $segment = CRM_Utils_Request::retrieve('segment', 'String', CRM_Core_DAO::$_nullObject, FALSE, '');
-    $parsedSegment = self::parseRfmSegment($segment);
-    if ($parsedSegment) {
-      $defaults['segment'] = $segment;
+     if (empty($segment)) {
+      $this->_showResults = FALSE;
+    } else {
+      $this->_showResults = TRUE;
+      $parsedSegment = self::parseRfmSegment($segment);
+      if ($parsedSegment) {
+        $defaults['segment'] = $segment;
+      }
     }
 
     $recurring = CRM_Utils_Request::retrieve('recurring', 'Integer', CRM_Core_DAO::$_nullObject, FALSE, self::RECURRING_NONRECURRING);
@@ -346,6 +353,9 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
   }
 
   function count(){
+    if (!$this->_showResults) {
+        return 0;
+    }
     if(!$this->_filled){
       $this->fillTable();
       $this->_filled = TRUE;
@@ -359,6 +369,9 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
    * Construct the search query
    */
   function all($offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $onlyIDs = FALSE){
+    if (!$this->_showResults) {
+      return "SELECT contact_a.id as contact_id FROM civicrm_contact contact_a WHERE 1 = 0";
+    }
     $fields = !$onlyIDs ? "*" : "contact_a.id as contact_id" ;
     if(!$this->_filled){
       // prepare rfm talbe
