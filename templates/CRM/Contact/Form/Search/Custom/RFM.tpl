@@ -117,7 +117,7 @@
                             {/if}
                           </div>
                           <div class="segment-counter">
-                            {ts 1=$record 2=$percent}
+                            {ts 1=$segment.count 2=$segment.percentage}
                               Showing <output class="record">%1</output> records, which is <output class="percent">%2</output> of the search results
                             {/ts}
                           </div>

@@ -24,6 +24,7 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
   protected $_contributionPage = NULL;
   protected $_defaultThresholds = [];
   protected $_template;
+  protected $_segmentStats = [];
 
   function __construct(&$formValues){
     parent::__construct($formValues);
@@ -90,6 +91,11 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
       'class' => 'rfm-input'
     ]);
     $this->_form->add('hidden', 'segment', '');
+
+    if (!$this->_filled) {
+      $this->fillTable();
+      $this->_filled = TRUE;
+    }
 
     // Get RFM segments in original order (0→7)
     $rfmSegments = $this->prepareRfmSegments();
@@ -231,6 +237,14 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
     foreach ($segments as &$segment) {
       $segment['numeric_id'] = self::rfmCodeToNumericId($segment['id']);
       $segment['rfm_parsed'] = $this->parseRfmStatesFromId($segment['id']);
+      $numericId = $segment['numeric_id'];
+      if (isset($this->_segmentStats[$numericId])) {
+        $segment['count'] = $this->_segmentStats[$numericId]['count'];
+        $segment['percentage'] = $this->_segmentStats[$numericId]['percentage'];
+      } else {
+        $segment['count'] = 0;
+        $segment['percentage'] = 0;
+      }
     }
 
     return $segments;
@@ -589,6 +603,7 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
     $rfm = new CRM_Contact_BAO_RFM($suffix, $dateString, $rThreshold, $fThreshold, $mThreshold, $thresholdType);
     $result = $rfm->calcRFM();
     $this->_tableName = $result['table'];
+    $this->calculateSegmentStatsFromTable($currentDefaults);
   }
 
   function prepareUrlParams($formValues) {
@@ -619,5 +634,62 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
       'fv' => $fv,
       'mv' => $mv
     ];
+  }
+
+  /**
+   * Calculate RFM segment statistics from the existing RFM data table
+   */
+  function calculateSegmentStatsFromTable($formValues) {
+    $rThreshold = CRM_Utils_Array::value('rfm_r_value', $formValues, $this->_defaultThresholds['r'] ?? 0);
+    $fThreshold = CRM_Utils_Array::value('rfm_f_value', $formValues, $this->_defaultThresholds['f'] ?? 0);
+    $mThreshold = CRM_Utils_Array::value('rfm_m_value', $formValues, $this->_defaultThresholds['m'] ?? 0);
+    $statsSql = "
+      SELECT
+        COUNT(DISTINCT contact_a.id) as total_count,
+        SUM(CASE
+          WHEN rfm.R > {$rThreshold} AND rfm.F <= {$fThreshold} AND rfm.M <= {$mThreshold}
+          THEN 1 ELSE 0 END) as segment_0_count,  -- RlFlMl
+        SUM(CASE
+          WHEN rfm.R > {$rThreshold} AND rfm.F <= {$fThreshold} AND rfm.M > {$mThreshold}
+          THEN 1 ELSE 0 END) as segment_1_count,  -- RlFlMh
+        SUM(CASE
+          WHEN rfm.R > {$rThreshold} AND rfm.F > {$fThreshold} AND rfm.M <= {$mThreshold}
+          THEN 1 ELSE 0 END) as segment_2_count,  -- RlFhMl
+        SUM(CASE
+          WHEN rfm.R > {$rThreshold} AND rfm.F > {$fThreshold} AND rfm.M > {$mThreshold}
+          THEN 1 ELSE 0 END) as segment_3_count,  -- RlFhMh
+        SUM(CASE
+          WHEN rfm.R <= {$rThreshold} AND rfm.F <= {$fThreshold} AND rfm.M <= {$mThreshold}
+          THEN 1 ELSE 0 END) as segment_4_count,  -- RhFlMl
+        SUM(CASE
+          WHEN rfm.R <= {$rThreshold} AND rfm.F <= {$fThreshold} AND rfm.M > {$mThreshold}
+          THEN 1 ELSE 0 END) as segment_5_count,  -- RhFlMh
+        SUM(CASE
+          WHEN rfm.R <= {$rThreshold} AND rfm.F > {$fThreshold} AND rfm.M <= {$mThreshold}
+          THEN 1 ELSE 0 END) as segment_6_count,  -- RhFhMl
+        SUM(CASE
+          WHEN rfm.R <= {$rThreshold} AND rfm.F > {$fThreshold} AND rfm.M > {$mThreshold}
+          THEN 1 ELSE 0 END) as segment_7_count   -- RhFhMh
+      FROM civicrm_contact contact_a
+      INNER JOIN {$this->_tableName} rfm ON contact_a.id = rfm.contact_id
+      WHERE contact_a.is_deleted = 0
+    ";
+    $statsQuery = CRM_Core_DAO::executeQuery($statsSql);
+    $statsQuery->fetch();
+
+    $totalCount = $statsQuery->total_count;
+    $this->_segmentStats = [];
+    for ($i = 0; $i <= 7; $i++) {
+      $countField = "segment_{$i}_count";
+      $segmentCount = $statsQuery->$countField;
+      $percentage = $totalCount > 0 ? round(($segmentCount / $totalCount) * 100, 1) : 0;
+
+      $this->_segmentStats[$i] = [
+        'count' => $segmentCount,
+        'percentage' => $percentage,
+        'rfm_code' => self::numericIdToRfmCode($i)
+      ];
+    }
+    $this->_segmentStats['total'] = $totalCount;
   }
 }
