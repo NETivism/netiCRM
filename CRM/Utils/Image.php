@@ -619,7 +619,7 @@ class CRM_Utils_Image {
   }
 
   /**
-   * Process blob images in a single field content
+   * Process blob images in a single field content with immediate URL replacement
    *
    * @param string $fieldName Field name for logging
    * @param string $content HTML content to process
@@ -662,9 +662,11 @@ class CRM_Utils_Image {
             $urlResult = self::generatePublicUrl($movedFile['final_path']);
 
             if ($urlResult['success']) {
-              // TODO: Replace blob URL with permanent URL in img tag
-              // TODO: Update title attribute to remove temp file reference
               $publicUrl = $urlResult['url'];
+
+              // Immediate replacement: build new img tag and replace in content
+              $newImgTag = self::buildNewImgTag($fullImgTag, $publicUrl, $originalName);
+              $content = str_replace($fullImgTag, $newImgTag, $content);
 
               $result['moved_files'][] = [
                 'field' => $fieldName,
@@ -672,7 +674,8 @@ class CRM_Utils_Image {
                 'temp_name' => $tempFileName,
                 'final_path' => $movedFile['final_path'],
                 'final_name' => $movedFile['final_name'],
-                'public_url' => $publicUrl
+                'public_url' => $publicUrl,
+                'img_tag_replaced' => true
               ];
             } else {
               $result['warnings'][] = "Generated URL failed for field '{$fieldName}': " . $urlResult['error'];
@@ -683,7 +686,8 @@ class CRM_Utils_Image {
                 'temp_name' => $tempFileName,
                 'final_path' => $movedFile['final_path'],
                 'final_name' => $movedFile['final_name'],
-                'public_url' => null  // URL 產生失敗
+                'public_url' => null,
+                'img_tag_replaced' => false
               ];
             }
           } else {
@@ -691,16 +695,106 @@ class CRM_Utils_Image {
           }
         } catch (Exception $e) {
           $result['errors'][] = "Exception processing image in field '{$fieldName}': " . $e->getMessage();
-          CRM_Core_Error::debug('Exception in processBlobImagesInField', [
-            'field' => $fieldName,
-            'temp_file' => $tempFileName,
-            'error' => $e->getMessage()
-          ]);
         }
       }
     }
 
-    return $content; // TODO: Return modified content with updated URLs
+    return $content; // Return modified content with updated URLs
+  }
+
+  /**
+   * Build new img tag with updated src and title attributes
+   *
+   * @param string $originalImgTag Original img tag HTML
+   * @param string $newUrl New permanent URL
+   * @param string $originalName Original filename for title
+   * @return string New img tag HTML
+   */
+  private static function buildNewImgTag($originalImgTag, $newUrl, $originalName) {
+    try {
+      // Parse all attributes from original img tag
+      $attributes = self::parseImgAttributes($originalImgTag);
+
+      // Update necessary attributes
+      $attributes['src'] = $newUrl;
+      $attributes['title'] = htmlspecialchars($originalName, ENT_QUOTES, 'UTF-8');
+
+      // Remove any data-* attributes that might be blob-related
+      foreach ($attributes as $attrName => $attrValue) {
+        if (strpos($attrName, 'data-blob') === 0 || strpos($attrName, 'data-temp') === 0) {
+          unset($attributes[$attrName]);
+        }
+      }
+
+      // Rebuild img tag
+      return self::buildImgTag($attributes);
+
+    } catch (Exception $e) {
+      // Fallback: simple replacement if parsing fails
+      $newTag = preg_replace('/src="[^"]*"/', 'src="' . htmlspecialchars($newUrl, ENT_QUOTES) . '"', $originalImgTag);
+      $newTag = preg_replace('/title="[^"]*"/', 'title="' . htmlspecialchars($originalName, ENT_QUOTES) . '"', $newTag);
+      return $newTag;
+    }
+  }
+
+  /**
+   * Parse attributes from img tag HTML
+   *
+   * @param string $imgTag HTML img tag
+   * @return array Associative array of attribute name => value
+   */
+  private static function parseImgAttributes($imgTag) {
+    $attributes = [];
+
+    // Enhanced regex to capture all attributes properly
+    $pattern = '/(\w+(?:-\w+)*)=(["\'])([^"\']*)\2/i';
+
+    if (preg_match_all($pattern, $imgTag, $matches, PREG_SET_ORDER)) {
+      foreach ($matches as $match) {
+        $attrName = strtolower(trim($match[1]));
+        $attrValue = $match[3];
+        $attributes[$attrName] = $attrValue;
+      }
+    }
+
+    // Ensure required attributes exist
+    if (!isset($attributes['alt'])) {
+      $attributes['alt'] = 'Uploaded image';
+    }
+
+    return $attributes;
+  }
+
+  /**
+   * Build img tag HTML from attributes array
+   *
+   * @param array $attributes Associative array of attributes
+   * @return string Complete img tag HTML
+   */
+  private static function buildImgTag($attributes) {
+    $attrStrings = [];
+
+    // Define attribute order for consistency
+    $orderedAttrs = ['src', 'alt', 'title', 'width', 'height', 'class', 'style', 'id'];
+
+    // Add ordered attributes first
+    foreach ($orderedAttrs as $attrName) {
+      if (isset($attributes[$attrName]) && $attributes[$attrName] !== '') {
+        $attrValue = htmlspecialchars($attributes[$attrName], ENT_QUOTES, 'UTF-8');
+        $attrStrings[] = $attrName . '="' . $attrValue . '"';
+        unset($attributes[$attrName]);
+      }
+    }
+
+    // Add remaining attributes
+    foreach ($attributes as $attrName => $attrValue) {
+      if ($attrValue !== '') {
+        $attrValue = htmlspecialchars($attrValue, ENT_QUOTES, 'UTF-8');
+        $attrStrings[] = $attrName . '="' . $attrValue . '"';
+      }
+    }
+
+    return '<img ' . implode(' ', $attrStrings) . ' />';
   }
 
   /**

@@ -1292,11 +1292,39 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
     return [$id, $additionalID];
   }
 
+  /**
+   * Process blob images from CKeditor fields before data persistence
+   * Convert temporary blob URLs to permanent file storage and update form elements
+   *
+   * @return array Result of blob image processing
+   */
   private function processBlobImages() {
-    return CRM_Utils_Image::processBlobImagesInContent(
+    $result = CRM_Utils_Image::processBlobImagesInContent(
       $this->_submitValues,
       $this->_elements
     );
+
+    // Update form elements with modified content using setValue
+    if (!empty($result['processed_fields'])) {
+      foreach ($result['processed_fields'] as $fieldName) {
+        $updatedContent = $this->_submitValues[$fieldName];
+
+        try {
+          // Find the corresponding form element and update its value
+          $element = $this->getElement($fieldName);
+
+          if ($element && method_exists($element, 'setValue')) {
+            // Use setValue to maintain form consistency
+            $element->setValue($updatedContent);
+          }
+        }
+        catch (Exception $e) {
+          $result['errors'][] = "Failed to update form element '{$fieldName}': " . $e->getMessage();
+        }
+      }
+    }
+
+    return $result;
   }
 }
 
