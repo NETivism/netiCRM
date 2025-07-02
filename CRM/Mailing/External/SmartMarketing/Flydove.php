@@ -388,6 +388,10 @@ ORDER BY civicrm_phone.is_primary DESC, phone_id ASC";
     }
     else {
       if ($civicrm_batch) {
+        if (empty($civicrm_batch->modified_date)) {
+          $civicrm_batch->modified_date = date('YmdHis');
+          $civicrm_batch->saveBatch();
+        }
         CRM_Core_Error::debug_log_message(ts('Flydove').': '."The group you request doesn't exists in flydove.");
         return FALSE;
       }

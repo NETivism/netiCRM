@@ -84,13 +84,25 @@ abstract class CRM_Mailing_External_SmartMarketing {
             $contactIds[$item] = $item;
           }
           if (count($contactIds) > $smartMarketingClass::BATCH_NUM) {
-            $smartMarketingService = new $smartMarketingClass($provider['id']);
-            $batchId = $smartMarketingService->batchSchedule($contactIds, $groupId, $syncData['remote_group_id'], $provider['id']);
-            return array(
-              'batch' => TRUE,
-              'batch_id' => $batchId,
-              'result' => ts('Scheduled').':'.ts('Batch ID').'-'.$batchId,
-            );
+            try {
+              $smartMarketingService = new $smartMarketingClass($provider['id']);
+              $batchId = $smartMarketingService->batchSchedule($contactIds, $groupId, $syncData['remote_group_id'], $provider['id']);
+              return array(
+                'batch' => TRUE,
+                'batch_id' => $batchId,
+                'result' => ts('Scheduled').':'.ts('Batch ID').'-'.$batchId,
+              );
+            }
+            catch(CRM_Core_Exception $e) {
+              CRM_Core_Error::debug_log_message("Smart Marketing - Exception in group $groupId: " . $e->getMessage());
+              return array(
+                'batch' => FALSE,
+                'batch_id' => 0,
+                'result' => array(
+                  '#report' => array('error' => ts('Sync operation failed: %1', array(1 => $e->getMessage()))),
+                ),
+              );
+            }
           }
           else {
             try {
