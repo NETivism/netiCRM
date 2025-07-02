@@ -390,6 +390,7 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
     $civicrm_batch = $this->_batch;
 
     // real processing logic 
+    $beforeProcessed = $this->_batch->data['processed'];
     if (isset($this->_batch->data['processCallback'])) {
       $args = array();
       if (!empty($this->_batch->data['processCallbackArgs'])) {
@@ -408,7 +409,10 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
       $this->finish();
     }
     else {
-      $this->_batch->modified_date = date('YmdHis');
+      if (empty($this->_batch->data['processed']) && empty($this->_batch->modified_date) ||
+      !empty($this->_batch->data['processed']) && $this->_batch->data['processed'] != $beforeProcessed) {
+        $this->_batch->modified_date = date('YmdHis');
+      }
       $this->saveBatch();
     }
 

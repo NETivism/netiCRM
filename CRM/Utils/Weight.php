@@ -359,26 +359,26 @@ class CRM_Utils_Weight {
 
       if ($prevID != 0) {
         $alt = ts('Move to top');
-        $links[] = "<a href=\"{$url}&dst={$firstID}&dir=first\"><img src=\"{$imageURL}/first.gif\" title=\"$alt\" alt=\"$alt\" class=\"order-icon\"></a>";
+        $links[] = "<a href=\"{$url}&dst={$firstID}&dir=first\"><i class=\"zmdi zmdi-chevron-up zmdi-hc-fw order-icon\" title=\"$alt\"></i></a>";
 
         $alt = ts('Move up one row');
-        $links[] = "<a href=\"{$url}&dst={$prevID}&dir=swap\"><img src=\"{$imageURL}/up.gif\" title=\"$alt\" alt=\"$alt\" class=\"order-icon\"></a>";
+        $links[] = "<a href=\"{$url}&dst={$prevID}&dir=swap\"><i class=\"zmdi zmdi-caret-up zmdi-hc-fw order-icon\" title=\"$alt\"></i></a>";
       }
       else {
-        $links[] = "<img src=\"{$imageURL}/spacer.gif\" class=\"order-icon\">";
-        $links[] = "<img src=\"{$imageURL}/spacer.gif\" class=\"order-icon\">";
+        $links[] = "<i class=\"zmdi zmdi-hc-fw order-icon\" style=\"visibility:hidden;\"></i>";
+        $links[] = "<i class=\"zmdi zmdi-hc-fw order-icon\" style=\"visibility:hidden;\"></i>";
       }
 
       if ($nextID != 0) {
         $alt = ts('Move down one row');
-        $links[] = "<a href=\"{$url}&dst={$nextID}&dir=swap\"><img src=\"{$imageURL}/down.gif\" title=\"$alt\" alt=\"$alt\" class=\"order-icon\"></a>";
+        $links[] = "<a href=\"{$url}&dst={$nextID}&dir=swap\"><i class=\"zmdi zmdi-caret-down zmdi-hc-fw order-icon\" title=\"$alt\"></i></a>";
 
         $alt = ts('Move to bottom');
-        $links[] = "<a href=\"{$url}&dst={$lastID}&dir=last\"><img src=\"{$imageURL}/last.gif\" title=\"$alt\" alt=\"$alt\" class=\"order-icon\"></a>";
+        $links[] = "<a href=\"{$url}&dst={$lastID}&dir=last\"><i class=\"zmdi zmdi-chevron-down zmdi-hc-fw order-icon\" title=\"$alt\"></i></a>";
       }
       else {
-        $links[] = "<img src=\"{$imageURL}/spacer.gif\" class=\"order-icon\">";
-        $links[] = "<img src=\"{$imageURL}/spacer.gif\" class=\"order-icon\">";
+        $links[] = "<i class=\"zmdi zmdi-hc-fw order-icon\" style=\"visibility:hidden;\"></i>";
+        $links[] = "<i class=\"zmdi zmdi-hc-fw order-icon\" style=\"visibility:hidden;\"></i>";
       }
       $rows[$id]['weight'] = CRM_Utils_Array::implode('&nbsp;', $links);
     }

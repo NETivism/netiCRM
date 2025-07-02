@@ -56,7 +56,7 @@
             <td>{$row.label}</td>
             <td>{$row.data_type}</td>
             <td>{$row.html_type}</td>
-            <td class="nowrap">{$row.order}</td>
+            <td class="nowrap weight-order">{$row.order}</td>
             <td>{if $row.is_required eq 1} {ts}Yes{/ts} {else} {ts}No{/ts} {/if}</td>
     	    <td id="row_{$row.id}_status">{if $row.is_active eq 1} {ts}Yes{/ts} {else} {ts}No{/ts} {/if}</td>
             <td>{$row.action|replace:'xx':$row.id}</td>

@@ -61,7 +61,7 @@
                     <td class="crm-membership-type-duration_interval_unit">{$row.duration_interval} {ts}{$row.duration_unit}{/ts}</td>
                     <td class="crm-membership-type-relationship_type_name">{$row.relationshipTypeName}</td>
                     <td class="crm-membership-type-visibility">{ts}{$row.visibility}{/ts}</td>
-                    <td class="nowrap crm-membership_type-order">{$row.order}</td>
+                    <td class="nowrap weight-order crm-membership_type-order">{$row.order}</td>
                     <td class="crm-membership-type-status_{$row.id}" id="row_{$row.id}_status">{if $row.is_active eq 1} {ts}Yes{/ts} {else} {ts}No{/ts} {/if}</td>
                     <td>{$row.action|replace:'xx':$row.id}</td>
                     <td class="order hiddenElement">{$row.weight}</td>

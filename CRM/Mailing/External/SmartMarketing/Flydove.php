@@ -196,12 +196,16 @@ class CRM_Mailing_External_SmartMarketing_Flydove extends CRM_Mailing_External_S
   /**
    * Add contact to remote group
    *
-   * @param array $contactIds
-   * @param int $destRemoteGroup
-   * @param int $providerId
+   * @param array $contactIds Array of contact IDs to sync
+   * @param int $groupId Local CiviCRM group ID
+   * @param int $destRemoteGroup Remote group ID in Flydove
+   * @param int $providerId SMS provider ID for Flydove configuration
    *
    * @static
-   * @return void|array
+   * @return bool|array Returns FALSE when in batch mode and error occurs,
+   *                    Returns array with sync results when not in batch mode,
+   *                    Throws CRM_Core_Exception when not in batch mode and error occurs
+   * @throws CRM_Core_Exception When not in batch mode and sync fails
    */
   public static function addContactToRemote($contactIds, $groupId, $destRemoteGroup, $providerId) {
     global $civicrm_batch;
@@ -219,10 +223,10 @@ class CRM_Mailing_External_SmartMarketing_Flydove extends CRM_Mailing_External_S
         $errorCode =$e->getErrorCode();
         if ($civicrm_batch) {
           CRM_Core_Error::debug_log_message("Flydove error - : $errorCode $errorMessage");
-          return;
+          return FALSE;
         }
         else {
-          throw new CRM_Core_Exception(ts('Flydove').':'.ts("Cannot get remote groups list."));
+          throw new CRM_Core_Exception(ts('Flydove').':'.ts("Cannot get remote groups list.") . " ($errorCode $errorMessage)");
         }
       }
     }
@@ -331,6 +335,12 @@ ORDER BY civicrm_phone.is_primary DESC, phone_id ASC";
             $errorMessage =$e->getMessage();
             $errorCode =$e->getErrorCode();
             CRM_Core_Error::debug_log_message("Flydove error - BatchCreateCustomer: $errorCode $errorMessage");
+            if ($civicrm_batch) {
+              return FALSE;
+            }
+            else {
+              throw new CRM_Core_Exception(ts('Flydove').': BatchCreateCustomer failed: ' . $errorMessage);
+            }
           }
 
           $offset += self::BATCH_NUM;
@@ -369,6 +379,7 @@ ORDER BY civicrm_phone.is_primary DESC, phone_id ASC";
       else {
         if ($civicrm_batch) {
           CRM_Core_Error::debug_log_message(ts('Flydove').': '."Please provide at least 1 contact.");
+          return FALSE;
         }
         else {
           throw new CRM_Core_Exception(ts("Please provide at least 1 contact."));
@@ -377,7 +388,12 @@ ORDER BY civicrm_phone.is_primary DESC, phone_id ASC";
     }
     else {
       if ($civicrm_batch) {
+        if (empty($civicrm_batch->modified_date)) {
+          $civicrm_batch->modified_date = date('YmdHis');
+          $civicrm_batch->saveBatch();
+        }
         CRM_Core_Error::debug_log_message(ts('Flydove').': '."The group you request doesn't exists in flydove.");
+        return FALSE;
       }
       else {
         throw new CRM_Core_Exception(ts('Flydove').': '.ts("The group you request doesn't exists in flydove."));

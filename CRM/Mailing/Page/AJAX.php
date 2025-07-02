@@ -93,10 +93,21 @@ class CRM_Mailing_Page_AJAX {
           'message' => $report,
         );
       }
+      elseif (!empty($syncResult['result']['#report']['error'])) {
+        $remoteResult = array(
+          'success' => FALSE,
+          'message' => ts('Synchronize error').': '.$syncResult['result']['#report']['error'],
+        );
+      }
       else {
         $report = ts('Synchronize error').': ';
-        foreach($syncResult['result']['#report'] as $rep) {
-          $report .= "<span>$rep</span>";
+        if (!empty($syncResult['result']['#report']) && is_array($syncResult['result']['#report'])) {
+          foreach($syncResult['result']['#report'] as $rep) {
+            $report .= "<span>$rep</span>";
+          }
+        }
+        else {
+          $report .= ts('Unknown error occurred');
         }
         $remoteResult = array(
           'success' => FALSE,

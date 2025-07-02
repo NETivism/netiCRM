@@ -69,7 +69,7 @@
             <td class="crm-price-option-label">{$row.label}</td>
             <td class="crm-price-option-value">{$row.amount|crmMoney}</td>
 	    <td class="crm-price-option-is_default">{if $row.is_default}<img src="{$config->resourceBase}/i/check.gif" alt="{ts}Default{/ts}" />{/if}</td>
-            <td class="nowrap crm-price-option-order">{$row.weight}</td>
+            <td class="nowrap crm-price-options-order">{$row.weight}</td>
             <td id="row_{$row.id}_status" class="crm-price-option-is_active">{if $row.is_active eq 1} {ts}Yes{/ts} {else} {ts}No{/ts} {/if}</td>
             <td>{$row.action|replace:'xx':$row.id}</td>
             <td class="order hiddenElement">{$row.weight}</td>

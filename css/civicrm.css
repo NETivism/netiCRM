@@ -3062,10 +3062,20 @@ div.grippie {
 
 /* Set/alter ICONS */
 .crm-container .order-icon {
-    height: 15px;
-    width:  10px;
-    padding-top: 4px;
-    padding-right: 4px;
+    line-height: 0;
+    font-size: 1.5em;
+    padding: 8px;
+    display: inline-block;
+    margin: 0;
+}
+.crm-container .order-icon:hover {
+    box-shadow: inset 0 0 0 9999px rgba(11, 89, 154, 0.377);
+}
+.crm-container table.dataTable td.dt-type-numeric.weight-order,
+.crm-container table.dataTable td.dt-type-numeric.nowrap[class*="-order"] {
+    text-align: center;
+    vertical-align: middle;
+    padding: 0;
 }
 
 /* autocomplete */
