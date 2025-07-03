@@ -1317,6 +1317,10 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
             // Use setValue to maintain form consistency
             $element->setValue($updatedContent);
           }
+          if (isset($element->_submitValues[$fieldName])) {
+            $element->_submitValues[$fieldName] = $updatedContent;
+          }
+          $this->controller->setValue($fieldName, $updatedContent);
         }
         catch (Exception $e) {
           $result['errors'][] = "Failed to update form element '{$fieldName}': " . $e->getMessage();

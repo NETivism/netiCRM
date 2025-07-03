@@ -790,5 +790,31 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
     $this->_destination = $url;
     $this->set('destination', $this->_destination);
   }
+
+  /**
+   * Set a value for a field within the controller's session container.
+   *
+   * This function iterates through all pages of the controller and updates
+   * the value for the given field name if it exists in the session.
+   *
+   * @param string $name  The name of the field to set.
+   * @param mixed  $value The new value for the field.
+   * @return bool  TRUE if the value was successfully set, FALSE otherwise.
+   */
+  public function setValue($name, $value) {
+    $containerName = '_' . $this->_name . '_container';
+    if (!isset($_SESSION[$containerName])) {
+      return FALSE;
+    }
+    foreach (array_keys($this->_pages) as $pageName) {
+      if (isset($_SESSION[$containerName]['values'][$pageName])) {
+        if(isset($_SESSION[$containerName]['values'][$pageName][$name])) {
+          $_SESSION[$containerName]['values'][$pageName][$name] = $value;
+          return TRUE;
+        }
+      }
+    }
+    return FALSE;
+  }
 }
 
