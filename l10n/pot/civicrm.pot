@@ -49755,3 +49755,76 @@ msgstr ""
 #: msgctxt "menu"
 msgid "New Taipei City"
 msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/RFM.php
+msgid "Dormant Small Donors"
+msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/RFM.php
+msgid "Dormant Major Donors"
+msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/RFM.php
+msgid "Lapsed Small Donors"
+msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/RFM.php
+msgid "Lapsed Major Donors"
+msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/RFM.php
+msgid "Recent Small Donors"
+msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/RFM.php
+msgid "Recent Major Donors"
+msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/RFM.php
+msgid "Loyal Small Donors"
+msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/RFM.php
+msgid "Loyal Major Donors"
+msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/RFM.php
+msgid "These donors haven't donated in a long time, and their past donation frequency and amount are both low. They may have low engagement or experienced life changes. Reconnect with them using warm messages, share recent organizational impact, and reawaken their attention with simple and engaging content."
+msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/RFM.php
+msgid "These donors haven’t contributed recently or frequently, but have previously made large donations. They show a strong potential for re-engagement. Personalized outreach by dedicated staff is recommended to understand their current situation and invite them to key events or gatherings."
+msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/RFM.php
+msgid "These were once regular small-amount donors who recently stopped giving. They may be facing financial difficulties or doubts about the organization. Show concern, emphasize the importance of each contribution, and offer flexible donation options such as monthly giving."
+msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/RFM.php
+msgid "These were once major and frequent donors who have recently disengaged. This is a high-priority group. Recommend senior leaders personally reach out for a one-on-one meeting to understand their concerns and rebuild trust."
+msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/RFM.php
+msgid "These are new supporters with low donation frequency and amount. They represent future growth potential. Send welcome messages and educational materials to help them understand the mission and build a lasting relationship."
+msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/RFM.php
+msgid "Although they have donated only a few times, their large gifts show strong alignment with the organization. Provide VIP treatment, invite them to strategy discussions or advisory panels, and foster long-term commitment."
+msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/RFM.php
+msgid "These are the most stable donors who give frequently in small amounts. They are emotionally connected to the organization. Show regular appreciation, offer member benefits, and involve them as volunteers or ambassadors."
+msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/RFM.php
+msgid "The most valuable supporters with high recency, frequency, and donation amount. They are key ambassadors and assets. Provide premier service, invite them to strategic planning, and consider naming opportunities to recognize their contributions."
+msgstr ""
+
+#: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
+msgid "The RFM model helps organizations categorize donors based on their giving behavior, enabling more refined and personalized communication strategies that convert more supporters into loyal ones."
+msgstr ""
+
+
+#: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
+msgid "Threshold values are automatically calculated based on the selected statistical time range. If the date range is adjusted, the condition values will be recalculated, and any previous manual adjustments will be cleared."
+msgstr ""

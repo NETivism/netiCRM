@@ -60,7 +60,7 @@
  		        <td class="crm-report-optionList-label">{$row.label}</td>	
 		        <td class="crm-report-optionList-value">{$row.value}</td>
 		        <td class="crm-report-optionList-description">{$row.description}</td>	
-		        <td class="nowrap crm-report-optionList-order">{$row.order}</td>
+		        <td class="nowrap weight-order crm-report-optionList-order">{$row.order}</td>
 		        {if $showIsDefault}
 		            <td class="crm-report-optionList-default_value">{$row.default_value}</td>
 		        {/if}

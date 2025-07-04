@@ -68,35 +68,41 @@ eval('tableId =[' + tableId + ']');
         else{
           option = 'none';
         }
-        stype   = 'numeric';
+        stype   = 'num';
         switch( option ) { 
             case 'sortable':
                 sortColumn += '[' + count + ', "asc" ],'; 
-                columns += '{"sClass": "'+ getElementClass( this ) +'"},';
+                columns += '{"className": "'+ getElementClass( this ) +'", "type": "num"},';
             break;
             case 'date':
                 stype = 'date';
+                if ( cj(this).attr('class') == 'sortable' ){
+                    sortColumn += '[' + count + ', "asc" ],';
+                }
+                sortId   = getRowId(tdObject, cj(this).attr('id') +' hiddenElement' ); 
+                columns += '{ "type": "' + stype + '", "data": ' + sortId + ', "render": function (data, type, row) { return data; }},';
+            break;
             case 'order':
                 if ( cj(this).attr('class') == 'sortable' ){
                     sortColumn += '[' + count + ', "asc" ],';
                 }
                 sortId   = getRowId(tdObject, cj(this).attr('id') +' hiddenElement' ); 
-                columns += '{ "sType": \'' + stype + '\', "fnRender": function (oObj) { return oObj.aData[' + sortId + ']; },"bUseRendered": false},';
+                columns += '{ "type": "' + stype + '", "data": ' + sortId + ', "render": function (data, type, row) { return data; }},';
             break;
             case 'nosort':           
-                columns += '{ "bSortable": false, "sClass": "'+ getElementClass( this ) +'"},';
+                columns += '{ "orderable": false, "className": "'+ getElementClass( this ) +'"},';
             break;
             case 'currency':
-                columns += '{ "sType": "currency" },';
+                columns += '{ "type": "currency" },';
             break;
             case 'link':
-                columns += '{"sType": "html"},';      
+                columns += '{"type": "html"},';
             break;   
             default:
                 if ( cj(this).text() ) {
-                    columns += '{"sClass": "'+ getElementClass( this ) +'"},';
+                    columns += '{"className": "'+ getElementClass( this ) +'", "type": "string"},';
                 } else {
-                    columns += '{ "bSortable": false },';
+                    columns += '{ "orderable": false },';
                 }
             break;
         }
@@ -133,41 +139,37 @@ eval('tableId =[' + tableId + ']');
     };
     if ( useAjax ) {
       oTable = cj(tabId).dataTable({
-        "oLanguage"  : language,
-        "bFilter"    : false,
-        "bAutoWidth" : false,
-        "aaSorting"  : sortColumn,
-        "aoColumns"  : columns,
-        "bProcessing": true,
-        "bLengthChange": false,
-        "sPaginationType": "full_numbers",
-        "sDom"       : '<"crm-datatable-pager-top"lfp>rt<"crm-datatable-pager-bottom"ip>',
-        "bServerSide": true,
-        "sAjaxSource": sourceUrl,
+        "language"   : language,
+        "searching"  : false,
+        "autoWidth" : false,
+        "order"     : sortColumn,
+        "columns"   : columns,
+        "processing": true,
+        "lengthChange": false,
+        "pagingType": "full_numbers",
+        "dom"       : '<"crm-datatable-pager-top"lfp>rt<"crm-datatable-pager-bottom"ip>',
+        "serverSide": true,
+        "ajax": {
+          "url": sourceUrl,
+          "type": "POST",
+          "dataType": "json"
+        },
         {/literal}{if $callBack}{literal}
-        "fnDrawCallback": function() { checkSelected(); },
+        "drawCallback": function() { checkSelected(); },
         {/literal}{/if}{literal}
-        "fnServerData": function ( sSource, aoData, fnCallback ) {
-          cj.ajax( {
-            "dataType": 'json',
-            "type": "POST", 
-            "url": sSource, 
-            "data": aoData, 
-            "success": fnCallback
-          } ); }
       }); 
     } else {
       oTable = cj(tabId).dataTable({
-        "oLanguage"    : language,
-        "aaSorting"    : sortColumn,
-        "bPaginate"    : hasPager,
-        "iDisplayLength": hasPager ? 20 : 0,
-        "bLengthChange": false,
-        "sPaginationType": "full_numbers",
-        "bFilter"      : false,
-        "bInfo"        : false,
-        "bAutoWidth"   : false,
-        "aoColumns"   : columns
+        "language"     : language,
+        "order"        : sortColumn,
+        "paging"       : hasPager,
+        "pageLength"   : hasPager ? 20 : -1,
+        "lengthChange" : false,
+        "pagingType"   : "full_numbers",
+        "searching"    : false,
+        "info"         : false,
+        "autoWidth"    : false,
+        "columns"      : columns
       }); 
     }
     var object;

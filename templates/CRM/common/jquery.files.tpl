@@ -59,8 +59,8 @@ packages/jquery/plugins/jquery.timeentry.pack.js
 
 packages/jquery/plugins/jquery.toolTip.js
 
-packages/jquery/plugins/DataTables/media/css/demo_table_jui.css
-packages/jquery/plugins/DataTables/media/js/jquery.dataTables.min.js
+packages/jquery/plugins/DataTables/datatables.min.css
+packages/jquery/plugins/DataTables/datatables.min.js
 
 packages/jquery/plugins/jquery.dashboard.js
 packages/jquery/css/dashboard.css
