@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: Seal Shen, 2025\n"
+"Last-Translator: CC Chu <poliphilonet@gmail.com>, 2020-2025\n"
 "Language-Team: Chinese (Taiwan) (http://app.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50340,3 +50340,111 @@ msgstr "為了讓您順利收到後續的活動報名通知，建議您聯繫管
 #: msgctxt "menu"
 msgid "New Taipei City"
 msgstr "新北市"
+
+#: CRM/Contact/Form/Search/Custom/RFM.php
+msgid "Dormant Small Donors"
+msgstr "沉睡小額者"
+
+#: CRM/Contact/Form/Search/Custom/RFM.php
+msgid "Dormant Major Donors"
+msgstr "沉睡大額者"
+
+#: CRM/Contact/Form/Search/Custom/RFM.php
+msgid "Lapsed Small Donors"
+msgstr "久違小額者"
+
+#: CRM/Contact/Form/Search/Custom/RFM.php
+msgid "Lapsed Major Donors"
+msgstr "久違大額者"
+
+#: CRM/Contact/Form/Search/Custom/RFM.php
+msgid "Recent Small Donors"
+msgstr "新近小額者"
+
+#: CRM/Contact/Form/Search/Custom/RFM.php
+msgid "Recent Major Donors"
+msgstr "新近大額者"
+
+#: CRM/Contact/Form/Search/Custom/RFM.php
+msgid "Loyal Small Donors"
+msgstr "忠誠小額者"
+
+#: CRM/Contact/Form/Search/Custom/RFM.php
+msgid "Loyal Major Donors"
+msgstr "忠誠大額者"
+
+#: CRM/Contact/Form/Search/Custom/RFM.php
+msgid ""
+"These donors haven't donated in a long time, and their past donation "
+"frequency and amount are both low. They may have low engagement or "
+"experienced life changes. Reconnect with them using warm messages, share "
+"recent organizational impact, and reawaken their attention with simple and "
+"engaging content."
+msgstr "這群捐款人已經很久沒有參與捐款，過去的捐款頻率和金額都不高。他們可能對組織的關注度較低，或是生活狀況發生變化。建議透過溫馨的關懷訊息重新建立聯繫，分享組織近期的成果和影響力，用簡單易懂的內容重新喚起他們的關注。"
+
+#: CRM/Contact/Form/Search/Custom/RFM.php
+msgid ""
+"These donors haven’t contributed recently or frequently, but have previously"
+" made large donations. They show a strong potential for re-engagement. "
+"Personalized outreach by dedicated staff is recommended to understand their "
+"current situation and invite them to key events or gatherings."
+msgstr "雖然長期沒有捐款且次數不多，但他們曾經給予較大金額的支持，顯示對組織有一定程度的認同。這群人具有很高的重啟潛力，建議安排專人進行個人化的關懷聯繫，了解他們目前的狀況，並邀請參加組織的重要活動或分享會。"
+
+#: CRM/Contact/Form/Search/Custom/RFM.php
+msgid ""
+"These were once regular small-amount donors who recently stopped giving. "
+"They may be facing financial difficulties or doubts about the organization. "
+"Show concern, emphasize the importance of each contribution, and offer "
+"flexible donation options such as monthly giving."
+msgstr "過去是組織的穩定小額捐款人，經常性參與但最近停止了捐款。他們可能面臨經濟壓力或對組織產生疑慮。建議主動關心他們的近況，強調每一份小額捐款的重要性，並提供更彈性的捐款方式，如按月小額定期捐款。"
+
+#: CRM/Contact/Form/Search/Custom/RFM.php
+msgid ""
+"These were once major and frequent donors who have recently disengaged. This"
+" is a high-priority group. Recommend senior leaders personally reach out for"
+" a one-on-one meeting to understand their concerns and rebuild trust."
+msgstr "曾經是組織的重要支持者，不僅捐款頻繁且金額較高，但最近卻停止了參與。這是需要特別關注的群體，建議高階主管親自關懷，安排面對面會談，了解他們的想法並重新建立信任關係。"
+
+#: CRM/Contact/Form/Search/Custom/RFM.php
+msgid ""
+"These are new supporters with low donation frequency and amount. They "
+"represent future growth potential. Send welcome messages and educational "
+"materials to help them understand the mission and build a lasting "
+"relationship."
+msgstr "剛開始關注組織的新朋友，雖然目前捐款金額不大且次數不多，但代表了組織的未來潛力。建議透過歡迎訊息和定期的教育內容，幫助他們更深入了解組織的使命，逐步培養長期的支持關係。"
+
+#: CRM/Contact/Form/Search/Custom/RFM.php
+msgid ""
+"Although they have donated only a few times, their large gifts show strong "
+"alignment with the organization. Provide VIP treatment, invite them to "
+"strategy discussions or advisory panels, and foster long-term commitment."
+msgstr "雖然捐款次數不多，但願意一次給予較大金額的支持，顯示他們對組織有強烈的認同感。建議提供VIP級的服務體驗，邀請參與組織的策略討論或諮詢會議，讓他們感受到被重視，並有機會發展成長期的大額支持者。"
+
+#: CRM/Contact/Form/Search/Custom/RFM.php
+msgid ""
+"These are the most stable donors who give frequently in small amounts. They "
+"are emotionally connected to the organization. Show regular appreciation, "
+"offer member benefits, and involve them as volunteers or ambassadors."
+msgstr "組織最穩定的基石，持續且頻繁地提供小額支持。他們對組織有深厚的情感連結，建議定期表達感謝，提供專屬的會員權益，並考慮邀請他們成為組織的志工或宣傳大使，發揮更大的影響力。"
+
+#: CRM/Contact/Form/Search/Custom/RFM.php
+msgid ""
+"The most valuable supporters with high recency, frequency, and donation "
+"amount. They are key ambassadors and assets. Provide premier service, invite"
+" them to strategic planning, and consider naming opportunities to recognize "
+"their contributions."
+msgstr "組織最珍貴的夥伴，在各方面都表現優異。他們是組織的代言人和重要資源，建議給予最高規格的服務，定期邀請參與組織治理或策略規劃，並考慮設立冠名專案，讓他們感受到自己對組織發展的重要貢獻。"
+
+#: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
+msgid ""
+"The RFM model helps organizations categorize donors based on their giving "
+"behavior, enabling more refined and personalized communication strategies "
+"that convert more supporters into loyal ones."
+msgstr "RFM 模型協助組織根據捐款人的行為特徵，將不同類型的捐款人加以分類，進而規劃更細緻、個性化的溝通方式，轉化出更多的忠誠支持者。"
+
+#: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
+msgid ""
+"Threshold values are automatically calculated based on the selected "
+"statistical time range. If the date range is adjusted, the condition values "
+"will be recalculated, and any previous manual adjustments will be cleared."
+msgstr "系統會根據設定的統計時間區間，自動計算各指標的門檻值。若調整日期區間，條件值將會重新計算，並清空原本的手動設定。"
