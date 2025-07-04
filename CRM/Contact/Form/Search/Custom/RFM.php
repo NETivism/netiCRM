@@ -179,59 +179,59 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
     $segments = [
       [
         'id' => 'RlFlMl',
-        'name' => ts('RFM Hibernating Small'),
+        'name' => ts('Dormant Small Donors'),
         'rfm_code' => ts('R %1 F %2 M %3', [1 => 'low', 2 => 'low', 3 => 'low']),
         'css_class' => 'rfm-segment-hibernating-small',
-        'description' => ts('These donors have not participated in donations for a long time, with low donation frequency and amounts. They may have reduced attention to the organization or experienced life changes. Recommend re-establishing contact through warm care messages, sharing recent organizational achievements and impact stories with simple, understandable content to rekindle their interest.')
+        'description' => ts('These donors haven\'t donated in a long time, and their past donation frequency and amount are both low. They may have low engagement or experienced life changes. Reconnect with them using warm messages, share recent organizational impact, and reawaken their attention with simple and engaging content.')
       ],
       [
         'id' => 'RlFlMh',
-        'name' => ts('RFM Hibernating Big'),
+        'name' => ts('Dormant Major Donors'),
         'rfm_code' => ts('R %1 F %2 M %3', [1 => 'low', 2 => 'low', 3 => 'high']),
         'css_class' => 'rfm-segment-hibernating-big',
-        'description' => ts('Although they have not donated for a long time and have infrequent donations, they previously provided larger amounts of support, showing a certain level of recognition for the organization. This group has high reactivation potential. Recommend arranging personalized care contact to understand their current situation and invite them to important organizational events or sharing sessions.')
+        'description' => ts('These donors haven’t contributed recently or frequently, but have previously made large donations. They show a strong potential for re-engagement. Personalized outreach by dedicated staff is recommended to understand their current situation and invite them to key events or gatherings.')
       ],
       [
         'id' => 'RlFhMl',
-        'name' => ts('RFM At Risk Small'),
+        'name' => ts('Lapsed Small Donors'),
         'rfm_code' => ts('R %1 F %2 M %3', [1 => 'low', 2 => 'high', 3 => 'low']),
         'css_class' => 'rfm-segment-at-risk-small',
-        'description' => ts('Previously stable small-amount donors who participated regularly but recently stopped donating. They may be facing financial pressure or have concerns about the organization. Recommend proactively caring about their situation, emphasizing the importance of every small donation, and providing more flexible donation methods such as monthly small recurring donations.')
+        'description' => ts('These were once regular small-amount donors who recently stopped giving. They may be facing financial difficulties or doubts about the organization. Show concern, emphasize the importance of each contribution, and offer flexible donation options such as monthly giving.')
       ],
       [
         'id' => 'RlFhMh',
-        'name' => ts('RFM At Risk Big'),
+        'name' => ts('Lapsed Major Donors'),
         'rfm_code' => ts('R %1 F %2 M %3', [1 => 'low', 2 => 'high', 3 => 'high']),
         'css_class' => 'rfm-segment-at-risk-big',
-        'description' => ts('Former important supporters who donated frequently with high amounts but recently stopped participating. This group requires special attention. Recommend senior management personally reach out, arrange face-to-face meetings to understand their thoughts and rebuild trust relationships.')
+        'description' => ts('These were once major and frequent donors who have recently disengaged. This is a high-priority group. Recommend senior leaders personally reach out for a one-on-one meeting to understand their concerns and rebuild trust.')
       ],
       [
         'id' => 'RhFlMl',
-        'name' => ts('RFM New Small'),
+        'name' => ts('Recent Small Donors'),
         'rfm_code' => ts('R %1 F %2 M %3', [1 => 'high', 2 => 'low', 3 => 'low']),
         'css_class' => 'rfm-segment-new-small',
-        'description' => ts('New friends who just started following the organization. Although current donation amounts are small and infrequent, they represent the organization\'s future potential. Recommend welcome messages and regular educational content to help them better understand the organization\'s mission and gradually cultivate long-term support relationships.')
+        'description' => ts('These are new supporters with low donation frequency and amount. They represent future growth potential. Send welcome messages and educational materials to help them understand the mission and build a lasting relationship.')
       ],
       [
         'id' => 'RhFlMh',
-        'name' => ts('RFM New Big'),
+        'name' => ts('Recent Major Donors'),
         'rfm_code' => ts('R %1 F %2 M %3', [1 => 'high', 2 => 'low', 3 => 'high']),
         'css_class' => 'rfm-segment-new-big',
-        'description' => ts('Although donation frequency is low, they are willing to provide larger amounts of support at once, showing strong recognition of the organization. Recommend providing VIP-level service experience, inviting participation in organizational strategy discussions or advisory meetings, making them feel valued and having opportunities to develop into long-term major supporters.')
+        'description' => ts('Although they have donated only a few times, their large gifts show strong alignment with the organization. Provide VIP treatment, invite them to strategy discussions or advisory panels, and foster long-term commitment.')
       ],
       [
         'id' => 'RhFhMl',
-        'name' => ts('RFM Loyal Small'),
+        'name' => ts('Loyal Small Donors'),
         'rfm_code' => ts('R %1 F %2 M %3', [1 => 'high', 2 => 'high', 3 => 'low']),
         'css_class' => 'rfm-segment-loyal-small',
-        'description' => ts('The organization\'s most stable foundation, continuously and frequently providing small support. They have deep emotional connections with the organization. Recommend regular expressions of gratitude, providing exclusive member benefits, and considering inviting them to become organizational volunteers or ambassadors to exert greater influence.')
+        'description' => ts('These are the most stable donors who give frequently in small amounts. They are emotionally connected to the organization. Show regular appreciation, offer member benefits, and involve them as volunteers or ambassadors.')
       ],
       [
         'id' => 'RhFhMh',
-        'name' => ts('RFM Champions'),
+        'name' => ts('Loyal Major Donors'),
         'rfm_code' => ts('R %1 F %2 M %3', [1 => 'high', 2 => 'high', 3 => 'high']),
         'css_class' => 'rfm-segment-champions',
-        'description' => ts('The organization\'s most valuable partners, performing excellently in all aspects. They are spokespersons and important resources for the organization. Recommend providing the highest level of service, regularly inviting participation in organizational governance or strategic planning, and considering establishing named projects to make them feel their important contributions to organizational development.')
+        'description' => ts('The most valuable supporters with high recency, frequency, and donation amount. They are key ambassadors and assets. Provide premier service, invite them to strategic planning, and consider naming opportunities to recognize their contributions.')
       ]
     ];
 
@@ -506,14 +506,14 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
   /**
    * parseRfmSegment
    *
-   * @param  string $segment
+   * @param  string|null $segment
    * @return array|null
    */
-  public static function parseRfmSegment(string $segment) {
-    if (!isset($segment) || strlen($segment) !== 6) {
+  public static function parseRfmSegment($segment) {
+    // Add null check at the beginning
+    if ($segment === null || !isset($segment) || strlen($segment) !== 6) {
       return null;
     }
-
     // Parse format like "RlFhMl" -> ['r' => 'low', 'f' => 'high', 'm' => 'low']
     $pattern = '/^R([lh])F([lh])M([lh])$/i';
     if (!preg_match($pattern, $segment, $matches)) {

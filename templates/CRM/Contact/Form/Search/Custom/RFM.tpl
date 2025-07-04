@@ -6,7 +6,7 @@
 
 <div class="crm-block crm-form-block crm-contact-custom-search-form-block">
 <div class="crm-custom-search-description">
-  TODO: RFM Search Page
+  {ts}The RFM model helps organizations categorize donors based on their giving behavior, enabling more refined and personalized communication strategies that convert more supporters into loyal ones.{/ts}
 </div>
 <div class="crm-accordion-wrapper crm-custom_search_form-accordion crm-accordion-{if !$rows}open{else}closed{/if}">
     <div class="crm-accordion-header crm-master-accordion-header">
@@ -15,6 +15,7 @@
     </div><!-- /.crm-accordion-header -->
     <div class="crm-accordion-body">
         <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>
+            <p>{ts}Threshold values are automatically calculated based on the selected statistical time range. If the date range is adjusted, the condition values will be recalculated, and any previous manual adjustments will be cleared.{/ts}</p>
             <table class="form-layout-compressed">
                 <tr class="crm-contact-custom-search-form-row-receive_date">
                     <td class="label">{$form.receive_date_from.label}</td>
