@@ -175,8 +175,6 @@
         activeNumericId: numericId,
         hasActiveElement: true
       });
-
-      this.showDescription(numericId);
     },
 
     handleSegmentLeave: function(event) {

@@ -100,6 +100,7 @@
                               Showing <output class="record">%1</output> records, which is <output class="percent">%2</output> of the search results
                             {/ts}
                           </div>
+                          <div class="segment-description">{$segment.description}</div>
                         </div>
                       </a>
                     </div>
@@ -213,19 +214,6 @@
                     <div class="axis-label label-front"><span class="rfm-label">M</span>{ts}Monetary: High{/ts}</div>
                   </div>
                 </div>
-              </div>
-              {* Segment Description Panel *}
-              <div class="segment-description" id="segmentDescription">
-                <div class="segment-description-header">
-                  <div class="segment-description-color"></div>
-                  <div class="segment-description-title-area">
-                    <h3 class="segment-description-title" id="descriptionTitle"></h3>
-                    <div class="segment-description-rfm" id="descriptionRfm">
-                      {* RFM indicators will be inserted here *}
-                    </div>
-                  </div>
-                </div>
-                <div class="segment-description-content" id="descriptionContent"></div>
               </div>
             </div>
             {* RFM 3D Visualization Container END *}
