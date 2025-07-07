@@ -49828,3 +49828,11 @@ msgstr ""
 #: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
 msgid "Threshold values are automatically calculated based on the selected statistical time range. If the date range is adjusted, the condition values will be recalculated, and any previous manual adjustments will be cleared."
 msgstr ""
+
+#: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
+msgid "RFM Customer Segments"
+msgstr ""
+
+#: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
+msgid "Showing <output class=\"record\">%1</output> records, which is <output class=\"percent\">%2</output> of the search results"
+msgstr ""
