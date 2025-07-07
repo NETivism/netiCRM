@@ -44,7 +44,7 @@
 .rfm-3d-container {
   position: relative;
   margin: 20px 0;
-  padding: 20px 20px 60px;
+  padding: 20px;
   background: linear-gradient(135deg, #FAFBFC 0%, #F5F7FA 25%, #EEF2F6 50%, #E8ECF0 75%, #E1E5E9 100%);
   border-radius: 12px;
   border: 1px solid #E1E5E9;
@@ -482,11 +482,12 @@
 /* TEMP Workspace */
 .rfm-3d-container {
     display: grid;
-    grid-template-columns: 1fr min(760px, 100%);
+    grid-template-columns: 1fr min(700px, 100%);
     grid-template-areas:
         "sidebar wrapper";
     gap: 1rem;
     max-width: 1200px;
+    overflow: hidden;
 }
 .rfm-3d-title {
   grid-area: title;
@@ -500,7 +501,7 @@
   grid-area: wrapper;
 }
 .rfm-3d-container:has(.segment-counter) .rfm-3d-wrapper {
-  /* margin-top: -300px; */
+  margin-top: -200px;
 }
 .rfm-sidebar-usage {
   max-width: 320px;
