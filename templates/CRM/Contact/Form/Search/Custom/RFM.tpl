@@ -65,18 +65,8 @@
 
             {* RFM 3D Visualization Container START *}
             <div class="rfm-3d-container">
-              <h2 class="rfm-3d-title">{ts}RFM 3D Analysis Model{/ts}</h2>
               <div class="rfm-3d-sidebar">
                 {* Segment Info Panel *}
-                <div class="rfm-sidebar-usage">
-                  <div class="usage-instructions-header">
-                    <div class="usage-instructions-icon">?</div>
-                    <h4 class="usage-instructions-title">{ts}How to Use{/ts}</h4>
-                  </div>
-                  <div class="usage-instructions-content">
-                    {ts}Click on any RFM group below to view its search results.{/ts}
-                  </div>
-                </div>
                 <div class="segment-info">
                   <div class="segment-title">{ts}RFM Customer Segments{/ts}</div>
 

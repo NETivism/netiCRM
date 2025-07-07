@@ -295,7 +295,7 @@
 }
 
 /* Segment Info Panel */
-.segment-info {background: rgba(255, 255, 255, 0.95);padding: 20px;border-radius: 12px;font-size: 13px;max-width: 320px;box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);backdrop-filter: blur(10px);}
+.segment-info {background: rgba(255, 255, 255, 0.95);padding: 20px;border-radius: 12px;font-size: 13px;box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);backdrop-filter: blur(10px);}
 .segment-title {
   font-size: 16px;
   font-weight: bold;
@@ -529,9 +529,8 @@
 /* TEMP Workspace */
 .rfm-3d-container {
     display: grid;
-    grid-template-columns: 1fr min(720px, 100%);
+    grid-template-columns: 1fr min(760px, 100%);
     grid-template-areas:
-        "title title"
         "sidebar wrapper";
     gap: 1rem;
     max-width: 1200px;
@@ -546,7 +545,7 @@
   grid-area: wrapper;
 }
 .rfm-3d-container:has(.segment-counter) .rfm-3d-wrapper {
-  margin-top: -300px;
+  /* margin-top: -300px; */
 }
 .rfm-sidebar-usage {
   max-width: 320px;
