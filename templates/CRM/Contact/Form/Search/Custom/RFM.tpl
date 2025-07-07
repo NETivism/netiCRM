@@ -30,39 +30,27 @@
                     <td>{$form.$element.html}</td>
                 </tr>
                 {/foreach}
+                <tr class="crm-contact-custom-search-form-row-rfm-thresholds">
+                    <td class="label">{ts}RFM Thresholds{/ts}</td>
+                    <td class="content">
+                      <ul class="rfm-thresholds-list">
+                        <li>
+                          <span class="item-label">{ts}Recency:{/ts}</span>
+                          <output class="item-value" data-threshold-type="recency">{$rfmThresholds.r}</output>
+                        </li>
+                        <li>
+                          <span class="item-label">{ts}Frequency:{/ts}</span>
+                          <output class="item-value" data-threshold-type="frequency">{$rfmThresholds.f}</output>
+                        </li>
+                        <li>
+                          <span class="item-label">{ts}Monetary:{/ts}</span>
+                          <output class="item-value" data-threshold-type="monetary">{$rfmThresholds.m|crmMoney}</output>
+                        </li>
+                      </ul>
+                      <a class="form-submit rfm-popup-open-link" href="#rfm-popup">{ts}Edit Thresholds{/ts}</a>
+                    </td>
+                </tr>
             </table>
-            <div class="rfm-thresholds">
-              <div class="rfm-thresholds-header">
-                <h2 class="rfm-thresholds-title">{ts}RFM Thresholds{/ts}</h2>
-                <a class="rfm-thresholds-edit rfm-popup-open-link" href="#rfm-popup">{ts}Edit Thresholds{/ts}</a>
-              </div>
-              <div class="rfm-thresholds-content">
-                <dl class="rfm-thresholds-list">
-                  <div class="rfm-thresholds-item">
-                    <dt class="rfm-thresholds-term">{ts}Recency{/ts}</dt>
-                    <dd class="rfm-thresholds-definition">
-                      <output class="rfm-thresholds-value" data-threshold-type="recency">{$rfmThresholds.r}</output>
-                      <span class="rfm-thresholds-desc">{ts}days since last donation{/ts}</span>
-                    </dd>
-                  </div>
-                  <div class="rfm-thresholds-item">
-                    <dt class="rfm-thresholds-term">{ts}Frequency{/ts}</dt>
-                    <dd class="rfm-thresholds-definition">
-                      <output class="rfm-thresholds-value" data-threshold-type="frequency">{$rfmThresholds.f}</output>
-                      <span class="rfm-thresholds-desc">{ts}number of donations{/ts}</span>
-                    </dd>
-                  </div>
-                  <div class="rfm-thresholds-item">
-                    <dt class="rfm-thresholds-term">{ts}Monetary{/ts}</dt>
-                    <dd class="rfm-thresholds-definition">
-                      <output class="rfm-thresholds-value" data-threshold-type="monetary">{$rfmThresholds.m|crmMoney}</output>
-                      <span class="rfm-thresholds-desc">{ts}total donation amount{/ts}</span>
-                    </dd>
-                  </div>
-                </dl>
-              </div>
-            </div>
-
             {* RFM 3D Visualization Container START *}
             <div class="rfm-3d-container">
               <div class="rfm-3d-sidebar">
