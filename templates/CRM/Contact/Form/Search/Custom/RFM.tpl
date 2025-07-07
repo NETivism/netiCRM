@@ -36,7 +36,7 @@
                       <ul class="rfm-thresholds-list">
                         <li>
                           <span class="item-label">{ts}Recency:{/ts}</span>
-                          <output class="item-value" data-threshold-type="recency">{$rfmThresholds.r}</output>
+                          <output class="ijtem-value" data-threshold-type="recency">{$rfmThresholds.r}</output>
                         </li>
                         <li>
                           <span class="item-label">{ts}Frequency:{/ts}</span>
@@ -96,9 +96,7 @@
                             {/if}
                           </div>
                           <div class="segment-counter">
-                            {ts 1=$segment.count 2=$segment.percentage}
-                              Showing <output class="record">%1</output> records, which is <output class="percent">%2</output> of the search results
-                            {/ts}
+                            {ts 1=$segment.count 2=$segment.percentage}Showing <output class="record">%1</output> records, which is <output class="percent">%2</output> of the search results{/ts}
                           </div>
                           <div class="segment-description">{$segment.description}</div>
                         </div>
