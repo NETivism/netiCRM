@@ -50448,3 +50448,13 @@ msgid ""
 "statistical time range. If the date range is adjusted, the condition values "
 "will be recalculated, and any previous manual adjustments will be cleared."
 msgstr "系統會根據設定的統計時間區間，自動計算各指標的門檻值。若調整日期區間，條件值將會重新計算，並清空原本的手動設定。"
+
+#: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
+msgid "RFM Customer Segments"
+msgstr "RFM 客戶分群類型"
+
+#: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
+msgid ""
+"Showing <output class=\"record\">%1</output> records, which is <output "
+"class=\"percent\">%2</output> of the search results"
+msgstr "<output class=\"record\">%1</output>筆資料，佔搜尋結果<output class=\"percent\">%2</output>"
