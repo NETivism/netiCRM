@@ -865,34 +865,32 @@ class CRM_Utils_Image {
   }
 
   /**
-   * Generate final filename based on original name or temp name
+   * Generate final filename using custom format to avoid encoding issues
+   * Format: pasted_image_YYYYMMDD_HHMMSS-randomstring.ext
    *
-   * @param string $originalName Original filename from title attribute
-   * @param string $userDir User directory path
+   * @param string $originalName Original filename from title attribute (not used in new logic)
+   * @param string $userDir User directory path (for future conflict checking if needed)
    * @param string $sourceFile Source file path to get extension
-   * @return string Final filename
+   * @return string Final filename with custom format
    */
   private static function generateFinalFileName($originalName, $userDir, $sourceFile) {
     // Get file extension from source file
     $sourceExtension = pathinfo($sourceFile, PATHINFO_EXTENSION);
 
-    if (!empty($originalName) && $originalName !== '') {
-      // Use original name if available
-      $baseName = pathinfo($originalName, PATHINFO_FILENAME);
-      $originalExtension = pathinfo($originalName, PATHINFO_EXTENSION);
-
-      // Use original extension if available, otherwise use source extension
-      $extension = !empty($originalExtension) ? $originalExtension : $sourceExtension;
-      $finalFileName = $baseName . '.' . $extension;
-    } else {
-      // Generate name based on timestamp if no original name
-      $timestamp = date('Y-m-d_H-i-s');
-      $finalFileName = 'uploaded_image_' . $timestamp . '.' . $sourceExtension;
+    // Ensure we have a valid extension, default to jpg if none
+    if (empty($sourceExtension)) {
+      $sourceExtension = 'jpg';
     }
 
-    // Sanitize filename to prevent path traversal and invalid characters
-    $finalFileName = preg_replace('/[^a-zA-Z0-9._-]/', '_', $finalFileName);
-    $finalFileName = preg_replace('/_{2,}/', '_', $finalFileName); // Remove multiple underscores
+    // Generate timestamp in the format YYYYMMDD_HHMMSS
+    $timestamp = date('Ymd_His');
+
+    // Generate random string (7 characters) for uniqueness
+    $randomString = substr(bin2hex(random_bytes(4)), 0, 7);
+
+    // Create final filename with custom format
+    // Example: pasted_image_20250703_181320-xy1asda.jpg
+    $finalFileName = 'pasted_image_' . $timestamp . '-' . $randomString . '.' . strtolower($sourceExtension);
 
     return $finalFileName;
   }
