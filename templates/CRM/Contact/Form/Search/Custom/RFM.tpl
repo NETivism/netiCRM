@@ -4,7 +4,7 @@
   window.rfmSegmentData = {if $rfmSegmentDataJson}{$rfmSegmentDataJson}{else}{ldelim}{rdelim}{/if};
 </script>
 
-<div class="crm-block crm-form-block crm-contact-custom-search-form-block">
+<div class="crm-block crm-form-block crm-contact-custom-search-form-block crm-contact-custom-search-form-rfm-block">
 <div class="crm-custom-search-description">
   {ts}The RFM model helps organizations categorize donors based on their giving behavior, enabling more refined and personalized communication strategies that convert more supporters into loyal ones.{/ts}
 </div>
@@ -14,8 +14,10 @@
       {ts}Edit Search Criteria{/ts}
     </div><!-- /.crm-accordion-header -->
     <div class="crm-accordion-body">
-        <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>
-            <p>{ts}Threshold values are automatically calculated based on the selected statistical time range. If the date range is adjusted, the condition values will be recalculated, and any previous manual adjustments will be cleared.{/ts}</p>
+        <div class="crm-submit-buttons crm-submit-buttons-top">{include file="CRM/common/formButtons.tpl" location="top"}</div>
+        <div class="custom-search-desc">
+          <p>{ts}Threshold values are automatically calculated based on the selected statistical time range. If the date range is adjusted, the condition values will be recalculated, and any previous manual adjustments will be cleared.{/ts}</p>
+        </div>
             <table class="form-layout-compressed">
                 <tr class="crm-contact-custom-search-form-row-receive_date">
                     <td class="label">{$form.receive_date_from.label}</td>
@@ -216,7 +218,7 @@
             </div>
             {* RFM 3D Visualization Container END *}
 
-        <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
+        <div class="crm-submit-buttons crm-submit-buttons-bottom">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
     </div><!-- /.crm-accordion-body -->
 </div><!-- /.crm-accordion-wrapper -->
 </div><!-- /.crm-form-block -->

@@ -567,6 +567,15 @@
 .crm-container .crm-contact-custom-search-form-row-rfm-thresholds .form-submit {
   margin: 0;
 }
+.crm-container .crm-contact-custom-search-form-rfm-block .crm-submit-buttons-top {
+  float: left;
+}
+.crm-container .crm-contact-custom-search-form-rfm-block .crm-submit-buttons-top + .custom-search-desc {
+  margin: 20px 0 0 80px;
+}
+.crm-container .crm-contact-custom-search-form-rfm-block .crm-submit-buttons-top + .custom-search-desc + * {
+  clear: both;
+}
 
 html[lang="zh-hant"] .segment-color {
   width: 20px;
