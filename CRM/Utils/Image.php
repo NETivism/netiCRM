@@ -665,7 +665,7 @@ class CRM_Utils_Image {
               $publicUrl = $urlResult['url'];
 
               // Immediate replacement: build new img tag and replace in content
-              $newImgTag = self::buildNewImgTag($fullImgTag, $publicUrl, $originalName);
+              $newImgTag = '<img class="ckeditor-clipboard-image" alt="" src="' . htmlspecialchars($publicUrl, ENT_QUOTES, 'UTF-8') . '" />';
               $content = str_replace($fullImgTag, $newImgTag, $content);
 
               $result['moved_files'][] = [
@@ -700,41 +700,6 @@ class CRM_Utils_Image {
     }
 
     return $content; // Return modified content with updated URLs
-  }
-
-  /**
-   * Build new img tag with updated src and title attributes
-   *
-   * @param string $originalImgTag Original img tag HTML
-   * @param string $newUrl New permanent URL
-   * @param string $originalName Original filename for title
-   * @return string New img tag HTML
-   */
-  private static function buildNewImgTag($originalImgTag, $newUrl, $originalName) {
-    try {
-      // Parse all attributes from original img tag
-      $attributes = self::parseImgAttributes($originalImgTag);
-
-      // Update necessary attributes
-      $attributes['src'] = $newUrl;
-      $attributes['title'] = htmlspecialchars($originalName, ENT_QUOTES, 'UTF-8');
-
-      // Remove any data-* attributes that might be blob-related
-      foreach ($attributes as $attrName => $attrValue) {
-        if (strpos($attrName, 'data-blob') === 0 || strpos($attrName, 'data-temp') === 0) {
-          unset($attributes[$attrName]);
-        }
-      }
-
-      // Rebuild img tag
-      return self::buildImgTag($attributes);
-
-    } catch (Exception $e) {
-      // Fallback: simple replacement if parsing fails
-      $newTag = preg_replace('/src="[^"]*"/', 'src="' . htmlspecialchars($newUrl, ENT_QUOTES) . '"', $originalImgTag);
-      $newTag = preg_replace('/title="[^"]*"/', 'title="' . htmlspecialchars($originalName, ENT_QUOTES) . '"', $newTag);
-      return $newTag;
-    }
   }
 
   /**
