@@ -5655,9 +5655,47 @@ tbody.scrollContent tr.alternateRow {
   color:#a7a7a7;
 }
 
-.crm-container a.sorting { color:#A7A7A7; }
+.crm-container a.sorting { 
+  color:#A7A7A7; 
+  position: relative;
+  padding-right: 1.2em;
+}
+.crm-container a.sorting:after {
+  content: "\25B2\A\25BC";
+  font-size: 0.8em;
+  opacity: 0.5;
+  white-space: pre;
+  line-height: 0.75;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
 .crm-container a.sorting_desc,
-.crm-container a.sorting_asc { color:#000; }
+.crm-container a.sorting_asc { 
+  color:#000; 
+}
+.crm-container a.sorting_asc {
+  position: relative;
+  padding-right: 1.2em;
+}
+.crm-container a.sorting_asc:after {
+  content: "\25B2";
+  font-size: 0.8em;
+  position: absolute;
+  right: 0;
+  top: -4px;
+}
+.crm-container a.sorting_desc {
+  position: relative;
+  padding-right: 1.2em;
+}
+.crm-container a.sorting_desc:after {
+  content: "\25BC";
+  font-size: 0.8em;
+  position: absolute;
+  right: 0;
+  top: 4px;
+}
 
 .crm-container tr a.sorting,
 .crm-container tr a.sorting_asc,
