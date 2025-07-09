@@ -121,6 +121,10 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
     }
     $urlParams = $this->prepareUrlParams($formValues);
     $this->_form->assign('urlParams', $urlParams);
+    // Set tittle
+    $segment = CRM_Utils_Array::value('segment', $this->_formValues, '');
+    $rfmModel = $this->getRfmModelName($segment);
+    CRM_Utils_System::setTitle($rfmModel);
   }
 
   /**
@@ -317,27 +321,8 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
       $qill[1]['receiveDateRange'] = ts("Receive Date").': '. self::DATE_RANGE_DEFAULT;
     }
     $segment = CRM_Utils_Array::value('segment', $this->_formValues, '');
-    $rfmModel = '';
-    if (!empty($segment)) {
-      $parsedSegment = self::parseRfmSegment($segment);
-      if ($parsedSegment) {
-        $segments = $this->prepareRfmSegments();
-        foreach ($segments as $segmentData) {
-          if ($segmentData['id'] === $segment) {
-            $rfmModel = $segmentData['name'];
-            break;
-          }
-        }
-      }
-    }
-    if (empty($rfmModel)) {
-      $rfmModel = ts('Custom');
-      $rValue = CRM_Utils_Array::value('rfm_r_value', $this->_formValues, 0);
-      $fValue = CRM_Utils_Array::value('rfm_f_value', $this->_formValues, 0);
-      $mValue = CRM_Utils_Array::value('rfm_m_value', $this->_formValues, 0);
-      $rfmModel .= " (R: {$rValue}, F: {$fValue}, M: {$mValue})";
-    }
-    $qill[1]['rfmModel'] = ts('RFM Model').': '. $rfmModel;
+    $rfmModel = $this->getRfmModelName($segment);
+    $qill[1]['rfmModel'] = ts('RFM Customer Segments').': '. $rfmModel;
 
     // Recurring contribution status
     $recurring = CRM_Utils_Array::value('recurring', $this->_formValues, self::RECURRING_NONRECURRING);
@@ -446,44 +431,6 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
 
   function &columns(){
     return $this->_columns;
-  }
-
-  function summary(){
-    if(!$this->_filled){
-      $this->fillTable();
-      $this->_filled = TRUE;
-    }
-    $sql = "
-    SELECT COUNT(DISTINCT contact_a.id) as total_contacts,
-    AVG(rfm.R) as avg_recency,
-    AVG(rfm.F) as avg_frequency,
-    AVG(rfm.M) as avg_monetary,
-    SUM(rfm.M) as total_monetary
-  FROM civicrm_contact contact_a
-  INNER JOIN {$this->_tableName} rfm ON contact_a.id = rfm.contact_id";
-  $whereClause = $this->where();
-  if (!empty($whereClause) && $whereClause !== '(1)') {
-    $sql .= " WHERE $whereClause";
-  }
-  $query = CRM_Core_DAO::executeQuery($sql);
-  $query->fetch();
-  $summary = [];
-  if ($query->total_contacts) {
-    $summary['search_results'] = [
-      'label' => ts('RFM Analysis Results'),
-      'value' => '',
-    ];
-    $totalAmount = '$' . CRM_Utils_Money::format($query->total_monetary, ' ');
-    $avgAmount = '$' . CRM_Utils_Money::format($query->avg_monetary, ' ');
-    $avgRecency = round($query->avg_recency, 1);
-    $avgFrequency = round($query->avg_frequency, 1);
-    $summary['search_results']['value'] =
-      ts('Total Amount: %1', [1 => $totalAmount]) . ' / ' .
-      ts('Avg Amount: %1', [1 => $avgAmount]) . ' / ' .
-      ts('Avg Recency: %1 days', [1 => $avgRecency]) . ' / ' .
-      ts('Avg Frequency: %1 times', [1 => $avgFrequency]);
-    }
-    return $summary;
   }
 
   function alterRow(&$row) {
@@ -704,5 +651,31 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
       ];
     }
     $this->_segmentStats['total'] = $totalCount;
+  }
+  /**
+   * get Rfm model name
+   */
+  function getRfmModelName($segment) {
+    $rfmModel = '';
+    if (!empty($segment)) {
+      $parsedSegment = self::parseRfmSegment($segment);
+      if ($parsedSegment) {
+        $segments = $this->prepareRfmSegments();
+        foreach ($segments as $segmentData) {
+          if ($segmentData['id'] === $segment) {
+            $rfmModel = $segmentData['name'];
+            break;
+          }
+        }
+      }
+    }
+    if (empty($rfmModel)) {
+      $rfmModel = ts('Custom');
+      $rValue = CRM_Utils_Array::value('rfm_r_value', $this->_formValues, 0);
+      $fValue = CRM_Utils_Array::value('rfm_f_value', $this->_formValues, 0);
+      $mValue = CRM_Utils_Array::value('rfm_m_value', $this->_formValues, 0);
+      $rfmModel .= " (R: {$rValue}, F: {$fValue}, M: {$mValue})";
+    }
+    return $rfmModel;
   }
 }
