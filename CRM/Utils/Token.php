@@ -638,6 +638,7 @@ class CRM_Utils_Token {
       WHERE r.contact_id = %1
       AND p.is_active != 0
       AND p.is_internal IS NULL
+      AND c.is_test != 1
       ORDER BY r.id DESC, c.id DESC
       LIMIT 1";
       $params = [
