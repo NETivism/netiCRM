@@ -458,6 +458,17 @@ class CRM_Utils_MCP {
     $searchableFields = $this->getSearchableFormFields($entity);
     $properties = $baseProperties;
     
+    // Add return.* properties for base properties
+    foreach ($baseProperties as $fieldName => $fieldConfig) {
+      $returnFieldName = 'return.' . $fieldName;
+      if (!isset($properties[$returnFieldName])) {
+        $properties[$returnFieldName] = [
+          'type' => 'boolean',
+          'description' => 'Include ' . $fieldConfig['description'] . ' in the returned results'
+        ];
+      }
+    }
+    
     // Add each searchable field with detailed information
     foreach ($searchableFields as $fieldName => $fieldInfo) {
       if (!isset($properties[$fieldName])) {
@@ -474,13 +485,23 @@ class CRM_Utils_MCP {
         
         $properties[$fieldName] = $property;
       }
+      
+      // Add corresponding return.field_name property for field selection
+      $returnFieldName = 'return.' . $fieldName;
+      if (!isset($properties[$returnFieldName])) {
+        $properties[$returnFieldName] = [
+          'type' => 'boolean',
+          'description' => 'Include ' . $fieldInfo['description'] . ' in the returned results'
+        ];
+      }
     }
     
     // Add common search properties
     $commonProperties = [
       'limit' => ['type' => 'integer', 'description' => 'Number of results to return'],
       'offset' => ['type' => 'integer', 'description' => 'Offset for pagination'],
-      'sort' => ['type' => 'string', 'description' => 'Sort field and direction (e.g., "field_name asc", "created_date desc")']
+      'sort' => ['type' => 'string', 'description' => 'Sort field and direction (e.g., "field_name asc", "created_date desc")'],
+      'return' => ['type' => 'string', 'description' => 'Comma-separated list of fields to return (alternative to using individual return.* parameters)']
     ];
     
     foreach ($commonProperties as $key => $value) {
@@ -506,7 +527,7 @@ class CRM_Utils_MCP {
     $tools = [
       [
         'name' => 'contact_search',
-        'description' => 'Search contacts using various filters. Available searchable fields: ' . implode(', ', array_keys($contactSearchableFields)),
+        'description' => 'Search contacts using various filters. Available searchable fields: ' . implode(', ', array_keys($contactSearchableFields)) . '. To specify which fields to return: use return.<field_name> (e.g., return.total_amount) for individual fields, or use "return" parameter with comma-separated field names (e.g., "display_name,email,phone"). Field names alone are used for filtering.',
         'inputSchema' => [
           'type' => 'object',
           'properties' => $this->generateInputSchemaProperties('contact', [
@@ -575,7 +596,7 @@ class CRM_Utils_MCP {
       ],
       [
         'name' => 'contribution_search',
-        'description' => 'Search contributions using various filters. Available searchable fields: ' . implode(', ', array_keys($contributionSearchableFields)),
+        'description' => 'Search contributions using various filters. Available searchable fields: ' . implode(', ', array_keys($contributionSearchableFields)) . '. To specify which fields to return: use return.<field_name> (e.g., return.total_amount) for individual fields, or use "return" parameter with comma-separated field names (e.g., "total_amount,contact_id,receive_date"). Field names alone are used for filtering.',
         'inputSchema' => [
           'type' => 'object',
           'properties' => $this->generateInputSchemaProperties('contribution', [
