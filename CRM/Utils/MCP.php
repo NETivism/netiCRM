@@ -129,13 +129,13 @@ class CRM_Utils_MCP {
     switch ($method) {
       case 'initialize':
         return $this->initialize($params, $id);
-      case 'list_tools':
+      case 'tools/list':
         return $this->listTools($params, $id);
-      case 'call_tool':
+      case 'tools/call':
         return $this->callTool($params, $id);
-      case 'list_resources':
+      case 'resources/list':
         return $this->listResources($params, $id);
-      case 'read_resource':
+      case 'resources/read':
         return $this->readResource($params, $id);
       default:
         return $this->error(-32601, 'Method not found', $id);
@@ -148,8 +148,12 @@ class CRM_Utils_MCP {
    * @return string JSON response
    */
   public function output($result) {
-    header('Content-Type: application/json; charset=utf-8');
-    return json_encode($result, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+    // Headers are set in extern/mcp.php, don't duplicate
+    $options = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
+    if (defined('JSON_INVALID_UTF8_IGNORE')) {
+      $options |= JSON_INVALID_UTF8_IGNORE;
+    }
+    return json_encode($result, $options);
   }
 
   /**
@@ -164,8 +168,13 @@ class CRM_Utils_MCP {
       'result' => [
         'protocolVersion' => '2024-11-05',
         'capabilities' => [
-          'tools' => [],
-          'resources' => []
+          'tools' => [
+            'listChanged' => false
+          ],
+          'resources' => [
+            'subscribe' => false,
+            'listChanged' => false
+          ]
         ],
         'serverInfo' => [
           'name' => 'netiCRM MCP Server',
@@ -245,7 +254,8 @@ class CRM_Utils_MCP {
     if (!empty($entity) && !empty($apiAction)) {
       try {
         require_once 'api/v3/utils.php';
-        _civicrm_api3_api_check_permission($entity, $apiAction, [], TRUE);
+        $emptyParams = [];
+        _civicrm_api3_api_check_permission($entity, $apiAction, $emptyParams, TRUE);
         return TRUE;
       }
       catch (Exception $e) {
@@ -257,19 +267,249 @@ class CRM_Utils_MCP {
   }
 
   /**
+   * Get searchable form fields for entity with detailed information
+   * @param string $entity Entity name (contact or contribution)
+   * @return array Available searchable fields with detailed info
+   */
+  private function getSearchableFormFields($entity) {
+    require_once 'api/v3/utils.php';
+    try {
+      $searchableFields = _civicrm_api3_get_entity_form_searchable($entity);
+      $detailedFields = [];
+      
+      foreach (array_keys($searchableFields) as $fieldName) {
+        $fieldInfo = [
+          'name' => $fieldName,
+          'type' => $this->determineFieldType($fieldName),
+          'description' => $this->generateFieldDescription($fieldName, $entity)
+        ];
+        
+        // Handle custom fields
+        if (preg_match('/^custom_(\d+)$/', $fieldName, $matches)) {
+          $customFieldId = $matches[1];
+          $customFieldInfo = $this->getCustomFieldInfo($customFieldId);
+          if ($customFieldInfo) {
+            $fieldInfo['description'] = $customFieldInfo['label'] ?? $fieldInfo['description'];
+            if (!empty($customFieldInfo['options'])) {
+              $fieldInfo['options'] = $customFieldInfo['options'];
+            }
+            if (!empty($customFieldInfo['data_type'])) {
+              $fieldInfo['type'] = $this->mapCustomFieldType($customFieldInfo['data_type']);
+            }
+          }
+        }
+        
+        $detailedFields[$fieldName] = $fieldInfo;
+      }
+      
+      return $detailedFields;
+    }
+    catch (Exception $e) {
+      return [];
+    }
+  }
+
+  /**
+   * Determine field type based on field name patterns
+   * @param string $fieldName Field name
+   * @return string Field type
+   */
+  private function determineFieldType($fieldName) {
+    if (strpos($fieldName, 'amount') !== FALSE) {
+      return 'number';
+    }
+    if (preg_match('/_id$/', $fieldName)) {
+      return 'integer';
+    }
+    return 'string';
+  }
+
+  /**
+   * Generate field description based on field name
+   * @param string $fieldName Field name
+   * @param string $entity Entity name
+   * @return string Field description
+   */
+  private function generateFieldDescription($fieldName, $entity) {
+    $humanReadable = str_replace('_', ' ', $fieldName);
+    return 'Search by ' . $humanReadable;
+  }
+
+  /**
+   * Get custom field information including options
+   * @param int $customFieldId Custom field ID
+   * @return array|null Custom field info
+   */
+  private function getCustomFieldInfo($customFieldId) {
+    try {
+      // Get custom field details
+      $customField = civicrm_api('CustomField', 'getsingle', [
+        'id' => $customFieldId,
+        'version' => 3,
+      ]);
+      
+      $fieldInfo = [
+        'label' => $customField['label'] ?? '',
+        'data_type' => $customField['data_type'] ?? 'String'
+      ];
+      
+      // Get options using getoptions API for custom fields
+      $customFieldName = 'custom_' . $customFieldId;
+      
+      // Determine entity based on custom field's extends property
+      $entity = 'Contact'; // Default entity
+      if (!empty($customField['custom_group_id'])) {
+        try {
+          $customGroup = civicrm_api('CustomGroup', 'getsingle', [
+            'id' => $customField['custom_group_id'],
+            'version' => 3,
+          ]);
+          
+          if (!empty($customGroup['extends'])) {
+            $extends = $customGroup['extends'];
+            $entityMap = [
+              'Contact' => 'Contact',
+              'Individual' => 'Contact',
+              'Organization' => 'Contact', 
+              'Household' => 'Contact',
+              'Contribution' => 'Contribution',
+              'Event' => 'Event',
+              'Participant' => 'Participant',
+              'Membership' => 'Membership',
+              'Activity' => 'Activity'
+            ];
+            $entity = $entityMap[$extends] ?? 'Contact';
+          }
+        }
+        catch (Exception $e) {
+          // Use default entity if custom group lookup fails
+        }
+      }
+      
+      // Try to get options using getoptions API
+      try {
+        $optionsResult = civicrm_api($entity, 'getoptions', [
+          'field' => $customFieldName,
+          'version' => 3,
+        ]);
+        
+        if (!empty($optionsResult['values'])) {
+          $fieldInfo['options'] = $optionsResult['values'];
+        }
+      }
+      catch (Exception $e) {
+        // If getoptions fails, fall back to option group method
+        if (!empty($customField['option_group_id'])) {
+          try {
+            $options = civicrm_api('OptionValue', 'get', [
+              'version' => 3,
+              'option_group_id' => $customField['option_group_id'],
+              'is_active' => 1,
+              'options' => ['sort' => 'weight']
+            ]);
+            
+            $fieldOptions = [];
+            foreach ($options['values'] as $option) {
+              $fieldOptions[$option['value']] = $option['label'];
+            }
+            $fieldInfo['options'] = $fieldOptions;
+          }
+          catch (Exception $e2) {
+            // Options not available
+          }
+        }
+      }
+      
+      return $fieldInfo;
+    }
+    catch (Exception $e) {
+      return null;
+    }
+  }
+
+  /**
+   * Map custom field data type to schema type
+   * @param string $dataType Custom field data type
+   * @return string Schema type
+   */
+  private function mapCustomFieldType($dataType) {
+    $typeMap = [
+      'String' => 'string',
+      'Int' => 'integer',
+      'Float' => 'number',
+      'Money' => 'number',
+      'Date' => 'string',
+      'Boolean' => 'boolean',
+      'Memo' => 'string',
+      'Link' => 'string',
+      'File' => 'string'
+    ];
+    
+    return $typeMap[$dataType] ?? 'string';
+  }
+
+  /**
+   * Generate input schema properties for searchable fields
+   * @param string $entity Entity name (contact or contribution)
+   * @param array $baseProperties Base properties to include
+   * @return array Properties array for inputSchema
+   */
+  private function generateInputSchemaProperties($entity, $baseProperties = []) {
+    $searchableFields = $this->getSearchableFormFields($entity);
+    $properties = $baseProperties;
+    
+    // Add each searchable field with detailed information
+    foreach ($searchableFields as $fieldName => $fieldInfo) {
+      if (!isset($properties[$fieldName])) {
+        $property = [
+          'type' => $fieldInfo['type'],
+          'description' => $fieldInfo['description']
+        ];
+        
+        // Add options if available (for select fields)
+        if (!empty($fieldInfo['options'])) {
+          $property['enum'] = array_keys($fieldInfo['options']);
+          $property['description'] .= '. Options: ' . implode(', ', $fieldInfo['options']);
+        }
+        
+        $properties[$fieldName] = $property;
+      }
+    }
+    
+    // Add common search properties
+    $commonProperties = [
+      'limit' => ['type' => 'integer', 'description' => 'Number of results to return'],
+      'offset' => ['type' => 'integer', 'description' => 'Offset for pagination'],
+      'sort' => ['type' => 'string', 'description' => 'Sort field and direction (e.g., "field_name asc", "created_date desc")']
+    ];
+    
+    foreach ($commonProperties as $key => $value) {
+      if (!isset($properties[$key])) {
+        $properties[$key] = $value;
+      }
+    }
+    
+    return $properties;
+  }
+
+  /**
    * MCP list_tools method
    * @param array $params Parameters
    * @param mixed $id Request ID
    * @return array Response
    */
   private function listTools($params, $id) {
+    // Get available searchable fields for contact and contribution
+    $contactSearchableFields = $this->getSearchableFormFields('contact');
+    $contributionSearchableFields = $this->getSearchableFormFields('contribution');
+    
     $tools = [
       [
         'name' => 'contact_search',
-        'description' => 'Search contacts using various filters',
+        'description' => 'Search contacts using various filters. Available searchable fields: ' . implode(', ', array_keys($contactSearchableFields)),
         'inputSchema' => [
           'type' => 'object',
-          'properties' => [
+          'properties' => $this->generateInputSchemaProperties('contact', [
             'contact_type' => ['type' => 'string', 'description' => 'Contact type (Individual, Organization, Household)'],
             'display_name' => ['type' => 'string', 'description' => 'Contact display name'],
             'first_name' => ['type' => 'string', 'description' => 'First name'],
@@ -277,11 +517,8 @@ class CRM_Utils_MCP {
             'email' => ['type' => 'string', 'description' => 'Email address'],
             'phone' => ['type' => 'string', 'description' => 'Phone number'],
             'external_identifier' => ['type' => 'string', 'description' => 'External identifier'],
-            'id' => ['type' => 'integer', 'description' => 'Contact ID'],
-            'limit' => ['type' => 'integer', 'description' => 'Number of results to return'],
-            'offset' => ['type' => 'integer', 'description' => 'Offset for pagination'],
-            'sort' => ['type' => 'string', 'description' => 'Sort field and direction (e.g., "display_name asc", "created_date desc")']
-          ]
+            'id' => ['type' => 'integer', 'description' => 'Contact ID']
+          ])
         ]
       ],
       [
@@ -338,21 +575,18 @@ class CRM_Utils_MCP {
       ],
       [
         'name' => 'contribution_search',
-        'description' => 'Search contributions using various filters',
+        'description' => 'Search contributions using various filters. Available searchable fields: ' . implode(', ', array_keys($contributionSearchableFields)),
         'inputSchema' => [
           'type' => 'object',
-          'properties' => [
+          'properties' => $this->generateInputSchemaProperties('contribution', [
             'contact_id' => ['type' => 'integer', 'description' => 'Contact ID'],
             'contribution_type_id' => ['type' => 'integer', 'description' => 'Contribution type ID'],
             'contribution_status_id' => ['type' => 'integer', 'description' => 'Contribution status ID'],
             'payment_instrument_id' => ['type' => 'integer', 'description' => 'Payment instrument ID'],
             'receive_date' => ['type' => 'string', 'description' => 'Receive date (YYYY-MM-DD)'],
             'total_amount' => ['type' => 'number', 'description' => 'Total amount'],
-            'id' => ['type' => 'integer', 'description' => 'Contribution ID'],
-            'limit' => ['type' => 'integer', 'description' => 'Number of results to return'],
-            'offset' => ['type' => 'integer', 'description' => 'Offset for pagination'],
-            'sort' => ['type' => 'string', 'description' => 'Sort field and direction (e.g., "total_amount desc", "receive_date asc")']
-          ]
+            'id' => ['type' => 'integer', 'description' => 'Contribution ID']
+          ])
         ]
       ],
       [
@@ -2481,20 +2715,44 @@ class CRM_Utils_MCP {
       $apiParams['options'] = $options;
     }
     
-    $result = CRM_Utils_REST::process($args, $apiParams);
-    
-    return [
-      'jsonrpc' => '2.0',
-      'result' => [
-        'content' => [
-          [
-            'type' => 'text',
-            'text' => json_encode($result, JSON_PRETTY_PRINT)
-          ]
-        ]
-      ],
-      'id' => $id
-    ];
+    try {
+      $result = CRM_Utils_REST::process($args, $apiParams);
+      
+      // Check if API call was successful
+      $isError = false;
+      if (isset($result['is_error']) && $result['is_error']) {
+        $isError = true;
+      }
+      
+      return [
+        'jsonrpc' => '2.0',
+        'result' => [
+          'content' => [
+            [
+              'type' => 'text',
+              'text' => json_encode($result, JSON_PRETTY_PRINT)
+            ]
+          ],
+          'isError' => $isError
+        ],
+        'id' => $id
+      ];
+    }
+    catch (Exception $e) {
+      return [
+        'jsonrpc' => '2.0',
+        'result' => [
+          'content' => [
+            [
+              'type' => 'text',
+              'text' => 'Error: ' . $e->getMessage()
+            ]
+          ],
+          'isError' => true
+        ],
+        'id' => $id
+      ];
+    }
   }
 
   /**

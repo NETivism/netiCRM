@@ -440,34 +440,7 @@ function _civicrm_api3_get_using_query_object($entity, $params, $additional_opti
     $fields['values'][$entity . '_id'] = [];
 
     // get form name to retrieve available searchable field
-    $searchableFormFields = [];
-    if (strtolower($entity) === 'contact') {
-      $controller = new CRM_Contact_Controller_Search('Advanced Search', TRUE, CRM_Core_Action::ADVANCED, NULL, FALSE);
-      $qform = $controller->_pages['Advanced'];
-      $qform->buildForm();
-      CRM_Contact_Form_Search_Criteria::location($qform);
-      CRM_Contact_Form_Search_Criteria::relationship($qform);
-      CRM_Contact_Form_Search_Criteria::demographics($qform);
-      CRM_Contact_Form_Search_Criteria::notes($qform);
-      $searchableFormFields = $qform->_elementIndex;
-      unset($qform);
-      unset($controller);
-    }
-    else {
-      if (strtolower($entity) === 'contribution') {
-        $queryClass = 'CRM_Contribute_BAO_Query';
-      }
-      else {
-        $queryClass = 'CRM_'.ucfirst($entity).'_BAO_Query';
-      }
-      $searchForm = 'buildSearchForm';
-      if (is_callable([$queryClass, $searchForm])) {
-        $qform = new CRM_Core_Form();
-        $queryClass::$searchForm($qform);
-        $searchableFormFields = $qform->_elementIndex;
-        unset($qform);
-      }
-    }
+    $searchableFormFields = _civicrm_api3_get_entity_form_searchable($entity);
     foreach($searchableFormFields as $fieldName => $dontcare) {
       if (!isset($fields['values'][$fieldName])) {
         $fields['values'][$fieldName] = 1;
@@ -1702,6 +1675,46 @@ function _civicrm_api3_allowed_zero_list() {
     'unit_price',
 
   ];
+}
+
+/**
+ * Get searchable form fields for a given entity
+ *
+ * @param string $entity The entity name (e.g., 'contact', 'contribution')
+ * @return array Array of searchable form fields
+ */
+function _civicrm_api3_get_entity_form_searchable($entity) {
+  $searchableFormFields = [];
+  
+  if (strtolower($entity) === 'contact') {
+    $controller = new CRM_Contact_Controller_Search('Advanced Search', TRUE, CRM_Core_Action::ADVANCED, NULL, FALSE);
+    $qform = $controller->_pages['Advanced'];
+    $qform->buildForm();
+    CRM_Contact_Form_Search_Criteria::location($qform);
+    CRM_Contact_Form_Search_Criteria::relationship($qform);
+    CRM_Contact_Form_Search_Criteria::demographics($qform);
+    CRM_Contact_Form_Search_Criteria::notes($qform);
+    $searchableFormFields = $qform->_elementIndex;
+    unset($qform);
+    unset($controller);
+  }
+  else {
+    if (strtolower($entity) === 'contribution') {
+      $queryClass = 'CRM_Contribute_BAO_Query';
+    }
+    else {
+      $queryClass = 'CRM_' . ucfirst($entity) . '_BAO_Query';
+    }
+    $searchForm = 'buildSearchForm';
+    if (is_callable([$queryClass, $searchForm])) {
+      $qform = new CRM_Core_Form();
+      $queryClass::$searchForm($qform);
+      $searchableFormFields = $qform->_elementIndex;
+      unset($qform);
+    }
+  }
+  
+  return $searchableFormFields;
 }
 
 function _civicrm_api3_pseudoconstant_entity() {
