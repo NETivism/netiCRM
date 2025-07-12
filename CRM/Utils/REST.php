@@ -351,7 +351,8 @@ class CRM_Utils_REST {
     if (!empty($entity) && !empty($action)) {
       try {
         require_once 'api/v3/utils.php';
-        _civicrm_api3_api_check_permission($entity, $action, [], TRUE);
+        $emptyParams = [];
+        _civicrm_api3_api_check_permission($entity, $action, $emptyParams, TRUE);
       }
       catch (Exception $e) {
         return self::error("FATAL: " . $e->getMessage());
