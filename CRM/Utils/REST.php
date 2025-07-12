@@ -323,12 +323,47 @@ class CRM_Utils_REST {
       return self::error("FATAL: ".$error);
     }
 
+    // Check REST API permissions based on action
+    $entity = $args[1] ?? '';
+    $action = strtolower($args[2] ?? '');
+    $permissionRequired = '';
+    
+    // Map actions to REST API permissions
+    if (in_array($action, ['create'])) {
+      $permissionRequired = 'REST API create';
+    }
+    elseif (in_array($action, ['update'])) {
+      $permissionRequired = 'REST API update';
+    }
+    elseif (in_array($action, ['delete'])) {
+      $permissionRequired = 'REST API delete';
+    }
+    elseif (in_array($action, ['get', 'getsingle', 'getvalue', 'getcount', 'getoptions', 'getfields'])) {
+      $permissionRequired = 'REST API search';
+    }
+    
+    // Check REST API permission if required
+    if (!empty($permissionRequired) && !CRM_Core_Permission::check($permissionRequired)) {
+      return self::error("FATAL: You do not have permission to perform this action via REST API. Required permission: " . $permissionRequired);
+    }
+
+    // Check standard API permissions using the permission checking function
+    if (!empty($entity) && !empty($action)) {
+      try {
+        require_once 'api/v3/utils.php';
+        _civicrm_api3_api_check_permission($entity, $action, [], TRUE);
+      }
+      catch (Exception $e) {
+        return self::error("FATAL: " . $e->getMessage());
+      }
+    }
+
     return self::process($args);
   }
 
   static function process(&$args, $params = []) {
     if (empty($params)) {
-      $params = &self::buildParamList();
+      $params = self::buildParamList();
     }
 
     $params['check_permissions'] = TRUE;
@@ -341,18 +376,7 @@ class CRM_Utils_REST {
       }
     }
 
-    // incase of ajax functions className is passed in url
-    if (isset($params['className'])) {
-      $params['className'] = CRM_Utils_String::munge($params['className']);
-
-      // functions that are defined only in AJAX.php can be called via
-      // rest interface
-      if (!CRM_Core_Page_AJAX::checkAuthz('method', $params['className'], $params['fnName'])) {
-        return self::error('Unknown function invocation.');
-      }
-
-      return call_user_func([$params['className'], $params['fnName']], $params);
-    }
+    // className-based calls are now handled exclusively in ajax() function for security
 
     if (!CRM_Utils_Array::arrayKeyExists('version', $params)) {
       $params['version'] = 3;
@@ -424,7 +448,7 @@ class CRM_Utils_REST {
     return $result;
   }
 
-  static function &buildParamList() {
+  static function buildParamList() {
     $params = [];
 
     $skipVars = [
@@ -490,111 +514,6 @@ class CRM_Utils_REST {
 
   /** used to load a template "inline", eg. for ajax, without having to build a menu for each template */
   static function loadTemplate() {
-    /*
-    $request = CRM_Utils_Request::retrieve('q', 'String', CRM_Core_DAO::$_nullObject);
-    if (FALSE !== strpos($request, '..')) {
-      die("SECURITY FATAL: the url can't contain '..'. Please report the issue on the forum at civicrm.org");
-    }
-
-    $request = preg_split('/\//', $request);
-    $entity = _civicrm_api_get_camel_name($request[2]);
-    $tplfile = _civicrm_api_get_camel_name($request[3]);
-
-    $tpl = 'CRM/' . $entity . '/Page/Inline/' . $tplfile . '.tpl';
-    $smarty = CRM_Core_Smarty::singleton();
-    CRM_Utils_System::setTitle("$entity::$tplfile inline $tpl");
-    if (!$smarty->template_exists($tpl)) {
-      header("Status: 404 Not Found");
-      die("Can't find the requested template file templates/$tpl");
-    }
-    // special treatmenent, because it's often used
-    if (CRM_Utils_Array::arrayKeyExists('id', $_GET)) {
-      // an id is always positive
-      $smarty->assign('id', (int)$_GET['id']);
-    }
-    $pos = strpos(CRM_Utils_Array::implode(array_keys($_GET)), '<');
-
-    if ($pos !== FALSE) {
-      die("SECURITY FATAL: one of the param names contains &lt;");
-    }
-    $param = array_map('htmlentities', $_GET);
-    unset($param['q']);
-    $smarty->assign_by_ref("request", $param);
-
-    if (!CRM_Utils_Array::arrayKeyExists('HTTP_X_REQUESTED_WITH', $_SERVER) ||
-      $_SERVER['HTTP_X_REQUESTED_WITH'] != "XMLHttpRequest"
-    ) {
-
-      $smarty->assign('tplFile', $tpl);
-      $config = CRM_Core_Config::singleton();
-      $content = $smarty->fetch('CRM/common/' . strtolower($config->userFramework) . '.tpl');
-
-      if ($region = CRM_Core_Region::instance('html-header', FALSE)) {
-        CRM_Utils_System::addHTMLHead($region->render(''));
-      }
-      CRM_Utils_System::appendTPLFile($tpl, $content);
-
-      return CRM_Utils_System::theme($content);
-    }
-    else {
-      $content = "<!-- .tpl file embeded: $tpl -->\n";
-      CRM_Utils_System::appendTPLFile($tpl, $content);
-      echo $content . $smarty->fetch($tpl);
-      CRM_Utils_System::civiExit();
-    }
-    */
-  }
-
-  /** This is a wrapper so you can call an api via json (it returns json too)
-   * http://example.org/civicrm/api/json?entity=Contact&action=Get"&json={"contact_type":"Individual","email.get.email":{}} to take all the emails from individuals
-   * works for POST & GET (POST recommended)
-   **/
-  static function ajaxJson() {
-    if (!self::isWebServiceRequest()) {
-      $error = civicrm_api3_create_error("SECURITY ALERT: Ajax requests can only be issued by javascript clients, eg. $().crmAPI().",
-        [
-          'IP' => CRM_Utils_System::ipAddress(),
-          'level' => 'security',
-          'referer' => $_SERVER['HTTP_REFERER'],
-          'reason' => 'CSRF suspected',
-        ]
-      );
-      echo json_encode($error);
-      CRM_Utils_System::civiExit();
-    }
-    if (empty($_REQUEST['entity'])) {
-      echo json_encode(civicrm_api3_create_error('missing entity param'));
-      CRM_Utils_System::civiExit();
-    }
-    if (empty($_REQUEST['entity'])) {
-      echo json_encode(civicrm_api3_create_error('missing entity entity'));
-      CRM_Utils_System::civiExit();
-    }
-    if (!empty($_REQUEST['json'])) {
-      $params = json_decode($_REQUEST['json'], TRUE);
-    }
-    $entity = CRM_Utils_String::munge(CRM_Utils_Array::value('entity', $_REQUEST));
-    $action = CRM_Utils_String::munge(CRM_Utils_Array::value('action', $_REQUEST));
-    if (!is_array($params)) {
-      echo json_encode(['is_error' => 1, 'error_message', 'invalid json format: ?{"param_with_double_quote":"value"}']);
-      CRM_Utils_System::civiExit();
-    }
-
-    $params['check_permissions'] = TRUE;
-    $params['version'] = 3;
-    $_REQUEST['json'] = 1;
-    if (!$params['sequential']) {
-      $params['sequential'] = 1;
-    }
-    // trap all fatal errors
-    CRM_Core_Error::setCallback(['CRM_Utils_REST', 'fatal']);
-    $result = civicrm_api($entity, $action, $params);
-
-    CRM_Core_Error::setCallback();
-
-    echo self::output($result);
-
-    CRM_Utils_System::civiExit();
   }
 
   static function ajax() {
@@ -616,6 +535,25 @@ class CRM_Utils_REST {
       CRM_Utils_System::civiExit();
     }
 
+    // Handle className-based internal function calls (AJAX only)
+    $className = CRM_Utils_Array::value('className', $_REQUEST);
+    if (!empty($className)) {
+      $className = CRM_Utils_String::munge($className);
+      $fnName = CRM_Utils_Array::value('fnName', $_REQUEST);
+      
+      // Security check: functions that are defined only in AJAX.php can be called via ajax interface
+      if (!CRM_Core_Page_AJAX::checkAuthz('method', $className, $fnName)) {
+        $err = ['error_message' => 'Unknown function invocation.', 'is_error' => 1];
+        echo self::output($err);
+        CRM_Utils_System::civiExit();
+      }
+      
+      $params = self::buildParamList();
+      $result = call_user_func([$className, $fnName], $params);
+      echo self::output($result);
+      CRM_Utils_System::civiExit();
+    }
+
     $q = CRM_Utils_Array::value('fnName', $_REQUEST);
     if (!$q) {
       $entity = CRM_Utils_Array::value('entity', $_REQUEST);
@@ -631,14 +569,11 @@ class CRM_Utils_REST {
       $args = explode('/', $q);
     }
 
-    // get the class name, since all ajax functions pass className
-    $className = CRM_Utils_Array::value('className', $_REQUEST);
-
     // If the function isn't in the civicrm namespace, reject the request.
-    if (($args[0] != 'civicrm' &&
-        count($args) != 3
-      ) && !$className) {
-      return self::error('Unknown function invocation.');
+    if ($args[0] != 'civicrm' && count($args) != 3) {
+      $err = ['error_message' => 'Unknown function invocation.', 'is_error' => 1];
+      echo self::output($err);
+      CRM_Utils_System::civiExit();
     }
 
     $result = self::process($args, FALSE);

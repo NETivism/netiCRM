@@ -292,8 +292,7 @@ function _civicrm_api_loadEntity($entity, $version = 3) {
 }
 
 /**
- *
- * @deprecated
+ * Get functions
  */
 function civicrm_api_get_function_name($entity, $action, $version = NULL) {
 
