@@ -331,9 +331,8 @@ class CRM_Utils_REST {
       $params = &self::buildParamList();
     }
 
-    if (!isset($params['check_permissions'])) {
-      $params['check_permissions'] = TRUE;
-    }
+    $params['check_permissions'] = TRUE;
+
     $fnName = $apiFile = NULL;
     // clean up all function / class names. they should be alphanumeric and _ only
     for ($i = 1; $i <= 3; $i++) {
