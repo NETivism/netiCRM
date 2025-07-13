@@ -627,6 +627,16 @@ class CRM_Utils_MCP {
       }
     }
     
+    $apiParams['return.id'] = 1;
+    $apiParams['return.contact_type'] = 1;
+    $apiParams['return.employer_id'] = 1;
+    $apiParams['return.birth_date'] = 1;
+    $apiParams['return.prefix_id'] = 1;
+    $apiParams['return.suffix_id'] = 1;
+    $apiParams['return.gender_id'] = 1;
+    $apiParams['return.job_title'] = 1;
+    $apiParams['return.created_date'] = 1;
+    $apiParams['return.modified_date'] = 1;
     return $this->executeApiCall('Contact', 'get', $apiParams, $id);
   }
 
@@ -641,8 +651,18 @@ class CRM_Utils_MCP {
         $apiParams[$field] = $arguments[$field];
       }
     }
-    
-    return $this->executeApiCall('Contribution', 'get', $apiParams, $id);
+    $apiParams['return.contact_id'] = 1;
+    $apiParams['return.contribution_page_id'] = 1;
+    $apiParams['return.contribution_type_id'] = 1;
+    $apiParams['return.contribution_recurring_id'] = 1;
+    $apiParams['return.contribution_status_id'] = 1;
+    $apiParams['return.amount_level'] = 1;
+    $apiParams['return.payment_instrument_id'] = 1;
+    $apiParams['return.currency'] = 1;
+    $apiParams['return.total_amount'] = 1;
+    $apiParams['return.receive_date'] = 1;
+    $results = $this->executeApiCall('Contribution', 'get', $apiParams, $id);
+    return $results;
   }
 
   /**
