@@ -36,36 +36,58 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
   }
 }
 
-// Set JSON-RPC 2.0 appropriate headers
-header('Content-Type: application/json; charset=utf-8');
+// Check if client requests streaming response
+$isStreamable = false;
+$acceptHeader = $_SERVER['HTTP_ACCEPT'] ?? '';
+if (strpos($acceptHeader, 'text/event-stream') !== false) {
+  $isStreamable = true;
+  header('Content-Type: text/event-stream; charset=utf-8');
+  header('Cache-Control: no-cache');
+  header('Connection: keep-alive');
+} else {
+  header('Content-Type: application/json; charset=utf-8');
+}
 header('Access-Control-Allow-Origin: *');
 
 // Check if MCP is enabled
 if (!defined('CIVICRM_MCP_ENABLED') || !CIVICRM_MCP_ENABLED) {
   http_response_code(404);
-  echo json_encode([
+  $errorResponse = [
     'jsonrpc' => '2.0',
     'error' => [
       'code' => -32600,
       'message' => 'MCP Server not available'
     ],
     'id' => null
-  ]);
+  ];
+  
+  if ($isStreamable) {
+    echo "data: " . json_encode($errorResponse) . "\n\n";
+  } else {
+    echo json_encode($errorResponse);
+  }
   exit;
 }
 
 // Initialize and run MCP server
 try {
   $mcp = new CRM_Utils_MCP();
+  $mcp->setStreamable($isStreamable);
   echo $mcp->bootAndRun();
 } catch (Exception $e) {
   http_response_code(500);
-  echo json_encode([
+  $errorResponse = [
     'jsonrpc' => '2.0',
     'error' => [
       'code' => -32603,
       'message' => 'Internal error: ' . $e->getMessage()
     ],
     'id' => null
-  ]);
+  ];
+  
+  if ($isStreamable) {
+    echo "data: " . json_encode($errorResponse) . "\n\n";
+  } else {
+    echo json_encode($errorResponse);
+  }
 }

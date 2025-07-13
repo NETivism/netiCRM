@@ -10,6 +10,19 @@
 class CRM_Utils_MCP {
   const LAST_HIT = 'mcp_lasthit';
   const RATE_LIMIT = 0.2;
+  
+  /**
+   * @var bool Whether to output streaming responses
+   */
+  private $isStreamable = false;
+
+  /**
+   * Set streaming mode
+   * @param bool $isStreamable Whether to enable streaming responses
+   */
+  public function setStreamable($isStreamable) {
+    $this->isStreamable = $isStreamable;
+  }
 
   /**
    * MCP (Model Context Protocol) entry point
@@ -145,7 +158,7 @@ class CRM_Utils_MCP {
   /**
    * Output MCP JSON-RPC 2.0 response
    * @param array $result Response data
-   * @return string JSON response
+   * @return string JSON response or SSE format
    */
   public function output($result) {
     // Headers are set in extern/mcp.php, don't duplicate
@@ -153,7 +166,14 @@ class CRM_Utils_MCP {
     if (defined('JSON_INVALID_UTF8_IGNORE')) {
       $options |= JSON_INVALID_UTF8_IGNORE;
     }
-    return json_encode($result, $options);
+    
+    $jsonResponse = json_encode($result, $options);
+    
+    if ($this->isStreamable) {
+      return "data: " . $jsonResponse . "\n\n";
+    } else {
+      return $jsonResponse;
+    }
   }
 
   /**
