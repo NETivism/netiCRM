@@ -565,7 +565,7 @@ class CRM_Utils_Image {
 
       // Log success summary
       if (!empty($result['moved_files']) && CRM_Core_Config::singleton()->debug) {
-        CRM_Core_Error::debug('Blob images processed successfully', [
+        CRM_Core_Error::debug('imageUpload_BlobImagesProcessed', [
           'user_id' => $userId,
           'ckeditor_fields' => $ckeditorFields,
           'processed_fields' => $result['processed_fields'],
@@ -811,13 +811,14 @@ class CRM_Utils_Image {
         $result['final_name'] = $finalFileName;
         $result['source_file'] = $sourceFile;
 
-        CRM_Core_Error::debug('File moved successfully', [
-          'source' => $sourceFile,
-          'destination' => $finalPath,
-          'user_id' => $userId,
-          'user_dir' => basename($userDir) // Just log u[uid] part
-        ]);
-
+        if (CRM_Core_Config::singleton()->debug) {
+          CRM_Core_Error::debug('imageUpload_FileMovedSuccessfully', [
+            'source' => $sourceFile,
+            'destination' => $finalPath,
+            'user_id' => $userId,
+            'user_dir' => basename($userDir) // Just log u[uid] part
+          ]);
+        }
       } else {
         $result['error'] = 'Failed to move file from ' . $sourceFile . ' to ' . $finalPath;
       }
@@ -940,21 +941,23 @@ class CRM_Utils_Image {
         $result['url'] = $relativeUrl;
 
         // Debug log the URL generation process
-        CRM_Core_Error::debug('URL generation details', [
-          'file_path' => $filePath,
-          'public_dir' => $normalizedPublicDir,
-          'document_root' => $documentRoot,
-          'file_relative_path' => $fileRelativePath,
-          'public_url_path' => $publicUrlPath,
-          'final_url' => $relativeUrl
-        ]);
+        if (CRM_Core_Config::singleton()->debug) {
+          CRM_Core_Error::debug('imageUpload_URLGeneration', [
+            'file_path' => $filePath,
+            'public_dir' => $normalizedPublicDir,
+            'document_root' => $documentRoot,
+            'file_relative_path' => $fileRelativePath,
+            'public_url_path' => $publicUrlPath,
+            'final_url' => $relativeUrl
+          ]);
+        }
       } else {
         $result['error'] = 'Generated URL is invalid: ' . $relativeUrl;
       }
 
     } catch (Exception $e) {
       $result['error'] = 'Exception in generatePublicUrl: ' . $e->getMessage();
-      CRM_Core_Error::debug('Exception in generatePublicUrl', [
+      CRM_Core_Error::debug('imageUpload_Exception', [
         'file_path' => $filePath,
         'error' => $e->getMessage()
       ]);
