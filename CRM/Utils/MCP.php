@@ -246,6 +246,9 @@ class CRM_Utils_MCP {
       case 'delete':
         $apiAction = 'delete';
         break;
+      case 'query':
+        $apiAction = 'query';
+        break;
       default:
         return FALSE;
     }
@@ -264,10 +267,16 @@ class CRM_Utils_MCP {
     elseif (in_array($apiAction, ['get', 'getsingle', 'getvalue', 'getcount', 'getoptions', 'getfields'])) {
       $permissionRequired = 'REST API search';
     }
+    elseif (in_array($apiAction, ['query'])) {
+      $permissionRequired = 'MCP query';
+    }
     
     // Check REST API permission if required
     if (!empty($permissionRequired) && !CRM_Core_Permission::check($permissionRequired)) {
       return FALSE;
+    }
+    if ($permissionRequired == 'MCP query') {
+      return TRUE;
     }
 
     // Check standard API permissions using the permission checking function
@@ -579,20 +588,27 @@ class CRM_Utils_MCP {
         ]
       ],
       [
-        'name' => 'civicrm_api',
-        'description' => 'Execute general CiviCRM API calls (get, getoptions)',
+        'name' => 'contact_query',
+        'description' => 'Generate MariaDB related SQL Query on table "civicrm_contact" based and other related tables to doing contact based analysis.',
         'inputSchema' => [
           'type' => 'object',
           'properties' => [
-            'entity' => ['type' => 'string', 'description' => 'API entity'],
-            'action' => ['type' => 'string', 'description' => 'API action (get or getoptions only)', 'enum' => ['get', 'getoptions']],
-            'params' => ['type' => 'object', 'description' => 'API parameters']
+            'query' => ['type' => 'string', 'description' => 'AI generated query that match MariaDB / MySQL Syntax and follow the rules: Allowed tables: [civicrm_contribution, civicrm_contact, civicrm_contribution_recur, civicrm_contribution_page, civicrm_membership_payment, civicrm_participant_payment]. Allowed selectable fields [id,contact_type,employer_id,birth_date,prefix_id,suffix_id,gender_id,job_title,created_date,modified_date,contact_id,total_amount,receive_date,is_test,contribution_status_id,contribution_page_id,contribution_type_id] .Always join tables "LEFT JOIN civicrm_participant_payment p ON p.contribution_id = cc.id LEFT JOIN civicrm_membership_payment m ON m.contribution_id = cc.id" and add WHERE to check civicrm_participant_payment.id IS NULL AND civicrm_membership_payment.id IS NULL'],
           ],
-          'required' => ['entity', 'action']
-        ]
-      ]
+        ],
+      ],
+      [
+        'name' => 'contribution_query',
+        'description' => 'Generate MariaDB related SQL Query on table "civicrm_contact" based and other related tables to doing contact based analysis.',
+        'inputSchema' => [
+          'type' => 'object',
+          'properties' => [
+            'query' => ['type' => 'string', 'description' => 'AI generated query that match MariaDB / MySQL Syntax and follow the rules: Allowed tables: [civicrm_contribution, civicrm_contact, civicrm_contribution_recur, civicrm_contribution_page, civicrm_membership_payment, civicrm_participant_payment]. Allowed selectable fields [id,contact_type,employer_id,birth_date,prefix_id,suffix_id,gender_id,job_title,created_date,modified_date,contact_id,total_amount,receive_date,is_test,contribution_status_id,contribution_page_id,contribution_type_id] .Always join tables "LEFT JOIN civicrm_participant_payment p ON p.contribution_id = cc.id LEFT JOIN civicrm_membership_payment m ON m.contribution_id = cc.id" and add WHERE to check civicrm_participant_payment.id IS NULL AND civicrm_membership_payment.id IS NULL'],
+          ],
+        ],
+      ],
     ];
-    
+
     // Filter tools based on user permissions
     $allowedTools = [];
     foreach ($tools as $tool) {
@@ -600,7 +616,7 @@ class CRM_Utils_MCP {
         $allowedTools[] = $tool;
       }
     }
-    
+
     return [
       'jsonrpc' => '2.0',
       'result' => ['tools' => $allowedTools],
@@ -628,6 +644,9 @@ class CRM_Utils_MCP {
         return $this->handleContactSearch($arguments, $id);
       case 'contribution_search':
         return $this->handleContributionSearch($arguments, $id);
+      case 'contact_query':
+      case 'contribution_query':
+        return $this->handleMCPQuery($arguments, $id);
       case 'civicrm_api':
         return $this->handleGenericApi($arguments, $id);
       default:
@@ -683,6 +702,43 @@ class CRM_Utils_MCP {
     $apiParams['return.receive_date'] = 1;
     $results = $this->executeApiCall('Contribution', 'get', $apiParams, $id);
     return $results;
+  }
+
+  private function handleMCPQuery($arguments, $id) {
+    $allowlist = [
+      'statement' => 'SELECT',
+      'table' => ['civicrm_contribution', 'civicrm_contact', 'civicrm_participant_payment', 'civicrm_membership_payment', 'civicrm_contribution_recur', 'civicrm_contribution_page'],
+      'field' => [
+        'id','contact_type','employer_id','birth_date','prefix_id','suffix_id','gender_id','job_title','created_date','modified_date','contact_id','total_amount','receive_date','is_test','contribution_status_id','contribution_page_id','contribution_type_id','contribution_id','participant_id','membership_id'
+      ],
+    ];
+    $parser = new CRM_Utils_SqlParser($arguments['query'], $allowlist);
+    $isError = FALSE;
+    if ($parser->isValid()) {
+      $sql = $parser->getQuery(TRUE);
+      $dbo = CRM_Core_DAO::initReadonly();
+      $sth = $dbo->prepare($sql);
+      $sth->execute();
+      $results = $sth->fetchAll();
+
+    }
+    else {
+      $results = $parser->getErrors();
+      $isError = TRUE;
+    }
+    return [
+      'jsonrpc' => '2.0',
+      'result' => [
+        'content' => [
+          [
+            'type' => 'text',
+            'text' => json_encode($results, JSON_PRETTY_PRINT)
+          ]
+        ],
+        'isError' => $isError
+      ],
+      'id' => $id
+    ];
   }
 
   /**

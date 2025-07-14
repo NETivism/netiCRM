@@ -100,6 +100,45 @@ class CRM_Core_DAO extends DB_DataObject {
     }
   }
 
+  static function initReadonly() {
+    if (!defined('CIVICRM_DSN')) {
+      return FALSE;
+    }
+
+    try {
+      $dsn = CIVICRM_DSN;
+      $parsed = parse_url($dsn);
+      if (!$parsed || !isset($parsed['scheme'])) {
+        return FALSE;
+      }
+      $driver = '';
+      switch ($parsed['scheme']) {
+        case 'mysqli':
+        case 'mysql':
+          $driver = 'mysql';
+          break;
+        default:
+          return FALSE;
+      }
+      $host = isset($parsed['host']) ? $parsed['host'] : 'localhost';
+      $port = isset($parsed['port']) ? $parsed['port'] : 3306;
+      $dbname = isset($parsed['path']) ? ltrim($parsed['path'], '/') : '';
+      $username = isset($parsed['user']) ? $parsed['user'] : '';
+      $password = isset($parsed['pass']) ? $parsed['pass'] : '';
+      $pdoDsn = "{$driver}:host={$host};port={$port};dbname={$dbname}";
+      $options = [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::ATTR_PERSISTENT => FALSE,
+      ];
+      $pdo = new PDO($pdoDsn, $username, $password, $options);
+      //$pdo->exec("SET SESSION read_only = 1");
+      return $pdo;
+    } catch (Exception $e) {
+      return FALSE;
+    }
+  }
+
   /**
    * reset the DAO object. DAO is kinda crappy in that there is an unwritten
    * rule of one query per DAO. We attempt to get around this crappy restricrion

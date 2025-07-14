@@ -407,6 +407,7 @@ class CRM_Core_Permission {
         'REST API update' => ts('REST API update'),
         'REST API delete' => ts('REST API delete'),
         'REST API search' => ts('REST API search'),
+        'MCP query' => ts('MCP query'),
       ];
 
       if (defined('CIVICRM_MULTISITE') && CIVICRM_MULTISITE) {
