@@ -210,6 +210,6 @@
 <item>
    <path>civicrm/ajax/editor/image-upload</path>
    <page_callback>CRM_Core_Page_AJAX_EditorImageUpload::upload</page_callback>
-   <access_arguments>upload and post images,access CiviCRM</access_arguments>
+   <access_arguments>access CiviCRM;paste and upload images</access_arguments>
 </item>
 </menu>

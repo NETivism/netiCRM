@@ -21,7 +21,7 @@ class CRM_Core_Page_AJAX_EditorImageUpload {
 
     // Check permissions
     if (!CRM_Core_Permission::check('access CiviCRM') ||
-        !CRM_Core_Permission::check('upload and post images')) {
+        !CRM_Core_Permission::check('paste and upload images')) {
       self::responseError([
         'status' => 0,
         'message' => 'Permission denied.'
