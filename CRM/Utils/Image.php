@@ -498,7 +498,7 @@ class CRM_Utils_Image {
       }
 
       // Get directory paths
-      $tempDir = CRM_Utils_System::cmsDir('temp');
+      $tempDir = CRM_Core_Config::singleton()->uploadDir;
       if (!$tempDir || !is_dir($tempDir)) {
         $result['success'] = false;
         $result['errors'][] = 'Temporary directory not found or not accessible';
@@ -564,7 +564,7 @@ class CRM_Utils_Image {
       }
 
       // Log success summary
-      if (!empty($result['moved_files'])) {
+      if (!empty($result['moved_files']) && CRM_Core_Config::singleton()->debug) {
         CRM_Core_Error::debug('Blob images processed successfully', [
           'user_id' => $userId,
           'ckeditor_fields' => $ckeditorFields,
