@@ -583,8 +583,7 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
     $fv = CRM_Utils_Array::value('rfm_f_value', $formValues, $this->_defaultThresholds['f'] ?? 0);
     $mv = CRM_Utils_Array::value('rfm_m_value', $formValues, $this->_defaultThresholds['m'] ?? 0);
     $customSearchID = CRM_Utils_Request::retrieve('csid', 'Integer', CRM_Core_DAO::$_nullObject, FALSE, '');
-
-    return [
+    $params = [
       'reset' => 1,
       'csid' => $customSearchID,
       'force' => 1,
@@ -594,6 +593,8 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
       'fv' => $fv,
       'mv' => $mv
     ];
+
+    return $params;
   }
 
   /**
@@ -670,12 +671,26 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
       }
     }
     if (empty($rfmModel)) {
-      $rfmModel = ts('Custom');
-      $rValue = CRM_Utils_Array::value('rfm_r_value', $this->_formValues, 0);
-      $fValue = CRM_Utils_Array::value('rfm_f_value', $this->_formValues, 0);
-      $mValue = CRM_Utils_Array::value('rfm_m_value', $this->_formValues, 0);
-      $rfmModel .= " (R: {$rValue}, F: {$fValue}, M: {$mValue})";
+      $rfmModel = ts('RFM Customer Segments');
     }
     return $rfmModel;
+  }
+
+  /**
+   * Handle form submission and redirect with URL parameters
+   */
+  function postCustomSearchProcess(&$form) {
+    $buttonName = $form->controller->getButtonName();
+    if (strpos($buttonName, '_qf_Custom_refresh') !== FALSE) {
+      $formValues = $form->exportValues();
+      $urlParams = $this->prepareUrlParams($formValues);
+      if (empty($urlParams['csid'])) {
+         $customSearchID = $form->get('customSearchID');
+         $urlParams['csid'] = $customSearchID;
+      }
+      $queryString = http_build_query($urlParams);
+      $redirectUrl = CRM_Utils_System::url('civicrm/contact/search/custom', $queryString, TRUE);
+      CRM_Utils_System::redirect($redirectUrl);
+    }
   }
 }
