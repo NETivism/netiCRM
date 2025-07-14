@@ -428,6 +428,11 @@ class CRM_Core_Config_Variables extends CRM_Core_Config_Defaults {
   public $wkhtmltopdfPath = '/usr/bin/wkhtmltopdf';
 
   /**
+   * System language when using wkhtmltopdf
+   */
+  public $wkhtmltopdfLang = '';
+
+  /**
    * Path to wkhtmltopdf if available
    */
   public $qpdfPath = '/usr/bin/qpdf';
