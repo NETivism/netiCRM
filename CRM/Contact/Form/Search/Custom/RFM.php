@@ -71,6 +71,10 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
     $this->_form->assign('elements', ['receive_date', 'recurring']);
     $this->_form->assign('showResults', $this->_showResults);
 
+    $segment = CRM_Utils_Array::value('segment', $this->_formValues, '');
+    $hasSegmentParam = !empty($segment);
+    $this->_form->assign('hasSegmentParam', $hasSegmentParam);
+
     $this->_form->addNumber('rfm_r_value', ts('Recency (days since last donation)'), [
       'size' => 5,
       'maxlength' => 5,
