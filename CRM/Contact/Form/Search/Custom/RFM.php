@@ -98,6 +98,11 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
     ]);
     $this->_form->add('hidden', 'segment', '');
 
+    $formValues = $this->_formValues;
+    if (empty($formValues['rfm_r_value'])) {
+      $formValues = $this->setDefaultValues();
+    }
+
     if (!$this->_filled) {
       $this->fillTable();
       $this->_filled = TRUE;
@@ -119,10 +124,6 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
     $rfmSegmentData = $this->prepareRfmSegmentDataForFrontend($rfmSegments);
     $this->_form->assign('rfmSegmentDataJson', json_encode($rfmSegmentData, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE));
 
-    $formValues = $this->_formValues;
-    if (empty($formValues)) {
-      $formValues = $this->setDefaultValues();
-    }
     $urlParams = $this->prepareUrlParams($formValues);
     $this->_form->assign('urlParams', $urlParams);
     // Set tittle
@@ -541,7 +542,7 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
       $dateString = self::DATE_RANGE_DEFAULT;
     }
 
-    $thresholdType = CRM_Utils_Array::value('recurring', $currentDefaults);
+    $thresholdType = CRM_Utils_Array::value('recurring', $currentDefaults) ?? 'all';
 
     $segment = $currentDefaults['segment'];
     $parsedSegment = self::parseRfmSegment($segment);
