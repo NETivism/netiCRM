@@ -50458,3 +50458,7 @@ msgid ""
 "Showing <output class=\"record\">%1</output> records, which is <output "
 "class=\"percent\">%2</output> of the search results"
 msgstr "<output class=\"record\">%1</output>筆資料，佔搜尋結果<output class=\"percent\">%2</output>"
+
+#: CRM/Core/Permission.php
+msgid "paste and upload images"
+msgstr "貼上並上傳圖片"
