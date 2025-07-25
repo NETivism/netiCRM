@@ -606,6 +606,15 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
    * Calculate RFM segment statistics from the existing RFM data table
    */
   function calculateSegmentStatsFromTable($formValues) {
+    // Check if a specific segment is selected
+    $segment = CRM_Utils_Array::value('segment', $formValues, '');
+    $parsedSegment = self::parseRfmSegment($segment);
+
+    // If no segment, do not calculate Segment Status
+    if (!empty($parsedSegment)) {
+      return;
+    }
+
     $rThreshold = abs(CRM_Utils_Array::value('rfm_r_value', $formValues, $this->_defaultThresholds['r'] ?? 0));
     $fThreshold = abs(CRM_Utils_Array::value('rfm_f_value', $formValues, $this->_defaultThresholds['f'] ?? 0));
     $mThreshold = abs(CRM_Utils_Array::value('rfm_m_value', $formValues, $this->_defaultThresholds['m'] ?? 0));
@@ -614,29 +623,29 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
       SELECT
         COUNT(DISTINCT contact_a.id) as total_count,
         SUM(CASE
-          WHEN rfm.R >= {$rThreshold} AND rfm.F < {$fThreshold} AND rfm.M < {$mThreshold}
-          THEN 1 ELSE 0 END) as segment_0_count,  -- RlFlMl
+          WHEN rfm.R >= {$rThreshold} AND rfm.F <= {$fThreshold} AND rfm.M <= {$mThreshold}
+          THEN 1 ELSE 0 END) as segment_0_count,  -- RlFlMl (R low: >=, F low: <=, M low: <=)
         SUM(CASE
-          WHEN rfm.R >= {$rThreshold} AND rfm.F < {$fThreshold} AND rfm.M >= {$mThreshold}
-          THEN 1 ELSE 0 END) as segment_1_count,  -- RlFlMh
+          WHEN rfm.R >= {$rThreshold} AND rfm.F <= {$fThreshold} AND rfm.M >= {$mThreshold}
+          THEN 1 ELSE 0 END) as segment_1_count,  -- RlFlMh (R low: >=, F low: <=, M high: >=)
         SUM(CASE
-          WHEN rfm.R >= {$rThreshold} AND rfm.F >= {$fThreshold} AND rfm.M < {$mThreshold}
-          THEN 1 ELSE 0 END) as segment_2_count,  -- RlFhMl
+          WHEN rfm.R >= {$rThreshold} AND rfm.F >= {$fThreshold} AND rfm.M <= {$mThreshold}
+          THEN 1 ELSE 0 END) as segment_2_count,  -- RlFhMl (R low: >=, F high: >=, M low: <=)
         SUM(CASE
           WHEN rfm.R >= {$rThreshold} AND rfm.F >= {$fThreshold} AND rfm.M >= {$mThreshold}
-          THEN 1 ELSE 0 END) as segment_3_count,  -- RlFhMh
+          THEN 1 ELSE 0 END) as segment_3_count,  -- RlFhMh (R low: >=, F high: >=, M high: >=)
         SUM(CASE
-          WHEN rfm.R < {$rThreshold} AND rfm.F < {$fThreshold} AND rfm.M < {$mThreshold}
-          THEN 1 ELSE 0 END) as segment_4_count,  -- RhFlMl
+          WHEN rfm.R <= {$rThreshold} AND rfm.F <= {$fThreshold} AND rfm.M <= {$mThreshold}
+          THEN 1 ELSE 0 END) as segment_4_count,  -- RhFlMl (R high: <=, F low: <=, M low: <=)
         SUM(CASE
-          WHEN rfm.R < {$rThreshold} AND rfm.F < {$fThreshold} AND rfm.M >= {$mThreshold}
-          THEN 1 ELSE 0 END) as segment_5_count,  -- RhFlMh
+          WHEN rfm.R <= {$rThreshold} AND rfm.F <= {$fThreshold} AND rfm.M >= {$mThreshold}
+          THEN 1 ELSE 0 END) as segment_5_count,  -- RhFlMh (R high: <=, F low: <=, M high: >=)
         SUM(CASE
-          WHEN rfm.R < {$rThreshold} AND rfm.F >= {$fThreshold} AND rfm.M < {$mThreshold}
-          THEN 1 ELSE 0 END) as segment_6_count,  -- RhFhMl
+          WHEN rfm.R <= {$rThreshold} AND rfm.F >= {$fThreshold} AND rfm.M <= {$mThreshold}
+          THEN 1 ELSE 0 END) as segment_6_count,  -- RhFhMl (R high: <=, F high: >=, M low: <=)
         SUM(CASE
-          WHEN rfm.R < {$rThreshold} AND rfm.F >= {$fThreshold} AND rfm.M >= {$mThreshold}
-          THEN 1 ELSE 0 END) as segment_7_count   -- RhFhMh
+          WHEN rfm.R <= {$rThreshold} AND rfm.F >= {$fThreshold} AND rfm.M >= {$mThreshold}
+          THEN 1 ELSE 0 END) as segment_7_count   -- RhFhMh (R high: <=, F high: >=, M high: >=)
       FROM civicrm_contact contact_a
       INNER JOIN {$this->_tableName} rfm ON contact_a.id = rfm.contact_id
       WHERE contact_a.is_deleted = 0
