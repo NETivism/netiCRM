@@ -3049,9 +3049,18 @@ SELECT  group_id
       $label = $field['title'];
       $value = $values['values'][$label];
       if (!empty($submitted)) {
-        if (!CRM_Utils_Array::value($fieldName, $submitted)) {
-          if (isset($values['values'][$label])) {
-            $values['values'][$label] = '';
+        if (CRM_Utils_Array::value('html_type', $field) == 'Radio') {
+          // 對於 radio button，如果欄位存在於 submitted 中，就保持其原值
+          if (!array_key_exists($fieldName, $submitted)) {
+            if (isset($values['values'][$label])) {
+              $values['values'][$label] = '';
+            }
+          }
+        } else {
+          if (!CRM_Utils_Array::value($fieldName, $submitted)) {
+            if (isset($values['values'][$label])) {
+              $values['values'][$label] = '';
+            }
           }
         }
       }
