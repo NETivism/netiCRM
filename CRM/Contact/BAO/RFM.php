@@ -65,7 +65,7 @@ class CRM_Contact_BAO_RFM {
    *                                   If zero, include all data without threshold
    * @param string $thresholdType Threshold type: 'recurring', 'non-recurring', 'all'
    */
-  public function __construct(string $suffix, string $dateString = '', float|int|null $rThreshold = null, float|int|null $fThreshold = null, float|int|null $mThreshold = null, string $thresholdType = 'all') {
+  public function __construct(string $suffix, string $dateString = '', $rThreshold = null, $fThreshold = null, $mThreshold = null, string $thresholdType = 'all') {
     if (empty($suffix)) {
       // Generate random suffix
       $this->_suffix = CRM_Utils_String::createRandom(6);
@@ -116,7 +116,7 @@ class CRM_Contact_BAO_RFM {
    * @param bool $reverse Whether to use reverse comparison
    * @return array Array containing temporary table name and threshold value
    */
-  public function calcR(float|int $position = 0.5, bool $reverse = FALSE): array {
+  public function calcR($position = 0.5, bool $reverse = FALSE) {
     if ($this->_thresholds['r'] !== null) {
       $position = $this->_thresholds['r'];
       $reverse = $this->_reverse['r'];
@@ -132,7 +132,7 @@ class CRM_Contact_BAO_RFM {
    * @param bool $reverse Whether to use reverse comparison
    * @return array Array containing temporary table name and threshold value
    */
-  public function calcF(float|int $position = 0.5, bool $reverse = FALSE): array {
+  public function calcF($position = 0.5, bool $reverse = FALSE) {
     if ($this->_thresholds['f'] !== null) {
       $position = $this->_thresholds['f'];
       $reverse = $this->_reverse['f'];
@@ -148,7 +148,7 @@ class CRM_Contact_BAO_RFM {
    * @param bool $reverse Whether to use reverse comparison
    * @return array Array containing temporary table name and threshold value
    */
-  public function calcM(float|int $position = 0.5, bool $reverse = FALSE): array {
+  public function calcM($position = 0.5, bool $reverse = FALSE) {
     if ($this->_thresholds['m'] !== null) {
       $position = $this->_thresholds['m'];
       $reverse = $this->_reverse['m'];
@@ -167,7 +167,7 @@ class CRM_Contact_BAO_RFM {
    * @param string $aggregateFunc Aggregate function expression
    * @return array Array containing temporary table name and threshold value
    */
-  protected function calcMetric(string $metricType, float|int $position, bool $reverse, string $columnName, string $aggregateFunc): array {
+  protected function calcMetric(string $metricType, $position, bool $reverse, string $columnName, string $aggregateFunc) {
     $order = $reverse ? 'DESC' : 'ASC';
     $dateFilterSQL = '';
     
@@ -256,7 +256,7 @@ class CRM_Contact_BAO_RFM {
    * @param string $recurFilterSQL Recur filter SQL
    * @return float|int Calculated threshold value
    */
-  protected function calculateThreshold(float|int $position, string $metricType, string $aggregateFunc, string $dateFilterSQL, string $recurFilterSQL = ''): float|int {
+  protected function calculateThreshold($position, string $metricType, string $aggregateFunc, string $dateFilterSQL, string $recurFilterSQL = '') {
     if ($position > 1) {
       return (float) $position;
     }
