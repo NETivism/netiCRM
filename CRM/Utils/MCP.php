@@ -593,7 +593,7 @@ class CRM_Utils_MCP {
         'inputSchema' => [
           'type' => 'object',
           'properties' => [
-            'query' => ['type' => 'string', 'description' => 'AI generated query that match MariaDB / MySQL Syntax and follow the rules: Allowed tables: [civicrm_contribution, civicrm_contact, civicrm_contribution_recur, civicrm_contribution_page, civicrm_membership_payment, civicrm_participant_payment]. Allowed selectable fields [id,contact_type,employer_id,birth_date,prefix_id,suffix_id,gender_id,job_title,created_date,modified_date,contact_id,total_amount,receive_date,is_test,contribution_status_id,contribution_page_id,contribution_type_id] .Always join tables "LEFT JOIN civicrm_participant_payment p ON p.contribution_id = cc.id LEFT JOIN civicrm_membership_payment m ON m.contribution_id = cc.id" and add WHERE to check civicrm_participant_payment.id IS NULL AND civicrm_membership_payment.id IS NULL'],
+            'query' => ['type' => 'string', 'description' => 'AI generated query that match MariaDB / MySQL Syntax and follow the rules: Allowed tables: [civicrm_contribution, civicrm_contact, civicrm_contribution_recur, civicrm_contribution_page, civicrm_membership_payment, civicrm_participant_payment]. Allowed selectable fields [id,contact_type,employer_id,birth_date,prefix_id,suffix_id,gender_id,job_title,created_date,modified_date,contact_id,total_amount,receive_date,is_test,contribution_status_id,contribution_page_id,contribution_type_id,contribution_recur_id] .Always join tables "LEFT JOIN civicrm_participant_payment p ON p.contribution_id = cc.id LEFT JOIN civicrm_membership_payment m ON m.contribution_id = cc.id" and add WHERE to check civicrm_participant_payment.id IS NULL AND civicrm_membership_payment.id IS NULL'],
           ],
         ],
       ],
@@ -603,7 +603,7 @@ class CRM_Utils_MCP {
         'inputSchema' => [
           'type' => 'object',
           'properties' => [
-            'query' => ['type' => 'string', 'description' => 'AI generated query that match MariaDB / MySQL Syntax and follow the rules: Allowed tables: [civicrm_contribution, civicrm_contact, civicrm_contribution_recur, civicrm_contribution_page, civicrm_membership_payment, civicrm_participant_payment]. Allowed selectable fields [id,contact_type,employer_id,birth_date,prefix_id,suffix_id,gender_id,job_title,created_date,modified_date,contact_id,total_amount,receive_date,is_test,contribution_status_id,contribution_page_id,contribution_type_id] .Always join tables "LEFT JOIN civicrm_participant_payment p ON p.contribution_id = cc.id LEFT JOIN civicrm_membership_payment m ON m.contribution_id = cc.id" and add WHERE to check civicrm_participant_payment.id IS NULL AND civicrm_membership_payment.id IS NULL'],
+            'query' => ['type' => 'string', 'description' => 'AI generated query that match MariaDB / MySQL Syntax and follow the rules: Allowed tables: [civicrm_contribution, civicrm_contact, civicrm_contribution_recur, civicrm_contribution_page, civicrm_membership_payment, civicrm_participant_payment]. Allowed selectable fields [id,contact_type,employer_id,birth_date,prefix_id,suffix_id,gender_id,job_title,created_date,modified_date,contact_id,total_amount,receive_date,is_test,contribution_status_id,contribution_page_id,contribution_type_id,contribution_recur_id] .Always join tables "LEFT JOIN civicrm_participant_payment p ON p.contribution_id = cc.id LEFT JOIN civicrm_membership_payment m ON m.contribution_id = cc.id" and add WHERE to check civicrm_participant_payment.id IS NULL AND civicrm_membership_payment.id IS NULL'],
           ],
         ],
       ],
@@ -709,7 +709,7 @@ class CRM_Utils_MCP {
       'statement' => 'SELECT',
       'table' => ['civicrm_contribution', 'civicrm_contact', 'civicrm_participant_payment', 'civicrm_membership_payment', 'civicrm_contribution_recur', 'civicrm_contribution_page'],
       'field' => [
-        'id','contact_type','employer_id','birth_date','prefix_id','suffix_id','gender_id','job_title','created_date','modified_date','contact_id','total_amount','receive_date','is_test','contribution_status_id','contribution_page_id','contribution_type_id','contribution_id','participant_id','membership_id'
+        'id','contact_type','employer_id','birth_date','prefix_id','suffix_id','gender_id','job_title','created_date','modified_date','contact_id','total_amount','receive_date','is_test','contribution_recur_id','contribution_status_id','contribution_page_id','contribution_type_id','contribution_id','participant_id','membership_id'
       ],
     ];
     $parser = new CRM_Utils_SqlParser($arguments['query'], $allowlist);
