@@ -50462,3 +50462,67 @@ msgstr "<output class=\"record\">%1</output>筆資料，佔搜尋結果<output c
 #: CRM/Core/Permission.php
 msgid "paste and upload images"
 msgstr "貼上並上傳圖片"
+
+#: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
+msgid "Recency:"
+msgstr "Recency："
+
+#: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
+msgid "Frequency:"
+msgstr "Frequency："
+
+#: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
+msgid "Monetary:"
+msgstr "Monetary："
+
+#: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
+msgid "RFM Thresholds"
+msgstr "RFM 門檻值"
+
+#: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
+msgid "Edit Thresholds"
+msgstr "編輯門檻值"
+
+#: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
+msgid "RFM Thresholds Settings"
+msgstr "RFM 分析門檻設定"
+
+#: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
+msgid "Threshold:"
+msgstr "門檻值："
+
+#: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
+msgid "Old R"
+msgstr "久遠R"
+
+#: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
+msgid "Recent R"
+msgstr "近期R"
+
+#: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
+msgid "Low F"
+msgstr "低頻F"
+
+#: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
+msgid "High F"
+msgstr "高頻F"
+
+#: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
+msgid "Low M"
+msgstr "小額 M"
+
+#: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
+msgid "High M"
+msgstr "大額 M"
+
+#: CRM/Contact/Form/Search/Custom/RFM.php
+msgid "Recency (days since last donation)"
+msgstr "Recency (距離上次捐款天數)"
+
+#: CRM/Contact/Form/Search/Custom/RFM.php
+msgid "Frequency (number of donations)"
+msgstr "Frequency (捐款總次數)"
+
+#: CRM/Contact/Form/Search/Custom/RFM.php
+msgid "Monetary (total donation amount)"
+msgstr "Monetary (捐款總金額)"
