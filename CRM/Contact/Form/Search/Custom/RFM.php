@@ -686,7 +686,7 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
       }
     }
     if (empty($rfmModel)) {
-      $rfmModel = ts('RFM Customer Segments');
+      $rfmModel = ts('RFM Model - Reactivating Dormant Supporters and Expanding Loyal Supporters');
     }
     return $rfmModel;
   }
