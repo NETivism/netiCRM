@@ -49904,3 +49904,7 @@ msgstr ""
 #: CRM/Contact/Form/Search/Custom/RFM.php
 msgid "Monetary (total donation amount)"
 msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/RFM.php
+msgid "RFM Model - Reactivating Dormant Supporters and Expanding Loyal Supporters"
+msgstr ""
