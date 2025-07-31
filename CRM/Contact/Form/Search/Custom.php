@@ -162,6 +162,8 @@ class CRM_Contact_Form_Search_Custom extends CRM_Contact_Form_Search {
 
       if (method_exists($this->_customClass, 'postCustomSearchProcess')) {
         $this->_customClass->postCustomSearchProcess($this);
+        $this->_selectorName = 'CRM_Contact_Selector_Custom';
+        parent::postProcess();
         return;
       }
     }
