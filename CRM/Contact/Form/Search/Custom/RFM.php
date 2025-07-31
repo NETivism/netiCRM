@@ -1,7 +1,7 @@
 <?php
 
 class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
-  const RECURRING_NONRECURRING = 2, RECURRING = 1, NONRECURRING = 0;
+  const RECURRING_NONRECURRING = 'all', RECURRING = 'recurring', NONRECURRING = 'non-recurring';
   const DATE_RANGE_DEFAULT = 'last 1 years to today';
 
   /**
@@ -97,6 +97,7 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
       'class' => 'rfm-input'
     ]);
     $this->_form->add('hidden', 'segment', '');
+    $this->_form->add('hidden', 'ct', '');
 
     $formValues = $this->_formValues;
     if (empty($formValues['rfm_r_value'])) {
@@ -271,6 +272,8 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
     $fv = CRM_Utils_Array::value('rfm_f_value', $this->_formValues);
     $mv = CRM_Utils_Array::value('rfm_m_value', $this->_formValues);
 
+    $ct = CRM_Utils_Request::retrieve('ct', 'Boolean', CRM_Core_DAO::$_nullObject, FALSE, '');
+
     $dateRange = '';
     if (!empty($dateFrom) && !empty($dateTo)) {
       $dateRange = $dateFrom . '_to_' . $dateTo;
@@ -322,6 +325,7 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
       'receive_date_from' => $dateFilter['start'],
       'receive_date_to' => $dateFilter['end'],
       'segment' => $segment ?? '', // empty for landing page
+      'ct' => $ct ?? '',
     ];
     $this->_defaultThresholds = [
       'r' => $defaults['rfm_r_value'],
@@ -594,6 +598,7 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
   function prepareUrlParams($formValues) {
     $dateFrom = CRM_Utils_Array::value('receive_date_from', $formValues);
     $dateTo = CRM_Utils_Array::value('receive_date_to', $formValues);
+    $ct = CRM_Utils_Array::value('ct', $formValues);
     $dateParam = '';
     if (!empty($dateFrom) && !empty($dateTo)) {
       $dateParam = $dateFrom . '_to_' . $dateTo;
@@ -618,6 +623,9 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
       'fv' => $fv,
       'mv' => $mv
     ];
+    if ($ct) {
+      $params['ct'] = $ct;
+    }
 
     return $params;
   }
