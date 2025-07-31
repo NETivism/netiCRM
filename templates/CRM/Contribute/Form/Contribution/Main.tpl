@@ -598,7 +598,7 @@ function enableHonorType( ) {
       lockfield(cj("input#last_name"));
       lockfield(cj("input#first_name"));
       lockfield(cj("input#email-5"));
-      {if !$isInternal}
+      {if !$isInternal && !$originalId}
         cj(".first_name-section .content").append('<div class="description">{ts}To prevent overwrite personal info, we locked some field above for logged user. Please logout before you help other people to complete this form.{/ts}{ts 1="/user"}To change your personal info, go <a href="%1">My Account page</a> for further setting.{/ts}</div>');
       {else}
         cj(".org_option-section").hide();

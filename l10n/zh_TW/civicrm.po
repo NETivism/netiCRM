@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: CC Chu <poliphilonet@gmail.com>, 2020-2025\n"
+"Last-Translator: 馮 佳今, 2022-2025\n"
 "Language-Team: Chinese (Taiwan) (http://app.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50526,3 +50526,8 @@ msgstr "Frequency (捐款總次數)"
 #: CRM/Contact/Form/Search/Custom/RFM.php
 msgid "Monetary (total donation amount)"
 msgstr "Monetary (捐款總金額)"
+
+#: CRM/Contact/Form/Search/Custom/RFM.php
+msgid ""
+"RFM Model - Reactivating Dormant Supporters and Expanding Loyal Supporters"
+msgstr "RFM模型 - 喚醒沈睡支持者，拓展忠誠支持者"
