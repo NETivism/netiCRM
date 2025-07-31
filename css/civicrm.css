@@ -7791,6 +7791,176 @@ html[lang="en"] .new-personal-campaign-link-wrap {
   }
 }
 
+/* Tell a Friend Page - Responsive Design (Mobile First) */
+/* Mobile First - Default styles for mobile devices */
+.crm-container .tell_friend_form-group table.form-layout-compressed {
+  width: 100%;
+  display: block;
+}
+
+.crm-container .tell_friend_form-group table.form-layout-compressed tr {
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.crm-container .tell_friend_form-group table.form-layout-compressed td {
+  display: block;
+  width: auto;
+  padding: 0.5rem 0;
+  text-align: left;
+}
+
+.crm-container .tell_friend_form-group table.form-layout-compressed td.right {
+  text-align: left;
+}
+
+.crm-container .tell_friend_form-group  #suggested_message {
+  min-height: 150px;
+}
+
+.crm-container .tell_friend_emails-group table,
+.crm-container .tell_friend_emails-group tbody,
+.crm-container .tell_friend_emails-group tr,
+.crm-container .tell_friend_emails-group td {
+  display: block;
+  width: 100%;
+}
+
+.crm-container .tell_friend_emails-group tr {
+  margin-bottom: 1rem;
+  border: 1px solid #ddd;
+  padding: 0.5rem;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+}
+
+.crm-container table.form-layout-compressed .tell_friend_emails-group tr.columnheader {
+  display: none; /* Hide table header on mobile */
+}
+
+.crm-container .tell_friend_emails-group td {
+  padding: 0.25rem 0;
+  border: none;
+  position: relative;
+}
+
+.crm-container .tell_friend_emails-group td.even-row {
+  background: transparent;
+}
+
+/* Add labels using pseudo-elements in mobile view */
+.crm-container .tell_friend_emails-group td[data-label]::before {
+  content: attr(data-label) ": ";
+  font-weight: bold;
+  color: #333;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+/* Style form inputs for better mobile experience */
+.crm-container .tell_friend_form-group input[type="text"],
+.crm-container .tell_friend_form-group input[type="email"],
+.crm-container .tell_friend_form-group textarea {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 0.5rem;
+  font-size: 16px; /* Prevent zoom on iOS */
+}
+
+/* Tablet styles - min-width: 768px */
+@media (min-width: 768px) {
+  .crm-container .tell_friend_emails-group tr.columnheader {
+    display: block;
+    background-color: #f0f0f0;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    border-radius: 4px 4px 0 0;
+  }
+
+  .crm-container .tell_friend_emails-group tr:not(.columnheader) {
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+  }
+
+  .crm-container .tell_friend_emails-group tr:not(.columnheader):first-of-type {
+    border-radius: 4px;
+  }
+}
+
+/* Desktop styles - min-width: 920px */
+@media (min-width: 920px) {
+  .crm-container .tell_friend_form-group table.form-layout-compressed {
+    display: table;
+  }
+
+  .crm-container .tell_friend_form-group table.form-layout-compressed tr {
+    display: table-row;
+    margin-bottom: 0;
+  }
+
+  .crm-container .tell_friend_form-group table.form-layout-compressed td {
+    display: table-cell;
+    width: auto;
+    padding: 4px;
+    vertical-align: top;
+  }
+
+  .crm-container .tell_friend_form-group table.form-layout-compressed td.label {
+    width: 200px;
+    text-align: right;
+  }
+
+  .crm-container .tell_friend_form-group table.form-layout-compressed td.right {
+    text-align: right;
+  }
+
+  .crm-container .tell_friend_emails-group table,
+  .crm-container .tell_friend_emails-group tbody {
+    display: table;
+    width: 100%;
+  }
+
+  .crm-container .tell_friend_emails-group tr {
+    display: table-row;
+    margin-bottom: 0;
+    border: none;
+    padding: 0;
+    background-color: transparent;
+    border-radius: 0;
+  }
+
+  .crm-container .tell_friend_emails-group td {
+    display: table-cell;
+    width: auto;
+    padding: 4px;
+    vertical-align: top;
+    border: none;
+  }
+
+  .crm-container table.form-layout-compressed .tell_friend_emails-group tr.columnheader {
+    display: table-row;
+  }
+
+  .crm-container .tell_friend_emails-group td.even-row {
+    background: #f7f7f7;
+  }
+
+  /* Hide pseudo-element labels in desktop view */
+  .crm-container .tell_friend_emails-group td[data-label]::before {
+    display: none;
+  }
+
+  /* Reset form inputs to original styling for desktop */
+  .crm-container .tell_friend_form-group input[type="text"],
+  .crm-container .tell_friend_form-group input[type="email"],
+  .crm-container .tell_friend_form-group textarea {
+    width: auto;
+    max-width: none;
+    font-size: inherit;
+  }
+}
+
 /* debug */
 .xdebug-var-dump {
   overflow-x: scroll;
