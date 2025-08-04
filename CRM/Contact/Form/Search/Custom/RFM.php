@@ -306,7 +306,7 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
     }
     // Second try to get values from Url (if not from save search)
     if (empty($recurring)) {
-      $recurring = CRM_Utils_Request::retrieve('recurring', 'Integer', CRM_Core_DAO::$_nullObject, FALSE, self::RECURRING_NONRECURRING);
+      $recurring = CRM_Utils_Request::retrieve('recurring', 'String', CRM_Core_DAO::$_nullObject, FALSE, self::RECURRING_NONRECURRING);
     }
     if (empty($rv)) {
       $rv = CRM_Utils_Request::retrieve('rv', 'Float', CRM_Core_DAO::$_nullObject);
