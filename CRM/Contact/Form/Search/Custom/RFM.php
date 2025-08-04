@@ -121,6 +121,17 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
       return $b['numeric_id'] - $a['numeric_id']; // DESC sorting
     });
 
+    $highRfmSegments = array_filter($sortedRfmSegments, function($segment) {
+      return $segment['numeric_id'] >= 4;
+    });
+
+    $lowRfmSegments = array_filter($sortedRfmSegments, function($segment) {
+      return $segment['numeric_id'] <= 3;
+    });
+
+    $this->_form->assign('highRfmSegments', $highRfmSegments);
+    $this->_form->assign('lowRfmSegments', $lowRfmSegments);
+
     // Assign sorted segments to template
     $this->_form->assign('rfmSegments', $sortedRfmSegments);
 
