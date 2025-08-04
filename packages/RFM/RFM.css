@@ -303,9 +303,7 @@
   color: #1565C0;
 }
 .segment-item {
-  display: flex;
-  align-items: center;
-  margin-bottom: 8px;
+  margin-bottom: 30px;
   position: relative;
   color: #212121;
 }
@@ -367,7 +365,8 @@
   color: inherit;
   text-decoration: none;
   display: flex;
-  width: 100%;
+  flex-direction: column;
+  gap: 6px;
 }
 .segment-link:hover {
   color: inherit;
@@ -481,78 +480,28 @@
 
 /* TEMP Workspace */
 .rfm-3d-container {
-    display: grid;
-    grid-template-columns: 1fr min(700px, 100%);
-    grid-template-areas:
-        "sidebar wrapper";
-    gap: 1rem;
-    max-width: 1200px;
-    min-height: 500px;
-}
-.rfm-3d-title {
-  grid-area: title;
-}
-.rfm-3d-sidebar {
-  grid-area: sidebar;
-  position: relative;
-  z-index: 5;
+  max-width: 1200px;
+  min-height: 600px;
 }
 .rfm-3d-wrapper {
-  grid-area: wrapper;
 }
-.rfm-3d-container:has(.segment-counter) .rfm-3d-wrapper {
-  /* margin-top: -200px; */
+.crm-container .rfm-3d-main {
+  display: grid;
+  grid-template-columns: 150px 1fr 150px;
+  grid-template-areas:
+    "sidebar-left content sidebar-right";
+  margin-block: 40px;
 }
-.rfm-sidebar-usage {
-  max-width: 320px;
-  margin-bottom: 1em;
-  background: #fff;
-  backdrop-filter: blur(10px);
-  padding: 16px 20px;
-  border-radius: 12px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-
+.crm-container .rfm-3d-sidebar-left {
+  grid-area: sidebar-left;
 }
-.usage-instructions-header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 12px;
+.crm-container .rfm-3d-content {
+  grid-area: content;
+}
+.crm-container .rfm-3d-sidebar-right {
+  grid-area: sidebar-right;
 }
 
-.usage-instructions-icon {
-  width: 24px;
-  height: 24px;
-  background: #1565C0;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 10px;
-  color: white;
-  font-size: 16px;
-  font-weight: bold;
-  font-family: sans-serif;
-}
-
-.usage-instructions-title {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #1565C0;
-  margin: 0;
-}
-
-.usage-instructions-content {
-  font-size: 13px;
-  line-height: 1.5;
-  color: #444;
-}
-
-.usage-instructions-content .highlight {
-  /*
-  color: #1565C0;
-  font-weight: 600;
-  */
-}
 .crm-container .crm-contact-custom-search-form-row-rfm-thresholds .content {
   display: flex;
   align-items: center;
@@ -568,7 +517,6 @@
   margin: 0;
 }
 .crm-container .crm-contact-custom-search-form-rfm-block .crm-submit-buttons-top {
-  float: left;
 }
 .crm-container .crm-contact-custom-search-form-rfm-block .crm-submit-buttons-top + .custom-search-desc {
   margin: 20px 0 0 80px;
