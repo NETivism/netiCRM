@@ -14,7 +14,6 @@
       {ts}Edit Search Criteria{/ts}
     </div><!-- /.crm-accordion-header -->
     <div class="crm-accordion-body">
-        <div class="crm-submit-buttons crm-submit-buttons-top">{include file="CRM/common/formButtons.tpl" location="top"}</div>
         <div class="custom-search-desc">
           <p>{ts}Threshold values are automatically calculated based on the selected statistical time range. If the date range is adjusted, the condition values will be recalculated, and any previous manual adjustments will be cleared.{/ts}</p>
         </div>
@@ -53,6 +52,7 @@
                     </td>
                 </tr>
             </table>
+            <div class="crm-submit-buttons crm-submit-buttons-top">{include file="CRM/common/formButtons.tpl" location="top"}</div>
             {* RFM 3D Visualization Container START *}
             <div class="rfm-3d-container">
               <div class="rfm-3d-sidebar">
@@ -219,8 +219,6 @@
               </div>
             </div>
             {* RFM 3D Visualization Container END *}
-
-        <div class="crm-submit-buttons crm-submit-buttons-bottom">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
     </div><!-- /.crm-accordion-body -->
 </div><!-- /.crm-accordion-wrapper -->
 </div><!-- /.crm-form-block -->
