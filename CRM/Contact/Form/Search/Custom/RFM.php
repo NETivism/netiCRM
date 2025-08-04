@@ -69,9 +69,13 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
     $this->_form->addDateRange('receive_date', ts('Receive Date').' - '.ts('From'), NULL, FALSE);
     $this->_form->addRadio('recurring', ts('Recurring Contribution'), $this->_recurringStatus);
     $this->_form->assign('elements', ['receive_date', 'recurring']);
-    $this->_form->assign('showResults', $this->_showResults);
 
     $segment = CRM_Utils_Array::value('segment', $this->_formValues, '');
+    $parsedSegment = self::parseRfmSegment($segment);
+    if ($parsedSegment) {
+      $this->_showResults = TRUE;
+      $this->_form->assign('showResults', $this->_showResults);
+    }
     $hasSegmentParam = !empty($segment);
     $this->_form->assign('hasSegmentParam', $hasSegmentParam);
 
@@ -106,7 +110,6 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
 
     if (!$this->_filled) {
       $this->fillTable();
-      $this->_filled = TRUE;
     }
 
     // Get RFM segments in original order (0→7)
@@ -372,7 +375,6 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
     }
     if(!$this->_filled){
       $this->fillTable();
-      $this->_filled = TRUE;
     }
     $sql = $this->all();
     $dao = CRM_Core_DAO::executeQuery($sql, CRM_Core_DAO::$_nullArray);
@@ -390,7 +392,6 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
     if(!$this->_filled){
       // prepare rfm talbe
       $this->fillTable();
-      $this->_filled = TRUE;
     }
     return $this->sql($fields, $offset, $rowcount, $sort, $includeContactIDs);
   }
@@ -544,6 +545,9 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
   }
 
   function fillTable(){
+    if ($this->_filled) {
+      return;
+    }
     $currentDefaults = [];
     if (empty($this->_defaultThresholds) && CRM_Utils_Request::retrieve('force', 'Integer', CRM_Core_DAO::$_nullObject)) {
       // duplicate call default values because parent preprocess will handler later
@@ -592,7 +596,10 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
     $rfm = new CRM_Contact_BAO_RFM($suffix, $dateString, $rThreshold, $fThreshold, $mThreshold, $thresholdType);
     $result = $rfm->calcRFM();
     $this->_tableName = $result['table'];
-    $this->calculateSegmentStatsFromTable($currentDefaults);
+    if (empty($parsedSegment)) {
+      $this->calculateSegmentStatsFromTable($currentDefaults);
+    }
+    $this->_filled = TRUE;
   }
 
   function prepareUrlParams($formValues) {
