@@ -31,9 +31,14 @@
                     <td>{$form.$element.html}</td>
                 </tr>
                 {/foreach}
-                <tr class="crm-contact-custom-search-form-row-rfm-thresholds">
-                    <td class="label">{ts}RFM Thresholds{/ts}</td>
-                    <td class="content">
+            </table>
+            <div class="crm-submit-buttons crm-submit-buttons-top">{include file="CRM/common/formButtons.tpl" location="top"}</div>
+            {* RFM 3D Visualization Container START *}
+            <div class="rfm-3d-container">
+              <div class="rfm-3d-main">
+                <div class="crm-contact-custom-search-form-row-rfm-thresholds">
+                  <div class="label">{ts}RFM Thresholds{/ts}</div>
+                  <div class="content">
                       <ul class="rfm-thresholds-list">
                         <li>
                           <span class="item-label">{ts}Recency:{/ts}</span>
@@ -49,12 +54,9 @@
                         </li>
                       </ul>
                       <a class="form-submit rfm-popup-open-link" href="#rfm-popup">{ts}Edit Thresholds{/ts}</a>
-                    </td>
-                </tr>
-            </table>
-            <div class="crm-submit-buttons crm-submit-buttons-top">{include file="CRM/common/formButtons.tpl" location="top"}</div>
-            {* RFM 3D Visualization Container START *}
-            <div class="rfm-3d-container">
+                  </div>
+                </div>
+              </div>
               <div class="rfm-3d-sidebar">
                 {* Segment Info Panel *}
                 <div class="segment-info">
