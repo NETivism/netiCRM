@@ -504,6 +504,11 @@
   transform: translateX(calc(100% + 12px)) translateY(-50%);
 }
 
+/* RFM Popup */
+.crm-container .rfm-popup-open-link i {
+  color: inherit;
+}
+
 /* TEMP Workspace */
 .rfm-3d-container {
   max-width: 1200px;
@@ -531,11 +536,11 @@
 .crm-container .crm-contact-custom-search-form-row-rfm-thresholds .content {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 40px;
 }
 .crm-container .rfm-thresholds-list {
   display: flex;
-  gap: 16px;
+  gap: 20px;
   margin: 0;
   list-style: none;
 }

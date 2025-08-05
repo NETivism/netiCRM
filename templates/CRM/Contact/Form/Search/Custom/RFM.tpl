@@ -41,19 +41,21 @@
                   <div class="content">
                       <ul class="rfm-thresholds-list">
                         <li>
-                          <span class="item-label">{ts}Recency:{/ts}</span>
-                          <output class="ijtem-value" data-threshold-type="recency">{$rfmThresholds.r}</output>
+                          <span class="item-label">{ts}Recency (days since last donation){/ts}</span>
+                          <output class="item-value" data-threshold-type="recency">{$rfmThresholds.r}</output>
+                          <span class="item-value-unit">{ts}days{/ts}</span>
                         </li>
                         <li>
-                          <span class="item-label">{ts}Frequency:{/ts}</span>
+                          <span class="item-label">{ts}Frequency (number of donations){/ts}</span>
                           <output class="item-value" data-threshold-type="frequency">{$rfmThresholds.f}</output>
+                          <span class="item-value-unit">{ts}times{/ts}</span>
                         </li>
                         <li>
-                          <span class="item-label">{ts}Monetary:{/ts}</span>
+                          <span class="item-label">{ts}Monetary (total donation amount){/ts}</span>
                           <output class="item-value" data-threshold-type="monetary">{$rfmThresholds.m|crmMoney}</output>
                         </li>
                       </ul>
-                      <a class="form-submit rfm-popup-open-link" href="#rfm-popup">{ts}Edit Thresholds{/ts}</a>
+                      <a class="rfm-popup-open-link" href="#rfm-popup"><i class="zmdi zmdi-edit"></i>{ts}Edit Thresholds{/ts}</a>
                   </div>
                 </div>
               </div>
