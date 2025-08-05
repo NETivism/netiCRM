@@ -49908,3 +49908,19 @@ msgstr ""
 #: CRM/Contact/Form/Search/Custom/RFM.php
 msgid "RFM Model - Reactivating Dormant Supporters and Expanding Loyal Supporters"
 msgstr ""
+
+#: CRM/Core/Payment/SPGATEWAY.php
+msgid "Order Comment"
+msgstr ""
+
+#: CRM/Core/Payment/SPGATEWAY.php
+msgid "Enable Neweb Recurring API"
+msgstr ""
+
+#: CRM/Core/Payment/SPGATEWAY.php
+msgid "Credit Card Agreement"
+msgstr ""
+
+#: CRM/Core/Payment/SPGATEWAY.php
+msgid "Merchant ID (No 3D secure support)"
+msgstr ""
