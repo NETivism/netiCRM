@@ -50542,7 +50542,7 @@ msgstr "啟用藍新定期定額 API"
 
 #: CRM/Core/Payment/SPGATEWAY.php
 msgid "Credit Card Agreement"
-msgstr "信用卡協議"
+msgstr "約定信用卡"
 
 #: CRM/Core/Payment/SPGATEWAY.php
 msgid "Merchant ID (No 3D secure support)"
