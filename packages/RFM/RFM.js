@@ -501,10 +501,13 @@
         });
       });
 
-      $('body').on('click', '.rfm-save-btn', function() {
+      $('body').on('click', '.rfm-search-btn', function() {
         updateThresholdValues();
         valuesSaved = true;
         $.magnificPopup.close();
+        if ($('.form-submit[name*="_qf_Custom_refresh"]').length) {
+          $('.form-submit[name*="_qf_Custom_refresh"]').eq(0).click();
+        }
       });
 
       $('body').on('click', '.rfm-cancel-btn, .rfm-popup-close', function() {
