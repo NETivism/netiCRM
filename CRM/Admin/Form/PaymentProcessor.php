@@ -188,6 +188,9 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
       $hostIP = ts('None');
     }
     $this->assign('hostIP', $hostIP);
+
+    $enableSPGatewayAgreement = defined('CIVICRM_SPGATEWAY_ENABLE_AGREEMENT') && CIVICRM_SPGATEWAY_ENABLE_AGREEMENT == 1;
+    $this->assign('enableSPGatewayAgreement', $enableSPGatewayAgreement);
   }
 
   /**
