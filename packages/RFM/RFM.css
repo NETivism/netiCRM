@@ -457,6 +457,7 @@ html[lang="zh-hant"] .r-axis .label-left {
   border-top-color: #B0BEC5;
 }
 .segment-link .segment-description {
+  display: none;
   position: absolute;
   right: 0;
   top: 50%;
@@ -470,17 +471,11 @@ html[lang="zh-hant"] .r-axis .label-left {
   backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
-  opacity: 0;
-  visibility: hidden;
   pointer-events: none;
   min-width: 200px;
   box-shadow: 
       0 8px 32px rgba(0, 0, 0, 0.3),
       0 2px 8px rgba(0, 0, 0, 0.2);
-  transition: 
-      opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-      visibility 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-      transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   z-index: 1000;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -501,10 +496,20 @@ html[lang="zh-hant"] .r-axis .label-left {
   will-change: auto;
 }
 .segment-link:hover .segment-description {
-  opacity: 1;
-  visibility: visible;
+  display: block;
   pointer-events: auto;
   transform: translateX(calc(100% + 12px)) translateY(-50%);
+}
+.rfm-3d-sidebar-right .segment-link .segment-description {
+  transform: translateX(calc(-100% + 12px)) translateY(-50%);
+}
+.rfm-3d-sidebar-right .segment-link .segment-description::before {
+  left: auto;
+  right: -6px;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-left: 6px solid rgba(0, 0, 0, 0.8);
+  border-right: 0;
 }
 
 /* RFM Popup */
