@@ -255,6 +255,9 @@
 .r-axis .axis-label .rfm-label {
   background: #E67E22;
 }
+html[lang="zh-hant"] .r-axis .label-left {
+  left: -345px;
+}
 
 /* F axis (Frequency) */
 .f-axis {
