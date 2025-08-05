@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>, 2013,2015-2025\n"
+"Last-Translator: CC Chu <poliphilonet@gmail.com>, 2020-2025\n"
 "Language-Team: Chinese (Taiwan) (http://app.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50457,7 +50457,7 @@ msgstr "RFM 客戶分群類型"
 msgid ""
 "Showing <output class=\"record\">%1</output> records, which is <output "
 "class=\"percent\">%2</output> of the search results"
-msgstr "<output class=\"record\">%1</output>筆資料，佔搜尋結果<output class=\"percent\">%2</output>"
+msgstr "<output class=\"record\">%1</output>位，佔<output class=\"percent\">%2</output>"
 
 #: CRM/Core/Permission.php
 msgid "paste and upload images"
@@ -50547,3 +50547,31 @@ msgstr "約定信用卡"
 #: CRM/Core/Payment/SPGATEWAY.php
 msgid "Merchant ID (No 3D secure support)"
 msgstr "特店編號（不支援 3D 驗證）"
+
+#: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
+msgid "days"
+msgstr "天"
+
+#: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
+msgid "Recency: Old"
+msgstr "最後一次捐款時間：遠"
+
+#: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
+msgid "Recency: Recent"
+msgstr "最後一次捐款時間：近"
+
+#: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
+msgid "Frequency: Low"
+msgstr "捐款頻率：低"
+
+#: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
+msgid "Frequency: High"
+msgstr "捐款頻率：高"
+
+#: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
+msgid "Monetary: Low"
+msgstr "捐款金額：低"
+
+#: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
+msgid "Monetary: High"
+msgstr "捐款金額：高"
