@@ -1772,7 +1772,8 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     $paymentProcessorDAO->whereAdd("url_api IS NOT NULL AND url_api != ''");
     $found = $paymentProcessorDAO->find();
     if ($found <= 0) {
-        return;
+      //CRM_Core_Error::debug_log_message('SPGATEWAY Agreement: No agreement payment settings. skip this process.');
+      return;
     }
 
     // Check sequence;
@@ -1848,12 +1849,13 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     LIMIT 0, 100
     EOT;
     $dao = CRM_Core_DAO::executeQuery($sql);
+    CRM_Core_Error::debug_log_message('SPGATEWAY Agreement: Found '.$dao->N.' record(s) for agreement payment.');
     while ($dao->fetch()) {
       // Check last execute date.
       $currentDayTime = strtotime(date('Y-m-d', $time));
       $lastExecuteDayTime = strtotime(date('Y-m-d', strtotime($dao->last_execute_date)));
       if (!empty($dao->last_execute_date) && $currentDayTime <= $lastExecuteDayTime) {
-        CRM_Core_Error::debug_log_message(ts("Last execute date of recur is over the date."));
+        CRM_Core_Error::debug_log_message("Last execute date of recur is over the date.");
         continue;
       }
 
