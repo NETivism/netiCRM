@@ -500,20 +500,27 @@ function _civicrm_api3_get_using_query_object($entity, $params, $additional_opti
 
   $newParams = CRM_Contact_BAO_Query::convertFormValues($inputParams);
   $skipPermissions = CRM_Utils_Array::value('check_permissions', $params)? 0 :1;
-  list($entities, $options) = CRM_Contact_BAO_Query::apiQuery(
-    $newParams,
-    $returnProperties,
-    NULL,
-    $sort,
-    $offset ,
-    $limit,
-    $smartGroupCache,
-    $groupBy,
-    $skipPermissions,
-    $mode
-  );
-  if ($getCount) { // only return the count of contacts
-    return $entities;
+  if ($getCount) {
+    $query = new CRM_Contact_BAO_Query($newParams, NULL, NULL, TRUE, FALSE, $mode, $skipPermissions, TRUE, $smartGroupCache);
+    if ($mode === CRM_Contact_BAO_Query::MODE_CONTRIBUTE) {
+      $query->_distinctComponentClause = " DISTINCT(civicrm_contribution.id)";
+    }
+    $countResult = $query->searchQuery(0, 0, NULL, TRUE);
+    return $countResult;
+  }
+  else {
+    list($entities, $options) = CRM_Contact_BAO_Query::apiQuery(
+      $newParams,
+      $returnProperties,
+      NULL,
+      $sort,
+      $offset ,
+      $limit,
+      $smartGroupCache,
+      $groupBy,
+      $skipPermissions,
+      $mode
+    );
   }
 
   return $entities;
