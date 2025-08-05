@@ -256,16 +256,16 @@ class CRM_Utils_MCP {
     // Check REST API permissions based on action
     $permissionRequired = '';
     if (in_array($apiAction, ['create'])) {
-      $permissionRequired = 'REST API create';
+      $permissionRequired = 'API create';
     }
     elseif (in_array($apiAction, ['update'])) {
-      $permissionRequired = 'REST API update';
+      $permissionRequired = 'API update';
     }
     elseif (in_array($apiAction, ['delete'])) {
-      $permissionRequired = 'REST API delete';
+      $permissionRequired = 'API delete';
     }
     elseif (in_array($apiAction, ['get', 'getsingle', 'getvalue', 'getcount', 'getoptions', 'getfields'])) {
-      $permissionRequired = 'REST API search';
+      $permissionRequired = 'API search';
     }
     elseif (in_array($apiAction, ['query'])) {
       $permissionRequired = 'MCP query';
@@ -274,9 +274,6 @@ class CRM_Utils_MCP {
     // Check REST API permission if required
     if (!empty($permissionRequired) && !CRM_Core_Permission::check($permissionRequired)) {
       return FALSE;
-    }
-    if ($permissionRequired == 'MCP query') {
-      return TRUE;
     }
 
     // Check standard API permissions using the permission checking function

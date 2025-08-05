@@ -326,26 +326,28 @@ class CRM_Utils_REST {
     // Check REST API permissions based on action
     $entity = $args[1] ?? '';
     $action = strtolower($args[2] ?? '');
-    $permissionRequired = '';
+    /*
+    $permissionRequired = 'API search';
     
     // Map actions to REST API permissions
     if (in_array($action, ['create'])) {
-      $permissionRequired = 'REST API create';
+      $permissionRequired = 'API create';
     }
     elseif (in_array($action, ['update'])) {
-      $permissionRequired = 'REST API update';
+      $permissionRequired = 'API update';
     }
     elseif (in_array($action, ['delete'])) {
-      $permissionRequired = 'REST API delete';
+      $permissionRequired = 'API delete';
     }
     elseif (in_array($action, ['get', 'getsingle', 'getvalue', 'getcount', 'getoptions', 'getfields'])) {
-      $permissionRequired = 'REST API search';
+      $permissionRequired = 'API search';
     }
     
-    // Check REST API permission if required
+    // Check API permission if required
     if (!empty($permissionRequired) && !CRM_Core_Permission::check($permissionRequired)) {
       return self::error("FATAL: You do not have permission to perform this action via REST API. Required permission: " . $permissionRequired);
     }
+    */
 
     // Check standard API permissions using the permission checking function
     if (!empty($entity) && !empty($action)) {
