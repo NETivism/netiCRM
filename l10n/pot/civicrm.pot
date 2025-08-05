@@ -49952,3 +49952,7 @@ msgstr ""
 #: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
 msgid "Monetary: High"
 msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/RFM.php
+msgid "RFM Donor Segments"
+msgstr ""
