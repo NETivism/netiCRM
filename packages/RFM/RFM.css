@@ -57,6 +57,8 @@
   background: linear-gradient(135deg, #FAFBFC 0%, #F5F7FA 25%, #EEF2F6 50%, #E8ECF0 75%, #E1E5E9 100%);
   border-radius: 12px;
   border: 1px solid #E1E5E9;
+  container-type: inline-size;
+  container-name: rfm-container;
 }
 .rfm-3d-title {
   text-align: center;
@@ -74,16 +76,51 @@
   justify-content: center;
   gap: 20px;
 }
+.rfm-3d-container .crm-contact-custom-search-form-row-rfm-thresholds,
+.rfm-3d-container .crm-contact-custom-search-form-row-rfm-thresholds ul {
+  font-size: 12px;  
+}
 .rfm-3d-container .crm-contact-custom-search-form-row-rfm-thresholds .label {
   font-weight: bold;
 }
-.rfm-3d-wrapper {
+.rfm-3d-container .rfm-3d-wrapper {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 400px;
   perspective: 1200px;
+  transform: scale(0.7);
+}
+
+/* Container Query for rfm-3d-wrapper */
+@container rfm-container (min-width: 800px) {
+  .rfm-3d-container .rfm-3d-wrapper {
+    transform: scale(0.8);
+  }
+}
+@container rfm-container (min-width: 960px) {
+  .rfm-3d-container .rfm-3d-wrapper {
+    transform: scale(0.85);
+  }
+  .rfm-3d-container .crm-contact-custom-search-form-row-rfm-thresholds,
+  .rfm-3d-container .crm-contact-custom-search-form-row-rfm-thresholds ul {
+    font-size: 14px;  
+  }
+}
+@container rfm-container (min-width: 1020px) {
+  .rfm-3d-container .rfm-3d-wrapper {
+    transform: scale(0.9);
+  }
+}
+@container rfm-container (min-width: 1120px) {
+  .rfm-3d-container .rfm-3d-wrapper {
+    transform: scale(1);
+  }
+  .rfm-3d-container .crm-contact-custom-search-form-row-rfm-thresholds,
+  .rfm-3d-container .crm-contact-custom-search-form-row-rfm-thresholds ul {
+    font-size: 15px;  
+  }
 }
 
 /* Cube Container */
@@ -190,7 +227,6 @@
   transform-style: preserve-3d;
   transform: translate(-50%, -50%) rotateX(-20deg) rotateY(30deg);
   pointer-events: none;
-  z-index: 98;
 }
 .axis {
   position: absolute;
@@ -530,6 +566,12 @@ html[lang="zh-hant"] .r-axis .label-left {
   grid-template-areas:
     "sidebar-left content sidebar-right";
   margin-block: 40px;
+  position: relative;
+  z-index: 0;
+}
+.crm-container .rfm-3d-sidebar {
+  position: relative;
+  z-index: 1;
 }
 .crm-container .rfm-3d-sidebar-left {
   grid-area: sidebar-left;
@@ -586,4 +628,4 @@ html[lang="zh-hant"] .rfm-tag .triangle.down {
   border-left: 4px solid transparent;
   border-right: 4px solid transparent;
   border-top: 6px solid #90A4AE;
-}
+} 
