@@ -20,8 +20,8 @@ class CRM_Core_Page_AJAX_EditorImageUpload {
     }
 
     // Check permissions
-    if (!CRM_Core_Permission::check('access CiviCRM') ||
-        !CRM_Core_Permission::check('upload and post images')) {
+    if (!CRM_Core_Permission::check('access CiviCRM') &&
+        !CRM_Core_Permission::check('paste and upload images')) {
       self::responseError([
         'status' => 0,
         'message' => 'Permission denied.'
@@ -150,7 +150,7 @@ class CRM_Core_Page_AJAX_EditorImageUpload {
   private static function saveToTempDirectory($fileInfo, $displayName) {
     try {
       // Get CiviCRM temp directory (for backend processing, not web accessible)
-      $tempDir = CRM_Utils_System::cmsDir('temp');
+      $tempDir = CRM_Core_Config::singleton()->uploadDir;
 
       // Fallback to system temp if CiviCRM temp not available
       if (!$tempDir || !is_dir($tempDir)) {
@@ -178,7 +178,7 @@ class CRM_Core_Page_AJAX_EditorImageUpload {
       $phpTempName = basename($fileInfo['temp_name']);
       $extension = self::getFileExtension($fileInfo['mime_type']);
       $filename = $phpTempName . '.' . $extension;
-      $filepath = $tempDir . DIRECTORY_SEPARATOR . $filename;
+      $filepath = rtrim($tempDir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $filename;
 
       // Move uploaded file to temp directory
       if (move_uploaded_file($fileInfo['temp_name'], $filepath)) {

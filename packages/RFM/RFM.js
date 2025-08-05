@@ -310,6 +310,9 @@
     var mValue = $('#rfm_m_value').val();
     var formattedMValue = Number(mValue).toLocaleString('zh-TW');
     $('output[data-threshold-type="monetary"]').text(formattedMValue);
+
+    // update hidden input to indicate this has been customized
+    $('input[name=ct]').val(1);
   }
 
   function saveOriginalValues() {
@@ -323,6 +326,129 @@
     $('#rfm_r_value').val(originalValues.recency);
     $('#rfm_f_value').val(originalValues.frequency);
     $('#rfm_m_value').val(originalValues.monetary);
+  }
+
+  /**
+   * Calculate default thresholds based on date range and threshold type
+   * Mirrors the PHP logic from CRM_Contact_BAO_RFM::defaultThresholds
+   */
+  function calculateDefaultThresholds(rangeString, thresholdType) {
+    // Parse date range string to calculate total days, months, years
+    var dateFilter = parseDateRange(rangeString);
+    var totalDays = dateFilter.days;
+    var totalMonths = dateFilter.months;
+    var totalYears = Math.ceil(dateFilter.days / 365);
+
+    var threshold = {
+      r: 0,
+      f: 0,
+      m: 0
+    };
+
+    switch (thresholdType) {
+      case 'recurring':
+        threshold.r = 31;
+        threshold.f = Math.ceil(totalMonths / 2);
+        threshold.m = 600 * totalMonths;
+        break;
+
+      case 'non-recurring':
+        threshold.r = 180;
+        threshold.f = Math.max(1, totalYears) + 1;
+        threshold.m = 10000 * totalYears;
+        break;
+
+      case 'all':
+      default:
+        threshold.r = Math.ceil(totalDays / 5);
+        threshold.f = Math.max(1, totalYears) + 1;
+        threshold.m = 600 * totalMonths;
+        break;
+    }
+
+    return threshold;
+  }
+
+  /**
+   * Parse date range string to calculate days, months, years
+   * Simplified to handle Y-m-d_to_Y-m-d format only
+   */
+  function parseDateRange(rangeString) {
+    var result = { days: 365, months: 12, years: 1 }; // default fallback
+
+    if (!rangeString) {
+      return result;
+    }
+
+    // Handle absolute date ranges like "2023-01-01_to_2024-01-01"
+    var dateMatch = rangeString.match(/(\d{4}-\d{2}-\d{2})_to_(\d{4}-\d{2}-\d{2})/);
+    if (dateMatch) {
+      var startDate = new Date(dateMatch[1]);
+      var endDate = new Date(dateMatch[2]);
+      var diffTime = Math.abs(endDate - startDate);
+      var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+      result.days = diffDays;
+      result.months = Math.ceil(diffDays / 30);
+      result.years = Math.ceil(diffDays / 365);
+      return result;
+    }
+
+    return result;
+  }
+
+  /**
+   * Build date range string from form inputs
+   */
+  function buildDateRangeString() {
+    var dateFrom = $('input[name="receive_date_from"]').val();
+    var dateTo = $('input[name="receive_date_to"]').val();
+
+    if (dateFrom && dateTo) {
+      return dateFrom + '_to_' + dateTo;
+    } else if (dateFrom) {
+      var today = new Date().toISOString().split('T')[0];
+      return dateFrom + '_to_' + today;
+    } else {
+      return 'last 1 years to today'; // default
+    }
+  }
+
+  /**
+   * Format monetary value with currency
+   */
+  function formatMoney(amount) {
+    return 'NT$ ' + parseFloat(amount).toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+  }
+
+  /**
+   * Update threshold display and form inputs
+   */
+  function updateThresholds() {
+    if (!$('input[name=ct]').val()) {
+
+      var rangeString = buildDateRangeString();
+      var thresholdType = $('input[name="recurring"]:checked').val() || 'all';
+
+      // Calculate new thresholds
+      var thresholds = calculateDefaultThresholds(rangeString, thresholdType);
+      // console.log(thresholds);
+
+      // Update display in threshold list
+      $('output[data-threshold-type="recency"]').text(thresholds.r);
+      $('output[data-threshold-type="frequency"]').text(thresholds.f);
+      $('output[data-threshold-type="monetary"]').text(formatMoney(thresholds.m));
+
+      // Update form input values
+      $('input[name="rfm_r_value"]').val(thresholds.r);
+      $('input[name="rfm_f_value"]').val(thresholds.f);
+      $('input[name="rfm_m_value"]').val(thresholds.m);
+
+      //console.log('RFM thresholds updated:', thresholds, 'Range:', rangeString, 'Type:', thresholdType);
+    }
   }
 
   $(function() {
@@ -385,5 +511,21 @@
         $.magnificPopup.close();
       });
     }
+
+    // dynamic update rfm default values using js
+    // Initialize and bind event handlers
+    // Update thresholds on date change
+    $('input[name="receive_date_from"], input[name="receive_date_to"]').on('change', function() {
+      updateThresholds();
+    });
+
+    // Update thresholds on recurring type change
+    $('input[name="recurring"]').on('change', function() {
+      updateThresholds();
+    });
+
+    // Initial calculation on page load
+    updateThresholds();
   });
+
 })(jQuery);

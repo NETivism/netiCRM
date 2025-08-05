@@ -3049,9 +3049,18 @@ SELECT  group_id
       $label = $field['title'];
       $value = $values['values'][$label];
       if (!empty($submitted)) {
-        if (!CRM_Utils_Array::value($fieldName, $submitted)) {
-          if (isset($values['values'][$label])) {
-            $values['values'][$label] = '';
+        if (CRM_Utils_Array::value('html_type', $field) == 'Radio') {
+           // refs #44244, Handle radio button negative values in UF group notifications.
+          if (!array_key_exists($fieldName, $submitted)) {
+            if (isset($values['values'][$label])) {
+              $values['values'][$label] = '';
+            }
+          }
+        } else {
+          if (!CRM_Utils_Array::value($fieldName, $submitted)) {
+            if (isset($values['values'][$label])) {
+              $values['values'][$label] = '';
+            }
           }
         }
       }

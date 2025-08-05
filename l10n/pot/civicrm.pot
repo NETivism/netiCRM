@@ -49836,3 +49836,71 @@ msgstr ""
 #: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
 msgid "Showing <output class=\"record\">%1</output> records, which is <output class=\"percent\">%2</output> of the search results"
 msgstr ""
+
+#: CRM/Core/Permission.php
+msgid "paste and upload images"
+msgstr ""
+
+#: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
+msgid "Recency:"
+msgstr ""
+
+#: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
+msgid "Frequency:"
+msgstr ""
+
+#: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
+msgid "Monetary:"
+msgstr ""
+
+#: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
+msgid "RFM Thresholds"
+msgstr ""
+
+#: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
+msgid "Edit Thresholds"
+msgstr ""
+
+#: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
+msgid "RFM Thresholds Settings"
+msgstr ""
+
+#: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
+msgid "Threshold:"
+msgstr ""
+
+#: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
+msgid "Old R"
+msgstr ""
+
+#: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
+msgid "Recent R"
+msgstr ""
+
+#: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
+msgid "Low F"
+msgstr ""
+
+#: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
+msgid "High F"
+msgstr ""
+
+#: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
+msgid "Low M"
+msgstr ""
+
+#: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
+msgid "High M"
+msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/RFM.php
+msgid "Recency (days since last donation)"
+msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/RFM.php
+msgid "Frequency (number of donations)"
+msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/RFM.php
+msgid "Monetary (total donation amount)"
+msgstr ""

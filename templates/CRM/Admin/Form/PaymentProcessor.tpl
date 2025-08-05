@@ -212,8 +212,8 @@
     let having_contribution_test = 0;
     {/literal}{if $having_contribution}having_contribution = 1;{/if}{literal}
     {/literal}{if $having_contribution_test}having_contribution_test = 1;{/if}{literal}
-    let spgateway_processor_options_live = {/literal}{$spgateway_processor_options_live};{literal}
-    let spgateway_processor_options_test= {/literal}{$spgateway_processor_options_test};{literal}
+    let spgateway_processor_options_live = {/literal}{if $spgateway_processor_options_live}{$spgateway_processor_options_live}{else}{ldelim} {rdelim}{/if};{literal}
+    let spgateway_processor_options_test = {/literal}{if $spgateway_processor_options_test}{$spgateway_processor_options_test}{else}{ldelim} {rdelim}{/if};{literal}
 
     function addApiCheckbox($element, label) {
       if (!$element.length) {
@@ -291,6 +291,8 @@
       return $newRow;
     }
     $('fieldset [class^="crm-paymentProcessor-"][class$="url_recur"]').each(function(i, element) {
+      const $subject = $(this).closest('table').find('[class^="crm-paymentProcessor-"][class$=subject]');
+      $subject.hide();
       addApiCheckbox($(this), '{/literal}{ts}Enable Neweb Recurring API{/ts}{literal}');
     });
     function createUrlSiteSelect($urlSiteElement) {
@@ -336,6 +338,7 @@
       return $select;
     }
 
+    {/literal}{if $enableSPGatewayAgreement}{literal}
     $('fieldset [class^="crm-paymentProcessor-"][class$="url_api"]').each(function(i, element) {
       addApiCheckbox($(this), '{/literal}{ts}Credit Card Agreement{/ts}{literal}');
       const $subject = $(this).closest('table').find('[class^="crm-paymentProcessor-"][class$=subject]');
@@ -365,6 +368,7 @@
         }
       });
     });
+    {/literal}{/if}{literal}
   });
 {/literal}</script>
 {/if}
