@@ -421,7 +421,7 @@
     </div>
     <div class="crm-popup-footer">
       <div class="crm-submit-buttons">
-        <span class="crm-button crm-button-type-upload">
+        <span class="crm-button crm-button-type-refresh">
           <button type="button" class="form-submit rfm-search-btn">{ts}Search{/ts}</button>
         </span>
         <span class="crm-button crm-button-type-cancel">
