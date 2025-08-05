@@ -50456,8 +50456,8 @@ msgstr "RFM 客戶分群類型"
 #: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
 msgid ""
 "Showing <output class=\"record\">%1</output> records, which is <output "
-"class=\"percent\">%2</output> of the search results"
-msgstr "<output class=\"record\">%1</output>位，佔<output class=\"percent\">%2</output>"
+"class=\"percent\">%2</output>% of the search results"
+msgstr "<output class=\"record\">%1</output>位，佔<output class=\"percent\">%2</output>%"
 
 #: CRM/Core/Permission.php
 msgid "paste and upload images"

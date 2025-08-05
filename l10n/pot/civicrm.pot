@@ -49834,7 +49834,7 @@ msgid "RFM Customer Segments"
 msgstr ""
 
 #: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
-msgid "Showing <output class=\"record\">%1</output> records, which is <output class=\"percent\">%2</output> of the search results"
+msgid "Showing <output class=\"record\">%1</output> records, which is <output class=\"percent\">%2</output>% of the search results"
 msgstr ""
 
 #: CRM/Core/Permission.php
