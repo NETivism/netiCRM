@@ -198,7 +198,7 @@
                       {* R-axis (Recency - Last donation time) *}
                       <div class="axis r-axis">
                         <div class="axis-line"></div>
-                        <div class="axis-label label-left"><span class="rfm-label">R</span>{ts}Recency: Far{/ts}</div>
+                        <div class="axis-label label-left"><span class="rfm-label">R</span>{ts}Recency: Old{/ts}</div>
                         <div class="axis-label label-right"><span class="rfm-label">R</span>{ts}Recency: Recent{/ts}</div>
                       </div>
 
