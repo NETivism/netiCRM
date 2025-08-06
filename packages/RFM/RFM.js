@@ -529,6 +529,9 @@
 
     // Initial calculation on page load
     updateThresholds();
+
+    // add class to title for beta css selector
+    $("h1.page-title").addClass("is-beta");
   });
 
 })(jQuery);
