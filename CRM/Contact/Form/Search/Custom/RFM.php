@@ -2,7 +2,7 @@
 
 class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
   const RECURRING_NONRECURRING = 'all', RECURRING = 'recurring', NONRECURRING = 'non-recurring';
-  const DATE_RANGE_DEFAULT = 'last 1 years to today';
+  const DATE_RANGE_DEFAULT = 'last 1 years to yesterday';
 
   /**
    * @var mixed[]

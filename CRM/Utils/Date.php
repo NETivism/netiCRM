@@ -1548,18 +1548,24 @@ class CRM_Utils_Date {
     $startDate = null;
     $endDate = null;
 
-    // Parse `last/next N days/weeks/months/years to today`
-    if (preg_match('/^(last|next) (\d+) (days|weeks|months|years) to today$/', strtolower($dateFilter), $matches)) {
+    // Parse `last/next N days/weeks/months/years to today/yesterday`
+    if (preg_match('/^(last|next) (\d+) (days|weeks|months|years) to (today|yesterday)$/', strtolower($dateFilter), $matches)) {
       $direction = $matches[1]; // last or next
       $amount = (int)$matches[2]; // number
       $unit = $matches[3]; // time unit
+      $endType = $matches[4]; // today or yesterday
+
+      $endReference = ($endType === 'yesterday') ? (clone $today)->modify('-1 day') : $today;
 
       if ($direction === 'last') {
-        $startDate = (clone $today)->modify("-{$amount} {$unit}")->format('Y-m-d');
-        $endDate = $today->format('Y-m-d');
+        $startDate = (clone $endReference)->modify("-{$amount} {$unit}")->format('Y-m-d');
+        $endDate = $endReference->format('Y-m-d');
+        
+        // Adjust start date by +1 day
+        $startDate = (new DateTime($startDate))->modify('+1 day')->format('Y-m-d');
       } else {
-        $startDate = $today->format('Y-m-d');
-        $endDate = (clone $today)->modify("+{$amount} {$unit}")->format('Y-m-d');
+        $startDate = $endReference->format('Y-m-d');
+        $endDate = (clone $endReference)->modify("+{$amount} {$unit}")->format('Y-m-d');
       }
     }
     // Parse `last/next N days/weeks/months/years` (without `to today`)
