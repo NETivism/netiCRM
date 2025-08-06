@@ -49834,7 +49834,7 @@ msgid "RFM Customer Segments"
 msgstr ""
 
 #: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
-msgid "Showing <output class=\"record\">%1</output> records, which is <output class=\"percent\">%2</output> of the search results"
+msgid "Showing <output class=\"record\">%1</output> records, which is <output class=\"percent\">%2</output>% of the search results"
 msgstr ""
 
 #: CRM/Core/Permission.php
@@ -49907,4 +49907,52 @@ msgstr ""
 
 #: CRM/Contact/Form/Search/Custom/RFM.php
 msgid "RFM Model - Reactivating Dormant Supporters and Expanding Loyal Supporters"
+msgstr ""
+
+#: CRM/Core/Payment/SPGATEWAY.php
+msgid "Order Comment"
+msgstr ""
+
+#: CRM/Core/Payment/SPGATEWAY.php
+msgid "Enable Neweb Recurring API"
+msgstr ""
+
+#: CRM/Core/Payment/SPGATEWAY.php
+msgid "Credit Card Agreement"
+msgstr ""
+
+#: CRM/Core/Payment/SPGATEWAY.php
+msgid "Merchant ID (No 3D secure support)"
+msgstr ""
+
+#: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
+msgid "days"
+msgstr ""
+
+#: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
+msgid "Recency: Old"
+msgstr ""
+
+#: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
+msgid "Recency: Recent"
+msgstr ""
+
+#: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
+msgid "Frequency: Low"
+msgstr ""
+
+#: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
+msgid "Frequency: High"
+msgstr ""
+
+#: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
+msgid "Monetary: Low"
+msgstr ""
+
+#: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
+msgid "Monetary: High"
+msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/RFM.php
+msgid "RFM Donor Segments"
 msgstr ""

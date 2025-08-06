@@ -50456,8 +50456,8 @@ msgstr "RFM 客戶分群類型"
 #: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
 msgid ""
 "Showing <output class=\"record\">%1</output> records, which is <output "
-"class=\"percent\">%2</output> of the search results"
-msgstr "<output class=\"record\">%1</output>筆資料，佔搜尋結果<output class=\"percent\">%2</output>"
+"class=\"percent\">%2</output>% of the search results"
+msgstr "<output class=\"record\">%1</output>位，佔<output class=\"percent\">%2</output>%"
 
 #: CRM/Core/Permission.php
 msgid "paste and upload images"
@@ -50531,3 +50531,51 @@ msgstr "Monetary (捐款總金額)"
 msgid ""
 "RFM Model - Reactivating Dormant Supporters and Expanding Loyal Supporters"
 msgstr "RFM模型 - 喚醒沈睡支持者，拓展忠誠支持者"
+
+#: CRM/Core/Payment/SPGATEWAY.php
+msgid "Order Comment"
+msgstr "訂單備註"
+
+#: CRM/Core/Payment/SPGATEWAY.php
+msgid "Enable Neweb Recurring API"
+msgstr "啟用藍新定期定額 API"
+
+#: CRM/Core/Payment/SPGATEWAY.php
+msgid "Credit Card Agreement"
+msgstr "約定信用卡"
+
+#: CRM/Core/Payment/SPGATEWAY.php
+msgid "Merchant ID (No 3D secure support)"
+msgstr "特店編號（不支援 3D 驗證）"
+
+#: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
+msgid "days"
+msgstr "天"
+
+#: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
+msgid "Recency: Old"
+msgstr "最後一次捐款時間：遠"
+
+#: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
+msgid "Recency: Recent"
+msgstr "最後一次捐款時間：近"
+
+#: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
+msgid "Frequency: Low"
+msgstr "捐款頻率：低"
+
+#: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
+msgid "Frequency: High"
+msgstr "捐款頻率：高"
+
+#: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
+msgid "Monetary: Low"
+msgstr "捐款金額：低"
+
+#: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
+msgid "Monetary: High"
+msgstr "捐款金額：高"
+
+#: CRM/Contact/Form/Search/Custom/RFM.php
+msgid "RFM Donor Segments"
+msgstr "RFM 捐款人分群模型"
