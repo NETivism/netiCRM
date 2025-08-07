@@ -50439,9 +50439,8 @@ msgstr "組織最珍貴的夥伴，在各方面都表現優異。他們是組織
 msgid ""
 "The RFM model helps organizations categorize donors based on their giving "
 "behavior, enabling more refined and personalized communication strategies "
-"that convert more supporters into loyal ones (<a href=\"%1\" "
-"target=\"_blank\">how to use</a>)."
-msgstr "RFM 模型協助組織根據捐款人的行為特徵，將不同類型的捐款人加以分類，進而規劃更細緻、個性化的溝通方式，轉化出更多的忠誠支持者（<a href=\"%1\" target=\"_blank\">使用說明</a>）。"
+"that convert more supporters into loyal ones"
+msgstr "RFM 模型協助組織根據捐款人的行為特徵，將不同類型的捐款人加以分類，進而規劃更細緻、個性化的溝通方式，轉化出更多的忠誠支持者"
 
 #: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
 msgid ""
@@ -50580,3 +50579,7 @@ msgstr "捐款金額：高"
 #: CRM/Contact/Form/Search/Custom/RFM.php
 msgid "RFM Donor Segments"
 msgstr "RFM 捐款人分群模型"
+
+#: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
+msgid "how to use"
+msgstr "使用說明"
