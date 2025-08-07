@@ -122,7 +122,11 @@ class CRM_Contact_BAO_RFM {
       $reverse = $this->_reverse['r'];
     }
     
-    return $this->calcMetric('r', $position, $reverse, 'duration', 'MIN(DATEDIFF(CURDATE(), DATE(contrib.receive_date)))');
+    // Get end date for DATEDIFF calculation
+    $endDateStr = $this->getEndDate();
+    $aggregateFunc = "MIN(DATEDIFF('$endDateStr', DATE(contrib.receive_date)))";
+    
+    return $this->calcMetric('r', $position, $reverse, 'duration', $aggregateFunc);
   }
   
   /**
@@ -437,6 +441,23 @@ class CRM_Contact_BAO_RFM {
       return " AND contrib.receive_date BETWEEN '$startDate 00:00:00' AND '$endDate 23:59:59' ";
     }
     return '';
+  }
+  
+  /**
+   * Get end date from date filter string
+   * 
+   * @return string End date string for SQL usage, defaults to current date if no filter
+   */
+  protected function getEndDate(): string {
+    if (!empty($this->_dateString)) {
+      $filter = CRM_Utils_Date::strtodate($this->_dateString);
+      $endDate = $filter['end'];
+      if (isset($endDate)) {
+        return $endDate;
+      }
+    }
+    // Default to current date if no date filter
+    return date('Y-m-d');
   }
   
   /**
