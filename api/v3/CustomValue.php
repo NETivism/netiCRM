@@ -75,11 +75,11 @@ require_once 'CRM/Core/BAO/CustomValueTable.php';
  *
  */
 function civicrm_api3_custom_value_create($params) {
-  civicrm_api3_verify_mandatory($params, NULL, array('entity_id'));
+  civicrm_api3_verify_mandatory($params, NULL, ['entity_id']);
   if (substr($params['entity_table'], 0, 7) == 'civicrm') {
     $params['entity_table'] = substr($params['entity_table'], 8, 7);
   }
-  $create = array('entityID' => $params['entity_id']);
+  $create = ['entityID' => $params['entity_id']];
   // Translate names and
   //Convert arrays to multi-value strings
   $sp = CRM_Core_DAO::VALUE_SEPARATOR;
@@ -132,12 +132,12 @@ function civicrm_api3_custom_value_create($params) {
  *
  **/
 function civicrm_api3_custom_value_get($params) {
-  civicrm_api3_verify_mandatory($params, NULL, array('entity_id'));
+  civicrm_api3_verify_mandatory($params, NULL, ['entity_id']);
 
-  $getParams = array(
+  $getParams = [
     'entityID' => $params['entity_id'],
     'entityType' => $params['entity_table'],
-  );
+  ];
   if (strstr($getParams['entityType'], 'civicrm_')) {
     $entityType = substr($getParams['entityType'], 8);
     if (strstr($entityType, '_')) {
@@ -177,7 +177,7 @@ function civicrm_api3_custom_value_get($params) {
 
   if ($result['is_error']) {
     if ($result['error_message'] == "No values found for the specified entity ID and custom field(s).") {
-      $values = array();
+      $values = [];
       return civicrm_api3_create_success($values, $params);
     }
     else {

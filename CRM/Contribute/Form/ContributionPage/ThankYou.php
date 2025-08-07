@@ -50,7 +50,7 @@ class CRM_Contribute_Form_ContributionPage_ThankYou extends CRM_Contribute_Form_
    */
   function setDefaultValues() {
     $title = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage', $this->_id, 'title');
-    CRM_Utils_System::setTitle(ts('Thank-you and Receipting (%1)', array(1 => $title)));
+    CRM_Utils_System::setTitle(ts('Thank-you and Receipting (%1)', [1 => $title]));
     return parent::setDefaultValues();
   }
 
@@ -68,7 +68,7 @@ class CRM_Contribute_Form_ContributionPage_ThankYou extends CRM_Contribute_Form_
     $this->addWysiwyg('thankyou_text', ts('Thank-you Message'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionPage', 'thankyou_text'));
     $this->addWysiwyg('thankyou_footer', ts('Thank-you Page Footer'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionPage', 'thankyou_footer'));
 
-    $this->addElement('checkbox', 'is_email_receipt', ts('Email Payment Notification to User?'), NULL, array('onclick' => "showReceipt()"));
+    $this->addElement('checkbox', 'is_email_receipt', ts('Email Payment Notification to User?'), NULL, ['onclick' => "showReceipt()"]);
     $this->add('text', 'receipt_from_name', ts('Payment Notification From Name'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionPage', 'receipt_from_name'));
 
     $availableFrom = CRM_Core_PseudoConstant::fromEmailAddress(TRUE, TRUE);
@@ -77,12 +77,12 @@ class CRM_Contribute_Form_ContributionPage_ThankYou extends CRM_Contribute_Form_
       CRM_Admin_Form_FromEmailAddress::VALID_EMAIL | CRM_Admin_Form_FromEmailAddress::VALID_DKIM | CRM_Admin_Form_FromEmailAddress::VALID_SPF,
       'domain'
     );
-    $selectableEmail = array();
+    $selectableEmail = [];
     $hasVerified = FALSE;
     foreach($availableFrom as $fromAddr) {
       $email = htmlspecialchars($fromAddr['email']);
       if (array_search($fromAddr['email'], $verifiedFrom) !== FALSE) {
-        $email = ts('%1 Verified', array(1 => '🛡️ '.htmlspecialchars($fromAddr['email'])));
+        $email = ts('%1 Verified', [1 => '🛡️ '.htmlspecialchars($fromAddr['email'])]);
         $hasVerified = TRUE;
         $selectableEmail[$fromAddr['email']] = $email;
       }
@@ -111,35 +111,35 @@ class CRM_Contribute_Form_ContributionPage_ThankYou extends CRM_Contribute_Form_
     $this->add('text', 'recur_fail_notify', ts('Recurring Failed Notification to'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionPage', 'recur_fail_notify'));
     $this->addRule('recur_fail_notify', ts('Please enter a valid list of comma delimited email addresses'), 'emailList');
 
-    $this->addFormRule(array('CRM_Contribute_Form_ContributionPage_ThankYou', 'formRule'));
+    $this->addFormRule(['CRM_Contribute_Form_ContributionPage_ThankYou', 'formRule']);
 
     if (CRM_SMS_BAO_Provider::activeProviderCount()) {
-      $this->addElement('checkbox', 'is_send_sms', ts('Send SMS when success?'), NULL, array('onclick' => "showSMS()"));
+      $this->addElement('checkbox', 'is_send_sms', ts('Send SMS when success?'), NULL, ['onclick' => "showSMS()"]);
       $this->add('textarea', 'sms_text', ts('SMS Text'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionPage', 'sms_text'));
     }
 
     // tokens
-    $tokens = array();
+    $tokens = [];
     $tokens = CRM_Core_SelectValues::contactTokens();
     $tokens = array_merge(CRM_Core_SelectValues::contributionTokens(), $tokens);
     $this->assign('tokens', CRM_Utils_Token::formatTokensForDisplay($tokens));
 
     $this->add('select', 'token1', ts('Insert Tokens'),
       $tokens, FALSE,
-      array(
+      [
         'size' => "5",
         'multiple' => TRUE,
         'onclick' => "return tokenReplText(this);",
-      )
+      ]
     );
 
     $this->add('select', 'token2', ts('Insert Tokens'),
       $tokens, FALSE,
-      array(
+      [
         'size' => "5",
         'multiple' => TRUE,
         'onclick' => "return tokenReplHtml(this);",
-      )
+      ]
     );
 
     parent::buildQuickForm();
@@ -157,7 +157,7 @@ class CRM_Contribute_Form_ContributionPage_ThankYou extends CRM_Contribute_Form_
    * @static
    */
   static function formRule($fields, $files, $options) {
-    $errors = array();
+    $errors = [];
 
     // if is_email_receipt is set, the receipt message must be non-empty
     if (CRM_Utils_Array::value('is_email_receipt', $fields)) {
@@ -171,7 +171,7 @@ class CRM_Contribute_Form_ContributionPage_ThankYou extends CRM_Contribute_Form_
           $errors['receipt_from_email'] = ts('Please enter the valid email address.'); 
         }
         if (!CRM_Utils_Mail::checkMailProviders($email)) {
-          $errors['receipt_from_email'] = ts('Do not use free mail address as mail sender. (eg. %1)', array(1 => str_replace('|', ', ', CRM_Utils_Mail::DMARC_MAIL_PROVIDERS)));
+          $errors['receipt_from_email'] = ts('Do not use free mail address as mail sender. (eg. %1)', [1 => str_replace('|', ', ', CRM_Utils_Mail::DMARC_MAIL_PROVIDERS)]);
         }
       }
     }

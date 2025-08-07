@@ -53,12 +53,12 @@ class CRM_Core_Menu {
    */
   static $_permissionedItems = NULL;
 
-  static $_serializedElements = array('access_arguments',
+  static $_serializedElements = ['access_arguments',
     'access_callback',
     'page_arguments',
     'page_callback',
     'breadcrumb',
-  );
+  ];
 
   static $_menuCache = NULL;
   CONST MENU_ITEM = 1;
@@ -82,7 +82,7 @@ class CRM_Core_Menu {
 
       CRM_Utils_Hook::xmlMenu($files);
 
-      self::$_items = array();
+      self::$_items = [];
       foreach ($files as $file) {
         self::read($file, self::$_items);
       }
@@ -110,7 +110,7 @@ class CRM_Core_Menu {
         CRM_Core_Error::fatal();
       }
       $path = (string ) $item->path;
-      $menu[$path] = array();
+      $menu[$path] = [];
       unset($item->path);
       foreach ($item as $key => $value) {
         $key = (string ) $key;
@@ -132,14 +132,14 @@ class CRM_Core_Menu {
               $elements = explode(';', $value);
               $op = 'or';
             }
-            $items = array();
+            $items = [];
             foreach ($elements as $element) {
               $items[] = $element;
             }
-            $value = array($items, $op);
+            $value = [$items, $op];
           }
           else {
-            $value = array(array($value), 'and');
+            $value = [[$value], 'and'];
           }
         }
         elseif ($key == 'is_public' || $key == 'is_ssl') {
@@ -172,14 +172,14 @@ class CRM_Core_Menu {
   }
 
   static function fillMenuValues(&$menu, $path) {
-    $fieldsToPropagate = array(
+    $fieldsToPropagate = [
       'access_callback',
       'access_arguments',
       'page_callback',
       'page_arguments',
       'is_ssl',
-    );
-    $fieldsPresent = array();
+    ];
+    $fieldsPresent = [];
     foreach ($fieldsToPropagate as $field) {
       $fieldsPresent[$field] = CRM_Utils_Array::value($field, $menu[$path]) !== NULL ? TRUE : FALSE;
     }
@@ -206,11 +206,11 @@ class CRM_Core_Menu {
       return;
     }
 
-    $messages = array();
+    $messages = [];
     foreach ($fieldsToPropagate as $field) {
       if (!$fieldsPresent[$field]) {
         $messages[] = ts("Could not find %1 in path tree",
-          array(1 => $field)
+          [1 => $field]
         );
       }
     }
@@ -281,7 +281,7 @@ class CRM_Core_Menu {
   }
 
   static function buildAdminLinks(&$menu) {
-    $values = array();
+    $values = [];
 
     foreach ($menu as $path => $item) {
       if (!CRM_Utils_Array::value('adminGroup', $item)) {
@@ -290,19 +290,19 @@ class CRM_Core_Menu {
 
       $query = CRM_Utils_Array::value('path_arguments', $item) ? str_replace(',', '&', $item['path_arguments']) . '&reset=1' : 'reset=1';
 
-      $value = array('title' => $item['title'],
+      $value = ['title' => $item['title'],
         'desc' => CRM_Utils_Array::value('desc', $item),
-        'id' => strtr($item['title'], array('(' => '_', ')' => '', ' ' => '',
+        'id' => strtr($item['title'], ['(' => '_', ')' => '', ' ' => '',
             ',' => '_', '/' => '_',
-          )
+          ]
         ),
         'url' => CRM_Core_Menu::buildMenuUrl($path, $query),
         'icon' => CRM_Utils_Array::value('icon', $item),
         'extra' => CRM_Utils_Array::value('extra', $item),
-      );
+      ];
       if (!CRM_Utils_Array::arrayKeyExists($item['adminGroup'], $values)) {
-        $values[$item['adminGroup']] = array();
-        $values[$item['adminGroup']]['fields'] = array();
+        $values[$item['adminGroup']] = [];
+        $values[$item['adminGroup']]['fields'] = [];
       }
       $weight = CRM_Utils_Array::value('weight', $item, 0);
       $values[$item['adminGroup']]['fields']["{weight}.{$item['title']}"] = $value;
@@ -314,7 +314,7 @@ class CRM_Core_Menu {
       ksort($values[$group]);
     }
 
-    $menu['admin'] = array('breadcrumb' => $values);
+    $menu['admin'] = ['breadcrumb' => $values];
   }
 
   static function &getNavigation($all = FALSE) {
@@ -325,7 +325,7 @@ class CRM_Core_Menu {
     }
 
     if (CRM_Core_Config::isUpgradeMode()) {
-      return array();
+      return [];
     }
 
     if (!CRM_Utils_Array::arrayKeyExists('navigation', self::$_menuCache)) {
@@ -397,7 +397,7 @@ class CRM_Core_Menu {
 
     // check permissions for the rest
 
-    $activeChildren = array();
+    $activeChildren = [];
 
     foreach ($values as $weight => $v) {
       if (CRM_Core_Permission::checkMenuItem($v)) {
@@ -449,7 +449,7 @@ class CRM_Core_Menu {
    * @access public
    */
   static function buildBreadcrumb(&$menu, $path) {
-    $crumbs = array();
+    $crumbs = [];
 
     $pathElements = explode('/', $path);
     array_pop($pathElements);
@@ -467,10 +467,10 @@ class CRM_Core_Menu {
       // add to crumb, if current-path exists in params.
       if (CRM_Utils_Array::arrayKeyExists($currentPath, $menu) && isset($menu[$currentPath]['title']) && $currentPath != 'civicrm') {
         $urlVar = CRM_Utils_Array::value('path_arguments', $menu[$currentPath]) ? '&' . $menu[$currentPath]['path_arguments'] : '';
-        $crumbs[] = array(
+        $crumbs[] = [
           'title' => $menu[$currentPath]['title'],
           'url' => CRM_Core_Menu::buildMenuUrl($currentPath, 'reset=1' . $urlVar),
-        );
+        ];
       }
     }
     $menu[$path]['breadcrumb'] = $crumbs;
@@ -490,25 +490,25 @@ class CRM_Core_Menu {
       array_pop($pathElements);
 
       if (empty($pathElements)) {
-        return array(NULL, NULL);
+        return [NULL, NULL];
       }
       $newPath = CRM_Utils_Array::implode('/', $pathElements);
 
       return self::getReturnUrl($menu, $newPath);
     }
     else {
-      return array(CRM_Utils_Array::value('return_url',
+      return [CRM_Utils_Array::value('return_url',
           $menu[$path]
         ),
         CRM_Utils_Array::value('return_url_args',
           $menu[$path]
         ),
-      );
+      ];
     }
   }
 
   static function fillComponentIds(&$menu, $path) {
-    static $cache = array();
+    static $cache = [];
 
     if (CRM_Utils_Array::arrayKeyExists('component_id', $menu[$path])) {
       return;
@@ -544,11 +544,11 @@ class CRM_Core_Menu {
     // return null if menu rebuild
     $config = CRM_Core_Config::singleton();
 
-    $params = array();
+    $params = [];
 
     $args = explode('/', $path);
 
-    $elements = array();
+    $elements = [];
     while (!empty($args)) {
       $string = CRM_Utils_Array::implode('/', $args);
       $string = CRM_Core_DAO::escapeString($string);
@@ -594,10 +594,10 @@ UNION (
     $menu = new CRM_Core_DAO_Menu();
     $menu->query($query);
 
-    self::$_menuCache = array();
+    self::$_menuCache = [];
     $menuPath = NULL;
     while ($menu->fetch()) {
-      self::$_menuCache[$menu->path] = array();
+      self::$_menuCache[$menu->path] = [];
       CRM_Core_DAO::storeValues($menu, self::$_menuCache[$menu->path]);
 
       foreach (self::$_serializedElements as $element) {
@@ -613,7 +613,7 @@ UNION (
     if ($path == 'civicrm/upgrade') {
       $menuPath['page_callback'] = 'CRM_Upgrade_Page_Upgrade';
       $menuPath['access_arguments'][0][] = 'administer CiviCRM';
-      $menuPath['access_callback'] = array('CRM_Core_Permission', 'checkMenu');
+      $menuPath['access_callback'] = ['CRM_Core_Permission', 'checkMenu'];
     }
 
     if (!empty($menuPath)) {
@@ -627,7 +627,7 @@ UNION (
     if (!is_string($pathArgs)) {
       return;
     }
-    $args = array();
+    $args = [];
 
     $elements = explode(',', $pathArgs);
     //CRM_Core_Error::debug( 'e', $elements );
@@ -637,7 +637,7 @@ UNION (
     }
 
     if (CRM_Utils_Array::arrayKeyExists('urlToSession', $arr)) {
-      $urlToSession = array();
+      $urlToSession = [];
 
       $params = explode(';', $arr['urlToSession']);
       $count = 0;

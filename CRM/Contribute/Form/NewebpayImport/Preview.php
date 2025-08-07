@@ -21,12 +21,12 @@ class CRM_Contribute_Form_NewebpayImport_Preview extends CRM_Core_Form {
     $downloadErrorType = CRM_Utils_Request::retrieve( 'downloadType', 'String', CRM_Core_DAO::$_nullObject);
 
     $this->_result = $this->get('parseResult');
-    $this->_successedContribution = array();
+    $this->_successedContribution = [];
     $modifyFieldsArray = [ts('Transaction Fee Amount')];
     $importDateCustomFieldId = $this->get('disbursementDate');
     if ($importDateCustomFieldId) {
       $importDataCustomFieldName = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_CustomField', $importDateCustomFieldId, 'label');
-      $modifyFieldsArray[] = ts("`%1` to the field `%2`", array(1 => ts('Disbursement Date'), 2 => $importDataCustomFieldName));
+      $modifyFieldsArray[] = ts("`%1` to the field `%2`", [1 => ts('Disbursement Date'), 2 => $importDataCustomFieldName]);
     }
     $modifyFields = implode(', ', $modifyFieldsArray);
     $this->assign('modifyFields', $modifyFields);
@@ -101,7 +101,7 @@ class CRM_Contribute_Form_NewebpayImport_Preview extends CRM_Core_Form {
       $this->assign('modifyStatusContribution', $this->_statusContent);
       $this->assign('modifyStatusBlockHeaderText', ts("Contribution data with inconsistent 'status' (import after modifying status)"));
       $modifyStatusFieldsArray = [ts('Transaction Fee Amount')];
-      $modifyStatusFieldsArray[] = ts("`%1` to the field `%2`", array(1 => ts('Disbursement Date'), 2 => ts('Empty Receive Date')));
+      $modifyStatusFieldsArray[] = ts("`%1` to the field `%2`", [1 => ts('Disbursement Date'), 2 => ts('Empty Receive Date')]);
       $modifyStatusFields = implode(', ', $modifyStatusFieldsArray);
       $this->assign('modifyStatusFields', $modifyStatusFields);
     }
@@ -145,7 +145,7 @@ class CRM_Contribute_Form_NewebpayImport_Preview extends CRM_Core_Form {
       $this->set('errorContribution', $this->_errorContent);
       $this->assign('errorBlockHeaderText', ts("Erroneous contribution data (cannot be imported)"));
     }
-    $this->addFormRule(array('CRM_Contribute_Form_NewebpayImport_Preview', 'formRule'), $this);
+    $this->addFormRule(['CRM_Contribute_Form_NewebpayImport_Preview', 'formRule'], $this);
 
     $query = "_qf_Preview_display=true&qfKey={$this->controller->_key}&downloadType=";
     $queryError = $query.'error';
@@ -158,15 +158,15 @@ class CRM_Contribute_Form_NewebpayImport_Preview extends CRM_Core_Form {
   }
 
   function buildQuickForm() {
-    $this->addButtons(array(
-        array('type' => 'upload',
+    $this->addButtons([
+        ['type' => 'upload',
           'name' => ts('Import'),
           'isDefault' => TRUE,
-        ),
-        array('type' => 'cancel',
+        ],
+        ['type' => 'cancel',
           'name' => ts('Cancel'),
-        ),
-      )
+        ],
+      ]
     );
   }
 
@@ -176,8 +176,8 @@ class CRM_Contribute_Form_NewebpayImport_Preview extends CRM_Core_Form {
   }
 
   function setDefaultValues() {
-    $defaults = array(
-    );
+    $defaults = [
+    ];
     return $defaults;
   }
 
@@ -225,32 +225,32 @@ class CRM_Contribute_Form_NewebpayImport_Preview extends CRM_Core_Form {
     $importDateCustomFieldId = $this->get('disbursementDate');
     if (!empty($importDateCustomFieldId)) {
       $sql = "SELECT table_name, cg.id as custom_group_id, cf.label as field_label, column_name FROM civicrm_custom_group cg INNER JOIN civicrm_custom_field cf ON cg.id = cf.custom_group_id WHERE cf.id = %1";
-      $params = array( 1 => array($importDateCustomFieldId, 'Positive'));
+      $params = [ 1 => [$importDateCustomFieldId, 'Positive']];
       $dao = CRM_Core_DAO::executeQuery($sql, $params);
       if ($dao->fetch()) {
         $sql2 = "SELECT id FROM {$dao->table_name} WHERE entity_id = %1";
-        $params2 = array( 1 => array($id, 'Positive'));
+        $params2 = [ 1 => [$id, 'Positive']];
         $customValueID = CRM_Core_DAO::singleValueQuery($sql2, $params2);
         $tableName = $dao->table_name;
-        $importDate = array(
-          $tableName => array(
-            0 => array(
-              0 => array(
+        $importDate = [
+          $tableName => [
+            0 => [
+              0 => [
                 'entity_id' => $id,
                 'column_name' => $dao->column_name,
                 'custom_group_id' => $dao->custom_group_id,
                 'is_multiple' => FALSE,
                 'type' => 'Date',
                 'value' => $contributionRow['撥款日期'],
-              )
-            )
-          )
-        );
+              ]
+            ]
+          ]
+        ];
         if ($customValueID) {
           $importDate[$tableName][0][0]['id'] = $customValueID;
         }
         CRM_Core_BAO_CustomValueTable::create($importDate);
-        $contributionRow[ts('Result')] .= ts("Add disbursement date to field `%1`", array(1 => $dao->field_label));
+        $contributionRow[ts('Result')] .= ts("Add disbursement date to field `%1`", [1 => $dao->field_label]);
       }
     }
     if ($isChangeStatus) {
@@ -280,19 +280,19 @@ class CRM_Contribute_Form_NewebpayImport_Preview extends CRM_Core_Form {
     $note = date("Y/m/d H:i:s"). ts("Transaction record").": \n".$note."\n===============================\n";
     $note_exists = CRM_Core_BAO_Note::getNote( $contributionRow['id'], 'civicrm_contribution' );
     if(count($note_exists)){
-      $note_id = array( 'id' => reset(array_keys($note_exists)) );
+      $note_id = [ 'id' => reset(array_keys($note_exists)) ];
       $note = $note . reset($note_exists);
     }
     else{
       $note_id = NULL;
     }
-    $noteParams = array(
+    $noteParams = [
       'entity_table'  => 'civicrm_contribution',
       'note'          => $note,
       'entity_id'     => $contributionRow['id'],
       'contact_id'    => $contributionRow['contact_id'],
       'modified_date' => date('Ymd')
-    );
+    ];
     CRM_Core_BAO_Note::add( $noteParams, $note_id );
   }
 }

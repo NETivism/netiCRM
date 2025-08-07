@@ -50,18 +50,18 @@ class CRM_Admin_Form_Setting_Path extends CRM_Admin_Form_Setting {
   public function buildQuickForm() {
     CRM_Utils_System::setTitle(ts('Settings - Upload Directories'));
 
-    $directories = array('uploadDir' => ts('Temporary Files'),
+    $directories = ['uploadDir' => ts('Temporary Files'),
       'imageUploadDir' => ts('Images'),
       'customFileUploadDir' => ts('Custom Files'),
       'customTemplateDir' => ts('Custom Templates'),
       'customPHPPathDir' => ts('Custom PHP Path Directory'),
       'extensionsDir' => ts('CiviCRM Extensions Directory'),
-    );
+    ];
     foreach ($directories as $name => $title) {
       $this->add('text', $name, $title);
       $this->addRule($name,
         ts("'%1' directory does not exist",
-          array(1 => $title)
+          [1 => $title]
         ),
         'fileExists'
       );

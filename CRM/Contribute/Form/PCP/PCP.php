@@ -92,20 +92,20 @@ class CRM_Contribute_Form_PCP_PCP extends CRM_Core_Form {
       $statusApprovedId = intval(CRM_Core_OptionGroup::getValue('pcp_status', 'Approved', 'name'));
       if ($isManager && ($this->_action == CRM_Core_Action::DELETE || $this->_action == 'delete')) {
         CRM_Contribute_BAO_PCP::deleteById($this->_id);
-        CRM_Core_Session::setStatus(ts("The Campaign Page '%1' has been deleted.", array(1 => $this->_title)));
+        CRM_Core_Session::setStatus(ts("The Campaign Page '%1' has been deleted.", [1 => $this->_title]));
       }
       elseif ($isManager || ($isOwner && $statusId == $statusApprovedId)) {
         switch ($this->_action) {
           case CRM_Core_Action::DISABLE:
           case 'disable':
             CRM_Contribute_BAO_PCP::setDisable($this->_id, '0');
-            CRM_Core_Session::setStatus(ts("The Campaign Page '%1' has been disabled.", array(1 => $this->_title)));
+            CRM_Core_Session::setStatus(ts("The Campaign Page '%1' has been disabled.", [1 => $this->_title]));
             break;
 
           case CRM_Core_Action::ENABLE:
           case 'enable':
             CRM_Contribute_BAO_PCP::setDisable($this->_id, '1');
-            CRM_Core_Session::setStatus(ts("The Campaign Page '%1' has been enabled.", array(1 => $this->_title)));
+            CRM_Core_Session::setStatus(ts("The Campaign Page '%1' has been enabled.", [1 => $this->_title]));
             break;
         }
       }
@@ -125,7 +125,7 @@ class CRM_Contribute_Form_PCP_PCP extends CRM_Core_Form {
    * @access public
    */
   function setDefaultValues() {
-    $defaults = array();
+    $defaults = [];
     if (!empty($_REQUEST['contribution_page_id'])) {
       $defaults['contribution_page_id'] = $_REQUEST['contribution_page_id'];
     }
@@ -145,26 +145,26 @@ class CRM_Contribute_Form_PCP_PCP extends CRM_Core_Form {
    */
   public function buildQuickForm() {
     if ($this->_action & CRM_Core_Action::DELETE) {
-      $this->addButtons(array(
-          array('type' => 'next',
+      $this->addButtons([
+          ['type' => 'next',
             'name' => ts('Delete Campaign'),
             'isDefault' => TRUE,
-          ),
-          array('type' => 'cancel',
+          ],
+          ['type' => 'cancel',
             'name' => ts('Cancel'),
-          ),
-        )
+          ],
+        ]
       );
     }
     else {
 
       $status = array_merge(
-        array('' => ts('- select -')),
+        ['' => ts('- select -')],
         CRM_Contribute_PseudoConstant::pcpstatus()
       );
-      $contribution_page = array(ts('- select -')) + CRM_Contribute_PseudoConstant::contributionPage();
+      $contribution_page = [ts('- select -')] + CRM_Contribute_PseudoConstant::contributionPage();
       $dao = CRM_Core_DAO::executeQuery("SELECT p.contact_id, c.sort_name, c.external_identifier FROM civicrm_pcp p INNER JOIN civicrm_contact c ON p.contact_id = c.id GROUP BY p.contact_id");
-      $contacts = array(ts('- select -'));
+      $contacts = [ts('- select -')];
       while($dao->fetch()) {
         $exid = '';
         if ($dao->external_identifier) {
@@ -177,20 +177,20 @@ class CRM_Contribute_Form_PCP_PCP extends CRM_Core_Form {
       $this->addSelect('contribution_page_id', ts('Belonging Main Contribution Page'), $contribution_page);
       $this->addSelect('contact_id', ts('Created by'), $contacts);
       $this->add('text', 'title', ts('Page Title'));
-      $this->addButtons(array(
-          array(
+      $this->addButtons([
+          [
             'type' => 'refresh',
             'name' => ts('Search'),
             'spacing' => ' ',
             'isDefault' => TRUE,
-          ),
-          array(
+          ],
+          [
             'type' => 'refresh',
             'name' => ts('Reset'),
             'spacing' => ' ',
             'isDefault' => FALSE,
-          ),
-        )
+          ],
+        ]
       );
       parent::buildQuickForm();
     }
@@ -219,7 +219,7 @@ class CRM_Contribute_Form_PCP_PCP extends CRM_Core_Form {
     if ($this->_action & CRM_Core_Action::DELETE) {
 
       CRM_Contribute_BAO_PCP::deleteById($this->_id);
-      CRM_Core_Session::setStatus(ts("The Campaign Page '%1' has been deleted.", array(1 => $this->_title)));
+      CRM_Core_Session::setStatus(ts("The Campaign Page '%1' has been deleted.", [1 => $this->_title]));
     }
     else {
       $buttonName = $this->_submitValues['_qf_PCP_refresh'];
@@ -229,8 +229,8 @@ class CRM_Contribute_Form_PCP_PCP extends CRM_Core_Form {
 
         if (!empty($params) && is_object($parent)) {
           // clear result
-          $parent->set("pcpSummary", array());
-          $fields = array('status_id', 'contribution_page_id', 'contact_id', 'title');
+          $parent->set("pcpSummary", []);
+          $fields = ['status_id', 'contribution_page_id', 'contact_id', 'title'];
           foreach ($fields as $field) {
             if (isset($params[$field]) && !CRM_Utils_System::isNull($params[$field])) {
               $parent->set($field, $params[$field]);

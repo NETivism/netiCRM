@@ -61,13 +61,13 @@ class CRM_Event_Form_Registration_ParticipantConfirm extends CRM_Event_Form_Regi
     $this->_cc = CRM_Utils_Request::retrieve('cc', 'String', $this);
 
     //get the contact and event id and assing to session.
-    $values = array();
+    $values = [];
     $csContactID = $eventId = NULL;
     if ($this->_participantId) {
 
-      $params = array('id' => $this->_participantId);
+      $params = ['id' => $this->_participantId];
       CRM_Core_DAO::commonRetrieve('CRM_Event_DAO_Participant', $params, $values,
-        array('contact_id', 'event_id', 'status_id', 'register_date')
+        ['contact_id', 'event_id', 'status_id', 'register_date']
       );
       $this->_participant = $values;
     }
@@ -116,11 +116,11 @@ class CRM_Event_Form_Registration_ParticipantConfirm extends CRM_Event_Form_Regi
    * @access public
    */
   public function buildQuickForm() {
-    $values = array();
-    $params = array('id' => $this->_eventId);
+    $values = [];
+    $params = ['id' => $this->_eventId];
     CRM_Event_BAO_Event::retrieve($params, $values['event']);
 
-    $buttons = array();
+    $buttons = [];
     $expired = FALSE;
 
     // calculate expiration day base on registration day, #22026
@@ -140,7 +140,7 @@ class CRM_Event_Form_Registration_ParticipantConfirm extends CRM_Event_Form_Regi
       //registration - but is there enough space to confirm.
 
 
-      $params = array( 1 => array($this->_participantId, 'Positive'));
+      $params = [ 1 => [$this->_participantId, 'Positive']];
       $isTest = CRM_Core_DAO::singleValueQuery("SELECT is_test FROM civicrm_participant WHERE id = %1", $params);
       if ($isTest == 1) {
         $emptySeats = NULL;
@@ -151,39 +151,39 @@ class CRM_Event_Form_Registration_ParticipantConfirm extends CRM_Event_Form_Regi
         $requireSpace = 1 + count($additonalIds);
       }
       if ($emptySeats !== NULL && ($requireSpace > $emptySeats)) {
-        $statusMsg = ts("Oops, it looks like there are currently no available spaces for the %1 event.", array(1 => $values['event']['title']));
+        $statusMsg = ts("Oops, it looks like there are currently no available spaces for the %1 event.", [1 => $values['event']['title']]);
       }
       else {
         if ($this->_cc == 'fail') {
-          $statusMsg = '<div class="bold">' . ts('Your Credit Card transaction was not successful. No money has yet been charged to your card.') . '</div><div><br />' . ts('Click the "Confirm Registration" button to complete your registration in %1, or click "Cancel Registration" if you are no longer interested in attending this event.', array(1 => $values['event']['title'])) . '</div>';
+          $statusMsg = '<div class="bold">' . ts('Your Credit Card transaction was not successful. No money has yet been charged to your card.') . '</div><div><br />' . ts('Click the "Confirm Registration" button to complete your registration in %1, or click "Cancel Registration" if you are no longer interested in attending this event.', [1 => $values['event']['title']]) . '</div>';
         }
         else {
           $url = CRM_Utils_System::url('civicrm/event/info', "reset=1&id={$this->_eventId}&noFullMsg=1",FALSE, NULL, FALSE, TRUE );
-          $statusMsg = '<div class="bold">' . ts('Confirm your registration for %1.', array(1 => "<a href='$url' target='_blank'>".$values['event']['title']."</a>")) . '</div><div><br />' . ts('Click the "Confirm Registration" button to begin, or click "Cancel Registration" if you are no longer interested in attending this event.') . '</div>';
+          $statusMsg = '<div class="bold">' . ts('Confirm your registration for %1.', [1 => "<a href='$url' target='_blank'>".$values['event']['title']."</a>"]) . '</div><div><br />' . ts('Click the "Confirm Registration" button to begin, or click "Cancel Registration" if you are no longer interested in attending this event.') . '</div>';
         }
-        $buttons = array_merge($buttons, array(array('type' => 'next',
+        $buttons = array_merge($buttons, [['type' => 'next',
               'name' => ts('Confirm Registration'),
               'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
               'isDefault' => TRUE,
-            )));
+            ]]);
       }
     }
 
     // status class other than Negative should be able to cancel registration.
     if (CRM_Utils_Array::arrayKeyExists($this->_participantStatusId, CRM_Event_PseudoConstant::participantStatus(NULL, "class != 'Negative'")) && !$expired) {
       $cancelConfirm = ts('Are you sure you want to cancel your registration for this event?');
-      $buttons = array_merge($buttons, array(array('type' => 'submit',
+      $buttons = array_merge($buttons, [['type' => 'submit',
             'name' => ts('Cancel Registration'),
             'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
-            'js' => array('onclick' => 'return confirm(\'' . $cancelConfirm . '\');'),
-          )));
+            'js' => ['onclick' => 'return confirm(\'' . $cancelConfirm . '\');'],
+          ]]);
       if (!$statusMsg) {
-        $statusMsg = ts('You can cancel your registration for %1 by clicking "Cancel Registration".', array(1 => $values['event']['title']));
+        $statusMsg = ts('You can cancel your registration for %1 by clicking "Cancel Registration".', [1 => $values['event']['title']]);
       }
     }
     if (!$statusMsg) {
       $statusMsg = ts("Oops, it looks like your registration for %1 has already been cancelled.",
-        array(1 => $values['event']['title'])
+        [1 => $values['event']['title']]
       );
     }
     $this->assign('statusMsg', $statusMsg);
@@ -191,7 +191,7 @@ class CRM_Event_Form_Registration_ParticipantConfirm extends CRM_Event_Form_Regi
     $this->assign('event', $values['event']);
     $this->assign('isShowLocation', CRM_Utils_Array::value('is_show_location', $values['event']));
 
-    $params = array('entity_id' => $this->_eventId, 'entity_table' => 'civicrm_event');
+    $params = ['entity_id' => $this->_eventId, 'entity_table' => 'civicrm_event'];
 
     $values['location'] = CRM_Core_BAO_Location::getValues($params, TRUE);
 
@@ -239,18 +239,18 @@ class CRM_Event_Form_Registration_ParticipantConfirm extends CRM_Event_Form_Regi
       $cancelledId = array_search('Cancelled', CRM_Event_PseudoConstant::participantStatus(NULL, "class = 'Negative'"));
       $additionalParticipantIds = CRM_Event_BAO_Participant::getAdditionalParticipantIds($participantId);
 
-      $participantIds = array_merge(array($participantId), $additionalParticipantIds);
+      $participantIds = array_merge([$participantId], $additionalParticipantIds);
       $results = CRM_Event_BAO_Participant::transitionParticipants($participantIds, $cancelledId, NULL, TRUE);
 
       if (count($participantIds) > 1) {
-        $statusMessage = ts("%1 Event registration(s) have been cancelled.", array(1 => count($participantIds)));
+        $statusMessage = ts("%1 Event registration(s) have been cancelled.", [1 => count($participantIds)]);
       }
       else {
         $statusMessage = ts("Your event registration has been cancelled.");
       }
       if (CRM_Utils_Array::value('mailedParticipants', $results)) {
         foreach ($results['mailedParticipants'] as $key => $displayName) {
-          $statusMessage .= "<br />" . ts("Email has been sent to : %1", array(1 => $displayName));
+          $statusMessage .= "<br />" . ts("Email has been sent to : %1", [1 => $displayName]);
         }
       }
 

@@ -127,27 +127,27 @@ class CRM_Core_Payment_Moneris extends CRM_Core_Payment {
     $mpgCustInfo->setEmail($params['email']);
     //get text representations of province/country to send to moneris for billing info
 
-    $billing = array('first_name' => $params['first_name'],
+    $billing = ['first_name' => $params['first_name'],
       'last_name' => $params['last_name'],
       'address' => $params['street_address'],
       'city' => $params['city'],
       'province' => $params['state_province'],
       'postal_code' => $params['postal_code'],
       'country' => $params['country'],
-    );
+    ];
     $mpgCustInfo->setBilling($billing);
     // set orderid as invoiceID to help match things up with Moneris later
     $my_orderid = $params['invoiceID'];
     $expiry_string = sprintf('%04d%02d', $params['year'], $params['month']);
 
-    $txnArray = array('type' => 'purchase',
+    $txnArray = ['type' => 'purchase',
       'order_id' => $my_orderid,
       'amount' => sprintf('%01.2f', $params['amount']),
       'pan' => $params['credit_card_number'],
       'expdate' => substr($expiry_string, 2, 4),
       'crypt_type' => '7',
       'cust_id' => $params['contact_id'],
-    );
+    ];
 
     // Allow further manipulation of params via custom hooks
     CRM_Utils_Hook::alterPaymentProcessorParams($this, $params, $txnArray);
@@ -200,14 +200,14 @@ class CRM_Core_Payment_Moneris extends CRM_Core_Payment {
       $recurAmount = sprintf('%01.2f', $params['amount']);
       //Create an array with the recur variables
       // (day | week | month)
-      $recurArray = array('recur_unit' => $recurUnit,
+      $recurArray = ['recur_unit' => $recurUnit,
         // yyyy/mm/dd
         'start_date' => $startDate,
         'num_recurs' => $numRecurs,
         'start_now' => 'true',
         'period' => $recurInterval,
         'recur_amount' => $recurAmount,
-      );
+      ];
       $mpgRecur = new mpgRecur($recurArray);
       // set the Recur Object to mpgRecur
       $mpgTxn->setRecur($mpgRecur);
@@ -239,7 +239,7 @@ class CRM_Core_Payment_Moneris extends CRM_Core_Payment {
 
     /* Success */
 
-    $params['trxn_result_code'] = (integer) $mpgResponse->getResponseCode();
+    $params['trxn_result_code'] = (int) $mpgResponse->getResponseCode();
     // todo: above assignment seems to be ignored, not getting stored in the civicrm_financial_trxn table
     $params['trxn_id'] = $mpgResponse->getTxnNumber();
     $params['gross_amount'] = $mpgResponse->getTransAmount();
@@ -314,7 +314,7 @@ class CRM_Core_Payment_Moneris extends CRM_Core_Payment {
    * @public
    */
   function checkConfig() {
-    $error = array();
+    $error = [];
 
     if (empty($this->_paymentProcessor['signature'])) {
       $error[] = ts('Store ID is not set in the Administer CiviCRM &raquo; Payment Processor.');

@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-class CRM_Contribute_DAO_PCP extends CRM_Core_DAO
+              class CRM_Contribute_DAO_PCP extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -78,7 +78,7 @@ class CRM_Contribute_DAO_PCP extends CRM_Core_DAO
    * @static
    */
   static $_log = true;
-  /**
+    /**
    * Personal Campaign Page ID
    *
    * @var int unsigned
@@ -154,7 +154,7 @@ class CRM_Contribute_DAO_PCP extends CRM_Core_DAO
    * @var boolean
    */
   public $is_active;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -173,14 +173,14 @@ class CRM_Contribute_DAO_PCP extends CRM_Core_DAO
   function &links()
   {
     if (!(self::$_links)) {
-      self::$_links = array(
+      self::$_links = [
         'contact_id' => 'civicrm_contact:id',
         'contribution_page_id' => 'civicrm_contribution_page:id',
-      );
+      ];
     }
     return self::$_links;
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -195,7 +195,7 @@ class CRM_Contribute_DAO_PCP extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -204,94 +204,94 @@ class CRM_Contribute_DAO_PCP extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'pcp_id' => array(
+      self::$_fields = [
+        'pcp_id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Personal Campaign Page ID') ,
           'required' => true,
-        ) ,
-        'pcp_contact_id' => array(
+                  ] ,
+        'pcp_contact_id' => [
           'name' => 'contact_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Contact ID') ,
           'required' => true,
-          'FKClassName' => 'CRM_Contact_DAO_Contact',
-        ) ,
-        'status_id' => array(
+                    'FKClassName' => 'CRM_Contact_DAO_Contact',
+        ] ,
+        'status_id' => [
           'name' => 'status_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Personal Campaign Page Status') ,
           'required' => true,
-        ) ,
-        'title' => array(
+                  ] ,
+        'title' => [
           'name' => 'title',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Personal Campaign Page Title') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-          'default' => 'UL',
-        ) ,
-        'intro_text' => array(
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                'default' => 'UL',
+          ] ,
+        'intro_text' => [
           'name' => 'intro_text',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Intro Text') ,
-          'default' => 'UL',
-        ) ,
-        'page_text' => array(
+                  'default' => 'UL',
+          ] ,
+        'page_text' => [
           'name' => 'page_text',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Page Text') ,
-          'default' => 'UL',
-        ) ,
-        'donate_link_text' => array(
+                  'default' => 'UL',
+          ] ,
+        'donate_link_text' => [
           'name' => 'donate_link_text',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Donate Link Text') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-          'default' => 'UL',
-        ) ,
-        'contribution_page_id' => array(
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                'default' => 'UL',
+          ] ,
+        'contribution_page_id' => [
           'name' => 'contribution_page_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-          'FKClassName' => 'CRM_Contribute_DAO_ContributionPage',
-        ) ,
-        'is_thermometer' => array(
+                    'FKClassName' => 'CRM_Contribute_DAO_ContributionPage',
+        ] ,
+        'is_thermometer' => [
           'name' => 'is_thermometer',
           'type' => CRM_Utils_Type::T_INT,
-        ) ,
-        'is_honor_roll' => array(
+                  ] ,
+        'is_honor_roll' => [
           'name' => 'is_honor_roll',
           'type' => CRM_Utils_Type::T_INT,
-        ) ,
-        'goal_amount' => array(
+                  ] ,
+        'goal_amount' => [
           'name' => 'goal_amount',
           'type' => CRM_Utils_Type::T_MONEY,
           'title' => ts('Goal Amount') ,
-        ) ,
-        'currency' => array(
+                  ] ,
+        'currency' => [
           'name' => 'currency',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Currency') ,
-          'maxlength' => 3,
-          'size' => CRM_Utils_Type::FOUR,
-          'default' => 'UL',
-        ) ,
-        'referer' => array(
+           'maxlength' => 3,
+           'size' => CRM_Utils_Type::FOUR,
+                'default' => 'UL',
+          ] ,
+        'referer' => [
           'name' => 'referer',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Referer') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-          'default' => 'UL',
-        ) ,
-        'is_active' => array(
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                'default' => 'UL',
+          ] ,
+        'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ) ,
-      );
+                  ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -303,8 +303,8 @@ class CRM_Contribute_DAO_PCP extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -324,7 +324,7 @@ class CRM_Contribute_DAO_PCP extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -335,7 +335,7 @@ class CRM_Contribute_DAO_PCP extends CRM_Core_DAO
           }
         }
       }
-    }
+                                              }
     return self::$_import;
   }
   /**
@@ -347,7 +347,7 @@ class CRM_Contribute_DAO_PCP extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
@@ -358,7 +358,7 @@ class CRM_Contribute_DAO_PCP extends CRM_Core_DAO
           }
         }
       }
-    }
+                                              }
     return self::$_export;
   }
 }

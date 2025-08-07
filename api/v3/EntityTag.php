@@ -54,9 +54,9 @@ function civicrm_api3_entity_tag_get($params) {
 
 
   $values = CRM_Core_BAO_EntityTag::getTag($params['entity_id'], $params['entity_table']);
-  $result = array();
+  $result = [];
   foreach ($values as $v) {
-    $result[$v] = array('tag_id' => $v);
+    $result[$v] = ['tag_id' => $v];
   }
   return civicrm_api3_create_success($result, $params);
 }
@@ -68,7 +68,7 @@ function civicrm_api3_entity_tag_get($params) {
  */
 function _civicrm_api3_entity_tag_get_spec(&$params) {
   $params['entity_id']['api.required'] = 1;
-  $params['entity_id']['api.aliases'] = array('contact_id');
+  $params['entity_id']['api.aliases'] = ['contact_id'];
   $params['entity_table']['api.default'] = 'civicrm_contact';
 }
 
@@ -82,7 +82,7 @@ function _civicrm_api3_entity_tag_get_spec(&$params) {
  */
 function civicrm_api3_entity_tag_display($params) {
 
-  civicrm_api3_verify_one_mandatory($params, NULL, array('entity_id', 'contact_id'));
+  civicrm_api3_verify_one_mandatory($params, NULL, ['entity_id', 'contact_id']);
 
   $entityID = NULL;
   $entityTable = 'civicrm_contact';
@@ -98,7 +98,7 @@ function civicrm_api3_entity_tag_display($params) {
 
   require_once 'CRM/Core/BAO/EntityTag.php';
   $values = CRM_Core_BAO_EntityTag::getTag($entityID, $entityTable);
-  $result = array();
+  $result = [];
   $tags   = CRM_Core_PseudoConstant::tag();
   foreach ($values as $v) {
     $result[] = $tags[$v];
@@ -149,8 +149,8 @@ function _civicrm_api3_entity_tag_delete_spec(&$params) {
  */
 function _civicrm_api3_entity_tag_common($params, $op = 'add') {
 
-  $entityIDs   = array();
-  $tagsIDs     = array();
+  $entityIDs   = [];
+  $tagsIDs     = [];
   $entityTable = 'civicrm_contact';
   if (is_array($params)) {
     foreach ($params as $n => $v) {
@@ -174,7 +174,7 @@ function _civicrm_api3_entity_tag_common($params, $op = 'add') {
   }
 
   require_once 'CRM/Core/BAO/EntityTag.php';
-  $values = array('is_error' => 0);
+  $values = ['is_error' => 0];
   if ($op == 'add') {
     $values['total_count'] = $values['added'] = $values['not_added'] = 0;
     foreach ($tagIDs as $tagID) {

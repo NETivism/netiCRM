@@ -5,7 +5,7 @@ require_once __DIR__.'/../civicrm.config.php';
 function _forcePHPIDS() {
   $ids = new CRM_Core_IDS();
   $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-  $args = array(ltrim($path, '/'));
+  $args = [ltrim($path, '/')];
   $ids->check($args);
 }
 

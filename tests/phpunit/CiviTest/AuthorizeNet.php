@@ -13,7 +13,7 @@ class AuthorizeNet extends PHPUnit_Framework_Testcase
     {
 
         $paymentProcessor = new CRM_Core_DAO_PaymentProcessor( );
-        $paymentParams = array(
+        $paymentParams = [
                                'name'                   => 'Authorize',
                                'domain_id'              => CRM_Core_Config::domainID( ),
                                'payment_processor_type' => 'AuthNet',
@@ -26,7 +26,7 @@ class AuthorizeNet extends PHPUnit_Framework_Testcase
                                'url_recur'              => 'https://apitest.authorize.net/xml/v1/request.api',
                                'class_name'             => 'Payment_AuthorizeNet',
                                'billing_mode'           => 1
-                               );
+                               ];
         $paymentProcessor->copyValues( $paymentParams );
         $paymentProcessor->save( );
         return $paymentProcessor;

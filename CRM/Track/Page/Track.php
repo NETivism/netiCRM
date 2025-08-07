@@ -16,7 +16,7 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
    */
   function run() {
     $null = CRM_Core_DAO::$_nullObject;
-    $params = array(
+    $params = [
       'pageType' => CRM_Utils_Request::retrieve('ptype', 'String', $null),
       'pageId' => CRM_Utils_Request::retrieve('pid', 'Positive', $null),
       'state' => CRM_Utils_Request::retrieve('state', 'Integer', $null),
@@ -28,7 +28,7 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
       'utmCampaign' => CRM_Utils_Request::retrieve('utm_campaign', 'String', $null),
       'utmTerm' => CRM_Utils_Request::retrieve('utm_term', 'String', $null),
       'utmContent' => CRM_Utils_Request::retrieve('utm_content', 'String', $null),
-    );
+    ];
 
     // only appear 3 month data by default
     $last3month = date('Y-m-01', strtotime('-3 month'));
@@ -45,18 +45,18 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
     }
     if ($params['pageType'] == 'civicrm_contribution_page' && $params['pageId']) {
       // breadcrumb starter
-      $breadcrumbs = array(
-        array('url' => CRM_Utils_System::url('civicrm/admin', 'reset=1'), 'title' => ts('Administer CiviCRM')),
-        array('url' => CRM_Utils_System::url('civicrm/admin/contribute', 'reset=1'), 'title' => ts('Manage Contribution Pages')),
-      );
+      $breadcrumbs = [
+        ['url' => CRM_Utils_System::url('civicrm/admin', 'reset=1'), 'title' => ts('Administer CiviCRM')],
+        ['url' => CRM_Utils_System::url('civicrm/admin/contribute', 'reset=1'), 'title' => ts('Manage Contribution Pages')],
+      ];
       CRM_Utils_System::appendBreadCrumb($breadcrumbs);
     }
     else
     if ($params['pageType'] == 'civicrm_event' && $params['pageId']) {
       // breadcrumb starter
-      $breadcrumbs = array(
-        array('url' => CRM_Utils_System::url('civicrm/event', 'reset=1'), 'title' => ts('CiviEvent Dashboard')),
-      );
+      $breadcrumbs = [
+        ['url' => CRM_Utils_System::url('civicrm/event', 'reset=1'), 'title' => ts('CiviEvent Dashboard')],
+      ];
       CRM_Utils_System::appendBreadCrumb($breadcrumbs);
     }
     $selector = new CRM_Track_Selector_Track($params, $this->_scope);
@@ -76,7 +76,7 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
     $controller->run();
 
     // another statistics
-    $stat = array();
+    $stat = [];
     $statistics = new CRM_Track_Selector_Track($params);
     $dao = $statistics->getQuery("COUNT(id) as `count`, referrer_type, SUM(CASE WHEN state >= 4 THEN 1 ELSE 0 END) as goal, max(visit_date) as end, min(visit_date) as start, GROUP_CONCAT(entity_id) as entity_ids", 'GROUP BY referrer_type');
 
@@ -84,12 +84,12 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
     while($dao->fetch()){
       $type = !empty($dao->referrer_type) ? $dao->referrer_type : 'unknown';
       $total = $total+$dao->count;
-      $stat[$type] = array(
+      $stat[$type] = [
         'name' => $type,
         'label' => empty($dao->referrer_type) ? ts("Unknown") : ts($dao->referrer_type),
         'count' => $dao->count,
         'count_goal' => $dao->goal,
-      );
+      ];
       if (!empty($params['pageType']) && !empty($dao->entity_ids)) {
         switch($params['pageType']) {
           case 'civicrm_contribution_page':
@@ -116,20 +116,20 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
     }
 
     // sort by count
-    uasort($stat, array('CRM_Core_BAO_Track', 'cmp'));
+    uasort($stat, ['CRM_Core_BAO_Track', 'cmp']);
     foreach($stat as $type => $data) {
       $stat[$type]['percent'] = number_format(($data['count'] / $total) * 100 );
       $stat[$type]['percent_goal'] = number_format(($data['count_goal'] / $total) * 100 );
     }
     foreach($stat as &$st) {
       $amount = '$'.CRM_Utils_Money::format($st['total_amount'], NULL, NULL, TRUE);
-      $st['display'] = '<div>'.ts("%1 achieved", array(1 => "{$st['percent_goal']}% ({$st['count_goal']}".ts('People')." ".ts('for')." {$amount})"))."</div><div style='color:grey'>".ts("Total")." {$st['percent']}% ({$st['count']}".ts('People').")</div>";
+      $st['display'] = '<div>'.ts("%1 achieved", [1 => "{$st['percent_goal']}% ({$st['count_goal']}".ts('People')." ".ts('for')." {$amount})"])."</div><div style='color:grey'>".ts("Total")." {$st['percent']}% ({$st['count']}".ts('People').")</div>";
     }
     $this->assign('summary', $stat);
 
     CRM_Utils_System::setTitle($selector->getTitle());
     $this->assign('title', $selector->getTitle());
-    self::chart($this, 'chart_track', $params, array('ratioClass' => 'ct-double-octave'));
+    self::chart($this, 'chart_track', $params, ['ratioClass' => 'ct-double-octave']);
 
     $sortID = NULL;
     if ($this->get(CRM_Utils_Sort::SORT_ID)) {
@@ -143,8 +143,8 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
 
   public static function chart($page, $chartName, $selectorParams, $chartParams = NULL) {
     $referrerTypes = CRM_Core_PseudoConstant::referrerTypes();
-    $label = $dates = array();
-    $dummy = $data = $legend = array();
+    $label = $dates = [];
+    $dummy = $data = $legend = [];
     $selector = new CRM_Track_Selector_Track($selectorParams);
     $dao = $selector->getQuery(
       "referrer_type, count(id) as `count`, DATE_FORMAT(visit_date,'%Y-%m-%d') visit_day",
@@ -180,7 +180,7 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
     $seriesNum = 0; 
     foreach($dummy as $rtype => $d) {
       $legend[$seriesNum] = $referrerTypes[$rtype];
-      $data[$seriesNum] = array();
+      $data[$seriesNum] = [];
       foreach($label as $idx => $date) {
         if (!empty($d[$date])) {
           $data[$seriesNum][$idx] = $d[$date];
@@ -192,7 +192,7 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
       $seriesNum++;
     }
 
-    $chart = array(
+    $chart = [
       'id' => str_replace('_', '-', $chartName),
       'selector' => '#'.str_replace('_', '-', $chartName),
       'type' => 'Bar',
@@ -205,7 +205,7 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
       'stackBars' => true,
       'withLegend' => true,
       'autoDateLabel' => true,
-    );
+    ];
     if (is_array($chartParams)) {
       $chart += $chartParams;
     }

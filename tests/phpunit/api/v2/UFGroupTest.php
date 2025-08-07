@@ -62,50 +62,50 @@ class api_v2_UFGroupTest extends CiviUnitTestCase {
     );
 
     // FIXME: something NULLs $GLOBALS['_HTML_QuickForm_registered_rules'] when the tests are ran all together
-    $GLOBALS['_HTML_QuickForm_registered_rules'] = array(
-      'required' => array('html_quickform_rule_required', 'HTML/QuickForm/Rule/Required.php'),
-      'maxlength' => array('html_quickform_rule_range', 'HTML/QuickForm/Rule/Range.php'),
-      'minlength' => array('html_quickform_rule_range', 'HTML/QuickForm/Rule/Range.php'),
-      'rangelength' => array('html_quickform_rule_range', 'HTML/QuickForm/Rule/Range.php'),
-      'email' => array('html_quickform_rule_email', 'HTML/QuickForm/Rule/Email.php'),
-      'regex' => array('html_quickform_rule_regex', 'HTML/QuickForm/Rule/Regex.php'),
-      'lettersonly' => array('html_quickform_rule_regex', 'HTML/QuickForm/Rule/Regex.php'),
-      'alphanumeric' => array('html_quickform_rule_regex', 'HTML/QuickForm/Rule/Regex.php'),
-      'numeric' => array('html_quickform_rule_regex', 'HTML/QuickForm/Rule/Regex.php'),
-      'nopunctuation' => array('html_quickform_rule_regex', 'HTML/QuickForm/Rule/Regex.php'),
-      'nonzero' => array('html_quickform_rule_regex', 'HTML/QuickForm/Rule/Regex.php'),
-      'callback' => array('html_quickform_rule_callback', 'HTML/QuickForm/Rule/Callback.php'),
-      'compare' => array('html_quickform_rule_compare', 'HTML/QuickForm/Rule/Compare.php'),
-    );
+    $GLOBALS['_HTML_QuickForm_registered_rules'] = [
+      'required' => ['html_quickform_rule_required', 'HTML/QuickForm/Rule/Required.php'],
+      'maxlength' => ['html_quickform_rule_range', 'HTML/QuickForm/Rule/Range.php'],
+      'minlength' => ['html_quickform_rule_range', 'HTML/QuickForm/Rule/Range.php'],
+      'rangelength' => ['html_quickform_rule_range', 'HTML/QuickForm/Rule/Range.php'],
+      'email' => ['html_quickform_rule_email', 'HTML/QuickForm/Rule/Email.php'],
+      'regex' => ['html_quickform_rule_regex', 'HTML/QuickForm/Rule/Regex.php'],
+      'lettersonly' => ['html_quickform_rule_regex', 'HTML/QuickForm/Rule/Regex.php'],
+      'alphanumeric' => ['html_quickform_rule_regex', 'HTML/QuickForm/Rule/Regex.php'],
+      'numeric' => ['html_quickform_rule_regex', 'HTML/QuickForm/Rule/Regex.php'],
+      'nopunctuation' => ['html_quickform_rule_regex', 'HTML/QuickForm/Rule/Regex.php'],
+      'nonzero' => ['html_quickform_rule_regex', 'HTML/QuickForm/Rule/Regex.php'],
+      'callback' => ['html_quickform_rule_callback', 'HTML/QuickForm/Rule/Callback.php'],
+      'compare' => ['html_quickform_rule_compare', 'HTML/QuickForm/Rule/Compare.php'],
+    ];
     // FIXME: …ditto for $GLOBALS['HTML_QUICKFORM_ELEMENT_TYPES']
-    $GLOBALS['HTML_QUICKFORM_ELEMENT_TYPES'] = array(
-      'group' => array('HTML/QuickForm/group.php', 'HTML_QuickForm_group'),
-      'hidden' => array('HTML/QuickForm/hidden.php', 'HTML_QuickForm_hidden'),
-      'reset' => array('HTML/QuickForm/reset.php', 'HTML_QuickForm_reset'),
-      'checkbox' => array('HTML/QuickForm/checkbox.php', 'HTML_QuickForm_checkbox'),
-      'file' => array('HTML/QuickForm/file.php', 'HTML_QuickForm_file'),
-      'image' => array('HTML/QuickForm/image.php', 'HTML_QuickForm_image'),
-      'password' => array('HTML/QuickForm/password.php', 'HTML_QuickForm_password'),
-      'radio' => array('HTML/QuickForm/radio.php', 'HTML_QuickForm_radio'),
-      'button' => array('HTML/QuickForm/button.php', 'HTML_QuickForm_button'),
-      'submit' => array('HTML/QuickForm/submit.php', 'HTML_QuickForm_submit'),
-      'select' => array('HTML/QuickForm/select.php', 'HTML_QuickForm_select'),
-      'hiddenselect' => array('HTML/QuickForm/hiddenselect.php', 'HTML_QuickForm_hiddenselect'),
-      'text' => array('HTML/QuickForm/text.php', 'HTML_QuickForm_text'),
-      'textarea' => array('HTML/QuickForm/textarea.php', 'HTML_QuickForm_textarea'),
-      'fckeditor' => array('HTML/QuickForm/fckeditor.php', 'HTML_QuickForm_FCKEditor'),
-      'dojoeditor' => array('HTML/QuickForm/dojoeditor.php', 'HTML_QuickForm_dojoeditor'),
-      'link' => array('HTML/QuickForm/link.php', 'HTML_QuickForm_link'),
-      'advcheckbox' => array('HTML/QuickForm/advcheckbox.php', 'HTML_QuickForm_advcheckbox'),
-      'date' => array('HTML/QuickForm/date.php', 'HTML_QuickForm_date'),
-      'static' => array('HTML/QuickForm/static.php', 'HTML_QuickForm_static'),
-      'header' => array('HTML/QuickForm/header.php', 'HTML_QuickForm_header'),
-      'html' => array('HTML/QuickForm/html.php', 'HTML_QuickForm_html'),
-      'hierselect' => array('HTML/QuickForm/hierselect.php', 'HTML_QuickForm_hierselect'),
-      'autocomplete' => array('HTML/QuickForm/autocomplete.php', 'HTML_QuickForm_autocomplete'),
-      'xbutton' => array('HTML/QuickForm/xbutton.php', 'HTML_QuickForm_xbutton'),
-      'advmultiselect' => array('HTML/QuickForm/advmultiselect.php', 'HTML_QuickForm_advmultiselect'),
-    );
+    $GLOBALS['HTML_QUICKFORM_ELEMENT_TYPES'] = [
+      'group' => ['HTML/QuickForm/group.php', 'HTML_QuickForm_group'],
+      'hidden' => ['HTML/QuickForm/hidden.php', 'HTML_QuickForm_hidden'],
+      'reset' => ['HTML/QuickForm/reset.php', 'HTML_QuickForm_reset'],
+      'checkbox' => ['HTML/QuickForm/checkbox.php', 'HTML_QuickForm_checkbox'],
+      'file' => ['HTML/QuickForm/file.php', 'HTML_QuickForm_file'],
+      'image' => ['HTML/QuickForm/image.php', 'HTML_QuickForm_image'],
+      'password' => ['HTML/QuickForm/password.php', 'HTML_QuickForm_password'],
+      'radio' => ['HTML/QuickForm/radio.php', 'HTML_QuickForm_radio'],
+      'button' => ['HTML/QuickForm/button.php', 'HTML_QuickForm_button'],
+      'submit' => ['HTML/QuickForm/submit.php', 'HTML_QuickForm_submit'],
+      'select' => ['HTML/QuickForm/select.php', 'HTML_QuickForm_select'],
+      'hiddenselect' => ['HTML/QuickForm/hiddenselect.php', 'HTML_QuickForm_hiddenselect'],
+      'text' => ['HTML/QuickForm/text.php', 'HTML_QuickForm_text'],
+      'textarea' => ['HTML/QuickForm/textarea.php', 'HTML_QuickForm_textarea'],
+      'fckeditor' => ['HTML/QuickForm/fckeditor.php', 'HTML_QuickForm_FCKEditor'],
+      'dojoeditor' => ['HTML/QuickForm/dojoeditor.php', 'HTML_QuickForm_dojoeditor'],
+      'link' => ['HTML/QuickForm/link.php', 'HTML_QuickForm_link'],
+      'advcheckbox' => ['HTML/QuickForm/advcheckbox.php', 'HTML_QuickForm_advcheckbox'],
+      'date' => ['HTML/QuickForm/date.php', 'HTML_QuickForm_date'],
+      'static' => ['HTML/QuickForm/static.php', 'HTML_QuickForm_static'],
+      'header' => ['HTML/QuickForm/header.php', 'HTML_QuickForm_header'],
+      'html' => ['HTML/QuickForm/html.php', 'HTML_QuickForm_html'],
+      'hierselect' => ['HTML/QuickForm/hierselect.php', 'HTML_QuickForm_hierselect'],
+      'autocomplete' => ['HTML/QuickForm/autocomplete.php', 'HTML_QuickForm_autocomplete'],
+      'xbutton' => ['HTML/QuickForm/xbutton.php', 'HTML_QuickForm_xbutton'],
+      'advmultiselect' => ['HTML/QuickForm/advmultiselect.php', 'HTML_QuickForm_advmultiselect'],
+    ];
   }
 
   /**
@@ -117,7 +117,7 @@ class api_v2_UFGroupTest extends CiviUnitTestCase {
   }
 
   function testGetUFProfileTitleWithEmptyParam() {
-    $result = civicrm_uf_profile_title_get(array());
+    $result = civicrm_uf_profile_title_get([]);
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
   }
 
@@ -169,7 +169,7 @@ class api_v2_UFGroupTest extends CiviUnitTestCase {
   }
 
   public function testUFJoinEditEmptyParams() {
-    $params = array();
+    $params = [];
     $result = civicrm_uf_join_edit($params);
 
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
@@ -177,13 +177,13 @@ class api_v2_UFGroupTest extends CiviUnitTestCase {
   }
 
   public function testUFJoinEditWithoutUFGroupId() {
-    $params = array(
+    $params = [
       'module' => 'CiviContribute',
       'entity_table' => 'civicrm_contribution_page',
       'entity_id' => 1,
       'weight' => 1,
       'is_active' => 1,
-    );
+    ];
     $result = civicrm_uf_join_edit($params);
 
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
@@ -194,7 +194,7 @@ class api_v2_UFGroupTest extends CiviUnitTestCase {
    * fetch profile HTML with group id
    */
   public function testGetUFProfileCreateHTML() {
-    $fieldsParams = array(
+    $fieldsParams = [
       'field_name' => 'first_name',
       'field_type' => 'Individual',
       'visibility' => 'Public Pages and Listings',
@@ -202,15 +202,15 @@ class api_v2_UFGroupTest extends CiviUnitTestCase {
       'label' => 'Test First Name',
       'is_searchable' => 1,
       'is_active' => 1,
-    );
+    ];
     $ufField = civicrm_uf_field_create($this->_ufGroupId, $fieldsParams);
 
-    $joinParams = array(
+    $joinParams = [
       'is_active' => 1,
       'module' => 'Profile',
       'weight' => 1,
       'uf_group_id' => $this->_ufGroupId,
-    );
+    ];
     $ufJoin = civicrm_uf_join_edit($joinParams);
 
     $profileHTML = civicrm_uf_create_html_get($this->_ufGroupId, TRUE);
@@ -226,7 +226,7 @@ class api_v2_UFGroupTest extends CiviUnitTestCase {
    * creating profile fields / fetch profile fields
    */
   public function testGetUFProfileFields() {
-    $params = array(
+    $params = [
       'field_name' => 'country',
       'field_type' => 'Contact',
       'visibility' => 'Public Pages and Listings',
@@ -234,7 +234,7 @@ class api_v2_UFGroupTest extends CiviUnitTestCase {
       'label' => 'Test Country',
       'is_searchable' => 1,
       'is_active' => 1,
-    );
+    ];
 
     $ufField = civicrm_uf_field_create($this->_ufGroupId, $params);
     $this->_ufFieldId = $ufField['id'];
@@ -253,7 +253,7 @@ class api_v2_UFGroupTest extends CiviUnitTestCase {
   }
 
   function testGetUFProfileFieldsWithEmptyParam() {
-    $result = civicrm_uf_profile_fields_get(array());
+    $result = civicrm_uf_profile_fields_get([]);
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
   }
 
@@ -292,11 +292,11 @@ class api_v2_UFGroupTest extends CiviUnitTestCase {
    * updating group
    */
   public function testUpdateUFGroup() {
-    $params = array(
+    $params = [
       'title' => 'Edited Test Profile',
       'help_post' => 'Profile Pro help text.',
       'is_active' => 1,
-    );
+    ];
 
     $updatedGroup = civicrm_uf_group_update($params, $this->_ufGroupId);
     foreach ($params as $key => $value) {
@@ -308,7 +308,7 @@ class api_v2_UFGroupTest extends CiviUnitTestCase {
    * create / updating field
    */
   public function testCreateUFField() {
-    $params = array(
+    $params = [
       'field_name' => 'country',
       'field_type' => 'Contact',
       'visibility' => 'Public Pages and Listings',
@@ -316,19 +316,19 @@ class api_v2_UFGroupTest extends CiviUnitTestCase {
       'label' => 'Test Country',
       'is_searchable' => 1,
       'is_active' => 1,
-    );
+    ];
     $ufField = civicrm_uf_field_create($this->_ufGroupId, $params);
     $this->_ufFieldId = $ufField['id'];
     foreach ($params as $key => $value) {
       $this->assertEquals($ufField[$key], $params[$key], 'In line ' . __LINE__);
     }
 
-    $params = array(
+    $params = [
       'field_name' => 'country',
       'label' => 'Edited Test Country',
       'weight' => 1,
       'is_active' => 1,
-    );
+    ];
 
     $updatedField = civicrm_uf_field_update($params, $ufField['id']);
     foreach ($params as $key => $value) {
@@ -337,16 +337,16 @@ class api_v2_UFGroupTest extends CiviUnitTestCase {
   }
 
   function testCreateUFFieldWithEmptyParams() {
-    $result = civicrm_uf_field_create($this->_ufGroupId, array());
+    $result = civicrm_uf_field_create($this->_ufGroupId, []);
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
   }
 
   function testCreateUFFieldWithWrongParams() {
-    $result = civicrm_uf_field_create('a string', array('field_name' => 'test field'));
+    $result = civicrm_uf_field_create('a string', ['field_name' => 'test field']);
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
     $result = civicrm_uf_field_create($this->_ufGroupId, 'a string');
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
-    $result = civicrm_uf_field_create($this->_ufGroupId, array('label' => 'name-less field'));
+    $result = civicrm_uf_field_create($this->_ufGroupId, ['label' => 'name-less field']);
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
   }
 
@@ -354,7 +354,7 @@ class api_v2_UFGroupTest extends CiviUnitTestCase {
    * deleting field
    */
   public function testDeleteUFField() {
-    $params = array(
+    $params = [
       'field_name' => 'country',
       'field_type' => 'Contact',
       'visibility' => 'Public Pages and Listings',
@@ -363,7 +363,7 @@ class api_v2_UFGroupTest extends CiviUnitTestCase {
       'label' => 'Test Country',
       'is_searchable' => 1,
       'is_active' => 1,
-    );
+    ];
     $ufField = civicrm_uf_field_create($this->_ufGroupId, $params);
     $this->_ufFieldId = $ufField['id'];
     foreach ($params as $key => $value) {
@@ -385,19 +385,19 @@ class api_v2_UFGroupTest extends CiviUnitTestCase {
    * create/update uf join
    */
   public function testEditUFJoin() {
-    $params = array(
+    $params = [
       'module' => 'CiviContribute',
       'entity_table' => 'civicrm_contribution_page',
       'entity_id' => 1,
       'weight' => 1,
       'uf_group_id' => $this->_ufGroupId,
       'is_active' => 1,
-    );
+    ];
     $ufJoin = civicrm_uf_join_edit($params);
     foreach ($params as $key => $value) {
       $this->assertEquals($ufJoin[$key], $params[$key], 'In line ' . __LINE__);
     }
-    $params = array(
+    $params = [
       'id' => $ufJoin['id'],
       'module' => 'CiviContribute',
       'entity_table' => 'civicrm_contribution_page',
@@ -405,7 +405,7 @@ class api_v2_UFGroupTest extends CiviUnitTestCase {
       'weight' => 1,
       'uf_group_id' => $this->_ufGroupId,
       'is_active' => 0,
-    );
+    ];
     $ufJoinUpdated = civicrm_uf_join_edit($params);
     foreach ($params as $key => $value) {
       $this->assertEquals($ufJoinUpdated[$key], $params[$key], 'In line ' . __LINE__);
@@ -422,7 +422,7 @@ class api_v2_UFGroupTest extends CiviUnitTestCase {
   }
 
   public function testFindUFJoinEmptyParams() {
-    $params = array();
+    $params = [];
     $result = civicrm_uf_join_add($params);
 
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
@@ -430,13 +430,13 @@ class api_v2_UFGroupTest extends CiviUnitTestCase {
   }
 
   public function testFindUFJoinWithoutUFGroupId() {
-    $params = array(
+    $params = [
       'module' => 'CiviContribute',
       'entity_table' => 'civicrm_contribution_page',
       'entity_id' => 1,
       'weight' => 1,
       'is_active' => 1,
-    );
+    ];
     $result = civicrm_uf_join_add($params);
 
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
@@ -447,19 +447,19 @@ class api_v2_UFGroupTest extends CiviUnitTestCase {
    * find uf join id
    */
   public function testFindUFJoinId() {
-    $params = array(
+    $params = [
       'module' => 'CiviContribute',
       'entity_table' => 'civicrm_contribution_page',
       'entity_id' => 1,
       'weight' => 1,
       'uf_group_id' => $this->_ufGroupId,
       'is_active' => 1,
-    );
+    ];
     $ufJoin = civicrm_uf_join_add($params);
-    $searchParams = array(
+    $searchParams = [
       'entity_table' => 'civicrm_contribution_page',
       'entity_id' => 1,
-    );
+    ];
     $ufJoinId = civicrm_uf_join_id_find($searchParams);
     $this->assertEquals($ufJoinId, $ufJoin['id'], 'In line ' . __LINE__);
   }
@@ -468,19 +468,19 @@ class api_v2_UFGroupTest extends CiviUnitTestCase {
    * find uf join group id
    */
   public function testFindUFGroupId() {
-    $params = array(
+    $params = [
       'module' => 'CiviContribute',
       'entity_table' => 'civicrm_contribution_page',
       'entity_id' => 1,
       'weight' => 1,
       'uf_group_id' => $this->_ufGroupId,
       'is_active' => 1,
-    );
+    ];
     $ufJoin = civicrm_uf_join_add($params);
-    $searchParams = array(
+    $searchParams = [
       'entity_table' => 'civicrm_contribution_page',
       'entity_id' => 1,
-    );
+    ];
     $ufGroupId = civicrm_uf_join_UFGroupId_find($searchParams);
     $this->assertEquals($ufGroupId, $this->_ufGroupId, 'In line ' . __LINE__);
   }
@@ -494,7 +494,7 @@ class api_v2_UFGroupTest extends CiviUnitTestCase {
   }
 
   function testGroupCreate() {
-    $params = array(
+    $params = [
       'add_captcha' => 1,
       'add_contact_to_group' => 2,
       'cancel_URL' => 'http://example.org/cancel',
@@ -515,7 +515,7 @@ class api_v2_UFGroupTest extends CiviUnitTestCase {
       'notify' => 'admin@example.org',
       'post_URL' => 'http://example.org/post',
       'title' => 'Test Group',
-    );
+    ];
     $group = civicrm_uf_group_create($params);
     foreach ($params as $key => $value) {
       if ($key == 'add_contact_to_group' or $key == 'group') {
@@ -528,19 +528,19 @@ class api_v2_UFGroupTest extends CiviUnitTestCase {
   }
 
   function testGroupCreateWithEmptyParams() {
-    $result = civicrm_uf_group_create(array());
+    $result = civicrm_uf_group_create([]);
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
   }
 
   function testGroupCreateWithWrongParams() {
     $result = civicrm_uf_group_create('a string');
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
-    $result = civicrm_uf_group_create(array('name' => 'A title-less group'));
+    $result = civicrm_uf_group_create(['name' => 'A title-less group']);
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
   }
 
   function testGroupUpdate() {
-    $params = array(
+    $params = [
       'add_captcha' => 1,
       'add_contact_to_group' => 2,
       'cancel_URL' => 'http://example.org/cancel',
@@ -561,7 +561,7 @@ class api_v2_UFGroupTest extends CiviUnitTestCase {
       'notify' => 'admin@example.org',
       'post_URL' => 'http://example.org/post',
       'title' => 'Test Group',
-    );
+    ];
     $group = civicrm_uf_group_update($params, $this->_ufGroupId);
     foreach ($params as $key => $value) {
       if ($key == 'add_contact_to_group' or $key == 'group') {
@@ -574,14 +574,14 @@ class api_v2_UFGroupTest extends CiviUnitTestCase {
   }
 
   function testGroupUpdateWithEmptyParams() {
-    $result = civicrm_uf_group_update(array(), $this->_ufGroupId);
+    $result = civicrm_uf_group_update([], $this->_ufGroupId);
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
   }
 
   function testGroupUpdateWithWrongParams() {
     $result = civicrm_uf_group_update('a string', $this->_ufGroupId);
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
-    $result = civicrm_uf_group_update(array('title' => 'Title'), 'a string');
+    $result = civicrm_uf_group_update(['title' => 'Title'], 'a string');
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
   }
 }

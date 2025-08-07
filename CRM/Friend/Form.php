@@ -90,7 +90,7 @@ class CRM_Friend_Form extends CRM_Core_Form {
       $this->_pcpBlockId = CRM_Utils_Request::retrieve('blockId', 'Positive', $this, TRUE);
 
       CRM_Core_DAO::commonRetrieveAll('CRM_Contribute_DAO_PCPBlock', 'id',
-        $this->_pcpBlockId, $pcpBlock, array('is_tellfriend_enabled', 'tellfriend_limit')
+        $this->_pcpBlockId, $pcpBlock, ['is_tellfriend_enabled', 'tellfriend_limit']
       );
 
       if (!CRM_Utils_Array::value('is_tellfriend_enabled', $pcpBlock[$this->_pcpBlockId])) {
@@ -129,7 +129,7 @@ class CRM_Friend_Form extends CRM_Core_Form {
    * @return None
    */
   public function setDefaultValues() {
-    $defaults = array();
+    $defaults = [];
 
     $defaults['entity_id'] = $this->_entityId;
     $defaults['entity_table'] = $this->_entityTable;
@@ -175,7 +175,7 @@ class CRM_Friend_Form extends CRM_Core_Form {
 
     $this->add('textarea', 'suggested_message', ts('Your Message'), CRM_Core_DAO::getAttribute('CRM_Friend_DAO_Friend', 'suggested_message'), TRUE);
 
-    $friend = array();
+    $friend = [];
     $mailLimit = self::NUM_OPTION;
     if ($this->_entityTable == 'civicrm_pcp') {
       $mailLimit = $this->_mailLimit;
@@ -188,19 +188,19 @@ class CRM_Friend_Form extends CRM_Core_Form {
       $this->addRule("friend[$i][email]", ts('The format of this email address is not valid.'), 'email');
     }
 
-    $this->addButtons(array(
-        array('type' => 'submit',
+    $this->addButtons([
+        ['type' => 'submit',
           'name' => ts('Send Your Message'),
           'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
           'isDefault' => TRUE,
-        ),
-        array('type' => 'cancel',
+        ],
+        ['type' => 'cancel',
           'name' => ts('Cancel'),
-        ),
-      )
+        ],
+      ]
     );
 
-    $this->addFormRule(array('CRM_Friend_Form', 'formRule'));
+    $this->addFormRule(['CRM_Friend_Form', 'formRule']);
   }
 
   /**
@@ -214,7 +214,7 @@ class CRM_Friend_Form extends CRM_Core_Form {
    */
   static function formRule($fields) {
 
-    $errors = array();
+    $errors = [];
 
     $valid = FALSE;
     foreach ($fields['friend'] as $key => $val) {
@@ -262,7 +262,7 @@ class CRM_Friend_Form extends CRM_Core_Form {
     CRM_Friend_BAO_Friend::create($formValues);
 
     $this->assign('status', 'thankyou');
-    $defaults = array();
+    $defaults = [];
 
     $defaults['entity_id'] = $this->_entityId;
     $defaults['entity_table'] = $this->_entityTable;

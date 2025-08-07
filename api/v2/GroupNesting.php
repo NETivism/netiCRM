@@ -72,11 +72,11 @@ function civicrm_group_nesting_get(&$params) {
     $dao->parent_group_id = $params['parent_group_id'];
   }
 
-  $values = array();
+  $values = [];
 
   if ($dao->find()) {
     while ($dao->fetch()) {
-      $temp = array();
+      $temp = [];
       _civicrm_object_to_array($dao, $temp);
       $values[$dao->id] = $temp;
     }
@@ -117,7 +117,7 @@ function civicrm_group_nesting_create(&$params) {
   CRM_Contact_BAO_GroupNesting::add($params['parent_group_id'], $params['child_group_id']);
 
   // FIXME: CRM_Contact_BAO_GroupNesting requires some work
-  $result = array('is_error' => 0);
+  $result = ['is_error' => 0];
   return $result;
 }
 
@@ -148,7 +148,7 @@ function civicrm_group_nesting_remove(&$params) {
   $dao->copyValues($params);
 
   if ($dao->delete()) {
-    $result = array('is_error' => 0);
+    $result = ['is_error' => 0];
   }
   return $result;
 }

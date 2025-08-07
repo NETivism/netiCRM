@@ -40,7 +40,7 @@ class CRM_Contact_Form_Search_Custom_Basic extends CRM_Contact_Form_Search_Custo
     parent::__construct($formValues);
 
     $this->normalize();
-    $this->_columns = array(ts('') => 'contact_type',
+    $this->_columns = [ts('') => 'contact_type',
       ts('') => 'contact_sub_type',
       ts('Name') => 'sort_name',
       ts('Address') => 'street_address',
@@ -50,10 +50,10 @@ class CRM_Contact_Form_Search_Custom_Basic extends CRM_Contact_Form_Search_Custo
       ts('Country') => 'country',
       ts('Email') => 'email',
       ts('Phone') => 'phone',
-    );
+    ];
 
     $params = &CRM_Contact_BAO_Query::convertFormValues($this->_formValues);
-    $returnProperties = array();
+    $returnProperties = [];
     foreach ($this->_columns as $name => $field) {
       $returnProperties[$field] = 1;
     }
@@ -94,21 +94,21 @@ class CRM_Contact_Form_Search_Custom_Basic extends CRM_Contact_Form_Search_Custo
   }
 
   function buildForm(&$form) {
-    $contactTypes = array('' => ts('- any contact type -')) + CRM_Contact_BAO_ContactType::getSelectElements();
+    $contactTypes = ['' => ts('- any contact type -')] + CRM_Contact_BAO_ContactType::getSelectElements();
     $form->add('select', 'contact_type', ts('Find...'), $contactTypes);
 
     // add select for groups
-    $group = array('' => ts('- any group -')) + CRM_Core_PseudoConstant::group();
+    $group = ['' => ts('- any group -')] + CRM_Core_PseudoConstant::group();
     $form->addElement('select', 'group', ts('in'), $group);
 
     // add select for categories
-    $tag = array('' => ts('- any tag -')) + CRM_Core_PseudoConstant::tag();
+    $tag = ['' => ts('- any tag -')] + CRM_Core_PseudoConstant::tag();
     $form->addElement('select', 'tag', ts('Tagged'), $tag);
 
     // text for sort_name
     $form->add('text', 'sort_name', ts('Name'));
 
-    $form->assign('elements', array('sort_name', 'contact_type', 'group', 'tag'));
+    $form->assign('elements', ['sort_name', 'contact_type', 'group', 'tag']);
   }
 
   function count() {

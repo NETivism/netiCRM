@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-class CRM_Batch_DAO_Batch extends CRM_Core_DAO
+              class CRM_Batch_DAO_Batch extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -78,7 +78,7 @@ class CRM_Batch_DAO_Batch extends CRM_Core_DAO
    * @static
    */
   static $_log = false;
-  /**
+    /**
    * Unique Address ID
    *
    * @var int unsigned
@@ -144,7 +144,7 @@ class CRM_Batch_DAO_Batch extends CRM_Core_DAO
    * @var longtext
    */
   public $data;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -163,14 +163,14 @@ class CRM_Batch_DAO_Batch extends CRM_Core_DAO
   function &links()
   {
     if (!(self::$_links)) {
-      self::$_links = array(
+      self::$_links = [
         'created_id' => 'civicrm_contact:id',
         'modified_id' => 'civicrm_contact:id',
-      );
+      ];
     }
     return self::$_links;
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -185,7 +185,7 @@ class CRM_Batch_DAO_Batch extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -194,71 +194,71 @@ class CRM_Batch_DAO_Batch extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'id' => array(
+      self::$_fields = [
+        'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Batch ID') ,
           'required' => true,
-        ) ,
-        'name' => array(
+                  ] ,
+        'name' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Batch Name') ,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ) ,
-        'label' => array(
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
+        'label' => [
           'name' => 'label',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Label') ,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ) ,
-        'description' => array(
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
+        'description' => [
           'name' => 'description',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Description') ,
-          'rows' => 4,
-          'cols' => 80,
-        ) ,
-        'created_id' => array(
+             'rows' => 4,
+           'cols' => 80,
+              ] ,
+        'created_id' => [
           'name' => 'created_id',
           'type' => CRM_Utils_Type::T_INT,
-          'FKClassName' => 'CRM_Contact_DAO_Contact',
-        ) ,
-        'created_date' => array(
+                    'FKClassName' => 'CRM_Contact_DAO_Contact',
+        ] ,
+        'created_date' => [
           'name' => 'created_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Created Date') ,
-        ) ,
-        'modified_id' => array(
+                  ] ,
+        'modified_id' => [
           'name' => 'modified_id',
           'type' => CRM_Utils_Type::T_INT,
-          'FKClassName' => 'CRM_Contact_DAO_Contact',
-        ) ,
-        'modified_date' => array(
+                    'FKClassName' => 'CRM_Contact_DAO_Contact',
+        ] ,
+        'modified_date' => [
           'name' => 'modified_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Modified Date') ,
-        ) ,
-        'status_id' => array(
+                  ] ,
+        'status_id' => [
           'name' => 'status_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Batch Status') ,
           'required' => true,
-        ) ,
-        'type_id' => array(
+                  ] ,
+        'type_id' => [
           'name' => 'type_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Batch Type') ,
-        ) ,
-        'data' => array(
+                  ] ,
+        'data' => [
           'name' => 'data',
           'type' => CRM_Utils_Type::T_LONGTEXT,
           'title' => ts('Batch Data') ,
-        ) ,
-      );
+                  ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -270,9 +270,9 @@ class CRM_Batch_DAO_Batch extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    global $dbLocale;
+        global $dbLocale;
     return self::$_tableName . $dbLocale;
-  }
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -292,7 +292,7 @@ class CRM_Batch_DAO_Batch extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -303,7 +303,7 @@ class CRM_Batch_DAO_Batch extends CRM_Core_DAO
           }
         }
       }
-    }
+                                              }
     return self::$_import;
   }
   /**
@@ -315,7 +315,7 @@ class CRM_Batch_DAO_Batch extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
@@ -326,7 +326,7 @@ class CRM_Batch_DAO_Batch extends CRM_Core_DAO
           }
         }
       }
-    }
+                                              }
     return self::$_export;
   }
 }

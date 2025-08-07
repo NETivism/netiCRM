@@ -57,10 +57,10 @@ class CRM_Contribute_Form_ContributionPage_PCP extends CRM_Contribute_Form_Contr
    */
   function setDefaultValues() {
     $title = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage', $this->_id, 'title');
-    CRM_Utils_System::setTitle(ts('Personal Campaign Page Settings (%1)', array(1 => $title)));
-    $defaults = array();
+    CRM_Utils_System::setTitle(ts('Personal Campaign Page Settings (%1)', [1 => $title]));
+    $defaults = [];
     if (isset($this->_id)) {
-      $params = array('entity_id' => $this->_id, 'entity_table' => 'civicrm_contribution_page');
+      $params = ['entity_id' => $this->_id, 'entity_table' => 'civicrm_contribution_page'];
       CRM_Core_DAO::commonRetrieve('CRM_Contribute_DAO_PCPBlock', $params, $defaults);
       // Assign contribution page ID to pageId for referencing in PCP.hlp - since $id is overwritten there. dgg
       $this->assign('pageId', $this->_id);
@@ -84,17 +84,17 @@ class CRM_Contribute_Form_ContributionPage_PCP extends CRM_Contribute_Form_Contr
    * @access public
    */
   function buildQuickForm() {
-    $this->addElement('checkbox', 'is_active', ts('Enable Personal Campaign Pages (for this contribution page)?'), NULL, array('onclick' => "return showHideByValue('is_active',true,'pcpFields','table-row','radio',false);"));
+    $this->addElement('checkbox', 'is_active', ts('Enable Personal Campaign Pages (for this contribution page)?'), NULL, ['onclick' => "return showHideByValue('is_active',true,'pcpFields','table-row','radio',false);"]);
 
     $this->addElement('checkbox', 'is_approval_needed', ts('Approval required'));
 
-    $profile = array();
+    $profile = [];
     $isUserRequired = NULL;
     $config = CRM_Core_Config::singleton();
     if ($config->userFramework != 'Standalone') {
       $isUserRequired = 2;
     }
-    CRM_Core_DAO::commonRetrieveAll('CRM_Core_DAO_UFGroup', 'is_cms_user', $isUserRequired, $profiles, array('title', 'is_active'));
+    CRM_Core_DAO::commonRetrieveAll('CRM_Core_DAO_UFGroup', 'is_cms_user', $isUserRequired, $profiles, ['title', 'is_active']);
     if (!empty($profiles)) {
       foreach ($profiles as $key => $value) {
         if ($value['is_active']) {
@@ -104,10 +104,10 @@ class CRM_Contribute_Form_ContributionPage_PCP extends CRM_Contribute_Form_Contr
       $this->assign('profile', $profile);
     }
 
-    $this->add('select', 'supporter_profile_id', ts('Campaign owner profile'), array('' => ts('- select -')) + $profile);
+    $this->add('select', 'supporter_profile_id', ts('Campaign owner profile'), ['' => ts('- select -')] + $profile);
     if (count($profile)) {
       $defaultProfile = key($profile);
-      $this->setDefaults(array('supporter_profile_id' => $defaultProfile));
+      $this->setDefaults(['supporter_profile_id' => $defaultProfile]);
     }
 
     $this->add('text',
@@ -121,7 +121,7 @@ class CRM_Contribute_Form_ContributionPage_PCP extends CRM_Contribute_Form_Contr
     $this->add('text', 'notify_email', ts('Notify Email'), $notifyAttr);
 
     parent::buildQuickForm();
-    $this->addFormRule(array('CRM_Contribute_Form_ContributionPage_PCP', 'formRule'), $this);
+    $this->addFormRule(['CRM_Contribute_Form_ContributionPage_PCP', 'formRule'], $this);
   }
 
   /**
@@ -134,7 +134,7 @@ class CRM_Contribute_Form_ContributionPage_PCP extends CRM_Contribute_Form_Contr
    * @static
    */
   public static function formRule($params, $files, $self) {
-    $errors = array();
+    $errors = [];
     if (CRM_Utils_Array::value('is_active', $params)) {
 
       if (!CRM_Utils_Array::value('supporter_profile_id', $params)) {

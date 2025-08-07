@@ -46,7 +46,7 @@ class CRM_Core_DAO extends DB_DataObject {
    * a null object so we can pass it as reference if / when needed
    */
   static $_nullObject = NULL;
-  static $_nullArray = array();
+  static $_nullArray = [];
   static $_dbColumnValueCache = NULL;
   CONST 
   NOT_NULL = 1,
@@ -118,7 +118,7 @@ class CRM_Core_DAO extends DB_DataObject {
     /**
      * reset the various DB_DAO structures manually
      */
-    $this->_query = array();
+    $this->_query = [];
     $this->whereAdd();
     $this->selectAdd();
     $this->joinAdd();
@@ -185,7 +185,7 @@ class CRM_Core_DAO extends DB_DataObject {
     $this->_connect();
 
     if (!isset($GLOBALS['_DB_DATAOBJECT']['LINKS'][$this->_database])) {
-      $GLOBALS['_DB_DATAOBJECT']['LINKS'][$this->_database] = array();
+      $GLOBALS['_DB_DATAOBJECT']['LINKS'][$this->_database] = [];
     }
 
     if (!CRM_Utils_Array::arrayKeyExists($this->__table, $GLOBALS['_DB_DATAOBJECT']['LINKS'][$this->_database])) {
@@ -203,10 +203,10 @@ class CRM_Core_DAO extends DB_DataObject {
   function keys() {
     static $keys;
     if (!empty($this->_primaryKey)) {
-      return array($this->_primaryKey);
+      return [$this->_primaryKey];
     }
     elseif (!isset($keys)) {
-      $keys = array('id');
+      $keys = ['id'];
     }
     return $keys;
   }
@@ -222,10 +222,10 @@ class CRM_Core_DAO extends DB_DataObject {
   function sequenceKey() {
     static $sequenceKeys;
     if (!empty($this->_primaryKey)) {
-      return array(FALSE, FALSE, $this->_primaryKey);
+      return [FALSE, FALSE, $this->_primaryKey];
     }
     elseif (!isset($sequenceKeys)) {
-      $sequenceKeys = array('id', TRUE);
+      $sequenceKeys = ['id', TRUE];
     }
     return $sequenceKeys;
   }
@@ -249,7 +249,7 @@ class CRM_Core_DAO extends DB_DataObject {
    *   Array of CRM_Core_Reference_Interface
    */
   public static function getReferenceColumns() {
-    return array();
+    return [];
   }
 
   /**
@@ -267,7 +267,7 @@ class CRM_Core_DAO extends DB_DataObject {
   function table() {
     $fields = &$this->fields();
 
-    $table = array();
+    $table = [];
     if ($fields) {
       foreach ($fields as $name => $value) {
         $table[$value['name']] = $value['type'];
@@ -419,7 +419,7 @@ class CRM_Core_DAO extends DB_DataObject {
         $maxLength = CRM_Utils_Array::value('maxlength', $field);
         $size = CRM_Utils_Array::value('size', $field);
         if ($maxLength || $size) {
-          $attributes = array();
+          $attributes = [];
           if ($maxLength) {
             $attributes['maxlength'] = $maxLength;
           }
@@ -439,7 +439,7 @@ class CRM_Core_DAO extends DB_DataObject {
           $cols = 80;
         }
 
-        $attributes = array();
+        $attributes = [];
         $attributes['rows'] = $rows;
         $attributes['cols'] = $cols;
         return $attributes;
@@ -473,7 +473,7 @@ class CRM_Core_DAO extends DB_DataObject {
       return self::makeAttribute($field);
     }
     else {
-      $attributes = array();
+      $attributes = [];
       foreach ($fields as $name => $field) {
         $attribute = self::makeAttribute($field);
         if ($attribute) {
@@ -533,7 +533,7 @@ SHOW COLUMNS
 FROM $tableName
 LIKE %1
 ";
-    $params = array(1 => array($columnName, 'String'));
+    $params = [1 => [$columnName, 'String']];
     $dao = CRM_Core_DAO::executeQuery($query, $params);
     $result = $dao->fetch() ? TRUE : FALSE;
     $dao->free();
@@ -551,16 +551,16 @@ LIKE %1
    * @static
    */
   function getStorageValues($tableName = NULL, $maxTablesToCheck = 10, $fieldName = 'Engine') {
-    $values = array();
+    $values = [];
     $query = "SHOW TABLE STATUS LIKE %1";
 
-    $params = array();
+    $params = [];
 
     if (isset($tableName)) {
-      $params = array(1 => array($tableName, 'String'));
+      $params = [1 => [$tableName, 'String']];
     }
     else {
-      $params = array(1 => array('civicrm_%', 'String'));
+      $params = [1 => ['civicrm_%', 'String']];
     }
 
     $dao = CRM_Core_DAO::executeQuery($query, $params);
@@ -601,7 +601,7 @@ LIKE %1
    * @static
    */
   function checkConstraintExists($tableName, $constraint) {
-    static $show = array();
+    static $show = [];
 
     if (!CRM_Utils_Array::arrayKeyExists($tableName, $show)) {
       $query = "SHOW CREATE TABLE $tableName";
@@ -629,7 +629,7 @@ LIKE %1
    * @static
    */
   function checkFKConstraintInFormat($tableName, $columnName) {
-    static $show = array();
+    static $show = [];
 
     if (!CRM_Utils_Array::arrayKeyExists($tableName, $show)) {
       $query = "SHOW CREATE TABLE $tableName";
@@ -694,7 +694,7 @@ LIKE %1
 SHOW TABLES
 LIKE %1
 ";
-    $params = array(1 => array($tableName, 'String'));
+    $params = [1 => [$tableName, 'String']];
 
     $dao = CRM_Core_DAO::executeQuery($query, $params);
     $result = $dao->fetch() ? TRUE : FALSE;
@@ -733,7 +733,7 @@ FROM   civicrm_domain
 
     $cacheKey = "{$daoName}:{$searchValue}:{$returnColumn}:{$searchColumn}";
     if (self::$_dbColumnValueCache === NULL) {
-      self::$_dbColumnValueCache = array();
+      self::$_dbColumnValueCache = [];
     }
 
     if (!CRM_Utils_Array::arrayKeyExists($cacheKey, self::$_dbColumnValueCache) || $force) {
@@ -872,7 +872,7 @@ FROM   civicrm_domain
    * @access public
    */
   static function &executeQuery($query,
-    $params = array(),
+    $params = [],
     $abort = TRUE,
     $daoName = NULL,
     $freeDAO = FALSE,
@@ -909,7 +909,7 @@ FROM   civicrm_domain
    * @access public
    */
   static function &singleValueQuery($query,
-    $params = array(),
+    $params = [],
     $abort = TRUE,
     $i18nRewrite = TRUE
   ) {
@@ -938,7 +938,7 @@ FROM   civicrm_domain
   static function composeQuery($query, &$params, $abort) {
 
 
-    $tr = array();
+    $tr = [];
     foreach ($params as $key => $item) {
       if (is_numeric($key)) {
         if (CRM_Utils_Type::validate($item[0], $item[1]) !== NULL) {
@@ -1054,9 +1054,9 @@ FROM   civicrm_domain
 
       $fields = &$object->fields();
       if (!is_array($fieldsFix)) {
-        $fieldsToPrefix = array();
-        $fieldsToSuffix = array();
-        $fieldsToReplace = array();
+        $fieldsToPrefix = [];
+        $fieldsToSuffix = [];
+        $fieldsToReplace = [];
       }
       if (CRM_Utils_Array::value('prefix', $fieldsFix)) {
         $fieldsToPrefix = $fieldsFix['prefix'];
@@ -1108,7 +1108,7 @@ FROM   civicrm_domain
    * since its used for things like send email
    */
   public static function &getContactIDsFromComponent(&$componentIDs, $tableName) {
-    $contactIDs = array();
+    $contactIDs = [];
 
     if (empty($componentIDs)) {
       return $contactIDs;
@@ -1157,7 +1157,7 @@ SELECT contact_id
 
     $object->find();
     while ($object->fetch()) {
-      $defaults = array();
+      $defaults = [];
       self::storeValues($object, $defaults);
       $details[$object->id] = $defaults;
     }
@@ -1190,8 +1190,8 @@ SELECT contact_id
 
     if (!$_dao) {
       if (!defined('CIVICRM_DSN')) {
-        $search = array("\\", "\x00", "\n", "\r", "'", '"', "\x1a");
-        $replace = array("\\\\", "\\0", "\\n", "\\r", "\'", '\"', "\\Z");
+        $search = ["\\", "\x00", "\n", "\r", "'", '"', "\x1a"];
+        $replace = ["\\\\", "\\0", "\\n", "\\r", "\'", '\"', "\\Z"];
         return str_replace($search, $replace, $string);
       }
       $_dao = new CRM_Core_DAO();
@@ -1205,7 +1205,7 @@ SELECT contact_id
     // card characters and could come in via sortByCharacter
     // note that mysql does not escape these characters
     if ($string && in_array($string,
-        array('%', '_', '%%', '_%')
+        ['%', '_', '%%', '_%']
       )) {
       return '\\' . $string;
     }
@@ -1216,7 +1216,7 @@ SELECT contact_id
   //Creates a test object, including any required objects it needs via recursion
   //createOnly: only create in database, do not store or return the objects (useful for perf testing)
   //ONLY USE FOR TESTING
-  static function createTestObject($daoName, $params = array(), $numObjects = 1, $createOnly = FALSE) {
+  static function createTestObject($daoName, $params = [], $numObjects = 1, $createOnly = FALSE) {
 
     static $counter = 0;
 
@@ -1330,7 +1330,7 @@ SELECT contact_id
   //deletes the this object plus any dependent objects that are associated with it
   //ONLY USE FOR TESTING
 
-  static function deleteTestObjects($daoName, $params = array()) {
+  static function deleteTestObjects($daoName, $params = []) {
     $object = new $daoName();
     $object->id = CRM_Utils_Array::value('id', $params);
 
@@ -1346,7 +1346,7 @@ SELECT contact_id
         if ($FKClassName != NULL && $object->$dbName) {
 
           //if it is required we need to generate the dependency object first
-          CRM_Core_DAO::deleteTestObjects($FKClassName, array('id' => $object->$dbName));
+          CRM_Core_DAO::deleteTestObjects($FKClassName, ['id' => $object->$dbName]);
         }
       }
     }
@@ -1365,7 +1365,7 @@ SELECT contact_id
 
   static function getNextId($tableName) {
     if($tableName) {
-      $query = CRM_Core_DAO::executeQuery("SHOW TABLE STATUS LIKE %1", array(1 => array($tableName, 'String')));
+      $query = CRM_Core_DAO::executeQuery("SHOW TABLE STATUS LIKE %1", [1 => [$tableName, 'String']]);
       $query->fetch();
       if (!empty($query->Auto_increment)) {
         return $query->Auto_increment;
@@ -1382,7 +1382,7 @@ SELECT contact_id
    * @return array<CRM_Core_Reference_Interface>
    */
   public static function createReferenceColumns($className) {
-    $result = array();
+    $result = [];
     $fields = $className::fields();
     foreach ($fields as $field) {
       if (isset($field['pseudoconstant'], $field['pseudoconstant']['optionGroupName'])) {
@@ -1407,7 +1407,7 @@ SELECT contact_id
   public function findReferences() {
     $links = self::getReferencesToTable(static::getTableName());
 
-    $occurrences = array();
+    $occurrences = [];
     foreach ($links as $refSpec) {
       /** @var $refSpec CRM_Core_Reference_Interface */
       $daoName = CRM_Core_DAO_AllCoreTables::getClassForTable($refSpec->getReferenceTable());
@@ -1436,7 +1436,7 @@ SELECT contact_id
   public function getReferenceCounts() {
     $links = self::getReferencesToTable(static::getTableName());
 
-    $counts = array();
+    $counts = [];
     foreach ($links as $refSpec) {
       /** @var $refSpec CRM_Core_Reference_Interface */
       $count = $refSpec->getReferenceCount($this);
@@ -1471,7 +1471,7 @@ SELECT contact_id
    *   foreign key reference to $tableName, and the column where the key appears.
    */
   public static function getReferencesToTable($tableName) {
-    $refsFound = array();
+    $refsFound = [];
     foreach (CRM_Core_DAO_AllCoreTables::getClasses() as $daoClassName) {
       $links = $daoClassName::getReferenceColumns();
       $daoTableName = $daoClassName::getTableName();
@@ -1529,7 +1529,7 @@ SELECT contact_id
     $customValueTables = CRM_Core_BAO_CustomGroup::getAllCustomGroupsByBaseEntity('Contact');
     $customValueTables->find();
     while ($customValueTables->fetch()) {
-      $cidRefs[$customValueTables->table_name] = array('entity_id');
+      $cidRefs[$customValueTables->table_name] = ['entity_id'];
     }
   }
 
@@ -1561,12 +1561,12 @@ SELECT contact_id
     if (CRM_Core_Config::singleton()->debugDatabaseProfiling) {
       $dao = CRM_Core_DAO::executeQuery("SHOW PROFILES");
       while($dao->fetch()) {
-        $_DB_PROFILING[] = array(
+        $_DB_PROFILING[] = [
           'id' => $dao->Query_ID,
           'duration' => $dao->Duration,
           'query' => $dao->Query,
           'details' => self::getProfile($dao->Query_ID),
-        );
+        ];
       }
     }
     // disable profiling after fetch result
@@ -1581,11 +1581,11 @@ SELECT contact_id
    * @return array
    */
   public static function getProfile($queryId) {
-    $details = array();
+    $details = [];
     if (CRM_Core_Config::singleton()->debugDatabaseProfiling) {
-      $dao = CRM_Core_DAO::executeQuery("SELECT * FROM INFORMATION_SCHEMA.PROFILING WHERE QUERY_ID = %1", array(
-        1 => array($queryId, 'Integer')
-      ));
+      $dao = CRM_Core_DAO::executeQuery("SELECT * FROM INFORMATION_SCHEMA.PROFILING WHERE QUERY_ID = %1", [
+        1 => [$queryId, 'Integer']
+      ]);
       $columnName = explode(',', self::PROFILE_RESULT_COLUMNS);
       $count = 0;
       while($dao->fetch()) {

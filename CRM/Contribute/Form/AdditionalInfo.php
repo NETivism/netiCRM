@@ -45,12 +45,12 @@ class CRM_Contribute_Form_AdditionalInfo {
     //premium section
     $form->add('hidden', 'hidden_Premium', 1);
 
-    $sel1 = $sel2 = array();
+    $sel1 = $sel2 = [];
 
     $dao = new CRM_Contribute_DAO_Product();
     $dao->is_active = 1;
     $dao->find();
-    $min_amount = array();
+    $min_amount = [];
     $sel1[0] = ts('- select -');
     while ($dao->fetch()) {
       $sel1[$dao->id] = $dao->name . " ( " . $dao->sku . " )";
@@ -109,11 +109,11 @@ class CRM_Contribute_Form_AdditionalInfo {
       }
     }
 
-    $sel->setOptions(array($sel1, $sel2));
+    $sel->setOptions([$sel1, $sel2]);
     $js .= "</script>\n";
     $form->assign('initHideBoxes', $js);
 
-    $form->addDate('fulfilled_date', ts('Fulfilled'), FALSE, array('formatType' => 'activityDate'));
+    $form->addDate('fulfilled_date', ts('Fulfilled'), FALSE, ['formatType' => 'activityDate']);
     $form->addElement('text', 'min_amount', ts('Minimum Contribution Amount'));
   }
 
@@ -130,7 +130,7 @@ class CRM_Contribute_Form_AdditionalInfo {
 
     $attributes = CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_Contribution');
 
-    $form->addDateTime('thankyou_date', ts('Thank-you Sent'), FALSE, array('formatType' => 'activityDateTime'));
+    $form->addDateTime('thankyou_date', ts('Thank-you Sent'), FALSE, ['formatType' => 'activityDateTime']);
 
     // add various amounts
     $element = &$form->add('text', 'non_deductible_amount', ts('Non-deductible Amount'),
@@ -165,7 +165,7 @@ class CRM_Contribute_Form_AdditionalInfo {
       $form->addRule('invoice_id',
         ts('This Invoice ID already exists in the database.'),
         'objectExists',
-        array('CRM_Contribute_DAO_Contribution', $form->_id, 'invoice_id')
+        ['CRM_Contribute_DAO_Contribution', $form->_id, 'invoice_id']
       );
     }
 
@@ -175,11 +175,11 @@ class CRM_Contribute_Form_AdditionalInfo {
     }
     $form->add('select', 'contribution_page_id',
       ts('Contribution Page'),
-      array('' => ts('- select -')) +
+      ['' => ts('- select -')] +
       $pages
     );
 
-    $form->add('textarea', 'note', ts('Notes'), array("rows" => 4, "cols" => 60));
+    $form->add('textarea', 'note', ts('Notes'), ["rows" => 4, "cols" => 60]);
   }
 
   /**
@@ -193,12 +193,12 @@ class CRM_Contribute_Form_AdditionalInfo {
     //Honoree section
     $form->add('hidden', 'hidden_Honoree', 1);
     $honor = CRM_Core_PseudoConstant::honor();
-    $extraOption = array('onclick' => "return enableHonorType();");
+    $extraOption = ['onclick' => "return enableHonorType();"];
     foreach ($honor as $key => $var) {
       $honorTypes[$key] = $form->createElement('radio', NULL, NULL, $var, $key, $extraOption);
     }
     $form->addGroup($honorTypes, 'honor_type_id', NULL);
-    $form->add('select', 'honor_prefix_id', ts('Prefix'), array('' => ts('- prefix -')) + CRM_Core_PseudoConstant::individualPrefix());
+    $form->add('select', 'honor_prefix_id', ts('Prefix'), ['' => ts('- prefix -')] + CRM_Core_PseudoConstant::individualPrefix());
     $form->add('text', 'honor_first_name', ts('First Name'));
     $form->add('text', 'honor_last_name', ts('Last Name'));
     $form->add('text', 'honor_email', ts('Email'));
@@ -215,11 +215,11 @@ class CRM_Contribute_Form_AdditionalInfo {
   static function buildPaymentReminders(&$form) {
     //PaymentReminders section
     $form->add('hidden', 'hidden_PaymentReminders', 1);
-    $form->add('text', 'initial_reminder_day', ts('Send Initial Reminder'), array('size' => 3));
+    $form->add('text', 'initial_reminder_day', ts('Send Initial Reminder'), ['size' => 3]);
     $form->addRule('initial_reminder_day', ts('Please enter a valid reminder day.'), 'positiveInteger');
-    $form->add('text', 'max_reminders', ts('Send up to'), array('size' => 3));
+    $form->add('text', 'max_reminders', ts('Send up to'), ['size' => 3]);
     $form->addRule('max_reminders', ts('Please enter a valid No. of reminders.'), 'positiveInteger');
-    $form->add('text', 'additional_reminder_day', ts('Send additional reminders'), array('size' => 3));
+    $form->add('text', 'additional_reminder_day', ts('Send additional reminders'), ['size' => 3]);
     $form->addRule('additional_reminder_day', ts('Please enter a valid additional reminder day.'), 'positiveInteger');
   }
 
@@ -267,14 +267,14 @@ class CRM_Contribute_Form_AdditionalInfo {
   static function processNote(&$params, $contactID, $contributionID, $contributionNoteID = NULL) {
     //process note
 
-    $noteParams = array('entity_table' => 'civicrm_contribution',
+    $noteParams = ['entity_table' => 'civicrm_contribution',
       'note' => $params['note'],
       'entity_id' => $contributionID,
       'contact_id' => $contactID,
-    );
-    $noteID = array();
+    ];
+    $noteID = [];
     if ($contributionNoteID) {
-      $noteID = array("id" => $contributionNoteID);
+      $noteID = ["id" => $contributionNoteID];
       $noteParams['note'] = $noteParams['note'] ? $noteParams['note'] : "null";
     }
     CRM_Core_BAO_Note::add($noteParams, $noteID);
@@ -288,7 +288,7 @@ class CRM_Contribute_Form_AdditionalInfo {
    * @return None
    */
   static function postProcessCommon(&$params, &$formatted) {
-    $fields = array('non_deductible_amount',
+    $fields = ['non_deductible_amount',
       'total_amount',
       'fee_amount',
       'net_amount',
@@ -296,7 +296,7 @@ class CRM_Contribute_Form_AdditionalInfo {
       'invoice_id',
       'honor_type_id',
       'contribution_page_id',
-    );
+    ];
     foreach ($fields as $f) {
       $formatted[$f] = CRM_Utils_Array::value($f, $params);
     }
@@ -374,11 +374,11 @@ class CRM_Contribute_Form_AdditionalInfo {
         $pdfFilePath = $receiptTask->makePDF(False);
       }
       $pdfFileName = strstr($pdfFilePath, 'Receipt');
-      $pdfParams =  array(
+      $pdfParams =  [
         'fullPath' => $pdfFilePath,
         'mime_type' => 'application/pdf',
         'cleanName' => $pdfFileName,
-      );
+      ];
     }
 
     $form->assign('receiptType', 'contribution');
@@ -435,14 +435,14 @@ class CRM_Contribute_Form_AdditionalInfo {
       $form->assign('billingName', $name);
 
       //assign the address formatted up for display
-      $addressParts = array("street_address" => "billing_street_address-{$form->_bltID}",
+      $addressParts = ["street_address" => "billing_street_address-{$form->_bltID}",
         "city" => "billing_city-{$form->_bltID}",
         "postal_code" => "billing_postal_code-{$form->_bltID}",
         "state_province" => "state_province-{$form->_bltID}",
         "country" => "country-{$form->_bltID}",
-      );
+      ];
 
-      $addressFields = array();
+      $addressFields = [];
       foreach ($addressParts as $name => $field) {
         $addressFields[$name] = CRM_Utils_Array::value($field, $params);
       }
@@ -475,20 +475,20 @@ class CRM_Contribute_Form_AdditionalInfo {
 
     //handle custom data
     if (!empty($params['contribution_page_id'])) {
-      $profiles = array();
+      $profiles = [];
       // page profile pre id
-      $ufJoinParams = array(
+      $ufJoinParams = [
         'entity_table' => 'civicrm_contribution_page',
         'entity_id' => $params['contribution_page_id'],
         'weight' => 1,
         'module' => 'CiviContribute',
-      );
+      ];
       $profiles['pre']['id'] = CRM_Core_BAO_UFJoin::findUFGroupId($ufJoinParams);
       $ufJoinParams['weight'] = 2;
       $profiles['post']['id'] = CRM_Core_BAO_UFJoin::findUFGroupId($ufJoinParams);
-      $customGroup = array();
+      $customGroup = [];
       foreach($profiles as $idx => $ufGroup) {
-        $customFields = $customValues = array();
+        $customFields = $customValues = [];
         if (!empty($ufGroup['id']) && CRM_Core_BAO_UFGroup::filterUFGroups($ufGroup['id'], $params['contact_id'])) {
           $groupTitle = NULL;
           $customFields = CRM_Core_BAO_UFGroup::getFields($ufGroup['id'], FALSE, CRM_Core_Action::VIEW);
@@ -503,9 +503,9 @@ class CRM_Contribute_Form_AdditionalInfo {
             }
           }
 
-          $contribParams = array(array('contribution_id', '=', $params['contribution_id'], 0, 0));
+          $contribParams = [['contribution_id', '=', $params['contribution_id'], 0, 0]];
           if ($form->_mode == 'test') {
-            $contribParams[] = array('contribution_test', '=', 1, 0, 0);
+            $contribParams[] = ['contribution_test', '=', 1, 0, 0];
           }
           CRM_Core_BAO_UFGroup::getValues($params['contact_id'], $customFields, $customValues, FALSE, $contribParams, CRM_Core_BAO_UFGroup::MASK_ALL);
           if (!empty(array_filter($customValues))) {
@@ -538,7 +538,7 @@ class CRM_Contribute_Form_AdditionalInfo {
     }
 
 
-    $templateParams = array(
+    $templateParams = [
       'groupName' => 'msg_tpl_workflow_contribution',
       'valueName' => 'contribution_offline_receipt',
       'contactId' => $params['contact_id'],
@@ -546,7 +546,7 @@ class CRM_Contribute_Form_AdditionalInfo {
       'toName' => $contributorDisplayName,
       'toEmail' => $contributorEmail,
       'isTest' => $form->_mode == 'test',
-    );
+    ];
     if (!empty($params['is_attach_receipt'])) {
       $templateParams['attachments'][] = $pdfParams;
       $templateParams['tplParams']['pdf_receipt'] = 1;
@@ -563,7 +563,7 @@ class CRM_Contribute_Form_AdditionalInfo {
     }
 
     $workflow = CRM_Core_BAO_MessageTemplates::getMessageTemplateByWorkflow($templateParams['groupName'], $templateParams['valueName']);
-    $contribParams = array('id' => $params['contribution_id']);
+    $contribParams = ['id' => $params['contribution_id']];
     $contribution = CRM_Core_DAO::commonRetrieve('CRM_Contribute_DAO_Contribution', $contribParams, CRM_Core_DAO::$_nullArray);
     if (!empty($params['is_attach_receipt']) && !empty(CRM_Core_OptionGroup::getValue('activity_type', 'Email Receipt', 'name'))) {
       $activityId = CRM_Activity_BAO_Activity::addTransactionalActivity($contribution, 'Email Receipt', $workflow['msg_title']);
@@ -573,10 +573,10 @@ class CRM_Contribute_Form_AdditionalInfo {
     }
     $templateParams['activityId'] = $activityId;
     $config = CRM_Core_Config::singleton();
-    list($sendReceipt, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate($templateParams, CRM_Core_DAO::$_nullObject, array(
-      0 => array('CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  array($activityId, TRUE)),
-      1 => array('CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  array($activityId, FALSE)),
-    ));
+    list($sendReceipt, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate($templateParams, CRM_Core_DAO::$_nullObject, [
+      0 => ['CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  [$activityId, TRUE]],
+      1 => ['CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  [$activityId, FALSE]],
+    ]);
 
 
     return $sendReceipt;

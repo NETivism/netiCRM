@@ -54,38 +54,38 @@ class CRM_Event_Form_ManageEvent_TabHeader {
       return NULL;
     }
 
-    $tabs = array(
-      'eventInfo' => array('title' => ts('Info and Settings'),
+    $tabs = [
+      'eventInfo' => ['title' => ts('Info and Settings'),
         'link' => NULL,
         'valid' => FALSE,
         'active' => FALSE,
         'current' => FALSE,
-      ),
-      'location' => array('title' => ts('Event Location'),
+      ],
+      'location' => ['title' => ts('Event Location'),
         'link' => NULL,
         'valid' => FALSE,
         'active' => FALSE,
         'current' => FALSE,
-      ),
-      'fee' => array('title' => ts('Fees'),
+      ],
+      'fee' => ['title' => ts('Fees'),
         'link' => NULL,
         'valid' => FALSE,
         'active' => FALSE,
         'current' => FALSE,
-      ),
-      'registration' => array('title' => ts('Online Registration'),
+      ],
+      'registration' => ['title' => ts('Online Registration'),
         'link' => NULL,
         'valid' => FALSE,
         'active' => FALSE,
         'current' => FALSE,
-      ),
-      'friend' => array('title' => ts('Tell a Friend'),
+      ],
+      'friend' => ['title' => ts('Tell a Friend'),
         'link' => NULL,
         'valid' => FALSE,
         'active' => FALSE,
         'current' => FALSE,
-      ),
-    );
+      ],
+    ];
 
     $eventID = $form->getVar('_id');
 
@@ -126,7 +126,7 @@ FROM       civicrm_event e
 LEFT JOIN  civicrm_tell_friend taf ON ( taf.entity_table = 'civicrm_event' AND taf.entity_id = e.id )
 WHERE      e.id = %1
 ";
-      $params = array(1 => array($eventID, 'Integer'));
+      $params = [1 => [$eventID, 'Integer']];
       $dao = CRM_Core_DAO::executeQuery($sql, $params);
       if (!$dao->fetch()) {
         CRM_Core_Error::fatal();

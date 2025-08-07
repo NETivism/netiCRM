@@ -42,15 +42,15 @@ class CRM_Batch_Page_Batch extends CRM_Core_Page_Basic {
    */
   public function &links() {
     if (!(self::$_links)) {
-      $links = array();
+      $links = [];
 
       if (CRM_Core_Permission::check('administer CiviCRM')) {
-        $links[CRM_Core_Action::UPDATE] = array(
+        $links[CRM_Core_Action::UPDATE] = [
           'name' => ts('Edit'),
           'url' => 'civicrm/admin/batch',
           'qs' => 'action=update&id=%%id%%',
           'title' => ts('Edit'),
-        );
+        ];
       }
 
       self::$_links = $links;
@@ -152,13 +152,13 @@ class CRM_Batch_Page_Batch extends CRM_Core_Page_Basic {
     $dao->orderBy('created_date DESC');
     $dao->find();
 
-    $rows = array();
+    $rows = [];
 
     $currentUser = CRM_Core_Session::singleton()->get("userID");
     $action = array_sum(array_keys($this->links()));
     while ($dao->fetch()) {
       $meta = NULL;
-      $row = array();
+      $row = [];
       if ($dao->data) {
         $meta = unserialize($dao->data);
       }
@@ -179,13 +179,13 @@ class CRM_Batch_Page_Batch extends CRM_Core_Page_Basic {
       if ($meta['statusCount']) {
         $row['statusCount'] = $meta['statusCount'];
       }
-      $row['action'] = CRM_Core_Action::formLink(self::links(), $action, array('id' => $dao->id));
+      $row['action'] = CRM_Core_Action::formLink(self::links(), $action, ['id' => $dao->id]);
 
       // batch action should also verify permission
       if (!empty($meta['download']) && $currentUser == $dao->created_id) {
         $completedStatus = $batchStatus['Completed'];
         $canceledStatus = $batchStatus['Canceled'];
-        $actions = array();
+        $actions = [];
         if (isset($meta['download']['file']) && file_exists($meta['download']['file']))  {
           $download = '<a href="'.CRM_Utils_System::url("civicrm/admin/batch", "reset=1&id={$dao->id}&action=export").'" class="download">'.ts("Download").'</a>';
           if ($dao->status_id == $completedStatus || $dao->status_id == $canceledStatus) {
@@ -232,10 +232,10 @@ class CRM_Batch_Page_Batch extends CRM_Core_Page_Basic {
   }
 
   public function processDownload($id) {
-    $params = array(
+    $params = [
       'id' => $id,
-    );
-    $defaults = array();
+    ];
+    $defaults = [];
     $batch = CRM_Batch_BAO_Batch::retrieve($params, $defaults);
     $currentUser = CRM_Core_Session::singleton()->get("userID");
     if ($currentUser == $batch->created_id) {

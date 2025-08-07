@@ -23,14 +23,14 @@ function civicrm_api3_option_group_get($params) {
  */
 function civicrm_api3_option_group_create($params) {
 
-  $ids = array();
+  $ids = [];
   $bao = CRM_Core_BAO_OptionGroup::add($params, $ids);
 
   if (is_null($bao)) {
     return civicrm_api3_create_error('Entity not created');
   }
   else {
-    $values = array();
+    $values = [];
     _civicrm_api3_object_to_array($bao, $values[$bao->id]);
     return civicrm_api3_create_success($values, $params, 'option_group', 'create', $bao);
   }

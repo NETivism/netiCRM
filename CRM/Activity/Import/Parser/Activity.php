@@ -77,15 +77,15 @@ class CRM_Activity_Import_Parser_Activity extends CRM_Activity_Import_Parser {
       CRM_Activity_BAO_ActivityTarget::import()
     );
 
-    $fields = array_merge($fields, array('activity_name' => array('title' => ts('Activity Type Label'),
+    $fields = array_merge($fields, ['activity_name' => ['title' => ts('Activity Type Label'),
           'headerPattern' => '/(activity.)?type label?/i',
-        )));
+        ]]);
 
     foreach ($fields as $name => $field) {
       $this->addField($name, $field['title'], $field['type'], $field['headerPattern'], $field['dataPattern']);
     }
 
-    $this->_newActivity = array();
+    $this->_newActivity = [];
 
     $this->setActiveFields($this->_mapperKeys);
 
@@ -240,13 +240,13 @@ class CRM_Activity_Import_Parser_Activity extends CRM_Activity_Import_Parser {
     $params = &$this->getActiveFieldParams();
     $activityName = array_search('activity_name', $this->_mapperKeys);
     if ($activityName) {
-      $params = array_merge($params, array('activity_name' => $values[$activityName]));
+      $params = array_merge($params, ['activity_name' => $values[$activityName]]);
     }
     //for date-Formats
     $session = CRM_Core_Session::singleton();
     $dateType = $session->get("dateTypes");
     $params['source_contact_id'] = $session->get('userID');
-    $formatted = array();
+    $formatted = [];
     $customFields = CRM_Core_BAO_CustomField::getFields(CRM_Utils_Array::value('contact_type', $params));
 
     foreach ($params as $key => $val) {
@@ -308,10 +308,10 @@ class CRM_Activity_Import_Parser_Activity extends CRM_Activity_Import_Parser {
       }
       else {
         // Using new Dedupe rule.
-        $ruleParams = array(
+        $ruleParams = [
           'contact_type' => 'Individual',
           'level' => 'Strict',
-        );
+        ];
 
         $fieldsArray = CRM_Dedupe_BAO_Rule::dedupeRuleFields($ruleParams);
 
@@ -392,7 +392,7 @@ class CRM_Activity_Import_Parser_Activity extends CRM_Activity_Import_Parser {
     //4. If date and time then convert to default date time format.
 
     $dateKey = 'date';
-    $dateParams = array($dateKey => $date);
+    $dateParams = [$dateKey => $date];
 
 
     CRM_Utils_Date::convertToDefaultDate($dateParams, $dateType, $dateKey);

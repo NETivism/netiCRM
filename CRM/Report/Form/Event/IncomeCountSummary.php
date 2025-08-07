@@ -53,97 +53,97 @@ class CRM_Report_Form_Event_IncomeCountSummary extends CRM_Report_Form {
   public $_absoluteUrl;
   protected $_summary = NULL;
 
-  protected $_charts = array('' => 'Tabular',
+  protected $_charts = ['' => 'Tabular',
     'barChart' => 'Bar Chart',
     'pieChart' => 'Pie Chart',
-  );
+  ];
 
   protected $_add2groupSupported = FALSE;
 
-  protected $_customGroupExtends = array('Event'); function __construct() {
+  protected $_customGroupExtends = ['Event']; function __construct() {
 
-    $this->_columns = array(
+    $this->_columns = [
       'civicrm_event' =>
-      array('dao' => 'CRM_Event_DAO_Event',
+      ['dao' => 'CRM_Event_DAO_Event',
         'fields' =>
-        array(
-          'title' => array('title' => ts('Event'),
+        [
+          'title' => ['title' => ts('Event'),
             'required' => TRUE,
-          ),
-          'id' => array('no_display' => TRUE,
+          ],
+          'id' => ['no_display' => TRUE,
             'required' => TRUE,
-          ),
-          'event_type_id' => array('title' => ts('Event Type'),
-          ),
-          'fee_label' => array('title' => ts('Fee Label')),
-          'event_start_date' => array('title' => ts('Event Start Date'),
-          ),
-          'event_end_date' => array('title' => ts('Event End Date'),
-          ),
-          'max_participants' => array('title' => ts('Capacity'),
+          ],
+          'event_type_id' => ['title' => ts('Event Type'),
+          ],
+          'fee_label' => ['title' => ts('Fee Label')],
+          'event_start_date' => ['title' => ts('Event Start Date'),
+          ],
+          'event_end_date' => ['title' => ts('Event End Date'),
+          ],
+          'max_participants' => ['title' => ts('Capacity'),
             'type' => CRM_Utils_Type::T_INT,
-          ),
-        ),
+          ],
+        ],
         'filters' =>
-        array(
-          'id' => array('title' => ts('Event Title'),
+        [
+          'id' => ['title' => ts('Event Title'),
             'operatorType' => CRM_Report_Form::OP_MULTISELECT,
             'options' => CRM_Event_PseudoConstant::event(NULL, NULL, "is_template IS NULL OR is_template = 0"),
-          ),
-          'event_type_id' => array('name' => 'event_type_id',
+          ],
+          'event_type_id' => ['name' => 'event_type_id',
             'title' => ts('Event Type'),
             'operatorType' => CRM_Report_Form::OP_MULTISELECT,
             'options' => CRM_Core_OptionGroup::values('event_type'),
-          ),
-          'event_start_date' => array('title' => ts('Event Start Date'),
+          ],
+          'event_start_date' => ['title' => ts('Event Start Date'),
             'operatorType' => CRM_Report_Form::OP_DATE,
-          ),
-          'event_end_date' => array('title' => ts('Event End Date'),
+          ],
+          'event_end_date' => ['title' => ts('Event End Date'),
             'operatorType' => CRM_Report_Form::OP_DATE,
-          ),
-        ),
-      ),
+          ],
+        ],
+      ],
       'civicrm_line_item' =>
-      array('dao' => 'CRM_Price_DAO_LineItem',
+      ['dao' => 'CRM_Price_DAO_LineItem',
         'fields' =>
-        array(
-          'participant_count' => array(
+        [
+          'participant_count' => [
             'title' => ts('Participants'),
             'default' => TRUE,
             'statistics' =>
-            array('count' => ts('Participants'),
-            ),
-          ),
-          'line_total' => array(
+            ['count' => ts('Participants'),
+            ],
+          ],
+          'line_total' => [
             'title' => ts('Income Statistics'),
             'type' => CRM_Utils_Type::T_MONEY,
             'default' => TRUE,
             'statistics' =>
-            array('sum' => ts('Income'),
+            ['sum' => ts('Income'),
               'avg' => ts('Average'),
-            ),
-          ),
-        ),
-      ),
+            ],
+          ],
+        ],
+      ],
       'civicrm_participant' =>
-      array('dao' => 'CRM_Event_DAO_Participant',
+      ['dao' => 'CRM_Event_DAO_Participant',
         'filters' =>
-        array('sid' => array('name' => 'status_id',
+        ['sid' => ['name' => 'status_id',
             'title' => ts('Participant Status'),
             'operatorType' => CRM_Report_Form::OP_MULTISELECT,
             'options' => CRM_Event_PseudoConstant::participantStatus(NULL, NULL, 'label'),
-          ),
-          'rid' => array('name' => 'role_id',
+          ],
+          'rid' => ['name' => 'role_id',
             'title' => ts('Participant Role'),
             'operatorType' => CRM_Report_Form::OP_MULTISELECT,
             'options' => CRM_Event_PseudoConstant::participantRole(),
-          ),
-          'participant_register_date' => array('title' => ts('Registration Date'),
+          ],
+          'participant_register_date' => ['title' => ts('Registration Date'),
             'operatorType' => CRM_Report_Form::OP_DATE,
-          ),
-        ),
-      ),
-    );
+          ],
+        ],
+      ],
+    ];
     parent::__construct();
   }
 
@@ -152,7 +152,7 @@ class CRM_Report_Form_Event_IncomeCountSummary extends CRM_Report_Form {
   }
 
   function select() {
-    $select = array();
+    $select = [];
     foreach ($this->_columns as $tableName => $table) {
       if (CRM_Utils_Array::arrayKeyExists('fields', $table)) {
         foreach ($table['fields'] as $fieldName => $field) {
@@ -210,7 +210,7 @@ class CRM_Report_Form_Event_IncomeCountSummary extends CRM_Report_Form {
   }
 
   function where() {
-    $clauses = array();
+    $clauses = [];
     $this->_participantWhere = "";
     foreach ($this->_columns as $tableName => $table) {
       if (CRM_Utils_Array::arrayKeyExists('filters', $table)) {
@@ -265,18 +265,18 @@ class CRM_Report_Form_Event_IncomeCountSummary extends CRM_Report_Form {
       if ($dao->count && $dao->amount) {
         $avg = $dao->amount / $dao->count;
       }
-      $statistics['counts']['count'] = array('value' => $dao->count,
+      $statistics['counts']['count'] = ['value' => $dao->count,
         'title' => 'Total Participants',
         'type' => CRM_Utils_Type::T_INT,
-      );
-      $statistics['counts']['amount'] = array('value' => $dao->amount,
+      ];
+      $statistics['counts']['amount'] = ['value' => $dao->amount,
         'title' => 'Total Income',
         'type' => CRM_Utils_Type::T_MONEY,
-      );
-      $statistics['counts']['avg   '] = array('value' => $avg,
+      ];
+      $statistics['counts']['avg   '] = ['value' => $avg,
         'title' => 'Average',
         'type' => CRM_Utils_Type::T_MONEY,
-      );
+      ];
     }
     return $statistics;
   }
@@ -298,11 +298,11 @@ class CRM_Report_Form_Event_IncomeCountSummary extends CRM_Report_Form {
     //set pager before execution of query in function participantInfo()
     $this->setPager();
 
-    $rows = $graphRows = array();
+    $rows = $graphRows = [];
     $count = 0;
 
     while ($dao->fetch()) {
-      $row = array();
+      $row = [];
       foreach ($this->_columnHeaders as $key => $value) {
         if (($key == 'civicrm_event_start_date') || ($key == 'civicrm_event_end_date')) {
           //get event start date and end date in custom datetime format
@@ -354,10 +354,10 @@ class CRM_Report_Form_Event_IncomeCountSummary extends CRM_Report_Form {
       }
 
       if ((!empty($rows)) && $countEvent != 1) {
-        $chartInfo = array('legend' => 'Participants Summary',
+        $chartInfo = ['legend' => 'Participants Summary',
           'xname' => 'Event',
           'yname' => 'Total Participants',
-        );
+        ];
         if (!empty($graphRows)) {
           foreach ($graphRows[$this->_interval] as $key => $val) {
             $graph[$val] = $graphRows['value'][$key];

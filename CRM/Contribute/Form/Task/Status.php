@@ -62,7 +62,7 @@ class CRM_Contribute_Form_Task_Status extends CRM_Contribute_Form_Task {
     );
 
     if ($id) {
-      $this->_contributionIds = array($id);
+      $this->_contributionIds = [$id];
       $this->_componentClause = " civicrm_contribution.id IN ( $id ) ";
       $this->_single = TRUE;
       $this->assign('totalSelectedContributions', 1);
@@ -142,11 +142,11 @@ AND    co.id IN ( $contribIDs )";
     );
 
     // build a row for each contribution id
-    $this->_rows = array();
+    $this->_rows = [];
     $attributes = CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_Contribution');
-    $defaults = array();
+    $defaults = [];
     $now = date("m/d/Y");
-    $paidByOptions = array('' => ts('- select -')) + CRM_Contribute_PseudoConstant::paymentInstrument();
+    $paidByOptions = ['' => ts('- select -')] + CRM_Contribute_PseudoConstant::paymentInstrument();
 
     while ($dao->fetch()) {
       $row['contact_id'] = $dao->contact_id;
@@ -158,7 +158,7 @@ AND    co.id IN ( $contribIDs )";
       $this->addRule("trxn_id_{$row['contribution_id']}",
         ts('This Transaction ID already exists in the database. Include the account number for checks.'),
         'objectExists',
-        array('CRM_Contribute_DAO_Contribution', $dao->contribution_id, 'trxn_id')
+        ['CRM_Contribute_DAO_Contribution', $dao->contribution_id, 'trxn_id']
       );
 
 
@@ -169,7 +169,7 @@ AND    co.id IN ( $contribIDs )";
       $defaults["fee_amount_{$row['contribution_id']}"] = 0.0;
 
       $row['trxn_date'] = &$this->addDate("trxn_date_{$row['contribution_id']}", FALSE,
-        ts('Receipt Date'), array('formatType' => 'activityDate')
+        ts('Receipt Date'), ['formatType' => 'activityDate']
       );
       $defaults["trxn_date_{$row['contribution_id']}"] = $now;
 
@@ -184,18 +184,18 @@ AND    co.id IN ( $contribIDs )";
 
     $this->assign_by_ref('rows', $this->_rows);
     $this->setDefaults($defaults);
-    $this->addButtons(array(
-        array('type' => 'next',
+    $this->addButtons([
+        ['type' => 'next',
           'name' => ts('Update Pending Status'),
           'isDefault' => TRUE,
-        ),
-        array('type' => 'back',
+        ],
+        ['type' => 'back',
           'name' => ts('Cancel'),
-        ),
-      )
+        ],
+      ]
     );
 
-    $this->addFormRule(array('CRM_Contribute_Form_Task_Status', 'formRule'));
+    $this->addFormRule(['CRM_Contribute_Form_Task_Status', 'formRule']);
   }
 
   /**
@@ -208,7 +208,7 @@ AND    co.id IN ( $contribIDs )";
    * @access public
    */
   static function formRule($fields) {
-    $seen = $errors = array();
+    $seen = $errors = [];
     foreach ($fields as $name => $value) {
       if (strpos($name, 'trxn_id_') !== FALSE) {
         if ($fields[$name]) {
@@ -255,7 +255,7 @@ AND    co.id IN ( $contribIDs )";
 
     // for each contribution id, we just call the baseIPN stuff
     foreach ($this->_rows as $row) {
-      $input = $ids = $objects = array();
+      $input = $ids = $objects = [];
 
       $input['component'] = $details[$row['contribution_id']]['component'];
 
@@ -328,17 +328,17 @@ LEFT JOIN civicrm_participant_payment pp ON pp.contribution_id = c.id
 LEFT JOIN civicrm_participant         p  ON pp.participant_id  = p.id
 WHERE     c.id IN ( $contributionIDs )";
 
-    $rows = array();
+    $rows = [];
     $dao = CRM_Core_DAO::executeQuery($query,
       CRM_Core_DAO::$_nullArray
     );
     while ($dao->fetch()) {
-      $rows[$dao->contribution_id] = array('component' => $dao->participant_id ? 'event' : 'contribute',
+      $rows[$dao->contribution_id] = ['component' => $dao->participant_id ? 'event' : 'contribute',
         'contact' => $dao->contact_id,
         'membership' => $dao->membership_id,
         'participant' => $dao->participant_id,
         'event' => $dao->event_id,
-      );
+      ];
     }
     return $rows;
   }

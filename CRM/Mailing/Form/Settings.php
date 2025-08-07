@@ -63,14 +63,14 @@ class CRM_Mailing_Form_Settings extends CRM_Core_Form {
     $mailingID = CRM_Utils_Request::retrieve('mid', 'Integer', $this, FALSE, NULL);
     $count = $this->get('count');
     $this->assign('count', $count);
-    $defaults = array();
+    $defaults = [];
 
-    $componentFields = array(
+    $componentFields = [
       'reply_id' => 'Reply',
       'optout_id' => 'OptOut',
       'unsubscribe_id' => 'Unsubscribe',
       'resubscribe_id' => 'Resubscribe',
-    );
+    ];
 
     foreach ($componentFields as $componentVar => $componentType) {
       $defaults[$componentVar] = CRM_Mailing_PseudoConstant::defaultComponent($componentType, '');
@@ -111,7 +111,7 @@ class CRM_Mailing_Form_Settings extends CRM_Core_Form {
     $this->add('checkbox', 'open_tracking', ts('Track Opens?'));
     $defaults['open_tracking'] = TRUE;
 
-    $options = array('' => ts("-- select --")) + CRM_Core_SelectValues::ufVisibility(TRUE);
+    $options = ['' => ts("-- select --")] + CRM_Core_SelectValues::ufVisibility(TRUE);
     $this->add('select', 'visibility', ts('Mailing Visibility'),
     $options, TRUE
     );
@@ -131,42 +131,42 @@ class CRM_Mailing_Form_Settings extends CRM_Core_Form {
     //FIXME : currently we are hiding save an continue later when
     //search base mailing, we should handle it when we fix CRM-3876
     if ($this->_searchBasedMailing) {
-      $buttons = array(
-        array('type' => 'back',
+      $buttons = [
+        ['type' => 'back',
           'name' => ts('<< Previous'),
-        ),
-        array(
+        ],
+        [
           'type' => 'next',
           'name' => ts('Next >>'),
           'spacing' => '&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;',
           'isDefault' => TRUE,
-        ),
-        array(
+        ],
+        [
           'type' => 'cancel',
           'name' => ts('Cancel'),
-        ),
-      );
+        ],
+      ];
     }
     else {
-      $buttons = array(
-        array('type' => 'back',
+      $buttons = [
+        ['type' => 'back',
           'name' => ts('<< Previous'),
-        ),
-        array(
+        ],
+        [
           'type' => 'next',
           'name' => ts('Next >>'),
           'spacing' => '&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;',
           'isDefault' => TRUE,
-        ),
-        array(
+        ],
+        [
           'type' => 'submit',
           'name' => ts('Save & Continue Later'),
-        ),
-        array(
+        ],
+        [
           'type' => 'cancel',
           'name' => ts('Cancel'),
-        ),
-      );
+        ],
+      ];
     }
 
     $this->addButtons($buttons);
@@ -175,10 +175,10 @@ class CRM_Mailing_Form_Settings extends CRM_Core_Form {
   }
 
   public function postProcess() {
-    $params = $ids = array();
+    $params = $ids = [];
 
-    $uploadParams = array('reply_id', 'unsubscribe_id', 'optout_id', 'resubscribe_id');
-    $uploadParamsBoolean = array('override_verp', 'forward_replies', 'url_tracking', 'open_tracking', 'auto_responder');
+    $uploadParams = ['reply_id', 'unsubscribe_id', 'optout_id', 'resubscribe_id'];
+    $uploadParamsBoolean = ['override_verp', 'forward_replies', 'url_tracking', 'open_tracking', 'auto_responder'];
 
     $qf_Settings_submit = $this->controller->exportValue($this->_name, '_qf_Settings_submit');
 
@@ -239,7 +239,7 @@ class CRM_Mailing_Form_Settings extends CRM_Core_Form {
         }
 
         $draftURL = CRM_Utils_System::url('civicrm/mailing/browse/unscheduled', 'scheduled=false&reset=1');
-        $status = ts("Your mailing has been saved. You can continue later by clicking the 'Continue' action to resume working on it.<br /> From <a href='%1'>Draft and Unscheduled Mailings</a>.", array(1 => $draftURL));
+        $status = ts("Your mailing has been saved. You can continue later by clicking the 'Continue' action to resume working on it.<br /> From <a href='%1'>Draft and Unscheduled Mailings</a>.", [1 => $draftURL]);
         CRM_Core_Session::setStatus($status);
 
         //replace user context to search.

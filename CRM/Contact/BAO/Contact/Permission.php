@@ -46,8 +46,8 @@ class CRM_Contact_BAO_Contact_Permission {
    * @static
    */
   static function allow($id, $type = CRM_Core_Permission::VIEW) {
-    $tables = array();
-    $whereTables = array();
+    $tables = [];
+    $whereTables = [];
 
     # FIXME: push this somewhere below, to not give this permission so many rights
     $isDeleted = (bool) CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $id, 'is_deleted');
@@ -70,7 +70,7 @@ class CRM_Contact_BAO_Contact_Permission {
 SELECT count(DISTINCT contact_a.id) 
        $from
 WHERE contact_a.id = %1 AND $permission";
-    $params = array(1 => array($id, 'Integer'));
+    $params = [1 => [$id, 'Integer']];
 
     return (CRM_Core_DAO::singleValueQuery($query, $params) > 0) ? TRUE : FALSE;
   }
@@ -87,7 +87,7 @@ WHERE contact_a.id = %1 AND $permission";
    * @static
    */
   static function cache($userID, $type = CRM_Core_Permission::VIEW, $force = FALSE) {
-    static $_processed = array();
+    static $_processed = [];
 
     if ($type = CRM_Core_Permission::VIEW) {
       $operationClause = " operation IN ( 'Edit', 'View' ) ";
@@ -110,7 +110,7 @@ FROM   civicrm_acl_contact_cache
 WHERE  user_id = %1
 AND    $operationClause
 ";
-      $params = array(1 => array($userID, 'Integer'));
+      $params = [1 => [$userID, 'Integer']];
       $count = CRM_Core_DAO::singleValueQuery($sql, $params);
       if ($count > 0) {
         $_processed[$userID] = 1;
@@ -118,8 +118,8 @@ AND    $operationClause
       }
     }
 
-    $tables = array();
-    $whereTables = array();
+    $tables = [];
+    $whereTables = [];
 
 
     $permission = CRM_ACL_API::whereClause($type, $tables, $whereTables, $userID);
@@ -133,7 +133,7 @@ SELECT DISTINCT(contact_a.id) as id
 WHERE $permission
 ";
 
-    $values = array();
+    $values = [];
     $dao = CRM_Core_DAO::executeQuery($query);
     while ($dao->fetch()) {
       $values[] = "( {$userID}, {$dao->id}, '{$operation}' )";
@@ -156,16 +156,16 @@ WHERE $permission
   static function cacheClause($contactAlias = 'contact_a', $contactID = NULL) {
     if (CRM_Core_Permission::check('view all contacts')) {
       if (is_array($contactAlias)) {
-        $wheres = array();
+        $wheres = [];
         foreach ($contactAlias as $alias) {
           // CRM-6181
           $wheres[] = "$alias.is_deleted = 0";
         }
-        return array(NULL, '(' . CRM_Utils_Array::implode(' AND ', $wheres) . ')');
+        return [NULL, '(' . CRM_Utils_Array::implode(' AND ', $wheres) . ')'];
       }
       else {
         // CRM-6181
-        return array(NULL, "$contactAlias.is_deleted = 0");
+        return [NULL, "$contactAlias.is_deleted = 0"];
       }
     }
 
@@ -180,7 +180,7 @@ WHERE $permission
 
     if (is_array($contactAlias) && !empty($contactAlias)) {
       //More than one contact alias
-      $clauses = array();
+      $clauses = [];
       foreach ($contactAlias as $k => $alias) {
         $clauses[] = " INNER JOIN civicrm_acl_contact_cache aclContactCache_{$k} ON {$alias}.id = aclContactCache_{$k}.contact_id AND aclContactCache_{$k}.user_id = $contactID ";
       }
@@ -193,7 +193,7 @@ WHERE $permission
       $whereClase = " aclContactCache.user_id = $contactID ";
     }
 
-    return array($fromClause, $whereClase);
+    return [$fromClause, $whereClase];
   }
 
   /**
@@ -226,9 +226,9 @@ WHERE  (( contact_id_a = %1 AND contact_id_b = %2 AND is_permission_a_b = 1 ) OR
        (contact_id_a NOT IN (SELECT id FROM civicrm_contact WHERE is_deleted = 1)) AND
        (contact_id_b NOT IN (SELECT id FROM civicrm_contact WHERE is_deleted = 1))
 ";
-      $params = array(1 => array($contactID, 'Integer'),
-        2 => array($selectedContactID, 'Integer'),
-      );
+      $params = [1 => [$contactID, 'Integer'],
+        2 => [$selectedContactID, 'Integer'],
+      ];
       return CRM_Core_DAO::singleValueQuery($query, $params);
     }
   }

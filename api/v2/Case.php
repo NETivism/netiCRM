@@ -85,13 +85,13 @@ function civicrm_case_create(&$params) {
 
   // format input with value separators
   $sep = CRM_Core_DAO::VALUE_SEPARATOR;
-  $newParams = array(
+  $newParams = [
     'case_type_id' => $sep . $params['case_type_id'] . $sep,
     'creator_id' => $params['creator_id'],
     'status_id' => $params['status_id'],
     'start_date' => $params['start_date'],
     'subject' => $params['subject'],
-  );
+  ];
 
   $case = CRM_Case_BAO_Case::create($newParams);
 
@@ -100,17 +100,17 @@ function civicrm_case_create(&$params) {
   }
 
   // Add client role
-  $contactParams = array(
+  $contactParams = [
     'case_id' => $case->id,
     'contact_id' => $params['contact_id'],
-  );
+  ];
 
   CRM_Case_BAO_Case::addCaseToContact($contactParams);
 
   // Initialize XML processor with $params
   require_once 'CRM/Case/XMLProcessor/Process.php';
   $xmlProcessor = new CRM_Case_XMLProcessor_Process();
-  $xmlProcessorParams = array(
+  $xmlProcessorParams = [
     'clientID' => $params['contact_id'],
     'creatorID' => $params['creator_id'],
     'standardTimeline' => 1,
@@ -122,8 +122,8 @@ function civicrm_case_create(&$params) {
     'duration' => $params['duration'],
     'medium_id' => $params['medium_id'],
     'details' => $params['details'],
-    'custom' => array(),
-  );
+    'custom' => [],
+  ];
 
   // Do it! :-D
   $xmlProcessor->run($params['case_type'], $xmlProcessorParams);
@@ -176,7 +176,7 @@ function civicrm_case_get(&$params) {
       $query = "SELECT activity_id FROM civicrm_case_activity WHERE case_id = $caseId";
       $dao = CRM_Core_DAO::executeQuery($query);
 
-      $case['activities'] = array();
+      $case['activities'] = [];
 
       while ($dao->fetch()) {
         $case['activities'][] = $dao->activity_id;
@@ -185,7 +185,7 @@ function civicrm_case_get(&$params) {
       return civicrm_create_success($case);
     }
     else {
-      return civicrm_create_success(array());
+      return civicrm_create_success([]);
     }
   }
 
@@ -200,10 +200,10 @@ function civicrm_case_get(&$params) {
 
     if (empty($ids)) {
 
-      return civicrm_create_success(array());
+      return civicrm_create_success([]);
     }
 
-    $cases = array();
+    $cases = [];
 
     foreach ($ids as $id) {
       $cases[$id] = _civicrm_case_read($id);
@@ -223,10 +223,10 @@ function civicrm_case_get(&$params) {
     $caseId = CRM_Core_DAO::singleValueQuery($sql);
 
     if (!$caseId) {
-      return civicrm_create_success(array());
+      return civicrm_create_success([]);
     }
 
-    $case = array($caseId => _civicrm_case_read($caseId));
+    $case = [$caseId => _civicrm_case_read($caseId)];
 
     return civicrm_create_success($case);
   }
@@ -245,7 +245,7 @@ SELECT DISTINCT case_id
    AND case_id IS NOT NULL";
     $dao = CRM_Core_DAO::executeQuery($sql);
 
-    $cases = array();
+    $cases = [];
 
     while ($dao->fetch()) {
       $cases[$dao->case_id] = _civicrm_case_read($dao->case_id);
@@ -293,10 +293,10 @@ function civicrm_case_activity_create(&$params) {
 
   $activity = CRM_Activity_BAO_Activity::create($params);
 
-  $caseParams = array(
+  $caseParams = [
     'activity_id' => $activity->id,
     'case_id' => $params['case_id'],
-  );
+  ];
 
   CRM_Case_BAO_Case::processCaseActivity($caseParams);
 
@@ -324,7 +324,7 @@ function civicrm_case_activity_create(&$params) {
 function civicrm_case_update(&$params) {
   _civicrm_initialize();
 
-  $errors = array();
+  $errors = [];
   //check for various error and required conditions
   $errors = _civicrm_case_check_params($params, 'update');
 
@@ -337,8 +337,8 @@ function civicrm_case_update(&$params) {
     return civicrm_create_error(ts('You have no provision to update creator id'));
   }
 
-  $mCaseId = array();
-  $origContactIds = array();
+  $mCaseId = [];
+  $origContactIds = [];
 
   // get original contact id and creator id of case
   if ($params['contact_id']) {
@@ -374,7 +374,7 @@ function civicrm_case_update(&$params) {
   $dao->copyValues($params);
   $dao->save();
 
-  $case = array();
+  $case = [];
 
   _civicrm_object_to_array($dao, $case);
 
@@ -438,7 +438,7 @@ function _civicrm_case_read($caseId) {
   $dao = new CRM_Case_BAO_Case();
   $dao->id = $caseId;
   if ($dao->find(TRUE)) {
-    $case = array();
+    $case = [];
     _civicrm_object_to_array($dao, $case);
 
     //handle multi-value case type
@@ -474,7 +474,7 @@ SELECT  ov.value
   JOIN  civicrm_option_group og ON og.id = ov.option_group_id
  WHERE  ov.label = %1 AND og.name = 'case_type'";
 
-        $values = array(1 => array($params['case_type'], 'String'));
+        $values = [1 => [$params['case_type'], 'String']];
         $params['case_type_id'] = CRM_Core_DAO::singleValueQuery($sql, $values);
       }
       elseif (!$params['case_type']) {
@@ -485,7 +485,7 @@ SELECT  ov.name
   JOIN  civicrm_option_group og ON og.id = ov.option_group_id
  WHERE  ov.value = %1 AND og.name = 'case_type'";
 
-        $values = array(1 => array($params['case_type_id'], 'Integer'));
+        $values = [1 => [$params['case_type_id'], 'Integer']];
         $params['case_type'] = CRM_Core_DAO::singleValueQuery($sql, $values);
       }
       break;
@@ -517,13 +517,13 @@ function _civicrm_case_check_params(&$params, $mode = NULL) {
         return civicrm_create_error(ts('Missing input parameters. Must provide case_type or case_type_id.'));
       }
 
-      $required = array(
+      $required = [
         'contact_id' => 'num',
         'status_id' => 'num',
         'medium_id' => 'num',
         'creator_id' => 'num',
         'subject' => 'str',
-      );
+      ];
 
       if (!$params['case_type']) {
 
@@ -536,18 +536,18 @@ function _civicrm_case_check_params(&$params, $mode = NULL) {
 
     case 'activity':
 
-      $required = array(
+      $required = [
         'case_id' => 'num',
         'activity_type_id' => 'num',
         'source_contact_id' => 'num',
         'status_id' => 'num',
         'medium_id' => 'num',
-      );
+      ];
       break;
 
     case 'update':
     case 'delete':
-      $required = array('case_id' => 'num');
+      $required = ['case_id' => 'num'];
       break;
 
     default:
@@ -558,17 +558,17 @@ function _civicrm_case_check_params(&$params, $mode = NULL) {
 
     if (!$params[$req]) {
 
-      return civicrm_create_error(ts('Missing required parameter: %1.', array(1 => $req)));
+      return civicrm_create_error(ts('Missing required parameter: %1.', [1 => $req]));
     }
 
     if ($type == 'num' && !is_numeric($params[$req])) {
 
-      return civicrm_create_error(ts('Invalid parameter: %1. Must provide a numeric value.', array(1 => $req)));
+      return civicrm_create_error(ts('Invalid parameter: %1. Must provide a numeric value.', [1 => $req]));
     }
 
     if ($type == 'str' && !is_string($params[$req])) {
 
-      return civicrm_create_error(ts('Invalid parameter: %1. Must provide a string.', array(1 => $req)));
+      return civicrm_create_error(ts('Invalid parameter: %1. Must provide a string.', [1 => $req]));
     }
   }
 
@@ -612,14 +612,14 @@ function _civicrm_case_check_params(&$params, $mode = NULL) {
     return civicrm_create_error(ts('Invalid Case Medium Id'));
   }
 
-  $contactIds = array('creator' => CRM_Utils_Array::value('creator_id', $params),
+  $contactIds = ['creator' => CRM_Utils_Array::value('creator_id', $params),
     'contact' => CRM_Utils_Array::value('contact_id', $params),
-  );
+  ];
   foreach ($contactIds as $key => $value) {
     if ($value &&
       !CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $value, 'id')
     ) {
-      return civicrm_create_error(ts('Invalid %1 Id', array(1 => ucfirst($key))));
+      return civicrm_create_error(ts('Invalid %1 Id', [1 => ucfirst($key)]));
     }
   }
 }

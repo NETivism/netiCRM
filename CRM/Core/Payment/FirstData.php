@@ -166,11 +166,11 @@ class CRM_Core_Payment_FirstData extends CRM_Core_Payment {
    **********************************************************/
   function doDirectPayment(&$params) {
     if ($params['is_recur'] == TRUE) {
-      CRM_Core_Error::fatal(ts('%1 - recurring payments not implemented', array(1 => $paymentProcessor)));
+      CRM_Core_Error::fatal(ts('%1 - recurring payments not implemented', [1 => $paymentProcessor]));
     }
 
     if (!defined('CURLOPT_SSLCERT')) {
-      CRM_Core_Error::fatal(ts('%1 - Gateway requires curl with SSL support', array(1 => $paymentProcessor)));
+      CRM_Core_Error::fatal(ts('%1 - Gateway requires curl with SSL support', [1 => $paymentProcessor]));
     }
 
     /**********************************************************
@@ -373,7 +373,7 @@ class CRM_Core_Payment_FirstData extends CRM_Core_Payment {
   //  function checkConfig( $mode )          // CiviCRM V1.9 Declaration
   // CiviCRM V2.0 Declaration
   function checkConfig() {
-    $errorMsg = array();
+    $errorMsg = [];
 
     if (empty($this->_paymentProcessor['user_name'])) {
       $errorMsg[] = ts(' Store Name is not set for this payment processor');

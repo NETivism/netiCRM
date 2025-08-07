@@ -44,10 +44,10 @@ class CRM_Report_Form_Contribute_Sybunt extends CRM_Report_Form {
   public $_groupBy;
   public $_aliases;
   public $_absoluteUrl;
-  protected $_charts = array('' => 'Tabular',
+  protected $_charts = ['' => 'Tabular',
     'barChart' => 'Bar Chart',
     'pieChart' => 'Pie Chart',
-  );
+  ];
   protected $_add2groupSupported = FALSE; function __construct() {
     $yearsInPast = 8;
     $yearsInFuture = 2;
@@ -58,68 +58,68 @@ class CRM_Report_Form_Contribute_Sybunt extends CRM_Report_Form {
       $date['minYear']++;
     }
 
-    $this->_columns = array(
+    $this->_columns = [
       'civicrm_contact' =>
-      array('dao' => 'CRM_Contact_DAO_Contact',
+      ['dao' => 'CRM_Contact_DAO_Contact',
         'grouping' => 'contact-field',
         'fields' =>
-        array('sort_name' =>
-          array('title' => ts('Donor Name'),
+        ['sort_name' =>
+          ['title' => ts('Donor Name'),
             'required' => TRUE,
-          ),
-        ),
+          ],
+        ],
         'filters' =>
-        array('sort_name' =>
-          array('title' => ts('Donor Name'),
+        ['sort_name' =>
+          ['title' => ts('Donor Name'),
             'operator' => 'like',
-          ),
-        ),
-      ),
+          ],
+        ],
+      ],
       'civicrm_email' =>
-      array('dao' => 'CRM_Core_DAO_Email',
+      ['dao' => 'CRM_Core_DAO_Email',
         'grouping' => 'contact-field',
         'fields' =>
-        array('email' =>
-          array('title' => ts('Email'),
+        ['email' =>
+          ['title' => ts('Email'),
             'default' => TRUE,
-          ),
-        ),
-      ),
+          ],
+        ],
+      ],
       'civicrm_phone' =>
-      array('dao' => 'CRM_Core_DAO_Phone',
+      ['dao' => 'CRM_Core_DAO_Phone',
         'grouping' => 'contact-field',
         'fields' =>
-        array('phone' =>
-          array('title' => ts('Phone No'),
+        ['phone' =>
+          ['title' => ts('Phone No'),
             'default' => TRUE,
-          ),
-        ),
-      ),
+          ],
+        ],
+      ],
       'civicrm_contribution' =>
-      array('dao' => 'CRM_Contribute_DAO_Contribution',
+      ['dao' => 'CRM_Contribute_DAO_Contribution',
         'fields' =>
-        array('contact_id' =>
-          array('title' => ts('contactId'),
+        ['contact_id' =>
+          ['title' => ts('contactId'),
             'no_display' => TRUE,
             'required' => TRUE,
             'no_repeat' => TRUE,
-          ),
+          ],
           'total_amount' =>
-          array('title' => ts('Total Amount'),
+          ['title' => ts('Total Amount'),
             'no_display' => TRUE,
             'required' => TRUE,
             'no_repeat' => TRUE,
-          ),
+          ],
           'receive_date' =>
-          array('title' => ts('Year'),
+          ['title' => ts('Year'),
             'no_display' => TRUE,
             'required' => TRUE,
             'no_repeat' => TRUE,
-          ),
-        ),
+          ],
+        ],
         'filters' =>
-        array('yid' =>
-          array('name' => 'receive_date',
+        ['yid' =>
+          ['name' => 'receive_date',
             'title' => ts('This Year'),
             'operatorType' => CRM_Report_Form::OP_SELECT,
             'options' => $optionYear,
@@ -127,28 +127,28 @@ class CRM_Report_Form_Contribute_Sybunt extends CRM_Report_Form {
             'clause' => "contribution_civireport.contact_id NOT IN
 (SELECT distinct cont.id FROM civicrm_contact cont, civicrm_contribution contri
  WHERE  cont.id = contri.contact_id AND YEAR (contri.receive_date) = \$value AND contri.is_test = 0 )",
-          ),
+          ],
           'contribution_status_id' =>
-          array('operatorType' => CRM_Report_Form::OP_MULTISELECT,
+          ['operatorType' => CRM_Report_Form::OP_MULTISELECT,
             'options' => CRM_Contribute_PseudoConstant::contributionStatus(),
-            'default' => array('1'),
-          ),
-        ),
-      ),
+            'default' => ['1'],
+          ],
+        ],
+      ],
       'civicrm_group' =>
-      array('dao' => 'CRM_Contact_DAO_GroupContact',
+      ['dao' => 'CRM_Contact_DAO_GroupContact',
         'alias' => 'cgroup',
         'filters' =>
-        array('gid' =>
-          array('name' => 'group_id',
+        ['gid' =>
+          ['name' => 'group_id',
             'title' => ts('Group'),
             'operatorType' => CRM_Report_Form::OP_MULTISELECT,
             'group' => TRUE,
             'options' => CRM_Core_PseudoConstant::group(),
-          ),
-        ),
-      ),
-    );
+          ],
+        ],
+      ],
+    ];
 
     $this->_tagFilter = TRUE;
     parent::__construct();
@@ -159,8 +159,8 @@ class CRM_Report_Form_Contribute_Sybunt extends CRM_Report_Form {
   }
 
   function select() {
-    $select = array();
-    $this->_columnHeaders = array();
+    $select = [];
+    $this->_columnHeaders = [];
     $current_year = $this->_params['yid_value'];
     $previous_year = $current_year - 1;
     $previous_pyear = $current_year - 2;
@@ -295,10 +295,10 @@ class CRM_Report_Form_Contribute_Sybunt extends CRM_Report_Form {
       $sql = "{$select} {$this->_from} {$this->_where}";
       $dao = CRM_Core_DAO::executeQuery($sql);
       if ($dao->fetch()) {
-        $statistics['counts']['amount'] = array('value' => $dao->amount,
+        $statistics['counts']['amount'] = ['value' => $dao->amount,
           'title' => 'Total LifeTime',
           'type' => CRM_Utils_Type::T_MONEY,
-        );
+        ];
       }
     }
     return $statistics;
@@ -314,7 +314,7 @@ class CRM_Report_Form_Contribute_Sybunt extends CRM_Report_Form {
     $this->where();
     $this->groupBy();
 
-    $rows = $contactIds = array();
+    $rows = $contactIds = [];
     if (!CRM_Utils_Array::value('charts', $this->_params)) {
       $this->limit();
       $getContacts = "SELECT SQL_CALC_FOUND_ROWS {$this->_aliases['civicrm_contact']}.id as cid {$this->_from} {$this->_where} GROUP BY {$this->_aliases['civicrm_contact']}.id {$this->_limit}";
@@ -342,15 +342,15 @@ class CRM_Report_Form_Contribute_Sybunt extends CRM_Report_Form {
       $previous_ppyear = $current_year - 3;
       $upTo_year = $current_year - 4;
 
-      $rows = $row = array();
+      $rows = $row = [];
       $dao = CRM_Core_DAO::executeQuery($sql);
       $contributionSum = 0;
-      $yearcal = array();
+      $yearcal = [];
       while ($dao->fetch()) {
         if (!$dao->civicrm_contribution_contact_id) {
           continue;
         }
-        $row = array();
+        $row = [];
         foreach ($this->_columnHeaders as $key => $value) {
           if (property_exists($dao, $key)) {
             $rows[$dao->civicrm_contribution_contact_id][$key] = $dao->$key;
@@ -383,7 +383,7 @@ class CRM_Report_Form_Contribute_Sybunt extends CRM_Report_Form {
   }
 
   function buildChart(&$rows) {
-    $graphRows = array();
+    $graphRows = [];
     $count = 0;
     $current_year = $this->_params['yid_value'];
     $previous_year = $current_year - 1;
@@ -405,10 +405,10 @@ class CRM_Report_Form_Contribute_Sybunt extends CRM_Report_Form {
 
     $graphRows['value'] = $display;
     $config = CRM_Core_Config::Singleton();
-    $chartInfo = array('legend' => 'Sybunt Report',
+    $chartInfo = ['legend' => 'Sybunt Report',
       'xname' => 'Year',
       'yname' => "Amount ({$config->defaultCurrency})",
-    );
+    ];
     if ($this->_params['charts']) {
       // build the chart.
       $this->assign('chartType', $this->_params['charts']);

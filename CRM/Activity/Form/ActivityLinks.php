@@ -51,7 +51,7 @@ class CRM_Activity_Form_ActivityLinks extends CRM_Core_Form {
       $urlParams, FALSE, NULL, FALSE
     );
 
-    $activityTypes = array();
+    $activityTypes = [];
 
     if (CRM_Utils_Mail::validOutBoundMail() && $contactId) {
 

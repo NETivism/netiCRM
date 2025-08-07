@@ -53,7 +53,7 @@ class CRM_Contact_Form_Search_Custom_TaiwanACHSearch extends CRM_Contact_Form_Se
   }
 
   function buildColumn(){
-    $this->_queryColumns = array( 
+    $this->_queryColumns = [ 
       'r.id' => 'id',
       'r.contact_id' => 'contact_id',
       'contact.sort_name' => 'sort_name',
@@ -76,8 +76,8 @@ class CRM_Contact_Form_Search_Custom_TaiwanACHSearch extends CRM_Contact_Form_Se
       'ach.bank_account' => 'bank_account',
       'ach.bank_code' => 'bank_code',
       'ach.identifier_number' => 'identifier_number',
-    );
-    $this->_columns = array(
+    ];
+    $this->_columns = [
       ts('ID') => 'id',
       ts('Name') => 'sort_name',
       ts('Amount') => 'amount',
@@ -96,7 +96,7 @@ class CRM_Contact_Form_Search_Custom_TaiwanACHSearch extends CRM_Contact_Form_Se
       0 => 'ach_data',
       //ts('Stamp Verification'). ' - '.ts('Cancelled or Failed Date') => 'ach_data',
       //ts('Stamp Verification'). ' - '.ts('Cancelled or Failed Reason') => 'ach_data',
-    );
+    ];
   }
 
   function buildTempTable() {
@@ -106,7 +106,7 @@ CREATE TEMPORARY TABLE IF NOT EXISTS {$this->_tableName} (
 ";
 
     foreach ($this->_queryColumns as $field) {
-      if (in_array($field, array('id'))) {
+      if (in_array($field, ['id'])) {
         continue;
       }
       if (strstr($field, 'amount') || preg_match('/.*id$/', $field)) {
@@ -140,7 +140,7 @@ PRIMARY KEY (id)
     $this->dropTempTable();
     $this->buildTempTable();
 
-    $select = array();
+    $select = [];
     foreach($this->_queryColumns as $k => $v){
       $select[] = $k.' as '.$v;
     }
@@ -162,7 +162,7 @@ $having
     $dao = CRM_Core_DAO::executeQuery($sql, CRM_Core_DAO::$_nullArray);
 
     while ($dao->fetch()) {
-      $values = array();
+      $values = [];
       foreach($this->_queryColumns as $name){
         if($name == 'id'){
           $values[] = CRM_Utils_Type::escape($dao->id, 'Integer');
@@ -194,7 +194,7 @@ $having
    * WHERE clause is an array built from any required JOINS plus conditional filters based on search criteria field values
    */
   function tempWhere(){
-    $clauses = array();
+    $clauses = [];
     $clauses[] = "(r.is_test = 0)";
     return CRM_Utils_Array::implode(' AND ', $clauses);
   }
@@ -209,20 +209,20 @@ $having
 
     // rest is ach specify form
     $form->addDateRange('create_date', ts('Recurring Contribution').' - '.ts('Create Date'), NULL, FALSE);
-    $form->addSelect('stamp_verification', ts('Stamp Verification Status'), array(
+    $form->addSelect('stamp_verification', ts('Stamp Verification Status'), [
       '' => ts('-- select --'),
       0 => ts('Pending'),
       1 => ts('Completed'),
       2 => ts('Failed'),
-    ));
+    ]);
     $form->addDateRange('end_date', ts('Recurring Contribution').' - '.ts('End Date'), NULL, FALSE);
-    $form->addSelect('payment_type', ts('Payment Instrument'), array(
+    $form->addSelect('payment_type', ts('Payment Instrument'), [
       '' => ts('-- select --'),
       'ACH Bank' => ts('Bank'),
       'ACH Post' => ts('Post Office'),
-    ));
+    ]);
     $bankCode = CRM_Contribute_PseudoConstant::taiwanACH();
-    $form->addSelect('bank_code', ts('Bank Identification Number'), array('' => ts('-- select --')) + $bankCode);
+    $form->addSelect('bank_code', ts('Bank Identification Number'), ['' => ts('-- select --')] + $bankCode);
     $form->add('text', 'bank_account', ts('Account Number'));
     $form->add('text', 'identifier_number', ts('Legal Identifier').'/'.ts('SIC Code'));
 
@@ -231,7 +231,7 @@ $having
     $ele = $form->getElement('start_date_from');
     $ele->_label = ts('Stamp Verication Date') .'/'.ts('Recurring Contribution').' - '.ts('Start Date');
     
-    $form->assign('elements', array(
+    $form->assign('elements', [
       'create_date',
       'status',
       'stamp_verification',
@@ -243,11 +243,11 @@ $having
       'identifier_number',
       'sort_name',
       'contribution_page',
-    ));
+    ]);
   }
 
   function setDefaultValues() {
-    return array();
+    return [];
   }
 
   function setTitle() {
@@ -301,13 +301,13 @@ $having
   }
 
   function where($includeContactIDs = false) {
-    $clauses = array();
+    $clauses = [];
 
-    $dateFields = array(
+    $dateFields = [
       'create_date',
       'start_date',
       'end_date',
-    );
+    ];
     foreach($dateFields as $fieldName) {
       if (!empty($this->_formValues[$fieldName.'_from'])) {
         $dateFrom = CRM_Utils_Date::processDate($this->_formValues[$fieldName.'_from']);
@@ -327,12 +327,12 @@ $having
       $clauses[] = "(stamp_verification = '{$this->_formValues['stamp_verification']}')";
     }
 
-    $achFields = array(
+    $achFields = [
       'payment_type',
       'bank_code',
       'bank_account',
       'identifier_number',
-    );
+    ];
 
     foreach($achFields as $fieldName) {
       if (isset($this->_formValues[$fieldName]) && !empty($this->_formValues[$fieldName])) {
@@ -368,7 +368,7 @@ $having
   }
 
   public static function includeContactIDs(&$sql, &$formValues, $isExport = FALSE) {
-    $contactIDs = array();
+    $contactIDs = [];
     foreach ($formValues as $id => $value) {
       list($contactID, $additionalID) = CRM_Core_Form::cbExtract($id);
       if ($isExport) {
@@ -397,23 +397,23 @@ $having
   }
   
   function summary(){
-    $summary = array();
+    $summary = [];
     if(!$this->_filled){
       $this->fillTable();
       $this->_filled = TRUE;
     }
     $count = $this->count();
 
-    $summary['search_results'] = array(
+    $summary['search_results'] = [
       'label' => ts('Search Results'),
-      'value' => ts('There are %1 recurring contributions.', array(1 => $count)),
-    );
+      'value' => ts('There are %1 recurring contributions.', [1 => $count]),
+    ];
     $query = CRM_Core_DAO::executeQuery("SELECT SUM(receive_amount) as amount FROM {$this->_tableName} WHERE ".$this->where());
     $query->fetch();
     
     if ($query->amount) {
       $amount = CRM_Utils_Money::format($query->amount);
-      $summary['search_results']['value'] .= ' '.ts('Total amount of completed contributions is %1.', array(1 => $amount));
+      $summary['search_results']['value'] .= ' '.ts('Total amount of completed contributions is %1.', [1 => $amount]);
     }
 
     return $summary;
@@ -431,10 +431,10 @@ $having
     unset($row['total_count']);
 
     if ($row['contribution_page_id'] && empty($this->_isExport)) {
-      $params = array(
+      $params = [
         'p' => 'civicrm/admin/contribute',
         'q' => "action=update&reset=1&id={$row['contribution_page_id']}",
-      );
+      ];
       $row['contribution_page_id'] = '<a href="'.CRM_Utils_System::crmURL($params).'" title="'. $this->_cpage[$row['contribution_page_id']].'">'. $row['contribution_page_id'].'</a>';
     }
 
@@ -450,7 +450,7 @@ $having
       }
     }
 
-    $date = array('start_date', 'end_date', 'cancel_date');
+    $date = ['start_date', 'end_date', 'cancel_date'];
     foreach($date as $d){
       if(!empty($row[$d])){
         $row[$d] = CRM_Utils_Date::customFormat($row[$d], $this->_config->dateformatFull);
@@ -466,12 +466,12 @@ $having
     $links[CRM_Core_Action::ADD]['qs'] = 'reset=1&action=update&id=%%ach_id%%&cid=%%cid%%';
     $action = array_sum(array_keys($links));
     $row['action'] = CRM_Core_Action::formLink($links, $action,
-      array(
+      [
         'cid' => $row['contact_id'],
         'id' => $row['id'],
         'ach_id' => $row['#dao']['ach_id'],
         'cxt' => 'contribution',
-      )
+      ]
     );
   }
 
@@ -483,18 +483,18 @@ $having
   }
 
   public static function tasks() {
-    return array(
-      1001 => array(
+    return [
+      1001 => [
         'title' => ts('Export ACH Stamp Verification File'),
-        'class' => array('CRM_Contact_Form_Task_TaiwanACHExportVerification'),
+        'class' => ['CRM_Contact_Form_Task_TaiwanACHExportVerification'],
         'result' => TRUE,
-      ),
-      1002 => array(
+      ],
+      1002 => [
         'title' => ts('Export ACH Transaction File'),
-        'class' => array('CRM_Contact_Form_Task_TaiwanACHExportTransaction'),
+        'class' => ['CRM_Contact_Form_Task_TaiwanACHExportTransaction'],
         'result' => TRUE,
-      ),
-    );
+      ],
+    ];
   }
 }
 

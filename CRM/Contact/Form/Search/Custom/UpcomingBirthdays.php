@@ -35,12 +35,12 @@ class CRM_Contact_Form_Search_Custom_UpcomingBirthdays implements CRM_Contact_Fo
     /**
      * Define the columns for search result rows
      */
-    $this->_columns = array(
+    $this->_columns = [
       ts('Contact Id') => 'contact_id',
       ts('Name') => 'name',
       ts('Year') => 'year',
       ts('Date') => 'birth',
-    );
+    ];
   }
 
   function buildForm(&$form) {
@@ -54,25 +54,25 @@ class CRM_Contact_Form_Search_Custom_UpcomingBirthdays implements CRM_Contact_Fo
      * Define the search form fields here
      */
     $groups = CRM_Core_PseudoConstant::staticGroup();
-    $form->addSelect('limit_groups', ts('Groups'), array('' => ts('- select -')) + $groups, array('multiple' => 'multiple'));
+    $form->addSelect('limit_groups', ts('Groups'), ['' => ts('- select -')] + $groups, ['multiple' => 'multiple']);
 
-    $month = array('' => ts('- select -'), '1' => '1', '2' => '2', '3' => '3', '4' => '4', '5' => '5', '6' => '6', '7' => '7', '8' => '8', '9' => '9', '10' => '10', '11' => '11', '12' => '12');
+    $month = ['' => ts('- select -'), '1' => '1', '2' => '2', '3' => '3', '4' => '4', '5' => '5', '6' => '6', '7' => '7', '8' => '8', '9' => '9', '10' => '10', '11' => '11', '12' => '12'];
     $form->addSelect('oc_month_start', ts('month')." (".ts("Start").")", $month, NULL, TRUE);
     $form->addSelect('oc_month_end', ts('month')." (".ts("End").")", $month, NULL, TRUE);
     $form->addNumber('oc_day_start', ts('day')." (".ts('Start').")", NULL, TRUE);
     $form->addNumber('oc_day_end', ts('day')." (".ts('End').")", NULL, TRUE);
-    $form->setDefaults(array(
+    $form->setDefaults([
       'oc_month_start' => date('n', $time),
       'oc_month_end' => date('n', $time),
       'oc_day_start' => 1,
       'oc_day_end' => date('j', strtotime('first day of next month') - 86400),
-    ));
+    ]);
 
     /**
      * If you are using the sample template, this array tells the template fields to render
      * for the search form.
      */
-    $form->assign('elements', array('limit_groups', 'oc_month_start', 'oc_month_end', 'oc_day_start', 'oc_day_end'));
+    $form->assign('elements', ['limit_groups', 'oc_month_start', 'oc_month_end', 'oc_day_start', 'oc_day_end']);
   }
 
   function setBreadcrumb() {
@@ -145,7 +145,7 @@ class CRM_Contact_Form_Search_Custom_UpcomingBirthdays implements CRM_Contact_Fo
   }
 
   function where($includeContactIDs = FALSE) {
-    $clauses = array();
+    $clauses = [];
 
     $oc_month_start = (int)$this->_formValues['oc_month_start'];
     $oc_month_end = (int)$this->_formValues['oc_month_end'];
@@ -180,7 +180,7 @@ class CRM_Contact_Form_Search_Custom_UpcomingBirthdays implements CRM_Contact_Fo
     }
 
     if ($includeContactIDs) {
-      $contactIDs = array();
+      $contactIDs = [];
       foreach ($this->_formValues as $id => $value) {
         list($contactID, $additionalID) = CRM_Core_Form::cbExtract($id);
         if ($value && !empty($contactID)) {
@@ -219,7 +219,7 @@ class CRM_Contact_Form_Search_Custom_UpcomingBirthdays implements CRM_Contact_Fo
   }
 
   function summary(){
-    $summary = array();
+    $summary = [];
     return $summary;
   }
 

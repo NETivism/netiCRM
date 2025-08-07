@@ -78,7 +78,7 @@ class CRM_Core_DAO_Instrument extends CRM_Core_DAO
    * @static
    */
   static $_log = false;
-  /**
+    /**
    * ID
    *
    * @var int unsigned
@@ -102,7 +102,7 @@ class CRM_Core_DAO_Instrument extends CRM_Core_DAO
    * @var blob
    */
   public $payment_instruments;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -112,7 +112,7 @@ class CRM_Core_DAO_Instrument extends CRM_Core_DAO
   {
     parent::__construct();
   }
-  /**
+    /**
    * returns all the column names of this table
    *
    * @access public
@@ -121,30 +121,30 @@ class CRM_Core_DAO_Instrument extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'id' => array(
+      self::$_fields = [
+        'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'entity_id' => array(
+                  ] ,
+        'entity_id' => [
           'name' => 'entity_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'entity_table' => array(
+                  ] ,
+        'entity_table' => [
           'name' => 'entity_table',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Entity Table') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'payment_instruments' => array(
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
+        'payment_instruments' => [
           'name' => 'payment_instruments',
           'type' => CRM_Utils_Type::T_BLOB,
           'title' => ts('Payment Instruments') ,
-        ) ,
-      );
+                  ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -156,8 +156,8 @@ class CRM_Core_DAO_Instrument extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -177,7 +177,7 @@ class CRM_Core_DAO_Instrument extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -188,7 +188,7 @@ class CRM_Core_DAO_Instrument extends CRM_Core_DAO
           }
         }
       }
-    }
+          }
     return self::$_import;
   }
   /**
@@ -200,7 +200,7 @@ class CRM_Core_DAO_Instrument extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
@@ -211,7 +211,7 @@ class CRM_Core_DAO_Instrument extends CRM_Core_DAO
           }
         }
       }
-    }
+          }
     return self::$_export;
   }
 }

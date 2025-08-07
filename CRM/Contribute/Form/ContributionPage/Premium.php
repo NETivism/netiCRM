@@ -50,10 +50,10 @@ class CRM_Contribute_Form_ContributionPage_Premium extends CRM_Contribute_Form_C
    * @return void
    */
   function setDefaultValues() {
-    $defaults = array();
+    $defaults = [];
     if (isset($this->_id)) {
       $title = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage', $this->_id, 'title');
-      CRM_Utils_System::setTitle(ts('Premiums (%1)', array(1 => $title)));
+      CRM_Utils_System::setTitle(ts('Premiums (%1)', [1 => $title]));
       $dao = new CRM_Contribute_DAO_Premium();
       $dao->entity_table = 'civicrm_contribution_page';
       $dao->entity_id = $this->_id;

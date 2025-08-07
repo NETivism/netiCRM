@@ -51,21 +51,21 @@ class CRM_Admin_Form_Tag extends CRM_Admin_Form {
   public function buildQuickForm() {
     if ($this->_action == CRM_Core_Action::DELETE) {
       if ($this->_id && $tag = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_Tag', $this->_id, 'name', 'parent_id')) {
-        CRM_Core_Session::setStatus(ts("This tag cannot be deleted! You must Delete all its child tags ('%1', etc) prior to deleting this tag.", array(1 => $tag)));
+        CRM_Core_Session::setStatus(ts("This tag cannot be deleted! You must Delete all its child tags ('%1', etc) prior to deleting this tag.", [1 => $tag]));
         $url = CRM_Utils_System::url('civicrm/admin/tag', "reset=1");
         CRM_Utils_System::redirect($url);
         return TRUE;
       }
       else {
-        $this->addButtons(array(
-            array('type' => 'next',
+        $this->addButtons([
+            ['type' => 'next',
               'name' => ts('Delete'),
               'isDefault' => TRUE,
-            ),
-            array('type' => 'cancel',
+            ],
+            ['type' => 'cancel',
               'name' => ts('Cancel'),
-            ),
-          )
+            ],
+          ]
         );
       }
     }
@@ -80,7 +80,7 @@ class CRM_Admin_Form_Tag extends CRM_Admin_Form {
       }
 
 
-      $allTag = array('' => '- ' . ts('select') . ' -') + CRM_Core_BAO_Tag::getTagsNotInTagset();
+      $allTag = ['' => '- ' . ts('select') . ' -'] + CRM_Core_BAO_Tag::getTagsNotInTagset();
 
       if ($this->_id) {
         unset($allTag[$this->_id]);
@@ -97,7 +97,7 @@ class CRM_Admin_Form_Tag extends CRM_Admin_Form {
       $this->add('text', 'name', ts('Name'),
         CRM_Core_DAO::getAttribute('CRM_Core_DAO_Tag', 'name'), TRUE
       );
-      $this->addRule('name', ts('Name already exists in Database.'), 'objectExists', array('CRM_Core_DAO_Tag', $this->_id));
+      $this->addRule('name', ts('Name already exists in Database.'), 'objectExists', ['CRM_Core_DAO_Tag', $this->_id]);
 
       $this->add('text', 'description', ts('Description'),
         CRM_Core_DAO::getAttribute('CRM_Core_DAO_Tag', 'description')
@@ -145,7 +145,7 @@ class CRM_Admin_Form_Tag extends CRM_Admin_Form {
    * @return None
    */
   public function postProcess() {
-    $params = $ids = array();
+    $params = $ids = [];
 
     // store the submitted values in an array
     $params = $this->exportValues();
@@ -173,7 +173,7 @@ class CRM_Admin_Form_Tag extends CRM_Admin_Form {
     }
     else {
       $tag = CRM_Core_BAO_Tag::add($params, $ids);
-      CRM_Core_Session::setStatus(ts('The tag \'%1\' has been saved.', array(1 => $tag->name)));
+      CRM_Core_Session::setStatus(ts('The tag \'%1\' has been saved.', [1 => $tag->name]));
     }
   }
   //end of function

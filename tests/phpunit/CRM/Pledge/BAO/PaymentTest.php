@@ -63,13 +63,13 @@ class CRM_Pledge_BAO_PaymentTest extends CiviUnitTestCase
     function testAdd( ) 
     {
         $pledge = CRM_Core_DAO::createTestObject('CRM_Pledge_BAO_Pledge');
-        $params = array( 'pledge_id'        => $pledge->id,
+        $params = [ 'pledge_id'        => $pledge->id,
                          'scheduled_amount' => 100.55, 
                          'currency'         => 'USD',
                          'scheduled_date'   => '20100512000000',
                          'reminder_date'    => '20100520000000',
                          'reminder_count'   => 5,
-                         'status_id'        => 1 );
+                         'status_id'        => 1 ];
         
         //do test for normal add.
         $payment = CRM_Pledge_BAO_Payment::add( $params );
@@ -78,14 +78,14 @@ class CRM_Pledge_BAO_PaymentTest extends CiviUnitTestCase
         }
         
         //do test for update mode.
-        $params = array( 'id'               => $payment->id,
+        $params = [ 'id'               => $payment->id,
                          'pledge_id'        => $pledge->id,
                          'scheduled_amount' => 55.55, 
                          'currency'         => 'USD',
                          'scheduled_date'   => '20100415000000',
                          'reminder_date'    => '20100425000000',
                          'reminder_count'   => 10,
-                         'status_id'        => 2 );
+                         'status_id'        => 2 ];
         
         $payment = CRM_Pledge_BAO_Payment::add( $params );
         foreach ( $params as $param => $value ) {
@@ -100,8 +100,8 @@ class CRM_Pledge_BAO_PaymentTest extends CiviUnitTestCase
 	function testRetrieveZeroPledeID( ) 
     {
 		$payment = CRM_Core_DAO::createTestObject('CRM_Pledge_BAO_Payment');
-		$params = 	array('pledge_id' => 0 );
-		$defaults = array();
+		$params = 	['pledge_id' => 0 ];
+		$defaults = [];
 		$paymentid = CRM_Pledge_BAO_Payment::retrieve($params,$defaults);
 		
 		$this->assertEquals(count($paymentid),0,"Pledge Id must be greater than 0");
@@ -114,8 +114,8 @@ class CRM_Pledge_BAO_PaymentTest extends CiviUnitTestCase
     function testRetrieveStringPledgeID( ) 
     {
 		$payment = CRM_Core_DAO::createTestObject('CRM_Pledge_BAO_Payment');
-		$params = 	array('pledge_id' => 'Test' );
-		$defaults = array();
+		$params = 	['pledge_id' => 'Test' ];
+		$defaults = [];
 		$paymentid = CRM_Pledge_BAO_Payment::retrieve($params,$defaults);
 		
 		$this->assertEquals(count($paymentid),0,"Pledge Id cannot be a string");
@@ -129,8 +129,8 @@ class CRM_Pledge_BAO_PaymentTest extends CiviUnitTestCase
     {
 		$payment = CRM_Core_DAO::createTestObject('CRM_Pledge_BAO_Payment');
                $pledgeId = $payment->pledge_id;
-		$params = 	array('pledge_id' => $pledgeId );
-		$defaults = array();
+		$params = 	['pledge_id' => $pledgeId ];
+		$defaults = [];
 		$paymentid = CRM_Pledge_BAO_Payment::retrieve($params,$defaults);
 		
 		$this->assertEquals(count($paymentid),1,"Pledge was retrieved");

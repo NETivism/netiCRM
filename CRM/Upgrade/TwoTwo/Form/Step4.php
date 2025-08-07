@@ -36,7 +36,7 @@
 
 class CRM_Upgrade_TwoTwo_Form_Step4 extends CRM_Upgrade_Form {
   function verifyPreDBState(&$errorMessage) {
-    $errorMessage = ts('Pre-condition failed for upgrade step %1.', array(1 => '4'));
+    $errorMessage = ts('Pre-condition failed for upgrade step %1.', [1 => '4']);
 
     if (CRM_Core_DAO::checkTableExists('civicrm_event_page')) {
       return FALSE;
@@ -84,8 +84,8 @@ class CRM_Upgrade_TwoTwo_Form_Step4 extends CRM_Upgrade_Form {
     if ($domain->config_backend) {
       $defaults = unserialize($domain->config_backend);
       // reset components
-      $defaults['enableComponents'] = array('CiviContribute', 'CiviPledge', 'CiviMember', 'CiviEvent', 'CiviMail');
-      $defaults['enableComponentIDs'] = array(1, 6, 2, 3, 4);
+      $defaults['enableComponents'] = ['CiviContribute', 'CiviPledge', 'CiviMember', 'CiviEvent', 'CiviMail'];
+      $defaults['enableComponentIDs'] = [1, 6, 2, 3, 4];
       $defaults['moneyvalueformat'] = '%!i';
       $defaults['fieldSeparator'] = ',';
       $defaults['fatalErrorTemplate'] = 'CRM/common/fatal.tpl';
@@ -104,7 +104,7 @@ class CRM_Upgrade_TwoTwo_Form_Step4 extends CRM_Upgrade_Form {
 
   function getTemplateMessage() {
     $upgradeDoc = CRM_Utils_System::docURL2('Installation and Upgrades', TRUE, 'Documentation online');
-    return '<p><strong>' . ts('Your CiviCRM database has been successfully upgraded to v2.2.') . '</strong></p><p>' . ts('Please be sure to follow the remaining steps in the upgrade instructions specific to your version of CiviCRM: %1.', array(1 => $upgradeDoc)) . '</p><p>' . ts('Thank you for using CiviCRM.') . '</p>';
+    return '<p><strong>' . ts('Your CiviCRM database has been successfully upgraded to v2.2.') . '</strong></p><p>' . ts('Please be sure to follow the remaining steps in the upgrade instructions specific to your version of CiviCRM: %1.', [1 => $upgradeDoc]) . '</p><p>' . ts('Thank you for using CiviCRM.') . '</p>';
   }
 }
 

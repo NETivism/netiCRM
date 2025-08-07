@@ -350,12 +350,12 @@ abstract class CRM_Contribute_Import_Parser {
     $this->_invalidRowCount = $this->_validCount = $this->_invalidSoftCreditRowCount = $this->_invalidPledgePaymentRowCount = 0;
     $this->_totalCount = $this->_conflictCount = 0;
 
-    $this->_errors = array();
-    $this->_warnings = array();
-    $this->_conflicts = array();
-    $this->_pledgePaymentErrors = array();
-    $this->_softCreditErrors = array();
-    $this->_pcpErrors = array();
+    $this->_errors = [];
+    $this->_warnings = [];
+    $this->_conflicts = [];
+    $this->_pledgePaymentErrors = [];
+    $this->_softCreditErrors = [];
+    $this->_pcpErrors = [];
     $this->_contributionPages = CRM_Contribute_PseudoConstant::contributionPage();
 
     $status = '';
@@ -365,7 +365,7 @@ abstract class CRM_Contribute_Import_Parser {
     $this->_statusFieldName = $statusFieldName;
 
     if ($mode == self::MODE_MAPFIELD) {
-      $this->_rows = array();
+      $this->_rows = [];
     }
     else {
       $this->_activeFieldCount = count($this->_activeFields);
@@ -379,7 +379,7 @@ abstract class CRM_Contribute_Import_Parser {
       $config = CRM_Core_Config::singleton();
       $statusFile = "{$config->uploadDir}status_{$statusID}.txt";
       $status = "<div class='description'>&nbsp; " . ts('No processing status reported yet.') . "</div>";
-      $contents = json_encode(array(0, $status));
+      $contents = json_encode([0, $status]);
 
       file_put_contents($statusFile, $contents);
 
@@ -441,7 +441,7 @@ abstract class CRM_Contribute_Import_Parser {
           $timeFormatted .= round($estimatedTime) . ' ' . ts('seconds');
           $processedPercent = (int )(($this->_rowCount * 100) / $totalRowCount);
           $statusMsg = ts('%1 of %2 records - %3 remaining',
-            array(1 => $this->_rowCount, 2 => $totalRowCount, 3 => $timeFormatted)
+            [1 => $this->_rowCount, 2 => $totalRowCount, 3 => $timeFormatted]
           );
           $status = "
 <div class=\"description\">
@@ -449,7 +449,7 @@ abstract class CRM_Contribute_Import_Parser {
 </div>
 ";
 
-          $contents = json_encode(array($processedPercent, $status));
+          $contents = json_encode([$processedPercent, $status]);
           file_put_contents($statusFile, $contents);
           $prevTimestamp = $currTimestamp;
         }
@@ -558,7 +558,7 @@ abstract class CRM_Contribute_Import_Parser {
           $customHeaders[$key] = $customfields[$id][0];
         }
       }
-      $headers = array_merge(array(ts('Line Number'), ts('Reason')), $customHeaders);
+      $headers = array_merge([ts('Line Number'), ts('Reason')], $customHeaders);
       $filenamePrefix = str_replace(CRM_Import_ImportJob::TABLE_PREFIX, self::ERROR_FILE_PREFIX, $tableName);
 
       if ($this->_invalidRowCount) {
@@ -709,33 +709,33 @@ abstract class CRM_Contribute_Import_Parser {
    * @access public
    */
   function &getActiveFieldParams() {
-    $params = array();
+    $params = [];
     for ($i = 0; $i < $this->_activeFieldCount; $i++) {
       if (isset($this->_activeFields[$i]->_value)) {
         if (isset($this->_activeFields[$i]->_softCreditField)) {
           if (!isset($params[$this->_activeFields[$i]->_name])) {
-            $params[$this->_activeFields[$i]->_name] = array();
+            $params[$this->_activeFields[$i]->_name] = [];
           }
           $params[$this->_activeFields[$i]->_name][$this->_activeFields[$i]->_softCreditField] = $this->_activeFields[$i]->_value;
         }
         if (isset($this->_activeFields[$i]->_pcpField)) {
           if (!isset($params[$this->_activeFields[$i]->_name])) {
-            $params[$this->_activeFields[$i]->_name] = array();
+            $params[$this->_activeFields[$i]->_name] = [];
           }
           $params[$this->_activeFields[$i]->_name][$this->_activeFields[$i]->_pcpField] = $this->_activeFields[$i]->_value;
         }
 
         if (isset($this->_activeFields[$i]->_hasLocationType)) {
           if (!isset($params[$this->_activeFields[$i]->_name])) {
-            $params[$this->_activeFields[$i]->_name] = array();
+            $params[$this->_activeFields[$i]->_name] = [];
           }
 
-          $value = array(
+          $value = [
             $this->_activeFields[$i]->_name =>
             $this->_activeFields[$i]->_value,
             'location_type_id' =>
             $this->_activeFields[$i]->_hasLocationType,
-          );
+          ];
 
           if (isset($this->_activeFields[$i]->_phoneType)) {
             $value['phone_type_id'] = $this->_activeFields[$i]->_phoneType;
@@ -749,9 +749,9 @@ abstract class CRM_Contribute_Import_Parser {
           $params[$this->_activeFields[$i]->_name][] = $value;
         }
         elseif (isset($this->_activeFields[$i]->_websiteType)) {
-          $value = array($this->_activeFields[$i]->_name => $this->_activeFields[$i]->_value,
+          $value = [$this->_activeFields[$i]->_name => $this->_activeFields[$i]->_value,
             'website_type_id' => $this->_activeFields[$i]->_websiteType,
-          );
+          ];
 
           $params[$this->_activeFields[$i]->_name][] = $value;
         }
@@ -767,7 +767,7 @@ abstract class CRM_Contribute_Import_Parser {
   }
 
   function getSelectValues() {
-    $values = array();
+    $values = [];
     foreach ($this->_fields as $name => $field) {
       $values[$name] = $field->_title;
     }
@@ -775,7 +775,7 @@ abstract class CRM_Contribute_Import_Parser {
   }
 
   function getSelectTypes() {
-    $values = array();
+    $values = [];
     foreach ($this->_fields as $name => $field) {
       if (isset($field->_hasLocationType)) {
         $values[$name] = $field->_hasLocationType;
@@ -785,7 +785,7 @@ abstract class CRM_Contribute_Import_Parser {
   }
 
   function getHeaderPatterns() {
-    $values = array();
+    $values = [];
     foreach ($this->_fields as $name => $field) {
       if (isset($field->_headerPattern)) {
         $values[$name] = $field->_headerPattern;
@@ -798,14 +798,14 @@ abstract class CRM_Contribute_Import_Parser {
     /**
       priority of fields is 'email', 'total amount', 'Each date fields like join_date, start_date', 'phone', 'contribute fields', 'contact fields'
     */
-    $values = $contribute_fields = $contact_fields = array();
-    $priority_fields = array(
+    $values = $contribute_fields = $contact_fields = [];
+    $priority_fields = [
       'email' => '',
       'total_amount' => '',
-    );
-    $secondary_fields = array(
+    ];
+    $secondary_fields = [
       'phone' => '',
-    );
+    ];
     foreach ($this->_fields as $name => $field) {
       if(isset($priority_fields[$name])){
         $priority_fields[$name] = $field->_dataPattern;
@@ -943,7 +943,7 @@ abstract class CRM_Contribute_Import_Parser {
 
     if ($statusFieldName && $primaryKeyName && is_numeric($id)) {
       $msg = !empty($params["{$statusFieldName}Msg"]) ? $params["{$statusFieldName}Msg"] : '';
-      $status = isset($params[$statusFieldName]) ? $params[$statusFieldName] : '';
+      $status = $params[$statusFieldName] ?? '';
       $query = "UPDATE {$this->_tableName} SET {$statusFieldName} = %1, {$statusFieldName}Msg = %2 WHERE {$primaryKeyName} = %3";
       if ($status === '') {
         CRM_Core_Error::debug_var('updateImportStatus_id', $id);
@@ -952,11 +952,11 @@ abstract class CRM_Contribute_Import_Parser {
         CRM_Core_Error::debug_var('updateImportStatus_query', $query);
         CRM_Core_Error::debug_var('updateImportStatus_msg', $msg);
       }
-      CRM_Core_DAO::executeQuery($query, array(
-        1 => array($status, 'String'),
-        2 => array($msg, 'String'),
-        3 => array($id, 'Integer'),
-      ));
+      CRM_Core_DAO::executeQuery($query, [
+        1 => [$status, 'String'],
+        2 => [$msg, 'String'],
+        3 => [$id, 'Integer'],
+      ]);
     }
   }
 

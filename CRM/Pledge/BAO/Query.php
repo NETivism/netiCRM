@@ -202,7 +202,7 @@ class CRM_Pledge_BAO_Query {
     if ($grouping !== NULL &&
       !$isTest
     ) {
-      $values = array('pledge_test', '=', 0, $grouping, 0);
+      $values = ['pledge_test', '=', 0, $grouping, 0];
       self::whereClauseSingle($values, $query);
     }
   }
@@ -273,7 +273,7 @@ class CRM_Pledge_BAO_Query {
 
         $statusValues = CRM_Core_OptionGroup::values("contribution_status");
 
-        $names = array();
+        $names = [];
         if (is_array($val)) {
           foreach ($val as $id => $dontCare) {
             $names[] = $statusValues[$id];
@@ -283,7 +283,7 @@ class CRM_Pledge_BAO_Query {
           $names[] = $statusValues[$value];
         }
 
-        $query->_qill[$grouping][] = ts('Pledge Status %1', array(1 => $op)) . ' ' . CRM_Utils_Array::implode(' ' . ts('or') . ' ', $names);
+        $query->_qill[$grouping][] = ts('Pledge Status %1', [1 => $op]) . ' ' . CRM_Utils_Array::implode(' ' . ts('or') . ' ', $names);
         $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("civicrm_pledge.status_id",
           $op,
           $status,
@@ -315,7 +315,7 @@ class CRM_Pledge_BAO_Query {
 
         $statusValues = CRM_Core_OptionGroup::values("contribution_status");
 
-        $names = array();
+        $names = [];
         if (is_array($val)) {
           foreach ($val as $id => $dontCare) {
             $names[] = $statusValues[$id];
@@ -325,7 +325,7 @@ class CRM_Pledge_BAO_Query {
           $names[] = $statusValues[$value];
         }
 
-        $query->_qill[$grouping][] = ts('Pledge Payment Status %1', array(1 => $op)) . ' ' . CRM_Utils_Array::implode(' ' . ts('or') . ' ', $names);
+        $query->_qill[$grouping][] = ts('Pledge Payment Status %1', [1 => $op]) . ' ' . CRM_Utils_Array::implode(' ' . ts('or') . ' ', $names);
         $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("civicrm_pledge_payment.status_id",
           $op,
           $status,
@@ -354,7 +354,7 @@ class CRM_Pledge_BAO_Query {
           $value,
           "Integer"
         );
-        $query->_qill[$grouping][] = ts('Contribution Type - %1', array(1 => $type));
+        $query->_qill[$grouping][] = ts('Contribution Type - %1', [1 => $type]);
         $query->_tables['civicrm_pledge'] = $query->_whereTables['civicrm_pledge'] = 1;
         return;
 
@@ -366,7 +366,7 @@ class CRM_Pledge_BAO_Query {
           $value,
           "Integer"
         );
-        $query->_qill[$grouping][] = ts('Contribution Page - %1', array(1 => $page));
+        $query->_qill[$grouping][] = ts('Contribution Page - %1', [1 => $page]);
         $query->_tables['civicrm_pledge'] = $query->_whereTables['civicrm_pledge'] = 1;
         return;
 
@@ -381,7 +381,7 @@ class CRM_Pledge_BAO_Query {
         }
 
         $query->_where[$grouping][] = ' ( ' . CRM_Utils_Array::implode('  OR ', $sub) . ' ) ';
-        $query->_qill[$grouping][] = ts('Honor name like - \'%1\'', array(1 => $name));
+        $query->_qill[$grouping][] = ts('Honor name like - \'%1\'', [1 => $name]);
         $query->_tables['pledge_contact_b'] = $query->_whereTables['pledge_contact_b'] = 1;
         $query->_tables['civicrm_pledge'] = $query->_whereTables['civicrm_pledge'] = 1;
         return;
@@ -458,7 +458,7 @@ class CRM_Pledge_BAO_Query {
     $properties = NULL;
 
     if ($mode & CRM_Contact_BAO_Query::MODE_PLEDGE) {
-      $properties = array(
+      $properties = [
         'contact_type' => 1,
         'contact_sub_type' => 1,
         'sort_name' => 1,
@@ -475,7 +475,7 @@ class CRM_Pledge_BAO_Query {
         'pledge_contribution_page_id' => 1,
         'pledge_frequency_interval' => 1,
         'pledge_frequency_unit' => 1,
-      );
+      ];
     }
     return $properties;
   }
@@ -487,7 +487,7 @@ class CRM_Pledge_BAO_Query {
     $properties = NULL;
 
     if ($mode & CRM_Contact_BAO_Query::MODE_PLEDGE) {
-      $properties = array(
+      $properties = [
         'pledge_balance_amount' => 1,
         'pledge_payment_id' => 1,
         'pledge_payment_scheduled_amount' => 1,
@@ -498,7 +498,7 @@ class CRM_Pledge_BAO_Query {
         'pledge_payment_reminder_count' => 1,
         'pledge_payment_status_id' => 1,
         'pledge_payment_status' => 1,
-      );
+      ];
 
       // also get all the custom pledge properties
 
@@ -514,27 +514,27 @@ class CRM_Pledge_BAO_Query {
 
   static function buildSearchForm(&$form) {
     // pledge related dates
-    $form->addDate('pledge_start_date_low', ts('Payments Start Date - From'), FALSE, array('formatType' => 'searchDate'));
-    $form->addDate('pledge_start_date_high', ts('To'), FALSE, array('formatType' => 'searchDate'));
+    $form->addDate('pledge_start_date_low', ts('Payments Start Date - From'), FALSE, ['formatType' => 'searchDate']);
+    $form->addDate('pledge_start_date_high', ts('To'), FALSE, ['formatType' => 'searchDate']);
 
-    $form->addDate('pledge_end_date_low', ts('Payments Ended Date - From'), FALSE, array('formatType' => 'searchDate'));
-    $form->addDate('pledge_end_date_high', ts('To'), FALSE, array('formatType' => 'searchDate'));
+    $form->addDate('pledge_end_date_low', ts('Payments Ended Date - From'), FALSE, ['formatType' => 'searchDate']);
+    $form->addDate('pledge_end_date_high', ts('To'), FALSE, ['formatType' => 'searchDate']);
 
-    $form->addDate('pledge_create_date_low', ts('Pledge Made - From'), FALSE, array('formatType' => 'searchDate'));
-    $form->addDate('pledge_create_date_high', ts('To'), FALSE, array('formatType' => 'searchDate'));
+    $form->addDate('pledge_create_date_low', ts('Pledge Made - From'), FALSE, ['formatType' => 'searchDate']);
+    $form->addDate('pledge_create_date_high', ts('To'), FALSE, ['formatType' => 'searchDate']);
 
     // pledge payment related dates
-    $form->addDate('pledge_payment_date_low', ts('Payment Scheduled - From'), FALSE, array('formatType' => 'searchDate'));
-    $form->addDate('pledge_payment_date_high', ts('To'), FALSE, array('formatType' => 'searchDate'));
+    $form->addDate('pledge_payment_date_low', ts('Payment Scheduled - From'), FALSE, ['formatType' => 'searchDate']);
+    $form->addDate('pledge_payment_date_high', ts('To'), FALSE, ['formatType' => 'searchDate']);
 
     $form->addElement('checkbox', 'pledge_test', ts('Find Test Pledges?'));
 
 
-    $form->add('text', 'pledge_amount_low', ts('From'), array('size' => 8, 'maxlength' => 8));
-    $form->addRule('pledge_amount_low', ts('Please enter a valid money value (e.g. %1).', array(1 => CRM_Utils_Money::format('9.99', ' '))), 'money');
+    $form->add('text', 'pledge_amount_low', ts('From'), ['size' => 8, 'maxlength' => 8]);
+    $form->addRule('pledge_amount_low', ts('Please enter a valid money value (e.g. %1).', [1 => CRM_Utils_Money::format('9.99', ' ')]), 'money');
 
-    $form->add('text', 'pledge_amount_high', ts('To'), array('size' => 8, 'maxlength' => 8));
-    $form->addRule('pledge_amount_high', ts('Please enter a valid money value (e.g. %1).', array(1 => CRM_Utils_Money::format('99.99', ' '))), 'money');
+    $form->add('text', 'pledge_amount_high', ts('To'), ['size' => 8, 'maxlength' => 8]);
+    $form->addRule('pledge_amount_high', ts('Please enter a valid money value (e.g. %1).', [1 => CRM_Utils_Money::format('99.99', ' ')]), 'money');
 
 
     $statusValues = CRM_Contribute_PseudoConstant::contributionStatus();
@@ -560,13 +560,13 @@ class CRM_Pledge_BAO_Query {
 
     $form->add('select', 'pledge_contribution_type_id',
       ts('Contribution Type'),
-      array('' => ts('- select -')) +
+      ['' => ts('- select -')] +
       CRM_Contribute_PseudoConstant::contributionType()
     );
 
     $form->add('select', 'pledge_contribution_page_id',
       ts('Contribution Page'),
-      array('' => ts('- select -')) +
+      ['' => ts('- select -')] +
       CRM_Contribute_PseudoConstant::contributionPage()
     );
 
@@ -574,21 +574,21 @@ class CRM_Pledge_BAO_Query {
     $form->addElement('text', 'pledge_in_honor_of', ts("In Honor Of"));
 
     //add fields for pledge frequency
-    $form->add('text', 'pledge_frequency_interval', ts("Every"), array('size' => 8, 'maxlength' => 8));
+    $form->add('text', 'pledge_frequency_interval', ts("Every"), ['size' => 8, 'maxlength' => 8]);
 
     $frequencies = CRM_Core_OptionGroup::values('recur_frequency_units');
     foreach ($frequencies as $val => $label) {
-      $freqUnitsDisplay["'{$val}'"] = ts('%1(s)', array(1 => $label));
+      $freqUnitsDisplay["'{$val}'"] = ts('%1(s)', [1 => $label]);
     }
 
     $form->add('select', 'pledge_frequency_unit',
       ts('Pledge Frequency'),
-      array('' => ts('- select -')) + $freqUnitsDisplay
+      ['' => ts('- select -')] + $freqUnitsDisplay
     );
 
     // add all the custom  searchable fields
 
-    $pledge = array('Pledge');
+    $pledge = ['Pledge'];
     $groupDetails = CRM_Core_BAO_CustomGroup::getGroupDetail(NULL, TRUE, $pledge);
     if ($groupDetails) {
 
@@ -616,7 +616,7 @@ class CRM_Pledge_BAO_Query {
     if (CRM_Utils_Array::value('pledge_status', $tables) ||
       CRM_Utils_Array::value('civicrm_pledge_payment', $tables)
     ) {
-      $tables = array_merge(array('civicrm_pledge' => 1), $tables);
+      $tables = array_merge(['civicrm_pledge' => 1], $tables);
     }
   }
 }

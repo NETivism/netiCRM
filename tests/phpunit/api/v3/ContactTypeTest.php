@@ -37,35 +37,35 @@ class api_v3_ContactTypeTest extends CiviUnitTestCase {
   function setUp() {
     parent::setUp();
     $this->_apiversion = 3;
-    $params = array(
+    $params = [
       'label' => 'sub_individual',
       'name' => 'sub_individual',
       // Individual
       'parent_id' => 1,
       'is_active' => 1,
-    );
+    ];
     $result = CRM_Contact_BAO_ContactType::add($params);
     $this->subTypeIndividual = $params['name'];
     $this->_subTypeIndividualId = $result->id;
 
-    $params = array(
+    $params = [
       'label' => 'sub_organization',
       'name' => 'sub_organization',
       // Organization
       'parent_id' => 3,
       'is_active' => 1,
-    );
+    ];
     $result = CRM_Contact_BAO_ContactType::add($params);
     $this->subTypeOrganization = $params['name'];
     $this->_subTypeOrganizationId = $result->id;
 
-    $params = array(
+    $params = [
       'label' => 'sub_household',
       'name' => 'sub_household',
       // Household
       'parent_id' => 2,
       'is_active' => 1,
-    );
+    ];
     $result = CRM_Contact_BAO_ContactType::add($params);
     $this->subTypeHousehold = $params['name'];
     $this->_subTypeHouseholdId = $result->id;
@@ -77,11 +77,11 @@ class api_v3_ContactTypeTest extends CiviUnitTestCase {
    *
    */
   function tearDown() {
-    $contactTypeIds = array(
+    $contactTypeIds = [
       $this->_subTypeIndividualId,
       $this->_subTypeOrganizationId,
       $this->_subTypeHouseholdId,
-    );
+    ];
     foreach ($contactTypeIds as $typeId) {
       $this->contactTypeDelete($typeId);
     }
@@ -94,19 +94,19 @@ class api_v3_ContactTypeTest extends CiviUnitTestCase {
   function testContactCreate() {
 
     // check for Type:Individual Subtype:sub_individual
-    $contactParams = array(
+    $contactParams = [
       'first_name' => 'Anne',
       'last_name' => 'Grant',
       'contact_type' => 'Individual',
       'contact_sub_type' => $this->subTypeIndividual,
       'version' => $this->_apiversion,
-    );
+    ];
     $contact = civicrm_api('contact', 'create', $contactParams);
     $this->assertEquals($contact['is_error'], 0, "In line " . __LINE__);
-    $params = array(
+    $params = [
       'contact_id' => $contact['id'],
       'version' => $this->_apiversion,
-    );
+    ];
     $result = civicrm_api('contact', 'get', $params);
     $this->assertEquals($result['values'][$contact['id']]['first_name'], $contactParams['first_name'], "In line " . __LINE__);
     $this->assertEquals($result['values'][$contact['id']]['last_name'], $contactParams['last_name'], "In line " . __LINE__);
@@ -115,19 +115,19 @@ class api_v3_ContactTypeTest extends CiviUnitTestCase {
     civicrm_api('contact', 'delete', $params);
 
     // check for Type:Organization Subtype:sub_organization
-    $contactParams = array(
+    $contactParams = [
       'organization_name' => 'Compumentor',
       'contact_type' => 'Organization',
       'contact_sub_type' => $this->subTypeOrganization,
       'version' => $this->_apiversion,
-    );
+    ];
     $contact = civicrm_api('contact', 'create', $contactParams);
     $this->assertEquals($contact['is_error'], 0, "In line " . __LINE__);
 
-    $params = array(
+    $params = [
       'contact_id' => $contact['id'],
       'version' => $this->_apiversion,
-    );
+    ];
     $getContacts = civicrm_api('contact', 'get', $params);
     $result = $getContacts['values'][$contact['id']];
     $this->assertEquals($result['organization_name'], $contactParams['organization_name'], "In line " . __LINE__);
@@ -143,23 +143,23 @@ class api_v3_ContactTypeTest extends CiviUnitTestCase {
   function testContactAddInvalidData() {
 
     // check for Type:Individual Subtype:sub_household
-    $contactParams = array(
+    $contactParams = [
       'first_name' => 'Anne',
       'last_name' => 'Grant',
       'contact_type' => 'Individual',
       'contact_sub_type' => $this->subTypeHousehold,
       'version' => $this->_apiversion,
-    );
+    ];
     $contact = civicrm_api('contact', 'create', $contactParams);
     $this->assertEquals($contact['is_error'], 1, "In line " . __LINE__);
 
     // check for Type:Organization Subtype:sub_individual
-    $contactParams = array(
+    $contactParams = [
       'organization_name' => 'Compumentor',
       'contact_type' => 'Organization',
       'contact_sub_type' => $this->subTypeIndividual,
       'version' => $this->_apiversion,
-    );
+    ];
     $contact = civicrm_api('contact', 'create', $contactParams);
     $this->assertEquals($contact['is_error'], 1, "In line " . __LINE__);
   }
@@ -172,30 +172,30 @@ class api_v3_ContactTypeTest extends CiviUnitTestCase {
   function testContactUpdateNoSubtypeValid() {
 
     // check for Type:Individual
-    $contactParams = array(
+    $contactParams = [
       'first_name' => 'Anne',
       'last_name' => 'Grant',
       'contact_type' => 'Individual',
       'version' => $this->_apiversion,
-    );
+    ];
     $contact = civicrm_api('contact', 'create', $contactParams);
     // subype:sub_individual
-    $updateParams = array(
+    $updateParams = [
       'first_name' => 'John',
       'last_name' => 'Grant',
       'contact_id' => $contact['id'],
       'contact_type' => 'Individual',
       'contact_sub_type' => $this->subTypeIndividual,
       'version' => $this->_apiversion,
-    );
+    ];
     $updateContact = civicrm_api('contact', 'create', $updateParams);
     $this->assertEquals($updateContact['is_error'], 0, "In line " . __LINE__);
     $this->assertEquals($updateContact['id'], $contact['id'], "In line " . __LINE__);
 
-    $params = array(
+    $params = [
       'contact_id' => $contact['id'],
       'version' => $this->_apiversion,
-    );
+    ];
     $getContacts = civicrm_api('contact', 'get', $params);
     $result = $getContacts['values'][$contact['id']];
 
@@ -206,30 +206,30 @@ class api_v3_ContactTypeTest extends CiviUnitTestCase {
     civicrm_api('contact', 'delete', $params);
 
     // check for Type:Organization
-    $contactParams = array(
+    $contactParams = [
       'organization_name' => 'Compumentor',
       'contact_type' => 'Organization',
       'version' => $this->_apiversion,
-    );
+    ];
     $contact = civicrm_api('contact', 'create', $contactParams);
 
     // subype:sub_organization
-    $updateParams = array(
+    $updateParams = [
       'organization_name' => 'Intel Arts',
       'contact_id' => $contact['id'],
       'contact_type' => 'Organization',
       'contact_sub_type' => $this->subTypeOrganization,
       'version' => $this->_apiversion,
-    );
+    ];
     $updateContact = civicrm_api('contact', 'create', $updateParams);
 
     $this->assertEquals($updateContact['is_error'], 0, "In line " . __LINE__);
     $this->assertEquals($updateContact['id'], $contact['id'], "In line " . __LINE__);
 
-    $params = array(
+    $params = [
       'contact_id' => $contact['id'],
       'version' => $this->_apiversion,
-    );
+    ];
     $getContacts = civicrm_api('contact', 'get', $params);
     $result = $getContacts['values'][$contact['id']];
 
@@ -246,54 +246,54 @@ class api_v3_ContactTypeTest extends CiviUnitTestCase {
   function testContactUpdateNoSubtypeInvalid() {
 
     // check for Type:Individual
-    $contactParams = array(
+    $contactParams = [
       'first_name' => 'Anne',
       'last_name' => 'Grant',
       'contact_type' => 'Individual',
       'version' => $this->_apiversion,
-    );
+    ];
     $contact = civicrm_api('contact', 'create', $contactParams);
 
     // subype:sub_household
-    $updateParams = array(
+    $updateParams = [
       'first_name' => 'John',
       'last_name' => 'Grant',
       'contact_id' => $contact['id'],
       'contact_type' => 'Individual',
       'contact_sub_type' => $this->subTypeHousehold,
       'version' => $this->_apiversion,
-    );
+    ];
     $updateContact = civicrm_api('contact', 'create', $updateParams);
 
     $this->assertEquals($updateContact['is_error'], 1, "In line " . __LINE__);
-    $params = array(
+    $params = [
       'contact_id' => $contact['id'],
       'version' => $this->_apiversion,
-    );
+    ];
     civicrm_api('contact', 'delete', $params);
 
     // check for Type:Organization
-    $contactParams = array(
+    $contactParams = [
       'organization_name' => 'Compumentor',
       'contact_type' => 'Organization',
       'version' => $this->_apiversion,
-    );
+    ];
     $contact = civicrm_api('contact', 'create', $contactParams);
 
-    $updateParams = array(
+    $updateParams = [
       'organization_name' => 'Intel Arts',
       'contact_id' => $contact['id'],
       'contact_type' => 'Organization',
       'contact_sub_type' => $this->subTypeIndividual,
       'version' => $this->_apiversion,
-    );
+    ];
     $updateContact = civicrm_api('contact', 'create', $updateParams);
 
     $this->assertEquals($updateContact['is_error'], 1, "In line " . __LINE__);
-    $params = array(
+    $params = [
       'contact_id' => $contact['id'],
       'version' => $this->_apiversion,
-    );
+    ];
     civicrm_api('contact', 'delete', $params);
   }
 
@@ -303,27 +303,27 @@ class api_v3_ContactTypeTest extends CiviUnitTestCase {
      */
   function testContactUpdateSubtypeValid() {
 
-    $params = array(
+    $params = [
       'label' => 'sub2_individual',
       'name' => 'sub2_individual',
       // Individual
       'parent_id' => 1,
       'is_active' => 1,
-    );
+    ];
     $getSubtype = CRM_Contact_BAO_ContactType::add($params);
     $subtype = $params['name'];
 
     // check for Type:Individual subype:sub_individual
-    $contactParams = array(
+    $contactParams = [
       'first_name' => 'Anne',
       'last_name' => 'Grant',
       'contact_type' => 'Individual',
       'contact_sub_type' => $this->subTypeIndividual,
       'version' => $this->_apiversion,
-    );
+    ];
     $contact = civicrm_api('contact', 'create', $contactParams);
     // subype:sub2_individual
-    $updateParams = array(
+    $updateParams = [
       'id' => $contact['id'],
       'first_name' => 'John',
       'last_name' => 'Grant',
@@ -331,16 +331,16 @@ class api_v3_ContactTypeTest extends CiviUnitTestCase {
       'contact_type' => 'Individual',
       'contact_sub_type' => $subtype,
       'version' => $this->_apiversion,
-    );
+    ];
     $updateContact = civicrm_api('contact', 'create', $updateParams);
 
     $this->assertEquals($updateContact['is_error'], 0, "In line " . __LINE__);
     $this->assertEquals($updateContact['id'], $contact['id'], "In line " . __LINE__);
 
-    $params = array(
+    $params = [
       'contact_id' => $contact['id'],
       'version' => $this->_apiversion,
-    );
+    ];
     $getContacts = civicrm_api('contact', 'get', $params);
     $result = $getContacts['values'][$contact['id']];
 
@@ -351,42 +351,42 @@ class api_v3_ContactTypeTest extends CiviUnitTestCase {
     civicrm_api('contact', 'delete', $params);
 
 
-    $params = array(
+    $params = [
       'label' => 'sub2_organization',
       'name' => 'sub2_organization',
       // Organization
       'parent_id' => 3,
       'is_active' => 1,
-    );
+    ];
     $getSubtype = CRM_Contact_BAO_ContactType::add($params);
     $subtype = $params['name'];
 
     // check for Type:Organization subype:sub_organization
-    $contactParams = array(
+    $contactParams = [
       'organization_name' => 'Compumentor',
       'contact_type' => 'Organization',
       'contact_sub_type' => $this->subTypeOrganization,
       'version' => $this->_apiversion,
-    );
+    ];
     $contact = civicrm_api('contact', 'create', $contactParams);
 
     // subype:sub2_organization
-    $updateParams = array(
+    $updateParams = [
       'organization_name' => 'Intel Arts',
       'contact_id' => $contact['id'],
       'contact_type' => 'Organization',
       'contact_sub_type' => $subtype,
       'version' => $this->_apiversion,
-    );
+    ];
     $updateContact = civicrm_api('contact', 'create', $updateParams);
 
     $this->assertEquals($updateContact['is_error'], 0, "In line " . __LINE__);
     $this->assertEquals($updateContact['id'], $contact['id'], "In line " . __LINE__);
 
-    $params = array(
+    $params = [
       'contact_id' => $contact['id'],
       'version' => $this->_apiversion,
-    );
+    ];
     $getContacts = civicrm_api('contact', 'get', $params);
     $result = $getContacts['values'][$contact['id']];
 
@@ -402,55 +402,55 @@ class api_v3_ContactTypeTest extends CiviUnitTestCase {
   function testContactUpdateSubtypeInvalid() {
 
     // check for Type:Individual subtype:sub_individual
-    $contactParams = array(
+    $contactParams = [
       'first_name' => 'Anne',
       'last_name' => 'Grant',
       'contact_type' => 'Individual',
       'contact_sub_type' => $this->subTypeIndividual,
       'version' => $this->_apiversion,
-    );
+    ];
     $contact = civicrm_api('contact', 'create', $contactParams);
 
     // subype:sub_household
-    $updateParams = array(
+    $updateParams = [
       'first_name' => 'John',
       'last_name' => 'Grant',
       'contact_id' => $contact['id'],
       'contact_type' => 'Individual',
       'contact_sub_type' => $this->subTypeHousehold,
       'version' => $this->_apiversion,
-    );
+    ];
     $updateContact = civicrm_api('contact', 'create', $updateParams);
 
     $this->assertEquals($updateContact['is_error'], 1, "In line " . __LINE__);
-    $params = array(
+    $params = [
       'contact_id' => $contact['id'],
       'version' => $this->_apiversion,
-    );
+    ];
     civicrm_api('contact', 'delete', $params);
 
     // check for Type:Organization subtype:
-    $contactParams = array(
+    $contactParams = [
       'organization_name' => 'Compumentor',
       'contact_type' => 'Organization',
       'contact_sub_type' => $this->subTypeOrganization,
       'version' => $this->_apiversion,
-    );
+    ];
     $contact = civicrm_api('contact', 'create', $contactParams);
 
-    $updateParams = array(
+    $updateParams = [
       'organization_name' => 'Intel Arts',
       'contact_id' => $contact['id'],
       'contact_sub_type' => $this->subTypeIndividual,
       'version' => $this->_apiversion,
-    );
+    ];
     $updateContact = civicrm_api('contact', 'create', $updateParams);
 
     $this->assertEquals($updateContact['is_error'], 1, "In line " . __LINE__);
-    $params = array(
+    $params = [
       'contact_id' => $contact['id'],
       'version' => $this->_apiversion,
-    );
+    ];
     civicrm_api('contact', 'delete', $params);
   }
 }

@@ -52,11 +52,11 @@ class CRM_Utils_ICalendar {
    */
   static function formatText($text) {
     $text = html_entity_decode($text, ENT_QUOTES);
-    $text = str_replace(array('&nbsp;', '&nbsp\;'), '', $text);
+    $text = str_replace(['&nbsp;', '&nbsp\;'], '', $text);
     $text = str_replace("\"", "DQUOTE", $text);
     $text = str_replace("\\", "\\\\", $text);
-    $text = str_replace(array("\n", "\r"), "", $text);
-    $text = str_replace(array("<br>", "<br />", "</p>"), '\n ', $text);
+    $text = str_replace(["\n", "\r"], "", $text);
+    $text = str_replace(["<br>", "<br />", "</p>"], '\n ', $text);
     $text = strip_tags($text);
     $text = str_replace(",", "\,", $text);
     $text = str_replace(";", "\;", $text);
@@ -138,7 +138,7 @@ class CRM_Utils_ICalendar {
 
     $len = mb_strlen($str, 'UTF-8');
     if ($len <= $split_len) {
-      return array($str);
+      return [$str];
     }
 
     preg_match_all('/.{' . $split_len . '}|[^\x00]{1,' . $split_len . '}$/us', $str, $ar);

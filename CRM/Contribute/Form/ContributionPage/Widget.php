@@ -76,73 +76,73 @@ class CRM_Contribute_Form_ContributionPage_Widget extends CRM_Contribute_Form_Co
       'title'
     );
 
-    $this->_fields = array('title' => array(ts('Title'),
+    $this->_fields = ['title' => [ts('Title'),
         'text',
         FALSE,
         $title,
-      ),
-      'url_logo' => array(ts('URL to Logo Image'),
+      ],
+      'url_logo' => [ts('URL to Logo Image'),
         'text',
         FALSE,
         NULL,
-      ),
-      'button_title' => array(ts('Button Title'),
+      ],
+      'button_title' => [ts('Button Title'),
         'text',
         FALSE,
         ts('Contribute!'),
-      ),
-    );
+      ],
+    ];
 
-    $this->_colorFields = array('color_title' => array(ts('Title Text Color'),
+    $this->_colorFields = ['color_title' => [ts('Title Text Color'),
         'text',
         FALSE,
         '#555555',
-      ),
-      'color_bar' => array(ts('Progress Bar Color'),
+      ],
+      'color_bar' => [ts('Progress Bar Color'),
         'text',
         FALSE,
         '#76CC1E',
-      ),
-      'color_main_text' => array(ts('Additional Text Color'),
+      ],
+      'color_main_text' => [ts('Additional Text Color'),
         'text',
         FALSE,
         '#999',
-      ),
-      'color_main' => array(ts('Background Color'),
+      ],
+      'color_main' => [ts('Background Color'),
         'text',
         FALSE,
         '#EEF2EA',
-      ),
-      'color_main_bg' => array(ts('Background Color Top Area'),
+      ],
+      'color_main_bg' => [ts('Background Color Top Area'),
         'text',
         FALSE,
         '#FFFFFF',
-      ),
-      'color_bg' => array(ts('Border Color'),
+      ],
+      'color_bg' => [ts('Border Color'),
         'text',
         FALSE,
         '#EEF2EA',
-      ),
-      'color_about_link' => array(ts('Button Link Color'),
+      ],
+      'color_about_link' => [ts('Button Link Color'),
         'text',
         FALSE,
         '#FFFFFF',
-      ),
-      'color_button' => array(ts('Button Background Color'),
+      ],
+      'color_button' => [ts('Button Background Color'),
         'text',
         FALSE,
         '#78EB05',
-      ),
-      'color_homepage_link' => array(ts('Homepage Link Color'),
+      ],
+      'color_homepage_link' => [ts('Homepage Link Color'),
         'text',
         FALSE,
         '#555555',
-      ),
-    );
+      ],
+    ];
   }
 
   function setDefaultValues() {
-    $defaults = array();
+    $defaults = [];
     // check if there is a widget already created
     if ($this->_widget) {
       CRM_Core_DAO::storeValues($this->_widget, $defaults);
@@ -174,7 +174,7 @@ class CRM_Contribute_Form_ContributionPage_Widget extends CRM_Contribute_Form_Co
       'is_active',
       ts('Enable Widget?'),
       NULL,
-      array('onclick' => "widgetBlock(this)")
+      ['onclick' => "widgetBlock(this)"]
     );
 
     $this->addWysiwyg('about', ts('About'), $attributes['about']);
@@ -205,7 +205,7 @@ class CRM_Contribute_Form_ContributionPage_Widget extends CRM_Contribute_Form_Co
       ts('Save and Preview')
     );
     parent::buildQuickForm();
-    $this->addFormRule(array('CRM_Contribute_Form_ContributionPage_Widget', 'formRule'), $this);
+    $this->addFormRule(['CRM_Contribute_Form_ContributionPage_Widget', 'formRule'], $this);
   }
 
   /**
@@ -218,7 +218,7 @@ class CRM_Contribute_Form_ContributionPage_Widget extends CRM_Contribute_Form_Co
    * @static
    */
   public static function formRule($params, $files, $self) {
-    $errors = array();
+    $errors = [];
     if (CRM_Utils_Array::value('is_active', $params)) {
       if (!CRM_Utils_Array::value('title', $params)) {
         $errors['title'] = ts('Title is a required field.');
@@ -229,7 +229,7 @@ class CRM_Contribute_Form_ContributionPage_Widget extends CRM_Contribute_Form_Co
 
       foreach ($params as $key => $val) {
         if (substr($key, 0, 6) == 'color_' && !CRM_Utils_Array::value($key, $params)) {
-          $errors[$key] = ts('%1 is a required field.', array(1 => $self->_colorFields[$key][0]));
+          $errors[$key] = ts('%1 is a required field.', [1 => $self->_colorFields[$key][0]]);
         }
       }
     }

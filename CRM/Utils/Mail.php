@@ -103,11 +103,11 @@ class CRM_Utils_Mail {
     $embedImages = CRM_Utils_Array::value('images', $params);
 
     // CRM-6224
-    if (trim(CRM_Utils_String::htmlPurifier($htmlMessage, array('img'))) == '') {
+    if (trim(CRM_Utils_String::htmlPurifier($htmlMessage, ['img'])) == '') {
       $htmlMessage = FALSE;
     }
 
-    $headers = array();
+    $headers = [];
     if (self::checkRFC822Email($params['from'])) {
       $headers['From'] = $params['from'];
     }
@@ -139,7 +139,7 @@ class CRM_Utils_Mail {
     }
 
     //make sure we has to have space, CRM-6977
-    foreach (array('From', 'To', 'Cc', 'Bcc', 'Reply-To', 'Return-Path', 'Sender') as $fld) {
+    foreach (['From', 'To', 'Cc', 'Bcc', 'Reply-To', 'Return-Path', 'Sender'] as $fld) {
       $headers[$fld] = str_replace('"<', '" <', $headers[$fld]);
     }
 
@@ -188,7 +188,7 @@ class CRM_Utils_Mail {
     $message = &self::setMimeParams($msg);
     $headers = &$msg->headers($headers);
 
-    $to = array($params['toEmail']);
+    $to = [$params['toEmail']];
 
     //get emails from headers, since these are
     //combination of name and email addresses.
@@ -217,15 +217,15 @@ class CRM_Utils_Mail {
 
       // only send non-blocking when there is a callback
       if (isset($callback) && is_array($callback)) {
-        $sendParams = array(
+        $sendParams = [
           'headers' => $headers,
           'to' => $to,
           'body' => $message,
           'callback' => $callback,
-        );
+        ];
         // Non-blocking only make sense when there is fastcgi_finish_request
         if (php_sapi_name() === 'fpm-fcgi') {
-          CRM_Core_Config::addShutdownCallback('after', 'CRM_Utils_Mail::sendNonBlocking', array($mailer, $sendParams));
+          CRM_Core_Config::addShutdownCallback('after', 'CRM_Utils_Mail::sendNonBlocking', [$mailer, $sendParams]);
         }
         else {
           CRM_Utils_Mail::sendNonBlocking($mailer, $sendParams);
@@ -278,7 +278,7 @@ class CRM_Utils_Mail {
   }
 
   static function errorMessage($mailer, $result) {
-    $message = '<p>' . ts('An error occurred when CiviCRM attempted to send an email (via %1). If you received this error after submitting on online contribution or event registration - the transaction was completed, but we were unable to send the email receipt.', array(1 => 'SMTP')) . '</p>' . '<p>' . ts('The mail library returned the following error message:') . '<br /><span class="font-red"><strong>' . $result->getMessage() . '</strong></span></p>' . '<p>' . ts('This is probably related to a problem in your Outbound Email Settings (Administer CiviCRM &raquo; Global Settings &raquo; Outbound Email), OR the FROM email address specifically configured for your contribution page or event. Possible causes are:') . '</p>';
+    $message = '<p>' . ts('An error occurred when CiviCRM attempted to send an email (via %1). If you received this error after submitting on online contribution or event registration - the transaction was completed, but we were unable to send the email receipt.', [1 => 'SMTP']) . '</p>' . '<p>' . ts('The mail library returned the following error message:') . '<br /><span class="font-red"><strong>' . $result->getMessage() . '</strong></span></p>' . '<p>' . ts('This is probably related to a problem in your Outbound Email Settings (Administer CiviCRM &raquo; Global Settings &raquo; Outbound Email), OR the FROM email address specifically configured for your contribution page or event. Possible causes are:') . '</p>';
 
     if (is_a($mailer, 'Mail_smtp')) {
       $message .= '<ul>' . '<li>' . ts('Your SMTP Username or Password are incorrect.') . '</li>' . '<li>' . ts('Your SMTP Server (machine) name is incorrect.') . '</li>' . '<li>' . ts('You need to use a Port other than the default port 25 in your environment.') . '</li>' . '<li>' . ts('Your SMTP server is just not responding right now (it is down for some reason).') . '</li>';
@@ -287,7 +287,7 @@ class CRM_Utils_Mail {
       $message .= '<ul>' . '<li>' . ts('Your Sendmail path is incorrect.') . '</li>' . '<li>' . ts('Your Sendmail argument is incorrect.') . '</li>';
     }
 
-    $message .= '<li>' . ts('The FROM Email Address configured for this feature may not be a valid sender based on your email service provider rules.') . '</li>' . '</ul>' . '<p>' . ts('Check <a href="%1">this page</a> for more information.', array(1 => CRM_Utils_System::docURL2('Outbound Email (SMTP)', TRUE))) . '</p>';
+    $message .= '<li>' . ts('The FROM Email Address configured for this feature may not be a valid sender based on your email service provider rules.') . '</li>' . '</ul>' . '<p>' . ts('Check <a href="%1">this page</a> for more information.', [1 => CRM_Utils_System::docURL2('Outbound Email (SMTP)', TRUE)]) . '</p>';
 
     return $message;
   }
@@ -384,14 +384,14 @@ class CRM_Utils_Mail {
     static $mimeParams = NULL;
     if (!$params) {
       if (!$mimeParams) {
-        $mimeParams = array(
+        $mimeParams = [
           'head_encoding' => 'base64',
           'text_encoding' => 'quoted-printable',
           'html_encoding' => 'quoted-printable',
           'head_charset' => 'utf-8',
           'text_charset' => 'utf-8',
           'html_charset' => 'utf-8',
-        );
+        ];
       }
       $params = $mimeParams;
     }
@@ -405,7 +405,7 @@ class CRM_Utils_Mail {
    * @return string
    */
   public static function checkEmails($mails) {
-    $mailArray = array();
+    $mailArray = [];
     if (is_string($mails)) {
       preg_match_all('/(?:"[^"]*"|[^,])+/u', $mails, $matches);
       if (!empty($matches[0])) {
@@ -415,7 +415,7 @@ class CRM_Utils_Mail {
     elseif (is_array($mails)) {
       $mailArray = $mails;
     }
-    $checked = array();
+    $checked = [];
     foreach($mailArray as $address) {
       $address = trim($address);
       if (strstr($address, '<') && strstr($address, '>')) {
@@ -584,7 +584,7 @@ class CRM_Utils_Mail {
     if (!empty($records)) {
       return $records;
     }
-    return array();
+    return [];
   }
 
   /**
@@ -619,7 +619,7 @@ class CRM_Utils_Mail {
 
     // skip check when there were no selector
     if (empty($civicrm_conf['mailing_dkim_domain']) || empty($civicrm_conf['mailing_dkim_selector'])) {
-      return array();
+      return [];
     }
 
 
@@ -634,7 +634,7 @@ class CRM_Utils_Mail {
     if (!empty($records)) {
       return $records;
     }
-    return array();
+    return [];
   }
 
   /**
@@ -675,7 +675,7 @@ class CRM_Utils_Mail {
     if ($saveFile) {
       $confPath = CRM_Utils_System::cmsRootPath().DIRECTORY_SEPARATOR.CRM_Utils_System::confPath().DIRECTORY_SEPARATOR;
       $savePath = $confPath.basename($saveFile);
-      $existsDomains = array();
+      $existsDomains = [];
       if (file_exists($savePath)) {
         $existsList = file_get_contents($savePath);
         $existsDomains = explode("\n", $existsList);
@@ -724,7 +724,7 @@ class CRM_Utils_Mail {
       }
       return $verifiedDomains;
     }
-    return array();
+    return [];
   }
 
   /**
@@ -757,7 +757,7 @@ class CRM_Utils_Mail {
         return $sanitized;
       }
       $subs = explode('.', $domain);
-      $sanitizedDomain = array();
+      $sanitizedDomain = [];
       foreach($subs as $sub) {
         $sub = trim($sub, " \t\n\r\0\x0B-" );
         $sub = preg_replace('/[^a-z0-9-]+/i', '', $sub);

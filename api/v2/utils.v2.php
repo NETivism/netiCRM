@@ -48,8 +48,8 @@ function _civicrm_initialize() {
   $config = CRM_Core_Config::singleton();
   }
 
-function civicrm_verify_mandatory(&$params, $daoName = NULL, $keys = array(
-  )) {
+function civicrm_verify_mandatory(&$params, $daoName = NULL, $keys = [
+  ]) {
   if (!is_array($params)) {
     throw new Exception('Input parameters is not an array');
   }
@@ -84,7 +84,7 @@ function civicrm_create_error($msg, $data = NULL) {
  */
 function civicrm_create_success($result = 1) {
 
-  $values = array();
+  $values = [];
 
   $values['is_error'] = 0;
   $values['result'] = $result;
@@ -147,7 +147,7 @@ function _civicrm_store_values(&$fields, &$params, &$values) {
  */
 function _civicrm_object_to_array(&$dao, &$values) {
   $tmpFields = $dao->fields();
-  $fields = array();
+  $fields = [];
   //rebuild $fields array to fix unique name of the fields
   foreach ($tmpFields as $key => $val) {
     $fields[$val["name"]] = $val;
@@ -195,7 +195,7 @@ function _civicrm_add_formatted_param(&$values, &$params) {
   static $fields = NULL;
 
   if ($fields == NULL) {
-    $fields = array();
+    $fields = [];
   }
 
   //first add core contact values since for other Civi modules they are not added
@@ -205,7 +205,7 @@ function _civicrm_add_formatted_param(&$values, &$params) {
 
   if (isset($values['individual_prefix'])) {
     if (CRM_Utils_Array::value('prefix_id', $params)) {
-      $prefixes         = array();
+      $prefixes         = [];
       $prefixes         = CRM_Core_PseudoConstant::individualPrefix();
       $params['prefix'] = $prefixes[$params['prefix_id']];
     }
@@ -217,7 +217,7 @@ function _civicrm_add_formatted_param(&$values, &$params) {
 
   if (isset($values['individual_suffix'])) {
     if (CRM_Utils_Array::value('suffix_id', $params)) {
-      $suffixes         = array();
+      $suffixes         = [];
       $suffixes         = CRM_Core_PseudoConstant::individualSuffix();
       $params['suffix'] = $suffixes[$params['suffix_id']];
     }
@@ -230,10 +230,10 @@ function _civicrm_add_formatted_param(&$values, &$params) {
   //CRM-4575
   if (isset($values['email_greeting'])) {
     if (CRM_Utils_Array::value('email_greeting_id', $params)) {
-      $emailGreetings = array();
-      $emailGreetingFilter = array('contact_type' => CRM_Utils_Array::value('contact_type', $params),
+      $emailGreetings = [];
+      $emailGreetingFilter = ['contact_type' => CRM_Utils_Array::value('contact_type', $params),
         'greeting_type' => 'email_greeting',
-      );
+      ];
       $emailGreetings = CRM_Core_PseudoConstant::greeting($emailGreetingFilter);
       $params['email_greeting'] = $emailGreetings[$params['email_greeting_id']];
     }
@@ -246,10 +246,10 @@ function _civicrm_add_formatted_param(&$values, &$params) {
 
   if (isset($values['postal_greeting'])) {
     if (CRM_Utils_Array::value('postal_greeting_id', $params)) {
-      $postalGreetings = array();
-      $postalGreetingFilter = array('contact_type' => CRM_Utils_Array::value('contact_type', $params),
+      $postalGreetings = [];
+      $postalGreetingFilter = ['contact_type' => CRM_Utils_Array::value('contact_type', $params),
         'greeting_type' => 'postal_greeting',
-      );
+      ];
       $postalGreetings = CRM_Core_PseudoConstant::greeting($postalGreetingFilter);
       $params['postal_greeting'] = $postalGreetings[$params['postal_greeting_id']];
     }
@@ -261,10 +261,10 @@ function _civicrm_add_formatted_param(&$values, &$params) {
 
   if (isset($values['addressee'])) {
     if (CRM_Utils_Array::value('addressee_id', $params)) {
-      $addressee = array();
-      $addresseeFilter = array('contact_type' => CRM_Utils_Array::value('contact_type', $params),
+      $addressee = [];
+      $addresseeFilter = ['contact_type' => CRM_Utils_Array::value('contact_type', $params),
         'greeting_type' => 'addressee',
-      );
+      ];
       $addressee = CRM_Core_PseudoConstant::addressee($addresseeFilter);
       $params['addressee'] = $addressee[$params['addressee_id']];
     }
@@ -276,7 +276,7 @@ function _civicrm_add_formatted_param(&$values, &$params) {
 
   if (isset($values['gender'])) {
     if (CRM_Utils_Array::value('gender_id', $params)) {
-      $genders          = array();
+      $genders          = [];
       $genders          = CRM_Core_PseudoConstant::gender();
       $params['gender'] = $genders[$params['gender_id']];
     }
@@ -287,9 +287,9 @@ function _civicrm_add_formatted_param(&$values, &$params) {
   }
 
   if (isset($values['preferred_communication_method'])) {
-    $comm      = array();
-    $preffComm = array();
-    $pcm       = array();
+    $comm      = [];
+    $preffComm = [];
+    $pcm       = [];
     $pcm       = array_change_key_case(array_flip(CRM_Core_PseudoConstant::pcm()), CASE_LOWER);
 
     $preffComm = explode(',', $values['preferred_communication_method']);
@@ -314,7 +314,7 @@ function _civicrm_add_formatted_param(&$values, &$params) {
     if (!CRM_Utils_Array::arrayKeyExists('website', $params) ||
       !is_array($params['website'])
     ) {
-      $params['website'] = array();
+      $params['website'] = [];
     }
 
     $websiteCount = count($params['website']);
@@ -336,11 +336,11 @@ function _civicrm_add_formatted_param(&$values, &$params) {
 
 
     if (!isset($params['note'])) {
-      $params['note'] = array();
+      $params['note'] = [];
     }
     $noteBlock = count($params['note']) + 1;
 
-    $params['note'][$noteBlock] = array();
+    $params['note'][$noteBlock] = [];
     if (!isset($fields['Note'])) {
       $fields['Note'] = CRM_Core_DAO_Note::fields();
     }
@@ -392,11 +392,11 @@ function _civicrm_add_formatted_param(&$values, &$params) {
 function _civicrm_add_formatted_location_blocks(&$values, &$params) {
   static $fields = NULL;
   if ($fields == NULL) {
-    $fields = array();
+    $fields = [];
   }
 
-  foreach (array(
-    'Phone', 'Email', 'IM', 'OpenID') as $block) {
+  foreach ([
+    'Phone', 'Email', 'IM', 'OpenID'] as $block) {
     $name = strtolower($block);
     if (!CRM_Utils_Array::arrayKeyExists($name, $values)) {
       continue;
@@ -404,7 +404,7 @@ function _civicrm_add_formatted_location_blocks(&$values, &$params) {
 
     // block present in value array.
     if (!CRM_Utils_Array::arrayKeyExists($name, $params) || !is_array($params[$name])) {
-      $params[$name] = array();
+      $params[$name] = [];
     }
 
     if (!CRM_Utils_Array::arrayKeyExists($block, $fields)) {
@@ -433,7 +433,7 @@ function _civicrm_add_formatted_location_blocks(&$values, &$params) {
 
   // handle address fields.
   if (!CRM_Utils_Array::arrayKeyExists('address', $params) || !is_array($params['address'])) {
-    $params['address'] = array();
+    $params['address'] = [];
   }
 
   $addressCnt = 1;
@@ -453,16 +453,16 @@ function _civicrm_add_formatted_location_blocks(&$values, &$params) {
   }
   _civicrm_store_values($fields['Address'], $values, $params['address'][$addressCnt]);
 
-  $addressFields = array(
+  $addressFields = [
     'county', 'country', 'state_province',
     'supplemental_address_1', 'supplemental_address_2',
     'StateProvince.name',
-  );
+  ];
 
   foreach ($addressFields as $field) {
     if (CRM_Utils_Array::arrayKeyExists($field, $values)) {
       if (!CRM_Utils_Array::arrayKeyExists('address', $params)) {
-        $params['address'] = array();
+        $params['address'] = [];
       }
       $params['address'][$addressCnt][$field] = $values[$field];
     }
@@ -581,7 +581,7 @@ function _civicrm_duplicate_formatted_contact(&$params,
     $ids = CRM_Dedupe_Finder::dupesByParams($dedupeParams,
       $params['contact_type'],
       'Strict',
-      array(),
+      [],
       $dedupeRuleGroupID
     );
 
@@ -660,7 +660,7 @@ function _civicrm_validate_formatted_contact(&$params) {
  * @param string $entityId ID of entity per $extends
  */
 function _civicrm_custom_format_params(&$params, &$values, $extends, $entityId = NULL) {
-  $values['custom'] = array();
+  $values['custom'] = [];
 
   require_once 'CRM/Core/BAO/CustomField.php';
   foreach ($params as $key => $value) {
@@ -705,7 +705,7 @@ function _civicrm_check_required_fields(&$params, $daoName, $throwException = FA
   $dao = new $daoName();
   $fields = $dao->fields();
 
-  $missing = array();
+  $missing = [];
   foreach ($fields as $k => $v) {
     if ($k == 'id') {
       continue;
@@ -763,7 +763,7 @@ function _civicrm_participant_formatted_param(&$params, &$values, $create = FALS
           return civicrm_create_error("contact_id not valid: $value");
         }
         $dao     = new CRM_Core_DAO();
-        $qParams = array();
+        $qParams = [];
         $svq     = $dao->singleValueQuery("SELECT id FROM civicrm_contact WHERE id = $value",
           $qParams
         );
@@ -790,7 +790,7 @@ function _civicrm_participant_formatted_param(&$params, &$values, $create = FALS
           return civicrm_create_error("Event ID is not valid: $value");
         }
         $dao     = new CRM_Core_DAO();
-        $qParams = array();
+        $qParams = [];
         $svq     = $dao->singleValueQuery("SELECT id FROM civicrm_event WHERE id = $value",
           $qParams
         );
@@ -844,7 +844,7 @@ function _civicrm_participant_formatted_param(&$params, &$values, $create = FALS
     // status_id and source. So, if $values contains
     // participant_register_date, participant_status_id or participant_source,
     // convert it to register_date, status_id or source
-    $changes = array(
+    $changes = [
       'participant_register_date' => 'register_date',
       'participant_source' => 'source',
       'participant_status_id' => 'status_id',
@@ -852,7 +852,7 @@ function _civicrm_participant_formatted_param(&$params, &$values, $create = FALS
       'participant_fee_level' => 'fee_level',
       'participant_fee_amount' => 'fee_amount',
       'participant_id' => 'id',
-    );
+    ];
 
     foreach ($changes as $orgVal => $changeVal) {
       if (isset($values[$orgVal])) {
@@ -915,7 +915,7 @@ function _civicrm_contribute_formatted_param(&$params, &$values, $create = FALSE
           return civicrm_create_error("contact_id not valid: $value");
         }
         $dao     = new CRM_Core_DAO();
-        $qParams = array();
+        $qParams = [];
         $svq     = $dao->singleValueQuery("SELECT id FROM civicrm_contact WHERE id = $value",
           $qParams
         );
@@ -1211,7 +1211,7 @@ function _civicrm_contribute_formatted_param(&$params, &$values, $create = FALSE
         break;
       case 'pcp_page':
         if (empty($values['pcp_id']) && !empty($value)) {
-          $dao = CRM_Core_DAO::executeQuery("SELECT id FROM civicrm_pcp WHERE title = %1", array(1 => array($value, 'String')));
+          $dao = CRM_Core_DAO::executeQuery("SELECT id FROM civicrm_pcp WHERE title = %1", [1 => [$value, 'String']]);
           $dao->fetch();
           if ($dao->N > 1) {
             $err = civicrm_create_error("Multiple PCP page found by this title: $value", 'pcp_creator');
@@ -1274,7 +1274,7 @@ function _civicrm_contribute_formatted_param(&$params, &$values, $create = FALSE
             }
           }
           if (!empty($values['pcp_creator_id'])) {
-            $dao = CRM_Core_DAO::executeQuery("SELECT id FROM civicrm_pcp WHERE contact_id = %1", array(1 => array($values['pcp_creator_id'], 'Integer')));
+            $dao = CRM_Core_DAO::executeQuery("SELECT id FROM civicrm_pcp WHERE contact_id = %1", [1 => [$values['pcp_creator_id'], 'Integer']]);
             $dao->fetch();
             if ($dao->N > 1) {
               // multiple pcp found
@@ -1310,7 +1310,7 @@ function _civicrm_contribute_formatted_param(&$params, &$values, $create = FALSE
   if ($create) {
     // CRM_Contribute_BAO_Contribution::add() handles contribution_source
     // So, if $values contains contribution_source, convert it to source
-    $changes = array('contribution_source' => 'source');
+    $changes = ['contribution_source' => 'source'];
 
     foreach ($changes as $orgVal => $changeVal) {
       if (isset($values[$orgVal])) {
@@ -1363,7 +1363,7 @@ function _civicrm_membership_formatted_param(&$params, &$values, $create = FALSE
           return civicrm_create_error("contact_id not valid: $value");
         }
         $dao     = new CRM_Core_DAO();
-        $qParams = array();
+        $qParams = [];
         $svq     = $dao->singleValueQuery("SELECT id FROM civicrm_contact WHERE id = $value",
           $qParams
         );
@@ -1419,11 +1419,11 @@ function _civicrm_membership_formatted_param(&$params, &$values, $create = FALSE
     // membership_end_date and membership_source. So, if $values contains
     // membership_start_date, membership_end_date  or membership_source,
     // convert it to start_date, end_date or source
-    $changes = array(
+    $changes = [
       'membership_start_date' => 'start_date',
       'membership_end_date' => 'end_date',
       'membership_source' => 'source',
-    );
+    ];
 
     foreach ($changes as $orgVal => $changeVal) {
       if (isset($values[$orgVal])) {
@@ -1504,7 +1504,7 @@ function civicrm_check_contact_dedupe(&$params, $dedupeRuleGroupID = NULL) {
   require_once 'CRM/Contact/BAO/Query.php';
   $locationFields = CRM_Contact_BAO_Query::$_locationSpecificFields;
 
-  $contactFormatted = array();
+  $contactFormatted = [];
   foreach ($params as $key => $field) {
     if ($field == NULL || $field === '') {
       continue;
@@ -1532,7 +1532,7 @@ function civicrm_check_contact_dedupe(&$params, $dedupeRuleGroupID = NULL) {
       continue;
     }
 
-    $value = array($key => $field);
+    $value = [$key => $field];
 
     // check if location related field, then we need to add primary location type
     if (in_array($key, $locationFields)) {
@@ -1566,11 +1566,11 @@ function civicrm_api_check_permission($api, $params, $throw = FALSE) {
   }
 
   require_once 'CRM/Core/Permission.php';
-  $requirements = array(
-    'civicrm_contact_create' => array('access CiviCRM', 'add contacts'),
-    'civicrm_contact_update' => array('access CiviCRM', 'add contacts'),
-    'civicrm_event_create' => array('access CiviEvent'),
-  );
+  $requirements = [
+    'civicrm_contact_create' => ['access CiviCRM', 'add contacts'],
+    'civicrm_contact_update' => ['access CiviCRM', 'add contacts'],
+    'civicrm_event_create' => ['access CiviEvent'],
+  ];
   foreach ($requirements[$api] as $perm) {
     if (!CRM_Core_Permission::check($perm)) {
       if ($throw) {
@@ -1598,7 +1598,7 @@ function _civicrm_generic_handle_custom_data($key, $value, &$values, &$customFie
     if ($type == 'CheckBox' || $type == 'Multi-Select') {
       $mulValues    = explode(',', $value);
       $customOption = CRM_Core_BAO_CustomOption::getCustomOption($customFieldID, TRUE);
-      $values[$key] = array();
+      $values[$key] = [];
       foreach ($mulValues as $v1) {
         foreach ($customOption as $customValueID => $customLabel) {
           $customValue = $customLabel['value'];
@@ -1648,7 +1648,7 @@ function _civicrm_add_custom_formatted_param($customFieldID, $key, $field, &$for
 
       $mulValues       = explode(',', $field);
       $customOption    = CRM_Core_BAO_CustomOption::getCustomOption($customFieldID, TRUE);
-      $formatted[$key] = array();
+      $formatted[$key] = [];
       foreach ($mulValues as $v1) {
         foreach ($customOption as $v2) {
           if ((strtolower($v2['label']) == strtolower(trim($v1))) ||
@@ -1683,7 +1683,7 @@ function _civicrm_add_custom_formatted_param($customFieldID, $key, $field, &$for
       $mulValues       = explode(',', $field);
       $stateAbbr       = CRM_Core_PseudoConstant::stateProvinceAbbreviation();
       $stateName       = CRM_Core_PseudoConstant::stateProvince();
-      $formatted[$key] = $stateValues = array();
+      $formatted[$key] = $stateValues = [];
       foreach ($mulValues as $values) {
         if ($val = CRM_Utils_Array::key($values, $stateAbbr)) {
           $formatted[$key][] = $val;
@@ -1699,7 +1699,7 @@ function _civicrm_add_custom_formatted_param($customFieldID, $key, $field, &$for
       $config          = CRM_Core_Config::singleton();
       $limitCodes      = $config->countryLimit();
       $mulValues       = explode(',', $field);
-      $formatted[$key] = array();
+      $formatted[$key] = [];
       CRM_Core_PseudoConstant::populate($countryNames, 'CRM_Core_DAO_Country', TRUE, 'name', 'is_active');
       CRM_Core_PseudoConstant::populate($countryIsoCodes, 'CRM_Core_DAO_Country', TRUE, 'iso_code');
       foreach ($mulValues as $values) {

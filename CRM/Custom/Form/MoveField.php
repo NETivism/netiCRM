@@ -98,7 +98,7 @@ class CRM_Custom_Form_MoveField extends CRM_Core_Form {
     );
 
     CRM_Utils_System::setTitle(ts('Custom Field Move: %1',
-        array(1 => $this->_label)
+        [1 => $this->_label]
       ));
   }
 
@@ -116,7 +116,7 @@ class CRM_Custom_Form_MoveField extends CRM_Core_Form {
        return CRM_Core_Error::statusBounce(ts('You need more than one custom group to move fields'));
     }
 
-    $customGroup = array('' => ts('- select -')) + $customGroup;
+    $customGroup = ['' => ts('- select -')] + $customGroup;
     $this->add('select',
       'dst_group_id',
       ts('Destination Custom Group'),
@@ -125,22 +125,22 @@ class CRM_Custom_Form_MoveField extends CRM_Core_Form {
     );
     $this->add('checkbox', 'is_copy', ts('Copy?'));
 
-    $this->addButtons(array(
-        array('type' => 'next',
+    $this->addButtons([
+        ['type' => 'next',
           'name' => ts('Move Custom Field'),
           'isDefault' => TRUE,
-        ),
-        array('type' => 'cancel',
+        ],
+        ['type' => 'cancel',
           'name' => ts('Cancel'),
-        ),
-      )
+        ],
+      ]
     );
 
-    $this->addFormRule(array('CRM_Custom_Form_MoveField', 'formRule'), $this);
+    $this->addFormRule(['CRM_Custom_Form_MoveField', 'formRule'], $this);
   }
 
   static function formRule($fields, $files, $self) {
-    $errors = array();
+    $errors = [];
 
     $query = "
 SELECT id
@@ -148,9 +148,9 @@ FROM   civicrm_custom_field
 WHERE  custom_group_id = %1
 AND    label = %2
 ";
-    $params = array(1 => array($fields['dst_group_id'], 'Integer'),
-      2 => array($self->_label, 'String'),
-    );
+    $params = [1 => [$fields['dst_group_id'], 'Integer'],
+      2 => [$self->_label, 'String'],
+    ];
     $count = CRM_Core_DAO::singleValueQuery($query, $params);
     if ($count > 0) {
       $errors['dst_group_id'] = ts('A field of the same label exists in the destination group');
@@ -179,12 +179,12 @@ SELECT extends
 FROM   civicrm_custom_group
 WHERE  id IN ( %1, %2 )
 ";
-      $params = array(1 => array($self->_srcGID, 'Integer'),
-        2 => array($fields['dst_group_id'], 'Integer'),
-      );
+      $params = [1 => [$self->_srcGID, 'Integer'],
+        2 => [$fields['dst_group_id'], 'Integer'],
+      ];
 
       $dao = CRM_Core_DAO::executeQuery($query, $params);
-      $extends = array();
+      $extends = [];
       while ($dao->fetch()) {
         $extends[] = $dao->extends;
       }

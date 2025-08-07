@@ -71,7 +71,7 @@ class CRM_Campaign_Selector_Search extends CRM_Core_Selector_Base implements CRM
    * @var array
    * @static
    */
-  static $_properties = array('contact_id',
+  static $_properties = ['contact_id',
     'sort_name',
     'street_unit',
     'street_name',
@@ -87,7 +87,7 @@ class CRM_Campaign_Selector_Search extends CRM_Core_Selector_Base implements CRM
     'survey_activity_id',
     'survey_activity_target_id',
     'survey_activity_target_contact_id',
-  );
+  ];
 
   /**
    * are we restricting ourselves to a single contact
@@ -194,7 +194,7 @@ class CRM_Campaign_Selector_Search extends CRM_Core_Selector_Base implements CRM
    *
    */
   static function &links() {
-    return self::$_links = array();
+    return self::$_links = [];
   }
 
   /**
@@ -251,10 +251,10 @@ class CRM_Campaign_Selector_Search extends CRM_Core_Selector_Base implements CRM
 
 
     // process the result of the query
-    $rows = array();
+    $rows = [];
 
     While ($result->fetch()) {
-      $row = array();
+      $row = [];
       // the columns we are interested in
       foreach (self::$_properties as $property) {
         if (property_exists($result, $property)) {
@@ -290,34 +290,34 @@ class CRM_Campaign_Selector_Search extends CRM_Core_Selector_Base implements CRM
    * @access public
    */
   public function &getColumnHeaders($action = NULL, $output = NULL) {
-    self::$_columnHeaders = array();
+    self::$_columnHeaders = [];
 
     if (!$this->_single) {
-      $contactDetails = array(
-        array('name' => ts('Contact Name'),
+      $contactDetails = [
+        ['name' => ts('Contact Name'),
           'sort' => 'sort_name',
           'direction' => CRM_Utils_Sort::ASCENDING,
-        ),
-        array('name' => ts('Street Number'),
+        ],
+        ['name' => ts('Street Number'),
           'sort' => 'street_number',
-        ),
-        array('name' => ts('Street Name'),
+        ],
+        ['name' => ts('Street Name'),
           'sort' => 'street_name',
-        ),
-        array('name' => ts('Street Address')),
-        array('name' => ts('City'),
+        ],
+        ['name' => ts('Street Address')],
+        ['name' => ts('City'),
           'sort' => 'city',
-        ),
-        array('name' => ts('Postal Code'),
+        ],
+        ['name' => ts('Postal Code'),
           'sort' => 'postal_code',
-        ),
-        array('name' => ts('State'),
+        ],
+        ['name' => ts('State'),
           'sort' => 'state_province_name',
-        ),
-        array('name' => ts('Country')),
-        array('name' => ts('Email')),
-        array('name' => ts('Phone')),
-      );
+        ],
+        ['name' => ts('Country')],
+        ['name' => ts('Email')],
+        ['name' => ts('Phone')],
+      ];
       self::$_columnHeaders = array_merge($contactDetails, self::$_columnHeaders);
     }
 

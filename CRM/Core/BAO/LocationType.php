@@ -99,8 +99,8 @@ class CRM_Core_BAO_LocationType extends CRM_Core_DAO_LocationType {
    */
   static function &getDefault() {
     if (self::$_defaultLocationType == NULL) {
-      $params = array('is_default' => 1);
-      $defaults = array();
+      $params = ['is_default' => 1];
+      $defaults = [];
       self::$_defaultLocationType = self::retrieve($params, $defaults);
     }
     return self::$_defaultLocationType;
@@ -115,7 +115,7 @@ class CRM_Core_BAO_LocationType extends CRM_Core_DAO_LocationType {
    * @static
    */
   static function del($locationTypeId) {
-    $entity = array('address', 'phone', 'email', 'im');
+    $entity = ['address', 'phone', 'email', 'im'];
     //check dependencies
     foreach ($entity as $key) {
       if ($key == 'im') {

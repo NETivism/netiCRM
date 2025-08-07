@@ -77,7 +77,7 @@ class CRM_Core_BAO_Address extends CRM_Core_DAO_Address {
       return;
     }
 
-    $addresses = array();
+    $addresses = [];
     $contactId = NULL;
 
     $updateBlankLocInfo = CRM_Utils_Array::value('updateBlankLocInfo', $params, FALSE);
@@ -88,14 +88,14 @@ class CRM_Core_BAO_Address extends CRM_Core_DAO_Address {
     }
     else {
       // get all address from location block
-      $entityElements = array('entity_table' => $params['entity_table'],
+      $entityElements = ['entity_table' => $params['entity_table'],
         'entity_id' => $params['entity_id'],
-      );
+      ];
       $addresses = self::allEntityAddress($entityElements);
     }
 
     $isPrimary = $isBilling = TRUE;
-    $blocks = array();
+    $blocks = [];
 
     foreach ($params['address'] as $key => $value) {
       if (!is_array($value)) {
@@ -120,7 +120,7 @@ class CRM_Core_BAO_Address extends CRM_Core_DAO_Address {
       // $updateBlankLocInfo will help take appropriate decision. CRM-5969
       if (isset($value['id']) && !$addressExists && $updateBlankLocInfo) {
         //delete the existing record
-        CRM_Core_BAO_Block::blockDelete('Address', array('id' => $value['id']));
+        CRM_Core_BAO_Block::blockDelete('Address', ['id' => $value['id']]);
         continue;
       }
       elseif (!$addressExists) {
@@ -215,14 +215,14 @@ class CRM_Core_BAO_Address extends CRM_Core_DAO_Address {
     if (CRM_Utils_Array::value('billing_street_address', $params)) {
       //Check address is comming from online contribution / registration page
       //Fixed :CRM-5076
-      $billing = array('street_address' => 'billing_street_address',
+      $billing = ['street_address' => 'billing_street_address',
         'city' => 'billing_city',
         'postal_code' => 'billing_postal_code',
         'state_province' => 'billing_state_province',
         'state_province_id' => 'billing_state_province_id',
         'country' => 'billing_country',
         'country_id' => 'billing_country_id',
-      );
+      ];
 
       foreach ($billing as $key => $val) {
         if ($value = CRM_Utils_Array::value($val, $params)) {
@@ -384,7 +384,7 @@ class CRM_Core_BAO_Address extends CRM_Core_DAO_Address {
 
     $config = CRM_Core_Config::singleton();
     foreach ($params as $name => $value) {
-      if (in_array($name, array('is_primary', 'location_type_id', 'id', 'contact_id', 'is_billing', 'display', 'master_id'))) {
+      if (in_array($name, ['is_primary', 'location_type_id', 'id', 'contact_id', 'is_billing', 'display', 'master_id'])) {
         continue;
       }
       elseif (!CRM_Utils_System::isNull($value)) {
@@ -437,14 +437,14 @@ class CRM_Core_BAO_Address extends CRM_Core_DAO_Address {
     if (empty($entityBlock)) {
       return NULL;
     }
-    $addresses = array();
+    $addresses = [];
     $address = new CRM_Core_BAO_Address();
 
     if (!CRM_Utils_Array::value('entity_table', $entityBlock)) {
       $address->$fieldName = CRM_Utils_Array::value($fieldName, $entityBlock);
     }
     else {
-      $addressIds = array();
+      $addressIds = [];
       $addressIds = self::allEntityAddress($entityBlock);
 
       if (!empty($addressIds[1])) {
@@ -463,12 +463,12 @@ class CRM_Core_BAO_Address extends CRM_Core_DAO_Address {
     while ($address->fetch()) {
       // deprecate reference.
       if ($count > 1) {
-        foreach (array('state', 'state_name', 'country', 'world_region') as $fld) {
+        foreach (['state', 'state_name', 'country', 'world_region'] as $fld) {
           if (isset($address->$fld))unset($address->$fld);
         }
       }
       $stree = $address->street_address;
-      $values = array();
+      $values = [];
       CRM_Core_DAO::storeValues($address, $values);
 
       // add state and country information: CRM-369
@@ -527,7 +527,7 @@ class CRM_Core_BAO_Address extends CRM_Core_DAO_Address {
    */
   function addDisplay($microformat = FALSE) {
 
-    $fields = array(
+    $fields = [
       // added this for CRM 1200
       'address_id' => $this->id,
       // CRM-4003
@@ -536,13 +536,13 @@ class CRM_Core_BAO_Address extends CRM_Core_DAO_Address {
       'supplemental_address_1' => $this->supplemental_address_1,
       'supplemental_address_2' => $this->supplemental_address_2,
       'city' => $this->city,
-      'state_province_name' => isset($this->state_name) ? $this->state_name : "",
-      'state_province' => isset($this->state) ? $this->state : "",
-      'postal_code' => isset($this->postal_code) ? $this->postal_code : "",
-      'postal_code_suffix' => isset($this->postal_code_suffix) ? $this->postal_code_suffix : "",
-      'country' => isset($this->country) ? $this->country : "",
-      'world_region' => isset($this->world_region) ? $this->world_region : "",
-    );
+      'state_province_name' => $this->state_name ?? "",
+      'state_province' => $this->state ?? "",
+      'postal_code' => $this->postal_code ?? "",
+      'postal_code_suffix' => $this->postal_code_suffix ?? "",
+      'country' => $this->country ?? "",
+      'world_region' => $this->world_region ?? "",
+    ];
 
     if (isset($this->county_id) && $this->county_id) {
       $fields['county'] = CRM_Core_PseudoConstant::county($this->county_id);
@@ -583,9 +583,9 @@ SELECT civicrm_address.id as address_id, civicrm_address.location_type_id as loc
 FROM civicrm_contact, civicrm_address 
 WHERE civicrm_address.contact_id = civicrm_contact.id AND civicrm_contact.id = %1
 ORDER BY civicrm_address.is_primary DESC, address_id ASC";
-    $params = array(1 => array($id, 'Integer'));
+    $params = [1 => [$id, 'Integer']];
 
-    $addresses = array();
+    $addresses = [];
     $dao = &CRM_Core_DAO::executeQuery($query, $params);
     $count = 1;
     while ($dao->fetch()) {
@@ -626,8 +626,8 @@ WHERE ev.id = %1
   AND ltype.id = civicrm_address.location_type_id
 ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC, address_id ASC ";
 
-    $params = array(1 => array($entityId, 'Integer'));
-    $addresses = array();
+    $params = [1 => [$entityId, 'Integer']];
+    $addresses = [];
     $dao = &CRM_Core_DAO::executeQuery($sql, $params);
     $locationCount = 1;
     while ($dao->fetch()) {
@@ -647,7 +647,7 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
 
     $config = CRM_Core_Config::singleton();
     if (!isset($config->stateCountryMap)) {
-      $config->stateCountryMap = array();
+      $config->stateCountryMap = [];
     }
 
     $config->stateCountryMap = array_merge($config->stateCountryMap,
@@ -690,15 +690,15 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
 
     $countryState = $cityPostal = FALSE;
     foreach ($addressSequence as $key => $field) {
-      if (in_array($field, array('country', 'state_province')) && !$countryState) {
+      if (in_array($field, ['country', 'state_province']) && !$countryState) {
         $countryState = TRUE;
         $addressSequence[$key] = 'country_state_province';
       }
-      elseif (in_array($field, array('city', 'postal_code')) && !$cityPostal) {
+      elseif (in_array($field, ['city', 'postal_code']) && !$cityPostal) {
         $cityPostal = TRUE;
         $addressSequence[$key] = 'city_postal_code';
       }
-      elseif (in_array($field, array('country', 'state_province', 'city', 'postal_code'))) {
+      elseif (in_array($field, ['country', 'state_province', 'city', 'postal_code'])) {
         unset($addressSequence[$key]);
       }
     }
@@ -733,20 +733,20 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
          */
 
 
-    $supportedLocalesForParsing = array('en_US', 'en_CA', 'fr_CA');
+    $supportedLocalesForParsing = ['en_US', 'en_CA', 'fr_CA'];
     if (!$locale) {
       $locale = $config->lcMessages;
     }
     // as different locale explicitly requested but is not available, display warning message and set $locale = 'en_US'
     if (!in_array($locale, $supportedLocalesForParsing)) {
-      CRM_Core_Session::setStatus(ts('Unsupported locale specified to parseStreetAddress: %1. Proceeding with en_US locale.', array(1 => $locale)));
+      CRM_Core_Session::setStatus(ts('Unsupported locale specified to parseStreetAddress: %1. Proceeding with en_US locale.', [1 => $locale]));
       $locale = 'en_US';
     }
-    $parseFields = array('street_name' => '',
+    $parseFields = ['street_name' => '',
       'street_unit' => '',
       'street_number' => '',
       'street_number_suffix' => '',
-    );
+    ];
 
     if (empty($streetAddress)) {
       return $parseFields;
@@ -754,25 +754,25 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
 
     $streetAddress = trim($streetAddress);
 
-    $matches = array();
-    if (in_array($locale, array('en_CA', 'fr_CA')) && preg_match('/^([A-Za-z0-9]+)[ ]*\-[ ]*/', $streetAddress, $matches)) {
+    $matches = [];
+    if (in_array($locale, ['en_CA', 'fr_CA']) && preg_match('/^([A-Za-z0-9]+)[ ]*\-[ ]*/', $streetAddress, $matches)) {
       $parseFields['street_unit'] = $matches[1];
       // unset from rest of street address
       $streetAddress = preg_replace('/^([A-Za-z0-9]+)[ ]*\-[ ]*/', '', $streetAddress);
     }
 
     // get street number and suffix.
-    $matches = array();
+    $matches = [];
     if (preg_match('/^[A-Za-z0-9]+([\W]+)/', $streetAddress, $matches)) {
       $steetNumAndSuffix = $matches[0];
 
       // get street number.
-      $matches = array();
+      $matches = [];
       if (preg_match('/^(\d+)/', $steetNumAndSuffix, $matches)) {
         $parseFields['street_number'] = $matches[0];
         $suffix = preg_replace('/^(\d+)/', '', $steetNumAndSuffix);
         $suffix = trim($suffix);
-        $matches = array();
+        $matches = [];
         if (preg_match('/^[A-Za-z0-9]+/', $suffix, $matches)) {
           $parseFields['street_number_suffix'] = $matches[0];
         }
@@ -790,7 +790,7 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
     }
 
     // suffix might be like 1/2
-    $matches = array();
+    $matches = [];
     if (preg_match('/^\d\/\d/', $streetAddress, $matches)) {
       $parseFields['street_number_suffix'] .= $matches[0];
 
@@ -801,22 +801,22 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
 
     // now get the street unit.
     // supportable street unit formats.
-    $streetUnitFormats = array('APT', 'APARTMENT', 'BSMT', 'BASEMENT', 'BLDG', 'BUILDING',
+    $streetUnitFormats = ['APT', 'APARTMENT', 'BSMT', 'BASEMENT', 'BLDG', 'BUILDING',
       'DEPT', 'DEPARTMENT', 'FL', 'FLOOR', 'FRNT', 'FRONT',
       'HNGR', 'HANGER', 'LBBY', 'LOBBY', 'LOWR', 'LOWER',
       'OFC', 'OFFICE', 'PH', 'PENTHOUSE', 'TRLR', 'TRAILER',
       'UPPR', 'RM', 'ROOM', 'SIDE', 'SLIP', 'KEY',
       'LOT', 'PIER', 'REAR', 'SPC', 'SPACE',
       'STOP', 'STE', 'SUITE', 'UNIT', '#', 'ST',
-    );
+    ];
 
     // overwriting $streetUnitFormats for 'en_CA' and 'fr_CA' locale
-    if (in_array($locale, array('en_CA', 'fr_CA'))) {
-      $streetUnitFormats = array('APT', 'APP', 'SUITE', 'BUREAU', 'UNIT');
+    if (in_array($locale, ['en_CA', 'fr_CA'])) {
+      $streetUnitFormats = ['APT', 'APP', 'SUITE', 'BUREAU', 'UNIT'];
     }
 
     $streetUnitPreg = '/(' . CRM_Utils_Array::implode('\s|\s', $streetUnitFormats) . ')(.+)?/i';
-    $matches = array();
+    $matches = [];
     if (preg_match($streetUnitPreg, $streetAddress, $matches)) {
       $parseFields['street_unit'] = $matches[0];
       $streetAddress = str_replace($matches[0], '', $streetAddress);
@@ -867,7 +867,7 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
    */
   static function checkContactSharedAddress($addressId) {
     $query = 'SELECT count(id) FROM civicrm_address WHERE master_id = %1';
-    return CRM_Core_DAO::singleValueQuery($query, array(1 => array($addressId, 'Integer')));
+    return CRM_Core_DAO::singleValueQuery($query, [1 => [$addressId, 'Integer']]);
   }
 
   /**
@@ -882,10 +882,10 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
    */
   static function processSharedAddress($addressId, $params) {
     $query = 'SELECT id FROM civicrm_address WHERE master_id = %1';
-    $dao = CRM_Core_DAO::executeQuery($query, array(1 => array($addressId, 'Integer')));
+    $dao = CRM_Core_DAO::executeQuery($query, [1 => [$addressId, 'Integer']]);
 
     // unset contact id
-    $skipFields = array('is_primary', 'location_type_id', 'is_billing', 'master_id', 'contact_id');
+    $skipFields = ['is_primary', 'location_type_id', 'is_billing', 'master_id', 'contact_id'];
     foreach ($skipFields as $value) {
       unset($params[$value]);
     }
@@ -933,7 +933,7 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
                  FROM civicrm_contact cc INNER JOIN civicrm_address ca ON cc.id = ca.contact_id
                  WHERE ca.id = %1';
 
-    $dao = CRM_Core_DAO::executeQuery($query, array(1 => array($masterAddressId, 'Integer')));
+    $dao = CRM_Core_DAO::executeQuery($query, [1 => [$masterAddressId, 'Integer']]);
 
     $dao->fetch();
 
@@ -955,19 +955,19 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
       $relationshipType = 'Household Member of';
     }
 
-    $cid = array('contact' => $currentContactId);
+    $cid = ['contact' => $currentContactId];
 
     $relTypeId = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_RelationshipType', $relationshipType, 'id', 'name_a_b');
 
     if (!$relTypeId) {
-       return CRM_Core_Error::statusBounce(ts("You seem to have deleted the relationship type '%1'", array(1 => $relationshipType)));
+       return CRM_Core_Error::statusBounce(ts("You seem to have deleted the relationship type '%1'", [1 => $relationshipType]));
     }
 
     // create relationship
-    $relationshipParams = array('is_active' => TRUE,
+    $relationshipParams = ['is_active' => TRUE,
       'relationship_type_id' => $relTypeId . '_a_b',
-      'contact_check' => array($sharedContactId => TRUE),
-    );
+      'contact_check' => [$sharedContactId => TRUE],
+    ];
 
 
     list($valid, $invalid, $duplicate,
@@ -1003,10 +1003,10 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
                 WHERE ca1.contact_id = %1';
     }
 
-    $dao = CRM_Core_DAO::executeQuery($query, array(1 => array($entityId, 'Integer')));
+    $dao = CRM_Core_DAO::executeQuery($query, [1 => [$entityId, 'Integer']]);
 
-    $deleteStatus = array();
-    $sharedContactList = array();
+    $deleteStatus = [];
+    $sharedContactList = [];
     $statusMessage = NULL;
     $addressCount = 0;
     while ($dao->fetch()) {
@@ -1029,9 +1029,9 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
       CRM_Core_Session::setStatus($statusMessage);
     }
     else {
-      return array('contactList' => $sharedContactList,
+      return ['contactList' => $sharedContactList,
         'count' => $addressCount,
-      );
+      ];
     }
   }
 
@@ -1062,7 +1062,7 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
         return reset($addresses);
       }
     }
-    return array();
+    return [];
   }
 
   /**
@@ -1075,15 +1075,15 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
    */
   static function valueExists(&$params) {
     if (empty($params['id']) && !empty($params['contact_id'])) {
-      $values = array();
-      $checkFields = array(
+      $values = [];
+      $checkFields = [
         'postal_code',
         'state_province_id',
         'city',
         'street_address',
         'name',
         'contact_id',
-      );
+      ];
       foreach($checkFields as $key) {
         if(!empty($params[$key])) {
           $values[$key] = $params[$key];

@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-class CRM_Core_DAO_Note extends CRM_Core_DAO
+        class CRM_Core_DAO_Note extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -78,7 +78,7 @@ class CRM_Core_DAO_Note extends CRM_Core_DAO
    * @static
    */
   static $_log = true;
-  /**
+    /**
    * Note ID
    *
    * @var int unsigned
@@ -126,7 +126,7 @@ class CRM_Core_DAO_Note extends CRM_Core_DAO
    * @var int
    */
   public $privacy;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -145,13 +145,13 @@ class CRM_Core_DAO_Note extends CRM_Core_DAO
   function &links()
   {
     if (!(self::$_links)) {
-      self::$_links = array(
+      self::$_links = [
         'contact_id' => 'civicrm_contact:id',
-      );
+      ];
     }
     return self::$_links;
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -166,7 +166,7 @@ class CRM_Core_DAO_Note extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -175,60 +175,60 @@ class CRM_Core_DAO_Note extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'id' => array(
+      self::$_fields = [
+        'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'entity_table' => array(
+                  ] ,
+        'entity_table' => [
           'name' => 'entity_table',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Entity Table') ,
           'required' => true,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ) ,
-        'entity_id' => array(
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
+        'entity_id' => [
           'name' => 'entity_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'note' => array(
+                  ] ,
+        'note' => [
           'name' => 'note',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Note') ,
-          'rows' => 4,
-          'cols' => 60,
-          'import' => true,
+             'rows' => 4,
+           'cols' => 60,
+           'import' => true,
           'where' => 'civicrm_note.note',
           'headerPattern' => '/Note|Comment/i',
           'dataPattern' => '//',
-          'export' => true,
-        ) ,
-        'contact_id' => array(
+           'export' => true,
+            ] ,
+        'contact_id' => [
           'name' => 'contact_id',
           'type' => CRM_Utils_Type::T_INT,
-          'FKClassName' => 'CRM_Contact_DAO_Contact',
-        ) ,
-        'modified_date' => array(
+                    'FKClassName' => 'CRM_Contact_DAO_Contact',
+        ] ,
+        'modified_date' => [
           'name' => 'modified_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Modified Date') ,
-        ) ,
-        'subject' => array(
+                  ] ,
+        'subject' => [
           'name' => 'subject',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Subject') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'privacy' => array(
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
+        'privacy' => [
           'name' => 'privacy',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Privacy') ,
-        ) ,
-      );
+                  ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -240,8 +240,8 @@ class CRM_Core_DAO_Note extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -261,7 +261,7 @@ class CRM_Core_DAO_Note extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -272,7 +272,7 @@ class CRM_Core_DAO_Note extends CRM_Core_DAO
           }
         }
       }
-    }
+                                  }
     return self::$_import;
   }
   /**
@@ -284,7 +284,7 @@ class CRM_Core_DAO_Note extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
@@ -295,7 +295,7 @@ class CRM_Core_DAO_Note extends CRM_Core_DAO
           }
         }
       }
-    }
+                                  }
     return self::$_export;
   }
 }

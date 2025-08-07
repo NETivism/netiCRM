@@ -59,69 +59,69 @@ class CRM_Report_Form_Contact_LoggingSummary extends CRM_Report_Form {
     $dsn = defined('CIVICRM_LOGGING_DSN') ? DB::parseDSN(CIVICRM_LOGGING_DSN) : DB::parseDSN(CIVICRM_DSN);
     $this->loggingDB = $dsn['database'];
 
-    $this->_columns = array(
-      'log_civicrm_contact' => array(
+    $this->_columns = [
+      'log_civicrm_contact' => [
         'dao' => 'CRM_Contact_DAO_Contact',
-        'fields' => array(
-          'id' => array(
+        'fields' => [
+          'id' => [
             'no_display' => TRUE,
             'required' => TRUE,
-          ),
-          'log_user_id' => array(
+          ],
+          'log_user_id' => [
             'no_display' => TRUE,
             'required' => TRUE,
-          ),
-          'log_date' => array(
+          ],
+          'log_date' => [
             'default' => TRUE,
             'required' => TRUE,
             'title' => ts('When'),
-          ),
-          'altered_contact' => array(
+          ],
+          'altered_contact' => [
             'default' => TRUE,
             'name' => 'display_name',
             'title' => ts('Altered Contact'),
-          ),
-          'log_conn_id' => array(
+          ],
+          'log_conn_id' => [
             'no_display' => TRUE,
             'required' => TRUE,
-          ),
-          'log_action' => array(
+          ],
+          'log_action' => [
             'default' => TRUE,
             'title' => ts('Action'),
-          ),
-        ),
-        'filters' => array(
-          'log_action' => array(
+          ],
+        ],
+        'filters' => [
+          'log_action' => [
             'operatorType' => CRM_Report_Form::OP_MULTISELECT,
-            'options' => array('Insert' => ts('Insert'), 'Update' => ts('Update'), 'Delete' => ts('Delete')),
+            'options' => ['Insert' => ts('Insert'), 'Update' => ts('Update'), 'Delete' => ts('Delete')],
             'title' => ts('Action'),
             'type' => CRM_Utils_Type::T_STRING,
-          ),
-          'altered_contact' => array(
+          ],
+          'altered_contact' => [
             'name' => 'display_name',
             'title' => ts('Altered Contact'),
             'type' => CRM_Utils_Type::T_STRING,
-          ),
-        ),
-      ),
-      'civicrm_contact' => array(
+          ],
+        ],
+      ],
+      'civicrm_contact' => [
         'dao' => 'CRM_Contact_DAO_Contact',
-        'fields' => array(
-          'altered_by' => array(
+        'fields' => [
+          'altered_by' => [
             'default' => TRUE,
             'name' => 'display_name',
             'title' => ts('Altered By'),
-          ),
-        ),
-        'filters' => array(
-          'altered_by' => array(
+          ],
+        ],
+        'filters' => [
+          'altered_by' => [
             'name' => 'display_name',
             'title' => ts('Altered By'),
             'type' => CRM_Utils_Type::T_STRING,
-          ),
-        ),
-      ),
-    );
+          ],
+        ],
+      ],
+    ];
     parent::__construct();
   }
 
@@ -147,8 +147,8 @@ class CRM_Report_Form_Contact_LoggingSummary extends CRM_Report_Form {
   }
 
   function select() {
-    $select = array();
-    $this->_columnHeaders = array();
+    $select = [];
+    $this->_columnHeaders = [];
     foreach ($this->_columns as $tableName => $table) {
       if (CRM_Utils_Array::arrayKeyExists('fields', $table)) {
         foreach ($table['fields'] as $fieldName => $field) {

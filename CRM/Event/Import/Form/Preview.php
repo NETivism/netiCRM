@@ -78,16 +78,16 @@ class CRM_Event_Import_Form_Preview extends CRM_Core_Form {
 
     $prefix = $this->get('errorFilenamePrefix');
     $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String', $this);
-    CRM_Import_Parser::setImportErrorFilenames($qfKey, array('error', 'conflict','no_match'), 'CRM_Event_Import_Parser', $prefix, $this);
+    CRM_Import_Parser::setImportErrorFilenames($qfKey, ['error', 'conflict','no_match'], 'CRM_Event_Import_Parser', $prefix, $this);
 
-    $properties = array('mapper',
+    $properties = ['mapper',
       'dataValues', 'columnCount',
       'totalRowCount', 'validRowCount',
       'invalidRowCount', 'conflictRowCount',
       'downloadErrorRecordsUrl',
       'downloadConflictRecordsUrl',
       'downloadMismatchRecordsUrl',
-    );
+    ];
 
     foreach ($properties as $property) {
       $this->assign($property, $this->get($property));
@@ -101,26 +101,26 @@ class CRM_Event_Import_Form_Preview extends CRM_Core_Form {
    * @access public
    */
   public function buildQuickForm() {
-    $attr = array();
+    $attr = [];
     $locked = CRM_Core_Lock::isUsed($this->controller->_key);
     if ($locked) {
       $attr['disabled'] = 'disabled';
       $this->assign('locked_import', TRUE);
     }
-    $this->addButtons(array(
-        array('type' => 'back',
+    $this->addButtons([
+        ['type' => 'back',
           'name' => ts('<< Previous'),
-        ),
-        array('type' => 'next',
+        ],
+        ['type' => 'next',
           'name' => ts('Import Now >>'),
           'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
           'isDefault' => TRUE,
           'js' => $attr,
-        ),
-        array('type' => 'cancel',
+        ],
+        ['type' => 'cancel',
           'name' => ts('Cancel'),
-        ),
-      )
+        ],
+      ]
     );
   }
 
@@ -152,7 +152,7 @@ class CRM_Event_Import_Form_Preview extends CRM_Core_Form {
     $seperator = $config->fieldSeparator;
 
     $mapper = $this->get('mapperKeys');
-    $mapperKeys = array();
+    $mapperKeys = [];
 
     foreach ($mapper as $key => $value) {
       $mapperKeys[$key] = $mapper[$key][0];
@@ -164,7 +164,7 @@ class CRM_Event_Import_Form_Preview extends CRM_Core_Form {
     $mapFields = $this->get('fields');
 
     foreach ($mapper as $key => $value) {
-      $header = array();
+      $header = [];
       if (isset($mapFields[$mapper[$key][0]])) {
         $header[] = $mapFields[$mapper[$key][0]];
       }
@@ -196,7 +196,7 @@ class CRM_Event_Import_Form_Preview extends CRM_Core_Form {
 
     $errorStack = &CRM_Core_Error::singleton();
     $errors = $errorStack->getErrors();
-    $errorMessage = array();
+    $errorMessage = [];
 
     if (is_array($errors)) {
       foreach ($errors as $key => $value) {

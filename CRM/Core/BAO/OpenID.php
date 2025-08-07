@@ -117,19 +117,19 @@ WHERE
   civicrm_contact.id = %1
 ORDER BY
   civicrm_openid.is_primary DESC,  openid_id ASC ";
-    $params = array(1 => array($id, 'Integer'));
+    $params = [1 => [$id, 'Integer']];
 
-    $openids = $values = array();
+    $openids = $values = [];
     $dao = &CRM_Core_DAO::executeQuery($query, $params);
     $count = 1;
     while ($dao->fetch()) {
-      $values = array('locationType' => $dao->locationType,
+      $values = ['locationType' => $dao->locationType,
         'is_primary' => $dao->is_primary,
         'id' => $dao->openid_id,
         'openid' => $dao->openid,
         'locationTypeId' => $dao->locationTypeId,
         'allowed_to_login' => $dao->allowed_to_login,
-      );
+      ];
 
       if ($updateBlankLocInfo) {
         $openids[$count++] = $values;
@@ -155,7 +155,7 @@ ORDER BY
     if (isset($parsed['scheme']) &&
       isset($parsed['host'])) {
       $scheme = strtolower($parsed['scheme']);
-      if (!in_array($scheme, array('http', 'https'))) {
+      if (!in_array($scheme, ['http', 'https'])) {
         return null;
       }
     } else {
@@ -169,7 +169,7 @@ ORDER BY
 
     $parts = explode("#", $url, 2);
     if (count($parts) == 1) {
-      list($defragged, $frag) = array($parts[0], "");
+      list($defragged, $frag) = [$parts[0], ""];
     } else {
       list($defragged, $frag) = $parts;
     }
@@ -177,7 +177,7 @@ ORDER BY
   }
 
   static function _normalizeURL($uri) {
-    $uri_matches = array();
+    $uri_matches = [];
     preg_match('&^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?&', $uri, $uri_matches);
 
     if (count($uri_matches) < 9) {
@@ -186,7 +186,7 @@ ORDER BY
       }
     }
 
-    $illegal_matches = array();
+    $illegal_matches = [];
     preg_match("/([^-A-Za-z0-9:\/\?#\[\]@\!\$&'\(\)\*\+,;=\._~\%])/", $uri, $illegal_matches);
     if ($illegal_matches) {
       return null;
@@ -204,7 +204,7 @@ ORDER BY
     }
 
     $scheme = strtolower($scheme);
-    if (!in_array($scheme, array('http', 'https'))) {
+    if (!in_array($scheme, ['http', 'https'])) {
       // Not an absolute HTTP or HTTPS URI
       return null;
     }
@@ -215,7 +215,7 @@ ORDER BY
       return null;
     }
 
-    $authority_matches = array();
+    $authority_matches = [];
     preg_match('/^([^@]*@)?([^:]*)(:.*)?/', $authority, $authority_matches);
     if (count($authority_matches) === 0) {
       // URI does not have a valid authority
@@ -257,7 +257,7 @@ ORDER BY
 
     $path = $uri_matches[5];
     $path = preg_replace_callback('/%([0-9A-Fa-f]{2})/', function($mo) {
-      $_unreserved = array();
+      $_unreserved = [];
       for ($i = 0; $i < 256; $i++) {
         $_unreserved[$i] = false;
       }
@@ -289,7 +289,7 @@ ORDER BY
       return $mo[0];
     }, $path);
 
-    $result_segments = array();
+    $result_segments = [];
     while ($path) {
       if (strpos($path, '../') === 0) {
         $path = substr($path, 3);

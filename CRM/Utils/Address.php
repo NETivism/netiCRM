@@ -76,11 +76,11 @@ class CRM_Utils_Address {
     }
 
     // make sure that some of the fields do have values
-    $emptyFields = array('supplemental_address_1',
+    $emptyFields = ['supplemental_address_1',
       'supplemental_address_2',
       'state_province_name',
       'county',
-    );
+    ];
     foreach ($emptyFields as $f) {
       if (!isset($fields[$f])) {
         $fields[$f] = NULL;
@@ -104,7 +104,7 @@ class CRM_Utils_Address {
 
     if (!$microformat) {
         // replacements in case of Individual Name Format
-      $replacements = array(
+      $replacements = [
         'display_name' => CRM_Utils_Array::value('display_name', $fields),
         'individual_prefix' => CRM_Utils_Array::value('individual_prefix', $fields),
         'first_name' => CRM_Utils_Array::value('first_name', $fields),
@@ -152,10 +152,10 @@ class CRM_Utils_Address {
         'addressee' => CRM_Utils_Array::value('addressee_display', $fields),
         'email_greeting' => CRM_Utils_Array::value('email_greeting_display', $fields),
         'postal_greeting' => CRM_Utils_Array::value('postal_greeting_display', $fields),
-      );
+      ];
     }
     else {
-      $replacements = array(
+      $replacements = [
         'address_name' => "<span class=\"address-name\">" . $fields['address_name'] . "</span>",
         'street_address' => "<span class=\"street-address\">" . $fields['street_address'] . "</span>",
         'supplemental_address_1' => "<span class=\"extended-address\">" . $fields['supplemental_address_1'] . "</span>",
@@ -167,7 +167,7 @@ class CRM_Utils_Address {
         'postal_code' => "<span class=\"postal-code\">" . $fullPostalCode . "</span>",
         'country' => "<span class=\"country-name\">" . $fields['country'] . "</span>",
         'world_region' => "<span class=\"region\">" . $fields['world_region'] . "</span>",
-      );
+      ];
 
       // erase all empty ones, so we dont get blank lines
       foreach (array_keys($replacements) as $key) {
@@ -233,7 +233,7 @@ class CRM_Utils_Address {
     $formatted = preg_replace('/{([^{}]*)}({[^{}]*})+/u', '\1', $formatted);
 
     // drop any remaining curly braces leaving their contents
-    $formatted = str_replace(array('{', '}'), '', $formatted);
+    $formatted = str_replace(['{', '}'], '', $formatted);
 
     // drop any empty lines left after the replacements
     $formatted = preg_replace('/^[ \t]*[\r\n]+/m', '', $formatted);
@@ -244,7 +244,7 @@ class CRM_Utils_Address {
     else {
       // remove \n from each line and only add at the end
       // this hack solves formatting issue, when we convert nl2br
-      $lines = array();
+      $lines = [];
       $count = 1;
       $finalFormatted = NULL;
       $formattedArray = explode("\n", $formatted);

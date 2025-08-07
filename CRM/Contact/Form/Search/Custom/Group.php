@@ -51,17 +51,17 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
 
   protected $_where = ' (1) '; function __construct(&$formValues) {
     $this->_formValues = $formValues;
-    $this->_columns = array(ts('Contact Id') => 'contact_id',
+    $this->_columns = [ts('Contact Id') => 'contact_id',
       ts('Contact Type') => 'contact_type',
       ts('Name') => 'sort_name',
       ts('Group Name') => 'gname',
       ts('Tag Name') => 'tname',
-    );
+    ];
 
-    $this->_includeGroups = CRM_Utils_Array::value('includeGroups', $this->_formValues, array());
-    $this->_excludeGroups = CRM_Utils_Array::value('excludeGroups', $this->_formValues, array());
-    $this->_includeTags = CRM_Utils_Array::value('includeTags', $this->_formValues, array());
-    $this->_excludeTags = CRM_Utils_Array::value('excludeTags', $this->_formValues, array());
+    $this->_includeGroups = CRM_Utils_Array::value('includeGroups', $this->_formValues, []);
+    $this->_excludeGroups = CRM_Utils_Array::value('excludeGroups', $this->_formValues, []);
+    $this->_includeTags = CRM_Utils_Array::value('includeTags', $this->_formValues, []);
+    $this->_excludeTags = CRM_Utils_Array::value('excludeTags', $this->_formValues, []);
 
     //define variables
     $this->_allSearch = FALSE;
@@ -109,49 +109,49 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
 
     $inG = &$form->addElement('select', 'includeGroups',
       ts('Include Group(s)') . ' ', $groups,
-      array('size' => 5,
+      ['size' => 5,
         'style' => 'width:400px',
         'multiple' => 'multiple',
-      )
+      ]
     );
 
     $outG = &$form->addElement('select', 'excludeGroups',
       ts('Exclude Group(s)') . ' ', $groups,
-      array('size' => 5,
+      ['size' => 5,
         'style' => 'width:400px',
         'multiple' => 'multiple',
-      )
+      ]
     );
     $andOr = &$form->addElement('checkbox', 'andOr', 'Search with tag (check for AND, uncheck For OR)', NULL,
-      array('checked' => 'checked')
+      ['checked' => 'checked']
     );
 
     $int = &$form->addElement('select', 'includeTags',
       ts('Include Tag(s)') . ' ', $tags,
-      array('size' => 5,
+      ['size' => 5,
         'style' => 'width:400px',
         'multiple' => 'multiple',
-      )
+      ]
     );
 
     $outt = &$form->addElement('select', 'excludeTags',
       ts('Exclude Tag(s)') . ' ', $tags,
-      array('size' => 5,
+      ['size' => 5,
         'style' => 'width:400px',
         'multiple' => 'multiple',
-      )
+      ]
     );
 
-    $defaults = array(
+    $defaults = [
       'andOr' => empty($this->_andOr) ? 0 : 1,
-    );
+    ];
     $form->setDefaults($defaults);
 
     /**
      * if you are using the standard template, this array tells the template what elements
      * are part of the search criteria
      */
-    $form->assign('elements', array('includeGroups', 'excludeGroups', 'andOr', 'includeTags', 'excludeTags'));
+    $form->assign('elements', ['includeGroups', 'excludeGroups', 'andOr', 'includeTags', 'excludeTags']);
   }
 
   function all($offset = 0, $rowcount = 0, $sort = NULL,
@@ -219,7 +219,7 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
     $this->_tableName = "civicrm_temp_custom_{$randomNum}";
 
     //block for Group search
-    $smartGroup = array();
+    $smartGroup = [];
     if ($this->_groups || $this->_allSearch) {
 
       $group = new CRM_Contact_DAO_Group();
@@ -754,7 +754,7 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
   function where($includeContactIDs = FALSE) {
 
     if ($includeContactIDs) {
-      $contactIDs = array();
+      $contactIDs = [];
 
       foreach ($this->_formValues as $id => $value) {
         list($contactID, $additionalID) = CRM_Core_Form::cbExtract($id);

@@ -43,10 +43,10 @@ class api_v2_PledgeTest extends CiviUnitTestCase {
 
   function tearDown() {
     // truncate a few tables
-    $tablesToTruncate = array(
+    $tablesToTruncate = [
       'civicrm_contact',
       'civicrm_pledge',
-    );
+    ];
     $this->quickCleanup($tablesToTruncate, FALSE);
   }
 
@@ -64,7 +64,7 @@ class api_v2_PledgeTest extends CiviUnitTestCase {
     //due to timezone issues
     $dayaftertomorrow = mktime(0, 0, 0, date("m"), date("d") + 2, date("y"));
 
-    $p = array(
+    $p = [
       'contact_id' => $this->_individualId,
       'pledge_create_date' => date('Ymd'),
       'start_date' => date('Ymd'),
@@ -77,10 +77,10 @@ class api_v2_PledgeTest extends CiviUnitTestCase {
       'frequency_unit' => 'month',
       'frequency_day' => 1,
       'installments' => 5,
-    );
+    ];
     $this->_pledge = &civicrm_pledge_add($p);
 
-    $params = array('pledge_id' => $this->_pledge['id']);
+    $params = ['pledge_id' => $this->_pledge['id']];
     $pledge = &civicrm_pledge_get($params);
     $this->assertEquals($pledge[$this->_pledge['id']]['contact_id'], $this->_individualId);
     $this->assertEquals($pledge[$this->_pledge['id']]['pledge_id'], $this->_pledge['id']);
@@ -92,13 +92,13 @@ class api_v2_PledgeTest extends CiviUnitTestCase {
     $this->assertEquals($pledge[$this->_pledge['id']]['pledge_next_pay_date'], date('Y-m-d', $dayaftertomorrow) . ' 00:00:00');
     $this->assertEquals($pledge[$this->_pledge['id']]['pledge_next_pay_amount'], 20.00);
 
-    $params2 = array('pledge_id' => $this->_pledge['id']);
+    $params2 = ['pledge_id' => $this->_pledge['id']];
     $pledge = &civicrm_pledge_delete($params2);
   }
 
   ///////////////// civicrm_pledge_add
   function testCreateEmptyParamsPledge() {
-    $params = array();
+    $params = [];
     $pledge = &civicrm_pledge_add($params);
     $this->assertEquals($pledge['is_error'], 1);
     $this->assertEquals($pledge['error_message'], 'No input parameters present');
@@ -112,7 +112,7 @@ class api_v2_PledgeTest extends CiviUnitTestCase {
   }
 
   function testCreateParamsWithoutRequiredKeys() {
-    $params = array('no_required' => 1);
+    $params = ['no_required' => 1];
     $pledge = &civicrm_pledge_add($params);
     $this->assertEquals($pledge['is_error'], 1);
     $this->assertEquals($pledge['error_message'], 'Required fields not found for pledge contact_id');
@@ -120,7 +120,7 @@ class api_v2_PledgeTest extends CiviUnitTestCase {
 
   function testCreatePledge() {
     $dayaftertomorrow = mktime(0, 0, 0, date("m"), date("d") + 2, date("y"));
-    $params = array(
+    $params = [
       'contact_id' => $this->_individualId,
       'pledge_create_date' => date('Ymd'),
       'start_date' => date('Ymd'),
@@ -133,7 +133,7 @@ class api_v2_PledgeTest extends CiviUnitTestCase {
       'frequency_unit' => 'year',
       'frequency_day' => 15,
       'installments' => 5,
-    );
+    ];
     $pledge = &civicrm_pledge_add($params);
     $this->assertEquals($pledge['amount'], 100.00, 'In line ' . __LINE__);
     $this->assertEquals($pledge['installments'], 5, 'In line ' . __LINE__);
@@ -147,7 +147,7 @@ class api_v2_PledgeTest extends CiviUnitTestCase {
     $this->assertEquals($pledge['start_date'], date('Ymd'), 'In line ' . __LINE__);
     $this->assertEquals($pledge['is_error'], 0, 'In line ' . __LINE__);
 
-    $pledgeID = array('pledge_id' => $pledge['pledge_id']);
+    $pledgeID = ['pledge_id' => $pledge['pledge_id']];
     $pledge = &civicrm_pledge_delete($pledgeID);
   }
 
@@ -157,10 +157,10 @@ class api_v2_PledgeTest extends CiviUnitTestCase {
     // we test 'sequential' param here too
     $pledgeID = $this->pledgeCreate($this->_individualId);
 
-    $old_params = array(
+    $old_params = [
       'id' => $pledgeID,
       'sequential' => 1,
-    );
+    ];
     $original = civicrm_pledge_get($old_params);
 
     //Make sure it came back
@@ -177,7 +177,7 @@ class api_v2_PledgeTest extends CiviUnitTestCase {
     $this->assertEquals($old_frequency_unit, 'year', 'In line ' . __LINE__);
     $this->assertEquals($old_frequency_interval, 5, 'In line ' . __LINE__);
     $this->assertEquals($old_status_id, 'Pending', 'In line ' . __LINE__);
-    $params = array(
+    $params = [
       'id' => $pledgeID,
       'contact_id' => $this->_individualId,
       'pledge_status_id' => 3,
@@ -185,13 +185,13 @@ class api_v2_PledgeTest extends CiviUnitTestCase {
       'contribution_type_id' => 1,
       'start_date' => date('Ymd'),
       'installments' => 10,
-    );
+    ];
 
     $pledge = &civicrm_pledge_add($params);
     $this->assertEquals($pledge['is_error'], 0);
-    $new_params = array(
+    $new_params = [
       'id' => $pledge['id'],
-    );
+    ];
     $pledge = &civicrm_pledge_get($new_params);
     $this->assertEquals($pledge[$pledgeID]['contact_id'], $this->_individualId, 'In line ' . __LINE__);
     $this->assertEquals($pledge[$pledgeID]['pledge_status'], 'Cancelled', 'In line ' . __LINE__);
@@ -201,7 +201,7 @@ class api_v2_PledgeTest extends CiviUnitTestCase {
 
   ///////////////// civicrm_pledge_delete methods
   function testDeleteEmptyParamsPledge() {
-    $params = array();
+    $params = [];
     $pledge = civicrm_pledge_delete($params);
     $this->assertEquals($pledge['is_error'], 1);
     $this->assertEquals($pledge['error_message'], 'Could not find pledge_id in input parameters');
@@ -215,7 +215,7 @@ class api_v2_PledgeTest extends CiviUnitTestCase {
   }
 
   function testDeleteWrongParamPledge() {
-    $params = array('pledge_source' => 'SSF');
+    $params = ['pledge_source' => 'SSF'];
     $pledge = &civicrm_pledge_delete($params);
     $this->assertEquals($pledge['is_error'], 1);
     $this->assertEquals($pledge['error_message'], 'Could not find pledge_id in input parameters');
@@ -223,7 +223,7 @@ class api_v2_PledgeTest extends CiviUnitTestCase {
 
   function testDeletePledge() {
     $pledgeID = $this->pledgeCreate($this->_individualId);
-    $params   = array('pledge_id' => $pledgeID);
+    $params   = ['pledge_id' => $pledgeID];
     $pledge   = civicrm_pledge_delete($params);
     $this->assertEquals($pledge['is_error'], 0);
   }

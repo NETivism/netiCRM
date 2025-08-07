@@ -63,9 +63,9 @@ class CRM_Case_Page_CaseDetails extends CRM_Core_Page {
     $pageTab->setContext();
 
 
-    $params = array('date_range' => 0);
+    $params = ['date_range' => 0];
 
-    $caseDetails = array();
+    $caseDetails = [];
     if (CRM_Case_BAO_Case::accessCiviCase()) {
       $caseDetails = CRM_Case_BAO_Case::getCaseActivity($caseId, $params, $this->_contactId, NULL, NULL, $type);
     }

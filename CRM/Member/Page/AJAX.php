@@ -59,9 +59,9 @@ class CRM_Member_Page_AJAX {
 
     $totalAmount = CRM_Utils_Money::format($totalAmount, NULL, '%a');
 
-    $details = array('contribution_type_id' => $contributionType,
+    $details = ['contribution_type_id' => $contributionType,
       'total_amount' => $totalAmount,
-    );
+    ];
 
     echo json_encode($details);
     CRM_Utils_System::civiExit();

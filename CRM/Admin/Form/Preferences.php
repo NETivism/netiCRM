@@ -104,7 +104,7 @@ class CRM_Admin_Form_Preferences extends CRM_Core_Form {
           substr($this->_config->$name, 1, -1)
         );
         if (!empty($value)) {
-          $defaults[$name] = array();
+          $defaults[$name] = [];
           foreach ($value as $n => $v) {
             $defaults[$name][$v] = 1;
           }
@@ -125,26 +125,26 @@ class CRM_Admin_Form_Preferences extends CRM_Core_Form {
 
     foreach ($this->_cbs as $name => $title) {
       $options = array_flip(CRM_Core_OptionGroup::values($name, FALSE, FALSE, TRUE));
-      $newOptions = array();
+      $newOptions = [];
       foreach ($options as $key => $val) {
         $newOptions[$key] = $val;
       }
       $this->addCheckBox($name, $title,
         $newOptions,
         NULL, NULL, NULL, NULL,
-        array('&nbsp;&nbsp;', '&nbsp;&nbsp;', '<br/>')
+        ['&nbsp;&nbsp;', '&nbsp;&nbsp;', '<br/>']
       );
     }
 
-    $this->addButtons(array(
-        array('type' => 'next',
+    $this->addButtons([
+        ['type' => 'next',
           'name' => ts('Save'),
           'isDefault' => TRUE,
-        ),
-        array('type' => 'cancel',
+        ],
+        ['type' => 'cancel',
           'name' => ts('Cancel'),
-        ),
-      )
+        ],
+      ]
     );
 
     if ($this->_action == CRM_Core_Action::VIEW) {

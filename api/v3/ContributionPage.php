@@ -112,14 +112,14 @@ function civicrm_api3_contribution_page_delete($params) {
 function _civicrm_api3_contribution_page_getamount(&$page, $pageId) {
   if ($pageId) {
     $fee = CRM_Contribute_BAO_ContributionPage::feeBlock($pageId);
-    $feeBlock = array();
+    $feeBlock = [];
     foreach($fee['label'] as $idx => $label) {
       if (isset($fee['value'][$idx]) && $fee['value'][$idx] !== '') {
         $grouping = !empty($fee['grouping'][$idx]) ? $fee['grouping'][$idx] : "all";
-        $feeBlock[$grouping][] = array(
+        $feeBlock[$grouping][] = [
           'label' => $label,
           'value' => $fee['value'][$idx],
-        );
+        ];
       }
     }
     $page['price_set_id'] = !empty($fee['price_set_id']) ? $fee['price_set_id'] : 0;

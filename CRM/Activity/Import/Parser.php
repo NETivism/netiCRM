@@ -229,14 +229,14 @@ abstract class CRM_Activity_Import_Parser {
     $this->_invalidRowCount = $this->_validCount = 0;
     $this->_totalCount = $this->_conflictCount = 0;
 
-    $this->_errors = array();
-    $this->_warnings = array();
-    $this->_conflicts = array();
+    $this->_errors = [];
+    $this->_warnings = [];
+    $this->_conflicts = [];
 
     $this->_fileSize = number_format(filesize($fileName) / 1024.0, 2);
 
     if ($mode == self::MODE_MAPFIELD) {
-      $this->_rows = array();
+      $this->_rows = [];
     }
     else {
       $this->_activeFieldCount = count($this->_activeFields);
@@ -372,27 +372,27 @@ abstract class CRM_Activity_Import_Parser {
       }
       if ($this->_invalidRowCount) {
         // removed view url for invlaid contacts
-        $headers = array_merge(array(ts('Line Number'),
+        $headers = array_merge([ts('Line Number'),
             ts('Reason'),
-          ),
+          ],
           $customHeaders
         );
         $this->_errorFileName = self::errorFileName(self::ERROR, $filenamePrefix);
         self::exportCSV($this->_errorFileName, $headers, $this->_errors);
       }
       if ($this->_conflictCount) {
-        $headers = array_merge(array(ts('Line Number'),
+        $headers = array_merge([ts('Line Number'),
             ts('Reason'),
-          ),
+          ],
           $customHeaders
         );
         $this->_conflictFileName = self::errorFileName(self::CONFLICT, $filenamePrefix);
         self::exportCSV($this->_conflictFileName, $headers, $this->_conflicts);
       }
       if ($this->_duplicateCount) {
-        $headers = array_merge(array(ts('Line Number'),
+        $headers = array_merge([ts('Line Number'),
             ts('View Activity History URL'),
-          ),
+          ],
           $customHeaders
         );
 
@@ -476,7 +476,7 @@ abstract class CRM_Activity_Import_Parser {
    * @access public
    */
   function &getActiveFieldParams() {
-    $params = array();
+    $params = [];
     for ($i = 0; $i < $this->_activeFieldCount; $i++) {
       if (isset($this->_activeFields[$i]->_value)
         && !isset($params[$this->_activeFields[$i]->_name])
@@ -490,7 +490,7 @@ abstract class CRM_Activity_Import_Parser {
   }
 
   function getSelectValues() {
-    $values = array();
+    $values = [];
     foreach ($this->_fields as $name => $field) {
       $values[$name] = $field->_title;
     }
@@ -498,7 +498,7 @@ abstract class CRM_Activity_Import_Parser {
   }
 
   function getSelectTypes() {
-    $values = array();
+    $values = [];
     foreach ($this->_fields as $name => $field) {
       $values[$name] = $field->_hasLocationType;
     }
@@ -506,7 +506,7 @@ abstract class CRM_Activity_Import_Parser {
   }
 
   function getHeaderPatterns() {
-    $values = array();
+    $values = [];
     foreach ($this->_fields as $name => $field) {
       $values[$name] = $field->_headerPattern;
     }
@@ -514,7 +514,7 @@ abstract class CRM_Activity_Import_Parser {
   }
 
   function getDataPatterns() {
-    $values = array();
+    $values = [];
     foreach ($this->_fields as $name => $field) {
       $values[$name] = $field->_dataPattern;
     }

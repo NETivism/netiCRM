@@ -99,9 +99,9 @@ class CRM_Core_Config_Defaults {
 
     $this->pluginsDir = $crm_root . DIRECTORY_SEPARATOR . 'CRM' . DIRECTORY_SEPARATOR . 'Core' . DIRECTORY_SEPARATOR . 'Smarty' . DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR;
 
-    $this->templateDir = array($crm_root . DIRECTORY_SEPARATOR .
+    $this->templateDir = [$crm_root . DIRECTORY_SEPARATOR .
       'templates' . DIRECTORY_SEPARATOR,
-    );
+    ];
 
     $this->importDataSourceDir = $crm_root . DIRECTORY_SEPARATOR . 'CRM' . DIRECTORY_SEPARATOR . 'Import' . DIRECTORY_SEPARATOR . 'DataSource' . DIRECTORY_SEPARATOR;
 
@@ -115,7 +115,7 @@ class CRM_Core_Config_Defaults {
 
     // add UI revamp pages
     //$this->revampPages = array( 'CRM/Admin/Form/Setting/Url.tpl', 'CRM/Admin/Form/Preferences/Address.tpl' );
-    $this->revampPages = array();
+    $this->revampPages = [];
 
     $this->profileDoubleOptIn = FALSE;
     // enable profile double Opt-In if Civimail enabled
@@ -258,7 +258,7 @@ class CRM_Core_Config_Defaults {
                   which might hinder the upgrade process. */
 
 
-    $args = array();
+    $args = [];
     if (isset($_GET[$config->userFrameworkURLVar])) {
       $args = explode('/', $_GET[$config->userFrameworkURLVar]);
     }

@@ -82,13 +82,13 @@ class CRM_Mailing_Event_BAO_Unsubscribe extends CRM_Mailing_Event_DAO_Unsubscrib
     $ue->time_stamp = date('YmdHis');
     $ue->save();
 
-    $shParams = array(
+    $shParams = [
       'contact_id' => $q->contact_id,
       'group_id' => NULL,
       'status' => 'Removed',
       'method' => 'Email',
       'tracking' => $ue->id,
-    );
+    ];
     CRM_Contact_BAO_SubscriptionHistory::create($shParams);
 
     $transaction->commit();
@@ -154,9 +154,9 @@ class CRM_Mailing_Event_BAO_Unsubscribe extends CRM_Mailing_Event_DAO_Unsubscrib
 
 
 
-    $groups = array();
-    $base_groups = array();
-    $mailings = array();
+    $groups = [];
+    $base_groups = [];
+    $mailings = [];
 
     while ($do->fetch()) {
       if ($do->entity_table == $group) {
@@ -185,7 +185,7 @@ class CRM_Mailing_Event_BAO_Unsubscribe extends CRM_Mailing_Event_DAO_Unsubscrib
                 WHERE       $mg.mailing_id IN (" . CRM_Utils_Array::implode(', ', $mailings) . ")
                     AND     $mg.group_type = 'Include'");
 
-      $mailings = array();
+      $mailings = [];
 
       while ($do->fetch()) {
         if ($do->entity_table == $group) {
@@ -216,9 +216,9 @@ class CRM_Mailing_Event_BAO_Unsubscribe extends CRM_Mailing_Event_DAO_Unsubscrib
 
     $baseGroupClause = '';
     if (count($group_ids) && empty($base_group_ids)) {
-      $base_group_ids = array(
+      $base_group_ids = [
         reset($group_ids),
-      );
+      ];
     }
     if (!empty($base_group_ids)) {
       $baseGroupClause = "OR  $group.id IN(" . CRM_Utils_Array::implode(', ', $base_group_ids) . ")";
@@ -239,12 +239,12 @@ class CRM_Mailing_Event_BAO_Unsubscribe extends CRM_Mailing_Event_DAO_Unsubscrib
                         )");
 
     if ($preview) {
-      $returnGroups = array();
+      $returnGroups = [];
       while ($do->fetch()) {
-        $returnGroups[$do->group_id] = array(
+        $returnGroups[$do->group_id] = [
           'title' => $do->title,
           'description' => $do->description,
-        );
+        ];
       }
       return $returnGroups;
     }
@@ -254,7 +254,7 @@ class CRM_Mailing_Event_BAO_Unsubscribe extends CRM_Mailing_Event_DAO_Unsubscrib
       }
     }
 
-    $contacts = array($contact_id);
+    $contacts = [$contact_id];
     foreach ($groups as $group_id => $group_name) {
       $notremoved = FALSE;
       if ($group_name) {
@@ -377,13 +377,13 @@ class CRM_Mailing_Event_BAO_Unsubscribe extends CRM_Mailing_Event_DAO_Unsubscrib
 
     $emailDomain = CRM_Core_BAO_MailSettings::defaultDomain();
 
-    $headers = array(
+    $headers = [
       'Subject' => $component->subject,
       'From' => "\"$domainEmailName\" <do-not-reply@$emailDomain>",
       'To' => $eq->email,
       'Reply-To' => "do-not-reply@$emailDomain",
       'Return-Path' => "do-not-reply@$emailDomain",
-    );
+    ];
     CRM_Mailing_BAO_Mailing::addMessageIdHeader($headers, 'u', $job, $queue_id, $eq->hash);
 
     $b = CRM_Utils_Mail::setMimeParams($message);
@@ -522,18 +522,18 @@ class CRM_Mailing_Event_BAO_Unsubscribe extends CRM_Mailing_Event_DAO_Unsubscrib
 
     $dao->query($query);
 
-    $results = array();
+    $results = [];
 
     while ($dao->fetch()) {
       $url = CRM_Utils_System::url('civicrm/contact/view',
         "reset=1&cid={$dao->contact_id}"
       );
-      $results[] = array(
+      $results[] = [
         'name' => "<a href=\"$url\">{$dao->display_name}</a>",
         'email' => $dao->email,
         'org' => $dao->org_unsubscribe ? ts('Yes') : ts('No'),
         'date' => CRM_Utils_Date::customFormat($dao->date),
-      );
+      ];
     }
     return $results;
   }
@@ -559,7 +559,7 @@ SELECT DISTINCT(civicrm_mailing_event_queue.contact_id) as contact_id,
       $email = $dao->email;
     }
 
-    return array($displayName, $email);
+    return [$displayName, $email];
   }
 }
 

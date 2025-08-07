@@ -7,39 +7,39 @@ class CRM_Contribute_Form_TaiwanACH_Upload extends CRM_Core_Form {
   protected $_action = NULL;
 
   function preProcess() {
-    $this->addFormRule(array('CRM_Contribute_Form_TaiwanACH_Upload', 'formRule'), $this);
+    $this->addFormRule(['CRM_Contribute_Form_TaiwanACH_Upload', 'formRule'], $this);
   }
 
   function buildQuickForm() {
     $this->add('file', 'uploadFile', ts('Import Data File'), 'size=30 maxlength=60', TRUE);
 
-    $this->addButtons(array(
-        array('type' => 'upload',
+    $this->addButtons([
+        ['type' => 'upload',
           'name' => ts('Continue'),
           'isDefault' => TRUE,
-        ),
-        array('type' => 'cancel',
+        ],
+        ['type' => 'cancel',
           'name' => ts('Cancel'),
-        ),
-      )
+        ],
+      ]
     );
   }
 
   public static function formRule($fields, $files, $self) {
-    $errors = array();
+    $errors = [];
     if (empty($files)) {
-      $errors['uploadFile'] = ts('Missing required field: %1', array(1 => ts('Import Data File')));
+      $errors['uploadFile'] = ts('Missing required field: %1', [1 => ts('Import Data File')]);
     }
 
     if ($files['uploadFile']['type'] !== 'text/plain') {
-      $errors['uploadFile'] = ts('File format must be one of these: %1', array(1 => 'txt'));
+      $errors['uploadFile'] = ts('File format must be one of these: %1', [1 => 'txt']);
     }
 
     return $errors;
   }
 
   function setDefaultValues() {
-    $defaults = array();
+    $defaults = [];
     return $defaults;
   }
 
@@ -55,7 +55,7 @@ class CRM_Contribute_Form_TaiwanACH_Upload extends CRM_Core_Form {
   }
 
   public static function parseUpload($file, $processId = NULL) {
-    $result = array();
+    $result = [];
     if (file_exists($file)) {
       $content = file_get_contents($file);
       $result = CRM_Contribute_BAO_TaiwanACH::parseUpload($content, $processId);
@@ -63,7 +63,7 @@ class CRM_Contribute_Form_TaiwanACH_Upload extends CRM_Core_Form {
       $contributionType = CRM_Contribute_PseudoConstant::contributionType();
       $paymentInstrument = CRM_Contribute_PseudoConstant::paymentInstrument();
       $stampStatus = CRM_Contribute_PseudoConstant::taiwanACHStampVerification();
-      $counter = array();
+      $counter = [];
       foreach($result['processed_data'] as &$line) {
         if (!empty($line['payment_instrument_id'])) {
           $line['payment_instrument'] = $paymentInstrument[$line['payment_instrument_id']];
@@ -89,7 +89,7 @@ class CRM_Contribute_Form_TaiwanACH_Upload extends CRM_Core_Form {
       }
       $result['counter'] = $counter;
       if ($result['import_type'] == 'transaction') {
-        $result['columns'] = array(
+        $result['columns'] = [
           'id' => ts('Contribution ID'),
           'trxn_id' => ts('Transaction ID'),
           'invoice_id' => ts('Invoice ID'),
@@ -101,10 +101,10 @@ class CRM_Contribute_Form_TaiwanACH_Upload extends CRM_Core_Form {
           'receive_date' => ts('Received'),
           'contribution_status' => ts('Status'),
           'cancel_reason' => ts('Cancelled or Failed Reason'),
-        );
+        ];
       }
       else {
-        $result['columns'] = array(
+        $result['columns'] = [
           'id' => ts('Recurring Contribution ID'),
           'invoice_id' => ts('Invoice ID'),
           'payment_type' => ts('Payment Instrument'),
@@ -115,12 +115,12 @@ class CRM_Contribute_Form_TaiwanACH_Upload extends CRM_Core_Form {
           'stamp_verification_status' => ts('Stamp Verification Status'),
           'verification_failed_date' => ts('Stamp Verification').' - '.ts('Cancelled or Failed Date'),
           'verification_failed_reason' => ts('Stamp Verification').' - '.ts('Cancelled or Failed Reason'),
-        );
+        ];
       }
       return $result;
     }
     else {
-      return array();
+      return [];
     }
   }
 

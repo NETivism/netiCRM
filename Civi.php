@@ -23,6 +23,6 @@ class Civi {
    * `Civi::$statics[__CLASS__]['foo'] = 'bar';
    * @endcode
    */
-  public static $statics = array();
+  public static $statics = [];
 
 }

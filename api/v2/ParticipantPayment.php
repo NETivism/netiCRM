@@ -62,7 +62,7 @@ function &civicrm_participant_payment_create(&$params) {
     return $error;
   }
 
-  $ids = array();
+  $ids = [];
   if (CRM_Utils_Array::value('id', $params)) {
     $ids['id'] = $params['id'];
   }
@@ -74,7 +74,7 @@ function &civicrm_participant_payment_create(&$params) {
     return $error;
   }
   else {
-    $payment             = array();
+    $payment             = [];
     $payment['id']       = $participantPayment->id;
     $payment['is_error'] = 0;
   }
@@ -104,13 +104,13 @@ function &civicrm_participant_payment_update(&$params) {
     return $error;
   }
 
-  $ids = array();
+  $ids = [];
   $ids['id'] = $params['id'];
 
   require_once 'CRM/Event/BAO/ParticipantPayment.php';
   $payment = CRM_Event_BAO_ParticipantPayment::create($params, $ids);
 
-  $participantPayment = array();
+  $participantPayment = [];
   _civicrm_object_to_array($payment, $participantPayment);
 
   return $participantPayment;

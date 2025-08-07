@@ -76,7 +76,7 @@ class api_v2_ConstantTest extends CiviUnitTestCase {
   }
 
   function tearDown() {
-    $this->quickCleanup(array('civicrm_option_group'));
+    $this->quickCleanup(['civicrm_option_group']);
   }
 
   /**
@@ -140,7 +140,7 @@ class api_v2_ConstantTest extends CiviUnitTestCase {
       )
     );
 
-    $parameters = array(TRUE, FALSE, TRUE);
+    $parameters = [TRUE, FALSE, TRUE];
     $result = civicrm_constant_get('activityType', $parameters);
 
     $this->assertEquals(2, count($result), "In line " . __LINE__);
@@ -190,7 +190,7 @@ class api_v2_ConstantTest extends CiviUnitTestCase {
 
     //  Testing on default set provided by civicrm_data.mysql
 
-    $result = civicrm_constant_get('locationType', array('all' => TRUE));
+    $result = civicrm_constant_get('locationType', ['all' => TRUE]);
 
     $this->assertEquals(5, count($result), "In line " . __LINE__);
     $this->assertContains('Home', $result, "In line " . __LINE__);
@@ -221,7 +221,7 @@ class api_v2_ConstantTest extends CiviUnitTestCase {
       )
     );
 
-    $parameters = array(TRUE, FALSE, TRUE);
+    $parameters = [TRUE, FALSE, TRUE];
     $result = civicrm_constant_get('phoneType', $parameters);
 
     $this->assertEquals(5, count($result), "In line " . __LINE__);
@@ -254,7 +254,7 @@ class api_v2_ConstantTest extends CiviUnitTestCase {
       )
     );
 
-    $parameters = array(TRUE, FALSE, TRUE);
+    $parameters = [TRUE, FALSE, TRUE];
     $result = civicrm_constant_get('mailProtocol', $parameters);
 
     $this->assertEquals(4, count($result), "In line " . __LINE__);

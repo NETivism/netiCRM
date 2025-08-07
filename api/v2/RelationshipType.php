@@ -116,7 +116,7 @@ function civicrm_relationship_type_create($params) {
 
   require_once 'CRM/Utils/Rule.php';
 
-  $ids = array();
+  $ids = [];
   if (isset($params['id']) && !CRM_Utils_Rule::integer($params['id'])) {
     return civicrm_create_error('Invalid value for relationship type ID');
   }
@@ -127,7 +127,7 @@ function civicrm_relationship_type_create($params) {
   require_once 'CRM/Contact/BAO/RelationshipType.php';
   $relationType = CRM_Contact_BAO_RelationshipType::add($params, $ids);
 
-  $relType = array();
+  $relType = [];
   _civicrm_object_to_array($relationType, $relType);
 
   return $relType;
@@ -141,8 +141,8 @@ function civicrm_relationship_type_create($params) {
 function civicrm_relationship_types_get($params = NULL) {
   _civicrm_initialize();
   require_once 'CRM/Contact/DAO/RelationshipType.php';
-  $relationshipTypes = array();
-  $relationshipType  = array();
+  $relationshipTypes = [];
+  $relationshipType  = [];
   $relationType      = new CRM_Contact_DAO_RelationshipType();
   if (!empty($params) && is_array($params)) {
     $properties = array_keys($relationType->fields());

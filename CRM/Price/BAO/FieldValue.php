@@ -86,7 +86,7 @@ class CRM_Price_BAO_FieldValue extends CRM_Price_DAO_FieldValue {
         $oldWeight = CRM_Core_DAO::getFieldValue('CRM_Price_DAO_FieldValue', $id, 'weight', 'id');
       }
 
-      $fieldValues = array('price_field_id' => CRM_Utils_Array::value('price_field_id', $params, 0));
+      $fieldValues = ['price_field_id' => CRM_Utils_Array::value('price_field_id', $params, 0)];
       $params['weight'] = CRM_Utils_Weight::updateOtherWeights('CRM_Price_DAO_FieldValue', $oldWeight, $params['weight'], $fieldValues);
     }
     else {

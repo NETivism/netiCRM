@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-class CRM_Campaign_DAO_Campaign extends CRM_Core_DAO
+                    class CRM_Campaign_DAO_Campaign extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -78,7 +78,7 @@ class CRM_Campaign_DAO_Campaign extends CRM_Core_DAO
    * @static
    */
   static $_log = false;
-  /**
+    /**
    * Unique Campaign ID.
    *
    * @var int unsigned
@@ -168,7 +168,7 @@ class CRM_Campaign_DAO_Campaign extends CRM_Core_DAO
    * @var datetime
    */
   public $last_modified_date;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -187,15 +187,15 @@ class CRM_Campaign_DAO_Campaign extends CRM_Core_DAO
   function &links()
   {
     if (!(self::$_links)) {
-      self::$_links = array(
+      self::$_links = [
         'parent_id' => 'civicrm_campaign:id',
         'created_id' => 'civicrm_contact:id',
         'last_modified_id' => 'civicrm_contact:id',
-      );
+      ];
     }
     return self::$_links;
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -211,7 +211,7 @@ class CRM_Campaign_DAO_Campaign extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -220,141 +220,141 @@ class CRM_Campaign_DAO_Campaign extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'id' => array(
+      self::$_fields = [
+        'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Campaign ID') ,
           'required' => true,
-          'import' => true,
+               'import' => true,
           'where' => 'civicrm_campaign.id',
           'headerPattern' => '',
           'dataPattern' => '',
-          'export' => true,
-        ) ,
-        'name' => array(
+           'export' => true,
+            ] ,
+        'name' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Campaign Name') ,
           'required' => true,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-          'import' => true,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+             'import' => true,
           'where' => 'civicrm_campaign.name',
           'headerPattern' => '',
           'dataPattern' => '',
-          'export' => true,
-        ) ,
-        'title' => array(
+           'export' => true,
+            ] ,
+        'title' => [
           'name' => 'title',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Campaign Title') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-          'import' => true,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+             'import' => true,
           'where' => 'civicrm_campaign.title',
           'headerPattern' => '',
           'dataPattern' => '',
-          'export' => true,
-        ) ,
-        'description' => array(
+           'export' => true,
+            ] ,
+        'description' => [
           'name' => 'description',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Campaign Description') ,
-          'rows' => 8,
-          'cols' => 60,
-        ) ,
-        'start_date' => array(
+             'rows' => 8,
+           'cols' => 60,
+              ] ,
+        'start_date' => [
           'name' => 'start_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Campaign Start Date') ,
-          'import' => true,
+               'import' => true,
           'where' => 'civicrm_campaign.start_date',
           'headerPattern' => '/^start|(s(tart\s)?date)$/i',
           'dataPattern' => '',
-          'export' => true,
-        ) ,
-        'end_date' => array(
+           'export' => true,
+            ] ,
+        'end_date' => [
           'name' => 'end_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Campaign End Date') ,
-          'import' => true,
+               'import' => true,
           'where' => 'civicrm_campaign.end_date',
           'headerPattern' => '/^end|(e(nd\s)?date)$/i',
           'dataPattern' => '',
-          'export' => true,
-        ) ,
-        'campaign_type_id' => array(
+           'export' => true,
+            ] ,
+        'campaign_type_id' => [
           'name' => 'campaign_type_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Campaign Type ID') ,
-          'import' => true,
+               'import' => true,
           'where' => 'civicrm_campaign.campaign_type_id',
           'headerPattern' => '',
           'dataPattern' => '',
-          'export' => true,
-          'default' => 'UL',
-        ) ,
-        'status_id' => array(
+           'export' => true,
+            'default' => 'UL',
+          ] ,
+        'status_id' => [
           'name' => 'status_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Campaign Status ID') ,
-          'import' => true,
+               'import' => true,
           'where' => 'civicrm_campaign.status_id',
           'headerPattern' => '',
           'dataPattern' => '',
-          'export' => true,
-          'default' => 'UL',
-        ) ,
-        'external_identifier' => array(
+           'export' => true,
+            'default' => 'UL',
+          ] ,
+        'external_identifier' => [
           'name' => 'external_identifier',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('External Identifier') ,
-          'maxlength' => 32,
-          'size' => CRM_Utils_Type::MEDIUM,
-          'import' => true,
+           'maxlength' => 32,
+           'size' => CRM_Utils_Type::MEDIUM,
+             'import' => true,
           'where' => 'civicrm_campaign.external_identifier',
           'headerPattern' => '/external\s?id/i',
           'dataPattern' => '/^\d{11,}$/',
-          'export' => true,
-        ) ,
-        'parent_id' => array(
+           'export' => true,
+            ] ,
+        'parent_id' => [
           'name' => 'parent_id',
           'type' => CRM_Utils_Type::T_INT,
-          'import' => true,
+               'import' => true,
           'where' => 'civicrm_campaign.parent_id',
           'headerPattern' => '',
           'dataPattern' => '',
-          'export' => true,
-          'default' => 'UL',
-          'FKClassName' => 'CRM_Campaign_DAO_Campaign',
-        ) ,
-        'is_active' => array(
+           'export' => true,
+            'default' => 'UL',
+            'FKClassName' => 'CRM_Campaign_DAO_Campaign',
+        ] ,
+        'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-          'default' => '',
-        ) ,
-        'created_id' => array(
+                  'default' => '',
+          ] ,
+        'created_id' => [
           'name' => 'created_id',
           'type' => CRM_Utils_Type::T_INT,
-          'FKClassName' => 'CRM_Contact_DAO_Contact',
-        ) ,
-        'created_date' => array(
+                    'FKClassName' => 'CRM_Contact_DAO_Contact',
+        ] ,
+        'created_date' => [
           'name' => 'created_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Campaign Created Date') ,
-        ) ,
-        'last_modified_id' => array(
+                  ] ,
+        'last_modified_id' => [
           'name' => 'last_modified_id',
           'type' => CRM_Utils_Type::T_INT,
-          'FKClassName' => 'CRM_Contact_DAO_Contact',
-        ) ,
-        'last_modified_date' => array(
+                    'FKClassName' => 'CRM_Contact_DAO_Contact',
+        ] ,
+        'last_modified_date' => [
           'name' => 'last_modified_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Last Modified Date') ,
-        ) ,
-      );
+                  ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -366,8 +366,8 @@ class CRM_Campaign_DAO_Campaign extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -387,7 +387,7 @@ class CRM_Campaign_DAO_Campaign extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -398,7 +398,7 @@ class CRM_Campaign_DAO_Campaign extends CRM_Core_DAO
           }
         }
       }
-    }
+                                                          }
     return self::$_import;
   }
   /**
@@ -410,7 +410,7 @@ class CRM_Campaign_DAO_Campaign extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
@@ -421,7 +421,7 @@ class CRM_Campaign_DAO_Campaign extends CRM_Core_DAO
           }
         }
       }
-    }
+                                                          }
     return self::$_export;
   }
 }

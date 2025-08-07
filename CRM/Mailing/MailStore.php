@@ -47,16 +47,16 @@ class CRM_Mailing_MailStore {
    */
   public static function getStore($name = NULL) {
     if($name) {
-      $params = array(
+      $params = [
         'name' => $name,
-      );
+      ];
     }
     else{
-      $params = array(
+      $params = [
         'is_default' => 1,
-      );
+      ];
     }
-    $setting = array();
+    $setting = [];
     CRM_Core_BAO_MailSettings::retrieve($params, $setting);
     $protocols = CRM_Core_PseudoConstant::mailProtocol();
 
@@ -128,9 +128,9 @@ class CRM_Mailing_MailStore {
       if ($this->_debug) {
         print "got to the end of the mailbox\n";
       }
-      return array();
+      return [];
     }
-    $mails = array();
+    $mails = [];
     $parser = new ezcMailParser;
     //set property text attachment as file CRM-5408
     $parser->options->parseTextAttachmentsAsFiles = TRUE;
@@ -155,9 +155,9 @@ class CRM_Mailing_MailStore {
   function maildir($name) {
     $config = CRM_Core_Config::singleton();
     $dir = $config->customFileUploadDir . DIRECTORY_SEPARATOR . $name;
-    foreach (array(
+    foreach ([
         'cur', 'new', 'tmp',
-      ) as $sub) {
+      ] as $sub) {
       if (!file_exists($dir . DIRECTORY_SEPARATOR . $sub)) {
         if ($this->_debug) {
           print "creating $dir/$sub\n";

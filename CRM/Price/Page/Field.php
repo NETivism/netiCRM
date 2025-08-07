@@ -74,46 +74,46 @@ class CRM_Price_Page_Field extends CRM_Core_Page {
       // helper variable for nicer formatting
       $deleteExtra = ts('Are you sure you want to delete this price field?');
       $copyExtra = ts('Are you sure you want to make a copy of this price field?');
-      self::$_actionLinks = array(
-        CRM_Core_Action::UPDATE => array(
+      self::$_actionLinks = [
+        CRM_Core_Action::UPDATE => [
           'name' => ts('Edit Price Field'),
           'url' => 'civicrm/admin/price/field',
           'qs' => 'action=update&reset=1&sid=%%sid%%&fid=%%fid%%',
           'title' => ts('Edit Price'),
-        ),
-        CRM_Core_Action::PREVIEW => array(
+        ],
+        CRM_Core_Action::PREVIEW => [
           'name' => ts('Preview Field'),
           'url' => 'civicrm/admin/price/field',
           'qs' => 'action=preview&reset=1&sid=%%sid%%&fid=%%fid%%',
           'title' => ts('Preview Price'),
-        ),
-        CRM_Core_Action::DISABLE => array(
+        ],
+        CRM_Core_Action::DISABLE => [
           'name' => ts('Disable'),
           'extra' => 'onclick = "enableDisable( %%fid%%,\'' . 'CRM_Price_BAO_Field' . '\',\'' . 'enable-disable' . '\' );"',
           'ref' => 'disable-action',
           'title' => ts('Disable Price'),
-        ),
-        CRM_Core_Action::ENABLE => array(
+        ],
+        CRM_Core_Action::ENABLE => [
           'name' => ts('Enable'),
           'extra' => 'onclick = "enableDisable( %%fid%%,\'' . 'CRM_Price_BAO_Field' . '\',\'' . 'disable-enable' . '\' );"',
           'ref' => 'enable-action',
           'title' => ts('Enable Price'),
-        ),
-        CRM_Core_Action::COPY => array(
+        ],
+        CRM_Core_Action::COPY => [
           'name' => ts('Copy'),
           'url' => CRM_Utils_System::currentPath(),
           'qs' => 'action=copy&sid=%%sid%%&fid=%%fid%%&key=%%key%%',
           'title' => ts('Make a Copy of Price Field'),
           'extra' => 'onclick = "return confirm(\'' . $copyExtra . '\');"',
-        ),
-        CRM_Core_Action::DELETE => array(
+        ],
+        CRM_Core_Action::DELETE => [
           'name' => ts('Delete'),
           'url' => 'civicrm/admin/price/field',
           'qs' => 'action=delete&reset=1&sid=%%sid%%&fid=%%fid%%',
           'title' => ts('Delete Price'),
           'extra' => 'onclick = "return confirm(\'' . $deleteExtra . '\');"',
-        ),
-      );
+        ],
+      ];
     }
     return self::$_actionLinks;
   }
@@ -128,7 +128,7 @@ class CRM_Price_Page_Field extends CRM_Core_Page {
    */
   function browse() {
 
-    $priceField = array();
+    $priceField = [];
     $priceFieldBAO = new CRM_Price_BAO_Field();
 
     // fkey is sid
@@ -141,13 +141,13 @@ class CRM_Price_Page_Field extends CRM_Core_Page {
     $this->assign('key', $key);
 
     while ($priceFieldBAO->fetch()) {
-      $priceField[$priceFieldBAO->id] = array();
+      $priceField[$priceFieldBAO->id] = [];
       CRM_Core_DAO::storeValues($priceFieldBAO, $priceField[$priceFieldBAO->id]);
 
       // get price if it's a text field
       if ($priceFieldBAO->html_type == 'Text') {
-        $optionValues = array();
-        $params = array('price_field_id' => $priceFieldBAO->id);
+        $optionValues = [];
+        $params = ['price_field_id' => $priceFieldBAO->id];
 
 
         CRM_Price_BAO_FieldValue::retrieve($params, $optionValues);
@@ -178,11 +178,11 @@ class CRM_Price_Page_Field extends CRM_Core_Page {
       $priceField[$priceFieldBAO->id]['html_type'] = $htmlTypes[$priceField[$priceFieldBAO->id]['html_type']];
       $priceField[$priceFieldBAO->id]['order'] = $priceField[$priceFieldBAO->id]['weight'];
       $priceField[$priceFieldBAO->id]['action'] = CRM_Core_Action::formLink(self::actionLinks(), $action,
-        array(
+        [
           'fid' => $priceFieldBAO->id,
           'sid' => $this->_sid,
           'key' => $key
-        )
+        ]
       );
     }
 
@@ -299,13 +299,13 @@ class CRM_Price_Page_Field extends CRM_Core_Page {
         // add breadcrumb
 
         $url = CRM_Utils_System::url('civicrm/admin/price/field', 'reset=1');
-        CRM_Utils_System::appendBreadCrumb(array(array('title'=>ts('Price'), 'url'=> $url)));
+        CRM_Utils_System::appendBreadCrumb([['title'=>ts('Price'), 'url'=> $url]]);
         $this->assign('usedPriceSetTitle', CRM_Price_BAO_Field::getTitle($fid));
         $this->assign('usedBy', $usedBy);
-        $comps = array("Event" => "civicrm_event",
+        $comps = ["Event" => "civicrm_event",
           "Contribution" => "civicrm_contribution_page",
-        );
-        $priceSetContexts = array();
+        ];
+        $priceSetContexts = [];
         foreach ($comps as $name => $table) {
           if (CRM_Utils_Array::arrayKeyExists($table, $usedBy)) {
             $priceSetContexts[] = $name;
@@ -324,7 +324,7 @@ class CRM_Price_Page_Field extends CRM_Core_Page {
       $groupTitle = CRM_Price_BAO_Set::getTitle($this->_sid);
       $this->assign('sid', $this->_sid);
       $this->assign('groupTitle', $groupTitle);
-      CRM_Utils_System::setTitle(ts('%1 - Price Fields', array(1 => $groupTitle)));
+      CRM_Utils_System::setTitle(ts('%1 - Price Fields', [1 => $groupTitle]));
     }
 
     // assign vars to templates

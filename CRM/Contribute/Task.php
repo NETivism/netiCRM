@@ -67,50 +67,50 @@ class CRM_Contribute_Task {
    */
   static function &tasks() {
     if (!(self::$_tasks)) {
-      self::$_tasks = array(
+      self::$_tasks = [
       /*
         1 => array('title' => ts('Delete Contributions'),
           'class' => 'CRM_Contribute_Form_Task_Delete',
           'result' => FALSE,
         ),
        */
-        2 => array('title' => ts('Print Contributions'),
+        2 => ['title' => ts('Print Contributions'),
           'class' => 'CRM_Contribute_Form_Task_Print',
           'result' => FALSE,
-        ),
-        3 => array('title' => ts('Batch Update Contributions Via Profile'),
-          'class' => array('CRM_Contribute_Form_Task_PickProfile',
+        ],
+        3 => ['title' => ts('Batch Update Contributions Via Profile'),
+          'class' => ['CRM_Contribute_Form_Task_PickProfile',
             'CRM_Contribute_Form_Task_Batch',
-          ),
+          ],
           'result' => TRUE,
-        ),
-        4 => array('title' => ts('Export Contributions'),
-          'class' => array('CRM_Export_Form_Select',
+        ],
+        4 => ['title' => ts('Export Contributions'),
+          'class' => ['CRM_Export_Form_Select',
             'CRM_Export_Form_Map',
-          ),
+          ],
           'result' => FALSE,
-        ),
-        5 => array('title' => ts('Send Email to Contacts'),
+        ],
+        5 => ['title' => ts('Send Email to Contacts'),
           'class' => 'CRM_Contribute_Form_Task_Email',
           'result' => TRUE,
-        ),
-        6 => array('title' => ts('Update Pending Contribution Status'),
+        ],
+        6 => ['title' => ts('Update Pending Contribution Status'),
           'class' => 'CRM_Contribute_Form_Task_Status',
           'result' => TRUE,
-        ),
-        7 => array('title' => ts('Print or Email Contribution Receipts'),
+        ],
+        7 => ['title' => ts('Print or Email Contribution Receipts'),
           'class' => 'CRM_Contribute_Form_Task_PDF',
           'result' => FALSE,
-        ),
-      );
+        ],
+      ];
 
       $providersCount = CRM_SMS_BAO_Provider::activeProviderCount();
       if ($providersCount) {
-        self::$_tasks[8] = array(
+        self::$_tasks[8] = [
           'title' => ts('SMS - schedule/send'),
           'class' => 'CRM_Contribute_Form_Task_SMS',
           'result' => TRUE,
-        );
+        ];
       }
 
       //CRM-4418, check for delete
@@ -134,7 +134,7 @@ class CRM_Contribute_Task {
    */
   static function &taskTitles() {
     self::tasks();
-    $titles = array();
+    $titles = [];
     foreach (self::$_tasks as $id => $value) {
       // skip Print Contribution task
       if ($id != 2) {
@@ -154,18 +154,18 @@ class CRM_Contribute_Task {
    * @access public
    */
   static function &permissionedTaskTitles($permission) {
-    $tasks = array();
+    $tasks = [];
     if (($permission == CRM_Core_Permission::EDIT)
       || CRM_Core_Permission::check('edit contributions')
     ) {
       $tasks = self::taskTitles();
     }
     else {
-      $tasks = array(
+      $tasks = [
         3 => self::$_tasks[3]['title'],
         5 => self::$_tasks[5]['title'],
         7 => self::$_tasks[7]['title'],
-      );
+      ];
 
       //CRM-4418,
       if (CRM_Core_Permission::check('delete in CiviContribute')) {
@@ -191,9 +191,9 @@ class CRM_Contribute_Task {
       // make the print task by default
       $value = 2;
     }
-    return array(self::$_tasks[$value]['class'],
+    return [self::$_tasks[$value]['class'],
       self::$_tasks[$value]['result'],
-    );
+    ];
   }
 }
 

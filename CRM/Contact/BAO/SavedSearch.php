@@ -151,7 +151,7 @@ class CRM_Contact_BAO_SavedSearch extends CRM_Contact_DAO_SavedSearch {
         return CRM_Contact_BAO_SearchCustom::contactIDSQL(NULL, $id);
       }
     }
-    $tables = $whereTables = array();
+    $tables = $whereTables = [];
     $where = CRM_Contact_BAO_SavedSearch::whereClause($id, $tables, $whereTables);
     if (!$where) {
       $where = '( 1 )';
@@ -172,10 +172,10 @@ WHERE  $where";
         return CRM_Contact_BAO_SearchCustom::fromWhereEmail(NULL, $id);
       }
       else {
-        $tables = $whereTables = array('civicrm_contact' => 1, 'civicrm_email' => 1);
+        $tables = $whereTables = ['civicrm_contact' => 1, 'civicrm_email' => 1];
         $where = CRM_Contact_BAO_SavedSearch::whereClause($id, $tables, $whereTables);
         $from = CRM_Contact_BAO_Query::getFromClause($whereTables);
-        return array($from, $where);
+        return [$from, $where];
       }
     }
     else {
@@ -200,7 +200,7 @@ WHERE  $where";
     }
 
     if (!empty($params)) {
-      $tables = $whereTables = array();
+      $tables = $whereTables = [];
       $this->where_clause = CRM_Contact_BAO_Query::getWhereClause($params, NULL, $tables, $whereTables);
       if (!empty($tables)) {
         $this->select_tables = serialize($tables);

@@ -13,16 +13,16 @@ class CRM_Contribute_Import_ImportJob_Contribution extends CRM_Import_ImportJob 
     parent::__construct($tableName);
 
     //initialize the properties.
-    $properties = array(
+    $properties = [
       'mapperSoftCredit',
       'mapperPCP',
       'mapperLocTypes',
       'mapperPhoneTypes',
       'mapperImProviders',
       'mapperWebsiteTypes',
-    );
+    ];
     foreach ($properties as $property) {
-      $this->{"_$property"} = array();
+      $this->{"_$property"} = [];
     }
   }
 
@@ -36,26 +36,26 @@ class CRM_Contribute_Import_ImportJob_Contribution extends CRM_Import_ImportJob 
         $fileName = 'import_contribution_'.$fileName.'.zip';
         $config = CRM_Core_Config::singleton();
         $file = $config->uploadDir.$fileName;
-        $batchParams = array(
+        $batchParams = [
           'label' => ts('Import Contributions'),
-          'startCallback' => array($this, 'batchStartCallback'),
+          'startCallback' => [$this, 'batchStartCallback'],
           'startCallbackArgs' => NULL,
-          'processCallback' => array($this, __FUNCTION__),
+          'processCallback' => [$this, __FUNCTION__],
           'processCallbackArgs' => $allArgs,
-          'finishCallback' => array($this, 'batchFinishCallback'),
+          'finishCallback' => [$this, 'batchFinishCallback'],
           'finishCallbackArgs' => NULL,
-          'download' => array(
-            'header' => array(
+          'download' => [
+            'header' => [
               'Content-Type: application/zip',
               'Content-Transfer-Encoding: Binary',
               'Content-Disposition: attachment;filename="'.$fileName.'"',
-            ),
+            ],
             'file' => $file,
-          ),
+          ],
           'actionPermission' => '',
           'total' => $this->_totalRowCount,
           'processed' => 0,
-        );
+        ];
         $batch = new CRM_Batch_BAO_Batch();
         $batch->start($batchParams);
 
@@ -78,9 +78,9 @@ class CRM_Contribute_Import_ImportJob_Contribution extends CRM_Import_ImportJob 
     }
 
     $mapper = $this->_mapper;
-    $mapperFields = array();
-    $mapperSoftCredit = array();
-    $mapperPCP = array();
+    $mapperFields = [];
+    $mapperSoftCredit = [];
+    $mapperPCP = [];
     foreach ($mapper as $key => $value) {
       $mapperFields[$key] = $mapper[$key][0];
       if (isset($mapper[$key][0]) && $mapper[$key][0] == 'soft_credit') {
@@ -144,16 +144,16 @@ class CRM_Contribute_Import_ImportJob_Contribution extends CRM_Import_ImportJob 
     $name = $form->controller->_name;
     $scope = CRM_Utils_System::getClassName($form->controller);
     $scope .= '_'.$form->controller->_key;
-    CRM_Core_Session::registerAndRetrieveSessionObjects(array("_{$name}_container", array('CiviCRM', $scope)));
+    CRM_Core_Session::registerAndRetrieveSessionObjects(["_{$name}_container", ['CiviCRM', $scope]]);
   }
 
   public function batchStartCallback() {
     global $civicrm_batch;
     if ($civicrm_batch) {
       $query = "SELECT COUNT(*) FROM $this->_tableName WHERE $this->_statusFieldName != %1";
-      $processed = CRM_Core_DAO::singleValueQuery($query, array(
-        1 => array(CRM_Import_Parser::PENDING, 'Integer')
-      ));
+      $processed = CRM_Core_DAO::singleValueQuery($query, [
+        1 => [CRM_Import_Parser::PENDING, 'Integer']
+      ]);
       $civicrm_batch->data['processed'] += $processed;
     }
   }
@@ -164,7 +164,7 @@ class CRM_Contribute_Import_ImportJob_Contribution extends CRM_Import_ImportJob 
       // calculate import results from table
       $query = "SELECT $this->_statusFieldName as status, COUNT(*) as count FROM $this->_tableName WHERE 1 GROUP BY $this->_statusFieldName";
       $dao = CRM_Core_DAO::executeQuery($query);
-      $statusCount = array();
+      $statusCount = [];
       while($dao->fetch()) {
         $name = CRM_Import_Parser::statusName($dao->status);
         $statusCount[$name] = $dao->count;
@@ -182,7 +182,7 @@ class CRM_Contribute_Import_ImportJob_Contribution extends CRM_Import_ImportJob 
       if ($zip->open($zipFile, ZipArchive::CREATE) == TRUE) {
         $config = CRM_Core_Config::singleton();
         $fileName = str_replace(CRM_Import_ImportJob::TABLE_PREFIX, CRM_Contribute_Import_Parser::ERROR_FILE_PREFIX, $this->_tableName);
-        $errorFiles = array();
+        $errorFiles = [];
         $errorFiles[] = CRM_Contribute_Import_Parser::errorFileName(CRM_Contribute_Import_Parser::ERROR, $fileName);
         $errorFiles[] = CRM_Contribute_Import_Parser::errorFileName(CRM_Contribute_Import_Parser::CONFLICT, $fileName);
         $errorFiles[] = CRM_Contribute_Import_Parser::errorFileName(CRM_Contribute_Import_Parser::DUPLICATE, $fileName);

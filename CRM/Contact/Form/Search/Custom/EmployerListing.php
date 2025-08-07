@@ -43,12 +43,12 @@ class CRM_Contact_Form_Search_Custom_EmployerListing implements CRM_Contact_Form
     /**
      * Define the columns for search result rows
      */
-    $this->_columns = array(ts('Contact Id') => 'contact_id',
+    $this->_columns = [ts('Contact Id') => 'contact_id',
       ts('Individual Name') => 'sort_name',
       ts('Individual State') => 'indState',
       ts('Employer') => 'employer',
       ts('Employer State') => 'empState',
-    );
+    ];
   }
 
   function buildForm(&$form) {
@@ -60,14 +60,14 @@ class CRM_Contact_Form_Search_Custom_EmployerListing implements CRM_Contact_Form
       ts('Individual\'s Name (last, first)')
     );
 
-    $stateProvince = array('' => ts('- any state/province -')) + CRM_Core_PseudoConstant::stateProvince();
+    $stateProvince = ['' => ts('- any state/province -')] + CRM_Core_PseudoConstant::stateProvince();
     $form->addElement('select', 'state_province_id', ts('Individual\'s Home State'), $stateProvince);
 
     /**
      * If you are using the sample template, this array tells the template fields to render
      * for the search form.
      */
-    $form->assign('elements', array('sort_name', 'state_province_id'));
+    $form->assign('elements', ['sort_name', 'state_province_id']);
   }
 
   /*
@@ -75,8 +75,8 @@ class CRM_Contact_Form_Search_Custom_EmployerListing implements CRM_Contact_Form
      */
   function setDefaultValues() {
     // Setting default search state to California
-    return array('state_province_id' => 1004,
-    );
+    return ['state_province_id' => 1004,
+    ];
   }
 
   /**
@@ -161,7 +161,7 @@ class CRM_Contact_Form_Search_Custom_EmployerListing implements CRM_Contact_Form
      *
      */
   function where($includeContactIDs = FALSE) {
-    $clauses = array();
+    $clauses = [];
 
     // These are required filters for our query.
     $clauses[] = "cInd.contact_type = 'Individual'";
@@ -189,7 +189,7 @@ class CRM_Contact_Form_Search_Custom_EmployerListing implements CRM_Contact_Form
     }
 
     if ($includeContactIDs) {
-      $contactIDs = array();
+      $contactIDs = [];
       foreach ($this->_formValues as $id => $value) {
         list($contactID, $additionalID) = CRM_Core_Form::cbExtract($id);
         if ($value && !empty($contactID)) {
@@ -207,7 +207,7 @@ class CRM_Contact_Form_Search_Custom_EmployerListing implements CRM_Contact_Form
   }
 
   function having($includeContactIDs = FALSE) {
-    $clauses = array();
+    $clauses = [];
     return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 

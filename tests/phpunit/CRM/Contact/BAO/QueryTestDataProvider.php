@@ -47,46 +47,46 @@ class CRM_Contact_BAO_QueryTestDataProvider implements Iterator
      *  IDs should be selected when the form values are applied to the
      *  database in dataset.xml
      */
-    private $dataset = array(
+    private $dataset = [
               //  Include static group 3
-              array( 'fv' => array( 'group' => array( '3' => 1 ) ),
-                     'id' => array(  '17', '18', '19', '20', '21',
-                                     '22', '23', '24' )
-                     ),
+              [ 'fv' => [ 'group' => [ '3' => 1 ] ],
+                     'id' => [  '17', '18', '19', '20', '21',
+                                     '22', '23', '24' ]
+                     ],
 
               //  Include static group 5
-              array( 'fv' => array( 'group' => array( '5' => 1 ) ),
-                     'id' => array( '13', '14', '15', '16', '21',
-                                    '22', '23', '24' )
-                     ),
+              [ 'fv' => [ 'group' => [ '5' => 1 ] ],
+                     'id' => [ '13', '14', '15', '16', '21',
+                                    '22', '23', '24' ]
+                     ],
 
               //  Include static groups 3 and 5
-              array( 'fv' => array( 'group' => array( '3' => 1,
-                                                      '5' => 1 ) ),
-                     'id' => array( '13', '14', '15', '16', '17', '18',
-                                    '19', '20', '21', '22', '23', '24' )
-                     ),
+              [ 'fv' => [ 'group' => [ '3' => 1,
+                                                      '5' => 1 ] ],
+                     'id' => [ '13', '14', '15', '16', '17', '18',
+                                    '19', '20', '21', '22', '23', '24' ]
+                     ],
 
               //  Include tag 7
-              array( 'fv' => array( 'tag' => array( '7' => 1 ) ),
-                     'id' => array( '11', '12', '15', '16',
-                                    '19', '20', '23', '24' )
-                     ),
+              [ 'fv' => [ 'tag' => [ '7' => 1 ] ],
+                     'id' => [ '11', '12', '15', '16',
+                                    '19', '20', '23', '24' ]
+                     ],
 
               //  Include tag 9
-              array( 'fv' => array( 'tag' => array( '9' => 1 ) ),
-                     'id' => array( '10', '12', '14', '16',
-                                    '18', '20', '22', '24' )
-                     ),
+              [ 'fv' => [ 'tag' => [ '9' => 1 ] ],
+                     'id' => [ '10', '12', '14', '16',
+                                    '18', '20', '22', '24' ]
+                     ],
 
               //  Include tags 7 and 9
-              array( 'fv' => array( 'tag' => array( '7' => 1,
-                                                    '9' => 1 ) ),
-                     'id' => array( '10', '11', '12', '14', '15', '16',
-                                    '18', '19', '20', '22', '23', '24' )
-                     ),
+              [ 'fv' => [ 'tag' => [ '7' => 1,
+                                                    '9' => 1 ] ],
+                     'id' => [ '10', '11', '12', '14', '15', '16',
+                                    '18', '19', '20', '22', '23', '24' ]
+                     ],
 
-            );
+            ];
 
     public function _construct( )
     {
@@ -102,14 +102,14 @@ class CRM_Contact_BAO_QueryTestDataProvider implements Iterator
     {
         $count = count( $this->dataset[$this->i]['id'] );
         $ids   = $this->dataset[$this->i]['id'];
-        $full  = array();
+        $full  = [];
         foreach( $this->dataset[$this->i]['id'] as $key => $value ) {
-            $full[] = array( 'contact_id' => $value,
+            $full[] = [ 'contact_id' => $value,
                              'contact_type' => 'Individual',
                              'sort_name'    => "Test Contact $value"
-                             );
+                             ];
         }
-        return array( $this->dataset[$this->i]['fv'], $count, $ids, $full );
+        return [ $this->dataset[$this->i]['fv'], $count, $ids, $full ];
     }
 
     public function key( )

@@ -60,7 +60,7 @@ class CRM_Contribute_Import_Form_Summary extends CRM_Core_Form {
     $prefix = str_replace(CRM_Import_ImportJob::TABLE_PREFIX, CRM_Contribute_Import_Parser::ERROR_FILE_PREFIX, $tableName);
     $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String', $this);
 
-    CRM_Import_Parser::setImportErrorFilenames($qfKey, array('error', 'conflict','soft_credit_error', 'pcp_error', 'pledge_payment_error', 'duplicate', 'no_match'), 'CRM_Contribute_Import_Parser', $prefix, $this);
+    CRM_Import_Parser::setImportErrorFilenames($qfKey, ['error', 'conflict','soft_credit_error', 'pcp_error', 'pledge_payment_error', 'duplicate', 'no_match'], 'CRM_Contribute_Import_Parser', $prefix, $this);
 
     $invalidRowCount = $this->get('invalidRowCount');
     $invalidSoftCreditRowCount = $this->get('invalidSoftCreditRowCount');
@@ -94,7 +94,7 @@ class CRM_Contribute_Import_Form_Summary extends CRM_Core_Form {
     );
     $this->assign('dupeActionString', $dupeActionString);
 
-    $properties = array('totalRowCount', 'validRowCount', 'invalidRowCount', 'validSoftCreditRowCount', 'validPCPRowCount', 'invalidSoftCreditRowCount', 'invalidPCPRowCount', 'conflictRowCount', 'downloadConflictRecordsUrl', 'downloadErrorRecordsUrl', 'duplicateRowCount', 'downloadDuplicateRecordsUrl', 'downloadMismatchRecordsUrl', 'groupAdditions', 'unMatchCount', 'validPledgePaymentRowCount', 'invalidPledgePaymentRowCount', 'downloadPledgePaymentErrorRecordsUrl', 'downloadSoftCreditErrorRecordsUrl', 'downloadPCPErrorRecordsUrl');
+    $properties = ['totalRowCount', 'validRowCount', 'invalidRowCount', 'validSoftCreditRowCount', 'validPCPRowCount', 'invalidSoftCreditRowCount', 'invalidPCPRowCount', 'conflictRowCount', 'downloadConflictRecordsUrl', 'downloadErrorRecordsUrl', 'duplicateRowCount', 'downloadDuplicateRecordsUrl', 'downloadMismatchRecordsUrl', 'groupAdditions', 'unMatchCount', 'validPledgePaymentRowCount', 'invalidPledgePaymentRowCount', 'downloadPledgePaymentErrorRecordsUrl', 'downloadSoftCreditErrorRecordsUrl', 'downloadPCPErrorRecordsUrl'];
     foreach ($properties as $property) {
       $this->assign($property, $this->get($property));
     }
@@ -107,12 +107,12 @@ class CRM_Contribute_Import_Form_Summary extends CRM_Core_Form {
    * @access public
    */
   public function buildQuickForm() {
-    $this->addButtons(array(
-        array('type' => 'next',
+    $this->addButtons([
+        ['type' => 'next',
           'name' => ts('Done'),
           'isDefault' => TRUE,
-        ),
-      )
+        ],
+      ]
     );
   }
 

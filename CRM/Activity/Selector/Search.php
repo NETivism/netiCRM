@@ -68,7 +68,7 @@ class CRM_Activity_Selector_Search extends CRM_Core_Selector_Base implements CRM
    * @static
    */
 
-  static $_properties = array(
+  static $_properties = [
     'contact_id',
     'contact_type',
     'contact_sub_type',
@@ -86,7 +86,7 @@ class CRM_Activity_Selector_Search extends CRM_Core_Selector_Base implements CRM
     'activity_type',
     'activity_is_test',
     'activity_duration',
-  );
+  ];
 
   /**
    * are we restricting ourselves to a single contact
@@ -242,13 +242,13 @@ class CRM_Activity_Selector_Search extends CRM_Core_Selector_Base implements CRM
       FALSE,
       $this->_activityClause
     );
-    $rows = array();
+    $rows = [];
 
     $mailingIDs = &CRM_Mailing_BAO_Mailing::mailingACLIDs();
     $accessCiviMail = CRM_Core_Permission::check('access CiviMail');
 
     while ($result->fetch()) {
-      $row = array();
+      $row = [];
 
       // ignore rows where we dont have an activity id
       if (empty($result->activity_id)) {
@@ -306,10 +306,10 @@ class CRM_Activity_Selector_Search extends CRM_Core_Selector_Base implements CRM
         $this->_compContext
       );
       $row['action'] = CRM_Core_Action::formLink($actionLinks, NULL,
-        array('id' => $result->activity_id,
+        ['id' => $result->activity_id,
           'cid' => $contactId,
           'cxt' => $this->_context,
-        )
+        ]
       );
       $rows[] = $row;
     }
@@ -339,43 +339,43 @@ class CRM_Activity_Selector_Search extends CRM_Core_Selector_Base implements CRM
    */
   public function &getColumnHeaders($action = NULL, $output = NULL) {
     if (!isset(self::$_columnHeaders)) {
-      self::$_columnHeaders = array(
-        array(
+      self::$_columnHeaders = [
+        [
           'name' => ts('Type'),
           'sort' => 'activity_type_id',
           'direction' => CRM_Utils_Sort::DONTCARE,
-        ),
-        array(
+        ],
+        [
           'name' => ts('Subject'),
           'sort' => 'subject',
           'direction' => CRM_Utils_Sort::DONTCARE,
-        ),
-        array(
+        ],
+        [
           'name' => ts('Added By'),
           'sort' => 'sort_name',
           'direction' => CRM_Utils_Sort::DONTCARE,
-        ),
-        array('name' => ts('With Contact')),
-        array('name' => ts('Assigned')),
-        array(
+        ],
+        ['name' => ts('With Contact')],
+        ['name' => ts('Assigned')],
+        [
           'name' => ts('Date'),
           'sort' => 'activity_date_time',
           'direction' => CRM_Utils_Sort::DESCENDING,
-        ),
-        array(
+        ],
+        [
           'name' => ts('Duration'),
           'sort' => 'duration',
           'direction' => CRM_Utils_Sort::DONTCARE,
-        ),
-        array(
+        ],
+        [
           'name' => ts('Status'),
           'sort' => 'status_id',
           'direction' => CRM_Utils_Sort::DONTCARE,
-        ),
-        array(
+        ],
+        [
           'desc' => ts('Actions'),
-        ),
-      );
+        ],
+      ];
     }
     return self::$_columnHeaders;
   }

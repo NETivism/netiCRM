@@ -132,7 +132,7 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
       $this->addField($name, $field['title'], $field['type'], $field['headerPattern'], $field['dataPattern'], $field['hasLocationType']);
     }
 
-    $this->_newMemberships = array();
+    $this->_newMemberships = [];
 
     $this->setActiveFields($this->_mapperKeys);
     $this->setActiveFieldLocationTypes($this->_mapperLocType);
@@ -157,7 +157,7 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
     foreach ($this->_mapperKeys as $key) {
       if (preg_match('/^contact_email/', $key) && !strstr($key, 'email_greeting')) {
         $this->_emailIndex = $index;
-        $this->_allEmails = array();
+        $this->_allEmails = [];
       }
       elseif (preg_match('/^contact__phone/', $key)) {
         $this->_phoneIndex = $index;
@@ -176,7 +176,7 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
       }
       elseif ($key == 'contact__external_identifier') {
         $this->_externalIdentifierIndex = $index;
-        $this->_allExternalIdentifiers = array();
+        $this->_allExternalIdentifiers = [];
       }
       elseif($key == 'membership_contact_id'){
         $this->_contactIdIndex = $index;
@@ -208,15 +208,15 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
     
     // create dedupe fields mapping to prevent each loop query
     if (!empty($this->_dedupeRuleGroupId)) {
-      $ruleParams = array(
+      $ruleParams = [
         'id' => $this->_dedupeRuleGroupId,
-      );
+      ];
     }
     else {
-      $ruleParams = array(
+      $ruleParams = [
         'contact_type' => $this->_contactType,
         'level' => 'Strict',
-      );
+      ];
     }
     $this->_dedupeRuleFields = CRM_Dedupe_BAO_Rule::dedupeRuleFieldsMapping($ruleParams);
   }
@@ -346,13 +346,13 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
           case 'contribution_contact_id':
             $is_deleted = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $val, 'is_deleted', 'id');
             if ($is_deleted) {
-              CRM_Import_Parser_Contact::addToErrorMsg(ts('Deleted Contact(s): %1', array(1 => ts('Contact ID').'-'.$val)), $errorMessage);
+              CRM_Import_Parser_Contact::addToErrorMsg(ts('Deleted Contact(s): %1', [1 => ts('Contact ID').'-'.$val]), $errorMessage);
             }
             break;
           case 'external_identifier':
             $is_deleted = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $val, 'is_deleted', 'external_identifier');
             if ($is_deleted) {
-              CRM_Import_Parser_Contact::addToErrorMsg(ts('Deleted Contact(s): %1', array(1 => ts('External Identifier').'-'.$val)), $errorMessage);
+              CRM_Import_Parser_Contact::addToErrorMsg(ts('Deleted Contact(s): %1', [1 => ts('External Identifier').'-'.$val]), $errorMessage);
             }
             break;
         }
@@ -363,7 +363,7 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
     $params['contact_type'] = 'Membership';
 
     //checking error in custom data
-    $contactParams = array();
+    $contactParams = [];
     $contactParams['contact_type'] = $this->_contactType;
     if (!empty($this->_contactSubType)) {
       $csType = $this->_contactSubType;
@@ -412,7 +412,7 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
 
     $session = CRM_Core_Session::singleton();
     $dateType = $session->get("dateTypes");
-    $formatted = array();
+    $formatted = [];
     $customFields = CRM_Core_BAO_CustomField::getFields(CRM_Utils_Array::value('contact_type', $params));
 
     // don't add to recent items, CRM-4399
@@ -477,7 +477,7 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
       $indieFields = $tempIndieFields;
     }
 
-    $paramValues = array();
+    $paramValues = [];
     foreach ($params as $key => $field) {
       if ($field == NULL || $field === '') {
         continue;
@@ -527,7 +527,7 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
         $field_id = str_replace('custom_', '', $this->_dataReferenceField);
         list($custom_table, $custom_field, $ignore) = CRM_Core_BAO_CustomField::getTableColumnGroup($field_id);
         $sql = "SELECT entity_id FROM $custom_table WHERE $custom_field = %1";
-        $queryParams = array(1 => array($paramValues[$this->_dataReferenceField], 'String'));
+        $queryParams = [1 => [$paramValues[$this->_dataReferenceField], 'String']];
         $membership_id = CRM_Core_DAO::singleValueQuery($sql, $queryParams);
       }
 
@@ -535,7 +535,7 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
         $dao = new CRM_Member_BAO_Membership();
         $dao->id = $membership_id;
         if ($dao->find(TRUE)) {
-          $dates = array('join_date', 'start_date', 'end_date');
+          $dates = ['join_date', 'start_date', 'end_date'];
           foreach ($dates as $v) {
             if (empty($formatted[$v]) && !empty($dao->$v)) {
               $formatted[$v] = $dao->$v;
@@ -547,10 +547,10 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
             'Membership'
           );
 
-          $ids = array(
+          $ids = [
             'membership' => $membership_id,
             'userId' => $session->get('userID'),
-          );
+          ];
           $newMembership = &CRM_Member_BAO_Membership::create($formatted, $ids, TRUE, 'Membership Renewal');
           // Workaround: why $formatted have reminder_date value 'null'
           // reference: CRM_Member_BAO_Membership::add(&$params, &$ids)
@@ -633,7 +633,7 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
         // Using new Dedupe rule for error message handling
         $fieldsArray = $this->_dedupeRuleFields;
 
-        $dispArray = array();
+        $dispArray = [];
         // workaround for #23859
         $this->_importableContactFields['sort_name']['title'] = ts('Sort Name');
         foreach ($fieldsArray as $value) {
@@ -726,11 +726,11 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
    *  @access public
    */
   function formattedDates($calcDates, &$formatted) {
-    $dates = array('join_date',
+    $dates = ['join_date',
       'start_date',
       'end_date',
       'reminder_date',
-    );
+    ];
 
     foreach ($dates as $d) {
       if (isset($formatted[$d]) &&

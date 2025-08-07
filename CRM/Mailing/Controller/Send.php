@@ -73,7 +73,7 @@ class CRM_Mailing_Controller_Send extends CRM_Core_Controller {
 
     // add all the actions
 
-    $uploadNames = array_merge(array('textFile', 'htmlFile'),
+    $uploadNames = array_merge(['textFile', 'htmlFile'],
       CRM_Core_BAO_File::uploadNames()
     );
 

@@ -52,12 +52,12 @@ require_once 'CRM/Grant/BAO/Grant.php';
  * @access public
  */
 function civicrm_api3_grant_create($params) {
-  $values = array();
+  $values = [];
   _civicrm_api3_custom_format_params($params, $values, 'Grant');
   $params = array_merge($values,$params);
   // BAO is non standard to we need to construct $ids array. Ideally we would fix BAO to accept $params without
   // id for standardisation
-  $ids = array();
+  $ids = [];
   if (CRM_Utils_Array::value('id', $params)) {
     $ids['grant'] = $params['id'];
   }
@@ -66,7 +66,7 @@ function civicrm_api3_grant_create($params) {
     return civicrm_api3_create_error('Grant not created ');
   }
   else {
-    $values = array();
+    $values = [];
     _civicrm_api3_object_to_array($bao, $values[$bao->id]);
     return civicrm_api3_create_success($values, $params, $bao, 'create');
   }

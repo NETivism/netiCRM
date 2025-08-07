@@ -8,11 +8,11 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase
 
     function get_info( ) 
     {
-        return array(
+        return [
                      'name'        => 'Activity BAOs',
                      'description' => 'Test all Activity_BAO_Activity methods.',
                      'group'       => 'CiviCRM BAO Tests',
-                     );
+                     ];
     }
     
     function setUp( ) 
@@ -23,7 +23,7 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase
     function tearDown( ) 
     {
         // truncate a few tables
-        $tablesToTruncate = array( 'civicrm_contact', 'civicrm_activity' );
+        $tablesToTruncate = [ 'civicrm_contact', 'civicrm_activity' ];
         $this->quickCleanup( $tablesToTruncate );
     }
     
@@ -35,11 +35,11 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase
     {
         $contactId = Contact::createIndividual( );
       
-        $params = array( 
+        $params = [ 
                         'source_contact_id'  => $contactId,
                         'subject'            => 'Scheduling Meeting',
                         'activity_type_id'   => 2
-                        );
+                        ];
         
         require_once 'CRM/Activity/BAO/Activity.php';
         CRM_Activity_BAO_Activity::create( $params );
@@ -49,13 +49,13 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase
         
         // Now call create() to modify an existing Activity
         
-        $params = array( );
-        $params = array(
+        $params = [ ];
+        $params = [
                         'id'                 => $activityId,
                         'source_contact_id'  => $contactId,
                         'subject'            => 'Scheduling Interview',
                         'activity_type_id'   => 3
-                        );
+                        ];
 
         CRM_Activity_BAO_Activity::create( $params );
         
@@ -75,19 +75,19 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase
     function testGetContactActivity( )
     {
         $contactId = Contact::createIndividual( );
-        $params    = array(
+        $params    = [
                            'first_name'     => 'liz',
                            'last_name'      => 'hurleey',
-                           ); 
+                           ]; 
         $targetContactId = Contact::createIndividual( $params );
         
-        $params = array( 
+        $params = [ 
                         'source_contact_id'  => $contactId,
                         'subject'            => 'Scheduling Meeting',
                         'activity_type_id'   => 2,
-                        'target_contact_id'  => array( $targetContactId ),
+                        'target_contact_id'  => [ $targetContactId ],
                         'activity_date_time' => date('Ymd'),
-                        );
+                        ];
         
         require_once 'CRM/Activity/BAO/Activity.php';
         CRM_Activity_BAO_Activity::create( $params );
@@ -112,19 +112,19 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase
     function testRetrieve ( )
     {
         $contactId = Contact::createIndividual( );
-        $params    = array(
+        $params    = [
                            'first_name'     => 'liz',
                            'last_name'      => 'hurleey',
-                           ); 
+                           ]; 
         $targetContactId = Contact::createIndividual( $params );
         
-        $params = array( 
+        $params = [ 
                         'source_contact_id'  => $contactId,
                         'subject'            => 'Scheduling Meeting',
                         'activity_type_id'   => 2,
-                        'target_contact_id'  => array( $targetContactId ),
+                        'target_contact_id'  => [ $targetContactId ],
                         'activity_date_time' => date('Ymd'),
-                        );
+                        ];
         
         require_once 'CRM/Activity/BAO/Activity.php';
         CRM_Activity_BAO_Activity::create( $params );
@@ -136,7 +136,7 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase
                                                     'id', 'target_contact_id',
                                                     'Database check for created activity target.' );
 
-        $defaults = array();
+        $defaults = [];
         $activity = CRM_Activity_BAO_Activity::retrieve( $params, $defaults );
         
         $this->assertEquals( $activity->subject, 'Scheduling Meeting', 'Verify activity subject is correct.');
@@ -160,20 +160,20 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase
     function testDeleteActivity ( )
     {
         $contactId = Contact::createIndividual( );
-        $params    = array(
+        $params    = [
                            'first_name'     => 'liz',
                            'last_name'      => 'hurleey',
-                           ); 
+                           ]; 
         $targetContactId = Contact::createIndividual( $params );
         
-        $params = array( 
+        $params = [ 
                         'source_contact_id'  => $contactId,
                         'source_record_id'   => $contactId,
                         'subject'            => 'Scheduling Meeting',
                         'activity_type_id'   => 2,
-                        'target_contact_id'  => array( $targetContactId ),
+                        'target_contact_id'  => [ $targetContactId ],
                         'activity_date_time' => date('Ymd'),
-                        );
+                        ];
         
         require_once 'CRM/Activity/BAO/Activity.php';
         CRM_Activity_BAO_Activity::create( $params );
@@ -184,12 +184,12 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase
         $activityTargetId = $this->assertDBNotNull( 'CRM_Activity_DAO_ActivityTarget', $targetContactId,
                                                     'id', 'target_contact_id',
                                                     'Database check for created activity target.' );
-        $params = array( 
+        $params = [ 
                         'source_contact_id'  => $contactId,
                         'source_record_id'   => $contactId,
                         'subject'            => 'Scheduling Meeting',
                         'activity_type_id'   => 2,
-                        );
+                        ];
         
         $result = CRM_Activity_BAO_Activity::deleteActivity( $params );
         
@@ -207,19 +207,19 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase
     function testDeleteActivityTarget ( )
     {
         $contactId = Contact::createIndividual( );
-        $params    = array(
+        $params    = [
                            'first_name'     => 'liz',
                            'last_name'      => 'hurleey',
-                           ); 
+                           ]; 
         $targetContactId = Contact::createIndividual( $params );
         
-        $params = array( 
+        $params = [ 
                         'source_contact_id'  => $contactId,
                         'subject'            => 'Scheduling Meeting',
                         'activity_type_id'   => 2,
-                        'target_contact_id'  => array( $targetContactId ),
+                        'target_contact_id'  => [ $targetContactId ],
                         'activity_date_time' => date('Ymd'),
-                        );
+                        ];
         
         require_once 'CRM/Activity/BAO/Activity.php';
         CRM_Activity_BAO_Activity::create( $params );
@@ -247,19 +247,19 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase
     function testDeleteActivityAssignment ( )
     {
         $contactId = Contact::createIndividual( );
-        $params    = array(
+        $params    = [
                            'first_name'     => 'liz',
                            'last_name'      => 'hurleey',
-                           ); 
+                           ]; 
         $assigneeContactId = Contact::createIndividual( $params );
         
-        $params = array( 
+        $params = [ 
                         'source_contact_id'  => $contactId,
                         'subject'            => 'Scheduling Meeting',
                         'activity_type_id'   => 2,
-                        'assignee_contact_id'=> array( $assigneeContactId ),
+                        'assignee_contact_id'=> [ $assigneeContactId ],
                         'activity_date_time' => date('Ymd'),
-                        );
+                        ];
         
         require_once 'CRM/Activity/BAO/Activity.php';
         CRM_Activity_BAO_Activity::create( $params );
@@ -291,7 +291,7 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase
                             . '/activities_for_dashboard_count.xml') );
 
         require_once 'CRM/Activity/BAO/Activity.php';
-        $params = array(
+        $params = [
                         'contact_id'       => null,
                         'admin'            => true,
                         'caseId'           => null,
@@ -300,7 +300,7 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase
                         'offset'           => 0,
                         'rowCount'         => 0,
                         'sort'             => null,
-                        );
+                        ];
         $activityCount = CRM_Activity_BAO_Activity::getActivitiesCount( $params );
 
         //since we are loading activities from dataset, we know total number of activities
@@ -319,7 +319,7 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase
                             dirname(__FILE__)
                             . '/activities_for_dashboard_count.xml') );
 
-        $params = array(
+        $params = [
                         'contact_id'       => 9,
                         'admin'            => false,
                         'caseId'           => null,
@@ -328,7 +328,7 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase
                         'offset'           => 0,
                         'rowCount'         => 0,
                         'sort'             => null,
-                        );
+                        ];
 
         require_once 'CRM/Activity/BAO/Activity.php';
         $activityCount = CRM_Activity_BAO_Activity::getActivitiesCount( $params );
@@ -349,7 +349,7 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase
             dirname(__FILE__)
             . '/activities_for_dashboard_count.xml') );
 
-        $params = array(
+        $params = [
                         'contact_id'       => 9,
                         'admin'            => false,
                         'caseId'           => null,
@@ -358,7 +358,7 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase
                         'offset'           => 0,
                         'rowCount'         => 0,
                         'sort'             => null,
-                        );
+                        ];
         require_once 'CRM/Activity/BAO/Activity.php';
         $activityCount = CRM_Activity_BAO_Activity::getActivitiesCount( $params );
         
@@ -378,7 +378,7 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase
             dirname(__FILE__)
             . '/activities_for_dashboard_count.xml') );
 
-        $params = array(
+        $params = [
                         'contact_id'       => 17,
                         'admin'            => false,
                         'caseId'           => null,
@@ -387,7 +387,7 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase
                         'offset'           => 0,
                         'rowCount'         => 0,
                         'sort'             => null,
-                        );
+                        ];
         require_once 'CRM/Activity/BAO/Activity.php';
         $activityCount = CRM_Activity_BAO_Activity::getActivitiesCount( $params );
        
@@ -406,7 +406,7 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase
                             dirname(__FILE__)
                             . '/activities_for_dashboard_count.xml') );
 
-        $params = array(
+        $params = [
                         'contact_id'       => 5,
                         'admin'            => true,
                         'caseId'           => null,
@@ -415,7 +415,7 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase
                         'offset'           => 0,
                         'rowCount'         => 0,
                         'sort'             => null,
-                        );
+                        ];
         require_once 'CRM/Activity/BAO/Activity.php';
         $activities = CRM_Activity_BAO_Activity::getActivities( $params );
 
@@ -442,7 +442,7 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase
                             . '/activities_for_dashboard_count.xml') );
 
         $contactID = 9;
-        $params = array(
+        $params = [
                         'contact_id'       => $contactID,
                         'admin'            => false,
                         'caseId'           => null,
@@ -451,7 +451,7 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase
                         'offset'           => 0,
                         'rowCount'         => 0,
                         'sort'             => null,
-                        );
+                        ];
         require_once 'CRM/Activity/BAO/Activity.php';
         $activities = CRM_Activity_BAO_Activity::getActivities( $params );
 
@@ -484,7 +484,7 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase
             . '/activities_for_dashboard_count.xml') );
 
         $contactID = 9;
-        $params = array(
+        $params = [
                         'contact_id'       => $contactID,
                         'admin'            => false,
                         'caseId'           => null,
@@ -493,7 +493,7 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase
                         'offset'           => 0,
                         'rowCount'         => 0,
                         'sort'             => null,
-                        );
+                        ];
         require_once 'CRM/Activity/BAO/Activity.php';
         $activities = CRM_Activity_BAO_Activity::getActivities( $params );
         
@@ -535,7 +535,7 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase
             dirname(__FILE__)
             . '/activities_for_dashboard_count.xml') );
 
-        $params = array(
+        $params = [
                         'contact_id'       => 17,
                         'admin'            => false,
                         'caseId'           => null,
@@ -544,7 +544,7 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase
                         'offset'           => 0,
                         'rowCount'         => 0,
                         'sort'             => null,
-                        );
+                        ];
         require_once 'CRM/Activity/BAO/Activity.php';
         $activities = CRM_Activity_BAO_Activity::getActivities( $params );
 

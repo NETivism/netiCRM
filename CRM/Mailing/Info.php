@@ -47,13 +47,13 @@ class CRM_Mailing_Info extends CRM_Core_Component_Info {
 
   // docs inherited from interface
   public function getInfo() {
-    return array(
+    return [
       'name' => 'CiviMail',
       'translatedName' => ts('CiviMail'),
       'title' => 'CiviCRM Mailing Engine',
       'search' => 1,
       'showActivitiesInCore' => 1,
-    );
+    ];
   }
 
 
@@ -76,12 +76,12 @@ class CRM_Mailing_Info extends CRM_Core_Component_Info {
 
   // docs inherited from interface
   public function getPermissions() {
-    $permissions = array(
+    $permissions = [
       'access CiviMail',
       'access CiviMail subscribe/unsubscribe pages',
       'delete in CiviMail',
       'view public CiviMail content',
-    );
+    ];
 
     if (self::workflowEnabled()) {
       $permissions[] = 'create mailings';
@@ -112,9 +112,9 @@ class CRM_Mailing_Info extends CRM_Core_Component_Info {
 
   // docs inherited from interface
   public function registerAdvancedSearchPane() {
-    return array('title' => ts('Mailings'),
+    return ['title' => ts('Mailings'),
       'weight' => 20,
-    );
+    ];
   }
 
   // docs inherited from interface

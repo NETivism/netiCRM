@@ -18,9 +18,9 @@ class CRM_Core_Payment_Neweb extends CRM_Core_Payment {
    */
   static protected $_mode = NULL;
 
-  static protected $_params = array();
+  static protected $_params = [];
 
-  public static $_hideFields = array('invoice_id', 'trxn_id');
+  public static $_hideFields = ['invoice_id', 'trxn_id'];
 
   /**
    * We only need one instance of this object. So we use the singleton
@@ -72,7 +72,7 @@ class CRM_Core_Payment_Neweb extends CRM_Core_Payment {
   function checkConfig() {
     $config = CRM_Core_Config::singleton();
 
-    $error = array();
+    $error = [];
 
     if (!empty($this->_paymentProcessor['user_name']) xor !empty($this->_paymentProcessor['signature'])) {
       $error[] = ts('Credit Card Payment is not set in the Administer CiviCRM &raquo; Payment Processor.');

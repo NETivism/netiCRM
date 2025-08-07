@@ -17,11 +17,11 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
   protected $_refundContributionId;
 
   function get_info() {
-    return array(
+    return [
      'name' => 'TapPay payment processor',
      'description' => 'Test TapPay payment processor.',
      'group' => 'Payment Processor Tests',
-    );
+    ];
   }
 
   /**
@@ -36,25 +36,25 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     $this->_is_test = 1;
 
     // get processor
-    $params = array(
+    $params = [
       'version' => 3,
       'class_name' => 'Payment_TapPay',
       'is_test' => $this->_is_test,
-    );
+    ];
     $result = civicrm_api('PaymentProcessor', 'get', $params);
     $this->assertAPISuccess($result);
     if(empty($result['count'])){
-      $payment_processors = array();
-      $params = array(
+      $payment_processors = [];
+      $params = [
         'version' => 3,
         'class_name' => 'Payment_TapPay',
-      );
+      ];
       $result = civicrm_api('PaymentProcessorType', 'get', $params);
       $this->assertAPISuccess($result);
       if(!empty($result['count'])){
         $domain_id = CRM_Core_Config::domainID();
         foreach($result['values'] as $type_id => $p){
-          $payment_processor = array(
+          $payment_processor = [
             'version' => 3,
             'domain_id' => $domain_id,
             'name' => 'AUTO payment '.$p['name'],
@@ -74,7 +74,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
             'billing_mode' => $p['billing_mode'],
             'is_recur' => $p['is_recur'],
             'payment_type' => $p['payment_type'],
-          );
+          ];
           $result = civicrm_api('PaymentProcessor', 'create', $payment_processor);
           $this->assertAPISuccess($result);
           if(is_numeric($result['id'])){
@@ -87,23 +87,23 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
         }
       }
     }
-    $params = array(
+    $params = [
       'version' => 3,
       'class_name' => 'Payment_TapPay',
       'is_test' => $this->_is_test,
-    );
+    ];
     $result = civicrm_api('PaymentProcessor', 'get', $params);
     $this->assertAPISuccess($result);
     $pp = reset($result['values']);
     $this->_processor = $pp;
 
     // get cid
-    $params = array(
+    $params = [
       'version' => 3,
-      'options' => array(
+      'options' => [
         'limit' => 1,
-      ),
-    );
+      ],
+    ];
     $result = civicrm_api('Contact', 'get', $params);
     $this->assertAPISuccess($result);
     if(!empty($result['count'])){
@@ -114,7 +114,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     $this->_recurFirstContributionId = CRM_Core_DAO::singleValueQuery("SELECT contribution_id FROM civicrm_contribution_tappay WHERE contribution_id IS NOT NULL AND contribution_recur_id IS NOT NULL ORDER BY id DESC LIMIT 1");
     $this->_refundTrxnId = CRM_Core_DAO::singleValueQuery("SELECT order_number FROM civicrm_contribution_tappay WHERE contribution_id IS NOT NULL AND contribution_recur_id IS NOT NULL ORDER BY id DESC LIMIT 1");
     if (!empty($this->_refundTrxnId)) {
-      $params = array(1 => array($this->_refundTrxnId, 'String'));
+      $params = [1 => [$this->_refundTrxnId, 'String']];
       $dao = CRM_Core_DAO::executeQuery("SELECT id, total_amount FROM civicrm_contribution WHERE trxn_id LIKE %1", $params);
       while ($dao->fetch()) {
         $this->_refundAmount = $dao->total_amount;
@@ -136,7 +136,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     $amount = 111;
 
     // create contribution
-    $contrib = array(
+    $contrib = [
       'trxn_id' => $trxnId,
       'contact_id' => $this->_cid,
       'contribution_contact_id' => $this->_cid,
@@ -155,13 +155,13 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
       'is_test' => $this->_is_test,
       'is_pay_later' => 0,
       'contribution_status_id' => 2,
-    );
+    ];
     $contribution = CRM_Contribute_BAO_Contribution::create($contrib, CRM_Core_DAO::$_nullArray);
     $this->assertNotEmpty($contribution->id, "In line " . __LINE__);
-    $params = array(
+    $params = [
       'is_test' => $this->_is_test,
       'id' => $contribution->id,
-    );
+    ];
     $this->assertDBState('CRM_Contribute_DAO_Contribution', $contribution->id, $params);
 
     // manually trigger pay by prime api
@@ -246,7 +246,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
 
     // create recurring
     $date = date('YmdHis', $now);
-    $recur = array(
+    $recur = [
       'contact_id' => $this->_cid,
       'amount' => $amount,
       'frequency_unit' => 'month',
@@ -260,17 +260,17 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
       'contribution_status_id' => 2,
       'cycle_day' => 5,
       'trxn_id' => $trxnId = 'ut'.substr($now, -5),
-    );
-    $ids = array();
+    ];
+    $ids = [];
     $recurring = CRM_Contribute_BAO_ContributionRecur::add($recur, $ids);
-    $params = array(
+    $params = [
       'id' => $recurring->id,
       'contribution_status_id' => 2,
-    );
+    ];
     $this->assertDBState('CRM_Contribute_DAO_ContributionRecur', $recurring->id, $params);
 
     // create contribution
-    $contrib = array(
+    $contrib = [
       'contact_id' => $this->_cid,
       'contribution_contact_id' => $this->_cid,
       'contribution_type_id' => 1,
@@ -289,16 +289,16 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
       'is_pay_later' => 0,
       'contribution_status_id' => 2,
       'contribution_recur_id' => $recurring->id,
-    );
+    ];
     $contribution = CRM_Contribute_BAO_Contribution::create($contrib, CRM_Core_DAO::$_nullArray);
     $trxnId = CRM_Core_Payment_TapPay::getContributionTrxnID($contribution->id, $recurring->id);
     CRM_Core_DAO::setFieldValue('CRM_Contribute_DAO_Contribution', $contribution->id, 'trxn_id', $trxnId);
     $this->assertNotEmpty($contribution->id, "In line " . __LINE__);
-    $params = array(
+    $params = [
       'is_test' => $this->_is_test,
       'id' => $contribution->id,
       'trxn_id' => $trxnId,
-    );
+    ];
     $this->assertDBState('CRM_Contribute_DAO_Contribution', $contribution->id, $params);
 
     // manually trigger pay by prime api
@@ -384,9 +384,9 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     CRM_Core_Payment_TapPay::doExecuteAllRecur($now);
     sleep(3);
 
-    $recurParams = array(
-      1 => array("r_{$recurring->id}_%", 'String')
-    );
+    $recurParams = [
+      1 => ["r_{$recurring->id}_%", 'String']
+    ];
     $contribution2nd = CRM_Core_DAO::executeQuery("SELECT id, trxn_id FROM civicrm_contribution WHERE trxn_id LIKE %1 ORDER BY id DESC LIMIT 1", $recurParams);
     $contribution2nd->fetch();
     $trxnId2 = $contribution2nd->trxn_id;
@@ -432,7 +432,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     // because response not through TapPayAPI, we need save data manually
     CRM_Core_Payment_TapPayAPI::saveTapPayData($contribution2nd->id, $tokenResponse, 'pay_by_token');
     CRM_Core_Payment_TapPay::doTransaction($tokenResponse, $contribution2nd->id);
-    $this->assertDBQuery(1, "SELECT contribution_status_id FROM civicrm_contribution WHERE trxn_id LIKE %1", array(1 => array($trxnId2, 'String')));
+    $this->assertDBQuery(1, "SELECT contribution_status_id FROM civicrm_contribution WHERE trxn_id LIKE %1", [1 => [$trxnId2, 'String']]);
     $this->assertDBQuery(2, "SELECT count(*) FROM civicrm_contribution WHERE trxn_id LIKE %1 ORDER BY id DESC", $recurParams);
     $this->assertDBQuery(2, "SELECT count(*) FROM civicrm_contribution_tappay WHERE order_number LIKE %1 ORDER BY id DESC", $recurParams);
 
@@ -458,9 +458,9 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     CRM_Core_Payment_TapPay::doExecuteAllRecur($now);
     sleep(3);
 
-    $recurParams = array(
-      1 => array("r_{$recurring->id}_%", 'String')
-    );
+    $recurParams = [
+      1 => ["r_{$recurring->id}_%", 'String']
+    ];
     $contribution3rd = CRM_Core_DAO::executeQuery("SELECT id, trxn_id FROM civicrm_contribution WHERE trxn_id LIKE %1 ORDER BY id DESC LIMIT 1", $recurParams);
     $contribution3rd->fetch();
     $trxnId3 = $contribution3rd->trxn_id;
@@ -506,10 +506,10 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     // because response not through TapPayAPI, we need save data manually
     CRM_Core_Payment_TapPayAPI::saveTapPayData($contribution3rd->id, $tokenResponse, 'pay_by_token');
     CRM_Core_Payment_TapPay::doTransaction($tokenResponse, $contribution3rd->id);
-    $this->assertDBQuery(1, "SELECT contribution_status_id FROM civicrm_contribution WHERE trxn_id LIKE %1", array(1 => array($trxnId3, 'String')));
+    $this->assertDBQuery(1, "SELECT contribution_status_id FROM civicrm_contribution WHERE trxn_id LIKE %1", [1 => [$trxnId3, 'String']]);
     $this->assertDBQuery(3, "SELECT count(*) FROM civicrm_contribution WHERE trxn_id LIKE %1 ORDER BY id DESC", $recurParams);
     $this->assertDBQuery(3, "SELECT count(*) FROM civicrm_contribution_tappay WHERE order_number LIKE %1 ORDER BY id DESC", $recurParams);
-    $this->assertDBQuery($amount, "SELECT total_amount FROM civicrm_contribution WHERE trxn_id LIKE %1", array(1 => array($trxnId3, 'String')));
+    $this->assertDBQuery($amount, "SELECT total_amount FROM civicrm_contribution WHERE trxn_id LIKE %1", [1 => [$trxnId3, 'String']]);
 
     $dao = new CRM_Contribute_DAO_TapPay();
     $dao->contribution_id = $contribution3rd->id;
@@ -530,9 +530,9 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     CRM_Core_Payment_TapPay::doExecuteAllRecur($now);
     sleep(3);
 
-    $recurParams = array(
-      1 => array("r_{$recurring->id}_%", 'String')
-    );
+    $recurParams = [
+      1 => ["r_{$recurring->id}_%", 'String']
+    ];
     $contribution4th = CRM_Core_DAO::executeQuery("SELECT id, trxn_id FROM civicrm_contribution WHERE trxn_id LIKE %1 ORDER BY id DESC LIMIT 1", $recurParams);
     $contribution4th->fetch();
     $trxnId4 = $contribution4th->trxn_id;
@@ -578,7 +578,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     // because response not through TapPayAPI, we need save data manually
     CRM_Core_Payment_TapPayAPI::saveTapPayData($contribution4th->id, $tokenResponse, 'pay_by_token');
     CRM_Core_Payment_TapPay::doTransaction($tokenResponse, $contribution4th->id);
-    $this->assertDBQuery(1, "SELECT contribution_status_id FROM civicrm_contribution WHERE trxn_id LIKE %1", array(1 => array($trxnId4, 'String')));
+    $this->assertDBQuery(1, "SELECT contribution_status_id FROM civicrm_contribution WHERE trxn_id LIKE %1", [1 => [$trxnId4, 'String']]);
     $this->assertDBQuery(4, "SELECT count(*) FROM civicrm_contribution WHERE trxn_id LIKE %1 ORDER BY id DESC", $recurParams);
     $this->assertDBQuery(4, "SELECT count(*) FROM civicrm_contribution_tappay WHERE order_number LIKE %1 ORDER BY id DESC", $recurParams);
 
@@ -606,10 +606,10 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
   }
 
   function testCardMetadata(){
-    $cardMetadata = (object)(array(
+    $cardMetadata = (object)([
       'status' => 0,
       'msg' => 'Success',
-      'card_info' => (object)(array(
+      'card_info' => (object)([
         'issuer' => '',
         'funding' => 0,
         'type' => 1,
@@ -620,22 +620,22 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
         'token_status' => 'ACTIVE',
         'country_code' => 'GB',
         'expiry_date' => '202211',
-      )),
-      'card_art_info' => (object)(array(
+      ]),
+      'card_art_info' => (object)([
         'is_real_card_face' => false,
-        'image' => (object)(array(
+        'image' => (object)([
           'url' => 'https://ooo.ooo.ooo/TapPay_Card_VISA.png',
           'width' => 1536,
           'height' => 960,
-        )),
+        ]),
         'foreground_color' => '0xffffff',
         'masked_card_number' => '**** **** **** 4242',
         'issuer' => '',
-      )),
-    ));
+      ]),
+    ]);
 
     // before metadata update, recurring and contribution should not have this data. 
-    $this->assertDBQuery(0, "SELECT r.auto_renew FROM civicrm_contribution c INNER JOIN civicrm_contribution_recur r ON c.contribution_recur_id = r.id WHERE c.id = %1", array( 1 => array($this->_recurFirstContributionId, 'Integer') ));
+    $this->assertDBQuery(0, "SELECT r.auto_renew FROM civicrm_contribution c INNER JOIN civicrm_contribution_recur r ON c.contribution_recur_id = r.id WHERE c.id = %1", [ 1 => [$this->_recurFirstContributionId, 'Integer'] ]);
     $this->assertDBCompareValue(
       'CRM_Contribute_DAO_TapPay',
       $this->_recurFirstContributionId,
@@ -648,14 +648,14 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     CRM_Core_Payment_TapPay::cardMetadata($this->_recurFirstContributionId, $cardMetadata);
 
     // after metadata update, recurring and contribution will have data
-    $this->assertDBQuery(1, "SELECT r.auto_renew FROM civicrm_contribution c INNER JOIN civicrm_contribution_recur r ON c.contribution_recur_id = r.id WHERE c.id = %1", array( 1 => array($this->_recurFirstContributionId, 'Integer') ));
+    $this->assertDBQuery(1, "SELECT r.auto_renew FROM civicrm_contribution c INNER JOIN civicrm_contribution_recur r ON c.contribution_recur_id = r.id WHERE c.id = %1", [ 1 => [$this->_recurFirstContributionId, 'Integer'] ]);
   }
 
   function testRecordSync() {
     $microtime = round(microtime(true) * 1000);
 
     // full refund
-    $fullRefundRecord = (object) (array(
+    $fullRefundRecord = (object) ([
       'cap_millis' => 1554823800000,
       'bank_result_code' => '00',
       'merchant_name' => '',
@@ -678,16 +678,16 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
       'rec_trade_id' => 'sample_trade_id',
       'bank_result_msg' => '',
       'pay_by_redeem' => false,
-      'cardholder' => (object) (array(
+      'cardholder' => (object) ([
         'phone_number' => '',
         'email' => 'ooo@ooo.com',
         'name' => 'OOO',
-      )),
+      ]),
       'is_captured' => true,
       'payment_method' => 'direct_pay',
       'record_status' => 3,
       'refund_date' => $microtime,
-    ));
+    ]);
     CRM_Core_Payment_TapPay::doSyncRecord($this->_refundContributionId, $fullRefundRecord);
     $this->assertDBCompareValue(
       'CRM_Contribute_DAO_Contribution',
@@ -754,7 +754,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
 }';
     $_SERVER['REQUEST_URI'] = '/civicrm/tappay/cardnotify';
     CRM_Core_Payment_TapPay::cardNotify(NULL, $notifyJson);
-    $dao = CRM_Core_DAO::executeQuery("SELECT * FROM civicrm_contribution_tappay WHERE card_token = %1 ORDER BY id DESC", array( 1 => array($this->_cardToken, 'String')));
+    $dao = CRM_Core_DAO::executeQuery("SELECT * FROM civicrm_contribution_tappay WHERE card_token = %1 ORDER BY id DESC", [ 1 => [$this->_cardToken, 'String']]);
     while($dao->fetch()) {
       $this->assertEquals('2030-12-31', $dao->expiry_date,  "In line " . __LINE__);
     }
@@ -781,7 +781,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
 }';
     $_SERVER['REQUEST_URI'] = '/civicrm/tappay/cardnotify';
     CRM_Core_Payment_TapPay::cardNotify(NULL, $notifyJson);
-    $contributionStatusId = CRM_Core_DAO::singleValueQuery("SELECT contribution_status_id FROM civicrm_contribution_recur WHERE id = %1", array( 1 => array($dao->contribution_recur_id, 'Integer')));
+    $contributionStatusId = CRM_Core_DAO::singleValueQuery("SELECT contribution_status_id FROM civicrm_contribution_recur WHERE id = %1", [ 1 => [$dao->contribution_recur_id, 'Integer']]);
     $this->assertEquals('7', $contributionStatusId,  "In line " . __LINE__);
   }
 }

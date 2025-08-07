@@ -78,7 +78,7 @@ class CRM_Core_DAO_MailSettings extends CRM_Core_DAO
    * @static
    */
   static $_log = false;
-  /**
+    /**
    * primary key
    *
    * @var int unsigned
@@ -162,7 +162,7 @@ class CRM_Core_DAO_MailSettings extends CRM_Core_DAO
    * @var string
    */
   public $source;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -172,7 +172,7 @@ class CRM_Core_DAO_MailSettings extends CRM_Core_DAO
   {
     parent::__construct();
   }
-  /**
+    /**
    * returns all the column names of this table
    *
    * @access public
@@ -181,94 +181,94 @@ class CRM_Core_DAO_MailSettings extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'id' => array(
+      self::$_fields = [
+        'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'domain_id' => array(
+                  ] ,
+        'domain_id' => [
           'name' => 'domain_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'name' => array(
+                  ] ,
+        'name' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Name') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'is_default' => array(
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
+        'is_default' => [
           'name' => 'is_default',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ) ,
-        'domain' => array(
+                  ] ,
+        'domain' => [
           'name' => 'domain',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Domain') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'localpart' => array(
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
+        'localpart' => [
           'name' => 'localpart',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Localpart') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'return_path' => array(
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
+        'return_path' => [
           'name' => 'return_path',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Return Path') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'protocol' => array(
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
+        'protocol' => [
           'name' => 'protocol',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Protocol') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'server' => array(
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
+        'server' => [
           'name' => 'server',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Server') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'port' => array(
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
+        'port' => [
           'name' => 'port',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Port') ,
-        ) ,
-        'username' => array(
+                  ] ,
+        'username' => [
           'name' => 'username',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Username') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'password' => array(
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
+        'password' => [
           'name' => 'password',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Password') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'is_ssl' => array(
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
+        'is_ssl' => [
           'name' => 'is_ssl',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ) ,
-        'source' => array(
+                  ] ,
+        'source' => [
           'name' => 'source',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Source') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ) ,
-      );
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -280,8 +280,8 @@ class CRM_Core_DAO_MailSettings extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -301,7 +301,7 @@ class CRM_Core_DAO_MailSettings extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -312,7 +312,7 @@ class CRM_Core_DAO_MailSettings extends CRM_Core_DAO
           }
         }
       }
-    }
+          }
     return self::$_import;
   }
   /**
@@ -324,7 +324,7 @@ class CRM_Core_DAO_MailSettings extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
@@ -335,7 +335,7 @@ class CRM_Core_DAO_MailSettings extends CRM_Core_DAO
           }
         }
       }
-    }
+          }
     return self::$_export;
   }
 }

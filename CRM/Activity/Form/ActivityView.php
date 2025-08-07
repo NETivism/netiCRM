@@ -72,7 +72,7 @@ class CRM_Activity_Form_ActivityView extends CRM_Core_Form {
 
     $session->pushUserContext($url);
 
-    $params = array('id' => $activityId);
+    $params = ['id' => $activityId];
     CRM_Activity_BAO_Activity::retrieve($params, $defaults);
 
     //set activity type name and description to template
@@ -126,13 +126,13 @@ class CRM_Activity_Form_ActivityView extends CRM_Core_Form {
    * @access public
    */
   public function buildQuickForm() {
-    $this->addButtons(array(
-        array('type' => 'next',
+    $this->addButtons([
+        ['type' => 'next',
           'name' => ts('Done'),
           'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
           'isDefault' => TRUE,
-        ),
-      )
+        ],
+      ]
     );
   }
 }

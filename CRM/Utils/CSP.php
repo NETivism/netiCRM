@@ -12,7 +12,7 @@ class CRM_Utils_CSP {
    */
   const
     // Directive names
-    DIRECTIVES = array(
+    DIRECTIVES = [
       'DIR_DEFAULT' => "default-src",
       'DIR_CHILD' => "child-src",
       'DIR_CONNECT' => "connect-src",
@@ -41,10 +41,10 @@ class CRM_Utils_CSP {
       // Special directives
       'DIR_REPORT' => "report-to",
       'DIR_SANDBOX' => "sandbox",
-    ),
+    ],
 
     // SOURCES
-    SOURCES = array(
+    SOURCES = [
       'VAL_NONE' => "'none'",
       'VAL_ANY' => "*",
       'VAL_SELF' => "'self'",
@@ -72,7 +72,7 @@ class CRM_Utils_CSP {
       'VAL_SCHEME_MS' => 'mediastream:',
       'VAL_SCHEME_BLOB' => 'blob:',
       'VAL_SCHEME_FS' => 'filesystem:',
-    );
+    ];
 
 
   /**
@@ -80,7 +80,7 @@ class CRM_Utils_CSP {
    *
    * @var array
    */
-  public $policies = array();
+  public $policies = [];
 
   /**
    * Constructor function that takes an encoded policy as input and parses it into an associative array.
@@ -104,7 +104,7 @@ class CRM_Utils_CSP {
         continue;
       }
       if (count($parts) == 1) {
-        $this->policies[$name] = array();
+        $this->policies[$name] = [];
         continue;
       }
       $sourceList = $this->parseSourceList($parts[1]);
@@ -122,7 +122,7 @@ class CRM_Utils_CSP {
     if (empty($this->policies)) {
       return '';
     }
-    $policies = array();
+    $policies = [];
     foreach($this->policies as $directive => $sources) {
       array_unshift($sources, $directive);
       $policies[] = implode(' ', $sources);
@@ -154,10 +154,10 @@ class CRM_Utils_CSP {
   private function parseSourceList($val) {
     $sl = array_map('trim', explode(" ", trim($val)));
     if (count($sl) == 0) {
-      return array();
+      return [];
     }
 
-    $sources = array();
+    $sources = [];
     foreach($sl as $sle) {
       $val = strtolower(trim($sle));
       if (in_array($val, self::SOURCES)) {
@@ -177,7 +177,7 @@ class CRM_Utils_CSP {
             break;
           default:
             // host source
-            if (in_array($val, array('http:', 'https:', 'ws:'))) {
+            if (in_array($val, ['http:', 'https:', 'ws:'])) {
               $sources[] = $val;
             }
             elseif (preg_match('/^((http|https|ws):\/\/)?([^:\/]+)([:]\d+)?(\/.*)?$/', $val)) {

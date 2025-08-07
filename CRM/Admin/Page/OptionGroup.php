@@ -64,38 +64,38 @@ class CRM_Admin_Page_OptionGroup extends CRM_Core_Page_Basic {
    */
   function &links() {
     if (!(self::$_links)) {
-      self::$_links = array(
-        CRM_Core_Action::BROWSE => array(
+      self::$_links = [
+        CRM_Core_Action::BROWSE => [
           'name' => ts('Multiple Choice Options'),
           'url' => 'civicrm/admin/optionValue',
           'qs' => 'reset=1&action=browse&gid=%%id%%',
           'title' => ts('View and Edit Multiple Choice Options'),
-        ),
-        CRM_Core_Action::UPDATE => array(
+        ],
+        CRM_Core_Action::UPDATE => [
           'name' => ts('Edit Group'),
           'url' => 'civicrm/admin/optionGroup',
           'qs' => 'action=update&id=%%id%%&reset=1',
           'title' => ts('Edit Option'),
-        ),
-        CRM_Core_Action::DISABLE => array(
+        ],
+        CRM_Core_Action::DISABLE => [
           'name' => ts('Disable'),
           'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_Core_BAO_OptionGroup' . '\',\'' . 'enable-disable' . '\' );"',
           'ref' => 'disable-action',
           'title' => ts('Disable Option'),
-        ),
-        CRM_Core_Action::ENABLE => array(
+        ],
+        CRM_Core_Action::ENABLE => [
           'name' => ts('Enable'),
           'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_Core_BAO_OptionGroup' . '\',\'' . 'disable-enable' . '\' );"',
           'ref' => 'enable-action',
           'title' => ts('Enable Option'),
-        ),
-        CRM_Core_Action::DELETE => array(
+        ],
+        CRM_Core_Action::DELETE => [
           'name' => ts('Delete'),
           'url' => 'civicrm/admin/optionGroup',
           'qs' => 'action=delete&id=%%id%%',
           'title' => ts('Delete Option'),
-        ),
-      );
+        ],
+      ];
     }
     return self::$_links;
   }
@@ -137,8 +137,8 @@ class CRM_Admin_Page_OptionGroup extends CRM_Core_Page_Basic {
    */
   function browse() {
     $thisArgs = func_get_args();
-    $action = isset($thisArgs[0]) ? $thisArgs[0] : NULL;
-    $sort = isset($thisArgs[1]) ? $thisArgs[1] : NULL;
+    $action = $thisArgs[0] ?? NULL;
+    $sort = $thisArgs[1] ?? NULL;
     $links = &$this->links();
     if ($action == NULL) {
       if (!empty($links)) {
@@ -162,7 +162,7 @@ class CRM_Admin_Page_OptionGroup extends CRM_Core_Page_Basic {
     $baoString = $this->getBAOName();
     $object = new $baoString();
 
-    $values = array();
+    $values = [];
 
     /*
          * lets make sure we get the stuff sorted by name if it exists
@@ -200,7 +200,7 @@ class CRM_Admin_Page_OptionGroup extends CRM_Core_Page_Basic {
           $permission = $this->checkPermission($object->id, $object->$key);
         }
         if ($permission) {
-          $values[$object->id] = array();
+          $values[$object->id] = [];
           CRM_Core_DAO::storeValues($object, $values[$object->id]);
 
 

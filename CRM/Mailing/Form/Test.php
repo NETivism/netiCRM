@@ -72,7 +72,7 @@ class CRM_Mailing_Form_Test extends CRM_Core_Form {
     $this->add('select',
       'test_group',
       ts('Send to This Group'),
-      array('' => ts('- none -')) + CRM_Core_PseudoConstant::group('Mailing')
+      ['' => ts('- none -')] + CRM_Core_PseudoConstant::group('Mailing')
     );
     $this->setDefaults($defaults);
 
@@ -90,42 +90,42 @@ class CRM_Mailing_Form_Test extends CRM_Core_Form {
     //FIXME : currently we are hiding save an continue later when
     //search base mailing, we should handle it when we fix CRM-3876
     if ($this->_searchBasedMailing) {
-      $buttons = array(
-        array('type' => 'back',
+      $buttons = [
+        ['type' => 'back',
           'name' => ts('<< Previous'),
-        ),
-        array(
+        ],
+        [
           'type' => 'next',
           'name' => $name,
           'spacing' => '&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;',
           'isDefault' => TRUE,
-        ),
-        array(
+        ],
+        [
           'type' => 'cancel',
           'name' => ts('Cancel'),
-        ),
-      );
+        ],
+      ];
     }
     else {
-      $buttons = array(
-        array('type' => 'back',
+      $buttons = [
+        ['type' => 'back',
           'name' => ts('<< Previous'),
-        ),
-        array(
+        ],
+        [
           'type' => 'next',
           'name' => $name,
           'spacing' => '&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;',
           'isDefault' => TRUE,
-        ),
-        array(
+        ],
+        [
           'type' => 'submit',
           'name' => ts('Save & Continue Later'),
-        ),
-        array(
+        ],
+        [
           'type' => 'cancel',
           'name' => ts('Cancel'),
-        ),
-      );
+        ],
+      ];
     }
 
     $this->addButtons($buttons);
@@ -134,8 +134,8 @@ class CRM_Mailing_Form_Test extends CRM_Core_Form {
     $textFile = $this->get('textFile');
     $htmlFile = $this->get('htmlFile');
 
-    $this->addFormRule(array('CRM_Mailing_Form_Test', 'testMail'), $this);
-    $preview = array();
+    $this->addFormRule(['CRM_Mailing_Form_Test', 'testMail'], $this);
+    $preview = [];
     if ($textFile) {
       $preview['text_link'] = CRM_Utils_System::url('civicrm/mailing/preview', "type=text&qfKey=$qfKey");
     }
@@ -149,7 +149,7 @@ class CRM_Mailing_Form_Test extends CRM_Core_Form {
     );
     $this->assign('preview', $preview);
     //Token Replacement of Subject in preview mailing
-    $options = array();
+    $options = [];
     $prefix = "CRM_Mailing_Controller_Send_$qfKey";
     if ($this->_searchBasedMailing) {
       $prefix = "CRM_Contact_Controller_Search_$qfKey";
@@ -173,7 +173,7 @@ class CRM_Mailing_Form_Test extends CRM_Core_Form {
 
     $returnProperties = $mailing->getReturnProperties();
     $userID = $session->get('userID');
-    $params = array('contact_id' => $userID);
+    $params = ['contact_id' => $userID];
 
     $details = CRM_Utils_Token::getTokenDetails($params,
       $returnProperties,
@@ -268,7 +268,7 @@ class CRM_Mailing_Form_Test extends CRM_Core_Form {
       //redirect it to search result CRM-3711.
       if ($ssID && $self->_searchBasedMailing) {
         $draftURL = CRM_Utils_System::url('civicrm/mailing/browse/unscheduled', 'scheduled=false&reset=1');
-        $status = ts("Your mailing has been saved. You can continue later by clicking the 'Continue' action to resume working on it.<br /> From <a href='%1'>Draft and Unscheduled Mailings</a>.", array(1 => $draftURL));
+        $status = ts("Your mailing has been saved. You can continue later by clicking the 'Continue' action to resume working on it.<br /> From <a href='%1'>Draft and Unscheduled Mailings</a>.", [1 => $draftURL]);
         CRM_Core_Session::setStatus($status);
 
         //replace user context to search.
@@ -321,13 +321,13 @@ class CRM_Mailing_Form_Test extends CRM_Core_Form {
                       WHERE e.email IN ($emails) AND c.is_deleted = 0";
 
       $dao = CRM_Core_DAO::executeQuery($query);
-      $emailDetail = array();
+      $emailDetail = [];
       // fetch contact_id and email id for all existing emails
       while ($dao->fetch()) {
-        $emailDetail[$dao->email] = array(
+        $emailDetail[$dao->email] = [
           'contact_id' => $dao->contact_id,
           'email_id' => $dao->id,
-        );
+        ];
       }
 
       $dao->free();
@@ -341,26 +341,26 @@ class CRM_Mailing_Form_Test extends CRM_Core_Form {
 
         if (!$contactId) {
           //create new contact.
-          $params = array(
+          $params = [
             'contact_type' => 'Individual',
-            'email' => array(
-              1 => array('email' => $email,
+            'email' => [
+              1 => ['email' => $email,
                 'is_primary' => 1,
                 'location_type_id' => 1,
-              ),
-            ),
-          );
+              ],
+            ],
+          ];
 
           $contact = CRM_Contact_BAO_Contact::create($params);
           $emailId = $contact->email[0]->id;
           $contactId = $contact->id;
           $contact->free();
         }
-        $params = array(
+        $params = [
           'job_id' => $job->id,
           'email_id' => $emailId,
           'contact_id' => $contactId,
-        );
+        ];
 
         CRM_Mailing_Event_BAO_Queue::create($params);
       }

@@ -49,12 +49,12 @@ class CRM_Utils_PDF_Utils {
     $paperSize = $paperSize ? $paperSize : 'a4';
 
     // make whole html first
-    $values = array();
+    $values = [];
     if (is_array($text)) {
       $values = &$text;
     }
     else {
-      $values = array($text);
+      $values = [$text];
     }
 
     // use system wkhtmltopdf to solve everything
@@ -92,8 +92,8 @@ class CRM_Utils_PDF_Utils {
       $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, $paperSize, TRUE, 'UTF-8', FALSE);
 
       // set header and footer fonts
-      $pdf->setHeaderFont(array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
-      $pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+      $pdf->setHeaderFont([PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN]);
+      $pdf->setFooterFont([PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA]);
       // set default monospaced font
       $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
 

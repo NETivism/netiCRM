@@ -51,25 +51,25 @@ class CRM_Contact_Page_DedupeException extends CRM_Core_Page {
    */
   function preProcess() {
     //fetch the dedupe exception contacts.
-    $dedupeExceptions = array();
+    $dedupeExceptions = [];
 
 
     $exception = new CRM_Dedupe_DAO_Exception();
     $exception->find();
-    $contactIds = array();
+    $contactIds = [];
     while ($exception->fetch()) {
       $key = "{$exception->contact_id1}_{$exception->contact_id2}";
       $contactIds[$exception->contact_id1] = $exception->contact_id1;
       $contactIds[$exception->contact_id2] = $exception->contact_id2;
-      $dedupeExceptions[$key] = array('main' => array('id' => $exception->contact_id1),
-        'other' => array('id' => $exception->contact_id2),
-      );
+      $dedupeExceptions[$key] = ['main' => ['id' => $exception->contact_id1],
+        'other' => ['id' => $exception->contact_id2],
+      ];
     }
     //get the dupe contacts display names.
     if (!empty($dedupeExceptions)) {
       $sql = 'select id, display_name from civicrm_contact where id IN ( ' . CRM_Utils_Array::implode(', ', $contactIds) . ' )';
       $contact = CRM_Core_DAO::executeQuery($sql);
-      $displayNames = array();
+      $displayNames = [];
       while ($contact->fetch()) {
         $displayNames[$contact->id] = $contact->display_name;
       }

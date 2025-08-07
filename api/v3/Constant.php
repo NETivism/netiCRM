@@ -100,10 +100,10 @@ function civicrm_api3_constant_get($params) {
   if (is_callable($callable)) {
     // #41306 only few constant return name instead label, dirty hack it
     if ($params['class'] == 'CRM_Event_PseudoConstant' && $name == 'participantStatus') {
-      $values = call_user_func(array($className, $name), NULL, NULL, 'label');
+      $values = call_user_func([$className, $name], NULL, NULL, 'label');
     }
     else {
-      $values = call_user_func(array($className, $name));
+      $values = call_user_func([$className, $name]);
     }
     return civicrm_api3_create_success($values, $params);
   }
@@ -113,8 +113,8 @@ function civicrm_api3_constant_get($params) {
 
 function _civicrm_api3_constant_get_spec(&$params) {
 
-  $params = (array
-    ('name' => array(
+  $params = (
+    ['name' => [
       'api.required' => 1,
         'options' =>
         'activityStatus',
@@ -157,7 +157,7 @@ function _civicrm_api3_constant_get_spec(&$params) {
         'visibility',
         'worldRegion',
         'wysiwygEditor',
-      ))
+      ]]
   );
 }
 

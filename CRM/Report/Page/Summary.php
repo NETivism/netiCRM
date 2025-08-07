@@ -48,7 +48,7 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
    */
   function run() {
 
-    $cc_filter = array();
+    $cc_filter = [];
     if($_GET['start_date']){
       $cc_filter['start_date'] = $_GET['start_date'];
     }
@@ -56,7 +56,7 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
       $cc_filter['end_date'] = $_GET['end_date'];
     }
     if(!empty($cc_filter)){
-      $filter = array('contribution' => $cc_filter);
+      $filter = ['contribution' => $cc_filter];
     }
 
     $components = CRM_Core_Component::getEnabledComponents();
@@ -68,12 +68,12 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
       $allData['contribute'] = CRM_Report_BAO_Summary::getContributionData();
       $allData['participant'] = CRM_Report_BAO_Summary::getParitcipantData();
       $allData['mailing'] = CRM_Report_BAO_Summary::getMailingData();
-      $params = array('contribution' => 1);
-      $allData['statistic_by_condition'] = array(
+      $params = ['contribution' => 1];
+      $allData['statistic_by_condition'] = [
         'gender' => CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::GENDER,$params, $filter),
         'age' => CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::AGE,$params, $filter),
         'province' => CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::PROVINCE,$params, $filter),
-        );
+        ];
       // refs #32830, performance issue
       // $allData['participant_after_mailing'] = CRM_Report_BAO_Summary::getPartAfterMailData();
       // $allData['contribute_after_mailing'] = CRM_Report_BAO_Summary::getConAfterMailData();
@@ -105,27 +105,27 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
     /**
      * Online-offline contribution
      */
-    $chartContact = array(
+    $chartContact = [
       'id' => 'chart-pie-with-legend-contribution-online-offline',
-      'classes' => array('ct-chart-pie'),
+      'classes' => ['ct-chart-pie'],
       'selector' => '#chart-pie-with-legend-contribution-online-offline',
       'type' => 'Pie',
       'series' => self::getDonutData($contribute['online_offline']['sum']),
       'isFillDonut' => true,
-    );
+    ];
     $template->assign('chartConributeOnlineOffline', $chartContact);
 
     /**
      * Online-offline participant
      */
-    $chartContact = array(
+    $chartContact = [
       'id' => 'chart-pie-with-legend-participant-online-offline',
-      'classes' => array('ct-chart-pie'),
+      'classes' => ['ct-chart-pie'],
       'selector' => '#chart-pie-with-legend-participant-online-offline',
       'type' => 'Pie',
       'series' => self::getDonutData($participant['online_offline']['count']),
       'isFillDonut' => true,
-    );
+    ];
     $template->assign('chartParticipantOnlineOffline', $chartContact);
 
 
@@ -133,9 +133,9 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
      * Contribute
      */
 
-    $chartContact = array(
+    $chartContact = [
       'id' => 'chart-pie-with-legend-contact-source',
-      'classes' => array('ct-chart-pie'),
+      'classes' => ['ct-chart-pie'],
       'selector' => '#chart-pie-with-legend-contact-source',
       'type' => 'Pie',
       'labels' => json_encode($contacts['filtered']['label']),
@@ -143,7 +143,7 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
       'labelType' => 'percent',
       'withLegend' => true,
       'withToolTip' => true
-    );
+    ];
 
     $template->assign('chartContact', $chartContact);
 
@@ -152,9 +152,9 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
      * Contribute
      */
 
-    $chartInsSum = array(
+    $chartInsSum = [
       'id' => 'chart-pie-with-legend-contribute-instrument',
-      'classes' => array('ct-chart-pie'),
+      'classes' => ['ct-chart-pie'],
       'selector' => '#chart-pie-with-legend-contribute-instrument',
       'type' => 'Pie',
       'labels' => json_encode($contribute['instruments']['label']),
@@ -162,7 +162,7 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
       'labelType' => 'percent',
       'withLegend' => true,
       'withToolTip' => true
-    );
+    ];
 
     $template->assign('chartInsSum', $chartInsSum);
 
@@ -170,9 +170,9 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
      * Contribute Times
      */
 
-    $chartContribTimes = array(
+    $chartContribTimes = [
       'id' => 'chart-pie-with-legend-contribute-times',
-      'classes' => array('ct-chart-pie'),
+      'classes' => ['ct-chart-pie'],
       'selector' => '#chart-pie-with-legend-contribute-times',
       'type' => 'Pie',
       'labels' => json_encode($contribute['times']['label']),
@@ -180,18 +180,18 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
       'labelType' => 'percent',
       'withLegend' => true,
       'withToolTip' => true
-    );
+    ];
 
     $template->assign('chartContribTimes', $chartContribTimes);
 
-    $this->assign('static_label',array(ts("Total Amount"), ts("Percentage"),ts("Avg Amount"),ts("Count"),ts("People")));
+    $this->assign('static_label',[ts("Total Amount"), ts("Percentage"),ts("Avg Amount"),ts("Count"),ts("People")]);
     $this->assign('contribution_type_table',$contribute['contribution_type_table']);
 
     $this->assign('recur_table',$contribute['recur_table']);
 
-    $chartPeopleGender = array(
+    $chartPeopleGender = [
       'id' => 'chart-pie-with-legend-people-by-gender',
-      'classes' => array('ct-chart-pie'),
+      'classes' => ['ct-chart-pie'],
       'selector' => '#chart-pie-with-legend-people-by-gender',
       'type' => 'Pie',
       'labels' => json_encode($statistic_by_condition['gender']['label']),
@@ -199,13 +199,13 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
       'labelType' => 'percent',
       'withLegend' => true,
       'withToolTip' => true
-    );
+    ];
 
     $template->assign('chartPeopleGender', $chartPeopleGender);
 
-    $chartContributionGender = array(
+    $chartContributionGender = [
       'id' => 'chart-pie-with-legend-contribution-by-gender',
-      'classes' => array('ct-chart-pie'),
+      'classes' => ['ct-chart-pie'],
       'selector' => '#chart-pie-with-legend-contribution-by-gender',
       'type' => 'Pie',
       'labels' => json_encode($statistic_by_condition['gender']['label']),
@@ -213,13 +213,13 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
       'labelType' => 'percent',
       'withLegend' => true,
       'withToolTip' => true
-    );
+    ];
 
     $template->assign('chartContributionGender', $chartContributionGender);
 
-    $chartPeopleAge = array(
+    $chartPeopleAge = [
       'id' => 'chart-pie-with-legend-people-by-age',
-      'classes' => array('ct-chart-pie'),
+      'classes' => ['ct-chart-pie'],
       'selector' => '#chart-pie-with-legend-people-by-age',
       'type' => 'Pie',
       'labels' => json_encode($statistic_by_condition['age']['label']),
@@ -227,13 +227,13 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
       'labelType' => 'percent',
       'withLegend' => true,
       'withToolTip' => true
-    );
+    ];
 
     $template->assign('chartPeopleAge', $chartPeopleAge);
 
-    $chartContributionAge = array(
+    $chartContributionAge = [
       'id' => 'chart-pie-with-legend-contribution-by-age',
-      'classes' => array('ct-chart-pie'),
+      'classes' => ['ct-chart-pie'],
       'selector' => '#chart-pie-with-legend-contribution-by-age',
       'type' => 'Pie',
       'labels' => json_encode($statistic_by_condition['age']['label']),
@@ -241,13 +241,13 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
       'labelType' => 'percent',
       'withLegend' => true,
       'withToolTip' => true
-    );
+    ];
 
     $template->assign('chartContributionAge', $chartContributionAge);
 
-    $chartPeopleProvince = array(
+    $chartPeopleProvince = [
       'id' => 'chart-pie-with-legend-people-by-province',
-      'classes' => array('ct-chart-pie'),
+      'classes' => ['ct-chart-pie'],
       'selector' => '#chart-pie-with-legend-people-by-province',
       'type' => 'Pie',
       'labels' => json_encode($statistic_by_condition['province']['label']),
@@ -255,13 +255,13 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
       'labelType' => 'percent',
       'withLegend' => true,
       'withToolTip' => true
-    );
+    ];
 
     $template->assign('chartPeopleProvince', $chartPeopleProvince);
 
-    $chartContributionProvince = array(
+    $chartContributionProvince = [
       'id' => 'chart-pie-with-legend-contribution-by-province',
-      'classes' => array('ct-chart-pie'),
+      'classes' => ['ct-chart-pie'],
       'selector' => '#chart-pie-with-legend-contribution-by-province',
       'type' => 'Pie',
       'labels' => json_encode($statistic_by_condition['province']['label']),
@@ -269,24 +269,24 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
       'labelType' => 'percent',
       'withLegend' => true,
       'withToolTip' => true
-    );
+    ];
 
     $template->assign('chartContributionProvince', $chartContributionProvince);
 
     /**
      * Mailing Funnel
      */
-    $labelsTopMailing = array(ts('Unsuccessful Deliveries'),ts("Unopened/Hidden"),ts("Not Clicked"));
-    $chartMailingFunnel = array(
+    $labelsTopMailing = [ts('Unsuccessful Deliveries'),ts("Unopened/Hidden"),ts("Not Clicked")];
+    $chartMailingFunnel = [
       'id' => 'chart-bar-mailing-funnel',
-      'classes' => array('ct-chart-bar'),
+      'classes' => ['ct-chart-bar'],
       'selector' => '#chart-bar-mailing-funnel',
       'type' => 'Bar',
       'labels' => json_encode(array_slice($mailing['label'],1)),
       'labelsTop' => json_encode($labelsTopMailing),
       'series' => json_encode($mailing['funnel']['count']),
       'withToolTip' => true
-    );
+    ];
     $this->assign('chartMailingFunnel', $chartMailingFunnel);
 
     /*
@@ -337,7 +337,7 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
 
   static private function getDonutData($data){
     $i = 0;
-    $returnData = array();
+    $returnData = [];
     foreach ($data as $value) {
       if($i == 0){
         $returnData[0] = $value;
@@ -378,15 +378,15 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
     );
     $return_array['Contribution sum amount by recur'] = $this->showhidden(
       'contrib_recur_sum',
-      self::arrayRemoveKey($contribute['recur'], array('sum')),
+      self::arrayRemoveKey($contribute['recur'], ['sum']),
       $contribute['recur']['label']
     );
 
-    $array = array(
+    $array = [
       'total_contribute' => $contribute['total_contribute'],
       'total_application_fee' => $contribute['total_application_fee'],
       'total_amount' => $contribute['total_amount'],
-      );
+      ];
 
     $return_array['Count and people by contribution and application fee.'] = $this->showhidden(
       'contrib_applicate',
@@ -395,7 +395,7 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
     );
     $return_array['Sum amount by contribution and application fee.'] = $this->showhidden(
       'contrib_applicate_sum',
-      self::dataTransferShowHidden($array,array('sum')),
+      self::dataTransferShowHidden($array,['sum']),
       array_keys($array)
     );
 
@@ -406,7 +406,7 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
     );
     $return_array['Sum amount by contribution times.'] = $this->showhidden(
       'contrib_times_sum',
-      self::arrayRemoveKey($contribute['times'], array('sum')),
+      self::arrayRemoveKey($contribute['times'], ['sum']),
       $contribute['times']['label']
     );
 
@@ -430,7 +430,7 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
   }
 
   private function showhidden($name, $data, $labels){
-    $chart = array(
+    $chart = [
       'name' => $name,
       'id' => 'chart-bar-'.$name,
       'selector' => '#chart-bar-'.$name,
@@ -438,18 +438,18 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
       'labels' => json_encode($labels),
       'series' => json_encode($data),
       'withToolTip' => true,
-    );
+    ];
     // $this->assign('chart'.$name, $chart);
     return $chart;
   }
 
-  static private function arrayRemoveKey($arr, $types = array('count','people')){
-    $return = array();
+  static private function arrayRemoveKey($arr, $types = ['count','people']){
+    $return = [];
     if(!is_array($arr))return $arr;
     foreach ($types as $type) {
       foreach ($arr as $key => $value) {
         if($key == $type){
-          $set = array();
+          $set = [];
           foreach ($value as $key => $value2) {
             $set[] = self::arrayRemoveKey($value2);
           }
@@ -478,10 +478,10 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
    * @param  array  $types [description]
    * @return [type]        [description]
    */
-  static private function dataTransferShowHidden($arr, $types = array('count','people')){
-    $return = array();
+  static private function dataTransferShowHidden($arr, $types = ['count','people']){
+    $return = [];
     foreach ($types as $type) {
-      $set = array();
+      $set = [];
       foreach ($arr as $value) {
         $set[] = $value[$type];
       }

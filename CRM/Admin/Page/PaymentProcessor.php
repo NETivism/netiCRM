@@ -65,32 +65,32 @@ class CRM_Admin_Page_PaymentProcessor extends CRM_Core_Page_Basic {
    */
   function &links() {
     if (!(self::$_links)) {
-      self::$_links = array(
-        CRM_Core_Action::UPDATE => array(
+      self::$_links = [
+        CRM_Core_Action::UPDATE => [
           'name' => ts('Edit'),
           'url' => 'civicrm/admin/paymentProcessor',
           'qs' => 'action=update&id=%%id%%&reset=1',
           'title' => ts('Edit Payment Processor'),
-        ),
-        CRM_Core_Action::DISABLE => array(
+        ],
+        CRM_Core_Action::DISABLE => [
           'name' => ts('Disable'),
           'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_Core_BAO_PaymentProcessor' . '\',\'' . 'enable-disable' . '\' );"',
           'ref' => 'disable-action',
           'title' => ts('Disable Payment Processor'),
-        ),
-        CRM_Core_Action::ENABLE => array(
+        ],
+        CRM_Core_Action::ENABLE => [
           'name' => ts('Enable'),
           'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_Core_BAO_PaymentProcessor' . '\',\'' . 'disable-enable' . '\' );"',
           'ref' => 'enable-action',
           'title' => ts('Enable Payment Processor'),
-        ),
-        CRM_Core_Action::DELETE => array(
+        ],
+        CRM_Core_Action::DELETE => [
           'name' => ts('Delete'),
           'url' => 'civicrm/admin/paymentProcessor',
           'qs' => 'action=delete&id=%%id%%',
           'title' => ts('Delete Payment Processor'),
-        ),
-      );
+        ],
+      ];
     }
     return self::$_links;
   }
@@ -109,11 +109,11 @@ class CRM_Admin_Page_PaymentProcessor extends CRM_Core_Page_Basic {
   function run() {
     // set title and breadcrumb
     CRM_Utils_System::setTitle(ts('Settings - Payment Processor'));
-    $breadCrumb = array(array('title' => ts('Global Settings'),
+    $breadCrumb = [['title' => ts('Global Settings'),
         'url' => CRM_Utils_System::url('civicrm/admin/setting',
           'reset=1'
         ),
-      ));
+      ]];
     CRM_Utils_System::appendBreadCrumb($breadCrumb);
     return parent::run();
   }
@@ -127,14 +127,14 @@ class CRM_Admin_Page_PaymentProcessor extends CRM_Core_Page_Basic {
    */
   function browse($action = NULL) {
     // get all custom groups sorted by weight
-    $paymentProcessor = array();
+    $paymentProcessor = [];
     $dao = new CRM_Core_DAO_PaymentProcessor();
     $dao->is_test = 0;
     $dao->orderBy('name');
     $dao->find();
 
     while ($dao->fetch()) {
-      $paymentProcessor[$dao->id] = array();
+      $paymentProcessor[$dao->id] = [];
       CRM_Core_DAO::storeValues($dao, $paymentProcessor[$dao->id]);
       // form all action links
       $action = array_sum(array_keys($this->links()));
@@ -147,7 +147,7 @@ class CRM_Admin_Page_PaymentProcessor extends CRM_Core_Page_Basic {
         $action -= CRM_Core_Action::DISABLE;
       }
 
-      $isHaveActiveRecur = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution_recur WHERE processor_id = %1 AND contribution_status_id = 5", array( 1 => array( $dao->id, 'Positive')));
+      $isHaveActiveRecur = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution_recur WHERE processor_id = %1 AND contribution_status_id = 5", [ 1 => [ $dao->id, 'Positive']]);
       if ($isHaveActiveRecur) {
         $action = $action & ~CRM_Core_Action::DISABLE;
         $action = $action & ~CRM_Core_Action::DELETE;
@@ -155,7 +155,7 @@ class CRM_Admin_Page_PaymentProcessor extends CRM_Core_Page_Basic {
       }
 
       $paymentProcessor[$dao->id]['action'] = CRM_Core_Action::formLink(self::links(), $action,
-        array('id' => $dao->id)
+        ['id' => $dao->id]
       );
     }
     $this->assign('rows', $paymentProcessor);

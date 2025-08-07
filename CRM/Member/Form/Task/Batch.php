@@ -76,11 +76,11 @@ class CRM_Member_Form_Task_Batch extends CRM_Member_Form_Task {
 
     //get the contact read only fields to display.
 
-    $readOnlyFields = array(
+    $readOnlyFields = [
       'contact_id' => ts('Contact ID'),
       'sort_name' => ts('Name'),
       'membership_id' => ts('Membership ID'),
-    );
+    ];
     $config = CRM_Core_Config::singleton();
 
     // For external membership ID custom value field condition.
@@ -98,7 +98,7 @@ class CRM_Member_Form_Task_Batch extends CRM_Member_Form_Task {
     $membershipDAO->selectAdd('id as membership_id');
     $membershipDAO->find();
     if (!empty($config->externalMembershipIdFieldId)) {
-      $externalMembershipIds = CRM_Core_BAO_CustomValueTable::getEntitiesValues($this->_memberIds, 'Membership', array($config->externalMembershipIdFieldId));
+      $externalMembershipIds = CRM_Core_BAO_CustomValueTable::getEntitiesValues($this->_memberIds, 'Membership', [$config->externalMembershipIdFieldId]);
     }
     while($membershipDAO->fetch()) {
       $contactDetails[$membershipDAO->membership_id]['membership_id'] = $membershipDAO->membership_id;
@@ -129,12 +129,12 @@ class CRM_Member_Form_Task_Batch extends CRM_Member_Form_Task {
     CRM_Utils_System::setTitle($this->_title);
 
     $this->addDefaultButtons(ts('Save'));
-    $this->_fields = array();
+    $this->_fields = [];
     $this->_fields = CRM_Core_BAO_UFGroup::getFields($ufGroupId, FALSE, CRM_Core_Action::VIEW);
 
     // remove file type field and then limit fields
     $suppressFields = FALSE;
-    $removehtmlTypes = array('File', 'Autocomplete-Select');
+    $removehtmlTypes = ['File', 'Autocomplete-Select'];
     foreach ($this->_fields as $name => $field) {
       if ($cfID = CRM_Core_BAO_CustomField::getKeyID($name) &&
         in_array($this->_fields[$name]['html_type'], $removehtmlTypes)
@@ -152,15 +152,15 @@ class CRM_Member_Form_Task_Batch extends CRM_Member_Form_Task {
 
     $this->_fields = array_slice($this->_fields, 0, $this->_maxFields);
 
-    $this->addButtons(array(
-        array('type' => 'submit',
+    $this->addButtons([
+        ['type' => 'submit',
           'name' => ts('Update Members(s)'),
           'isDefault' => TRUE,
-        ),
-        array('type' => 'cancel',
+        ],
+        ['type' => 'cancel',
           'name' => ts('Cancel'),
-        ),
-      )
+        ],
+      ]
     );
 
 
@@ -217,9 +217,9 @@ class CRM_Member_Form_Task_Batch extends CRM_Member_Form_Task {
       return;
     }
 
-    $defaults = array();
+    $defaults = [];
     foreach ($this->_memberIds as $memberId) {
-      $details[$memberId] = array();
+      $details[$memberId] = [];
       CRM_Core_BAO_UFGroup::setProfileDefaults(NULL, $this->_fields, $defaults, FALSE, $memberId, 'Membership');
     }
 
@@ -237,7 +237,7 @@ class CRM_Member_Form_Task_Batch extends CRM_Member_Form_Task {
     $params = $this->exportValues();
 
     if (isset($params['field'])) {
-      $customFields = array();
+      $customFields = [];
 
       foreach ($params['field'] as $key => $value) {
         $ids['membership'] = $key;

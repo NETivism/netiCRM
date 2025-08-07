@@ -201,7 +201,7 @@ class CRM_Core_BAO_UFField extends CRM_Core_DAO_UFField {
     if (CRM_Utils_Array::value('field_id', $params)) {
       $oldWeight = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_UFField', $params['field_id'], 'weight', 'id');
     }
-    $fieldValues = array('uf_group_id' => $params['group_id']);
+    $fieldValues = ['uf_group_id' => $params['group_id']];
 
     $ufField->weight = CRM_Utils_Weight::updateOtherWeights('CRM_Core_DAO_UFField', $oldWeight, $params['weight'], $fieldValues);
 
@@ -225,7 +225,7 @@ class CRM_Core_BAO_UFField extends CRM_Core_DAO_UFField {
     if (CRM_Utils_Array::value('field_id', $params)) {
       $oldWeight = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_UFField', $params['field_id'], 'weight', 'id');
     }
-    $fieldValues = array('uf_group_id' => $params['group_id']);
+    $fieldValues = ['uf_group_id' => $params['group_id']];
     return CRM_Utils_Weight::updateOtherWeights('CRM_Core_DAO_UFField', $oldWeight, $params['weight'], $fieldValues);
   }
 
@@ -312,7 +312,7 @@ class CRM_Core_BAO_UFField extends CRM_Core_DAO_UFField {
                         FROM   civicrm_custom_field, civicrm_custom_group
                         WHERE  civicrm_custom_field.custom_group_id = civicrm_custom_group.id
                           AND  civicrm_custom_group.id = %1";
-    $p = array(1 => array($customGroupId, 'Integer'));
+    $p = [1 => [$customGroupId, 'Integer']];
     $dao = &CRM_Core_DAO::executeQuery($queryString, $p);
 
     while ($dao->fetch()) {
@@ -360,7 +360,7 @@ class CRM_Core_BAO_UFField extends CRM_Core_DAO_UFField {
     $ufGroup->id = $ufGroupId;
     $ufGroup->find(TRUE);
 
-    $profileTypes = array();
+    $profileTypes = [];
     if ($ufGroup->group_type) {
       $typeParts = explode(CRM_Core_DAO::VALUE_SEPARATOR, $ufGroup->group_type);
       $profileTypes = explode(',', $typeParts[0]);
@@ -369,7 +369,7 @@ class CRM_Core_BAO_UFField extends CRM_Core_DAO_UFField {
     if (empty($profileTypes)) {
       return FALSE;
     }
-    $components = array('Contribution', 'Participant', 'Membership');
+    $components = ['Contribution', 'Participant', 'Membership'];
     if (!in_array('Activity', $profileTypes)) {
       return FALSE;
     }
@@ -384,7 +384,7 @@ class CRM_Core_BAO_UFField extends CRM_Core_DAO_UFField {
       }
     }
 
-    $contactTypes = array('Individual', 'Household', 'Organization');
+    $contactTypes = ['Individual', 'Household', 'Organization'];
     $subTypes = CRM_Contact_BAO_ContactType::subTypes();
 
     $profileTypeComponent = array_intersect($components, $profileTypes);
@@ -417,7 +417,7 @@ class CRM_Core_BAO_UFField extends CRM_Core_DAO_UFField {
     $ufGroup->id = $ufGroupId;
     $ufGroup->find(TRUE);
 
-    $profileTypes = array();
+    $profileTypes = [];
     if ($ufGroup->group_type) {
       $typeParts = explode(CRM_Core_DAO::VALUE_SEPARATOR, $ufGroup->group_type);
       $profileTypes = explode(',', $typeParts[0]);
@@ -463,7 +463,7 @@ class CRM_Core_BAO_UFField extends CRM_Core_DAO_UFField {
     $ufGroup->id = $ufGroupId;
     $ufGroup->find(TRUE);
 
-    $profileTypes = array();
+    $profileTypes = [];
     if ($ufGroup->group_type) {
       $profileTypes = explode(',', $ufGroup->group_type);
     }
@@ -485,9 +485,9 @@ class CRM_Core_BAO_UFField extends CRM_Core_DAO_UFField {
 
     CRM_Contact_BAO_ContactType::suppressSubTypes($profileTypes);
 
-    $contactTypes = array('Contact', 'Individual', 'Household', 'Organization');
-    $components = array('Contribution', 'Participant', 'Membership');
-    $fields = array();
+    $contactTypes = ['Contact', 'Individual', 'Household', 'Organization'];
+    $components = ['Contribution', 'Participant', 'Membership'];
+    $fields = [];
 
     // check for mix profile condition
     if (count($profileTypes) > 1) {
@@ -526,11 +526,11 @@ class CRM_Core_BAO_UFField extends CRM_Core_DAO_UFField {
    */
   static function getProfileType($ufGroupId, $returnMixType = TRUE, $onlyPure = FALSE, $skipComponentType = FALSE) {
     // profile types
-    $contactTypes = array('Contact', 'Individual', 'Household', 'Organization');
+    $contactTypes = ['Contact', 'Individual', 'Household', 'Organization'];
 
     $subTypes = CRM_Contact_BAO_ContactType::subTypes();
 
-    $components = array('Contribution', 'Participant', 'Membership');
+    $components = ['Contribution', 'Participant', 'Membership'];
 
 
     $ufGroup = new CRM_Core_DAO_UFGroup();
@@ -539,7 +539,7 @@ class CRM_Core_BAO_UFField extends CRM_Core_DAO_UFField {
 
     $ufGroup->find(TRUE);
 
-    $profileTypes = array();
+    $profileTypes = [];
     if ($ufGroup->group_type) {
       $profileTypes = explode(',', $ufGroup->group_type);
     }
@@ -569,7 +569,7 @@ class CRM_Core_BAO_UFField extends CRM_Core_DAO_UFField {
     }
     else {
       //check the there are any components include in profile
-      $componentCount = array();
+      $componentCount = [];
       foreach ($components as $value) {
         if (in_array($value, $profileTypes)) {
           $componentCount[] = $value;
@@ -577,14 +577,14 @@ class CRM_Core_BAO_UFField extends CRM_Core_DAO_UFField {
       }
 
       //check contact type included in profile
-      $contactTypeCount = array();
+      $contactTypeCount = [];
       foreach ($contactTypes as $value) {
         if (in_array($value, $profileTypes)) {
           $contactTypeCount[] = $value;
         }
       }
       // subtype counter
-      $subTypeCount = array();
+      $subTypeCount = [];
       foreach ($subTypes as $value) {
         if (in_array($value, $profileTypes)) {
           $subTypeCount[] = $value;
@@ -644,8 +644,8 @@ SELECT ufg.id as id
 
     $ufGroup = &CRM_Core_DAO::executeQuery($query);
 
-    $fields = array();
-    $validProfiles = array('Individual', 'Organization', 'Household', 'Contribution');
+    $fields = [];
+    $validProfiles = ['Individual', 'Organization', 'Household', 'Contribution'];
     while ($ufGroup->fetch()) {
       $profileType = self::getProfileType($ufGroup->id);
       if (in_array($profileType, $validProfiles)) {

@@ -44,7 +44,7 @@ class CRM_ACL_BAO_Cache extends CRM_ACL_DAO_Cache {
 
   static function &build($id) {
     if (!self::$_cache) {
-      self::$_cache = array();
+      self::$_cache = [];
     }
 
     if (CRM_Utils_Array::arrayKeyExists($id, self::$_cache)) {
@@ -70,7 +70,7 @@ SELECT acl_id
   FROM civicrm_acl_cache
  WHERE contact_id = %1
 ";
-    $params = array(1 => array($id, 'Integer'));
+    $params = [1 => [$id, 'Integer']];
 
     if ($id == 0) {
       $query .= " OR contact_id IS NULL";
@@ -78,7 +78,7 @@ SELECT acl_id
 
     $dao = &CRM_Core_DAO::executeQuery($query, $params);
 
-    $cache = array();
+    $cache = [];
     while ($dao->fetch()) {
       $cache[$dao->acl_id] = 1;
     }
@@ -110,7 +110,7 @@ SELECT acl_id
 DELETE FROM civicrm_acl_cache
 WHERE contact_id = %1
 ";
-    $params = array(1 => array($id, 'Integer'));
+    $params = [1 => [$id, 'Integer']];
     $dao = &CRM_Core_DAO::executeQuery($query, $params);
   }
 

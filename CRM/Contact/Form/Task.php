@@ -97,8 +97,8 @@ class CRM_Contact_Form_Task extends CRM_Core_Form {
   }
 
   static function preProcessCommon(&$form, $useTable = FALSE) {
-    $form->_contactIds = array();
-    $form->_contactTypes = array();
+    $form->_contactIds = [];
+    $form->_contactTypes = [];
 
     // get the submitted values of the search form
     // we'll need to get fv from either search or adv search in the future
@@ -185,7 +185,7 @@ class CRM_Contact_Form_Task extends CRM_Core_Form {
       if ($sortByCharacter &&
         $sortByCharacter != 1
       ) {
-        $params[] = array('sortByCharacter', '=', $sortByCharacter, 0, 0);
+        $params[] = ['sortByCharacter', '=', $sortByCharacter, 0, 0];
       }
 
       if ($selectorName == 'CRM_Contact_Selector_Custom') {
@@ -195,10 +195,10 @@ class CRM_Contact_Form_Task extends CRM_Core_Form {
         $dao = &$selector->contactIDQuery($params, $form->_action, $sortID);
       }
 
-      $form->_contactIds = array();
+      $form->_contactIds = [];
       if ($useTable) {
         $count = 0;
-        $insertString = array();
+        $insertString = [];
         while ($dao->fetch()) {
           $count++;
           $insertString[] = " ( {$dao->contact_id} ) ";
@@ -206,7 +206,7 @@ class CRM_Contact_Form_Task extends CRM_Core_Form {
             $string = CRM_Utils_Array::implode(',', $insertString);
             $sql = "REPLACE INTO {$form->_componentTable} ( contact_id ) VALUES $string";
             CRM_Core_DAO::executeQuery($sql);
-            $insertString = array();
+            $insertString = [];
           }
         }
         if (!empty($insertString)) {
@@ -218,7 +218,7 @@ class CRM_Contact_Form_Task extends CRM_Core_Form {
       }
       else {
         // CRM-7058
-        $alreadySeen = array();
+        $alreadySeen = [];
         while ($dao->fetch()) {
           if (!empty($dao->id)) {
             $form->_additionalIds[$dao->id] = $dao->id;
@@ -234,8 +234,8 @@ class CRM_Contact_Form_Task extends CRM_Core_Form {
     elseif (CRM_Utils_Array::value('radio_ts', $values) == 'ts_sel') {
       // selected contacts only
       // need to perform action on only selected contacts
-      $insertString = array();
-      $alreadySeen = array();
+      $insertString = [];
+      $alreadySeen = [];
       foreach ($values as $name => $value) {
         list($contactID, $additionalID) = CRM_Core_Form::cbExtract($name);
         if (!empty($contactID)) {
@@ -296,7 +296,7 @@ class CRM_Contact_Form_Task extends CRM_Core_Form {
    * @return void
    */
   function setDefaultValues() {
-    $defaults = array();
+    $defaults = [];
     return $defaults;
   }
 
@@ -339,15 +339,15 @@ class CRM_Contact_Form_Task extends CRM_Core_Form {
    * @access public
    */
   function addDefaultButtons($title, $nextType = 'next', $backType = 'back', $submitOnce = null) {
-    $this->addButtons(array(
-        array('type' => $nextType,
+    $this->addButtons([
+        ['type' => $nextType,
           'name' => $title,
           'isDefault' => TRUE,
-        ),
-        array('type' => $backType,
+        ],
+        ['type' => $backType,
           'name' => ts('Cancel'),
-        ),
-      )
+        ],
+      ]
     );
   }
 }

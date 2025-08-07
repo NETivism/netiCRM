@@ -99,11 +99,11 @@ class CRM_Activity_Form_Task_PickProfile extends CRM_Activity_Form_Task {
    */
   function buildQuickForm() {
 
-    $types = array('Activity');
+    $types = ['Activity'];
     $profiles = CRM_Core_BAO_UFGroup::getProfiles($types, TRUE);
 
     $activityTypeIds = array_flip(CRM_Core_PseudoConstant::activityType(TRUE, FALSE, FALSE, 'name'));
-    $nonEditableActivityTypeIds = array(
+    $nonEditableActivityTypeIds = [
       $activityTypeIds['Email'],
       $activityTypeIds['Bulk Email'],
       $activityTypeIds['Contribution'],
@@ -113,7 +113,7 @@ class CRM_Activity_Form_Task_PickProfile extends CRM_Activity_Form_Task {
       $activityTypeIds['Membership Renewal'],
       $activityTypeIds['Event Registration'],
       $activityTypeIds['Pledge Acknowledgment'],
-    );
+    ];
 
     foreach ($this->_activityHolderIds as $activityId) {
       $typeId = CRM_Core_DAO::getFieldValue("CRM_Activity_DAO_Activity", $activityId, 'activity_type_id');
@@ -124,7 +124,7 @@ class CRM_Activity_Form_Task_PickProfile extends CRM_Activity_Form_Task {
     }
 
     if (empty($profiles)) {
-      CRM_Core_Session::setStatus(ts("You will need to create a Profile containing the %1 fields you want to edit before you can use Batch Update via Profile. Navigate to Administer Civicrm >> CiviCRM Profile to configure a Profile. Consult the online Administrator documentation for more information.", array(1 => ts($types[0]))));
+      CRM_Core_Session::setStatus(ts("You will need to create a Profile containing the %1 fields you want to edit before you can use Batch Update via Profile. Navigate to Administer Civicrm >> CiviCRM Profile to configure a Profile. Consult the online Administrator documentation for more information.", [1 => ts($types[0])]));
       CRM_Utils_System::redirect($this->_userContext);
     }
     elseif ($notEditable) {
@@ -133,7 +133,7 @@ class CRM_Activity_Form_Task_PickProfile extends CRM_Activity_Form_Task {
     }
 
     $ufGroupElement = $this->add('select', 'uf_group_id', ts('Select Profile'),
-      array('' => ts('- select profile -')) + $profiles, TRUE
+      ['' => ts('- select profile -')] + $profiles, TRUE
     );
     $this->addDefaultButtons(ts('Continue >>'));
   }
@@ -146,7 +146,7 @@ class CRM_Activity_Form_Task_PickProfile extends CRM_Activity_Form_Task {
    * @return void
    */
   function addRules() {
-    $this->addFormRule(array('CRM_Activity_Form_Task_PickProfile', 'formRule'));
+    $this->addFormRule(['CRM_Activity_Form_Task_PickProfile', 'formRule']);
   }
 
   /**

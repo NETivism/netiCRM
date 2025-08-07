@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<table>
+  <base>CRM/Contribute</base>
+  <class>MyPayLog</class>
+  <name>civicrm_contribution_mypay_log</name>
+  <add>4.0</add>
+  <field>
+      <name>id</name>
+      <uniqueName>mypay_log_id</uniqueName>
+      <type>int unsigned</type>
+      <required>true</required>
+      <title>MyPay Log ID</title>
+      <comment>MyPay Log ID</comment>
+      <add>4.0</add>
+  </field>
+  <primaryKey>
+       <name>id</name>
+       <autoincrement>true</autoincrement>
+  </primaryKey>
+  <field>
+      <name>contribution_id</name>
+      <uniqueName>contribution_id</uniqueName>
+      <type>int unsigned</type>
+      <default>NULL</default>
+      <title>Contribuution ID</title>
+      <comment>Contribuution ID</comment>
+      <add>4.0</add>
+  </field>
+  <foreignKey>
+    <name>contribution_id</name>
+    <table>civicrm_contribution</table>
+    <key>id</key>
+    <add>4.0</add>
+    <onDelete>SET NULL</onDelete>
+  </foreignKey>
+  <field>
+      <name>uid</name>
+      <uniqueName>uid</uniqueName>
+      <type>varchar</type>
+      <length>255</length>
+      <default>NULL</default>
+      <title>MyPay uid</title>
+      <comment>The uid in mypay transaction.</comment>
+      <add>4.0</add>
+  </field>
+  <field>
+      <name>url</name>
+      <uniqueName>url</uniqueName>
+      <title>Request URL</title>
+      <type>varchar</type>
+      <length>255</length>
+      <comment>Request URL</comment>
+      <add>4.0</add>
+  </field>
+  <field>
+      <name>cmd</name>
+      <uniqueName>cmd</uniqueName>
+      <title>service API CMD Name</title>
+      <type>varchar</type>
+      <length>255</length>
+      <comment>Request Command</comment>
+      <add>4.0</add>
+  </field>
+  <field>
+      <name>date</name>
+      <type>datetime</type>
+      <comment>Request Date Time</comment>
+      <add>4.0</add>
+  </field>
+  <field>
+      <name>post_data</name>
+      <title>Request Post Data</title>
+      <type>text</type>
+      <comment>Request Post Data</comment>
+      <add>4.0</add>
+  </field>
+  <field>
+      <name>return_data</name>
+      <title>Request Return Data</title>
+      <type>text</type>
+      <comment>Request Return Data</comment>
+      <add>4.0</add>
+  </field>
+  <index>
+    <name>UI_uid</name>
+    <fieldName>uid</fieldName>
+    <add>4.0</add>
+  </index>
+  <index>
+    <name>UI_url</name>
+    <fieldName>url</fieldName>
+    <add>4.0</add>
+  </index>
+  <index>
+    <name>UI_date</name>
+    <fieldName>date</fieldName>
+    <add>4.0</add>
+  </index>
+</table>

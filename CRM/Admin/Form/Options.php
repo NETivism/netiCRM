@@ -110,7 +110,7 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
 
     if ($this->_action & CRM_Core_Action::DELETE) {
       if ($this->_id) {
-        $is_default = CRM_Core_DAO::singleValueQuery("SELECT is_default FROM civicrm_option_value WHERE id = %1" , array(1 => array($this->_id, 'Integer')));
+        $is_default = CRM_Core_DAO::singleValueQuery("SELECT is_default FROM civicrm_option_value WHERE id = %1" , [1 => [$this->_id, 'Integer']]);
         if ($is_default) {
           return CRM_Core_Error::statusBounce(ts('You cannot delete default value.'));
         }
@@ -130,12 +130,12 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
     $defaults = parent::setDefaultValues();
 
     if (!isset($defaults['weight']) || !$defaults['weight']) {
-      $fieldValues = array('option_group_id' => $this->_gid);
+      $fieldValues = ['option_group_id' => $this->_gid];
       $defaults['weight'] = CRM_Utils_Weight::getDefaultWeight('CRM_Core_DAO_OptionValue', $fieldValues);
     }
 
     //setDefault of contact types for email greeting, postal greeting, addressee, CRM-4575
-    if (in_array($this->_gName, array('email_greeting', 'postal_greeting', 'addressee'))) {
+    if (in_array($this->_gName, ['email_greeting', 'postal_greeting', 'addressee'])) {
       $defaults['contactOptions'] = (CRM_Utils_Array::value('filter', $defaults)) ? $defaults['filter'] : NULL;
     }
     return $defaults;
@@ -167,18 +167,18 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
       TRUE
     );
 
-    if (!in_array($this->_gName, array('email_greeting', 'postal_greeting', 'addressee')) && !$isReserved) {
+    if (!in_array($this->_gName, ['email_greeting', 'postal_greeting', 'addressee']) && !$isReserved) {
       $this->addRule('label',
         ts('This Label already exists in the database for this option group. Please select a different Value.'),
         'optionExists',
-        array('CRM_Core_DAO_OptionValue', $this->_id, $this->_gid, 'label')
+        ['CRM_Core_DAO_OptionValue', $this->_id, $this->_gid, 'label']
       );
     }
 
     if ($this->_gName == 'case_status') {
-      $classes = array('Opened' => ts('Opened'),
+      $classes = ['Opened' => ts('Opened'),
         'Closed' => ts('Closed'),
-      );
+      ];
 
       $grouping = $this->add('select',
         'grouping',
@@ -218,7 +218,7 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
       // Hard-coding attributes here since description is still stored as varchar and not text in the schema. dgg
       $this->addWysiwyg('description',
         ts('Description'),
-        array('rows' => 4, 'cols' => 80),
+        ['rows' => 4, 'cols' => 80],
         $required
       );
     }
@@ -248,7 +248,7 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
     ) {
 
       $caseID = CRM_Core_Component::getComponentID('CiviCase');
-      $components = array('' => ts('Contact'), $caseID => 'CiviCase');
+      $components = ['' => ts('Contact'), $caseID => 'CiviCase'];
       $this->add('select',
         'component_id',
         ts('Component'),
@@ -259,11 +259,11 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
     $enabled = $this->add('checkbox', 'is_active', ts('Enabled?'));
 
     //fix for CRM-3552, CRM-4575
-    if (in_array($this->_gName, array('email_greeting', 'postal_greeting', 'addressee', 'from_email_address', 'website_type'))) {
+    if (in_array($this->_gName, ['email_greeting', 'postal_greeting', 'addressee', 'from_email_address', 'website_type'])) {
       $this->assign('showDefault', TRUE);
       $ele = $this->add('checkbox', 'is_default', ts('Default Option?'));
       if ($this->_id) {
-        $is_default = CRM_Core_DAO::singleValueQuery("SELECT is_default FROM civicrm_option_value WHERE id = %1" , array(1 => array($this->_id, 'Integer')));
+        $is_default = CRM_Core_DAO::singleValueQuery("SELECT is_default FROM civicrm_option_value WHERE id = %1" , [1 => [$this->_id, 'Integer']]);
         if ($is_default >= 1) {
           $ele->freeze();
         }
@@ -271,12 +271,12 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
     }
 
     //get contact type for which user want to create a new greeting/addressee type, CRM-4575
-    if (in_array($this->_gName, array('email_greeting', 'postal_greeting', 'addressee')) && !$isReserved) {
-      $values = array(1 => ts('Individual'), 2 => ts('Household'));
+    if (in_array($this->_gName, ['email_greeting', 'postal_greeting', 'addressee']) && !$isReserved) {
+      $values = [1 => ts('Individual'), 2 => ts('Household')];
       if ($this->_gName == 'addressee') {
         $values[] = ts('Organization');
       }
-      $this->add('select', 'contactOptions', ts('Contact Type'), array('' => '-select-') + $values, TRUE);
+      $this->add('select', 'contactOptions', ts('Contact Type'), ['' => '-select-'] + $values, TRUE);
       $this->assign('showContactFilter', TRUE);
     }
 
@@ -291,7 +291,7 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
       $this->add('checkbox', 'filter', ts('Counted?'));
     }
 
-    $this->addFormRule(array('CRM_Admin_Form_Options', 'formRule'), $this);
+    $this->addFormRule(['CRM_Admin_Form_Options', 'formRule'], $this);
   }
 
   /**
@@ -306,12 +306,12 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
    * @static
    */
   static function formRule($fields, $files, $self) {
-    $errors = array();
+    $errors = [];
     if ($self->_gName == 'case_status' && !CRM_Utils_Array::value('grouping', $fields)) {
       $errors['grouping'] = ts('Status class is a required field');
     }
 
-    if (in_array($self->_gName, array('email_greeting', 'postal_greeting', 'addressee'))
+    if (in_array($self->_gName, ['email_greeting', 'postal_greeting', 'addressee'])
       && !$self->_defaultValues['is_reserved']
     ) {
       $label = $fields['label'];
@@ -341,11 +341,11 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
       }
 
       if (!CRM_Utils_Mail::checkMailProviders($formEmail)) {
-        $errors['label'] = ts('Do not use free mail address as mail sender. (eg. %1)', array(1 => str_replace('|', ', ', CRM_Utils_Mail::DMARC_MAIL_PROVIDERS)));
+        $errors['label'] = ts('Do not use free mail address as mail sender. (eg. %1)', [1 => str_replace('|', ', ', CRM_Utils_Mail::DMARC_MAIL_PROVIDERS)]);
       }
     }
     if ($fields['is_default'] && empty($fields['is_active'])) {
-      $errors['is_active'] = ts('%1 is a required field.', array(1 => ts('Is Active')));
+      $errors['is_active'] = ts('%1 is a required field.', [1 => ts('Is Active')]);
     }
 
     return $errors;
@@ -360,7 +360,7 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
    */
   public function postProcess() {
     if ($this->_action & CRM_Core_Action::DELETE) {
-      $fieldValues = array('option_group_id' => $this->_gid);
+      $fieldValues = ['option_group_id' => $this->_gid];
       $wt = CRM_Utils_Weight::delWeight('CRM_Core_DAO_OptionValue', $this->_id, $fieldValues);
 
       if (CRM_Core_BAO_OptionValue::del($this->_id)) {
@@ -369,26 +369,26 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
           CRM_Core_BAO_Phone::setOptionToNull(CRM_Utils_Array::value('value', $this->_defaultValues));
         }
 
-        CRM_Core_Session::setStatus(ts('Selected %1 type has been deleted.', array(1 => $this->_GName)));
+        CRM_Core_Session::setStatus(ts('Selected %1 type has been deleted.', [1 => $this->_GName]));
       }
       else {
-        CRM_Core_Session::setStatus(ts('Selected %1 type has not been deleted.', array(1 => $this->_GName)));
+        CRM_Core_Session::setStatus(ts('Selected %1 type has not been deleted.', [1 => $this->_GName]));
         CRM_Utils_Weight::correctDuplicateWeights('CRM_Core_DAO_OptionValue', $fieldValues);
       }
     }
     else {
-      $params = $ids = array();
+      $params = $ids = [];
       $params = $this->exportValues();
 
       // allow multiple defaults within group.
-      $allowMultiDefaults = array('email_greeting', 'postal_greeting', 'addressee', 'from_email_address');
+      $allowMultiDefaults = ['email_greeting', 'postal_greeting', 'addressee', 'from_email_address'];
       if (in_array($this->_gName, $allowMultiDefaults)) {
         if ($this->_gName == 'from_email_address') {
-          $params['reset_default_for'] = array('domain_id' => CRM_Core_Config::domainID());
+          $params['reset_default_for'] = ['domain_id' => CRM_Core_Config::domainID()];
         }
         elseif ($filter = CRM_Utils_Array::value('contactOptions', $params)) {
           $params['filter'] = $filter;
-          $params['reset_default_for'] = array('filter' => "0, " . $params['filter']);
+          $params['reset_default_for'] = ['filter' => "0, " . $params['filter']];
         }
 
         //make sure we should has to have space, CRM-6977
@@ -402,11 +402,11 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
         $params['filter'] = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionValue', $this->_id, 'filter', 'id');
       }
 
-      $groupParams = array('name' => ($this->_gName));
+      $groupParams = ['name' => ($this->_gName)];
 
       $optionValue = CRM_Core_OptionValue::addOptionValue($params, $groupParams, $this->_action, $this->_id);
 
-      CRM_Core_Session::setStatus(ts('The %1 \'%2\' has been saved.', array(1 => $this->_GName, 2 => $optionValue->label)));
+      CRM_Core_Session::setStatus(ts('The %1 \'%2\' has been saved.', [1 => $this->_GName, 2 => $optionValue->label]));
     }
   }
 }

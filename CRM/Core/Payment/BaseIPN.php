@@ -80,16 +80,16 @@ class CRM_Core_Payment_BaseIPN {
   }
 
   function createContact(&$input, &$ids, &$objects) {
-    $params = array();
+    $params = [];
     $billingID = $ids['billing'];
-    $lookup = array("first_name",
+    $lookup = ["first_name",
       "last_name",
       "street_address-{$billingID}",
       "city-{$billingID}",
       "state-{$billingID}",
       "postal_code-{$billingID}",
       "country-{$billingID}",
-    );
+    ];
     foreach ($lookup as $name) {
       $params[$name] = $input[$name];
     }
@@ -131,9 +131,9 @@ class CRM_Core_Payment_BaseIPN {
       // resf #34141, Reserved contribution as TaiwanACH.
       if (!empty($ids['contributionRecur']) && $objects['contribution'] && !$isReserveObjectsContribution) {
         if (!empty($config->recurringCopySetting) && $config->recurringCopySetting == 'latest') {
-          $daoLastContribution = CRM_Core_DAO::executeQuery("SELECT id FROM civicrm_contribution WHERE contribution_recur_id = %1 ORDER BY created_date DESC", array(
-              1 => array($ids['contributionRecur'], 'Integer'),
-            ));
+          $daoLastContribution = CRM_Core_DAO::executeQuery("SELECT id FROM civicrm_contribution WHERE contribution_recur_id = %1 ORDER BY created_date DESC", [
+              1 => [$ids['contributionRecur'], 'Integer'],
+            ]);
             if ($daoLastContribution->N > 1) {
               $daoLastContribution->fetch();
               $ids['contribution'] = $daoLastContribution->id;
@@ -175,7 +175,7 @@ class CRM_Core_Payment_BaseIPN {
       if (isset($ids['pledge_payment'])) {
 
 
-        $objects['pledge_payment'] = array();
+        $objects['pledge_payment'] = [];
         foreach ($ids['pledge_payment'] as $key => $paymentID) {
           $payment = new CRM_Pledge_DAO_Payment();
           $payment->id = $paymentID;
@@ -323,7 +323,7 @@ class CRM_Core_Payment_BaseIPN {
         CRM_Core_Error::debug_log_message("Prepare to send failed notify. CR_count: {$crcount}, Id: {$contribution->id}, Status: {$contribution->contribution_status_id} Mail to: {$recur_fail_notify}");
       }
       if($crcount >= 2 && $contribution->contribution_status_id == 4 && !empty($recur_fail_notify)){
-        $values = array(
+        $values = [
           'contribution_id' => $contribution->id,
           'currency' => $contribution->currency,
           'total_amount' => $contribution->total_amount,
@@ -333,7 +333,7 @@ class CRM_Core_Payment_BaseIPN {
           'display_name' => $contact->display_name,
           'recur_fail_notify' => $recur_fail_notify,
           'message' => $message,
-          );
+          ];
         $returnArray = CRM_Contribute_BAO_ContributionPage::sendFailedNotifyMail($contribution->contact_id, $values, $contribution->is_test, TRUE);
         CRM_Core_Error::debug_log_message("Failed notify email sended.");
       }
@@ -373,7 +373,7 @@ class CRM_Core_Payment_BaseIPN {
 
       //update related Memberships.
 
-      $params = array('status_id' => $cancelled_id);
+      $params = ['status_id' => $cancelled_id];
       CRM_Member_BAO_Membership::updateRelatedMemberships($membership->id, $params);
     }
 
@@ -398,7 +398,7 @@ class CRM_Core_Payment_BaseIPN {
   }
 
   function completeTransaction(&$input, &$ids, &$objects, &$transaction, $recur = FALSE, $sendMail = TRUE) {
-    $values = array();
+    $values = [];
     CRM_Utils_Hook::ipnPre('complete', $objects, $input, $ids, $values);
     $contribution = &$objects['contribution'];
     $membership = &$objects['membership'];
@@ -469,12 +469,12 @@ class CRM_Core_Payment_BaseIPN {
           TRUE
         );
 
-        $formatedParams = array('status_id' => CRM_Utils_Array::value('id', $calcStatus, 2),
+        $formatedParams = ['status_id' => CRM_Utils_Array::value('id', $calcStatus, 2),
           'join_date' => CRM_Utils_Date::customFormat($dates['join_date'], $format),
           'start_date' => CRM_Utils_Date::customFormat($dates['start_date'], $format),
           'end_date' => CRM_Utils_Date::customFormat($dates['end_date'], $format),
           'reminder_date' => CRM_Utils_Date::customFormat($dates['reminder_date'], $format),
-        );
+        ];
         // respect human input even we have complete transaction
         if ($membership->is_override) {
           if ($membership->end_date > $formatedParams['end_date']) {
@@ -493,7 +493,7 @@ class CRM_Core_Payment_BaseIPN {
         $membership->save();
 
         //updating the membership log
-        $membershipLog = array();
+        $membershipLog = [];
         $membershipLog = $formatedParams;
         $logStartDate = CRM_Utils_Date::customFormat($dates['log_start_date'], $format);
         $logStartDate = ($logStartDate) ? CRM_Utils_Date::isoToMysql($logStartDate) : $formatedParams['start_date'];
@@ -512,31 +512,31 @@ class CRM_Core_Payment_BaseIPN {
     }
     else {
       // event
-      $eventParams = array('id' => $objects['event']->id);
-      $values['event'] = array();
+      $eventParams = ['id' => $objects['event']->id];
+      $values['event'] = [];
 
 
       CRM_Event_BAO_Event::retrieve($eventParams, $values['event']);
 
-      $eventParams = array('id' => $objects['event']->id);
-      $values['event'] = array();
+      $eventParams = ['id' => $objects['event']->id];
+      $values['event'] = [];
 
 
       CRM_Event_BAO_Event::retrieve($eventParams, $values['event']);
 
       //get location details
-      $locationParams = array('entity_id' => $objects['event']->id, 'entity_table' => 'civicrm_event');
+      $locationParams = ['entity_id' => $objects['event']->id, 'entity_table' => 'civicrm_event'];
 
 
       $values['location'] = CRM_Core_BAO_Location::getValues($locationParams);
 
 
-      $ufJoinParams = array(
+      $ufJoinParams = [
         'entity_table' => 'civicrm_event',
         'entity_id' => $ids['event'],
         'weight' => 1,
         'module' => 'CiviEvent',
-      );
+      ];
       $values['custom_pre_id'] = CRM_Core_BAO_UFJoin::findUFGroupId($ufJoinParams);
       $ufJoinParams['weight'] = 2;
       $values['custom_post_id'] = CRM_Core_BAO_UFJoin::findUFGroupId($ufJoinParams);
@@ -610,9 +610,9 @@ class CRM_Core_Payment_BaseIPN {
     }
     if ($contribution->trxn_id) {
 
-      $trxnParams = array(
+      $trxnParams = [
         'contribution_id' => $contribution->id,
-        'trxn_date' => isset($input['trxn_date']) ? $input['trxn_date'] : self::$_now,
+        'trxn_date' => $input['trxn_date'] ?? self::$_now,
         'trxn_type' => 'Debit',
         'total_amount' => $input['total_amount'] ? $input['total_amount'] : $input['amount'],
         'fee_amount' => $contribution->fee_amount,
@@ -620,18 +620,18 @@ class CRM_Core_Payment_BaseIPN {
         'currency' => $contribution->currency,
         'payment_processor' => $paymentProcessor,
         'trxn_id' => $contribution->trxn_id,
-      );
+      ];
 
       CRM_Core_BAO_FinancialTrxn::create($trxnParams);
     }
 
     //update corresponding pledge payment record
 
-    $returnProperties = array('id', 'pledge_id');
+    $returnProperties = ['id', 'pledge_id'];
     if (CRM_Core_DAO::commonRetrieveAll('CRM_Pledge_DAO_Payment', 'contribution_id', $contribution->id,
         $paymentDetails, $returnProperties
       )) {
-      $paymentIDs = array();
+      $paymentIDs = [];
       foreach ($paymentDetails as $key => $value) {
         $paymentIDs[] = $value['id'];
         $pledgeId = $value['pledge_id'];
@@ -695,16 +695,16 @@ class CRM_Core_Payment_BaseIPN {
       if (!empty($contribution->contribution_recur_id)) {
         $contribution_recur_id = $contribution->contribution_recur_id;
         $sql = "SELECT count( contribution_recur_id ) FROM civicrm_contribution WHERE contribution_recur_id = %1 GROUP BY contribution_recur_id";
-        $params = array(
-          1 => array($contribution_recur_id, 'Positive'),
-        );
+        $params = [
+          1 => [$contribution_recur_id, 'Positive'],
+        ];
         $count = CRM_Core_DAO::singleValueQuery($sql, $params);
         if ($count > 1) {
           $sendSMS = FALSE;
         }
       }
       if ($sendSMS) {
-        $defaultProvider = CRM_SMS_BAO_Provider::getProviders(NULL, array('is_default' => 1));
+        $defaultProvider = CRM_SMS_BAO_Provider::getProviders(NULL, ['is_default' => 1]);
         $provider = reset($defaultProvider);
         $preparedParams = CRM_Activity_BAO_Activity::prepareSMS($contribution->contact_id, $provider['id'], $values['sms_text'], $objects);
         $sendResult = CRM_Activity_BAO_Activity::sendSMS(
@@ -758,7 +758,7 @@ class CRM_Core_Payment_BaseIPN {
     $locationTypes = CRM_Core_PseudoConstant::locationType(FALSE, 'name');
     $ids['billing'] = array_search('Billing', $locationTypes);
     if (!$ids['billing']) {
-      CRM_Core_Error::debug_log_message(ts('Please set a location type of %1', array(1 => 'Billing')));
+      CRM_Core_Error::debug_log_message(ts('Please set a location type of %1', [1 => 'Billing']));
       echo "Failure: Could not find billing location type<p>";
       return FALSE;
     }
@@ -773,7 +773,7 @@ class CRM_Core_Payment_BaseIPN {
     $config = CRM_Core_Config::singleton();
 
     if (empty($values)) {
-      $values = array();
+      $values = [];
       $contribID = $ids['contribution'];
       if ($input['component'] == 'contribute') {
 
@@ -803,23 +803,23 @@ class CRM_Core_Payment_BaseIPN {
       }
       else {
         // event
-        $eventParams = array('id' => $objects['event']->id);
-        $values['event'] = array();
+        $eventParams = ['id' => $objects['event']->id];
+        $values['event'] = [];
 
 
         CRM_Event_BAO_Event::retrieve($eventParams, $values['event']);
 
         //get location details
-        $locationParams = array('entity_id' => $objects['event']->id, 'entity_table' => 'civicrm_event');
+        $locationParams = ['entity_id' => $objects['event']->id, 'entity_table' => 'civicrm_event'];
 
 
         $values['location'] = CRM_Core_BAO_Location::getValues($locationParams);
 
 
-        $ufJoinParams = array('entity_table' => 'civicrm_event',
+        $ufJoinParams = ['entity_table' => 'civicrm_event',
           'entity_id' => $ids['event'],
           'weight' => 1,
-        );
+        ];
 
         $values['custom_pre_id'] = CRM_Core_BAO_UFJoin::findUFGroupId($ufJoinParams);
 
@@ -855,7 +855,7 @@ class CRM_Core_Payment_BaseIPN {
       // set display address of contributor
       if ($contribution->address_id) {
 
-        $addressParams = array('id' => $contribution->address_id);
+        $addressParams = ['id' => $contribution->address_id];
         $addressDetails = CRM_Core_BAO_Address::getValues($addressParams, FALSE, 'id');
         $addressDetails = array_values($addressDetails);
         $values['address'] = $addressDetails[0]['display'];
@@ -870,11 +870,11 @@ class CRM_Core_Payment_BaseIPN {
         $contribution->id,
         'honor_contact_id'
       )) {
-      $honorDefault = array();
-      $honorIds = array();
+      $honorDefault = [];
+      $honorIds = [];
       $honorIds['contribution'] = $contribution->id;
 
-      $idParams = array('id' => $honarID, 'contact_id' => $honarID);
+      $idParams = ['id' => $honarID, 'contact_id' => $honarID];
 
 
       CRM_Contact_BAO_Contact::retrieve($idParams, $honorDefault, $honorIds);
@@ -981,13 +981,13 @@ class CRM_Core_Payment_BaseIPN {
       }
 
       if(!empty($objects['contributionRecur'])){
-        $recurring = array(
+        $recurring = [
           'frequency_unit' => NULL,
           'frequency_interval' => NULL,
           'installments' => NULL,
           'start_date' => NULL,
           'end_date' => NULL,
-        );
+        ];
         foreach($recurring as $k => $v){
           if(isset($objects['contributionRecur']->$k)){
             $value = $objects['contributionRecur']->$k;
@@ -1025,11 +1025,11 @@ class CRM_Core_Payment_BaseIPN {
         $isTest = TRUE;
       }
 
-      $values['params'] = array();
+      $values['params'] = [];
 
       //to get email of primary participant.
       $primaryEmail = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_Email', $participant->contact_id, 'email', 'contact_id');
-      $primaryAmount[] = array('label' => $participant->fee_level . ' - ' . $primaryEmail, 'amount' => $participant->fee_amount);
+      $primaryAmount[] = ['label' => $participant->fee_level . ' - ' . $primaryEmail, 'amount' => $participant->fee_amount];
       //build an array of cId/pId of participants
       $additionalIDs = CRM_Event_BAO_Event::buildCustomProfile($participant->id, NULL, $ids['contact'], $isTest, TRUE);
       unset($additionalIDs[$participant->id]);
@@ -1040,7 +1040,7 @@ class CRM_Core_Payment_BaseIPN {
         //set additionalParticipant true
         $values['params']['additionalParticipant'] = TRUE;
         foreach ($additionalIDs as $pId => $cId) {
-          $amount = array();
+          $amount = [];
           //to change the status pending to completed
           $additional = new CRM_Event_DAO_Participant();
           $additional->id = $pId;
@@ -1055,8 +1055,8 @@ class CRM_Core_Payment_BaseIPN {
 
             $additionalParticipantInfo = CRM_Contact_BAO_Contact::displayName($additional->contact_id);
           }
-          $amount[0] = array('label' => $additional->fee_level, 'amount' => $additional->fee_amount);
-          $primaryAmount[] = array('label' => $additional->fee_level . ' - ' . $additionalParticipantInfo, 'amount' => $additional->fee_amount);
+          $amount[0] = ['label' => $additional->fee_level, 'amount' => $additional->fee_amount];
+          $primaryAmount[] = ['label' => $additional->fee_level . ' - ' . $additionalParticipantInfo, 'amount' => $additional->fee_amount];
           $additional->save();
           $additional->free();
           $template->assign('amount', $amount);
@@ -1109,11 +1109,11 @@ class CRM_Core_Payment_BaseIPN {
         }
 
 
-        $entityBlock = array('contact_id' => $ids['contact'],
+        $entityBlock = ['contact_id' => $ids['contact'],
           'location_type_id' => CRM_Core_DAO::getFieldValue('CRM_Core_DAO_LocationType',
             'Home', 'id', 'name'
           ),
-        );
+        ];
         $address = CRM_Core_BAO_Address::getValues($entityBlock);
         $template->assign('onBehalfAddress', $address[$entityBlock['location_type_id']]['display']);
       }
@@ -1155,7 +1155,7 @@ class CRM_Core_Payment_BaseIPN {
       return;
     }
 
-    $input = $ids = $objects = array();
+    $input = $ids = $objects = [];
 
     //get the required ids.
     $ids['contribution'] = $contributionId;
@@ -1224,7 +1224,7 @@ class CRM_Core_Payment_BaseIPN {
     }
 
     //set values for ipn code.
-    foreach (array('fee_amount', 'check_number', 'payment_instrument_id') as $field) {
+    foreach (['fee_amount', 'check_number', 'payment_instrument_id'] as $field) {
       if (!$input[$field] = CRM_Utils_Array::value($field, $params)) {
         $input[$field] = $contribution->$field;
       }

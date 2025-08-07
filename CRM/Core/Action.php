@@ -84,7 +84,7 @@ class CRM_Core_Action {
    * @static
    *
    */
-  static $_names = array(
+  static $_names = [
     'add' => self::ADD,
     'update' => self::UPDATE,
     'view' => self::VIEW,
@@ -102,7 +102,7 @@ class CRM_Core_Action {
     'revert' => self::REVERT,
     'close' => self::CLOSE,
     'reopen' => self::REOPEN,
-  );
+  ];
 
   /**
    * the flipped version of the names array, initialized when used
@@ -216,7 +216,7 @@ class CRM_Core_Action {
       return NULL;
     }
 
-    $url = array();
+    $url = [];
 
     $firstLink = TRUE;
     foreach ($links as $m => $link) {

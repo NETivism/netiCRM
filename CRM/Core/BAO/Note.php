@@ -89,7 +89,7 @@ class CRM_Core_BAO_Note extends CRM_Core_DAO_Note {
       return FALSE;
     }
 
-    $noteValues = array();
+    $noteValues = [];
     if (is_object($note) && get_class($note) == 'CRM_Core_DAO_Note') {
       CRM_Core_DAO::storeValues($note, $noteValues);
     }
@@ -201,15 +201,15 @@ class CRM_Core_BAO_Note extends CRM_Core_DAO_Note {
         }
       }
 
-      $recentOther = array();
+      $recentOther = [];
       if ($noteActions) {
-        $recentOther = array('editUrl' => CRM_Utils_System::url('civicrm/contact/view/note',
+        $recentOther = ['editUrl' => CRM_Utils_System::url('civicrm/contact/view/note',
             "reset=1&action=update&cid={$note->entity_id}&id={$note->id}&context=home"
           ),
           'deleteUrl' => CRM_Utils_System::url('civicrm/contact/view/note',
             "reset=1&action=delete&cid={$note->entity_id}&id={$note->id}&context=home"
           ),
-        );
+        ];
       }
 
       // add the recently created Note
@@ -283,10 +283,10 @@ class CRM_Core_BAO_Note extends CRM_Core_DAO_Note {
     $note->limit($numNotes);
     $note->find();
 
-    $notes = array();
+    $notes = [];
     $count = 0;
     while ($note->fetch()) {
-      $values['note'][$note->id] = array();
+      $values['note'][$note->id] = [];
       CRM_Core_DAO::storeValues($note, $values['note'][$note->id]);
       $notes[] = $note;
 
@@ -312,7 +312,7 @@ class CRM_Core_BAO_Note extends CRM_Core_DAO_Note {
    */
   static function del($id, $showStatus = TRUE) {
     $return = NULL;
-    $recent = array($id);
+    $recent = [$id];
     $note = new CRM_Core_DAO_Note();
     $note->id = $id;
     $note->find();
@@ -340,10 +340,10 @@ class CRM_Core_BAO_Note extends CRM_Core_DAO_Note {
     // delete the recently created Note
 
     foreach ($recent as $recentId) {
-      $noteRecent = array(
+      $noteRecent = [
         'id' => $recentId,
         'type' => 'Note',
-      );
+      ];
       CRM_Utils_Recent::del($noteRecent);
     }
     return $return;
@@ -383,7 +383,7 @@ class CRM_Core_BAO_Note extends CRM_Core_DAO_Note {
    * @static
    */
   public static function &getNote($id, $entityTable = 'civicrm_relationship') {
-    $viewNote = array();
+    $viewNote = [];
 
     $query = "
 SELECT   id, note FROM civicrm_note
@@ -391,7 +391,7 @@ WHERE    entity_table=\"{$entityTable}\"
   AND    entity_id = %1
   AND    note is not null
 ORDER BY modified_date desc";
-    $params = array(1 => array($id, 'Integer'));
+    $params = [1 => [$id, 'Integer']];
 
     $dao = &CRM_Core_DAO::executeQuery($query, $params);
 
@@ -412,7 +412,7 @@ ORDER BY modified_date desc";
    * @static
    */
   public static function &getNoteDetail($id, $entityTable = 'civicrm_relationship') {
-    $viewNote = array();
+    $viewNote = [];
 
     $query = "
 SELECT   id, note, subject, modified_date FROM civicrm_note
@@ -420,16 +420,16 @@ WHERE    entity_table=\"{$entityTable}\"
   AND    entity_id = %1
   AND    (note is not null OR subject is not null)
 ORDER BY modified_date desc";
-    $params = array(1 => array($id, 'Integer'));
+    $params = [1 => [$id, 'Integer']];
 
     $dao = &CRM_Core_DAO::executeQuery($query, $params);
 
     while ($dao->fetch()) {
-      $viewNote[$dao->id] = array(
+      $viewNote[$dao->id] = [
         'note' => $dao->note,
         'subject' => $dao->subject,
         'modified_date' => $dao->modified_date,
-      );
+      ];
     }
     return $viewNote;
   }
@@ -502,7 +502,7 @@ ORDER BY modified_date desc";
    *
    * @return array Nested associative array beginning with direct children of given note.
    */
-  private static function buildNoteTree($parentId, $maxDepth = 0, $snippet = FALSE, &$tree = array(), $depth = 0) {
+  private static function buildNoteTree($parentId, $maxDepth = 0, $snippet = FALSE, &$tree = [], $depth = 0) {
     if ($maxDepth && $depth > $max_depth) {
       return;
     }
@@ -561,7 +561,7 @@ ORDER BY modified_date desc";
    *
    * @return array One-dimensional array containing ids of all desendent notes
    */
-  public static function getDescendentIds($parentId, &$ids = array()) {
+  public static function getDescendentIds($parentId, &$ids = []) {
     // get direct children of given parentId note
     $note = new CRM_Core_DAO_Note();
     $note->entity_table = 'civicrm_note';

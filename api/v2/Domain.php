@@ -52,28 +52,28 @@ require_once 'api/v2/utils.php';
 function civicrm_domain_get() {
   require_once 'CRM/Core/BAO/Domain.php';
   $dao    = CRM_Core_BAO_Domain::getDomain();
-  $values = array();
-  $params = array(
+  $values = [];
+  $params = [
     'entity_id' => $dao->id,
     'entity_table' => 'civicrm_domain',
-  );
+  ];
   require_once 'CRM/Core/BAO/Location.php';
   $values['location'] = CRM_Core_BAO_Location::getValues($params, TRUE);
-  $address_array = array(
+  $address_array = [
     'street_address', 'supplemental_address_1', 'supplemental_address_2',
     'city', 'state_province_id', 'postal_code', 'country_id', 'geo_code_1', 'geo_code_2',
-  );
+  ];
   require_once 'CRM/Core/OptionGroup.php';
-  $domain[$dao->id] = array(
+  $domain[$dao->id] = [
     'id' => $dao->id,
     'domain_name' => $dao->name,
     'description' => $dao->description,
     'domain_email' => CRM_Utils_Array::value('email', $values['location']['email'][1]),
-    'domain_phone' => array(
+    'domain_phone' => [
       'phone_type' => CRM_Core_OptionGroup::getLabel('phone_type', CRM_Utils_Array::value('phone_type_id', $values['location']['phone'][1])),
       'phone' => CRM_Utils_Array::value('phone', $values['location']['phone'][1]),
-    ),
-  );
+    ],
+  ];
   foreach ($address_array as $value) {
     $domain[$dao->id]['domain_address'][$value] = CRM_Utils_Array::value($value, $values['location']['address'][1]);
   }
@@ -100,7 +100,7 @@ function civicrm_domain_create($params) {
   }
 
   $domain = CRM_Core_BAO_Domain::create($params);
-  $domain_array = array();
+  $domain_array = [];
   _civicrm_object_to_array($domain, $domain_array);
   return $domain_array;
 }

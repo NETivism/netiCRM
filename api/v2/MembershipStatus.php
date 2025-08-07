@@ -81,13 +81,13 @@ function civicrm_membership_status_create(&$params) {
   }
 
   require_once 'CRM/Member/BAO/MembershipStatus.php';
-  $ids = array();
+  $ids = [];
   $membershipStatusBAO = CRM_Member_BAO_MembershipStatus::add($params, $ids);
   if (is_a($membershipStatusBAO, 'CRM_Core_Error')) {
     return civicrm_create_error("Membership is not created");
   }
   else {
-    $values             = array();
+    $values             = [];
     $values['id']       = $membershipStatusBAO->id;
     $values['is_error'] = 0;
     return $values;
@@ -122,7 +122,7 @@ function civicrm_membership_status_get(&$params) {
   }
 
   if ($membershipStatusBAO->find()) {
-    $membershipStatus = array();
+    $membershipStatus = [];
     while ($membershipStatusBAO->fetch()) {
       $bao = clone $membershipStatusBAO;
       _civicrm_object_to_array($bao, $membershipStatus);
@@ -179,7 +179,7 @@ function &civicrm_membership_status_update(&$params) {
     }
     $membershipStatusBAO->save();
   }
-  $membershipStatus = array();
+  $membershipStatus = [];
   $bao = clone $membershipStatusBAO;
   _civicrm_object_to_array($bao, $membershipStatus);
   $membershipStatus['is_error'] = 0;
@@ -236,7 +236,7 @@ SELECT start_date, end_date, join_date
   FROM civicrm_membership
  WHERE id = %1
 ";
-  $params = array(1 => array($membershipID, 'Integer'));
+  $params = [1 => [$membershipID, 'Integer']];
   $dao = CRM_Core_DAO::executeQuery($query, $params);
   if ($dao->fetch()) {
     require_once 'CRM/Member/BAO/MembershipStatus.php';

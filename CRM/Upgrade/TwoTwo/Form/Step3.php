@@ -36,7 +36,7 @@
 
 class CRM_Upgrade_TwoTwo_Form_Step3 extends CRM_Upgrade_Form {
   function verifyPreDBState(&$errorMessage) {
-    $errorMessage = ts('Pre-condition failed for upgrade step %1.', array(1 => '3'));
+    $errorMessage = ts('Pre-condition failed for upgrade step %1.', [1 => '3']);
     return $this->checkVersion('2.1.102');
   }
 
@@ -80,7 +80,7 @@ class CRM_Upgrade_TwoTwo_Form_Step3 extends CRM_Upgrade_Form {
       $errorMessage .= ' Few important fields were found missing in civicrm_option_value table.';
       return FALSE;
     }
-    $errorMessage = ts('Post-condition failed for upgrade step %1.', array(1 => '2'));
+    $errorMessage = ts('Post-condition failed for upgrade step %1.', [1 => '2']);
 
     return $this->checkVersion('2.1.103');
   }
@@ -152,7 +152,7 @@ SELECT id
       //get the existing from email address.
 
 
-      $optionValues = array();
+      $optionValues = [];
       $grpParams['name'] = 'from_email_address';
       CRM_Core_OptionValue::getValues($grpParams, $optionValues);
 
@@ -167,14 +167,14 @@ UPDATE  civicrm_option_value
    SET  is_default = 0 
  WHERE  option_group_id = %1";
 
-        $params = array(1 => array($fmaGroupId, 'Integer'));
+        $params = [1 => [$fmaGroupId, 'Integer']];
         CRM_Core_DAO::executeQuery($query, $params);
 
         //if domain from name and email exist as name or label in option value
         //table need to preserve that name and label  and take care that label
         //and name both remain unique in db.
 
-        $labelValues = $nameValues = array();
+        $labelValues = $nameValues = [];
         foreach ($optionValues as $id => $value) {
           if ($value['label'] == $formEmailAddress) {
             $labelValues = $value;
@@ -185,7 +185,7 @@ UPDATE  civicrm_option_value
         }
 
         //as we consider label so label should preserve.
-        $updateValues = array();
+        $updateValues = [];
         if (!empty($labelValues)) {
           $updateValues = $labelValues;
         }
@@ -247,11 +247,11 @@ INSERT INTO  `civicrm_option_value`
               `weight`, `description`, `is_optgroup`, `is_reserved`, `is_active`, `component_id`) 
      VALUES  ( %1, %2, %3, %2, NULL, 0, 1, %4, 'Default domain email address and from name.', 0, 0, 1, NULL)";
 
-        $params = array(1 => array($fmaGroupId, 'Integer'),
-          2 => array($formEmailAddress, 'String'),
-          3 => array($maxVal, 'Integer'),
-          4 => array($maxWt, 'Integer'),
-        );
+        $params = [1 => [$fmaGroupId, 'Integer'],
+          2 => [$formEmailAddress, 'String'],
+          3 => [$maxVal, 'Integer'],
+          4 => [$maxWt, 'Integer'],
+        ];
         CRM_Core_DAO::executeQuery($query, $params);
       }
 
@@ -273,10 +273,10 @@ ALTER TABLE `civicrm_domain`
 
 
 
-    $mailerValues = array();
-    $mailerFields = array('outBound_option', 'smtpServer', 'smtpPort', 'smtpAuth',
+    $mailerValues = [];
+    $mailerFields = ['outBound_option', 'smtpServer', 'smtpPort', 'smtpAuth',
       'smtpUsername', 'smtpPassword', 'sendmail_path', 'sendmail_args',
-    );
+    ];
 
     //get the mailer preferences from backend
     //store in civicrm_preferences and unset from backend.

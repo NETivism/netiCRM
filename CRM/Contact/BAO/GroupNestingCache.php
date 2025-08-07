@@ -48,18 +48,18 @@ WHERE  n.child_group_id  = gc.id
 
     $dao = &CRM_Core_DAO::executeQuery($sql);
 
-    $tree = array();
+    $tree = [];
     while ($dao->fetch()) {
       if (!CRM_Utils_Array::arrayKeyExists($dao->child, $tree)) {
-        $tree[$dao->child] = array('children' => array(),
-          'parents' => array(),
-        );
+        $tree[$dao->child] = ['children' => [],
+          'parents' => [],
+        ];
       }
 
       if (!CRM_Utils_Array::arrayKeyExists($dao->parent, $tree)) {
-        $tree[$dao->parent] = array('children' => array(),
-          'parents' => array(),
-        );
+        $tree[$dao->parent] = ['children' => [],
+          'parents' => [],
+        ];
       }
 
       $tree[$dao->child]['parents'][] = $dao->parent;
@@ -78,7 +78,7 @@ SET    parents  = null,
 ";
     CRM_Core_DAO::executeQuery($sql);
 
-    $values = array();
+    $values = [];
     foreach (array_keys($tree) as $id) {
       $parents = CRM_Utils_Array::implode(',', $tree[$id]['parents']);
       $children = CRM_Utils_Array::implode(',', $tree[$id]['children']);
@@ -113,7 +113,7 @@ WHERE  id = $id
   }
 
   static function isCyclic(&$tree, $id) {
-    $parents = $children = array();
+    $parents = $children = [];
     self::getAll($parent, $tree, $id, 'parents');
     self::getAll($child, $tree, $id, 'children');
 
@@ -197,7 +197,7 @@ WHERE  id = $id
     foreach ($groups as $id => $name) {
       $string = "id:'$id', name:'$name'";
       if (isset($tree[$id])) {
-        $children = array();
+        $children = [];
         if (!empty($tree[$id]['children'])) {
           foreach ($tree[$id]['children'] as $child) {
             $children[] = "{_reference:'$child'}";

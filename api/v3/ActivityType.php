@@ -81,7 +81,7 @@ function civicrm_api3_activity_type_create($params) {
 
 
   $action = 1;
-  $groupParams = array('name' => 'activity_type');
+  $groupParams = ['name' => 'activity_type'];
 
   if ($optionValueID = CRM_Utils_Array::value('option_value_id', $params)) {
     $action = 2;
@@ -89,7 +89,7 @@ function civicrm_api3_activity_type_create($params) {
 
   require_once 'CRM/Core/OptionValue.php';
   $activityObject = CRM_Core_OptionValue::addOptionValue($params, $groupParams, $action, $optionValueID);
-  $activityType = array();
+  $activityType = [];
   _civicrm_api3_object_to_array($activityObject, $activityType[$activityObject->id]);
   return civicrm_api3_create_success($activityType, $params, 'activity_type', 'create');
 }
@@ -118,7 +118,7 @@ function _civicrm_api3_activity_type_create_spec(&$params) {
  */
 function civicrm_api3_activity_type_delete($params) {
 
-  civicrm_api3_verify_mandatory($params, NULL, array('activity_type_id'));
+  civicrm_api3_verify_mandatory($params, NULL, ['activity_type_id']);
 
   $activityTypeId = $params['activity_type_id'];
   require_once 'CRM/Core/BAO/OptionValue.php';

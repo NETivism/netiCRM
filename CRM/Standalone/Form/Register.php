@@ -38,7 +38,7 @@ class CRM_Standalone_Form_Register extends CRM_Core_Form {
 
   protected $_profileID;
 
-  protected $_fields = array();
+  protected $_fields = [];
 
   protected $_openID;
   
@@ -65,7 +65,7 @@ class CRM_Standalone_Form_Register extends CRM_Core_Form {
   }
 
   function setDefaultValues() {
-    $defaults = array();
+    $defaults = [];
 
     $defaults['user_unique_id'] = $this->_openID;
 
@@ -104,15 +104,15 @@ class CRM_Standalone_Form_Register extends CRM_Core_Form {
       $this->_fields[$key] = $field;
     }
 
-    $this->addButtons(array(
-        array('type' => 'next',
+    $this->addButtons([
+        ['type' => 'next',
           'name' => ts('Save'),
           'isDefault' => TRUE,
-        ),
-        array('type' => 'cancel',
+        ],
+        ['type' => 'cancel',
           'name' => ts('Cancel'),
-        ),
-      )
+        ],
+      ]
     );
   }
 
@@ -153,7 +153,7 @@ class CRM_Standalone_Form_Register extends CRM_Core_Form {
       $group->name = 'Administrators';
       $group->is_active = 1;
       if ($group->find(TRUE)) {
-        $contactIds = array($contactId);
+        $contactIds = [$contactId];
         CRM_Contact_BAO_GroupContact::addContactsToGroup($contactIds, $group->id,
           'Web', 'Added'
         );

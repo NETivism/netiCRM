@@ -106,19 +106,19 @@ LEFT JOIN civicrm_location_type ON ( civicrm_phone.location_type_id = civicrm_lo
 WHERE     civicrm_contact.id = %1 $cond
 ORDER BY civicrm_phone.is_primary DESC,  phone_id ASC ";
 
-    $params = array(1 => array($id, 'Integer'));
+    $params = [1 => [$id, 'Integer']];
 
-    $numbers = $values = array();
+    $numbers = $values = [];
     $dao = &CRM_Core_DAO::executeQuery($query, $params);
     $count = 1;
     while ($dao->fetch()) {
-      $values = array('locationType' => $dao->locationType,
+      $values = ['locationType' => $dao->locationType,
         'is_primary' => $dao->is_primary,
         'id' => $dao->phone_id,
         'phone' => $dao->phone,
         'phone_type_id' => $dao->phone_type_id,
         'locationTypeId' => $dao->locationTypeId,
-      );
+      ];
 
       if ($updateBlankLocInfo) {
         $numbers[$count++] = $values;
@@ -166,16 +166,16 @@ AND   ph.id IN (loc.phone_id, loc.phone_2_id)
 AND   ltype.id = ph.location_type_id
 ORDER BY ph.is_primary DESC, phone_id ASC ";
 
-    $params = array(1 => array($entityId, 'Integer'));
-    $numbers = array();
+    $params = [1 => [$entityId, 'Integer']];
+    $numbers = [];
     $dao = &CRM_Core_DAO::executeQuery($sql, $params);
     while ($dao->fetch()) {
-      $numbers[$dao->phone_id] = array('locationType' => $dao->locationType,
+      $numbers[$dao->phone_id] = ['locationType' => $dao->locationType,
         'is_primary' => $dao->is_primary,
         'id' => $dao->phone_id,
         'phone' => $dao->phone,
         'locationTypeId' => $dao->locationTypeId,
-      );
+      ];
     }
     return $numbers;
   }
@@ -193,8 +193,8 @@ ORDER BY ph.is_primary DESC, phone_id ASC ";
       return;
     }
 
-    $tables = array('civicrm_phone', 'civicrm_mapping_field', 'civicrm_uf_field');
-    $params = array(1 => array($optionId, 'Integer'));
+    $tables = ['civicrm_phone', 'civicrm_mapping_field', 'civicrm_uf_field'];
+    $params = [1 => [$optionId, 'Integer']];
 
     foreach ($tables as $tableName) {
       $query = "UPDATE `{$tableName}` SET `phone_type_id` = NULL WHERE `phone_type_id` = %1";
@@ -213,10 +213,10 @@ ORDER BY ph.is_primary DESC, phone_id ASC ";
   static function valueExists(&$params) {
     if (empty($params['id']) && !empty($params['phone']) && !empty($params['contact_id'])) {
       $check = preg_replace('/[^0-9]/', '', $params['phone']);
-      $params['id'] = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_phone WHERE REGEXP_REPLACE(phone, '[^0-9]+', '') LIKE %1 AND contact_id = %2", array(
-        1 => array($check, 'String'),
-        2 => array($params['contact_id'], 'Integer')
-      ));
+      $params['id'] = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_phone WHERE REGEXP_REPLACE(phone, '[^0-9]+', '') LIKE %1 AND contact_id = %2", [
+        1 => [$check, 'String'],
+        2 => [$params['contact_id'], 'Integer']
+      ]);
     }
   }
 }

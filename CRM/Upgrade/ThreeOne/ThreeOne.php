@@ -40,7 +40,7 @@ class CRM_Upgrade_ThreeOne_ThreeOne extends CRM_Upgrade_Form {
   function verifyPreDBState(&$errorMessage) {
     $latestVer = CRM_Utils_System::version();
 
-    $errorMessage = ts('Pre-condition failed for upgrade to %1.', array(1 => $latestVer));
+    $errorMessage = ts('Pre-condition failed for upgrade to %1.', [1 => $latestVer]);
 
     // check tables and table-columns, if the db is already 3.1
     if (CRM_Core_DAO::checkTableExists('civicrm_acl_contact_cache') ||
@@ -64,7 +64,7 @@ class CRM_Upgrade_ThreeOne_ThreeOne extends CRM_Upgrade_Form {
       CRM_Core_DAO::checkFieldExists('civicrm_relationship_type', 'contact_sub_type_b') ||
       CRM_Core_DAO::checkFieldExists('civicrm_report_instance', 'domain_id')
     ) {
-      $errorMessage = ts("Database check failed - it looks like you have already upgraded to the latest version (v%1) of the database. OR If you think this message is wrong, it is very likely that this a partially upgraded database and you will need to reload the correct database from backup on which upgrade was never tried.", array(1 => $latestVer));
+      $errorMessage = ts("Database check failed - it looks like you have already upgraded to the latest version (v%1) of the database. OR If you think this message is wrong, it is very likely that this a partially upgraded database and you will need to reload the correct database from backup on which upgrade was never tried.", [1 => $latestVer]);
       return FALSE;
     }
 
@@ -260,7 +260,7 @@ class CRM_Upgrade_ThreeOne_ThreeOne extends CRM_Upgrade_Form {
     if ($afterUpgradeMessage = $template->get_template_vars('afterUpgradeMessage')) {
       $afterUpgradeMessage .= "<br/><br/>";
     }
-    $afterUpgradeMessage .= ts("Date Input Format has been set to %1 format. If you want to use a different format please check Administer CiviCRM &raquo; Global Settings &raquo; Date Formats.", array(1 => $defaults['dateInputFormat']));
+    $afterUpgradeMessage .= ts("Date Input Format has been set to %1 format. If you want to use a different format please check Administer CiviCRM &raquo; Global Settings &raquo; Date Formats.", [1 => $defaults['dateInputFormat']]);
     $template->assign('afterUpgradeMessage', $afterUpgradeMessage);
   }
 
@@ -329,7 +329,7 @@ INNER JOIN ( SELECT id, contact_id FROM civicrm_openid WHERE is_primary = 1 GROU
       $template = &CRM_Core_Smarty::singleton();
       $afterUpgradeMessage = $template->get_template_vars('afterUpgradeMessage');
       $afterUpgradeMessage .= "<br/><br/>";
-      $afterUpgradeMessage .= ts("%1 records have been updated so that each contact record should contain only one Address, Email, Phone, Instant Messanger and openID as primary.", array(1 => $totalCount));
+      $afterUpgradeMessage .= ts("%1 records have been updated so that each contact record should contain only one Address, Email, Phone, Instant Messanger and openID as primary.", [1 => $totalCount]);
       $template->assign('afterUpgradeMessage', $afterUpgradeMessage);
     }
   }
@@ -345,7 +345,7 @@ INNER JOIN ( SELECT id, contact_id FROM civicrm_openid WHERE is_primary = 1 GROU
         NULL, 'color: white; text-decoration: underline;'
       );
 
-      $afterUpgradeMessage .= "<br/>" . ts("Please %1 mpgClasses.php in packages/Services in order to continue using Moneris payment processor. That file is no longer included in the CiviCRM distribution.", array(1 => $docURL));
+      $afterUpgradeMessage .= "<br/>" . ts("Please %1 mpgClasses.php in packages/Services in order to continue using Moneris payment processor. That file is no longer included in the CiviCRM distribution.", [1 => $docURL]);
       $template->assign('afterUpgradeMessage', $afterUpgradeMessage);
     }
   }

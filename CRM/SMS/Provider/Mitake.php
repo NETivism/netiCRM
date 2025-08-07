@@ -21,7 +21,7 @@ class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
 
   private $_mitakeStatuses = NULL;
 
-  public static function &singleton($providerParams = array(), $force = FALSE) {
+  public static function &singleton($providerParams = [], $force = FALSE) {
     $providerId = CRM_Utils_Array::value('provider_id', $providerParams);
     $providerId = CRM_Utils_Type::validate($providerId, 'Integer');
     if (empty($providerId)) {
@@ -40,7 +40,7 @@ class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
       $this->_bulkMode = TRUE;
     }
     $this->_objectId = (string) microtime(true);
-    $this->_mitakeStatuses = array(
+    $this->_mitakeStatuses = [
       '0' => ts('Scheduled'),
       '1' => ts('Delivered'),
       '2' => ts('Delivered'),
@@ -50,8 +50,8 @@ class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
       '7' => ts('Error').":".ts('no SMS'),
       '8' => ts('Error').":".ts('Expires'),
       '9' => ts('Error').":".ts('Cancelled'),
-    );
-    $this->_mitakeStatusesMapping = array(
+    ];
+    $this->_mitakeStatusesMapping = [
       '0' => 4,
       '1' => 4,
       '2' => 4,
@@ -61,7 +61,7 @@ class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
       '7' => 5,
       '8' => 3,
       '9' => 3,
-    );
+    ];
   }
 
   /**
@@ -78,7 +78,7 @@ class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
    * @return array response of self::doRequest
    */
   public function send(&$messages){
-    $data = array();
+    $data = [];
     if ($this->_bulkMode){
       if (count($messages) > $this->_bulkLimit) {
         CRM_Core_Error::debug_log_message("The max number of recipients per bulk is ".$this->_bulkLimit.'. Abort this action.');
@@ -99,9 +99,9 @@ class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
 
     // Sending request
     $query = http_build_query($data['http_query_params'], "", "&", PHP_QUERY_RFC3986);
-    $response = $this->doRequest($this->_providerInfo['api_url'].'?'.$query, array(
+    $response = $this->doRequest($this->_providerInfo['api_url'].'?'.$query, [
       'post_data' => $data['http_post_params'],
-    ));
+    ]);
 
     $this->activityUpdate();
 
@@ -116,11 +116,11 @@ class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
   public function activityUpdate() {
     foreach($this->_sms as $guid => $sms) {
       if ($sms['activityId']) {
-        $details = array();
+        $details = [];
         $details[] = '<div class="content">'.ts("Body") . ": <br>" . nl2br($sms['smbody']).'</div>';
         $details[] = '<div class="meta">';
         if (empty($sms['dstaddr'])) {
-          $details[] = ts("Please enter a valid phone number."). ' '.ts("Format is not correct. Input format is '%1'", array(1 => $sms['phone']));
+          $details[] = ts("Please enter a valid phone number."). ' '.ts("Format is not correct. Input format is '%1'", [1 => $sms['phone']]);
         }
         else {
           $details[] = ts("To"). CRM_Utils_String::mask($sms['dstaddr'], 'custom', 4, 2);
@@ -166,7 +166,7 @@ class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
    *  'success' => int, count of success sent
    * ]
    */
-  protected function doRequest($requestUri, $request = array()) {
+  protected function doRequest($requestUri, $request = []) {
     // CRM_Core_Error::debug_var('mitake_requst_uri', $requestUri);
     $ch = curl_init($requestUri);
     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 1);
@@ -186,7 +186,7 @@ class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
     // CRM_Core_Error::debug_var('mitake_request_body', $postFields);
     curl_setopt($ch, CURLOPT_POSTFIELDS, $postFields);
 
-    $response = array();
+    $response = [];
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     $responseBody = curl_exec($ch);
     $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -194,11 +194,11 @@ class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
     if ($responseBody === FALSE) {
       $errno = curl_errno($ch);
       $err = curl_error($ch);
-      $error = array(
+      $error = [
         'error_code' => $errno,
         'error' => $err,
         'http_status' => $status,
-      );
+      ];
       CRM_Core_Error::debug_log_message('Mitake send sms failed at curl');
       CRM_Core_Error::debug_var('mitake_http_error', $error);
       $response['error'] = 1;
@@ -228,24 +228,24 @@ class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
    * @return array|bool
    */
   protected function formatSMS($message) {
-    $rules = array();
-    $rules['required'] = array(
+    $rules = [];
+    $rules['required'] = [
       //'username:20:',
       //'password:24:',
       'dstaddr:20:',
       'smbody::',
-    );
-    $rules['optional'] = array(
+    ];
+    $rules['optional'] = [
       'destname:36:',
       'dlvtime:14:YmdHis',
       'vldtime:14:YmdHis',
       'response:256:',
       'clientid:36:',
       'objectID:16:',
-    );
+    ];
 
     // required fields
-    $msg = array();
+    $msg = [];
     $msg['dstaddr'] = $this->formatPhone($message['phone']);
     $msg['smbody'] = $message['body'];
 
@@ -287,9 +287,9 @@ class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
   protected function formatBulkSMS($messages) {
     // format SMS per line in http request body
     // ClientID $$ dstaddr $$ dlvtime $$ vldtime $$ destname $$ response $$ smbody
-    $body = array();
+    $body = [];
     foreach($messages as $message) {
-      $msg = array();
+      $msg = [];
       if ($message['guid']) {
         $msg['clientID'] = substr($message['guid'], 0, 36);
       }
@@ -323,20 +323,20 @@ class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
 
   public function prepareSmsRequest($formatted) {
     if ($this->_bulkMode) {
-      $data = array();
-      $data['http_query_params'] = array(
+      $data = [];
+      $data['http_query_params'] = [
         'username' => $this->_providerInfo['username'],
         'password' => $this->_providerInfo['password'],
         'Encoding_PostIn' => 'UTF8',
         'objectID' => $this->_objectId,
-      );
+      ];
       $data['http_post_params'] = $formatted;
     }
     else {
-      $data = array();
-      $data['http_query_params'] = array(
+      $data = [];
+      $data['http_query_params'] = [
         'CharsetURL' => 'UTF8',
-      );
+      ];
       $data['http_post_params'] = $formatted;
     }
     return $data;
@@ -355,7 +355,7 @@ class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
   public function formatResponse($responseBody) {
     $responseLines = preg_split("/\r\n|\n|\r/", $responseBody);
     $msgCount = 0;
-    $result = array();
+    $result = [];
 
     // any of SMS correctly response numberic status, this will be TRUE
     $success = 0;

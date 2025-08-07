@@ -7,16 +7,16 @@ class CRM_Core_BAO_OpenIDTest extends CiviUnitTestCase
 {
     function get_info( ) 
     {
-        return array(
+        return [
                      'name'        => 'OpenID BAOs',
                      'description' => 'Test all Core_BAO_OpenID methods.',
                      'group'       => 'CiviCRM BAO Tests',
-                     );
+                     ];
     }
     
     function tearDown( )
     {
-        $tablesToTruncate = array( 'civicrm_contact' );
+        $tablesToTruncate = [ 'civicrm_contact' ];
         $this->quickCleanup( $tablesToTruncate );
     }
 
@@ -33,11 +33,11 @@ class CRM_Core_BAO_OpenIDTest extends CiviUnitTestCase
         $contactId = Contact::createIndividual( );
         
         $openIdURL = "http://test-username.civicrm.org/";
-        $params = array('contact_id'       => $contactId, 
+        $params = ['contact_id'       => $contactId, 
                         'location_type_id' => 1,
                         'openid'           => $openIdURL,
                         'is_primary'       => 1,
-                        );
+                        ];
         
         require_once 'CRM/Core/BAO/OpenID.php';
         $openObject = CRM_Core_BAO_OpenID::add( $params );
@@ -49,11 +49,11 @@ class CRM_Core_BAO_OpenIDTest extends CiviUnitTestCase
         
         // Now call add() to modify an existing open-id record
         
-        $params = array( 'id'               => $openId,
+        $params = [ 'id'               => $openId,
                          'contact_id'       => $contactId,
                          'openid'           => $openIdURL,
                          'is_bulkmail'      => 1,
-                         'allowed_to_login' => 1 );
+                         'allowed_to_login' => 1 ];
         
         CRM_Core_BAO_OpenID::add( $params );
         
@@ -72,11 +72,11 @@ class CRM_Core_BAO_OpenIDTest extends CiviUnitTestCase
         $contactId = Contact::createIndividual( );
         $openIdURL = "http://test-username.civicrm.org/";
         
-        $params = array('contact_id'       => $contactId, 
+        $params = ['contact_id'       => $contactId, 
                         'location_type_id' => 1,
                         'openid'           => $openIdURL,
                         'is_primary'       => 1,
-                        );
+                        ];
         
         require_once 'CRM/Core/BAO/OpenID.php';
         $openObject = CRM_Core_BAO_OpenID::add( $params );
@@ -91,11 +91,11 @@ class CRM_Core_BAO_OpenIDTest extends CiviUnitTestCase
         
         // Now call add() to modify an existing open-id record
         
-        $params = array( 'id'               => $openId,
+        $params = [ 'id'               => $openId,
                          'contact_id'       => $contactId,
                          'openid'           => $openIdURL,
                          'is_bulkmail'      => 1,
-                         'allowed_to_login' => 1 );
+                         'allowed_to_login' => 1 ];
         
         CRM_Core_BAO_OpenID::add( $params );
         
@@ -114,12 +114,12 @@ class CRM_Core_BAO_OpenIDTest extends CiviUnitTestCase
         
         // create first openid
         $openIdURLOne = "http://test-one-username.civicrm.org/";
-        $params  = array('contact_id'       => $contactId, 
+        $params  = ['contact_id'       => $contactId, 
                          'location_type_id' => 1,
                          'openid'           => $openIdURLOne,
                          'is_primary'       => 1,
                          'allowed_to_login' => 1
-                         );
+                         ];
         
         require_once 'CRM/Core/BAO/OpenID.php';
         $openObjectOne = CRM_Core_BAO_OpenID::add( $params );
@@ -130,10 +130,10 @@ class CRM_Core_BAO_OpenIDTest extends CiviUnitTestCase
         
         // create second openid
         $openIdURLTwo = "http://test-two-username.civicrm.org/";
-        $params  = array('contact_id'       => $contactId, 
+        $params  = ['contact_id'       => $contactId, 
                          'location_type_id' => 1,
                          'openid'           => $openIdURLTwo
-                         );
+                         ];
         
         $openObjectTwo = CRM_Core_BAO_OpenID::add( $params );
         $openIdTwo = $openObjectTwo->id;

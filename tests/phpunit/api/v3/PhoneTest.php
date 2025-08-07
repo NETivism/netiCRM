@@ -27,14 +27,14 @@ class api_v3_PhoneTest extends CiviUnitTestCase {
     $loc                 = $this->locationTypeCreate();
     $this->_locationType = $loc->id;
     CRM_Core_PseudoConstant::flush('locationType');
-    $this->quickCleanup(array('civicrm_phone'));
-    $this->_params = array(
+    $this->quickCleanup(['civicrm_phone']);
+    $this->_params = [
       'contact_id' => $this->_contactID,
       'location_type_id' => $this->_locationType,
       'phone' => '021 512 755',
       'is_primary' => 1,
       'version' => $this->_apiversion,
-    );
+    ];
   }
 
   /**
@@ -76,7 +76,7 @@ class api_v3_PhoneTest extends CiviUnitTestCase {
 
     // $this->assertEquals( 1, $result['id'], 'In line ' . __LINE__ );
 
-    $delresult = civicrm_api('phone', 'delete', array('id' => $result['id'], 'version' => 3));
+    $delresult = civicrm_api('phone', 'delete', ['id' => $result['id'], 'version' => 3]);
     $this->assertEquals(0, $delresult['is_error'], 'In line ' . __LINE__);
   }
 
@@ -102,17 +102,17 @@ class api_v3_PhoneTest extends CiviUnitTestCase {
     $create = civicrm_api('phone', 'create', $this->_params);
     $this->assertAPISuccess($create, 'In line ' . __LINE__);
 
-    $result = civicrm_api('phone', 'delete', array('id' => $create['id'], 'version' => 3));
+    $result = civicrm_api('phone', 'delete', ['id' => $create['id'], 'version' => 3]);
     $this->docMakerRequest($this->_params, __FILE__, __FUNCTION__);
 
     $this->documentMe($this->_params, $result, __FUNCTION__, __FILE__);
     $this->docMakerResponse($result, __FILE__, __FUNCTION__);
     $this->assertEquals(0, $result['is_error'], 'In line ' . __LINE__);
     $this->assertEquals(1, $result['count'], 'In line ' . __LINE__);
-    $get = civicrm_api('phone', 'get', array(
+    $get = civicrm_api('phone', 'get', [
       'version' => 3, 'id' => $create['id'],
         'location_type_id' => $this->_locationType,
-      ));
+      ]);
     $this->assertEquals(0, $get['is_error'], 'In line ' . __LINE__);
     $this->assertEquals(0, $get['count'], 'Phone not successfully deleted In line ' . __LINE__);
   }
@@ -130,7 +130,7 @@ class api_v3_PhoneTest extends CiviUnitTestCase {
    * Test civicrm_phone_get with empty params.
    */
   public function testGetEmptyParams() {
-    $params = array('version' => $this->_apiversion);
+    $params = ['version' => $this->_apiversion];
     $result = civicrm_api('Phone', 'Get', ($params));
     $this->assertEquals(0, $result['is_error'], 'In line ' . __LINE__);
   }
@@ -139,17 +139,17 @@ class api_v3_PhoneTest extends CiviUnitTestCase {
    * Test civicrm_address_get with wrong params.
    */
   public function testGetWrongParams() {
-    $params = array('contact_id' => 'abc', 'version' => $this->_apiversion);
+    $params = ['contact_id' => 'abc', 'version' => $this->_apiversion];
     $result = civicrm_api('Phone', 'Get', ($params));
     $this->assertEquals(0, $result['is_error'], 'In line ' . __LINE__);
     $this->assertEquals(0, $result['count'], 'In line ' . __LINE__);
 
-    $params = array('location_type_id' => 'abc', 'version' => $this->_apiversion);
+    $params = ['location_type_id' => 'abc', 'version' => $this->_apiversion];
     $result = civicrm_api('Phone', 'Get', ($params));
     $this->assertEquals(1, $result['is_error'], 'In line ' . __LINE__);
     $this->assertEquals(0, $result['count'], 'In line ' . __LINE__);
 
-    $params = array('phone_type_id' => 'abc', 'version' => $this->_apiversion);
+    $params = ['phone_type_id' => 'abc', 'version' => $this->_apiversion];
     $result = civicrm_api('Phone', 'Get', ($params));
     $this->assertEquals(1, $result['is_error'], 'In line ' . __LINE__);
     $this->assertEquals(0, $result['count'], 'In line ' . __LINE__);
@@ -174,11 +174,11 @@ class api_v3_PhoneTest extends CiviUnitTestCase {
     $phone = civicrm_api('phone', 'create', $this->_params);
     $this->assertAPISuccess($phone, 'In line ' . __LINE__);
 
-    $params = array(
+    $params = [
       'contact_id' => $phone['values'][$phone['id']]['contact_id'],
       'phone' => $phone['values'][$phone['id']]['phone'],
       'version' => $this->_apiversion,
-    );
+    ];
     $this->docMakerRequest($params, __FILE__, __FUNCTION__);
     $result = civicrm_api('Phone', 'Get', ($params));
 
@@ -195,12 +195,12 @@ class api_v3_PhoneTest extends CiviUnitTestCase {
     $phone = civicrm_api('phone', 'create', $this->_params);
     $this->assertAPISuccess($phone, 'In line ' . __LINE__);
 
-    $params = array(
+    $params = [
       'contact_id' => $phone['values'][$phone['id']]['contact_id'],
       'phone' => $phone['values'][$phone['id']]['phone'],
       'is_primary' => '1',
       'version' => $this->_apiversion,
-    );
+    ];
     $result = civicrm_api('Phone', 'Get', ($params));
 
     $this->documentMe($params, $result, __FUNCT1ION__, __FILE__);
@@ -215,12 +215,12 @@ class api_v3_PhoneTest extends CiviUnitTestCase {
     $phone = civicrm_api('phone', 'create', $this->_params);
     $this->assertAPISuccess($phone, 'In line ' . __LINE__);
 
-    $params = array(
+    $params = [
       'contact_id' => $phone['values'][$phone['id']]['contact_id'],
       'phone' => $phone['values'][$phone['id']]['phone'],
       'location_type_id' => $phone['values'][$phone['id']]['location_type_id'],
       'version' => $this->_apiversion,
-    );
+    ];
     $result = civicrm_api('Phone', 'Get', ($params));
 
     $this->documentMe($params, $result, __FUNCTION__, __FILE__);
@@ -232,24 +232,24 @@ class api_v3_PhoneTest extends CiviUnitTestCase {
   }
 
   public function testGetPhoneByPhoneType() {
-    $paramsWithPhoneType = array(
+    $paramsWithPhoneType = [
       'contact_id' => $this->_contactID,
       'location_type_id' => $this->_locationType,
       'phone' => '021 512 755',
       'is_primary' => 1,
       'version' => $this->_apiversion,
       'phone_type_id' => 1
-    );
+    ];
 
     $phone = civicrm_api('phone', 'create', $paramsWithPhoneType);
     $this->assertAPISuccess($phone, 'In line ' . __LINE__);
 
-    $params = array(
+    $params = [
       'contact_id' => $phone['values'][$phone['id']]['contact_id'],
       'phone' => $phone['values'][$phone['id']]['phone'],
       'phone_type_id' => '1',
       'version' => $this->_apiversion,
-    );
+    ];
     $result = civicrm_api('Phone', 'Get', ($params));
 
     $this->documentMe($params, $result, __FUNCTION__, __FILE__);
@@ -264,21 +264,21 @@ class api_v3_PhoneTest extends CiviUnitTestCase {
     $phone = civicrm_api('phone', 'create', $this->_params);
     $this->assertAPISuccess($phone, 'In line ' . __LINE__);
 
-    $params = array(
+    $params = [
       'contact_id' => $phone['values'][$phone['id']]['contact_id'],
       'phone' => $phone['values'][$phone['id']]['phone'],
       'version' => $this->_apiversion,
-    );
+    ];
     $result = civicrm_api('Phone', 'Get', ($params));
 
-    $replaceParams = array(
+    $replaceParams = [
       'contact_id' => $this->_contactID,
       'location_type_id' => $this->_locationType,
       'phone' => '021 512 755',
       'is_primary' => 1,
       'phone_type_id' => 1,
       'version' => $this->_apiversion,
-    );
+    ];
 
     $replace = civicrm_api('phone', 'create', $replaceParams);
     $this->assertAPISuccess($replace, 'In line ' . __LINE__);
@@ -318,11 +318,11 @@ class api_v3_PhoneTest extends CiviUnitTestCase {
     $phone1 = civicrm_api('phone', 'create', $params);
     $this->assertApiSuccess($phone1, 'In line ' . __LINE__);
     //now we check & make sure it has been set to primary
-    $check = civicrm_api('phone', 'getcount', array(
+    $check = civicrm_api('phone', 'getcount', [
         'version' => 3,
         'is_primary' => 1,
         'id' => $phone1['id'],
-      ));
+      ]);
     $this->assertEquals(1, $check);
   }
   public function testCreatePhonePrimaryHandlingChangeExisting() {
@@ -330,11 +330,11 @@ class api_v3_PhoneTest extends CiviUnitTestCase {
     $this->assertApiSuccess($phone1, 'In line ' . __LINE__);
     $phone2 = civicrm_api('phone', 'create', $this->_params);
     $this->assertApiSuccess($phone2, 'In line ' . __LINE__);
-    $check = civicrm_api('phone', 'getcount', array(
+    $check = civicrm_api('phone', 'getcount', [
         'version' => 3,
         'is_primary' => 1,
         'contact_id' => $this->_contactID,
-      ));
+      ]);
     $this->assertEquals(1, $check);
   }
 

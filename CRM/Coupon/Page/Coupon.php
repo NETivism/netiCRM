@@ -25,39 +25,39 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
       // helper variable for nicer formatting
       $deleteExtra = ts('Are you sure you want to delete this coupon?');
       $copyExtra = ts('Are you sure you want to make a copy of this coupon?');
-      self::$_actionLinks = array(
-        CRM_Core_Action::UPDATE => array(
+      self::$_actionLinks = [
+        CRM_Core_Action::UPDATE => [
           'name' => ts('Edit'),
           'url' => 'civicrm/admin/coupon',
           'qs' => 'action=update&reset=1&id=%%id%%',
           'title' => ts('Edit'),
-        ),
-        CRM_Core_Action::COPY => array(
+        ],
+        CRM_Core_Action::COPY => [
           'name' => ts('Copy'),
           'url' => CRM_Utils_System::currentPath(),
           'qs' => 'action=copy&id=%%id%%&key=%%key%%',
           'extra' => 'onclick = "return confirm(\'' . $copyExtra . '\');"',
-        ),
-        CRM_Core_Action::DISABLE => array(
+        ],
+        CRM_Core_Action::DISABLE => [
           'name' => ts('Disable'),
           'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_Coupon_BAO_Coupon' . '\',\'' . 'enable-disable' . '\' );"',
           'ref' => 'disable-action',
           'title' => ts('Disable Coupon'),
-        ),
-        CRM_Core_Action::ENABLE => array(
+        ],
+        CRM_Core_Action::ENABLE => [
           'name' => ts('Enable'),
           'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_Coupon_BAO_Coupon' . '\',\'' . 'disable-enable' . '\' );"',
           'ref' => 'enable-action',
           'title' => ts('Enable Coupon'),
-        ),
-        CRM_Core_Action::DELETE => array(
+        ],
+        CRM_Core_Action::DELETE => [
           'name' => ts('Delete'),
           'url' => 'civicrm/admin/coupon',
           'qs' => 'action=delete&reset=1&id=%%id%%',
           'title' => ts('Delete'),
           'extra' => 'onclick = "return confirm(\'' . $deleteExtra . '\');"',
-        ),
-      );
+        ],
+      ];
     }
     return self::$_actionLinks;
   }
@@ -71,9 +71,9 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
 
     // what action to take ?
     if ($action & (CRM_Core_Action::UPDATE | CRM_Core_Action::ADD)) {
-      CRM_Utils_System::appendBreadCrumb(array(
-        0 => array('title' => ts('Coupon'), 'url' => CRM_Utils_System::url('civicrm/admin/coupon', 'reset=1'))
-      ));
+      CRM_Utils_System::appendBreadCrumb([
+        0 => ['title' => ts('Coupon'), 'url' => CRM_Utils_System::url('civicrm/admin/coupon', 'reset=1')]
+      ]);
       $this->edit($id, $action);
     }
     elseif ($action & CRM_Core_Action::COPY) {
@@ -111,15 +111,15 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
   
   function browse() {
     // get all coupon
-    $coupon = array();
-    $usedFor = array(
+    $coupon = [];
+    $usedFor = [
       'civicrm_event' => ts('Event'),
       'civicrm_price_field_value' => ts('Price Option'),
-    );
+    ];
     $this->assign('usedForName', $usedFor);
 
     $priceSets = CRM_Price_BAO_Field::getPriceLevels();
-    $priceOptions = array();
+    $priceOptions = [];
     foreach($priceSets as $set => &$field) {
       foreach($field as $key => $val) {
         $field_id = str_replace('priceset:', '', $key);
@@ -138,7 +138,7 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
     $entityTable = CRM_Utils_Request::retrieve('entity_table', 'String', $this, FALSE);
     $entityId = CRM_Utils_Request::retrieve('entity_id', 'Positive', $this, FALSE);
 
-    $filter = array();
+    $filter = [];
     $filter['entity_table'] = CRM_Utils_Request::retrieve('entity_table', 'String', $this);
     $filter['entity_id'] = CRM_Utils_Request::retrieve('entity_id', 'Positive', $this);
     $filter['code'] = CRM_Utils_Request::retrieve('code', 'String', $this);
@@ -173,7 +173,7 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
         }
         continue;
       }
-      $coupon[$dao->id] = array();
+      $coupon[$dao->id] = [];
       foreach($dao as $field => $value) {
         if ($field == 'entity_table') {
           if($dao->entity_table == 'civicrm_event'){
@@ -209,10 +209,10 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
       $coupon[$dao->id]['action'] = CRM_Core_Action::formLink(
         self::actionLinks(),
         $action,
-        array(
+        [
           'id' => $dao->id,
           'key' => $key
-        )
+        ]
       );
     }
     $couponIds = array_keys($coupon);
@@ -225,7 +225,7 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
   }
 
   function export() {
-    $filter = array();
+    $filter = [];
     $filter['entity_table'] = CRM_Utils_Request::retrieve('entity_table', 'String', $this);
     $filter['entity_id'] = CRM_Utils_Request::retrieve('entity_id', 'Positive', $this);
     $filter['code'] = CRM_Utils_Request::retrieve('code', 'String', $this);
@@ -244,7 +244,7 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
     $filename = 'coupon-export'.$code.'.xlsx';
     $writer = CRM_Core_Report_Excel::singleton('excel');
     $writer->openToBrowser($filename);
-    $header = array(
+    $header = [
       ts('ID'),
       ts('Start Date'),
       ts('End Date'),
@@ -255,16 +255,16 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
       ts('Used').' / '.ts('Max'),
       ts('Description'),
       ts('Enabled?'),
-    );
+    ];
     $writer->addRow($header);
 
-    $exists = array();
+    $exists = [];
     while ($dao->fetch()) {
       if (!empty($exists[$dao->id])) {
         continue;
       }
       $exists[$dao->id] = 1;
-      $coupon = array();
+      $coupon = [];
       foreach($dao as $field => $value) {
         if ($field == 'entity_table' || $field == 'entity_id' || $field[0] == '_' || $field == 'N') {
           continue;
@@ -276,7 +276,7 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
       $coupon['discount'] = $coupon['coupon_type'] == 'percentage' ? $coupon['discount'].'%' : (int)$coupon['discount'];
 -     $coupon['coupon_type'] = ts(ucfirst($coupon['coupon_type']));
 
-      $couponUses = CRM_Coupon_BAO_Coupon::getCouponUsed(array($coupon['id']));
+      $couponUses = CRM_Coupon_BAO_Coupon::getCouponUsed([$coupon['id']]);
       $coupon['count_max'] = $couponUses[$coupon['id']]." / ".$coupon['count_max'];
       $writer->addRow($coupon);
       unset($coupon);
@@ -326,7 +326,7 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
   }
 
   function pager($total) {
-    $params = array(); 
+    $params = []; 
     $params['status'] = '';
     $params['csvString'] = NULL;
     $params['buttonTop'] = 'PagerTopButton';

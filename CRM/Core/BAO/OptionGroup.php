@@ -188,24 +188,24 @@ class CRM_Core_BAO_OptionGroup extends CRM_Core_DAO_OptionGroup {
     );
     if ($optionGroupId) {
       $copyOptionGroup = &CRM_Core_DAO::copyGeneric('CRM_Core_DAO_OptionGroup',
-        array('name' => $fromGroupName),
-        array('name' => $toGroupName)
+        ['name' => $fromGroupName],
+        ['name' => $toGroupName]
       );
 
       $copyOptionValue = &CRM_Core_DAO::copyGeneric('CRM_Core_DAO_OptionValue',
-        array('option_group_id' => $optionGroupId),
-        array('option_group_id' => $copyOptionGroup->id)
+        ['option_group_id' => $optionGroupId],
+        ['option_group_id' => $copyOptionGroup->id]
       );
 
       if ($discountSuffix) {
         $copyDiscount = &CRM_Core_DAO::copyGeneric('CRM_Core_DAO_Discount',
-          array('entity_id' => $fromId,
+          ['entity_id' => $fromId,
             'entity_table' => 'civicrm_' . $component,
             'option_group_id' => $optionGroupId,
-          ),
-          array('entity_id' => $toId,
+          ],
+          ['entity_id' => $toId,
             'option_group_id' => $copyOptionGroup->id,
-          )
+          ]
         );
       }
 
@@ -218,10 +218,10 @@ AND first.option_group_id =%2
 AND first.weight = second.weight
 AND first.id =%3
 ";
-        $params = array(1 => array($copyOptionGroup->id, 'Int'),
-          2 => array($optionGroupId, 'Int'),
-          3 => array($defaultId, 'Int'),
-        );
+        $params = [1 => [$copyOptionGroup->id, 'Int'],
+          2 => [$optionGroupId, 'Int'],
+          3 => [$defaultId, 'Int'],
+        ];
 
         $dao = CRM_Core_DAO::executeQuery($query, $params);
 

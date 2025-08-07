@@ -64,38 +64,38 @@ class CRM_Contribute_Page_ManagePremiums extends CRM_Core_Page_Basic {
    */
   function &links() {
     if (!(self::$_links)) {
-      self::$_links = array(
-        CRM_Core_Action::UPDATE => array(
+      self::$_links = [
+        CRM_Core_Action::UPDATE => [
           'name' => ts('Edit'),
           'url' => 'civicrm/admin/contribute/managePremiums',
           'qs' => 'action=update&id=%%id%%&reset=1',
           'title' => ts('Edit Premium'),
-        ),
-        CRM_Core_Action::PREVIEW => array(
+        ],
+        CRM_Core_Action::PREVIEW => [
           'name' => ts('Preview'),
           'url' => 'civicrm/admin/contribute/managePremiums',
           'qs' => 'action=preview&id=%%id%%',
           'title' => ts('Preview Premium'),
-        ),
-        CRM_Core_Action::DISABLE => array(
+        ],
+        CRM_Core_Action::DISABLE => [
           'name' => ts('Disable'),
           'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_Contribute_BAO_ManagePremiums' . '\',\'' . 'enable-disable' . '\' );"',
           'ref' => 'disable-action',
           'title' => ts('Disable Premium'),
-        ),
-        CRM_Core_Action::ENABLE => array(
+        ],
+        CRM_Core_Action::ENABLE => [
           'name' => ts('Enable'),
           'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_Contribute_BAO_ManagePremiums' . '\',\'' . 'disable-enable' . '\' );"',
           'ref' => 'enable-action',
           'title' => ts('Enable Premium'),
-        ),
-        CRM_Core_Action::DELETE => array(
+        ],
+        CRM_Core_Action::DELETE => [
           'name' => ts('Delete'),
           'url' => 'civicrm/admin/contribute/managePremiums',
           'qs' => 'action=delete&id=%%id%%',
           'title' => ts('Delete Premium'),
-        ),
-      );
+        ],
+      ];
     }
     return self::$_links;
   }
@@ -146,14 +146,14 @@ class CRM_Contribute_Page_ManagePremiums extends CRM_Core_Page_Basic {
    */
   function browse() {
     // get all custom groups sorted by weight
-    $premiums = array();
+    $premiums = [];
 
     $dao = new CRM_Contribute_DAO_Product();
     $dao->orderBy('name');
     $dao->find();
 
     while ($dao->fetch()) {
-      $premiums[$dao->id] = array();
+      $premiums[$dao->id] = [];
       CRM_Core_DAO::storeValues($dao, $premiums[$dao->id]);
       // form all action links
       $action = array_sum(array_keys($this->links()));
@@ -168,7 +168,7 @@ class CRM_Contribute_Page_ManagePremiums extends CRM_Core_Page_Basic {
 
       $premiums[$dao->id]['action'] = CRM_Core_Action::formLink(self::links(),
         $action,
-        array('id' => $dao->id)
+        ['id' => $dao->id]
       );
     }
     $this->assign('rows', $premiums);

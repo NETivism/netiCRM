@@ -189,7 +189,7 @@ function civicrm_api3_extension_download($params) {
   }
   CRM_Extension_System::singleton()->getCache()->flush();
   CRM_Extension_System::singleton(TRUE);
-  CRM_Extension_System::singleton()->getManager()->install(array($params['key']));
+  CRM_Extension_System::singleton()->getManager()->install([$params['key']]);
 
   return civicrm_api3_create_success();
 }
@@ -208,7 +208,7 @@ function civicrm_api3_extension_download($params) {
  *
  */
 function civicrm_api3_extension_refresh($params) {
-  $defaults = array('local' => TRUE, 'remote' => TRUE);
+  $defaults = ['local' => TRUE, 'remote' => TRUE];
   $params = array_merge($defaults, $params);
 
   $system = CRM_Extension_System::singleton(TRUE);
@@ -240,12 +240,12 @@ function civicrm_api3_extension_refresh($params) {
 function civicrm_api3_extension_get($params) {
   $statuses = CRM_Extension_System::singleton()->getManager()->getStatuses();
   $mapper = CRM_Extension_System::singleton()->getMapper();
-  $result = array();
+  $result = [];
   foreach ($statuses as $key => $status) {
     //try {
     //  $info = (array) $mapper->keyToInfo($key);
     //} catch (CRM_Extension_Exception $e) {
-      $info = array();
+      $info = [];
       $info['key'] = $key;
     //}
     $info['status'] = $status;
@@ -266,12 +266,12 @@ function _civicrm_api3_getKeys($params) {
     return $params['keys'];
   } elseif (CRM_Utils_Array::arrayKeyExists('keys', $params) && is_string($params['keys'])) {
     if ($params['keys'] == '') {
-      return array();
+      return [];
     } else {
       return explode(API_V3_EXTENSION_DELIMITER, $params['keys']);
     }
   } elseif (CRM_Utils_Array::arrayKeyExists('key', $params)) {
-    return array($params['key']);
+    return [$params['key']];
   } else {
     throw new API_Exception('Missing required parameter: key or keys');
   }

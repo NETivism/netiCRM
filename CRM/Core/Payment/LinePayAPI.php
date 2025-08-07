@@ -6,21 +6,21 @@ class CRM_Core_Payment_LinePayAPI {
   CONST LINEPAY_TEST = 'https://sandbox-api-pay.line.me';
   CONST LINEPAY_PROD = 'https://api-pay.line.me';
 
-  public static $_currencies = array(
+  public static $_currencies = [
     'USD' => 'USD',
     'JPY' => 'JPY',
     'TWD' => 'TWD',
     'THB' => 'THB',
-  );
-  public static $_lang = array(
+  ];
+  public static $_lang = [
     'zh_TW' => 'zh-Hant',
     'zh_CN' => 'zh-Hans',
     'en_US' => 'en',
     'ja_JP' => 'ja',
     'ko_KR' => 'ko',
     'th_TH' => 'th',
-  );
-  public static $_errorMessage = array(
+  ];
+  public static $_errorMessage = [
     '1101' => 'This user is not a LINE Pay user.',
     '1102' => 'The purchasing user suspended for transaction.',
     '1104' => 'Merchant not found.',
@@ -77,7 +77,7 @@ class CRM_Core_Payment_LinePayAPI {
     '2101' => 'Parameter error',
     '2102' => 'JSON data format error',
     '9000' => 'Internal error',
-  );
+  ];
 
   public $_request;
   public $_response;
@@ -92,7 +92,7 @@ class CRM_Core_Payment_LinePayAPI {
 
   public $_curlError;
 
-  protected $_apiTypes = array(
+  protected $_apiTypes = [
     'query' => '/v2/payments?orderId={orderId}&transactionId={transactionId}',
     'request' => '/v2/payments/request',
     'confirm' => '/v2/payments/{transactionId}/confirm',
@@ -104,9 +104,9 @@ class CRM_Core_Payment_LinePayAPI {
     #'recurring/payment' => '/v2/payments/preapprovedPay/{regKey}/payment',
     #'recurring/check' => '/v2/payments/preapprovedPay/{regKey}/check',
     #'recurring/expire' => '/v2/payments/preapprovedPay/{regKey}/expire',
-  );
+  ];
 
-  protected $_apiGetMethodTypes = array('query', 'authorization', 'recurring/check');
+  protected $_apiGetMethodTypes = ['query', 'authorization', 'recurring/check'];
   protected $_apiMethod;
 
   function __construct($apiParams){
@@ -136,7 +136,7 @@ class CRM_Core_Payment_LinePayAPI {
   public function request($params) {
     $orderId = $transactionId = NULL;
     $allowedFields = self::fields($this->_apiType);
-    $post = array();
+    $post = [];
     foreach ($params as $name => $value) {
       if (!in_array($name, $allowedFields)) {
         continue;
@@ -191,12 +191,12 @@ class CRM_Core_Payment_LinePayAPI {
     $this->_request = $post;
     $this->_curl();
     if (!empty($this->_response)) {
-      $record = array(
+      $record = [
         'url' => $this->_apiURL,
         'timestamp' => CRM_REQUEST_TIME,
         'request' => $this->_request,
         'response' => $this->_response,
-      );
+      ];
       // api response single record
       if (!empty($this->_response->info) && is_object($this->_response->info)) {
         if (!empty($this->_response->info->transactionId)) {
@@ -242,10 +242,10 @@ class CRM_Core_Payment_LinePayAPI {
       $data = json_encode($data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
     }
     $record = new CRM_Contribute_DAO_LinePay();
-    $id = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution_linepay WHERE trxn_id LIKE %1 OR transaction_id LIKE %2", array(
-      1 => array($orderId, 'String'),
-      2 => array($transactionId, 'String'),
-    ));
+    $id = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution_linepay WHERE trxn_id LIKE %1 OR transaction_id LIKE %2", [
+      1 => [$orderId, 'String'],
+      2 => [$transactionId, 'String'],
+    ]);
     if ($id) {
       $record->id = $id;
       $record->find(TRUE);
@@ -266,14 +266,14 @@ class CRM_Core_Payment_LinePayAPI {
   private function _curl() {
     $this->_success = FALSE;
     $ch = curl_init($this->_apiURL);
-    $opt = array();
+    $opt = [];
 
-    $opt[CURLOPT_HTTPHEADER] = array(
+    $opt[CURLOPT_HTTPHEADER] = [
       'Content-Type: application/json',
       'X-LINE-ChannelId: ' . $this->_channelId, // 10 bytes
       'X-LINE-ChannelSecret: ' . $this->_channelSecret, // 32 bytes
       #'X-LINE-MerchantDeviceType' => '',
-    );
+    ];
     $opt[CURLOPT_RETURNTRANSFER] = TRUE;
     $opt[CURLOPT_CONNECTTIMEOUT] = 10;
     $opt[CURLOPT_TIMEOUT] = 45;
@@ -289,10 +289,10 @@ class CRM_Core_Payment_LinePayAPI {
     if ($result === FALSE) {
       $errno = curl_errno($ch);
       $err = curl_error($ch);
-      $curlError = array($errno => $err);
+      $curlError = [$errno => $err];
     }
     else{
-      $curlError = array();
+      $curlError = [];
     }
     curl_close($ch);
     if (!empty($result)) {
@@ -304,11 +304,11 @@ class CRM_Core_Payment_LinePayAPI {
       $this->_response = NULL;
       $this->_curlError = $curlError;
     }
-    $return = array(
+    $return = [
       'success' => $this->_success,
       'status' => $status,
       'curlError' => $curlError,
-    );
+    ];
     return $return;
   }
 
@@ -316,7 +316,7 @@ class CRM_Core_Payment_LinePayAPI {
    * API query fields
    */
   static public function fields($apiType, $isResponse = FALSE) {
-    $fields = array();
+    $fields = [];
     switch($apiType){
       case 'query':
         $fields = explode(',', 'transactionId,orderId');

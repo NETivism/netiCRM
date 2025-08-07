@@ -58,19 +58,19 @@ function civicrm_api3_domain_get($params) {
   $domains = _civicrm_api3_dao_to_array($bao, $params, true,'domain');
 
   foreach ($domains as $domain) {
-    $values = array();
-    $locparams = array(
+    $values = [];
+    $locparams = [
       'entity_id'    => $domain['id'],
       'entity_table' => 'civicrm_domain'
-    );
+    ];
     require_once 'CRM/Core/BAO/Location.php';
     $values['location'] = CRM_Core_BAO_Location::getValues($locparams, TRUE);
 
-    $address_array = array(
+    $address_array = [
       'street_address', 'supplemental_address_1', 'supplemental_address_2',
       'city', 'state_province_id', 'postal_code', 'country_id',
       'geo_code_1', 'geo_code_2',
-    );
+    ];
     
     require_once 'CRM/Core/OptionGroup.php';
     
@@ -79,7 +79,7 @@ function civicrm_api3_domain_get($params) {
     }
 
     if ( !empty( $values['location']['phone'] ) ) {
-    $domain['domain_phone'] = array(
+    $domain['domain_phone'] = [
         'phone_type' => CRM_Core_OptionGroup::getLabel(
           'phone_type',
           CRM_Utils_Array::value(
@@ -91,7 +91,7 @@ function civicrm_api3_domain_get($params) {
           'phone',
         $values['location']['phone'][1]
         )
-    );
+    ];
     }
 
     if ( !empty( $values['location']['address'] ) ) {
@@ -118,7 +118,7 @@ function civicrm_api3_domain_get($params) {
  * @param array $params array or parameters determined by getfields
  */
 function _civicrm_api3_domain_get_spec(&$params) {
-  $params['current_domain'] = array('title' => "get loaded domain");
+  $params['current_domain'] = ['title' => "get loaded domain"];
 }
 
 /**
@@ -137,7 +137,7 @@ function civicrm_api3_domain_create($params) {
   civicrm_api3_verify_mandatory($params, 'CRM_Core_BAO_Domain');
   $params['version'] = CRM_Utils_Array::value('domain_version', $params);
   $domain            = CRM_Core_BAO_Domain::create($params);
-  $domain_array      = array();
+  $domain_array      = [];
   _civicrm_api3_object_to_array($domain, $domain_array[$domain->id]);
   return civicrm_api3_create_success($domain_array, $params);
 }

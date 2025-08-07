@@ -121,7 +121,7 @@ class CRM_Pledge_BAO_PledgeBlock extends CRM_Pledge_DAO_PledgeBlock {
 
     if ($freqUnits && is_array($freqUnits)) {
       unset($params['pledge_frequency_unit']);
-      $newFreqUnits = array();
+      $newFreqUnits = [];
       foreach ($freqUnits as $k => $v) {
         if ($v) {
           $newFreqUnits[$k] = $v;
@@ -186,7 +186,7 @@ class CRM_Pledge_BAO_PledgeBlock extends CRM_Pledge_DAO_PledgeBlock {
    * @static
    */
   static function getPledgeBlock($pageID) {
-    $pledgeBlock = array();
+    $pledgeBlock = [];
 
     $dao = new CRM_Pledge_DAO_PledgeBlock();
     $dao->entity_table = 'civicrm_contribution_page';
@@ -208,8 +208,8 @@ class CRM_Pledge_BAO_PledgeBlock extends CRM_Pledge_DAO_PledgeBlock {
     //build pledge payment fields.
     if (CRM_Utils_Array::value('pledge_id', $form->_values)) {
       //get all payments required details.
-      $allPayments = array();
-      $returnProperties = array('status_id', 'scheduled_date', 'scheduled_amount');
+      $allPayments = [];
+      $returnProperties = ['status_id', 'scheduled_date', 'scheduled_amount'];
       CRM_Core_DAO::commonRetrieveAll('CRM_Pledge_DAO_Payment', 'pledge_id',
         $form->_values['pledge_id'], $allPayments, $returnProperties
       );
@@ -217,48 +217,48 @@ class CRM_Pledge_BAO_PledgeBlock extends CRM_Pledge_DAO_PledgeBlock {
 
       $allStatus = CRM_Contribute_PseudoConstant::contributionStatus(NULL, 'name');
 
-      $nextPayment = array();
+      $nextPayment = [];
       $isNextPayment = FALSE;
-      $overduePayments = array();
+      $overduePayments = [];
       $now = date('Ymd');
       foreach ($allPayments as $payID => $value) {
         if ($allStatus[$value['status_id']] == 'Overdue') {
-          $overduePayments[$payID] = array('id' => $payID,
+          $overduePayments[$payID] = ['id' => $payID,
             'scheduled_amount' => CRM_Utils_Rule::cleanMoney($value['scheduled_amount']),
             'scheduled_date' => CRM_Utils_Date::customFormat($value['scheduled_date'],
               '%B %d'
             ),
-          );
+          ];
         }
         elseif (!$isNextPayment &&
           $allStatus[$value['status_id']] == 'Pending'
         ) {
           //get the next payment.
-          $nextPayment = array('id' => $payID,
+          $nextPayment = ['id' => $payID,
             'scheduled_amount' => CRM_Utils_Rule::cleanMoney($value['scheduled_amount']),
             'scheduled_date' => CRM_Utils_Date::customFormat($value['scheduled_date'],
               '%B %d'
             ),
-          );
+          ];
           $isNextPayment = TRUE;
         }
       }
 
       //build check box array for payments.
-      $payments = array();
+      $payments = [];
       if (!empty($overduePayments)) {
         foreach ($overduePayments as $id => $payment) {
-          $key = ts("$%1 - due on %2 (overdue)", array(1 => CRM_Utils_Array::value('scheduled_amount', $payment),
+          $key = ts("$%1 - due on %2 (overdue)", [1 => CRM_Utils_Array::value('scheduled_amount', $payment),
               2 => CRM_Utils_Array::value('scheduled_date', $payment),
-            ));
+            ]);
           $payments[$key] = CRM_Utils_Array::value('id', $payment);
         }
       }
 
       if (!empty($nextPayment)) {
-        $key = ts("$%1 - due on %2", array(1 => CRM_Utils_Array::value('scheduled_amount', $nextPayment),
+        $key = ts("$%1 - due on %2", [1 => CRM_Utils_Array::value('scheduled_amount', $nextPayment),
             2 => CRM_Utils_Array::value('scheduled_date', $nextPayment),
-          ));
+          ]);
         $payments[$key] = CRM_Utils_Array::value('id', $nextPayment);
       }
       //give error if empty or build form for payment.
@@ -275,24 +275,24 @@ class CRM_Pledge_BAO_PledgeBlock extends CRM_Pledge_DAO_PledgeBlock {
       $pledgeBlock = CRM_Pledge_BAO_PledgeBlock::getPledgeBlock($form->_id);
 
       //build form for pledge creation.
-      $pledgeOptions = array('0' => ts('I want to make a one-time contribution'),
+      $pledgeOptions = ['0' => ts('I want to make a one-time contribution'),
         '1' => ts('I pledge to contribute this amount every'),
-      );
+      ];
       $form->addRadio('is_pledge', ts('Pledge Frequency Interval'), $pledgeOptions,
-        NULL, array('<br/>')
+        NULL, ['<br/>']
       );
-      $form->addElement('text', 'pledge_installments', ts('Installments'), array('size' => 3));
+      $form->addElement('text', 'pledge_installments', ts('Installments'), ['size' => 3]);
 
       if (CRM_Utils_Array::value('is_pledge_interval', $pledgeBlock)) {
         $form->assign('is_pledge_interval', CRM_Utils_Array::value('is_pledge_interval', $pledgeBlock));
-        $form->addElement('text', 'pledge_frequency_interval', NULL, array('size' => 3));
+        $form->addElement('text', 'pledge_frequency_interval', NULL, ['size' => 3]);
       }
       else {
         $form->add('hidden', 'pledge_frequency_interval', 1);
       }
       //Frequency unit drop-down label suffixes switch from *ly to *(s)
       $freqUnitVals = explode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, $pledgeBlock['pledge_frequency_unit']);
-      $freqUnits = array();
+      $freqUnits = [];
       $frequencyUnits = CRM_Core_OptionGroup::values('recur_frequency_units');
       foreach ($freqUnitVals as $key => $val) {
         if (CRM_Utils_Array::arrayKeyExists($val, $frequencyUnits)) {

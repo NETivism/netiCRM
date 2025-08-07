@@ -101,11 +101,11 @@ class CRM_Core_BAO_CMSUser {
 
     //end of schronization code
     $status = ts('Synchronize Users to Contacts completed.');
-    $status .= ' ' . ts('Checked one user record.', array('count' => $contactCount, 'plural' => 'Checked %count user records.'));
+    $status .= ' ' . ts('Checked one user record.', ['count' => $contactCount, 'plural' => 'Checked %count user records.']);
     if ($contactMatching) {
-      $status .= ' ' . ts('Found one matching contact record.', array('count' => $contactMatching, 'plural' => 'Found %count matching contact records.'));
+      $status .= ' ' . ts('Found one matching contact record.', ['count' => $contactMatching, 'plural' => 'Found %count matching contact records.']);
     }
-    $status .= ' ' . ts('Created one new contact record.', array('count' => $contactCreated, 'plural' => 'Created %count new contact records.'));
+    $status .= ' ' . ts('Created one new contact record.', ['count' => $contactCreated, 'plural' => 'Created %count new contact records.']);
     CRM_Core_Session::setStatus($status, TRUE);
     CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin', 'reset=1'));
   }
@@ -190,9 +190,9 @@ class CRM_Core_BAO_CMSUser {
       if ($isCMSUser && $emailPresent) {
         if ($showUserRegistration) {
           if ($isCMSUser != 2) {
-            $extra = array(
+            $extra = [
               'onclick' => "return showHideByValue('cms_create_account','','details','block','radio',false );",
-            );
+            ];
             $form->addElement('checkbox', 'cms_create_account', ts('Create an account?'), NULL, $extra);
             $required = FALSE;
           }
@@ -220,7 +220,7 @@ class CRM_Core_BAO_CMSUser {
               $form->add('password', 'cms_confirm_pass', ts('Confirm Password'));
             }
 
-            $form->addFormRule(array('CRM_Core_BAO_CMSUser', 'formRule'), $form);
+            $form->addFormRule(['CRM_Core_BAO_CMSUser', 'formRule'], $form);
           }
           $showCMS = TRUE;
         }
@@ -236,7 +236,7 @@ class CRM_Core_BAO_CMSUser {
       $loginUrl .= 'user/login';
       // For Drupal we can redirect user to current page after login by passing it as destination.
 
-      $args = array('reset' => 1);
+      $args = ['reset' => 1];
 
       $id = $form->get('id');
       if ($id) {
@@ -282,7 +282,7 @@ class CRM_Core_BAO_CMSUser {
     $isDrupal = ucfirst($config->userFramework) == 'Drupal' ? TRUE : FALSE;
     $isJoomla = ucfirst($config->userFramework) == 'Joomla' ? TRUE : FALSE;
 
-    $errors = array();
+    $errors = [];
     if ($isDrupal || $isJoomla) {
       $emailName = NULL;
       if (!empty($self->_bltID)) {
@@ -329,9 +329,9 @@ class CRM_Core_BAO_CMSUser {
 
       // now check that the cms db does not have the user name and/or email
       if ($isDrupal OR $isJoomla) {
-        $params = array('name' => $fields['cms_name'],
+        $params = ['name' => $fields['cms_name'],
           'mail' => $fields[$emailName],
-        );
+        ];
       }
 
       $errors = $config->userSystem->checkUserNameEmailExists($params, $emailName);
@@ -405,7 +405,7 @@ class CRM_Core_BAO_CMSUser {
       $session = CRM_Core_Session::singleton();
       $session->pushUserContext(CRM_Utils_System::url('civicrm/admin', 'reset=1'));
        return CRM_Core_Error::statusBounce(ts("Cannot connect to UF db via %1. Please check the CIVICRM_UF_DSN value in your civicrm.settings.php file",
-          array(1 => $db_uf->getMessage())
+          [1 => $db_uf->getMessage()]
         ));
     }
     $db_uf->query('/*!40101 SET NAMES utf8mb4 */');

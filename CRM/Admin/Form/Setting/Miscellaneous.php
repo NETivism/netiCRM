@@ -57,28 +57,28 @@ class CRM_Admin_Form_Setting_Miscellaneous extends CRM_Admin_Form_Setting {
     $this->addYesNo('doNotAttachPDFReceipt', ts('Do not attach PDF copy to receipts'));
 
     $this->addElement('text', 'maxAttachments', ts('Maximum Attachments'),
-      array('size' => 2, 'maxlength' => 8)
+      ['size' => 2, 'maxlength' => 8]
     );
     $this->addElement('text', 'maxFileSize', ts('Maximum File Size'),
-      array('size' => 2, 'maxlength' => 8)
+      ['size' => 2, 'maxlength' => 8]
     );
     $this->addElement('text', 'recaptchaPublicKey', ts('Public Key'),
-      array('size' => 64, 'maxlength' => 64)
+      ['size' => 64, 'maxlength' => 64]
     );
     $this->addElement('text', 'recaptchaPrivateKey', ts('Private Key'),
-      array('size' => 64, 'maxlength' => 64)
+      ['size' => 64, 'maxlength' => 64]
     );
 
     if (CRM_Core_Permission::check('administer neticrm')) {
-      $attribs = $domain->locales ? array('disabled' => 'disabled') : NULL;
+      $attribs = $domain->locales ? ['disabled' => 'disabled'] : NULL;
       $this->addYesNo('logging', ts('Logging'), NULL, NULL, $attribs);
       $this->addRule('maxAttachments', ts('Value should be a positive number'), 'positiveInteger');
       $this->addRule('maxFileSize', ts('Value should be a positive number'), 'positiveInteger');
       $this->addElement('text', 'dashboardCacheTimeout', ts('Dashboard cache timeout'),
-        array('size' => 3, 'maxlength' => 5)
+        ['size' => 3, 'maxlength' => 5]
       );
       $this->addElement('text', 'wkhtmltopdfPath', ts('Path to wkhtmltopdf executable'),
-        array('size' => 64, 'maxlength' => 256)
+        ['size' => 64, 'maxlength' => 256]
       );
       $this->addYesNo('versionCheck', ts('Version Check & Statistics Reporting'));
       $this->assign('admin', TRUE);
@@ -86,7 +86,7 @@ class CRM_Admin_Form_Setting_Miscellaneous extends CRM_Admin_Form_Setting {
 
       // Refs #38829, Add Path to qpdf executable field.
       $this->addElement('text', 'qpdfPath', ts('Path to qpdf executable'),
-        array('size' => 64, 'maxlength' => 256)
+        ['size' => 64, 'maxlength' => 256]
       );
     }
     else {

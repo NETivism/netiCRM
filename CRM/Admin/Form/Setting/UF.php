@@ -52,12 +52,12 @@ class CRM_Admin_Form_Setting_UF extends CRM_Admin_Form_Setting {
     $uf = $config->userFramework;
 
     CRM_Utils_System::setTitle(ts('Settings - %1 Integration',
-        array(1 => $uf)
+        [1 => $uf]
       ));
 
-    $ele = $this->addElement('text', 'userSystemVersion', ts('%1 Version', array(1 => $uf)));
+    $ele = $this->addElement('text', 'userSystemVersion', ts('%1 Version', [1 => $uf]));
     $ele->freeze();
-    $this->addElement('text', 'userFrameworkUsersTableName', ts('%1 Users Table Name', array(1 => $uf)));
+    $this->addElement('text', 'userFrameworkUsersTableName', ts('%1 Users Table Name', [1 => $uf]));
     if (CRM_Utils_System::moduleExists('views') && $config->dsn != $config->userFrameworkDSN) {
       $dsnArray = DB::parseDSN($config->dsn);
       $tableNames = CRM_Core_DAO::GetStorageValues(NULL, 0, 'Name');
@@ -81,8 +81,8 @@ class CRM_Admin_Form_Setting_UF extends CRM_Admin_Form_Setting {
    * @return None
    */
   public function setDefaultValues() {
-    $defaults = array();
-    $params = array();
+    $defaults = [];
+    $params = [];
 
     $config = CRM_Core_Config::singleton();
     $version = $config->userSystem->version;

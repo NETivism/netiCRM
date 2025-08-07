@@ -68,7 +68,7 @@ function civicrm_api3_mailing_event_subscribe_create($params) {
 
     $subscribe->send_confirm_request($email);
 
-    $values = array();
+    $values = [];
     $values['contact_id'] = $subscribe->contact_id;
     $values['subscribe_id'] = $subscribe->id;
     $values['hash'] = $subscribe->hash;

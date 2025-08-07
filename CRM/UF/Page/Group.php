@@ -65,31 +65,31 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
     if (!self::$_actionLinks) {
       // helper variable for nicer formatting
       $copyExtra = ts('Are you sure you want to make a copy of this Profile?');
-      self::$_actionLinks = array(
-        CRM_Core_Action::BROWSE => array(
+      self::$_actionLinks = [
+        CRM_Core_Action::BROWSE => [
           'name' => ts('Fields'),
           'url' => 'civicrm/admin/uf/group/field',
           'qs' => 'reset=1&action=browse&gid=%%id%%',
           'title' => ts('View and Edit Fields'),
-        ),
-        CRM_Core_Action::UPDATE => array(
+        ],
+        CRM_Core_Action::UPDATE => [
           'name' => ts('Settings'),
           'url' => 'civicrm/admin/uf/group/update',
           'qs' => 'action=update&id=%%id%%&context=group',
           'title' => ts('Edit CiviCRM Profile Group'),
-        ),
-        CRM_Core_Action::PREVIEW => array(
+        ],
+        CRM_Core_Action::PREVIEW => [
           'name' => ts('Preview'),
           'url' => 'civicrm/admin/uf/group',
           'qs' => 'action=preview&id=%%id%%&field=0&context=group',
           'title' => ts('Edit CiviCRM Profile Group'),
-        ),
-        CRM_Core_Action::ADD => array(
+        ],
+        CRM_Core_Action::ADD => [
           'name' => ts('Publish Online Profile'),
           'url' => 'civicrm/admin/uf/group',
           'qs' => 'action=profile&gid=%%id%%',
           'title' => ts('HTML Form Snippet for this Profile'),
-        ),
+        ],
         /*
         CRM_Core_Action::VIEW => array(
           'name' => ts('Public Pages'),
@@ -98,39 +98,39 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
           'title' => ts('Search in public pages when enabled in profile settings'),
         ),
         */
-        CRM_Core_Action::DISABLE => array(
+        CRM_Core_Action::DISABLE => [
           'name' => ts('Disable'),
           'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_Core_BAO_UFGroup' . '\',\'' . 'enable-disable' . '\' );"',
           'ref' => 'disable-action',
           'title' => ts('Disable CiviCRM Profile Group'),
-        ),
-        CRM_Core_Action::ENABLE => array(
+        ],
+        CRM_Core_Action::ENABLE => [
           'name' => ts('Enable'),
           'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_Core_BAO_UFGroup' . '\',\'' . 'disable-enable' . '\' );"',
           'ref' => 'enable-action',
           'title' => ts('Enable CiviCRM Profile Group'),
-        ),
-        CRM_Core_Action::DELETE => array(
+        ],
+        CRM_Core_Action::DELETE => [
           'name' => ts('Delete'),
           'url' => 'civicrm/admin/uf/group',
           'qs' => 'action=delete&id=%%id%%',
           'title' => ts('Delete CiviCRM Profile Group'),
-        ),
-        CRM_Core_Action::COPY => array(
+        ],
+        CRM_Core_Action::COPY => [
           'name' => ts('Copy Profile'),
           'url' => 'civicrm/admin/uf/group',
           'qs' => 'action=copy&gid=%%id%%&key=%%key%%',
           'title' => ts('Make a Copy of CiviCRM Profile Group'),
           'extra' => 'onclick = "return confirm(\'' . $copyExtra . '\');"',
-        ),
-        CRM_Core_Action::REOPEN => array(
+        ],
+        CRM_Core_Action::REOPEN => [
           'name' => ts('Traffic Source'),
           'title' => ts('Traffic Source'),
           'url' => 'civicrm/track/report',
           'qs' => 'reset=1&ptype=civicrm_uf_group&pid=%%id%%',
           'uniqueName' => 'traffic_source',
-        ),
-      );
+        ],
+      ];
     }
     return self::$_actionLinks;
   }
@@ -247,7 +247,7 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
     }
     else {
       $title = 'Profile Form';
-      CRM_Utils_System::setTitle(ts('%1 - HTML Form Snippet', array(1 => $this->_title)));
+      CRM_Utils_System::setTitle(ts('%1 - HTML Form Snippet', [1 => $this->_title]));
     }
 
     $this->assign('title', $title);
@@ -284,8 +284,8 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
    * @static
    */
   function browse($action = NULL) {
-    $ufGroup = array();
-    $allUFGroups = array();
+    $ufGroup = [];
+    $allUFGroups = [];
 
     $allUFGroups = CRM_Core_BAO_UFGroup::getModuleUFGroup();
     if (empty($allUFGroups)) {
@@ -300,15 +300,15 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
 
     $ufGroups = CRM_Core_PseudoConstant::ufGroup();
     CRM_Utils_Hook::aclGroup(CRM_Core_Permission::ADMIN, NULL, 'civicrm_uf_group', $ufGroups, $allUFGroups);
-    $restrictType = array(
+    $restrictType = [
       'Contribution',
       'Membership',
       'Activity',
       'Participant',
-    );
+    ];
 
     foreach ($allUFGroups as $id => $value) {
-      $ufGroup[$id] = array();
+      $ufGroup[$id] = [];
       $ufGroup[$id]['id'] = $id;
       $ufGroup[$id]['title'] = $value['title'];
       $ufGroup[$id]['is_active'] = $value['is_active'];
@@ -333,11 +333,11 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
         $action -= CRM_Core_Action::DELETE;
       }
       $groupTypes = self::extractGroupTypes($value['group_type']);
-      $groupComponents = array('Contribution', 'Membership', 'Activity', 'Participant');
+      $groupComponents = ['Contribution', 'Membership', 'Activity', 'Participant'];
 
       $groupTypesString = '';
       if (!empty($groupTypes)) {
-        $groupTypesStrings = array();
+        $groupTypesStrings = [];
         foreach ($groupTypes as $groupType => $typeValues) {
           if (is_array($typeValues)) {
             if ($groupType == 'Participant') {
@@ -367,10 +367,10 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
       }
 
       $ufGroup[$id]['action'] = CRM_Core_Action::formLink(self::actionLinks(), $action,
-        array(
+        [
           'id' => $id,
           'key' => $key
-        )
+        ]
       );
 
 
@@ -418,9 +418,9 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
 
         // as there is no argument after group in the url, and the context is different,
         // breadcrumb doesn't get set. And therefore setting it here -
-        $breadCrumb = array(array('title' => ts('CiviCRM Profile'),
+        $breadCrumb = [['title' => ts('CiviCRM Profile'),
             'url' => CRM_Utils_System::url(CRM_Utils_System::currentPath(), 'reset=1'),
-          ));
+          ]];
         CRM_Utils_System::appendBreadCrumb($breadCrumb);
         break;
 
@@ -436,7 +436,7 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
   }
 
   static function extractGroupTypes($groupType) {
-    $returnGroupTypes = array();
+    $returnGroupTypes = [];
     if (!$groupType) {
       return $returnGroupTypes;
     }
@@ -448,7 +448,7 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
 
     if (CRM_Utils_Array::value(1, $groupTypeParts)) {
       foreach (explode(',', $groupTypeParts[1]) as $typeValue) {
-        $groupTypeValues = $valueLabels = array();
+        $groupTypeValues = $valueLabels = [];
         $valueParts = explode(':', $typeValue);
         $typeName = NULL;
         switch ($valueParts[0]) {
@@ -490,7 +490,7 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
         }
 
         if (!is_array($returnGroupTypes[$typeName])) {
-          $returnGroupTypes[$typeName] = array();
+          $returnGroupTypes[$typeName] = [];
         }
         $returnGroupTypes[$typeName][$valueParts[0]] = $groupTypeValues;
       }

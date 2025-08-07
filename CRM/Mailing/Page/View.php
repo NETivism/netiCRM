@@ -126,7 +126,7 @@ class CRM_Mailing_Page_View extends CRM_Core_Page {
     if (isset($this->_contactID)) {
       //get details of contact with token value including Custom Field Token Values.CRM-3734
       $returnProperties = $this->_mailing->getReturnProperties();
-      $params = array('contact_id' => $this->_contactID);
+      $params = ['contact_id' => $this->_contactID];
       $details = CRM_Utils_Token::getTokenDetails($params,
         $returnProperties,
         TRUE, TRUE, NULL,
@@ -137,7 +137,7 @@ class CRM_Mailing_Page_View extends CRM_Core_Page {
     }
     else {
 
-      $details = array('test');
+      $details = ['test'];
     }
     $mime = &$this->_mailing->compose(NULL, NULL, NULL, 0,
       $this->_mailing->from_email,

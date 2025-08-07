@@ -66,7 +66,7 @@ function civicrm_api3_group_create($params) {
     return civicrm_api3_create_error('Group not created');
   }
   else {
-    $values = array();
+    $values = [];
     _civicrm_api3_object_to_array_unique_fields($group, $values[$group->id]);
     return civicrm_api3_create_success($values, $params, 'group', 'create', $group);
   }
@@ -95,7 +95,7 @@ function _civicrm_api3_group_create_spec(&$params) {
  * @access public
  */
 function civicrm_api3_group_get($params) {
-  $returnProperties = array();
+  $returnProperties = [];
   foreach ($params as $n => $v) {
     if (substr($n, 0, 7) == 'return.') {
       $returnProperties[] = substr($n, 7);
@@ -115,7 +115,7 @@ function civicrm_api3_group_get($params) {
   if (empty($groupObjects)) {
     return civicrm_api3_create_success(FALSE);
   }
-  $groups = array();
+  $groups = [];
   foreach ($groupObjects as $group) {
     _civicrm_api3_object_to_array($group, $groups[$group->id]);
     _civicrm_api3_custom_data_get($groups[$group->id], 'Group', $group->id);

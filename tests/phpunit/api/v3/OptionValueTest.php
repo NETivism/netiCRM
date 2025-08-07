@@ -14,14 +14,14 @@ class api_v3_OptionValueTest extends CiviUnitTestCase {
   function tearDown() {}
 
   public function testGetOptionValueByID() {
-    $result = civicrm_api('option_value', 'get', array('id' => 1, 'version' => $this->_apiversion));
+    $result = civicrm_api('option_value', 'get', ['id' => 1, 'version' => $this->_apiversion]);
     $this->assertEquals(0, $result['is_error'], 'In line ' . __LINE__);
     $this->assertEquals(1, $result['count'], 'In line ' . __LINE__);
     $this->assertEquals(1, $result['id'], 'In line ' . __LINE__);
   }
 
   public function testGetOptionValueByValue() {
-    $result = civicrm_api('option_value', 'get', array('option_group_id' => 1, 'value' => '1', 'version' => $this->_apiversion));
+    $result = civicrm_api('option_value', 'get', ['option_group_id' => 1, 'value' => '1', 'version' => $this->_apiversion]);
     $this->assertEquals(0, $result['is_error'], 'In line ' . __LINE__);
     $this->assertEquals(1, $result['count'], 'In line ' . __LINE__);
     $this->assertEquals(1, $result['id'], 'In line ' . __LINE__);
@@ -31,9 +31,9 @@ class api_v3_OptionValueTest extends CiviUnitTestCase {
    *  Test limit param
    */
   function testGetOptionValueLimit() {
-    $params = array(
+    $params = [
       'version' => $this->_apiversion,
-    );
+    ];
     $result = civicrm_api('option_value', 'getcount', $params);
     $this->assertGreaterThan(1, $result, "Check more than one exists In line " . __LINE__);
     $params['options']['limit'] = 1;
@@ -46,17 +46,17 @@ class api_v3_OptionValueTest extends CiviUnitTestCase {
    */
   function testGetOptionValueOffSet() {
 
-    $result = civicrm_api('option_value', 'getcount', array(
+    $result = civicrm_api('option_value', 'getcount', [
       'option_group_id' => 1,
         'value' => '1',
         'version' => $this->_apiversion,
-      ));
-    $result2 = civicrm_api('option_value', 'getcount', array(
+      ]);
+    $result2 = civicrm_api('option_value', 'getcount', [
       'option_group_id' => 1,
         'value' => '1',
         'version' => $this->_apiversion,
-        'options' => array('offset' => 1),
-      ));
+        'options' => ['offset' => 1],
+      ]);
     $this->assertGreaterThan($result2, $result);
   }
 
@@ -66,22 +66,22 @@ class api_v3_OptionValueTest extends CiviUnitTestCase {
   function testGetSingleValueOptionValueSort() {
     $description = "demonstrates use of Sort param (available in many api functions). Also, getsingle";
     $subfile     = 'SortOption';
-    $result      = civicrm_api('option_value', 'getsingle', array(
+    $result      = civicrm_api('option_value', 'getsingle', [
       'option_group_id' => 1,
         'version' => $this->_apiversion,
-        'options' => array(
+        'options' => [
           'sort' => 'label ASC',
           'limit' => 1,
-        ),
-      ));
-    $params = array(
+        ],
+      ]);
+    $params = [
       'option_group_id' => 1,
       'version' => $this->_apiversion,
-      'options' => array(
+      'options' => [
         'sort' => 'label DESC',
         'limit' => 1,
-      ),
-    );
+      ],
+    ];
     $result2 = civicrm_api('option_value', 'getsingle', $params);
     $this->documentMe($params, $result2, __FUNCTION__, __FILE__, $description, $subfile);
     $this->assertGreaterThan($result['label'], $result2['label']);
@@ -92,16 +92,16 @@ class api_v3_OptionValueTest extends CiviUnitTestCase {
    */
   function testGetValueOptionPagination() {
     $pageSize = 10;
-    $page1 = civicrm_api('option_value', 'get', array('options' => array('limit' => $pageSize),
+    $page1 = civicrm_api('option_value', 'get', ['options' => ['limit' => $pageSize],
         'version' => $this->_apiversion,
-      ));
-    $page2 = civicrm_api('option_value', 'get', array(
-      'options' => array('limit' => $pageSize,
+      ]);
+    $page2 = civicrm_api('option_value', 'get', [
+      'options' => ['limit' => $pageSize,
           // if you use it for pagination, option.offset=pageSize*pageNumber
           'offset' => $pageSize - 1,
-        ),
+        ],
         'version' => $this->_apiversion,
-      ));
+      ]);
     $this->assertEquals($pageSize, $page1['count'], "Check only 10 retrieved in the 1st page " . __LINE__);
     $this->assertEquals($pageSize, $page2['count'], "Check only 10 retrieved in the 2nd page " . __LINE__);
 
@@ -112,7 +112,7 @@ class api_v3_OptionValueTest extends CiviUnitTestCase {
   }
 
   public function testGetOptionGroup() {
-    $params = array('option_group_id' => 1, 'version' => $this->_apiversion);
+    $params = ['option_group_id' => 1, 'version' => $this->_apiversion];
     $result = civicrm_api('option_value', 'get', $params);
     $this->documentMe($params, $result, __FUNCTION__, __FILE__);
     $this->assertEquals(0, $result['is_error'], 'In line ' . __LINE__);
@@ -125,8 +125,8 @@ class api_v3_OptionValueTest extends CiviUnitTestCase {
 
 
   public function testGetOptionGroupByName() {
-    $activityTypesParams = array('option_group_name' => 'activity_type', 'version' => $this->_apiversion, 'option.limit' => 100);
-    $params              = array('version' => $this->_apiversion, 'option.limit' => 100);
+    $activityTypesParams = ['option_group_name' => 'activity_type', 'version' => $this->_apiversion, 'option.limit' => 100];
+    $params              = ['version' => $this->_apiversion, 'option.limit' => 100];
     $activityTypes       = civicrm_api('option_value', 'get', $activityTypesParams);
     $result              = civicrm_api('option_value', 'get', $params);
     $this->assertEquals(0, $result['is_error'], 'In line ' . __LINE__);
@@ -134,7 +134,7 @@ class api_v3_OptionValueTest extends CiviUnitTestCase {
     $this->assertGreaterThan($activityTypes['count'], $result['count'], 'In line ' . __LINE__);
   }
   public function testGetOptionDoesNotExist() {
-    $result = civicrm_api('option_value', 'get', array('label' => 'FSIGUBSFGOMUUBSFGMOOUUBSFGMOOBUFSGMOOIIB', 'version' => $this->_apiversion));
+    $result = civicrm_api('option_value', 'get', ['label' => 'FSIGUBSFGOMUUBSFGMOOUUBSFGMOOBUFSGMOOIIB', 'version' => $this->_apiversion]);
     $this->assertEquals(0, $result['is_error'], 'In line ' . __LINE__);
     $this->assertEquals(0, $result['count'], 'In line ' . __LINE__);
   }

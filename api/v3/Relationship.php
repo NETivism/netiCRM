@@ -55,9 +55,9 @@ function civicrm_api3_relationship_create($params) {
 
   // check entities exist
   $orig_values = _civicrm_api3_relationship_check_params($params);
-  $values = array();
+  $values = [];
   _civicrm_api3_relationship_format_params($params, $values);
-  $ids = array();
+  $ids = [];
   require_once 'CRM/Core/Action.php';
   $action = CRM_Core_Action::ADD;
   require_once 'CRM/Utils/Array.php';
@@ -70,7 +70,7 @@ function civicrm_api3_relationship_create($params) {
   }
 
   $values['relationship_type_id'] = $params['relationship_type_id'] . '_a_b';
-  $values['contact_check'] = array($params['contact_id_b'] => $params['contact_id_b']);
+  $values['contact_check'] = [$params['contact_id_b'] => $params['contact_id_b']];
   $ids['contact'] = $params['contact_id_a'];
 
   $relationshipBAO = CRM_Contact_BAO_Relationship::create($values, $ids);
@@ -83,10 +83,10 @@ function civicrm_api3_relationship_create($params) {
   }
   CRM_Contact_BAO_Relationship::relatedMemberships($params['contact_id_a'], $values, $ids, $action);
   $relationID = $relationshipBAO[4][0];
-  return civicrm_api3_create_success(array(
-    $relationID => array('id' => $relationID,
+  return civicrm_api3_create_success([
+    $relationID => ['id' => $relationID,
         'moreIDs' => CRM_Utils_Array::implode(',', $relationshipBAO[4]),
-      )));
+      ]]);
 }
 /*
  * Adjust Metadata for Create action
@@ -149,7 +149,7 @@ function civicrm_api3_relationship_get($params) {
     $relationships = _civicrm_api3_basic_get(_civicrm_api3_get_BAO(__FUNCTION__), $params, FALSE);
   }
   else {
-    $relationships = array();
+    $relationships = [];
     $relationships = CRM_Contact_BAO_Relationship::getRelationship($params['contact_id'],
       CRM_Utils_Array::value('status_id', $params),
       0,
@@ -200,7 +200,7 @@ function _civicrm_api3_relationship_format_params($params, &$values) {
           throw new Exception("contact_id not valid: $value");
         }
         $dao     = new CRM_Core_DAO();
-        $qParams = array();
+        $qParams = [];
         $svq     = $dao->singleValueQuery("SELECT id FROM civicrm_contact WHERE id = $value",
           $qParams
         );
@@ -257,7 +257,7 @@ function _civicrm_api3_relationship_format_params($params, &$values) {
   }
   _civicrm_api3_custom_format_params($params, $values, 'Relationship');
 
-  return array();
+  return [];
 }
 /*
  * @deprecated - checking to be moved to wrapper
@@ -281,13 +281,13 @@ function _civicrm_api3_relationship_check_params(&$params) {
       else {
         // since the BAO function is not std & won't accept just 'id' (aargh) let's
         // at least return our BAO here
-        $values = array();
+        $values = [];
         _civicrm_api3_object_to_array($relation, $values);
         return $values;
       }
     }
   }
 
-  return array();
+  return [];
 }
 

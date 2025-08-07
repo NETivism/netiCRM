@@ -111,7 +111,7 @@ class CRM_Core_BAO_ConfigSetting {
 
     $countryIsoCodes = CRM_Core_PseudoConstant::countryIsoCode();
 
-    $specialArray = array('countryLimit', 'provinceLimit');
+    $specialArray = ['countryLimit', 'provinceLimit'];
 
     foreach ($params as $key => $value) {
       if (in_array($key, $specialArray) && is_array($value)) {
@@ -211,14 +211,14 @@ class CRM_Core_BAO_ConfigSetting {
 
       // for logging purposes, pass the userID to the db
       if ($session->get('userID')) {
-        CRM_Core_DAO::executeQuery('SET @civicrm_user_id = %1', array(1 => array($session->get('userID'), 'Integer')));
+        CRM_Core_DAO::executeQuery('SET @civicrm_user_id = %1', [1 => [$session->get('userID'), 'Integer']]);
       }
 
       // on multi-lang sites based on request and civicrm_uf_match
       if ($multiLang) {
 
         $lcMessagesRequest = CRM_Utils_Request::retrieve('lcMessages', 'String', CRM_Core_DAO::$_nullObject);
-        $languageLimit = array();
+        $languageLimit = [];
         if (CRM_Utils_Array::arrayKeyExists('languageLimit', $defaults) && is_array($defaults['languageLimit'])) {
           $languageLimit = $defaults['languageLimit'];
         }
@@ -337,7 +337,7 @@ class CRM_Core_BAO_ConfigSetting {
       // might have different values etc
       $dir = preg_replace('|/files/civicrm/.*$|', '/files/', $config->imageUploadDir);
 
-      $matches = array();
+      $matches = [];
       if (preg_match('|/sites/([\w\.\-\_]+)/|', $config->imageUploadDir, $matches)) {
         $siteName = $matches[1];
         if ($siteName) {
@@ -350,7 +350,7 @@ class CRM_Core_BAO_ConfigSetting {
       }
     }
 
-    return array($url, $dir, $siteName, $siteRoot);
+    return [$url, $dir, $siteName, $siteRoot];
   }
 
   static function getBestGuessSettings() {
@@ -366,7 +366,7 @@ class CRM_Core_BAO_ConfigSetting {
     $dir = preg_replace('|civicrm/templates_c/.*$|', '', CIVICRM_TEMPLATE_COMPILEDIR);
 
     if ($config->userFramework != 'Joomla') {
-      $matches = array();
+      $matches = [];
       if (preg_match('|/sites/([\w\.\-\_]+)/|', CIVICRM_TEMPLATE_COMPILEDIR, $matches)) {
         $siteName = $matches[1];
         if ($siteName) {
@@ -379,10 +379,10 @@ class CRM_Core_BAO_ConfigSetting {
       }
     }
 
-    return array($url, $dir, $siteName, $siteRoot);
+    return [$url, $dir, $siteName, $siteRoot];
   }
 
-  static function doSiteMove($defaultValues = array()) {
+  static function doSiteMove($defaultValues = []) {
     $moveStatus = ts('Beginning site move process...') . '<br />';
     // get the current and guessed values
     list($oldURL, $oldDir, $oldSiteName, $oldSiteRoot) = self::getConfigSettings();
@@ -391,8 +391,8 @@ class CRM_Core_BAO_ConfigSetting {
 
 
     // retrieve these values from the argument list
-    $variables = array('URL', 'Dir', 'SiteName', 'SiteRoot', 'Val_1', 'Val_2', 'Val_3');
-    $states = array('old', 'new');
+    $variables = ['URL', 'Dir', 'SiteName', 'SiteRoot', 'Val_1', 'Val_2', 'Val_3'];
+    $states = ['old', 'new'];
     foreach ($variables as $varSuffix) {
       foreach ($states as $state) {
         $var = "{$state}{$varSuffix}";
@@ -414,7 +414,7 @@ class CRM_Core_BAO_ConfigSetting {
       }
     }
 
-    $from = $to = array();
+    $from = $to = [];
     foreach ($variables as $varSuffix) {
       $oldVar = "old{$varSuffix}";
       $newVar = "new{$varSuffix}";
@@ -433,7 +433,7 @@ SELECT config_backend
 FROM   civicrm_domain
 WHERE  id = %1
 ";
-    $params = array(1 => array(CRM_Core_Config::domainID(), 'Integer'));
+    $params = [1 => [CRM_Core_Config::domainID(), 'Integer']];
     $configBackend = CRM_Core_DAO::singleValueQuery($sql, $params);
     if (!$configBackend) {
       CRM_Core_Error::fatal(ts('Returning early due to unexpected error - civicrm_domain.config_backend column value is NULL. Try visiting CiviCRM Home page.'));
@@ -451,7 +451,7 @@ UPDATE civicrm_domain
 SET    config_backend = %2
 WHERE  id = %1
 ";
-    $params[2] = array($configBackend, 'String');
+    $params[2] = [$configBackend, 'String'];
     CRM_Core_DAO::executeQuery($sql, $params);
 
     $moveStatus .= ts('Directory and Resource URLs have been updated in the moved database to reflect current site location.') . '<br />';
@@ -492,7 +492,7 @@ WHERE  id = %1
    * @return array
    */
   static function skipVars() {
-    return array(
+    return [
       'dsn', 'templateCompileDir',
       'userSystem',
       'userFrameworkDSN',
@@ -506,7 +506,7 @@ WHERE  id = %1
       'autocompleteContactReference',
       'checksumTimeout',
       'defaultCSP',
-    );
+    ];
   }
 }
 

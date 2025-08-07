@@ -43,7 +43,7 @@ class CRM_Core_Payment_PaymentExpress extends CRM_Core_Payment {
   CONST CHARSET = 'iso-8859-1';
   static protected $_mode = NULL;
 
-  static protected $_params = array();
+  static protected $_params = [];
 
   /**
    * We only need one instance of this object. So we use the singleton
@@ -88,7 +88,7 @@ class CRM_Core_Payment_PaymentExpress extends CRM_Core_Payment {
   function checkConfig() {
     $config = CRM_Core_Config::singleton();
 
-    $error = array();
+    $error = [];
 
     if (empty($this->_paymentProcessor['user_name'])) {
       $error[] = ts('UserID is not set in the Administer CiviCRM &raquo; Payment Processor.');
@@ -195,7 +195,7 @@ class CRM_Core_Payment_PaymentExpress extends CRM_Core_Payment {
 
 
       // Build a valid XML string to pass to DPS
-      $generateRequest = _valueXml(array(
+      $generateRequest = _valueXml([
           'PxPayUserId' => $this->_paymentProcessor['user_name'],
           'PxPayKey' => $this->_paymentProcessor['password'],
           'AmountInput' => str_replace(",", "", number_format($params['amount'], 2)),
@@ -209,7 +209,7 @@ class CRM_Core_Payment_PaymentExpress extends CRM_Core_Payment {
           'TxnId' => '',
           'UrlFail' => $url,
           'UrlSuccess' => $url,
-        ));
+        ]);
 
       $generateRequest = _valueXml('GenerateRequest', $generateRequest);
       // Get the special validated URL back from DPS by sending them the XML we've generated

@@ -238,20 +238,20 @@ class CRM_Case_Page_Tab extends CRM_Core_Page {
 
     if (!(self::$_links)) {
       $deleteExtra = ts('Are you sure you want to delete this case?');
-      self::$_links = array(
-        CRM_Core_Action::VIEW => array(
+      self::$_links = [
+        CRM_Core_Action::VIEW => [
           'name' => ts('Manage Case'),
           'url' => 'civicrm/contact/view/case',
           'qs' => 'action=view&reset=1&cid=%%cid%%&id=%%id%%',
           'title' => ts('Manage Case'),
-        ),
-        CRM_Core_Action::DELETE => array(
+        ],
+        CRM_Core_Action::DELETE => [
           'name' => ts('Delete'),
           'url' => 'civicrm/contact/view/case',
           'qs' => 'action=delete&reset=1&cid=%%cid%%&id=%%id%%',
           'title' => ts('Delete Case'),
-        ),
-      );
+        ],
+      ];
     }
     return self::$_links;
   }

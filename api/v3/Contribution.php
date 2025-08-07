@@ -59,7 +59,7 @@ require_once 'CRM/Contribute/PseudoConstant.php';
 function civicrm_api3_contribution_create($params) {
   // civicrm_api3_verify_one_mandatory($params, NULL, array('financial_type_id', 'financial_type'));
 
-  $values = array();
+  $values = [];
 
   _civicrm_api3_contribute_format_params($params, $values);
 
@@ -67,7 +67,7 @@ function civicrm_api3_contribution_create($params) {
   $values["contact_id"] = CRM_Utils_Array::value('contact_id', $params);
   $values["source"] = CRM_Utils_Array::value('source', $params);
 
-  $ids = array();
+  $ids = [];
   if (CRM_Utils_Array::value('id', $params)) {
     $ids['contribution'] = $params['id'];
   }
@@ -89,28 +89,28 @@ function civicrm_api3_contribution_create($params) {
 function _civicrm_api3_contribution_create_spec(&$params) {
   $params['contact_id']['api.required'] = 1;
   $params['total_amount']['api.required'] = 1;
-  $params['note'] = array(
+  $params['note'] = [
     'name' => 'note',
     'uniqueName' => 'contribution_note',
     'title' => 'note',
     'type' => 2,
     'description' => 'Associated Note in the notes table',
-  );
-  $params['soft_credit_to'] = array(
+  ];
+  $params['soft_credit_to'] = [
     'name' => 'soft_credit_to',
     'title' => 'Soft Credit contact ID',
     'type' => 1,
     'description' => 'ID of Contact to be Soft credited to',
     'FKClassName' => 'CRM_Contact_DAO_Contact',
-  );
+  ];
   // note this is a recommended option but not adding as a default to avoid
   // creating unecessary changes for the dev
-    $params['skipRecentView'] = array(
+    $params['skipRecentView'] = [
     'name' => 'skipRecentView',
     'title' => 'Skip adding to recent view',
     'type' => 1,
     'description' => 'Do not add to recent view (setting this improves performance)',
-  );
+  ];
 }
 
 /**
@@ -138,7 +138,7 @@ function civicrm_api3_contribution_delete($params) {
  * modify metadata. Legacy support for contribution_id
  */
 function _civicrm_api3_contribution_delete_spec(&$params) {
-  $params['id']['api.aliases'] = array('contribution_id');
+  $params['id']['api.aliases'] = ['contribution_id'];
 }
 
 /**
@@ -164,7 +164,7 @@ function civicrm_api3_contribution_get($params) {
   $contributions = _civicrm_api3_get_using_query_object('Contribution', $params, $additionalOptions, NULL, $mode, $returnProperties, TRUE);
   if (!empty($contributions)) {
     foreach ($contributions as $id => $contribution) {
-      $soft_params = array('contribution_id' => $id);
+      $soft_params = ['contribution_id' => $id];
       $soft_contribution = CRM_Contribute_BAO_Contribution::getSoftContribution ( $soft_params , true);
       if (!empty($soft_contribution)) {
         $contributions[$id] = array_merge($contributions[$id], $soft_contribution);
@@ -172,6 +172,13 @@ function civicrm_api3_contribution_get($params) {
     }
   }
   return civicrm_api3_create_success($contributions, $params, 'Contribution', 'get');
+}
+
+function civicrm_api3_contribution_getcount($params) {
+  $options = [];
+  $params['contact_is_deleted'] = 0;
+  $count = _civicrm_api3_get_using_query_object('Contribution', $params, $options, 1, CRM_Contact_BAO_Query::MODE_CONTRIBUTE, [], TRUE);
+  return (int) $count;
 }
 /*
  * Adjust Metadata for Get action
@@ -182,7 +189,7 @@ function civicrm_api3_contribution_get($params) {
 function _civicrm_api3_contribution_get_spec(&$params) {
   $params['contribution_test']['api.default'] = 0;
   $params['contact_id'] = $params['contribution_contact_id'];
-  $params['contact_id']['api.aliases'] = array('contribution_contact_id');
+  $params['contact_id']['api.aliases'] = ['contribution_contact_id'];
   unset($params['contribution_contact_id']);
 }
 
@@ -239,7 +246,7 @@ function _civicrm_api3_contribute_format_params($params, &$values, $create = FAL
     }
   }
 
-  return array();
+  return [];
 }
 
 /**
@@ -253,7 +260,7 @@ function _civicrm_api3_contribute_format_params($params, &$values, $create = FAL
  *
  */
 function civicrm_api3_contribution_transact($params) {
-  $required = array('amount');
+  $required = ['amount'];
   foreach ($required as $key) {
     if (!isset($params[$key])) {
       return civicrm_api3_create_error("Missing parameter $key: civicrm_contribute_transact() requires a parameter '$key'.");
@@ -262,9 +269,9 @@ function civicrm_api3_contribution_transact($params) {
 
   // allow people to omit some values for convenience
   // 'payment_processor_id' => NULL /* we could retrieve the default processor here, but only if it's missing to avoid an extra lookup */
-  $defaults = array(
+  $defaults = [
     'payment_processor_mode' => 'live',
-  );
+  ];
   $params = array_merge($defaults, $params);
 
   // clean up / adjust some values which
@@ -328,7 +335,7 @@ function civicrm_api3_contribution_sendconfirmation($params) {
   if (! $contribution->find(true)) {
     throw new Exception('Contribution does not exist');
 }
-  $input = $ids = $cvalues = array();
+  $input = $ids = $cvalues = [];
   $contribution->loadRelatedObjects($input, $ids, FALSE, true);
   $contribution->composeMessageArray($input, $ids, $cvalues, false, false);
 }
@@ -340,9 +347,9 @@ function civicrm_api3_contribution_sendconfirmation($params) {
  * @param array $params array or parameters determined by getfields
  */
 function _civicrm_api3_contribution_sendconfirmation_spec(&$params) {
-  $params['id'] = array(
+  $params['id'] = [
     'api.required' => 1,
     'title' => 'Contribution ID'
-  );
+  ];
 
 }

@@ -49,18 +49,18 @@ class CRM_Contact_Form_Task_AnnualReceiptEmail_Finish extends CRM_Contact_Form_T
    * @return void
    */
   public function buildQuickForm() {
-    $this->addButtons(array(
-        array(
+    $this->addButtons([
+        [
           'type' => 'done',
           'name' => ts('Done'),
           'isDefault' => TRUE,
-        ),
-      )
+        ],
+      ]
     );
   }
 
   function setDefaultValues() {
-    $defaults = array();
+    $defaults = [];
     return $defaults;
   }
 

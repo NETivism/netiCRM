@@ -81,7 +81,7 @@ class CRM_Core_Payment_ProcessorForm {
       !$form->_paymentProcessor['class_name'] &&
       !CRM_Utils_Array::value('is_pay_later', $form->_values)
     ) {
-      $form->addRule('payment_processor', ts('%1 is a required field.', array(1 => ts('Payment Method'))), 'required');
+      $form->addRule('payment_processor', ts('%1 is a required field.', [1 => ts('Payment Method')]), 'required');
     }
 
     if (!empty($form->_membershipBlock) &&
@@ -92,7 +92,7 @@ class CRM_Core_Payment_ProcessorForm {
     ) {
 
        return CRM_Core_Error::statusBounce(ts('This contribution page is configured to support separate contribution and membership payments. This %1 plugin does not currently support multiple simultaneous payments, or the option to "Execute real-time monetary transactions" is disabled. Please contact the site administrator and notify them of this error',
-          array(1 => $form->_paymentProcessor['payment_processor_type'])
+          [1 => $form->_paymentProcessor['payment_processor_type']]
         ));
     }
 

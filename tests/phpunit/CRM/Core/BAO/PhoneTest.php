@@ -34,11 +34,11 @@ class CRM_Core_BAO_PhoneTest extends CiviUnitTestCase
 {
     function get_info( ) 
     {
-        return array(
+        return [
                      'name'        => 'Phone BAOs',
                      'description' => 'Test all Core_BAO_Phone methods.',
                      'group'       => 'CiviCRM BAO Tests',
-                     );
+                     ];
     }
     
     function setUp( ) 
@@ -53,12 +53,12 @@ class CRM_Core_BAO_PhoneTest extends CiviUnitTestCase
     {
         $contactId = Contact::createIndividual( );
 
-        $params = array( );
-        $params = array( 'phone'            => '(415) 222-1011 x 221',
+        $params = [ ];
+        $params = [ 'phone'            => '(415) 222-1011 x 221',
                          'is_primary'       => 1,
                          'location_type_id' => 1,
                          'phone_type'       => 'Mobile',
-                         'contact_id'       => $contactId );
+                         'contact_id'       => $contactId ];
         
         require_once 'CRM/Core/BAO/Phone.php';
         CRM_Core_BAO_Phone::add( $params );
@@ -71,10 +71,10 @@ class CRM_Core_BAO_PhoneTest extends CiviUnitTestCase
 
         // Now call add() to modify the existing phone number
 
-        $params = array( );
-        $params = array( 'id'           => $phoneId,
+        $params = [ ];
+        $params = [ 'id'           => $phoneId,
                          'contact_id'   => $contactId,
-                         'phone'        => '(415) 222-5432' );
+                         'phone'        => '(415) 222-5432' ];
         
         CRM_Core_BAO_Phone::add( $params );
         
@@ -91,10 +91,10 @@ class CRM_Core_BAO_PhoneTest extends CiviUnitTestCase
 
     function testAllPhones( )
     {
-        $contactParams = array ( 'first_name' => 'Alan',
+        $contactParams =  [ 'first_name' => 'Alan',
                                  'last_name'  => 'Smith',
                                  'phone-1'    => '(415) 222-1011 x 221',
-                                 'phone-2'    => '(415) 222-5432' );
+                                 'phone-2'    => '(415) 222-5432' ];
         
         $contactId = Contact::createIndividual( $contactParams );
 

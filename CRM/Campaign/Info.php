@@ -45,25 +45,25 @@ class CRM_Campaign_Info extends CRM_Core_Component_Info {
 
   // docs inherited from interface
   public function getInfo() {
-    return array('name' => 'CiviCampaign',
+    return ['name' => 'CiviCampaign',
       'translatedName' => ts('CiviCampaign'),
       'title' => 'CiviCRM Campaign Engine',
       'search' => 1,
       'showActivitiesInCore' => 1,
-    );
+    ];
   }
 
 
   // docs inherited from interface
   public function getPermissions() {
-    return array('administer CiviCampaign',
+    return ['administer CiviCampaign',
       'manage campaign',
       'reserve campaign contacts',
       'release campaign contacts',
       'interview campaign contacts',
       'gotv campaign contacts',
       'sign CiviCRM Petition',
-    );
+    ];
   }
 
 
@@ -101,17 +101,17 @@ class CRM_Campaign_Info extends CRM_Core_Component_Info {
     if (CRM_Core_Permission::check('manage campaign') ||
       CRM_Core_Permission::check('administer CiviCampaign')
     ) {
-      $shortCuts = array_merge($shortCuts, array(array('path' => 'civicrm/campaign/add',
+      $shortCuts = array_merge($shortCuts, [['path' => 'civicrm/campaign/add',
             'query' => "reset=1&action=add",
             'ref' => 'new-campaign',
             'title' => ts('Campaign'),
-          ),
-          array('path' => 'civicrm/survey/add',
+          ],
+          ['path' => 'civicrm/survey/add',
             'query' => "reset=1&action=add",
             'ref' => 'new-survey',
             'title' => ts('Survey'),
-          ),
-        ));
+          ],
+        ]);
     }
   }
 }

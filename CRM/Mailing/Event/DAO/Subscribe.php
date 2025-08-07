@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-class CRM_Mailing_Event_DAO_Subscribe extends CRM_Core_DAO
+              class CRM_Mailing_Event_DAO_Subscribe extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -78,7 +78,7 @@ class CRM_Mailing_Event_DAO_Subscribe extends CRM_Core_DAO
    * @static
    */
   static $_log = false;
-  /**
+    /**
    *
    * @var int unsigned
    */
@@ -107,7 +107,7 @@ class CRM_Mailing_Event_DAO_Subscribe extends CRM_Core_DAO
    * @var datetime
    */
   public $time_stamp;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -126,14 +126,14 @@ class CRM_Mailing_Event_DAO_Subscribe extends CRM_Core_DAO
   function &links()
   {
     if (!(self::$_links)) {
-      self::$_links = array(
+      self::$_links = [
         'group_id' => 'civicrm_group:id',
         'contact_id' => 'civicrm_contact:id',
-      );
+      ];
     }
     return self::$_links;
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -148,7 +148,7 @@ class CRM_Mailing_Event_DAO_Subscribe extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -157,39 +157,39 @@ class CRM_Mailing_Event_DAO_Subscribe extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'id' => array(
+      self::$_fields = [
+        'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'group_id' => array(
+                  ] ,
+        'group_id' => [
           'name' => 'group_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-          'FKClassName' => 'CRM_Contact_DAO_Group',
-        ) ,
-        'contact_id' => array(
+                    'FKClassName' => 'CRM_Contact_DAO_Group',
+        ] ,
+        'contact_id' => [
           'name' => 'contact_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-          'FKClassName' => 'CRM_Contact_DAO_Contact',
-        ) ,
-        'hash' => array(
+                    'FKClassName' => 'CRM_Contact_DAO_Contact',
+        ] ,
+        'hash' => [
           'name' => 'hash',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Hash') ,
           'required' => true,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'time_stamp' => array(
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
+        'time_stamp' => [
           'name' => 'time_stamp',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Time Stamp') ,
           'required' => true,
-        ) ,
-      );
+                  ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -201,8 +201,8 @@ class CRM_Mailing_Event_DAO_Subscribe extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -222,7 +222,7 @@ class CRM_Mailing_Event_DAO_Subscribe extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -233,7 +233,7 @@ class CRM_Mailing_Event_DAO_Subscribe extends CRM_Core_DAO
           }
         }
       }
-    }
+                                              }
     return self::$_import;
   }
   /**
@@ -245,7 +245,7 @@ class CRM_Mailing_Event_DAO_Subscribe extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
@@ -256,7 +256,7 @@ class CRM_Mailing_Event_DAO_Subscribe extends CRM_Core_DAO
           }
         }
       }
-    }
+                                              }
     return self::$_export;
   }
 }

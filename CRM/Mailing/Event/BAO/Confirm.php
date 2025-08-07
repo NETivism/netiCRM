@@ -99,25 +99,25 @@ class CRM_Mailing_Event_BAO_Confirm extends CRM_Mailing_Event_DAO_Confirm {
     $transaction->commit();
 
     // remove opt-out and freezed email 
-    $params = array('id' => $contact_id);
-    $contact = array();
+    $params = ['id' => $contact_id];
+    $contact = [];
     CRM_Contact_BAO_Contact::retrieve($params, $contact);
     if ($contact['is_opt_out']) {
-      $params = array(
+      $params = [
         'contact_id' => $contact_id,
         'contact_type' => $contact['contact_type'],
         'is_opt_out' => 0,
         'log_data' => ts('Opt-in').' ('.ts('Re-subscribe Confirmation').')',
-      );
+      ];
       CRM_Contact_BAO_Contact::create($params);
     }
-    $emailOnHold = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_email WHERE contact_id = %1 AND is_bulkmail = 1 AND on_hold = 1", array(
-      1 => array($contact_id, 'Positive'),      
-    ));
+    $emailOnHold = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_email WHERE contact_id = %1 AND is_bulkmail = 1 AND on_hold = 1", [
+      1 => [$contact_id, 'Positive'],      
+    ]);
     if ($emailOnHold) {
-      CRM_Core_DAO::executeQuery("UPDATE civicrm_email SET on_hold = 0 WHERE id = %1", array(
-        1 => array($emailOnHold, 'Positive'),      
-      ));
+      CRM_Core_DAO::executeQuery("UPDATE civicrm_email SET on_hold = 0 WHERE id = %1", [
+        1 => [$emailOnHold, 'Positive'],      
+      ]);
     }
 
 
@@ -130,13 +130,13 @@ class CRM_Mailing_Event_BAO_Confirm extends CRM_Mailing_Event_DAO_Confirm {
 
     $emailDomain = CRM_Core_BAO_MailSettings::defaultDomain();
 
-    $headers = array(
+    $headers = [
       'Subject' => $component->subject,
       'From' => "\"$domainEmailName\" <do-not-reply@$emailDomain>",
       'To' => $email,
       'Reply-To' => "do-not-reply@$emailDomain",
       'Return-Path' => "do-not-reply@$emailDomain",
-    );
+    ];
 
     $html = $component->body_html;
 

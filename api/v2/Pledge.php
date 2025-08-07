@@ -98,7 +98,7 @@ function &civicrm_pledge_create(&$params) {
     return $error;
   }
 
-  $values = array();
+  $values = [];
   require_once 'CRM/Pledge/BAO/Pledge.php';
   //check that fields are in appropriate format. Dates will be formatted (within reason) by this function
   $error = _civicrm_pledge_format_params($params, $values, TRUE);
@@ -165,9 +165,9 @@ function &civicrm_pledge_get(&$params) {
 
 
 
-  $inputParams      = array();
-  $returnProperties = array();
-  $otherVars        = array('sort', 'offset', 'rowCount');
+  $inputParams      = [];
+  $returnProperties = [];
+  $otherVars        = ['sort', 'offset', 'rowCount'];
 
   $sort     = NULL;
   $offset   = 0;
@@ -214,7 +214,7 @@ function &civicrm_pledge_get(&$params) {
 
 
 
-  $pledge = array();
+  $pledge = [];
   while ($dao->fetch()) {
     if ($params['sequential']) {
       $pledge[] = $query->store($dao);
@@ -240,7 +240,7 @@ function &civicrm_pledge_get(&$params) {
  * @access private
  */
 function _civicrm_pledge_check_params(&$params) {
-    static $required = array( 'contact_id', 'amount', 'financial_type_id' , 'installments','start_date');
+    static $required = [ 'contact_id', 'amount', 'financial_type_id' , 'installments','start_date'];
   if ($params['pledge_amount']) {
     //can be in unique format or DB format but change to unique format here
     $params['amount'] = $params['pledge_amount'];
@@ -265,7 +265,7 @@ function _civicrm_pledge_check_params(&$params) {
     return civicrm_create_error("Required fields not found for pledge $error");
   }
 
-  return array();
+  return [];
 }
 
 /**
@@ -405,7 +405,7 @@ function _civicrm_pledge_format_params(&$params, &$values, $create = FALSE) {
           return civicrm_create_error("contact_id not valid: $value");
         }
         $dao     = new CRM_Core_DAO();
-        $qParams = array();
+        $qParams = [];
         $svq     = $dao->singleValueQuery("SELECT id FROM civicrm_contact WHERE id = $value",
           $qParams
         );
@@ -422,7 +422,7 @@ function _civicrm_pledge_format_params(&$params, &$values, $create = FALSE) {
           return civicrm_create_error("contact_id not valid: $value");
         }
         $dao     = new CRM_Core_DAO();
-        $qParams = array();
+        $qParams = [];
         $svq     = $dao->singleValueQuery("SELECT id FROM civicrm_pledge WHERE id = $value",
           $qParams
         );
@@ -465,6 +465,6 @@ function _civicrm_pledge_format_params(&$params, &$values, $create = FALSE) {
   _civicrm_custom_format_params($params, $values, 'Pledge');
 
 
-  return array();
+  return [];
 }
 

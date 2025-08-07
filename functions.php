@@ -8,7 +8,7 @@
  *
  * @return         string  the translated string
  */
-function ts($text, $params = array()) {
+function ts($text, $params = []) {
   static $function;
   static $locale;
   global $tsLocale;

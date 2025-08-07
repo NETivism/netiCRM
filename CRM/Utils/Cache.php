@@ -105,17 +105,17 @@ class CRM_Utils_Cache {
     switch ($cachePlugin) {
       case 'ArrayCache':
       case 'NoCache':
-        $defaults = array();
+        $defaults = [];
         break;
 
       case 'Memcache':
       case 'Memcached':
-        $defaults = array(
+        $defaults = [
           'host' => 'localhost',
           'port' => 11211,
           'timeout' => 3600,
           'prefix' => '',
-        );
+        ];
 
         // Use old constants if needed to ensure backward compatability
         if (defined('CIVICRM_MEMCACHE_HOST')) {
@@ -153,7 +153,7 @@ class CRM_Utils_Cache {
         break;
 
       case 'APCcache':
-        $defaults = array();
+        $defaults = [];
         if (defined('CIVICRM_DB_CACHE_TIMEOUT')) {
           $defaults['timeout'] = CIVICRM_DB_CACHE_TIMEOUT;
         }

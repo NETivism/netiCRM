@@ -48,7 +48,7 @@ class CRM_Core_BAO_Location extends CRM_Core_DAO {
   /**
    * Location block element array
    */
-  static $blocks = array('phone', 'email', 'im', 'openid', 'address');
+  static $blocks = ['phone', 'email', 'im', 'openid', 'address'];
 
   /**
    * Function to create various elements of location block
@@ -62,7 +62,7 @@ class CRM_Core_BAO_Location extends CRM_Core_DAO {
    * @static
    */
   static function create(&$params, $fixAddress = TRUE, $entity = NULL) {
-    $location = array();
+    $location = [];
     if (!self::dataExists($params)) {
       return $location;
     }
@@ -79,9 +79,9 @@ class CRM_Core_BAO_Location extends CRM_Core_DAO {
 
     if ($entity) {
       // this is a special case for adding values in location block table
-      $entityElements = array('entity_table' => $params['entity_table'],
+      $entityElements = ['entity_table' => $params['entity_table'],
         'entity_id' => $params['entity_id'],
-      );
+      ];
 
       $location['id'] = self::createLocBlock($location, $entityElements);
     }
@@ -101,7 +101,7 @@ class CRM_Core_BAO_Location extends CRM_Core_DAO {
    */
   static function createLocBlock(&$location, &$entityElements) {
     $locId = self::findExisting($entityElements);
-    $locBlock = array();
+    $locBlock = [];
 
     if ($locId) {
       $locBlock['id'] = $locId;
@@ -146,7 +146,7 @@ SELECT e.loc_block_id as locId
 FROM {$etable} e
 WHERE e.id = %1";
 
-    $params = array(1 => array($eid, 'Integer'));
+    $params = [1 => [$eid, 'Integer']];
     $dao = &CRM_Core_DAO::executeQuery($query, $params);
     while ($dao->fetch()) {
       $locBlockId = $dao->locId;
@@ -194,7 +194,7 @@ WHERE e.id = %1";
     $locBlock->find(TRUE);
 
     //resolve conflict of having same ids for multiple blocks
-    $store = array(
+    $store = [
       'IM_1' => $locBlock->im_id,
       'IM_2' => $locBlock->im_2_id,
       'Email_1' => $locBlock->email_id,
@@ -203,7 +203,7 @@ WHERE e.id = %1";
       'Phone_2' => $locBlock->phone_2_id,
       'Address_1' => $locBlock->address_id,
       'Address_2' => $locBlock->address_2_id,
-    );
+    ];
     $locBlock->delete();
     foreach ($store as $daoName => $id) {
       if ($id) {
@@ -297,10 +297,10 @@ WHERE e.id = %1";
       $locationTypeId = 'null';
     }
 
-    static $blocks = array('Address', 'Phone', 'IM', 'OpenID', 'Email');
+    static $blocks = ['Address', 'Phone', 'IM', 'OpenID', 'Email'];
 
 
-    $params = array('contact_id' => $contactId, 'location_type_id' => $locationTypeId);
+    $params = ['contact_id' => $contactId, 'location_type_id' => $locationTypeId];
     foreach ($blocks as $name) {
       CRM_Core_BAO_Block::blockDelete($name, $params);
     }
@@ -315,13 +315,13 @@ WHERE e.id = %1";
 
   static function copyLocBlock($locBlockId, $updateLocBlockId = NULL) {
     //get the location info.
-    $defaults = $updateValues = array();
-    $locBlock = array('id' => $locBlockId);
+    $defaults = $updateValues = [];
+    $locBlock = ['id' => $locBlockId];
     CRM_Core_DAO::commonRetrieve('CRM_Core_DAO_LocBlock', $locBlock, $defaults);
 
     if ($updateLocBlockId) {
       //get the location info for update.
-      $copyLocationParams = array('id' => $updateLocBlockId);
+      $copyLocationParams = ['id' => $updateLocBlockId];
       CRM_Core_DAO::commonRetrieve('CRM_Core_DAO_LocBlock', $copyLocationParams, $updateValues);
       foreach ($updateValues as $key => $value) {
         if ($key != 'id') {
@@ -337,16 +337,16 @@ WHERE e.id = %1";
         $name = ucfirst($tbl[0]);
         $updateParams = NULL;
         if ($updateId = CRM_Utils_Array::value($key, $updateValues)) {
-          $updateParams = array('id' => $updateId);
+          $updateParams = ['id' => $updateId];
         }
 
-        $copy = &CRM_Core_DAO::copyGeneric('CRM_Core_DAO_' . $name, array('id' => $value), $updateParams);
+        $copy = &CRM_Core_DAO::copyGeneric('CRM_Core_DAO_' . $name, ['id' => $value], $updateParams);
         $copyLocationParams[$key] = $copy->id;
       }
     }
 
     $copyLocation = &CRM_Core_DAO::copyGeneric('CRM_Core_DAO_LocBlock',
-      array('id' => $locBlock['id']),
+      ['id' => $locBlock['id']],
       $copyLocationParams
     );
     return $copyLocation->id;
@@ -368,10 +368,10 @@ WHERE e.id = %1";
 
     // get the loc block ids.
 
-    $primaryLocBlockIds = CRM_Contact_BAO_Contact::getLocBlockIds($contactId, array('is_primary' => 1));
-    $nonPrimaryBlockIds = CRM_Contact_BAO_Contact::getLocBlockIds($contactId, array('is_primary' => 0));
+    $primaryLocBlockIds = CRM_Contact_BAO_Contact::getLocBlockIds($contactId, ['is_primary' => 1]);
+    $nonPrimaryBlockIds = CRM_Contact_BAO_Contact::getLocBlockIds($contactId, ['is_primary' => 0]);
 
-    foreach (array('Email', 'IM', 'Phone', 'Address', 'OpenID') as $block) {
+    foreach (['Email', 'IM', 'Phone', 'Address', 'OpenID'] as $block) {
       $name = strtolower($block);
       if (CRM_Utils_Array::arrayKeyExists($name, $primaryLocBlockIds) &&
         !CRM_Utils_System::isNull($primaryLocBlockIds[$name])
@@ -400,8 +400,8 @@ WHERE e.id = %1";
       return;
     }
 
-    $dao = CRM_Core_DAO::executeQuery("SELECT id, location_type_id, is_billing, is_primary FROM civicrm_address WHERE contact_id = %1", array(1 => array($contactId, 'Integer')));
-    $addr = array('billing' => array(), 'nonbilling' => array());
+    $dao = CRM_Core_DAO::executeQuery("SELECT id, location_type_id, is_billing, is_primary FROM civicrm_address WHERE contact_id = %1", [1 => [$contactId, 'Integer']]);
+    $addr = ['billing' => [], 'nonbilling' => []];
     while ($dao->fetch()) {
       if ($dao->is_billing) {
         $addr['billing'][$dao->id] = $dao->location_type_id;

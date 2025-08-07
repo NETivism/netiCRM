@@ -66,6 +66,12 @@ class HTML_QuickForm_CKeditor extends HTML_QuickForm_textarea
           $config = CRM_Core_Config::singleton();
           if (CRM_Utils_System::isUserLoggedIn()) {
             $plugins = array('widget', 'lineutils',  'mediaembed', 'tableresize', 'image2');
+            // Add clipboard_image plugin only if user has permission
+            // Permission check follows the same logic as CRM/Core/Page/AJAX/EditorImageUpload.php:23-24
+            if (CRM_Core_Permission::check('access CiviCRM') || 
+                CRM_Core_Permission::check('paste and upload images')) {
+              $plugins[] = 'clipboard_image';
+            }
             foreach($plugins as $name){
               $extraPlugins[] = 'CKEDITOR.plugins.addExternal("'.$name.'", "'.$config->resourceBase.'/packages/ckeditor/extraplugins/'.$name.'/", "plugin.js");';
             }
@@ -74,7 +80,7 @@ class HTML_QuickForm_CKeditor extends HTML_QuickForm_textarea
               $allowedContent = 'editor.config.allowedContent = true;';
             }
             else {
-              $allowedContent = "editor.config.allowedContent = 'h1 h2 h3 p blockquote; strong em; a[!href]; img(left,right)[!src,alt,width,height]; span{font-size,color,background-color}';";
+              $allowedContent = "editor.config.allowedContent = 'h1 h2 h3 p blockquote; strong em; a[!href]; img(left,right)[!src,alt,width,height,title]; span{font-size,color,background-color}';";
               $toolbar =  'CiviCRMBasic';
             }
             $fullPage = $this->getAttribute('fullpage');

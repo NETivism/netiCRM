@@ -52,7 +52,7 @@ class CRM_Member_Form_MembershipView extends CRM_Core_Form {
 
 
 
-    $values = array();
+    $values = [];
     $id = CRM_Utils_Request::retrieve('id', 'Positive', $this);
 
     // Make sure context is assigned to template for condition where we come here view civicrm/membership/view
@@ -60,7 +60,7 @@ class CRM_Member_Form_MembershipView extends CRM_Core_Form {
     $this->assign('context', $context);
 
     if ($id) {
-      $params = array('id' => $id);
+      $params = ['id' => $id];
 
       CRM_Member_BAO_Membership::retrieve($params, $values);
 
@@ -128,7 +128,7 @@ END AS 'relType'
       $title = $displayName . ' - ' . ts('Membership Type:') . ' ' . $values['membership_type'];
 
 
-      $recentOther = array();
+      $recentOther = [];
       if (CRM_Core_Permission::checkActionPermission('CiviMember', CRM_Core_Action::UPDATE)) {
         $recentOther['editUrl'] = CRM_Utils_System::url('civicrm/contact/view/membership',
           "action=update&reset=1&id={$values['id']}&cid={$values['contact_id']}&context=home"
@@ -168,13 +168,13 @@ END AS 'relType'
    * @access public
    */
   public function buildQuickForm() {
-    $this->addButtons(array(
-        array('type' => 'cancel',
+    $this->addButtons([
+        ['type' => 'cancel',
           'name' => ts('Done'),
           'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
           'isDefault' => TRUE,
-        ),
-      )
+        ],
+      ]
     );
   }
 }

@@ -9,11 +9,11 @@ require_once 'api/v3/utils.php';
 function civicrm_api3_entity_get($params) {
 
   civicrm_api3_verify_mandatory($params);
-  $entities = array();
+  $entities = [];
   $include_dirs = array_unique(explode(PATH_SEPARATOR, get_include_path()));
   #$include_dirs = array(dirname(__FILE__). '/../../');
   foreach ($include_dirs as $include_dir) {
-    $api_dir = CRM_Utils_Array::implode(DIRECTORY_SEPARATOR, array($include_dir, 'api', 'v3'));
+    $api_dir = CRM_Utils_Array::implode(DIRECTORY_SEPARATOR, [$include_dir, 'api', 'v3']);
     if (! is_dir($api_dir)) {
       continue;
     }
@@ -37,7 +37,7 @@ function civicrm_api3_entity_get($params) {
       }
     }
   }
-  $entities = array_diff($entities, array('Generic'));
+  $entities = array_diff($entities, ['Generic']);
   $entities = array_unique($entities);
   sort($entities);
   return civicrm_api3_create_success($entities);
@@ -63,6 +63,6 @@ function civicrm_api3_entity_delete($params) {
 function civicrm_api3_entity_getfields($params) {
   // we return an empty array so it makes it easier to write generic getdefaults / required tests
   // without putting an exception in for entity
-  return civicrm_api3_create_success(array());
+  return civicrm_api3_create_success([]);
 }
 

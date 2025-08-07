@@ -102,7 +102,7 @@ class CRM_Mailing_Form_Approve extends CRM_Core_Form {
    * @return None
    */
   function setDefaultValues() {
-    $defaults = array();
+    $defaults = [];
     if ($this->_mailingID) {
       /*
       $defaults['approval_status_id'] = $this->_mailing->approval_status_id;
@@ -145,22 +145,22 @@ class CRM_Mailing_Form_Approve extends CRM_Core_Form {
 */
 
 
-    $buttons = array(
-      array('type' => 'next',
+    $buttons = [
+      ['type' => 'next',
         'name' => ts('Save'),
         'spacing' => '&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;',
         'isDefault' => TRUE,
-      ),
-      array(
+      ],
+      [
         'type' => 'cancel',
         'name' => ts('Cancel'),
-      ),
-    );
+      ],
+    ];
 
     $this->addButtons($buttons);
 
     // add the preview elements
-    $preview = array();
+    $preview = [];
 
     $preview['subject'] = CRM_Core_DAO::getFieldValue('CRM_Mailing_DAO_Mailing',
       $this->_mailingID,
@@ -188,7 +188,7 @@ class CRM_Mailing_Form_Approve extends CRM_Core_Form {
     // get the submitted form values.
     $params = $this->controller->exportValues($this->_name);
 
-    $ids = array();
+    $ids = [];
     if (isset($this->_mailingID)) {
       $ids['mailing_id'] = $this->_mailingID;
     }

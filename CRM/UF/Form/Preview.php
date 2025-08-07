@@ -91,7 +91,7 @@ class CRM_UF_Form_Preview extends CRM_Core_Form {
       }
       $name = $fieldDAO->field_name;
       // preview for field
-      $specialFields = array('street_address', 'supplemental_address_1', 'supplemental_address_2', 'city', 'postal_code', 'postal_code_suffix', 'geo_code_1', 'geo_code_2', 'state_province', 'country', 'county', 'phone', 'email', 'im');
+      $specialFields = ['street_address', 'supplemental_address_1', 'supplemental_address_2', 'city', 'postal_code', 'postal_code_suffix', 'geo_code_1', 'geo_code_2', 'state_province', 'country', 'county', 'phone', 'email', 'im'];
 
       if ($fieldDAO->location_type_id) {
         $name .= '-' . $fieldDAO->location_type_id;
@@ -134,8 +134,8 @@ class CRM_UF_Form_Preview extends CRM_Core_Form {
    * @return array the default array reference
    */
   function &setDefaultValues() {
-    $defaults = array();
-    $stateCountryMap = array();
+    $defaults = [];
+    $stateCountryMap = [];
     foreach ($this->_fields as $name => $field) {
       if ($customFieldID = CRM_Core_BAO_CustomField::getKeyID($field['name'])) {
         CRM_Core_BAO_CustomField::setProfileDefaults($customFieldID, $name, $defaults, NULL, CRM_Profile_Form::MODE_REGISTER);
@@ -145,7 +145,7 @@ class CRM_UF_Form_Preview extends CRM_Core_Form {
       if ((substr($name, 0, 14) === 'state_province') || (substr($name, 0, 7) === 'country')) {
         list($fieldName, $index) = CRM_Utils_System::explode('-', $name, 2);
         if (!CRM_Utils_Array::arrayKeyExists($index, $stateCountryMap)) {
-          $stateCountryMap[$index] = array();
+          $stateCountryMap[$index] = [];
         }
         $stateCountryMap[$index][$fieldName] = $name;
       }
@@ -180,12 +180,12 @@ class CRM_UF_Form_Preview extends CRM_Core_Form {
       }
     }
 
-    $this->addButtons(array(
-        array('type' => 'cancel',
+    $this->addButtons([
+        ['type' => 'cancel',
           'name' => ts('Done with Preview'),
           'isDefault' => TRUE,
-        ),
-      )
+        ],
+      ]
     );
   }
 }

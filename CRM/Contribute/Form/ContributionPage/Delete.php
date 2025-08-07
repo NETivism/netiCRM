@@ -88,7 +88,7 @@ class CRM_Contribute_Form_ContributionPage_Delete extends CRM_Contribute_Form_Co
 
     $config = CRM_Core_Config::singleton();
     $defaultPageId = $config->defaultRenewalPageId;
-    if ($this->_id == $defaultPageId && defined('ONE_TIME_RENEWAL_ENABLED')) {
+    if ($this->_id == $defaultPageId) {
       $this->_defaulRenwaltPage = TRUE;
       $this->assign('defaultContributionPage', TRUE);
       $recurringSettingURL = CRM_Utils_System::url('civicrm/admin/recurring', 'reset=1');
@@ -108,17 +108,17 @@ class CRM_Contribute_Form_ContributionPage_Delete extends CRM_Contribute_Form_Co
 
     //if there are contributions related to Contribution Page
     //then onle cancel button is displayed
-    $buttons = array();
+    $buttons = [];
     if (!$this->_relatedContributions && !$this->_defaulRenwaltPage) {
-      $buttons[] = array('type' => 'next',
+      $buttons[] = ['type' => 'next',
         'name' => ts('Delete Contribution Page'),
         'isDefault' => TRUE,
-      );
+      ];
     }
 
-    $buttons[] = array('type' => 'cancel',
+    $buttons[] = ['type' => 'cancel',
       'name' => ts('Cancel'),
-    );
+    ];
 
     $this->addButtons($buttons);
   }
@@ -137,9 +137,9 @@ class CRM_Contribute_Form_ContributionPage_Delete extends CRM_Contribute_Form_Co
 
     $dao = new CRM_Core_DAO_UFJoin();
 
-    $params = array('entity_table' => 'civicrm_contribution_page',
+    $params = ['entity_table' => 'civicrm_contribution_page',
       'entity_id' => $this->_id,
-    );
+    ];
     $dao->copyValues($params);
     $dao->delete();
 
@@ -177,7 +177,7 @@ class CRM_Contribute_Form_ContributionPage_Delete extends CRM_Contribute_Form_Co
 
     $transaction->commit();
 
-    CRM_Core_Session::setStatus(ts('The contribution page \'%1\' has been deleted.', array(1 => $this->_title)));
+    CRM_Core_Session::setStatus(ts('The contribution page \'%1\' has been deleted.', [1 => $this->_title]));
   }
 }
 

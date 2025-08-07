@@ -9,7 +9,7 @@ class CRM_Contribute_Form_TaiwanACH_Preview extends CRM_Core_Form {
   protected $_parseResult = NULL;
 
   function preProcess() {
-    $this->addFormRule(array('CRM_Contribute_Form_TaiwanACH_Preview', 'formRule'), $this);
+    $this->addFormRule(['CRM_Contribute_Form_TaiwanACH_Preview', 'formRule'], $this);
     $this->_parseResult = $this->get('parseResult');
 
     // refs #33861, check parse result process_id
@@ -39,7 +39,7 @@ class CRM_Contribute_Form_TaiwanACH_Preview extends CRM_Core_Form {
       if (is_null($result['process_id']) || !empty($this->get('customProcessId'))) {
         $tYear = date('Y') - 1911;
         $tYear = sprintf('%04d', $tYear);
-        $this->add('text', 'custom_process_id', ts('ACH Transaction File ID'), array('class' => 'huge', 'placeholder' => 'BOFACHP01'.$tYear.date('md').'xxxxxx'), TRUE);
+        $this->add('text', 'custom_process_id', ts('ACH Transaction File ID'), ['class' => 'huge', 'placeholder' => 'BOFACHP01'.$tYear.date('md').'xxxxxx'], TRUE);
       }
       $dateLabel = ts('Receive Date');
     }
@@ -47,53 +47,53 @@ class CRM_Contribute_Form_TaiwanACH_Preview extends CRM_Core_Form {
       $dateLabel = ts('Start Date');
     }
 
-    $this->addDateTime('receive_date', $dateLabel, False, array('formatType' => 'activityDateTime'));
+    $this->addDateTime('receive_date', $dateLabel, False, ['formatType' => 'activityDateTime']);
 
     if (!empty($this->_parseResult)) {
       if (is_null($result['process_id'])) {
-        $this->addButtons(array(
-            array('type' => 'refresh',
+        $this->addButtons([
+            ['type' => 'refresh',
               'name' => ts('Refresh'),
               'isDefault' => TRUE,
-            ),
-            array('type' => 'cancel',
+            ],
+            ['type' => 'cancel',
               'name' => ts('Cancel'),
-            ),
-          )
+            ],
+          ]
         );
       }
       else {
-        $this->addButtons(array(
-            array('type' => 'back',
+        $this->addButtons([
+            ['type' => 'back',
               'name' => ts('<< Previous'),
-            ),
-            array('type' => 'upload',
+            ],
+            ['type' => 'upload',
               'name' => ts('Import Now >>'),
               'isDefault' => TRUE,
-            ),
-            array('type' => 'cancel',
+            ],
+            ['type' => 'cancel',
               'name' => ts('Cancel'),
-            ),
-          )
+            ],
+          ]
         );
       }
     }
     else {
       CRM_Core_Session::setStatus(ts('Invalid file being import, abort.'), FALSE, 'error');
-      $this->addButtons(array(
-          array('type' => 'back',
+      $this->addButtons([
+          ['type' => 'back',
             'name' => ts('<< Previous'),
-          ),
-          array('type' => 'cancel',
+          ],
+          ['type' => 'cancel',
             'name' => ts('Cancel'),
-          ),
-        )
+          ],
+        ]
       );
     }
   }
 
   public static function formRule($fields, $files, $self) {
-    $errors = array();
+    $errors = [];
     if (empty($self->_parseResult)) {
       $errors['qfKey'] = ts('Invalid file being import, abort.');
     }
@@ -119,17 +119,17 @@ class CRM_Contribute_Form_TaiwanACH_Preview extends CRM_Core_Form {
         }
       }
       else {
-        $errors['custom_process_id'] = ts("Format is not correct. Input format is '%1'", array(1 => 'BOFACHP01'.$tYear.date('md').'xxxxxx123123'));
+        $errors['custom_process_id'] = ts("Format is not correct. Input format is '%1'", [1 => 'BOFACHP01'.$tYear.date('md').'xxxxxx123123']);
       }
     }
     return $errors;
   }
 
   function setDefaultValues() {
-    $defaults = array(
+    $defaults = [
       'receive_date' => date('Y-m-d'),
       'receive_date_time' => date('H:i:s'),
-    );
+    ];
     return $defaults;
   }
 
@@ -143,7 +143,7 @@ class CRM_Contribute_Form_TaiwanACH_Preview extends CRM_Core_Form {
 
     // send parseResult into BAO
     // Considering type is Bank or Post in process function
-    $counter = array();
+    $counter = [];
     $receiveDate = $this->exportValue('receive_date').' '.$this->exportValue('receive_date_time');
     $contributionStatus = CRM_Contribute_PseudoConstant::contributionStatus();
     $contributionType = CRM_Contribute_PseudoConstant::contributionType();

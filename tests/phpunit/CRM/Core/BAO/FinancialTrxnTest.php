@@ -33,11 +33,11 @@ class CRM_Core_BAO_FinancialTrxnTest extends CiviUnitTestCase
     
     function get_info( ) 
     {
-        return array(
+        return [
                      'name'        => 'FinancialTrxn BAOs',
                      'description' => 'Test all CRM_Core_BAO_ContributionTrxn methods.',
                      'group'       => 'CiviCRM BAO Tests',
-                     );
+                     ];
     }
     
     function setUp( ) 
@@ -54,7 +54,7 @@ class CRM_Core_BAO_FinancialTrxnTest extends CiviUnitTestCase
         $contactId          = $this->individualCreate( ); 
         $contributionTypeId = $this->contributionTypeCreate(); 
         $contributionId     = $this->contributionCreate( $contactId  ,$contributionTypeId);
-        $params = array (
+        $params =  [
                          'contribution_id'   => $contributionTypeId,
                          'trxn_date'         => 20091021184930,
                          'trxn_type'         => 'Debit',
@@ -63,7 +63,7 @@ class CRM_Core_BAO_FinancialTrxnTest extends CiviUnitTestCase
                          'currency'          => 'USD',
                          'payment_processor' => 'Dummy',
                          'trxn_id'           => 'test_01014000'
-                        );
+                        ];
         $FinancialTrxn = CRM_Core_BAO_FinancialTrxn::create( $params );
 
         $result = $this->assertDBNotNull( 'CRM_Core_BAO_FinancialTrxn', $FinancialTrxn->id,

@@ -58,14 +58,14 @@ class CRM_Admin_Page_Persistent extends CRM_Core_Page {
     // check if variable _actionsLinks is populated
     if (!isset(self::$_stringActionLinks)) {
 
-      self::$_stringActionLinks = array(
-        CRM_Core_Action::UPDATE => array(
+      self::$_stringActionLinks = [
+        CRM_Core_Action::UPDATE => [
           'name' => ts('Edit'),
           'url' => 'civicrm/admin/tplstrings/add',
           'qs' => 'reset=1&action=update&id=%%id%%',
           'title' => ts('Configure'),
-        ),
-      );
+        ],
+      ];
     }
     return self::$_stringActionLinks;
   }
@@ -74,14 +74,14 @@ class CRM_Admin_Page_Persistent extends CRM_Core_Page {
     // check if variable _actionsLinks is populated
     if (!isset(self::$_customizeActionLinks)) {
 
-      self::$_customizeActionLinks = array(
-        CRM_Core_Action::UPDATE => array(
+      self::$_customizeActionLinks = [
+        CRM_Core_Action::UPDATE => [
           'name' => ts('Edit'),
           'url' => 'civicrm/admin/tplstrings/add',
           'qs' => 'reset=1&action=update&id=%%id%%&config=1',
           'title' => ts('Configure'),
-        ),
-      );
+        ],
+      ];
     }
     return self::$_customizeActionLinks;
   }
@@ -116,14 +116,14 @@ class CRM_Admin_Page_Persistent extends CRM_Core_Page {
 
     $daoResult = new CRM_Core_DAO_Persistent();
     $daoResult->find();
-    $schoolValues = array();
+    $schoolValues = [];
     while ($daoResult->fetch()) {
-      $values[$daoResult->id] = array();
+      $values[$daoResult->id] = [];
       CRM_Core_DAO::storeValues($daoResult, $values[$daoResult->id]);
       if ($daoResult->is_config == 1) {
         $values[$daoResult->id]['action'] = CRM_Core_Action::formLink(self::customizeActionLinks(),
           NULL,
-          array('id' => $daoResult->id)
+          ['id' => $daoResult->id]
         );
         $values[$daoResult->id]['data'] = CRM_Utils_Array::implode(',', unserialize($daoResult->data));
         $configCustomization[$daoResult->id] = $values[$daoResult->id];
@@ -131,14 +131,14 @@ class CRM_Admin_Page_Persistent extends CRM_Core_Page {
       if ($daoResult->is_config == 0) {
         $values[$daoResult->id]['action'] = CRM_Core_Action::formLink(self::stringActionLinks(),
           NULL,
-          array('id' => $daoResult->id)
+          ['id' => $daoResult->id]
         );
         $configStrings[$daoResult->id] = $values[$daoResult->id];
       }
     }
-    $rows = array('configTemplates' => $configStrings,
+    $rows = ['configTemplates' => $configStrings,
       'customizeTemplates' => $configCustomization,
-    );
+    ];
     $this->assign('rows', $rows);
   }
 }

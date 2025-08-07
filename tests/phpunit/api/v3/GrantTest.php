@@ -3,12 +3,12 @@ require_once 'CiviTest/CiviUnitTestCase.php';
 class api_v3_GrantTest extends CiviUnitTestCase {
   protected $_apiversion = 3;
   protected $params;
-  protected $ids = array();
+  protected $ids = [];
   protected $_entity = 'Grant';
   public $DBResetRequired = FALSE; function setUp() {
     parent::setUp();
     $this->ids['contact'][0] = $this->individualCreate();
-    $this->params = array(
+    $this->params = [
       'version' => 3,
       'contact_id' => $this->ids['contact'][0],
       'application_received_date' => 'now',
@@ -18,13 +18,13 @@ class api_v3_GrantTest extends CiviUnitTestCase {
       'rationale' => 'Just Because',
       'currency' => 'USD',
       'grant_type_id' => 1,
-    );
+    ];
   }
 
   function tearDown() {
     foreach ($this->ids as $entity => $entities) {
       foreach ($entities as $id) {
-        civicrm_api($entity, 'delete', array('version' => $this->_apiversion, 'id' => $id));
+        civicrm_api($entity, 'delete', ['version' => $this->_apiversion, 'id' => $id]);
       }
     }
   }
@@ -41,7 +41,7 @@ class api_v3_GrantTest extends CiviUnitTestCase {
   public function testGetGrant() {
     $result = civicrm_api($this->_entity, 'create', $this->params);
     $this->ids['grant'][0] = $result['id'];
-    $result = civicrm_api($this->_entity, 'get', array('version' => $this->_apiversion, 'rationale' => 'Just Because'));
+    $result = civicrm_api($this->_entity, 'get', ['version' => $this->_apiversion, 'rationale' => 'Just Because']);
     $this->documentMe($this->params, $result, __FUNCTION__, __FILE__);
     $this->assertAPISuccess($result, 'In line ' . __LINE__);
     $this->assertEquals(1, $result['count'], 'In line ' . __LINE__);
@@ -49,12 +49,12 @@ class api_v3_GrantTest extends CiviUnitTestCase {
 
   public function testDeleteGrant() {
     $result = civicrm_api($this->_entity, 'create', $this->params);
-    $result = civicrm_api($this->_entity, 'delete', array('version' => 3, 'id' => $result['id']));
+    $result = civicrm_api($this->_entity, 'delete', ['version' => 3, 'id' => $result['id']]);
     $this->documentMe($this->params, $result, __FUNCTION__, __FILE__);
     $this->assertAPISuccess($result, 'In line ' . __LINE__);
-    $checkDeleted = civicrm_api($this->_entity, 'get', array(
+    $checkDeleted = civicrm_api($this->_entity, 'get', [
       'version' => 3,
-      ));
+      ]);
     $this->assertEquals(0, $checkDeleted['count'], 'In line ' . __LINE__);
   }
   /*
@@ -68,20 +68,20 @@ class api_v3_GrantTest extends CiviUnitTestCase {
   public function testCreateAutoGrant() {
     $entityName = $this->_entity;
     $baoString  = 'CRM_Grant_BAO_Grant';
-    $fields     = civicrm_api($entityName, 'getfields', array(
+    $fields     = civicrm_api($entityName, 'getfields', [
         'version' => 3,
-      )
+      ]
     );
 
     $fields = $fields['values'];
     $return = array_keys($fields);
     $baoObj = new CRM_Core_DAO();
-    $baoObj->createTestObject($baoString, array('currency' => 'USD'), 2, 0);
-    $getentities = civicrm_api($entityName, 'get', array(
+    $baoObj->createTestObject($baoString, ['currency' => 'USD'], 2, 0);
+    $getentities = civicrm_api($entityName, 'get', [
         'version' => 3,
         'sequential' => 1,
         'return' => $return,
-      ));
+      ]);
 
     // lets use first rather than assume only one exists
     $entity = $getentities['values'][0];
@@ -127,19 +127,19 @@ class api_v3_GrantTest extends CiviUnitTestCase {
         case CRM_Utils_Type::T_URL:
           $entity[$field] = 'warm.beer.com';
       }
-      $updateParams = array(
+      $updateParams = [
         'version' => 3,
         'id' => $entity['id'],
         $field => $entity[$field],
-      );
+      ];
       $update = civicrm_api($entityName, 'create', $updateParams);
 
       $this->assertAPISuccess($update, 'in line ' . __LINE__);
-      $checkParams = array(
+      $checkParams = [
         'id' => $entity['id'],
         'version' => 3,
         'sequential' => 1,
-      );
+      ];
       $checkEntity = civicrm_api($entityName, 'getsingle', $checkParams);
       $this->assertEquals($entity, $checkEntity, "changing field $field");
     }

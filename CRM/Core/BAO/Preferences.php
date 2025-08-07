@@ -111,7 +111,7 @@ class CRM_Core_BAO_Preferences extends CRM_Core_DAO_Preferences {
 
   static function addressSequence($format) {
     // also compute and store the address sequence
-    $addressSequence = array('address_name',
+    $addressSequence = ['address_name',
       'street_address',
       'supplemental_address_1',
       'supplemental_address_2',
@@ -120,10 +120,10 @@ class CRM_Core_BAO_Preferences extends CRM_Core_DAO_Preferences {
       'state_province',
       'postal_code',
       'country',
-    );
+    ];
 
     // get the field sequence from the format
-    $newSequence = array();
+    $newSequence = [];
     foreach ($addressSequence as $field) {
       if (substr_count($format, $field)) {
         $newSequence[strpos($format, $field)] = $field;
@@ -155,7 +155,7 @@ class CRM_Core_BAO_Preferences extends CRM_Core_DAO_Preferences {
 
     //enabled name => label require for new contact edit form, CRM-4605
     if ($returnNameANDLabels) {
-      $names = $labels = $nameAndLabels = array();
+      $names = $labels = $nameAndLabels = [];
       if ($returnField == 'name') {
         $names = $groupValues;
         $labels = CRM_Core_OptionGroup::values($name, FALSE, FALSE, $localize, $condition, 'label');
@@ -166,7 +166,7 @@ class CRM_Core_BAO_Preferences extends CRM_Core_DAO_Preferences {
       }
     }
 
-    $returnValues = array();
+    $returnValues = [];
     foreach ($groupValues as $gn => $gv) {
       $returnValues[$gv] = 0;
     }
@@ -207,7 +207,7 @@ class CRM_Core_BAO_Preferences extends CRM_Core_DAO_Preferences {
 
       $groupValues = CRM_Core_OptionGroup::values($name, FALSE, FALSE, FALSE, NULL, $keyField);
 
-      $cbValues = array();
+      $cbValues = [];
       foreach ($groupValues as $key => $val) {
         if (CRM_Utils_Array::value($val, $value)) {
           $cbValues[$key] = 1;
@@ -241,8 +241,8 @@ AND    v.option_group_id = g.id
 AND    v.is_active = 1
 ";
 
-    $dirParams = array();
-    $urlParams = array();
+    $dirParams = [];
+    $urlParams = [];
     $dao = CRM_Core_DAO::executeQuery($sql);
     while ($dao->fetch()) {
       if (!isset($params[$dao->valueName])) {
@@ -288,10 +288,10 @@ AND    v.name = %3
       else {
         $value = CRM_Utils_System::relativeURL($value);
       }
-      $sqlParams = array(1 => array($value, 'String'),
-        2 => array($optionName, 'String'),
-        3 => array($name, 'String'),
-      );
+      $sqlParams = [1 => [$value, 'String'],
+        2 => [$optionName, 'String'],
+        3 => [$name, 'String'],
+      ];
       CRM_Core_DAO::executeQuery($sql, $sqlParams);
     }
   }

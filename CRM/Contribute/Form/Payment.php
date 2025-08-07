@@ -43,7 +43,7 @@ class CRM_Contribute_Form_Payment extends CRM_Core_Form {
       $this->_mode = ($this->_action & CRM_Core_Action::PREVIEW) ? 'test' : 'live';
       $pass = TRUE;
 
-      $this->_ids = array();
+      $this->_ids = [];
       $session = CRM_Core_Session::singleton();
       $current_contact_id = $session->get('userID');
       $ufid = $session->get('ufID');
@@ -55,7 +55,7 @@ class CRM_Contribute_Form_Payment extends CRM_Core_Form {
         $pass = FALSE;
       }
       else{
-        $details = CRM_Contribute_BAO_Contribution::getComponentDetails(array($contribution_id));
+        $details = CRM_Contribute_BAO_Contribution::getComponentDetails([$contribution_id]);
         $ids = reset($details);
         if(!empty($ids['contact_id'])){
           if($ids['contact_id'] != $current_contact_id){

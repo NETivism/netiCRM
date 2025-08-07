@@ -53,7 +53,7 @@ require_once 'CRM/Core/BAO/Website.php';
  */
 function civicrm_api3_website_create($params) {
   $websiteBAO = CRM_Core_BAO_Website::add($params);
-    $values = array();
+    $values = [];
     _civicrm_api3_object_to_array($websiteBAO, $values[$websiteBAO->id]);
     return civicrm_api3_create_success($values, $params, 'website', 'get');
 

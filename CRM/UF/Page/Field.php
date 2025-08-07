@@ -70,38 +70,38 @@ class CRM_UF_Page_Field extends CRM_Core_Page {
    */
   function &actionLinks() {
     if (!isset(self::$_actionLinks)) {
-      self::$_actionLinks = array(
-        CRM_Core_Action::UPDATE => array(
+      self::$_actionLinks = [
+        CRM_Core_Action::UPDATE => [
           'name' => ts('Edit'),
           'url' => 'civicrm/admin/uf/group/field/update',
           'qs' => 'reset=1&action=update&id=%%id%%&gid=%%gid%%',
           'title' => ts('Edit CiviCRM Profile Field'),
-        ),
-        CRM_Core_Action::PREVIEW => array(
+        ],
+        CRM_Core_Action::PREVIEW => [
           'name' => ts('Preview'),
           'url' => 'civicrm/admin/uf/group/field',
           'qs' => 'action=preview&id=%%id%%&gid=%%gid%%&field=1',
           'title' => ts('Preview CiviCRM Profile Field'),
-        ),
-        CRM_Core_Action::DISABLE => array(
+        ],
+        CRM_Core_Action::DISABLE => [
           'name' => ts('Disable'),
           'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_Core_BAO_UFField' . '\',\'' . 'enable-disable' . '\' );"',
           'ref' => 'disable-action',
           'title' => ts('Disable CiviCRM Profile Field'),
-        ),
-        CRM_Core_Action::ENABLE => array(
+        ],
+        CRM_Core_Action::ENABLE => [
           'name' => ts('Enable'),
           'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_Core_BAO_UFField' . '\',\'' . 'disable-enable' . '\' );"',
           'ref' => 'enable-action',
           'title' => ts('Enable CiviCRM Profile Field'),
-        ),
-        CRM_Core_Action::DELETE => array(
+        ],
+        CRM_Core_Action::DELETE => [
           'name' => ts('Delete'),
           'url' => 'civicrm/admin/uf/group/field',
           'qs' => 'action=delete&id=%%id%%',
           'title' => ts('Enable CiviCRM Profile Field'),
-        ),
-      );
+        ],
+      ];
     }
     return self::$_actionLinks;
   }
@@ -114,7 +114,7 @@ class CRM_UF_Page_Field extends CRM_Core_Page {
    * @static
    */
   function browse() {
-    $ufField = array();
+    $ufField = [];
     $ufFieldBAO = new CRM_Core_BAO_UFField();
 
     // fkey is gid
@@ -138,7 +138,7 @@ class CRM_UF_Page_Field extends CRM_Core_Page {
       $this->assign('skipBrowse', TRUE);
     }
 
-    $locationType = array();
+    $locationType = [];
     $locationType = &CRM_Core_PseudoConstant::locationType();
 
 
@@ -151,7 +151,7 @@ class CRM_UF_Page_Field extends CRM_Core_Page {
       $fields = array_merge(CRM_Quest_BAO_Student::exportableFields(), $fields);
     }
 
-    $select = array();
+    $select = [];
     foreach ($fields as $name => $field) {
       if ($name) {
         $select[$name] = $field['title'];
@@ -169,7 +169,7 @@ class CRM_UF_Page_Field extends CRM_Core_Page {
       if ($ufFieldBAO->inSelector) {
         $inSelector = TRUE;
       }
-      $ufField[$ufFieldBAO->id] = array();
+      $ufField[$ufFieldBAO->id] = [];
       $phoneType = $locType = '';
       CRM_Core_DAO::storeValues($ufFieldBAO, $ufField[$ufFieldBAO->id]);
       CRM_Core_DAO_UFField::addDisplayEnums($ufField[$ufFieldBAO->id]);
@@ -192,9 +192,9 @@ class CRM_UF_Page_Field extends CRM_Core_Page {
       $ufField[$ufFieldBAO->id]['order'] = $ufField[$ufFieldBAO->id]['weight'];
       $ufField[$ufFieldBAO->id]['action'] = CRM_Core_Action::formLink(self::actionLinks(),
         $action,
-        array('id' => $ufFieldBAO->id,
+        ['id' => $ufFieldBAO->id,
           'gid' => $this->_gid,
-        )
+        ]
       );
     }
 
@@ -264,9 +264,9 @@ class CRM_UF_Page_Field extends CRM_Core_Page {
       $groupTitle = CRM_Core_BAO_UFGroup::getTitle($this->_gid);
       $this->assign('gid', $this->_gid);
       $this->assign('groupTitle', $groupTitle);
-      CRM_Utils_System::setTitle(ts('%1 - CiviCRM Profile Fields', array(1 => $groupTitle)));
-      $this->_ufGroup = array();
-      $ufGRoupParams = array('id' => $this->_gid);
+      CRM_Utils_System::setTitle(ts('%1 - CiviCRM Profile Fields', [1 => $groupTitle]));
+      $this->_ufGroup = [];
+      $ufGRoupParams = ['id' => $this->_gid];
       CRM_Core_BAO_UFGroup::retrieve($ufGRoupParams, $this->_ufGroup);
     }
 

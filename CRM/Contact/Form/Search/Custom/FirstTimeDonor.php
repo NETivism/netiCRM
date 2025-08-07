@@ -17,7 +17,7 @@ class CRM_Contact_Form_Search_Custom_FirstTimeDonor extends CRM_Contact_Form_Sea
   protected $_config;
   protected $_tableName = NULL;
   protected $_filled = NULL;
-  protected $_recurringStatus = array();
+  protected $_recurringStatus = [];
   protected $_contributionPage = NULL;
 
   function __construct(&$formValues){
@@ -27,11 +27,11 @@ class CRM_Contact_Form_Search_Custom_FirstTimeDonor extends CRM_Contact_Form_Sea
     $this->_tableName = 'civicrm_temp_custom_FirstTimeDonor';
     $statuses = CRM_Contribute_PseudoConstant::contributionStatus();
     $this->_cstatus = $statuses;
-    $this->_recurringStatus = array(
+    $this->_recurringStatus = [
       2 => ts('All'),
       1 => ts("Recurring Contribution"),
       0 => ts("Non-recurring Contribution"),
-    );
+    ];
     $this->_contributionPage = CRM_Contribute_PseudoConstant::contributionPage();
     $this->_instruments = CRM_Contribute_PseudoConstant::paymentInstrument();
     $this->_contributionType = CRM_Contribute_PseudoConstant::contributionType();
@@ -47,7 +47,7 @@ class CRM_Contact_Form_Search_Custom_FirstTimeDonor extends CRM_Contact_Form_Sea
   }
 
   function buildColumn(){
-    $this->_queryColumns = array(
+    $this->_queryColumns = [
       'contact.id' => 'id',
       'c.contact_id' => 'contact_id',
       'contact.sort_name' => 'sort_name',
@@ -57,8 +57,8 @@ class CRM_Contact_Form_Search_Custom_FirstTimeDonor extends CRM_Contact_Form_Sea
       'c.contribution_page_id' => 'contribution_page_id',
       'c.payment_instrument_id' => 'instrument_id',
       'c.contribution_type_id' => 'contribution_type_id',
-    );
-    $this->_columns = array(
+    ];
+    $this->_columns = [
       ts('Contact ID') => 'id',
       ts('Name') => 'sort_name',
       ts('First Amount') => 'amount',
@@ -67,7 +67,7 @@ class CRM_Contact_Form_Search_Custom_FirstTimeDonor extends CRM_Contact_Form_Sea
       ts('Payment Instrument') => 'instrument_id',
       ts('Contribution Type') => 'contribution_type_id',
       ts('Created Date') => 'receive_date',
-    );
+    ];
   }
   function buildTempTable() {
     $sql = "
@@ -76,7 +76,7 @@ CREATE TEMPORARY TABLE IF NOT EXISTS {$this->_tableName} (
 ";
 
     foreach ($this->_queryColumns as $field) {
-      if (in_array($field, array('id'))) {
+      if (in_array($field, ['id'])) {
         continue;
       }
       if($field == 'amount'){
@@ -107,7 +107,7 @@ PRIMARY KEY (id)
    */
   function fillTable(){
     $this->buildTempTable();
-    $select = array();
+    $select = [];
     foreach($this->_queryColumns as $k => $v){
       $select[] = $k.' as '.$v;
     }
@@ -124,7 +124,7 @@ GROUP BY contact.id
     $dao = CRM_Core_DAO::executeQuery($sql, CRM_Core_DAO::$_nullArray);
 
     while ($dao->fetch()) {
-      $values = array();
+      $values = [];
       foreach($this->_queryColumns as $name){
         if($name == 'id'){
           $values[] = CRM_Utils_Type::escape($dao->id, 'Integer');
@@ -144,7 +144,7 @@ GROUP BY contact.id
 
 
   function tempFrom() {
-    $sub_where_clauses = array();
+    $sub_where_clauses = [];
     $sub_where_clauses[] = 'co.is_test = 0';
     $sub_where_clauses[] = 'pp.id IS NULL';
     $sub_where_clauses[] = 'mp.id IS NULL';
@@ -164,7 +164,7 @@ GROUP BY contact.id
    * WHERE clause is an array built from any required JOINS plus conditional filters based on search criteria field values
    */
   function tempWhere(){
-    $clauses = array();
+    $clauses = [];
     $clauses[] = "contact.is_deleted = 0";
 
     if (!empty($this->_formValues['receive_date_from'])) {
@@ -185,20 +185,20 @@ GROUP BY contact.id
     $form->addDateRange('receive_date', ts('Receive Date').' - '.ts('From'), NULL, FALSE);
 
     $recurring = $form->addRadio('recurring', ts('Recurring Contribution'), $this->_recurringStatus);
-    $form->addSelect('contribution_page_id', ts('Contribution Page'), array('' => ts('- select -')) + $this->_contributionPage);
+    $form->addSelect('contribution_page_id', ts('Contribution Page'), ['' => ts('- select -')] + $this->_contributionPage);
 
-    $form->assign('elements', array('receive_date', 'recurring', 'contribution_page_id'));
+    $form->assign('elements', ['receive_date', 'recurring', 'contribution_page_id']);
   }
 
   function setDefaultValues() {
-    return array(
+    return [
       'receive_date_from' => date('Y-m-01', time() - 86400*90),
       'recurring' => 2,
-    );
+    ];
   }
 
   function qill(){
-    $qill = array();
+    $qill = [];
     $from = !empty($this->_formValues['receive_date_from']) ? $this->_formValues['receive_date_from'] : NULL;
     $to = !empty($this->_formValues['receive_date_to']) ? $this->_formValues['receive_date_to'] : NULL;
     if ($from || $to) {
@@ -309,7 +309,7 @@ GROUP BY contact.id
   }
 
   static function includeContactIDs(&$sql, &$formValues, $isExport = FALSE) {
-    $contactIDs = array();
+    $contactIDs = [];
     foreach ($formValues as $id => $value) {
       list($contactID, $additionalID) = CRM_Core_Form::cbExtract($id);
       if ($value && !empty($contactID)) {
@@ -344,13 +344,13 @@ GROUP BY contact.id
     $query->fetch();
 
     if ($query->amount_sum) {
-      $summary['search_results'] = array(
+      $summary['search_results'] = [
         'label' => ts('Search Results'),
         'value' => '',
-      );
+      ];
       $amount_sum = '$'.CRM_Utils_Money::format($query->amount_sum, ' ');
       $amount_avg = '$'.CRM_Utils_Money::format($query->amount_sum / $count, ' ');
-      $summary['search_results']['value'] = ts('Total amount of completed contributions is %1.', array(1 => $amount_sum)).' / '.ts('for')." ".$count." ".ts('People').' / '.ts('Average').": ".$amount_avg;
+      $summary['search_results']['value'] = ts('Total amount of completed contributions is %1.', [1 => $amount_sum]).' / '.ts('for')." ".$count." ".ts('People').' / '.ts('Average').": ".$amount_avg;
     }
 
     return $summary;

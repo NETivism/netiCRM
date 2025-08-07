@@ -91,7 +91,7 @@
       <add>4.0</add>
   </field>
   <index>
-      <name>UI_rec_trade_id</name>
+      <name>index_rec_trade_id</name>
       <fieldName>rec_trade_id</fieldName>      
       <add>4.0</add>
   </index>
@@ -116,7 +116,7 @@
   <field>
       <name>expiry_date</name>
       <type>date</type>
-      <comment>Used date time of this coupon track.</comment>
+      <comment>Credit card expiry date.</comment>
       <add>4.0</add>
   </field>
   <field>
@@ -146,17 +146,17 @@
     <onDelete>SET NULL</onDelete>
   </foreignKey>
   <index>
-    <name>UI_bin_code</name>
+    <name>index_bin_code</name>
     <fieldName>bin_code</fieldName>
     <add>4.0</add>
   </index>
   <index>
-    <name>UI_last_four</name>
+    <name>index_last_four</name>
     <fieldName>last_four</fieldName>
     <add>4.0</add>
   </index>
   <index>
-    <name>UI_expiry_date</name>
+    <name>index_expiry_date</name>
     <fieldName>expiry_date</fieldName>
     <add>4.0</add>
   </index>

@@ -46,12 +46,12 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
   /**
    * ids of the contacts to limit the SQL queries (whole-database queries otherwise)
    */
-  var $contactIds = array();
+  var $contactIds = [];
 
   /**
    * params to dedupe against (queries against the whole contact set otherwise)
    */
-  var $params = array();
+  var $params = [];
 
   /**
    * custom rules when using rules made by program
@@ -61,7 +61,7 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
    *   )
    * ``` 
    */
-  var $rules = array();
+  var $rules = [];
 
   /**
    * if there are no rules in rule group
@@ -79,7 +79,7 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
     static $fields = NULL;
     if (!$fields) {
       // this is needed, as we're piggy-backing importableFields() below
-      $replacements = array(
+      $replacements = [
         'civicrm_country.name' => 'civicrm_address.country_id',
         'civicrm_county.name' => 'civicrm_address.county_id',
         'civicrm_state_province.name' => 'civicrm_address.state_province_id',
@@ -89,15 +89,15 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
         'addressee.label' => 'civicrm_contact.addressee_id',
         'email_greeting.label' => 'civicrm_contact.email_greeting_id',
         'postal_greeting.label' => 'civicrm_contact.postal_greeting_id',
-      );
+      ];
       // the table names we support in dedupe rules - a filter for importableFields()
-      $supportedTables = array('civicrm_address', 'civicrm_contact', 'civicrm_email',
+      $supportedTables = ['civicrm_address', 'civicrm_contact', 'civicrm_email',
         'civicrm_im', 'civicrm_note', 'civicrm_openid', 'civicrm_phone',
-      );
+      ];
 
 
 
-      foreach (array('Individual', 'Organization', 'Household') as $ctype) {
+      foreach (['Individual', 'Organization', 'Household'] as $ctype) {
         // take the table.field pairs and their titles from importableFields() if the table is supported
         foreach (CRM_Contact_BAO_Contact::importableFields($ctype) as $iField) {
           if (isset($iField['where'])) {
@@ -123,7 +123,7 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
         }
 
         // add special field only for contact table to speed up name dedupe
-        $special_contact_field = array('sort_name' => ts('Sort Name'), 'display_name' => ts('Display Name'));
+        $special_contact_field = ['sort_name' => ts('Sort Name'), 'display_name' => ts('Display Name')];
         foreach($special_contact_field as $value => $name){
           foreach($fields as $ctype => $table){
             $fields[$ctype]['civicrm_contact'][$value] = $name;
@@ -145,7 +145,7 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
    * Return the SQL query for creating the temporary table.
    */
   function tableQuery() {
-    $queries = array();
+    $queries = [];
     $idx = 0;
     if ($this->rules) {
       foreach($this->rules as $rule) {
@@ -178,7 +178,7 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
 
     // if there are no rules in this rule group, add an empty query fulfilling the pattern
     if (empty($queries)) {
-      $queries = array('SELECT 0 id1, 0 id2, 0 weight LIMIT 0');
+      $queries = ['SELECT 0 id1, 0 id2, 0 weight LIMIT 0'];
       $this->noRules = TRUE;
     }
 
@@ -202,7 +202,7 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
       $dupeCopyJoin = " JOIN dedupe_copy ON dedupe_copy.id1 = t1.column AND dedupe_copy.id2 = t2.column WHERE ";
     }
     $patternColumn = '/t1.(\w+)/';
-    $exclWeightSum = array();
+    $exclWeightSum = [];
 
     // create temp table
     $dao = new CRM_Core_DAO();
@@ -250,7 +250,7 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
           // In an inclusive situation, failure of any query means no further processing -
           if ($affectedRows == 0) {
             // reset to make sure no further execution is done.
-            $tableQueries = array();
+            $tableQueries = [];
             break;
           }
           $weightSum = substr($fieldWeight, strrpos($fieldWeight, '.') + 1) + $weightSum;
@@ -278,8 +278,8 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
 
   // Function to determine if a given query set contains inclusive or exclusive set of weights.
   // The function assumes that the query set is already ordered by weight in desc order.
-  static function isQuerySetInclusive($tableQueries, $threshold, $exclWeightSum = array()) {
-    $input = array();
+  static function isQuerySetInclusive($tableQueries, $threshold, $exclWeightSum = []) {
+    $input = [];
     foreach ($tableQueries as $key => $query) {
       $input[] = substr($key, strrpos($key, '.') + 1);
     }
@@ -290,12 +290,12 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
     }
 
     if (count($input) == 1) {
-      return array(FALSE, $input[0] < $threshold);
+      return [FALSE, $input[0] < $threshold];
     }
 
     $totalCombinations = 0;
     for ($i = 0; $i < count($input); $i++) {
-      $combination = array($input[$i]);
+      $combination = [$input[$i]];
       if (array_sum($combination) >= $threshold) {
         $totalCombinations++;
         continue;
@@ -307,14 +307,14 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
         }
       }
     }
-    return array($totalCombinations == 1, $totalCombinations <= 0);
+    return [$totalCombinations == 1, $totalCombinations <= 0];
   }
 
   // sort queries by number of records for the table associated with them
   static function orderByTableCount(&$tableQueries) {
-    static $tableCount = array();
+    static $tableCount = [];
 
-    $tempArray = array();
+    $tempArray = [];
     foreach ($tableQueries as $key => $query) {
       $table = explode(".", $key);
       $table = $table[0];
@@ -360,7 +360,7 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
     else {
       $this->_aclWhere = ' AND c1.is_deleted = 0 AND c2.is_deleted = 0';
       if ($checkPermission) {
-        list($this->_aclFrom, $this->_aclWhere) = CRM_Contact_BAO_Contact_Permission::cacheClause(array('c1', 'c2'));
+        list($this->_aclFrom, $this->_aclWhere) = CRM_Contact_BAO_Contact_Permission::cacheClause(['c1', 'c2']);
         $this->_aclWhere = $this->_aclWhere ? "AND {$this->_aclWhere}" : '';
       }
       $query = "SELECT dedupe.id1, dedupe.id2, dedupe.weight
@@ -400,7 +400,7 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
     $ruleBao = new CRM_Dedupe_BAO_Rule();
     $ruleBao->dedupe_rule_group_id = $rgBao->id;
     $ruleBao->find();
-    $ruleFields = array();
+    $ruleFields = [];
     while ($ruleBao->fetch()) {
       if (strstr($ruleBao->rule_table, 'civicrm_value_')) {
         $customFieldId = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_CustomField', $ruleBao->rule_field, 'id', 'column_name');
@@ -412,7 +412,7 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
       $ruleFields[$ruleBao->rule_field] = $ruleBao->rule_weight;
     }
 
-    return array($ruleFields, $rgBao->threshold);
+    return [$ruleFields, $rgBao->threshold];
   }
 
   /**
@@ -434,7 +434,7 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
     }
 
     $dao->find();
-    $result = array();
+    $result = [];
     while ($dao->fetch()) {
       if (!empty($dao->name)) {
         $name = "{$dao->name} - {$dao->level}";
@@ -447,8 +447,8 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
     return $result;
   }
 
-  static function getDetailsByParams($params = array()) {
-    $ruleGroups = array();
+  static function getDetailsByParams($params = []) {
+    $ruleGroups = [];
     $dao = new CRM_Dedupe_DAO_RuleGroup();
     $dao->orderBy('contact_type,level,is_default DESC');
     foreach($params as $k => $v) {
@@ -456,9 +456,9 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
     }
     $dao->find();
     while ($dao->fetch()) {
-      $ruleGroups[$dao->id] = array();
-      $fields = array();
-      $fieldParams = array('id' => $dao->id);
+      $ruleGroups[$dao->id] = [];
+      $fields = [];
+      $fieldParams = ['id' => $dao->id];
       $fields = CRM_Dedupe_BAO_Rule::dedupeRuleFields($fieldParams);
       CRM_Core_DAO::storeValues($dao, $ruleGroups[$dao->id]);
       $ruleGroups[$dao->id]['fields'] = $fields;

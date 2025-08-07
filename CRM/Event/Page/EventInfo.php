@@ -77,11 +77,11 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
     $additionalBreadCrumb = "<a href=\"$breadCrumbPath\">" . ts('Events') . '</a>';
 
     //retrieve event information
-    $params = array('id' => $this->_id);
+    $params = ['id' => $this->_id];
     CRM_Event_BAO_Event::retrieve($params, $values['event']);
 
     if (!$values['event']['is_active'] && CRM_Core_Permission::check('access CiviEvent')) {
-      CRM_Core_Session::setStatus(ts('Preview Page - %1', array(1 => $values['event']['title'])));
+      CRM_Core_Session::setStatus(ts('Preview Page - %1', [1 => $values['event']['title']]));
     }
     elseif (!$values['event']['is_active']) {
       // form is inactive, die a fatal death
@@ -104,7 +104,7 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
       }
     }
 
-    $params = array('entity_id' => $this->_id, 'entity_table' => 'civicrm_event');
+    $params = ['entity_id' => $this->_id, 'entity_table' => 'civicrm_event'];
 
     $values['location'] = CRM_Core_BAO_Location::getValues($params, TRUE);
 
@@ -173,10 +173,10 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
       $statusMessage = $eventFullMessage;
 
       $session = CRM_Core_Session::singleton();
-      $params = array('contact_id' => $session->get('userID'),
+      $params = ['contact_id' => $session->get('userID'),
         'event_id' => CRM_Utils_Array::value('id', $values['event']),
         'role_id' => CRM_Utils_Array::value('default_role_id', $values['event']),
-      );
+      ];
 
       if (CRM_Event_BAO_Event::alreadyRegistered($params)) {
         $statusMessage = ts("Oops. It looks like you are already registered for this event. If you want to change your registration, or you feel that you've gotten this message in error, please contact the site administrator.");
@@ -208,7 +208,7 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
 
 
     // Prepare params used for meta.
-    $params = array();
+    $params = [];
     $siteName = CRM_Utils_System::siteName();
     $params['site'] = $siteName;
     $params['title'] = $values['event']['title'] . ' - ' . $siteName;
@@ -261,12 +261,12 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
   }
 
   function track() {
-    $params = array(
+    $params = [
       'state' => '0',
       'page_type' => 'civicrm_event',
       'page_id' => $this->_id,
       'visit_date' => date('Y-m-d H:i:s'),
-    );
+    ];
     CRM_Core_BAO_Track::add($params);
   }
 
@@ -288,7 +288,7 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
   }
 
   static function feeBlock($eventId) {
-    $feeBlock = array();
+    $feeBlock = [];
     if ($priceSetId = CRM_Price_BAO_Set::getFor('civicrm_event', $eventId)) {
       $feeBlock['price_set_id'] = $priceSetId;
       $setDetails = CRM_Price_BAO_Set::getSetDetail($priceSetId);

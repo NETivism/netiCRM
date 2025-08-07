@@ -79,19 +79,19 @@ class CRM_Profile_Form_Dynamic extends CRM_Profile_Form {
    * @access public
    */
   public function buildQuickForm() {
-    $this->addButtons(array(
-        array('type' => 'upload',
+    $this->addButtons([
+        ['type' => 'upload',
           'name' => ts('Save'),
           'isDefault' => TRUE,
-        ),
-      )
+        ],
+      ]
     );
 
     // also add a hidden element for to trick drupal
     $this->addElement('hidden', "edit[civicrm_dummy_field]", "CiviCRM Dummy Field for Drupal");
     parent::buildQuickForm();
 
-    $this->addFormRule(array('CRM_Profile_Form_Dynamic', 'formRule'), $this);
+    $this->addFormRule(['CRM_Profile_Form_Dynamic', 'formRule'], $this);
   }
 
   /**
@@ -106,7 +106,7 @@ class CRM_Profile_Form_Dynamic extends CRM_Profile_Form {
    * @static
    */
   static function formRule($fields, $files, $form) {
-    $errors = array();
+    $errors = [];
 
     // if no values, return
     if (empty($fields) || !CRM_Utils_Array::value('edit', $fields)) {

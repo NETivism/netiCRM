@@ -99,13 +99,21 @@ class CRM_Contribute_Form_MakingTransaction extends CRM_Core_Form {
       if (method_exists($paymentClass, 'getSyncNowMessage')) {
         $message = $paymentClass::getSyncNowMessage($contributionId, $id);
       }
-      $this->addElement('submit', $name, ts("Sync Now"), array('onclick' => "return confirm('".$message."')"));
-      $this->assign('update_notify', $name);
+      if (!empty($message)) {
+        $this->addElement('submit', $name, ts("Sync Now"), ['onclick' => "return confirm('".$message."')"]);
+        $this->assign('update_notify', $name);
+      }
     }
     if (method_exists($paymentClass, 'doRecurTransact')) {
-      $name = $this->getButtonName('submit');
-      $submit = $this->addElement('submit', $name, ts('Process now'), array('onclick' => "return confirm('".ts("Are you sure you want to process a transaction of %1?", array(1 => $id))."')"));
-      $this->assign('submit_name', $name);
+      $showButton = TRUE;
+      if (method_exists($paymentClass, 'checkProceedRecur')) {
+        $showButton = $paymentClass::checkProceedRecur($id);
+      }
+      if ($showButton) {
+        $name = $this->getButtonName('submit');
+        $this->addElement('submit', $name, ts('Process now'), ['onclick' => "return confirm('".ts("Are you sure you want to process a transaction of %1?", [1 => $id])."')"]);
+        $this->assign('submit_name', $name);
+      }
     }
   }
 
@@ -123,7 +131,9 @@ class CRM_Contribute_Form_MakingTransaction extends CRM_Core_Form {
     $recurId = $this->get('recurId');
     $contributionId = $this->get('contributionId');
 
-    $isActionUpdate = $this->exportValue('_qf_MakingTransaction_upload');
+    if (isset($this->_elementIndex['_qf_MakingTransaction_upload'])) {
+      $isActionUpdate = TRUE;
+    }
 
     $paymentClass = CRM_Contribute_BAO_Contribution::getPaymentClass($contributionId);
     if ($isActionUpdate) {
@@ -134,7 +144,7 @@ class CRM_Contribute_Form_MakingTransaction extends CRM_Core_Form {
     else {
       if (method_exists($paymentClass, 'doRecurTransact')) {
         $result = $paymentClass::doRecurTransact($recurId);
-        $resultMessage = ts("Total Payments: %1", array(1));
+        $resultMessage = ts("Total Payments: %1", [1]);
       }
     }
 

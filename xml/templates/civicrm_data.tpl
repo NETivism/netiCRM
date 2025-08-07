@@ -520,6 +520,7 @@ VALUES
   (@option_group_id_csearch , '{ts escape="sql"}Recurring Donors Search{/ts}'          ,23, 'CRM_Contact_Form_Search_Custom_RecurDonor', NULL, 0, NULL, 23, '', 0, 0, 1, NULL, NULL),
   (@option_group_id_csearch , '{ts escape="sql"}Upcoming Birthdays Search{/ts}'          ,24, 'CRM_Contact_Form_Search_Custom_UpcomingBirthdays', NULL, 0, NULL, 24, '', 0, 0, 1, NULL, NULL),
   (@option_group_id_csearch , '{ts escape="sql"}ACH Search{/ts}'          ,25, 'CRM_Contact_Form_Search_Custom_TaiwanACHSearch', NULL, 0, NULL, 25, '', 0, 0, 1, NULL, NULL),
+  (@option_group_id_csearch , '{ts escape="sql"}RFM{/ts}'          ,26, 'CRM_Contact_Form_Search_Custom_RFM', NULL, 0, NULL, 26, '', 0, 0, 1, NULL, NULL),
 
 -- report templates
   (@option_group_id_report , '{ts escape="sql"}Constituent Report (Summary){/ts}',            'contact/summary',                'CRM_Report_Form_Contact_Summary',                NULL, 0, NULL, 1,  '{ts escape="sql"}Provides a list of address and telephone information for constituent records in your system.{/ts}', 0, 0, 1, NULL, NULL),
@@ -836,7 +837,8 @@ VALUES
  ('ALLPAYX', '{ts escape="sql"}AllPay Non-Credit Card{/ts}', NULL, 1, 0, '{ts escape="sql"}Merchant ID{/ts}', 'HashKey', 'HashIV', '', 'Payment_ALLPAY', 'https://payment.ecpay.com.tw/Cashier/AioCheckOut', 'https://payment.ecpay.com.tw/Cashier/QueryTradeInfo', NULL, NULL, 'https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut', 'https://payment-stage.ecpay.com.tw/Cashier/QueryTradeInfo', NULL, NULL, 4, 0),
 ('SPGATEWAY', '{ts escape="sql"}NewebPay Credit Card{/ts}', NULL, 1, 0, '{ts escape="sql"}Merchant ID{/ts}', 'HashKey', 'HashIV', '', 'Payment_SPGATEWAY', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 4, 1),
 ('SPGATEWAYX', '{ts escape="sql"}NewebPay Non-Credit Card{/ts}', NULL, 1, 0, '{ts escape="sql"}Merchant ID{/ts}', 'HashKey', 'HashIV', '', 'Payment_SPGATEWAY', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 4, 0),
-('Backer', '{ts escape="sql"}Backer Founder{/ts}', NULL, 1, 0, '{ts escape="sql"}Contribution Page{/ts}', 'Secret Key', NULL, NULL, 'Payment_Backer', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 7, 0);
+('Backer', '{ts escape="sql"}Backer Founder{/ts}', NULL, 1, 0, '{ts escape="sql"}Contribution Page{/ts}', 'Secret Key', NULL, NULL, 'Payment_Backer', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 7, 0),
+('MyPay', 'MyPay', NULL, 1, 0, 'Store ID', 'Secret', 'In-App Token', '', 'Payment_MyPay', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 4, 1);
 
 
 -- the fuzzy default dedupe rules

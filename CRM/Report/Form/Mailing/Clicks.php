@@ -57,103 +57,103 @@ class CRM_Report_Form_Mailing_Clicks extends CRM_Report_Form {
 
   protected $_mailingidField = FALSE;
 
-  protected $_customGroupExtends = array('Contact', 'Individual', 'Household', 'Organization');
+  protected $_customGroupExtends = ['Contact', 'Individual', 'Household', 'Organization'];
 
-  protected $_charts = array('' => 'Tabular',
+  protected $_charts = ['' => 'Tabular',
     'barChart' => 'Bar Chart',
     'pieChart' => 'Pie Chart',
-  ); function __construct() {
-    $this->_columns = array();
+  ]; function __construct() {
+    $this->_columns = [];
 
-    $this->_columns['civicrm_contact'] = array(
+    $this->_columns['civicrm_contact'] = [
       'dao' => 'CRM_Contact_DAO_Contact',
-      'fields' => array(
-        'id' => array(
+      'fields' => [
+        'id' => [
           'title' => ts('Contact ID'),
           'required' => TRUE,
-        ),
-        'first_name' => array(
+        ],
+        'first_name' => [
           'title' => ts('First Name'),
           'required' => TRUE,
           'no_repeat' => TRUE,
-        ),
-        'last_name' => array(
+        ],
+        'last_name' => [
           'title' => ts('Last Name'),
           'required' => TRUE,
           'no_repeat' => TRUE,
-        ),
-      ),
-      'filters' => array(
-        'sort_name' => array(
+        ],
+      ],
+      'filters' => [
+        'sort_name' => [
           'title' => ts('Contact Name'),
-        ),
-        'source' => array(
+        ],
+        'source' => [
           'title' => ts('Contact Source'),
           'type' => CRM_Utils_Type::T_STRING,
-        ),
-        'id' => array(
+        ],
+        'id' => [
           'title' => ts('Contact ID'),
           'no_display' => TRUE,
-        ),
-      ),
+        ],
+      ],
       'grouping' => 'contact-fields',
-    );
+    ];
 
-    $this->_columns['civicrm_mailing'] = array(
+    $this->_columns['civicrm_mailing'] = [
       'dao' => 'CRM_Mailing_DAO_Mailing',
-      'fields' => array(
-        'name' => array(
+      'fields' => [
+        'name' => [
           'title' => ts('Mailing Name'),
           'no_display' => TRUE,
           'required' => TRUE,
-        ),
-      ),
-      'filters' => array(
-        'mailing_name' => array(
+        ],
+      ],
+      'filters' => [
+        'mailing_name' => [
           'name' => 'name',
           'title' => ts('Mailing'),
           'operatorType' => CRM_Report_Form::OP_MULTISELECT,
           'type' => CRM_Utils_Type::T_STRING,
           'options' => self::mailing_select(),
           'operator' => 'like',
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
 
-    $this->_columns['civicrm_email'] = array(
+    $this->_columns['civicrm_email'] = [
       'dao' => 'CRM_Core_DAO_Email',
-      'fields' => array(
-        'email' => array(
+      'fields' => [
+        'email' => [
           'title' => ts('Email'),
           'no_repeat' => TRUE,
           'required' => TRUE,
-        ),
-      ),
+        ],
+      ],
       'grouping' => 'contact-fields',
-    );
+    ];
 
-    $this->_columns['civicrm_mailing_trackable_url'] = array(
+    $this->_columns['civicrm_mailing_trackable_url'] = [
       'dao' => 'CRM_Mailing_DAO_TrackableURL',
-      'fields' => array(
-        'url' => array(
+      'fields' => [
+        'url' => [
           'title' => ts('Click through URL'),
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
 
-    $this->_columns['civicrm_group'] = array(
+    $this->_columns['civicrm_group'] = [
       'dao' => 'CRM_Contact_DAO_Group',
       'alias' => 'cgroup',
-      'filters' => array(
-        'gid' => array(
+      'filters' => [
+        'gid' => [
           'name' => 'group_id',
           'title' => ts('Group'),
           'operatorType' => CRM_Report_Form::OP_MULTISELECT,
           'group' => TRUE,
           'options' => CRM_Core_PseudoConstant::group(),
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
 
     $this->_tagFilter = TRUE;
     parent::__construct();
@@ -165,8 +165,8 @@ class CRM_Report_Form_Mailing_Clicks extends CRM_Report_Form {
   }
 
   function select() {
-    $select = array();
-    $this->_columnHeaders = array();
+    $select = [];
+    $this->_columnHeaders = [];
     foreach ($this->_columns as $tableName => $table) {
       if (CRM_Utils_Array::arrayKeyExists('fields', $table)) {
         foreach ($table['fields'] as $fieldName => $field) {
@@ -198,7 +198,7 @@ class CRM_Report_Form_Mailing_Clicks extends CRM_Report_Form {
   }
 
   static function formRule($fields, $files, $self) {
-    $errors = $grouping = array();
+    $errors = $grouping = [];
     return $errors;
   }
 
@@ -229,7 +229,7 @@ class CRM_Report_Form_Mailing_Clicks extends CRM_Report_Form {
   }
 
   function where() {
-    $clauses = array();
+    $clauses = [];
     foreach ($this->_columns as $tableName => $table) {
       if (CRM_Utils_Array::arrayKeyExists('filters', $table)) {
         foreach ($table['filters'] as $fieldName => $field) {
@@ -294,7 +294,7 @@ class CRM_Report_Form_Mailing_Clicks extends CRM_Report_Form {
 
     // print_r($sql);
 
-    $rows = $graphRows = array();
+    $rows = $graphRows = [];
     $this->buildRows($sql, $rows);
 
     $this->formatDisplay($rows);
@@ -307,12 +307,12 @@ class CRM_Report_Form_Mailing_Clicks extends CRM_Report_Form {
       return;
     }
 
-    $chartInfo = array('legend' => ts('Mail Clickthrough Report'),
+    $chartInfo = ['legend' => ts('Mail Clickthrough Report'),
       'xname' => ts('Mailing'),
       'yname' => ts('Clicks'),
       'xLabelAngle' => 20,
-      'tip' => ts("Clicks: %1", array('%1' => '#val#')),
-    );
+      'tip' => ts("Clicks: %1", ['%1' => '#val#']),
+    ];
     foreach ($rows as $row) {
       $chartInfo['values'][$row['civicrm_mailing_name']] = $row['civicrm_mailing_click_count'];
     }
@@ -365,7 +365,7 @@ class CRM_Report_Form_Mailing_Clicks extends CRM_Report_Form {
   function mailing_select() {
 
 
-    $data = array();
+    $data = [];
     $mailing = new CRM_Mailing_BAO_Mailing();
     $query = "SELECT name FROM civicrm_mailing ";
     $mailing->query($query);

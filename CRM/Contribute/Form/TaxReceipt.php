@@ -6,7 +6,7 @@ class CRM_Contribute_Form_TaxReceipt extends CRM_Core_Form {
   public $_id = NULL;
   public $_type = NULL;
   public $_name = NULL;
-  public $_tplParams = array();
+  public $_tplParams = [];
   public $_taxReceipt = NULL;
   public $_userContext = NULL;
   public $_contribution = NULL;
@@ -23,12 +23,12 @@ class CRM_Contribute_Form_TaxReceipt extends CRM_Core_Form {
     $this->_type = CRM_Utils_Request::retrieve('type', 'String', $this);
     $this->_contactId = CRM_Utils_Request::retrieve('cid', 'Positive', $this, TRUE);
  
-    $breadcrumb = array(
-      array(
+    $breadcrumb = [
+      [
 				'title' => ts('View Contribution'),
 				'url' => CRM_Utils_System::url('civicrm/contact/view/contribution', "reset=1&action=view&context=$context&selectedChild=contribute&cid=$this->_contactId&id=$this->_id"),
-      )
-		);
+      ]
+		];
     CRM_Utils_System::appendBreadCrumb($breadcrumb);
 
     $contribution = new CRM_Contribute_DAO_Contribution();
@@ -36,7 +36,7 @@ class CRM_Contribute_Form_TaxReceipt extends CRM_Core_Form {
     if($contribution->find(TRUE)) {
       $this->_contribution = $contribution;
       if ($contribution->total_amount <= 0) {
-         return CRM_Core_Error::statusBounce(ts('Contribution amount must be greater than %1', array(1 => 0)));
+         return CRM_Core_Error::statusBounce(ts('Contribution amount must be greater than %1', [1 => 0]));
       }
       $this->assign('trxn_id', $contribution->trxn_id);
       CRM_Utils_Hook::prepareTaxReceipt($this->_id, $this->_tplParams, $this->_taxReceipt, $contribution);
@@ -85,34 +85,34 @@ class CRM_Contribute_Form_TaxReceipt extends CRM_Core_Form {
       $this->add('checkbox', 'tax_receipt_paper', ts('Use paper receipt'));
     }
 
-    $button = array();
-    $button['create'] = array(
+    $button = [];
+    $button['create'] = [
       'type' => 'next',
       'name' => ts('Create Tax Receipt'),
       'isDefault' => TRUE,
-    );
-    $button['print'] = array(
+    ];
+    $button['print'] = [
       'type' => 'print',
       'name' => ts('Print Tax Receipt'),
-      'js' => array('disabled' => 'disabled'),
-    );
-    $button['pdf'] = array(
+      'js' => ['disabled' => 'disabled'],
+    ];
+    $button['pdf'] = [
       'type' => 'pdf',
       'name' => ts('PDF'),
-      'js' => array('disabled' => 'disabled'),
-    );
+      'js' => ['disabled' => 'disabled'],
+    ];
     if (!$createButton) {
-      $button['create']['js'] = array('disabled' => 'disabled');
+      $button['create']['js'] = ['disabled' => 'disabled'];
     }
     if ($printButton) {
       $printUrl = CRM_Utils_System::url('civicrm/contribute/taxreceipt', "reset=1&id={$this->_id}&cid={$this->_contactId}&snippet=2", FALSE, NULL, FALSE);
-      $button['print']['js'] = array(
+      $button['print']['js'] = [
         'onclick' => 'window.open("'.$printUrl.'"); return false;',
-      );
+      ];
       $pdfUrl = CRM_Utils_System::url('civicrm/contribute/taxreceipt', "reset=1&id={$this->_id}&cid={$this->_contactId}&snippet=3", FALSE, NULL, FALSE);
-      $button['pdf']['js'] = array(
+      $button['pdf']['js'] = [
         'onclick' => 'window.open("'.$pdfUrl.'"); return false;',
-      );
+      ];
     }
     if (!empty($button)) {
       $this->addButtons($button);

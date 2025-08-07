@@ -316,13 +316,13 @@ class CRM_Utils_Date {
       $config = CRM_Core_Config::singleton();
 
       if ($dateParts) {
-        if (array_intersect(array('h', 'H'), $dateParts)) {
+        if (array_intersect(['h', 'H'], $dateParts)) {
           $format = $config->dateformatDatetime;
         }
-        elseif (array_intersect(array('d', 'j'), $dateParts)) {
+        elseif (array_intersect(['d', 'j'], $dateParts)) {
           $format = $config->dateformatFull;
         }
-        elseif (array_intersect(array('m', 'M'), $dateParts)) {
+        elseif (array_intersect(['m', 'M'], $dateParts)) {
           $format = $config->dateformatPartial;
         }
         else {
@@ -400,7 +400,7 @@ class CRM_Utils_Date {
         $type = 'PM';
       }
 
-      $date = array(
+      $date = [
         '%b' => CRM_Utils_Array::value($month, $abbrMonths),
         '%B' => CRM_Utils_Array::value($month, $fullMonths),
         '%d' => $day > 9 ? $day : '0' . $day,
@@ -419,7 +419,7 @@ class CRM_Utils_Date {
         '%P' => $type,
         '%A' => $type,
         '%Y' => $year,
-      );
+      ];
 
       return strtr($format, $date);
     }
@@ -476,7 +476,7 @@ class CRM_Utils_Date {
    * @static
    */
   static function isoToMysql($iso) {
-    $dropArray = array('-' => '', ':' => '', ' ' => '');
+    $dropArray = ['-' => '', ':' => '', ' ' => ''];
     return strtr($iso, $dropArray);
   }
 
@@ -776,7 +776,7 @@ class CRM_Utils_Date {
    * @access public
    */
   public static function calculateAge($birthDate) {
-    $results = array();
+    $results = [];
     $formatedBirthDate = CRM_Utils_Date::customFormat($birthDate, '%Y-%m-%d');
 
     $bDate = explode('-', $formatedBirthDate);
@@ -872,7 +872,7 @@ class CRM_Utils_Date {
 
     $scheduleDate = explode("-", date("n-j-Y-H-i-s", $date));
 
-    $date = array();
+    $date = [];
     $date['M'] = $scheduleDate[0];
     $date['d'] = $scheduleDate[1];
     $date['Y'] = $scheduleDate[2];
@@ -897,19 +897,19 @@ class CRM_Utils_Date {
       $birthDateFormat = self::getDateFormat('birth');
     }
 
-    $supportableFormats = array(
+    $supportableFormats = [
       'mm/dd' => '%B %E%f',
       'dd-mm' => '%E%f %B',
       'yy-mm' => '%Y %B',
       'M yy' => '%b %Y',
       'yy' => '%Y',
       'dd/mm/yy' => '%E%f %B %Y',
-    );
+    ];
 
     if (CRM_Utils_Array::arrayKeyExists($birthDateFormat, $supportableFormats)) {
-      $birthDateFormat = array('qfMapping' => $supportableFormats[$birthDateFormat],
+      $birthDateFormat = ['qfMapping' => $supportableFormats[$birthDateFormat],
         'dateParts' => $formatMapping,
-      );
+      ];
     }
 
     return $birthDateFormat;
@@ -926,7 +926,7 @@ class CRM_Utils_Date {
    */
   static function relativeToAbsolute($relativeTerm, $unit) {
     $now = getDate();
-    $from = $to = $dateRange = array();
+    $from = $to = $dateRange = [];
     $from['H'] = $from['i'] = $from['s'] = 0;
 
     switch ($unit) {
@@ -1335,7 +1335,7 @@ class CRM_Utils_Date {
         break;
     }
 
-    foreach (array('from', 'to') as $item) {
+    foreach (['from', 'to'] as $item) {
       if (!empty($$item)) {
         $dateRange[$item] = self::format($$item);
       }
@@ -1426,9 +1426,9 @@ class CRM_Utils_Date {
 
       $timeStamp = strtotime($date . ' ' . $time);
       if (empty($timeStamp)) {
-        CRM_Core_Session::setStatus(ts("%1 has error on format.", array(
+        CRM_Core_Session::setStatus(ts("%1 has error on format.", [
             1 => ts('Time')
-          )), TRUE, 'error'
+          ]), TRUE, 'error'
         );
       }
       $mysqlDate = date($format, $timeStamp);
@@ -1453,8 +1453,8 @@ class CRM_Utils_Date {
     $config = CRM_Core_Config::singleton();
     if ($formatType) {
       // get actual format
-      $params = array('name' => $formatType);
-      $values = array();
+      $params = ['name' => $formatType];
+      $values = [];
       CRM_Core_DAO::commonRetrieve('CRM_Core_DAO_PreferencesDate', $params, $values);
 
       if ($values['date_format']) {
@@ -1495,7 +1495,7 @@ class CRM_Utils_Date {
       $time = '0' . $time;
     }
 
-    return array($date, $time);
+    return [$date, $time];
   }
 
   /**
@@ -1535,6 +1535,117 @@ class CRM_Utils_Date {
     $now = date('YmdHis', $time);
     date_default_timezone_set($originalTimezone);
     return $now;
+  }
+
+  /**
+   * Parse date filter
+   *
+   * @param string $dateFilter Date filter string
+   * @return array Array containing start date, end date, total days and total months
+   */
+  public static function strtodate(string $dateFilter): array {
+    $today = new DateTime();
+    $startDate = null;
+    $endDate = null;
+
+    // Parse `last/next N days/weeks/months/years to today/yesterday`
+    if (preg_match('/^(last|next) (\d+) (days|weeks|months|years) to (today|yesterday)$/', strtolower($dateFilter), $matches)) {
+      $direction = $matches[1]; // last or next
+      $amount = (int)$matches[2]; // number
+      $unit = $matches[3]; // time unit
+      $endType = $matches[4]; // today or yesterday
+
+      $endReference = ($endType === 'yesterday') ? (clone $today)->modify('-1 day') : $today;
+
+      if ($direction === 'last') {
+        $startDate = (clone $endReference)->modify("-{$amount} {$unit}")->format('Y-m-d');
+        $endDate = $endReference->format('Y-m-d');
+        
+        // Adjust start date by +1 day
+        $startDate = (new DateTime($startDate))->modify('+1 day')->format('Y-m-d');
+      } else {
+        $startDate = $endReference->format('Y-m-d');
+        $endDate = (clone $endReference)->modify("+{$amount} {$unit}")->format('Y-m-d');
+      }
+    }
+    // Parse `last/next N days/weeks/months/years` (without `to today`)
+    elseif (preg_match('/^(last|next) (\d+) (days|weeks|months|years)$/', strtolower($dateFilter), $matches)) {
+      $direction = $matches[1];
+      $amount = (int)$matches[2];
+      $unit = $matches[3];
+
+      if ($direction === 'last') {
+        $startDate = (clone $today)->modify("-{$amount} {$unit}")->format('Y-m-d');
+        $endDate = $today->format('Y-m-d');
+      } else {
+        $startDate = $today->format('Y-m-d');
+        $endDate = (clone $today)->modify("+{$amount} {$unit}")->format('Y-m-d');
+      }
+    }
+    // Parse `this week`, `last month`, `this year`, `last year`
+    elseif (preg_match('/^(this|last) (week|month|year)$/', strtolower($dateFilter), $matches)) {
+      $modifier = $matches[1]; // this or last
+      $unit = $matches[2]; // week, month, year
+
+      if ($unit === 'week') {
+        if ($modifier === 'this') {
+          $startDate = (clone $today)->modify('monday this week')->format('Y-m-d');
+          $endDate = $today->format('Y-m-d');
+        } else {
+          $startDate = (clone $today)->modify('monday last week')->format('Y-m-d');
+          $endDate = (clone $today)->modify('sunday last week')->format('Y-m-d');
+        }
+      } elseif ($unit === 'month') {
+        if ($modifier === 'this') {
+          $startDate = (clone $today)->modify('first day of this month')->format('Y-m-d');
+          $endDate = $today->format('Y-m-d');
+        } else {
+          $startDate = (clone $today)->modify('first day of last month')->format('Y-m-d');
+          $endDate = (clone $today)->modify('last day of last month')->format('Y-m-d');
+        }
+      } elseif ($unit === 'year') {
+        if ($modifier === 'this') {
+          $startDate = (clone $today)->modify('first day of January this year')->format('Y-m-d');
+          $endDate = $today->format('Y-m-d');
+        } else {
+          $startDate = (clone $today)->modify('first day of January last year')->format('Y-m-d');
+          $endDate = (clone $today)->modify('last day of December last year')->format('Y-m-d');
+        }
+      }
+    }
+    // Special fixed values
+    elseif ($dateFilter === 'today') {
+      $startDate = $today->format('Y-m-d');
+      $endDate = $today->format('Y-m-d');
+    } elseif ($dateFilter === 'yesterday') {
+      $startDate = (clone $today)->modify('-1 day')->format('Y-m-d');
+      $endDate = $startDate;
+    }
+    // Parse single day yyyy-mm-dd
+    elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $dateFilter)) {
+      $startDate = $dateFilter;
+      $endDate = $dateFilter;
+    }
+    // Parse range yyyy-mm-dd_to_yyyy-mm-dd
+    elseif (preg_match('/^\d{4}-\d{2}-\d{2}_to_\d{4}-\d{2}-\d{2}$/', $dateFilter)) {
+      list($startDate, $endDate) = explode('_to_', $dateFilter);
+    }
+
+    $startDateTime = new DateTime($startDate);
+    $endDateTime = new DateTime($endDate);
+    $interval = $startDateTime->diff($endDateTime);
+    $totalDays = $interval->days + 1;
+    $totalMonths = ($interval->y * 12) + $interval->m;
+    if ($interval->d > 0) {
+      $totalMonths++;
+    }
+
+    return [
+      'start' => $startDate,
+      'end' => $endDate,
+      'day' => $totalDays,
+      'month' => $totalMonths,
+    ];
   }
 }
 

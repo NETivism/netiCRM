@@ -48,7 +48,7 @@ class CRM_Case_Form_Task_SearchTaskHookSample extends CRM_Case_Form_Task {
    */
   function preProcess() {
     parent::preProcess();
-    $rows = array();
+    $rows = [];
     // display name and email of all contact ids
     $caseIDs = CRM_Utils_Array::implode(',', $this->_caseIds);
     $statusId = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionGroup', 'case_status', 'id', 'name');
@@ -65,11 +65,11 @@ WHERE cs.id IN ( {$caseIDs} )";
 
     $dao = CRM_Core_DAO::executeQuery($query, CRM_Core_DAO::$_nullArray);
     while ($dao->fetch()) {
-      $rows[] = array(
+      $rows[] = [
         'display_name' => $dao->display_name,
         'start_date' => CRM_Utils_Date::customFormat($dao->start_date),
         'status' => $dao->status,
-      );
+      ];
     }
     $this->assign('rows', $rows);
   }
@@ -81,12 +81,12 @@ WHERE cs.id IN ( {$caseIDs} )";
    * @access public
    */
   public function buildQuickForm() {
-    $this->addButtons(array(
-        array('type' => 'done',
+    $this->addButtons([
+        ['type' => 'done',
           'name' => ts('Done'),
           'isDefault' => TRUE,
-        ),
-      )
+        ],
+      ]
     );
   }
 }

@@ -61,26 +61,26 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page {
    */
   static function &honorLinks() {
     if (!(self::$_links)) {
-      self::$_links = array(
-        CRM_Core_Action::VIEW => array(
+      self::$_links = [
+        CRM_Core_Action::VIEW => [
           'name' => ts('View'),
           'url' => 'civicrm/contact/view/contribution',
           'qs' => 'reset=1&id=%%id%%&cid=%%cid%%&honorId=%%honorId%%&action=view&context=%%cxt%%&selectedChild=contribute',
           'title' => ts('View Contribution'),
-        ),
-        CRM_Core_Action::UPDATE => array(
+        ],
+        CRM_Core_Action::UPDATE => [
           'name' => ts('Edit'),
           'url' => 'civicrm/contact/view/contribution',
           'qs' => 'reset=1&action=update&id=%%id%%&cid=%%cid%%&honorId=%%honorId%%&context=%%cxt%%&subType=%%contributionType%%',
           'title' => ts('Edit Contribution'),
-        ),
-        CRM_Core_Action::DELETE => array(
+        ],
+        CRM_Core_Action::DELETE => [
           'name' => ts('Delete'),
           'url' => 'civicrm/contact/view/contribution',
           'qs' => 'reset=1&action=delete&id=%%id%%&cid=%%cid%%&honorId=%%honorId%%&context=%%cxt%%',
           'title' => ts('Delete Contribution'),
-        ),
-      );
+        ],
+      ];
     }
     return self::$_links;
   }
@@ -100,27 +100,27 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page {
    */
   static function &recurLinks() {
     if (!(self::$_links) && CRM_Core_Permission::check('access CiviContribute')) {
-      self::$_links = array(
-        CRM_Core_Action::VIEW => array(
+      self::$_links = [
+        CRM_Core_Action::VIEW => [
           'name' => ts('View'),
           'title' => ts('View Recurring Payment'),
           'url' => 'civicrm/contact/view/contributionrecur',
           'qs' => 'reset=1&id=%%id%%&cid=%%cid%%',
-        ),
-      );
+        ],
+      ];
       if (CRM_Core_Permission::check('edit contributions')) {
-        self::$_links[CRM_Core_Action::UPDATE] = array(
+        self::$_links[CRM_Core_Action::UPDATE] = [
           'name' => ts('Edit'),
           'title' => ts('Edit Recurring Payment'),
           'url' => 'civicrm/contact/view/contributionrecur',
           'qs' => 'reset=1&action=update&id=%%id%%&cid=%%cid%%',
-        );
-        self::$_links[CRM_Core_Action::DISABLE] = array(
+        ];
+        self::$_links[CRM_Core_Action::DISABLE] = [
           'name' => ts('Cancel'),
           'title' => ts('Cancel'),
           'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_Contribute_BAO_ContributionRecur' . '\',\'' . 'enable-disable' . '\' );"',
           'ref' => 'disable-action',
-        );
+        ];
       }
     }
     return self::$_links;
@@ -142,7 +142,7 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page {
     $this->assign('editContributionPermission', CRM_Core_Permission::check('edit contributions'));
 
     // add annual contribution
-    $annual = array();
+    $annual = [];
     list($annual['count'],
       $annual['amount'],
       $annual['avg']
@@ -160,7 +160,7 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page {
 
     // add recurring block
     $action = array_sum(array_keys($this->recurLinks()));
-    $params = array();
+    $params = [];
     $params = CRM_Contribute_BAO_ContributionRecur::getRecurContributions($this->_contactId);
     if (!empty($params)) {
       foreach ($params as $ids => $recur) {
@@ -169,20 +169,20 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page {
         $links = self::recurLinks();
         if ($params[$ids]['is_active']) {
           $params[$ids]['action'] = CRM_Core_Action::formLink($links, $action,
-            array('cid' => $this->_contactId,
+            ['cid' => $this->_contactId,
               'id' => $ids,
               'cxt' => 'contribution',
-            )
+            ]
           );
         }
         else{
           unset($links[CRM_Core_Action::DISABLE]);
           unset($links[CRM_Core_Action::UPDATE]);
           $params[$ids]['action'] = CRM_Core_Action::formLink($links, $action,
-            array('cid' => $this->_contactId,
+            ['cid' => $this->_contactId,
               'id' => $ids,
               'cxt' => 'contribution',
-            )
+            ]
           );
         }
       }
@@ -196,17 +196,17 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page {
     // form all action links
     $action = array_sum(array_keys($this->honorLinks()));
 
-    $params = array();
+    $params = [];
     $params = CRM_Contribute_BAO_Contribution::getHonorContacts($this->_contactId);
     if (!empty($params)) {
       foreach ($params as $ids => $honorId) {
         $params[$ids]['action'] = CRM_Core_Action::formLink(self::honorLinks(), $action,
-          array('cid' => $honorId['honorId'],
+          ['cid' => $honorId['honorId'],
             'id' => $ids,
             'cxt' => 'contribution',
             'contributionType' => $honorId['type_id'],
             'honorId' => $this->_contactId,
-          )
+          ]
         );
       }
       // assign vars to templates
@@ -225,7 +225,7 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page {
     $softCreditList = CRM_Contribute_BAO_Contribution::getSoftContributionList($this->_contactId, $isTest);
 
     if (!empty($softCreditList)) {
-      $softCreditTotals = array();
+      $softCreditTotals = [];
 
       list($softCreditTotals['amount'],
         $softCreditTotals['avg'],

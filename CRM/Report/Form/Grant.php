@@ -50,178 +50,178 @@ class CRM_Report_Form_Grant extends CRM_Report_Form {
   public $_groupBy;
   protected $_addressField = FALSE;
 
-  protected $_customGroupExtends = array('Grant'); function __construct() {
-    $this->_columns = array(
+  protected $_customGroupExtends = ['Grant']; function __construct() {
+    $this->_columns = [
       'civicrm_contact' =>
-      array('dao' => 'CRM_Contact_DAO_Contact',
+      ['dao' => 'CRM_Contact_DAO_Contact',
         'fields' =>
-        array('display_name' =>
-          array('title' => ts('Contact Name'),
+        ['display_name' =>
+          ['title' => ts('Contact Name'),
             'required' => TRUE,
             'no_repeat' => TRUE,
-          ),
-        ),
+          ],
+        ],
         'grouping' => 'contact-fields',
         'filters' =>
-        array('display_name' =>
-          array('title' => ts('Contact Name'),
+        ['display_name' =>
+          ['title' => ts('Contact Name'),
             'operator' => 'like',
-          ),
+          ],
           'gender_id' =>
-          array('title' => ts('Gender'),
+          ['title' => ts('Gender'),
             'operatorType' => CRM_Report_Form::OP_MULTISELECT,
             'options' => CRM_Core_PseudoConstant::gender(),
-          ),
-        ),
-      ),
+          ],
+        ],
+      ],
       'civicrm_address' =>
-      array('dao' => 'CRM_Core_DAO_Address',
+      ['dao' => 'CRM_Core_DAO_Address',
         'filters' =>
-        array('country_id' =>
-          array('title' => ts('Country'),
+        ['country_id' =>
+          ['title' => ts('Country'),
             'operatorType' => CRM_Report_Form::OP_MULTISELECT,
             'options' => CRM_Core_PseudoConstant::country(),
-          ),
+          ],
           'state_province_id' =>
-          array('title' => ts('State/Province'),
+          ['title' => ts('State/Province'),
             'operatorType' => CRM_Report_Form::OP_MULTISELECT,
             'options' => CRM_Core_PseudoConstant::stateProvince(),
-          ),
-        ),
-      ),
+          ],
+        ],
+      ],
       'civicrm_grant' =>
-      array('dao' => 'CRM_Grant_DAO_Grant',
+      ['dao' => 'CRM_Grant_DAO_Grant',
         'fields' =>
-        array(
+        [
           'grant_type_id' =>
-          array(
+          [
             'name' => 'grant_type_id',
             'title' => ts('Grant Type'),
-          ),
+          ],
           'status_id' =>
-          array(
+          [
             'name' => 'status_id',
             'title' => ts('Grant Status'),
-          ),
+          ],
           'amount_requested' =>
-          array(
+          [
             'name' => 'amount_requested',
             'title' => ts('Amount Requested'),
             'type' => CRM_Utils_Type::T_MONEY,
-          ),
+          ],
           'amount_granted' =>
-          array(
+          [
             'name' => 'amount_granted',
             'title' => ts('Amount Granted'),
-          ),
+          ],
           'application_received_date' =>
-          array(
+          [
             'name' => 'application_received_date',
             'title' => ts('Application Received Date'),
             'default' => TRUE,
-          ),
+          ],
           'money_transfer_date' =>
-          array(
+          [
             'name' => 'money_transfer_date',
             'title' => ts('Money Transfer Date'),
             'type' => CRM_Utils_Type::T_DATE,
-          ),
+          ],
           'grant_due_date' =>
-          array(
+          [
             'name' => 'grant_due_date',
             'title' => ts('Grant Due Date'),
             'type' => CRM_Utils_Type::T_DATE,
-          ),
+          ],
           'rationale' =>
-          array(
+          [
             'name' => 'rationale',
             'title' => ts('Rationale'),
-          ),
+          ],
           'grant_report_received' =>
-          array(
+          [
             'name' => 'grant_report_received',
             'title' => ts('Grant Report Received'),
-          ),
-        ),
+          ],
+        ],
         'filters' =>
-        array('grant_type' =>
-          array(
+        ['grant_type' =>
+          [
             'name' => 'grant_type_id',
             'title' => ts('Grant Type'),
             'operatorType' => CRM_Report_Form::OP_MULTISELECT,
             'options' => CRM_Grant_PseudoConstant::grantType(),
-          ),
+          ],
           'status_id' =>
-          array(
+          [
             'name' => 'status_id',
             'title' => ts('Grant Status'),
             'operatorType' => CRM_Report_Form::OP_MULTISELECT,
             'options' => CRM_Grant_PseudoConstant::grantStatus(),
-          ),
+          ],
           'amount_granted' =>
-          array(
+          [
             'title' => ts('Amount Granted'),
             'operatorType' => CRM_Report_Form::OP_INT,
-          ),
+          ],
           'amount_requested' =>
-          array(
+          [
             'title' => ts('Amount Requested'),
             'operatorType' => CRM_Report_Form::OP_INT,
-          ),
+          ],
           'application_received_date' =>
-          array(
+          [
             'title' => ts('Application Received Date'),
             'operatorType' => CRM_Report_Form::OP_DATE,
-          ),
+          ],
           'money_transfer_date' =>
-          array(
+          [
             'title' => ts('Money Transfer Date'),
             'operatorType' => CRM_Report_Form::OP_DATE,
-          ),
+          ],
           'grant_due_date' =>
-          array(
+          [
             'title' => ts('Grant Due Date'),
             'operatorType' => CRM_Report_Form::OP_DATE,
             'type' => CRM_Report_Form::OP_DATE,
-          ),
-        ),
+          ],
+        ],
         'group_bys' =>
-        array(
+        [
           'grant_type_id' =>
-          array(
+          [
             'title' => ts('Grant Type'),
-          ),
+          ],
           'status_id' =>
-          array(
+          [
             'title' => ts('Grant Status'),
-          ),
+          ],
           'amount_requested' =>
-          array(
+          [
             'title' => ts('Amount Requested'),
-          ),
+          ],
           'amount_granted' =>
-          array(
+          [
             'title' => ts('Amount Granted'),
-          ),
+          ],
           'application_received_date' =>
-          array(
+          [
             'title' => ts('Application Received Date'),
-          ),
+          ],
           'money_transfer_date' =>
-          array(
+          [
             'title' => ts('Money Transfer Date'),
-          ),
-        ),
-      ),
-    );
+          ],
+        ],
+      ],
+    ];
 
     parent::__construct();
   }
 
   function select() {
-    $select = array();
+    $select = [];
 
-    $this->_columnHeaders = array();
+    $this->_columnHeaders = [];
     foreach ($this->_columns as $tableName => $table) {
       if ($tableName == 'civicrm_address') {
         $this->_addressField = TRUE;
@@ -259,7 +259,7 @@ class CRM_Report_Form_Grant extends CRM_Report_Form {
   }
 
   function where() {
-    $clauses = array();
+    $clauses = [];
     foreach ($this->_columns as $tableName => $table) {
       if (CRM_Utils_Array::arrayKeyExists('filters', $table)) {
         foreach ($table['filters'] as $fieldName => $field) {

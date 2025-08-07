@@ -78,7 +78,7 @@ class CRM_Member_Selector_Search extends CRM_Core_Selector_Base implements CRM_C
    * @var array
    * @static
    */
-  static $_properties = array('contact_id', 'membership_id',
+  static $_properties = ['contact_id', 'membership_id',
     'contact_type',
     'sort_name',
     'membership_type',
@@ -91,7 +91,7 @@ class CRM_Member_Selector_Search extends CRM_Core_Selector_Base implements CRM_C
     'owner_membership_id',
     'membership_status',
     'reminder_date',
-  );
+  ];
 
   /**
    * are we restricting ourselves to a single contact
@@ -212,42 +212,42 @@ class CRM_Member_Selector_Search extends CRM_Core_Selector_Base implements CRM_C
     }
 
     if (!self::$_links['view']) {
-      self::$_links['view'] = array(
-        CRM_Core_Action::VIEW => array(
+      self::$_links['view'] = [
+        CRM_Core_Action::VIEW => [
           'name' => ts('View'),
           'url' => 'civicrm/contact/view/membership',
           'qs' => 'reset=1&id=%%id%%&cid=%%cid%%&action=view&context=%%cxt%%&selectedChild=member' . $extraParams,
           'title' => ts('View Membership'),
-        ),
-      );
+        ],
+      ];
     }
     if (!isset(self::$_links['all']) || !self::$_links['all']) {
-      $extraLinks = array(
-        CRM_Core_Action::UPDATE => array(
+      $extraLinks = [
+        CRM_Core_Action::UPDATE => [
           'name' => ts('Edit'),
           'url' => 'civicrm/contact/view/membership',
           'qs' => 'reset=1&action=update&id=%%id%%&cid=%%cid%%&context=%%cxt%%' . $extraParams,
           'title' => ts('Edit Membership'),
-        ),
-        CRM_Core_Action::DELETE => array(
+        ],
+        CRM_Core_Action::DELETE => [
           'name' => ts('Delete'),
           'url' => 'civicrm/contact/view/membership',
           'qs' => 'reset=1&action=delete&id=%%id%%&cid=%%cid%%&context=%%cxt%%' . $extraParams,
           'title' => ts('Delete Membership'),
-        ),
-        CRM_Core_Action::RENEW => array(
+        ],
+        CRM_Core_Action::RENEW => [
           'name' => ts('Renew'),
           'url' => 'civicrm/contact/view/membership',
           'qs' => 'reset=1&action=renew&id=%%id%%&cid=%%cid%%&context=%%cxt%%' . $extraParams,
           'title' => ts('Renew Membership'),
-        ),
-        CRM_Core_Action::FOLLOWUP => array(
+        ],
+        CRM_Core_Action::FOLLOWUP => [
           'name' => ts('Renew-Credit Card'),
           'url' => 'civicrm/contact/view/membership',
           'qs' => 'action=renew&reset=1&cid=%%cid%%&id=%%id%%&context=%%cxt%%&mode=live' . $extraParams,
           'title' => ts('Renew Membership Using Credit Card'),
-        ),
-      );
+        ],
+      ];
       if (!$isPaymentProcessor || !$accessContribution) {
         //unset the renew with credit card when payment
         //processor is not available or user not permitted to make contributions
@@ -339,10 +339,10 @@ class CRM_Member_Selector_Search extends CRM_Core_Selector_Base implements CRM_C
     );
 
     // process the result of the query
-    $rows = array();
+    $rows = [];
 
     //CRM-4418 check for view, edit, delete
-    $permissions = array(CRM_Core_Permission::VIEW);
+    $permissions = [CRM_Core_Permission::VIEW];
     if (CRM_Core_Permission::check('edit memberships')) {
       $permissions[] = CRM_Core_Permission::EDIT;
     }
@@ -354,7 +354,7 @@ class CRM_Member_Selector_Search extends CRM_Core_Selector_Base implements CRM_C
     $memberLabelStatus = CRM_Member_PseudoConstant::membershipStatus(NULL, NULL, 'label');
 
     while ($result->fetch()) {
-      $row = array();
+      $row = [];
 
       // the columns we are interested in
       foreach (self::$_properties as $property) {
@@ -386,18 +386,18 @@ class CRM_Member_Selector_Search extends CRM_Core_Selector_Base implements CRM_C
             $this->_context
           ),
           $currentMask,
-          array('id' => $result->membership_id,
+          ['id' => $result->membership_id,
             'cid' => $result->contact_id,
             'cxt' => $this->_context,
-          )
+          ]
         );
       }
       else {
         $row['action'] = CRM_Core_Action::formLink(self::links('view'), $mask,
-          array('id' => $result->membership_id,
+          ['id' => $result->membership_id,
             'cid' => $result->contact_id,
             'cxt' => $this->_context,
-          )
+          ]
         );
       }
 
@@ -437,70 +437,70 @@ class CRM_Member_Selector_Search extends CRM_Core_Selector_Base implements CRM_C
    */
   public function &getColumnHeaders($action = NULL, $output = NULL) {
     if (!isset(self::$_columnHeaders)) {
-      self::$_columnHeaders = array(
-        array(
+      self::$_columnHeaders = [
+        [
           'name' => ts('Membership Type'),
           'sort' => 'membership_type_id',
           'direction' => CRM_Utils_Sort::DONTCARE,
-        ),
-        array('name' => ts('Member Since'),
+        ],
+        ['name' => ts('Member Since'),
           'sort' => 'join_date',
           'direction' => CRM_Utils_Sort::DESCENDING,
-        ),
-        array(
+        ],
+        [
           'name' => ts('Start Date'),
           'sort' => 'membership_start_date',
           'direction' => CRM_Utils_Sort::DONTCARE,
-        ),
-        array(
+        ],
+        [
           'name' => ts('End Date'),
           'sort' => 'membership_end_date',
           'direction' => CRM_Utils_Sort::DONTCARE,
-        ),
-        array(
+        ],
+        [
           'name' => ts('Renewal Reminder Date'),
           'sort' => 'reminder_date',
           'direction' => CRM_Utils_Sort::DONTCARE,
-        ),
-        array(
+        ],
+        [
           'name' => ts('Source'),
           'sort' => 'membership_source',
           'direction' => CRM_Utils_Sort::DONTCARE,
-        ),
-        array(
+        ],
+        [
           'name' => ts('Status'),
           'sort' => 'status_id',
           'direction' => CRM_Utils_Sort::DONTCARE,
-        ),
-        array('desc' => ts('Actions')),
-      );
+        ],
+        ['desc' => ts('Actions')],
+      ];
 
       if (!$this->_single) {
-        $pre = array(
-          array('desc' => ts('Contact Type')),
-          array(
+        $pre = [
+          ['desc' => ts('Contact Type')],
+          [
             'name' => '#',
             'title' => ts('Membership ID'),
             'sort' => 'membership_id',
             'direction' => CRM_Utils_Sort::DONTCARE,
-          ),
-          array(
+          ],
+          [
             'name' => ts('Name'),
             'sort' => 'sort_name',
             'direction' => CRM_Utils_Sort::DONTCARE,
-          ),
-        );
+          ],
+        ];
         self::$_columnHeaders = array_merge($pre, self::$_columnHeaders);
       }
       else {
-        $pre = array(
-          array(
+        $pre = [
+          [
             'name' => '#',
             'title' => ts('Membership ID'),
             'sort' => 'membership_id',
             'direction' => CRM_Utils_Sort::DONTCARE,
-          ),
-        );
+          ],
+        ];
         self::$_columnHeaders = array_merge($pre, self::$_columnHeaders);
       }
     }

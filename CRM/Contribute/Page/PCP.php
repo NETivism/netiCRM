@@ -68,55 +68,55 @@ class CRM_Contribute_Page_PCP extends CRM_Core_Page_Basic {
       // helper variable for nicer formatting
       $deleteExtra = ts('Are you sure you want to delete this Campaign Page ?');
 
-      self::$_links = array(
-        CRM_Core_Action::UPDATE => array(
+      self::$_links = [
+        CRM_Core_Action::UPDATE => [
           'name' => ts('Edit'),
           'url' => 'civicrm/contribute/pcp/info',
           'qs' => 'action=update&reset=1&id=%%id%%&context=standalone&key=%%qfKey%%',
           'title' => ts('Edit Personal Campaign Page'),
           'fe' => TRUE,
-        ),
-        CRM_Core_Action::RENEW => array(
+        ],
+        CRM_Core_Action::RENEW => [
           'name' => ts('Approve'),
           'url' => 'civicrm/admin/pcp',
           'qs' => 'action=renew&id=%%id%%',
           'title' => ts('Approve Personal Campaign Page'),
           'class' => 'dialog approve',
-        ),
-        CRM_Core_Action::REVERT => array(
+        ],
+        CRM_Core_Action::REVERT => [
           'name' => ts('Reject'),
           'url' => 'civicrm/admin/pcp',
           'qs' => 'action=revert&id=%%id%%',
           'title' => ts('Reject Personal Campaign Page'),
           'class' => 'dialog reject',
-        ),
-        CRM_Core_Action::PREVIEW => array(
+        ],
+        CRM_Core_Action::PREVIEW => [
           'name' => ts('Revoke to Draft'),
           'url' => 'civicrm/admin/pcp',
           'qs' => 'action=preview&id=%%id%%',
           'title' => ts('Revoke Personal Campaign Page to Draft status'),
           'class' => 'dialog revoke',
-        ),
-        CRM_Core_Action::DELETE => array(
+        ],
+        CRM_Core_Action::DELETE => [
           'name' => ts('Delete'),
           'url' => 'civicrm/admin/pcp',
           'qs' => 'action=delete&id=%%id%%',
           'extra' => 'onclick = "return confirm(\'' . $deleteExtra . '\');"',
           'title' => ts('Delete Personal Campaign Page'),
-        ),
-        CRM_Core_Action::DISABLE => array(
+        ],
+        CRM_Core_Action::DISABLE => [
           'name' => ts('Disable'),
           'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_Contribute_BAO_PCP' . '\',\'' . 'enable-disable' . '\' );"',
           'ref' => 'disable-action',
           'title' => ts('Disable Personal Campaign Pages'),
-        ),
-        CRM_Core_Action::ENABLE => array(
+        ],
+        CRM_Core_Action::ENABLE => [
           'name' => ts('Enable'),
           'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_Contribute_BAO_PCP' . '\',\'' . 'disable-enable' . '\' );"',
           'ref' => 'enable-action',
           'title' => ts('Enable Personal Campaign Pages'),
-        ),
-      );
+        ],
+      ];
     }
     return self::$_links;
   }
@@ -190,33 +190,33 @@ class CRM_Contribute_Page_PCP extends CRM_Core_Page_Basic {
    * @static
    */
   function browse($action = NULL) {
-    $pcpSummary = $params = array();
+    $pcpSummary = $params = [];
 
     $pcpSummary = $this->get("pcpSummary");
     if (empty($pcpSummary)) {
       $status = CRM_Contribute_PseudoConstant::pcpstatus();
       $contribution_page = CRM_Contribute_PseudoConstant::contributionPage();
-      $whereClause = array();
+      $whereClause = [];
 
       $status_id = CRM_Utils_Request::retrieve('status_id', 'Integer', $this);
       if (!empty($status_id) || $status_id === '0') {
         $whereClause[] = 'cp.status_id = %1';
-        $params['1'] = array($status_id, 'Integer');
+        $params['1'] = [$status_id, 'Integer'];
       }
 
       if ($contribution_page_id = CRM_Utils_Request::retrieve('contribution_page_id', 'Positive', $this)) {
         $whereClause[] = 'cp.contribution_page_id = %2';
-        $params['2'] = array($contribution_page_id, 'Integer');
+        $params['2'] = [$contribution_page_id, 'Integer'];
       }
 
       if ($contact_id = CRM_Utils_Request::retrieve('contact_id', 'Positive', $this)) {
         $whereClause[] = 'cp.contact_id = %3';
-        $params['3'] = array($contact_id, 'Integer');
+        $params['3'] = [$contact_id, 'Integer'];
       }
 
       if ($title = $this->get("title")) {
         $whereClause[] = 'cp.title LIKE %4';
-        $params['4'] = array("%".$title."%", 'String');
+        $params['4'] = ["%".$title."%", 'String'];
       }
 
       if (!empty($whereClause)) {
@@ -236,7 +236,7 @@ class CRM_Contribute_Page_PCP extends CRM_Core_Page_Basic {
       $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String', $this);
       while ($dao->fetch()) {
 
-        $pcpSummary[$dao->id] = array();
+        $pcpSummary[$dao->id] = [];
         $action = array_sum(array_keys($this->links()));
 
         CRM_Core_DAO::storeValues($dao, $pcpSummary[$dao->id]);
@@ -298,7 +298,7 @@ class CRM_Contribute_Page_PCP extends CRM_Core_Page_Basic {
         $pcpSummary[$dao->id]['contribution_page_id'] = $dao->contribution_page_id;
         $pcpSummary[$dao->id]['contribution_page_title'] = $contribution_page[$dao->contribution_page_id];
         $pcpSummary[$dao->id]['action'] = CRM_Core_Action::formLink(self::links(), $action,
-          array('id' => $dao->id, 'qfKey' => $qfKey)
+          ['id' => $dao->id, 'qfKey' => $qfKey]
         );
         $pcpSummary[$dao->id]['class'] = $class;
       }

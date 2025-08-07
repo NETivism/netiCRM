@@ -45,58 +45,58 @@ class CRM_Event_Info extends CRM_Core_Component_Info {
 
   // docs inherited from interface
   public function getInfo() {
-    return array('name' => 'CiviEvent',
+    return ['name' => 'CiviEvent',
       'translatedName' => ts('CiviEvent'),
       'title' => ts('CiviCRM Event Engine'),
       'search' => 1,
       'showActivitiesInCore' => 1,
-    );
+    ];
   }
 
 
   // docs inherited from interface
   public function getPermissions() {
-    return array('access CiviEvent',
+    return ['access CiviEvent',
       'edit event participants',
       'edit all events',
       'register for events',
       'view event info',
       'view event participants',
       'delete in CiviEvent',
-    );
+    ];
   }
 
   // docs inherited from interface
   public function getUserDashboardElement() {
-    return array('name' => ts('Events'),
+    return ['name' => ts('Events'),
       'title' => ts('Your Event(s)'),
-      'perm' => array('register for events'),
+      'perm' => ['register for events'],
       'weight' => 20,
-    );
+    ];
   }
 
   // docs inherited from interface
   public function registerTab() {
-    return array('title' => ts('Events'),
+    return ['title' => ts('Events'),
       'id' => 'participant',
       'url' => 'participant',
       'weight' => 40,
-    );
+    ];
   }
 
   // docs inherited from interface
   public function registerAdvancedSearchPane() {
-    return array('title' => ts('Events'),
+    return ['title' => ts('Events'),
       'weight' => 40,
-    );
+    ];
   }
 
   // docs inherited from interface
   public function getActivityTypes() {
-    $types = array();
-    $types['Event'] = array('title' => ts('Event'),
+    $types = [];
+    $types['Event'] = ['title' => ts('Event'),
       'callback' => 'CRM_Event_Page_EventInfo::run()',
-    );
+    ];
     return $types;
   }
 
@@ -105,11 +105,11 @@ class CRM_Event_Info extends CRM_Core_Component_Info {
     if (CRM_Core_Permission::check('access CiviEvent') &&
       CRM_Core_Permission::check('edit event participants')
     ) {
-      $shortCuts = array_merge($shortCuts, array(array('path' => 'civicrm/participant/add',
+      $shortCuts = array_merge($shortCuts, [['path' => 'civicrm/participant/add',
             'query' => "reset=1&action=add&context=standalone",
             'ref' => 'new-participant',
             'title' => ts('Event Registration'),
-          )));
+          ]]);
     }
   }
 }

@@ -72,45 +72,45 @@ class CRM_Custom_Page_Field extends CRM_Core_Page {
   function &actionLinks() {
     if (!isset(self::$_actionLinks)) {
       $deleteExtra = ts('Are you sure you want to delete this custom data field?');
-      self::$_actionLinks = array(
-        CRM_Core_Action::UPDATE => array(
+      self::$_actionLinks = [
+        CRM_Core_Action::UPDATE => [
           'name' => ts('Edit Field'),
           'url' => 'civicrm/admin/custom/group/field/update',
           'qs' => 'action=update&reset=1&gid=%%gid%%&id=%%id%%',
           'title' => ts('Edit Custom Field'),
-        ),
-        CRM_Core_Action::BROWSE => array(
+        ],
+        CRM_Core_Action::BROWSE => [
           'name' => ts('Edit Multiple Choice Options'),
           'url' => 'civicrm/admin/custom/group/field/option',
           'qs' => 'reset=1&action=browse&gid=%%gid%%&fid=%%id%%',
           'title' => ts('List Custom Options'),
-        ),
-        CRM_Core_Action::PREVIEW => array(
+        ],
+        CRM_Core_Action::PREVIEW => [
           'name' => ts('Preview Field Display'),
           'url' => 'civicrm/admin/custom/group/field',
           'qs' => 'action=preview&reset=1&gid=%%gid%%&id=%%id%%',
           'title' => ts('Preview Custom Field'),
-        ),
-        CRM_Core_Action::DISABLE => array(
+        ],
+        CRM_Core_Action::DISABLE => [
           'name' => ts('Disable'),
           'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_Core_BAO_CustomField' . '\',\'' . 'enable-disable' . '\' );"',
           'ref' => 'disable-action',
           'title' => ts('Disable Custom Field'),
-        ),
-        CRM_Core_Action::ENABLE => array(
+        ],
+        CRM_Core_Action::ENABLE => [
           'name' => ts('Enable'),
           'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_Core_BAO_CustomField' . '\',\'' . 'disable-enable' . '\' );"',
           'ref' => 'enable-action',
           'title' => ts('Enable Custom Field'),
-        ),
-        CRM_Core_Action::DELETE => array(
+        ],
+        CRM_Core_Action::DELETE => [
           'name' => ts('Delete'),
           'url' => 'civicrm/admin/custom/group/field',
           'qs' => 'action=delete&reset=1&gid=%%gid%%&id=%%id%%',
           'title' => ts('Delete Custom Field'),
           'extra' => 'onclick = "return confirm(\'' . $deleteExtra . '\');"',
-        ),
-      );
+        ],
+      ];
     }
     return self::$_actionLinks;
   }
@@ -125,7 +125,7 @@ class CRM_Custom_Page_Field extends CRM_Core_Page {
    */
   function browse() {
 
-    $customField = array();
+    $customField = [];
     $customFieldBAO = new CRM_Core_BAO_CustomField();
 
     // fkey is gid
@@ -134,7 +134,7 @@ class CRM_Custom_Page_Field extends CRM_Core_Page {
     $customFieldBAO->find();
 
     while ($customFieldBAO->fetch()) {
-      $customField[$customFieldBAO->id] = array();
+      $customField[$customFieldBAO->id] = [];
       CRM_Core_DAO::storeValues($customFieldBAO, $customField[$customFieldBAO->id]);
       $action = array_sum(array_keys($this->actionLinks()));
       if ($customFieldBAO->is_active) {
@@ -171,9 +171,9 @@ class CRM_Custom_Page_Field extends CRM_Core_Page {
       $customField[$customFieldBAO->id]['data_type'] = $customFieldDataType[$customField[$customFieldBAO->id]['data_type']];
       $customField[$customFieldBAO->id]['order'] = $customField[$customFieldBAO->id]['weight'];
       $customField[$customFieldBAO->id]['action'] = CRM_Core_Action::formLink(self::actionLinks(), $action,
-        array('id' => $customFieldBAO->id,
+        ['id' => $customFieldBAO->id,
           'gid' => $this->_gid,
-        )
+        ]
       );
     }
 
@@ -246,7 +246,7 @@ class CRM_Custom_Page_Field extends CRM_Core_Page {
       $controller->setEmbedded(TRUE);
       $controller->process();
       $controller->run();
-      $fieldValues = array('custom_group_id' => $this->_gid);
+      $fieldValues = ['custom_group_id' => $this->_gid];
       $wt = CRM_Utils_Weight::delWeight('CRM_Core_DAO_CustomField', $id, $fieldValues);
     }
 
@@ -254,7 +254,7 @@ class CRM_Custom_Page_Field extends CRM_Core_Page {
       $groupTitle = CRM_Core_BAO_CustomGroup::getTitle($this->_gid);
       $this->assign('gid', $this->_gid);
       $this->assign('groupTitle', $groupTitle);
-      CRM_Utils_System::setTitle(ts('%1 - Custom Fields', array(1 => $groupTitle)));
+      CRM_Utils_System::setTitle(ts('%1 - Custom Fields', [1 => $groupTitle]));
     }
 
     // assign vars to templates

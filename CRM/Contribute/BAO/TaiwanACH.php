@@ -36,7 +36,7 @@
 
 class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
 
-  static $_txtFormat = array();
+  static $_txtFormat = [];
 
   CONST BANK = 'ACH Bank';
   CONST POST = 'ACH Post';
@@ -49,18 +49,18 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
 
   public static function getTxtFormatArray() {
     if (empty(self::$_txtFormat)) {
-      self::$_txtFormat = array(
-        self::BANK => array(
-          self::VERIFICATION => array(
-            'header' => array(
+      self::$_txtFormat = [
+        self::BANK => [
+          self::VERIFICATION => [
+            'header' => [
               '1' => 'X(03)',
               '4' => 'X(06)',
               '10' => '9(08)',
               '18' => '9(07)',
               '25' => 'X(3)',
               '28' => 'X(193)',
-            ),
-            'body' => array(
+            ],
+            'body' => [
               '1' => '9(06)',
               '7' => 'X(03)',
               '10' => 'X(10)',
@@ -79,15 +79,15 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
               '140' => 'X(08)',
               '148' => 'X(20)',
               '168' => 'X(53)',
-            ),
-            'footer' => array(
+            ],
+            'footer' => [
               '1' => 'X(03)',
               '4' => '9(08)',
               '12' => 'X(209)',
-            ),
-          ),
-          self::TRANSACTION => array(
-            'header' => array(
+            ],
+          ],
+          self::TRANSACTION => [
+            'header' => [
               '1' => 'X(03)',
               '4' => 'X(06)',
               '10' => '9(08)',
@@ -96,8 +96,8 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
               '31' => '9(07)',
               '38' => 'X(3)',
               '41' => 'X(210)',
-            ),
-            'body' => array(
+            ],
+            'body' => [
               '1' => 'X(01)',
               '2' => 'X(02)',
               '4' => 'X(03)',
@@ -121,8 +121,8 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
               '187' => '9(05)',
               '192' => 'X(20)',
               '212' => 'X(39)',
-            ),
-            'footer' => array(
+            ],
+            'footer' => [
               '1' => 'X(03)',
               '4' => 'X(06)',
               '10' => '9(08)',
@@ -132,12 +132,12 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
               '40' => '9(16)',
               '56' => '9(08)',
               '64' => 'X(187)',
-            ),
-          ),
-        ),
-        self::POST => array(
-          self::VERIFICATION => array(
-            'body' => array(
+            ],
+          ],
+        ],
+        self::POST => [
+          self::VERIFICATION => [
+            'body' => [
               '1' => 'X(1)',
               '2' => 'X(3)',
               '5' => 'X(4)',
@@ -152,8 +152,8 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
               '72' => 'X(2)',
               '74' => 'X(1)',
               '75' => 'X(26)',
-            ),
-            'footer' => array(
+            ],
+            'footer' => [
               '1' => 'X(1)',
               '2' => 'X(3)',
               '5' => 'X(4)',
@@ -165,10 +165,10 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
               '35' => '9(6)',
               '41' => '9(6)',
               '47' => 'X(54)',
-            ),
-          ),
-          self::TRANSACTION => array(
-            'body' => array(
+            ],
+          ],
+          self::TRANSACTION => [
+            'body' => [
               '1' => '9(1)',
               '2' => 'X(1)',
               '3' => 'X(3)',
@@ -189,8 +189,8 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
               '86' => 'X(5)',
               '91' => 'X(20)',
               '111' => 'X(10)',
-            ),
-            'footer' => array(
+            ],
+            'footer' => [
               '1' => '9(1)',
               '2' => 'X(1)',
               '3' => 'X(3)',
@@ -204,10 +204,10 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
               '56' => '9(7)',
               '63' => '9(13)',
               '76' => 'X(45)',
-            ),
-          ),
-        ),
-      );
+            ],
+          ],
+        ],
+      ];
     }
     return self::$_txtFormat;
   }
@@ -252,14 +252,14 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     }
     $originData = unserialize($taiwanACH->data);
     if (empty($originData)) {
-      $originData = array();
+      $originData = [];
     }
     $paramsData = $params['data'];
     $mergedData = array_merge($originData, $paramsData);
     $taiwanACH->copyValues($params);
 
     $recurring = new CRM_Contribute_DAO_ContributionRecur();
-    $recurParams = array();
+    $recurParams = [];
     $recurringFields = $recurring->fields();
     foreach ($recurringFields as $field) {
       $fieldName = $field['name'];
@@ -267,7 +267,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
         $recurParams[$fieldName] = $params[$fieldName];
       }
     }
-    $ids = array();
+    $ids = [];
     if (!empty($taiwanACH->contribution_recur_id)) {
       $recurParams['id'] = $taiwanACH->contribution_recur_id;
     }
@@ -318,19 +318,19 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     if (empty($userId)) {
       $userId = "NULL";
     }
-    $noteParams = array(
+    $noteParams = [
       'entity_table'  => 'civicrm_contribution_recur',
       'subject'       => $title,
       'note'          => $body,
       'entity_id'     => $taiwanACHId,
       'contact_id'    => $userId,
       'modified_date' => date('YmdHis'),
-    );
+    ];
     $note = CRM_Core_BAO_Note::add( $noteParams, NULL );
   }
 
   static function getValue($recurringId) {
-    $output = array();
+    $output = [];
 
     $taiwanACH = new CRM_Contribute_DAO_TaiwanACH();
     $taiwanACH->contribution_recur_id = $recurringId;
@@ -356,19 +356,19 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     return $output;
   }
 
-  static function getTaiwanACHDatas($recurringIds = array()) {
-    $achDatas = array();
+  static function getTaiwanACHDatas($recurringIds = []) {
+    $achDatas = [];
     foreach ($recurringIds as $recurringId) {
       $achDatas[$recurringId] = self::getValue($recurringId);
     }
     return $achDatas;
   }
 
-  static function doExportVerification($recurringIds = array(), &$params = array(), $officeType = self::BANK, $type = 'txt') {
+  static function doExportVerification($recurringIds = [], &$params = [], $officeType = self::BANK, $type = 'txt') {
     // Assign params
     $fileName = $params['file_name'];
     // $table = $bodyTable = array();
-    $table = array();
+    $table = [];
     $achDatas = self::getTaiwanACHDatas($recurringIds);
 
 
@@ -394,7 +394,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
         if (!empty($check['is_error'])) {
           $isError = TRUE;
           foreach ($check['messages'] as $message) {
-            $messages[] = ts('Error on line %1:', array(1 => $lineType)).$message;
+            $messages[] = ts('Error on line %1:', [1 => $lineType]).$message;
           }
         }
       }
@@ -426,14 +426,14 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       $bankCode = call_user_func_array('array_replace', $bankCode);
       foreach ($achDatas as $key => $achData) {
         $bankName = preg_replace('/^\d{7} (.+)$/', '$1', $bankCode[$achData['bank_code']]);
-        $row = array(
+        $row = [
           'Order Number' => $key+1,
           'Contact Id' => $achData['contact_id'],
           'Display Name' => CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $achData['contact_id'], 'display_name'),
           'Bank Code' => $achData['bank_code'],
           'Bank Name' => $bankName,
           'Bank Account' => $achData['bank_account'],
-        );
+        ];
         $tableByBankCode[$achData['bank_code']][] = $row;
       }
       ksort($tableByBankCode);
@@ -444,11 +444,11 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     }
   }
 
-  static function doExportTransaction($recurringIds, &$params = array(), $officeType = self::BANK, $type = 'txt') {
+  static function doExportTransaction($recurringIds, &$params = [], $officeType = self::BANK, $type = 'txt') {
     // Assign params
     $fileName = $params['file_name'];
     // $table = $bodyTable = array();
-    $table = array();
+    $table = [];
     $achDatas = self::getTaiwanACHDatas($recurringIds);
 
 
@@ -489,7 +489,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
         if (!empty($check['is_error'])) {
           $isError = TRUE;
           foreach ($check['messages'] as $message) {
-            $messages[] = ts('Error on line %1:', array(1 => $lineType)).$message;
+            $messages[] = ts('Error on line %1:', [1 => $lineType]).$message;
           }
         }
       }
@@ -515,14 +515,14 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       $bankCode = call_user_func_array('array_replace', $bankCode);
       foreach ($achDatas as $key => $achData) {
         $bankName = preg_replace('/^\d{7} (.+)$/', '$1', $bankCode[$achData['bank_code']]);
-        $row = array(
+        $row = [
           'Order Number' => $key+1,
           'Contact Id' => $achData['contact_id'],
           'Display Name' => CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $achData['contact_id'], 'display_name'),
           'Bank Code' => $achData['bank_code'],
           'Bank Name' => $bankName,
           'Bank Account' => $achData['bank_account'],
-        );
+        ];
         $tableByBankCode[$achData['bank_code']][] = $row;
       }
       ksort($tableByBankCode);
@@ -572,14 +572,14 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     $date = str_pad(($params['date'] - 19110000), 8, '0', STR_PAD_LEFT);
 
     // Generate Header
-    $header = array(
+    $header = [
       'BOF',
       'ACHP02',
       $date,
       $orgBankCode,
       'V10',
       str_repeat(' ', 193),
-    );
+    ];
     $checkResults['header'] = self::doCheckParseRow($header, self::BANK, self::VERIFICATION, 'header');
     $table[] = $header;
 
@@ -590,7 +590,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       $achData['invoice_id'] = "{$params['date']}_{$i}_{$rand}";
       CRM_Contribute_BAO_TaiwanACH::add($achData);
       $orderNumber = !empty(trim($achData['order_number'])) ? $achData['order_number'] : $achData['identifier_number'];
-      $row = array(
+      $row = [
         str_pad($i, 6, '0', STR_PAD_LEFT),
         '530',
         str_pad($paymentProcessor['password'], 10, ' ', STR_PAD_RIGHT),
@@ -609,7 +609,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
         str_repeat(' ', 8),
         str_repeat(' ', 20),
         str_repeat(' ', 53),
-      );
+      ];
       $checkResults[$i] = self::doCheckParseRow($row, self::BANK, self::VERIFICATION, 'body');
       $table[] = $row;
       $i++;
@@ -617,11 +617,11 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
 
     // Generate Footer
     $total = str_pad(count($achDatas), 8, '0', STR_PAD_LEFT);
-    $footer = array(
+    $footer = [
       'EOF',
       $total,
       str_repeat(' ', 209),
-    );
+    ];
     $checkResults['footer'] = self::doCheckParseRow($footer, self::BANK, self::VERIFICATION, 'footer');
     $table['check_results'] = $checkResults;
     $table[] = $footer;
@@ -637,7 +637,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     foreach ($achDatas as $achData) {
       $bankAccount = str_pad($achData['bank_account'], 14, '0', STR_PAD_RIGHT);
       $orderNumber = $achData['contribution_recur_id']; // #32543, force use recur id or can't verify order
-      $row = array(
+      $row = [
         1,
         $paymentProcessor['subject'],
         str_repeat(' ', 4),
@@ -652,7 +652,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
         str_repeat(' ', 2),
         ' ',
         str_repeat(' ', 26),
-      );
+      ];
       $checkResults[$i] = self::doCheckParseRow($row, self::POST, self::VERIFICATION, 'body');
       $table[] = $row;
       $i++;
@@ -660,7 +660,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
 
     // Generate Footer
     $total = str_pad(count($achDatas), 6, '0', STR_PAD_LEFT);
-    $footer = array(
+    $footer = [
       2,
       $paymentProcessor['subject'],
       str_repeat(' ', 4),
@@ -672,7 +672,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       str_repeat('0', 6),
       str_repeat('0', 6),
       str_repeat(' ', 54),
-    );
+    ];
     $checkResults['footer'] = self::doCheckParseRow($footer, self::POST, self::VERIFICATION, 'footer');
     $table['check_results'] = $checkResults;
     $table[] = $footer;
@@ -685,7 +685,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
 
     // Generate Header
     $date = str_pad(($params['transact_date'] - 19110000), 8, '0', STR_PAD_LEFT);
-    $header = array(
+    $header = [
       'BOF',
       'ACHP01',
       $date,
@@ -694,7 +694,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       '9990250',
       'V10',
       str_repeat(' ', 210),
-    );
+    ];
     $checkResults['header'] = self::doCheckParseRow($header, self::BANK, self::TRANSACTION, 'header');
     $table[] = $header;
 
@@ -709,7 +709,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       $params['contribution_ids'][] = $contribution->id;
       $identifier_number = str_pad($achData['identifier_number'], 10, ' ', STR_PAD_RIGHT);
       $orderNumber = !empty(trim($achData['order_number'])) ? $achData['order_number'] : $achData['identifier_number'];
-      $row = array(
+      $row = [
         'N',
         'SD',
         '530',
@@ -733,7 +733,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
         str_repeat('0', 5),
         str_repeat(' ', 20),
         str_repeat(' ', 39),
-      );
+      ];
       $checkResults[$i] = self::doCheckParseRow($row, self::BANK, self::TRANSACTION, 'body');
       $table[] = $row;
       $i++;
@@ -743,7 +743,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     // Generate Footer
     $total = str_pad(count($achDatas), 8, '0', STR_PAD_LEFT);
     $totalAmount = str_pad($totalAmount, 16, '0', STR_PAD_LEFT);
-    $footer = array(
+    $footer = [
       'EOF',
       'ACHP01',
       $date,
@@ -753,7 +753,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       $totalAmount,
       str_repeat(' ', 8),
       str_repeat(' ', 187),
-    );
+    ];
     $checkResults['footer'] = self::doCheckParseRow($footer, self::BANK, self::TRANSACTION, 'footer');
     $table['check_results'] = $checkResults;
     $table[] = $footer;
@@ -778,7 +778,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       $bankAccount = str_pad($achData['bank_account'], 14, '0', STR_PAD_RIGHT);
       $totalAmount += (INT) $achData['amount'];
       $orderNumber = !empty($achData['order_number']) ? $achData['order_number'] : $contribution->contribution_recur_id;
-      $row = array(
+      $row = [
         1,
         ($achData['postoffice_acc_type'] == 1)? 'P' : 'G',
         $paymentProcessor['subject'],
@@ -799,7 +799,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
         str_repeat(' ', 5),
         str_pad("{$params['transact_id']}-{$contribution->trxn_id}", 20, ' ', STR_PAD_LEFT),
         str_repeat(' ', 10),
-      );
+      ];
       $checkResults[$i] = self::doCheckParseRow($row, self::POST, self::TRANSACTION, 'body');
       $table[] = $row;
       $i++;
@@ -808,7 +808,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     // Generate Footer
     $total = str_pad(count($achDatas), 7, '0', STR_PAD_LEFT);
     $totalAmount = str_pad($totalAmount, 11, '0', STR_PAD_LEFT).'00';
-    $footer = array(
+    $footer = [
       2,
       ' ',
       $paymentProcessor['subject'],
@@ -822,7 +822,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       str_repeat('0', 7),
       str_repeat('0', 13),
       str_repeat(' ', 45),
-    );
+    ];
     $checkResults['footer'] = self::doCheckParseRow($footer, self::POST, self::TRANSACTION, 'footer');
     $table['check_results'] = $checkResults;
     $table[] = $footer;
@@ -843,7 +843,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
         }
       }
     }
-    $contributionParams = array(
+    $contributionParams = [
       'contact_id' => $achData['contact_id'],
       'total_amount' => $achData['amount'],
       'create_date' => date('Y-m-d H:i:s'),
@@ -857,8 +857,8 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       'payment_instrument_id' => $instrumentId,
       'custom' => $customData,
       'source' => ts('Export ACH Transaction File'),
-    );
-    $ids = array();
+    ];
+    $ids = [];
     $contribution = CRM_Contribute_BAO_Contribution::create($contributionParams, $ids);
     if (!empty($contribution->id)) {
       $contribution->trxn_id = self::genTrxnId($contribution);
@@ -889,7 +889,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     $instrumentType = '';
     $processType = '';
     $isError = FALSE;
-    $resolvedData = array();
+    $resolvedData = [];
     // Consider instrument type and process type, Transfer row text to array.
     for ($i = 0; $i < $lines; $i++) {
       $bodyLine = NULL;
@@ -915,7 +915,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
             break;
         }
         if (empty($instrumentType) || empty($processType)) {
-           return CRM_Core_Error::statusBounce(ts("Word count of txt is wrong: %1", array(1 => $wordCount)));
+           return CRM_Core_Error::statusBounce(ts("Word count of txt is wrong: %1", [1 => $wordCount]));
         }
         if ($instrumentType == self::BANK) {
           $header = self::doCheckParseRow($row, $instrumentType, $processType, 'header');
@@ -955,7 +955,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     }
 
     // Rearrange data, Add id to key so that it's easy to find the row.
-    $rearrangeData = array();
+    $rearrangeData = [];
     foreach ($resolvedData as $data) {
       if ($processType == self::VERIFICATION) {
         if ($instrumentType == self::BANK) {
@@ -1004,11 +1004,11 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     }
 
     $sql = "SELECT data FROM civicrm_log WHERE entity_table = 'civicrm_contribution_taiwanach_{$processType}{$tableSubName}' AND entity_id = %1 ORDER BY id DESC LIMIT 1";
-    $params = array( 1 => array($entityId, 'String'));
+    $params = [ 1 => [$entityId, 'String']];
     $dataIds = CRM_Core_DAO::singleValueQuery($sql, $params);
     if (!empty($dataIds)) {
       $processIds = explode(',', $dataIds);
-      $processedData = array();
+      $processedData = [];
       foreach ($processIds as $id) {
         // if $processType = 'verification' => 'contribution_recur_id'
         // if $processType = 'transaction' => 'contribution_id'
@@ -1024,9 +1024,9 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
           }
           if ($processType == self::TRANSACTION) {
             if ($instrumentType == self::BANK && empty($parsedData)) {
-              $rearrangeData[$id] = $parsedData = array(
+              $rearrangeData[$id] = $parsedData = [
                 'is_success' => TRUE,
-              );
+              ];
             }
             $data = self::doProcessTransaction($id, $parsedData);
           }
@@ -1045,11 +1045,11 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
        return CRM_Core_Error::statusBounce(CRM_Utils_Array::implode('<br/>', $messages));
     }
 
-    $result = array(
+    $result = [
       'import_type' => $processType,
       'payment_type' => $instrumentType,
       'parsed_data' => $rearrangeData,
-    );
+    ];
     $result['process_id'] = $entityId;
     $result['processed_data'] = $processedData;
     return $result;
@@ -1071,19 +1071,19 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
           $regexp = self::getRegexpFromFormatString($format[$wordCount]);
           if (!preg_match($regexp, $row[$i])) {
             $isError = TRUE;
-            $msg[] = ts("In %1, row %2 is not correct, input value is %3, format should be %4", array(
+            $msg[] = ts("In %1, row %2 is not correct, input value is %3, format should be %4", [
               1 => $headerOrFooter,
               2 => $i+1,
               3 => str_replace(' ', "_", $row[$i]),
               4 => $format[$wordCount],
-            ));
+            ]);
           }
         }
       }
       $returnArray = $row;
     }
     else {
-      $returnArray = array();
+      $returnArray = [];
       // Check when input is String
       for ($i = 0; $i < count($formatKeys); $i++) {
         $wordCount = $formatKeys[$i];
@@ -1098,12 +1098,12 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
         $regexp = self::getRegexpFromFormatString($format[$wordCount]);
         if (!preg_match($regexp, $str)) {
           $isError = TRUE;
-          $msg[] = ts("In %1, word since %2 is not correct, input value is %3, format should be %4", array(
+          $msg[] = ts("In %1, word since %2 is not correct, input value is %3, format should be %4", [
             1 => $headerOrFooter,
             2 => $formatKeys[$i],
             3 => str_replace(' ', "_", $str),
             4 => $format[$wordCount],
-          ));
+          ]);
         }
         $returnArray[] = trim($str);
       }
@@ -1131,7 +1131,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       }
     }
     else {
-       return CRM_Core_Error::statusBounce(ts("Format is not correct. Input format is '%1'", array(1 => $formatString)));
+       return CRM_Core_Error::statusBounce(ts("Format is not correct. Input format is '%1'", [1 => $formatString]));
     }
     return $regexp;
   }
@@ -1161,7 +1161,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     // check Stamp Verification
 
     $isError = FALSE;
-    $messages = array();
+    $messages = [];
     if ($taiwanACHData['contribution_status_id'] == 2 && $taiwanACHData['stamp_verification'] == 0) {
       if ($processType == self::BANK) {
         if ($parsedData[11] == 'R' || $parsedData[11] == 'N') {
@@ -1199,7 +1199,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     }
     else {
       $isError = TRUE;
-      $messages[] = ts("Status of recurring: %1 should be 'pending'.", array(1 => $recurId));
+      $messages[] = ts("Status of recurring: %1 should be 'pending'.", [1 => $recurId]);
     }
     if ($isError) {
        return CRM_Core_Error::statusBounce(CRM_Utils_Array::implode('<br/>', $messages));
@@ -1355,14 +1355,14 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
           $objects['contribution']->save();
           if (!empty($ids['contributionRecur'])) {
             $sql = "SELECT count(*) FROM civicrm_contribution WHERE contribution_recur_id = %1";
-            $params = array( 1 => array($ids['contributionRecur'], 'Positive'));
+            $params = [ 1 => [$ids['contributionRecur'], 'Positive']];
             $recurTimes = CRM_Core_DAO::singleValueQuery($sql, $params);
             if ($recurTimes == 1) {
-              $recur_params = array(
+              $recur_params = [
                 'id' => $ids['contributionRecur'],
                 'contribution_status_id' => 5,
-              );
-              $null = array();
+              ];
+              $null = [];
               CRM_Contribute_BAO_ContributionRecur::add($recur_params, $null);
             }
           }
@@ -1389,19 +1389,19 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     $sql = "SELECT r.id, r.end_date, r.contribution_status_id, c.payment_processor_id, c.is_test FROM civicrm_contribution_recur r
  INNER JOIN civicrm_contribution c ON c.contribution_recur_id = r.id
  WHERE r.end_date IS NOT NULL AND r.end_date < %1 AND r.contribution_status_id = 5 GROUP BY r.id";
-    $dao = CRM_Core_DAO::executeQuery($sql, array(
-      1 => array($currentDay, 'String'),
-    ));
+    $dao = CRM_Core_DAO::executeQuery($sql, [
+      1 => [$currentDay, 'String'],
+    ]);
     while ($dao->fetch()) {
       $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($dao->payment_processor_id, $dao->is_test ? 'test': 'live');
       if ($dao->id && strtolower($paymentProcessor['payment_processor_type']) == 'taiwanach') {
-        $params = array(
+        $params = [
           'id' => $dao->id,
           'contribution_status_id' => 1,
           'message' => ts("End date is due."),
-        );
+        ];
         CRM_Contribute_BAO_ContributionRecur::add($params, CRM_Core_DAO::$_nullObject);
-        $statusNoteTitle = ts("Change status to %1", array(1 => CRM_Contribute_PseudoConstant::contributionStatus(1)));
+        $statusNoteTitle = ts("Change status to %1", [1 => CRM_Contribute_PseudoConstant::contributionStatus(1)]);
         $statusNote = $params['message'] . ts("Auto renews status");
         CRM_Contribute_BAO_ContributionRecur::addNote($dao->id, $statusNoteTitle, $statusNote);
 

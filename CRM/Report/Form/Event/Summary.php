@@ -56,57 +56,57 @@ class CRM_Report_Form_Event_Summary extends CRM_Report_Form {
   public $_absoluteUrl;
   protected $_summary = NULL;
 
-  protected $_charts = array('' => 'Tabular',
+  protected $_charts = ['' => 'Tabular',
     'barChart' => 'Bar Chart',
     'pieChart' => 'Pie Chart',
-  );
+  ];
 
   protected $_add2groupSupported = FALSE;
 
-  protected $_customGroupExtends = array('Event'); function __construct() {
+  protected $_customGroupExtends = ['Event']; function __construct() {
 
-    $this->_columns = array(
+    $this->_columns = [
       'civicrm_event' =>
-      array('dao' => 'CRM_Event_DAO_Event',
+      ['dao' => 'CRM_Event_DAO_Event',
         'fields' =>
-        array(
-          'id' => array('no_display' => TRUE,
+        [
+          'id' => ['no_display' => TRUE,
             'required' => TRUE,
-          ),
-          'title' => array('title' => ts('Event Title'),
+          ],
+          'title' => ['title' => ts('Event Title'),
             'required' => TRUE,
-          ),
-          'event_type_id' => array('title' => ts('Event Type'),
+          ],
+          'event_type_id' => ['title' => ts('Event Type'),
             'required' => TRUE,
-          ),
-          'fee_label' => array('title' => ts('Fee Label')),
-          'event_start_date' => array('title' => ts('Event Start Date'),
-          ),
-          'event_end_date' => array('title' => ts('Event End Date')),
-          'max_participants' => array('title' => ts('Capacity'),
+          ],
+          'fee_label' => ['title' => ts('Fee Label')],
+          'event_start_date' => ['title' => ts('Event Start Date'),
+          ],
+          'event_end_date' => ['title' => ts('Event End Date')],
+          'max_participants' => ['title' => ts('Capacity'),
             'type' => CRM_Utils_Type::T_INT,
-          ),
-        ),
+          ],
+        ],
         'filters' =>
-        array(
-          'id' => array('title' => ts('Event Title'),
+        [
+          'id' => ['title' => ts('Event Title'),
             'operatorType' => CRM_Report_Form::OP_MULTISELECT,
             'options' => CRM_Event_PseudoConstant::event(NULL, NULL, "is_template IS NULL OR is_template = 0"),
-          ),
-          'event_type_id' => array('name' => 'event_type_id',
+          ],
+          'event_type_id' => ['name' => 'event_type_id',
             'title' => ts('Event Type'),
             'operatorType' => CRM_Report_Form::OP_MULTISELECT,
             'options' => CRM_Core_OptionGroup::values('event_type'),
-          ),
-          'event_start_date' => array('title' => 'Event Start Date',
+          ],
+          'event_start_date' => ['title' => 'Event Start Date',
             'operatorType' => CRM_Report_Form::OP_DATE,
-          ),
-          'event_end_date' => array('title' => 'Event End Date',
+          ],
+          'event_end_date' => ['title' => 'Event End Date',
             'operatorType' => CRM_Report_Form::OP_DATE,
-          ),
-        ),
-      ),
-    );
+          ],
+        ],
+      ],
+    ];
 
     parent::__construct();
   }
@@ -116,7 +116,7 @@ class CRM_Report_Form_Event_Summary extends CRM_Report_Form {
   }
 
   function select() {
-    $select = array();
+    $select = [];
     foreach ($this->_columns as $tableName => $table) {
       if (CRM_Utils_Array::arrayKeyExists('fields', $table)) {
         foreach ($table['fields'] as $fieldName => $field) {
@@ -137,7 +137,7 @@ class CRM_Report_Form_Event_Summary extends CRM_Report_Form {
   }
 
   function where() {
-    $clauses = array();
+    $clauses = [];
     $this->_participantWhere = "";
     foreach ($this->_columns as $tableName => $table) {
       if (CRM_Utils_Array::arrayKeyExists('filters', $table)) {
@@ -205,7 +205,7 @@ class CRM_Report_Form_Event_Summary extends CRM_Report_Form {
                  civicrm_participant.status_id";
 
     $info = CRM_Core_DAO::executeQuery($sql);
-    $participant_data = $participant_info = array();
+    $participant_data = $participant_info = [];
 
     while ($info->fetch()) {
       $participant_data[$info->event_id][$info->statusId]['participant'] = $info->participant;
@@ -243,7 +243,7 @@ class CRM_Report_Form_Event_Summary extends CRM_Report_Form {
   //build header for table
   function buildColumnHeaders() {
 
-    $this->_columnHeaders = array();
+    $this->_columnHeaders = [];
     foreach ($this->_columns as $tableName => $table) {
       if (CRM_Utils_Array::arrayKeyExists('fields', $table)) {
         foreach ($table['fields'] as $fieldName => $field) {
@@ -267,15 +267,15 @@ class CRM_Report_Form_Event_Summary extends CRM_Report_Form {
     //make column header for participant status No-show/Cancelled/Pending
     $type2_header = CRM_Utils_Array::implode('/', $statusType2);
 
-    $this->_columnHeaders['statusType1'] = array('title' => $type1_header,
+    $this->_columnHeaders['statusType1'] = ['title' => $type1_header,
       'type' => CRM_Utils_Type::T_INT,
-    );
-    $this->_columnHeaders['statusType2'] = array('title' => $type2_header,
+    ];
+    $this->_columnHeaders['statusType2'] = ['title' => $type2_header,
       'type' => CRM_Utils_Type::T_INT,
-    );
-    $this->_columnHeaders['totalAmount'] = array('title' => 'Total Income',
+    ];
+    $this->_columnHeaders['totalAmount'] = ['title' => 'Total Income',
       'type' => CRM_Utils_Type::T_MONEY,
-    );
+    ];
   }
 
   function postProcess() {
@@ -291,10 +291,10 @@ class CRM_Report_Form_Event_Summary extends CRM_Report_Form {
     //set pager before exicution of query in function participantInfo()
     $this->setPager();
 
-    $rows = $graphRows = array();
+    $rows = $graphRows = [];
     $count = 0;
     while ($dao->fetch()) {
-      $row = array();
+      $row = [];
       foreach ($this->_columnHeaders as $key => $value) {
         if (($key == 'civicrm_event_start_date') || ($key == 'civicrm_event_end_date')) {
           //get event start date and end date in custom datetime format
@@ -342,10 +342,10 @@ class CRM_Report_Form_Event_Summary extends CRM_Report_Form {
 
       if ((!empty($rows)) && $countEvent != 1) {
         $config = CRM_Core_Config::Singleton();
-        $chartInfo = array('legend' => 'Event Summary',
+        $chartInfo = ['legend' => 'Event Summary',
           'xname' => 'Event',
           'yname' => "Total Amount ({$config->defaultCurrency})",
-        );
+        ];
         if (!empty($graphRows)) {
           foreach ($graphRows[$this->_interval] as $key => $val) {
             $graph[$val] = $graphRows['value'][$key];

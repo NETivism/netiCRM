@@ -58,17 +58,17 @@ class CRM_Mailing_Page_Confirm extends CRM_Core_Page {
     else {
       $this->assign('success', TRUE);
       $this->assign('group', $result);
-      CRM_Utils_System::setTitle(ts("You has been successfully subscribed to the %1 mailing list.", array(1 => $result)));
+      CRM_Utils_System::setTitle(ts("You has been successfully subscribed to the %1 mailing list.", [1 => $result]));
     }
 
 
     list($displayName, $email) = CRM_Contact_BAO_Contact_Location::getEmailDetails($contact_id);
     $this->assign('display_name', $displayName);
     $this->assign('email', $email);
-    $obj = array(
+    $obj = [
       'type' => 'markup',
       'markup' => '<meta name="robots" content="noindex" />'.PHP_EOL,
-    );
+    ];
     CRM_Utils_System::addHTMLHead($obj);
 
     return parent::run();

@@ -8,3 +8,4 @@ vendor
 .vscode
 tests/casperjs/picture
 **/node_modules
+.php-cs-fixer.cache

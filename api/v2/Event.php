@@ -62,7 +62,7 @@ function civicrm_event_create(&$params) {
   $errorScope = CRM_Core_TemporaryErrorScope::useException();
   try {
     civicrm_api_check_permission(__FUNCTION__, $params, TRUE);
-    civicrm_verify_mandatory($params, 'CRM_Event_DAO_Event', array('start_date', 'event_type_id', 'title'));
+    civicrm_verify_mandatory($params, 'CRM_Event_DAO_Event', ['start_date', 'event_type_id', 'title']);
 
     // Do we really want $params[id], even if we have
     // $params[event_id]? if yes then please uncomment the below line
@@ -80,9 +80,9 @@ function civicrm_event_create(&$params) {
       return civicrm_create_error("Event is not created");
     }
     else {
-      $event = array();
+      $event = [];
       _civicrm_object_to_array($eventBAO, $event);
-      $values             = array();
+      $values             = [];
       $values['event_id'] = $event['id'];
       $values['is_error'] = 0;
     }
@@ -121,7 +121,7 @@ function civicrm_event_get(&$params) {
   if (count($event) != 1 &&
     !CRM_Utils_Array::value('returnFirst', $params)
   ) {
-    return civicrm_create_error(ts('%1 events matching input params', array(1 => count($event))));
+    return civicrm_create_error(ts('%1 events matching input params', [1 => count($event)]));
   }
 
   if (civicrm_error($event)) {
@@ -148,10 +148,10 @@ function civicrm_event_search(&$params) {
     return civicrm_create_error(ts('Input parameters is not an array.'));
   }
 
-  $inputParams = array();
-  $returnProperties = array();
-  $returnCustomProperties = array();
-  $otherVars = array('sort', 'offset', 'rowCount', 'isCurrent');
+  $inputParams = [];
+  $returnProperties = [];
+  $returnCustomProperties = [];
+  $otherVars = ['sort', 'offset', 'rowCount', 'isCurrent'];
 
   $sort = CRM_Utils_Array::arrayKeyExists('return.sort', $params) ? $params['return.sort'] : FALSE;
 
@@ -166,8 +166,8 @@ function civicrm_event_search(&$params) {
         //take custom return properties separate
         $returnCustomProperties[] = substr($n, 7);
       }
-      elseif (!in_array(substr($n, 7), array(
-        'sort', 'offset', 'max_results'))) {
+      elseif (!in_array(substr($n, 7), [
+        'sort', 'offset', 'max_results'])) {
         $returnProperties[] = substr($n, 7);
       }
     }
@@ -188,7 +188,7 @@ function civicrm_event_search(&$params) {
   require_once 'CRM/Event/BAO/Event.php';
   $eventDAO = new CRM_Event_BAO_Event();
   $eventDAO->copyValues($inputParams);
-  $event = array();
+  $event = [];
   if (!empty($returnProperties)) {
     $eventDAO->selectAdd();
     $eventDAO->selectAdd(CRM_Utils_Array::implode(',', $returnProperties));
@@ -202,7 +202,7 @@ function civicrm_event_search(&$params) {
   $eventDAO->limit((int)$offset, (int)$rowCount);
   $eventDAO->find();
   while ($eventDAO->fetch()) {
-    $event[$eventDAO->id] = array();
+    $event[$eventDAO->id] = [];
     CRM_Core_DAO::storeValues($eventDAO, $event[$eventDAO->id]);
     $groupTree = &CRM_Core_BAO_CustomGroup::getTree('Event',
       CRM_Core_DAO::$_nullObject,
@@ -211,7 +211,7 @@ function civicrm_event_search(&$params) {
       $eventDAO->event_type_id
     );
     $groupTree = CRM_Core_BAO_CustomGroup::formatGroupTree($groupTree, 1, CRM_Core_DAO::$_nullObject);
-    $defaults = array();
+    $defaults = [];
     CRM_Core_BAO_CustomGroup::setDefaults($groupTree, $defaults);
 
     if (!empty($defaults)) {

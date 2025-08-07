@@ -133,7 +133,7 @@ class CRM_Contact_Form_Task_SaveSearch extends CRM_Contact_Form_Task {
       $this->addDefaultButtons(ts('Save Smart Group'));
     }
     $this->addRule('title', ts('Name already exists in Database.'),
-      'objectExists', array('CRM_Contact_DAO_Group', $groupID, 'title')
+      'objectExists', ['CRM_Contact_DAO_Group', $groupID, 'title']
     );
   }
 
@@ -160,8 +160,8 @@ class CRM_Contact_Form_Task_SaveSearch extends CRM_Contact_Form_Task {
 
       if (!$this->_id) {
         //save record in mapping table
-        $mappingParams = array('mapping_type' => 'Search Builder');
-        $temp = array();
+        $mappingParams = ['mapping_type' => 'Search Builder'];
+        $temp = [];
         $mapping = CRM_Core_BAO_Mapping::add($mappingParams, $temp);
         $mappingId = $mapping->id;
       }
@@ -187,10 +187,10 @@ class CRM_Contact_Form_Task_SaveSearch extends CRM_Contact_Form_Task {
     $savedSearch->search_custom_id = $this->get('customSearchID');
     $savedSearch->save();
     $this->set('ssID', $savedSearch->id);
-    CRM_Core_Session::setStatus(ts('Your smart group has been saved as \'%1\'.', array(1 => $formValues['title'])));
+    CRM_Core_Session::setStatus(ts('Your smart group has been saved as \'%1\'.', [1 => $formValues['title']]));
 
     // also create a group that is associated with this saved search only if new saved search
-    $params = array();
+    $params = [];
     $params['title'] = $formValues['title'];
     $params['description'] = $formValues['description'];
     if (is_array($formValues['group_type'])) {

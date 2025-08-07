@@ -64,7 +64,7 @@ class CRM_Mailing_BAO_Spool extends CRM_Mailing_DAO_Spool {
    */
   function send($recipient, $headers, $body, $job_id) {
 
-    $headerStr = array();
+    $headerStr = [];
     foreach ($headers as $name => $value) {
       $headerStr[] = "$name: $value";
     }
@@ -72,14 +72,14 @@ class CRM_Mailing_BAO_Spool extends CRM_Mailing_DAO_Spool {
 
     $session = CRM_Core_Session::singleton();
 
-    $params = array(
+    $params = [
       'job_id' => $job_id,
       'recipient_email' => $recipient,
       'headers' => $headerStr,
       'body' => $body,
       'added_at' => date("YmdHis"),
       'removed_at' => NULL,
-    );
+    ];
 
     $spoolMail = new CRM_Mailing_DAO_Spool();
     $spoolMail->copyValues($params);

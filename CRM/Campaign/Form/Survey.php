@@ -111,10 +111,10 @@ class CRM_Campaign_Form_Survey extends CRM_Core_Form {
     $session->pushUserContext($url);
 
     if ($this->_name != 'Petition') {
-      CRM_Utils_System::appendBreadCrumb(array(array('title' => ts('Survey Dashboard'), 'url' => $url)));
+      CRM_Utils_System::appendBreadCrumb([['title' => ts('Survey Dashboard'), 'url' => $url]]);
     }
 
-    $this->_values = array();
+    $this->_values = [];
     if ($this->_surveyId) {
       $this->assign('surveyId', $this->_surveyId);
 
@@ -124,7 +124,7 @@ class CRM_Campaign_Form_Survey extends CRM_Core_Form {
         $this->_values = $values;
       }
       else {
-        $params = array('id' => $this->_surveyId);
+        $params = ['id' => $this->_surveyId];
         CRM_Campaign_BAO_Survey::retrieve($params, $this->_values, TRUE);
         $this->set('values', $this->_values);
       }
@@ -160,10 +160,10 @@ class CRM_Campaign_Form_Survey extends CRM_Core_Form {
         $defaults['option_group_id'] = $resultId;
       }
 
-      $ufJoinParams = array('entity_table' => 'civicrm_survey',
+      $ufJoinParams = ['entity_table' => 'civicrm_survey',
         'entity_id' => $this->_surveyId,
         'weight' => 1,
-      );
+      ];
 
       if ($ufGroupId = CRM_Core_BAO_UFJoin::findUFGroupId($ufJoinParams)) {
         $defaults['profile_id'] = $ufGroupId;
@@ -198,15 +198,15 @@ class CRM_Campaign_Form_Survey extends CRM_Core_Form {
 
     if ($this->_action & CRM_Core_Action::DELETE) {
 
-      $this->addButtons(array(
-          array('type' => 'next',
+      $this->addButtons([
+          ['type' => 'next',
             'name' => ts('Delete'),
             'isDefault' => TRUE,
-          ),
-          array('type' => 'cancel',
+          ],
+          ['type' => 'cancel',
             'name' => ts('Cancel'),
-          ),
-        )
+          ],
+        ]
       );
       return;
     }
@@ -219,53 +219,53 @@ class CRM_Campaign_Form_Survey extends CRM_Core_Form {
 
     $surveyActivityTypes = CRM_Campaign_BAO_Survey::getSurveyActivityType();
     // Activity Type id
-    $this->add('select', 'activity_type_id', ts('Activity Type'), array('' => ts('- select -')) + $surveyActivityTypes, TRUE);
+    $this->add('select', 'activity_type_id', ts('Activity Type'), ['' => ts('- select -')] + $surveyActivityTypes, TRUE);
 
     // Campaign id
 
     $campaigns = CRM_Campaign_BAO_Campaign::getAllCampaign();
-    $this->add('select', 'campaign_id', ts('Campaign'), array('' => ts('- select -')) + $campaigns);
+    $this->add('select', 'campaign_id', ts('Campaign'), ['' => ts('- select -')] + $campaigns);
 
-    $customProfiles = CRM_Core_BAO_UFGroup::getProfiles(array('Activity'));
+    $customProfiles = CRM_Core_BAO_UFGroup::getProfiles(['Activity']);
     // custom group id
     $this->add('select', 'profile_id', ts('Profile'),
-      array('' => ts('- select -')) + $customProfiles
+      ['' => ts('- select -')] + $customProfiles
     );
 
     $optionGroups = CRM_Campaign_BAO_Survey::getResultSets();
 
     if (empty($optionGroups)) {
-      $optionTypes = array('1' => ts('Create new response set'));
+      $optionTypes = ['1' => ts('Create new response set')];
     }
     else {
-      $optionTypes = array('1' => ts('Create a new response set'),
+      $optionTypes = ['1' => ts('Create a new response set'),
         '2' => ts('Use existing response set'),
-      );
+      ];
       $this->add('select',
         'option_group_id',
         ts('Select Response Set'),
-        array('' => ts('- select -')) + $optionGroups, FALSE,
-        array('onChange' => 'loadOptionGroup( )')
+        ['' => ts('- select -')] + $optionGroups, FALSE,
+        ['onChange' => 'loadOptionGroup( )']
       );
     }
 
     $element = &$this->addRadio('option_type',
       ts('Survey Responses'),
       $optionTypes,
-      array('onclick' => "showOptionSelect();"), '<br/>', TRUE
+      ['onclick' => "showOptionSelect();"], '<br/>', TRUE
     );
 
     if (empty($optionGroups) || !CRM_Utils_Array::value('result_id', $this->_values)) {
-      $this->setdefaults(array('option_type' => 1));
+      $this->setdefaults(['option_type' => 1]);
     }
     elseif (CRM_Utils_Array::value('result_id', $this->_values)) {
-      $this->setdefaults(array('option_type' => 2,
+      $this->setdefaults(['option_type' => 2,
           'option_group_id' => $this->_values['result_id'],
-        ));
+        ]);
     }
 
     // form fields of Custom Option rows
-    $defaultOption = array();
+    $defaultOption = [];
     $_showHide = new CRM_Core_ShowHideBlocks('', '');
 
     $optionAttributes = &CRM_Core_DAO::getAttribute('CRM_Core_DAO_OptionValue');
@@ -312,7 +312,7 @@ class CRM_Campaign_Form_Survey extends CRM_Core_Form {
     $_showHide->addToTemplate();
 
     // script / instructions
-    $this->add('textarea', 'instructions', ts('Instructions for interviewers'), array('rows' => 5, 'cols' => 40));
+    $this->add('textarea', 'instructions', ts('Instructions for interviewers'), ['rows' => 5, 'cols' => 40]);
 
     // release frequency
     $this->add('text', 'release_frequency', ts('Release frequency'), CRM_Core_DAO::getAttribute('CRM_Campaign_DAO_Survey', 'release_frequency'));
@@ -335,36 +335,36 @@ class CRM_Campaign_Form_Survey extends CRM_Core_Form {
 
     // add buttons
     if ($this->_context == 'dialog') {
-      $this->addButtons(array(
-          array('type' => 'next',
+      $this->addButtons([
+          ['type' => 'next',
             'name' => ts('Save'),
             'isDefault' => TRUE,
-          ),
-          array('type' => 'cancel',
+          ],
+          ['type' => 'cancel',
             'name' => ts('Cancel'),
-            'js' => array('onclick' => "cj('#survey-dialog').dialog('close'); return false;"),
-          ),
-        ));
+            'js' => ['onclick' => "cj('#survey-dialog').dialog('close'); return false;"],
+          ],
+        ]);
     }
     else {
-      $this->addButtons(array(
-          array('type' => 'next',
+      $this->addButtons([
+          ['type' => 'next',
             'name' => ts('Save'),
             'isDefault' => TRUE,
-          ),
-          array('type' => 'next',
+          ],
+          ['type' => 'next',
             'name' => ts('Save and New'),
             'subName' => 'new',
-          ),
-          array('type' => 'cancel',
+          ],
+          ['type' => 'cancel',
             'name' => ts('Cancel'),
-          ),
-        )
+          ],
+        ]
       );
     }
 
     // add a form rule to check default value
-    $this->addFormRule(array('CRM_Campaign_Form_Survey', 'formRule'), $this);
+    $this->addFormRule(['CRM_Campaign_Form_Survey', 'formRule'], $this);
   }
 
   /**
@@ -372,7 +372,7 @@ class CRM_Campaign_Form_Survey extends CRM_Core_Form {
    *
    */
   static function formRule($fields, $files, $form) {
-    $errors = array();
+    $errors = [];
 
     if (CRM_Utils_Array::value('option_label', $fields) &&
       CRM_Utils_Array::value('option_value', $fields) &&
@@ -537,7 +537,7 @@ class CRM_Campaign_Form_Survey extends CRM_Core_Form {
     $params['is_active'] = CRM_Utils_Array::value('is_active', $params, 0);
     $params['is_default'] = CRM_Utils_Array::value('is_default', $params, 0);
 
-    $recontactInterval = array();
+    $recontactInterval = [];
 
 
     if ($updateResultSet) {
@@ -589,7 +589,7 @@ class CRM_Campaign_Form_Survey extends CRM_Core_Form {
 
     if (CRM_Utils_Array::value('result_id', $this->_values) && !$updateResultSet) {
       $query = "SELECT COUNT(*) FROM civicrm_survey WHERE result_id = %1";
-      $countSurvey = CRM_Core_DAO::singleValueQuery($query, array(1 => array($this->_values['result_id'], 'Integer')));
+      $countSurvey = CRM_Core_DAO::singleValueQuery($query, [1 => [$this->_values['result_id'], 'Integer']]);
 
       // delete option group if no any survey is using it.
       if (!($countSurvey >= 1)) {
@@ -600,11 +600,11 @@ class CRM_Campaign_Form_Survey extends CRM_Core_Form {
 
 
     // also update the ProfileModule tables
-    $ufJoinParams = array('is_active' => 1,
+    $ufJoinParams = ['is_active' => 1,
       'module' => 'CiviCampaign',
       'entity_table' => 'civicrm_survey',
       'entity_id' => $surveyId->id,
-    );
+    ];
 
     // first delete all past entries
     if ($this->_surveyId) {
@@ -618,11 +618,11 @@ class CRM_Campaign_Form_Survey extends CRM_Core_Form {
     }
 
     if (!is_a($surveyId, 'CRM_Core_Error')) {
-      CRM_Core_Session::setStatus(ts('Survey %1 has been saved.', array(1 => $params['title'])));
+      CRM_Core_Session::setStatus(ts('Survey %1 has been saved.', [1 => $params['title']]));
     }
 
     if ($this->_context == 'dialog') {
-      $returnArray = array('returnSuccess' => TRUE);
+      $returnArray = ['returnSuccess' => TRUE];
       echo json_encode($returnArray);
       CRM_Utils_System::civiExit();
     }

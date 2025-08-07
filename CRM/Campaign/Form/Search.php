@@ -147,7 +147,7 @@ class CRM_Campaign_Form_Search extends CRM_Core_Form {
     $this->set('searchFormName', 'Search');
 
     $this->_done = FALSE;
-    $this->_defaults = array();
+    $this->_defaults = [];
 
     //set the button name.
     $this->_searchButtonName = $this->getButtonName('refresh');
@@ -164,7 +164,7 @@ class CRM_Campaign_Form_Search extends CRM_Core_Form {
     //operation for state machine.
     $this->_operation = CRM_Utils_Request::retrieve('op', 'String', $this, FALSE, 'reserve');
     //validate operation.
-    if (!in_array($this->_operation, array('reserve', 'release', 'interview'))) {
+    if (!in_array($this->_operation, ['reserve', 'release', 'interview'])) {
       $this->_operation = 'reserve';
       $this->set('op', $this->_operation);
     }
@@ -239,11 +239,11 @@ class CRM_Campaign_Form_Search extends CRM_Core_Form {
 
     if (CRM_Campaign_BAO_Campaign::accessCampaignDashboard()) {
       $url = CRM_Utils_System::url('civicrm/campaign', 'reset=1&subPage=survey');
-      CRM_Utils_System::appendBreadCrumb(array(array('title' => ts('Survey(s)'), 'url' => $url)));
+      CRM_Utils_System::appendBreadCrumb([['title' => ts('Survey(s)'), 'url' => $url]]);
     }
 
     //set the form title.
-    CRM_Utils_System::setTitle(ts('Find Respondents To %1', array(1 => ucfirst($this->_operation))));
+    CRM_Utils_System::setTitle(ts('Find Respondents To %1', [1 => ucfirst($this->_operation)]));
   }
 
   function setDefaultValues() {
@@ -293,13 +293,13 @@ class CRM_Campaign_Form_Search extends CRM_Core_Form {
       $allTasks = CRM_Campaign_Task::permissionedTaskTitles($permission);
 
       //hack to serve right page to state machine.
-      $taskMapping = array('interview' => 1,
+      $taskMapping = ['interview' => 1,
         'reserve' => 2,
         'release' => 3,
-      );
+      ];
 
       $currentTaskValue = CRM_Utils_Array::value($this->_operation, $taskMapping);
-      $taskValue = array($currentTaskValue => $allTasks[$currentTaskValue]);
+      $taskValue = [$currentTaskValue => $allTasks[$currentTaskValue]];
       if ($this->_operation == 'interview' &&
         CRM_Utils_Array::value('campaign_survey_id', $this->_formValues)
       ) {
@@ -310,28 +310,28 @@ class CRM_Campaign_Form_Search extends CRM_Core_Form {
           $this->_formValues['campaign_survey_id'],
           'activity_type_id'
         );
-        $taskValue = array($currentTaskValue => ts('Record %1 Responses',
-            array(1 => $activityTypes[$surveyTypeId])
-          ));
+        $taskValue = [$currentTaskValue => ts('Record %1 Responses',
+            [1 => $activityTypes[$surveyTypeId]]
+          )];
       }
 
       $this->add('select', 'task', ts('Actions:') . ' ', $taskValue);
-      $this->setDefaults(array('task' => $currentTaskValue));
+      $this->setDefaults(['task' => $currentTaskValue]);
 
       $this->add('submit', $this->_actionButtonName, ts('Go'),
-        array('class' => 'form-submit',
+        ['class' => 'form-submit',
           'id' => 'Go',
-        )
+        ]
       );
 
       $this->add('submit', $this->_printButtonName, ts('Print'),
-        array('class' => 'form-submit',
+        ['class' => 'form-submit',
           'onclick' => "return checkPerformAction('mark_x', '" . $this->getName() . "', 1);",
-        )
+        ]
       );
 
       // need to perform tasks on all or selected items ? using radio_ts(task selection) for it
-      $selectedRowsRadio = $this->addElement('radio', 'radio_ts', NULL, '', 'ts_sel', array('checked' => 'checked'));
+      $selectedRowsRadio = $this->addElement('radio', 'radio_ts', NULL, '', 'ts_sel', ['checked' => 'checked']);
       $this->assign('ts_sel_id', $selectedRowsRadio->_attributes['id']);      
 
       $allRowsRadio = $this->addElement('radio', 'radio_ts', NULL, '', 'ts_all');
@@ -339,12 +339,12 @@ class CRM_Campaign_Form_Search extends CRM_Core_Form {
     }
 
     // add buttons
-    $this->addButtons(array(
-        array('type' => 'refresh',
+    $this->addButtons([
+        ['type' => 'refresh',
           'name' => ts('Search'),
           'isDefault' => TRUE,
-        ),
-      )
+        ],
+      ]
     );
   }
 
@@ -547,11 +547,11 @@ class CRM_Campaign_Form_Search extends CRM_Core_Form {
 
   function voterClause() {
 
-    $params = array('campaign_search_voter_for' => $this->_operation);
+    $params = ['campaign_search_voter_for' => $this->_operation];
 
-    $clauseFields = array('surveyId' => 'campaign_survey_id',
+    $clauseFields = ['surveyId' => 'campaign_survey_id',
       'interviewerId' => 'survey_interviewer_id',
-    );
+    ];
 
     foreach ($clauseFields as $param => $key) {
       $params[$key] = CRM_Utils_Array::value($key, $this->_formValues);

@@ -79,7 +79,7 @@ function civicrm_group_organization_get(&$params) {
     $dao->group_id = $params['group_id'];
   }
   $dao->find();
-  $values = array();
+  $values = [];
   _civicrm_object_to_array($dao, $values);
   return civicrm_create_success($values);
 }

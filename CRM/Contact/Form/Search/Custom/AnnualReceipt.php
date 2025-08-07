@@ -45,21 +45,21 @@ class CRM_Contact_Form_Search_Custom_AnnualReceipt extends CRM_Contact_Form_Sear
       }
     }
 
-    $this->_columns = array(ts('Contact Id') => 'contact_id',
+    $this->_columns = [ts('Contact Id') => 'contact_id',
       ts('Name') => 'sort_name',
       ts('Count') => 'count',
       ts('Total Amount') => 'total_amount',
-    );
+    ];
   }
 
   function buildForm(&$form) {
-    $years = array();
+    $years = [];
     for($year = date('Y'); $year < date('Y') + 10; $year++) {
       $years[$year - 9] = $year - 9;
     }
     $form->addElement('select', 'year', ts('Receipt Year'), $years);
-    $form->assign('elements', array('year'));
-    $defaults = array();
+    $form->assign('elements', ['year']);
+    $defaults = [];
     $defaults['year'] = date('m') == '12' ? date('Y') : date('Y') - 1;
     $form->setDefaults($defaults);
 
@@ -72,10 +72,10 @@ class CRM_Contact_Form_Search_Custom_AnnualReceipt extends CRM_Contact_Form_Sear
 
   function summary() {
     $year = CRM_Utils_Array::value('year', $this->_formValues);
-    $summary = array(
+    $summary = [
       'summary' => ts('Date'),
       'total' => $year.'-01-01 ~ '.$year.'-12-31',
-    );
+    ];
     return $summary;
   }
 
@@ -106,12 +106,12 @@ INNER JOIN civicrm_contribution contribution ON contact_a.id = contribution.cont
   }
 
   function where($includeContactIDs = FALSE) {
-    $params = array();
-    $where = array(
+    $params = [];
+    $where = [
       'contribution.is_test = 0',
       'contribution.contribution_status_id = 1',
       'contact_a.is_deleted = 0',
-    );
+    ];
     $year = CRM_Utils_Array::value('year', $this->_formValues);
     if(!empty($year)){
       $start = $year.'-01-01 00:00:00';

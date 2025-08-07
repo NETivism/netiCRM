@@ -118,12 +118,12 @@ class CRM_Contact_Page_View extends CRM_Core_Page {
     $this->assign('contactId', $this->_contactId);
 
     $path = CRM_Utils_System::url('civicrm/contact/view', 'reset=1&cid=' . $this->_contactId);
-    CRM_Utils_System::appendBreadCrumb(array(array('title' => ts('View Contact'),
+    CRM_Utils_System::appendBreadCrumb([['title' => ts('View Contact'),
           'url' => $path,
-        )));
-    CRM_Utils_System::appendBreadCrumb(array(array('title' => ts('Search Results'),
+        ]]);
+    CRM_Utils_System::appendBreadCrumb([['title' => ts('Search Results'),
           'url' => $this->getSearchURL(),
-        )));
+        ]]);
 
     if ($image_URL = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $this->_contactId, 'image_URL')) {
       $contactImage = CRM_Utils_Image::getImageVars($image_URL); 
@@ -160,10 +160,10 @@ class CRM_Contact_Page_View extends CRM_Core_Page {
     // add to recently viewed block
     $isDeleted = (bool) CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $this->_contactId, 'is_deleted');
 
-    $recentOther = array('imageUrl' => $contactImageUrl,
+    $recentOther = ['imageUrl' => $contactImageUrl,
       'subtype' => $contactSubtype,
       'isDeleted' => $isDeleted,
-    );
+    ];
 
 
 
@@ -335,9 +335,9 @@ class CRM_Contact_Page_View extends CRM_Core_Page {
     $displayName = $contactImage = NULL;
     if (!isset($contactDetails[$contactId])) {
       list($displayName, $contactImage) = self::getContactDetails($contactId);
-      $contactDetails[$contactId] = array('displayName' => $displayName,
+      $contactDetails[$contactId] = ['displayName' => $displayName,
         'contactImage' => $contactImage,
-      );
+      ];
     }
     else {
       $displayName = $contactDetails[$contactId]['displayName'];

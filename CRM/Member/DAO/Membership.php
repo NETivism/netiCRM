@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-class CRM_Member_DAO_Membership extends CRM_Core_DAO
+                          class CRM_Member_DAO_Membership extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -78,7 +78,7 @@ class CRM_Member_DAO_Membership extends CRM_Core_DAO
    * @static
    */
   static $_log = true;
-  /**
+    /**
    * Membership Id
    *
    * @var int unsigned
@@ -153,7 +153,7 @@ class CRM_Member_DAO_Membership extends CRM_Core_DAO
    * @var boolean
    */
   public $is_pay_later;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -172,16 +172,16 @@ class CRM_Member_DAO_Membership extends CRM_Core_DAO
   function &links()
   {
     if (!(self::$_links)) {
-      self::$_links = array(
+      self::$_links = [
         'contact_id' => 'civicrm_contact:id',
         'membership_type_id' => 'civicrm_membership_type:id',
         'status_id' => 'civicrm_membership_status:id',
         'owner_membership_id' => 'civicrm_membership:id',
-      );
+      ];
     }
     return self::$_links;
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -198,7 +198,7 @@ class CRM_Member_DAO_Membership extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -207,158 +207,158 @@ class CRM_Member_DAO_Membership extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'membership_id' => array(
+      self::$_fields = [
+        'membership_id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Membership ID') ,
           'required' => true,
-          'import' => true,
+               'import' => true,
           'where' => 'civicrm_membership.id',
           'headerPattern' => '/^(m(embership\s)?id)$/i',
           'dataPattern' => '',
-          'export' => true,
-          'usage' => 'System',
-        ) ,
-        'membership_contact_id' => array(
+           'export' => true,
+               'usage' => 'System',
+       ] ,
+        'membership_contact_id' => [
           'name' => 'contact_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Contact ID') ,
           'required' => true,
-          'import' => true,
+               'import' => true,
           'where' => 'civicrm_membership.contact_id',
           'headerPattern' => '/contact(.?id)?/i',
           'dataPattern' => '/^\d+$/',
-          'export' => true,
-          'FKClassName' => 'CRM_Contact_DAO_Contact',
-          'usage' => 'System',
-        ) ,
-        'membership_type_id' => array(
+           'export' => true,
+              'FKClassName' => 'CRM_Contact_DAO_Contact',
+           'usage' => 'System',
+       ] ,
+        'membership_type_id' => [
           'name' => 'membership_type_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Membership Type Id') ,
           'required' => true,
-          'import' => true,
+               'import' => true,
           'where' => 'civicrm_membership.membership_type_id',
           'headerPattern' => '/^(m(embership\s)?type)$/i',
           'dataPattern' => '',
-          'export' => false,
-          'FKClassName' => 'CRM_Member_DAO_MembershipType',
-          'usage' => 'System',
-        ) ,
-        'join_date' => array(
+           'export' => false,
+              'FKClassName' => 'CRM_Member_DAO_MembershipType',
+           'usage' => 'System',
+       ] ,
+        'join_date' => [
           'name' => 'join_date',
           'type' => CRM_Utils_Type::T_DATE,
           'title' => ts('Member Since') ,
-          'import' => true,
+               'import' => true,
           'where' => 'civicrm_membership.join_date',
           'headerPattern' => '/^join|(j(oin\s)?date)$/i',
           'dataPattern' => '/\d{4}-?\d{2}-?\d{2}/',
-          'export' => true,
-          'usage' => 'System',
-        ) ,
-        'membership_start_date' => array(
+           'export' => true,
+               'usage' => 'System',
+       ] ,
+        'membership_start_date' => [
           'name' => 'start_date',
           'type' => CRM_Utils_Type::T_DATE,
           'title' => ts('Membership Start Date') ,
-          'import' => true,
+               'import' => true,
           'where' => 'civicrm_membership.start_date',
           'headerPattern' => '/(member(ship)?.)?start(s)?(.date$)?/i',
           'dataPattern' => '/\d{4}-?\d{2}-?\d{2}/',
-          'export' => true,
-          'usage' => 'System',
-        ) ,
-        'membership_end_date' => array(
+           'export' => true,
+               'usage' => 'System',
+       ] ,
+        'membership_end_date' => [
           'name' => 'end_date',
           'type' => CRM_Utils_Type::T_DATE,
           'title' => ts('Membership Expiration Date') ,
-          'import' => true,
+               'import' => true,
           'where' => 'civicrm_membership.end_date',
           'headerPattern' => '/(member(ship)?.)?end(s)?(.date$)?/i',
           'dataPattern' => '/\d{4}-?\d{2}-?\d{2}/',
-          'export' => true,
-          'usage' => 'System',
-        ) ,
-        'membership_source' => array(
+           'export' => true,
+               'usage' => 'System',
+       ] ,
+        'membership_source' => [
           'name' => 'source',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Source') ,
-          'maxlength' => 128,
-          'size' => CRM_Utils_Type::HUGE,
-          'import' => true,
+           'maxlength' => 128,
+           'size' => CRM_Utils_Type::HUGE,
+             'import' => true,
           'where' => 'civicrm_membership.source',
           'headerPattern' => '/^(member(ship?))?source$/i',
           'dataPattern' => '',
-          'export' => true,
-        ) ,
-        'status_id' => array(
+           'export' => true,
+            ] ,
+        'status_id' => [
           'name' => 'status_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Membership Status Id') ,
           'required' => true,
-          'import' => true,
+               'import' => true,
           'where' => 'civicrm_membership.status_id',
           'headerPattern' => '/(member(ship|).)?(status)$/i',
           'dataPattern' => '',
-          'export' => false,
-          'FKClassName' => 'CRM_Member_DAO_MembershipStatus',
-          'usage' => 'System',
-        ) ,
-        'is_override' => array(
+           'export' => false,
+              'FKClassName' => 'CRM_Member_DAO_MembershipStatus',
+           'usage' => 'System',
+       ] ,
+        'is_override' => [
           'name' => 'is_override',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Status Override') ,
-          'import' => true,
+               'import' => true,
           'where' => 'civicrm_membership.is_override',
           'headerPattern' => '/override$/i',
           'dataPattern' => '',
-          'export' => true,
-          'usage' => 'System',
-        ) ,
-        'reminder_date' => array(
+           'export' => true,
+               'usage' => 'System',
+       ] ,
+        'reminder_date' => [
           'name' => 'reminder_date',
           'type' => CRM_Utils_Type::T_DATE,
           'title' => ts('Reminder Date') ,
-          'export' => true,
+                'export' => true,
           'where' => 'civicrm_membership.reminder_date',
           'headerPattern' => '',
           'dataPattern' => '',
-          'usage' => 'System',
-        ) ,
-        'owner_membership_id' => array(
+               'usage' => 'System',
+       ] ,
+        'owner_membership_id' => [
           'name' => 'owner_membership_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Primary Member ID') ,
-          'export' => true,
+                'export' => true,
           'where' => 'civicrm_membership.owner_membership_id',
           'headerPattern' => '',
           'dataPattern' => '',
-          'FKClassName' => 'CRM_Member_DAO_Membership',
-          'usage' => 'System',
-        ) ,
-        'member_is_test' => array(
+              'FKClassName' => 'CRM_Member_DAO_Membership',
+           'usage' => 'System',
+       ] ,
+        'member_is_test' => [
           'name' => 'is_test',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Test') ,
-          'import' => true,
+               'import' => true,
           'where' => 'civicrm_membership.is_test',
           'headerPattern' => '/(is.)?test(.member(ship)?)?/i',
           'dataPattern' => '',
-          'export' => true,
-          'usage' => 'System',
-        ) ,
-        'member_is_pay_later' => array(
+           'export' => true,
+               'usage' => 'System',
+       ] ,
+        'member_is_pay_later' => [
           'name' => 'is_pay_later',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Is Pay Later') ,
-          'import' => true,
+               'import' => true,
           'where' => 'civicrm_membership.is_pay_later',
           'headerPattern' => '/(is.)?(pay(.)?later)$/i',
           'dataPattern' => '',
-          'export' => true,
-          'usage' => 'System',
-        ) ,
-      );
+           'export' => true,
+               'usage' => 'System',
+       ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -370,8 +370,8 @@ class CRM_Member_DAO_Membership extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -391,7 +391,7 @@ class CRM_Member_DAO_Membership extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -402,7 +402,7 @@ class CRM_Member_DAO_Membership extends CRM_Core_DAO
           }
         }
       }
-    }
+                                                                      }
     return self::$_import;
   }
   /**
@@ -414,7 +414,7 @@ class CRM_Member_DAO_Membership extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
@@ -425,7 +425,7 @@ class CRM_Member_DAO_Membership extends CRM_Core_DAO
           }
         }
       }
-    }
+                                                                      }
     return self::$_export;
   }
 }

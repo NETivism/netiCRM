@@ -50,8 +50,8 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
 
   /**
    * Override public variable for HTML_QuickForm_Page
-   * 
-   * @var      CRM_Core_Controller 
+   *
+   * @var      CRM_Core_Controller
    * @access   public
    */
   public $controller = null;
@@ -175,7 +175,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
    *
    */
   function registerRules() {
-    static $rules = array('title', 'longTitle', 'variable', 'qfVariable',
+    static $rules = ['title', 'longTitle', 'variable', 'qfVariable',
       'phone', 'integer', 'query',
       'url', 'wikiURL',
       'domain', 'numberOfDigit',
@@ -183,7 +183,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
       'asciiFile', 'htmlFile', 'utf8File', 'imageFile',
       'objectExists', 'optionExists', 'postalCode', 'money', 'positiveInteger',
       'xssString', 'fileExists', 'autocomplete', 'validContact', 'alphanumeric'
-    );
+    ];
 
     foreach ($rules as $rule) {
       $this->registerRule($rule, 'callback', $rule, 'CRM_Utils_Rule');
@@ -214,7 +214,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
     }
 
     if ($required) {
-      $error = $this->addRule($name, ts('%1 is a required field.', array(1 => $label)), 'required');
+      $error = $this->addRule($name, ts('%1 is a required field.', [1 => $label]), 'required');
       if (HTML_QuickForm::isError($error)) {
         CRM_Core_Error::fatal(HTML_QuickForm::errorMessage($element));
       }
@@ -255,6 +255,10 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
    * This function is just a wrapper, so that we can call all the hook functions
    */
   function mainProcess() {
+    // Process blob images from CKeditor fields before data persistence
+    // Convert temporary blob URLs to permanent file storage
+    $blobImagesProcessResult = $this->processBlobImages();
+
     CRM_Utils_Hook::preSave(get_class($this), $this);
 
     // before postProcess, count submission at form object
@@ -379,7 +383,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
   }
 
   function addButton($buttonType, $label, $attributes = NULL) {
-    $attributes = !empty($attributes) ? $attributes : array();
+    $attributes = !empty($attributes) ? $attributes : [];
     if (!empty($attributes['class'])) {
       $attributes['class'] .= ' form-submit';
     }
@@ -404,16 +408,16 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
    *
    */
   function addButtons($params) {
-    $prevnext = array();
-    $spacing = array();
+    $prevnext = [];
+    $spacing = [];
     foreach ($params as $button) {
       $js = CRM_Utils_Array::value('js', $button);
       $isDefault = CRM_Utils_Array::value('isDefault', $button, FALSE);
       if ($isDefault) {
-        $attrs = array('class' => 'form-submit default');
+        $attrs = ['class' => 'form-submit default'];
       }
       else {
-        $attrs = array('class' => 'form-submit');
+        $attrs = ['class' => 'form-submit'];
       }
 
       if ($js) {
@@ -431,8 +435,8 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
           $buttonName = $this->getButtonName($button['type']);
         }
 
-        if (in_array($button['type'], array('next', 'upload')) && $button['name'] === 'Save') {
-          $attrs = array_merge($attrs, (array('accesskey' => 'S')));
+        if (in_array($button['type'], ['next', 'upload']) && $button['name'] === 'Save') {
+          $attrs = array_merge($attrs, (['accesskey' => 'S']));
         }
         $prevnext[] = $this->createElement('submit', $buttonName, $button['name'], $attrs);
       }
@@ -442,7 +446,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
 
       // if button type is upload, set the enctype
       if ($button['type'] == 'upload') {
-        $this->updateAttributes(array('enctype' => 'multipart/form-data'));
+        $this->updateAttributes(['enctype' => 'multipart/form-data']);
         $this->setMaxFileSize();
       }
 
@@ -614,7 +618,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
   /**
    * A wrapper for getTemplateFileName that includes calling the hook to
    * prevent us from having to copy & paste the logic of calling the hook
-   */ 
+   */
   function getHookedTemplateFileName() {
     $pageTemplateFile = $this->getTemplateFileName();
     CRM_Utils_Hook::alterTemplateFile(get_class($this), $this, 'page', $pageTemplateFile);
@@ -723,7 +727,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
    *
    * @param string $name  name  of variable
    * @param mixed $value value of varaible, if value will check equality
-   *        default only check isset 
+   *        default only check isset
    *
    * @return void
    * @access public
@@ -741,8 +745,8 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
   }
 
   function addRadio($name, $title, &$values, $attributes = NULL, $separator = NULL, $required = FALSE) {
-    $options = array();
-    $attributes = $attributes ? $attributes : array();
+    $options = [];
+    $attributes = $attributes ? $attributes : [];
     $allowClear = !empty($attributes['allowClear']) ? TRUE : FALSE;
     unset($attributes['allowClear']);
 
@@ -751,7 +755,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
     }
     $group = &$this->addGroup($options, $name, $title, $separator);
     if ($required) {
-      $this->addRule($name, ts('%1 is a required field.', array(1 => $title)), 'required');
+      $this->addRule($name, ts('%1 is a required field.', [1 => $title]), 'required');
     }
     if ($allowClear) {
       $group->setAttribute('allowClear', TRUE);
@@ -760,7 +764,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
   }
 
   function addYesNo($id, $title, $dontKnow = NULL, $required = NULL, $attribute = NULL) {
-    $choice = array();
+    $choice = [];
     $choice[] = &$this->createElement('radio', NULL, '11', ts('Yes'), '1', $attribute);
     $choice[] = &$this->createElement('radio', NULL, '11', ts('No'), '0', $attribute);
     if ($dontKnow) {
@@ -769,7 +773,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
     $group = $this->addGroup($choice, $id, $title);
 
     if ($required) {
-      $this->addRule($id, ts('%1 is a required field.', array(1 => $title)), 'required');
+      $this->addRule($id, ts('%1 is a required field.', [1 => $title]), 'required');
     }
     return $group;
   }
@@ -779,7 +783,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
     $javascriptMethod = NULL,
     $separator = '<br />', $flipValues = FALSE
   ) {
-    $options = array();
+    $options = [];
 
     if ($javascriptMethod) {
       foreach ($values as $key => $var) {
@@ -810,7 +814,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
 
     if ($required) {
       $this->addRule($id,
-        ts('%1 is a required field.', array(1 => $title)),
+        ts('%1 is a required field.', [1 => $title]),
         'required'
       );
     }
@@ -819,7 +823,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
 
   function resetValues() {
     $data = &$this->controller->container();
-    $data['values'][$this->_name] = array();
+    $data['values'][$this->_name] = [];
   }
 
   /**
@@ -834,19 +838,19 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
    * @access public
    */
   function addDefaultButtons($title, $nextType = 'next', $backType = 'back', $submitOnce = FALSE) {
-    $buttons = array();
+    $buttons = [];
     if ($backType != NULL) {
-      $buttons[] = array('type' => $backType,
+      $buttons[] = ['type' => $backType,
         'name' => ts('Previous'),
-      );
+      ];
     }
     if ($nextType != NULL) {
-      $nextButton = array('type' => $nextType,
+      $nextButton = ['type' => $nextType,
         'name' => $title,
         'isDefault' => TRUE,
-      );
+      ];
       if ($submitOnce) {
-        $nextButton['js'] = array('data' => 'submit-once');
+        $nextButton['js'] = ['data' => 'submit-once'];
       }
       $buttons[] = $nextButton;
     }
@@ -854,31 +858,31 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
   }
 
   function addDateRange($name, $label = 'From', $dateFormat = 'searchDate', $required = FALSE) {
-    $this->addDate($name . '_from', ts($label), $required, array('formatType' => $dateFormat));
-    $this->addDate($name . '_to', ts('To'), $required, array('formatType' => $dateFormat));
+    $this->addDate($name . '_from', ts($label), $required, ['formatType' => $dateFormat]);
+    $this->addDate($name . '_to', ts('To'), $required, ['formatType' => $dateFormat]);
   }
 
   function addSelectByOption($name, $label, $prefix = NULL, $required = NULL, $extra = NULL, $select = '- select -') {
     if ($prefix) {
       $ele = $this->addElement('select', $name . '_id' . $prefix, $label,
-        array('' => $select) + CRM_Core_OptionGroup::values($name), $extra
+        ['' => $select] + CRM_Core_OptionGroup::values($name), $extra
       );
       if ($required) {
-        $this->addRule($name . '_id' . $prefix, ts('Please select %1', array(1 => $label)), 'required');
+        $this->addRule($name . '_id' . $prefix, ts('Please select %1', [1 => $label]), 'required');
       }
       return $ele;
     }
     else {
       $ele = $this->addElement('select', $name . '_id', $label,
-        array('' => $select) + CRM_Core_OptionGroup::values($name), $extra
+        ['' => $select] + CRM_Core_OptionGroup::values($name), $extra
       );
       if ($required) {
-        $this->addRule($name . '_id', ts('Please select %1', array(1 => $label)), 'required');
+        $this->addRule($name . '_id', ts('Please select %1', [1 => $label]), 'required');
       }
       return $ele;
     }
   }
-  
+
   function addTextarea($name, $label, $attributes = NULL, $required = NULL) {
     return $this->add('textarea', $name, $label, $attributes, $required);
   }
@@ -904,10 +908,10 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
 
   function addCountry($id, $title, $required = NULL, $extra = NULL) {
     $ele = $this->addElement('select', $id, $title,
-      array('' => ts('- select -')) + CRM_Core_PseudoConstant::country(), $extra
+      ['' => ts('- select -')] + CRM_Core_PseudoConstant::country(), $extra
     );
     if ($required) {
-      $this->addRule($id, ts('Please select %1', array(1 => $title)), 'required');
+      $this->addRule($id, ts('Please select %1', [1 => $title]), 'required');
     }
     return $ele;
   }
@@ -916,7 +920,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
     $ele = $this->addElement('select', $name, $label, $options, $attributes);
 
     if ($required) {
-      $this->addRule($name, ts('Please select %1', array(1 => $label)), 'required');
+      $this->addRule($name, ts('Please select %1', [1 => $label]), 'required');
     }
     return $ele;
   }
@@ -941,7 +945,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
       $attributes['street_address']
     );
     if ($addressRequired) {
-      $this->addRule("{$locationName}[$locationId][address][street_address]", ts("Please enter the Street Address for %1.", array(1 => $title)), 'required');
+      $this->addRule("{$locationName}[$locationId][address][street_address]", ts("Please enter the Street Address for %1.", [1 => $title]), 'required');
     }
 
     $location[$locationId]['address']['supplemental_address_1'] = $this->addElement('text', "{$locationName}[$locationId][address][supplemental_address_1]", ts('Additional Address 1'),
@@ -955,36 +959,36 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
       $attributes['city']
     );
     if ($addressRequired) {
-      $this->addRule("{$locationName}[$locationId][address][city]", ts("Please enter the City for %1.", array(1 => $title)), 'required');
+      $this->addRule("{$locationName}[$locationId][address][city]", ts("Please enter the City for %1.", [1 => $title]), 'required');
     }
 
     $location[$locationId]['address']['postal_code'] = $this->addElement('text', "{$locationName}[$locationId][address][postal_code]", ts('Zip / Postal Code'),
       $attributes['postal_code']
     );
     if ($addressRequired) {
-      $this->addRule("{$locationName}[$locationId][address][postal_code]", ts("Please enter the Zip/Postal Code for %1.", array(1 => $title)), 'required');
+      $this->addRule("{$locationName}[$locationId][address][postal_code]", ts("Please enter the Zip/Postal Code for %1.", [1 => $title]), 'required');
     }
 
     $location[$locationId]['address']['postal_code_suffix'] = $this->addElement('text', "{$locationName}[$locationId][address][postal_code_suffix]", ts('Add-on Code'),
-      array('size' => 4, 'maxlength' => 12)
+      ['size' => 4, 'maxlength' => 12]
     );
     $this->addRule("{$locationName}[$locationId][address][postal_code_suffix]", ts('Zip-Plus not valid.'), 'positiveInteger');
 
     if ($config->includeCounty) {
       $location[$locationId]['address']['county_id'] = $this->addElement('select', "{$locationName}[$locationId][address][county_id]", ts('County'),
-        array('' => ts('- select -')) + CRM_Core_PseudoConstant::county()
+        ['' => ts('- select -')] + CRM_Core_PseudoConstant::county()
       );
     }
 
     $location[$locationId]['address']['state_province_id'] = $this->addElement('select', "{$locationName}[$locationId][address][state_province_id]", ts('State / Province'),
-      array('' => ts('- select -')) + CRM_Core_PseudoConstant::stateProvince()
+      ['' => ts('- select -')] + CRM_Core_PseudoConstant::stateProvince()
     );
 
     $location[$locationId]['address']['country_id'] = $this->addElement('select', "{$locationName}[$locationId][address][country_id]", ts('Country'),
-      array('' => ts('- select -')) + CRM_Core_PseudoConstant::country()
+      ['' => ts('- select -')] + CRM_Core_PseudoConstant::country()
     );
     if ($addressRequired) {
-      $this->addRule("{$locationName}[$locationId][address][country_id]", ts("Please select the Country for %1.", array(1 => $title)), 'required');
+      $this->addRule("{$locationName}[$locationId][address][country_id]", ts("Please select the Country for %1.", [1 => $title]), 'required');
     }
 
 
@@ -997,9 +1001,9 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
         )
       );
       if ($phoneRequired) {
-        $this->addRule("{$locationName}[$locationId][phone][1][phone]", ts('Please enter a value for %1', array(1 => $phone)), 'required');
+        $this->addRule("{$locationName}[$locationId][phone][1][phone]", ts('Please enter a value for %1', [1 => $phone]), 'required');
       }
-      $this->addRule("{$locationName}[$locationId][phone][1][phone]", ts('Please enter a valid number for %1', array(1 => $phone)), 'phone');
+      $this->addRule("{$locationName}[$locationId][phone][1][phone]", ts('Please enter a valid number for %1', [1 => $phone]), 'phone');
     }
 
     if ($alternatePhone) {
@@ -1011,9 +1015,9 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
         )
       );
       if ($alternatePhoneRequired) {
-        $this->addRule("{$locationName}[$locationId][phone][2][phone]", ts('Please enter a value for %1', array(1 => $alternatePhone)), 'required');
+        $this->addRule("{$locationName}[$locationId][phone][2][phone]", ts('Please enter a value for %1', [1 => $alternatePhone]), 'required');
       }
-      $this->addRule("{$locationName}[$locationId][phone][2][phone]", ts('Please enter a valid number for %1', array(1 => $alternatePhone)), 'phone');
+      $this->addRule("{$locationName}[$locationId][phone][2][phone]", ts('Please enter a valid number for %1', [1 => $alternatePhone]), 'phone');
     }
   }
 
@@ -1032,7 +1036,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
   function addUploadElement($elementName) {
     $uploadNames = $this->get('uploadNames');
     if (!$uploadNames) {
-      $uploadNames = array();
+      $uploadNames = [];
     }
     if (is_array($elementName)) {
       foreach ($elementName as $name) {
@@ -1062,7 +1066,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
   }
 
   function getVar($name) {
-    return isset($this->$name) ? $this->$name : NULL;
+    return $this->$name ?? NULL;
   }
 
   function setVar($name, $value) {
@@ -1085,8 +1089,8 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
   function addDate($name, $label, $required = FALSE, $attributes = NULL) {
     if (CRM_Utils_Array::value('formatType', $attributes)) {
       // get actual format
-      $params = array('name' => $attributes['formatType']);
-      $values = array();
+      $params = ['name' => $attributes['formatType']];
+      $values = [];
       CRM_Core_DAO::commonRetrieve('CRM_Core_DAO_PreferencesDate', $params, $values);
 
       if ($values['date_format']) {
@@ -1142,12 +1146,12 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
           $elementName = substr($name, 0, strlen($name) - 1) . '_time]';
         }
 
-        $this->add('text', $elementName, ts('Time'), array('timeFormat' => $show24Hours));
+        $this->add('text', $elementName, ts('Time'), ['timeFormat' => $show24Hours]);
       }
     }
 
     if ($required) {
-      $this->addRule($name, ts('Please select %1', array(1 => $label)), 'required');
+      $this->addRule($name, ts('Please select %1', [1 => $label]), 'required');
       if (CRM_Utils_Array::value('addTime', $attributes)) {
         $this->addRule($elementName, ts('Please select Time'), 'required');
       }
@@ -1158,7 +1162,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
    *  Function that will add date and time
    */
   function addDateTime($name, $label, $required = FALSE, $attributes = NULL) {
-    $addTime = array('addTime' => TRUE);
+    $addTime = ['addTime' => TRUE];
     if (is_array($attributes)) {
       $attributes = array_merge($attributes, $addTime);
     }
@@ -1201,14 +1205,14 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
 
     $currencies = CRM_Core_OptionGroup::values('currencies_enabled');
     if (!$required) {
-      $currencies = array( ''=> ts( '- select -' ) ) + $currencies;
+      $currencies = [ ''=> ts( '- select -' ) ] + $currencies;
     }
     $ele = $this->add('select', $name, $label, $currencies, $required);
     if (!$defaultCurrency) {
       $config = CRM_Core_Config::singleton();
       $defaultCurrency = $config->defaultCurrency;
     }
-    $this->setDefaults(array($name => $defaultCurrency));
+    $this->setDefaults([$name => $defaultCurrency]);
     return $ele;
   }
 
@@ -1218,26 +1222,26 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
     // or $this->_submitFiles['custom_4']['name'] is null.
     foreach ($this->_fields as $name => $fld) {
       if($fld['is_required']){
-        $data_type = isset($fld['data_type']) ? $fld['data_type'] : '';
+        $data_type = $fld['data_type'] ?? '';
         if (CRM_Utils_System::isNull(CRM_Utils_Array::value($name, $fields) && $data_type != 'File')) {
-          $errors[$name] = ts('%1 is a required field.', array(1 => $fld['title']));
+          $errors[$name] = ts('%1 is a required field.', [1 => $fld['title']]);
         }
 
         if(empty($files[$name]['name']) && ($data_type == 'File' || $name == 'image_URL')){
           if($this->_action == 1){
             // profile : create
-            $errors[$name] = ts('%1 is a required field.', array(1 => $fld['title']));
+            $errors[$name] = ts('%1 is a required field.', [1 => $fld['title']]);
           }else{
             if($data_type == 'File'){
               $customFieldID = CRM_Core_BAO_CustomField::getKeyID($name);
               $file = CRM_Core_BAO_CustomField::getFileURL($this->_id, $customFieldID);
-              $file = isset($file['file_id'])?$file['file_id']:FALSE;
+              $file = $file['file_id']??FALSE;
             }
             if($name == 'image_URL'){
               $file  = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $this->_id , 'image_URL');
             }
             if(empty($file)){
-              $errors[$name] = ts('%1 is a required field.', array(1 => $fld['title']));
+              $errors[$name] = ts('%1 is a required field.', [1 => $fld['title']]);
             }
           }
         }
@@ -1263,7 +1267,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
     }
 
     if ($required) {
-      $error = $this->addRule($name, ts('%1 is a required field.', array(1 => $label)), 'required');
+      $error = $this->addRule($name, ts('%1 is a required field.', [1 => $label]), 'required');
       if (HTML_QuickForm::isError($error)) {
         CRM_Core_Error::fatal(HTML_QuickForm::errorMessage($element));
       }
@@ -1285,7 +1289,46 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
         }
       }
     }
-    return array($id, $additionalID);
+    return [$id, $additionalID];
+  }
+
+  /**
+   * Process blob images from CKeditor fields before data persistence
+   * Convert temporary blob URLs to permanent file storage and update form elements
+   *
+   * @return array Result of blob image processing
+   */
+  private function processBlobImages() {
+    $result = CRM_Utils_Image::processBlobImagesInContent(
+      $this->_submitValues,
+      $this->_elements
+    );
+
+    // Update form elements with modified content using setValue
+    if (!empty($result['processed_fields'])) {
+      foreach ($result['processed_fields'] as $fieldName) {
+        $updatedContent = $this->_submitValues[$fieldName];
+
+        try {
+          // Find the corresponding form element and update its value
+          $element = $this->getElement($fieldName);
+
+          if ($element && method_exists($element, 'setValue')) {
+            // Use setValue to maintain form consistency
+            $element->setValue($updatedContent);
+          }
+          if (isset($element->_submitValues[$fieldName])) {
+            $element->_submitValues[$fieldName] = $updatedContent;
+          }
+          $this->controller->setValue($fieldName, $updatedContent);
+        }
+        catch (Exception $e) {
+          $result['errors'][] = "Failed to update form element '{$fieldName}': " . $e->getMessage();
+        }
+      }
+    }
+
+    return $result;
   }
 }
 

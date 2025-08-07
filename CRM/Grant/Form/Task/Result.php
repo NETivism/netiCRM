@@ -75,12 +75,12 @@ class CRM_Grant_Form_Task_Result extends CRM_Grant_Form_Task {
    * @access public
    */
   public function buildQuickForm() {
-    $this->addButtons(array(
-        array('type' => 'done',
+    $this->addButtons([
+        ['type' => 'done',
           'name' => ts('Done'),
           'isDefault' => TRUE,
-        ),
-      )
+        ],
+      ]
     );
   }
 }

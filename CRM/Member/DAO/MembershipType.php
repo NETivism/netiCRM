@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-class CRM_Member_DAO_MembershipType extends CRM_Core_DAO
+                          class CRM_Member_DAO_MembershipType extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -78,7 +78,7 @@ class CRM_Member_DAO_MembershipType extends CRM_Core_DAO
    * @static
    */
   static $_log = true;
-  /**
+    /**
    * Membership Id
    *
    * @var int unsigned
@@ -201,7 +201,7 @@ class CRM_Member_DAO_MembershipType extends CRM_Core_DAO
    * @var boolean
    */
   public $is_active;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -220,16 +220,16 @@ class CRM_Member_DAO_MembershipType extends CRM_Core_DAO
   function &links()
   {
     if (!(self::$_links)) {
-      self::$_links = array(
+      self::$_links = [
         'domain_id' => 'civicrm_domain:id',
         'member_of_contact_id' => 'civicrm_contact:id',
         'contribution_type_id' => 'civicrm_contribution_type:id',
         'renewal_msg_id' => 'civicrm_msg_template:id',
-      );
+      ];
     }
     return self::$_links;
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -246,7 +246,7 @@ class CRM_Member_DAO_MembershipType extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -255,138 +255,138 @@ class CRM_Member_DAO_MembershipType extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'id' => array(
+      self::$_fields = [
+        'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'domain_id' => array(
+                  ] ,
+        'domain_id' => [
           'name' => 'domain_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-          'FKClassName' => 'CRM_Core_DAO_Domain',
-        ) ,
-        'membership_type' => array(
+                    'FKClassName' => 'CRM_Core_DAO_Domain',
+        ] ,
+        'membership_type' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Membership Type') ,
-          'maxlength' => 128,
-          'size' => CRM_Utils_Type::HUGE,
-          'import' => true,
+           'maxlength' => 128,
+           'size' => CRM_Utils_Type::HUGE,
+             'import' => true,
           'where' => 'civicrm_membership_type.name',
           'headerPattern' => '',
           'dataPattern' => '',
-          'export' => true,
-          'usage' => 'System',
-        ) ,
-        'description' => array(
+           'export' => true,
+               'usage' => 'System',
+       ] ,
+        'description' => [
           'name' => 'description',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Description') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'member_of_contact_id' => array(
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
+        'member_of_contact_id' => [
           'name' => 'member_of_contact_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-          'FKClassName' => 'CRM_Contact_DAO_Contact',
-        ) ,
-        'contribution_type_id' => array(
+                    'FKClassName' => 'CRM_Contact_DAO_Contact',
+        ] ,
+        'contribution_type_id' => [
           'name' => 'contribution_type_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-          'FKClassName' => 'CRM_Contribute_DAO_ContributionType',
-        ) ,
-        'minimum_fee' => array(
+                    'FKClassName' => 'CRM_Contribute_DAO_ContributionType',
+        ] ,
+        'minimum_fee' => [
           'name' => 'minimum_fee',
           'type' => CRM_Utils_Type::T_MONEY,
           'title' => ts('Minimum Fee') ,
-        ) ,
-        'duration_unit' => array(
+                  ] ,
+        'duration_unit' => [
           'name' => 'duration_unit',
           'type' => CRM_Utils_Type::T_ENUM,
           'title' => ts('Duration Unit') ,
-          'enumValues' => 'day, month, year, lifetime',
-        ) ,
-        'duration_interval' => array(
+                   'enumValues' => 'day, month, year, lifetime',
+         ] ,
+        'duration_interval' => [
           'name' => 'duration_interval',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Duration Interval') ,
-        ) ,
-        'period_type' => array(
+                  ] ,
+        'period_type' => [
           'name' => 'period_type',
           'type' => CRM_Utils_Type::T_ENUM,
           'title' => ts('Period Type') ,
-          'enumValues' => 'rolling, fixed',
-        ) ,
-        'fixed_period_start_day' => array(
+                   'enumValues' => 'rolling, fixed',
+         ] ,
+        'fixed_period_start_day' => [
           'name' => 'fixed_period_start_day',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Fixed Period Start Day') ,
-        ) ,
-        'fixed_period_rollover_day' => array(
+                  ] ,
+        'fixed_period_rollover_day' => [
           'name' => 'fixed_period_rollover_day',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Fixed Period Rollover Day') ,
-        ) ,
-        'relationship_type_id' => array(
+                  ] ,
+        'relationship_type_id' => [
           'name' => 'relationship_type_id',
           'type' => CRM_Utils_Type::T_STRING,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ) ,
-        'relationship_direction' => array(
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
+        'relationship_direction' => [
           'name' => 'relationship_direction',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Relationship Direction') ,
-          'maxlength' => 128,
-          'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'visibility' => array(
+           'maxlength' => 128,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
+        'visibility' => [
           'name' => 'visibility',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Visible') ,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ) ,
-        'weight' => array(
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
+        'weight' => [
           'name' => 'weight',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Weight') ,
-        ) ,
-        'renewal_msg_id' => array(
+                  ] ,
+        'renewal_msg_id' => [
           'name' => 'renewal_msg_id',
           'type' => CRM_Utils_Type::T_INT,
-          'FKClassName' => 'CRM_Core_DAO_MessageTemplates',
-        ) ,
-        'renewal_reminder_day' => array(
+                    'FKClassName' => 'CRM_Core_DAO_MessageTemplates',
+        ] ,
+        'renewal_reminder_day' => [
           'name' => 'renewal_reminder_day',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Renewal Reminder Day') ,
-        ) ,
-        'receipt_text_signup' => array(
+                  ] ,
+        'receipt_text_signup' => [
           'name' => 'receipt_text_signup',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Receipt Text Signup') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'receipt_text_renewal' => array(
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
+        'receipt_text_renewal' => [
           'name' => 'receipt_text_renewal',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Receipt Text Renewal') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'is_active' => array(
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
+        'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Is Active') ,
-          'default' => '',
-        ) ,
-      );
+                  'default' => '',
+          ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -398,9 +398,9 @@ class CRM_Member_DAO_MembershipType extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    global $dbLocale;
+        global $dbLocale;
     return self::$_tableName . $dbLocale;
-  }
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -420,7 +420,7 @@ class CRM_Member_DAO_MembershipType extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -431,7 +431,7 @@ class CRM_Member_DAO_MembershipType extends CRM_Core_DAO
           }
         }
       }
-    }
+                                                                      }
     return self::$_import;
   }
   /**
@@ -443,7 +443,7 @@ class CRM_Member_DAO_MembershipType extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
@@ -454,7 +454,7 @@ class CRM_Member_DAO_MembershipType extends CRM_Core_DAO
           }
         }
       }
-    }
+                                                                      }
     return self::$_export;
   }
   /**
@@ -464,10 +464,10 @@ class CRM_Member_DAO_MembershipType extends CRM_Core_DAO
    */
   static function &getEnums()
   {
-    static $enums = array(
-      'duration_unit',
-      'period_type',
-    );
+    static $enums = [
+                                                                                                        'duration_unit',
+                                      'period_type',
+                                                                                                                                                    ];
     return $enums;
   }
   /**
@@ -482,18 +482,18 @@ class CRM_Member_DAO_MembershipType extends CRM_Core_DAO
   {
     static $translations = null;
     if (!$translations) {
-      $translations = array(
-        'duration_unit' => array(
-          'day' => ts('day') ,
-          'month' => ts('month') ,
-          'year' => ts('year') ,
-          'lifetime' => ts('lifetime') ,
-        ) ,
-        'period_type' => array(
-          'rolling' => ts('rolling') ,
-          'fixed' => ts('fixed') ,
-        ) ,
-      );
+      $translations = [
+                                                                                                        'duration_unit' => [
+                  'day' => ts('day'),
+                  'month' => ts('month'),
+                  'year' => ts('year'),
+                  'lifetime' => ts('lifetime'),
+                ],
+                                      'period_type' => [
+                  'rolling' => ts('rolling'),
+                  'fixed' => ts('fixed'),
+                ],
+                                                                                                                                                      ];
     }
     return $translations[$field][$value];
   }
@@ -506,7 +506,7 @@ class CRM_Member_DAO_MembershipType extends CRM_Core_DAO
   static function addDisplayEnums(&$values)
   {
     $enumFields = &CRM_Member_DAO_MembershipType::getEnums();
-    foreach($enumFields as $enum) {
+    foreach ($enumFields as $enum) {
       if (isset($values[$enum])) {
         $values[$enum . '_display'] = CRM_Member_DAO_MembershipType::tsEnum($enum, $values[$enum]);
       }

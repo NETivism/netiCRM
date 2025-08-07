@@ -66,17 +66,17 @@ class CRM_SMS_Form_Provider extends CRM_Core_Form {
   public function buildQuickForm() {
     parent::buildQuickForm();
 
-    $this->addButtons(array(
-      array(
+    $this->addButtons([
+      [
         'type' => 'next',
         'name' => $this->_action & CRM_Core_Action::DELETE ? ts('Delete') : ts('Save'),
         'isDefault' => TRUE,
-      ),
-      array(
+      ],
+      [
         'type' => 'cancel',
         'name' => ts('Cancel'),
-      ),
-    ));
+      ],
+    ]);
 
     if ($this->_action & CRM_Core_Action::DELETE) {
       return;
@@ -87,7 +87,7 @@ class CRM_SMS_Form_Provider extends CRM_Core_Form {
     $providerNames = CRM_Core_OptionGroup::values('sms_provider_name', FALSE, FALSE, FALSE, NULL, 'label');
     $apiTypes = CRM_Core_OptionGroup::values('sms_api_type', FALSE, FALSE, FALSE, NULL, 'label');
 
-    $eleProviders = $this->addSelect('name', ts('Name'), array('' => ts('-- Select --')) + $providerNames, TRUE);
+    $eleProviders = $this->addSelect('name', ts('Name'), ['' => ts('-- Select --')] + $providerNames, TRUE);
     if ($this->_action & CRM_Core_Action::UPDATE) {
       $eleProviders->freeze();
     }
@@ -96,10 +96,10 @@ class CRM_SMS_Form_Provider extends CRM_Core_Form {
       $attributes['title'], TRUE
     );
 
-    $this->addRule('title', ts('This title already exists in Database.'), 'objectExists', array(
+    $this->addRule('title', ts('This title already exists in Database.'), 'objectExists', [
       'CRM_SMS_DAO_Provider',
       $this->_id,
-    ));
+    ]);
 
     $this->add('text', 'username', ts('Username'), $attributes['username']);
 
@@ -115,7 +115,7 @@ class CRM_SMS_Form_Provider extends CRM_Core_Form {
 
     $this->add('checkbox', 'is_default', ts('Is this a default provider?'));
 
-    $this->addFormRule(array('CRM_SMS_Form_Provider', 'formRule'));
+    $this->addFormRule(['CRM_SMS_Form_Provider', 'formRule']);
   }
 
   /**
@@ -125,16 +125,16 @@ class CRM_SMS_Form_Provider extends CRM_Core_Form {
    * @return array
    */
   public static function formRule($fields) {
-    $errors = array();
+    $errors = [];
     if ($fields['name'] == 'CRM_SMS_Provider_Mitake') {
       // check requirement of these fields
-      $checkFields = array(
+      $checkFields = [
         'username' => ts('Username'),
         'password' => ts('Password'),
-      );
+      ];
       foreach(array_keys($checkFields) as $field) {
         if (empty($fields[$field])) {
-          $errors[$field] = ts('%1 is a required field.', array(1 => $checkFields[$field]));
+          $errors[$field] = ts('%1 is a required field.', [1 => $checkFields[$field]]);
         }
       }
     }
@@ -154,12 +154,12 @@ class CRM_SMS_Form_Provider extends CRM_Core_Form {
    * @return array
    */
   public function setDefaultValues() {
-    $defaults = array();
+    $defaults = [];
 
     $name = CRM_Utils_Request::retrieve('key', 'String', $this, FALSE, NULL);
     if ($name) {
       $defaults['name'] = $name;
-      $provider = CRM_SMS_Provider::singleton(array('provider' => $name));
+      $provider = CRM_SMS_Provider::singleton(['provider' => $name]);
       $defaults['api_url'] = $provider->_apiURL;
     }
 
@@ -210,9 +210,9 @@ class CRM_SMS_Form_Provider extends CRM_Core_Form {
 
     $recData = $values = $this->controller->exportValues($this->_name);
     if ($recData['name'] === 'CRM_SMS_Provider_Flydove' && !empty($this->_submitValues['flydove_api_token'])) {
-      $apiParams = array(
+      $apiParams = [
         'tokens' => $this->_submitValues['flydove_api_token'],
-      );
+      ];
       $recData['api_params'] = json_encode($apiParams);
     }
     $recData['is_active'] = CRM_Utils_Array::value('is_active', $recData, 0);

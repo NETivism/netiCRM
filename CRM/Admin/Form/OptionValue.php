@@ -76,10 +76,10 @@ class CRM_Admin_Form_OptionValue extends CRM_Admin_Form {
     if ($this->_action & CRM_Core_Action::UPDATE){
       if(!is_numeric($this->_id)) {
         $value = CRM_Utils_Request::retrieve('value', 'String', $this, TRUE);
-        $optionId = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_option_value WHERE option_group_id = %1 AND value = %2", array(
-          1 => array($this->_gid, 'Integer'),
-          2 => array($value, 'String'),
-        ));
+        $optionId = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_option_value WHERE option_group_id = %1 AND value = %2", [
+          1 => [$this->_gid, 'Integer'],
+          2 => [$value, 'String'],
+        ]);
         if (!empty($optionId)) {
           $this->_id = $optionId;
         }
@@ -91,7 +91,7 @@ class CRM_Admin_Form_OptionValue extends CRM_Admin_Form {
       if (ts($label) !== $label) {
         $label = ts($label)."($label)";
       }
-      CRM_Utils_System::setTitle(ts('Edit %1 Option', array(1 => $label)));
+      CRM_Utils_System::setTitle(ts('Edit %1 Option', [1 => $label]));
     }
     $session = CRM_Core_Session::singleton();
     $url = CRM_Utils_System::url('civicrm/admin/optionValue', 'reset=1&action=browse&gid=' . $this->_gid);
@@ -117,7 +117,7 @@ class CRM_Admin_Form_OptionValue extends CRM_Admin_Form {
    * @return None
    */
   function setDefaultValues() {
-    $defaults = array();
+    $defaults = [];
     $defaults = parent::setDefaultValues();
     if (!CRM_Utils_Array::value('weight', $defaults)) {
       $query = "SELECT max( `weight` ) as weight FROM `civicrm_option_value` where option_group_id=" . $this->_gid;
@@ -127,7 +127,7 @@ class CRM_Admin_Form_OptionValue extends CRM_Admin_Form {
       $defaults['weight'] = ($dao->weight + 1);
     }
     //setDefault of contact types for email greeting, postal greeting, addressee, CRM-4575
-    if (in_array($this->_gName, array('email_greeting', 'postal_greeting', 'addressee'))) {
+    if (in_array($this->_gName, ['email_greeting', 'postal_greeting', 'addressee'])) {
       $defaults['contactOptions'] = CRM_Utils_Array::value('filter', $defaults);
     }
     return $defaults;
@@ -169,9 +169,9 @@ class CRM_Admin_Form_OptionValue extends CRM_Admin_Form {
     }
 
     if ($this->_gName == 'case_status') {
-      $grouping = $this->add('select', 'grouping', ts('Option Grouping Name'), array('Opened' => ts('Opened'),
+      $grouping = $this->add('select', 'grouping', ts('Option Grouping Name'), ['Opened' => ts('Opened'),
           'Closed' => ts('Closed'),
-        ));
+        ]);
       if ($isReserved) {
         $grouping->freeze();
       }
@@ -205,18 +205,18 @@ class CRM_Admin_Form_OptionValue extends CRM_Admin_Form {
     }
 
     if ($this->_action & CRM_Core_Action::UPDATE && $isReserved) {
-      $this->freeze(array('name', 'description', 'is_active'));
+      $this->freeze(['name', 'description', 'is_active']);
     }
     //get contact type for which user want to create a new greeting/addressee type, CRM-4575
-    if (in_array($this->_gName, array('email_greeting', 'postal_greeting', 'addressee')) && !$isReserved) {
-      $values = array(1 => ts('Individual'), 2 => ts('Household'));
+    if (in_array($this->_gName, ['email_greeting', 'postal_greeting', 'addressee']) && !$isReserved) {
+      $values = [1 => ts('Individual'), 2 => ts('Household')];
       if ($this->_gName == 'addressee') {
         $values[] = ts('Organization');
       }
-      $this->add('select', 'contactOptions', ts('Contact Type'), array('' => '-select-') + $values, TRUE);
+      $this->add('select', 'contactOptions', ts('Contact Type'), ['' => '-select-'] + $values, TRUE);
     }
 
-    $this->addFormRule(array('CRM_Admin_Form_OptionValue', 'formRule'), $this);
+    $this->addFormRule(['CRM_Admin_Form_OptionValue', 'formRule'], $this);
   }
 
   /**
@@ -231,12 +231,12 @@ class CRM_Admin_Form_OptionValue extends CRM_Admin_Form {
    * @static
    */
   static function formRule($fields, $files, $self) {
-    $errors = array();
+    $errors = [];
 
     //don't allow duplicate value within group.
-    $optionValues = array();
+    $optionValues = [];
 
-    CRM_Core_OptionValue::getValues(array('id' => $self->_gid), $optionValues);
+    CRM_Core_OptionValue::getValues(['id' => $self->_gid], $optionValues);
     foreach ($optionValues as $values) {
       if ($values['id'] != $self->_id) {
         if ($fields['value'] == $values['value']) {
@@ -265,7 +265,7 @@ class CRM_Admin_Form_OptionValue extends CRM_Admin_Form {
     }
     else {
 
-      $params = $ids = array();
+      $params = $ids = [];
       // store the submitted values in an array
       $params = $this->exportValues();
       $params['option_group_id'] = $this->_gid;
@@ -281,7 +281,7 @@ class CRM_Admin_Form_OptionValue extends CRM_Admin_Form {
       }
 
       $optionValue = CRM_Core_BAO_OptionValue::add($params, $ids);
-      CRM_Core_Session::setStatus(ts('The Option Value \'%1\' has been saved.', array(1 => $optionValue->label)));
+      CRM_Core_Session::setStatus(ts('The Option Value \'%1\' has been saved.', [1 => $optionValue->label]));
     }
   }
 }

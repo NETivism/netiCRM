@@ -50,11 +50,11 @@ class CRM_UF_Form_AdvanceSetting extends CRM_UF_Form_Group {
     $form->addElement('checkbox', 'is_map', ts('Enable mapping for this profile?'));
 
     // should we allow updates on a exisitng contact
-    $options = array(
+    $options = [
       0 => ts('Issue warning and do not save'),
       1 => ts('Update the matching contact'),
       2 => ts('Allow duplicate contact to be created'),
-    );
+    ];
     $form->addRadio('is_update_dupe', ts('What to do upon duplicate match'), $options, NULL, '<br>');
 
     // we do not have any url checks to allow relative urls
@@ -62,7 +62,7 @@ class CRM_UF_Form_AdvanceSetting extends CRM_UF_Form_Group {
     $form->addElement('text', 'cancel_URL', ts('Back to Website URL'), CRM_Core_DAO::getAttribute('CRM_Core_DAO_UFGroup', 'cancel_URL'));
 
     // add select for groups
-    $group = array('' => ts('- select -')) + $form->_group;
+    $group = ['' => ts('- select -')] + $form->_group;
     $form->_groupElement = &$form->addElement('select', 'group', ts('Limit listings to a specific Group?'), $group);
 
     // add CAPTCHA To this group ?
@@ -73,7 +73,7 @@ class CRM_UF_Form_AdvanceSetting extends CRM_UF_Form_Group {
 
     // should we display a link to the website profile
     $config = CRM_Core_Config::singleton();
-    $form->addElement('checkbox', 'is_uf_link', ts('Include %1 user account information links in search results?', array(1 => $config->userFramework)));
+    $form->addElement('checkbox', 'is_uf_link', ts('Include %1 user account information links in search results?', [1 => $config->userFramework]));
 
     // want to create cms user
     $session = CRM_Core_Session::singleton();
@@ -82,19 +82,19 @@ class CRM_UF_Form_AdvanceSetting extends CRM_UF_Form_Group {
       $form->_cmsId = TRUE;
     }
 
-    $options = array(
+    $options = [
       0 => ts('No account create option'),
       1 => ts('Give option, but not required'),
       2 => ts('Account creation required'),
-    );
+    ];
     $form->addRadio('is_cms_user', ts('%1 user account registration option?'), $options, NULL, '<br>');
 
     // options for including Proximity Search in the profile search form
-    $proxOptions = array(
+    $proxOptions = [
       0 => ts('None'),
       1 => ts('Optional'),
       2 => ts('Required'),
-    );
+    ];
     $form->addRadio('is_proximity_search', ts('Proximity search'), $proxOptions, NULL, '<br>');
 
     // add is in other situation to this group

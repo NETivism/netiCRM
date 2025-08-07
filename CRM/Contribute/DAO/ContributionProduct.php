@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-class CRM_Contribute_DAO_ContributionProduct extends CRM_Core_DAO
+        class CRM_Contribute_DAO_ContributionProduct extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -78,7 +78,7 @@ class CRM_Contribute_DAO_ContributionProduct extends CRM_Core_DAO
    * @static
    */
   static $_log = true;
-  /**
+    /**
    *
    * @var int unsigned
    */
@@ -127,7 +127,7 @@ class CRM_Contribute_DAO_ContributionProduct extends CRM_Core_DAO
    * @var text
    */
   public $comment;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -146,13 +146,13 @@ class CRM_Contribute_DAO_ContributionProduct extends CRM_Core_DAO
   function &links()
   {
     if (!(self::$_links)) {
-      self::$_links = array(
+      self::$_links = [
         'contribution_id' => 'civicrm_contribution:id',
-      );
+      ];
     }
     return self::$_links;
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -166,7 +166,7 @@ class CRM_Contribute_DAO_ContributionProduct extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -175,76 +175,76 @@ class CRM_Contribute_DAO_ContributionProduct extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'id' => array(
+      self::$_fields = [
+        'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'product_id' => array(
+                  ] ,
+        'product_id' => [
           'name' => 'product_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'contribution_id' => array(
+                  ] ,
+        'contribution_id' => [
           'name' => 'contribution_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-          'FKClassName' => 'CRM_Contribute_DAO_Contribution',
-        ) ,
-        'product_option' => array(
+                    'FKClassName' => 'CRM_Contribute_DAO_Contribution',
+        ] ,
+        'product_option' => [
           'name' => 'product_option',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Product Option') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-          'export' => true,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+              'export' => true,
           'where' => 'civicrm_contribution_product.product_option',
           'headerPattern' => '',
           'dataPattern' => '',
-        ) ,
-        'quantity' => array(
+            ] ,
+        'quantity' => [
           'name' => 'quantity',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Quantity') ,
-          'export' => true,
+                'export' => true,
           'where' => 'civicrm_contribution_product.quantity',
           'headerPattern' => '',
           'dataPattern' => '',
-        ) ,
-        'fulfilled_date' => array(
+            ] ,
+        'fulfilled_date' => [
           'name' => 'fulfilled_date',
           'type' => CRM_Utils_Type::T_DATE,
           'title' => ts('Fulfilled Date') ,
-          'export' => true,
+                'export' => true,
           'where' => 'civicrm_contribution_product.fulfilled_date',
           'headerPattern' => '',
           'dataPattern' => '',
-        ) ,
-        'contribution_start_date' => array(
+            ] ,
+        'contribution_start_date' => [
           'name' => 'start_date',
           'type' => CRM_Utils_Type::T_DATE,
           'title' => ts('Start Date') ,
-          'export' => true,
+                'export' => true,
           'where' => 'civicrm_contribution_product.start_date',
           'headerPattern' => '',
           'dataPattern' => '',
-        ) ,
-        'contribution_end_date' => array(
+            ] ,
+        'contribution_end_date' => [
           'name' => 'end_date',
           'type' => CRM_Utils_Type::T_DATE,
           'title' => ts('End Date') ,
-          'export' => true,
+                'export' => true,
           'where' => 'civicrm_contribution_product.end_date',
           'headerPattern' => '',
           'dataPattern' => '',
-        ) ,
-        'comment' => array(
+            ] ,
+        'comment' => [
           'name' => 'comment',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Comment') ,
-        ) ,
-      );
+                  ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -256,8 +256,8 @@ class CRM_Contribute_DAO_ContributionProduct extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -277,7 +277,7 @@ class CRM_Contribute_DAO_ContributionProduct extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -288,7 +288,7 @@ class CRM_Contribute_DAO_ContributionProduct extends CRM_Core_DAO
           }
         }
       }
-    }
+                                  }
     return self::$_import;
   }
   /**
@@ -300,7 +300,7 @@ class CRM_Contribute_DAO_ContributionProduct extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
@@ -311,7 +311,7 @@ class CRM_Contribute_DAO_ContributionProduct extends CRM_Core_DAO
           }
         }
       }
-    }
+                                  }
     return self::$_export;
   }
 }

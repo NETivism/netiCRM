@@ -49,13 +49,13 @@ class api_v3_UFJoinTest extends CiviUnitTestCase {
     parent::setUp();
     //  Truncate the tables
     $this->quickCleanup(
-      array(
+      [
         'civicrm_group',
         'civicrm_contact',
         'civicrm_uf_group',
         'civicrm_uf_join',
         'civicrm_uf_match',
-      )
+      ]
     );
     $this->_apiversion = 3;
     $op = new PHPUnit_Extensions_Database_Operation_Insert;
@@ -65,62 +65,62 @@ class api_v3_UFJoinTest extends CiviUnitTestCase {
     );
 
     // FIXME: something NULLs $GLOBALS['_HTML_QuickForm_registered_rules'] when the tests are ran all together
-    $GLOBALS['_HTML_QuickForm_registered_rules'] = array(
-      'required' => array('html_quickform_rule_required', 'HTML/QuickForm/Rule/Required.php'),
-      'maxlength' => array('html_quickform_rule_range', 'HTML/QuickForm/Rule/Range.php'),
-      'minlength' => array('html_quickform_rule_range', 'HTML/QuickForm/Rule/Range.php'),
-      'rangelength' => array('html_quickform_rule_range', 'HTML/QuickForm/Rule/Range.php'),
-      'email' => array('html_quickform_rule_email', 'HTML/QuickForm/Rule/Email.php'),
-      'regex' => array('html_quickform_rule_regex', 'HTML/QuickForm/Rule/Regex.php'),
-      'lettersonly' => array('html_quickform_rule_regex', 'HTML/QuickForm/Rule/Regex.php'),
-      'alphanumeric' => array('html_quickform_rule_regex', 'HTML/QuickForm/Rule/Regex.php'),
-      'numeric' => array('html_quickform_rule_regex', 'HTML/QuickForm/Rule/Regex.php'),
-      'nopunctuation' => array('html_quickform_rule_regex', 'HTML/QuickForm/Rule/Regex.php'),
-      'nonzero' => array('html_quickform_rule_regex', 'HTML/QuickForm/Rule/Regex.php'),
-      'callback' => array('html_quickform_rule_callback', 'HTML/QuickForm/Rule/Callback.php'),
-      'compare' => array('html_quickform_rule_compare', 'HTML/QuickForm/Rule/Compare.php'),
-    );
+    $GLOBALS['_HTML_QuickForm_registered_rules'] = [
+      'required' => ['html_quickform_rule_required', 'HTML/QuickForm/Rule/Required.php'],
+      'maxlength' => ['html_quickform_rule_range', 'HTML/QuickForm/Rule/Range.php'],
+      'minlength' => ['html_quickform_rule_range', 'HTML/QuickForm/Rule/Range.php'],
+      'rangelength' => ['html_quickform_rule_range', 'HTML/QuickForm/Rule/Range.php'],
+      'email' => ['html_quickform_rule_email', 'HTML/QuickForm/Rule/Email.php'],
+      'regex' => ['html_quickform_rule_regex', 'HTML/QuickForm/Rule/Regex.php'],
+      'lettersonly' => ['html_quickform_rule_regex', 'HTML/QuickForm/Rule/Regex.php'],
+      'alphanumeric' => ['html_quickform_rule_regex', 'HTML/QuickForm/Rule/Regex.php'],
+      'numeric' => ['html_quickform_rule_regex', 'HTML/QuickForm/Rule/Regex.php'],
+      'nopunctuation' => ['html_quickform_rule_regex', 'HTML/QuickForm/Rule/Regex.php'],
+      'nonzero' => ['html_quickform_rule_regex', 'HTML/QuickForm/Rule/Regex.php'],
+      'callback' => ['html_quickform_rule_callback', 'HTML/QuickForm/Rule/Callback.php'],
+      'compare' => ['html_quickform_rule_compare', 'HTML/QuickForm/Rule/Compare.php'],
+    ];
     // FIXME: …ditto for $GLOBALS['HTML_QUICKFORM_ELEMENT_TYPES']
-    $GLOBALS['HTML_QUICKFORM_ELEMENT_TYPES'] = array(
-      'group' => array('HTML/QuickForm/group.php', 'HTML_QuickForm_group'),
-      'hidden' => array('HTML/QuickForm/hidden.php', 'HTML_QuickForm_hidden'),
-      'reset' => array('HTML/QuickForm/reset.php', 'HTML_QuickForm_reset'),
-      'checkbox' => array('HTML/QuickForm/checkbox.php', 'HTML_QuickForm_checkbox'),
-      'file' => array('HTML/QuickForm/file.php', 'HTML_QuickForm_file'),
-      'image' => array('HTML/QuickForm/image.php', 'HTML_QuickForm_image'),
-      'password' => array('HTML/QuickForm/password.php', 'HTML_QuickForm_password'),
-      'radio' => array('HTML/QuickForm/radio.php', 'HTML_QuickForm_radio'),
-      'button' => array('HTML/QuickForm/button.php', 'HTML_QuickForm_button'),
-      'submit' => array('HTML/QuickForm/submit.php', 'HTML_QuickForm_submit'),
-      'select' => array('HTML/QuickForm/select.php', 'HTML_QuickForm_select'),
-      'hiddenselect' => array('HTML/QuickForm/hiddenselect.php', 'HTML_QuickForm_hiddenselect'),
-      'text' => array('HTML/QuickForm/text.php', 'HTML_QuickForm_text'),
-      'textarea' => array('HTML/QuickForm/textarea.php', 'HTML_QuickForm_textarea'),
-      'fckeditor' => array('HTML/QuickForm/fckeditor.php', 'HTML_QuickForm_FCKEditor'),
-      'dojoeditor' => array('HTML/QuickForm/dojoeditor.php', 'HTML_QuickForm_dojoeditor'),
-      'link' => array('HTML/QuickForm/link.php', 'HTML_QuickForm_link'),
-      'advcheckbox' => array('HTML/QuickForm/advcheckbox.php', 'HTML_QuickForm_advcheckbox'),
-      'date' => array('HTML/QuickForm/date.php', 'HTML_QuickForm_date'),
-      'static' => array('HTML/QuickForm/static.php', 'HTML_QuickForm_static'),
-      'header' => array('HTML/QuickForm/header.php', 'HTML_QuickForm_header'),
-      'html' => array('HTML/QuickForm/html.php', 'HTML_QuickForm_html'),
-      'hierselect' => array('HTML/QuickForm/hierselect.php', 'HTML_QuickForm_hierselect'),
-      'autocomplete' => array('HTML/QuickForm/autocomplete.php', 'HTML_QuickForm_autocomplete'),
-      'xbutton' => array('HTML/QuickForm/xbutton.php', 'HTML_QuickForm_xbutton'),
-      'advmultiselect' => array('HTML/QuickForm/advmultiselect.php', 'HTML_QuickForm_advmultiselect'),
-    );
+    $GLOBALS['HTML_QUICKFORM_ELEMENT_TYPES'] = [
+      'group' => ['HTML/QuickForm/group.php', 'HTML_QuickForm_group'],
+      'hidden' => ['HTML/QuickForm/hidden.php', 'HTML_QuickForm_hidden'],
+      'reset' => ['HTML/QuickForm/reset.php', 'HTML_QuickForm_reset'],
+      'checkbox' => ['HTML/QuickForm/checkbox.php', 'HTML_QuickForm_checkbox'],
+      'file' => ['HTML/QuickForm/file.php', 'HTML_QuickForm_file'],
+      'image' => ['HTML/QuickForm/image.php', 'HTML_QuickForm_image'],
+      'password' => ['HTML/QuickForm/password.php', 'HTML_QuickForm_password'],
+      'radio' => ['HTML/QuickForm/radio.php', 'HTML_QuickForm_radio'],
+      'button' => ['HTML/QuickForm/button.php', 'HTML_QuickForm_button'],
+      'submit' => ['HTML/QuickForm/submit.php', 'HTML_QuickForm_submit'],
+      'select' => ['HTML/QuickForm/select.php', 'HTML_QuickForm_select'],
+      'hiddenselect' => ['HTML/QuickForm/hiddenselect.php', 'HTML_QuickForm_hiddenselect'],
+      'text' => ['HTML/QuickForm/text.php', 'HTML_QuickForm_text'],
+      'textarea' => ['HTML/QuickForm/textarea.php', 'HTML_QuickForm_textarea'],
+      'fckeditor' => ['HTML/QuickForm/fckeditor.php', 'HTML_QuickForm_FCKEditor'],
+      'dojoeditor' => ['HTML/QuickForm/dojoeditor.php', 'HTML_QuickForm_dojoeditor'],
+      'link' => ['HTML/QuickForm/link.php', 'HTML_QuickForm_link'],
+      'advcheckbox' => ['HTML/QuickForm/advcheckbox.php', 'HTML_QuickForm_advcheckbox'],
+      'date' => ['HTML/QuickForm/date.php', 'HTML_QuickForm_date'],
+      'static' => ['HTML/QuickForm/static.php', 'HTML_QuickForm_static'],
+      'header' => ['HTML/QuickForm/header.php', 'HTML_QuickForm_header'],
+      'html' => ['HTML/QuickForm/html.php', 'HTML_QuickForm_html'],
+      'hierselect' => ['HTML/QuickForm/hierselect.php', 'HTML_QuickForm_hierselect'],
+      'autocomplete' => ['HTML/QuickForm/autocomplete.php', 'HTML_QuickForm_autocomplete'],
+      'xbutton' => ['HTML/QuickForm/xbutton.php', 'HTML_QuickForm_xbutton'],
+      'advmultiselect' => ['HTML/QuickForm/advmultiselect.php', 'HTML_QuickForm_advmultiselect'],
+    ];
   }
 
   function tearDown() {
     //  Truncate the tables
     $this->quickCleanup(
-      array(
+      [
         'civicrm_group',
         'civicrm_contact',
         'civicrm_uf_group',
         'civicrm_uf_join',
         'civicrm_uf_match',
-      )
+      ]
     );
   }
 
@@ -128,7 +128,7 @@ class api_v3_UFJoinTest extends CiviUnitTestCase {
    * find uf join group id
    */
   public function testFindUFGroupId() {
-    $params = array(
+    $params = [
       'module' => 'CiviContribute',
       'entity_table' => 'civicrm_contribution_page',
       'entity_id' => 1,
@@ -136,14 +136,14 @@ class api_v3_UFJoinTest extends CiviUnitTestCase {
       'uf_group_id' => $this->_ufGroupId,
       'is_active' => 1,
       'version' => $this->_apiversion,
-    );
+    ];
     $ufJoin = civicrm_api('uf_join', 'create', $params);
 
-    $searchParams = array(
+    $searchParams = [
       'entity_table' => 'civicrm_contribution_page',
       'entity_id' => 1,
       'version' => $this->_apiversion,
-    );
+    ];
     $result = civicrm_api('uf_join', 'get', $searchParams);
 
     foreach ($result['values'] as $key => $value) {
@@ -161,7 +161,7 @@ class api_v3_UFJoinTest extends CiviUnitTestCase {
   }
 
   public function testUFJoinEditEmptyParams() {
-    $params = array();
+    $params = [];
     $result = civicrm_api('uf_join', 'create', $params);
 
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
@@ -169,14 +169,14 @@ class api_v3_UFJoinTest extends CiviUnitTestCase {
   }
 
   public function testUFJoinEditWithoutUFGroupId() {
-    $params = array(
+    $params = [
       'module' => 'CiviContribute',
       'entity_table' => 'civicrm_contribution_page',
       'entity_id' => 1,
       'weight' => 1,
       'is_active' => 1,
       'version' => $this->_apiversion,
-    );
+    ];
     $result = civicrm_api('uf_join', 'create', $params);
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
     $this->assertEquals($result['error_message'], 'Mandatory key(s) missing from params array: uf_group_id', 'In line ' . __LINE__);
@@ -186,7 +186,7 @@ class api_v3_UFJoinTest extends CiviUnitTestCase {
    * create/update uf join
    */
   public function testCreateUFJoin() {
-    $params = array(
+    $params = [
       'module' => 'CiviContribute',
       'entity_table' => 'civicrm_contribution_page',
       'entity_id' => 1,
@@ -195,14 +195,14 @@ class api_v3_UFJoinTest extends CiviUnitTestCase {
       'is_active' => 1,
       'version' => $this->_apiversion,
       'sequential' => 1,
-    );
+    ];
     $ufJoin = civicrm_api('uf_join', 'create', $params);
     $this->documentMe($params, $ufJoin, __FUNCTION__, __FILE__);
     $this->assertEquals($ufJoin['values'][0]['module'], $params['module'], 'In line ' . __LINE__);
     $this->assertEquals($ufJoin['values'][0]['uf_group_id'], $params['uf_group_id'], 'In line ' . __LINE__);
     $this->assertEquals($ufJoin['values'][0]['is_active'], $params['is_active'], 'In line ' . __LINE__);
 
-    $params = array(
+    $params = [
       'id' => $ufJoin['id'],
       'module' => 'CiviContribute',
       'entity_table' => 'civicrm_contribution_page',
@@ -212,7 +212,7 @@ class api_v3_UFJoinTest extends CiviUnitTestCase {
       'is_active' => 0,
       'version' => $this->_apiversion,
       'sequential' => 1,
-    );
+    ];
     $ufJoinUpdated = civicrm_api('uf_join', 'create', $params);
     $this->assertEquals($ufJoinUpdated['values'][0]['module'], $params['module'], 'In line ' . __LINE__);
     $this->assertEquals($ufJoinUpdated['values'][0]['uf_group_id'], $params['uf_group_id'], 'In line ' . __LINE__);
@@ -229,7 +229,7 @@ class api_v3_UFJoinTest extends CiviUnitTestCase {
   }
 
   public function testFindUFJoinEmptyParams() {
-    $params = array();
+    $params = [];
     $result = civicrm_api('uf_join', 'create', $params);
 
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
@@ -237,14 +237,14 @@ class api_v3_UFJoinTest extends CiviUnitTestCase {
   }
 
   public function testFindUFJoinWithoutUFGroupId() {
-    $params = array(
+    $params = [
       'module' => 'CiviContribute',
       'entity_table' => 'civicrm_contribution_page',
       'entity_id' => 1,
       'weight' => 1,
       'is_active' => 1,
       'version' => $this->_apiversion,
-    );
+    ];
     $result = civicrm_api('uf_join', 'create', $params);
 
     $this->assertEquals($result['is_error'], 1);
@@ -255,7 +255,7 @@ class api_v3_UFJoinTest extends CiviUnitTestCase {
    * find uf join id
    */
   public function testGetUFJoinId() {
-    $params = array(
+    $params = [
       'module' => 'CiviContribute',
       'entity_table' => 'civicrm_contribution_page',
       'entity_id' => 1,
@@ -263,15 +263,15 @@ class api_v3_UFJoinTest extends CiviUnitTestCase {
       'uf_group_id' => $this->_ufGroupId,
       'is_active' => 1,
       'version' => $this->_apiversion,
-    );
+    ];
 
     $ufJoin = civicrm_api('uf_join', 'create', $params);
-    $searchParams = array(
+    $searchParams = [
       'entity_table' => 'civicrm_contribution_page',
       'entity_id' => 1,
       'version' => $this->_apiversion,
       'sequential' => 1,
-    );
+    ];
 
     $result = civicrm_api('uf_join', 'get', $searchParams);
     $this->documentMe($searchParams, $result, __FUNCTION__, __FILE__);

@@ -48,8 +48,8 @@ class CRM_Core_Component {
 
   private static function &_info() {
     if (self::$_info == NULL) {
-      self::$_info = array();
-      $c = array();
+      self::$_info = [];
+      $c = [];
 
       $config = CRM_Core_Config::singleton();
       $c = &self::getComponents();
@@ -76,7 +76,7 @@ class CRM_Core_Component {
     static $_cache = NULL;
 
     if (!$_cache || $force) {
-      $_cache = array();
+      $_cache = [];
 
 
       $cr = new CRM_Core_DAO_Component();
@@ -103,7 +103,7 @@ class CRM_Core_Component {
   public static function &getNames($translated = FALSE) {
     $allComponents = self::getComponents();
 
-    $names = array();
+    $names = [];
     foreach ($allComponents as $name => $comp) {
       if ($translated) {
         $names[$comp->componentID] = $comp->info['translatedName'];
@@ -135,13 +135,13 @@ class CRM_Core_Component {
             $template->assign('formTpl', $comp->info[$name]['formTpl']);
           }
           if (CRM_Utils_Array::value('css', $comp->info[$name])) {
-            $styleSheet = array(
+            $styleSheet = [
               'tag' => 'style',
-              'attributes' => array(
+              'attributes' => [
                 'type' => 'text/css',
-              ),
+              ],
               'value' => '@import url(' . "{$config->resourceBase}css/{$comp->info[$name]['css']});",
-            );
+            ];
             CRM_Utils_System::addHTMLHead($styleSheet);
           }
         }
@@ -158,7 +158,7 @@ class CRM_Core_Component {
     // lets build the menu for all components
     $info = &self::getComponents(TRUE);
 
-    $files = array();
+    $files = [];
     foreach ($info as $name => $comp) {
       $files = array_merge($files,
         $comp->menuFiles()
@@ -170,7 +170,7 @@ class CRM_Core_Component {
 
   static function &menu() {
     $info = &self::_info();
-    $items = array();
+    $items = [];
     foreach ($info as $name => $comp) {
       $mnu = &$comp->getMenuObject();
 
@@ -215,7 +215,7 @@ class CRM_Core_Component {
 
   static function &getQueryFields() {
     $info = &self::_info();
-    $fields = array();
+    $fields = [];
     foreach ($info as $name => $comp) {
       if ($comp->usesSearch()) {
         $bqr = &$comp->getBAOQueryObject();
@@ -304,19 +304,19 @@ class CRM_Core_Component {
 
   static function &contactSubTypes() {
     if (self::$_contactSubTypes == NULL) {
-      self::$_contactSubTypes = array();
+      self::$_contactSubTypes = [];
 
       if (CRM_Core_Permission::access('Quest')) {
 
         // Generalize this at some point
-        self::$_contactSubTypes = array(
+        self::$_contactSubTypes = [
           'Student' =>
-          array('View' =>
-            array('file' => 'CRM/Quest/Page/View/Student.php',
+          ['View' =>
+            ['file' => 'CRM/Quest/Page/View/Student.php',
               'class' => 'CRM_Quest_Page_View_Student',
-            ),
-          ),
-        );
+            ],
+          ],
+        ];
       }
     }
     return self::$_contactSubTypes;
@@ -336,7 +336,7 @@ class CRM_Core_Component {
   static function &taskList() {
     $info = &self::_info();
 
-    $tasks = array();
+    $tasks = [];
     foreach ($info as $name => $value) {
       if (CRM_Utils_Array::value('task', $info[$name])) {
         $tasks += $info[$name]['task'];

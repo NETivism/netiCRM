@@ -64,8 +64,8 @@ class CRM_Mailing_Event_BAO_Subscribe extends CRM_Mailing_Event_DAO_Subscribe {
    */
   public static function &subscribe($group_id, $email, $contactId = NULL, $context = NULL) {
     // CRM-1797 - allow subscription only to public groups
-    $params = array('id' => (int) $group_id);
-    $defaults = array();
+    $params = ['id' => (int) $group_id];
+    $defaults = [];
     $contact_id = NULL;
     $success = NULL;
 
@@ -84,7 +84,7 @@ class CRM_Mailing_Event_BAO_Subscribe extends CRM_Mailing_Event_DAO_Subscribe {
      FROM civicrm_contact contact_a 
 LEFT JOIN civicrm_email ON contact_a.id = civicrm_email.contact_id
     WHERE civicrm_email.email = %1 AND contact_a.is_deleted = 0 AND contact_a.id = %2";
-      $params = array(1 => array($email, 'String'), 2 => array($contactId, 'Positive'));
+      $params = [1 => [$email, 'String'], 2 => [$contactId, 'Positive']];
       $dao = CRM_Core_DAO::executeQuery($query, $params);
     }
     else {
@@ -93,7 +93,7 @@ LEFT JOIN civicrm_email ON contact_a.id = civicrm_email.contact_id
      FROM civicrm_contact contact_a 
 LEFT JOIN civicrm_email ON contact_a.id = civicrm_email.contact_id
     WHERE civicrm_email.email = %1 AND contact_a.is_deleted = 0";
-      $params = array(1 => array($email, 'String'));
+      $params = [1 => [$email, 'String']];
       $dao = CRM_Core_DAO::executeQuery($query, $params);
     }
     $dao->fetch();
@@ -110,16 +110,16 @@ LEFT JOIN civicrm_email ON contact_a.id = civicrm_email.contact_id
       /* If the contact does not exist, create one. */
 
 
-      $formatted = array(
+      $formatted = [
         'contact_type' => 'Individual',
         'version' => 3,
-      );
+      ];
       $locationType = CRM_Core_BAO_LocationType::getDefault();
-      $value = array(
+      $value = [
         'email' => $email,
         'location_type_id' => $locationType->id,
         'is_bulkmail' => 1,
-      );
+      ];
       require_once 'api/v3/DeprecatedUtils.php';
       _civicrm_api3_deprecated_add_formatted_param($value, $formatted);
 
@@ -141,7 +141,7 @@ LEFT JOIN civicrm_email ON contact_a.id = civicrm_email.contact_id
 
     // purge contact bulk email assignment, set this email to bulkmail
     $sql = " UPDATE civicrm_email SET is_bulkmail = 0 WHERE contact_id = %1";
-    CRM_Core_DAO::executeQuery($sql, array(1 => array($contact_id, 'Positive')));
+    CRM_Core_DAO::executeQuery($sql, [1 => [$contact_id, 'Positive']]);
     $mailobj = new CRM_Core_BAO_Email();
     $mailobj->id = $email_id;
     $mailobj->find(TRUE);
@@ -156,9 +156,9 @@ SELECT     civicrm_email.id as email_id
   FROM     civicrm_email
      WHERE civicrm_email.email = %1
        AND civicrm_email.contact_id = %2";
-    $params = array(1 => array($email, 'String'),
-      2 => array($contact_id, 'Integer'),
-    );
+    $params = [1 => [$email, 'String'],
+      2 => [$contact_id, 'Integer'],
+    ];
     $dao = CRM_Core_DAO::executeQuery($query, $params);
 
     if (!$dao->fetch()) {
@@ -175,7 +175,7 @@ SELECT     civicrm_email.id as email_id
     );
     $se->save();
 
-    $contacts = array($contact_id);
+    $contacts = [$contact_id];
 
     CRM_Contact_BAO_GroupContact::addContactsToGroup($contacts, $group_id,
       'Email', 'Pending', $se->id
@@ -231,12 +231,12 @@ SELECT     civicrm_email.id as email_id
 
 
     $confirm = CRM_Utils_Array::implode($config->verpSeparator,
-      array(
+      [
         $localpart . 'c',
         $this->contact_id,
         $this->id,
         $this->hash,
-      )
+      ]
     ) . "@$emailDomain";
 
 
@@ -252,13 +252,13 @@ SELECT     civicrm_email.id as email_id
 
     $component->find(TRUE);
 
-    $headers = array(
+    $headers = [
       'Subject' => $component->subject,
       'From' => "\"{$domainEmailName}\" <{$domainEmailAddress}>",
       'To' => $email,
       'Reply-To' => $confirm,
       'Return-Path' => "do-not-reply@$emailDomain",
-    );
+    ];
 
     $url = CRM_Utils_System::url('civicrm/mailing/confirm',
       "reset=1&cid={$this->contact_id}&sid={$this->id}&h={$this->hash}",
@@ -342,7 +342,7 @@ SELECT     civicrm_email.id as email_id
                  LEFT JOIN civicrm_contact ON ( group_a.contact_id = civicrm_contact.id )
                  WHERE civicrm_contact.id = %1";
 
-      $params = array(1 => array($contactID, 'Integer'));
+      $params = [1 => [$contactID, 'Integer']];
     }
     else {
       $email = mb_strtolower($email, 'UTF-8');
@@ -355,17 +355,17 @@ SELECT     civicrm_email.id as email_id
                  LEFT JOIN civicrm_email ON civicrm_contact.id = civicrm_email.contact_id
                  WHERE civicrm_email.email = %1";
 
-      $params = array(1 => array($email, 'String'));
+      $params = [1 => [$email, 'String']];
     }
 
     $dao = CRM_Core_DAO::executeQuery($query, $params);
-    $groups = array();
+    $groups = [];
     while ($dao->fetch()) {
-      $groups[$dao->group_id] = array(
+      $groups[$dao->group_id] = [
         'id' => $dao->group_id,
         'title' => $dao->title,
         'status' => $dao->status,
-      );
+      ];
     }
 
     $dao->free();
@@ -386,7 +386,7 @@ SELECT     civicrm_email.id as email_id
    */
   static function commonSubscribe(&$groups, &$params, $contactId = NULL, $context = NULL) {
     $contactGroups = CRM_Mailing_Event_BAO_Subscribe::getContactGroups($params['email'], $contactId);
-    $group = array();
+    $group = [];
     $success = NULL;
     foreach ($groups as $groupID) {
       $title = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Group', $groupID, 'title');
@@ -394,7 +394,7 @@ SELECT     civicrm_email.id as email_id
         $group[$groupID]['title'] = $contactGroups[$groupID]['title'];
 
         $group[$groupID]['status'] = $contactGroups[$groupID]['status'];
-        $status = ts('You are already subscribed in %1, your subscription is %2.', array(1 => $group[$groupID]['title'], 2 => ts($group[$groupID]['status'])));
+        $status = ts('You are already subscribed in %1, your subscription is %2.', [1 => $group[$groupID]['title'], 2 => ts($group[$groupID]['status'])]);
         CRM_Utils_System::setUFMessage($status);
         continue;
       }
@@ -416,11 +416,11 @@ SELECT     civicrm_email.id as email_id
     }
     if ($success) {
       $groupTitle = CRM_Utils_Array::implode(',', $groupAdded);
-      CRM_Utils_System::setUFMessage(ts('Your subscription request has been submitted for group %1. Check your inbox shortly for the confirmation email(s). If you do not see a confirmation email, please check your spam/junk mail folder.', array(1 => $groupTitle)));
+      CRM_Utils_System::setUFMessage(ts('Your subscription request has been submitted for group %1. Check your inbox shortly for the confirmation email(s). If you do not see a confirmation email, please check your spam/junk mail folder.', [1 => $groupTitle]));
     }
     elseif ($success === FALSE) {
       $groupTitle = CRM_Utils_Array::implode(',', $groupFailed);
-      CRM_Utils_System::setUFMessage(ts('We had a problem processing your subscription request for group %1. You have tried to subscribe to a private group and/or we encountered a database error. Please contact the site administrator.', array(1 => $groupTitle)));
+      CRM_Utils_System::setUFMessage(ts('We had a problem processing your subscription request for group %1. You have tried to subscribe to a private group and/or we encountered a database error. Please contact the site administrator.', [1 => $groupTitle]));
     }
   }
   //end of function

@@ -58,7 +58,7 @@ function smarty_function_crmAPI($params, &$smarty) {
   }
   // trap all fatal errors
 
-  CRM_Core_Error::setCallback(array('CRM_Utils_REST', 'fatal'));
+  CRM_Core_Error::setCallback(['CRM_Utils_REST', 'fatal']);
   unset($params['entity']);
   unset($params['method']);
   unset($params['assign']);

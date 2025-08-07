@@ -75,7 +75,7 @@ class CRM_Core_Permission {
    */
   static function check($str) {
     $config = CRM_Core_Config::singleton();
-    return call_user_func(array($config->userPermissionClass, 'check'), $str);
+    return call_user_func([$config->userPermissionClass, 'check'], $str);
   }
 
   /**
@@ -115,7 +115,7 @@ class CRM_Core_Permission {
 
   public static function customGroup($type = CRM_Core_Permission::VIEW, $reset = FALSE) {
     $customGroups = CRM_Core_PseudoConstant::customGroup($reset);
-    $defaultGroups = array();
+    $defaultGroups = [];
 
     // check if user has all powerful permission
     // or administer civicrm permission (CRM-1905)
@@ -212,7 +212,7 @@ class CRM_Core_Permission {
   public static function event($type = CRM_Core_Permission::VIEW, $eventID = NULL) {
 
     $events = CRM_Event_PseudoConstant::event(NULL, TRUE);
-    $includeEvents = array();
+    $includeEvents = [];
 
     // check if user has all powerful permission
     if (self::check('register for events')) {
@@ -276,14 +276,14 @@ class CRM_Core_Permission {
       $permissionName = "delete in $module";
     }
     else {
-      $editPermissions = array('CiviEvent' => 'edit event participants',
+      $editPermissions = ['CiviEvent' => 'edit event participants',
         'CiviMember' => 'edit memberships',
         'CiviPledge' => 'edit pledges',
         'CiviContribute' => 'edit contributions',
         'CiviGrant' => 'edit grants',
         'CiviMail' => 'access CiviMail',
         'CiviAuction' => 'add auction items',
-      );
+      ];
       $permissionName = CRM_Utils_Array::value($module, $editPermissions);
     }
 
@@ -340,7 +340,7 @@ class CRM_Core_Permission {
     if (empty($item['access_callback']) ||
       is_numeric($item['access_callback'])
     ) {
-      return (boolean ) $item['access_callback'];
+      return (bool ) $item['access_callback'];
     }
 
     // check whether the following Ajax requests submitted the right key
@@ -373,7 +373,7 @@ class CRM_Core_Permission {
     static $permissions = NULL;
 
     if (!$permissions) {
-      $permissions = array(
+      $permissions = [
         'add contacts' => ts('add contacts'),
         'view all contacts' => ts('view all contacts'),
         'edit all contacts' => ts('edit all contacts'),
@@ -386,6 +386,7 @@ class CRM_Core_Permission {
         'administer CiviCRM' => ts('administer CiviCRM'),
         'administer Reserved Option' => ts('administer Reserved Option'),
         'access uploaded files' => ts('access uploaded files'),
+        'paste and upload images' => ts('paste and upload images'),
         'profile listings and forms' => ts('profile listings and forms'),
         'profile listings' => ts('profile listings'),
         'profile create' => ts('profile create'),
@@ -402,7 +403,7 @@ class CRM_Core_Permission {
         'administer dedupe rules' => ts('administer dedupe rules'),
         'merge duplicate contacts' => ts('merge duplicate contacts'),
         'view all notes' => ts('view all notes'),
-      );
+      ];
 
       if (defined('CIVICRM_MULTISITE') && CIVICRM_MULTISITE) {
         $permissions['administer Multiple Organizations'] = ts('administer Multiple Organizations');
@@ -459,9 +460,9 @@ class CRM_Core_Permission {
     //check for acl.
     if (!$hasPermission) {
       $aclPermission = self::getPermission();
-      if (in_array($aclPermission, array(CRM_Core_Permission::EDIT,
+      if (in_array($aclPermission, [CRM_Core_Permission::EDIT,
             CRM_Core_Permission::VIEW,
-          ))) {
+          ])) {
         $hasPermission = TRUE;
       }
     }

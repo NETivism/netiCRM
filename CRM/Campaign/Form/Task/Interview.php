@@ -86,7 +86,7 @@ class CRM_Campaign_Form_Task_Interview extends CRM_Campaign_Form_Task {
     $this->_reserveToInterview = $this->get('reserveToInterview');
     if ($this->_reserveToInterview || $this->_votingTab) {
       //user came from voting tab / reserve form.
-      foreach (array('surveyId', 'contactIds', 'interviewerId') as $fld) {
+      foreach (['surveyId', 'contactIds', 'interviewerId'] as $fld) {
         $this->{"_$fld"} = $this->get($fld);
       }
       //get the target voter ids.
@@ -103,9 +103,9 @@ class CRM_Campaign_Form_Task_Interview extends CRM_Campaign_Form_Task {
 
     //get the contact read only fields to display.
 
-    $readOnlyFields = array_merge(array('contact_type' => '',
+    $readOnlyFields = array_merge(['contact_type' => '',
         'sort_name' => ts('Name'),
-      ),
+      ],
       CRM_Core_BAO_Preferences::valueOptions('contact_autocomplete_options',
         TRUE, NULL, FALSE, 'name', TRUE
       )
@@ -117,10 +117,10 @@ class CRM_Campaign_Form_Task_Interview extends CRM_Campaign_Form_Task {
 
     //get the profile id.
 
-    $ufJoinParams = array('entity_id' => $this->_surveyId,
+    $ufJoinParams = ['entity_id' => $this->_surveyId,
       'entity_table' => 'civicrm_survey',
       'module' => 'CiviCampaign',
-    );
+    ];
     $this->_ufGroupId = CRM_Core_BAO_UFJoin::findUFGroupId($ufJoinParams);
 
     //validate all voters for required activity.
@@ -134,7 +134,7 @@ class CRM_Campaign_Form_Task_Interview extends CRM_Campaign_Form_Task {
     $activityStatus = CRM_Core_PseudoConstant::activityStatus('name');
     $scheduledStatusId = array_search('Scheduled', $activityStatus);
 
-    $activityIds = array();
+    $activityIds = [];
     foreach ($this->_contactIds as $key => $voterId) {
       $actVals = CRM_Utils_Array::value($voterId, $this->_surveyActivityIds);
       $statusId = CRM_Utils_Array::value('status_id', $actVals);
@@ -174,10 +174,10 @@ class CRM_Campaign_Form_Task_Interview extends CRM_Campaign_Form_Task {
     //get the survey values.
     $this->_surveyValues = $this->get('surveyValues');
     if (!is_array($this->_surveyValues)) {
-      $this->_surveyValues = array();
+      $this->_surveyValues = [];
       if ($this->_surveyId) {
 
-        $surveyParams = array('id' => $this->_surveyId);
+        $surveyParams = ['id' => $this->_surveyId];
         CRM_Campaign_BAO_Survey::retrieve($surveyParams, $this->_surveyValues);
       }
       $this->set('surveyValues', $this->_surveyValues);
@@ -187,7 +187,7 @@ class CRM_Campaign_Form_Task_Interview extends CRM_Campaign_Form_Task {
     //get the survey result options.
     $this->_resultOptions = $this->get('resultOptions');
     if (!is_array($this->_resultOptions)) {
-      $this->_resultOptions = array();
+      $this->_resultOptions = [];
       if ($resultOptionId = CRM_Utils_Array::value('result_id', $this->_surveyValues)) {
 
         $this->_resultOptions = CRM_Core_OptionGroup::valuesByID($resultOptionId);
@@ -202,24 +202,24 @@ class CRM_Campaign_Form_Task_Interview extends CRM_Campaign_Form_Task {
 
     if (CRM_Campaign_BAO_Campaign::accessCampaignDashboard()) {
       $url = CRM_Utils_System::url('civicrm/campaign', 'reset=1&subPage=survey');
-      CRM_Utils_System::appendBreadCrumb(array(array('title' => ts('Survey(s)'), 'url' => $url)));
+      CRM_Utils_System::appendBreadCrumb([['title' => ts('Survey(s)'), 'url' => $url]]);
     }
 
     //set the title.
 
     $activityTypes = CRM_Core_PseudoConstant::activityType(FALSE, TRUE, FALSE, 'label', TRUE);
     $this->_surveyTypeId = CRM_Utils_Array::value('activity_type_id', $this->_surveyValues);
-    CRM_Utils_System::setTitle(ts('Record %1 Responses', array(1 => $activityTypes[$this->_surveyTypeId])));
+    CRM_Utils_System::setTitle(ts('Record %1 Responses', [1 => $activityTypes[$this->_surveyTypeId]]));
   }
 
   function validateIds() {
-    $required = array('surveyId' => ts('Could not find Survey.'),
+    $required = ['surveyId' => ts('Could not find Survey.'),
       'interviewerId' => ts('Could not find Interviewer.'),
       'contactIds' => ts('No respondents are currently reserved for you to interview.'),
       'resultOptions' => ts('Oops. It looks like there is no response option configured.'),
-    );
+    ];
 
-    $errorMessages = array();
+    $errorMessages = [];
     foreach ($required as $fld => $msg) {
       if (empty($this->{"_$fld"})) {
         if (!$this->_votingTab) {
@@ -244,7 +244,7 @@ class CRM_Campaign_Form_Task_Interview extends CRM_Campaign_Form_Task {
     $this->assign('surveyTypeId', $this->_surveyTypeId);
 
     //pickup the uf fields.
-    $this->_surveyFields = array();
+    $this->_surveyFields = [];
     if ($this->_ufGroupId) {
 
       $this->_surveyFields = CRM_Core_BAO_UFGroup::getFields($this->_ufGroupId,
@@ -253,7 +253,7 @@ class CRM_Campaign_Form_Task_Interview extends CRM_Campaign_Form_Task {
     }
 
     //build all fields.
-    $exposedSurveyFields = array();
+    $exposedSurveyFields = [];
     foreach ($this->_contactIds as $contactId) {
       //build the profile fields.
       foreach ($this->_surveyFields as $name => $field) {
@@ -272,7 +272,7 @@ class CRM_Campaign_Form_Task_Interview extends CRM_Campaign_Form_Task {
       //build the result field.
       if (!empty($this->_resultOptions)) {
         $this->add('select', "field[$contactId][result]", ts('Result'),
-          array('' => ts('- select -')) +
+          ['' => ts('- select -')] +
           array_combine($this->_resultOptions, $this->_resultOptions)
         );
       }
@@ -283,7 +283,7 @@ class CRM_Campaign_Form_Task_Interview extends CRM_Campaign_Form_Task {
       if ($this->_allowAjaxReleaseButton) {
         $this->addElement('hidden',
           "field[{$contactId}][is_release_or_reserve]", 0,
-          array('id' => "field_{$contactId}_is_release_or_reserve")
+          ['id' => "field_{$contactId}_is_release_or_reserve"]
         );
       }
     }
@@ -294,11 +294,11 @@ class CRM_Campaign_Form_Task_Interview extends CRM_Campaign_Form_Task {
       return;
     }
 
-    $buttons = array(array('type' => 'cancel',
+    $buttons = [['type' => 'cancel',
         'name' => ts('Done'),
         'subName' => 'interview',
         'isDefault' => TRUE,
-      ));
+      ]];
 
     $manageCampaign = CRM_Core_Permission::check('manage campaign');
     $adminCampaign = CRM_Core_Permission::check('administer CiviCampaign');
@@ -306,19 +306,19 @@ class CRM_Campaign_Form_Task_Interview extends CRM_Campaign_Form_Task {
       $adminCampaign ||
       CRM_Core_Permission::check('release campaign contacts')
     ) {
-      $buttons[] = array('type' => 'next',
+      $buttons[] = ['type' => 'next',
         'name' => ts('Release Respondents >>'),
         'subName' => 'interviewToRelease',
-      );
+      ];
     }
     if ($manageCampaign ||
       $adminCampaign ||
       CRM_Core_Permission::check('reserve campaign contacts')
     ) {
-      $buttons[] = array('type' => 'done',
+      $buttons[] = ['type' => 'done',
         'name' => ts('Reserve More Respondents >>'),
         'subName' => 'interviewToReserve',
-      );
+      ];
     }
 
     $this->addButtons($buttons);
@@ -332,7 +332,7 @@ class CRM_Campaign_Form_Task_Interview extends CRM_Campaign_Form_Task {
    * @return None
    */
   function setDefaultValues() {
-    return $defaults = array();
+    return $defaults = [];
   }
 
   /**
@@ -350,7 +350,7 @@ class CRM_Campaign_Form_Task_Interview extends CRM_Campaign_Form_Task {
     }
     elseif ($buttonName == '_qf_Interview_next_interviewToRelease') {
       //get ready to jump to release form.
-      foreach (array('surveyId', 'contactIds', 'interviewerId') as $fld) {
+      foreach (['surveyId', 'contactIds', 'interviewerId'] as $fld) {
         $this->controller->set($fld, $this->{"_$fld"});
       }
       $this->controller->set('interviewToRelease', TRUE);
@@ -427,7 +427,7 @@ class CRM_Campaign_Form_Task_Interview extends CRM_Campaign_Form_Task {
     $subject = '';
     $surveyTitle = CRM_Utils_Array::value('surveyTitle', $params);
     if ($surveyTitle) {
-      $subject = ts('%1', array(1 => $surveyTitle));
+      $subject = ts('%1', [1 => $surveyTitle]);
       $subject .= ' - ';
     }
     $subject .= ts('Respondent Interview');
@@ -459,7 +459,7 @@ class CRM_Campaign_Form_Task_Interview extends CRM_Campaign_Form_Task {
       //get the survey activities.
 
       $activityStatus = CRM_Core_PseudoConstant::activityStatus('name');
-      $statusIds = array();
+      $statusIds = [];
       if ($statusId = array_search('Scheduled', $activityStatus)) {
         $statusIds[] = $statusId;
       }
@@ -468,7 +468,7 @@ class CRM_Campaign_Form_Task_Interview extends CRM_Campaign_Form_Task {
         $this->_interviewerId,
         $statusIds
       );
-      $this->_contactIds = array();
+      $this->_contactIds = [];
       foreach ($surveyActivities as $val) $this->_contactIds[$val['voter_id']] = $val['voter_id'];
       $this->set('contactIds', $this->_contactIds);
     }

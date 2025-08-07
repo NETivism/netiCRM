@@ -143,7 +143,7 @@ class CRM_Member_BAO_MembershipStatus extends CRM_Member_DAO_MembershipStatus {
    * @static
    */
   static function getMembershipStatus($membershipStatusId) {
-    $statusDetails = array();
+    $statusDetails = [];
     $membershipStatus = new CRM_Member_DAO_MembershipStatus();
     $membershipStatus->id = $membershipStatusId;
     if ($membershipStatus->find(TRUE)) {
@@ -163,7 +163,7 @@ class CRM_Member_BAO_MembershipStatus extends CRM_Member_DAO_MembershipStatus {
     //checking if any membership status is present in some other table
     $check = FALSE;
 
-    $dependancy = array('Membership', 'MembershipLog');
+    $dependancy = ['Membership', 'MembershipLog'];
     foreach ($dependancy as $name) {
       $baoString = 'CRM_Member_BAO_' . $name;
       $dao = new $baoString();
@@ -179,7 +179,7 @@ class CRM_Member_BAO_MembershipStatus extends CRM_Member_DAO_MembershipStatus {
         CRM_Core_Session::setStatus(ts('This membership status cannot be deleted'));
         return CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin/member/membershipStatus', "reset=1"));
       }
-      $error = array();
+      $error = [];
       $error['is_error'] = 1;
       //don't translate as api error message are not translated
       $error['error_message'] = 'The membership status cannot be deleted as memberships of this status exist';
@@ -210,7 +210,7 @@ class CRM_Member_BAO_MembershipStatus extends CRM_Member_DAO_MembershipStatus {
   static function getMembershipStatusByDate($startDate, $endDate, $joinDate,
     $statusDate = 'today', $excludeIsAdmin = FALSE
   ) {
-    $membershipDetails = array();
+    $membershipDetails = [];
     if (!$statusDate || $statusDate == 'today') {
       $statusDate = getDate();
       $statusDate = date('Ymd',
@@ -231,8 +231,8 @@ class CRM_Member_BAO_MembershipStatus extends CRM_Member_DAO_MembershipStatus {
     $endDate = CRM_Utils_Date::customFormat($endDate, '%Y%m%d');
     $joinDate = CRM_Utils_Date::customFormat($joinDate, '%Y%m%d');
 
-    $dates = array('start', 'end', 'join');
-    $events = array('start', 'end');
+    $dates = ['start', 'end', 'join'];
+    $events = ['start', 'end'];
 
     foreach ($dates as $dat) {
       if (${$dat . 'Date'}) {
@@ -344,7 +344,7 @@ class CRM_Member_BAO_MembershipStatus extends CRM_Member_DAO_MembershipStatus {
    * @static
    */
   static function getMembershipStatusCurrent() {
-    $statusIds = array();
+    $statusIds = [];
 
     $membershipStatus = new CRM_Member_DAO_MembershipStatus();
     $membershipStatus->is_current_member = 1;

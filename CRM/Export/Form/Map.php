@@ -113,18 +113,18 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
     }
     CRM_Core_BAO_Mapping::buildMappingForm($this, 'Export', $this->_mappingId, $this->_exportColumnCount, $blockCnt = 2, $this->get('exportMode'));
 
-    $this->addButtons(array(
-        array('type' => 'back',
+    $this->addButtons([
+        ['type' => 'back',
           'name' => ts('<< Previous'),
-        ),
-        array('type' => 'next',
+        ],
+        ['type' => 'next',
           'name' => ts('Export >>'),
           'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
-        ),
-        array('type' => 'done',
+        ],
+        ['type' => 'done',
           'name' => ts('Done'),
-        ),
-      )
+        ],
+      ]
     );
   }
 
@@ -138,7 +138,7 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
    * @access public
    */
   static function formRule($fields, $values, $mappingTypeId) {
-    $errors = array();
+    $errors = [];
 
     if (CRM_Utils_Array::value('saveMapping', $fields)) {
       $nameField = CRM_Utils_Array::value('saveMappingName', $fields);
@@ -241,12 +241,12 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
       if (property_exists($customSearchClass, '_primaryIDName')) {
         $primaryIDName = $customSearchClass::$_primaryIDName;
       }
-      $exportCustomVars = array(
+      $exportCustomVars = [
         'customSearchClass' => $this->get('customSearchClass'),
         'formValues' => $this->get('formValues'),
         'order' => $this->get(CRM_Utils_Sort::SORT_ORDER),
         'pirmaryIDName' => $primaryIDName,
-      );
+      ];
       // If select fields is empty, than only export custom search result table.
       $isSelectorEmpty = TRUE;
       foreach ($mapperKeys as $selectors) {
@@ -305,11 +305,11 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
     }
 
     if ( CRM_Utils_Array::value('saveMapping', $params) ) {
-      $mappingParams = array(
+      $mappingParams = [
         'name'      => $params['saveMappingName'],
         'description'   => $params['saveMappingDesc'],
         'mapping_type_id' => $this->get( 'mappingTypeId'),
-      );
+      ];
 
       $saveMapping = CRM_Core_BAO_Mapping::add( $mappingParams );
       $this->set('mappingId', $saveMapping->id);

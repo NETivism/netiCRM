@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-class CRM_Contact_DAO_SubscriptionHistory extends CRM_Core_DAO
+              class CRM_Contact_DAO_SubscriptionHistory extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -78,7 +78,7 @@ class CRM_Contact_DAO_SubscriptionHistory extends CRM_Core_DAO
    * @static
    */
   static $_log = true;
-  /**
+    /**
    * Internal Id
    *
    * @var int unsigned
@@ -120,7 +120,7 @@ class CRM_Contact_DAO_SubscriptionHistory extends CRM_Core_DAO
    * @var string
    */
   public $tracking;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -139,14 +139,14 @@ class CRM_Contact_DAO_SubscriptionHistory extends CRM_Core_DAO
   function &links()
   {
     if (!(self::$_links)) {
-      self::$_links = array(
+      self::$_links = [
         'contact_id' => 'civicrm_contact:id',
         'group_id' => 'civicrm_group:id',
-      );
+      ];
     }
     return self::$_links;
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -161,7 +161,7 @@ class CRM_Contact_DAO_SubscriptionHistory extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -170,49 +170,49 @@ class CRM_Contact_DAO_SubscriptionHistory extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'id' => array(
+      self::$_fields = [
+        'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'contact_id' => array(
+                  ] ,
+        'contact_id' => [
           'name' => 'contact_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-          'FKClassName' => 'CRM_Contact_DAO_Contact',
-        ) ,
-        'group_id' => array(
+                    'FKClassName' => 'CRM_Contact_DAO_Contact',
+        ] ,
+        'group_id' => [
           'name' => 'group_id',
           'type' => CRM_Utils_Type::T_INT,
-          'FKClassName' => 'CRM_Contact_DAO_Group',
-        ) ,
-        'date' => array(
+                    'FKClassName' => 'CRM_Contact_DAO_Group',
+        ] ,
+        'date' => [
           'name' => 'date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Date') ,
           'required' => true,
-        ) ,
-        'method' => array(
+                  ] ,
+        'method' => [
           'name' => 'method',
           'type' => CRM_Utils_Type::T_ENUM,
           'title' => ts('Method') ,
-          'enumValues' => 'Admin, Email, Web, API',
-        ) ,
-        'status' => array(
+                   'enumValues' => 'Admin, Email, Web, API',
+         ] ,
+        'status' => [
           'name' => 'status',
           'type' => CRM_Utils_Type::T_ENUM,
           'title' => ts('Status') ,
-          'enumValues' => 'Added, Removed, Pending',
-        ) ,
-        'tracking' => array(
+                   'enumValues' => 'Added, Removed, Pending',
+         ] ,
+        'tracking' => [
           'name' => 'tracking',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Tracking') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ) ,
-      );
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -224,8 +224,8 @@ class CRM_Contact_DAO_SubscriptionHistory extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -245,7 +245,7 @@ class CRM_Contact_DAO_SubscriptionHistory extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -256,7 +256,7 @@ class CRM_Contact_DAO_SubscriptionHistory extends CRM_Core_DAO
           }
         }
       }
-    }
+                                              }
     return self::$_import;
   }
   /**
@@ -268,7 +268,7 @@ class CRM_Contact_DAO_SubscriptionHistory extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
@@ -279,7 +279,7 @@ class CRM_Contact_DAO_SubscriptionHistory extends CRM_Core_DAO
           }
         }
       }
-    }
+                                              }
     return self::$_export;
   }
   /**
@@ -289,10 +289,10 @@ class CRM_Contact_DAO_SubscriptionHistory extends CRM_Core_DAO
    */
   static function &getEnums()
   {
-    static $enums = array(
-      'method',
-      'status',
-    );
+    static $enums = [
+                                                                    'method',
+                          'status',
+                            ];
     return $enums;
   }
   /**
@@ -307,19 +307,19 @@ class CRM_Contact_DAO_SubscriptionHistory extends CRM_Core_DAO
   {
     static $translations = null;
     if (!$translations) {
-      $translations = array(
-        'method' => array(
-          'Admin' => ts('Admin') ,
-          'Email' => ts('Email') ,
-          'Web' => ts('Web') ,
-          'API' => ts('API') ,
-        ) ,
-        'status' => array(
-          'Added' => ts('Added') ,
-          'Removed' => ts('Removed') ,
-          'Pending' => ts('Pending') ,
-        ) ,
-      );
+      $translations = [
+                                                                    'method' => [
+                  'Admin' => ts('Admin'),
+                  'Email' => ts('Email'),
+                  'Web' => ts('Web'),
+                  'API' => ts('API'),
+                ],
+                          'status' => [
+                  'Added' => ts('Added'),
+                  'Removed' => ts('Removed'),
+                  'Pending' => ts('Pending'),
+                ],
+                              ];
     }
     return $translations[$field][$value];
   }
@@ -332,7 +332,7 @@ class CRM_Contact_DAO_SubscriptionHistory extends CRM_Core_DAO
   static function addDisplayEnums(&$values)
   {
     $enumFields = &CRM_Contact_DAO_SubscriptionHistory::getEnums();
-    foreach($enumFields as $enum) {
+    foreach ($enumFields as $enum) {
       if (isset($values[$enum])) {
         $values[$enum . '_display'] = CRM_Contact_DAO_SubscriptionHistory::tsEnum($enum, $values[$enum]);
       }

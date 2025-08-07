@@ -78,7 +78,7 @@ class CRM_Core_DAO_Persistent extends CRM_Core_DAO
    * @static
    */
   static $_log = false;
-  /**
+    /**
    * Persistent Record Id
    *
    * @var int unsigned
@@ -108,7 +108,7 @@ class CRM_Core_DAO_Persistent extends CRM_Core_DAO
    * @var boolean
    */
   public $is_config;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -118,7 +118,7 @@ class CRM_Core_DAO_Persistent extends CRM_Core_DAO
   {
     parent::__construct();
   }
-  /**
+    /**
    * returns all the column names of this table
    *
    * @access public
@@ -127,39 +127,39 @@ class CRM_Core_DAO_Persistent extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'id' => array(
+      self::$_fields = [
+        'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'context' => array(
+                  ] ,
+        'context' => [
           'name' => 'context',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Context') ,
           'required' => true,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'name' => array(
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
+        'name' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Name') ,
           'required' => true,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'data' => array(
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
+        'data' => [
           'name' => 'data',
           'type' => CRM_Utils_Type::T_LONGTEXT,
           'title' => ts('Data') ,
-        ) ,
-        'is_config' => array(
+                  ] ,
+        'is_config' => [
           'name' => 'is_config',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'required' => true,
-        ) ,
-      );
+                  ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -171,8 +171,8 @@ class CRM_Core_DAO_Persistent extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -192,7 +192,7 @@ class CRM_Core_DAO_Persistent extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -203,7 +203,7 @@ class CRM_Core_DAO_Persistent extends CRM_Core_DAO
           }
         }
       }
-    }
+          }
     return self::$_import;
   }
   /**
@@ -215,7 +215,7 @@ class CRM_Core_DAO_Persistent extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
@@ -226,7 +226,7 @@ class CRM_Core_DAO_Persistent extends CRM_Core_DAO
           }
         }
       }
-    }
+          }
     return self::$_export;
   }
 }

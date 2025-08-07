@@ -54,7 +54,7 @@ class CRM_Case_Form_Activity_LinkCases {
       $relatedCases = CRM_Case_BAO_Case::getRelatedCases($form->_caseId, $form->_currentlyViewedContactId);
       $form->set('relatedCases', empty($relatedCases) ? FALSE : $relatedCases);
     }
-    $excludeCaseIds = array($form->_caseId);
+    $excludeCaseIds = [$form->_caseId];
     if (is_array($relatedCases) && !empty($relatedCases)) {
       $excludeCaseIds = array_merge($excludeCaseIds, array_keys($relatedCases));
     }
@@ -70,12 +70,12 @@ class CRM_Case_Form_Activity_LinkCases {
    * @return None
    */
   function setDefaultValues(&$form) {
-    return $defaults = array();
+    return $defaults = [];
   }
 
   static function buildQuickForm(&$form) {
     $form->add('text', 'link_to_case', ts('Link To Case'));
-    $form->add('hidden', 'link_to_case_id', '', array('id' => 'link_to_case_id'));
+    $form->add('hidden', 'link_to_case_id', '', ['id' => 'link_to_case_id']);
   }
 
   /**
@@ -88,7 +88,7 @@ class CRM_Case_Form_Activity_LinkCases {
    * @access public
    */
   static function formRule($values, $files, $form) {
-    $errors = array();
+    $errors = [];
 
     $linkCaseId = CRM_Utils_Array::value('link_to_case_id', $values);
     if (!$linkCaseId) {
@@ -131,9 +131,9 @@ class CRM_Case_Form_Activity_LinkCases {
 
     //create a link between two cases.
     if ($activityId && $linkCaseID) {
-      $caseParams = array('case_id' => $linkCaseID,
+      $caseParams = ['case_id' => $linkCaseID,
         'activity_id' => $activityId,
-      );
+      ];
       CRM_Case_BAO_Case::processCaseActivity($caseParams);
     }
   }

@@ -22,7 +22,7 @@ class CRM_Contact_Form_Search_Custom_HalfYearDonor extends CRM_Contact_Form_Sear
   }
 
   function buildColumn(){
-    $this->_queryColumns = array( 
+    $this->_queryColumns = [ 
       'contact.id' => 'id',
       'c.contact_id' => 'contact_id',
       'contact.sort_name' => 'sort_name',
@@ -30,14 +30,14 @@ class CRM_Contact_Form_Search_Custom_HalfYearDonor extends CRM_Contact_Form_Sear
       'ROUND(SUM(IF(c.contribution_status_id = 1, c.total_amount, 0)),0)' => 'receive_amount',
       'COUNT(IF(c.contribution_status_id = 1, 1, NULL))' => 'completed_count',
       'COUNT(c.id)' => 'total_count',
-    );
-    $this->_columns = array(
+    ];
+    $this->_columns = [
       ts('ID') => 'id',
       ts('Name') => 'sort_name',
       ts('Total Receive Amount') => 'receive_amount',
       ts('Completed Donation') => 'completed_count',
       0 => 'total_count',
-    );
+    ];
   }
   function buildTempTable() {
     $sql = "
@@ -46,7 +46,7 @@ CREATE TEMPORARY TABLE IF NOT EXISTS {$this->_tableName} (
 ";
 
     foreach ($this->_queryColumns as $field) {
-      if (in_array($field, array('id'))) {
+      if (in_array($field, ['id'])) {
         continue;
       }
       if($field == 'receive_amount' || $field == 'completed_count' || $field == 'total_count'){
@@ -77,7 +77,7 @@ PRIMARY KEY (id)
    */
   function fillTable(){
     $this->buildTempTable();
-    $select = array();
+    $select = [];
     foreach($this->_queryColumns as $k => $v){
       $select[] = $k.' as '.$v;
     }
@@ -99,7 +99,7 @@ $having
     $dao = CRM_Core_DAO::executeQuery($sql, CRM_Core_DAO::$_nullArray);
 
     while ($dao->fetch()) {
-      $values = array();
+      $values = [];
       foreach($this->_queryColumns as $name){
         if($name == 'id'){
           $values[] = CRM_Utils_Type::escape($dao->id, 'Integer');
@@ -128,7 +128,7 @@ $having
   function tempWhere(){
     $month = $this->_formValues['month'];
     $halfyear = date('Y-m-01 00:00:00', strtotime('-'.$month.' month'));
-    $clauses = array();
+    $clauses = [];
     $clauses[] = "contact.is_deleted = 0 AND pp.id IS NULL AND mp.id IS NULL";
     $clauses[] = "c.receive_date > '$halfyear'";
     $clauses[] = "c.contribution_status_id = 1";
@@ -148,9 +148,9 @@ $having
   }
 
   function setDefaultValues() {
-    return array(
+    return [
       'month' => 6,
-    );
+    ];
   }
 
   function setBreadcrumb() {
@@ -210,7 +210,7 @@ $having
   }
 
   static function includeContactIDs(&$sql, &$formValues, $isExport = FALSE) {
-    $contactIDs = array();
+    $contactIDs = [];
     foreach ($formValues as $id => $value) {
       list($contactID, $additionalID) = CRM_Core_Form::cbExtract($id);
       if ($value && !empty($contactID)) {
@@ -230,7 +230,7 @@ $having
   
   function setTitle(){
     $month = $this->_formValues['month'];
-    $title = ts('Donor who donate in last %count month', array('count' => $month, 'plural' => 'Donor who donate in last %count months'));
+    $title = ts('Donor who donate in last %count month', ['count' => $month, 'plural' => 'Donor who donate in last %count months']);
     CRM_Utils_System::setTitle($title);
   }
 
@@ -238,11 +238,11 @@ $having
     // just add qill
     $month = $this->_formValues['month'];
     $past = date('Y-m-01', strtotime('-'.$month.' month'));
-    return array(
-      1 => array(
-        'monthrange' => ts('Donor who donate in last %count month', array('count' => $month, 'plural' => 'Donor who donate in last %count months')). ' ( '.$past.' ~ '.ts('Today').')'
-      ),
-    );
+    return [
+      1 => [
+        'monthrange' => ts('Donor who donate in last %count month', ['count' => $month, 'plural' => 'Donor who donate in last %count months']). ' ( '.$past.' ~ '.ts('Today').')'
+      ],
+    ];
   }
 
   function alterRow(&$row) {

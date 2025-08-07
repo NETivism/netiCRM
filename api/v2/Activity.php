@@ -76,7 +76,7 @@ require_once 'api/v2/ActivityContact.php';
 function &civicrm_activity_create(&$params) {
   _civicrm_initialize();
 
-  $errors = array();
+  $errors = [];
 
   // check for various error and required conditions
   $errors = _civicrm_activity_check_params($params, TRUE);
@@ -86,7 +86,7 @@ function &civicrm_activity_create(&$params) {
   }
 
   // processing for custom data
-  $values = array();
+  $values = [];
   _civicrm_custom_format_params($params, $values, 'Activity');
   if (!empty($values['custom'])) {
     $params['custom'] = $values['custom'];
@@ -96,10 +96,10 @@ function &civicrm_activity_create(&$params) {
   $activity = CRM_Activity_BAO_Activity::create($params);
 
   if (!is_a($activity, 'CRM_Core_Error') && isset($activity->id)) {
-    $activityArray = array('is_error' => 0);
+    $activityArray = ['is_error' => 0];
   }
   else {
-    $activityArray = array('is_error' => 1);
+    $activityArray = ['is_error' => 1];
   }
 
   _civicrm_object_to_array($activity, $activityArray);
@@ -177,7 +177,7 @@ function civicrm_activities_get_contact($params) {
  *
  */
 function &civicrm_activity_update(&$params) {
-  $errors = array();
+  $errors = [];
   //check for various error and required conditions
   $errors = _civicrm_activity_check_params($params);
 
@@ -186,14 +186,14 @@ function &civicrm_activity_update(&$params) {
   }
 
   // processing for custom data
-  $values = array();
+  $values = [];
   _civicrm_custom_format_params($params, $values, 'Activity');
   if (!empty($values['custom'])) {
     $params['custom'] = $values['custom'];
   }
 
   $activity = CRM_Activity_BAO_Activity::create($params);
-  $activityArray = array();
+  $activityArray = [];
   _civicrm_object_to_array($activity, $activityArray);
 
   return $activityArray;
@@ -213,7 +213,7 @@ function &civicrm_activity_update(&$params) {
 function civicrm_activity_delete(&$params) {
   _civicrm_initialize();
 
-  $errors = array();
+  $errors = [];
 
   //check for various error and required conditions
   $errors = _civicrm_activity_check_params($params);
@@ -242,15 +242,15 @@ function _civicrm_activity_get($activityId, $returnCustom = FALSE) {
   $dao = new CRM_Activity_BAO_Activity();
   $dao->id = $activityId;
   if ($dao->find(TRUE)) {
-    $activity = array();
+    $activity = [];
     _civicrm_object_to_array($dao, $activity);
 
     //also return custom data if needed.
     if ($returnCustom && !empty($activity)) {
-      $customdata = civicrm_activity_custom_get(array(
+      $customdata = civicrm_activity_custom_get([
         'activity_id' => $activityId,
           'activity_type_id' => $activity['activity_type_id'],
-        ));
+        ]);
       $activity = array_merge($activity, $customdata);
     }
 
@@ -275,18 +275,18 @@ function _civicrm_activity_check_params(&$params, $addMode = FALSE) {
     return civicrm_create_error(ts('Input Parameters empty'));
   }
 
-  $contactIds = array('source' => CRM_Utils_Array::value('source_contact_id', $params),
+  $contactIds = ['source' => CRM_Utils_Array::value('source_contact_id', $params),
     'assignee' => CRM_Utils_Array::value('assignee_contact_id', $params),
     'target' => CRM_Utils_Array::value('target_contact_id', $params),
-  );
+  ];
 
   foreach ($contactIds as $key => $value) {
     if (empty($value)) {
       continue;
     }
-    $valueIds = array($value);
+    $valueIds = [$value];
     if (is_array($value)) {
-      $valueIds = array();
+      $valueIds = [];
       foreach ($value as $id) {
         if (is_numeric($id)) {
           $valueIds[$id] = $id;
@@ -294,10 +294,10 @@ function _civicrm_activity_check_params(&$params, $addMode = FALSE) {
       }
     }
     elseif (!is_numeric($value)) {
-      return civicrm_create_error(ts('Invalid %1 Contact Id', array(
+      return civicrm_create_error(ts('Invalid %1 Contact Id', [
         1 => ucfirst(
               $key
-            ))));
+            )]));
     }
 
     if (empty($valueIds)) {
@@ -309,20 +309,20 @@ SELECT  count(*)
   FROM  civicrm_contact 
  WHERE  id IN (' . CRM_Utils_Array::implode(', ', $valueIds) . ' )';
     if (count($valueIds) != CRM_Core_DAO::singleValueQuery($sql)) {
-      return civicrm_create_error(ts('Invalid %1 Contact Id', array(1 => ucfirst($key))));
+      return civicrm_create_error(ts('Invalid %1 Contact Id', [1 => ucfirst($key)]));
     }
   }
 
-  $activityIds = array('activity' => CRM_Utils_Array::value('id', $params),
+  $activityIds = ['activity' => CRM_Utils_Array::value('id', $params),
     'parent' => CRM_Utils_Array::value('parent_id', $params),
     'original' => CRM_Utils_Array::value('original_id', $params),
-  );
+  ];
 
   foreach ($activityIds as $id => $value) {
     if ($value &&
       !CRM_Core_DAO::getFieldValue('CRM_Activity_DAO_Activity', $value, 'id')
     ) {
-      return civicrm_create_error(ts('Invalid %1 Id', array(1 => ucfirst($id))));
+      return civicrm_create_error(ts('Invalid %1 Id', [1 => ucfirst($id)]));
     }
   }
 
@@ -421,8 +421,8 @@ SELECT  count(*)
 /**
  * Convert an email file to an activity
  */
-function civicrm_activity_processemail($file, $activityTypeID, $result = array(
-  )) {
+function civicrm_activity_processemail($file, $activityTypeID, $result = [
+  ]) {
   // do not parse if result array already passed (towards EmailProcessor..)
   if (empty($result)) {
     // might want to check that email is ok here
@@ -430,7 +430,7 @@ function civicrm_activity_processemail($file, $activityTypeID, $result = array(
       !is_readable($file)
     ) {
       return CRM_Core_Error::createAPIError(ts('File %1 does not exist or is not readable',
-          array(1 => $file)
+          [1 => $file]
         ));
     }
   }
@@ -454,13 +454,13 @@ function civicrm_activity_processemail($file, $activityTypeID, $result = array(
  */
 function _civicrm_activity_buildmailparams($result, $activityTypeID) {
   // get ready for collecting data about activity to be created
-  $params = array();
+  $params = [];
 
   $params['activity_type_id'] = $activityTypeID;
   $params['status_id'] = 2;
   $params['source_contact_id'] = $params['assignee_contact_id'] = $result['from']['id'];
-  $params['target_contact_id'] = array();
-  $keys = array('to', 'cc', 'bcc');
+  $params['target_contact_id'] = [];
+  $keys = ['to', 'cc', 'bcc'];
   foreach ($keys as $key) {
     if (is_array($result[$key])) {
       foreach ($result[$key] as $key => $keyValue) {
@@ -517,7 +517,7 @@ function civicrm_activity_get_types() {
  */
 function civicrm_activity_custom_get($params) {
 
-  $customData = array();
+  $customData = [];
   if (!CRM_Utils_Array::value('activity_id', $params)) {
     return $customData;
   }
@@ -541,7 +541,7 @@ function civicrm_activity_custom_get($params) {
     $groupCount,
     CRM_Core_DAO::$_nullObject
   );
-  $defaults = array();
+  $defaults = [];
   CRM_Core_BAO_CustomGroup::setDefaults($formattedGroupTree, $defaults);
   if (!empty($defaults)) {
     foreach ($defaults as $key => $val) {

@@ -48,7 +48,7 @@ class CRM_Pledge_Form_Task_SearchTaskHookSample extends CRM_Pledge_Form_Task {
    */
   function preProcess() {
     parent::preProcess();
-    $rows = array();
+    $rows = [];
     // display name and pledge details of all selected contacts
     $pledgeIDs = CRM_Utils_Array::implode(',', $this->_pledgeIds);
 
@@ -62,11 +62,11 @@ INNER JOIN civicrm_contact ct ON ( plg.contact_id = ct.id )
 
     $dao = CRM_Core_DAO::executeQuery($query, CRM_Core_DAO::$_nullArray);
     while ($dao->fetch()) {
-      $rows[] = array(
+      $rows[] = [
         'display_name' => $dao->display_name,
         'amount' => $dao->amount,
         'create_date' => CRM_Utils_Date::customFormat($dao->create_date),
-      );
+      ];
     }
     $this->assign('rows', $rows);
   }
@@ -78,12 +78,12 @@ INNER JOIN civicrm_contact ct ON ( plg.contact_id = ct.id )
    * @access public
    */
   public function buildQuickForm() {
-    $this->addButtons(array(
-        array('type' => 'done',
+    $this->addButtons([
+        ['type' => 'done',
           'name' => ts('Done'),
           'isDefault' => TRUE,
-        ),
-      )
+        ],
+      ]
     );
   }
 }

@@ -65,9 +65,9 @@ class CRM_Admin_Form extends CRM_Core_Form {
   function preProcess() {
     $this->_id = $this->get('id');
     $this->_BAOName = $this->get('BAOName');
-    $this->_values = array();
+    $this->_values = [];
     if (isset($this->_id)) {
-      $params = array('id' => $this->_id);
+      $params = ['id' => $this->_id];
       $baoName = $this->_BAOName;
       $baoName::retrieve( $params, $this->_values );
     }
@@ -83,8 +83,8 @@ class CRM_Admin_Form extends CRM_Core_Form {
    */
   function setDefaultValues() {
     if (isset($this->_id) && empty($this->_values)) {
-      $this->_values = array();
-      $params = array('id' => $this->_id);
+      $this->_values = [];
+      $params = ['id' => $this->_id];
       $baoName = $this->_BAOName;
       $baoName::retrieve( $params, $this->_values );
     }
@@ -112,29 +112,29 @@ class CRM_Admin_Form extends CRM_Core_Form {
    */
   public function buildQuickForm() {
     if ($this->_action & CRM_Core_Action::DELETE) {
-      $this->addButtons(array(
-          array('type' => 'next',
+      $this->addButtons([
+          ['type' => 'next',
             'name' => ts('Delete'),
             'isDefault' => TRUE,
-          ),
-          array('type' => 'cancel',
+          ],
+          ['type' => 'cancel',
             'name' => ts('Cancel'),
-          ),
-        )
+          ],
+        ]
       );
     }
     else {
-      $js = array('data' => 'click-once');
-      $this->addButtons(array(
-          array('type' => 'next',
+      $js = ['data' => 'click-once'];
+      $this->addButtons([
+          ['type' => 'next',
             'name' => ts('Save'),
             'isDefault' => TRUE,
             'js' => $js,
-          ),
-          array('type' => 'cancel',
+          ],
+          ['type' => 'cancel',
             'name' => ts('Cancel'),
-          ),
-        )
+          ],
+        ]
       );
     }
   }

@@ -53,16 +53,16 @@ class CRM_Admin_Form_Setting_Component extends CRM_Admin_Form_Setting {
     $components = $this->_getComponentSelectValues();
     $include = &$this->addElement('advmultiselect', 'enableComponents',
       ts('Components') . ' ', $components,
-      array('size' => 5,
+      ['size' => 5,
         'style' => 'width:150px',
         'class' => 'advmultiselect',
-      )
+      ]
     );
 
-    $include->setButtonAttributes('add', array('value' => ts('Enable >>')));
-    $include->setButtonAttributes('remove', array('value' => ts('<< Disable')));
+    $include->setButtonAttributes('add', ['value' => ts('Enable >>')]);
+    $include->setButtonAttributes('remove', ['value' => ts('<< Disable')]);
 
-    $this->addFormRule(array('CRM_Admin_Form_Setting_Component', 'formRule'), $this);
+    $this->addFormRule(['CRM_Admin_Form_Setting_Component', 'formRule'], $this);
 
     parent::buildQuickForm();
   }
@@ -79,7 +79,7 @@ class CRM_Admin_Form_Setting_Component extends CRM_Admin_Form_Setting {
    * @static
    */
   static function formRule($fields) {
-    $errors = array();
+    $errors = [];
 
     if (is_array($fields['enableComponents'])) {
       if (in_array('CiviPledge', $fields['enableComponents']) && !in_array('CiviContribute', $fields['enableComponents'])) {
@@ -92,7 +92,7 @@ class CRM_Admin_Form_Setting_Component extends CRM_Admin_Form_Setting {
 
 
   private function _getComponentSelectValues() {
-    $ret = array();
+    $ret = [];
 
     $this->_components = CRM_Core_Component::getComponents();
     foreach ($this->_components as $name => $object) {
@@ -106,7 +106,7 @@ class CRM_Admin_Form_Setting_Component extends CRM_Admin_Form_Setting {
     $params = $this->controller->exportValues($this->_name);
 
 
-    $params['enableComponentIDs'] = array();
+    $params['enableComponentIDs'] = [];
     foreach ($params['enableComponents'] as $name) {
       $params['enableComponentIDs'][] = $this->_components[$name]->componentID;
     }

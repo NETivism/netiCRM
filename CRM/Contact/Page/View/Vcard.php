@@ -52,9 +52,9 @@ class CRM_Contact_Page_View_Vcard extends CRM_Contact_Page_View {
   function run() {
     $this->preProcess();
 
-    $params = array();
-    $defaults = array();
-    $ids = array();
+    $params = [];
+    $defaults = [];
+    $ids = [];
 
     $params['id'] = $params['contact_id'] = $this->_contactId;
     $contact = CRM_Contact_BAO_Contact::retrieve($params, $defaults, $ids);

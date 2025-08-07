@@ -104,7 +104,7 @@ class CRM_Core_Payment_PayPalImpl extends CRM_Core_Payment {
    * @public
    */
   function setExpressCheckOut(&$params) {
-    $args = array();
+    $args = [];
 
     $this->initialize($args, 'SetExpressCheckout');
 
@@ -147,7 +147,7 @@ class CRM_Core_Payment_PayPalImpl extends CRM_Core_Payment {
    * @public
    */
   function getExpressCheckoutDetails($token) {
-    $args = array();
+    $args = [];
 
     $this->initialize($args, 'GetExpressCheckoutDetails');
     $args['token'] = $token;
@@ -162,7 +162,7 @@ class CRM_Core_Payment_PayPalImpl extends CRM_Core_Payment {
 
     /* Success */
 
-    $params = array();
+    $params = [];
     $params['token'] = $result['token'];
     $params['payer_id'] = $result['payerid'];
     $params['payer_status'] = $result['payerstatus'];
@@ -188,7 +188,7 @@ class CRM_Core_Payment_PayPalImpl extends CRM_Core_Payment {
    * @public
    */
   function doExpressCheckout(&$params) {
-    $args = array();
+    $args = [];
 
     $this->initialize($args, 'DoExpressCheckoutPayment');
 
@@ -224,7 +224,7 @@ class CRM_Core_Payment_PayPalImpl extends CRM_Core_Payment {
 
   //LCD add new function for handling recurring payments for PayPal Express
   function createRecurringPayments(&$params) {
-    $args = array();
+    $args = [];
 
     $this->initialize($args, 'CreateRecurringPaymentsProfile');
 
@@ -289,7 +289,7 @@ class CRM_Core_Payment_PayPalImpl extends CRM_Core_Payment {
    * @public
    */
   function doDirectPayment(&$params, $component = 'contribute') {
-    $args = array();
+    $args = [];
 
     $this->initialize($args, 'DoDirectPayment');
 
@@ -360,7 +360,7 @@ class CRM_Core_Payment_PayPalImpl extends CRM_Core_Payment {
    * @public
    */
   function checkConfig() {
-    $error = array();
+    $error = [];
     if ($this->_paymentProcessor['payment_processor_type'] == 'PayPal_Standard' ||
       $this->_paymentProcessor['payment_processor_type'] == 'PayPal'
     ) {
@@ -430,7 +430,7 @@ class CRM_Core_Payment_PayPalImpl extends CRM_Core_Payment {
     $returnURL = CRM_Utils_System::url($url, "_qf_ThankYou_display=1&qfKey={$params['qfKey']}", TRUE, NULL, FALSE);
     $cancelURL = CRM_Utils_System::url($url, "_qf_ThankYou_display=1&qfKey={$params['qfKey']}&payment_result_type=4", TRUE, NULL, FALSE);
 
-    $paypalParams = array('business' => $this->_paymentProcessor['user_name'],
+    $paypalParams = ['business' => $this->_paymentProcessor['user_name'],
       'notify_url' => $notifyURL,
       'item_name' => $params['item_name'],
       'quantity' => 1,
@@ -447,10 +447,10 @@ class CRM_Core_Payment_PayPalImpl extends CRM_Core_Payment {
       'custom' => CRM_Utils_Array::value('accountingCode',
         $params
       ),
-    );
+    ];
 
     // add name and address if available, CRM-3130
-    $otherVars = array('first_name' => 'first_name',
+    $otherVars = ['first_name' => 'first_name',
       'last_name' => 'last_name',
       'street_address' => 'address1',
       'country' => 'country',
@@ -459,7 +459,7 @@ class CRM_Core_Payment_PayPalImpl extends CRM_Core_Payment {
       'state_province' => 'state',
       'postal_code' => 'zip',
       'email' => 'email',
-    );
+    ];
 
     foreach (array_keys($params) as $p) {
       // get the base name without the location type suffixed to it
@@ -494,7 +494,7 @@ class CRM_Core_Payment_PayPalImpl extends CRM_Core_Payment {
       else {
         CRM_Core_Error::fatal(ts('Recurring contribution, but no database id'));
       }
-      $paypalParams += array(
+      $paypalParams += [
         'cmd' => '_xclick-subscriptions',
         'a3' => $params['amount'],
         'p3' => $params['frequency_interval'],
@@ -504,13 +504,13 @@ class CRM_Core_Payment_PayPalImpl extends CRM_Core_Payment {
         'srt' => ($params['installments'] > 0) ? $params['installments'] : NULL,
         'no_note' => 1,
         'modify' => 0,
-      );
+      ];
     }
     else {
-      $paypalParams += array(
+      $paypalParams += [
         'cmd' => '_xclick',
         'amount' => $params['amount'],
-      );
+      ];
     }
 
     // Allow further manipulation of the arguments via custom hooks ..
@@ -572,7 +572,7 @@ class CRM_Core_Payment_PayPalImpl extends CRM_Core_Payment {
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($ch, CURLOPT_POST, 1);
 
-    $p = array();
+    $p = [];
     foreach ($args as $n => $v) {
       $p[] = "$n=" . urlencode($v);
     }
@@ -622,7 +622,7 @@ class CRM_Core_Payment_PayPalImpl extends CRM_Core_Payment {
    */
 
   static function deformat($str) {
-    $result = array();
+    $result = [];
 
     while (strlen($str)) {
       // postion of key

@@ -2,7 +2,7 @@
 
 class CRM_Contact_DAO_Factory {
 
-  static $_classes = array(
+  static $_classes = [
     'Address' => 'data',
     'Contact' => 'data',
     'Email' => 'data',
@@ -14,26 +14,26 @@ class CRM_Contact_DAO_Factory {
     'Organization' => 'data',
     'Phone' => 'data',
     'Relationship' => 'data',
-  );
+  ];
 
-  static $_prefix = array(
+  static $_prefix = [
     'business' => 'CRM/Contact/BAO/',
     'data' => 'CRM/Contact/DAO/',
-  );
+  ];
 
   static $_suffix = '.php';
 
-  static $_preCall = array(
+  static $_preCall = [
     'singleton' => '',
     'business' => 'new',
     'data' => 'new',
-  );
+  ];
 
-  static $_extCall = array(
+  static $_extCall = [
     'singleton' => '::singleton',
     'business' => '',
     'data' => '',
-  );
+  ];
 
 
   static function &create($className) {

@@ -58,9 +58,9 @@ class CRM_Core_Lock {
   function acquire() {
     if (!$this->_hasLock) {
       $query = "SELECT GET_LOCK( %1, %2 )";
-      $params = array(1 => array($this->_name, 'String'),
-        2 => array($this->_timeout, 'Integer'),
-      );
+      $params = [1 => [$this->_name, 'String'],
+        2 => [$this->_timeout, 'Integer'],
+      ];
       $res = CRM_Core_DAO::singleValueQuery($query, $params);
       if ($res) {
         $this->_hasLock = TRUE;
@@ -74,7 +74,7 @@ class CRM_Core_Lock {
       $this->_hasLock = FALSE;
 
       $query = "SELECT RELEASE_LOCK( %1 )";
-      $params = array(1 => array($this->_name, 'String'));
+      $params = [1 => [$this->_name, 'String']];
       return CRM_Core_DAO::singleValueQuery($query, $params);
     }
   }
@@ -96,7 +96,7 @@ class CRM_Core_Lock {
     $domainID = CRM_Core_Config::domainID();
     $name = $database . '.' . $domainID . '.' . $name;
     $query = "SELECT IS_FREE_LOCK( %1 )";
-    $params = array(1 => array($name, 'String'));
+    $params = [1 => [$name, 'String']];
     return CRM_Core_DAO::singleValueQuery($query, $params);
   }
 
@@ -113,7 +113,7 @@ class CRM_Core_Lock {
     $domainID = CRM_Core_Config::domainID();
     $name = $database . '.' . $domainID . '.' . $name;
     $query = "SELECT IS_USED_LOCK( %1 )";
-    $params = array(1 => array($name, 'String'));
+    $params = [1 => [$name, 'String']];
     return CRM_Core_DAO::singleValueQuery($query, $params);
   }
 }

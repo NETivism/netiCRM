@@ -59,13 +59,13 @@ require_once 'CRM/Event/BAO/ParticipantPayment.php';
  */
 function civicrm_api3_participant_payment_create($params) {
 
-  $ids = array();
+  $ids = [];
   if (CRM_Utils_Array::value('id', $params)) {
     $ids['id'] = $params['id'];
   }
   $participantPayment = CRM_Event_BAO_ParticipantPayment::create($params, $ids);
 
-  $payment = array();
+  $payment = [];
   _civicrm_api3_object_to_array($participantPayment, $payment[$participantPayment->id]);
 
   return civicrm_api3_create_success($payment, $params);

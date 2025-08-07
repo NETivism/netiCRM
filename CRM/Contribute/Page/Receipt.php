@@ -57,7 +57,7 @@ class CRM_Contribute_Page_Receipt extends CRM_Core_Page{
       $statusId = CRM_Core_OptionGroup::getValue('activity_status', 'Completed', 'name');
       $receiptId = CRM_Core_DAO::getFieldValue("CRM_Contribute_DAO_Contribution", $this->_id, "receipt_id");
       $subject = $receiptId ? ts('Receipt ID') . " : ".$receiptId : ts('Print Contribution Receipts');
-      $activityParams = array(
+      $activityParams = [
         'activity_type_id' => $activityTypeId,
         'activity_date_time' => date('Y-m-d H:i:s'),
         'source_record_id' => $this->_id,
@@ -65,7 +65,7 @@ class CRM_Contribute_Page_Receipt extends CRM_Core_Page{
         'subject' => $subject,
         'assignee_contact_id' => $this->_contactId,
         'source_contact_id' => $userID,
-      );
+      ];
       CRM_Activity_BAO_Activity::create($activityParams);
     }
   }

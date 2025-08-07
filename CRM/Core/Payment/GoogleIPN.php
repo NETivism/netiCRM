@@ -99,7 +99,7 @@ class CRM_Core_Payment_GoogleIPN extends CRM_Core_Payment_BaseIPN {
    *
    */
   function newOrderNotify($dataRoot, $privateData, $component) {
-    $ids = $input = $params = array();
+    $ids = $input = $params = [];
 
     $input['component'] = strtolower($component);
 
@@ -190,7 +190,7 @@ class CRM_Core_Payment_GoogleIPN extends CRM_Core_Payment_BaseIPN {
    *
    */
   function orderStateChange($status, $dataRoot, $component) {
-    $input = $objects = $ids = array();
+    $input = $objects = $ids = [];
 
     $input['component'] = strtolower($component);
 
@@ -230,7 +230,7 @@ class CRM_Core_Payment_GoogleIPN extends CRM_Core_Payment_BaseIPN {
         $contribution->trxn_id
       );
 
-      foreach (array('membership', 'related_contact', 'onbehalf_dupe_alert') as $fld) {
+      foreach (['membership', 'related_contact', 'onbehalf_dupe_alert'] as $fld) {
         if (!is_numeric($ids[$fld])) {
           unset($ids[$fld]);
         }
@@ -398,7 +398,7 @@ class CRM_Core_Payment_GoogleIPN extends CRM_Core_Payment_BaseIPN {
       exit();
     }
 
-    return array($isTest, $module, $paymentProcessorID);
+    return [$isTest, $module, $paymentProcessorID];
   }
 
   /**
@@ -526,7 +526,7 @@ class CRM_Core_Payment_GoogleIPN extends CRM_Core_Payment_BaseIPN {
       }
 
       $billingID = $ids['billing'];
-      $lookup = array("first_name" => 'contact-name',
+      $lookup = ["first_name" => 'contact-name',
         // "last-name" not available with google (every thing in contact-name)
         "last_name" => 'last_name',
         "street_address-{$billingID}" => 'address1',
@@ -534,7 +534,7 @@ class CRM_Core_Payment_GoogleIPN extends CRM_Core_Payment_BaseIPN {
         "state-{$billingID}" => 'region',
         "postal_code-{$billingID}" => 'postal-code',
         "country-{$billingID}" => 'country-code',
-      );
+      ];
 
       foreach ($lookup as $name => $googleName) {
         $value = $dataRoot['buyer-billing-address'][$googleName]['VALUE'];
@@ -548,7 +548,7 @@ class CRM_Core_Payment_GoogleIPN extends CRM_Core_Payment_BaseIPN {
      * to an array of name-value pairs.
      */
     static   function stringToArray($str) {
-      $vars = $labels = array();
+      $vars = $labels = [];
       $labels = explode(',', $str);
       foreach ($labels as $label) {
         $terms = explode('=', $label);

@@ -45,8 +45,8 @@ class CRM_Contact_Form_DedupeRules extends CRM_Admin_Form {
   public $_contactTypeDisplay;
   CONST RULES_COUNT = 5;
   protected $_contactType;
-  protected $_defaults = array();
-  protected $_fields = array();
+  protected $_defaults = [];
+  protected $_fields = [];
   protected $_rgid;
 
   /**
@@ -74,7 +74,7 @@ class CRM_Contact_Form_DedupeRules extends CRM_Admin_Form {
       $rgDao->find(TRUE);
       $this->_defaults['threshold'] = $rgDao->threshold;
       $this->_contactType = $rgDao->contact_type;
-      $params = array('name' => $rgDao->contact_type);
+      $params = ['name' => $rgDao->contact_type];
       $_contactType = $contactType->retrieve($params, $defaults);
       $this->_contactTypeDisplay = $_contactType->label;
 
@@ -111,10 +111,10 @@ class CRM_Contact_Form_DedupeRules extends CRM_Admin_Form {
    */
   public function buildQuickForm() {
     $this->add('text', 'name', ts('Rule Name'));
-    $levelType = array(
+    $levelType = [
       'Strict' => ts('Strict'),
       'Fuzzy' => ts('Fuzzy'),
-    );
+    ];
     $ruleLevel = $this->add('select', 'level', ts('Level'), $levelType);
 
     $default = $this->add('checkbox', 'is_default', ts('Default?'));
@@ -131,21 +131,21 @@ class CRM_Contact_Form_DedupeRules extends CRM_Admin_Form {
     }
 
     for ($count = 0; $count < self::RULES_COUNT; $count++) {
-      $this->add('select', "where_$count", ts('Field'), array(NULL => ts('- none -')) + $this->_fields);
-      $this->add('text', "length_$count", ts('Length'), array('class' => 'two', 'style' => 'text-align: right'));
-      $this->add('text', "weight_$count", ts('Weight'), array('class' => 'two', 'style' => 'text-align: right'));
-      $this->addRule("weight_$count", ts('%1 should be a postive number', array(1 => ts('Weight'))), 'positiveInteger');
-      $this->addRule("weight_$count", ts('%1 should be a postive number', array(1 => ts('Weight'))), 'nonzero');
+      $this->add('select', "where_$count", ts('Field'), [NULL => ts('- none -')] + $this->_fields);
+      $this->add('text', "length_$count", ts('Length'), ['class' => 'two', 'style' => 'text-align: right']);
+      $this->add('text', "weight_$count", ts('Weight'), ['class' => 'two', 'style' => 'text-align: right']);
+      $this->addRule("weight_$count", ts('%1 should be a postive number', [1 => ts('Weight')]), 'positiveInteger');
+      $this->addRule("weight_$count", ts('%1 should be a postive number', [1 => ts('Weight')]), 'nonzero');
     }
-    $this->add('text', 'threshold', ts("Weight Threshold to Consider Contacts 'Matching':"), array('class' => 'two', 'style' => 'text-align: right'));
-    $this->addRule('threshold', ts('%1 should be a postive number', array(1 => ts('Threshold'))), 'positiveInteger');
-    $this->addRule('threshold', ts('%1 should be a postive number', array(1 => ts('Threshold'))), 'nonzero');
-    $this->addButtons(array(
-        array('type' => 'next', 'name' => ts('Save'), 'isDefault' => TRUE),
-        array('type' => 'cancel', 'name' => ts('Cancel')),
-      ));
+    $this->add('text', 'threshold', ts("Weight Threshold to Consider Contacts 'Matching':"), ['class' => 'two', 'style' => 'text-align: right']);
+    $this->addRule('threshold', ts('%1 should be a postive number', [1 => ts('Threshold')]), 'positiveInteger');
+    $this->addRule('threshold', ts('%1 should be a postive number', [1 => ts('Threshold')]), 'nonzero');
+    $this->addButtons([
+        ['type' => 'next', 'name' => ts('Save'), 'isDefault' => TRUE],
+        ['type' => 'cancel', 'name' => ts('Cancel')],
+      ]);
     $this->assign('contact_type', $this->_contactTypeDisplay);
-    $this->addFormRule(array('CRM_Contact_Form_DedupeRules', 'formRule'));
+    $this->addFormRule(['CRM_Contact_Form_DedupeRules', 'formRule']);
   }
 
   /**
@@ -158,7 +158,7 @@ class CRM_Contact_Form_DedupeRules extends CRM_Admin_Form {
    * @access public
    */
   static function formRule($fields) {
-    $errors = array();
+    $errors = [];
     $total = 0;
     for ($count = 0; $count < self::RULES_COUNT; $count++) {
       if (!empty($fields['weight_'.$count])) {
@@ -197,9 +197,9 @@ UPDATE civicrm_dedupe_rule_group
    SET is_default = 0
  WHERE contact_type = %1 
    AND level = %2";
-      $queryParams = array(1 => array($this->_contactType, 'String'),
-        2 => array($values['level'], 'String'),
-      );
+      $queryParams = [1 => [$this->_contactType, 'String'],
+        2 => [$values['level'], 'String'],
+      ];
       CRM_Core_DAO::executeQuery($query, $queryParams);
     }
 
@@ -219,9 +219,9 @@ UPDATE civicrm_dedupe_rule_group
     $ruleDao->delete();
     $ruleDao->free();
 
-    $substrLenghts = array();
+    $substrLenghts = [];
 
-    $tables = array();
+    $tables = [];
     for ($count = 0; $count < self::RULES_COUNT; $count++) {
       if (!CRM_Utils_Array::value("where_$count", $values)) {
         continue;
@@ -240,7 +240,7 @@ UPDATE civicrm_dedupe_rule_group
         $ruleDao->free();
 
         if (!CRM_Utils_Array::arrayKeyExists($table, $tables)) {
-          $tables[$table] = array();
+          $tables[$table] = [];
         }
         $tables[$table][] = $field;
       }
@@ -248,7 +248,7 @@ UPDATE civicrm_dedupe_rule_group
       // CRM-6245: we must pass table/field/length triples to the createIndexes() call below
       if ($length) {
         if (!isset($substrLenghts[$table])) {
-          $substrLenghts[$table] = array();
+          $substrLenghts[$table] = [];
         }
         $substrLenghts[$table][$field] = $length;
       }

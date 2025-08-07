@@ -45,48 +45,48 @@ class CRM_Member_Info extends CRM_Core_Component_Info {
 
   // docs inherited from interface
   public function getInfo() {
-    return array('name' => 'CiviMember',
+    return ['name' => 'CiviMember',
       'translatedName' => ts('CiviMember'),
       'title' => 'CiviCRM Membership Engine',
       'search' => 1,
       'showActivitiesInCore' => 1,
-    );
+    ];
   }
 
 
   // docs inherited from interface
   public function getPermissions() {
-    return array('access CiviMember',
+    return ['access CiviMember',
       'edit memberships',
       'delete in CiviMember',
-    );
+    ];
   }
 
   // docs inherited from interface
   public function getUserDashboardElement() {
-    return array('name' => ts('Memberships'),
+    return ['name' => ts('Memberships'),
       'title' => ts('Your Membership(s)'),
       // this is CiviContribute specific permission, since
       // there is no permission that could be checked for
       // CiviMember
-      'perm' => array('make online contributions'),
+      'perm' => ['make online contributions'],
       'weight' => 30,
-    );
+    ];
   }
 
   // docs inherited from interface
   public function registerTab() {
-    return array('title' => ts('Memberships'),
+    return ['title' => ts('Memberships'),
       'url' => 'membership',
       'weight' => 30,
-    );
+    ];
   }
 
   // docs inherited from interface
   public function registerAdvancedSearchPane() {
-    return array('title' => ts('Memberships'),
+    return ['title' => ts('Memberships'),
       'weight' => 30,
-    );
+    ];
   }
 
   // docs inherited from interface
@@ -99,11 +99,11 @@ class CRM_Member_Info extends CRM_Core_Component_Info {
     if (CRM_Core_Permission::check('access CiviMember') &&
       CRM_Core_Permission::check('edit memberships')
     ) {
-      $shortCuts = array_merge($shortCuts, array(array('path' => 'civicrm/member/add',
+      $shortCuts = array_merge($shortCuts, [['path' => 'civicrm/member/add',
             'query' => "reset=1&action=add&context=standalone",
             'ref' => 'new-membership',
             'title' => ts('Membership'),
-          )));
+          ]]);
     }
   }
 }

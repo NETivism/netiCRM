@@ -316,18 +316,18 @@ class CRM_Mailing_Page_Browse extends CRM_Core_Page {
   }
 
   function whereClause(&$params, $sortBy = TRUE) {
-    $values = array();
+    $values = [];
 
-    $clauses = array();
+    $clauses = [];
     $title = $this->get('mailing_name');
     //echo " name=$title  ";
     if ($title) {
       $clauses[] = 'name LIKE %1';
       if (strpos($title, '%') !== FALSE) {
-        $params[1] = array($title, 'String', FALSE);
+        $params[1] = [$title, 'String', FALSE];
       }
       else {
-        $params[1] = array($title, 'String', TRUE);
+        $params[1] = [$title, 'String', TRUE];
       }
     }
 

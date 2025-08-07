@@ -63,44 +63,44 @@ class CRM_Custom_Page_Group extends CRM_Core_Page {
   function &actionLinks() {
     // check if variable _actionsLinks is populated
     if (!isset(self::$_actionLinks)) {
-      self::$_actionLinks = array(
-        CRM_Core_Action::BROWSE => array(
+      self::$_actionLinks = [
+        CRM_Core_Action::BROWSE => [
           'name' => ts('View and Edit Custom Fields'),
           'url' => 'civicrm/admin/custom/group/field',
           'qs' => 'reset=1&action=browse&gid=%%id%%',
           'title' => ts('View and Edit Custom Fields'),
-        ),
-        CRM_Core_Action::PREVIEW => array(
+        ],
+        CRM_Core_Action::PREVIEW => [
           'name' => ts('Preview'),
           'url' => 'civicrm/admin/custom/group',
           'qs' => 'action=preview&reset=1&id=%%id%%',
           'title' => ts('Preview Custom Data Set'),
-        ),
-        CRM_Core_Action::UPDATE => array(
+        ],
+        CRM_Core_Action::UPDATE => [
           'name' => ts('Settings'),
           'url' => 'civicrm/admin/custom/group',
           'qs' => 'action=update&reset=1&id=%%id%%',
           'title' => ts('Edit Custom Set'),
-        ),
-        CRM_Core_Action::DISABLE => array(
+        ],
+        CRM_Core_Action::DISABLE => [
           'name' => ts('Disable'),
           'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_Core_BAO_CustomGroup' . '\',\'' . 'enable-disable' . '\' );"',
           'ref' => 'disable-action',
           'title' => ts('Disable Custom Set'),
-        ),
-        CRM_Core_Action::ENABLE => array(
+        ],
+        CRM_Core_Action::ENABLE => [
           'name' => ts('Enable'),
           'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_Core_BAO_CustomGroup' . '\',\'' . 'disable-enable' . '\' );"',
           'ref' => 'enable-action',
           'title' => ts('Enable Custom Set'),
-        ),
-        CRM_Core_Action::DELETE => array(
+        ],
+        CRM_Core_Action::DELETE => [
           'name' => ts('Delete'),
           'url' => 'civicrm/admin/custom/group',
           'qs' => 'action=delete&reset=1&id=%%id%%',
           'title' => ts('Delete Custom Set'),
-        ),
-      );
+        ],
+      ];
     }
     return self::$_actionLinks;
   }
@@ -210,14 +210,14 @@ class CRM_Custom_Page_Group extends CRM_Core_Page {
    */
   function browse($action = NULL) {
     // get all custom groups sorted by weight
-    $customGroup = array();
+    $customGroup = [];
     $dao = new CRM_Core_DAO_CustomGroup();
 
     $dao->orderBy('weight, title');
     $dao->find();
 
     while ($dao->fetch()) {
-      $customGroup[$dao->id] = array();
+      $customGroup[$dao->id] = [];
       CRM_Core_DAO::storeValues($dao, $customGroup[$dao->id]);
       // form all action links
       $action = array_sum(array_keys($this->actionLinks()));
@@ -231,7 +231,7 @@ class CRM_Custom_Page_Group extends CRM_Core_Page {
       }
       $customGroup[$dao->id]['order'] = $customGroup[$dao->id]['weight'];
       $customGroup[$dao->id]['action'] = CRM_Core_Action::formLink(self::actionLinks(), $action,
-        array('id' => $dao->id)
+        ['id' => $dao->id]
       );
     }
 
@@ -242,7 +242,7 @@ class CRM_Custom_Page_Group extends CRM_Core_Page {
     }
 
     //fix for Displaying subTypes
-    $subTypes = array();
+    $subTypes = [];
 
 
 
@@ -253,7 +253,7 @@ class CRM_Custom_Page_Group extends CRM_Core_Page {
     $subTypes['ContributionPage'] = CRM_Contribute_PseudoConstant::contributionType();
     $subTypes['Membership'] = CRM_Member_BAO_MembershipType::getMembershipTypes(FALSE);
     $subTypes['Event'] = CRM_Core_OptionGroup::values('event_type');
-    $subTypes['Participant'] = array();
+    $subTypes['Participant'] = [];
     $subTypes['ParticipantRole'] = CRM_Core_OptionGroup::values('participant_role');;
     $subTypes['ParticipantEventName'] = CRM_Event_PseudoConstant::event();
     $subTypes['ParticipantEventType'] = CRM_Core_OptionGroup::values('event_type');
@@ -267,7 +267,7 @@ class CRM_Custom_Page_Group extends CRM_Core_Page {
     $relTypeOrg = CRM_Contact_BAO_Relationship::getContactRelationshipType(NULL, 'null', NULL, 'Organization');
     $relTypeHou = CRM_Contact_BAO_Relationship::getContactRelationshipType(NULL, 'null', NULL, 'Household');
 
-    $allRelationshipType = array();
+    $allRelationshipType = [];
     $allRelationshipType = array_merge($relTypeInd, $relTypeOrg);
     $allRelationshipType = array_merge($allRelationshipType, $relTypeHou);
 
@@ -284,7 +284,7 @@ class CRM_Custom_Page_Group extends CRM_Core_Page {
 
 
     $cSubTypes = CRM_Core_Component::contactSubTypes();
-    $contactSubTypes = array();
+    $contactSubTypes = [];
     foreach ($cSubTypes as $key => $value) {
       $contactSubTypes[$key] = $key;
     }

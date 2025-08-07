@@ -78,7 +78,7 @@ class CRM_ACL_DAO_ACL extends CRM_Core_DAO
    * @static
    */
   static $_log = false;
-  /**
+    /**
    * Unique table ID
    *
    * @var int unsigned
@@ -144,7 +144,7 @@ class CRM_ACL_DAO_ACL extends CRM_Core_DAO
    * @var boolean
    */
   public $is_active;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -154,7 +154,7 @@ class CRM_ACL_DAO_ACL extends CRM_Core_DAO
   {
     parent::__construct();
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -168,7 +168,7 @@ class CRM_ACL_DAO_ACL extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -177,71 +177,71 @@ class CRM_ACL_DAO_ACL extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'id' => array(
+      self::$_fields = [
+        'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'name' => array(
+                  ] ,
+        'name' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('ACL Name') ,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ) ,
-        'deny' => array(
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
+        'deny' => [
           'name' => 'deny',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Deny') ,
           'required' => true,
-        ) ,
-        'entity_table' => array(
+                  ] ,
+        'entity_table' => [
           'name' => 'entity_table',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Entity Table') ,
           'required' => true,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ) ,
-        'entity_id' => array(
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
+        'entity_id' => [
           'name' => 'entity_id',
           'type' => CRM_Utils_Type::T_INT,
-        ) ,
-        'operation' => array(
+                  ] ,
+        'operation' => [
           'name' => 'operation',
           'type' => CRM_Utils_Type::T_ENUM,
           'title' => ts('Operation') ,
           'required' => true,
-          'enumValues' => 'All,View,Edit,Create,Delete,Grant,Revoke,Search',
-        ) ,
-        'object_table' => array(
+                   'enumValues' => 'All,View,Edit,Create,Delete,Grant,Revoke,Search',
+         ] ,
+        'object_table' => [
           'name' => 'object_table',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Object Table') ,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ) ,
-        'object_id' => array(
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
+        'object_id' => [
           'name' => 'object_id',
           'type' => CRM_Utils_Type::T_INT,
-        ) ,
-        'acl_table' => array(
+                  ] ,
+        'acl_table' => [
           'name' => 'acl_table',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Acl Table') ,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ) ,
-        'acl_id' => array(
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
+        'acl_id' => [
           'name' => 'acl_id',
           'type' => CRM_Utils_Type::T_INT,
-        ) ,
-        'is_active' => array(
+                  ] ,
+        'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ) ,
-      );
+                  ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -253,8 +253,8 @@ class CRM_ACL_DAO_ACL extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -274,7 +274,7 @@ class CRM_ACL_DAO_ACL extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -285,7 +285,7 @@ class CRM_ACL_DAO_ACL extends CRM_Core_DAO
           }
         }
       }
-    }
+          }
     return self::$_import;
   }
   /**
@@ -297,7 +297,7 @@ class CRM_ACL_DAO_ACL extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
@@ -308,7 +308,7 @@ class CRM_ACL_DAO_ACL extends CRM_Core_DAO
           }
         }
       }
-    }
+          }
     return self::$_export;
   }
   /**
@@ -318,9 +318,9 @@ class CRM_ACL_DAO_ACL extends CRM_Core_DAO
    */
   static function &getEnums()
   {
-    static $enums = array(
-      'operation',
-    );
+    static $enums = [
+                                                                                'operation',
+                                                                            ];
     return $enums;
   }
   /**
@@ -335,18 +335,18 @@ class CRM_ACL_DAO_ACL extends CRM_Core_DAO
   {
     static $translations = null;
     if (!$translations) {
-      $translations = array(
-        'operation' => array(
-          'All' => ts('All') ,
-          'View' => ts('View') ,
-          'Edit' => ts('Edit') ,
-          'Create' => ts('Create') ,
-          'Delete' => ts('Delete') ,
-          'Grant' => ts('Grant') ,
-          'Revoke' => ts('Revoke') ,
-          'Search' => ts('Search') ,
-        ) ,
-      );
+      $translations = [
+                                                                                'operation' => [
+                  'All' => ts('All'),
+                  'View' => ts('View'),
+                  'Edit' => ts('Edit'),
+                  'Create' => ts('Create'),
+                  'Delete' => ts('Delete'),
+                  'Grant' => ts('Grant'),
+                  'Revoke' => ts('Revoke'),
+                  'Search' => ts('Search'),
+                ],
+                                                                              ];
     }
     return $translations[$field][$value];
   }
@@ -359,7 +359,7 @@ class CRM_ACL_DAO_ACL extends CRM_Core_DAO
   static function addDisplayEnums(&$values)
   {
     $enumFields = &CRM_ACL_DAO_ACL::getEnums();
-    foreach($enumFields as $enum) {
+    foreach ($enumFields as $enum) {
       if (isset($values[$enum])) {
         $values[$enum . '_display'] = CRM_ACL_DAO_ACL::tsEnum($enum, $values[$enum]);
       }

@@ -50,7 +50,7 @@ class CRM_Core_BAO_Dashboard extends CRM_Core_DAO_Dashboard {
    * @static
    */
   static function getDashlets($all = TRUE) {
-    $dashlets = array();
+    $dashlets = [];
     $dao = new CRM_Core_DAO_Dashboard();
 
     if (!$all) {
@@ -65,7 +65,7 @@ class CRM_Core_BAO_Dashboard extends CRM_Core_DAO_Dashboard {
         continue;
       }
 
-      $values = array();
+      $values = [];
       CRM_Core_DAO::storeValues($dao, $values);
       $dashlets[$dao->id] = $values;
     }
@@ -85,7 +85,7 @@ class CRM_Core_BAO_Dashboard extends CRM_Core_DAO_Dashboard {
    * @static
    */
   static function getContactDashlets($flatFormat = FALSE) {
-    $dashlets = array();
+    $dashlets = [];
 
     $session = CRM_Core_Session::singleton();
     $contactID = $session->get('userID');
@@ -168,7 +168,7 @@ class CRM_Core_BAO_Dashboard extends CRM_Core_DAO_Dashboard {
         }
 
         // hack to handle case permissions
-        if (!$componentName && in_array($key, array('access my cases and activities', 'access all cases and activities'))) {
+        if (!$componentName && in_array($key, ['access my cases and activities', 'access all cases and activities'])) {
           $componentName = 'CiviCase';
         }
 
@@ -220,7 +220,7 @@ class CRM_Core_BAO_Dashboard extends CRM_Core_DAO_Dashboard {
    * @static
    */
   static function getDashletInfo($dashletID) {
-    $dashletInfo = array();
+    $dashletInfo = [];
     $dao = new CRM_Core_DAO_Dashboard();
 
     $dao->id = $dashletID;
@@ -257,9 +257,9 @@ class CRM_Core_BAO_Dashboard extends CRM_Core_DAO_Dashboard {
       $dao->save();
     }
 
-    $dashletInfo = array('title' => $dao->label,
+    $dashletInfo = ['title' => $dao->label,
       'content' => $dao->content,
-    );
+    ];
 
     if ($dao->is_fullscreen) {
       $dashletInfo['fullscreen'] = $dao->content;
@@ -288,7 +288,7 @@ class CRM_Core_BAO_Dashboard extends CRM_Core_DAO_Dashboard {
     //we need to get existing dashletes, so we know when to update or insert
     $contactDashlets = CRM_Core_BAO_Dashboard::getContactDashlets(TRUE);
 
-    $dashletIDs = array();
+    $dashletIDs = [];
     if (is_array($columns)) {
       foreach ($columns as $colNo => $dashlets) {
         if (!is_integer($colNo)) {
@@ -389,7 +389,7 @@ class CRM_Core_BAO_Dashboard extends CRM_Core_DAO_Dashboard {
 
     // if dashlet is created by admin then you need to add it all contacts.
     // else just add to contact who is creating this dashlet
-    $contactIDs = array();
+    $contactIDs = [];
     if ($admin) {
       $query = "SELECT distinct( contact_id ) 
                         FROM civicrm_dashboard_contact 

@@ -75,9 +75,9 @@ function civicrm_api3_pledge_create($params) {
  */
 function civicrm_api3_pledge_delete($params) {
   if (CRM_Pledge_BAO_Pledge::deletePledge($params['id'])) {
-    return civicrm_api3_create_success(array(
+    return civicrm_api3_create_success([
       'id' => $params['id']
-    ), $params, 'pledge', 'delete');
+    ], $params, 'pledge', 'delete');
   }
   else {
     return civicrm_api3_create_error('Could not delete pledge');
@@ -86,19 +86,19 @@ function civicrm_api3_pledge_delete($params) {
 
 function _civicrm_api3_pledge_delete_spec(&$params) {
   // set as not required as pledge_id also acceptable & no either/or std yet
-  $params['id']['api.aliases'] = array('pledge_id');
+  $params['id']['api.aliases'] = ['pledge_id'];
 }
 /*
  * return field specification specific to get requests
  */
 function _civicrm_api3_pledge_get_spec(&$params) {
-  $params['next_pay_date'] = array(
+  $params['next_pay_date'] = [
     'name' => 'next_pay_date',
     'type' => 12,
     'title' => 'Pledge Made',
     'api.filter' => 0,
     'api.return' => 1,
-  );
+  ];
 }
 
 /*
@@ -106,13 +106,13 @@ function _civicrm_api3_pledge_get_spec(&$params) {
  */
 function _civicrm_api3_pledge_create_spec(&$params) {
 
-  $required = array('contact_id', 'amount', 'installments', 'start_date', 'pledge_financial_type_id');
+  $required = ['contact_id', 'amount', 'installments', 'start_date', 'pledge_financial_type_id'];
   foreach ($required as $required_field) {
     $params[$required_field]['api.required'] = 1;
   }
   // @todo this can come from xml
-  $params['amount']['api.aliases'] = array('pledge_amount');
-  $params['pledge_financial_type_id']['api.aliases'] = array('financial_type_id');
+  $params['amount']['api.aliases'] = ['pledge_amount'];
+  $params['pledge_financial_type_id']['api.aliases'] = ['financial_type_id'];
 }
 
 /**
@@ -147,7 +147,7 @@ function civicrm_api3_pledge_get($params) {
   }
   $sql .= " LIMIT " . $options['offset'] . " , " . $options['limit'];
   $dao = CRM_Core_DAO::executeQuery($sql);
-  $pledge = array();
+  $pledge = [];
   while ($dao->fetch()) {
     $pledge[$dao->pledge_id] = $query->store($dao);
   }
@@ -159,7 +159,7 @@ function civicrm_api3_pledge_get($params) {
  * Set default to not return test params
  */
 function _civicrm_api3_pledge_get_defaults() {
-  return array('pledge_test' => 0);
+  return ['pledge_test' => 0];
 }
 
 /**

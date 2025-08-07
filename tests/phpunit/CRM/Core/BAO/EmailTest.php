@@ -7,11 +7,11 @@ class CRM_Core_BAO_EmailTest extends CiviUnitTestCase
 {
     function get_info( ) 
     {
-        return array(
+        return [
                      'name'        => 'Email BAOs',
                      'description' => 'Test all Core_BAO_Email methods.',
                      'group'       => 'CiviCRM BAO Tests',
-                     );
+                     ];
     }
     
     function setUp( ) 
@@ -26,11 +26,11 @@ class CRM_Core_BAO_EmailTest extends CiviUnitTestCase
     {
         $contactId = Contact::createIndividual( );
 
-        $params = array( );
-        $params = array( 'email'            => 'jane.doe@example.com',
+        $params = [ ];
+        $params = [ 'email'            => 'jane.doe@example.com',
                          'is_primary'       => 1,
                          'location_type_id' => 1,
-                         'contact_id'       => $contactId );
+                         'contact_id'       => $contactId ];
         
         require_once 'CRM/Core/BAO/Email.php';
         CRM_Core_BAO_Email::add( $params );
@@ -40,11 +40,11 @@ class CRM_Core_BAO_EmailTest extends CiviUnitTestCase
 
         // Now call add() to modify an existing email address
 
-        $params = array( );
-        $params = array( 'id'           => $emailId,
+        $params = [ ];
+        $params = [ 'id'           => $emailId,
                          'contact_id'   => $contactId,
                          'is_bulkmail'  => 1,
-                         'on_hold'      => 1, );
+                         'on_hold'      => 1, ];
         
         CRM_Core_BAO_Email::add( $params );
         
@@ -62,11 +62,11 @@ class CRM_Core_BAO_EmailTest extends CiviUnitTestCase
     {
         $contactId = Contact::createIndividual( );
         
-        $params = array( );
-        $params = array( 'email'           => 'jane.doe@example.com',
+        $params = [ ];
+        $params = [ 'email'           => 'jane.doe@example.com',
                         'is_primary'       => 1,
                         'location_type_id' => 1,
-                        'contact_id'       => $contactId );
+                        'contact_id'       => $contactId ];
         
         require_once 'CRM/Core/BAO/Email.php';
         CRM_Core_BAO_Email::add( $params );
@@ -75,10 +75,10 @@ class CRM_Core_BAO_EmailTest extends CiviUnitTestCase
                                           'Database check for created email address.' );
         
         // Now call add() to update on_hold=true and check record state
-        $params = array( );
-        $params = array( 'id'          => $emailId,
+        $params = [ ];
+        $params = [ 'id'          => $emailId,
                         'contact_id'   => $contactId,
-                        'on_hold'      => 1, );
+                        'on_hold'      => 1, ];
         
         CRM_Core_BAO_Email::add( $params );
         
@@ -94,10 +94,10 @@ class CRM_Core_BAO_EmailTest extends CiviUnitTestCase
                                      'Check if on_hold=1 in updated email record.' );
         
         // Now call add() with on_hold=false and verify that reset_date is set.
-        $params = array( );
-        $params = array( 'id'          => $emailId,
+        $params = [ ];
+        $params = [ 'id'          => $emailId,
                         'contact_id'   => $contactId,
-                        'on_hold'      => 'null', );
+                        'on_hold'      => 'null', ];
         
         CRM_Core_BAO_Email::add( $params );
         $this->assertDBCompareValue( 'CRM_Core_DAO_Email', $emailId, 'on_hold', 'id', 0,
@@ -121,11 +121,11 @@ class CRM_Core_BAO_EmailTest extends CiviUnitTestCase
      */
     function testAllEmails( )
     {
-        $contactParams = array ( 'first_name' => 'Alan',
+        $contactParams =  [ 'first_name' => 'Alan',
                                  'last_name'  => 'Smith',
                                  'email-1'    => 'alan.smith1@example.com',
                                  'email-2'    => 'alan.smith2@example.com',
-                                 'email-3'    => 'alan.smith3@example.com');
+                                 'email-3'    => 'alan.smith3@example.com'];
 
         $contactId = Contact::createIndividual( $contactParams );
 

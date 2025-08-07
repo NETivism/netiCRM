@@ -50,15 +50,15 @@ class CRM_Contribute_Form_SearchContribution extends CRM_Core_Form {
     $this->add('text', 'title', ts('Find'), $attributes);
 
     $contribution_type = CRM_Contribute_PseudoConstant::contributionType(NULl, NULL, TRUE);
-    $attrs = array('multiple' => 'multiple');
+    $attrs = ['multiple' => 'multiple'];
     $this->addElement('select', 'contribution_type_id', 'Contribution Type', $contribution_type, $attrs);
 
-    $this->addButtons(array(
-        array('type' => 'refresh',
+    $this->addButtons([
+        ['type' => 'refresh',
           'name' => ts('Search'),
           'isDefault' => TRUE,
-        ),
-      ));
+        ],
+      ]);
   }
 
   function postProcess() {
@@ -66,7 +66,7 @@ class CRM_Contribute_Form_SearchContribution extends CRM_Core_Form {
     $parent = $this->controller->getParent();
     $parent->set('searchResult', 1);
     if (!empty($params)) {
-      $fields = array('title', 'contribution_type_id');
+      $fields = ['title', 'contribution_type_id'];
       foreach ($fields as $field) {
         if (isset($params[$field]) &&
           !CRM_Utils_System::isNull($params[$field])

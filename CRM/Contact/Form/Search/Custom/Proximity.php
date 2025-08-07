@@ -82,13 +82,13 @@ class CRM_Contact_Form_Search_Custom_Proximity extends CRM_Contact_Form_Search_C
 
     $this->_tag = CRM_Utils_Array::value('tag', $this->_formValues);
 
-    $this->_columns = array(ts('Name') => 'sort_name',
+    $this->_columns = [ts('Name') => 'sort_name',
       ts('Street Address') => 'street_address',
       ts('City') => 'city',
       ts('Postal Code') => 'postal_code',
       ts('State') => 'state_province',
       ts('Country') => 'country',
-    );
+    ];
   }
 
   function buildForm(&$form) {
@@ -97,7 +97,7 @@ class CRM_Contact_Form_Search_Custom_Proximity extends CRM_Contact_Form_Search_C
 
     $form->add('text', 'distance', ts('Distance'), NULL, TRUE);
 
-    $proxUnits = array('km' => ts('km'), 'miles' => ts('miles'));
+    $proxUnits = ['km' => ts('km'), 'miles' => ts('miles')];
     $form->add('select', 'prox_distance_unit', ts('Units'), $proxUnits, TRUE);
 
     $form->add('text',
@@ -114,27 +114,27 @@ class CRM_Contact_Form_Search_Custom_Proximity extends CRM_Contact_Form_Search_C
       'postal_code',
       ts('Postal Code')
     );
-    $stateCountryMap = array();
-    $stateCountryMap[] = array('state_province' => 'state_province_id',
+    $stateCountryMap = [];
+    $stateCountryMap[] = ['state_province' => 'state_province_id',
       'country' => 'country_id',
-    );
-    $defaults = array();
+    ];
+    $defaults = [];
     if ($countryDefault) {
-      $stateProvince = array('' => ts('- select -')) + CRM_Core_PseudoConstant::stateProvinceForCountry($countryDefault);
+      $stateProvince = ['' => ts('- select -')] + CRM_Core_PseudoConstant::stateProvinceForCountry($countryDefault);
       $defaults['country_id'] = $countryDefault;
     }
     else {
-      $stateProvince = array('' => ts('- select -')) + CRM_Core_PseudoConstant::stateProvince();
+      $stateProvince = ['' => ts('- select -')] + CRM_Core_PseudoConstant::stateProvince();
     }
     $form->addElement('select', 'state_province_id', ts('State/Province'), $stateProvince);
 
-    $country = array('' => ts('- select -')) + CRM_Core_PseudoConstant::country();
+    $country = ['' => ts('- select -')] + CRM_Core_PseudoConstant::country();
     $form->add('select', 'country_id', ts('Country'), $country, TRUE);
 
-    $group = array('' => ts('- any group -')) + CRM_Core_PseudoConstant::group();
+    $group = ['' => ts('- any group -')] + CRM_Core_PseudoConstant::group();
     $form->addElement('select', 'group', ts('Group'), $group);
 
-    $tag = array('' => ts('- any tag -')) + CRM_Core_PseudoConstant::tag();
+    $tag = ['' => ts('- any tag -')] + CRM_Core_PseudoConstant::tag();
     $form->addElement('select', 'tag', ts('Tag'), $tag);
 
 
@@ -152,7 +152,7 @@ class CRM_Contact_Form_Search_Custom_Proximity extends CRM_Contact_Form_Search_C
      * if you are using the standard template, this array tells the template what elements
      * are part of the search criteria
      */
-    $form->assign('elements', array('distance',
+    $form->assign('elements', ['distance',
         'prox_distance_unit',
         'street_address',
         'city',
@@ -161,7 +161,7 @@ class CRM_Contact_Form_Search_Custom_Proximity extends CRM_Contact_Form_Search_C
         'state_province_id',
         'group',
         'tag',
-      ));
+      ]);
   }
 
   function all($offset = 0, $rowcount = 0, $sort = NULL,
@@ -209,8 +209,8 @@ LEFT JOIN civicrm_group_contact cgc ON ( cgc.contact_id = contact_a.id AND cgc.s
   }
 
   function where($includeContactIDs = FALSE) {
-    $params = array();
-    $clause = array();
+    $params = [];
+    $clause = [];
 
 
     $where = CRM_Contact_BAO_ProximityQuery::where($this->_latitude,
@@ -240,7 +240,7 @@ AND cgc.group_id = {$this->_group}
   function setDefaultValues() {
     $config = CRM_Core_Config::singleton();
     $countryDefault = $config->defaultContactCountry;
-    $defaults = array();
+    $defaults = [];
 
     if ($countryDefault) {
       if ($countryDefault == '1228' || $countryDefault == '1226') {

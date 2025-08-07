@@ -63,8 +63,8 @@
 class civicrm_api3 {
   function __construct($config = NULL) {
     $this->local      = TRUE;
-    $this->input      = array();
-    $this->lastResult = array();
+    $this->input      = [];
+    $this->lastResult = [];
     if (isset($config) && isset($config['server'])) {
       // we are calling a remote server via REST
       $this->local = FALSE;
@@ -123,8 +123,8 @@ class civicrm_api3 {
     echo "Calling static method '$name' " . CRM_Utils_Array::implode(', ', $arguments) . "\n";
   }
 
-  function remoteCall($entity, $action, $params = array(
-    )) {
+  function remoteCall($entity, $action, $params = [
+    ]) {
     $fields = "key={$this->key}&api_key={$this->api_key}";
     $query = $this->uri . "&entity=$entity&action=$action";
     foreach ($params as $k => $v) {
@@ -150,10 +150,10 @@ class civicrm_api3 {
     }
   }
 
-  function call($entity, $action = 'Get', $params = array(
-    )) {
+  function call($entity, $action = 'Get', $params = [
+    ]) {
     if (is_int($params)) {
-      $params = array('id' => $params);
+      $params = ['id' => $params];
     }
     elseif (is_string($params)) {
       $params = json_decode($params);
@@ -175,7 +175,7 @@ class civicrm_api3 {
       $this->lastResult = json_decode(json_encode(civicrm_api($entity, $action, $params)));
     }
     // reset the input to be ready for a new call
-    $this->input = array();
+    $this->input = [];
     if (property_exists($this->lastResult, 'is_error')) {
       return !$this->lastResult->is_error;
     }

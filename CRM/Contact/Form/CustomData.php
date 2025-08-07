@@ -170,15 +170,15 @@ class CRM_Contact_Form_CustomData extends CRM_Core_Form {
 
     // make this form an upload since we dont know if the custom data injected dynamically
     // is of type file etc
-    $this->addButtons(array(
-        array('type' => 'upload',
+    $this->addButtons([
+        ['type' => 'upload',
           'name' => ts('Save'),
           'isDefault' => TRUE,
-        ),
-        array('type' => 'cancel',
+        ],
+        ['type' => 'cancel',
           'name' => ts('Cancel'),
-        ),
-      )
+        ],
+      ]
     );
   }
 
@@ -215,7 +215,7 @@ class CRM_Contact_Form_CustomData extends CRM_Core_Form {
 
     $this->assign("customValueCount", $customValueCount);
 
-    $defaults = array();
+    $defaults = [];
     return $defaults;
   }
 

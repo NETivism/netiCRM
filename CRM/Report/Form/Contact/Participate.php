@@ -55,141 +55,141 @@ class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
   public $_absoluteUrl;
   protected $_summary = NULL;
 
-  protected $_customGroupExtends = array('Participant'); function __construct() {
-    $this->_columns = array(
+  protected $_customGroupExtends = ['Participant']; function __construct() {
+    $this->_columns = [
       'civicrm_contact' =>
-      array('dao' => 'CRM_Contact_DAO_Contact',
+      ['dao' => 'CRM_Contact_DAO_Contact',
         'fields' =>
-        array('sort_name' =>
-          array('title' => ts('Name'),
+        ['sort_name' =>
+          ['title' => ts('Name'),
             'default' => TRUE,
             'no_repeat' => TRUE,
             'required' => TRUE,
-          ),
+          ],
           'id' =>
-          array('required' => TRUE,
-          ),
-        ),
+          ['required' => TRUE,
+          ],
+        ],
         'grouping' => 'contact-fields',
-        'filters' => array('sort_name' =>
-          array('title' => ts('Participant Name'),
+        'filters' => ['sort_name' =>
+          ['title' => ts('Participant Name'),
             'operator' => 'like',
-          ),
-        ),
-      ),
+          ],
+        ],
+      ],
       'civicrm_email' =>
-      array('dao' => 'CRM_Core_DAO_Email',
-        'fields' => array('email' =>
-          array('title' => ts('Email'),
+      ['dao' => 'CRM_Core_DAO_Email',
+        'fields' => ['email' =>
+          ['title' => ts('Email'),
             'no_repeat' => TRUE,
-          ),
-        ),
+          ],
+        ],
         'grouping' => 'contact-fields',
         'filters' =>
-        array('email' =>
-          array('title' => ts('Participant E-mail'),
+        ['email' =>
+          ['title' => ts('Participant E-mail'),
             'operator' => 'like',
-          ),
-        ),
-      ),
+          ],
+        ],
+      ],
       'civicrm_address' =>
-      array('dao' => 'CRM_Core_DAO_Address',
+      ['dao' => 'CRM_Core_DAO_Address',
         'fields' =>
-        array('street_address' => NULL,
-        ),
+        ['street_address' => NULL,
+        ],
         'grouping' => 'contact-fields',
-      ),
+      ],
       'civicrm_participant' =>
-      array('dao' => 'CRM_Event_DAO_Participant',
+      ['dao' => 'CRM_Event_DAO_Participant',
         'fields' =>
-        array('participant_id' =>
-          array('title' => ts('Participant ID'),
+        ['participant_id' =>
+          ['title' => ts('Participant ID'),
             'default' => TRUE,
             'no_display' => TRUE,
-          ),
+          ],
           'event_id' =>
-          array('title' => ts('Event'),
+          ['title' => ts('Event'),
             'type' => CRM_Utils_Type::T_STRING,
-          ),
+          ],
           'role_id' =>
-          array('title' => ts('Role'),
+          ['title' => ts('Role'),
             'default' => TRUE,
-          ),
+          ],
           'status_id' =>
-          array('title' => ts('Status'),
+          ['title' => ts('Status'),
             'default' => TRUE,
-          ),
+          ],
           'participant_register_date' =>
-          array('title' => ts('Registration Date'),
-          ),
-        ),
+          ['title' => ts('Registration Date'),
+          ],
+        ],
         'grouping' => 'event-fields',
         'filters' =>
-        array(
-          'participant_count' => array(
+        [
+          'participant_count' => [
             'title' => ts('Count'),
             'type' => CRM_Utils_Type::T_INT,
             'default_op' => 'gte',
-          ),
+          ],
           'event_id' =>
-          array('name' => 'event_id',
+          ['name' => 'event_id',
             'title' => ts('Event'),
             'operatorType' => CRM_Report_Form::OP_MULTISELECT,
             'options' => CRM_Event_PseudoConstant::event(NULL, NULL, "is_template IS NULL OR is_template = 0"),
-          ),
+          ],
           'sid' =>
-          array('name' => 'status_id',
+          ['name' => 'status_id',
             'title' => ts('Participant Status'),
             'operatorType' => CRM_Report_Form::OP_MULTISELECT,
             'options' => CRM_Event_PseudoConstant::participantStatus(NULL, NULL, 'label'),
-          ),
+          ],
           'rid' =>
-          array('name' => 'role_id',
+          ['name' => 'role_id',
             'title' => ts('Participant Role'),
             'operatorType' => CRM_Report_Form::OP_MULTISELECT,
             'options' => CRM_Event_PseudoConstant::participantRole(),
-          ),
-          'participant_register_date' => array('title' => ts('Registration Date'),
+          ],
+          'participant_register_date' => ['title' => ts('Registration Date'),
             'operatorType' => CRM_Report_Form::OP_DATE,
-          ),
-        ),
-      ),
+          ],
+        ],
+      ],
       'civicrm_event' =>
-      array('dao' => 'CRM_Event_DAO_Event',
+      ['dao' => 'CRM_Event_DAO_Event',
         'fields' =>
-        array('event_type_id' =>
-          array('title' => ts('Event Type'),
-          ),
+        ['event_type_id' =>
+          ['title' => ts('Event Type'),
+          ],
           'start_date' =>
-          array('title' => ts('Event Start Date'),
-          ),
+          ['title' => ts('Event Start Date'),
+          ],
           'end_date' =>
-          array('title' => ts('Event End Date'),
-          ),
-        ),
+          ['title' => ts('Event End Date'),
+          ],
+        ],
         'grouping' => 'event-fields',
-        'filters' => array('eid' =>
-          array('name' => 'event_type_id',
+        'filters' => ['eid' =>
+          ['name' => 'event_type_id',
             'title' => ts('Event Type'),
             'operatorType' => CRM_Report_Form::OP_MULTISELECT,
             'options' => CRM_Core_OptionGroup::values('event_type'),
-          ),
+          ],
           'event_start_date' =>
-          array('name' => 'start_date',
+          ['name' => 'start_date',
             'title' => ts('Event Start Date'),
             'operatorType' => CRM_Report_Form::OP_DATE,
-          ),
+          ],
           'event_end_date' =>
-          array('name' => 'end_date',
+          ['name' => 'end_date',
             'title' => ts('Event End Date'),
             'operatorType' => CRM_Report_Form::OP_DATE,
-          ),
-        ),
-      ),
+          ],
+        ],
+      ],
       'civicrm_line_item' =>
-      array('dao' => 'CRM_Price_DAO_LineItem',
-      ),
-    );
+      ['dao' => 'CRM_Price_DAO_LineItem',
+      ],
+    ];
 
     parent::__construct();
   }
@@ -209,18 +209,18 @@ class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
       if ($dao->count && $dao->amount) {
         $avg = $dao->amount / $dao->count;
       }
-      $statistics['counts']['count'] = array('value' => $dao->count,
+      $statistics['counts']['count'] = ['value' => $dao->count,
         'title' => 'Total Participants',
         'type' => CRM_Utils_Type::T_INT,
-      );
+      ];
     }
 
     return $statistics;
   }
 
   function select() {
-    $select = array();
-    $this->_columnHeaders = array();
+    $select = [];
+    $this->_columnHeaders = [];
 
     foreach ($this->_columns as $tableName => $table) {
       if (CRM_Utils_Array::arrayKeyExists('fields', $table)) {
@@ -241,7 +241,7 @@ class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
   }
 
   static function formRule($fields, $files, $self) {
-    $errors = $grouping = array();
+    $errors = $grouping = [];
     return $errors;
   }
 
@@ -262,7 +262,7 @@ class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
   }
 
   function where() {
-    $clauses = array();
+    $clauses = [];
     foreach ($this->_columns as $tableName => $table) {
       if (CRM_Utils_Array::arrayKeyExists('filters', $table)) {
         foreach ($table['filters'] as $fieldName => $field) {
@@ -449,7 +449,7 @@ class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
       if (CRM_Utils_Array::arrayKeyExists('civicrm_participant_role_id', $row)) {
         if ($value = $row['civicrm_participant_role_id']) {
           $roles = explode(CRM_Core_DAO::VALUE_SEPARATOR, $value);
-          $value = array();
+          $value = [];
           foreach ($roles as $role) {
             $value[$role] = CRM_Event_PseudoConstant::participantRole($role, FALSE);
           }

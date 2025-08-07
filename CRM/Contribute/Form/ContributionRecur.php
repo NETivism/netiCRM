@@ -66,7 +66,7 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
     $this->_contactID = $this->get('cid');
 
     $query = "SELECT c.payment_processor_id FROM civicrm_contribution c WHERE c.contribution_recur_id = %1 AND c.payment_processor_id IS NOT NULL && c.payment_processor_id > 0";
-    $sqlParams = array(1 => array($this->_id, 'Integer'));
+    $sqlParams = [1 => [$this->_id, 'Integer']];
     $dao = CRM_Core_DAO::executeQuery($query, $sqlParams);
     if($dao->N){
       $this->_online = TRUE;
@@ -127,7 +127,7 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
    * @return None
    */
   function setDefaultValues() {
-    $defaults = array();
+    $defaults = [];
 
     if ($this->_action & CRM_Core_Action::UPDATE) {
       if (isset($this->_id)) {
@@ -189,7 +189,7 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
     $this->assign('customDataType', 'ContributionRecur');
 
     // define the fields
-    $field = array(
+    $field = [
       'id' => ts('Recurring Contribution ID'),
       'amount' => ts('Amount'),
       'currency' => ts('Currency'),
@@ -209,7 +209,7 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
       'auto_renew' => ts('Auto Renew'),
       'contribution_status_id' => ts('Contribution Status Id'),
       'trxn_id' => ts('Transaction ID'),
-    );
+    ];
 
     // Get payment processor or Payment Processor DAO to get $activeFields
     $activeFields = NULL;
@@ -239,21 +239,21 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
 
     foreach ($field as $name => $label) {
       if (substr($name, -5) == '_date') {
-        $this->addDateTime($name, $label, FALSE, array('formatType' => 'activityDateTime'));
+        $this->addDateTime($name, $label, FALSE, ['formatType' => 'activityDateTime']);
       }
       else if( $name == 'contribution_status_id') {
         $statuses = CRM_Contribute_PseudoConstant::contributionStatus();
         $statusId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionRecur', $this->_id, 'contribution_status_id');
-        $ele = $this->add('select', 'contribution_status_id', $label, $statuses, FALSE, array(
+        $ele = $this->add('select', 'contribution_status_id', $label, $statuses, FALSE, [
           'data-origin-status' => $statusId,
-        ));
+        ]);
       }
-      else if (in_array($name, array('installments', 'cycle_day', 'amount'))) {
+      else if (in_array($name, ['installments', 'cycle_day', 'amount'])) {
         if ($name == 'cycle_day') {
-          $attr = array('max' => 28, 'min' => 1);
+          $attr = ['max' => 28, 'min' => 1];
         }
         else {
-          $attr = array('min' => 0);
+          $attr = ['min' => 0];
         }
         if ($name == 'amount') {
           $amount = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionRecur', $this->_id, 'amount');
@@ -262,7 +262,7 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
         $ele = $this->add('number', $name, $label, $attr);
       }
       else {
-        $ele = $this->add('text', $name, $label, array('size' => 20));
+        $ele = $this->add('text', $name, $label, ['size' => 20]);
       }
 
       if (empty($activeFields) || !in_array($name, $activeFields) ) {
@@ -279,29 +279,29 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
     }
 
     if (in_array('note_title', $activeFields)) {
-      $this->add('text', 'note_title', ts('Note Title'), array(
+      $this->add('text', 'note_title', ts('Note Title'), [
         'readonly' => 'readonly',
         'size' => 60,
-      ));
+      ]);
     }
     if (in_array('note_body', $activeFields)) {
-      $this->add('textarea', 'note_body', ts('Note Text'), array(
+      $this->add('textarea', 'note_body', ts('Note Text'), [
         'rows' => "4",
         'cols' => "60",
         'placeholder' => ts("Enter text here")."...",
-      ));
+      ]);
     }
 
     // define the buttons
-    $this->addButtons(array(
-        array('type' => 'upload',
+    $this->addButtons([
+        ['type' => 'upload',
           'name' => ts('Save'),
           'isDefault' => TRUE,
-        ),
-        array('type' => 'cancel',
+        ],
+        ['type' => 'cancel',
           'name' => ts('Cancel'),
-        ),
-      )
+        ],
+      ]
     );
 
     //retrieve custom field information
@@ -352,14 +352,14 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
     );
 
     // refs #17486. Date format should be YmdHis.
-    foreach (array('create_date', 'start_date', 'modified_date', 'cancel_date', 'end_date', 'next_sched_contribution', 'failure_retry_date', 'last_execute_date') as $idx) {
+    foreach (['create_date', 'start_date', 'modified_date', 'cancel_date', 'end_date', 'next_sched_contribution', 'failure_retry_date', 'last_execute_date'] as $idx) {
       if(preg_match('/\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/', $params[$idx])){
         $params[$idx] = preg_replace('/-| |:/', '', $params[$idx]);
       }
     }
 
-    $recur = array();
-    $ids = array('id' => $this->_id);
+    $recur = [];
+    $ids = ['id' => $this->_id];
     CRM_Core_DAO::commonRetrieve('CRM_Contribute_DAO_ContributionRecur', $ids, $recur);
     $isUpdate = FALSE;
     if (!empty($recur) && !empty($recur['processor_id'])) {
@@ -442,18 +442,18 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
       // If there has update.
       // Update contribution recur
       
-      $ids = array();
+      $ids = [];
 
       CRM_Contribute_BAO_ContributionRecur::add($params, $ids);
       CRM_Core_Session::setStatus(ts('Your recurring contribution has been saved.'));
     
       CRM_Contribute_BAO_ContributionRecur::addNote($this->_id, $params['note_title'], $params['note_body']);
     }
-    $urlParams = http_build_query(array(
+    $urlParams = http_build_query([
       'reset' => 1,
       'id' => $this->_id,
       'cid' => $this->_contactID,
-    ));
+    ]);
     $session = CRM_Core_Session::singleton();
     $session->replaceUserContext(CRM_Utils_System::url('civicrm/contact/view/contributionrecur', $urlParams));
   }

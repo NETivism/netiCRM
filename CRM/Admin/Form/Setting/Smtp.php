@@ -52,7 +52,7 @@ class CRM_Admin_Form_Setting_Smtp extends CRM_Admin_Form_Setting {
    */
   public function buildQuickForm() {
 
-    $outBoundOption = array('3' => ts('mail()'), '0' => ts('SMTP'), '1' => ts('Sendmail'), '2' => ts('Disable Outbound Email'));
+    $outBoundOption = ['3' => ts('mail()'), '0' => ts('SMTP'), '1' => ts('Sendmail'), '2' => ts('Disable Outbound Email')];
     $this->addRadio('outBound_option', ts('Select Mailer'), $outBoundOption);
 
     CRM_Utils_System::setTitle(ts('Settings - Outbound Mail'));
@@ -68,7 +68,7 @@ class CRM_Admin_Form_Setting_Smtp extends CRM_Admin_Form_Setting {
 
     $this->add('submit', $this->_testButtonName, ts('Save & Send Test Email'));
 
-    $this->addFormRule(array('CRM_Admin_Form_Setting_Smtp', 'formRule'));
+    $this->addFormRule(['CRM_Admin_Form_Setting_Smtp', 'formRule']);
     parent::buildQuickForm();
   }
 
@@ -101,7 +101,7 @@ class CRM_Admin_Form_Setting_Smtp extends CRM_Admin_Form_Setting {
         if (!$domainEmailAddress || $domainEmailAddress == 'info@FIXME.ORG') {
 
           $fixUrl = CRM_Utils_System::url("civicrm/admin/domain", 'action=update&reset=1');
-          return CRM_Core_Error::statusBounce(ts('The site administrator needs to enter a valid \'FROM Email Address\' in <a href="%1">Administer CiviCRM &raquo; Configure &raquo; Domain Information</a>. The email address used may need to be a valid mail account with your email service provider.', array(1 => $fixUrl)));
+          return CRM_Core_Error::statusBounce(ts('The site administrator needs to enter a valid \'FROM Email Address\' in <a href="%1">Administer CiviCRM &raquo; Configure &raquo; Domain Information</a>. The email address used may need to be a valid mail account with your email service provider.', [1 => $fixUrl]));
         }
 
         if (!$toEmail) {
@@ -114,7 +114,7 @@ class CRM_Admin_Form_Setting_Smtp extends CRM_Admin_Form_Setting {
 
         $to = '"' . $toDisplayName . '"' . "<$toEmail>";
         $from = '"' . $domainEmailName . '" <' . $domainEmailAddress . '>';
-        $testMailStatusMsg = ts('Sending test email. FROM: %1 TO: %2.<br />', array(1 => $domainEmailAddress, 2 => $toEmail));
+        $testMailStatusMsg = ts('Sending test email. FROM: %1 TO: %2.<br />', [1 => $domainEmailAddress, 2 => $toEmail]);
 
         if ($formValues['outBound_option'] == 0) {
           $subject = "Test for SMTP settings";
@@ -146,22 +146,22 @@ class CRM_Admin_Form_Setting_Smtp extends CRM_Admin_Form_Setting {
           $mailerName = 'mail';
         }
 
-        $headers = array(
+        $headers = [
           'From' => $from,
           'To' => $to,
           'Subject' => $subject,
-        );
+        ];
 
         $mailer = &Mail::factory($mailerName, $params);
 
         CRM_Core_Error::ignoreException();
         $result = $mailer->send($toEmail, $headers, $message);
         if (!is_a($result, 'PEAR_Error')) {
-          CRM_Core_Session::setStatus($testMailStatusMsg . ts('Your %1 settings are correct. A test email has been sent to your email address.', array(1 => strtoupper($mailerName))));
+          CRM_Core_Session::setStatus($testMailStatusMsg . ts('Your %1 settings are correct. A test email has been sent to your email address.', [1 => strtoupper($mailerName)]));
         }
         else {
           $message = CRM_Utils_Mail::errorMessage($mailer, $result);
-          CRM_Core_Session::setStatus($testMailStatusMsg . ts('Oops. Your %1 settings are incorrect. No test mail has been sent.', array(1 => strtoupper($mailerName))) . $message);
+          CRM_Core_Session::setStatus($testMailStatusMsg . ts('Oops. Your %1 settings are incorrect. No test mail has been sent.', [1 => strtoupper($mailerName)]) . $message);
         }
       }
     }
@@ -232,7 +232,7 @@ class CRM_Admin_Form_Setting_Smtp extends CRM_Admin_Form_Setting {
    */
   function setDefaultValues() {
     if (!$this->_defaults) {
-      $this->_defaults = array();
+      $this->_defaults = [];
 
 
       $mailingPref = CRM_Core_BAO_Preferences::mailingPreferences();

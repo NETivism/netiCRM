@@ -44,7 +44,7 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
   public $_mobilePayment;
   CONST CHARSET = 'iso-8859-1';
   static protected $_mode = NULL;
-  static protected $_params = array();
+  static protected $_params = [];
 
   /**
    * We only need one instance of this object. So we use the singleton
@@ -100,7 +100,7 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
   function checkConfig() {
     $config = CRM_Core_Config::singleton();
 
-    $error = array();
+    $error = [];
 
     if (empty($this->_paymentProcessor['user_name']) && strlen($this->_paymentProcessor['user_name']) == 0) {
       $error[] = ts('UserID is not set in the Administer CiviCRM &raquo; Payment Processor.');
@@ -143,7 +143,7 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
     $instrument_id = $params['civicrm_instrument_id'];
     if(!empty($instrument_id)){
       // civicrm_instrument_by_id($params['civicrm_instrument_id'], 'name');
-      $options = array(1 => array( $instrument_id, 'Integer'));
+      $options = [1 => [ $instrument_id, 'Integer']];
       $instrument_name = CRM_Core_DAO::singleValueQuery("SELECT v.name FROM civicrm_option_value v INNER JOIN civicrm_option_group g ON v.option_group_id = g.id WHERE g.name = 'payment_instrument' AND v.is_active = 1 AND v.value = %1;", $options);
       $this->_instrumentType = strtolower($instrument_name);
     }
@@ -151,10 +151,10 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
     $cid = $params['contributionID'];
     $iid = $params['civicrm_instrument_id'];
     if($cid && $iid){
-      $options = array(
-        1 => array($iid, 'Integer'),
-        2 => array($cid, 'Integer'),
-      );
+      $options = [
+        1 => [$iid, 'Integer'],
+        2 => [$cid, 'Integer'],
+      ];
       CRM_Core_DAO::executeQuery("UPDATE civicrm_contribution SET payment_instrument_id = %1 WHERE id = %2", $options);
     }
     CRM_Core_Error::debug_var('mobile_payment_params', $params);
@@ -196,14 +196,14 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
     if($this->_instrumentType == 'applepay'){
       $smarty = CRM_Core_Smarty::singleton();
       $smarty->assign('after_redirect', 0);
-      $payment_params = array(
+      $payment_params = [
         'cid' => $params['contributionID'],
         'provider' => $provider_name,
         'description' => $description,
         'amount' => $params['amount'],
         'qfKey' => $qfKey,
         'is_test' => $is_test,
-      );
+      ];
       if(!empty($params['participantID'])){
         $payment_params['pid'] = $params['participantID'];
       }
@@ -255,18 +255,18 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
 
     if($arg[2] == 'applepay'){
       // Refs: Document: [Requesting an Apple Pay Payment Session] https://goo.gl/CJAe4M
-      $data = array(
+      $data = [
         'merchantIdentifier' => $merchantIdentifier,
         'displayName' => 'test',
         'initiative' => 'web',
         'initiativeContext' => $domainName,
-      );
+      ];
       $host = '';
       if (!self::doCheckValidationUrl($validationUrl, $isTest, $host)) {
-        $note = ts('URL: %1 is not accessable, Where ip is %2', array(
+        $note = ts('URL: %1 is not accessable, Where ip is %2', [
           1 => $validationUrl,
           2 => $host,
-        ));
+        ]);
         $contribution = new CRM_Contribute_DAO_Contribution();
         $contribution->id = $contributionId;
         $contribution->find(TRUE);
@@ -279,10 +279,10 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
       $cafile_path = $civicrm_root.'cert/cacert.pem';
 
       $ch = curl_init($validationUrl);
-      $opt = array();
+      $opt = [];
       $opt[CURLOPT_RETURNTRANSFER] = TRUE;
       $opt[CURLOPT_POST] = TRUE;
-      $opt[CURLOPT_HTTPHEADER] = array("Content-Type: application/json");
+      $opt[CURLOPT_HTTPHEADER] = ["Content-Type: application/json"];
       $opt[CURLOPT_POSTFIELDS] = json_encode($data);
       $opt[CURLOPT_SSLCERT] = $file_path;
       $opt[CURLOPT_CAINFO] = $cafile_path;
@@ -296,10 +296,10 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
       if ($result === FALSE) {
         $errno = curl_errno($ch);
         $err = curl_error($ch);
-        $curlError = array($errno => $err);
+        $curlError = [$errno => $err];
       }
       else{
-        $curlError = array();
+        $curlError = [];
       }
 
       CRM_Core_Error::debug('applepay_filepath', $file_path);
@@ -340,20 +340,20 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
     $merchantPaymentProcessor = new CRM_Core_DAO_PaymentProcessor();
     $merchantPaymentProcessor->id = $originPaymentProcessorId;
     $merchantPaymentProcessor->find(TRUE);
-    $objects = array(
+    $objects = [
       'contribution' => $contribution,
       'payment_processor' => $merchantPaymentProcessor,
-    );
+    ];
 
     if(strstr($_GET['q'], 'applepay')){
       $type = 'applepay';
     }
     // call mobile checkout function
     $paymentProviderClass = 'CRM_Core_Payment_'.strtoupper($ppProvider);
-    if (!is_callable(array($paymentProviderClass, 'mobileCheckout'))) {
+    if (!is_callable([$paymentProviderClass, 'mobileCheckout'])) {
       return CRM_Core_Error::fatal('Function '.$paymentProviderClass.'::mobileCheckout doesn\'t exists.');
     }
-    $return = call_user_func(array($paymentProviderClass, 'mobileCheckout'), $type, $post, $objects);
+    $return = call_user_func([$paymentProviderClass, 'mobileCheckout'], $type, $post, $objects);
 
     if(!empty($return)){
 
@@ -363,7 +363,7 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
 
       // execute ipn transact
       $ipn = new CRM_Core_Payment_BaseIPN();
-      $input = $ids = $objects = array();
+      $input = $ids = $objects = [];
       if(!empty($participant_id) && !empty($event_id)){
         $input['component'] = 'event';
         $ids['participant'] = $participant_id;
@@ -387,12 +387,12 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
           $objects['contribution']->trxn_id = $ids['contribution']; // Workaround, should use MerchantOrderNo from transact result
           $transaction_result = $ipn->completeTransaction($input, $ids, $objects, $transaction);
 
-          $result = array('is_success' => 1);
+          $result = ['is_success' => 1];
         }else{
           $ipn->failed($objects, $transaction, $error);
           $note = $error . $return['message'];
           self::addNote($note, $contribution);
-          $result = array('is_success' => 0);
+          $result = ['is_success' => 0];
         }
       }
     }
@@ -406,45 +406,45 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
     $note = date("Y/m/d H:i:s "). ts("Transaction record").": \n\n".$note."\n===============================\n";
     $note_exists = CRM_Core_BAO_Note::getNote( $contribution->id, 'civicrm_contribution' );
     if(count($note_exists)){
-      $note_id = array( 'id' => reset(array_keys($note_exists)) );
+      $note_id = [ 'id' => reset(array_keys($note_exists)) ];
       $note = $note . reset($note_exists);
     }
     else{
       $note_id = NULL;
     }
-    $noteParams = array(
+    $noteParams = [
       'entity_table'  => 'civicrm_contribution',
       'note'          => $note,
       'entity_id'     => $contribution->id,
       'contact_id'    => $contribution->contact_id,
       'modified_date' => date('Ymd')
-    );
+    ];
     CRM_Core_BAO_Note::add( $noteParams, $note_id );
   }
 
-  static function getAdminFields($ppDAO){
-    $text = ts('If the provider needs server IP address, the IP address of this website is %1', array(1 => gethostbyname($_SERVER['HTTP_HOST'])));
+  static function getAdminFields($ppDAO, $form){
+    $text = ts('If the provider needs server IP address, the IP address of this website is %1', [1 => gethostbyname($_SERVER['HTTP_HOST'])]);
     CRM_Core_Session::setStatus($text);
-    return array(
-      array('name' => 'user_name',
+    return [
+      ['name' => 'user_name',
         'label' => $ppDAO->user_name_label,
-      ),
-      array('name' => 'password',
+      ],
+      ['name' => 'password',
         'label' => $ppDAO->password_label,
-      ),
-      array('name' => 'signature',
+      ],
+      ['name' => 'signature',
         'label' => $ppDAO->signature_label,
-      ),
-      array('name' => 'subject',
+      ],
+      ['name' => 'subject',
         'label' => $ppDAO->subject_label,
-      ),
-      array('name' => 'url_site',
+      ],
+      ['name' => 'url_site',
         'label' => ts('LinePay Channel ID'),
-      ),
-      array('name' => 'url_api',
+      ],
+      ['name' => 'url_api',
         'label' => ts('LinePay Channel Secret Key'),
-      ),
-    );
+      ],
+    ];
   }
 
   static function doCheckValidationUrl($url, $isTest = FALSE, &$host = NULL) {
@@ -457,13 +457,13 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
     $validateUrl = preg_replace("/\/.+$/", "", $validateUrl);
 
     if ($isTest) {
-      $accessList = array(
+      $accessList = [
         "apple-pay-gateway-cert.apple.com" => "17.171.85.7",
         "cn-apple-pay-gateway-cert.apple.com" => "101.230.204.235",
-      );
+      ];
     }
     else {
-      $accessList = array(
+      $accessList = [
         "apple-pay-gateway-nc-pod1.apple.com" => "17.171.78.7",
         "apple-pay-gateway-nc-pod2.apple.com" => "17.171.78.71",
         "apple-pay-gateway-nc-pod3.apple.com" => "17.171.78.135",
@@ -496,7 +496,7 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
         "cn-apple-pay-gateway-tj-pod2-dr.apple.com" => "60.29.205.107",
         "cn-apple-pay-gateway-tj-pod3.apple.com" => "60.29.205.108",
         "cn-apple-pay-gateway-tj-pod3-dr.apple.com" => "60.29.205.109",
-      );
+      ];
     }
 
     $host = gethostbyname($validateUrl);

@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-class CRM_Core_DAO_FinancialTrxn extends CRM_Core_DAO
+              class CRM_Core_DAO_FinancialTrxn extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -78,7 +78,7 @@ class CRM_Core_DAO_FinancialTrxn extends CRM_Core_DAO
    * @static
    */
   static $_log = true;
-  /**
+    /**
    * Gift ID
    *
    * @var int unsigned
@@ -148,7 +148,7 @@ class CRM_Core_DAO_FinancialTrxn extends CRM_Core_DAO
    * @var string
    */
   public $trxn_result_code;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -167,14 +167,14 @@ class CRM_Core_DAO_FinancialTrxn extends CRM_Core_DAO
   function &links()
   {
     if (!(self::$_links)) {
-      self::$_links = array(
+      self::$_links = [
         'from_account_id' => 'civicrm_financial_account:id',
         'to_account_id' => 'civicrm_financial_account:id',
-      );
+      ];
     }
     return self::$_links;
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -189,7 +189,7 @@ class CRM_Core_DAO_FinancialTrxn extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -198,87 +198,87 @@ class CRM_Core_DAO_FinancialTrxn extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'id' => array(
+      self::$_fields = [
+        'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'from_account_id' => array(
+                  ] ,
+        'from_account_id' => [
           'name' => 'from_account_id',
           'type' => CRM_Utils_Type::T_INT,
-          'FKClassName' => 'CRM_Core_DAO_FinancialAccount',
-        ) ,
-        'to_account_id' => array(
+                    'FKClassName' => 'CRM_Core_DAO_FinancialAccount',
+        ] ,
+        'to_account_id' => [
           'name' => 'to_account_id',
           'type' => CRM_Utils_Type::T_INT,
-          'FKClassName' => 'CRM_Core_DAO_FinancialAccount',
-        ) ,
-        'trxn_date' => array(
+                    'FKClassName' => 'CRM_Core_DAO_FinancialAccount',
+        ] ,
+        'trxn_date' => [
           'name' => 'trxn_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Trxn Date') ,
           'required' => true,
-        ) ,
-        'trxn_type' => array(
+                  ] ,
+        'trxn_type' => [
           'name' => 'trxn_type',
           'type' => CRM_Utils_Type::T_ENUM,
           'title' => ts('Trxn Type') ,
           'required' => true,
-          'enumValues' => 'Debit,Credit',
-        ) ,
-        'total_amount' => array(
+                   'enumValues' => 'Debit,Credit',
+         ] ,
+        'total_amount' => [
           'name' => 'total_amount',
           'type' => CRM_Utils_Type::T_MONEY,
           'title' => ts('Total Amount') ,
           'required' => true,
-        ) ,
-        'fee_amount' => array(
+                  ] ,
+        'fee_amount' => [
           'name' => 'fee_amount',
           'type' => CRM_Utils_Type::T_MONEY,
           'title' => ts('Transaction Fee Amount') ,
-        ) ,
-        'net_amount' => array(
+                  ] ,
+        'net_amount' => [
           'name' => 'net_amount',
           'type' => CRM_Utils_Type::T_MONEY,
           'title' => ts('Net Amount') ,
-        ) ,
-        'currency' => array(
+                  ] ,
+        'currency' => [
           'name' => 'currency',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Currency') ,
-          'maxlength' => 3,
-          'size' => CRM_Utils_Type::FOUR,
-          'import' => true,
+           'maxlength' => 3,
+           'size' => CRM_Utils_Type::FOUR,
+             'import' => true,
           'where' => 'civicrm_financial_trxn.currency',
           'headerPattern' => '/cur(rency)?/i',
           'dataPattern' => '/^[A-Z]{3}$/',
-          'export' => true,
-          'default' => 'UL',
-        ) ,
-        'payment_processor' => array(
+           'export' => true,
+            'default' => 'UL',
+          ] ,
+        'payment_processor' => [
           'name' => 'payment_processor',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Payment Processor') ,
           'required' => true,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ) ,
-        'trxn_id' => array(
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
+        'trxn_id' => [
           'name' => 'trxn_id',
           'type' => CRM_Utils_Type::T_STRING,
           'required' => true,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'trxn_result_code' => array(
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
+        'trxn_result_code' => [
           'name' => 'trxn_result_code',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Trxn Result Code') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ) ,
-      );
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -290,8 +290,8 @@ class CRM_Core_DAO_FinancialTrxn extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -311,7 +311,7 @@ class CRM_Core_DAO_FinancialTrxn extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -322,7 +322,7 @@ class CRM_Core_DAO_FinancialTrxn extends CRM_Core_DAO
           }
         }
       }
-    }
+                                              }
     return self::$_import;
   }
   /**
@@ -334,7 +334,7 @@ class CRM_Core_DAO_FinancialTrxn extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
@@ -345,7 +345,7 @@ class CRM_Core_DAO_FinancialTrxn extends CRM_Core_DAO
           }
         }
       }
-    }
+                                              }
     return self::$_export;
   }
   /**
@@ -355,9 +355,9 @@ class CRM_Core_DAO_FinancialTrxn extends CRM_Core_DAO
    */
   static function &getEnums()
   {
-    static $enums = array(
-      'trxn_type',
-    );
+    static $enums = [
+                                                                    'trxn_type',
+                                                                                                    ];
     return $enums;
   }
   /**
@@ -372,12 +372,12 @@ class CRM_Core_DAO_FinancialTrxn extends CRM_Core_DAO
   {
     static $translations = null;
     if (!$translations) {
-      $translations = array(
-        'trxn_type' => array(
-          'Debit' => ts('Debit') ,
-          'Credit' => ts('Credit') ,
-        ) ,
-      );
+      $translations = [
+                                                                    'trxn_type' => [
+                  'Debit' => ts('Debit'),
+                  'Credit' => ts('Credit'),
+                ],
+                                                                                                      ];
     }
     return $translations[$field][$value];
   }
@@ -390,7 +390,7 @@ class CRM_Core_DAO_FinancialTrxn extends CRM_Core_DAO
   static function addDisplayEnums(&$values)
   {
     $enumFields = &CRM_Core_DAO_FinancialTrxn::getEnums();
-    foreach($enumFields as $enum) {
+    foreach ($enumFields as $enum) {
       if (isset($values[$enum])) {
         $values[$enum . '_display'] = CRM_Core_DAO_FinancialTrxn::tsEnum($enum, $values[$enum]);
       }

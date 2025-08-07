@@ -31,10 +31,10 @@
  * $Id$
  *
  */
-require_once 'CRM/Core/DAO/County.php';
-require_once 'CRM/Core/DAO/StateProvince.php';
-require_once 'CRM/Core/DAO/Country.php';
-class CRM_Core_DAO_Address extends CRM_Core_DAO
+            require_once 'CRM/Core/DAO/County.php';
+          require_once 'CRM/Core/DAO/StateProvince.php';
+          require_once 'CRM/Core/DAO/Country.php';
+            class CRM_Core_DAO_Address extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -81,7 +81,7 @@ class CRM_Core_DAO_Address extends CRM_Core_DAO
    * @static
    */
   static $_log = true;
-  /**
+    /**
    * Unique Address ID
    *
    * @var int unsigned
@@ -248,7 +248,7 @@ class CRM_Core_DAO_Address extends CRM_Core_DAO
    * @var int unsigned
    */
   public $master_id;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -267,17 +267,17 @@ class CRM_Core_DAO_Address extends CRM_Core_DAO
   function &links()
   {
     if (!(self::$_links)) {
-      self::$_links = array(
+      self::$_links = [
         'contact_id' => 'civicrm_contact:id',
         'county_id' => 'civicrm_county:id',
         'state_province_id' => 'civicrm_state_province:id',
         'country_id' => 'civicrm_country:id',
         'master_id' => 'civicrm_address:id',
-      );
+      ];
     }
     return self::$_links;
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -295,7 +295,7 @@ class CRM_Core_DAO_Address extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -304,244 +304,244 @@ class CRM_Core_DAO_Address extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'id' => array(
+      self::$_fields = [
+        'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'contact_id' => array(
+                  ] ,
+        'contact_id' => [
           'name' => 'contact_id',
           'type' => CRM_Utils_Type::T_INT,
-          'FKClassName' => 'CRM_Contact_DAO_Contact',
-        ) ,
-        'location_type_id' => array(
+                    'FKClassName' => 'CRM_Contact_DAO_Contact',
+        ] ,
+        'location_type_id' => [
           'name' => 'location_type_id',
           'type' => CRM_Utils_Type::T_INT,
-        ) ,
-        'is_primary' => array(
+                  ] ,
+        'is_primary' => [
           'name' => 'is_primary',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ) ,
-        'is_billing' => array(
+                  ] ,
+        'is_billing' => [
           'name' => 'is_billing',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ) ,
-        'street_address' => array(
+                  ] ,
+        'street_address' => [
           'name' => 'street_address',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Street Address') ,
-          'maxlength' => 96,
-          'size' => CRM_Utils_Type::HUGE,
-          'import' => true,
+           'maxlength' => 96,
+           'size' => CRM_Utils_Type::HUGE,
+             'import' => true,
           'where' => 'civicrm_address.street_address',
           'headerPattern' => '/(street|address)/i',
           'dataPattern' => '/^(\d{1,5}( [0-9A-Za-z]+)+)$|^(P\.?O\.\? Box \d{1,5})$/i',
-          'export' => true,
-        ) ,
-        'street_number' => array(
+           'export' => true,
+            ] ,
+        'street_number' => [
           'name' => 'street_number',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Street Number') ,
-          'export' => true,
+                'export' => true,
           'where' => 'civicrm_address.street_number',
           'headerPattern' => '',
           'dataPattern' => '',
-        ) ,
-        'street_number_suffix' => array(
+            ] ,
+        'street_number_suffix' => [
           'name' => 'street_number_suffix',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Street Number Suffix') ,
-          'maxlength' => 8,
-          'size' => CRM_Utils_Type::EIGHT,
-          'export' => true,
+           'maxlength' => 8,
+           'size' => CRM_Utils_Type::EIGHT,
+              'export' => true,
           'where' => 'civicrm_address.street_number_suffix',
           'headerPattern' => '',
           'dataPattern' => '',
-        ) ,
-        'street_number_predirectional' => array(
+            ] ,
+        'street_number_predirectional' => [
           'name' => 'street_number_predirectional',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Street Number Predirectional') ,
-          'maxlength' => 8,
-          'size' => CRM_Utils_Type::EIGHT,
-        ) ,
-        'street_name' => array(
+           'maxlength' => 8,
+           'size' => CRM_Utils_Type::EIGHT,
+                ] ,
+        'street_name' => [
           'name' => 'street_name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Street Name') ,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-          'export' => true,
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+              'export' => true,
           'where' => 'civicrm_address.street_name',
           'headerPattern' => '',
           'dataPattern' => '',
-        ) ,
-        'street_type' => array(
+            ] ,
+        'street_type' => [
           'name' => 'street_type',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Street Type') ,
-          'maxlength' => 8,
-          'size' => CRM_Utils_Type::EIGHT,
-        ) ,
-        'street_number_postdirectional' => array(
+           'maxlength' => 8,
+           'size' => CRM_Utils_Type::EIGHT,
+                ] ,
+        'street_number_postdirectional' => [
           'name' => 'street_number_postdirectional',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Street Number Postdirectional') ,
-          'maxlength' => 8,
-          'size' => CRM_Utils_Type::EIGHT,
-        ) ,
-        'street_unit' => array(
+           'maxlength' => 8,
+           'size' => CRM_Utils_Type::EIGHT,
+                ] ,
+        'street_unit' => [
           'name' => 'street_unit',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Street Unit') ,
-          'maxlength' => 16,
-          'size' => CRM_Utils_Type::TWELVE,
-          'export' => true,
+           'maxlength' => 16,
+           'size' => CRM_Utils_Type::TWELVE,
+              'export' => true,
           'where' => 'civicrm_address.street_unit',
           'headerPattern' => '',
           'dataPattern' => '',
-        ) ,
-        'supplemental_address_1' => array(
+            ] ,
+        'supplemental_address_1' => [
           'name' => 'supplemental_address_1',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Supplemental Address 1') ,
-          'maxlength' => 96,
-          'size' => CRM_Utils_Type::HUGE,
-          'import' => true,
+           'maxlength' => 96,
+           'size' => CRM_Utils_Type::HUGE,
+             'import' => true,
           'where' => 'civicrm_address.supplemental_address_1',
           'headerPattern' => '/(supplemental(\s)?)?address(\s\d+)?/i',
           'dataPattern' => '/unit|ap(ar)?t(ment)?\s(\d|\w)+/i',
-          'export' => true,
-        ) ,
-        'supplemental_address_2' => array(
+           'export' => true,
+            ] ,
+        'supplemental_address_2' => [
           'name' => 'supplemental_address_2',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Supplemental Address 2') ,
-          'maxlength' => 96,
-          'size' => CRM_Utils_Type::HUGE,
-          'import' => true,
+           'maxlength' => 96,
+           'size' => CRM_Utils_Type::HUGE,
+             'import' => true,
           'where' => 'civicrm_address.supplemental_address_2',
           'headerPattern' => '/(supplemental(\s)?)?address(\s\d+)?/i',
           'dataPattern' => '/unit|ap(ar)?t(ment)?\s(\d|\w)+/i',
-          'export' => true,
-        ) ,
-        'supplemental_address_3' => array(
+           'export' => true,
+            ] ,
+        'supplemental_address_3' => [
           'name' => 'supplemental_address_3',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Supplemental Address 3') ,
-          'maxlength' => 96,
-          'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'city' => array(
+           'maxlength' => 96,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
+        'city' => [
           'name' => 'city',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('City') ,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-          'import' => true,
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+             'import' => true,
           'where' => 'civicrm_address.city',
           'headerPattern' => '/city/i',
           'dataPattern' => '/^[A-Za-z]+(\.?)(\s?[A-Za-z]+){0,2}$/',
-          'export' => true,
-        ) ,
-        'county_id' => array(
+           'export' => true,
+            ] ,
+        'county_id' => [
           'name' => 'county_id',
           'type' => CRM_Utils_Type::T_INT,
-          'FKClassName' => 'CRM_Core_DAO_County',
-        ) ,
-        'state_province_id' => array(
+                    'FKClassName' => 'CRM_Core_DAO_County',
+        ] ,
+        'state_province_id' => [
           'name' => 'state_province_id',
           'type' => CRM_Utils_Type::T_INT,
-          'FKClassName' => 'CRM_Core_DAO_StateProvince',
-        ) ,
-        'postal_code_suffix' => array(
+                    'FKClassName' => 'CRM_Core_DAO_StateProvince',
+        ] ,
+        'postal_code_suffix' => [
           'name' => 'postal_code_suffix',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Postal Code Suffix') ,
-          'maxlength' => 12,
-          'size' => CRM_Utils_Type::TWELVE,
-          'import' => true,
+           'maxlength' => 12,
+           'size' => CRM_Utils_Type::TWELVE,
+             'import' => true,
           'where' => 'civicrm_address.postal_code_suffix',
           'headerPattern' => '/p(ostal)\sc(ode)\ss(uffix)/i',
           'dataPattern' => '/\d?\d{4}(-\d{4})?/',
-          'export' => true,
-        ) ,
-        'postal_code' => array(
+           'export' => true,
+            ] ,
+        'postal_code' => [
           'name' => 'postal_code',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Postal Code') ,
-          'maxlength' => 12,
-          'size' => CRM_Utils_Type::TWELVE,
-          'import' => true,
+           'maxlength' => 12,
+           'size' => CRM_Utils_Type::TWELVE,
+             'import' => true,
           'where' => 'civicrm_address.postal_code',
           'headerPattern' => '/postal|zip/i',
           'dataPattern' => '/\d?\d{4}(-\d{4})?/',
-          'export' => true,
-        ) ,
-        'usps_adc' => array(
+           'export' => true,
+            ] ,
+        'usps_adc' => [
           'name' => 'usps_adc',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Usps Adc') ,
-          'maxlength' => 32,
-          'size' => CRM_Utils_Type::MEDIUM,
-        ) ,
-        'country_id' => array(
+           'maxlength' => 32,
+           'size' => CRM_Utils_Type::MEDIUM,
+                ] ,
+        'country_id' => [
           'name' => 'country_id',
           'type' => CRM_Utils_Type::T_INT,
-          'FKClassName' => 'CRM_Core_DAO_Country',
-        ) ,
-        'geo_code_1' => array(
+                    'FKClassName' => 'CRM_Core_DAO_Country',
+        ] ,
+        'geo_code_1' => [
           'name' => 'geo_code_1',
           'type' => CRM_Utils_Type::T_FLOAT,
           'title' => ts('Geo Code 1') ,
-          'import' => true,
+               'import' => true,
           'where' => 'civicrm_address.geo_code_1',
           'headerPattern' => '/geo/i',
           'dataPattern' => '',
-          'export' => true,
-        ) ,
-        'geo_code_2' => array(
+           'export' => true,
+            ] ,
+        'geo_code_2' => [
           'name' => 'geo_code_2',
           'type' => CRM_Utils_Type::T_FLOAT,
           'title' => ts('Geo Code 2') ,
-          'import' => true,
+               'import' => true,
           'where' => 'civicrm_address.geo_code_2',
           'headerPattern' => '/geo/i',
           'dataPattern' => '',
-          'export' => true,
-        ) ,
-        'timezone' => array(
+           'export' => true,
+            ] ,
+        'timezone' => [
           'name' => 'timezone',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Timezone') ,
-          'maxlength' => 8,
-          'size' => CRM_Utils_Type::EIGHT,
-        ) ,
-        'address_name' => array(
+           'maxlength' => 8,
+           'size' => CRM_Utils_Type::EIGHT,
+                ] ,
+        'address_name' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Address Name') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-          'import' => true,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+             'import' => true,
           'where' => 'civicrm_address.name',
           'headerPattern' => '/^location|(l(ocation\s)?name)$/i',
           'dataPattern' => '/^\w+$/',
-          'export' => true,
-        ) ,
-        'master_id' => array(
+           'export' => true,
+            ] ,
+        'master_id' => [
           'name' => 'master_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Master Address ID') ,
-          'import' => true,
+               'import' => true,
           'where' => 'civicrm_address.master_id',
           'headerPattern' => '',
           'dataPattern' => '',
-          'export' => true,
-          'FKClassName' => 'CRM_Core_DAO_Address',
-        ) ,
-      );
+           'export' => true,
+              'FKClassName' => 'CRM_Core_DAO_Address',
+        ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -553,9 +553,9 @@ class CRM_Core_DAO_Address extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    global $dbLocale;
+        global $dbLocale;
     return self::$_tableName . $dbLocale;
-  }
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -575,7 +575,7 @@ class CRM_Core_DAO_Address extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -586,10 +586,13 @@ class CRM_Core_DAO_Address extends CRM_Core_DAO
           }
         }
       }
-      self::$_import = array_merge(self::$_import, CRM_Core_DAO_County::import(true));
-      self::$_import = array_merge(self::$_import, CRM_Core_DAO_StateProvince::import(true));
-      self::$_import = array_merge(self::$_import, CRM_Core_DAO_Country::import(true));
-    }
+                                    self::$_import = array_merge( self::$_import,
+      CRM_Core_DAO_County::import( true ) );
+                        self::$_import = array_merge( self::$_import,
+      CRM_Core_DAO_StateProvince::import( true ) );
+                        self::$_import = array_merge( self::$_import,
+      CRM_Core_DAO_Country::import( true ) );
+                                  }
     return self::$_import;
   }
   /**
@@ -601,7 +604,7 @@ class CRM_Core_DAO_Address extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
@@ -612,10 +615,13 @@ class CRM_Core_DAO_Address extends CRM_Core_DAO
           }
         }
       }
-      self::$_export = array_merge(self::$_export, CRM_Core_DAO_County::export(true));
-      self::$_export = array_merge(self::$_export, CRM_Core_DAO_StateProvince::export(true));
-      self::$_export = array_merge(self::$_export, CRM_Core_DAO_Country::export(true));
-    }
+                                    self::$_export = array_merge( self::$_export,
+      CRM_Core_DAO_County::export( true ) );
+                        self::$_export = array_merge( self::$_export,
+      CRM_Core_DAO_StateProvince::export( true ) );
+                        self::$_export = array_merge( self::$_export,
+      CRM_Core_DAO_Country::export( true ) );
+                                  }
     return self::$_export;
   }
 }

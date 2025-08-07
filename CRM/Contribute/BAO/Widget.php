@@ -51,7 +51,7 @@ class CRM_Contribute_BAO_Widget extends CRM_Contribute_DAO_Widget {
   public static function getContributionPageData($contributionPageID) {
     $config = CRM_Core_Config::singleton();
 
-    $data = array();
+    $data = [];
     $data['currencySymbol'] = $config->defaultCurrencySymbol;
 
     if (empty($contributionPageID) ||
@@ -84,12 +84,12 @@ class CRM_Contribute_BAO_Widget extends CRM_Contribute_DAO_Widget {
     $data['num_donors'] = $data['money_raised'] = 0;
 
     // prepare all contribution page variable
-    $page = array();
+    $page = [];
     CRM_Contribute_BAO_ContributionPage::setValues($contributionPageID, $page);
 
     // total donors
     $query = "SELECT count(id) as count, SUM(total_amount) as total FROM civicrm_contribution  WHERE is_test = 0 AND contribution_status_id = 1 AND contribution_page_id = %1 GROUP BY contribution_page_id";
-    $dao = CRM_Core_DAO::executeQuery($query, array(1 => array($contributionPageID, 'Integer')));
+    $dao = CRM_Core_DAO::executeQuery($query, [1 => [$contributionPageID, 'Integer']]);
     $dao->fetch();
     $data['num_donors'] = $dao->count;
     $data['money_raised'] = $dao->total;
@@ -122,7 +122,7 @@ class CRM_Contribute_BAO_Widget extends CRM_Contribute_DAO_Widget {
           $startDate = CRM_Utils_Date::unixTime($page['start_date']);
           if ($startDate && $startDate >= $now) {
             $data['is_active'] = FALSE;
-            $data['campaign_start'] = ts('Campaign starts on %1', array(1 => CRM_Utils_Date::customFormat($page['start_date'], $config->dateformatFull)));
+            $data['campaign_start'] = ts('Campaign starts on %1', [1 => CRM_Utils_Date::customFormat($page['start_date'], $config->dateformatFull)]);
           }
         }
 
@@ -132,10 +132,10 @@ class CRM_Contribute_BAO_Widget extends CRM_Contribute_DAO_Widget {
             $data['is_active'] = FALSE;
           }
           elseif ($startDate >= $now) {
-            $data['campaign_start'] = ts('Campaign starts on %1', array(1 => CRM_Utils_Date::customFormat($page['start_date'], $config->dateformatFull)));
+            $data['campaign_start'] = ts('Campaign starts on %1', [1 => CRM_Utils_Date::customFormat($page['start_date'], $config->dateformatFull)]);
           }
           else {
-            $data['campaign_start'] = ts('Campaign ends on %1', array(1 => CRM_Utils_Date::customFormat($page['end_date'], $config->dateformatFull)));
+            $data['campaign_start'] = ts('Campaign ends on %1', [1 => CRM_Utils_Date::customFormat($page['end_date'], $config->dateformatFull)]);
           }
         }
       }
@@ -155,19 +155,19 @@ class CRM_Contribute_BAO_Widget extends CRM_Contribute_DAO_Widget {
       $data['money_raised_percentage'] = $achievement['percent']."%";
       if ($achievement['type'] == 'recuramount') {
         $data['money_target_display'] = $achievement['label'] . ': ' . CRM_Utils_Money::format($achievement['goal']);
-        $data['money_raised'] = ts('%1 achieved', array(1 => CRM_Utils_Money::format($achievement['current'])));
+        $data['money_raised'] = ts('%1 achieved', [1 => CRM_Utils_Money::format($achievement['current'])]);
       }
       elseif ($achievement['type'] == 'amount') {
         $data['money_target_display'] = $achievement['label'] . ': ' . CRM_Utils_Money::format($achievement['goal']);
-        $data['money_raised'] = ts('%1 achieved', array(1 => CRM_Utils_Money::format($achievement['current'])));
+        $data['money_raised'] = ts('%1 achieved', [1 => CRM_Utils_Money::format($achievement['current'])]);
       }
       elseif ($achievement['type'] == 'recurring') {
         $data['money_target_display'] = $achievement['label'] . ': ' . $achievement['goal'] ." ". ts("People");
-        $data['money_raised'] = ts('%1 achieved', array(1 => $achievement['current'])) . " ". ts("People");
+        $data['money_raised'] = ts('%1 achieved', [1 => $achievement['current']]) . " ". ts("People");
       }
     }
     else {
-      $data['money_raised'] = ts('Raised %1', array(1 => CRM_Utils_Money::format($data['money_raised'])));
+      $data['money_raised'] = ts('Raised %1', [1 => CRM_Utils_Money::format($data['money_raised'])]);
     }
 
     $data['money_low'] = 0;
@@ -178,7 +178,7 @@ class CRM_Contribute_BAO_Widget extends CRM_Contribute_DAO_Widget {
     // if is_active is false, show this link and hide the contribute button
     $data['homepage_link'] = $widget->url_homepage;
 
-    $data['colors'] = array();
+    $data['colors'] = [];
 
     $data['colors']["title"] = $widget->color_title;
     $data['colors']["button"] = $widget->color_button;

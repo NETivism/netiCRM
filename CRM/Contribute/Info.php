@@ -46,46 +46,46 @@ class CRM_Contribute_Info extends CRM_Core_Component_Info {
 
   // docs inherited from interface
   public function getInfo() {
-    return array('name' => 'CiviContribute',
+    return ['name' => 'CiviContribute',
       'translatedName' => ts('CiviContribute'),
       'title' => ts('CiviCRM Contribution Engine'),
       'search' => 1,
       'showActivitiesInCore' => 1,
-    );
+    ];
   }
 
   // docs inherited from interface
   public function getPermissions() {
-    return array('access CiviContribute',
+    return ['access CiviContribute',
       'edit contributions',
       'make online contributions',
       'delete in CiviContribute',
-    );
+    ];
   }
 
 
   // docs inherited from interface
   public function getUserDashboardElement() {
-    return array('name' => ts('Contributions'),
+    return ['name' => ts('Contributions'),
       'title' => ts('Your Contribution(s)'),
-      'perm' => array('make online contributions'),
+      'perm' => ['make online contributions'],
       'weight' => 10,
-    );
+    ];
   }
 
   // docs inherited from interface
   public function registerTab() {
-    return array('title' => ts('Contributions'),
+    return ['title' => ts('Contributions'),
       'url' => 'contribution',
       'weight' => 20,
-    );
+    ];
   }
 
   // docs inherited from interface
   public function registerAdvancedSearchPane() {
-    return array('title' => ts('Contributions'),
+    return ['title' => ts('Contributions'),
       'weight' => 20,
-    );
+    ];
   }
 
   // docs inherited from interface
@@ -98,11 +98,11 @@ class CRM_Contribute_Info extends CRM_Core_Component_Info {
     if (CRM_Core_Permission::check('access CiviContribute') &&
       CRM_Core_Permission::check('edit contributions')
     ) {
-      $shortCuts = array_merge($shortCuts, array(array('path' => 'civicrm/contribute/add',
+      $shortCuts = array_merge($shortCuts, [['path' => 'civicrm/contribute/add',
             'query' => "reset=1&action=add&context=standalone",
             'ref' => 'new-contribution',
             'title' => ts('Contribution'),
-          )));
+          ]]);
     }
   }
 }

@@ -95,7 +95,7 @@ class CRM_Campaign_Form_Task extends CRM_Core_Form {
     $taskName = CRM_Utils_Array::value($this->_task, $campaignTasks);
     $this->assign('taskName', $taskName);
 
-    $ids = array();
+    $ids = [];
     if ($values['radio_ts'] == 'ts_sel') {
       foreach ($values as $name => $value) {
         list($id, $additionalID) = CRM_Core_Form::cbExtract($name);
@@ -169,15 +169,15 @@ class CRM_Campaign_Form_Task extends CRM_Core_Form {
    * @access public
    */
   function addDefaultButtons($title, $nextType = 'next', $backType = 'back', $submitOnce = null) {
-    $this->addButtons(array(
-        array('type' => $nextType,
+    $this->addButtons([
+        ['type' => $nextType,
           'name' => $title,
           'isDefault' => TRUE,
-        ),
-        array('type' => $backType,
+        ],
+        ['type' => $backType,
           'name' => ts('Cancel'),
-        ),
-      )
+        ],
+      ]
     );
   }
 }

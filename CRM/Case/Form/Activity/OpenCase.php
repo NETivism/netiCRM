@@ -75,7 +75,7 @@ class CRM_Case_Form_Activity_OpenCase {
    * @return None
    */
   function setDefaultValues(&$form) {
-    $defaults = array();
+    $defaults = [];
     if ($form->_context == 'caseActivity') {
       return $defaults;
     }
@@ -127,7 +127,7 @@ class CRM_Case_Form_Activity_OpenCase {
       $caseStatus, TRUE
     );
 
-    $form->add('text', 'duration', ts('Duration'), array('size' => 4, 'maxlength' => 8));
+    $form->add('text', 'duration', ts('Duration'), ['size' => 4, 'maxlength' => 8]);
     $form->addRule('duration', ts('Please enter the duration as number of minutes (integers only).'), 'positiveInteger');
 
 
@@ -136,7 +136,7 @@ class CRM_Case_Form_Activity_OpenCase {
       $form->assign('clientName', $displayName);
     }
 
-    $form->addDate('start_date', ts('Case Start Date'), TRUE, array('formatType' => 'activityDate'));
+    $form->addDate('start_date', ts('Case Start Date'), TRUE, ['formatType' => 'activityDate']);
 
     $form->add('select', 'medium_id', ts('Medium'),
       CRM_Case_PseudoConstant::encounterMedium(), TRUE
@@ -149,19 +149,19 @@ class CRM_Case_Form_Activity_OpenCase {
       CRM_Core_DAO::getAttribute('CRM_Activity_DAO_Activity', 'details')
     );
 
-    $form->addButtons(array(
-        array('type' => 'upload',
+    $form->addButtons([
+        ['type' => 'upload',
           'name' => ts('Save'),
           'isDefault' => TRUE,
-        ),
-        array('type' => 'upload',
+        ],
+        ['type' => 'upload',
           'name' => ts('Save and New'),
           'subName' => 'new',
-        ),
-        array('type' => 'cancel',
+        ],
+        ['type' => 'cancel',
           'name' => ts('Cancel'),
-        ),
-      )
+        ],
+      ]
     );
   }
 
@@ -214,7 +214,7 @@ class CRM_Case_Form_Activity_OpenCase {
       return TRUE;
     }
 
-    $errors = array();
+    $errors = [];
     //check if contact is selected in standalone mode
     if (isset($fields['contact_select_id'][1]) && !$fields['contact_select_id'][1]) {
       $errors['contact[1]'] = ts('Please select a contact or create new contact');
@@ -262,16 +262,16 @@ class CRM_Case_Form_Activity_OpenCase {
         if (empty($cliId)) {
           CRM_Core_Error::fatal('contact_id cannot be empty');
         }
-        $contactParams = array('case_id' => $params['case_id'],
+        $contactParams = ['case_id' => $params['case_id'],
           'contact_id' => $cliId,
-        );
+        ];
         CRM_Case_BAO_Case::addCaseToContact($contactParams);
       }
     }
     else {
-      $contactParams = array('case_id' => $params['case_id'],
+      $contactParams = ['case_id' => $params['case_id'],
         'contact_id' => $form->_currentlyViewedContactId,
-      );
+      ];
       CRM_Case_BAO_Case::addCaseToContact($contactParams);
       $client = $form->_currentlyViewedContactId;
     }
@@ -281,7 +281,7 @@ class CRM_Case_Form_Activity_OpenCase {
     // 2. initiate xml processor
     $xmlProcessor = new CRM_Case_XMLProcessor_Process();
 
-    $xmlProcessorParams = array('clientID' => $client,
+    $xmlProcessorParams = ['clientID' => $client,
       'creatorID' => $form->_currentUserId,
       'standardTimeline' => 1,
       'activityTypeName' => 'Open Case',
@@ -292,7 +292,7 @@ class CRM_Case_Form_Activity_OpenCase {
       'duration' => $params['duration'],
       'medium_id' => $params['medium_id'],
       'details' => $params['activity_details'],
-    );
+    ];
 
     if (CRM_Utils_Array::arrayKeyExists('custom', $params) && is_array($params['custom'])) {
       $xmlProcessorParams['custom'] = $params['custom'];

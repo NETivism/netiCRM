@@ -179,7 +179,7 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
     $this->_exportButtonName = $this->getButtonName('next', 'task_3');
 
     $this->_done = FALSE;
-    $this->defaults = array();
+    $this->defaults = [];
 
     /* 
          * we allow the controller to set force/reset externally, useful when we are being 
@@ -207,7 +207,7 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
       $this->_eventId = $this->_formValues['event_id']; 
     }
     if ($this->_eventId) {
-      $params = array('id' => $this->_eventId);
+      $params = ['id' => $this->_eventId];
       CRM_Event_BAO_Event::retrieve($params, $this->_event);
 
       if ($this->_event['id']) {
@@ -221,9 +221,9 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
         $this->assign('participantSummary', $summary);
 
         // prepopulate form
-        $prePopulate = array(
-          array('id' => $event, 'name' => $this->_event['title']),
-        );
+        $prePopulate = [
+          ['id' => $event, 'name' => $this->_event['title']],
+        ];
         $this->assign('eventPrepopulate', json_encode($prePopulate));
 
         // online registration links
@@ -306,7 +306,7 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
 
     $rows = $this->get('rows');
     if (is_array($rows)) {
-      $lineItems = $participantIds = array();
+      $lineItems = $participantIds = [];
 
 
       if (!$this->_single) {
@@ -334,44 +334,44 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
       $permission = CRM_Core_Permission::getPermission();
 
 
-      $tasks = array('' => ts('- actions -')) + CRM_Event_Task::permissionedTaskTitles($permission);
+      $tasks = ['' => ts('- actions -')] + CRM_Event_Task::permissionedTaskTitles($permission);
       if (isset($this->_ssID)) {
         if ($permission == CRM_Core_Permission::EDIT) {
 
           $tasks = $tasks + CRM_Event_Task::optionalTaskTitle();
         }
 
-        $savedSearchValues = array('id' => $this->_ssID,
+        $savedSearchValues = ['id' => $this->_ssID,
           'name' => CRM_Contact_BAO_SavedSearch::getName($this->_ssID, 'title'),
-        );
+        ];
         $this->assign_by_ref('savedSearch', $savedSearchValues);
         $this->assign('ssID', $this->_ssID);
       }
 
       $this->add('select', 'task', ts('Actions:') . ' ', $tasks);
       $this->add('submit', $this->_actionButtonName, ts('Go'),
-        array('class' => 'form-submit',
+        ['class' => 'form-submit',
           'id' => 'Go',
           'onclick' => "return checkPerformAction('mark_x', '" . $this->getName() . "', 0);",
-        )
+        ]
       );
 
       // override default task
       $this->addElement('hidden', 'task_force', 3);
       $this->add('submit', $this->_exportButtonName, ts('Export Participants'),
-        array('class' => 'form-submit',
+        ['class' => 'form-submit',
           'id' => 'export',
-        )
+        ]
       );
 
       $this->add('submit', $this->_printButtonName, ts('Print'),
-        array('class' => 'form-submit',
+        ['class' => 'form-submit',
           'onclick' => "return checkPerformAction('mark_x', '" . $this->getName() . "', 1);",
-        )
+        ]
       );
 
       // need to perform tasks on all or selected items ? using radio_ts(task selection) for it
-      $selectedRowsRadio = $this->addElement('radio', 'radio_ts', NULL, '', 'ts_sel', array('checked' => 'checked'));
+      $selectedRowsRadio = $this->addElement('radio', 'radio_ts', NULL, '', 'ts_sel', ['checked' => 'checked']);
       $this->assign('ts_sel_id', $selectedRowsRadio->_attributes['id']);
 
       $allRowsRadio = $this->addElement('radio', 'radio_ts', NULL, '', 'ts_all');
@@ -379,12 +379,12 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
     }
 
     // add buttons
-    $this->addButtons(array(
-        array('type' => 'refresh',
+    $this->addButtons([
+        ['type' => 'refresh',
           'name' => ts('Search'),
           'isDefault' => TRUE,
-        ),
-      ));
+        ],
+      ]);
   }
 
   /**
@@ -514,7 +514,7 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
    * @see valid_date
    */
   function addRules() {
-    $this->addFormRule(array('CRM_Event_Form_Search', 'formRule'));
+    $this->addFormRule(['CRM_Event_Form_Search', 'formRule']);
   }
 
   /**
@@ -528,7 +528,7 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
    * @access public
    */
   static function formRule($fields) {
-    $errors = array();
+    $errors = [];
 
     if (!empty($fields['event_id']) && !is_numeric($fields['event_id'])) {
       if (strstr($fields['event_id'], ',')) {
@@ -574,7 +574,7 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
    * @return array the default array reference
    */
   function &setDefaultValues() {
-    $defaults = array();
+    $defaults = [];
     $defaults = $this->_formValues;
     self::fixEventIdDefaultValues($defaults);
     self::fixEventTypeIdDefaultValues($defaults);
@@ -613,9 +613,9 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
       }
       elseif (is_numeric($status)) {
         $status = (int) $status;
-        $statusTypes = array($status => CRM_Event_PseudoConstant::participantStatus($status));
+        $statusTypes = [$status => CRM_Event_PseudoConstant::participantStatus($status)];
       }
-      $status = array();
+      $status = [];
       foreach ($statusTypes as $key => $value) {
         $status[$key] = $key;
       }
@@ -634,9 +634,9 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
       }
       elseif (is_numeric($role)) {
         $role = (int) $role;
-        $roleTypes = array($role => CRM_Event_PseudoConstant::participantRole($role));
+        $roleTypes = [$role => CRM_Event_PseudoConstant::participantRole($role)];
       }
-      $role = array();
+      $role = [];
       foreach ($roleTypes as $key => $value) {
         $role[$key] = $key;
       }
@@ -644,14 +644,14 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
     }
 
     if (is_array($_REQUEST['participant_status_id'])) {
-      $this->_formValues['participant_status_id'] = array();
+      $this->_formValues['participant_status_id'] = [];
       foreach ($_REQUEST['participant_status_id'] as $key => $value) {
         $this->_formValues['participant_status_id'][$value] = $value;
       }
     }
 
     if (is_array($_REQUEST['participant_role_id'])) {
-      $this->_formValues['participant_role_id'] = array();
+      $this->_formValues['participant_role_id'] = [];
       foreach ($_REQUEST['participant_role_id'] as $key => $value) {
         $this->_formValues['participant_role_id'][$value] = $value;
       }
@@ -682,7 +682,7 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
           }
         }
         else {
-          $this->_formValues['participant_fee_id'] = array($feeLevel);
+          $this->_formValues['participant_fee_id'] = [$feeLevel];
         }
       }
     }
@@ -716,16 +716,16 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
 
   public static function fixEventIdDefaultValues($defaults) {
     if (!empty($defaults['event_id'])) {
-      $prePopulate = array();
+      $prePopulate = [];
       if (is_numeric($defaults['event_id'])) {
         $eventTitle = CRM_Event_BAO_Event::retrieveField($defaults['event_id'], 'title');
-        $prePopulate[] = array('id' => trim($defaults['event_id']), 'name' => $eventTitle);
+        $prePopulate[] = ['id' => trim($defaults['event_id']), 'name' => $eventTitle];
       }
       else {
         $ids = explode(',', $defaults['event_id']);
         foreach($ids as $id) {
           $eventTitle = CRM_Event_BAO_Event::retrieveField($id, 'title');
-          $prePopulate[] = array('id' => trim($id), 'name' => $eventTitle);
+          $prePopulate[] = ['id' => trim($id), 'name' => $eventTitle];
         }
       }
       $template = CRM_Core_Smarty::singleton();
@@ -735,15 +735,15 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
 
   public static function fixEventTypeIdDefaultValues($defaults) {
     if (!empty($defaults['event_type_id'])) {
-      $prePopulate = array();
+      $prePopulate = [];
       $types = CRM_Event_PseudoConstant::eventType();
       if (is_numeric($defaults['event_type_id'])) {
-        $prePopulate[] = array('id' => trim($defaults['event_type_id']), 'name' => $types[$defaults['event_type_id']]);
+        $prePopulate[] = ['id' => trim($defaults['event_type_id']), 'name' => $types[$defaults['event_type_id']]];
       }
       else {
         $ids = explode(',', $defaults['event_type_id']);
         foreach($ids as $id) {
-          $prePopulate[] = array('id' => trim($id), 'name' => $types[$id]);
+          $prePopulate[] = ['id' => trim($id), 'name' => $types[$id]];
         }
       }
       $template = CRM_Core_Smarty::singleton();

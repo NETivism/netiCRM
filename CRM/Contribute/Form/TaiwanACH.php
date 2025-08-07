@@ -34,7 +34,7 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
 
     $this->set('type', 'Contribution');
     CRM_Custom_Form_CustomData::preProcess($this);
-    $this->addFormRule(array('CRM_Contribute_Form_TaiwanACH', 'formRule'), $this);
+    $this->addFormRule(['CRM_Contribute_Form_TaiwanACH', 'formRule'], $this);
   }
 
   function buildQuickForm() {
@@ -49,22 +49,22 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
     }
     $this->addSelect('ach_contribution_page_id', ts('Contribution Page'), $pages, NULL, TRUE);
     $this->addMoney('ach_amount', ts('Total Amount'), TRUE);
-    $this->addSelect('ach_payment_type', ts('ACH Type').' - '.ts('Payment Instrument'), array(
+    $this->addSelect('ach_payment_type', ts('ACH Type').' - '.ts('Payment Instrument'), [
       '' => ts('-- select --'),
       'ACH Bank' => ts('Bank'),
       'ACH Post' => ts('Post Office'),
-    ), NULL, TRUE);
+    ], NULL, TRUE);
 
     $this->addSelect('ach_processor_id', ts('Payment Processor'), $this->_processors, NULL, TRUE);
 
     $bankCode = CRM_Contribute_PseudoConstant::taiwanACH();
-    $this->addSelect('ach_bank_code', ts('Bank Identification Number'), array('' => ts('-- select --')) + $bankCode);
+    $this->addSelect('ach_bank_code', ts('Bank Identification Number'), ['' => ts('-- select --')] + $bankCode);
 
-    $this->addSelect('ach_postoffice_acc_type', ts('Post Office Account Type'), array(
+    $this->addSelect('ach_postoffice_acc_type', ts('Post Office Account Type'), [
       '' => ts('-- select --'),
       1 => ts('Bank book'),
       2 => ts('Postal transfer'),
-    ));
+    ]);
 
     $stampVerification = CRM_Contribute_PseudoConstant::taiwanACHStampVerification();
     if ($this->_action & CRM_Core_Action::ADD) {
@@ -75,25 +75,25 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
     $this->add('text', 'ach_bank_branch', ts('Bank Branch'));
     $this->add('text', 'ach_bank_account', ts('ACH').' - '.ts('Account Number'), NULL, TRUE);
     $this->add('text', 'ach_identifier_number', ts('ACH').' - '.ts('Legal Identifier').'/'.ts('SIC Code'), NULL, TRUE);
-    $this->addCheckbox('is_custom_order_number', '', array(ts('Migrate from other ACH system?') => 1));
+    $this->addCheckbox('is_custom_order_number', '', [ts('Migrate from other ACH system?') => 1]);
     $this->add('text', 'ach_order_number', ts('ACH').' - '.ts('User Number'));
 
     CRM_Custom_Form_CustomData::buildQuickForm($this);
 
-    $this->addButtons(array(
-        array('type' => 'upload',
+    $this->addButtons([
+        ['type' => 'upload',
           'name' => ts('Save'),
           'isDefault' => TRUE,
-        ),
-        array('type' => 'cancel',
+        ],
+        ['type' => 'cancel',
           'name' => ts('Cancel'),
-        ),
-      )
+        ],
+      ]
     );
   }
 
   public static function formRule($fields, $files, $self) {
-    $errors = array();
+    $errors = [];
 
     //check if contact is selected in standalone mode
     if (isset($fields['contact_select_id'][1]) && !$fields['contact_select_id'][1]) {
@@ -101,10 +101,10 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
     }
 
     if ($fields['ach_payment_type'] == 'ACH Bank' && empty($fields['ach_bank_code'])) {
-      $errors['ach_bank_code'] = ts('%1 is a required field.', array(1 => ts('Bank Code')));
+      $errors['ach_bank_code'] = ts('%1 is a required field.', [1 => ts('Bank Code')]);
     }
     if ($fields['ach_payment_type'] == 'ACH Post' && empty($fields['ach_postoffice_acc_type'])) {
-      $errors['ach_postoffice_acc_type'] = ts('%1 is a required field.', array(1 => ts('Post Office Account Type')));
+      $errors['ach_postoffice_acc_type'] = ts('%1 is a required field.', [1 => ts('Post Office Account Type')]);
     }
 
     if($fields['ach_identifier_number']) {
@@ -116,19 +116,19 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
         $err = TRUE;
       }
       if ($err) {
-        $errors['ach_identifier_number'] = ts('%1 has error on format.', array(1 => ts('ACH').' - '.ts('Legal Identifier')));
+        $errors['ach_identifier_number'] = ts('%1 has error on format.', [1 => ts('ACH').' - '.ts('Legal Identifier')]);
       }
     }
 
     if(!empty($fields['is_custom_order_number']) && empty($fields['ach_order_number'])) {
-      $errors['ach_order_number'] = ts('%1 is a required field.', array(1 => ts('User Number')));
+      $errors['ach_order_number'] = ts('%1 is a required field.', [1 => ts('User Number')]);
     }
 
     return $errors;
   }
 
   function setDefaultValues() {
-    $defaults = array();
+    $defaults = [];
     if ($this->_id && $this->_contributionRecurId) {
       $achValues = CRM_Contribute_BAO_TaiwanACH::getValue($this->_contributionRecurId);
       foreach($achValues as $idx => $val) {
@@ -165,13 +165,13 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
       $this->_contactId = $submittedValues['contact_select_id'][1];
     }
 
-    $params = array();
+    $params = [];
     if ($this->_contributionRecurId) {
       $params['contribution_recur_id'] = $this->_contributionRecurId;
     }
     $params['contact_id'] = $this->_contactId;
     foreach($submittedValues as $key => $value) {
-      if (in_array($key, array('hidden_custom', 'MAX_FILE_SIZE', 'qfKey', 'contact', 'contact_select_id', 'profiles'))) {
+      if (in_array($key, ['hidden_custom', 'MAX_FILE_SIZE', 'qfKey', 'contact', 'contact_select_id', 'profiles'])) {
         continue;
       }
       if (strstr($key, 'custom_')) {

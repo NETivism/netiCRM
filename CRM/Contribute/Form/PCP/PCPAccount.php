@@ -178,7 +178,7 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
       if (CRM_Core_BAO_UFGroup::filterUFGroups($id, $this->_contactID)) {
         $fields = CRM_Core_BAO_UFGroup::getFields($id, FALSE, CRM_Core_Action::ADD);
       }
-      $this->addFormRule(array('CRM_Contribute_Form_PCP_PCPAccount', 'formRule'), $this);
+      $this->addFormRule(['CRM_Contribute_Form_PCP_PCPAccount', 'formRule'], $this);
     }
     else {
 			if (!$session->get('userID')) {
@@ -210,24 +210,24 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
     $this->assign('campaignName', CRM_Contribute_PseudoConstant::contributionPage($this->_pageId));
 
     if ($this->_single) {
-      $button = array(array('type' => 'upload',
+      $button = [['type' => 'upload',
           'name' => ts('Save'),
           'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
           'isDefault' => TRUE,
-        ),
-        array('type' => 'cancel',
+        ],
+        ['type' => 'cancel',
           'name' => ts('Cancel'),
-        ),
-      );
+        ],
+      ];
     }
     else {
-      $button[] = array('type' => 'upload',
+      $button[] = ['type' => 'upload',
         'name' => ts('Continue >>'),
         'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
         'isDefault' => TRUE,
-      );
+      ];
     }
-    $this->addFormRule(array('CRM_Contribute_Form_PCP_PCPAccount', 'formRule'), $this);
+    $this->addFormRule(['CRM_Contribute_Form_PCP_PCPAccount', 'formRule'], $this);
     $this->addButtons($button);
     $this->assign('isPcP', TRUE);
   }
@@ -244,7 +244,7 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
    * @static
    */
   static function formRule($fields, $files, $self) {
-    $errors = array();
+    $errors = [];
     if (!CRM_Core_Permission::check('access CiviContribute')) {
       foreach ($fields as $key => $value) {
         if (strpos($key, 'email-') !== FALSE && !empty($value)) {
@@ -283,7 +283,7 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
             $isPrimary = 1;
           }
 
-          $params['email'] = array();
+          $params['email'] = [];
           $params['email'][1]['email'] = $value;
           $params['email'][1]['location_type_id'] = $locTypeId;
           $params['email'][1]['is_primary'] = $isPrimary;

@@ -30,17 +30,17 @@ require_once 'api/v2/Event.php';
 require_once 'CiviTest/CiviUnitTestCase.php';
 class api_v2_EventTest extends CiviUnitTestCase {
   protected $_params; function get_info() {
-    return array(
+    return [
       'name' => 'Event Create',
       'description' => 'Test all Event Create API methods.',
       'group' => 'CiviCRM API Tests',
-    );
+    ];
   }
 
   function setUp() {
     parent::setUp();
 
-    $this->_params = array(
+    $this->_params = [
       'title' => 'Annual CiviCRM meet',
       'summary' => 'If you have any CiviCRM realted issues or want to track where CiviCRM is heading, Sign up now',
       'description' => 'This event is intended to give brief idea about progess of CiviCRM and giving solutions to common user issues',
@@ -56,13 +56,13 @@ class api_v2_EventTest extends CiviUnitTestCase {
       'is_monetory' => 0,
       'is_active' => 1,
       'is_show_location' => 0,
-    );
+    ];
 
-    $params = array(
+    $params = [
       'title' => 'Annual CiviCRM meet',
       'event_type_id' => 1,
       'start_date' => 20081021,
-    );
+    ];
 
     $this->_event = civicrm_event_create($params);
     $this->_eventId = $this->_event['event_id'];
@@ -85,7 +85,7 @@ class api_v2_EventTest extends CiviUnitTestCase {
   }
 
   function testGetEventEmptyParams() {
-    $params = array();
+    $params = [];
     $result = civicrm_event_get($params);
 
     $this->assertEquals($result['is_error'], 1);
@@ -93,13 +93,13 @@ class api_v2_EventTest extends CiviUnitTestCase {
   }
 
   function testGetEventById() {
-    $params = array('id' => $this->_event['event_id']);
+    $params = ['id' => $this->_event['event_id']];
     $result = civicrm_event_get($params);
     $this->assertEquals($result['event_title'], 'Annual CiviCRM meet');
   }
 
   function testGetEventByEventTitle() {
-    $params = array('title' => 'Annual CiviCRM meet');
+    $params = ['title' => 'Annual CiviCRM meet'];
 
     $result = civicrm_event_get($params);
     $this->assertEquals($result['id'], $this->_event['event_id']);
@@ -114,7 +114,7 @@ class api_v2_EventTest extends CiviUnitTestCase {
   }
 
   function testCreateEventEmptyParams() {
-    $params = array();
+    $params = [];
     $result = civicrm_event_create($params);
     $this->assertEquals($result['is_error'], 1);
     $this->assertEquals('Mandatory param missing: start_date', $result['error_message'], 'In line ' . __LINE__);
@@ -158,22 +158,22 @@ class api_v2_EventTest extends CiviUnitTestCase {
   }
 
   function testDeleteEmptyParams() {
-    $params = array();
+    $params = [];
     $result = &civicrm_event_delete($params);
     $this->assertEquals($result['is_error'], 1);
   }
 
   function testDelete() {
-    $params = array('event_id' => $this->_eventId);
+    $params = ['event_id' => $this->_eventId];
     $result = &civicrm_event_delete($params);
     $this->assertNotEquals($result['is_error'], 1);
   }
 
   function testDeleteWithWrongEventId() {
-    $params = array('event_id' => $this->_eventId);
+    $params = ['event_id' => $this->_eventId];
     $result = &civicrm_event_delete($params);
     // try to delete again - there's no such event anymore
-    $params = array('event_id' => $this->_eventId);
+    $params = ['event_id' => $this->_eventId];
     $result = &civicrm_event_delete($params);
     $this->assertEquals($result['is_error'], 1);
   }
@@ -197,7 +197,7 @@ class api_v2_EventTest extends CiviUnitTestCase {
   function testSearchEmptyParams() {
     $event = civicrm_event_create($this->_params);
 
-    $params = array();
+    $params = [];
     $result = &civicrm_event_search($params);
     $res    = $result[$event['event_id']];
 
@@ -211,12 +211,12 @@ class api_v2_EventTest extends CiviUnitTestCase {
    *  Test civicrm_event_search. Success expected.
    */
   function testSearch() {
-    $params = array(
+    $params = [
       'event_type_id' => 1,
       'return.title' => 1,
       'return.id' => 1,
       'return.start_date' => 1,
-    );
+    ];
     $result = &civicrm_event_search($params);
 
     $this->assertEquals($result[$this->_eventId]['id'], $this->_eventId, 'In line ' . __LINE__);
@@ -229,38 +229,38 @@ class api_v2_EventTest extends CiviUnitTestCase {
    */
   function testSearchWithOffsetAndMaxResults() {
     $maxEvents = 5;
-    $events = array();
+    $events = [];
     while ($maxEvents > 0) {
-      $params = array(
+      $params = [
         'title' => 'Test Event' . $maxEvents,
         'event_type_id' => 2,
         'start_date' => 20081021,
-      );
+      ];
 
       $events[$maxEvents] = civicrm_event_create($params);
       $maxEvents--;
     }
-    $params = array(
+    $params = [
       'event_type_id' => 2,
       'return.id' => 1,
       'return.title' => 1,
       'return.offset' => 2,
       'return.max_results' => 2,
-    );
+    ];
     $result = &civicrm_event_search($params);
     $this->assertEquals(count($result), 2, 'In line ' . __LINE__);
   }
 
   function testEventCreationPermissions() {
     require_once 'CRM/Core/Permission/UnitTests.php';
-    $params = array('event_type_id' => 1, 'start_date' => '2010-10-03', 'title' => 'le cake is a tie', 'check_permissions' => TRUE);
+    $params = ['event_type_id' => 1, 'start_date' => '2010-10-03', 'title' => 'le cake is a tie', 'check_permissions' => TRUE];
 
-    CRM_Core_Permission_UnitTests::$permissions = array('access CiviCRM');
+    CRM_Core_Permission_UnitTests::$permissions = ['access CiviCRM'];
     $result = civicrm_event_create($params);
     $this->assertEquals(1, $result['is_error'], 'lacking permissions should not be enough to create an event');
     $this->assertEquals('API permission check failed for civicrm_event_create call; missing permission: access CiviEvent.', $result['error_message'], 'lacking permissions should not be enough to create an event');
 
-    CRM_Core_Permission_UnitTests::$permissions = array('access CiviEvent', 'add contacts');
+    CRM_Core_Permission_UnitTests::$permissions = ['access CiviEvent', 'add contacts'];
     $result = civicrm_event_create($params);
     $this->assertEquals(0, $result['is_error'], 'overfluous permissions should be enough to create an event');
   }

@@ -78,7 +78,7 @@ class CRM_Project_DAO_Task extends CRM_Core_DAO
    * @static
    */
   static $_log = true;
-  /**
+    /**
    * Task ID
    *
    * @var int unsigned
@@ -150,7 +150,7 @@ class CRM_Project_DAO_Task extends CRM_Core_DAO
    * @var boolean
    */
   public $is_active;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -160,7 +160,7 @@ class CRM_Project_DAO_Task extends CRM_Core_DAO
   {
     parent::__construct();
   }
-  /**
+    /**
    * returns all the column names of this table
    *
    * @access public
@@ -169,80 +169,80 @@ class CRM_Project_DAO_Task extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'id' => array(
+      self::$_fields = [
+        'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'title' => array(
+                  ] ,
+        'title' => [
           'name' => 'title',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Title') ,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ) ,
-        'description' => array(
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
+        'description' => [
           'name' => 'description',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Description') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'task_type_id' => array(
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
+        'task_type_id' => [
           'name' => 'task_type_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Task Type') ,
-        ) ,
-        'owner_entity_table' => array(
+                  ] ,
+        'owner_entity_table' => [
           'name' => 'owner_entity_table',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Owner Entity Table') ,
           'required' => true,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ) ,
-        'owner_entity_id' => array(
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
+        'owner_entity_id' => [
           'name' => 'owner_entity_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Task Owner ID') ,
           'required' => true,
-        ) ,
-        'parent_entity_table' => array(
+                  ] ,
+        'parent_entity_table' => [
           'name' => 'parent_entity_table',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Parent Entity Table') ,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ) ,
-        'parent_entity_id' => array(
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
+        'parent_entity_id' => [
           'name' => 'parent_entity_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Task Parent') ,
-        ) ,
-        'due_date' => array(
+                  ] ,
+        'due_date' => [
           'name' => 'due_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Due Date') ,
-        ) ,
-        'priority_id' => array(
+                  ] ,
+        'priority_id' => [
           'name' => 'priority_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Priority') ,
-        ) ,
-        'task_class' => array(
+                  ] ,
+        'task_class' => [
           'name' => 'task_class',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Task Class') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'is_active' => array(
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
+        'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Active?') ,
-        ) ,
-      );
+                  ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -254,8 +254,8 @@ class CRM_Project_DAO_Task extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -275,7 +275,7 @@ class CRM_Project_DAO_Task extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -286,7 +286,7 @@ class CRM_Project_DAO_Task extends CRM_Core_DAO
           }
         }
       }
-    }
+          }
     return self::$_import;
   }
   /**
@@ -298,7 +298,7 @@ class CRM_Project_DAO_Task extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
@@ -309,7 +309,7 @@ class CRM_Project_DAO_Task extends CRM_Core_DAO
           }
         }
       }
-    }
+          }
     return self::$_export;
   }
 }

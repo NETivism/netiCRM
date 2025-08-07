@@ -88,10 +88,10 @@ class CRM_Core_BAO_Persistent extends CRM_Core_DAO_Persistent {
   }
 
   static function getContext($context, $name = NULL) {
-    static $contextNameData = array();
+    static $contextNameData = [];
 
     if (!CRM_Utils_Array::arrayKeyExists($context, $contextNameData)) {
-      $contextNameData[$context] = array();
+      $contextNameData[$context] = [];
       $persisntentDAO = new CRM_Core_DAO_Persistent();
       $persisntentDAO->context = $context;
       $persisntentDAO->find();

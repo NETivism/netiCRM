@@ -77,7 +77,7 @@ class CRM_Utils_REST {
     $session = CRM_Core_Session::singleton();
     $key = $session->get('key');
     //$session->set( 'key', $var );
-    return self::simple(array('message' => "PONG: $key"));
+    return self::simple(['message' => "PONG: $key"]);
   }
 
   /**
@@ -117,22 +117,22 @@ class CRM_Utils_REST {
     $session->set('PHPSESSID', CRM_Utils_System::getSessionID());
     $session->set('cms_user_id', $result[1]);
 
-    return self::simple(array('api_key' => $api_key, 'PHPSESSID' => CRM_Utils_System::getSessionID(), 'key' => sha1($result[2])));
+    return self::simple(['api_key' => $api_key, 'PHPSESSID' => CRM_Utils_System::getSessionID(), 'key' => sha1($result[2])]);
   }
 
   // Generates values needed for error messages
   public static function error($message = 'Unknown Error') {
 
-    $values = array(
+    $values = [
       'error_message' => $message,
       'is_error' => 1,
-    );
+    ];
     return $values;
   }
 
   // Generates values needed for non-error responses.
-  function simple($params) {
-    $values = array('is_error' => 0);
+  public static function simple($params) {
+    $values = ['is_error' => 0];
     $values += $params;
     return $values;
   }
@@ -165,7 +165,7 @@ class CRM_Utils_REST {
       $dao->value = CRM_Utils_Array::implode('-', $args);
       $dao->insert();
     }
-    return array();
+    return [];
   }
 
   static function output(&$result) {
@@ -174,7 +174,7 @@ class CRM_Utils_REST {
       if (!$result) {
         $result = 0;
       }
-      $result = self::simple(array('result' => $result));
+      $result = self::simple(['result' => $result]);
     }
     elseif (is_array($result)) {
       if (CRM_Utils_Array::isHierarchical($result)) {
@@ -237,7 +237,7 @@ class CRM_Utils_REST {
 
     // or for the rest interface, from fnName
     // If the function isn't in the civicrm namespace, reject the request.
-    $args = array();
+    $args = [];
 
     // check from IP address when allowed list defined
     if (defined('CIVICRM_API_ALLOWED_IP')) {
@@ -298,7 +298,7 @@ class CRM_Utils_REST {
       if ($contactId) {
         $uid = CRM_Core_BAO_UFMatch::getUFId($contactId);
         if ($uid) {
-          CRM_Utils_System::loadUser(array('uid' => $uid));
+          CRM_Utils_System::loadUser(['uid' => $uid]);
           $ufId = CRM_Utils_System::getLoggedInUfID();
           if (CRM_Utils_System::isUserLoggedIn() && $ufId == $uid) {
             $validUser = $contactId;
@@ -326,7 +326,7 @@ class CRM_Utils_REST {
     return self::process($args);
   }
 
-  static function process(&$args, $params = array()) {
+  static function process(&$args, $params = []) {
     if (empty($params)) {
       $params = &self::buildParamList();
     }
@@ -352,7 +352,7 @@ class CRM_Utils_REST {
         return self::error('Unknown function invocation.');
       }
 
-      return call_user_func(array($params['className'], $params['fnName']), $params);
+      return call_user_func([$params['className'], $params['fnName']], $params);
     }
 
     if (!CRM_Utils_Array::arrayKeyExists('version', $params)) {
@@ -370,19 +370,19 @@ class CRM_Utils_REST {
       // get only valid for non destructive methods
 
       return civicrm_api3_create_error("SECURITY: All requests that modify the database must be http POST, not GET.",
-        array(
+        [
           'IP' => CRM_Utils_System::ipAddress(),
           'level' => 'security',
           'referer' => $_SERVER['HTTP_REFERER'],
           'reason' => 'Destructive HTTP GET',
-        )
+        ]
       );
     }
 
     // check options, all options should be inside option object
-    $disableOptions = array(
+    $disableOptions = [
       'sort', 'limit', 'rowCount', 'offset'
-    );
+    ];
     foreach($disableOptions as $opt) {
       if (isset($params[$opt])) unset($params[$opt]);
       if (isset($params['option.'.$opt])) unset($params['option.'.$opt]);
@@ -412,7 +412,7 @@ class CRM_Utils_REST {
     }
 
     // trap all fatal errors
-    CRM_Core_Error::setCallback(array('CRM_Utils_REST', 'fatal'));
+    CRM_Core_Error::setCallback(['CRM_Utils_REST', 'fatal']);
     if (!isset($params['sequential'])) {
       $params['sequential'] = 1;
     }
@@ -426,29 +426,29 @@ class CRM_Utils_REST {
   }
 
   static function &buildParamList() {
-    $params = array();
+    $params = [];
 
-    $skipVars = array(
+    $skipVars = [
       'q' => 1,
       'json' => 1,
       'key' => 1,
       'api_key' => 1,
       'entity' => 1,
       'action' => 1,
-    );
+    ];
 
     if($_SERVER["CONTENT_TYPE"] === strtolower('application/json')) {
       $input = file_get_contents('php://input');
       $params = json_decode($input, TRUE);
       if (empty($params)) {
-        echo json_encode(array('is_error' => 1, 'error_message', 'invalid json format: ?{"param_with_double_quote":"value"}'));
+        echo json_encode(['is_error' => 1, 'error_message', 'invalid json format: ?{"param_with_double_quote":"value"}']);
         CRM_Utils_System::civiExit();
       }
     }
     elseif (CRM_Utils_Array::arrayKeyExists('json', $_REQUEST) && $_REQUEST['json'][0] == "{") {
       $params = json_decode($_REQUEST['json'], TRUE);
       if (empty($params)) {
-        echo json_encode(array('is_error' => 1, 'error_message', 'invalid json format: ?{"param_with_double_quote":"value"}'));
+        echo json_encode(['is_error' => 1, 'error_message', 'invalid json format: ?{"param_with_double_quote":"value"}']);
         CRM_Utils_System::civiExit();
       }
     }
@@ -466,7 +466,7 @@ class CRM_Utils_REST {
 
   static function fatal($pearError) {
     header('Content-Type: text/xml');
-    $error = array();
+    $error = [];
     $error['code'] = $pearError->getCode();
     $error['error_message'] = $pearError->getMessage();
     $error['mode'] = $pearError->getMode();
@@ -553,12 +553,12 @@ class CRM_Utils_REST {
   static function ajaxJson() {
     if (!self::isWebServiceRequest()) {
       $error = civicrm_api3_create_error("SECURITY ALERT: Ajax requests can only be issued by javascript clients, eg. $().crmAPI().",
-        array(
+        [
           'IP' => CRM_Utils_System::ipAddress(),
           'level' => 'security',
           'referer' => $_SERVER['HTTP_REFERER'],
           'reason' => 'CSRF suspected',
-        )
+        ]
       );
       echo json_encode($error);
       CRM_Utils_System::civiExit();
@@ -577,7 +577,7 @@ class CRM_Utils_REST {
     $entity = CRM_Utils_String::munge(CRM_Utils_Array::value('entity', $_REQUEST));
     $action = CRM_Utils_String::munge(CRM_Utils_Array::value('action', $_REQUEST));
     if (!is_array($params)) {
-      echo json_encode(array('is_error' => 1, 'error_message', 'invalid json format: ?{"param_with_double_quote":"value"}'));
+      echo json_encode(['is_error' => 1, 'error_message', 'invalid json format: ?{"param_with_double_quote":"value"}']);
       CRM_Utils_System::civiExit();
     }
 
@@ -588,7 +588,7 @@ class CRM_Utils_REST {
       $params['sequential'] = 1;
     }
     // trap all fatal errors
-    CRM_Core_Error::setCallback(array('CRM_Utils_REST', 'fatal'));
+    CRM_Core_Error::setCallback(['CRM_Utils_REST', 'fatal']);
     $result = civicrm_api($entity, $action, $params);
 
     CRM_Core_Error::setCallback();
@@ -606,12 +606,12 @@ class CRM_Utils_REST {
     if (!$config->debug && !self::isWebServiceRequest()) {
       require_once 'api/v3/utils.php';
       $error = civicrm_api3_create_error("SECURITY ALERT: Ajax requests can only be issued by javascript clients, eg. $().crmAPI().",
-        array(
+        [
           'IP' => CRM_Utils_System::ipAddress(),
           'level' => 'security',
           'referer' => $_SERVER['HTTP_REFERER'],
           'reason' => 'CSRF suspected',
-        )
+        ]
       );
       echo json_encode($error);
       CRM_Utils_System::civiExit();
@@ -622,11 +622,11 @@ class CRM_Utils_REST {
       $entity = CRM_Utils_Array::value('entity', $_REQUEST);
       $action = CRM_Utils_Array::value('action', $_REQUEST);
       if (!$entity || !$action) {
-        $err = array('error_message' => 'missing mandatory params "entity=" or "action="', 'is_error' => 1);
+        $err = ['error_message' => 'missing mandatory params "entity=" or "action="', 'is_error' => 1];
         echo self::output($err);
         CRM_Utils_System::civiExit();
       }
-      $args = array('civicrm', $entity, $action);
+      $args = ['civicrm', $entity, $action];
     }
     else {
       $args = explode('/', $q);

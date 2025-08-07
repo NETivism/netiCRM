@@ -131,7 +131,7 @@ class CRM_Core_I18n {
       else {
         $gettextResourceDir = $config->gettextResourceDir;
       }
-      $codes = array();
+      $codes = [];
       if (is_dir($gettextResourceDir)) {
         $dir = opendir($gettextResourceDir);
         while ($filename = readdir($dir)) {
@@ -156,7 +156,7 @@ class CRM_Core_I18n {
 
     if ($enabled === NULL) {
       $config = CRM_Core_Config::singleton();
-      $enabled = array();
+      $enabled = [];
       if (isset($config->languageLimit) and $config->languageLimit) {
         foreach ($all as $code => $name) {
           if (in_array($code, array_keys($config->languageLimit))) {
@@ -178,7 +178,7 @@ class CRM_Core_I18n {
    * @return      string  modified string
    */
   function strarg($str) {
-    $tr = array();
+    $tr = [];
     $p = 0;
     for ($i = 1; $i < func_num_args(); $i++) {
       $arg = func_get_arg($i);
@@ -214,7 +214,7 @@ class CRM_Core_I18n {
    *
    * @return        string  the translated string
    */
-  function crm_translate($text, $params = array()) {
+  function crm_translate($text, $params = []) {
     if (isset($params['escape'])) {
       $escape = $params['escape'];
       unset($params['escape']);
@@ -288,7 +288,7 @@ class CRM_Core_I18n {
         }
 
         // expand %count in translated string to $count
-        $text = strtr($text, array('%count' => $count));
+        $text = strtr($text, ['%count' => $count]);
 
         // if not plural, but the locale's set, translate
       }
@@ -347,7 +347,7 @@ class CRM_Core_I18n {
    *
    * @return        void
    */
-  function localizeArray(&$array, $params = array()) {
+  function localizeArray(&$array, $params = []) {
     global $tsLocale;
 
     if ($tsLocale == CRM_Core_Config::SYSTEM_LANG) {
@@ -384,7 +384,7 @@ class CRM_Core_I18n {
    * Static instance provider - return the instance for the current locale.
    */
   static function singleton() {
-    static $singleton = array();
+    static $singleton = [];
 
     global $tsLocale;
     if (!isset($singleton[$tsLocale])) {
@@ -402,7 +402,7 @@ class CRM_Core_I18n {
    * @return string  the final LC_TIME that got set
    */
   static function setLcTime() {
-    static $locales = array();
+    static $locales = [];
 
     global $tsLocale;
     if (!isset($locales[$tsLocale])) {

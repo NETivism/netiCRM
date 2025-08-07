@@ -84,15 +84,15 @@ class CRM_Price_Form_DeleteField extends CRM_Core_Form {
    * @access public
    */
   public function buildQuickForm() {
-    $this->addButtons(array(
-        array('type' => 'next',
+    $this->addButtons([
+        ['type' => 'next',
           'name' => ts('Delete Price Field'),
           'isDefault' => TRUE,
-        ),
-        array('type' => 'cancel',
+        ],
+        ['type' => 'cancel',
           'name' => ts('Cancel'),
-        ),
-      )
+        ],
+      ]
     );
   }
 
@@ -108,7 +108,7 @@ class CRM_Price_Form_DeleteField extends CRM_Core_Form {
 
 
     if (CRM_Price_BAO_Field::deleteField($this->_fid)) {
-      CRM_Core_Session::setStatus(ts('The Price Field \'%1\' has been deleted.', array(1 => $this->_title)));
+      CRM_Core_Session::setStatus(ts('The Price Field \'%1\' has been deleted.', [1 => $this->_title]));
     }
   }
 }

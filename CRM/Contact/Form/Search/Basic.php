@@ -64,7 +64,7 @@ class CRM_Contact_Form_Search_Basic extends CRM_Contact_Form_Search {
      * @static
      */
 
-  static $csv = array('contact_type', 'group', 'tag');
+  static $csv = ['contact_type', 'group', 'tag'];
 
   /**
    * Build the form
@@ -83,7 +83,7 @@ class CRM_Contact_Form_Search_Basic extends CRM_Contact_Form_Search {
 
     if (CRM_Utils_Array::value('contactType', $searchOptions)) {
 
-      $contactTypes = array('' => ts('- any contact type -')) + CRM_Contact_BAO_ContactType::getSelectElements();
+      $contactTypes = ['' => ts('- any contact type -')] + CRM_Contact_BAO_ContactType::getSelectElements();
       $this->add('select', 'contact_type',
         ts('is...'),
         $contactTypes
@@ -93,14 +93,14 @@ class CRM_Contact_Form_Search_Basic extends CRM_Contact_Form_Search {
     if (CRM_Utils_Array::value('groups', $searchOptions)) {
       $config = CRM_Core_Config::singleton();
       if ($config->groupTree) {
-        $this->add('hidden', 'group', NULL, array('id' => 'group'));
+        $this->add('hidden', 'group', NULL, ['id' => 'group']);
 
         $group = CRM_Utils_Array::value('group', $this->_formValues);
         $selectedGroups = explode(',', $group);
 
         if (is_array($selectedGroups)) {
           $groupNames = NULL;
-          $groupIds = array();
+          $groupIds = [];
           foreach ($selectedGroups as $groupId) {
             if ($groupNames) {
               $groupNames .= '<br/>';
@@ -115,7 +115,7 @@ class CRM_Contact_Form_Search_Basic extends CRM_Contact_Form_Search {
       }
       else {
         // add select for groups
-        $group = array('' => ts('- any group -')) + $this->_group;
+        $group = ['' => ts('- any group -')] + $this->_group;
         $this->_groupElement = &$this->addElement('select', 'group', ts('in'), $group);
       }
     }
@@ -123,7 +123,7 @@ class CRM_Contact_Form_Search_Basic extends CRM_Contact_Form_Search {
     if (CRM_Utils_Array::value('tags', $searchOptions)) {
       // tag criteria
       if (!empty($this->_tag)) {
-        $tag = array('' => ts('- any tag -')) + $this->_tag;
+        $tag = ['' => ts('- any tag -')] + $this->_tag;
         $this->_tagElement = &$this->addElement('select', 'tag', ts('with'), $tag);
       }
     }
@@ -139,7 +139,7 @@ class CRM_Contact_Form_Search_Basic extends CRM_Contact_Form_Search {
    * @return array the default array reference
    */
   function &setDefaultValues() {
-    $defaults = array();
+    $defaults = [];
 
     $defaults['sort_name'] = CRM_Utils_Array::value('sort_name', $this->_formValues);
     foreach (self::$csv as $v) {
@@ -174,7 +174,7 @@ class CRM_Contact_Form_Search_Basic extends CRM_Contact_Form_Search {
    * @return void
    */
   function addRules() {
-    $this->addFormRule(array('CRM_Contact_Form_Search_Basic', 'formRule'));
+    $this->addFormRule(['CRM_Contact_Form_Search_Basic', 'formRule']);
   }
 
   /**
@@ -288,7 +288,7 @@ class CRM_Contact_Form_Search_Basic extends CRM_Contact_Form_Search {
     // check actionName and if next, then do not repeat a search, since we are going to the next page
     if (CRM_Utils_Array::arrayKeyExists('_qf_Search_next', $fields)) {
       if (!CRM_Utils_Array::value('task', $fields)) {
-        return array('task' => 'Please select a valid action.');
+        return ['task' => 'Please select a valid action.'];
       }
 
       if (CRM_Utils_Array::value('task', $fields) == CRM_Contact_Task::SAVE_SEARCH) {
@@ -306,7 +306,7 @@ class CRM_Contact_Form_Search_Basic extends CRM_Contact_Form_Search {
           return TRUE;
         }
       }
-      return array('task' => 'Please select one or more checkboxes to perform the action on.');
+      return ['task' => 'Please select one or more checkboxes to perform the action on.'];
     }
     return TRUE;
   }

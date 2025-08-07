@@ -65,11 +65,11 @@ FROM civicrm_pb_pledge p
 WHERE {$whereClause}
 ";
       $dao = CRM_Core_DAO::executeQuery($query);
-      $elements = array();
+      $elements = [];
       while ($dao->fetch()) {
-        $elements[] = array('name' => $dao->creator_pledge_desc,
+        $elements[] = ['name' => $dao->creator_pledge_desc,
           'value' => $dao->id,
-        );
+        ];
       }
     }
 
@@ -79,9 +79,9 @@ WHERE {$whereClause}
         $pledgeName = CRM_Utils_Type::escape($_GET['id'], 'String', FALSE);
         $name = $pledgeName;
       }
-      $elements[] = array('name' => trim($name, '*'),
+      $elements[] = ['name' => trim($name, '*'),
         'value' => trim($name, '*'),
-      );
+      ];
     }
 
 

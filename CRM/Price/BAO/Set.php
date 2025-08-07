@@ -122,12 +122,12 @@ class CRM_Price_BAO_Set extends CRM_Price_DAO_Set {
    * @return array
    */
   public static function &getUsedBy($id, $onlyTable = FALSE) {
-    $usedBy = $forms = $tables = array();
+    $usedBy = $forms = $tables = [];
     $queryString = "
 SELECT   entity_table, entity_id 
 FROM     civicrm_price_set_entity
 WHERE    price_set_id = %1";
-    $params = array(1 => array($id, 'Integer'));
+    $params = [1 => [$id, 'Integer']];
     $crmFormDAO = CRM_Core_DAO::executeQuery($queryString, $params);
 
     while ($crmFormDAO->fetch()) {
@@ -358,7 +358,7 @@ WHERE     ct.id = cp.contribution_type_id AND
       $query .= " AND civicrm_price_set.domain_id = " . CRM_Core_Config::domainID();
     }
 
-    $priceSets = array();
+    $priceSets = [];
 
     if ($extendComponentName) {
       $componentId = CRM_Core_Component::getComponentID($extendComponentName);
@@ -386,10 +386,10 @@ WHERE     ct.id = cp.contribution_type_id AND
    */
   public static function getSetDetail($setID, $required = TRUE, $isActive = TRUE) {
     // create a new tree
-    $setTree = array();
+    $setTree = [];
     $select = $from = $where = $orderBy = '';
 
-    $priceFields = array(
+    $priceFields = [
       'id',
       'name',
       'label',
@@ -404,7 +404,7 @@ WHERE     ct.id = cp.contribution_type_id AND
       'max_value',
       'active_on', 
       'expire_on',
-    );
+    ];
     if ($required == TRUE) {
       $priceFields[] = 'is_required';
     }
@@ -413,8 +413,8 @@ WHERE     ct.id = cp.contribution_type_id AND
     $select = 'SELECT ' . CRM_Utils_Array::implode(',', $priceFields);
     $from = ' FROM civicrm_price_field';
 
-    $params = array();
-    $params[1] = array($setID, 'Integer');
+    $params = [];
+    $params[1] = [$setID, 'Integer'];
     $where = '
 WHERE price_set_id = %1
 ';
@@ -433,7 +433,7 @@ WHERE price_set_id = %1
     while ($dao->fetch()) {
       $fieldID = $dao->id;
 
-      $setTree[$setID]['fields'][$fieldID] = array();
+      $setTree[$setID]['fields'][$fieldID] = [];
       $setTree[$setID]['fields'][$fieldID]['id'] = $fieldID;
 
       foreach ($priceFields as $field) {
@@ -516,7 +516,7 @@ WHERE  id = %1";
         //get option count info.
         $form->_priceSet['optionsCountTotal'] = self::getPricesetCount($priceSetId);
         if ($form->_priceSet['optionsCountTotal']) {
-          $optionsCountDeails = array();
+          $optionsCountDeails = [];
           foreach ($form->_priceSet['fields'] as $field) {
             foreach ($field['options'] as $option) {
               $count = CRM_Utils_Array::value('count', $option, 0);
@@ -528,7 +528,7 @@ WHERE  id = %1";
 
         //get option max value info.
         $optionsMaxValueTotal = 0;
-        $optionsMaxValueDetails = array();
+        $optionsMaxValueDetails = [];
         foreach ($form->_priceSet['fields'] as $field) {
           if (isset($field['max_value']) && !empty($field['max_value'])) {
             $optionsMaxValueDetails['fields'][$field['id']]['max_value'] = $field['max_value'];
@@ -558,7 +558,7 @@ WHERE  id = %1";
   static function processAmount(&$fields, &$params, &$lineItem) {
     // using price set
     $totalPrice = 0;
-    $radioLevel = $checkboxLevel = $selectLevel = $textLevel = array();
+    $radioLevel = $checkboxLevel = $selectLevel = $textLevel = [];
 
 
     foreach ($fields as $id => $field) {
@@ -570,7 +570,7 @@ WHERE  id = %1";
       switch ($field['html_type']) {
         case 'Text':
           reset($field['options']);
-          $params["price_{$id}"] = array(key($field['options']) => $params["price_{$id}"]);
+          $params["price_{$id}"] = [key($field['options']) => $params["price_{$id}"]];
           CRM_Price_BAO_LineItem::format($id, $params, $field, $lineItem);
           $totalPrice += $lineItem[key($field['options'])]['line_total'];
           break;
@@ -581,9 +581,9 @@ WHERE  id = %1";
             break;
           }
           $optionValueId = $params["price_{$id}"];
-          $params["price_{$id}"] = array($params["price_{$id}"] => $params["price_{$id}_{$optionValueId}_count"]);
+          $params["price_{$id}"] = [$params["price_{$id}"] => $params["price_{$id}_{$optionValueId}_count"]];
           $optionLabel = $field['options'][$optionValueId]['label'];
-          $params['amount_priceset_level_radio'] = array();
+          $params['amount_priceset_level_radio'] = [];
           $params['amount_priceset_level_radio'][$optionValueId] = $optionLabel;
           if (isset($radioLevel)) {
             $radioLevel = array_merge($radioLevel,
@@ -598,10 +598,10 @@ WHERE  id = %1";
           break;
 
         case 'Select':
-          $params["price_{$id}"] = array($params["price_{$id}"] => 1);
+          $params["price_{$id}"] = [$params["price_{$id}"] => 1];
           $optionValueId = CRM_Utils_Array::key(1, $params["price_{$id}"]);
           $optionLabel = $field['options'][$optionValueId]['label'];
-          $params['amount_priceset_level_select'] = array();
+          $params['amount_priceset_level_select'] = [];
           $params['amount_priceset_level_select'][CRM_Utils_Array::key(1, $params["price_{$id}"])] = $optionLabel;
           if (isset($selectLevel)) {
             $selectLevel = array_merge($selectLevel, array_keys($params['amount_priceset_level_select']));
@@ -613,7 +613,7 @@ WHERE  id = %1";
           $totalPrice += $lineItem[$optionValueId]['line_total'];
           break;
         case 'CheckBox':
-          $params['amount_priceset_level_checkbox'] = $optionIds = array();
+          $params['amount_priceset_level_checkbox'] = $optionIds = [];
           foreach ($params["price_{$id}"] as $optionId => $option) {
             $optionIds[] = $optionId;
             $optionLabel = $field['options'][$optionId]['label'];
@@ -715,7 +715,7 @@ WHERE  id = %1";
     $priceField->orderBy('weight, label');
     $priceField->find();
 
-    $fields = array();
+    $fields = [];
     while ($priceField->fetch()) {
       $fields[$priceField->id] = $setTitle.": ".$priceField->label." (".ts($priceField->html_type).")";
     }
@@ -735,24 +735,24 @@ WHERE  id = %1";
   static function copy($id) {
     $maxId = CRM_Core_DAO::singleValueQuery("SELECT max(id) FROM civicrm_price_set");
 
-    $title = ts('[Copy id %1]', array(1 => $maxId + 1));
-    $fieldsFix = array(
-      'suffix' => array(
+    $title = ts('[Copy id %1]', [1 => $maxId + 1]);
+    $fieldsFix = [
+      'suffix' => [
         'title' => ' ' . $title,
         'name' => '__Copy_id_' . ($maxId + 1) . '_',
-      )
-    );
+      ]
+    ];
 
-    $copy = &CRM_Core_DAO::copyGeneric('CRM_Price_DAO_Set', array('id' => $id), NULL, $fieldsFix);
+    $copy = &CRM_Core_DAO::copyGeneric('CRM_Price_DAO_Set', ['id' => $id], NULL, $fieldsFix);
 
     //copying all the blocks pertaining to the price set
-    $copyPriceField = &CRM_Core_DAO::copyGeneric('CRM_Price_DAO_Field', array('price_set_id' => $id), array('price_set_id' => $copy->id));
+    $copyPriceField = &CRM_Core_DAO::copyGeneric('CRM_Price_DAO_Field', ['price_set_id' => $id], ['price_set_id' => $copy->id]);
     if (!empty($copyPriceField)) {
       $price = array_combine(self::getFieldIds($id), self::getFieldIds($copy->id));
 
       //copy option group and values
       foreach ($price as $originalId => $copyId) {
-        CRM_Core_DAO::copyGeneric('CRM_Price_DAO_FieldValue', array('price_field_id' => $originalId), array('price_field_id' => $copyId));
+        CRM_Core_DAO::copyGeneric('CRM_Price_DAO_FieldValue', ['price_field_id' => $originalId], ['price_field_id' => $copyId]);
       }
     }
     $copy->save();
@@ -806,7 +806,7 @@ INNER JOIN  civicrm_price_field field ON ( field.id = value.price_field_id )
 INNER JOIN  civicrm_price_set pset    ON ( pset.id = field.price_set_id ) 
 WHERE  pset.id = %1 $where";
 
-      $count = CRM_Core_DAO::singleValueQuery($sql, array(1 => array($sid, 'Positive')));
+      $count = CRM_Core_DAO::singleValueQuery($sql, [1 => [$sid, 'Positive']]);
       $pricesetFieldCount[$sid] = ($count) ? $count : 0;
     }
 
@@ -814,7 +814,7 @@ WHERE  pset.id = %1 $where";
   }
 
   public static function amountLevelText($lineItem) {
-    $amount_level = array();
+    $amount_level = [];
     $totalParticipant = 0;
     if (is_array($lineItem)) {
       foreach ($lineItem as $values) {

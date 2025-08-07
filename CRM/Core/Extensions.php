@@ -126,7 +126,7 @@ class CRM_Core_Extensions {
     $installed = $this->getInstalled($fullInfo);
     $uploaded = $this->getNotInstalled();
     $this->_extById = array_merge($installed, $uploaded);
-    $this->_extByKey = array();
+    $this->_extByKey = [];
     foreach ($this->_extById as $id => $ext) {
       $this->_extByKey[$ext->key] = $ext;
     }
@@ -194,7 +194,7 @@ class CRM_Core_Extensions {
   public function getNotInstalled() {
     $installed = $this->_discoverInstalled();
     $result = $this->_discoverAvailable();
-    $instKeys = array();
+    $instKeys = [];
     foreach ($installed as $id => $ext) {
       $instKeys[] = $ext->key;
     }
@@ -218,9 +218,9 @@ class CRM_Core_Extensions {
   private function _discoverInstalled($fullInfo = FALSE) {
 
 
-    $result = array();
-    $groupParams = array('name' => self::OPTION_GROUP_NAME);
-    $links = array();
+    $result = [];
+    $groupParams = ['name' => self::OPTION_GROUP_NAME];
+    $links = [];
     $ov = CRM_Core_OptionValue::getRows($groupParams, $links);
     foreach ($ov as $id => $entry) {
       $ext = new CRM_Core_Extensions_Extension($entry['value'], $entry['grouping'], $entry['name'],
@@ -247,7 +247,7 @@ class CRM_Core_Extensions {
    */
   private function _discoverAvailable() {
 
-    $result = array();
+    $result = [];
     $e = scandir($this->_extDir);
     foreach ($e as $dc => $name) {
       $dir = $this->_extDir . DIRECTORY_SEPARATOR . $name;

@@ -64,202 +64,202 @@ class CRM_Report_Form_Mailing_Summary extends CRM_Report_Form {
   # just a toggle we use to build the from
   protected $_mailingidField = FALSE;
 
-  protected $_customGroupExtends = array();
+  protected $_customGroupExtends = [];
 
 
-  protected $_charts = array('' => 'Tabular',
+  protected $_charts = ['' => 'Tabular',
     'bar_3dChart' => 'Bar Chart',
-  ); function __construct() {
-    $this->_columns = array();
+  ]; function __construct() {
+    $this->_columns = [];
 
-    $this->_columns['civicrm_mailing'] = array(
+    $this->_columns['civicrm_mailing'] = [
       'dao' => 'CRM_Mailing_DAO_Mailing',
-      'fields' => array(
-        'name' => array(
+      'fields' => [
+        'name' => [
           'title' => ts('Mailing Name'),
           'required' => TRUE,
-        ),
-        'created_date' => array(
+        ],
+        'created_date' => [
           'title' => ts('Date Created'),
-        ),
-      ),
-      'filters' => array(
-        'is_completed' => array(
+        ],
+      ],
+      'filters' => [
+        'is_completed' => [
           'title' => ts('Mailing Status'),
           'operatorType' => CRM_Report_Form::OP_SELECT,
           'type' => CRM_Utils_Type::T_INT,
-          'options' => array(
+          'options' => [
             0 => ts('Incomplete'),
             1 => ts('Complete'),
-          ),
+          ],
           //'operator' => 'like',
           'default' => 1,
-        ),
-        'mailing_name' => array(
+        ],
+        'mailing_name' => [
           'name' => 'name',
           'title' => ts('Mailing'),
           'operatorType' => CRM_Report_Form::OP_MULTISELECT,
           'type' => CRM_Utils_Type::T_STRING,
           'options' => self::mailing_select(),
           'operator' => 'like',
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
 
-    $this->_columns['civicrm_mailing_job'] = array(
+    $this->_columns['civicrm_mailing_job'] = [
       'dao' => 'CRM_Mailing_DAO_Job',
-      'fields' => array(
-        'start_date' => array(
+      'fields' => [
+        'start_date' => [
           'title' => ts('Start Date'),
-        ),
-        'end_date' => array(
+        ],
+        'end_date' => [
           'title' => ts('End Date'),
-        ),
-      ),
-      'filters' => array(
-        'status' => array(
+        ],
+      ],
+      'filters' => [
+        'status' => [
           'type' => CRM_Utils_Type::T_STRING,
           'default' => 'Complete',
           'no_display' => TRUE,
-        ),
-        'is_test' => array(
+        ],
+        'is_test' => [
           'type' => CRM_Utils_Type::T_INT,
           'default' => 0,
           'no_display' => TRUE,
-        ),
-        'start_date' => array(
+        ],
+        'start_date' => [
           'title' => ts('Start Date'),
           'default' => 'this.year',
           'operatorType' => CRM_Report_Form::OP_DATE,
           'type' => CRM_Utils_Type::T_DATE,
-        ),
-        'end_date' => array(
+        ],
+        'end_date' => [
           'title' => ts('End Date'),
           'default' => 'this.year',
           'operatorType' => CRM_Report_Form::OP_DATE,
           'type' => CRM_Utils_Type::T_DATE,
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
 
-    $this->_columns['civicrm_mailing_event_queue'] = array(
+    $this->_columns['civicrm_mailing_event_queue'] = [
       'dao' => 'CRM_Mailing_DAO_Mailing',
-      'fields' => array(
-        'queue_count' => array(
+      'fields' => [
+        'queue_count' => [
           'name' => 'id',
           'title' => ts('Intended Recipients'),
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
 
-    $this->_columns['civicrm_mailing_event_delivered'] = array(
+    $this->_columns['civicrm_mailing_event_delivered'] = [
       'dao' => 'CRM_Mailing_DAO_Mailing',
-      'fields' => array(
-        'delivered_count' => array(
+      'fields' => [
+        'delivered_count' => [
           'name' => 'id',
           'title' => ts('Delivered'),
-        ),
-        'accepted_rate' => array(
+        ],
+        'accepted_rate' => [
           'title' => ts('Successful Deliveries').'%',
-          'statistics' => array(
+          'statistics' => [
             'calc' => 'PERCENTAGE',
             'top' => 'civicrm_mailing_event_delivered.delivered_count',
             'base' => 'civicrm_mailing_event_queue.queue_count',
-          ),
-        ),
-      ),
-    );
+          ],
+        ],
+      ],
+    ];
 
-    $this->_columns['civicrm_mailing_event_bounce'] = array(
+    $this->_columns['civicrm_mailing_event_bounce'] = [
       'dao' => 'CRM_Mailing_DAO_Mailing',
-      'fields' => array(
-        'bounce_count' => array(
+      'fields' => [
+        'bounce_count' => [
           'name' => 'id',
           'title' => ts('Bounce'),
-        ),
-        'bounce_rate' => array(
+        ],
+        'bounce_rate' => [
           'title' => ts('Bounce Rate').'%',
-          'statistics' => array(
+          'statistics' => [
             'calc' => 'PERCENTAGE',
             'top' => 'civicrm_mailing_event_bounce.bounce_count',
             'base' => 'civicrm_mailing_event_queue.queue_count',
-          ),
-        ),
-      ),
-    );
+          ],
+        ],
+      ],
+    ];
 
-    $this->_columns['civicrm_mailing_event_opened'] = array(
+    $this->_columns['civicrm_mailing_event_opened'] = [
       'dao' => 'CRM_Mailing_DAO_Mailing',
-      'fields' => array(
-        'unique_open_count' => array(
+      'fields' => [
+        'unique_open_count' => [
           'name' => 'id',
           'title' => ts('Unique Tracked Opens'),
           'alias' => 'mailing_event_opened_civireport',
           'dbAlias' => 'mailing_event_opened_civireport.event_queue_id',
-        ),
-        'unique_open_rate' => array(
+        ],
+        'unique_open_rate' => [
           'title' => ts('Unique Open Rate').'%',
-          'statistics' => array(
+          'statistics' => [
             'calc' => 'PERCENTAGE',
             'top' => 'civicrm_mailing_event_opened.unique_open_count',
             'base' => 'civicrm_mailing_event_delivered.delivered_count',
-          ),
-        ),
-        'open_count' => array(
+          ],
+        ],
+        'open_count' => [
           'name' => 'id',
           'title' => ts('Total Opens'),
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
 
-    $this->_columns['civicrm_mailing_event_trackable_url_open'] = array(
+    $this->_columns['civicrm_mailing_event_trackable_url_open'] = [
       'dao' => 'CRM_Mailing_DAO_Mailing',
-      'fields' => array(
-        'unique_click_count' => array(
+      'fields' => [
+        'unique_click_count' => [
           'name' => 'id',
           'title' => ts('Unique Click-throughs'),
           'alias' => 'mailing_event_trackable_url_open_civireport',
           'dbAlias' => 'mailing_event_trackable_url_open_civireport.event_queue_id',
-        ),
-        'click_count' => array(
+        ],
+        'click_count' => [
           'name' => 'id',
           'title' => ts('Total Clicks'),
-        ),
-        'CTR' => array(
+        ],
+        'CTR' => [
           'title' => ts('Unique Click-throughs Rate').'%',
-          'statistics' => array(
+          'statistics' => [
             'calc' => 'PERCENTAGE',
             'top' => 'civicrm_mailing_event_trackable_url_open.unique_click_count',
             'base' => 'civicrm_mailing_event_delivered.delivered_count',
-          ),
-        ),
-        'CTO' => array(
+          ],
+        ],
+        'CTO' => [
           'title' => ts('Click to Open Rate').'%',
           'default' => 0,
-          'statistics' => array(
+          'statistics' => [
             'calc' => 'PERCENTAGE',
             'top' => 'civicrm_mailing_event_trackable_url_open.unique_click_count',
             'base' => 'civicrm_mailing_event_opened.unique_open_count',
-          ),
-        ),
-      ),
-    );
+          ],
+        ],
+      ],
+    ];
 
-    $this->_columns['civicrm_mailing_event_unsubscribe'] = array(
+    $this->_columns['civicrm_mailing_event_unsubscribe'] = [
       'dao' => 'CRM_Mailing_DAO_Mailing',
-      'fields' => array(
-        'unsubscribe_count' => array(
+      'fields' => [
+        'unsubscribe_count' => [
           'name' => 'id',
           'title' => ts('Unsubscribe'),
-        ),
-        'unique_unsubscribe_count' => array(
+        ],
+        'unique_unsubscribe_count' => [
           'name' => 'id',
           'title' => ts('Unique Unsubscribe'),
           'alias' => 'mailing_event_unsubscribe_civireport',
           'dbAlias' => 'mailing_event_unsubscribe_civireport.event_queue_id',
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
 
     parent::__construct();
   }
@@ -267,7 +267,7 @@ class CRM_Report_Form_Mailing_Summary extends CRM_Report_Form {
   function mailing_select() {
 
 
-    $data = array();
+    $data = [];
 
     $mailing = new CRM_Mailing_BAO_Mailing();
     $query = "SELECT name FROM civicrm_mailing ";
@@ -288,15 +288,15 @@ class CRM_Report_Form_Mailing_Summary extends CRM_Report_Form {
   // manipulate the select function to query count functions
   function select() {
 
-    $count_tables = array(
+    $count_tables = [
       'civicrm_mailing_event_queue',
       'civicrm_mailing_event_delivered',
       'civicrm_mailing_event_bounce',
       'civicrm_mailing_event_opened',
       'civicrm_mailing_event_trackable_url_open',
       'civicrm_mailing_event_unsubscribe',
-    );
-    $distinctCountColumns = array(
+    ];
+    $distinctCountColumns = [
       'civicrm_mailing_event_queue.queue_count',
       'civicrm_mailing_event_delivered.delivered_count',
       'civicrm_mailing_event_bounce.bounce_count',
@@ -304,10 +304,10 @@ class CRM_Report_Form_Mailing_Summary extends CRM_Report_Form {
       'civicrm_mailing_event_trackable_url_open.unique_click_count',
       'civicrm_mailing_event_unsubscribe.unique_unsubscribe_count',
       'civicrm_mailing_event_unsubscribe.optout_count',
-    );
+    ];
 
-    $select = array();
-    $this->_columnHeaders = array();
+    $select = [];
+    $this->_columnHeaders = [];
     foreach ($this->_columns as $tableName => $table) {
       if (CRM_Utils_Array::arrayKeyExists('fields', $table)) {
         foreach ($table['fields'] as $fieldName => $field) {
@@ -377,7 +377,7 @@ class CRM_Report_Form_Mailing_Summary extends CRM_Report_Form {
   }
 
   function where() {
-    $clauses = array();
+    $clauses = [];
     foreach ($this->_columns as $tableName => $table) {
       if (CRM_Utils_Array::arrayKeyExists('filters', $table)) {
         foreach ($table['filters'] as $fieldName => $field) {
@@ -444,7 +444,7 @@ class CRM_Report_Form_Mailing_Summary extends CRM_Report_Form {
 
     // print_r($sql);
 
-    $rows = $graphRows = array();
+    $rows = $graphRows = [];
     $this->buildRows($sql, $rows);
 
     $this->formatDisplay($rows);
@@ -453,16 +453,16 @@ class CRM_Report_Form_Mailing_Summary extends CRM_Report_Form {
   }
 
   static function getChartCriteria() {
-    return array('civicrm_mailing_event_delivered_delivered_count' => ts('Delivered'),
+    return ['civicrm_mailing_event_delivered_delivered_count' => ts('Delivered'),
       'civicrm_mailing_event_bounce_bounce_count' => ts('Bounce'),
       'civicrm_mailing_event_opened_open_count' => ts('Opened'),
       'civicrm_mailing_event_trackable_url_open_click_count' => ts('Clicks'),
       'civicrm_mailing_event_unsubscribe_unsubscribe_count' => ts('Unsubscribe'),
-    );
+    ];
   }
 
   static function formRule($fields, $files, $self) {
-    $errors = array();
+    $errors = [];
 
     if (!CRM_Utils_Array::value('charts', $fields)) {
       return $errors;
@@ -471,13 +471,13 @@ class CRM_Report_Form_Mailing_Summary extends CRM_Report_Form {
     $criterias = self::getChartCriteria();
     $isError = TRUE;
     foreach ($fields['fields'] as $fld => $isActive) {
-      if (in_array($fld, array('delivered_count', 'bounce_count', 'open_count', 'click_count', 'unsubscribe_count'))) {
+      if (in_array($fld, ['delivered_count', 'bounce_count', 'open_count', 'click_count', 'unsubscribe_count'])) {
         $isError = FALSE;
       }
     }
 
     if ($isError) {
-      $errors['_qf_default'] = ts("For Chart view, please select at least one field from %1.", array('%1' => CRM_Utils_Array::implode(', ', $criterias)));
+      $errors['_qf_default'] = ts("For Chart view, please select at least one field from %1.", ['%1' => CRM_Utils_Array::implode(', ', $criterias)]);
     }
 
     return $errors;
@@ -490,15 +490,15 @@ class CRM_Report_Form_Mailing_Summary extends CRM_Report_Form {
 
     $criterias = self::getChartCriteria();
 
-    $chartInfo = array('legend' => ts('Mail Summary'),
+    $chartInfo = ['legend' => ts('Mail Summary'),
       'xname' => ts('Mailing'),
       'yname' => ts('Statistics'),
       'xLabelAngle' => 20,
-      'tip' => array(),
-    );
+      'tip' => [],
+    ];
 
     foreach ($rows as $row) {
-      $chartInfo['values'][$row['civicrm_mailing_name']] = array();
+      $chartInfo['values'][$row['civicrm_mailing_name']] = [];
       foreach ($criterias as $criteria => $label) {
         if (isset($row[$criteria])) {
           $chartInfo['values'][$row['civicrm_mailing_name']][$label] = $row[$criteria];

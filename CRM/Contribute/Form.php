@@ -67,11 +67,11 @@ class CRM_Contribute_Form extends CRM_Core_Form {
    * @return None
    */
   function setDefaultValues() {
-    $defaults = array();
-    $params = array();
+    $defaults = [];
+    $params = [];
 
     if (isset($this->_id)) {
-      $params = array('id' => $this->_id);
+      $params = ['id' => $this->_id];
       $baoName = $this->_BAOName;
       $baoName::retrieve( $params, $defaults );
     }
@@ -93,29 +93,29 @@ class CRM_Contribute_Form extends CRM_Core_Form {
    * @access public
    */
   public function buildQuickForm() {
-    $js = array('data' => 'click-once');
-    $this->addButtons(array(
-        array('type' => 'next',
+    $js = ['data' => 'click-once'];
+    $this->addButtons([
+        ['type' => 'next',
           'name' => ts('Save'),
           'isDefault' => TRUE,
           'js' => $js,
-        ),
-        array('type' => 'cancel',
+        ],
+        ['type' => 'cancel',
           'name' => ts('Cancel'),
-        ),
-      )
+        ],
+      ]
     );
 
     if ($this->_action & CRM_Core_Action::DELETE) {
-      $this->addButtons(array(
-          array('type' => 'next',
+      $this->addButtons([
+          ['type' => 'next',
             'name' => ts('Delete'),
             'isDefault' => TRUE,
-          ),
-          array('type' => 'cancel',
+          ],
+          ['type' => 'cancel',
             'name' => ts('Cancel'),
-          ),
-        )
+          ],
+        ]
       );
     }
   }

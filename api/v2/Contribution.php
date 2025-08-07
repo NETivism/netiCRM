@@ -63,7 +63,7 @@ function &civicrm_contribution_create(&$params) {
     return $error;
   }
 
-  $values = array();
+  $values = [];
 
   require_once 'CRM/Contribute/BAO/Contribution.php';
   $error = _civicrm_contribute_format_params($params, $values);
@@ -74,7 +74,7 @@ function &civicrm_contribution_create(&$params) {
   $values['contact_id'] = $params['contact_id'];
   $values['source'] = CRM_Utils_Array::value('source', $params);
   $values['skipRecentView'] = TRUE;
-  $ids = array();
+  $ids = [];
   if (CRM_Utils_Array::value('id', $params)) {
     $ids['contribution'] = $params['id'];
   }
@@ -110,7 +110,7 @@ function civicrm_contribution_add(&$params) {
 function &civicrm_contribution_get(&$params) {
   _civicrm_initialize();
 
-  $values = array();
+  $values = [];
   if (empty($params)) {
     return civicrm_create_error(ts('No input parameters present'));
   }
@@ -127,7 +127,7 @@ function &civicrm_contribution_get(&$params) {
   if (count($contributions) != 1 &&
     !$params['returnFirst']
   ) {
-    return civicrm_create_error(ts('%1 contributions matching input params', array(1 => count($contributions))),
+    return civicrm_create_error(ts('%1 contributions matching input params', [1 => count($contributions)]),
       $contributions
     );
   }
@@ -180,9 +180,9 @@ function &civicrm_contribution_search(&$params) {
     return civicrm_create_error(ts('Input parameters is not an array'));
   }
 
-  $inputParams      = array();
-  $returnProperties = array();
-  $otherVars        = array('sort', 'offset', 'rowCount');
+  $inputParams      = [];
+  $returnProperties = [];
+  $otherVars        = ['sort', 'offset', 'rowCount'];
 
   $sort     = NULL;
   $offset   = 0;
@@ -223,7 +223,7 @@ function &civicrm_contribution_search(&$params) {
   $sql .= " LIMIT $offset, $rowCount ";
   $dao = CRM_Core_DAO::executeQuery($sql);
 
-  $contribution = array();
+  $contribution = [];
   while ($dao->fetch()) {
     $contribution[$dao->contribution_id] = $query->store($dao);
   }
@@ -251,7 +251,7 @@ function &civicrm_contribution_format_create(&$params) {
   if (civicrm_error($error)) {
     return $error;
   }
-  $values = array();
+  $values = [];
   $error = _civicrm_contribute_format_params($params, $values);
   if (civicrm_error($error)) {
     return $error;
@@ -267,7 +267,7 @@ function &civicrm_contribution_format_create(&$params) {
     return $error;
   }
 
-  $ids = array();
+  $ids = [];
   CRM_Contribute_BAO_Contribution::resolveDefaults($params, TRUE);
 
   $contribution = CRM_Contribute_BAO_Contribution::create($params, $ids);
@@ -291,10 +291,10 @@ function &civicrm_contribution_format_create(&$params) {
  * @access private
  */
 function _civicrm_contribute_check_params(&$params) {
-  static $required = array('contact_id' => NULL,
+  static $required = ['contact_id' => NULL,
     'total_amount' => NULL,
     'contribution_type_id' => 'contribution_type',
-  );
+  ];
 
   // params should be an array
   if (!is_array($params)) {
@@ -318,7 +318,7 @@ function _civicrm_contribute_check_params(&$params) {
       return civicrm_create_error(ts('Contribution id is not valid'));
     }
     // do not check other field during update
-    return array();
+    return [];
   }
 
   foreach ($required as $field => $eitherField) {
@@ -344,7 +344,7 @@ function _civicrm_contribute_check_params(&$params) {
     return civicrm_create_error("Required fields not found for contribution $error");
   }
 
-  return array();
+  return [];
 }
 
 /**
@@ -358,7 +358,7 @@ function _civicrm_contribute_check_params(&$params) {
  */
 function _civicrm_contribute_duplicate_check(&$params) {
   require_once 'CRM/Contribute/BAO/Contribution.php';
-  $duplicates = array();
+  $duplicates = [];
   $result = CRM_Contribute_BAO_Contribution::checkDuplicate($params, $duplicates);
   if ($result) {
     $d = CRM_Utils_Array::implode(', ', $duplicates);
@@ -368,7 +368,7 @@ function _civicrm_contribute_duplicate_check(&$params) {
     );
   }
   else {
-    return array();
+    return [];
   }
 }
 
@@ -382,7 +382,7 @@ function _civicrm_contribute_duplicate_check(&$params) {
  * @access private
  */
 function _civicrm_contribute_receiptid_check(&$params) {
-  $duplicates = array();
+  $duplicates = [];
   $result = CRM_Contribute_BAO_Contribution::checkDuplicateReceipt($params, $duplicates);
 
   if ($result) {
@@ -393,7 +393,7 @@ function _civicrm_contribute_receiptid_check(&$params) {
     );
   }
   else {
-    return array();
+    return [];
   }
 }
 
@@ -434,7 +434,7 @@ function civicrm_contribute_transact($params) {
     return civicrm_create_error(ts('Input parameters is not an array'));
   }
 
-  $values = array();
+  $values = [];
 
   require_once 'CRM/Contribute/BAO/Contribution.php';
   $error = _civicrm_contribute_format_params($params, $values);
@@ -442,9 +442,9 @@ function civicrm_contribute_transact($params) {
     return $error;
   }
 
-  $required = array(
+  $required = [
     'amount',
-  );
+  ];
   foreach ($required as $key) {
     if (!isset($params[$key])) {
       return civicrm_create_error("Missing parameter $key: civicrm_contribute_transact() requires a parameter '$key'.");
@@ -452,10 +452,10 @@ function civicrm_contribute_transact($params) {
   }
 
   // allow people to omit some values for convenience
-  $defaults = array(
+  $defaults = [
     // 'payment_processor_id' => NULL /* we could retrieve the default processor here, but only if it's missing to avoid an extra lookup */
     'payment_processor_mode' => 'live',
-  );
+  ];
   $params = array_merge($defaults, $params);
 
   // clean up / adjust some values which

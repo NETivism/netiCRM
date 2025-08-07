@@ -14,7 +14,7 @@ class api_v3_PriceFieldValueTest extends CiviUnitTestCase {
   public function setUp() {
     parent::setUp();
     // put stuff here that should happen before all tests in this unit
-    $priceSetparams = array(
+    $priceSetparams = [
       'version' => 3,
       #     [domain_id] =>
       'name' => 'default_goat_priceset',
@@ -26,12 +26,12 @@ class api_v3_PriceFieldValueTest extends CiviUnitTestCase {
       'contribution_type_id' => 1,
       'is_quick_config' => 1,
       'is_reserved' => 1,
-    );
+    ];
 
     $price_set = civicrm_api('price_set', 'create',$priceSetparams);
     $this->priceSetID = $price_set['id'];
 
-    $priceFieldparams = array(
+    $priceFieldparams = [
       'version' => $this->_apiversion,
       'price_set_id' => $this->priceSetID,
       'name' => 'grassvariety',
@@ -39,32 +39,32 @@ class api_v3_PriceFieldValueTest extends CiviUnitTestCase {
       'html_type' => 'Text',
       'is_enter_qty' => 1,
       'is_active' => 1,
-    );
+    ];
     $priceField = civicrm_api('price_field','create', $priceFieldparams);
     $this->priceFieldID = $priceField['id'];
-    $this->_params = array(
+    $this->_params = [
       'version' => 3,
       'price_field_id' => $this->priceFieldID,
       'name' => 'ryegrass',
       'label' => 'juicy and healthy',
       'amount' => 1
-     );
+     ];
   }
 
   function tearDown() {
-    $tablesToTruncate = array(
+    $tablesToTruncate = [
         'civicrm_contact',
         'civicrm_contribution',
-    );
+    ];
     $this->quickCleanup($tablesToTruncate);
-    civicrm_api('PriceField','delete', array(
+    civicrm_api('PriceField','delete', [
         'version' => 3,
         'id' => $this->priceFieldID,
-    ));
-    $delete = civicrm_api('PriceSet','delete', array(
+    ]);
+    $delete = civicrm_api('PriceSet','delete', [
       'version' => 3,
       'id' => $this->priceSetID,
-    ));
+    ]);
 
     $this->assertAPISuccess($delete);
   }
@@ -83,34 +83,34 @@ class api_v3_PriceFieldValueTest extends CiviUnitTestCase {
     $createResult = civicrm_api($this->_entity, 'create', $this->_params);
     $this->id = $createResult['id'];
     $this->assertAPISuccess($createResult);
-    $getParams = array(
+    $getParams = [
       'version' => $this->_apiversion,
       'name' => 'contribution_amount',
-    );
+    ];
     $getResult = civicrm_api($this->_entity, 'get', $getParams);
     $this->documentMe($getParams, $getResult, __FUNCTION__, __FILE__);
     $this->assertAPISuccess($getResult, 'In line ' . __LINE__);
     $this->assertEquals(1, $getResult['count'], 'In line ' . __LINE__);
-    civicrm_api('price_field_value','delete', array('version' => 3, 'id' => $createResult['id']));
+    civicrm_api('price_field_value','delete', ['version' => 3, 'id' => $createResult['id']]);
   }
 
   public function testDeletePriceFieldValue() {
-    $startCount = civicrm_api($this->_entity, 'getcount', array(
+    $startCount = civicrm_api($this->_entity, 'getcount', [
       'version' => $this->_apiversion,
-      ));
+      ]);
     $createResult = civicrm_api($this->_entity, 'create', $this->_params);
-    $deleteParams = array('version' => $this->_apiversion, 'id' => $createResult['id']);
+    $deleteParams = ['version' => $this->_apiversion, 'id' => $createResult['id']];
     $deleteResult = civicrm_api($this->_entity, 'delete', $deleteParams);
     $this->documentMe($deleteParams, $deleteResult, __FUNCTION__, __FILE__);
     $this->assertAPISuccess($deleteResult, 'In line ' . __LINE__);
-    $endCount = civicrm_api($this->_entity, 'getcount', array(
+    $endCount = civicrm_api($this->_entity, 'getcount', [
       'version' => $this->_apiversion,
-      ));
+      ]);
     $this->assertEquals($startCount, $endCount, 'In line ' . __LINE__);
   }
 
   public function testGetFieldsPriceFieldValue() {
-    $result = civicrm_api($this->_entity, 'getfields', array('version' => $this->_apiversion, 'action' => 'create'));
+    $result = civicrm_api($this->_entity, 'getfields', ['version' => $this->_apiversion, 'action' => 'create']);
     $this->assertAPISuccess($result, 'In line ' . __LINE__);
     $this->assertEquals(1, $result['values']['max_value']['type']);
   }

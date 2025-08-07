@@ -56,7 +56,7 @@ class CRM_Core_I18n_Form extends CRM_Core_Form {
     $this->addElement('hidden', 'field', $field);
     $this->addElement('hidden', 'id', $id);
 
-    $cols = array();
+    $cols = [];
     foreach ($this->_locales as $locale) {
       $cols[] = "{$field}_{$locale} {$locale}";
     }
@@ -71,11 +71,11 @@ class CRM_Core_I18n_Form extends CRM_Core_Form {
 
     $languages = CRM_Core_I18n::languages(TRUE);
     foreach ($this->_locales as $locale) {
-      $this->addElement($type, "{$field}_{$locale}", $languages[$locale], array('cols' => 60, 'rows' => 3));
+      $this->addElement($type, "{$field}_{$locale}", $languages[$locale], ['cols' => 60, 'rows' => 3]);
       $this->_defaults["{$field}_{$locale}"] = $dao->$locale;
     }
 
-    $this->addButtons(array(array('type' => 'next', 'name' => ts('Save'), 'isDefault' => TRUE)));
+    $this->addButtons([['type' => 'next', 'name' => ts('Save'), 'isDefault' => TRUE]]);
 
     global $tsLocale;
     $this->assign('tsLocale', $tsLocale);
@@ -98,12 +98,12 @@ class CRM_Core_I18n_Form extends CRM_Core_Form {
       CRM_Core_Error::fatal("$table.$field is not internationalized.");
     }
 
-    $cols = array();
-    $params = array(array($values['id'], 'Int'));
+    $cols = [];
+    $params = [[$values['id'], 'Int']];
     $i = 1;
     foreach ($this->_locales as $locale) {
       $cols[] = "{$field}_{$locale} = %$i";
-      $params[$i] = array($values["{$field}_{$locale}"], 'String');
+      $params[$i] = [$values["{$field}_{$locale}"], 'String'];
       $i++;
     }
     $query = "UPDATE $table SET " . CRM_Utils_Array::implode(', ', $cols) . " WHERE id = %0";

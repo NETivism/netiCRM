@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-class CRM_Mailing_Event_DAO_Unsubscribe extends CRM_Core_DAO
+        class CRM_Mailing_Event_DAO_Unsubscribe extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -78,7 +78,7 @@ class CRM_Mailing_Event_DAO_Unsubscribe extends CRM_Core_DAO
    * @static
    */
   static $_log = false;
-  /**
+    /**
    *
    * @var int unsigned
    */
@@ -101,7 +101,7 @@ class CRM_Mailing_Event_DAO_Unsubscribe extends CRM_Core_DAO
    * @var datetime
    */
   public $time_stamp;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -120,13 +120,13 @@ class CRM_Mailing_Event_DAO_Unsubscribe extends CRM_Core_DAO
   function &links()
   {
     if (!(self::$_links)) {
-      self::$_links = array(
+      self::$_links = [
         'event_queue_id' => 'civicrm_mailing_event_queue:id',
-      );
+      ];
     }
     return self::$_links;
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -140,7 +140,7 @@ class CRM_Mailing_Event_DAO_Unsubscribe extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -149,31 +149,31 @@ class CRM_Mailing_Event_DAO_Unsubscribe extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'id' => array(
+      self::$_fields = [
+        'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'event_queue_id' => array(
+                  ] ,
+        'event_queue_id' => [
           'name' => 'event_queue_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-          'FKClassName' => 'CRM_Mailing_Event_DAO_Queue',
-        ) ,
-        'org_unsubscribe' => array(
+                    'FKClassName' => 'CRM_Mailing_Event_DAO_Queue',
+        ] ,
+        'org_unsubscribe' => [
           'name' => 'org_unsubscribe',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Org Unsubscribe') ,
           'required' => true,
-        ) ,
-        'time_stamp' => array(
+                  ] ,
+        'time_stamp' => [
           'name' => 'time_stamp',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Time Stamp') ,
           'required' => true,
-        ) ,
-      );
+                  ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -185,8 +185,8 @@ class CRM_Mailing_Event_DAO_Unsubscribe extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -206,7 +206,7 @@ class CRM_Mailing_Event_DAO_Unsubscribe extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -217,7 +217,7 @@ class CRM_Mailing_Event_DAO_Unsubscribe extends CRM_Core_DAO
           }
         }
       }
-    }
+                                  }
     return self::$_import;
   }
   /**
@@ -229,7 +229,7 @@ class CRM_Mailing_Event_DAO_Unsubscribe extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
@@ -240,7 +240,7 @@ class CRM_Mailing_Event_DAO_Unsubscribe extends CRM_Core_DAO
           }
         }
       }
-    }
+                                  }
     return self::$_export;
   }
 }

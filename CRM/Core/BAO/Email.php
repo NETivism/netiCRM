@@ -138,20 +138,20 @@ WHERE
   civicrm_contact.id = %1
 ORDER BY
   civicrm_email.is_primary DESC, email_id ASC ";
-    $params = array(1 => array($id, 'Integer'));
+    $params = [1 => [$id, 'Integer']];
 
-    $emails = $values = array();
+    $emails = $values = [];
     $dao = &CRM_Core_DAO::executeQuery($query, $params);
     $count = 1;
     while ($dao->fetch()) {
-      $values = array('locationType' => $dao->locationType,
+      $values = ['locationType' => $dao->locationType,
         'is_primary' => $dao->is_primary,
         'on_hold' => $dao->on_hold,
         'id' => $dao->email_id,
         'email' => $dao->email,
         'locationTypeId' => $dao->locationTypeId,
         'is_bulkmail' => $dao->is_bulkmail,
-      );
+      ];
 
       if ($updateBlankLocInfo) {
         $emails[$count++] = $values;
@@ -190,18 +190,18 @@ AND   e.id IN (loc.email_id, loc.email_2_id)
 AND   ltype.id = e.location_type_id
 ORDER BY e.is_primary DESC, email_id ASC ";
 
-    $params = array(1 => array($entityId, 'Integer'));
+    $params = [1 => [$entityId, 'Integer']];
 
-    $emails = array();
+    $emails = [];
     $dao = &CRM_Core_DAO::executeQuery($sql, $params);
     while ($dao->fetch()) {
-      $emails[$dao->email_id] = array('locationType' => $dao->locationType,
+      $emails[$dao->email_id] = ['locationType' => $dao->locationType,
         'is_primary' => $dao->is_primary,
         'on_hold' => $dao->on_hold,
         'id' => $dao->email_id,
         'email' => $dao->email,
         'locationTypeId' => $dao->locationTypeId,
-      );
+      ];
     }
 
     return $emails;
@@ -254,10 +254,10 @@ ORDER BY e.is_primary DESC, email_id ASC ";
   static function valueExists(&$params) {
     if (empty($params['id']) && !empty($params['email']) && is_string($params['email']) && !empty($params['contact_id'])) {
       $check = preg_replace('/[^a-zA-Z0-9.@-]/', '', $params['email']);
-      $params['id'] = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_email WHERE REGEXP_REPLACE(email, '[^a-zA-Z0-9.@-]', '') LIKE %1 AND contact_id = %2", array(
-        1 => array($check, 'String'),
-        2 => array($params['contact_id'], 'Integer')
-      ));
+      $params['id'] = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_email WHERE REGEXP_REPLACE(email, '[^a-zA-Z0-9.@-]', '') LIKE %1 AND contact_id = %2", [
+        1 => [$check, 'String'],
+        2 => [$params['contact_id'], 'Integer']
+      ]);
     }
   }
 }

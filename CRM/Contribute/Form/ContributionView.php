@@ -50,8 +50,8 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
   public function preProcess() {
     $id = $this->get('id');
     $this->assign('id', $id);
-    $values = $ids = array();
-    $params = array('id' => $id);
+    $values = $ids = [];
+    $params = ['id' => $id];
     $context = CRM_Utils_Request::retrieve('context', 'String', $this);
     $compContext = CRM_Utils_Request::retrieve('compContext', 'String', $this);
     $compId = CRM_Utils_Request::retrieve('compId', 'String', $this);
@@ -63,7 +63,7 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
     CRM_Contribute_BAO_Contribution::getValues($params, $values, $ids);
 
     $instrument_options = CRM_Core_OptionGroup::values('payment_instrument', FALSE);
-    $no_expire_date = array(ts('Convenient Store'), ts('Convenient Store code'), ts('ATM'));
+    $no_expire_date = [ts('Convenient Store'), ts('Convenient Store code'), ts('ATM')];
     $instrument = $instrument_options[$values['payment_instrument_id']];
     if ($instrument == ts('Check')) {
       $this->assign('payment_instrument_name', 'Check');
@@ -88,7 +88,7 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
       }
     }
 
-    $softParams = array('contribution_id' => $values['contribution_id']);
+    $softParams = ['contribution_id' => $values['contribution_id']];
     if ($softContribution = CRM_Contribute_BAO_Contribution::getSoftContribution($softParams, TRUE)) {
       $values = array_merge($values, $softContribution);
     }
@@ -109,7 +109,7 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
 
     if (CRM_Utils_Array::value('honor_contact_id', $values)) {
       $sql = "SELECT display_name FROM civicrm_contact WHERE id = %1";
-      $params = array(1 => array($values['honor_contact_id'], 'Integer'));
+      $params = [1 => [$values['honor_contact_id'], 'Integer']];
       $dao = CRM_Core_DAO::executeQuery($sql, $params);
       if ($dao->fetch()) {
         $url = CRM_Utils_System::url('civicrm/contact/view', "reset=1&cid=$values[honor_contact_id]");
@@ -121,7 +121,7 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
 
     if (CRM_Utils_Array::value('contribution_recur_id', $values)) {
       $sql = "SELECT  installments, frequency_interval, frequency_unit FROM civicrm_contribution_recur WHERE id = %1";
-      $params = array(1 => array($values['contribution_recur_id'], 'Integer'));
+      $params = [1 => [$values['contribution_recur_id'], 'Integer']];
       $dao = CRM_Core_DAO::executeQuery($sql, $params);
       if ($dao->fetch()) {
         $values["recur_installments"] = empty($dao->installments) ? ts("no limit") : $dao->installments;
@@ -173,7 +173,7 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
 
     // show billing address location details, if exists
     if (CRM_Utils_Array::value('address_id', $values)) {
-      $addressParams = array('id' => CRM_Utils_Array::value('address_id', $values));
+      $addressParams = ['id' => CRM_Utils_Array::value('address_id', $values)];
       $addressDetails = CRM_Core_BAO_Address::getValues($addressParams, FALSE, 'id');
       $addressDetails = array_values($addressDetails);
       $values['billing_address'] = $addressDetails[0]['display'];
@@ -194,7 +194,7 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
     }
 
 
-    $lineItems = array();
+    $lineItems = [];
     if ($id && CRM_Price_BAO_Set::getFor('civicrm_contribution', $id)) {
 
       $lineItems[] = CRM_Price_BAO_LineItem::getLineItems($id, 'contribution');
@@ -211,7 +211,7 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
     }
 
     // get detail about membership payment, contribution page, or event
-    $details = CRM_Contribute_BAO_Contribution::getComponentDetails(array($id));
+    $details = CRM_Contribute_BAO_Contribution::getComponentDetails([$id]);
     if (!empty($details[$id])) {
       $this->assign('details', $details[$id]);
     }
@@ -229,7 +229,7 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
 
     $title = $displayName . ' - (' . CRM_Utils_Money::format($values['total_amount']) . ' ' . ' - ' . $values['contribution_type'] . ')';
 
-    $recentOther = array();
+    $recentOther = [];
     if (CRM_Core_Permission::checkActionPermission('CiviContribute', CRM_Core_Action::UPDATE)) {
       $recentOther['editUrl'] = CRM_Utils_System::url('civicrm/contact/view/contribution',
         "action=update&reset=1&id={$values['id']}&cid={$values['contact_id']}&context=home"
@@ -249,7 +249,7 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
 
     // receipt sending activity
     $sortID = NULL;
-    $activityTypes = array('Email Receipt', 'Print Contribution Receipts');
+    $activityTypes = ['Email Receipt', 'Print Contribution Receipts'];
     foreach ($activityTypes as $typeName) {
       $activityTypeId = CRM_Core_OptionGroup::getValue('activity_type', $typeName, 'name');
       if (!empty($activityTypeId)) {
@@ -257,11 +257,11 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
       }
     }
     if (!empty($activityTypeIds)) {
-      $filter = array(
+      $filter = [
         'activity_record_id' => $values['id'], // source_record_id
         'activity_type_id' => $activityTypeIds,
         'activity_test' => $values['is_test'],
-      );
+      ];
       $queryParams = CRM_Contact_BAO_Query::convertFormValues($filter);
       $selector = new CRM_Activity_Selector_Search($queryParams, $this->_action);
       $controller2 = new CRM_Core_Selector_Controller($selector,
@@ -283,13 +283,13 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
    * @access public
    */
   public function buildQuickForm() {
-    $this->addButtons(array(
-        array('type' => 'cancel',
+    $this->addButtons([
+        ['type' => 'cancel',
           'name' => ts('Done'),
           'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
           'isDefault' => TRUE,
-        ),
-      )
+        ],
+      ]
     );
   }
 }

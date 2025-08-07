@@ -48,9 +48,9 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
       $this->_values = self::loadEmailAddress($this->_id);
     }
     else {
-      $this->_values = array(
+      $this->_values = [
         'is_active' => 0,
-      );
+      ];
     }
     if ($this->_action & CRM_Core_Action::DELETE) {
       return;
@@ -61,17 +61,17 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
   function buildQuickForm() {
     if ($this->_action & CRM_Core_Action::DELETE) {
       $this->assign('email', $this->_values['email']);
-      $this->addButtons(array(
-          array(
+      $this->addButtons([
+          [
             'type' => 'next',
             'name' => ts('Delete Mail Settings'),
             'isDefault' => TRUE,
-          ),
-          array(
+          ],
+          [
             'type' => 'cancel',
             'name' => ts('Cancel'),
-          ),
-        )
+          ],
+        ]
       );
     }
   }
@@ -98,8 +98,8 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
    * @return void
    */
   public static function loadEmailAddress($id) {
-    $values = array();
-    $params = array('id' => $id);
+    $values = [];
+    $params = ['id' => $id];
     CRM_Core_BAO_OptionValue::retrieve($params, $values);
     if (!empty($values['label'])) {
       $values['from'] = CRM_Utils_Mail::pluckNameFromHeader($values['label']);
@@ -124,7 +124,7 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
    * @return object
    */
   public static function saveEmailAddress($action, $id, $params) {
-    $groupParams = array('name' => ('from_email_address'));
+    $groupParams = ['name' => ('from_email_address')];
     $params['label'] = CRM_Utils_Mail::formatRFC822Email($params['from'], $params['email'], TRUE);
     $params['name'] = $params['label'];
     unset($params['from']);
@@ -154,13 +154,13 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
     $localpart = CRM_Core_BAO_MailSettings::defaultLocalpart();
     $emailDomain = CRM_Core_BAO_MailSettings::defaultDomain();
 
-    $headers = array(
+    $headers = [
       'Subject' => ts('Email Validation - Confirm you are the email owner by click link'),
       'From' => "\"{$domainEmailName}\" <{$domainEmailAddress}>",
       'To' => $email,
       'Reply-To' => "do-not-reply@$emailDomain",
       'Return-Path' => "do-not-reply@$emailDomain",
-    );
+    ];
 
     $hash = new CRM_Core_DAO_Sequence();
     $hash->name = __FUNCTION__.':'.$id;
@@ -177,7 +177,7 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
 
     $key = CRM_Core_Key::get($email);
     $url = CRM_Utils_System::url('civicrm/admin/from_email_address', "reset=1&action=renew&id={$id}&k={$key}", TRUE);
-    $text = ts('You receive this email because you were trying to add new from email address in %1.', array(1 => $domainEmailName))."\n";
+    $text = ts('You receive this email because you were trying to add new from email address in %1.', [1 => $domainEmailName])."\n";
     $text .= ts('To finish email validation, please click the confirmation link below:')."\n";
     $text .= $url;
 
@@ -193,7 +193,7 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
     $mailer = &$config->getMailer();
     if (is_object($mailer)) {
       $mailer->send($email, $h, $b);
-      CRM_Core_Session::setStatus(ts('Email has been sent to : %1', array(1 => $email)));
+      CRM_Core_Session::setStatus(ts('Email has been sent to : %1', [1 => $email]));
       CRM_Core_Error::setCallback();
     }
   }
@@ -211,10 +211,10 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
         if (!$values['filter'] & self::VALID_EMAIL) {
           $values['filter'] = $values['filter'] | self::VALID_EMAIL;
           self::saveEmailAddress(CRM_Core_Action::UPDATE, $id, $values);
-          CRM_Core_Session::setStatus(ts("<strong>%1 - your email address '%2' has been successfully verified.</strong>", array(
+          CRM_Core_Session::setStatus(ts("<strong>%1 - your email address '%2' has been successfully verified.</strong>", [
             1 => ts('Validation Success'),
             2 => $email,
-          )));
+          ]));
           CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin/from_email_address', 'reset=1&action=update&id='.$id));
           return;
         }
@@ -235,9 +235,9 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
    * @return array
    */
   public static function getVerifiedEmail($verifiedType = self::VALID_EMAIL | self::VALID_SPF | self::VALID_DKIM, $returnType = 'email') {
-    $all = array();
+    $all = [];
     CRM_Core_OptionGroup::getAssoc('from_email_address', $all);
-    $verified = array();
+    $verified = [];
     foreach($all['filter'] as $idx => $filter) {
       if ($filter == $verifiedType) {
         $verified[$all['value'][$idx]] = CRM_Utils_Mail::pluckEmailFromHeader($all['label'][$idx]);
@@ -276,7 +276,7 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
     if ($migrateEmail) {
       // check if domain already verified
       $verifiedSPFDKIM = self::VALID_EMAIL;
-      $existsFrom = array();
+      $existsFrom = [];
       list($dontcare, $domain) = explode('@', $fromEmail);
       CRM_Core_OptionGroup::getAssoc('from_email_address', $existsFrom);
       foreach($existsFrom['filter'] as $idx => $filter) {
@@ -291,7 +291,7 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
         }
       }
 
-      $params = array();
+      $params = [];
       $params['email'] = trim($fromEmail);
       $params['from'] = trim($fromName);
       $params['is_active'] = 1;

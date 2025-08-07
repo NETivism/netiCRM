@@ -48,7 +48,7 @@ class CRM_Member_Form_Task_SearchTaskHookSample extends CRM_Member_Form_Task {
    */
   function preProcess() {
     parent::preProcess();
-    $rows = array();
+    $rows = [];
     // display name and membership details of all selected contacts
     $memberIDs = CRM_Utils_Array::implode(',', $this->_memberIds);
 
@@ -63,12 +63,12 @@ WHERE      mem.id IN ( $memberIDs )";
 
     $dao = CRM_Core_DAO::executeQuery($query, CRM_Core_DAO::$_nullArray);
     while ($dao->fetch()) {
-      $rows[] = array(
+      $rows[] = [
         'display_name' => $dao->display_name,
         'start_date' => CRM_Utils_Date::customFormat($dao->start_date),
         'end_date' => CRM_Utils_Date::customFormat($dao->end_date),
         'source' => $dao->source,
-      );
+      ];
     }
     $this->assign('rows', $rows);
   }
@@ -80,12 +80,12 @@ WHERE      mem.id IN ( $memberIDs )";
    * @access public
    */
   public function buildQuickForm() {
-    $this->addButtons(array(
-        array('type' => 'done',
+    $this->addButtons([
+        ['type' => 'done',
           'name' => ts('Done'),
           'isDefault' => TRUE,
-        ),
-      )
+        ],
+      ]
     );
   }
 }

@@ -8,11 +8,11 @@ class CRM_Core_BAO_CustomValueTableTest extends CiviUnitTestCase
 {
     function get_info( ) 
     {
-        return array(
+        return [
                      'name'        => 'Custom Value Table BAOs',
                      'description' => 'Test all Core_BAO_CustomValueTable methods.',
                      'group'       => 'CiviCRM BAO Tests',
-                     );
+                     ];
     }
     
     function setUp( ) 
@@ -27,18 +27,18 @@ class CRM_Core_BAO_CustomValueTableTest extends CiviUnitTestCase
      */
     function testStoreCountry()
     {
-        $params      = array();
+        $params      = [];
         $contactID   = Contact::createIndividual();
         $customGroup = Custom::createGroup( $params ,'Individual' );
-        $fields      = array (
+        $fields      =  [
                               'groupId'  => $customGroup->id,
                               'dataType' => 'Country',
                               'htmlType' => 'Select Country'
-                              );
+                              ];
         
         $customField = Custom::createField( $params, $fields );
         
-        $params[] = array( $customField->id => array (
+        $params[] = [ $customField->id =>  [
 						      'value'            => 1228,
 						      'type'             => 'Country',
 						      'custom_field_id'  => $customField->id,
@@ -46,7 +46,7 @@ class CRM_Core_BAO_CustomValueTableTest extends CiviUnitTestCase
 						      'table_name'       => 'civicrm_value_test_group_'.$customGroup->id,
 						      'column_name'      => 'test_Country_'.$customField->id,
 						      'file_id'          => ''
-						      ));
+						      ]];
 
         require_once 'CRM/Core/BAO/CustomValueTable.php';
         CRM_Core_BAO_CustomValueTable::store( $params, 'civicrm_contact', $contactID );
@@ -63,18 +63,18 @@ class CRM_Core_BAO_CustomValueTableTest extends CiviUnitTestCase
      */
     function atestStoreFile()
     {
-        $params      = array();
+        $params      = [];
         $contactID   = Contact::createIndividual();
         $customGroup = Custom::createGroup( $params ,'Individual' );
-        $fields      = array (
+        $fields      =  [
                               'groupId'  => $customGroup->id,
                               'dataType' => 'File',
                               'htmlType' => 'File'
-                              );
+                              ];
         
         $customField = Custom::createField( $params, $fields );
         
-        $params[] = array( $customField->id => array (
+        $params[] = [ $customField->id =>  [
 						      'value'            => 'i/contact_house.png',
 						      'type'             => 'File',
 						      'custom_field_id'  => $customField->id,
@@ -82,7 +82,7 @@ class CRM_Core_BAO_CustomValueTableTest extends CiviUnitTestCase
 						      'table_name'       => 'civicrm_value_test_group_'.$customGroup->id,
 						      'column_name'      => 'test_File_'.$customField->id,
 						      'file_id'          => 1
-						      ));
+						      ]];
 
         require_once 'CRM/Core/BAO/CustomValueTable.php';
         CRM_Core_BAO_CustomValueTable::store( $params, 'civicrm_contact', $contactID );
@@ -99,18 +99,18 @@ class CRM_Core_BAO_CustomValueTableTest extends CiviUnitTestCase
      */
     function testStoreStateProvince()
     {
-        $params      = array();
+        $params      = [];
         $contactID   = Contact::createIndividual();
         $customGroup = Custom::createGroup( $params ,'Individual' );
-        $fields      = array (
+        $fields      =  [
                               'groupId'  => $customGroup->id,
                               'dataType' => 'StateProvince',
                               'htmlType' => 'Select State/Province'
-                              );
+                              ];
         
         $customField = Custom::createField( $params, $fields );
         
-        $params[] = array( $customField->id => array (
+        $params[] = [ $customField->id =>  [
 						      'value'            => 1029,
 						      'type'             => 'StateProvince',
 						      'custom_field_id'  => $customField->id,
@@ -118,7 +118,7 @@ class CRM_Core_BAO_CustomValueTableTest extends CiviUnitTestCase
 						      'table_name'       => 'civicrm_value_test_group_'.$customGroup->id,
 						      'column_name'      => 'test_StateProvince_'.$customField->id,
 						      'file_id'          => 1
-						      ));
+						      ]];
 	
         require_once 'CRM/Core/BAO/CustomValueTable.php';
         CRM_Core_BAO_CustomValueTable::store( $params, 'civicrm_contact', $contactID );
@@ -135,18 +135,18 @@ class CRM_Core_BAO_CustomValueTableTest extends CiviUnitTestCase
      */
     function testStoreDate()
     {
-        $params      = array();
+        $params      = [];
         $contactID   = Contact::createIndividual();
         $customGroup = Custom::createGroup( $params ,'Individual' );
-        $fields      = array (
+        $fields      =  [
                               'groupId'  => $customGroup->id,
                               'dataType' => 'Date',
                               'htmlType' => 'Select Date'
-                              );
+                              ];
         
         $customField = Custom::createField( $params, $fields );
         
-        $params[] = array( $customField->id => array (
+        $params[] = [ $customField->id =>  [
 						      'value'            => '20080608000000',
 						      'type'             => 'Date',
 						      'custom_field_id'  => $customField->id,
@@ -154,7 +154,7 @@ class CRM_Core_BAO_CustomValueTableTest extends CiviUnitTestCase
 						      'table_name'       => 'civicrm_value_test_group_'.$customGroup->id,
 						      'column_name'      => 'test_Date_'.$customField->id,
 						      'file_id'          => ''
-						      ));
+						      ]];
 
         require_once 'CRM/Core/BAO/CustomValueTable.php';
         CRM_Core_BAO_CustomValueTable::store( $params, 'civicrm_contact', $contactID );
@@ -171,18 +171,18 @@ class CRM_Core_BAO_CustomValueTableTest extends CiviUnitTestCase
      */
     function testStoreRichTextEditor()
     {
-        $params      = array();
+        $params      = [];
         $contactID   = Contact::createIndividual();
         $customGroup = Custom::createGroup( $params ,'Individual' );
-        $fields      = array (
+        $fields      =  [
                               'groupId'  => $customGroup->id,
                               'htmlType' => 'RichTextEditor',
                               'dataType' => 'Memo'
-                              );
+                              ];
         
         $customField = Custom::createField( $params, $fields );
         
-        $params[] = array( $customField->id => array (
+        $params[] = [ $customField->id =>  [
 						      'value'            => '<p><strong>This is a <u>test</u></p>',
 						      'type'             => 'Memo',
 						      'custom_field_id'  => $customField->id,
@@ -190,7 +190,7 @@ class CRM_Core_BAO_CustomValueTableTest extends CiviUnitTestCase
 						      'table_name'       => 'civicrm_value_test_group_'.$customGroup->id,
 						      'column_name'      => 'test_Memo_'.$customField->id,
 						      'file_id'          => ''
-						      ));
+						      ]];
         
         require_once 'CRM/Core/BAO/CustomValueTable.php';
         CRM_Core_BAO_CustomValueTable::store( $params, 'civicrm_contact', $contactID );
@@ -208,18 +208,18 @@ class CRM_Core_BAO_CustomValueTableTest extends CiviUnitTestCase
     function testgetEntityValues()
     {
 
-        $params      = array();
+        $params      = [];
         $contactID   = Contact::createIndividual();
         $customGroup = Custom::createGroup( $params ,'Individual' );
-        $fields      = array (
+        $fields      =  [
                               'groupId'  => $customGroup->id,
                               'htmlType' => 'RichTextEditor',
                               'dataType' => 'Memo'
-                              );
+                              ];
         
         $customField = Custom::createField( $params, $fields );
         
-        $params[] = array( $customField->id => array (
+        $params[] = [ $customField->id =>  [
 						      'value'            => '<p><strong>This is a <u>test</u></p>',
 						      'type'             => 'Memo',
 						      'custom_field_id'  => $customField->id,
@@ -227,7 +227,7 @@ class CRM_Core_BAO_CustomValueTableTest extends CiviUnitTestCase
 						      'table_name'       => 'civicrm_value_test_group_'.$customGroup->id,
 						      'column_name'      => 'test_Memo_'.$customField->id,
 						      'file_id'          => ''
-						      ));
+						      ]];
         
         require_once 'CRM/Core/BAO/CustomValueTable.php';
         CRM_Core_BAO_CustomValueTable::store( $params, 'civicrm_contact', $contactID );
@@ -244,25 +244,25 @@ class CRM_Core_BAO_CustomValueTableTest extends CiviUnitTestCase
     }
 
     function testCustomGroupMultiple( ) {
-        $params      = array();
+        $params      = [];
         $contactID   = Contact::createIndividual();
         $customGroup = Custom::createGroup( $params ,'Individual' );
 
-        $fields      = array (
+        $fields      =  [
                               'groupId'  => $customGroup->id,
                               'dataType' => 'String',
                               'htmlType' => 'Text'
-                              );
+                              ];
 
         $customField = Custom::createField( $params, $fields );
 
-        $params = array( 'entityID'                       => $contactID,
+        $params = [ 'entityID'                       => $contactID,
                          'custom_'.$customField->id.'_-1' => 'First String',
-                         );
+                         ];
         $error = CRM_Core_BAO_CustomValueTable::setValues( $params );
         
-        $newParams = array( 'entityID'                  => $contactID,
-                            'custom_'.$customField->id  => 1 );
+        $newParams = [ 'entityID'                  => $contactID,
+                            'custom_'.$customField->id  => 1 ];
         $result = CRM_Core_BAO_CustomValueTable::getValues( $newParams );
         
         $this->assertEquals( $params['custom_'.$customField->id.'_-1'], $result['custom_'.$customField->id] );

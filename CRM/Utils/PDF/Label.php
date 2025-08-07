@@ -73,50 +73,50 @@ class CRM_Utils_PDF_Label extends TCPDF {
   public $countY = 0;
 
   // Listing of labels size
-  protected $averyLabels = array(
-    '5160' => array('name' => '5160', 'paper-size' => 'letter', 'metric' => 'mm',
+  protected $averyLabels = [
+    '5160' => ['name' => '5160', 'paper-size' => 'letter', 'metric' => 'mm',
       'lMargin' => 4.7625, 'tMargin' => 12.7, 'NX' => 3, 'NY' => 10,
       'SpaceX' => 3.96875, 'SpaceY' => 0, 'width' => 65.875, 'height' => 25.4,
       'font-size' => 8,
-    ),
-    '5161' => array('name' => '5161', 'paper-size' => 'letter', 'metric' => 'mm',
+    ],
+    '5161' => ['name' => '5161', 'paper-size' => 'letter', 'metric' => 'mm',
       'lMargin' => 0.967, 'tMargin' => 10.7, 'NX' => 2, 'NY' => 10,
       'SpaceX' => 3.967, 'SpaceY' => 0, 'width' => 101.6,
       'height' => 25.4, 'font-size' => 8,
-    ),
-    '5162' => array('name' => '5162', 'paper-size' => 'letter', 'metric' => 'mm',
+    ],
+    '5162' => ['name' => '5162', 'paper-size' => 'letter', 'metric' => 'mm',
       'lMargin' => 0.97, 'tMargin' => 20.224, 'NX' => 2, 'NY' => 7,
       'SpaceX' => 4.762, 'SpaceY' => 0, 'width' => 100.807,
       'height' => 35.72, 'font-size' => 8,
-    ),
-    '5163' => array('name' => '5163', 'paper-size' => 'letter', 'metric' => 'mm',
+    ],
+    '5163' => ['name' => '5163', 'paper-size' => 'letter', 'metric' => 'mm',
       'lMargin' => 1.762, 'tMargin' => 10.7, 'NX' => 2,
       'NY' => 5, 'SpaceX' => 3.175, 'SpaceY' => 0, 'width' => 101.6,
       'height' => 50.8, 'font-size' => 8,
-    ),
-    '5164' => array('name' => '5164', 'paper-size' => 'letter', 'metric' => 'in',
+    ],
+    '5164' => ['name' => '5164', 'paper-size' => 'letter', 'metric' => 'in',
       'lMargin' => 0.148, 'tMargin' => 0.5, 'NX' => 2, 'NY' => 3,
       'SpaceX' => 0.2031, 'SpaceY' => 0, 'width' => 4.0, 'height' => 3.33,
       'font-size' => 12,
-    ),
-    '8600' => array('name' => '8600', 'paper-size' => 'letter', 'metric' => 'mm',
+    ],
+    '8600' => ['name' => '8600', 'paper-size' => 'letter', 'metric' => 'mm',
       'lMargin' => 7.1, 'tMargin' => 19, 'NX' => 3, 'NY' => 10,
       'SpaceX' => 9.5, 'SpaceY' => 3.1, 'width' => 66.6,
       'height' => 25.4, 'font-size' => 8,
-    ),
-    'L7160' => array('name' => 'L7160', 'paper-size' => 'A4', 'metric' => 'mm', 'lMargin' => 6,
+    ],
+    'L7160' => ['name' => 'L7160', 'paper-size' => 'A4', 'metric' => 'mm', 'lMargin' => 6,
       'tMargin' => 15.1, 'NX' => 3, 'NY' => 7, 'SpaceX' => 2.5, 'SpaceY' => 0,
       'width' => 63.5, 'height' => 38.1, 'font-size' => 9,
-    ),
-    'L7161' => array('name' => 'L7161', 'paper-size' => 'A4', 'metric' => 'mm', 'lMargin' => 6,
+    ],
+    'L7161' => ['name' => 'L7161', 'paper-size' => 'A4', 'metric' => 'mm', 'lMargin' => 6,
       'tMargin' => 9, 'NX' => 3, 'NY' => 6, 'SpaceX' => 5, 'SpaceY' => 2,
       'width' => 63.5, 'height' => 46.6, 'font-size' => 9,
-    ),
-    'L7163' => array('name' => 'L7163', 'paper-size' => 'A4', 'metric' => 'mm', 'lMargin' => 5,
+    ],
+    'L7163' => ['name' => 'L7163', 'paper-size' => 'A4', 'metric' => 'mm', 'lMargin' => 5,
       'tMargin' => 15, 'NX' => 2, 'NY' => 7, 'SpaceX' => 2.5, 'SpaceY' => 0,
       'width' => 99.1, 'height' => 38.1, 'font-size' => 9,
-    ),
-  );
+    ],
+  ];
 
   /**
    * Constructor
@@ -193,7 +193,7 @@ class CRM_Utils_PDF_Label extends TCPDF {
      */
   function GetHeightChars($pt) {
     // Array matching character sizes and line heights
-    $tableHauteurChars = array(6 => 2, 7 => 2.5, 8 => 3, 9 => 4, 10 => 5, 11 => 6, 12 => 7, 13 => 8, 14 => 9, 15 => 10);
+    $tableHauteurChars = [6 => 2, 7 => 2.5, 8 => 3, 9 => 4, 10 => 5, 11 => 6, 12 => 7, 13 => 8, 14 => 9, 15 => 10];
     if (in_array($pt, array_keys($tableHauteurChars))) {
       return $tableHauteurChars[$pt];
     }
@@ -271,7 +271,7 @@ class CRM_Utils_PDF_Label extends TCPDF {
     $this->SetXY($posX + 3, $posY + 3);
     $maxwidth = $this->width;
     if ($this->generatorMethod) {
-      call_user_func_array(array($this->generatorObject, $this->generatorMethod), array($texte));
+      call_user_func_array([$this->generatorObject, $this->generatorMethod], [$texte]);
     }
     else {
       $this->generateLabel($texte);

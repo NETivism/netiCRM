@@ -161,11 +161,11 @@ class CRM_Core_IDS {
    * @var array
    * @access private
    */
-  private $_threshold = array(
+  private $_threshold = [
     'log' => 30,
     'warn' => 55,
     'kick' => 75,
-  );
+  ];
 
   /**
    * This function includes the IDS vendor parts and runs the
@@ -179,8 +179,8 @@ class CRM_Core_IDS {
     $path = CRM_Utils_Array::implode('/', $args);
 
     // remove tracking parameters to prevent false positive
-    $trackingG = array('fbclid', 'gclid', 'wbraid');
-    $trackingC = array( '__utma', '__utmb', '__utmc', '__utmv', '__utmz', '_gid', '_ga', '_gcl_au', '_fbp');
+    $trackingG = ['fbclid', 'gclid', 'wbraid'];
+    $trackingC = [ '__utma', '__utmb', '__utmc', '__utmv', '__utmz', '_gid', '_ga', '_gcl_au', '_fbp'];
     foreach($trackingG as $g) {
       if (isset($_GET[$g])) {
         unset($_GET[$g]);
@@ -248,7 +248,7 @@ class CRM_Core_IDS {
       $init->config['General']['json'][] = 'IDS_php_input';
     }
 
-    $ids = new Monitor($init, array('sqli', 'dt', 'id', 'lfi', 'rfe'));
+    $ids = new Monitor($init, ['sqli', 'dt', 'id', 'lfi', 'rfe']);
     $result = $ids->run($request);
     unset($request); // release memory
 
@@ -376,7 +376,7 @@ class CRM_Core_IDS {
     $ip = CRM_Utils_System::ipAddress();
     $session = CRM_Core_Session::singleton();
     $contact = $session->get('userID');
-    $data = array(
+    $data = [
       'time' => date('c'),
       'ip' => $ip,
       'impact' => $impact,
@@ -387,22 +387,22 @@ class CRM_Core_IDS {
       'url' => $_SERVER['REQUEST_URI'],
       'method' => $_SERVER['REQUEST_METHOD'],
       'content_type' => $_SERVER["CONTENT_TYPE"],
-    );
+    ];
     foreach ($result as $event) {
       $filters = $event->getFilters();
-      $description = array();
+      $description = [];
       foreach($filters as $filter) {
-        $description[] = array(
+        $description[] = [
           'id' => $filter->getId(),
           'desc' => $filter->getDescription(),
-        );
+        ];
       }
-      $log = array(
+      $log = [
         'field' => $event->getName(),
         'value' => $event->getValue(),
         'tags' => $event->getTags(),
         'filters' => $description,
-      );
+      ];
       $data['events'][] = $log;
     }
     // civicrm logger

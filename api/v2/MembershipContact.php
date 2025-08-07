@@ -65,7 +65,7 @@ function civicrm_membership_contact_create(&$params) {
     return $error;
   }
 
-  $values = array();
+  $values = [];
   $error = _civicrm_membership_format_params($params, $values);
   if (civicrm_error($error)) {
     return $error;
@@ -76,14 +76,14 @@ function civicrm_membership_contact_create(&$params) {
   require_once 'CRM/Core/Action.php';
   $action = CRM_Core_Action::ADD;
   // we need user id during add mode
-  $ids = array('userId' => $params['contact_id']);
+  $ids = ['userId' => $params['contact_id']];
 
   //for edit membership id should be present
   if (CRM_Utils_Array::value('id', $params)) {
-    $ids = array(
+    $ids = [
       'membership' => $params['id'],
       'userId' => $params['contact_id'],
-    );
+    ];
     $action = CRM_Core_Action::UPDATE;
   }
 
@@ -99,9 +99,9 @@ function civicrm_membership_contact_create(&$params) {
     return civicrm_create_error(ts('The membership can not be saved, no valid membership status for given dates'));
   }
 
-  $membership = array();
+  $membership = [];
   _civicrm_object_to_array($membershipBAO, $membership);
-  $values             = array();
+  $values             = [];
   $values['id']       = $membership['id'];
   $values['is_error'] = 0;
 
@@ -153,11 +153,11 @@ function civicrm_membership_contact_get(&$params) {
 
   // get the membership for the given contact ID
   require_once 'CRM/Member/BAO/Membership.php';
-  $membershipParams = array('contact_id' => $contactID);
+  $membershipParams = ['contact_id' => $contactID];
   if ($membershipTypeId) {
     $membershipParams['membership_type_id'] = $membershipTypeId;
   }
-  $membershipValues = array();
+  $membershipValues = [];
   CRM_Member_BAO_Membership::getValues($membershipParams, $membershipValues, $activeOnly);
 
   $recordCount = 0;
@@ -169,8 +169,8 @@ function civicrm_membership_contact_get(&$params) {
     return $membershipValues;
   }
 
-  $members[$contactID] = array();
-  $relationships = array();;
+  $members[$contactID] = [];
+  $relationships = [];;
   foreach ($membershipValues as $membershipId => $values) {
     // populate the membership type name for the membership type id
     require_once 'CRM/Member/BAO/MembershipType.php';
@@ -195,7 +195,7 @@ function civicrm_membership_contact_get(&$params) {
     );
     $groupTree = CRM_Core_BAO_CustomGroup::formatGroupTree($groupTree, 1, CRM_Core_DAO::$_nullObject);
 
-    $defaults = array();
+    $defaults = [];
     CRM_Core_BAO_CustomGroup::setDefaults($groupTree, $defaults);
 
     if (!empty($defaults)) {
@@ -265,7 +265,7 @@ function _civicrm_membership_format_params(&$params, &$values, $create = FALSE) 
           return civicrm_create_error("contact_id not valid: $value");
         }
         $dao     = new CRM_Core_DAO();
-        $qParams = array();
+        $qParams = [];
         $svq     = $dao->singleValueQuery("SELECT id FROM civicrm_contact WHERE id = $value",
           $qParams
         );
@@ -334,11 +334,11 @@ function _civicrm_membership_format_params(&$params, &$values, $create = FALSE) 
     // membership_end_date and membership_source. So, if $values contains
     // membership_start_date, membership_end_date  or membership_source,
     // convert it to start_date, end_date or source
-    $changes = array(
+    $changes = [
       'membership_start_date' => 'start_date',
       'membership_end_date' => 'end_date',
       'membership_source' => 'source',
-    );
+    ];
 
     foreach ($changes as $orgVal => $changeVal) {
       if (isset($values[$orgVal])) {
@@ -413,6 +413,6 @@ function _civicrm_membership_check_params(&$params) {
     return civicrm_create_error("Required fields not found for membership $error");
   }
 
-  return array();
+  return [];
 }
 

@@ -106,10 +106,10 @@ class CRM_Utils_Money {
     // money_format() exists only in certain PHP install (CRM-650)
     $amount = self::formatNumericByFormat($amount, $config->moneyvalueformat);
 
-    $rep = array(
+    $rep = [
       ',' => $config->monetaryThousandSeparator,
       '.' => $config->monetaryDecimalPoint,
-    );
+    ];
 
     // If it contains tags, means that HTML was passed and the
     // amount is already converted properly,
@@ -122,11 +122,11 @@ class CRM_Utils_Money {
     }
 
 
-    $replacements = array(
+    $replacements = [
       '%a' => $money,
       '%C' => $currency,
       '%c' => CRM_Utils_Array::value($currency, self::$_currencySymbols, $currency),
-    );
+    ];
 
     return strtr($format, $replacements);
   }
@@ -165,12 +165,12 @@ class CRM_Utils_Money {
     $amount = floor($amount);
     $amount = (string) $amount;
 
-    $num = array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
-    $cht = array('零', '壹', '貳', '參', '肆', '伍', '陸', '柒', '捌', '玖');
+    $num = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+    $cht = ['零', '壹', '貳', '參', '肆', '伍', '陸', '柒', '捌', '玖'];
     $amt = str_replace($num, $cht, $amount);
     $amt = preg_split('/(?<!^)(?!$)/u', $amt);
     $amt = array_reverse($amt);
-    $unit = array('元整', '拾', '佰', '仟', '萬', '拾萬', '佰萬', '仟萬');
+    $unit = ['元整', '拾', '佰', '仟', '萬', '拾萬', '佰萬', '仟萬'];
     $output = '';
 
     if (count($amt) > 0 && count($amt) < 9) {

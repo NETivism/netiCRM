@@ -82,8 +82,8 @@ function &civicrm_note_create(&$params) {
     $params['modified_date'] = date("Ymd");
   }
 
-  $ids     = array();
-  $ids     = array('id' => CRM_Utils_Array::value('id', $params));
+  $ids     = [];
+  $ids     = ['id' => CRM_Utils_Array::value('id', $params)];
   $noteBAO = CRM_Core_BAO_Note::add($params, $ids);
 
   if (is_a($noteBAO, 'CRM_Core_Error')) {
@@ -91,7 +91,7 @@ function &civicrm_note_create(&$params) {
     return $error;
   }
   else {
-    $note = array();
+    $note = [];
     _civicrm_object_to_array($noteBAO, $note);
     $note['is_error'] = 0;
   }
@@ -153,7 +153,7 @@ function civicrm_note_delete(&$params) {
 function &civicrm_note_get(&$params) {
   _civicrm_initialize();
 
-  $values = array();
+  $values = [];
   if (empty($params)) {
     return civicrm_create_error(ts('No input parameters present'));
   }
@@ -177,7 +177,7 @@ function &civicrm_note_get(&$params) {
   }
 
   if (count($note) < 1) {
-    return civicrm_create_error(ts('%1 notes matching the input parameters', array(1 => count($note))));
+    return civicrm_create_error(ts('%1 notes matching the input parameters', [1 => count($note)]));
   }
 
   $note = array_values($note);

@@ -63,13 +63,13 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
     }
     // make sure we're not creating a new recurring contribution with the same trasaction ID
     // or invoice ID as an existing recurring contribution
-    $duplicates = array();
+    $duplicates = [];
     if (self::checkDuplicate($params, $duplicates)) {
       $error = &CRM_Core_Error::singleton();
       $d = CRM_Utils_Array::implode(', ', $duplicates);
       $error->push(CRM_Core_Error::DUPLICATE_CONTRIBUTION,
         'Fatal',
-        array($d),
+        [$d],
         "Found matching recurring contribution(s): $d"
       );
       return $error;
@@ -132,17 +132,17 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
     $trxn_id = CRM_Utils_Array::value('trxn_id', $params);
     $invoice_id = CRM_Utils_Array::value('invoice_id', $params);
 
-    $clause = array();
-    $params = array();
+    $clause = [];
+    $params = [];
 
     if ($trxn_id) {
       $clause[] = "trxn_id = %1";
-      $params[1] = array($trxn_id, 'String');
+      $params[1] = [$trxn_id, 'String'];
     }
 
     if ($invoice_id) {
       $clause[] = "invoice_id = %2";
-      $params[2] = array($invoice_id, 'String');
+      $params[2] = [$invoice_id, 'String'];
     }
 
     if (empty($clause)) {
@@ -152,7 +152,7 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
     $clause = CRM_Utils_Array::implode(' OR ', $clause);
     if ($id) {
       $clause = "( $clause ) AND id != %3";
-      $params[3] = array($id, 'Integer');
+      $params[3] = [$id, 'Integer'];
     }
 
     $query = "SELECT id FROM civicrm_contribution_recur WHERE $clause";
@@ -168,7 +168,7 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
   static function getPaymentProcessor($id, $mode) {
     $sql = "SELECT c.payment_processor_id, r.processor_id FROM civicrm_contribution c INNER JOIN civicrm_contribution_recur r ON c.contribution_recur_id = r.id WHERE c.payment_processor_id IS NOT NULL AND r.id = %1 ORDER BY c.id ASC LiMIT 0, 1";
 
-    $params = array(1 => array($id, 'Integer'));
+    $params = [1 => [$id, 'Integer']];
     $query = CRM_Core_DAO::executeQuery($sql, $params);
     $query->fetch();
     if(empty($query->payment_processor_id) && empty($query->processor_id)){
@@ -191,7 +191,7 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
    * static  */
   static function getCount(&$ids) {
     $recurID = CRM_Utils_Array::implode(',', $ids);
-    $totalCount = array();
+    $totalCount = [];
 
     $query = " 
          SELECT contribution_recur_id, count( contribution_recur_id ) as commpleted
@@ -283,7 +283,7 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
    * @static
    */
   static function getRecurContributions($contactId) {
-    $params = array();
+    $params = [];
 
     $recurDAO = new CRM_Contribute_DAO_ContributionRecur();
     $recurDAO->contact_id = $contactId;
@@ -345,18 +345,18 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
       if (!empty($contributionId)) {
         $queryContributionExcepFor = 'AND id != %2';
       }
-      $query = CRM_Core_DAO::executeQuery("SELECT id, trxn_id FROM civicrm_contribution WHERE contribution_recur_id = %1 {$queryContributionExcepFor} ORDER BY created_date DESC", array(
-        1 => array($id, 'Integer'),
-        2 => array($contributionId, 'Integer'),
-      ));
+      $query = CRM_Core_DAO::executeQuery("SELECT id, trxn_id FROM civicrm_contribution WHERE contribution_recur_id = %1 {$queryContributionExcepFor} ORDER BY created_date DESC", [
+        1 => [$id, 'Integer'],
+        2 => [$contributionId, 'Integer'],
+      ]);
     }
     else {
-      $query = CRM_Core_DAO::executeQuery("SELECT id, trxn_id FROM civicrm_contribution WHERE contribution_recur_id = %1 ORDER BY id ASC", array(1 => array($id, 'Integer')));
+      $query = CRM_Core_DAO::executeQuery("SELECT id, trxn_id FROM civicrm_contribution WHERE contribution_recur_id = %1 ORDER BY id ASC", [1 => [$id, 'Integer']]);
     }
     $i = 1;
-    $children = array();
+    $children = [];
     $config = CRM_Core_Config::singleton();
-    $exclude = !empty($config->recurringSyncExclude) ? $config->recurringSyncExclude : array();
+    $exclude = !empty($config->recurringSyncExclude) ? $config->recurringSyncExclude : [];
     while ($query->fetch()) {
       if ($i == 1) {
         // load custom field values
@@ -373,7 +373,7 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
         $membership_payment->find(TRUE);
 
         if ($contributionId) {
-          $children = array(0 => $contributionId);
+          $children = [0 => $contributionId];
           break;
         }
       }
@@ -391,7 +391,7 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
         }
       }
       foreach ($children as $cid) {
-        $params = array('entityID' => $cid);
+        $params = ['entityID' => $cid];
         $params = array_merge($params, $params_parent);
         foreach($exclude as $e){
           if(isset($params['custom_'.$e])) {
@@ -460,13 +460,13 @@ FROM (
   ) c
 GROUP BY c.currency";
     $dao = CRM_Core_DAO::executeQuery($sql);
-    $summary = array();
+    $summary = [];
     while($dao->fetch()){
-      $summary[$dao->currency] = array(
+      $summary[$dao->currency] = [
         'contacts' => $dao->contacts,
         'contributions' => $dao->contributions,
         'amount' => $dao->amount,
-      );
+      ];
     }
     return $summary;
   }
@@ -494,13 +494,13 @@ GROUP BY c.currency";
     }
     $dao->free();
 
-    $labels = $values = array();
+    $labels = $values = [];
     $increment = NULL;
-    $axisformat = array(
+    $axisformat = [
       'month' => 'n',
       'year' => 'Y',
       'day' => 'd',
-    );
+    ];
     foreach($slot as $installment => $amount){
       $increment += $amount;
       $amount = $unlimit + $over + $increment;
@@ -510,14 +510,14 @@ GROUP BY c.currency";
     ksort($values);
     ksort($labels);
     
-    $chart = array(
+    $chart = [
       'id' => 'chart-recur',
       'selector' => '#chart-recur',
-      'title' => ts('Recurring contributions estimated in next %1 %2', array(1 => $limit, 2 => ts($frequency_unit))),
+      'title' => ts('Recurring contributions estimated in next %1 %2', [1 => $limit, 2 => ts($frequency_unit)]),
       'labels' => json_encode(array_values($labels)),
-      'series' => json_encode(array(array_values($values))),
+      'series' => json_encode([array_values($values)]),
       'type' => 'Line',
-    );
+    ];
     return $chart;
   }
 
@@ -537,7 +537,7 @@ GROUP BY c.currency";
 
     $recurFields = array_keys((new CRM_Contribute_DAO_ContributionRecur())->fields());
 
-    $before = $after = array();
+    $before = $after = [];
     foreach ($recurFields as $field) {
       $before[$field] = empty($recurDAO->$field) ? NULL : $recurDAO->$field;
       $after[$field] = empty($params->$field) ? NULL : $params->$field;
@@ -546,19 +546,19 @@ GROUP BY c.currency";
         $after[$field] = $recurDAO->$field; 
       }
     }
-    $data = array('before' => $before, 'after' => $after);
+    $data = ['before' => $before, 'after' => $after];
     if (!empty($message)) {
       $data['message'] = $message;
     }
     $session = CRM_Core_Session::singleton();
     $contactId = $session->get('userID');
-    $logParams = array(
+    $logParams = [
       'entity_table' => 'civicrm_contribution_recur',
       'entity_id' => $params->id,
       'data' => serialize($data),
       'modified_id' => $contactId,
       'modified_date' => date('YmdHis'),
-    );
+    ];
     if (!empty($logId)) {
       $logParams['id'] = $logId;
     }
@@ -571,14 +571,14 @@ GROUP BY c.currency";
     if (empty($userId)) {
       $userId = "NULL";
     }
-    $noteParams = array(
+    $noteParams = [
       'entity_table'  => 'civicrm_contribution_recur',
       'subject'       => $title,
       'note'          => $body,
       'entity_id'     => $recurringId,
       'contact_id'    => $userId,
       'modified_date' => date('YmdHis'),
-    );
+    ];
     $note = CRM_Core_BAO_Note::add( $noteParams, NULL );
   }
 }

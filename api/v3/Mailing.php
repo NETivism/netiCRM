@@ -48,7 +48,7 @@
  * @param array $params
  * @return array API Success Array
  */
-function civicrm_api3_mailing_create($params, $ids = array()) {
+function civicrm_api3_mailing_create($params, $ids = []) {
   return _civicrm_api3_basic_create(_civicrm_api3_get_BAO(__FUNCTION__), $params);
 }
 
@@ -73,7 +73,7 @@ function _civicrm_api3_mailing_create_spec(&$params) {
  * @param array $params
  * @return array
  */
-function civicrm_api3_mailing_get($params, $ids = array()) {
+function civicrm_api3_mailing_get($params, $ids = []) {
   return _civicrm_api3_basic_get(_civicrm_api3_get_BAO(__FUNCTION__), $params);
 }
 
@@ -213,7 +213,7 @@ function civicrm_api3_mailing_event_click($params) {
 
   civicrm_api3_verify_mandatory($params,
     'CRM_Mailing_Event_DAO_TrackableURLOpen',
-    array('event_queue_id', 'url_id'),
+    ['event_queue_id', 'url_id'],
     FALSE
   );
 
@@ -222,7 +222,7 @@ function civicrm_api3_mailing_event_click($params) {
 
   $url = CRM_Mailing_Event_BAO_TrackableURLOpen::track($queue, $url_id);
 
-  $values             = array();
+  $values             = [];
   $values['url']      = $url;
   $values['is_error'] = 0;
 
@@ -240,7 +240,7 @@ function civicrm_api3_mailing_event_open($params) {
 
   civicrm_api3_verify_mandatory($params,
     'CRM_Mailing_Event_DAO_Opened',
-    array('event_queue_id'),
+    ['event_queue_id'],
     FALSE
   );
 

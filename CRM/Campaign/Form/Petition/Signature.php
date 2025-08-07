@@ -173,7 +173,7 @@ class CRM_Campaign_Form_Petition_Signature extends CRM_Core_Form {
     //check petition is valid and active
 
     $params['id'] = $this->_surveyId;
-    $this->petition = array();
+    $this->petition = [];
     CRM_Campaign_BAO_Survey::retrieve($params, $this->petition);
     if (empty($this->petition)) {
       CRM_Core_Error::fatal('Petition doesn\'t exist.');
@@ -195,11 +195,11 @@ class CRM_Campaign_Form_Petition_Signature extends CRM_Core_Form {
 
 
 
-    $ufJoinParams = array('entity_id' => $this->_surveyId,
+    $ufJoinParams = ['entity_id' => $this->_surveyId,
       'entity_table' => 'civicrm_survey',
       'module' => 'CiviCampaign',
       'weight' => 2,
-    );
+    ];
 
     $this->_contactProfileId = CRM_Core_BAO_UFJoin::findUFGroupId($ufJoinParams);
     if ($this->_contactProfileId) {
@@ -230,7 +230,7 @@ class CRM_Campaign_Form_Petition_Signature extends CRM_Core_Form {
    */
   function setDefaultValues() {
 
-    $this->_defaults = array();
+    $this->_defaults = [];
     if ($this->_contactId) {
       CRM_Core_BAO_UFGroup::setProfileDefaults($this->_contactId, $this->_contactProfileFields, $this->_defaults, TRUE);
       if ($this->_activityProfileId) {
@@ -296,12 +296,12 @@ class CRM_Campaign_Form_Petition_Signature extends CRM_Core_Form {
       $this->buildCustom($this->_activityProfileId, 'petitionActivityProfile');
     }
     // add buttons
-    $this->addButtons(array(
-        array('type' => 'next',
+    $this->addButtons([
+        ['type' => 'next',
           'name' => ts('Sign the Petition'),
           'isDefault' => TRUE,
-        ),
-      )
+        ],
+      ]
     );
   }
 
@@ -315,7 +315,7 @@ class CRM_Campaign_Form_Petition_Signature extends CRM_Core_Form {
    */
 
   static function formRule($fields, $files, $errors) {
-    $errors = array();
+    $errors = [];
 
     return empty($errors) ? TRUE : $errors;
   }
@@ -393,7 +393,7 @@ class CRM_Campaign_Form_Petition_Signature extends CRM_Core_Form {
         //no matching contacts - create a new contact
 
         $petition_params['id'] = $this->_surveyId;
-        $petition = array();
+        $petition = [];
         CRM_Campaign_BAO_Survey::retrieve($petition_params, $petition);
 
         // Add a source for this new contact

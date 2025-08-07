@@ -65,7 +65,7 @@ class CRM_Friend_Form_Contribute extends CRM_Contribute_Form_ContributionPage {
     $title = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage', $this->_id, 'title');
     CRM_Utils_System::setTitle(ts('Tell a Friend') . " ($title)");
 
-    $defaults = array();
+    $defaults = [];
 
     if (isset($this->_id)) {
       $defaults['entity_table'] = 'civicrm_contribution_page';

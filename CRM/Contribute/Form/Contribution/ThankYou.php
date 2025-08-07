@@ -153,10 +153,10 @@ class CRM_Contribute_Form_Contribution_ThankYou extends CRM_Contribute_Form_Cont
         $dataLayer .= $smarty->fetch('CRM/common/DataLayer.tpl');
       }
       if (!empty($dataLayer)) {
-        $obj = array(
+        $obj = [
           'type' => 'markup',
           'markup' => $dataLayer."\n",
-        );
+        ];
         CRM_Utils_System::addHTMLHead($obj);
         $this->set('dataLayerAdded', true);
       }
@@ -233,7 +233,7 @@ class CRM_Contribute_Form_Contribution_ThankYou extends CRM_Contribute_Form_Cont
     //pcp elements
     if ($this->_pcpId) {
       $this->assign('pcpBlock', TRUE);
-      foreach (array('pcp_display_in_roll', 'pcp_is_anonymous', 'pcp_roll_nickname', 'pcp_personal_note') as $val) {
+      foreach (['pcp_display_in_roll', 'pcp_is_anonymous', 'pcp_roll_nickname', 'pcp_personal_note'] as $val) {
         if (CRM_Utils_Array::value($val, $this->_params)) {
           $this->assign($val, $this->_params[$val]);
         }
@@ -266,11 +266,11 @@ class CRM_Contribute_Form_Contribution_ThankYou extends CRM_Contribute_Form_Cont
     $this->assign('trxn_id', CRM_Utils_Array::value('trxn_id', $this->_params));
     $this->assign('receive_date', CRM_Utils_Date::mysqlToIso(CRM_Utils_Array::value('receive_date', $this->_params)));
 
-    $defaults = array();
-    $options = array();
-    $fields = array();
+    $defaults = [];
+    $options = [];
+    $fields = [];
 
-    $removeCustomFieldTypes = array('Contribution');
+    $removeCustomFieldTypes = ['Contribution'];
     foreach ($this->_fields as $name => $dontCare) {
       $fields[$name] = 1;
     }
@@ -303,7 +303,7 @@ class CRM_Contribute_Form_Contribution_ThankYou extends CRM_Contribute_Form_Cont
             }
           }
         }
-        elseif (in_array($name, array('addressee', 'email_greeting', 'postal_greeting'))
+        elseif (in_array($name, ['addressee', 'email_greeting', 'postal_greeting'])
           && CRM_Utils_Array::value($name . '_custom', $contact)
         ) {
           $defaults[$name . '_custom'] = $contact[$name . '_custom'];

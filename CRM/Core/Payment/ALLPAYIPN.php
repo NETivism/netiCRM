@@ -14,7 +14,7 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
   function main($component, $instrument){
     // get the contribution and contact ids from the GET params
 
-    $objects = $ids = $input = array();
+    $objects = $ids = $input = [];
     $input = $this->_post;
     $this->getIds($ids, $component);
     if (!empty($ids['participant'])) {
@@ -142,7 +142,7 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
     // certainly this is recurring contribution
     if($ids['contributionRecur']){
       $recur = &$objects['contributionRecur'];
-      $params = $null = array();
+      $params = $null = [];
       // see if we are first time, if not first time, save new contribution
       // 6 - expired
       // 5 - processing
@@ -154,7 +154,7 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
       // not the first time (PeriodReturnURL)
       if($this->_get['is_recur']){
         $trxn_id = CRM_Core_Payment_ALLPAY::generateRecurTrxn($input['MerchantTradeNo'], $input['Gwsr']);
-        $local_succ_times = CRM_Core_DAO::singleValueQuery("SELECT count(*) FROM civicrm_contribution WHERE contribution_recur_id = %1 AND contribution_status_id = 1", array(1 => array($recur->id, 'Integer')));
+        $local_succ_times = CRM_Core_DAO::singleValueQuery("SELECT count(*) FROM civicrm_contribution WHERE contribution_recur_id = %1 AND contribution_status_id = 1", [1 => [$recur->id, 'Integer']]);
         if($input['RtnCode'] != 1){
           $contribution->contribution_status_id = 4; // Failed
           $c = self::copyContribution($contribution, $ids['contributionRecur'], $trxn_id);
@@ -186,10 +186,10 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
               $expire_date = str_replace('/', '-', $expire_date).' 23:59:59';
             }
             $sql = "UPDATE civicrm_contribution SET expire_date = %1 WHERE id = %2";
-            $params = array(
-              1 => array( $expire_date, 'String'),
-              2 => array( $c->id, 'Integer'),
-            );
+            $params = [
+              1 => [ $expire_date, 'String'],
+              2 => [ $c->id, 'Integer'],
+            ];
             CRM_Core_DAO::executeQuery($sql, $params);
           }
           $objects['contribution'] = $c;
@@ -244,20 +244,20 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
     $note = date("Y/m/d H:i:s"). ts("Transaction record").": \n".$note."\n===============================\n";
     $note_exists = CRM_Core_BAO_Note::getNote( $contribution->id, 'civicrm_contribution' );
     if(count($note_exists)){
-      $note_id = array( 'id' => reset(array_keys($note_exists)) );
+      $note_id = [ 'id' => reset(array_keys($note_exists)) ];
       $note = $note . reset($note_exists);
     }
     else{
       $note_id = NULL;
     }
     
-    $noteParams = array(
+    $noteParams = [
       'entity_table'  => 'civicrm_contribution',
       'note'          => $note,
       'entity_id'     => $contribution->id,
       'contact_id'    => $contribution->contact_id,
       'modified_date' => date('Ymd')
-    );
+    ];
     CRM_Core_BAO_Note::add( $noteParams, $note_id );
   }
 
@@ -294,23 +294,23 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
           $query = "UPDATE civicrm_contribution_allpay SET data = %2 WHERE cid = %1";
           $existsData = json_decode($allpayDAO->data, TRUE);
           $data = array_merge($existsData, $data);
-          CRM_Core_DAO::executeQuery($query, array(
-            1 => array($cid, 'Positive'),
-            2 => array(json_encode($data), 'String'),
-          ));
+          CRM_Core_DAO::executeQuery($query, [
+            1 => [$cid, 'Positive'],
+            2 => [json_encode($data), 'String'],
+          ]);
         }
         else {
           $query = "INSERT INTO civicrm_contribution_allpay (cid, data) VALUES (%1, %2)";
-          CRM_Core_DAO::executeQuery($query, array(
-            1 => array($cid, 'Positive'),
-            2 => array(json_encode($data), 'String'),
-          ));
+          CRM_Core_DAO::executeQuery($query, [
+            1 => [$cid, 'Positive'],
+            2 => [json_encode($data), 'String'],
+          ]);
         }
 
         if($billing_notify && function_exists('civicrm_allpay_notify_generate')){
-          $maybeSent = CRM_Core_DAO::singleValueQuery("SELECT expire_date FROM civicrm_contribution WHERE id = %1", array(
-            1 => array( $cid, 'Integer'),
-          ));
+          $maybeSent = CRM_Core_DAO::singleValueQuery("SELECT expire_date FROM civicrm_contribution WHERE id = %1", [
+            1 => [ $cid, 'Integer'],
+          ]);
           if (!$maybeSent) {
             civicrm_allpay_notify_generate($cid, TRUE); // send mail
           }
@@ -331,10 +331,10 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
             $expire_date = str_replace('/', '-', $expire_date).' 23:59:59';
           }
           $sql = "UPDATE civicrm_contribution SET expire_date = %1 WHERE id = %2";
-          $params = array(
-            1 => array( $expire_date, 'String'),
-            2 => array( $cid, 'Integer'),
-          );
+          $params = [
+            1 => [ $expire_date, 'String'],
+            2 => [ $cid, 'Integer'],
+          ];
           CRM_Core_DAO::executeQuery($sql, $params);
         }
       }

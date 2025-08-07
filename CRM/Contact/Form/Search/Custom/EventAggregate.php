@@ -43,14 +43,14 @@ class CRM_Contact_Form_Search_Custom_EventAggregate extends CRM_Contact_Form_Sea
     /**
      * Define the columns for search result rows
      */
-    $this->_columns = array(ts('Event') => 'event_name',
+    $this->_columns = [ts('Event') => 'event_name',
       ts('Type') => 'event_type',
       ts('Number of<br />Participant') => 'participant_count',
       ts('Total Payment') => 'payment_amount',
       ts('Fee') => 'fee',
       ts('Net Payment') => 'net_payment',
       ts('Participant') => 'participant',
-    );
+    ];
   }
 
   function buildForm(&$form) {
@@ -68,16 +68,16 @@ class CRM_Contact_Form_Search_Custom_EventAggregate extends CRM_Contact_Form_Sea
     }
 
     $events = CRM_Event_BAO_Event::getEvents(TRUE);
-    $form->add('select', 'event_id', ts('Event Name'), array('' => ts('- select -')) + $events);
+    $form->add('select', 'event_id', ts('Event Name'), ['' => ts('- select -')] + $events);
 
-    $form->addDate('start_date', ts('Payments Date From'), FALSE, array('formatType' => 'custom'));
-    $form->addDate('end_date', ts('...through'), FALSE, array('formatType' => 'custom'));
+    $form->addDate('start_date', ts('Payments Date From'), FALSE, ['formatType' => 'custom']);
+    $form->addDate('end_date', ts('...through'), FALSE, ['formatType' => 'custom']);
 
     /**
      * If you are using the sample template, this array tells the template fields to render
      * for the search form.
      */
-    $form->assign('elements', array('paid_online', 'start_date', 'end_date', 'show_payees', 'event_type_id', 'event_id'));
+    $form->assign('elements', ['paid_online', 'start_date', 'end_date', 'show_payees', 'event_type_id', 'event_id']);
   }
 
   /**
@@ -183,7 +183,7 @@ class CRM_Contact_Form_Search_Custom_EventAggregate extends CRM_Contact_Form_Sea
      *
      */
   function where($includeContactIDs = FALSE) {
-    $clauses = array();
+    $clauses = [];
 
     $clauses[] = "civicrm_participant.status_id in ( 1 )";
     $clauses[] = "civicrm_contribution.is_test = 0";
@@ -209,7 +209,7 @@ class CRM_Contact_Form_Search_Custom_EventAggregate extends CRM_Contact_Form_Sea
     }
 
     if ($includeContactIDs) {
-      $contactIDs = array();
+      $contactIDs = [];
       foreach ($this->_formValues as $id => $value) {
         list($contactID, $additionalID) = CRM_Core_Form::cbExtract($id);
         if ($value && !empty($contactID)) {
@@ -262,7 +262,7 @@ class CRM_Contact_Form_Search_Custom_EventAggregate extends CRM_Contact_Form_Sea
     $dao = CRM_Core_DAO::executeQuery($sql,
       CRM_Core_DAO::$_nullArray
     );
-    $totals = array();
+    $totals = [];
     while ($dao->fetch()) {
       $totals['payment_amount'] = $dao->payment_amount;
       $totals['fee'] = $dao->fee;

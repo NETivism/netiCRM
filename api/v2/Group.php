@@ -102,7 +102,7 @@ function civicrm_group_get(&$params) {
     return civicrm_create_error('Params should be array');
   }
 
-  $returnProperties = array();
+  $returnProperties = [];
   foreach ($params as $n => $v) {
     if (substr($n, 0, 7) == 'return.') {
       $returnProperties[] = substr($n, 7);
@@ -119,7 +119,7 @@ function civicrm_group_get(&$params) {
     return civicrm_create_error('No such group exists');
   }
 
-  $groups = array();
+  $groups = [];
   foreach ($groupObjects as $group) {
     _civicrm_object_to_array($group, $groups[$group->id]);
   }

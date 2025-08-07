@@ -101,13 +101,13 @@ class CRM_Contribute_Form_Payment_Main extends CRM_Contribute_Form_Payment {
       $this->addRadio('payment_processor', ts('Payment Method'), $pps, NULL, "&nbsp;", TRUE);
     }
 
-    $this->addButtons(array(
-        array(
+    $this->addButtons([
+        [
           'type' => 'next',
           'name' => ts('Change Payment Method'),
           'isDefault' => TRUE,
-        ),
-      )
+        ],
+      ]
     );
   }
 
@@ -155,7 +155,7 @@ class CRM_Contribute_Form_Payment_Main extends CRM_Contribute_Form_Payment {
       $this->set('invoiceID', $invoiceID);
     }
     $contrib->save();
-    $values = array();
+    $values = [];
     $contrib->storeValues($contrib, $values);
     $this->set('contrib', $values);
     $ids = $this->getVar('_ids');
@@ -187,7 +187,7 @@ class CRM_Contribute_Form_Payment_Main extends CRM_Contribute_Form_Payment {
    */
   private function payLaterProcessor($pid) {
     // Update status
-    $value = array();
+    $value = [];
     $participant = new CRM_Event_DAO_Participant();
     $participant->id = $pid;
     if ($participant->find(TRUE)) {

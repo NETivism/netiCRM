@@ -99,9 +99,9 @@ class CRM_Import_ImportJob {
       CRM_Core_Error::fatal("Could not get name of the import status field");
     }
     $query = "SELECT * FROM $this->_tableName WHERE $this->_statusFieldName = %1 LIMIT 1";
-    $result = CRM_Core_DAO::executeQuery($query, array(
-      1 => array(CRM_Import_Parser::PENDING, 'Integer'),
-    ));
+    $result = CRM_Core_DAO::executeQuery($query, [
+      1 => [CRM_Import_Parser::PENDING, 'Integer'],
+    ]);
     if ($result->fetch()) {
       return FALSE;
     }
@@ -131,8 +131,8 @@ class CRM_Import_ImportJob {
                   WHERE    TABLE_SCHEMA = ? AND
                            TABLE_NAME LIKE '{$tablePrefix}_%'
                   ORDER BY TABLE_NAME";
-    $result = CRM_Core_DAO::executeQuery($query, array($database));
-    $incompleteImportTables = array();
+    $result = CRM_Core_DAO::executeQuery($query, [$database]);
+    $incompleteImportTables = [];
     /* #24589
     // Very confuse code here
     // this will trigger "Using $this when not in object context error"

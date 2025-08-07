@@ -78,7 +78,7 @@ class CRM_Core_DAO_LocationType extends CRM_Core_DAO
    * @static
    */
   static $_log = true;
-  /**
+    /**
    * Location Type ID
    *
    * @var int unsigned
@@ -126,7 +126,7 @@ class CRM_Core_DAO_LocationType extends CRM_Core_DAO
    * @var boolean
    */
   public $is_default;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -136,7 +136,7 @@ class CRM_Core_DAO_LocationType extends CRM_Core_DAO
   {
     parent::__construct();
   }
-  /**
+    /**
    * returns all the column names of this table
    *
    * @access public
@@ -145,53 +145,53 @@ class CRM_Core_DAO_LocationType extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'id' => array(
+      self::$_fields = [
+        'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'label' => array(
+                  ] ,
+        'label' => [
           'name' => 'label',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Location Type Label') ,
-          'maxlength' => 128,
-          'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'name' => array(
+           'maxlength' => 128,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
+        'name' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Location Type') ,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ) ,
-        'vcard_name' => array(
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
+        'vcard_name' => [
           'name' => 'vcard_name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('vCard Location Type') ,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ) ,
-        'description' => array(
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
+        'description' => [
           'name' => 'description',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Description') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'is_reserved' => array(
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
+        'is_reserved' => [
           'name' => 'is_reserved',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ) ,
-        'is_active' => array(
+                  ] ,
+        'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ) ,
-        'is_default' => array(
+                  ] ,
+        'is_default' => [
           'name' => 'is_default',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ) ,
-      );
+                  ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -203,8 +203,8 @@ class CRM_Core_DAO_LocationType extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -224,7 +224,7 @@ class CRM_Core_DAO_LocationType extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -235,7 +235,7 @@ class CRM_Core_DAO_LocationType extends CRM_Core_DAO
           }
         }
       }
-    }
+          }
     return self::$_import;
   }
   /**
@@ -247,7 +247,7 @@ class CRM_Core_DAO_LocationType extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
@@ -258,7 +258,7 @@ class CRM_Core_DAO_LocationType extends CRM_Core_DAO
           }
         }
       }
-    }
+          }
     return self::$_export;
   }
 }

@@ -51,7 +51,7 @@ class CRM_Member_Form_MembershipBlock extends CRM_Contribute_Form_ContributionPa
    */
   function setDefaultValues() {
     //parent::setDefaultValues();
-    $defaults = array();
+    $defaults = [];
     if (isset($this->_id)) {
 
       $dao = new CRM_Member_DAO_MembershipBlock();
@@ -64,7 +64,7 @@ class CRM_Member_Form_MembershipBlock extends CRM_Contribute_Form_ContributionPa
     // for membership_types
     if (isset($defaults['membership_types'])) {
       $membershipType = explode(',', $defaults['membership_types']);
-      $newMembershipType = array();
+      $newMembershipType = [];
       foreach ($membershipType as $k => $v) {
         $newMembershipType[$v] = 1;
       }
@@ -93,7 +93,7 @@ class CRM_Member_Form_MembershipBlock extends CRM_Contribute_Form_ContributionPa
     $membershipTypes = CRM_Member_BAO_MembershipType::getMembershipTypes();
 
     if (!empty($membershipTypes)) {
-      $this->addElement('checkbox', 'is_active', ts('Membership Section Enabled?'), NULL, array('onclick' => "memberBlock(this);"));
+      $this->addElement('checkbox', 'is_active', ts('Membership Section Enabled?'), NULL, ['onclick' => "memberBlock(this);"]);
 
       $this->addElement('text', 'new_title', ts('Title - New Membership'), CRM_Core_DAO::getAttribute('CRM_Member_DAO_MembershipBlock', 'new_title'));
 
@@ -107,8 +107,8 @@ class CRM_Member_Form_MembershipBlock extends CRM_Contribute_Form_ContributionPa
       $this->addElement('checkbox', 'display_min_fee', ts('Display Membership Fee'));
       $this->addElement('checkbox', 'is_separate_payment', ts('Separate Membership Payment'));
 
-      $membership = array();
-      $membershipDefault = array();
+      $membership = [];
+      $membershipDefault = [];
       foreach ($membershipTypes as $k => $v) {
         $membership[] = $this->createElement('advcheckbox', $k, NULL, $v);
         $membershipDefault[] = $this->createElement('radio', NULL, NULL, NULL, $k);
@@ -117,22 +117,22 @@ class CRM_Member_Form_MembershipBlock extends CRM_Contribute_Form_ContributionPa
       $this->addGroup($membership, 'membership_type', ts('Membership Types'));
       $this->addGroup($membershipDefault, 'membership_type_default', ts('Membership Types Default'));
 
-      $this->addFormRule(array('CRM_Member_Form_MembershipBlock', 'formRule'), $this->_id);
+      $this->addFormRule(['CRM_Member_Form_MembershipBlock', 'formRule'], $this->_id);
     }
 
     $session = CRM_Core_Session::singleton();
     $single = $session->get('singleForm');
     if ($single) {
-      $this->addButtons(array(
-          array('type' => 'next',
+      $this->addButtons([
+          ['type' => 'next',
             'name' => ts('Save'),
             'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
             'isDefault' => TRUE,
-          ),
-          array('type' => 'cancel',
+          ],
+          ['type' => 'cancel',
             'name' => ts('Cancel'),
-          ),
-        )
+          ],
+        ]
       );
     }
     else {
@@ -151,7 +151,7 @@ class CRM_Member_Form_MembershipBlock extends CRM_Contribute_Form_ContributionPa
    * @static
    */
   static function formRule($params, $files, $contributionPageId = NULL) {
-    $errors = array();
+    $errors = [];
     if (CRM_Utils_Array::value('is_active', $params)) {
 
       // don't allow price set w/ membership signup, CRM-5095
@@ -221,7 +221,7 @@ class CRM_Member_Form_MembershipBlock extends CRM_Contribute_Form_ContributionPa
         $params['id'] = $membershipID;
       }
 
-      $membershipTypes = array();
+      $membershipTypes = [];
       if (is_array($params['membership_type'])) {
         foreach ($params['membership_type'] as $k => $v) {
           if ($v) {

@@ -75,9 +75,9 @@ class CRM_Campaign_Page_Vote extends CRM_Core_Page {
   }
 
   function browse() {
-    $this->_tabs = array('reserve' => ts('Reserve Respondents'),
+    $this->_tabs = ['reserve' => ts('Reserve Respondents'),
       'interview' => ts('Interview Respondents'),
-    );
+    ];
 
     $this->_surveyId = CRM_Utils_Request::retrieve('sid', 'Positive', $this);
     $this->_interviewerId = CRM_Utils_Request::retrieve('cid', 'Positive', $this);
@@ -116,7 +116,7 @@ class CRM_Campaign_Page_Vote extends CRM_Core_Page {
       $superUser = TRUE;
     }
 
-    $allTabs = array();
+    $allTabs = [];
     foreach ($this->_tabs as $name => $title) {
       if (!$superUser &&
         !CRM_Core_Permission::check("{$name} campaign contacts")
@@ -131,12 +131,12 @@ class CRM_Campaign_Page_Vote extends CRM_Core_Page {
       if ($this->_interviewerId) {
         $urlParams .= "&cid={$this->_interviewerId}";
       }
-      $allTabs[] = array('id' => $name,
+      $allTabs[] = ['id' => $name,
         'title' => $title,
         'url' => CRM_Utils_System::url('civicrm/campaign/vote',
           $urlParams
         ),
-      );
+      ];
     }
 
     $this->assign('allTabs', empty($allTabs) ? FALSE : $allTabs);

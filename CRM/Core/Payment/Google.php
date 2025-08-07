@@ -99,7 +99,7 @@ class CRM_Core_Payment_Google extends CRM_Core_Payment {
   function checkConfig() {
     $config = CRM_Core_Config::singleton();
 
-    $error = array();
+    $error = [];
 
     if (empty($this->_paymentProcessor['user_name'])) {
       $error[] = ts('User Name is not set in the Administer CiviCRM &raquo; Payment Processor.');
@@ -191,14 +191,14 @@ class CRM_Core_Payment_Google extends CRM_Core_Payment {
     $cartVal = base64_encode($cart->GetXML());
     $signatureVal = base64_encode($cart->CalcHmacSha1($cart->GetXML()));
 
-    $googleParams = array('cart' => $cartVal,
+    $googleParams = ['cart' => $cartVal,
       'signature' => $signatureVal,
-    );
+    ];
 
 
-    $params = array('method' => HTTP_REQUEST_METHOD_POST,
+    $params = ['method' => HTTP_REQUEST_METHOD_POST,
       'allowRedirects' => FALSE,
-    );
+    ];
     $request = new HTTP_Request($url, $params);
     foreach ($googleParams as $key => $value) {
       $request->addPostData($key, $value);
@@ -212,7 +212,7 @@ class CRM_Core_Payment_Google extends CRM_Core_Payment {
 
     if ($request->getResponseCode() != 302) {
       CRM_Core_Error::fatal(ts('Invalid response code received from Google Checkout: %1',
-          array(1 => $request->getResponseCode())
+          [1 => $request->getResponseCode()]
         ));
     }
     CRM_Utils_System::redirect($request->getResponseHeader('location'));
@@ -314,7 +314,7 @@ class CRM_Core_Payment_Google extends CRM_Core_Payment {
     $root = $xmlParser->GetRoot();
     $data = $xmlParser->GetData();
 
-    return array($root, $data);
+    return [$root, $data];
   }
 }
 

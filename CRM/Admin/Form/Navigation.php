@@ -49,7 +49,7 @@ class CRM_Admin_Form_Navigation extends CRM_Admin_Form {
   /**
    * Default values
    */
-  protected $_defaults = array();
+  protected $_defaults = [];
 
   /**
    * Function to build the form
@@ -65,7 +65,7 @@ class CRM_Admin_Form_Navigation extends CRM_Admin_Form {
     }
 
     if (isset($this->_id)) {
-      $params = array('id' => $this->_id);
+      $params = ['id' => $this->_id];
       CRM_Core_BAO_Navigation::retrieve($params, $this->_defaults);
     }
 
@@ -82,16 +82,16 @@ class CRM_Admin_Form_Navigation extends CRM_Admin_Form {
     $permissions = CRM_Core_Permission::basicPermissions(TRUE);
     $include = &$this->addElement('advmultiselect', 'permission',
       ts('Permission') . ' ', $permissions,
-      array('size' => 5,
+      ['size' => 5,
         'style' => 'width:150px',
         'class' => 'advmultiselect',
-      )
+      ]
     );
 
-    $include->setButtonAttributes('add', array('value' => ts('Add >>')));
-    $include->setButtonAttributes('remove', array('value' => ts('<< Remove')));
+    $include->setButtonAttributes('add', ['value' => ts('Add >>')]);
+    $include->setButtonAttributes('remove', ['value' => ts('<< Remove')]);
 
-    $operators = array('AND' => 'AND', 'OR' => 'OR');
+    $operators = ['AND' => 'AND', 'OR' => 'OR'];
     $this->add('select', 'permission_operator', ts('Operator'), $operators);
 
     $this->add('checkbox', 'has_separator', ts('Separator?'));
@@ -111,7 +111,7 @@ class CRM_Admin_Form_Navigation extends CRM_Admin_Form {
       $homeMenuId = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_Navigation', 'Home', 'id', 'name');
       unset($parentMenu[$homeMenuId]);
 
-      $parent = $this->add('select', 'parent_id', ts('Parent'), array('' => ts('-- select --')) + $parentMenu);
+      $parent = $this->add('select', 'parent_id', ts('Parent'), ['' => ts('-- select --')] + $parentMenu);
     }
   }
 
@@ -161,7 +161,7 @@ class CRM_Admin_Form_Navigation extends CRM_Admin_Form {
     CRM_Core_BAO_Navigation::resetNavigation();
 
     CRM_Core_Session::setStatus(ts('Menu \'%1\' has been saved.',
-        array(1 => $navigation->label)
+        [1 => $navigation->label]
       ));
   }
   //end of function

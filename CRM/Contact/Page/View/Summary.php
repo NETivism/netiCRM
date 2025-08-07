@@ -134,9 +134,9 @@ class CRM_Contact_Page_View_Summary extends CRM_Contact_Page_View {
     $url = CRM_Utils_System::url('civicrm/contact/view', 'reset=1&cid=' . $this->_contactId);
     $session->pushUserContext($url);
 
-    $params = array();
-    $defaults = array();
-    $ids = array();
+    $params = [];
+    $defaults = [];
+    $ids = [];
 
     $params['id'] = $params['contact_id'] = $this->_contactId;
     $params['noRelationships'] = $params['noNotes'] = $params['noGroups'] = TRUE;
@@ -156,23 +156,23 @@ class CRM_Contact_Page_View_Summary extends CRM_Contact_Page_View {
       }
     }
 
-    $communicationType = array(
-      'phone' => array(
+    $communicationType = [
+      'phone' => [
         'type' => 'phoneType',
         'id' => 'phone_type',
-      ),
-      'im' => array(
+      ],
+      'im' => [
         'type' => 'IMProvider',
         'id' => 'provider',
-      ),
-      'website' => array(
+      ],
+      'website' => [
         'type' => 'websiteType',
         'id' => 'website_type',
-      ),
-      'address' => array('skip' => TRUE, 'customData' => 1),
-      'email' => array('skip' => TRUE),
-      'openid' => array('skip' => TRUE),
-    );
+      ],
+      'address' => ['skip' => TRUE, 'customData' => 1],
+      'email' => ['skip' => TRUE],
+      'openid' => ['skip' => TRUE],
+    ];
 
     foreach ($communicationType as $key => $value) {
       if (CRM_Utils_Array::value($key, $defaults)) {
@@ -212,7 +212,7 @@ class CRM_Contact_Page_View_Summary extends CRM_Contact_Page_View {
     $contactTags = CRM_Core_BAO_EntityTag::getContactTags($this->_contactId);
 
     if ( !empty( $contactTags ) ) {
-      $contactTagsHtml = array();
+      $contactTagsHtml = [];
       foreach ($contactTags as $key => $value) {
         $tagUrl = CRM_Utils_System::url('civicrm/contact/search','reset=1&force=1&tid=' . $key);
         $contactTagsHtml[] = '<a href="' . $tagUrl . '">' . $value . '</a>';
@@ -225,11 +225,11 @@ class CRM_Contact_Page_View_Summary extends CRM_Contact_Page_View {
     //Show blocks only if they are visible in edit form
 
     $this->_editOptions = CRM_Core_BAO_Preferences::valueOptions('contact_edit_options');
-    $configItems = array('CommBlock' => 'Communication Preferences',
+    $configItems = ['CommBlock' => 'Communication Preferences',
       'Demographics' => 'Demographics',
       'TagsAndGroups' => 'Tags and Groups',
       'Notes' => 'Notes',
-    );
+    ];
 
     foreach ($configItems as $c => $t) {
       $varName = '_show' . $c;
@@ -238,13 +238,13 @@ class CRM_Contact_Page_View_Summary extends CRM_Contact_Page_View {
     }
 
     // get contact name of shared contact names
-    $sharedAddresses = array();
+    $sharedAddresses = [];
     $shareAddressContactNames = CRM_Contact_BAO_Contact_Utils::getAddressShareContactNames($defaults['address']);
     foreach ($defaults['address'] as $key => $addressValue) {
       if (CRM_Utils_Array::value('master_id', $addressValue) && !$shareAddressContactNames[$addressValue['master_id']]['is_deleted']) {
-        $sharedAddresses[$key]['shared_address_display'] = array('address' => $addressValue['display'],
+        $sharedAddresses[$key]['shared_address_display'] = ['address' => $addressValue['display'],
           'name' => $shareAddressContactNames[$addressValue['master_id']]['name'],
-        );
+        ];
       }
     }
     $this->assign('sharedAddresses', $sharedAddresses);
@@ -273,14 +273,14 @@ class CRM_Contact_Page_View_Summary extends CRM_Contact_Page_View {
     }
     else {
       if (!empty($contact->created_date)) {
-        $createdBy = array(
+        $createdBy = [
           'date' => $contact->created_date,
-        );  
+        ];  
         $this->assign_by_ref('createdBy', $createdBy);
       }
     }
 
-    $allTabs = array();
+    $allTabs = [];
     $weight = 10;
 
     $this->_viewOptions = CRM_Core_BAO_Preferences::valueOptions('contact_view_options', TRUE);
@@ -311,12 +311,12 @@ class CRM_Contact_Page_View_Summary extends CRM_Contact_Page_View {
         if (CRM_Utils_Request::retrieve('isTest', 'Positive', $this)) {
           $q = $q . "&isTest=1";
         }
-        $allTabs[] = array('id' => $i,
+        $allTabs[] = ['id' => $i,
           'url' => CRM_Utils_System::url("civicrm/contact/view/$u", $q),
           'title' => $elem['title'],
           'weight' => $elem['weight'],
           'count' => CRM_Contact_BAO_Contact::getCountComponent($u, $this->_contactId),
-        );
+        ];
         // make sure to get maximum weight, rest of tabs go after
         // FIXME: not very elegant again
         if ($weight < $elem['weight']) {
@@ -325,14 +325,14 @@ class CRM_Contact_Page_View_Summary extends CRM_Contact_Page_View {
       }
     }
 
-    $rest = array('activity' => ts('Activities'),
+    $rest = ['activity' => ts('Activities'),
       'case' => ts('Cases'),
       'rel' => ts('Relationships'),
       'group' => ts('Groups'),
       'note' => ts('Notes'),
       'tag' => ts('Tags'),
       'log' => ts('Change Log'),
-    );
+    ];
 
     $config = CRM_Core_Config::singleton();
     if (isset($config->sunlight) &&
@@ -345,14 +345,14 @@ class CRM_Contact_Page_View_Summary extends CRM_Contact_Page_View {
 
     foreach ($rest as $k => $v) {
       if (CRM_Utils_Array::value($k, $this->_viewOptions)) {
-        $allTabs[] = array('id' => $k,
+        $allTabs[] = ['id' => $k,
           'url' => CRM_Utils_System::url("civicrm/contact/view/$k",
             "reset=1&snippet=1&cid={$this->_contactId}"
           ),
           'title' => $v,
           'weight' => $weight,
           'count' => CRM_Contact_BAO_Contact::getCountComponent($k, $this->_contactId),
-        );
+        ];
         $weight += 10;
       }
     }
@@ -366,12 +366,12 @@ class CRM_Contact_Page_View_Summary extends CRM_Contact_Page_View {
 
     foreach ($activeGroups as $group) {
       $id = "custom_{$group['id']}";
-      $allTabs[] = array('id' => $id,
+      $allTabs[] = ['id' => $id,
         'url' => CRM_Utils_System::url($group['path'], $group['query'] . "&snippet=1&selectedChild=$id"),
         'title' => $group['title'],
         'weight' => $weight,
         'count' => CRM_Contact_BAO_Contact::getCountComponent($id, $this->_contactId, $group['table_name']),
-      );
+      ];
       $weight += 10;
     }
 
@@ -381,7 +381,7 @@ class CRM_Contact_Page_View_Summary extends CRM_Contact_Page_View {
 
     // now sort the tabs based on weight
 
-    usort($allTabs, array('CRM_Utils_Sort', 'cmpFunc'));
+    usort($allTabs, ['CRM_Utils_Sort', 'cmpFunc']);
 
     $this->assign('allTabs', $allTabs);
 

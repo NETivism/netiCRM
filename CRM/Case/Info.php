@@ -46,41 +46,41 @@ class CRM_Case_Info extends CRM_Core_Component_Info {
 
   // docs inherited from interface
   public function getInfo() {
-    return array('name' => 'CiviCase',
+    return ['name' => 'CiviCase',
       'translatedName' => ts('CiviCase'),
       'title' => ts('CiviCase Engine'),
       'search' => 1,
       'showActivitiesInCore' => 0,
-    );
+    ];
   }
 
   // docs inherited from interface
   public function getPermissions() {
-    return array('delete in CiviCase',
+    return ['delete in CiviCase',
       'administer CiviCase',
       'access my cases and activities',
       'access all cases and activities',
-    );
+    ];
   }
 
   // docs inherited from interface
   public function getUserDashboardElement() {
-    return array();
+    return [];
   }
 
   // docs inherited from interface
   public function registerTab() {
-    return array('title' => ts('Cases'),
+    return ['title' => ts('Cases'),
       'url' => 'case',
       'weight' => 50,
-    );
+    ];
   }
 
   // docs inherited from interface
   public function registerAdvancedSearchPane() {
-    return array('title' => ts('Cases'),
+    return ['title' => ts('Cases'),
       'weight' => 50,
-    );
+    ];
   }
 
   // docs inherited from interface
@@ -99,11 +99,11 @@ class CRM_Case_Info extends CRM_Core_Component_Info {
         'name'
       );
       if ($atype) {
-        $shortCuts = array_merge($shortCuts, array(array('path' => 'civicrm/case/add',
+        $shortCuts = array_merge($shortCuts, [['path' => 'civicrm/case/add',
               'query' => "reset=1&action=add&atype=$atype&context=standalone",
               'ref' => 'new-case',
               'title' => ts('Case'),
-            )));
+            ]]);
       }
     }
   }

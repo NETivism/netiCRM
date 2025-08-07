@@ -77,7 +77,7 @@ class CRM_Core_BAO_CustomOption {
   static function getCustomOption($fieldID,
     $inactiveNeeded = FALSE
   ) {
-    $options = array();
+    $options = [];
     if (!$fieldID) {
       return $options;
     }
@@ -101,7 +101,7 @@ class CRM_Core_BAO_CustomOption {
     $dao->find();
 
     while ($dao->fetch()) {
-      $options[$dao->id] = array();
+      $options[$dao->id] = [];
       $options[$dao->id]['id'] = $dao->id;
       $options[$dao->id]['label'] = $dao->label;
       $options[$dao->id]['value'] = $dao->value;
@@ -124,7 +124,7 @@ SELECT html_type, data_type
 FROM   civicrm_custom_field
 WHERE  id = %1
 ";
-      $params = array(1 => array($fieldId, 'Integer'));
+      $params = [1 => [$fieldId, 'Integer']];
       $dao = CRM_Core_DAO::executeQuery($sql, $params);
       if ($dao->fetch()) {
         $htmlType = $dao->html_type;
@@ -143,7 +143,7 @@ WHERE  id = %1
       case 'Select':
       case 'Radio':
       case 'Autocomplete-Select':
-        if (!in_array($dataType, array('Boolean', 'ContactReference'))) {
+        if (!in_array($dataType, ['Boolean', 'ContactReference'])) {
           $options = &self::valuesByID($fieldId);
         }
     }
@@ -174,21 +174,21 @@ FROM   civicrm_option_value v,
 WHERE  v.id    = %1
 AND    g.id    = f.option_group_id
 AND    g.id    = v.option_group_id";
-    $params = array(1 => array($optionId, 'Integer'));
+    $params = [1 => [$optionId, 'Integer']];
     $dao = CRM_Core_DAO::executeQuery($query, $params);
     if ($dao->fetch()) {
       if (in_array($dao->dataType,
-          array('Int', 'Float', 'Money', 'Boolean')
+          ['Int', 'Float', 'Money', 'Boolean']
         )) {
         $value = 0;
       }
       else {
         $value = '';
       }
-      $params = array('optionId' => $optionId,
+      $params = ['optionId' => $optionId,
         'fieldId' => $dao->id,
         'value' => $value,
-      );
+      ];
       // delete this value from the tables
       self::updateCustomValues($params);
 
@@ -197,7 +197,7 @@ AND    g.id    = v.option_group_id";
 DELETE
 FROM   civicrm_option_value
 WHERE  id = %1";
-      $params = array(1 => array($optionId, 'Integer'));
+      $params = [1 => [$optionId, 'Integer']];
       CRM_Core_DAO::executeQuery($query, $params);
     }
   }
@@ -218,7 +218,7 @@ FROM   civicrm_custom_group g,
        civicrm_custom_field f
 WHERE  f.custom_group_id = g.id
   AND  f.id = %1";
-    $queryParams = array(1 => array($params['fieldId'], 'Integer'));
+    $queryParams = [1 => [$params['fieldId'], 'Integer']];
     $dao = CRM_Core_DAO::executeQuery($query, $queryParams);
     if ($dao->fetch()) {
       if ($dao->dataType == 'Money') {
@@ -239,13 +239,13 @@ WHERE  {$dao->columnName} = %2";
           else {
             $dataType = $dao->dataType;
           }
-          $queryParams = array(1 => array($params['value'],
+          $queryParams = [1 => [$params['value'],
               $dataType,
-            ),
-            2 => array($oldValue,
+            ],
+            2 => [$oldValue,
               $dataType,
-            ),
-          );
+            ],
+          ];
           break;
 
         case 'AdvMulti-Select':
@@ -256,9 +256,9 @@ WHERE  {$dao->columnName} = %2";
           $query = "
 UPDATE {$dao->tableName}
 SET    {$dao->columnName} = REPLACE( {$dao->columnName}, %1, %2 )";
-          $queryParams = array(1 => array($oldString, 'String'),
-            2 => array($newString, 'String'),
-          );
+          $queryParams = [1 => [$oldString, 'String'],
+            2 => [$newString, 'String'],
+          ];
           break;
 
         default:
@@ -269,7 +269,7 @@ SET    {$dao->columnName} = REPLACE( {$dao->columnName}, %1, %2 )";
   }
 
   static function &valuesByID($customFieldID, $optionGroupID = NULL) {
-    $options = array();
+    $options = [];
     if (!$optionGroupID) {
       $optionGroupID = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_CustomField',
         $customFieldID,

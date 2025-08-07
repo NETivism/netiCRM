@@ -132,12 +132,12 @@ Class CRM_Campaign_BAO_Campaign extends CRM_Campaign_DAO_Campaign {
   }
 
   public static function getAllCampaign($id = NULL) {
-    $campaigns = array();
+    $campaigns = [];
     $whereClause = NULL;
     if ($id) {
       $whereClause = " AND c.id != " . $id;
     }
-    $campaignParent = array();
+    $campaignParent = [];
     $sql = "
 SELECT c.id as id, c.title as title
 FROM  civicrm_campaign c
@@ -159,7 +159,7 @@ WHERE c.title IS NOT NULL" . $whereClause;
    * @static
    */
   static function getCampaign($all = FALSE, $id = FALSE) {
-    $campaign = array();
+    $campaign = [];
     $dao = new CRM_Campaign_DAO_Campaign();
     if (!$all) {
       $dao->is_active = 1;
@@ -184,7 +184,7 @@ WHERE c.title IS NOT NULL" . $whereClause;
    * @static
    */
   static function getCampaignGroups($campaignId) {
-    $campaignGroups = array();
+    $campaignGroups = [];
     if (!$campaignId) {
       return $campaignGroups;
     }

@@ -40,7 +40,7 @@ function smarty_modifier_replacecharbystar($str) {
     $glue = ' ';
   }
   $str_array = explode($glue, $str);
-  $return_array = array();
+  $return_array = [];
   foreach ($str_array as $str2) {
     $return_array[] = _doAddStar($str2);
   }

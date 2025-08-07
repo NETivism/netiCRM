@@ -13,15 +13,15 @@ class CRM_Core_Payment_SPGATEWAYAPI {
   public $_contribution_id; // this request relative contribution.
   public $_logId;
 
-  public static $_apiTypes = array(
+  public static $_apiTypes = [
     'alter-status' => '/MPG/period/AlterStatus',
     'alter-amt' => '/MPG/period/AlterAmt',
-  );
-  public static $_alterStatus = array(
+  ];
+  public static $_alterStatus = [
     'suspend',    // Paused
     'terminate',  // Stop
     'restart',    // Only used in paused recur.
-  );
+  ];
 
   // Used for request result
   public $_apiURL;
@@ -69,7 +69,7 @@ class CRM_Core_Payment_SPGATEWAYAPI {
    */
   public function request($params) {
     $allowedFields = self::getRequestFields($this->_apiType);
-    $post = array();
+    $post = [];
     foreach ($params as $name => $value) {
       if (!in_array($name, $allowedFields)) {
         continue;
@@ -157,7 +157,7 @@ class CRM_Core_Payment_SPGATEWAYAPI {
 
         return $recurResult;
       }
-      else if ( in_array($this->_response->Status, array('PER10061', 'PER10063', 'PER10062', 'PER10064')) ) {
+      else if ( in_array($this->_response->Status, ['PER10061', 'PER10063', 'PER10062', 'PER10064']) ) {
         // Refs #30842, Status is already changed in NewebPay.
         $recurResult['response_status'] = $this->_response->Status;
         $recurResult['msg'] = $recurResult['note_body'] = ts('NewebPay response:') . $this->_response->Message;
@@ -173,19 +173,19 @@ class CRM_Core_Payment_SPGATEWAYAPI {
     }
     else if ($result['success'] == FALSE && $result['status'] == 0){
       // Curl Error
-      $return = array(
+      $return = [
         'is_error' => 1,
         'msg' => reset($result['curlError']),
-      );
+      ];
       return $return;
     }
     else if (empty($this->_response)) {
       // No any response, need to ask Newebpay
       CRM_Core_Error::debug('NewebPay api request as empty response', $this);
-      $return = array(
+      $return = [
         'is_error' => 1,
         'msg' => ts('The response from payment provider is empty.'),
-      );
+      ];
       return $return;
     }
     else {
@@ -197,23 +197,23 @@ class CRM_Core_Payment_SPGATEWAYAPI {
   private function _request() {
     $this->_success = FALSE;
     if (!empty(getenv('CIVICRM_TEST_DSN'))) {
-      return  array(
+      return  [
         'success' => FALSE,
         'status' => NULL,
         'curlError' => NULL,
-      );
+      ];
     }
     $ch = curl_init($this->_apiURL);
-    $opt = array();
+    $opt = [];
     $opt[CURLOPT_RETURNTRANSFER] = TRUE;
     $opt[CURLOPT_SSL_VERIFYPEER] = FALSE;
     if($this->_apiMethod == 'POST'){
       $requestString = http_build_query($this->_request, '', '&');
       $postDataString = self::recurEncrypt($requestString, $this->_paymentProcessor);
-      $postFields = array(
+      $postFields = [
         'MerchantID_' => $this->_paymentProcessor['user_name'],
         'PostData_' => $postDataString,
-      );
+      ];
       $opt[CURLOPT_POST] = TRUE;
       $opt[CURLOPT_POSTFIELDS] = $postFields;
     }
@@ -232,10 +232,10 @@ class CRM_Core_Payment_SPGATEWAYAPI {
     if ($result === FALSE) {
       $errno = curl_errno($ch);
       $err = curl_error($ch);
-      $curlError = array($errno => $err);
+      $curlError = [$errno => $err];
     }
     else{
-      $curlError = array();
+      $curlError = [];
     }
     curl_close($ch);
     if (!empty($result)) {
@@ -246,11 +246,11 @@ class CRM_Core_Payment_SPGATEWAYAPI {
     else {
       $this->_response = NULL;
     }
-    $return = array(
+    $return = [
       'success' => $this->_success,
       'status' => $status,
       'curlError' => $curlError,
-    );
+    ];
     return $return;
   }
 
@@ -262,7 +262,7 @@ class CRM_Core_Payment_SPGATEWAYAPI {
    * @param array $data
    * @return void
    */
-  public static function writeRecord($cid, $data = null){
+  public static function writeRecord($cid, $data = null, $recurringId = NULL){
     if(is_numeric($cid)){
       if(empty($data) && !empty($_POST)){
         $data = $_POST;
@@ -271,20 +271,62 @@ class CRM_Core_Payment_SPGATEWAYAPI {
       if(!empty($data['JSONData'])){
         $data = $data['JSONData'];
       }
-      $exists = CRM_Core_DAO::singleValueQuery("SELECT cid FROM civicrm_contribution_spgateway WHERE cid = %1", array(
-        1 => array($cid, 'Integer'),
-      ));
+      $exists = CRM_Core_DAO::singleValueQuery("SELECT cid FROM civicrm_contribution_spgateway WHERE cid = %1", [
+        1 => [$cid, 'Integer'],
+      ]);
+      if (!is_string($data)) {
+        $data = json_encode($data);
+      }
+      $columns = [
+        'data' => $data,
+      ];
+      if (is_string($data)) {
+        $checkData = json_decode($data);
+        if (!empty($checkData)) {
+          if (isset($checkData->Result) && isset($checkData->Result->TokenValue)) {
+            $columns['trade_no'] = $checkData->Result->TradeNo;
+            $columns['token_value'] = $checkData->Result->TokenValue;
+            $columns['token_life'] = $checkData->Result->TokenLife;
+            $columns['last_four'] = $checkData->Result->Card4No;
+            $columns['expiry_date'] = $checkData->Result->TokenLife;
+          }
+        }
+      }
+      if (!empty($recurringId)) {
+        $columns['contribution_recur_id'] = $recurringId;
+      }
+
+      $sqlParams = [];
+      $counter = 1;
       if ($exists) {
-        CRM_Core_DAO::executeQuery("UPDATE civicrm_contribution_spgateway SET data = %1 WHERE cid = %2", array(
-          1 => array(json_encode($data), 'String'),
-          2 => array($cid, 'Integer')
-        ));
+
+        $updateFields = [];
+        foreach ($columns as $field => $value) {
+          $updateFields[] = "$field = %$counter";
+          $sqlParams[$counter] = [$value, 'String'];
+          $counter++;
+        }
+        $sqlParams[$counter] = [$cid, 'Integer'];
+        $sql = "UPDATE civicrm_contribution_spgateway SET " . implode(', ', $updateFields) . " WHERE cid = %$counter";
+
+        CRM_Core_DAO::executeQuery($sql, $sqlParams);
       }
       else {
-        CRM_Core_DAO::executeQuery("INSERT INTO civicrm_contribution_spgateway (cid, data) VALUES(%2, %1) ", array(
-          1 => array(json_encode($data), 'String'),
-          2 => array($cid, 'Integer')
-        ));
+        $fields = array_keys($columns);
+        $values = [];
+
+        foreach ($columns as $value) {
+          $values[] = "%$counter";
+          $sqlParams[$counter] = [$value, 'String'];
+          $counter++;
+        }
+
+        $fields[] = 'cid';
+        $values[] = "%$counter";
+        $sqlParams[$counter] = [$cid, 'Integer'];
+
+        $sql = "INSERT INTO civicrm_contribution_spgateway (" . implode(', ', $fields) . ") VALUES (" . implode(', ', $values) . ")";
+        CRM_Core_DAO::executeQuery($sql, $sqlParams);
       }
 
       // Set expire time
@@ -300,10 +342,10 @@ class CRM_Core_Payment_SPGATEWAYAPI {
       }
       if(!empty($expire_date)){
         $sql = "UPDATE civicrm_contribution SET expire_date = %1 WHERE id = %2";
-        $params = array(
-          1 => array( $expire_date, 'String'),
-          2 => array( $cid, 'Integer'),
-        );
+        $params = [
+          1 => [ $expire_date, 'String'],
+          2 => [ $cid, 'Integer'],
+        ];
         CRM_Core_DAO::executeQuery($sql, $params);
       }
     }
@@ -370,7 +412,7 @@ class CRM_Core_Payment_SPGATEWAYAPI {
    * @return array
    */
   public static function getRequestFields($apiType, $required = FALSE) {
-    $fields = array();
+    $fields = [];
     switch($apiType){
       case 'alter-status':
         $fields = explode(',', 'RespondType*,Version*,MerOrderNo*,PeriodNo*,AlterType*,TimeStamp*');
@@ -433,7 +475,7 @@ class CRM_Core_Payment_SPGATEWAYAPI {
    * @param array $checkArgs
    * @return string
    */
-  public static function encode(&$args, $payment_processor, $checkArgs = array()){
+  public static function encode(&$args, $payment_processor, $checkArgs = []){
     // remove empty arg
     if(is_array($args)){
       foreach($args as $k => $v){
@@ -444,14 +486,14 @@ class CRM_Core_Payment_SPGATEWAYAPI {
     }
     elseif(is_string($args)){
       $tmp = explode('&', $args);
-      $args = array();
+      $args = [];
       foreach($tmp as $v){
         list($key, $value) = explode('=', $v);
         $args[$key] = $value;
       }
     }
     if(count($checkArgs) == 0){
-      $checkArgs = array('HashKey','Amt','MerchantID','MerchantOrderNo','TimeStamp','Version','HashIV');
+      $checkArgs = ['HashKey','Amt','MerchantID','MerchantOrderNo','TimeStamp','Version','HashIV'];
     }
     foreach($checkArgs as $k){
       switch ($k) {
@@ -495,7 +537,7 @@ class CRM_Core_Payment_SPGATEWAYAPI {
    * @return string
    */
   public static function checkMacValue(&$args, $payment_processor){
-    $used_args = array('HashKey','Amt','MerchantID','MerchantOrderNo','TimeStamp','Version','HashIV');
+    $used_args = ['HashKey','Amt','MerchantID','MerchantOrderNo','TimeStamp','Version','HashIV'];
     return self::encode($args, $payment_processor, $used_args);
   }
 
@@ -507,8 +549,27 @@ class CRM_Core_Payment_SPGATEWAYAPI {
    * @return string
    */
   public static function checkCode(&$args, $payment_processor){
-    $used_args = array('HashIV','Amt','MerchantID','MerchantOrderNo','TradeNo','HashKey');
+    $used_args = ['HashIV','Amt','MerchantID','MerchantOrderNo','TradeNo','HashKey'];
     return self::encode($args, $payment_processor, $used_args);
+  }
+
+  /**
+   * tradeSha for agreement payment
+   *
+   * @param string $aesString
+   * @param object $paymentProcessor
+   */
+  public static function tradeSha($aesString, $paymentProcessor) {
+    $hashKey = $paymentProcessor['password'];
+    self::checkKeyIV($hashKey);
+    $hashIV = $paymentProcessor['signature'];
+    self::checkKeyIV($hashIV);
+    $sha = hash("sha256", implode('&', [
+      'HashKey='.$hashKey,
+      $aesString,
+      'HashIV='.$hashIV,
+    ]));
+    return strtoupper($sha);
   }
 
   /**

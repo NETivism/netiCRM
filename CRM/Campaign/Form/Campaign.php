@@ -106,11 +106,11 @@ class CRM_Campaign_Form_Campaign extends CRM_Core_Form {
    * @return None
    */
   function setDefaultValues() {
-    $defaults = array();
+    $defaults = [];
 
     // if we are editing
     if (isset($this->_campaignId)) {
-      $params = array('id' => $this->_campaignId);
+      $params = ['id' => $this->_campaignId];
 
       CRM_Campaign_BAO_Campaign::retrieve($params, $defaults);
     }
@@ -146,7 +146,7 @@ class CRM_Campaign_Form_Campaign extends CRM_Core_Form {
 
     $dao = new CRM_Campaign_DAO_CampaignGroup();
 
-    $campaignGroups = array();
+    $campaignGroups = [];
     $dao->campaign_id = $this->_campaignId;
     $dao->find();
 
@@ -163,15 +163,15 @@ class CRM_Campaign_Form_Campaign extends CRM_Core_Form {
   public function buildQuickForm() {
     if ($this->_action & CRM_Core_Action::DELETE) {
 
-      $this->addButtons(array(
-          array('type' => 'next',
+      $this->addButtons([
+          ['type' => 'next',
             'name' => ts('Delete'),
             'isDefault' => TRUE,
-          ),
-          array('type' => 'cancel',
+          ],
+          ['type' => 'cancel',
             'name' => ts('Cancel'),
-          ),
-        )
+          ],
+        ]
       );
       return;
     }
@@ -186,18 +186,18 @@ class CRM_Campaign_Form_Campaign extends CRM_Core_Form {
     $this->add('textarea', 'description', ts('Description'), $attributes['description']);
 
     // add campaign start date
-    $this->addDateTime('start_date', ts('Start Date'), TRUE, array('formatType' => 'activityDateTime'));
+    $this->addDateTime('start_date', ts('Start Date'), TRUE, ['formatType' => 'activityDateTime']);
 
     // add campaign end date
-    $this->addDateTime('end_date', ts('End Date'), FALSE, array('formatType' => 'activityDateTime'));
+    $this->addDateTime('end_date', ts('End Date'), FALSE, ['formatType' => 'activityDateTime']);
 
     // add campaign type
     $campaignType = CRM_Campaign_PseudoConstant::campaignType();
-    $this->add('select', 'campaign_type_id', ts('Campaign Type'), array('' => ts('- select -')) + $campaignType, TRUE);
+    $this->add('select', 'campaign_type_id', ts('Campaign Type'), ['' => ts('- select -')] + $campaignType, TRUE);
 
     // add campaign status
     $campaignStatus = CRM_Campaign_PseudoConstant::campaignStatus();
-    $this->addElement('select', 'status_id', ts('Campaign Status'), array('' => ts('- select -')) + $campaignStatus);
+    $this->addElement('select', 'status_id', ts('Campaign Status'), ['' => ts('- select -')] + $campaignStatus);
 
     // add External Identifire Element
     $this->add('text', 'external_identifier', ts('External Id'),
@@ -210,7 +210,7 @@ class CRM_Campaign_Form_Campaign extends CRM_Core_Form {
 
     if ($campaigns) {
       $this->addElement('select', 'parent_id', ts('Parent Id'),
-        array('' => ts('- select Parent -')) + $campaigns
+        ['' => ts('- select Parent -')] + $campaigns
       );
     }
 
@@ -220,43 +220,43 @@ class CRM_Campaign_Form_Campaign extends CRM_Core_Form {
     $inG = &$this->addElement('advmultiselect', 'includeGroups',
       ts('Include Group(s)') . ' ',
       $groups,
-      array('size' => 5,
+      ['size' => 5,
         'style' => 'width:240px',
         'class' => 'advmultiselect',
-      )
+      ]
     );
-    $inG->setButtonAttributes('add', array('value' => ts('Add >>')));
-    $inG->setButtonAttributes('remove', array('value' => ts('<< Remove')));
+    $inG->setButtonAttributes('add', ['value' => ts('Add >>')]);
+    $inG->setButtonAttributes('remove', ['value' => ts('<< Remove')]);
 
     // is this Campaign active
     $this->addElement('checkbox', 'is_active', ts('Is Active?'));
 
     if ($this->_context == 'dialog') {
-      $this->addButtons(array(
-          array('type' => 'next',
+      $this->addButtons([
+          ['type' => 'next',
             'name' => ts('Save'),
             'isDefault' => TRUE,
-          ),
-          array('type' => 'cancel',
+          ],
+          ['type' => 'cancel',
             'name' => ts('Cancel'),
-            'js' => array('onclick' => "cj('#campaign-dialog').dialog('close'); return false;"),
-          ),
-        ));
+            'js' => ['onclick' => "cj('#campaign-dialog').dialog('close'); return false;"],
+          ],
+        ]);
     }
     else {
-      $this->addButtons(array(
-          array('type' => 'next',
+      $this->addButtons([
+          ['type' => 'next',
             'name' => ts('Save'),
             'isDefault' => TRUE,
-          ),
-          array('type' => 'next',
+          ],
+          ['type' => 'next',
             'name' => ts('Save and New'),
             'subName' => 'new',
-          ),
-          array('type' => 'cancel',
+          ],
+          ['type' => 'cancel',
             'name' => ts('Cancel'),
-          ),
-        )
+          ],
+        ]
       );
     }
   }
@@ -271,7 +271,7 @@ class CRM_Campaign_Form_Campaign extends CRM_Core_Form {
    */
 
   static function formRule($fields, $files, $errors) {
-    $errors = array();
+    $errors = [];
 
     return empty($errors) ? TRUE : $errors;
   }
@@ -288,7 +288,7 @@ class CRM_Campaign_Form_Campaign extends CRM_Core_Form {
     $params = $this->controller->exportValues($this->_name);
     $session = CRM_Core_Session::singleton();
 
-    $groups = array();
+    $groups = [];
     if (isset($this->_campaignId)) {
       if ($this->_action & CRM_Core_Action::DELETE) {
         CRM_Campaign_BAO_Campaign::del($this->_campaignId);
@@ -332,12 +332,12 @@ class CRM_Campaign_Form_Campaign extends CRM_Core_Form {
     $result = CRM_Campaign_BAO_Campaign::create($params);
 
     if ($result) {
-      CRM_Core_Session::setStatus(ts('Campaign %1 has been saved.', array(1 => $result->title)));
+      CRM_Core_Session::setStatus(ts('Campaign %1 has been saved.', [1 => $result->title]));
       $session->pushUserContext(CRM_Utils_System::url('civicrm/campaign', 'reset=1&subPage=campaign'));
     }
 
     if ($this->_context == 'dialog') {
-      $returnArray = array('returnSuccess' => TRUE);
+      $returnArray = ['returnSuccess' => TRUE];
       echo json_encode($returnArray);
       CRM_Utils_System::civiExit();
     }

@@ -51,7 +51,7 @@ class CRM_Admin_Form_Setting_Mapping extends CRM_Admin_Form_Setting {
     CRM_Utils_System::setTitle(ts('Settings - Mapping Provider'));
 
     $map = CRM_Core_SelectValues::mapProvider();
-    $this->addElement('select', 'mapProvider', ts('Map Provider'), array('' => '- select -') + $map, array('onChange' => 'showHideMapAPIkey( this.value );'));
+    $this->addElement('select', 'mapProvider', ts('Map Provider'), ['' => '- select -'] + $map, ['onChange' => 'showHideMapAPIkey( this.value );']);
     $this->add('text', 'mapAPIKey', ts('Provider Key'), NULL);
 
     parent::buildQuickForm();
@@ -68,7 +68,7 @@ class CRM_Admin_Form_Setting_Mapping extends CRM_Admin_Form_Setting {
    * @static
    */
   static function formRule($fields) {
-    $errors = array();
+    $errors = [];
 
     if (!CRM_Utils_System::checkPHPVersion(5, FALSE)) {
       $errors['_qf_default'] = ts('Mapping features require PHP version 5 or greater');
@@ -91,7 +91,7 @@ class CRM_Admin_Form_Setting_Mapping extends CRM_Admin_Form_Setting {
    * @access public
    */
   function addRules() {
-    $this->addFormRule(array('CRM_Admin_Form_Setting_Mapping', 'formRule'));
+    $this->addFormRule(['CRM_Admin_Form_Setting_Mapping', 'formRule']);
   }
 }
 

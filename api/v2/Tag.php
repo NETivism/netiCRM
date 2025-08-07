@@ -60,14 +60,14 @@ function civicrm_tag_create(&$params) {
   $errorScope = CRM_Core_TemporaryErrorScope::useException();
   try {
 
-    civicrm_verify_mandatory($params, 'CRM_Core_DAO_Tag', array('name'));
+    civicrm_verify_mandatory($params, 'CRM_Core_DAO_Tag', ['name']);
 
     if (!CRM_Utils_Array::arrayKeyExists('used_for', $params)) {
       $params['used_for'] = "civicrm_contact";
     }
 
     require_once 'CRM/Core/BAO/Tag.php';
-    $ids = array('tag' => CRM_Utils_Array::value('tag', $params));
+    $ids = ['tag' => CRM_Utils_Array::value('tag', $params)];
     if (CRM_Utils_Array::value('tag', $params)) {
       $ids['tag'] = $params['tag'];
     }
@@ -78,9 +78,9 @@ function civicrm_tag_create(&$params) {
       return civicrm_create_error("Tag is not created");
     }
     else {
-      $values = array();
+      $values = [];
       _civicrm_object_to_array($tagBAO, $values);
-      $tag             = array();
+      $tag             = [];
       $tag['tag_id']   = $values['id'];
       $tag['name']     = $values['name'];
       $tag['is_error'] = 0;
@@ -107,7 +107,7 @@ function civicrm_tag_delete(&$params) {
   _civicrm_initialize();
   $errorScope = CRM_Core_TemporaryErrorScope::useException();
   try {
-    civicrm_verify_mandatory($params, NULL, array('tag_id'));
+    civicrm_verify_mandatory($params, NULL, ['tag_id']);
     $tagID = CRM_Utils_Array::value('tag_id', $params);
 
     require_once 'CRM/Core/BAO/Tag.php';
@@ -144,10 +144,10 @@ function civicrm_tag_get($params) {
     return civicrm_create_error('Required parameters missing.');
   }
 
-  $properties = array(
+  $properties = [
     'id', 'name', 'description', 'parent_id', 'is_selectable', 'is_hidden',
     'is_reserved', 'used_for',
-  );
+  ];
   foreach ($properties as $name) {
     if (CRM_Utils_Array::arrayKeyExists($name, $params)) {
       $tagBAO->$name = $params[$name];

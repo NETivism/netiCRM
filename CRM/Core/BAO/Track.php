@@ -57,12 +57,12 @@ class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
     else {
       // in thirty mins same session visit same page and not completed
       // we treat as same visit
-      $sameSession = CRM_Core_DAO::executeQuery("SELECT id FROM civicrm_track WHERE session_key = %1 AND visit_date > %2 AND page_type = %3 AND page_id = %4 ORDER BY visit_date DESC LIMIT 1", array(
-        1 => array($params['session_key'], 'String'),
-        2 => array(date('Y-m-d H:i:s', time() - self::SESSION_LIMIT), 'String'),
-        3 => array($params['page_type'], 'String'),
-        4 => array($params['page_id'], 'Integer')
-      ));
+      $sameSession = CRM_Core_DAO::executeQuery("SELECT id FROM civicrm_track WHERE session_key = %1 AND visit_date > %2 AND page_type = %3 AND page_id = %4 ORDER BY visit_date DESC LIMIT 1", [
+        1 => [$params['session_key'], 'String'],
+        2 => [date('Y-m-d H:i:s', time() - self::SESSION_LIMIT), 'String'],
+        3 => [$params['page_type'], 'String'],
+        4 => [$params['page_id'], 'Integer']
+      ]);
       
       if ($sameSession->fetch()) {
         CRM_Utils_Hook::pre('edit', 'Track', $sameSession->id, $params);
@@ -149,10 +149,10 @@ class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
   }
 
   public static function referrerTypeByPage($pageType, $pageId, $start = NULL, $end = NULL) {
-    $params = array(
+    $params = [
       'pageType' => $pageType,
       'pageId' => $pageId,
-    );
+    ];
     if($start){
       $params['visitDateStart'] = $start;
     }
@@ -162,7 +162,7 @@ class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
     $selector = new CRM_Track_Selector_Track($params);
     $dao = $selector->getQuery("COUNT(id) as `count`, referrer_type, SUM(CASE WHEN state >= 4 THEN 1 ELSE 0 END) as goal, max(visit_date) as end, min(visit_date) as start", 'GROUP BY referrer_type');
 
-    $return = array();
+    $return = [];
     $total = 0;
     $start = $end = 0;
     while($dao->fetch()){
@@ -176,15 +176,15 @@ class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
         $start = strtotime($dao->start) < $start ? strtotime($dao->start) : $start;
         $end = strtotime($dao->end) > $end ? strtotime($dao->end) : $end;
       }
-      $return[$type] = array(
+      $return[$type] = [
         'name' => $type,
         'label' => empty($dao->referrer_type) ? ts("Unknown") : ts($dao->referrer_type),
         'count' => $dao->count,
         'count_goal' => $dao->goal,
-      );
+      ];
     }
     // sort by count
-    uasort($return, array(__CLASS__, 'cmp'));
+    uasort($return, [__CLASS__, 'cmp']);
     foreach($return as $type => $data) {
       $return[$type]['percent'] = number_format(($data['count'] / $total) * 100 );
       $return[$type]['percent_goal'] = number_format(($data['count_goal'] / $total) * 100 );
@@ -196,17 +196,17 @@ class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
 
   public static function getTrack($entityTable, $entityId) {
     if (!empty($entityTable) && is_numeric($entityId)) {
-      $params = array(
+      $params = [
         'entityTable' => $entityTable,
         'entityId' => $entityId,
-      );
+      ];
       $selector = new CRM_Track_Selector_Track($params);
       $dao = $selector->getQuery();
       $dao->fetch();
       if ($dao->N) {
 				$track = new CRM_Core_DAO_Track();
         $fields = $track->fields();
-        $values = array();
+        $values = [];
 				foreach ($fields as $name => $value) {
 					$dbName = $value['name'];
 					if (isset($dao->$dbName) && $dao->$dbName !== 'null') {
@@ -218,7 +218,7 @@ class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
 				}
         return $values;
       }
-      return array();
+      return [];
     } 
   }
 

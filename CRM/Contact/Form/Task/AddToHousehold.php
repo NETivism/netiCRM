@@ -68,14 +68,14 @@ class CRM_Contact_Form_Task_AddToHousehold extends CRM_Contact_Form_Task {
     $this->addElement('text', 'name', ts('Find Target Household'));
 
     $this->add('select', 'relationship_type_id', ts('Relationship Type'),
-      array('' => ts('- select -')) +
+      ['' => ts('- select -')] +
       CRM_Contact_BAO_Relationship::getRelationType("Household"), TRUE
     );
 
     $searchRows = $this->get('searchRows');
     $searchCount = $this->get('searchCount');
     if ($searchRows) {
-      $checkBoxes = array();
+      $checkBoxes = [];
       $chekFlag = 0;
       foreach ($searchRows as $id => $row) {
         if (!$chekFlag) {
@@ -93,18 +93,18 @@ class CRM_Contact_Form_Task_AddToHousehold extends CRM_Contact_Form_Task {
     $this->assign('searchCount', $searchCount);
     $this->assign('searchDone', $this->get('searchDone'));
     $this->assign('contact_type_display', ts('Household'));
-    $this->addElement('submit', $this->getButtonName('refresh'), ts('Search'), array('class' => 'form-submit'));
-    $this->addElement('submit', $this->getButtonName('cancel'), ts('Cancel'), array('class' => 'form-submit'));
+    $this->addElement('submit', $this->getButtonName('refresh'), ts('Search'), ['class' => 'form-submit']);
+    $this->addElement('submit', $this->getButtonName('cancel'), ts('Cancel'), ['class' => 'form-submit']);
 
-    $this->addButtons(array(
-        array('type' => 'next',
+    $this->addButtons([
+        ['type' => 'next',
           'name' => ts('Add to Household'),
           'isDefault' => TRUE,
-        ),
-        array('type' => 'cancel',
+        ],
+        ['type' => 'cancel',
           'name' => ts('Cancel'),
-        ),
-      )
+        ],
+      ]
     );
   }
 
@@ -123,14 +123,14 @@ class CRM_Contact_Form_Task_AddToHousehold extends CRM_Contact_Form_Task {
 
     $this->set('searchDone', 0);
     if (CRM_Utils_Array::value('_qf_AddToHousehold_refresh', $_POST)) {
-      $searchParams['contact_type'] = array('Household' => 'Household');
+      $searchParams['contact_type'] = ['Household' => 'Household'];
       $searchParams['rel_contact'] = $params['name'];
       CRM_Contact_Form_Relationship::search($searchParams, $this);
       $this->set('searchDone', 1);
       return;
     }
 
-    $data = array();
+    $data = [];
     //$params['relationship_type_id']='4_a_b';
     $data['relationship_type_id'] = $params['relationship_type_id'];
     $data['is_active'] = 1;
@@ -139,7 +139,7 @@ class CRM_Contact_Form_Task_AddToHousehold extends CRM_Contact_Form_Task {
     $duplicate = 0;
     if (is_array($this->_contactIds)) {
       foreach ($this->_contactIds as $value) {
-        $ids = array();
+        $ids = [];
         $ids['contact'] = $value;
         //contact b --> household
         // contact a  -> individual
@@ -161,18 +161,18 @@ class CRM_Contact_Form_Task_AddToHousehold extends CRM_Contact_Form_Task {
         $valid++;
       }
 
-      $status = array(
+      $status = [
         ts('Added Contact(s) to Household'),
-        ts('Total Selected Contact(s): %1', array(1 => $valid + $invalid + $duplicate)),
-      );
+        ts('Total Selected Contact(s): %1', [1 => $valid + $invalid + $duplicate]),
+      ];
       if ($valid) {
-        $status[] = ts('New relationship record(s) created: %1.', array(1 => $valid)) . '<br/>';
+        $status[] = ts('New relationship record(s) created: %1.', [1 => $valid]) . '<br/>';
       }
       if ($invalid) {
-        $status[] = ts('Relationship record(s) not created due to invalid target contact type: %1.', array(1 => $invalid)) . '<br/>';
+        $status[] = ts('Relationship record(s) not created due to invalid target contact type: %1.', [1 => $invalid]) . '<br/>';
       }
       if ($duplicate) {
-        $status[] = ts('Relationship record(s) not created - duplicate of existing relationship: %1.', array(1 => $duplicate)) . '<br/>';
+        $status[] = ts('Relationship record(s) not created - duplicate of existing relationship: %1.', [1 => $duplicate]) . '<br/>';
       }
       CRM_Core_Session::setStatus($status);
     }

@@ -101,7 +101,7 @@ class CRM_Core_BAO_CustomQuery {
    * @var array
    * @static
    */
-  static $extendsMap = array(
+  static $extendsMap = [
     'Contact' => 'civicrm_contact',
     'Individual' => 'civicrm_contact',
     'Household' => 'civicrm_contact',
@@ -116,7 +116,7 @@ class CRM_Core_BAO_CustomQuery {
     'Pledge' => 'civicrm_pledge',
     'Grant' => 'civicrm_grant',
     'Address' => 'civicrm_address',
-  );
+  ];
 
   /**
    * class constructor
@@ -131,15 +131,15 @@ class CRM_Core_BAO_CustomQuery {
   function __construct($ids) {
     $this->_ids = &$ids;
 
-    $this->_select = array();
-    $this->_element = array();
-    $this->_tables = array();
-    $this->_whereTables = array();
-    $this->_where = array();
-    $this->_qill = array();
-    $this->_options = array();
+    $this->_select = [];
+    $this->_element = [];
+    $this->_tables = [];
+    $this->_whereTables = [];
+    $this->_where = [];
+    $this->_qill = [];
+    $this->_options = [];
 
-    $this->_fields = array();
+    $this->_fields = [];
 
     if (empty($this->_ids)) {
       return;
@@ -172,7 +172,7 @@ SELECT f.id, f.label, f.data_type,
         // if $extends is a subtype, refer contact table
         $extendsTable = self::$extendsMap['Contact'];
       }
-      $this->_fields[$dao->id] = array('id' => $dao->id,
+      $this->_fields[$dao->id] = ['id' => $dao->id,
         'label' => $dao->label,
         'extends' => $extendsTable,
         'data_type' => $dao->data_type,
@@ -181,25 +181,25 @@ SELECT f.id, f.label, f.data_type,
         'column_name' => $dao->column_name,
         'table_name' => $dao->table_name,
         'option_group_id' => $dao->option_group_id,
-      );
+      ];
 
       // store it in the options cache to make things easier
       // during option lookup
-      $this->_options[$dao->id] = array();
-      $this->_options[$dao->id]['attributes'] = array('label' => $dao->label,
+      $this->_options[$dao->id] = [];
+      $this->_options[$dao->id]['attributes'] = ['label' => $dao->label,
         'data_type' => $dao->data_type,
         'html_type' => $dao->html_type,
-      );
+      ];
 
       $optionGroupID = NULL;
-      $htmlTypes = array('CheckBox', 'Radio', 'Select', 'Multi-Select', 'AdvMulti-Select', 'Autocomplete-Select');
+      $htmlTypes = ['CheckBox', 'Radio', 'Select', 'Multi-Select', 'AdvMulti-Select', 'Autocomplete-Select'];
       if (in_array($dao->html_type, $htmlTypes) && $dao->data_type != 'ContactReference') {
         if ($dao->option_group_id) {
           $optionGroupID = $dao->option_group_id;
         }
         elseif ($dao->data_type != 'Boolean') {
           $errorMessage = ts("The custom field %1 is corrupt. Please delete and re-build the field",
-            array(1 => $dao->label)
+            [1 => $dao->label]
           );
           CRM_Core_Error::fatal($errorMessage);
         }
@@ -352,7 +352,7 @@ SELECT label, value
 
 
               //ignoring $op value for checkbox and multi select
-              $sqlValue = array();
+              $sqlValue = [];
               $innerOP = 'LIKE';
               $sqlOPlabel = ts('match ALL');
               $sqlOPlabelAddition = ts('Include');
@@ -436,7 +436,7 @@ SELECT label, value
                   $wildcard = FALSE;
                   $val = array_search($value, $this->_options[$field['id']]);
                 }
-                elseif (in_array($field['html_type'], array('Select', 'Radio'))) {
+                elseif (in_array($field['html_type'], ['Select', 'Radio'])) {
                   $wildcard = FALSE;
                   $val = CRM_Utils_Type::escape($value, 'String');
                 }
@@ -610,7 +610,7 @@ SELECT label, value
 
     $whereStr = NULL;
     if (!empty($this->_where)) {
-      $clauses = array();
+      $clauses = [];
       foreach ($this->_where as $grouping => $values) {
         if (!empty($values)) {
           $clauses[] = ' ( ' . CRM_Utils_Array::implode(' AND ', $values) . ' ) ';
@@ -621,14 +621,14 @@ SELECT label, value
       }
     }
 
-    return array(CRM_Utils_Array::implode(' , ', $this->_select),
+    return [CRM_Utils_Array::implode(' , ', $this->_select),
       CRM_Utils_Array::implode(' ', $this->_tables),
       $whereStr,
-    );
+    ];
   }
 
   function searchRange(&$id, &$label, $type, $fieldName, &$value, &$grouping) {
-    $qill = array();
+    $qill = [];
 
     if (isset($value['from'])) {
       $val = CRM_Utils_Type::escape($value['from'], $type);
@@ -639,7 +639,7 @@ SELECT label, value
       else {
         $this->_where[$grouping][] = "$fieldName >= $val";
       }
-      $qill[] = ts('greater than or equal to \'%1\'', array(1 => $value['from']));
+      $qill[] = ts('greater than or equal to \'%1\'', [1 => $value['from']]);
     }
 
     if (isset($value['to'])) {
@@ -650,7 +650,7 @@ SELECT label, value
       else {
         $this->_where[$grouping][] = "$fieldName <= $val";
       }
-      $qill[] = ts('less than or equal to \'%1\'', array(1 => $value['to']));
+      $qill[] = ts('less than or equal to \'%1\'', [1 => $value['to']]);
     }
 
     if (!empty($qill)) {

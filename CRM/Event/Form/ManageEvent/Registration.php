@@ -75,17 +75,17 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
 
     $this->setShowHide($defaults);
     if (isset($eventId)) {
-      $params = array('id' => $eventId);
+      $params = ['id' => $eventId];
       CRM_Event_BAO_Event::retrieve($params, $defaults);
       if (!empty($defaults['is_multiple_registrations'])) {
         $defaults['is_multiple_registrations_max'] = $defaults['is_multiple_registrations'];
       }
 
 
-      $ufJoinParams = array('entity_table' => 'civicrm_event',
+      $ufJoinParams = ['entity_table' => 'civicrm_event',
         'module' => 'CiviEvent',
         'entity_id' => $eventId,
-      );
+      ];
 
       list($defaults['custom_pre_id'],
         $defaults['custom_post_id']
@@ -99,9 +99,9 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
         $ufJoin->entity_id = $eventId;
         $ufJoin->orderBy('weight');
         $ufJoin->find();
-        $custom = array(1 => 'additional_custom_pre_id',
+        $custom = [1 => 'additional_custom_pre_id',
           2 => 'additional_custom_post_id',
-        );
+        ];
         while ($ufJoin->fetch()) {
           $defaults[$custom[$ufJoin->weight]] = $ufJoin->is_active ? $ufJoin->uf_group_id : 'none';
         }
@@ -143,7 +143,7 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
    */
   function setShowHide(&$defaults) {
 
-    $this->_showHide = new CRM_Core_ShowHideBlocks(array('registration' => 1), '');
+    $this->_showHide = new CRM_Core_ShowHideBlocks(['registration' => 1], '');
     if (empty($defaults)) {
       $this->_showHide->addShow('registration_screen_show');
       $this->_showHide->addShow('confirm_show');
@@ -191,23 +191,23 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
       'is_online_registration',
       ts('Allow Online Registration?'),
       NULL,
-      array('onclick' => "return showHideByValue('is_online_registration', 
+      ['onclick' => "return showHideByValue('is_online_registration', 
                                                                        '', 
                                                                        'registration_blocks', 
                                                                        'block', 
                                                                        'radio', 
                                                                        false );",
-      )
+      ]
     );
 
     $this->add('text', 'registration_link_text', ts('Registration Link Text'));
 
     if (!$this->_isTemplate) {
-      $this->addDateTime('registration_start_date', ts('Registration Start Date'), FALSE, array('formatType' => 'activityDateTime'));
-      $this->addDateTime('registration_end_date', ts('Registration End Date'), FALSE, array('formatType' => 'activityDateTime'));
+      $this->addDateTime('registration_start_date', ts('Registration Start Date'), FALSE, ['formatType' => 'activityDateTime']);
+      $this->addDateTime('registration_end_date', ts('Registration End Date'), FALSE, ['formatType' => 'activityDateTime']);
     }
 
-    $this->addElement('checkbox', 'is_multiple_registrations', ts('Register multiple participants?'), NULL, array('onclick' => "return showHideByValue('is_multiple_registrations', '', 'allow_same_emails|additional_profile_pre|additional_profile_post|is_multiple_registrations_limit', 'table-row', 'radio', false);"));
+    $this->addElement('checkbox', 'is_multiple_registrations', ts('Register multiple participants?'), NULL, ['onclick' => "return showHideByValue('is_multiple_registrations', '', 'allow_same_emails|additional_profile_pre|additional_profile_post|is_multiple_registrations_limit', 'table-row', 'radio', false);"]);
 
     for($i = 2; $i <= 10; $i++) {
       $maxLimit[$i]  = $i;
@@ -226,7 +226,7 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
         'requires_approval',
         ts('Require participant approval?'),
         NULL,
-        array('onclick' => "return showHideByValue('requires_approval', '', 'id-approval-text', 'table-row', 'radio', false);")
+        ['onclick' => "return showHideByValue('requires_approval', '', 'id-approval-text', 'table-row', 'radio', false);"]
       );
       $this->add('textarea', 'approval_req_text', ts('Approval message'), $attributes['approval_req_text']);
     }
@@ -253,11 +253,11 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
     $form->addWysiwyg('intro_text', ts('Introductory Text'), $attributes['intro_text']);
     // FIXME: This hack forces height of editor to 175px. Need to modify QF classes for editors to allow passing
     // explicit height and width.
-    $form->addWysiwyg('footer_text', ts('Footer Text'), array('rows' => 2, 'cols' => 40));
+    $form->addWysiwyg('footer_text', ts('Footer Text'), ['rows' => 2, 'cols' => 40]);
 
 
 
-    $types = array_merge(array('Contact', 'Individual', 'Participant'),
+    $types = array_merge(['Contact', 'Individual', 'Participant'],
       CRM_Contact_BAO_ContactType::subTypes('Individual')
     );
     $profiles = CRM_Core_BAO_UFGroup::getProfiles($types);
@@ -266,8 +266,8 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
     $eventProfiles = CRM_Core_BAO_UFGroup::getModuleUFGroup('CiviEvent') + CRM_Core_BAO_UFGroup::getModuleUFGroup('CiviEvent_Additional');
     $profiles = array_intersect_key($profiles, $eventProfiles);
 
-    $mainProfiles = array('' => ts('- select -')) + $profiles;
-    $addtProfiles = array('' => ts('- same as for main contact -'), 'none' => ts('- no profile -')) + $profiles;
+    $mainProfiles = ['' => ts('- select -')] + $profiles;
+    $addtProfiles = ['' => ts('- same as for main contact -'), 'none' => ts('- no profile -')] + $profiles;
 
     $form->add('select', 'custom_pre_id', ts('Include Profile') . '<br />' . ts('(top of page)'), $mainProfiles);
     $form->add('select', 'custom_post_id', ts('Include Profile') . '<br />' . ts('(bottom of page)'), $mainProfiles);
@@ -288,7 +288,7 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
     $form->addWysiwyg('confirm_text', ts('Introductory Text'), $attributes['confirm_text']);
     // FIXME: This hack forces height of editor to 175px. Need to modify QF classes for editors to allow passing
     // explicit height and width.
-    $form->addWysiwyg('confirm_footer_text', ts('Footer Text'), array('rows' => 2, 'cols' => 40));
+    $form->addWysiwyg('confirm_footer_text', ts('Footer Text'), ['rows' => 2, 'cols' => 40]);
   }
 
   /**
@@ -300,7 +300,7 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
   function buildMailBlock(&$form) {
     $form->registerRule('emailList', 'callback', 'emailList', 'CRM_Utils_Rule');
     $attributes = CRM_Core_DAO::getAttribute('CRM_Event_DAO_Event');
-    $form->addYesNo('is_email_confirm', ts('Send Confirmation Email?'), NULL, NULL, array('onclick' => "return showHideByValue('is_email_confirm','','confirmEmail','block','radio',false);"));
+    $form->addYesNo('is_email_confirm', ts('Send Confirmation Email?'), NULL, NULL, ['onclick' => "return showHideByValue('is_email_confirm','','confirmEmail','block','radio',false);"]);
     $form->addYesNo('is_qrcode', ts('Check In Code')."?");
     $form->addWysiwyg('confirm_email_text', ts('Text'), $attributes['confirm_email_text']);
     $form->add('text', 'cc_confirm', ts('CC Confirmation To'), CRM_Core_DAO::getAttribute('CRM_Event_DAO_Event', 'cc_confirm'));
@@ -315,12 +315,12 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
       CRM_Admin_Form_FromEmailAddress::VALID_EMAIL | CRM_Admin_Form_FromEmailAddress::VALID_DKIM | CRM_Admin_Form_FromEmailAddress::VALID_SPF,
       'domain'
     );
-    $selectableEmail = array();
+    $selectableEmail = [];
     $hasVerified = FALSE;
     foreach($availableFrom as $fromAddr) {
       $email = htmlspecialchars($fromAddr['email']);
       if (array_search($fromAddr['email'], $verifiedFrom) !== FALSE) {
-        $email = ts('%1 Verified', array(1 => '🛡️ '.htmlspecialchars($fromAddr['email'])));
+        $email = ts('%1 Verified', [1 => '🛡️ '.htmlspecialchars($fromAddr['email'])]);
         $hasVerified = TRUE;
         $selectableEmail[$fromAddr['email']] = $email;
       }
@@ -346,17 +346,17 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
     $form->assign('default_from_value', $defaultFromMail);
 
     // tokens
-    $tokens = array();
+    $tokens = [];
     $tokens = CRM_Core_SelectValues::contactTokens();
     $form->assign('tokens', CRM_Utils_Token::formatTokensForDisplay($tokens));
 
     $form->add('select', 'token2', ts('Insert Tokens'),
       $tokens, FALSE,
-      array(
+      [
         'size' => "5",
         'multiple' => TRUE,
         'onclick' => "return tokenReplHtml(this);",
-      )
+      ]
     );
   }
 
@@ -366,7 +366,7 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
     $form->addWysiwyg('thankyou_text', ts('Introductory Text'), $attributes['thankyou_text']);
     // FIXME: This hack forces height of editor to 175px. Need to modify QF classes for editors to allow passing
     // explicit height and width.
-    $form->addWysiwyg('thankyou_footer_text', ts('Footer Text'), array('rows' => 2, 'cols' => 40));
+    $form->addWysiwyg('thankyou_footer_text', ts('Footer Text'), ['rows' => 2, 'cols' => 40]);
   }
 
   /**
@@ -377,7 +377,7 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
    * @return void
    */
   function addRules() {
-    $this->addFormRule(array('CRM_Event_Form_ManageEvent_Registration', 'formRule'));
+    $this->addFormRule(['CRM_Event_Form_ManageEvent_Registration', 'formRule']);
   }
 
   /**
@@ -411,7 +411,7 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
             $errorMsg['confirm_from_email'] = ts('Please enter the valid email address.');
           }
           if (!CRM_Utils_Mail::checkMailProviders($email)) {
-            $errorMsg['confirm_from_email'] = ts('Do not use free mail address as mail sender. (eg. %1)', array(1 => str_replace('|', ', ', CRM_Utils_Mail::DMARC_MAIL_PROVIDERS)));
+            $errorMsg['confirm_from_email'] = ts('Do not use free mail address as mail sender. (eg. %1)', [1 => str_replace('|', ', ', CRM_Utils_Mail::DMARC_MAIL_PROVIDERS)]);
           }
         }
       }
@@ -432,7 +432,7 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
    * @return None
    */
   public function postProcess() {
-    $params = array();
+    $params = [];
     $params = $this->exportValues();
 
     $params['id'] = $this->_id;
@@ -467,11 +467,11 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
     CRM_Event_BAO_Event::add($params);
 
     // also update the ProfileModule tables
-    $ufJoinParams = array('is_active' => 1,
+    $ufJoinParams = ['is_active' => 1,
       'module' => 'CiviEvent',
       'entity_table' => 'civicrm_event',
       'entity_id' => $this->_id,
-    );
+    ];
 
 
 

@@ -13,9 +13,9 @@ class Custom extends CiviUnitTestCase
         if ( empty( $group ) ) {
             if ( isset( $extends ) &&
                  ! is_array( $extends ) ) {
-                $extends = array( $extends );
+                $extends = [ $extends ];
             }
-            $group = array(
+            $group = [
                            'title'       => 'Test_Group',
                            'name'        => 'test_group',
                            'extends'     => $extends,
@@ -23,7 +23,7 @@ class Custom extends CiviUnitTestCase
                            'is_multiple' => $isMultiple,
                            'is_active'   => 1,
                            'version'     => 3
-                           );
+                           ];
             
         } else {
             // this is done for backward compatibility
@@ -59,7 +59,7 @@ class Custom extends CiviUnitTestCase
      */ 
     function createField( $params, $fields = null ) {
         if ( empty( $params ) ){
-            $params = array(
+            $params = [
                             'custom_group_id' => $fields['groupId'],
                             'label'           => 'test_' . $fields['dataType'],
                             'html_type'       => $fields['htmlType'],
@@ -69,7 +69,7 @@ class Custom extends CiviUnitTestCase
                             'is_searchable'   => 0,
                             'is_active'       => 1,
                             'version'		      => 3
-                            );
+                            ];
         }
         
         $result = civicrm_api('custom_field', 'create', $params );

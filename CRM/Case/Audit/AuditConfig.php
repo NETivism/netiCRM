@@ -15,8 +15,8 @@ class AuditConfig {
     // set some defaults
     $this->completionLabel = "Status";
     $this->completionValue = "Completed";
-    $this->sortByLabels = array("Actual Date", "Due Date");
-    $this->ifBlanks = array();
+    $this->sortByLabels = ["Actual Date", "Due Date"];
+    $this->ifBlanks = [];
 
     $this->loadConfig();
   }
@@ -38,22 +38,22 @@ class AuditConfig {
   }
 
   public function loadConfig() {
-    $this->regionFieldList = array();
-    $this->includeRules = array();
+    $this->regionFieldList = [];
+    $this->includeRules = [];
 
     $doc = new DOMDocument();
     if ($doc->load(dirname(__FILE__) . '/' . $this->filename)) {
       $regions = $doc->getElementsByTagName("region");
       foreach ($regions as $region) {
         $regionName = $region->getAttribute("name");
-        $this->regionFieldList[$regionName] = array();
+        $this->regionFieldList[$regionName] = [];
 
         // Inclusion/exclusion settings
         $includeRule = $region->getAttribute("includeRule");
         if (empty($includeRule)) {
           $includeRule = 'include';
         }
-        $this->includeRules[$regionName] = array('rule' => $includeRule);
+        $this->includeRules[$regionName] = ['rule' => $includeRule];
         if ($includeRule == 'exclude') {
           $altRegion = $region->getAttribute("exclusionCorrespondingRegion");
           $this->includeRules[$regionName]['altRegion'] = $altRegion;
@@ -103,7 +103,7 @@ class AuditConfig {
 
       $sortElement = $doc->getElementsByTagName("sortByLabels");
       if (!empty($sortElement)) {
-        $this->sortByLabels = array();
+        $this->sortByLabels = [];
         $label_elements = $sortElement->item(0)->getElementsByTagName("label");
         foreach ($label_elements as $ele) {
           $this->sortByLabels[] = $ele->nodeValue;
@@ -195,7 +195,7 @@ class AuditConfig {
     }
 
     $this->sortRegion = $r;
-    uasort($f, array(&$this, "compareFields"));
+    uasort($f, [&$this, "compareFields"]);
   }
 
   /* compareFields

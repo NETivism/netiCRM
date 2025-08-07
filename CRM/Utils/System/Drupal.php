@@ -134,14 +134,14 @@ class CRM_Utils_System_Drupal {
         setcookie(session_name(), self::sessionID(), $lifetime, '/; domain='.$sparams['domain'].'; Secure; HttpOnly; SameSite=None');
       }
       else {
-        setcookie(session_name(), self::sessionID(), array(
+        setcookie(session_name(), self::sessionID(), [
           'expires' => $lifetime,
           'path' => '/',
           'domain' => $sparams['domain'],
           'secure' => TRUE,
           'httponly' => TRUE,
           'samesite' => 'None',
-        ));
+        ]);
       }
     }
   }
@@ -153,7 +153,7 @@ class CRM_Utils_System_Drupal {
    */
   function __call($method, $args) {
     if(method_exists($this->versionalClass, $method)) {
-      return call_user_func_array(array($this->versionalClass, $method), $args);
+      return call_user_func_array([$this->versionalClass, $method], $args);
     }
     else{
       return FALSE;
@@ -179,7 +179,7 @@ class CRM_Utils_System_Drupal {
     CRM_Utils_System::civiBeforeShutdown();
     $url = str_replace('&amp;', '&', $url); // legacy url/crmURL behaviour should remove
     if($version >= 8){
-      $headers = array('Cache-Control' => 'no-cache');
+      $headers = ['Cache-Control' => 'no-cache'];
       $response = new \Symfony\Component\HttpFoundation\RedirectResponse($url, 302, $headers);
       $response->send();
     }
@@ -197,7 +197,7 @@ class CRM_Utils_System_Drupal {
       // let symfony router handling this
       // will trigger event(KernelEvents::TERMINATE at controller
       // set default null exception handler to prevent no catch after this
-      set_exception_handler(array('CRM_Core_Exception', 'nullExceptionHandler'));
+      set_exception_handler(['CRM_Core_Exception', 'nullExceptionHandler']);
       throw new CRM_Core_Exception('', CRM_Core_Error::NO_ERROR);
     }
     exit;
@@ -325,7 +325,7 @@ class CRM_Utils_System_Drupal {
       if (is_array($breadcrumbs)) {
         foreach ($breadcrumbs as $crumbs) {
           if (stripos($crumbs['url'], 'id%%')) {
-            $args = array('cid', 'mid');
+            $args = ['cid', 'mid'];
             foreach ($args as $a) {
               $val = CRM_Utils_Request::retrieve($a, 'Positive', CRM_Core_DAO::$_nullObject,
                 FALSE, NULL, $_GET
@@ -354,7 +354,7 @@ class CRM_Utils_System_Drupal {
    */
   static function resetBreadCrumb() {
     if (self::$_version < 8) {
-      $bc = array();
+      $bc = [];
       drupal_set_breadcrumb($bc);
     }
     else {
@@ -409,7 +409,7 @@ class CRM_Utils_System_Drupal {
       return;
     }
     elseif($version >= 7 && $version < 8){
-      $element = array();
+      $element = [];
       foreach ($head as $key => $value) {
         $element['#' . $key] = $value;
       }
@@ -517,8 +517,8 @@ class CRM_Utils_System_Drupal {
       $options = NULL;
 
       if (!empty($params)) {
-        $options = array();
-        $possibleVars = array('scope', 'group', 'every_page', 'weight', 'requires_jquery', 'defer', 'cache', 'preprocess');
+        $options = [];
+        $possibleVars = ['scope', 'group', 'every_page', 'weight', 'requires_jquery', 'defer', 'cache', 'preprocess'];
 
         foreach($possibleVars as $varName) {
           if (isset($params[$varName])) {
@@ -837,7 +837,7 @@ class CRM_Utils_System_Drupal {
     if ($version < 8) {
       if ($uid) {
         if ($version < 7) {
-          $account = user_load(array('uid' => $uid));
+          $account = user_load(['uid' => $uid]);
         }
         else {
           $account = user_load($uid);
@@ -963,7 +963,7 @@ class CRM_Utils_System_Drupal {
    *   'name' for username
    *   'pass' for password for login
    */
-  static function loadBootStrap($params = array(), $throwError = TRUE) {
+  static function loadBootStrap($params = [], $throwError = TRUE) {
     //take the cms root path.
     $cmsPath = self::cmsRootPath();
     chdir($cmsPath);
@@ -978,7 +978,7 @@ class CRM_Utils_System_Drupal {
    * @param array $params
    * @return void
    */
-  static function loadUser($params = array()) {
+  static function loadUser($params = []) {
     if (empty($params)) {
       return FALSE;
     }
@@ -1016,7 +1016,7 @@ class CRM_Utils_System_Drupal {
     //start w/ csm dir search.
     foreach ($pathVars as $var) {
       $cmsRoot .= "/$var";
-      $cmsIncludePath = array();
+      $cmsIncludePath = [];
       $cmsIncludePath[] = "$cmsRoot/includes";
       $cmsIncludePath[] = "$cmsRoot/core/includes";
       foreach($cmsIncludePath as $path) {
@@ -1149,14 +1149,14 @@ class CRM_Utils_System_Drupal {
       return \Drupal::moduleHandler()->getImplementations($hook);
     }
     elseif(self::$_version >= 10) {
-      $implementors = array();
+      $implementors = [];
       \Drupal::moduleHandler()->invokeAllWith($hook, function (callable $hook, string $module) use (&$implementors) {
         $implementors[] = $module;
       });
       return $implementors;
     }
     elseif (function_exists('module_list')) {
-      $implements = array();
+      $implements = [];
       foreach (module_list() as $module) {
         $fnName = "{$module}_{$hook}";
         if (function_exists($fnName)) {
@@ -1165,7 +1165,7 @@ class CRM_Utils_System_Drupal {
       }
       return $implements;
     }
-    return array();
+    return [];
   }
 
   function sessionStart(){

@@ -118,7 +118,7 @@ function &civicrm_membershipcontributionlink_get(&$params) {
   $mpDAO->id = CRM_Utils_Array::value('membership_contribution_id', $params);
   $mpDAO->find();
 
-  $values = array();
+  $values = [];
   while ($mpDAO->fetch()) {
     _civicrm_object_to_array($mpDAO, $mpArray);
     $mpArray['membership_contribution_id'] = $mpDAO->id;

@@ -37,7 +37,7 @@
 class CRM_Contact_Form_Task_SMSCommon {
   const RECIEVED_SMS_ACTIVITY_SUBJECT = "SMS Received";
 
-  public $_contactDetails = array();
+  public $_contactDetails = [];
 
   /**
    * Pre process the provider.
@@ -69,27 +69,27 @@ class CRM_Contact_Form_Task_SMSCommon {
    */
   public static function buildQuickForm(&$form) {
     $form->assign('SMSTask', TRUE);
-    $toArray = array();
+    $toArray = [];
     $suppressedSms = 0;
     if (empty($form->_contactIds)) {
       $cid = CRM_Utils_Request::retrieve('cid', 'Positive', $form, TRUE);
-      $form->_contactIds = array($cid);
+      $form->_contactIds = [$cid];
     }
 
 
     if (!empty($form->_contactIds)) {
-      $queryParams = array();
-      $returnProperties = array(
+      $queryParams = [];
+      $returnProperties = [
         'sort_name' => 1,
         'do_not_sms' => 1,
         'is_deceased' => 1,
         'display_name' => 1,
-      );
+      ];
       $query = new CRM_Contact_BAO_Query($queryParams, $returnProperties);
       foreach ($form->_contactIds as $key => $contactId) {
-        $queryParams[] = array(
+        $queryParams[] = [
           CRM_Core_Form::CB_PREFIX.$contactId, '=', 1, 0, 0,
-        );
+        ];
       }
       $numberofContacts = count($form->_contactIds);
       $details = $query->apiQuery($queryParams, $returnProperties, NULL, NULL, 0, $numberofContacts, TRUE, TRUE);
@@ -104,10 +104,10 @@ FROM civicrm_contact
 LEFT JOIN civicrm_phone ON ( civicrm_contact.id = civicrm_phone.contact_id )
 WHERE civicrm_contact.id IN (%1) AND civicrm_phone.phone_type_id = %2
 ORDER BY civicrm_phone.is_primary DESC, phone_id ASC";
-      $mobilePhoneResult = CRM_Core_DAO::executeQuery($mobilePhoneQuery, array(
-        1 => array(CRM_Utils_Array::implode(',', $form->_contactIds), 'CommaSeparatedIntegers'),
-        2 => array($mobileTypeId, 'Integer'),
-      ));
+      $mobilePhoneResult = CRM_Core_DAO::executeQuery($mobilePhoneQuery, [
+        1 => [CRM_Utils_Array::implode(',', $form->_contactIds), 'CommaSeparatedIntegers'],
+        2 => [$mobileTypeId, 'Integer'],
+      ]);
       while ($mobilePhoneResult->fetch()) {
         if (!empty(trim($mobilePhoneResult->phone))) {
           $contactId = $mobilePhoneResult->contact_id;
@@ -125,19 +125,19 @@ ORDER BY civicrm_phone.is_primary DESC, phone_id ASC";
           unset($form->_contactDetails[$contactId]);
         }
         else {
-          $toArray[] = array(
+          $toArray[] = [
             'text' => '"' . $form->_contactDetails[$contactId]['sort_name'] . '" (' .$form->_contactDetails[$contactId]['phone'] . ')',
             'id' => $contactId.'::'.$form->_contactDetails[$contactId]['phone'],
-          );
+          ];
         }
       }
 
-      $toArrayIdPhone = array();
+      $toArrayIdPhone = [];
       if (count($toArray) == 1) {
         $defaults['to'] = $toArray[0]['text'];
       }
       elseif (count($toArray) > 500) {
-        $defaults['to'] = ts('We will send messages to %1 contacts.', array(1 => count($form->_contactIds) - $suppressedSms));
+        $defaults['to'] = ts('We will send messages to %1 contacts.', [1 => count($form->_contactIds) - $suppressedSms]);
       }
       else {
         foreach ($toArray as $key => $value) {
@@ -175,7 +175,7 @@ ORDER BY civicrm_phone.is_primary DESC, phone_id ASC";
     $token->_attributes['onclick'] = "tokenReplText(this);maxLengthMessage();maxCharInfoDisplay();";
 
     $providers = CRM_SMS_BAO_Provider::getProviders(NULL, NULL, TRUE, 'is_default desc');
-    $providerSelect = array();
+    $providerSelect = [];
     foreach ($providers as $provider) {
       if (!empty($provider['is_active'])) {
         $providerSelect[$provider['id']] = $provider['title'];
@@ -183,9 +183,9 @@ ORDER BY civicrm_phone.is_primary DESC, phone_id ASC";
     }
     $form->add('select', 'sms_provider_id', ts('From'), $providerSelect, TRUE);
 
-    $to = $form->add('text', 'to', ts('To'), array('class' => 'huge'));
+    $to = $form->add('text', 'to', ts('To'), ['class' => 'huge']);
     $to->freeze();
-    $form->add('text', 'activity_subject', ts('Name The SMS'), array('class' => 'huge'), TRUE);
+    $form->add('text', 'activity_subject', ts('Name The SMS'), ['class' => 'huge'], TRUE);
 
     if ($form->_single) {
       // also fix the user context stack
@@ -205,7 +205,7 @@ ORDER BY civicrm_phone.is_primary DESC, phone_id ASC";
       $form->addDefaultButtons(ts('Send SMS'), 'upload');
     }
 
-    $form->addFormRule(array('CRM_Contact_Form_Task_SMSCommon', 'formRule'), $form);
+    $form->addFormRule(['CRM_Contact_Form_Task_SMSCommon', 'formRule'], $form);
   }
 
   /**
@@ -221,7 +221,7 @@ ORDER BY civicrm_phone.is_primary DESC, phone_id ASC";
    *   true if no errors, else array of errors
    */
   public static function formRule($fields, $dontCare, $self) {
-    $errors = array();
+    $errors = [];
 
     $template = CRM_Core_Smarty::singleton();
 
@@ -241,13 +241,13 @@ ORDER BY civicrm_phone.is_primary DESC, phone_id ASC";
           }
           if(preg_match ("/[\x{4e00}-\x{9fa5}]/u", $messageCheck)){
             if ($messageCheck && (mb_strlen($messageCheck) > CRM_SMS_Provider::MAX_ZH_SMS_CHAR)) {
-              $errors['sms_text_message'] .= ts("You can configure the SMS message body up to %1 characters", array(1 => CRM_SMS_Provider::MAX_ZH_SMS_CHAR));
+              $errors['sms_text_message'] .= ts("You can configure the SMS message body up to %1 characters", [1 => CRM_SMS_Provider::MAX_ZH_SMS_CHAR]);
               $self->set('force_send', TRUE);
             }
           }
           else {
             if ($messageCheck && (strlen($messageCheck) > CRM_SMS_Provider::MAX_SMS_CHAR)) {
-              $errors['sms_text_message'] .= ts("You can configure the SMS message body up to %1 characters", array(1 => CRM_SMS_Provider::MAX_SMS_CHAR));
+              $errors['sms_text_message'] .= ts("You can configure the SMS message body up to %1 characters", [1 => CRM_SMS_Provider::MAX_SMS_CHAR]);
               $self->set('force_send', TRUE);
             }
           }
@@ -278,11 +278,11 @@ ORDER BY civicrm_phone.is_primary DESC, phone_id ASC";
 
     // process message template
     if (!empty($thisValues['SMSsaveTemplate']) || !empty($thisValues['SMSupdateTemplate'])) {
-      $messageTemplate = array(
+      $messageTemplate = [
         'msg_text' => $thisValues['sms_text_message'],
         'is_active' => TRUE,
         'is_sms' => TRUE,
-      );
+      ];
 
       if (!empty($thisValues['SMSsaveTemplate'])) {
         $messageTemplate['msg_title'] = $thisValues['SMSsaveTemplateName'];
@@ -297,8 +297,8 @@ ORDER BY civicrm_phone.is_primary DESC, phone_id ASC";
     }
 
     // format contact details array to handle multiple sms from same contact
-    $formattedContactDetails = array();
-    $tempPhones = array();
+    $formattedContactDetails = [];
+    $tempPhones = [];
 
     foreach ($form->_contactIds as $contactId) {
       $phone = $form->_contactDetails[$contactId]['phone'];
@@ -325,23 +325,23 @@ ORDER BY civicrm_phone.is_primary DESC, phone_id ASC";
       $form->set('force_send', FALSE);
     }
 
-    $providerObj = CRM_SMS_Provider::singleton(array('provider_id' => $smsParams['provider_id']));
+    $providerObj = CRM_SMS_Provider::singleton(['provider_id' => $smsParams['provider_id']]);
     if (!empty($providerObj->_bulkMode)) {
       // start batch
       $config = CRM_Core_Config::singleton();
       $batch = new CRM_Batch_BAO_Batch();
-      $batchParams = array(
+      $batchParams = [
         'label' => ts('SMS').': '.date('YmdHis'),
         'startCallback' => NULL,
         'startCallbackArgs' => NULL,
-        'processCallback' => array('CRM_Contact_Form_Task_SMSCommon', 'batchSend'),
-        'processCallbackArgs' => array($formattedContactDetails, $thisValues, $smsParams, $contactIds),
+        'processCallback' => ['CRM_Contact_Form_Task_SMSCommon', 'batchSend'],
+        'processCallbackArgs' => [$formattedContactDetails, $thisValues, $smsParams, $contactIds],
         'finishCallback' => NULL,
         'finishCallbackArgs' => NULL,
         'actionPermission' => '',
         'total' => count($formattedContactDetails),
         'processed' => 0,
-      );
+      ];
       $batch->start($batchParams);
 
       // redirect to notice page
@@ -356,14 +356,14 @@ ORDER BY civicrm_phone.is_primary DESC, phone_id ASC";
       );
 
       $smsNotSent = count($sendResult['activityIds']) - $sendResult['sent'];
-      CRM_Core_Session::setStatus(ts('One message was sent successfully.', array(
+      CRM_Core_Session::setStatus(ts('One message was sent successfully.', [
         'count' => $sendResult['sent'],
         'plural' => '%count messages were sent successfully.',
-      )));
-      CRM_Core_Session::setStatus(ts('One Message Not Sent', array(
+      ]));
+      CRM_Core_Session::setStatus(ts('One Message Not Sent', [
         'count' => $smsNotSent,
         'plural' => '%count Messages Not Sent',
-      )));
+      ]));
     }
   }
 
@@ -372,7 +372,7 @@ ORDER BY civicrm_phone.is_primary DESC, phone_id ASC";
 
     if ($civicrm_batch) {
       $offset = 0;
-      $providerObj = CRM_SMS_Provider::singleton(array('provider_id' => $smsParams['provider_id']));
+      $providerObj = CRM_SMS_Provider::singleton(['provider_id' => $smsParams['provider_id']]);
       $batchLimit = $providerObj->_bulkLimit;
       if (isset($civicrm_batch->data['processed']) && !empty($civicrm_batch->data['processed'])) {
         $offset = $civicrm_batch->data['processed'];

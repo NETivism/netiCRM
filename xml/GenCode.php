@@ -76,7 +76,7 @@ class CRM_GenCode_Main {
     require_once 'Smarty/Smarty.class.php';
     $this->smarty = new Smarty();
     $this->smarty->template_dir = './templates';
-    $this->smarty->plugins_dir = array('../packages/Smarty/plugins', '../CRM/Core/Smarty/plugins');
+    $this->smarty->plugins_dir = ['../packages/Smarty/plugins', '../CRM/Core/Smarty/plugins'];
     $this->compileDir = CRM_GenCode_Util_File::createTempDir('templates_c_');
     $this->smarty->compile_dir = $this->compileDir;
     $this->smarty->clear_all_cache();
@@ -92,7 +92,7 @@ class CRM_GenCode_Main {
     // add one or more filters
     $this->beautifier->addFilter('Pear');
     // add one or more filters
-    $this->beautifier->addFilter('NewLines', array('after' => 'class, public, require, comment'));
+    $this->beautifier->addFilter('NewLines', ['after' => 'class, public, require, comment']);
     $this->beautifier->setIndentChar(' ');
     $this->beautifier->setIndentNumber(2);
     $this->beautifier->setNewLine("\n");
@@ -149,7 +149,7 @@ Alternatively you can get a version of CiviCRM that matches your PHP version
     $database = &$this->getDatabase($dbXML);
     // print_r( $database );
 
-    $this->classNames = array();
+    $this->classNames = [];
 
     echo "Extracting table information\n";
     $tables = &$this->getTables($dbXML, $database);
@@ -170,7 +170,7 @@ Alternatively you can get a version of CiviCRM that matches your PHP version
 
   function generateListAll($tables) {
     $allDAO = "<?php\n\$dao = array ();";
-    $dao = array();
+    $dao = [];
 
     foreach ($tables as $table) {
       $base = $table['base'] . $table['objectName'];
@@ -250,7 +250,7 @@ Alternatively you can get a version of CiviCRM that matches your PHP version
       $this->smarty->assign('tsLocale', $locale);
       $tsLocale = $locale;
 
-      $data   = array();
+      $data   = [];
       $data[] = $this->smarty->fetch('civicrm_country.tpl');
       $data[] = $this->smarty->fetch('civicrm_state_province.tpl');
       $data[] = $this->smarty->fetch('civicrm_currency.tpl');
@@ -281,9 +281,9 @@ Alternatively you can get a version of CiviCRM that matches your PHP version
   function generateInstallLangs() {
     // CRM-7161: generate install/langs.php from the languages template
     // grep it for enabled languages and create a 'xx_YY' => 'Language name' $langs mapping
-    $matches = array();
+    $matches = [];
     preg_match_all('/, 1, \'([a-z][a-z]_[A-Z][A-Z])\', \'..\', \{localize\}\'\{ts escape="sql"\}(.+)\{\/ts\}\'\{\/localize\}, /', file_get_contents('templates/languages.tpl'), $matches);
-    $langs = array();
+    $langs = [];
     for ($i = 0; $i < count($matches[0]); $i++) {
       $langs[$matches[1][$i]] = $matches[2][$i];
     }
@@ -299,9 +299,6 @@ Alternatively you can get a version of CiviCRM that matches your PHP version
 
       $this->smarty->assign_by_ref('table', $tables[$name]);
       $php = $this->smarty->fetch('dao.tpl');
-
-      $this->beautifier->setInputString($php);
-
       if (empty($tables[$name]['base'])) {
         echo "No base defined for $name, skipping output generation\n";
         continue;
@@ -309,21 +306,17 @@ Alternatively you can get a version of CiviCRM that matches your PHP version
 
       $directory = $this->phpCodePath . $tables[$name]['base'];
       CRM_GenCode_Util_File::createDir($directory);
-      $this->beautifier->setOutputFile($directory . $tables[$name]['fileName']);
-      // required
-      $this->beautifier->process();
-
-      $this->beautifier->save();
+      file_put_contents($directory . $tables[$name]['fileName'], $php);
     }
   }
 
   function generateSchemaStructure($tables) {
     echo "Generating CRM_Core_I18n_SchemaStructure...\n";
-    $columns = array();
-    $indices = array();
+    $columns = [];
+    $indices = [];
     foreach ($tables as $table) {
       if ($table['localizable']) {
-        $columns[$table['name']] = array();
+        $columns[$table['name']] = [];
       }
       else {
         continue;
@@ -368,7 +361,7 @@ Alternatively you can get a version of CiviCRM that matches your PHP version
   function findLocales() {
     require_once 'CRM/Core/Config.php';
     $config = CRM_Core_Config::singleton(FALSE);
-    $locales = array();
+    $locales = [];
     if (substr($config->gettextResourceDir, 0, 1) === '/') {
       $localeDir = $config->gettextResourceDir;
     }
@@ -389,8 +382,8 @@ Alternatively you can get a version of CiviCRM that matches your PHP version
   function setupCms($argCms, $db_version) {
     // default cms is 'drupal', if not specified
     $cms = isset($argCms) ? strtolower($argCms) : 'drupal';
-    if (!in_array($cms, array(
-      'drupal', 'joomla'))) {
+    if (!in_array($cms, [
+      'drupal', 'joomla'])) {
       echo "Config file for '{$cms}' not known.";
       exit();
     }
@@ -417,7 +410,7 @@ Alternatively you can get a version of CiviCRM that matches your PHP version
   }
 
   function &getDatabase(&$dbXML) {
-    $database = array('name' => trim((string ) $dbXML->name));
+    $database = ['name' => trim((string ) $dbXML->name)];
 
     $attributes = '';
     $this->checkAndAppend($attributes, $dbXML, 'character_set', 'DEFAULT CHARACTER SET ', '');
@@ -437,7 +430,7 @@ Alternatively you can get a version of CiviCRM that matches your PHP version
   }
 
   function &getTables(&$dbXML, &$database) {
-    $tables = array();
+    $tables = [];
     foreach ($dbXML->tables as $tablesXML) {
       foreach ($tablesXML->table as $tableXML) {
         if ($this->value('drop', $tableXML, 0) > 0 and $this->value('drop', $tableXML, 0) <= $this->buildVersion) {
@@ -477,7 +470,7 @@ Alternatively you can get a version of CiviCRM that matches your PHP version
   }
 
   function orderTables(&$tables) {
-    $ordered = array();
+    $ordered = [];
 
     while (!empty($tables)) {
       foreach (array_keys($tables) as $name) {
@@ -520,7 +513,7 @@ Alternatively you can get a version of CiviCRM that matches your PHP version
       }
     }
 
-    $table = array(
+    $table = [
       'name' => $name,
       'base' => $base,
       'fileName' => $klass . '.php',
@@ -532,12 +525,12 @@ Alternatively you can get a version of CiviCRM that matches your PHP version
       'comment' => $this->value('comment', $tableXML),
       'localizable' => $localizable,
       'log' => $this->value('log', $tableXML, 'false'),
-    );
+    ];
     if (!empty($engine)) {
       $table['engine'] = $engine;
     }
 
-    $fields = array();
+    $fields = [];
     foreach ($tableXML->field as $fieldXML) {
       if ($this->value('drop', $fieldXML, 0) > 0 and $this->value('drop', $fieldXML, 0) <= $this->buildVersion) {
         continue;
@@ -567,7 +560,7 @@ Alternatively you can get a version of CiviCRM that matches your PHP version
     // some kind of refresh?
     CRM_Core_Config::singleton(FALSE);
     if ($this->value('index', $tableXML)) {
-      $index = array();
+      $index = [];
       foreach ($tableXML->index as $indexXML) {
         if ($this->value('drop', $indexXML, 0) > 0 and $this->value('drop', $indexXML, 0) <= $this->buildVersion) {
           continue;
@@ -579,7 +572,7 @@ Alternatively you can get a version of CiviCRM that matches your PHP version
     }
 
     if ($this->value('foreignKey', $tableXML)) {
-      $foreign = array();
+      $foreign = [];
       foreach ($tableXML->foreignKey as $foreignXML) {
         // print_r($foreignXML);
 
@@ -594,7 +587,7 @@ Alternatively you can get a version of CiviCRM that matches your PHP version
     }
 
     if ($this->value('dynamicForeignKey', $tableXML)) {
-      $dynamicForeign = array();
+      $dynamicForeign = [];
       foreach ($tableXML->dynamicForeignKey as $foreignXML) {
         if ($this->value('drop', $foreignXML, 0) > 0 && version_compare($this->value('drop', $foreignXML, 0), $this->buildVersion, '<=')) {
           continue;
@@ -612,7 +605,7 @@ Alternatively you can get a version of CiviCRM that matches your PHP version
 
   function getField(&$fieldXML, &$fields) {
     $name  = trim((string ) $fieldXML->name);
-    $field = array('name' => $name, 'localizable' => $fieldXML->localizable);
+    $field = ['name' => $name, 'localizable' => $fieldXML->localizable];
     $type  = (string ) $fieldXML->type;
     switch ($type) {
       case 'varchar':
@@ -634,7 +627,7 @@ Alternatively you can get a version of CiviCRM that matches your PHP version
       case 'enum':
         $value               = (string ) $fieldXML->values;
         $field['sqlType']    = 'enum(';
-        $field['values']     = array();
+        $field['values']     = [];
         $field['enumValues'] = $value;
         $values              = explode(',', $value);
         $first               = TRUE;
@@ -755,10 +748,10 @@ Alternatively you can get a version of CiviCRM that matches your PHP version
     // set the autoincrement property of the field
     $auto = $this->value('autoincrement', $primaryXML);
     $fields[$name]['autoincrement'] = $auto;
-    $primaryKey = array(
+    $primaryKey = [
       'name' => $name,
       'autoincrement' => $auto,
-    );
+    ];
     $table['primaryKey'] = &$primaryKey;
   }
 
@@ -766,11 +759,11 @@ Alternatively you can get a version of CiviCRM that matches your PHP version
     //echo "\n\n*******************************************************\n";
     //echo "entering getIndex\n";
 
-    $index = array();
+    $index = [];
     // empty index name is fine
     $indexName      = trim((string)$indexXML->name);
     $index['name']  = $indexName;
-    $index['field'] = array();
+    $index['field'] = [];
 
     // populate fields
     foreach ($indexXML->fieldName as $v) {
@@ -835,7 +828,7 @@ Alternatively you can get a version of CiviCRM that matches your PHP version
 
     /** need to check for existence of table and key **/
     $table = trim($this->value('table', $foreignXML));
-    $foreignKey = array(
+    $foreignKey = [
       'name' => $name,
       'table' => $table,
       'uniqName' => "FK_{$currentTableName}_{$name}",
@@ -845,16 +838,16 @@ Alternatively you can get a version of CiviCRM that matches your PHP version
       // we do this matching in a seperate phase (resolveForeignKeys)
       'className' => NULL,
       'onDelete' => $this->value('onDelete', $foreignXML, FALSE),
-    );
+    ];
     $foreignKeys[$name] = &$foreignKey;
   }
 
   public function getDynamicForeignKey(&$foreignXML, &$dynamicForeignKeys) {
-    $foreignKey = array(
+    $foreignKey = [
       'idColumn' => trim($foreignXML->idColumn),
       'typeColumn' => trim($foreignXML->typeColumn),
       'key' => trim($this->value('key', $foreignXML)),
-    );
+    ];
     $dynamicForeignKeys[] = $foreignKey;
   }
 

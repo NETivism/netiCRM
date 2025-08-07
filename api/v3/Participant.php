@@ -67,7 +67,7 @@ function civicrm_api3_participant_create($params) {
     }
   }
 
-  $value = array();
+  $value = [];
   _civicrm_api3_custom_format_params($params, $values, 'Participant');
   $params = array_merge($values, $params);
   require_once 'CRM/Event/BAO/Participant.php';
@@ -98,7 +98,7 @@ where ps.id is not null
   $dao = CRM_Core_DAO::executeQuery($sql);
   if ($dao->fetch()) {
     $amount = CRM_Utils_Array::value('fee_amount', $params, 0);
-    $lineItemparams = array(
+    $lineItemparams = [
       'price_field_id' => $dao->priceFieldID,
       'price_field_value_id' => $dao->priceFieldValueID,
       'entity_table' => 'civicrm_participant',
@@ -109,7 +109,7 @@ where ps.id is not null
       'unit_price' => $amount,
       'line_total' => $amount,
       'version' => 3,
-    ); 
+    ]; 
     civicrm_api('line_item', 'create', $lineItemparams);
   }
 }
@@ -146,7 +146,7 @@ function civicrm_api3_participant_get($params) {
   $offset           = CRM_Utils_Array::value('offset', $options);
   $rowCount         = CRM_Utils_Array::value('limit', $options);
   $smartGroupCache  = CRM_Utils_Array::value('smartGroupCache', $params);
-  $inputParams      = CRM_Utils_Array::value('input_params', $options, array());
+  $inputParams      = CRM_Utils_Array::value('input_params', $options, []);
   $returnProperties = CRM_Utils_Array::value('return', $options, NULL);
 
   if (empty($returnProperties)) {
@@ -166,7 +166,7 @@ function civicrm_api3_participant_get($params) {
   $sql .= " LIMIT $offset, $rowCount ";
   $dao = CRM_Core_DAO::executeQuery($sql);
 
-  $participant = array();
+  $participant = [];
   while ($dao->fetch()) {
     $participant[$dao->participant_id] = $query->store($dao);
     _civicrm_api3_custom_data_get($participant[$dao->participant_id], 'Participant', $dao->participant_id, NULL);

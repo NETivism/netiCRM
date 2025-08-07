@@ -112,15 +112,15 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
 
     if (!$this->_caseId) {
 
-      $caseAttributes = array('case_type' => CRM_Case_PseudoConstant::caseType(),
+      $caseAttributes = ['case_type' => CRM_Case_PseudoConstant::caseType(),
         'case_status' => CRM_Case_PseudoConstant::caseStatus(),
         'encounter_medium' => CRM_Case_PseudoConstant::encounterMedium(),
-      );
+      ];
 
       foreach ($caseAttributes as $key => $values) {
         if (empty($values)) {
           return CRM_Core_Error::statusBounce(ts('You do not have any active %1',
-              array(1 => str_replace('_', ' ', $key))
+              [1 => str_replace('_', ' ', $key)]
             ));
           break;
         }
@@ -165,7 +165,7 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
       $contact = new CRM_Contact_DAO_Contact();
       $contact->id = $this->_currentlyViewedContactId;
       if (!$contact->find(TRUE)) {
-        return CRM_Core_Error::statusBounce(ts('Client contact does not exist: %1', array(1 => $this->_currentlyViewedContactId)));
+        return CRM_Core_Error::statusBounce(ts('Client contact does not exist: %1', [1 => $this->_currentlyViewedContactId]));
       }
       $this->assign('clientName', $contact->display_name);
     }
@@ -210,16 +210,16 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
       if ($this->_action & CRM_Core_Action::RENEW) {
         $title = 'Restore';
       }
-      $this->addButtons(array(
-          array('type' => 'next',
+      $this->addButtons([
+          ['type' => 'next',
             'name' => $title,
             'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
             'isDefault' => TRUE,
-          ),
-          array('type' => 'cancel',
+          ],
+          ['type' => 'cancel',
             'name' => ts('Cancel'),
-          ),
-        )
+          ],
+        ]
       );
       return;
     }
@@ -230,17 +230,17 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
 
     $s = CRM_Core_DAO::getAttribute('CRM_Activity_DAO_Activity', 'subject');
     if (!is_array($s)) {
-      $s = array();
+      $s = [];
     }
     $this->add('text', 'activity_subject', ts('Subject'),
-      array_merge($s, array('maxlength' => '128')), TRUE
+      array_merge($s, ['maxlength' => '128']), TRUE
     );
 
 
     $tags = CRM_Core_BAO_Tag::getTags('civicrm_case');
     if (!empty($tags)) {
       $this->add('select', 'tag', ts('Select Tags'), $tags, FALSE,
-        array('id' => 'tags', 'multiple' => 'multiple', 'title' => ts('- select -'))
+        ['id' => 'tags', 'multiple' => 'multiple', 'title' => ts('- select -')]
       );
     }
 
@@ -249,16 +249,16 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
     $parentNames = CRM_Core_BAO_Tag::getTagSet('civicrm_case');
     CRM_Core_Form_Tag::buildQuickForm($this, $parentNames, 'civicrm_case', NULL, FALSE, TRUE);
 
-    $this->addButtons(array(
-        array('type' => 'next',
+    $this->addButtons([
+        ['type' => 'next',
           'name' => ts('Save'),
           'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
           'isDefault' => TRUE,
-        ),
-        array('type' => 'cancel',
+        ],
+        ['type' => 'cancel',
           'name' => ts('Cancel'),
-        ),
-      )
+        ],
+      ]
     );
 
     $className = "CRM_Case_Form_Activity_{$this->_activityTypeFile}";
@@ -277,8 +277,8 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
       return TRUE;
     }
     $className = "CRM_Case_Form_Activity_{$this->_activityTypeFile}";
-    $this->addFormRule(array($className, 'formrule'), $this);
-    $this->addFormRule(array('CRM_Case_Form_Case', 'formRule'), $this);
+    $this->addFormRule([$className, 'formrule'], $this);
+    $this->addFormRule(['CRM_Case_Form_Case', 'formRule'], $this);
   }
 
   /**
@@ -356,10 +356,10 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
     unset($params['id'], $params['custom']);
 
     // add tags if exists
-    $tagParams = array();
+    $tagParams = [];
     if (!empty($params['tag'])) {
 
-      $tagParams = array();
+      $tagParams = [];
       foreach ($params['tag'] as $tag) {
         $tagParams[$tag] = 1;
       }

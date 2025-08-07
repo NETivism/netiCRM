@@ -47,7 +47,7 @@ class api_v3_AddressTest extends CiviUnitTestCase {
     $this->_locationType = $this->locationTypeCreate();
     CRM_Core_PseudoConstant::flush('locationType');
 
-    $this->_params = array(
+    $this->_params = [
       'contact_id' => $this->_contactID,
       'location_type_id' => $this->_locationType->id,
       'street_name' => 'Ambachtstraat',
@@ -58,7 +58,7 @@ class api_v3_AddressTest extends CiviUnitTestCase {
       'city' => 'Brummen',
       'is_primary' => 1,
       'version' => $this->_apiversion,
-    );
+    ];
   }
 
   function tearDown() {
@@ -76,13 +76,13 @@ class api_v3_AddressTest extends CiviUnitTestCase {
     $this->getAndCheck($this->_params, $result['id'], 'address');
   }
   public function testCreateAddressParsing() {
-    $params = array(
+    $params = [
       'version' => $this->_apiversion,
       'street_parsing' => 1,
       'street_address' => '54A Excelsior Ave. Apt 1C',
       'location_type_id' => $this->_locationType->id,
       'contact_id' => $this->_contactID,
-    );
+    ];
     $subfile     = "AddressParse";
     $description = "Demonstrates Use of address parsing param";
     $result = civicrm_api('address', 'create', $params);
@@ -132,7 +132,7 @@ class api_v3_AddressTest extends CiviUnitTestCase {
     unset($params['is_primary']);
     $params['id'] = $result['id'];
     $result       = civicrm_api('address', 'create', $params);
-    $address      = civicrm_api('address', 'get', array('version' => 3, 'contact_id' => $params['contact_id']));
+    $address      = civicrm_api('address', 'get', ['version' => 3, 'contact_id' => $params['contact_id']]);
     $this->assertEquals(0, $result['is_error'], 'In line ' . __LINE__);
     $this->assertEquals(1, $result['count'], 'In line ' . __LINE__);
     $this->assertEquals(1, $result['values'][$result['id']]['is_primary'], 'In line ' . __LINE__);
@@ -141,10 +141,10 @@ class api_v3_AddressTest extends CiviUnitTestCase {
   public function testDeleteAddress() {
 
     //check there are no addresss to start with
-    $get = civicrm_api('address', 'get', array(
+    $get = civicrm_api('address', 'get', [
       'version' => 3,
         'location_type_id' => $this->_locationType->id,
-      ));
+      ]);
     $this->assertEquals(0, $get['is_error'], 'In line ' . __LINE__);
     $this->assertEquals(0, $get['count'], 'Contact already exists ' . __LINE__);
 
@@ -153,14 +153,14 @@ class api_v3_AddressTest extends CiviUnitTestCase {
 
     $this->assertEquals(0, $create['is_error'], 'In line ' . __LINE__);
 
-    $result = civicrm_api('address', 'delete', array('id' => $create['id'], 'version' => 3));
+    $result = civicrm_api('address', 'delete', ['id' => $create['id'], 'version' => 3]);
     $this->documentMe($this->_params, $result, __FUNCTION__, __FILE__);
     $this->assertEquals(0, $result['is_error'], 'In line ' . __LINE__);
     $this->assertEquals(1, $result['count'], 'In line ' . __LINE__);
-    $get = civicrm_api('address', 'get', array(
+    $get = civicrm_api('address', 'get', [
       'version' => 3,
         'location_type_id' => $this->_locationType->id,
-      ));
+      ]);
     $this->assertEquals(0, $get['is_error'], 'In line ' . __LINE__);
     $this->assertEquals(0, $get['count'], 'Contact not successfully deleted In line ' . __LINE__);
   }
@@ -172,14 +172,14 @@ class api_v3_AddressTest extends CiviUnitTestCase {
     $address = civicrm_api('address', 'create', $this->_params);
     $this->assertAPISuccess($address, 'In line ' . __LINE__);
 
-    $params = array(
+    $params = [
       'contact_id' => $this->_contactID,
       'street_name' => $address['values'][$address['id']]['street_name'],
       'version' => $this->_apiversion,
-    );
+    ];
     $result = civicrm_api('Address', 'Get', ($params));
     $this->documentMe($params, $result, __FUNCTION__, __FILE__);
-    civicrm_api('Address', 'delete', array('version' => 3, 'id' => $result['id']));
+    civicrm_api('Address', 'delete', ['version' => 3, 'id' => $result['id']]);
     $this->assertAPISuccess($result, 'In line ' . __LINE__);
     $this->assertEquals($address['values'][$address['id']]['location_type_id'], $result['values'][$address['id']]['location_type_id'], 'In line ' . __LINE__);
    $this->assertEquals($address['values'][$address['id']]['is_primary'], $result['values'][$address['id']]['is_primary'], 'In line ' . __LINE__);
@@ -191,10 +191,10 @@ class api_v3_AddressTest extends CiviUnitTestCase {
    */
   public function testGetSingleAddress() {
     civicrm_api('address', 'create', $this->_params);
-    $params = array(
+    $params = [
       'contact_id' => $this->_contactID,
       'version' => $this->_apiversion,
-    );
+    ];
     $address = civicrm_api('Address', 'getsingle', ($params));
     $this->assertEquals($address['location_type_id'], $this->_params['location_type_id'], 'In line ' . __LINE__);
     civicrm_api('address', 'delete', $address);
@@ -207,10 +207,10 @@ class api_v3_AddressTest extends CiviUnitTestCase {
     civicrm_api('address', 'create', $this->_params);
     $subfile     = "AddressSort";
     $description = "Demonstrates Use of sort filter";
-    $params      = array('options' => array('sort' => 'street_address DESC'),
+    $params      = ['options' => ['sort' => 'street_address DESC'],
       'version' => $this->_apiversion,
       'sequential' => 1,
-    );
+    ];
     $result = civicrm_api('Address', 'Get', ($params));
     $this->documentMe($params, $result, __FUNCTION__, __FILE__, $description, $subfile);
     $this->assertEquals(0, $result['is_error'], 'In line ' . __LINE__);
@@ -225,10 +225,10 @@ class api_v3_AddressTest extends CiviUnitTestCase {
     civicrm_api('address', 'create', $this->_params);
     $subfile     = "AddressLike";
     $description = "Demonstrates Use of Like";
-    $params      = array('street_address' => array('LIKE' => '%mb%'),
+    $params      = ['street_address' => ['LIKE' => '%mb%'],
       'version' => $this->_apiversion,
       'sequential' => 1,
-    );
+    ];
     $result = civicrm_api('Address', 'Get', ($params));
     $this->documentMe($params, $result, __FUNCTION__, __FILE__, $description, $subfile);
     $this->assertEquals(0, $result['is_error'], 'In line ' . __LINE__);
@@ -243,10 +243,10 @@ class api_v3_AddressTest extends CiviUnitTestCase {
     civicrm_api('address', 'create', $this->_params);
     $subfile     = "AddressLike";
     $description = "Demonstrates Use of Like";
-    $params      = array('street_address' => array('LIKE' => "'%xy%'"),
+    $params      = ['street_address' => ['LIKE' => "'%xy%'"],
       'version' => $this->_apiversion,
       'sequential' => 1,
-    );
+    ];
     $result = civicrm_api('Address', 'Get', ($params));
     $this->assertEquals(0, $result['is_error'], 'In line ' . __LINE__);
     $this->assertEquals(0, $result['count'], 'In line ' . __LINE__);
@@ -261,7 +261,7 @@ class api_v3_AddressTest extends CiviUnitTestCase {
     $result = civicrm_api($this->_entity, 'create', $params);
     $this->assertAPISuccess($result, ' in line ' . __LINE__);
 
-    $getParams = array('version' => 3, 'id' => $result['id'], 'return' => array('custom'));
+    $getParams = ['version' => 3, 'id' => $result['id'], 'return' => ['custom']];
     $check = civicrm_api($this->_entity, 'get', $getParams);
 
     $this->assertEquals("custom string", $check['values'][$check['id']]['custom_' . $ids['custom_field_id']], ' in line ' . __LINE__);
@@ -276,11 +276,11 @@ class api_v3_AddressTest extends CiviUnitTestCase {
     $address1 = civicrm_api('address', 'create', $params);
     $this->assertApiSuccess($address1, 'In line ' . __LINE__);
     //now we check & make sure it has been set to primary
-    $check = civicrm_api('address', 'getcount', array(
+    $check = civicrm_api('address', 'getcount', [
         'version' => 3,
         'is_primary' => 1,
         'id' => $address1['id'],
-      ));
+      ]);
     $this->assertEquals(1, $check);
   }
   public function testCreateAddressPrimaryHandlingChangeExisting() {
@@ -288,11 +288,11 @@ class api_v3_AddressTest extends CiviUnitTestCase {
     $this->assertApiSuccess($address1, 'In line ' . __LINE__);
     $address2 = civicrm_api('address', 'create', $this->_params);
     $this->assertApiSuccess($address2, 'In line ' . __LINE__);
-    $check = civicrm_api('address', 'getcount', array(
+    $check = civicrm_api('address', 'getcount', [
         'version' => 3,
         'is_primary' => 1,
         'contact_id' => $this->_contactID,
-      ));
+      ]);
     $this->assertEquals(1, $check);
   }
 }

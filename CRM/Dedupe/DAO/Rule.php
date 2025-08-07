@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-class CRM_Dedupe_DAO_Rule extends CRM_Core_DAO
+        class CRM_Dedupe_DAO_Rule extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -78,7 +78,7 @@ class CRM_Dedupe_DAO_Rule extends CRM_Core_DAO
    * @static
    */
   static $_log = false;
-  /**
+    /**
    * Unique dedupe rule id
    *
    * @var int unsigned
@@ -114,7 +114,7 @@ class CRM_Dedupe_DAO_Rule extends CRM_Core_DAO
    * @var int
    */
   public $rule_weight;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -133,13 +133,13 @@ class CRM_Dedupe_DAO_Rule extends CRM_Core_DAO
   function &links()
   {
     if (!(self::$_links)) {
-      self::$_links = array(
+      self::$_links = [
         'dedupe_rule_group_id' => 'civicrm_dedupe_rule_group:id',
-      );
+      ];
     }
     return self::$_links;
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -153,7 +153,7 @@ class CRM_Dedupe_DAO_Rule extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -162,46 +162,46 @@ class CRM_Dedupe_DAO_Rule extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'id' => array(
+      self::$_fields = [
+        'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'dedupe_rule_group_id' => array(
+                  ] ,
+        'dedupe_rule_group_id' => [
           'name' => 'dedupe_rule_group_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-          'FKClassName' => 'CRM_Dedupe_DAO_RuleGroup',
-        ) ,
-        'rule_table' => array(
+                    'FKClassName' => 'CRM_Dedupe_DAO_RuleGroup',
+        ] ,
+        'rule_table' => [
           'name' => 'rule_table',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Rule Table') ,
           'required' => true,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ) ,
-        'rule_field' => array(
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
+        'rule_field' => [
           'name' => 'rule_field',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Rule Field') ,
           'required' => true,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ) ,
-        'rule_length' => array(
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
+        'rule_length' => [
           'name' => 'rule_length',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Rule Length') ,
-        ) ,
-        'rule_weight' => array(
+                  ] ,
+        'rule_weight' => [
           'name' => 'rule_weight',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Rule Weight') ,
           'required' => true,
-        ) ,
-      );
+                  ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -213,8 +213,8 @@ class CRM_Dedupe_DAO_Rule extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -234,7 +234,7 @@ class CRM_Dedupe_DAO_Rule extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -245,7 +245,7 @@ class CRM_Dedupe_DAO_Rule extends CRM_Core_DAO
           }
         }
       }
-    }
+                                  }
     return self::$_import;
   }
   /**
@@ -257,7 +257,7 @@ class CRM_Dedupe_DAO_Rule extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
@@ -268,7 +268,7 @@ class CRM_Dedupe_DAO_Rule extends CRM_Core_DAO
           }
         }
       }
-    }
+                                  }
     return self::$_export;
   }
 }

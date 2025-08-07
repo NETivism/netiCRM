@@ -63,7 +63,7 @@ class CRM_Pledge_BAO_PledgeTest extends CiviUnitTestCase
      */
     function testAdd( ) 
     {        
-        $params = array(
+        $params = [
                         'contact_id'           =>  $this->_contactId,
                         'frequency_unit'       => 'month',
                         'frequency_interval'   => 1,
@@ -76,7 +76,7 @@ class CRM_Pledge_BAO_PledgeTest extends CiviUnitTestCase
                         'status_id'            => 2,
                         'currency'             => 'USD',
                         'amount'               => 300
-                        );
+                        ];
         
         //do test for normal add.
         require_once "CRM/Pledge/BAO/Pledge.php";
@@ -92,8 +92,8 @@ class CRM_Pledge_BAO_PledgeTest extends CiviUnitTestCase
      */
 	function testRetrieveZeroPledeID( ) 
     {
-        $defaults = array();
-		$params   = array( 'pledge_id' => 0 );
+        $defaults = [];
+		$params   = [ 'pledge_id' => 0 ];
         require_once 'CRM/Pledge/BAO/Pledge.php';
 		$pledgeId = CRM_Pledge_BAO_Pledge::retrieve( $params, $defaults );
 		
@@ -105,8 +105,8 @@ class CRM_Pledge_BAO_PledgeTest extends CiviUnitTestCase
      */
     function testRetrieveStringPledgeID( ) 
     {        
-        $defaults = array();
-        $params   = array( 'pledge_id' => 'random text' );
+        $defaults = [];
+        $params   = [ 'pledge_id' => 'random text' ];
         require_once 'CRM/Pledge/BAO/Pledge.php';
 		$pledgeId = CRM_Pledge_BAO_Pledge::retrieve( $params, $defaults );
 		
@@ -118,7 +118,7 @@ class CRM_Pledge_BAO_PledgeTest extends CiviUnitTestCase
      */
     function testRetrieveKnownPledgeID( ) 
     {
-        $params = array(
+        $params = [
                         'contact_id'           =>  $this->_contactId,
                         'frequency_unit'       => 'month',
                         'frequency_interval'   => 1,
@@ -132,13 +132,13 @@ class CRM_Pledge_BAO_PledgeTest extends CiviUnitTestCase
                         'status_id'            => 2,
                         'currency'             => 'USD',
                         'amount'               => 300
-                        );
+                        ];
         
         require_once "CRM/Pledge/BAO/Pledge.php";
         $pledge = CRM_Pledge_BAO_Pledge::add( $params );
         
-        $defaults     = array();
-		$pledgeParams = array( 'pledge_id' => $pledge->id );
+        $defaults     = [];
+		$pledgeParams = [ 'pledge_id' => $pledge->id ];
         
 		$pledgeId = CRM_Pledge_BAO_Pledge::retrieve( $pledgeParams, $defaults );
 		

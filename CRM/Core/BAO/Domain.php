@@ -106,10 +106,10 @@ class CRM_Core_BAO_Domain extends CRM_Core_DAO_Domain {
    */
   function &getLocationValues() {
     if ($this->_location == NULL) {
-      $params = array(
+      $params = [
         'entity_id' => $this->id,
         'entity_table' => self::getTableName(),
-      );
+      ];
       $this->_location = CRM_Core_BAO_Location::getValues($params, TRUE);
 
       if (empty($this->_location)) {
@@ -161,7 +161,7 @@ class CRM_Core_BAO_Domain extends CRM_Core_DAO_Domain {
   static function getNameAndEmail() {
     $config = CRM_Core_Config::singleton();
     if (!empty($config->domain->from) && !empty($config->domain->email)) {
-      return array($config->domain->from, $config->domain->email);
+      return [$config->domain->from, $config->domain->email];
     }
 
     $fromEmailAddress = CRM_Core_OptionGroup::values('from_email_address', NULL, NULL, NULL, ' AND is_default = 1');
@@ -172,11 +172,11 @@ class CRM_Core_BAO_Domain extends CRM_Core_DAO_Domain {
       $addr = reset($fromEmailAddress);
       $email = CRM_Utils_Mail::pluckEmailFromHeader($addr);
       $fromName = CRM_Utils_Array::value(1, explode('"', $addr));
-      return array($fromName, $email);
+      return [$fromName, $email];
     }
     else {
       $url = CRM_Utils_System::url('civicrm/admin/options/from_email', 'reset=1&group=from_email_address');
-      $status = ts("There is no valid default from email address configured for the domain. You can configure here <a href='%1'>Configure From Email Address.</a>", array(1 => $url));
+      $status = ts("There is no valid default from email address configured for the domain. You can configure here <a href='%1'>Configure From Email Address.</a>", [1 => $url]);
       CRM_Core_Session::setStatus($status);
     }
   }
@@ -185,7 +185,7 @@ class CRM_Core_BAO_Domain extends CRM_Core_DAO_Domain {
     $groupID = self::getGroupId();
 
     if ($groupID) {
-      $contactIDs = array($contactID);
+      $contactIDs = [$contactID];
 
       CRM_Contact_BAO_GroupContact::addContactsToGroup($contactIDs, $groupID);
 
@@ -213,10 +213,10 @@ class CRM_Core_BAO_Domain extends CRM_Core_DAO_Domain {
         $title, 'id', 'title'
       );
       if (empty($groupID) && !empty($title)) {
-        $groupParams = array('title' => $title,
+        $groupParams = ['title' => $title,
           'is_active' => 1,
           'no_parent' => 1,
-        );
+        ];
 
         $group = CRM_Contact_BAO_Group::create($groupParams);
         $groupID = $group->id;
@@ -232,7 +232,7 @@ class CRM_Core_BAO_Domain extends CRM_Core_DAO_Domain {
 
   static function getChildGroupIds() {
     $domainGroupID = self::getGroupId();
-    $childGrps = array();
+    $childGrps = [];
 
     if ($domainGroupID) {
 
@@ -245,7 +245,7 @@ class CRM_Core_BAO_Domain extends CRM_Core_DAO_Domain {
   // function to retrieve a list of contact-ids that belongs to current domain/site.
   static function getContactList() {
     $siteGroups = CRM_Core_BAO_Domain::getChildGroupIds();
-    $siteContacts = array();
+    $siteContacts = [];
 
     if (!empty($siteGroups)) {
       $query = "

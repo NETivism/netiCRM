@@ -77,7 +77,7 @@ class CRM_Contact_Form_Search_Builder extends CRM_Contact_Form_Search {
     }
 
     //get the column count
-    $this->_columnCount = array();
+    $this->_columnCount = [];
     $this->_columnCount = $this->get('columnCount');
 
     for ($i = 1; $i < $this->_blockCount; $i++) {
@@ -116,7 +116,7 @@ class CRM_Contact_Form_Search_Builder extends CRM_Contact_Form_Search {
    * @return void
    */
   function addRules() {
-    $this->addFormRule(array('CRM_Contact_Form_Search_Builder', 'formRule'));
+    $this->addFormRule(['CRM_Contact_Form_Search_Builder', 'formRule']);
   }
 
   /**
@@ -134,7 +134,7 @@ class CRM_Contact_Form_Search_Builder extends CRM_Contact_Form_Search {
       return TRUE;
     }
 
-    $fields = array();
+    $fields = [];
     $fields = CRM_Contact_BAO_Contact::exportableFields('All', FALSE, TRUE);
 
 
@@ -144,24 +144,24 @@ class CRM_Contact_Form_Search_Builder extends CRM_Contact_Form_Search {
     $compomentFields = array_merge($compomentFields, $activityFields);
     $fields = array_merge($fields, $compomentFields);
 
-    $fld = array();
+    $fld = [];
     $fld = CRM_Core_BAO_Mapping::formattedFields($values, TRUE);
 
 
-    $errorMsg = array();
+    $errorMsg = [];
     foreach ($fld as $k => $v) {
       if (!$v[1]) {
         $errorMsg["operator[$v[3]][$v[4]]"] = ts("Please enter the operator.");
       }
       else {
         $entered = is_array($v[2]) ? key($v[2]) : $v[2];
-        if (in_array($v[1], array('IS NULL', 'IS NOT NULL')) && !empty($entered)) {
-          $errorMsg["value[$v[3]][$v[4]]"] = ts('Please clear your value if you want to use %1 operator.', array(1 => ts($v[1])));
+        if (in_array($v[1], ['IS NULL', 'IS NOT NULL']) && !empty($entered)) {
+          $errorMsg["value[$v[3]][$v[4]]"] = ts('Please clear your value if you want to use %1 operator.', [1 => ts($v[1])]);
         }
-        elseif (empty($v[2]) && !in_array($v[1], array('IS NULL', 'IS NOT NULL'))) {
+        elseif (empty($v[2]) && !in_array($v[1], ['IS NULL', 'IS NOT NULL'])) {
           $errorMsg["value[$v[3]][$v[4]]"] = ts("Please enter the value.");
         }
-        elseif (in_array($v[1], array('IS NULL', 'IS NOT NULL'))) {
+        elseif (in_array($v[1], ['IS NULL', 'IS NOT NULL'])) {
           // do nothing
         }
         elseif ($v[0] == 'group' || $v[0] == 'tag') {
@@ -185,13 +185,13 @@ class CRM_Contact_Form_Search_Builder extends CRM_Contact_Form_Search {
           else {
             $error = CRM_Utils_Type::validate($grpId[0], 'Integer', FALSE);
             if ($error != $grpId[0]) {
-              $errorMsg["value[$v[3]][$v[4]]"] = ts('Please enter valid %1 id.', array(1 => $v[0]));
+              $errorMsg["value[$v[3]][$v[4]]"] = ts('Please enter valid %1 id.', [1 => $v[0]]);
             }
           }
         }
         elseif (substr($v[0], 0, 7) === 'do_not_' or substr($v[0], 0, 3) === 'is_') {
           if (isset($v[2])) {
-            $v2 = array($v[2]);
+            $v2 = [$v[2]];
             if (!isset($v[2])) {
               $errorMsg["value[$v[3]][$v[4]]"] = ts("Please enter the value.");
             }
@@ -216,7 +216,7 @@ class CRM_Contact_Form_Search_Builder extends CRM_Contact_Form_Search {
             $type = $fields[$v[0]]['data_type'];
 
             // hack to handle custom data of type state and country
-            if (in_array($type, array('Country', 'StateProvince'))) {
+            if (in_array($type, ['Country', 'StateProvince'])) {
               $type = "Integer";
             }
           }
@@ -231,7 +231,7 @@ class CRM_Contact_Form_Search_Builder extends CRM_Contact_Form_Search {
             $fldType = CRM_Utils_Array::value('type', $fields[$fldName]);
             $type = CRM_Utils_Type::typeToString($fldType);
             // Check Empty values for Integer Or Boolean Or Date type For operators other than IS NULL and IS NOT NULL.
-            if (!in_array($v[1], array('IS NULL', 'IS NOT NULL'))) {
+            if (!in_array($v[1], ['IS NULL', 'IS NOT NULL'])) {
               if ((($type == 'Int' || $type == 'Boolean') && !trim($v[2])) && $v[2] != '0') {
                 $errorMsg["value[$v[3]][$v[4]]"] = ts("Please enter the value.");
               }
@@ -258,7 +258,7 @@ class CRM_Contact_Form_Search_Builder extends CRM_Contact_Form_Search {
               }
               // Validate each value in parenthesis to avoid db errors
               if (empty($errorMsg)) {
-                $parenValues = array();
+                $parenValues = [];
                 $parenValues = explode(',', trim($inVal, "(..)"));
                 foreach ($parenValues as $val) {
                   $val = trim($val);

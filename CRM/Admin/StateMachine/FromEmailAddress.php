@@ -16,12 +16,12 @@ class CRM_Admin_StateMachine_FromEmailAddress extends CRM_Core_StateMachine {
     $session = CRM_Core_Session::singleton();
     $session->set('singleForm', FALSE);
 
-    $this->_pages = array(
+    $this->_pages = [
       'CRM_Admin_Form_FromEmailAddress_Edit' => NULL,
       'CRM_Admin_Form_FromEmailAddress_EmailVerify' => NULL,
       'CRM_Admin_Form_FromEmailAddress_DNSVerify' => NULL,
       'CRM_Admin_Form_FromEmailAddress_Finish' => NULL,
-    );
+    ];
     $skipEmailVerify = $controller->get('skipEmailVerify');
     if ($skipEmailVerify) {
       unset($this->_pages['CRM_Admin_Form_FromEmailAddress_EmailVerify']);

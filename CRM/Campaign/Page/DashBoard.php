@@ -65,32 +65,32 @@ class CRM_Campaign_Page_DashBoard extends CRM_Core_Page {
     // check if variable _actionsLinks is populated
     if (!isset(self::$_campaignActionLinks)) {
       $deleteExtra = ts('Are you sure you want to delete this Campaign?');
-      self::$_campaignActionLinks = array(
-        CRM_Core_Action::UPDATE => array(
+      self::$_campaignActionLinks = [
+        CRM_Core_Action::UPDATE => [
           'name' => ts('Edit'),
           'url' => 'civicrm/campaign/add',
           'qs' => 'reset=1&action=update&id=%%id%%',
           'title' => ts('Update Campaign'),
-        ),
-        CRM_Core_Action::DISABLE => array(
+        ],
+        CRM_Core_Action::DISABLE => [
           'name' => ts('Disable'),
           'title' => ts('Disable Campaign'),
           'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_Campaign_BAO_Campaign' . '\',\'' . 'enable-disable' . '\' );"',
           'ref' => 'disable-action',
-        ),
-        CRM_Core_Action::ENABLE => array(
+        ],
+        CRM_Core_Action::ENABLE => [
           'name' => ts('Enable'),
           'title' => ts('Enable Campaign'),
           'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_Campaign_BAO_Campaign' . '\',\'' . 'disable-enable' . '\' );"',
           'ref' => 'enable-action',
-        ),
-        CRM_Core_Action::DELETE => array(
+        ],
+        CRM_Core_Action::DELETE => [
           'name' => ts('Delete'),
           'url' => 'civicrm/campaign/add',
           'qs' => 'action=delete&reset=1&id=%%id%%',
           'title' => ts('Delete Campaign'),
-        ),
-      );
+        ],
+      ];
     }
 
     return self::$_campaignActionLinks;
@@ -99,71 +99,71 @@ class CRM_Campaign_Page_DashBoard extends CRM_Core_Page {
   function &surveyActionLinks($activityType = NULL) {
     // check if variable _actionsLinks is populated
     if (!isset(self::$_surveyActionLinks)) {
-      self::$_surveyActionLinks = array(
-        CRM_Core_Action::UPDATE => array(
+      self::$_surveyActionLinks = [
+        CRM_Core_Action::UPDATE => [
           'name' => ts('Edit'),
           'url' => 'civicrm/survey/add',
           'qs' => 'action=update&id=%%id%%&reset=1',
           'title' => ts('Update Survey'),
-        ),
-        CRM_Core_Action::DISABLE => array(
+        ],
+        CRM_Core_Action::DISABLE => [
           'name' => ts('Disable'),
           'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_Campaign_BAO_Survey' . '\',\'' . 'enable-disable' . '\' );"',
           'ref' => 'disable-action',
           'title' => ts('Disable Survey'),
-        ),
-        CRM_Core_Action::ENABLE => array(
+        ],
+        CRM_Core_Action::ENABLE => [
           'name' => ts('Enable'),
           'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_Campaign_BAO_Survey' . '\',\'' . 'disable-enable' . '\' );"',
           'ref' => 'enable-action',
           'title' => ts('Enable Survey'),
-        ),
-        CRM_Core_Action::DELETE => array(
+        ],
+        CRM_Core_Action::DELETE => [
           'name' => ts('Delete'),
           'url' => 'civicrm/survey/add',
           'qs' => 'action=delete&id=%%id%%&reset=1',
           'title' => ts('Delete Survey'),
-        ),
-      );
+        ],
+      ];
       self::$_petitionActionLinks = self::$_surveyActionLinks;
-      self::$_petitionActionLinks[CRM_Core_Action::UPDATE] = array(
+      self::$_petitionActionLinks[CRM_Core_Action::UPDATE] = [
         'name' => ts('Edit'),
         'url' => 'civicrm/petition/add',
         'qs' => 'action=update&id=%%id%%&reset=1',
         'title' => ts('Update Petition'),
-      );
-      self::$_petitionActionLinks[CRM_Core_Action::DISABLE] = array(
+      ];
+      self::$_petitionActionLinks[CRM_Core_Action::DISABLE] = [
         'name' => ts('Disable'),
         'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_Campaign_BAO_Survey' . '\',\'' . 'enable-disable' . '\' );"',
         'ref' => 'disable-action',
         'title' => ts('Disable Petition'),
-      );
-      self::$_petitionActionLinks[CRM_Core_Action::ENABLE] = array(
+      ];
+      self::$_petitionActionLinks[CRM_Core_Action::ENABLE] = [
         'name' => ts('Enable'),
         'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_Campaign_BAO_Survey' . '\',\'' . 'disable-enable' . '\' );"',
         'ref' => 'enable-action',
         'title' => ts('Enable Petition'),
-      );
-      self::$_petitionActionLinks[CRM_Core_Action::DELETE] = array(
+      ];
+      self::$_petitionActionLinks[CRM_Core_Action::DELETE] = [
         'name' => ts('Delete'),
         'url' => 'civicrm/petition/add',
         'qs' => 'action=delete&id=%%id%%&reset=1',
         'title' => ts('Delete Petition'),
-      );
-      self::$_petitionActionLinks[CRM_Core_Action::PROFILE] = array(
+      ];
+      self::$_petitionActionLinks[CRM_Core_Action::PROFILE] = [
         'name' => ts('Sign'),
         'url' => 'civicrm/petition/sign',
         'qs' => 'sid=%%id%%&reset=1',
         'title' => ts('Sign Petition'),
       //CRM_Core_Action::PROFILE is used because there isn't a specific action for sign
-      );
-      self::$_petitionActionLinks[CRM_Core_Action::BROWSE] = array(
+      ];
+      self::$_petitionActionLinks[CRM_Core_Action::BROWSE] = [
         'name' => ts('Signatures'),
         'url' => 'civicrm/activity/search',
         'qs' => 'survey=%%id%%&force=1',
         'title' => ts('List the signatures'),
       //CRM_Core_Action::PROFILE is used because there isn't a specific action for sign
-      );
+      ];
     }
 
 
@@ -174,15 +174,15 @@ class CRM_Campaign_Page_DashBoard extends CRM_Core_Page {
   }
 
   function browseCampaign() {
-    $campaignsData = array();
+    $campaignsData = [];
     //get the campaigns.
     $campaigns = CRM_Campaign_BAO_Campaign::getCampaign(TRUE);
     if (!empty($campaigns)) {
       $campaignType = CRM_Campaign_PseudoConstant::campaignType();
       $campaignStatus = CRM_Campaign_PseudoConstant::campaignStatus();
-      $properties = array('id', 'name', 'title', 'status_id', 'description',
+      $properties = ['id', 'name', 'title', 'status_id', 'description',
         'campaign_type_id', 'is_active', 'start_date', 'end_date',
-      );
+      ];
       foreach ($campaigns as $cmpid => $campaign) {
         foreach ($properties as $prop) {
           $campaignsData[$cmpid][$prop] = CRM_Utils_Array::value($prop, $campaign);
@@ -201,7 +201,7 @@ class CRM_Campaign_Page_DashBoard extends CRM_Core_Page {
         }
         $campaignsData[$cmpid]['action'] = CRM_Core_Action::formLink(self::campaignActionLinks(),
           $action,
-          array('id' => $campaign['id'])
+          ['id' => $campaign['id']]
         );
       }
     }
@@ -211,7 +211,7 @@ class CRM_Campaign_Page_DashBoard extends CRM_Core_Page {
   }
 
   function browsePetition() {
-    $surveysData = array();
+    $surveysData = [];
     //get the survey.
     $surveys = CRM_Campaign_BAO_Petition::getPetition(TRUE);
     if (!empty($surveys)) {
@@ -236,7 +236,7 @@ class CRM_Campaign_Page_DashBoard extends CRM_Core_Page {
         }
         $surveysData[$sid]['action'] = CRM_Core_Action::formLink($this->surveyActionLinks($surveysData[$sid]['activity_type']),
           $action,
-          array('id' => $sid)
+          ['id' => $sid]
         );
 
         if (CRM_Utils_Array::value('activity_type', $surveysData[$sid]) != 'Petition') {
@@ -250,7 +250,7 @@ class CRM_Campaign_Page_DashBoard extends CRM_Core_Page {
   }
 
   function browseSurvey() {
-    $surveysData = array();
+    $surveysData = [];
     //get the survey.
     $surveys = CRM_Campaign_BAO_Survey::getSurvey(TRUE);
     if (!empty($surveys)) {
@@ -274,7 +274,7 @@ class CRM_Campaign_Page_DashBoard extends CRM_Core_Page {
         }
         $surveysData[$sid]['action'] = CRM_Core_Action::formLink($this->surveyActionLinks($surveysData[$sid]['activity_type']),
           $action,
-          array('id' => $sid)
+          ['id' => $sid]
         );
 
         if (CRM_Utils_Array::value('activity_type', $surveysData[$sid]) != 'Petition') {
@@ -288,10 +288,10 @@ class CRM_Campaign_Page_DashBoard extends CRM_Core_Page {
   }
 
   function browse() {
-    $this->_tabs = array('campaign' => ts('Campaigns'),
+    $this->_tabs = ['campaign' => ts('Campaigns'),
       'survey' => ts('Surveys'),
       'petition' => ts('Petitions'),
-    );
+    ];
 
     $subPageType = CRM_Utils_Request::retrieve('type', 'String', $this);
     if ($subPageType) {
@@ -322,12 +322,12 @@ class CRM_Campaign_Page_DashBoard extends CRM_Core_Page {
   }
 
   function buildTabs() {
-    $allTabs = array();
+    $allTabs = [];
     foreach ($this->_tabs as $name => $title) {
-      $allTabs[] = array('id' => $name,
+      $allTabs[] = ['id' => $name,
         'title' => $title,
         'url' => CRM_Utils_System::url('civicrm/campaign', "reset=1&type=$name&snippet=1"),
-      );
+      ];
     }
 
     $this->assign('allTabs', $allTabs);

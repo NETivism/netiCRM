@@ -92,7 +92,7 @@ class CRM_Mailing_Form_Schedule extends CRM_Core_Form {
    * @return None
    */
   function setDefaultValues() {
-    $defaults = array();
+    $defaults = [];
     $this->assign('count', $this->_recipientsCount);
     $defaults['now'] = 1;
     return $defaults;
@@ -107,15 +107,15 @@ class CRM_Mailing_Form_Schedule extends CRM_Core_Form {
    * @access public
    */
   public function buildQuickform() {
-    $this->addDateTime('start_date', ts('Schedule Mailing'), FALSE, array('formatType' => 'mailing'));
+    $this->addDateTime('start_date', ts('Schedule Mailing'), FALSE, ['formatType' => 'mailing']);
 
     $this->addElement('checkbox', 'now', ts('Send Immediately'));
 
-    $this->addFormRule(array('CRM_Mailing_Form_Schedule', 'formRule'), $this);
+    $this->addFormRule(['CRM_Mailing_Form_Schedule', 'formRule'], $this);
 
-    $disabled = array();
+    $disabled = [];
     if ($this->_recipientsCount <= 0) {
-      $disabled = array('disabled' => 'disabled');
+      $disabled = ['disabled' => 'disabled'];
       $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String', $this);
       if (CRM_Utils_Rule::qfKey($qfKey)){
         $this->assign('backURL', CRM_Utils_System::url("civicrm/mailing/send", "_qf_Group_display=true&qfKey=".$qfKey));
@@ -128,53 +128,53 @@ class CRM_Mailing_Form_Schedule extends CRM_Core_Form {
         'name'
       );
       CRM_Utils_System::setTitle($title);
-      $buttons = array(
-        array('type' => 'next',
+      $buttons = [
+        ['type' => 'next',
           'name' => ts('Submit Mailing'),
           'spacing' => '&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;',
           'isDefault' => TRUE,
           'js' => $disabled,
-        ),
-        array(
+        ],
+        [
           'type' => 'cancel',
           'name' => ts('Cancel'),
-        ),
-      );
+        ],
+      ];
     }
     else {
       //FIXME : currently we are hiding save an continue later when
       //search base mailing, we should handle it when we fix CRM-3876
       if ($this->_searchBasedMailing) {
-        $buttons = array(
-          array('type' => 'back',
+        $buttons = [
+          ['type' => 'back',
             'name' => ts('<< Previous'),
-          ),
-          array(
+          ],
+          [
             'type' => 'next',
             'name' => ts('Submit Mailing'),
             'spacing' => '&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;',
             'isDefault' => TRUE,
             'js' => $disabled,
-          ),
-        );
+          ],
+        ];
       }
       else {
-        $buttons = array(
-          array('type' => 'back',
+        $buttons = [
+          ['type' => 'back',
             'name' => ts('<< Previous'),
-          ),
-          array(
+          ],
+          [
             'type' => 'next',
             'name' => ts('Submit Mailing'),
             'spacing' => '&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;',
             'isDefault' => TRUE,
-            'js' => array('data' => 'submit-once') + $disabled,
-          ),
-          array(
+            'js' => ['data' => 'submit-once'] + $disabled,
+          ],
+          [
             'type' => 'cancel',
             'name' => ts('Continue Later'),
-          ),
-        );
+          ],
+        ];
       }
     }
     $this->addButtons($buttons);
@@ -183,7 +183,7 @@ class CRM_Mailing_Form_Schedule extends CRM_Core_Form {
       $this->_scheduleFormOnly
     ) {
       // add the preview elements
-      $preview = array();
+      $preview = [];
       $preview['type'] = CRM_Core_DAO::getFieldValue('CRM_Mailing_DAO_Mailing', $this->_mailingID, 'body_html') ? 'html' : 'text';
       $preview['subject'] = CRM_Core_DAO::getFieldValue('CRM_Mailing_DAO_Mailing',
         $this->_mailingID,
@@ -233,7 +233,7 @@ class CRM_Mailing_Form_Schedule extends CRM_Core_Form {
         }
 
         $draftURL = CRM_Utils_System::url('civicrm/mailing/browse/unscheduled', 'scheduled=false&reset=1');
-        $status = ts("Your mailing has been saved. You can continue later by clicking the 'Continue' action to resume working on it.<br /> From <a href='%1'>Draft and Unscheduled Mailings</a>.", array(1 => $draftURL));
+        $status = ts("Your mailing has been saved. You can continue later by clicking the 'Continue' action to resume working on it.<br /> From <a href='%1'>Draft and Unscheduled Mailings</a>.", [1 => $draftURL]);
         CRM_Core_Session::setStatus($status);
 
         //replace user context to search.
@@ -263,10 +263,10 @@ class CRM_Mailing_Form_Schedule extends CRM_Core_Form {
     if (CRM_Utils_Date::format(CRM_Utils_Date::processDate($params['start_date'],
           $params['start_date_time']
         )) < CRM_Utils_Date::format(date('YmdHi00'))) {
-      return array(
+      return [
         'start_date' =>
         ts('Start date cannot be earlier than the current time.'),
-      );
+      ];
     }
     return TRUE;
   }
@@ -280,7 +280,7 @@ class CRM_Mailing_Form_Schedule extends CRM_Core_Form {
    * @access public
    */
   public function postProcess() {
-    $params = array();
+    $params = [];
 
     $params['mailing_id'] = $ids['mailing_id'] = $this->_mailingID;
 
@@ -288,9 +288,9 @@ class CRM_Mailing_Form_Schedule extends CRM_Core_Form {
       CRM_Core_Error::fatal(ts('Could not find a mailing id'));
     }
 
-    foreach (array(
+    foreach ([
         'now', 'start_date', 'start_date_time',
-      ) as $parameter) {
+      ] as $parameter) {
       $params[$parameter] = $this->controller->exportValue($this->_name,
         $parameter
       );

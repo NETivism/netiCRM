@@ -63,7 +63,7 @@ function civicrm_relationship_create(&$params) {
   if (civicrm_error($error)) {
     return $error;
   }
-  $values = array();
+  $values = [];
   require_once 'CRM/Contact/BAO/Relationship.php';
   $error = _civicrm_relationship_format_params($params, $values);
 
@@ -71,7 +71,7 @@ function civicrm_relationship_create(&$params) {
     return $error;
   }
 
-  $ids = array();
+  $ids = [];
   $action = CRM_Core_Action::ADD;
   require_once 'CRM/Utils/Array.php';
 
@@ -82,7 +82,7 @@ function civicrm_relationship_create(&$params) {
   }
 
   $values['relationship_type_id'] = $params['relationship_type_id'] . '_a_b';
-  $values['contact_check'] = array($params['contact_id_b'] => $params['contact_id_b']);
+  $values['contact_check'] = [$params['contact_id_b'] => $params['contact_id_b']];
   $ids['contact'] = $params['contact_id_a'];
 
   $relationshipBAO = CRM_Contact_BAO_Relationship::create($values, $ids);
@@ -98,7 +98,7 @@ function civicrm_relationship_create(&$params) {
   }
   CRM_Contact_BAO_Relationship::relatedMemberships($params['contact_id_a'], $values, $ids, $action);
 
-  return civicrm_create_success(array('id' => CRM_Utils_Array::implode(',', $relationshipBAO[4])));
+  return civicrm_create_success(['id' => CRM_Utils_Array::implode(',', $relationshipBAO[4])]);
 }
 
 /**
@@ -162,13 +162,13 @@ function civicrm_relationship_update($params) {
         */
 
 
-    civicrm_verify_mandatory($params, 'CRM_Contact_DAO_Relationship', array('relationship_id'));
+    civicrm_verify_mandatory($params, 'CRM_Contact_DAO_Relationship', ['relationship_id']);
 
-    $names = array(
+    $names = [
       'id', 'contact_id_a', 'contact_id_b',
       'relationship_type_id', 'start_date', 'end_date', 'is_active',
       'description', 'is_permission_a_b', 'is_permission_b_a', 'case_id',
-    );
+    ];
 
     $relationship_id = (int) $params['relationship_id'];
     $query           = "SELECT * FROM civicrm_relationship WHERE id = $relationship_id";
@@ -242,7 +242,7 @@ function civicrm_contact_relationship_get($contact_a, $contact_b = NULL, $relati
   $relationships = CRM_Contact_BAO_Relationship::getRelationship($contactID);
 
   if (!empty($relationshipTypes)) {
-    $result = array();
+    $result = [];
     foreach ($relationshipTypes as $relationshipName) {
       foreach ($relationships as $key => $relationship) {
         if ($relationship['relation'] == $relationshipName) {
@@ -255,7 +255,7 @@ function civicrm_contact_relationship_get($contact_a, $contact_b = NULL, $relati
 
   if (isset($contact_b['contact_id'])) {
     $cid = $contact_b['contact_id'];
-    $result = array();
+    $result = [];
 
     foreach ($relationships as $key => $relationship) {
       if ($relationship['cid'] == $cid) {
@@ -284,7 +284,7 @@ function civicrm_contact_relationship_get($contact_a, $contact_b = NULL, $relati
     );
     $formatTree = CRM_Core_BAO_CustomGroup::formatGroupTree($groupTree, 1, CRM_Core_DAO::$_nullObject);
 
-    $defaults = array();
+    $defaults = [];
     CRM_Core_BAO_CustomGroup::setDefaults($formatTree, $defaults);
 
     if (!empty($defaults)) {
@@ -337,7 +337,7 @@ function _civicrm_relationship_format_params(&$params, &$values) {
           return civicrm_create_error("contact_id not valid: $value");
         }
         $dao     = new CRM_Core_DAO();
-        $qParams = array();
+        $qParams = [];
         $svq     = $dao->singleValueQuery("SELECT id FROM civicrm_contact WHERE id = $value",
           $qParams
         );
@@ -402,7 +402,7 @@ function _civicrm_relationship_format_params(&$params, &$values) {
   }
   _civicrm_custom_format_params($params, $values, 'Relationship');
 
-  return array();
+  return [];
 }
 
 /**
@@ -418,11 +418,11 @@ function _civicrm_relationship_format_params(&$params, &$values) {
  * @access private
  */
 function _civicrm_relationship_check_params(&$params) {
-  static $required = array(
+  static $required = [
     'contact_id_a' => NULL,
     'contact_id_b' => NULL,
     'relationship_type_id' => 'relationship_type',
-  );
+  ];
 
   // params should be an array
   if (!is_array($params)) {
@@ -465,6 +465,6 @@ function _civicrm_relationship_check_params(&$params) {
     return civicrm_create_error('Required fields not found' . $error);
   }
 
-  return array();
+  return [];
 }
 

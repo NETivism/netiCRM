@@ -87,15 +87,15 @@ class CRM_Coupon_Form_DeleteCoupon extends CRM_Core_Form {
   public function buildQuickForm() {
     $this->assign('description', $this->_description);
     $this->assign('code', $this->_code);
-    $this->addButtons(array(
-        array('type' => 'next',
+    $this->addButtons([
+        ['type' => 'next',
           'name' => ts('Delete Coupon'),
           'isDefault' => TRUE,
-        ),
-        array('type' => 'cancel',
+        ],
+        ['type' => 'cancel',
           'name' => ts('Cancel'),
-        ),
-      )
+        ],
+      ]
     );
   }
 
@@ -108,12 +108,12 @@ class CRM_Coupon_Form_DeleteCoupon extends CRM_Core_Form {
   public function postProcess() {
     if (CRM_Coupon_BAO_Coupon::deleteCoupon($this->_id)) {
       CRM_Core_Session::setStatus(ts('The Coupon \'%1 (%2)\' has been deleted.',
-          array(1 => $this->_description, 2 => $this->_code)
+          [1 => $this->_description, 2 => $this->_code]
         ));
     }
     else {
       CRM_Core_Session::setStatus(ts('The Coupon \'%1 (%2)\' has not been deleted!',
-          array(1 => $this->_description, 2 => $this->_code)
+          [1 => $this->_description, 2 => $this->_code]
         ));
     }
   }

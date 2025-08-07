@@ -48,11 +48,11 @@ class CRM_Contact_Form_Search_Custom_Sample extends CRM_Contact_Form_Search_Cust
       }
     }
 
-    $this->_columns = array(ts('Contact Id') => 'contact_id',
+    $this->_columns = [ts('Contact Id') => 'contact_id',
       ts('Contact Type') => 'contact_type',
       ts('Name') => 'sort_name',
       ts('State') => 'state_province',
-    );
+    ];
   }
 
   function buildForm(&$form) {
@@ -63,7 +63,7 @@ class CRM_Contact_Form_Search_Custom_Sample extends CRM_Contact_Form_Search_Cust
       TRUE
     );
 
-    $stateProvince = array('' => ts('- any state/province -')) + CRM_Core_PseudoConstant::stateProvince();
+    $stateProvince = ['' => ts('- any state/province -')] + CRM_Core_PseudoConstant::stateProvince();
     $form->addElement('select', 'state_province_id', ts('State/Province'), $stateProvince);
 
     /**
@@ -75,13 +75,13 @@ class CRM_Contact_Form_Search_Custom_Sample extends CRM_Contact_Form_Search_Cust
      * if you are using the standard template, this array tells the template what elements
      * are part of the search criteria
      */
-    $form->assign('elements', array('household_name', 'state_province_id'));
+    $form->assign('elements', ['household_name', 'state_province_id']);
   }
 
   function summary() {
-    $summary = array('summary' => 'This is a summary',
+    $summary = ['summary' => 'This is a summary',
       'total' => 50.0,
-    );
+    ];
     return $summary;
   }
 
@@ -112,11 +112,11 @@ LEFT JOIN civicrm_state_province state_province ON state_province.id = address.s
   }
 
   function where($includeContactIDs = FALSE) {
-    $params = array();
+    $params = [];
     $where = "contact_a.contact_type   = 'Household'";
 
     $count = 1;
-    $clause = array();
+    $clause = [];
     $name = CRM_Utils_Array::value('household_name',
       $this->_formValues
     );
@@ -124,7 +124,7 @@ LEFT JOIN civicrm_state_province state_province ON state_province.id = address.s
       if (strpos($name, '%') === FALSE) {
         $name = "%{$name}%";
       }
-      $params[$count] = array($name, 'String');
+      $params[$count] = [$name, 'String'];
       $clause[] = "contact_a.household_name LIKE %{$count}";
       $count++;
     }
@@ -139,7 +139,7 @@ LEFT JOIN civicrm_state_province state_province ON state_province.id = address.s
     }
 
     if ($state) {
-      $params[$count] = array($state, 'Integer');
+      $params[$count] = [$state, 'Integer'];
       $clause[] = "state_province.id = %{$count}";
     }
 
@@ -155,8 +155,8 @@ LEFT JOIN civicrm_state_province state_province ON state_province.id = address.s
   }
 
   function setDefaultValues() {
-    return array('household_name' => '',
-    );
+    return ['household_name' => '',
+    ];
   }
 
   function alterRow(&$row) {

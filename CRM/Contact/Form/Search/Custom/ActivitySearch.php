@@ -44,7 +44,7 @@ class CRM_Contact_Form_Search_Custom_ActivitySearch implements CRM_Contact_Form_
     /**
      * Define the columns for search result rows
      */
-    $this->_columns = array(
+    $this->_columns = [
       ts('Name') => 'sort_name',
       ts('Status') => 'activity_status',
       ts('Activity Type') => 'activity_type',
@@ -58,7 +58,7 @@ class CRM_Contact_Form_Search_Custom_ActivitySearch implements CRM_Contact_Form_
       ts('Duration') => 'duration',
       ts('Details') => 'details',
       ts('Assignee') => 'assignee',
-    );
+    ];
 
     $this->_groupId = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionGroup',
       'activity_status',
@@ -100,7 +100,7 @@ class CRM_Contact_Form_Search_Custom_ActivitySearch implements CRM_Contact_Form_
     );
 
     // Select box for Activity Type
-    $activityType = array('' => ' - select activity - ') + CRM_Core_PseudoConstant::activityType();
+    $activityType = ['' => ' - select activity - '] + CRM_Core_PseudoConstant::activityType();
 
     $form->add('select', 'activity_type_id', ts('Activity Type'),
       $activityType,
@@ -108,7 +108,7 @@ class CRM_Contact_Form_Search_Custom_ActivitySearch implements CRM_Contact_Form_
     );
 
     // textbox for Activity Status
-    $activityStatus = array('' => ' - select status - ') + CRM_Core_PseudoConstant::activityStatus();
+    $activityStatus = ['' => ' - select status - '] + CRM_Core_PseudoConstant::activityStatus();
 
     $form->add('select', 'activity_status_id', ts('Activity Status'),
       $activityStatus,
@@ -116,8 +116,8 @@ class CRM_Contact_Form_Search_Custom_ActivitySearch implements CRM_Contact_Form_
     );
 
     // Activity Date range
-    $form->addDate('start_date', ts('Activity Date From'), FALSE, array('formatType' => 'custom'));
-    $form->addDate('end_date', ts('...through'), FALSE, array('formatType' => 'custom'));
+    $form->addDate('start_date', ts('Activity Date From'), FALSE, ['formatType' => 'custom']);
+    $form->addDate('end_date', ts('...through'), FALSE, ['formatType' => 'custom']);
 
 
     // Contact Name field
@@ -127,9 +127,9 @@ class CRM_Contact_Form_Search_Custom_ActivitySearch implements CRM_Contact_Form_
      * If you are using the sample template, this array tells the template fields to render
      * for the search form.
      */
-    $form->assign('elements', array('contact_type', 'activity_subject', 'activity_type_id',
+    $form->assign('elements', ['contact_type', 'activity_subject', 'activity_type_id',
         'activity_status_id', 'start_date', 'end_date', 'sort_name',
-      ));
+      ]);
   }
 
   /**
@@ -246,7 +246,7 @@ class CRM_Contact_Form_Search_Custom_ActivitySearch implements CRM_Contact_Form_
      *
      */
   function where($includeContactIDs = FALSE) {
-    $clauses = array();
+    $clauses = [];
 
     // add contact name search; search on primary name, source contact, assignee
     $contactname = $this->_formValues['sort_name'];
@@ -297,7 +297,7 @@ class CRM_Contact_Form_Search_Custom_ActivitySearch implements CRM_Contact_Form_
     }
 
     if ($includeContactIDs) {
-      $contactIDs = array();
+      $contactIDs = [];
       foreach ($this->_formValues as $id => $value) {
         list($id, $additionalID) = CRM_Core_Form::cbExtract($id); 
         if ($value && !empty($id)) {

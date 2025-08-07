@@ -81,16 +81,16 @@ class CRM_Custom_Form_Option extends CRM_Core_Form {
   public function preProcess() {
     $this->_fid = CRM_Utils_Request::retrieve('fid', 'Positive', $this);
     if ($this->_fid) {
-      $params = array(
+      $params = [
         'id' => $this->_fid
-      );
-      $field = array();
+      ];
+      $field = [];
       CRM_Core_BAO_CustomField::retrieve($params, $field);
       if (!empty($field['attributes']) && strstr($field['attributes'], 'data-parent=')) {
-        $matches = array();
+        $matches = [];
         if (preg_match('/data-parent=(\d+)/i', $field['attributes'], $matches)) {
           $parentFieldId = (int)$matches[1];
-          $params = array('id' => $parentFieldId);
+          $params = ['id' => $parentFieldId];
           CRM_Core_BAO_CustomField::retrieve($params, $field);
           if ($field['id'] == $parentFieldId && $field['option_group_id']) {
             $optionValues = CRM_Core_OptionGroup::valuesByID($field['option_group_id']);
@@ -128,12 +128,12 @@ class CRM_Custom_Form_Option extends CRM_Core_Form {
    * @access public
    */
   function setDefaultValues() {
-    $defaults = $fieldDefaults = array();
+    $defaults = $fieldDefaults = [];
     if (isset($this->_id)) {
-      $params = array('id' => $this->_id);
+      $params = ['id' => $this->_id];
       CRM_Core_BAO_CustomOption::retrieve($params, $defaults);
 
-      $paramsField = array('id' => $this->_fid);
+      $paramsField = ['id' => $this->_fid];
       CRM_Core_BAO_CustomField::retrieve($paramsField, $fieldDefaults);
 
       if ($fieldDefaults['html_type'] == 'CheckBox'
@@ -159,7 +159,7 @@ class CRM_Custom_Form_Option extends CRM_Core_Form {
 
 
     if ($this->_action & CRM_Core_Action::ADD) {
-      $fieldValues = array('option_group_id' => $this->_optionGroupID);
+      $fieldValues = ['option_group_id' => $this->_optionGroupID];
       $defaults['weight'] = CRM_Utils_Weight::getDefaultWeight('CRM_Core_DAO_OptionValue', $fieldValues);
     }
 
@@ -176,15 +176,15 @@ class CRM_Custom_Form_Option extends CRM_Core_Form {
    */
   public function buildQuickForm() {
     if ($this->_action == CRM_Core_Action::DELETE) {
-      $this->addButtons(array(
-          array('type' => 'next',
+      $this->addButtons([
+          ['type' => 'next',
             'name' => ts('Delete'),
             'isDefault' => TRUE,
-          ),
-          array('type' => 'cancel',
+          ],
+          ['type' => 'cancel',
             'name' => ts('Cancel'),
-          ),
-        )
+          ],
+        ]
       );
     }
     else {
@@ -206,7 +206,7 @@ class CRM_Custom_Form_Option extends CRM_Core_Form {
       $this->add('text', 'weight', ts('Order'), CRM_Core_DAO::getAttribute('CRM_Core_DAO_OptionValue', 'weight'), TRUE);
 
       if (!empty($this->_parent['id']) && is_array($this->_parent['options'])) {
-        $options = array('' => ts('- select Parent -')) + $this->_parent['options'];
+        $options = ['' => ts('- select Parent -')] + $this->_parent['options'];
         $this->addSelect('grouping', ts('Parent'), $options);
       }
       $this->addRule('weight', ts('is a numeric field'), 'numeric');
@@ -218,22 +218,22 @@ class CRM_Custom_Form_Option extends CRM_Core_Form {
       $this->add('checkbox', 'default_value', ts('Default'));
 
       // add a custom form rule
-      $this->addFormRule(array('CRM_Custom_Form_Option', 'formRule'), $this);
+      $this->addFormRule(['CRM_Custom_Form_Option', 'formRule'], $this);
 
       // add buttons
-      $this->addButtons(array(
-          array('type' => 'next',
+      $this->addButtons([
+          ['type' => 'next',
             'name' => ts('Save'),
             'isDefault' => TRUE,
-          ),
-          array('type' => 'next',
+          ],
+          ['type' => 'next',
             'name' => ts('Save and New'),
             'subName' => 'new',
-          ),
-          array('type' => 'cancel',
+          ],
+          ['type' => 'cancel',
             'name' => ts('Cancel'),
-          ),
-        )
+          ],
+        ]
       );
 
 
@@ -247,7 +247,7 @@ class CRM_Custom_Form_Option extends CRM_Core_Form {
         $this->addElement('button',
           'done',
           ts('Done'),
-          array('onclick' => "location.href='$url'", 'class' => 'form-submit')
+          ['onclick' => "location.href='$url'", 'class' => 'form-submit']
         );
       }
     }
@@ -269,16 +269,16 @@ class CRM_Custom_Form_Option extends CRM_Core_Form {
     $fieldId = $form->_fid;
     $optionGroupId = $form->_optionGroupID;
 
-    $temp = array();
+    $temp = [];
     if (empty($form->_id)) {
       $query = "
 SELECT count(*) 
   FROM civicrm_option_value
  WHERE option_group_id = %1
    AND label = %2";
-      $params = array(1 => array($optionGroupId, 'Integer'),
-        2 => array($optionLabel, 'String'),
-      );
+      $params = [1 => [$optionGroupId, 'Integer'],
+        2 => [$optionLabel, 'String'],
+      ];
       if (CRM_Core_DAO::singleValueQuery($query, $params) > 0) {
         $errors['label'] = ts('There is an entry with the same label.');
       }
@@ -288,9 +288,9 @@ SELECT count(*)
   FROM civicrm_option_value
  WHERE option_group_id = %1
    AND value = %2";
-      $params = array(1 => array($optionGroupId, 'Integer'),
-        2 => array($optionValue, 'String'),
-      );
+      $params = [1 => [$optionGroupId, 'Integer'],
+        2 => [$optionValue, 'String'],
+      ];
       if (CRM_Core_DAO::singleValueQuery($query, $params) > 0) {
         $errors['value'] = ts('There is an entry with the same value.');
       }
@@ -306,10 +306,10 @@ SELECT count(*)
  WHERE option_group_id = %1
    AND id != %2
    AND label = %3";
-      $params = array(1 => array($optionGroupId, 'Integer'),
-        2 => array($optionId, 'Integer'),
-        3 => array($optionLabel, 'String'),
-      );
+      $params = [1 => [$optionGroupId, 'Integer'],
+        2 => [$optionId, 'Integer'],
+        3 => [$optionLabel, 'String'],
+      ];
       if (CRM_Core_DAO::singleValueQuery($query, $params) > 0) {
         $errors['label'] = ts('There is an entry with the same label.');
       }
@@ -321,10 +321,10 @@ SELECT count(*)
  WHERE option_group_id = %1
    AND id != %2
    AND value = %3";
-      $params = array(1 => array($optionGroupId, 'Integer'),
-        2 => array($optionId, 'Integer'),
-        3 => array($optionValue, 'String'),
-      );
+      $params = [1 => [$optionGroupId, 'Integer'],
+        2 => [$optionId, 'Integer'],
+        3 => [$optionValue, 'String'],
+      ];
       if (CRM_Core_DAO::singleValueQuery($query, $params) > 0) {
         $errors['value'] = ts('There is an entry with the same value.');
       }
@@ -334,7 +334,7 @@ SELECT count(*)
 SELECT data_type 
   FROM civicrm_custom_field
  WHERE id = %1";
-    $params = array(1 => array($fieldId, 'Integer'));
+    $params = [1 => [$fieldId, 'Integer']];
     $dao = &CRM_Core_DAO::executeQuery($query, $params);
     if ($dao->fetch()) {
       switch ($dao->data_type) {
@@ -373,7 +373,7 @@ SELECT data_type
 
         case 'Country':
           if (!empty($fields["value"])) {
-            $params = array(1 => array($fields['value'], 'String'));
+            $params = [1 => [$fields['value'], 'String']];
             $query = "SELECT count(*) FROM civicrm_country WHERE name = %1 OR iso_code = %1";
             if (CRM_Core_DAO::singleValueQuery($query, $params) <= 0) {
               $errors['value'] = ts('Invalid default value for country.');
@@ -383,7 +383,7 @@ SELECT data_type
 
         case 'StateProvince':
           if (!empty($fields["value"])) {
-            $params = array(1 => array($fields['value'], 'String'));
+            $params = [1 => [$fields['value'], 'String']];
             $query = "
 SELECT count(*) 
   FROM civicrm_state_province
@@ -427,10 +427,10 @@ SELECT count(*)
     $customOption->is_active = CRM_Utils_Array::value('is_active', $params, FALSE);
 
     if ($this->_action == CRM_Core_Action::DELETE) {
-      $fieldValues = array('option_group_id' => $this->_optionGroupID);
+      $fieldValues = ['option_group_id' => $this->_optionGroupID];
       $wt = CRM_Utils_Weight::delWeight('CRM_Core_DAO_OptionValue', $this->_id, $fieldValues);
       CRM_Core_BAO_CustomOption::del($this->_id);
-      CRM_Core_Session::setStatus(ts('Your multiple choice option has been deleted', array(1 => $customOption->label)));
+      CRM_Core_Session::setStatus(ts('Your multiple choice option has been deleted', [1 => $customOption->label]));
       return;
     }
 
@@ -440,7 +440,7 @@ SELECT count(*)
       $oldWeight = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionValue', $this->_id, 'weight', 'id');
     }
 
-    $fieldValues = array('option_group_id' => $this->_optionGroupID);
+    $fieldValues = ['option_group_id' => $this->_optionGroupID];
     $customOption->weight = CRM_Utils_Weight::updateOtherWeights('CRM_Core_DAO_OptionValue', $oldWeight, $params['weight'], $fieldValues);
 
     $customOption->option_group_id = $this->_optionGroupID;
@@ -459,7 +459,7 @@ SELECT count(*)
       if (CRM_Utils_Array::value('default_value', $params)) {
         if (!in_array($customOption->value, $defVal)) {
           if (empty($defVal[0])) {
-            $defVal = array($customOption->value);
+            $defVal = [$customOption->value];
           }
           else {
             $defVal[] = $customOption->value;
@@ -469,7 +469,7 @@ SELECT count(*)
         }
       }
       elseif (in_array($customOption->value, $defVal)) {
-        $tempVal = array();
+        $tempVal = [];
         foreach ($defVal as $v) {
           if ($v != $customOption->value) {
             $tempVal[] = $v;
@@ -509,7 +509,7 @@ SELECT count(*)
 
     $customOption->save();
 
-    CRM_Core_Session::setStatus(ts('Your multiple choice option \'%1\' has been saved', array(1 => $customOption->label)));
+    CRM_Core_Session::setStatus(ts('Your multiple choice option \'%1\' has been saved', [1 => $customOption->label]));
     $buttonName = $this->controller->getButtonName();
     $session = CRM_Core_Session::singleton();
     if ($buttonName == $this->getButtonName('next', 'new')) {

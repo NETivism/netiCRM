@@ -113,7 +113,7 @@ class CRM_Core_Payment_PaymentExpressIPN extends CRM_Core_Payment_BaseIPN {
    *
    */
   function newOrderNotify($success, $privateData, $component, $amount, $transactionReference) {
-    $ids = $input = $params = array();
+    $ids = $input = $params = [];
 
     $input['component'] = strtolower($component);
 
@@ -274,7 +274,7 @@ class CRM_Core_Payment_PaymentExpressIPN extends CRM_Core_Payment_BaseIPN {
       exit();
     }
 
-    return array($isTest, $component, $paymentProcessorID, $duplicateTransaction);
+    return [$isTest, $component, $paymentProcessorID, $duplicateTransaction];
   }
 
   /**
@@ -298,11 +298,11 @@ class CRM_Core_Payment_PaymentExpressIPN extends CRM_Core_Payment_BaseIPN {
 
     if ($dps_method == "pxpay") {
 
-      $processResponse = _valueXml(array(
+      $processResponse = _valueXml([
           'PxPayUserId' => $dps_user,
           'PxPayKey' => $dps_key,
           'Response' => $_GET['result'],
-        ));
+        ]);
       $processResponse = _valueXml('ProcessResponse', $processResponse);
 
       fwrite($message_log, sprintf("\n\r%s:- %s\n", date("D M j G:i:s T Y"),
@@ -442,7 +442,7 @@ class CRM_Core_Payment_PaymentExpressIPN extends CRM_Core_Payment_BaseIPN {
    * to an array of values.
    */
   static function stringToArray($str) {
-    $vars = $labels = array();
+    $vars = $labels = [];
     $labels = explode(',', $str);
     foreach ($labels as $label) {
       $terms = explode('=', $label);

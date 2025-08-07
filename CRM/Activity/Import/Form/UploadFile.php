@@ -74,13 +74,13 @@ class CRM_Activity_Import_Form_UploadFile extends CRM_Core_Form {
     $this->add('file', 'uploadFile', ts('Import Data File'), 'size=30 maxlength=60', TRUE);
 
     $this->addRule('uploadFile', ts('A valid file must be uploaded.'), 'uploadedfile');
-    $this->addRule('uploadFile', ts('File size should be less than %1 MBytes (%2 bytes)', array(1 => $uploadSize, 2 => $uploadFileSize)), 'maxfilesize', $uploadFileSize);
+    $this->addRule('uploadFile', ts('File size should be less than %1 MBytes (%2 bytes)', [1 => $uploadSize, 2 => $uploadFileSize]), 'maxfilesize', $uploadFileSize);
     $this->setMaxFileSize($uploadFileSize);
     $this->addRule('uploadFile', ts('Input file must be in CSV format'), 'utf8File');
 
     $this->addElement('checkbox', 'skipColumnHeader', ts('First row contains column headers'));
 
-    $duplicateOptions = array();
+    $duplicateOptions = [];
     $duplicateOptions[] = $this->createElement('radio',
       NULL, NULL, ts('Skip'), CRM_Activity_Import_Parser::DUPLICATE_SKIP
     );
@@ -103,31 +103,31 @@ class CRM_Activity_Import_Form_UploadFile extends CRM_Core_Form {
         'name'
       ));
     $this->assign('savedMapping', $mappingArray);
-    $this->add('select', 'savedMapping', ts('Mapping Option'), array('' => ts('- select -')) + $mappingArray);
+    $this->add('select', 'savedMapping', ts('Mapping Option'), ['' => ts('- select -')] + $mappingArray);
 
     if ($loadeMapping = $this->get('loadedMapping')) {
       $this->assign('loadedMapping', $loadeMapping);
-      $this->setDefaults(array('savedMapping' => $loadeMapping));
+      $this->setDefaults(['savedMapping' => $loadeMapping]);
     }
 
-    $this->setDefaults(array('onDuplicate' =>
+    $this->setDefaults(['onDuplicate' =>
         CRM_Activity_Import_Parser::DUPLICATE_SKIP,
-      ));
+      ]);
 
     //build date formats
 
     CRM_Core_Form_Date::buildAllowedDateFormats($this);
 
-    $this->addButtons(array(
-        array('type' => 'upload',
+    $this->addButtons([
+        ['type' => 'upload',
           'name' => ts('Continue >>'),
           'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
           'isDefault' => TRUE,
-        ),
-        array('type' => 'cancel',
+        ],
+        ['type' => 'cancel',
           'name' => ts('Cancel'),
-        ),
-      )
+        ],
+      ]
     );
   }
 
@@ -158,7 +158,7 @@ class CRM_Activity_Import_Form_UploadFile extends CRM_Core_Form {
     $config = CRM_Core_Config::singleton();
     $seperator = $config->fieldSeparator;
 
-    $mapper = array();
+    $mapper = [];
 
     $parser = new CRM_Activity_Import_Parser_Activity($mapper);
     $parser->setMaxLinesToProcess(100);

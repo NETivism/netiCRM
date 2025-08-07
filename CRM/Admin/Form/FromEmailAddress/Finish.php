@@ -26,7 +26,7 @@ class CRM_Admin_Form_FromEmailAddress_Finish extends CRM_Admin_Form_FromEmailAdd
    * the default values are retrieved from the database
    */
   function setDefaultValues() {
-    $defaults = array();
+    $defaults = [];
     $defaults['is_active'] = $this->_values['is_active'];
     $defaults['is_default'] = $this->_values['is_default'];
     return $defaults;
@@ -43,17 +43,17 @@ class CRM_Admin_Form_FromEmailAddress_Finish extends CRM_Admin_Form_FromEmailAdd
       $eleDefault->freeze();
     }
 
-    $this->addButtons(array(
-        array(
+    $this->addButtons([
+        [
           'type' => 'back',
           'name' => ts('<< Previous'),
           'isDefault' => TRUE,
-        ),
-        array(
+        ],
+        [
           'type' => 'done',
           'name' => ts('Save and Done'),
-        ),
-      )
+        ],
+      ]
     );
   }
 

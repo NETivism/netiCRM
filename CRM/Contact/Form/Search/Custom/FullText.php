@@ -58,7 +58,7 @@ class CRM_Contact_Form_Search_Custom_FullText implements CRM_Contact_Form_Search
 
   protected $_limitNumber = 10;
 
-  protected $_foundRows = array();
+  protected $_foundRows = [];
 
   function __construct(&$formValues) {
     $formValues['table'] = $this->getFieldValue($formValues, 'table', 'String');
@@ -136,7 +136,7 @@ class CRM_Contact_Form_Search_Custom_FullText implements CRM_Contact_Form_Search
     $randomNum = md5(uniqid());
     $this->_tableName = "civicrm_temp_custom_details_{$randomNum}";
 
-    $this->_tableFields = array(
+    $this->_tableFields = [
       'id' => 'int unsigned NOT NULL AUTO_INCREMENT',
       'table_name' => 'varchar(16)',
       'contact_id' => 'int unsigned',
@@ -178,7 +178,7 @@ class CRM_Contact_Form_Search_Custom_FullText implements CRM_Contact_Form_Search
       'membership_end_date' => 'datetime',
       'membership_source' => 'varchar(255)',
       'membership_status' => 'varchar(255)',
-    );
+    ];
 
     $sql = "
 CREATE TEMPORARY TABLE {$this->_tableName} (
@@ -267,7 +267,7 @@ CREATE TEMPORARY TABLE {$this->_entityIDTableName} (
 
     CRM_Contact_BAO_Contact_Permission::cache($contactID);
 
-    $params = array(1 => array($contactID, 'Integer'));
+    $params = [1 => [$contactID, 'Integer']];
 
     $sql = "
 DELETE     t.*
@@ -319,9 +319,9 @@ AND        cf.html_type IN ( 'Text', 'TextArea', 'RichTextEditor' )
       if (!CRM_Utils_Array::arrayKeyExists($dao->table_name,
           $tables
         )) {
-        $tables[$dao->table_name] = array('id' => 'entity_id',
-          'fields' => array(),
-        );
+        $tables[$dao->table_name] = ['id' => 'entity_id',
+          'fields' => [],
+        ];
       }
       $tables[$dao->table_name]['fields'][$dao->column_name] = NULL;
     }
@@ -347,7 +347,7 @@ $sqlStatement
         }
       }
       else {
-        $clauses = array();
+        $clauses = [];
 
         foreach ($tableValues['fields'] as $fieldName => $fieldType) {
           if ($fieldType == 'Int') {
@@ -392,30 +392,30 @@ AND     {$tableValues['id']} IS NOT NULL
   }
 
   function fillContactIDs() {
-    $tables = array('civicrm_contact' => array('id' => 'id',
-        'fields' => array('sort_name' => NULL,
+    $tables = ['civicrm_contact' => ['id' => 'id',
+        'fields' => ['sort_name' => NULL,
           'nick_name' => NULL,
-        ),
-      ),
-      'civicrm_address' => array('id' => 'contact_id',
-        'fields' => array('street_address' => NULL,
+        ],
+      ],
+      'civicrm_address' => ['id' => 'contact_id',
+        'fields' => ['street_address' => NULL,
           'city' => NULL,
           'postal_code' => NULL,
-        ),
-      ),
-      'civicrm_email' => array('id' => 'contact_id',
-        'fields' => array('email' => NULL),
-      ),
-      'civicrm_phone' => array('id' => 'contact_id',
-        'fields' => array('phone' => NULL),
-      ),
-      'civicrm_note' => array('id' => 'entity_id',
+        ],
+      ],
+      'civicrm_email' => ['id' => 'contact_id',
+        'fields' => ['email' => NULL],
+      ],
+      'civicrm_phone' => ['id' => 'contact_id',
+        'fields' => ['phone' => NULL],
+      ],
+      'civicrm_note' => ['id' => 'entity_id',
         'entity_table' => 'civicrm_contact',
-        'fields' => array('subject' => NULL,
+        'fields' => ['subject' => NULL,
           'note' => NULL,
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
 
     // get the custom data info
     $this->fillCustomInfo($tables,
@@ -434,7 +434,7 @@ AND     {$tableValues['id']} IS NOT NULL
   }
 
   function fillActivityIDs() {
-    $contactSQL = array();
+    $contactSQL = [];
 
     $contactSQL[] = "
 SELECT     distinct ca.id 
@@ -485,13 +485,13 @@ AND (ca.is_deleted = 0 OR ca.is_deleted IS NULL OR
      c.is_deleted = 0 OR c.is_deleted IS NULL)
 ";
 
-    $tables = array('civicrm_activity' => array('id' => 'id',
-        'fields' => array('subject' => NULL,
+    $tables = ['civicrm_activity' => ['id' => 'id',
+        'fields' => ['subject' => NULL,
           'details' => NULL,
-        ),
-      ),
+        ],
+      ],
       'sql' => $contactSQL,
-    );
+    ];
 
     $this->fillCustomInfo($tables, "( 'Activity' )");
     $this->runQueries($tables);
@@ -557,30 +557,30 @@ WHERE     cc.id = {$this->_textID}
    * get contribution ids in entity tables.
    */
   function fillContributionIDs() {
-    $contactSQL = array();
+    $contactSQL = [];
     $contactSQL[] = "
 SELECT     distinct cc.id 
 FROM       civicrm_contribution cc
 INNER JOIN civicrm_contact c ON cc.contact_id = c.id
 WHERE      c.sort_name LIKE {$this->_text}
 ";
-    $tables = array('civicrm_contribution' => array('id' => 'id',
-        'fields' => array('source' => NULL,
+    $tables = ['civicrm_contribution' => ['id' => 'id',
+        'fields' => ['source' => NULL,
           'amount_level' => NULL,
           'trxn_Id' => NULL,
           'invoice_id' => NULL,
           'check_number' => ($this->_textID) ? 'Int' : NULL,
           'total_amount' => ($this->_textID) ? 'Int' : NULL,
-        ),
-      ),
+        ],
+      ],
       'sql' => $contactSQL,
-      'civicrm_note' => array('id' => 'entity_id',
+      'civicrm_note' => ['id' => 'entity_id',
         'entity_table' => 'civicrm_contribution',
-        'fields' => array('subject' => NULL,
+        'fields' => ['subject' => NULL,
           'note' => NULL,
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
 
     // get the custom data info
     $this->fillCustomInfo($tables, "( 'Contribution' )");
@@ -599,27 +599,27 @@ WHERE      c.sort_name LIKE {$this->_text}
    * get participant ids in entity tables.
    */
   function fillParticipantIDs() {
-    $contactSQL = array();
+    $contactSQL = [];
     $contactSQL[] = "
 SELECT     distinct cp.id 
 FROM       civicrm_participant cp
 INNER JOIN civicrm_contact c ON cp.contact_id = c.id
 WHERE      c.sort_name LIKE {$this->_text}
 ";
-    $tables = array('civicrm_participant' => array('id' => 'id',
-        'fields' => array('source' => NULL,
+    $tables = ['civicrm_participant' => ['id' => 'id',
+        'fields' => ['source' => NULL,
           'fee_level' => NULL,
           'fee_amount' => ($this->_textID) ? 'Int' : NULL,
-        ),
-      ),
+        ],
+      ],
       'sql' => $contactSQL,
-      'civicrm_note' => array('id' => 'entity_id',
+      'civicrm_note' => ['id' => 'entity_id',
         'entity_table' => 'civicrm_participant',
-        'fields' => array('subject' => NULL,
+        'fields' => ['subject' => NULL,
           'note' => NULL,
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
 
     // get the custom data info
     $this->fillCustomInfo($tables, "( 'Participant' )");
@@ -639,18 +639,18 @@ WHERE      c.sort_name LIKE {$this->_text}
    * get membership ids in entity tables.
    */
   function fillMembershipIDs() {
-    $contactSQL = array();
+    $contactSQL = [];
     $contactSQL[] = "
 SELECT     distinct cm.id 
 FROM       civicrm_membership cm
 INNER JOIN civicrm_contact c ON cm.contact_id = c.id
 WHERE      c.sort_name LIKE {$this->_text}
 ";
-    $tables = array('civicrm_membership' => array('id' => 'id',
-        'fields' => array('source' => NULL),
-      ),
+    $tables = ['civicrm_membership' => ['id' => 'id',
+        'fields' => ['source' => NULL],
+      ],
       'sql' => $contactSQL,
-    );
+    ];
 
     // get the custom data info
     $this->fillCustomInfo($tables, "( 'Membership' )");
@@ -669,7 +669,7 @@ WHERE      c.sort_name LIKE {$this->_text}
     );
 
     // also add a select box to allow the search to be constrained
-    $tables = array('' => ts('All tables'));
+    $tables = ['' => ts('All tables')];
     if (CRM_Core_Permission::check('view all contacts')) {
       $tables['Contact'] = ts('Contacts');
     }
@@ -699,21 +699,21 @@ WHERE      c.sort_name LIKE {$this->_text}
   }
 
   function &columns() {
-    $this->_columns = array(ts('Contact Id') => 'contact_id',
+    $this->_columns = [ts('Contact Id') => 'contact_id',
       ts('Name') => 'sort_name',
-    );
+    ];
 
     return $this->_columns;
   }
 
   function summary() {
-    $summary = array('Contact' => array(),
-      'Activity' => array(),
-      'Case' => array(),
-      'Contribution' => array(),
-      'Participant' => array(),
-      'Membership' => array(),
-    );
+    $summary = ['Contact' => [],
+      'Activity' => [],
+      'Case' => [],
+      'Contribution' => [],
+      'Participant' => [],
+      'Membership' => [],
+    ];
 
 
     // now iterate through the table and add entries to the relevant section
@@ -727,7 +727,7 @@ WHERE      c.sort_name LIKE {$this->_text}
 
     $roleIds = CRM_Event_PseudoConstant::participantRole();
     while ($dao->fetch()) {
-      $row = array();
+      $row = [];
       foreach ($this->_tableFields as $name => $dontCare) {
         if ($name != 'activity_type_id') {
           $row[$name] = $dao->$name;
@@ -740,7 +740,7 @@ WHERE      c.sort_name LIKE {$this->_text}
       }
       if (isset($row['participant_role'])) {
         $participantRole = explode(CRM_Core_DAO::VALUE_SEPARATOR, $row['participant_role']);
-        $viewRoles = array();
+        $viewRoles = [];
         foreach ($participantRole as $k => $v) {
           $viewRoles[] = $roleIds[$v];
         }
@@ -749,7 +749,7 @@ WHERE      c.sort_name LIKE {$this->_text}
       $summary[$dao->table_name][] = $row;
     }
 
-    $summary['Count'] = array();
+    $summary['Count'] = [];
     foreach (array_keys($summary) as $table) {
       $summary['Count'][$table] = $this->_foundRows[$table];
     }
@@ -801,7 +801,7 @@ FROM
   }
 
   function setDefaultValues() {
-    return array();
+    return [];
   }
 
   function alterRow(&$row) {}

@@ -64,7 +64,7 @@ class CRM_Admin_Form_Setting_UpdateConfigBackend extends CRM_Admin_Form_Setting 
     if ($this->_oldSiteName) {
       $this->add('text', 'newSiteName', ts('New Site Name'), NULL, TRUE);
     }
-    $this->addFormRule(array('CRM_Admin_Form_Setting_UpdateConfigBackend', 'formRule'));
+    $this->addFormRule(['CRM_Admin_Form_Setting_UpdateConfigBackend', 'formRule']);
 
     parent::buildQuickForm();
   }
@@ -86,10 +86,10 @@ class CRM_Admin_Form_Setting_UpdateConfigBackend extends CRM_Admin_Form_Setting 
   static function formRule($fields) {
     $tmpDir = trim($fields['newBaseDir']);
 
-    $errors = array();
+    $errors = [];
     if (!is_writeable($tmpDir)) {
       $errors['newBaseDir'] = ts('%1 directory does not exist or cannot be written by webserver',
-        array(1 => $tmpDir)
+        [1 => $tmpDir]
       );
     }
     return $errors;
@@ -104,15 +104,15 @@ class CRM_Admin_Form_Setting_UpdateConfigBackend extends CRM_Admin_Form_Setting 
 
     //CRM-5679
     foreach ($params as $name => & $val) {
-      if ($val && in_array($name, array('newBaseURL', 'newBaseDir', 'newSiteName'))) {
+      if ($val && in_array($name, ['newBaseURL', 'newBaseDir', 'newSiteName'])) {
         $val = CRM_Utils_File::addTrailingSlash($val);
       }
     }
 
-    $from = array($this->_oldBaseURL, $this->_oldBaseDir);
-    $to = array(trim($params['newBaseURL']),
+    $from = [$this->_oldBaseURL, $this->_oldBaseDir];
+    $to = [trim($params['newBaseURL']),
       trim($params['newBaseDir']),
-    );
+    ];
     if ($this->_oldSiteName &&
       $params['newSiteName']
     ) {

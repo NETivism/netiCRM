@@ -65,7 +65,7 @@ class CRM_Contribute_Form_ContributionCharts extends CRM_Core_Form {
   public function buildQuickForm() {
     //take available years from database to show in drop down
     $currentYear = date('Y');
-    $years = array();
+    $years = [];
     if (!empty($this->_years)) {
       if (!CRM_Utils_Array::arrayKeyExists($currentYear, $this->_years)) {
         $this->_years[$currentYear] = $currentYear;
@@ -76,8 +76,8 @@ class CRM_Contribute_Form_ContributionCharts extends CRM_Core_Form {
       }
     }
 
-    $this->addElement('select', 'select_year', ts('Select Year (for monthly breakdown)'), $years, array('onchange' => "getChart();"));
-    $this->setDefaults(array('select_year' => ($this->_year) ? $this->_year : $currentYear));
+    $this->addElement('select', 'select_year', ts('Select Year (for monthly breakdown)'), $years, ['onchange' => "getChart();"]);
+    $this->setDefaults(['select_year' => ($this->_year) ? $this->_year : $currentYear]);
   }
 
   /**
@@ -102,7 +102,7 @@ class CRM_Contribute_Form_ContributionCharts extends CRM_Core_Form {
     $chartData = CRM_Core_BAO_Cache::getItem($group, $path.'_chartData'.$selectedYear, $components['CiviContribute']->componentID);
     $chartTime = CRM_Core_BAO_Cache::getItem($group, $path.'_chartTime'.$selectedYear, $components['CiviContribute']->componentID);
     $this->assign('generateDate', date('n/j H:i', $chartTime));
-    $abbrMonthNames = array();
+    $abbrMonthNames = [];
     for ($i = 0; $i < 12; $i++) {
       $abbrMonthNames[$i] = strftime('%b', mktime(0, 0, 0, $i+1, 10, 1970));
     }
@@ -113,7 +113,7 @@ class CRM_Contribute_Form_ContributionCharts extends CRM_Core_Form {
 
       //take contribution information monthly
       $chartInfoMonthly = CRM_Contribute_BAO_Contribution_Utils::contributionChartMonthly($selectedYear);
-      $chartData = $abbrMonthNames = array();
+      $chartData = $abbrMonthNames = [];
       if (is_array($chartInfoMonthly)) {
         foreach ($chartInfoMonthly['By Month'] as $value) {
           $chartData[] = (int) round($value);
@@ -127,16 +127,16 @@ class CRM_Contribute_Form_ContributionCharts extends CRM_Core_Form {
       $this->_years = $chartYears;
     }
     if(!empty($chartData)){
-      $chart = array(
+      $chart = [
         'id' => 'chart-monthly',
         'selector' => '#chart-monthly',
         'type' => 'Bar',
         'labels' => json_encode($abbrMonthNames),
-        'series' => json_encode(array(array_values($chartData))),
+        'series' => json_encode([array_values($chartData)]),
         'withToolTip' => true,
         'seriesUnit' => '$',
         'seriesUnitPosition' => 'prefix',
-      );
+      ];
       $this->assign('chart', $chart);
       $this->assign('hasChart', TRUE);
     }

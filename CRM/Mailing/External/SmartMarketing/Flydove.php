@@ -59,7 +59,7 @@ class CRM_Mailing_External_SmartMarketing_Flydove extends CRM_Mailing_External_S
     if (!empty(self::$_remoteGroups) && empty($force)) {
       return self::$_remoteGroups;
     }
-    $groups = array();
+    $groups = [];
     try {
       $results = $this->apiRequestSend('GetGroupList');
       foreach($results as $group) {
@@ -89,7 +89,7 @@ class CRM_Mailing_External_SmartMarketing_Flydove extends CRM_Mailing_External_S
    * @return array
    */
   private function apiRequestSend($apiType, $data = NULL) {
-    if (!in_array($apiType, array('GetGroupList', 'DeleteCustomer', 'BatchCreateCustomer'))) {
+    if (!in_array($apiType, ['GetGroupList', 'DeleteCustomer', 'BatchCreateCustomer'])) {
       throw new CRM_Core_Exception("Flydove: API type not supported. Provided api type: $apiType");
     }
     $token = '';
@@ -118,16 +118,16 @@ class CRM_Mailing_External_SmartMarketing_Flydove extends CRM_Mailing_External_S
     curl_setopt($ch, CURLOPT_TIMEOUT, 10);
     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
 
-    $postData = array(
+    $postData = [
       'token' => $token,
       'data' => $data,
-    );
+    ];
     $postFields = http_build_query($postData, "", "&", PHP_QUERY_RFC1738);
     curl_setopt($ch, CURLOPT_POSTFIELDS, $postFields);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
       'accept: application/json',
       'Content-Type: application/x-www-form-urlencoded',
-    ));
+    ]);
     $responseData = curl_exec($ch);
     if(curl_errno($ch)){
       throw new CRM_Core_Exception('Flydove: connection error. CURL:'.curl_error($ch));
@@ -170,17 +170,17 @@ class CRM_Mailing_External_SmartMarketing_Flydove extends CRM_Mailing_External_S
         $batch = new CRM_Batch_BAO_Batch();
         $manually = php_sapi_name() === 'cli' ? 'Auto' : 'Manually Synchronize';
         $batchTitle = ts('Flydove').': '.ts($manually).' - '.ts('Group ID').' '.$groupId;
-        $batchParams = array(
+        $batchParams = [
           'label' => $batchTitle,
           'startCallback' => NULL,
           'startCallbackArgs' => NULL,
-          'processCallback' => array($this, 'addContactToRemote'),
-          'processCallbackArgs' => array($contactIds, $groupId, $destRemoteGroup, $providerId),
+          'processCallback' => [$this, 'addContactToRemote'],
+          'processCallbackArgs' => [$contactIds, $groupId, $destRemoteGroup, $providerId],
           'finishCallback' => NULL,
           'finishCallbackArgs' => NULL,
           'total' => count($contactIds),
           'processed' => 0,
-        );
+        ];
         $batch->start($batchParams);
         return $batch->_id;
       }
@@ -212,7 +212,7 @@ class CRM_Mailing_External_SmartMarketing_Flydove extends CRM_Mailing_External_S
     $flydove = new CRM_Mailing_External_SmartMarketing_Flydove($providerId);
     // do not check remote group id if process is running
     if (!empty($civicrm_batch) && $civicrm_batch->data['processed'] > 0) {
-      $remoteGroups = array($destRemoteGroup => 1);
+      $remoteGroups = [$destRemoteGroup => 1];
     }
     else {
       try {
@@ -251,21 +251,21 @@ class CRM_Mailing_External_SmartMarketing_Flydove extends CRM_Mailing_External_S
           if (!empty($civicrm_batch) && $civicrm_batch->data['processed'] >= $civicrm_batch->data['total']) {
             break;
           }
-          $sliceResults = array();
-          $syncData = array();
-          $queryParams = array();
-          $returnProperties = array(
+          $sliceResults = [];
+          $syncData = [];
+          $queryParams = [];
+          $returnProperties = [
             'sort_name' => 1,
             'individual_prefix' => 1,
             'email' => 1,
             'birth_date' => 1,
             'do_not_email' => 1,
             'is_deceased' => 1,
-          );
+          ];
           foreach ($ids as $contactId) {
-            $queryParams[] = array(
+            $queryParams[] = [
               CRM_Core_Form::CB_PREFIX.$contactId, '=', 1, 0, 0,
-            );
+            ];
           }
           $query = new CRM_Contact_BAO_Query($queryParams, $returnProperties);
           $numContacts = count($ids);
@@ -277,14 +277,14 @@ LEFT JOIN civicrm_phone ON ( civicrm_contact.id = civicrm_phone.contact_id )
 WHERE civicrm_contact.id IN (%1) AND civicrm_phone.phone_type_id = %2
 ORDER BY civicrm_phone.is_primary DESC, phone_id ASC";
           $imploded = CRM_Utils_Array::implode(',', $ids);
-          $mobilePhoneResult = CRM_Core_DAO::executeQuery($mobilePhoneQuery, array(
-            1 => array($imploded, 'CommaSeparatedIntegers'),
-            2 => array($mobileTypeId, 'Integer'),
-          ));
+          $mobilePhoneResult = CRM_Core_DAO::executeQuery($mobilePhoneQuery, [
+            1 => [$imploded, 'CommaSeparatedIntegers'],
+            2 => [$mobileTypeId, 'Integer'],
+          ]);
           while ($mobilePhoneResult->fetch()) {
             $details[0][$mobilePhoneResult->contact_id]['phone'] = $mobilePhoneResult->phone;
           }
-          $skipped = array();
+          $skipped = [];
           foreach($details[0] as $contactId => $detail) {
             if (!CRM_Utils_Rule::email($detail['email']) || empty($detail['email'])) {
               $skipped['invalid_or_empty_email'][] = $contactId;
@@ -304,7 +304,7 @@ ORDER BY civicrm_phone.is_primary DESC, phone_id ASC";
             if (!empty($detail['phone']) && is_string($detail['phone'])) {
               $detail['phone'] = preg_replace('/[^0-9]/', '', $detail['phone']);
             }
-            $syncData[] = array(
+            $syncData[] = [
               'email' => $detail['email'],
               'phone' => !empty($detail['phone']) && strlen($detail['phone']) == 10 ? trim($detail['phone']) : '',
               'title' => !empty($detail['individual_prefix']) && strlen($detail['individual_prefix']) < 10 ? $detail['individual_prefix'] : '',
@@ -314,14 +314,14 @@ ORDER BY civicrm_phone.is_primary DESC, phone_id ASC";
               'var3' => '',
               'var4' => '',
               'var5' => (string) $contactId,
-            );
+            ];
           }
           try {
             $destRemoteGroup = (int) $destRemoteGroup;
-            $sendData = array(
+            $sendData = [
               'customers' => $syncData,
-              'group_ids' => array($destRemoteGroup),
-            );
+              'group_ids' => [$destRemoteGroup],
+            ];
             $apiResult = $flydove->apiRequestSend('BatchCreateCustomer', json_encode($sendData));
             if ($apiResult) {
               $sliceResults[$i]['success'] = TRUE;
@@ -346,16 +346,16 @@ ORDER BY civicrm_phone.is_primary DESC, phone_id ASC";
           $offset += self::BATCH_NUM;
           usleep(500000);
         }
-        CRM_Core_DAO::executeQuery("UPDATE civicrm_group SET last_sync = %1 WHERE id = %2", array(
-          1 => array(date('YmdHis'), 'String'),
-          2 => array($groupId, 'Integer')
-        ));
+        CRM_Core_DAO::executeQuery("UPDATE civicrm_group SET last_sync = %1 WHERE id = %2", [
+          1 => [date('YmdHis'), 'String'],
+          2 => [$groupId, 'Integer']
+        ]);
         $total = count($contactIds);
-        $sliceResults['#count'] = array(
+        $sliceResults['#count'] = [
           'total' => $total,
           'skipped' => $skippedCount,
           'success' => $total - $skippedCount,
-        );
+        ];
         $sliceResults['#remote_group_id'] = is_numeric($remoteGroups[$destRemoteGroup]) ? $destRemoteGroup : $remoteGroups[$destRemoteGroup]."($destRemoteGroup)";
         $sliceResults['#group_id'] = $groupId;
         $report = self::formatResult($sliceResults);
@@ -403,7 +403,7 @@ ORDER BY civicrm_phone.is_primary DESC, phone_id ASC";
 
   public static function formatResult($meta) {
     $groups = CRM_Core_PseudoConstant::group();
-    $skippedText = array();
+    $skippedText = [];
     if (!empty($meta['#count']) && !empty($meta['#count']['skipped'])) {
       foreach($meta as $idx => $slice) {
         if (is_numeric($idx) && isset($slice['skipped']) && is_array($slice['skipped'])) {
@@ -413,16 +413,16 @@ ORDER BY civicrm_phone.is_primary DESC, phone_id ASC";
         }
       }
     }
-    $report['success'] = ts('Flydove').': '.ts('Success sync %1 contacts from group %2 to remote group %3', array(
+    $report['success'] = ts('Flydove').': '.ts('Success sync %1 contacts from group %2 to remote group %3', [
       1 => $meta['#count']['success'],
       2 => $groups[$meta['#group_id']]."(".$meta['#group_id'].")",
       3 => $meta['#remote_group_id'],
-    ));
+    ]);
     if (!empty($meta['#count']['skipped']) && !empty($skippedText)) {
-      $report['skipped'] = ts('Flydove').': '.ts('Skipped %1 contacts due to reasons: %2.', array(
+      $report['skipped'] = ts('Flydove').': '.ts('Skipped %1 contacts due to reasons: %2.', [
         1 => $meta['#count']['skipped'],
         2 => implode(' / ', $skippedText),
-      ));
+      ]);
     }
     return $report;
   }

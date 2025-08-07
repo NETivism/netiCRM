@@ -76,12 +76,12 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
    * @var array
    * @static
    */
-  static $_properties = array('contact_id', 'contact_type', 'contact_sub_type',
+  static $_properties = ['contact_id', 'contact_type', 'contact_sub_type',
     'sort_name', 'country', 'postal_code',
     'state_province', 'city', 'street_address',
     'geo_code_1', 'geo_code_2',
     'email', 'on_hold', 'phone', 'status',
-  );
+  ];
 
   /**
    * formValues is the array returned by exportValues called on
@@ -212,7 +212,7 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
       foreach ($this->_params as $param) {
         if ($param[0] == 'prox_distance') {
           // add prox_ prefix to these
-          $param_alter = array('street_address', 'city', 'postal_code', 'state_province', 'country');
+          $param_alter = ['street_address', 'city', 'postal_code', 'state_province', 'country'];
 
           foreach ($this->_params as $key => $_param) {
             if (in_array($_param[0], $param_alter)) {
@@ -267,31 +267,31 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
     $searchContext = ($context) ? "&context=$context" : NULL;
 
     if (!(self::$_links)) {
-      self::$_links = array(
-        CRM_Core_Action::VIEW => array(
+      self::$_links = [
+        CRM_Core_Action::VIEW => [
           'name' => ts('View'),
           'url' => 'civicrm/contact/view',
           'qs' => "reset=1&cid=%%id%%{$searchContext}{$extraParams}",
           'title' => ts('View Contact Details'),
           'ref' => 'view-contact',
-        ),
-        CRM_Core_Action::UPDATE => array(
+        ],
+        CRM_Core_Action::UPDATE => [
           'name' => ts('Edit'),
           'url' => 'civicrm/contact/add',
           'qs' => "reset=1&action=update&cid=%%id%%{$searchContext}{$extraParams}",
           'title' => ts('Edit Contact Details'),
           'ref' => 'edit-contact',
-        ),
-      );
+        ],
+      ];
 
       $config = CRM_Core_Config::singleton();
       if ($config->mapAPIKey && $config->mapProvider) {
-        self::$_links[CRM_Core_Action::MAP] = array(
+        self::$_links[CRM_Core_Action::MAP] = [
           'name' => ts('Map'),
           'url' => 'civicrm/contact/map',
           'qs' => "reset=1&cid=%%id%%{$searchContext}{$extraParams}",
           'title' => ts('Map Contact'),
-        );
+        ];
       }
 
       // Adding Context Menu Links in more action
@@ -317,13 +317,13 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
             $qs = "atype=4&action=add&reset=1&cid=%%id%%{$extraParams}";
           }
 
-          self::$_links[$counter++] = array(
+          self::$_links[$counter++] = [
             'name' => $value['title'],
             'url' => $url,
             'qs' => $qs,
             'title' => $value['title'],
             'ref' => $value['ref'],
-          );
+          ];
         }
       }
     }
@@ -351,7 +351,7 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
 
     $colHeads = self::_getColumnHeaders();
 
-    $colHeads[] = array('desc' => ts('Actions'), 'name' => ts('Action'));
+    $colHeads[] = ['desc' => ts('Actions'), 'name' => ts('Action')];
     return $colHeads;
   }
 
@@ -368,7 +368,7 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
   function &getColumnHeaders($action = NULL, $output = NULL) {
 
     if ($output == CRM_Core_Selector_Controller::EXPORT) {
-      $csvHeaders = array(ts('Contact Id'), ts('Contact Type'));
+      $csvHeaders = [ts('Contact Id'), ts('Contact Type')];
       foreach ($this->getColHeads($action, $output) as $column) {
         if (CRM_Utils_Array::arrayKeyExists('name', $column)) {
           $csvHeaders[] = $column['name'];
@@ -377,7 +377,7 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
       return $csvHeaders;
     }
     elseif ($output == CRM_Core_Selector_Controller::SCREEN) {
-      $csvHeaders = array(ts('Name'));
+      $csvHeaders = [ts('Name')];
       foreach ($this->getColHeads($action, $output) as $column) {
         if (CRM_Utils_Array::arrayKeyExists('name', $column) &&
           $column['name'] &&
@@ -391,24 +391,24 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
     elseif ($this->_ufGroupID) {
       // we dont use the cached value of column headers
       // since it potentially changed because of the profile selected
-      static $skipFields = array('group', 'tag');
+      static $skipFields = ['group', 'tag'];
       $direction = CRM_Utils_Sort::ASCENDING;
       $empty = TRUE;
       if (!self::$_columnHeaders) {
-        self::$_columnHeaders = array(
-          array('name' => ''),
-          array(
+        self::$_columnHeaders = [
+          ['name' => ''],
+          [
             'name' => '#',
             'title' => ts('Contact ID'),
             'sort' => 'contact_id',
             'direction' => CRM_Utils_Sort::DONTCARE,
-          ),
-          array(
+          ],
+          [
             'name' => ts('Name'),
             'sort' => 'sort_name',
             'direction' => CRM_Utils_Sort::ASCENDING,
-          ),
-        );
+          ],
+        ];
 
 
         $locationTypes = CRM_Core_PseudoConstant::locationType();
@@ -427,7 +427,7 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
                 $locationTypeName = $locationTypes[$lType];
               }
 
-              if (in_array($fieldName, array('phone', 'im', 'email'))) {
+              if (in_array($fieldName, ['phone', 'im', 'email'])) {
                 if ($type) {
                   $name = "`$locationTypeName-$fieldName-$type`";
                 }
@@ -444,10 +444,10 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
               $name = 'contact_id';
             }
 
-            self::$_columnHeaders[] = array('name' => $field['title'],
+            self::$_columnHeaders[] = ['name' => $field['title'],
               'sort' => $name,
               'direction' => $direction,
-            );
+            ];
             $direction = CRM_Utils_Sort::DONTCARE;
             $empty = FALSE;
           }
@@ -456,30 +456,30 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
         // if we dont have any valid columns, dont add the implicit ones
         // this allows the template to check on emptiness of column headers
         if ($empty) {
-          self::$_columnHeaders = array();
+          self::$_columnHeaders = [];
         }
         else {
-          self::$_columnHeaders[] = array('desc' => ts('Actions'), 'name' => ts('Action'));
+          self::$_columnHeaders[] = ['desc' => ts('Actions'), 'name' => ts('Action')];
         }
       }
       return self::$_columnHeaders;
     }
     elseif (!empty($this->_returnProperties)) {
 
-      self::$_columnHeaders = array(
-        array('name' => ''),
-        array(
+      self::$_columnHeaders = [
+        ['name' => ''],
+        [
           'name' => '#',
           'title' => ts('Contact ID'),
           'sort' => 'contact_id',
           'direction' => CRM_Utils_Sort::DONTCARE,
-        ),
-        array(
+        ],
+        [
           'name' => ts('Name'),
           'sort' => 'sort_name',
           'direction' => CRM_Utils_Sort::ASCENDING,
-        ),
-      );
+        ],
+      ];
       $properties = &self::makeProperties($this->_returnProperties);
 
       foreach ($properties as $prop) {
@@ -499,9 +499,9 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
           $title = $this->_query->_fields[$prop]['title'];
         }
 
-        self::$_columnHeaders[] = array('name' => $title, 'sort' => $prop);
+        self::$_columnHeaders[] = ['name' => $title, 'sort' => $prop];
       }
-      self::$_columnHeaders[] = array('name' => ts('Actions'));
+      self::$_columnHeaders[] = ['name' => ts('Actions')];
       return self::$_columnHeaders;
     }
     else {
@@ -565,8 +565,8 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
     }
 
     // process the result of the query
-    $rows = array();
-    $permissions = array(CRM_Core_Permission::getPermission());
+    $rows = [];
+    $permissions = [CRM_Core_Permission::getPermission()];
     if (CRM_Core_Permission::check('delete contacts')) {
       $permissions[] = CRM_Core_Permission::DELETE;
     }
@@ -581,8 +581,8 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
 
       $locationTypes = CRM_Core_PseudoConstant::locationType(false, 'name');
 
-      $names = array();
-      static $skipFields = array('group', 'tag');
+      $names = [];
+      static $skipFields = ['group', 'tag'];
       foreach ($this->_fields as $key => $field) {
         if (CRM_Utils_Array::value('in_selector', $field) &&
           !in_array($key, $skipFields)
@@ -601,7 +601,7 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
             }
 
             $locationTypeName = str_replace(' ', '_', $locationTypeName);
-            if (in_array($fieldName, array('phone', 'im', 'email'))) {
+            if (in_array($fieldName, ['phone', 'im', 'email'])) {
               if ($type) {
                 $names[] = "{$locationTypeName}-{$fieldName}-{$type}";
               }
@@ -629,7 +629,7 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
     }
 
     //hack for student data (checkboxs)
-    $multipleSelectFields = array('preferred_communication_method' => 1);
+    $multipleSelectFields = ['preferred_communication_method' => 1];
     if (CRM_Core_Permission::access('Quest')) {
 
       $multipleSelectFields = CRM_Quest_BAO_Student::$multipleSelectFields;
@@ -645,7 +645,7 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
     }
 
     while ($result->fetch()) {
-      $row = array();
+      $row = [];
 
       // for CRM-3157 purposes
 
@@ -672,17 +672,17 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
         ) {
           //fix to display student checkboxes
           $key = $property;
-          $paramsNew = array($key => $result->$property);
+          $paramsNew = [$key => $result->$property];
 
           if ($key == 'test_tutoring') {
-            $name = array($key => array('newName' => $key, 'groupName' => 'test'));
+            $name = [$key => ['newName' => $key, 'groupName' => 'test']];
             // for  readers group
           }
           elseif (substr($key, 0, 4) == 'cmr_') {
-            $name = array($key => array('newName' => $key, 'groupName' => substr($key, 0, -3)));
+            $name = [$key => ['newName' => $key, 'groupName' => substr($key, 0, -3)]];
           }
           else {
-            $name = array($key => array('newName' => $key, 'groupName' => $key));
+            $name = [$key => ['newName' => $key, 'groupName' => $key]];
           }
           CRM_Core_OptionGroup::lookupValues($paramsNew, $name, FALSE);
           $row[$key] = $paramsNew[$key];
@@ -692,8 +692,8 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
         ) {
           if (substr($property, -3) == '_id') {
             $key = substr($property, 0, -3);
-            $paramsNew = array($key => $result->$property);
-            $name = array($key => array('newName' => $key, 'groupName' => $key));
+            $paramsNew = [$key => $result->$property];
+            $name = [$key => ['newName' => $key, 'groupName' => $key]];
             CRM_Core_OptionGroup::lookupValues($paramsNew, $name, FALSE);
             $row[$key] = $paramsNew[$key];
           }
@@ -710,7 +710,7 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
             $row[$property] = $result->$property . " ({$providerName})";
           }
         }
-        elseif (in_array($property, array('addressee', 'email_greeting', 'postal_greeting'))) {
+        elseif (in_array($property, ['addressee', 'email_greeting', 'postal_greeting'])) {
           $greeting = $property . '_display';
           $row[$property] = $result->$greeting;
         }
@@ -740,12 +740,12 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
         if ((empty($result->status) || $hasChildren) && $groupID) {
           $contactID = $result->contact_id;
           if ($contactID) {
-            $gcParams = array(
+            $gcParams = [
               'contact_id' => $contactID,
               'group_id' => $groupID,
-            );
+            ];
 
-            $gcDefaults = array();
+            $gcDefaults = [];
             CRM_Core_DAO::commonRetrieve('CRM_Contact_DAO_GroupContact', $gcParams, $gcDefaults);
 
             if (empty($gcDefaults)) {
@@ -769,40 +769,40 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
 
         if (CRM_Utils_Array::value('deleted_contacts', $this->_formValues) && CRM_Core_Permission::check('access deleted contacts') ) {
           $row['is_deleted'] = TRUE;
-          $links = array(
-            array(
+          $links = [
+            [
               'name' => ts('View'),
               'url' => 'civicrm/contact/view',
               'qs' => 'reset=1&cid=%%id%%',
               'title' => ts('View Contact Details'),
-            ),
-            array(
+            ],
+            [
               'name' => ts('Restore'),
               'url' => 'civicrm/contact/view/delete',
               'qs' => 'reset=1&cid=%%id%%&restore=1',
               'title' => ts('Restore Contact'),
-            ),
-          );
+            ],
+          ];
           if (CRM_Core_Permission::check('delete contacts permanantly')) {
-            $links[] = array(
+            $links[] = [
               'name' => ts('Delete Permanently'),
               'url' => 'civicrm/contact/view/delete',
               'qs' => 'reset=1&cid=%%id%%&skip_undelete=1',
               'title' => ts('Permanently Delete Contact'),
-            );
+            ];
           }
-          $row['action'] = CRM_Core_Action::formLink($links, NULL, array('id' => $result->contact_id));
+          $row['action'] = CRM_Core_Action::formLink($links, NULL, ['id' => $result->contact_id]);
         }
         elseif ((is_numeric(CRM_Utils_Array::value('geo_code_1', $row))) ||
           ($config->mapGeoCoding &&
             CRM_Utils_Array::value('city', $row) && $row['state_province']
           )
         ) {
-          $row['action'] = CRM_Core_Action::formLink($links, $mask, array('id' => $result->contact_id));
+          $row['action'] = CRM_Core_Action::formLink($links, $mask, ['id' => $result->contact_id]);
           // FIXME: guard with permission check
         }
         else {
-          $row['action'] = CRM_Core_Action::formLink($links, $mapMask, array('id' => $result->contact_id));
+          $row['action'] = CRM_Core_Action::formLink($links, $mapMask, ['id' => $result->contact_id]);
         }
 
         // allow components to add more actions
@@ -878,47 +878,47 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
    */
   private static function &_getColumnHeaders() {
     if (!isset(self::$_columnHeaders)) {
-      self::$_columnHeaders = array(
-        array('desc' => ts('Contact Type')),
-        array(
+      self::$_columnHeaders = [
+        ['desc' => ts('Contact Type')],
+        [
           'name' => '#',
           'title' => ts('Contact ID'),
           'sort' => 'contact_id',
           'direction' => CRM_Utils_Sort::DONTCARE,
-        ),
-        array(
+        ],
+        [
           'name' => ts('Name'),
           'sort' => 'sort_name',
           'direction' => CRM_Utils_Sort::ASCENDING,
-        ),
-        array(
+        ],
+        [
           'name' => ts('Email'),
           'sort' => 'email',
           'direction' => CRM_Utils_Sort::DONTCARE,
-        ),
-        array(
+        ],
+        [
           'name' => ts('Country'),
           'sort' => 'country',
           'direction' => CRM_Utils_Sort::DONTCARE,
-        ),
-        array(
+        ],
+        [
           'name' => ts('Postal'),
           'sort' => 'postal_code',
           'direction' => CRM_Utils_Sort::DONTCARE,
-        ),
-        array(
+        ],
+        [
           'name' => ts('State'),
           'sort' => 'state_province',
           'direction' => CRM_Utils_Sort::DONTCARE,
-        ),
-        array(
+        ],
+        [
           'name' => ts('City'),
           'sort' => 'city',
           'direction' => CRM_Utils_Sort::DONTCARE,
-        ),
-        array('name' => ts('Address')),
-        array('name' => ts('Phone')),
-      );
+        ],
+        ['name' => ts('Address')],
+        ['name' => ts('Phone')],
+      ];
     }
     return self::$_columnHeaders;
   }
@@ -944,7 +944,7 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
   }
 
   function &makeProperties(&$returnProperties) {
-    $properties = array();
+    $properties = [];
     foreach ($returnProperties as $name => $value) {
       if ($name != 'location') {
         $properties[] = $name;

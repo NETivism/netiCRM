@@ -68,28 +68,28 @@ class CRM_Campaign_Task {
    */
   static function &tasks() {
     if (!(self::$_tasks)) {
-      self::$_tasks = array(1 => array('title' => ts('Record Respondents Interview'),
-          'class' => array('CRM_Campaign_Form_Task_Interview',
+      self::$_tasks = [1 => ['title' => ts('Record Respondents Interview'),
+          'class' => ['CRM_Campaign_Form_Task_Interview',
             'CRM_Campaign_Form_Task_Release',
-          ),
+          ],
           'result' => FALSE,
-        ),
-        2 => array('title' => ts('Reserve Respondents'),
-          'class' => array('CRM_Campaign_Form_Task_Reserve',
+        ],
+        2 => ['title' => ts('Reserve Respondents'),
+          'class' => ['CRM_Campaign_Form_Task_Reserve',
             'CRM_Campaign_Form_Task_Interview',
             'CRM_Campaign_Form_Task_Release',
-          ),
+          ],
           'result' => FALSE,
-        ),
-        3 => array('title' => ts('Release Respondents'),
+        ],
+        3 => ['title' => ts('Release Respondents'),
           'class' => 'CRM_Campaign_Form_Task_Release',
           'result' => FALSE,
-        ),
-        4 => array('title' => ts('Print Respondents'),
+        ],
+        4 => ['title' => ts('Print Respondents'),
           'class' => 'CRM_Campaign_Form_Task_Print',
           'result' => FALSE,
-        ),
-      );
+        ],
+      ];
     }
 
 
@@ -110,7 +110,7 @@ class CRM_Campaign_Task {
    */
   static function &taskTitles() {
     self::tasks();
-    $titles = array();
+    $titles = [];
     foreach (self::$_tasks as $id => $value) {
       $titles[$id] = $value['title'];
     }
@@ -150,9 +150,9 @@ class CRM_Campaign_Task {
       $value = 1;
     }
 
-    return array(self::$_tasks[$value]['class'],
+    return [self::$_tasks[$value]['class'],
       self::$_tasks[$value]['result'],
-    );
+    ];
   }
 }
 

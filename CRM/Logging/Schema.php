@@ -35,8 +35,8 @@
 
 
 class CRM_Logging_Schema {
-  private $logs = array();
-  private $tables = array();
+  private $logs = [];
+  private $tables = [];
 
   private $loggingDB;
 
@@ -142,7 +142,7 @@ class CRM_Logging_Schema {
    * Returns table-name-keyed array of arrays of missing columns, e.g. array('civicrm_value_foo_1' => array('bar_1', 'baz_2'))
    */
   function schemaDifferences() {
-    $diffs = array();
+    $diffs = [];
     foreach ($this->tables as $table) {
       $diffs[$table] = array_diff($this->columnsOf($table), $this->columnsOf("log_$table"));
     }
@@ -182,13 +182,13 @@ class CRM_Logging_Schema {
    * Get an array of column names of the given table.
    */
   private function columnsOf($table) {
-    static $columnsOf = array();
+    static $columnsOf = [];
 
     $from = (substr($table, 0, 4) == 'log_') ? "{$this->loggingDB}.$table" : $table;
 
     if (!isset($columnsOf[$table])) {
       $dao = CRM_Core_DAO::executeQuery("SHOW COLUMNS FROM $from");
-      $columnsOf[$table] = array();
+      $columnsOf[$table] = [];
       while ($dao->fetch()) {
         $columnsOf[$table][] = $dao->Field;
       }
@@ -214,11 +214,11 @@ class CRM_Logging_Schema {
     // - set the ENGINE to ARCHIVE
     // - add log-specific columns (at the end of the table)
     $cols = <<<COLS
-            log_date    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            log_conn_id INTEGER,
-            log_user_id INTEGER,
-            log_action  ENUM('Initialization', 'Insert', 'Update', 'Delete')
-COLS;
+                log_date    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                log_conn_id INTEGER,
+                log_user_id INTEGER,
+                log_action  ENUM('Initialization', 'Insert', 'Update', 'Delete')
+    COLS;
     $query = preg_replace("/^CREATE TABLE `$table`/i", "CREATE TABLE {$this->loggingDB}.log_$table", $query);
     $query = preg_replace("/ AUTO_INCREMENT/i", '', $query);
     $query = preg_replace("/^  [^`].*$/m", '', $query);
@@ -240,8 +240,8 @@ COLS;
   private function createTriggersFor($table) {
     $columns = $this->columnsOf($table);
 
-    $queries = array();
-    foreach (array('Insert', 'Update', 'Delete') as $action) {
+    $queries = [];
+    foreach (['Insert', 'Update', 'Delete'] as $action) {
       $trigger = "{$table}_after_" . strtolower($action);
       $queries[] = "DROP TRIGGER IF EXISTS $trigger";
       $query = "CREATE TRIGGER $trigger AFTER $action ON $table FOR EACH ROW INSERT INTO {$this->loggingDB}.log_$table (";

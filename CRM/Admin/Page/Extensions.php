@@ -86,32 +86,32 @@ class CRM_Admin_Page_Extensions extends CRM_Core_Page_Basic {
    */
   function &links() {
     if (!(self::$_links)) {
-      self::$_links = array(
-        CRM_Core_Action::ADD => array(
+      self::$_links = [
+        CRM_Core_Action::ADD => [
           'name' => ts('Install'),
           'url' => 'civicrm/admin/extensions',
           'qs' => 'action=add&id=%%id%%&key=%%key%%',
           'title' => ts('Install'),
-        ),
-        CRM_Core_Action::ENABLE => array(
+        ],
+        CRM_Core_Action::ENABLE => [
           'name' => ts('Enable'),
           'extra' => 'onclick = "enableDisable( \'%%id%%\',\'' . 'CRM_Core_Extensions' . '\',\'' . 'disable-enable' . '\',\'' . 'true' . '\' );"',
           'ref' => 'enable-action',
           'title' => ts('Enable'),
-        ),
-        CRM_Core_Action::DISABLE => array(
+        ],
+        CRM_Core_Action::DISABLE => [
           'name' => ts('Disable'),
           'extra' => 'onclick = "enableDisable( \'%%id%%\',\'' . 'CRM_Core_Extensions' . '\',\'' . 'enable-disable' . '\',\'' . 'true' . '\' );"',
           'ref' => 'disable-action',
           'title' => ts('Disable'),
-        ),
-        CRM_Core_Action::DELETE => array(
+        ],
+        CRM_Core_Action::DELETE => [
           'name' => ts('Uninstall'),
           'url' => 'civicrm/admin/extensions',
           'qs' => 'action=delete&id=%%id%%&key=%%key%%',
           'title' => ts('Uninstall Extension'),
-        ),
-      );
+        ],
+      ];
     }
     return self::$_links;
   }
@@ -141,7 +141,7 @@ class CRM_Admin_Page_Extensions extends CRM_Core_Page_Basic {
       $this->assign('extEnabled', TRUE);
 
       // convert objects to arrays for handling in the template
-      $rows = array();
+      $rows = [];
       foreach (self::$_extInstalled as $id => $obj) {
         $rows[$id] = (array) $obj;
         if ($obj->is_active) {
@@ -153,9 +153,9 @@ class CRM_Admin_Page_Extensions extends CRM_Core_Page_Basic {
           $action -= CRM_Core_Action::ADD;
         }
         $rows[$id]['action'] = CRM_Core_Action::formLink(self::links(), $action,
-          array('id' => $id,
+          ['id' => $id,
             'key' => $obj->key,
-          )
+          ]
         );
       }
       $this->assign('rows', $rows);
@@ -163,7 +163,7 @@ class CRM_Admin_Page_Extensions extends CRM_Core_Page_Basic {
 
     if (self::$_extNotInstalled) {
       $this->assign('extEnabled', TRUE);
-      $rowsUpl = array();
+      $rowsUpl = [];
       foreach (self::$_extNotInstalled as $id => $obj) {
         $rowsUpl[$id] = (array) $obj;
         $action = array_sum(array_keys($this->links()));
@@ -171,9 +171,9 @@ class CRM_Admin_Page_Extensions extends CRM_Core_Page_Basic {
         $action -= CRM_Core_Action::ENABLE;
         $action -= CRM_Core_Action::DELETE;
         $rowsUpl[$id]['action'] = CRM_Core_Action::formLink(self::links(), $action,
-          array('id' => $id,
+          ['id' => $id,
             'key' => $obj->key,
-          )
+          ]
         );
       }
       $this->assign('rowsUploaded', $rowsUpl);

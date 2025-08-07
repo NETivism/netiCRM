@@ -21,7 +21,7 @@ class CRM_Admin_Form_FromEmailAddress_Edit extends CRM_Admin_Form_FromEmailAddre
       $this->controller->set('skipEmailVerify', TRUE);
       $this->set('skipEmailVerify', TRUE);
     }
-    $this->addFormRule(array('CRM_Admin_Form_FromEmailAddress_Edit', 'formRule'), $this);
+    $this->addFormRule(['CRM_Admin_Form_FromEmailAddress_Edit', 'formRule'], $this);
   }
 
   /**
@@ -34,7 +34,7 @@ class CRM_Admin_Form_FromEmailAddress_Edit extends CRM_Admin_Form_FromEmailAddre
    * @return array array of errors / empty array.
    */
   static function formRule($fields, $files, $self) {
-    $errors = array();
+    $errors = [];
     if (!empty($fields['from'])) {
       if (preg_match('/["<>]/', $fields['from'])) {
         $errors['from'] = ts('Email from name cannot have special character [<, >, "].');
@@ -45,7 +45,7 @@ class CRM_Admin_Form_FromEmailAddress_Edit extends CRM_Admin_Form_FromEmailAddre
         $errors['email'] = ts('Email is not valid.');
       }
       if (!CRM_Utils_Mail::checkMailProviders($fields['email'])) {
-        $errors['email'] = ts('Do not use free mail address as mail sender. (eg. %1)', array(1 => str_replace('|', ', ', CRM_Utils_Mail::DMARC_MAIL_PROVIDERS)));
+        $errors['email'] = ts('Do not use free mail address as mail sender. (eg. %1)', [1 => str_replace('|', ', ', CRM_Utils_Mail::DMARC_MAIL_PROVIDERS)]);
       }
     }
     return $errors;
@@ -56,7 +56,7 @@ class CRM_Admin_Form_FromEmailAddress_Edit extends CRM_Admin_Form_FromEmailAddre
    * the default values are retrieved from the database
    */
   function setDefaultValues() {
-    $defaults = array();
+    $defaults = [];
     if (!empty($this->_id) && !empty($this->_values)) {
       $defaults['from'] = $this->_values['from'];
       $defaults['email'] = $this->_values['email'];
@@ -71,7 +71,7 @@ class CRM_Admin_Form_FromEmailAddress_Edit extends CRM_Admin_Form_FromEmailAddre
   public function buildQuickForm() {
     $this->addTextfield('from', ts('From Name'), NULL, TRUE);
 
-    $emailEle = $this->addTextfield('email', ts('From Email Address'), array('class' => 'huge'), TRUE);
+    $emailEle = $this->addTextfield('email', ts('From Email Address'), ['class' => 'huge'], TRUE);
     if ((trim($this->_values['email']) === $this->_defaultFrom) || ($this->_values['filter'] & self::VALID_EMAIL)) {
       $this->assign('email_status', TRUE);
       $emailEle->freeze();
@@ -84,17 +84,17 @@ class CRM_Admin_Form_FromEmailAddress_Edit extends CRM_Admin_Form_FromEmailAddre
 
     $this->addTextarea('description', ts('Description'));
 
-    $this->addButtons(array(
-        array(
+    $this->addButtons([
+        [
           'type' => 'next',
           'name' => ts('Continue'),
           'isDefault' => TRUE,
-        ),
-        array(
+        ],
+        [
           'type' => 'cancel',
           'name' => ts('Cancel'),
-        ),
-      )
+        ],
+      ]
     );
   }
 

@@ -135,7 +135,7 @@ class CRM_Mailing_Event_BAO_Reply extends CRM_Mailing_Event_DAO_Reply {
       $parser = new ezcMailParser;
       $set = new ezcMailVariableSet($fullEmail);
       $parsed = array_shift($parser->parseMail($set));
-      $parsed->to = array(new ezcMailAddress($mailing->replyto_email));
+      $parsed->to = [new ezcMailAddress($mailing->replyto_email)];
 
       // CRM-5567: we need to set Reply-To: so that any response
       // to the forward goes to the sender of the reply
@@ -154,7 +154,7 @@ class CRM_Mailing_Event_BAO_Reply extends CRM_Mailing_Event_DAO_Reply {
       // the body and make the boundary in the header match it
       $ct = &$h['Content-Type'];
       if (substr_count($ct, 'boundary=')) {
-        $matches = array();
+        $matches = [];
         preg_match('/^--(.*)$/m', $b, $matches);
         $boundary = rtrim($matches[1]);
         $parts = explode('boundary=', $ct);
@@ -172,13 +172,13 @@ class CRM_Mailing_Event_BAO_Reply extends CRM_Mailing_Event_DAO_Reply {
 
       $message = new Mail_mime("\n");
 
-      $headers = array(
+      $headers = [
         'Subject' => "Re: {$mailing->subject}",
         'To' => $mailing->replyto_email,
         'From' => $from,
         'Reply-To' => empty($replyto) ? $eq->email : $replyto,
         'Return-Path' => "do-not-reply@{$emailDomain}",
-      );
+      ];
 
       $message->setTxtBody($bodyTxt);
       $message->setHTMLBody($bodyHTML);
@@ -242,13 +242,13 @@ class CRM_Mailing_Event_BAO_Reply extends CRM_Mailing_Event_DAO_Reply {
 
     $emailDomain = CRM_Core_BAO_MailSettings::defaultDomain();
 
-    $headers = array(
+    $headers = [
       'Subject' => $component->subject,
       'To' => $to,
       'From' => "\"$domainEmailName\" <do-not-reply@$emailDomain>",
       'Reply-To' => "do-not-reply@$emailDomain",
       'Return-Path' => "do-not-reply@$emailDomain",
-    );
+    ];
 
     /* TODO: do we need reply tokens? */
 
@@ -413,17 +413,17 @@ class CRM_Mailing_Event_BAO_Reply extends CRM_Mailing_Event_DAO_Reply {
 
     $dao->query($query);
 
-    $results = array();
+    $results = [];
 
     while ($dao->fetch()) {
       $url = CRM_Utils_System::url('civicrm/contact/view',
         "reset=1&cid={$dao->contact_id}"
       );
-      $results[] = array(
+      $results[] = [
         'name' => "<a href=\"$url\">{$dao->display_name}</a>",
         'email' => $dao->email,
         'date' => CRM_Utils_Date::customFormat($dao->date),
-      );
+      ];
     }
     return $results;
   }

@@ -144,7 +144,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
    * 
    * @var array
    */
-  public static $_shutdownCallbacks = array();
+  public static $_shutdownCallbacks = [];
 
   /**
    * the factory class used to instantiate our DB objects
@@ -263,10 +263,10 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
         // Check trusted HTTP Host headers to protect against header attacks
         if (!CRM_Utils_System::checkTrustedHosts($_SERVER['HTTP_HOST']) && php_sapi_name() !== 'cli') {
           if (CRM_Core_Permission::check('access CiviCRM')) {
-            CRM_Core_Session::singleton()->setStatus(ts("Current host \"%1\" doesn't in Trusted Host. If you are sure it's correct host, please add your domain into the <a href=\"%2\">trusted host setting</a>.", array(
+            CRM_Core_Session::singleton()->setStatus(ts("Current host \"%1\" doesn't in Trusted Host. If you are sure it's correct host, please add your domain into the <a href=\"%2\">trusted host setting</a>.", [
               1 => $_SERVER['HTTP_HOST'],
               2 => CRM_Utils_System::url('civicrm/admin/setting/security', 'reset=1')
-            )), TRUE, 'error');
+            ]), TRUE, 'error');
           }
           else {
             CRM_Core_Error::fatalWithoutInitialized(ts('Access Denied.'));
@@ -440,7 +440,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
   private function _initVariables() {
     global $civicrm_root;
     // retrieve serialised settings
-    $variables = array();
+    $variables = [];
     CRM_Core_BAO_ConfigSetting::retrieve($variables);
 
     // after locales initialized in configsetting
@@ -481,8 +481,8 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
       CRM_Core_BAO_ConfigSetting::add($variables);
     }
 
-    $urlArray = array('userFrameworkResourceURL', 'imageUploadURL');
-    $dirArray = array('uploadDir', 'customFileUploadDir');
+    $urlArray = ['userFrameworkResourceURL', 'imageUploadURL'];
+    $dirArray = ['uploadDir', 'customFileUploadDir'];
 
     foreach ($variables as $key => $value) {
       if (in_array($key, $urlArray)) {
@@ -498,7 +498,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
           // CRM-4949
           $value = $this->templateCompileDir;
           $url = CRM_Utils_System::url('civicrm/admin/setting/path', 'reset=1');
-          CRM_Core_Session::setStatus(ts('%1 has an incorrect directory path. Please go to the <a href="%2">path setting page</a> and correct it.', array(1 => $key, 2 => $url)) . '<br/>');
+          CRM_Core_Session::setStatus(ts('%1 has an incorrect directory path. Please go to the <a href="%2">path setting page</a> and correct it.', [1 => $key, 2 => $url]) . '<br/>');
         }
       }
       $this->$key = $value;
@@ -549,11 +549,11 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
     // refs #30289, special case for retrieve mailer type from mail settings
     if (is_numeric($mailerType) && !empty($mailerTypes[$mailerType])) {
       if (!isset(self::$_mail[$mailerType])) {
-        $mailSettings = array();
+        $mailSettings = [];
         CRM_Core_BAO_MailSettings::commonRetrieveAll('CRM_Core_BAO_MailSettings', 'is_default', $mailerType, $mailSettings);
         if (count($mailSettings)) {
-          self::$_mail[$mailerType] = array();
-          $filters = array();
+          self::$_mail[$mailerType] = [];
+          $filters = [];
           foreach($mailSettings as $setting) {
             $params['host'] = $setting['server'];
             $params['port'] = !empty($setting['port']) ? $setting['port'] : 25;
@@ -606,7 +606,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
         if ($mailingInfo['smtpServer'] == '' ||
           !$mailingInfo['smtpServer']
         ) {
-          CRM_Core_Error::fatal(ts('There is no valid smtp server setting. Click <a href=\'%1\'>Administer CiviCRM >> Global Settings</a> to set the SMTP Server.', array(1 => CRM_Utils_System::url('civicrm/admin/setting', 'reset=1'))));
+          CRM_Core_Error::fatal(ts('There is no valid smtp server setting. Click <a href=\'%1\'>Administer CiviCRM >> Global Settings</a> to set the SMTP Server.', [1 => CRM_Utils_System::url('civicrm/admin/setting', 'reset=1')]));
         }
 
         $params['host'] = $mailingInfo['smtpServer'] ? $mailingInfo['smtpServer'] : 'localhost';
@@ -631,7 +631,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
         if ($mailingInfo['sendmail_path'] == '' ||
           !$mailingInfo['sendmail_path']
         ) {
-          CRM_Core_Error::fatal(ts('There is no valid sendmail path setting. Click <a href=\'%1\'>Administer CiviCRM >> Global Settings</a> to set the Sendmail Server.', array(1 => CRM_Utils_System::url('civicrm/admin/setting', 'reset=1'))));
+          CRM_Core_Error::fatal(ts('There is no valid sendmail path setting. Click <a href=\'%1\'>Administer CiviCRM >> Global Settings</a> to set the Sendmail Server.', [1 => CRM_Utils_System::url('civicrm/admin/setting', 'reset=1')]));
         }
         $params['sendmail_path'] = $mailingInfo['sendmail_path'];
         $params['sendmail_args'] = $mailingInfo['sendmail_args'];
@@ -639,11 +639,11 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
         self::$_mail[$mailerType] = &Mail::factory('sendmail', $params);
       }
       elseif ($mailingInfo['outBound_option'] == 3) {
-        $params = array();
+        $params = [];
         self::$_mail[$mailerType] = &Mail::factory('mail', $params);
       }
       else {
-        CRM_Core_Session::setStatus(ts('There is no valid SMTP server Setting Or SendMail path setting. Click <a href=\'%1\'>Administer CiviCRM >> Global Settings</a> to set the OutBound Email.', array(1 => CRM_Utils_System::url('civicrm/admin/setting', 'reset=1'))));
+        CRM_Core_Session::setStatus(ts('There is no valid SMTP server Setting Or SendMail path setting. Click <a href=\'%1\'>Administer CiviCRM >> Global Settings</a> to set the OutBound Email.', [1 => CRM_Utils_System::url('civicrm/admin/setting', 'reset=1')]));
       }
     }
     return self::$_mail[$mailerType];
@@ -721,14 +721,14 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
    * clear db cache
    */
   static function clearDBCache() {
-    $queries = array('TRUNCATE TABLE civicrm_acl_cache',
+    $queries = ['TRUNCATE TABLE civicrm_acl_cache',
       'TRUNCATE TABLE civicrm_acl_contact_cache',
       'TRUNCATE TABLE civicrm_cache',
       'UPDATE civicrm_group SET cache_date = NULL',
       'TRUNCATE TABLE civicrm_group_contact_cache',
       'TRUNCATE TABLE civicrm_menu',
       'UPDATE civicrm_preferences SET navigation = NULL WHERE contact_id IS NOT NULL',
-    );
+    ];
 
     foreach ($queries as $query) {
       CRM_Core_DAO::executeQuery($query);
@@ -758,9 +758,9 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
  SELECT TABLE_NAME as import_table
    FROM INFORMATION_SCHEMA.TABLES
   WHERE TABLE_SCHEMA = %1 AND TABLE_NAME LIKE '{$importTablePrefix}_%'";
-    $params = array(1 => array($dao->database(), 'String'));
+    $params = [1 => [$dao->database(), 'String']];
     $tableDAO = CRM_Core_DAO::executeQuery($query, $params);
-    $importTables = array();
+    $importTables = [];
     while ($tableDAO->fetch()) {
       $microtime = str_replace($importTablePrefix.'_', '', $tableDAO->import_table);
       list($microtime) = explode('_', $microtime);
@@ -820,14 +820,14 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
     if (!is_string($callback) || !is_callable($callback)) {
       return FALSE;
     }
-    if (!in_array($type, array('before', 'after'))) {
+    if (!in_array($type, ['before', 'after'])) {
       return FALSE;
     }
-    $args = !empty($args) ? $args : array();
+    $args = !empty($args) ? $args : [];
     if (!is_array($args)) {
       return FALSE;
     }
-    self::$_shutdownCallbacks[$type][] = array($callback => $args);
+    self::$_shutdownCallbacks[$type][] = [$callback => $args];
     return TRUE;
   }
 }

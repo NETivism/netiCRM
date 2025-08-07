@@ -11,11 +11,11 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
   protected $_page_id;
 
   function get_info() {
-    return array(
+    return [
      'name' => 'SPGATEWAY payment processor',
      'description' => 'Test SPGATEWAY payment processor.',
      'group' => 'Payment Processor Tests',
-    );
+    ];
   }
 
   /**
@@ -34,7 +34,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     // check drupal version
     $version = CRM_Core_Config::$_userSystem->version;
     if($version < 8){
-      $payment_page = variable_get('civicrm_demo_payment_page', array());
+      $payment_page = variable_get('civicrm_demo_payment_page', []);
     }
     else {
       $payment_page = \Drupal::state()->get('civicrm_demo.payment_page');
@@ -51,25 +51,25 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     $this->_is_test = 1;
 
     // get processor
-    $params = array(
+    $params = [
       'version' => 3,
       'class_name' => 'Payment_SPGATEWAY',
       'is_test' => $this->_is_test,
-    );
+    ];
     $result = civicrm_api('PaymentProcessor', 'get', $params);
     $this->assertAPISuccess($result);
     if(empty($result['count'])){
-      $payment_processors = array();
-      $params = array(
+      $payment_processors = [];
+      $params = [
         'version' => 3,
         'class_name' => 'Payment_SPGATEWAY',
-      );
+      ];
       $result = civicrm_api('PaymentProcessorType', 'get', $params);
       $this->assertAPISuccess($result);
       if(!empty($result['count'])){
         $domain_id = CRM_Core_Config::domainID();
         foreach($result['values'] as $type_id => $p){
-          $payment_processor = array(
+          $payment_processor = [
             'version' => 3,
             'domain_id' => $domain_id,
             'name' => 'AUTO payment '.$p['name'],
@@ -90,7 +90,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
             'billing_mode' => $p['billing_mode'],
             'is_recur' => $p['is_recur'],
             'payment_type' => $p['payment_type'],
-          );
+          ];
           $result = civicrm_api('PaymentProcessor', 'create', $payment_processor);
           $this->assertAPISuccess($result);
           if(is_numeric($result['id'])){
@@ -105,23 +105,23 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
         }
       }
     }
-    $params = array(
+    $params = [
       'version' => 3,
       'class_name' => 'Payment_SPGATEWAY',
       'is_test' => $this->_is_test,
-    );
+    ];
     $result = civicrm_api('PaymentProcessor', 'get', $params);
     $this->assertAPISuccess($result);
     $pp = reset($result['values']);
     $this->_processor = $pp;
 
     // get cid
-    $params = array(
+    $params = [
       'version' => 3,
-      'options' => array(
+      'options' => [
         'limit' => 1,
-      ),
-    );
+      ],
+    ];
     $result = civicrm_api('Contact', 'get', $params);
     $this->assertAPISuccess($result);
     if(!empty($result['count'])){
@@ -145,7 +145,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     $amount = 111;
 
     // create contribution
-    $contrib = array(
+    $contrib = [
       'trxn_id' => $trxn_id,
       'contact_id' => $this->_cid,
       'contribution_contact_id' => $this->_cid,
@@ -164,23 +164,23 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
       'is_test' => $this->_is_test,
       'is_pay_later' => 0,
       'contribution_status_id' => 2,
-    );
+    ];
 
     $contribution = CRM_Contribute_BAO_Contribution::create($contrib, CRM_Core_DAO::$_nullArray);
     $this->assertNotEquals('CRM_Core_Error', get_class($contribution), "Contribution return error in line ".__LINE__.". Error messages:\n  ".CRM_Core_Error::getMessages($contribution, "\n  "));
     $this->assertNotEmpty($contribution->id, "In line " . __LINE__);
-    $params = array(
+    $params = [
       'is_test' => $this->_is_test,
       'id' => $contribution->id,
-    );
+    ];
     $this->assertDBState('CRM_Contribute_DAO_Contribution', $contribution->id, $params);
 
     // manually trigger ipn
-    $get = $post = $ids = array();
+    $get = $post = $ids = [];
     $ids = CRM_Contribute_BAO_Contribution::buildIds($contribution->id);
     $query = CRM_Contribute_BAO_Contribution::makeNotifyUrl($ids, NULL, $return_query = TRUE);
     parse_str($query, $get);
-    $data = array(
+    $data = [
       'MerchantID' => 'abcd',// have to modify
       'Amt' => $amount,
       'TradeNo' => '16112117153757079',
@@ -202,15 +202,15 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
       'InstEach' => 0,
       'Inst' => 0,
       'ECI' => '',
-    );
+    ];
     $json = json_encode($data);
-    $jsonData = json_encode(array(
+    $jsonData = json_encode([
       'Status' => 'SUCCESS',
       'Message' => '',
       'Result' => $json,
-      ));
-    $post = array('JSONData' => $jsonData);
-    $this->doIPN(array('spgateway', 'ipn', 'Credit'), $post, $get, __LINE__);
+      ]);
+    $post = ['JSONData' => $jsonData];
+    $this->doIPN(['spgateway', 'ipn', 'Credit'], $post, $get, __LINE__);
     // verify contribution status after trigger
     $this->assertDBCompareValue(
       'CRM_Contribute_DAO_Contribution',
@@ -232,7 +232,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     $amount = 200;
 
     // create contribution
-    $contrib = array(
+    $contrib = [
       'trxn_id' => $trxn_id,
       'contact_id' => $this->_cid,
       'contribution_contact_id' => $this->_cid,
@@ -251,23 +251,23 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
       'is_test' => $this->_is_test,
       'is_pay_later' => 0,
       'contribution_status_id' => 4,
-    );
+    ];
 
     $contribution = CRM_Contribute_BAO_Contribution::create($contrib, CRM_Core_DAO::$_nullArray);
     $this->assertNotEquals('CRM_Core_Error', get_class($contribution), "Contribution return error in line ".__LINE__.". Error messages:\n  ".CRM_Core_Error::getMessages($contribution, "\n  "));
     $this->assertNotEmpty($contribution->id, "In line " . __LINE__);
-    $params = array(
+    $params = [
       'is_test' => $this->_is_test,
       'id' => $contribution->id,
-    );
+    ];
     $this->assertDBState('CRM_Contribute_DAO_Contribution', $contribution->id, $params);
 
     // manually trigger ipn
-    $get = $post = $ids = array();
+    $get = $post = $ids = [];
     $ids = CRM_Contribute_BAO_Contribution::buildIds($contribution->id);
     $query = CRM_Contribute_BAO_Contribution::makeNotifyUrl($ids, NULL, $return_query = TRUE);
     parse_str($query, $get);
-    $data = array(
+    $data = [
       'MerchantID' => 'abcd',// have to modify
       'Amt' => $amount,
       'TradeNo' => '16112117153757079',
@@ -288,15 +288,15 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
       'InstEach' => 0,
       'Inst' => 0,
       'ECI' => '',
-    );
+    ];
     $json = json_encode($data);
-    $jsonData = json_encode(array(
+    $jsonData = json_encode([
       'Status' => 'FAILED',
       'Message' => '授權失敗',
       'Result' => $json,
-      ));
-    $post = array('JSONData' => $jsonData);
-    $this->doIPN(array('spgateway', 'ipn', 'Credit'), $post, $get, __LINE__);
+      ]);
+    $post = ['JSONData' => $jsonData];
+    $this->doIPN(['spgateway', 'ipn', 'Credit'], $post, $get, __LINE__);
 
     // verify contribution status after trigger
     $this->assertDBCompareValue(
@@ -313,11 +313,11 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     $this->assertNotEmpty($cid, "In line " . __LINE__);
 
     //post data
-    $post = (object) array(
+    $post = (object) [
       'Status' => 'SUCCESS',
       'Message' => '查詢成功',
       'Result' =>
-      (object)(array(
+      (object)([
         'MerchantID' => 'abcd',
         'Amt' => $amount,
         'TradeNo' => '16112117153757079',
@@ -339,8 +339,8 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
         'InstFirst' => '0',
         'InstEach' => '0',
         'PaymentMethod' => 'CREDIT',
-      )),
-    );
+      ]),
+    ];
     try {
       CRM_Core_Payment_SPGATEWAY::doSingleQueryRecord($contribution->id, $post);
     }
@@ -369,7 +369,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     $amount = 222;
 
     // create contribution
-    $contrib = array(
+    $contrib = [
       'trxn_id' => $trxn_id,
       'contact_id' => $this->_cid,
       'contribution_contact_id' => $this->_cid,
@@ -388,23 +388,23 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
       'is_test' => $this->_is_test,
       'is_pay_later' => 0,
       'contribution_status_id' => 2,
-    );
+    ];
 
     $contribution = CRM_Contribute_BAO_Contribution::create($contrib, CRM_Core_DAO::$_nullArray);
     $this->assertNotEquals('CRM_Core_Error', get_class($contribution), "Contribution return error in line ".__LINE__.". Error messages:\n  ".CRM_Core_Error::getMessages($contribution, "\n  "));
     $this->assertNotEmpty($contribution->id, "In line " . __LINE__);
-    $params = array(
+    $params = [
       'is_test' => $this->_is_test,
       'id' => $contribution->id,
-    );
+    ];
     $this->assertDBState('CRM_Contribute_DAO_Contribution', $contribution->id, $params);
 
     // manually trigger ipn
-    $get = $post = $ids = array();
+    $get = $post = $ids = [];
     $ids = CRM_Contribute_BAO_Contribution::buildIds($contribution->id);
     $query = CRM_Contribute_BAO_Contribution::makeNotifyUrl($ids, NULL, $return_query = TRUE);
     parse_str($query, $get);
-    $data = array(
+    $data = [
       'MerchantID' => 'abcd',// have to modify
       'Amt' => $amount,
       'TradeNo' => '16112117153757079',
@@ -425,15 +425,15 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
       'InstEach' => 0,
       'Inst' => 0,
       'ECI' => '',
-    );
+    ];
     $json = json_encode($data);
-    $jsonData = json_encode(array(
+    $jsonData = json_encode([
       'Status' => 'SUCCESS',
       'Message' => '',
       'Result' => $json,
-      ));
-    $post = array('JSONData' => $jsonData);
-    $this->doIPN(array('spgateway', 'ipn', 'Credit'), $post, $get, __LINE__);
+      ]);
+    $post = ['JSONData' => $jsonData];
+    $this->doIPN(['spgateway', 'ipn', 'Credit'], $post, $get, __LINE__);
     $error_msg = CRM_Core_DAO::singleValueQuery("SELECT note FROM civicrm_note WHERE entity_id = $contribution->id");
     $this->assertNotEmpty($error_msg, "In line " . __LINE__);
     $this->assertNotFalse(strpos($error_msg, 'Failuare'));
@@ -446,7 +446,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
 
     // create recurring
     $date = date('YmdHis', $now);
-    $recur = array(
+    $recur = [
       'contact_id' => $this->_cid,
       'amount' => $amount,
       'frequency_unit' => 'month',
@@ -459,21 +459,21 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
       'invoice_id' => md5(uniqid((string)rand(), TRUE)),
       'contribution_status_id' => 2,
       'trxn_id' => md5(uniqid((string)rand(), TRUE)),
-    );
-    $ids = array();
+    ];
+    $ids = [];
     $recurring = &CRM_Contribute_BAO_ContributionRecur::add($recur, $ids);
 
     // verify recurring status
-    $params = array(
+    $params = [
       'id' => $recurring->id,
       'contribution_status_id' => 2,
-    );
+    ];
     $this->assertDBState('CRM_Contribute_DAO_ContributionRecur', $recurring->id, $params);
 
     /**
      * create contribution (first recurring)
      */
-    $contrib = array(
+    $contrib = [
       'trxn_id' => $trxn_id,
       'contact_id' => $this->_cid,
       'contribution_contact_id' => $this->_cid,
@@ -493,37 +493,37 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
       'is_pay_later' => 0,
       'contribution_status_id' => 2,
       'contribution_recur_id' => $recurring->id,
-    );
+    ];
     $contribution = CRM_Contribute_BAO_Contribution::create($contrib, CRM_Core_DAO::$_nullArray);
     $this->assertNotEquals('CRM_Core_Error', get_class($contribution), "Contribution return error in line ".__LINE__.". Error messages:\n  ".CRM_Core_Error::getMessages($contribution, "\n  "));
     $this->assertNotEmpty($contribution->id, "In line " . __LINE__);
-    $params = array(
+    $params = [
       'is_test' => $this->_is_test,
       'id' => $contribution->id,
-    );
+    ];
     $this->assertDBState('CRM_Contribute_DAO_Contribution', $contribution->id, $params);
 
     // manually trigger ipn
-    $get = $post = $ids = array();
+    $get = $post = $ids = [];
     $ids = CRM_Contribute_BAO_Contribution::buildIds($contribution->id);
     // $query = CRM_Contribute_BAO_Contribution::makeNotifyUrl($ids, NULL, $return_query = TRUE);
-    $vars = array(
+    $vars = [
       'contactID' => $this->_cid,
       'contributionID' => $contribution->id,
       'is_recur' => 1,
       'contributionRecurID' => $contribution->contribution_recur_id,
       'contributionPageID' => $this->_page_id,
       'payment_processor' => $this->_processor['id'],
-    );
+    ];
     $instrument_code = $contrib['payment_instrument_id'];
     module_load_include('inc', 'civicrm_spgateway', 'civicrm_spgateway.checkout');
     $query = CRM_Contribute_BAO_Contribution::makeNotifyUrl($vars, 'spgateway/ipn/'.$instrument_code, TRUE);
 
     parse_str($query, $get);
-    $post = array(
+    $post = [
       "Status" => "SUCCESS",
       "Message" => "委託單成立，且首次授權成功",
-      "Result" => array(
+      "Result" => [
         "MerchantID" => 'abcd',
         "MerchantOrderNo" => $trxn_id,
         "PeriodType" => "M",
@@ -537,13 +537,13 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
         "CardNo" => "400022******1111",
         "EscrowBank" => "KGI",
         "AuthBank" => "KGI",
-      ),
-    );
+      ],
+    ];
     $ppid = $this->_processor['id'];
     $get['ppid'] = $ppid;
     $PaymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($ppid, $this->_is_test?'test':'live');
-    $post = array('Period' => CRM_Core_Payment_SPGATEWAYAPI::recurEncrypt(json_encode($post), $PaymentProcessor));
-    $this->doIPN(array('spgateway', 'ipn', 'Credit'), $post, $get, __LINE__);
+    $post = ['Period' => CRM_Core_Payment_SPGATEWAYAPI::recurEncrypt(json_encode($post), $PaymentProcessor)];
+    $this->doIPN(['spgateway', 'ipn', 'Credit'], $post, $get, __LINE__);
 
     // verify contribution status after trigger
     $this->assertDBCompareValue(
@@ -563,10 +563,10 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     $first_data = CRM_Core_DAO::singleValueQuery("SELECT data FROM civicrm_contribution_spgateway WHERE cid = $contribution->id");
 
     // verify recurring status
-    $params = array(
+    $params = [
       'id' => $recurring->id,
       'contribution_status_id' => 5,
-    );
+    ];
     $this->assertDBState('CRM_Contribute_DAO_ContributionRecur', $recurring->id, $params);
 
     /**
@@ -575,16 +575,16 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
 
     $now += 86400;
     $trxn_id2 = $trxn_id . "_2";
-    $get = $post = $ids = array();
+    $get = $post = $ids = [];
     $ids = CRM_Contribute_BAO_Contribution::buildIds($contribution->id);
 
     // $query = CRM_Contribute_BAO_Contribution::makeNotifyUrl($ids, NULL, $return_query = TRUE);
     parse_str($query, $get);
     // $get['is_recur'] = 1;
-    $post = array(
+    $post = [
       "Status" => "SUCCESS",
       "Message" => "成功",
-      "Result" => array(
+      "Result" => [
         "RespondCode" => "00",
         "MerchantID" => 'abcd',
         "MerOrderNo" => $trxn_id,
@@ -598,28 +598,28 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
         "EscrowBank" => "KGI",
         "AuthBank" => "KGI",
         "NextAuthDate" => "",
-      ),
-    );
-    $post = array('Period' => CRM_Core_Payment_SPGATEWAYAPI::recurEncrypt(json_encode($post), $PaymentProcessor));
-    $this->doIPN(array('spgateway', 'ipn', 'Credit'), $post, $get, __LINE__);
+      ],
+    ];
+    $post = ['Period' => CRM_Core_Payment_SPGATEWAYAPI::recurEncrypt(json_encode($post), $PaymentProcessor)];
+    $this->doIPN(['spgateway', 'ipn', 'Credit'], $post, $get, __LINE__);
     // $trxn_id2 = _civicrm_spgateway_recur_trxn($trxn_id, $gwsr1);
     // $trxn_id2 = "testdev500302T368_2";
 
     // check second payment contribution exists
-    $params = array(
+    $params = [
       'id' => $recurring->id,
       'contribution_status_id' => 5,
-    );
+    ];
     $this->assertDBState('CRM_Contribute_DAO_ContributionRecur', $recurring->id, $params);
 
-    $params = array(
-      1 => array($recurring->id, 'Integer'),
-    );
+    $params = [
+      1 => [$recurring->id, 'Integer'],
+    ];
     $this->assertDBQuery(2, "SELECT count(*) FROM civicrm_contribution WHERE contribution_recur_id = %1", $params);
 
-    $params = array(
-      1 => array($trxn_id2, 'String'),
-    );
+    $params = [
+      1 => [$trxn_id2, 'String'],
+    ];
 
     $this->assertDBQuery(1, "SELECT contribution_status_id FROM civicrm_contribution WHERE trxn_id = %1", $params);
     $cid2 = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution WHERE trxn_id = %1", $params);
@@ -636,16 +636,16 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
      */
     $now += 86400;
     $trxn_id3 = $trxn_id . "_3";
-    $get = $post = $ids = array();
+    $get = $post = $ids = [];
     $ids = CRM_Contribute_BAO_Contribution::buildIds($contribution->id);
 
     // $query = CRM_Contribute_BAO_Contribution::makeNotifyUrl($ids, NULL, $return_query = TRUE);
     parse_str($query, $get);
     // $get['is_recur'] = 1;
-    $post = array(
+    $post = [
       "Status" => "FAILED",
       "Message" => "授權失敗",
-      "Result" => array(
+      "Result" => [
         "RespondCode" => "99",
         "MerchantID" => 'abcd',
         "MerOrderNo" => $trxn_id,
@@ -659,27 +659,27 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
         "EscrowBank" => "KGI",
         "AuthBank" => "KGI",
         "NextAuthDate" => "",
-      ),
-    );
-    $post = array('Period' => CRM_Core_Payment_SPGATEWAYAPI::recurEncrypt(json_encode($post), $PaymentProcessor));
-    $this->doIPN(array('spgateway', 'ipn', 'Credit'), $post, $get, __LINE__);
+      ],
+    ];
+    $post = ['Period' => CRM_Core_Payment_SPGATEWAYAPI::recurEncrypt(json_encode($post), $PaymentProcessor)];
+    $this->doIPN(['spgateway', 'ipn', 'Credit'], $post, $get, __LINE__);
     // $trxn_id2 = _civicrm_spgateway_recur_trxn($trxn_id, $gwsr1);
     // $trxn_id2 = "testdev500302T368_2";
 
-    $params = array(
+    $params = [
       'id' => $recurring->id,
       'contribution_status_id' => 5,
-    );
+    ];
     $this->assertDBState('CRM_Contribute_DAO_ContributionRecur', $recurring->id, $params);
 
-    $params = array(
-      1 => array($recurring->id, 'Integer'),
-    );
+    $params = [
+      1 => [$recurring->id, 'Integer'],
+    ];
     $this->assertDBQuery(3, "SELECT count(*) FROM civicrm_contribution WHERE contribution_recur_id = %1", $params);
 
-    $params = array(
-      1 => array($trxn_id3, 'String'),
-    );
+    $params = [
+      1 => [$trxn_id3, 'String'],
+    ];
 
     $this->assertDBQuery(4, "SELECT contribution_status_id FROM civicrm_contribution WHERE trxn_id = %1", $params);
     $this->assertDBQuery(1, "SELECT count(*) FROM civicrm_contribution WHERE trxn_id = %1 AND receive_date IS NULL AND cancel_date IS NOT NULL AND cancel_reason IS NOT NULL", $params);
@@ -690,11 +690,11 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     // Fourth payment, when missing recurring, trying to syncronize payment
     $now += 86400;
     $trxn_id4 = $trxn_id . "_4";
-    $post = (object) array(
+    $post = (object) [
       'Status' => 'SUCCESS',
       'Message' => '查詢成功',
       'Result' => 
-      (object)(array(
+      (object)([
         'MerchantID' => 'abcd',
         'Amt' => $amount,
         'TradeNo' => '19022107170243218',
@@ -716,18 +716,18 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
         'InstFirst' => '0',
         'InstEach' => '0',
         'PaymentMethod' => 'CREDIT',
-      )),
-    );
+      ]),
+    ];
 
     $result = CRM_Core_Payment_SPGATEWAY::recurSyncTransaction($trxn_id4, $create_contribution = TRUE, $post);
-    $params = array(
-      1 => array($recurring->id, 'Integer'),
-    );
+    $params = [
+      1 => [$recurring->id, 'Integer'],
+    ];
     $this->assertDBQuery(4, "SELECT count(*) FROM civicrm_contribution WHERE contribution_recur_id = %1", $params);
 
-    $params = array(
-      1 => array($trxn_id4, 'String'),
-    );
+    $params = [
+      1 => [$trxn_id4, 'String'],
+    ];
     $this->assertDBQuery(1, "SELECT contribution_status_id FROM civicrm_contribution WHERE trxn_id = %1", $params);
     $cid4 = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution WHERE trxn_id = %1", $params);
     $this->assertNotEmpty($cid4, "In line " . __LINE__);
@@ -739,16 +739,16 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
      */
     $now += 86400;
     $trxn_id5 = $trxn_id . "_5";
-    $get = $post = $ids = array();
+    $get = $post = $ids = [];
     $ids = CRM_Contribute_BAO_Contribution::buildIds($contribution->id);
 
     // $query = CRM_Contribute_BAO_Contribution::makeNotifyUrl($ids, NULL, $return_query = TRUE);
     parse_str($query, $get);
     // $get['is_recur'] = 1;
-    $post = array(
+    $post = [
       "Status" => "SUCCESS",
       "Message" => "授權成功",
-      "Result" => array(
+      "Result" => [
         "RespondCode" => "00",
         "MerchantID" => 'abcd',
         "MerOrderNo" => $trxn_id,
@@ -762,28 +762,28 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
         "EscrowBank" => "KGI",
         "AuthBank" => "KGI",
         "NextAuthDate" => "",
-      ),
-    );
-    $post = array('Period' => CRM_Core_Payment_SPGATEWAYAPI::recurEncrypt(json_encode($post), $PaymentProcessor));
+      ],
+    ];
+    $post = ['Period' => CRM_Core_Payment_SPGATEWAYAPI::recurEncrypt(json_encode($post), $PaymentProcessor)];
 
-    $this->doIPN(array('spgateway', 'ipn', 'Credit'), $post, $get, __LINE__);
+    $this->doIPN(['spgateway', 'ipn', 'Credit'], $post, $get, __LINE__);
     // $trxn_id2 = _civicrm_spgateway_recur_trxn($trxn_id, $gwsr1);
     // $trxn_id2 = "testdev500302T368_2";
 
-    $params = array(
+    $params = [
       'id' => $recurring->id,
       'contribution_status_id' => 1,
-    );
+    ];
     $this->assertDBState('CRM_Contribute_DAO_ContributionRecur', $recurring->id, $params);
 
-    $params = array(
-      1 => array($recurring->id, 'Integer'),
-    );
+    $params = [
+      1 => [$recurring->id, 'Integer'],
+    ];
     $this->assertDBQuery(5, "SELECT count(*) FROM civicrm_contribution WHERE contribution_recur_id = %1", $params);
 
-    $params = array(
-      1 => array($trxn_id5, 'String'),
-    );
+    $params = [
+      1 => [$trxn_id5, 'String'],
+    ];
 
     $this->assertDBQuery(1, "SELECT contribution_status_id FROM civicrm_contribution WHERE trxn_id = %1", $params);
     $this->assertDBQuery(1, "SELECT count(*) FROM civicrm_contribution WHERE trxn_id = %1 AND receive_date IS NOT NULL AND receive_date >= '".date('Y-m-d H:i:s')."'", $params);
@@ -803,11 +803,11 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     $instrument_id = 11;
     $payment_type = 'BARCODE';
 
-    $return_params = array(
+    $return_params = [
       'Barcode_1' => 'test1',
       'Barcode_2' => 'test2',
       'Barcode_3' => 'test3',
-      );
+      ];
 
     $this->doSingleNonCreditTest(
       $now,
@@ -826,9 +826,9 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     $instrument_id = 12;
     $payment_type = 'CVS';
 
-    $return_params = array(
+    $return_params = [
       'CodeNo' => '12345',
-      );
+      ];
 
     $this->doSingleNonCreditTest(
       $now,
@@ -847,10 +847,10 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     $instrument_id = 14;
     $payment_type = 'VACC';
 
-    $return_params = array(
+    $return_params = [
       'PayBankCode' => '111',
       'PayerAccount5Code' => '12345',
-      );
+      ];
 
     $this->doSingleNonCreditTest(
       $now,
@@ -882,7 +882,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
 
   function doSingleNonCreditTest($now, $trxn_id, $amount, $instrument_id, $payment_type, $return_params){
     // create contribution
-    $contrib = array(
+    $contrib = [
       'trxn_id' => $trxn_id,
       'contact_id' => $this->_cid,
       'contribution_contact_id' => $this->_cid,
@@ -901,39 +901,39 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
       'is_test' => $this->_is_test,
       'is_pay_later' => 0,
       'contribution_status_id' => 2,
-    );
+    ];
 
     $contribution = CRM_Contribute_BAO_Contribution::create($contrib, CRM_Core_DAO::$_nullArray);
     $this->assertNotEmpty($contribution->id, "In line " . __LINE__);
-    $params = array(
+    $params = [
       'is_test' => $this->_is_test,
       'id' => $contribution->id,
-    );
+    ];
     $this->assertDBState('CRM_Contribute_DAO_Contribution', $contribution->id, $params);
 
     // manually trigger ipn
     $afteweek = $now + ( 7 * 86400 );
-    $get = $post = $ids = array();
+    $get = $post = $ids = [];
     $ids = CRM_Contribute_BAO_Contribution::buildIds($contribution->id);
     $query = CRM_Contribute_BAO_Contribution::makeNotifyUrl($ids, NULL, $return_query = TRUE);
     parse_str($query, $get);
-    $data = array(
+    $data = [
       'MerchantID' => 'abcd',// have to modify
       'Amt' => $amount,
       'TradeNo' => '16112117153757079',
       'MerchantOrderNo' => $trxn_id,
       'PaymentType' => $payment_type,
       'ExpireDate' => date('Y-m-d',$afteweek),
-    );
+    ];
     $data = array_merge($data, $return_params);
     $json = json_encode($data);
-    $jsonData = json_encode(array(
+    $jsonData = json_encode([
       'Status' => 'SUCCESS',
       'Message' => '',
       'Result' => $json,
-      ));
-    $post = array('JSONData' => $jsonData);
-    $this->doIPN(array('spgateway', 'ipn', 'Credit'), $post, $get, __LINE__);
+      ]);
+    $post = ['JSONData' => $jsonData];
+    $this->doIPN(['spgateway', 'ipn', 'Credit'], $post, $get, __LINE__);
 
     // verify contribution status after trigger
     $this->assertDBCompareValue(

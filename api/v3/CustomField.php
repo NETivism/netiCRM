@@ -91,7 +91,7 @@ function civicrm_api3_custom_field_create($params) {
     }
   }
   $customField = CRM_Core_BAO_CustomField::create($params);
-  civicrm_api('custom_field', 'getfields', array('version' => 3, 'cache_clear' => 1));
+  civicrm_api('custom_field', 'getfields', ['version' => 3, 'cache_clear' => 1]);
   _civicrm_api3_object_to_array_unique_fields($customField, $values[$customField->id]);
   return civicrm_api3_create_success($values, $params, 'custom_field', $customField);
 }
@@ -121,7 +121,7 @@ function civicrm_api3_custom_field_delete($params) {
   $field->id = $params['id'];
   $field->find(TRUE);
   $customFieldDelete = CRM_Core_BAO_CustomField::deleteField($field);
-  civicrm_api('custom_field', 'getfields', array('version' => 3, 'cache_clear' => 1));
+  civicrm_api('custom_field', 'getfields', ['version' => 3, 'cache_clear' => 1]);
   return $customFieldDelete ? civicrm_api3_create_error('Error while deleting custom field') : civicrm_api3_create_success();
 }
 
@@ -161,8 +161,8 @@ function civicrm_api3_custom_field_get($params) {
  * @todo remove this function - not in use but need to review functionality before
  * removing as it might be useful in wrapper layer
  */
-function _civicrm_api3_custom_field_validate_field($fieldName, $value, $fieldDetails, &$errors = array(
-  )) {
+function _civicrm_api3_custom_field_validate_field($fieldName, $value, $fieldDetails, &$errors = [
+  ]) {
     return;
     //see comment block
   if (!$value) {
@@ -213,7 +213,7 @@ function _civicrm_api3_custom_field_validate_field($fieldName, $value, $fieldDet
       }
 
       if (!is_array($value)) {
-        $value = array($value);
+        $value = [$value];
       }
 
       $query = "SELECT count(*) FROM civicrm_country WHERE id IN (" . CRM_Utils_Array::implode(',', $value) . ")";
@@ -233,7 +233,7 @@ function _civicrm_api3_custom_field_validate_field($fieldName, $value, $fieldDet
       }
 
       if (!is_array($value)) {
-        $value = array($value);
+        $value = [$value];
       }
 
       $query = "
@@ -250,14 +250,14 @@ SELECT count(*)
       break;
   }
 
-  if (in_array($htmlType, array(
-    'Select', 'Multi-Select', 'CheckBox', 'Radio', 'AdvMulti-Select')) &&
+  if (in_array($htmlType, [
+    'Select', 'Multi-Select', 'CheckBox', 'Radio', 'AdvMulti-Select']) &&
     !isset($errors[$fieldName])
   ) {
     require_once 'CRM/Core/OptionGroup.php';
     $options = CRM_Core_OptionGroup::valuesByID($fieldDetails['option_group_id']);
     if (!is_array($value)) {
-      $value = array($value);
+      $value = [$value];
     }
 
     $invalidOptions = array_diff($value, array_keys($options));

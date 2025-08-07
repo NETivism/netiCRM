@@ -71,7 +71,7 @@ class CRM_Coupon_Page_AJAX {
       echo $json;
     }
     else {
-      $json = json_encode(array('error' => ts('The coupon is not valid.')));
+      $json = json_encode(['error' => ts('The coupon is not valid.')]);
       echo $json;
       http_response_code(400);
     }
@@ -79,21 +79,21 @@ class CRM_Coupon_Page_AJAX {
   }
 
   public static function prepareJson($coupon) {
-    $return = array(
+    $return = [
       'description' => $coupon['description'],
-    );
+    ];
     if (!empty($coupon['used_for']['civicrm_price_field_value'])) {
       $fvids = $coupon['used_for']['civicrm_price_field_value'];
       $return['entity_table'] = 'civicrm_price_field_value';
-      $fields = array();
+      $fields = [];
       $sql = "SELECT price_field_id, id FROM civicrm_price_field_value WHERE id IN(".CRM_Utils_Array::implode(',', $fvids).")";
       $dao = CRM_Core_DAO::executeQuery($sql);
       while($dao->fetch()) {
         $fieldName = 'price_'.$dao->price_field_id;
-        $fields[] = array(
+        $fields[] = [
           'fieldName' => $fieldName,
           'vid' => $dao->id,
-        );
+        ];
       }
       $return['fields'] = $fields;
     }

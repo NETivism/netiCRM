@@ -53,7 +53,7 @@ class CRM_Contact_BAO_GroupOrganization extends CRM_Contact_DAO_GroupOrganizatio
    * @static
    */
   static function add(&$params) {
-    $formatedValues = array();
+    $formatedValues = [];
     self::formatValues($params, $formatedValues);
     $dataExists = self::dataExists($formatedValues);
     if (!$dataExists) {

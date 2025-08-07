@@ -23,7 +23,7 @@ class api_v3_ContributionRecurTest extends CiviUnitTestCase {
   function setUpTest() {
     parent::setUp();
     $this->_individualId = $this->individualCreate();
-    $this->_params = array(
+    $this->_params = [
       'version' => $this->_apiversion,
       'sequential' => 1,
       'contact_id' => $this->_individualId,
@@ -48,7 +48,7 @@ class api_v3_ContributionRecurTest extends CiviUnitTestCase {
       'failure_retry_date' => '',
       'auto_renew' => 0,
       'last_execute_date' => '',
-    );
+    ];
   }
 
   /**
@@ -73,10 +73,10 @@ class api_v3_ContributionRecurTest extends CiviUnitTestCase {
    */
   public function testGetContributionRecur() {
     $result = civicrm_api($this->_entity, 'create', $this->_params);
-    $getParams = array(
+    $getParams = [
       'version' => $this->_apiversion,
       'id' => $result['id'],
-    );
+    ];
 
     $this->docMakerRequest($getParams, __FILE__, __FUNCTION__);
     $result = civicrm_api($this->_entity, 'get', $getParams);
@@ -141,13 +141,13 @@ class api_v3_ContributionRecurTest extends CiviUnitTestCase {
     $value = reset($result['values']);
     $this->assertNotNull($value['id'], 'In line ' . __LINE__);
 
-    $updateParams = array(
+    $updateParams = [
       'version' => $this->_apiversion,
       'id' => $result['id'],
       'contribution_status_id' => 1, // completed
       'next_sched_contribution' => '',
       'end_date' => date('Y-m-d H:i:s'),
-    );
+    ];
 
     $this->docMakerRequest($updateParams, __FILE__, __FUNCTION__);
     $updated = civicrm_api($this->_entity, 'update', $updateParams);
@@ -159,22 +159,22 @@ class api_v3_ContributionRecurTest extends CiviUnitTestCase {
     $this->getAndCheck($verifyParams, $result['id'], $this->_entity);
 
     // database record as expect
-    $verifyParams = array(
+    $verifyParams = [
       'id' => $updated['id'],
       'contact_id' => $this->_individualId,
       'contribution_status_id' => 1,
-    );
+    ];
     $this->assertDBState('CRM_Contribute_DAO_ContributionRecur', $updated['id'], $verifyParams);
 
     // original value not touched when update
-    $verifyParams = array(
+    $verifyParams = [
       'id' => $updated['id'],
       'amount' => $this->_params['amount'],
       'currency' => $this->_params['currency'],
       'frequency_unit' => $this->_params['frequency_unit'],
       'frequency_interval' => $this->_params['frequency_interval'],
       'cycle_day' => $this->_params['cycle_day'],
-    );
+    ];
     $this->assertDBState('CRM_Contribute_DAO_ContributionRecur', $updated['id'], $verifyParams);
   }
 
@@ -196,26 +196,26 @@ class api_v3_ContributionRecurTest extends CiviUnitTestCase {
    */
   public function testDeleteContributionRecur() {
     $result = civicrm_api($this->_entity, 'create', $this->_params);
-    $deleteParams = array(
+    $deleteParams = [
       'version' => $this->_apiversion,
       'id' => $result['id'],
-    );
+    ];
 
     $this->docMakerRequest($deleteParams, __FILE__, __FUNCTION__);
     $deleted = civicrm_api($this->_entity, 'delete', $deleteParams);
     $this->docMakerResponse($deleted, __FILE__, __FUNCTION__);
 
     $this->assertAPISuccess($deleted, 'In line ' . __LINE__);
-    $checkDeleted = civicrm_api($this->_entity, 'get', array(
+    $checkDeleted = civicrm_api($this->_entity, 'get', [
       'version' => $this->_apiversion,
       'id' => $deleteParams['id'],
-    ));
+    ]);
     $this->assertEquals(0, $checkDeleted['count'], 'In line ' . __LINE__);
     $this->assertDBNull('CRM_Contribute_DAO_ContributionRecur', $result['id'], 'id', 'id', 'In line ' . __LINE__);
   }
 
   public function testGetFieldsContributionRecur() {
-    $result = civicrm_api($this->_entity, 'getfields', array('version' => 3, 'action' => 'create'));
+    $result = civicrm_api($this->_entity, 'getfields', ['version' => 3, 'action' => 'create']);
     $this->assertAPISuccess($result, 'In line ' . __LINE__);
     $this->assertEquals(12, $result['values']['start_date']['type']);
   }

@@ -10,25 +10,25 @@ class CRM_Widget_Widget {
   static $_methodTable;
   function initialize() {
     if (!self::$_methodTable) {
-      self::$_methodTable = array(
+      self::$_methodTable = [
         'getContributionPageData' =>
-        array(
+        [
           'description' => 'Gets all campaign related data and returns it as a std class.',
           'access' => 'remote',
-          'arguments' => array('contributionPageID',
+          'arguments' => ['contributionPageID',
             'widgetID',
-          ),
-        ),
+          ],
+        ],
         'getEmbedCode' =>
-        array(
+        [
           'description' => 'Gets embed code.  Perhaps overkill, but we can track dropoffs in this case. by # of people reqeusting emebed code / number of unique instances.',
           'access' => 'remote',
-          'arguments' => array('contributionPageID',
+          'arguments' => ['contributionPageID',
             'widgetID',
             'format',
-          ),
-        ),
-      );
+          ],
+        ],
+      ];
     }
   }
 
@@ -105,7 +105,7 @@ FROM   civicrm_contribution
 WHERE  is_test = 0
 AND    contribution_status_id = 1
 AND    contribution_page_id = %1";
-    $params = array(1 => array($contributionPageID, 'Integer'));
+    $params = [1 => [$contributionPageID, 'Integer']];
     $dao = CRM_Core_DAO::executeQuery($query, $params);
     if ($dao->fetch()) {
       $data->num_donors = $dao->count;
@@ -119,7 +119,7 @@ AND    contribution_page_id = %1";
 SELECT goal_amount, start_date, end_date, is_active
 FROM   civicrm_contribution_page
 WHERE  id = %1";
-    $params = array(1 => array($contributionPageID, 'Integer'));
+    $params = [1 => [$contributionPageID, 'Integer']];
     $dao = CRM_Core_DAO::executeQuery($query, $params);
     if ($dao->fetch()) {
 
@@ -155,7 +155,7 @@ WHERE  id = %1";
     $data->homepage_link = $widget->url_homepage;
 
     // movie clip colors, must be in '0xRRGGBB' format
-    $data->colors = array();
+    $data->colors = [];
 
     $hexPrefix = '0x';
     $data->colors["title"] = str_replace('#', $hexPrefix, $widget->color_title);

@@ -65,7 +65,7 @@ class CRM_Grant_PseudoConstant extends CRM_Core_PseudoConstant {
    */
   public static function &grantStatus($id = NULL) {
     if (!self::$grantStatus) {
-      self::$grantStatus = array();
+      self::$grantStatus = [];
 
       self::$grantStatus = CRM_Core_OptionGroup::values("grant_status");
     }
@@ -87,7 +87,7 @@ class CRM_Grant_PseudoConstant extends CRM_Core_PseudoConstant {
    */
   public static function &grantType($id = NULL) {
     if (!self::$grantType) {
-      self::$grantType = array();
+      self::$grantType = [];
 
       self::$grantType = CRM_Core_OptionGroup::values("grant_type");
     }

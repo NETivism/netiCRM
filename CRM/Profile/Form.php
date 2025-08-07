@@ -71,7 +71,7 @@ class CRM_Profile_Form extends CRM_Core_Form {
   /**
    * @var array details of the UFGroup used on this page
    */
-  protected $_ufGroup = array('name' => 'unknown');
+  protected $_ufGroup = ['name' => 'unknown'];
  
 
   /**
@@ -140,7 +140,7 @@ class CRM_Profile_Form extends CRM_Core_Form {
    * Store profile ids if multiple profile ids are passed using comma separated.
    * Currently lets implement this functionality only for dialog mode
    */
-  protected $_profileIds = array();
+  protected $_profileIds = [];
 
   /**
    * pre processing work done here.
@@ -203,15 +203,15 @@ class CRM_Profile_Form extends CRM_Core_Form {
         // restrict permission when profile is reserved
         if ($dao->is_reserved && !CRM_Core_Permission::check('access CiviCRM')) {
           $sql = "SELECT id FROM civicrm_uf_join WHERE uf_group_id = %1 and module = %2";
-          $params = array(
-            1 => array($dao->id, 'Integer'),
-            2 => array("User Account", 'String'),
-          );
+          $params = [
+            1 => [$dao->id, 'Integer'],
+            2 => ["User Account", 'String'],
+          ];
           $useForIsUserAccount = CRM_Core_DAO::singleValueQuery($sql, $params);
           if (empty($useForIsUserAccount)) {
-            return CRM_Core_Error::statusBounce(ts('The requested Profile (gid=%1) is disabled OR it is not configured to be used for \'Profile\' listings in its Settings OR there is no Profile with that ID OR you do not have permission to access this profile. Please contact the site administrator if you need assistance.', array(
+            return CRM_Core_Error::statusBounce(ts('The requested Profile (gid=%1) is disabled OR it is not configured to be used for \'Profile\' listings in its Settings OR there is no Profile with that ID OR you do not have permission to access this profile. Please contact the site administrator if you need assistance.', [
               1 => $this->_gid
-            )));
+            ]));
           }
         }
       }
@@ -312,13 +312,13 @@ class CRM_Profile_Form extends CRM_Core_Form {
           else{
             $disallowed = TRUE;
             if (!$statusMessage) {
-              $statusMessage = ts("This profile is configured for contact type '%1'. It cannot be used to edit contacts of other types.", array(1 => $profileSubType ? $profileSubType : $profileType));
+              $statusMessage = ts("This profile is configured for contact type '%1'. It cannot be used to edit contacts of other types.", [1 => $profileSubType ? $profileSubType : $profileType]);
             }
           }
         }
       }
 
-      if (in_array($profileType, array("Membership", "Participant", "Contribution"))) {
+      if (in_array($profileType, ["Membership", "Participant", "Contribution"])) {
         $disallowed = TRUE;
         if (!$statusMessage) {
           $statusMessage = ts('Profile is not configured for the selected action.');
@@ -348,7 +348,7 @@ class CRM_Profile_Form extends CRM_Core_Form {
    * @return void
    */
   function setDefaultsValues() {
-    $this->_defaults = array();
+    $this->_defaults = [];
     if ($this->_id) {
       CRM_Core_BAO_UFGroup::setProfileDefaults($this->_id, $this->_fields, $this->_defaults, TRUE);
     }
@@ -413,8 +413,8 @@ class CRM_Profile_Form extends CRM_Core_Form {
     if ($this->_disallowed) {
       return FALSE;
     }
-    $sBlocks = array();
-    $hBlocks = array();
+    $sBlocks = [];
+    $hBlocks = [];
     $config = CRM_Core_Config::singleton();
 
     $this->assign('id', $this->_id);
@@ -468,12 +468,12 @@ class CRM_Profile_Form extends CRM_Core_Form {
       $this->assign('anonUser', TRUE);
     }
 
-    $addCaptcha = array();
+    $addCaptcha = [];
     $emailPresent = FALSE;
 
     // cache the state country fields. based on the results, we could use our javascript solution
     // in create or register mode
-    $stateCountryMap = array();
+    $stateCountryMap = [];
 
     // add the form elements
     foreach ($this->_fields as $name => $field) {
@@ -495,7 +495,7 @@ class CRM_Profile_Form extends CRM_Core_Form {
       list($prefixName, $index) = CRM_Utils_System::explode('-', $name, 2);
       if ($prefixName == 'state_province' || $prefixName == 'country') {
         if (!CRM_Utils_Array::arrayKeyExists($index, $stateCountryMap)) {
-          $stateCountryMap[$index] = array();
+          $stateCountryMap[$index] = [];
         }
         $stateCountryMap[$index][$prefixName] = $name;
       }
@@ -596,14 +596,14 @@ class CRM_Profile_Form extends CRM_Core_Form {
    * @return Array   $errors     Errors ( if any ).
    */
   static function validateContactActivityProfile($activityId, $contactId, $gid) {
-    $errors = array();
+    $errors = [];
     if (!$activityId) {
       $errors[] = 'Profile is using one or more activity fields, and is missing the activity Id (aid) in the URL.';
       return $errors;
     }
 
-    $activityDetails = array();
-    $activityParams = array('id' => $activityId);
+    $activityDetails = [];
+    $activityParams = ['id' => $activityId];
     CRM_Activity_BAO_Activity::retrieve($activityParams, $activityDetails);
 
     if (empty($activityDetails)) {
@@ -638,7 +638,7 @@ class CRM_Profile_Form extends CRM_Core_Form {
    * @static
    */
   static function formRule($fields, $files, $form) {
-    $errors = array();
+    $errors = [];
     // if no values, return
     if (empty($fields)) {
       return TRUE;
@@ -684,11 +684,11 @@ class CRM_Profile_Form extends CRM_Core_Form {
       $dedupeParams = CRM_Dedupe_Finder::formatParams($fields, $ctype);
       if ($form->_mode == CRM_Profile_Form::MODE_CREATE) {
         // fix for CRM-2888
-        $exceptions = array();
+        $exceptions = [];
       }
       else {
         // for edit mode we need to allow our own record to be a dupe match!
-        $exceptions = array($session->get('userID'));
+        $exceptions = [$session->get('userID')];
       }
 
       // for dialog mode we should always use fuzzy rule.
@@ -719,12 +719,12 @@ class CRM_Profile_Form extends CRM_Core_Form {
             $contactLinks = CRM_Contact_BAO_Contact_Utils::formatContactIDSToLinks($ids, TRUE, TRUE);
 
             $duplicateContactsLinks = '<div class="matching-contacts-found">';
-            $duplicateContactsLinks .= ts('One matching contact was found. ', array('count' => count($contactLinks['rows']), 'plural' => '%count matching contacts were found.<br />'));
+            $duplicateContactsLinks .= ts('One matching contact was found. ', ['count' => count($contactLinks['rows']), 'plural' => '%count matching contacts were found.<br />']);
             if ($contactLinks['msg'] == 'view') {
-              $duplicateContactsLinks .= ts('You can View the existing contact.', array('count' => count($contactLinks['rows']), 'plural' => 'You can View the existing contacts.'));
+              $duplicateContactsLinks .= ts('You can View the existing contact.', ['count' => count($contactLinks['rows']), 'plural' => 'You can View the existing contacts.']);
             }
             else {
-              $duplicateContactsLinks .= ts('You can View or Edit the existing contact.', array('count' => count($contactLinks['rows']), 'plural' => 'You can View or Edit the existing contacts.'));
+              $duplicateContactsLinks .= ts('You can View or Edit the existing contact.', ['count' => count($contactLinks['rows']), 'plural' => 'You can View or Edit the existing contacts.']);
             }
             $duplicateContactsLinks .= '</div>';
             $duplicateContactsLinks .= '<table class="matching-contacts-actions">';
@@ -802,10 +802,10 @@ class CRM_Profile_Form extends CRM_Core_Form {
       }
     }
 
-    $elements = array('email_greeting' => 'email_greeting_custom',
+    $elements = ['email_greeting' => 'email_greeting_custom',
       'postal_greeting' => 'postal_greeting_custom',
       'addressee' => 'addressee_custom',
-    );
+    ];
     foreach ($elements as $greeting => $customizedGreeting) {
       if ($greetingType = CRM_Utils_Array::value($greeting, $fields)) {
         $customizedValue = CRM_Core_OptionGroup::getValue($greeting, 'Customized', 'name');
@@ -813,7 +813,7 @@ class CRM_Profile_Form extends CRM_Core_Form {
           !CRM_Utils_Array::value($customizedGreeting, $fields)
         ) {
           $errors[$customizedGreeting] = ts('Custom  %1 is a required field if %1 is of type Customized.',
-            array(1 => ucwords(str_replace('_', " ", $greeting)))
+            [1 => ucwords(str_replace('_', " ", $greeting))]
           );
         }
       }
@@ -836,10 +836,10 @@ class CRM_Profile_Form extends CRM_Core_Form {
       CRM_Contact_BAO_Contact::processImageParams($params);
     }
 
-    $greetingTypes = array('addressee' => 'addressee_id',
+    $greetingTypes = ['addressee' => 'addressee_id',
       'email_greeting' => 'email_greeting_id',
       'postal_greeting' => 'postal_greeting_id',
-    );
+    ];
     if ($this->_id) {
       $contactDetails = CRM_Contact_BAO_Contact::getHierContactDetails($this->_id,
         $greetingTypes
@@ -865,9 +865,9 @@ class CRM_Profile_Form extends CRM_Core_Form {
         $profileType = CRM_Contact_BAO_ContactType::getBasicType($profileType);
       }
 
-      $contactTypeFilters = array(1 => 'Individual', 2 => 'Household',
+      $contactTypeFilters = [1 => 'Individual', 2 => 'Household',
         3 => 'Organization',
-      );
+      ];
       $filter = CRM_Utils_Array::key($profileType, $contactTypeFilters);
       if ($filter) {
         foreach ($greetingTypes as $key => $value) {
@@ -904,8 +904,8 @@ class CRM_Profile_Form extends CRM_Core_Form {
     $transaction = new CRM_Core_Transaction();
 
     // first, trying to add contact from profile without group
-    $submittedGroup = !empty($params['group']) ? $params['group'] : array();
-    $fieldGroup = !empty($this->_fields['group']) ? $this->_fields['group'] : array(); 
+    $submittedGroup = !empty($params['group']) ? $params['group'] : [];
+    $fieldGroup = !empty($this->_fields['group']) ? $this->_fields['group'] : []; 
     unset($params['group']);
     unset($this->_fields['group']);
     $this->_id = CRM_Contact_BAO_Contact::createProfileContact(
@@ -926,9 +926,9 @@ class CRM_Profile_Form extends CRM_Core_Form {
     }
 
     // second, trying to send mail to subscrber.
-    $mailingType = array();
+    $mailingType = [];
     $config = CRM_Core_Config::singleton();
-    $groupSubscribed = array();
+    $groupSubscribed = [];
     //array of group id, subscribed by contact
     if ($this->_id) {
       $contactGroups = new CRM_Contact_DAO_GroupContact();
@@ -994,7 +994,7 @@ class CRM_Profile_Form extends CRM_Core_Form {
     }
 
 
-    $ufGroups = array();
+    $ufGroups = [];
     if ($this->_gid) {
       $ufGroups[$this->_gid] = 1;
     }
@@ -1051,12 +1051,12 @@ class CRM_Profile_Form extends CRM_Core_Form {
   }
 
   function track($state) {
-    $params = array(
+    $params = [
       'state' => $state,
       'page_type' => 'civicrm_uf_group',
       'page_id' => $this->_gid,
       'visit_date' => date('Y-m-d H:i:s'),
-    );
+    ];
     $track = CRM_Core_BAO_Track::add($params);
     if ($this->_id) {
       $params['entity_table'] = 'civicrm_contact';

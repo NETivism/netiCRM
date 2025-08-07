@@ -5,9 +5,9 @@ class CRM_Core_Payment_TaiwanACH extends CRM_Core_Payment {
   protected $_mode = NULL;
 
   // Used for contribution recurring form ( /CRM/Contribute/Form/ContributionRecur.php ).
-  public static $_editableFields = array('amount', 'installments', 'end_date', 'contribution_status_id', 'note_title', 'note_body', 'start_date');
+  public static $_editableFields = ['amount', 'installments', 'end_date', 'contribution_status_id', 'note_title', 'note_body', 'start_date'];
 
-  public static $_hideFields = array('invoice_id');
+  public static $_hideFields = ['invoice_id'];
 
   /**
    * We only need one instance of this object. So we use the singleton
@@ -49,7 +49,7 @@ class CRM_Core_Payment_TaiwanACH extends CRM_Core_Payment {
   function checkConfig() {
     $config = CRM_Core_Config::singleton();
 
-    $error = array();
+    $error = [];
 
     if (!empty($this->_paymentProcessor['user_name']) xor !empty($this->_paymentProcessor['password'])) {
       $error[] = ts('User Name is not set in the Administer CiviCRM &raquo; Payment Processor.');
@@ -105,27 +105,27 @@ class CRM_Core_Payment_TaiwanACH extends CRM_Core_Payment {
     if (empty($fields["{$isTestPrefix}user_name"]) || empty($fields["{$isTestPrefix}password"]) || empty($fields["{$isTestPrefix}signature"])) {
       if (empty($fields["{$isTestPrefix}user_name"])) {
         $emptyField++;
-        $errors["{$isTestPrefix}user_name"] = ts('Missing required field: %1', array(1 => $ppDAO->user_name_label));
+        $errors["{$isTestPrefix}user_name"] = ts('Missing required field: %1', [1 => $ppDAO->user_name_label]);
       }
       if (empty($fields["{$isTestPrefix}password"])) {
         $emptyField++;
-        $errors["{$isTestPrefix}password"] = ts('Missing required field: %1', array(1 => $ppDAO->password_label));
+        $errors["{$isTestPrefix}password"] = ts('Missing required field: %1', [1 => $ppDAO->password_label]);
       }
       if (empty($fields["{$isTestPrefix}signature"])) {
         $emptyField++;
-        $errors["{$isTestPrefix}signature"] = ts('Missing required field: %1', array(1 => $ppDAO->signature_label));
+        $errors["{$isTestPrefix}signature"] = ts('Missing required field: %1', [1 => $ppDAO->signature_label]);
       }
     }
     if (count($errors) == 3) {
       if(empty($fields["{$isTestPrefix}subject"])) {
-        $errors["{$isTestPrefix}subject"] = ts('Missing required field: Provide %1 or %2', array(
+        $errors["{$isTestPrefix}subject"] = ts('Missing required field: Provide %1 or %2', [
           1 => $ppDAO->subject_label,
           2 => $ppDAO->user_name_label,
-        ));
+        ]);
         $emptyField++;
       }
       else {
-        $errors = array();
+        $errors = [];
       }
     }
     if ($emptyField == 4) {

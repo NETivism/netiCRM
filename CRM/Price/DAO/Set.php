@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-class CRM_Price_DAO_Set extends CRM_Core_DAO
+        class CRM_Price_DAO_Set extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -78,7 +78,7 @@ class CRM_Price_DAO_Set extends CRM_Core_DAO
    * @static
    */
   static $_log = true;
-  /**
+    /**
    * Price Set
    *
    * @var int unsigned
@@ -132,7 +132,7 @@ class CRM_Price_DAO_Set extends CRM_Core_DAO
    * @var string
    */
   public $extends;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -151,13 +151,13 @@ class CRM_Price_DAO_Set extends CRM_Core_DAO
   function &links()
   {
     if (!(self::$_links)) {
-      self::$_links = array(
+      self::$_links = [
         'domain_id' => 'civicrm_domain:id',
-      );
+      ];
     }
     return self::$_links;
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -171,7 +171,7 @@ class CRM_Price_DAO_Set extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -180,68 +180,68 @@ class CRM_Price_DAO_Set extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'id' => array(
+      self::$_fields = [
+        'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'domain_id' => array(
+                  ] ,
+        'domain_id' => [
           'name' => 'domain_id',
           'type' => CRM_Utils_Type::T_INT,
-          'FKClassName' => 'CRM_Core_DAO_Domain',
-        ) ,
-        'name' => array(
+                    'FKClassName' => 'CRM_Core_DAO_Domain',
+        ] ,
+        'name' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Name') ,
           'required' => true,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'title' => array(
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
+        'title' => [
           'name' => 'title',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Title') ,
           'required' => true,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'is_active' => array(
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
+        'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-          'default' => '',
-        ) ,
-        'help_pre' => array(
+                  'default' => '',
+          ] ,
+        'help_pre' => [
           'name' => 'help_pre',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Help Pre') ,
-          'rows' => 4,
-          'cols' => 80,
-        ) ,
-        'help_post' => array(
+             'rows' => 4,
+           'cols' => 80,
+              ] ,
+        'help_post' => [
           'name' => 'help_post',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Help Post') ,
-          'rows' => 4,
-          'cols' => 80,
-        ) ,
-        'javascript' => array(
+             'rows' => 4,
+           'cols' => 80,
+              ] ,
+        'javascript' => [
           'name' => 'javascript',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Javascript') ,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ) ,
-        'extends' => array(
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
+        'extends' => [
           'name' => 'extends',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Extends') ,
           'required' => true,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ) ,
-      );
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -253,9 +253,9 @@ class CRM_Price_DAO_Set extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    global $dbLocale;
+        global $dbLocale;
     return self::$_tableName . $dbLocale;
-  }
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -275,7 +275,7 @@ class CRM_Price_DAO_Set extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -286,7 +286,7 @@ class CRM_Price_DAO_Set extends CRM_Core_DAO
           }
         }
       }
-    }
+                                  }
     return self::$_import;
   }
   /**
@@ -298,7 +298,7 @@ class CRM_Price_DAO_Set extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
@@ -309,7 +309,7 @@ class CRM_Price_DAO_Set extends CRM_Core_DAO
           }
         }
       }
-    }
+                                  }
     return self::$_export;
   }
 }

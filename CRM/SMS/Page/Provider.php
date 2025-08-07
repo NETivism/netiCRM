@@ -67,32 +67,32 @@ class CRM_SMS_Page_Provider extends CRM_Core_Page_Basic {
    */
   public function &links() {
     if (!(self::$_links)) {
-      self::$_links = array(
-        CRM_Core_Action::UPDATE => array(
+      self::$_links = [
+        CRM_Core_Action::UPDATE => [
           'name' => ts('Edit'),
           'url' => 'civicrm/admin/sms/provider',
           'qs' => 'action=update&id=%%id%%&reset=1',
           'title' => ts('Edit Provider'),
-        ),
-        CRM_Core_Action::DELETE => array(
+        ],
+        CRM_Core_Action::DELETE => [
           'name' => ts('Delete'),
           'url' => 'civicrm/admin/sms/provider',
           'qs' => 'action=delete&id=%%id%%',
           'title' => ts('Delete Provider'),
-        ),
-        CRM_Core_Action::ENABLE => array(
+        ],
+        CRM_Core_Action::ENABLE => [
           'name' => ts('Enable'),
           'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_SMS_BAO_Provider' . '\',\'' . 'disable-enable' . '\' , true);"',
           'ref' => 'enable-action',
           'title' => ts('Enable Provider'),
-        ),
-        CRM_Core_Action::DISABLE => array(
+        ],
+        CRM_Core_Action::DISABLE => [
           'name' => ts('Disable'),
           'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_SMS_BAO_Provider' . '\',\'' . 'enable-disable' . '\' , true);"',
           'ref' => 'disable-action',
           'title' => ts('Disable Provider'),
-        ),
-      );
+        ],
+      ];
     }
     return self::$_links;
   }
@@ -107,14 +107,14 @@ class CRM_SMS_Page_Provider extends CRM_Core_Page_Basic {
   public function run() {
     // set title and breadcrumb
     CRM_Utils_System::setTitle(ts('Settings - SMS Provider'));
-    $breadCrumb = array(
-      array(
+    $breadCrumb = [
+      [
         'title' => ts('SMS Provider'),
         'url' => CRM_Utils_System::url('civicrm/admin/sms/provider',
           'reset=1'
         ),
-      ),
-    );
+      ],
+    ];
     CRM_Utils_System::appendBreadCrumb($breadCrumb);
 
     $this->_id = CRM_Utils_Request::retrieve('id', 'String',
@@ -134,7 +134,7 @@ class CRM_SMS_Page_Provider extends CRM_Core_Page_Basic {
    */
   public function browse($action = NULL) {
     $providers = CRM_SMS_BAO_Provider::getProviders();
-    $rows = array();
+    $rows = [];
     foreach ($providers as $provider) {
       $action = array_sum(array_keys($this->links()));
       // update enable/disable links.
@@ -150,7 +150,7 @@ class CRM_SMS_Page_Provider extends CRM_Core_Page_Basic {
       if ($provider['name'] == 'CRM_SMS_Provider_Flydove') {
         $apiParams = json_decode($provider['api_params'], TRUE);
         if (is_array($apiParams)) {
-          $provider['api_params'] = array();
+          $provider['api_params'] = [];
           foreach($apiParams as $key => $val) {
             if (is_array($val)) {
               $provider['api_params'][] = '<strong>'.$key.'</strong>';
@@ -167,7 +167,7 @@ class CRM_SMS_Page_Provider extends CRM_Core_Page_Basic {
       }
 
       $provider['action'] = CRM_Core_Action::formLink(self::links(), $action,
-        array('id' => $provider['id']),
+        ['id' => $provider['id']],
         ts('more'),
         FALSE,
         'sms.provider.row',

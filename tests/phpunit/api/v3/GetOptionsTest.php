@@ -23,15 +23,15 @@ class api_v3_GetOptionsTest extends CiviUnitTestCase {
     global $tsLocale;
     $tsLocale = 'zh_TW';
     $config =& CRM_Core_Config::singleton();
-    $config->countryLimit = array(1208, 1228);
-    $config->provinceLimit = array(1208); // Taiwan
+    $config->countryLimit = [1208, 1228];
+    $config->provinceLimit = [1208]; // Taiwan
     $config->defaultContactCountry = 1208; // Taiwan
     $config->defaultCurrency = 'TWD';
     $config->lcMessages = 'zh_TW';
-    $this->_params = array(
+    $this->_params = [
       'version' => $this->_apiversion,
       'sequential' => true,
-    );
+    ];
   }
 
   /**
@@ -52,9 +52,9 @@ class api_v3_GetOptionsTest extends CiviUnitTestCase {
    * @docmaker_end
    */
   function testExample() {
-    $params = $this->_params += array(
+    $params = $this->_params += [
       'field' => 'contact_type',
-    );
+    ];
     $result = civicrm_api('Contact', 'getoptions', $params);
     foreach($result['values'] as $k => &$v) {
       $a = $k+1;
@@ -79,9 +79,9 @@ class api_v3_GetOptionsTest extends CiviUnitTestCase {
    * @docmaker_end
    */
   function testContactType() {
-    $params = $this->_params += array(
+    $params = $this->_params += [
       'field' => 'contact_type',
-    );
+    ];
     $result = civicrm_api('Contact', 'getoptions', $params);
     $this->docMakerResponse($result, __FILE__, __FUNCTION__);
     $this->assertAPISuccess($result, 'In line ' . __LINE__);
@@ -103,9 +103,9 @@ class api_v3_GetOptionsTest extends CiviUnitTestCase {
   function testContactSubType() {
     // create contact sub type
     CRM_Core_DAO::executeQuery("INSERT IGNORE INTO `civicrm_contact_type` (`name`, `label`, `parent_id`, `is_active`, `is_reserved`) VALUES ('NPO', 'NPO', 3, 1, NULL)");
-    $params = $this->_params += array(
+    $params = $this->_params += [
       'field' => 'contact_sub_type',
-    );
+    ];
     $this->docMakerRequest($params, __FILE__, __FUNCTION__);
     $result = civicrm_api('Contact', 'getoptions', $params);
     $this->docMakerResponse($result, __FILE__, __FUNCTION__);
@@ -126,9 +126,9 @@ class api_v3_GetOptionsTest extends CiviUnitTestCase {
    * @docmaker_end
    */
   function testPrefixId() {
-    $params = $this->_params += array(
+    $params = $this->_params += [
       'field' => 'prefix_id',
-    );
+    ];
     $this->docMakerRequest($params, __FILE__, __FUNCTION__);
     $result = civicrm_api('Contact', 'getoptions', $params);
     $this->docMakerResponse($result, __FILE__, __FUNCTION__);
@@ -149,9 +149,9 @@ class api_v3_GetOptionsTest extends CiviUnitTestCase {
    * @docmaker_end
    */
   function testSuffixId() {
-    $params = $this->_params += array(
+    $params = $this->_params += [
       'field' => 'suffix_id',
-    );
+    ];
     $this->docMakerRequest($params, __FILE__, __FUNCTION__);
     $result = civicrm_api('Contact', 'getoptions', $params);
     $this->docMakerResponse($result, __FILE__, __FUNCTION__);
@@ -172,9 +172,9 @@ class api_v3_GetOptionsTest extends CiviUnitTestCase {
    * @docmaker_end
    */
   public function testGenderId() {
-    $params = $this->_params += array(
+    $params = $this->_params += [
       'field' => 'gender_id',
-    );
+    ];
     $this->docMakerRequest($params, __FILE__, __FUNCTION__);
     $result = civicrm_api('Contact', 'getoptions', $params);
     $this->docMakerResponse($result, __FILE__, __FUNCTION__);
@@ -195,9 +195,9 @@ class api_v3_GetOptionsTest extends CiviUnitTestCase {
    * @docmaker_end
    */
   public function testLocationTypeId() {
-    $params = $this->_params += array(
+    $params = $this->_params += [
       'field' => 'location_type_id',
-    );
+    ];
     $this->docMakerRequest($params, __FILE__, __FUNCTION__);
     $result = civicrm_api('Contact', 'getoptions', $params);
     $this->docMakerResponse($result, __FILE__, __FUNCTION__);
@@ -218,9 +218,9 @@ class api_v3_GetOptionsTest extends CiviUnitTestCase {
    * @docmaker_end
    */
   public function testWorldregionId() {
-    $params = $this->_params += array(
+    $params = $this->_params += [
       'field' => 'worldregion_id',
-    );
+    ];
     $this->docMakerRequest($params, __FILE__, __FUNCTION__);
     $result = civicrm_api('Contact', 'getoptions', $params);
     $this->docMakerResponse($result, __FILE__, __FUNCTION__);
@@ -240,9 +240,9 @@ class api_v3_GetOptionsTest extends CiviUnitTestCase {
    * @docmaker_end
    */
   public function testCountryId() {
-    $params = $this->_params += array(
+    $params = $this->_params += [
       'field' => 'country_id',
-    );
+    ];
     $this->docMakerRequest($params, __FILE__, __FUNCTION__);
     $result = civicrm_api('Contact', 'getoptions', $params);
     $this->docMakerResponse($result, __FILE__, __FUNCTION__);
@@ -264,13 +264,13 @@ class api_v3_GetOptionsTest extends CiviUnitTestCase {
    */
   public function testStateProvinceId() {
     $config = CRM_Core_Config::singleton();
-    $params = array(
+    $params = [
       'version' => $this->_apiversion,
       'field' => 'state_province_id',
-    );
-    $params = $this->_params += array(
+    ];
+    $params = $this->_params += [
       'field' => 'state_province_id',
-    );
+    ];
     $this->docMakerRequest($params, __FILE__, __FUNCTION__);
     $result = civicrm_api('Contact', 'getoptions', $params);
     $this->docMakerResponse($result, __FILE__, __FUNCTION__);
@@ -292,9 +292,9 @@ class api_v3_GetOptionsTest extends CiviUnitTestCase {
    * @docmaker_end
    */
   public function testPhoneTypeId() {
-    $params = $this->_params += array(
+    $params = $this->_params += [
       'field' => 'phone_type_id',
-    );
+    ];
     $this->docMakerRequest($params, __FILE__, __FUNCTION__);
     $result = civicrm_api('Contact', 'getoptions', $params);
     $this->docMakerResponse($result, __FILE__, __FUNCTION__);
@@ -315,9 +315,9 @@ class api_v3_GetOptionsTest extends CiviUnitTestCase {
    * @docmaker_end
    */
   public function testProviderId() {
-    $params = $this->_params += array(
+    $params = $this->_params += [
       'field' => 'provider_id',
-    );
+    ];
     $this->docMakerRequest($params, __FILE__, __FUNCTION__);
     $result = civicrm_api('Contact', 'getoptions', $params);
     $this->docMakerResponse($result, __FILE__, __FUNCTION__);
@@ -338,9 +338,9 @@ class api_v3_GetOptionsTest extends CiviUnitTestCase {
    * @docmaker_end
    */
   public function testContributionTypeId() {
-    $params = $this->_params += array(
+    $params = $this->_params += [
       'field' => 'contribution_type_id',
-    );
+    ];
     $this->docMakerRequest($params, __FILE__, __FUNCTION__);
     $result = civicrm_api('Contribution', 'getoptions', $params);
     $this->docMakerResponse($result, __FILE__, __FUNCTION__);
@@ -361,9 +361,9 @@ class api_v3_GetOptionsTest extends CiviUnitTestCase {
    * @docmaker_end
    */
   public function testContributionPageId() {
-    $params = $this->_params += array(
+    $params = $this->_params += [
       'field' => 'contribution_page_id',
-    );
+    ];
     $this->docMakerRequest($params, __FILE__, __FUNCTION__);
     $result = civicrm_api('Contribution', 'getoptions', $params);
     $this->docMakerResponse($result, __FILE__, __FUNCTION__);
@@ -384,9 +384,9 @@ class api_v3_GetOptionsTest extends CiviUnitTestCase {
    * @docmaker_end
    */
   public function testContributionStatusId() {
-    $params = $this->_params += array(
+    $params = $this->_params += [
       'field' => 'contribution_status_id',
-    );
+    ];
     $this->docMakerRequest($params, __FILE__, __FUNCTION__);
     $result = civicrm_api('Contribution', 'getoptions', $params);
     $this->docMakerResponse($result, __FILE__, __FUNCTION__);
@@ -407,9 +407,9 @@ class api_v3_GetOptionsTest extends CiviUnitTestCase {
    * @docmaker_end
    */
   public function testCurrency() {
-    $params = $this->_params += array(
+    $params = $this->_params += [
       'field' => 'currency',
-    );
+    ];
     $this->docMakerRequest($params, __FILE__, __FUNCTION__);
     $result = civicrm_api('Contribution', 'getoptions', $params);
     $this->docMakerResponse($result, __FILE__, __FUNCTION__);
@@ -430,9 +430,9 @@ class api_v3_GetOptionsTest extends CiviUnitTestCase {
    * @docmaker_end
    */
   public function testPaymentInstrumentId() {
-    $params = $this->_params += array(
+    $params = $this->_params += [
       'field' => 'payment_instrument_id',
-    );
+    ];
     $this->docMakerRequest($params, __FILE__, __FUNCTION__);
     $result = civicrm_api('Contribution', 'getoptions', $params);
     $this->docMakerResponse($result, __FILE__, __FUNCTION__);

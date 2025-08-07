@@ -94,14 +94,14 @@ class CRM_Campaign_Form_Task_Reserve extends CRM_Campaign_Form_Task {
       return CRM_Core_Error::statusBounce(ts("Could not find contacts for reservation."));
     }
 
-    $params = array('id' => $this->_surveyId);
+    $params = ['id' => $this->_surveyId];
     CRM_Campaign_BAO_Survey::retrieve($params, $this->_surveyDetails);
 
     //get the survey activities.
 
     $activityStatus = CRM_Core_PseudoConstant::activityStatus('name');
-    $statusIds = array();
-    foreach (array('Scheduled') as $name) {
+    $statusIds = [];
+    foreach (['Scheduled'] as $name) {
       if ($statusId = array_search($name, $activityStatus)) {
         $statusIds[] = $statusId;
       }
@@ -120,7 +120,7 @@ class CRM_Campaign_Form_Task_Reserve extends CRM_Campaign_Form_Task {
 
     if (CRM_Campaign_BAO_Campaign::accessCampaignDashboard()) {
       $url = CRM_Utils_System::url('civicrm/campaign', 'reset=1&subPage=survey');
-      CRM_Utils_System::appendBreadCrumb(array(array('title' => ts('Survey(s)'), 'url' => $url)));
+      CRM_Utils_System::appendBreadCrumb([['title' => ts('Survey(s)'), 'url' => $url]]);
     }
 
     //set the title.
@@ -136,14 +136,14 @@ class CRM_Campaign_Form_Task_Reserve extends CRM_Campaign_Form_Task {
       }
       elseif (count($this->_contactIds) > ($maxVoters - $this->_numVoters)) {
         $errorMsg = ts('You can reserve a maximum of %1 contact(s) at a time for this survey.',
-          array(1 => $maxVoters - $this->_numVoters)
+          [1 => $maxVoters - $this->_numVoters]
         );
       }
     }
     $defaultNum = CRM_Utils_Array::value('default_number_of_contacts', $this->_surveyDetails);
     if (!$errorMsg && $defaultNum && (count($this->_contactIds) > $defaultNum)) {
       $errorMsg = ts('You can reserve a maximum of %1 contact(s) at a time for this survey.',
-        array(1 => $defaultNum)
+        [1 => $defaultNum]
       );
     }
     if ($errorMsg) {
@@ -159,24 +159,24 @@ class CRM_Campaign_Form_Task_Reserve extends CRM_Campaign_Form_Task {
    * @return void
    */
   function buildQuickForm() {
-    $buttons = array(array('type' => 'done',
+    $buttons = [['type' => 'done',
         'name' => ts('Reserve'),
         'subName' => 'reserve',
         'isDefault' => TRUE,
-      ));
+      ]];
 
     if (CRM_Core_Permission::check('manage campaign') ||
       CRM_Core_Permission::check('administer CiviCampaign') ||
       CRM_Core_Permission::check('interview campaign contacts')
     ) {
-      $buttons[] = array('type' => 'next',
+      $buttons[] = ['type' => 'next',
         'name' => ts('Reserve and Interview'),
         'subName' => 'reserveToInterview',
-      );
+      ];
     }
-    $buttons[] = array('type' => 'back',
+    $buttons[] = ['type' => 'back',
       'name' => ts('Cancel'),
-    );
+    ];
 
     $this->addButtons($buttons);
   }
@@ -189,7 +189,7 @@ class CRM_Campaign_Form_Task_Reserve extends CRM_Campaign_Form_Task {
    * @return None
    */
   public function postProcess() {
-    $existingVoterIds = $campGrpContacts = $reservedVoterIds = array();
+    $existingVoterIds = $campGrpContacts = $reservedVoterIds = [];
     foreach ($this->_surveyActivities as $actId => $actVals) {
       $voterId = $actVals['voter_id'];
       $existingVoterIds[$voterId] = $voterId;
@@ -224,18 +224,18 @@ class CRM_Campaign_Form_Task_Reserve extends CRM_Campaign_Form_Task {
       ) {
         continue;
       }
-      $subject = ts('%1', array(1 => $this->_surveyDetails['title'])) . ' - ' . ts('Respondent Reservation');
+      $subject = ts('%1', [1 => $this->_surveyDetails['title']]) . ' - ' . ts('Respondent Reservation');
       $session = &CRM_Core_Session::singleton();
-      $activityParams = array('source_contact_id' => $session->get('userID'),
-        'assignee_contact_id' => array($this->_interviewerId),
-        'target_contact_id' => array($cid),
+      $activityParams = ['source_contact_id' => $session->get('userID'),
+        'assignee_contact_id' => [$this->_interviewerId],
+        'target_contact_id' => [$cid],
         'source_record_id' => $this->_surveyId,
         'activity_type_id' => $this->_surveyDetails['activity_type_id'],
         'subject' => $subject,
         'activity_date_time' => date('YmdHis'),
         'status_id' => $statusHeld,
         'skipRecentView' => 1,
-      );
+      ];
       $activity = CRM_Activity_BAO_Activity::create($activityParams);
       if ($activity->id) {
         $countVoters++;
@@ -246,13 +246,13 @@ class CRM_Campaign_Form_Task_Reserve extends CRM_Campaign_Form_Task {
       }
     }
 
-    $status = array();
+    $status = [];
     if ($countVoters > 0) {
-      $status[] = ts('Reservation has been added for %1 Contact(s).', array(1 => $countVoters));
+      $status[] = ts('Reservation has been added for %1 Contact(s).', [1 => $countVoters]);
     }
     if (count($this->_contactIds) > $countVoters) {
       $status[] = ts('Reservation did not add for %1 Contact(s).',
-        array(1 => (count($this->_contactIds) - $countVoters))
+        [1 => (count($this->_contactIds) - $countVoters)]
       );
     }
     if (!empty($status)) {

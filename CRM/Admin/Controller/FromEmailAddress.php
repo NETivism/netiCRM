@@ -15,6 +15,6 @@ class CRM_Admin_Controller_FromEmailAddress extends CRM_Core_Controller {
 
     // add all the actions
     $config = CRM_Core_Config::singleton();
-    $this->addActions($config->uploadDir, array('uploadFile'));
+    $this->addActions($config->uploadDir, ['uploadFile']);
   }
 }

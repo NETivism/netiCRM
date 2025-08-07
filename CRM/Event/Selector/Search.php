@@ -70,7 +70,7 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
    * @var array
    * @static
    */
-  static $_properties = array('contact_id',
+  static $_properties = ['contact_id',
     'contact_type',
     'sort_name',
     'event_id',
@@ -90,7 +90,7 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
     'participant_status',
     'participant_role',
     'participant_registered_by_id',
-  );
+  ];
 
   /**
    * are we restricting ourselves to a single contact
@@ -232,26 +232,26 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
 
 
     if (!(self::$_links)) {
-      self::$_links = array(
-        CRM_Core_Action::VIEW => array(
+      self::$_links = [
+        CRM_Core_Action::VIEW => [
           'name' => ts('View'),
           'url' => 'civicrm/contact/view/participant',
           'qs' => 'reset=1&id=%%id%%&cid=%%cid%%&action=view&context=%%cxt%%&selectedChild=event' . $extraParams,
           'title' => ts('View Participation'),
-        ),
-        CRM_Core_Action::UPDATE => array(
+        ],
+        CRM_Core_Action::UPDATE => [
           'name' => ts('Edit'),
           'url' => 'civicrm/contact/view/participant',
           'qs' => 'reset=1&action=update&id=%%id%%&cid=%%cid%%&context=%%cxt%%' . $extraParams,
           'title' => ts('Edit Participation'),
-        ),
-        CRM_Core_Action::DELETE => array(
+        ],
+        CRM_Core_Action::DELETE => [
           'name' => ts('Delete'),
           'url' => 'civicrm/contact/view/participant',
           'qs' => 'reset=1&action=delete&id=%%id%%&cid=%%cid%%&context=%%cxt%%' . $extraParams,
           'title' => ts('Delete Participation'),
-        ),
-      );
+        ],
+      ];
     }
     return self::$_links;
   }
@@ -314,10 +314,10 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
       $this->_eventClause
     );
     // process the result of the query
-    $rows = array();
+    $rows = [];
 
     //lets handle view, edit and delete separately. CRM-4418
-    $permissions = array(CRM_Core_Permission::VIEW);
+    $permissions = [CRM_Core_Permission::VIEW];
     if (CRM_Core_Permission::check('edit event participants')) {
       $permissions[] = CRM_Core_Permission::EDIT;
     }
@@ -335,7 +335,7 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
     $sep = CRM_Core_DAO::VALUE_SEPARATOR;
 
     while ($result->fetch()) {
-      $row = array();
+      $row = [];
       // the columns we are interested in
       foreach (self::$_properties as $property) {
         if (isset($result->$property)) {
@@ -361,10 +361,10 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
 
       $row['action'] = CRM_Core_Action::formLink(self::links($this->_key, $this->_context, $this->_compContext),
         $mask,
-        array('id' => $result->participant_id,
+        ['id' => $result->participant_id,
           'cid' => $result->contact_id,
           'cxt' => $this->_context,
-        )
+        ]
       );
 
 
@@ -377,7 +377,7 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
       $row['contribution_currency'] = NULL;
       if ($row['participant_fee_amount']) {
         $sql = "SELECT c.id, c.currency, c.total_amount, c.contribution_status_id FROM civicrm_contribution c INNER JOIN civicrm_participant_payment p ON p.contribution_id = c.id WHERE p.participant_id = %1 ORDER BY c.created_date DESC";
-        $dao = CRM_Core_DAO::executeQuery($sql, array(1 => array($result->participant_id, 'Integer')));
+        $dao = CRM_Core_DAO::executeQuery($sql, [1 => [$result->participant_id, 'Integer']]);
         if ($dao->fetch()) {
           $row['contribution_total_amount'] = $dao->total_amount;
           $row['contribution_currency'] = $dao->currency;
@@ -399,10 +399,10 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
       }
 
       if(!empty($row['contribution_id'])){
-        $dao = CRM_Coupon_BAO_Coupon::getCouponUsedBy(array($row['contribution_id']), 'contribution_id');
+        $dao = CRM_Coupon_BAO_Coupon::getCouponUsedBy([$row['contribution_id']], 'contribution_id');
         $dao->fetch();
         if ($dao->N > 0) {
-          $coupon = array();
+          $coupon = [];
           foreach($dao as $idx => $value) {
             if ($idx[0] != '_') {
               $coupon[$idx] = $value;
@@ -413,7 +413,7 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
         $dao->free();
       }
 
-      $viewRoles = array();
+      $viewRoles = [];
       foreach (explode($sep, $row['participant_role_id']) as $k => $v) {
         $viewRoles[] = $participantRoles[$v];
       }
@@ -450,53 +450,53 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
    */
   public function &getColumnHeaders($action = NULL, $output = NULL) {
     if (!isset(self::$_columnHeaders)) {
-      self::$_columnHeaders = array(
-        array('name' => ts('Event'),
+      self::$_columnHeaders = [
+        ['name' => ts('Event'),
           'sort' => 'title',
           'direction' => CRM_Utils_Sort::DONTCARE,
-        ),
-        array(
+        ],
+        [
           'name' => ts('Event Level'),
           'sort' => 'fee_level',
           'direction' => CRM_Utils_Sort::DONTCARE,
-        ),
-        array(
+        ],
+        [
           'name' => ts('Actual Amount'),
           'direction' => CRM_Utils_Sort::DONTCARE,
-        ),
-        array(
+        ],
+        [
           'name' => ts('Registered'),
           'sort' => 'participant_register_date',
           'direction' => CRM_Utils_Sort::DESCENDING,
-        ),
-        array(
+        ],
+        [
           'name' => ts('Status'),
           'sort' => 'participant_status',
           'direction' => CRM_Utils_Sort::DONTCARE,
-        ),
-        array(
+        ],
+        [
           'name' => ts('Role'),
           'sort' => 'participant_role_id',
           'direction' => CRM_Utils_Sort::DONTCARE,
-        ),
-        array('desc' => ts('Actions')),
-      );
+        ],
+        ['desc' => ts('Actions')],
+      ];
 
       if (!$this->_single) {
-        $pre = array(
-          array('desc' => ts('Contact Type')),
-          array(
+        $pre = [
+          ['desc' => ts('Contact Type')],
+          [
             'name' => '#',
             'title' => ts('Participant ID'),
             'sort' => 'participant_id',
             'direction' => CRM_Utils_Sort::DONTCARE,
-          ),
-          array(
+          ],
+          [
             'name' => ts('Participant'),
             'sort' => 'sort_name',
             'direction' => CRM_Utils_Sort::DONTCARE,
-          ),
-        );
+          ],
+        ];
         self::$_columnHeaders = array_merge($pre, self::$_columnHeaders);
       }
     }

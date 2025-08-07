@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-class CRM_Activity_DAO_ActivityTarget extends CRM_Core_DAO
+              class CRM_Activity_DAO_ActivityTarget extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -78,7 +78,7 @@ class CRM_Activity_DAO_ActivityTarget extends CRM_Core_DAO
    * @static
    */
   static $_log = true;
-  /**
+    /**
    * Activity target id
    *
    * @var int unsigned
@@ -96,7 +96,7 @@ class CRM_Activity_DAO_ActivityTarget extends CRM_Core_DAO
    * @var int unsigned
    */
   public $target_contact_id;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -115,14 +115,14 @@ class CRM_Activity_DAO_ActivityTarget extends CRM_Core_DAO
   function &links()
   {
     if (!(self::$_links)) {
-      self::$_links = array(
+      self::$_links = [
         'activity_id' => 'civicrm_activity:id',
         'target_contact_id' => 'civicrm_contact:id',
-      );
+      ];
     }
     return self::$_links;
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -137,7 +137,7 @@ class CRM_Activity_DAO_ActivityTarget extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -146,31 +146,31 @@ class CRM_Activity_DAO_ActivityTarget extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'id' => array(
+      self::$_fields = [
+        'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'activity_id' => array(
+                  ] ,
+        'activity_id' => [
           'name' => 'activity_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-          'FKClassName' => 'CRM_Activity_DAO_Activity',
-        ) ,
-        'target_contact_id' => array(
+                    'FKClassName' => 'CRM_Activity_DAO_Activity',
+        ] ,
+        'target_contact_id' => [
           'name' => 'target_contact_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Contact ID (match to contact)') ,
           'required' => true,
-          'import' => true,
+               'import' => true,
           'where' => 'civicrm_activity_target.target_contact_id',
           'headerPattern' => '',
           'dataPattern' => '',
-          'export' => true,
-          'FKClassName' => 'CRM_Contact_DAO_Contact',
-        ) ,
-      );
+           'export' => true,
+              'FKClassName' => 'CRM_Contact_DAO_Contact',
+        ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -182,8 +182,8 @@ class CRM_Activity_DAO_ActivityTarget extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -203,7 +203,7 @@ class CRM_Activity_DAO_ActivityTarget extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -214,7 +214,7 @@ class CRM_Activity_DAO_ActivityTarget extends CRM_Core_DAO
           }
         }
       }
-    }
+                                              }
     return self::$_import;
   }
   /**
@@ -226,7 +226,7 @@ class CRM_Activity_DAO_ActivityTarget extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
@@ -237,7 +237,7 @@ class CRM_Activity_DAO_ActivityTarget extends CRM_Core_DAO
           }
         }
       }
-    }
+                                              }
     return self::$_export;
   }
 }

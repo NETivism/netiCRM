@@ -60,19 +60,19 @@ class CRM_Core_Extensions_Search {
     }
 
     $weight = CRM_Utils_Weight::getDefaultWeight('CRM_Core_DAO_OptionValue',
-      array('option_group_id' => $this->groupId)
+      ['option_group_id' => $this->groupId]
     );
 
-    $params = array('option_group_id' => $this->groupId,
+    $params = ['option_group_id' => $this->groupId,
       'weight' => $weight,
       'description' => $this->ext->label . ' (' . $this->ext->key . ')',
       'name' => $this->ext->key,
       'value' => max($this->customSearches) + 1,
       'label' => $this->ext->key,
       'is_active' => 1,
-    );
+    ];
 
-    $ids = array();
+    $ids = [];
     $optionValue = CRM_Core_BAO_OptionValue::add($params, $ids);
   }
 

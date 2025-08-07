@@ -91,10 +91,10 @@ class CRM_Pledge_Form_Task_Delete extends CRM_Pledge_Form_Task {
       }
     }
 
-    $status = array(
-      ts('Deleted Pledge(s): %1', array(1 => $deletedPledges)),
-      ts('Total Selected Pledge(s): %1', array(1 => count($this->_pledgeIds))),
-    );
+    $status = [
+      ts('Deleted Pledge(s): %1', [1 => $deletedPledges]),
+      ts('Total Selected Pledge(s): %1', [1 => count($this->_pledgeIds)]),
+    ];
     CRM_Core_Session::setStatus($status);
   }
 }

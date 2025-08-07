@@ -47,41 +47,41 @@ class CRM_Contact_Form_Search_Custom_DateAdded extends CRM_Contact_Form_Search_C
   protected $_debug = 0; function __construct(&$formValues) {
     parent::__construct($formValues);
 
-    $this->_includeGroups = CRM_Utils_Array::value('includeGroups', $formValues, array());
-    $this->_excludeGroups = CRM_Utils_Array::value('excludeGroups', $formValues, array());
+    $this->_includeGroups = CRM_Utils_Array::value('includeGroups', $formValues, []);
+    $this->_excludeGroups = CRM_Utils_Array::value('excludeGroups', $formValues, []);
 
-    $this->_columns = array(ts('Contact Id') => 'contact_id',
+    $this->_columns = [ts('Contact Id') => 'contact_id',
       ts('Contact Type') => 'contact_type',
       ts('Name') => 'sort_name',
       ts('Date Added') => 'date_added',
-    );
+    ];
   }
 
   function buildForm(&$form) {
-    $form->addDate('start_date', ts('Start Date'), FALSE, array('formatType' => 'custom'));
-    $form->addDate('end_date', ts('End Date'), FALSE, array('formatType' => 'custom'));
+    $form->addDate('start_date', ts('Start Date'), FALSE, ['formatType' => 'custom']);
+    $form->addDate('end_date', ts('End Date'), FALSE, ['formatType' => 'custom']);
 
     $groups = &CRM_Core_PseudoConstant::group();
     $inG = &$form->addElement('advmultiselect', 'includeGroups',
       ts('Include Group(s)') . ' ', $groups,
-      array('size' => 5,
+      ['size' => 5,
         'style' => 'width:240px',
         'class' => 'advmultiselect',
-      )
+      ]
     );
 
     $outG = &$form->addElement('advmultiselect', 'excludeGroups',
       ts('Exclude Group(s)') . ' ', $groups,
-      array('size' => 5,
+      ['size' => 5,
         'style' => 'width:240px',
         'class' => 'advmultiselect',
-      )
+      ]
     );
 
-    $inG->setButtonAttributes('add', array('value' => ts('Add >>')));
-    $outG->setButtonAttributes('add', array('value' => ts('Add >>')));
-    $inG->setButtonAttributes('remove', array('value' => ts('<< Remove')));
-    $outG->setButtonAttributes('remove', array('value' => ts('<< Remove')));
+    $inG->setButtonAttributes('add', ['value' => ts('Add >>')]);
+    $outG->setButtonAttributes('add', ['value' => ts('Add >>')]);
+    $inG->setButtonAttributes('remove', ['value' => ts('<< Remove')]);
+    $outG->setButtonAttributes('remove', ['value' => ts('<< Remove')]);
 
 
     //redirect if group not available for search criteria
@@ -97,7 +97,7 @@ class CRM_Contact_Form_Search_Custom_DateAdded extends CRM_Contact_Form_Search_C
      * if you are using the standard template, this array tells the template what elements
      * are part of the search criteria
      */
-    $form->assign('elements', array('start_date', 'end_date', 'includeGroups', 'excludeGroups'));
+    $form->assign('elements', ['start_date', 'end_date', 'includeGroups', 'excludeGroups']);
   }
 
   function summary() {
@@ -108,9 +108,9 @@ class CRM_Contact_Form_Search_Custom_DateAdded extends CRM_Contact_Form_Search_C
     $includeContactIDs = FALSE
   ) {
 
-    $this->_includeGroups = CRM_Utils_Array::value('includeGroups', $this->_formValues, array());
+    $this->_includeGroups = CRM_Utils_Array::value('includeGroups', $this->_formValues, []);
 
-    $this->_excludeGroups = CRM_Utils_Array::value('excludeGroups', $this->_formValues, array());
+    $this->_excludeGroups = CRM_Utils_Array::value('excludeGroups', $this->_formValues, []);
 
     $this->_allSearch = FALSE;
     $this->_groups = FALSE;
@@ -186,7 +186,7 @@ class CRM_Contact_Form_Search_Custom_DateAdded extends CRM_Contact_Form_Search_C
     // CRM-6356
     if ($this->_groups) {
       //block for Group search
-      $smartGroup = array();
+      $smartGroup = [];
 
       $group = new CRM_Contact_DAO_Group();
       $group->is_active = 1;

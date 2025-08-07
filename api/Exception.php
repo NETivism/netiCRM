@@ -23,7 +23,7 @@ class API_Exception extends Exception  {
   const UNAUTHORIZED = 'unauthorized';
   const NOT_IMPLEMENTED = 'not-found';
 
-  private $extraParams = array();
+  private $extraParams = [];
 
   /**
    * @param string $message
@@ -31,13 +31,13 @@ class API_Exception extends Exception  {
    * @param array $extraParams
    * @param Exception $previous
    */
-  public function __construct($message, $error_code = 0, $extraParams = array(),Exception $previous = null) {
+  public function __construct($message, $error_code = 0, $extraParams = [],Exception $previous = null) {
     if (is_numeric ($error_code)) // using int for error code "old way")
       $code = $error_code;
     else
       $code = 0;
     parent::__construct($message, $code, $previous);
-    $this->extraParams = $extraParams + array('error_code' => $error_code);
+    $this->extraParams = $extraParams + ['error_code' => $error_code];
   }
 
   // custom string representation of object
@@ -59,13 +59,13 @@ class API_Exception extends Exception  {
    * @return array
    */
   public function getErrorCodes(){
-    return array(
+    return [
         2000 => '$params was not an array',
         2001 => 'Invalid Value for Date field',
         2100 => 'String value is longer than permitted length',
         self::UNAUTHORIZED => 'Unauthorized',
         self::NOT_IMPLEMENTED => 'Entity or method is not implemented',
-        );
+        ];
   }
 }
 

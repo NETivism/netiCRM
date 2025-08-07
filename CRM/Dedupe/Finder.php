@@ -52,7 +52,7 @@ class CRM_Dedupe_Finder {
    *
    * @return array  array of (cid1, cid2, weight) dupe triples
    */
-  static function dupes($rgid, $cids = array()) {
+  static function dupes($rgid, $cids = []) {
     $rgBao = new CRM_Dedupe_BAO_RuleGroup();
     $rgBao->id = $rgid;
     $rgBao->contactIds = $cids;
@@ -63,9 +63,9 @@ class CRM_Dedupe_Finder {
     $rgBao->fillTable();
     $dao = new CRM_Core_DAO();
     $dao->query($rgBao->thresholdQuery());
-    $dupes = array();
+    $dupes = [];
     while ($dao->fetch()) {
-      $dupes[] = array($dao->id1, $dao->id2, $dao->weight);
+      $dupes[] = [$dao->id1, $dao->id2, $dao->weight];
     }
     $dao->query($rgBao->tableDropQuery());
 
@@ -93,12 +93,12 @@ class CRM_Dedupe_Finder {
   static function dupesByParams($params,
     $ctype,
     $level = 'Strict',
-    $except = array(),
+    $except = [],
     $ruleGroupID = NULL
   ) {
     // If $params is empty there is zero reason to proceed.
     if (!$params) {
-      return array();
+      return [];
     }
 
     $foundByID = FALSE;
@@ -126,7 +126,7 @@ class CRM_Dedupe_Finder {
     $rgBao->fillTable();
     $dao = new CRM_Core_DAO();
     $dao->query($rgBao->thresholdQuery($params['check_permission']));
-    $dupes = array();
+    $dupes = [];
     while ($dao->fetch()) {
       if (isset($dao->id) && $dao->id) {
         $dupes[] = $dao->id;
@@ -157,13 +157,13 @@ class CRM_Dedupe_Finder {
    * @param int    $threshold threshold that meet above rules
    * @return array  matching contact ids
    */
-  static function dupesByRules($params, $ctype, $level = 'Strict', $except = array(), $rules = array(),     $threshold = 10) {
+  static function dupesByRules($params, $ctype, $level = 'Strict', $except = [], $rules = [],     $threshold = 10) {
     // If $params is empty there is zero reason to proceed.
     if (!$params) {
-      return array();
+      return [];
     }
     if (empty($rules)) {
-      return array();
+      return [];
     }
 
     $rgBao = new CRM_Dedupe_BAO_RuleGroup();
@@ -176,7 +176,7 @@ class CRM_Dedupe_Finder {
     $rgBao->fillTable();
     $dao = new CRM_Core_DAO();
     $dao->query($rgBao->thresholdQuery($params['check_permission']));
-    $dupes = array();
+    $dupes = [];
     while ($dao->fetch()) {
       if (isset($dao->id) && $dao->id) {
         $dupes[] = $dao->id;
@@ -226,10 +226,10 @@ class CRM_Dedupe_Finder {
     if (!$rgBao->find(TRUE)) {
       CRM_Core_Error::fatal("$level rule for $ctype does not exist");
     }
-    $dupes = self::dupes($rgBao->id, array($cid));
+    $dupes = self::dupes($rgBao->id, [$cid]);
 
     // get the dupes for this cid
-    $result = array();
+    $result = [];
     foreach ($dupes as $dupe) {
       if ($dupe[0] == $cid) {
         $result[] = $dupe[1];
@@ -259,11 +259,11 @@ class CRM_Dedupe_Finder {
    * @return array  valid $params array for dedupe
    */
   static function formatParams($fields, $ctype) {
-    $flat = array();
+    $flat = [];
     CRM_Utils_Array::flatten($fields, $flat);
 
     // handle {birth,deceased}_date
-    foreach (array('birth_date', 'deceased_date') as $date) {
+    foreach (['birth_date', 'deceased_date'] as $date) {
       if (CRM_Utils_Array::value($date, $fields)) {
         $flat[$date] = $fields[$date];
         if (is_array($flat[$date])) {
@@ -280,7 +280,7 @@ class CRM_Dedupe_Finder {
 
     // handle preferred_communication_method
     if (CRM_Utils_Array::arrayKeyExists('preferred_communication_method', $fields)) {
-      $methods = array_intersect($fields['preferred_communication_method'], array('1'));
+      $methods = array_intersect($fields['preferred_communication_method'], ['1']);
       $methods = array_keys($methods);
       sort($methods);
       if ($methods) {
@@ -317,7 +317,7 @@ class CRM_Dedupe_Finder {
     // FIXME: CRM-5026 should be fixed here; the below clobbers all address info; we should split off address fields and match
     // the -digit to civicrm_address.location_type_id and -Primary to civicrm_address.is_primary
     foreach ($flat as $key => $value) {
-      $matches = array();
+      $matches = [];
       if (preg_match('/([^-]*)-(\d+|Primary)(-\d+)*$/', $key, $matches)) {
         if ($matches[2] == 'Primary') {
           $matches[2] = '0';
@@ -336,7 +336,7 @@ class CRM_Dedupe_Finder {
       }
     }
 
-    $params = array();
+    $params = [];
     $supportedFields = CRM_Dedupe_BAO_RuleGroup::supportedFields($ctype);
     if (is_array($supportedFields)) {
       foreach ($supportedFields as $table => $fields) {
@@ -344,9 +344,9 @@ class CRM_Dedupe_Finder {
           // for matching on civicrm_address fields, we also need the location_type_id
           $fields['location_type_id'] = '';
           // FIXME: we also need to do some hacking for id and name fields, see CRM-3902’s comments
-          $fixes = array('address_name' => 'name', 'country' => 'country_id',
+          $fixes = ['address_name' => 'name', 'country' => 'country_id',
             'state_province' => 'state_province_id', 'county' => 'county_id',
-          );
+          ];
           foreach ($fixes as $orig => $target) {
             if (CRM_Utils_Array::value($orig, $flat)) {
               $params[$table][$target] = $flat[$orig];
@@ -372,14 +372,14 @@ class CRM_Dedupe_Finder {
     // to support sort_name / display_name as dedupe rule
     if (!empty($params['civicrm_contact']) && $ctype == 'Individual') {
       $contact = new stdClass(); // null class for pass into
-      $formatParams = array('contact_type' => 'Individual');
+      $formatParams = ['contact_type' => 'Individual'];
       foreach($params['civicrm_contact'] as $field => $value) {
         $contact->$field = $value;
         $formatParams[$field] = $value;
       }
       foreach($params['civicrm_email'] as $field => $value) {
         $contact->$field = $value;
-        $formatParams[$field][] = array('email' => $value);
+        $formatParams[$field][] = ['email' => $value];
       }
       CRM_Contact_BAO_Individual::format($formatParams, $contact);
       $params['civicrm_contact']['display_name'] = $contact->display_name;

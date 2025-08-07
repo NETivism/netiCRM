@@ -46,7 +46,7 @@ function run( ) {
     
     require_once 'Console/Getopt.php';
     $shortOptions = "n:p:s:e:k:g:parse";
-    $longOptions  = array( 'name=', 'pass=', 'key=', 'start=', 'end=', 'geocoding=', 'parse=' );
+    $longOptions  = [ 'name=', 'pass=', 'key=', 'start=', 'end=', 'geocoding=', 'parse=' ];
     
     $getopt  = new Console_Getopt( );
     $args = $getopt->readPHPArgv( );
@@ -54,14 +54,14 @@ function run( ) {
     array_shift( $args );
     list( $valid, $dontCare ) = $getopt->getopt2( $args, $shortOptions, $longOptions );
     
-    $vars = array(
+    $vars = [
                   'start'     => 's',
                   'end'       => 'e',
                   'name'      => 'n',
                   'pass'      => 'p',
                   'key'       => 'k',
                   'geocoding' => 'g',
-                  'parse'     => 'ap' );
+                  'parse'     => 'ap' ];
     
     foreach ( $vars as $var => $short ) {
         $$var = null;
@@ -135,7 +135,7 @@ function run( ) {
 function processContacts( &$config, $processGeocode, $parseStreetAddress, $start = null, $end = null ) 
 {
     // build where clause.
-    $clause = array( '( c.id = a.contact_id )' );
+    $clause = [ '( c.id = a.contact_id )' ];
     if ( $start ) {
         $clause[] = "( c.id >= $start )";
     }
@@ -176,16 +176,16 @@ WHERE      {$whereClause}
     require_once 'CRM/Core/DAO/Address.php';
     require_once 'CRM/Core/BAO/Address.php';
     
-    $unparseableContactAddress = array( );
+    $unparseableContactAddress = [ ];
     while ( $dao->fetch( ) ) {
         $totalAddresses++;
-        $params = array( 'street_address'    => $dao->street_address,
+        $params = [ 'street_address'    => $dao->street_address,
                          'postal_code'       => $dao->postal_code,
                          'city'              => $dao->city,
                          'state_province'    => $dao->state,
-                         'country'           => $dao->country );
+                         'country'           => $dao->country ];
         
-        $addressParams = array( );
+        $addressParams = [ ];
         
         // process geocode.
         if ( $processGeocode ) {
@@ -258,7 +258,7 @@ WHERE      {$whereClause}
         if ( $unparseableContactAddress ) {
             echo ts( "<br />\nFollowing is the list of contacts whose address is not parsed :<br />\n");
             foreach ( $unparseableContactAddress as $contactLink ) {
-                echo ts("%1<br />\n", array( 1 => $contactLink ) );
+                echo ts("%1<br />\n", [ 1 => $contactLink ] );
             }
         }
     }

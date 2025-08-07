@@ -45,13 +45,13 @@ class CRM_Core_SelectValues {
   static function &phoneType() {
     static $phoneType = NULL;
     if (!$phoneType) {
-      $phoneType = array(
+      $phoneType = [
         '' => ts('- select -'),
         'Phone' => ts('Phone'),
         'Mobile' => ts('Mobile'),
         'Fax' => ts('Fax'),
         'Pager' => ts('Pager'),
-      );
+      ];
     }
     return $phoneType;
   }
@@ -63,11 +63,11 @@ class CRM_Core_SelectValues {
   static function &pmf() {
     static $pmf = NULL;
     if (!$pmf) {
-      $pmf = array(
+      $pmf = [
         'Both' => ts('Both'),
         'HTML' => ts('HTML'),
         'Text' => ts('Text'),
-      );
+      ];
     }
     return $pmf;
   }
@@ -79,7 +79,7 @@ class CRM_Core_SelectValues {
   static function &privacy() {
     static $privacy = NULL;
     if (!$privacy) {
-      $privacy = array(
+      $privacy = [
         'do_not_phone' => ts('Do not phone'),
         'do_not_email' => ts('Do not email'),
         'do_not_mail' => ts('Do not mail'),
@@ -87,7 +87,7 @@ class CRM_Core_SelectValues {
         'do_not_trade' => ts('Do not trade'),
         'do_not_notify' => ts('Do not notify'),
         'is_opt_out' => ts('No bulk emails (User Opt Out)'),
-      );
+      ];
     }
     return $privacy;
   }
@@ -100,7 +100,7 @@ class CRM_Core_SelectValues {
     static $contactType = NULL;
     if (!$contactType) {
 
-      $contactType = array('' => ts('- any contact type -'));
+      $contactType = ['' => ts('- any contact type -')];
       $contactType = $contactType + CRM_Contact_BAO_ContactType::basicTypePairs();
     }
     return $contactType;
@@ -113,16 +113,16 @@ class CRM_Core_SelectValues {
   static function &unitList($unitType = NULL) {
     static $unitList = NULL;
     if (!$unitList) {
-      $unitList = array(
+      $unitList = [
         '' => ts('- select -'),
         'day' => ts('day'),
         'month' => ts('month'),
         'year' => ts('year'),
-      );
+      ];
       if ($unitType == 'duration') {
-        $unitAdd = array(
+        $unitAdd = [
           'lifetime' => ts('lifetime'),
-        );
+        ];
         $unitList = array_merge($unitList, $unitAdd);
       }
     }
@@ -136,11 +136,11 @@ class CRM_Core_SelectValues {
   static function &periodType() {
     static $periodType = NULL;
     if (!$periodType) {
-      $periodType = array(
+      $periodType = [
         '' => ts('- select -'),
         'rolling' => ts('rolling'),
         'fixed' => ts('fixed'),
-      );
+      ];
     }
     return $periodType;
   }
@@ -152,10 +152,10 @@ class CRM_Core_SelectValues {
   static function &memberVisibility() {
     static $visible = NULL;
     if (!$visible) {
-      $visible = array(
+      $visible = [
         'Public' => ts('Public'),
         'Admin' => ts('Admin'),
-      );
+      ];
     }
     return $visible;
   }
@@ -167,12 +167,12 @@ class CRM_Core_SelectValues {
   static function &eventDate() {
     static $eventDate = NULL;
     if (!$eventDate) {
-      $eventDate = array(
+      $eventDate = [
         '' => ts('- select -'),
         'start_date' => ts('start date'),
         'end_date' => ts('end date'),
         'join_date' => ts('join date'),
-      );
+      ];
     }
     return $eventDate;
   }
@@ -184,7 +184,7 @@ class CRM_Core_SelectValues {
   static function &customDataType() {
     static $customDataType = NULL;
     if (!$customDataType) {
-      $customDataType = array(
+      $customDataType = [
         '' => ts('- select -'),
         'String' => ts('Text'),
         'Int' => ts('Integer'),
@@ -196,7 +196,7 @@ class CRM_Core_SelectValues {
         'Boolean' => ts('Yes/No'),
         'Link' => ts('Link'),
         'Auto-complete' => ts('Auto-complete'),
-      );
+      ];
     }
     return $customDataType;
   }
@@ -208,7 +208,7 @@ class CRM_Core_SelectValues {
   static function &customHtmlType() {
     static $customHtmlType = NULL;
     if (!$customHtmlType) {
-      $customHtmlType = array(
+      $customHtmlType = [
         '' => ts('- select -'),
         'Text' => ts('Single-line input field (text or numeric)'),
         'TextArea' => ts('Multi-line text box (textarea)'),
@@ -221,7 +221,7 @@ class CRM_Core_SelectValues {
         'Select Country' => ts('Country selector'),
         'RichTextEditor' => ts('Rich Text Editor'),
         'Auto-complete' => ts('Contact Reference'),
-      );
+      ];
     }
     return $customHtmlType;
   }
@@ -234,7 +234,7 @@ class CRM_Core_SelectValues {
   static function &customGroupExtends() {
     static $customGroupExtends = NULL;
     if (!$customGroupExtends) {
-      $customGroupExtends = array(
+      $customGroupExtends = [
         'Activity' => ts('Activities'),
         'Relationship' => ts('Relationships'),
         'Contribution' => ts('Contributions'),
@@ -251,10 +251,10 @@ class CRM_Core_SelectValues {
         #'Grant' => ts('Grants'),
         'Address' => ts('Addresses'),
         'PriceField' => ts('Price Field'),
-      );
+      ];
       $contactTypes = self::contactType();
       unset($contactTypes['']);
-      $contactTypes = !empty($contactTypes) ? array('Contact' => ts('All Contacts')) + $contactTypes : array();
+      $contactTypes = !empty($contactTypes) ? ['Contact' => ts('All Contacts')] + $contactTypes : [];
       $customGroupExtends = array_merge($contactTypes, $customGroupExtends);
     }
     return $customGroupExtends;
@@ -268,10 +268,10 @@ class CRM_Core_SelectValues {
   static function &customGroupStyle() {
     static $customGroupStyle = NULL;
     if (!$customGroupStyle) {
-      $customGroupStyle = array(
+      $customGroupStyle = [
         'Tab' => ts('Tab'),
         'Inline' => ts('Inline'),
-      );
+      ];
     }
     return $customGroupStyle;
   }
@@ -282,20 +282,20 @@ class CRM_Core_SelectValues {
    * @static
    */
   static function &ufGroupTypes($type = '') {
-    $ufGroupType = array();
+    $ufGroupType = [];
     if ($type == 'all' || empty($type)) {
-      $ufGroupType += array(
+      $ufGroupType += [
         'CiviContribute' => ts('Form in Contribution or Membership Page'),
         'CiviEvent' => ts('Form in Event Registeration Page for Participant'),
         'Profile' => ts('Online Form for Data Collection'),
         'System' => ts('Used for Batch Update and Contact Search Profile.'),
-      );
+      ];
     }
     if ($type == 'all' || $type == 'register') {
-      $ufGroupType += array(
+      $ufGroupType += [
         'User Registration' => ts('Drupal User Registration'),
         'User Account' => ts('View/Edit Drupal User Account'),
-      );
+      ];
     }
     return $ufGroupType;
   }
@@ -308,11 +308,11 @@ class CRM_Core_SelectValues {
   static function &groupContactStatus() {
     static $groupContactStatus = NULL;
     if (!$groupContactStatus) {
-      $groupContactStatus = array(
+      $groupContactStatus = [
         'Added' => ts('Added'),
         'Removed' => ts('Removed'),
         'Pending' => ts('Pending'),
-      );
+      ];
     }
     return $groupContactStatus;
   }
@@ -324,10 +324,10 @@ class CRM_Core_SelectValues {
   static function &groupType() {
     static $groupType = NULL;
     if (!$groupType) {
-      $groupType = array(
+      $groupType = [
         'query' => ts('Dynamic'),
         'static' => ts('Static'),
-      );
+      ];
     }
     return $groupType;
   }
@@ -343,11 +343,11 @@ class CRM_Core_SelectValues {
    */
   static function &date($type = NULL, $format = NULL, $minOffset = NULL, $maxOffset = NULL) {
 
-    $date = array(
+    $date = [
       'addEmptyOption' => TRUE,
       'emptyOptionText' => ts('- select -'),
       'emptyOptionValue' => '',
-    );
+    ];
 
     if ($format) {
       $date['format'] = $format;
@@ -390,11 +390,11 @@ class CRM_Core_SelectValues {
   static function ufVisibility($isGroup = FALSE) {
     static $_visibility = NULL;
     if (!$_visibility) {
-      $_visibility = array(
+      $_visibility = [
         'User and User Admin Only' => ts('User and User Admin Only'),
         'Public Pages' => ts('Public Pages'),
         'Public Pages and Listings' => ts('Public Pages and Listings'),
-      );
+      ];
       if ($isGroup) {
         unset($_visibility['Public Pages and Listings']);
       }
@@ -412,7 +412,7 @@ class CRM_Core_SelectValues {
     static $components = NULL;
 
     if (!$components) {
-      $components = array('Header' => ts('Header'),
+      $components = ['Header' => ts('Header'),
         'Footer' => ts('Footer'),
         'Reply' => ts('Reply Auto-responder'),
         'OptOut' => ts('Opt-out Message'),
@@ -420,7 +420,7 @@ class CRM_Core_SelectValues {
         'Welcome' => ts('Welcome Message'),
         'Unsubscribe' => ts('Unsubscribe Message'),
         'Resubscribe' => ts('Resubscribe Message'),
-      );
+      ];
     }
     return $components;
   }
@@ -460,10 +460,10 @@ class CRM_Core_SelectValues {
   static function &mapProvider() {
     static $map = NULL;
     if (!$map) {
-      $map = array(
+      $map = [
         'Yahoo' => ts('Yahoo'),
         'Google' => ts('Google'),
-      );
+      ];
     }
     return $map;
   }
@@ -478,7 +478,7 @@ class CRM_Core_SelectValues {
     static $tokens = NULL;
 
     if (!$tokens) {
-      $tokens = array(
+      $tokens = [
         '{action.unsubscribeUrl}' => ts('Unsubscribe via web page'),
         '{action.resubscribeUrl}' => ts('Resubscribe via web page'),
         '{action.optOutUrl}' => ts('Opt out via web page'),
@@ -492,7 +492,7 @@ class CRM_Core_SelectValues {
         '{mailing.name}' => ts('Mailing name'),
         '{mailing.group}' => ts('Mailing group'),
         '{mailing.viewUrl}' => ts('Mailing permalink'),
-      );
+      ];
     }
     return $tokens;
   }
@@ -508,15 +508,13 @@ class CRM_Core_SelectValues {
     if (!$tokens) {
 
 
-      $additionalFields = array(
-        'checksum' => array('title' => ts('Checksum')),
-        'contact_id' => array('title' => ts('Internal Contact ID')),
-      );
-      if (defined('ONE_TIME_RENEWAL_ENABLED')) {
-        $additionalFields['recurring_renewal_link'] = array(
-          'title' => ts('Recurring Contribution Renewal Link')
-        );
-      }
+      $additionalFields = [
+        'checksum' => ['title' => ts('Checksum')],
+        'contact_id' => ['title' => ts('Internal Contact ID')],
+      ];
+      $additionalFields['recurring_renewal_link'] = [
+        'title' => ts('Recurring Contribution Renewal Link')
+      ];
       $exportFields = array_merge(CRM_Contact_BAO_Contact::exportableFields(), $additionalFields);
       $exportFields['state_province_name'] = $exportFields['state_province'];
       $exportFields['state_province']['title'] = ts('State Abbreviation');
@@ -525,10 +523,10 @@ class CRM_Core_SelectValues {
       unset($values[0]);
 
       //FIXME:skipping some tokens for time being.
-      $skipTokens = array('is_bulkmail', 'group', 'tag', 'contact_sub_type', 'note',
+      $skipTokens = ['is_bulkmail', 'group', 'tag', 'contact_sub_type', 'note',
         'is_deceased', 'deceased_date', 'legal_identifier', 'contact_sub_type', 'user_unique_id', 'contact_is_deleted'
-      );
-      $customFields = array();
+      ];
+      $customFields = [];
       $customFields = CRM_Core_BAO_CustomField::getFields('Individual');
       $structure = CRM_Core_FieldHierarchy::$hierarchy;
       foreach($structure as $component => $fields) {
@@ -559,7 +557,7 @@ class CRM_Core_SelectValues {
       }
 
       // might as well get all the hook tokens to
-      $hookTokens = array();
+      $hookTokens = [];
       CRM_Utils_Hook::tokens($hookTokens);
       foreach ($hookTokens as $category => $tokenValues) {
         foreach ($tokenValues as $key => $value) {
@@ -599,7 +597,7 @@ class CRM_Core_SelectValues {
     }
 
     if (!$tokens) {
-      $customFields = array();
+      $customFields = [];
       $customFields = CRM_Core_BAO_CustomField::getFields('Participant');
 
       foreach ($customFields as $key => $val) {
@@ -607,7 +605,7 @@ class CRM_Core_SelectValues {
       }
 
       // might as well get all the hook tokens to
-      $hookTokens = array();
+      $hookTokens = [];
       CRM_Utils_Hook::tokens($hookTokens);
       foreach ($hookTokens as $category => $tokenValues) {
         foreach ($tokenValues as $key => $value) {
@@ -639,13 +637,13 @@ class CRM_Core_SelectValues {
     $contribution = new CRM_Contribute_DAO_Contribution();
     $fields = $contribution->fields();
     foreach ($fields as $key => $field) {
-      if (!in_array($key, array('contribution_type_id', 'payment_instrument_id', 'contribution_recur_id', 'honor_contact_id', 'address_id'))) {
+      if (!in_array($key, ['contribution_type_id', 'payment_instrument_id', 'contribution_recur_id', 'honor_contact_id', 'address_id'])) {
         $tokens["{contribution.{$field['name']}}"] = $field['title'];
       }
     }
 
     if (!$tokens) {
-      $customFields = array();
+      $customFields = [];
       $customFields = CRM_Core_BAO_CustomField::getFields('Contribution');
 
       foreach ($customFields as $key => $val) {
@@ -653,7 +651,7 @@ class CRM_Core_SelectValues {
       }
 
       // might as well get all the hook tokens to
-      $hookTokens = array();
+      $hookTokens = [];
       CRM_Utils_Hook::tokens($hookTokens);
       foreach ($hookTokens as $category => $tokenValues) {
         foreach ($tokenValues as $key => $value) {
@@ -681,7 +679,7 @@ class CRM_Core_SelectValues {
   static function &qfDatePartsMapping() {
     static $qfDatePartsMapping = NULL;
     if (!$qfDatePartsMapping) {
-      $qfDatePartsMapping = array(
+      $qfDatePartsMapping = [
         '%b' => 'M',
         '%B' => 'F',
         '%d' => 'd',
@@ -697,7 +695,7 @@ class CRM_Core_SelectValues {
         '%p' => 'a',
         '%P' => 'A',
         '%Y' => 'Y',
-      );
+      ];
     }
 
     return $qfDatePartsMapping;
@@ -707,7 +705,7 @@ class CRM_Core_SelectValues {
    *  CiviCRM supported date input formats
    */
   static function getDatePluginInputFormats() {
-    $dateInputFormats = array(
+    $dateInputFormats = [
       "mm/dd/yy" => ts('mm/dd/yyyy (12/31/2009)'),
       "dd/mm/yy" => ts('dd/mm/yyyy (31/12/2009)'),
       "yy-mm-dd" => ts('yyyy-mm-dd (2009-12-31)'),
@@ -723,7 +721,7 @@ class CRM_Core_SelectValues {
       "yy-mm" => ts('yyyy-mm (2009-12)'),
       'mm/yy' => ts('mm/yyyy (12/2009)'),
       "yy" => ts('yyyy (2009)'),
-    );
+    ];
 
     /*
          Year greater than 2000 get wrong result for following format
@@ -746,7 +744,7 @@ class CRM_Core_SelectValues {
    * Map date plugin and actual format that is used by PHP
    */
   static function datePluginToPHPFormats() {
-    $dateInputFormats = array(
+    $dateInputFormats = [
       "mm/dd/yy" => 'm/d/Y',
       "dd/mm/yy" => 'd/m/Y',
       "yy-mm-dd" => 'Y-m-d',
@@ -762,7 +760,7 @@ class CRM_Core_SelectValues {
       "yy-mm" => 'Y-m',
       "mm/yy" => 'm/Y',
       "yy" => 'Y',
-    );
+    ];
     return $dateInputFormats;
   }
 
@@ -770,7 +768,7 @@ class CRM_Core_SelectValues {
    * Map date plugin and actual format that is used by PHP
    */
   static function datePluginToPOSIXFormats() {
-    $dateInputFormats = array(
+    $dateInputFormats = [
       "mm/dd/yy" => '%m/%d/%Y',
       "dd/mm/yy" => '%d/%m/%Y',
       "yy-mm-dd" => '%Y-%m-%d',
@@ -786,7 +784,7 @@ class CRM_Core_SelectValues {
       "yy-mm" => '%Y-%m',
       "mm/yy" => '%m/%Y',
       "yy" => '%Y',
-    );
+    ];
     return $dateInputFormats;
   }
 
@@ -794,9 +792,9 @@ class CRM_Core_SelectValues {
    * Time formats
    */
   static function getTimeFormats() {
-    $timeFormats = array('1' => ts('12 Hours'),
+    $timeFormats = ['1' => ts('12 Hours'),
       '2' => ts('24 Hours'),
-    );
+    ];
     return $timeFormats;
   }
 }

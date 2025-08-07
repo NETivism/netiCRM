@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-class CRM_Core_DAO_Menu extends CRM_Core_DAO
+              class CRM_Core_DAO_Menu extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -78,7 +78,7 @@ class CRM_Core_DAO_Menu extends CRM_Core_DAO
    * @static
    */
   static $_log = false;
-  /**
+    /**
    *
    * @var int unsigned
    */
@@ -203,7 +203,7 @@ class CRM_Core_DAO_Menu extends CRM_Core_DAO
    * @var boolean
    */
   public $skipBreadcrumb;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -222,14 +222,14 @@ class CRM_Core_DAO_Menu extends CRM_Core_DAO
   function &links()
   {
     if (!(self::$_links)) {
-      self::$_links = array(
+      self::$_links = [
         'domain_id' => 'civicrm_domain:id',
         'component_id' => 'civicrm_component:id',
-      );
+      ];
     }
     return self::$_links;
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -244,7 +244,7 @@ class CRM_Core_DAO_Menu extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -253,128 +253,128 @@ class CRM_Core_DAO_Menu extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'id' => array(
+      self::$_fields = [
+        'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'domain_id' => array(
+                  ] ,
+        'domain_id' => [
           'name' => 'domain_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-          'FKClassName' => 'CRM_Core_DAO_Domain',
-        ) ,
-        'path' => array(
+                    'FKClassName' => 'CRM_Core_DAO_Domain',
+        ] ,
+        'path' => [
           'name' => 'path',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Path') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'path_arguments' => array(
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
+        'path_arguments' => [
           'name' => 'path_arguments',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Path Arguments') ,
-        ) ,
-        'title' => array(
+                  ] ,
+        'title' => [
           'name' => 'title',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Title') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'access_callback' => array(
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
+        'access_callback' => [
           'name' => 'access_callback',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Access Callback') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'access_arguments' => array(
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
+        'access_arguments' => [
           'name' => 'access_arguments',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Access Arguments') ,
-        ) ,
-        'page_callback' => array(
+                  ] ,
+        'page_callback' => [
           'name' => 'page_callback',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Page Callback') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'page_arguments' => array(
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
+        'page_arguments' => [
           'name' => 'page_arguments',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Page Arguments') ,
-        ) ,
-        'breadcrumb' => array(
+                  ] ,
+        'breadcrumb' => [
           'name' => 'breadcrumb',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Breadcrumb') ,
-        ) ,
-        'return_url' => array(
+                  ] ,
+        'return_url' => [
           'name' => 'return_url',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Return Url') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'return_url_args' => array(
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
+        'return_url_args' => [
           'name' => 'return_url_args',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Return Url Args') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'component_id' => array(
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
+        'component_id' => [
           'name' => 'component_id',
           'type' => CRM_Utils_Type::T_INT,
-          'FKClassName' => 'CRM_Core_DAO_Component',
-        ) ,
-        'is_active' => array(
+                    'FKClassName' => 'CRM_Core_DAO_Component',
+        ] ,
+        'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ) ,
-        'is_public' => array(
+                  ] ,
+        'is_public' => [
           'name' => 'is_public',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ) ,
-        'is_exposed' => array(
+                  ] ,
+        'is_exposed' => [
           'name' => 'is_exposed',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ) ,
-        'is_ssl' => array(
+                  ] ,
+        'is_ssl' => [
           'name' => 'is_ssl',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ) ,
-        'weight' => array(
+                  ] ,
+        'weight' => [
           'name' => 'weight',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Weight') ,
           'required' => true,
-          'default' => '',
-        ) ,
-        'type' => array(
+                  'default' => '',
+          ] ,
+        'type' => [
           'name' => 'type',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Type') ,
           'required' => true,
-          'default' => '',
-        ) ,
-        'page_type' => array(
+                  'default' => '',
+          ] ,
+        'page_type' => [
           'name' => 'page_type',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Page Type') ,
           'required' => true,
-          'default' => '',
-        ) ,
-        'skipBreadcrumb' => array(
+                  'default' => '',
+          ] ,
+        'skipBreadcrumb' => [
           'name' => 'skipBreadcrumb',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Skipbreadcrumb') ,
-        ) ,
-      );
+                  ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -386,8 +386,8 @@ class CRM_Core_DAO_Menu extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -407,7 +407,7 @@ class CRM_Core_DAO_Menu extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -418,7 +418,7 @@ class CRM_Core_DAO_Menu extends CRM_Core_DAO
           }
         }
       }
-    }
+                                              }
     return self::$_import;
   }
   /**
@@ -430,7 +430,7 @@ class CRM_Core_DAO_Menu extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
@@ -441,7 +441,7 @@ class CRM_Core_DAO_Menu extends CRM_Core_DAO
           }
         }
       }
-    }
+                                              }
     return self::$_export;
   }
 }

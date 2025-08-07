@@ -71,60 +71,60 @@ class CRM_Event_Task {
    */
   static function &tasks() {
     if (!(self::$_tasks)) {
-      self::$_tasks = array(1 => array('title' => ts('Delete Participants'),
+      self::$_tasks = [1 => ['title' => ts('Delete Participants'),
           'class' => 'CRM_Event_Form_Task_Delete',
           'result' => FALSE,
-        ),
-        2 => array('title' => ts('Print Participants'),
+        ],
+        2 => ['title' => ts('Print Participants'),
           'class' => 'CRM_Event_Form_Task_Print',
           'result' => FALSE,
-        ),
-        3 => array('title' => ts('Export Participants'),
-          'class' => array('CRM_Export_Form_Select',
+        ],
+        3 => ['title' => ts('Export Participants'),
+          'class' => ['CRM_Export_Form_Select',
             'CRM_Export_Form_Map',
-          ),
+          ],
           'result' => FALSE,
-        ),
-        4 => array('title' => ts('Batch Update Participants Via Profile'),
-          'class' => array('CRM_Event_Form_Task_PickProfile',
+        ],
+        4 => ['title' => ts('Batch Update Participants Via Profile'),
+          'class' => ['CRM_Event_Form_Task_PickProfile',
             'CRM_Event_Form_Task_Batch',
-          ),
+          ],
           'result' => TRUE,
-        ),
-        5 => array('title' => ts('Cancel Registration'),
+        ],
+        5 => ['title' => ts('Cancel Registration'),
           'class' => 'CRM_Event_Form_Task_Cancel',
           'result' => FALSE,
-        ),
-        6 => array('title' => ts('Send Email to Contacts'),
+        ],
+        6 => ['title' => ts('Send Email to Contacts'),
           'class' => 'CRM_Event_Form_Task_Email',
           'result' => TRUE,
-        ),
-        13 => array('title' => ts('New Smart Group'),
+        ],
+        13 => ['title' => ts('New Smart Group'),
           'class' => 'CRM_Event_Form_Task_SaveSearch',
           'result' => TRUE,
-        ),
-        14 => array('title' => ts('Update Smart Group'),
+        ],
+        14 => ['title' => ts('Update Smart Group'),
           'class' => 'CRM_Event_Form_Task_SaveSearch_Update',
           'result' => TRUE,
-        ),
-        15 => array('title' => ts('Change Participant Status'),
+        ],
+        15 => ['title' => ts('Change Participant Status'),
           'class' => 'CRM_Event_Form_Task_ParticipantStatus',
           'result' => TRUE,
-        ),
-        16 => array('title' => ts('Print Event Name Badges'),
+        ],
+        16 => ['title' => ts('Print Event Name Badges'),
           'class' => 'CRM_Event_Form_Task_Badge',
           'result' => FALSE,
-        ),
-      );
+        ],
+      ];
 
 
       $providersCount = CRM_SMS_BAO_Provider::activeProviderCount();
       if ($providersCount) {
-        self::$_tasks[] = array(
+        self::$_tasks[] = [
           'title' => ts('SMS - schedule/send'),
           'class' => 'CRM_Event_Form_Task_SMS',
           'result' => TRUE,
-        );
+        ];
       }
 
       //CRM-4418, check for delete
@@ -149,10 +149,10 @@ class CRM_Event_Task {
    */
   static function &taskTitles() {
     self::tasks();
-    $titles = array();
+    $titles = [];
     foreach (self::$_tasks as $id => $value) {
       // skip Print Participants and Update Smart Group task
-      if (!in_array($id, array(2, 14))) {
+      if (!in_array($id, [2, 14])) {
         $titles[$id] = $value['title'];
       }
       else {
@@ -170,9 +170,9 @@ class CRM_Event_Task {
    * @access public
    */
   static function &optionalTaskTitle() {
-    $tasks = array(
+    $tasks = [
       14 => self::$_tasks[14]['title'],
-    );
+    ];
     return $tasks;
   }
 
@@ -186,17 +186,17 @@ class CRM_Event_Task {
    * @access public
    */
   static function &permissionedTaskTitles($permission) {
-    $tasks = array();
+    $tasks = [];
     if (($permission == CRM_Core_Permission::EDIT)
       || CRM_Core_Permission::check('edit event participants')
     ) {
       $tasks = self::taskTitles();
     }
     else {
-      $tasks = array(
+      $tasks = [
         3 => self::$_tasks[3]['title'],
         6 => self::$_tasks[6]['title'],
-      );
+      ];
 
       //CRM-4418,
       if (CRM_Core_Permission::check('delete in CiviEvent')) {
@@ -222,9 +222,9 @@ class CRM_Event_Task {
       // make the print task by default
       $value = 2;
     }
-    return array(self::$_tasks[$value]['class'],
+    return [self::$_tasks[$value]['class'],
       self::$_tasks[$value]['result'],
-    );
+    ];
   }
 }
 

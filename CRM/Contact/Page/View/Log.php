@@ -54,17 +54,17 @@ class CRM_Contact_Page_View_Log extends CRM_Core_Page {
     $log->orderBy('modified_date desc');
     $log->find();
 
-    $logEntries = array();
+    $logEntries = [];
     while ($log->fetch()) {
       if (!empty($log->modified_id)) {
         list($displayName, $contactImage) = CRM_Contact_BAO_Contact::getDisplayAndImage($log->modified_id);
       }
-      $logEntries[] = array('id' => $log->modified_id,
+      $logEntries[] = ['id' => $log->modified_id,
         'name' => $displayName,
         'image' => $contactImage,
         'date' => $log->modified_date,
         'data' => $log->data,
-      );
+      ];
     }
 
     $this->assign('logCount', count($logEntries));

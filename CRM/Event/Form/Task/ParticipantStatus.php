@@ -47,14 +47,14 @@ class CRM_Event_Form_Task_ParticipantStatus extends CRM_Event_Form_Task_Batch {
 
     $statuses = &CRM_Event_PseudoConstant::participantStatus(NULL, NULL, 'label');
     $this->add('select', 'status_change', ts('Change All Statuses'),
-      array('' => ts('- select status -')) + $statuses, NULL,
-      array('onchange' => "if (this.value) {  setStatusesTo(this.value);}")
+      ['' => ts('- select status -')] + $statuses, NULL,
+      ['onchange' => "if (this.value) {  setStatusesTo(this.value);}"]
     );
     $this->assign('context', 'statusChange');
 
     # CRM-4321: display info on users being notified if any of the below statuses is enabled
 
-    $notifyingStatuses = array('Pending from waitlist', 'Pending from approval', 'Expired', 'Cancelled');
+    $notifyingStatuses = ['Pending from waitlist', 'Pending from approval', 'Expired', 'Cancelled'];
     $notifyingStatuses = array_intersect(CRM_Event_PseudoConstant::participantStatus(), $notifyingStatuses);
     foreach($notifyingStatuses as $k => $v){
       $notifyingStatuses[$k] = ts($v);

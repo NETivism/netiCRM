@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-class CRM_Pledge_DAO_Payment extends CRM_Core_DAO
+              class CRM_Pledge_DAO_Payment extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -78,7 +78,7 @@ class CRM_Pledge_DAO_Payment extends CRM_Core_DAO
    * @static
    */
   static $_log = true;
-  /**
+    /**
    *
    * @var int unsigned
    */
@@ -136,7 +136,7 @@ class CRM_Pledge_DAO_Payment extends CRM_Core_DAO
    * @var int unsigned
    */
   public $status_id;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -155,14 +155,14 @@ class CRM_Pledge_DAO_Payment extends CRM_Core_DAO
   function &links()
   {
     if (!(self::$_links)) {
-      self::$_links = array(
+      self::$_links = [
         'pledge_id' => 'civicrm_pledge:id',
         'contribution_id' => 'civicrm_contribution:id',
-      );
+      ];
     }
     return self::$_links;
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -177,7 +177,7 @@ class CRM_Pledge_DAO_Payment extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -186,100 +186,100 @@ class CRM_Pledge_DAO_Payment extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'pledge_payment_id' => array(
+      self::$_fields = [
+        'pledge_payment_id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Payment ID') ,
           'required' => true,
-          'import' => true,
+               'import' => true,
           'where' => 'civicrm_pledge_payment.id',
           'headerPattern' => '',
           'dataPattern' => '',
-          'export' => true,
-        ) ,
-        'pledge_id' => array(
+           'export' => true,
+            ] ,
+        'pledge_id' => [
           'name' => 'pledge_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-          'FKClassName' => 'CRM_Pledge_DAO_Pledge',
-        ) ,
-        'contribution_id' => array(
+                    'FKClassName' => 'CRM_Pledge_DAO_Pledge',
+        ] ,
+        'contribution_id' => [
           'name' => 'contribution_id',
           'type' => CRM_Utils_Type::T_INT,
-          'FKClassName' => 'CRM_Contribute_DAO_Contribution',
-        ) ,
-        'pledge_payment_scheduled_amount' => array(
+                    'FKClassName' => 'CRM_Contribute_DAO_Contribution',
+        ] ,
+        'pledge_payment_scheduled_amount' => [
           'name' => 'scheduled_amount',
           'type' => CRM_Utils_Type::T_MONEY,
           'title' => ts('Scheduled Amount') ,
           'required' => true,
-          'import' => true,
+               'import' => true,
           'where' => 'civicrm_pledge_payment.scheduled_amount',
           'headerPattern' => '',
           'dataPattern' => '',
-          'export' => true,
-        ) ,
-        'pledge_payment_actual_amount' => array(
+           'export' => true,
+            ] ,
+        'pledge_payment_actual_amount' => [
           'name' => 'actual_amount',
           'type' => CRM_Utils_Type::T_MONEY,
           'title' => ts('Actual Amount') ,
-          'import' => true,
+               'import' => true,
           'where' => 'civicrm_pledge_payment.actual_amount',
           'headerPattern' => '',
           'dataPattern' => '',
-          'export' => true,
-        ) ,
-        'currency' => array(
+           'export' => true,
+            ] ,
+        'currency' => [
           'name' => 'currency',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Currency') ,
-          'maxlength' => 3,
-          'size' => CRM_Utils_Type::FOUR,
-          'default' => 'UL',
-        ) ,
-        'pledge_payment_scheduled_date' => array(
+           'maxlength' => 3,
+           'size' => CRM_Utils_Type::FOUR,
+                'default' => 'UL',
+          ] ,
+        'pledge_payment_scheduled_date' => [
           'name' => 'scheduled_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Scheduled Date') ,
           'required' => true,
-          'import' => true,
+               'import' => true,
           'where' => 'civicrm_pledge_payment.scheduled_date',
           'headerPattern' => '',
           'dataPattern' => '',
-          'export' => true,
-        ) ,
-        'pledge_payment_reminder_date' => array(
+           'export' => true,
+            ] ,
+        'pledge_payment_reminder_date' => [
           'name' => 'reminder_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Last Reminder') ,
-          'import' => true,
+               'import' => true,
           'where' => 'civicrm_pledge_payment.reminder_date',
           'headerPattern' => '',
           'dataPattern' => '',
-          'export' => true,
-        ) ,
-        'pledge_payment_reminder_count' => array(
+           'export' => true,
+            ] ,
+        'pledge_payment_reminder_count' => [
           'name' => 'reminder_count',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Reminders Sent') ,
-          'import' => true,
+               'import' => true,
           'where' => 'civicrm_pledge_payment.reminder_count',
           'headerPattern' => '',
           'dataPattern' => '',
-          'export' => true,
-        ) ,
-        'pledge_payment_status_id' => array(
+           'export' => true,
+            ] ,
+        'pledge_payment_status_id' => [
           'name' => 'status_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Payment Status') ,
-          'import' => true,
+               'import' => true,
           'where' => 'civicrm_pledge_payment.status_id',
           'headerPattern' => '',
           'dataPattern' => '',
-          'export' => false,
-        ) ,
-      );
+           'export' => false,
+            ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -291,8 +291,8 @@ class CRM_Pledge_DAO_Payment extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -312,7 +312,7 @@ class CRM_Pledge_DAO_Payment extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -323,7 +323,7 @@ class CRM_Pledge_DAO_Payment extends CRM_Core_DAO
           }
         }
       }
-    }
+                                              }
     return self::$_import;
   }
   /**
@@ -335,7 +335,7 @@ class CRM_Pledge_DAO_Payment extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
@@ -346,7 +346,7 @@ class CRM_Pledge_DAO_Payment extends CRM_Core_DAO
           }
         }
       }
-    }
+                                              }
     return self::$_export;
   }
 }

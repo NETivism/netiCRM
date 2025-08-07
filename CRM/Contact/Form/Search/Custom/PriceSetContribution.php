@@ -72,9 +72,9 @@ CREATE TEMPORARY TABLE IF NOT EXISTS {$this->_tableName} (
 ";
 
     foreach ($this->_columns as $dontCare => $fieldName) {
-      if (in_array($fieldName, array('eneity_table',
+      if (in_array($fieldName, ['eneity_table',
             'entity_id',
-          ))) {
+          ])) {
         continue;
       }
       $sql .= "{$fieldName} varchar(64) default '',\n";
@@ -107,7 +107,7 @@ ORDER BY l.entity_table, l.entity_id ASC
     $dao = CRM_Core_DAO::executeQuery($sql, CRM_Core_DAO::$_nullArray);
 
     // first store all the information by option value id
-    $rows = array();
+    $rows = [];
     while ($dao->fetch()) {
       $uniq = $dao->entity_table . "-" . $dao->entity_id.'-'.$dao->contact_id;
       $fieldName = "price_field_{$dao->price_field_value_id}";
@@ -170,9 +170,9 @@ INNER JOIN civicrm_price_set_entity e ON e.price_set_id = p.id
 WHERE p.extends LIKE '%2%'
 ";
 
-    $params = array();
+    $params = [];
     if ($price_set_id) {
-      $params[1] = array($price_set_id, 'Integer');
+      $params[1] = [$price_set_id, 'Integer'];
       $sql .= " AND p.id = $price_set_id";
     }
 
@@ -185,14 +185,14 @@ WHERE p.extends LIKE '%2%'
   function buildForm(&$form) {
     $dao = $this->priceSetDAO();
 
-    $price_set = array();
+    $price_set = [];
     while ($dao->fetch()) {
       $price_set[$dao->id] = $dao->title;
     }
 
     if (empty($price_set)) {
       $url = CRM_Utils_System::url('civicrm/admin/price', 'action=add&reset=1');
-      CRM_Core_Session::setStatus(ts("No price sets have been created yet. You can <a href='%1'>add one</a>.", array(1 => $url)));
+      CRM_Core_Session::setStatus(ts("No price sets have been created yet. You can <a href='%1'>add one</a>.", [1 => $url]));
       return;
     }
 
@@ -212,11 +212,11 @@ WHERE p.extends LIKE '%2%'
      * if you are using the standard template, this array tells the template what elements
      * are part of the search criteria
      */
-    $form->assign('elements', array('price_set_id'));
+    $form->assign('elements', ['price_set_id']);
   }
 
   function setColumns() {
-    $this->_columns = array(
+    $this->_columns = [
       ts('Contact Id') => 'contact_id',
       ts('Contribution ID') => 'entity_id',
       ts('Contribution Status') => 'contribution_status_id',
@@ -228,7 +228,7 @@ WHERE p.extends LIKE '%2%'
       ts('Phone') => 'phone',
       ts('Email') => 'email',
       ts('Total Amount') => 'total_amount',
-    );
+    ];
 
     if (!$this->_price_set_id) {
       return;
@@ -284,9 +284,9 @@ contact_a.id             as contact_id  ,
 contact_a.display_name   as display_name";
 
     foreach ($this->_columns as $dontCare => $fieldName) {
-      if (in_array($fieldName, array('contact_id',
+      if (in_array($fieldName, ['contact_id',
             'display_name',
-          ))) {
+          ])) {
         continue;
       }
       $selectClause .= ",\ntempTable.{$fieldName} as {$fieldName}";
@@ -312,15 +312,15 @@ contact_a.display_name   as display_name";
   }
 
   function setDefaultValues() {
-    return array();
+    return [];
   }
 
   function alterRow(&$row) {
     $row['contribution_status_id'] = $this->_cstatus[$row['contribution_status_id']];
-    $action = array(
+    $action = [
       '<a href="'.CRM_Utils_System::url('civicrm/contact/view/contribution', "reset=1&id={$row['entity_id']}&cid={$row['contact_id']}&action=view").'" class="action-item" target="_blank">'.ts('View').'</a>',
       '<a href="'.CRM_Utils_System::url('civicrm/contact/view/contribution', "reset=1&id={$row['entity_id']}&cid={$row['contact_id']}&action=update").'" class="action-item" target="_blank">'.ts('Edit').'</a>',
-    );                                      
+    ];                                      
     if(isset($row['action'])){
       $row['action'] = CRM_Utils_Array::implode('<br>', $action);
     }

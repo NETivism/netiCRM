@@ -165,7 +165,7 @@ class CRM_Contact_Page_View_GroupContact extends CRM_Core_Page {
       return FALSE;
     }
 
-    $ids = array($contactID);
+    $ids = [$contactID];
     $method = 'Admin';
 
     $session = CRM_Core_Session::singleton();

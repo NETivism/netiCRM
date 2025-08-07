@@ -73,7 +73,7 @@ class api_v3_DomainTest extends CiviUnitTestCase {
     $params['entity_table'] = CRM_Core_BAO_Domain::getTableName();
     $domain = 1;    
     $defaultLocationType = CRM_Core_BAO_LocationType::getDefault();
-    $location = array();
+    $location = [];
     $params['address'][1]['location_type_id'] = $defaultLocationType->id;
     $params['phone'][1]['location_type_id'] = $defaultLocationType->id;
     $params['phone'][1]['phone_type_id'] = 1;
@@ -82,15 +82,15 @@ class api_v3_DomainTest extends CiviUnitTestCase {
     $params['phone'][1]['phone'] = '456-456';
     $params['address'][1]['street_address'] = '45 Penny Lane';
     $location = CRM_Core_BAO_Location::create($params, TRUE, 'domain');
-    $domUpdate = civicrm_api('domain','create',array('id' => 1, 'loc_block_id' => $location['id'], 'version' => $this->_apiversion));
+    $domUpdate = civicrm_api('domain','create',['id' => 1, 'loc_block_id' => $location['id'], 'version' => $this->_apiversion]);
     $this->_apiversion = 3;
-    $this->params = array(
+    $this->params = [
       'name' => 'A-team domain',
       'description' => 'domain of chaos',
       'version' => $this->_apiversion,
       'domain_version' => '4.2',
       'loc_block_id' => $location['id'],
-    );
+    ];
  }
 
   /**
@@ -112,7 +112,7 @@ class api_v3_DomainTest extends CiviUnitTestCase {
   public function testGet() {
     
 
-    $params = array('version' => 3);
+    $params = ['version' => 3];
     $result = civicrm_api('domain', 'get', $params);
     $this->documentMe($params, $result, __FUNCTION__, __FILE__);
 
@@ -137,7 +137,7 @@ class api_v3_DomainTest extends CiviUnitTestCase {
   }
 
   public function testGetCurrentDomain() {
-    $params = array('version' => 3, 'current_domain' => 1);
+    $params = ['version' => 3, 'current_domain' => 1];
     $result = civicrm_api('domain', 'get', $params);
 
     $this->assertType('array', $result, 'In line' . __LINE__);
@@ -171,17 +171,17 @@ class api_v3_DomainTest extends CiviUnitTestCase {
 
 
   public function testGetCurrentDomainTwice() {
-    $domain = civicrm_api('domain', 'getvalue', array(
+    $domain = civicrm_api('domain', 'getvalue', [
         'version' => 3,
         'current_domain' => 1,
         'return' => 'name',
-      ));
+      ]);
     $this->assertEquals('Default Domain Name', $domain, print_r($domain, TRUE) . 'in line ' . __LINE__);
-    $domain = civicrm_api('domain', 'getvalue', array(
+    $domain = civicrm_api('domain', 'getvalue', [
         'version' => 3,
         'current_domain' => 1,
         'return' => 'name',
-      ));
+      ]);
     $this->assertEquals('Default Domain Name', $domain, print_r($domain, TRUE) . 'in line ' . __LINE__);
   }
 
@@ -204,7 +204,7 @@ class api_v3_DomainTest extends CiviUnitTestCase {
    * Error expected.
    */
   public function testCreateWithEmptyParams() {
-    $params = array();
+    $params = [];
     $result = civicrm_api('domain', 'create', $params);
     $this->assertEquals($result['is_error'], 1,
       "In line " . __LINE__

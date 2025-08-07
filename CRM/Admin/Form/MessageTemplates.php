@@ -88,18 +88,18 @@ class CRM_Admin_Form_MessageTemplates extends CRM_Admin_Form {
       $cancelURL = CRM_Utils_System::url('civicrm/admin/messageTemplates', "selectedChild={$selectedChild}&reset=1");
       $cancelURL = str_replace('&amp;', '&', $cancelURL);
       $this->addButtons(
-        array(
-          array(
+        [
+          [
             'type' => 'next',
             'name' => ts('Save'),
             'isDefault' => TRUE,
-          ),
-          array(
+          ],
+          [
             'type' => 'cancel',
             'name' => ts('Cancel'),
-            'js' => array('onclick' => "location.href='{$cancelURL}'; return false;"),
-          ),
-        )
+            'js' => ['onclick' => "location.href='{$cancelURL}'; return false;"],
+          ],
+        ]
       );
     }
 
@@ -119,13 +119,13 @@ class CRM_Admin_Form_MessageTemplates extends CRM_Admin_Form {
       // currently, the above action is used solely for previewing default workflow templates
       $cancelURL = CRM_Utils_System::url('civicrm/admin/messageTemplates', 'selectedChild=workflow&reset=1');
       $cancelURL = str_replace('&amp;', '&', $cancelURL);
-      $this->addButtons(array(
-          array('type' => 'cancel',
+      $this->addButtons([
+          ['type' => 'cancel',
             'name' => ts('Done'),
-            'js' => array('onclick' => "location.href='{$cancelURL}'; return false;"),
+            'js' => ['onclick' => "location.href='{$cancelURL}'; return false;"],
             'isDefault' => TRUE,
-          ),
-        )
+          ],
+        ]
       );
     }
     else {
@@ -137,11 +137,11 @@ class CRM_Admin_Form_MessageTemplates extends CRM_Admin_Form {
     }
 
 
-    $breadCrumb = array(array('title' => ts('Message Templates'),
+    $breadCrumb = [['title' => ts('Message Templates'),
         'url' => CRM_Utils_System::url('civicrm/admin/messageTemplates',
           'action=browse&reset=1'
         ),
-      ));
+      ]];
     CRM_Utils_System::appendBreadCrumb($breadCrumb);
 
     $this->applyFilter('__ALL__', 'trim');
@@ -161,29 +161,29 @@ class CRM_Admin_Form_MessageTemplates extends CRM_Admin_Form {
 
     $this->add('select', 'token1', ts('Insert Tokens'),
       $tokens, FALSE,
-      array(
+      [
         'size' => "5",
         'multiple' => TRUE,
         'onchange' => "return tokenReplText(this);",
-      )
+      ]
     );
 
     $this->add('select', 'token2', ts('Insert Tokens'),
       $tokens, FALSE,
-      array(
+      [
         'size' => "5",
         'multiple' => TRUE,
         'onchange' => "return tokenReplHtml(this);",
-      )
+      ]
     );
 
     $this->add('select', 'token3', ts('Insert Tokens'),
       $tokens, FALSE,
-      array(
+      [
         'size' => "5",
         'multiple' => TRUE,
         'onchange' => "return tokenReplText(this);",
-      )
+      ]
     );
 
     $this->add('textarea', 'msg_text', ts('Text Message'),
@@ -203,12 +203,12 @@ class CRM_Admin_Form_MessageTemplates extends CRM_Admin_Form {
     }
     else {
       $this->addWysiwyg('msg_html', ts('HTML Message'),
-        array(
+        [
           'cols' => '80',
           'rows' => '8',
           'fullpage' => '1',
           'onkeyup' => "return verify(this)",
-        )
+        ]
       );
     }
 
@@ -238,7 +238,7 @@ class CRM_Admin_Form_MessageTemplates extends CRM_Admin_Form {
       CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin/messageTemplates', 'selectedChild=workflow&reset=1'));
     }
     else {
-      $params = array();
+      $params = [];
 
       // store the submitted values in an array
       $params = $this->exportValues();
@@ -253,7 +253,7 @@ class CRM_Admin_Form_MessageTemplates extends CRM_Admin_Form {
       }
 
       $messageTemplate = CRM_Core_BAO_MessageTemplates::add($params);
-      CRM_Core_Session::setStatus(ts('The Message Template \'%1\' has been saved.', array(1 => $messageTemplate->msg_title)));
+      CRM_Core_Session::setStatus(ts('The Message Template \'%1\' has been saved.', [1 => $messageTemplate->msg_title]));
 
       if ($this->_workflow_id) {
         CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin/messageTemplates', 'selectedChild=workflow&reset=1'));

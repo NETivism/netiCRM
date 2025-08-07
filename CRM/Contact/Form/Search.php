@@ -220,7 +220,7 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
      * @static
      */
 
-  static $csv = array('contact_type', 'group', 'tag');
+  static $csv = ['contact_type', 'group', 'tag'];
 
   protected $_componentMode;
   protected $_modeValue;
@@ -249,7 +249,7 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
    */
   static function &validContext() {
     if (!(self::$_validContext)) {
-      self::$_validContext = array(
+      self::$_validContext = [
         'smog' => 'Show members of group',
         'amtg' => 'Add members to group',
         'basic' => 'Basic Search',
@@ -257,7 +257,7 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
         'builder' => 'Search Builder',
         'advanced' => 'Advanced Search',
         'custom' => 'Custom Search',
-      );
+      ];
     }
     return self::$_validContext;
   }
@@ -297,8 +297,8 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
   }
 
   public static function setModeValuesCommon($selectorName) {
-    self::$_modeValues = array(
-      1 => array(
+    self::$_modeValues = [
+      1 => [
         'selectorName' => $selectorName,
         'selectorLabel' => ts('Contacts'),
         'taskFile' => "CRM/Contact/Form/Search/ResultTasks.tpl",
@@ -306,47 +306,47 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
         'resultFile' => 'CRM/Contact/Form/Selector.tpl',
         'resultContext' => NULL,
         'taskClassName' => 'CRM_Contact_Task',
-      ),
-      2 => array('selectorName' => 'CRM_Contribute_Selector_Search',
+      ],
+      2 => ['selectorName' => 'CRM_Contribute_Selector_Search',
         'selectorLabel' => ts('Contributions'),
         'taskFile' => "CRM/common/searchResultTasks.tpl",
         'taskContext' => 'Contribution',
         'resultFile' => 'CRM/Contribute/Form/Selector.tpl',
         'resultContext' => 'Search',
         'taskClassName' => 'CRM_Contribute_Task',
-      ),
-      3 => array('selectorName' => 'CRM_Event_Selector_Search',
+      ],
+      3 => ['selectorName' => 'CRM_Event_Selector_Search',
         'selectorLabel' => ts('Event Participants'),
         'taskFile' => "CRM/common/searchResultTasks.tpl",
         'taskContext' => NULL,
         'resultFile' => 'CRM/Event/Form/Selector.tpl',
         'resultContext' => 'Search',
         'taskClassName' => 'CRM_Event_Task',
-      ),
-      4 => array('selectorName' => 'CRM_Activity_Selector_Search',
+      ],
+      4 => ['selectorName' => 'CRM_Activity_Selector_Search',
         'selectorLabel' => ts('Activities'),
         'taskFile' => "CRM/common/searchResultTasks.tpl",
         'taskContext' => NULL,
         'resultFile' => 'CRM/Activity/Form/Selector.tpl',
         'resultContext' => 'Search',
         'taskClassName' => 'CRM_Activity_Task',
-      ),
-      5 => array('selectorName' => 'CRM_Member_Selector_Search',
+      ],
+      5 => ['selectorName' => 'CRM_Member_Selector_Search',
         'selectorLabel' => ts('Membership'),
         'taskFile' => "CRM/common/searchResultTasks.tpl",
         'taskContext' => NULL,
         'resultFile' => 'CRM/Member/Form/Selector.tpl',
         'resultContext' => 'Search',
         'taskClassName' => 'CRM_Member_Task',
-      ),
-    );
+      ],
+    ];
   }
 
 
   function getModeSelect() {
     $this->setModeValues();
 
-    $select = array();
+    $select = [];
     foreach (self::$_modeValues as $id => & $value) {
       $select[$id] = $value['selectorLabel'];
     }
@@ -383,7 +383,7 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
     $permission = CRM_Core_Permission::getPermission();
 
     // some tasks.. what do we want to do with the selected contacts ?
-    $tasks = array('' => ts('- actions -'));
+    $tasks = ['' => ts('- actions -')];
     if ($this->_componentMode == CRM_Contact_BAO_Query::MODE_CONTACTS) {
       $tasks += CRM_Contact_Task::permissionedTaskTitles($permission,
         CRM_Utils_Array::value('deleted_contacts',
@@ -401,9 +401,9 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
         CRM_Contact_Task::optionalTaskTitle($tasks);
       }
 
-      $savedSearchValues = array('id' => $this->_ssID,
+      $savedSearchValues = ['id' => $this->_ssID,
         'name' => CRM_Contact_BAO_SavedSearch::getName($this->_ssID, 'title'),
-      );
+      ];
       $this->assign_by_ref('savedSearch', $savedSearchValues);
       $this->assign('ssID', $this->_ssID);
     }
@@ -417,7 +417,7 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
 
       // also set the group title
       $cacheDate = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Group', $this->_groupID, 'cache_date');
-      $groupValues = array('id' => $this->_groupID, 'title' => $this->_group[$this->_groupID], 'cache_date' => $cacheDate);
+      $groupValues = ['id' => $this->_groupID, 'title' => $this->_group[$this->_groupID], 'cache_date' => $cacheDate];
       if (CRM_REQUEST_TIME - CRM_Contact_BAO_GroupContactCache::SMARTGROUP_CACHE_TIMEOUT_MINIMAL > strtotime($cacheDate)) {
         $groupValues['refresh_button'] = TRUE;
       }
@@ -436,7 +436,7 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
       if (isset($ssMappingId)) {
         $this->assign('ssMappingID', $ssMappingId);
       }
-      $group_contact_status = array();
+      $group_contact_status = [];
       foreach (CRM_Core_SelectValues::groupContactStatus() as $k => $v) {
         if (!empty($k)) {
           $group_contact_status[] = $this->createElement('checkbox', $k, NULL, $v);
@@ -455,7 +455,7 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
 
 
       // Set dynamic page title for 'Show Members of Group'
-      CRM_Utils_System::setTitle(ts('Contacts in Group: %1', array(1 => $this->_group[$this->_groupID])));
+      CRM_Utils_System::setTitle(ts('Contacts in Group: %1', [1 => $this->_group[$this->_groupID]]));
 
       // check if user has permission to edit members of this group
 
@@ -475,24 +475,24 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
 
     if ($this->_context === 'amtg') {
       // Set dynamic page title for 'Add Members Group'
-      CRM_Utils_System::setTitle(ts('Add to Group: %1', array(1 => $this->_group[$this->_amtgID])));
+      CRM_Utils_System::setTitle(ts('Add to Group: %1', [1 => $this->_group[$this->_amtgID]]));
       // also set the group title and freeze the action task with Add Members to Group
-      $groupValues = array('id' => $this->_amtgID, 'title' => $this->_group[$this->_amtgID]);
+      $groupValues = ['id' => $this->_amtgID, 'title' => $this->_group[$this->_amtgID]];
       $this->assign_by_ref('group', $groupValues);
-      $this->add('submit', $this->_actionButtonName, ts('Add Contacts to %1', array(1 => $this->_group[$this->_amtgID])),
-        array('class' => 'form-submit',
+      $this->add('submit', $this->_actionButtonName, ts('Add Contacts to %1', [1 => $this->_group[$this->_amtgID]]),
+        ['class' => 'form-submit',
           'onclick' => "return checkPerformAction('mark_x', '" . $this->getName() . "', 1);",
-        )
+        ]
       );
       $this->add('hidden', 'task', CRM_Contact_Task::GROUP_CONTACTS);
     }
     else {
       $this->add('select', 'task', ts('Actions:') . ' ', $tasks);
       $this->add('submit', $this->_actionButtonName, ts('Go'),
-        array('class' => 'form-submit',
+        ['class' => 'form-submit',
           'id' => 'Go',
           'onclick' => "return checkPerformAction('mark_x', '" . $this->getName() . "', 0);",
-        )
+        ]
       );
     }
 
@@ -500,7 +500,7 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
     $selectedRowsRadio = $this->addElement('radio', 'radio_ts', NULL, '', 'ts_sel');
     $this->assign('ts_sel_id', $selectedRowsRadio->_attributes['id']);
 
-    $allRowsRadio = $this->addElement('radio', 'radio_ts', NULL, '', 'ts_all', array('checked' => 'checked'));
+    $allRowsRadio = $this->addElement('radio', 'radio_ts', NULL, '', 'ts_all', ['checked' => 'checked']);
     $this->assign('ts_all_id', $allRowsRadio->_attributes['id']);
 
     /*
@@ -510,26 +510,26 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
 
     $rows = $this->get('rows');
     if (is_array($rows)) {
-      $this->addElement('checkbox', 'toggleSelect', NULL, NULL, array('onclick' => "toggleTaskAction( true ); return toggleCheckboxVals('mark_x_',this);"));
+      $this->addElement('checkbox', 'toggleSelect', NULL, NULL, ['onclick' => "toggleTaskAction( true ); return toggleCheckboxVals('mark_x_',this);"]);
       foreach ($rows as $row) {
         $this->addElement('checkbox', $row['checkbox'], NULL, NULL);
       }
     }
 
     // add buttons
-    $this->addButtons(array(
-        array('type' => 'refresh',
+    $this->addButtons([
+        ['type' => 'refresh',
           'name' => ts('Search'),
           'isDefault' => TRUE,
-        ),
-      )
+        ],
+      ]
     );
 
     $this->add('submit', $this->_printButtonName, ts('Print'),
-      array('class' => 'form-submit',
+      ['class' => 'form-submit',
         'id' => 'Print',
         'onclick' => "return checkPerformAction('mark_x', '" . $this->getName() . "', 1);",
-      )
+      ]
     );
 
     $this->setDefaultAction('refresh');
@@ -679,8 +679,8 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
     if (!CRM_Utils_Array::value('deleted_contacts', $this->_formValues)) {
 
       $menuItems = CRM_Contact_BAO_Contact::contextMenu();
-      $primaryActions = CRM_Utils_Array::value('primaryActions', $menuItems, array());
-      $this->_contextMenu = CRM_Utils_Array::value('moreActions', $menuItems, array());
+      $primaryActions = CRM_Utils_Array::value('primaryActions', $menuItems, []);
+      $this->_contextMenu = CRM_Utils_Array::value('moreActions', $menuItems, []);
       $this->assign('contextMenu', $primaryActions + $this->_contextMenu);
     }
 

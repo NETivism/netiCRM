@@ -163,7 +163,7 @@ UPDATE civicrm_membership_type
   SET  relationship_type_id = NULL
  WHERE relationship_type_id = %1
 ";
-    $params = array(1 => array($relationshipTypeId, 'Integer'));
+    $params = [1 => [$relationshipTypeId, 'Integer']];
     CRM_Core_DAO::executeQuery($query, $params);
 
     //fixed for CRM-3323

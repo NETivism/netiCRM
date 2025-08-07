@@ -80,7 +80,7 @@ class CRM_Core_Payment_ClickAndPledge extends CRM_Core_Payment {
    * @public
    */
   function doDirectPayment(&$params) {
-    $args = array();
+    $args = [];
 
     $this->initialize($args, 'DoDirectPayment');
 
@@ -125,7 +125,7 @@ class CRM_Core_Payment_ClickAndPledge extends CRM_Core_Payment {
    * @public
    */
   function checkConfig() {
-    $error = array();
+    $error = [];
     if ($this->_paymentProcessor['payment_processor_type'] == 'ClickAndPledge') {
       if (empty($this->_paymentProcessor['user_name'])) {
         $error[] = ts('User ID is not set in the Administer CiviCRM &raquo; Payment Processor.');
@@ -183,10 +183,10 @@ class CRM_Core_Payment_ClickAndPledge extends CRM_Core_Payment {
     if (substr($returnURL, 0, 4) != 'http') {
 
       $fixUrl = CRM_Utils_System::url("civicrm/admin/setting/url", '&reset=1');
-      CRM_Core_Error::fatal(ts('Sending a relative URL to Click And Pledge is erroneous. Please make your resource URL (in <a href="%1">Administer CiviCRM &raquo; Global Settings &raquo; Resource URLs</a> ) complete.', array(1 => $fixUrl)));
+      CRM_Core_Error::fatal(ts('Sending a relative URL to Click And Pledge is erroneous. Please make your resource URL (in <a href="%1">Administer CiviCRM &raquo; Global Settings &raquo; Resource URLs</a> ) complete.', [1 => $fixUrl]));
     }
 
-    $ClickAndPledgeParams = array('WID' => $this->_paymentProcessor['user_name'],
+    $ClickAndPledgeParams = ['WID' => $this->_paymentProcessor['user_name'],
       'R' => $returnURL,
       'D' => $deductAmount,
       'B' => $this->_paymentProcessor['signature'],
@@ -194,17 +194,17 @@ class CRM_Core_Payment_ClickAndPledge extends CRM_Core_Payment {
       'RD' => '1',
       'C' => '1',
       'I' => $params['invoiceID'],
-    );
+    ];
 
     // add name and address if available, CRM-3130
-    $otherVars = array('first_name' => 'first_name',
+    $otherVars = ['first_name' => 'first_name',
       'last_name' => 'last_name',
       'street_address' => 'address1',
       'city' => 'city',
       'state_province' => 'state',
       'postal_code' => 'zip',
       'email' => 'email',
-    );
+    ];
 
     foreach (array_keys($params) as $p) {
       // get the base name without the location type suffixed to it
@@ -232,19 +232,19 @@ class CRM_Core_Payment_ClickAndPledge extends CRM_Core_Payment {
         CRM_Core_Error::fatal(ts('Recurring contribution, but no database id'));
       }
 
-      $ClickAndPledgeParams = array('WID' => $this->_paymentProcessor['user_name'],
+      $ClickAndPledgeParams = ['WID' => $this->_paymentProcessor['user_name'],
         'R' => $returnURL,
         'B' => $this->_paymentProcessor['signature'],
         'T' => $params['amount'],
         'RD' => '1',
         'C' => '1',
         'I' => $params['invoiceID'],
-      );
+      ];
     }
     else {
-      $ClickAndPledgeParams += array('cmd' => '_xclick',
+      $ClickAndPledgeParams += ['cmd' => '_xclick',
         'amount' => $params['amount'],
-      );
+      ];
     }
 
     // Allow further manipulation of the arguments via custom hooks ..

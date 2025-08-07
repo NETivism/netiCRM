@@ -90,16 +90,16 @@ class CRM_Contribute_Import_Form_Preview extends CRM_Core_Form {
     $prefix = str_replace(CRM_Import_ImportJob::TABLE_PREFIX, CRM_Contribute_Import_Parser::ERROR_FILE_PREFIX, $tableName);
     $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String', $this);
 
-    CRM_Import_Parser::setImportErrorFilenames($qfKey, array('error', 'conflict','no_match'), 'CRM_Contribute_Import_Parser', $prefix, $this);
+    CRM_Import_Parser::setImportErrorFilenames($qfKey, ['error', 'conflict','no_match'], 'CRM_Contribute_Import_Parser', $prefix, $this);
 
-    $properties = array(
+    $properties = [
       'mapper', 'softCreditFields', 'pcpCreatorFields', 'columnCount',
       'totalRowCount', 'validRowCount',
       'invalidRowCount', 'conflictRowCount',
       'downloadErrorRecordsUrl',
       'downloadConflictRecordsUrl',
       'downloadMismatchRecordsUrl',
-    );
+    ];
 
     foreach ($properties as $property) {
       $this->assign($property, $this->get($property));
@@ -121,25 +121,25 @@ class CRM_Contribute_Import_Form_Preview extends CRM_Core_Form {
    * @access public
    */
   public function buildQuickForm() {
-    $attr = array('onclick' => "return verify();");
+    $attr = ['onclick' => "return verify();"];
     $locked = CRM_Core_Lock::isUsed($this->get('importTableName'));
     if ($locked) {
       $attr['disabled'] = 'disabled';
       $this->assign('locked_import', TRUE);
     }
-    $this->addButtons(array(
-        array('type' => 'back',
+    $this->addButtons([
+        ['type' => 'back',
           'name' => ts('<< Previous'),
-        ),
-        array('type' => 'next',
+        ],
+        ['type' => 'next',
           'name' => ts('Import Now >>'),
           'js' => $attr,
           'isDefault' => TRUE,
-        ),
-        array('type' => 'cancel',
+        ],
+        ['type' => 'cancel',
           'name' => ts('Cancel'),
-        ),
-      )
+        ],
+      ]
     );
   }
 
@@ -169,7 +169,7 @@ class CRM_Contribute_Import_Form_Preview extends CRM_Core_Form {
     $config = CRM_Core_Config::singleton();
     $onDuplicate = $this->get('onDuplicate');
 
-    $importJobParams = array(
+    $importJobParams = [
       'invalidRowCount' => $this->get('invalidRowCount'),
       'conflictRowCount' => $this->get('conflictRowCount'),
       'onDuplicate' => $this->get('onDuplicate'),
@@ -183,14 +183,14 @@ class CRM_Contribute_Import_Form_Preview extends CRM_Core_Form {
       'createContactOption' => $this->get('createContactOption'),
       'skipColumnHeader' => $this->get('skipColumnHeader'),
       'dateFormats' => $this->get('dateFormats'),
-    );
-    $properties = array(
+    ];
+    $properties = [
       'ims' => 'mapperImProvider',
       'phones' => 'mapperPhoneType',
       'websites' => 'mapperWebsiteType',
       'locationTypes' => 'mapperLocType',
       'locations' => 'locations',
-    );
+    ];
     foreach ($properties as $propertyName => $propertyVal) {
       $importJobParams[$propertyVal] = $this->get($propertyName);
     }
@@ -217,7 +217,7 @@ class CRM_Contribute_Import_Form_Preview extends CRM_Core_Form {
     $errorStack = CRM_Core_Error::singleton();
     $errors = $errorStack->getErrors();
 
-    $errorMessage = array();
+    $errorMessage = [];
 
     if (is_array($errors)) {
       foreach ($errors as $key => $value) {

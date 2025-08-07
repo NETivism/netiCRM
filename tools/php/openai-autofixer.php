@@ -7,68 +7,68 @@ if (!php_sapi_name() === 'cli') {
 
 function usage($long =  FALSE){
     $output = <<<'EOT'
-  Usage: This tool parses error logs line by line, utilizes OpenAI to
-  generate corrective code, and applies these changes to the respective files.
-  Currently, only support one line auto replacement.
+      Usage: This tool parses error logs line by line, utilizes OpenAI to
+      generate corrective code, and applies these changes to the respective files.
+      Currently, only support one line auto replacement.
 
-    php openai-autofixer.php \
-      --input-file=<file_name> \
-      --filename-match="<regex>" \
-      --linenum-match="<regex>" \
-      --prompt-file=<file_name> \
-      --report-file=<file_name>
-      --openai-keyfile=<file_name> \
-      --context=<AnBn|func> \
+        php openai-autofixer.php \
+          --input-file=<file_name> \
+          --filename-match="<regex>" \
+          --linenum-match="<regex>" \
+          --prompt-file=<file_name> \
+          --report-file=<file_name>
+          --openai-keyfile=<file_name> \
+          --context=<AnBn|func> \
 
-EOT;
+    EOT;
   if ($long) {
     $output .= <<<'EOT'
-    --input-file [required]: This is the input log file with each error logged on a separate line.
-      Utilize --filename-match and --linenum-match to identify the code file you wish to correct.
+        --input-file [required]: This is the input log file with each error logged on a separate line.
+          Utilize --filename-match and --linenum-match to identify the code file you wish to correct.
 
-    --filename-match [required]: Use this to match the filename from each log line.
-      Examples:
-      --filename-match="*.civicrm/(CRM.*php$)"
-      --filename-match="^[^:]+"
+        --filename-match [required]: Use this to match the filename from each log line.
+          Examples:
+          --filename-match="*.civicrm/(CRM.*php$)"
+          --filename-match="^[^:]+"
 
-    --linenum-match [required]: Use this to match the line number of a specific file.
-      Examples:
-      --linenum-match="line\s(\d+)"
-      --linenum-match="^[^:]+:(\d+):"
+        --linenum-match [required]: Use this to match the line number of a specific file.
+          Examples:
+          --linenum-match="line\s(\d+)"
+          --linenum-match="^[^:]+:(\d+):"
 
-    --prompt-file [required]: This is the prompt template file.
-      Use {{code-block}} and {{log-line}} placeholders when parsing each log line.
-      Example prompt file:
-        You are a PHP programmer. Please help me using PHP rewrite below code based on error message. Return PHP program only without any note or explanation. The return PHP code should wrap with triple backtick.
+        --prompt-file [required]: This is the prompt template file.
+          Use {{code-block}} and {{log-line}} placeholders when parsing each log line.
+          Example prompt file:
+            You are a PHP programmer. Please help me using PHP rewrite below code based on error message. Return PHP program only without any note or explanation. The return PHP code should wrap with triple backtick.
 
-        Code:
-        ```
-        {{code-block}}
-        ```
-        Error message:
-        {{log-line}}
+            Code:
+            ```
+            {{code-block}}
+            ```
+            Error message:
+            {{log-line}}
 
-    --report-file [required]: This is the output report file.
-      The log from the parsing process will be stored in this file. This may contain code samples in response to OpenAI queries.
+        --report-file [required]: This is the output report file.
+          The log from the parsing process will be stored in this file. This may contain code samples in response to OpenAI queries.
 
-    --openai-keyfile: Contains the content for the HTTP header: Authorization.
-      Only send a request to OpenAI if this is provided. Otherwise, the command preview will be output.
-      Utilize a format that's compatible with the HTTP header, based on OpenAI's documentation.
-      Example:
-        Bearer your_api_key
+        --openai-keyfile: Contains the content for the HTTP header: Authorization.
+          Only send a request to OpenAI if this is provided. Otherwise, the command preview will be output.
+          Utilize a format that's compatible with the HTTP header, based on OpenAI's documentation.
+          Example:
+            Bearer your_api_key
 
-    --context: Use this to extract lines before or after specific lines for the GPT.
-      Without any context, only a single line will be used as a prompt placeholder.
-      Examples:
-      --context=B10
-        Extracts 10 lines before the specific line
-      --context=A10
-        Extracts 10 lines after the specific line
-      --context=B3A10
-        Extracts 3 lines before and 10 lines after the specific line
-      --context=func
-        Extracts from the closest function to the specific line
-EOT;
+        --context: Use this to extract lines before or after specific lines for the GPT.
+          Without any context, only a single line will be used as a prompt placeholder.
+          Examples:
+          --context=B10
+            Extracts 10 lines before the specific line
+          --context=A10
+            Extracts 10 lines after the specific line
+          --context=B3A10
+            Extracts 3 lines before and 10 lines after the specific line
+          --context=func
+            Extracts from the closest function to the specific line
+    EOT;
   }
   else {
     $output .= '
@@ -119,8 +119,8 @@ function prompt($logLine, $fileName, $lineNum, $promptTemplate, $params){
 
 function request($prompt, $params, &$result) {
   $request = [
-    'model' => isset($params['model']) ? $params['model'] : 'gpt-3.5-turbo',
-    'temperature' => isset($params['temperature']) ? $params['temperature'] : 0,
+    'model' => $params['model'] ?? 'gpt-3.5-turbo',
+    'temperature' => $params['temperature'] ?? 0,
     'messages' => [
       ['role' => 'user', 'content' => $prompt],
     ]

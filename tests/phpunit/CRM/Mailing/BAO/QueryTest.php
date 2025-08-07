@@ -17,11 +17,11 @@ class CRM_Mailing_BAO_QueryTest extends CiviUnitTestCase
 
     function get_info( ) 
     {
-        return array(
+        return [
                      'name'        => 'Mailing BAO Query',
                      'description' => 'Test all Mailing_BAO_Query methods.',
                      'group'       => 'CiviMail BAO Query Tests',
-                     );
+                     ];
     }
     
     public function dataProvider()
@@ -36,7 +36,7 @@ class CRM_Mailing_BAO_QueryTest extends CiviUnitTestCase
     
     function tearDown()
     {
-        $tablesToTruncate = array( 
+        $tablesToTruncate = [ 
                                    'civicrm_mailing_event_bounce',
                                    'civicrm_mailing_event_delivered',
                                    'civicrm_mailing_event_opened',
@@ -48,7 +48,7 @@ class CRM_Mailing_BAO_QueryTest extends CiviUnitTestCase
                                    'civicrm_mailing',
                                    'civicrm_email',
                                    'civicrm_contact',
-                                   );
+                                   ];
         $this->quickCleanup( $tablesToTruncate );
     }
     
@@ -64,7 +64,7 @@ class CRM_Mailing_BAO_QueryTest extends CiviUnitTestCase
         $obj = new CRM_Contact_BAO_Query( $params );
         $dao = $obj->searchQuery( );
 
-        $contacts = array( );
+        $contacts = [ ];
         while ( $dao->fetch( ) ) {
             $contacts[] = $dao->contact_id;
         }

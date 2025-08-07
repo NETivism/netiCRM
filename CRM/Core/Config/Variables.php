@@ -97,14 +97,14 @@ class CRM_Core_Config_Variables extends CRM_Core_Config_Defaults {
    * 1228 is an id for United States.
    * @var string
    */
-  public $countryLimit = array('1228');
+  public $countryLimit = ['1228'];
 
   /**
    * List of country codes limiting the province list.
    * 1228 is an id for United States.
    * @var string
    */
-  public $provinceLimit = array('1228');
+  public $provinceLimit = ['1228'];
 
   /**
    * ISO code of default country for contact.
@@ -172,10 +172,10 @@ class CRM_Core_Config_Variables extends CRM_Core_Config_Defaults {
    *
    * @var array
    */
-  public $fiscalYearStart = array(
+  public $fiscalYearStart = [
     'M' => 01,
     'd' => 01,
-  );
+  ];
 
   /**
    * String format for monetary amounts
@@ -312,10 +312,10 @@ class CRM_Core_Config_Variables extends CRM_Core_Config_Defaults {
    *
    * @var array
    */
-  public $enableComponents = array('CiviContribute', 'CiviPledge', 'CiviMember',
+  public $enableComponents = ['CiviContribute', 'CiviPledge', 'CiviMember',
     'CiviEvent', 'CiviMail', 'CiviReport',
-  );
-  public $enableComponentIDs = array(1, 6, 2, 3, 4, 8);
+  ];
+  public $enableComponentIDs = [1, 6, 2, 3, 4, 8];
 
   /**
    * Should payments be accepted only via SSL?
@@ -440,7 +440,7 @@ class CRM_Core_Config_Variables extends CRM_Core_Config_Defaults {
   /**
    * The default value for Content Security Policy recover.
    */
-  public $defaultCSP = "default-src 'self'; img-src 'self' data: https: https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.g.doubleclick.net https://*.google.com https://*.google.com.tw; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://analytics.neticrm.tw https://*.googletagmanager.com https://*.google-analytics.com https://www.google.com/recaptcha/api.js https://*.facebook.net https://*.facebook.com https://*.twitter.com https://*.tappaysdk.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com; font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; frame-src 'self' https://neticrm.tw https://*.facebook.net https://*.facebook.com https://*.twitter.com https://*.youtube.com https://*.vimeo.com https://*.tappaysdk.com https://www.google.com https://td.doubleclick.net; object-src 'none'; connect-src 'self' https://neti.cc https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.g.doubleclick.net https://*.google.com https://*.google.com.tw";
+  public $defaultCSP = "default-src 'self'; img-src 'self' data: blob: https: https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.g.doubleclick.net https://*.google.com https://*.google.com.tw; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://analytics.neticrm.tw https://*.googletagmanager.com https://*.google-analytics.com https://www.google.com/recaptcha/api.js https://*.facebook.net https://*.facebook.com https://*.twitter.com https://*.tappaysdk.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com; font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; frame-src 'self' https://neticrm.tw https://*.facebook.net https://*.facebook.com https://*.twitter.com https://*.youtube.com https://*.vimeo.com https://*.tappaysdk.com https://www.google.com https://td.doubleclick.net; object-src 'none'; connect-src 'self' blob: https://neti.cc https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.g.doubleclick.net https://*.google.com https://*.google.com.tw";
 
   /**
    * The default value for Content Security Policy setting.
@@ -464,12 +464,12 @@ class CRM_Core_Config_Variables extends CRM_Core_Config_Defaults {
    *
    * @var array
    */
-  public $customDonorCredit = array(
+  public $customDonorCredit = [
     'full_name' => 1,
     'partial_name' => 1,
     'custom_name' => 1,
     'anonymous' => 0
-  );
+  ];
 
   /**
    * Provide addressSequence
@@ -552,7 +552,7 @@ class CRM_Core_Config_Variables extends CRM_Core_Config_Defaults {
     static $cachedCountryLimit = NULL;
     if (!$cachedCountryLimit) {
       $countryIsoCodes = CRM_Core_PseudoConstant::countryIsoCode();
-      $country = array();
+      $country = [];
       if (is_array($this->countryLimit)) {
         foreach ($this->countryLimit as $val) {
           $country[] = $countryIsoCodes[$val];
@@ -577,7 +577,7 @@ class CRM_Core_Config_Variables extends CRM_Core_Config_Defaults {
     static $cachedProvinceLimit = NULL;
     if (!$cachedProvinceLimit) {
       $countryIsoCodes = CRM_Core_PseudoConstant::countryIsoCode();
-      $country = array();
+      $country = [];
       if (is_array($this->provinceLimit)) {
         foreach ($this->provinceLimit as $val) {
           $country[] = $countryIsoCodes[$val];

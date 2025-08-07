@@ -5,14 +5,14 @@ class CRM_Coupon_Page_CouponTrack extends CRM_Core_Page {
   function run() {
     $couponId = CRM_Utils_Request::retrieve('coupon_id', 'Positive', $this);
     if ($couponId) {
-      $dao = CRM_Coupon_BAO_Coupon::getCouponUsedBy(array($couponId));
+      $dao = CRM_Coupon_BAO_Coupon::getCouponUsedBy([$couponId]);
     }
     else {
       $dao = CRM_Coupon_BAO_Coupon::getCouponUsedBy();
     }
 
     while ($dao->fetch()) {
-      $used[$dao->id] = array();
+      $used[$dao->id] = [];
       foreach($dao as $field => $value) {
         if ($field[0] == '_') {
           continue;

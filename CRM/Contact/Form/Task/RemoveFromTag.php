@@ -79,11 +79,11 @@ class CRM_Contact_Form_Task_RemoveFromTag extends CRM_Contact_Form_Task {
   }
 
   function addRules() {
-    $this->addFormRule(array('CRM_Contact_Form_Task_RemoveFromTag', 'formRule'));
+    $this->addFormRule(['CRM_Contact_Form_Task_RemoveFromTag', 'formRule']);
   }
 
   static function formRule($form, $rule) {
-    $errors = array();
+    $errors = [];
     if (empty($form['tag']) && empty($form['taglist'])) {
       $errors['_qf_default'] = "Please select atleast one tag.";
     }
@@ -101,7 +101,7 @@ class CRM_Contact_Form_Task_RemoveFromTag extends CRM_Contact_Form_Task {
     //get the submitted values in an array
     $params = $this->controller->exportValues($this->_name);
 
-    $contactTags = $tagList = array();
+    $contactTags = $tagList = [];
 
     // check if contact tags exists
     if (CRM_Utils_Array::value('tag', $params)) {
@@ -130,15 +130,15 @@ class CRM_Contact_Form_Task_RemoveFromTag extends CRM_Contact_Form_Task {
     // merge contact and taglist tags
     $allTags = CRM_Utils_Array::arrayMerge($contactTags, $tagList);
 
-    $this->_name = array();
+    $this->_name = [];
     foreach ($allTags as $key => $dnc) {
       $this->_name[] = $this->_tags[$key];
 
       list($total, $removed, $notRemoved) = CRM_Core_BAO_EntityTag::removeEntitiesFromTag($this->_contactIds, $key);
-      $status = array(
+      $status = [
         'Contact(s) tagged as: ' . CRM_Utils_Array::implode(',', $this->_name),
         'Total Selected Contact(s): ' . $total,
-      );
+      ];
     }
     if ($removed) {
       $status[] = 'Total Contact(s) to be  removed from tag: ' . $removed;

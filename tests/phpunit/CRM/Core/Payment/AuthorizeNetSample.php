@@ -35,11 +35,11 @@ class CRM_Core_Payment_AuthorizeNetTest extends CiviUnitTestCase
 {
     function get_info( ) 
     {
-        return array(
+        return [
                      'name'        => 'Authorize.net processing',
                      'description' => 'Test Authorize.ne methods.',
                      'group'       => 'Payment Processor Tests',
-                     );
+                     ];
     }
    
     function setUp( ) 
@@ -50,9 +50,9 @@ class CRM_Core_Payment_AuthorizeNetTest extends CiviUnitTestCase
         $this->paymentProcessor  = new AuthorizeNet( );
         $this->processorParams   = $this->paymentProcessor->create( );
 
-        $paymentProcessor = array( 'user_name' => $this->processorParams->user_name,
+        $paymentProcessor = [ 'user_name' => $this->processorParams->user_name,
                                    'password'  => $this->processorParams->password,
-                                   'url_recur' => $this->processorParams->url_recur );  
+                                   'url_recur' => $this->processorParams->url_recur ];  
         
         $this->processor = new CRM_Core_Payment_AuthorizeNet( 'Contribute', $paymentProcessor );
         $this->_contributionTypeId = $this->contributionTypeCreate( );
@@ -61,7 +61,7 @@ class CRM_Core_Payment_AuthorizeNetTest extends CiviUnitTestCase
     function tearDown( )
     {
         $this->processorParams->delete( );
-        $tablesToTruncate = array( 'civicrm_contribution_type', 'civicrm_contribution', 'civicrm_contribution_recur' );
+        $tablesToTruncate = [ 'civicrm_contribution_type', 'civicrm_contribution', 'civicrm_contribution_recur' ];
         $this->quickCleanup( $tablesToTruncate );
     }
     
@@ -73,9 +73,9 @@ class CRM_Core_Payment_AuthorizeNetTest extends CiviUnitTestCase
     function testCreateSingleNowDated( )
     {
         $contactId = Contact::createIndividual( );
-        $ids       = array( 'contribution' => null );
+        $ids       = [ 'contribution' => null ];
         
-        $contributionRecurParams = array( 'contact_id'             => $contactId,
+        $contributionRecurParams = [ 'contact_id'             => $contactId,
                                           'amount'                 => 150.00,
                                           'currency'               => 'USD',
                                           'frequency_unit'         => 'week',
@@ -86,11 +86,11 @@ class CRM_Core_Payment_AuthorizeNetTest extends CiviUnitTestCase
                                           'invoice_id'             => 'c8acb91e080ad7bd8a2adc119c192885',
                                           'contribution_status_id' => 2,
                                           'is_test'                => 1,
-                                          'payment_processor_id'   => $this->processorParams->id );
+                                          'payment_processor_id'   => $this->processorParams->id ];
         
         $recur = CRM_Contribute_BAO_ContributionRecur::add( $contributionRecurParams, $ids );
                                           
-        $contributionParams = array( 'contact_id'             => $contactId,
+        $contributionParams = [ 'contact_id'             => $contactId,
                                      'contribution_type_id'   => $this->_contributionTypeId,
                                      'recieve_date'           => date( 'Ymd' ),
                                      'total_amount'           => 150.00,
@@ -99,10 +99,10 @@ class CRM_Core_Payment_AuthorizeNetTest extends CiviUnitTestCase
                                      'contribution_recur_id'  => $recur->id,
                                      'is_test'                => 1,
                                      'contribution_status_id' => 2,
-                                     );
+                                     ];
         $contribution = CRM_Contribute_BAO_Contribution::add( $contributionParams, $ids );
         
-        $params = array(     
+        $params = [     
                         'qfKey' => '08ed21c7ca00a1f7d32fff2488596ef7_4454',
                         'hidden_CreditCard' => 1,
                         'billing_first_name' => 'Frodo',
@@ -115,10 +115,10 @@ class CRM_Core_Payment_AuthorizeNetTest extends CiviUnitTestCase
                         'billing_country_id-5' => 1228,
                         'credit_card_number' => '4007000000027',
                         'cvv2' => 123,
-                        'credit_card_exp_date' => Array(
+                        'credit_card_exp_date' => [
                                                         'M' => 10,
                                                         'Y' => 2019
-                                                        ),
+                                                        ],
                         
                         'credit_card_type' => 'Visa',
                         'is_recur' => 1,
@@ -174,7 +174,7 @@ class CRM_Core_Payment_AuthorizeNetTest extends CiviUnitTestCase
                         'contributionID' => $contribution->id,
                         'contributionTypeID' => $this->_contributionTypeId,
                         'contributionRecurID' => $recur->id,
-                             );
+                             ];
 
         $result = $this->processor->doDirectPayment($params);
         
@@ -192,9 +192,9 @@ class CRM_Core_Payment_AuthorizeNetTest extends CiviUnitTestCase
         $start_date = date('Ymd',strtotime("+ 1 week") );
         
         $contactId = Contact::createIndividual( );
-        $ids       = array( 'contribution' => null );
+        $ids       = [ 'contribution' => null ];
         
-        $contributionRecurParams = array( 'contact_id'             => $contactId,
+        $contributionRecurParams = [ 'contact_id'             => $contactId,
                                           'amount'                 => 100.00,
                                           'currency'               => 'USD',
                                           'frequency_unit'         => 'month',
@@ -205,11 +205,11 @@ class CRM_Core_Payment_AuthorizeNetTest extends CiviUnitTestCase
                                           'invoice_id'             => 'f72ee3de0a877bfdc03ca1daf4a1d757',
                                           'contribution_status_id' => 2,
                                           'is_test'                => 1,
-                                          'payment_processor_id'   => $this->processorParams->id );
+                                          'payment_processor_id'   => $this->processorParams->id ];
         
         $recur = CRM_Contribute_BAO_ContributionRecur::add( $contributionRecurParams, $ids );
                                           
-        $contributionParams = array( 'contact_id'             => $contactId,
+        $contributionParams = [ 'contact_id'             => $contactId,
                                      'contribution_type_id'   => $this->_contributionTypeId,
                                      'recieve_date'           => $start_date,
                                      'total_amount'           => 100.00,
@@ -218,10 +218,10 @@ class CRM_Core_Payment_AuthorizeNetTest extends CiviUnitTestCase
                                      'contribution_recur_id'  => $recur->id,
                                      'is_test'                => 1,
                                      'contribution_status_id' => 2,
-                                     );
+                                     ];
         $contribution = CRM_Contribute_BAO_Contribution::add( $contributionParams, $ids );
 
-        $params = array(     
+        $params = [     
                         'qfKey' => '00ed21c7ca00a1f7d555555596ef7_4454',
                         'hidden_CreditCard' => 1,
                         'billing_first_name' => 'Frodowina',
@@ -234,10 +234,10 @@ class CRM_Core_Payment_AuthorizeNetTest extends CiviUnitTestCase
                         'billing_country_id-5' => 1228,
                         'credit_card_number' => '4007000000027',
                         'cvv2' => 123,
-                        'credit_card_exp_date' => array(
+                        'credit_card_exp_date' => [
                                                         'M' => 11,
                                                         'Y' => 2019
-                                                        ),
+                                                        ],
                         
                         'credit_card_type' => 'Visa',
                         'is_recur' => 1,
@@ -293,7 +293,7 @@ class CRM_Core_Payment_AuthorizeNetTest extends CiviUnitTestCase
                         'contributionID' => $contribution->id,
                         'contributionTypeID' => $this->_contributionTypeId,
                         'contributionRecurID' => $recur->id,
-                             );
+                             ];
 
         $result = $this->processor->doDirectPayment( $params );
         

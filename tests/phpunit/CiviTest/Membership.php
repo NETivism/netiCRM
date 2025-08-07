@@ -15,9 +15,9 @@ class Membership extends PHPUnit_Framework_Testcase
     {
         $orgId     = Contact::createOrganisation( );
         
-        $ids = array ( 'memberOfContact' => $orgId );
+        $ids =  [ 'memberOfContact' => $orgId ];
         
-        $params = array (
+        $params =  [
                          'name'                      => 'Test Type',
                          'description'               => 'test membership type',
                          'minimum_fee'               => 111,
@@ -35,7 +35,7 @@ class Membership extends PHPUnit_Framework_Testcase
                          'is_active'                 => 1,
                          'contact_check'             => 1,
                          'relationship_direction'    => 'a_b'
-                         );
+                         ];
 
         $membershipType = CRM_Member_BAO_MembershipType::add( $params, $ids );
         $membershipType->orgnizationID = $orgId;
@@ -48,7 +48,7 @@ class Membership extends PHPUnit_Framework_Testcase
      */
     function createMembershipBlock( $membershipType, $contributionPageId ) 
     {
-        $param = array (
+        $param =  [
                         'is_active'               => 1,
                         'new_title'               => 'Membership Fees',
                         'new_text'                => 'text for membership fees',
@@ -56,15 +56,15 @@ class Membership extends PHPUnit_Framework_Testcase
                         'renewal_text'            => 'Membership renewal text',
                         'is_required'             => 1,
                         'display_min_fee'         => 1,
-                        'membership_type'         => array(
+                        'membership_type'         => [
                                                            $membershipType => 1
-                                                           ),
+                                                           ],
                         'membership_type_default' => null,
                         'membership_types'        => $membershipType,
                         'is_separate_payment'     => 0,
                         'entity_table'            => 'civicrm_contribution_page',
                         'entity_id'               => $contributionPageId
-                        );
+                        ];
         
         $dao = new CRM_Member_DAO_MembershipBlock();
         $dao->copyValues($param);

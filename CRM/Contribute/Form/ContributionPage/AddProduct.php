@@ -80,7 +80,7 @@ class CRM_Contribute_Form_ContributionPage_AddProduct extends CRM_Contribute_For
    * @return void
    */
   function setDefaultValues() {
-    $defaults = array();
+    $defaults = [];
 
     if ($this->_pid) {
       $dao = new CRM_Contribute_DAO_PremiumsProduct();
@@ -101,7 +101,7 @@ class CRM_Contribute_Form_ContributionPage_AddProduct extends CRM_Contribute_For
       $premiumID = $dao->id;
 
       $sql = 'SELECT max( weight ) as max_weight FROM civicrm_premiums_product WHERE premiums_id = %1';
-      $params = array(1 => array($premiumID, 'Integer'));
+      $params = [1 => [$premiumID, 'Integer']];
       $dao = &CRM_Core_DAO::executeQuery($sql, $params);
       $dao->fetch();
       $defaults['weight'] = $dao->max_weight + 1;
@@ -133,16 +133,16 @@ class CRM_Contribute_Form_ContributionPage_AddProduct extends CRM_Contribute_For
       }
 
 
-      $this->addButtons(array(
-          array('type' => 'next',
+      $this->addButtons([
+          ['type' => 'next',
             'name' => ts('Delete'),
             'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;',
             'isDefault' => TRUE,
-          ),
-          array('type' => 'cancel',
+          ],
+          ['type' => 'cancel',
             'name' => ts('Cancel'),
-          ),
-        )
+          ],
+        ]
       );
       return;
     }
@@ -150,12 +150,12 @@ class CRM_Contribute_Form_ContributionPage_AddProduct extends CRM_Contribute_For
     if ($this->_action & CRM_Core_Action::PREVIEW) {
 
       CRM_Contribute_BAO_Premium::buildPremiumPreviewBlock($this, NULL, $this->_pid);
-      $this->addButtons(array(
-          array('type' => 'next',
+      $this->addButtons([
+          ['type' => 'next',
             'name' => ts('Done with Preview'),
             'isDefault' => TRUE,
-          ),
-        )
+          ],
+        ]
       );
       return;
     }
@@ -174,16 +174,16 @@ class CRM_Contribute_Form_ContributionPage_AddProduct extends CRM_Contribute_For
     $session->pushUserContext(CRM_Utils_System::url($urlParams, 'action=update&reset=1&id=' . $this->_id));
 
     if ($single) {
-      $this->addButtons(array(
-          array('type' => 'next',
+      $this->addButtons([
+          ['type' => 'next',
             'name' => ts('Save'),
             'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;',
             'isDefault' => TRUE,
-          ),
-          array('type' => 'cancel',
+          ],
+          ['type' => 'cancel',
             'name' => ts('Cancel'),
-          ),
-        )
+          ],
+        ]
       );
     }
     else {

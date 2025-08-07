@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-class CRM_Contact_DAO_GroupOrganization extends CRM_Core_DAO
+              class CRM_Contact_DAO_GroupOrganization extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -78,7 +78,7 @@ class CRM_Contact_DAO_GroupOrganization extends CRM_Core_DAO
    * @static
    */
   static $_log = true;
-  /**
+    /**
    * Relationship ID
    *
    * @var int unsigned
@@ -96,7 +96,7 @@ class CRM_Contact_DAO_GroupOrganization extends CRM_Core_DAO
    * @var int unsigned
    */
   public $organization_id;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -115,14 +115,14 @@ class CRM_Contact_DAO_GroupOrganization extends CRM_Core_DAO
   function &links()
   {
     if (!(self::$_links)) {
-      self::$_links = array(
+      self::$_links = [
         'group_id' => 'civicrm_group:id',
         'organization_id' => 'civicrm_contact:id',
-      );
+      ];
     }
     return self::$_links;
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -137,7 +137,7 @@ class CRM_Contact_DAO_GroupOrganization extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -146,25 +146,25 @@ class CRM_Contact_DAO_GroupOrganization extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'id' => array(
+      self::$_fields = [
+        'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'group_id' => array(
+                  ] ,
+        'group_id' => [
           'name' => 'group_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-          'FKClassName' => 'CRM_Contact_DAO_Group',
-        ) ,
-        'organization_id' => array(
+                    'FKClassName' => 'CRM_Contact_DAO_Group',
+        ] ,
+        'organization_id' => [
           'name' => 'organization_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-          'FKClassName' => 'CRM_Contact_DAO_Contact',
-        ) ,
-      );
+                    'FKClassName' => 'CRM_Contact_DAO_Contact',
+        ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -176,8 +176,8 @@ class CRM_Contact_DAO_GroupOrganization extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -197,7 +197,7 @@ class CRM_Contact_DAO_GroupOrganization extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -208,7 +208,7 @@ class CRM_Contact_DAO_GroupOrganization extends CRM_Core_DAO
           }
         }
       }
-    }
+                                              }
     return self::$_import;
   }
   /**
@@ -220,7 +220,7 @@ class CRM_Contact_DAO_GroupOrganization extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
@@ -231,7 +231,7 @@ class CRM_Contact_DAO_GroupOrganization extends CRM_Core_DAO
           }
         }
       }
-    }
+                                              }
     return self::$_export;
   }
 }

@@ -87,9 +87,9 @@ class CRM_Case_Form_Report extends CRM_Core_Form {
       return;
     }
 
-    $includeActivites = array(1 => ts('Include All Activities'),
+    $includeActivites = [1 => ts('Include All Activities'),
       2 => ts('Include Missing Activities Only'),
-    );
+    ];
     $includeActivitesGroup = $this->addRadio('include_activities',
       NULL,
       $includeActivites,
@@ -104,16 +104,16 @@ class CRM_Case_Form_Report extends CRM_Core_Form {
       ts('Redact (hide) Client and Service Provider Data')
     );
 
-    $this->addButtons(array(
-        array('type' => 'refresh',
+    $this->addButtons([
+        ['type' => 'refresh',
           'name' => ts('Generate Report'),
           'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
           'isDefault' => TRUE,
-        ),
-        array('type' => 'cancel',
+        ],
+        ['type' => 'cancel',
           'name' => ts('Cancel'),
-        ),
-      )
+        ],
+      ]
     );
   }
 

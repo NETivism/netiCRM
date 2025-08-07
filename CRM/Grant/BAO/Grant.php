@@ -77,21 +77,21 @@ class CRM_Grant_BAO_Grant extends CRM_Grant_DAO_Grant {
     $dao = &CRM_Core_DAO::executeQuery($query, CRM_Core_DAO::$_nullArray);
 
 
-    $status = array();
-    $summary = array();
+    $status = [];
+    $summary = [];
     $summary['total_grants'] = NULL;
     $status = CRM_Grant_PseudoConstant::grantStatus();
 
     foreach ($status as $id => $name) {
-      $stats[$id] = array('label' => $name,
+      $stats[$id] = ['label' => $name,
         'total' => 0,
-      );
+      ];
     }
 
     while ($dao->fetch()) {
-      $stats[$dao->status_id] = array('label' => $status[$dao->status_id],
+      $stats[$dao->status_id] = ['label' => $status[$dao->status_id],
         'total' => $dao->status_total,
-      );
+      ];
       $summary['total_grants'] += $dao->status_total;
     }
 
@@ -109,10 +109,10 @@ class CRM_Grant_BAO_Grant extends CRM_Grant_DAO_Grant {
   static function getGrantStatusOptGroup() {
 
 
-    $params = array();
+    $params = [];
     $params['name'] = CRM_Grant_BAO_Grant::$statusGroupName;
 
-    $defaults = array();
+    $defaults = [];
 
     $bao = new CRM_Core_BAO_OptionGroup();
     $og = $bao->retrieve($params, $defaults);
@@ -133,7 +133,7 @@ class CRM_Grant_BAO_Grant extends CRM_Grant_DAO_Grant {
     $dao->option_group_id = $og->id;
     $dao->find();
 
-    $statuses = array();
+    $statuses = [];
 
     while ($dao->fetch()) {
       $statuses[$dao->id] = $dao->label;
@@ -162,7 +162,7 @@ class CRM_Grant_BAO_Grant extends CRM_Grant_DAO_Grant {
    * @return array Array of grant summary statistics
    */
   static function getGrantStatistics($admin = FALSE) {
-    $grantStatuses = array();
+    $grantStatuses = [];
   }
 
   /**
@@ -211,10 +211,10 @@ class CRM_Grant_BAO_Grant extends CRM_Grant_DAO_Grant {
     }
 
     // first clean up all the money fields
-    $moneyFields = array('amount_total',
+    $moneyFields = ['amount_total',
       'amount_granted',
       'amount_requested',
-    );
+    ];
     foreach ($moneyFields as $field) {
       if (isset($params[$field])) {
         $params[$field] = CRM_Utils_Rule::cleanMoney($params[$field]);
@@ -243,7 +243,7 @@ class CRM_Grant_BAO_Grant extends CRM_Grant_DAO_Grant {
     $grantTypes = CRM_Grant_PseudoConstant::grantType();
     $title = CRM_Contact_BAO_Contact::displayName($grant->contact_id) . ' - ' . ts('Grant') . ': ' . $grantTypes[$grant->grant_type_id];
 
-    $recentOther = array();
+    $recentOther = [];
     if (CRM_Core_Permission::checkActionPermission('CiviGrant', CRM_Core_Action::UPDATE)) {
       $recentOther['editUrl'] = CRM_Utils_System::url('civicrm/contact/view/grant',
         "action=update&reset=1&id={$grant->id}&cid={$grant->contact_id}&context=home"
@@ -303,24 +303,24 @@ class CRM_Grant_BAO_Grant extends CRM_Grant_DAO_Grant {
     }
     if (CRM_Utils_Array::value('note', $params) || CRM_Utils_Array::value('id', $ids['note'])) {
 
-      $noteParams = array(
+      $noteParams = [
         'entity_table' => 'civicrm_grant',
         'note' => $params['note'] = $params['note'] ? $params['note'] : "null",
         'entity_id' => $grant->id,
         'contact_id' => $id,
         'modified_date' => date('Ymd'),
-      );
+      ];
 
       CRM_Core_BAO_Note::add($noteParams, $ids['note']);
     }
     // Log the information on successful add/edit of Grant
 
-    $logParams = array(
+    $logParams = [
       'entity_table' => 'civicrm_grant',
       'entity_id' => $grant->id,
       'modified_id' => $id,
       'modified_date' => date('Ymd'),
-    );
+    ];
 
     CRM_Core_BAO_Log::add($logParams);
 
@@ -377,10 +377,10 @@ class CRM_Grant_BAO_Grant extends CRM_Grant_DAO_Grant {
 
     // delete the recently created Grant
 
-    $grantRecent = array(
+    $grantRecent = [
       'id' => $id,
       'type' => 'Grant',
-    );
+    ];
     CRM_Utils_Recent::del($grantRecent);
 
     while ($grant->fetch()) {
@@ -398,42 +398,42 @@ class CRM_Grant_BAO_Grant extends CRM_Grant_DAO_Grant {
   static function &exportableFields() {
     if (!self::$_exportableFields) {
       if (!self::$_exportableFields) {
-        self::$_exportableFields = array();
+        self::$_exportableFields = [];
       }
 
-      $grantFields = array('grant_status' => array(
+      $grantFields = ['grant_status' => [
           'title' => 'Grant Status',
           'name' => 'grant_status',
           'data_type' => CRM_Utils_Type::T_STRING,
-        ),
-        'grant_type' => array(
+        ],
+        'grant_type' => [
           'title' => 'Grant Type',
           'name' => 'grant_type',
           'data_type' => CRM_Utils_Type::T_STRING,
-        ),
-        'grant_money_transfer_date' => array(
+        ],
+        'grant_money_transfer_date' => [
           'title' => 'Grant Money Transfer Date',
           'name' => 'grant_money_transfer_date',
           'data_type' => CRM_Utils_Type::T_DATE,
-        ),
-        'grant_amount_requested' => array(
+        ],
+        'grant_amount_requested' => [
           'title' => 'Grant Amount Requested',
           'name' => 'grant_amount_requested',
           'data_type' => CRM_Utils_Type::T_FLOAT,
-        ),
-        'grant_application_received_date' => array(
+        ],
+        'grant_application_received_date' => [
           'title' => 'Grant Application Recieved Date',
           'name' => 'grant_application_received_date',
           'data_type' => CRM_Utils_Type::T_DATE,
-        ),
-      );
+        ],
+      ];
 
 
       $fields = CRM_Grant_DAO_Grant::export();
-      $grantNote = array('grant_note' => array('title' => ts('Grant Note'),
+      $grantNote = ['grant_note' => ['title' => ts('Grant Note'),
           'name' => 'grant_note',
           'data_type' => CRM_Utils_Type::T_TEXT,
-        ));
+        ]];
       $fields = array_merge($fields, $grantFields, $grantNote,
         CRM_Core_BAO_CustomField::getFieldsForImport('Grant')
       );

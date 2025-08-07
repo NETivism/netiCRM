@@ -61,7 +61,7 @@ class CRM_Admin_Form_RelationshipType extends CRM_Admin_Form {
       CRM_Core_DAO::getAttribute('CRM_Contact_DAO_RelationshipType', 'label_a_b'), TRUE
     );
     $this->addRule('label_a_b', ts('Label already exists in Database.'),
-      'objectExists', array('CRM_Contact_DAO_RelationshipType', $this->_id, 'label_a_b')
+      'objectExists', ['CRM_Contact_DAO_RelationshipType', $this->_id, 'label_a_b']
     );
 
     $this->add('text', 'label_b_a', ts('Relationship Label-B to A'),
@@ -69,7 +69,7 @@ class CRM_Admin_Form_RelationshipType extends CRM_Admin_Form {
     );
 
     $this->addRule('label_b_a', ts('Label already exists in Database.'),
-      'objectExists', array('CRM_Contact_DAO_RelationshipType', $this->_id, 'label_b_a')
+      'objectExists', ['CRM_Contact_DAO_RelationshipType', $this->_id, 'label_b_a']
     );
 
     $this->add('text', 'description', ts('Description'),
@@ -83,10 +83,10 @@ class CRM_Admin_Form_RelationshipType extends CRM_Admin_Form {
 
     // add select for contact type
     $contactTypeA = &$this->add('select', 'contact_types_a', ts('Contact Type A') . ' ',
-      array('' => ts('- select -')) + $contactTypes
+      ['' => ts('- select -')] + $contactTypes
     );
     $contactTypeB = &$this->add('select', 'contact_types_b', ts('Contact Type B') . ' ',
-      array('' => ts('- select -')) + $contactTypes
+      ['' => ts('- select -')] + $contactTypes
     );
 
     $isActive = &$this->add('checkbox', 'is_active', ts('Enabled?'));
@@ -95,14 +95,14 @@ class CRM_Admin_Form_RelationshipType extends CRM_Admin_Form {
     if ($this->_id &&
       CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_RelationshipType', $this->_id, 'is_reserved')
     ) {
-      foreach (array('contactTypeA', 'contactTypeB', 'isActive') as $field)$$field->freeze();
+      foreach (['contactTypeA', 'contactTypeB', 'isActive'] as $field)$$field->freeze();
     }
 
     if ($this->_action & CRM_Core_Action::VIEW) {
       $this->freeze();
       $url = CRM_Utils_System::url('civicrm/admin/reltype&reset=1');
       $location = "window.location='$url'";
-      $this->addElement('button', 'done', ts('Done'), array('onclick' => $location));
+      $this->addElement('button', 'done', ts('Done'), ['onclick' => $location]);
     }
   }
 
@@ -110,8 +110,8 @@ class CRM_Admin_Form_RelationshipType extends CRM_Admin_Form {
     if ($this->_action != CRM_Core_Action::DELETE &&
       isset($this->_id)
     ) {
-      $defaults = $params = array();
-      $params = array('id' => $this->_id);
+      $defaults = $params = [];
+      $params = ['id' => $this->_id];
       $baoName = $this->_BAOName;
       $baoName::retrieve( $params, $defaults );
 
@@ -144,8 +144,8 @@ class CRM_Admin_Form_RelationshipType extends CRM_Admin_Form {
       CRM_Core_Session::setStatus(ts('Selected Relationship type has been deleted.'));
     }
     else {
-      $params = array();
-      $ids = array();
+      $params = [];
+      $ids = [];
 
       // store the submitted values in an array
       $params = $this->exportValues();

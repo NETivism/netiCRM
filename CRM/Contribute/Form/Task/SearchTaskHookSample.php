@@ -48,7 +48,7 @@ class CRM_Contribute_Form_Task_SearchTaskHookSample extends CRM_Contribute_Form_
    */
   function preProcess() {
     parent::preProcess();
-    $rows = array();
+    $rows = [];
     // display name and contribution details of all selected contacts
     $contribIDs = CRM_Utils_Array::implode(',', $this->_contributionIds);
 
@@ -66,12 +66,12 @@ INNER JOIN civicrm_contact ct ON ( co.contact_id = ct.id )
     );
 
     while ($dao->fetch()) {
-      $rows[] = array(
+      $rows[] = [
         'display_name' => $dao->display_name,
         'amount' => $dao->amount,
         'source' => $dao->source,
         'receive_date' => $dao->receive_date,
-      );
+      ];
     }
     $this->assign('rows', $rows);
   }
@@ -83,12 +83,12 @@ INNER JOIN civicrm_contact ct ON ( co.contact_id = ct.id )
    * @access public
    */
   public function buildQuickForm() {
-    $this->addButtons(array(
-        array('type' => 'done',
+    $this->addButtons([
+        ['type' => 'done',
           'name' => ts('Done'),
           'isDefault' => TRUE,
-        ),
-      )
+        ],
+      ]
     );
   }
 }

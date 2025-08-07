@@ -35,12 +35,12 @@
 
 
 class CRM_Core_BAO_MailSettings extends CRM_Core_DAO_MailSettings {
-  public static $_mailerTypes = array(
+  public static $_mailerTypes = [
     3 => 'Transaction Notification',
     2 => 'Mass Mailing',
     1 => 'Bounce Processing',
     0 => 'Disabled',
-  );
+  ];
 
   /**
    * class constructor
@@ -158,7 +158,7 @@ class CRM_Core_BAO_MailSettings extends CRM_Core_DAO_MailSettings {
     //handle is_default.
     if ($params['is_default'] == 1) {
       $query = 'UPDATE civicrm_mail_settings SET is_default = 0 WHERE domain_id = %1 AND is_default = 1';
-      $queryParams = array(1 => array(CRM_Core_Config::domainID(), 'Integer'));
+      $queryParams = [1 => [CRM_Core_Config::domainID(), 'Integer']];
       CRM_Core_DAO::executeQuery($query, $queryParams);
     }
 

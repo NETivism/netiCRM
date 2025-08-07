@@ -154,7 +154,7 @@ class CRM_Activity_BAO_Query {
     if ($grouping !== NULL &&
       !$isTest
     ) {
-      $values = array('activity_test', '=', 0, $grouping, 0);
+      $values = ['activity_test', '=', 0, $grouping, 0];
       self::whereClauseSingle($values, $query);
     }
   }
@@ -176,7 +176,7 @@ class CRM_Activity_BAO_Query {
     switch ($name) {
       case 'activity_type_id':
         $types = CRM_Core_PseudoConstant::activityType(TRUE, TRUE);
-        $clause = array();
+        $clause = [];
         if (is_array($value)) {
           foreach ($value as $id) {
             if (CRM_Utils_Array::arrayKeyExists($id, $types)) {
@@ -245,7 +245,7 @@ class CRM_Activity_BAO_Query {
 
       case 'activity_status':
         $status = CRM_Core_PseudoConstant::activityStatus();
-        $clause = array();
+        $clause = [];
         if (is_array($value)) {
           foreach ($value as $v) {
             $clause[] = "'" . CRM_Utils_Type::escape($status[$v], 'String') . "'";
@@ -299,15 +299,15 @@ class CRM_Activity_BAO_Query {
         $value = array_keys($value);
         $activityTags = CRM_Core_BAO_Tag::getTagsUsedFor('civicrm_activity');
 
-        $names = array();
-        $val = array();
+        $names = [];
+        $val = [];
         if (is_array($value)) {
           foreach ($value as $k => $v) {
             $names[] = $activityTags[$v];
           }
         }
         $query->_where[$grouping][] = "civicrm_activity_tag.tag_id IN (" . CRM_Utils_Array::implode(",", $value) . ")";
-        $query->_qill[$grouping][] = ts('Activity Tag %1', array(1 => $op)) . ' ' . CRM_Utils_Array::implode(' ' . ts('OR') . ' ', $names);
+        $query->_qill[$grouping][] = ts('Activity Tag %1', [1 => $op]) . ' ' . CRM_Utils_Array::implode(' ' . ts('OR') . ' ', $names);
         $query->_tables['civicrm_activity_tag'] = $query->_whereTables['civicrm_activity_tag'] = 1;
         break;
 
@@ -387,20 +387,20 @@ class CRM_Activity_BAO_Query {
 
     $activityOptions = CRM_Core_PseudoConstant::activityType(TRUE, TRUE, FALSE, 'label', TRUE);
     asort($activityOptions);
-    $attrmultiple = array('multiple' => 'multiple');
+    $attrmultiple = ['multiple' => 'multiple'];
     $form->addElement('select', 'activity_type_id', ts('Activity Type(s)'), $activityOptions, $attrmultiple);
 
-    $form->addDate('activity_date_low', ts('Activity Dates - From'), FALSE, array('formatType' => 'searchDate'));
-    $form->addDate('activity_date_high', ts('To'), FALSE, array('formatType' => 'searchDate'));
+    $form->addDate('activity_date_low', ts('Activity Dates - From'), FALSE, ['formatType' => 'searchDate']);
+    $form->addDate('activity_date_high', ts('To'), FALSE, ['formatType' => 'searchDate']);
 
-    $activityRoles = array(1 => ts('Created by'), 2 => ts('Assigned to'), 3 => ts('Target Contact'));
+    $activityRoles = [1 => ts('Created by'), 2 => ts('Assigned to'), 3 => ts('Target Contact')];
     $form->addRadio('activity_role', NULL, $activityRoles, NULL, '<br />');
-    $form->setDefaults(array('activity_role' => 1));
+    $form->setDefaults(['activity_role' => 1]);
 
     $activityStatus = CRM_Core_PseudoConstant::activityStatus();
     $form->addElement('select', 'activity_status', ts('Activity Status'), $activityStatus, $attrmultiple);
 
-    $form->setDefaults(array('activity_status' => array(1, 2)));
+    $form->setDefaults(['activity_status' => [1, 2]]);
     $form->addElement('text', 'activity_subject', ts('Subject'), CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Contact', 'sort_name'));
     $form->addElement('checkbox', 'activity_test', ts('Find Test Activities?'));
 
@@ -410,11 +410,11 @@ class CRM_Activity_BAO_Query {
     }
 
 
-    $surveys = array('' => ts('- none -')) + CRM_Campaign_BAO_Survey::getSurveyList();
+    $surveys = ['' => ts('- none -')] + CRM_Campaign_BAO_Survey::getSurveyList();
     $form->add('select', 'activity_survey_id', ts('Survey'), $surveys, FALSE);
 
 
-    $extends = array('Activity');
+    $extends = ['Activity'];
     $groupDetails = CRM_Core_BAO_CustomGroup::getGroupDetail(NULL, TRUE, $extends);
     if ($groupDetails) {
 
@@ -437,7 +437,7 @@ class CRM_Activity_BAO_Query {
   static function defaultReturnProperties($mode) {
     $properties = NULL;
     if ($mode & CRM_Contact_BAO_Query::MODE_ACTIVITY) {
-      $properties = array(
+      $properties = [
         'activity_id' => 1,
         'contact_type' => 1,
         'contact_sub_type' => 1,
@@ -453,7 +453,7 @@ class CRM_Activity_BAO_Query {
         'source_contact_id' => 1,
         'source_record_id' => 1,
         'activity_is_test' => 1,
-      );
+      ];
 
       // also get all the custom activity properties
 

@@ -285,6 +285,10 @@
 
   <civicrm_contribution_tappay_log />
 
+  <civicrm_contribution_mypay />
+
+  <civicrm_contribution_mypay_log />
+
   <civicrm_contribution_allpay />
 
   <civicrm_contribution_spgateway />

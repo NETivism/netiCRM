@@ -230,7 +230,7 @@ SELECT count(j.id)
 WHERE j.job_type = 'child'
   AND j.parent_id = %1
   AND j.status <> 'Complete'";
-      $params = array(1 => array($job->id, 'Integer'));
+      $params = [1 => [$job->id, 'Integer']];
 
       $anyChildLeft = CRM_Core_DAO::singleValueQuery($child_job_sql, $params);
 
@@ -285,7 +285,7 @@ ORDER BY j.scheduled_date ASC, j.start_date ASC LIMIT 1";
 
     // For each of the "Parent Jobs" we find, we split them into
     // X Number of child jobs
-    $processedMailing = array();
+    $processedMailing = [];
     while ($job->fetch()) {
       // refs #22088 calculate recipients before job start
       $hasChild = CRM_Core_DAO::singleValueQuery("SELECT count(*) FROM $jobTable WHERE is_test = 0 AND job_type = 'child'");
@@ -356,14 +356,14 @@ INSERT INTO civicrm_mailing_job
 (`mailing_id`, `scheduled_date`, `status`, `job_type`, `parent_id`, `job_offset`, `job_limit`)
 VALUES (%1, %2, %3, %4, %5, %6, %7)
 ";
-    $params = array(1 => array($this->mailing_id, 'Integer'),
-      2 => array($this->scheduled_date, 'String'),
-      3 => array('Scheduled', 'String'),
-      4 => array('child', 'String'),
-      5 => array($this->id, 'Integer'),
-      6 => array(0, 'Integer'),
-      7 => array($recipient_count, 'Integer'),
-    );
+    $params = [1 => [$this->mailing_id, 'Integer'],
+      2 => [$this->scheduled_date, 'String'],
+      3 => ['Scheduled', 'String'],
+      4 => ['child', 'String'],
+      5 => [$this->id, 'Integer'],
+      6 => [0, 'Integer'],
+      7 => [$recipient_count, 'Integer'],
+    ];
 
     // create one child job if the mailing size is less than the offset
     // probably use a CRM_Mailing_DAO_Job( );
@@ -400,19 +400,19 @@ VALUES (%1, %2, %3, %4, %5, %6, %7)
       // INSERT INTO ... SELECT FROM ..
       // the thing we need to figure out is how to generate the hash automatically
       $now = time();
-      $params = array();
+      $params = [];
       $count = 0;
       while ($recipients->fetch()) {
-        $params[] = array(
+        $params[] = [
           $this->id,
           $recipients->email_id,
           $recipients->contact_id,
-        );
+        ];
         $count++;
         if ($count % CRM_Core_DAO::BULK_MAIL_INSERT_COUNT == 0) {
           CRM_Mailing_Event_BAO_Queue::bulkCreate($params, $now);
           $count = 0;
-          $params = array();
+          $params = [];
         }
       }
 
@@ -475,11 +475,11 @@ VALUES (%1, %2, %3, %4, %5, %6, %7)
     }
 
     $job_date = CRM_Utils_Date::isoToMysql($this->scheduled_date);
-    $fields = array();
+    $fields = [];
 
     if (!empty($testParams)) {
       $mailing->from_name = ts('CiviCRM Test Mailer (%1)',
-        array(1 => $mailing->from_name)
+        [1 => $mailing->from_name]
       );
       $mailing->subject = ts('Test Mailing:') . ' ' . $mailing->subject;
     }
@@ -514,19 +514,19 @@ VALUES (%1, %2, %3, %4, %5, %6, %7)
       }
       $mailsProcessed++;
 
-      $fields[] = array(
+      $fields[] = [
         'id' => $eq->id,
         'hash' => $eq->hash,
         'contact_id' => $eq->contact_id,
         'email' => $eq->email,
-      );
+      ];
       if (count($fields) == self::MAX_CONTACTS_TO_PROCESS) {
         $isDelivered = $this->deliverGroup($fields, $mailing, $mailer, $job_date, $attachments);
         if (!$isDelivered) {
           $eq->free();
           return $isDelivered;
         }
-        $fields = array();
+        $fields = [];
       }
     }
 
@@ -565,7 +565,7 @@ VALUES (%1, %2, %3, %4, %5, %6, %7)
 
     // get the return properties
     $returnProperties = $mailing->getReturnProperties();
-    $params = $targetParams = $deliveredParams = array();
+    $params = $targetParams = $deliveredParams = [];
     $count = 0;
 
     foreach ($fields as $key => $field) {
@@ -599,11 +599,11 @@ VALUES (%1, %2, %3, %4, %5, %6, %7)
       // handling compose failing
       if (empty($message) || !is_object($message) || !is_a($message, 'Mail_mime')) {
         CRM_Core_Error::debug_log_message("Failed to compose message for queue: {$field['id']}, contact {$field['contact_id']}, email {$field['email']}");
-        $params = array(
+        $params = [
           'event_queue_id' => $field['id'],
           'job_id' => $this->id,
           'hash' => $field['hash'],
-        );
+        ];
         $params = array_merge($params, CRM_Mailing_BAO_BouncePattern::match('Mailing compose system error, check system log for detail.'));
         CRM_Mailing_Event_BAO_Bounce::create($params);
 
@@ -674,11 +674,11 @@ VALUES (%1, %2, %3, %4, %5, %6, %7)
         }
 
         /* Register the bounce event */
-        $params = array(
+        $params = [
           'event_queue_id' => $field['id'],
           'job_id' => $this->id,
           'hash' => $field['hash'],
-        );
+        ];
         $params = array_merge($params, CRM_Mailing_BAO_BouncePattern::match($result->getMessage()));
         CRM_Mailing_Event_BAO_Bounce::create($params);
 
@@ -733,10 +733,10 @@ AND    is_test = 0
 AND    ( ( job_type IS NULL ) OR
            job_type <> 'child' )
 ";
-    $params = array(1 => array($mailingId, 'Integer'));
+    $params = [1 => [$mailingId, 'Integer']];
     $job = CRM_Core_DAO::executeQuery($sql, $params);
     if ($job->fetch() &&
-      in_array($job->status, array('Scheduled', 'Running', 'Paused'))
+      in_array($job->status, ['Scheduled', 'Running', 'Paused'])
     ) {
 
       $newJob = new CRM_Mailing_BAO_Job();
@@ -755,9 +755,9 @@ AND    is_test = 0
 AND    job_type = 'child'
 AND    status IN ( 'Scheduled', 'Running', 'Paused' )
 ";
-      $params = array(1 => array($job->id, 'Integer'),
-        2 => array(date('YmdHis'), 'Timestamp'),
-      );
+      $params = [1 => [$job->id, 'Integer'],
+        2 => [date('YmdHis'), 'Timestamp'],
+      ];
       CRM_Core_DAO::executeQuery($sql, $params);
 
       CRM_Core_Session::setStatus(ts('The mailing has been canceled.'));
@@ -777,13 +777,13 @@ AND    status IN ( 'Scheduled', 'Running', 'Paused' )
     static $translation = NULL;
 
     if (empty($translation)) {
-      $translation = array(
+      $translation = [
         'Scheduled' => ts('Scheduled'),
         'Running' => ts('Running'),
         'Complete' => ts('Complete'),
         'Paused' => ts('Paused'),
         'Canceled' => ts('Canceled'),
-      );
+      ];
     }
     return CRM_Utils_Array::value($status, $translation, ts('Not scheduled'));
   }
@@ -825,7 +825,7 @@ AND    status IN ( 'Scheduled', 'Running', 'Paused' )
 
     if (!empty($deliveredParams)) {
       CRM_Mailing_Event_BAO_Delivered::bulkCreate($deliveredParams);
-      $deliveredParams = array();
+      $deliveredParams = [];
     }
 
     $result = TRUE;
@@ -843,7 +843,7 @@ AND    status IN ( 'Scheduled', 'Running', 'Paused' )
         }
       }
 
-      $activity = array(
+      $activity = [
         'source_contact_id' => $mailing->scheduled_id,
         'target_contact_id' => $targetParams,
         'activity_type_id' => $activityTypeID,
@@ -853,7 +853,7 @@ AND    status IN ( 'Scheduled', 'Running', 'Paused' )
         'status_id' => 2,
         'deleteActivityTarget' => FALSE,
         'campaign_id' => $mailing->campaign_id,
-      );
+      ];
 
       //check whether activity is already created for this mailing.
       //if yes then create only target contact record.
@@ -863,9 +863,9 @@ FROM   civicrm_activity
 WHERE  civicrm_activity.activity_type_id = %1
 AND    civicrm_activity.source_record_id = %2";
 
-      $queryParams = array(1 => array($activityTypeID, 'Integer'),
-        2 => array($this->mailing_id, 'Integer'),
-      );
+      $queryParams = [1 => [$activityTypeID, 'Integer'],
+        2 => [$this->mailing_id, 'Integer'],
+      ];
       $activityID = CRM_Core_DAO::singleValueQuery($query,
         $queryParams
       );
@@ -881,7 +881,7 @@ AND    civicrm_activity.source_record_id = %2";
         $result = FALSE;
       }
 
-      $targetParams = array();
+      $targetParams = [];
     }
 
     return $result;

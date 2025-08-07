@@ -44,13 +44,13 @@ class CRM_Upgrade_Incremental_php_ThreeTwo {
     if ($config->userFramework == 'Drupal') {
       db_query("UPDATE {permission} SET perm = REPLACE( perm, 'access CiviCase', 'access my cases and activities, access all cases and activities, administer CiviCase' )");
       //insert core acls.
-      $casePermissions = array('delete in CiviCase',
+      $casePermissions = ['delete in CiviCase',
         'administer CiviCase',
         'access my cases and activities',
         'access all cases and activities',
-      );
+      ];
 
-      $aclParams = array('name' => 'Core ACL',
+      $aclParams = ['name' => 'Core ACL',
         'deny' => 0,
         'acl_id' => NULL,
         'object_id' => NULL,
@@ -59,7 +59,7 @@ class CRM_Upgrade_Incremental_php_ThreeTwo {
         'operation' => 'All',
         'is_active' => 1,
         'entity_table' => 'civicrm_acl_role',
-      );
+      ];
       foreach ($casePermissions as $per) {
         $aclParams['object_table'] = $per;
         $acl = new CRM_ACL_DAO_ACL();
@@ -90,11 +90,11 @@ class CRM_Upgrade_Incremental_php_ThreeTwo {
     // locale to use as the final civicrm_membership_status.name column
     $domain = new CRM_Core_DAO_Domain;
     $domain->find(TRUE);
-    $locales = array();
+    $locales = [];
     if ($domain->locales) {
       $locales = explode(CRM_Core_DAO::VALUE_SEPARATOR, $domain->locales);
       // optimal: an English locale
-      foreach (array('en_US', 'en_GB', 'en_AU') as $loc) {
+      foreach (['en_US', 'en_GB', 'en_AU'] as $loc) {
         if (in_array($loc, $locales)) {
           $seedLocale = $loc;
           break;
@@ -109,7 +109,7 @@ class CRM_Upgrade_Incremental_php_ThreeTwo {
       $upgrade->assign('seedLocale', $seedLocale);
       $upgrade->assign('locales', $locales);
 
-      $localizedColNames = array();
+      $localizedColNames = [];
       foreach ($locales as $loc) {
         $localizedName = "help_pre_{$loc}";
         $localizedColNames[$localizedName] = $localizedName;
@@ -130,8 +130,8 @@ class CRM_Upgrade_Incremental_php_ThreeTwo {
 
     // now civicrm_membership_status.name has possibly localised strings, so fix them
     $i18n = new CRM_Core_I18n($seedLocale);
-    $statuses = array(
-      array(
+    $statuses = [
+      [
         'name' => 'New',
         'start_event' => 'join_date',
         'end_event' => 'join_date',
@@ -141,8 +141,8 @@ class CRM_Upgrade_Incremental_php_ThreeTwo {
         'is_admin' => '0',
         'is_default' => '0',
         'is_reserved' => '0',
-      ),
-      array(
+      ],
+      [
         'name' => 'Current',
         'start_event' => 'start_date',
         'end_event' => 'end_date',
@@ -150,8 +150,8 @@ class CRM_Upgrade_Incremental_php_ThreeTwo {
         'is_admin' => '0',
         'is_default' => '1',
         'is_reserved' => '0',
-      ),
-      array(
+      ],
+      [
         'name' => 'Grace',
         'start_event' => 'end_date',
         'end_event' => 'end_date',
@@ -161,8 +161,8 @@ class CRM_Upgrade_Incremental_php_ThreeTwo {
         'is_admin' => '0',
         'is_default' => '0',
         'is_reserved' => '0',
-      ),
-      array(
+      ],
+      [
         'name' => 'Expired',
         'start_event' => 'end_date',
         'start_event_adjust_unit' => 'month',
@@ -171,8 +171,8 @@ class CRM_Upgrade_Incremental_php_ThreeTwo {
         'is_admin' => '0',
         'is_default' => '0',
         'is_reserved' => '0',
-      ),
-      array(
+      ],
+      [
         'name' => 'Pending',
         'start_event' => 'join_date',
         'end_event' => 'join_date',
@@ -180,8 +180,8 @@ class CRM_Upgrade_Incremental_php_ThreeTwo {
         'is_admin' => '0',
         'is_default' => '0',
         'is_reserved' => '1',
-      ),
-      array(
+      ],
+      [
         'name' => 'Cancelled',
         'start_event' => 'join_date',
         'end_event' => 'join_date',
@@ -189,18 +189,18 @@ class CRM_Upgrade_Incremental_php_ThreeTwo {
         'is_admin' => '0',
         'is_default' => '0',
         'is_reserved' => '0',
-      ),
-      array(
+      ],
+      [
         'name' => 'Deceased',
         'is_current_member' => '0',
         'is_admin' => '1',
         'is_default' => '0',
         'is_reserved' => '1',
-      ),
-    );
+      ],
+    ];
 
 
-    $statusIds = array();
+    $statusIds = [];
     $insertedNewRecord = FALSE;
     foreach ($statuses as $status) {
       $dao = new CRM_Member_DAO_MembershipStatus;

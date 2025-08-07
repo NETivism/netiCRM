@@ -77,7 +77,7 @@ class CRM_Activity_BAO_ActivityAssignment extends CRM_Activity_DAO_ActivityAssig
    *
    */
   static function retrieveAssigneeIdsByActivityId($activity_id) {
-    $assigneeArray = array();
+    $assigneeArray = [];
 
     if (!CRM_Utils_Rule::positiveInteger($activity_id)) {
       return $assigneeArray;
@@ -89,7 +89,7 @@ class CRM_Activity_BAO_ActivityAssignment extends CRM_Activity_DAO_ActivityAssig
             JOIN civicrm_contact ON assignee_contact_id = civicrm_contact.id
             WHERE activity_id = %1 AND civicrm_contact.is_deleted = 0
         ';
-    $assignment = &CRM_Core_DAO::executeQuery($sql, array(1 => array($activity_id, 'Integer')));
+    $assignment = &CRM_Core_DAO::executeQuery($sql, [1 => [$activity_id, 'Integer']]);
     while ($assignment->fetch()) {
       $assigneeArray[] = $assignment->assignee_contact_id;
     }
@@ -110,7 +110,7 @@ class CRM_Activity_BAO_ActivityAssignment extends CRM_Activity_DAO_ActivityAssig
    *
    */
   static function getAssigneeNames($activityID, $isDisplayName = FALSE, $skipDetails = TRUE) {
-    $assigneeNames = array();
+    $assigneeNames = [];
     if (empty($activityID)) {
       return $assigneeNames;
     }
@@ -130,7 +130,7 @@ class CRM_Activity_BAO_ActivityAssignment extends CRM_Activity_DAO_ActivityAssig
                         AND contact_a.is_deleted = 0
                         {$whereClause}";
 
-    $queryParam = array(1 => array($activityID, 'Integer'));
+    $queryParam = [1 => [$activityID, 'Integer']];
     $dao = CRM_Core_DAO::executeQuery($query, $queryParam);
     while ($dao->fetch()) {
       if (!$isDisplayName) {

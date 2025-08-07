@@ -71,7 +71,7 @@ class CRM_Member_Selector_MembershipLog extends CRM_Core_Selector_Base implement
    * @var array
    * @static
    */
-  static $_properties = array(
+  static $_properties = [
     'id',
     'membership_id',
     'status_id',
@@ -80,7 +80,7 @@ class CRM_Member_Selector_MembershipLog extends CRM_Core_Selector_Base implement
     'modified_id',
     'modified_date',
     'renewal_reminder_date',
-  );
+  ];
 
   /**
    * are we restricting ourselves to a single contact
@@ -154,7 +154,7 @@ class CRM_Member_Selector_MembershipLog extends CRM_Core_Selector_Base implement
     $this->_queryParams = &$queryParams;
     $this->_limit = $limit;
 
-    $whereClauses = array();
+    $whereClauses = [];
     foreach ($this->_queryParams as $arr) {
       $whereClauses[] = CRM_Utils_Array::implode(' ', array_slice($arr, 0, 3));
     }
@@ -216,7 +216,7 @@ class CRM_Member_Selector_MembershipLog extends CRM_Core_Selector_Base implement
     $sql = "SELECT $fields FROM civicrm_membership_log WHERE $this->_where $order $limit $offsetClause";
     $dao = CRM_Core_DAO::executeQuery($sql);
     while($dao->fetch()){
-      $row = array();
+      $row = [];
       foreach (self::$_properties as $field) {
         if($field == 'status_id' && !empty($dao->status_id)){
           $status = new CRM_Member_DAO_MembershipStatus();
@@ -248,38 +248,38 @@ class CRM_Member_Selector_MembershipLog extends CRM_Core_Selector_Base implement
    */
   public function &getColumnHeaders($action = NULL, $output = NULL) {
     if (!isset(self::$_columnHeaders)) {
-      self::$_columnHeaders = array(
-        array(
+      self::$_columnHeaders = [
+        [
           'name' => ts('Membership Status'),
           'sort' => 'membership_status_id',
           'direction' => CRM_Utils_Sort::DONTCARE,
-        ),
-        array(
+        ],
+        [
           'name' => ts('Start Date'),
           'sort' => 'start_date',
           'direction' => CRM_Utils_Sort::DESCENDING,
-        ),
-        array(
+        ],
+        [
           'name' => ts('End Date'),
           'sort' => 'end_date',
           'direction' => CRM_Utils_Sort::DESCENDING,
-        ),
-        array(
+        ],
+        [
           'name' => ts('Modified By'),
           'sort' => 'modified_id',
           'direction' => CRM_Utils_Sort::DONTCARE,
-        ),
-        array(
+        ],
+        [
           'name' => ts('Modified Date'),
           'sort' => 'modified_date',
           'direction' => CRM_Utils_Sort::DESCENDING,
-        ),
-        array(
+        ],
+        [
           'name' => ts('Renewal Reminder Date'),
           'sort' => 'renewal_reminder_date',
           'direction' => CRM_Utils_Sort::DESCENDING,
-        ),
-      );
+        ],
+      ];
     }
     return self::$_columnHeaders;
   }

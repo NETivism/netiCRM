@@ -86,19 +86,19 @@ class CRM_Case_Form_EditClient extends CRM_Core_Form {
    */
   public function buildQuickForm() {
     $this->add('text', 'change_client_id', ts('Select Contact'));
-    $this->add('hidden', 'contact_id', '', array('id' => 'contact_id'));
+    $this->add('hidden', 'contact_id', '', ['id' => 'contact_id']);
     $this->addElement('submit',
       $this->getButtonName('next', 'edit_client'),
       ts('Reassign Case'),
-      array('class' => 'form-submit-inline',
+      ['class' => 'form-submit-inline',
         'onclick' => "return checkSelection( this );",
-      )
+      ]
     );
 
     $this->addElement('submit',
       $this->getButtonName('cancel', 'edit_client'),
       ts('Cancel'),
-      array('class' => 'form-submit-inline')
+      ['class' => 'form-submit-inline']
     );
 
     $this->assign('contactId', $this->_contactId);

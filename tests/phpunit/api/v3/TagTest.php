@@ -54,7 +54,7 @@ class api_v3_TagTest extends CiviUnitTestCase {
    * Test civicrm_tag_get with empty params.
    */
   public function testGetEmptyParams() {
-    $params = array();
+    $params = [];
     $result = civicrm_api('tag', 'get', $params);
     $this->assertEquals(1, $result['is_error'], 'In line ' . __LINE__);
     $this->assertEquals('Mandatory key(s) missing from params array: version', $result['error_message'], 'In line ' . __LINE__);
@@ -64,7 +64,7 @@ class api_v3_TagTest extends CiviUnitTestCase {
    * Test civicrm_tag_get with wrong params.
    */
   public function testGetWrongParams() {
-    $params = array('name' => 'Wrong Tag Name', 'version' => $this->_apiversion);
+    $params = ['name' => 'Wrong Tag Name', 'version' => $this->_apiversion];
     $result = civicrm_api('tag', 'get', $params);
     $this->assertEquals(0, $result['is_error'], 'In line ' . __LINE__);
     $this->assertEquals(0, $result['count'], 'In line ' . __LINE__);
@@ -77,11 +77,11 @@ class api_v3_TagTest extends CiviUnitTestCase {
     $tag = $this->tagCreate(NULL);
     $this->assertEquals(0, $tag['is_error'], 'In line ' . __LINE__);
 
-    $params = array(
+    $params = [
       'id' => $tag['id'],
       'name' => $tag['values'][$tag['id']]['name'],
       'version' => $this->_apiversion,
-    );
+    ];
     $result = civicrm_api('tag', 'get', $params);
     $this->documentMe($params, $result, __FUNCTION__, __FILE__);
     $this->assertEquals(0, $result['is_error'], 'In line ' . __LINE__);
@@ -98,12 +98,12 @@ class api_v3_TagTest extends CiviUnitTestCase {
     $tag         = $this->tagCreate(NULL);
     $this->assertEquals(0, $tag['is_error'], 'In line ' . __LINE__);
 
-    $params = array(
+    $params = [
       'id' => $tag['id'],
       'name' => $tag['values'][$tag['id']]['name'],
       'version' => $this->_apiversion,
-      'return' => array('name'),
-    );
+      'return' => ['name'],
+    ];
     $result = civicrm_api('tag', 'get', $params);
     $this->documentMe($params, $result, __FUNCTION__, __FILE__, $description, $subfile);
     $this->assertEquals(0, $result['is_error'], 'In line ' . __LINE__);
@@ -127,7 +127,7 @@ class api_v3_TagTest extends CiviUnitTestCase {
    * Test civicrm_tag_create with empty params.
    */
   function testCreateEmptyParams() {
-    $params = array('version' => $this->_apiversion);
+    $params = ['version' => $this->_apiversion];
     $result = civicrm_api('tag', 'create', $params);
     $this->assertEquals(1, $result['is_error'], "In line " . __LINE__);
     $this->assertEquals('Mandatory key(s) missing from params array: name', $result['error_message'], 'In line ' . __LINE__);
@@ -137,12 +137,12 @@ class api_v3_TagTest extends CiviUnitTestCase {
    * Test civicrm_tag_create
    */
   function testCreatePasstagInParams() {
-    $params = array(
+    $params = [
       'tag' => 10,
       'name' => 'New Tag23',
       'description' => 'This is description for New Tag 02',
       'version' => $this->_apiversion,
-    );
+    ];
     $result = civicrm_api('tag', 'create', $params);
     $this->assertEquals(10, $result['id'], 'In line ' . __LINE__);
   }
@@ -151,11 +151,11 @@ class api_v3_TagTest extends CiviUnitTestCase {
    * Test civicrm_tag_create - success expected.
    */
   function testCreate() {
-    $params = array(
+    $params = [
       'name' => 'New Tag3',
       'description' => 'This is description for New Tag 02',
       'version' => $this->_apiversion,
-    );
+    ];
 
     $result = civicrm_api('tag', 'create', $params);
     $this->documentMe($params, $result, __FUNCTION__, __FILE__);
@@ -170,15 +170,15 @@ class api_v3_TagTest extends CiviUnitTestCase {
    * and not over-written by default on update
    */
   function testCreateContributionTag() {
-    $params = array(
+    $params = [
       'name' => 'New Tag4',
       'description' => 'This is description for New Cont tag',
       'version' => $this->_apiversion,
       'used_for' => 'civicrm_contribution',
-    );
+    ];
     $result = civicrm_api('tag', 'create', $params);
     $this->assertAPISuccess($result, "contribution tag created");
-    $check = civicrm_api('tag', 'get', array('version' => 3));
+    $check = civicrm_api('tag', 'get', ['version' => 3]);
     $this->getAndCheck($params, $result['id'], 'tag', 0, __FUNCTION__ . ' tag first created');
     unset($params['used_for']);
     $this->assertAPISuccess($result, 'tag created');
@@ -204,7 +204,7 @@ class api_v3_TagTest extends CiviUnitTestCase {
    * Test civicrm_tag_delete with empty parameters.
    */
   function testDeleteEmptyParams() {
-    $tag = array('version' => $this->_apiversion);
+    $tag = ['version' => $this->_apiversion];
     $result = civicrm_api('tag', 'delete', $tag);
     $this->assertEquals(1, $result['is_error'], 'In line ' . __LINE__);
     $this->assertEquals('Mandatory key(s) missing from params array: id', $result['error_message'], 'In line ' . __LINE__);
@@ -214,7 +214,7 @@ class api_v3_TagTest extends CiviUnitTestCase {
    * Test civicrm_tag_delete without tag id.
    */
   function testDeleteWithoutTagId() {
-    $tag = array('version' => 3);
+    $tag = ['version' => 3];
 
     $result = civicrm_api('tag', 'delete', $tag);
     $this->assertEquals(1, $result['is_error'], 'In line ' . __LINE__);
@@ -235,10 +235,10 @@ class api_v3_TagTest extends CiviUnitTestCase {
    */
   function testTagDeleteOldSyntax() {
     $tagID = $this->tagCreate(NULL);
-    $params = array(
+    $params = [
       'tag_id' => $tagID['id'],
       'version' => $this->_apiversion,
-    );
+    ];
     $result = civicrm_api('tag', 'delete', $params);
     $this->assertAPISuccess($result, 'In line ' . __LINE__);
   }
@@ -248,10 +248,10 @@ class api_v3_TagTest extends CiviUnitTestCase {
    */
   function testTagDeleteCorrectSyntax() {
     $tagID = $this->tagCreate(NULL);
-    $params = array(
+    $params = [
       'id' => $tagID['id'],
       'version' => $this->_apiversion,
-    );
+    ];
     $result = civicrm_api('tag', 'delete', $params);
     $this->documentMe($params, $result, __FUNCTION__, __FILE__);
     $this->assertEquals(0, $result['is_error'], 'In line ' . __LINE__);
@@ -259,7 +259,7 @@ class api_v3_TagTest extends CiviUnitTestCase {
 
   function testTaggetfields() {
     $description = "demonstrate use of getfields to interogate api";
-    $params      = array('version' => 3, 'action' => 'create');
+    $params      = ['version' => 3, 'action' => 'create'];
     $result      = civicrm_api('tag', 'getfields', $params);
     $this->assertEquals('civicrm_contact', $result['values']['used_for']['api.default']);
   }

@@ -118,7 +118,7 @@ class CRM_Profile_Form_Edit extends CRM_Profile_Form {
     // make sure the gid is set and valid
     if (!$this->_gid) {
        return CRM_Core_Error::statusBounce(ts('The requested Profile (gid=%1) is disabled, OR there is no Profile with that ID, OR a valid \'gid=\' integer value is missing from the URL. Contact the site administrator if you need assistance.',
-          array(1 => $this->_gid)
+          [1 => $this->_gid]
         ));
     }
 
@@ -129,11 +129,11 @@ SELECT module
  WHERE module = 'Profile'
    AND uf_group_id = %1
 ";
-    $params = array(1 => array($this->_gid, 'Integer'));
+    $params = [1 => [$this->_gid, 'Integer']];
     $dao = CRM_Core_DAO::executeQuery($query, $params);
     if (!$dao->fetch()) {
        return CRM_Core_Error::statusBounce(ts('The requested Profile (gid=%1) is not configured to be used for \'Profile\' edit and view forms in its Settings. Contact the site administrator if you need assistance.',
-          array(1 => $this->_gid)
+          [1 => $this->_gid]
         ));
     }
 
@@ -217,11 +217,11 @@ SELECT module
       $buttonName = 'next';
     }
 
-    $buttons[] = array('type' => $buttonName,
+    $buttons[] = ['type' => $buttonName,
       'name' => ts('Submit').' >> ',
       'isDefault' => TRUE,
-      'js' => array('data' => 'submit-once'),
-    );
+      'js' => ['data' => 'submit-once'],
+    ];
 
     if ($this->_context != 'dialog' && $this->_cancelURL) {
       // assign back url
@@ -231,7 +231,7 @@ SELECT module
 
     $this->addButtons($buttons);
 
-    $this->addFormRule(array('CRM_Profile_Form', 'formRule'), $this);
+    $this->addFormRule(['CRM_Profile_Form', 'formRule'], $this);
   }
 
   /**
@@ -247,10 +247,10 @@ SELECT module
     // this is special case when we create contact using Dialog box
     if ($this->_context == 'dialog') {
       $sortName = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $this->_id, 'sort_name');
-      $returnArray = array('contactID' => $this->_id,
+      $returnArray = ['contactID' => $this->_id,
         'sortName' => $sortName,
         'newContactSuccess' => TRUE,
-      );
+      ];
 
       echo json_encode($returnArray);
       CRM_Utils_System::civiExit();

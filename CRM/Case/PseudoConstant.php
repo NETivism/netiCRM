@@ -44,7 +44,7 @@ class CRM_Case_PseudoConstant extends CRM_Core_PseudoConstant {
    * @var array
    * @static
    */
-  static $caseStatus = array();
+  static $caseStatus = [];
 
   /**
    * redaction rules
@@ -58,28 +58,28 @@ class CRM_Case_PseudoConstant extends CRM_Core_PseudoConstant {
    * @var array
    * @static
    */
-  static $caseType = array();
+  static $caseType = [];
 
   /**
    * Encounter Medium
    * @var array
    * @static
    */
-  static $encounterMedium = array();
+  static $encounterMedium = [];
 
   /**
    * activity type
    * @var array
    * @static
    */
-  static $activityTypeList = array();
+  static $activityTypeList = [];
 
   /**
    * case type
    * @var array
    * @static
    */
-  static $caseTypePair = array();
+  static $caseTypePair = [];
 
   /**
    * Get all the case statues
@@ -113,7 +113,7 @@ class CRM_Case_PseudoConstant extends CRM_Core_PseudoConstant {
 
   public static function redactionRule($filter = NULL) {
     // if ( ! self::$redactionRule ) {
-    self::$redactionRule = array();
+    self::$redactionRule = [];
 
     if ($filter === 0) {
       $condition = "  AND (v.filter = 0 OR v.filter IS NULL)";
@@ -190,7 +190,7 @@ class CRM_Case_PseudoConstant extends CRM_Core_PseudoConstant {
     $cache = (int) $indexName . '_' . (int) $all;
 
     if (!CRM_Utils_Array::arrayKeyExists($cache, self::$activityTypeList)) {
-      self::$activityTypeList[$cache] = array();
+      self::$activityTypeList[$cache] = [];
 
       $query = "
               SELECT  v.label as label ,v.value as value, v.name as name, v.description as description
@@ -213,7 +213,7 @@ class CRM_Case_PseudoConstant extends CRM_Core_PseudoConstant {
 
       $dao = &CRM_Core_DAO::executeQuery($query, CRM_Core_DAO::$_nullArray);
 
-      $activityTypes = array();
+      $activityTypes = [];
       while ($dao->fetch()) {
         if ($indexName) {
           $index = $dao->name;
@@ -221,7 +221,7 @@ class CRM_Case_PseudoConstant extends CRM_Core_PseudoConstant {
         else {
           $index = $dao->value;
         }
-        $activityTypes[$index] = array();
+        $activityTypes[$index] = [];
         $activityTypes[$index]['id'] = $dao->value;
         $activityTypes[$index]['label'] = $dao->label;
         $activityTypes[$index]['name'] = $dao->name;
@@ -259,9 +259,9 @@ class CRM_Case_PseudoConstant extends CRM_Core_PseudoConstant {
       );
       $caseTypeId = $caseTypeId[0];
 
-      self::$caseTypePair[$caseId][$column] = array('id' => $caseTypeId,
+      self::$caseTypePair[$caseId][$column] = ['id' => $caseTypeId,
         'name' => $caseTypes[$caseTypeId],
-      );
+      ];
     }
 
     return self::$caseTypePair[$caseId][$column];

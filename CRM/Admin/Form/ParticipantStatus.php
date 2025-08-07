@@ -54,8 +54,8 @@ class CRM_Admin_Form_ParticipantStatus extends CRM_Admin_Form {
 
     $this->add('text', 'label', ts('Label'), $attributes['label'], TRUE);
 
-    $classes = array();
-    foreach (array('Positive', 'Pending', 'Waiting', 'Negative') as $class) {
+    $classes = [];
+    foreach (['Positive', 'Pending', 'Waiting', 'Negative'] as $class) {
       $classes[$class] = CRM_Event_DAO_ParticipantStatusType::tsEnum('class', $class);
     }
     $this->add('select', 'class', ts('Class'), $classes, TRUE);
@@ -77,7 +77,7 @@ class CRM_Admin_Form_ParticipantStatus extends CRM_Admin_Form {
     }
     $this->_isReserved = $defaults['is_reserved'];
     if ($this->_isReserved) {
-      $this->freeze(array('name', 'class', 'is_active'));
+      $this->freeze(['name', 'class', 'is_active']);
     }
     return $defaults;
   }
@@ -95,7 +95,7 @@ class CRM_Admin_Form_ParticipantStatus extends CRM_Admin_Form {
 
     $formValues = $this->controller->exportValues($this->_name);
 
-    $params = array(
+    $params = [
       'name' => CRM_Utils_Array::value('name', $formValues),
       'label' => CRM_Utils_Array::value('label', $formValues),
       'class' => CRM_Utils_Array::value('class', $formValues),
@@ -103,7 +103,7 @@ class CRM_Admin_Form_ParticipantStatus extends CRM_Admin_Form {
       'is_counted' => CRM_Utils_Array::value('is_counted', $formValues, FALSE),
       'weight' => CRM_Utils_Array::value('weight', $formValues),
       'visibility_id' => CRM_Utils_Array::value('visibility_id', $formValues),
-    );
+    ];
 
     // make sure a malicious POST does not change these on reserved statuses
     if ($this->_isReserved)unset($params['name'], $params['class'], $params['is_active']);

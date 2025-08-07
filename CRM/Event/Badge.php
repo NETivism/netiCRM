@@ -68,7 +68,7 @@ class CRM_Event_Badge {
    */
   public $lMarginLogo;
   function __construct() {
-    $this->style = array('width' => 0.1, 'cap' => 'round', 'join' => 'round', 'dash' => '2,2', 'color' => array(0, 0, 200));
+    $this->style = ['width' => 0.1, 'cap' => 'round', 'join' => 'round', 'dash' => '2,2', 'color' => [0, 0, 200]];
     $this->format = '5160';
     $this->imgExtension = 'png';
     $this->imgRes = 300;
@@ -162,7 +162,7 @@ class CRM_Event_Badge {
     $x = $this->pdf->GetAbsX();
     $y = $this->pdf->GetY();
     if ($this->debug) {
-      $this->pdf->Rect($x, $y, $this->pdf->width, $this->pdf->height, 'D', array('all' => array('width' => 1, 'cap' => 'round', 'join' => 'round', 'dash' => '2,10', 'color' => array(255, 0, 0))));
+      $this->pdf->Rect($x, $y, $this->pdf->width, $this->pdf->height, 'D', ['all' => ['width' => 1, 'cap' => 'round', 'join' => 'round', 'dash' => '2,10', 'color' => [255, 0, 0]]]);
     }
     $img = $this->getImageFileName($this->event->id, $img);
     if ($img) {

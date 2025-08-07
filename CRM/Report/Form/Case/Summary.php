@@ -74,90 +74,90 @@ class CRM_Report_Form_Case_Summary extends CRM_Report_Form {
       $this->rel_types[$relid] = $v['label_b_a'];
     }
 
-    $this->deleted_labels = array('' => ts('- select -'), 0 => ts('No'), 1 => ts('Yes'));
+    $this->deleted_labels = ['' => ts('- select -'), 0 => ts('No'), 1 => ts('Yes')];
 
-    $this->_columns = array('civicrm_c2' =>
-      array('dao' => 'CRM_Contact_DAO_Contact',
+    $this->_columns = ['civicrm_c2' =>
+      ['dao' => 'CRM_Contact_DAO_Contact',
         'fields' =>
-        array('display_name' =>
-          array('title' => ts('Client'),
+        ['display_name' =>
+          ['title' => ts('Client'),
             'required' => TRUE,
-          ),
-        ),
-      ),
+          ],
+        ],
+      ],
       'civicrm_case' =>
-      array('dao' => 'CRM_Case_DAO_Case',
+      ['dao' => 'CRM_Case_DAO_Case',
         'fields' =>
-        array('id' =>
-          array('title' => ts('Case ID'),
+        ['id' =>
+          ['title' => ts('Case ID'),
             'required' => TRUE,
-          ),
-          'start_date' => array('title' => ts('Start Date'), 'default' => TRUE,
-          ),
-          'end_date' => array('title' => ts('End Date'), 'default' => TRUE,
-          ),
-          'status_id' => array('title' => ts('Status'), 'default' => TRUE,
-          ),
-          'duration' => array('title' => ts('Duration (Days)'), 'default' => FALSE,
-          ),
-          'is_deleted' => array('title' => ts('Deleted?'), 'default' => FALSE, 'type' => CRM_Utils_Type::T_INT,
-          ),
-        ),
+          ],
+          'start_date' => ['title' => ts('Start Date'), 'default' => TRUE,
+          ],
+          'end_date' => ['title' => ts('End Date'), 'default' => TRUE,
+          ],
+          'status_id' => ['title' => ts('Status'), 'default' => TRUE,
+          ],
+          'duration' => ['title' => ts('Duration (Days)'), 'default' => FALSE,
+          ],
+          'is_deleted' => ['title' => ts('Deleted?'), 'default' => FALSE, 'type' => CRM_Utils_Type::T_INT,
+          ],
+        ],
         'filters' =>
-        array('start_date' => array('title' => ts('Start Date'),
+        ['start_date' => ['title' => ts('Start Date'),
             'operatorType' => CRM_Report_Form::OP_DATE,
             'type' => CRM_Utils_Type::T_DATE,
-          ),
-          'end_date' => array('title' => ts('End Date'),
+          ],
+          'end_date' => ['title' => ts('End Date'),
             'operatorType' => CRM_Report_Form::OP_DATE,
             'type' => CRM_Utils_Type::T_DATE,
-          ),
-          'status_id' => array('title' => ts('Status'),
+          ],
+          'status_id' => ['title' => ts('Status'),
             'operatorType' => CRM_Report_Form::OP_MULTISELECT,
             'options' => $this->case_statuses,
-          ),
-          'is_deleted' => array('title' => ts('Deleted?'),
+          ],
+          'is_deleted' => ['title' => ts('Deleted?'),
             'type' => CRM_Report_Form::OP_INT,
             'operatorType' => CRM_Report_Form::OP_SELECT,
             'options' => $this->deleted_labels,
             'default' => 0,
-          ),
-        ),
-      ),
+          ],
+        ],
+      ],
       'civicrm_contact' =>
-      array('dao' => 'CRM_Contact_DAO_Contact',
+      ['dao' => 'CRM_Contact_DAO_Contact',
         'fields' =>
-        array('sort_name' =>
-          array('title' => ts('Staff Member'),
+        ['sort_name' =>
+          ['title' => ts('Staff Member'),
             'default' => TRUE,
-          ),
-        ),
+          ],
+        ],
         'filters' =>
-        array('sort_name' => array('title' => ts('Staff Member'),
-          ),
-        ),
-      ),
+        ['sort_name' => ['title' => ts('Staff Member'),
+          ],
+        ],
+      ],
       'civicrm_relationship' =>
-      array('dao' => 'CRM_Contact_DAO_Relationship',
+      ['dao' => 'CRM_Contact_DAO_Relationship',
         'filters' =>
-        array('relationship_type_id' => array('title' => ts('Staff Relationship'),
+        ['relationship_type_id' => ['title' => ts('Staff Relationship'),
             'operatorType' => CRM_Report_Form::OP_MULTISELECT,
             'options' => $this->rel_types,
-          ),
-        ),
-      ),
+          ],
+        ],
+      ],
       'civicrm_relationship_type' =>
-      array('dao' => 'CRM_Contact_DAO_RelationshipType',
+      ['dao' => 'CRM_Contact_DAO_RelationshipType',
         'fields' =>
-        array('label_b_a' =>
-          array('title' => ts('Relationship'), 'default' => TRUE,
-          ),
-        ),
-      ),
+        ['label_b_a' =>
+          ['title' => ts('Relationship'), 'default' => TRUE,
+          ],
+        ],
+      ],
       'civicrm_case_contact' =>
-      array('dao' => 'CRM_Case_DAO_CaseContact',
-      ),
-    );
+      ['dao' => 'CRM_Case_DAO_CaseContact',
+      ],
+    ];
 
     parent::__construct();
   }
@@ -167,8 +167,8 @@ class CRM_Report_Form_Case_Summary extends CRM_Report_Form {
   }
 
   function select() {
-    $select = array();
-    $this->_columnHeaders = array();
+    $select = [];
+    $this->_columnHeaders = [];
     foreach ($this->_columns as $tableName => $table) {
       if (CRM_Utils_Array::arrayKeyExists('fields', $table)) {
         foreach ($table['fields'] as $fieldName => $field) {
@@ -197,7 +197,7 @@ class CRM_Report_Form_Case_Summary extends CRM_Report_Form {
   }
 
   static function formRule($fields, $files, $self) {
-    $errors = $grouping = array();
+    $errors = $grouping = [];
     if (empty($fields['relationship_type_id_value']) && (CRM_Utils_Array::arrayKeyExists('sort_name', $fields['fields']) || CRM_Utils_Array::arrayKeyExists('label_b_a', $fields['fields']))) {
       $errors['fields'] = ts('Either filter on at least one relationship type, or de-select Staff Member and Relationship from the list of fields.');
     }
@@ -236,7 +236,7 @@ inner join civicrm_contact $c2 on {$c2}.id={$ccc}.contact_id
   }
 
   function where() {
-    $clauses = array();
+    $clauses = [];
     $this->_having = '';
     foreach ($this->_columns as $tableName => $table) {
       if (CRM_Utils_Array::arrayKeyExists('filters', $table)) {
@@ -289,7 +289,7 @@ inner join civicrm_contact $c2 on {$c2}.id={$ccc}.contact_id
 
     $sql = $this->buildQuery(TRUE);
 
-    $rows = $graphRows = array();
+    $rows = $graphRows = [];
     $this->buildRows($sql, $rows);
 
     $this->formatDisplay($rows);

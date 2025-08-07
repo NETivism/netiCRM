@@ -85,8 +85,8 @@ class CRM_Contact_Form_Edit_TagsandGroups {
         $fName = $fieldName;
       }
 
-      $elements = array();
-      $groupID = isset($form->_grid) ? $form->_grid : NULL;
+      $elements = [];
+      $groupID = $form->_grid ?? NULL;
       if ($groupID && $visibility) {
         $ids = '= ' . $groupID;
       }
@@ -126,15 +126,15 @@ class CRM_Contact_Form_Edit_TagsandGroups {
 
         if (!empty($elements)) {
           if ($classContext == 'CRM_Contact_Form_Contact') {
-            $form->addSelect($fName, ts($groupName), $elements, array('multiple'=>'multiple'));
+            $form->addSelect($fName, ts($groupName), $elements, ['multiple'=>'multiple']);
             if (!empty($form->_entityId)) {
               $contactGroup = CRM_Contact_BAO_GroupContact::getContactGroup($form->_entityId, 'Added', NULL, FALSE, TRUE);
               if (!empty($contactGroup)) {
-                $defaultGroups = array();
+                $defaultGroups = [];
                 foreach($contactGroup as $gp) {
                   $defaultGroups[] = $gp['group_id'];
                 }
-                $form->setDefaults(array($fName => $defaultGroups));
+                $form->setDefaults([$fName => $defaultGroups]);
               }
             }
           }
@@ -143,7 +143,7 @@ class CRM_Contact_Form_Edit_TagsandGroups {
             $form->assign('groupCount', count($elements));
           }
           if ($isRequired) {
-            $form->addRule($fName, ts('%1 is a required field.', array(1 => $groupName)), 'required');
+            $form->addRule($fName, ts('%1 is a required field.', [1 => $groupName]), 'required');
           }
         }
       }
@@ -155,7 +155,7 @@ class CRM_Contact_Form_Edit_TagsandGroups {
         $fName = $fieldName;
       }
       $form->_tagGroup[$fName] = 1;
-      $elements = array();
+      $elements = [];
 
       $tag = CRM_Core_BAO_Tag::getTags();
 
@@ -169,11 +169,11 @@ class CRM_Contact_Form_Edit_TagsandGroups {
       }
       if (!empty($elements)) {
         if ($classContext == 'CRM_Contact_Form_Contact') {
-          $form->addSelect($fName, ts($tagName), $elements, array('multiple'=>'multiple'));
+          $form->addSelect($fName, ts($tagName), $elements, ['multiple'=>'multiple']);
           if (!empty($form->_entityId)) {
             $contactTag = CRM_Core_BAO_EntityTag::getTag($form->_entityId);
             if (!empty($contactTag)) {
-              $form->setDefaults(array($fName => $contactTag));
+              $form->setDefaults([$fName => $contactTag]);
             }
           }
         }
@@ -184,7 +184,7 @@ class CRM_Contact_Form_Edit_TagsandGroups {
       }
 
       if ($isRequired) {
-        $form->addRule($fName, ts('%1 is a required field.', array(1 => $tagName)), 'required');
+        $form->addRule($fName, ts('%1 is a required field.', [1 => $tagName]), 'required');
       }
 
       // build tag widget

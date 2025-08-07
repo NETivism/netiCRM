@@ -37,7 +37,7 @@
 class CRM_Utils_Verp {
   /* Mapping of reserved characters to hex codes */
 
-  static $encodeMap = array(
+  static $encodeMap = [
     '+' => '2B',
     '@' => '40',
     ':' => '3A',
@@ -46,11 +46,11 @@ class CRM_Utils_Verp {
     '-' => '2D',
     '[' => '5B',
     ']' => '5D',
-  );
+  ];
 
   /* Mapping of hex codes to reserved characters */
 
-  static $decodeMap = array(
+  static $decodeMap = [
     '40' => '@',
     '3A' => ':',
     '25' => '%',
@@ -59,7 +59,7 @@ class CRM_Utils_Verp {
     '5B' => '[',
     '5D' => ']',
     '2B' => '+',
-  );
+  ];
 
   /**
    * Encode the sender's address with the VERPed recipient.
@@ -110,7 +110,7 @@ class CRM_Utils_Verp {
       $rdomain = preg_replace("/+$code/i", $char, $rdomain);
     }
 
-    return array("$slocal@$sdomain", "$rlocal@$rdomain");
+    return ["$slocal@$sdomain", "$rlocal@$rdomain"];
   }
 }
 

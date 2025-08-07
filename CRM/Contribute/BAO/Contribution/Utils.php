@@ -126,7 +126,7 @@ class CRM_Contribute_BAO_Contribution_Utils {
         // add qfKey so we can send to paypal
         $form->_params['qfKey'] = $form->controller->_key;
         if ($component == 'membership') {
-          $membershipResult = array(1 => $contribution);
+          $membershipResult = [1 => $contribution];
           return $membershipResult;
         }
         else {
@@ -159,7 +159,7 @@ class CRM_Contribute_BAO_Contribution_Utils {
               $form->_values,
               $contribution->is_test
             );
-            return array();
+            return [];
           }
         }
       }
@@ -207,7 +207,7 @@ class CRM_Contribute_BAO_Contribution_Utils {
     }
 
     if ($component == 'membership') {
-      $membershipResult = array();
+      $membershipResult = [];
     }
 
     if (is_a($result, 'CRM_Core_Error')) {
@@ -258,8 +258,8 @@ class CRM_Contribute_BAO_Contribution_Utils {
     elseif (empty($result) && $form->_values['is_monetary'] && $form->_amount > 0.0) {
       $errorResult = CRM_Core_Error::singleton();
       CRM_Core_Error::displaySessionError($errorResult);
-      CRM_Core_Session::setStatus(ts("We apologize for any inconvenience caused, please go back to the <a href='%1'>donation page</a> to retry.", array(
-        1 => CRM_Utils_System::url('civicrm/contribute/transact', 'reset=1&id='.$form->_params['contributionPageID']))),
+      CRM_Core_Session::setStatus(ts("We apologize for any inconvenience caused, please go back to the <a href='%1'>donation page</a> to retry.", [
+        1 => CRM_Utils_System::url('civicrm/contribute/transact', 'reset=1&id='.$form->_params['contributionPageID'])]),
         TRUE, 'error');
       CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/contribute/transact', "_qf_Confirm_display=true&qfKey={$form->_params['qfKey']}"));
       return FALSE;
@@ -271,7 +271,7 @@ class CRM_Contribute_BAO_Contribution_Utils {
     //Do not send an email if Recurring contribution is done via Direct Mode
     //Email will we send once the IPN will receive.
     if ($paymentParams['is_recur'] && $form->_contributeMode == 'direct') {
-      return array();
+      return [];
     }
 
     // get the price set values for receipt.
@@ -284,7 +284,7 @@ class CRM_Contribute_BAO_Contribution_Utils {
 
     $form->_values['contribution_id'] = $contribution->id;
     CRM_Contribute_BAO_ContributionPage::sendMail($contactID, $form->_values, $contribution->is_test);
-    return array();
+    return [];
   }
 
   /**
@@ -300,11 +300,11 @@ class CRM_Contribute_BAO_Contribution_Utils {
    */
   static function contributionChartMonthly($param) {
     if ($param) {
-      $param = array(1 => array($param, 'Integer'));
+      $param = [1 => [$param, 'Integer']];
     }
     else {
       $param = date("Y");
-      $param = array(1 => array($param, 'Integer'));
+      $param = [1 => [$param, 'Integer']];
     }
 
     $query = "
@@ -329,7 +329,7 @@ INNER JOIN   civicrm_contact AS contact ON ( contact.id = contrib.contact_id )
         $slot[$dao->contribMonth] = $dao->ctAmt;
       }
     }
-    return array('By Month' => $slot);
+    return ['By Month' => $slot];
   }
 
   /**
@@ -399,9 +399,9 @@ INNER JOIN   civicrm_contact contact ON ( contact.id = contrib.contact_id )
       $params['address'][1]['location_type_id'] = $billingLocTypeId;
     }
     if (!CRM_Utils_System::isNull($params['email'])) {
-      $params['email'] = array(1 => array('email' => $params['email'],
+      $params['email'] = [1 => ['email' => $params['email'],
           'location_type_id' => $billingLocTypeId,
-        ));
+        ]];
     }
 
     if (isset($transaction['trxn_id'])) {
@@ -433,7 +433,7 @@ INNER JOIN   civicrm_contact contact ON ( contact.id = contrib.contact_id )
     }
 
     $source = ts('ContributionProcessor: %1 API',
-      array(1 => ucfirst($type))
+      [1 => ucfirst($type)]
     );
     if (isset($transaction['source'])) {
       $transaction['source'] = $source . ':: ' . $transaction['source'];
@@ -448,11 +448,11 @@ INNER JOIN   civicrm_contact contact ON ( contact.id = contrib.contact_id )
   static function formatAPIParams($apiParams, $mapper, $type = 'paypal', $category = TRUE) {
     $type = strtolower($type);
 
-    if (!in_array($type, array('paypal', 'google', 'csv'))) {
+    if (!in_array($type, ['paypal', 'google', 'csv'])) {
       // return the params as is
       return $apiParams;
     }
-    $params = $transaction = array();
+    $params = $transaction = [];
 
     if ($type == 'paypal') {
       foreach ($apiParams as $detail => $val) {
@@ -467,12 +467,12 @@ INNER JOIN   civicrm_contact contact ON ( contact.id = contrib.contact_id )
             case 'l_period2':
               // Sadly, PayPal seems to send two distinct data elements in a single field,
               // so we break them out here.  This is somewhat ugly and tragic.
-              $freqUnits = array(
+              $freqUnits = [
                 'D' => 'day',
                 'W' => 'week',
                 'M' => 'month',
                 'Y' => 'year',
-              );
+              ];
               list($frequency_interval, $frequency_unit) = explode(' ', $val);
               $transaction['frequency_interval'] = $frequency_interval;
               $transaction['frequency_unit'] = $freqUnits[$frequency_unit];
@@ -567,12 +567,12 @@ INNER JOIN   civicrm_contact contact ON ( contact.id = contrib.contact_id )
 
         // Response is an huge array. Lets pickup only those which we ineterested in
         // using a local mapper, rather than traversing the entire array.
-        $localMapper = array('google-order-number' => $riskInfo['google-order-number']['VALUE'],
+        $localMapper = ['google-order-number' => $riskInfo['google-order-number']['VALUE'],
           'total-charge-amount' => $apiParams[2]['total-charge-amount']['VALUE'],
           'currency' => $apiParams[2]['total-charge-amount']['currency'],
           'item-name' => $newOrder['shopping-cart']['items']['item']['item-name']['VALUE'],
           'timestamp' => $apiParams[2]['timestamp']['VALUE'],
-        );
+        ];
         if (CRM_Utils_Array::arrayKeyExists('latest-charge-fee', $apiParams[2])) {
           $localMapper['latest-charge-fee'] = $apiParams[2]['latest-charge-fee']['total']['VALUE'];
           $localMapper['net-amount'] = $localMapper['total-charge-amount'] - $localMapper['latest-charge-fee'];
@@ -759,7 +759,7 @@ INNER JOIN   civicrm_contact contact ON ( contact.id = contrib.contact_id )
       }
     }
     else{
-      $invoice_id = CRM_Core_DAO::singleValueQuery("SELECT invoice_id FROM civicrm_contribution WHERE id = %1", array(1 => array($contribution_id, 'Integer')));
+      $invoice_id = CRM_Core_DAO::singleValueQuery("SELECT invoice_id FROM civicrm_contribution WHERE id = %1", [1 => [$contribution_id, 'Integer']]);
     }
     if(!empty($invoice_id)){
       return CRM_Utils_System::url('civicrm/contribute/invoice', 'reset=1&ii='.$invoice_id, TRUE);
@@ -772,8 +772,8 @@ INNER JOIN   civicrm_contact contact ON ( contact.id = contrib.contact_id )
    */
   public static function clearDonateAgainLink() {
     $aweekbefore = CRM_REQUEST_TIME - 86400*7;
-    CRM_Core_DAO::executeQuery("DELETE FROM civicrm_sequence WHERE `name` LIKE 'DA_%' AND `timestamp` < %1", array(
-      1 => array($aweekbefore, 'Integer')
-    ));
+    CRM_Core_DAO::executeQuery("DELETE FROM civicrm_sequence WHERE `name` LIKE 'DA_%' AND `timestamp` < %1", [
+      1 => [$aweekbefore, 'Integer']
+    ]);
   }  
 }

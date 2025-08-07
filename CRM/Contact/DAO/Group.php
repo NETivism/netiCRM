@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-class CRM_Contact_DAO_Group extends CRM_Core_DAO
+        class CRM_Contact_DAO_Group extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -78,7 +78,7 @@ class CRM_Contact_DAO_Group extends CRM_Core_DAO
    * @static
    */
   static $_log = true;
-  /**
+    /**
    * Group ID
    *
    * @var int unsigned
@@ -192,7 +192,7 @@ class CRM_Contact_DAO_Group extends CRM_Core_DAO
    * @var datetime
    */
   public $last_sync;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -211,13 +211,13 @@ class CRM_Contact_DAO_Group extends CRM_Core_DAO
   function &links()
   {
     if (!(self::$_links)) {
-      self::$_links = array(
+      self::$_links = [
         'saved_search_id' => 'civicrm_saved_search:id',
-      );
+      ];
     }
     return self::$_links;
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -231,7 +231,7 @@ class CRM_Contact_DAO_Group extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -240,118 +240,118 @@ class CRM_Contact_DAO_Group extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'id' => array(
+      self::$_fields = [
+        'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ) ,
-        'name' => array(
+                  ] ,
+        'name' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Name') ,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ) ,
-        'title' => array(
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
+        'title' => [
           'name' => 'title',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Title') ,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-          'import' => true,
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+             'import' => true,
           'where' => 'civicrm_group.title',
           'headerPattern' => '',
           'dataPattern' => '',
-          'export' => true,
-          'usage' => 'System',
-        ) ,
-        'description' => array(
+           'export' => true,
+               'usage' => 'System',
+       ] ,
+        'description' => [
           'name' => 'description',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Description') ,
-          'rows' => 2,
-          'cols' => 60,
-        ) ,
-        'source' => array(
+             'rows' => 2,
+           'cols' => 60,
+              ] ,
+        'source' => [
           'name' => 'source',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Source') ,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ) ,
-        'saved_search_id' => array(
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
+        'saved_search_id' => [
           'name' => 'saved_search_id',
           'type' => CRM_Utils_Type::T_INT,
-          'FKClassName' => 'CRM_Contact_DAO_SavedSearch',
-        ) ,
-        'is_active' => array(
+                    'FKClassName' => 'CRM_Contact_DAO_SavedSearch',
+        ] ,
+        'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ) ,
-        'visibility' => array(
+                  ] ,
+        'visibility' => [
           'name' => 'visibility',
           'type' => CRM_Utils_Type::T_ENUM,
           'title' => ts('Visibility') ,
-          'default' => 'User and User Admin Only',
-          'enumValues' => 'User and User Admin Only,Public Pages',
-        ) ,
-        'where_clause' => array(
+                  'default' => 'User and User Admin Only',
+           'enumValues' => 'User and User Admin Only,Public Pages',
+         ] ,
+        'where_clause' => [
           'name' => 'where_clause',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Where Clause') ,
-        ) ,
-        'select_tables' => array(
+                  ] ,
+        'select_tables' => [
           'name' => 'select_tables',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Select Tables') ,
-        ) ,
-        'where_tables' => array(
+                  ] ,
+        'where_tables' => [
           'name' => 'where_tables',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Where Tables') ,
-        ) ,
-        'group_type' => array(
+                  ] ,
+        'group_type' => [
           'name' => 'group_type',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Group Type') ,
-          'maxlength' => 128,
-          'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'cache_date' => array(
+           'maxlength' => 128,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
+        'cache_date' => [
           'name' => 'cache_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Cache Date') ,
-        ) ,
-        'parents' => array(
+                  ] ,
+        'parents' => [
           'name' => 'parents',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Parents') ,
-        ) ,
-        'children' => array(
+                  ] ,
+        'children' => [
           'name' => 'children',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Children') ,
-        ) ,
-        'is_hidden' => array(
+                  ] ,
+        'is_hidden' => [
           'name' => 'is_hidden',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ) ,
-        'is_sync' => array(
+                  ] ,
+        'is_sync' => [
           'name' => 'is_sync',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ) ,
-        'sync_data' => array(
+                  ] ,
+        'sync_data' => [
           'name' => 'sync_data',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Sync Data') ,
-        ) ,
-        'last_sync' => array(
+                  ] ,
+        'last_sync' => [
           'name' => 'last_sync',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Last Sync') ,
-        ) ,
-      );
+                  ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -363,8 +363,8 @@ class CRM_Contact_DAO_Group extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -384,7 +384,7 @@ class CRM_Contact_DAO_Group extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -395,7 +395,7 @@ class CRM_Contact_DAO_Group extends CRM_Core_DAO
           }
         }
       }
-    }
+                                  }
     return self::$_import;
   }
   /**
@@ -407,7 +407,7 @@ class CRM_Contact_DAO_Group extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
@@ -418,7 +418,7 @@ class CRM_Contact_DAO_Group extends CRM_Core_DAO
           }
         }
       }
-    }
+                                  }
     return self::$_export;
   }
   /**
@@ -428,9 +428,9 @@ class CRM_Contact_DAO_Group extends CRM_Core_DAO
    */
   static function &getEnums()
   {
-    static $enums = array(
-      'visibility',
-    );
+    static $enums = [
+                                                                                                        'visibility',
+                                                                                                                                                    ];
     return $enums;
   }
   /**
@@ -445,12 +445,12 @@ class CRM_Contact_DAO_Group extends CRM_Core_DAO
   {
     static $translations = null;
     if (!$translations) {
-      $translations = array(
-        'visibility' => array(
-          'User and User Admin Only' => ts('User and User Admin Only') ,
-          'Public Pages' => ts('Public Pages') ,
-        ) ,
-      );
+      $translations = [
+                                                                                                        'visibility' => [
+                  'User and User Admin Only' => ts('User and User Admin Only'),
+                  'Public Pages' => ts('Public Pages'),
+                ],
+                                                                                                                                                      ];
     }
     return $translations[$field][$value];
   }
@@ -463,7 +463,7 @@ class CRM_Contact_DAO_Group extends CRM_Core_DAO
   static function addDisplayEnums(&$values)
   {
     $enumFields = &CRM_Contact_DAO_Group::getEnums();
-    foreach($enumFields as $enum) {
+    foreach ($enumFields as $enum) {
       if (isset($values[$enum])) {
         $values[$enum . '_display'] = CRM_Contact_DAO_Group::tsEnum($enum, $values[$enum]);
       }

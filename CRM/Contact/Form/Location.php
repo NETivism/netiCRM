@@ -52,11 +52,11 @@ class CRM_Contact_Form_Location {
     }
 
     $className = CRM_Utils_System::getClassName($form);
-    if (in_array($className, array('CRM_Event_Form_ManageEvent_Location', 'CRM_Contact_Form_Domain'))) {
-      $form->_blocks = array('Address' => ts('Address'),
+    if (in_array($className, ['CRM_Event_Form_ManageEvent_Location', 'CRM_Contact_Form_Domain'])) {
+      $form->_blocks = ['Address' => ts('Address'),
         'Email' => ts('Email'),
         'Phone' => ts('Phone'),
-      );
+      ];
     }
 
     $form->assign('blocks', $form->_blocks);
@@ -79,7 +79,7 @@ class CRM_Contact_Form_Location {
    */
   static function buildQuickForm(&$form) {
     // required for subsequent AJAX requests.
-    $ajaxRequestBlocks = array();
+    $ajaxRequestBlocks = [];
     $generateAjaxRequest = 0;
 
     //build 1 instance of all blocks, without using ajax ...
@@ -87,7 +87,7 @@ class CRM_Contact_Form_Location {
       require_once (str_replace('_', DIRECTORY_SEPARATOR, "CRM_Contact_Form_Edit_" . $blockName) . ".php");
       $name = strtolower($blockName);
 
-      $instances = array(1);
+      $instances = [1];
       if (CRM_Utils_Array::value($name, $_POST) && is_array($_POST[$name])) {
         $instances = array_keys($_POST[$name]);
       }

@@ -85,13 +85,13 @@ class CRM_Event_Form_Task_Batch extends CRM_Event_Form_Task {
 
     //get the contact read only fields to display.
 
-    $readOnlyFields = array(
+    $readOnlyFields = [
       'contact_id' => ts('Contact ID'),
       'sort_name' => ts('Name'),
       'participant_id' => ts('Participant ID'),
-    );
+    ];
     // get the read only field data.
-    $returnProperties = array('sort_name' => 1, 'do_not_notify' => 1);
+    $returnProperties = ['sort_name' => 1, 'do_not_notify' => 1];
     $contactDetails = CRM_Contact_BAO_Contact_Utils::contactDetails($this->_participantIds, 'CiviEvent', $returnProperties);
     $participantDAO = new CRM_Event_DAO_Participant();
     $participantDAO->whereAdd("id IN (".CRM_Utils_Array::implode(',', $this->_participantIds).")");
@@ -104,7 +104,7 @@ class CRM_Event_Form_Task_Batch extends CRM_Event_Form_Task {
     $this->assign('contactDetails', $contactDetails);
     $this->assign('readOnlyFields', $readOnlyFields);
 
-    $suppressEmail = array();
+    $suppressEmail = [];
     foreach($contactDetails as $detail) {
       if (!empty($detail['do_not_notify'])) {
         $suppressEmail[] = $detail['contact_id'];
@@ -131,12 +131,12 @@ class CRM_Event_Form_Task_Batch extends CRM_Event_Form_Task {
     $this->_title = ts('Batch Update for Events') . ' - ' . CRM_Core_BAO_UFGroup::getTitle($ufGroupId);
     CRM_Utils_System::setTitle($this->_title);
     $this->addDefaultButtons(ts('Save'));
-    $this->_fields = array();
+    $this->_fields = [];
     $this->_fields = CRM_Core_BAO_UFGroup::getFields($ufGroupId, FALSE, CRM_Core_Action::VIEW);
 
     // remove file type field and then limit fields
     $suppressFields = FALSE;
-    $removehtmlTypes = array('File', 'Autocomplete-Select');
+    $removehtmlTypes = ['File', 'Autocomplete-Select'];
     foreach ($this->_fields as $name => $field) {
       if ($cfID = CRM_Core_BAO_CustomField::getKeyID($name) &&
         in_array($this->_fields[$name]['html_type'], $removehtmlTypes)
@@ -154,7 +154,7 @@ class CRM_Event_Form_Task_Batch extends CRM_Event_Form_Task {
 
     // assign will notify status to batch front end
     $participantStatuses = CRM_Event_PseudoConstant::participantStatus();
-    $notifyStatus = array();
+    $notifyStatus = [];
     $notifyStatus[] = array_search('Cancelled', $participantStatuses);
     $notifyStatus[] = array_search('Pending from waitlist', $participantStatuses);
     $notifyStatus[] = array_search('Pending from approval', $participantStatuses);
@@ -163,15 +163,15 @@ class CRM_Event_Form_Task_Batch extends CRM_Event_Form_Task {
 
     $this->_fields = array_slice($this->_fields, 0, $this->_maxFields);
 
-    $this->addButtons(array(
-        array('type' => 'submit',
+    $this->addButtons([
+        ['type' => 'submit',
           'name' => ts('Update Participant(s)'),
           'isDefault' => TRUE,
-        ),
-        array('type' => 'cancel',
+        ],
+        ['type' => 'cancel',
           'name' => ts('Cancel'),
-        ),
-      )
+        ],
+      ]
     );
 
 
@@ -253,9 +253,9 @@ class CRM_Event_Form_Task_Batch extends CRM_Event_Form_Task {
       return;
     }
 
-    $defaults = array();
+    $defaults = [];
     foreach ($this->_participantIds as $participantId) {
-      $details[$participantId] = array();
+      $details[$participantId] = [];
 
 
       $details[$participantId] = CRM_Event_BAO_Participant::participantDetails($participantId);
@@ -339,7 +339,7 @@ class CRM_Event_Form_Task_Batch extends CRM_Event_Form_Task {
 
         //need to trigger mails when we change status
         if ($statusChange) {
-          CRM_Event_BAO_Participant::transitionParticipants(array($key), $value['status_id'], $fromStatusId);
+          CRM_Event_BAO_Participant::transitionParticipants([$key], $value['status_id'], $fromStatusId);
 
           //update related contribution status, CRM-4395
           self::updatePendingOnlineContribution($key, $value['status_id']);
@@ -388,11 +388,11 @@ class CRM_Event_Form_Task_Batch extends CRM_Event_Form_Task {
       return;
     }
 
-    $params = array('component_id' => $participantId,
+    $params = ['component_id' => $participantId,
       'componentName' => 'Event',
       'contribution_id' => $contributionId,
       'contribution_status_id' => $contributionStatusId,
-    );
+    ];
 
     //change related contribution status.
 

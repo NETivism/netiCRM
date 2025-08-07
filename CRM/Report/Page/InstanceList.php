@@ -82,7 +82,7 @@ class CRM_Report_Page_InstanceList extends CRM_Core_Page {
         ";
     $dao = CRM_Core_DAO::executeQuery($sql);
     $config = CRM_Core_Config::singleton();
-    $rows = array();
+    $rows = [];
     $url = 'civicrm/report/instance';
     while ($dao->fetch()) {
       $enabled = in_array("Civi{$dao->compName}", $config->enableComponents);
@@ -96,7 +96,7 @@ class CRM_Report_Page_InstanceList extends CRM_Core_Page {
 
       if (trim($dao->title)) {
         if ($ovID) {
-          $title = ts("Report(s) created from the template: %1", array(1 => $dao->label));
+          $title = ts("Report(s) created from the template: %1", [1 => $dao->label]);
         }
         $rows[$dao->compName][$dao->id]['title'] = $dao->title;
         $rows[$dao->compName][$dao->id]['label'] = $dao->label;

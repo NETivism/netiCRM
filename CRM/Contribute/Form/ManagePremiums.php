@@ -64,7 +64,7 @@ class CRM_Contribute_Form_ManagePremiums extends CRM_Contribute_Form {
 
     $defaults = parent::setDefaultValues();
     if ($this->_id) {
-      $params = array('id' => $this->_id);
+      $params = ['id' => $this->_id];
       CRM_Contribute_BAO_ManagePremiums::retrieve($params, $tempDefaults);
       $imageUrl = (isset($tempDefaults['image'])) ? $tempDefaults['image'] : "";
       if (isset($tempDefaults['image']) && isset($tempDefaults['thumbnail'])) {
@@ -107,34 +107,34 @@ class CRM_Contribute_Form_ManagePremiums extends CRM_Contribute_Form {
 
       CRM_Contribute_BAO_Premium::buildPremiumPreviewBlock($this, $this->_id);
 
-      $this->addButtons(array(
-          array('type' => 'next',
+      $this->addButtons([
+          ['type' => 'next',
             'name' => ts('Done with Preview'),
             'isDefault' => TRUE,
-          ),
-        )
+          ],
+        ]
       );
 
       return;
     }
 
     if ($this->_action & CRM_Core_Action::DELETE) {
-      $this->addButtons(array(
-          array('type' => 'next',
+      $this->addButtons([
+          ['type' => 'next',
             'name' => ts('Delete'),
             'isDefault' => TRUE,
-          ),
-          array('type' => 'cancel',
+          ],
+          ['type' => 'cancel',
             'name' => ts('Cancel'),
-          ),
-        )
+          ],
+        ]
       );
       return;
     }
 
     $this->applyFilter('__ALL__', 'trim');
     $this->add('text', 'name', ts('Name'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_Product', 'name'), TRUE);
-    $this->addRule('name', ts('A product with this name already exists. Please select another name.'), 'objectExists', array('CRM_Contribute_DAO_Product', $this->_id));
+    $this->addRule('name', ts('A product with this name already exists. Please select another name.'), 'objectExists', ['CRM_Contribute_DAO_Product', $this->_id]);
     $this->add('text', 'sku', ts('SKU'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_Product', 'sku'));
 
     $this->add('textarea', 'description', ts('Description'), 'rows=3, cols=60');
@@ -164,47 +164,47 @@ class CRM_Contribute_Form_ManagePremiums extends CRM_Contribute_Form {
     $this->addNumber('min_contribution', ts('Non-Recurring Contribution').' - '.ts('Threshold'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_Product', 'min_contribution'), TRUE);
     $this->addRule('min_contribution', ts('Please enter a monetary value for the Minimum Contribution Amount.'), 'money');
 
-    $options = array(
+    $options = [
       'first' => ts('Non-Cumulative Mode'),
       'cumulative' => ts('Cumulative Mode'),
-    );
+    ];
     $this->addRadio('calculate_mode', ts('Threshold').' - '.ts('Recurring Contribution'), $options, NULL, '<br>', TRUE);
     $this->addNumber('min_contribution_recur', ts('Threshold').' - '.ts('Recurring Contribution'), NULL, TRUE);
-    $this->addNumber('installments', '', array('placeholder' => 99));
+    $this->addNumber('installments', '', ['placeholder' => 99]);
 
     $this->add('textarea', 'options', ts('Options'), 'rows=3, cols=60');
 
-    $this->add('select', 'period_type', ts('Period Type'), array('' => ts('- select -'), 'rolling' => ts('rolling'), 'fixed' => ts('fixed')));
+    $this->add('select', 'period_type', ts('Period Type'), ['' => ts('- select -'), 'rolling' => ts('rolling'), 'fixed' => ts('fixed')]);
 
     $this->add('text', 'fixed_period_start_day', ts('Fixed Period Start Day'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_Product', 'fixed_period_start_day'));
 
 
-    $this->add('Select', 'duration_unit', ts('Duration Unit'), array('' => ts('- select -'), 'day' => ts('day'), 'week' => ts('week'), 'month' => ts('month'), 'year' => ts('year')));
+    $this->add('Select', 'duration_unit', ts('Duration Unit'), ['' => ts('- select -'), 'day' => ts('day'), 'week' => ts('week'), 'month' => ts('month'), 'year' => ts('year')]);
 
     $this->add('text', 'duration_interval', ts('Duration'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_Product', 'duration_interval'));
 
-    $this->add('Select', 'frequency_unit', ts('Frequency Unit'), array('' => ts('- select -'), 'day' => ts('day'), 'week' => ts('week'), 'month' => ts('month'), 'year' => ts('year')));
+    $this->add('Select', 'frequency_unit', ts('Frequency Unit'), ['' => ts('- select -'), 'day' => ts('day'), 'week' => ts('week'), 'month' => ts('month'), 'year' => ts('year')]);
 
     $this->add('text', 'frequency_interval', ts('Frequency Interval'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_Product', 'frequency_interval'));
 
 
     $this->add('checkbox', 'is_active', ts('Enabled?'));
 
-    $this->addFormRule(array('CRM_Contribute_Form_ManagePremiums', 'formRule'));
+    $this->addFormRule(['CRM_Contribute_Form_ManagePremiums', 'formRule']);
 
-    $js = array('data' => 'click-once');
-    $this->addButtons(array(
-        array(
+    $js = ['data' => 'click-once'];
+    $this->addButtons([
+        [
           'type' => 'upload',
           'name' => ts('Save'),
           'isDefault' => TRUE,
           'js' => $js,
-        ),
-        array(
+        ],
+        [
           'type' => 'cancel',
           'name' => ts('Cancel'),
-        ),
-      )
+        ],
+      ]
     );
 
     $this->assign('productId', $this->_id);
@@ -289,7 +289,7 @@ class CRM_Contribute_Form_ManagePremiums extends CRM_Contribute_Form {
 
       $config = &CRM_Core_Config::singleton();
 
-      $ids = array();
+      $ids = [];
       $error = FALSE;
       // store the submitted values in an array
 
@@ -329,7 +329,7 @@ class CRM_Contribute_Form_ManagePremiums extends CRM_Contribute_Form {
       }
 
       // fix the money fields
-      foreach (array('cost', 'price', 'min_contribution', 'min_contribution_recur') as $f) {
+      foreach (['cost', 'price', 'min_contribution', 'min_contribution_recur'] as $f) {
         $params[$f] = CRM_Utils_Rule::cleanMoney($params[$f]);
       }
 
@@ -342,7 +342,7 @@ class CRM_Contribute_Form_ManagePremiums extends CRM_Contribute_Form {
         CRM_Core_Session::setStatus(ts('NOTICE: No thumbnail of your image was created because the GD image library is not currently compiled in your PHP installation. Product is currently configured to use default thumbnail image. If you have a local thumbnail image you can upload it separately and input the thumbnail URL by editing this premium.'));
       }
       else {
-        CRM_Core_Session::setStatus(ts("The Premium '%1' has been saved.", array(1 => $premium->name)));
+        CRM_Core_Session::setStatus(ts("The Premium '%1' has been saved.", [1 => $premium->name]));
       }
     }
   }

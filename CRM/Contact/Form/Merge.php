@@ -54,7 +54,7 @@ class CRM_Contact_Form_Merge extends CRM_Core_Form {
   public $_contactType = NULL;
 
   // variable to keep all location block ids.
-  protected $_locBlockIds = array();
+  protected $_locBlockIds = [];
 
   // FIXME: QuickForm can't create advcheckboxes with value set to 0 or '0' :(
   // see HTML_QuickForm_advcheckbox::setValues() - but patching that doesn't
@@ -68,7 +68,7 @@ class CRM_Contact_Form_Merge extends CRM_Core_Form {
       return CRM_Core_Error::statusBounce(ts('You do not have access to this page'));
     }
 
-    $rows = array();
+    $rows = [];
     $cid = CRM_Utils_Request::retrieve('cid', 'Positive', $this, TRUE);
     $oid = CRM_Utils_Request::retrieve('oid', 'Positive', $this, TRUE);
     $flip = CRM_Utils_Request::retrieve('flip', 'Positive', $this, FALSE);
@@ -78,7 +78,7 @@ class CRM_Contact_Form_Merge extends CRM_Core_Form {
     $this->_mergeId = CRM_Utils_Request::retrieve('mergeId', 'Positive', $this, FALSE);
 
     if (!self::validateContacts($cid, $oid)) {
-      return CRM_Core_Error::statusBounce(ts('The selected pair of contacts are marked as non duplicates. If these records should be merged, you can remove this exception on the <a href="%1">Dedupe Exceptions</a> page.', array(1 => CRM_Utils_System::url('civicrm/dedupe/exception', 'reset=1'))));
+      return CRM_Core_Error::statusBounce(ts('The selected pair of contacts are marked as non duplicates. If these records should be merged, you can remove this exception on the <a href="%1">Dedupe Exceptions</a> page.', [1 => CRM_Utils_System::url('civicrm/dedupe/exception', 'reset=1')]));
       $this->_hasError = TRUE;
     }
 
@@ -151,7 +151,7 @@ class CRM_Contact_Form_Merge extends CRM_Core_Form {
     if ($session->get('userID') == $oid) {
       $display_name = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $oid, 'display_name');
       $message = ts('The contact record which is linked to the currently logged in user account - \'%1\' - cannot be deleted.',
-        array(1 => $display_name)
+        [1 => $display_name]
       );
       return CRM_Core_Error::statusBounce($message);
       $this->_hasError = TRUE;
@@ -191,15 +191,15 @@ class CRM_Contact_Form_Merge extends CRM_Core_Form {
     $this->_oid         = $oid;
     $this->_rgid        = $rgid;
     $this->_contactType = $main['contact_type'];
-    $this->addElement('checkbox', 'toggleSelect', NULL, NULL, array('onclick' => "return toggleCheckboxVals('move_',this);"));
+    $this->addElement('checkbox', 'toggleSelect', NULL, NULL, ['onclick' => "return toggleCheckboxVals('move_',this);"]);
 
     $this->assign('mainLocBlock', json_encode($rowsElementsAndInfo['main_loc_block']));
     $this->assign('rows', $rowsElementsAndInfo['rows']);
 
-    $this->_locBlockIds = array(
+    $this->_locBlockIds = [
       'main' => $rowsElementsAndInfo['main_details']['loc_block_ids'],
       'other' => $rowsElementsAndInfo['other_details']['loc_block_ids']
-    );
+    ];
 
     // add elements
     foreach ($rowsElementsAndInfo['elements'] as $element) {
@@ -234,7 +234,7 @@ class CRM_Contact_Form_Merge extends CRM_Core_Form {
   }
 
   function setDefaultValues() {
-    return array('deleteOther' => 1);
+    return ['deleteOther' => 1];
   }
 
   function addRules() {}
@@ -242,10 +242,10 @@ class CRM_Contact_Form_Merge extends CRM_Core_Form {
   public function buildQuickForm() {
     CRM_Utils_System::setTitle(ts('Merge Contacts'));
     if (!$this->_hasError) {
-      $this->addButtons(array(
-        array('type' => 'next', 'name' => ts('Merge'), 'isDefault' => TRUE),
-        array('type' => 'cancel', 'name' => ts('Cancel')),
-      ));
+      $this->addButtons([
+        ['type' => 'next', 'name' => ts('Merge'), 'isDefault' => TRUE],
+        ['type' => 'cancel', 'name' => ts('Cancel')],
+      ]);
     }
   }
 
@@ -259,14 +259,14 @@ class CRM_Contact_Form_Merge extends CRM_Core_Form {
       $session->resetScope('selectedSearchContactIds');
     }
 
-    $formValues['main_details'] = $formValues['other_details'] = array();
+    $formValues['main_details'] = $formValues['other_details'] = [];
     $formValues['main_details']['contact_type'] = $this->_contactType;
     $formValues['main_details']['loc_block_ids'] = $this->_locBlockIds['main'];
     $formValues['other_details']['loc_block_ids'] = $this->_locBlockIds['other'];
 
     CRM_Dedupe_Merger::moveAllBelongings($this->_cid, $this->_oid, $formValues);
 
-    CRM_Core_Session::setStatus(ts('Contact id %1 has been updated and contact id %2 has been deleted.', array(1 => $this->_cid, 2 => $this->_oid)), ts('Contacts Merged'), 'success');
+    CRM_Core_Session::setStatus(ts('Contact id %1 has been updated and contact id %2 has been deleted.', [1 => $this->_cid, 2 => $this->_oid]), ts('Contacts Merged'), 'success');
     $url = CRM_Utils_System::url('civicrm/contact/view', "reset=1&cid={$this->_cid}");
     CRM_Utils_System::redirect($url);
   }
@@ -295,11 +295,11 @@ class CRM_Contact_Form_Merge extends CRM_Core_Form {
   function checkContactIsAdmin($cid, $oid) {
     // Check contact is admin or not
     $cidSql = "SELECT uf_id FROM `civicrm_uf_match` where contact_id = %1";
-    $cidParams = array( 1 => array($cid, 'Integer'));
+    $cidParams = [ 1 => [$cid, 'Integer']];
     $cidUid = CRM_Core_DAO::singleValueQuery($cidSql, $cidParams);
 
     $oidSql = "SELECT uf_id FROM `civicrm_uf_match` where contact_id = %1";
-    $oidParams = array( 1 => array($oid, 'Integer'));
+    $oidParams = [ 1 => [$oid, 'Integer']];
     $oidUid = CRM_Core_DAO::singleValueQuery($oidSql, $oidParams);
 
     if ($cidUid == 1 || $oidUid == 1) {

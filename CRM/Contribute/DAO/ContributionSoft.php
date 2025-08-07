@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-class CRM_Contribute_DAO_ContributionSoft extends CRM_Core_DAO
+                    class CRM_Contribute_DAO_ContributionSoft extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -78,7 +78,7 @@ class CRM_Contribute_DAO_ContributionSoft extends CRM_Core_DAO
    * @static
    */
   static $_log = true;
-  /**
+    /**
    * Soft Contribution ID
    *
    * @var int unsigned
@@ -129,7 +129,7 @@ class CRM_Contribute_DAO_ContributionSoft extends CRM_Core_DAO
    * @var string
    */
   public $pcp_personal_note;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -148,15 +148,15 @@ class CRM_Contribute_DAO_ContributionSoft extends CRM_Core_DAO
   function &links()
   {
     if (!(self::$_links)) {
-      self::$_links = array(
+      self::$_links = [
         'contribution_id' => 'civicrm_contribution:id',
         'contact_id' => 'civicrm_contact:id',
         'pcp_id' => 'civicrm_pcp:id',
-      );
+      ];
     }
     return self::$_links;
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -172,7 +172,7 @@ class CRM_Contribute_DAO_ContributionSoft extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -181,83 +181,83 @@ class CRM_Contribute_DAO_ContributionSoft extends CRM_Core_DAO
   static function &fields()
   {
     if (!(self::$_fields)) {
-      self::$_fields = array(
-        'contribution_soft_id' => array(
+      self::$_fields = [
+        'contribution_soft_id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Soft Contribution ID') ,
           'required' => true,
-          'import' => true,
+               'import' => true,
           'where' => 'civicrm_contribution_soft.id',
           'headerPattern' => '',
           'dataPattern' => '',
-          'export' => true,
-        ) ,
-        'contribution_id' => array(
+           'export' => true,
+            ] ,
+        'contribution_id' => [
           'name' => 'contribution_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-          'FKClassName' => 'CRM_Contribute_DAO_Contribution',
-        ) ,
-        'contribution_soft_contact_id' => array(
+                    'FKClassName' => 'CRM_Contribute_DAO_Contribution',
+        ] ,
+        'contribution_soft_contact_id' => [
           'name' => 'contact_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Contact ID') ,
           'required' => true,
-          'import' => true,
+               'import' => true,
           'where' => 'civicrm_contribution_soft.contact_id',
           'headerPattern' => '/contact(.?id)?/i',
           'dataPattern' => '/^\d+$/',
-          'export' => true,
-          'FKClassName' => 'CRM_Contact_DAO_Contact',
-        ) ,
-        'amount' => array(
+           'export' => true,
+              'FKClassName' => 'CRM_Contact_DAO_Contact',
+        ] ,
+        'amount' => [
           'name' => 'amount',
           'type' => CRM_Utils_Type::T_MONEY,
           'title' => ts('Amount') ,
           'required' => true,
-          'import' => true,
+               'import' => true,
           'where' => 'civicrm_contribution_soft.amount',
           'headerPattern' => '/total(.?am(ou)?nt)?/i',
           'dataPattern' => '/^\d+(\.\d{2})?$/',
-          'export' => true,
-        ) ,
-        'currency' => array(
+           'export' => true,
+            ] ,
+        'currency' => [
           'name' => 'currency',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Currency') ,
-          'maxlength' => 3,
-          'size' => CRM_Utils_Type::FOUR,
-          'default' => 'UL',
-        ) ,
-        'pcp_id' => array(
+           'maxlength' => 3,
+           'size' => CRM_Utils_Type::FOUR,
+                'default' => 'UL',
+          ] ,
+        'pcp_id' => [
           'name' => 'pcp_id',
           'type' => CRM_Utils_Type::T_INT,
-          'default' => 'UL',
-          'FKClassName' => 'CRM_Contribute_DAO_PCP',
-        ) ,
-        'pcp_display_in_roll' => array(
+                  'default' => 'UL',
+            'FKClassName' => 'CRM_Contribute_DAO_PCP',
+        ] ,
+        'pcp_display_in_roll' => [
           'name' => 'pcp_display_in_roll',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Pcp Display In Roll') ,
-        ) ,
-        'pcp_roll_nickname' => array(
+                  ] ,
+        'pcp_roll_nickname' => [
           'name' => 'pcp_roll_nickname',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Pcp Roll Nickname') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-          'default' => 'UL',
-        ) ,
-        'pcp_personal_note' => array(
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                'default' => 'UL',
+          ] ,
+        'pcp_personal_note' => [
           'name' => 'pcp_personal_note',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Pcp Personal Note') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-          'default' => 'UL',
-        ) ,
-      );
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                'default' => 'UL',
+          ] ,
+      ];
     }
     return self::$_fields;
   }
@@ -269,8 +269,8 @@ class CRM_Contribute_DAO_ContributionSoft extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -290,7 +290,7 @@ class CRM_Contribute_DAO_ContributionSoft extends CRM_Core_DAO
   static function &import($prefix = false)
   {
     if (!(self::$_import)) {
-      self::$_import = array();
+      self::$_import = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
@@ -301,7 +301,7 @@ class CRM_Contribute_DAO_ContributionSoft extends CRM_Core_DAO
           }
         }
       }
-    }
+                                                          }
     return self::$_import;
   }
   /**
@@ -313,7 +313,7 @@ class CRM_Contribute_DAO_ContributionSoft extends CRM_Core_DAO
   static function &export($prefix = false)
   {
     if (!(self::$_export)) {
-      self::$_export = array();
+      self::$_export = [];
       $fields = &self::fields();
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
@@ -324,7 +324,7 @@ class CRM_Contribute_DAO_ContributionSoft extends CRM_Core_DAO
           }
         }
       }
-    }
+                                                          }
     return self::$_export;
   }
 }

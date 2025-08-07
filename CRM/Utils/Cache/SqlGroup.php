@@ -80,7 +80,7 @@ class CRM_Utils_Cache_SqlGroup implements CRM_Utils_Cache_Interface {
     else {
       $this->componentID = NULL;
     }
-    $this->frontCache = array();
+    $this->frontCache = [];
     if (CRM_Utils_Array::value('prefetch', $config, TRUE)) {
       $this->prefetch();
     }
@@ -109,7 +109,7 @@ class CRM_Utils_Cache_SqlGroup implements CRM_Utils_Cache_Interface {
 
   function flush() {
     CRM_Core_BAO_Cache::deleteGroup($this->group);
-    $this->frontCache = array();
+    $this->frontCache = [];
   }
 
   function prefetch() {

@@ -9,7 +9,7 @@ class Participant extends PHPUnit_Framework_Testcase
      */
     function create( $contactId, $eventId )
     {        
-        $params = array(
+        $params = [
                         'send_receipt'     => 1,
                         'is_test'          => 0,
                         'is_pay_later'     => 0,
@@ -19,7 +19,7 @@ class Participant extends PHPUnit_Framework_Testcase
                         'status_id'        => 1,
                         'source'           => 'Event_'.$eventId,
                         'contact_id'       => $contactId
-                        );
+                        ];
 
         require_once 'CRM/Event/BAO/Participant.php';
         $participant = CRM_Event_BAO_Participant::add($params);

@@ -20,19 +20,19 @@ class CRM_Contact_Form_Search_Custom_RecurDonor extends CRM_Contact_Form_Search_
       $this->_cstatus = CRM_Contribute_PseudoConstant::contributionStatus();
       $this->_cpage = CRM_Contribute_PseudoConstant::contributionPage();
       $this->_ctype = CRM_Contribute_PseudoConstant::contributionType();
-      $this->_criteria = array(
+      $this->_criteria = [
         'active' => ts('active donors (and no past recurring donation)'),
         'inactive' => ts('inactive donors (past recurring donors)'),
         'intersection' => ts('recurring donors (multiple times, active now and inactive past)'),
         'all' => ts('recurring donors (no matter active or inactive)'),
         'never' => ts('not recurring donors (no matter with/without one-time donation)'),
-      );
+      ];
       $this->buildColumn();
     }
   }
 
   function buildColumn(){
-    $this->_queryColumns = array( 
+    $this->_queryColumns = [ 
       'contact.id' => 'id',
       'contact.sort_name' => 'sort_name',
       'r1.id' => 'rid1',
@@ -47,8 +47,8 @@ class CRM_Contact_Form_Search_Custom_RecurDonor extends CRM_Contact_Form_Search_
       'ROUND(r2.amount,0)' => 'amount2',
       'r2.contribution_status_id' => 'contribution_status_id2',
       'r2.contribution_id' => 'contribution_id2',
-    );
-    $this->_columns = array(
+    ];
+    $this->_columns = [
       ts('Contact ID') => 'id',
       ts('Name') => 'sort_name',
       ts('Recurring Contributions ID').' ('.ts("In Progress").')' => 'rid1',
@@ -63,7 +63,7 @@ class CRM_Contact_Form_Search_Custom_RecurDonor extends CRM_Contact_Form_Search_
       ts('Amount') => 'amount2',
       ts('Type') => 'type_id2',
       ts('Contribution Page') => 'page_id2',
-    );
+    ];
   }
 
   function buildTempTable() {
@@ -73,7 +73,7 @@ CREATE TEMPORARY TABLE IF NOT EXISTS {$this->_tableName} (
 ";
 
     foreach ($this->_queryColumns as $field) {
-      if (in_array($field, array('id'))) {
+      if (in_array($field, ['id'])) {
         continue;
       }
       if (strstr($field, 'amount') || strstr($field, '_id')) {
@@ -109,7 +109,7 @@ PRIMARY KEY (id)
     }
     $this->buildTempTable();
 
-    $select = array();
+    $select = [];
     foreach($this->_queryColumns as $k => $v){
       $select[] = $k.' as '.$v;
     }
@@ -132,7 +132,7 @@ ORDER BY r1.start_date ASC, r2.start_date ASC
     $dao = CRM_Core_DAO::executeQuery($sql);
 
     while ($dao->fetch()) {
-      $values = array();
+      $values = [];
 
       foreach($this->_queryColumns as $name){
         if ($name == 'id') {
@@ -194,20 +194,20 @@ ORDER BY r1.start_date ASC, r2.start_date ASC
   }
 
   function buildForm(&$form){
-    $form->addSelect('search_criteria', ts('Recurring Donors Search'), array('' => ts('-- select --')) + $this->_criteria, NULL, TRUE);
+    $form->addSelect('search_criteria', ts('Recurring Donors Search'), ['' => ts('-- select --')] + $this->_criteria, NULL, TRUE);
 
-    $form->addNumber('amount_low', ts('giving level filter'), array('size' => 8, 'maxlength' => 8));
-    $form->addNumber('amount_high', ts('To'), array('size' => 8, 'maxlength' => 8));
+    $form->addNumber('amount_low', ts('giving level filter'), ['size' => 8, 'maxlength' => 8]);
+    $form->addNumber('amount_high', ts('To'), ['size' => 8, 'maxlength' => 8]);
 
     foreach($this->_cpage as $pid => $title) {
       $pages[$pid] = $title."($pid)"; 
     }
-    $form->addSelect('contribution_page_id', ts('Contribution Page'), array('' => ts('-- select --')) + $pages);
+    $form->addSelect('contribution_page_id', ts('Contribution Page'), ['' => ts('-- select --')] + $pages);
 
-    $form->addSelect('contribution_type_id', ts('Contribution Type'), array('' => ts('-- select --')) + $this->_ctype);
+    $form->addSelect('contribution_type_id', ts('Contribution Type'), ['' => ts('-- select --')] + $this->_ctype);
 
     // assgin elements for tpl
-    $form->assign('elements', array('search_criteria', 'amount_low', 'contribution_page_id', 'contribution_type_id'));
+    $form->assign('elements', ['search_criteria', 'amount_low', 'contribution_page_id', 'contribution_type_id']);
   }
 
   function setBreadcrumb() {
@@ -282,7 +282,7 @@ ORDER BY r1.start_date ASC, r2.start_date ASC
   function where($includeContactIDs = FALSE) {
     $criteria = $this->_formValues['search_criteria'];
     if ($criteria != 'never' && ($this->_formValues['amount_low'] || $this->_formValues['amount_high'] || $this->_formValues['contribution_page_id'] || $this->_formValues['contribution_type_id'])) {
-      $clauses = array();  
+      $clauses = [];  
       if (strlen($this->_formValues['amount_low']) > 0) {
         $amountLow = CRM_Utils_Type::escape($this->_formValues['amount_low'], 'Integer'); 
         if ($criteria == 'active') {
@@ -367,7 +367,7 @@ ORDER BY r1.start_date ASC, r2.start_date ASC
   }
 
   public static function includeContactIDs(&$sql, &$formValues, $isExport = FALSE) {
-    $contactIDs = array();
+    $contactIDs = [];
     foreach ($formValues as $id => $value) {
       list($contactID, $additionalID) = CRM_Core_Form::cbExtract($id);
       if ($value && !empty($contactID)) {
@@ -390,24 +390,24 @@ ORDER BY r1.start_date ASC, r2.start_date ASC
   }
 
   function summary() {
-    $summary = array();
+    $summary = [];
     if(!$this->_filled){
       $this->fillTable();
       $this->_filled = TRUE;
     }
 
-    $summary['search_criteria'] = array(
+    $summary['search_criteria'] = [
       'label' => ts('Search Criteria'),
-    );
-    $formCriteria = array(
+    ];
+    $formCriteria = [
       'search_criteria' => ts('Recurring Donors Search'),
       'amount_low' => ts('Min Amount'),
       'amount_high' => ts('Max Amount'),
       'contribution_page_id' => ts('Contribution Page'),
       'contribution_type_id' => ts('Contribution Type'),
-    );
+    ];
 
-    $values = array();
+    $values = [];
     foreach($formCriteria as $key => $label) {
       if (!empty($this->_formValues[$key])) {
         if ($key == 'search_criteria') {
@@ -444,47 +444,47 @@ ORDER BY r1.start_date ASC, r2.start_date ASC
     }
 
     if ($row['page_id1'] && empty($this->_isExport)) {
-      $params = array(
+      $params = [
         'p' => 'civicrm/admin/contribute',
         'q' => "action=update&reset=1&id={$row['page_id1']}",
-      );
+      ];
       $row['page_id1'] = '<a href="'.CRM_Utils_System::crmURL($params).'" target="_blank">'.$this->_cpage[$row['page_id1']].'</a>';
     }
     if ($row['page_id2'] && empty($this->_isExport)) {
-      $params = array(
+      $params = [
         'p' => 'civicrm/admin/contribute',
         'q' => "action=update&reset=1&id={$row['page_id2']}",
-      );
+      ];
       $row['page_id2'] = '<a href="'.CRM_Utils_System::crmURL($params).'" target="_blank">'.$this->_cpage[$row['page_id2']].'</a>';
     }
 
     if ($row['rid1'] && empty($this->_isExport)) {
-      $params = array(
+      $params = [
         'p' => 'civicrm/contact/view/contributionrecur',
         'q' => "reset=1&id={$row['rid1']}&cid={$row['id']}",
-      );
+      ];
       $row['rid1'] = '<a href="'.CRM_Utils_System::crmURL($params).'" target="_blank">'.$row['rid1'].'</a>';
     }
     if ($row['rid2'] && empty($this->_isExport)) {
-      $params = array(
+      $params = [
         'p' => 'civicrm/contact/view/contributionrecur',
         'q' => "reset=1&id={$row['rid2']}&cid={$row['id']}",
-      );
+      ];
       $row['rid2'] = '<a href="'.CRM_Utils_System::crmURL($params).'" target="_blank">'.$row['rid2'].'</a>';
     }
 
     if ($row['contribution_id1'] && empty($this->_isExport)) {
-      $params = array(
+      $params = [
         'p' => 'civicrm/contact/view/contribution',
         'q' => "reset=1&id={$row['contribution_id1']}&cid={$row['id']}&action=view",
-      );
+      ];
       $row['contribution_id1'] = '<a href="'.CRM_Utils_System::crmURL($params).'" target="_blank">'.$row['contribution_id1'].'</a>';
     }
     if ($row['contribution_id2'] && empty($this->_isExport)) {
-      $params = array(
+      $params = [
         'p' => 'civicrm/contact/view/contribution',
         'q' => "reset=1&id={$row['contribution_id2']}&cid={$row['id']}&action=view",
-      );
+      ];
       $row['contribution_id2'] = '<a href="'.CRM_Utils_System::crmURL($params).'" target="_blank">'.$row['contribution_id2'].'</a>';
     }
     // Refs #38855, Workaround for export error when there are NULL field.
