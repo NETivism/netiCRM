@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-class CRM_Core_DAO_Navigation extends CRM_Core_DAO
+              class CRM_Core_DAO_Navigation extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -78,7 +78,7 @@ class CRM_Core_DAO_Navigation extends CRM_Core_DAO
    * @static
    */
   static $_log = false;
-  /**
+    /**
    *
    * @var int unsigned
    */
@@ -143,7 +143,7 @@ class CRM_Core_DAO_Navigation extends CRM_Core_DAO
    * @var int
    */
   public $weight;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -169,7 +169,7 @@ class CRM_Core_DAO_Navigation extends CRM_Core_DAO
     }
     return self::$_links;
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -184,7 +184,7 @@ class CRM_Core_DAO_Navigation extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -198,67 +198,67 @@ class CRM_Core_DAO_Navigation extends CRM_Core_DAO
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ] ,
+                  ] ,
         'domain_id' => [
           'name' => 'domain_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-          'FKClassName' => 'CRM_Core_DAO_Domain',
+                    'FKClassName' => 'CRM_Core_DAO_Domain',
         ] ,
         'label' => [
           'name' => 'label',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Label') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'name' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Name') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'url' => [
           'name' => 'url',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Url') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'permission' => [
           'name' => 'permission',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Permission') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'permission_operator' => [
           'name' => 'permission_operator',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Permission Operator') ,
-          'maxlength' => 3,
-          'size' => CRM_Utils_Type::FOUR,
-        ] ,
+           'maxlength' => 3,
+           'size' => CRM_Utils_Type::FOUR,
+                ] ,
         'parent_id' => [
           'name' => 'parent_id',
           'type' => CRM_Utils_Type::T_INT,
-          'FKClassName' => 'CRM_Core_DAO_Navigation',
+                    'FKClassName' => 'CRM_Core_DAO_Navigation',
         ] ,
         'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ] ,
+                  ] ,
         'has_separator' => [
           'name' => 'has_separator',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Has Separator') ,
-        ] ,
+                  ] ,
         'weight' => [
           'name' => 'weight',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Weight') ,
-        ] ,
+                  ] ,
       ];
     }
     return self::$_fields;
@@ -271,8 +271,8 @@ class CRM_Core_DAO_Navigation extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -303,7 +303,7 @@ class CRM_Core_DAO_Navigation extends CRM_Core_DAO
           }
         }
       }
-    }
+                                              }
     return self::$_import;
   }
   /**
@@ -326,7 +326,7 @@ class CRM_Core_DAO_Navigation extends CRM_Core_DAO
           }
         }
       }
-    }
+                                              }
     return self::$_export;
   }
 }

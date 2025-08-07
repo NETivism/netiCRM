@@ -78,7 +78,7 @@ class CRM_Standalone_OpenID_DAO_Associations extends CRM_Core_DAO
    * @static
    */
   static $_log = false;
-  /**
+    /**
    *
    * @var int unsigned
    */
@@ -113,7 +113,7 @@ class CRM_Standalone_OpenID_DAO_Associations extends CRM_Core_DAO
    * @var string
    */
   public $assoc_type;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -123,7 +123,7 @@ class CRM_Standalone_OpenID_DAO_Associations extends CRM_Core_DAO
   {
     parent::__construct();
   }
-  /**
+    /**
    * returns all the column names of this table
    *
    * @access public
@@ -137,41 +137,41 @@ class CRM_Standalone_OpenID_DAO_Associations extends CRM_Core_DAO
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ] ,
+                  ] ,
         'server_url' => [
           'name' => 'server_url',
           'type' => CRM_Utils_Type::T_BLOB,
           'title' => ts('Server Url') ,
-        ] ,
+                  ] ,
         'handle' => [
           'name' => 'handle',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Handle') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'secret' => [
           'name' => 'secret',
           'type' => CRM_Utils_Type::T_BLOB,
           'title' => ts('Secret') ,
-        ] ,
+                  ] ,
         'issued' => [
           'name' => 'issued',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Issued') ,
-        ] ,
+                  ] ,
         'lifetime' => [
           'name' => 'lifetime',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Lifetime') ,
-        ] ,
+                  ] ,
         'assoc_type' => [
           'name' => 'assoc_type',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Assoc Type') ,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ] ,
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
       ];
     }
     return self::$_fields;
@@ -184,8 +184,8 @@ class CRM_Standalone_OpenID_DAO_Associations extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -216,7 +216,7 @@ class CRM_Standalone_OpenID_DAO_Associations extends CRM_Core_DAO
           }
         }
       }
-    }
+          }
     return self::$_import;
   }
   /**
@@ -239,7 +239,7 @@ class CRM_Standalone_OpenID_DAO_Associations extends CRM_Core_DAO
           }
         }
       }
-    }
+          }
     return self::$_export;
   }
 }

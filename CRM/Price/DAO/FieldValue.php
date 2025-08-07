@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-class CRM_Price_DAO_FieldValue extends CRM_Core_DAO
+        class CRM_Price_DAO_FieldValue extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -78,7 +78,7 @@ class CRM_Price_DAO_FieldValue extends CRM_Core_DAO
    * @static
    */
   static $_log = false;
-  /**
+    /**
    * Price Field Value
    *
    * @var int unsigned
@@ -150,7 +150,7 @@ class CRM_Price_DAO_FieldValue extends CRM_Core_DAO
    * @var boolean
    */
   public $is_active;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -175,7 +175,7 @@ class CRM_Price_DAO_FieldValue extends CRM_Core_DAO
     }
     return self::$_links;
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -189,7 +189,7 @@ class CRM_Price_DAO_FieldValue extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -203,76 +203,76 @@ class CRM_Price_DAO_FieldValue extends CRM_Core_DAO
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ] ,
+                  ] ,
         'price_field_id' => [
           'name' => 'price_field_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-          'FKClassName' => 'CRM_Price_DAO_Field',
+                    'FKClassName' => 'CRM_Price_DAO_Field',
         ] ,
         'name' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Name') ,
           'required' => true,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'label' => [
           'name' => 'label',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Label') ,
           'required' => true,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'description' => [
           'name' => 'description',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Description') ,
-          'rows' => 2,
-          'cols' => 60,
-          'default' => 'UL',
-        ] ,
+             'rows' => 2,
+           'cols' => 60,
+              'default' => 'UL',
+          ] ,
         'amount' => [
           'name' => 'amount',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Amount') ,
           'required' => true,
-          'maxlength' => 512,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 512,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'count' => [
           'name' => 'count',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Count') ,
-          'default' => 'UL',
-        ] ,
+                  'default' => 'UL',
+          ] ,
         'max_value' => [
           'name' => 'max_value',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Max Value') ,
-          'default' => 'UL',
-        ] ,
+                  'default' => 'UL',
+          ] ,
         'weight' => [
           'name' => 'weight',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Weight') ,
-          'default' => '',
-        ] ,
+                  'default' => '',
+          ] ,
         'is_member' => [
           'name' => 'is_member',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ] ,
+                  ] ,
         'is_default' => [
           'name' => 'is_default',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ] ,
+                  ] ,
         'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-          'default' => '',
-        ] ,
+                  'default' => '',
+          ] ,
       ];
     }
     return self::$_fields;
@@ -285,9 +285,9 @@ class CRM_Price_DAO_FieldValue extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    global $dbLocale;
+        global $dbLocale;
     return self::$_tableName . $dbLocale;
-  }
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -318,7 +318,7 @@ class CRM_Price_DAO_FieldValue extends CRM_Core_DAO
           }
         }
       }
-    }
+                                  }
     return self::$_import;
   }
   /**
@@ -341,7 +341,7 @@ class CRM_Price_DAO_FieldValue extends CRM_Core_DAO
           }
         }
       }
-    }
+                                  }
     return self::$_export;
   }
 }

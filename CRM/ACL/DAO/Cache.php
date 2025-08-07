@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-class CRM_ACL_DAO_Cache extends CRM_Core_DAO
+              class CRM_ACL_DAO_Cache extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -78,7 +78,7 @@ class CRM_ACL_DAO_Cache extends CRM_Core_DAO
    * @static
    */
   static $_log = false;
-  /**
+    /**
    * Unique table ID
    *
    * @var int unsigned
@@ -102,7 +102,7 @@ class CRM_ACL_DAO_Cache extends CRM_Core_DAO
    * @var date
    */
   public $modified_date;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -128,7 +128,7 @@ class CRM_ACL_DAO_Cache extends CRM_Core_DAO
     }
     return self::$_links;
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -143,7 +143,7 @@ class CRM_ACL_DAO_Cache extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -157,23 +157,23 @@ class CRM_ACL_DAO_Cache extends CRM_Core_DAO
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ] ,
+                  ] ,
         'contact_id' => [
           'name' => 'contact_id',
           'type' => CRM_Utils_Type::T_INT,
-          'FKClassName' => 'CRM_Contact_DAO_Contact',
+                    'FKClassName' => 'CRM_Contact_DAO_Contact',
         ] ,
         'acl_id' => [
           'name' => 'acl_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-          'FKClassName' => 'CRM_ACL_DAO_ACL',
+                    'FKClassName' => 'CRM_ACL_DAO_ACL',
         ] ,
         'modified_date' => [
           'name' => 'modified_date',
           'type' => CRM_Utils_Type::T_DATE,
           'title' => ts('Modified Date') ,
-        ] ,
+                  ] ,
       ];
     }
     return self::$_fields;
@@ -186,8 +186,8 @@ class CRM_ACL_DAO_Cache extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -218,7 +218,7 @@ class CRM_ACL_DAO_Cache extends CRM_Core_DAO
           }
         }
       }
-    }
+                                              }
     return self::$_import;
   }
   /**
@@ -241,7 +241,7 @@ class CRM_ACL_DAO_Cache extends CRM_Core_DAO
           }
         }
       }
-    }
+                                              }
     return self::$_export;
   }
 }

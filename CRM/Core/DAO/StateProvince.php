@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-class CRM_Core_DAO_StateProvince extends CRM_Core_DAO
+        class CRM_Core_DAO_StateProvince extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -78,7 +78,7 @@ class CRM_Core_DAO_StateProvince extends CRM_Core_DAO
    * @static
    */
   static $_log = false;
-  /**
+    /**
    * State / Province ID
    *
    * @var int unsigned
@@ -102,7 +102,7 @@ class CRM_Core_DAO_StateProvince extends CRM_Core_DAO
    * @var int unsigned
    */
   public $country_id;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -127,7 +127,7 @@ class CRM_Core_DAO_StateProvince extends CRM_Core_DAO
     }
     return self::$_links;
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -141,7 +141,7 @@ class CRM_Core_DAO_StateProvince extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -155,31 +155,31 @@ class CRM_Core_DAO_StateProvince extends CRM_Core_DAO
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ] ,
+                  ] ,
         'name' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('State') ,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-          'import' => true,
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+             'import' => true,
           'where' => 'civicrm_state_province.name',
           'headerPattern' => '/state|prov(ince)?/i',
           'dataPattern' => '/[A-Z]{2}/',
-          'export' => true,
-        ] ,
+           'export' => true,
+            ] ,
         'abbreviation' => [
           'name' => 'abbreviation',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('State Abbreviation') ,
-          'maxlength' => 4,
-          'size' => CRM_Utils_Type::FOUR,
-        ] ,
+           'maxlength' => 4,
+           'size' => CRM_Utils_Type::FOUR,
+                ] ,
         'country_id' => [
           'name' => 'country_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-          'FKClassName' => 'CRM_Core_DAO_Country',
+                    'FKClassName' => 'CRM_Core_DAO_Country',
         ] ,
       ];
     }
@@ -193,8 +193,8 @@ class CRM_Core_DAO_StateProvince extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -225,7 +225,7 @@ class CRM_Core_DAO_StateProvince extends CRM_Core_DAO
           }
         }
       }
-    }
+                                  }
     return self::$_import;
   }
   /**
@@ -248,7 +248,7 @@ class CRM_Core_DAO_StateProvince extends CRM_Core_DAO
           }
         }
       }
-    }
+                                  }
     return self::$_export;
   }
 }

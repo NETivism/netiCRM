@@ -78,7 +78,7 @@ class CRM_Contribute_DAO_LinePay extends CRM_Core_DAO
    * @static
    */
   static $_log = false;
-  /**
+    /**
    * LinePay ID
    *
    * @var int unsigned
@@ -156,7 +156,7 @@ class CRM_Contribute_DAO_LinePay extends CRM_Core_DAO
    * @var text
    */
   public $recurring_expire;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -166,7 +166,7 @@ class CRM_Contribute_DAO_LinePay extends CRM_Core_DAO
   {
     parent::__construct();
   }
-  /**
+    /**
    * returns all the column names of this table
    *
    * @access public
@@ -181,81 +181,81 @@ class CRM_Contribute_DAO_LinePay extends CRM_Core_DAO
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('LinePay ID') ,
           'required' => true,
-        ] ,
+                  ] ,
         'contribution_trxn_id' => [
           'name' => 'trxn_id',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Contribution Trxn ID') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'transaction_id' => [
           'name' => 'transaction_id',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Transaction ID') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'query' => [
           'name' => 'query',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Query') ,
-          'default' => 'UL',
-        ] ,
+                  'default' => 'UL',
+          ] ,
         'request' => [
           'name' => 'request',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Request') ,
-          'default' => 'UL',
-        ] ,
+                  'default' => 'UL',
+          ] ,
         'confirm' => [
           'name' => 'confirm',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Confirm') ,
-          'default' => 'UL',
-        ] ,
+                  'default' => 'UL',
+          ] ,
         'refund' => [
           'name' => 'refund',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Refund') ,
-          'default' => 'UL',
-        ] ,
+                  'default' => 'UL',
+          ] ,
         'authorization' => [
           'name' => 'authorization',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Authorization') ,
-          'default' => 'UL',
-        ] ,
+                  'default' => 'UL',
+          ] ,
         'capture' => [
           'name' => 'capture',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Capture') ,
-          'default' => 'UL',
-        ] ,
+                  'default' => 'UL',
+          ] ,
         'void' => [
           'name' => 'void',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Void') ,
-          'default' => 'UL',
-        ] ,
+                  'default' => 'UL',
+          ] ,
         'recurring_payment' => [
           'name' => 'recurring_payment',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Recurring Payment') ,
-          'default' => 'UL',
-        ] ,
+                  'default' => 'UL',
+          ] ,
         'recurring_check' => [
           'name' => 'recurring_check',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Recurring Check') ,
-          'default' => 'UL',
-        ] ,
+                  'default' => 'UL',
+          ] ,
         'recurring_expire' => [
           'name' => 'recurring_expire',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Recurring Expire') ,
-          'default' => 'UL',
-        ] ,
+                  'default' => 'UL',
+          ] ,
       ];
     }
     return self::$_fields;
@@ -268,8 +268,8 @@ class CRM_Contribute_DAO_LinePay extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -300,7 +300,7 @@ class CRM_Contribute_DAO_LinePay extends CRM_Core_DAO
           }
         }
       }
-    }
+          }
     return self::$_import;
   }
   /**
@@ -323,7 +323,7 @@ class CRM_Contribute_DAO_LinePay extends CRM_Core_DAO
           }
         }
       }
-    }
+          }
     return self::$_export;
   }
 }

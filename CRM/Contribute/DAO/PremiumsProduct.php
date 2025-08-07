@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-class CRM_Contribute_DAO_PremiumsProduct extends CRM_Core_DAO
+              class CRM_Contribute_DAO_PremiumsProduct extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -78,7 +78,7 @@ class CRM_Contribute_DAO_PremiumsProduct extends CRM_Core_DAO
    * @static
    */
   static $_log = true;
-  /**
+    /**
    * Contribution ID
    *
    * @var int unsigned
@@ -101,7 +101,7 @@ class CRM_Contribute_DAO_PremiumsProduct extends CRM_Core_DAO
    * @var int unsigned
    */
   public $weight;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -127,7 +127,7 @@ class CRM_Contribute_DAO_PremiumsProduct extends CRM_Core_DAO
     }
     return self::$_links;
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -142,7 +142,7 @@ class CRM_Contribute_DAO_PremiumsProduct extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -156,25 +156,25 @@ class CRM_Contribute_DAO_PremiumsProduct extends CRM_Core_DAO
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ] ,
+                  ] ,
         'premiums_id' => [
           'name' => 'premiums_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-          'FKClassName' => 'CRM_Contribute_DAO_Premium',
+                    'FKClassName' => 'CRM_Contribute_DAO_Premium',
         ] ,
         'product_id' => [
           'name' => 'product_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-          'FKClassName' => 'CRM_Contribute_DAO_Product',
+                    'FKClassName' => 'CRM_Contribute_DAO_Product',
         ] ,
         'weight' => [
           'name' => 'weight',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Weight') ,
           'required' => true,
-        ] ,
+                  ] ,
       ];
     }
     return self::$_fields;
@@ -187,8 +187,8 @@ class CRM_Contribute_DAO_PremiumsProduct extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -219,7 +219,7 @@ class CRM_Contribute_DAO_PremiumsProduct extends CRM_Core_DAO
           }
         }
       }
-    }
+                                              }
     return self::$_import;
   }
   /**
@@ -242,7 +242,7 @@ class CRM_Contribute_DAO_PremiumsProduct extends CRM_Core_DAO
           }
         }
       }
-    }
+                                              }
     return self::$_export;
   }
 }

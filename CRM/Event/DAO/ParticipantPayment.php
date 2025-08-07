@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-class CRM_Event_DAO_ParticipantPayment extends CRM_Core_DAO
+              class CRM_Event_DAO_ParticipantPayment extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -78,7 +78,7 @@ class CRM_Event_DAO_ParticipantPayment extends CRM_Core_DAO
    * @static
    */
   static $_log = true;
-  /**
+    /**
    * Participant Payment Id
    *
    * @var int unsigned
@@ -96,7 +96,7 @@ class CRM_Event_DAO_ParticipantPayment extends CRM_Core_DAO
    * @var int unsigned
    */
   public $contribution_id;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -122,7 +122,7 @@ class CRM_Event_DAO_ParticipantPayment extends CRM_Core_DAO
     }
     return self::$_links;
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -137,7 +137,7 @@ class CRM_Event_DAO_ParticipantPayment extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -152,19 +152,19 @@ class CRM_Event_DAO_ParticipantPayment extends CRM_Core_DAO
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Payment ID') ,
           'required' => true,
-        ] ,
+                  ] ,
         'participant_id' => [
           'name' => 'participant_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Participant ID') ,
           'required' => true,
-          'FKClassName' => 'CRM_Event_DAO_Participant',
+                    'FKClassName' => 'CRM_Event_DAO_Participant',
         ] ,
         'contribution_id' => [
           'name' => 'contribution_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-          'FKClassName' => 'CRM_Contribute_DAO_Contribution',
+                    'FKClassName' => 'CRM_Contribute_DAO_Contribution',
         ] ,
       ];
     }
@@ -178,8 +178,8 @@ class CRM_Event_DAO_ParticipantPayment extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -210,7 +210,7 @@ class CRM_Event_DAO_ParticipantPayment extends CRM_Core_DAO
           }
         }
       }
-    }
+                                              }
     return self::$_import;
   }
   /**
@@ -233,7 +233,7 @@ class CRM_Event_DAO_ParticipantPayment extends CRM_Core_DAO
           }
         }
       }
-    }
+                                              }
     return self::$_export;
   }
 }

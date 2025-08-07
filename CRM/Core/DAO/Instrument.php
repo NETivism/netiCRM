@@ -78,7 +78,7 @@ class CRM_Core_DAO_Instrument extends CRM_Core_DAO
    * @static
    */
   static $_log = false;
-  /**
+    /**
    * ID
    *
    * @var int unsigned
@@ -102,7 +102,7 @@ class CRM_Core_DAO_Instrument extends CRM_Core_DAO
    * @var blob
    */
   public $payment_instruments;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -112,7 +112,7 @@ class CRM_Core_DAO_Instrument extends CRM_Core_DAO
   {
     parent::__construct();
   }
-  /**
+    /**
    * returns all the column names of this table
    *
    * @access public
@@ -126,24 +126,24 @@ class CRM_Core_DAO_Instrument extends CRM_Core_DAO
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ] ,
+                  ] ,
         'entity_id' => [
           'name' => 'entity_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ] ,
+                  ] ,
         'entity_table' => [
           'name' => 'entity_table',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Entity Table') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'payment_instruments' => [
           'name' => 'payment_instruments',
           'type' => CRM_Utils_Type::T_BLOB,
           'title' => ts('Payment Instruments') ,
-        ] ,
+                  ] ,
       ];
     }
     return self::$_fields;
@@ -156,8 +156,8 @@ class CRM_Core_DAO_Instrument extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -188,7 +188,7 @@ class CRM_Core_DAO_Instrument extends CRM_Core_DAO
           }
         }
       }
-    }
+          }
     return self::$_import;
   }
   /**
@@ -211,7 +211,7 @@ class CRM_Core_DAO_Instrument extends CRM_Core_DAO
           }
         }
       }
-    }
+          }
     return self::$_export;
   }
 }

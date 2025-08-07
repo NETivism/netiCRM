@@ -78,7 +78,7 @@ class CRM_Mailing_DAO_BounceType extends CRM_Core_DAO
    * @static
    */
   static $_log = false;
-  /**
+    /**
    *
    * @var int unsigned
    */
@@ -101,7 +101,7 @@ class CRM_Mailing_DAO_BounceType extends CRM_Core_DAO
    * @var int unsigned
    */
   public $hold_threshold;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -111,7 +111,7 @@ class CRM_Mailing_DAO_BounceType extends CRM_Core_DAO
   {
     parent::__construct();
   }
-  /**
+    /**
    * returns all the column names of this table
    *
    * @access public
@@ -125,27 +125,27 @@ class CRM_Mailing_DAO_BounceType extends CRM_Core_DAO
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ] ,
+                  ] ,
         'name' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_ENUM,
           'title' => ts('Name') ,
           'required' => true,
-          'enumValues' => 'AOL, Away, DNS, Host, Inactive, Invalid, Loop, Quota, Relay, Spam, Syntax, Unknown',
-        ] ,
+                   'enumValues' => 'AOL, Away, DNS, Host, Inactive, Invalid, Loop, Quota, Relay, Spam, Syntax, Unknown',
+         ] ,
         'description' => [
           'name' => 'description',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Description') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'hold_threshold' => [
           'name' => 'hold_threshold',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Hold Threshold') ,
           'required' => true,
-        ] ,
+                  ] ,
       ];
     }
     return self::$_fields;
@@ -158,8 +158,8 @@ class CRM_Mailing_DAO_BounceType extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -190,7 +190,7 @@ class CRM_Mailing_DAO_BounceType extends CRM_Core_DAO
           }
         }
       }
-    }
+          }
     return self::$_import;
   }
   /**
@@ -213,7 +213,7 @@ class CRM_Mailing_DAO_BounceType extends CRM_Core_DAO
           }
         }
       }
-    }
+          }
     return self::$_export;
   }
   /**
@@ -224,8 +224,8 @@ class CRM_Mailing_DAO_BounceType extends CRM_Core_DAO
   static function &getEnums()
   {
     static $enums = [
-      'name',
-    ];
+                                'name',
+                                        ];
     return $enums;
   }
   /**
@@ -241,21 +241,21 @@ class CRM_Mailing_DAO_BounceType extends CRM_Core_DAO
     static $translations = null;
     if (!$translations) {
       $translations = [
-        'name' => [
-          'AOL' => ts('AOL') ,
-          'Away' => ts('Away') ,
-          'DNS' => ts('DNS') ,
-          'Host' => ts('Host') ,
-          'Inactive' => ts('Inactive') ,
-          'Invalid' => ts('Invalid') ,
-          'Loop' => ts('Loop') ,
-          'Quota' => ts('Quota') ,
-          'Relay' => ts('Relay') ,
-          'Spam' => ts('Spam') ,
-          'Syntax' => ts('Syntax') ,
-          'Unknown' => ts('Unknown') ,
-        ] ,
-      ];
+                                'name' => [
+                  'AOL' => ts('AOL'),
+                  'Away' => ts('Away'),
+                  'DNS' => ts('DNS'),
+                  'Host' => ts('Host'),
+                  'Inactive' => ts('Inactive'),
+                  'Invalid' => ts('Invalid'),
+                  'Loop' => ts('Loop'),
+                  'Quota' => ts('Quota'),
+                  'Relay' => ts('Relay'),
+                  'Spam' => ts('Spam'),
+                  'Syntax' => ts('Syntax'),
+                  'Unknown' => ts('Unknown'),
+                ],
+                                          ];
     }
     return $translations[$field][$value];
   }
@@ -268,7 +268,7 @@ class CRM_Mailing_DAO_BounceType extends CRM_Core_DAO
   static function addDisplayEnums(&$values)
   {
     $enumFields = &CRM_Mailing_DAO_BounceType::getEnums();
-    foreach($enumFields as $enum) {
+    foreach ($enumFields as $enum) {
       if (isset($values[$enum])) {
         $values[$enum . '_display'] = CRM_Mailing_DAO_BounceType::tsEnum($enum, $values[$enum]);
       }

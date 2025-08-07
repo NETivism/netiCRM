@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-class CRM_Mailing_DAO_Group extends CRM_Core_DAO
+        class CRM_Mailing_DAO_Group extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -78,7 +78,7 @@ class CRM_Mailing_DAO_Group extends CRM_Core_DAO
    * @static
    */
   static $_log = false;
-  /**
+    /**
    *
    * @var int unsigned
    */
@@ -119,7 +119,7 @@ class CRM_Mailing_DAO_Group extends CRM_Core_DAO
    * @var text
    */
   public $search_args;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -144,7 +144,7 @@ class CRM_Mailing_DAO_Group extends CRM_Core_DAO
     }
     return self::$_links;
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -159,7 +159,7 @@ class CRM_Mailing_DAO_Group extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -173,41 +173,41 @@ class CRM_Mailing_DAO_Group extends CRM_Core_DAO
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ] ,
+                  ] ,
         'mailing_id' => [
           'name' => 'mailing_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-          'FKClassName' => 'CRM_Mailing_DAO_Mailing',
+                    'FKClassName' => 'CRM_Mailing_DAO_Mailing',
         ] ,
         'group_type' => [
           'name' => 'group_type',
           'type' => CRM_Utils_Type::T_ENUM,
           'title' => ts('Group Type') ,
-          'enumValues' => 'Include, Exclude, Base',
-        ] ,
+                   'enumValues' => 'Include, Exclude, Base',
+         ] ,
         'entity_table' => [
           'name' => 'entity_table',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Entity Table') ,
           'required' => true,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ] ,
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
         'entity_id' => [
           'name' => 'entity_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ] ,
+                  ] ,
         'search_id' => [
           'name' => 'search_id',
           'type' => CRM_Utils_Type::T_INT,
-        ] ,
+                  ] ,
         'search_args' => [
           'name' => 'search_args',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Search Args') ,
-        ] ,
+                  ] ,
       ];
     }
     return self::$_fields;
@@ -220,8 +220,8 @@ class CRM_Mailing_DAO_Group extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -252,7 +252,7 @@ class CRM_Mailing_DAO_Group extends CRM_Core_DAO
           }
         }
       }
-    }
+                                  }
     return self::$_import;
   }
   /**
@@ -275,7 +275,7 @@ class CRM_Mailing_DAO_Group extends CRM_Core_DAO
           }
         }
       }
-    }
+                                  }
     return self::$_export;
   }
   /**
@@ -286,8 +286,8 @@ class CRM_Mailing_DAO_Group extends CRM_Core_DAO
   static function &getEnums()
   {
     static $enums = [
-      'group_type',
-    ];
+                                            'group_type',
+                                                                ];
     return $enums;
   }
   /**
@@ -303,12 +303,12 @@ class CRM_Mailing_DAO_Group extends CRM_Core_DAO
     static $translations = null;
     if (!$translations) {
       $translations = [
-        'group_type' => [
-          'Include' => ts('Include') ,
-          'Exclude' => ts('Exclude') ,
-          'Base' => ts('Base') ,
-        ] ,
-      ];
+                                            'group_type' => [
+                  'Include' => ts('Include'),
+                  'Exclude' => ts('Exclude'),
+                  'Base' => ts('Base'),
+                ],
+                                                                  ];
     }
     return $translations[$field][$value];
   }
@@ -321,7 +321,7 @@ class CRM_Mailing_DAO_Group extends CRM_Core_DAO
   static function addDisplayEnums(&$values)
   {
     $enumFields = &CRM_Mailing_DAO_Group::getEnums();
-    foreach($enumFields as $enum) {
+    foreach ($enumFields as $enum) {
       if (isset($values[$enum])) {
         $values[$enum . '_display'] = CRM_Mailing_DAO_Group::tsEnum($enum, $values[$enum]);
       }

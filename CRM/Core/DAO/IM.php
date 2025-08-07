@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-class CRM_Core_DAO_IM extends CRM_Core_DAO
+        class CRM_Core_DAO_IM extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -78,7 +78,7 @@ class CRM_Core_DAO_IM extends CRM_Core_DAO
    * @static
    */
   static $_log = true;
-  /**
+    /**
    * Unique IM ID
    *
    * @var int unsigned
@@ -120,7 +120,7 @@ class CRM_Core_DAO_IM extends CRM_Core_DAO
    * @var boolean
    */
   public $is_billing;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -145,7 +145,7 @@ class CRM_Core_DAO_IM extends CRM_Core_DAO
     }
     return self::$_links;
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -159,7 +159,7 @@ class CRM_Core_DAO_IM extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -173,40 +173,40 @@ class CRM_Core_DAO_IM extends CRM_Core_DAO
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ] ,
+                  ] ,
         'contact_id' => [
           'name' => 'contact_id',
           'type' => CRM_Utils_Type::T_INT,
-          'FKClassName' => 'CRM_Contact_DAO_Contact',
+                    'FKClassName' => 'CRM_Contact_DAO_Contact',
         ] ,
         'location_type_id' => [
           'name' => 'location_type_id',
           'type' => CRM_Utils_Type::T_INT,
-        ] ,
+                  ] ,
         'name' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('IM Screen Name') ,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-          'import' => true,
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+             'import' => true,
           'where' => 'civicrm_im.name',
           'headerPattern' => '/I(nstant )?M(ess.*)?|screen(\s+)?name/i',
           'dataPattern' => '/^[A-Za-z][0-9A-Za-z]{20,}$/',
-          'export' => true,
-        ] ,
+           'export' => true,
+            ] ,
         'provider_id' => [
           'name' => 'provider_id',
           'type' => CRM_Utils_Type::T_INT,
-        ] ,
+                  ] ,
         'is_primary' => [
           'name' => 'is_primary',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ] ,
+                  ] ,
         'is_billing' => [
           'name' => 'is_billing',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ] ,
+                  ] ,
       ];
     }
     return self::$_fields;
@@ -219,8 +219,8 @@ class CRM_Core_DAO_IM extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -251,7 +251,7 @@ class CRM_Core_DAO_IM extends CRM_Core_DAO
           }
         }
       }
-    }
+                                  }
     return self::$_import;
   }
   /**
@@ -274,7 +274,7 @@ class CRM_Core_DAO_IM extends CRM_Core_DAO
           }
         }
       }
-    }
+                                  }
     return self::$_export;
   }
 }

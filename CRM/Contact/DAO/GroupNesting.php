@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-class CRM_Contact_DAO_GroupNesting extends CRM_Core_DAO
+              class CRM_Contact_DAO_GroupNesting extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -78,7 +78,7 @@ class CRM_Contact_DAO_GroupNesting extends CRM_Core_DAO
    * @static
    */
   static $_log = true;
-  /**
+    /**
    * Relationship ID
    *
    * @var int unsigned
@@ -96,7 +96,7 @@ class CRM_Contact_DAO_GroupNesting extends CRM_Core_DAO
    * @var int unsigned
    */
   public $parent_group_id;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -122,7 +122,7 @@ class CRM_Contact_DAO_GroupNesting extends CRM_Core_DAO
     }
     return self::$_links;
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -137,7 +137,7 @@ class CRM_Contact_DAO_GroupNesting extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -151,18 +151,18 @@ class CRM_Contact_DAO_GroupNesting extends CRM_Core_DAO
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ] ,
+                  ] ,
         'child_group_id' => [
           'name' => 'child_group_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-          'FKClassName' => 'CRM_Contact_DAO_Group',
+                    'FKClassName' => 'CRM_Contact_DAO_Group',
         ] ,
         'parent_group_id' => [
           'name' => 'parent_group_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-          'FKClassName' => 'CRM_Contact_DAO_Group',
+                    'FKClassName' => 'CRM_Contact_DAO_Group',
         ] ,
       ];
     }
@@ -176,8 +176,8 @@ class CRM_Contact_DAO_GroupNesting extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -208,7 +208,7 @@ class CRM_Contact_DAO_GroupNesting extends CRM_Core_DAO
           }
         }
       }
-    }
+                                              }
     return self::$_import;
   }
   /**
@@ -231,7 +231,7 @@ class CRM_Contact_DAO_GroupNesting extends CRM_Core_DAO
           }
         }
       }
-    }
+                                              }
     return self::$_export;
   }
 }

@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-class CRM_Core_DAO_UFMatch extends CRM_Core_DAO
+              class CRM_Core_DAO_UFMatch extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -78,7 +78,7 @@ class CRM_Core_DAO_UFMatch extends CRM_Core_DAO
    * @static
    */
   static $_log = true;
-  /**
+    /**
    * System generated ID.
    *
    * @var int unsigned
@@ -114,7 +114,7 @@ class CRM_Core_DAO_UFMatch extends CRM_Core_DAO
    * @var string
    */
   public $language;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -140,7 +140,7 @@ class CRM_Core_DAO_UFMatch extends CRM_Core_DAO
     }
     return self::$_links;
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -155,7 +155,7 @@ class CRM_Core_DAO_UFMatch extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -169,37 +169,37 @@ class CRM_Core_DAO_UFMatch extends CRM_Core_DAO
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ] ,
+                  ] ,
         'domain_id' => [
           'name' => 'domain_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-          'FKClassName' => 'CRM_Core_DAO_Domain',
+                    'FKClassName' => 'CRM_Core_DAO_Domain',
         ] ,
         'uf_id' => [
           'name' => 'uf_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ] ,
+                  ] ,
         'uf_name' => [
           'name' => 'uf_name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Uf Name') ,
-          'maxlength' => 128,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 128,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'contact_id' => [
           'name' => 'contact_id',
           'type' => CRM_Utils_Type::T_INT,
-          'FKClassName' => 'CRM_Contact_DAO_Contact',
+                    'FKClassName' => 'CRM_Contact_DAO_Contact',
         ] ,
         'language' => [
           'name' => 'language',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Language') ,
-          'maxlength' => 5,
-          'size' => CRM_Utils_Type::EIGHT,
-        ] ,
+           'maxlength' => 5,
+           'size' => CRM_Utils_Type::EIGHT,
+                ] ,
       ];
     }
     return self::$_fields;
@@ -212,8 +212,8 @@ class CRM_Core_DAO_UFMatch extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -244,7 +244,7 @@ class CRM_Core_DAO_UFMatch extends CRM_Core_DAO
           }
         }
       }
-    }
+                                              }
     return self::$_import;
   }
   /**
@@ -267,7 +267,7 @@ class CRM_Core_DAO_UFMatch extends CRM_Core_DAO
           }
         }
       }
-    }
+                                              }
     return self::$_export;
   }
 }

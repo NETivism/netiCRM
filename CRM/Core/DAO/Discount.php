@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-class CRM_Core_DAO_Discount extends CRM_Core_DAO
+        class CRM_Core_DAO_Discount extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -78,7 +78,7 @@ class CRM_Core_DAO_Discount extends CRM_Core_DAO
    * @static
    */
   static $_log = true;
-  /**
+    /**
    * primary key
    *
    * @var int unsigned
@@ -114,7 +114,7 @@ class CRM_Core_DAO_Discount extends CRM_Core_DAO
    * @var date
    */
   public $end_date;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -139,7 +139,7 @@ class CRM_Core_DAO_Discount extends CRM_Core_DAO
     }
     return self::$_links;
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -154,7 +154,7 @@ class CRM_Core_DAO_Discount extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -168,40 +168,40 @@ class CRM_Core_DAO_Discount extends CRM_Core_DAO
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ] ,
+                  ] ,
         'entity_table' => [
           'name' => 'entity_table',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Entity Table') ,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ] ,
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
         'entity_id' => [
           'name' => 'entity_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ] ,
+                  ] ,
         'participant_discount_name' => [
           'name' => 'option_group_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Discount Name') ,
           'required' => true,
-          'export' => true,
+                'export' => true,
           'where' => 'civicrm_discount.option_group_id',
           'headerPattern' => '',
           'dataPattern' => '',
-          'FKClassName' => 'CRM_Core_DAO_OptionGroup',
+              'FKClassName' => 'CRM_Core_DAO_OptionGroup',
         ] ,
         'start_date' => [
           'name' => 'start_date',
           'type' => CRM_Utils_Type::T_DATE,
           'title' => ts('Start Date') ,
-        ] ,
+                  ] ,
         'end_date' => [
           'name' => 'end_date',
           'type' => CRM_Utils_Type::T_DATE,
           'title' => ts('End Date') ,
-        ] ,
+                  ] ,
       ];
     }
     return self::$_fields;
@@ -214,8 +214,8 @@ class CRM_Core_DAO_Discount extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -246,7 +246,7 @@ class CRM_Core_DAO_Discount extends CRM_Core_DAO
           }
         }
       }
-    }
+                                  }
     return self::$_import;
   }
   /**
@@ -269,7 +269,7 @@ class CRM_Core_DAO_Discount extends CRM_Core_DAO
           }
         }
       }
-    }
+                                  }
     return self::$_export;
   }
 }

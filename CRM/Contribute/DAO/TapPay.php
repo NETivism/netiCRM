@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-class CRM_Contribute_DAO_TapPay extends CRM_Core_DAO
+                    class CRM_Contribute_DAO_TapPay extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -78,7 +78,7 @@ class CRM_Contribute_DAO_TapPay extends CRM_Core_DAO
    * @static
    */
   static $_log = false;
-  /**
+    /**
    * TapPay ID
    *
    * @var int unsigned
@@ -156,7 +156,7 @@ class CRM_Contribute_DAO_TapPay extends CRM_Core_DAO
    * @var int unsigned
    */
   public $created_id;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -183,7 +183,7 @@ class CRM_Contribute_DAO_TapPay extends CRM_Core_DAO
     }
     return self::$_links;
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -199,7 +199,7 @@ class CRM_Contribute_DAO_TapPay extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -214,83 +214,83 @@ class CRM_Contribute_DAO_TapPay extends CRM_Core_DAO
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('TapPay ID') ,
           'required' => true,
-        ] ,
+                  ] ,
         'contribution_id' => [
           'name' => 'contribution_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Contribuution ID') ,
-          'default' => 'UL',
-          'FKClassName' => 'CRM_Contribute_DAO_Contribution',
+                  'default' => 'UL',
+            'FKClassName' => 'CRM_Contribute_DAO_Contribution',
         ] ,
         'contribution_recur_id' => [
           'name' => 'contribution_recur_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Contribuution Recur ID') ,
-          'FKClassName' => 'CRM_Contribute_DAO_ContributionRecur',
+                    'FKClassName' => 'CRM_Contribute_DAO_ContributionRecur',
         ] ,
         'order_number' => [
           'name' => 'order_number',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Contribution Trxn ID') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'card_token' => [
           'name' => 'card_token',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Card Token') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'card_key' => [
           'name' => 'card_key',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Card Key') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'rec_trade_id' => [
           'name' => 'rec_trade_id',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Record Trade ID') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'bin_code' => [
           'name' => 'bin_code',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Bin Code') ,
-          'maxlength' => 32,
-          'size' => CRM_Utils_Type::MEDIUM,
-        ] ,
+           'maxlength' => 32,
+           'size' => CRM_Utils_Type::MEDIUM,
+                ] ,
         'last_four' => [
           'name' => 'last_four',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Last Four') ,
-          'maxlength' => 32,
-          'size' => CRM_Utils_Type::MEDIUM,
-        ] ,
+           'maxlength' => 32,
+           'size' => CRM_Utils_Type::MEDIUM,
+                ] ,
         'expiry_date' => [
           'name' => 'expiry_date',
           'type' => CRM_Utils_Type::T_DATE,
           'title' => ts('Expiry Date') ,
-        ] ,
+                  ] ,
         'data' => [
           'name' => 'data',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Data') ,
-        ] ,
+                  ] ,
         'token_status' => [
           'name' => 'token_status',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Token Status') ,
-          'maxlength' => 32,
-          'size' => CRM_Utils_Type::MEDIUM,
-        ] ,
+           'maxlength' => 32,
+           'size' => CRM_Utils_Type::MEDIUM,
+                ] ,
         'created_id' => [
           'name' => 'created_id',
           'type' => CRM_Utils_Type::T_INT,
-          'FKClassName' => 'CRM_Contact_DAO_Contact',
+                    'FKClassName' => 'CRM_Contact_DAO_Contact',
         ] ,
       ];
     }
@@ -304,8 +304,8 @@ class CRM_Contribute_DAO_TapPay extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -336,7 +336,7 @@ class CRM_Contribute_DAO_TapPay extends CRM_Core_DAO
           }
         }
       }
-    }
+                                                          }
     return self::$_import;
   }
   /**
@@ -359,7 +359,7 @@ class CRM_Contribute_DAO_TapPay extends CRM_Core_DAO
           }
         }
       }
-    }
+                                                          }
     return self::$_export;
   }
 }

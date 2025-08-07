@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-class CRM_Mailing_Event_DAO_Forward extends CRM_Core_DAO
+              class CRM_Mailing_Event_DAO_Forward extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -78,7 +78,7 @@ class CRM_Mailing_Event_DAO_Forward extends CRM_Core_DAO
    * @static
    */
   static $_log = false;
-  /**
+    /**
    *
    * @var int unsigned
    */
@@ -101,7 +101,7 @@ class CRM_Mailing_Event_DAO_Forward extends CRM_Core_DAO
    * @var datetime
    */
   public $time_stamp;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -127,7 +127,7 @@ class CRM_Mailing_Event_DAO_Forward extends CRM_Core_DAO
     }
     return self::$_links;
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -142,7 +142,7 @@ class CRM_Mailing_Event_DAO_Forward extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -156,24 +156,24 @@ class CRM_Mailing_Event_DAO_Forward extends CRM_Core_DAO
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ] ,
+                  ] ,
         'event_queue_id' => [
           'name' => 'event_queue_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-          'FKClassName' => 'CRM_Mailing_Event_DAO_Queue',
+                    'FKClassName' => 'CRM_Mailing_Event_DAO_Queue',
         ] ,
         'dest_queue_id' => [
           'name' => 'dest_queue_id',
           'type' => CRM_Utils_Type::T_INT,
-          'FKClassName' => 'CRM_Mailing_Event_DAO_Queue',
+                    'FKClassName' => 'CRM_Mailing_Event_DAO_Queue',
         ] ,
         'time_stamp' => [
           'name' => 'time_stamp',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Time Stamp') ,
           'required' => true,
-        ] ,
+                  ] ,
       ];
     }
     return self::$_fields;
@@ -186,8 +186,8 @@ class CRM_Mailing_Event_DAO_Forward extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -218,7 +218,7 @@ class CRM_Mailing_Event_DAO_Forward extends CRM_Core_DAO
           }
         }
       }
-    }
+                                              }
     return self::$_import;
   }
   /**
@@ -241,7 +241,7 @@ class CRM_Mailing_Event_DAO_Forward extends CRM_Core_DAO
           }
         }
       }
-    }
+                                              }
     return self::$_export;
   }
 }

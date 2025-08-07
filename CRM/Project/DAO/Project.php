@@ -78,7 +78,7 @@ class CRM_Project_DAO_Project extends CRM_Core_DAO
    * @static
    */
   static $_log = true;
-  /**
+    /**
    * Project ID
    *
    * @var int unsigned
@@ -138,7 +138,7 @@ class CRM_Project_DAO_Project extends CRM_Core_DAO
    * @var int unsigned
    */
   public $status_id;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -148,7 +148,7 @@ class CRM_Project_DAO_Project extends CRM_Core_DAO
   {
     parent::__construct();
   }
-  /**
+    /**
    * returns all the column names of this table
    *
    * @access public
@@ -162,62 +162,62 @@ class CRM_Project_DAO_Project extends CRM_Core_DAO
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ] ,
+                  ] ,
         'title' => [
           'name' => 'title',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Title') ,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ] ,
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
         'description' => [
           'name' => 'description',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Description') ,
-          'rows' => 6,
-          'cols' => 50,
-        ] ,
+             'rows' => 6,
+           'cols' => 50,
+              ] ,
         'logo' => [
           'name' => 'logo',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Logo') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'owner_entity_table' => [
           'name' => 'owner_entity_table',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Owner Entity Table') ,
           'required' => true,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ] ,
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
         'owner_entity_id' => [
           'name' => 'owner_entity_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Project Owner ID') ,
           'required' => true,
-        ] ,
+                  ] ,
         'start_date' => [
           'name' => 'start_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Start Date') ,
-        ] ,
+                  ] ,
         'end_date' => [
           'name' => 'end_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('End Date') ,
-        ] ,
+                  ] ,
         'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Active?') ,
-        ] ,
+                  ] ,
         'status_id' => [
           'name' => 'status_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Status') ,
-        ] ,
+                  ] ,
       ];
     }
     return self::$_fields;
@@ -230,8 +230,8 @@ class CRM_Project_DAO_Project extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -262,7 +262,7 @@ class CRM_Project_DAO_Project extends CRM_Core_DAO
           }
         }
       }
-    }
+          }
     return self::$_import;
   }
   /**
@@ -285,7 +285,7 @@ class CRM_Project_DAO_Project extends CRM_Core_DAO
           }
         }
       }
-    }
+          }
     return self::$_export;
   }
 }
