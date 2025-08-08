@@ -142,6 +142,8 @@ class CRM_Utils_MCP {
     switch ($method) {
       case 'initialize':
         return $this->initialize($params, $id);
+      case 'notifications/initialized':
+        return $this->notificationsInitialized($params, $id);
       case 'tools/list':
         return $this->listTools($params, $id);
       case 'tools/call':
@@ -201,6 +203,24 @@ class CRM_Utils_MCP {
           'version' => '1.0.0'
         ]
       ],
+      'id' => $id
+    ];
+  }
+
+  /**
+   * MCP notifications/initialized method
+   * This is called after the client has processed the initialize response
+   * @param array $params Parameters (unused for notifications)
+   * @param mixed $id Request ID (should be null for notifications)
+   * @return array|null Response (null for notifications, but return empty array for consistency)
+   */
+  private function notificationsInitialized($params, $id) {
+    // This is a notification, so we don't return a response according to MCP spec
+    // However, for consistency with our JSON-RPC framework, we return an empty success response
+    // The client should ignore responses to notifications anyway
+    return [
+      'jsonrpc' => '2.0',
+      'result' => [],
       'id' => $id
     ];
   }
