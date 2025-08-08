@@ -6,7 +6,7 @@
 
 <div class="crm-block crm-form-block crm-contact-custom-search-form-block crm-contact-custom-search-form-rfm-block">
 <div class="crm-custom-search-description">
-  {ts}The RFM model helps organizations categorize donors based on their giving behavior, enabling more refined and personalized communication strategies that convert more supporters into loyal ones.{/ts}
+  {ts}The RFM model helps organizations categorize donors based on their giving behavior, enabling more refined and personalized communication strategies that convert more supporters into loyal ones{/ts} {docURL page="RFM Model Usage Guide" text="how to use"}
 </div>
 <div class="crm-accordion-wrapper crm-custom_search_form-accordion crm-accordion-{if !$rows}open{else}closed{/if}">
     <div class="crm-accordion-header crm-master-accordion-header">
@@ -41,19 +41,21 @@
                   <div class="content">
                       <ul class="rfm-thresholds-list">
                         <li>
-                          <span class="item-label">{ts}Recency:{/ts}</span>
-                          <output class="ijtem-value" data-threshold-type="recency">{$rfmThresholds.r}</output>
+                          <span class="item-label">{ts}Recency (days since last donation){/ts}</span>
+                          <output class="item-value" data-threshold-type="recency">{$rfmThresholds.r}</output>
+                          <span class="item-value-unit">{ts}days{/ts}</span>
                         </li>
                         <li>
-                          <span class="item-label">{ts}Frequency:{/ts}</span>
+                          <span class="item-label">{ts}Frequency (number of donations){/ts}</span>
                           <output class="item-value" data-threshold-type="frequency">{$rfmThresholds.f}</output>
+                          <span class="item-value-unit">{ts}times{/ts}</span>
                         </li>
                         <li>
-                          <span class="item-label">{ts}Monetary:{/ts}</span>
+                          <span class="item-label">{ts}Monetary (total donation amount){/ts}</span>
                           <output class="item-value" data-threshold-type="monetary">{$rfmThresholds.m|crmMoney}</output>
                         </li>
                       </ul>
-                      <a class="form-submit rfm-popup-open-link" href="#rfm-popup">{ts}Edit Thresholds{/ts}</a>
+                      <a class="rfm-popup-open-link" href="#rfm-popup"><i class="zmdi zmdi-edit"></i>{ts}Edit Thresholds{/ts}</a>
                   </div>
                 </div>
               </div>
@@ -98,7 +100,7 @@
                         </div>
                         {if !$hasSegmentParam}
                         <div class="segment-counter">
-                          {ts 1=$segment.count 2=$segment.percentage}Showing <output class="record">%1</output> records, which is <output class="percent">%2</output> of the search results{/ts}
+                          {ts 1=$segment.count 2=$segment.percentage}Showing <output class="record">%1</output> records, which is <output class="percent">%2</output>% of the search results{/ts}
                         </div>
                         {/if}
                         <div class="segment-description">{$segment.description}</div>
@@ -196,7 +198,7 @@
                       {* R-axis (Recency - Last donation time) *}
                       <div class="axis r-axis">
                         <div class="axis-line"></div>
-                        <div class="axis-label label-left"><span class="rfm-label">R</span>{ts}Recency: Far{/ts}</div>
+                        <div class="axis-label label-left"><span class="rfm-label">R</span>{ts}Recency: Old{/ts}</div>
                         <div class="axis-label label-right"><span class="rfm-label">R</span>{ts}Recency: Recent{/ts}</div>
                       </div>
 
@@ -256,7 +258,7 @@
                         </div>
                         {if !$hasSegmentParam}
                         <div class="segment-counter">
-                          {ts 1=$segment.count 2=$segment.percentage}Showing <output class="record">%1</output> records, which is <output class="percent">%2</output> of the search results{/ts}
+                          {ts 1=$segment.count 2=$segment.percentage}Showing <output class="record">%1</output> records, which is <output class="percent">%2</output>% of the search results{/ts}
                         </div>
                         {/if}
                         <div class="segment-description">{$segment.description}</div>
@@ -419,8 +421,8 @@
     </div>
     <div class="crm-popup-footer">
       <div class="crm-submit-buttons">
-        <span class="crm-button crm-button-type-upload">
-          <button type="button" class="form-submit rfm-save-btn">{ts}Save{/ts}</button>
+        <span class="crm-button crm-button-type-refresh">
+          <button type="button" class="form-submit rfm-search-btn">{ts}Search{/ts}</button>
         </span>
         <span class="crm-button crm-button-type-cancel">
           <button type="button" class="form-submit rfm-cancel-btn">{ts}Cancel{/ts}</button>

@@ -122,7 +122,11 @@ class CRM_Contact_BAO_RFM {
       $reverse = $this->_reverse['r'];
     }
     
-    return $this->calcMetric('r', $position, $reverse, 'duration', 'MIN(DATEDIFF(CURDATE(), DATE(contrib.receive_date)))');
+    // Get end date for DATEDIFF calculation
+    $endDateStr = $this->getEndDate();
+    $aggregateFunc = "MIN(DATEDIFF('$endDateStr', DATE(contrib.receive_date)))";
+    
+    return $this->calcMetric('r', $position, $reverse, 'duration', $aggregateFunc);
   }
   
   /**
@@ -257,7 +261,7 @@ class CRM_Contact_BAO_RFM {
    * @return float|int Calculated threshold value
    */
   protected function calculateThreshold($position, string $metricType, string $aggregateFunc, string $dateFilterSQL, string $recurFilterSQL = '') {
-    if ($position > 1) {
+    if ($position >= 1) {
       return (float) $position;
     }
     
@@ -386,7 +390,7 @@ class CRM_Contact_BAO_RFM {
    */
   public function exportToCSV(string $filename = null, bool $download = TRUE): string {
     if (!$this->_tables['rfm']) {
-      $r = $this->calcRFM();
+      $this->calcRFM();
     }
     
     if ($filename === null) {
@@ -440,6 +444,23 @@ class CRM_Contact_BAO_RFM {
   }
   
   /**
+   * Get end date from date filter string
+   * 
+   * @return string End date string for SQL usage, defaults to current date if no filter
+   */
+  protected function getEndDate(): string {
+    if (!empty($this->_dateString)) {
+      $filter = CRM_Utils_Date::strtodate($this->_dateString);
+      $endDate = $filter['end'];
+      if (isset($endDate)) {
+        return $endDate;
+      }
+    }
+    // Default to current date if no date filter
+    return date('Y-m-d');
+  }
+  
+  /**
    * Get default thresholds based on date range and threshold type
    * 
    * @param string $rangeString Date range string
@@ -450,7 +471,7 @@ class CRM_Contact_BAO_RFM {
     $filter = CRM_Utils_Date::strtodate($rangeString);
     $totalDays = $filter['day'];
     $totalMonths = $filter['month'];
-    $totalYears = ceil($filter['day']/365);
+    $totalYears = $filter['day']/365;
     
     $threshold = [
       'r' => '',
@@ -461,20 +482,20 @@ class CRM_Contact_BAO_RFM {
     switch ($thresholdType) {
       case 'recurring':
         $threshold['r'] = 31;
-        $threshold['f'] = (int) ceil($totalMonths/2);
+        $threshold['f'] = max($totalMonths, 2);
         $threshold['m'] = 600 * $totalMonths;
         break;
         
       case 'non-recurring':
-        $threshold['r'] = 180;
-        $threshold['f'] = max(1, $totalYears) + 1;
-        $threshold['m'] = 10000 * $totalYears;
+        $threshold['r'] = (int) floor($totalDays / 5);
+        $threshold['f'] = max($totalYears * 1, 2);
+        $threshold['m'] = 600 * $totalMonths;
         break;
         
       case 'all':
       default:
         $threshold['r'] = (int) ceil($totalDays / 5);
-        $threshold['f'] = max(1, $totalYears) + 1;
+        $threshold['f'] = max($totalYears * 1, 2);
         $threshold['m'] = 600 * $totalMonths;
         break;
     }

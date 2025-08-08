@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-class CRM_Core_DAO_EntityFinancialTrxn extends CRM_Core_DAO
+        class CRM_Core_DAO_EntityFinancialTrxn extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -78,7 +78,7 @@ class CRM_Core_DAO_EntityFinancialTrxn extends CRM_Core_DAO
    * @static
    */
   static $_log = false;
-  /**
+    /**
    * ID
    *
    * @var int unsigned
@@ -111,7 +111,7 @@ class CRM_Core_DAO_EntityFinancialTrxn extends CRM_Core_DAO
    * @var string
    */
   public $currency;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -136,7 +136,7 @@ class CRM_Core_DAO_EntityFinancialTrxn extends CRM_Core_DAO
     }
     return self::$_links;
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -151,7 +151,7 @@ class CRM_Core_DAO_EntityFinancialTrxn extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -165,44 +165,44 @@ class CRM_Core_DAO_EntityFinancialTrxn extends CRM_Core_DAO
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ] ,
+                  ] ,
         'entity_table' => [
           'name' => 'entity_table',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Entity Table') ,
           'required' => true,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-          'import' => true,
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+             'import' => true,
           'where' => 'civicrm_entity_financial_trxn.entity_table',
           'headerPattern' => '',
           'dataPattern' => '',
-          'export' => true,
-        ] ,
+           'export' => true,
+            ] ,
         'entity_id' => [
           'name' => 'entity_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ] ,
+                  ] ,
         'financial_trxn_id' => [
           'name' => 'financial_trxn_id',
           'type' => CRM_Utils_Type::T_INT,
-          'FKClassName' => 'CRM_Core_DAO_FinancialTrxn',
+                    'FKClassName' => 'CRM_Core_DAO_FinancialTrxn',
         ] ,
         'amount' => [
           'name' => 'amount',
           'type' => CRM_Utils_Type::T_MONEY,
           'title' => ts('Amount') ,
           'required' => true,
-        ] ,
+                  ] ,
         'currency' => [
           'name' => 'currency',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Currency') ,
-          'maxlength' => 3,
-          'size' => CRM_Utils_Type::FOUR,
-          'default' => 'UL',
-        ] ,
+           'maxlength' => 3,
+           'size' => CRM_Utils_Type::FOUR,
+                'default' => 'UL',
+          ] ,
       ];
     }
     return self::$_fields;
@@ -215,8 +215,8 @@ class CRM_Core_DAO_EntityFinancialTrxn extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -247,7 +247,7 @@ class CRM_Core_DAO_EntityFinancialTrxn extends CRM_Core_DAO
           }
         }
       }
-    }
+                                  }
     return self::$_import;
   }
   /**
@@ -270,7 +270,7 @@ class CRM_Core_DAO_EntityFinancialTrxn extends CRM_Core_DAO
           }
         }
       }
-    }
+                                  }
     return self::$_export;
   }
 }

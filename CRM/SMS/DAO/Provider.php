@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-class CRM_SMS_DAO_Provider extends CRM_Core_DAO
+        class CRM_SMS_DAO_Provider extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -78,7 +78,7 @@ class CRM_SMS_DAO_Provider extends CRM_Core_DAO
    * @static
    */
   static $_log = false;
-  /**
+    /**
    * SMS Provider ID
    *
    * @var int unsigned
@@ -139,7 +139,7 @@ class CRM_SMS_DAO_Provider extends CRM_Core_DAO
    * @var int unsigned
    */
   public $domain_id;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -164,7 +164,7 @@ class CRM_SMS_DAO_Provider extends CRM_Core_DAO
     }
     return self::$_links;
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -178,7 +178,7 @@ class CRM_SMS_DAO_Provider extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -193,68 +193,68 @@ class CRM_SMS_DAO_Provider extends CRM_Core_DAO
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('SMS Provider ID') ,
           'required' => true,
-        ] ,
+                  ] ,
         'name' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('SMS Provider Name') ,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ] ,
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
         'title' => [
           'name' => 'title',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('SMS Provider Title') ,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ] ,
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
         'username' => [
           'name' => 'username',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('SMS Provider Username') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'password' => [
           'name' => 'password',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('SMS Provider Password') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'api_type' => [
           'name' => 'api_type',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('SMS Provider API') ,
           'required' => true,
-        ] ,
+                  ] ,
         'api_url' => [
           'name' => 'api_url',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('SMS Provider API URL') ,
-          'maxlength' => 128,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 128,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'api_params' => [
           'name' => 'api_params',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('SMS Provider API Params') ,
-        ] ,
+                  ] ,
         'is_default' => [
           'name' => 'is_default',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('SMS Provider is Default?') ,
-        ] ,
+                  ] ,
         'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('SMS Provider is Active?') ,
-        ] ,
+                  ] ,
         'domain_id' => [
           'name' => 'domain_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('SMS Domain') ,
-          'FKClassName' => 'CRM_Core_DAO_Domain',
+                    'FKClassName' => 'CRM_Core_DAO_Domain',
         ] ,
       ];
     }
@@ -268,8 +268,8 @@ class CRM_SMS_DAO_Provider extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -300,7 +300,7 @@ class CRM_SMS_DAO_Provider extends CRM_Core_DAO
           }
         }
       }
-    }
+                                  }
     return self::$_import;
   }
   /**
@@ -323,7 +323,7 @@ class CRM_SMS_DAO_Provider extends CRM_Core_DAO
           }
         }
       }
-    }
+                                  }
     return self::$_export;
   }
 }

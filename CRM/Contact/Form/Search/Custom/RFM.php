@@ -2,7 +2,7 @@
 
 class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
   const RECURRING_NONRECURRING = 'all', RECURRING = 'recurring', NONRECURRING = 'non-recurring';
-  const DATE_RANGE_DEFAULT = 'last 1 years to today';
+  const DATE_RANGE_DEFAULT = 'last 1 years to yesterday';
 
   /**
    * @var mixed[]
@@ -703,7 +703,7 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
     $this->_segmentStats = [];
     for ($i = 0; $i <= 7; $i++) {
       $countField = "segment_{$i}_count";
-      $segmentCount = $statsQuery->$countField;
+      $segmentCount = $statsQuery->$countField ?? 0;
       $percentage = $totalCount > 0 ? round(($segmentCount / $totalCount) * 100, 1) : 0;
 
       $this->_segmentStats[$i] = [

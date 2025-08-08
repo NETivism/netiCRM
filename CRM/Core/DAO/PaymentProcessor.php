@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-class CRM_Core_DAO_PaymentProcessor extends CRM_Core_DAO
+        class CRM_Core_DAO_PaymentProcessor extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -78,7 +78,7 @@ class CRM_Core_DAO_PaymentProcessor extends CRM_Core_DAO
    * @static
    */
   static $_log = false;
-  /**
+    /**
    * Payment Processor ID
    *
    * @var int unsigned
@@ -189,7 +189,7 @@ class CRM_Core_DAO_PaymentProcessor extends CRM_Core_DAO
    * @var int unsigned
    */
   public $payment_type;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -214,7 +214,7 @@ class CRM_Core_DAO_PaymentProcessor extends CRM_Core_DAO
     }
     return self::$_links;
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -228,7 +228,7 @@ class CRM_Core_DAO_PaymentProcessor extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -242,125 +242,125 @@ class CRM_Core_DAO_PaymentProcessor extends CRM_Core_DAO
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ] ,
+                  ] ,
         'domain_id' => [
           'name' => 'domain_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-          'FKClassName' => 'CRM_Core_DAO_Domain',
+                    'FKClassName' => 'CRM_Core_DAO_Domain',
         ] ,
         'name' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Payment Processor') ,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ] ,
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
         'description' => [
           'name' => 'description',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Description') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'payment_processor_type' => [
           'name' => 'payment_processor_type',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Payment Processor Type') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ] ,
+                  ] ,
         'is_default' => [
           'name' => 'is_default',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ] ,
+                  ] ,
         'is_test' => [
           'name' => 'is_test',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ] ,
+                  ] ,
         'user_name' => [
           'name' => 'user_name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('User Name') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'password' => [
           'name' => 'password',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Password') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'signature' => [
           'name' => 'signature',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Signature') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'url_site' => [
           'name' => 'url_site',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Site URL') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'url_api' => [
           'name' => 'url_api',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('API URL') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'url_recur' => [
           'name' => 'url_recur',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Recurring Payments URL') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'url_button' => [
           'name' => 'url_button',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Button URL') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'subject' => [
           'name' => 'subject',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Subject') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'class_name' => [
           'name' => 'class_name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Suffix for PHP clas name implementation') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'billing_mode' => [
           'name' => 'billing_mode',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Billing Mode') ,
           'required' => true,
-        ] ,
+                  ] ,
         'is_recur' => [
           'name' => 'is_recur',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ] ,
+                  ] ,
         'payment_type' => [
           'name' => 'payment_type',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Payment Type') ,
-          'default' => '',
-        ] ,
+                  'default' => '',
+          ] ,
       ];
     }
     return self::$_fields;
@@ -373,8 +373,8 @@ class CRM_Core_DAO_PaymentProcessor extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -405,7 +405,7 @@ class CRM_Core_DAO_PaymentProcessor extends CRM_Core_DAO
           }
         }
       }
-    }
+                                  }
     return self::$_import;
   }
   /**
@@ -428,7 +428,7 @@ class CRM_Core_DAO_PaymentProcessor extends CRM_Core_DAO
           }
         }
       }
-    }
+                                  }
     return self::$_export;
   }
 }

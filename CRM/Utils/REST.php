@@ -131,7 +131,7 @@ class CRM_Utils_REST {
   }
 
   // Generates values needed for non-error responses.
-  function simple($params) {
+  public static function simple($params) {
     $values = ['is_error' => 0];
     $values += $params;
     return $values;

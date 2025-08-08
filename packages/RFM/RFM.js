@@ -335,9 +335,10 @@
   function calculateDefaultThresholds(rangeString, thresholdType) {
     // Parse date range string to calculate total days, months, years
     var dateFilter = parseDateRange(rangeString);
+    //console.log(dateFilter);
     var totalDays = dateFilter.days;
     var totalMonths = dateFilter.months;
-    var totalYears = Math.ceil(dateFilter.days / 365);
+    var totalYears = Math.ceil(dateFilter.months/12);
 
     var threshold = {
       r: 0,
@@ -348,20 +349,20 @@
     switch (thresholdType) {
       case 'recurring':
         threshold.r = 31;
-        threshold.f = Math.ceil(totalMonths / 2);
+        threshold.f = Math.max(totalMonths, 2);
         threshold.m = 600 * totalMonths;
         break;
 
       case 'non-recurring':
-        threshold.r = 180;
-        threshold.f = Math.max(1, totalYears) + 1;
-        threshold.m = 10000 * totalYears;
+        threshold.r = Math.ceil(totalDays / 5);
+        threshold.f = Math.max(totalYears * 1, 2);
+        threshold.m = 600 * totalMonths;
         break;
 
       case 'all':
       default:
         threshold.r = Math.ceil(totalDays / 5);
-        threshold.f = Math.max(1, totalYears) + 1;
+        threshold.f = Math.max(totalYears * 1, 2);
         threshold.m = 600 * totalMonths;
         break;
     }
@@ -386,11 +387,39 @@
       var startDate = new Date(dateMatch[1]);
       var endDate = new Date(dateMatch[2]);
       var diffTime = Math.abs(endDate - startDate);
-      var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      var diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1; // Add 1 to include both start and end dates
+
+      // Calculate precise months using Date objects
+      var startYear = startDate.getFullYear();
+      var startMonth = startDate.getMonth();
+      var startDay = startDate.getDate();
+      var endYear = endDate.getFullYear();
+      var endMonth = endDate.getMonth();
+      var endDay = endDate.getDate();
+
+      // Calculate total months between start and end
+      var diffMonths = (endYear - startYear) * 12 + (endMonth - startMonth);
+      if (endYear === startYear) {
+        diffMonths += 1;
+      }
+
+      // Adjust for partial months based on day of month
+      if (endDay < startDay - 1) {
+        diffMonths -= 1;
+      }
+      diffMonths = Math.max(diffMonths, 0);
+
+      // Calculate precise years
+      var diffYears = endYear - startYear;
+      // Adjust for partial years
+      if (endMonth < startMonth || (endMonth === startMonth && endDay < startDay)) {
+        diffYears -= 1;
+      }
+      diffYears = Math.max(diffYears, 0);
 
       result.days = diffDays;
-      result.months = Math.ceil(diffDays / 30);
-      result.years = Math.ceil(diffDays / 365);
+      result.months = diffMonths;
+      result.years = diffYears;
       return result;
     }
 
@@ -501,10 +530,13 @@
         });
       });
 
-      $('body').on('click', '.rfm-save-btn', function() {
+      $('body').on('click', '.rfm-search-btn', function() {
         updateThresholdValues();
         valuesSaved = true;
         $.magnificPopup.close();
+        if ($('.form-submit[name*="_qf_Custom_refresh"]').length) {
+          $('.form-submit[name*="_qf_Custom_refresh"]').eq(0).click();
+        }
       });
 
       $('body').on('click', '.rfm-cancel-btn, .rfm-popup-close', function() {
@@ -526,6 +558,9 @@
 
     // Initial calculation on page load
     updateThresholds();
+
+    // add class to title for beta css selector
+    $("h1.page-title").addClass("is-beta");
   });
 
 })(jQuery);

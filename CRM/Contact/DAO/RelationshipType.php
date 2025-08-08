@@ -78,7 +78,7 @@ class CRM_Contact_DAO_RelationshipType extends CRM_Core_DAO
    * @static
    */
   static $_log = true;
-  /**
+    /**
    * Primary key
    *
    * @var int unsigned
@@ -150,7 +150,7 @@ class CRM_Contact_DAO_RelationshipType extends CRM_Core_DAO
    * @var boolean
    */
   public $is_active;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -160,7 +160,7 @@ class CRM_Contact_DAO_RelationshipType extends CRM_Core_DAO
   {
     parent::__construct();
   }
-  /**
+    /**
    * returns all the column names of this table
    *
    * @access public
@@ -174,77 +174,77 @@ class CRM_Contact_DAO_RelationshipType extends CRM_Core_DAO
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ] ,
+                  ] ,
         'name_a_b' => [
           'name' => 'name_a_b',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Name A B') ,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ] ,
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
         'label_a_b' => [
           'name' => 'label_a_b',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Label A B') ,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ] ,
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
         'name_b_a' => [
           'name' => 'name_b_a',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Name B A') ,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ] ,
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
         'label_b_a' => [
           'name' => 'label_b_a',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Label B A') ,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ] ,
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
         'description' => [
           'name' => 'description',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Description') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'contact_type_a' => [
           'name' => 'contact_type_a',
           'type' => CRM_Utils_Type::T_ENUM,
           'title' => ts('Contact Type A') ,
-          'enumValues' => 'Individual, Organization, Household',
-        ] ,
+                   'enumValues' => 'Individual, Organization, Household',
+         ] ,
         'contact_type_b' => [
           'name' => 'contact_type_b',
           'type' => CRM_Utils_Type::T_ENUM,
           'title' => ts('Contact Type B') ,
-          'enumValues' => 'Individual, Organization, Household',
-        ] ,
+                   'enumValues' => 'Individual, Organization, Household',
+         ] ,
         'contact_sub_type_a' => [
           'name' => 'contact_sub_type_a',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Contact Subtype A') ,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ] ,
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
         'contact_sub_type_b' => [
           'name' => 'contact_sub_type_b',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Contact Subtype B') ,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ] ,
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
         'is_reserved' => [
           'name' => 'is_reserved',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ] ,
+                  ] ,
         'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-          'default' => '',
-        ] ,
+                  'default' => '',
+          ] ,
       ];
     }
     return self::$_fields;
@@ -257,8 +257,8 @@ class CRM_Contact_DAO_RelationshipType extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -289,7 +289,7 @@ class CRM_Contact_DAO_RelationshipType extends CRM_Core_DAO
           }
         }
       }
-    }
+          }
     return self::$_import;
   }
   /**
@@ -312,7 +312,7 @@ class CRM_Contact_DAO_RelationshipType extends CRM_Core_DAO
           }
         }
       }
-    }
+          }
     return self::$_export;
   }
   /**
@@ -323,9 +323,9 @@ class CRM_Contact_DAO_RelationshipType extends CRM_Core_DAO
   static function &getEnums()
   {
     static $enums = [
-      'contact_type_a',
-      'contact_type_b',
-    ];
+                                                                                            'contact_type_a',
+                          'contact_type_b',
+                                                                ];
     return $enums;
   }
   /**
@@ -341,17 +341,17 @@ class CRM_Contact_DAO_RelationshipType extends CRM_Core_DAO
     static $translations = null;
     if (!$translations) {
       $translations = [
-        'contact_type_a' => [
-          'Individual' => ts('Individual') ,
-          'Organization' => ts('Organization') ,
-          'Household' => ts('Household') ,
-        ] ,
-        'contact_type_b' => [
-          'Individual' => ts('Individual') ,
-          'Organization' => ts('Organization') ,
-          'Household' => ts('Household') ,
-        ] ,
-      ];
+                                                                                            'contact_type_a' => [
+                  'Individual' => ts('Individual'),
+                  'Organization' => ts('Organization'),
+                  'Household' => ts('Household'),
+                ],
+                          'contact_type_b' => [
+                  'Individual' => ts('Individual'),
+                  'Organization' => ts('Organization'),
+                  'Household' => ts('Household'),
+                ],
+                                                                  ];
     }
     return $translations[$field][$value];
   }
@@ -364,7 +364,7 @@ class CRM_Contact_DAO_RelationshipType extends CRM_Core_DAO
   static function addDisplayEnums(&$values)
   {
     $enumFields = &CRM_Contact_DAO_RelationshipType::getEnums();
-    foreach($enumFields as $enum) {
+    foreach ($enumFields as $enum) {
       if (isset($values[$enum])) {
         $values[$enum . '_display'] = CRM_Contact_DAO_RelationshipType::tsEnum($enum, $values[$enum]);
       }

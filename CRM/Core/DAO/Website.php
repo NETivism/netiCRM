@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-class CRM_Core_DAO_Website extends CRM_Core_DAO
+        class CRM_Core_DAO_Website extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -78,7 +78,7 @@ class CRM_Core_DAO_Website extends CRM_Core_DAO
    * @static
    */
   static $_log = false;
-  /**
+    /**
    * Unique Website ID
    *
    * @var int unsigned
@@ -102,7 +102,7 @@ class CRM_Core_DAO_Website extends CRM_Core_DAO
    * @var int unsigned
    */
   public $website_type_id;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -127,7 +127,7 @@ class CRM_Core_DAO_Website extends CRM_Core_DAO
     }
     return self::$_links;
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -141,7 +141,7 @@ class CRM_Core_DAO_Website extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -155,28 +155,28 @@ class CRM_Core_DAO_Website extends CRM_Core_DAO
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ] ,
+                  ] ,
         'contact_id' => [
           'name' => 'contact_id',
           'type' => CRM_Utils_Type::T_INT,
-          'FKClassName' => 'CRM_Contact_DAO_Contact',
+                    'FKClassName' => 'CRM_Contact_DAO_Contact',
         ] ,
         'url' => [
           'name' => 'url',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Website') ,
-          'maxlength' => 128,
-          'size' => CRM_Utils_Type::HUGE,
-          'import' => true,
+           'maxlength' => 128,
+           'size' => CRM_Utils_Type::HUGE,
+             'import' => true,
           'where' => 'civicrm_website.url',
           'headerPattern' => '/Website/i',
           'dataPattern' => '/^[A-Za-z][0-9A-Za-z]{20,}$/',
-          'export' => true,
-        ] ,
+           'export' => true,
+            ] ,
         'website_type_id' => [
           'name' => 'website_type_id',
           'type' => CRM_Utils_Type::T_INT,
-        ] ,
+                  ] ,
       ];
     }
     return self::$_fields;
@@ -189,8 +189,8 @@ class CRM_Core_DAO_Website extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -221,7 +221,7 @@ class CRM_Core_DAO_Website extends CRM_Core_DAO
           }
         }
       }
-    }
+                                  }
     return self::$_import;
   }
   /**
@@ -244,7 +244,7 @@ class CRM_Core_DAO_Website extends CRM_Core_DAO
           }
         }
       }
-    }
+                                  }
     return self::$_export;
   }
 }

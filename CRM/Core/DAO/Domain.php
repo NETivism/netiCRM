@@ -78,7 +78,7 @@ class CRM_Core_DAO_Domain extends CRM_Core_DAO
    * @static
    */
   static $_log = false;
-  /**
+    /**
    * Domain ID
    *
    * @var int unsigned
@@ -126,7 +126,7 @@ class CRM_Core_DAO_Domain extends CRM_Core_DAO
    * @var text
    */
   public $locale_custom_strings;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -136,7 +136,7 @@ class CRM_Core_DAO_Domain extends CRM_Core_DAO
   {
     parent::__construct();
   }
-  /**
+    /**
    * returns all the column names of this table
    *
    * @access public
@@ -150,51 +150,51 @@ class CRM_Core_DAO_Domain extends CRM_Core_DAO
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ] ,
+                  ] ,
         'name' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Name') ,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ] ,
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
         'description' => [
           'name' => 'description',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Description') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'config_backend' => [
           'name' => 'config_backend',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Config Backend') ,
-          'rows' => 20,
-          'cols' => 80,
-        ] ,
+             'rows' => 20,
+           'cols' => 80,
+              ] ,
         'version' => [
           'name' => 'version',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Version') ,
-          'maxlength' => 32,
-          'size' => CRM_Utils_Type::MEDIUM,
-        ] ,
+           'maxlength' => 32,
+           'size' => CRM_Utils_Type::MEDIUM,
+                ] ,
         'loc_block_id' => [
           'name' => 'loc_block_id',
           'type' => CRM_Utils_Type::T_INT,
-        ] ,
+                  ] ,
         'locales' => [
           'name' => 'locales',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Locales') ,
-        ] ,
+                  ] ,
         'locale_custom_strings' => [
           'name' => 'locale_custom_strings',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Locale Custom Strings') ,
-          'rows' => 20,
-          'cols' => 80,
-        ] ,
+             'rows' => 20,
+           'cols' => 80,
+              ] ,
       ];
     }
     return self::$_fields;
@@ -207,8 +207,8 @@ class CRM_Core_DAO_Domain extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -239,7 +239,7 @@ class CRM_Core_DAO_Domain extends CRM_Core_DAO
           }
         }
       }
-    }
+          }
     return self::$_import;
   }
   /**
@@ -262,7 +262,7 @@ class CRM_Core_DAO_Domain extends CRM_Core_DAO
           }
         }
       }
-    }
+          }
     return self::$_export;
   }
 }

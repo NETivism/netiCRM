@@ -173,6 +173,13 @@ function civicrm_api3_contribution_get($params) {
   }
   return civicrm_api3_create_success($contributions, $params, 'Contribution', 'get');
 }
+
+function civicrm_api3_contribution_getcount($params) {
+  $options = [];
+  $params['contact_is_deleted'] = 0;
+  $count = _civicrm_api3_get_using_query_object('Contribution', $params, $options, 1, CRM_Contact_BAO_Query::MODE_CONTRIBUTE, [], TRUE);
+  return (int) $count;
+}
 /*
  * Adjust Metadata for Get action
  *

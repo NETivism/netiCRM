@@ -78,7 +78,7 @@ class CRM_Contribute_DAO_ContributionType extends CRM_Core_DAO
    * @static
    */
   static $_log = true;
-  /**
+    /**
    * Contribution Type ID
    *
    * @var int unsigned
@@ -132,7 +132,7 @@ class CRM_Contribute_DAO_ContributionType extends CRM_Core_DAO
    * @var boolean
    */
   public $is_active;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -142,7 +142,7 @@ class CRM_Contribute_DAO_ContributionType extends CRM_Core_DAO
   {
     parent::__construct();
   }
-  /**
+    /**
    * returns all the column names of this table
    *
    * @access public
@@ -156,61 +156,61 @@ class CRM_Contribute_DAO_ContributionType extends CRM_Core_DAO
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ] ,
+                  ] ,
         'contribution_type' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Contribution Type') ,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-          'import' => true,
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+             'import' => true,
           'where' => 'civicrm_contribution_type.name',
           'headerPattern' => '/(contrib(ution)?)?type/i',
           'dataPattern' => '/donation|member|campaign/i',
-          'export' => true,
-          'usage' => 'System',
-        ] ,
+           'export' => true,
+               'usage' => 'System',
+       ] ,
         'accounting_code' => [
           'name' => 'accounting_code',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Accounting Code') ,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-          'export' => true,
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+              'export' => true,
           'where' => 'civicrm_contribution_type.accounting_code',
           'headerPattern' => '',
           'dataPattern' => '',
-          'usage' => 'System',
-        ] ,
+               'usage' => 'System',
+       ] ,
         'description' => [
           'name' => 'description',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Description') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'tax_rate' => [
           'name' => 'tax_rate',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Tax Rate') ,
-        ] ,
+                  ] ,
         'is_taxreceipt' => [
           'name' => 'is_taxreceipt',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ] ,
+                  ] ,
         'is_deductible' => [
           'name' => 'is_deductible',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-          'default' => '',
-        ] ,
+                  'default' => '',
+          ] ,
         'is_reserved' => [
           'name' => 'is_reserved',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ] ,
+                  ] ,
         'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ] ,
+                  ] ,
       ];
     }
     return self::$_fields;
@@ -223,8 +223,8 @@ class CRM_Contribute_DAO_ContributionType extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -255,7 +255,7 @@ class CRM_Contribute_DAO_ContributionType extends CRM_Core_DAO
           }
         }
       }
-    }
+          }
     return self::$_import;
   }
   /**
@@ -278,7 +278,7 @@ class CRM_Contribute_DAO_ContributionType extends CRM_Core_DAO
           }
         }
       }
-    }
+          }
     return self::$_export;
   }
 }

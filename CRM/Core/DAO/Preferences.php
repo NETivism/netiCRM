@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-class CRM_Core_DAO_Preferences extends CRM_Core_DAO
+              class CRM_Core_DAO_Preferences extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -78,7 +78,7 @@ class CRM_Core_DAO_Preferences extends CRM_Core_DAO
    * @static
    */
   static $_log = true;
-  /**
+    /**
    *
    * @var int unsigned
    */
@@ -197,7 +197,7 @@ class CRM_Core_DAO_Preferences extends CRM_Core_DAO
    * @var string
    */
   public $contact_autocomplete_options;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -223,7 +223,7 @@ class CRM_Core_DAO_Preferences extends CRM_Core_DAO
     }
     return self::$_links;
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -238,7 +238,7 @@ class CRM_Core_DAO_Preferences extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -252,121 +252,121 @@ class CRM_Core_DAO_Preferences extends CRM_Core_DAO
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ] ,
+                  ] ,
         'domain_id' => [
           'name' => 'domain_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-          'FKClassName' => 'CRM_Core_DAO_Domain',
+                    'FKClassName' => 'CRM_Core_DAO_Domain',
         ] ,
         'contact_id' => [
           'name' => 'contact_id',
           'type' => CRM_Utils_Type::T_INT,
-          'FKClassName' => 'CRM_Contact_DAO_Contact',
+                    'FKClassName' => 'CRM_Contact_DAO_Contact',
         ] ,
         'is_domain' => [
           'name' => 'is_domain',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ] ,
+                  ] ,
         'contact_view_options' => [
           'name' => 'contact_view_options',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Contact View Options') ,
-          'maxlength' => 128,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 128,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'contact_edit_options' => [
           'name' => 'contact_edit_options',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Contact Edit Options') ,
-          'maxlength' => 128,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 128,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'advanced_search_options' => [
           'name' => 'advanced_search_options',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Advanced Search Options') ,
-          'maxlength' => 128,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 128,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'user_dashboard_options' => [
           'name' => 'user_dashboard_options',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('User Dashboard Options') ,
-          'maxlength' => 128,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 128,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'address_options' => [
           'name' => 'address_options',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Address Options') ,
-          'maxlength' => 128,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 128,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'address_format' => [
           'name' => 'address_format',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Address Format') ,
-        ] ,
+                  ] ,
         'mailing_format' => [
           'name' => 'mailing_format',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Mailing Format') ,
-        ] ,
+                  ] ,
         'display_name_format' => [
           'name' => 'display_name_format',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Display Name Format') ,
-        ] ,
+                  ] ,
         'sort_name_format' => [
           'name' => 'sort_name_format',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Sort Name Format') ,
-        ] ,
+                  ] ,
         'address_standardization_provider' => [
           'name' => 'address_standardization_provider',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Address Standardization Provider') ,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ] ,
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
         'address_standardization_userid' => [
           'name' => 'address_standardization_userid',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Address Standardization Userid') ,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ] ,
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
         'address_standardization_url' => [
           'name' => 'address_standardization_url',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Address Standardization Url') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'editor_id' => [
           'name' => 'editor_id',
           'type' => CRM_Utils_Type::T_INT,
-        ] ,
+                  ] ,
         'mailing_backend' => [
           'name' => 'mailing_backend',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Mailing Backend') ,
-          'rows' => 20,
-          'cols' => 80,
-        ] ,
+             'rows' => 20,
+           'cols' => 80,
+              ] ,
         'navigation' => [
           'name' => 'navigation',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Navigation') ,
-        ] ,
+                  ] ,
         'contact_autocomplete_options' => [
           'name' => 'contact_autocomplete_options',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Contact Autocomplete Options') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
       ];
     }
     return self::$_fields;
@@ -379,8 +379,8 @@ class CRM_Core_DAO_Preferences extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -411,7 +411,7 @@ class CRM_Core_DAO_Preferences extends CRM_Core_DAO
           }
         }
       }
-    }
+                                              }
     return self::$_import;
   }
   /**
@@ -434,7 +434,7 @@ class CRM_Core_DAO_Preferences extends CRM_Core_DAO
           }
         }
       }
-    }
+                                              }
     return self::$_export;
   }
 }

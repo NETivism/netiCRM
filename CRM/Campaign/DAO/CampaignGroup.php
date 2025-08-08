@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-class CRM_Campaign_DAO_CampaignGroup extends CRM_Core_DAO
+        class CRM_Campaign_DAO_CampaignGroup extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -78,7 +78,7 @@ class CRM_Campaign_DAO_CampaignGroup extends CRM_Core_DAO
    * @static
    */
   static $_log = false;
-  /**
+    /**
    * Campaign Group id.
    *
    * @var int unsigned
@@ -108,7 +108,7 @@ class CRM_Campaign_DAO_CampaignGroup extends CRM_Core_DAO
    * @var int unsigned
    */
   public $entity_id;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -133,7 +133,7 @@ class CRM_Campaign_DAO_CampaignGroup extends CRM_Core_DAO
     }
     return self::$_links;
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -148,7 +148,7 @@ class CRM_Campaign_DAO_CampaignGroup extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -162,33 +162,33 @@ class CRM_Campaign_DAO_CampaignGroup extends CRM_Core_DAO
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ] ,
+                  ] ,
         'campaign_id' => [
           'name' => 'campaign_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-          'FKClassName' => 'CRM_Campaign_DAO_Campaign',
+                    'FKClassName' => 'CRM_Campaign_DAO_Campaign',
         ] ,
         'group_type' => [
           'name' => 'group_type',
           'type' => CRM_Utils_Type::T_ENUM,
           'title' => ts('Group Type') ,
-          'default' => 'UL',
-          'enumValues' => 'Include, Exclude',
-        ] ,
+                  'default' => 'UL',
+           'enumValues' => 'Include, Exclude',
+         ] ,
         'entity_table' => [
           'name' => 'entity_table',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Entity Table') ,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-          'default' => 'UL',
-        ] ,
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                'default' => 'UL',
+          ] ,
         'entity_id' => [
           'name' => 'entity_id',
           'type' => CRM_Utils_Type::T_INT,
-          'default' => 'UL',
-        ] ,
+                  'default' => 'UL',
+          ] ,
       ];
     }
     return self::$_fields;
@@ -201,8 +201,8 @@ class CRM_Campaign_DAO_CampaignGroup extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -233,7 +233,7 @@ class CRM_Campaign_DAO_CampaignGroup extends CRM_Core_DAO
           }
         }
       }
-    }
+                                  }
     return self::$_import;
   }
   /**
@@ -256,7 +256,7 @@ class CRM_Campaign_DAO_CampaignGroup extends CRM_Core_DAO
           }
         }
       }
-    }
+                                  }
     return self::$_export;
   }
   /**
@@ -267,8 +267,8 @@ class CRM_Campaign_DAO_CampaignGroup extends CRM_Core_DAO
   static function &getEnums()
   {
     static $enums = [
-      'group_type',
-    ];
+                                            'group_type',
+                                        ];
     return $enums;
   }
   /**
@@ -284,11 +284,11 @@ class CRM_Campaign_DAO_CampaignGroup extends CRM_Core_DAO
     static $translations = null;
     if (!$translations) {
       $translations = [
-        'group_type' => [
-          'Include' => ts('Include') ,
-          'Exclude' => ts('Exclude') ,
-        ] ,
-      ];
+                                            'group_type' => [
+                  'Include' => ts('Include'),
+                  'Exclude' => ts('Exclude'),
+                ],
+                                          ];
     }
     return $translations[$field][$value];
   }
@@ -301,7 +301,7 @@ class CRM_Campaign_DAO_CampaignGroup extends CRM_Core_DAO
   static function addDisplayEnums(&$values)
   {
     $enumFields = &CRM_Campaign_DAO_CampaignGroup::getEnums();
-    foreach($enumFields as $enum) {
+    foreach ($enumFields as $enum) {
       if (isset($values[$enum])) {
         $values[$enum . '_display'] = CRM_Campaign_DAO_CampaignGroup::tsEnum($enum, $values[$enum]);
       }

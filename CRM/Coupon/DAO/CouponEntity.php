@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-class CRM_Coupon_DAO_CouponEntity extends CRM_Core_DAO
+        class CRM_Coupon_DAO_CouponEntity extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -78,7 +78,7 @@ class CRM_Coupon_DAO_CouponEntity extends CRM_Core_DAO
    * @static
    */
   static $_log = false;
-  /**
+    /**
    * ID for internal usage
    *
    * @var int unsigned
@@ -102,7 +102,7 @@ class CRM_Coupon_DAO_CouponEntity extends CRM_Core_DAO
    * @var int unsigned
    */
   public $entity_id;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -127,7 +127,7 @@ class CRM_Coupon_DAO_CouponEntity extends CRM_Core_DAO
     }
     return self::$_links;
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -142,7 +142,7 @@ class CRM_Coupon_DAO_CouponEntity extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -156,24 +156,24 @@ class CRM_Coupon_DAO_CouponEntity extends CRM_Core_DAO
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ] ,
+                  ] ,
         'coupon_id' => [
           'name' => 'coupon_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-          'FKClassName' => 'CRM_Coupon_DAO_Coupon',
+                    'FKClassName' => 'CRM_Coupon_DAO_Coupon',
         ] ,
         'entity_table' => [
           'name' => 'entity_table',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Entity Table') ,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ] ,
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
         'entity_id' => [
           'name' => 'entity_id',
           'type' => CRM_Utils_Type::T_INT,
-        ] ,
+                  ] ,
       ];
     }
     return self::$_fields;
@@ -186,8 +186,8 @@ class CRM_Coupon_DAO_CouponEntity extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -218,7 +218,7 @@ class CRM_Coupon_DAO_CouponEntity extends CRM_Core_DAO
           }
         }
       }
-    }
+                                  }
     return self::$_import;
   }
   /**
@@ -241,7 +241,7 @@ class CRM_Coupon_DAO_CouponEntity extends CRM_Core_DAO
           }
         }
       }
-    }
+                                  }
     return self::$_export;
   }
 }

@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-class CRM_Project_DAO_TaskStatus extends CRM_Core_DAO
+        class CRM_Project_DAO_TaskStatus extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -78,7 +78,7 @@ class CRM_Project_DAO_TaskStatus extends CRM_Core_DAO
    * @static
    */
   static $_log = true;
-  /**
+    /**
    * Task ID
    *
    * @var int unsigned
@@ -138,7 +138,7 @@ class CRM_Project_DAO_TaskStatus extends CRM_Core_DAO
    * @var datetime
    */
   public $modified_date;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -163,7 +163,7 @@ class CRM_Project_DAO_TaskStatus extends CRM_Core_DAO
     }
     return self::$_links;
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -177,7 +177,7 @@ class CRM_Project_DAO_TaskStatus extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -191,61 +191,61 @@ class CRM_Project_DAO_TaskStatus extends CRM_Core_DAO
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ] ,
+                  ] ,
         'task_id' => [
           'name' => 'task_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-          'FKClassName' => 'CRM_Project_DAO_Task',
+                    'FKClassName' => 'CRM_Project_DAO_Task',
         ] ,
         'responsible_entity_table' => [
           'name' => 'responsible_entity_table',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Responsible Entity Table') ,
           'required' => true,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ] ,
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
         'responsible_entity_id' => [
           'name' => 'responsible_entity_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Responsible') ,
           'required' => true,
-        ] ,
+                  ] ,
         'target_entity_table' => [
           'name' => 'target_entity_table',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Target Entity Table') ,
           'required' => true,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ] ,
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
         'target_entity_id' => [
           'name' => 'target_entity_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Target') ,
           'required' => true,
-        ] ,
+                  ] ,
         'status_detail' => [
           'name' => 'status_detail',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Status Details') ,
-        ] ,
+                  ] ,
         'status_id' => [
           'name' => 'status_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Status') ,
-        ] ,
+                  ] ,
         'create_date' => [
           'name' => 'create_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Created') ,
-        ] ,
+                  ] ,
         'modified_date' => [
           'name' => 'modified_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Last Modified') ,
-        ] ,
+                  ] ,
       ];
     }
     return self::$_fields;
@@ -258,8 +258,8 @@ class CRM_Project_DAO_TaskStatus extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -290,7 +290,7 @@ class CRM_Project_DAO_TaskStatus extends CRM_Core_DAO
           }
         }
       }
-    }
+                                  }
     return self::$_import;
   }
   /**
@@ -313,7 +313,7 @@ class CRM_Project_DAO_TaskStatus extends CRM_Core_DAO
           }
         }
       }
-    }
+                                  }
     return self::$_export;
   }
 }
