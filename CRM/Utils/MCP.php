@@ -47,8 +47,13 @@ class CRM_Utils_MCP {
    */
   public function handle() {
     // Parse JSON-RPC 2.0 request
-    $input = file_get_contents('php://input');
-    $request = json_decode($input, TRUE);
+    if ($_SERVER['REQUEST_METHOD'] === 'GET' && !empty($_POST)) {
+      // GET request was converted to mock POST request in extern/mcp.php
+      $request = $_POST;
+    } else {
+      $input = file_get_contents('php://input');
+      $request = json_decode($input, TRUE);
+    }
     
     if (!$request || !isset($request['jsonrpc']) || $request['jsonrpc'] !== '2.0') {
       return $this->error(-32600, 'Invalid Request', $request['id'] ?? NULL);

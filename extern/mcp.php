@@ -11,29 +11,87 @@
 require_once __DIR__.'/extern.inc';
 CRM_Core_Config::singleton();
 
-// Only allow POST requests for MCP
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-  if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    // Handle CORS preflight requests
+// Handle different HTTP methods for MCP compatibility
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+  // Handle CORS preflight requests
+  header('Access-Control-Allow-Origin: *');
+  header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+  header('Access-Control-Allow-Headers: Content-Type, Authorization, X-CIVICRM-API-KEY, Accept');
+  header('Access-Control-Max-Age: 86400');
+  http_response_code(200);
+  exit;
+} elseif ($_SERVER['REQUEST_METHOD'] === 'GET') {
+  // Handle GET request for MCP backwards compatibility detection
+  // For Claude Desktop connector, we need to handle GET requests with query parameters
+  
+  // Check if this is a simple MCP endpoint detection
+  if (empty($_GET)) {
+    // Return SSE stream for legacy HTTP+SSE transport detection
+    header('Content-Type: text/event-stream; charset=utf-8');
+    header('Cache-Control: no-cache');
+    header('Connection: keep-alive');
     header('Access-Control-Allow-Origin: *');
-    header('Access-Control-Allow-Methods: POST, OPTIONS');
-    header('Access-Control-Allow-Headers: Content-Type, Authorization, X-CIVICRM-API-KEY');
-    header('Access-Control-Max-Age: 86400');
-    http_response_code(200);
+    
+    // Send endpoint event for legacy HTTP+SSE transport detection
+    echo "event: endpoint\n";
+    echo "data: " . json_encode([
+      'method' => 'notifications/endpoint',
+      'params' => [
+        'endpoint' => $_SERVER['REQUEST_URI'],
+        'transport' => 'http+sse'
+      ]
+    ]) . "\n\n";
+    
+    // Keep connection alive for SSE
+    while (true) {
+      echo "event: ping\n";
+      echo "data: " . json_encode(['timestamp' => time()]) . "\n\n";
+      
+      if (connection_aborted()) {
+        break;
+      }
+      
+      sleep(30); // Send ping every 30 seconds
+    }
     exit;
   } else {
-    http_response_code(405);
-    header('Allow: POST, OPTIONS');
-    echo json_encode([
+    // Handle GET with query parameters (like Claude Desktop)
+    // Convert GET parameters to a simple JSON-RPC initialize request
+    header('Content-Type: application/json; charset=utf-8');
+    header('Access-Control-Allow-Origin: *');
+    
+    // Create a mock initialize request
+    $mockRequest = [
       'jsonrpc' => '2.0',
-      'error' => [
-        'code' => -32600,
-        'message' => 'Invalid Request - Only POST method allowed for MCP'
+      'method' => 'initialize',
+      'params' => [
+        'protocolVersion' => '2024-11-05',
+        'capabilities' => [],
+        'clientInfo' => [
+          'name' => 'Claude Desktop',
+          'version' => '1.0.0'
+        ]
       ],
-      'id' => null
-    ]);
-    exit;
+      'id' => 'get-init'
+    ];
+    
+    // Override the input for GET requests
+    $_POST = $mockRequest;
+    // Continue processing as if it was a POST request
   }
+} elseif ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+  // Reject other methods
+  http_response_code(405);
+  header('Allow: GET, POST, OPTIONS');
+  echo json_encode([
+    'jsonrpc' => '2.0',
+    'error' => [
+      'code' => -32600,
+      'message' => 'Invalid Request - Only GET, POST, OPTIONS methods allowed for MCP'
+    ],
+    'id' => null
+  ]);
+  exit;
 }
 
 // Check if client requests streaming response
