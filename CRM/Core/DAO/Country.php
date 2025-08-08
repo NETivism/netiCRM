@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-class CRM_Core_DAO_Country extends CRM_Core_DAO
+              class CRM_Core_DAO_Country extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -78,7 +78,7 @@ class CRM_Core_DAO_Country extends CRM_Core_DAO
    * @static
    */
   static $_log = false;
-  /**
+    /**
    * Country Id
    *
    * @var int unsigned
@@ -132,7 +132,7 @@ class CRM_Core_DAO_Country extends CRM_Core_DAO
    * @var boolean
    */
   public $is_province_abbreviated;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -158,7 +158,7 @@ class CRM_Core_DAO_Country extends CRM_Core_DAO
     }
     return self::$_links;
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -173,7 +173,7 @@ class CRM_Core_DAO_Country extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -187,62 +187,62 @@ class CRM_Core_DAO_Country extends CRM_Core_DAO
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ] ,
+                  ] ,
         'name' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Country') ,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-          'import' => true,
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+             'import' => true,
           'where' => 'civicrm_country.name',
           'headerPattern' => '/country/i',
           'dataPattern' => '/^[A-Z][a-z]+\.?(\s+[A-Z][a-z]+){0,3}$/',
-          'export' => true,
-        ] ,
+           'export' => true,
+            ] ,
         'iso_code' => [
           'name' => 'iso_code',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Iso Code') ,
-          'maxlength' => 2,
-          'size' => CRM_Utils_Type::TWO,
-        ] ,
+           'maxlength' => 2,
+           'size' => CRM_Utils_Type::TWO,
+                ] ,
         'country_code' => [
           'name' => 'country_code',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Country Code') ,
-          'maxlength' => 4,
-          'size' => CRM_Utils_Type::FOUR,
-        ] ,
+           'maxlength' => 4,
+           'size' => CRM_Utils_Type::FOUR,
+                ] ,
         'address_format_id' => [
           'name' => 'address_format_id',
           'type' => CRM_Utils_Type::T_INT,
-          'FKClassName' => 'CRM_Core_DAO_AddressFormat',
+                    'FKClassName' => 'CRM_Core_DAO_AddressFormat',
         ] ,
         'idd_prefix' => [
           'name' => 'idd_prefix',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Idd Prefix') ,
-          'maxlength' => 4,
-          'size' => CRM_Utils_Type::FOUR,
-        ] ,
+           'maxlength' => 4,
+           'size' => CRM_Utils_Type::FOUR,
+                ] ,
         'ndd_prefix' => [
           'name' => 'ndd_prefix',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Ndd Prefix') ,
-          'maxlength' => 4,
-          'size' => CRM_Utils_Type::FOUR,
-        ] ,
+           'maxlength' => 4,
+           'size' => CRM_Utils_Type::FOUR,
+                ] ,
         'region_id' => [
           'name' => 'region_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-          'FKClassName' => 'CRM_Core_DAO_Worldregion',
+                    'FKClassName' => 'CRM_Core_DAO_Worldregion',
         ] ,
         'is_province_abbreviated' => [
           'name' => 'is_province_abbreviated',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ] ,
+                  ] ,
       ];
     }
     return self::$_fields;
@@ -255,8 +255,8 @@ class CRM_Core_DAO_Country extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -287,7 +287,7 @@ class CRM_Core_DAO_Country extends CRM_Core_DAO
           }
         }
       }
-    }
+                                              }
     return self::$_import;
   }
   /**
@@ -310,7 +310,7 @@ class CRM_Core_DAO_Country extends CRM_Core_DAO
           }
         }
       }
-    }
+                                              }
     return self::$_export;
   }
 }

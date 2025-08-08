@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-class CRM_AI_DAO_AICompletion extends CRM_Core_DAO
+        class CRM_AI_DAO_AICompletion extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -78,7 +78,7 @@ class CRM_AI_DAO_AICompletion extends CRM_Core_DAO
    * @static
    */
   static $_log = false;
-  /**
+    /**
    * AICompletion ID
    *
    * @var int unsigned
@@ -192,7 +192,7 @@ class CRM_AI_DAO_AICompletion extends CRM_Core_DAO
    * @var int unsigned
    */
   public $status_id;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -217,7 +217,7 @@ class CRM_AI_DAO_AICompletion extends CRM_Core_DAO
     }
     return self::$_links;
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -231,7 +231,7 @@ class CRM_AI_DAO_AICompletion extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -245,120 +245,120 @@ class CRM_AI_DAO_AICompletion extends CRM_Core_DAO
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ] ,
+                  ] ,
         'contact_id' => [
           'name' => 'contact_id',
           'type' => CRM_Utils_Type::T_INT,
-          'FKClassName' => 'CRM_Contact_DAO_Contact',
+                    'FKClassName' => 'CRM_Contact_DAO_Contact',
         ] ,
         'is_template' => [
           'name' => 'is_template',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'required' => true,
-        ] ,
+                  ] ,
         'template_title' => [
           'name' => 'template_title',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Template Title') ,
-          'maxlength' => 128,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 128,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'tone_style' => [
           'name' => 'tone_style',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Tone Style') ,
           'required' => true,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ] ,
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
         'ai_role' => [
           'name' => 'ai_role',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Ai Role') ,
           'required' => true,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ] ,
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
         'context' => [
           'name' => 'context',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Context') ,
           'required' => true,
-        ] ,
+                  ] ,
         'output_text' => [
           'name' => 'output_text',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Output Text') ,
           'required' => true,
-        ] ,
+                  ] ,
         'is_share_with_others' => [
           'name' => 'is_share_with_others',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'required' => true,
-        ] ,
+                  ] ,
         'created_date' => [
           'name' => 'created_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Created Date') ,
           'required' => true,
-        ] ,
+                  ] ,
         'prompt' => [
           'name' => 'prompt',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Prompt') ,
           'required' => true,
-        ] ,
+                  ] ,
         'component' => [
           'name' => 'component',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Component') ,
           'required' => true,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ] ,
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
         'field' => [
           'name' => 'field',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Field') ,
           'required' => true,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ] ,
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
         'temperature' => [
           'name' => 'temperature',
           'type' => CRM_Utils_Type::T_FLOAT,
           'title' => ts('Temperature') ,
           'required' => true,
-        ] ,
+                  ] ,
         'post_data' => [
           'name' => 'post_data',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Post Data') ,
           'required' => true,
-        ] ,
+                  ] ,
         'return_data' => [
           'name' => 'return_data',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Return Data') ,
           'required' => true,
-        ] ,
+                  ] ,
         'prompt_token' => [
           'name' => 'prompt_token',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Prompt Token') ,
           'required' => true,
-        ] ,
+                  ] ,
         'completion_token' => [
           'name' => 'completion_token',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Completion Token') ,
           'required' => true,
-        ] ,
+                  ] ,
         'status_id' => [
           'name' => 'status_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ] ,
+                  ] ,
       ];
     }
     return self::$_fields;
@@ -371,8 +371,8 @@ class CRM_AI_DAO_AICompletion extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -403,7 +403,7 @@ class CRM_AI_DAO_AICompletion extends CRM_Core_DAO
           }
         }
       }
-    }
+                                  }
     return self::$_import;
   }
   /**
@@ -426,7 +426,7 @@ class CRM_AI_DAO_AICompletion extends CRM_Core_DAO
           }
         }
       }
-    }
+                                  }
     return self::$_export;
   }
 }

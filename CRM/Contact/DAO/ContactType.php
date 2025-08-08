@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-class CRM_Contact_DAO_ContactType extends CRM_Core_DAO
+        class CRM_Contact_DAO_ContactType extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -78,7 +78,7 @@ class CRM_Contact_DAO_ContactType extends CRM_Core_DAO
    * @static
    */
   static $_log = false;
-  /**
+    /**
    * Contact Type ID
    *
    * @var int unsigned
@@ -126,7 +126,7 @@ class CRM_Contact_DAO_ContactType extends CRM_Core_DAO
    * @var boolean
    */
   public $is_reserved;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -151,7 +151,7 @@ class CRM_Contact_DAO_ContactType extends CRM_Core_DAO
     }
     return self::$_links;
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -165,7 +165,7 @@ class CRM_Contact_DAO_ContactType extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -179,48 +179,48 @@ class CRM_Contact_DAO_ContactType extends CRM_Core_DAO
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ] ,
+                  ] ,
         'name' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Name') ,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ] ,
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
         'label' => [
           'name' => 'label',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Label') ,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ] ,
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
         'description' => [
           'name' => 'description',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Description') ,
-          'rows' => 2,
-          'cols' => 60,
-        ] ,
+             'rows' => 2,
+           'cols' => 60,
+              ] ,
         'image_URL' => [
           'name' => 'image_URL',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Image Url') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'parent_id' => [
           'name' => 'parent_id',
           'type' => CRM_Utils_Type::T_INT,
-          'FKClassName' => 'CRM_Contact_DAO_ContactType',
+                    'FKClassName' => 'CRM_Contact_DAO_ContactType',
         ] ,
         'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ] ,
+                  ] ,
         'is_reserved' => [
           'name' => 'is_reserved',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ] ,
+                  ] ,
       ];
     }
     return self::$_fields;
@@ -233,9 +233,9 @@ class CRM_Contact_DAO_ContactType extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    global $dbLocale;
+        global $dbLocale;
     return self::$_tableName . $dbLocale;
-  }
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -266,7 +266,7 @@ class CRM_Contact_DAO_ContactType extends CRM_Core_DAO
           }
         }
       }
-    }
+                                  }
     return self::$_import;
   }
   /**
@@ -289,7 +289,7 @@ class CRM_Contact_DAO_ContactType extends CRM_Core_DAO
           }
         }
       }
-    }
+                                  }
     return self::$_export;
   }
 }

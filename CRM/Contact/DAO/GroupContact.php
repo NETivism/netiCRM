@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-class CRM_Contact_DAO_GroupContact extends CRM_Core_DAO
+                          class CRM_Contact_DAO_GroupContact extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -78,7 +78,7 @@ class CRM_Contact_DAO_GroupContact extends CRM_Core_DAO
    * @static
    */
   static $_log = true;
-  /**
+    /**
    * primary key
    *
    * @var int unsigned
@@ -114,7 +114,7 @@ class CRM_Contact_DAO_GroupContact extends CRM_Core_DAO
    * @var int unsigned
    */
   public $email_id;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -142,7 +142,7 @@ class CRM_Contact_DAO_GroupContact extends CRM_Core_DAO
     }
     return self::$_links;
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -159,7 +159,7 @@ class CRM_Contact_DAO_GroupContact extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -173,34 +173,34 @@ class CRM_Contact_DAO_GroupContact extends CRM_Core_DAO
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ] ,
+                  ] ,
         'group_id' => [
           'name' => 'group_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-          'FKClassName' => 'CRM_Contact_DAO_Group',
+                    'FKClassName' => 'CRM_Contact_DAO_Group',
         ] ,
         'contact_id' => [
           'name' => 'contact_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-          'FKClassName' => 'CRM_Contact_DAO_Contact',
+                    'FKClassName' => 'CRM_Contact_DAO_Contact',
         ] ,
         'status' => [
           'name' => 'status',
           'type' => CRM_Utils_Type::T_ENUM,
           'title' => ts('Status') ,
-          'enumValues' => 'Added,Removed,Pending',
-        ] ,
+                   'enumValues' => 'Added,Removed,Pending',
+         ] ,
         'location_id' => [
           'name' => 'location_id',
           'type' => CRM_Utils_Type::T_INT,
-          'FKClassName' => 'CRM_Core_DAO_LocBlock',
+                    'FKClassName' => 'CRM_Core_DAO_LocBlock',
         ] ,
         'email_id' => [
           'name' => 'email_id',
           'type' => CRM_Utils_Type::T_INT,
-          'FKClassName' => 'CRM_Core_DAO_Email',
+                    'FKClassName' => 'CRM_Core_DAO_Email',
         ] ,
       ];
     }
@@ -214,8 +214,8 @@ class CRM_Contact_DAO_GroupContact extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -246,7 +246,7 @@ class CRM_Contact_DAO_GroupContact extends CRM_Core_DAO
           }
         }
       }
-    }
+                                                                      }
     return self::$_import;
   }
   /**
@@ -269,7 +269,7 @@ class CRM_Contact_DAO_GroupContact extends CRM_Core_DAO
           }
         }
       }
-    }
+                                                                      }
     return self::$_export;
   }
   /**
@@ -280,8 +280,8 @@ class CRM_Contact_DAO_GroupContact extends CRM_Core_DAO
   static function &getEnums()
   {
     static $enums = [
-      'status',
-    ];
+                                                        'status',
+                                        ];
     return $enums;
   }
   /**
@@ -297,12 +297,12 @@ class CRM_Contact_DAO_GroupContact extends CRM_Core_DAO
     static $translations = null;
     if (!$translations) {
       $translations = [
-        'status' => [
-          'Added' => ts('Added') ,
-          'Removed' => ts('Removed') ,
-          'Pending' => ts('Pending') ,
-        ] ,
-      ];
+                                                        'status' => [
+                  'Added' => ts('Added'),
+                  'Removed' => ts('Removed'),
+                  'Pending' => ts('Pending'),
+                ],
+                                          ];
     }
     return $translations[$field][$value];
   }
@@ -315,7 +315,7 @@ class CRM_Contact_DAO_GroupContact extends CRM_Core_DAO
   static function addDisplayEnums(&$values)
   {
     $enumFields = &CRM_Contact_DAO_GroupContact::getEnums();
-    foreach($enumFields as $enum) {
+    foreach ($enumFields as $enum) {
       if (isset($values[$enum])) {
         $values[$enum . '_display'] = CRM_Contact_DAO_GroupContact::tsEnum($enum, $values[$enum]);
       }

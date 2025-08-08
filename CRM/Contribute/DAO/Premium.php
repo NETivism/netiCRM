@@ -78,7 +78,7 @@ class CRM_Contribute_DAO_Premium extends CRM_Core_DAO
    * @static
    */
   static $_log = true;
-  /**
+    /**
    *
    * @var int unsigned
    */
@@ -136,7 +136,7 @@ class CRM_Contribute_DAO_Premium extends CRM_Core_DAO
    * @var string
    */
   public $premiums_nothanks_text;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -146,7 +146,7 @@ class CRM_Contribute_DAO_Premium extends CRM_Core_DAO
   {
     parent::__construct();
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -160,7 +160,7 @@ class CRM_Contribute_DAO_Premium extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -174,65 +174,65 @@ class CRM_Contribute_DAO_Premium extends CRM_Core_DAO
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ] ,
+                  ] ,
         'entity_table' => [
           'name' => 'entity_table',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Entity Table') ,
           'required' => true,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ] ,
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
         'entity_id' => [
           'name' => 'entity_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ] ,
+                  ] ,
         'premiums_active' => [
           'name' => 'premiums_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Premiums Active') ,
           'required' => true,
-        ] ,
+                  ] ,
         'premiums_intro_title' => [
           'name' => 'premiums_intro_title',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Title for Premiums section') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'premiums_intro_text' => [
           'name' => 'premiums_intro_text',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Premiums Intro Text') ,
-        ] ,
+                  ] ,
         'premiums_contact_email' => [
           'name' => 'premiums_contact_email',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Premiums Contact Email') ,
-          'maxlength' => 100,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 100,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'premiums_contact_phone' => [
           'name' => 'premiums_contact_phone',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Premiums Contact Phone') ,
-          'maxlength' => 50,
-          'size' => CRM_Utils_Type::BIG,
-        ] ,
+           'maxlength' => 50,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
         'premiums_display_min_contribution' => [
           'name' => 'premiums_display_min_contribution',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Premiums Display Min Contribution') ,
           'required' => true,
-        ] ,
+                  ] ,
         'premiums_nothanks_text' => [
           'name' => 'premiums_nothanks_text',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Premiums Nothanks Text') ,
-          'maxlength' => 128,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 128,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
       ];
     }
     return self::$_fields;
@@ -245,9 +245,9 @@ class CRM_Contribute_DAO_Premium extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    global $dbLocale;
+        global $dbLocale;
     return self::$_tableName . $dbLocale;
-  }
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -278,7 +278,7 @@ class CRM_Contribute_DAO_Premium extends CRM_Core_DAO
           }
         }
       }
-    }
+          }
     return self::$_import;
   }
   /**
@@ -301,7 +301,7 @@ class CRM_Contribute_DAO_Premium extends CRM_Core_DAO
           }
         }
       }
-    }
+          }
     return self::$_export;
   }
 }

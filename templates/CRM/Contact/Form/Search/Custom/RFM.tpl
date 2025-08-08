@@ -6,7 +6,7 @@
 
 <div class="crm-block crm-form-block crm-contact-custom-search-form-block crm-contact-custom-search-form-rfm-block">
 <div class="crm-custom-search-description">
-  {ts 1='https://neticrm.tw/resources/25318'}The RFM model helps organizations categorize donors based on their giving behavior, enabling more refined and personalized communication strategies that convert more supporters into loyal ones (<a href="%1" target="_blank">how to use</a>).{/ts}
+  {ts}The RFM model helps organizations categorize donors based on their giving behavior, enabling more refined and personalized communication strategies that convert more supporters into loyal ones{/ts} {docURL page="RFM Model Usage Guide" text="how to use"}
 </div>
 <div class="crm-accordion-wrapper crm-custom_search_form-accordion crm-accordion-{if !$rows}open{else}closed{/if}">
     <div class="crm-accordion-header crm-master-accordion-header">

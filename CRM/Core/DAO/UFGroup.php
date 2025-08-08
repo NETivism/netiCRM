@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-class CRM_Core_DAO_UFGroup extends CRM_Core_DAO
+                    class CRM_Core_DAO_UFGroup extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -78,7 +78,7 @@ class CRM_Core_DAO_UFGroup extends CRM_Core_DAO
    * @static
    */
   static $_log = true;
-  /**
+    /**
    * Unique table ID
    *
    * @var int unsigned
@@ -169,7 +169,7 @@ class CRM_Core_DAO_UFGroup extends CRM_Core_DAO
    */
   public $cancel_URL;
   /**
-   * Should we create a cms user for this profile
+   * Should we create a cms user for this profile 
    *
    * @var boolean
    */
@@ -209,7 +209,7 @@ class CRM_Core_DAO_UFGroup extends CRM_Core_DAO
    * @var boolean
    */
   public $is_proximity_search;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -236,7 +236,7 @@ class CRM_Core_DAO_UFGroup extends CRM_Core_DAO
     }
     return self::$_links;
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -252,7 +252,7 @@ class CRM_Core_DAO_UFGroup extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -266,124 +266,124 @@ class CRM_Core_DAO_UFGroup extends CRM_Core_DAO
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ] ,
+                  ] ,
         'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-          'default' => '',
-        ] ,
+                  'default' => '',
+          ] ,
         'group_type' => [
           'name' => 'group_type',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Group Type') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-          'import' => true,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+             'import' => true,
           'where' => 'civicrm_uf_group.group_type',
           'headerPattern' => '',
           'dataPattern' => '',
-          'export' => true,
-        ] ,
+           'export' => true,
+            ] ,
         'title' => [
           'name' => 'title',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Title') ,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ] ,
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
         'help_pre' => [
           'name' => 'help_pre',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Help Pre') ,
-          'rows' => 4,
-          'cols' => 80,
-        ] ,
+             'rows' => 4,
+           'cols' => 80,
+              ] ,
         'help_post' => [
           'name' => 'help_post',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Help Post') ,
-          'rows' => 4,
-          'cols' => 80,
-        ] ,
+             'rows' => 4,
+           'cols' => 80,
+              ] ,
         'limit_listings_group_id' => [
           'name' => 'limit_listings_group_id',
           'type' => CRM_Utils_Type::T_INT,
-          'FKClassName' => 'CRM_Contact_DAO_Group',
+                    'FKClassName' => 'CRM_Contact_DAO_Group',
         ] ,
         'post_URL' => [
           'name' => 'post_URL',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Post Url') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'add_to_group_id' => [
           'name' => 'add_to_group_id',
           'type' => CRM_Utils_Type::T_INT,
-          'FKClassName' => 'CRM_Contact_DAO_Group',
+                    'FKClassName' => 'CRM_Contact_DAO_Group',
         ] ,
         'add_captcha' => [
           'name' => 'add_captcha',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Add Captcha') ,
-        ] ,
+                  ] ,
         'is_map' => [
           'name' => 'is_map',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ] ,
+                  ] ,
         'is_edit_link' => [
           'name' => 'is_edit_link',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ] ,
+                  ] ,
         'is_uf_link' => [
           'name' => 'is_uf_link',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ] ,
+                  ] ,
         'is_update_dupe' => [
           'name' => 'is_update_dupe',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ] ,
+                  ] ,
         'cancel_URL' => [
           'name' => 'cancel_URL',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Cancel Url') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'is_cms_user' => [
           'name' => 'is_cms_user',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ] ,
+                  ] ,
         'notify' => [
           'name' => 'notify',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Notify') ,
-        ] ,
+                  ] ,
         'is_reserved' => [
           'name' => 'is_reserved',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ] ,
+                  ] ,
         'name' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Name') ,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ] ,
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
         'created_id' => [
           'name' => 'created_id',
           'type' => CRM_Utils_Type::T_INT,
-          'FKClassName' => 'CRM_Contact_DAO_Contact',
+                    'FKClassName' => 'CRM_Contact_DAO_Contact',
         ] ,
         'created_date' => [
           'name' => 'created_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('UF Group Created Date') ,
-        ] ,
+                  ] ,
         'is_proximity_search' => [
           'name' => 'is_proximity_search',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ] ,
+                  ] ,
       ];
     }
     return self::$_fields;
@@ -396,9 +396,9 @@ class CRM_Core_DAO_UFGroup extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    global $dbLocale;
+        global $dbLocale;
     return self::$_tableName . $dbLocale;
-  }
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -429,7 +429,7 @@ class CRM_Core_DAO_UFGroup extends CRM_Core_DAO
           }
         }
       }
-    }
+                                                          }
     return self::$_import;
   }
   /**
@@ -452,7 +452,7 @@ class CRM_Core_DAO_UFGroup extends CRM_Core_DAO
           }
         }
       }
-    }
+                                                          }
     return self::$_export;
   }
 }

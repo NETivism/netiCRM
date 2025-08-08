@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-class CRM_Contribute_DAO_PCPBlock extends CRM_Core_DAO
+              class CRM_Contribute_DAO_PCPBlock extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -78,7 +78,7 @@ class CRM_Contribute_DAO_PCPBlock extends CRM_Core_DAO
    * @static
    */
   static $_log = true;
-  /**
+    /**
    * PCP block Id
    *
    * @var int unsigned
@@ -137,7 +137,7 @@ class CRM_Contribute_DAO_PCPBlock extends CRM_Core_DAO
    * @var string
    */
   public $notify_email;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -163,7 +163,7 @@ class CRM_Contribute_DAO_PCPBlock extends CRM_Core_DAO
     }
     return self::$_links;
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -179,7 +179,7 @@ class CRM_Contribute_DAO_PCPBlock extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -193,63 +193,63 @@ class CRM_Contribute_DAO_PCPBlock extends CRM_Core_DAO
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ] ,
+                  ] ,
         'entity_table' => [
           'name' => 'entity_table',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Entity Table') ,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ] ,
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
         'entity_id' => [
           'name' => 'entity_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-          'FKClassName' => 'CRM_Contribute_DAO_ContributionPage',
+                    'FKClassName' => 'CRM_Contribute_DAO_ContributionPage',
         ] ,
         'supporter_profile_id' => [
           'name' => 'supporter_profile_id',
           'type' => CRM_Utils_Type::T_INT,
-          'default' => 'UL',
-          'FKClassName' => 'CRM_Core_DAO_UFGroup',
+                  'default' => 'UL',
+            'FKClassName' => 'CRM_Core_DAO_UFGroup',
         ] ,
         'is_approval_needed' => [
           'name' => 'is_approval_needed',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-          'default' => 'UL',
-        ] ,
+                  'default' => 'UL',
+          ] ,
         'is_tellfriend_enabled' => [
           'name' => 'is_tellfriend_enabled',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-          'default' => 'UL',
-        ] ,
+                  'default' => 'UL',
+          ] ,
         'tellfriend_limit' => [
           'name' => 'tellfriend_limit',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Tellfriend Limit') ,
-          'default' => 'UL',
-        ] ,
+                  'default' => 'UL',
+          ] ,
         'link_text' => [
           'name' => 'link_text',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Link Text') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-          'default' => 'UL',
-        ] ,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                'default' => 'UL',
+          ] ,
         'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-          'default' => '',
-        ] ,
+                  'default' => '',
+          ] ,
         'notify_email' => [
           'name' => 'notify_email',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Notify Email') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-          'default' => 'UL',
-        ] ,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                'default' => 'UL',
+          ] ,
       ];
     }
     return self::$_fields;
@@ -262,8 +262,8 @@ class CRM_Contribute_DAO_PCPBlock extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -294,7 +294,7 @@ class CRM_Contribute_DAO_PCPBlock extends CRM_Core_DAO
           }
         }
       }
-    }
+                                              }
     return self::$_import;
   }
   /**
@@ -317,7 +317,7 @@ class CRM_Contribute_DAO_PCPBlock extends CRM_Core_DAO
           }
         }
       }
-    }
+                                              }
     return self::$_export;
   }
 }

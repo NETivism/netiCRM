@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-class CRM_Core_DAO_CustomField extends CRM_Core_DAO
+        class CRM_Core_DAO_CustomField extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -78,7 +78,7 @@ class CRM_Core_DAO_CustomField extends CRM_Core_DAO
    * @static
    */
   static $_log = true;
-  /**
+    /**
    * Unique Custom Field ID
    *
    * @var int unsigned
@@ -199,13 +199,13 @@ class CRM_Core_DAO_CustomField extends CRM_Core_DAO
    */
   public $text_length;
   /**
-   * Date may be up to start_date_years years prior to tcurrent date
+   * Date may be up to start_date_years years prior to tcurrent date  
    *
    * @var int unsigned
    */
   public $start_date_years;
   /**
-   * Date may be up to end_date_years years after to tcurrent date
+   * Date may be up to end_date_years years after to tcurrent date 
    *
    * @var int unsigned
    */
@@ -223,13 +223,13 @@ class CRM_Core_DAO_CustomField extends CRM_Core_DAO
    */
   public $time_format;
   /**
-   *  Number of columns in Note Field
+   *  Number of columns in Note Field 
    *
    * @var int unsigned
    */
   public $note_columns;
   /**
-   *  Number of rows in Note Field
+   *  Number of rows in Note Field 
    *
    * @var int unsigned
    */
@@ -246,7 +246,7 @@ class CRM_Core_DAO_CustomField extends CRM_Core_DAO
    * @var int unsigned
    */
   public $option_group_id;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -271,7 +271,7 @@ class CRM_Core_DAO_CustomField extends CRM_Core_DAO
     }
     return self::$_links;
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -285,7 +285,7 @@ class CRM_Core_DAO_CustomField extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -299,159 +299,159 @@ class CRM_Core_DAO_CustomField extends CRM_Core_DAO
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ] ,
+                  ] ,
         'custom_group_id' => [
           'name' => 'custom_group_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-          'FKClassName' => 'CRM_Core_DAO_CustomGroup',
+                    'FKClassName' => 'CRM_Core_DAO_CustomGroup',
         ] ,
         'name' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Name') ,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ] ,
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
         'label' => [
           'name' => 'label',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Label') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'data_type' => [
           'name' => 'data_type',
           'type' => CRM_Utils_Type::T_ENUM,
           'title' => ts('Data Type') ,
           'required' => true,
-          'enumValues' => 'String, Int, Float, Money, Memo, Date, Boolean, StateProvince, Country, File, Link, ContactReference',
-        ] ,
+                   'enumValues' => 'String, Int, Float, Money, Memo, Date, Boolean, StateProvince, Country, File, Link, ContactReference',
+         ] ,
         'html_type' => [
           'name' => 'html_type',
           'type' => CRM_Utils_Type::T_ENUM,
           'title' => ts('Html Type') ,
           'required' => true,
-          'enumValues' => 'Text, TextArea, Select, Multi-Select, AdvMulti-Select, Radio, CheckBox, Select Date, Select State/Province, Select Country, Multi-Select Country, Multi-Select State/Province, File, Link, RichTextEditor, Autocomplete-Select',
-        ] ,
+                   'enumValues' => 'Text, TextArea, Select, Multi-Select, AdvMulti-Select, Radio, CheckBox, Select Date, Select State/Province, Select Country, Multi-Select Country, Multi-Select State/Province, File, Link, RichTextEditor, Autocomplete-Select',
+         ] ,
         'default_value' => [
           'name' => 'default_value',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Default Value') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'is_required' => [
           'name' => 'is_required',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ] ,
+                  ] ,
         'is_searchable' => [
           'name' => 'is_searchable',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ] ,
+                  ] ,
         'is_search_range' => [
           'name' => 'is_search_range',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ] ,
+                  ] ,
         'weight' => [
           'name' => 'weight',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Weight') ,
           'required' => true,
-          'default' => '',
-        ] ,
+                  'default' => '',
+          ] ,
         'help_pre' => [
           'name' => 'help_pre',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Help Pre') ,
-        ] ,
+                  ] ,
         'help_post' => [
           'name' => 'help_post',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Help Post') ,
-        ] ,
+                  ] ,
         'mask' => [
           'name' => 'mask',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Mask') ,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ] ,
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
         'attributes' => [
           'name' => 'attributes',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Attributes') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'javascript' => [
           'name' => 'javascript',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Javascript') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ] ,
+                  ] ,
         'is_view' => [
           'name' => 'is_view',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ] ,
+                  ] ,
         'options_per_line' => [
           'name' => 'options_per_line',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Options Per Line') ,
-        ] ,
+                  ] ,
         'text_length' => [
           'name' => 'text_length',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Text Length') ,
-        ] ,
+                  ] ,
         'start_date_years' => [
           'name' => 'start_date_years',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Start Date Years') ,
-        ] ,
+                  ] ,
         'end_date_years' => [
           'name' => 'end_date_years',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('End Date Years') ,
-        ] ,
+                  ] ,
         'date_format' => [
           'name' => 'date_format',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Date Format') ,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ] ,
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
         'time_format' => [
           'name' => 'time_format',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Time Format') ,
-        ] ,
+                  ] ,
         'note_columns' => [
           'name' => 'note_columns',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Note Columns') ,
-        ] ,
+                  ] ,
         'note_rows' => [
           'name' => 'note_rows',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Note Rows') ,
-        ] ,
+                  ] ,
         'column_name' => [
           'name' => 'column_name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Column Name') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'option_group_id' => [
           'name' => 'option_group_id',
           'type' => CRM_Utils_Type::T_INT,
-        ] ,
+                  ] ,
       ];
     }
     return self::$_fields;
@@ -464,9 +464,9 @@ class CRM_Core_DAO_CustomField extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    global $dbLocale;
+        global $dbLocale;
     return self::$_tableName . $dbLocale;
-  }
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -497,7 +497,7 @@ class CRM_Core_DAO_CustomField extends CRM_Core_DAO
           }
         }
       }
-    }
+                                  }
     return self::$_import;
   }
   /**
@@ -520,7 +520,7 @@ class CRM_Core_DAO_CustomField extends CRM_Core_DAO
           }
         }
       }
-    }
+                                  }
     return self::$_export;
   }
   /**
@@ -531,9 +531,9 @@ class CRM_Core_DAO_CustomField extends CRM_Core_DAO
   static function &getEnums()
   {
     static $enums = [
-      'data_type',
-      'html_type',
-    ];
+                                                                    'data_type',
+                          'html_type',
+                                                                                                                                                                                                                                                                                        ];
     return $enums;
   }
   /**
@@ -549,39 +549,39 @@ class CRM_Core_DAO_CustomField extends CRM_Core_DAO
     static $translations = null;
     if (!$translations) {
       $translations = [
-        'data_type' => [
-          'String' => ts('String') ,
-          'Int' => ts('Int') ,
-          'Float' => ts('Float') ,
-          'Money' => ts('Money') ,
-          'Memo' => ts('Memo') ,
-          'Date' => ts('Date') ,
-          'Boolean' => ts('Boolean') ,
-          'StateProvince' => ts('StateProvince') ,
-          'Country' => ts('Country') ,
-          'File' => ts('File') ,
-          'Link' => ts('Link') ,
-          'ContactReference' => ts('ContactReference') ,
-        ] ,
-        'html_type' => [
-          'Text' => ts('Text') ,
-          'TextArea' => ts('TextArea') ,
-          'Select' => ts('Select') ,
-          'Multi-Select' => ts('Multi-Select') ,
-          'AdvMulti-Select' => ts('AdvMulti-Select') ,
-          'Radio' => ts('Radio') ,
-          'CheckBox' => ts('CheckBox') ,
-          'Select Date' => ts('Select Date') ,
-          'Select State/Province' => ts('Select State/Province') ,
-          'Select Country' => ts('Select Country') ,
-          'Multi-Select Country' => ts('Multi-Select Country') ,
-          'Multi-Select State/Province' => ts('Multi-Select State/Province') ,
-          'File' => ts('File') ,
-          'Link' => ts('Link') ,
-          'RichTextEditor' => ts('RichTextEditor') ,
-          'Autocomplete-Select' => ts('Autocomplete-Select') ,
-        ] ,
-      ];
+                                                                    'data_type' => [
+                  'String' => ts('String'),
+                  'Int' => ts('Int'),
+                  'Float' => ts('Float'),
+                  'Money' => ts('Money'),
+                  'Memo' => ts('Memo'),
+                  'Date' => ts('Date'),
+                  'Boolean' => ts('Boolean'),
+                  'StateProvince' => ts('StateProvince'),
+                  'Country' => ts('Country'),
+                  'File' => ts('File'),
+                  'Link' => ts('Link'),
+                  'ContactReference' => ts('ContactReference'),
+                ],
+                          'html_type' => [
+                  'Text' => ts('Text'),
+                  'TextArea' => ts('TextArea'),
+                  'Select' => ts('Select'),
+                  'Multi-Select' => ts('Multi-Select'),
+                  'AdvMulti-Select' => ts('AdvMulti-Select'),
+                  'Radio' => ts('Radio'),
+                  'CheckBox' => ts('CheckBox'),
+                  'Select Date' => ts('Select Date'),
+                  'Select State/Province' => ts('Select State/Province'),
+                  'Select Country' => ts('Select Country'),
+                  'Multi-Select Country' => ts('Multi-Select Country'),
+                  'Multi-Select State/Province' => ts('Multi-Select State/Province'),
+                  'File' => ts('File'),
+                  'Link' => ts('Link'),
+                  'RichTextEditor' => ts('RichTextEditor'),
+                  'Autocomplete-Select' => ts('Autocomplete-Select'),
+                ],
+                                                                                                                                                                                                                                                                                          ];
     }
     return $translations[$field][$value];
   }
@@ -594,7 +594,7 @@ class CRM_Core_DAO_CustomField extends CRM_Core_DAO
   static function addDisplayEnums(&$values)
   {
     $enumFields = &CRM_Core_DAO_CustomField::getEnums();
-    foreach($enumFields as $enum) {
+    foreach ($enumFields as $enum) {
       if (isset($values[$enum])) {
         $values[$enum . '_display'] = CRM_Core_DAO_CustomField::tsEnum($enum, $values[$enum]);
       }

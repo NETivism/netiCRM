@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-class CRM_Core_DAO_Cache extends CRM_Core_DAO
+        class CRM_Core_DAO_Cache extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -78,7 +78,7 @@ class CRM_Core_DAO_Cache extends CRM_Core_DAO
    * @static
    */
   static $_log = false;
-  /**
+    /**
    *
    * @var int unsigned
    */
@@ -119,7 +119,7 @@ class CRM_Core_DAO_Cache extends CRM_Core_DAO
    * @var datetime
    */
   public $expired_date;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -144,7 +144,7 @@ class CRM_Core_DAO_Cache extends CRM_Core_DAO
     }
     return self::$_links;
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -158,7 +158,7 @@ class CRM_Core_DAO_Cache extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -172,42 +172,42 @@ class CRM_Core_DAO_Cache extends CRM_Core_DAO
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ] ,
+                  ] ,
         'group_name' => [
           'name' => 'group_name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Group Name') ,
           'required' => true,
-          'maxlength' => 32,
-          'size' => CRM_Utils_Type::MEDIUM,
-        ] ,
+           'maxlength' => 32,
+           'size' => CRM_Utils_Type::MEDIUM,
+                ] ,
         'path' => [
           'name' => 'path',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Path') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'data' => [
           'name' => 'data',
           'type' => CRM_Utils_Type::T_LONGTEXT,
           'title' => ts('Data') ,
-        ] ,
+                  ] ,
         'component_id' => [
           'name' => 'component_id',
           'type' => CRM_Utils_Type::T_INT,
-          'FKClassName' => 'CRM_Core_DAO_Component',
+                    'FKClassName' => 'CRM_Core_DAO_Component',
         ] ,
         'created_date' => [
           'name' => 'created_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Created Date') ,
-        ] ,
+                  ] ,
         'expired_date' => [
           'name' => 'expired_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Expired Date') ,
-        ] ,
+                  ] ,
       ];
     }
     return self::$_fields;
@@ -220,8 +220,8 @@ class CRM_Core_DAO_Cache extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -252,7 +252,7 @@ class CRM_Core_DAO_Cache extends CRM_Core_DAO
           }
         }
       }
-    }
+                                  }
     return self::$_import;
   }
   /**
@@ -275,7 +275,7 @@ class CRM_Core_DAO_Cache extends CRM_Core_DAO
           }
         }
       }
-    }
+                                  }
     return self::$_export;
   }
 }

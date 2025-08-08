@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-class CRM_Dedupe_DAO_Rule extends CRM_Core_DAO
+        class CRM_Dedupe_DAO_Rule extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -78,7 +78,7 @@ class CRM_Dedupe_DAO_Rule extends CRM_Core_DAO
    * @static
    */
   static $_log = false;
-  /**
+    /**
    * Unique dedupe rule id
    *
    * @var int unsigned
@@ -114,7 +114,7 @@ class CRM_Dedupe_DAO_Rule extends CRM_Core_DAO
    * @var int
    */
   public $rule_weight;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -139,7 +139,7 @@ class CRM_Dedupe_DAO_Rule extends CRM_Core_DAO
     }
     return self::$_links;
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -153,7 +153,7 @@ class CRM_Dedupe_DAO_Rule extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -167,40 +167,40 @@ class CRM_Dedupe_DAO_Rule extends CRM_Core_DAO
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ] ,
+                  ] ,
         'dedupe_rule_group_id' => [
           'name' => 'dedupe_rule_group_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-          'FKClassName' => 'CRM_Dedupe_DAO_RuleGroup',
+                    'FKClassName' => 'CRM_Dedupe_DAO_RuleGroup',
         ] ,
         'rule_table' => [
           'name' => 'rule_table',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Rule Table') ,
           'required' => true,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ] ,
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
         'rule_field' => [
           'name' => 'rule_field',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Rule Field') ,
           'required' => true,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ] ,
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
         'rule_length' => [
           'name' => 'rule_length',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Rule Length') ,
-        ] ,
+                  ] ,
         'rule_weight' => [
           'name' => 'rule_weight',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Rule Weight') ,
           'required' => true,
-        ] ,
+                  ] ,
       ];
     }
     return self::$_fields;
@@ -213,8 +213,8 @@ class CRM_Dedupe_DAO_Rule extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -245,7 +245,7 @@ class CRM_Dedupe_DAO_Rule extends CRM_Core_DAO
           }
         }
       }
-    }
+                                  }
     return self::$_import;
   }
   /**
@@ -268,7 +268,7 @@ class CRM_Dedupe_DAO_Rule extends CRM_Core_DAO
           }
         }
       }
-    }
+                                  }
     return self::$_export;
   }
 }

@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-class CRM_Core_DAO_Phone extends CRM_Core_DAO
+        class CRM_Core_DAO_Phone extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -78,7 +78,7 @@ class CRM_Core_DAO_Phone extends CRM_Core_DAO
    * @static
    */
   static $_log = true;
-  /**
+    /**
    * Unique Phone ID
    *
    * @var int unsigned
@@ -126,7 +126,7 @@ class CRM_Core_DAO_Phone extends CRM_Core_DAO
    * @var int unsigned
    */
   public $phone_type_id;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -151,7 +151,7 @@ class CRM_Core_DAO_Phone extends CRM_Core_DAO
     }
     return self::$_links;
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -165,7 +165,7 @@ class CRM_Core_DAO_Phone extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -179,44 +179,44 @@ class CRM_Core_DAO_Phone extends CRM_Core_DAO
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ] ,
+                  ] ,
         'contact_id' => [
           'name' => 'contact_id',
           'type' => CRM_Utils_Type::T_INT,
-          'FKClassName' => 'CRM_Contact_DAO_Contact',
+                    'FKClassName' => 'CRM_Contact_DAO_Contact',
         ] ,
         'location_type_id' => [
           'name' => 'location_type_id',
           'type' => CRM_Utils_Type::T_INT,
-        ] ,
+                  ] ,
         'is_primary' => [
           'name' => 'is_primary',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ] ,
+                  ] ,
         'is_billing' => [
           'name' => 'is_billing',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ] ,
+                  ] ,
         'mobile_provider_id' => [
           'name' => 'mobile_provider_id',
           'type' => CRM_Utils_Type::T_INT,
-        ] ,
+                  ] ,
         'phone' => [
           'name' => 'phone',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Phone') ,
-          'maxlength' => 32,
-          'size' => CRM_Utils_Type::MEDIUM,
-          'import' => true,
+           'maxlength' => 32,
+           'size' => CRM_Utils_Type::MEDIUM,
+             'import' => true,
           'where' => 'civicrm_phone.phone',
           'headerPattern' => '/phone/i',
           'dataPattern' => '/^[\d\(\)\-\.\s]+$/',
-          'export' => true,
-        ] ,
+           'export' => true,
+            ] ,
         'phone_type_id' => [
           'name' => 'phone_type_id',
           'type' => CRM_Utils_Type::T_INT,
-        ] ,
+                  ] ,
       ];
     }
     return self::$_fields;
@@ -229,8 +229,8 @@ class CRM_Core_DAO_Phone extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -261,7 +261,7 @@ class CRM_Core_DAO_Phone extends CRM_Core_DAO
           }
         }
       }
-    }
+                                  }
     return self::$_import;
   }
   /**
@@ -284,7 +284,7 @@ class CRM_Core_DAO_Phone extends CRM_Core_DAO
           }
         }
       }
-    }
+                                  }
     return self::$_export;
   }
 }

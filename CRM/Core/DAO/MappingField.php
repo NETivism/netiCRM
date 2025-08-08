@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-class CRM_Core_DAO_MappingField extends CRM_Core_DAO
+                    class CRM_Core_DAO_MappingField extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -78,7 +78,7 @@ class CRM_Core_DAO_MappingField extends CRM_Core_DAO
    * @static
    */
   static $_log = false;
-  /**
+    /**
    * Mapping Field ID
    *
    * @var int unsigned
@@ -161,7 +161,7 @@ class CRM_Core_DAO_MappingField extends CRM_Core_DAO
    * @var string
    */
   public $value;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -188,7 +188,7 @@ class CRM_Core_DAO_MappingField extends CRM_Core_DAO
     }
     return self::$_links;
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -204,7 +204,7 @@ class CRM_Core_DAO_MappingField extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -218,82 +218,82 @@ class CRM_Core_DAO_MappingField extends CRM_Core_DAO
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ] ,
+                  ] ,
         'mapping_id' => [
           'name' => 'mapping_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-          'FKClassName' => 'CRM_Core_DAO_Mapping',
+                    'FKClassName' => 'CRM_Core_DAO_Mapping',
         ] ,
         'name' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Name') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'contact_type' => [
           'name' => 'contact_type',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Contact Type') ,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ] ,
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
         'column_number' => [
           'name' => 'column_number',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Column Number') ,
           'required' => true,
-        ] ,
+                  ] ,
         'location_type_id' => [
           'name' => 'location_type_id',
           'type' => CRM_Utils_Type::T_INT,
-          'FKClassName' => 'CRM_Core_DAO_LocationType',
+                    'FKClassName' => 'CRM_Core_DAO_LocationType',
         ] ,
         'phone_type_id' => [
           'name' => 'phone_type_id',
           'type' => CRM_Utils_Type::T_INT,
-        ] ,
+                  ] ,
         'im_provider_id' => [
           'name' => 'im_provider_id',
           'type' => CRM_Utils_Type::T_INT,
-        ] ,
+                  ] ,
         'website_type_id' => [
           'name' => 'website_type_id',
           'type' => CRM_Utils_Type::T_INT,
-        ] ,
+                  ] ,
         'relationship_type_id' => [
           'name' => 'relationship_type_id',
           'type' => CRM_Utils_Type::T_INT,
-          'FKClassName' => 'CRM_Contact_DAO_RelationshipType',
+                    'FKClassName' => 'CRM_Contact_DAO_RelationshipType',
         ] ,
         'relationship_direction' => [
           'name' => 'relationship_direction',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Relationship Direction') ,
-          'maxlength' => 6,
-          'size' => CRM_Utils_Type::EIGHT,
-        ] ,
+           'maxlength' => 6,
+           'size' => CRM_Utils_Type::EIGHT,
+                ] ,
         'grouping' => [
           'name' => 'grouping',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Grouping') ,
-          'default' => '',
-        ] ,
+                  'default' => '',
+          ] ,
         'operator' => [
           'name' => 'operator',
           'type' => CRM_Utils_Type::T_ENUM,
           'title' => ts('Operator') ,
-          'enumValues' => '=, !=, >, <, >=, <=,
+                   'enumValues' => '=, !=, >, <, >=, <=,
        IN, NOT IN, LIKE, NOT LIKE, IS NULL, IS NOT NULL',
-        ] ,
+         ] ,
         'value' => [
           'name' => 'value',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Value') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
       ];
     }
     return self::$_fields;
@@ -306,8 +306,8 @@ class CRM_Core_DAO_MappingField extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -338,7 +338,7 @@ class CRM_Core_DAO_MappingField extends CRM_Core_DAO
           }
         }
       }
-    }
+                                                          }
     return self::$_import;
   }
   /**
@@ -361,7 +361,7 @@ class CRM_Core_DAO_MappingField extends CRM_Core_DAO
           }
         }
       }
-    }
+                                                          }
     return self::$_export;
   }
   /**
@@ -372,8 +372,8 @@ class CRM_Core_DAO_MappingField extends CRM_Core_DAO
   static function &getEnums()
   {
     static $enums = [
-      'operator',
-    ];
+                                                                                                                                                                    'operator',
+                            ];
     return $enums;
   }
   /**
@@ -389,21 +389,21 @@ class CRM_Core_DAO_MappingField extends CRM_Core_DAO
     static $translations = null;
     if (!$translations) {
       $translations = [
-        'operator' => [
-          '=' => ts('=') ,
-          '!=' => ts('!=') ,
-          '>' => ts('>') ,
-          '<' => ts('<') ,
-          '>=' => ts('>=') ,
-          '<=' => ts('<=') ,
-          'IN' => ts('IN') ,
-          'NOT IN' => ts('NOT IN') ,
-          'LIKE' => ts('LIKE') ,
-          'NOT LIKE' => ts('NOT LIKE') ,
-          'IS NULL' => ts('IS NULL') ,
-          'IS NOT NULL' => ts('IS NOT NULL') ,
-        ] ,
-      ];
+                                                                                                                                                                    'operator' => [
+                  '=' => ts('='),
+                  '!=' => ts('!='),
+                  '>' => ts('>'),
+                  '<' => ts('<'),
+                  '>=' => ts('>='),
+                  '<=' => ts('<='),
+                  'IN' => ts('IN'),
+                  'NOT IN' => ts('NOT IN'),
+                  'LIKE' => ts('LIKE'),
+                  'NOT LIKE' => ts('NOT LIKE'),
+                  'IS NULL' => ts('IS NULL'),
+                  'IS NOT NULL' => ts('IS NOT NULL'),
+                ],
+                              ];
     }
     return $translations[$field][$value];
   }
@@ -416,7 +416,7 @@ class CRM_Core_DAO_MappingField extends CRM_Core_DAO
   static function addDisplayEnums(&$values)
   {
     $enumFields = &CRM_Core_DAO_MappingField::getEnums();
-    foreach($enumFields as $enum) {
+    foreach ($enumFields as $enum) {
       if (isset($values[$enum])) {
         $values[$enum . '_display'] = CRM_Core_DAO_MappingField::tsEnum($enum, $values[$enum]);
       }

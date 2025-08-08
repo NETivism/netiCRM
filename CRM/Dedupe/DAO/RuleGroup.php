@@ -78,7 +78,7 @@ class CRM_Dedupe_DAO_RuleGroup extends CRM_Core_DAO
    * @static
    */
   static $_log = false;
-  /**
+    /**
    * Unique dedupe rule group id
    *
    * @var int unsigned
@@ -114,7 +114,7 @@ class CRM_Dedupe_DAO_RuleGroup extends CRM_Core_DAO
    * @var string
    */
   public $name;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -124,7 +124,7 @@ class CRM_Dedupe_DAO_RuleGroup extends CRM_Core_DAO
   {
     parent::__construct();
   }
-  /**
+    /**
    * returns all the column names of this table
    *
    * @access public
@@ -138,36 +138,36 @@ class CRM_Dedupe_DAO_RuleGroup extends CRM_Core_DAO
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ] ,
+                  ] ,
         'contact_type' => [
           'name' => 'contact_type',
           'type' => CRM_Utils_Type::T_ENUM,
           'title' => ts('Contact Type') ,
-          'enumValues' => 'Individual, Organization, Household',
-        ] ,
+                   'enumValues' => 'Individual, Organization, Household',
+         ] ,
         'threshold' => [
           'name' => 'threshold',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Threshold') ,
           'required' => true,
-        ] ,
+                  ] ,
         'level' => [
           'name' => 'level',
           'type' => CRM_Utils_Type::T_ENUM,
           'title' => ts('Level') ,
-          'enumValues' => 'Strict, Fuzzy',
-        ] ,
+                   'enumValues' => 'Strict, Fuzzy',
+         ] ,
         'is_default' => [
           'name' => 'is_default',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ] ,
+                  ] ,
         'name' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Name') ,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ] ,
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
       ];
     }
     return self::$_fields;
@@ -180,8 +180,8 @@ class CRM_Dedupe_DAO_RuleGroup extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -212,7 +212,7 @@ class CRM_Dedupe_DAO_RuleGroup extends CRM_Core_DAO
           }
         }
       }
-    }
+          }
     return self::$_import;
   }
   /**
@@ -235,7 +235,7 @@ class CRM_Dedupe_DAO_RuleGroup extends CRM_Core_DAO
           }
         }
       }
-    }
+          }
     return self::$_export;
   }
   /**
@@ -246,9 +246,9 @@ class CRM_Dedupe_DAO_RuleGroup extends CRM_Core_DAO
   static function &getEnums()
   {
     static $enums = [
-      'contact_type',
-      'level',
-    ];
+                                'contact_type',
+                                      'level',
+                                        ];
     return $enums;
   }
   /**
@@ -264,16 +264,16 @@ class CRM_Dedupe_DAO_RuleGroup extends CRM_Core_DAO
     static $translations = null;
     if (!$translations) {
       $translations = [
-        'contact_type' => [
-          'Individual' => ts('Individual') ,
-          'Organization' => ts('Organization') ,
-          'Household' => ts('Household') ,
-        ] ,
-        'level' => [
-          'Strict' => ts('Strict') ,
-          'Fuzzy' => ts('Fuzzy') ,
-        ] ,
-      ];
+                                'contact_type' => [
+                  'Individual' => ts('Individual'),
+                  'Organization' => ts('Organization'),
+                  'Household' => ts('Household'),
+                ],
+                                      'level' => [
+                  'Strict' => ts('Strict'),
+                  'Fuzzy' => ts('Fuzzy'),
+                ],
+                                          ];
     }
     return $translations[$field][$value];
   }
@@ -286,7 +286,7 @@ class CRM_Dedupe_DAO_RuleGroup extends CRM_Core_DAO
   static function addDisplayEnums(&$values)
   {
     $enumFields = &CRM_Dedupe_DAO_RuleGroup::getEnums();
-    foreach($enumFields as $enum) {
+    foreach ($enumFields as $enum) {
       if (isset($values[$enum])) {
         $values[$enum . '_display'] = CRM_Dedupe_DAO_RuleGroup::tsEnum($enum, $values[$enum]);
       }

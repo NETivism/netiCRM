@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-class CRM_Member_DAO_MembershipPayment extends CRM_Core_DAO
+              class CRM_Member_DAO_MembershipPayment extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -78,7 +78,7 @@ class CRM_Member_DAO_MembershipPayment extends CRM_Core_DAO
    * @static
    */
   static $_log = true;
-  /**
+    /**
    *
    * @var int unsigned
    */
@@ -95,7 +95,7 @@ class CRM_Member_DAO_MembershipPayment extends CRM_Core_DAO
    * @var int unsigned
    */
   public $contribution_id;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -121,7 +121,7 @@ class CRM_Member_DAO_MembershipPayment extends CRM_Core_DAO
     }
     return self::$_links;
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -136,7 +136,7 @@ class CRM_Member_DAO_MembershipPayment extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -150,17 +150,17 @@ class CRM_Member_DAO_MembershipPayment extends CRM_Core_DAO
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ] ,
+                  ] ,
         'membership_id' => [
           'name' => 'membership_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-          'FKClassName' => 'CRM_Member_DAO_Membership',
+                    'FKClassName' => 'CRM_Member_DAO_Membership',
         ] ,
         'contribution_id' => [
           'name' => 'contribution_id',
           'type' => CRM_Utils_Type::T_INT,
-          'FKClassName' => 'CRM_Contribute_DAO_Contribution',
+                    'FKClassName' => 'CRM_Contribute_DAO_Contribution',
         ] ,
       ];
     }
@@ -174,8 +174,8 @@ class CRM_Member_DAO_MembershipPayment extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -206,7 +206,7 @@ class CRM_Member_DAO_MembershipPayment extends CRM_Core_DAO
           }
         }
       }
-    }
+                                              }
     return self::$_import;
   }
   /**
@@ -229,7 +229,7 @@ class CRM_Member_DAO_MembershipPayment extends CRM_Core_DAO
           }
         }
       }
-    }
+                                              }
     return self::$_export;
   }
 }

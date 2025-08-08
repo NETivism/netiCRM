@@ -299,9 +299,6 @@ Alternatively you can get a version of CiviCRM that matches your PHP version
 
       $this->smarty->assign_by_ref('table', $tables[$name]);
       $php = $this->smarty->fetch('dao.tpl');
-
-      $this->beautifier->setInputString($php);
-
       if (empty($tables[$name]['base'])) {
         echo "No base defined for $name, skipping output generation\n";
         continue;
@@ -309,11 +306,7 @@ Alternatively you can get a version of CiviCRM that matches your PHP version
 
       $directory = $this->phpCodePath . $tables[$name]['base'];
       CRM_GenCode_Util_File::createDir($directory);
-      $this->beautifier->setOutputFile($directory . $tables[$name]['fileName']);
-      // required
-      $this->beautifier->process();
-
-      $this->beautifier->save();
+      file_put_contents($directory . $tables[$name]['fileName'], $php);
     }
   }
 

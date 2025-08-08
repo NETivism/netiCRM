@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-class CRM_Contribute_DAO_MyPayLog extends CRM_Core_DAO
+        class CRM_Contribute_DAO_MyPayLog extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -78,7 +78,7 @@ class CRM_Contribute_DAO_MyPayLog extends CRM_Core_DAO
    * @static
    */
   static $_log = false;
-  /**
+    /**
    * MyPay Log ID
    *
    * @var int unsigned
@@ -126,7 +126,7 @@ class CRM_Contribute_DAO_MyPayLog extends CRM_Core_DAO
    * @var text
    */
   public $return_data;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -151,7 +151,7 @@ class CRM_Contribute_DAO_MyPayLog extends CRM_Core_DAO
     }
     return self::$_links;
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -165,7 +165,7 @@ class CRM_Contribute_DAO_MyPayLog extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -180,51 +180,51 @@ class CRM_Contribute_DAO_MyPayLog extends CRM_Core_DAO
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('MyPay Log ID') ,
           'required' => true,
-        ] ,
+                  ] ,
         'contribution_id' => [
           'name' => 'contribution_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Contribuution ID') ,
-          'default' => 'UL',
-          'FKClassName' => 'CRM_Contribute_DAO_Contribution',
+                  'default' => 'UL',
+            'FKClassName' => 'CRM_Contribute_DAO_Contribution',
         ] ,
         'uid' => [
           'name' => 'uid',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('MyPay uid') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-          'default' => 'UL',
-        ] ,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                'default' => 'UL',
+          ] ,
         'url' => [
           'name' => 'url',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Request URL') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'cmd' => [
           'name' => 'cmd',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('service API CMD Name') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'date' => [
           'name' => 'date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Date') ,
-        ] ,
+                  ] ,
         'post_data' => [
           'name' => 'post_data',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Request Post Data') ,
-        ] ,
+                  ] ,
         'return_data' => [
           'name' => 'return_data',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Request Return Data') ,
-        ] ,
+                  ] ,
       ];
     }
     return self::$_fields;
@@ -237,8 +237,8 @@ class CRM_Contribute_DAO_MyPayLog extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -269,7 +269,7 @@ class CRM_Contribute_DAO_MyPayLog extends CRM_Core_DAO
           }
         }
       }
-    }
+                                  }
     return self::$_import;
   }
   /**
@@ -292,7 +292,7 @@ class CRM_Contribute_DAO_MyPayLog extends CRM_Core_DAO
           }
         }
       }
-    }
+                                  }
     return self::$_export;
   }
 }

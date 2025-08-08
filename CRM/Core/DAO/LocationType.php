@@ -78,7 +78,7 @@ class CRM_Core_DAO_LocationType extends CRM_Core_DAO
    * @static
    */
   static $_log = true;
-  /**
+    /**
    * Location Type ID
    *
    * @var int unsigned
@@ -126,7 +126,7 @@ class CRM_Core_DAO_LocationType extends CRM_Core_DAO
    * @var boolean
    */
   public $is_default;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -136,7 +136,7 @@ class CRM_Core_DAO_LocationType extends CRM_Core_DAO
   {
     parent::__construct();
   }
-  /**
+    /**
    * returns all the column names of this table
    *
    * @access public
@@ -150,47 +150,47 @@ class CRM_Core_DAO_LocationType extends CRM_Core_DAO
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ] ,
+                  ] ,
         'label' => [
           'name' => 'label',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Location Type Label') ,
-          'maxlength' => 128,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 128,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'name' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Location Type') ,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ] ,
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
         'vcard_name' => [
           'name' => 'vcard_name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('vCard Location Type') ,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ] ,
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
         'description' => [
           'name' => 'description',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Description') ,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
         'is_reserved' => [
           'name' => 'is_reserved',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ] ,
+                  ] ,
         'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ] ,
+                  ] ,
         'is_default' => [
           'name' => 'is_default',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ] ,
+                  ] ,
       ];
     }
     return self::$_fields;
@@ -203,8 +203,8 @@ class CRM_Core_DAO_LocationType extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -235,7 +235,7 @@ class CRM_Core_DAO_LocationType extends CRM_Core_DAO
           }
         }
       }
-    }
+          }
     return self::$_import;
   }
   /**
@@ -258,7 +258,7 @@ class CRM_Core_DAO_LocationType extends CRM_Core_DAO
           }
         }
       }
-    }
+          }
     return self::$_export;
   }
 }

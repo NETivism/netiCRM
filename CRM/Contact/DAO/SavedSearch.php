@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-class CRM_Contact_DAO_SavedSearch extends CRM_Core_DAO
+        class CRM_Contact_DAO_SavedSearch extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -78,7 +78,7 @@ class CRM_Contact_DAO_SavedSearch extends CRM_Core_DAO
    * @static
    */
   static $_log = false;
-  /**
+    /**
    * Saved search ID
    *
    * @var int unsigned
@@ -120,7 +120,7 @@ class CRM_Contact_DAO_SavedSearch extends CRM_Core_DAO
    * @var text
    */
   public $where_tables;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -145,7 +145,7 @@ class CRM_Contact_DAO_SavedSearch extends CRM_Core_DAO
     }
     return self::$_links;
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -159,7 +159,7 @@ class CRM_Contact_DAO_SavedSearch extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -173,41 +173,41 @@ class CRM_Contact_DAO_SavedSearch extends CRM_Core_DAO
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ] ,
+                  ] ,
         'form_values' => [
           'name' => 'form_values',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Submitted Form Values') ,
-          'import' => true,
+               'import' => true,
           'where' => 'civicrm_saved_search.form_values',
           'headerPattern' => '',
           'dataPattern' => '',
-          'export' => true,
-        ] ,
+           'export' => true,
+            ] ,
         'mapping_id' => [
           'name' => 'mapping_id',
           'type' => CRM_Utils_Type::T_INT,
-          'FKClassName' => 'CRM_Core_DAO_Mapping',
+                    'FKClassName' => 'CRM_Core_DAO_Mapping',
         ] ,
         'search_custom_id' => [
           'name' => 'search_custom_id',
           'type' => CRM_Utils_Type::T_INT,
-        ] ,
+                  ] ,
         'where_clause' => [
           'name' => 'where_clause',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Where Clause') ,
-        ] ,
+                  ] ,
         'select_tables' => [
           'name' => 'select_tables',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Select Tables') ,
-        ] ,
+                  ] ,
         'where_tables' => [
           'name' => 'where_tables',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Where Tables') ,
-        ] ,
+                  ] ,
       ];
     }
     return self::$_fields;
@@ -220,8 +220,8 @@ class CRM_Contact_DAO_SavedSearch extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -252,7 +252,7 @@ class CRM_Contact_DAO_SavedSearch extends CRM_Core_DAO
           }
         }
       }
-    }
+                                  }
     return self::$_import;
   }
   /**
@@ -275,7 +275,7 @@ class CRM_Contact_DAO_SavedSearch extends CRM_Core_DAO
           }
         }
       }
-    }
+                                  }
     return self::$_export;
   }
 }

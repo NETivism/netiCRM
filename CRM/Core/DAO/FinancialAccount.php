@@ -78,7 +78,7 @@ class CRM_Core_DAO_FinancialAccount extends CRM_Core_DAO
    * @static
    */
   static $_log = false;
-  /**
+    /**
    * ID
    *
    * @var int unsigned
@@ -94,7 +94,7 @@ class CRM_Core_DAO_FinancialAccount extends CRM_Core_DAO
    * @var int unsigned
    */
   public $account_type_id;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -104,7 +104,7 @@ class CRM_Core_DAO_FinancialAccount extends CRM_Core_DAO
   {
     parent::__construct();
   }
-  /**
+    /**
    * returns all the column names of this table
    *
    * @access public
@@ -118,25 +118,25 @@ class CRM_Core_DAO_FinancialAccount extends CRM_Core_DAO
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ] ,
+                  ] ,
         'name' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Name') ,
           'required' => true,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-          'import' => true,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+             'import' => true,
           'where' => 'civicrm_financial_account.name',
           'headerPattern' => '',
           'dataPattern' => '',
-          'export' => true,
-        ] ,
+           'export' => true,
+            ] ,
         'account_type_id' => [
           'name' => 'account_type_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ] ,
+                  ] ,
       ];
     }
     return self::$_fields;
@@ -149,8 +149,8 @@ class CRM_Core_DAO_FinancialAccount extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -181,7 +181,7 @@ class CRM_Core_DAO_FinancialAccount extends CRM_Core_DAO
           }
         }
       }
-    }
+          }
     return self::$_import;
   }
   /**
@@ -204,7 +204,7 @@ class CRM_Core_DAO_FinancialAccount extends CRM_Core_DAO
           }
         }
       }
-    }
+          }
     return self::$_export;
   }
 }

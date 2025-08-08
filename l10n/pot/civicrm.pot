@@ -49821,7 +49821,7 @@ msgid "The most valuable supporters with high recency, frequency, and donation a
 msgstr ""
 
 #: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
-msgid "The RFM model helps organizations categorize donors based on their giving behavior, enabling more refined and personalized communication strategies that convert more supporters into loyal ones (<a href=\"%1\" target=\"_blank\">how to use</a>)."
+msgid "The RFM model helps organizations categorize donors based on their giving behavior, enabling more refined and personalized communication strategies that convert more supporters into loyal ones"
 msgstr ""
 
 #: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
@@ -49954,4 +49954,8 @@ msgstr ""
 
 #: CRM/Contact/Form/Search/Custom/RFM.php
 msgid "RFM Donor Segments"
+msgstr ""
+
+#: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
+msgid "how to use"
 msgstr ""

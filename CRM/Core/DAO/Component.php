@@ -78,7 +78,7 @@ class CRM_Core_DAO_Component extends CRM_Core_DAO
    * @static
    */
   static $_log = false;
-  /**
+    /**
    * Component ID
    *
    * @var int unsigned
@@ -92,12 +92,12 @@ class CRM_Core_DAO_Component extends CRM_Core_DAO
   public $name;
   /**
    * Path to components main directory in a form of a class
-   namespace.
+namespace.
    *
    * @var string
    */
   public $namespace;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -107,7 +107,7 @@ class CRM_Core_DAO_Component extends CRM_Core_DAO
   {
     parent::__construct();
   }
-  /**
+    /**
    * returns all the column names of this table
    *
    * @access public
@@ -121,22 +121,22 @@ class CRM_Core_DAO_Component extends CRM_Core_DAO
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ] ,
+                  ] ,
         'name' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Component name') ,
           'required' => true,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ] ,
+           'maxlength' => 64,
+           'size' => CRM_Utils_Type::BIG,
+                ] ,
         'namespace' => [
           'name' => 'namespace',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Namespace reserved for component.') ,
-          'maxlength' => 128,
-          'size' => CRM_Utils_Type::HUGE,
-        ] ,
+           'maxlength' => 128,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
       ];
     }
     return self::$_fields;
@@ -149,8 +149,8 @@ class CRM_Core_DAO_Component extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -181,7 +181,7 @@ class CRM_Core_DAO_Component extends CRM_Core_DAO
           }
         }
       }
-    }
+          }
     return self::$_import;
   }
   /**
@@ -204,7 +204,7 @@ class CRM_Core_DAO_Component extends CRM_Core_DAO
           }
         }
       }
-    }
+          }
     return self::$_export;
   }
 }

@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-class CRM_Coupon_DAO_CouponTrack extends CRM_Core_DAO
+                    class CRM_Coupon_DAO_CouponTrack extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -78,7 +78,7 @@ class CRM_Coupon_DAO_CouponTrack extends CRM_Core_DAO
    * @static
    */
   static $_log = false;
-  /**
+    /**
    * ID for internal usage
    *
    * @var int unsigned
@@ -114,7 +114,7 @@ class CRM_Coupon_DAO_CouponTrack extends CRM_Core_DAO
    * @var int unsigned
    */
   public $discount_amount;
-  /**
+   /**
    * class constructor
    *
    * @access public
@@ -141,7 +141,7 @@ class CRM_Coupon_DAO_CouponTrack extends CRM_Core_DAO
     }
     return self::$_links;
   }
-  /**
+   /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -157,7 +157,7 @@ class CRM_Coupon_DAO_CouponTrack extends CRM_Core_DAO
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-  /**
+   /**
    * returns all the column names of this table
    *
    * @access public
@@ -171,34 +171,34 @@ class CRM_Coupon_DAO_CouponTrack extends CRM_Core_DAO
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-        ] ,
+                  ] ,
         'coupon_id' => [
           'name' => 'coupon_id',
           'type' => CRM_Utils_Type::T_INT,
-          'FKClassName' => 'CRM_Coupon_DAO_Coupon',
+                    'FKClassName' => 'CRM_Coupon_DAO_Coupon',
         ] ,
         'contact_id' => [
           'name' => 'contact_id',
           'type' => CRM_Utils_Type::T_INT,
-          'default' => 'UL',
-          'FKClassName' => 'CRM_Contact_DAO_Contact',
+                  'default' => 'UL',
+            'FKClassName' => 'CRM_Contact_DAO_Contact',
         ] ,
         'contribution_id' => [
           'name' => 'contribution_id',
           'type' => CRM_Utils_Type::T_INT,
-          'default' => 'UL',
-          'FKClassName' => 'CRM_Contribute_DAO_Contribution',
+                  'default' => 'UL',
+            'FKClassName' => 'CRM_Contribute_DAO_Contribution',
         ] ,
         'used_date' => [
           'name' => 'used_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Used Date') ,
-        ] ,
+                  ] ,
         'discount_amount' => [
           'name' => 'discount_amount',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Discount Amount') ,
-        ] ,
+                  ] ,
       ];
     }
     return self::$_fields;
@@ -211,8 +211,8 @@ class CRM_Coupon_DAO_CouponTrack extends CRM_Core_DAO
    */
   static function getTableName()
   {
-    return self::$_tableName;
-  }
+        return self::$_tableName;
+      }
   /**
    * returns if this table needs to be logged
    *
@@ -243,7 +243,7 @@ class CRM_Coupon_DAO_CouponTrack extends CRM_Core_DAO
           }
         }
       }
-    }
+                                                          }
     return self::$_import;
   }
   /**
@@ -266,7 +266,7 @@ class CRM_Coupon_DAO_CouponTrack extends CRM_Core_DAO
           }
         }
       }
-    }
+                                                          }
     return self::$_export;
   }
 }
