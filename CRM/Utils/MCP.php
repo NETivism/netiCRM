@@ -89,9 +89,10 @@ class CRM_Utils_MCP {
     // require authentication prior to being called. Therefore, at this point we need
     // to make sure we're working with a trusted user.
 
-    // There are two ways to check for a trusted user:
+    // There are three ways to check for a trusted user:
     // First: they can be someone that has a valid session currently
     // Second: they can be someone that has provided an API_Key
+    // Third: they can be someone that has provided a valid OAuth Bearer token
     $validUser = FALSE;
 
     // Check for valid session. Session ID's only appear here if you have
@@ -99,7 +100,16 @@ class CRM_Utils_MCP {
     // AJAX methods.
     $session = CRM_Core_Session::singleton();
 
-    // If the user does not have a valid session (most likely to be used by people using
+    // Check for OAuth Bearer token first
+    $bearerToken = $this->getBearerToken();
+    if ($bearerToken) {
+      $validUser = $this->validateBearerToken($bearerToken);
+      if (!$validUser) {
+        return $this->sendOAuthChallenge($id);
+      }
+    }
+
+    // If the user does not have a valid session or bearer token (most likely to be used by people using
     // an ajax interface), we need to check to see if they are carrying a valid user's
     // secret key.
     if (!$validUser) {
@@ -110,7 +120,8 @@ class CRM_Utils_MCP {
         $api_key = trim(CRM_Utils_Request::retrieve('api_key', 'String', CRM_Core_DAO::$_nullObject, FALSE, NULL, 'REQUEST'));
       }
       if (!$api_key || strtolower($api_key) == 'null') {
-        return $this->error(-32000, 'FATAL: site key or api key is incorrect.', $id);
+        // If no API key and no bearer token, send OAuth challenge
+        return $this->sendOAuthChallenge($id);
       }
       $api_key = CRM_Utils_Type::escape($api_key, 'String');
       $contactId = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $api_key, 'id', 'api_key');
@@ -126,14 +137,14 @@ class CRM_Utils_MCP {
           }
         }
         if (!$validUser) {
-          return $this->error(-32000, 'FATAL: site key or api key is incorrect.', $id);
+          return $this->sendOAuthChallenge($id);
         }
       }
     }
 
-    // If we didn't find a valid user either way, then die.
+    // If we didn't find a valid user either way, then send OAuth challenge.
     if (empty($validUser)) {
-      return $this->error(-32000, 'FATAL: site key or api key is incorrect.', $id);
+      return $this->sendOAuthChallenge($id);
     }
 
     // Check request rate limit
@@ -917,6 +928,121 @@ class CRM_Utils_MCP {
       'error' => [
         'code' => $code,
         'message' => $message
+      ],
+      'id' => $id
+    ];
+  }
+
+  /**
+   * Extract Bearer token from HTTP Authorization header
+   * @return string|null Bearer token or null if not found
+   */
+  private function getBearerToken() {
+    $authHeader = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
+    if (empty($authHeader)) {
+      return null;
+    }
+    
+    if (preg_match('/Bearer\s+(.*)$/i', $authHeader, $matches)) {
+      return trim($matches[1]);
+    }
+    
+    return null;
+  }
+
+  /**
+   * Validate OAuth Bearer token using Drupal OAuth2 Server module
+   * @param string $token Bearer token
+   * @return int|false Contact ID if valid, false otherwise
+   */
+  private function validateBearerToken($token) {
+    if (empty($token)) {
+      return false;
+    }
+    
+    // Check if we're in a Drupal environment and OAuth2 server module is available
+    if (!function_exists('oauth2_server_check_access')) {
+      return false;
+    }
+    
+    try {
+      // Use Drupal's OAuth2 server to validate the token
+      // We need to temporarily set the Authorization header for the OAuth2 library
+      $originalAuthHeader = $_SERVER['HTTP_AUTHORIZATION'] ?? null;
+      $_SERVER['HTTP_AUTHORIZATION'] = 'Bearer ' . $token;
+      
+      // Try to validate using the default MCP server name
+      // This should be configured in your Drupal OAuth2 server settings
+      $serverName = 'mcp_server'; // Default server name for MCP
+      $result = oauth2_server_check_access($serverName);
+      
+      // Restore original auth header
+      if ($originalAuthHeader !== null) {
+        $_SERVER['HTTP_AUTHORIZATION'] = $originalAuthHeader;
+      } else {
+        unset($_SERVER['HTTP_AUTHORIZATION']);
+      }
+      
+      // If result is an array, it's a valid token
+      if (is_array($result) && isset($result['user_id'])) {
+        $uid = $result['user_id'];
+        
+        // Convert Drupal user ID to CiviCRM contact ID
+        if ($uid) {
+          $contactId = CRM_Core_BAO_UFMatch::getContactId($uid);
+          if ($contactId) {
+            // Set up session for the validated user
+            $session = CRM_Core_Session::singleton();
+            $session->set('ufID', $uid);
+            $session->set('userID', $contactId);
+            return $contactId;
+          }
+        }
+      }
+      
+    } catch (Exception $e) {
+      // Token validation failed
+      error_log('OAuth token validation failed: ' . $e->getMessage());
+    }
+    
+    return false;
+  }
+
+  /**
+   * Send OAuth challenge response with 401 status and WWW-Authenticate header
+   * @param mixed $id Request ID
+   * @return array OAuth challenge response
+   */
+  private function sendOAuthChallenge($id) {
+    // Set HTTP 401 Unauthorized status
+    http_response_code(401);
+    
+    // Get base URL for OAuth authorization server
+    $config = CRM_Core_Config::singleton();
+    $baseUrl = $config->userFrameworkBaseURL;
+    
+    // Set WWW-Authenticate header with OAuth authorization server information
+    $authServer = rtrim($baseUrl, '/') . '/oauth2';
+    $wwwAuthenticate = sprintf(
+      'Bearer realm="%s", authorization_uri="%s/authorize", token_uri="%s/token"',
+      'netiCRM MCP API',
+      $authServer,
+      $authServer
+    );
+    
+    header('WWW-Authenticate: ' . $wwwAuthenticate);
+    
+    // Return JSON-RPC error response
+    return [
+      'jsonrpc' => '2.0',
+      'error' => [
+        'code' => -32001,
+        'message' => 'Unauthorized: Valid OAuth Bearer token required',
+        'data' => [
+          'authorization_uri' => $authServer . '/authorize',
+          'token_uri' => $authServer . '/token',
+          'realm' => 'netiCRM MCP API'
+        ]
       ],
       'id' => $id
     ];
