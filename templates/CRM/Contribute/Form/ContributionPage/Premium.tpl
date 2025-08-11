@@ -44,6 +44,14 @@
         <span class="description">{ts}Title to appear at the top of the Premiums section.{/ts}</span>
       </td>
   </tr>
+  <!-- // todo : When the database has a value, change the element name -->
+  <tr class="crm-contribution-contributionpage-premium-form-block-premiums_is_combine">
+      <td class="label">{$form.premiums_is_combine.label}
+      </td>
+      <td class="html-adjust">{$form.premiums_is_combine.html}<br />
+        <span class="description">{ts}Once enabled, the Contribution Page will display gift combinations instead of individual premiums.{/ts}</span>
+      </td>
+  </tr>
 </table>
 <div class="crm-accordion-wrapper crm-accordion-closed" id="premiums-settings">
   <div class="crm-accordion-header">
@@ -102,10 +110,12 @@
     var showHidePremium = function(obj) {
       if($(obj).is(":checked")) {
         $("tr.crm-contribution-contributionpage-premium-form-block-premiums_intro_title").show();
+        $("tr.crm-contribution-contributionpage-premium-form-block-premiums_is_combine").show();
         $("#premiums-settings").show();
       }
       else {
         $("tr.crm-contribution-contributionpage-premium-form-block-premiums_intro_title").hide();
+        $("tr.crm-contribution-contributionpage-premium-form-block-premiums_is_combine").hide();
         $("#premiums-settings").hide();
       }
     }

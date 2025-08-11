@@ -71,6 +71,8 @@ class CRM_Contribute_Form_ContributionPage_Premium extends CRM_Contribute_Form_C
    */
   public function buildQuickForm() {
     $this->addElement('checkbox', 'premiums_active', ts('Premiums Section Enabled?'));
+    // todo : When the database has a value, change the element name
+    $this->addElement('checkbox', 'premiums_is_combine', ts('Enable Gift Combination Feature?'));
 
     $this->addElement('text', 'premiums_intro_title', ts('Title'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_Premium', 'premiums_intro_title'));
 
@@ -125,6 +127,8 @@ class CRM_Contribute_Form_ContributionPage_Premium extends CRM_Contribute_Form_C
     }
 
     $params['premiums_active'] = CRM_Utils_Array::value('premiums_active', $params, FALSE);
+    // todo : When the database has a value, continue executing this function
+    // $params['premiums_is_combine'] = CRM_Utils_Array::value('premiums_is_combine', $params, FALSE);
     $params['premiums_display_min_contribution'] = CRM_Utils_Array::value('premiums_display_min_contribution', $params, FALSE);
     $params['entity_table'] = 'civicrm_contribution_page';
     $params['entity_id'] = $this->_id;
