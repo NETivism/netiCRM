@@ -5769,6 +5769,20 @@ tbody.scrollContent tr.alternateRow {
   white-space   : normal;
 }
 
+.crm-container .fee_block-table td.fee_amount-value {
+  white-space: nowrap;
+  width: 80px;
+  min-width: 80px;
+  text-align: right;
+  vertical-align: top;
+}
+
+.crm-container .fee_block-table td.crm-event-label {
+  word-wrap: break-word;
+  word-break: break-word;
+  max-width: calc(100% - 90px);
+}
+
 .crm-container .form-layout-compressed td,
 .crm-container .form-layout-compressed th {
   vertical-align: top;
