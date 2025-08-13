@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-class CRM_Contribute_DAO_Premium extends CRM_Core_DAO
+        class CRM_Contribute_DAO_PremiumsCombination extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -39,7 +39,7 @@ class CRM_Contribute_DAO_Premium extends CRM_Core_DAO
    * @var string
    * @static
    */
-  static $_tableName = 'civicrm_premiums';
+  static $_tableName = 'civicrm_premiums_combination';
   /**
    * static instance to hold the field values
    *
@@ -84,73 +84,119 @@ class CRM_Contribute_DAO_Premium extends CRM_Core_DAO
    */
   public $id;
   /**
-   * Joins these premium settings to another object. Always civicrm_contribution_page for now.
-   *
-   * @var string
-   */
-  public $entity_table;
-  /**
+   * Foreign key to civicrm_premiums table
    *
    * @var int unsigned
    */
-  public $entity_id;
+  public $premiums_id;
   /**
-   * Is the Premiums feature enabled for this page?
-   *
-   * @var boolean
-   */
-  public $premiums_active;
-  /**
-   * Title for Premiums section.
+   * Name of the premium combination
    *
    * @var string
    */
-  public $premiums_intro_title;
+  public $combination_name;
   /**
-   * Displayed in <div> at top of Premiums section of page. Text and HTML allowed.
+   * Optional description of the product/premium.
    *
    * @var text
    */
-  public $premiums_intro_text;
+  public $description;
   /**
-   * This email address is included in receipts if it is populated and a premium has been selected.
+   * Optional product sku or code.
    *
    * @var string
    */
-  public $premiums_contact_email;
+  public $sku;
   /**
-   * This phone number is included in receipts if it is populated and a premium has been selected.
+   * Minimum non-recurring contribution amount required for this combination
+   *
+   * @var float
+   */
+  public $min_contribution;
+  /**
+   * Minimum recurring contribution amount threshold for this combination
+   *
+   * @var float
+   */
+  public $min_contribution_recur;
+  /**
+   * 3 character string, value from config setting or input via user.
    *
    * @var string
    */
-  public $premiums_contact_phone;
+  public $currency;
   /**
-   * Boolean. Should we automatically display minimum contribution amount text after the premium descriptions.
+   * Whether this combination is active
    *
    * @var boolean
    */
-  public $premiums_display_min_contribution;
+  public $is_active;
   /**
-   * No thank you text for premium page display.
+   * Order for displaying combinations
+   *
+   * @var int unsigned
+   */
+  public $weight;
+  /**
+   * Calculate by accumulate or by min-amount of contribution
    *
    * @var string
    */
-  public $premiums_nothanks_text;
+  public $calculate_mode;
   /**
-   * Enable premiums combination feature for this page.
+   * Num of installments when calculate mode is accumulate.
    *
-   * @var boolean
+   * @var int
    */
-  public $premiums_combination;
+  public $installments;
+  /**
+   * Full or relative URL to uploaded image - fullsize.
+   *
+   * @var string
+   */
+  public $image;
+  /**
+   * Full or relative URL to image thumbnail.
+   *
+   * @var string
+   */
+  public $thumbnail;
+  /**
+   * When was this combination created
+   *
+   * @var timestamp
+   */
+  public $created_date;
+  /**
+   * When was this combination last modified
+   *
+   * @var timestamp
+   */
+  public $modified_date;
    /**
    * class constructor
    *
    * @access public
-   * @return civicrm_premiums
+   * @return civicrm_premiums_combination
    */
   function __construct()
   {
     parent::__construct();
+  }
+  /**
+   * return foreign links
+   *
+   * @access public
+   * @return array
+   */
+  function &links()
+  {
+    if (!(self::$_links)) {
+      self::$_links = [
+        'premiums_id' => 'civicrm_premiums:id',
+      ];
+    }
+    return self::$_links;
   }
    /**
    * Returns foreign keys and entity references.
@@ -162,7 +208,7 @@ class CRM_Contribute_DAO_Premium extends CRM_Core_DAO
   {
     if (!isset(Civi::$statics[__CLASS__]['links'])) {
       Civi::$statics[__CLASS__]['links'] = static ::createReferenceColumns(__CLASS__);
-      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Dynamic(self::getTableName() , 'entity_id', NULL, 'id', 'entity_table');
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'premiums_id', 'civicrm_premiums', 'id');
     }
     return Civi::$statics[__CLASS__]['links'];
   }
@@ -181,69 +227,106 @@ class CRM_Contribute_DAO_Premium extends CRM_Core_DAO
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
                   ] ,
-        'entity_table' => [
-          'name' => 'entity_table',
-          'type' => CRM_Utils_Type::T_STRING,
-          'title' => ts('Entity Table') ,
-          'required' => true,
-           'maxlength' => 64,
-           'size' => CRM_Utils_Type::BIG,
-                ] ,
-        'entity_id' => [
-          'name' => 'entity_id',
+        'premiums_id' => [
+          'name' => 'premiums_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-                  ] ,
-        'premiums_active' => [
-          'name' => 'premiums_active',
-          'type' => CRM_Utils_Type::T_BOOLEAN,
-          'title' => ts('Premiums Active') ,
-          'required' => true,
-                  ] ,
-        'premiums_intro_title' => [
-          'name' => 'premiums_intro_title',
+                    'FKClassName' => 'CRM_Contribute_DAO_Premium',
+        ] ,
+        'combination_name' => [
+          'name' => 'combination_name',
           'type' => CRM_Utils_Type::T_STRING,
-          'title' => ts('Title for Premiums section') ,
+          'title' => ts('Combination Name') ,
+          'required' => true,
            'maxlength' => 255,
            'size' => CRM_Utils_Type::HUGE,
                 ] ,
-        'premiums_intro_text' => [
-          'name' => 'premiums_intro_text',
+        'description' => [
+          'name' => 'description',
           'type' => CRM_Utils_Type::T_TEXT,
-          'title' => ts('Premiums Intro Text') ,
+          'title' => ts('Description') ,
                   ] ,
-        'premiums_contact_email' => [
-          'name' => 'premiums_contact_email',
+        'sku' => [
+          'name' => 'sku',
           'type' => CRM_Utils_Type::T_STRING,
-          'title' => ts('Premiums Contact Email') ,
-           'maxlength' => 100,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
-        'premiums_contact_phone' => [
-          'name' => 'premiums_contact_phone',
-          'type' => CRM_Utils_Type::T_STRING,
-          'title' => ts('Premiums Contact Phone') ,
+          'title' => ts('SKU') ,
            'maxlength' => 50,
            'size' => CRM_Utils_Type::BIG,
-                ] ,
-        'premiums_display_min_contribution' => [
-          'name' => 'premiums_display_min_contribution',
-          'type' => CRM_Utils_Type::T_BOOLEAN,
-          'title' => ts('Premiums Display Min Contribution') ,
+              'export' => true,
+          'where' => 'civicrm_premiums_combination.sku',
+          'headerPattern' => '',
+          'dataPattern' => '',
+            ] ,
+        'min_contribution' => [
+          'name' => 'min_contribution',
+          'type' => CRM_Utils_Type::T_MONEY,
+          'title' => ts('Min Contribution') ,
           'required' => true,
                   ] ,
-        'premiums_nothanks_text' => [
-          'name' => 'premiums_nothanks_text',
+        'min_contribution_recur' => [
+          'name' => 'min_contribution_recur',
+          'type' => CRM_Utils_Type::T_MONEY,
+          'title' => ts('Min Contribution Recur') ,
+                  ] ,
+        'currency' => [
+          'name' => 'currency',
           'type' => CRM_Utils_Type::T_STRING,
-          'title' => ts('Premiums Nothanks Text') ,
-           'maxlength' => 128,
+          'title' => ts('Currency') ,
+           'maxlength' => 3,
+           'size' => CRM_Utils_Type::FOUR,
+                'default' => 'UL',
+          ] ,
+        'is_active' => [
+          'name' => 'is_active',
+          'type' => CRM_Utils_Type::T_BOOLEAN,
+                  'default' => '',
+          ] ,
+        'weight' => [
+          'name' => 'weight',
+          'type' => CRM_Utils_Type::T_INT,
+          'title' => ts('Weight') ,
+                  ] ,
+        'calculate_mode' => [
+          'name' => 'calculate_mode',
+          'type' => CRM_Utils_Type::T_STRING,
+          'title' => ts('Calculate Mode') ,
+           'maxlength' => 32,
+           'size' => CRM_Utils_Type::MEDIUM,
+                'default' => 'UL',
+          ] ,
+        'installments' => [
+          'name' => 'installments',
+          'type' => CRM_Utils_Type::T_INT,
+          'title' => ts('Installments') ,
+                  ] ,
+        'image' => [
+          'name' => 'image',
+          'type' => CRM_Utils_Type::T_STRING,
+          'title' => ts('Image') ,
+           'maxlength' => 255,
            'size' => CRM_Utils_Type::HUGE,
                 ] ,
-        'premiums_combination' => [
-          'name' => 'premiums_combination',
-          'type' => CRM_Utils_Type::T_BOOLEAN,
-          'title' => ts('Premiums Combination') ,
-                  ] ,
+        'thumbnail' => [
+          'name' => 'thumbnail',
+          'type' => CRM_Utils_Type::T_STRING,
+          'title' => ts('Thumbnail') ,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
+        'created_date' => [
+          'name' => 'created_date',
+          'type' => CRM_Utils_Type::T_TIMESTAMP,
+          'title' => ts('Created Date') ,
+          'required' => true,
+                  'default' => 'URRENT_TIMESTAM',
+          ] ,
+        'modified_date' => [
+          'name' => 'modified_date',
+          'type' => CRM_Utils_Type::T_TIMESTAMP,
+          'title' => ts('Modified Date') ,
+          'required' => true,
+                  'default' => 'URRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAM',
+          ] ,
       ];
     }
     return self::$_fields;
@@ -283,13 +366,13 @@ class CRM_Contribute_DAO_Premium extends CRM_Core_DAO
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
-            self::$_import['premiums'] = &$fields[$name];
+            self::$_import['premiums_combination'] = &$fields[$name];
           } else {
             self::$_import[$name] = &$fields[$name];
           }
         }
       }
-          }
+                                  }
     return self::$_import;
   }
   /**
@@ -306,13 +389,13 @@ class CRM_Contribute_DAO_Premium extends CRM_Core_DAO
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
-            self::$_export['premiums'] = &$fields[$name];
+            self::$_export['premiums_combination'] = &$fields[$name];
           } else {
             self::$_export[$name] = &$fields[$name];
           }
         }
       }
-          }
+                                  }
     return self::$_export;
   }
 }

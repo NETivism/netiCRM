@@ -221,6 +221,16 @@ return array(
     'class' => 'CRM_Contribute_DAO_PremiumsProduct',
     'table' => 'civicrm_premiums_product',
   ) ,
+  'CRM_Contribute_DAO_PremiumsCombination' => array(
+    'name' => 'PremiumsCombination',
+    'class' => 'CRM_Contribute_DAO_PremiumsCombination',
+    'table' => 'civicrm_premiums_combination',
+  ) ,
+  'CRM_Contribute_DAO_PremiumsCombinationProducts' => array(
+    'name' => 'PremiumsCombinationProducts',
+    'class' => 'CRM_Contribute_DAO_PremiumsCombinationProducts',
+    'table' => 'civicrm_premiums_combination_products',
+  ) ,
   'CRM_Coupon_DAO_Coupon' => array(
     'name' => 'Coupon',
     'class' => 'CRM_Coupon_DAO_Coupon',

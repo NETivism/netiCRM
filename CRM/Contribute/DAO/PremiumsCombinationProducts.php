@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-class CRM_Contribute_DAO_Premium extends CRM_Core_DAO
+              class CRM_Contribute_DAO_PremiumsCombinationProducts extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -39,7 +39,7 @@ class CRM_Contribute_DAO_Premium extends CRM_Core_DAO
    * @var string
    * @static
    */
-  static $_tableName = 'civicrm_premiums';
+  static $_tableName = 'civicrm_premiums_combination_products';
   /**
    * static instance to hold the field values
    *
@@ -84,73 +84,48 @@ class CRM_Contribute_DAO_Premium extends CRM_Core_DAO
    */
   public $id;
   /**
-   * Joins these premium settings to another object. Always civicrm_contribution_page for now.
-   *
-   * @var string
-   */
-  public $entity_table;
-  /**
+   * Foreign key to civicrm_premiums_combination table
    *
    * @var int unsigned
    */
-  public $entity_id;
+  public $combination_id;
   /**
-   * Is the Premiums feature enabled for this page?
+   * Foreign key to civicrm_product table
    *
-   * @var boolean
+   * @var int unsigned
    */
-  public $premiums_active;
+  public $product_id;
   /**
-   * Title for Premiums section.
+   * Quantity of this product in the combination
    *
-   * @var string
+   * @var int unsigned
    */
-  public $premiums_intro_title;
-  /**
-   * Displayed in <div> at top of Premiums section of page. Text and HTML allowed.
-   *
-   * @var text
-   */
-  public $premiums_intro_text;
-  /**
-   * This email address is included in receipts if it is populated and a premium has been selected.
-   *
-   * @var string
-   */
-  public $premiums_contact_email;
-  /**
-   * This phone number is included in receipts if it is populated and a premium has been selected.
-   *
-   * @var string
-   */
-  public $premiums_contact_phone;
-  /**
-   * Boolean. Should we automatically display minimum contribution amount text after the premium descriptions.
-   *
-   * @var boolean
-   */
-  public $premiums_display_min_contribution;
-  /**
-   * No thank you text for premium page display.
-   *
-   * @var string
-   */
-  public $premiums_nothanks_text;
-  /**
-   * Enable premiums combination feature for this page.
-   *
-   * @var boolean
-   */
-  public $premiums_combination;
+  public $quantity;
    /**
    * class constructor
    *
    * @access public
-   * @return civicrm_premiums
+   * @return civicrm_premiums_combination_products
    */
   function __construct()
   {
     parent::__construct();
+  }
+  /**
+   * return foreign links
+   *
+   * @access public
+   * @return array
+   */
+  function &links()
+  {
+    if (!(self::$_links)) {
+      self::$_links = [
+        'combination_id' => 'civicrm_premiums_combination:id',
+        'product_id' => 'civicrm_product:id',
+      ];
+    }
+    return self::$_links;
   }
    /**
    * Returns foreign keys and entity references.
@@ -162,7 +137,8 @@ class CRM_Contribute_DAO_Premium extends CRM_Core_DAO
   {
     if (!isset(Civi::$statics[__CLASS__]['links'])) {
       Civi::$statics[__CLASS__]['links'] = static ::createReferenceColumns(__CLASS__);
-      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Dynamic(self::getTableName() , 'entity_id', NULL, 'id', 'entity_table');
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'combination_id', 'civicrm_premiums_combination', 'id');
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'product_id', 'civicrm_product', 'id');
     }
     return Civi::$statics[__CLASS__]['links'];
   }
@@ -181,69 +157,24 @@ class CRM_Contribute_DAO_Premium extends CRM_Core_DAO
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
                   ] ,
-        'entity_table' => [
-          'name' => 'entity_table',
-          'type' => CRM_Utils_Type::T_STRING,
-          'title' => ts('Entity Table') ,
-          'required' => true,
-           'maxlength' => 64,
-           'size' => CRM_Utils_Type::BIG,
-                ] ,
-        'entity_id' => [
-          'name' => 'entity_id',
+        'combination_id' => [
+          'name' => 'combination_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-                  ] ,
-        'premiums_active' => [
-          'name' => 'premiums_active',
-          'type' => CRM_Utils_Type::T_BOOLEAN,
-          'title' => ts('Premiums Active') ,
+                    'FKClassName' => 'CRM_Contribute_DAO_PremiumsCombination',
+        ] ,
+        'product_id' => [
+          'name' => 'product_id',
+          'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-                  ] ,
-        'premiums_intro_title' => [
-          'name' => 'premiums_intro_title',
-          'type' => CRM_Utils_Type::T_STRING,
-          'title' => ts('Title for Premiums section') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
-        'premiums_intro_text' => [
-          'name' => 'premiums_intro_text',
-          'type' => CRM_Utils_Type::T_TEXT,
-          'title' => ts('Premiums Intro Text') ,
-                  ] ,
-        'premiums_contact_email' => [
-          'name' => 'premiums_contact_email',
-          'type' => CRM_Utils_Type::T_STRING,
-          'title' => ts('Premiums Contact Email') ,
-           'maxlength' => 100,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
-        'premiums_contact_phone' => [
-          'name' => 'premiums_contact_phone',
-          'type' => CRM_Utils_Type::T_STRING,
-          'title' => ts('Premiums Contact Phone') ,
-           'maxlength' => 50,
-           'size' => CRM_Utils_Type::BIG,
-                ] ,
-        'premiums_display_min_contribution' => [
-          'name' => 'premiums_display_min_contribution',
-          'type' => CRM_Utils_Type::T_BOOLEAN,
-          'title' => ts('Premiums Display Min Contribution') ,
-          'required' => true,
-                  ] ,
-        'premiums_nothanks_text' => [
-          'name' => 'premiums_nothanks_text',
-          'type' => CRM_Utils_Type::T_STRING,
-          'title' => ts('Premiums Nothanks Text') ,
-           'maxlength' => 128,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
-        'premiums_combination' => [
-          'name' => 'premiums_combination',
-          'type' => CRM_Utils_Type::T_BOOLEAN,
-          'title' => ts('Premiums Combination') ,
-                  ] ,
+                    'FKClassName' => 'CRM_Contribute_DAO_Product',
+        ] ,
+        'quantity' => [
+          'name' => 'quantity',
+          'type' => CRM_Utils_Type::T_INT,
+          'title' => ts('Quantity') ,
+                  'default' => '',
+          ] ,
       ];
     }
     return self::$_fields;
@@ -256,8 +187,7 @@ class CRM_Contribute_DAO_Premium extends CRM_Core_DAO
    */
   static function getTableName()
   {
-        global $dbLocale;
-    return self::$_tableName . $dbLocale;
+        return self::$_tableName;
       }
   /**
    * returns if this table needs to be logged
@@ -283,13 +213,13 @@ class CRM_Contribute_DAO_Premium extends CRM_Core_DAO
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
-            self::$_import['premiums'] = &$fields[$name];
+            self::$_import['premiums_combination_products'] = &$fields[$name];
           } else {
             self::$_import[$name] = &$fields[$name];
           }
         }
       }
-          }
+                                              }
     return self::$_import;
   }
   /**
@@ -306,13 +236,13 @@ class CRM_Contribute_DAO_Premium extends CRM_Core_DAO
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
-            self::$_export['premiums'] = &$fields[$name];
+            self::$_export['premiums_combination_products'] = &$fields[$name];
           } else {
             self::$_export[$name] = &$fields[$name];
           }
         }
       }
-          }
+                                              }
     return self::$_export;
   }
 }
