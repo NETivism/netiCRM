@@ -169,6 +169,16 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       $this->_paymentForm->assign('class_name', $className);
       $this->_paymentForm->assign('qfKey', $qfKey);
 
+      // event or contribution form have diff params
+      $cardholderEmail = '';
+      if (isset($this->_paymentForm->_params[0]) && !empty($this->_paymentForm->_params[0]['email-5'])) {
+        $cardholderEmail = $this->_paymentForm->_params[0]['email-5'];
+      }
+      else if(!empty($this->_paymentForm->_params['email-5'])){
+        $cardholderEmail = $this->_paymentForm->_params['email-5'];
+      }
+      $this->_paymentForm->assign('cardholder_email', $cardholderEmail);
+
       // get template and render some element
       require_once 'CRM/Core/Smarty/resources/String.php';
       civicrm_smarty_register_string_resource();

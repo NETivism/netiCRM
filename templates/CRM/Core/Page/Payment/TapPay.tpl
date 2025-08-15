@@ -101,7 +101,7 @@
   <div class="wrapper-email">
     <label class="tp-label">{ts}Payer Email{/ts}</label>
     <div class="tp-field fcardholder femail">
-      <input type="email" name="cardholder_email" id="cardholder-email" placeholder="* {ts}Email will verified by credit card issuer.{/ts}" required>
+      <input type="email" name="cardholder_email" id="cardholder-email" placeholder="* {ts}Email will verified by credit card issuer.{/ts}" value="{$cardholder_email}" required>
     </div>
   </div>
 </div>
