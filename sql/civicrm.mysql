@@ -162,6 +162,8 @@ DROP TABLE IF EXISTS civicrm_project;
 DROP TABLE IF EXISTS civicrm_sms_provider;
 DROP TABLE IF EXISTS civicrm_coupon_entity;
 DROP TABLE IF EXISTS civicrm_coupon;
+DROP TABLE IF EXISTS civicrm_premiums_combination_products;
+DROP TABLE IF EXISTS civicrm_premiums_combination;
 DROP TABLE IF EXISTS civicrm_premiums_product;
 DROP TABLE IF EXISTS civicrm_product;
 DROP TABLE IF EXISTS civicrm_premiums;
@@ -1538,7 +1540,8 @@ CREATE TABLE civicrm_premiums (
      `premiums_contact_email` varchar(100)    COMMENT 'This email address is included in receipts if it is populated and a premium has been selected.',
      `premiums_contact_phone` varchar(50)    COMMENT 'This phone number is included in receipts if it is populated and a premium has been selected.',
      `premiums_display_min_contribution` tinyint NOT NULL   COMMENT 'Boolean. Should we automatically display minimum contribution amount text after the premium descriptions.',
-     `premiums_nothanks_text` varchar(128)    COMMENT 'No thank you text for premium page display.' 
+     `premiums_nothanks_text` varchar(128)    COMMENT 'No thank you text for premium page display.',
+     `premiums_combination` tinyint   DEFAULT 0 COMMENT 'Enable premiums combination feature for this page.' 
 ,
     PRIMARY KEY ( id )
  
@@ -1577,7 +1580,12 @@ CREATE TABLE civicrm_product (
      `duration_unit` enum('day', 'month', 'week', 'year')   DEFAULT 'year' ,
      `duration_interval` int    COMMENT 'Number of units for total duration of subscription, service, membership (e.g. 12 Months).',
      `frequency_unit` enum('day', 'month', 'week', 'year')   DEFAULT 'month' COMMENT 'Frequency unit and interval allow option to store actual delivery frequency for a subscription or service.',
-     `frequency_interval` int    COMMENT 'Number of units for delivery frequency of subscription, service, membership (e.g. every 3 Months).' 
+     `frequency_interval` int    COMMENT 'Number of units for delivery frequency of subscription, service, membership (e.g. every 3 Months).',
+     `stock_status` tinyint   DEFAULT 1 COMMENT 'Stock management status for this product.',
+     `stock_qty` int   DEFAULT 0 COMMENT 'Available stock quantity for this product.',
+     `send_qty` int   DEFAULT 0 COMMENT 'Number of products already sent or delivered.',
+     `created_date` datetime NOT NULL  DEFAULT CURRENT_TIMESTAMP COMMENT 'When was the product was created.',
+     `modified_date` datetime NOT NULL  DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'When was the product was created or modified or deleted.' 
 ,
     PRIMARY KEY ( id )
  
@@ -1606,6 +1614,63 @@ CREATE TABLE civicrm_premiums_product (
 ,      
      CONSTRAINT FK_civicrm_premiums_product_premiums_id FOREIGN KEY (premiums_id) REFERENCES civicrm_premiums(id) ,      
      CONSTRAINT FK_civicrm_premiums_product_product_id FOREIGN KEY (product_id) REFERENCES civicrm_product(id)   
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
+
+-- /*******************************************************
+-- *
+-- * civicrm_premiums_combination
+-- *
+-- * Table for storing premiums combination configurations
+-- *
+-- *******************************************************/
+CREATE TABLE civicrm_premiums_combination (
+
+
+     `id` int unsigned NOT NULL AUTO_INCREMENT  ,
+     `premiums_id` int unsigned NOT NULL   COMMENT 'Foreign key to civicrm_premiums table',
+     `combination_name` varchar(255) NOT NULL   COMMENT 'Name of the premium combination',
+     `description` text    COMMENT 'Optional description of the product/premium.',
+     `sku` varchar(50)    COMMENT 'Optional product sku or code.',
+     `min_contribution` decimal(20,2) NOT NULL   COMMENT 'Minimum non-recurring contribution amount required for this combination',
+     `min_contribution_recur` decimal(20,2)    COMMENT 'Minimum recurring contribution amount threshold for this combination',
+     `currency` varchar(3)   DEFAULT NULL COMMENT '3 character string, value from config setting or input via user.',
+     `is_active` tinyint   DEFAULT 1 COMMENT 'Whether this combination is active',
+     `weight` int unsigned   DEFAULT 0 COMMENT 'Order for displaying combinations',
+     `calculate_mode` varchar(32)   DEFAULT NULL COMMENT 'Calculate by accumulate or by min-amount of contribution',
+     `installments` int   DEFAULT 0 COMMENT 'Num of installments when calculate mode is accumulate.',
+     `image` varchar(255)    COMMENT 'Full or relative URL to uploaded image - fullsize.',
+     `thumbnail` varchar(255)    COMMENT 'Full or relative URL to image thumbnail.',
+     `created_date` timestamp NOT NULL  DEFAULT CURRENT_TIMESTAMP COMMENT 'When was this combination created',
+     `modified_date` timestamp NOT NULL  DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'When was this combination last modified' 
+,
+    PRIMARY KEY ( id )
+ 
+ 
+,      
+     CONSTRAINT FK_civicrm_premiums_combination_premiums_id FOREIGN KEY (premiums_id) REFERENCES civicrm_premiums(id) ON DELETE CASCADE  
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
+
+-- /*******************************************************
+-- *
+-- * civicrm_premiums_combination_products
+-- *
+-- * Table for storing products associated with premium combinations
+-- *
+-- *******************************************************/
+CREATE TABLE civicrm_premiums_combination_products (
+
+
+     `id` int unsigned NOT NULL AUTO_INCREMENT  ,
+     `combination_id` int unsigned NOT NULL   COMMENT 'Foreign key to civicrm_premiums_combination table',
+     `product_id` int unsigned NOT NULL   COMMENT 'Foreign key to civicrm_product table',
+     `quantity` int unsigned   DEFAULT 1 COMMENT 'Quantity of this product in the combination' 
+,
+    PRIMARY KEY ( id )
+ 
+ 
+,      
+     CONSTRAINT FK_civicrm_premiums_combination_products_combination_id FOREIGN KEY (combination_id) REFERENCES civicrm_premiums_combination(id) ON DELETE CASCADE,      
+     CONSTRAINT FK_civicrm_premiums_combination_products_product_id FOREIGN KEY (product_id) REFERENCES civicrm_product(id) ON DELETE CASCADE  
 )  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
