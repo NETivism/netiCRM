@@ -185,6 +185,24 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     $currentPath = CRM_Utils_System::currentPath();
     $params['prime'] = CRM_Utils_Type::escape($_POST['prime'], 'String');
     $params['mode'] = $this->_mode;
+
+    // Retrieve and validate cardholder information
+    $cardholderName = CRM_Utils_Request::retrieve('cardholder_name', 'String', CRM_Core_DAO::$_nullObject, FALSE, NULL, 'POST');
+    $cardholderEmail = CRM_Utils_Request::retrieve('cardholder_email', 'String', CRM_Core_DAO::$_nullObject, FALSE, NULL, 'POST');
+
+    if (!empty($cardholderName)) {
+      // Validate name contains only [0-9a-zA-Z,.']
+      if (preg_match('/^[0-9a-zA-Z,.\'\s]+$/', $cardholderName)) {
+        $params['cardholder_name'] = trim($cardholderName);
+      }
+    }
+
+    if (!empty($cardholderEmail)) {
+      // Validate email format using CRM_Utils_Rule::email
+      if (CRM_Utils_Rule::email($cardholderEmail)) {
+        $params['cardholder_email'] = trim($cardholderEmail);
+      }
+    }
     if (!empty($params['isPayByBindCard'])) {
       $paymentResult = self::payByBindCard($params);
     }
@@ -243,8 +261,8 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
         'details' => mb_substr($details, 0, 98), // item name
         'cardholder'=> [
           'phone_number'=> '', #required #TODO
-          'name' => '', #required but use empty
-          'email' => '', #required but use empty
+          'name' => !empty($payment['cardholder_name']) ? $payment['cardholder_name'] : '', #required but use empty
+          'email' => !empty($payment['cardholder_email']) ? $payment['cardholder_email'] : '', #required but use empty
           'zip_code' => '',    //optional
           'address' => '',     //optional
           'national_id' => '', //optional
@@ -556,8 +574,8 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
         'currency' => $contribution['currency'],
         'cardholder'=> [
           'phone_number'=> '', #required #TODO
-          'name' => '', #required but use empty
-          'email' => '', #required but use empty
+          'name' => !empty($payment['cardholder_name']) ? $payment['cardholder_name'] : '', #required but use empty
+          'email' => !empty($payment['cardholder_email']) ? $payment['cardholder_email'] : '', #required but use empty
           'zip_code' => '',    //optional
           'address' => '',     //optional
           'national_id' => '', //optional
