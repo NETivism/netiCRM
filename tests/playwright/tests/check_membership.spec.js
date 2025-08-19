@@ -39,7 +39,7 @@ test.describe.serial("Create Membership Type", () => {
         .locator("form[name=Contact] input[type=submit][value='Save']")
         .first()
         .click();
-      await utils.wait(wait_secs);
+      await utils.findElement(page, "h1.page-title");
       /* Verify page title contains organization name */
       await expect(page).toHaveTitle(new RegExp("^" + organization));
     });
@@ -55,7 +55,7 @@ test.describe.serial("Create Membership Type", () => {
       await page.locator("input#member_org").fill(organization);
       /* Search for organization in database */
       await page.locator("#_qf_MembershipType_refresh").click();
-      await utils.wait(wait_secs);
+      await utils.findElement(page, "table tbody tr");
       /* Verify organization found in search results */
       await expect(
         page.locator("table tbody tr").filter({ hasText: organization })
