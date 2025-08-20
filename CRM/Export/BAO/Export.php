@@ -573,6 +573,7 @@ class CRM_Export_BAO_Export {
     }
 
     $header = $addPaymentHeader = FALSE;
+    $paymentDetails = [];
 
     if ($paymentFields) {
       //special return properties for event and members
@@ -730,45 +731,47 @@ class CRM_Export_BAO_Export {
             }
             elseif (CRM_Utils_Array::arrayKeyExists($field, $contactRelationshipTypes)) {
               $relName = $field;
-              foreach ($value as $relationField => $relationValue) {
-                // below block is same as primary block (duplicate)
-                if (isset($relationQuery[$field]->_fields[$relationField]['title'])) {
-                  $headerName = $field . '-' . $relationQuery[$field]->_fields[$relationField]['title'];
-                  $headerRows[$relationValue] = $headerName;
-                  $fieldOrder[] = $relationValue;
-                  self::sqlColumnDefn($query, $sqlColumns, $headerName, $relationValue);
-                }
-                elseif ($relationField == 'phone_type_id') {
-                  $headerName = $field . '-' . 'Phone Type';
-                  $headerRows[$relationValue] = $headerName;
-                  $fieldOrder[] = $relationValue;
-                  self::sqlColumnDefn($query, $sqlColumns, $headerName, $relationValue);
-                }
-                elseif ($relationField == 'provider_id') {
-                  $headerName = $field . '-' . 'Im Service Provider';
-                  $headerRows[$relationValue] = $headerName;
-                  $fieldOrder[] = $relationValue;
-                  self::sqlColumnDefn($query, $sqlColumns, $headerName, $relationValue);
-                }
-                elseif (is_array($relationValue) && $relationField == 'location') {
-                  // fix header for location type case
-                  foreach ($relationValue as $ltype => $val) {
-                    foreach (array_keys($val) as $fld) {
-                      $type = explode('-', $fld);
-                      $hdr = "{$ltype}-" . $relationQuery[$field]->_fields[$type[0]]['title'];
+              if (is_array($value)) {
+                foreach ($value as $relationField => $relationValue) {
+                  // below block is same as primary block (duplicate)
+                  if (isset($relationQuery[$field]->_fields[$relationField]['title'])) {
+                    $headerName = $field . '-' . $relationQuery[$field]->_fields[$relationField]['title'];
+                    $headerRows[$relationValue] = $headerName;
+                    $fieldOrder[] = $relationValue;
+                    self::sqlColumnDefn($query, $sqlColumns, $headerName, $relationValue);
+                  }
+                  elseif ($relationField == 'phone_type_id') {
+                    $headerName = $field . '-' . 'Phone Type';
+                    $headerRows[$relationValue] = $headerName;
+                    $fieldOrder[] = $relationValue;
+                    self::sqlColumnDefn($query, $sqlColumns, $headerName, $relationValue);
+                  }
+                  elseif ($relationField == 'provider_id') {
+                    $headerName = $field . '-' . 'Im Service Provider';
+                    $headerRows[$relationValue] = $headerName;
+                    $fieldOrder[] = $relationValue;
+                    self::sqlColumnDefn($query, $sqlColumns, $headerName, $relationValue);
+                  }
+                  elseif (is_array($relationValue) && $relationField == 'location') {
+                    // fix header for location type case
+                    foreach ($relationValue as $ltype => $val) {
+                      foreach (array_keys($val) as $fld) {
+                        $type = explode('-', $fld);
+                        $hdr = "{$ltype}-" . $relationQuery[$field]->_fields[$type[0]]['title'];
 
-                      if (CRM_Utils_Array::value(1, $type)) {
-                        if (CRM_Utils_Array::value(0, $type) == 'phone') {
-                          $hdr .= "-" . CRM_Utils_Array::value($type[1], $phoneTypes);
+                        if (CRM_Utils_Array::value(1, $type)) {
+                          if (CRM_Utils_Array::value(0, $type) == 'phone') {
+                            $hdr .= "-" . CRM_Utils_Array::value($type[1], $phoneTypes);
+                          }
+                          elseif (CRM_Utils_Array::value(0, $type) == 'im') {
+                            $hdr .= "-" . CRM_Utils_Array::value($type[1], $imProviders);
+                          }
                         }
-                        elseif (CRM_Utils_Array::value(0, $type) == 'im') {
-                          $hdr .= "-" . CRM_Utils_Array::value($type[1], $imProviders);
-                        }
+                        $headerName = $field . '-' . $hdr;
+                        $headerRows[$val[$fld]] = $headerName;
+                        $fieldOrder[] = $val[$fld];
+                        self::sqlColumnDefn($query, $sqlColumns, $headerName, $val[$fld]);
                       }
-                      $headerName = $field . '-' . $hdr;
-                      $headerRows[$val[$fld]] = $headerName;
-                      $fieldOrder[] = $val[$fld];
-                      self::sqlColumnDefn($query, $sqlColumns, $headerName, $val[$fld]);
                     }
                   }
                 }
@@ -883,89 +886,91 @@ class CRM_Export_BAO_Export {
             }
           }
           elseif (CRM_Utils_Array::arrayKeyExists($field, $contactRelationshipTypes)) {
-            $relDAO = $allRelContactArray[$field][$dao->contact_id];
+            $relDAO = isset($allRelContactArray[$field][$dao->contact_id]) ? $allRelContactArray[$field][$dao->contact_id] : null;
 
-            foreach ($value as $relationField => $relationValue) {
-              if (is_object($relDAO) && property_exists($relDAO, $relationField)) {
-                $fieldValue = $relDAO->$relationField;
-                if ($relationField == 'phone_type_id') {
-                  $fieldValue = $phoneTypes[$relationValue];
+            if (is_array($value)) {
+              foreach ($value as $relationField => $relationValue) {
+                if (is_object($relDAO) && property_exists($relDAO, $relationField)) {
+                  $fieldValue = $relDAO->$relationField;
+                  if ($relationField == 'phone_type_id') {
+                    $fieldValue = $phoneTypes[$relationValue];
+                  }
+                  elseif ($relationField == 'provider_id') {
+                    $fieldValue = CRM_Utils_Array::value($relationValue, $imProviders);
+                  }
                 }
-                elseif ($relationField == 'provider_id') {
-                  $fieldValue = CRM_Utils_Array::value($relationValue, $imProviders);
+                else {
+                  $fieldValue = '';
                 }
-              }
-              else {
-                $fieldValue = '';
-              }
-              if ($relationField == 'id') {
-                $row[$field . $relationField] = $relDAO->contact_id;
-              }
-              elseif (is_array($relationValue) && $relationField == 'location') {
-                foreach ($relationValue as $ltype => $val) {
-                  foreach (array_keys($val) as $fld) {
-                    $type = explode('-', $fld);
-                    $fldValue = "{$ltype}-" . $type[0];
-                    if (CRM_Utils_Array::value(1, $type)) {
-                      $fldValue .= "-" . $type[1];
+                if ($relationField == 'id') {
+                  $row[$field . $relationField] = $relDAO ? $relDAO->contact_id : '';
+                }
+                elseif (is_array($relationValue) && $relationField == 'location') {
+                  foreach ($relationValue as $ltype => $val) {
+                    foreach (array_keys($val) as $fld) {
+                      $type = explode('-', $fld);
+                      $fldValue = "{$ltype}-" . $type[0];
+                      if (CRM_Utils_Array::value(1, $type)) {
+                        $fldValue .= "-" . $type[1];
+                      }
+                      // CRM-3157: localise country, region (both have ‘country’ context) and state_province (‘province’ context)
+                      switch (TRUE) {
+                        case in_array('country', $type):
+                        case in_array('world_region', $type):
+                          $row[$field . $fldValue] = $relDAO->$fldValue ? $i18n->crm_translate($relDAO->$fldValue, ['context' => 'country']) : $relDAO->$fldValue;
+                          break;
+
+                        case in_array('state_province_name', $type):
+                        case in_array('state_province', $type):
+                          $row[$field . $fldValue] = $relDAO->$fldValue ? $i18n->crm_translate($relDAO->$fldValue, ['context' => 'province']) : $relDAO->$fldValue;
+                          break;
+
+                        default:
+                          $row[$field . $fldValue] = $relDAO->$fldValue;
+                          break;
+                      }
                     }
+                  }
+                }
+                elseif (isset($fieldValue) && $fieldValue != '') {
+                  //check for custom data
+                  if ($cfID = CRM_Core_BAO_CustomField::getKeyID($relationField)) {
+                    if($relationQuery[$field]->_fields[$relationField]['data_type'] == 'File'){
+                      list($url, $ignore1, $ignore2) = CRM_Core_BAO_File::url($fieldValue, NULL);
+                      $row[$field . $relationField] = $url;
+                    }else{
+                      $row[$field . $relationField] = CRM_Core_BAO_CustomField::getDisplayValue($fieldValue, $cfID, $relationQuery[$field]->_options, NULL, $separateMode);
+                    }
+                  }
+                  elseif (in_array($relationField, ['email_greeting', 'postal_greeting', 'addressee'])) {
+                    //special case for greeting replacement
+                    $fldValue = "{$relationField}_display";
+                    $row[$field . $relationField] = $relDAO->$fldValue;
+                  }
+                  else {
+                    //normal relationship fields
                     // CRM-3157: localise country, region (both have ‘country’ context) and state_province (‘province’ context)
-                    switch (TRUE) {
-                      case in_array('country', $type):
-                      case in_array('world_region', $type):
-                        $row[$field . $fldValue] = $relDAO->$fldValue ? $i18n->crm_translate($relDAO->$fldValue, ['context' => 'country']) : $relDAO->$fldValue;
+                    switch ($relationField) {
+                      case 'country':
+                      case 'world_region':
+                        $row[$field . $relationField] = $fieldValue ? $i18n->crm_translate($fieldValue, ['context' => 'country']) : $fieldValue;
                         break;
 
-                      case in_array('state_province_name', $type):
-                      case in_array('state_province', $type):
-                        $row[$field . $fldValue] = $relDAO->$fldValue ? $i18n->crm_translate($relDAO->$fldValue, ['context' => 'province']) : $relDAO->$fldValue;
+                      case 'state_province_name':
+                      case 'state_province':
+                        $row[$field . $relationField] = $fieldValue ? $i18n->crm_translate($fieldValue, ['context' => 'province']) : $fieldValue;
                         break;
 
                       default:
-                        $row[$field . $fldValue] = $relDAO->$fldValue;
+                        $row[$field . $relationField] = $fieldValue;
                         break;
                     }
                   }
                 }
-              }
-              elseif (isset($fieldValue) && $fieldValue != '') {
-                //check for custom data
-                if ($cfID = CRM_Core_BAO_CustomField::getKeyID($relationField)) {
-                  if($relationQuery[$field]->_fields[$relationField]['data_type'] == 'File'){
-                    list($url, $ignore1, $ignore2) = CRM_Core_BAO_File::url($fieldValue, NULL);
-                    $row[$field . $relationField] = $url;
-                  }else{
-                    $row[$field . $relationField] = CRM_Core_BAO_CustomField::getDisplayValue($fieldValue, $cfID, $relationQuery[$field]->_options, NULL, $separateMode);
-                  }
-                }
-                elseif (in_array($relationField, ['email_greeting', 'postal_greeting', 'addressee'])) {
-                  //special case for greeting replacement
-                  $fldValue = "{$relationField}_display";
-                  $row[$field . $relationField] = $relDAO->$fldValue;
-                }
                 else {
-                  //normal relationship fields
-                  // CRM-3157: localise country, region (both have ‘country’ context) and state_province (‘province’ context)
-                  switch ($relationField) {
-                    case 'country':
-                    case 'world_region':
-                      $row[$field . $relationField] = $fieldValue ? $i18n->crm_translate($fieldValue, ['context' => 'country']) : $fieldValue;
-                      break;
-
-                    case 'state_province_name':
-                    case 'state_province':
-                      $row[$field . $relationField] = $fieldValue ? $i18n->crm_translate($fieldValue, ['context' => 'province']) : $fieldValue;
-                      break;
-
-                    default:
-                      $row[$field . $relationField] = $fieldValue;
-                      break;
-                  }
+                  // if relation field is empty or null
+                  $row[$field . $relationField] = '';
                 }
-              }
-              else {
-                // if relation field is empty or null
-                $row[$field . $relationField] = '';
               }
             }
           }
@@ -2030,7 +2035,7 @@ GROUP BY civicrm_primary_id ";
     }
   }
 
-  function batchFinish() {
+  public static function batchFinish() {
     global $civicrm_batch;
     $batchData = $civicrm_batch->data;
     $fileFullPath = $batchData['download']['file'];
