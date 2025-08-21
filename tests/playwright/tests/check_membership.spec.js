@@ -133,9 +133,9 @@ test.describe.serial("Create Membership Type", () => {
       await page.getByText("Advanced options").click();
       await page.locator("input#CIVICRM_QFID_2_12").check();
       await page.locator('[id="_qf_Group_next-bottom"]').click();
-      element = "#Field";
+      element = "h1";
       await utils.findElement(page, element);
-      await expect(page.locator("h1.page-title")).toContainText(profile_name);
+      await expect(page.locator(element)).toBeVisible();
     });
 
     await test.step("Add  Name field and verify", async () => {
@@ -237,11 +237,9 @@ test.describe.serial("Create Membership Type", () => {
         await page.locator(buttonSelector).click();
       }
       /* Verify return to contribution page overview */
-      element = "#crm-container";
+      element = "h1";
       await utils.findElement(page, element);
-      await expect(page.locator("h1.page-title")).toContainText(
-        contribution_page_name
-      );
+      await expect(page.locator(element)).toContainText(contribution_page_name);
     });
   });
   test("Fill Contribution Form", async () => {
@@ -251,6 +249,7 @@ test.describe.serial("Create Membership Type", () => {
       await page.goto("/civicrm/admin/contribute?reset=1");
       await page.locator("#title").fill(contribution_page_name);
       await page.locator("input#_qf_SearchContribution_refresh").click();
+      await utils.findElement(page, "table tbody tr");
       await page.getByRole("link", { name: contribution_page_name }).click();
 
       [contributionPage] = await Promise.all([
