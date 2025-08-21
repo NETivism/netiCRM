@@ -3,7 +3,6 @@ const utils = require("./utils.js");
 
 /** @type {import('@playwright/test').Page} */
 let page;
-const wait_secs = 2000;
 
 test.beforeAll(async () => {
   const browser = await chromium.launch();
