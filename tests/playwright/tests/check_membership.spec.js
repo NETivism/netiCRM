@@ -38,7 +38,8 @@ test.describe.serial("Create Membership Type", () => {
         .locator("form[name=Contact] input[type=submit][value='Save']")
         .first()
         .click();
-      await utils.findElement(page, "h1.page-title");
+      element = "#crm-container";
+      await utils.findElement(page, element);
       /* Verify page title contains organization name */
       await expect(page).toHaveTitle(new RegExp("^" + organization));
     });
@@ -132,7 +133,8 @@ test.describe.serial("Create Membership Type", () => {
       await page.getByText("Advanced options").click();
       await page.locator("input#CIVICRM_QFID_2_12").check();
       await page.locator('[id="_qf_Group_next-bottom"]').click();
-      await utils.findElement(page, "h1.page-title");
+      element = "#Field";
+      await utils.findElement(page, element);
       await expect(page.locator("h1.page-title")).toContainText(profile_name);
     });
 
@@ -235,7 +237,8 @@ test.describe.serial("Create Membership Type", () => {
         await page.locator(buttonSelector).click();
       }
       /* Verify return to contribution page overview */
-      await utils.findElement(page, "h1.page-title");
+      element = "#crm-container";
+      await utils.findElement(page, element);
       await expect(page.locator("h1.page-title")).toContainText(
         contribution_page_name
       );
