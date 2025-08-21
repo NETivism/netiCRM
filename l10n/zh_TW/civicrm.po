@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: CC Chu <poliphilonet@gmail.com>, 2020-2025\n"
+"Last-Translator: 馮 佳今, 2022-2025\n"
 "Language-Team: Chinese (Taiwan) (http://app.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50583,3 +50583,46 @@ msgstr "RFM 捐款人分群模型"
 #: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
 msgid "how to use"
 msgstr "使用說明"
+
+#: templates/CRM/Contribute/Form/ContributionPage/Premium.tpl
+#: CRM/Contribute/Form/ContributionPage/Premium.php
+msgid "Enable Gift Combination Feature"
+msgstr "啟用禮品組合功能"
+
+msgid ""
+"This Contribution Page currently has no premiums. You can <a href='%1'>add "
+"one</a>."
+msgstr "此募款頁尚未有感謝禮提供。您可以新增一個。"
+
+msgid ""
+"This Contribution Page currently has no premiums. You can <a href='%1'>add a"
+" gift combination</a>."
+msgstr "此募款頁尚未有感謝禮提供。您可以新增禮品組合。"
+
+msgid ""
+"Once enabled, the Contribution Page will display gift combinations instead "
+"of individual premiums."
+msgstr "啟用後，募款頁將不會顯示個別感謝禮品，而是顯示禮品組合"
+
+msgid "Add Gifts to the Combination"
+msgstr "加入禮品到組合中"
+
+msgid ""
+"You can select gifts to include in the combination and set the quantity for "
+"each gift."
+msgstr "您可以選擇要加入組合的禮品，並設定該組合包含的禮品數量"
+
+msgid "Add more gifts to the combination"
+msgstr "加入更多禮品到組合中"
+
+msgid "Please select a gift"
+msgstr "請選擇禮品"
+
+msgid "Combination Name"
+msgstr "組合名稱"
+
+msgid "Combination Contents"
+msgstr "組合內容"
+
+msgid "Offer other gift combinations on this Contribution Page"
+msgstr "在此募款頁提供其他感謝禮品組合"
