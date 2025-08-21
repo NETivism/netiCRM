@@ -316,8 +316,9 @@ test.describe.serial("Create Membership Type", () => {
     });
 
     await test.step("Search for contact", async () => {
+      element = "#_qf_Basic_refresh";
       await page.locator("input#sort_name").fill("firstName");
-      await page.locator("input[type='submit'][value='Search']").click();
+      await page.locator(element).click();
       /* Verify search-status container exists with results */
       await expect(page.locator("#search-status")).toBeVisible();
     });
