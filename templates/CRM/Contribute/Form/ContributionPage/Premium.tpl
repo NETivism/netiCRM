@@ -91,17 +91,6 @@
   </div><!--Accordion Body-->
 </div>
 <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
-{if $showForm}
-<div class="messages status">
-  {capture assign=crmURL}{crmURL p='civicrm/admin/contribute/managePremiums' q="reset=1"}{/capture}
-  <p>{ts}This Contribution Page currently has no premiums. You can <a href='%1'>add one</a>.{/ts}</p>
-</div>
-{else}
-<div class="messages status">
-  {capture assign=managePremiumsURL}{crmURL p='civicrm/admin/contribute/managePremiums' q="reset=1"}{/capture}
-  <p>{ts 1=$managePremiumsURL}This Contribution Page currently has no premiums. You can <a href='%1'>add a gift combination</a>.{/ts}</p>
-</div>
-{/if}
 
 <script type="text/javascript">
     var myElement1 = document.getElementById('id_form');
