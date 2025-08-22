@@ -67,15 +67,17 @@
 </div>
 {else}
     {if $showForm eq false}
-    <div class="messages status">
-	{if $products ne null }
-          {capture assign=crmURL}{crmURL p='civicrm/admin/contribute/addProductToPage' q="reset=1&action=update&id=$id"}{/capture}
-          {ts 1=$crmURL}There are no premiums offered on this contribution page yet. You can <a href='%1'>add one</a>.{/ts}
-	{else}
-           {ts 1=$managePremiumsURL}There are no active premiums for your site. You can <a href='%1'>create and/or enable premiums here</a>.{/ts}
-	
-	{/if}
-    </div>
+        {if $products ne null  && $activePremiums}
+        <div class="messages status">
+            {if $enablePremiumsCombination eq false}
+                {capture assign=crmURL}{crmURL p='civicrm/admin/contribute/addProductToPage' q="reset=1&action=update&id=$id"}{/capture}
+                {ts 1=$crmURL}There are no premiums offered on this contribution page yet. You can <a href='%1'>add one</a>.{/ts}
+            {elseif $enablePremiumsCombination eq true}
+                {ts 1=$managePremiumsURL}This Contribution Page currently has no premiums. You can <a href='%1'>add a gift combination</a>.{/ts}
+            {/if}
+        </div>
+        {/if}
+    {else}
+        {ts 1=$managePremiumsURL}There are no active premiums for your site. You can <a href='%1'>create and/or enable premiums here</a>.{/ts}
     {/if}
-   
 {/if}
