@@ -71,7 +71,7 @@ class CRM_Contribute_Form_ContributionPage_Premium extends CRM_Contribute_Form_C
    */
   public function buildQuickForm() {
     $this->addElement('checkbox', 'premiums_active', ts('Premiums Section Enabled?'));
-    $this->addElement('checkbox', 'premiums_combination', ts('Enable Gift Combination Feature?'));
+    $this->addElement('checkbox', 'premiums_combination', ts('Enable Gift Combination Feature'));
 
     $this->addElement('text', 'premiums_intro_title', ts('Title'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_Premium', 'premiums_intro_title'));
 
