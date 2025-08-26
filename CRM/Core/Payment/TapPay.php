@@ -270,9 +270,10 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
         'order_number' => $contribution['trxn_id'],
         'details' => mb_substr($details, 0, 98), // item name
         'cardholder'=> [
-          'phone_number'=> '', #required #TODO
-          'name' => !empty($payment['cardholder_name']) ? $payment['cardholder_name'] : '', #required but use empty
-          'email' => !empty($payment['cardholder_email']) ? $payment['cardholder_email'] : '', #required but use empty
+          'phone_number'=> '', #required
+          'name' => '', #required but use empty
+          'name_en' => !empty($payment['cardholder_name']) ? $payment['cardholder_name'] : '',
+          'email' => !empty($payment['cardholder_email']) ? $payment['cardholder_email'] : '',
           'zip_code' => '',    //optional
           'address' => '',     //optional
           'national_id' => '', //optional
@@ -584,8 +585,9 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
         'currency' => $contribution['currency'],
         'cardholder'=> [
           'phone_number'=> '', #required #TODO
-          'name' => !empty($payment['cardholder_name']) ? $payment['cardholder_name'] : '', #required but use empty
-          'email' => !empty($payment['cardholder_email']) ? $payment['cardholder_email'] : '', #required but use empty
+          'name' => '', #required but use empty
+          'name_en' => !empty($payment['cardholder_name']) ? $payment['cardholder_name'] : '',
+          'email' => !empty($payment['cardholder_email']) ? $payment['cardholder_email'] : '',
           'zip_code' => '',    //optional
           'address' => '',     //optional
           'national_id' => '', //optional

@@ -93,13 +93,13 @@
 {/literal}</style>
 <div class="tp-wrapper">
   <div class="wrapper-name">
-    <label class="tp-label">{ts}Payer Name{/ts}</label>
+    <label class="tp-label">{ts}Cardholder Name{/ts}</label>
     <div class="tp-field fcardholder fname">
       <input type="text" name="cardholder_name" id="cardholder-name" placeholder="* {ts}Same on your credit card.{/ts}" required>
     </div>
   </div>
   <div class="wrapper-email">
-    <label class="tp-label">{ts}Payer Email{/ts}</label>
+    <label class="tp-label">{ts}Cardholder Email{/ts}</label>
     <div class="tp-field fcardholder femail">
       <input type="email" name="cardholder_email" id="cardholder-email" placeholder="* {ts}Email will verified by credit card issuer.{/ts}" value="{$cardholder_email}" required>
     </div>
