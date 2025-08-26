@@ -17,9 +17,10 @@ test.use({ storageState: 'storageState.json' });
 
 test.describe.serial('Create Membership Type', () => {
   var organization = utils.makeid(10);
-  const membership_type = `MembershipTypeForTest${Math.floor(
-    Math.random() * 100000
-  )}`; // Use random number to avoid duplicate names
+  // const membership_type = `MembershipTypeForTest${Math.floor(
+  //   Math.random() * 100000
+  // )}`; // Use random number to avoid duplicate names
+  const membership_type = 'typeForTest';
   const profile_name = `ProfileNameForTest${Math.floor(
     Math.random() * 100000
   )}`; // Use random number to avoid duplicate names
@@ -70,7 +71,7 @@ test.describe.serial('Create Membership Type', () => {
       await page.locator('[id="_qf_MembershipType_upload-bottom"]').click();
       /* Verify membership type appears in results table */
       await expect(
-        page.getByRole('cell', { name: membership_type })
+        page.getByRole('cell', { name: membership_type, exact: true })
       ).toHaveText(membership_type);
     });
   });
