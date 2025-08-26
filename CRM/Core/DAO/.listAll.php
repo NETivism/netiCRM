@@ -72,6 +72,7 @@ $dao['SetEntity'] = 'CRM_Price_DAO_SetEntity';
 $dao['Batch'] = 'CRM_Batch_DAO_Batch';
 $dao['EntityBatch'] = 'CRM_Batch_DAO_EntityBatch';
 $dao['AICompletion'] = 'CRM_AI_DAO_AICompletion';
+$dao['AIImageGeneration'] = 'CRM_AI_DAO_AIImageGeneration';
 $dao['Cache'] = 'CRM_Core_DAO_Cache';
 $dao['Country'] = 'CRM_Core_DAO_Country';
 $dao['CustomGroup'] = 'CRM_Core_DAO_CustomGroup';

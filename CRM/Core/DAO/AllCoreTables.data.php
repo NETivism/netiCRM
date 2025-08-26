@@ -361,6 +361,11 @@ return array(
     'class' => 'CRM_AI_DAO_AICompletion',
     'table' => 'civicrm_aicompletion',
   ) ,
+  'CRM_AI_DAO_AIImageGeneration' => array(
+    'name' => 'AIImageGeneration',
+    'class' => 'CRM_AI_DAO_AIImageGeneration',
+    'table' => 'civicrm_aiimagegeneration',
+  ) ,
   'CRM_Core_DAO_Cache' => array(
     'name' => 'Cache',
     'class' => 'CRM_Core_DAO_Cache',

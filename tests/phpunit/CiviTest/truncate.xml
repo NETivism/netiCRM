@@ -145,6 +145,8 @@
 
   <civicrm_aicompletion />
 
+  <civicrm_aiimagegeneration />
+
   <civicrm_cache />
 
   <civicrm_country />

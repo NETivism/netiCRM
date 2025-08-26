@@ -4379,7 +4379,7 @@ INSERT INTO civicrm_domain (name, version, loc_block_id) VALUES (@domainName, '2
 SELECT @domainID := id FROM civicrm_domain where name = 'Default Domain Name';
 
 -- Sample location types
-INSERT INTO civicrm_location_type( label, name, vcard_name, description, is_reserved, is_active, is_default ) VALUES( '住家', 'Home', 'HOME', '居住地點', 0, 1, 1 );
+INSERT INTO civicrm_location_type( label, name, vcard_name, description, is_reserved, is_active, is_default ) VALUES( '首頁', 'Home', 'HOME', '居住地點', 0, 1, 1 );
 INSERT INTO civicrm_location_type( label, name, vcard_name, description, is_reserved, is_active ) VALUES( '工作', 'Work', 'WORK', '工作地點', 0, 1 );
 INSERT INTO civicrm_location_type( label, name, vcard_name, description, is_reserved, is_active ) VALUES( '主要', 'Main', NULL, '主要辦公地點', 0, 1 );
 INSERT INTO civicrm_location_type( label, name, vcard_name, description, is_reserved, is_active ) VALUES( '其他', 'Other', NULL, '其他地點', 0, 1 );
@@ -4477,7 +4477,7 @@ VALUES
    ('recur_frequency_units'         , '週期頻率單位'          , 0, 1), 
    ('phone_type'                    , '電話類型'                         , 0, 1),
    ('custom_data_type'              , '自訂欄位類型'                   , 0, 1),  
-   ('visibility'                    , '公開'                         , 0, 1),
+   ('visibility'                    , '可見性'                         , 0, 1),
    ('mail_protocol'                 , 'Mail 通訊協定'                      , 0, 1),
    ('priority'                      , '優先次序'                           , 0, 1),
    ('redaction_rule'                , '擬訂規條'                     , 0, 1),	
@@ -4709,7 +4709,7 @@ VALUES
   (@option_group_id_etype, '展覽', 2, 'Exhibition',  NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_etype, '籌款者', 3, 'Fundraiser',  NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_etype, '會議',    4, 'Meeting',     NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_etype, '表演',5, 'Performance', NULL, 0, NULL, 5, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_etype, '效能',5, 'Performance', NULL, 0, NULL, 5, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_etype, '工作坊',   6, 'Workshop',    NULL, 0, NULL, 6, NULL, 0, 0, 1, NULL, NULL),
 
 -- note that these are not ts'ed since they are used for logic in most cases and not display
@@ -4718,7 +4718,7 @@ VALUES
   (@option_group_id_cvOpt, '關係',   2, 'rel', NULL, 0, NULL,  2,  NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_cvOpt, '群組'       ,   3, 'group', NULL, 0, NULL,  3,  NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_cvOpt, '註記'        ,   4, 'note', NULL, 0, NULL,  4,  NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_cvOpt, '標籤/Tag'         ,   5, 'tag', NULL, 0, NULL,  5,  NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_cvOpt, '標籤 (Tags)'         ,   5, 'tag', NULL, 0, NULL,  5,  NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_cvOpt, '變更記錄'   ,   6, 'log', NULL, 0, NULL,  6,  NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_cvOpt, '捐款',   7, 'CiviContribute', NULL, 0, NULL,  7,  NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_cvOpt, '會員'  ,   8, 'CiviMember', NULL, 0, NULL,  8,  NULL, 0, 0, 1, NULL, NULL),
@@ -4753,7 +4753,7 @@ VALUES
   (@option_group_id_asOpt, '認捐'                 ,  15, 'CiviPledge', NULL, 0, NULL, 17, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_asOpt, '聯絡人類型'            ,  16, 'contactType', NULL, 0, NULL, 18, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_asOpt, '群組'                  ,  17, 'groups', NULL, 0, NULL, 19, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_asOpt, '標籤/Tag'                    ,  18, 'tags', NULL, 0, NULL, 20, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_asOpt, '標籤 (Tags)'                    ,  18, 'tags', NULL, 0, NULL, 20, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_asOpt, '電子報'                ,  19, 'CiviMail', NULL, 0, NULL, 21, NULL, 0, 0, 1, NULL, NULL),
 
   (@option_group_id_udOpt, '群組'                     , 1, 'Groups', NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
@@ -4982,7 +4982,7 @@ VALUES
    (@option_group_id_accTp, 'Expense', 4, 'Expense',  NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
 
 -- website type
-   (@option_group_id_website, '住家',     1, 'Home',     NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
+   (@option_group_id_website, '首頁',     1, 'Home',     NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
    (@option_group_id_website, '工作',     2, 'Work',     NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
    (@option_group_id_website, 'Facebook', 3, 'Facebook', NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL),
    (@option_group_id_website, 'Twitter',  4, 'Twitter',  NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL),
@@ -4990,7 +4990,7 @@ VALUES
    (@option_group_id_website, '主要',     6, 'Main',     NULL, 0, NULL, 6, NULL, 0, 0, 1, NULL, NULL),
 
 -- Tag used for
-   (@option_group_id_tuf, '聯絡人',   'civicrm_contact',  'Contacts',    NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
+   (@option_group_id_tuf, '聯絡',   'civicrm_contact',  'Contacts',    NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
    (@option_group_id_tuf, '任務', 'civicrm_activity', 'Activities',  NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
    (@option_group_id_tuf, '個案',      'civicrm_case',     'Cases',       NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL),
 
@@ -5070,7 +5070,7 @@ VALUES
 INSERT INTO `civicrm_option_group`
   (`name`, `label`, `description`, `is_reserved`, `is_active`)
 VALUES
-  ('languages', 'Languages', 'List of Languages', 0, 1);
+  ('languages', '語言', 'List of Languages', 0, 1);
   
 SELECT @option_group_id_languages      := max(id) from civicrm_option_group where name = 'languages';
 
@@ -5694,7 +5694,7 @@ INSERT INTO civicrm_uf_field
 	   (24, 7, 			 'postal_code', 		  1, 		   0, 			6, 	  	'User and User Admin Only',  0, 		  0, 			 NULL, 			   '郵遞區號',  				'Contact', 	   NULL,  NULL),
 	   (25, 7, 			 'email', 				  1, 		   0, 			7, 	  	'User and User Admin Only',  0, 		  0, 			 NULL, 			   '預設 Email',  				'Contact', 	   NULL,  NULL),
 	   (26, 7, 			 'group', 				  1, 		   0, 			8, 	  	'User and User Admin Only',  0, 		  0, 			 NULL, 			   '群組',  					'Contact', 	   NULL,  NULL),
-	   (27, 7, 			 'tag', 				  1, 		   0, 			9, 	  	'User and User Admin Only',  0, 	      0, 		     NULL, 			   '標籤/Tag', 						'Contact', 	   NULL,  NULL),
+	   (27, 7, 			 'tag', 				  1, 		   0, 			9, 	  	'User and User Admin Only',  0, 	      0, 		     NULL, 			   '標籤 (Tags)', 						'Contact', 	   NULL,  NULL),
 	   (28  ,7  	    ,'gender'  				 ,1  	      ,0  			,10  	,'User and User Admin Only' ,0  		 ,0  			,NULL,  			 '性別'  						,'Individual' ,NULL,  NULL),
 	   (29 	,7 		    ,'birth_date' 			 ,1  	      ,0 			,11 	,'User and User Admin Only' ,0 		 	 ,0 			,NULL, 			  'Date of Birth' 			    ,'Individual' ,NULL,  NULL),
 	   (30,  8,           'street_address',        1,           0,           1,      'User and User Admin Only',  0,           0,             1,                '街道地址', 		'Contact',     NULL,  NULL),
@@ -16735,12 +16735,12 @@ INSERT INTO `civicrm_dashboard`
 INSERT INTO civicrm_navigation
  ( domain_id, label, name, url, permission, permission_operator, parent_id, is_active, has_separator, weight )
 VALUES
- ( @domainID, 'Homepage', 'Home', 'civicrm/dashboard&reset=1', NULL, '', NULL, 1, NULL, 0);
+ ( @domainID, '首頁', 'Home', 'civicrm/dashboard&reset=1', NULL, '', NULL, 1, NULL, 0);
  
 INSERT INTO civicrm_navigation
     ( domain_id, url, label, name, permission, permission_operator, parent_id, is_active, has_separator, weight )
 VALUES
-    (  @domainID, NULL, 'Search',  'Search...',    NULL, '',  NULL, '1', NULL, 1 );
+    (  @domainID, NULL, '搜尋',  'Search...',    NULL, '',  NULL, '1', NULL, 1 );
 
 SET @searchlastID:=LAST_INSERT_ID();
     
@@ -16809,7 +16809,7 @@ SET @contributionlastID:=LAST_INSERT_ID();
 INSERT INTO civicrm_navigation
     ( domain_id, url, label, name, permission, permission_operator, parent_id, is_active, has_separator, weight )
 VALUES     
-    ( @domainID, 'civicrm/contribute&reset=1',                              'Dashboard',              'Dashboard',              'access CiviContribute', '', @contributionlastID, '1', NULL, 1 ), 
+    ( @domainID, 'civicrm/contribute&reset=1',                              '儀表板',              'Dashboard',              'access CiviContribute', '', @contributionlastID, '1', NULL, 1 ), 
     ( @domainID, 'civicrm/contribute/add&reset=1&action=add&context=standalone', 'New Contribution',  'New Contribution',       'access CiviContribute,edit contributions', 'AND', @contributionlastID, '1', NULL, 2 ), 
     ( @domainID, 'civicrm/contribute/search&reset=1',                       'Find Contributions',     'Find Contributions',     'access CiviContribute', '', @contributionlastID, '1', NULL, 3 ), 
     ( @domainID, 'civicrm/contribute/import&reset=1',                       'Import Contributions',   'Import Contributions',   'access CiviContribute,edit contributions', 'AND', @contributionlastID, '1', '1',  4 );
@@ -16823,7 +16823,7 @@ SET @pledgelastID:=LAST_INSERT_ID();
 INSERT INTO civicrm_navigation
     ( domain_id, url, label, name, permission, permission_operator, parent_id, is_active, has_separator, weight )
 VALUES    
-    ( @domainID, 'civicrm/pledge&reset=1',                                  'Dashboard',                  'Dashboard',                 'access CiviPledge',  '',  @pledgelastID,       '1', NULL, 1 ), 
+    ( @domainID, 'civicrm/pledge&reset=1',                                  '儀表板',                  'Dashboard',                 'access CiviPledge',  '',  @pledgelastID,       '1', NULL, 1 ), 
     ( @domainID, 'civicrm/pledge/add&reset=1&action=add&context=standalone', 'New Pledge',                'New Pledge',                'access CiviPledge,edit pledges',  'AND',  @pledgelastID,       '1', NULL, 2 ),
     ( @domainID, 'civicrm/pledge/search&reset=1',                           'Find Pledges',               'Find Pledges',              'access CiviPledge',  '',  @pledgelastID,       '1', NULL, 3 ), 
     ( @domainID, 'civicrm/admin/contribute/add&reset=1&action=add',             'New Contribution Page',      'New Contribution Page',     'access CiviContribute,administer CiviCRM', 'AND',  @contributionlastID, '1', NULL, 6 ), 
@@ -16842,7 +16842,7 @@ SET @eventlastID:=LAST_INSERT_ID();
 INSERT INTO civicrm_navigation
     ( domain_id, url, label, name, permission, permission_operator, parent_id, is_active, has_separator, weight )
 VALUES    
-    ( @domainID, 'civicrm/event&reset=1',                                   'Dashboard',          'CiviEvent Dashboard',  'access CiviEvent', '',    @eventlastID, '1', NULL, 1 ), 
+    ( @domainID, 'civicrm/event&reset=1',                                   '儀表板',          'CiviEvent Dashboard',  'access CiviEvent', '',    @eventlastID, '1', NULL, 1 ), 
     ( @domainID, 'civicrm/participant/add&reset=1&action=add&context=standalone', 'Register Event Participant', 'Register Event Participant', 'access CiviEvent,edit event participants', 'AND', @eventlastID, '1', NULL, 2 ), 
     ( @domainID, 'civicrm/event/search&reset=1',                            'Find Participants',  'Find Participants',    'access CiviEvent', '',    @eventlastID, '1', NULL, 3 ), 
     ( @domainID, 'civicrm/event/import&reset=1',                            'Import Participants','Import Participants',  'access CiviEvent,edit event participants', 'AND',    @eventlastID, '1', '1',  4 ), 
@@ -16878,7 +16878,7 @@ SET @memberlastID:=LAST_INSERT_ID();
 INSERT INTO civicrm_navigation
     ( domain_id, url, label, name, permission, permission_operator, parent_id, is_active, has_separator, weight )
 VALUES    
-    ( @domainID, 'civicrm/member&reset=1',                              'Dashboard',           'Dashboard',       'access CiviMember', '', @memberlastID, '1', NULL, 1 ), 
+    ( @domainID, 'civicrm/member&reset=1',                              '儀表板',           'Dashboard',       'access CiviMember', '', @memberlastID, '1', NULL, 1 ), 
     ( @domainID, 'civicrm/member/add&reset=1&action=add&context=standalone', 'New Membership', 'New Membership',  'access CiviMember,edit memberships', 'AND', @memberlastID, '1', NULL, 2 ), 
     ( @domainID, 'civicrm/member/search&reset=1',                       'Find Members',        'Find Members',    'access CiviMember', '', @memberlastID, '1', NULL, 3 ), 
     ( @domainID, 'civicrm/member/import&reset=1',                       'Import Memberships',      'Import Members',  'access CiviMember,edit memberships', 'AND', @memberlastID, '1', NULL, 4 );
@@ -16886,7 +16886,7 @@ VALUES
 INSERT INTO civicrm_navigation
     ( domain_id, url, label, name, permission, permission_operator, parent_id, is_active, has_separator, weight )
 VALUES     
-    ( @domainID, NULL, 'Other', 'Other', 'access CiviGrant,administer CiviCase,access my cases and activities,access all cases and activities,administer CiviCampaign,manage campaign,reserve campaign contacts,release campaign contacts,interview campaign contacts,gotv campaign contacts', 'OR', NULL, '1', NULL, 9 );
+    ( @domainID, NULL, '其他', 'Other', 'access CiviGrant,administer CiviCase,access my cases and activities,access all cases and activities,administer CiviCampaign,manage campaign,reserve campaign contacts,release campaign contacts,interview campaign contacts,gotv campaign contacts', 'OR', NULL, '1', NULL, 9 );
     
 SET @otherlastID:=LAST_INSERT_ID();
 INSERT INTO civicrm_navigation
@@ -16898,7 +16898,7 @@ SET @caselastID:=LAST_INSERT_ID();
 INSERT INTO civicrm_navigation
     ( domain_id, url, label, name, permission, permission_operator, parent_id, is_active, has_separator, weight )
 VALUES    
-    ( @domainID, 'civicrm/case&reset=1',        'Dashboard', 'Dashboard', 'access my cases and activities,access all cases and activities', 'OR',       @caselastID, '1', NULL, 1 ), 
+    ( @domainID, 'civicrm/case&reset=1',        '儀表板', 'Dashboard', 'access my cases and activities,access all cases and activities', 'OR',       @caselastID, '1', NULL, 1 ), 
     ( @domainID, 'civicrm/case/add&reset=1&action=add&atype=13&context=standalone', 'New Case', 'New Case', 'add contacts,access all cases and activities', 'AND', @caselastID, '1', NULL, 2 ), 
     ( @domainID, 'civicrm/case/search&reset=1', 'Find Cases', 'Find Cases', 'access my cases and activities,access all cases and activities', 'OR',     @caselastID, '1', 1, 3 );
     
@@ -16911,7 +16911,7 @@ SET @grantlastID:=LAST_INSERT_ID();
 INSERT INTO civicrm_navigation
     ( domain_id, url, label, name, permission, permission_operator, parent_id, is_active, has_separator, weight )
 VALUES        
-    ( @domainID, 'civicrm/grant&reset=1',           'Dashboard', 'Dashboard', 'access CiviGrant', '',       @grantlastID, '1', NULL, 1 ), 
+    ( @domainID, 'civicrm/grant&reset=1',           '儀表板', 'Dashboard', 'access CiviGrant', '',       @grantlastID, '1', NULL, 1 ), 
     ( @domainID, 'civicrm/grant/add&reset=1&action=add&context=standalone', 'New Grant', 'New Grant', 'access CiviGrant,edit grants', 'AND', @grantlastID, '1', NULL, 2 ), 
     ( @domainID, 'civicrm/grant/search&reset=1',    'Find Grants', 'Find Grants', 'access CiviGrant', '',   @grantlastID, '1', 1, 3 );
 
@@ -16925,7 +16925,7 @@ SET @campaignlastID:=LAST_INSERT_ID();
 INSERT INTO civicrm_navigation
     ( domain_id, url, label, name, permission, permission_operator, parent_id, is_active, has_separator, weight )
 VALUES    
-    ( @domainID, 'civicrm/campaign&reset=1',        'Dashboard', 'Dashboard', 'manage campaign,administer CiviCampaign', 'OR', @campaignlastID, '1', NULL, 1 );
+    ( @domainID, 'civicrm/campaign&reset=1',        '儀表板', 'Dashboard', 'manage campaign,administer CiviCampaign', 'OR', @campaignlastID, '1', NULL, 1 );
 SET @campaigndashboardlastID:=LAST_INSERT_ID();
 INSERT INTO civicrm_navigation
     ( domain_id, url, label, name, permission, permission_operator, parent_id, is_active, has_separator, weight )
@@ -16973,7 +16973,7 @@ VALUES
 INSERT INTO civicrm_navigation
     ( domain_id, url, label, name, permission, permission_operator, parent_id, is_active, has_separator, weight )
 VALUES     
-    ( @domainID, NULL, 'Configure', 'Configure', 'administer CiviCRM', '', @adminlastID, '1', NULL, 3 );
+    ( @domainID, NULL, '設置', 'Configure', 'administer CiviCRM', '', @adminlastID, '1', NULL, 3 );
 
 SET @configurelastID:=LAST_INSERT_ID();
 INSERT INTO civicrm_navigation
@@ -16992,7 +16992,7 @@ INSERT INTO civicrm_navigation
 VALUES    
     ( @domainID, 'civicrm/admin/setting/component&reset=1',             'Enable CiviCRM Components', 'Enable Components', 'administer CiviCRM', '',   @globalSettinglastID, '1', NULL, 1 ), 
     ( @domainID, 'civicrm/admin/setting/preferences/display&reset=1',   'Site Preferences (screen and form configuration)', 'Site Preferences', 'administer CiviCRM', '', @globalSettinglastID, '1', NULL, 2 ), 
-    ( @domainID, 'civicrm/admin/setting/path&reset=1',                  'Directories',        'Directories',      'administer CiviCRM', '',        @globalSettinglastID, '1', NULL, 3 ), 
+    ( @domainID, 'civicrm/admin/setting/path&reset=1',                  '目錄',        'Directories',      'administer CiviCRM', '',        @globalSettinglastID, '1', NULL, 3 ), 
     ( @domainID, 'civicrm/admin/setting/url&reset=1',                   'Resource URLs',      'Resource URLs',    'administer CiviCRM', '',      @globalSettinglastID, '1', NULL, 4 ), 
     ( @domainID, 'civicrm/admin/setting/smtp&reset=1',                  'Outbound Email (SMTP/Sendmail)', 'Outbound Email', 'administer CiviCRM', '', @globalSettinglastID, '1', NULL, 5 ), 
     ( @domainID, 'civicrm/admin/setting/mapping&reset=1',               'Mapping and Geocoding', 'Mapping and Geocoding',   'administer CiviCRM', '', @globalSettinglastID, '1', NULL, 6 ), 
@@ -17171,7 +17171,7 @@ VALUES
 INSERT INTO civicrm_navigation
     ( domain_id, url, label, name, permission, permission_operator, parent_id, is_active, has_separator, weight )
 VALUES     
-    ( @domainID, NULL, 'Help', 'Help', NULL, '',  NULL, '1', NULL, 11);
+    ( @domainID, NULL, '說明', 'Help', NULL, '',  NULL, '1', NULL, 11);
 
 SET @adminHelplastID:=LAST_INSERT_ID();
 INSERT INTO civicrm_navigation
@@ -17184,7 +17184,7 @@ VALUES
 INSERT INTO civicrm_navigation
     ( domain_id, url, label, name, permission, permission_operator, parent_id, is_active, has_separator, weight )
 VALUES     
-    ( @domainID, NULL, 'Reports', 'Reports', 'access CiviReport', '',  NULL, '1', NULL, 8 );
+    ( @domainID, NULL, '報告', 'Reports', 'access CiviReport', '',  NULL, '1', NULL, 8 );
 
 SET @reportlastID:=LAST_INSERT_ID();
 INSERT INTO civicrm_navigation
