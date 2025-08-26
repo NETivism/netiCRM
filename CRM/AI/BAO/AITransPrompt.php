@@ -2,10 +2,11 @@
 
 /**
  * Class CRM_AI_BAO_AITransPrompt
- * 
+ *
  * Handles prompt translation and optimization for AI image generation
  */
 class CRM_AI_BAO_AITransPrompt {
+
 
   /**
    * Completion service instance for translation
@@ -37,17 +38,22 @@ class CRM_AI_BAO_AITransPrompt {
    * @param string $text Input text to translate
    * @param array $options Additional options for translation
    *
-   * @return string Translated and optimized prompt
+   * @return string|false Translated prompt, or false if input is invalid
    */
   public function translate($text, $options = []) {
+    // Basic format validation first
+    if (!$this->validatePromptFormat($text)) {
+      return false;
+    }
+
     // Language detection
     $language = $this->detectLanguage($text);
-    
+
     // If already English, return as is
     if ($language === 'english') {
       return $text;
     }
-    
+
     // For non-English text, proceed with translation
     // Implementation for actual translation will be added in next phase
     return $text;
@@ -64,12 +70,58 @@ class CRM_AI_BAO_AITransPrompt {
     // Use regex pattern to detect if text contains only English characters
     // Pattern matches: letters, numbers, spaces, and punctuation
     $englishPattern = '/^[a-zA-Z0-9\s\p{P}]+$/u';
-    
+
     if (preg_match($englishPattern, $text)) {
       return 'english';
     }
-    
+
     return 'non-english';
+  }
+
+  /**
+   * Validate prompt format for basic requirements
+   *
+   * @param mixed $text Input text to validate
+   *
+   * @return bool True if format is valid, false otherwise
+   */
+  public function validatePromptFormat($text) {
+    // Convert to string for processing
+    $text = (string) $text;
+    $trimmed = trim($text);
+
+    // Check empty content (including whitespace only)
+    if (strlen($trimmed) === 0) {
+      return false;
+    }
+
+    // Check for meaningless content (pure numbers or pure symbols)
+    if ($this->isMeaninglessContent($trimmed)) {
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
+   * Check if content is meaningless (pure numbers or pure symbols)
+   *
+   * @param string $text Input text to check
+   *
+   * @return bool True if content is meaningless, false otherwise
+   */
+  private function isMeaninglessContent($text) {
+    // Pure numbers only
+    if (preg_match('/^\d+$/', $text)) {
+      return true;
+    }
+
+    // Pure punctuation/symbols only
+    if (preg_match('/^[\p{P}\p{S}]+$/u', $text)) {
+      return true;
+    }
+
+    return false;
   }
 
   /**
