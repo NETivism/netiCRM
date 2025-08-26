@@ -17,11 +17,13 @@ test.use({ storageState: 'storageState.json' });
 
 test.describe.serial('Create Membership Type', () => {
   var organization = utils.makeid(10);
-  const membership_type =
-    process.env.GITHUB_ACTIONS === 'true'
-      ? 'typeForTest' // For CI testing, use fixed name 'typeForTest' as it's required by import.spec.js test
-      : `MembershipTypeForTest${Math.floor(Math.random() * 100000)}`; // For local testing, use random number to avoid duplicate membership type names
+  // For local testing, use random number to avoid duplicate membership type names
+  // const membership_type = `MembershipTypeForTest${Math.floor(
+  //   Math.random() * 100000
+  // )}`;
 
+  // For CI testing, use fixed name 'typeForTest' as it's required by import.spec.js test
+  const membership_type = 'typeForTest';
   const profile_name = `ProfileNameForTest${Math.floor(
     Math.random() * 100000
   )}`; // Use random number to avoid duplicate names
