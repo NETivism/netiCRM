@@ -155,14 +155,14 @@ class CRM_Utils_Recent {
     self::initialize();
     $tempRecent = self::$_recent;
 
-    self::$_recent = '';
+    self::$_recent = [];
 
-    // make sure item is not already present in list
+    // rebuild recent array excluding the matching item
     for ($i = 0; $i < count($tempRecent); $i++) {
       if (!($tempRecent[$i]['id'] == $recentItem['id'] &&
           $tempRecent[$i]['type'] == $recentItem['type']
         )) {
-        self::$_recent .= $tempRecent[$i];
+        self::$_recent[] = $tempRecent[$i];
       }
     }
 

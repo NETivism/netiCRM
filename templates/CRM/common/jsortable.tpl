@@ -71,7 +71,7 @@ eval('tableId =[' + tableId + ']');
         stype   = 'num';
         switch( option ) { 
             case 'sortable':
-                sortColumn += '[' + count + ', "asc" ],'; 
+                sortColumn += '[' + count + '],';
                 columns += '{"className": "'+ getElementClass( this ) +'", "type": "num"},';
             break;
             case 'date':
