@@ -327,14 +327,24 @@ class CRM_Report_Form_Member_Detail extends CRM_Report_Form {
       if (!empty($this->_noRepeats) && $this->_outputMode != 'csv') {
         // not repeat contact display names if it matches with the one
         // in previous row
-        $repeatFound = FALSE;
+        $currentContactId = CRM_Utils_Array::value('civicrm_contact_id', $row);
         foreach ($row as $colName => $colVal) {
-          if (CRM_Utils_Array::value($colName, $checkList) &&
-            is_array($checkList[$colName]) &&
-            in_array($colVal, $checkList[$colName])
-          ) {
-            $rows[$rowNum][$colName] = "";
-            $repeatFound = TRUE;
+          // Check all fields for repeats, but use special logic for contact display name
+          // For contact display name, only hide if it's the same contact ID as previous row
+          if (in_array($colName, $this->_noRepeats) && $colName == 'civicrm_contact_display_name') {
+            $lastContactId = CRM_Utils_Array::value('last_contact_id', $checkList);
+            if ($lastContactId && $lastContactId == $currentContactId) {
+              $rows[$rowNum][$colName] = "";
+            }
+            $checkList['last_contact_id'] = $currentContactId;
+          }
+          else {
+            if (CRM_Utils_Array::value($colName, $checkList) &&
+              is_array($checkList[$colName]) &&
+              in_array($colVal, $checkList[$colName])
+            ) {
+              $rows[$rowNum][$colName] = "";
+            }
           }
           if (in_array($colName, $this->_noRepeats)) {
             $checkList[$colName][] = $colVal;
