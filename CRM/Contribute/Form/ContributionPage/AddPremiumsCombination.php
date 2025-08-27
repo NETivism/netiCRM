@@ -131,13 +131,15 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
       $defaults['imageOption'] = 'noImage';
     }
 
-    // Load associated products
+    // Load associated products (using 1-based indexing to match form structure)
     $productDao = new CRM_Contribute_DAO_PremiumsCombinationProducts();
     $productDao->combination_id = $this->_cid;
     $productDao->find();
-    while ($productDao->fetch()) {
-      $defaults["product_{$productDao->product_id}"] = 1;
-      $defaults["quantity_{$productDao->product_id}"] = $productDao->quantity;
+    $index = 1; // Start from 1 to match product[1], product[2], etc.
+    while ($productDao->fetch() && $index <= 6) {
+      $defaults['product'][$index] = $productDao->product_id;
+      $defaults['quantity'][$index] = $productDao->quantity;
+      $index++;
     }
 
     return $defaults;
@@ -319,8 +321,6 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
     $this->applyFilter('__ALL__', 'trim');
     $this->add('text', 'combination_name', ts('Premium Combination Name'), 
       CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_PremiumsCombination', 'combination_name'), TRUE);
-    $this->addRule('combination_name', ts('A premium combination with this name already exists. Please select another name.'), 
-      'objectExists', ['CRM_Contribute_DAO_PremiumsCombination', $this->_cid]);
 
     $this->add('text', 'sku', ts('SKU'), 
       CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_PremiumsCombination', 'sku'));
@@ -360,14 +360,14 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
     $availableProducts = CRM_Contribute_PseudoConstant::products();
     $this->assign('availableProducts', $availableProducts);
 
-    // Add form elements for each product
-    foreach ($availableProducts as $productId => $productName) {
-      $this->add('checkbox', "product_{$productId}", $productName);
-      $this->add('text', "quantity_{$productId}", ts('Quantity'), [
+    // Create array-based form elements for products (up to 6 products)
+    for ($i = 1; $i <= 6; $i++) {
+      $this->add('select', "product[{$i}]", ts('Product'), 
+        ['' => ts('-- Select --')] + $availableProducts, FALSE);
+      $this->add('text', "quantity[{$i}]", ts('Quantity'), [
         'size' => 3, 
         'maxlength' => 3,
-        'style' => 'width: 60px; padding: 4px; text-align: center; border: 1px solid #ccc;',
-        'disabled' => 'disabled'
+        'value' => '1'
       ]);
     }
 
@@ -394,10 +394,12 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
 
     // Always check for products since we're always in edit mode now
     $hasSelectedProduct = FALSE;
-    foreach ($params as $key => $value) {
-      if (strpos($key, 'new_product_') === 0 && $value && !strpos($key, '_quantity')) {
-        $hasSelectedProduct = TRUE;
-        break;
+    if (!empty($params['product']) && is_array($params['product'])) {
+      foreach ($params['product'] as $productId) {
+        if ($productId) {
+          $hasSelectedProduct = TRUE;
+          break;
+        }
       }
     }
 
@@ -583,16 +585,14 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
     $deleteDao->delete();
 
     // Save selected products
-    foreach ($params as $key => $value) {
-      if (strpos($key, 'new_product_') === 0 && $value && !strpos($key, '_quantity')) {
-        $index = str_replace('new_product_', '', $key);
-        $quantityKey = "new_product_quantity_{$index}";
-        $quantity = CRM_Utils_Array::value($quantityKey, $params, 1);
-        
-        if ($value) {
+    if (!empty($params['product']) && is_array($params['product'])) {
+      foreach ($params['product'] as $index => $productId) {
+        if ($productId) {
+          $quantity = CRM_Utils_Array::value($index, $params['quantity'], 1);
+          
           $productDao = new CRM_Contribute_DAO_PremiumsCombinationProducts();
           $productDao->combination_id = $combinationId;
-          $productDao->product_id = $value; // $value is the product_id
+          $productDao->product_id = $productId;
           $productDao->quantity = $quantity;
           $productDao->save();
         }
