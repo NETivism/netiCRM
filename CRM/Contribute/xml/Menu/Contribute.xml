@@ -142,7 +142,7 @@
   </item>
   <item>
      <path>civicrm/admin/contribute/addPremiumsCombinationToPage</path>
-     <title>Add Premium Combinations to This Page</title>
+     <title>Manage Premium Combinations</title>
      <page_callback>CRM_Contribute_Form_ContributionPage_AddPremiumsCombination</page_callback>
   </item>
   <item>
@@ -168,15 +168,6 @@
      <adminGroup>CiviContribute</adminGroup>
      <icon>admin/small/Premiums.png</icon>
      <weight>365</weight>
-  </item>
-  <item>
-     <path>civicrm/admin/contribute/managePremiumsCombination</path>
-     <title>Manage Premium Combinations</title>
-     <page_callback>CRM_Contribute_Page_ManagePremiumsCombination</page_callback>
-     <desc>CiviContribute allows you to configure premium combinations which bundle multiple products together as thank-you gifts. Define the combinations you want to offer here.</desc>
-     <adminGroup>CiviContribute</adminGroup>
-     <icon>admin/small/Premiums.png</icon>
-     <weight>366</weight>
   </item>
   <item>
      <path>civicrm/admin/contribute/contributionType</path>

@@ -168,10 +168,17 @@ class CRM_Contribute_BAO_PremiumsCombination extends CRM_Contribute_DAO_Premiums
    * @access public
    * @static
    */
-  static function getCombinations($premiumsId, $onlyActive = TRUE) {
+  static function getCombinations($premiumsId, $onlyActive = TRUE, $unassignedOnly = TRUE) {
     $combinations = [];
     $combination = new CRM_Contribute_DAO_PremiumsCombination();
-    $combination->premiums_id = $premiumsId;
+    
+    if ($unassignedOnly) {
+      // Get combinations that are not assigned to any page (premiums_id is NULL)
+      $combination->premiums_id = NULL;
+    } else {
+      // Get combinations assigned to specific premiums_id
+      $combination->premiums_id = $premiumsId;
+    }
 
     if ($onlyActive) {
       $combination->is_active = 1;
