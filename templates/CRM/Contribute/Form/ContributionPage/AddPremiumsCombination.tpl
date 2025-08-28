@@ -76,19 +76,10 @@
                   <tr id="productField_{$index}" class="product-row form-item {cycle values="odd-row,even-row"}" 
                       {if $index GT 2}style="display:none;"{/if}>
                     <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">
-                      <select name="product[{$index}]" style="width: 200px; padding: 4px;">
-                        <option value="">{ts}-- Select --{/ts}</option>
-                        {if $availableProducts}
-                          {foreach from=$availableProducts key=productId item=productName}
-                            <option value="{$productId}">{$productName}</option>
-                          {/foreach}
-                        {/if}
-                      </select>
+                      {$form.product[$index].html}
                     </td>
                     <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">
-                      <input type="text" name="quantity[{$index}]" value="1" 
-                             style="width: 60px; padding: 4px; text-align: center; border: 1px solid #ccc;" 
-                             maxlength="3" />
+                      {$form.quantity[$index].html}
                     </td>
                     <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">
                       {if $index GT 1}
