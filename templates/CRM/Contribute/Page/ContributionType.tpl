@@ -37,7 +37,8 @@
         {strip}
 	{* handle enable/disable actions*}
  	{include file="CRM/common/enableDisable.tpl"}
-        <table cellpadding="0" cellspacing="0" border="0">
+        {include file="CRM/common/jsortable.tpl"}
+        <table class="display" cellpadding="0" cellspacing="0" border="0">
            <thead class="sticky">
             <th>{ts}ID{/ts}</th>
             <th>{ts}Name{/ts}</th>

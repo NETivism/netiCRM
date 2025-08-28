@@ -59,7 +59,7 @@
            </td>
         </tr>
     </table>
-        {if $parent_tags|@count > 0}
+        {if $parent_tags}
         <table class="form-layout-compressed">
             <tr><td><label>{ts}Remove Parent?{/ts}</label></td></tr>
             {foreach from=$parent_tags item=ctag key=tag_id}

@@ -56,7 +56,7 @@
             <table id="options" class="display">
         	    <thead>
                     <tr>
-                    <th>{ts}ID{/ts}</th>
+                    <th id="sortable">{ts}ID{/ts}</th>
             	      <th>{ts}Tag{/ts}</th>
             	      <th id="nosort">{ts}Description{/ts}</th>
             	      <th>{ts}Parent ID{/ts}</th>
