@@ -72,7 +72,7 @@ class CRM_Contribute_Page_Premium extends CRM_Core_Page_Basic {
           'name' => ts('Edit'),
           'url' => 'civicrm/admin/contribute/addProductToPage',
           'qs' => 'action=update&id=%%id%%&pid=%%pid%%&reset=1',
-          'title' => ts('Edit Premium'),
+          'title' => ts('Edit Premium Combination'),
         ],
         CRM_Core_Action::PREVIEW => [
           'name' => ts('Preview'),
