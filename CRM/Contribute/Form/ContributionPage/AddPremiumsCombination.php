@@ -456,19 +456,8 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
   private function _handleDeleteAction() {
     $urlParams = 'civicrm/admin/contribute/premium';
     $url = CRM_Utils_System::url($urlParams, 'reset=1&action=update&id=' . $this->_id);
-    
-    if ($this->_isEdit) {
-      // Delete combination and products
-      CRM_Contribute_BAO_PremiumsCombination::del($this->_cid);
-      CRM_Core_Session::setStatus(ts('Selected Premium Combination has been deleted.'));
-    } else {
-      // Only remove the page association
-      $dao = new CRM_Contribute_DAO_PremiumsCombination();
-      $dao->id = $this->_cid;
-      $dao->premiums_id = NULL;
-      $dao->save();
-      CRM_Core_Session::setStatus(ts('The selected premium combination has been removed from this contribution page.'));
-    }
+    CRM_Contribute_BAO_PremiumsCombination::del($this->_cid);
+    CRM_Core_Session::setStatus(ts('Selected Premium Combination has been deleted.'));
     CRM_Utils_System::redirect($url);
   }
 

@@ -26,7 +26,14 @@
 {* this template is used for adding/editing/deleting premium combination  *}
 <div class="crm-block crm-form-block crm-contribution-addpremiumscombination-form-block">
 <fieldset><legend>{if $action eq 1}{ts}New Premium Combination{/ts}{elseif $action eq 2}{ts}Edit Premium Combination{/ts}{elseif $action eq 1024}{ts}Preview Premium Combination{/ts}{else}{ts}Delete Premium Combination{/ts}{/if}</legend>
+   {if $action eq 8}
+      <div class="messages status">
+          {ts}Are you sure you want to remove this premium product from this Contribution page?{/ts}
+      </div>
+  {else}
 <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>
+  {/if}
+  {if $action ne 8}
   <table class="form-layout-compressed">
       <tr class="crm-contribution-form-block-is_active">
          <td class="label">{$form.is_active.label}</td>
@@ -171,6 +178,7 @@
         </td>
       </tr>
   </table>
+  {/if}
 </div>
 <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
 </fieldset>
