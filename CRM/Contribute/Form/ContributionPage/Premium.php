@@ -172,14 +172,14 @@ class CRM_Contribute_Form_ContributionPage_Premium extends CRM_Contribute_Form_C
         while ($dao->fetch()) {
           // Get products for each combination
           $productsQuery = "
-            SELECT 
+            SELECT
               p.name,
               p.sku as product_sku,
               pcp.quantity
             FROM civicrm_premiums_combination_products pcp
             LEFT JOIN civicrm_product p ON pcp.product_id = p.id
             WHERE pcp.combination_id = %1
-            ORDER BY p.name
+            ORDER BY p.id
           ";
           $productsDao = CRM_Core_DAO::executeQuery($productsQuery, [
             1 => [$dao->id, 'Integer']
@@ -198,7 +198,7 @@ class CRM_Contribute_Form_ContributionPage_Premium extends CRM_Contribute_Form_C
           $combinationContent = [];
           foreach ($products as $product) {
             $productDisplay = $product['name'];
-            if ($product['quantity'] > 1) {
+            if ($product['quantity'] >= 1) {
               $productDisplay .= ' x' . $product['quantity'];
             }
             $combinationContent[] = $productDisplay;

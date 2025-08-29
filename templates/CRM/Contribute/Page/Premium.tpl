@@ -51,7 +51,7 @@
   <tr class="{cycle values='odd-row,even-row'} {$combination.class}{if NOT $combination.is_active} disabled{/if}">
       <td class="crm-contribution-form-block-combination_name">{$combination.combination_name}</td>
       <td class="crm-contribution-form-block-sku">{$combination.sku|default:'-'}</td>
-      <td class="crm-contribution-form-block-combination_content">{$combination.combination_content}</td>
+      <td class="crm-contribution-form-block-combination_content">{$combination.combination_content|replace:', ':'<br>'}</td>
       <td class="crm-contribution-form-block-price">
         {if $combination.min_contribution_recur}
           {$combination.min_contribution_recur|crmMoney:$combination.currency}
