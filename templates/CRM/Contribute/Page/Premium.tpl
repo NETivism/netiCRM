@@ -25,12 +25,12 @@
 *}
 {include file="CRM/Contribute/Form/ContributionPage/Premium.tpl"}
 {capture assign=managePremiumsURL}{crmURL p='civicrm/admin/contribute/managePremiums' q="reset=1"}{/capture}
-{capture assign=addPremiumsCombinationURL}{crmURL p='civicrm/admin/contribute/addPremiumsCombinationToPage' q="action=add&reset=1&pid=$id"}{/capture}
+{capture assign=addPremiumsCombinationURL}{crmURL p='civicrm/admin/contribute/addPremiumsCombinationToPage' q="action=add&reset=1&id=$id"}{/capture}
 
 {* Premium Combinations Table - Show when combination feature is enabled *}
 {if $combinations ne null }
     <div class="action-link-button">
-        <a class="button" href="{crmURL p='civicrm/admin/contribute/addPremiumsCombinationToPage' q="action=add&reset=1&pid=$id"}"><i class="zmdi zmdi-plus-circle-o"></i> {ts}Offer other gift combinations on this Contribution Page{/ts}</a>
+        <a class="button" href="{crmURL p='civicrm/admin/contribute/addPremiumsCombinationToPage' q="action=add&reset=1&id=$id"}"><i class="zmdi zmdi-plus-circle-o"></i> {ts}Offer other gift combinations on this Contribution Page{/ts}</a>
     </div>
 {/if}
 {if $enablePremiumsCombination && $combinations}
@@ -73,7 +73,7 @@
   {/strip}
     {if $combinations ne null }
     <div class="action-link-button">
-        <a class="button" href="{crmURL p='civicrm/admin/contribute/addPremiumsCombinationToPage' q="action=add&reset=1&pid=$id"}"><i class="zmdi zmdi-plus-circle-o"></i> {ts}Offer other gift combinations on this Contribution Page{/ts}</a>
+        <a class="button" href="{crmURL p='civicrm/admin/contribute/addPremiumsCombinationToPage' q="action=add&reset=1&id=$id"}"><i class="zmdi zmdi-plus-circle-o"></i> {ts}Offer other gift combinations on this Contribution Page{/ts}</a>
     </div>
     {/if}
 </div>

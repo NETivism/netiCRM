@@ -81,19 +81,19 @@ class CRM_Contribute_Form_ContributionPage_Premium extends CRM_Contribute_Form_C
       CRM_Core_Action::UPDATE => [
         'name' => ts('Edit'),
         'url' => 'civicrm/admin/contribute/addPremiumsCombinationToPage',
-        'qs' => 'action=update&id=%%id%%&pid=%%pid%%&reset=1',
+        'qs' => 'action=update&cid=%%id%%&id=%%pid%%&reset=1',
         'title' => ts('Edit Premium'),
       ],
       CRM_Core_Action::PREVIEW => [
         'name' => ts('Preview'),
         'url' => 'civicrm/admin/contribute/addPremiumsCombinationToPage',
-        'qs' => 'action=preview&id=%%id%%&pid=%%pid%%',
+        'qs' => 'action=preview&cid=%%id%%&id=%%pid%%',
         'title' => ts('Preview Premium Combination'),
       ],
       CRM_Core_Action::DELETE => [
         'name' => ts('delete'),
         'url' => 'civicrm/admin/contribute/addPremiumsCombinationToPage',
-        'qs' => 'action=delete&id=%%id%%&pid=%%pid%%',
+        'qs' => 'action=delete&cid=%%id%%&id=%%pid%%',
         'extra' => 'onclick = "if (confirm(\'' . $deleteExtra . '\') ) {  this.href+=\'&amp;confirmed=1\'; else return false;}"',
         'title' => ts('Delete Premium Combination'),
       ],

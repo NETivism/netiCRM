@@ -53,7 +53,7 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
   public function preProcess() {
     parent::preProcess();
 
-    $this->_cid = CRM_Utils_Request::retrieve('id', 'Positive', $this, FALSE, 0);
+    $this->_cid = CRM_Utils_Request::retrieve('cid', 'Positive', $this, FALSE, 0);
     $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE, CRM_Core_Action::ADD);
 
     // Check if this is an edit action
@@ -177,7 +177,7 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
    */
   private function _setDefaultWeight($defaults) {
     if (!isset($defaults['weight']) || !$defaults['weight']) {
-      $pageID = CRM_Utils_Request::retrieve('pid', 'Positive', $this, FALSE, 0);
+      $pageID = CRM_Utils_Request::retrieve('id', 'Positive', $this, FALSE, 0);
       $dao = new CRM_Contribute_DAO_Premium();
       $dao->entity_table = 'civicrm_contribution_page';
       $dao->entity_id = $pageID;
@@ -462,7 +462,7 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
   }
 
   private function _processCombinationEdit($params) {
-    $pageID = CRM_Utils_Request::retrieve('pid', 'Positive', $this, FALSE, 0);
+    $pageID = CRM_Utils_Request::retrieve('id', 'Positive', $this, FALSE, 0);
 
     $dao = new CRM_Contribute_DAO_Premium();
     $dao->entity_table = 'civicrm_contribution_page';
@@ -479,7 +479,7 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
   }
 
   private function _processCombinationSelection($params) {
-    $pageID = CRM_Utils_Request::retrieve('pid', 'Positive', $this, FALSE, 0);
+    $pageID = CRM_Utils_Request::retrieve('id', 'Positive', $this, FALSE, 0);
     $urlParams = 'civicrm/admin/contribute/premium';
     $url = CRM_Utils_System::url($urlParams, 'reset=1&action=update&id=' . $this->_id);
 
