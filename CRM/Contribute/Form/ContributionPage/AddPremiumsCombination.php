@@ -124,7 +124,7 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
       $defaults['imageUrl'] = $dao->image;
       $defaults['thumbnailUrl'] = $dao->thumbnail;
       $defaults['imageOption'] = 'thumbnail';
-      $this->assign('thumbnailUrl', $defaults['thumbnailUrl']);
+      $this->assign('thumbnailUrl', $dao->thumbnail);
       $this->assign('thumbURL', $dao->thumbnail);
       $this->assign('imageURL', $dao->image);
     } else {
@@ -343,6 +343,8 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
 
     $this->add('file', 'uploadFile', ts('Image File Name'), 'onChange="select_option();"');
     $this->addRule('uploadFile', ts('Image could not be uploaded due to invalid type extension.'), 'imageFile', '1000x1000');
+    // Set upload element for correct file handling
+    $this->addUploadElement('uploadFile');
 
     $this->addNumber('min_contribution', ts('Min Contribution'), 
       CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_PremiumsCombination', 'min_contribution'), TRUE);
@@ -377,6 +379,13 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
 
     $this->assign('combinationId', $this->_cid);
     $this->assign('isEditMode', $this->_isEdit);
+
+    // Set correct upload directory for image files
+    $config = CRM_Core_Config::singleton();
+    $uploadNames = $this->get('uploadNames');
+    if (!empty($uploadNames)) {
+      $this->controller->addUploadAction($config->imageUploadDir, $uploadNames);
+    }
   }
 
   /**
@@ -511,8 +520,10 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
    * @access private
    */
   private function _saveCombinationDetails($params, $premiumID) {
+    $params = $this->controller->exportValues($this->_name);
     $imageFile = CRM_Utils_Array::value('uploadFile', $params);
-    $imageFile = $imageFile['name'];
+    $imageFileName = isset($imageFile['name']) ? basename($imageFile['name']) : '';
+    $imageFile = $imageFile['name'] ?? '';
 
     $config = &CRM_Core_Config::singleton();
     $error = FALSE;
@@ -522,13 +533,13 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
       $value = CRM_Utils_Array::value('imageOption', $params, FALSE);
       if ($value == 'image') {
         if ($imageFile) {
-          $imageFileName = preg_replace('/\\.[^.\\s]{3,4}$/', '', $imageFile);
-          $ext = str_replace($imageFileName, '', $imageFile);
+          $imageFileName = preg_replace('/\\.[^.\\s]{3,4}$/', '', $imageFileName);
+          $ext = str_replace($imageFileName, '', basename($imageFile));
           $gdSupport = CRM_Utils_System::getModuleSetting('gd', 'GD Support');
           if($gdSupport) {
             $error = false;
-            $params['image'] = $this->_resizeImage($imageFile, $imageFileName."_full".$ext, 1200, 1200);
-            $params['thumbnail'] = $this->_resizeImage($imageFile, $imageFileName."_thumb".$ext, 480, 480);
+            $params['image'] = $this->_resizeImage($imageFile, $config->imageUploadDir . $imageFileName."_full".$ext, 1200, 1200);
+            $params['thumbnail'] = $this->_resizeImage($imageFile, $config->imageUploadDir . $imageFileName."_thumb".$ext, 480, 480);
           }
           else {
             $error = true;

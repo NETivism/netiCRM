@@ -28,7 +28,7 @@
 <fieldset><legend>{if $action eq 1}{ts}New Premium Combination{/ts}{elseif $action eq 2}{ts}Edit Premium Combination{/ts}{elseif $action eq 1024}{ts}Preview Premium Combination{/ts}{else}{ts}Delete Premium Combination{/ts}{/if}</legend>
    {if $action eq 8}
       <div class="messages status">
-          {ts}Are you sure you want to remove this premium product from this Contribution page?{/ts}
+          {ts}Are you sure you want to remove this premium combination from this Contribution page?{/ts}
       </div>
   {else}
 <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>
