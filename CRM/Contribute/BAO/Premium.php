@@ -116,62 +116,55 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
       $premiumBlock = [];
       CRM_Core_DAO::storeValues($dao, $premiumBlock);
 
+      // Check if this premium uses combinations
+      if (!empty($premiumBlock['premiums_combination']) && $premiumBlock['premiums_combination'] == 1) {
+        // Build combination block
+        self::buildCombinationBlock($form, $premiumID, $formItems, $selectedProductID, $selectedOption);
+      }
+      else {
+        // Build regular premium block
+        self::buildRegularPremiumBlock($form, $premiumID, $formItems, $selectedProductID, $selectedOption, $premiumBlock);
+      }
+    }
+  }
 
-      $dao = new CRM_Contribute_DAO_PremiumsProduct();
-      $dao->premiums_id = $premiumID;
-      $dao->orderBy('weight');
-      $dao->find();
+  /**
+   * Build combination premium block
+   */
+  static function buildCombinationBlock(&$form, $premiumID, $formItems, $selectedProductID = NULL, $selectedOption = NULL) {
+    $dao = new CRM_Contribute_DAO_Premium();
+    $dao->id = $premiumID;
+    if ($dao->find(TRUE)) {
+      $premiumBlock = [];
+      CRM_Core_DAO::storeValues($dao, $premiumBlock);
 
-      $products = [];
+      // Get combinations
+      $combinationDAO = new CRM_Contribute_DAO_PremiumsCombination();
+      $combinationDAO->premiums_id = $premiumID;
+      $combinationDAO->is_active = 1;
+      $combinationDAO->orderBy('weight');
+      $combinationDAO->find();
+
+      $combinations = [];
       $radio = [];
-      while ($dao->fetch()) {
+      while ($combinationDAO->fetch()) {
+        $combinationData = [];
+        CRM_Core_DAO::storeValues($combinationDAO, $combinationData);
+        // Get products in this combination
+        $combinationData['products'] = CRM_Contribute_BAO_PremiumsCombination::getCombinationProducts($combinationDAO->id);
+        $combinations[$combinationDAO->id] = $combinationData;
 
-        $productDAO = new CRM_Contribute_DAO_Product();
-        $productDAO->id = $dao->product_id;
-        $productDAO->is_active = 1;
-        if ($productDAO->find(TRUE)) {
-          // #26455, backward compatibility needed
-          if (is_null($productDAO->min_contribution_recur)) {
-            $productDAO->min_contribution_recur = $productDAO->min_contribution;
-          }
-          if (is_null($productDAO->calculate_mode)) {
-            $productDAO->calculate_mode = 'cumulative';
-          }
-          if (is_null($productDAO->installments)) {
-            $productDAO->installments = 0;
-          }
-          if ($selectedProductID != NULL) {
-            if ($selectedProductID == $productDAO->id) {
-              if ($selectedOption) {
-                $productDAO->options = ts('Selected Option') . ': ' . $selectedOption;
-              }
-              else {
-                $productDAO->options = NULL;
-              }
-              CRM_Core_DAO::storeValues($productDAO, $products[$productDAO->id]);
-            }
-          }
-          else {
-            CRM_Core_DAO::storeValues($productDAO, $products[$productDAO->id]);
-          }
-        }
-        $productAttr = [];
-        $productAttr['data-min-contribution'] = $products[$productDAO->id]['min_contribution'];
-        $productAttr['data-min-contribution-recur'] = $products[$productDAO->id]['min_contribution_recur'];
-        $productAttr['data-calculate-mode'] = $products[$productDAO->id]['calculate_mode'];
-        $productAttr['data-installments'] = $products[$productDAO->id]['installments'];
-        
-        $radio[$productDAO->id] = $form->createElement('radio', NULL, NULL, ' ', $productDAO->id, $productAttr);
-        $options = $temp = [];
-        $temp = explode(',', $productDAO->options);
-        foreach ($temp as $value) {
-          $options[trim($value)] = trim($value);
-        }
-        if ($temp[0] != '') {
-          $form->addElement('select', 'options_' . $productDAO->id, NULL, $options);
+        if ($formItems) {
+          $combinationAttr = [];
+          $combinationAttr['data-min-contribution'] = $combinationDAO->min_contribution;
+          $combinationAttr['data-min-contribution-recur'] = $combinationDAO->min_contribution_recur;
+          $combinationAttr['data-calculate-mode'] = $combinationDAO->calculate_mode;
+          $combinationAttr['data-installments'] = $combinationDAO->installments;
+          $radio['combination_' . $combinationDAO->id] = $form->createElement('radio', NULL, NULL, ' ', 'combination_' . $combinationDAO->id, $combinationAttr);
         }
       }
-      if (count($products)) {
+
+      if (count($combinations)) {
         $form->assign('showRadioPremium', $formItems);
         if ($formItems) {
           $radio[''] = $form->createElement('radio', NULL, NULL, ' ', 'no_thanks', NULL);
@@ -181,10 +174,84 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
           $default = ['selectProduct' => 'no_thanks'];
           $form->setDefaults($default);
         }
-        $form->assign('showSelectOptions', $formItems);
-        $form->assign('products', $products);
+        $form->assign('combinations', $combinations);
         $form->assign('premiumBlock', $premiumBlock);
+        $form->assign('useCombinations', TRUE);
       }
+    }
+  }
+
+  /**
+   * Build regular premium block
+   */
+  static function buildRegularPremiumBlock(&$form, $premiumID, $formItems, $selectedProductID, $selectedOption, $premiumBlock) {
+    $dao = new CRM_Contribute_DAO_PremiumsProduct();
+    $dao->premiums_id = $premiumID;
+    $dao->orderBy('weight');
+    $dao->find();
+
+    $products = [];
+    $radio = [];
+    while ($dao->fetch()) {
+
+      $productDAO = new CRM_Contribute_DAO_Product();
+      $productDAO->id = $dao->product_id;
+      $productDAO->is_active = 1;
+      if ($productDAO->find(TRUE)) {
+        // #26455, backward compatibility needed
+        if (is_null($productDAO->min_contribution_recur)) {
+          $productDAO->min_contribution_recur = $productDAO->min_contribution;
+        }
+        if (is_null($productDAO->calculate_mode)) {
+          $productDAO->calculate_mode = 'cumulative';
+        }
+        if (is_null($productDAO->installments)) {
+          $productDAO->installments = 0;
+        }
+        if ($selectedProductID != NULL) {
+          if ($selectedProductID == $productDAO->id) {
+            if ($selectedOption) {
+              $productDAO->options = ts('Selected Option') . ': ' . $selectedOption;
+            }
+            else {
+              $productDAO->options = NULL;
+            }
+            CRM_Core_DAO::storeValues($productDAO, $products[$productDAO->id]);
+          }
+        }
+        else {
+          CRM_Core_DAO::storeValues($productDAO, $products[$productDAO->id]);
+        }
+      }
+      $productAttr = [];
+      $productAttr['data-min-contribution'] = $products[$productDAO->id]['min_contribution'];
+      $productAttr['data-min-contribution-recur'] = $products[$productDAO->id]['min_contribution_recur'];
+      $productAttr['data-calculate-mode'] = $products[$productDAO->id]['calculate_mode'];
+      $productAttr['data-installments'] = $products[$productDAO->id]['installments'];
+      
+      $radio[$productDAO->id] = $form->createElement('radio', NULL, NULL, ' ', $productDAO->id, $productAttr);
+      $options = $temp = [];
+      $temp = explode(',', $productDAO->options);
+      foreach ($temp as $value) {
+        $options[trim($value)] = trim($value);
+      }
+      if ($temp[0] != '') {
+        $form->addElement('select', 'options_' . $productDAO->id, NULL, $options);
+      }
+    }
+    if (count($products)) {
+      $form->assign('showRadioPremium', $formItems);
+      if ($formItems) {
+        $radio[''] = $form->createElement('radio', NULL, NULL, ' ', 'no_thanks', NULL);
+        $form->assign('no_thanks_label', ts('No thank you'));
+        $form->addGroup($radio, 'selectProduct', NULL);
+        $form->addRule('selectProduct', ts('%1 is a required field.', [1 => ts('Premium')]), 'required');
+        $default = ['selectProduct' => 'no_thanks'];
+        $form->setDefaults($default);
+      }
+      $form->assign('showSelectOptions', $formItems);
+      $form->assign('products', $products);
+      $form->assign('premiumBlock', $premiumBlock);
     }
   }
 
