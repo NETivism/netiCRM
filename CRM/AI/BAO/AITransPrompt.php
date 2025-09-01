@@ -33,14 +33,16 @@ class CRM_AI_BAO_AITransPrompt {
    * Constructor
    *
    * @param CRM_AI_CompletionService $completionService Optional completion service instance
+   * @param string $model Model name (default: gpt-4o)
+   * @param int $maxTokens Maximum tokens (default: 4000)
    */
-  public function __construct($completionService = null) {
+  public function __construct($completionService = null, $model = 'gpt-4o', $maxTokens = 4000) {
     $this->completionService = $completionService ?? new CRM_AI_CompletionService_OpenAI();
     $this->config = CRM_Core_Config::singleton();
     
-    // Set model to GPT-4o and max tokens to 128000 (GPT-4o's maximum)
-    $this->completionService->setModel('gpt-4o');
-    $this->completionService->setMaxTokens(128000);
+    // Set model and max tokens via parameters (dependency injection)
+    $this->completionService->setModel($model);
+    $this->completionService->setMaxTokens($maxTokens);
     
     // Initialize System Prompt
     $this->initializeSystemPrompt();
@@ -82,8 +84,7 @@ class CRM_AI_BAO_AITransPrompt {
     $response = $this->completionService->request([
       'action' => CRM_AI_BAO_AICompletion::CHAT_COMPLETION,
       'messages' => $messages,
-      'temperature' => 0.3,
-      'max_tokens' => 1000
+      'temperature' => 0.3
     ]);
 
     // Return complete response information including token usage
