@@ -38,6 +38,10 @@ class CRM_AI_BAO_AITransPrompt {
     $this->completionService = $completionService ?? new CRM_AI_CompletionService_OpenAI();
     $this->config = CRM_Core_Config::singleton();
     
+    // Set model to GPT-4o and max tokens to 128000 (GPT-4o's maximum)
+    $this->completionService->setModel('gpt-4o');
+    $this->completionService->setMaxTokens(128000);
+    
     // Initialize System Prompt
     $this->initializeSystemPrompt();
   }

@@ -8,6 +8,7 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
 
   CONST MODEL_LIST = [
     'gpt-3.5-turbo',
+    'gpt-4o',
   ];
 
   /**
