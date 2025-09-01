@@ -39,11 +39,11 @@ class CRM_AI_BAO_AITransPrompt {
   public function __construct($completionService = null, $model = 'gpt-4o', $maxTokens = 4000) {
     $this->completionService = $completionService ?? new CRM_AI_CompletionService_OpenAI();
     $this->config = CRM_Core_Config::singleton();
-    
+
     // Set model and max tokens via parameters (dependency injection)
     $this->completionService->setModel($model);
     $this->completionService->setMaxTokens($maxTokens);
-    
+
     // Initialize System Prompt
     $this->initializeSystemPrompt();
   }
@@ -383,7 +383,6 @@ You are a prompt translation specialist with expertise in Stable Diffusion 3.5, 
   "success": false,
   "error": {
     "code": "CONTENT_VIOLATION",
-    "message": "[Specific rejection reason and suggestions]"
   }
 }
 ```
@@ -395,7 +394,7 @@ You are a prompt translation specialist with expertise in Stable Diffusion 3.5, 
 
 **Programming Logic**:
 - `success === true` → Safety check passed, directly use `data.prompt` field content
-- `success === false` → Processing failed, handle error based on `error.code` and `error.message`
+- `success === false` → Processing failed, handle error based on `error.code`
 
 Please always process each request in a professional, accurate, and safe manner, **strictly prioritizing user-specified style and aspect ratio parameters**, ensuring that output prompts can produce high-quality image results that meet user expectations on Stable Diffusion 3.5.';
   }
@@ -415,7 +414,7 @@ Please always process each request in a professional, accurate, and safe manner,
       'ratio' => $options['ratio'] ?? null
     ];
 
-    return "Please process the following input according to the workflow above:\n\n" . 
+    return "Please process the following input according to the workflow above:\n\n" .
            json_encode($userInput, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
   }
 }
