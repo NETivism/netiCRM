@@ -79,7 +79,7 @@
 </div>
 {/if}
 
-{if $rows && !($enablePremiumsCombination && $combinations)}
+{if $rows && !$enablePremiumsCombination}
 <div id="ltype">
     {if $products ne null }
         <div class="action-link-button">

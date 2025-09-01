@@ -145,7 +145,7 @@ cj(document).ready(function($){
             {foreach from=$combinations item=combination}
             <tr valign="top" class="combination-row">
                 {if $showRadioPremium}
-                    {assign var="cid" value="combination_"|cat:$combination.id}
+                    {assign var="cid" value=$combination.id}
                     <td class="premium-selected">{$form.selectProduct.$cid.html}</td>
                 {/if}
                 {if $combination.thumbnail}

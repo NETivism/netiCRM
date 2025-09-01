@@ -160,7 +160,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
           $combinationAttr['data-min-contribution-recur'] = $combinationDAO->min_contribution_recur;
           $combinationAttr['data-calculate-mode'] = $combinationDAO->calculate_mode;
           $combinationAttr['data-installments'] = $combinationDAO->installments;
-          $radio['combination_' . $combinationDAO->id] = $form->createElement('radio', NULL, NULL, ' ', 'combination_' . $combinationDAO->id, $combinationAttr);
+          $radio[$combinationDAO->id] = $form->createElement('radio', NULL, NULL, ' ', $combinationDAO->id, $combinationAttr);
         }
       }
 
