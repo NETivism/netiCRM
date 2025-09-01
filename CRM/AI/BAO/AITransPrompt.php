@@ -52,7 +52,7 @@ class CRM_AI_BAO_AITransPrompt {
    * @param string $text Input text to translate
    * @param array $options Additional options for translation
    *
-   * @return string Translated prompt response from OpenAI
+   * @return array Complete response including message, token usage, and status
    */
   public function translate($text, $options = []) {
     // Basic format validation first
@@ -86,8 +86,8 @@ class CRM_AI_BAO_AITransPrompt {
       'max_tokens' => 1000
     ]);
 
-    // Return the message content from response
-    return $response['message'] ?? $response;
+    // Return complete response information including token usage
+    return $response;
   }
 
   /**
