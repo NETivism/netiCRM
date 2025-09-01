@@ -62,15 +62,28 @@ class CRM_AI_BAO_AITransPrompt {
     // Build user prompt with input text and options
     $userPrompt = $this->buildUserPrompt($text, $options);
 
-    // Call OpenAI service with System Prompt
-    $response = $this->completionService->complete([
-      'system' => $this->systemPrompt,
-      'user' => $userPrompt,
+    // Prepare messages in OpenAI format
+    $messages = [
+      [
+        'role' => 'system',
+        'content' => $this->systemPrompt
+      ],
+      [
+        'role' => 'user',
+        'content' => $userPrompt
+      ]
+    ];
+
+    // Call OpenAI service using correct method and parameters
+    $response = $this->completionService->request([
+      'action' => CRM_AI_BAO_AICompletion::CHAT_COMPLETION,
+      'messages' => $messages,
       'temperature' => 0.3,
       'max_tokens' => 1000
     ]);
 
-    return $response;
+    // Return the message content from response
+    return $response['message'] ?? $response;
   }
 
   /**
