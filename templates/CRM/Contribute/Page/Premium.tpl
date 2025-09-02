@@ -60,12 +60,7 @@
         {/if}
       </td>
       <td class="crm-contribution-form-block-min_contribution">{$combination.min_contribution|crmMoney:$combination.currency}</td>
-      <td class="nowrap crm-contribution-form-block-weight">
-        <span class="nowrap">
-          <a href="#" onclick="moveUp('{$combination.id}'); return false;" title="{ts}Move Up{/ts}">↑</a>
-          <a href="#" onclick="moveDown('{$combination.id}'); return false;" title="{ts}Move Down{/ts}">↓</a>
-        </span>
-      </td>
+      <td class="nowrap crm-contribution-form-block-weight">{$combination.weight}</td>
       <td class="crm-contribution-form-block-action">{$combination.action}</td>
   </tr>
   {/foreach}
@@ -153,14 +148,5 @@
     showHideCombinations($("#premiums_combination"));
   });
 
-  // TODO : Functions for combination weight management
-  function moveUp(combinationId) {
-    // AJAX call to move combination up - placeholder for future implementation
-    return false;
-  }
-  function moveDown(combinationId) {
-    // AJAX call to move combination down - placeholder for future implementation  
-    return false;
-  }
 </script>
 {/literal}

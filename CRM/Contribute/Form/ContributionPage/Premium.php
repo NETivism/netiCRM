@@ -69,37 +69,6 @@ class CRM_Contribute_Form_ContributionPage_Premium extends CRM_Contribute_Form_C
    * @return void
    * @access public
    */
-  /**
-   * Get combination action Links
-   *
-   * @return array (reference) of action links
-   */
-  function &combinationLinks() {
-    $deleteExtra = ts('Are you sure you want to remove this combination from this page?');
-
-    $links = [
-      CRM_Core_Action::UPDATE => [
-        'name' => ts('Edit'),
-        'url' => 'civicrm/admin/contribute/addPremiumsCombinationToPage',
-        'qs' => 'action=update&cid=%%id%%&id=%%pid%%&reset=1',
-        'title' => ts('Edit Premium'),
-      ],
-      CRM_Core_Action::PREVIEW => [
-        'name' => ts('Preview'),
-        'url' => 'civicrm/admin/contribute/addPremiumsCombinationToPage',
-        'qs' => 'action=preview&cid=%%id%%&id=%%pid%%',
-        'title' => ts('Preview Premium Combination'),
-      ],
-      CRM_Core_Action::DELETE => [
-        'name' => ts('delete'),
-        'url' => 'civicrm/admin/contribute/addPremiumsCombinationToPage',
-        'qs' => 'action=delete&cid=%%id%%&id=%%pid%%',
-        'extra' => 'onclick = "if (confirm(\'' . $deleteExtra . '\') ) {  this.href+=\'&amp;confirmed=1\'; else return false;}"',
-        'title' => ts('Delete Premium Combination'),
-      ],
-    ];
-    return $links;
-  }
 
   public function buildQuickForm() {
     $this->addElement('checkbox', 'premiums_active', ts('Premiums Section Enabled?'));
@@ -143,86 +112,6 @@ class CRM_Contribute_Form_ContributionPage_Premium extends CRM_Contribute_Form_C
     $this->assign('enablePremiumsCombination', $enablePremiumsCombination);
     $this->assign('activePremiums', $activePremiums);
 
-    // Get combinations data if combination feature is enabled
-    $combinations = [];
-    if ($enablePremiumsCombination && $this->_id) {
-      $daoPremium = new CRM_Contribute_DAO_Premium();
-      $daoPremium->entity_id = $this->_id;
-      $daoPremium->entity_table = 'civicrm_contribution_page';
-      if ($daoPremium->find(TRUE)) {
-        // Query combinations for this premium
-        $query = "
-          SELECT 
-            pc.id,
-            pc.combination_name,
-            pc.sku,
-            pc.min_contribution,
-            pc.min_contribution_recur,
-            pc.currency,
-            pc.is_active,
-            pc.weight
-          FROM civicrm_premiums_combination pc
-          WHERE pc.premiums_id = %1
-          ORDER BY pc.weight, pc.combination_name
-        ";
-        $dao = CRM_Core_DAO::executeQuery($query, [
-          1 => [$daoPremium->id, 'Integer']
-        ]);
-        
-        while ($dao->fetch()) {
-          // Get products for each combination
-          $productsQuery = "
-            SELECT
-              p.name,
-              p.sku as product_sku,
-              pcp.quantity
-            FROM civicrm_premiums_combination_products pcp
-            LEFT JOIN civicrm_product p ON pcp.product_id = p.id
-            WHERE pcp.combination_id = %1
-            ORDER BY p.id
-          ";
-          $productsDao = CRM_Core_DAO::executeQuery($productsQuery, [
-            1 => [$dao->id, 'Integer']
-          ]);
-          
-          $products = [];
-          while ($productsDao->fetch()) {
-            $products[] = [
-              'name' => $productsDao->name,
-              'sku' => $productsDao->product_sku,
-              'quantity' => $productsDao->quantity,
-            ];
-          }
-          
-          // Format combination content for display
-          $combinationContent = [];
-          foreach ($products as $product) {
-            $productDisplay = $product['name'];
-            if ($product['quantity'] >= 1) {
-              $productDisplay .= ' x' . $product['quantity'];
-            }
-            $combinationContent[] = $productDisplay;
-          }
-          // Generate action links for combination
-          $action = array_sum(array_keys($this->combinationLinks()));
-          $combinations[] = [
-            'id' => $dao->id,
-            'combination_name' => $dao->combination_name,
-            'sku' => $dao->sku,
-            'combination_content' => implode(', ', $combinationContent),
-            'min_contribution' => $dao->min_contribution,
-            'min_contribution_recur' => $dao->min_contribution_recur,
-            'currency' => $dao->currency,
-            'is_active' => $dao->is_active,
-            'weight' => $dao->weight,
-            'action' => CRM_Core_Action::formLink($this->combinationLinks(), $action,
-              ['id' => $dao->id, 'pid' => $this->_id]
-            ),
-          ];
-        }
-      }
-    }
-    $this->assign('combinations', $combinations);
 
     parent::buildQuickForm();
   }
