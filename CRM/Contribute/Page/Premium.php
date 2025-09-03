@@ -191,6 +191,80 @@ class CRM_Contribute_Page_Premium extends CRM_Core_Page_Basic {
       'id', $returnURL, $filter
     );
     $this->assign('rows', $premiums);
+
+    // Handle premium combinations
+    $combinations = [];
+    $combinationDAO = new CRM_Contribute_DAO_PremiumsCombination();
+    $combinationDAO->premiums_id = $premiumID;
+    $combinationDAO->orderBy('weight');
+    $combinationDAO->find();
+
+    while ($combinationDAO->fetch()) {
+      $combinations[$combinationDAO->id] = [];
+      $combinations[$combinationDAO->id]['id'] = $combinationDAO->id;
+      $combinations[$combinationDAO->id]['combination_name'] = $combinationDAO->combination_name;
+      $combinations[$combinationDAO->id]['sku'] = $combinationDAO->sku;
+      $combinations[$combinationDAO->id]['min_contribution'] = $combinationDAO->min_contribution;
+      $combinations[$combinationDAO->id]['min_contribution_recur'] = $combinationDAO->min_contribution_recur;
+      $combinations[$combinationDAO->id]['currency'] = $combinationDAO->currency;
+      $combinations[$combinationDAO->id]['weight'] = $combinationDAO->weight;
+      $combinations[$combinationDAO->id]['is_active'] = $combinationDAO->is_active;
+
+      // Get combination content
+      $productDAO = CRM_Core_DAO::executeQuery("
+        SELECT p.name, cp.quantity
+        FROM civicrm_premiums_combination_products cp
+        LEFT JOIN civicrm_product p ON cp.product_id = p.id
+        WHERE cp.combination_id = %1
+      ", [1 => [$combinationDAO->id, 'Integer']]);
+
+      $content = [];
+      while ($productDAO->fetch()) {
+        $content[] = $productDAO->name . ' x' . $productDAO->quantity;
+      }
+      $combinations[$combinationDAO->id]['combination_content'] = implode(', ', $content);
+    }
+
+    // Add action links and order changing widget for combinations
+    if (!empty($combinations)) {
+      $deleteExtra = ts('Are you sure you want to remove this combination from this page?');
+      $combinationLinks = [
+        CRM_Core_Action::UPDATE => [
+          'name' => ts('Edit'),
+          'url' => 'civicrm/admin/contribute/addPremiumsCombinationToPage',
+          'qs' => 'action=update&id=%%id%%&cid=%%cid%%&reset=1',
+          'title' => ts('Edit Premium Combination'),
+        ],
+        CRM_Core_Action::PREVIEW => [
+          'name' => ts('Preview'),
+          'url' => 'civicrm/admin/contribute/addPremiumsCombinationToPage',
+          'qs' => 'action=preview&id=%%id%%&cid=%%cid%%',
+          'title' => ts('Preview Premium Combination'),
+        ],
+        CRM_Core_Action::DELETE => [
+          'name' => ts('Remove'),
+          'url' => 'civicrm/admin/contribute/addPremiumsCombinationToPage',
+          'qs' => 'action=delete&id=%%id%%&cid=%%cid%%',
+          'extra' => 'onclick = "if (confirm(\'' . $deleteExtra . '\') ) {  this.href+=\'&amp;confirmed=1\'; else return false;}"',
+          'title' => ts('Remove Premium Combination'),
+        ],
+      ];
+
+      foreach ($combinations as $id => $combination) {
+        $action = array_sum(array_keys($combinationLinks));
+        $combinations[$id]['action'] = CRM_Core_Action::formLink($combinationLinks, $action,
+          ['id' => $pageID, 'cid' => $id]
+        );
+      }
+
+      $combinationReturnURL = CRM_Utils_System::url('civicrm/admin/contribute/premium', "reset=1&action=update&id={$pageID}");
+      $combinationFilter = "premiums_id = {$premiumID}";
+      CRM_Utils_Weight::addOrder($combinations, 'CRM_Contribute_DAO_PremiumsCombination',
+        'id', $combinationReturnURL, $combinationFilter
+      );
+    }
+    $this->assign('combinations', $combinations);
+
   }
 
   /**
