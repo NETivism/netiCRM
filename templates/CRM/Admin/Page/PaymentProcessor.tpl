@@ -41,16 +41,19 @@
         {strip}
         {* handle enable/disable actions*}
  	{include file="CRM/common/enableDisable.tpl"}
-        <table class="selector">
-        <tr class="columnheader">
-            <th >{ts}ID{/ts}</th>
+        {include file="CRM/common/jsortable.tpl"}
+        <table class="selector display">
+          <thead>
+          <tr class="columnheader">
+            <th id="sortable">{ts}ID{/ts}</th>
             <th >{ts}Name{/ts}</th>
             <th >{ts}Processor Type{/ts}</th>
             <th >{ts}Description{/ts}</th>
             <th >{ts}Enabled?{/ts}</th>
 	    <th >{ts}Default?{/ts}</th>
             <th ></th>
-        </tr>
+          </tr>
+          </thead>
         {foreach from=$rows item=row}
         <tr id="row_{$row.id}" class="crm-payment_processor {cycle values="odd-row,even-row"} {$row.class}{if NOT $row.is_active} disabled{/if}">
             <td class="crm-payment_processor-id">{$row.id}</td>
