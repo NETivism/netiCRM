@@ -298,6 +298,34 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
   }
 
   /**
+   * Function to build Premium Combination Preview Block
+   *
+   * @param $form
+   * @param $combinationID
+   * @static
+   */
+  static function buildCombinationPreviewBlock($form, $combinationID) {
+    $combinations = [];
+    $dao = new CRM_Contribute_DAO_PremiumsCombination();
+    $dao->id = $combinationID;
+    if ($dao->find(TRUE)) {
+      $combinationData = [];
+      CRM_Core_DAO::storeValues($dao, $combinationData);
+      // Get products in this combination
+      $combinationData['products'] = CRM_Contribute_BAO_PremiumsCombination::getCombinationProducts($dao->id);
+      $combinations[$dao->id] = $combinationData;
+
+      $radio[$dao->id] = $form->createElement('radio', NULL, NULL, NULL, $dao->id, NULL);
+      $form->addGroup($radio, 'selectProduct', NULL);
+    }
+
+    $form->assign('showRadio', TRUE);
+    $form->assign('combinations', $combinations);
+    $form->assign('useCombinations', TRUE);
+    $form->assign('preview', TRUE);
+  }
+
+  /**
    * Function to delete premium associated w/ contribution page.
    *
    * @param int $contribution page id

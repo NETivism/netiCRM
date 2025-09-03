@@ -30,10 +30,15 @@
       <div class="messages status">
           {ts}Are you sure you want to remove this premium combination from this Contribution page?{/ts}
       </div>
+  {elseif $action eq 1024}
+      <div id="help">
+          {ts}This is a preview of this combination as it will appear on your Contributions page(s).{/ts}
+      </div>
+      {include file="CRM/Contribute/Form/Contribution/PremiumBlock.tpl"}
   {else}
 <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>
   {/if}
-  {if $action ne 8}
+  {if $action ne 8 and $action ne 1024}
   <table class="form-layout-compressed">
       <tr class="crm-contribution-form-block-is_active">
          <td class="label">{$form.is_active.label}</td>

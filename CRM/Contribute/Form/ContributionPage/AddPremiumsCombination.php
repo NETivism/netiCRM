@@ -260,7 +260,7 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
       );
     }
     elseif ($this->_action & CRM_Core_Action::PREVIEW) {
-      // TODO: Preview combination
+      CRM_Contribute_BAO_Premium::buildCombinationPreviewBlock($this, $this->_cid);
       $this->addButtons([
           ['type' => 'next',
             'name' => ts('Done with Preview'),
