@@ -1256,19 +1256,19 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
           $total = $amount * $installments;
           if($total < $premiumItemDAO->min_contribution_recur){
             $msg = ts('total support of recurring payment at least %1', [1 => CRM_Utils_Money::format($premiumItemDAO->min_contribution_recur)]);
-            $errors['selectProduct'] = $premiumTitle.'-'.ts('This gift will be eligible when your %1.', $msg);
+            $errors['selectProduct'] = $premiumTitle.'-'.ts('This gift will be eligible when your %1.', [1 => $msg]);
           }
         }
         elseif ($premiumItemDAO->calculate_mode == 'first') {
           if($amount < $premiumItemDAO->min_contribution_recur){
             $msg = ts('first support of recurring payment at least %1', [1 => CRM_Utils_Money::format($premiumItemDAO->min_contribution_recur)]);
-            $errors['selectProduct'] = $premiumTitle.'-'.ts('This gift will be eligible when your %1.', $msg);
+            $errors['selectProduct'] = $premiumTitle.'-'.ts('This gift will be eligible when your %1.', [1 => $msg]);
           }
         }
       }
       elseif($amount < $premiumItemDAO->min_contribution) {
         $msg = ts('one-time support at least %1', [1 => CRM_Utils_Money::format($premiumItemDAO->min_contribution)]);
-        $errors['selectProduct'] = $premiumTitle.'-'.ts('This gift will be eligible when your %1.', $msg);
+        $errors['selectProduct'] = $premiumTitle.'-'.ts('This gift will be eligible when your %1.', [1 => $msg]);
       }
     }
 

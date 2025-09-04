@@ -68,7 +68,7 @@
         <td colspan="2">
           <div class="crm-accordion-wrapper crm-accordion-open" id="combination-products">
             <div class="crm-accordion-header">
-              <div class="zmdi crm-accordion-pointer"></div>{ts}Add Gifts to the Combination{/ts}
+              <div class="zmdi crm-accordion-pointer"></div>{ts}Add Premium to the Combination{/ts}
             </div>
             <div class="crm-accordion-body">
               <div class="description">

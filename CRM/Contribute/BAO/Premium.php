@@ -152,7 +152,18 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
         CRM_Core_DAO::storeValues($combinationDAO, $combinationData);
         // Get products in this combination
         $combinationData['products'] = CRM_Contribute_BAO_PremiumsCombination::getCombinationProducts($combinationDAO->id);
-        $combinations[$combinationDAO->id] = $combinationData;
+        // Apply selection filter similar to regular premium block
+        if ($selectedProductID != NULL) {
+          if ($selectedProductID == $combinationDAO->id) {
+            if ($selectedOption) {
+              $combinationData['selected_option'] = ts('Selected Option') . ': ' . $selectedOption;
+            }
+            $combinations[$combinationDAO->id] = $combinationData;
+          }
+        }
+        else {
+          $combinations[$combinationDAO->id] = $combinationData;
+        }
 
         if ($formItems) {
           $combinationAttr = [];
