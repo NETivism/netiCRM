@@ -206,10 +206,10 @@ class CRM_Contribute_BAO_PremiumsCombination extends CRM_Contribute_DAO_Premiums
     $products = [];
 
     $dao = CRM_Core_DAO::executeQuery("
-      SELECT cp.product_id, cp.quantity, p.name, p.sku, p.price
+      SELECT cp.product_id, cp.quantity, p.name, p.sku, p.price, p.is_active
       FROM civicrm_premiums_combination_products cp
       LEFT JOIN civicrm_product p ON cp.product_id = p.id
-      WHERE cp.combination_id = %1
+      WHERE cp.combination_id = %1 And p.is_active = 1
     ", [
       1 => [$combinationId, 'Integer']
     ]);

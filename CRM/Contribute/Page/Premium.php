@@ -200,22 +200,12 @@ class CRM_Contribute_Page_Premium extends CRM_Core_Page_Basic {
     $combinationDAO->find();
 
     while ($combinationDAO->fetch()) {
-      $combinations[$combinationDAO->id] = [];
-      $combinations[$combinationDAO->id]['id'] = $combinationDAO->id;
-      $combinations[$combinationDAO->id]['combination_name'] = $combinationDAO->combination_name;
-      $combinations[$combinationDAO->id]['sku'] = $combinationDAO->sku;
-      $combinations[$combinationDAO->id]['min_contribution'] = $combinationDAO->min_contribution;
-      $combinations[$combinationDAO->id]['min_contribution_recur'] = $combinationDAO->min_contribution_recur;
-      $combinations[$combinationDAO->id]['currency'] = $combinationDAO->currency;
-      $combinations[$combinationDAO->id]['weight'] = $combinationDAO->weight;
-      $combinations[$combinationDAO->id]['is_active'] = $combinationDAO->is_active;
-
-      // Get combination content
+      // Get combination content first
       $productDAO = CRM_Core_DAO::executeQuery("
-        SELECT p.name, cp.quantity, p.price
+        SELECT p.name, cp.quantity, p.price, p.is_active
         FROM civicrm_premiums_combination_products cp
         LEFT JOIN civicrm_product p ON cp.product_id = p.id
-        WHERE cp.combination_id = %1
+        WHERE cp.combination_id = %1 And p.is_active = 1
       ", [1 => [$combinationDAO->id, 'Integer']]);
 
       $content = [];
@@ -224,8 +214,21 @@ class CRM_Contribute_Page_Premium extends CRM_Core_Page_Basic {
         $content[] = $productDAO->name . ' x' . $productDAO->quantity;
         $totalPrice += $productDAO->price * $productDAO->quantity;
       }
-      $combinations[$combinationDAO->id]['combination_content'] = implode(', ', $content);
-      $combinations[$combinationDAO->id]['combination_total_price'] = $totalPrice;
+
+      // Only add combination to array if it has active products
+      if (!empty($content)) {
+        $combinations[$combinationDAO->id] = [];
+        $combinations[$combinationDAO->id]['id'] = $combinationDAO->id;
+        $combinations[$combinationDAO->id]['combination_name'] = $combinationDAO->combination_name;
+        $combinations[$combinationDAO->id]['sku'] = $combinationDAO->sku;
+        $combinations[$combinationDAO->id]['min_contribution'] = $combinationDAO->min_contribution;
+        $combinations[$combinationDAO->id]['min_contribution_recur'] = $combinationDAO->min_contribution_recur;
+        $combinations[$combinationDAO->id]['currency'] = $combinationDAO->currency;
+        $combinations[$combinationDAO->id]['weight'] = $combinationDAO->weight;
+        $combinations[$combinationDAO->id]['is_active'] = $combinationDAO->is_active;
+        $combinations[$combinationDAO->id]['combination_content'] = implode(', ', $content);
+        $combinations[$combinationDAO->id]['combination_total_price'] = $totalPrice;
+      }
     }
 
     // Add action links and order changing widget for combinations
@@ -267,7 +270,6 @@ class CRM_Contribute_Page_Premium extends CRM_Core_Page_Basic {
       );
     }
     $this->assign('combinations', $combinations);
-
   }
 
   /**
