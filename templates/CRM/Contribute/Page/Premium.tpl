@@ -42,7 +42,8 @@
       <th>{ts}SKU{/ts}</th>
       <th>{ts}Combination Contents{/ts}</th>
       <th>{ts}Market Value{/ts}</th>
-      <th>{ts}Min Contribution{/ts}</th>
+      <th>{ts}Min One-Time Contribution{/ts}</th>
+      <th>{ts}Min Recurring Contribution{/ts}</th>
       <th>{ts}Weight{/ts}</th>
       <th>{ts}Operation{/ts}</th>
       <th></th>
@@ -53,13 +54,10 @@
       <td class="crm-contribution-form-block-sku">{$combination.sku|default:'-'}</td>
       <td class="crm-contribution-form-block-combination_content">{$combination.combination_content|replace:', ':'<br>'}</td>
       <td class="crm-contribution-form-block-price">
-        {if $combination.min_contribution_recur}
-          {$combination.min_contribution_recur|crmMoney:$combination.currency}
-        {else}
-          {$combination.min_contribution|crmMoney:$combination.currency}
-        {/if}
+        {$combination.combination_total_price|crmMoney:$combination.currency}
       </td>
-      <td class="crm-contribution-form-block-min_contribution">{$combination.min_contribution|crmMoney:$combination.currency}</td>
+      <td class="crm-contribution-form-block-min_one_time_contribution">{$combination.min_contribution|crmMoney:$combination.currency}</td>
+      <td class="crm-contribution-form-block-min_recurring_contribution">{$combination.min_contribution_recur|crmMoney:$combination.currency}</td>
       <td class="nowrap crm-contribution-form-block-weight">{$combination.weight}</td>
       <td class="crm-contribution-form-block-action">{$combination.action}</td>
   </tr>

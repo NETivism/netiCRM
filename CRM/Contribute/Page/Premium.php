@@ -212,17 +212,20 @@ class CRM_Contribute_Page_Premium extends CRM_Core_Page_Basic {
 
       // Get combination content
       $productDAO = CRM_Core_DAO::executeQuery("
-        SELECT p.name, cp.quantity
+        SELECT p.name, cp.quantity, p.price
         FROM civicrm_premiums_combination_products cp
         LEFT JOIN civicrm_product p ON cp.product_id = p.id
         WHERE cp.combination_id = %1
       ", [1 => [$combinationDAO->id, 'Integer']]);
 
       $content = [];
+      $totalPrice = 0;
       while ($productDAO->fetch()) {
         $content[] = $productDAO->name . ' x' . $productDAO->quantity;
+        $totalPrice += $productDAO->price * $productDAO->quantity;
       }
       $combinations[$combinationDAO->id]['combination_content'] = implode(', ', $content);
+      $combinations[$combinationDAO->id]['combination_total_price'] = $totalPrice;
     }
 
     // Add action links and order changing widget for combinations
