@@ -52,7 +52,7 @@
              <table id="options" class="display">
                <thead>
                <tr>
-            	 <th>{ts}ID{/ts}</th>
+            	 <th id="sortable">{ts}ID{/ts}</th>
                <th>{ts}Title{/ts}</th>
                <th>{ts}Contribution Type{/ts}</th>
             	 <th>{ts}Enabled?{/ts}</th>
