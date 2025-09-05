@@ -92,7 +92,7 @@ test.describe.serial('Donation Tax Deduction Electronic Process', () => {
     });
   });
 
-  test('Create Tax Deduction Report', async () => {
+  test('Create Tax Deduction Report and download xlsx', async () => {
     // Generate unique report title
     let downloadPath;
     let download;
@@ -200,67 +200,4 @@ test.describe.serial('Donation Tax Deduction Electronic Process', () => {
       }
     });
   });
-
-  // test('Download Tax Deduction Report CSV', async () => {
-  //   let downloadPath;
-  //   let download;
-
-  //   await test.step('Navigate to existing report', async () => {
-  //     // Navigate to report list page
-  //     await page.goto('civicrm/report/list?reset=1');
-
-  //     // Wait for the report title to appear
-  //     await expect(page.getByText(reportTitle)).toBeVisible();
-
-  //     // Find and click Taiwan tax deduction report link by partial text
-  //     await page
-  //       .locator(
-  //         `a[href*="/civicrm/report/instance/"]:has-text("${reportTitle}")`
-  //       )
-  //       .click();
-  //     await utils.findElement(page, '.crm-tasks');
-  //   });
-
-  //   await test.step('Download xlsx file', async () => {
-  //     // Setup download handler and click CSV export button
-  //     const downloadPromise = page.waitForEvent('download');
-  //     await page.locator('#_qf_TaiwanTax_submit_csv').click();
-  //     download = await downloadPromise;
-
-  //     // Verify download file is xlsx format
-  //     await expect(download.suggestedFilename()).toContain('.xlsx');
-  //     console.log(`Downloaded file: ${download.suggestedFilename()}`);
-
-  //     // Save downloaded file to temporary location
-  //     downloadPath = path.join(__dirname, 'temp', download.suggestedFilename());
-  //     await download.saveAs(downloadPath);
-  //   });
-
-  //   await test.step('Verify downloaded file properties', async () => {
-  //     // Verify file exists and has content
-  //     expect(fs.existsSync(downloadPath)).toBe(true);
-
-  //     // Check file size is greater than 0
-  //     const stats = fs.statSync(downloadPath);
-  //     expect(stats.size).toBeGreaterThan(0);
-  //     console.log(`Downloaded file size: ${stats.size} bytes`);
-
-  //     // Verify file extension is xlsx
-  //     expect(downloadPath).toMatch(/\.xlsx$/);
-
-  //     // Check file was created recently (within last 5 minutes)
-  //     const now = new Date();
-  //     const fileCreationTime = stats.mtime;
-  //     const timeDifference = now - fileCreationTime;
-  //     expect(timeDifference).toBeLessThan(5 * 60 * 1000); // 5 minutes in milliseconds
-  //   });
-
-  //   await test.step('Clean up temporary files', async () => {
-  //     // Clean up temporary file
-  //     if (fs.existsSync(downloadPath)) {
-  //       fs.unlinkSync(downloadPath);
-  //       console.log('Temporary file cleaned up');
-  //     }
-  //   });
-  // });
 });
