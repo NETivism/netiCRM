@@ -25,6 +25,16 @@ test.describe.serial('Donation Tax Deduction Electronic Process', () => {
     donationAmount: '2000',
   };
   const reportTitle = `臺灣財政部所得扣除額_${utils.makeid(4)}`;
+  //open legal_identifier field in admin
+  test('before all - Enable legal_identifier field', async () => {
+    await page.goto('/admin/modules');
+    await page.locator('#edit-modules-civicrm-legalid-enable').check();
+    await page.locator('#edit-submit').click();
+    await page.goto('civicrm/contact/add?reset=1&ct=Individual');
+    // Verify the legal_identifier field is available
+    await expect(page.locator('#legal_identifier')).toBeVisible();
+  });
+
   test('Complete Donation Tax Deduction Process', async () => {
     await test.step('Create individual contact with tax ID', async () => {
       // Navigate to individual contact creation form
