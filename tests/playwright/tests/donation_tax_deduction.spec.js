@@ -28,7 +28,11 @@ test.describe.serial('Donation Tax Deduction Electronic Process', () => {
   //open legal_identifier field in admin
   test('before all - Enable legal_identifier field', async () => {
     await page.goto('/admin/modules');
-    await page.locator('#edit-modules-civicrm-legalid-enable').check();
+    await page
+      .locator(
+        '#edit-modules-neticrm-civicrm-legalid-enable,#edit-modules-civicrm-legalid-enable'
+      )
+      .check();
     await page.locator('#edit-submit').click();
     await page.goto('civicrm/contact/add?reset=1&ct=Individual');
     // Verify the legal_identifier field is available
@@ -115,7 +119,7 @@ test.describe.serial('Donation Tax Deduction Electronic Process', () => {
       // Click preview report button
       await page.locator('#_qf_TaiwanTax_submit').click();
       await utils.findElement(page, '#TaiwanTax');
-      
+
       // Verify expected element appears
       await expect(page.locator('#option11_wrapper')).toBeVisible();
     });
@@ -145,6 +149,9 @@ test.describe.serial('Donation Tax Deduction Electronic Process', () => {
     await test.step('Navigate to existing report', async () => {
       // Navigate to report list page
       await page.goto('civicrm/report/list?reset=1');
+      
+      // Wait for the report title to appear
+      await expect(page.getByText(reportTitle)).toBeVisible();
 
       // Find and click Taiwan tax deduction report link by partial text
       await page
