@@ -115,6 +115,9 @@ test.describe.serial('Donation Tax Deduction Electronic Process', () => {
       // Click preview report button
       await page.locator('#_qf_TaiwanTax_submit').click();
       await utils.findElement(page, '#TaiwanTax');
+      
+      // Verify expected element appears
+      await expect(page.locator('#option11_wrapper')).toBeVisible();
     });
 
     await test.step('Create and configure report', async () => {
