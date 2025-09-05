@@ -60,6 +60,7 @@ steps:
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_spgateway.spec.js
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_booster.spec.js
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/report_check.spec.js
+    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/donation_tax_deduction.spec.js
 - name: notify
   image: drillster/drone-email
   settings:
@@ -145,6 +146,7 @@ steps:
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_spgateway.spec.js
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_booster.spec.js
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/report_check.spec.js
+    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/donation_tax_deduction.spec.js
 - name: notify
   image: drillster/drone-email
   settings:
@@ -232,6 +234,7 @@ steps:
     - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_spgateway.spec.js
     - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/edit_mailing.spec.js
     - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/report_check.spec.js
+    - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/donation_tax_deduction.spec.js
 - name: notify
   image: drillster/drone-email
   settings:
