@@ -22,10 +22,10 @@ class CRM_AI_GenImageService_ITRIICL extends CRM_AI_GenImageService {
   public function __construct() {
     parent::__construct();
     
-    // Load configuration from CiviCRM settings
-    $this->apiKey = $this->config->itriIclApiKey ?? '';
-    $this->endpoint = $this->config->itriIclEndpoint ?? '';
-    $this->timeout = $this->config->itriIclTimeout ?? self::DEFAULT_TIMEOUT;
+    // Load configuration from CiviCRM settings (defined constants)
+    $this->apiKey = defined('ITRI_ICL_API_KEY') ? ITRI_ICL_API_KEY : '';
+    $this->endpoint = defined('ITRI_ICL_ENDPOINT') ? ITRI_ICL_ENDPOINT : '';
+    $this->timeout = defined('ITRI_ICL_TIMEOUT') ? ITRI_ICL_TIMEOUT : self::DEFAULT_TIMEOUT;
     
     // Validate required configuration
     if (empty($this->apiKey)) {
