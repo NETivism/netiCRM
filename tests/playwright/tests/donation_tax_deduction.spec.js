@@ -156,6 +156,8 @@ test.describe.serial('Donation Tax Deduction Electronic Process', () => {
         )
         .click();
       await utils.findElement(page, '.crm-tasks');
+      // Check if donor field is displayed
+      await expect(page.locator('#option11_wrapper')).toBeVisible();
     });
 
     await test.step('Download xlsx file', async () => {
