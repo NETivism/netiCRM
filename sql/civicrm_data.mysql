@@ -4686,7 +4686,7 @@ VALUES
   (@option_group_id_pi, 'ACH Bank',  20, 'ACH Bank', NULL, 0, NULL, 20, NULL, 0, 1, 1, NULL, NULL),
   (@option_group_id_pi, 'ACH Post',  21, 'ACH Post', NULL, 0, NULL, 21, NULL, 0, 1, 1, NULL, NULL),
   (@option_group_id_pi, 'Alipay',  22, 'Alipay', NULL, 0, NULL, 22, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_pi, 'Apple Pay Front',  23, 'ApplePayFront', NULL, 0, NULL, 23, NULL, 0, 1, 1, NULL, NULL),
+  (@option_group_id_pi, 'Apple Pay Front',  23, 'ApplePayFront', NULL, 0, NULL, 17, NULL, 0, 1, 1, NULL, NULL),
 
   (@option_group_id_cs, 'Completed'  , 1, 'Completed'  , NULL, 0, NULL, 1, NULL, 0, 1, 1, NULL, NULL),
   (@option_group_id_cs, 'Pending'    , 2, 'Pending'    , NULL, 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL),
