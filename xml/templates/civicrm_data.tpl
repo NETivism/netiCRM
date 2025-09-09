@@ -383,6 +383,7 @@ VALUES
   (@option_group_id_pi, '{ts escape="sql"}ACH Bank{/ts}',  20, 'ACH Bank', NULL, 0, NULL, 20, NULL, 0, 1, 1, NULL, NULL),
   (@option_group_id_pi, '{ts escape="sql"}ACH Post{/ts}',  21, 'ACH Post', NULL, 0, NULL, 21, NULL, 0, 1, 1, NULL, NULL),
   (@option_group_id_pi, '{ts escape="sql"}Alipay{/ts}',  22, 'Alipay', NULL, 0, NULL, 22, NULL, 0, 1, 1, NULL, NULL),
+  (@option_group_id_pi, '{ts escape="sql"}Apple Pay Front{/ts}',  23, 'ApplePayFront', NULL, 0, NULL, 23, NULL, 0, 1, 1, NULL, NULL),
 
   (@option_group_id_cs, '{ts escape="sql"}Completed{/ts}'  , 1, 'Completed'  , NULL, 0, NULL, 1, NULL, 0, 1, 1, NULL, NULL),
   (@option_group_id_cs, '{ts escape="sql"}Pending{/ts}'    , 2, 'Pending'    , NULL, 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL),
