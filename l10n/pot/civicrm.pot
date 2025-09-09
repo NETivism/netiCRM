@@ -50030,3 +50030,6 @@ msgstr ""
 
 msgid "Min Recurring Contribution"
 msgstr ""
+
+msgid "Apple Pay Front"
+msgstr ""
