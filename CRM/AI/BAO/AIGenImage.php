@@ -196,8 +196,8 @@ class CRM_AI_BAO_AIGenImage {
       return $configDir;
     }
 
-    // Default directory path
-    $defaultDir = CIVICRM_ROOT . '/files/civicrm/persist/gen-image';
+    // Default directory path using CMS public directory
+    $defaultDir = CRM_Utils_System::cmsDir('public') . '/civicrm/persist/gen-image';
     return $defaultDir;
   }
 
@@ -236,12 +236,12 @@ class CRM_AI_BAO_AIGenImage {
    * Convert absolute path to relative path for database storage
    *
    * @param string $fullPath Absolute file path
-   * @return string Relative path from CiviCRM root
+   * @return string Relative path from CMS public directory
    */
   private function getRelativePath($fullPath) {
-    $civiRoot = rtrim(CIVICRM_ROOT, '/');
-    if (strpos($fullPath, $civiRoot) === 0) {
-      return substr($fullPath, strlen($civiRoot) + 1);
+    $publicDir = rtrim(CRM_Utils_System::cmsDir('public'), '/');
+    if (strpos($fullPath, $publicDir) === 0) {
+      return substr($fullPath, strlen($publicDir) + 1);
     }
     return $fullPath;
   }
