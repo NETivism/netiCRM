@@ -78,7 +78,7 @@ class CRM_AI_BAO_AIGenImage {
       }
 
       // Step 6: Process and store image
-      $imagePath = $this->processImage($imageData['data']['image_data']);
+      $imagePath = $this->processImage($imageData['data']);
 
       // Step 7: Save generation record
       // $this->saveGenerationRecord($params, $imagePath, $translatedPrompt);
@@ -94,35 +94,43 @@ class CRM_AI_BAO_AIGenImage {
    * Process and store binary image data to designated directory
    * Handles file naming, directory creation, and storage
    *
-   * @param string $imageData Binary image data from API
+   * @param array $responseData Response data from image service containing format and binary data
    * @return string Relative path to stored image file
    * @throws Exception On file operations failure
    */
-  public function processImage($imageData) {
-    // Step 1: Validate image data
-    if (empty($imageData)) {
-      throw new Exception('Empty image data received');
+  public function processImage($responseData) {
+    // Step 1: Validate response data structure
+    if (empty($responseData) || !isset($responseData['image_data'])) {
+      throw new Exception('Empty or invalid image data received');
     }
 
-    // Step 2: Get upload directory configuration
+    // Step 2: Extract format and binary data
+    $format = $responseData['format'] ?? 'png';
+    $binaryData = $responseData['image_data'];
+
+    if (empty($binaryData)) {
+      throw new Exception('Empty binary image data');
+    }
+
+    // Step 3: Get upload directory configuration
     $uploadDir = $this->getUploadDirectory();
 
-    // Step 3: Ensure directory exists
+    // Step 4: Ensure directory exists
     $this->ensureDirectoryExists($uploadDir);
 
-    // Step 4: Generate unique filename
-    $filename = $this->generateUniqueFilename('png');
+    // Step 5: Generate unique filename with correct extension
+    $filename = $this->generateUniqueFilename($format);
 
-    // Step 5: Build full file path
+    // Step 6: Build full file path
     $fullPath = $uploadDir . '/' . $filename;
 
-    // Step 6: Write binary data to file
-    $result = file_put_contents($fullPath, $imageData);
+    // Step 7: Write binary data to file
+    $result = file_put_contents($fullPath, $binaryData);
     if ($result === FALSE) {
       throw new Exception('Failed to write image file to: ' . $fullPath);
     }
 
-    // Step 7: Return relative path for database storage
+    // Step 8: Return relative path for database storage
     return $this->getRelativePath($fullPath);
   }
 
