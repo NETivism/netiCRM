@@ -127,6 +127,18 @@
    * @var text
    */
   public $comment;
+  /**
+   * Indicates if contribution product restocked
+   *
+   * @var boolean
+   */
+  public $restock;
+  /**
+   * ID for product combination
+   *
+   * @var int unsigned
+   */
+  public $combination_id;
    /**
    * class constructor
    *
@@ -244,6 +256,23 @@
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Comment') ,
                   ] ,
+        'restock' => [
+          'name' => 'restock',
+          'type' => CRM_Utils_Type::T_BOOLEAN,
+          'title' => ts('Restock') ,
+                'export' => true,
+          'where' => 'civicrm_contribution_product.restock',
+          'headerPattern' => '',
+          'dataPattern' => '',
+            ] ,
+        'combination_id' => [
+          'name' => 'combination_id',
+          'type' => CRM_Utils_Type::T_INT,
+                'export' => true,
+          'where' => 'civicrm_contribution_product.combination_id',
+          'headerPattern' => '',
+          'dataPattern' => '',
+            ] ,
       ];
     }
     return self::$_fields;
