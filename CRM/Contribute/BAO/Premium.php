@@ -369,5 +369,216 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
       $premium->delete();
     }
   }
+
+  /**
+   * Restock contribution products based on expired/failed online payments
+   *
+   * @static
+   */
+  static function restockContributionProducts() {
+    $config = CRM_Core_Config::singleton();
+    
+    $creditCardDays = isset($config->premiumIRCreditCardDays) ? $config->premiumIRCreditCardDays : 7;
+    $nonCreditCardDays = isset($config->premiumIRNonCreditCardDays) ? $config->premiumIRNonCreditCardDays : 3;
+    $checkStatuses = isset($config->premiumIRCheckStatuses) ? $config->premiumIRCheckStatuses : [2]; // Pending
+    $statusChange = isset($config->premiumIRStatusChange) ? $config->premiumIRStatusChange : 3; // Cancelled
+
+    // Get contributions that need to be processed for restocking
+    $contributionsToRestock = self::getExpiredOnlineContributions($creditCardDays, $nonCreditCardDays, $checkStatuses);
+    
+    if (empty($contributionsToRestock)) {
+      return [];
+    }
+
+    $restockedContributions = [];
+    
+    foreach ($contributionsToRestock as $contribution) {
+      // Update contribution status
+      $sql = "UPDATE civicrm_contribution SET contribution_status_id = %1 WHERE id = %2";
+      $params = [
+        1 => [$statusChange, 'Integer'],
+        2 => [$contribution['id'], 'Integer']
+      ];
+      CRM_Core_DAO::executeQuery($sql, $params);
+      
+      // Restock the premium products
+      self::restockPremiumInventory($contribution['id']);
+      
+      $restockedContributions[] = $contribution['id'];
+    }
+
+    return $restockedContributions;
+  }
+
+  /**
+   * Get payment instrument IDs by name
+   *
+   * @param array $names Array of payment instrument names
+   * @return array
+   * @static
+   */
+  static function getPaymentInstrumentIdsByNames($names) {
+    $paymentInstruments = CRM_Contribute_PseudoConstant::paymentInstrument('name');
+    $ids = [];
+    foreach ($names as $name) {
+      $id = array_search($name, $paymentInstruments);
+      if ($id !== FALSE) {
+        $ids[] = $id;
+      }
+    }
+    return $ids;
+  }
+
+  /**
+   * Get expired online contributions that need restocking
+   *
+   * @param int $creditCardDays Days for credit card transactions
+   * @param int $nonCreditCardDays Days for non-credit card transactions  
+   * @param array $checkStatuses Statuses to check for
+   * @return array
+   * @static
+   */
+  static function getExpiredOnlineContributions($creditCardDays, $nonCreditCardDays, $checkStatuses) {
+    $statusList = implode(',', array_map('intval', $checkStatuses));
+    
+    // Get payment instrument IDs based on names
+    $creditCardInstruments = self::getPaymentInstrumentIdsByNames(['Credit Card', 'Web ATM', 'LinePay']);
+    $nonCreditCardInstruments = self::getPaymentInstrumentIdsByNames(['ATM', 'Convenient Store (Code)']);
+    $barcodeInstruments = self::getPaymentInstrumentIdsByNames(['Convenient Store']);
+    
+    $creditCardIds = implode(',', array_map('intval', $creditCardInstruments));
+    $nonCreditCardIds = implode(',', array_map('intval', $nonCreditCardInstruments));
+    $barcodeIds = implode(',', array_map('intval', $barcodeInstruments));
+    
+    $results = [];
+    
+    // Credit card transactions (immediate)
+    if (!empty($creditCardIds)) {
+      $creditCardSql = "
+        SELECT c.id, c.payment_instrument_id, c.receive_date, c.expiry_date, c.contribution_status_id
+        FROM civicrm_contribution c
+        INNER JOIN civicrm_entity_financial_trxn eft ON eft.entity_table = 'civicrm_contribution' AND eft.entity_id = c.id
+        WHERE c.contribution_status_id IN ({$statusList})
+          AND c.payment_instrument_id IN ({$creditCardIds})
+          AND DATEDIFF(NOW(), c.receive_date) > %1
+          AND c.id IN (
+            SELECT cp.contribution_id FROM civicrm_contribution_premium cp WHERE cp.contribution_id = c.id
+          )
+      ";
+      
+      $dao = CRM_Core_DAO::executeQuery($creditCardSql, [1 => [$creditCardDays, 'Integer']]);
+      while ($dao->fetch()) {
+        $results[] = [
+          'id' => $dao->id,
+          'payment_instrument_id' => $dao->payment_instrument_id,
+          'receive_date' => $dao->receive_date,
+          'expiry_date' => $dao->expiry_date,
+          'contribution_status_id' => $dao->contribution_status_id
+        ];
+      }
+    }
+    
+    // Non-credit card transactions (ATM, convenience store code)
+    if (!empty($nonCreditCardIds)) {
+      $nonCreditCardSql = "
+        SELECT c.id, c.payment_instrument_id, c.receive_date, c.expiry_date, c.contribution_status_id
+        FROM civicrm_contribution c
+        INNER JOIN civicrm_entity_financial_trxn eft ON eft.entity_table = 'civicrm_contribution' AND eft.entity_id = c.id  
+        WHERE c.contribution_status_id IN ({$statusList})
+          AND c.payment_instrument_id IN ({$nonCreditCardIds})
+          AND c.expiry_date IS NOT NULL
+          AND DATEDIFF(NOW(), c.expiry_date) > %1
+          AND c.id IN (
+            SELECT cp.contribution_id FROM civicrm_contribution_premium cp WHERE cp.contribution_id = c.id
+          )
+      ";
+      
+      $dao = CRM_Core_DAO::executeQuery($nonCreditCardSql, [1 => [$nonCreditCardDays, 'Integer']]);
+      while ($dao->fetch()) {
+        $results[] = [
+          'id' => $dao->id,
+          'payment_instrument_id' => $dao->payment_instrument_id,
+          'receive_date' => $dao->receive_date,
+          'expiry_date' => $dao->expiry_date,
+          'contribution_status_id' => $dao->contribution_status_id
+        ];
+      }
+    }
+    
+    // Special case for convenience store barcodes (slower processing)
+    if (!empty($barcodeIds)) {
+      $barcodeSpecialSql = "
+        SELECT c.id, c.payment_instrument_id, c.receive_date, c.expiry_date, c.contribution_status_id
+        FROM civicrm_contribution c
+        INNER JOIN civicrm_entity_financial_trxn eft ON eft.entity_table = 'civicrm_contribution' AND eft.entity_id = c.id
+        WHERE c.contribution_status_id IN ({$statusList})
+          AND c.payment_instrument_id IN ({$barcodeIds})
+          AND c.expiry_date IS NOT NULL  
+          AND DATEDIFF(NOW(), c.expiry_date) > 3
+          AND c.id IN (
+            SELECT cp.contribution_id FROM civicrm_contribution_premium cp WHERE cp.contribution_id = c.id
+          )
+      ";
+      
+      $dao = CRM_Core_DAO::executeQuery($barcodeSpecialSql);
+      while ($dao->fetch()) {
+        $results[] = [
+          'id' => $dao->id,
+          'payment_instrument_id' => $dao->payment_instrument_id,
+          'receive_date' => $dao->receive_date,
+          'expiry_date' => $dao->expiry_date,
+          'contribution_status_id' => $dao->contribution_status_id
+        ];
+      }
+    }
+
+    return $results;
+  }
+
+  /**
+   * Restock premium inventory for a specific contribution
+   *
+   * @param int $contributionId The contribution ID
+   * @static
+   */
+  static function restockPremiumInventory($contributionId) {
+    $transaction = new CRM_Core_Transaction();
+    
+    // Get premium products associated with this contribution from civicrm_contribution_product
+    $sql = "
+      SELECT cp.id, cp.product_id, cp.product_option, cp.quantity
+      FROM civicrm_contribution_product cp
+      WHERE cp.contribution_id = %1
+    ";
+    
+    $dao = CRM_Core_DAO::executeQuery($sql, [1 => [$contributionId, 'Integer']]);
+    
+    while ($dao->fetch()) {
+      // Update product send_qty by reducing the quantity (restock)
+      $updateSql = "
+        UPDATE civicrm_product 
+        SET send_qty = send_qty - %1
+        WHERE id = %2 AND send_qty IS NOT NULL AND send_qty >= %1 AND stock_status > 0
+      ";
+      
+      $params = [
+        1 => [$dao->quantity ?: 1, 'Integer'],
+        2 => [$dao->product_id, 'Integer']
+      ];
+      
+      CRM_Core_DAO::executeQuery($updateSql, $params);
+      
+      // Mark the contribution product as restocked
+      $restockSql = "
+        UPDATE civicrm_contribution_product 
+        SET restock = 1
+        WHERE id = %1
+      ";
+      
+      CRM_Core_DAO::executeQuery($restockSql, [1 => [$dao->id, 'Integer']]);
+    }
+    
+    $transaction->commit();
+  }
 }
 
