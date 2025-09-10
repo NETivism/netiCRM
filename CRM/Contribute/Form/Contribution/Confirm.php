@@ -765,6 +765,7 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
         'product_id' => $product['product_id'],
         'contribution_id' => $contribution->id,
         'quantity' => $product['quantity'],
+        'combination_id' => $combinationId,
         'product_option' => '',
       ];
       $existingRecord = new CRM_Contribute_DAO_ContributionProduct();
