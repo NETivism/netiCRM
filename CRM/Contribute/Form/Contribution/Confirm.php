@@ -727,97 +727,15 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
   public function postProcessPremium($premiumParams, $contribution) {
     // assigning Premium information to receipt tpl
     $selectProduct = CRM_Utils_Array::value('selectProduct', $premiumParams);
-    if ($selectProduct &&
-      $selectProduct != 'no_thanks'
-    ) {
-      $startDate = $endDate = "";
+    $premiumType = CRM_Utils_Array::value('premium_type', $premiumParams, 'product');
+    if ($selectProduct && $selectProduct != 'no_thanks') {
       $this->assign('selectPremium', TRUE);
 
-      $productDAO = new CRM_Contribute_DAO_Product();
-      $productDAO->id = $selectProduct;
-      $productDAO->find(TRUE);
-      $this->assign('product_name', $productDAO->name);
-      $this->assign('price', $productDAO->price);
-      $this->assign('sku', $productDAO->sku);
-      $this->assign('option', CRM_Utils_Array::value('options_' . $premiumParams['selectProduct'], $premiumParams));
-
-      $periodType = $productDAO->period_type;
-
-      if ($periodType) {
-        $fixed_period_start_day = $productDAO->fixed_period_start_day;
-        $duration_unit = $productDAO->duration_unit;
-        $duration_interval = $productDAO->duration_interval;
-        if ($periodType == 'rolling') {
-          $startDate = date('Y-m-d');
-        }
-        elseif ($periodType == 'fixed') {
-          if ($fixed_period_start_day) {
-            $date = explode('-', date('Y-m-d'));
-            $month = substr($fixed_period_start_day, 0, strlen($fixed_period_start_day) - 2);
-            $day = substr($fixed_period_start_day, -2) . "<br>";
-            $year = $date[0];
-            $startDate = $year . '-' . $month . '-' . $day;
-          }
-          else {
-            $startDate = date('Y-m-d');
-          }
-        }
-
-        $date = explode('-', $startDate);
-        $year = $date[0];
-        $month = $date[1];
-        $day = $date[2];
-
-        switch ($duration_unit) {
-          case 'year':
-            $year = $year + $duration_interval;
-            break;
-
-          case 'month':
-            $month = $month + $duration_interval;
-            break;
-
-          case 'day':
-            $day = $day + $duration_interval;
-            break;
-
-          case 'week':
-            $day = $day + ($duration_interval * 7);
-        }
-        $endDate = date('Y-m-d H:i:s', mktime($hour, $minute, $second, $month, $day, $year));
-        $this->assign('start_date', $startDate);
-        $this->assign('end_date', $endDate);
+      if ($premiumType == 'combination') {
+        $this->processPremiumCombination($selectProduct, $contribution, $premiumParams);
+      } else {
+        $this->processSingleProduct($selectProduct, $contribution, $premiumParams);
       }
-
-
-      $dao = new CRM_Contribute_DAO_Premium();
-      $dao->entity_table = 'civicrm_contribution_page';
-      $dao->entity_id = $this->_id;
-      $dao->find(TRUE);
-      $this->assign('contact_phone', $dao->premiums_contact_phone);
-      $this->assign('contact_email', $dao->premiums_contact_email);
-
-      //create Premium record
-
-      $params = [
-        'product_id' => $premiumParams['selectProduct'],
-        'contribution_id' => $contribution->id,
-        'product_option' => CRM_Utils_Array::value('options_' . $premiumParams['selectProduct'], $premiumParams),
-        'quantity' => 1,
-        'start_date' => CRM_Utils_Date::customFormat($startDate, '%Y%m%d'),
-        'end_date' => CRM_Utils_Date::customFormat($endDate, '%Y%m%d'),
-      ];
-
-      //Fixed For CRM-3901
-
-      $daoContrProd = new CRM_Contribute_DAO_ContributionProduct();
-      $daoContrProd->contribution_id = $contribution->id;
-      if ($daoContrProd->find(TRUE)) {
-        $params['id'] = $daoContrProd->id;
-      }
-
-
-      CRM_Contribute_BAO_Contribution::addPremium($params);
     }
     elseif ($selectProduct == 'no_thanks') {
       //Fixed For CRM-3901
@@ -828,6 +746,130 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
         $daoContrProd->delete();
       }
     }
+  }
+
+  /**
+   * Process premium combination
+   */
+  private function processPremiumCombination($combinationId, $contribution, $premiumParams) {
+    // Get combination information for receipt
+    $combination = new CRM_Contribute_DAO_PremiumsCombination();
+    $combination->id = $combinationId;
+    $combination->find(TRUE);
+    $this->assign('combination_name', $combination->combination_name);
+    $this->setPremiumReceiptInfo();
+    // Get products in the combination
+    $products = CRM_Contribute_BAO_PremiumsCombination::getCombinationProducts($combinationId);
+    foreach ($products as $product) {
+      $params = [
+        'product_id' => $product['product_id'],
+        'contribution_id' => $contribution->id,
+        'quantity' => $product['quantity'],
+        'product_option' => '',
+      ];
+      $existingRecord = new CRM_Contribute_DAO_ContributionProduct();
+      $existingRecord->contribution_id = $contribution->id;
+      $existingRecord->product_id = $product['product_id'];
+      if ($existingRecord->find(TRUE)) {
+        $params['id'] = $existingRecord->id;
+      }
+      CRM_Contribute_BAO_Contribution::addPremium($params);
+    }
+  }
+
+  /**
+   * Process single product
+   */
+  private function processSingleProduct($selectProduct, $contribution, $premiumParams) {
+    $startDate = $endDate = "";
+    $productDAO = new CRM_Contribute_DAO_Product();
+    $productDAO->id = $selectProduct;
+    $productDAO->find(TRUE);
+    $this->assign('product_name', $productDAO->name);
+    $this->assign('price', $productDAO->price);
+    $this->assign('sku', $productDAO->sku);
+    $this->assign('option', CRM_Utils_Array::value('options_' . $premiumParams['selectProduct'], $premiumParams));
+
+    $periodType = $productDAO->period_type;
+
+    if ($periodType) {
+      $fixed_period_start_day = $productDAO->fixed_period_start_day;
+      $duration_unit = $productDAO->duration_unit;
+      $duration_interval = $productDAO->duration_interval;
+      if ($periodType == 'rolling') {
+        $startDate = date('Y-m-d');
+      }
+      elseif ($periodType == 'fixed') {
+        if ($fixed_period_start_day) {
+          $date = explode('-', date('Y-m-d'));
+          $month = substr($fixed_period_start_day, 0, strlen($fixed_period_start_day) - 2);
+          $day = substr($fixed_period_start_day, -2) . "<br>";
+          $year = $date[0];
+          $startDate = $year . '-' . $month . '-' . $day;
+        }
+        else {
+          $startDate = date('Y-m-d');
+        }
+      }
+
+      $date = explode('-', $startDate);
+      $year = $date[0];
+      $month = $date[1];
+      $day = $date[2];
+
+      switch ($duration_unit) {
+        case 'year':
+          $year = $year + $duration_interval;
+          break;
+
+        case 'month':
+          $month = $month + $duration_interval;
+          break;
+
+        case 'day':
+          $day = $day + $duration_interval;
+          break;
+
+        case 'week':
+          $day = $day + ($duration_interval * 7);
+      }
+      $endDate = date('Y-m-d H:i:s', mktime(0, 0, 0, $month, $day, $year));
+      $this->assign('start_date', $startDate);
+      $this->assign('end_date', $endDate);
+    }
+
+    $this->setPremiumReceiptInfo();
+
+    // Create Premium record
+    $params = [
+      'product_id' => $premiumParams['selectProduct'],
+      'contribution_id' => $contribution->id,
+      'product_option' => CRM_Utils_Array::value('options_' . $premiumParams['selectProduct'], $premiumParams),
+      'quantity' => 1,
+      'start_date' => CRM_Utils_Date::customFormat($startDate, '%Y%m%d'),
+      'end_date' => CRM_Utils_Date::customFormat($endDate, '%Y%m%d'),
+    ];
+
+    // Fixed For CRM-3901
+    $daoContrProd = new CRM_Contribute_DAO_ContributionProduct();
+    $daoContrProd->contribution_id = $contribution->id;
+    if ($daoContrProd->find(TRUE)) {
+      $params['id'] = $daoContrProd->id;
+    }
+
+    CRM_Contribute_BAO_Contribution::addPremium($params);
+  }
+
+  /**
+   * Set common premium receipt information
+   */
+  private function setPremiumReceiptInfo() {
+    $dao = new CRM_Contribute_DAO_Premium();
+    $dao->entity_table = 'civicrm_contribution_page';
+    $dao->entity_id = $this->_id;
+    $dao->find(TRUE);
+    $this->assign('contact_phone', $dao->premiums_contact_phone);
+    $this->assign('contact_email', $dao->premiums_contact_email);
   }
 
   /**

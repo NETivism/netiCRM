@@ -184,6 +184,8 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
           $form->addRule('selectProduct', ts('%1 is a required field.', [1 => ts('Premium')]), 'required');
           $default = ['selectProduct' => 'no_thanks'];
           $form->setDefaults($default);
+          // Add hidden field to indicate this is combination
+          $form->addElement('hidden', 'premium_type', 'combination');
         }
         $form->assign('combinations', $combinations);
         $form->assign('premiumBlock', $premiumBlock);
@@ -259,6 +261,8 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
         $form->addRule('selectProduct', ts('%1 is a required field.', [1 => ts('Premium')]), 'required');
         $default = ['selectProduct' => 'no_thanks'];
         $form->setDefaults($default);
+        // Add hidden field to indicate this is product
+        $form->addElement('hidden', 'premium_type', 'product');
       }
       $form->assign('showSelectOptions', $formItems);
       $form->assign('products', $products);
