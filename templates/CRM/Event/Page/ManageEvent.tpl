@@ -47,7 +47,7 @@
         <table id="options" class="display">
          <thead>
          <tr>
-            <th>#</th>
+            <th id="sortable">#</th>
             <th>{ts}Event Type{/ts}</th>
             <th>{ts}Event{/ts}</th>
             <th>{ts}Starts{/ts}-{ts}Ends{/ts}</th>

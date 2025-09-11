@@ -87,9 +87,9 @@
            <table class="display">
              <thead>
               <tr>
-                <th id="sortable">{ts}Profile Title{/ts}</th>
+                <th>{ts}Profile Title{/ts}</th>
                 <th>{ts}Type{/ts}</th>
-                <th>{ts}ID{/ts}</th>
+                <th id="sortable">{ts}ID{/ts}</th>
                 <th id="nosort">{ts}Used For{/ts}</th>
                 <th></th>
               </tr>

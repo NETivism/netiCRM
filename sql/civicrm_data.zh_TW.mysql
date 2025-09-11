@@ -4686,6 +4686,7 @@ VALUES
   (@option_group_id_pi, 'ACH 銀行',  20, 'ACH Bank', NULL, 0, NULL, 20, NULL, 0, 1, 1, NULL, NULL),
   (@option_group_id_pi, 'ACH 郵局',  21, 'ACH Post', NULL, 0, NULL, 21, NULL, 0, 1, 1, NULL, NULL),
   (@option_group_id_pi, 'Alipay',  22, 'Alipay', NULL, 0, NULL, 22, NULL, 0, 1, 1, NULL, NULL),
+  (@option_group_id_pi, 'Apple Pay 幕前支付',  23, 'ApplePayFront', NULL, 0, NULL, 17, NULL, 0, 1, 1, NULL, NULL),
 
   (@option_group_id_cs, '已完成'  , 1, 'Completed'  , NULL, 0, NULL, 1, NULL, 0, 1, 1, NULL, NULL),
   (@option_group_id_cs, '待處理'    , 2, 'Pending'    , NULL, 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL),

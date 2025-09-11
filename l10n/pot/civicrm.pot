@@ -49965,16 +49965,13 @@ msgstr ""
 msgid "Enable Gift Combination Feature"
 msgstr ""
 
-msgid "This Contribution Page currently has no premiums. You can <a href='%1'>add one</a>."
-msgstr ""
-
 msgid "This Contribution Page currently has no premiums. You can <a href='%1'>add a gift combination</a>."
 msgstr ""
 
 msgid "Once enabled, the Contribution Page will display gift combinations instead of individual premiums."
 msgstr ""
 
-msgid "Add Gifts to the Combination"
+msgid "Add Premium to the Combination"
 msgstr ""
 
 msgid "You can select gifts to include in the combination and set the quantity for each gift."
@@ -49993,4 +49990,46 @@ msgid "Combination Contents"
 msgstr ""
 
 msgid "Offer other gift combinations on this Contribution Page"
+msgstr ""
+
+msgid "New Premium Combination"
+msgstr ""
+
+msgid "Edit Premium Combination"
+msgstr ""
+
+msgid "Preview Premium Combination"
+msgstr ""
+
+msgid "Delete Premium Combination"
+msgstr ""
+
+msgid "Manage Premium Combination"
+msgstr ""
+
+msgid "This is the name of the premium combination to be displayed to the donor."
+msgstr ""
+
+msgid "Premium Combination Name"
+msgstr ""
+
+msgid "Are you sure you want to remove this premium combination from this Contribution page?"
+msgstr ""
+
+msgid "Selected Premium Combination has been deleted."
+msgstr ""
+
+msgid "The Premium Combination '%1' has been saved."
+msgstr ""
+
+msgid "This is a preview of this combination as it will appear on your Contributions page(s)."
+msgstr ""
+
+msgid "Min One-Time Contribution"
+msgstr ""
+
+msgid "Min Recurring Contribution"
+msgstr ""
+
+msgid "Apple Pay Front"
 msgstr ""
