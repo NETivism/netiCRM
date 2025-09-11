@@ -92,7 +92,7 @@ class CRM_AI_BAO_AIGenImage {
 
   /**
    * Process and store binary image data to designated directory
-   * Handles file naming, directory creation, and storage
+   * Handles file naming, directory creation, storage, and WebP conversion
    *
    * @param array $responseData Response data from image service containing format and binary data
    * @return string Relative path to stored image file
@@ -110,6 +110,23 @@ class CRM_AI_BAO_AIGenImage {
 
     if (empty($binaryData)) {
       throw new Exception('Empty binary image data');
+    }
+
+    // Step 2.5: WebP conversion for PNG images
+    if ($format === 'png' && function_exists('imagewebp')) {
+      $image = imagecreatefromstring($binaryData);
+      if ($image !== FALSE) {
+        ob_start();
+        imagewebp($image, null, 80); // 80% quality for good balance of size/quality
+        $webpData = ob_get_contents();
+        ob_end_clean();
+        imagedestroy($image);
+
+        // Use converted WebP data and update format
+        $binaryData = $webpData;
+        $format = 'webp';
+      }
+      // If conversion fails, keep original PNG format and data
     }
 
     // Step 3: Get upload directory configuration
@@ -222,14 +239,15 @@ class CRM_AI_BAO_AIGenImage {
 
   /**
    * Generate unique filename with timestamp and random suffix
+   * Supports dynamic format based on processed image format
    *
-   * @param string $extension File extension without dot
-   * @return string Unique filename
+   * @param string $format Image format (png, webp, jpg, etc.)
+   * @return string Unique filename with appropriate extension
    */
-  private function generateUniqueFilename($extension = 'png') {
+  private function generateUniqueFilename($format = 'png') {
     $timestamp = date('Ymd_His');
     $random = substr(md5(uniqid(rand(), true)), 0, 8);
-    return "genimg_{$timestamp}_{$random}.{$extension}";
+    return "genimg_{$timestamp}_{$random}.{$format}";
   }
 
   /**
