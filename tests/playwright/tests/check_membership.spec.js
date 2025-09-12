@@ -394,6 +394,8 @@ test.describe.serial('Create Membership Type', () => {
       expect(endDate.toDateString()).toBe(expectedEndDate.toDateString());
     });
   });
+
+  //Membership Renewal
   test('Edit Membership Status to Expired && Add Password info', async () => {
     await test.step('Navigate to admin/people page and verify title', async () => {
       await page.goto('/admin/people');
@@ -401,7 +403,10 @@ test.describe.serial('Create Membership Type', () => {
     });
 
     await test.step('Set password', async () => {
-      await page.locator(`a[aria-label*="${testUsername}"]`).click();
+      await page
+        .locator(`tr:has-text("${testUsername}") a[href*="/edit"]`)
+        .click();
+      await utils.findElement(page, 'h1');
       await page.locator('#edit-pass-pass1').fill(testPassword);
       await page.locator('#edit-pass-pass2').fill(testPassword);
       await page.locator('#edit-status-1').check();
