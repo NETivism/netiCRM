@@ -36,16 +36,8 @@ test.describe.serial('Create Membership Type', () => {
   const testUsername = utils.makeid(8);
   const testEmail = utils.makeid(8) + '@example.com';
   const testPassword = 'Password1!';
-  const testFirstName =
-    'chen' +
-    Math.floor(Math.random() * 1000)
-      .toString()
-      .padStart(3, '0');
-  const testLastName =
-    'jerry' +
-    Math.floor(Math.random() * 1000)
-      .toString()
-      .padStart(3, '0');
+  const testFirstName = utils.makeid(4);
+  const testLastName = utils.makeid(4);
   test('Create Organization Contact', async () => {
     await test.step('Navigate to add organization page', async () => {
       await page.goto('civicrm/contact/add?reset=1&ct=Organization');
@@ -529,11 +521,9 @@ test.describe.serial('Create Membership Type', () => {
       /* Verify #help container exists and is visible, with payment incomplete message */
       await expect(contributionPage.locator('#help')).toBeVisible();
     });
-
-    await test.step('', async () => {});
   });
   test('Check Status update', async () => {
-    await test.step('Nevigate to contact search page', async () => {
+    await test.step('Navigate to contact search page', async () => {
       await page.goto('/civicrm/contact/search?reset=1');
       await utils.findElement(page, 'h1');
     });
