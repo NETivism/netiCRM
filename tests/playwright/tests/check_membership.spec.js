@@ -413,7 +413,9 @@ test.describe.serial('Create Membership Type', () => {
       await page.locator('#edit-submit').click();
 
       // Verify membership password update success message
-      await expect(page.locator('.messages--status')).toBeVisible();
+      await expect(
+        page.locator('.messages--status, .messages.status')
+      ).toBeVisible();
     });
 
     await test.step('Navigate to member search page and verify title', async () => {
