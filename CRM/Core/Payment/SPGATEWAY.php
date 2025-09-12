@@ -319,13 +319,11 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
 
     $instrumentId = $params['civicrm_instrument_id'];
     $options = [1 => [ $instrumentId, 'Integer']];
-    $instrumentName = CRM_Core_DAO::singleValueQuery("SELECT v.name FROM civicrm_option_value v INNER JOIN civicrm_option_group g ON v.option_group_id = g.id WHERE g.name = 'payment_instrument' AND v.is_active = 1 AND v.value = %1;", $options);
+    $instrument = CRM_Core_DAO::executeQuery("SELECT v.label, v.name FROM civicrm_option_value v INNER JOIN civicrm_option_group g ON v.option_group_id = g.id WHERE g.name = 'payment_instrument' AND v.is_active = 1 AND v.value = %1;", $options);
+    $instrument->fetch();
+    $instrumentName = $instrument->name;
     $spgatewayInstruments = self::instruments('code');
     $instrumentCode = $spgatewayInstruments[$instrumentName];
-    if (empty($instrumentCode)) {
-      // For google pay
-      $instrumentCode = $instrumentName;
-    }
     $formKey = $component == 'event' ? 'CRM_Event_Controller_Registration_'.$params['qfKey'] : 'CRM_Contribute_Controller_Contribution_'.$params['qfKey'];
 
     // The first, we insert every contribution into record. After this, we'll use update for the record.
@@ -565,6 +563,10 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
           break;
         case 'GooglePay':
           $args['ANDROIDPAY'] = 1;
+          $args['ReturnURL'] = $thankyouURL;
+          break;
+        case 'ApplePayFront':
+          $args['APPLEPAY'] = 1;
           $args['ReturnURL'] = $thankyouURL;
           break;
       }
@@ -1236,6 +1238,8 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
       'Web ATM' => ['label' => ts('Web ATM'), 'desc' => '', 'code' => 'WebATM'],
       'Convenient Store' => ['label' => ts('Convenient Store Barcode'), 'desc'=>'', 'code' => 'BARCODE'],
       'Convenient Store (Code)' => ['label'=> ts('Convenient Store (Code)'),'desc' => '', 'code' => 'CVS'],
+      'GooglePay' => ['label'=> ts('Google Pay'),'desc' => '', 'code' => 'GooglePay'],
+      'ApplePayFront' => ['label'=> ts('Apple Pay'),'desc' => '', 'code' => 'ApplePayFront'],
     ];
     if($type == 'form_name'){
       foreach($i as $name => $data){

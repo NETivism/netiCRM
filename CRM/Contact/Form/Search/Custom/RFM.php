@@ -399,7 +399,7 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
     if (!$this->_showResults) {
       return "SELECT contact_a.id as contact_id FROM civicrm_contact contact_a WHERE 1 = 0";
     }
-    $fields = !$onlyIDs ? "*" : "contact_a.id" ;
+    $fields = !$onlyIDs ? "*" : "contact_a.id as contact_id" ;
     if(!$this->_filled){
       // prepare rfm talbe
       $this->fillTable();
@@ -466,7 +466,7 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
 
     if (!empty($contactIDs)) {
       $contactIDs = CRM_Utils_Array::implode(', ', $contactIDs);
-      $sql .= " AND contact_a.contact_id IN ( $contactIDs )";
+      $sql .= " AND contact_a.id IN ( $contactIDs )";
     }
   }
 

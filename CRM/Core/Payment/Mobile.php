@@ -224,6 +224,12 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
       $payment = new CRM_Core_Payment_SPGATEWAY($mode, $paymentProcessor);
       $payment->doTransferCheckout($params, $component);
     }
+    else if ($this->_instrumentType == 'applepayfront' && $provider_name == 'spgateway') {
+      $mode = $is_test ? 'test':'';
+      $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($this->_paymentProcessor['user_name'], $mode);
+      $payment = new CRM_Core_Payment_SPGATEWAY($mode, $paymentProcessor);
+      $payment->doTransferCheckout($params, $component);
+    }
   }
 
   static function checkout(){
