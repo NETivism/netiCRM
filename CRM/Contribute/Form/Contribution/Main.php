@@ -1222,43 +1222,52 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
       $fields['selectProduct'] != 'no_thanks' &&
       $self->_values['amount_block_is_active']
     ) {
-
-
       $premiumTitle = $self->_values['premiums_intro_title'];
-      $productDAO = new CRM_Contribute_DAO_Product();
-      $productDAO->id = $fields['selectProduct'];
-      $productDAO->find(TRUE);
+
+      $premiumDAO = new CRM_Contribute_DAO_Premium();
+      $premiumDAO->entity_table = 'civicrm_contribution_page';
+      $premiumDAO->entity_id = $self->_values['id'];
+      $premiumDAO->find(TRUE);
+      if ($premiumDAO->premiums_combination == 1) {
+        $daoClassName = 'CRM_Contribute_DAO_PremiumsCombination';
+      } else {
+        $daoClassName = 'CRM_Contribute_DAO_Product';
+      }
+
+      $premiumItemDAO = new $daoClassName();
+      $premiumItemDAO->id = $fields['selectProduct'];
+      $premiumItemDAO->find(TRUE);
       // #26455, backward compatibility needed
-      if (is_null($productDAO->min_contribution_recur)) {
-        $productDAO->min_contribution_recur = $productDAO->min_contribution;
+      if (is_null($premiumItemDAO->min_contribution_recur)) {
+        $premiumItemDAO->min_contribution_recur = $premiumItemDAO->min_contribution;
       }
-      if (is_null($productDAO->calculate_mode)) {
-        $productDAO->calculate_mode = 'cumulative';
+      if (is_null($premiumItemDAO->calculate_mode)) {
+        $premiumItemDAO->calculate_mode = 'cumulative';
       }
-      if (is_null($productDAO->installments)) {
-        $productDAO->installments = 0;
+      if (is_null($premiumItemDAO->installments)) {
+        $premiumItemDAO->installments = 0;
       }
       if(!empty($fields['is_recur'])){
-        if ($productDAO->calculate_mode == 'cumulative') {
-          $installments = !empty($fields['installments']) ? $fields['installments'] : $productDAO->installments;
+        if ($premiumItemDAO->calculate_mode == 'cumulative') {
+          $installments = !empty($fields['installments']) ? $fields['installments'] : $premiumItemDAO->installments;
           if (empty($installments)) {
             $installments = 99; // max installments #26445
           }
           $total = $amount * $installments;
-          if($total < $productDAO->min_contribution_recur){
-            $msg = ts('total support of recurring payment at least %1', [1 => CRM_Utils_Money::format($productDAO->min_contribution_recur)]);
+          if($total < $premiumItemDAO->min_contribution_recur){
+            $msg = ts('total support of recurring payment at least %1', [1 => CRM_Utils_Money::format($premiumItemDAO->min_contribution_recur)]);
             $errors['selectProduct'] = $premiumTitle.'-'.ts('This gift will be eligible when your %1.', [1 => $msg]);
           }
         }
-        elseif ($productDAO->calculate_mode == 'first') {
-          if($amount < $productDAO->min_contribution_recur){
-            $msg = ts('first support of recurring payment at least %1', [1 => CRM_Utils_Money::format($productDAO->min_contribution_recur)]);
+        elseif ($premiumItemDAO->calculate_mode == 'first') {
+          if($amount < $premiumItemDAO->min_contribution_recur){
+            $msg = ts('first support of recurring payment at least %1', [1 => CRM_Utils_Money::format($premiumItemDAO->min_contribution_recur)]);
             $errors['selectProduct'] = $premiumTitle.'-'.ts('This gift will be eligible when your %1.', [1 => $msg]);
           }
         }
       }
-      elseif($amount < $productDAO->min_contribution) {
-        $msg = ts('one-time support at least %1', [1 => CRM_Utils_Money::format($productDAO->min_contribution)]);
+      elseif($amount < $premiumItemDAO->min_contribution) {
+        $msg = ts('one-time support at least %1', [1 => CRM_Utils_Money::format($premiumItemDAO->min_contribution)]);
         $errors['selectProduct'] = $premiumTitle.'-'.ts('This gift will be eligible when your %1.', [1 => $msg]);
       }
     }

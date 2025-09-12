@@ -82,6 +82,9 @@ class CRM_Core_I18n_SchemaStructure
           'description' => "text",
           'options' => "text",
         ) ,
+        'civicrm_premiums_combination' => array(
+          'description' => "text",
+        ) ,
         'civicrm_membership_type' => array(
           'name' => "varchar(128)",
           'description' => "varchar(255)",
