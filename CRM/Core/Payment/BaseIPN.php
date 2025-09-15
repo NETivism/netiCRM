@@ -306,6 +306,16 @@ class CRM_Core_Payment_BaseIPN {
       $participant->status_id = 4;
       $participant->save();
     }
+    // it's contribution, maybe have premium
+    else {
+      try{
+        CRM_Contribute_BAO_Premium::restockPremiumInventory($contribution->id);
+      }
+      catch (Exception $e) {
+        $errorMessage = "Failed to restock contribution ID {$contribution->id}: " . $e->getMessage();
+        CRM_Core_Error::debug_log_message($errorMessage);
+      }
+    }
 
     $transaction->commit();
     CRM_Utils_Hook::ipnPost('failed', $objects);
@@ -381,6 +391,17 @@ class CRM_Core_Payment_BaseIPN {
       $participant->status_id = 4;
       $participant->save();
     }
+    // it's contribution, maybe have premium
+    else {
+      try{
+        CRM_Contribute_BAO_Premium::restockPremiumInventory($contribution->id);
+      }
+      catch (Exception $e) {
+        $errorMessage = "Failed to restock contribution ID {$contribution->id}: " . $e->getMessage();
+        CRM_Core_Error::debug_log_message($errorMessage);
+      }
+    }
+
 
     $transaction->commit();
     CRM_Utils_Hook::ipnPost('cancelled', $objects);

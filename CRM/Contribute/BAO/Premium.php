@@ -397,18 +397,24 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
     $restockedContributions = [];
     
     foreach ($contributionsToRestock as $contribution) {
-      // Update contribution status
-      $sql = "UPDATE civicrm_contribution SET contribution_status_id = %1 WHERE id = %2";
-      $params = [
-        1 => [$statusChange, 'Integer'],
-        2 => [$contribution['id'], 'Integer']
-      ];
-      CRM_Core_DAO::executeQuery($sql, $params);
-      
-      // Restock the premium products
-      self::restockPremiumInventory($contribution['id']);
-      
-      $restockedContributions[] = $contribution['id'];
+      try {
+        // Update contribution status
+        $sql = "UPDATE civicrm_contribution SET contribution_status_id = %1 WHERE id = %2";
+        $params = [
+          1 => [$statusChange, 'Integer'],
+          2 => [$contribution['id'], 'Integer']
+        ];
+        CRM_Core_DAO::executeQuery($sql, $params);
+        
+        // Restock the premium products
+        self::restockPremiumInventory($contribution['id']);
+        
+        $restockedContributions[] = $contribution['id'];
+      } catch (Exception $e) {
+        $errorMessage = "Failed to restock contribution ID {$contribution['id']}: " . $e->getMessage();
+        CRM_Core_Error::debug_log_message($errorMessage);
+        // Continue processing other contributions
+      }
     }
 
     return $restockedContributions;
