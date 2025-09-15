@@ -553,10 +553,12 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
    */
   static function restockPremiumInventory($contributionId) {
     // Get premium products associated with this contribution from civicrm_contribution_product
+    // Only get products that haven't been restocked yet (restock IS NULL OR restock = 0)
     $sql = "
       SELECT cp.id, cp.product_id, cp.product_option, cp.quantity
       FROM civicrm_contribution_product cp
-      WHERE cp.contribution_id = %1
+      WHERE cp.contribution_id = %1 
+        AND (cp.restock IS NULL OR cp.restock = 0)
     ";
     
     $dao = CRM_Core_DAO::executeQuery($sql, [1 => [$contributionId, 'Integer']]);
@@ -660,10 +662,10 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
         2 => [$productInfo['product_id'], 'Integer']
       ];
       
-      CRM_Core_DAO::executeQuery($updateSql, $params);
+      $resultDao = CRM_Core_DAO::executeQuery($updateSql, $params);
       
       // Verify that the update actually affected a row
-      if (CRM_Core_DAO::affectedRows() == 0) {
+      if ($resultDao->affectedRows() == 0) {
         $transaction->rollback();
         throw new Exception("Restock failed - Product ID {$productInfo['product_id']} could not be updated. This may indicate the product conditions changed during processing.");
       }
