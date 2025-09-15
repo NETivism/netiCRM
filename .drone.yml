@@ -4,85 +4,84 @@ type: docker
 name: php7
 
 steps:
-- name: submodules
-  image: alpine/git
-  pull: if-not-exists
-  commands:
-  - git submodule update --init --recursive
-- name: neticrm ci php 7
-  image: rg.netivism.com.tw/netivism/docker-neticrm-ci:drone-php7
-  pull: always
-  environment:
-    DRUPAL: "7"
-    TZ: Asia/Taipei
-    RUNPORT: 8080
-    DRUPAL_ROOT: /var/www/html
-    CIVICRM_TEST_DSN: "mysqli://root@localhost/neticrmci"
-  commands:
-    - /usr/bin/supervisord &
-    - /init.sh
-    - cd $DRUPAL_ROOT && drush status | grep version
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Utils/TypeTest.php
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/ALLPAYTest.php
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/SPGATEWAYTest.php
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/LinePayTest.php
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/TapPayTest.php
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/BackerTest.php
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit --filter testLastReceiptId CRM/Contribute/BAO/ContributionTest.php
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit api/v3/ContributionRecurTest.php
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit api/v3/GetOptionsTest.php
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit --group CItesting api/v3/PhoneTest.php
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit --group CItesting api/v3/ParticipantTest.php
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit --group CItesting api/v3/ActivityTest.php
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit --group CItesting api/v3/MembershipTest.php
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/batch_action.spec.js
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/page.spec.js
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/add_contact.spec.js
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/add_contribution_page.spec.js
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/add_event.spec.js
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/edit_contact.spec.js
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/custom_data.spec.js
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_allpay.spec.js
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_allpay_atm.spec.js
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_allpay_barcode.spec.js
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/new_contribution.spec.js
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/advanced_search.spec.js
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/add_group.spec.js
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/check_membership.spec.js
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/import.spec.js
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/event_normal_register.spec.js
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/event_limit_nowait_register.spec.js
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/event_limit_wait_register.spec.js
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/event_limit_approval_register.spec.js
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/event_unlimit_approval_register.spec.js
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/event_participant.spec.js
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/edit_mailing.spec.js
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_spgateway.spec.js
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_booster.spec.js
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/report_check.spec.js
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/donation_tax_deduction.spec.js
-- name: notify
-  image: drillster/drone-email
-  settings:
-    from.address:
-      from_secret: email_from_addr
-    from.name:
-      from_secret: email_from_name
-    host:
-      from_secret: email_host
-    port:
-      from_secret: email_port
-    username:
-      from_secret: email_username
-    password:
-      from_secret: email_password
-    recipients:
-      from_secret: email_recipients
-    recipients_only: true
-    skip_verify: true
-  when:
-    status:
-    - failure
+  - name: submodules
+    image: alpine/git
+    pull: if-not-exists
+    commands:
+      - git submodule update --init --recursive
+  - name: neticrm ci php 7
+    image: rg.netivism.com.tw/netivism/docker-neticrm-ci:drone-php7
+    pull: always
+    environment:
+      DRUPAL: '7'
+      TZ: Asia/Taipei
+      RUNPORT: 8080
+      DRUPAL_ROOT: /var/www/html
+      CIVICRM_TEST_DSN: 'mysqli://root@localhost/neticrmci'
+    commands:
+      - /usr/bin/supervisord &
+      - /init.sh
+      - cd $DRUPAL_ROOT && drush status | grep version
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Utils/TypeTest.php
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/ALLPAYTest.php
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/SPGATEWAYTest.php
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/LinePayTest.php
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/TapPayTest.php
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/BackerTest.php
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit --filter testLastReceiptId CRM/Contribute/BAO/ContributionTest.php
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit api/v3/ContributionRecurTest.php
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit api/v3/GetOptionsTest.php
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit --group CItesting api/v3/PhoneTest.php
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit --group CItesting api/v3/ParticipantTest.php
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit --group CItesting api/v3/ActivityTest.php
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit --group CItesting api/v3/MembershipTest.php
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/batch_action.spec.js
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/page.spec.js
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/add_contact.spec.js
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/add_contribution_page.spec.js
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/add_event.spec.js
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/edit_contact.spec.js
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/custom_data.spec.js
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_allpay.spec.js
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_allpay_atm.spec.js
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_allpay_barcode.spec.js
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/new_contribution.spec.js
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/advanced_search.spec.js
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/add_group.spec.js
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/check_membership.spec.js
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/import.spec.js
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/event_normal_register.spec.js
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/event_limit_nowait_register.spec.js
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/event_limit_wait_register.spec.js
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/event_limit_approval_register.spec.js
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/event_unlimit_approval_register.spec.js
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/event_participant.spec.js
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/edit_mailing.spec.js
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_spgateway.spec.js
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_booster.spec.js
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/report_check.spec.js
+  - name: notify
+    image: drillster/drone-email
+    settings:
+      from.address:
+        from_secret: email_from_addr
+      from.name:
+        from_secret: email_from_name
+      host:
+        from_secret: email_host
+      port:
+        from_secret: email_port
+      username:
+        from_secret: email_username
+      password:
+        from_secret: email_password
+      recipients:
+        from_secret: email_recipients
+      recipients_only: true
+      skip_verify: true
+    when:
+      status:
+        - failure
 
 ---
 kind: pipeline
@@ -90,87 +89,86 @@ type: docker
 name: php8
 
 steps:
-- name: submodules
-  image: alpine/git
-  pull: if-not-exists
-  commands:
-  - git submodule update --init --recursive
-- name: neticrm ci php 8
-  image: rg.netivism.com.tw/netivism/docker-neticrm-ci:drone-php8
-  pull: always
-  environment:
-    DRUPAL: "7"
-    TZ: Asia/Taipei
-    RUNPORT: 8080
-    DRUPAL_ROOT: /var/www/html
-    CIVICRM_TEST_DSN: "mysqli://root@localhost/neticrmci"
-  commands:
-    - /usr/bin/supervisord &
-    - /init.sh
-    - cd $DRUPAL_ROOT && drush status | grep version
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Utils/TypeTest.php
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/ALLPAYTest.php
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/SPGATEWAYTest.php
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/LinePayTest.php
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/TapPayTest.php
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/BackerTest.php
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit --filter testLastReceiptId CRM/Contribute/BAO/ContributionTest.php
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit api/v3/ContributionRecurTest.php
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit api/v3/GetOptionsTest.php
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit --group CItesting api/v3/PhoneTest.php
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit --group CItesting api/v3/ParticipantTest.php
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit --group CItesting api/v3/ActivityTest.php
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit --group CItesting api/v3/MembershipTest.php
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/batch_action.spec.js
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/page.spec.js
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/add_contact.spec.js
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/add_contribution_page.spec.js
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/add_event.spec.js
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/edit_contact.spec.js
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/custom_data.spec.js
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_allpay.spec.js
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_allpay_atm.spec.js
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_allpay_barcode.spec.js
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/new_contribution.spec.js
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/advanced_search.spec.js
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/add_group.spec.js
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/check_membership.spec.js
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/import.spec.js
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/event_normal_register.spec.js
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/event_limit_nowait_register.spec.js
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/event_limit_wait_register.spec.js
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/event_limit_approval_register.spec.js
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/event_unlimit_approval_register.spec.js
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/event_participant.spec.js
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/edit_mailing.spec.js
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_spgateway.spec.js
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_booster.spec.js
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/report_check.spec.js
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/donation_tax_deduction.spec.js
-- name: notify
-  image: drillster/drone-email
-  settings:
-    from.address:
-      from_secret: email_from_addr
-    from.name:
-      from_secret: email_from_name
-    host:
-      from_secret: email_host
-    port:
-      from_secret: email_port
-    username:
-      from_secret: email_username
-    password:
-      from_secret: email_password
-    recipients:
-      from_secret: email_recipients
-    recipients_only: true
-    skip_verify: true
-  when:
-    status:
-    - failure
+  - name: submodules
+    image: alpine/git
+    pull: if-not-exists
+    commands:
+      - git submodule update --init --recursive
+  - name: neticrm ci php 8
+    image: rg.netivism.com.tw/netivism/docker-neticrm-ci:drone-php8
+    pull: always
+    environment:
+      DRUPAL: '7'
+      TZ: Asia/Taipei
+      RUNPORT: 8080
+      DRUPAL_ROOT: /var/www/html
+      CIVICRM_TEST_DSN: 'mysqli://root@localhost/neticrmci'
+    commands:
+      - /usr/bin/supervisord &
+      - /init.sh
+      - cd $DRUPAL_ROOT && drush status | grep version
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Utils/TypeTest.php
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/ALLPAYTest.php
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/SPGATEWAYTest.php
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/LinePayTest.php
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/TapPayTest.php
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/BackerTest.php
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit --filter testLastReceiptId CRM/Contribute/BAO/ContributionTest.php
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit api/v3/ContributionRecurTest.php
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit api/v3/GetOptionsTest.php
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit --group CItesting api/v3/PhoneTest.php
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit --group CItesting api/v3/ParticipantTest.php
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit --group CItesting api/v3/ActivityTest.php
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit --group CItesting api/v3/MembershipTest.php
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/batch_action.spec.js
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/page.spec.js
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/add_contact.spec.js
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/add_contribution_page.spec.js
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/add_event.spec.js
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/edit_contact.spec.js
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/custom_data.spec.js
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_allpay.spec.js
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_allpay_atm.spec.js
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_allpay_barcode.spec.js
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/new_contribution.spec.js
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/advanced_search.spec.js
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/add_group.spec.js
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/check_membership.spec.js
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/import.spec.js
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/event_normal_register.spec.js
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/event_limit_nowait_register.spec.js
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/event_limit_wait_register.spec.js
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/event_limit_approval_register.spec.js
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/event_unlimit_approval_register.spec.js
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/event_participant.spec.js
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/edit_mailing.spec.js
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_spgateway.spec.js
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_booster.spec.js
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/report_check.spec.js
+  - name: notify
+    image: drillster/drone-email
+    settings:
+      from.address:
+        from_secret: email_from_addr
+      from.name:
+        from_secret: email_from_name
+      host:
+        from_secret: email_host
+      port:
+        from_secret: email_port
+      username:
+        from_secret: email_username
+      password:
+        from_secret: email_password
+      recipients:
+        from_secret: email_recipients
+      recipients_only: true
+      skip_verify: true
+    when:
+      status:
+        - failure
 depends_on:
-- php7
+  - php7
 
 ---
 kind: pipeline
@@ -178,113 +176,112 @@ type: docker
 name: php82-d10
 
 steps:
-- name: submodules
-  image: alpine/git
-  pull: if-not-exists
-  commands:
-  - git submodule update --init --recursive
-  - cd drupal && git checkout 9.x-develop && git pull && cd ..
-  - cd neticrm && git checkout 9.x-develop && git pull && cd ..
-- name: neticrm ci php 8 drupal 10
-  image: rg.netivism.com.tw/netivism/docker-neticrm-ci:drone-php82-d10
-  pull: always
-  environment:
-    DRUPAL: "10"
-    TZ: Asia/Taipei
-    RUNPORT: "8080"
-    DRUPAL_ROOT: "/var/www/html"
-    CIVICRM_TEST_DSN: "mysqli://root@localhost/neticrmci"
-  commands:
-    - /usr/bin/supervisord &
-    - /init.sh
-    - cd $DRUPAL_ROOT && drush status | grep version
-    - cd $DRUPAL_ROOT/modules/civicrm/tests/phpunit && phpunit CRM/Utils/TypeTest.php
-    - cd $DRUPAL_ROOT/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/ALLPAYTest.php
-    - cd $DRUPAL_ROOT/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/LinePayTest.php
-    - cd $DRUPAL_ROOT/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/TapPayTest.php
-    - cd $DRUPAL_ROOT/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/BackerTest.php
-    - cd $DRUPAL_ROOT/modules/civicrm/tests/phpunit && phpunit --filter testLastReceiptId CRM/Contribute/BAO/ContributionTest.php
-    - cd $DRUPAL_ROOT/modules/civicrm/tests/phpunit && phpunit api/v3/ContributionRecurTest.php
-    - cd $DRUPAL_ROOT/modules/civicrm/tests/phpunit && phpunit api/v3/GetOptionsTest.php
-    - cd $DRUPAL_ROOT/modules/civicrm/tests/phpunit && phpunit --group CItesting api/v3/PhoneTest.php
-    - cd $DRUPAL_ROOT/modules/civicrm/tests/phpunit && phpunit --group CItesting api/v3/ParticipantTest.php
-    - cd $DRUPAL_ROOT/modules/civicrm/tests/phpunit && phpunit --group CItesting api/v3/ActivityTest.php
-    - cd $DRUPAL_ROOT/modules/civicrm/tests/phpunit && phpunit --group CItesting api/v3/MembershipTest.php
-    - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/batch_action.spec.js
-    - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/page.spec.js
-    - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/add_contact.spec.js
-    - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/add_contribution_page.spec.js
-    - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/add_event.spec.js
-    - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/edit_contact.spec.js
-    - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/custom_data.spec.js
-    - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_allpay.spec.js
-    - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_allpay_atm.spec.js
-    - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_allpay_barcode.spec.js
-    - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/new_contribution.spec.js
-    - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/advanced_search.spec.js
-    - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/add_group.spec.js
-    - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/check_membership.spec.js
-    - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/import.spec.js
-    - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/event_normal_register.spec.js
-    - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/event_limit_nowait_register.spec.js
-    - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/event_limit_wait_register.spec.js
-    - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/event_limit_approval_register.spec.js
-    - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/event_unlimit_approval_register.spec.js
-    - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/event_participant.spec.js
-    - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_spgateway.spec.js
-    - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/edit_mailing.spec.js
-    - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/report_check.spec.js
-    - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/donation_tax_deduction.spec.js
-- name: notify
-  image: drillster/drone-email
-  settings:
-    from.address:
-      from_secret: email_from_addr
-    from.name:
-      from_secret: email_from_name
-    host:
-      from_secret: email_host
-    port:
-      from_secret: email_port
-    username:
-      from_secret: email_username
-    password:
-      from_secret: email_password
-    recipients:
-      from_secret: email_recipients
-    recipients_only: true
-    skip_verify: true
-  when:
-    status:
-    - failure
+  - name: submodules
+    image: alpine/git
+    pull: if-not-exists
+    commands:
+      - git submodule update --init --recursive
+      - cd drupal && git checkout 9.x-develop && git pull && cd ..
+      - cd neticrm && git checkout 9.x-develop && git pull && cd ..
+  - name: neticrm ci php 8 drupal 10
+    image: rg.netivism.com.tw/netivism/docker-neticrm-ci:drone-php82-d10
+    pull: always
+    environment:
+      DRUPAL: '10'
+      TZ: Asia/Taipei
+      RUNPORT: '8080'
+      DRUPAL_ROOT: '/var/www/html'
+      CIVICRM_TEST_DSN: 'mysqli://root@localhost/neticrmci'
+    commands:
+      - /usr/bin/supervisord &
+      - /init.sh
+      - cd $DRUPAL_ROOT && drush status | grep version
+      - cd $DRUPAL_ROOT/modules/civicrm/tests/phpunit && phpunit CRM/Utils/TypeTest.php
+      - cd $DRUPAL_ROOT/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/ALLPAYTest.php
+      - cd $DRUPAL_ROOT/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/LinePayTest.php
+      - cd $DRUPAL_ROOT/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/TapPayTest.php
+      - cd $DRUPAL_ROOT/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/BackerTest.php
+      - cd $DRUPAL_ROOT/modules/civicrm/tests/phpunit && phpunit --filter testLastReceiptId CRM/Contribute/BAO/ContributionTest.php
+      - cd $DRUPAL_ROOT/modules/civicrm/tests/phpunit && phpunit api/v3/ContributionRecurTest.php
+      - cd $DRUPAL_ROOT/modules/civicrm/tests/phpunit && phpunit api/v3/GetOptionsTest.php
+      - cd $DRUPAL_ROOT/modules/civicrm/tests/phpunit && phpunit --group CItesting api/v3/PhoneTest.php
+      - cd $DRUPAL_ROOT/modules/civicrm/tests/phpunit && phpunit --group CItesting api/v3/ParticipantTest.php
+      - cd $DRUPAL_ROOT/modules/civicrm/tests/phpunit && phpunit --group CItesting api/v3/ActivityTest.php
+      - cd $DRUPAL_ROOT/modules/civicrm/tests/phpunit && phpunit --group CItesting api/v3/MembershipTest.php
+      - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/batch_action.spec.js
+      - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/page.spec.js
+      - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/add_contact.spec.js
+      - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/add_contribution_page.spec.js
+      - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/add_event.spec.js
+      - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/edit_contact.spec.js
+      - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/custom_data.spec.js
+      - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_allpay.spec.js
+      - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_allpay_atm.spec.js
+      - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_allpay_barcode.spec.js
+      - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/new_contribution.spec.js
+      - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/advanced_search.spec.js
+      - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/add_group.spec.js
+      - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/check_membership.spec.js
+      - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/import.spec.js
+      - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/event_normal_register.spec.js
+      - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/event_limit_nowait_register.spec.js
+      - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/event_limit_wait_register.spec.js
+      - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/event_limit_approval_register.spec.js
+      - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/event_unlimit_approval_register.spec.js
+      - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/event_participant.spec.js
+      - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_spgateway.spec.js
+      - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/edit_mailing.spec.js
+      - cd $DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/report_check.spec.js
+  - name: notify
+    image: drillster/drone-email
+    settings:
+      from.address:
+        from_secret: email_from_addr
+      from.name:
+        from_secret: email_from_name
+      host:
+        from_secret: email_host
+      port:
+        from_secret: email_port
+      username:
+        from_secret: email_username
+      password:
+        from_secret: email_password
+      recipients:
+        from_secret: email_recipients
+      recipients_only: true
+      skip_verify: true
+    when:
+      status:
+        - failure
 depends_on:
-- php8
+  - php8
 
 ---
 kind: pipeline
 name: notify
 
 steps:
-- name: notify
-  image: drillster/drone-email
-  settings:
-    from.address:
-      from_secret: email_from_addr
-    from.name:
-      from_secret: email_from_name
-    host:
-      from_secret: email_host
-    port:
-      from_secret: email_port
-    username:
-      from_secret: email_username
-    password:
-      from_secret: email_password
-    recipients:
-      from_secret: email_recipients
-    recipients_only: true
-    skip_verify: true
+  - name: notify
+    image: drillster/drone-email
+    settings:
+      from.address:
+        from_secret: email_from_addr
+      from.name:
+        from_secret: email_from_name
+      host:
+        from_secret: email_host
+      port:
+        from_secret: email_port
+      username:
+        from_secret: email_username
+      password:
+        from_secret: email_password
+      recipients:
+        from_secret: email_recipients
+      recipients_only: true
+      skip_verify: true
 depends_on:
-- php7
-- php8
-- php82-d10
+  - php7
+  - php8
+  - php82-d10
