@@ -145,14 +145,14 @@ cj(document).ready(function($){
             {foreach from=$combinations item=combination}
             <tr valign="top" class="combination-row">
                 {if $showRadioPremium}
-                    {assign var="cid" value=$combination.id}
-                    <td class="premium-selected">{$form.selectProduct.$cid.html}</td>
+                    {assign var="combination_id" value=$combination.id}
+                    <td class="premium-selected">{$form.selectProduct.$combination_id.html}</td>
                 {/if}
                 {if $combination.thumbnail}
-                <td class="premium-img"><label for="{$form.selectProduct.$cid.id}"><img src="{$combination.thumbnail}" alt="{$combination.combination_name}" class="no-border" /></label></td>
+                <td class="premium-img"><label for="{$form.selectProduct.$combination_id.id}"><img src="{$combination.thumbnail}" alt="{$combination.combination_name}" class="no-border" /></label></td>
                 {/if}
                 <td class="premium-info"{if !$combination.thumbnail} colspan="2"{/if}>
-                    <label class="premium-name" for="{$form.selectProduct.$cid.id}">{$combination.combination_name}</label>
+                    <label class="premium-name" for="{$form.selectProduct.$combination_id.id}">{$combination.combination_name}</label>
                     <div class="combination-products">
                         {foreach from=$combination.products item=product name=productLoop}
                             {$smarty.foreach.productLoop.iteration}.{$product.name} x {$product.quantity}<br/>
