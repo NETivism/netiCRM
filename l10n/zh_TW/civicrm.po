@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: CC Chu <poliphilonet@gmail.com>, 2020-2025\n"
+"Last-Translator: jimyhuang <jimmy@netivism.com.tw>, 2013,2015-2025\n"
 "Language-Team: Chinese (Taiwan) (http://app.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50583,3 +50583,88 @@ msgstr "RFM 捐款人分群模型"
 #: templates/CRM/Contact/Form/Search/Custom/RFM.tpl
 msgid "how to use"
 msgstr "使用說明"
+
+#: templates/CRM/Contribute/Form/ContributionPage/Premium.tpl
+#: CRM/Contribute/Form/ContributionPage/Premium.php
+msgid "Enable Gift Combination Feature"
+msgstr "啟用禮品組合功能"
+
+msgid ""
+"This Contribution Page currently has no premiums. You can <a href='%1'>add a"
+" gift combination</a>."
+msgstr "此募款頁尚未有感謝禮提供。您可以<a href='%1'>新增禮品組合</a>。"
+
+msgid ""
+"Once enabled, the Contribution Page will display gift combinations instead "
+"of individual premiums."
+msgstr "啟用後，募款頁將不會顯示個別感謝禮品，而是顯示禮品組合"
+
+msgid "Add Premium to the Combination"
+msgstr "加入禮品到組合中"
+
+msgid ""
+"You can select gifts to include in the combination and set the quantity for "
+"each gift."
+msgstr "您可以選擇要加入組合的禮品，並設定該組合包含的禮品數量"
+
+msgid "Add more gifts to the combination"
+msgstr "加入更多禮品到組合中"
+
+msgid "Please select a gift"
+msgstr "請選擇禮品"
+
+msgid "Combination Name"
+msgstr "組合名稱"
+
+msgid "Combination Contents"
+msgstr "組合內容"
+
+msgid "Offer other gift combinations on this Contribution Page"
+msgstr "在此募款頁提供其他感謝禮品組合"
+
+msgid "New Premium Combination"
+msgstr "新增感謝禮品組合"
+
+msgid "Edit Premium Combination"
+msgstr "編輯感謝禮品組合"
+
+msgid "Preview Premium Combination"
+msgstr "預覽感謝禮品組合"
+
+msgid "Delete Premium Combination"
+msgstr "刪除感謝禮品組合"
+
+msgid "Manage Premium Combination"
+msgstr "管理感謝禮品組合"
+
+msgid ""
+"This is the name of the premium combination to be displayed to the donor."
+msgstr "此為這套感謝禮品組合要展示給捐款人看的名稱"
+
+msgid "Premium Combination Name"
+msgstr "感謝禮組合名稱"
+
+msgid ""
+"Are you sure you want to remove this premium combination from this "
+"Contribution page?"
+msgstr "您確定要從此募款頁移除此感謝禮組合？"
+
+msgid "Selected Premium Combination has been deleted."
+msgstr "已刪除所選擇的贈品組合。"
+
+msgid "The Premium Combination '%1' has been saved."
+msgstr "已儲存感謝禮組合「%1」。"
+
+msgid ""
+"This is a preview of this combination as it will appear on your "
+"Contributions page(s)."
+msgstr "這是此感謝禮品組合的預覽，這會出現在您的募款頁。"
+
+msgid "Min One-Time Contribution"
+msgstr "單筆門檻"
+
+msgid "Min Recurring Contribution"
+msgstr "定捐門檻"
+
+msgid "Apple Pay Front"
+msgstr "Apple Pay 幕前支付"
