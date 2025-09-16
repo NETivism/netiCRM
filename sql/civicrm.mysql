@@ -4757,7 +4757,9 @@ CREATE TABLE civicrm_contribution_product (
      `fulfilled_date` date    COMMENT 'Optional. Can be used to record the date this product was fulfilled or shipped.',
      `start_date` date    COMMENT 'Actual start date for a time-delimited premium (subscription, service or membership)',
      `end_date` date    COMMENT 'Actual end date for a time-delimited premium (subscription, service or membership)',
-     `comment` text     
+     `comment` text    ,
+     `restock` tinyint   DEFAULT 0 COMMENT 'Indicates if contribution product restocked',
+     `combination_id` int unsigned    COMMENT 'ID for product combination' 
 ,
     PRIMARY KEY ( id )
  
