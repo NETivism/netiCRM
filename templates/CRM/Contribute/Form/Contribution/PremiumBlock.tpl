@@ -31,7 +31,7 @@
 <script type="text/javascript">
 cj(document).ready(function($){
   var detectAmount = function(obj) {
-    var amount = $(obj).prop('type') == 'text' ? parseFloat($(obj).val()) : parseFloat($(obj).data('amount'));
+    var amount = $(obj).prop('type') == 'number' ? parseFloat($(obj).val()) : parseFloat($(obj).data('amount'));
     var is_recur = parseInt($("input[name=is_recur]:checked").val());
     if (typeof amount === 'number' && amount) {
       if (typeof is_recur === 'number' && is_recur) {
