@@ -568,6 +568,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
         case 'ApplePayFront':
           $args['APPLEPAY'] = 1;
           $args['ReturnURL'] = $thankyouURL;
+          $args['Version'] = '1.3';
           break;
       }
 
