@@ -51,9 +51,28 @@ class CRM_Core_Payment_SPGATEWAYIPN extends CRM_Core_Payment_BaseIPN {
     // common credit card
     elseif(empty($ids['contributionRecur'])){
       $recur = FALSE;
-      // get the contribution and contact ids from the GET params
-      $input = CRM_Core_Payment_SPGATEWAYAPI::dataDecode($this->_post);
-      CRM_Core_Payment_SPGATEWAYAPI::writeRecord($ids['contribution'], $this->_post);
+      if (!empty($this->_post['JSONData'])) {
+        CRM_Core_Payment_SPGATEWAYAPI::writeRecord($ids['contribution'], $this->_post);
+        $input = CRM_Core_Payment_SPGATEWAYAPI::dataDecode($this->_post);
+      }
+      elseif (!empty($this->_post['TradeInfo'])) {
+        $ppid = NULL;
+        if (empty($ppid)) {
+          $sql = 'SELECT payment_processor_id FROM civicrm_contribution WHERE id = %1';
+          $ppid = CRM_Core_DAO::singleValueQuery($sql, [1 => [$ids['contribution'], 'Integer']]);
+        }
+        if (empty($ppid)) {
+          CRM_Core_Error::debug_log_message("Spgateway: could not find payment processor id on this contribution {$ids['contribution']}");
+          CRM_Utils_System::civiExit();
+        }
+        $isTest = CRM_Core_DAO::singleValueQuery("SELECT is_test FROM civicrm_payment_processor WHERE id = %1", [1 => [$ppid, 'Integer']]);
+        $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($ppid, $isTest ? 'test' : 'live');
+        $post = CRM_Core_Payment_SPGATEWAYAPI::recurDecrypt($this->_post['TradeInfo'], $paymentProcessor);
+        $this->_post = $post;
+
+        CRM_Core_Payment_SPGATEWAYAPI::writeRecord($ids['contribution'], $this->_post);
+        $input = CRM_Core_Payment_SPGATEWAYAPI::dataDecode($this->_post);
+      }
     }
     // recurring 1.0 or 1.1
     else{

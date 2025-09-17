@@ -1219,9 +1219,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     }
     else{
       // validate some post
-      if (!empty($post['JSONData']) || !empty($post['Period']) || !empty($post['Result']) ||
-        (!empty($post['Version']) && $post['Version'] === self::AGREEMENT_VERSION && !empty($post['TradeInfo']))
-      ) {
+      if (!empty($post['TradeInfo']) || !empty($post['JSONData']) || !empty($post['Period']) || !empty($post['Result'])) {
         $ipn = new CRM_Core_Payment_SPGATEWAYIPN($post, $get);
         $result = $ipn->main($instrument);
         if(is_string($result) && $print){
