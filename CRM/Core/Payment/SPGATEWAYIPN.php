@@ -15,8 +15,13 @@ class CRM_Core_Payment_SPGATEWAYIPN extends CRM_Core_Payment_BaseIPN {
   function main($instrument){
     $objects = $ids = $input = [];
     $this->getIds($ids);
+    // query result sync
+    if (!empty($this->_post['Result'])) {
+      CRM_Core_Payment_SPGATEWAYAPI::writeRecord($ids['contribution'], $this->_post);
+      $input = CRM_Core_Payment_SPGATEWAYAPI::dataDecode($this->_post);
+    }
     // agreement
-    if (!empty($this->_post['TradeInfo']) && !empty($this->_post['Version']) && $this->_post['Version'] === CRM_Core_Payment_SPGATEWAY::AGREEMENT_VERSION) {
+    elseif (!empty($this->_post['TradeInfo']) && !empty($this->_post['Version']) && $this->_post['Version'] === CRM_Core_Payment_SPGATEWAY::AGREEMENT_VERSION) {
       $ppid = NULL;
       $recur = FALSE;
       if (!empty($ids['contributionRecur'])) {
@@ -49,7 +54,7 @@ class CRM_Core_Payment_SPGATEWAYIPN extends CRM_Core_Payment_BaseIPN {
       $input = CRM_Core_Payment_SPGATEWAYAPI::dataDecode($this->_post);
     }
     // common credit card
-    elseif(empty($ids['contributionRecur'])){
+    elseif(empty($ids['contributionRecur']) && (!empty($this->_post['JSONData']) || !empty($this->_post['TradeInfo']))){
       $recur = FALSE;
       if (!empty($this->_post['JSONData'])) {
         CRM_Core_Payment_SPGATEWAYAPI::writeRecord($ids['contribution'], $this->_post);
