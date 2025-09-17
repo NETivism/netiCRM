@@ -1250,6 +1250,8 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
       'Web ATM' => ['label' => ts('Web ATM'), 'desc' => '', 'code' => 'WebATM'],
       'Convenient Store' => ['label' => ts('Convenient Store Barcode'), 'desc'=>'', 'code' => 'BARCODE'],
       'Convenient Store (Code)' => ['label'=> ts('Convenient Store (Code)'),'desc' => '', 'code' => 'CVS'],
+      'GooglePay' => ['label'=> ts('Google Pay'),'desc' => '', 'code' => 'GooglePay'],
+      'ApplePayFront' => ['label'=> ts('Apple Pay'),'desc' => '', 'code' => 'ApplePayFront'],
     ];
     if($type == 'form_name'){
       foreach($i as $name => $data){
