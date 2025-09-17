@@ -293,6 +293,20 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
       CRM_Core_Error::fatal(ts('Component is invalid'));
     }
     $is_test = $this->_mode == 'test' ? 1 : 0;
+
+
+    // special case for mobile payment, update payment_processor_id when needed
+    if (!empty($params['contributionID']) && !empty($this->_paymentProcessor['id'])) {
+      $existingContribution = new CRM_Contribute_DAO_Contribution();
+      $existingContribution->id = $params['contributionID'];
+      if ($existingContribution->find(TRUE)) {
+        if ($existingContribution->payment_processor_id != $this->_paymentProcessor['id']) {
+          $existingContribution->payment_processor_id = $this->_paymentProcessor['id'];
+          $existingContribution->save();
+        }
+      }
+    }
+
     if (isset($this->_paymentForm) && get_class($this->_paymentForm) == 'CRM_Contribute_Form_Payment_Main') {
       if (empty($params['email-5'])) {
         // Retrieve email of billing type or primary.
