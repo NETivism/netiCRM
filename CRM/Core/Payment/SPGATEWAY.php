@@ -5,7 +5,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
   const EXPIRE_DAY = 7;
   const MAX_EXPIRE_DAY = 180;
   const RESPONSE_TYPE = 'JSON';
-  const MPG_VERSION = '2.3';
+  const MPG_VERSION = '2.0';
   const AGREEMENT_VERSION = '1.5';
   const RECUR_VERSION = '1.0';
   const QUERY_VERSION = '1.1';
@@ -584,6 +584,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
         'MerchantID' => $this->_paymentProcessor['user_name'],
         'TradeInfo' => $tradeInfoEncrypted,
         'TradeSha' => $tradeSha,
+        'Version' => self::MPG_VERSION,
       ];
       if ($this->_paymentProcessor['is_test']) {
         $args['#url'] = self::TEST_DOMAIN.self::URL_SITE;
