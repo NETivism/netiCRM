@@ -47,6 +47,7 @@
         <table id="options" class="display">
           <thead>
            <tr>
+            <th>#</th>
             <th id="sortable">{ts}Name{/ts}</th>
             <th>{ts}SKU{/ts}</th>
             <th>{ts}Market Value{/ts}</th>
@@ -61,6 +62,7 @@
           </thead>
         {foreach from=$rows item=row}
 	      <tr id="row_{$row.id}"class="{cycle values="odd-row,even-row"} {$row.class}{if NOT $row.is_active} disabled{/if}">        
+          <td class="crm-contribution-form-block-id">{$row.id}</td>
 	        <td class="crm-contribution-form-block-name">{$row.name}</td>	
 	        <td class="crm-contribution-form-block-sku">{$row.sku}</td>
                 <td class="crm-contribution-form-block-price">{$row.price }</td>
