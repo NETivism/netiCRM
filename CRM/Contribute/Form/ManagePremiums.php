@@ -187,6 +187,8 @@ class CRM_Contribute_Form_ManagePremiums extends CRM_Contribute_Form {
 
     $this->add('text', 'frequency_interval', ts('Frequency Interval'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_Product', 'frequency_interval'));
 
+    $this->add('checkbox', 'stock_status', ts('Enabled?'));
+    $this->addNumber('stock_qty', ts('Total inventory'));
 
     $this->add('checkbox', 'is_active', ts('Enabled?'));
 
@@ -261,6 +263,9 @@ class CRM_Contribute_Form_ManagePremiums extends CRM_Contribute_Form {
       $errors['frequency_interval'] = ts('Please enter the Frequency Interval for this subscription or service.');
     }
 
+    if (!empty($params['stock_status']) && empty($params['stock_qty'])) {
+      $errors['stock_qty'] = ts('Please enter the total inventory quantity when inventory management is enabled.');
+    }
 
     return empty($errors) ? TRUE : $errors;
   }

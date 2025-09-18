@@ -127,8 +127,34 @@
       </td>
     </tr>
     <tr>
+      <td colspan="2">
+        <div class="crm-accordion-wrapper crm-accordion-open" id="inventory-management">
+          <div class="crm-accordion-header">
+            <div class="zmdi crm-accordion-pointer"></div>{ts}Inventory Management{/ts}
+          </div>
+          <div class="crm-accordion-body">
+            <table class="form-layout-compressed">
+              <tr class="crm-contribution-form-block-stock_status">
+                <td class="label">{$form.stock_status.label}</td>
+                <td class="html-adjust">{$form.stock_status.html}</td>
+              </tr>
+              <tr class="crm-contribution-form-block-stock_qty">
+                <td class="label">{$form.stock_qty.label}</td>
+                <td class="html-adjust">{$form.stock_qty.html}<br />
+                    <span class="description">
+                      {ts}Set the total inventory quantity for this premium. Once the given quantity exceeds this total, this premium will no longer be offered.{/ts}<br>
+                      {ts}Note: Inventory is tied to the entire premium. If you need to manage inventory for different options, please create multiple premiums.{/ts}
+                    </span>
+                </td>
+              </tr>
+            </table>
+          </div><!--Accordion Body-->
+        </div>
+      </td>
+    </tr>
+    <tr>
     <td colspan="2">
-  <div class="crm-accordion-wrapper crm-accordion-open" id="minimum-contribution-amount">
+  <div class="crm-accordion-wrapper crm-accordion-open" id="other">
     <div class="crm-accordion-header">
       <div class="zmdi crm-accordion-pointer"></div>{ts}Other{/ts}
     </div>
