@@ -60,8 +60,8 @@ class CRM_AI_GenImageService_ITRIICL extends CRM_AI_GenImageService {
    */
   public function setImageSize($width, $height) {
     // Basic dimension validation and setting
-    $this->imageWidth = $width ?? 832;
-    $this->imageHeight = $height ?? 832;
+    $this->imageWidth = $width ?? 1024;
+    $this->imageHeight = $height ?? 1024;
     
     return [
       'width' => $this->imageWidth,
@@ -223,9 +223,11 @@ class CRM_AI_GenImageService_ITRIICL extends CRM_AI_GenImageService {
    */
   private function processRatio($ratio) {
     $ratioMap = [
-      '1:1' => ['width' => 832, 'height' => 832],
-      '4:3' => ['width' => 832, 'height' => 624],
-      '16:9' => ['width' => 832, 'height' => 468]
+      '1:1' => ['width' => 1024, 'height' => 1024],
+      '4:3' => ['width' => 1152, 'height' => 896],
+      '3:4' => ['width' => 896, 'height' => 1152],
+      '16:9' => ['width' => 1344, 'height' => 768],
+      '9:16' => ['width' => 768, 'height' => 1344]
     ];
     
     if (isset($ratioMap[$ratio])) {

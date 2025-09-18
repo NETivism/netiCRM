@@ -166,7 +166,7 @@ class CRM_AI_BAO_AIGenImage {
       throw new Exception('Text description is too long (max 1000 characters)');
     }
 
-    $allowedRatios = ['1:1', '4:3', '16:9'];
+    $allowedRatios = ['1:1', '4:3', '3:4', '16:9', '9:16'];
     if (!empty($params['ratio']) && !in_array($params['ratio'], $allowedRatios)) {
       throw new Exception('Invalid ratio. Allowed: ' . implode(', ', $allowedRatios));
     }
