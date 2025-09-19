@@ -39,7 +39,7 @@
 class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Contribute_Form_ContributionPage_AddProduct {
 
   static $_combinations;
-  static $_cid;
+  static $_combination_id;
   protected $_action;
   protected $_isEdit = FALSE;
 
@@ -53,11 +53,11 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
   public function preProcess() {
     parent::preProcess();
 
-    $this->_cid = CRM_Utils_Request::retrieve('cid', 'Positive', $this, FALSE, 0);
+    $this->_combination_id = CRM_Utils_Request::retrieve('combination_id', 'Positive', $this, FALSE, 0);
     $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE, CRM_Core_Action::ADD);
 
     // Check if this is an edit action
-    if ($this->_cid) {
+    if ($this->_combination_id) {
       $this->_isEdit = TRUE;
     }
     // For adding existing combinations to page
@@ -65,8 +65,8 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
       $this->_combinations = CRM_Contribute_BAO_PremiumsCombination::getCombinations($this->_id, TRUE, TRUE);
     }
 
-    // If no cid parameter and action is add, treat it as creating new combination
-    if ($this->_action == CRM_Core_Action::ADD && !$this->_cid) {
+    // If no combination_id parameter and action is add, treat it as creating new combination
+    if ($this->_action == CRM_Core_Action::ADD && !$this->_combination_id) {
       $this->_isEdit = TRUE;
     }
   }
@@ -82,10 +82,10 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
   function setDefaultValues() {
     $defaults = [];
 
-    if ($this->_isEdit && $this->_cid) {
+    if ($this->_isEdit && $this->_combination_id) {
       // For editing existing combination
       $defaults = $this->_loadCombinationDefaults();
-    } elseif (!$this->_isEdit && $this->_cid) {
+    } elseif (!$this->_isEdit && $this->_combination_id) {
       // For adding existing combination to page
       $defaults = $this->_loadSelectionDefaults();
     } else {
@@ -103,7 +103,7 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
   private function _loadCombinationDefaults() {
     $defaults = [];
     $dao = new CRM_Contribute_DAO_PremiumsCombination();
-    $dao->id = $this->_cid;
+    $dao->id = $this->_combination_id;
     $dao->find(TRUE);
 
     $defaults['combination_name'] = $dao->combination_name;
@@ -133,7 +133,7 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
 
     // Load associated products (using 1-based indexing to match form structure)
     $productDao = new CRM_Contribute_DAO_PremiumsCombinationProducts();
-    $productDao->combination_id = $this->_cid;
+    $productDao->combination_id = $this->_combination_id;
     $productDao->find();
     $index = 1; // Start from 1 to match product[1], product[2], etc.
     while ($productDao->fetch() && $index <= 6) {
@@ -151,7 +151,7 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
   private function _loadSelectionDefaults() {
     $defaults = [];
     $dao = new CRM_Contribute_DAO_PremiumsCombination();
-    $dao->id = $this->_cid;
+    $dao->id = $this->_combination_id;
     $dao->find(TRUE);
     $defaults['combination_id'] = $dao->id;
     $defaults['weight'] = $dao->weight;
@@ -234,12 +234,12 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
         )) {
         if ($this->_isEdit) {
           // Delete combination and products
-          CRM_Contribute_BAO_PremiumsCombination::del($this->_cid);
+          CRM_Contribute_BAO_PremiumsCombination::del($this->_combination_id);
           CRM_Core_Session::setStatus(ts('Selected Premium Combination has been deleted.'));
         } else {
           // Only remove the page association
           $dao = new CRM_Contribute_DAO_PremiumsCombination();
-          $dao->id = $this->_cid;
+          $dao->id = $this->_combination_id;
           $dao->premiums_id = NULL;
           $dao->save();
           CRM_Core_Session::setStatus(ts('Selected Premium Combination has been removed from this Contribution Page.'));
@@ -260,7 +260,7 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
       );
     }
     elseif ($this->_action & CRM_Core_Action::PREVIEW) {
-      CRM_Contribute_BAO_Premium::buildCombinationPreviewBlock($this, $this->_cid);
+      CRM_Contribute_BAO_Premium::buildCombinationPreviewBlock($this, $this->_combination_id);
       $this->addButtons([
           ['type' => 'next',
             'name' => ts('Done with Preview'),
@@ -377,7 +377,7 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
 
     $this->addFormRule(['CRM_Contribute_Form_ContributionPage_AddPremiumsCombination', 'formRule']);
 
-    $this->assign('combinationId', $this->_cid);
+    $this->assign('combinationId', $this->_combination_id);
     $this->assign('isEditMode', $this->_isEdit);
 
     // Set correct upload directory for image files
@@ -465,7 +465,7 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
   private function _handleDeleteAction() {
     $urlParams = 'civicrm/admin/contribute/premium';
     $url = CRM_Utils_System::url($urlParams, 'reset=1&action=update&id=' . $this->_id);
-    CRM_Contribute_BAO_PremiumsCombination::del($this->_cid);
+    CRM_Contribute_BAO_PremiumsCombination::del($this->_combination_id);
     CRM_Core_Session::setStatus(ts('Selected Premium Combination has been deleted.'));
     CRM_Utils_System::redirect($url);
   }
@@ -569,8 +569,8 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
 
     // Save combination
     $dao = new CRM_Contribute_DAO_PremiumsCombination();
-    if ($this->_cid) {
-      $params['id'] = $this->_cid;
+    if ($this->_combination_id) {
+      $params['id'] = $this->_combination_id;
     } else {
       // Set premiums_id for new combinations
       $params['premiums_id'] = $premiumID;

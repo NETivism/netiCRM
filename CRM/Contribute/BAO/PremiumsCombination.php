@@ -226,38 +226,4 @@ class CRM_Contribute_BAO_PremiumsCombination extends CRM_Contribute_DAO_Premiums
 
     return $products;
   }
-
-  /**
-   * Check if combination is eligible for contribution amount
-   *
-   * @param int $combinationId
-   * @param float $amount
-   * @param boolean $isRecurring
-   * @param string $calculateMode
-   * @param int $installments
-   *
-   * @return boolean
-   * @access public
-   * @static
-   */
-  static function isEligible($combinationId, $amount, $isRecurring = FALSE, $calculateMode = 'first', $installments = 1) {
-    $combination = new CRM_Contribute_DAO_PremiumsCombination();
-    $combination->id = $combinationId;
-    $combination->is_active = 1;
-
-    if (!$combination->find(TRUE)) {
-      return FALSE;
-    }
-
-    if ($isRecurring) {
-      $threshold = $combination->min_contribution_recur;
-      if ($calculateMode == 'cumulative') {
-        $threshold = $threshold * $installments;
-      }
-    } else {
-      $threshold = $combination->min_contribution;
-    }
-
-    return $amount >= $threshold;
-  }
 }
