@@ -238,19 +238,19 @@ class CRM_Contribute_Page_Premium extends CRM_Core_Page_Basic {
         CRM_Core_Action::UPDATE => [
           'name' => ts('Edit'),
           'url' => 'civicrm/admin/contribute/addPremiumsCombinationToPage',
-          'qs' => 'action=update&id=%%id%%&cid=%%cid%%&reset=1',
+          'qs' => 'action=update&id=%%id%%&combination_id=%%combination_id%%&reset=1',
           'title' => ts('Edit Premium Combination'),
         ],
         CRM_Core_Action::PREVIEW => [
           'name' => ts('Preview'),
           'url' => 'civicrm/admin/contribute/addPremiumsCombinationToPage',
-          'qs' => 'action=preview&id=%%id%%&cid=%%cid%%',
+          'qs' => 'action=preview&id=%%id%%&combination_id=%%combination_id%%',
           'title' => ts('Preview Premium Combination'),
         ],
         CRM_Core_Action::DELETE => [
           'name' => ts('Remove'),
           'url' => 'civicrm/admin/contribute/addPremiumsCombinationToPage',
-          'qs' => 'action=delete&id=%%id%%&cid=%%cid%%',
+          'qs' => 'action=delete&id=%%id%%&combination_id=%%combination_id%%',
           'extra' => 'onclick = "if (confirm(\'' . $deleteExtra . '\') ) {  this.href+=\'&amp;confirmed=1\'; else return false;}"',
           'title' => ts('Remove Premium Combination'),
         ],
@@ -259,7 +259,7 @@ class CRM_Contribute_Page_Premium extends CRM_Core_Page_Basic {
       foreach ($combinations as $id => $combination) {
         $action = array_sum(array_keys($combinationLinks));
         $combinations[$id]['action'] = CRM_Core_Action::formLink($combinationLinks, $action,
-          ['id' => $pageID, 'cid' => $id]
+          ['id' => $pageID, 'combination_id' => $id]
         );
       }
 
