@@ -1218,16 +1218,13 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
       $amount = $fields['amount'];
     }
 
-    if (isset($fields['selectProduct']) &&
-      $fields['selectProduct'] != 'no_thanks' &&
-      $self->_values['amount_block_is_active']
-    ) {
+    if (isset($fields['selectProduct']) && $fields['selectProduct'] != 'no_thanks') {
       $premiumTitle = $self->_values['premiums_intro_title'];
-
       $premiumDAO = new CRM_Contribute_DAO_Premium();
       $premiumDAO->entity_table = 'civicrm_contribution_page';
       $premiumDAO->entity_id = $self->_values['id'];
       $premiumDAO->find(TRUE);
+
       if ($premiumDAO->premiums_combination == 1) {
         $daoClassName = 'CRM_Contribute_DAO_PremiumsCombination';
       } else {
@@ -1237,38 +1234,71 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
       $premiumItemDAO = new $daoClassName();
       $premiumItemDAO->id = $fields['selectProduct'];
       $premiumItemDAO->find(TRUE);
-      // #26455, backward compatibility needed
-      if (is_null($premiumItemDAO->min_contribution_recur)) {
-        $premiumItemDAO->min_contribution_recur = $premiumItemDAO->min_contribution;
-      }
-      if (is_null($premiumItemDAO->calculate_mode)) {
-        $premiumItemDAO->calculate_mode = 'cumulative';
-      }
-      if (is_null($premiumItemDAO->installments)) {
-        $premiumItemDAO->installments = 0;
-      }
-      if(!empty($fields['is_recur'])){
-        if ($premiumItemDAO->calculate_mode == 'cumulative') {
-          $installments = !empty($fields['installments']) ? $fields['installments'] : $premiumItemDAO->installments;
-          if (empty($installments)) {
-            $installments = 99; // max installments #26445
+
+      if ($self->_values['amount_block_is_active']) {
+        // #26455, backward compatibility needed
+        if (is_null($premiumItemDAO->min_contribution_recur)) {
+          $premiumItemDAO->min_contribution_recur = $premiumItemDAO->min_contribution;
+        }
+        if (is_null($premiumItemDAO->calculate_mode)) {
+          $premiumItemDAO->calculate_mode = 'cumulative';
+        }
+        if (is_null($premiumItemDAO->installments)) {
+          $premiumItemDAO->installments = 0;
+        }
+        if(!empty($fields['is_recur'])){
+          if ($premiumItemDAO->calculate_mode == 'cumulative') {
+            $installments = !empty($fields['installments']) ? $fields['installments'] : $premiumItemDAO->installments;
+            if (empty($installments)) {
+              $installments = 99; // max installments #26445
+            }
+            $total = $amount * $installments;
+            if($total < $premiumItemDAO->min_contribution_recur){
+              $msg = ts('total support of recurring payment at least %1', [1 => CRM_Utils_Money::format($premiumItemDAO->min_contribution_recur)]);
+              $errors['selectProduct'] = $premiumTitle.'-'.ts('This gift will be eligible when your %1.', [1 => $msg]);
+            }
           }
-          $total = $amount * $installments;
-          if($total < $premiumItemDAO->min_contribution_recur){
-            $msg = ts('total support of recurring payment at least %1', [1 => CRM_Utils_Money::format($premiumItemDAO->min_contribution_recur)]);
-            $errors['selectProduct'] = $premiumTitle.'-'.ts('This gift will be eligible when your %1.', [1 => $msg]);
+          elseif ($premiumItemDAO->calculate_mode == 'first') {
+            if($amount < $premiumItemDAO->min_contribution_recur){
+              $msg = ts('first support of recurring payment at least %1', [1 => CRM_Utils_Money::format($premiumItemDAO->min_contribution_recur)]);
+              $errors['selectProduct'] = $premiumTitle.'-'.ts('This gift will be eligible when your %1.', [1 => $msg]);
+            }
           }
         }
-        elseif ($premiumItemDAO->calculate_mode == 'first') {
-          if($amount < $premiumItemDAO->min_contribution_recur){
-            $msg = ts('first support of recurring payment at least %1', [1 => CRM_Utils_Money::format($premiumItemDAO->min_contribution_recur)]);
-            $errors['selectProduct'] = $premiumTitle.'-'.ts('This gift will be eligible when your %1.', [1 => $msg]);
-          }
+        elseif($amount < $premiumItemDAO->min_contribution) {
+          $msg = ts('one-time support at least %1', [1 => CRM_Utils_Money::format($premiumItemDAO->min_contribution)]);
+          $errors['selectProduct'] = $premiumTitle.'-'.ts('This gift will be eligible when your %1.', [1 => $msg]);
         }
       }
-      elseif($amount < $premiumItemDAO->min_contribution) {
-        $msg = ts('one-time support at least %1', [1 => CRM_Utils_Money::format($premiumItemDAO->min_contribution)]);
-        $errors['selectProduct'] = $premiumTitle.'-'.ts('This gift will be eligible when your %1.', [1 => $msg]);
+
+      // Check stock status for selected product
+      if (empty($errors['selectProduct'])) {
+        if ($premiumDAO->premiums_combination == 1) {
+          // For combination products, check each product in the combination
+          $combinationProductsDAO = new CRM_Contribute_DAO_PremiumsCombinationProducts();
+          $combinationProductsDAO->combination_id = $fields['selectProduct'];
+          $combinationProductsDAO->find();
+          while ($combinationProductsDAO->fetch()) {
+            $product = new CRM_Contribute_DAO_Product();
+            $product->id = $combinationProductsDAO->product_id;
+            if ($product->find(TRUE) && $product->stock_status > 0) {
+              $remainQty = $product->stock_qty - $product->send_qty;
+              $requiredQty = $combinationProductsDAO->quantity;
+              if ($remainQty < $requiredQty) {
+                $errors['selectProduct'] = CRM_Utils_String::xssFilter($premiumItemDAO->combination_name).'-'.ts('This gift is currently out of stock.');
+                break;
+              }
+            }
+          }
+        } else {
+          // For single products, check stock status
+          if ($premiumItemDAO->stock_status > 0) {
+            $remainQty = $premiumItemDAO->stock_qty - $premiumItemDAO->send_qty;
+            if ($remainQty <= 0) {
+              $errors['selectProduct'] = CRM_Utils_String::xssFilter($premiumItemDAO->name).'-'.ts('This gift is currently out of stock.');
+            }
+          }
+        }
       }
     }
 

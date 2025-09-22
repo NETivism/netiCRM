@@ -946,8 +946,35 @@ INNER JOIN  civicrm_contact contact ON ( contact.id = civicrm_contribution.conta
    * @static
    */
   static function addPremium(&$params) {
+    if (empty($params['preview']) && !empty($params['product_id']) && !empty($params['quantity'])) {
+      $product = new CRM_Contribute_DAO_Product();
+      $product->id = $params['product_id'];
 
+      if ($product->find(TRUE)) {
+        $transaction = new CRM_Core_Transaction();
+        try {
+          if ($product->stock_status > 0) {
+            if ($product->stock_qty > 0) {
+              $remainQty = $product->stock_qty - $product->send_qty;
 
+              if ($remainQty < $params['quantity']) {
+                throw new CRM_Core_Exception(ts('Insufficient stock. Available quantity: %1, Requested: %2',
+                  [1 => $remainQty, 2 => $params['quantity']]));
+              }
+              $product->send_qty += $params['quantity'];
+              $product->save();
+              $transaction->commit();
+            }
+            else {
+              throw new CRM_Core_Exception(ts('Product is out of stock.'));
+            }
+          }
+        }
+        catch (Exception $e) {
+          $params['comment'] .= ts("Inventory Management").': '.$e->getMessage();
+        }
+      }
+    }
     $contributionProduct = new CRM_Contribute_DAO_ContributionProduct();
     $contributionProduct->copyValues($params);
     return $contributionProduct->save();

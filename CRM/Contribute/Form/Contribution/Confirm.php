@@ -221,6 +221,7 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
     $this->_preventMultipleSubmission = TRUE;
     $this->set('params', $this->_params);
     $this->assign('contribution_type_id', $this->_values['contribution_type_id']);
+    $this->addFormRule(['CRM_Contribute_Form_Contribution_Confirm', 'formRule'], $this);
   }
 
   /**
@@ -438,6 +439,72 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
         $session->set('user_contribution_prepopulate', $params);
       }
     }
+  }
+
+  /**
+   * form rule
+   *
+   * @param array $fields  the input form values
+   * @param array $files   the uploaded files if any
+   * @param array $form the form object
+   *
+   * @return true if no errors, else array of errors
+   * @access public
+   * @static
+   */
+  static function formRule($fields, $files, $self) {
+    $errors = array();
+
+    if (!empty($self->_params['selectProduct'])) {
+      $fields['selectProduct'] = $self->_params['selectProduct'];
+    }
+    if (isset($fields['selectProduct']) && $fields['selectProduct'] != 'no_thanks' ) {
+      $premiumTitle = $self->_values['premiums_intro_title'];
+      // Check stock status for selected product
+      $premiumDAO = new CRM_Contribute_DAO_Premium();
+      $premiumDAO->entity_table = 'civicrm_contribution_page';
+      $premiumDAO->entity_id = $self->_values['id'];
+      $premiumDAO->find(TRUE);
+
+      if ($premiumDAO->premiums_combination == 1) {
+        $daoClassName = 'CRM_Contribute_DAO_PremiumsCombination';
+      } else {
+        $daoClassName = 'CRM_Contribute_DAO_Product';
+      }
+      $premiumItemDAO = new $daoClassName();
+      $premiumItemDAO->id = $fields['selectProduct'];
+
+      if ($premiumItemDAO->find(TRUE)) {
+        if ($premiumDAO->premiums_combination == 1) {
+          // For combination products, check each product in the combination
+          $combinationProductsDAO = new CRM_Contribute_DAO_PremiumsCombinationProducts();
+          $combinationProductsDAO->combination_id = $fields['selectProduct'];
+          $combinationProductsDAO->find();
+          while ($combinationProductsDAO->fetch()) {
+            $product = new CRM_Contribute_DAO_Product();
+            $product->id = $combinationProductsDAO->product_id;
+            if ($product->find(TRUE) && $product->stock_status > 0) {
+              $remainQty = $product->stock_qty - $product->send_qty;
+              $requiredQty = $combinationProductsDAO->quantity;
+              if ($remainQty < $requiredQty) {
+                $errors['qfKey'] = CRM_Utils_String::xssFilter($premiumItemDAO->combination_name).'-'.ts('This gift is currently out of stock.');
+                break;
+              }
+            }
+          }
+        } else {
+          // For single products, check stock status
+          if ($premiumItemDAO->stock_status > 0) {
+            $remainQty = $premiumItemDAO->stock_qty - $premiumItemDAO->send_qty;
+            if ($remainQty <= 0) {
+              $errors['qfKey'] = CRM_Utils_String::xssFilter($premiumItemDAO->name).'-'.ts('This gift is currently out of stock.');
+            }
+          }
+        }
+      }
+    }
+
+    return empty($errors) ? TRUE : $errors;
   }
 
   /**
@@ -767,6 +834,7 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
         'quantity' => $product['quantity'],
         'combination_id' => $combinationId,
         'product_option' => '',
+        'preview' => $this->_action & CRM_Core_Action::PREVIEW ? TRUE : FALSE,
       ];
       $existingRecord = new CRM_Contribute_DAO_ContributionProduct();
       $existingRecord->contribution_id = $contribution->id;
@@ -849,6 +917,7 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
       'quantity' => 1,
       'start_date' => CRM_Utils_Date::customFormat($startDate, '%Y%m%d'),
       'end_date' => CRM_Utils_Date::customFormat($endDate, '%Y%m%d'),
+      'preview' => $this->_action & CRM_Core_Action::PREVIEW ? TRUE : FALSE,
     ];
 
     // Fixed For CRM-3901
