@@ -45,6 +45,35 @@ class CRM_Contribute_Form_AdditionalInfo {
     //premium section
     $form->add('hidden', 'hidden_Premium', 1);
 
+    // Check if this is a combination premium
+    $isCombination = FALSE;
+    $combinationName = '';
+    $combinationContent = '';
+
+    if (!empty($form->_premiumID)) {
+      $dao = new CRM_Contribute_DAO_ContributionProduct();
+      $dao->id = $form->_premiumID;
+      if ($dao->find(TRUE) && !empty($dao->combination_id)) {
+        $isCombination = TRUE;
+        // Get combination details
+        $combinationDAO = new CRM_Contribute_DAO_PremiumsCombination();
+        $combinationDAO->id = $dao->combination_id;
+        if ($combinationDAO->find(TRUE)) {
+          $combinationName = $combinationDAO->combination_name;
+          // Get combination products
+          $combinationProducts = CRM_Contribute_BAO_PremiumsCombination::getCombinationProducts($dao->combination_id);
+          $combinationContentArray = [];
+          foreach ($combinationProducts as $product) {
+            $combinationContentArray[] = $product['name'] . ' x' . $product['quantity'];
+          }
+          $combinationContent = implode(', ', $combinationContentArray);
+        }
+      }
+    }
+    $form->assign('is_combination_premium', $isCombination);
+    $form->assign('combination_name', $combinationName);
+    $form->assign('combination_content', $combinationContent);
+
     $sel1 = $sel2 = [];
 
     $dao = new CRM_Contribute_DAO_Product();
