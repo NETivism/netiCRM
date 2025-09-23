@@ -1730,7 +1730,7 @@ WHERE  contribution_id = {$this->_id}
       }
 
       //process premium
-      if ($contribution->id && isset($formValues['product_name'][0])) {
+      if ($contribution->id && (isset($formValues['product_name'][0]) || $this->_premiumID)) {
         CRM_Contribute_Form_AdditionalInfo::processPremium($formValues, $contribution->id,
           $this->_premiumID, $this->_options
         );
