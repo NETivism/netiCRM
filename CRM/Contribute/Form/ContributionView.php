@@ -171,8 +171,7 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
           }
           $this->assign('combination_content', implode(', ', $combinationContent));
           if (!empty($values['contribution_page_id'])) {
-            $editUrl = CRM_Utils_System::url('civicrm/admin/contribute/addPremiumsCombinationToPage', 
-              "action=update&id={$values['contribution_page_id']}&combination_id={$dao->combination_id}&reset=1");
+            $editUrl = CRM_Utils_System::url('civicrm/admin/contribute/premium',"action=update&id={$values['contribution_page_id']}&reset=1");
             $this->assign('combination_edit_url', $editUrl);
           }
         }

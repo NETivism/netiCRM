@@ -319,18 +319,12 @@
         	{if $is_combination}
         		<tr>
         			<td class="label">{ts}Combination Name{/ts}</td>
-        			<td>{$combination_name}</td>
+              <td>{ts}{$combination_name}{/ts}(<a href="{$combination_edit_url}" target="_blank">{ts}Details{/ts}</a>)</td>
         		</tr>
         		<tr>
         			<td class="label">{ts}Combination Contents{/ts}</td>
         			<td>{$combination_content}</td>
         		</tr>
-        		{if $combination_edit_url}
-        		<tr>
-        			<td class="label">{ts}Operation{/ts}</td>
-        			<td><a href="{$combination_edit_url}" target="_blank">{ts}Edit{/ts}</a></td>
-        		</tr>
-        		{/if}
         	{else}
         		<tr>
         			<td class="label">{ts}Premium{/ts}</td>
