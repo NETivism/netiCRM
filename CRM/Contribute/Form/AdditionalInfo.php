@@ -82,7 +82,21 @@ class CRM_Contribute_Form_AdditionalInfo {
     $min_amount = [];
     $sel1[0] = ts('- select -');
     while ($dao->fetch()) {
-      $sel1[$dao->id] = $dao->name . " ( " . $dao->sku . " )";
+      // Build product display string
+      $productDisplay = $dao->name;
+
+      // Add SKU if available
+      if (!empty($dao->sku)) {
+        $productDisplay .= " ( " . $dao->sku . " )";
+      }
+
+      // Add stock info if stock_status is 1
+      if ($dao->stock_status == 1) {
+        $remaining = $dao->stock_qty - $dao->send_qty;
+        $productDisplay .= " [" . ts('Remaining') . " " . $remaining . "/" . $dao->stock_qty . "]";
+      }
+
+      $sel1[$dao->id] = $productDisplay;
       if ($dao->calculate_mode == 'first') {
         $min_contribution = min($dao->min_contribution, $dao->min_contribution_recur);
       }
@@ -107,7 +121,22 @@ class CRM_Contribute_Form_AdditionalInfo {
         $dao = new CRM_Contribute_DAO_Product();
         $dao->id = $selectedProductId;
         $dao->find(TRUE);
-        $sel1[$dao->id] = $dao->name . " ( " . $dao->sku . " ) ( ".ts('Disable')." )";
+        // Build product display string for disabled product
+        $productDisplay = $dao->name;
+
+        // Add SKU if available
+        if (!empty($dao->sku)) {
+          $productDisplay .= " ( " . $dao->sku . " )";
+        }
+
+        // Add stock info if stock_status is 1
+        if ($dao->stock_status == 1) {
+          $remaining = $dao->stock_qty - $dao->send_qty;
+          $productDisplay .= " [" . ts('Remaining') . " " . $remaining . "/" . $dao->stock_qty . "]";
+        }
+
+        $productDisplay .= " ( ".ts('Disable')." )";
+        $sel1[$dao->id] = $productDisplay;
         if ($dao->calculate_mode == 'first') {
           $min_contribution = min($dao->min_contribution, $dao->min_contribution_recur);
         }
@@ -303,6 +332,23 @@ class CRM_Contribute_Form_AdditionalInfo {
       if (CRM_Utils_Array::value($params['product_name'][0], $options)) {
         $dao->product_option = $options[$params['product_name'][0]][$params['product_name'][1]];
       }
+
+      // Handle stock management for new premium creation
+      if (!empty($params['product_name'][0]) && !empty($contributionID)) {
+        try {
+          CRM_Contribute_BAO_Premium::reserveProductStock(
+            $contributionID,
+            $params['product_name'][0],
+            1, // Default quantity is 1 for premium products
+            "Premium selection via contribution ID {$contributionID}"
+          );
+        }
+        catch (Exception $e) {
+          // Log the error but don't stop the premium creation process
+          CRM_Core_Error::debug_log_message("Stock management failed for premium: " . $e->getMessage());
+        }
+      }
+
       $premium = $dao->save();
     }
   }

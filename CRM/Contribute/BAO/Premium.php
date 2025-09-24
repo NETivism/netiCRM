@@ -681,7 +681,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
           'entity_table' => 'civicrm_product',
           'entity_id' => $productInfo['id'],
           'modified_date' => date('YmdHis'),
-          'data' => "+{$productInfo['quantity']}::".$source.' via contribution ID '.$productInfo['contribution_id'],
+          'data' => "+{$productInfo['quantity']}::{$productInfo['contribution_id']}::".$source.' via contribution ID '.$productInfo['contribution_id'],
         ];
         $userID = CRM_Core_Session::singleton()->get('userID');
         if (!empty($userID)) {
@@ -701,6 +701,59 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
     }
     
     $transaction->commit();
+  }
+
+  /**
+   * Reserve product stock by updating send_qty for a given product
+   *
+   * This function handles stock management when a premium product is selected
+   * in a contribution. It checks stock availability, updates the send quantity,
+   * and creates a log entry for inventory tracking.
+   *
+   * @param int $contributionId The ID of the contribution requesting the product
+   * @param int $productId The ID of the product to reserve
+   * @param int $quantity The quantity to reserve
+   * @param string $comment The comment/description for the stock reservation log
+   *
+   * @throws CRM_Core_Exception When insufficient stock or product is out of stock
+   *
+   * @return void
+   * @access public
+   * @static
+   */
+  public static function reserveProductStock($contributionId, $productId, $quantity, $comment) {
+    $product = new CRM_Contribute_DAO_Product();
+    $product->id = $productId;
+
+    if ($product->find(TRUE)) {
+      if ($product->stock_status > 0) {
+        if ($product->stock_qty > 0) {
+          $remainQty = $product->stock_qty - $product->send_qty;
+
+          if ($remainQty < $quantity) {
+            throw new CRM_Core_Exception(ts('Insufficient stock. Available quantity: %1, Requested: %2',
+              [1 => $remainQty, 2 => $quantity]));
+          }
+          $transaction = new CRM_Core_Transaction();
+          $product->send_qty += $quantity;
+          $product->save();
+          $logParams = [
+            'entity_table' => 'civicrm_product',
+            'entity_id' => $product->id,
+            'modified_date' => date('YmdHis'),
+            'data' => "-{$quantity}::$contributionId::{$comment}",
+          ];
+          $userID = CRM_Core_Session::singleton()->get('userID');
+          if (!empty($userID)) {
+            $logParams['modified_id'] = $userID;
+          }
+          $transaction->commit();
+        }
+        else {
+          throw new CRM_Core_Exception(ts('Product is out of stock.'));
+        }
+      }
+    }
   }
 }
 
