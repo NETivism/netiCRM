@@ -963,6 +963,16 @@ INNER JOIN  civicrm_contact contact ON ( contact.id = civicrm_contribution.conta
               }
               $product->send_qty += $params['quantity'];
               $product->save();
+              $logParams = [
+                'entity_table' => 'civicrm_product',
+                'entity_id' => $product->id,
+                'modified_date' => date('YmdHis'),
+                'data' => "-{$params['quantity']}::Contribution Page Submission via contribution ID {$params['contribution_id']}",
+              ];
+              $userID = CRM_Core_Session::singleton()->get('userID');
+              if (!empty($userID)) {
+                $logParams['modified_id'] = $userID;
+              }
               $transaction->commit();
             }
             else {

@@ -72,7 +72,7 @@ class CRM_Admin_Form_Setting_PremiumsSetting extends CRM_Admin_Form_Setting {
     $defaults['premiumIRCreditCardDays'] = 1;
     $defaults['premiumIRNonCreditCardDays'] = 3;
     $defaults['premiumIRConvenienceStoreDays'] = 3;
-    $defaults['premiumIRCheckStatuses'] = ['Pending', 'Cancelled', 'Failed'];
+    $defaults['premiumIRCheckStatuses'] = ['Pending'];
     $defaults['premiumIRStatusChange'] = 'maintain';
     $defaults['premiumIRManualCancel'] = '1';
 

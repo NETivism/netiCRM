@@ -384,11 +384,12 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
     
     $creditCardDays = $config->premiumIRCreditCardDays ?? 7;
     $nonCreditCardDays = $config->premiumIRNonCreditCardDays ?? 3;
+    $convenienceStoreDays = $config->premiumIRConvenienceStoreDays ?? 3;
     $checkStatuses = $config->premiumIRCheckStatuses ?? [2]; // Pending
     $statusChange = $config->premiumIRStatusChange ?? 3; // Cancelled
 
     // Get contributions that need to be processed for restocking
-    $contributionsToRestock = self::getExpiredOnlineContributions($creditCardDays, $nonCreditCardDays, $checkStatuses);
+    $contributionsToRestock = self::getExpiredOnlineContributions($creditCardDays, $nonCreditCardDays, $convenienceStoreDays, $checkStatuses);
     
     if (empty($contributionsToRestock)) {
       return [];
@@ -407,7 +408,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
         CRM_Core_DAO::executeQuery($sql, $params);
         
         // Restock the premium products
-        self::restockPremiumInventory($contribution['id']);
+        self::restockPremiumInventory($contribution['id'], $contribution['reason']);
         
         $restockedContributions[] = $contribution['id'];
       } catch (Exception $e) {
@@ -443,12 +444,13 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
    * Get expired online contributions that need restocking
    *
    * @param int $creditCardDays Days for credit card transactions
-   * @param int $nonCreditCardDays Days for non-credit card transactions  
+   * @param int $nonCreditCardDays Days for non-credit card transactions
+   * @param int $convenienceStoreDays Days for convenience store barcode transactions
    * @param array $checkStatuses Statuses to check for
    * @return array
    * @static
    */
-  static function getExpiredOnlineContributions($creditCardDays, $nonCreditCardDays, $checkStatuses) {
+  static function getExpiredOnlineContributions($creditCardDays, $nonCreditCardDays, $convenienceStoreDays, $checkStatuses) {
     $statusList = implode(',', array_map('intval', $checkStatuses));
     
     // Get payment instrument IDs based on names
@@ -483,7 +485,8 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
           'payment_instrument_id' => $dao->payment_instrument_id,
           'receive_date' => $dao->receive_date,
           'expiry_date' => $dao->expiry_date,
-          'contribution_status_id' => $dao->contribution_status_id
+          'contribution_status_id' => $dao->contribution_status_id,
+          'reason' => "Credit card transaction expired (over {$creditCardDays} days)"
         ];
       }
     }
@@ -510,7 +513,8 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
           'payment_instrument_id' => $dao->payment_instrument_id,
           'receive_date' => $dao->receive_date,
           'expiry_date' => $dao->expiry_date,
-          'contribution_status_id' => $dao->contribution_status_id
+          'contribution_status_id' => $dao->contribution_status_id,
+          'reason' => "Non-credit card transaction expired (over {$nonCreditCardDays} days)"
         ];
       }
     }
@@ -524,20 +528,21 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
         WHERE c.contribution_status_id IN ({$statusList})
           AND c.payment_instrument_id IN ({$barcodeIds})
           AND c.expiry_date IS NOT NULL  
-          AND DATEDIFF(NOW(), c.expiry_date) > 3
+          AND DATEDIFF(NOW(), c.expiry_date) > %1
           AND c.id IN (
             SELECT cp.contribution_id FROM civicrm_contribution_premium cp WHERE cp.contribution_id = c.id
           )
       ";
       
-      $dao = CRM_Core_DAO::executeQuery($barcodeSpecialSql);
+      $dao = CRM_Core_DAO::executeQuery($barcodeSpecialSql, [1 => [$convenienceStoreDays, 'Integer']]);
       while ($dao->fetch()) {
         $results[] = [
           'id' => $dao->id,
           'payment_instrument_id' => $dao->payment_instrument_id,
           'receive_date' => $dao->receive_date,
           'expiry_date' => $dao->expiry_date,
-          'contribution_status_id' => $dao->contribution_status_id
+          'contribution_status_id' => $dao->contribution_status_id,
+          'reason' => "Convenience store barcode transaction expired (over {$convenienceStoreDays} days)"
         ];
       }
     }
@@ -549,13 +554,14 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
    * Restock premium inventory for a specific contribution
    *
    * @param int $contributionId The contribution ID
+   * @param string $source The source of this restock
    * @static
    */
-  static function restockPremiumInventory($contributionId) {
+  static function restockPremiumInventory($contributionId, $source) {
     // Get premium products associated with this contribution from civicrm_contribution_product
     // Only get products that haven't been restocked yet (restock IS NULL OR restock = 0)
     $sql = "
-      SELECT cp.id, cp.product_id, cp.product_option, cp.quantity
+      SELECT cp.id, cp.product_id, cp.contribution_id, cp.product_option, cp.quantity
       FROM civicrm_contribution_product cp
       WHERE cp.contribution_id = %1 
         AND (cp.restock IS NULL OR cp.restock = 0)
@@ -588,7 +594,8 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
         $productsToRestock[] = [
           'contribution_product_id' => $dao->id,
           'product_id' => $dao->product_id,
-          'quantity' => $quantity
+          'quantity' => $quantity,
+          'contribution_id' => $contributionId,
         ];
       } else {
         // Get product details for error message
@@ -668,6 +675,19 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
       if ($resultDao->affectedRows() == 0) {
         $transaction->rollback();
         throw new Exception("Restock failed - Product ID {$productInfo['product_id']} could not be updated. This may indicate the product conditions changed during processing.");
+      }
+      else {
+        $logParams = [
+          'entity_table' => 'civicrm_product',
+          'entity_id' => $productInfo['id'],
+          'modified_date' => date('YmdHis'),
+          'data' => "+{$productInfo['quantity']}::".$source.' via contribution ID '.$productInfo['contribution_id'],
+        ];
+        $userID = CRM_Core_Session::singleton()->get('userID');
+        if (!empty($userID)) {
+          $logParams['modified_id'] = $userID;
+        }
+        CRM_Core_BAO_Log::add($logParams);
       }
       
       // Mark the contribution product as restocked

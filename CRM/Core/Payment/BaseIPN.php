@@ -309,7 +309,7 @@ class CRM_Core_Payment_BaseIPN {
     // it's contribution, maybe have premium
     else {
       try{
-        CRM_Contribute_BAO_Premium::restockPremiumInventory($contribution->id);
+        CRM_Contribute_BAO_Premium::restockPremiumInventory($contribution->id, 'Transaction failed or batch action');
       }
       catch (Exception $e) {
         $errorMessage = "Failed to restock contribution ID {$contribution->id}: " . $e->getMessage();
@@ -394,7 +394,7 @@ class CRM_Core_Payment_BaseIPN {
     // it's contribution, maybe have premium
     else {
       try{
-        CRM_Contribute_BAO_Premium::restockPremiumInventory($contribution->id);
+        CRM_Contribute_BAO_Premium::restockPremiumInventory($contribution->id, 'Transaction failed or batch action');
       }
       catch (Exception $e) {
         $errorMessage = "Failed to restock contribution ID {$contribution->id}: " . $e->getMessage();
