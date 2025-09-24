@@ -31,15 +31,13 @@
 <script type="text/javascript">
 cj(document).ready(function($){
   var detectAmount = function(obj) {
-    var amount = $(obj).prop('type') == 'number' ? parseFloat($(obj).val()) : parseFloat($(obj).data('amount'));
-    var is_recur = parseInt($("input[name=is_recur]:checked").val());
-    if (typeof amount === 'number' && amount) {
-      if (typeof is_recur === 'number' && is_recur) {
-        return filterPremiumByAmount(0, amount);
-      }
-      else {
-        return filterPremiumByAmount(amount, 0);
-      }
+    var amount = $(obj).attr('name') === 'amount_other'
+      ? parseFloat($(obj).val())
+      : parseFloat($(obj).data('amount'));
+
+    var is_recur = parseInt($("input[name=is_recur]:checked").val()) || 0;
+    if (amount && amount > 0) {
+      return is_recur ? filterPremiumByAmount(0, amount) : filterPremiumByAmount(amount, 0);
     }
   }
   var filterPremiumByAmount = function(amt, amt_recur){
@@ -79,27 +77,40 @@ cj(document).ready(function($){
     $('tr.product-row.not-available .premium-info .description').prepend('<i class="zmdi zmdi-alert-triangle"></i>');
   }
   var initialize = function (){
-    if ($("input[name=amount_other]").val()) {
-      detectAmount($("input[name=amount_other]")[0]);
-    }
-    else {
-      $("input[name=amount]:checked:eq(0)").each(function(){
-        detectAmount(this);
-      });
-    }
+    handleAmountChange();
   }
-  $("input[name=amount]").click(function(){
-    detectAmount(this);
+  var handleAmountChange = function() {
+    var checkedRadio = $("input[name=amount]:checked");
+    if (checkedRadio.val() === 'amount_other_radio') {
+      var otherAmount = $("input[name=amount_other]").val();
+      if (otherAmount) {
+        detectAmount($("input[name=amount_other]")[0]);
+      }
+    } else if (checkedRadio.length) {
+      detectAmount(checkedRadio[0]);
+    }
+  };
+
+  // Handle amount radio button changes
+  $("input[name=amount]").on('change click', function(){
+    if ($(this).val() === 'amount_other_radio') {
+      setTimeout(handleAmountChange, 100);
+    } else {
+      detectAmount(this);
+    }
   });
-  $("input[name=amount_other]").change(function(){
-    detectAmount(this);
+
+  // Handle custom amount input changes
+  $("input[name=amount_other]").on('input keyup change', function(){
+    var inputValue = $(this).val();
+    if (inputValue && parseFloat(inputValue) > 0) {
+      detectAmount(this);
+      if (!$("input[name=amount][value=amount_other_radio]:checked").length) {
+        $("input[name=amount][value=amount_other_radio]").prop('checked', true);
+      }
+    }
   });
-  $("input[name=installments]").change(function(){
-    initialize();
-  });
-  $("input[name=is_recur]").change(function(){
-    initialize();
-  });
+  $("input[name=installments], input[name=is_recur]").change(initialize);
 
   // after page load, use selected value to determin amount
   initialize();

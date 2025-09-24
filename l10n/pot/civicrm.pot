@@ -50033,3 +50033,122 @@ msgstr ""
 
 msgid "Apple Pay Front"
 msgstr ""
+
+#: CRM/Admin/Form/Setting/PremiumsSetting.php
+#: templates/CRM/Admin/Form/Setting/PremiumsSetting.tpl
+msgid "Premium Settings"
+msgstr ""
+
+#: CRM/Admin/Form/Setting/PremiumsSetting.php
+msgid "Credit Card Transaction Inventory Replenishment Days"
+msgstr ""
+
+#: CRM/Admin/Form/Setting/PremiumsSetting.php
+msgid "Non-Credit Card Inventory Replenishment Days"
+msgstr ""
+
+#: CRM/Admin/Form/Setting/PremiumsSetting.php
+msgid "Convenience Store Barcode Inventory Replenishment Days"
+msgstr ""
+
+#: CRM/Admin/Form/Setting/PremiumsSetting.php
+msgid "Check Status for Inventory Replenishment"
+msgstr ""
+
+#: CRM/Admin/Form/Setting/PremiumsSetting.php
+msgid "Maintain Unchanged"
+msgstr ""
+
+#: CRM/Admin/Form/Setting/PremiumsSetting.php
+msgid "Change to Cancelled"
+msgstr ""
+
+#: CRM/Admin/Form/Setting/PremiumsSetting.php
+msgid "Status Change After Inventory Replenishment"
+msgstr ""
+
+#: CRM/Admin/Form/Setting/PremiumsSetting.php
+msgid "Manual Cancellation Inventory Replenishment"
+msgstr ""
+
+#: CRM/Contribute/Form/ManagePremiums.php
+msgid "Total inventory"
+msgstr ""
+
+#: CRM/Contribute/Form/ManagePremiums.php
+msgid ""
+"Please enter the total inventory quantity when inventory management is "
+"enabled."
+msgstr ""
+
+#: templates/CRM/Admin/Form/Setting/PremiumsSetting.tpl
+msgid ""
+"Credit card transaction inventory replenishment days (1-3 days). Default: 1 "
+"day."
+msgstr ""
+
+#: templates/CRM/Admin/Form/Setting/PremiumsSetting.tpl
+msgid ""
+"Non-credit card inventory replenishment days after payment deadline (1-7 "
+"days). Default: 3 days."
+msgstr ""
+
+#: templates/CRM/Admin/Form/Setting/PremiumsSetting.tpl
+msgid ""
+"Convenience store barcode inventory replenishment days after payment "
+"deadline (3-7 days). Default: 3 days."
+msgstr ""
+
+#: templates/CRM/Admin/Form/Setting/PremiumsSetting.tpl
+msgid ""
+"Select which contribution statuses should be checked for inventory "
+"replenishment."
+msgstr ""
+
+#: templates/CRM/Admin/Form/Setting/PremiumsSetting.tpl
+msgid "Choose how to handle contribution status after inventory replenishment."
+msgstr ""
+
+#: templates/CRM/Admin/Form/Setting/PremiumsSetting.tpl
+msgid ""
+"Enable inventory replenishment for manual cancellations based on the "
+"specified statuses above."
+msgstr ""
+
+#: templates/CRM/Contribute/Form/Contribution.tpl
+msgid ""
+"Premium inventory linked to this donation will be restocked when saved as "
+"cancelled or failed status"
+msgstr ""
+
+#: templates/CRM/Contribute/Form/ManagePremiums.tpl
+msgid "Inventory Management"
+msgstr ""
+
+#: templates/CRM/Contribute/Form/ManagePremiums.tpl
+msgid ""
+"Set the total inventory quantity for this premium. Once the given quantity "
+"exceeds this total, this premium will no longer be offered."
+msgstr ""
+
+#: templates/CRM/Contribute/Form/ManagePremiums.tpl
+msgid ""
+"Note: Inventory is tied to the entire premium. If you need to manage "
+"inventory for different options, please create multiple premiums."
+msgstr ""
+
+#: templates/CRM/Contribute/Page/ManagePremiums.tpl
+msgid "Stock Status"
+msgstr ""
+
+#: templates/CRM/Contribute/Page/ManagePremiums.tpl
+msgid "Total Stock"
+msgstr ""
+
+#: templates/CRM/Contribute/Page/ManagePremiums.tpl
+msgid "Sent Quantity"
+msgstr ""
+
+#: templates/CRM/Contribute/Page/ManagePremiums.tpl
+msgid "Remaining"
+msgstr ""
