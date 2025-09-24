@@ -308,7 +308,7 @@
     {/if}	
 </table>
 
-{if $premium}
+{if $premium || $is_combination}
     <div class="crm-accordion-wrapper crm-accordion_title-accordion crm-accordion-open">
         <div class="crm-accordion-header">
             <div class="zmdi crm-accordion-pointer"></div> 
@@ -316,9 +316,31 @@
         </div>
         <div class="crm-accordion-body">			   
         <table class="crm-info-panel">
-        	<td class="label">{ts}Premium{/ts}</td><td>{$premium}</td>
-        	<td class="label">{ts}Option{/ts}</td><td>{$option}</td>
-        	<td class="label">{ts}Fulfilled{/ts}</td><td>{$fulfilled|truncate:10:''|crmDate}</td>
+        	{if $is_combination}
+        		<tr>
+        			<td class="label">{ts}Combination Name{/ts}</td>
+              <td>{ts}{$combination_name}{/ts}(<a href="{$combination_edit_url}" target="_blank">{ts}Details{/ts}</a>)</td>
+        		</tr>
+        		<tr>
+        			<td class="label">{ts}Combination Contents{/ts}</td>
+        			<td>{$combination_content}</td>
+        		</tr>
+        	{else}
+        		<tr>
+        			<td class="label">{ts}Premium{/ts}</td>
+        			<td>{$premium}</td>
+        		</tr>
+        	{/if}
+        	{if $option}
+        	<tr>
+        		<td class="label">{ts}Option{/ts}</td>
+        		<td>{$option}</td>
+        	</tr>
+        	{/if}
+        	<tr>
+        		<td class="label">{ts}Fulfilled{/ts}</td>
+        		<td>{$fulfilled|truncate:10:''|crmDate}</td>
+        	</tr>
         </table>
         </div>
     </div>

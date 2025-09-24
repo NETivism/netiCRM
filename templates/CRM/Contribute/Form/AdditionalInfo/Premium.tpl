@@ -25,6 +25,26 @@
 *}
 {* this template is used for adding/editing Premium Information *} 
  <div id="id-premium" class="section-shown crm-contribution-additionalinfo-premium-form-block">
+     {if $is_combination_premium}
+     {* Display read-only combination information *}
+     <div class="crm-section">
+         <div class="messages info">
+             <div class="icon inform-icon"></div>
+             {ts}This premium combination will have its inventory automatically calculated based on the "contribution status" and cannot be edited here.{/ts}
+         </div>
+     </div>
+     <table class="form-layout-compressed">
+        <tr class="crm-contribution-form-block-combination_name">
+           <td class="label">{ts}Combination Name{/ts}</td>
+	   <td class="html-adjust"><strong>{$combination_name}</strong></td>
+        </tr>
+        <tr class="crm-contribution-form-block-combination_content">
+           <td class="label">{ts}Combination Contents{/ts}</td>
+	   <td class="html-adjust">{$combination_content}</td>
+        </tr>
+     </table>
+     {else}
+     {* Display editable premium selection *}
      <table class="form-layout-compressed">
         <tr class="crm-contribution-form-block-product_name">
            <td class="label">{$form.product_name.label}</td>
@@ -41,6 +61,7 @@
         </table>
         <div class="spacer"></div>
     </div>
+     {/if}
     <table class="form-layout-compressed"> 
 	  <tr class="crm-contribution-form-block-fulfilled_date">
              <td class="label">{$form.fulfilled_date.label}</td>
@@ -49,6 +70,7 @@
         </table>    
 </div>
 
+{if !$is_combination_premium}
       {literal}
         <script type="text/javascript">
             var min_amount = document.getElementById("min_amount");
@@ -91,4 +113,5 @@
 {/if}
 {if $action ne 2 or $showOption eq true}
     {$initHideBoxes}
+{/if}
 {/if}

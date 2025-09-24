@@ -45,6 +45,35 @@ class CRM_Contribute_Form_AdditionalInfo {
     //premium section
     $form->add('hidden', 'hidden_Premium', 1);
 
+    // Check if this is a combination premium
+    $isCombination = FALSE;
+    $combinationName = '';
+    $combinationContent = '';
+
+    if (!empty($form->_premiumID)) {
+      $dao = new CRM_Contribute_DAO_ContributionProduct();
+      $dao->id = $form->_premiumID;
+      if ($dao->find(TRUE) && !empty($dao->combination_id)) {
+        $isCombination = TRUE;
+        // Get combination details
+        $combinationDAO = new CRM_Contribute_DAO_PremiumsCombination();
+        $combinationDAO->id = $dao->combination_id;
+        if ($combinationDAO->find(TRUE)) {
+          $combinationName = $combinationDAO->combination_name;
+          // Get combination products
+          $combinationProducts = CRM_Contribute_BAO_PremiumsCombination::getCombinationProducts($dao->combination_id);
+          $combinationContentArray = [];
+          foreach ($combinationProducts as $product) {
+            $combinationContentArray[] = $product['name'] . ' x' . $product['quantity'];
+          }
+          $combinationContent = implode(', ', $combinationContentArray);
+        }
+      }
+    }
+    $form->assign('is_combination_premium', $isCombination);
+    $form->assign('combination_name', $combinationName);
+    $form->assign('combination_content', $combinationContent);
+
     $sel1 = $sel2 = [];
 
     $dao = new CRM_Contribute_DAO_Product();
@@ -234,25 +263,46 @@ class CRM_Contribute_Form_AdditionalInfo {
 
     $dao = new CRM_Contribute_DAO_ContributionProduct();
     $dao->contribution_id = $contributionID;
-    $dao->product_id = $params['product_name'][0];
-    $dao->fulfilled_date = CRM_Utils_Date::processDate($params['fulfilled_date'], NULL, TRUE);
-    if (CRM_Utils_Array::value($params['product_name'][0], $options)) {
-      $dao->product_option = $options[$params['product_name'][0]][$params['product_name'][1]];
-    }
+    // Check if this is updating an existing premium
     if ($premiumID) {
-      $premoumDAO = new CRM_Contribute_DAO_ContributionProduct();
-      $premoumDAO->id = $premiumID;
-      $premoumDAO->find(TRUE);
-      if ($premoumDAO->product_id == $params['product_name'][0]) {
-        $dao->id = $premiumID;
-        $premium = $dao->save();
-      }
-      else {
-        $premoumDAO->delete();
-        $premium = $dao->save();
+      $existingDAO = new CRM_Contribute_DAO_ContributionProduct();
+      $existingDAO->id = $premiumID;
+      if ($existingDAO->find(TRUE)) {
+        // If it's a combination, only update fulfilled_date
+        if (!empty($existingDAO->combination_id)) {
+          $dao->id = $premiumID;
+          $dao->combination_id = $existingDAO->combination_id;
+          $dao->product_id = $existingDAO->product_id;
+          $dao->product_option = $existingDAO->product_option;
+          $dao->fulfilled_date = CRM_Utils_Date::processDate($params['fulfilled_date'], NULL, TRUE);
+          $premium = $dao->save();
+          return;
+        }
+        // Normal premium processing for non-combination items
+        else if (isset($params['product_name'][0])) {
+          $dao->product_id = $params['product_name'][0];
+          $dao->fulfilled_date = CRM_Utils_Date::processDate($params['fulfilled_date'], NULL, TRUE);
+          if (CRM_Utils_Array::value($params['product_name'][0], $options)) {
+            $dao->product_option = $options[$params['product_name'][0]][$params['product_name'][1]];
+          }
+          if ($existingDAO->product_id == $params['product_name'][0]) {
+            $dao->id = $premiumID;
+            $premium = $dao->save();
+          }
+          else {
+            $existingDAO->delete();
+            $premium = $dao->save();
+          }
+        }
       }
     }
-    else {
+    // New premium creation (only for non-combination items)
+    else if (isset($params['product_name'][0])) {
+      $dao->product_id = $params['product_name'][0];
+      $dao->fulfilled_date = CRM_Utils_Date::processDate($params['fulfilled_date'], NULL, TRUE);
+      if (CRM_Utils_Array::value($params['product_name'][0], $options)) {
+        $dao->product_option = $options[$params['product_name'][0]][$params['product_name'][1]];
+      }
       $premium = $dao->save();
     }
   }
