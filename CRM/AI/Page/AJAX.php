@@ -506,6 +506,7 @@ class CRM_AI_Page_AJAX {
         $config = CRM_Core_Config::singleton();
         $imageUrl = $config->userFrameworkResourceURL . $savedImagePath;
 
+        $result = TRUE;
         self::responseSucess([
           'status' => 1,
           'message' => 'Image generated successfully.',
