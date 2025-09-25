@@ -157,6 +157,40 @@ class CRM_AI_BAO_AITransPrompt {
   }
 
   /**
+   * Parse JSON response from markdown format
+   *
+   * @param string $markdownResponse Response containing JSON wrapped in markdown
+   *
+   * @return array|false Parsed data array or false on failure
+   */
+  public function parseJsonResponse($markdownResponse) {
+    if (empty($markdownResponse)) {
+      return false;
+    }
+
+    // Extract JSON content from markdown code blocks
+    $pattern = '/```json\s*\n(.*?)\n```/s';
+    if (!preg_match($pattern, $markdownResponse, $matches)) {
+      return false;
+    }
+
+    $jsonString = trim($matches[1]);
+    if (empty($jsonString)) {
+      return false;
+    }
+
+    // Parse JSON and return as associative array
+    $decoded = json_decode($jsonString, true);
+    
+    // Check for JSON decode errors
+    if (json_last_error() !== JSON_ERROR_NONE) {
+      return false;
+    }
+
+    return $decoded;
+  }
+
+  /**
    * Optimize prompt for better AI image generation results
    *
    * @param string $text Input text to optimize
