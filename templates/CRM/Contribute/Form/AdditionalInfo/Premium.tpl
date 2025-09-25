@@ -67,7 +67,13 @@
              <td class="label">{$form.fulfilled_date.label}</td>
 	     <td class="html-adjust">{include file="CRM/common/jcalendar.tpl" elementName=fulfilled_date}</td>
           </tr>
-        </table>    
+        </table>
+</div>
+
+<div id="premium-dialog-confirm" title="{ts}Confirmation{/ts}" style="display: none;">
+  <p><strong id="premium-name-display"></strong></p>
+  <p>{ts}After saving, the premium inventory will be automatically calculated based on the "contribution status" and the premium linked to this contribution cannot be changed.{/ts}</p>
+  <p>{ts}Are you sure you want to continue?{/ts}</p>
 </div>
 
 {if !$is_combination_premium}
@@ -75,6 +81,48 @@
         <script type="text/javascript">
             var min_amount = document.getElementById("min_amount");
             min_amount.readOnly = 1;
+
+            cj(document).ready(function($){
+              var targetForm;
+              $("#premium-dialog-confirm").dialog({
+                autoOpen: false,
+                resizable: false,
+                dialogClass: 'noTitleStuff',
+                width: 600,
+                height: 300,
+                modal: true,
+                buttons: {
+                  "{/literal}{ts}OK{/ts}{literal}": function() {
+                    $(this).dialog("close");
+                    if (targetForm && targetForm.length > 0) {
+                      targetForm.off("submit.premium-check");
+                      targetForm[0].submit();
+                    }
+                  },
+                  "{/literal}{ts}Cancel{/ts}{literal}": function() {
+                    $(this).dialog("close");
+                    return false;
+                  }
+                }
+              });
+
+              $("form").on("submit.premium-check", function(e){
+                var product = $("select[name='product_name[0]']");
+                if (product.length > 0 && product.val() > 0) {
+                  var selectedText = product.find("option:selected").text();
+                  var bracketPattern = /\[.*\]/;
+                  if (bracketPattern.test(selectedText)) {
+                    targetForm = $(this);
+                    var premiumText = "{/literal}{ts}Are you sure you want to link this contribution to{/ts}{literal} \"" + selectedText + "\"?";
+                    $("#premium-name-display").text(premiumText);
+                    $("#premium-dialog-confirm").dialog("open");
+                    return false;
+                  }
+                }
+                return true;
+              });
+            });
+
     	    function showMinContrib( ) {
                var product = document.getElementsByName("product_name[0]")[0];
                var product_id = product.options[product.selectedIndex].value;
