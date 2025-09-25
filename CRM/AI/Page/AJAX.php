@@ -469,60 +469,52 @@ class CRM_AI_Page_AJAX {
       }
 
       // Direct image generation
-      try {
-        // Step 1: Translate prompt
-        $translator = new CRM_AI_BAO_AITransPrompt();
-        $translateResult = $translator->translate($text, [
-          'style' => $jsondata['style'] ?? '',
-          'ratio' => $jsondata['ratio'] ?? '1:1'
-        ]);
+      // Step 1: Translate prompt
+      $translator = new CRM_AI_BAO_AITransPrompt();
+      $translateResult = $translator->translate($text, [
+        'style' => $jsondata['style'] ?? '',
+        'ratio' => $jsondata['ratio'] ?? '1:1'
+      ]);
 
-        $parsedData = $translator->parseJsonResponse($translateResult['message']);
-        if ($parsedData === false) {
-          throw new CRM_Core_Exception('Failed to parse translation result');
-        }
-
-        $prompt = $parsedData['data']['prompt'];
-
-        // Step 2: Call image generation API
-        $imageService = new CRM_AI_GenImageService_ITRIICL();
-        $imageService->setModel('stable-diffusion-3.5');
-
-        $generationParams = [
-          'prompt' => $prompt,
-          'ratio' => $jsondata['ratio'] ?? '1:1'
-        ];
-
-        $apiResult = $imageService->generateImage($generationParams);
-        if ($imageService->isError($apiResult)) {
-          throw new CRM_Core_Exception('Image generation API error: ' . $apiResult['error']['message']);
-        }
-
-        // Step 3: Process and save image
-        $imageGenerator = new CRM_AI_BAO_AIGenImage();
-        $savedImagePath = $imageGenerator->processImage($apiResult['data']);
-
-        // Step 4: Create full URL
-        $config = CRM_Core_Config::singleton();
-        $imageUrl = $config->userFrameworkResourceURL . $savedImagePath;
-
-        $result = TRUE;
-        self::responseSucess([
-          'status' => 1,
-          'message' => 'Image generated successfully.',
-          'data' => [
-            'image_path' => $savedImagePath,
-            'image_url' => $imageUrl,
-            'translated_prompt' => $prompt,
-          ],
-        ]);
+      $parsedData = $translator->parseJsonResponse($translateResult['message']);
+      if ($parsedData === false) {
+        throw new CRM_Core_Exception('Failed to parse translation result');
       }
-      catch(Exception $e) {
-        self::responseError([
-          'status' => 0,
-          'message' => $e->getMessage(),
-        ]);
+
+      $prompt = $parsedData['data']['prompt'];
+
+      // Step 2: Call image generation API
+      $imageService = new CRM_AI_GenImageService_ITRIICL();
+      $imageService->setModel('stable-diffusion-3.5');
+
+      $generationParams = [
+        'prompt' => $prompt,
+        'ratio' => $jsondata['ratio'] ?? '1:1'
+      ];
+
+      $apiResult = $imageService->generateImage($generationParams);
+      if ($imageService->isError($apiResult)) {
+        throw new CRM_Core_Exception('Image generation API error: ' . $apiResult['error']['message']);
       }
+
+      // Step 3: Process and save image
+      $imageGenerator = new CRM_AI_BAO_AIGenImage();
+      $savedImagePath = $imageGenerator->processImage($apiResult['data']);
+
+      // Step 4: Create full URL
+      $config = CRM_Core_Config::singleton();
+      $imageUrl = $config->userFrameworkResourceURL . $savedImagePath;
+
+      $result = TRUE;
+      self::responseSucess([
+        'status' => 1,
+        'message' => 'Image generated successfully.',
+        'data' => [
+          'image_path' => $savedImagePath,
+          'image_url' => $imageUrl,
+          'translated_prompt' => $prompt,
+        ],
+      ]);
     }
 
     if (!$result) {
