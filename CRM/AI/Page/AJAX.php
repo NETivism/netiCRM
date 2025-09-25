@@ -502,8 +502,9 @@ class CRM_AI_Page_AJAX {
       $savedImagePath = $imageGenerator->processImage($apiResult['data']);
 
       // Step 4: Create full URL
-      $config = CRM_Core_Config::singleton();
-      $imageUrl = $config->userFrameworkResourceURL . $savedImagePath;
+      $baseUrl = rtrim(CIVICRM_UF_BASEURL, '/');
+      $publicPath = CRM_Utils_System::cmsDir('public');
+      $imageUrl = $baseUrl . '/' . $publicPath . '/' . $savedImagePath;
 
       $result = TRUE;
       self::responseSucess([
