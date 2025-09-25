@@ -404,6 +404,134 @@ class CRM_AI_Page_AJAX {
     }
   }
 
+  public static function generateImage() {
+    $maxlength = 1000;
+    $result = FALSE;
+
+    // Only handle POST requests for direct image generation
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] == 'application/json') {
+      $jsonString = file_get_contents('php://input');
+      $jsondata = json_decode($jsonString, true);
+
+      if ($jsondata === NULL) {
+        self::responseError([
+          'status' => 0,
+          'message' => 'The request is not a valid JSON format.',
+        ]);
+      }
+
+      $allowedInput = [
+        'text' => 'string',
+        'style' => 'string',
+        'ratio' => 'string',
+        'sourceUrlPath' => 'string',
+      ];
+
+      $checkFormatResult = self::validateJsonData($jsondata, $allowedInput);
+      if (!$checkFormatResult) {
+        self::responseError([
+          'status' => 0,
+          'message' => 'The request does not match the expected format.',
+        ]);
+      }
+
+      $text = $jsondata['text'];
+      if (mb_strlen($text) > $maxlength) {
+        self::responseError([
+          'status' => 0,
+          'message' => "Content exceeds the maximum character limit.",
+        ]);
+      }
+
+      // URL whitelist check (follow chat() pattern)
+      $url = $jsondata['sourceUrlPath'];
+      $allowPatterns = [
+        'CiviContribute' => ['civicrm/admin/contribute/add', 'civicrm/admin/contribute/setting'],
+        'CiviEvent' => ['civicrm/event/add', 'civicrm/event/manage/eventInfo'],
+        'CiviMail' => ['civicrm/mailing/send'],
+      ];
+
+      $component = '';
+      foreach ($allowPatterns as $comp => $allowedUrls) {
+        foreach ($allowedUrls as $allowedUrl) {
+          if (strstr($url, $allowedUrl)) {
+            $component = $comp;
+            break 2;
+          }
+        }
+      }
+
+      if (empty($component)) {
+        self::responseError([
+          'status' => 0,
+          'message' => "No corresponding component was found.",
+        ]);
+      }
+
+      // Direct image generation
+      try {
+        // Step 1: Translate prompt
+        $translator = new CRM_AI_BAO_AITransPrompt();
+        $translateResult = $translator->translate($text, [
+          'style' => $jsondata['style'] ?? '',
+          'ratio' => $jsondata['ratio'] ?? '1:1'
+        ]);
+
+        $parsedData = $translator->parseJsonResponse($translateResult['message']);
+        if ($parsedData === false) {
+          throw new CRM_Core_Exception('Failed to parse translation result');
+        }
+
+        $prompt = $parsedData['data']['prompt'];
+
+        // Step 2: Call image generation API
+        $imageService = new CRM_AI_GenImageService_ITRIICL();
+        $imageService->setModel('stable-diffusion-3.5');
+
+        $generationParams = [
+          'prompt' => $prompt,
+          'ratio' => $jsondata['ratio'] ?? '1:1'
+        ];
+
+        $apiResult = $imageService->generateImage($generationParams);
+        if ($imageService->isError($apiResult)) {
+          throw new CRM_Core_Exception('Image generation API error: ' . $apiResult['error']['message']);
+        }
+
+        // Step 3: Process and save image
+        $imageGenerator = new CRM_AI_BAO_AIGenImage();
+        $savedImagePath = $imageGenerator->processImage($apiResult['data']);
+
+        // Step 4: Create full URL
+        $config = CRM_Core_Config::singleton();
+        $imageUrl = $config->userFrameworkResourceURL . $savedImagePath;
+
+        self::responseSucess([
+          'status' => 1,
+          'message' => 'Image generated successfully.',
+          'data' => [
+            'image_path' => $savedImagePath,
+            'image_url' => $imageUrl,
+            'translated_prompt' => $prompt,
+          ],
+        ]);
+      }
+      catch(Exception $e) {
+        self::responseError([
+          'status' => 0,
+          'message' => $e->getMessage(),
+        ]);
+      }
+    }
+
+    if (!$result) {
+      self::responseError([
+        'status' => 0,
+        'message' => 'Invalid request method or missing data.',
+      ]);
+    }
+  }
+
   /**
    * This function handles the response in case of an error.
    *
