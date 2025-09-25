@@ -91,6 +91,9 @@
                 width: 600,
                 height: 300,
                 modal: true,
+                open: function() {
+                  $(this).siblings('.ui-dialog-titlebar').remove();
+                },
                 buttons: {
                   "{/literal}{ts}OK{/ts}{literal}": function() {
                     $(this).dialog("close");
