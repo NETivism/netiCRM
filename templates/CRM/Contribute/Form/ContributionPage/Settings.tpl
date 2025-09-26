@@ -292,7 +292,15 @@
 {if $config->nextEnabled}
 <div class="nme-setting-panels">
   <div class="nme-setting-panels-inner">
-    <div class="nme-setting-panels-content" id="nme-setting-panels-content">
+    <div class="nme-setting-panels-header">
+      <div class="inner">
+        <ul data-target-contents="nme-setting-panel" class="nme-setting-panels-tabs">
+          <li><a href="#nme-aicompletion" class="is-active" data-target-id="nme-aicompletion">{ts}AI Copywriter{/ts}</a></li>
+          <li><a href="#nme-aiimagegeneration" data-target-id="nme-aiimagegeneration">{ts}AI Image Generator{/ts}</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="nme-ai-panels-content" id="nme-setting-panels-content">
       <div id="nme-aicompletion" class="nme-aicompletion nme-setting-panel is-active">
         <div class="nme-setting-panel-inner">
           <h3 class="nme-setting-panel-title">{ts}AI Copywriter{/ts}</h3>
@@ -301,12 +309,20 @@
           </div>
         </div>
       </div>
+      <div id="nme-aiimagegeneration" class="nme-aiimagegeneration nme-setting-panel">
+        <div class="nme-setting-panel-inner">
+          <h3 class="nme-setting-panel-title">{ts}AI Image Generator{/ts}</h3>
+          <div class="nme-setting-panel-content">
+            {include file="CRM/AI/AIImageGeneration.tpl"}
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 	<div class="nme-setting-panels-trigger" data-tooltip data-tooltip-placement="w"><i
 			class="zmdi zmdi-settings"></i></div>
 </div>
-{include file="CRM/common/sidePanel.tpl" type="inline" contentSelector="#nme-setting-panels-content" containerClass="nme-setting-panels" opened="true" userPreference="true" triggerText="AI Copywriter" width="500px" fullscreen="true" triggerIcon="packages/AICompletion/images/icon--magic--white.svg"}
+{include file="CRM/common/sidePanel.tpl" type="inline" contentSelector="#nme-setting-panels-content" containerClass="nme-setting-panels" opened="true" userPreference="true" triggerText="AI Assistant" width="500px" fullscreen="true" triggerIcon="packages/AICompletion/images/icon--magic--white.svg"}
 {/if}
 
 {/if}{* end cdtype *}
