@@ -74,45 +74,107 @@ class CRM_Contribute_Form_AdditionalInfo {
     $form->assign('combination_name', $combinationName);
     $form->assign('combination_content', $combinationContent);
 
+    $contributionId = $form->get('id');
+    if (!empty($contributionId)) {
+      $contributionPageId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $contributionId, 'contribution_page_id');
+      if (!empty($contributionPageId)) {
+        $premium = new CRM_Contribute_DAO_Premium();
+        $premium->entity_table = 'civicrm_contribution_page';
+        $premium->entity_id = $contributionPageId;
+        $premium->find(TRUE);
+      }
+    }
+
     $sel1 = $sel2 = [];
-
-    $dao = new CRM_Contribute_DAO_Product();
-    $dao->is_active = 1;
-    $dao->find();
-    $min_amount = [];
     $sel1[0] = ts('- select -');
-    while ($dao->fetch()) {
-      // Build product display string
-      $productDisplay = $dao->name;
+    $min_amount = [];
 
-      // Add SKU if available
-      if (!empty($dao->sku)) {
-        $productDisplay .= " ( " . $dao->sku . " )";
-      }
+    // Check if this is premiums_combination mode
+    if (!empty($contributionPageId) && isset($premium) && !empty($premium->premiums_combination)) {
+      // Assign contribution page title, id to the template
+      $contributionPageTitle = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage', $contributionPageId, 'title');
+      $form->assign('contributionPageTitle', $contributionPageTitle);
+      $form->assign('contributionPageId', $contributionPageId);
 
-      // Add stock info if stock_status is 1
-      if ($dao->stock_status == 1) {
-        $remaining = $dao->stock_qty - $dao->send_qty;
-        $productDisplay .= " [" . ts('Remaining') . " " . $remaining . "/" . $dao->stock_qty . "]";
-      }
+      // Handle premiums combination
+      $dao = new CRM_Contribute_DAO_PremiumsCombination();
+      $dao->is_active = 1;
+      $dao->premiums_id = $premium->id;
+      $dao->find();
 
-      $sel1[$dao->id] = $productDisplay;
-      if ($dao->calculate_mode == 'first') {
-        $min_contribution = min($dao->min_contribution, $dao->min_contribution_recur);
+      while ($dao->fetch()) {
+        // Get combination products
+        $combinationProducts = CRM_Contribute_BAO_PremiumsCombination::getCombinationProducts($dao->id);
+
+        // Build combination display string
+        $combinationDisplay = $dao->combination_name;
+
+        if (!empty($combinationProducts)) {
+          $productStrings = [];
+          foreach ($combinationProducts as $product) {
+            // Build basic product string: "product name x quantity"
+            $productString = $product['name'] . ' x ' . $product['quantity'];
+
+            // Add stock info only if stock_status = 1 and stock_qty has value
+            if ($product['stock_status'] == 1 && !empty($product['stock_qty'])) {
+              $remaining = $product['stock_qty'] - $product['send_qty'];
+              $total = $product['stock_qty'];
+              $productString .= ' [' . $remaining . '/' . $total . ']';
+            }
+
+            $productStrings[] = $productString;
+          }
+          $combinationDisplay .= ' (' . implode(', ', $productStrings) . ')';
+        }
+
+        $sel1[$dao->id] = $combinationDisplay;
+        $min_amount[$dao->id] = !empty($dao->min_contribution) ? $dao->min_contribution : 0;
+
+        $form->assign('premiums', TRUE);
       }
-      else {
-        // condition: $dao->calculate_mode == 'cumulative'
-        $min_contribution = $dao->min_contribution;
+      if (!empty($sel1)) {
+        $form->add('hidden', 'is_combination', '1');
       }
-      $min_amount[$dao->id] = $min_contribution;
-      $options = explode(',', $dao->options);
-      foreach ($options as $k => $v) {
-        $options[$k] = trim($v);
+    }
+    else {
+      // Handle regular products
+      $dao = new CRM_Contribute_DAO_Product();
+      $dao->is_active = 1;
+      $dao->find();
+
+      while ($dao->fetch()) {
+        // Build product display string
+        $productDisplay = $dao->name;
+
+        // Add SKU if available
+        if (!empty($dao->sku)) {
+          $productDisplay .= " ( " . $dao->sku . " )";
+        }
+
+        // Add stock info if stock_status is 1
+        if ($dao->stock_status == 1) {
+          $remaining = $dao->stock_qty - $dao->send_qty;
+          $productDisplay .= " [".$remaining . "/" . $dao->stock_qty . "]";
+        }
+
+        $sel1[$dao->id] = $productDisplay;
+        if ($dao->calculate_mode == 'first') {
+          $min_contribution = min($dao->min_contribution, $dao->min_contribution_recur);
+        }
+        else {
+          // condition: $dao->calculate_mode == 'cumulative'
+          $min_contribution = $dao->min_contribution;
+        }
+        $min_amount[$dao->id] = $min_contribution;
+        $options = explode(',', $dao->options);
+        foreach ($options as $k => $v) {
+          $options[$k] = trim($v);
+        }
+        if ($options[0] != '') {
+          $sel2[$dao->id] = $options;
+        }
+        $form->assign('premiums', TRUE);
       }
-      if ($options[0] != '') {
-        $sel2[$dao->id] = $options;
-      }
-      $form->assign('premiums', TRUE);
     }
     // Display Item if it's selected even if it disabled. refs #28171
     if (!empty($form->_id) && get_class($form) == 'CRM_Contribute_Form_Contribution') {
@@ -323,6 +385,37 @@ class CRM_Contribute_Form_AdditionalInfo {
             $premium = $dao->save();
           }
         }
+      }
+    }
+    // Handle combination premium creation
+    else if (!empty($params['is_combination']) && isset($params['product_name'][0])) {
+      $combinationId = $params['product_name'][0];
+
+      // Get combination information for receipt
+      $combination = new CRM_Contribute_DAO_PremiumsCombination();
+      $combination->id = $combinationId;
+      $combination->find(TRUE);
+
+      // Get products in the combination
+      $products = CRM_Contribute_BAO_PremiumsCombination::getCombinationProducts($combinationId);
+      foreach ($products as $product) {
+        $premiumParams = [
+          'product_id' => $product['product_id'],
+          'contribution_id' => $contributionID,
+          'quantity' => $product['quantity'],
+          'combination_id' => $combinationId,
+          'product_option' => '',
+          'fulfilled_date' => CRM_Utils_Date::processDate($params['fulfilled_date'], NULL, TRUE),
+        ];
+
+        $existingRecord = new CRM_Contribute_DAO_ContributionProduct();
+        $existingRecord->contribution_id = $contributionID;
+        $existingRecord->product_id = $product['product_id'];
+        if ($existingRecord->find(TRUE)) {
+          $premiumParams['id'] = $existingRecord->id;
+        }
+
+        CRM_Contribute_BAO_Contribution::addPremium($premiumParams);
       }
     }
     // New premium creation (only for non-combination items)
