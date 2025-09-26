@@ -22,6 +22,14 @@
 
 	/**
 	 * ============================
+	 * Tabs constants
+	 * ============================
+	 */
+  const TABS_SELECTOR = ".nme-setting-panels-tabs",
+        TAB_PANEL_SELECTOR = ".nme-setting-panel";
+
+	/**
+	 * ============================
 	 * Private variables
 	 * ============================
 	 */
@@ -62,7 +70,12 @@
 		_header = "." + NSP_HEADER,
 		_footer = "." + NSP_FOOTER,
 		_trigger = "." + NSP_TRIGGER,
-    _inner = "." + INNER_CLASS;
+    _inner = "." + INNER_CLASS,
+    
+  /**
+   * Tabs variables
+   */
+    _tabsEnabled = false;
 
 	/**
 	 * ============================
@@ -342,6 +355,66 @@
     }
   };
 
+  /**
+   * Tabs initialization
+   */
+  var _initTabs = function() {
+    if ($(_nspHeader).find(TABS_SELECTOR).length > 0) {
+      _tabsEnabled = true;
+      _bindTabsEvents();
+      _setDefaultTab();
+    }
+  };
+
+  /**
+   * Bind tabs events
+   */
+  var _bindTabsEvents = function() {
+    $(_nspHeader).on("click", TABS_SELECTOR + " a", function(event) {
+      event.preventDefault();
+      var $thisTabLink = $(this),
+          $thisTab = $thisTabLink.parent("li"),
+          $tabContainer = $thisTab.parent("ul"),
+          $tabItems = $tabContainer.children("li"),
+          $tabLinks = $tabItems.children("a"),
+          targetContents = $tabContainer.data("target-contents"),
+          $targetContents = $("." + targetContents),
+          targetID = $thisTabLink.data("target-id"),
+          $targetTabContent = $("#" + targetID);
+
+      // Remove all active states
+      $tabLinks.removeClass(ACTIVE_CLASS);
+      $targetContents.removeClass(ACTIVE_CLASS);
+      
+      // Set new active states
+      $thisTabLink.addClass(ACTIVE_CLASS);
+      $targetTabContent.addClass(ACTIVE_CLASS);
+      
+      // Update container attribute
+      $(_container).attr('data-tab-active-id', targetID);
+      
+      _debug("Tab switched to: " + targetID, "tabs");
+    });
+  };
+
+  /**
+   * Set default tab
+   */
+  var _setDefaultTab = function() {
+    var $activeTab = $(_nspHeader).find(TABS_SELECTOR + " a." + ACTIVE_CLASS);
+    
+    if ($activeTab.length > 0) {
+      // If there's already an active tab, trigger its click to ensure proper initialization
+      $activeTab.trigger("click");
+    } else {
+      // If no active tab, activate the first tab
+      var $firstTab = $(_nspHeader).find(TABS_SELECTOR + " a:first");
+      if ($firstTab.length > 0) {
+        $firstTab.trigger("click");
+      }
+    }
+  };
+
 	/**
 	 * Debug
 	 */
@@ -416,6 +489,7 @@
       }
 
       _nsp.render();
+      _initTabs();
 
       // Window resize
       $(window).resize(function() {

@@ -3071,25 +3071,6 @@
       });
 
 
-      $(".nme-setting-panels-tabs").on("click", "a", function(event) {
-        event.preventDefault();
-        let $thisTabLink = $(this),
-            $thisTab = $thisTabLink.parent("li"),
-            $tabContainer = $thisTab.parent("ul"),
-            $tabItems = $tabContainer.children("li"),
-            $tabLinks = $tabItems.children("a"),
-            tatgetContents = $tabContainer.data("target-contents"),
-            $targetContents = $("." + tatgetContents),
-            targetID = $thisTabLink.data("target-id"),
-            $targetTabContent = $("#" + targetID);
-
-        $tabLinks.removeClass(ACTIVE_CLASS);
-        $targetContents.removeClass(ACTIVE_CLASS);
-        $thisTabLink.addClass(ACTIVE_CLASS);
-        $targetTabContent.addClass(ACTIVE_CLASS);
-        $(_panels).attr('data-tab-active-id', targetID);
-      });
-
       // Switch the default panel to block panel if mail data field has value
       if ($(_dataLoadSource).val()) {
         $(".nme-setting-panels-tabs a[data-target-id='nme-add-block']").click();
