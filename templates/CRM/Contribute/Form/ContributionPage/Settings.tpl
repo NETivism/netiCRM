@@ -292,7 +292,7 @@
 {if $config->nextEnabled}
 <div class="nme-setting-panels">
   <div class="nme-setting-panels-inner">
-    <div class="nme-setting-panels-header">
+    <div class="nme-setting-panels-header" id="nme-setting-panels-header">
       <div class="inner">
         <ul data-target-contents="nme-setting-panel" class="nme-setting-panels-tabs">
           <li><a href="#nme-aicompletion" class="is-active" data-target-id="nme-aicompletion">{ts}AI Copywriter{/ts}</a></li>
@@ -322,7 +322,7 @@
 	<div class="nme-setting-panels-trigger" data-tooltip data-tooltip-placement="w"><i
 			class="zmdi zmdi-settings"></i></div>
 </div>
-{include file="CRM/common/sidePanel.tpl" type="inline" contentSelector="#nme-setting-panels-content" containerClass="nme-setting-panels" opened="true" userPreference="true" triggerText="AI Assistant" width="500px" fullscreen="true" triggerIcon="packages/AICompletion/images/icon--magic--white.svg"}
+{include file="CRM/common/sidePanel.tpl" type="inline" headerSelector="#nme-setting-panels-header" contentSelector="#nme-setting-panels-content" containerClass="nme-setting-panels" opened="true" userPreference="true" triggerText="AI Assistant" width="500px" fullscreen="true" triggerIcon="packages/AICompletion/images/icon--magic--white.svg"}
 {/if}
 
 {/if}{* end cdtype *}
