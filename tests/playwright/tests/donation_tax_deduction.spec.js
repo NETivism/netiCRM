@@ -112,13 +112,13 @@ test.describe.serial('Donation Tax Deduction Electronic Process', () => {
             const linkCount = await taiwanTaxLink.count();
 
             // Skip test if template not found
-            if (linkCount === 0) {
-                console.log(
-                    'Taiwan tax report template not found, skipping test'
-                );
-                test.skip();
-                return;
-            }
+            // if (linkCount === 0) {
+            //     console.log(
+            //         'Taiwan tax report template not found, skipping test'
+            //     );
+            //     test.skip();
+            //     return;
+            // }
 
             // Click Taiwan tax report template
             await taiwanTaxLink.click();

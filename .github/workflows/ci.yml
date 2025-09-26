@@ -52,6 +52,8 @@ jobs:
         run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit --group CItesting api/v3/ActivityTest.php"
       - name: API Test - Membership
         run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit --group CItesting api/v3/MembershipTest.php"
+      - name: Frontend - Donation Tax Deduction - Playwright
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/donation_tax_deduction.spec.js"
       - name: Frontend - Batch Actions - Playwright
         run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/batch_action.spec.js"
       - name: Frontend - All Pages - Playwright
@@ -165,6 +167,8 @@ jobs:
         run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit --group CItesting api/v3/MembershipTest.php"
       - name: Frontend - Batch Actions - Playwright
         run: docker exec neticrm-ci  bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/batch_action.spec.js"
+      - name: Frontend - Donation Tax Deduction - Playwright
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/donation_tax_deduction.spec.js"
       - name: Frontend - All Pages - Playwright
         run: docker exec neticrm-ci  bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/page.spec.js"
       - name: Frontend - Add Contact - Playwright
@@ -278,6 +282,8 @@ jobs:
         run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/phpunit && phpunit --group CItesting api/v3/MembershipTest.php"
       - name: Frontend - Batch Actions - Playwright
         run: docker exec neticrm-ci  bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/batch_action.spec.js"
+      - name: Frontend - Donation Tax Deduction - Playwright
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/donation_tax_deduction.spec.js"
       - name: Frontend - All Pages - Playwright
         run: docker exec neticrm-ci  bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/page.spec.js"
       - name: Frontend - Add Contact - Playwright
