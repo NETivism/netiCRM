@@ -56,6 +56,9 @@
     _nspContentSelector,
     _nspHeaderSelector,
     _nspFooterSelector,
+    _nspContentId,
+    _nspHeaderId,
+    _nspFooterId,
     _nspContent,
     _nspHeader,
     _nspFooter,
@@ -173,15 +176,15 @@
       $(_container).attr("data-type", _nspType);
 
 			if ($(_content).length == 0) {
-				$(_container).find("." + NSP_INNER).append("<div class='" + NSP_CONTENT + "'><div class='" + INNER_CLASS + "'></div></div>");
+				$(_container).find("." + NSP_INNER).append("<div id='" + _nspContentId + "' class='" + NSP_CONTENT + "'><div class='" + INNER_CLASS + "'></div></div>");
 			}
 
 			if ($(_header).length == 0 && _nspHeaderSelector) {
-				$(_container).find("." + NSP_INNER).prepend("<div class='" + NSP_HEADER + "'><div class='" + INNER_CLASS + "'></div></div>");
+				$(_container).find("." + NSP_INNER).prepend("<div id='" + _nspHeaderId + "' class='" + NSP_HEADER + "'><div class='" + INNER_CLASS + "'></div></div>");
 			}
 
 			if ($(_footer).length == 0 && _nspFooterSelector) {
-				$(_container).find("." + NSP_INNER).append("<div class='" + NSP_FOOTER + "'><div class='" + INNER_CLASS + "'></div></div>");
+				$(_container).find("." + NSP_INNER).append("<div id='" + _nspFooterId + "' class='" + NSP_FOOTER + "'><div class='" + INNER_CLASS + "'></div></div>");
 			}
 
       switch (_nspType) {
@@ -214,6 +217,8 @@
       $(_container).find(_content).find(_inner).html(_nspContent);
       $(_container).find(_header).find(_inner).html(_nspHeader);
       $(_container).find(_footer).find(_inner).html(_nspFooter);
+      
+      _initTabs();
 
       $(_container).on("click", _trigger, function(event) {
         event.preventDefault();
@@ -359,10 +364,9 @@
    * Tabs initialization
    */
   var _initTabs = function() {
-    if ($(_nspHeader).find(TABS_SELECTOR).length > 0) {
+    if ($(_nspHeaderSelector).find(TABS_SELECTOR).length > 0) {
       _tabsEnabled = true;
       _bindTabsEvents();
-      _setDefaultTab();
     }
   };
 
@@ -370,7 +374,7 @@
    * Bind tabs events
    */
   var _bindTabsEvents = function() {
-    $(_nspHeader).on("click", TABS_SELECTOR + " a", function(event) {
+    $(_nspHeaderSelector + " " + TABS_SELECTOR + " a").on("click", function(event) {
       event.preventDefault();
       var $thisTabLink = $(this),
           $thisTab = $thisTabLink.parent("li"),
@@ -392,27 +396,8 @@
       
       // Update container attribute
       $(_container).attr('data-tab-active-id', targetID);
-      
       _debug("Tab switched to: " + targetID, "tabs");
     });
-  };
-
-  /**
-   * Set default tab
-   */
-  var _setDefaultTab = function() {
-    var $activeTab = $(_nspHeader).find(TABS_SELECTOR + " a." + ACTIVE_CLASS);
-    
-    if ($activeTab.length > 0) {
-      // If there's already an active tab, trigger its click to ensure proper initialization
-      $activeTab.trigger("click");
-    } else {
-      // If no active tab, activate the first tab
-      var $firstTab = $(_nspHeader).find(TABS_SELECTOR + " a:first");
-      if ($firstTab.length > 0) {
-        $firstTab.trigger("click");
-      }
-    }
   };
 
 	/**
@@ -489,7 +474,6 @@
       }
 
       _nsp.render();
-      _initTabs();
 
       // Window resize
       $(window).resize(function() {
@@ -555,6 +539,9 @@
       }
 
       _container = selector;
+      _nspContentId = _nspContentSelector.slice(1);
+      _nspHeaderId = _nspHeaderSelector.slice(1);
+      _nspFooterId = _nspFooterSelector.slice(1);
       _checkNspInstance();
 
       return _nsp;
