@@ -76,8 +76,16 @@ class CRM_AI_BAO_AIGenImage {
       
       // Handle different response formats from translator
       if (is_array($translationResponse)) {
-        $translatedPrompt = $translationResponse['message'] ?? $translationResponse['translated_prompt'] ?? $translationResponse;
+        $translatedPrompt = $translationResponse['message'] ?? $translationResponse['translated_prompt'] ?? '';
         $aiCompletionId = $translationResponse['id'] ?? $translationResponse['aicompletion_id'] ?? null;
+        
+        // Parse JSON response if message contains JSON
+        if (!empty($translatedPrompt) && is_string($translatedPrompt)) {
+          $parsedData = $this->translator->parseJsonResponse($translatedPrompt);
+          if ($parsedData !== false && isset($parsedData['data']['prompt'])) {
+            $translatedPrompt = $parsedData['data']['prompt'];
+          }
+        }
       }
 
       // Step 4: Update translation result and establish AI completion relationship
@@ -101,7 +109,12 @@ class CRM_AI_BAO_AIGenImage {
       // Step 8: Update final result after successful image generation and storage
       $this->updateFinalResult($imagePath);
 
-      return ['success' => true, 'image_path' => $imagePath];
+      return [
+        'success' => true, 
+        'image_path' => $imagePath,
+        'translated_prompt' => $translatedPrompt,
+        'generation_id' => $this->generationRecordId
+      ];
 
     } catch (Exception $e) {
       // Step 9: Handle errors and update database status
