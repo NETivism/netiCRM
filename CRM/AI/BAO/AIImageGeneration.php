@@ -2,6 +2,12 @@
 
 class CRM_AI_BAO_AIImageGeneration extends CRM_AI_DAO_AIImageGeneration {
 
+  // Status constants based on planning document
+  const STATUS_SUCCESS = 1;      // Success: Image generated and saved successfully
+  const STATUS_PENDING = 2;      // Pending: Request created, waiting to start processing
+  const STATUS_FAILED = 4;       // Failed: Error occurred during translation or image generation
+  const STATUS_PROCESSING = 5;   // Processing: Currently translating prompt or generating image
+
   /**
    * Create image generation record
    *
@@ -199,10 +205,10 @@ class CRM_AI_BAO_AIImageGeneration extends CRM_AI_DAO_AIImageGeneration {
     $sql = "
       SELECT 
         COUNT(*) as total_generations,
-        SUM(CASE WHEN status_id = 1 THEN 1 ELSE 0 END) as successful_generations,
-        SUM(CASE WHEN status_id = 4 THEN 1 ELSE 0 END) as failed_generations,
-        SUM(CASE WHEN status_id = 2 THEN 1 ELSE 0 END) as pending_generations,
-        SUM(CASE WHEN status_id = 5 THEN 1 ELSE 0 END) as processing_generations
+        SUM(CASE WHEN status_id = " . self::STATUS_SUCCESS . " THEN 1 ELSE 0 END) as successful_generations,
+        SUM(CASE WHEN status_id = " . self::STATUS_FAILED . " THEN 1 ELSE 0 END) as failed_generations,
+        SUM(CASE WHEN status_id = " . self::STATUS_PENDING . " THEN 1 ELSE 0 END) as pending_generations,
+        SUM(CASE WHEN status_id = " . self::STATUS_PROCESSING . " THEN 1 ELSE 0 END) as processing_generations
       FROM civicrm_aiimagegeneration 
       WHERE {$whereClause}
     ";
@@ -237,7 +243,7 @@ class CRM_AI_BAO_AIImageGeneration extends CRM_AI_DAO_AIImageGeneration {
     
     $sql = "
       DELETE FROM civicrm_aiimagegeneration 
-      WHERE status_id = 4 
+      WHERE status_id = " . self::STATUS_FAILED . " 
       AND created_date < %1
     ";
     
