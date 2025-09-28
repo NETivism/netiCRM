@@ -491,13 +491,27 @@ class CRM_AI_Page_AJAX {
               'translated_prompt' => $generateResult['translated_prompt'] ?? '',
             ],
           ]);
-          // responseSucess() calls civiExit(), so this point should never be reached
+          // responseSucess() calls civiExit(), which throws an exception in Drupal
+          // This should never be reached, but just in case
           return;
         } else {
           throw new CRM_Core_Exception($generateResult['error'] ?? 'Unknown error occurred during image generation');
         }
 
+      } catch (CRM_Core_Exception $e) {
+        // Handle CiviCRM exceptions (including civiExit exceptions)
+        if ($e->getErrorCode() === CRM_Core_Error::NO_ERROR) {
+          // This is a civiExit() exception from responseSucess(), ignore it
+          return;
+        }
+        // This is a real error, handle it
+        self::responseError([
+          'status' => 0,
+          'message' => 'Image generation failed: ' . $e->getMessage(),
+        ]);
+        return;
       } catch (Exception $e) {
+        // Handle other exceptions
         self::responseError([
           'status' => 0,
           'message' => 'Image generation failed: ' . $e->getMessage(),
