@@ -109,7 +109,6 @@ class CRM_AI_BAO_AITransPrompt {
       return $response;
 
     } catch (Exception $e) {
-      Civi::log()->error("AITransPrompt translation failed: " . $e->getMessage());
       return [
         'success' => false,
         'error' => $e->getMessage(),
@@ -184,24 +183,32 @@ class CRM_AI_BAO_AITransPrompt {
   }
 
   /**
-   * Parse JSON response from markdown format
+   * Parse JSON response from markdown format or plain JSON
    *
-   * @param string $markdownResponse Response containing JSON wrapped in markdown
+   * @param string $response Response containing JSON wrapped in markdown or plain JSON
    *
    * @return array|false Parsed data array or false on failure
    */
-  public function parseJsonResponse($markdownResponse) {
-    if (empty($markdownResponse)) {
+  public function parseJsonResponse($response) {
+    if (empty($response)) {
       return false;
     }
 
-    // Extract JSON content from markdown code blocks
+    $jsonString = null;
+
+    // Try to extract JSON content from markdown code blocks first
     $pattern = '/```json\s*\n(.*?)\n```/s';
-    if (!preg_match($pattern, $markdownResponse, $matches)) {
-      return false;
+    if (preg_match($pattern, $response, $matches)) {
+      $jsonString = trim($matches[1]);
+    } else {
+      // If no markdown wrapper found, try to parse the response directly as JSON
+      $trimmed = trim($response);
+      // Check if the response looks like JSON (starts with { or [)
+      if (preg_match('/^[{\[]/', $trimmed)) {
+        $jsonString = $trimmed;
+      }
     }
 
-    $jsonString = trim($matches[1]);
     if (empty($jsonString)) {
       return false;
     }
