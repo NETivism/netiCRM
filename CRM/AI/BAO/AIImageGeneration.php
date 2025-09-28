@@ -26,10 +26,14 @@ class CRM_AI_BAO_AIImageGeneration extends CRM_AI_DAO_AIImageGeneration {
     // Auto-set contact ID if not provided
     // Note: contact_id field is not yet implemented in schema
     // This code is prepared for future schema update
+    // TEMPORARY FIX: Commented out to resolve double JSON response issue
+    // The contact_id field does not exist in the database schema yet
+    /*
     if (empty($data['contact_id'])) {
       $session = CRM_Core_Session::singleton();
       $data['contact_id'] = $session->get('userID') ?: NULL;
     }
+    */
 
     // Set created date for new records
     if (!$id && empty($data['created_date'])) {
