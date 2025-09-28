@@ -255,42 +255,62 @@ class CRM_AI_BAO_AIGenImage {
 
   /**
    * Update final generation result after successful image generation and storage
+   * Uses try-catch to prevent database issues from affecting main workflow
    *
    * @param string $imagePath Generated image path (relative to public directory)
-   * @throws Exception On database update failure
    */
   protected function updateFinalResult($imagePath) {
     if ($this->generationRecordId && !empty($imagePath)) {
-      // Verify file actually exists before marking as success
-      // Convert relative path to absolute path for file existence check
-      $publicDir = rtrim(CRM_Utils_System::cmsDir('public'), '/');
-      $fullPath = $publicDir . '/' . $imagePath;
-      
-      if (file_exists($fullPath)) {
-        CRM_AI_BAO_AIImageGeneration::updateStatus(
-          $this->generationRecordId,
-          CRM_AI_BAO_AIImageGeneration::STATUS_SUCCESS,
-          ['image_path' => $imagePath]
-        );
-      } else {
-        // File doesn't exist, mark as failed
-        $this->updateErrorStatus('Generated image file could not be saved to: ' . $fullPath);
+      try {
+        // Verify file actually exists before marking as success
+        // Convert relative path to absolute path for file existence check
+        $publicDir = rtrim(CRM_Utils_System::cmsDir('public'), '/');
+        $fullPath = $publicDir . '/' . $imagePath;
+        
+        if (file_exists($fullPath)) {
+          CRM_AI_BAO_AIImageGeneration::updateStatus(
+            $this->generationRecordId,
+            CRM_AI_BAO_AIImageGeneration::STATUS_SUCCESS,
+            ['image_path' => $imagePath]
+          );
+        } else {
+          // File doesn't exist, mark as failed but don't throw exception
+          $this->updateErrorStatus('Generated image file could not be saved to: ' . $fullPath);
+        }
+      } catch (Exception $e) {
+        // Log database update error but don't propagate to main workflow
+        // This prevents double JSON response issue
+        CRM_Core_Error::debug_log_message("Database update error in updateFinalResult: " . $e->getMessage());
+        
+        // Try to update error status without throwing exception
+        try {
+          $this->updateErrorStatus('Database update failed: ' . $e->getMessage());
+        } catch (Exception $innerE) {
+          // Even error status update failed, just log it
+          CRM_Core_Error::debug_log_message("Error status update also failed: " . $innerE->getMessage());
+        }
       }
     }
   }
 
   /**
    * Update generation record with error status and message
+   * Uses try-catch to prevent database issues from causing additional errors
    *
    * @param string $errorMessage Error message to store
    */
   protected function updateErrorStatus($errorMessage) {
     if ($this->generationRecordId) {
-      CRM_AI_BAO_AIImageGeneration::updateStatus(
-        $this->generationRecordId,
-        CRM_AI_BAO_AIImageGeneration::STATUS_FAILED,
-        ['error_message' => $errorMessage]
-      );
+      try {
+        CRM_AI_BAO_AIImageGeneration::updateStatus(
+          $this->generationRecordId,
+          CRM_AI_BAO_AIImageGeneration::STATUS_FAILED,
+          ['error_message' => $errorMessage]
+        );
+      } catch (Exception $e) {
+        // Log database update error but don't throw exception
+        CRM_Core_Error::debug_log_message("Failed to update error status: " . $e->getMessage());
+      }
     }
   }
 

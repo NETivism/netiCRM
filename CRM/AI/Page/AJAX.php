@@ -406,7 +406,6 @@ class CRM_AI_Page_AJAX {
 
   public static function generateImage() {
     $maxlength = 1000;
-    $result = FALSE;
 
     // Only handle POST requests for direct image generation
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] == 'application/json') {
@@ -483,7 +482,6 @@ class CRM_AI_Page_AJAX {
           $publicPath = CRM_Utils_System::cmsDir('public');
           $imageUrl = $baseUrl . '/' . $publicPath . '/' . $generateResult['image_path'];
 
-          $result = TRUE;
           self::responseSucess([
             'status' => 1,
             'message' => 'Image generated successfully.',
@@ -493,6 +491,8 @@ class CRM_AI_Page_AJAX {
               'translated_prompt' => $generateResult['translated_prompt'] ?? '',
             ],
           ]);
+          // responseSucess() calls civiExit(), so this point should never be reached
+          return;
         } else {
           throw new CRM_Core_Exception($generateResult['error'] ?? 'Unknown error occurred during image generation');
         }
@@ -502,15 +502,15 @@ class CRM_AI_Page_AJAX {
           'status' => 0,
           'message' => 'Image generation failed: ' . $e->getMessage(),
         ]);
+        return;
       }
     }
 
-    if (!$result) {
-      self::responseError([
-        'status' => 0,
-        'message' => 'Invalid request method or missing data.',
-      ]);
-    }
+    // If we reach here, it means the request method is not POST or content-type is not JSON
+    self::responseError([
+      'status' => 0,
+      'message' => 'Invalid request method or missing data.',
+    ]);
   }
 
   /**
