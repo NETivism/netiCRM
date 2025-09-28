@@ -30,6 +30,13 @@ class CRM_AI_BAO_AIGenImage {
   private $config;
 
   /**
+   * Current generation record ID for tracking database operations
+   *
+   * @var int
+   */
+  protected $generationRecordId;
+
+  /**
    * Constructor with dependency injection
    *
    * @param CRM_AI_BAO_AITransPrompt $translator Optional prompt translator
@@ -42,7 +49,7 @@ class CRM_AI_BAO_AIGenImage {
   }
 
   /**
-   * Main image generation workflow
+   * Main image generation workflow with database integration
    * Orchestrates the complete process from prompt to final image
    *
    * @param array $params Generation parameters
@@ -54,38 +61,51 @@ class CRM_AI_BAO_AIGenImage {
       // Step 1: Parameter validation
       $this->validateInput($params);
 
-      // Step 2: Quota checking
-      if (!$this->checkQuota()['available']) {
-        throw new Exception('Quota exceeded');
-      }
+      // Step 2: Create initial database record
+      $this->generationRecordId = $this->createInitialRecord($params);
 
       // Step 3: Prompt translation
-      $translatedPrompt = $this->translator->translate($params['text'], [
+      $translationResponse = $this->translator->translate($params['text'], [
         'style' => $params['style'] ?? '',
         'ratio' => $params['ratio'] ?? '1:1'
       ]);
 
-      // Step 4: Call image generation service
+      // Extract translated prompt and AI completion ID if available
+      $translatedPrompt = $translationResponse;
+      $aiCompletionId = null;
+      
+      // Handle different response formats from translator
+      if (is_array($translationResponse)) {
+        $translatedPrompt = $translationResponse['message'] ?? $translationResponse['translated_prompt'] ?? $translationResponse;
+        $aiCompletionId = $translationResponse['id'] ?? $translationResponse['aicompletion_id'] ?? null;
+      }
+
+      // Step 4: Update translation result and establish AI completion relationship
+      $this->updateTranslationResult($translatedPrompt, $aiCompletionId);
+
+      // Step 5: Call image generation service
       $imageData = $this->imageService->generateImage([
         'prompt' => $translatedPrompt,
         'ratio' => $params['ratio'] ?? '1:1'
       ]);
 
-      // Step 5: Check for generation errors
+      // Step 6: Check for generation errors
       if ($this->imageService->isError($imageData)) {
         throw new Exception('Image generation failed: ' .
           ($imageData['error']['message'] ?? 'Unknown error'));
       }
 
-      // Step 6: Process and store image
+      // Step 7: Process and store image
       $imagePath = $this->processImage($imageData['data']);
 
-      // Step 7: Save generation record
-      // $this->saveGenerationRecord($params, $imagePath, $translatedPrompt);
+      // Step 8: Update final result after successful image generation and storage
+      $this->updateFinalResult($imagePath);
 
       return ['success' => true, 'image_path' => $imagePath];
 
     } catch (Exception $e) {
+      // Step 9: Handle errors and update database status
+      $this->updateErrorStatus($e->getMessage());
       return ['success' => false, 'error' => $e->getMessage()];
     }
   }
@@ -172,20 +192,93 @@ class CRM_AI_BAO_AIGenImage {
     }
   }
 
+
   /**
-   * Check user quota for image generation
-   * Basic implementation - can be enhanced with user-specific limits
+   * Create initial generation record with pending status
    *
-   * @return array Quota status information
+   * @param array $params Generation parameters
+   * @return int Record ID
+   * @throws Exception On database save failure
    */
-  public function checkQuota() {
-    // Basic implementation - always allow for now
-    // TODO: Implement actual quota checking logic
-    return [
-      'available' => true,
-      'remaining' => 100,
-      'total' => 100
+  protected function createInitialRecord($params) {
+    $data = [
+      'original_prompt' => $params['text'],
+      'image_style' => $params['style'] ?? '',
+      'image_ratio' => $params['ratio'] ?? '1:1',
+      'status_id' => CRM_AI_BAO_AIImageGeneration::STATUS_PENDING,
+      'created_date' => date('Y-m-d H:i:s')
     ];
+
+    $record = CRM_AI_BAO_AIImageGeneration::create($data);
+    return $record->id;
+  }
+
+  /**
+   * Update translation result and establish AI completion relationship
+   *
+   * @param string $translatedPrompt Translated prompt
+   * @param int $aiCompletionId AI completion ID from translation process
+   * @throws Exception On database update failure
+   */
+  protected function updateTranslationResult($translatedPrompt, $aiCompletionId = null) {
+    if ($this->generationRecordId) {
+      $updateData = [
+        'translated_prompt' => $translatedPrompt,
+        'status_id' => CRM_AI_BAO_AIImageGeneration::STATUS_PROCESSING
+      ];
+
+      // Add AI completion relationship if available
+      if ($aiCompletionId) {
+        $updateData['aicompletion_id'] = $aiCompletionId;
+      }
+
+      CRM_AI_BAO_AIImageGeneration::updateStatus(
+        $this->generationRecordId,
+        CRM_AI_BAO_AIImageGeneration::STATUS_PROCESSING,
+        $updateData
+      );
+    }
+  }
+
+  /**
+   * Update final generation result after successful image generation and storage
+   *
+   * @param string $imagePath Generated image path (relative to public directory)
+   * @throws Exception On database update failure
+   */
+  protected function updateFinalResult($imagePath) {
+    if ($this->generationRecordId && !empty($imagePath)) {
+      // Verify file actually exists before marking as success
+      // Convert relative path to absolute path for file existence check
+      $publicDir = rtrim(CRM_Utils_System::cmsDir('public'), '/');
+      $fullPath = $publicDir . '/' . $imagePath;
+      
+      if (file_exists($fullPath)) {
+        CRM_AI_BAO_AIImageGeneration::updateStatus(
+          $this->generationRecordId,
+          CRM_AI_BAO_AIImageGeneration::STATUS_SUCCESS,
+          ['image_path' => $imagePath]
+        );
+      } else {
+        // File doesn't exist, mark as failed
+        $this->updateErrorStatus('Generated image file could not be saved to: ' . $fullPath);
+      }
+    }
+  }
+
+  /**
+   * Update generation record with error status and message
+   *
+   * @param string $errorMessage Error message to store
+   */
+  protected function updateErrorStatus($errorMessage) {
+    if ($this->generationRecordId) {
+      CRM_AI_BAO_AIImageGeneration::updateStatus(
+        $this->generationRecordId,
+        CRM_AI_BAO_AIImageGeneration::STATUS_FAILED,
+        ['error_message' => $errorMessage]
+      );
+    }
   }
 
   /**
