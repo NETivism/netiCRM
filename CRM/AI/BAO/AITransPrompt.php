@@ -50,11 +50,12 @@ class CRM_AI_BAO_AITransPrompt {
 
   /**
    * Translate prompt text from non-English to English for AI image generation
+   * Creates AICompletion record for proper tracking and association
    *
    * @param string $text Input text to translate
    * @param array $options Additional options for translation
    *
-   * @return array Complete response including message, token usage, and status
+   * @return array Complete response including message, token usage, AICompletion ID, and status
    */
   public function translate($text, $options = []) {
     // Basic format validation first
@@ -62,33 +63,59 @@ class CRM_AI_BAO_AITransPrompt {
       return false;
     }
 
-    // Language detection
-    $language = $this->detectLanguage($text);
+    // Language detection (for future use if needed)
+    // $language = $this->detectLanguage($text);
 
     // Build user prompt with input text and options
     $userPrompt = $this->buildUserPrompt($text, $options);
 
-    // Prepare messages in OpenAI format
-    $messages = [
-      [
-        'role' => 'system',
-        'content' => $this->systemPrompt
-      ],
-      [
-        'role' => 'user',
-        'content' => $userPrompt
+    // Prepare data for AICompletion record creation
+    $chatData = [
+      'ai_role' => 'Image Prompt Translator',
+      'tone_style' => 'Professional Translation',
+      'context' => $text,
+      'component' => 'AIImageGeneration',
+      'field' => 'prompt_translation',
+      'temperature' => 0.3,
+      'prompt' => [
+        [
+          'role' => 'system',
+          'content' => $this->systemPrompt
+        ],
+        [
+          'role' => 'user',
+          'content' => $userPrompt
+        ]
       ]
     ];
 
-    // Call OpenAI service using correct method and parameters
-    $response = $this->completionService->request([
-      'action' => CRM_AI_BAO_AICompletion::CHAT_COMPLETION,
-      'messages' => $messages,
-      'temperature' => 0.3
-    ]);
+    try {
+      // Step 1: Create AICompletion record using prepareChat
+      $tokenData = CRM_AI_BAO_AICompletion::prepareChat($chatData);
+      
+      // Step 2: Execute translation and save result using chat method
+      $response = CRM_AI_BAO_AICompletion::chat([
+        'id' => $tokenData['id'],
+        'token' => $tokenData['token'],
+        'temperature' => 0.3
+      ]);
 
-    // Return complete response information including token usage
-    return $response;
+      // Step 3: Add AICompletion ID to response for association tracking
+      if (isset($tokenData['id'])) {
+        $response['aicompletion_id'] = $tokenData['id'];
+        $response['id'] = $tokenData['id']; // For backward compatibility
+      }
+
+      return $response;
+
+    } catch (Exception $e) {
+      Civi::log()->error("AITransPrompt translation failed: " . $e->getMessage());
+      return [
+        'success' => false,
+        'error' => $e->getMessage(),
+        'message' => 'Translation failed: ' . $e->getMessage()
+      ];
+    }
   }
 
   /**
