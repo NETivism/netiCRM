@@ -468,55 +468,47 @@ class CRM_AI_Page_AJAX {
       }
 
       // Use complete AIGenImage workflow with database integration
+      // Wrap only the image generation logic, not the response output
+      $imageGenerator = new CRM_AI_BAO_AIGenImage();
+      $generateResult = null;
+      
       try {
-        $imageGenerator = new CRM_AI_BAO_AIGenImage();
         $generateResult = $imageGenerator->generate([
           'text' => $text,
           'style' => $jsondata['style'] ?? '',
           'ratio' => $jsondata['ratio'] ?? '1:1'
         ]);
-
-        if ($generateResult['success']) {
-          // Create full URL for response
-          $baseUrl = rtrim(CIVICRM_UF_BASEURL, '/');
-          $publicPath = CRM_Utils_System::cmsDir('public');
-          $imageUrl = $baseUrl . '/' . $publicPath . '/' . $generateResult['image_path'];
-
-          self::responseSucess([
-            'status' => 1,
-            'message' => 'Image generated successfully.',
-            'data' => [
-              'image_path' => $generateResult['image_path'],
-              'image_url' => $imageUrl,
-              'translated_prompt' => $generateResult['translated_prompt'] ?? '',
-            ],
-          ]);
-          // responseSucess() calls civiExit(), which throws an exception in Drupal
-          // This should never be reached, but just in case
-          return;
-        } else {
-          throw new CRM_Core_Exception($generateResult['error'] ?? 'Unknown error occurred during image generation');
-        }
-
-      } catch (CRM_Core_Exception $e) {
-        // Handle CiviCRM exceptions (including civiExit exceptions)
-        if ($e->getErrorCode() === CRM_Core_Error::NO_ERROR) {
-          // This is a civiExit() exception from responseSucess(), ignore it
-          return;
-        }
-        // This is a real error, handle it
-        self::responseError([
-          'status' => 0,
-          'message' => 'Image generation failed: ' . $e->getMessage(),
-        ]);
-        return;
       } catch (Exception $e) {
-        // Handle other exceptions
+        // Handle image generation errors only
         self::responseError([
           'status' => 0,
           'message' => 'Image generation failed: ' . $e->getMessage(),
         ]);
-        return;
+        return; // Ensure we don't continue after error response
+      }
+
+      if ($generateResult && $generateResult['success']) {
+        // Create full URL for response
+        $baseUrl = rtrim(CIVICRM_UF_BASEURL, '/');
+        $publicPath = CRM_Utils_System::cmsDir('public');
+        $imageUrl = $baseUrl . '/' . $publicPath . '/' . $generateResult['image_path'];
+
+        // Call responseSucess without try-catch, let civiExit exception propagate to Drupal
+        self::responseSucess([
+          'status' => 1,
+          'message' => 'Image generated successfully.',
+          'data' => [
+            'image_path' => $generateResult['image_path'],
+            'image_url' => $imageUrl,
+            'translated_prompt' => $generateResult['translated_prompt'] ?? '',
+          ],
+        ]);
+      } else {
+        // Handle generation failure
+        self::responseError([
+          'status' => 0,
+          'message' => 'Image generation failed: ' . ($generateResult['error'] ?? 'Unknown error occurred during image generation'),
+        ]);
       }
     }
 
