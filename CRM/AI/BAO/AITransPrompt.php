@@ -94,11 +94,24 @@ class CRM_AI_BAO_AITransPrompt {
       $tokenData = CRM_AI_BAO_AICompletion::prepareChat($chatData);
       
       // Step 2: Execute translation and save result using chat method
-      $response = CRM_AI_BAO_AICompletion::chat([
+      // Get model and max tokens from completion service instance
+      $chatParams = [
         'id' => $tokenData['id'],
         'token' => $tokenData['token'],
         'temperature' => 0.3
-      ]);
+      ];
+      
+      // Add model parameter from completion service
+      if ($this->completionService->getModel()) {
+        $chatParams['model'] = $this->completionService->getModel();
+      }
+      
+      // Add max_tokens parameter from completion service
+      if ($this->completionService->getMaxTokens() !== null) {
+        $chatParams['max_tokens'] = $this->completionService->getMaxTokens();
+      }
+      
+      $response = CRM_AI_BAO_AICompletion::chat($chatParams);
 
       // Step 3: Add AICompletion ID to response for association tracking
       if (isset($tokenData['id'])) {

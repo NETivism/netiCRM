@@ -95,6 +95,24 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
   }
 
   /**
+   * Get current model name
+   *
+   * @return string
+   */
+  public function getModel() {
+    return $this->_model;
+  }
+
+  /**
+   * Get current max tokens
+   *
+   * @return int|null
+   */
+  public function getMaxTokens() {
+    return $this->_maxTokens;
+  }
+
+  /**
    * Sending request using service API
    *
    * Error handling should using try - catch when doing request
