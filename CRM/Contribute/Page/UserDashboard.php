@@ -78,6 +78,7 @@ class CRM_Contribute_Page_UserDashboard extends CRM_Contact_Page_View_UserDashBo
 
 
 
+    require_once 'api/v3/utils.php';
     $recurRow = [];
     $recurIDs = [];
     while ($recur->fetch()) {

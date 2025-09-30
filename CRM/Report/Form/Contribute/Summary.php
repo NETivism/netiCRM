@@ -660,8 +660,25 @@ class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
       if (CRM_Utils_Array::arrayKeyExists('civicrm_contact_sort_name', $row) &&
         CRM_Utils_Array::arrayKeyExists('civicrm_contact_id', $row)
       ) {
+        $query = "reset=1&force=1&id_op=eq&id_value=" . $row['civicrm_contact_id'];
+        // Add receive_date filter
+        if (!empty($this->_params['receive_date_from'])) {
+          $query .= "&receive_date_from=" . urlencode($this->_params['receive_date_from']);
+        }
+        if (!empty($this->_params['receive_date_to'])) {
+          $query .= "&receive_date_to=" . urlencode($this->_params['receive_date_to']);
+        }
+        // Add contribution_status_id filter
+        if (!empty($this->_params['contribution_status_id_op']) && !empty($this->_params['contribution_status_id_value'])) {
+          if (is_array($this->_params['contribution_status_id_value'])) {
+            $status_id_value = CRM_Utils_Array::implode(',', $this->_params['contribution_status_id_value']);
+          } else {
+            $status_id_value = $this->_params['contribution_status_id_value'];
+          }
+          $query .= "&contribution_status_id_op={$this->_params['contribution_status_id_op']}&contribution_status_id_value={$status_id_value}";
+        }
         $url = CRM_Report_Utils_Report::getNextUrl('contribute/detail',
-          'reset=1&force=1&id_op=eq&id_value=' . $row['civicrm_contact_id'],
+          $query,
           $this->_absoluteUrl, $this->_id
         );
         $rows[$rowNum]['civicrm_contact_sort_name_link'] = $url;
