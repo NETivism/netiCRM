@@ -107,11 +107,11 @@ class CRM_AI_GenImageService_ITRIICL extends CRM_AI_GenImageService {
    */
   protected function formatParams(&$params) {
     // Set basic default parameters for ITRI ICL
-    $params['negative_prompt'] = $params['negative_prompt'] ?? 'blurry, watermark, lowres';
+    $params['negative_prompt'] = $params['negative_prompt'] ?? '';
     $params['steps'] = 30;
     $params['cfg'] = 7;
     $params['sampler'] = 'dpmpp_2m';
-    
+
     // Set seed parameter - user can customize, defaults to random generation
     $params['seed'] = $params['seed'] ?? $this->generateRandomSeed();
 
