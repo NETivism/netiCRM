@@ -92,10 +92,8 @@ class CRM_AI_BAO_AIGenImage {
       $this->updateTranslationResult($translatedPrompt, $aiCompletionId);
 
       // Step 5: Call image generation service
-      $imageData = $this->imageService->generateImage([
-        'prompt' => $translatedPrompt,
-        'ratio' => $params['ratio'] ?? '1:1'
-      ]);
+      $serviceParams = $this->prepareServiceParams($params, $translatedPrompt);
+      $imageData = $this->imageService->generateImage($serviceParams);
 
       // Step 6: Check for generation errors
       if ($this->imageService->isError($imageData)) {
@@ -203,6 +201,30 @@ class CRM_AI_BAO_AIGenImage {
     if (!empty($params['ratio']) && !in_array($params['ratio'], $allowedRatios)) {
       throw new Exception('Invalid ratio. Allowed: ' . implode(', ', $allowedRatios));
     }
+  }
+
+  /**
+   * Prepare parameters for image generation service
+   * Combines standard parameters with advanced service-specific parameters
+   *
+   * @param array $params Original parameters from user
+   * @param string $translatedPrompt Processed prompt text
+   * @return array Service parameters ready for generation
+   */
+  protected function prepareServiceParams($params, $translatedPrompt) {
+    // Standard parameters that all services understand
+    $serviceParams = [
+      'prompt' => $translatedPrompt,
+      'ratio' => $params['ratio'] ?? '1:1'
+    ];
+
+    // Merge advanced parameters if provided
+    // This allows service-specific parameters to be passed through
+    if (!empty($params['advanced']) && is_array($params['advanced'])) {
+      $serviceParams = array_merge($serviceParams, $params['advanced']);
+    }
+
+    return $serviceParams;
   }
 
 
