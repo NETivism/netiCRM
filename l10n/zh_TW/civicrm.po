@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>, 2013,2015-2025\n"
+"Last-Translator: Seal Shen, 2025\n"
 "Language-Team: Chinese (Taiwan) (http://app.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50791,41 +50791,41 @@ msgstr "剩餘可贈"
 
 #: CRM/Contribute/BAO/Premium.php
 msgid "Insufficient stock. Available quantity: %1, Requested: %2"
-msgstr ""
+msgstr "庫存不足。目前剩餘: %1 ，需求數量:  #2"
 
 #: CRM/Contribute/BAO/Premium.php
 msgid "Product is out of stock."
-msgstr ""
+msgstr "此禮品已無庫存"
 
 #: CRM/Contribute/Form/Contribution/Confirm.php
 #: CRM/Contribute/Form/Contribution/Main.php
 msgid "This gift is currently out of stock."
-msgstr ""
+msgstr "此感謝禮已無庫存"
 
 #: templates/CRM/Contribute/Form/AdditionalInfo/Premium.tpl
 msgid ""
 "This premium combination will have its inventory automatically calculated "
 "based on the \"contribution status\" and cannot be edited here."
-msgstr ""
+msgstr "此回饋禮組合的庫存將依「捐款狀態」自動計算，無法在此編輯。"
 
 #: templates/CRM/Contribute/Form/AdditionalInfo/Premium.tpl
 msgid "This product option comes from fundraising page %1."
-msgstr ""
+msgstr "此禮品選項來自募款頁面 %1。"
 
 #: templates/CRM/Contribute/Form/AdditionalInfo/Premium.tpl
 msgid "The selected product is out of stock. Please choose another product."
-msgstr ""
+msgstr "您選擇的禮品已缺貨，請選擇其他禮品。"
 
 #: templates/CRM/Contribute/Form/AdditionalInfo/Premium.tpl
 msgid ""
 "After saving, the premium inventory will be automatically calculated based "
 "on the \"contribution status\" and the premium linked to this contribution "
 "cannot be changed."
-msgstr ""
+msgstr "儲存後，回饋禮品庫存將依「捐款狀態」自動計算，且此筆捐款所連結的回饋禮品將無法再變更。"
 
 #: templates/CRM/Contribute/Form/AdditionalInfo/Premium.tpl
 msgid "Are you sure you want to link this contribution to"
-msgstr ""
+msgstr "您確定要將此筆捐款連結至"
 
 #: templates/CRM/Core/Page/Payment/TapPay.tpl
 msgid "Cardholder Name"
