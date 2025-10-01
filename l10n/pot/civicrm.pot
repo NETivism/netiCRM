@@ -50190,3 +50190,19 @@ msgstr ""
 #: templates/CRM/Contribute/Form/AdditionalInfo/Premium.tpl
 msgid "Are you sure you want to link this contribution to"
 msgstr ""
+
+#: templates/CRM/Core/Page/Payment/TapPay.tpl
+msgid "Cardholder Name"
+msgstr ""
+
+#: templates/CRM/Core/Page/Payment/TapPay.tpl
+msgid "Same on your credit card."
+msgstr ""
+
+#: templates/CRM/Core/Page/Payment/TapPay.tpl
+msgid "Cardholder Email"
+msgstr ""
+
+#: templates/CRM/Core/Page/Payment/TapPay.tpl
+msgid "Email will verified by credit card issuer."
+msgstr ""
