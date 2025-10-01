@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>, 2013,2015-2025\n"
+"Last-Translator: Seal Shen, 2025\n"
 "Language-Team: Chinese (Taiwan) (http://app.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50668,3 +50668,177 @@ msgstr "定捐門檻"
 
 msgid "Apple Pay Front"
 msgstr "Apple Pay 幕前支付"
+
+#: CRM/Admin/Form/Setting/PremiumsSetting.php
+#: templates/CRM/Admin/Form/Setting/PremiumsSetting.tpl
+msgid "Premium Settings"
+msgstr "感謝禮設定"
+
+#: CRM/Admin/Form/Setting/PremiumsSetting.php
+msgid "Credit Card Transaction Inventory Replenishment Days"
+msgstr "信用卡交易庫存回補天數"
+
+#: CRM/Admin/Form/Setting/PremiumsSetting.php
+msgid "Non-Credit Card Inventory Replenishment Days"
+msgstr "非信用卡（虛擬ATM／超商代碼）庫存回補天數"
+
+#: CRM/Admin/Form/Setting/PremiumsSetting.php
+msgid "Convenience Store Barcode Inventory Replenishment Days"
+msgstr "超商條碼繳費庫存回補天數"
+
+#: CRM/Admin/Form/Setting/PremiumsSetting.php
+msgid "Check Status for Inventory Replenishment"
+msgstr "哪些捐款狀態要進行庫存回補檢查"
+
+#: CRM/Admin/Form/Setting/PremiumsSetting.php
+msgid "Maintain Unchanged"
+msgstr "維持不變"
+
+#: CRM/Admin/Form/Setting/PremiumsSetting.php
+msgid "Change to Cancelled"
+msgstr "變更為「已取消」"
+
+#: CRM/Admin/Form/Setting/PremiumsSetting.php
+msgid "Status Change After Inventory Replenishment"
+msgstr "庫存回補後的捐款狀態變更"
+
+#: CRM/Admin/Form/Setting/PremiumsSetting.php
+msgid "Manual Cancellation Inventory Replenishment"
+msgstr "手動更改狀態回補庫存"
+
+#: CRM/Contribute/Form/ManagePremiums.php
+msgid "Total inventory"
+msgstr "總庫存量"
+
+#: CRM/Contribute/Form/ManagePremiums.php
+msgid ""
+"Please enter the total inventory quantity when inventory management is "
+"enabled."
+msgstr "啟用庫存管理功能時，請輸入總庫存數量"
+
+#: templates/CRM/Admin/Form/Setting/PremiumsSetting.tpl
+msgid ""
+"Credit card transaction inventory replenishment days (1-3 days). Default: 1 "
+"day."
+msgstr "信用卡交易的庫存回補天數（1-3 天）。預設：1 天。"
+
+#: templates/CRM/Admin/Form/Setting/PremiumsSetting.tpl
+msgid ""
+"Non-credit card inventory replenishment days after payment deadline (1-7 "
+"days). Default: 3 days."
+msgstr "非信用卡交易在付款截止日後的庫存回補天數（1-7 天）。預設：3 天。"
+
+#: templates/CRM/Admin/Form/Setting/PremiumsSetting.tpl
+msgid ""
+"Convenience store barcode inventory replenishment days after payment "
+"deadline (3-7 days). Default: 3 days."
+msgstr "超商條碼繳費在付款截止日後的庫存回補天數（3-7 天）。預設：3 天。"
+
+#: templates/CRM/Admin/Form/Setting/PremiumsSetting.tpl
+msgid ""
+"Select which contribution statuses should be checked for inventory "
+"replenishment."
+msgstr "請選擇要檢查哪些捐款狀態以進行庫存回補。"
+
+#: templates/CRM/Admin/Form/Setting/PremiumsSetting.tpl
+msgid ""
+"Choose how to handle contribution status after inventory replenishment."
+msgstr "請選擇庫存回補後，系統應如何處理捐款狀態。"
+
+#: templates/CRM/Admin/Form/Setting/PremiumsSetting.tpl
+msgid ""
+"Enable inventory replenishment for manual cancellations based on the "
+"specified statuses above."
+msgstr "手動變更為上述指定狀態時啟用庫存回補。"
+
+#: templates/CRM/Contribute/Form/Contribution.tpl
+msgid ""
+"Premium inventory linked to this donation will be restocked when saved as "
+"cancelled or failed status"
+msgstr "當此筆捐款被取消時，連結的感謝禮庫存將會回補。"
+
+#: templates/CRM/Contribute/Form/ManagePremiums.tpl
+msgid "Inventory Management"
+msgstr "庫存管理"
+
+#: templates/CRM/Contribute/Form/ManagePremiums.tpl
+msgid ""
+"Set the total inventory quantity for this premium. Once the given quantity "
+"exceeds this total, this premium will no longer be offered."
+msgstr "設定此感謝禮的總庫存數量。當已預訂數量超過此總數時，該感謝禮將不再提供。"
+
+#: templates/CRM/Contribute/Form/ManagePremiums.tpl
+msgid ""
+"Note: Inventory is tied to the entire premium. If you need to manage "
+"inventory for different options, please create multiple premiums."
+msgstr "注意：庫存是針對整個感謝禮設定的。若需針對不同禮品選項分別管理庫存，請建立多個感謝禮。"
+
+#: templates/CRM/Contribute/Page/ManagePremiums.tpl
+msgid "Stock Status"
+msgstr "庫存狀態"
+
+#: templates/CRM/Contribute/Page/ManagePremiums.tpl
+msgid "Total Stock"
+msgstr "總庫存"
+
+#: templates/CRM/Contribute/Page/ManagePremiums.tpl
+msgid "Sent Quantity"
+msgstr "已預定"
+
+#: templates/CRM/Contribute/Page/ManagePremiums.tpl
+msgid "Remaining"
+msgstr "剩餘可贈"
+
+#: CRM/Contribute/BAO/Premium.php
+msgid "Insufficient stock. Available quantity: %1, Requested: %2"
+msgstr "庫存不足。目前剩餘: %1 ，需求數量:  #2"
+
+#: CRM/Contribute/BAO/Premium.php
+msgid "Product is out of stock."
+msgstr "此禮品已無庫存"
+
+#: CRM/Contribute/Form/Contribution/Confirm.php
+#: CRM/Contribute/Form/Contribution/Main.php
+msgid "This gift is currently out of stock."
+msgstr "此感謝禮已無庫存"
+
+#: templates/CRM/Contribute/Form/AdditionalInfo/Premium.tpl
+msgid ""
+"This premium combination will have its inventory automatically calculated "
+"based on the \"contribution status\" and cannot be edited here."
+msgstr "此回饋禮組合的庫存將依「捐款狀態」自動計算，無法在此編輯。"
+
+#: templates/CRM/Contribute/Form/AdditionalInfo/Premium.tpl
+msgid "This product option comes from fundraising page %1."
+msgstr "此禮品選項來自募款頁面 %1。"
+
+#: templates/CRM/Contribute/Form/AdditionalInfo/Premium.tpl
+msgid "The selected product is out of stock. Please choose another product."
+msgstr "您選擇的禮品已缺貨，請選擇其他禮品。"
+
+#: templates/CRM/Contribute/Form/AdditionalInfo/Premium.tpl
+msgid ""
+"After saving, the premium inventory will be automatically calculated based "
+"on the \"contribution status\" and the premium linked to this contribution "
+"cannot be changed."
+msgstr "儲存後，回饋禮品庫存將依「捐款狀態」自動計算，且此筆捐款所連結的回饋禮品將無法再變更。"
+
+#: templates/CRM/Contribute/Form/AdditionalInfo/Premium.tpl
+msgid "Are you sure you want to link this contribution to"
+msgstr "您確定要將此筆捐款連結至"
+
+#: templates/CRM/Core/Page/Payment/TapPay.tpl
+msgid "Cardholder Name"
+msgstr "卡片持有人姓名"
+
+#: templates/CRM/Core/Page/Payment/TapPay.tpl
+msgid "Same on your credit card."
+msgstr "跟您信用卡面上一致的字樣（可能是英文）"
+
+#: templates/CRM/Core/Page/Payment/TapPay.tpl
+msgid "Cardholder Email"
+msgstr "卡片持有人 Email"
+
+#: templates/CRM/Core/Page/Payment/TapPay.tpl
+msgid "Email will verified by credit card issuer."
+msgstr "發卡單位需要此欄位以做驗證"
