@@ -153,6 +153,17 @@ class CRM_Group_Form_Edit extends CRM_Core_Form {
             $this->_groupValues['saved_search_id'],
             'mapping_id'
           );
+          // Get saved search form values to determine if it's from custom search
+          $formValues = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_SavedSearch',
+            $this->_groupValues['saved_search_id'],
+            'form_values'
+          );
+          if ($formValues) {
+            $formValuesArray = unserialize($formValues);
+            if (!empty($formValuesArray['customSearchClass'])) {
+              $groupValues['custom_search_class'] = $formValuesArray['customSearchClass'];
+            }
+          }
         }
         $this->assign_by_ref('group', $groupValues);
 
