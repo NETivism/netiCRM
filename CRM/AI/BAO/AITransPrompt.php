@@ -334,6 +334,12 @@ class CRM_AI_BAO_AITransPrompt {
 **其他模糊描述：**
 - 分析語境 → 轉化為具體可視場景 → 依指定風格完整構建五大要素
 
+**場景完整性原則**（適用於所有類型輸入）：
+- 每個主體必須有**至少3個具體環境元素**（光線來源、空間細節、道具）
+- 若場景包含對比角色，兩者必須有**同等深度描述**
+- 禁止：「surrounded by A and B」、「shown with X」等薄弱描述
+- 必須：每個環境都有光線、空間、動作的完整描述
+
 **多元化變化原則**：為相同輸入輪換選擇不同的視覺元素組合，避免固定模式
 
 ### 5. SD3.5 結構化組織
@@ -344,12 +350,13 @@ class CRM_AI_BAO_AITransPrompt {
 1. **風格**：使用者指定 > 內容推斷，智慧添加該風格專業術語
 2. **主體動作**：優先強調主體，詳述動作姿態
 3. **構圖框架**：依指定比例選擇適合的專業構圖術語，避免直接描述比例數值，使用具體的攝影和藝術構圖技法
-   - **視角選擇**：bird\'s eye view, close-up, wide shot, low angle, high angle
-   - **通用構圖**：rule of thirds, golden ratio, center composition, diagonal composition
-   - **動態構圖**：leading lines, radial composition, spiral composition, triangular composition
-   - **平衡構圖**：symmetrical framing, asymmetrical balance, negative space usage
-   - **空間構圖**：foreground-background separation, depth layering, frame within frame
-   - **比例適配**：正方形偏好 center/symmetrical，橫式適合 rule of thirds/leading lines，直式強調 vertical flow/high-low angle
+   - **嚴禁使用**：ratio、aspect ratio、x:x、16:9、4:3 等任何比例數值
+   - **必須多樣化**：從對應比例的構圖術語中**輪換選擇**，避免重複使用同一術語：
+      - **視角選擇**：bird\'s eye view, close-up, wide shot, low angle, high angle
+      - **通用構圖**：rule of thirds, golden ratio, center composition, diagonal composition
+      - **動態構圖**：leading lines, radial composition, spiral composition, triangular composition
+      - **平衡構圖**：symmetrical framing, asymmetrical balance, negative space usage
+      - **空間構圖**：foreground-background separation, depth layering, frame within frame
 4. **光線色彩**：輪換多樣化選擇明亮、柔和、戲劇、冷調等不同光線氛圍和色彩基調
 5. **技術參數**：依風格選用對應專業術語，例如：
    - **攝影風格**：運用攝影專業術語（視角、景深、散景、鏡頭類型、光圈設定等）
@@ -359,6 +366,8 @@ class CRM_AI_BAO_AITransPrompt {
 
 ### 6. 詞彙精化
 - 模糊詞 → 專業術語（例如：「好看」→「精緻優雅」、「很亮」→「高對比強光」）
+- **禁止抽象動詞**：avoiding "capturing", "emphasizing", "conveying" 等
+- **必須具體化**：用光影、色彩、構圖等視覺元素表達情感
 - 風格術語智慧匹配，避免混用
 
 ### 7. 輸出組合
