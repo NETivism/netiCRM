@@ -8,7 +8,7 @@
 <div class="netiaiig-container">
   <div class="netiaiig-inner">
     <div class="netiaiig-content">
-      {* Image display area *}
+      {* Imagej display area *}
       <div class="image-display">
         <div class="generated-image">
           <div class="image-placeholder">
@@ -37,7 +37,7 @@
           <div class="prompt-container">
             {* Embedded control buttons *}
             <div class="embedded-controls">
-              <div class="style-dropdown" id="styleDropdown">
+              <div class="netiaiig-dropdown" id="styleDropdown">
                 <button class="embedded-btn dropdown-toggle" data-tooltip="Select Art Style">
                   <i class="zmdi zmdi-flower-alt"></i>
                   <span id="styleText">Children's Book Illustration</span>
@@ -73,7 +73,7 @@
                 </div>
               </div>
 
-              <div class="dropdown" id="ratioDropdown">
+              <div class="netiaiig-dropdown" id="ratioDropdown">
                 <button class="embedded-btn dropdown-toggle" data-tooltip="Select Aspect Ratio">
                   <i class="zmdi zmdi-aspect-ratio-alt"></i>
                   <span id="ratioText">1:1</span>
