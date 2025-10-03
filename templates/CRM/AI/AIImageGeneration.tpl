@@ -45,9 +45,9 @@
                 </button>
                 <div class="style-dropdown-menu">
                   <div class="style-grid">
-                    <div class="style-option" data-style="Watercolor">
+                    <div class="style-option" data-style="Watercolor printing">
                       <div class="style-preview"><img src="../images/thumb-01.png" alt=""></div>
-                      <div class="style-label">Watercolor</div>
+                      <div class="style-label">Watercolor printing</div>
                     </div>
                     <div class="style-option" data-style="Pixel Art">
                       <div class="style-preview"><img src="../images/thumb-02.png" alt=""></div>
@@ -57,9 +57,9 @@
                       <div class="style-preview"><img src="../images/thumb-03.png" alt=""></div>
                       <div class="style-label">Expressionist Painting</div>
                     </div>
-                    <div class="style-option" data-style="Vector Illustration">
+                    <div class="style-option" data-style="Simple Illustration">
                       <div class="style-preview"><img src="../images/thumb-04.png" alt=""></div>
-                      <div class="style-label">Vector Illustration</div>
+                      <div class="style-label">Simple Illustration</div>
                     </div>
                     <div class="style-option" data-style="3D Animation">
                       <div class="style-preview"><img src="../images/thumb-05.png" alt=""></div>

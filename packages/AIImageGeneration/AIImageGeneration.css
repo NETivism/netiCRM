@@ -20,7 +20,6 @@
 .netiaiig-container {
   display: flex;
   flex-direction: column;
-  overflow: hidden;
   max-width: 500px;
   margin: 0 auto;
 }
@@ -53,6 +52,7 @@
   position: relative;
   overflow: hidden;
   transition: all 0.3s ease;
+  border-radius: 16px;
 }
 
 .netiaiig-container .generated-image:hover {
@@ -105,6 +105,7 @@
   transition: all 0.2s ease;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
   font-size: 16px;
+  margin: 0;
 }
 
 .netiaiig-container .floating-btn:hover {
@@ -196,8 +197,8 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  backdrop-filter: blur(8px);-
-  shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   height: 32px;
   white-space: nowrap;
   min-width: fit-content;
@@ -389,6 +390,7 @@
 
 .netiaiig-container .generate-btn:hover {
   transform: translateY(-2px);
+  background: linear-gradient(135deg, #007aff 0%, #0056b3 100%);
   box-shadow: 0 8px 24px rgba(0, 122, 255, 0.3);
 }
 
