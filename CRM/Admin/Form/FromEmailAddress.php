@@ -271,6 +271,7 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
     $checked = [];
     $results = [];
 
+    $enableDMARC = FALSE;
     foreach($emails as $val => $email) {
       if (!CRM_Utils_Array::arrayKeyExists($val, $fromEmailIds)) {
         continue;
@@ -289,6 +290,9 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
           'spf' => $spfResult === TRUE,
           'dkim' => $dkimResult === TRUE
         ];
+        if ($checked[$domain]['spf'] && $checked[$domain]['dkim'] && !$enableDMARC) {
+          $enableDMARC = TRUE;
+        }
       }
 
       $results[$domain][$id] = [
@@ -322,6 +326,14 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
           self::saveEmailAddress(CRM_Core_Action::UPDATE, $id, $emailData);
         }
       }
+    }
+
+    // try to enable DMARC when verify passed (sender = from addr)
+    if ($enableDMARC) {
+      $params = array(
+        'enableDMARC' => 1,
+      );
+      CRM_Core_BAO_ConfigSetting::add($params);
     }
 
     return $results;
