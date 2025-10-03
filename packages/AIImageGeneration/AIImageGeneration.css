@@ -289,7 +289,7 @@
 }
 
 /* Style dropdown */
-.netiaiig-container .style-dropdown {
+.netiaiig-container .netiaiig-dropdown {
   position: relative;
   display: inline-block;
 }
@@ -311,7 +311,7 @@
   transition: all 0.2s ease;
 }
 
-.netiaiig-container .style-dropdown.active .style-dropdown-menu {
+.netiaiig-container .netiaiig-dropdown.active .style-dropdown-menu {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
