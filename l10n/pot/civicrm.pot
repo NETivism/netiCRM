@@ -50206,3 +50206,7 @@ msgstr ""
 #: templates/CRM/Core/Page/Payment/TapPay.tpl
 msgid "Email will verified by credit card issuer."
 msgstr ""
+
+#: CRM/Admin/Form/FromEmailAddress.php
+msgid "Last validation"
+msgstr ""
