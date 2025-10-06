@@ -90,8 +90,8 @@ class CRM_AI_GenImageService_ITRIICL extends CRM_AI_GenImageService {
       // Step 4: Execute API call
       $response = $this->executeRequest($requestData);
 
-      // Step 5: Format response (minimal version)
-      return $this->formatResponse($response);
+      // Step 5: Format response with advanced parameters
+      return $this->formatResponse($response, $params);
 
     } catch (Exception $e) {
       return $this->createErrorResponse('api_error', $e->getMessage());
@@ -126,18 +126,30 @@ class CRM_AI_GenImageService_ITRIICL extends CRM_AI_GenImageService {
    * Convert service response to standardized format
    *
    * @param string $responseString Raw response from service
+   * @param array $params Original generation parameters with advanced settings
    * @return array Standardized response format
    */
-  protected function formatResponse($responseString) {
+  protected function formatResponse($responseString, $params = []) {
     // Minimal version: direct return of raw data
     if (empty($responseString)) {
       return $this->createErrorResponse('empty_response', 'No data received from API');
     }
 
+    // Prepare advanced parameters for response
+    $advancedParams = [
+      'gen_image_service' => 'ITRIICL',
+      'negative_prompt' => $params['negative_prompt'] ?? '',
+      'seed' => $params['seed'] ?? 0,
+      'steps' => $params['steps'] ?? 30,
+      'cfg' => $params['cfg'] ?? 7,
+      'sampler' => $params['sampler'] ?? 'dpmpp_2m'
+    ];
+
     return $this->createSuccessResponse([
       'image_data' => $responseString,
       'format' => 'png',
-      'size' => strlen($responseString)
+      'size' => strlen($responseString),
+      'advanced' => $advancedParams
     ]);
   }
 

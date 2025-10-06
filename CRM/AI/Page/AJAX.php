@@ -501,6 +501,10 @@ class CRM_AI_Page_AJAX {
             'image_path' => $generateResult['image_path'],
             'image_url' => $imageUrl,
             'translated_prompt' => $generateResult['translated_prompt'] ?? '',
+            'original_prompt' => $generateResult['original_prompt'] ?? '',
+            'image_style' => $generateResult['image_style'] ?? '',
+            'image_ratio' => $generateResult['image_ratio'] ?? '1:1',
+            'advanced' => $generateResult['advanced'] ?? []
           ],
         ]);
       } else {

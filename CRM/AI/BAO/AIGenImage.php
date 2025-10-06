@@ -107,10 +107,17 @@ class CRM_AI_BAO_AIGenImage {
       // Step 8: Update final result after successful image generation and storage
       $this->updateFinalResult($imagePath);
 
+      // Extract advanced parameters from service response
+      $advancedParams = $imageData['data']['advanced'] ?? [];
+
       return [
         'success' => true, 
         'image_path' => $imagePath,
         'translated_prompt' => $translatedPrompt,
+        'original_prompt' => $params['text'],
+        'image_style' => $params['style'] ?? '',
+        'image_ratio' => $params['ratio'] ?? '1:1',
+        'advanced' => $advancedParams,
         'generation_id' => $this->generationRecordId
       ];
 
