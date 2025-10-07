@@ -454,12 +454,8 @@
         return;
       }
       
-      // Reset height to auto first, then to min height to get accurate scrollHeight
-      element.style.height = 'auto';
+      // Reset height to min height to get accurate scrollHeight (following reference file logic)
       element.style.height = minHeight + 'px';
-      
-      // Force a reflow to ensure scrollHeight is calculated correctly
-      element.offsetHeight;
       
       // Get required height based on content
       const scrollHeight = element.scrollHeight;
@@ -515,20 +511,13 @@
       // Set initial height to min height
       element.style.height = element._minHeight + 'px';
 
-      // Wait longer for DOM to be fully ready, especially for initial content
+      // Initial adjustment for existing content (following reference file logic)
       const self = this;
-      const initResize = () => {
-        // Only resize if scrollHeight is available (> 0)
-        if (element.scrollHeight > 0) {
+      setTimeout(() => {
+        if (element.value) {
           self.autoResizeTextarea($textarea);
-        } else {
-          // DOM not ready yet, wait a bit more
-          setTimeout(initResize, 100);
         }
-      };
-
-      // Multiple attempts with increasing delays to ensure proper initialization
-      setTimeout(initResize, 100);
+      }, 0);
 
       console.log('Auto-resize textarea initialized with min height:', element._minHeight + 'px');
     },
