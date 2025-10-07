@@ -96,7 +96,7 @@
 
 
         {* Generate button *}
-        <button class="generate-btn" onclick="generateImage()">Generate Image</button>
+        <button class="generate-btn">Generate Image</button>
       </div>
 
       {* History section *}
