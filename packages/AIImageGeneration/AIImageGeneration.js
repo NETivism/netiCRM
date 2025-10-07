@@ -34,6 +34,7 @@
     init: function() {
       this.bindEvents();
       this.initializeTooltips();
+      this.initAutoResizeTextarea();
 
       // Initialize floating buttons state (disabled by default)
       this.updateFloatingButtonsState(false);
@@ -101,9 +102,21 @@
         }
       });
 
-      // Textarea auto-resize
-      $(document).on('input', self.config.selectors.promptTextarea, function() {
-        self.autoResizeTextarea($(this));
+      // Enhanced textarea auto-resize with multiple event support
+      $(document).on('input paste keydown', self.config.selectors.promptTextarea, function(e) {
+        const $textarea = $(this);
+        
+        // Use requestAnimationFrame for smooth resizing
+        requestAnimationFrame(function() {
+          self.autoResizeTextarea($textarea);
+        });
+        
+        // Additional handling for paste events
+        if (e.type === 'paste') {
+          setTimeout(function() {
+            self.autoResizeTextarea($textarea);
+          }, 10);
+        }
       });
     },
 
@@ -431,11 +444,66 @@
       $(this.config.container).trigger('historyImageLoaded', [$item]);
     },
 
-    // Auto-resize textarea
+    // Auto-resize textarea using enhanced implementation
     autoResizeTextarea: function($textarea) {
+      if (!$textarea || !$textarea.length) return;
+
       const element = $textarea[0];
+      
+      // Reset height to calculate proper scrollHeight
       element.style.height = 'auto';
-      element.style.height = element.scrollHeight + 'px';
+      
+      // Calculate new height with constraints
+      const scrollHeight = element.scrollHeight;
+      const minHeight = parseInt($textarea.css('min-height')) || 52;
+      const maxHeight = parseInt($textarea.css('max-height')) || 300;
+      
+      const newHeight = Math.min(
+        Math.max(scrollHeight, minHeight),
+        maxHeight
+      );
+      
+      // Apply new height
+      element.style.height = newHeight + 'px';
+      
+      // Handle overflow for content exceeding max height
+      if (scrollHeight > maxHeight) {
+        element.style.overflowY = 'auto';
+      } else {
+        element.style.overflowY = 'hidden';
+      }
+    },
+
+    // Initialize advanced auto-resize for prompt textarea
+    initAutoResizeTextarea: function() {
+      const $textarea = $(this.config.selectors.promptTextarea);
+      
+      if ($textarea.length === 0) return;
+
+      // Calculate single line height (font-size + padding + line-height)
+      const fontSize = parseInt($textarea.css('font-size')) || 14;
+      const lineHeight = parseFloat($textarea.css('line-height')) || 1.5;
+      const paddingTop = parseInt($textarea.css('padding-top')) || 16;
+      const paddingBottom = parseInt($textarea.css('padding-bottom')) || 16;
+      
+      // Single line height = font-size * line-height + padding
+      const singleLineHeight = Math.ceil(fontSize * lineHeight) + paddingTop + paddingBottom;
+
+      // Set styles for better resize behavior with single line minimum
+      $textarea.css({
+        'min-height': singleLineHeight + 'px',
+        'max-height': '400px',
+        'overflow': 'hidden',
+        'box-sizing': 'border-box',
+        'resize': 'none'
+      });
+
+      // Initial resize for existing content
+      setTimeout(() => {
+        this.autoResizeTextarea($textarea);
+      }, 0);
+
+      console.log('Advanced auto-resize textarea initialized with single line height:', singleLineHeight + 'px');
     },
 
     // Initialize tooltips (if tooltip library is available)
@@ -492,11 +560,17 @@
 
     // Public API methods
     api: {
-      // Set prompt text
+      // Set prompt text with auto-resize
       setPrompt: function(text) {
-        $(NetiAIImageGeneration.config.container)
-          .find(NetiAIImageGeneration.config.selectors.promptTextarea)
-          .val(text);
+        const $textarea = $(NetiAIImageGeneration.config.container)
+          .find(NetiAIImageGeneration.config.selectors.promptTextarea);
+          
+        $textarea.val(text);
+        
+        // Trigger auto-resize after setting text
+        requestAnimationFrame(function() {
+          NetiAIImageGeneration.autoResizeTextarea($textarea);
+        });
       },
 
       // Get current prompt

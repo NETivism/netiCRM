@@ -150,7 +150,6 @@
 
 .netiaiig-container .prompt-textarea {
   width: 100%;
-  min-height: 120px;
   padding: 16px;
   border: 0;
   border-radius: 12px;
@@ -484,7 +483,6 @@
 
   .netiaiig-container .prompt-textarea {
     padding: 16px;
-    min-height: 100px;
   }
 
   .netiaiig-container .embedded-btn {
