@@ -38,7 +38,7 @@
             {* Embedded control buttons *}
             <div class="embedded-controls">
               <div class="netiaiig-dropdown" id="styleDropdown">
-                <button class="embedded-btn dropdown-toggle" data-tooltip="Select Art Style">
+                <button type="button" class="embedded-btn dropdown-toggle" data-tooltip="Select Art Style">
                   <i class="zmdi zmdi-flower-alt"></i>
                   <span id="styleText">Children's Book Illustration</span>
                   <i class="zmdi zmdi-chevron-down"></i>
@@ -74,7 +74,7 @@
               </div>
 
               <div class="netiaiig-dropdown" id="ratioDropdown">
-                <button class="embedded-btn dropdown-toggle" data-tooltip="Select Aspect Ratio">
+                <button type="button" class="embedded-btn dropdown-toggle" data-tooltip="Select Aspect Ratio">
                   <i class="zmdi zmdi-aspect-ratio-alt"></i>
                   <span id="ratioText">1:1</span>
                   <i class="zmdi zmdi-chevron-down"></i>
@@ -89,7 +89,7 @@
               </div>
             </div>
 
-            <textarea class="prompt-textarea"
+            <textarea name="netiaiig_prompt" class="prompt-textarea"
               placeholder="Describe the image you want to generate...">A gentle owl telling stories to small animals under the starry sky, soft pastel colors, warm golden moonlight, cozy storytelling atmosphere, rounded character design, digital painting style, whimsical warm mood, medium shot composition.</textarea>
           </div>
         </div>
