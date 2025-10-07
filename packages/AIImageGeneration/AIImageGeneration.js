@@ -515,21 +515,20 @@
       // Set initial height to min height
       element.style.height = element._minHeight + 'px';
 
-      // Use requestAnimationFrame and setTimeout to ensure DOM and CSS are fully ready
+      // Wait longer for DOM to be fully ready, especially for initial content
       const self = this;
-      requestAnimationFrame(() => {
-        setTimeout(() => {
-          // Force resize regardless of content (to handle initial content properly)
+      const initResize = () => {
+        // Only resize if scrollHeight is available (> 0)
+        if (element.scrollHeight > 0) {
           self.autoResizeTextarea($textarea);
-          
-          // If still has content, trigger another resize to be sure
-          if (element.value) {
-            setTimeout(() => {
-              self.autoResizeTextarea($textarea);
-            }, 50);
-          }
-        }, 10);
-      });
+        } else {
+          // DOM not ready yet, wait a bit more
+          setTimeout(initResize, 100);
+        }
+      };
+
+      // Multiple attempts with increasing delays to ensure proper initialization
+      setTimeout(initResize, 100);
 
       console.log('Auto-resize textarea initialized with min height:', element._minHeight + 'px');
     },
