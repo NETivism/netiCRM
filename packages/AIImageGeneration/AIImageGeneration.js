@@ -43,40 +43,40 @@
       const container = $(self.config.container);
 
       // Style dropdown functionality
-      container.on('click', `${self.config.selectors.styleDropdown} .dropdown-toggle`, function(e) {
+      $(document).on('click', `${self.config.selectors.styleDropdown} .dropdown-toggle`, function(e) {
         e.stopPropagation();
         self.toggleDropdown($(this).closest('.netiaiig-dropdown'));
       });
 
       // Ratio dropdown functionality  
-      container.on('click', `${self.config.selectors.ratioDropdown} .dropdown-toggle`, function(e) {
+      $(document).on('click', `${self.config.selectors.ratioDropdown} .dropdown-toggle`, function(e) {
         e.stopPropagation();
         self.toggleDropdown($(this).closest('.netiaiig-dropdown'));
       });
 
       // Style option selection
-      container.on('click', self.config.selectors.styleOptions, function() {
+      $(document).on('click', self.config.selectors.styleOptions, function() {
         self.selectStyleOption($(this));
       });
 
       // Ratio item selection
-      container.on('click', `${self.config.selectors.ratioDropdown} ${self.config.selectors.dropdownItems}`, function() {
+      $(document).on('click', `${self.config.selectors.ratioDropdown} ${self.config.selectors.dropdownItems}`, function() {
         self.selectRatioOption($(this));
       });
 
       // Generate button
-      container.on('click', self.config.selectors.generateBtn, function() {
+      $(document).on('click', self.config.selectors.generateBtn, function() {
         self.generateImage();
       });
 
       // Floating action buttons
-      container.on('click', self.config.selectors.floatingBtn, function(e) {
+      $(document).on('click', self.config.selectors.floatingBtn, function(e) {
         e.stopPropagation();
         self.handleFloatingAction($(this));
       });
 
       // History items
-      container.on('click', self.config.selectors.historyItem, function() {
+      $(document).on('click', self.config.selectors.historyItem, function() {
         self.loadHistoryImage($(this));
       });
 
@@ -86,12 +86,12 @@
       });
 
       // Prevent dropdown close when clicking inside
-      container.on('click', '.dropdown-menu, .style-dropdown-menu', function(e) {
+      $(document).on('click', '.dropdown-menu, .style-dropdown-menu', function(e) {
         e.stopPropagation();
       });
 
       // Keyboard navigation support
-      container.on('keydown', '.dropdown-toggle', function(e) {
+      $(document).on('keydown', '.dropdown-toggle', function(e) {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
           $(this).click();
@@ -99,7 +99,7 @@
       });
 
       // Textarea auto-resize
-      container.on('input', self.config.selectors.promptTextarea, function() {
+      $(document).on('input', self.config.selectors.promptTextarea, function() {
         self.autoResizeTextarea($(this));
       });
     },
