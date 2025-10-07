@@ -454,7 +454,8 @@
         return;
       }
       
-      // Reset height to min height to get accurate scrollHeight
+      // Reset height to auto first, then to min height to get accurate scrollHeight
+      element.style.height = 'auto';
       element.style.height = minHeight + 'px';
       
       // Force a reflow to ensure scrollHeight is calculated correctly
