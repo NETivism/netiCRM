@@ -251,10 +251,10 @@ class CRM_AI_GenImageService_ITRIICL extends CRM_AI_GenImageService {
   private function processRatio($ratio) {
     $ratioMap = [
       '1:1' => ['width' => 832, 'height' => 832],
-      '4:3' => ['width' => 832, 'height' => 640],
-      '3:4' => ['width' => 640, 'height' => 832],
-      '16:9' => ['width' => 832, 'height' => 448],
-      '9:16' => ['width' => 448, 'height' => 832]
+      '4:3' => ['width' => 1024, 'height' => 768],
+      '3:4' => ['width' => 768, 'height' => 1024],
+      '16:9' => ['width' => 1024, 'height' => 576],
+      '9:16' => ['width' => 576, 'height' => 1024]
     ];
 
     if (isset($ratioMap[$ratio])) {
