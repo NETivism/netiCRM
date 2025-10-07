@@ -328,30 +328,47 @@
       const $imageContainer = $(this.config.container).find('.image-placeholder');
 
       if (imageUrl) {
-        // Create new image element with loading state
-        const $img = $('<img>').attr({
-          'src': imageUrl,
-          'alt': 'AI 生成圖片',
-          'loading': 'lazy'
-        });
-
-        // Show loading placeholder while image loads
+        console.log('Displaying image:', imageUrl);
+        
+        // Show loading placeholder first
         $imageContainer.html('<div class="image-loading">載入圖片中...</div>');
-
-        // Handle image load success
-        $img.on('load', function() {
+        
+        // Function to handle successful image display
+        const showImage = function($img) {
+          console.log('Showing image in container');
           $imageContainer.empty().append($img);
-          console.log('Generated image loaded successfully');
+        };
+        
+        // Create new image element
+        const $img = $('<img>').attr({
+          'alt': 'AI 生成圖片',
+          'loading': 'lazy',
+          'src': imageUrl
         });
-
-        // Handle image load error
-        $img.on('error', function() {
-          $imageContainer.html('<div class="image-error">圖片載入失敗</div>');
-          console.error('Failed to load generated image:', imageUrl);
-        });
-
-        // Start loading the image
-        $img[0].src = imageUrl;
+        
+        // Check if image is already complete (cached)
+        if ($img[0].complete) {
+          console.log('Image is already complete');
+          if ($img[0].naturalWidth > 0) {
+            console.log('Image loaded from cache, displaying immediately');
+            showImage($img);
+          } else {
+            console.error('Image failed to load:', imageUrl);
+            $imageContainer.html('<div class="image-error">圖片載入失敗</div>');
+          }
+        } else {
+          // Bind load/error events for non-cached images
+          $img.on('load', function() {
+            console.log('Image loaded successfully via event');
+            showImage($img);
+          }).on('error', function() {
+            console.error('Image failed to load via event:', imageUrl);
+            $imageContainer.html('<div class="image-error">圖片載入失敗</div>');
+          });
+          
+          console.log('Waiting for image to load...');
+        }
+        
       } else {
         $imageContainer.html('<div class="image-placeholder-text">尚未生成圖片</div>');
       }
