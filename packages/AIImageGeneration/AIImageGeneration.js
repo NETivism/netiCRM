@@ -450,11 +450,15 @@
       if (!element.value) {
         element.style.height = minHeight + 'px';
         element.style.overflowY = 'hidden';
+        console.log('Auto-resize: Empty content, set to min height:', minHeight + 'px');
         return;
       }
       
       // Reset height to min height to get accurate scrollHeight
       element.style.height = minHeight + 'px';
+      
+      // Force a reflow to ensure scrollHeight is calculated correctly
+      element.offsetHeight;
       
       // Get required height based on content
       const scrollHeight = element.scrollHeight;
@@ -471,6 +475,8 @@
       } else {
         element.style.overflowY = 'hidden';
       }
+      
+      console.log('Auto-resize: content length:', element.value.length, 'scrollHeight:', scrollHeight, 'newHeight:', newHeight);
     },
 
     // Calculate min height based on computed styles
@@ -508,12 +514,21 @@
       // Set initial height to min height
       element.style.height = element._minHeight + 'px';
 
-      // Initial resize for existing content after DOM is ready
-      setTimeout(() => {
-        if (element.value) {
-          this.autoResizeTextarea($textarea);
-        }
-      }, 0);
+      // Use requestAnimationFrame and setTimeout to ensure DOM and CSS are fully ready
+      const self = this;
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          // Force resize regardless of content (to handle initial content properly)
+          self.autoResizeTextarea($textarea);
+          
+          // If still has content, trigger another resize to be sure
+          if (element.value) {
+            setTimeout(() => {
+              self.autoResizeTextarea($textarea);
+            }, 50);
+          }
+        }, 10);
+      });
 
       console.log('Auto-resize textarea initialized with min height:', element._minHeight + 'px');
     },
