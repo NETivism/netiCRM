@@ -35,7 +35,7 @@
       this.bindEvents();
       this.initializeTooltips();
       this.initAutoResizeTextarea();
-      this.initContainerObserver();
+      this.initVisibilityObserver();
 
       // Initialize floating buttons state (disabled by default)
       this.updateFloatingButtonsState(false);
@@ -523,68 +523,114 @@
       console.log('Auto-resize textarea initialized with min height:', element._minHeight + 'px');
     },
 
-    // Initialize container visibility observer
-    initContainerObserver: function() {
-      const containerElement = document.getElementById('nme-aiimagegeneration');
+    // Initialize visibility observer - listening to tab click events (the root cause)
+    initVisibilityObserver: function() {
+      console.log('🔍 Starting initVisibilityObserver...');
+      console.log('📝 Found root cause: #nme-aiimagegeneration is controlled by sidePanel tab system');
       
-      if (!containerElement || typeof MutationObserver === 'undefined') return;
-
       const self = this;
       
-      // Create observer to watch for class changes
-      this.containerObserver = new MutationObserver(function(mutations) {
-        mutations.forEach(function(mutation) {
-          if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
-            const target = mutation.target;
-            
-            // Check if is-active class was added
-            if (target.classList.contains('is-active') && target.classList.contains('nme-setting-panel')) {
-              console.log('Container became active, refreshing textarea height');
-              
-              // Wait a bit for CSS transitions to complete
-              setTimeout(() => {
-                self.onContainerVisible();
-              }, 50);
-            }
-          }
-        });
+      // Method 1: Listen to tab click events (most reliable)
+      $(document).on('click', '.nme-setting-panels-tabs a', function() {
+        const targetId = $(this).data('target-id');
+        console.log('🗁 Tab clicked, target ID:', targetId);
+        
+        if (targetId === 'nme-aiimagegeneration') {
+          console.log('✅ AI Image Generation tab clicked! Scheduling textarea height refresh...');
+          
+          // Wait for DOM to update after tab switch
+          setTimeout(() => {
+            console.log('⚡ Executing onContainerVisible() after tab switch...');
+            self.onContainerVisible();
+          }, 100);
+        }
       });
-
-      // Start observing
-      this.containerObserver.observe(containerElement, {
-        attributes: true,
-        attributeFilter: ['class']
-      });
-
-      console.log('Container visibility observer initialized');
+      
+      // Method 2: Check initial state if tab is already active
+      const checkInitialState = () => {
+        const currentContainer = document.querySelector('#nme-aiimagegeneration');
+        if (currentContainer && currentContainer.classList.contains('is-active')) {
+          console.log('⚡ INITIAL STATE: AI tab is already active! Triggering height refresh...');
+          setTimeout(() => {
+            self.onContainerVisible();
+          }, 100);
+          return true;
+        }
+        return false;
+      };
+      
+      // Check initial state with multiple attempts
+      if (!checkInitialState()) {
+        setTimeout(checkInitialState, 500);
+        setTimeout(checkInitialState, 1000);
+      }
+      
+      console.log('✅ Tab click event listener initialized');
+      console.log('🛠️ Simple and reliable solution based on actual tab switching mechanism');
     },
 
-    // Handle container becoming visible
+    // Handle container becoming visible with enhanced debugging
     onContainerVisible: function() {
+      console.log('🚀 onContainerVisible() called!');
+      
       const $textarea = $(this.config.selectors.promptTextarea);
+      console.log('🔍 Textarea selector:', this.config.selectors.promptTextarea);
+      console.log('🔍 Textarea found:', $textarea.length > 0);
       
-      if ($textarea.length === 0) return;
-
-      const element = $textarea[0];
-      
-      // Check if container is actually visible now
-      if (element.offsetHeight === 0) {
-        console.log('Container still not visible, skipping height recalculation');
+      if ($textarea.length === 0) {
+        console.error('❌ Textarea not found with selector:', this.config.selectors.promptTextarea);
         return;
       }
 
+      const element = $textarea[0];
+      console.log('📏 Textarea dimensions:', {
+        offsetWidth: element.offsetWidth,
+        offsetHeight: element.offsetHeight,
+        scrollHeight: element.scrollHeight,
+        value: element.value,
+        valueLength: element.value ? element.value.length : 0
+      });
+      
+      // Check if container is actually visible now
+      if (element.offsetHeight === 0) {
+        console.log('⚠️ Container still not visible (offsetHeight = 0), skipping height recalculation');
+        return;
+      }
+
+      console.log('✅ Container is visible! Proceeding with height recalculation...');
+      
       // Recalculate min height since previous calculation was done when hidden
+      console.log('🔄 Recalculating min height...');
+      const oldMinHeight = element._minHeight;
       this.calculateMinHeight($textarea);
+      const newMinHeight = element._minHeight;
+      
+      console.log('📐 Min height calculation:', {
+        oldMinHeight: oldMinHeight,
+        newMinHeight: newMinHeight,
+        changed: oldMinHeight !== newMinHeight
+      });
       
       // Reset and recalculate height
+      console.log('🔄 Resetting textarea height...');
       element.style.height = element._minHeight + 'px';
       
       if (element.value) {
+        console.log('📝 Textarea has content, calling autoResizeTextarea...');
         this.autoResizeTextarea($textarea);
+      } else {
+        console.log('📝 Textarea is empty, keeping min height');
       }
       
-      console.log('Textarea height refreshed after container became visible, new min height:', element._minHeight + 'px');
+      console.log('✅ Textarea height refresh completed!', {
+        finalHeight: element.style.height,
+        finalScrollHeight: element.scrollHeight,
+        minHeight: element._minHeight
+      });
     },
+
+
+
 
     // Initialize tooltips (if tooltip library is available)
     initializeTooltips: function() {
@@ -698,11 +744,9 @@
     }
   });
 
-  // Cleanup observers when page unloads
+  // Cleanup events when page unloads
   $(window).on('beforeunload', function() {
-    if (NetiAIImageGeneration.containerObserver) {
-      NetiAIImageGeneration.containerObserver.disconnect();
-    }
+    $(document).off('click', '.nme-setting-panels-tabs a');
   });
 
   // Expose API to global scope
