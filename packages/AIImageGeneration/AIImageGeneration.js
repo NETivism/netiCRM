@@ -102,21 +102,9 @@
         }
       });
 
-      // Enhanced textarea auto-resize with multiple event support
-      $(document).on('input paste keydown', self.config.selectors.promptTextarea, function(e) {
-        const $textarea = $(this);
-        
-        // Use requestAnimationFrame for smooth resizing
-        requestAnimationFrame(function() {
-          self.autoResizeTextarea($textarea);
-        });
-        
-        // Additional handling for paste events
-        if (e.type === 'paste') {
-          setTimeout(function() {
-            self.autoResizeTextarea($textarea);
-          }, 10);
-        }
+      // Textarea auto-resize event binding (following reference file logic)
+      $(document).on('input', self.config.selectors.promptTextarea, function() {
+        self.autoResizeTextarea($(this));
       });
     },
 
@@ -444,24 +432,35 @@
       $(this.config.container).trigger('historyImageLoaded', [$item]);
     },
 
-    // Auto-resize textarea using enhanced implementation
+    // Auto-resize textarea using logic from reference file
     autoResizeTextarea: function($textarea) {
       if (!$textarea || !$textarea.length) return;
 
       const element = $textarea[0];
       
-      // Reset height to calculate proper scrollHeight
-      element.style.height = 'auto';
+      // Get the stored min height or calculate it
+      if (!element._minHeight) {
+        this.calculateMinHeight($textarea);
+      }
       
-      // Calculate new height with constraints
+      const minHeight = element._minHeight;
+      const maxHeight = 400;
+      
+      // If content is empty, directly set to min height
+      if (!element.value) {
+        element.style.height = minHeight + 'px';
+        element.style.overflowY = 'hidden';
+        return;
+      }
+      
+      // Reset height to min height to get accurate scrollHeight
+      element.style.height = minHeight + 'px';
+      
+      // Get required height based on content
       const scrollHeight = element.scrollHeight;
-      const minHeight = parseInt($textarea.css('min-height')) || 52;
-      const maxHeight = parseInt($textarea.css('max-height')) || 300;
       
-      const newHeight = Math.min(
-        Math.max(scrollHeight, minHeight),
-        maxHeight
-      );
+      // Calculate final height within constraints
+      const newHeight = Math.min(Math.max(scrollHeight, minHeight), maxHeight);
       
       // Apply new height
       element.style.height = newHeight + 'px';
@@ -474,36 +473,49 @@
       }
     },
 
-    // Initialize advanced auto-resize for prompt textarea
+    // Calculate min height based on computed styles
+    calculateMinHeight: function($textarea) {
+      const element = $textarea[0];
+      const styles = window.getComputedStyle(element);
+      
+      const lineHeight = parseInt(styles.lineHeight);
+      const paddingTop = parseInt(styles.paddingTop) || 0;
+      const paddingBottom = parseInt(styles.paddingBottom) || 0;
+      const borderTop = parseInt(styles.borderTopWidth) || 0;
+      const borderBottom = parseInt(styles.borderBottomWidth) || 0;
+      
+      // Store calculated min height on element
+      element._minHeight = lineHeight + paddingTop + paddingBottom + borderTop + borderBottom;
+    },
+
+    // Initialize auto-resize for prompt textarea
     initAutoResizeTextarea: function() {
       const $textarea = $(this.config.selectors.promptTextarea);
       
       if ($textarea.length === 0) return;
 
-      // Calculate single line height (font-size + padding + line-height)
-      const fontSize = parseInt($textarea.css('font-size')) || 14;
-      const lineHeight = parseFloat($textarea.css('line-height')) || 1.5;
-      const paddingTop = parseInt($textarea.css('padding-top')) || 16;
-      const paddingBottom = parseInt($textarea.css('padding-bottom')) || 16;
+      const element = $textarea[0];
+
+      // Set basic styles (must be set before calculating min height)
+      element.style.boxSizing = 'border-box';
+      element.style.maxHeight = '400px';
+      element.style.overflow = 'hidden';
+      element.style.resize = 'none';
       
-      // Single line height = font-size * line-height + padding
-      const singleLineHeight = Math.ceil(fontSize * lineHeight) + paddingTop + paddingBottom;
+      // Calculate and store min height
+      this.calculateMinHeight($textarea);
+      
+      // Set initial height to min height
+      element.style.height = element._minHeight + 'px';
 
-      // Set styles for better resize behavior with single line minimum
-      $textarea.css({
-        'min-height': singleLineHeight + 'px',
-        'max-height': '400px',
-        'overflow': 'hidden',
-        'box-sizing': 'border-box',
-        'resize': 'none'
-      });
-
-      // Initial resize for existing content
+      // Initial resize for existing content after DOM is ready
       setTimeout(() => {
-        this.autoResizeTextarea($textarea);
+        if (element.value) {
+          this.autoResizeTextarea($textarea);
+        }
       }, 0);
 
-      console.log('Advanced auto-resize textarea initialized with single line height:', singleLineHeight + 'px');
+      console.log('Auto-resize textarea initialized with min height:', element._minHeight + 'px');
     },
 
     // Initialize tooltips (if tooltip library is available)
