@@ -333,41 +333,46 @@
         // Show loading placeholder first
         $imageContainer.html('<div class="image-loading">載入圖片中...</div>');
         
-        // Function to handle successful image display
-        const showImage = function($img) {
-          console.log('Showing image in container');
+        // Create image element without lazy loading
+        const img = new Image();
+        const $img = $(img);
+        
+        // Set up load handler before setting src
+        img.onload = function() {
+          console.log('Image loaded successfully - displaying now');
+          $img.attr('alt', 'AI 生成圖片');
           $imageContainer.empty().append($img);
         };
         
-        // Create new image element
-        const $img = $('<img>').attr({
-          'alt': 'AI 生成圖片',
-          'loading': 'lazy',
-          'src': imageUrl
-        });
+        // Set up error handler
+        img.onerror = function() {
+          console.error('Image failed to load:', imageUrl);
+          $imageContainer.html('<div class="image-error">圖片載入失敗</div>');
+        };
         
-        // Check if image is already complete (cached)
-        if ($img[0].complete) {
-          console.log('Image is already complete');
-          if ($img[0].naturalWidth > 0) {
-            console.log('Image loaded from cache, displaying immediately');
-            showImage($img);
-          } else {
-            console.error('Image failed to load:', imageUrl);
-            $imageContainer.html('<div class="image-error">圖片載入失敗</div>');
+        // Add timeout protection (10 seconds)
+        setTimeout(function() {
+          if ($imageContainer.find('.image-loading').length > 0) {
+            console.warn('Image loading timeout, checking status...');
+            if (img.complete) {
+              if (img.naturalWidth > 0) {
+                console.log('Image actually loaded but event didn\'t fire - force display');
+                $img.attr('alt', 'AI 生成圖片');
+                $imageContainer.empty().append($img);
+              } else {
+                console.error('Image loading timed out');
+                $imageContainer.html('<div class="image-error">圖片載入超時</div>');
+              }
+            } else {
+              console.error('Image still loading after timeout');
+              $imageContainer.html('<div class="image-error">圖片載入超時</div>');
+            }
           }
-        } else {
-          // Bind load/error events for non-cached images
-          $img.on('load', function() {
-            console.log('Image loaded successfully via event');
-            showImage($img);
-          }).on('error', function() {
-            console.error('Image failed to load via event:', imageUrl);
-            $imageContainer.html('<div class="image-error">圖片載入失敗</div>');
-          });
-          
-          console.log('Waiting for image to load...');
-        }
+        }, 10000);
+        
+        // Start loading - this should trigger onload when ready
+        console.log('Starting image load...');
+        img.src = imageUrl;
         
       } else {
         $imageContainer.html('<div class="image-placeholder-text">尚未生成圖片</div>');
