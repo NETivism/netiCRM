@@ -34,13 +34,16 @@
     init: function() {
       this.bindEvents();
       this.initializeTooltips();
+
+      // Initialize floating buttons state (disabled by default)
+      this.updateFloatingButtonsState(false);
+
       console.log('AI Image Generation component initialized');
     },
 
     // Bind all events
     bindEvents: function() {
       const self = this;
-      const container = $(self.config.container);
 
       // Style dropdown functionality
       $(document).on('click', `${self.config.selectors.styleDropdown} .dropdown-toggle`, function(e) {
@@ -48,7 +51,7 @@
         self.toggleDropdown($(this).closest('.netiaiig-dropdown'));
       });
 
-      // Ratio dropdown functionality  
+      // Ratio dropdown functionality
       $(document).on('click', `${self.config.selectors.ratioDropdown} .dropdown-toggle`, function(e) {
         e.stopPropagation();
         self.toggleDropdown($(this).closest('.netiaiig-dropdown'));
@@ -107,10 +110,10 @@
     // Toggle dropdown state
     toggleDropdown: function($dropdown) {
       const isActive = $dropdown.hasClass(this.config.classes.active);
-      
+
       // Close all dropdowns first
       this.closeAllDropdowns();
-      
+
       // Toggle current dropdown
       if (!isActive) {
         $dropdown.addClass(this.config.classes.active);
@@ -126,19 +129,19 @@
     selectStyleOption: function($option) {
       const style = $option.data('style');
       const $container = $option.closest('.netiaiig-dropdown');
-      
+
       // Update selected state
       $option.siblings().removeClass(this.config.classes.selected);
       $option.addClass(this.config.classes.selected);
-      
+
       // Update button text
       $container.find(this.config.selectors.styleText).text(style);
-      
+
       // Close dropdown
       $container.removeClass(this.config.classes.active);
-      
+
       console.log('Selected style:', style);
-      
+
       // Trigger custom event
       $(this.config.container).trigger('styleChanged', [style]);
     },
@@ -147,22 +150,22 @@
     selectRatioOption: function($option) {
       const ratio = $option.data('ratio');
       const $container = $option.closest('.netiaiig-dropdown');
-      
+
       // Update selected state
       $option.siblings().removeClass(this.config.classes.selected);
       $option.addClass(this.config.classes.selected);
-      
+
       // Update button text
       $container.find(this.config.selectors.ratioText).text(ratio);
-      
+
       // Close dropdown
       $container.removeClass(this.config.classes.active);
-      
+
       console.log('Selected ratio:', ratio);
-      
+
       // Update image container aspect ratio
       this.updateImageAspectRatio(ratio);
-      
+
       // Trigger custom event
       $(this.config.container).trigger('ratioChanged', [ratio]);
     },
@@ -170,7 +173,7 @@
     // Update image aspect ratio based on selection
     updateImageAspectRatio: function(ratio) {
       const $imageContainer = $(this.config.container).find('.generated-image');
-      
+
       // Map ratio strings to CSS aspect-ratio values
       const ratioMap = {
         '1:1': '1',
@@ -179,7 +182,7 @@
         '4:3': '4/3',
         '3:4': '3/4'
       };
-      
+
       if (ratioMap[ratio]) {
         $imageContainer.css('aspect-ratio', ratioMap[ratio]);
       }
@@ -187,8 +190,14 @@
 
     // Handle floating action buttons
     handleFloatingAction: function($button) {
+      // Check if button is disabled
+      if ($button.hasClass(this.config.classes.disabled)) {
+        this.showError('請先生成圖片');
+        return;
+      }
+
       const tooltip = $button.attr('data-tooltip');
-      
+
       switch(tooltip) {
         case 'Regenerate':
           this.generateImage();
@@ -209,75 +218,156 @@
       const $btn = $(this.config.container).find(this.config.selectors.generateBtn);
       const $textarea = $(this.config.container).find(this.config.selectors.promptTextarea);
       const prompt = $textarea.val().trim();
-      
+
+      // Input validation
       if (!prompt) {
-        this.showError('Please enter a prompt description');
+        this.showError('請輸入圖片描述');
         return;
       }
-      
-      // Disable button and show loading state
-      $btn.prop('disabled', true)
-          .addClass(this.config.classes.loading)
-          .text('Generating...');
-      
-      console.log('Generating image with prompt:', prompt);
-      
+
+      if (prompt.length > 1000) {
+        this.showError('描述文字超過1000字元限制');
+        return;
+      }
+
       // Get current settings
       const style = $(this.config.container).find(this.config.selectors.styleText).text();
       const ratio = $(this.config.container).find(this.config.selectors.ratioText).text();
-      
-      // Trigger custom event
-      $(this.config.container).trigger('imageGeneration', [{
-        prompt: prompt,
+
+      // Prepare request data
+      const requestData = {
+        text: prompt,
         style: style,
-        ratio: ratio
-      }]);
-      
-      // Simulate generation process (replace with actual API call)
-      setTimeout(() => {
-        this.onGenerationComplete();
-      }, 3000);
+        ratio: ratio,
+        sourceUrlPath: window.location.pathname
+      };
+
+      // Set loading state
+      $btn.prop('disabled', true)
+          .addClass(this.config.classes.loading)
+          .text('正在生成圖片...');
+
+      console.log('Generating image with data:', requestData);
+
+      // Trigger custom event
+      $(this.config.container).trigger('imageGeneration', [requestData]);
+
+      // Make API call
+      const self = this;
+      $.ajax({
+        url: '/civicrm/ai/images/generate',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(requestData),
+        timeout: 60000, // 60 seconds timeout
+
+        success: function(response) {
+          if (response.status === 1 && response.data) {
+            self.onGenerationComplete(response.data.image_url, response.data);
+            self.showSuccess('圖片生成成功！');
+          } else {
+            self.onGenerationComplete();
+            self.showError(response.message || '圖片生成失敗');
+          }
+        },
+
+        error: function(xhr, status, error) {
+          self.onGenerationComplete();
+
+          let errorMessage = '圖片生成失敗';
+
+          if (xhr.responseJSON && xhr.responseJSON.message) {
+            errorMessage = xhr.responseJSON.message;
+          } else if (status === 'timeout') {
+            errorMessage = '請求超時，請重試';
+          } else if (xhr.status === 400) {
+            errorMessage = '請求參數錯誤';
+          } else if (xhr.status === 403) {
+            errorMessage = '權限不足';
+          } else if (xhr.status === 500) {
+            errorMessage = '伺服器內部錯誤';
+          }
+
+          self.showError(errorMessage);
+          console.error('Image generation error:', status, error, xhr.responseText);
+        }
+      });
     },
 
     // Handle generation completion
-    onGenerationComplete: function(imageUrl = null) {
+    onGenerationComplete: function(imageUrl = null, responseData = null) {
       const $btn = $(this.config.container).find(this.config.selectors.generateBtn);
-      
+
       // Reset button state
       $btn.prop('disabled', false)
           .removeClass(this.config.classes.loading)
           .text('Generate Image');
-      
+
       if (imageUrl) {
         this.displayGeneratedImage(imageUrl);
+
+        // Enable floating action buttons when image is generated
+        this.updateFloatingButtonsState(true);
+
+        console.log('Image generation completed successfully:', {
+          imageUrl: imageUrl,
+          responseData: responseData
+        });
+      } else {
+        // Disable floating action buttons when no image
+        this.updateFloatingButtonsState(false);
+        console.log('Image generation completed without result');
       }
-      
-      console.log('Image generation completed');
-      
-      // Trigger custom event
-      $(this.config.container).trigger('generationComplete', [imageUrl]);
+
+      // Trigger custom event with full response data
+      $(this.config.container).trigger('generationComplete', [imageUrl, responseData]);
     },
 
     // Display generated image
     displayGeneratedImage: function(imageUrl) {
       const $imageContainer = $(this.config.container).find('.image-placeholder');
-      
+
       if (imageUrl) {
-        $imageContainer.html(`<img src="${imageUrl}" alt="Generated Image">`);
+        // Create new image element with loading state
+        const $img = $('<img>').attr({
+          'src': imageUrl,
+          'alt': 'AI 生成圖片',
+          'loading': 'lazy'
+        });
+
+        // Show loading placeholder while image loads
+        $imageContainer.html('<div class="image-loading">載入圖片中...</div>');
+
+        // Handle image load success
+        $img.on('load', function() {
+          $imageContainer.empty().append($img);
+          console.log('Generated image loaded successfully');
+        });
+
+        // Handle image load error
+        $img.on('error', function() {
+          $imageContainer.html('<div class="image-error">圖片載入失敗</div>');
+          console.error('Failed to load generated image:', imageUrl);
+        });
+
+        // Start loading the image
+        $img[0].src = imageUrl;
+      } else {
+        $imageContainer.html('<div class="image-placeholder-text">尚未生成圖片</div>');
       }
     },
 
     // Insert image to editor
     insertToEditor: function() {
       const $image = $(this.config.container).find('.image-placeholder img');
-      
+
       if ($image.length > 0) {
         const imageUrl = $image.attr('src');
         console.log('Inserting image to editor:', imageUrl);
-        
+
         // Trigger custom event for parent component to handle
         $(this.config.container).trigger('insertToEditor', [imageUrl]);
-        
+
         this.showSuccess('Image inserted successfully');
       } else {
         this.showError('No image to insert');
@@ -287,17 +377,17 @@
     // Download generated image
     downloadImage: function() {
       const $image = $(this.config.container).find('.image-placeholder img');
-      
+
       if ($image.length > 0) {
         const imageUrl = $image.attr('src');
         console.log('Downloading image:', imageUrl);
-        
+
         // Create download link
         const link = document.createElement('a');
         link.href = imageUrl;
         link.download = `ai-generated-image-${Date.now()}.png`;
         link.click();
-        
+
         this.showSuccess('Image download started');
       } else {
         this.showError('No image to download');
@@ -307,14 +397,14 @@
     // Load history image
     loadHistoryImage: function($item) {
       console.log('Loading history image');
-      
+
       // Get image from history item (could be background or img element)
       const $img = $item.find('img');
       if ($img.length > 0) {
         const imageUrl = $img.attr('src');
         this.displayGeneratedImage(imageUrl);
       }
-      
+
       // Trigger custom event
       $(this.config.container).trigger('historyImageLoaded', [$item]);
     },
@@ -348,19 +438,34 @@
     // Show success message
     showSuccess: function(message) {
       console.log('Success:', message);
-      // Implement toast notification or use existing CiviCRM notification system
-      if (typeof CRM !== 'undefined' && CRM.alert) {
-        CRM.alert(message, 'Success', 'success');
-      }
+
+      // Trigger custom success event
+      $(this.config.container).trigger('aiImageSuccess', [message]);
     },
 
     // Show error message
     showError: function(message) {
       console.error('Error:', message);
-      // Implement toast notification or use existing CiviCRM notification system
-      if (typeof CRM !== 'undefined' && CRM.alert) {
-        CRM.alert(message, 'Error', 'error');
+
+      // Trigger custom error event
+      $(this.config.container).trigger('aiImageError', [message]);
+    },
+
+    // Update floating buttons state
+    updateFloatingButtonsState: function(hasImage) {
+      const $floatingBtns = $(this.config.container).find(this.config.selectors.floatingBtn);
+
+      if (hasImage) {
+        $floatingBtns.removeClass(this.config.classes.disabled);
+      } else {
+        $floatingBtns.addClass(this.config.classes.disabled);
       }
+    },
+
+    // Check if current image exists
+    hasGeneratedImage: function() {
+      const $image = $(this.config.container).find('.image-placeholder img');
+      return $image.length > 0 && $image.attr('src');
     },
 
     // Public API methods
