@@ -45,6 +45,14 @@
     </table>
     {else}
      {* Display editable premium selection *}
+    {if $action eq 2}
+    <div class="crm-section">
+      <div class="messages info">
+        <div class="icon inform-icon"></div>
+        {ts}This premium combination will have its inventory automatically calculated based on the "contribution status" and cannot be edited here.{/ts}
+      </div>
+    </div>
+    {/if}
     <table class="form-layout-compressed">
       <tr class="crm-contribution-form-block-product_name">
         <td class="label">{$form.product_name.label}</td>
@@ -94,6 +102,16 @@
           min_amount.readOnly = 1;
 
           cj(document).ready(function($){
+      {/literal}
+          {if $action eq 2}
+      {literal}
+            var product_name_selects = document.querySelectorAll("select[name^='product_name']");
+            product_name_selects.forEach(function(select) {
+              select.disabled = true;
+            });
+      {/literal}
+          {/if}
+      {literal}
             var targetForm;
             $("#premium-dialog-confirm").dialog({
               autoOpen: false,
