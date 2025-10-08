@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: Seal Shen, 2025\n"
+"Last-Translator: jimyhuang <jimmy@netivism.com.tw>, 2013,2015-2025\n"
 "Language-Team: Chinese (Taiwan) (http://app.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50842,3 +50842,7 @@ msgstr "卡片持有人 Email"
 #: templates/CRM/Core/Page/Payment/TapPay.tpl
 msgid "Email will verified by credit card issuer."
 msgstr "發卡單位需要此欄位以做驗證"
+
+#: CRM/Admin/Form/FromEmailAddress.php
+msgid "Last validation"
+msgstr "最近一次驗證"
