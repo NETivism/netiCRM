@@ -244,10 +244,13 @@
         sourceUrlPath: window.location.pathname
       };
 
-      // Set loading state
+      // Set button loading state
       $btn.prop('disabled', true)
           .addClass(this.config.classes.loading)
           .text('正在生成圖片...');
+
+      // Show staged loading overlay in image area
+      this.loadingManager.show();
 
       console.log('Generating image with data:', requestData);
 
@@ -264,6 +267,9 @@
         timeout: 60000, // 60 seconds timeout
 
         success: function(response) {
+          // Hide loading overlay
+          self.loadingManager.hide();
+          
           if (response.status === 1 && response.data) {
             self.onGenerationComplete(response.data.image_url, response.data);
             self.showSuccess('圖片生成成功！');
@@ -274,6 +280,9 @@
         },
 
         error: function(xhr, status, error) {
+          // Hide loading overlay
+          self.loadingManager.hide();
+          
           self.onGenerationComplete();
 
           let errorMessage = '圖片生成失敗';
@@ -629,8 +638,103 @@
       });
     },
 
-
-
+    // Loading state manager for staged progress display
+    loadingManager: {
+      // Stage configuration with time intervals and messages
+      stages: [
+        { message: '送出請求中...', duration: 2000, progress: 15 },
+        { message: '轉譯您的提示詞...', duration: 5000, progress: 40 },
+        { message: '產製圖片中...', duration: 28000, progress: 90 },
+        { message: '系統繁忙，正在啟用備援通道加速，請稍候...', duration: 0, progress: 95 }
+      ],
+      
+      currentStage: 0,
+      timers: [],
+      isActive: false,
+      
+      // Show loading overlay with staged progress
+      show: function() {
+        const $container = $(NetiAIImageGeneration.config.container);
+        const $overlay = $container.find('.loading-overlay');
+        const $image = $container.find('.image-placeholder img');
+        
+        // Hide existing image and show loading overlay
+        $image.hide();
+        $overlay.show();
+        
+        // Reset state
+        this.currentStage = 0;
+        this.isActive = true;
+        this.clearTimers();
+        
+        // Start stage progression
+        this.nextStage();
+        
+        console.log('Loading state manager: Started');
+      },
+      
+      // Hide loading overlay
+      hide: function() {
+        const $container = $(NetiAIImageGeneration.config.container);
+        const $overlay = $container.find('.loading-overlay');
+        const $image = $container.find('.image-placeholder img');
+        
+        // Clear all timers
+        this.clearTimers();
+        this.isActive = false;
+        
+        // Hide loading overlay and show image
+        $overlay.hide();
+        $image.show();
+        
+        console.log('Loading state manager: Stopped');
+      },
+      
+      // Progress to next stage
+      nextStage: function() {
+        if (!this.isActive || this.currentStage >= this.stages.length) {
+          return;
+        }
+        
+        const stage = this.stages[this.currentStage];
+        this.updateMessage(stage.message);
+        this.updateProgress(stage.progress);
+        
+        console.log('Loading stage:', this.currentStage + 1, '-', stage.message);
+        
+        // Set timer for next stage if not the last stage and has duration
+        if (this.currentStage < this.stages.length - 1 && stage.duration > 0) {
+          const timer = setTimeout(() => {
+            if (this.isActive) {
+              this.currentStage++;
+              this.nextStage();
+            }
+          }, stage.duration);
+          
+          this.timers.push(timer);
+        }
+        
+        this.currentStage++;
+      },
+      
+      // Update loading message
+      updateMessage: function(message) {
+        const $container = $(NetiAIImageGeneration.config.container);
+        $container.find('.loading-message').text(message);
+      },
+      
+      // Update progress bar
+      updateProgress: function(progress) {
+        const $container = $(NetiAIImageGeneration.config.container);
+        $container.find('.progress-fill').css('width', progress + '%');
+      },
+      
+      // Clear all timers
+      clearTimers: function() {
+        this.timers.forEach(timer => clearTimeout(timer));
+        this.timers = [];
+      }
+    },
 
     // Initialize tooltips (if tooltip library is available)
     initializeTooltips: function() {
@@ -732,6 +836,15 @@
       // Refresh textarea height (useful when container becomes visible)
       refreshTextareaHeight: function() {
         NetiAIImageGeneration.onContainerVisible();
+      },
+
+      // Loading state management
+      showLoading: function() {
+        NetiAIImageGeneration.loadingManager.show();
+      },
+
+      hideLoading: function() {
+        NetiAIImageGeneration.loadingManager.hide();
       }
     }
   };
