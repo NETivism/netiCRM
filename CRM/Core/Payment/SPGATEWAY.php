@@ -2153,8 +2153,9 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
       ];
       // Allow further manipulation of the arguments via custom hooks ..
       $paymentClass = self::singleton($mode, $paymentProcessor, CRM_Core_DAO::$_nullObject);
-      CRM_Utils_Hook::alterPaymentProcessorParams($paymentClass, $payment, $prepareParams);
+      CRM_Utils_Hook::alterPaymentProcessorParams($paymentClass, $params, $prepareParams);
       $postData = http_build_query($prepareParams, '', '&');
+      CRM_Core_Error::debug_var('spgateway_agreement_args_payByToken', $postData);
       $postData_ = CRM_Core_Payment_SPGATEWAYAPI::recurEncrypt($postData, $paymentProcessor);
       $data = [
         'MerchantID_' => $paymentProcessor['user_name'],
