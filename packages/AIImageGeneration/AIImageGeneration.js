@@ -341,10 +341,21 @@
       if (imageUrl) {
         console.log('Displaying image:', imageUrl);
 
-        // Show loading placeholder first
-        $imageContainer.html('<div class="image-loading">載入圖片中...</div>');
+        // Find existing image and loading overlay, preserve structure
+        let $existingImg = $imageContainer.find('img');
+        const $loadingOverlay = $imageContainer.find('.loading-overlay');
+        
+        // Ensure loading overlay structure exists
+        if ($loadingOverlay.length === 0) {
+          this.restoreLoadingOverlay($imageContainer);
+        }
 
-        // Create image element without lazy loading
+        // Hide existing image during loading
+        if ($existingImg.length > 0) {
+          $existingImg.hide();
+        }
+
+        // Create new image element
         const img = new Image();
         const $img = $(img);
 
@@ -352,42 +363,84 @@
         img.onload = function() {
           console.log('Image loaded successfully - displaying now');
           $img.attr('alt', 'AI 生成圖片');
-          $imageContainer.empty().append($img);
+          
+          // Remove old image if exists and add new one
+          $existingImg.remove();
+          
+          // Insert new image before loading-overlay to maintain structure
+          const $overlay = $imageContainer.find('.loading-overlay');
+          if ($overlay.length > 0) {
+            $overlay.before($img);
+          } else {
+            $imageContainer.prepend($img);
+          }
         };
 
         // Set up error handler
         img.onerror = function() {
           console.error('Image failed to load:', imageUrl);
-          $imageContainer.html('<div class="image-error">圖片載入失敗</div>');
+          // Show existing image if error occurs
+          if ($existingImg.length > 0) {
+            $existingImg.show();
+          }
         };
 
         // Add timeout protection (10 seconds)
         setTimeout(function() {
-          if ($imageContainer.find('.image-loading').length > 0) {
-            console.warn('Image loading timeout, checking status...');
-            if (img.complete) {
-              if (img.naturalWidth > 0) {
-                console.log('Image actually loaded but event didn\'t fire - force display');
-                $img.attr('alt', 'AI 生成圖片');
-                $imageContainer.empty().append($img);
-              } else {
-                console.error('Image loading timed out');
-                $imageContainer.html('<div class="image-error">圖片載入超時</div>');
-              }
-            } else {
-              console.error('Image still loading after timeout');
-              $imageContainer.html('<div class="image-error">圖片載入超時</div>');
+          if (!img.complete || img.naturalWidth === 0) {
+            console.error('Image loading failed or timed out');
+            // Show existing image on timeout
+            if ($existingImg.length > 0) {
+              $existingImg.show();
             }
           }
         }, 10000);
 
-        // Start loading - this should trigger onload when ready
+        // Start loading
         console.log('Starting image load...');
         img.src = imageUrl;
 
       } else {
-        $imageContainer.html('<div class="image-placeholder-text">尚未生成圖片</div>');
+        // Reset to initial state, preserve loading-overlay
+        const $existingImg = $imageContainer.find('img');
+        const $loadingOverlay = $imageContainer.find('.loading-overlay');
+        
+        // Ensure loading overlay structure exists
+        if ($loadingOverlay.length === 0) {
+          this.restoreLoadingOverlay($imageContainer);
+        }
+        
+        if ($existingImg.length > 0) {
+          $existingImg.attr('src', '../images/thumb-00.png').attr('alt', '').show();
+        } else {
+          // Create default image if not exists
+          const $defaultImg = $('<img src="../images/thumb-00.png" alt="">');
+          const $overlay = $imageContainer.find('.loading-overlay');
+          if ($overlay.length > 0) {
+            $overlay.before($defaultImg);
+          } else {
+            $imageContainer.prepend($defaultImg);
+          }
+        }
       }
+    },
+
+    // Restore loading overlay structure when missing
+    restoreLoadingOverlay: function($container) {
+      const loadingOverlayHtml = `
+        <div class="loading-overlay" style="display: none;">
+          <div class="loading-spinner"></div>
+          <div class="loading-message">送出請求中...</div>
+          <div class="loading-progress">
+            <div class="progress-bar">
+              <div class="progress-fill"></div>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      $container.append(loadingOverlayHtml);
+      console.log('Loading overlay structure restored');
     },
 
     // Insert image to editor
