@@ -456,9 +456,9 @@
         // Trigger custom event for parent component to handle
         $(this.config.container).trigger('insertToEditor', [imageUrl]);
 
-        this.showSuccess('Image inserted successfully');
+        this.showSuccess('圖片已插入編輯器');
       } else {
-        this.showError('No image to insert');
+        this.showError('沒有圖片可供插入');
       }
     },
 
@@ -470,15 +470,26 @@
         const imageUrl = $image.attr('src');
         console.log('Downloading image:', imageUrl);
 
+        // Extract file extension from URL or default to webp
+        const getFileExtension = (url) => {
+          const match = url.match(/\.([a-zA-Z0-9]+)(?:\?|$)/);
+          return match ? match[1] : 'webp';
+        };
+
+        const fileExtension = getFileExtension(imageUrl);
+        const timestamp = Date.now();
+        const fileName = `ai-generated-image-${timestamp}.${fileExtension}`;
+
         // Create download link
         const link = document.createElement('a');
         link.href = imageUrl;
-        link.download = `ai-generated-image-${Date.now()}.png`;
+        link.download = fileName;
         link.click();
 
-        this.showSuccess('Image download started');
+        console.log('Downloading as:', fileName);
+        this.showSuccess('圖片下載已開始');
       } else {
-        this.showError('No image to download');
+        this.showError('沒有圖片可供下載');
       }
     },
 
