@@ -28,13 +28,13 @@
 
           {* Floating action buttons *}
           <div class="floating-actions">
-            <button class="floating-btn" data-tooltip="Regenerate">
+            <button type="button" class="floating-btn" data-tooltip="Regenerate">
               <i class="zmdi zmdi-refresh"></i>
             </button>
-            <button class="floating-btn" data-tooltip="Insert to Editor">
+            <button type="button" class="floating-btn" data-tooltip="Insert to Editor">
               <i class="zmdi zmdi-collection-plus"></i>
             </button>
-            <button class="floating-btn" data-tooltip="Download Image">
+            <button type="button" class="floating-btn" data-tooltip="Download Image">
               <i class="zmdi zmdi-download"></i>
             </button>
           </div>
@@ -107,7 +107,7 @@
 
 
         {* Generate button *}
-        <button class="generate-btn">Generate Image</button>
+        <button type="button" class="generate-btn">Generate Image</button>
       </div>
 
       {* History section *}

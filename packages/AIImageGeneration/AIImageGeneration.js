@@ -70,12 +70,14 @@
       });
 
       // Generate button
-      $(document).on('click', self.config.selectors.generateBtn, function() {
+      $(document).on('click', self.config.selectors.generateBtn, function(e) {
+        e.preventDefault();
         self.generateImage();
       });
 
       // Floating action buttons
       $(document).on('click', self.config.selectors.floatingBtn, function(e) {
+        e.preventDefault();
         e.stopPropagation();
         self.handleFloatingAction($(this));
       });
