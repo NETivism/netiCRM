@@ -269,7 +269,7 @@
         success: function(response) {
           // Hide loading overlay
           self.loadingManager.hide();
-          
+
           if (response.status === 1 && response.data) {
             self.onGenerationComplete(response.data.image_url, response.data);
             self.showSuccess('圖片生成成功！');
@@ -282,7 +282,7 @@
         error: function(xhr, status, error) {
           // Hide loading overlay
           self.loadingManager.hide();
-          
+
           self.onGenerationComplete();
 
           let errorMessage = '圖片生成失敗';
@@ -340,27 +340,27 @@
 
       if (imageUrl) {
         console.log('Displaying image:', imageUrl);
-        
+
         // Show loading placeholder first
         $imageContainer.html('<div class="image-loading">載入圖片中...</div>');
-        
+
         // Create image element without lazy loading
         const img = new Image();
         const $img = $(img);
-        
+
         // Set up load handler before setting src
         img.onload = function() {
           console.log('Image loaded successfully - displaying now');
           $img.attr('alt', 'AI 生成圖片');
           $imageContainer.empty().append($img);
         };
-        
+
         // Set up error handler
         img.onerror = function() {
           console.error('Image failed to load:', imageUrl);
           $imageContainer.html('<div class="image-error">圖片載入失敗</div>');
         };
-        
+
         // Add timeout protection (10 seconds)
         setTimeout(function() {
           if ($imageContainer.find('.image-loading').length > 0) {
@@ -380,11 +380,11 @@
             }
           }
         }, 10000);
-        
+
         // Start loading - this should trigger onload when ready
         console.log('Starting image load...');
         img.src = imageUrl;
-        
+
       } else {
         $imageContainer.html('<div class="image-placeholder-text">尚未生成圖片</div>');
       }
@@ -447,15 +447,15 @@
       if (!$textarea || !$textarea.length) return;
 
       const element = $textarea[0];
-      
+
       // Get the stored min height or calculate it
       if (!element._minHeight) {
         this.calculateMinHeight($textarea);
       }
-      
+
       const minHeight = element._minHeight;
       const maxHeight = 400;
-      
+
       // If content is empty, directly set to min height
       if (!element.value) {
         element.style.height = minHeight + 'px';
@@ -463,26 +463,26 @@
         console.log('Auto-resize: Empty content, set to min height:', minHeight + 'px');
         return;
       }
-      
+
       // Reset height to min height to get accurate scrollHeight (following reference file logic)
       element.style.height = minHeight + 'px';
-      
+
       // Get required height based on content
       const scrollHeight = element.scrollHeight;
-      
+
       // Calculate final height within constraints
       const newHeight = Math.min(Math.max(scrollHeight, minHeight), maxHeight);
-      
+
       // Apply new height
       element.style.height = newHeight + 'px';
-      
+
       // Handle overflow for content exceeding max height
       if (scrollHeight > maxHeight) {
         element.style.overflowY = 'auto';
       } else {
         element.style.overflowY = 'hidden';
       }
-      
+
       console.log('Auto-resize: content length:', element.value.length, 'scrollHeight:', scrollHeight, 'newHeight:', newHeight);
     },
 
@@ -490,13 +490,13 @@
     calculateMinHeight: function($textarea) {
       const element = $textarea[0];
       const styles = window.getComputedStyle(element);
-      
+
       const lineHeight = parseInt(styles.lineHeight);
       const paddingTop = parseInt(styles.paddingTop) || 0;
       const paddingBottom = parseInt(styles.paddingBottom) || 0;
       const borderTop = parseInt(styles.borderTopWidth) || 0;
       const borderBottom = parseInt(styles.borderBottomWidth) || 0;
-      
+
       // Store calculated min height on element
       element._minHeight = lineHeight + paddingTop + paddingBottom + borderTop + borderBottom;
     },
@@ -504,7 +504,7 @@
     // Initialize auto-resize for prompt textarea
     initAutoResizeTextarea: function() {
       const $textarea = $(this.config.selectors.promptTextarea);
-      
+
       if ($textarea.length === 0) return;
 
       const element = $textarea[0];
@@ -514,10 +514,10 @@
       element.style.maxHeight = '400px';
       element.style.overflow = 'hidden';
       element.style.resize = 'none';
-      
+
       // Calculate and store min height
       this.calculateMinHeight($textarea);
-      
+
       // Set initial height to min height
       element.style.height = element._minHeight + 'px';
 
@@ -536,17 +536,17 @@
     initVisibilityObserver: function() {
       console.log('🔍 Starting initVisibilityObserver...');
       console.log('📝 Found root cause: #nme-aiimagegeneration is controlled by sidePanel tab system');
-      
+
       const self = this;
-      
+
       // Method 1: Listen to tab click events (most reliable)
       $(document).on('click', '.nme-setting-panels-tabs a', function() {
         const targetId = $(this).data('target-id');
         console.log('🗁 Tab clicked, target ID:', targetId);
-        
+
         if (targetId === 'nme-aiimagegeneration') {
           console.log('✅ AI Image Generation tab clicked! Scheduling textarea height refresh...');
-          
+
           // Wait for DOM to update after tab switch
           setTimeout(() => {
             console.log('⚡ Executing onContainerVisible() after tab switch...');
@@ -554,7 +554,7 @@
           }, 100);
         }
       });
-      
+
       // Method 2: Check initial state if tab is already active
       const checkInitialState = () => {
         const currentContainer = document.querySelector('#nme-aiimagegeneration');
@@ -567,13 +567,13 @@
         }
         return false;
       };
-      
+
       // Check initial state with multiple attempts
       if (!checkInitialState()) {
         setTimeout(checkInitialState, 500);
         setTimeout(checkInitialState, 1000);
       }
-      
+
       console.log('✅ Tab click event listener initialized');
       console.log('🛠️ Simple and reliable solution based on actual tab switching mechanism');
     },
@@ -581,11 +581,11 @@
     // Handle container becoming visible with enhanced debugging
     onContainerVisible: function() {
       console.log('🚀 onContainerVisible() called!');
-      
+
       const $textarea = $(this.config.selectors.promptTextarea);
       console.log('🔍 Textarea selector:', this.config.selectors.promptTextarea);
       console.log('🔍 Textarea found:', $textarea.length > 0);
-      
+
       if ($textarea.length === 0) {
         console.error('❌ Textarea not found with selector:', this.config.selectors.promptTextarea);
         return;
@@ -599,7 +599,7 @@
         value: element.value,
         valueLength: element.value ? element.value.length : 0
       });
-      
+
       // Check if container is actually visible now
       if (element.offsetHeight === 0) {
         console.log('⚠️ Container still not visible (offsetHeight = 0), skipping height recalculation');
@@ -607,30 +607,30 @@
       }
 
       console.log('✅ Container is visible! Proceeding with height recalculation...');
-      
+
       // Recalculate min height since previous calculation was done when hidden
       console.log('🔄 Recalculating min height...');
       const oldMinHeight = element._minHeight;
       this.calculateMinHeight($textarea);
       const newMinHeight = element._minHeight;
-      
+
       console.log('📐 Min height calculation:', {
         oldMinHeight: oldMinHeight,
         newMinHeight: newMinHeight,
         changed: oldMinHeight !== newMinHeight
       });
-      
+
       // Reset and recalculate height
       console.log('🔄 Resetting textarea height...');
       element.style.height = element._minHeight + 'px';
-      
+
       if (element.value) {
         console.log('📝 Textarea has content, calling autoResizeTextarea...');
         this.autoResizeTextarea($textarea);
       } else {
         console.log('📝 Textarea is empty, keeping min height');
       }
-      
+
       console.log('✅ Textarea height refresh completed!', {
         finalHeight: element.style.height,
         finalScrollHeight: element.scrollHeight,
@@ -642,66 +642,68 @@
     loadingManager: {
       // Stage configuration with time intervals and messages
       stages: [
-        { message: '送出請求中...', duration: 2000, progress: 15 },
-        { message: '轉譯您的提示詞...', duration: 5000, progress: 40 },
-        { message: '產製圖片中...', duration: 28000, progress: 90 },
-        { message: '系統繁忙，正在啟用備援通道加速，請稍候...', duration: 0, progress: 95 }
+        { message: '送出請求中...', duration: 5000, progress: 5 },
+        { message: '轉譯您的提示詞...', duration: 5000, progress: 10 },
+        { message: '產製圖片中...', duration: 10000, progress: 20 },
+        { message: '產製圖片中...', duration: 10000, progress: 60 },
+        { message: '產製圖片中...', duration: 5000, progress: 80 },
+        { message: '系統繁忙，正在啟用備援通道加速，請稍候...', duration: 0, progress: 90 }
       ],
-      
+
       currentStage: 0,
       timers: [],
       isActive: false,
-      
+
       // Show loading overlay with staged progress
       show: function() {
         const $container = $(NetiAIImageGeneration.config.container);
         const $overlay = $container.find('.loading-overlay');
         const $image = $container.find('.image-placeholder img');
-        
+
         // Hide existing image and show loading overlay
         $image.hide();
         $overlay.show();
-        
+
         // Reset state
         this.currentStage = 0;
         this.isActive = true;
         this.clearTimers();
-        
+
         // Start stage progression
         this.nextStage();
-        
+
         console.log('Loading state manager: Started');
       },
-      
+
       // Hide loading overlay
       hide: function() {
         const $container = $(NetiAIImageGeneration.config.container);
         const $overlay = $container.find('.loading-overlay');
         const $image = $container.find('.image-placeholder img');
-        
+
         // Clear all timers
         this.clearTimers();
         this.isActive = false;
-        
+
         // Hide loading overlay and show image
         $overlay.hide();
         $image.show();
-        
+
         console.log('Loading state manager: Stopped');
       },
-      
+
       // Progress to next stage
       nextStage: function() {
         if (!this.isActive || this.currentStage >= this.stages.length) {
           return;
         }
-        
+
         const stage = this.stages[this.currentStage];
         this.updateMessage(stage.message);
         this.updateProgress(stage.progress);
-        
+
         console.log('Loading stage:', this.currentStage + 1, '-', stage.message);
-        
+
         // Set timer for next stage if not the last stage and has duration
         if (this.currentStage < this.stages.length - 1 && stage.duration > 0) {
           const timer = setTimeout(() => {
@@ -710,25 +712,25 @@
               this.nextStage();
             }
           }, stage.duration);
-          
+
           this.timers.push(timer);
         }
-        
-        this.currentStage++;
+
+        // Note: currentStage is incremented in setTimeout callback, not here
       },
-      
+
       // Update loading message
       updateMessage: function(message) {
         const $container = $(NetiAIImageGeneration.config.container);
         $container.find('.loading-message').text(message);
       },
-      
+
       // Update progress bar
       updateProgress: function(progress) {
         const $container = $(NetiAIImageGeneration.config.container);
         $container.find('.progress-fill').css('width', progress + '%');
       },
-      
+
       // Clear all timers
       clearTimers: function() {
         this.timers.forEach(timer => clearTimeout(timer));
@@ -794,9 +796,9 @@
       setPrompt: function(text) {
         const $textarea = $(NetiAIImageGeneration.config.container)
           .find(NetiAIImageGeneration.config.selectors.promptTextarea);
-          
+
         $textarea.val(text);
-        
+
         // Trigger auto-resize after setting text
         requestAnimationFrame(function() {
           NetiAIImageGeneration.autoResizeTextarea($textarea);
