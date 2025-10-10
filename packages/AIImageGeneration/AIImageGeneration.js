@@ -433,6 +433,7 @@
         <div class="loading-overlay" style="display: none;">
           <div class="loading-spinner"></div>
           <div class="loading-message">送出請求中...</div>
+          <div class="loading-timer">00.00</div>
           <div class="loading-progress">
             <div class="progress-bar">
               <div class="progress-fill"></div>
@@ -719,6 +720,10 @@
       currentStage: 0,
       timers: [],
       isActive: false,
+      
+      // Timer related properties
+      startTime: null,
+      timerInterval: null,
 
       // Show loading overlay with staged progress
       show: function() {
@@ -735,6 +740,9 @@
         this.isActive = true;
         this.clearTimers();
 
+        // Initialize timer
+        this.startTimer();
+
         // Start stage progression
         this.nextStage();
 
@@ -749,6 +757,7 @@
 
         // Clear all timers
         this.clearTimers();
+        this.stopTimer();
         this.isActive = false;
 
         // Hide loading overlay and show image
@@ -801,6 +810,43 @@
       clearTimers: function() {
         this.timers.forEach(timer => clearTimeout(timer));
         this.timers = [];
+      },
+
+      // Start the timer display
+      startTimer: function() {
+        this.startTime = Date.now();
+        this.updateTimer();
+        
+        // Update timer every 10ms for millisecond precision
+        this.timerInterval = setInterval(() => {
+          if (this.isActive) {
+            this.updateTimer();
+          }
+        }, 10);
+      },
+
+      // Stop the timer
+      stopTimer: function() {
+        if (this.timerInterval) {
+          clearInterval(this.timerInterval);
+          this.timerInterval = null;
+        }
+        this.startTime = null;
+      },
+
+      // Update timer display
+      updateTimer: function() {
+        if (!this.startTime || !this.isActive) return;
+
+        const elapsed = Date.now() - this.startTime;
+        const seconds = Math.floor(elapsed / 1000);
+        const milliseconds = Math.floor((elapsed % 1000) / 10); // Display centiseconds (00-99)
+
+        // Format as SS.MM (seconds.centiseconds)
+        const formattedTime = `${seconds.toString().padStart(2, '0')}.${milliseconds.toString().padStart(2, '0')}`;
+
+        const $container = $(NetiAIImageGeneration.config.container);
+        $container.find('.loading-timer').text(formattedTime);
       }
     },
 

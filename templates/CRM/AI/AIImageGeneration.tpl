@@ -18,6 +18,7 @@
             <div class="loading-overlay" style="display: none;">
               <div class="loading-spinner"></div>
               <div class="loading-message">送出請求中...</div>
+              <div class="loading-timer">00.00</div>
               <div class="loading-progress">
                 <div class="progress-bar">
                   <div class="progress-fill"></div>
