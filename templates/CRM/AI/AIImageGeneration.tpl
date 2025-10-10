@@ -4,6 +4,17 @@
 {* AIImageGeneration JavaScript *}
 {js src=packages/AIImageGeneration/AIImageGeneration.js group=999 weight=998 library=civicrm/civicrm-js-aiimagegeneration}{/js}
 
+{* Added global js variable: AIImageGeneration *}
+{literal}
+<script type="text/javascript">
+window.AIImageGeneration = {
+  translation: {
+    "seconds": "{/literal}{ts}seconds{/ts}{literal}"
+  }
+};
+</script>
+{/literal}
+
 {* AIImageGeneration HTML interface *}
 <div class="netiaiig-container">
   <div class="netiaiig-inner">
@@ -18,7 +29,7 @@
             <div class="loading-overlay" style="display: none;">
               <div class="loading-spinner"></div>
               <div class="loading-message">送出請求中...</div>
-              <div class="loading-timer">00.00</div>
+              <div class="loading-timer">00.00 {ts}seconds{/ts}</div>
               <div class="loading-progress">
                 <div class="progress-bar">
                   <div class="progress-fill"></div>

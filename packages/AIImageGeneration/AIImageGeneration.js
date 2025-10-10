@@ -429,11 +429,16 @@
 
     // Restore loading overlay structure when missing
     restoreLoadingOverlay: function($container) {
+      // Get translation for "seconds"
+      const secondsLabel = window.AIImageGeneration && window.AIImageGeneration.translation 
+        ? window.AIImageGeneration.translation.seconds 
+        : 'seconds';
+        
       const loadingOverlayHtml = `
         <div class="loading-overlay" style="display: none;">
           <div class="loading-spinner"></div>
           <div class="loading-message">送出請求中...</div>
-          <div class="loading-timer">00.00</div>
+          <div class="loading-timer">00.00 ${secondsLabel}</div>
           <div class="loading-progress">
             <div class="progress-bar">
               <div class="progress-fill"></div>
@@ -844,9 +849,16 @@
 
         // Format as SS.MM (seconds.centiseconds)
         const formattedTime = `${seconds.toString().padStart(2, '0')}.${milliseconds.toString().padStart(2, '0')}`;
+        
+        // Get translation for "seconds"
+        const secondsLabel = window.AIImageGeneration && window.AIImageGeneration.translation 
+          ? window.AIImageGeneration.translation.seconds 
+          : 'seconds';
+        
+        const displayText = `${formattedTime} ${secondsLabel}`;
 
         const $container = $(NetiAIImageGeneration.config.container);
-        $container.find('.loading-timer').text(formattedTime);
+        $container.find('.loading-timer').text(displayText);
       }
     },
 
