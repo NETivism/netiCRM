@@ -732,52 +732,12 @@
 /* AI Generated Image Lightbox Styles */
 .netiaiig-container .ai-generated-image {
   cursor: pointer;
-  transition: transform 0.2s ease, filter 0.2s ease;
+  transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
 .netiaiig-container .ai-generated-image:hover {
-  transform: scale(1.02);
-  filter: brightness(1.1);
-}
-
-.netiaiig-container .ai-generated-image:active {
-  transform: scale(0.98);
-}
-
-/* Add subtle zoom indicator */
-.netiaiig-container .generated-image:hover .ai-generated-image::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 40px;
-  height: 40px;
-  margin: -20px 0 0 -20px;
-  background: rgba(0, 0, 0, 0.6);
-  border-radius: 50%;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-  pointer-events: none;
-  background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTkuNSA5LjVMMTQuNSAxNC41TTkuNSAxNC41TDE0LjUgOS41IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8cGF0aCBkPSJNMjEgMTJDMjEgMTYuOTcwNiAxNi45NzA2IDIxIDEyIDIxUzcgMTYuOTcwNiA3IDEyQzcgNy4wMjk0NCAxMS4wMjk0IDMgMTYgM1MyNSA3LjAyOTQgMjUgMTJaIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiLz4KPC9zdmc+');
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 20px 20px;
-}
-
-.netiaiig-container .generated-image:hover .ai-generated-image:hover::after {
-  opacity: 1;
-}
-
-/* Magnific Popup customization for AI images */
-.mfp-ai-image .mfp-counter {
-  color: #ffffff;
-}
-
-.mfp-ai-image .mfp-title {
-  color: #ffffff;
-  font-size: 14px;
-  text-align: center;
-  padding: 0 0 10px 0;
+  transform: scale(1.05);
+  opacity: 0.9;
 }
 
 /* Dark mode support */

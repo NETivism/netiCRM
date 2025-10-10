@@ -943,60 +943,58 @@
     initImageLightbox: function() {
       // Check if Magnific Popup is available
       if (typeof $.magnificPopup !== 'undefined') {
-        // Initialize lightbox for AI generated images
-        this.bindLightboxEvents();
+        // Initialize lightbox for AI generated images using standard method
+        this.setupImageLightbox();
         console.log('Image lightbox initialized');
       } else {
         console.warn('Magnific Popup not available - lightbox functionality disabled');
       }
     },
 
-    // Bind lightbox events for AI generated images
-    bindLightboxEvents: function() {
-      const self = this;
+    // Setup image lightbox using standard Magnific Popup method
+    setupImageLightbox: function() {
+      // Remove any existing lightbox events to avoid conflicts
+      $(this.config.container).off('click.aiImageLightbox');
       
-      // Use event delegation to handle dynamically added images
-      $(this.config.container).off('click.aiImageLightbox').on('click.aiImageLightbox', '.ai-generated-image', function(e) {
+      // Debug: Check if Magnific Popup is properly loaded
+      console.log('Magnific Popup available:', typeof $.magnificPopup !== 'undefined');
+      
+      // Bind click event for AI generated images
+      $(this.config.container).on('click.aiImageLightbox', '.ai-generated-image', function(e) {
         e.preventDefault();
         e.stopPropagation();
         
         const $img = $(this);
         const imageUrl = $img.attr('src');
         
-        // Only open lightbox for valid generated images (not placeholders)
-        if (!self.hasGeneratedImage()) {
+        console.log('AI image clicked:', {
+          hasClass: $img.hasClass('ai-generated-image'),
+          imageUrl: imageUrl,
+          isPlaceholder: imageUrl && (imageUrl.includes('thumb-00.png') || imageUrl.includes('placeholder'))
+        });
+        
+        // Validate image URL and ensure it's a generated image
+        if (!imageUrl || imageUrl.includes('thumb-00.png') || imageUrl.includes('placeholder')) {
+          console.log('Skipping lightbox for placeholder image');
           return;
         }
         
-        console.log('Opening lightbox for image:', imageUrl);
+        console.log('Opening lightbox for AI generated image:', imageUrl);
         
-        // Open image in lightbox
+        // Open lightbox with simple configuration
         $.magnificPopup.open({
           items: {
             src: imageUrl,
             type: 'image'
           },
           image: {
-            titleSrc: function() {
-              return 'AI 生成圖片';
-            }
+            titleSrc: 'AI 生成圖片'
           },
           closeOnContentClick: true,
-          closeBtnInside: false,
-          fixedContentPos: true,
-          mainClass: 'mfp-no-margins mfp-with-zoom mfp-ai-image',
+          mainClass: 'mfp-with-zoom',
           zoom: {
             enabled: true,
-            duration: 300,
-            easing: 'ease-in-out'
-          },
-          callbacks: {
-            open: function() {
-              console.log('Lightbox opened for AI generated image');
-            },
-            close: function() {
-              console.log('Lightbox closed');
-            }
+            duration: 300
           }
         });
       });
