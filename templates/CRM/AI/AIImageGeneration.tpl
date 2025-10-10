@@ -44,13 +44,13 @@ window.AIImageGeneration = {
 
           {* Floating action buttons *}
           <div class="floating-actions">
-            <button type="button" class="floating-btn" data-tooltip="Regenerate">
+            <button type="button" class="floating-btn" title="{ts}Regenerate{/ts}" data-tooltip data-tooltip-placement="nw">
               <i class="zmdi zmdi-refresh"></i>
             </button>
-            <button type="button" class="floating-btn" data-tooltip="Insert to Editor">
+            <button type="button" class="floating-btn" title="{ts}Insert to Editor{/ts}" data-tooltip data-tooltip-placement="nw">
               <i class="zmdi zmdi-collection-plus"></i>
             </button>
-            <button type="button" class="floating-btn" data-tooltip="Download Image">
+            <button type="button" class="floating-btn" title="{ts}Download Image{/ts}" data-tooltip data-tooltip-placement="nw">
               <i class="zmdi zmdi-download"></i>
             </button>
           </div>
@@ -65,7 +65,7 @@ window.AIImageGeneration = {
             {* Embedded control buttons *}
             <div class="embedded-controls">
               <div class="netiaiig-dropdown" id="styleDropdown">
-                <button type="button" class="embedded-btn dropdown-toggle" data-tooltip="Select Art Style">
+                <button type="button" class="embedded-btn dropdown-toggle" title="{ts}Select Art Style{/ts}" data-tooltip data-tooltip-placement="n">
                   <i class="zmdi zmdi-flower-alt"></i>
                   <span id="styleText">Children's Book Illustration</span>
                   <i class="zmdi zmdi-chevron-down"></i>
@@ -101,7 +101,7 @@ window.AIImageGeneration = {
               </div>
 
               <div class="netiaiig-dropdown" id="ratioDropdown">
-                <button type="button" class="embedded-btn dropdown-toggle" data-tooltip="Select Aspect Ratio">
+                <button type="button" class="embedded-btn dropdown-toggle" title="{ts}Select Aspect Ratio{/ts}" data-tooltip data-tooltip-placement="n">
                   <i class="zmdi zmdi-aspect-ratio-alt"></i>
                   <span id="ratioText">1:1</span>
                   <i class="zmdi zmdi-chevron-down"></i>

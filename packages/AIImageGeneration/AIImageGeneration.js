@@ -207,20 +207,18 @@
         return;
       }
 
-      const tooltip = $button.attr('data-tooltip');
+      // Get action from title attribute or data-tooltip for backwards compatibility
+      const title = $button.attr('title') || $button.attr('data-tooltip');
 
-      switch(tooltip) {
-        case 'Regenerate':
-          this.generateImage();
-          break;
-        case 'Insert to Editor':
-          this.insertToEditor();
-          break;
-        case 'Download Image':
-          this.downloadImage();
-          break;
-        default:
-          console.log('Unknown floating action:', tooltip);
+      // Determine action based on icon class or title
+      if ($button.find('.zmdi-refresh').length || title.includes('Regenerate')) {
+        this.generateImage();
+      } else if ($button.find('.zmdi-collection-plus').length || title.includes('Insert')) {
+        this.insertToEditor();
+      } else if ($button.find('.zmdi-download').length || title.includes('Download')) {
+        this.downloadImage();
+      } else {
+        console.log('Unknown floating action:', title);
       }
     },
 
@@ -926,22 +924,28 @@
       }
     },
 
-    // Initialize tooltips (if tooltip library is available)
+    // Initialize tooltips using powerTip (same as sidePanel)
     initializeTooltips: function() {
-      // Check if tooltip library is available
-      if (typeof tippy !== 'undefined') {
-        tippy('[data-tooltip]', {
-          content(reference) {
-            return reference.getAttribute('data-tooltip');
-          },
-          placement: 'top',
-          theme: 'dark',
-          maxWidth: 280,
-          animation: 'scale',
-          delay: [200, 100],
-          duration: [300, 200],
-          allowHTML: true,
-        });
+      // Use same tooltip system as sidePanel
+      var jq = $.fn.powerTip ? $ : jQuery.fn.powerTip ? jQuery : null;
+
+      if (jq) {
+        if ($(this.config.container).find('[data-tooltip]').length) {
+          $(this.config.container).find('[data-tooltip]:not(.tooltip-initialized)').each(function() {
+            let options = {};
+
+            if ($(this).is('[data-tooltip-placement]')) {
+              options.placement = $(this).data('tooltip-placement');
+            }
+
+            if ($(this).is('[data-tooltip-fadeouttime]')) {
+              options.fadeOutTime = $(this).data('tooltip-fadeouttime');
+            }
+
+            jq(this).powerTip(options);
+            $(this).addClass('tooltip-initialized');
+          });
+        }
       }
     },
 
