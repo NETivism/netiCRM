@@ -354,7 +354,7 @@
         // Find existing image and loading overlay, preserve structure
         let $existingImg = $imageContainer.find('img');
         const $loadingOverlay = $imageContainer.find('.loading-overlay');
-        
+
         // Ensure loading overlay structure exists
         if ($loadingOverlay.length === 0) {
           this.restoreLoadingOverlay($imageContainer);
@@ -373,21 +373,27 @@
         img.onload = function() {
           console.log('Image loaded successfully - displaying now');
           $img.attr('alt', 'AI 生成圖片');
-          
-          // Add specific class for AI generated images to enable lightbox functionality
+
+          // Add specific class for AI generated images
           $img.addClass('ai-generated-image');
-          
-          // Remove old image if exists and add new one
+
+          // Create anchor tag to wrap the image for lightbox functionality
+          const $link = $('<a>').attr({
+            'href': imageUrl,
+            'class': 'ai-image-link'
+          }).append($img);
+
+          // Remove old image if exists and add new wrapped image
           $existingImg.remove();
-          
-          // Insert new image before loading-overlay to maintain structure
+
+          // Insert new link before loading-overlay to maintain structure
           const $overlay = $imageContainer.find('.loading-overlay');
           if ($overlay.length > 0) {
-            $overlay.before($img);
+            $overlay.before($link);
           } else {
-            $imageContainer.prepend($img);
+            $imageContainer.prepend($link);
           }
-          
+
           // Update floating actions state after image is successfully loaded
           setTimeout(() => {
             NetiAIImageGeneration.updateFloatingActionsBasedOnImage();
@@ -422,12 +428,12 @@
         // Reset to initial state, preserve loading-overlay
         const $existingImg = $imageContainer.find('img');
         const $loadingOverlay = $imageContainer.find('.loading-overlay');
-        
+
         // Ensure loading overlay structure exists
         if ($loadingOverlay.length === 0) {
           this.restoreLoadingOverlay($imageContainer);
         }
-        
+
         if ($existingImg.length > 0) {
           $existingImg.attr('src', '../images/thumb-00.png').attr('alt', '').show();
         } else {
@@ -440,7 +446,7 @@
             $imageContainer.prepend($defaultImg);
           }
         }
-        
+
         // Update floating actions state when resetting to placeholder
         setTimeout(() => {
           NetiAIImageGeneration.updateFloatingActionsBasedOnImage();
@@ -451,10 +457,10 @@
     // Restore loading overlay structure when missing
     restoreLoadingOverlay: function($container) {
       // Get translation for "seconds"
-      const secondsLabel = window.AIImageGeneration && window.AIImageGeneration.translation 
-        ? window.AIImageGeneration.translation.seconds 
+      const secondsLabel = window.AIImageGeneration && window.AIImageGeneration.translation
+        ? window.AIImageGeneration.translation.seconds
         : 'seconds';
-        
+
       const loadingOverlayHtml = `
         <div class="loading-overlay" style="display: none;">
           <div class="loading-spinner"></div>
@@ -467,7 +473,7 @@
           </div>
         </div>
       `;
-      
+
       $container.append(loadingOverlayHtml);
       console.log('Loading overlay structure restored');
     },
@@ -479,9 +485,9 @@
         return;
       }
 
-      const $image = $(this.config.container).find('.image-placeholder img');
+      const $image = $(this.config.container).find('.image-placeholder .ai-generated-image');
       const imageUrl = $image.attr('src');
-      
+
       console.log('Inserting image to editor:', imageUrl);
 
       // Trigger custom event for parent component to handle
@@ -497,9 +503,9 @@
         return;
       }
 
-      const $image = $(this.config.container).find('.image-placeholder img');
+      const $image = $(this.config.container).find('.image-placeholder .ai-generated-image');
       const imageUrl = $image.attr('src');
-      
+
       console.log('Downloading image:', imageUrl);
 
       // Extract file extension from URL or default to webp
@@ -531,7 +537,7 @@
       if ($img.length > 0) {
         const imageUrl = $img.attr('src');
         this.displayGeneratedImage(imageUrl);
-        
+
         // Update floating actions after loading history image
         setTimeout(() => {
           this.updateFloatingActionsBasedOnImage();
@@ -753,7 +759,7 @@
       currentStage: 0,
       timers: [],
       isActive: false,
-      
+
       // Timer related properties
       startTime: null,
       timerInterval: null,
@@ -855,7 +861,7 @@
       startTimer: function() {
         this.startTime = Date.now();
         this.updateTimer();
-        
+
         // Update timer every 10ms for millisecond precision
         this.timerInterval = setInterval(() => {
           if (this.isActive) {
@@ -883,12 +889,12 @@
 
         // Format as SS.MM (seconds.centiseconds)
         const formattedTime = `${seconds.toString().padStart(2, '0')}.${milliseconds.toString().padStart(2, '0')}`;
-        
+
         // Get translation for "seconds"
-        const secondsLabel = window.AIImageGeneration && window.AIImageGeneration.translation 
-          ? window.AIImageGeneration.translation.seconds 
+        const secondsLabel = window.AIImageGeneration && window.AIImageGeneration.translation
+          ? window.AIImageGeneration.translation.seconds
           : 'seconds';
-        
+
         const displayText = `${formattedTime} ${secondsLabel}`;
 
         const $container = $(NetiAIImageGeneration.config.container);
@@ -898,21 +904,21 @@
       // Reset loading state to initial values
       resetLoadingState: function() {
         const $container = $(NetiAIImageGeneration.config.container);
-        
+
         // Get translation for "seconds"
-        const secondsLabel = window.AIImageGeneration && window.AIImageGeneration.translation 
-          ? window.AIImageGeneration.translation.seconds 
+        const secondsLabel = window.AIImageGeneration && window.AIImageGeneration.translation
+          ? window.AIImageGeneration.translation.seconds
           : 'seconds';
 
         // Reset progress bar to 0%
         $container.find('.progress-fill').css('width', '0%');
-        
+
         // Reset message to initial state
         $container.find('.loading-message').text('送出請求中...');
-        
+
         // Reset timer to initial state
         $container.find('.loading-timer').text(`00.00 ${secondsLabel}`);
-        
+
         // Reset internal state
         this.currentStage = 0;
 
@@ -953,50 +959,19 @@
 
     // Setup image lightbox using standard Magnific Popup method
     setupImageLightbox: function() {
-      // Remove any existing lightbox events to avoid conflicts
-      $(this.config.container).off('click.aiImageLightbox');
-      
-      // Debug: Check if Magnific Popup is properly loaded
-      console.log('Magnific Popup available:', typeof $.magnificPopup !== 'undefined');
-      
-      // Bind click event for AI generated images
-      $(this.config.container).on('click.aiImageLightbox', '.ai-generated-image', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        
-        const $img = $(this);
-        const imageUrl = $img.attr('src');
-        
-        console.log('AI image clicked:', {
-          hasClass: $img.hasClass('ai-generated-image'),
-          imageUrl: imageUrl,
-          isPlaceholder: imageUrl && (imageUrl.includes('thumb-00.png') || imageUrl.includes('placeholder'))
-        });
-        
-        // Validate image URL and ensure it's a generated image
-        if (!imageUrl || imageUrl.includes('thumb-00.png') || imageUrl.includes('placeholder')) {
-          console.log('Skipping lightbox for placeholder image');
-          return;
+      // Initialize Magnific Popup for AI image links using standard method
+      $(this.config.container).magnificPopup({
+        delegate: '.ai-image-link',
+        type: 'image',
+        image: {
+          titleSrc: 'AI 生成圖片'
+        },
+        closeOnContentClick: true,
+        mainClass: 'mfp-with-zoom',
+        zoom: {
+          enabled: true,
+          duration: 300
         }
-        
-        console.log('Opening lightbox for AI generated image:', imageUrl);
-        
-        // Open lightbox with simple configuration
-        $.magnificPopup.open({
-          items: {
-            src: imageUrl,
-            type: 'image'
-          },
-          image: {
-            titleSrc: 'AI 生成圖片'
-          },
-          closeOnContentClick: true,
-          mainClass: 'mfp-with-zoom',
-          zoom: {
-            enabled: true,
-            duration: 300
-          }
-        });
       });
     },
 
@@ -1058,22 +1033,22 @@
 
     // Check if current image exists and is a real generated image
     hasGeneratedImage: function() {
-      const $image = $(this.config.container).find('.image-placeholder img');
-      
+      const $image = $(this.config.container).find('.image-placeholder .ai-generated-image');
+
       if ($image.length === 0) {
         return false;
       }
-      
+
       const src = $image.attr('src');
       if (!src) {
         return false;
       }
-      
+
       // Check if it's a placeholder image (not a real generated image)
-      const isPlaceholder = src.includes('thumb-00.png') || 
-                           src.includes('placeholder') || 
+      const isPlaceholder = src.includes('thumb-00.png') ||
+                           src.includes('placeholder') ||
                            src.endsWith('thumb-00.png');
-      
+
       return !isPlaceholder;
     },
 
