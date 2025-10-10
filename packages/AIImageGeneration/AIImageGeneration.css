@@ -123,6 +123,22 @@
   transform: translateY(0);
 }
 
+.netiaiig-container .floating-btn:disabled,
+.netiaiig-container .floating-btn.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+  transform: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.netiaiig-container .floating-btn:disabled:hover,
+.netiaiig-container .floating-btn.disabled:hover {
+  background: rgba(255, 255, 255, 0.95);
+  transform: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
 /* Controls section */
 .netiaiig-container .controls {
   padding: 20px 0;
@@ -805,5 +821,18 @@
 
   .netiaiig-container .loading-progress {
     background: #48484a;
+  }
+
+  .netiaiig-container .floating-btn:disabled,
+  .netiaiig-container .floating-btn.disabled {
+    opacity: 0.4;
+    background: rgba(44, 44, 46, 0.7);
+  }
+
+  .netiaiig-container .floating-btn:disabled:hover,
+  .netiaiig-container .floating-btn.disabled:hover {
+    background: rgba(44, 44, 46, 0.7);
+    transform: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
 }

@@ -37,8 +37,8 @@
       this.initAutoResizeTextarea();
       this.initVisibilityObserver();
 
-      // Initialize floating buttons state (disabled by default)
-      this.updateFloatingButtonsState(false);
+      // Initialize floating actions state based on current image
+      this.updateFloatingActionsBasedOnImage();
 
       console.log('AI Image Generation component initialized');
     },
@@ -194,8 +194,14 @@
 
     // Handle floating action buttons
     handleFloatingAction: function($button) {
-      // Check if button is disabled
-      if ($button.hasClass(this.config.classes.disabled)) {
+      // Check if button is disabled (both HTML attribute and CSS class)
+      if ($button.prop('disabled') || $button.hasClass(this.config.classes.disabled)) {
+        this.showError('功能暫時無法使用，請先生成圖片');
+        return;
+      }
+
+      // Double check if we have a valid image
+      if (!this.hasGeneratedImage()) {
         this.showError('請先生成圖片');
         return;
       }
@@ -319,18 +325,19 @@
       if (imageUrl) {
         this.displayGeneratedImage(imageUrl);
 
-        // Enable floating action buttons when image is generated
-        this.updateFloatingButtonsState(true);
-
         console.log('Image generation completed successfully:', {
           imageUrl: imageUrl,
           responseData: responseData
         });
       } else {
-        // Disable floating action buttons when no image
-        this.updateFloatingButtonsState(false);
         console.log('Image generation completed without result');
       }
+
+      // Update floating actions based on actual image state
+      // Wait a moment for displayGeneratedImage to complete
+      setTimeout(() => {
+        this.updateFloatingActionsBasedOnImage();
+      }, 100);
 
       // Trigger custom event with full response data
       $(this.config.container).trigger('generationComplete', [imageUrl, responseData]);
@@ -376,6 +383,11 @@
           } else {
             $imageContainer.prepend($img);
           }
+          
+          // Update floating actions state after image is successfully loaded
+          setTimeout(() => {
+            NetiAIImageGeneration.updateFloatingActionsBasedOnImage();
+          }, 50);
         };
 
         // Set up error handler
@@ -424,6 +436,11 @@
             $imageContainer.prepend($defaultImg);
           }
         }
+        
+        // Update floating actions state when resetting to placeholder
+        setTimeout(() => {
+          NetiAIImageGeneration.updateFloatingActionsBasedOnImage();
+        }, 50);
       }
     },
 
@@ -453,50 +470,52 @@
 
     // Insert image to editor
     insertToEditor: function() {
-      const $image = $(this.config.container).find('.image-placeholder img');
-
-      if ($image.length > 0) {
-        const imageUrl = $image.attr('src');
-        console.log('Inserting image to editor:', imageUrl);
-
-        // Trigger custom event for parent component to handle
-        $(this.config.container).trigger('insertToEditor', [imageUrl]);
-
-        this.showSuccess('圖片已插入編輯器');
-      } else {
+      if (!this.hasGeneratedImage()) {
         this.showError('沒有圖片可供插入');
+        return;
       }
+
+      const $image = $(this.config.container).find('.image-placeholder img');
+      const imageUrl = $image.attr('src');
+      
+      console.log('Inserting image to editor:', imageUrl);
+
+      // Trigger custom event for parent component to handle
+      $(this.config.container).trigger('insertToEditor', [imageUrl]);
+
+      this.showSuccess('圖片已插入編輯器');
     },
 
     // Download generated image
     downloadImage: function() {
-      const $image = $(this.config.container).find('.image-placeholder img');
-
-      if ($image.length > 0) {
-        const imageUrl = $image.attr('src');
-        console.log('Downloading image:', imageUrl);
-
-        // Extract file extension from URL or default to webp
-        const getFileExtension = (url) => {
-          const match = url.match(/\.([a-zA-Z0-9]+)(?:\?|$)/);
-          return match ? match[1] : 'webp';
-        };
-
-        const fileExtension = getFileExtension(imageUrl);
-        const timestamp = Date.now();
-        const fileName = `ai-generated-image-${timestamp}.${fileExtension}`;
-
-        // Create download link
-        const link = document.createElement('a');
-        link.href = imageUrl;
-        link.download = fileName;
-        link.click();
-
-        console.log('Downloading as:', fileName);
-        this.showSuccess('圖片下載已開始');
-      } else {
+      if (!this.hasGeneratedImage()) {
         this.showError('沒有圖片可供下載');
+        return;
       }
+
+      const $image = $(this.config.container).find('.image-placeholder img');
+      const imageUrl = $image.attr('src');
+      
+      console.log('Downloading image:', imageUrl);
+
+      // Extract file extension from URL or default to webp
+      const getFileExtension = (url) => {
+        const match = url.match(/\.([a-zA-Z0-9]+)(?:\?|$)/);
+        return match ? match[1] : 'webp';
+      };
+
+      const fileExtension = getFileExtension(imageUrl);
+      const timestamp = Date.now();
+      const fileName = `ai-generated-image-${timestamp}.${fileExtension}`;
+
+      // Create download link
+      const link = document.createElement('a');
+      link.href = imageUrl;
+      link.download = fileName;
+      link.click();
+
+      console.log('Downloading as:', fileName);
+      this.showSuccess('圖片下載已開始');
     },
 
     // Load history image
@@ -508,6 +527,11 @@
       if ($img.length > 0) {
         const imageUrl = $img.attr('src');
         this.displayGeneratedImage(imageUrl);
+        
+        // Update floating actions after loading history image
+        setTimeout(() => {
+          this.updateFloatingActionsBasedOnImage();
+        }, 100);
       }
 
       // Trigger custom event
@@ -740,6 +764,9 @@
         $image.hide();
         $overlay.show();
 
+        // Hide floating actions during loading
+        NetiAIImageGeneration.setFloatingActionsState('hidden');
+
         // Reset state
         this.currentStage = 0;
         this.isActive = true;
@@ -924,21 +951,65 @@
       $(this.config.container).trigger('aiImageError', [message]);
     },
 
-    // Update floating buttons state
+    // Update floating buttons state (legacy method, use updateFloatingActionsBasedOnImage instead)
     updateFloatingButtonsState: function(hasImage) {
-      const $floatingBtns = $(this.config.container).find(this.config.selectors.floatingBtn);
+      // Legacy method - now uses image detection
+      this.updateFloatingActionsBasedOnImage();
+    },
 
-      if (hasImage) {
-        $floatingBtns.removeClass(this.config.classes.disabled);
-      } else {
-        $floatingBtns.addClass(this.config.classes.disabled);
+    // Set floating actions state based on image availability
+    setFloatingActionsState: function(state) {
+      const $floatingActions = $(this.config.container).find('.floating-actions');
+      const $floatingBtns = $floatingActions.find(this.config.selectors.floatingBtn);
+
+      switch(state) {
+        case 'hidden':
+          // Hide entire floating actions container (loading or no image)
+          $floatingActions.hide();
+          $floatingBtns.prop('disabled', true).addClass(this.config.classes.disabled);
+          console.log('Floating actions: Hidden (no image or loading)');
+          break;
+
+        case 'enabled':
+          // Show floating actions and enable all buttons (has real image)
+          $floatingActions.show();
+          $floatingBtns.prop('disabled', false).removeClass(this.config.classes.disabled);
+          console.log('Floating actions: Visible and enabled (has image)');
+          break;
+
+        default:
+          console.warn('Invalid floating actions state:', state, 'Valid states: hidden, enabled');
       }
     },
 
-    // Check if current image exists
+    // Update floating actions based on current image state
+    updateFloatingActionsBasedOnImage: function() {
+      if (this.hasGeneratedImage()) {
+        this.setFloatingActionsState('enabled');
+      } else {
+        this.setFloatingActionsState('hidden');
+      }
+    },
+
+    // Check if current image exists and is a real generated image
     hasGeneratedImage: function() {
       const $image = $(this.config.container).find('.image-placeholder img');
-      return $image.length > 0 && $image.attr('src');
+      
+      if ($image.length === 0) {
+        return false;
+      }
+      
+      const src = $image.attr('src');
+      if (!src) {
+        return false;
+      }
+      
+      // Check if it's a placeholder image (not a real generated image)
+      const isPlaceholder = src.includes('thumb-00.png') || 
+                           src.includes('placeholder') || 
+                           src.endsWith('thumb-00.png');
+      
+      return !isPlaceholder;
     },
 
     // Public API methods
