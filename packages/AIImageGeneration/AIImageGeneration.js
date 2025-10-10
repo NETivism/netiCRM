@@ -36,6 +36,7 @@
       this.initializeTooltips();
       this.initAutoResizeTextarea();
       this.initVisibilityObserver();
+      this.initImageLightbox();
 
       // Initialize floating actions state based on current image
       this.updateFloatingActionsBasedOnImage();
@@ -372,6 +373,9 @@
         img.onload = function() {
           console.log('Image loaded successfully - displaying now');
           $img.attr('alt', 'AI 生成圖片');
+          
+          // Add specific class for AI generated images to enable lightbox functionality
+          $img.addClass('ai-generated-image');
           
           // Remove old image if exists and add new one
           $existingImg.remove();
@@ -935,6 +939,69 @@
       }
     },
 
+    // Initialize image lightbox using Magnific Popup
+    initImageLightbox: function() {
+      // Check if Magnific Popup is available
+      if (typeof $.magnificPopup !== 'undefined') {
+        // Initialize lightbox for AI generated images
+        this.bindLightboxEvents();
+        console.log('Image lightbox initialized');
+      } else {
+        console.warn('Magnific Popup not available - lightbox functionality disabled');
+      }
+    },
+
+    // Bind lightbox events for AI generated images
+    bindLightboxEvents: function() {
+      const self = this;
+      
+      // Use event delegation to handle dynamically added images
+      $(this.config.container).off('click.aiImageLightbox').on('click.aiImageLightbox', '.ai-generated-image', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const $img = $(this);
+        const imageUrl = $img.attr('src');
+        
+        // Only open lightbox for valid generated images (not placeholders)
+        if (!self.hasGeneratedImage()) {
+          return;
+        }
+        
+        console.log('Opening lightbox for image:', imageUrl);
+        
+        // Open image in lightbox
+        $.magnificPopup.open({
+          items: {
+            src: imageUrl,
+            type: 'image'
+          },
+          image: {
+            titleSrc: function() {
+              return 'AI 生成圖片';
+            }
+          },
+          closeOnContentClick: true,
+          closeBtnInside: false,
+          fixedContentPos: true,
+          mainClass: 'mfp-no-margins mfp-with-zoom mfp-ai-image',
+          zoom: {
+            enabled: true,
+            duration: 300,
+            easing: 'ease-in-out'
+          },
+          callbacks: {
+            open: function() {
+              console.log('Lightbox opened for AI generated image');
+            },
+            close: function() {
+              console.log('Lightbox closed');
+            }
+          }
+        });
+      });
+    },
+
     // Show success message
     showSuccess: function(message) {
       console.log('Success:', message);
@@ -952,7 +1019,7 @@
     },
 
     // Update floating buttons state (legacy method, use updateFloatingActionsBasedOnImage instead)
-    updateFloatingButtonsState: function(hasImage) {
+    updateFloatingButtonsState: function() {
       // Legacy method - now uses image detection
       this.updateFloatingActionsBasedOnImage();
     },

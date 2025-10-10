@@ -1,3 +1,7 @@
+{* Magnific Popup *}
+<link rel="stylesheet" href="{$config->resourceBase}packages/Magnific-Popup/dist/magnific-popup.css?v{$config->ver}">
+{js src=packages/Magnific-Popup/dist/jquery.magnific-popup.min.js group=999 weight=997 library=civicrm/civicrm-js-mailingeditor}{/js}
+
 {* AIImageGeneration CSS *}
 <link rel="stylesheet" href="{$config->resourceBase}packages/AIImageGeneration/AIImageGeneration.css?v{$config->ver}">
 
@@ -24,7 +28,7 @@ window.AIImageGeneration = {
         <div class="generated-image">
           <div class="image-placeholder">
             <img src="../images/thumb-00.png" alt="">
-            
+
             {* Loading state overlay *}
             <div class="loading-overlay" style="display: none;">
               <div class="loading-spinner"></div>
