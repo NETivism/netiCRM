@@ -684,19 +684,10 @@
 
 .netiaiig-container .loading-timer {
   font-size: 14px;
-  font-weight: 500;
   color: #007aff;
-  font-family: 'Consolas', 'Monaco', 'Menlo', 'Liberation Mono', 'Courier New', monospace;
   text-align: center;
-  margin-bottom: 12px;
-  letter-spacing: 0.5px;
-  background: rgba(0, 122, 255, 0.05);
-  padding: 4px 12px;
-  border-radius: 8px;
-  border: 1px solid rgba(0, 122, 255, 0.15);
-  backdrop-filter: blur(4px);
   min-width: 60px;
-  display: inline-block;
+  margin: 12px;
 }
 
 .netiaiig-container .loading-progress {
@@ -711,6 +702,7 @@
   width: 100%;
   height: 100%;
   position: relative;
+  background: inherit;
 }
 
 .netiaiig-container .progress-fill {
