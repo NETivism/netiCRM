@@ -960,7 +960,7 @@
     // Setup image lightbox using standard Magnific Popup method
     setupImageLightbox: function() {
       // Initialize Magnific Popup for AI image links using standard method
-      $(this.config.container).magnificPopup({
+      $(document).magnificPopup({
         delegate: '.ai-image-link',
         type: 'image',
         image: {
