@@ -765,6 +765,9 @@
         this.stopTimer();
         this.isActive = false;
 
+        // Reset loading state to initial values
+        this.resetLoadingState();
+
         // Hide loading overlay and show image
         $overlay.hide();
         $image.show();
@@ -859,6 +862,30 @@
 
         const $container = $(NetiAIImageGeneration.config.container);
         $container.find('.loading-timer').text(displayText);
+      },
+
+      // Reset loading state to initial values
+      resetLoadingState: function() {
+        const $container = $(NetiAIImageGeneration.config.container);
+        
+        // Get translation for "seconds"
+        const secondsLabel = window.AIImageGeneration && window.AIImageGeneration.translation 
+          ? window.AIImageGeneration.translation.seconds 
+          : 'seconds';
+
+        // Reset progress bar to 0%
+        $container.find('.progress-fill').css('width', '0%');
+        
+        // Reset message to initial state
+        $container.find('.loading-message').text('送出請求中...');
+        
+        // Reset timer to initial state
+        $container.find('.loading-timer').text(`00.00 ${secondsLabel}`);
+        
+        // Reset internal state
+        this.currentStage = 0;
+
+        console.log('Loading state reset to initial values');
       }
     },
 
