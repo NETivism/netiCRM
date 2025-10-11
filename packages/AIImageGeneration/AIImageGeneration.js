@@ -33,7 +33,6 @@
     // Initialize component
     init: function() {
       this.bindEvents();
-      this.initializeTooltips();
       this.initAutoResizeTextarea();
       this.initVisibilityObserver();
       this.initImageLightbox();
