@@ -47,6 +47,10 @@ window.AIImageGeneration = {
                 </div>
               </div>
               <div class="loading-timer">00.00 {ts}seconds{/ts}</div>
+              {* Loading info message positioned below image area *}
+              <div class="loading-info">
+                <p class="loading-info-text"></p>
+              </div>
             </div>
           </div>
 
@@ -62,11 +66,6 @@ window.AIImageGeneration = {
               <i class="zmdi zmdi-download"></i>
             </button>
           </div>
-        </div>
-
-        {* Loading info message positioned below image area *}
-        <div class="loading-info" style="display: none;">
-          <p class="loading-info-text"></p>
         </div>
       </div>
 

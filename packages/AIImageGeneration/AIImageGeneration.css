@@ -84,20 +84,6 @@
 }
 
 /* Loading info message */
-.netiaiig-container .loading-info {
-  position: absolute;
-  bottom: -60px;
-  left: 0;
-  right: 0;
-  z-index: 10;
-  background: rgba(248, 249, 250, 0.95);
-  backdrop-filter: blur(8px);
-  border-radius: 12px;
-  padding: 16px 20px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-}
-
 .netiaiig-container .loading-info-text {
   color: #495057;
   font-size: 14px;
