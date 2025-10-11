@@ -13,7 +13,14 @@
 <script type="text/javascript">
 window.AIImageGeneration = {
   translation: {
-    "seconds": "{/literal}{ts}seconds{/ts}{literal}"
+    "seconds": "{/literal}{ts}seconds{/ts}{literal}",
+    "stage1": "{/literal}{ts}Preparing your image...{/ts}{literal}",
+    "stage2": "{/literal}{ts}Analyzing your description...{/ts}{literal}",
+    "stage3": "{/literal}{ts}Starting the composition...{/ts}{literal}",
+    "stage4": "{/literal}{ts}The image is taking shape...{/ts}{literal}",
+    "stage5": "{/literal}{ts}Refining the details...{/ts}{literal}",
+    "stage6": "{/literal}{ts}Finalizing the image...{/ts}{literal}",
+    "stage7": "{/literal}{ts}The system is a bit busy. We're speeding things up - please hold on...{/ts}{literal}"
   }
 };
 </script>

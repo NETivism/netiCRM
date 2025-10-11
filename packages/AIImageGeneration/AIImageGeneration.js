@@ -745,12 +745,69 @@
     loadingManager: {
       // Stage configuration with time intervals and messages
       stages: [
-        { message: '送出請求中...', duration: 5000, progress: 5 },
-        { message: '轉譯您的提示詞...', duration: 5000, progress: 10 },
-        { message: '產製圖片中...', duration: 10000, progress: 20 },
-        { message: '產製圖片中...', duration: 10000, progress: 60 },
-        { message: '產製圖片中...', duration: 5000, progress: 80 },
-        { message: '系統繁忙，正在啟用備援通道加速，請稍候...', duration: 0, progress: 90 }
+        { 
+          message: function() {
+            return window.AIImageGeneration && window.AIImageGeneration.translation
+              ? window.AIImageGeneration.translation.stage1
+              : 'Preparing your image...';
+          }, 
+          duration: 5000, 
+          progress: 5 
+        },
+        { 
+          message: function() {
+            return window.AIImageGeneration && window.AIImageGeneration.translation
+              ? window.AIImageGeneration.translation.stage2
+              : 'Analyzing your description...';
+          }, 
+          duration: 5000, 
+          progress: 15 
+        },
+        { 
+          message: function() {
+            return window.AIImageGeneration && window.AIImageGeneration.translation
+              ? window.AIImageGeneration.translation.stage3
+              : 'Starting the composition...';
+          }, 
+          duration: 8000, 
+          progress: 35 
+        },
+        { 
+          message: function() {
+            return window.AIImageGeneration && window.AIImageGeneration.translation
+              ? window.AIImageGeneration.translation.stage4
+              : 'The image is taking shape...';
+          }, 
+          duration: 10000, 
+          progress: 55 
+        },
+        { 
+          message: function() {
+            return window.AIImageGeneration && window.AIImageGeneration.translation
+              ? window.AIImageGeneration.translation.stage5
+              : 'Refining the details...';
+          }, 
+          duration: 9000, 
+          progress: 75 
+        },
+        { 
+          message: function() {
+            return window.AIImageGeneration && window.AIImageGeneration.translation
+              ? window.AIImageGeneration.translation.stage6
+              : 'Finalizing the image...';
+          }, 
+          duration: 8000, 
+          progress: 90 
+        },
+        { 
+          message: function() {
+            return window.AIImageGeneration && window.AIImageGeneration.translation
+              ? window.AIImageGeneration.translation.stage7
+              : 'The system is a bit busy. We\'re speeding things up - please hold on...';
+          }, 
+          duration: 0, 
+          progress: 95 
+        }
       ],
 
       currentStage: 0,
@@ -816,7 +873,8 @@
         }
 
         const stage = this.stages[this.currentStage];
-        this.updateMessage(stage.message);
+        const message = typeof stage.message === 'function' ? stage.message() : stage.message;
+        this.updateMessage(message);
         this.updateProgress(stage.progress);
 
         console.log('Loading stage:', this.currentStage + 1, '-', stage.message);
