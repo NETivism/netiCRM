@@ -15,12 +15,13 @@ window.AIImageGeneration = {
   translation: {
     "seconds": "{/literal}{ts}seconds{/ts}{literal}",
     "stage1": "{/literal}{ts}Preparing your image...{/ts}{literal}",
-    "stage2": "{/literal}{ts}Analyzing your description...{/ts}{literal}",
+    "stage2": "{/literal}{ts}Analyzing and adjusting your prompt to help generate a better image...{/ts}{literal}",
     "stage3": "{/literal}{ts}Starting the composition...{/ts}{literal}",
     "stage4": "{/literal}{ts}The image is taking shape...{/ts}{literal}",
     "stage5": "{/literal}{ts}Refining the details...{/ts}{literal}",
     "stage6": "{/literal}{ts}Finalizing the image...{/ts}{literal}",
-    "stage7": "{/literal}{ts}The system is a bit busy. We're speeding things up - please hold on...{/ts}{literal}"
+    "stage7": "{/literal}{ts}The system is a bit busy. We're speeding things up - please hold on...{/ts}{literal}",
+    "loadingInfo": "{/literal}{ts}Your image is being generated and usually takes about 40–45 seconds to complete. Feel free to do something else — we're working hard to finish your artwork!{/ts}{literal}"
   }
 };
 </script>
@@ -61,6 +62,11 @@ window.AIImageGeneration = {
               <i class="zmdi zmdi-download"></i>
             </button>
           </div>
+        </div>
+
+        {* Loading info message positioned below image area *}
+        <div class="loading-info" style="display: none;">
+          <p class="loading-info-text"></p>
         </div>
       </div>
 

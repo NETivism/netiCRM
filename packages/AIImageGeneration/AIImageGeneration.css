@@ -40,6 +40,7 @@
 .netiaiig-container .image-display {
   padding: 0;
   border-bottom: 1px solid #f5f5f7;
+  position: relative;
 }
 
 .netiaiig-container .generated-image {
@@ -80,6 +81,30 @@
   font-size: 16px;
   opacity: 0.8;
   font-weight: 500;
+}
+
+/* Loading info message */
+.netiaiig-container .loading-info {
+  position: absolute;
+  bottom: -60px;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background: rgba(248, 249, 250, 0.95);
+  backdrop-filter: blur(8px);
+  border-radius: 12px;
+  padding: 16px 20px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+.netiaiig-container .loading-info-text {
+  color: #495057;
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: center;
+  margin: 0;
+  font-weight: 400;
 }
 
 /* Floating action buttons */

@@ -745,68 +745,68 @@
     loadingManager: {
       // Stage configuration with time intervals and messages
       stages: [
-        { 
+        {
           message: function() {
             return window.AIImageGeneration && window.AIImageGeneration.translation
               ? window.AIImageGeneration.translation.stage1
               : 'Preparing your image...';
-          }, 
-          duration: 5000, 
-          progress: 5 
+          },
+          duration: 5000,
+          progress: 5
         },
-        { 
+        {
           message: function() {
             return window.AIImageGeneration && window.AIImageGeneration.translation
               ? window.AIImageGeneration.translation.stage2
-              : 'Analyzing your description...';
-          }, 
-          duration: 5000, 
-          progress: 15 
+              : 'Analyzing and adjusting your prompt to help generate a better image...';
+          },
+          duration: 5000,
+          progress: 15
         },
-        { 
+        {
           message: function() {
             return window.AIImageGeneration && window.AIImageGeneration.translation
               ? window.AIImageGeneration.translation.stage3
               : 'Starting the composition...';
-          }, 
-          duration: 8000, 
-          progress: 35 
+          },
+          duration: 8000,
+          progress: 35
         },
-        { 
+        {
           message: function() {
             return window.AIImageGeneration && window.AIImageGeneration.translation
               ? window.AIImageGeneration.translation.stage4
               : 'The image is taking shape...';
-          }, 
-          duration: 10000, 
-          progress: 55 
+          },
+          duration: 10000,
+          progress: 55
         },
-        { 
+        {
           message: function() {
             return window.AIImageGeneration && window.AIImageGeneration.translation
               ? window.AIImageGeneration.translation.stage5
               : 'Refining the details...';
-          }, 
-          duration: 9000, 
-          progress: 75 
+          },
+          duration: 9000,
+          progress: 75
         },
-        { 
+        {
           message: function() {
             return window.AIImageGeneration && window.AIImageGeneration.translation
               ? window.AIImageGeneration.translation.stage6
               : 'Finalizing the image...';
-          }, 
-          duration: 8000, 
-          progress: 90 
+          },
+          duration: 8000,
+          progress: 90
         },
-        { 
+        {
           message: function() {
             return window.AIImageGeneration && window.AIImageGeneration.translation
               ? window.AIImageGeneration.translation.stage7
               : 'The system is a bit busy. We\'re speeding things up - please hold on...';
-          }, 
-          duration: 0, 
-          progress: 95 
+          },
+          duration: 0,
+          progress: 95
         }
       ],
 
@@ -823,10 +823,19 @@
         const $container = $(NetiAIImageGeneration.config.container);
         const $overlay = $container.find('.loading-overlay');
         const $image = $container.find('.image-placeholder img');
+        const $loadingInfo = $container.find('.loading-info');
 
         // Hide existing image and show loading overlay
         $image.hide();
         $overlay.show();
+
+        // Show and update loading info with translation
+        const loadingInfoText = window.AIImageGeneration && window.AIImageGeneration.translation
+          ? window.AIImageGeneration.translation.loadingInfo
+          : 'Your image is being generated and usually takes about 40–45 seconds to complete. Feel free to do something else — we\'re working hard to finish your artwork!';
+        
+        $loadingInfo.find('.loading-info-text').text(loadingInfoText);
+        $loadingInfo.show();
 
         // Hide floating actions during loading
         NetiAIImageGeneration.setFloatingActionsState('hidden');
@@ -850,6 +859,7 @@
         const $container = $(NetiAIImageGeneration.config.container);
         const $overlay = $container.find('.loading-overlay');
         const $image = $container.find('.image-placeholder img');
+        const $loadingInfo = $container.find('.loading-info');
 
         // Clear all timers
         this.clearTimers();
@@ -859,8 +869,9 @@
         // Reset loading state to initial values
         this.resetLoadingState();
 
-        // Hide loading overlay and show image
+        // Hide loading overlay, loading info and show image
         $overlay.hide();
+        $loadingInfo.hide();
         $image.show();
 
         console.log('Loading state manager: Stopped');
