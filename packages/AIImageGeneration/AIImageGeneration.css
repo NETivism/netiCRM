@@ -39,7 +39,6 @@
 /* Image display area */
 .netiaiig-container .image-display {
   padding: 0;
-  border-bottom: 1px solid #f5f5f7;
   position: relative;
 }
 
@@ -66,7 +65,6 @@
   width: auto;
   height: auto;
   object-fit: contain;
-  border-radius: 16px;
   transition: transform 0.3s ease;
 }
 
@@ -76,7 +74,6 @@
   width: auto;
   height: auto;
   object-fit: contain;
-  border-radius: 16px;
 }
 
 .netiaiig-container .image-placeholder {
@@ -136,13 +133,15 @@
   margin: 0;
 }
 
-.netiaiig-container .floating-btn:hover {
+.netiaiig-container .floating-btn:hover,
+.netiaiig-container .floating-btn:active {
   background: rgba(255, 255, 255, 1);
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
 }
 
 .netiaiig-container .floating-btn:focus {
+  background: rgba(255, 255, 255, 1);
   outline: 2px solid #007aff;
   outline-offset: 2px;
 }
@@ -786,9 +785,11 @@
 
 /* AI Generated Image Lightbox Styles */
 .netiaiig-container .ai-image-link {
-  display: block;
+  display: flex;
   width: 100%;
   height: 100%;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
   transition: transform 0.2s ease, opacity 0.2s ease;
 }
