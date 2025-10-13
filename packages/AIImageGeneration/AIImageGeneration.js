@@ -238,6 +238,9 @@
         return;
       }
 
+      // Hide any existing error state when starting new generation
+      this.errorManager.hide();
+
       // Get current settings
       const style = $(this.config.container).find(this.config.selectors.styleText).text();
       const ratio = $(this.config.container).find(this.config.selectors.ratioText).text();
@@ -1196,7 +1199,6 @@
 
     // Error state manager
     errorManager: {
-      autoHideTimeout: null,
       
       // Show error state
       show: function(errorData) {
@@ -1219,9 +1221,6 @@
         
         // Hide floating actions
         NetiAIImageGeneration.setFloatingActionsState('hidden');
-        
-        // Set auto hide
-        this.setAutoHide();
       },
       
       // Hide error state
@@ -1229,12 +1228,6 @@
         const $container = $(NetiAIImageGeneration.config.container);
         const $loadingOverlay = $container.find('.loading-overlay');
         const $errorState = $loadingOverlay.find('.error-state');
-        
-        // Clear auto hide timeout
-        if (this.autoHideTimeout) {
-          clearTimeout(this.autoHideTimeout);
-          this.autoHideTimeout = null;
-        }
         
         // Hide error state and loading overlay
         $errorState.hide();
@@ -1244,17 +1237,6 @@
         setTimeout(() => {
           NetiAIImageGeneration.updateFloatingActionsBasedOnImage();
         }, 100);
-      },
-      
-      // Set auto hide
-      setAutoHide: function() {
-        if (this.autoHideTimeout) {
-          clearTimeout(this.autoHideTimeout);
-        }
-        
-        this.autoHideTimeout = setTimeout(() => {
-          this.hide();
-        }, 8000); // 8 seconds auto hide
       },
       
       // Update error message content
