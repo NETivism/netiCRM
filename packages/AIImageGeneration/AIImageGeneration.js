@@ -1175,11 +1175,18 @@
 
     // Update tooltip text for copy button
     updateCopyButtonTooltip: function(text, isTemporary = false) {
+      console.log('updateCopyButtonTooltip called with text:', text, 'isTemporary:', isTemporary);
+      
       const $copyButton = $(this.config.container).find('.floating-btn').filter(function() {
         return $(this).find('.zmdi-collection-plus').length > 0;
       });
 
-      if ($copyButton.length === 0) return;
+      console.log('Found copy buttons:', $copyButton.length);
+      
+      if ($copyButton.length === 0) {
+        console.log('No copy button found');
+        return;
+      }
 
       // Clear existing timer for this button
       if (this.tooltipTimers.copyButton) {
@@ -1187,18 +1194,17 @@
         delete this.tooltipTimers.copyButton;
       }
 
-      // Update tooltip text
+      // Update tooltip text using PowerTip's recommended method
       $copyButton.attr('title', text);
+      $copyButton.data('powertip', text);
       
-      // Update powerTip data if it exists
-      if ($copyButton.data('powertip') !== undefined) {
-        $copyButton.data('powertip', text);
-      }
+      console.log('Updated tooltip to:', text);
 
       // If temporary, set timer to revert back
       if (isTemporary) {
         const self = this;
         this.tooltipTimers.copyButton = setTimeout(function() {
+          console.log('Reverting tooltip back to Copy');
           self.updateCopyButtonTooltip('Copy', false);
           delete self.tooltipTimers.copyButton;
         }, 5000);
