@@ -167,14 +167,14 @@
 
       console.log('Selected ratio:', ratio);
 
-      // Update image container aspect ratio
+      // Update image container aspect ratio using CSS variable
       this.updateImageAspectRatio(ratio);
 
       // Trigger custom event
       $(this.config.container).trigger('ratioChanged', [ratio]);
     },
 
-    // Update image aspect ratio based on selection
+    // Update image aspect ratio using CSS variable
     updateImageAspectRatio: function(ratio) {
       const $imageContainer = $(this.config.container).find('.generated-image');
 
@@ -188,7 +188,7 @@
       };
 
       if (ratioMap[ratio]) {
-        $imageContainer.css('aspect-ratio', ratioMap[ratio]);
+        $imageContainer.css('--image-ratio', ratioMap[ratio]);
       }
     },
 
