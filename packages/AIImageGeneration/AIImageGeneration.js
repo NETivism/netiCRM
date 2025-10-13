@@ -30,6 +30,9 @@
       }
     },
 
+    // State management for tooltip timers
+    tooltipTimers: {},
+
     // Initialize component
     init: function() {
       this.bindEvents();
@@ -480,6 +483,12 @@
         return;
       }
 
+      // Clear any existing tooltip timer to handle repeated clicks
+      if (this.tooltipTimers.copyButton) {
+        clearTimeout(this.tooltipTimers.copyButton);
+        delete this.tooltipTimers.copyButton;
+      }
+
       const $image = $(this.config.container).find('.image-placeholder .ai-generated-image');
       const imageUrl = $image.attr('src');
 
@@ -522,6 +531,9 @@
             navigator.clipboard.write([clipboardItem]).then(function() {
               self.showSuccess('圖片已複製到剪貼簿');
               console.log('Image copied to clipboard successfully');
+              
+              // Update tooltip to show success state temporarily
+              self.updateCopyButtonTooltip('Copied successfully !', true);
             }).catch(function(error) {
               console.error('Failed to copy image to clipboard:', error);
               self.showError('複製圖片失敗，請重試');
@@ -1158,6 +1170,38 @@
         this.setFloatingActionsState('enabled');
       } else {
         this.setFloatingActionsState('hidden');
+      }
+    },
+
+    // Update tooltip text for copy button
+    updateCopyButtonTooltip: function(text, isTemporary = false) {
+      const $copyButton = $(this.config.container).find('.floating-btn').filter(function() {
+        return $(this).find('.zmdi-collection-plus').length > 0;
+      });
+
+      if ($copyButton.length === 0) return;
+
+      // Clear existing timer for this button
+      if (this.tooltipTimers.copyButton) {
+        clearTimeout(this.tooltipTimers.copyButton);
+        delete this.tooltipTimers.copyButton;
+      }
+
+      // Update tooltip text
+      $copyButton.attr('title', text);
+      
+      // Update powerTip data if it exists
+      if ($copyButton.data('powertip') !== undefined) {
+        $copyButton.data('powertip', text);
+      }
+
+      // If temporary, set timer to revert back
+      if (isTemporary) {
+        const self = this;
+        this.tooltipTimers.copyButton = setTimeout(function() {
+          self.updateCopyButtonTooltip('Copy', false);
+          delete self.tooltipTimers.copyButton;
+        }, 5000);
       }
     },
 
