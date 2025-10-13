@@ -192,8 +192,8 @@
       // Determine action based on icon class or title
       if ($button.find('.zmdi-refresh').length || title.includes('Regenerate')) {
         this.generateImage();
-      } else if ($button.find('.zmdi-collection-plus').length || title.includes('Insert')) {
-        this.insertToEditor();
+      } else if ($button.find('.zmdi-collection-plus').length || title.includes('Copy')) {
+        this.copyImage();
       } else if ($button.find('.zmdi-download').length || title.includes('Download')) {
         this.downloadImage();
       } else {
@@ -473,22 +473,74 @@
       console.log('Loading overlay structure restored');
     },
 
-    // Insert image to editor
-    insertToEditor: function() {
+    // Copy image to clipboard
+    copyImage: function() {
       if (!this.hasGeneratedImage()) {
-        this.showError('沒有圖片可供插入');
+        this.showError('沒有圖片可供複製');
         return;
       }
 
       const $image = $(this.config.container).find('.image-placeholder .ai-generated-image');
       const imageUrl = $image.attr('src');
 
-      console.log('Inserting image to editor:', imageUrl);
+      console.log('Copying image to clipboard:', imageUrl);
 
-      // Trigger custom event for parent component to handle
-      $(this.config.container).trigger('insertToEditor', [imageUrl]);
+      // Check if clipboard API is supported
+      if (!navigator.clipboard || !navigator.clipboard.write) {
+        this.showError('您的瀏覽器不支援複製圖片功能');
+        return;
+      }
 
-      this.showSuccess('圖片已插入編輯器');
+      const self = this;
+      
+      // Create a new image element to load the image data
+      const img = new Image();
+      img.crossOrigin = 'anonymous'; // Handle CORS if needed
+      
+      img.onload = function() {
+        try {
+          // Create canvas to convert image to blob
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          
+          canvas.width = img.naturalWidth;
+          canvas.height = img.naturalHeight;
+          
+          // Draw image to canvas
+          ctx.drawImage(img, 0, 0);
+          
+          // Convert canvas to blob
+          canvas.toBlob(function(blob) {
+            if (!blob) {
+              self.showError('圖片處理失敗');
+              return;
+            }
+            
+            // Create clipboard item and copy to clipboard
+            const clipboardItem = new ClipboardItem({ [blob.type]: blob });
+            
+            navigator.clipboard.write([clipboardItem]).then(function() {
+              self.showSuccess('圖片已複製到剪貼簿');
+              console.log('Image copied to clipboard successfully');
+            }).catch(function(error) {
+              console.error('Failed to copy image to clipboard:', error);
+              self.showError('複製圖片失敗，請重試');
+            });
+          }, 'image/png');
+          
+        } catch (error) {
+          console.error('Error processing image for clipboard:', error);
+          self.showError('圖片處理過程發生錯誤');
+        }
+      };
+      
+      img.onerror = function() {
+        console.error('Failed to load image for copying');
+        self.showError('無法載入圖片，請重試');
+      };
+      
+      // Load the image
+      img.src = imageUrl;
     },
 
     // Download generated image
