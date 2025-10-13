@@ -273,39 +273,49 @@
         timeout: 60000, // 60 seconds timeout
 
         success: function(response) {
-          // Hide loading overlay
+          // Stop loading manager
           self.loadingManager.hide();
 
+          // Check response status
           if (response.status === 1 && response.data) {
+            // Success: show image
             self.onGenerationComplete(response.data.image_url, response.data);
             self.showSuccess('圖片生成成功！');
           } else {
+            // Failure: show error message
             self.onGenerationComplete();
-            self.showError(response.message || '圖片生成失敗');
+            self.errorManager.show({
+              message: response.message || '圖片生成失敗'
+            });
           }
         },
 
         error: function(xhr, status, error) {
-          // Hide loading overlay
+          // Stop loading manager
           self.loadingManager.hide();
 
+          // Reset generate button
           self.onGenerationComplete();
 
+          // Handle HTTP errors
           let errorMessage = '圖片生成失敗';
 
+          // Try to parse JSON response
           if (xhr.responseJSON && xhr.responseJSON.message) {
             errorMessage = xhr.responseJSON.message;
           } else if (status === 'timeout') {
-            errorMessage = '請求超時，請重試';
-          } else if (xhr.status === 400) {
-            errorMessage = '請求參數錯誤';
-          } else if (xhr.status === 403) {
-            errorMessage = '權限不足';
-          } else if (xhr.status === 500) {
-            errorMessage = '伺服器內部錯誤';
+            errorMessage = 'timeout'; // Will be converted to friendly message
+          } else {
+            // Other cases keep generic error message, handled by HTTP status code
+            errorMessage = '圖片生成失敗';
           }
 
-          self.showError(errorMessage);
+          // Use error manager with HTTP status code
+          self.errorManager.show({
+            message: errorMessage,
+            httpStatus: xhr.status
+          });
+
           console.error('Image generation error:', status, error, xhr.responseText);
         }
       });
@@ -1181,6 +1191,138 @@
 
       hideLoading: function() {
         NetiAIImageGeneration.loadingManager.hide();
+      }
+    },
+
+    // Error state manager
+    errorManager: {
+      autoHideTimeout: null,
+      
+      // Show error state
+      show: function(errorData) {
+        const $container = $(NetiAIImageGeneration.config.container);
+        const $loadingOverlay = $container.find('.loading-overlay');
+        const $loadingElements = $loadingOverlay.find('.loading-spinner, .loading-message, .loading-timer, .loading-progress, .loading-info');
+        const $errorState = $loadingOverlay.find('.error-state');
+        
+        // Hide loading elements
+        $loadingElements.hide();
+        
+        // Update error message
+        this.updateErrorMessage(errorData);
+        
+        // Show error state
+        $errorState.show();
+        
+        // Ensure loading-overlay remains visible
+        $loadingOverlay.show();
+        
+        // Hide floating actions
+        NetiAIImageGeneration.setFloatingActionsState('hidden');
+        
+        // Set auto hide
+        this.setAutoHide();
+      },
+      
+      // Hide error state
+      hide: function() {
+        const $container = $(NetiAIImageGeneration.config.container);
+        const $loadingOverlay = $container.find('.loading-overlay');
+        const $errorState = $loadingOverlay.find('.error-state');
+        
+        // Clear auto hide timeout
+        if (this.autoHideTimeout) {
+          clearTimeout(this.autoHideTimeout);
+          this.autoHideTimeout = null;
+        }
+        
+        // Hide error state and loading overlay
+        $errorState.hide();
+        $loadingOverlay.hide();
+        
+        // Restore floating actions state
+        setTimeout(() => {
+          NetiAIImageGeneration.updateFloatingActionsBasedOnImage();
+        }, 100);
+      },
+      
+      // Set auto hide
+      setAutoHide: function() {
+        if (this.autoHideTimeout) {
+          clearTimeout(this.autoHideTimeout);
+        }
+        
+        this.autoHideTimeout = setTimeout(() => {
+          this.hide();
+        }, 8000); // 8 seconds auto hide
+      },
+      
+      // Update error message content
+      updateErrorMessage: function(errorData) {
+        const $container = $(NetiAIImageGeneration.config.container);
+        const friendlyMessage = this.getFriendlyErrorMessage(errorData.message, errorData.httpStatus);
+        
+        $container.find('.error-reason').text(friendlyMessage);
+      },
+      
+      // Convert various errors to user-friendly messages
+      getFriendlyErrorMessage: function(technicalMessage, httpStatus) {
+        // JSON response error mappings
+        const jsonErrorMappings = {
+          'The request is not a valid JSON format.': '請求格式錯誤，請重新整理頁面後重試',
+          'The request does not match the expected format.': '請求參數錯誤，請檢查輸入內容',
+          'Content exceeds the maximum character limit.': '描述文字過長，請縮短至 1000 字以內',
+          'No corresponding component was found.': '頁面權限錯誤，請重新整理頁面',
+          'Invalid request method or missing data.': '系統錯誤，請重新整理頁面後重試'
+        };
+        
+        // HTTP status code mappings
+        const httpStatusMappings = {
+          400: '請求參數有誤，請檢查輸入內容',
+          401: '登入已過期，請重新登入',
+          403: '權限不足，請聯絡管理員',
+          404: '服務暫時無法使用，請稍後重試',
+          408: '請求逾時，請檢查網路連線',
+          429: '使用頻率過高，請稍後重試',
+          500: '伺服器暫時錯誤，請稍後重試',
+          502: '服務暫時無法連線，請稍後重試',
+          503: '服務暫時維護中，請稍後重試',
+          504: '連線逾時，請檢查網路連線'
+        };
+        
+        // Network connection error mappings
+        const networkErrorMappings = {
+          'network error': '網路連線中斷，請檢查網路狀態',
+          'timeout': '連線逾時，請重新整理頁面後重試',
+          'connection refused': '無法連接到伺服器，請稍後重試',
+          'dns error': '網路設定問題，請檢查網路連線'
+        };
+        
+        // 1. Priority check JSON response error messages
+        if (jsonErrorMappings[technicalMessage]) {
+          return jsonErrorMappings[technicalMessage];
+        }
+        
+        // 2. Check for Image generation failed type
+        if (technicalMessage.includes('Image generation failed')) {
+          return '圖片生成失敗，請稍後重試';
+        }
+        
+        // 3. Check HTTP status code
+        if (httpStatus && httpStatusMappings[httpStatus]) {
+          return httpStatusMappings[httpStatus];
+        }
+        
+        // 4. Check network connection errors (fuzzy match)
+        const lowerMessage = technicalMessage.toLowerCase();
+        for (const [key, message] of Object.entries(networkErrorMappings)) {
+          if (lowerMessage.includes(key)) {
+            return message;
+          }
+        }
+        
+        // 5. Default error message
+        return '圖片生成過程中發生錯誤，請稍後重試';
       }
     }
   };

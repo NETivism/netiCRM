@@ -51,6 +51,17 @@ window.AIImageGeneration = {
               <div class="loading-info">
                 <p class="loading-info-text"></p>
               </div>
+              
+              {* Error state elements (hidden by default) *}
+              <div class="error-state" style="display: none;" role="alert" aria-live="polite">
+                <div class="error-icon" aria-hidden="true">
+                  <i class="zmdi zmdi-close-circle"></i>
+                </div>
+                <div class="error-message" id="error-title">{ts}圖片生成失敗{/ts}</div>
+                <div class="error-details" aria-describedby="error-title">
+                  <div class="error-reason"></div>
+                </div>
+              </div>
             </div>
           </div>
 
