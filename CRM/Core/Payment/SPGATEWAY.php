@@ -2169,6 +2169,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
       if (!empty($tradeResult) && is_object($tradeResult) && isset($tradeResult->Status)) {
         // save token_value on each payment anyway
         $tradeResult->Result->TokenValue = $spgateway->token_value;
+        $tradeResult->Result->TokenLife = $spgateway->token_life;
         // call IPN
         $ids = CRM_Contribute_BAO_Contribution::buildIds($c->id);
         $query = CRM_Contribute_BAO_Contribution::makeNotifyUrl($ids, NULL, TRUE);
@@ -2185,7 +2186,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
         ];
         $ipnResult = self::doIPN(['spgateway', 'ipn', 'Credit'], $ipnPost, $ipnGet, FALSE);
         if (!empty($ipnResult)) {
-          $response = ['status' => $tradeResult->status, 'msg' => $tradeResult->msg];
+          $response = ['status' => $tradeResult->Status, 'msg' => $tradeResult->Message];
         }
         else {
           if ($tradeResult->Status === 'SUCCESS') {
