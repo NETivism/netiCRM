@@ -373,8 +373,13 @@
             'class': 'ai-image-link'
           }).append($img);
 
-          // Remove old image if exists and add new wrapped image
-          $existingImg.remove();
+          // Remove old image and its link wrapper if exists
+          const $existingLink = $imageContainer.find('.ai-image-link');
+          if ($existingLink.length > 0) {
+            $existingLink.remove();
+          } else {
+            $existingImg.remove();
+          }
 
           // Insert new link before loading-overlay to maintain structure
           const $overlay = $imageContainer.find('.loading-overlay');
