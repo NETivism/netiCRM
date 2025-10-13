@@ -842,6 +842,14 @@
         $image.hide();
         $overlay.show();
 
+        // Restore loading elements that may have been hidden by errorManager
+        const $loadingElements = $overlay.find('.loading-spinner, .loading-message, .loading-timer, .loading-progress');
+        $loadingElements.show();
+        
+        // Hide error state if it was showing
+        const $errorState = $overlay.find('.error-state');
+        $errorState.hide();
+
         // Show and update loading info with translation
         const loadingInfoText = window.AIImageGeneration && window.AIImageGeneration.translation
           ? window.AIImageGeneration.translation.loadingInfo
