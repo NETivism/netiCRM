@@ -273,7 +273,7 @@
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify(requestData),
-        timeout: 60000, // 60 seconds timeout
+        timeout: 120000, // 60 seconds timeout
 
         success: function(response) {
           // Stop loading manager
@@ -845,7 +845,7 @@
         // Restore loading elements that may have been hidden by errorManager
         const $loadingElements = $overlay.find('.loading-spinner, .loading-message, .loading-timer, .loading-progress');
         $loadingElements.show();
-        
+
         // Hide error state if it was showing
         const $errorState = $overlay.find('.error-state');
         $errorState.hide();
@@ -854,7 +854,7 @@
         const loadingInfoText = window.AIImageGeneration && window.AIImageGeneration.translation
           ? window.AIImageGeneration.translation.loadingInfo
           : 'Your image is being generated and usually takes about 40–45 seconds to complete. Feel free to do something else — we\'re working hard to finish your artwork!';
-        
+
         $loadingInfo.find('.loading-info-text').text(loadingInfoText);
         $loadingInfo.show();
 
@@ -1207,64 +1207,64 @@
 
     // Error state manager
     errorManager: {
-      
+
       // Show error state
       show: function(errorData) {
         const $container = $(NetiAIImageGeneration.config.container);
         const $loadingOverlay = $container.find('.loading-overlay');
         const $loadingElements = $loadingOverlay.find('.loading-spinner, .loading-message, .loading-timer, .loading-progress, .loading-info');
         const $errorState = $loadingOverlay.find('.error-state');
-        
+
         // Hide loading elements
         $loadingElements.hide();
-        
+
         // Update error message
         this.updateErrorMessage(errorData);
-        
+
         // Show error state
         $errorState.show();
-        
+
         // Ensure loading-overlay remains visible
         $loadingOverlay.show();
-        
+
         // Hide floating actions
         NetiAIImageGeneration.setFloatingActionsState('hidden');
       },
-      
+
       // Hide error state
       hide: function() {
         const $container = $(NetiAIImageGeneration.config.container);
         const $loadingOverlay = $container.find('.loading-overlay');
         const $errorState = $loadingOverlay.find('.error-state');
-        
+
         // Hide error state and loading overlay
         $errorState.hide();
         $loadingOverlay.hide();
-        
+
         // Restore floating actions state
         setTimeout(() => {
           NetiAIImageGeneration.updateFloatingActionsBasedOnImage();
         }, 100);
       },
-      
+
       // Reset error state without hiding loading overlay (for regeneration)
       reset: function() {
         const $container = $(NetiAIImageGeneration.config.container);
         const $loadingOverlay = $container.find('.loading-overlay');
         const $errorState = $loadingOverlay.find('.error-state');
-        
+
         // Hide error state only
         $errorState.hide();
       },
-      
+
       // Update error message content
       updateErrorMessage: function(errorData) {
         const $container = $(NetiAIImageGeneration.config.container);
         const friendlyMessage = this.getFriendlyErrorMessage(errorData.message, errorData.httpStatus);
-        
+
         $container.find('.error-reason').text(friendlyMessage);
       },
-      
+
       // Convert various errors to user-friendly messages
       getFriendlyErrorMessage: function(technicalMessage, httpStatus) {
         // JSON response error mappings
@@ -1275,7 +1275,7 @@
           'No corresponding component was found.': '頁面權限錯誤，請重新整理頁面',
           'Invalid request method or missing data.': '系統錯誤，請重新整理頁面後重試'
         };
-        
+
         // HTTP status code mappings
         const httpStatusMappings = {
           400: '請求參數有誤，請檢查輸入內容',
@@ -1289,7 +1289,7 @@
           503: '服務暫時維護中，請稍後重試',
           504: '連線逾時，請檢查網路連線'
         };
-        
+
         // Network connection error mappings
         const networkErrorMappings = {
           'network error': '網路連線中斷，請檢查網路狀態',
@@ -1297,22 +1297,22 @@
           'connection refused': '無法連接到伺服器，請稍後重試',
           'dns error': '網路設定問題，請檢查網路連線'
         };
-        
+
         // 1. Priority check JSON response error messages
         if (jsonErrorMappings[technicalMessage]) {
           return jsonErrorMappings[technicalMessage];
         }
-        
+
         // 2. Check for Image generation failed type
         if (technicalMessage.includes('Image generation failed')) {
           return '圖片生成失敗，請稍後重試';
         }
-        
+
         // 3. Check HTTP status code
         if (httpStatus && httpStatusMappings[httpStatus]) {
           return httpStatusMappings[httpStatus];
         }
-        
+
         // 4. Check network connection errors (fuzzy match)
         const lowerMessage = technicalMessage.toLowerCase();
         for (const [key, message] of Object.entries(networkErrorMappings)) {
@@ -1320,7 +1320,7 @@
             return message;
           }
         }
-        
+
         // 5. Default error message
         return '圖片生成過程中發生錯誤，請稍後重試';
       }
