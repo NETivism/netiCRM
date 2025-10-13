@@ -31,11 +31,24 @@ window.AIImageGeneration = {
 <div class="netiaiig-container">
   <div class="netiaiig-inner">
     <div class="netiaiig-content">
-      {* Imagej display area *}
-      <div class="image-display">
+      {* Image display area with enhanced empty state *}
+      <div class="image-display" role="region" aria-label="{ts}AI 圖片生成區域{/ts}">
         <div class="generated-image">
-          <div class="image-placeholder">
-            <img src="../images/thumb-00.png" alt="">
+          <div class="image-placeholder" 
+               role="img" 
+               aria-label="{ts}圖片生成區域，點選下方按鈕開始創作您的專屬圖片{/ts}"
+               tabindex="0">
+            
+            {* Empty state content - visible when no image is generated *}
+            <div class="empty-state-content">
+              <div class="empty-state-icon" aria-hidden="true">
+                <i class="zmdi zmdi-brush"></i>
+              </div>
+              <div class="empty-state-title">{ts}準備好釋放您的創意了嗎？{/ts}</div>
+              <div class="empty-state-subtitle">{ts}輸入您的想法，讓 AI 為您創作獨特的藝術作品{/ts}</div>
+            </div>
+            
+            <img src="../images/thumb-00.png" alt="" style="display: none;">
 
             {* Loading state overlay *}
             <div class="loading-overlay" style="display: none;">

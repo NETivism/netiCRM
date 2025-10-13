@@ -40,10 +40,29 @@
       this.initVisibilityObserver();
       this.initImageLightbox();
 
+      // Initialize empty state visibility
+      this.initEmptyState();
+
       // Initialize floating actions state based on current image
       this.updateFloatingActionsBasedOnImage();
 
       console.log('AI Image Generation component initialized');
+    },
+
+    // Initialize empty state visibility
+    initEmptyState: function() {
+      const $container = $(this.config.container);
+      const $emptyState = $container.find('.empty-state-content');
+      const $image = $container.find('.image-placeholder img');
+
+      // Show empty state and hide placeholder image on initial load
+      if (!this.hasGeneratedImage()) {
+        $emptyState.show();
+        $image.hide();
+      } else {
+        $emptyState.hide();
+        $image.show();
+      }
     },
 
     // Bind all events
@@ -344,6 +363,9 @@
       if (imageUrl) {
         console.log('Displaying image:', imageUrl);
 
+        // Hide empty state content and show image
+        $imageContainer.find('.empty-state-content').hide();
+
         // Find existing image and loading overlay, preserve structure
         let $existingImg = $imageContainer.find('img');
         const $loadingOverlay = $imageContainer.find('.loading-overlay');
@@ -423,29 +445,28 @@
         img.src = imageUrl;
 
       } else {
-        // Reset to initial state, preserve loading-overlay
+        // Reset to empty state, show empty state content
         const $existingImg = $imageContainer.find('img');
         const $loadingOverlay = $imageContainer.find('.loading-overlay');
+        const $emptyStateContent = $imageContainer.find('.empty-state-content');
+
+        // Show empty state content
+        $emptyStateContent.show();
+
+        // Hide existing image
+        if ($existingImg.length > 0) {
+          $existingImg.hide().attr('src', '../images/thumb-00.png').attr('alt', '');
+        }
+
+        // Remove any generated image links
+        $imageContainer.find('.ai-image-link').remove();
 
         // Ensure loading overlay structure exists
         if ($loadingOverlay.length === 0) {
           this.restoreLoadingOverlay($imageContainer);
         }
 
-        if ($existingImg.length > 0) {
-          $existingImg.attr('src', '../images/thumb-00.png').attr('alt', '').show();
-        } else {
-          // Create default image if not exists
-          const $defaultImg = $('<img src="../images/thumb-00.png" alt="">');
-          const $overlay = $imageContainer.find('.loading-overlay');
-          if ($overlay.length > 0) {
-            $overlay.before($defaultImg);
-          } else {
-            $imageContainer.prepend($defaultImg);
-          }
-        }
-
-        // Update floating actions state when resetting to placeholder
+        // Update floating actions state when resetting to empty state
         setTimeout(() => {
           NetiAIImageGeneration.updateFloatingActionsBasedOnImage();
         }, 50);
@@ -886,9 +907,11 @@
         const $overlay = $container.find('.loading-overlay');
         const $image = $container.find('.image-placeholder img');
         const $loadingInfo = $container.find('.loading-info');
+        const $emptyState = $container.find('.empty-state-content');
 
-        // Hide existing image and show loading overlay
+        // Hide existing image and empty state content, show loading overlay
         $image.hide();
+        $emptyState.hide();
         $overlay.show();
 
         // Restore loading elements that may have been hidden by errorManager
@@ -930,6 +953,7 @@
         const $overlay = $container.find('.loading-overlay');
         const $image = $container.find('.image-placeholder img');
         const $loadingInfo = $container.find('.loading-info');
+        const $emptyState = $container.find('.empty-state-content');
 
         // Clear all timers
         this.clearTimers();
@@ -939,10 +963,16 @@
         // Reset loading state to initial values
         this.resetLoadingState();
 
-        // Hide loading overlay, loading info and show image
+        // Hide loading overlay and loading info
         $overlay.hide();
         $loadingInfo.hide();
-        $image.show();
+        
+        // Show appropriate content based on whether we have a generated image
+        if (NetiAIImageGeneration.hasGeneratedImage()) {
+          $image.show();
+        } else {
+          $emptyState.show();
+        }
 
         console.log('Loading state manager: Stopped');
       },
