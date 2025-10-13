@@ -239,7 +239,7 @@
       }
 
       // Hide any existing error state when starting new generation
-      this.errorManager.hide();
+      this.errorManager.reset();
 
       // Get current settings
       const style = $(this.config.container).find(this.config.selectors.styleText).text();
@@ -1237,6 +1237,16 @@
         setTimeout(() => {
           NetiAIImageGeneration.updateFloatingActionsBasedOnImage();
         }, 100);
+      },
+      
+      // Reset error state without hiding loading overlay (for regeneration)
+      reset: function() {
+        const $container = $(NetiAIImageGeneration.config.container);
+        const $loadingOverlay = $container.find('.loading-overlay');
+        const $errorState = $loadingOverlay.find('.error-state');
+        
+        // Hide error state only
+        $errorState.hide();
       },
       
       // Update error message content
