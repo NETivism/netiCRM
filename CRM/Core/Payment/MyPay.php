@@ -10,7 +10,7 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
   public static $_allowRecurUnit = ['month', 'year'];
 
   // Used for contribution recurring form ( /CRM/Contribute/Form/ContributionRecur.php ).
-   public static $_editableFields = ['amount', 'installments', 'end_date', 'cycle_day', 'contribution_status_id', 'note_title', 'note_body'];
+   public static $_editableFields = ['contribution_status_id'];
 
   /**
    * mode of operation: live or test
