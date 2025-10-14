@@ -21,7 +21,49 @@ window.AIImageGeneration = {
     "stage5": "{/literal}{ts}Refining the details...{/ts}{literal}",
     "stage6": "{/literal}{ts}Finalizing the image...{/ts}{literal}",
     "stage7": "{/literal}{ts}The system is a bit busy. We're speeding things up - please hold on...{/ts}{literal}",
-    "loadingInfo": "{/literal}{ts}Your image is being generated and usually takes about 40–45 seconds to complete. Feel free to do something else — we're working hard to finish your artwork!{/ts}{literal}"
+    "loadingInfo": "{/literal}{ts}Your image is being generated and usually takes about 40–45 seconds to complete. Feel free to do something else — we're working hard to finish your artwork!{/ts}{literal}",
+    "functionNotAvailable": "{/literal}{ts}Function temporarily unavailable, please generate an image first{/ts}{literal}",
+    "pleaseGenerateFirst": "{/literal}{ts}Please generate an image first{/ts}{literal}",
+    "pleaseEnterDescription": "{/literal}{ts}Please enter image description{/ts}{literal}",
+    "descriptionTooLong": "{/literal}{ts}Description text exceeds 1000 character limit{/ts}{literal}",
+    "generating": "{/literal}{ts}Generating image...{/ts}{literal}",
+    "generateSuccess": "{/literal}{ts}Image generated successfully!{/ts}{literal}",
+    "generateFailed": "{/literal}{ts}Image generation failed{/ts}{literal}",
+    "generateButton": "{/literal}{ts}Generate Image{/ts}{literal}",
+    "aiGeneratedImage": "{/literal}{ts}AI Generated Image{/ts}{literal}",
+    "submittingRequest": "{/literal}{ts}Submitting request...{/ts}{literal}",
+    "noImageToCopy": "{/literal}{ts}No image available to copy{/ts}{literal}",
+    "browserNotSupported": "{/literal}{ts}Your browser does not support image copying feature{/ts}{literal}",
+    "imageProcessFailed": "{/literal}{ts}Image processing failed{/ts}{literal}",
+    "imageCopied": "{/literal}{ts}Image copied to clipboard{/ts}{literal}",
+    "copyFailed": "{/literal}{ts}Failed to copy image, please try again{/ts}{literal}",
+    "imageProcessError": "{/literal}{ts}Error occurred during image processing{/ts}{literal}",
+    "imageLoadFailed": "{/literal}{ts}Failed to load image, please try again{/ts}{literal}",
+    "noImageToDownload": "{/literal}{ts}No image available to download{/ts}{literal}",
+    "downloadStarted": "{/literal}{ts}Image download started{/ts}{literal}",
+    "lightboxTitle": "{/literal}{ts}AI Generated Image{/ts}{literal}",
+    "imageGenerationError": "{/literal}{ts}An error occurred during image generation, please try again later{/ts}{literal}",
+    "errorInvalidJson": "{/literal}{ts}Request format error, please refresh the page and try again{/ts}{literal}",
+    "errorInvalidFormat": "{/literal}{ts}Request parameter error, please check input content{/ts}{literal}",
+    "errorContentTooLong": "{/literal}{ts}Description text is too long, please shorten to within 1000 characters{/ts}{literal}",
+    "errorNoComponent": "{/literal}{ts}Page permission error, please refresh the page{/ts}{literal}",
+    "errorInvalidMethod": "{/literal}{ts}System error, please refresh the page and try again{/ts}{literal}",
+    "errorBadRequest": "{/literal}{ts}Request parameter error, please check input content{/ts}{literal}",
+    "errorUnauthorized": "{/literal}{ts}Login expired, please login again{/ts}{literal}",
+    "errorForbidden": "{/literal}{ts}Insufficient permissions, please contact administrator{/ts}{literal}",
+    "errorNotFound": "{/literal}{ts}Service temporarily unavailable, please try again later{/ts}{literal}",
+    "errorTimeout": "{/literal}{ts}Request timeout, please check network connection{/ts}{literal}",
+    "errorTooManyRequests": "{/literal}{ts}Usage frequency too high, please try again later{/ts}{literal}",
+    "errorServerError": "{/literal}{ts}Server temporarily error, please try again later{/ts}{literal}",
+    "errorBadGateway": "{/literal}{ts}Service temporarily unavailable, please try again later{/ts}{literal}",
+    "errorServiceUnavailable": "{/literal}{ts}Service temporarily under maintenance, please try again later{/ts}{literal}",
+    "errorGatewayTimeout": "{/literal}{ts}Connection timeout, please check network connection{/ts}{literal}",
+    "errorNetworkError": "{/literal}{ts}Network connection interrupted, please check network status{/ts}{literal}",
+    "errorConnectionTimeout": "{/literal}{ts}Connection timeout, please refresh the page and try again{/ts}{literal}",
+    "errorConnectionRefused": "{/literal}{ts}Unable to connect to server, please try again later{/ts}{literal}",
+    "errorDnsError": "{/literal}{ts}Network configuration problem, please check network connection{/ts}{literal}",
+    "errorGenerationFailed": "{/literal}{ts}Image generation failed, please try again later{/ts}{literal}",
+    "errorDefaultMessage": "{/literal}{ts}An error occurred during image generation, please try again later{/ts}{literal}"
   }
 };
 </script>
@@ -32,11 +74,11 @@ window.AIImageGeneration = {
   <div class="netiaiig-inner">
     <div class="netiaiig-content">
       {* Image display area with enhanced empty state *}
-      <div class="image-display" role="region" aria-label="{ts}AI 圖片生成區域{/ts}">
+      <div class="image-display" role="region" aria-label="{ts}AI Image Generation Area{/ts}">
         <div class="generated-image">
           <div class="image-placeholder" 
                role="img" 
-               aria-label="{ts}圖片生成區域，點選下方按鈕開始創作您的專屬圖片{/ts}"
+               aria-label="{ts}Image generation area, click the button below to start creating your custom image{/ts}"
                tabindex="0">
             
             {* Empty state content - visible when no image is generated *}
@@ -44,8 +86,8 @@ window.AIImageGeneration = {
               <div class="empty-state-icon" aria-hidden="true">
                 <i class="zmdi zmdi-brush"></i>
               </div>
-              <div class="empty-state-title">{ts}準備好釋放您的創意了嗎？{/ts}</div>
-              <div class="empty-state-subtitle">{ts}輸入您的想法，讓 AI 為您創作圖像{/ts}</div>
+              <div class="empty-state-title">{ts}Ready to unleash your creativity?{/ts}</div>
+              <div class="empty-state-subtitle">{ts}Enter your ideas and let AI create images for you{/ts}</div>
             </div>
             
             <img src="../images/thumb-00.png" alt="" style="display: none;">
@@ -70,7 +112,7 @@ window.AIImageGeneration = {
                 <div class="error-icon" aria-hidden="true">
                   <i class="zmdi zmdi-close-circle"></i>
                 </div>
-                <div class="error-message" id="error-title">{ts}圖片生成失敗{/ts}</div>
+                <div class="error-message" id="error-title">{ts}Image Generation Failed{/ts}</div>
                 <div class="error-details" aria-describedby="error-title">
                   <div class="error-reason"></div>
                 </div>

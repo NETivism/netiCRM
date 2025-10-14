@@ -481,13 +481,15 @@
   box-shadow: 0 4px 16px rgba(0, 122, 255, 0.2);
 }
 
-.netiaiig-container .generate-btn:hover {
+.netiaiig-container .generate-btn:hover,
+.netiaiig-container .generate-btn:active {
   transform: translateY(-2px);
   background: linear-gradient(135deg, #007aff 0%, #03A9F4 100%);
-  box-shadow: 0 4px 16px rgba(0, 122, 255, 0.3); 
+  box-shadow: 0 4px 16px rgba(0, 122, 255, 0.3);
 }
 
 .netiaiig-container .generate-btn:focus {
+  background: linear-gradient(135deg, #007aff 0%, #03A9F4 100%);
   outline: 3px solid rgba(0, 122, 255, 0.5);
   outline-offset: 2px;
 }
@@ -668,11 +670,11 @@
     font-size: 40px;
     margin-bottom: 12px;
   }
-  
+
   .netiaiig-container .error-message {
     font-size: 16px;
   }
-  
+
   .netiaiig-container .error-reason {
     font-size: 13px;
   }
@@ -698,11 +700,11 @@
     border: 2px solid #000;
     background: #fff;
   }
-  
+
   .netiaiig-container .error-icon {
     color: #d00;
   }
-  
+
   .netiaiig-container .error-message,
   .netiaiig-container .error-reason {
     color: #000;
@@ -716,12 +718,12 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-  
+
   /* Disable specific empty state animations */
   .netiaiig-container .generated-image {
     animation: none !important;
   }
-  
+
   .netiaiig-container .empty-state-icon {
     animation: none !important;
   }
@@ -951,7 +953,7 @@
     background-size: 200% 200%;
     animation: gradientShift 8s ease-in-out infinite;
   }
-  
+
   .netiaiig-container .empty-state-content {
     color: white;
   }
@@ -1037,7 +1039,7 @@
   .netiaiig-container .error-message {
     color: #ffffff;
   }
-  
+
   .netiaiig-container .error-reason {
     color: #8e8e93;
   }

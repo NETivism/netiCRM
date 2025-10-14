@@ -198,13 +198,19 @@
     handleFloatingAction: function($button) {
       // Check if button is disabled (both HTML attribute and CSS class)
       if ($button.prop('disabled') || $button.hasClass(this.config.classes.disabled)) {
-        this.showError('功能暫時無法使用，請先生成圖片');
+        const message = window.AIImageGeneration && window.AIImageGeneration.translation
+          ? window.AIImageGeneration.translation.functionNotAvailable
+          : 'Function temporarily unavailable, please generate an image first';
+        this.showError(message);
         return;
       }
 
       // Double check if we have a valid image
       if (!this.hasGeneratedImage()) {
-        this.showError('請先生成圖片');
+        const message = window.AIImageGeneration && window.AIImageGeneration.translation
+          ? window.AIImageGeneration.translation.pleaseGenerateFirst
+          : 'Please generate an image first';
+        this.showError(message);
         return;
       }
 
@@ -231,12 +237,18 @@
 
       // Input validation
       if (!prompt) {
-        this.showError('請輸入圖片描述');
+        const message = window.AIImageGeneration && window.AIImageGeneration.translation
+          ? window.AIImageGeneration.translation.pleaseEnterDescription
+          : 'Please enter image description';
+        this.showError(message);
         return;
       }
 
       if (prompt.length > 1000) {
-        this.showError('描述文字超過1000字元限制');
+        const message = window.AIImageGeneration && window.AIImageGeneration.translation
+          ? window.AIImageGeneration.translation.descriptionTooLong
+          : 'Description text exceeds 1000 character limit';
+        this.showError(message);
         return;
       }
 
@@ -258,7 +270,9 @@
       // Set button loading state
       $btn.prop('disabled', true)
           .addClass(this.config.classes.loading)
-          .text('正在生成圖片...');
+          .text(window.AIImageGeneration && window.AIImageGeneration.translation
+            ? window.AIImageGeneration.translation.generating
+            : 'Generating image...');
 
       // Show staged loading overlay in image area
       this.loadingManager.show();
@@ -285,12 +299,18 @@
           if (response.status === 1 && response.data) {
             // Success: show image
             self.onGenerationComplete(response.data.image_url, response.data);
-            self.showSuccess('圖片生成成功！');
+            const message = window.AIImageGeneration && window.AIImageGeneration.translation
+              ? window.AIImageGeneration.translation.generateSuccess
+              : 'Image generated successfully!';
+            self.showSuccess(message);
           } else {
             // Failure: show error message
             self.onGenerationComplete();
+            const defaultMessage = window.AIImageGeneration && window.AIImageGeneration.translation
+              ? window.AIImageGeneration.translation.generateFailed
+              : 'Image generation failed';
             self.errorManager.show({
-              message: response.message || '圖片生成失敗'
+              message: response.message || defaultMessage
             });
           }
         },
@@ -303,7 +323,9 @@
           self.onGenerationComplete();
 
           // Handle HTTP errors
-          let errorMessage = '圖片生成失敗';
+          let errorMessage = window.AIImageGeneration && window.AIImageGeneration.translation
+            ? window.AIImageGeneration.translation.generateFailed
+            : 'Image generation failed';
 
           // Try to parse JSON response
           if (xhr.responseJSON && xhr.responseJSON.message) {
@@ -312,7 +334,9 @@
             errorMessage = 'timeout'; // Will be converted to friendly message
           } else {
             // Other cases keep generic error message, handled by HTTP status code
-            errorMessage = '圖片生成失敗';
+            errorMessage = window.AIImageGeneration && window.AIImageGeneration.translation
+              ? window.AIImageGeneration.translation.generateFailed
+              : 'Image generation failed';
           }
 
           // Use error manager with HTTP status code
@@ -333,7 +357,9 @@
       // Reset button state
       $btn.prop('disabled', false)
           .removeClass(this.config.classes.loading)
-          .text('Generate Image');
+          .text(window.AIImageGeneration && window.AIImageGeneration.translation
+            ? window.AIImageGeneration.translation.generateButton
+            : 'Generate Image');
 
       if (imageUrl) {
         this.displayGeneratedImage(imageUrl);
@@ -387,7 +413,10 @@
         // Set up load handler before setting src
         img.onload = function() {
           console.log('Image loaded successfully - displaying now');
-          $img.attr('alt', 'AI 生成圖片');
+          const altText = window.AIImageGeneration && window.AIImageGeneration.translation
+            ? window.AIImageGeneration.translation.aiGeneratedImage
+            : 'AI Generated Image';
+          $img.attr('alt', altText);
 
           // Add specific class for AI generated images
           $img.addClass('ai-generated-image');
@@ -483,7 +512,7 @@
       const loadingOverlayHtml = `
         <div class="loading-overlay" style="display: none;">
           <div class="loading-spinner"></div>
-          <div class="loading-message">送出請求中...</div>
+          <div class="loading-message">` + (window.AIImageGeneration && window.AIImageGeneration.translation ? window.AIImageGeneration.translation.submittingRequest : 'Submitting request...') + `</div>
           <div class="loading-timer">00.00 ${secondsLabel}</div>
           <div class="loading-progress">
             <div class="progress-bar">
@@ -500,7 +529,10 @@
     // Copy image to clipboard
     copyImage: function() {
       if (!this.hasGeneratedImage()) {
-        this.showError('沒有圖片可供複製');
+        const message = window.AIImageGeneration && window.AIImageGeneration.translation
+          ? window.AIImageGeneration.translation.noImageToCopy
+          : 'No image available to copy';
+        this.showError(message);
         return;
       }
 
@@ -517,7 +549,10 @@
 
       // Check if clipboard API is supported
       if (!navigator.clipboard || !navigator.clipboard.write) {
-        this.showError('您的瀏覽器不支援複製圖片功能');
+        const message = window.AIImageGeneration && window.AIImageGeneration.translation
+          ? window.AIImageGeneration.translation.browserNotSupported
+          : 'Your browser does not support image copying feature';
+        this.showError(message);
         return;
       }
 
@@ -542,7 +577,10 @@
           // Convert canvas to blob
           canvas.toBlob(function(blob) {
             if (!blob) {
-              self.showError('圖片處理失敗');
+              const message = window.AIImageGeneration && window.AIImageGeneration.translation
+                ? window.AIImageGeneration.translation.imageProcessFailed
+                : 'Image processing failed';
+              self.showError(message);
               return;
             }
             
@@ -550,26 +588,38 @@
             const clipboardItem = new ClipboardItem({ [blob.type]: blob });
             
             navigator.clipboard.write([clipboardItem]).then(function() {
-              self.showSuccess('圖片已複製到剪貼簿');
+              const message = window.AIImageGeneration && window.AIImageGeneration.translation
+                ? window.AIImageGeneration.translation.imageCopied
+                : 'Image copied to clipboard';
+              self.showSuccess(message);
               console.log('Image copied to clipboard successfully');
               
               // Update tooltip to show success state temporarily
               self.updateCopyButtonTooltip('Copied successfully !', true);
             }).catch(function(error) {
               console.error('Failed to copy image to clipboard:', error);
-              self.showError('複製圖片失敗，請重試');
+              const message = window.AIImageGeneration && window.AIImageGeneration.translation
+                ? window.AIImageGeneration.translation.copyFailed
+                : 'Failed to copy image, please try again';
+              self.showError(message);
             });
           }, 'image/png');
           
         } catch (error) {
           console.error('Error processing image for clipboard:', error);
-          self.showError('圖片處理過程發生錯誤');
+          const message = window.AIImageGeneration && window.AIImageGeneration.translation
+            ? window.AIImageGeneration.translation.imageProcessError
+            : 'Error occurred during image processing';
+          self.showError(message);
         }
       };
       
       img.onerror = function() {
         console.error('Failed to load image for copying');
-        self.showError('無法載入圖片，請重試');
+        const message = window.AIImageGeneration && window.AIImageGeneration.translation
+          ? window.AIImageGeneration.translation.imageLoadFailed
+          : 'Failed to load image, please try again';
+        self.showError(message);
       };
       
       // Load the image
@@ -579,7 +629,10 @@
     // Download generated image
     downloadImage: function() {
       if (!this.hasGeneratedImage()) {
-        this.showError('沒有圖片可供下載');
+        const message = window.AIImageGeneration && window.AIImageGeneration.translation
+          ? window.AIImageGeneration.translation.noImageToDownload
+          : 'No image available to download';
+        this.showError(message);
         return;
       }
 
@@ -605,7 +658,10 @@
       link.click();
 
       console.log('Downloading as:', fileName);
-      this.showSuccess('圖片下載已開始');
+      const message = window.AIImageGeneration && window.AIImageGeneration.translation
+        ? window.AIImageGeneration.translation.downloadStarted
+        : 'Image download started';
+      this.showSuccess(message);
     },
 
     // Load history image
@@ -1080,7 +1136,10 @@
         $container.find('.progress-fill').css('width', '0%');
 
         // Reset message to initial state
-        $container.find('.loading-message').text('送出請求中...');
+        const initialMessage = window.AIImageGeneration && window.AIImageGeneration.translation
+          ? window.AIImageGeneration.translation.submittingRequest
+          : 'Submitting request...';
+        $container.find('.loading-message').text(initialMessage);
 
         // Reset timer to initial state
         $container.find('.loading-timer').text(`00.00 ${secondsLabel}`);
@@ -1136,7 +1195,11 @@
         delegate: '.ai-image-link',
         type: 'image',
         image: {
-          titleSrc: 'AI 生成圖片'
+          titleSrc: function() {
+            return window.AIImageGeneration && window.AIImageGeneration.translation
+              ? window.AIImageGeneration.translation.lightboxTitle
+              : 'AI Generated Image';
+          }
         },
         closeOnContentClick: true,
         mainClass: 'mfp-with-zoom',
@@ -1384,35 +1447,42 @@
 
       // Convert various errors to user-friendly messages
       getFriendlyErrorMessage: function(technicalMessage, httpStatus) {
+        // Get translation helper function
+        const getTranslation = (key) => {
+          return window.AIImageGeneration && window.AIImageGeneration.translation
+            ? window.AIImageGeneration.translation[key]
+            : null;
+        };
+
         // JSON response error mappings
         const jsonErrorMappings = {
-          'The request is not a valid JSON format.': '請求格式錯誤，請重新整理頁面後重試',
-          'The request does not match the expected format.': '請求參數錯誤，請檢查輸入內容',
-          'Content exceeds the maximum character limit.': '描述文字過長，請縮短至 1000 字以內',
-          'No corresponding component was found.': '頁面權限錯誤，請重新整理頁面',
-          'Invalid request method or missing data.': '系統錯誤，請重新整理頁面後重試'
+          'The request is not a valid JSON format.': getTranslation('errorInvalidJson') || 'Request format error, please refresh the page and try again',
+          'The request does not match the expected format.': getTranslation('errorInvalidFormat') || 'Request parameter error, please check input content',
+          'Content exceeds the maximum character limit.': getTranslation('errorContentTooLong') || 'Description text is too long, please shorten to within 1000 characters',
+          'No corresponding component was found.': getTranslation('errorNoComponent') || 'Page permission error, please refresh the page',
+          'Invalid request method or missing data.': getTranslation('errorInvalidMethod') || 'System error, please refresh the page and try again'
         };
 
         // HTTP status code mappings
         const httpStatusMappings = {
-          400: '請求參數有誤，請檢查輸入內容',
-          401: '登入已過期，請重新登入',
-          403: '權限不足，請聯絡管理員',
-          404: '服務暫時無法使用，請稍後重試',
-          408: '請求逾時，請檢查網路連線',
-          429: '使用頻率過高，請稍後重試',
-          500: '伺服器暫時錯誤，請稍後重試',
-          502: '服務暫時無法連線，請稍後重試',
-          503: '服務暫時維護中，請稍後重試',
-          504: '連線逾時，請檢查網路連線'
+          400: getTranslation('errorBadRequest') || 'Request parameter error, please check input content',
+          401: getTranslation('errorUnauthorized') || 'Login expired, please login again',
+          403: getTranslation('errorForbidden') || 'Insufficient permissions, please contact administrator',
+          404: getTranslation('errorNotFound') || 'Service temporarily unavailable, please try again later',
+          408: getTranslation('errorTimeout') || 'Request timeout, please check network connection',
+          429: getTranslation('errorTooManyRequests') || 'Usage frequency too high, please try again later',
+          500: getTranslation('errorServerError') || 'Server temporarily error, please try again later',
+          502: getTranslation('errorBadGateway') || 'Service temporarily unavailable, please try again later',
+          503: getTranslation('errorServiceUnavailable') || 'Service temporarily under maintenance, please try again later',
+          504: getTranslation('errorGatewayTimeout') || 'Connection timeout, please check network connection'
         };
 
         // Network connection error mappings
         const networkErrorMappings = {
-          'network error': '網路連線中斷，請檢查網路狀態',
-          'timeout': '連線逾時，請重新整理頁面後重試',
-          'connection refused': '無法連接到伺服器，請稍後重試',
-          'dns error': '網路設定問題，請檢查網路連線'
+          'network error': getTranslation('errorNetworkError') || 'Network connection interrupted, please check network status',
+          'timeout': getTranslation('errorConnectionTimeout') || 'Connection timeout, please refresh the page and try again',
+          'connection refused': getTranslation('errorConnectionRefused') || 'Unable to connect to server, please try again later',
+          'dns error': getTranslation('errorDnsError') || 'Network configuration problem, please check network connection'
         };
 
         // 1. Priority check JSON response error messages
@@ -1422,7 +1492,7 @@
 
         // 2. Check for Image generation failed type
         if (technicalMessage.includes('Image generation failed')) {
-          return '圖片生成失敗，請稍後重試';
+          return getTranslation('errorGenerationFailed') || 'Image generation failed, please try again later';
         }
 
         // 3. Check HTTP status code
@@ -1439,7 +1509,7 @@
         }
 
         // 5. Default error message
-        return '圖片生成過程中發生錯誤，請稍後重試';
+        return getTranslation('errorDefaultMessage') || 'An error occurred during image generation, please try again later';
       }
     }
   };
