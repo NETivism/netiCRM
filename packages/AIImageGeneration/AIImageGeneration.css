@@ -844,6 +844,7 @@
 }
 
 .netiaiig-container .loading-timer {
+  display: none !important;
   font-size: 14px;
   color: #007aff;
   text-align: center;

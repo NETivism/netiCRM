@@ -76,11 +76,11 @@ window.AIImageGeneration = {
       {* Image display area with enhanced empty state *}
       <div class="image-display" role="region" aria-label="{ts}AI Image Generation Area{/ts}">
         <div class="generated-image">
-          <div class="image-placeholder" 
-               role="img" 
+          <div class="image-placeholder"
+               role="img"
                aria-label="{ts}Image generation area, click the button below to start creating your custom image{/ts}"
                tabindex="0">
-            
+
             {* Empty state content - visible when no image is generated *}
             <div class="empty-state-content">
               <div class="empty-state-icon" aria-hidden="true">
@@ -89,7 +89,7 @@ window.AIImageGeneration = {
               <div class="empty-state-title">{ts}Ready to unleash your creativity?{/ts}</div>
               <div class="empty-state-subtitle">{ts}Enter your ideas and let AI create images for you{/ts}</div>
             </div>
-            
+
             <img src="../images/thumb-00.png" alt="" style="display: none;">
 
             {* Loading state overlay *}
@@ -106,7 +106,7 @@ window.AIImageGeneration = {
               <div class="loading-info">
                 <p class="loading-info-text"></p>
               </div>
-              
+
               {* Error state elements (hidden by default) *}
               <div class="error-state" style="display: none;" role="alert" aria-live="polite">
                 <div class="error-icon" aria-hidden="true">
@@ -150,7 +150,7 @@ window.AIImageGeneration = {
                 </button>
                 <div class="style-dropdown-menu">
                   <div class="style-grid">
-                    <div class="style-option" data-style="Simple Illustration">
+                    <div class="style-option selected" data-style="Simple Illustration">
                       <div class="style-preview"><img src="../images/thumb-01.png" alt=""></div>
                       <div class="style-label">{ts}Simple Illustration{/ts}</div>
                     </div>
@@ -170,7 +170,7 @@ window.AIImageGeneration = {
                       <div class="style-preview"><img src="../images/thumb-05.png" alt=""></div>
                       <div class="style-label">{ts}Hand-Drawn Illustration{/ts}</div>
                     </div>
-                    <div class="style-option selected" data-style="Custom Style">
+                    <div class="style-option" data-style="Custom Style">
                       <div class="style-preview"><img src="../images/thumb-06.png" alt=""></div>
                       <div class="style-label">{ts}Custom Style{/ts}</div>
                     </div>

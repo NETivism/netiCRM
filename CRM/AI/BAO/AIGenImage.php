@@ -37,6 +37,58 @@ class CRM_AI_BAO_AIGenImage {
   protected $generationRecordId;
 
   /**
+   * Style mapping for converting user-facing style names to internal style names
+   *
+   * @var array
+   */
+  private static $styleMapping = [
+    'Simple Illustration' => 'Simple Illustration',
+    'Japanese Illustration' => 'Simple Illustration',
+    'Storybook Style' => 'Children\'s picture book illustration',
+    'Watercolor Painting' => 'Watercolor printing',
+    'Hand-Drawn Illustration' => 'Hand-Drawn Illustration',
+  ];
+
+  /**
+   * Style prefixes for enhancing prompts based on selected style
+   * Each style contains multiple prefix options for random selection
+   *
+   * @var array
+   */
+  private static $stylePrefixes = [
+    'Simple Illustration' => [
+      'Minimalist flat illustration, the character design is a minimalist cartoon style, with minimal facial features',
+      'Minimalist flat illustration, the character design is a minimalist style, with minimal facial features',
+      'Minimalist flat illustration, minimalist cartoon style',
+    ],
+    'Japanese Illustration' => [
+      'Minimalist flat illustration, the character design is a Japanese minimalist cartoon style, with minimal facial features',
+      'Minimalist flat illustration, the character design is a Japanese minimalist style, with minimal facial features',
+      'Children\'s picture book illustration in a mid-20th century Japanese style, soft pastel colors, clean bold lines, crayon texture, simple geometric composition, paper texture background, and a warm, minimal atmosphere. The character design is minimalist with minimal facial features',
+    ],
+    'Children\'s picture book illustration' => [
+      'Children\'s picture book illustration in the mid-20th century Polish style, featuring geometric composition, muted primary colors, paper texture, symbolic shapes, and minimalist folk-inspired characters',
+      'Modern reinterpretation of Polish picture book illustration, bold flat colors, strong graphic layout, naive art influence, poster-like composition, warm matte tone',
+      'Contemporary children\'s illustration with a humanistic Polish aesthetic,subtle textures, muted palette, expressive yet kind faces,showing compassion and community care in realistic scenes',
+      'Children\'s book illustration in a warm Eastern European style, featuring soft geometric shapes, muted earth tones, and handmade textures,depicting empathy, cooperation, and human connection in daily life',
+      'Modern Polish picture book illustration, flat geometric design with paper grain texture, featuring children learning and teachers guiding with gentle expression,balanced color composition and thoughtful mood',
+      'Dreamlike watercolor illustration in the Polish children\'s book style,symbolic landscapes, surreal proportions, soft color diffusion,folk pattern details, expressive character silhouettes, evoking a poetic and nostalgic feeling',
+    ],
+    'Watercolor printing' => [
+      'Minimalist flat illustration, the character design is a minimalist cartoon style, with minimal facial features',
+      'Minimalist flat illustration, the character design is a minimalist style, with minimal facial features',
+      'Modern watercolor interpretation of Polish picture book illustration,combining soft watercolor washes with strong graphic composition,folk-inspired shapes, matte pastel palette, minimal outlines,delicate storytelling mood, vintage children\'s book atmosphere',
+      'Modern watercolor interpretation of Polish picture book illustration,combining soft watercolor washes with strong graphic composition,folk-inspired shapes, matte pastel palette, minimal outlines,delicate storytelling mood, vintage children\'s book atmosphere, the character design is a minimalist cartoon style, with minimal facial features',
+      'Modern watercolor interpretation of Polish picture book illustration,combining soft watercolor washes with strong graphic composition,folk-inspired shapes, matte pastel palette, minimal outlines,delicate storytelling mood, vintage children\'s book atmosphere, the character design is a minimalist style, with minimal facial features',
+    ],
+    'Hand-Drawn Illustration' => [
+      'A hand-drawn illustration with a nouveau and minimalistic style, minimalist cartoon character design with simplified facial features',
+      'A hand-drawn illustration with a nouveau and minimalistic style, minimalist cartoon character design with simplified facial features, textured paper,',
+      'A hand-drawn illustration with a nouveau and minimalistic style, minimalist cartoon character design with simplified facial features, textured paper, handmade pencil and crayon strokes of various thicknesses',
+    ],
+  ];
+
+  /**
    * Constructor with dependency injection
    *
    * @param CRM_AI_BAO_AITransPrompt $translator Optional prompt translator
@@ -63,6 +115,9 @@ class CRM_AI_BAO_AIGenImage {
 
       // Step 2: Create initial database record
       $this->generationRecordId = $this->createInitialRecord($params);
+
+      // Step 2.5: Process style mapping and text enhancement
+      $params = $this->processStyleAndText($params);
 
       // Step 3: Prompt translation
       $translationResponse = $this->translator->translate($params['text'], [
@@ -188,6 +243,40 @@ class CRM_AI_BAO_AIGenImage {
 
     // Step 8: Return relative path for database storage
     return $this->getRelativePath($fullPath);
+  }
+
+  /**
+   * Process and enhance text prompt based on style requirements
+   * Adds random prefix based on original style, then applies style mapping
+   *
+   * @param array $params Original request parameters
+   * @return array Modified parameters with enhanced text and mapped style
+   */
+  protected function processStyleAndText($params) {
+    $modifiedParams = $params;
+    $originalStyle = $params['style'] ?? '';
+    
+    // Step 1: Add prefix to text based on the original style (before mapping)
+    if (!empty($originalStyle) && isset(self::$stylePrefixes[$originalStyle])) {
+      $prefixOptions = self::$stylePrefixes[$originalStyle];
+      if (!empty($prefixOptions)) {
+        // Randomly select one prefix from available options
+        $randomIndex = array_rand($prefixOptions);
+        $selectedPrefix = $prefixOptions[$randomIndex];
+        
+        // Combine prefix with original text
+        $originalText = $params['text'] ?? '';
+        $modifiedParams['text'] = $selectedPrefix . ', ' . $originalText;
+      }
+    }
+    
+    // Step 2: Apply style mapping if style exists
+    if (!empty($originalStyle) && isset(self::$styleMapping[$originalStyle])) {
+      $mappedStyle = self::$styleMapping[$originalStyle];
+      $modifiedParams['style'] = $mappedStyle;
+    }
+    
+    return $modifiedParams;
   }
 
   /**
