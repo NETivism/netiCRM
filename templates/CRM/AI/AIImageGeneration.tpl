@@ -103,7 +103,7 @@ window.AIImageGeneration = {
               <div class="netiaiig-dropdown" id="styleDropdown">
                 <button type="button" class="embedded-btn dropdown-toggle" title="{ts}Select Art Style{/ts}" data-tooltip data-tooltip-placement="n">
                   <i class="zmdi zmdi-flower-alt"></i>
-                  <span id="styleText">Children's Book Illustration</span>
+                  <span id="styleText">{ts}Simple Illustration{/ts}</span>
                   <i class="zmdi zmdi-chevron-down"></i>
                 </button>
                 <div class="style-dropdown-menu">
@@ -126,11 +126,11 @@ window.AIImageGeneration = {
                     </div>
                     <div class="style-option" data-style="Hand-Drawn Illustration">
                       <div class="style-preview"><img src="../images/thumb-05.png" alt=""></div>
-                      <div class="style-label">{ts}Hand-Drawn Illustration{ts}</div>
+                      <div class="style-label">{ts}Hand-Drawn Illustration{/ts}</div>
                     </div>
                     <div class="style-option selected" data-style="Custom Style">
                       <div class="style-preview"><img src="../images/thumb-06.png" alt=""></div>
-                      <div class="style-label">{ts}Custom Style{ts}</div>
+                      <div class="style-label">{ts}Custom Style{/ts}</div>
                     </div>
                   </div>
                 </div>
@@ -162,8 +162,8 @@ window.AIImageGeneration = {
         <button type="button" class="generate-btn">{ts}Generate Image{/ts}</button>
       </div>
 
-      {* History section *}
       <!--
+      {* History section *}
       <div class="history-section">
         <label class="control-label">History</label>
         <div class="history-grid">
