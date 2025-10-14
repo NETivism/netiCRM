@@ -82,6 +82,7 @@ class CRM_AI_BAO_AIGenImage {
         // Parse JSON response if message contains JSON
         if (!empty($translatedPrompt) && is_string($translatedPrompt)) {
           $parsedData = $this->translator->parseJsonResponse($translatedPrompt);
+
           if ($parsedData !== false && isset($parsedData['data']['prompt'])) {
             $translatedPrompt = $parsedData['data']['prompt'];
           }

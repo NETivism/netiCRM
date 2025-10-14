@@ -45,7 +45,7 @@ window.AIImageGeneration = {
                 <i class="zmdi zmdi-brush"></i>
               </div>
               <div class="empty-state-title">{ts}準備好釋放您的創意了嗎？{/ts}</div>
-              <div class="empty-state-subtitle">{ts}輸入您的想法，讓 AI 為您創作獨特的藝術作品{/ts}</div>
+              <div class="empty-state-subtitle">{ts}輸入您的想法，讓 AI 為您創作圖像{/ts}</div>
             </div>
             
             <img src="../images/thumb-00.png" alt="" style="display: none;">
@@ -53,7 +53,7 @@ window.AIImageGeneration = {
             {* Loading state overlay *}
             <div class="loading-overlay" style="display: none;">
               <div class="loading-spinner"></div>
-              <div class="loading-message">送出請求中...</div>
+              <div class="loading-message"></div>
               <div class="loading-progress">
                 <div class="progress-bar">
                   <div class="progress-fill"></div>
@@ -108,29 +108,29 @@ window.AIImageGeneration = {
                 </button>
                 <div class="style-dropdown-menu">
                   <div class="style-grid">
-                    <div class="style-option" data-style="Watercolor printing">
-                      <div class="style-preview"><img src="../images/thumb-01.png" alt=""></div>
-                      <div class="style-label">Watercolor printing</div>
-                    </div>
-                    <div class="style-option" data-style="Pixel Art">
-                      <div class="style-preview"><img src="../images/thumb-02.png" alt=""></div>
-                      <div class="style-label">Pixel Art</div>
-                    </div>
-                    <div class="style-option" data-style="Expressionist Painting">
-                      <div class="style-preview"><img src="../images/thumb-03.png" alt=""></div>
-                      <div class="style-label">Expressionist Painting</div>
-                    </div>
                     <div class="style-option" data-style="Simple Illustration">
+                      <div class="style-preview"><img src="../images/thumb-01.png" alt=""></div>
+                      <div class="style-label">{ts}Simple Illustration{/ts}</div>
+                    </div>
+                    <div class="style-option" data-style="Japanese Illustration">
+                      <div class="style-preview"><img src="../images/thumb-02.png" alt=""></div>
+                      <div class="style-label">{ts}Japanese Illustration{/ts}</div>
+                    </div>
+                    <div class="style-option" data-style="Storybook Style">
+                      <div class="style-preview"><img src="../images/thumb-03.png" alt=""></div>
+                      <div class="style-label">{ts}Storybook Style{/ts}</div>
+                    </div>
+                    <div class="style-option" data-style="Watercolor Painting">
                       <div class="style-preview"><img src="../images/thumb-04.png" alt=""></div>
-                      <div class="style-label">Simple Illustration</div>
+                      <div class="style-label">{ts}Watercolor Painting{/ts}</div>
                     </div>
-                    <div class="style-option" data-style="3D Animation">
+                    <div class="style-option" data-style="Hand-Drawn Illustration">
                       <div class="style-preview"><img src="../images/thumb-05.png" alt=""></div>
-                      <div class="style-label">3D Animation</div>
+                      <div class="style-label">{ts}Hand-Drawn Illustration{ts}</div>
                     </div>
-                    <div class="style-option selected" data-style="Children's Book Illustration">
+                    <div class="style-option selected" data-style="Custom Style">
                       <div class="style-preview"><img src="../images/thumb-06.png" alt=""></div>
-                      <div class="style-label">Children's Book Illustration</div>
+                      <div class="style-label">{ts}Custom Style{ts}</div>
                     </div>
                   </div>
                 </div>
@@ -139,30 +139,31 @@ window.AIImageGeneration = {
               <div class="netiaiig-dropdown" id="ratioDropdown">
                 <button type="button" class="embedded-btn dropdown-toggle" title="{ts}Select Aspect Ratio{/ts}" data-tooltip data-tooltip-placement="n">
                   <i class="zmdi zmdi-aspect-ratio-alt"></i>
-                  <span id="ratioText">1:1</span>
+                  <span id="ratioText">4:3</span>
                   <i class="zmdi zmdi-chevron-down"></i>
                 </button>
                 <div class="dropdown-menu">
+                  <div class="dropdown-item" data-ratio="4:3">4:3</div>
+                  <div class="dropdown-item" data-ratio="3:4">3:4</div>
                   <div class="dropdown-item selected" data-ratio="1:1">1:1</div>
                   <div class="dropdown-item" data-ratio="16:9">16:9</div>
                   <div class="dropdown-item" data-ratio="9:16">9:16</div>
-                  <div class="dropdown-item" data-ratio="4:3">4:3</div>
-                  <div class="dropdown-item" data-ratio="3:4">3:4</div>
                 </div>
               </div>
             </div>
 
             <textarea name="netiaiig_prompt" class="prompt-textarea"
-              placeholder="Describe the image you want to generate...">A gentle owl telling stories to small animals under the starry sky, soft pastel colors, warm golden moonlight, cozy storytelling atmosphere, rounded character design, digital painting style, whimsical warm mood, medium shot composition.</textarea>
+              placeholder="{ts}Describe the image you want to generate...{/ts}"></textarea>
           </div>
         </div>
 
 
         {* Generate button *}
-        <button type="button" class="generate-btn">Generate Image</button>
+        <button type="button" class="generate-btn">{ts}Generate Image{/ts}</button>
       </div>
 
       {* History section *}
+      <!--
       <div class="history-section">
         <label class="control-label">History</label>
         <div class="history-grid">
@@ -186,6 +187,7 @@ window.AIImageGeneration = {
           </div>
         </div>
       </div>
+      -->
 
     </div>
   </div>
