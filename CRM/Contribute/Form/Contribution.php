@@ -1548,7 +1548,7 @@ WHERE  contribution_id = {$this->_id}
       if ($contribution->id && isset($params['product_name'][0])) {
         CRM_Contribute_Form_AdditionalInfo::processPremium($params, $contribution->id, NULL, $this->_options);
         // pending contribution to restock
-        if ($originalValues['contribution_status_id'] == 2 && $config->premiumIRManualCancel && ($submittedValues['contribution_status_id'] == 3 || $submittedValues['contribution_status_id'] == 4) ) {
+        if ($config->premiumIRManualCancel && ($submittedValues['contribution_status_id'] == 3 || $submittedValues['contribution_status_id'] == 4) ) {
           try{
             CRM_Contribute_BAO_Premium::restockPremiumInventory($contribution->id, 'Manually restock by user');
           }
@@ -1735,7 +1735,9 @@ WHERE  contribution_id = {$this->_id}
           $this->_premiumID, $this->_options
         );
       }
-      if ($originalValues['contribution_status_id'] == 2 && $config->premiumIRManualCancel && ($submittedValues['contribution_status_id'] == 3 || $submittedValues['contribution_status_id'] == 4)) {
+      if ($config->premiumIRManualCancel &&
+        ($originalValues['contribution_status_id'] == 1 || $originalValues['contribution_status_id'] == 2) &&
+        ($submittedValues['contribution_status_id'] == 3 || $submittedValues['contribution_status_id'] == 4)) {
         try{
           CRM_Contribute_BAO_Premium::restockPremiumInventory($contribution->id, 'Manually restock by user');
         }

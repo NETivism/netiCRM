@@ -575,7 +575,6 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
     // Pre-validate all products before starting transaction
     while ($dao->fetch()) {
       $quantity = $dao->quantity ?: 1;
-      
       // Check if product meets restock conditions
       $checkSql = "
         SELECT id, name, send_qty, stock_status, stock_qty
@@ -628,14 +627,15 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
     if (!empty($invalidProducts)) {
       $errorMessages = [];
       foreach ($invalidProducts as $product) {
+        // skip no stock management product
+        if (empty($product['stock_status'])) {
+          continue;
+        }
         $reasons = [];
         if (is_null($product['send_qty'])) {
           $reasons[] = 'send_qty is NULL';
         } elseif ($product['send_qty'] < $product['required_quantity']) {
           $reasons[] = "send_qty ({$product['send_qty']}) < required quantity ({$product['required_quantity']})";
-        }
-        if ($product['stock_status'] <= 0) {
-          $reasons[] = "stock_status ({$product['stock_status']}) <= 0";
         }
         if ($product['stock_qty'] <= 0) {
           $reasons[] = "stock_qty ({$product['stock_qty']}) <= 0";
@@ -643,8 +643,9 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
         
         $errorMessages[] = "Product '{$product['name']}' (ID: {$product['id']}): " . implode(', ', $reasons);
       }
-      
-      throw new Exception("Restock failed - the following products do not meet restock conditions: " . implode('; ', $errorMessages));
+      if (!empty($errorMessages)) {
+        throw new Exception("Restock failed - the following products do not meet restock conditions: " . implode('; ', $errorMessages));
+      }
     }
     
     // If no products to restock, return early
