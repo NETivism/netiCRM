@@ -20,7 +20,10 @@
         historyItem: '.history-item',
         promptTextarea: '.prompt-textarea',
         styleOptions: '.style-option',
-        dropdownItems: '.dropdown-item'
+        dropdownItems: '.dropdown-item',
+        floatingMessage: '.floating-message',
+        floatingMessageIcon: '.floating-message-icon',
+        floatingMessageText: '.floating-message-text'
       },
       classes: {
         active: 'active',
@@ -557,23 +560,23 @@
       }
 
       const self = this;
-      
+
       // Create a new image element to load the image data
       const img = new Image();
       img.crossOrigin = 'anonymous'; // Handle CORS if needed
-      
+
       img.onload = function() {
         try {
           // Create canvas to convert image to blob
           const canvas = document.createElement('canvas');
           const ctx = canvas.getContext('2d');
-          
+
           canvas.width = img.naturalWidth;
           canvas.height = img.naturalHeight;
-          
+
           // Draw image to canvas
           ctx.drawImage(img, 0, 0);
-          
+
           // Convert canvas to blob
           canvas.toBlob(function(blob) {
             if (!blob) {
@@ -583,19 +586,16 @@
               self.showError(message);
               return;
             }
-            
+
             // Create clipboard item and copy to clipboard
             const clipboardItem = new ClipboardItem({ [blob.type]: blob });
-            
+
             navigator.clipboard.write([clipboardItem]).then(function() {
               const message = window.AIImageGeneration && window.AIImageGeneration.translation
                 ? window.AIImageGeneration.translation.imageCopied
                 : 'Image copied to clipboard';
               self.showSuccess(message);
               console.log('Image copied to clipboard successfully');
-              
-              // Update tooltip to show success state temporarily
-              self.updateCopyButtonTooltip('Copied successfully !', true);
             }).catch(function(error) {
               console.error('Failed to copy image to clipboard:', error);
               const message = window.AIImageGeneration && window.AIImageGeneration.translation
@@ -604,7 +604,7 @@
               self.showError(message);
             });
           }, 'image/png');
-          
+
         } catch (error) {
           console.error('Error processing image for clipboard:', error);
           const message = window.AIImageGeneration && window.AIImageGeneration.translation
@@ -613,7 +613,7 @@
           self.showError(message);
         }
       };
-      
+
       img.onerror = function() {
         console.error('Failed to load image for copying');
         const message = window.AIImageGeneration && window.AIImageGeneration.translation
@@ -621,7 +621,7 @@
           : 'Failed to load image, please try again';
         self.showError(message);
       };
-      
+
       // Load the image
       img.src = imageUrl;
     },
@@ -1022,7 +1022,7 @@
         // Hide loading overlay and loading info
         $overlay.hide();
         $loadingInfo.hide();
-        
+
         // Show appropriate content based on whether we have a generated image
         if (NetiAIImageGeneration.hasGeneratedImage()) {
           $image.show();
@@ -1214,6 +1214,9 @@
     showSuccess: function(message) {
       console.log('Success:', message);
 
+      // Show floating message notification
+      this.floatingMessage.showSuccess(message);
+
       // Trigger custom success event
       $(this.config.container).trigger('aiImageSuccess', [message]);
     },
@@ -1221,6 +1224,9 @@
     // Show error message
     showError: function(message) {
       console.error('Error:', message);
+
+      // Show floating message notification
+      this.floatingMessage.showError(message);
 
       // Trigger custom error event
       $(this.config.container).trigger('aiImageError', [message]);
@@ -1236,12 +1242,15 @@
     setFloatingActionsState: function(state) {
       const $floatingActions = $(this.config.container).find('.floating-actions');
       const $floatingBtns = $floatingActions.find(this.config.selectors.floatingBtn);
+      const $floatingMessage = $floatingActions.find(this.config.selectors.floatingMessage);
 
       switch(state) {
         case 'hidden':
           // Hide entire floating actions container (loading or no image)
           $floatingActions.hide();
           $floatingBtns.prop('disabled', true).addClass(this.config.classes.disabled);
+          // Also hide any existing floating messages
+          this.floatingMessage.hide();
           console.log('Floating actions: Hidden (no image or loading)');
           break;
 
@@ -1263,44 +1272,6 @@
         this.setFloatingActionsState('enabled');
       } else {
         this.setFloatingActionsState('hidden');
-      }
-    },
-
-    // Update tooltip text for copy button
-    updateCopyButtonTooltip: function(text, isTemporary = false) {
-      console.log('updateCopyButtonTooltip called with text:', text, 'isTemporary:', isTemporary);
-      
-      const $copyButton = $(this.config.container).find('.floating-btn').filter(function() {
-        return $(this).find('.zmdi-collection-plus').length > 0;
-      });
-
-      console.log('Found copy buttons:', $copyButton.length);
-      
-      if ($copyButton.length === 0) {
-        console.log('No copy button found');
-        return;
-      }
-
-      // Clear existing timer for this button
-      if (this.tooltipTimers.copyButton) {
-        clearTimeout(this.tooltipTimers.copyButton);
-        delete this.tooltipTimers.copyButton;
-      }
-
-      // Update tooltip text using PowerTip's recommended method
-      $copyButton.attr('title', text);
-      $copyButton.data('powertip', text);
-      
-      console.log('Updated tooltip to:', text);
-
-      // If temporary, set timer to revert back
-      if (isTemporary) {
-        const self = this;
-        this.tooltipTimers.copyButton = setTimeout(function() {
-          console.log('Reverting tooltip back to Copy');
-          self.updateCopyButtonTooltip('Copy', false);
-          delete self.tooltipTimers.copyButton;
-        }, 5000);
       }
     },
 
@@ -1510,6 +1481,78 @@
 
         // 5. Default error message
         return getTranslation('errorDefaultMessage') || 'An error occurred during image generation, please try again later';
+      }
+    },
+
+    // Floating message manager for action button notifications
+    floatingMessage: {
+      hideTimer: null,
+
+      // Show floating message with auto-hide
+      show: function(message, type = 'success') {
+        const $container = $(NetiAIImageGeneration.config.container);
+        const $floatingMessage = $container.find(NetiAIImageGeneration.config.selectors.floatingMessage);
+        const $messageIcon = $container.find(NetiAIImageGeneration.config.selectors.floatingMessageIcon);
+        const $messageText = $container.find(NetiAIImageGeneration.config.selectors.floatingMessageText);
+
+        if ($floatingMessage.length === 0) {
+          console.warn('Floating message element not found');
+          return;
+        }
+
+        // Clear any existing timer
+        this.clearTimer();
+
+        // Set message content
+        $messageText.text(message);
+
+        // Set icon based on type
+        if (type === 'success') {
+          $messageIcon.removeClass().addClass('floating-message-icon zmdi zmdi-check-circle');
+          $floatingMessage.removeClass('error').addClass('success');
+        } else if (type === 'error') {
+          $messageIcon.removeClass().addClass('floating-message-icon zmdi zmdi-close-circle');
+          $floatingMessage.removeClass('success').addClass('error');
+        }
+
+        // Show message with animation
+        $floatingMessage.stop(true, true).fadeIn(200);
+
+        // Auto-hide after 5 seconds
+        this.hideTimer = setTimeout(() => {
+          this.hide();
+        }, 5000);
+
+        console.log('Floating message shown:', { message, type });
+      },
+
+      // Hide floating message
+      hide: function() {
+        const $container = $(NetiAIImageGeneration.config.container);
+        const $floatingMessage = $container.find(NetiAIImageGeneration.config.selectors.floatingMessage);
+
+        this.clearTimer();
+        $floatingMessage.stop(true, true).fadeOut(200);
+
+        console.log('Floating message hidden');
+      },
+
+      // Clear hide timer
+      clearTimer: function() {
+        if (this.hideTimer) {
+          clearTimeout(this.hideTimer);
+          this.hideTimer = null;
+        }
+      },
+
+      // Show success message
+      showSuccess: function(message) {
+        this.show(message, 'success');
+      },
+
+      // Show error message
+      showError: function(message) {
+        this.show(message, 'error');
       }
     }
   };

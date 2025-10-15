@@ -122,15 +122,25 @@ window.AIImageGeneration = {
 
           {* Floating action buttons *}
           <div class="floating-actions">
-            <button type="button" class="floating-btn" title="{ts}Regenerate{/ts}" data-tooltip data-tooltip-placement="s">
-              <i class="zmdi zmdi-refresh"></i>
-            </button>
-            <button type="button" class="floating-btn" title="{ts}Copy{/ts}" data-tooltip data-tooltip-placement="s">
-              <i class="zmdi zmdi-collection-plus"></i>
-            </button>
-            <button type="button" class="floating-btn" title="{ts}Download Image{/ts}" data-tooltip data-tooltip-placement="s">
-              <i class="zmdi zmdi-download"></i>
-            </button>
+            {* Message notification area *}
+            <div class="floating-message" style="display: none;" role="alert" aria-live="polite">
+              <div class="floating-message-content">
+                <i class="floating-message-icon"></i>
+                <span class="floating-message-text"></span>
+              </div>
+            </div>
+            
+            <div class="floating-buttons">
+              <button type="button" class="floating-btn" title="{ts}Regenerate{/ts}" data-tooltip data-tooltip-placement="s">
+                <i class="zmdi zmdi-refresh"></i>
+              </button>
+              <button type="button" class="floating-btn" title="{ts}Copy{/ts}" data-tooltip data-tooltip-placement="s">
+                <i class="zmdi zmdi-collection-plus"></i>
+              </button>
+              <button type="button" class="floating-btn" title="{ts}Download Image{/ts}" data-tooltip data-tooltip-placement="s">
+                <i class="zmdi zmdi-download"></i>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -185,9 +195,9 @@ window.AIImageGeneration = {
                   <i class="zmdi zmdi-chevron-down"></i>
                 </button>
                 <div class="dropdown-menu">
-                  <div class="dropdown-item" data-ratio="4:3">4:3</div>
+                  <div class="dropdown-item selected" data-ratio="4:3">4:3</div>
                   <div class="dropdown-item" data-ratio="3:4">3:4</div>
-                  <div class="dropdown-item selected" data-ratio="1:1">1:1</div>
+                  <div class="dropdown-item" data-ratio="1:1">1:1</div>
                   <div class="dropdown-item" data-ratio="16:9">16:9</div>
                   <div class="dropdown-item" data-ratio="9:16">9:16</div>
                 </div>

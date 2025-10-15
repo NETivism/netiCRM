@@ -157,9 +157,16 @@
   bottom: 12px;
   right: 12px;
   display: flex;
+  flex-direction: column;
+  align-items: flex-end;
   gap: 8px;
   opacity: 1;
   transition: opacity 0.3s ease;
+}
+
+.netiaiig-container .floating-buttons {
+  display: flex;
+  gap: 8px;
 }
 
 .netiaiig-container .generated-image:hover .floating-actions {
@@ -215,6 +222,71 @@
   background: rgba(255, 255, 255, 0.95);
   transform: none;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Floating message notification */
+.netiaiig-container .floating-message {
+  position: relative;
+  display: none;
+  min-width: 200px;
+  max-width: 300px;
+  margin-bottom: 4px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+  z-index: 1002;
+}
+
+.netiaiig-container .floating-message.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.netiaiig-container .floating-message-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Success message styles */
+.netiaiig-container .floating-message.success .floating-message-content {
+  background: rgba(52, 199, 89, 0.95);
+  color: white;
+  border: 1px solid rgba(52, 199, 89, 0.3);
+}
+
+.netiaiig-container .floating-message.success .floating-message-icon {
+  color: white;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+/* Error message styles */
+.netiaiig-container .floating-message.error .floating-message-content {
+  background: rgba(255, 59, 48, 0.95);
+  color: white;
+  border: 1px solid rgba(255, 59, 48, 0.3);
+}
+
+.netiaiig-container .floating-message.error .floating-message-icon {
+  color: white;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.netiaiig-container .floating-message-text {
+  flex: 1;
+  min-width: 0;
 }
 
 /* Controls section */
@@ -622,9 +694,28 @@
     gap: 6px;
   }
 
+  .netiaiig-container .floating-buttons {
+    gap: 6px;
+  }
+
   .netiaiig-container .floating-btn {
     width: 32px;
     height: 32px;
+    font-size: 14px;
+  }
+
+  .netiaiig-container .floating-message {
+    min-width: 160px;
+    max-width: 240px;
+    margin-bottom: 6px;
+  }
+
+  .netiaiig-container .floating-message-content {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+
+  .netiaiig-container .floating-message-icon {
     font-size: 14px;
   }
 
@@ -1060,5 +1151,16 @@
     background: rgba(44, 44, 46, 0.7);
     transform: none;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Floating message dark mode styles */
+  .netiaiig-container .floating-message.success .floating-message-content {
+    background: rgba(48, 209, 88, 0.95);
+    border-color: rgba(48, 209, 88, 0.3);
+  }
+
+  .netiaiig-container .floating-message.error .floating-message-content {
+    background: rgba(255, 69, 58, 0.95);
+    border-color: rgba(255, 69, 58, 0.3);
   }
 }
