@@ -43,7 +43,7 @@ class CRM_AI_BAO_AIGenImage {
    */
   private static $styleMapping = [
     'Simple Illustration' => 'Simple Illustration',
-    'Japanese Illustration' => 'Simple Illustration',
+    'Japanese Simple Illustration' => 'Simple Illustration',
     'Storybook Style' => 'Children\'s picture book illustration',
     'Watercolor Painting' => 'Watercolor Painting',
     'Hand-Drawn Illustration' => 'Hand-Drawn Illustration',
@@ -61,7 +61,7 @@ class CRM_AI_BAO_AIGenImage {
       'Minimalist flat illustration, the character design is a minimalist style, with minimal facial features',
       'Minimalist flat illustration, minimalist cartoon style',
     ],
-    'Japanese Illustration' => [
+    'Japanese Simple Illustration' => [
       'Minimalist flat illustration, the character design is a Japanese minimalist cartoon style, with minimal facial features',
       'Minimalist flat illustration, the character design is a Japanese minimalist style, with minimal facial features',
       'Children\'s picture book illustration in a mid-20th century Japanese style, soft pastel colors, clean bold lines, crayon texture, simple geometric composition, paper texture background, and a warm, minimal atmosphere. The character design is minimalist with minimal facial features',

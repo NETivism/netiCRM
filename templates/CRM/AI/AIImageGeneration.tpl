@@ -164,9 +164,9 @@ window.AIImageGeneration = {
                       <div class="style-preview"><img src="../images/thumb-01.png" alt=""></div>
                       <div class="style-label">{ts}Simple Illustration{/ts}</div>
                     </div>
-                    <div class="style-option" data-style="Japanese Illustration">
+                    <div class="style-option" data-style="Japanese Simple Illustration">
                       <div class="style-preview"><img src="../images/thumb-02.png" alt=""></div>
-                      <div class="style-label">{ts}Japanese Illustration{/ts}</div>
+                      <div class="style-label">{ts}Japanese Simple Illustration{/ts}</div>
                     </div>
                     <div class="style-option" data-style="Storybook Style">
                       <div class="style-preview"><img src="../images/thumb-03.png" alt=""></div>

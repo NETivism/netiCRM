@@ -231,7 +231,6 @@
   min-width: 200px;
   max-width: 300px;
   margin-bottom: 4px;
-  opacity: 0;
   transform: translateY(10px);
   transition: all 0.3s ease;
   z-index: 1002;
