@@ -120,7 +120,7 @@ class CRM_Core_Payment_SPGATEWAYIPN extends CRM_Core_Payment_BaseIPN {
 
     // now, retrieve full object by validateData, or false fallback
     // when it's recurring, this will load first recurring contrib into object even it's not
-    if (!$this->validateData( $input, $ids, $objects ) ) {
+    if (!$this->validateData( $input, $ids, $objects, FALSE ) ) {
       return FALSE;
     }
 
