@@ -205,13 +205,11 @@ class CRM_Core_Payment_BaseIPN {
       if (!$objects['contribution']->contribution_page_id) {
         if (!CRM_Utils_Array::value('pledge_payment', $ids)) {
           // return if we are just doing an optional validation
-          if (!$required) {
-            return TRUE;
+          if ($required) {
+            CRM_Core_Error::debug_log_message("Could not find contribution page for contribution record: {$objects['contribution']->id}");
+            echo "Failure: Could not find contribution page for contribution record: {$objects['contribution']->id}<p>";
+            return FALSE;
           }
-
-          CRM_Core_Error::debug_log_message("Could not find contribution page for contribution record: {$objects['contribution']->id}");
-          echo "Failure: Could not find contribution page for contribution record: {$objects['contribution']->id}<p>";
-          return FALSE;
         }
       }
     }
