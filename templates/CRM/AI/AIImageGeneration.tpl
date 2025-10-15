@@ -122,13 +122,13 @@ window.AIImageGeneration = {
 
           {* Floating action buttons *}
           <div class="floating-actions">
-            <button type="button" class="floating-btn" title="{ts}Regenerate{/ts}" data-tooltip data-tooltip-placement="nw">
+            <button type="button" class="floating-btn" title="{ts}Regenerate{/ts}" data-tooltip data-tooltip-placement="s">
               <i class="zmdi zmdi-refresh"></i>
             </button>
-            <button type="button" class="floating-btn" title="{ts}Copy{/ts}" data-tooltip data-tooltip-placement="nw">
+            <button type="button" class="floating-btn" title="{ts}Copy{/ts}" data-tooltip data-tooltip-placement="s">
               <i class="zmdi zmdi-collection-plus"></i>
             </button>
-            <button type="button" class="floating-btn" title="{ts}Download Image{/ts}" data-tooltip data-tooltip-placement="nw">
+            <button type="button" class="floating-btn" title="{ts}Download Image{/ts}" data-tooltip data-tooltip-placement="s">
               <i class="zmdi zmdi-download"></i>
             </button>
           </div>
@@ -143,7 +143,7 @@ window.AIImageGeneration = {
             {* Embedded control buttons *}
             <div class="embedded-controls">
               <div class="netiaiig-dropdown" id="styleDropdown">
-                <button type="button" class="embedded-btn dropdown-toggle" title="{ts}Select Art Style{/ts}" data-tooltip data-tooltip-placement="n">
+                <button type="button" class="embedded-btn dropdown-toggle" title="{ts}Select Art Style{/ts}" data-tooltip data-tooltip-placement="s">
                   <i class="zmdi zmdi-flower-alt"></i>
                   <span id="styleText">{ts}Simple Illustration{/ts}</span>
                   <i class="zmdi zmdi-chevron-down"></i>
@@ -179,7 +179,7 @@ window.AIImageGeneration = {
               </div>
 
               <div class="netiaiig-dropdown" id="ratioDropdown">
-                <button type="button" class="embedded-btn dropdown-toggle" title="{ts}Select Aspect Ratio{/ts}" data-tooltip data-tooltip-placement="n">
+                <button type="button" class="embedded-btn dropdown-toggle" title="{ts}Select Aspect Ratio{/ts}" data-tooltip data-tooltip-placement="s">
                   <i class="zmdi zmdi-aspect-ratio-alt"></i>
                   <span id="ratioText">4:3</span>
                   <i class="zmdi zmdi-chevron-down"></i>
