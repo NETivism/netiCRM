@@ -45,7 +45,7 @@ class CRM_AI_BAO_AIGenImage {
     'Simple Illustration' => 'Simple Illustration',
     'Japanese Illustration' => 'Simple Illustration',
     'Storybook Style' => 'Children\'s picture book illustration',
-    'Watercolor Painting' => 'Watercolor printing',
+    'Watercolor Painting' => 'Watercolor Painting',
     'Hand-Drawn Illustration' => 'Hand-Drawn Illustration',
   ];
 
@@ -66,7 +66,7 @@ class CRM_AI_BAO_AIGenImage {
       'Minimalist flat illustration, the character design is a Japanese minimalist style, with minimal facial features',
       'Children\'s picture book illustration in a mid-20th century Japanese style, soft pastel colors, clean bold lines, crayon texture, simple geometric composition, paper texture background, and a warm, minimal atmosphere. The character design is minimalist with minimal facial features',
     ],
-    'Children\'s picture book illustration' => [
+    'Storybook Style' => [
       'Children\'s picture book illustration in the mid-20th century Polish style, featuring geometric composition, muted primary colors, paper texture, symbolic shapes, and minimalist folk-inspired characters',
       'Modern reinterpretation of Polish picture book illustration, bold flat colors, strong graphic layout, naive art influence, poster-like composition, warm matte tone',
       'Contemporary children\'s illustration with a humanistic Polish aesthetic,subtle textures, muted palette, expressive yet kind faces,showing compassion and community care in realistic scenes',
@@ -74,7 +74,7 @@ class CRM_AI_BAO_AIGenImage {
       'Modern Polish picture book illustration, flat geometric design with paper grain texture, featuring children learning and teachers guiding with gentle expression,balanced color composition and thoughtful mood',
       'Dreamlike watercolor illustration in the Polish children\'s book style,symbolic landscapes, surreal proportions, soft color diffusion,folk pattern details, expressive character silhouettes, evoking a poetic and nostalgic feeling',
     ],
-    'Watercolor printing' => [
+    'Watercolor Painting' => [
       'Minimalist flat illustration, the character design is a minimalist cartoon style, with minimal facial features',
       'Minimalist flat illustration, the character design is a minimalist style, with minimal facial features',
       'Modern watercolor interpretation of Polish picture book illustration,combining soft watercolor washes with strong graphic composition,folk-inspired shapes, matte pastel palette, minimal outlines,delicate storytelling mood, vintage children\'s book atmosphere',
@@ -251,7 +251,7 @@ class CRM_AI_BAO_AIGenImage {
    *
    * @param array $params Original request parameters
    * @return array Modified parameters with enhanced text and mapped style
-   */
+    */
   protected function processStyleAndText($params) {
     $modifiedParams = $params;
     $originalStyle = $params['style'] ?? '';
@@ -259,6 +259,7 @@ class CRM_AI_BAO_AIGenImage {
     // Step 1: Add prefix to text based on the original style (before mapping)
     if (!empty($originalStyle) && isset(self::$stylePrefixes[$originalStyle])) {
       $prefixOptions = self::$stylePrefixes[$originalStyle];
+      
       if (!empty($prefixOptions)) {
         // Randomly select one prefix from available options
         $randomIndex = array_rand($prefixOptions);

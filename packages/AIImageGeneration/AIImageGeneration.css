@@ -147,7 +147,7 @@
   font-size: 14px;
   line-height: 1.5;
   text-align: center;
-  margin: 0;
+  margin: 16px 0;
   font-weight: 400;
 }
 
@@ -907,6 +907,9 @@
   font-size: 48px;
   animation: errorPulse 0.6s ease-out;
 }
+.netiaiig-container .error-icon i {
+  color: inherit;
+}
 
 .netiaiig-container .error-message {
   font-size: 18px;
@@ -914,6 +917,7 @@
   color: #333333;
   margin-bottom: 8px;
   text-align: center;
+  background: none;
 }
 
 .netiaiig-container .error-reason {

@@ -107,7 +107,7 @@ class CRM_AI_GenImageService_ITRIICL extends CRM_AI_GenImageService {
    */
   protected function formatParams(&$params) {
     // Set basic default parameters for ITRI ICL
-    $params['negative_prompt'] = $params['negative_prompt'] ?? '';
+    $params['negative_prompt'] = $params['negative_prompt'] ?? 'extra limbs, missing limbs, extra fingers, twisted limbs, malformed limbs, bad hand, fused bodies, merged limbs, connected arms, non-english text, asian letters, chinese characters, japanese text, korean text, messy text, unreadable letters, gibberish, nonsensical writing';
     $params['steps'] = $params['steps'] ?? 30;
     $params['cfg'] = $params['cfg'] ?? 7;
     $params['sampler'] = $params['sampler'] ?? 'dpmpp_2m';
