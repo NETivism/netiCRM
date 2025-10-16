@@ -129,7 +129,7 @@ window.AIImageGeneration = {
                 <span class="floating-message-text"></span>
               </div>
             </div>
-            
+
             <div class="floating-buttons">
               <button type="button" class="floating-btn" title="{ts}Regenerate{/ts}" data-tooltip data-tooltip-placement="s">
                 <i class="zmdi zmdi-refresh"></i>
@@ -160,28 +160,29 @@ window.AIImageGeneration = {
                 </button>
                 <div class="style-dropdown-menu">
                   <div class="style-grid">
+                    {assign var="rand_img_num" value=rand(1, 7)|string_format:"%02d"}
                     <div class="style-option selected" data-style="Simple Illustration">
-                      <div class="style-preview"><img src="../images/thumb-01.png" alt=""></div>
+                      <div class="style-preview"><img src="../images/style-preset-simple-illustration-{$rand_img_num}.webp" alt=""></div>
                       <div class="style-label">{ts}Simple Illustration{/ts}</div>
                     </div>
                     <div class="style-option" data-style="Japanese Simple Illustration">
-                      <div class="style-preview"><img src="../images/thumb-02.png" alt=""></div>
+                      <div class="style-preview"><img src="../images/style-preset-japanese-illustration-{$rand_img_num}.webp" alt=""></div>
                       <div class="style-label">{ts}Japanese Simple Illustration{/ts}</div>
                     </div>
                     <div class="style-option" data-style="Storybook Style">
-                      <div class="style-preview"><img src="../images/thumb-03.png" alt=""></div>
+                      <div class="style-preview"><img src="../images/style-preset-storybook-style-{$rand_img_num}.webp" alt=""></div>
                       <div class="style-label">{ts}Storybook Style{/ts}</div>
                     </div>
                     <div class="style-option" data-style="Watercolor Painting">
-                      <div class="style-preview"><img src="../images/thumb-04.png" alt=""></div>
+                      <div class="style-preview"><img src="../images/style-preset-watercolor-painting-{$rand_img_num}.webp" alt=""></div>
                       <div class="style-label">{ts}Watercolor Painting{/ts}</div>
                     </div>
                     <div class="style-option" data-style="Hand-Drawn Illustration">
-                      <div class="style-preview"><img src="../images/thumb-05.png" alt=""></div>
+                      <div class="style-preview"><img src="../images/style-preset-hand-drawn-illustration-{$rand_img_num}.webp" alt=""></div>
                       <div class="style-label">{ts}Hand-Drawn Illustration{/ts}</div>
                     </div>
                     <div class="style-option" data-style="Custom Style">
-                      <div class="style-preview"><img src="../images/thumb-06.png" alt=""></div>
+                      <div class="style-preview custom-style"></div>
                       <div class="style-label">{ts}Custom Style{/ts}</div>
                     </div>
                   </div>
