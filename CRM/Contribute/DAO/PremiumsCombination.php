@@ -31,7 +31,7 @@
  * $Id$
  *
  */
-        class CRM_Contribute_DAO_ContributionProduct extends CRM_Core_DAO
+        class CRM_Contribute_DAO_PremiumsCombination extends CRM_Core_DAO
 {
   /**
    * static instance to hold the table name
@@ -39,7 +39,7 @@
    * @var string
    * @static
    */
-  static $_tableName = 'civicrm_contribution_product';
+  static $_tableName = 'civicrm_premiums_combination';
   /**
    * static instance to hold the field values
    *
@@ -84,66 +84,100 @@
    */
   public $id;
   /**
+   * Foreign key to civicrm_premiums table
    *
    * @var int unsigned
    */
-  public $product_id;
+  public $premiums_id;
   /**
-   *
-   * @var int unsigned
-   */
-  public $contribution_id;
-  /**
-   * Option value selected if applicable - e.g. color, size etc.
+   * Name of the premium combination
    *
    * @var string
    */
-  public $product_option;
+  public $combination_name;
   /**
-   *
-   * @var int
-   */
-  public $quantity;
-  /**
-   * Optional. Can be used to record the date this product was fulfilled or shipped.
-   *
-   * @var date
-   */
-  public $fulfilled_date;
-  /**
-   * Actual start date for a time-delimited premium (subscription, service or membership)
-   *
-   * @var date
-   */
-  public $start_date;
-  /**
-   * Actual end date for a time-delimited premium (subscription, service or membership)
-   *
-   * @var date
-   */
-  public $end_date;
-  /**
+   * Optional description of the product/premium.
    *
    * @var text
    */
-  public $comment;
+  public $description;
   /**
-   * Indicates if contribution product restocked
+   * Optional product sku or code.
+   *
+   * @var string
+   */
+  public $sku;
+  /**
+   * Minimum non-recurring contribution amount required for this combination
+   *
+   * @var float
+   */
+  public $min_contribution;
+  /**
+   * Minimum recurring contribution amount threshold for this combination
+   *
+   * @var float
+   */
+  public $min_contribution_recur;
+  /**
+   * 3 character string, value from config setting or input via user.
+   *
+   * @var string
+   */
+  public $currency;
+  /**
+   * Whether this combination is active
    *
    * @var boolean
    */
-  public $restock;
+  public $is_active;
   /**
-   * ID for product combination
+   * Order for displaying combinations
    *
    * @var int unsigned
    */
-  public $combination_id;
+  public $weight;
+  /**
+   * Calculate by accumulate or by min-amount of contribution
+   *
+   * @var string
+   */
+  public $calculate_mode;
+  /**
+   * Num of installments when calculate mode is accumulate.
+   *
+   * @var int
+   */
+  public $installments;
+  /**
+   * Full or relative URL to uploaded image - fullsize.
+   *
+   * @var string
+   */
+  public $image;
+  /**
+   * Full or relative URL to image thumbnail.
+   *
+   * @var string
+   */
+  public $thumbnail;
+  /**
+   * When was this combination created
+   *
+   * @var timestamp
+   */
+  public $created_date;
+  /**
+   * When was this combination last modified
+   *
+   * @var timestamp
+   */
+  public $modified_date;
    /**
    * class constructor
    *
    * @access public
-   * @return civicrm_contribution_product
+   * @return civicrm_premiums_combination
    */
   function __construct()
   {
@@ -159,7 +193,7 @@
   {
     if (!(self::$_links)) {
       self::$_links = [
-        'contribution_id' => 'civicrm_contribution:id',
+        'premiums_id' => 'civicrm_premiums:id',
       ];
     }
     return self::$_links;
@@ -174,7 +208,7 @@
   {
     if (!isset(Civi::$statics[__CLASS__]['links'])) {
       Civi::$statics[__CLASS__]['links'] = static ::createReferenceColumns(__CLASS__);
-      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'contribution_id', 'civicrm_contribution', 'id');
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'premiums_id', 'civicrm_premiums', 'id');
     }
     return Civi::$statics[__CLASS__]['links'];
   }
@@ -193,86 +227,106 @@
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
                   ] ,
-        'product_id' => [
-          'name' => 'product_id',
+        'premiums_id' => [
+          'name' => 'premiums_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
-                  ] ,
-        'contribution_id' => [
-          'name' => 'contribution_id',
-          'type' => CRM_Utils_Type::T_INT,
-          'required' => true,
-                    'FKClassName' => 'CRM_Contribute_DAO_Contribution',
+                    'FKClassName' => 'CRM_Contribute_DAO_Premium',
         ] ,
-        'product_option' => [
-          'name' => 'product_option',
+        'combination_name' => [
+          'name' => 'combination_name',
           'type' => CRM_Utils_Type::T_STRING,
-          'title' => ts('Product Option') ,
+          'title' => ts('Combination Name') ,
+          'required' => true,
            'maxlength' => 255,
            'size' => CRM_Utils_Type::HUGE,
-              'export' => true,
-          'where' => 'civicrm_contribution_product.product_option',
-          'headerPattern' => '',
-          'dataPattern' => '',
-            ] ,
-        'quantity' => [
-          'name' => 'quantity',
-          'type' => CRM_Utils_Type::T_INT,
-          'title' => ts('Quantity') ,
-                'export' => true,
-          'where' => 'civicrm_contribution_product.quantity',
-          'headerPattern' => '',
-          'dataPattern' => '',
-            ] ,
-        'fulfilled_date' => [
-          'name' => 'fulfilled_date',
-          'type' => CRM_Utils_Type::T_DATE,
-          'title' => ts('Fulfilled Date') ,
-                'export' => true,
-          'where' => 'civicrm_contribution_product.fulfilled_date',
-          'headerPattern' => '',
-          'dataPattern' => '',
-            ] ,
-        'contribution_start_date' => [
-          'name' => 'start_date',
-          'type' => CRM_Utils_Type::T_DATE,
-          'title' => ts('Start Date') ,
-                'export' => true,
-          'where' => 'civicrm_contribution_product.start_date',
-          'headerPattern' => '',
-          'dataPattern' => '',
-            ] ,
-        'contribution_end_date' => [
-          'name' => 'end_date',
-          'type' => CRM_Utils_Type::T_DATE,
-          'title' => ts('End Date') ,
-                'export' => true,
-          'where' => 'civicrm_contribution_product.end_date',
-          'headerPattern' => '',
-          'dataPattern' => '',
-            ] ,
-        'comment' => [
-          'name' => 'comment',
+                ] ,
+        'description' => [
+          'name' => 'description',
           'type' => CRM_Utils_Type::T_TEXT,
-          'title' => ts('Comment') ,
+          'title' => ts('Description') ,
                   ] ,
-        'restock' => [
-          'name' => 'restock',
+        'sku' => [
+          'name' => 'sku',
+          'type' => CRM_Utils_Type::T_STRING,
+          'title' => ts('SKU') ,
+           'maxlength' => 50,
+           'size' => CRM_Utils_Type::BIG,
+              'export' => true,
+          'where' => 'civicrm_premiums_combination.sku',
+          'headerPattern' => '',
+          'dataPattern' => '',
+            ] ,
+        'min_contribution' => [
+          'name' => 'min_contribution',
+          'type' => CRM_Utils_Type::T_MONEY,
+          'title' => ts('Min Contribution') ,
+          'required' => true,
+                  ] ,
+        'min_contribution_recur' => [
+          'name' => 'min_contribution_recur',
+          'type' => CRM_Utils_Type::T_MONEY,
+          'title' => ts('Min Contribution Recur') ,
+                  ] ,
+        'currency' => [
+          'name' => 'currency',
+          'type' => CRM_Utils_Type::T_STRING,
+          'title' => ts('Currency') ,
+           'maxlength' => 3,
+           'size' => CRM_Utils_Type::FOUR,
+                'default' => 'UL',
+          ] ,
+        'is_active' => [
+          'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-          'title' => ts('Restock') ,
-                'export' => true,
-          'where' => 'civicrm_contribution_product.restock',
-          'headerPattern' => '',
-          'dataPattern' => '',
-            ] ,
-        'combination_id' => [
-          'name' => 'combination_id',
+                  'default' => '',
+          ] ,
+        'weight' => [
+          'name' => 'weight',
           'type' => CRM_Utils_Type::T_INT,
-                'export' => true,
-          'where' => 'civicrm_contribution_product.combination_id',
-          'headerPattern' => '',
-          'dataPattern' => '',
-            ] ,
+          'title' => ts('Weight') ,
+                  ] ,
+        'calculate_mode' => [
+          'name' => 'calculate_mode',
+          'type' => CRM_Utils_Type::T_STRING,
+          'title' => ts('Calculate Mode') ,
+           'maxlength' => 32,
+           'size' => CRM_Utils_Type::MEDIUM,
+                'default' => 'UL',
+          ] ,
+        'installments' => [
+          'name' => 'installments',
+          'type' => CRM_Utils_Type::T_INT,
+          'title' => ts('Installments') ,
+                  ] ,
+        'image' => [
+          'name' => 'image',
+          'type' => CRM_Utils_Type::T_STRING,
+          'title' => ts('Image') ,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
+        'thumbnail' => [
+          'name' => 'thumbnail',
+          'type' => CRM_Utils_Type::T_STRING,
+          'title' => ts('Thumbnail') ,
+           'maxlength' => 255,
+           'size' => CRM_Utils_Type::HUGE,
+                ] ,
+        'created_date' => [
+          'name' => 'created_date',
+          'type' => CRM_Utils_Type::T_TIMESTAMP,
+          'title' => ts('Created Date') ,
+          'required' => true,
+                  'default' => 'URRENT_TIMESTAM',
+          ] ,
+        'modified_date' => [
+          'name' => 'modified_date',
+          'type' => CRM_Utils_Type::T_TIMESTAMP,
+          'title' => ts('Modified Date') ,
+          'required' => true,
+                  'default' => 'URRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAM',
+          ] ,
       ];
     }
     return self::$_fields;
@@ -285,7 +339,8 @@
    */
   static function getTableName()
   {
-        return self::$_tableName;
+        global $dbLocale;
+    return self::$_tableName . $dbLocale;
       }
   /**
    * returns if this table needs to be logged
@@ -311,7 +366,7 @@
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
-            self::$_import['contribution_product'] = &$fields[$name];
+            self::$_import['premiums_combination'] = &$fields[$name];
           } else {
             self::$_import[$name] = &$fields[$name];
           }
@@ -334,7 +389,7 @@
       foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
-            self::$_export['contribution_product'] = &$fields[$name];
+            self::$_export['premiums_combination'] = &$fields[$name];
           } else {
             self::$_export[$name] = &$fields[$name];
           }

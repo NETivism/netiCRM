@@ -89,6 +89,10 @@
 
   <civicrm_premiums_product />
 
+  <civicrm_premiums_combination />
+
+  <civicrm_premiums_combination_products />
+
   <civicrm_coupon />
 
   <civicrm_coupon_entity />

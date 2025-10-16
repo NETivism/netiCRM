@@ -307,7 +307,7 @@ class CRM_Report_Form_Event_ParticipantListing extends CRM_Report_Form {
   }
 
   function groupBy() {
-    $this->_groupBy = "";
+    $this->_groupBy = array();
     if (CRM_Utils_Array::value('group_bys', $this->_params) &&
       is_array($this->_params['group_bys']) &&
       !empty($this->_params['group_bys'])

@@ -141,6 +141,11 @@
      <weight>480</weight>
   </item>
   <item>
+     <path>civicrm/admin/contribute/addPremiumsCombinationToPage</path>
+     <title>Manage Premium Combinations</title>
+     <page_callback>CRM_Contribute_Form_ContributionPage_AddPremiumsCombination</page_callback>
+  </item>
+  <item>
      <path>civicrm/admin/contribute/add</path>
      <title>New Contribution Page</title>
      <page_callback>CRM_Contribute_Controller_ContributionPage</page_callback>
@@ -163,6 +168,16 @@
      <adminGroup>CiviContribute</adminGroup>
      <icon>admin/small/Premiums.png</icon>
      <weight>365</weight>
+  </item>
+  <item>
+     <path>civicrm/admin/contribute/premiumsSetting</path>
+     <title>Premiums Settings</title>
+     <page_callback>CRM_Admin_Form_Setting_PremiumsSetting</page_callback>
+     <desc>Configure premium inventory replenishment settings and status handling.</desc>
+     <access_arguments>administer CiviCRM</access_arguments>
+     <adminGroup>CiviContribute</adminGroup>
+     <icon>admin/small/Premiums.png</icon>
+     <weight>367</weight>
   </item>
   <item>
      <path>civicrm/admin/contribute/contributionType</path>

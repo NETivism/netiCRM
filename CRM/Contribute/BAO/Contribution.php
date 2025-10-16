@@ -946,8 +946,19 @@ INNER JOIN  civicrm_contact contact ON ( contact.id = civicrm_contribution.conta
    * @static
    */
   static function addPremium(&$params) {
-
-
+    if (empty($params['preview']) && !empty($params['product_id']) && !empty($params['quantity'])) {
+      try {
+        CRM_Contribute_BAO_Premium::reserveProductStock(
+          $params['contribution_id'],
+          $params['product_id'],
+          $params['quantity'],
+          "Contribution Page Submission via contribution ID {$params['contribution_id']}"
+        );
+      }
+      catch (Exception $e) {
+        $params['comment'] .= ts("Inventory Management").': '.$e->getMessage();
+      }
+    }
     $contributionProduct = new CRM_Contribute_DAO_ContributionProduct();
     $contributionProduct->copyValues($params);
     return $contributionProduct->save();

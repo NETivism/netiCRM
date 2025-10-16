@@ -303,7 +303,7 @@ class CRM_Core_Payment_SPGATEWAYAPI {
         $updateFields = [];
         foreach ($columns as $field => $value) {
           $updateFields[] = "$field = %$counter";
-          $sqlParams[$counter] = [$value, 'String'];
+          $sqlParams[$counter] = [(string)$value, 'String'];
           $counter++;
         }
         $sqlParams[$counter] = [$cid, 'Integer'];
@@ -317,7 +317,7 @@ class CRM_Core_Payment_SPGATEWAYAPI {
 
         foreach ($columns as $value) {
           $values[] = "%$counter";
-          $sqlParams[$counter] = [$value, 'String'];
+          $sqlParams[$counter] = [(string)$value, 'String'];
           $counter++;
         }
 

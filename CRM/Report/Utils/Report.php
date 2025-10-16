@@ -237,8 +237,39 @@ WHERE  inst.report_id = %1";
 
     if (is_numeric($groupID) && isset($form->_aliases['civicrm_contact'])) {
 
+      if (!empty($form->_groupBy) || !empty($form->_having)) {
+        // Build SELECT clause - include contact_id and any aggregate fields needed for HAVING
+        $selectFields = ["{$form->_aliases['civicrm_contact']}.id AS contact_id"];
 
-      $sql = "SELECT DISTINCT {$form->_aliases['civicrm_contact']}.id AS contact_id {$form->_from} {$form->_where} ";
+        if (!empty($form->_having) && !empty($form->_select)) {
+          // Extract field names from HAVING clause
+          if (preg_match_all('/\b([a-z_]+_(?:sum|count|avg))\b/i', $form->_having, $havingFields)) {
+            foreach ($havingFields[1] as $fieldAlias) {
+              // Get select aggregate field (sum/count/avg) in havingFields
+              if (preg_match('/(\w+\([^)]+\))\s+as\s+' . preg_quote($fieldAlias, '/') . '\b/i', $form->_select, $aggMatch)) {
+                $selectFields[] = $aggMatch[0];
+              }
+            }
+          }
+        }
+
+        $innerSql = "SELECT " . implode(', ', $selectFields) . " {$form->_from} {$form->_where} ";
+
+        if (!empty($form->_groupBy)) {
+          $innerSql .= " {$form->_groupBy} ";
+        }
+
+        if (!empty($form->_having)) {
+          $innerSql .= " {$form->_having} ";
+        }
+
+        $sql = "SELECT DISTINCT contact_id FROM ({$innerSql}) as subquery";
+      }
+      else {
+        // Original behavior when no GROUP BY or HAVING
+        $sql = "SELECT DISTINCT {$form->_aliases['civicrm_contact']}.id AS contact_id {$form->_from} {$form->_where} ";
+      }
+
       $dao = CRM_Core_DAO::executeQuery($sql);
 
       $contact_ids = [];

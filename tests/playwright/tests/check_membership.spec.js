@@ -31,6 +31,13 @@ test.describe.serial('Create Membership Type', () => {
     Math.random() * 100000
   )}`; // Use random number to avoid duplicate names
   var element;
+
+  //create user info
+  const testUsername = utils.makeid(8);
+  const testEmail = utils.makeid(8) + '@example.com';
+  const testPassword = 'Password1!';
+  const testFirstName = utils.makeid(4);
+  const testLastName = utils.makeid(4);
   test('Create Organization Contact', async () => {
     await test.step('Navigate to add organization page', async () => {
       await page.goto('civicrm/contact/add?reset=1&ct=Organization');
@@ -247,7 +254,7 @@ test.describe.serial('Create Membership Type', () => {
       await expect(page.locator(element)).toContainText(contribution_page_name);
     });
   });
-  test('Fill Contribution Form', async () => {
+  test('Fill Contribution Form', async ({ browser }) => {
     let contributionPage;
 
     await test.step('Navigate to contribution page overview', async () => {
@@ -257,14 +264,20 @@ test.describe.serial('Create Membership Type', () => {
       await utils.findElement(page, 'table tbody tr');
       await page.getByRole('link', { name: contribution_page_name }).click();
 
-      [contributionPage] = await Promise.all([
-        page.waitForEvent('popup'),
-        page
-          .locator(
-            "a[href*='/civicrm/contribute/transact'][target='_blank']:not([href*='action=preview'])"
-          )
-          .click(),
-      ]);
+      // Create new incognito browser context without cookies
+      const newContext = await browser.newContext({
+        storageState: undefined,
+      });
+      contributionPage = await newContext.newPage();
+
+      // Get the URL from the link and navigate directly
+      const contributionUrl = await page
+        .locator(
+          "a[href*='/civicrm/contribute/transact'][target='_blank']:not([href*='action=preview'])"
+        )
+        .getAttribute('href');
+
+      await contributionPage.goto(contributionUrl);
 
       /* Verify page title is correct */
       await expect(contributionPage).toHaveTitle(
@@ -280,23 +293,20 @@ test.describe.serial('Create Membership Type', () => {
     });
 
     await test.step('Fill name information', async () => {
-      const randomUsername = utils.makeid(8);
-      const randomEmail = utils.makeid(8) + '@example.com';
-
       const email = contributionPage.locator('input#email-5');
       /* Check if user is logged in */
       if ((await email.isVisible()) && (await email.isEditable())) {
         await contributionPage
           .locator("input[name='cms_name']")
-          .fill(randomUsername);
-        await email.fill(randomEmail);
-        await contributionPage.locator('input#first_name').fill('chenyy');
-        await contributionPage.locator('input#last_name').fill('jerryyy');
+          .fill(testUsername);
+        await email.fill(testEmail);
+        await contributionPage.locator('input#first_name').fill(testFirstName);
+        await contributionPage.locator('input#last_name').fill(testLastName);
       }
       /* Verify data filled correctly - only check name if not logged in */
       const firstNameField = contributionPage.locator('input#first_name');
       if ((await email.isVisible()) && (await email.isEditable())) {
-        await expect(firstNameField).toHaveValue('chenyy');
+        await expect(firstNameField).toHaveValue(testFirstName);
       }
     });
 
@@ -312,6 +322,7 @@ test.describe.serial('Create Membership Type', () => {
     await test.step('Final contribution data', async () => {
       await contributionPage.locator('input#_qf_Confirm_next-bottom').click();
       /* Verify #help container exists and is visible, with payment incomplete message */
+      await utils.findElement(contributionPage, '#help');
       await expect(contributionPage.locator('#help')).toBeVisible();
     });
   });
@@ -373,6 +384,216 @@ test.describe.serial('Create Membership Type', () => {
 
       /* Verify end date is exactly one year from start date */
       expect(endDate.toDateString()).toBe(expectedEndDate.toDateString());
+    });
+  });
+
+  //Membership Renewal
+  test('Edit Membership Status to Expired && Add Password info', async () => {
+    await test.step('Navigate to admin/people page and verify title', async () => {
+      await page.goto('/admin/people');
+      await utils.findElement(page, 'h1');
+    });
+
+    await test.step('Set password', async () => {
+      await page
+        .locator(`tr:has-text("${testUsername}") a[href*="/edit"]`)
+        .click();
+      await utils.findElement(page, 'h1');
+      await page.locator('#edit-pass-pass1').fill(testPassword);
+      await page.locator('#edit-pass-pass2').fill(testPassword);
+      await page.locator('#edit-status-1').check();
+      await page.locator('#edit-submit').click();
+
+      // Verify membership password update success message
+      await expect(
+        page.locator('.messages--status, .messages.status')
+      ).toBeVisible();
+    });
+
+    await test.step('Navigate to member search page and verify title', async () => {
+      await page.goto('/civicrm/contact/search?reset=1');
+
+      await utils.findElement(page, 'h1');
+    });
+
+    await test.step('Search for created member and modify status to expired', async () => {
+      await page.locator('#sort_name').fill(testEmail);
+      await page.locator('#_qf_Basic_refresh').click();
+      await utils.findElement(page, 'table tbody ');
+
+      await page.locator('.view-contact').first().click();
+      await page.locator('[id="ui-id-6"]').first().click();
+
+      await page
+        .locator('a[href*="action=update"][href*="context=membership"]')
+        .click();
+
+      await page.locator('#is_override').check();
+      await page.locator('#status_id').selectOption('4'); // Expired status
+
+      /* Set join and start dates */
+      await page.locator('#join_date').click();
+      await page.locator('.ui-datepicker-year').selectOption('2022');
+      await page.locator('.ui-datepicker-month').selectOption('0'); // January (0-indexed)
+      await page.getByRole('link', { name: '2', exact: true }).click();
+
+      await page.locator('#start_date').click();
+      await page.locator('.ui-datepicker-year').selectOption('2022');
+      await page.locator('.ui-datepicker-month').selectOption('0'); // January (0-indexed)
+      await page.getByRole('link', { name: '2', exact: true }).click();
+
+      await page
+        .locator('a[href="javascript:clearDateTime( \'end_date\' );"]')
+        .click();
+
+      await page.locator('[id="_qf_Membership_upload-bottom"]').click();
+
+      // Verify membership status update success message
+      await expect(page.locator('.messages.status')).toBeVisible();
+      await expect(page.locator('h3.font-red')).toContainText(
+        /Pending and Inactive Memberships|等待中以及停用的會員/
+      );
+    });
+  });
+  test('Login again to Fill contribution page', async ({ browser }) => {
+    let contributionPage;
+
+    await test.step('Navigate to contribution page overview', async () => {
+      await page.goto('/civicrm/admin/contribute?reset=1');
+      await page.locator('#title').fill(contribution_page_name);
+      await page.locator('input#_qf_SearchContribution_refresh').click();
+      await utils.findElement(page, 'table tbody tr');
+      await page.getByRole('link', { name: contribution_page_name }).click();
+
+      // Create new incognito browser context without cookies
+      const newContext = await browser.newContext({
+        storageState: undefined,
+      });
+      contributionPage = await newContext.newPage();
+
+      // Get the URL from the link and navigate directly
+      const contributionUrl = await page
+        .locator(
+          "a[href*='/civicrm/contribute/transact'][target='_blank']:not([href*='action=preview'])"
+        )
+        .getAttribute('href');
+
+      await contributionPage.goto(contributionUrl);
+
+      /* Verify page title is correct */
+      await expect(contributionPage).toHaveTitle(
+        new RegExp(contribution_page_name)
+      );
+    });
+
+    await test.step('Login to contribution page', async () => {
+      await contributionPage
+        .locator('a[href*="/user/login"][href*="destination="]')
+        .click();
+      await contributionPage.locator('input#edit-name').fill(testUsername);
+      await contributionPage.locator('input#edit-pass').fill(testPassword);
+      await contributionPage.locator('input#edit-submit').click();
+      await utils.findElement(contributionPage, 'h1');
+      /* Verify login successful  */
+      await expect(contributionPage).toHaveTitle(
+        new RegExp(contribution_page_name)
+      );
+    });
+
+    await test.step('Select membership type', async () => {
+      /* Verify membership type selection is correct */
+      await expect(
+        contributionPage.getByRole('radio', { name: membership_type })
+      ).toBeVisible();
+    });
+
+    await test.step('Check input data correctness', async () => {
+      await contributionPage.locator('input#_qf_Main_upload-bottom').click();
+      /* Verify help container and continue button are visible */
+      await expect(contributionPage.locator('#help')).toBeVisible();
+      await expect(
+        contributionPage.locator('input#_qf_Confirm_next-bottom')
+      ).toBeVisible();
+    });
+
+    await test.step('Final contribution data', async () => {
+      await contributionPage.locator('input#_qf_Confirm_next-bottom').click();
+      /* Verify #help container exists and is visible, with payment incomplete message */
+      await expect(contributionPage.locator('#help')).toBeVisible();
+    });
+  });
+  test('Check Status update', async () => {
+    await test.step('Navigate to contact search page', async () => {
+      await page.goto('/civicrm/contact/search?reset=1');
+      await utils.findElement(page, 'h1');
+    });
+
+    await test.step('Search for created member', async () => {
+      await page.locator('#sort_name').fill(testEmail);
+      await page.locator('#_qf_Basic_refresh').click();
+      await utils.findElement(page, 'table tbody ');
+    });
+
+    await test.step('Verify membership status is new', async () => {
+      await page.locator('.view-contact').first().click();
+      await page.locator('[id="ui-id-6"]').first().click();
+      await expect(page.locator('.crm-membership-status')).toContainText(
+        /Current|正常/
+      );
+    });
+
+    await test.step('Verify membership start and end dates', async () => {
+      const startDateText = await page
+        .locator('.crm-membership-start_date')
+        .textContent();
+      const endDateText = await page
+        .locator('.crm-membership-end_date')
+        .textContent();
+
+      const parseDate = (dateStr) =>
+        new Date(dateStr.trim().replace(/(\d+)(st|nd|rd|th)/, '$1'));
+
+      const startDate = parseDate(startDateText);
+      const endDate = parseDate(endDateText);
+
+      expect(startDate.toDateString()).toBe(new Date().toDateString());
+
+      const expectedEndDate = new Date(startDate);
+      expectedEndDate.setFullYear(startDate.getFullYear() + 1);
+      expectedEndDate.setDate(expectedEndDate.getDate() - 1);
+
+      expect(endDate.toDateString()).toBe(expectedEndDate.toDateString());
+    });
+  });
+  test('Set Membership qualify email info', async () => {
+    const emailName =
+      'Please donation money' + Math.floor(Math.random() * 1000);
+    await test.step('Navigate to message templates and create template', async () => {
+      await page.goto('civicrm/admin/messageTemplates?reset=1');
+      await utils.findElement(page, 'h1');
+    });
+
+    await test.step('Add message template', async () => {
+      await page.locator('#newMessageTemplates').click();
+      await page.locator('#msg_title').fill(emailName);
+      await page.locator('#_qf_MessageTemplates_next').first().click();
+      await expect(page.locator('.messages.status')).toBeVisible();
+    });
+
+    await test.step('Configure membership type', async () => {
+      await page.goto('civicrm/admin/member/membershipType?reset=1');
+      await page
+        .locator('tr')
+        .filter({ hasText: membership_type })
+        .locator('a[href*="action=update"][href*="membershipType"]')
+        .click();
+      await page.locator('#renewal_msg_id').selectOption({ label: emailName });
+      await page.locator('#renewal_reminder_day').fill('30');
+      await page
+        .locator('[id="_qf_MembershipType_upload-bottom"]')
+        .first()
+        .click();
+      await expect(page.locator('.messages.status')).toBeVisible();
     });
   });
 });

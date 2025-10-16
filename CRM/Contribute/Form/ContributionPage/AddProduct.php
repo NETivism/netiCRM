@@ -116,6 +116,8 @@ class CRM_Contribute_Form_ContributionPage_AddProduct extends CRM_Contribute_For
    * @access public
    */
   public function buildQuickForm() {
+    $mngPremURL = CRM_Utils_System::url('civicrm/admin/contribute/managePremiums', 'reset=1');
+    $this->assign('mngPremURL', $mngPremURL);
     $urlParams = 'civicrm/admin/contribute/premium';
     if ($this->_action & CRM_Core_Action::DELETE) {
       $session = CRM_Core_Session::singleton();
