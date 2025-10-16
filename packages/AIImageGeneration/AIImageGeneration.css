@@ -143,6 +143,7 @@
 
 /* Loading info message */
 .netiaiig-container .loading-info-text {
+  display: none !important;
   color: #495057;
   font-size: 14px;
   line-height: 1.5;
