@@ -749,6 +749,13 @@ class CRM_Utils_Token {
     }
     else {
       $value = CRM_Utils_Array::retrieveValueRecursive($contribution, $token);
+
+      // Refs #44841, Format amount token.
+      $moneyFields = ['total_amount', 'net_amount', 'fee_amount', 'non_deductible_amount'];
+      if (in_array($token, $moneyFields) && is_numeric($value)) {
+        $currency = CRM_Utils_Array::value('currency', $contribution);
+        $value = CRM_Utils_Money::format($value, $currency, NULL, TRUE);
+      }
     }
 
     if (!$html) {
