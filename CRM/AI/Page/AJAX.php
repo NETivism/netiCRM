@@ -537,9 +537,12 @@ class CRM_AI_Page_AJAX {
 
       $allowedInput = [
         'locale' => 'string',
+        'style' => 'string',
+        'ratio' => 'string',
       ];
 
-      $checkFormatResult = self::validateJsonData($jsondata, $allowedInput);
+      $requiredFields = ['locale'];
+      $checkFormatResult = self::validateJsonData($jsondata, $allowedInput, $requiredFields);
       if (!$checkFormatResult) {
         self::responseError([
           'status' => 0,
@@ -579,10 +582,23 @@ class CRM_AI_Page_AJAX {
         ]);
       }
 
-      // Get random prompt item
+      // Filter prompts based on optional parameters
       $prompts = $promptsData['prompts'];
-      $randomIndex = array_rand($prompts);
-      $randomPrompt = $prompts[$randomIndex];
+      $filteredPrompts = self::filterPrompts($prompts, $jsondata);
+      
+      if (empty($filteredPrompts)) {
+        http_response_code(404);
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode([
+          'status' => 0,
+          'message' => 'No matching sample images found.',
+        ]);
+        CRM_Utils_System::civiExit();
+      }
+      
+      // Get random prompt item from filtered results
+      $randomIndex = array_rand($filteredPrompts);
+      $randomPrompt = $filteredPrompts[$randomIndex];
 
       // Create image URL
       $baseUrl = rtrim(CIVICRM_UF_BASEURL, '/');
@@ -608,6 +624,36 @@ class CRM_AI_Page_AJAX {
       'status' => 0,
       'message' => 'Invalid request method or missing data.',
     ]);
+  }
+
+  /**
+   * Filter prompts based on style and ratio parameters
+   *
+   * @param array $prompts Array of prompt items
+   * @param array $filters Filter parameters from request
+   * @return array Filtered prompt items
+   */
+  private static function filterPrompts($prompts, $filters) {
+    $filteredPrompts = $prompts;
+    
+    // Filter by style if provided
+    if (isset($filters['style']) && !empty($filters['style'])) {
+      $style = $filters['style'];
+      $filteredPrompts = array_filter($filteredPrompts, function($prompt) use ($style) {
+        return isset($prompt['style']) && $prompt['style'] === $style;
+      });
+    }
+    
+    // Filter by ratio if provided
+    if (isset($filters['ratio']) && !empty($filters['ratio'])) {
+      $ratio = $filters['ratio'];
+      $filteredPrompts = array_filter($filteredPrompts, function($prompt) use ($ratio) {
+        return isset($prompt['ratio']) && $prompt['ratio'] === $ratio;
+      });
+    }
+    
+    // Re-index array to ensure array_rand works correctly
+    return array_values($filteredPrompts);
   }
 
   /**
@@ -660,19 +706,35 @@ class CRM_AI_Page_AJAX {
    *                            and the values are the types that these inputs should have.
    * @return bool Returns true if all inputs exist and are of the correct type; otherwise returns false.
    */
-  public static function validateJsonData($jsondata, $allowedInput) {
-    foreach ($allowedInput as $key => $type) {
-      if (!isset($jsondata[$key])) {
-        return false;
-      }
-      if ($type === 'integer' || $type === 'double') {
-        if (!is_numeric($jsondata[$key])) {
-          return false;
-        }
-      } else if (gettype($jsondata[$key]) != $type) {
+  public static function validateJsonData($jsondata, $allowedInput, $requiredFields = []) {
+    // If no required fields specified, all fields are required (backward compatibility)
+    if (empty($requiredFields)) {
+      $requiredFields = array_keys($allowedInput);
+    }
+    
+    // Check required fields exist
+    foreach ($requiredFields as $field) {
+      if (!isset($jsondata[$field])) {
         return false;
       }
     }
+    
+    // Check type validation for all provided fields
+    foreach ($jsondata as $key => $value) {
+      if (!isset($allowedInput[$key])) {
+        return false; // Unknown field
+      }
+      
+      $expectedType = $allowedInput[$key];
+      if ($expectedType === 'integer' || $expectedType === 'double') {
+        if (!is_numeric($value)) {
+          return false;
+        }
+      } else if (gettype($value) != $expectedType) {
+        return false;
+      }
+    }
+    
     return true;
   }
 }
