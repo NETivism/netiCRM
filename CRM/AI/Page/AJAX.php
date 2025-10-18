@@ -557,8 +557,10 @@ class CRM_AI_Page_AJAX {
         ]);
       }
 
-      // Load sample prompts data
-      $dataPath = dirname(__FILE__) . "/../../packages/AIImageGeneration/data/{$locale}/defaultPrompts.json";
+      // Load sample prompts data using CiviCRM root path
+      global $civicrm_root;
+      $civicrm_root = rtrim($civicrm_root, DIRECTORY_SEPARATOR);
+      $dataPath = $civicrm_root . "/packages/AIImageGeneration/data/{$locale}/defaultPrompts.json";
       
       if (!file_exists($dataPath)) {
         self::responseError([

@@ -1,0 +1,25 @@
+{
+  "version": "1.0",
+  "locale": "zh_TW",
+  "lastUpdated": "2025-10-18",
+  "prompts": [
+    {
+      "text": "Children doing their homework in an after-school tutoring class",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_001123_b0c5706b.webp"
+    },
+    {
+      "text": "Rural schoolchildren happily receiving new stationery",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_001516_8c3916c9.webp"
+    },
+    {
+      "text": "Rural schoolchildren happily receiving new stationery",
+      "style": "Storybook Style",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_001556_a9f56e29.webp"
+    }
+  ]
+}
