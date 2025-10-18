@@ -1194,17 +1194,3 @@
 .generate-ai-sample-image {
   margin-left: 8px;
 }
-
-
-/* Dark mode support for AI generate link */
-@media (prefers-color-scheme: dark) {
-  .generate-ai-sample-image {
-    color: #0a84ff;
-    border-color: #0a84ff;
-  }
-
-  .generate-ai-sample-image:hover {
-    background: #0a84ff;
-    color: #ffffff;
-  }
-}
