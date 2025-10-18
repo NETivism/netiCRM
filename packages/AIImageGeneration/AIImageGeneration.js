@@ -1388,10 +1388,41 @@
     // Get current UI locale
     getUILocale: function() {
       // Try to get locale from various sources
-      return $('html').attr('lang') || 
-             window.navigator.language || 
-             window.navigator.userLanguage || 
-             'en';
+      let locale = $('html').attr('lang') || 
+                   window.navigator.language || 
+                   window.navigator.userLanguage || 
+                   'en';
+      
+      // Convert locale format to what API expects
+      // Common conversions for CiviCRM/Drupal locales
+      const localeMap = {
+        'zh-hant': 'zh_TW',
+        'zh-hans': 'zh_CN', 
+        'zh-tw': 'zh_TW',
+        'zh-cn': 'zh_CN',
+        'en-us': 'en_US',
+        'en-gb': 'en_GB'
+      };
+      
+      const normalizedLocale = locale.toLowerCase();
+      
+      // Check if we have a direct mapping
+      if (localeMap[normalizedLocale]) {
+        console.log('Locale converted from', locale, 'to', localeMap[normalizedLocale]);
+        return localeMap[normalizedLocale];
+      }
+      
+      // Convert dash format to underscore format (zh-hant -> zh_TW)
+      if (locale.includes('-')) {
+        const parts = locale.split('-');
+        const converted = parts[0] + '_' + parts[1].toUpperCase();
+        console.log('Locale converted from', locale, 'to', converted);
+        return converted;
+      }
+      
+      // Default fallback
+      console.log('Using locale as-is:', locale);
+      return locale;
     },
 
     // Load sample image from API
@@ -1409,16 +1440,22 @@
         timeout: 10000,
 
         success: function(response) {
+          console.log('Sample image API response received:', response);
           if (response.status === 1 && response.data) {
             console.log('Sample image loaded successfully:', response.data);
             self.applySampleToInterface(response.data);
           } else {
-            console.warn('Sample image API returned no data:', response);
+            console.warn('Sample image API returned unexpected format:', response);
           }
         },
 
         error: function(xhr, status, error) {
-          console.warn('Failed to load sample image:', status, error);
+          console.warn('Failed to load sample image:', {
+            status: status,
+            error: error,
+            responseText: xhr.responseText,
+            httpStatus: xhr.status
+          });
           // Silently fail - don't show error to user for sample loading
         }
       });
@@ -1426,25 +1463,38 @@
 
     // Apply sample data to interface
     applySampleToInterface: function(sampleData) {
+      console.log('Applying sample data to interface:', sampleData);
       try {
         // Update image if provided
         if (sampleData.image_url) {
+          console.log('Updating sample image with URL:', sampleData.image_url);
           this.updateSampleImage(sampleData.image_url, sampleData.filename);
+        } else {
+          console.log('No image_url provided in sample data');
         }
 
         // Update prompt text if provided
         if (sampleData.text) {
+          console.log('Updating prompt text:', sampleData.text);
           this.updatePromptText(sampleData.text);
+        } else {
+          console.log('No text provided in sample data');
         }
 
         // Update style selector if provided
         if (sampleData.style) {
+          console.log('Updating style selector:', sampleData.style);
           this.updateStyleSelector(sampleData.style);
+        } else {
+          console.log('No style provided in sample data');
         }
 
         // Update ratio selector if provided
         if (sampleData.ratio) {
+          console.log('Updating ratio selector:', sampleData.ratio);
           this.updateRatioSelector(sampleData.ratio);
+        } else {
+          console.log('No ratio provided in sample data');
         }
 
         console.log('Sample data applied to interface successfully');
@@ -1455,11 +1505,23 @@
 
     // Update sample image display
     updateSampleImage: function(imageUrl, filename) {
+      console.log('updateSampleImage called with:', { imageUrl, filename });
+      console.log('Container selector:', this.config.container);
+      
       const $imageContainer = $(this.config.container).find('.image-placeholder');
+      console.log('Image container found:', $imageContainer.length);
+      
       const $image = $imageContainer.find('img');
+      console.log('Image element found:', $image.length);
+      
       const $emptyState = $imageContainer.find('.empty-state-content');
+      console.log('Empty state element found:', $emptyState.length);
 
       if ($image.length > 0) {
+        console.log('Before update - image src:', $image.attr('src'));
+        console.log('Before update - image display:', $image.css('display'));
+        console.log('Before update - empty state display:', $emptyState.css('display'));
+        
         // Set image source and mark as sample image
         $image.attr('src', imageUrl);
         $image.attr('alt', 'AI Sample Image');
@@ -1469,12 +1531,19 @@
         // Hide empty state
         $emptyState.hide();
 
+        console.log('After update - image src:', $image.attr('src'));
+        console.log('After update - image display:', $image.css('display'));
+        console.log('After update - empty state display:', $emptyState.css('display'));
+        console.log('After update - image classes:', $image.attr('class'));
+
         // Update floating actions state after sample image is loaded
         setTimeout(() => {
           this.updateFloatingActionsBasedOnImage();
         }, 50);
 
-        console.log('Sample image updated:', imageUrl);
+        console.log('Sample image updated successfully:', imageUrl);
+      } else {
+        console.error('No image element found in container');
       }
     },
 
