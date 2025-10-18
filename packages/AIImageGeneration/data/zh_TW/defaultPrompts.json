@@ -1,0 +1,25 @@
+{
+  "version": "1.0",
+  "locale": "zh_TW",
+  "lastUpdated": "2025-10-18",
+  "prompts": [
+    {
+      "text": "孩子們在課後輔導班寫作業",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_001123_b0c5706b.webp"
+    },
+    {
+      "text": "偏鄉學童開心地收到新文具",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_001516_8c3916c9.webp"
+    },
+    {
+      "text": "偏鄉學童開心地收到新文具",
+      "style": "Storybook Style",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_001556_a9f56e29.webp"
+    }
+  ]
+}
