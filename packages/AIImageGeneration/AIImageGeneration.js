@@ -52,6 +52,9 @@
       // Initialize sample image loading mechanism
       this.initSampleImageLoading();
 
+      // Initialize tooltip based on existing content
+      this.initPromptTooltip();
+
       console.log('AI Image Generation component initialized');
     },
 
@@ -137,13 +140,13 @@
       $(document).on('input', self.config.selectors.promptTextarea, function() {
         self.autoResizeTextarea($(this));
         
-        // Remove sample prompt tooltip when user starts editing
-        self.removeSamplePromptTooltip($(this));
+        // Update tooltip based on content
+        self.updatePromptTooltip($(this));
       });
 
       // Also listen for change event (for paste operations)
       $(document).on('change', self.config.selectors.promptTextarea, function() {
-        self.removeSamplePromptTooltip($(this));
+        self.updatePromptTooltip($(this));
       });
     },
 
@@ -1593,12 +1596,8 @@
       if ($textarea.length > 0) {
         $textarea.val(text);
         
-        // Add sample prompt class and tooltip to the container
-        const $promptContainer = $textarea.closest('.prompt-container');
-        $promptContainer.addClass('with-sample-prompt');
-        
-        // Add HTML tooltip element with translation support
-        this.addSamplePromptTooltip($promptContainer);
+        // Update tooltip based on content
+        this.updatePromptTooltip($textarea);
         
         // Trigger auto-resize
         setTimeout(() => {
@@ -1608,15 +1607,31 @@
       }
     },
 
-    // Add HTML tooltip element for sample prompt
-    addSamplePromptTooltip: function($promptContainer) {
+    // Update tooltip based on textarea content
+    updatePromptTooltip: function($textarea) {
+      const $promptContainer = $textarea.closest('.prompt-container');
+      const textContent = $textarea.val().trim();
+      
+      if (textContent.length > 0) {
+        // Has content - show tooltip
+        $promptContainer.addClass('with-sample-prompt');
+        this.addPromptTooltip($promptContainer);
+      } else {
+        // No content - hide tooltip
+        $promptContainer.removeClass('with-sample-prompt');
+        this.removePromptTooltip($promptContainer);
+      }
+    },
+
+    // Add HTML tooltip element for prompt
+    addPromptTooltip: function($promptContainer) {
       // Remove existing tooltip if any
       $promptContainer.find('.sample-prompt-tooltip').remove();
       
       // Get translated text
       const tooltipText = window.AIImageGeneration && window.AIImageGeneration.translation && window.AIImageGeneration.translation.editPromptTooltip
         ? window.AIImageGeneration.translation.editPromptTooltip
-        : '編輯提示詞';
+        : 'Edit prompt: Describe the image you want to generate';
       
       // Create tooltip element
       const $tooltip = $('<div class="sample-prompt-tooltip">' + tooltipText + '</div>');
@@ -1625,16 +1640,17 @@
       $promptContainer.append($tooltip);
     },
 
-    // Remove sample prompt tooltip when user starts editing
-    removeSamplePromptTooltip: function($textarea) {
-      const $promptContainer = $textarea.closest('.prompt-container');
-      if ($promptContainer.hasClass('with-sample-prompt')) {
-        $promptContainer.removeClass('with-sample-prompt');
-        
-        // Remove HTML tooltip element
-        $promptContainer.find('.sample-prompt-tooltip').remove();
-        
-        console.log('Sample prompt tooltip removed - user started editing');
+    // Remove prompt tooltip
+    removePromptTooltip: function($promptContainer) {
+      // Remove HTML tooltip element
+      $promptContainer.find('.sample-prompt-tooltip').remove();
+    },
+
+    // Initialize tooltip based on existing content
+    initPromptTooltip: function() {
+      const $textarea = $(this.config.container).find(this.config.selectors.promptTextarea);
+      if ($textarea.length > 0) {
+        this.updatePromptTooltip($textarea);
       }
     },
 
