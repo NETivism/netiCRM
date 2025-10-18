@@ -49,6 +49,9 @@
       // Initialize floating actions state based on current image
       this.updateFloatingActionsBasedOnImage();
 
+      // Initialize sample image loading mechanism
+      this.initSampleImageLoading();
+
       console.log('AI Image Generation component initialized');
     },
 
@@ -545,7 +548,11 @@
         delete this.tooltipTimers.copyButton;
       }
 
-      const $image = $(this.config.container).find('.image-placeholder .ai-generated-image');
+      // Try to find generated image first, then sample image
+      let $image = $(this.config.container).find('.image-placeholder .ai-generated-image');
+      if ($image.length === 0) {
+        $image = $(this.config.container).find('.image-placeholder .ai-sample-image');
+      }
       const imageUrl = $image.attr('src');
 
       console.log('Copying image to clipboard:', imageUrl);
@@ -636,7 +643,11 @@
         return;
       }
 
-      const $image = $(this.config.container).find('.image-placeholder .ai-generated-image');
+      // Try to find generated image first, then sample image
+      let $image = $(this.config.container).find('.image-placeholder .ai-generated-image');
+      if ($image.length === 0) {
+        $image = $(this.config.container).find('.image-placeholder .ai-sample-image');
+      }
       const imageUrl = $image.attr('src');
 
       console.log('Downloading image:', imageUrl);
@@ -1277,23 +1288,244 @@
 
     // Check if current image exists and is a real generated image
     hasGeneratedImage: function() {
-      const $image = $(this.config.container).find('.image-placeholder .ai-generated-image');
+      const $imageContainer = $(this.config.container).find('.image-placeholder');
+      const $generatedImage = $imageContainer.find('.ai-generated-image');
+      const $sampleImage = $imageContainer.find('.ai-sample-image');
 
-      if ($image.length === 0) {
-        return false;
+      // Check for AI generated images first
+      if ($generatedImage.length > 0) {
+        const src = $generatedImage.attr('src');
+        if (src && !this.isPlaceholderImage(src)) {
+          return true;
+        }
       }
 
-      const src = $image.attr('src');
-      if (!src) {
-        return false;
+      // Also check for sample images - they should enable floating actions
+      if ($sampleImage.length > 0) {
+        const src = $sampleImage.attr('src');
+        if (src && !this.isPlaceholderImage(src)) {
+          return true;
+        }
       }
 
-      // Check if it's a placeholder image (not a real generated image)
-      const isPlaceholder = src.includes('thumb-00.png') ||
-                           src.includes('placeholder') ||
-                           src.endsWith('thumb-00.png');
+      return false;
+    },
 
-      return !isPlaceholder;
+    // Helper method to check if an image URL is a placeholder
+    isPlaceholderImage: function(src) {
+      return src.includes('thumb-00.png') ||
+             src.includes('placeholder') ||
+             src.endsWith('thumb-00.png');
+    },
+
+    // Sample image loading functionality
+    initSampleImageLoading: function() {
+      const self = this;
+      
+      // Listen to panel activation events
+      $(document).on('click', '.nme-setting-panels-tabs a', function() {
+        const targetId = $(this).data('target-id');
+        
+        if (targetId === 'nme-aiimagegeneration') {
+          console.log('AI Image Generation panel activated - checking for sample image load');
+          
+          // Wait for DOM to update after tab switch
+          setTimeout(() => {
+            self.checkAndLoadSampleImage();
+          }, 100);
+        }
+      });
+
+      // Check initial state if panel is already active
+      const checkInitialState = () => {
+        const currentPanel = document.querySelector('.nme-aiimagegeneration.nme-setting-panel');
+        if (currentPanel && currentPanel.classList.contains('is-active')) {
+          console.log('AI panel is already active on load - checking for sample image');
+          setTimeout(() => {
+            self.checkAndLoadSampleImage();
+          }, 100);
+          return true;
+        }
+        return false;
+      };
+
+      // Check initial state with multiple attempts
+      if (!checkInitialState()) {
+        setTimeout(checkInitialState, 500);
+        setTimeout(checkInitialState, 1000);
+      }
+    },
+
+    // Check if sample image should be loaded and load it
+    checkAndLoadSampleImage: function() {
+      // Only load if no existing image is present
+      if (!this.hasExistingImage()) {
+        console.log('No existing image found - loading sample image');
+        this.loadSampleImage();
+      } else {
+        console.log('Existing image found - skipping sample image load');
+      }
+    },
+
+    // Check if there's already an image displayed
+    hasExistingImage: function() {
+      const $imageContainer = $(this.config.container).find('.image-placeholder');
+      const $image = $imageContainer.find('img');
+      const $emptyState = $imageContainer.find('.empty-state-content');
+
+      // Check if we have a visible image that's not the default placeholder
+      const hasVisibleImage = $image.length > 0 && 
+                             $image.is(':visible') && 
+                             $image.attr('src') && 
+                             !$image.attr('src').includes('thumb-00.png');
+
+      // Check if empty state is hidden (indicating an image is displayed)
+      const emptyStateHidden = $emptyState.length > 0 && !$emptyState.is(':visible');
+
+      return hasVisibleImage || emptyStateHidden;
+    },
+
+    // Get current UI locale
+    getUILocale: function() {
+      // Try to get locale from various sources
+      return $('html').attr('lang') || 
+             window.navigator.language || 
+             window.navigator.userLanguage || 
+             'en';
+    },
+
+    // Load sample image from API
+    loadSampleImage: function() {
+      const self = this;
+      const locale = this.getUILocale();
+
+      console.log('Loading sample image for locale:', locale);
+
+      $.ajax({
+        url: '/civicrm/ai/images/get-sample',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ locale: locale }),
+        timeout: 10000,
+
+        success: function(response) {
+          if (response.status === 1 && response.data) {
+            console.log('Sample image loaded successfully:', response.data);
+            self.applySampleToInterface(response.data);
+          } else {
+            console.warn('Sample image API returned no data:', response);
+          }
+        },
+
+        error: function(xhr, status, error) {
+          console.warn('Failed to load sample image:', status, error);
+          // Silently fail - don't show error to user for sample loading
+        }
+      });
+    },
+
+    // Apply sample data to interface
+    applySampleToInterface: function(sampleData) {
+      try {
+        // Update image if provided
+        if (sampleData.image_url) {
+          this.updateSampleImage(sampleData.image_url, sampleData.filename);
+        }
+
+        // Update prompt text if provided
+        if (sampleData.text) {
+          this.updatePromptText(sampleData.text);
+        }
+
+        // Update style selector if provided
+        if (sampleData.style) {
+          this.updateStyleSelector(sampleData.style);
+        }
+
+        // Update ratio selector if provided
+        if (sampleData.ratio) {
+          this.updateRatioSelector(sampleData.ratio);
+        }
+
+        console.log('Sample data applied to interface successfully');
+      } catch (error) {
+        console.error('Error applying sample data to interface:', error);
+      }
+    },
+
+    // Update sample image display
+    updateSampleImage: function(imageUrl, filename) {
+      const $imageContainer = $(this.config.container).find('.image-placeholder');
+      const $image = $imageContainer.find('img');
+      const $emptyState = $imageContainer.find('.empty-state-content');
+
+      if ($image.length > 0) {
+        // Set image source and mark as sample image
+        $image.attr('src', imageUrl);
+        $image.attr('alt', 'AI Sample Image');
+        $image.addClass('ai-sample-image'); // Mark as sample for identification
+        $image.show();
+
+        // Hide empty state
+        $emptyState.hide();
+
+        // Update floating actions state after sample image is loaded
+        setTimeout(() => {
+          this.updateFloatingActionsBasedOnImage();
+        }, 50);
+
+        console.log('Sample image updated:', imageUrl);
+      }
+    },
+
+    // Update prompt text with auto-resize
+    updatePromptText: function(text) {
+      const $textarea = $(this.config.container).find(this.config.selectors.promptTextarea);
+      
+      if ($textarea.length > 0) {
+        $textarea.val(text);
+        
+        // Trigger auto-resize
+        setTimeout(() => {
+          this.autoResizeTextarea($textarea);
+        }, 10);
+
+        console.log('Prompt text updated:', text);
+      }
+    },
+
+    // Update style selector
+    updateStyleSelector: function(style) {
+      const $styleOptions = $(this.config.container).find(this.config.selectors.styleOptions);
+      const $styleText = $(this.config.container).find(this.config.selectors.styleText);
+
+      // Remove current selection
+      $styleOptions.removeClass(this.config.classes.selected);
+
+      // Find and select target option
+      const $targetOption = $styleOptions.filter(`[data-style="${style}"]`);
+      if ($targetOption.length > 0) {
+        $targetOption.addClass(this.config.classes.selected);
+        $styleText.text(style);
+        console.log('Style selector updated:', style);
+      }
+    },
+
+    // Update ratio selector
+    updateRatioSelector: function(ratio) {
+      const $ratioItems = $(this.config.container).find(`${this.config.selectors.ratioDropdown} ${this.config.selectors.dropdownItems}`);
+      const $ratioText = $(this.config.container).find(this.config.selectors.ratioText);
+
+      // Remove current selection
+      $ratioItems.removeClass(this.config.classes.selected);
+
+      // Find and select target item
+      const $targetItem = $ratioItems.filter(`[data-ratio="${ratio}"]`);
+      if ($targetItem.length > 0) {
+        $targetItem.addClass(this.config.classes.selected);
+        $ratioText.text(ratio);
+        console.log('Ratio selector updated:', ratio);
+      }
     },
 
     // Public API methods
