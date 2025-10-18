@@ -64,7 +64,8 @@ window.AIImageGeneration = {
     "errorDnsError": "{/literal}{ts}Network configuration problem, please check network connection{/ts}{literal}",
     "errorGenerationFailed": "{/literal}{ts}Image generation failed, please try again later{/ts}{literal}",
     "errorDefaultMessage": "{/literal}{ts}An error occurred during image generation, please try again later{/ts}{literal}",
-    "editPromptTooltip": "{/literal}{ts}Edit prompt: Describe the image you want to generate{/ts}{literal}"
+    "editPromptTooltip": "{/literal}{ts}Edit prompt: Describe the image you want to generate{/ts}{literal}",
+    "generateImagesUsingAI": "{/literal}{ts}Generate images using AI{/ts}{literal}"
   }
 };
 </script>

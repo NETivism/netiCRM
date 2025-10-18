@@ -55,6 +55,9 @@
       // Initialize tooltip based on existing content
       this.initPromptTooltip();
 
+      // Initialize file upload field integration
+      this.initFileUploadIntegration();
+
       console.log('AI Image Generation component initialized');
     },
 
@@ -139,7 +142,7 @@
       // Textarea auto-resize event binding (following reference file logic)
       $(document).on('input', self.config.selectors.promptTextarea, function() {
         self.autoResizeTextarea($(this));
-        
+
         // Update tooltip based on content
         self.updatePromptTooltip($(this));
       });
@@ -1332,14 +1335,14 @@
     // Sample image loading functionality
     initSampleImageLoading: function() {
       const self = this;
-      
+
       // Listen to panel activation events
       $(document).on('click', '.nme-setting-panels-tabs a', function() {
         const targetId = $(this).data('target-id');
-        
+
         if (targetId === 'nme-aiimagegeneration') {
           console.log('AI Image Generation panel activated - checking for sample image load');
-          
+
           // Wait for DOM to update after tab switch
           setTimeout(() => {
             self.checkAndLoadSampleImage();
@@ -1385,9 +1388,9 @@
       const $emptyState = $imageContainer.find('.empty-state-content');
 
       // Check if we have a visible image that's not the default placeholder
-      const hasVisibleImage = $image.length > 0 && 
-                             $image.is(':visible') && 
-                             $image.attr('src') && 
+      const hasVisibleImage = $image.length > 0 &&
+                             $image.is(':visible') &&
+                             $image.attr('src') &&
                              !$image.attr('src').includes('thumb-00.png');
 
       // Check if empty state is hidden (indicating an image is displayed)
@@ -1399,29 +1402,29 @@
     // Get corrected image URL using CiviCRM resource base path
     getCorrectedImageUrl: function(imageUrl, imagePath) {
       // Try to use CiviCRM resource base path first
-      if (typeof Drupal !== 'undefined' && 
-          Drupal.settings && 
-          Drupal.settings.civicrm && 
+      if (typeof Drupal !== 'undefined' &&
+          Drupal.settings &&
+          Drupal.settings.civicrm &&
           Drupal.settings.civicrm.resourceBase) {
-        
+
         const resourceBase = Drupal.settings.civicrm.resourceBase;
         const correctedUrl = resourceBase + imagePath;
         console.log('Using Drupal.settings.civicrm.resourceBase:', resourceBase);
         console.log('Corrected URL:', correctedUrl);
         return correctedUrl;
       }
-      
+
       // Fallback: manual path correction
       if (imageUrl && imageUrl.includes('/packages/AIImageGeneration/')) {
         // Insert the missing path part
         const correctedUrl = imageUrl.replace(
-          '/packages/AIImageGeneration/', 
+          '/packages/AIImageGeneration/',
           '/sites/all/modules/civicrm/packages/AIImageGeneration/'
         );
         console.log('Manual path correction applied:', correctedUrl);
         return correctedUrl;
       }
-      
+
       // If we have image_path, try to construct URL from current domain
       if (imagePath) {
         const baseUrl = window.location.origin;
@@ -1429,7 +1432,7 @@
         console.log('Constructed URL from image_path:', correctedUrl);
         return correctedUrl;
       }
-      
+
       // Last resort: return original image_url
       console.warn('Could not correct image URL, using original:', imageUrl);
       return imageUrl;
@@ -1438,30 +1441,30 @@
     // Get current UI locale
     getUILocale: function() {
       // Try to get locale from various sources
-      let locale = $('html').attr('lang') || 
-                   window.navigator.language || 
-                   window.navigator.userLanguage || 
+      let locale = $('html').attr('lang') ||
+                   window.navigator.language ||
+                   window.navigator.userLanguage ||
                    'en';
-      
+
       // Convert locale format to what API expects
       // Common conversions for CiviCRM/Drupal locales
       const localeMap = {
         'zh-hant': 'zh_TW',
-        'zh-hans': 'zh_CN', 
+        'zh-hans': 'zh_CN',
         'zh-tw': 'zh_TW',
         'zh-cn': 'zh_CN',
         'en-us': 'en_US',
         'en-gb': 'en_GB'
       };
-      
+
       const normalizedLocale = locale.toLowerCase();
-      
+
       // Check if we have a direct mapping
       if (localeMap[normalizedLocale]) {
         console.log('Locale converted from', locale, 'to', localeMap[normalizedLocale]);
         return localeMap[normalizedLocale];
       }
-      
+
       // Convert dash format to underscore format (zh-hant -> zh_TW)
       if (locale.includes('-')) {
         const parts = locale.split('-');
@@ -1469,7 +1472,7 @@
         console.log('Locale converted from', locale, 'to', converted);
         return converted;
       }
-      
+
       // Default fallback
       console.log('Using locale as-is:', locale);
       return locale;
@@ -1592,13 +1595,13 @@
     // Update prompt text with auto-resize
     updatePromptText: function(text) {
       const $textarea = $(this.config.container).find(this.config.selectors.promptTextarea);
-      
+
       if ($textarea.length > 0) {
         $textarea.val(text);
-        
+
         // Update tooltip based on content
         this.updatePromptTooltip($textarea);
-        
+
         // Trigger auto-resize
         setTimeout(() => {
           this.autoResizeTextarea($textarea);
@@ -1611,7 +1614,7 @@
     updatePromptTooltip: function($textarea) {
       const $promptContainer = $textarea.closest('.prompt-container');
       const textContent = $textarea.val().trim();
-      
+
       if (textContent.length > 0) {
         // Has content - show tooltip
         $promptContainer.addClass('with-sample-prompt');
@@ -1627,15 +1630,15 @@
     addPromptTooltip: function($promptContainer) {
       // Remove existing tooltip if any
       $promptContainer.find('.sample-prompt-tooltip').remove();
-      
+
       // Get translated text
       const tooltipText = window.AIImageGeneration && window.AIImageGeneration.translation && window.AIImageGeneration.translation.editPromptTooltip
         ? window.AIImageGeneration.translation.editPromptTooltip
         : 'Edit prompt: Describe the image you want to generate';
-      
+
       // Create tooltip element
       const $tooltip = $('<div class="sample-prompt-tooltip">' + tooltipText + '</div>');
-      
+
       // Add to container
       $promptContainer.append($tooltip);
     },
@@ -1652,6 +1655,55 @@
       if ($textarea.length > 0) {
         this.updatePromptTooltip($textarea);
       }
+    },
+
+    // Initialize file upload field integration
+    initFileUploadIntegration: function() {
+      const self = this;
+
+      // Configuration for file upload fields and their ratios
+      const uploadFieldConfigs = {
+        'uploadBackgroundImage': '4:3',
+        'uploadMobileBackgroundImage': '9:16'
+      };
+
+      // Check each upload field
+      Object.keys(uploadFieldConfigs).forEach(fieldName => {
+        const $uploadField = $('.crm-container input[type="file"][name="' + fieldName + '"]');
+
+        if ($uploadField.length > 0) {
+          const ratio = uploadFieldConfigs[fieldName];
+          self.addAIGenerateLink($uploadField, ratio);
+          console.log('Added AI generate link for field:', fieldName, 'with ratio:', ratio);
+        }
+      });
+    },
+
+    // Add AI generate link after file upload field
+    addAIGenerateLink: function($uploadField, ratio) {
+      // Check if link already exists to avoid duplicates
+      if ($uploadField.next('.generate-ai-sample-image').length > 0) {
+        return;
+      }
+
+      // Get translated text
+      const linkText = window.AIImageGeneration && window.AIImageGeneration.translation && window.AIImageGeneration.translation.generateImagesUsingAI
+        ? window.AIImageGeneration.translation.generateImagesUsingAI
+        : 'Generate images using AI';
+
+      // Create AI generate link
+      const $aiLink = $('<a href="#" class="generate-ai-sample-image" data-ratio="' + ratio + '">' + linkText + '</a>');
+
+      // Add click event handler
+      $aiLink.on('click', function(e) {
+        e.preventDefault();
+        const selectedRatio = $(this).data('ratio');
+        console.log('AI generate link clicked with ratio:', selectedRatio);
+        // TODO: Add logic to open AI generation interface with specific ratio
+      });
+
+      // Insert after the upload field
+      $uploadField.after($aiLink);
     },
 
     // Update style selector

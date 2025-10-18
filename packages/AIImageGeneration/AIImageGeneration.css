@@ -1177,21 +1177,52 @@
   border-radius: 4px;
   white-space: nowrap;
   z-index: 10;
-  opacity: 0;
   transform: translateY(-4px);
   transition: all 0.2s ease;
   pointer-events: none;
 }
 
-.netiaiig-container .prompt-container.with-sample-prompt:hover .sample-prompt-tooltip,
-.netiaiig-container .prompt-container.with-sample-prompt:focus-within .sample-prompt-tooltip {
-  opacity: 1;
-  transform: translateY(0);
-}
-
 /* Dark mode support for tooltip */
 @media (prefers-color-scheme: dark) {
   .netiaiig-container .sample-prompt-tooltip {
+    background: #0a84ff;
+    color: #ffffff;
+  }
+}
+
+/* AI Generate Link for file upload fields */
+.generate-ai-sample-image {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 4px 8px;
+  font-size: 12px;
+  color: #007aff;
+  text-decoration: none;
+  border: 1px solid #007aff;
+  border-radius: 4px;
+  background: transparent;
+  transition: all 0.2s ease;
+}
+
+.generate-ai-sample-image:hover {
+  background: #007aff;
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.generate-ai-sample-image:focus {
+  outline: 2px solid #007aff;
+  outline-offset: 2px;
+}
+
+/* Dark mode support for AI generate link */
+@media (prefers-color-scheme: dark) {
+  .generate-ai-sample-image {
+    color: #0a84ff;
+    border-color: #0a84ff;
+  }
+  
+  .generate-ai-sample-image:hover {
     background: #0a84ff;
     color: #ffffff;
   }
