@@ -1532,18 +1532,40 @@
     // Update sample image display
     updateSampleImage: function(imageUrl, filename) {
       const $imageContainer = $(this.config.container).find('.image-placeholder');
-      const $image = $imageContainer.find('img');
+      const $existingImage = $imageContainer.find('img');
       const $emptyState = $imageContainer.find('.empty-state-content');
 
-      if ($image.length > 0) {
-        // Set image source and mark as sample image
-        $image.attr('src', imageUrl);
-        $image.attr('alt', 'AI Sample Image');
-        $image.addClass('ai-sample-image'); // Mark as sample for identification
-        $image.show();
-
+      if ($existingImage.length > 0) {
         // Hide empty state
         $emptyState.hide();
+
+        // Create new image element with correct classes
+        const $img = $('<img>').attr({
+          'src': imageUrl,
+          'alt': 'AI Generated Image'
+        }).addClass('ai-generated-image ai-sample-image');
+
+        // Create anchor tag to wrap the image for lightbox functionality
+        const $link = $('<a>').attr({
+          'href': imageUrl,
+          'class': 'ai-image-link'
+        }).append($img);
+
+        // Remove old image and its link wrapper if exists
+        const $existingLink = $imageContainer.find('.ai-image-link');
+        if ($existingLink.length > 0) {
+          $existingLink.remove();
+        } else {
+          $existingImage.remove();
+        }
+
+        // Insert new link before loading-overlay to maintain structure
+        const $overlay = $imageContainer.find('.loading-overlay');
+        if ($overlay.length > 0) {
+          $overlay.before($link);
+        } else {
+          $imageContainer.prepend($link);
+        }
 
         // Update floating actions state after sample image is loaded
         setTimeout(() => {
