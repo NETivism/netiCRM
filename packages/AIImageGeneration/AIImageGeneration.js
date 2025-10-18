@@ -1385,6 +1385,45 @@
       return hasVisibleImage || emptyStateHidden;
     },
 
+    // Get corrected image URL using CiviCRM resource base path
+    getCorrectedImageUrl: function(imageUrl, imagePath) {
+      // Try to use CiviCRM resource base path first
+      if (typeof Drupal !== 'undefined' && 
+          Drupal.settings && 
+          Drupal.settings.civicrm && 
+          Drupal.settings.civicrm.resourceBase) {
+        
+        const resourceBase = Drupal.settings.civicrm.resourceBase;
+        const correctedUrl = resourceBase + imagePath;
+        console.log('Using Drupal.settings.civicrm.resourceBase:', resourceBase);
+        console.log('Corrected URL:', correctedUrl);
+        return correctedUrl;
+      }
+      
+      // Fallback: manual path correction
+      if (imageUrl && imageUrl.includes('/packages/AIImageGeneration/')) {
+        // Insert the missing path part
+        const correctedUrl = imageUrl.replace(
+          '/packages/AIImageGeneration/', 
+          '/sites/all/modules/civicrm/packages/AIImageGeneration/'
+        );
+        console.log('Manual path correction applied:', correctedUrl);
+        return correctedUrl;
+      }
+      
+      // If we have image_path, try to construct URL from current domain
+      if (imagePath) {
+        const baseUrl = window.location.origin;
+        const correctedUrl = baseUrl + '/sites/all/modules/civicrm/' + imagePath;
+        console.log('Constructed URL from image_path:', correctedUrl);
+        return correctedUrl;
+      }
+      
+      // Last resort: return original image_url
+      console.warn('Could not correct image URL, using original:', imageUrl);
+      return imageUrl;
+    },
+
     // Get current UI locale
     getUILocale: function() {
       // Try to get locale from various sources
@@ -1440,9 +1479,8 @@
         timeout: 10000,
 
         success: function(response) {
-          console.log('Sample image API response received:', response);
           if (response.status === 1 && response.data) {
-            console.log('Sample image loaded successfully:', response.data);
+            console.log('Sample image loaded successfully');
             self.applySampleToInterface(response.data);
           } else {
             console.warn('Sample image API returned unexpected format:', response);
@@ -1463,38 +1501,26 @@
 
     // Apply sample data to interface
     applySampleToInterface: function(sampleData) {
-      console.log('Applying sample data to interface:', sampleData);
       try {
         // Update image if provided
-        if (sampleData.image_url) {
-          console.log('Updating sample image with URL:', sampleData.image_url);
-          this.updateSampleImage(sampleData.image_url, sampleData.filename);
-        } else {
-          console.log('No image_url provided in sample data');
+        if (sampleData.image_url || sampleData.image_path) {
+          const correctedImageUrl = this.getCorrectedImageUrl(sampleData.image_url, sampleData.image_path);
+          this.updateSampleImage(correctedImageUrl, sampleData.filename);
         }
 
         // Update prompt text if provided
         if (sampleData.text) {
-          console.log('Updating prompt text:', sampleData.text);
           this.updatePromptText(sampleData.text);
-        } else {
-          console.log('No text provided in sample data');
         }
 
         // Update style selector if provided
         if (sampleData.style) {
-          console.log('Updating style selector:', sampleData.style);
           this.updateStyleSelector(sampleData.style);
-        } else {
-          console.log('No style provided in sample data');
         }
 
         // Update ratio selector if provided
         if (sampleData.ratio) {
-          console.log('Updating ratio selector:', sampleData.ratio);
           this.updateRatioSelector(sampleData.ratio);
-        } else {
-          console.log('No ratio provided in sample data');
         }
 
         console.log('Sample data applied to interface successfully');
@@ -1505,23 +1531,11 @@
 
     // Update sample image display
     updateSampleImage: function(imageUrl, filename) {
-      console.log('updateSampleImage called with:', { imageUrl, filename });
-      console.log('Container selector:', this.config.container);
-      
       const $imageContainer = $(this.config.container).find('.image-placeholder');
-      console.log('Image container found:', $imageContainer.length);
-      
       const $image = $imageContainer.find('img');
-      console.log('Image element found:', $image.length);
-      
       const $emptyState = $imageContainer.find('.empty-state-content');
-      console.log('Empty state element found:', $emptyState.length);
 
       if ($image.length > 0) {
-        console.log('Before update - image src:', $image.attr('src'));
-        console.log('Before update - image display:', $image.css('display'));
-        console.log('Before update - empty state display:', $emptyState.css('display'));
-        
         // Set image source and mark as sample image
         $image.attr('src', imageUrl);
         $image.attr('alt', 'AI Sample Image');
@@ -1530,11 +1544,6 @@
 
         // Hide empty state
         $emptyState.hide();
-
-        console.log('After update - image src:', $image.attr('src'));
-        console.log('After update - image display:', $image.css('display'));
-        console.log('After update - empty state display:', $emptyState.css('display'));
-        console.log('After update - image classes:', $image.attr('class'));
 
         // Update floating actions state after sample image is loaded
         setTimeout(() => {
@@ -1559,7 +1568,6 @@
           this.autoResizeTextarea($textarea);
         }, 10);
 
-        console.log('Prompt text updated:', text);
       }
     },
 
@@ -1576,7 +1584,6 @@
       if ($targetOption.length > 0) {
         $targetOption.addClass(this.config.classes.selected);
         $styleText.text(style);
-        console.log('Style selector updated:', style);
       }
     },
 
@@ -1593,7 +1600,6 @@
       if ($targetItem.length > 0) {
         $targetItem.addClass(this.config.classes.selected);
         $ratioText.text(ratio);
-        console.log('Ratio selector updated:', ratio);
       }
     },
 
