@@ -523,6 +523,91 @@ class CRM_AI_Page_AJAX {
     ]);
   }
 
+  public static function getSampleImage() {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] == 'application/json') {
+      $jsonString = file_get_contents('php://input');
+      $jsondata = json_decode($jsonString, true);
+
+      if ($jsondata === NULL) {
+        self::responseError([
+          'status' => 0,
+          'message' => 'The request is not a valid JSON format.',
+        ]);
+      }
+
+      $allowedInput = [
+        'locale' => 'string',
+      ];
+
+      $checkFormatResult = self::validateJsonData($jsondata, $allowedInput);
+      if (!$checkFormatResult) {
+        self::responseError([
+          'status' => 0,
+          'message' => 'The request does not match the expected format.',
+        ]);
+      }
+
+      $locale = $jsondata['locale'];
+      
+      // Validate locale format
+      if (!in_array($locale, ['zh_TW', 'en_US'])) {
+        self::responseError([
+          'status' => 0,
+          'message' => 'Invalid locale format.',
+        ]);
+      }
+
+      // Load sample prompts data
+      $dataPath = dirname(__FILE__) . "/../../packages/AIImageGeneration/data/{$locale}/defaultPrompts.json";
+      
+      if (!file_exists($dataPath)) {
+        self::responseError([
+          'status' => 0,
+          'message' => 'Sample prompts data not found for the specified locale.',
+        ]);
+      }
+
+      $jsonContent = file_get_contents($dataPath);
+      $promptsData = json_decode($jsonContent, true);
+
+      if ($promptsData === NULL || !isset($promptsData['prompts']) || empty($promptsData['prompts'])) {
+        self::responseError([
+          'status' => 0,
+          'message' => 'Invalid or empty sample prompts data.',
+        ]);
+      }
+
+      // Get random prompt item
+      $prompts = $promptsData['prompts'];
+      $randomIndex = array_rand($prompts);
+      $randomPrompt = $prompts[$randomIndex];
+
+      // Create image URL
+      $baseUrl = rtrim(CIVICRM_UF_BASEURL, '/');
+      $imagePath = "packages/AIImageGeneration/images/samples/{$randomPrompt['filename']}";
+      $imageUrl = $baseUrl . '/' . $imagePath;
+
+      self::responseSucess([
+        'status' => 1,
+        'message' => 'Sample image retrieved successfully.',
+        'data' => [
+          'text' => $randomPrompt['text'],
+          'style' => $randomPrompt['style'],
+          'ratio' => $randomPrompt['ratio'],
+          'filename' => $randomPrompt['filename'],
+          'image_url' => $imageUrl,
+          'image_path' => $imagePath,
+        ],
+      ]);
+    }
+
+    // If we reach here, it means the request method is not POST or content-type is not JSON
+    self::responseError([
+      'status' => 0,
+      'message' => 'Invalid request method or missing data.',
+    ]);
+  }
+
   /**
    * This function handles the response in case of an error.
    *
