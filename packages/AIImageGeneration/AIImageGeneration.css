@@ -1163,3 +1163,36 @@
     border-color: rgba(255, 69, 58, 0.3);
   }
 }
+
+/* Sample prompt tooltip */
+.netiaiig-container .sample-prompt-tooltip {
+  position: absolute;
+  top: -8px;
+  right: 12px;
+  background: #007aff;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  z-index: 10;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: all 0.2s ease;
+  pointer-events: none;
+}
+
+.netiaiig-container .prompt-container.with-sample-prompt:hover .sample-prompt-tooltip,
+.netiaiig-container .prompt-container.with-sample-prompt:focus-within .sample-prompt-tooltip {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Dark mode support for tooltip */
+@media (prefers-color-scheme: dark) {
+  .netiaiig-container .sample-prompt-tooltip {
+    background: #0a84ff;
+    color: #ffffff;
+  }
+}

@@ -136,6 +136,14 @@
       // Textarea auto-resize event binding (following reference file logic)
       $(document).on('input', self.config.selectors.promptTextarea, function() {
         self.autoResizeTextarea($(this));
+        
+        // Remove sample prompt tooltip when user starts editing
+        self.removeSamplePromptTooltip($(this));
+      });
+
+      // Also listen for change event (for paste operations)
+      $(document).on('change', self.config.selectors.promptTextarea, function() {
+        self.removeSamplePromptTooltip($(this));
       });
     },
 
@@ -1585,11 +1593,48 @@
       if ($textarea.length > 0) {
         $textarea.val(text);
         
+        // Add sample prompt class and tooltip to the container
+        const $promptContainer = $textarea.closest('.prompt-container');
+        $promptContainer.addClass('with-sample-prompt');
+        
+        // Add HTML tooltip element with translation support
+        this.addSamplePromptTooltip($promptContainer);
+        
         // Trigger auto-resize
         setTimeout(() => {
           this.autoResizeTextarea($textarea);
         }, 10);
 
+      }
+    },
+
+    // Add HTML tooltip element for sample prompt
+    addSamplePromptTooltip: function($promptContainer) {
+      // Remove existing tooltip if any
+      $promptContainer.find('.sample-prompt-tooltip').remove();
+      
+      // Get translated text
+      const tooltipText = window.AIImageGeneration && window.AIImageGeneration.translation && window.AIImageGeneration.translation.editPromptTooltip
+        ? window.AIImageGeneration.translation.editPromptTooltip
+        : '編輯提示詞';
+      
+      // Create tooltip element
+      const $tooltip = $('<div class="sample-prompt-tooltip">' + tooltipText + '</div>');
+      
+      // Add to container
+      $promptContainer.append($tooltip);
+    },
+
+    // Remove sample prompt tooltip when user starts editing
+    removeSamplePromptTooltip: function($textarea) {
+      const $promptContainer = $textarea.closest('.prompt-container');
+      if ($promptContainer.hasClass('with-sample-prompt')) {
+        $promptContainer.removeClass('with-sample-prompt');
+        
+        // Remove HTML tooltip element
+        $promptContainer.find('.sample-prompt-tooltip').remove();
+        
+        console.log('Sample prompt tooltip removed - user started editing');
       }
     },
 

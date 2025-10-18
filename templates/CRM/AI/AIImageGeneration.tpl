@@ -63,7 +63,8 @@ window.AIImageGeneration = {
     "errorConnectionRefused": "{/literal}{ts}Unable to connect to server, please try again later{/ts}{literal}",
     "errorDnsError": "{/literal}{ts}Network configuration problem, please check network connection{/ts}{literal}",
     "errorGenerationFailed": "{/literal}{ts}Image generation failed, please try again later{/ts}{literal}",
-    "errorDefaultMessage": "{/literal}{ts}An error occurred during image generation, please try again later{/ts}{literal}"
+    "errorDefaultMessage": "{/literal}{ts}An error occurred during image generation, please try again later{/ts}{literal}",
+    "editPromptTooltip": "{/literal}{ts}Edit Prompt{/ts}{literal}"
   }
 };
 </script>
