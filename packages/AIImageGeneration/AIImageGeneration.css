@@ -1192,28 +1192,9 @@
 
 /* AI Generate Link for file upload fields */
 .generate-ai-sample-image {
-  display: inline-block;
   margin-left: 8px;
-  padding: 4px 8px;
-  font-size: 12px;
-  color: #007aff;
-  text-decoration: none;
-  border: 1px solid #007aff;
-  border-radius: 4px;
-  background: transparent;
-  transition: all 0.2s ease;
 }
 
-.generate-ai-sample-image:hover {
-  background: #007aff;
-  color: #ffffff;
-  text-decoration: none;
-}
-
-.generate-ai-sample-image:focus {
-  outline: 2px solid #007aff;
-  outline-offset: 2px;
-}
 
 /* Dark mode support for AI generate link */
 @media (prefers-color-scheme: dark) {
@@ -1221,7 +1202,7 @@
     color: #0a84ff;
     border-color: #0a84ff;
   }
-  
+
   .generate-ai-sample-image:hover {
     background: #0a84ff;
     color: #ffffff;

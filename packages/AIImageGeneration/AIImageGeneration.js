@@ -1699,7 +1699,56 @@
         e.preventDefault();
         const selectedRatio = $(this).data('ratio');
         console.log('AI generate link clicked with ratio:', selectedRatio);
-        // TODO: Add logic to open AI generation interface with specific ratio
+        
+        // Check if nsp-container exists and get its current state
+        const $nspContainer = $('.nsp-container');
+        if ($nspContainer.length === 0) {
+          console.warn('nsp-container not found');
+          return;
+        }
+        
+        const isContainerOpen = $nspContainer.hasClass('is-opened');
+        console.log('nsp-container current state - is opened:', isContainerOpen);
+        
+        // Function to switch to AI Image Generation panel
+        const switchToAIPanel = function() {
+          const $aiTabLink = $('.nme-setting-panels-tabs a[data-target-id="nme-aiimagegeneration"]');
+          if ($aiTabLink.length > 0) {
+            console.log('Switching to AI Image Generation panel');
+            $aiTabLink.trigger('click');
+            
+            // Update ratio after panel switch
+            setTimeout(() => {
+              if (window.NetiAIImageGeneration && window.NetiAIImageGeneration.setRatio) {
+                window.NetiAIImageGeneration.setRatio(selectedRatio);
+                console.log('Set ratio to:', selectedRatio);
+              }
+            }, 200);
+          } else {
+            console.warn('AI Image Generation tab link not found');
+          }
+        };
+        
+        if (!isContainerOpen) {
+          // Container is closed - first switch panel, then open container
+          console.log('Container is closed - switching panel first, then opening container');
+          switchToAIPanel();
+          
+          // Wait for panel switch to complete, then open container
+          setTimeout(() => {
+            const $trigger = $('.nsp-trigger');
+            if ($trigger.length > 0) {
+              console.log('Opening nsp-container');
+              $trigger.trigger('click');
+            } else {
+              console.warn('nsp-trigger not found');
+            }
+          }, 300);
+        } else {
+          // Container is already open - just switch panel
+          console.log('Container is already open - switching to AI panel directly');
+          switchToAIPanel();
+        }
       });
 
       // Insert after the upload field
