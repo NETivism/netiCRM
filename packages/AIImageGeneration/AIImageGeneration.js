@@ -434,6 +434,7 @@
         const $img = $(img);
 
         // Set up load handler before setting src
+        const self = this; // Store reference to NetiAIImageGeneration instance
         img.onload = function() {
           console.log('Image loaded successfully - displaying now');
           const altText = window.AIImageGeneration && window.AIImageGeneration.translation
@@ -444,10 +445,10 @@
           // Add specific class for AI generated images
           $img.addClass('ai-generated-image');
 
-          // Get current form data for lightbox metadata
-          const currentPrompt = $(this.config.container).find(this.config.selectors.promptTextarea).val() || '';
-          const currentStyle = $(this.config.container).find(this.config.selectors.styleText).text() || '';
-          const currentRatio = $(this.config.container).find(this.config.selectors.ratioText).text() || '';
+          // Get current form data for lightbox metadata using correct context
+          const currentPrompt = $(self.config.container).find(self.config.selectors.promptTextarea).val() || '';
+          const currentStyle = $(self.config.container).find(self.config.selectors.styleText).text() || '';
+          const currentRatio = $(self.config.container).find(self.config.selectors.ratioText).text() || '';
 
           // Create anchor tag to wrap the image for lightbox functionality with metadata
           const $link = $('<a>').attr({
@@ -476,7 +477,7 @@
 
           // Update floating actions state after image is successfully loaded
           setTimeout(() => {
-            NetiAIImageGeneration.updateFloatingActionsBasedOnImage();
+            self.updateFloatingActionsBasedOnImage();
           }, 50);
         };
 
