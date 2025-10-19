@@ -1216,26 +1216,350 @@
       }
     },
 
-    // Setup image lightbox using standard Magnific Popup method
+    // Setup enhanced image lightbox with metadata and actions
     setupImageLightbox: function() {
-      // Initialize Magnific Popup for AI image links using standard method
+      const self = this;
+      
+      // Initialize enhanced Magnific Popup for AI image links
       $(document).magnificPopup({
         delegate: '.ai-image-link',
         type: 'image',
         image: {
+          markup: `<div class="mfp-figure enhanced-lightbox">
+            <div class="mfp-close"></div>
+            
+            <!-- Main content wrapper: Image + Info panel -->
+            <div class="mfp-content-wrapper">
+              <!-- Image display area -->
+              <div class="mfp-img-holder">
+                <div class="mfp-img"></div>
+              </div>
+              
+              <!-- Right info panel (desktop) -->
+              <div class="mfp-info-panel desktop-panel">
+                <div class="panel-header">
+                  <h3>圖片資訊</h3>
+                </div>
+                <div class="panel-content">
+                  <div class="meta-item">
+                    <label>提示詞</label>
+                    <div class="prompt-text"></div>
+                  </div>
+                  <div class="meta-item">
+                    <label>風格</label>
+                    <div class="style-text"></div>
+                  </div>
+                  <div class="meta-item">
+                    <label>比例</label>
+                    <div class="ratio-text"></div>
+                  </div>
+                </div>
+                <div class="panel-actions">
+                  <button class="lightbox-btn regenerate-btn" title="重新生成">
+                    <i class="zmdi zmdi-refresh"></i>
+                    <span>重新生成</span>
+                  </button>
+                  <button class="lightbox-btn copy-btn" title="複製">
+                    <i class="zmdi zmdi-collection-plus"></i>
+                    <span>複製</span>
+                  </button>
+                  <button class="lightbox-btn download-btn" title="下載">
+                    <i class="zmdi zmdi-download"></i>
+                    <span>下載</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Floating info card (mobile) -->
+            <div class="mfp-floating-info mobile-panel" style="display: none;">
+              <div class="floating-toggle">
+                <button class="info-toggle-btn">
+                  <i class="zmdi zmdi-info"></i>
+                </button>
+              </div>
+              <div class="floating-content" style="display: none;">
+                <div class="floating-meta">
+                  <div class="meta-item">
+                    <label>提示詞</label>
+                    <div class="prompt-text"></div>
+                  </div>
+                  <div class="meta-item">
+                    <label>風格</label>
+                    <div class="style-text"></div>
+                  </div>
+                  <div class="meta-item">
+                    <label>比例</label>
+                    <div class="ratio-text"></div>
+                  </div>
+                </div>
+                <div class="floating-actions">
+                  <button class="lightbox-btn regenerate-btn" title="重新生成">
+                    <i class="zmdi zmdi-refresh"></i>
+                  </button>
+                  <button class="lightbox-btn copy-btn" title="複製">
+                    <i class="zmdi zmdi-collection-plus"></i>
+                  </button>
+                  <button class="lightbox-btn download-btn" title="下載">
+                    <i class="zmdi zmdi-download"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <div class="mfp-preloader"></div>
+          </div>`,
           titleSrc: function() {
             return window.AIImageGeneration && window.AIImageGeneration.translation
               ? window.AIImageGeneration.translation.lightboxTitle
               : 'AI Generated Image';
           }
         },
-        closeOnContentClick: true,
-        mainClass: 'mfp-with-zoom',
+        closeOnContentClick: false, // Disable to prevent conflict with info panel
+        mainClass: 'mfp-with-zoom enhanced-ai-lightbox',
         zoom: {
           enabled: true,
           duration: 300
+        },
+        callbacks: {
+          open: function() {
+            self.initLightboxMetadata();
+            self.bindLightboxEvents();
+          },
+          close: function() {
+            self.unbindLightboxEvents();
+          }
         }
       });
+    },
+
+    // Initialize lightbox metadata display
+    initLightboxMetadata: function() {
+      const $currentItem = $.magnificPopup.instance.currItem;
+      if (!$currentItem || !$currentItem.el) return;
+
+      const $trigger = $($currentItem.el);
+      const prompt = $trigger.data('prompt') || '';
+      const style = $trigger.data('style') || '';
+      const ratio = $trigger.data('ratio') || '';
+
+      // Update desktop panel metadata
+      $('.mfp-info-panel .prompt-text').text(prompt);
+      $('.mfp-info-panel .style-text').text(style);
+      $('.mfp-info-panel .ratio-text').text(ratio);
+
+      // Update mobile panel metadata
+      $('.mfp-floating-info .prompt-text').text(prompt);
+      $('.mfp-floating-info .style-text').text(style);
+      $('.mfp-floating-info .ratio-text').text(ratio);
+
+      // Show/hide panels based on screen size
+      this.adjustLightboxLayout();
+
+      console.log('Lightbox metadata initialized:', { prompt, style, ratio });
+    },
+
+    // Adjust lightbox layout based on screen size
+    adjustLightboxLayout: function() {
+      const isMobile = window.innerWidth < 768;
+      
+      if (isMobile) {
+        $('.desktop-panel').hide();
+        $('.mobile-panel').show();
+      } else {
+        $('.desktop-panel').show();
+        $('.mobile-panel').hide();
+      }
+    },
+
+    // Bind lightbox event handlers
+    bindLightboxEvents: function() {
+      const self = this;
+
+      // Desktop panel actions
+      $(document).on('click.lightbox', '.desktop-panel .lightbox-btn', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        self.handleLightboxAction($(this));
+      });
+
+      // Mobile panel toggle
+      $(document).on('click.lightbox', '.info-toggle-btn', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const $content = $('.floating-content');
+        $content.slideToggle(200);
+      });
+
+      // Mobile panel actions
+      $(document).on('click.lightbox', '.mobile-panel .lightbox-btn', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        self.handleLightboxAction($(this));
+      });
+
+      // Handle window resize
+      $(window).on('resize.lightbox', function() {
+        self.adjustLightboxLayout();
+      });
+
+      console.log('Lightbox events bound');
+    },
+
+    // Unbind lightbox event handlers
+    unbindLightboxEvents: function() {
+      $(document).off('.lightbox');
+      $(window).off('resize.lightbox');
+      console.log('Lightbox events unbound');
+    },
+
+    // Handle lightbox action buttons
+    handleLightboxAction: function($button) {
+      const action = this.getLightboxActionType($button);
+      
+      console.log('Lightbox action triggered:', action);
+
+      switch(action) {
+        case 'regenerate':
+          // Close lightbox and trigger regeneration
+          $.magnificPopup.close();
+          this.generateImage();
+          break;
+        case 'copy':
+          this.copyImageFromLightbox();
+          break;
+        case 'download':
+          this.downloadImageFromLightbox();
+          break;
+        default:
+          console.warn('Unknown lightbox action:', action);
+      }
+    },
+
+    // Get lightbox action type from button
+    getLightboxActionType: function($button) {
+      if ($button.hasClass('regenerate-btn')) {
+        return 'regenerate';
+      } else if ($button.hasClass('copy-btn')) {
+        return 'copy';
+      } else if ($button.hasClass('download-btn')) {
+        return 'download';
+      }
+      return 'unknown';
+    },
+
+    // Copy image from lightbox
+    copyImageFromLightbox: function() {
+      const $currentItem = $.magnificPopup.instance.currItem;
+      if (!$currentItem) {
+        this.showError('無法取得圖片資訊');
+        return;
+      }
+
+      const imageUrl = $currentItem.src;
+      this.copyImageByUrl(imageUrl);
+    },
+
+    // Download image from lightbox
+    downloadImageFromLightbox: function() {
+      const $currentItem = $.magnificPopup.instance.currItem;
+      if (!$currentItem) {
+        this.showError('無法取得圖片資訊');
+        return;
+      }
+
+      const imageUrl = $currentItem.src;
+      this.downloadImageByUrl(imageUrl);
+    },
+
+    // Copy image by URL
+    copyImageByUrl: function(imageUrl) {
+      if (!navigator.clipboard || !navigator.clipboard.write) {
+        const message = window.AIImageGeneration && window.AIImageGeneration.translation
+          ? window.AIImageGeneration.translation.browserNotSupported
+          : 'Your browser does not support image copying feature';
+        this.showError(message);
+        return;
+      }
+
+      const self = this;
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+
+      img.onload = function() {
+        try {
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+
+          canvas.width = img.naturalWidth;
+          canvas.height = img.naturalHeight;
+          ctx.drawImage(img, 0, 0);
+
+          canvas.toBlob(function(blob) {
+            if (!blob) {
+              const message = window.AIImageGeneration && window.AIImageGeneration.translation
+                ? window.AIImageGeneration.translation.imageProcessFailed
+                : 'Image processing failed';
+              self.showError(message);
+              return;
+            }
+
+            const clipboardItem = new ClipboardItem({ [blob.type]: blob });
+            navigator.clipboard.write([clipboardItem]).then(function() {
+              const message = window.AIImageGeneration && window.AIImageGeneration.translation
+                ? window.AIImageGeneration.translation.imageCopied
+                : 'Image copied to clipboard';
+              self.showSuccess(message);
+            }).catch(function(error) {
+              console.error('Failed to copy image to clipboard:', error);
+              const message = window.AIImageGeneration && window.AIImageGeneration.translation
+                ? window.AIImageGeneration.translation.copyFailed
+                : 'Failed to copy image, please try again';
+              self.showError(message);
+            });
+          }, 'image/png');
+
+        } catch (error) {
+          console.error('Error processing image for clipboard:', error);
+          const message = window.AIImageGeneration && window.AIImageGeneration.translation
+            ? window.AIImageGeneration.translation.imageProcessError
+            : 'Error occurred during image processing';
+          self.showError(message);
+        }
+      };
+
+      img.onerror = function() {
+        console.error('Failed to load image for copying');
+        const message = window.AIImageGeneration && window.AIImageGeneration.translation
+          ? window.AIImageGeneration.translation.imageLoadFailed
+          : 'Failed to load image, please try again';
+        self.showError(message);
+      };
+
+      img.src = imageUrl;
+    },
+
+    // Download image by URL
+    downloadImageByUrl: function(imageUrl) {
+      const getFileExtension = (url) => {
+        const match = url.match(/\.([a-zA-Z0-9]+)(?:\?|$)/);
+        return match ? match[1] : 'webp';
+      };
+
+      const fileExtension = getFileExtension(imageUrl);
+      const timestamp = Date.now();
+      const fileName = `ai-generated-image-${timestamp}.${fileExtension}`;
+
+      const link = document.createElement('a');
+      link.href = imageUrl;
+      link.download = fileName;
+      link.click();
+
+      console.log('Downloading as:', fileName);
+      const message = window.AIImageGeneration && window.AIImageGeneration.translation
+        ? window.AIImageGeneration.translation.downloadStarted
+        : 'Image download started';
+      this.showSuccess(message);
     },
 
     // Show success message
@@ -1625,10 +1949,18 @@
           'alt': 'AI Generated Image'
         }).addClass('ai-generated-image ai-sample-image');
 
-        // Create anchor tag to wrap the image for lightbox functionality
+        // Get current form data for lightbox metadata (for sample images)
+        const currentPrompt = $(this.config.container).find(this.config.selectors.promptTextarea).val() || '';
+        const currentStyle = $(this.config.container).find(this.config.selectors.styleText).text() || '';
+        const currentRatio = $(this.config.container).find(this.config.selectors.ratioText).text() || '';
+
+        // Create anchor tag to wrap the image for lightbox functionality with metadata
         const $link = $('<a>').attr({
           'href': imageUrl,
-          'class': 'ai-image-link'
+          'class': 'ai-image-link',
+          'data-prompt': currentPrompt,
+          'data-style': currentStyle,
+          'data-ratio': currentRatio
         }).append($img);
 
         // Remove old image and its link wrapper if exists

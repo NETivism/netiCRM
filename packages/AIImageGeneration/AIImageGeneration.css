@@ -304,7 +304,7 @@
   border: 1px solid #d2d2d7;
   border-radius: 12px;
   padding-bottom: 48px;
-  background: #fbfbfd;
+  background: #fff;
   transition: border-color 0.2s ease;
 }
 
@@ -508,8 +508,8 @@
 }
 
 .netiaiig-container .style-preview {
-  width: 80px;
-  height: 80px;
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
   overflow: hidden;
   border: 3px solid transparent;
@@ -848,6 +848,439 @@
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+/**
+ * Enhanced Lightbox Styles
+ * Responsive design with desktop/mobile layouts
+ */
+
+/* Enhanced lightbox base styles */
+.mfp-bg.enhanced-ai-lightbox {
+  background: rgba(0, 0, 0, 0.9);
+}
+
+.enhanced-lightbox {
+  max-width: none !important;
+  max-height: none !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Main content wrapper - flex layout for desktop */
+.enhanced-lightbox .mfp-content-wrapper {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  max-height: 90vh;
+  overflow: hidden;
+}
+
+/* Image holder - takes remaining space */
+.enhanced-lightbox .mfp-img-holder {
+  flex: 1;
+  min-width: 0; /* Prevent flex overflow */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+}
+
+.enhanced-lightbox .mfp-img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+/* Desktop info panel */
+.enhanced-lightbox .mfp-info-panel {
+  width: 300px;
+  flex-shrink: 0;
+  background: #fff;
+  border-left: 1px solid #e0e0e0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.enhanced-lightbox .panel-header {
+  padding: 20px;
+  border-bottom: 1px solid #e0e0e0;
+  background: #f8f9fa;
+}
+
+.enhanced-lightbox .panel-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.enhanced-lightbox .panel-content {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.enhanced-lightbox .meta-item {
+  margin-bottom: 20px;
+}
+
+.enhanced-lightbox .meta-item:last-child {
+  margin-bottom: 0;
+}
+
+.enhanced-lightbox .meta-item label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.enhanced-lightbox .meta-item .prompt-text,
+.enhanced-lightbox .meta-item .style-text,
+.enhanced-lightbox .meta-item .ratio-text {
+  font-size: 14px;
+  color: #333;
+  line-height: 1.5;
+  word-wrap: break-word;
+  background: #f8f9fa;
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid #e0e0e0;
+}
+
+.enhanced-lightbox .meta-item .prompt-text {
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+/* Action buttons */
+.enhanced-lightbox .panel-actions {
+  padding: 20px;
+  border-top: 1px solid #e0e0e0;
+  background: #f8f9fa;
+}
+
+.enhanced-lightbox .lightbox-btn {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  padding: 12px 16px;
+  margin-bottom: 8px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  color: #333;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.enhanced-lightbox .lightbox-btn:last-child {
+  margin-bottom: 0;
+}
+
+.enhanced-lightbox .lightbox-btn:hover {
+  background: #f0f0f0;
+  border-color: #ccc;
+}
+
+.enhanced-lightbox .lightbox-btn:active {
+  background: #e0e0e0;
+}
+
+.enhanced-lightbox .lightbox-btn i {
+  margin-right: 8px;
+  font-size: 16px;
+}
+
+.enhanced-lightbox .lightbox-btn.regenerate-btn:hover {
+  background: #e3f2fd;
+  border-color: #2196f3;
+  color: #1976d2;
+}
+
+.enhanced-lightbox .lightbox-btn.copy-btn:hover {
+  background: #f3e5f5;
+  border-color: #9c27b0;
+  color: #7b1fa2;
+}
+
+.enhanced-lightbox .lightbox-btn.download-btn:hover {
+  background: #e8f5e8;
+  border-color: #4caf50;
+  color: #388e3c;
+}
+
+/* Mobile floating panel */
+.enhanced-lightbox .mfp-floating-info {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 1000;
+  display: none;
+}
+
+.enhanced-lightbox .floating-toggle {
+  margin-bottom: 10px;
+}
+
+.enhanced-lightbox .info-toggle-btn {
+  width: 44px;
+  height: 44px;
+  background: rgba(0, 0, 0, 0.7);
+  border: none;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.enhanced-lightbox .info-toggle-btn:hover {
+  background: rgba(0, 0, 0, 0.9);
+}
+
+.enhanced-lightbox .floating-content {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 16px;
+  min-width: 280px;
+  max-width: 320px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.enhanced-lightbox .floating-meta .meta-item {
+  margin-bottom: 12px;
+}
+
+.enhanced-lightbox .floating-meta .meta-item:last-child {
+  margin-bottom: 0;
+}
+
+.enhanced-lightbox .floating-meta .meta-item label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 4px;
+}
+
+.enhanced-lightbox .floating-meta .meta-item .prompt-text,
+.enhanced-lightbox .floating-meta .meta-item .style-text,
+.enhanced-lightbox .floating-meta .meta-item .ratio-text {
+  font-size: 13px;
+  color: #333;
+  line-height: 1.4;
+  background: rgba(248, 249, 250, 0.8);
+  padding: 8px;
+  border-radius: 4px;
+  max-height: 80px;
+  overflow-y: auto;
+}
+
+.enhanced-lightbox .floating-actions {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(224, 224, 224, 0.6);
+  display: flex;
+  gap: 8px;
+}
+
+.enhanced-lightbox .floating-actions .lightbox-btn {
+  flex: 1;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(221, 221, 221, 0.8);
+  border-radius: 6px;
+  font-size: 12px;
+  text-align: center;
+  min-height: 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.enhanced-lightbox .floating-actions .lightbox-btn i {
+  font-size: 14px;
+  margin: 0;
+}
+
+.enhanced-lightbox .floating-actions .lightbox-btn span {
+  display: none; /* Hide text on mobile for space */
+}
+
+/* Enhanced close button */
+.enhanced-lightbox .mfp-close {
+  top: 20px;
+  right: 20px;
+  width: 44px;
+  height: 44px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  color: #fff;
+  font-size: 24px;
+  line-height: 44px;
+  text-align: center;
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+}
+
+.enhanced-lightbox .mfp-close:hover {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.7);
+}
+
+/* Responsive adjustments */
+@media (max-width: 767px) {
+  .enhanced-lightbox .mfp-content-wrapper {
+    flex-direction: column;
+    height: 100vh;
+    max-height: 100vh;
+  }
+
+  .enhanced-lightbox .mfp-img-holder {
+    flex: 1;
+  }
+
+  .enhanced-lightbox .desktop-panel {
+    display: none !important;
+  }
+
+  .enhanced-lightbox .mobile-panel {
+    display: block !important;
+  }
+
+  .enhanced-lightbox .mfp-floating-info {
+    top: 60px; /* Below close button */
+    left: 20px;
+    right: 20px;
+    width: auto;
+  }
+
+  .enhanced-lightbox .floating-content {
+    max-width: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .enhanced-lightbox .floating-content {
+    padding: 12px;
+    min-width: auto;
+  }
+
+  .enhanced-lightbox .floating-actions {
+    gap: 6px;
+  }
+
+  .enhanced-lightbox .floating-actions .lightbox-btn {
+    padding: 8px;
+    font-size: 11px;
+    min-height: 32px;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .enhanced-lightbox .mfp-info-panel {
+    border-left-color: #000;
+  }
+
+  .enhanced-lightbox .panel-header,
+  .enhanced-lightbox .panel-actions {
+    border-color: #000;
+  }
+
+  .enhanced-lightbox .lightbox-btn {
+    border-color: #000;
+  }
+
+  .enhanced-lightbox .meta-item .prompt-text,
+  .enhanced-lightbox .meta-item .style-text,
+  .enhanced-lightbox .meta-item .ratio-text {
+    border-color: #000;
+  }
+}
+
+/* Reduced motion support for lightbox */
+@media (prefers-reduced-motion: reduce) {
+  .enhanced-lightbox * {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+
+  .enhanced-lightbox .floating-content {
+    backdrop-filter: none;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .enhanced-lightbox .mfp-info-panel {
+    background: #1a1a1a;
+    border-left-color: #333;
+    color: #fff;
+  }
+
+  .enhanced-lightbox .panel-header,
+  .enhanced-lightbox .panel-actions {
+    background: #0d1117;
+    border-color: #333;
+  }
+
+  .enhanced-lightbox .panel-header h3 {
+    color: #fff;
+  }
+
+  .enhanced-lightbox .meta-item label {
+    color: #a0a0a0;
+  }
+
+  .enhanced-lightbox .meta-item .prompt-text,
+  .enhanced-lightbox .meta-item .style-text,
+  .enhanced-lightbox .meta-item .ratio-text {
+    background: #0d1117;
+    border-color: #333;
+    color: #fff;
+  }
+
+  .enhanced-lightbox .lightbox-btn {
+    background: #161b22;
+    border-color: #333;
+    color: #fff;
+  }
+
+  .enhanced-lightbox .lightbox-btn:hover {
+    background: #21262d;
+    border-color: #444;
+  }
+
+  .enhanced-lightbox .floating-content {
+    background: rgba(26, 26, 26, 0.95);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .enhanced-lightbox .floating-meta .meta-item .prompt-text,
+  .enhanced-lightbox .floating-meta .meta-item .style-text,
+  .enhanced-lightbox .floating-meta .meta-item .ratio-text {
+    background: rgba(13, 17, 23, 0.8);
+    color: #fff;
+  }
+
+  .enhanced-lightbox .floating-actions .lightbox-btn {
+    background: rgba(22, 27, 34, 0.9);
+    border-color: rgba(51, 51, 51, 0.8);
+    color: #fff;
+  }
 }
 
 /* Empty state animations */
