@@ -1426,6 +1426,45 @@
       return hasVisibleImage || emptyStateHidden;
     },
 
+    // Check if there's a user-generated image that cannot be overwritten
+    hasUserGeneratedImage: function() {
+      const $imageContainer = $(this.config.container).find('.image-placeholder');
+      const $image = $imageContainer.find('img');
+      const $emptyState = $imageContainer.find('.empty-state-content');
+
+      // Check if we have a visible image that's not the default placeholder
+      const hasVisibleImage = $image.length > 0 &&
+                             $image.is(':visible') &&
+                             $image.attr('src') &&
+                             !$image.attr('src').includes('thumb-00.png');
+
+      // Check if empty state is hidden (indicating an image is displayed)
+      const emptyStateHidden = $emptyState.length > 0 && !$emptyState.is(':visible');
+
+      if (!hasVisibleImage && !emptyStateHidden) {
+        console.log('🔍 hasUserGeneratedImage: No image found');
+        return false; // No image at all
+      }
+
+      // If there's an image, check if it's a user-generated image (not a sample)
+      // User-generated images have 'ai-generated-image' class but NOT 'ai-sample-image' class
+      const hasGeneratedClass = $image.hasClass('ai-generated-image');
+      const hasSampleClass = $image.hasClass('ai-sample-image');
+      
+      console.log('🔍 hasUserGeneratedImage: Image classes check', {
+        hasGeneratedClass: hasGeneratedClass,
+        hasSampleClass: hasSampleClass,
+        imageClasses: $image.attr('class'),
+        src: $image.attr('src')
+      });
+
+      // It's a user-generated image if it has ai-generated-image but not ai-sample-image
+      const isUserGenerated = hasGeneratedClass && !hasSampleClass;
+      console.log('🔍 hasUserGeneratedImage result:', isUserGenerated);
+      
+      return isUserGenerated;
+    },
+
     // Get corrected image URL using CiviCRM resource base path
     getCorrectedImageUrl: function(imageUrl, imagePath) {
       // Try to use CiviCRM resource base path first
@@ -1743,7 +1782,8 @@
           NetiAIImageGeneration._aiLinkTriggerContext = {
             source: 'ai-link',
             ratio: selectedRatio,
-            forceLoad: true,
+            forceLoad: false,
+            forceLoadSample: true,  // Use forceLoadSample instead of forceLoad
             timestamp: Date.now()
           };
           console.log('Set trigger context:', NetiAIImageGeneration._aiLinkTriggerContext);
@@ -1902,7 +1942,13 @@
       console.log('Loading sample image with context:', context);
       
       // Use ratio information from context to load sample image
-      this._loadSampleImageWithRatio(locale, context.ratio, context.forceLoad);
+      // Pass both forceLoad and forceLoadSample for compatibility
+      this._loadSampleImageWithRatio(
+        locale, 
+        context.ratio, 
+        context.forceLoad || false,
+        context.forceLoadSample || false
+      );
     },
 
     // Clear trigger context
@@ -1912,13 +1958,26 @@
     },
 
     // Extended loadSampleImage method with ratio support
-    _loadSampleImageWithRatio: function(locale, ratio, forceLoad = false) {
+    _loadSampleImageWithRatio: function(locale, ratio, forceLoad = false, forceLoadSample = false) {
       const self = this;
       
-      // If forceLoad is true, skip existing image check
-      if (!forceLoad && this.hasExistingImage()) {
-        console.log('Existing image found and forceLoad is false - skipping');
-        return;
+      // Determine loading conditions based on force options
+      if (forceLoad) {
+        // forceLoad: Can overwrite any image (existing behavior)
+        console.log('Force loading sample image (can overwrite any image)');
+      } else if (forceLoadSample) {
+        // forceLoadSample: Can only overwrite sample images, not user-generated images
+        if (this.hasUserGeneratedImage()) {
+          console.log('User-generated image found and forceLoadSample cannot overwrite it - skipping');
+          return;
+        }
+        console.log('Force loading sample image (can overwrite sample images only)');
+      } else {
+        // Default: Only load if no existing image
+        if (this.hasExistingImage()) {
+          console.log('Existing image found and no force option - skipping');
+          return;
+        }
       }
       
       console.log('Loading sample image with ratio:', ratio);
