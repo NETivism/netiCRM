@@ -1348,17 +1348,26 @@
 
           // Wait for DOM to update after tab switch
           setTimeout(() => {
+            // Debug context checking
+            console.log('🔍 Checking trigger context:', self._aiLinkTriggerContext);
+            console.log('🔍 Context exists:', !!self._aiLinkTriggerContext);
+            if (self._aiLinkTriggerContext) {
+              console.log('🔍 Context source:', self._aiLinkTriggerContext.source);
+              console.log('🔍 Context valid:', self._isContextValid());
+            }
+            
             // Check if there's a trigger context
             if (self._aiLinkTriggerContext && 
                 self._aiLinkTriggerContext.source === 'ai-link' &&
                 self._isContextValid()) {
               
               // Execute context-specific loading
-              console.log('Loading sample image with context:', self._aiLinkTriggerContext);
+              console.log('✅ Loading sample image with context:', self._aiLinkTriggerContext);
               self._loadSampleImageWithContext();
               
             } else {
               // Execute default loading logic
+              console.log('❌ No valid context found - using default loading logic');
               self.checkAndLoadSampleImage();
             }
             
@@ -1731,13 +1740,13 @@
         // Function to switch to AI Image Generation panel
         const switchToAIPanel = function() {
           // Set trigger context before switching panel
-          window.NetiAIImageGeneration._aiLinkTriggerContext = {
+          NetiAIImageGeneration._aiLinkTriggerContext = {
             source: 'ai-link',
             ratio: selectedRatio,
             forceLoad: true,
             timestamp: Date.now()
           };
-          console.log('Set trigger context:', window.NetiAIImageGeneration._aiLinkTriggerContext);
+          console.log('Set trigger context:', NetiAIImageGeneration._aiLinkTriggerContext);
           
           const $aiTabLink = $('.nme-setting-panels-tabs a[data-target-id="nme-aiimagegeneration"]');
           if ($aiTabLink.length > 0) {
