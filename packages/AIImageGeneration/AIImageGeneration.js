@@ -444,10 +444,18 @@
           // Add specific class for AI generated images
           $img.addClass('ai-generated-image');
 
-          // Create anchor tag to wrap the image for lightbox functionality
+          // Get current form data for lightbox metadata
+          const currentPrompt = $(this.config.container).find(this.config.selectors.promptTextarea).val() || '';
+          const currentStyle = $(this.config.container).find(this.config.selectors.styleText).text() || '';
+          const currentRatio = $(this.config.container).find(this.config.selectors.ratioText).text() || '';
+
+          // Create anchor tag to wrap the image for lightbox functionality with metadata
           const $link = $('<a>').attr({
             'href': imageUrl,
-            'class': 'ai-image-link'
+            'class': 'ai-image-link',
+            'data-prompt': currentPrompt,
+            'data-style': currentStyle,
+            'data-ratio': currentRatio
           }).append($img);
 
           // Remove old image and its link wrapper if exists
@@ -1909,7 +1917,7 @@
         // Update image if provided
         if (sampleData.image_url || sampleData.image_path) {
           const correctedImageUrl = this.getCorrectedImageUrl(sampleData.image_url, sampleData.image_path);
-          this.updateSampleImage(correctedImageUrl, sampleData.filename);
+          this.updateSampleImage(correctedImageUrl, sampleData.filename, sampleData);
         }
 
         // Update prompt text if provided
@@ -1934,7 +1942,7 @@
     },
 
     // Update sample image display
-    updateSampleImage: function(imageUrl, filename) {
+    updateSampleImage: function(imageUrl, filename, sampleData) {
       const $imageContainer = $(this.config.container).find('.image-placeholder');
       const $existingImage = $imageContainer.find('img');
       const $emptyState = $imageContainer.find('.empty-state-content');
@@ -1949,18 +1957,25 @@
           'alt': 'AI Generated Image'
         }).addClass('ai-generated-image ai-sample-image');
 
-        // Get current form data for lightbox metadata (for sample images)
-        const currentPrompt = $(this.config.container).find(this.config.selectors.promptTextarea).val() || '';
-        const currentStyle = $(this.config.container).find(this.config.selectors.styleText).text() || '';
-        const currentRatio = $(this.config.container).find(this.config.selectors.ratioText).text() || '';
+        // Get metadata from sample data or fallback to form data
+        const promptText = (sampleData && sampleData.text) || $(this.config.container).find(this.config.selectors.promptTextarea).val() || '';
+        const styleText = (sampleData && sampleData.style) || $(this.config.container).find(this.config.selectors.styleText).text() || '';
+        const ratioText = (sampleData && sampleData.ratio) || $(this.config.container).find(this.config.selectors.ratioText).text() || '';
+
+        console.log('Sample image metadata:', {
+          promptText: promptText,
+          styleText: styleText,
+          ratioText: ratioText,
+          sampleData: sampleData
+        });
 
         // Create anchor tag to wrap the image for lightbox functionality with metadata
         const $link = $('<a>').attr({
           'href': imageUrl,
           'class': 'ai-image-link',
-          'data-prompt': currentPrompt,
-          'data-style': currentStyle,
-          'data-ratio': currentRatio
+          'data-prompt': promptText,
+          'data-style': styleText,
+          'data-ratio': ratioText
         }).append($img);
 
         // Remove old image and its link wrapper if exists
