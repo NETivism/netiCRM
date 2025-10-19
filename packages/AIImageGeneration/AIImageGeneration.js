@@ -36,6 +36,9 @@
     // State management for tooltip timers
     tooltipTimers: {},
 
+    // Context marking for trigger source tracking
+    _aiLinkTriggerContext: null,
+
     // Initialize component
     init: function() {
       this.bindEvents();
@@ -1345,7 +1348,22 @@
 
           // Wait for DOM to update after tab switch
           setTimeout(() => {
-            self.checkAndLoadSampleImage();
+            // Check if there's a trigger context
+            if (self._aiLinkTriggerContext && 
+                self._aiLinkTriggerContext.source === 'ai-link' &&
+                self._isContextValid()) {
+              
+              // Execute context-specific loading
+              console.log('Loading sample image with context:', self._aiLinkTriggerContext);
+              self._loadSampleImageWithContext();
+              
+            } else {
+              // Execute default loading logic
+              self.checkAndLoadSampleImage();
+            }
+            
+            // Clear trigger context
+            self._clearTriggerContext();
           }, 100);
         }
       });
@@ -1712,6 +1730,15 @@
         
         // Function to switch to AI Image Generation panel
         const switchToAIPanel = function() {
+          // Set trigger context before switching panel
+          window.NetiAIImageGeneration._aiLinkTriggerContext = {
+            source: 'ai-link',
+            ratio: selectedRatio,
+            forceLoad: true,
+            timestamp: Date.now()
+          };
+          console.log('Set trigger context:', window.NetiAIImageGeneration._aiLinkTriggerContext);
+          
           const $aiTabLink = $('.nme-setting-panels-tabs a[data-target-id="nme-aiimagegeneration"]');
           if ($aiTabLink.length > 0) {
             console.log('Switching to AI Image Generation panel');
@@ -1845,6 +1872,69 @@
       hideLoading: function() {
         NetiAIImageGeneration.loadingManager.hide();
       }
+    },
+
+    // Context validation method
+    _isContextValid: function() {
+      if (!this._aiLinkTriggerContext) return false;
+      
+      // Check timestamp to avoid expired context (5 seconds timeout)
+      const now = Date.now();
+      const timeDiff = now - this._aiLinkTriggerContext.timestamp;
+      
+      return timeDiff < 5000; // Valid within 5 seconds
+    },
+
+    // Context-based loading method
+    _loadSampleImageWithContext: function() {
+      const context = this._aiLinkTriggerContext;
+      const locale = this.getUILocale();
+      
+      console.log('Loading sample image with context:', context);
+      
+      // Use ratio information from context to load sample image
+      this._loadSampleImageWithRatio(locale, context.ratio, context.forceLoad);
+    },
+
+    // Clear trigger context
+    _clearTriggerContext: function() {
+      this._aiLinkTriggerContext = null;
+      console.log('Trigger context cleared');
+    },
+
+    // Extended loadSampleImage method with ratio support
+    _loadSampleImageWithRatio: function(locale, ratio, forceLoad = false) {
+      const self = this;
+      
+      // If forceLoad is true, skip existing image check
+      if (!forceLoad && this.hasExistingImage()) {
+        console.log('Existing image found and forceLoad is false - skipping');
+        return;
+      }
+      
+      console.log('Loading sample image with ratio:', ratio);
+      
+      $.ajax({
+        url: '/civicrm/ai/images/get-sample',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ 
+          locale: locale,
+          ratio: ratio  // Add ratio parameter
+        }),
+        timeout: 10000,
+        
+        success: function(response) {
+          if (response.status === 1 && response.data) {
+            console.log('Sample image loaded successfully with ratio:', ratio);
+            self.applySampleToInterface(response.data);
+          }
+        },
+        
+        error: function(xhr, status, error) {
+          console.warn('Failed to load sample image with ratio:', ratio, error);
+        }
+      });
     },
 
     // Error state manager
