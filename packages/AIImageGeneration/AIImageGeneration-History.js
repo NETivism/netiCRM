@@ -37,7 +37,7 @@
     // History state
     state: {
       currentPage: 1,
-      perPage: 6,
+      perPage: 20,
       totalPages: 0,
       totalItems: 0,
       isLoading: false,
@@ -91,23 +91,8 @@
         }
       });
 
-      // History item click
-      $container.on('click', this.config.selectors.historyItem, function(e) {
-        e.preventDefault();
-        const imageData = $(this).data('image');
-        if (imageData) {
-          console.log('History item clicked:', imageData);
-          self.loadHistoryImage(imageData);
-        }
-      });
-
-      // Keyboard navigation for history items
-      $container.on('keydown', this.config.selectors.historyItem, function(e) {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          $(this).click();
-        }
-      });
+      // Note: History items now use lightbox directly through ai-image-link class
+      // No need for custom click handlers as Magnific Popup handles the lightbox functionality
 
       console.log('History events bound successfully');
     },
@@ -222,25 +207,28 @@
 
     // Create individual history item
     createHistoryItem: function(imageData, index) {
-      const $item = $('<div>').addClass('history-item').attr({
-        'data-image': JSON.stringify(imageData),
-        'title': imageData.original_prompt || 'AI Generated Image',
-        'role': 'button',
-        'tabindex': '0',
-        'aria-label': `Load image: ${imageData.original_prompt || 'AI Generated Image'}`
+      // Create link element for lightbox functionality
+      const $link = $('<a>').attr({
+        'href': imageData.image_url,
+        'class': 'ai-image-link',
+        'data-prompt': imageData.original_prompt || '',
+        'data-style': imageData.image_style || '',
+        'data-ratio': imageData.image_ratio || '',
+        'title': imageData.original_prompt || 'AI Generated Image'
       });
 
       // Create image element
       const $img = $('<img>').attr({
         'src': imageData.image_url,
         'alt': imageData.original_prompt || 'AI Generated Image',
+        'class': 'ai-generated-image',
         'loading': 'lazy'
       });
 
       // Error handling for image loading
       $img.on('error', function() {
         console.warn('Failed to load history image:', imageData.image_url);
-        $(this).parent().addClass('image-error');
+        $link.addClass('image-error');
         $(this).attr('src', 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2Y1ZjVmNSIvPjx0ZXh0IHg9IjUwIiB5PSI1MCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmaWxsPSIjOTk5IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjNlbSI+SU1BR0U8L3RleHQ+PC9zdmc+');
       });
 
@@ -248,60 +236,15 @@
         console.log('History image loaded successfully:', index);
       });
 
-      $item.append($img);
+      $link.append($img);
+
+      // Create wrapper div for styling purposes
+      const $item = $('<div>').addClass('history-item').append($link);
+
       return $item;
     },
 
-    // Load selected history image into main display
-    loadHistoryImage: function(imageData) {
-      if (!imageData || !imageData.image_url) {
-        console.warn('Invalid image data for loading:', imageData);
-        return;
-      }
-
-      console.log('Loading history image to main display:', imageData);
-
-      const $container = $(this.config.container);
-      const $placeholder = $container.find(this.config.selectors.imagePlaceholder);
-      const $img = $placeholder.find('img, a');
-      const $emptyState = $placeholder.find(this.config.selectors.emptyState);
-
-      // Create new image element
-      const $newImg = $('<img>').attr({
-        'src': imageData.image_url,
-        'alt': imageData.original_prompt || 'AI Generated Image'
-      });
-
-      // Wrap in link for lightbox functionality
-      const $link = $('<a>').attr({
-        'href': imageData.image_url,
-        'class': 'ai-image-link',
-        'data-prompt': imageData.original_prompt || '',
-        'data-style': imageData.image_style || '',
-        'data-ratio': imageData.image_ratio || ''
-      }).append($newImg);
-
-      // Update display
-      if ($img.length) {
-        $img.replaceWith($link);
-      } else {
-        $placeholder.append($link);
-      }
-      
-      $emptyState.hide();
-
-      // Update prompt textarea if exists
-      const $promptTextarea = $container.find(this.config.selectors.promptTextarea);
-      if ($promptTextarea.length && imageData.original_prompt) {
-        $promptTextarea.val(imageData.original_prompt);
-        console.log('Updated prompt textarea with:', imageData.original_prompt);
-      }
-
-      // Trigger custom event
-      $container.trigger('historyImageLoaded', [imageData]);
-
-      console.log('History image loaded successfully to main display');
-    },
+    // Note: loadHistoryImage function removed as history items now use lightbox directly
 
     // Update pagination controls
     updatePagination: function() {

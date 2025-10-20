@@ -126,9 +126,11 @@
 /* History grid */
 .netiaiig-container .history-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
   gap: 12px;
   margin-bottom: 20px;
+  max-height: 400px;
+  overflow-y: auto;
 }
 
 /* History items */
@@ -155,6 +157,13 @@
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
+.netiaiig-container .history-item a {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
 .netiaiig-container .history-item img {
   width: 100%;
   height: 100%;
@@ -167,12 +176,16 @@
   transform: scale(1.1);
 }
 
-.netiaiig-container .history-item.image-error {
+.netiaiig-container .history-item a.image-error {
+  background: #f3f4f6;
+}
+
+.netiaiig-container .history-item:has(a.image-error) {
   background: #f3f4f6;
   border-color: #e5e7eb;
 }
 
-.netiaiig-container .history-item.image-error:hover {
+.netiaiig-container .history-item:has(a.image-error):hover {
   border-color: #d1d5db;
   transform: none;
   box-shadow: none;
