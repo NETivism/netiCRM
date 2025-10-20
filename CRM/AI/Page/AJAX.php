@@ -636,6 +636,7 @@ class CRM_AI_Page_AJAX {
           'status' => 0,
           'message' => 'The request is not a valid JSON format.',
         ]);
+        return;
       }
 
       $allowedInput = [
@@ -649,6 +650,7 @@ class CRM_AI_Page_AJAX {
           'status' => 0,
           'message' => 'The request does not match the expected format.',
         ]);
+        return;
       }
 
       // Get current user ID
@@ -661,6 +663,7 @@ class CRM_AI_Page_AJAX {
           'status' => 0,
           'message' => 'User not authenticated.',
         ]);
+        return;
       }
 
       // Input validation with defaults
@@ -772,14 +775,15 @@ class CRM_AI_Page_AJAX {
           'status' => 0,
           'message' => 'Database error occurred while retrieving image history.',
         ]);
+        return;
       }
+    } else {
+      // If we reach here, it means the request method is not POST or content-type is not JSON
+      self::responseError([
+        'status' => 0,
+        'message' => 'Invalid request method or missing data.',
+      ]);
     }
-
-    // If we reach here, it means the request method is not POST or content-type is not JSON
-    self::responseError([
-      'status' => 0,
-      'message' => 'Invalid request method or missing data.',
-    ]);
   }
 
   /**
