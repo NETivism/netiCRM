@@ -901,6 +901,7 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  line-height: 1.4;
 }
 
 .enhanced-lightbox .panel-header {
@@ -923,7 +924,7 @@
 }
 
 .enhanced-lightbox .meta-item {
-  margin-bottom: 20px;
+  margin-bottom: 40px;
 }
 
 .enhanced-lightbox .meta-item:last-child {
@@ -932,29 +933,17 @@
 
 .enhanced-lightbox .meta-item label {
   display: block;
-  font-size: 14px;
-  font-weight: 600;
-  color: #666;
   margin-bottom: 8px;
+  color: #424242;
 }
 
 .enhanced-lightbox .meta-item .prompt-text,
 .enhanced-lightbox .meta-item .style-text,
 .enhanced-lightbox .meta-item .ratio-text {
-  font-size: 14px;
-  color: #333;
-  line-height: 1.5;
-  word-wrap: break-word;
-  background: #f8f9fa;
-  padding: 12px;
-  border-radius: 6px;
-  border: 1px solid #e0e0e0;
+  font-size: 15px;
+  color: #616161;
 }
 
-.enhanced-lightbox .meta-item .prompt-text {
-  max-height: 120px;
-  overflow-y: auto;
-}
 
 /* Action buttons */
 .enhanced-lightbox .panel-actions {
@@ -985,8 +974,7 @@
 }
 
 .enhanced-lightbox .lightbox-btn:hover {
-  background: #f0f0f0;
-  border-color: #ccc;
+  border-color: #aaa;
 }
 
 .enhanced-lightbox .lightbox-btn:active {
@@ -997,25 +985,6 @@
   margin-right: 8px;
   font-size: 16px;
 }
-
-.enhanced-lightbox .lightbox-btn.regenerate-btn:hover {
-  background: #e3f2fd;
-  border-color: #2196f3;
-  color: #1976d2;
-}
-
-.enhanced-lightbox .lightbox-btn.copy-btn:hover {
-  background: #f3e5f5;
-  border-color: #9c27b0;
-  color: #7b1fa2;
-}
-
-.enhanced-lightbox .lightbox-btn.download-btn:hover {
-  background: #e8f5e8;
-  border-color: #4caf50;
-  color: #388e3c;
-}
-
 /* Mobile floating panel */
 .enhanced-lightbox .mfp-floating-info {
   position: absolute;
@@ -1121,23 +1090,32 @@
 
 /* Enhanced close button */
 .enhanced-lightbox .mfp-close {
+  position: absolute;
   top: 20px;
   right: 20px;
-  width: 44px;
-  height: 44px;
-  background: rgba(0, 0, 0, 0.5);
-  border-radius: 50%;
-  color: #fff;
-  font-size: 24px;
-  line-height: 44px;
-  text-align: center;
-  opacity: 0.8;
-  transition: opacity 0.2s ease;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  font-size: 0;
+  line-height: 32px;
 }
-
+.enhanced-lightbox .mfp-close::before,
+.enhanced-lightbox .mfp-close::after {
+  position: absolute;
+  left: 16px;
+  content: ' ';
+  height: 32px;
+  width: 2px;
+  background-color: #333;
+}
+.enhanced-lightbox .mfp-close::before {
+  transform: rotate(45deg);
+}
+.enhanced-lightbox .mfp-close::after {
+  transform: rotate(-45deg);
+}
 .enhanced-lightbox .mfp-close:hover {
-  opacity: 1;
-  background: rgba(0, 0, 0, 0.7);
+  cursor: pointer;
 }
 
 /* Responsive adjustments */
