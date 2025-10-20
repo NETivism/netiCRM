@@ -119,10 +119,8 @@
         self.handleFloatingAction($(this));
       });
 
-      // History items
-      $(document).on('click', self.config.selectors.historyItem, function() {
-        self.loadHistoryImage($(this));
-      });
+      // Note: History items now use lightbox directly via AIImageGeneration-History.js
+      // No need for custom click handlers as Magnific Popup handles the lightbox functionality
 
       // Close dropdowns when clicking outside
       $(document).on('click', function() {
@@ -701,25 +699,7 @@
       this.showLightboxMessage(message, 'success');
     },
 
-    // Load history image
-    loadHistoryImage: function($item) {
-      console.log('Loading history image');
-
-      // Get image from history item (could be background or img element)
-      const $img = $item.find('img');
-      if ($img.length > 0) {
-        const imageUrl = $img.attr('src');
-        this.displayGeneratedImage(imageUrl);
-
-        // Update floating actions after loading history image
-        setTimeout(() => {
-          this.updateFloatingActionsBasedOnImage();
-        }, 100);
-      }
-
-      // Trigger custom event
-      $(this.config.container).trigger('historyImageLoaded', [$item]);
-    },
+    // Note: loadHistoryImage function removed as history items now use lightbox directly
 
     // Auto-resize textarea using logic from reference file
     autoResizeTextarea: function($textarea) {
