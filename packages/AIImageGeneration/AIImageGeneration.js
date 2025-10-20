@@ -1271,6 +1271,14 @@
                   </div>
                 </div>
                 <div class="panel-actions">
+                  <!-- Panel message area for desktop lightbox -->
+                  <div class="panel-message" style="display: none;">
+                    <div class="panel-message-content">
+                      <i class="panel-message-icon"></i>
+                      <span class="panel-message-text"></span>
+                    </div>
+                  </div>
+                  
                   <button class="lightbox-btn regenerate-btn" title="${getTranslation('lightboxRegenerate', 'Regenerate')}">
                     <i class="zmdi zmdi-refresh"></i>
                     <span>${getTranslation('lightboxRegenerate', 'Regenerate')}</span>
@@ -1426,6 +1434,10 @@
     unbindLightboxEvents: function() {
       $(document).off('.lightbox');
       $(window).off('resize.lightbox');
+      
+      // Clear any pending panel messages when closing lightbox
+      this.panelMessage.hide();
+      
       console.log('Lightbox events unbound');
     },
 
@@ -1452,7 +1464,7 @@
       }
     },
 
-    // Show message in lightbox context
+    // Show message in lightbox context with intelligent routing
     showLightboxMessage: function(message, type = 'success') {
       console.log('Lightbox message:', { message, type });
       
@@ -1460,18 +1472,19 @@
       const isLightboxOpen = $.magnificPopup.instance && $.magnificPopup.instance.isOpen;
       
       if (isLightboxOpen) {
-        // Use floating message system which works well in lightbox context
+        // Use dedicated panel message system for lightbox panel-actions
+        if (type === 'success') {
+          this.panelMessage.showSuccess(message);
+        } else {
+          this.panelMessage.showError(message);
+        }
+      } else {
+        // Use regular floating message system if lightbox is not open
+        // This maintains compatibility with float-actions buttons
         if (type === 'success') {
           this.floatingMessage.showSuccess(message);
         } else {
           this.floatingMessage.showError(message);
-        }
-      } else {
-        // Use regular message system if lightbox is not open
-        if (type === 'success') {
-          this.showSuccess(message);
-        } else {
-          this.showError(message);
         }
       }
     },
@@ -2569,6 +2582,83 @@
         $floatingMessage.stop(true, true).fadeOut(200);
 
         console.log('Floating message hidden');
+      },
+
+      // Clear hide timer
+      clearTimer: function() {
+        if (this.hideTimer) {
+          clearTimeout(this.hideTimer);
+          this.hideTimer = null;
+        }
+      },
+
+      // Show success message
+      showSuccess: function(message) {
+        this.show(message, 'success');
+      },
+
+      // Show error message
+      showError: function(message) {
+        this.show(message, 'error');
+      }
+    },
+
+    // Panel message manager for lightbox panel-actions notifications
+    panelMessage: {
+      hideTimer: null,
+
+      // Show panel message near action buttons
+      show: function(message, type = 'success') {
+        // Find panel message element in lightbox
+        const $panelMessage = $('.panel-message');
+        
+        if ($panelMessage.length === 0) {
+          console.warn('Panel message element not found');
+          return;
+        }
+
+        // Clear any existing timer
+        this.clearTimer();
+
+        // Update panel message content
+        const $messageIcon = $panelMessage.find('.panel-message-icon');
+        const $messageText = $panelMessage.find('.panel-message-text');
+
+        // Set message content
+        $messageText.text(message);
+
+        // Set icon and styling based on type
+        if (type === 'success') {
+          $messageIcon.removeClass().addClass('panel-message-icon zmdi zmdi-check-circle');
+          $panelMessage.removeClass('error').addClass('success');
+        } else if (type === 'error') {
+          $messageIcon.removeClass().addClass('panel-message-icon zmdi zmdi-close-circle');
+          $panelMessage.removeClass('success').addClass('error');
+        }
+
+        // Show message with slideDown animation
+        $panelMessage.stop(true, true).slideDown(300);
+
+        // Auto-hide after 3.5 seconds
+        this.hideTimer = setTimeout(() => {
+          this.hide();
+        }, 3500);
+
+        console.log('Panel message shown:', { message, type });
+      },
+
+      // Hide panel message
+      hide: function() {
+        const $panelMessage = $('.panel-message');
+        
+        this.clearTimer();
+        
+        // Hide with slideUp animation and fade out
+        $panelMessage.stop(true, true).slideUp(300, function() {
+          $(this).fadeOut(100);
+        });
+
+        console.log('Panel message hidden');
       },
 
       // Clear hide timer
