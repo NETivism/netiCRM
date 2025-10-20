@@ -1272,10 +1272,10 @@
                 </div>
                 <div class="panel-actions">
                   <!-- Panel message area for desktop lightbox -->
-                  <div class="panel-message" style="display: none;">
-                    <div class="panel-message-content">
-                      <i class="panel-message-icon"></i>
-                      <span class="panel-message-text"></span>
+                  <div class="floating-message panel-message" style="display: none;" role="alert" aria-live="polite">
+                    <div class="floating-message-content">
+                      <i class="floating-message-icon"></i>
+                      <span class="floating-message-text"></span>
                     </div>
                   </div>
                   
@@ -2607,9 +2607,9 @@
     panelMessage: {
       hideTimer: null,
 
-      // Show panel message near action buttons
+      // Show panel message near action buttons using same styling as floating messages
       show: function(message, type = 'success') {
-        // Find panel message element in lightbox
+        // Find panel message element in lightbox (uses same classes as floating-message)
         const $panelMessage = $('.panel-message');
         
         if ($panelMessage.length === 0) {
@@ -2620,19 +2620,19 @@
         // Clear any existing timer
         this.clearTimer();
 
-        // Update panel message content
-        const $messageIcon = $panelMessage.find('.panel-message-icon');
-        const $messageText = $panelMessage.find('.panel-message-text');
+        // Update panel message content using same selectors as floating message
+        const $messageIcon = $panelMessage.find('.floating-message-icon');
+        const $messageText = $panelMessage.find('.floating-message-text');
 
         // Set message content
         $messageText.text(message);
 
-        // Set icon and styling based on type
+        // Set icon and styling based on type (same as floatingMessage)
         if (type === 'success') {
-          $messageIcon.removeClass().addClass('panel-message-icon zmdi zmdi-check-circle');
+          $messageIcon.removeClass().addClass('floating-message-icon zmdi zmdi-check-circle');
           $panelMessage.removeClass('error').addClass('success');
         } else if (type === 'error') {
-          $messageIcon.removeClass().addClass('panel-message-icon zmdi zmdi-close-circle');
+          $messageIcon.removeClass().addClass('floating-message-icon zmdi zmdi-close-circle');
           $panelMessage.removeClass('success').addClass('error');
         }
 
@@ -2653,10 +2653,8 @@
         
         this.clearTimer();
         
-        // Hide with slideUp animation and fade out
-        $panelMessage.stop(true, true).slideUp(300, function() {
-          $(this).fadeOut(100);
-        });
+        // Hide with slideUp animation
+        $panelMessage.stop(true, true).slideUp(300);
 
         console.log('Panel message hidden');
       },
