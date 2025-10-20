@@ -626,6 +626,162 @@ class CRM_AI_Page_AJAX {
     ]);
   }
 
+  public static function getImageHistory() {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] == 'application/json') {
+      $jsonString = file_get_contents('php://input');
+      $jsondata = json_decode($jsonString, true);
+
+      if ($jsondata === NULL) {
+        self::responseError([
+          'status' => 0,
+          'message' => 'The request is not a valid JSON format.',
+        ]);
+      }
+
+      $allowedInput = [
+        'page' => 'integer',
+        'per_page' => 'integer',
+      ];
+
+      $checkFormatResult = self::validateJsonData($jsondata, $allowedInput, []);
+      if (!$checkFormatResult) {
+        self::responseError([
+          'status' => 0,
+          'message' => 'The request does not match the expected format.',
+        ]);
+      }
+
+      // Get current user ID
+      $session = CRM_Core_Session::singleton();
+      $currentContactId = $session->get('userID');
+
+      // Verify permission: only current user can view their own records
+      if (empty($currentContactId)) {
+        self::responseError([
+          'status' => 0,
+          'message' => 'User not authenticated.',
+        ]);
+      }
+
+      // Input validation with defaults
+      $page = max(1, (int)CRM_Utils_Array::value('page', $jsondata, 1));
+      $perPage = min(50, max(1, (int)CRM_Utils_Array::value('per_page', $jsondata, 10)));
+      $offset = ($page - 1) * $perPage;
+
+      try {
+        // Get total count for pagination
+        $countQuery = "
+          SELECT COUNT(img.id) as total
+          FROM civicrm_aiimagegeneration img
+          LEFT JOIN civicrm_aicompletion comp ON img.aicompletion_id = comp.id
+          WHERE comp.contact_id = %1
+            AND img.status_id = %2
+        ";
+        $countParams = [
+          1 => [$currentContactId, 'Integer'],
+          2 => [CRM_AI_BAO_AIImageGeneration::STATUS_SUCCESS, 'Integer'],
+        ];
+        $totalResult = CRM_Core_DAO::executeQuery($countQuery, $countParams);
+        $totalResult->fetch();
+        $total = (int)$totalResult->total;
+
+        // Get image history data
+        $query = "
+          SELECT 
+            img.id,
+            img.original_prompt,
+            img.translated_prompt,
+            img.image_style,
+            img.image_ratio,
+            img.image_path,
+            img.created_date,
+            img.status_id,
+            comp.contact_id,
+            comp.tone_style,
+            comp.ai_role
+          FROM civicrm_aiimagegeneration img
+          LEFT JOIN civicrm_aicompletion comp ON img.aicompletion_id = comp.id
+          WHERE comp.contact_id = %1
+            AND img.status_id = %2
+          ORDER BY img.created_date DESC
+          LIMIT %3 OFFSET %4
+        ";
+        $params = [
+          1 => [$currentContactId, 'Integer'],
+          2 => [CRM_AI_BAO_AIImageGeneration::STATUS_SUCCESS, 'Integer'],
+          3 => [$perPage, 'Integer'],
+          4 => [$offset, 'Integer'],
+        ];
+
+        $dao = CRM_Core_DAO::executeQuery($query, $params);
+        $images = [];
+        $baseUrl = rtrim(CIVICRM_UF_BASEURL, '/');
+        $publicPath = CRM_Utils_System::cmsDir('public');
+
+        while ($dao->fetch()) {
+          $imageUrl = !empty($dao->image_path) ? $baseUrl . '/' . $publicPath . '/' . $dao->image_path : '';
+          
+          $images[] = [
+            'id' => (int)$dao->id,
+            'original_prompt' => $dao->original_prompt ?: '',
+            'translated_prompt' => $dao->translated_prompt ?: '',
+            'image_style' => $dao->image_style ?: '',
+            'image_ratio' => $dao->image_ratio ?: '',
+            'image_path' => $dao->image_path ?: '',
+            'image_url' => $imageUrl,
+            'created_date' => $dao->created_date ?: '',
+            'status_id' => (int)$dao->status_id,
+          ];
+        }
+
+        // Calculate pagination info
+        $totalPages = $total > 0 ? (int)ceil($total / $perPage) : 0;
+
+        if (empty($images)) {
+          self::responseSucess([
+            'status' => 1,
+            'message' => 'No image generation history found.',
+            'data' => [
+              'images' => [],
+              'pagination' => [
+                'total' => $total,
+                'current_page' => $page,
+                'per_page' => $perPage,
+                'total_pages' => $totalPages,
+              ],
+            ],
+          ]);
+        } else {
+          self::responseSucess([
+            'status' => 1,
+            'message' => 'Image history retrieved successfully.',
+            'data' => [
+              'images' => $images,
+              'pagination' => [
+                'total' => $total,
+                'current_page' => $page,
+                'per_page' => $perPage,
+                'total_pages' => $totalPages,
+              ],
+            ],
+          ]);
+        }
+
+      } catch (Exception $e) {
+        self::responseError([
+          'status' => 0,
+          'message' => 'Database error occurred while retrieving image history.',
+        ]);
+      }
+    }
+
+    // If we reach here, it means the request method is not POST or content-type is not JSON
+    self::responseError([
+      'status' => 0,
+      'message' => 'Invalid request method or missing data.',
+    ]);
+  }
+
   /**
    * Filter prompts based on style and ratio parameters
    *

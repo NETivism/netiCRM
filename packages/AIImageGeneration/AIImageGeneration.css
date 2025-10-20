@@ -225,23 +225,29 @@
 }
 
 /* Floating message notification */
+.enhanced-ai-lightbox .floating-message,
 .netiaiig-container .floating-message {
   position: relative;
   display: none;
   min-width: 200px;
   max-width: 300px;
   margin-bottom: 4px;
-  transform: translateY(10px);
+  transform: translateY(2px);
   transition: all 0.3s ease;
   z-index: 1002;
 }
-
+.enhanced-ai-lightbox .floating-message {
+  position: absolute;
+  transform: translateY(-50px);
+}
+.enhanced-ai-lightbox .floating-message.show,
 .netiaiig-container .floating-message.show {
   opacity: 1;
   transform: translateY(0);
 }
-
+.enhanced-ai-lightbox .floating-message-content,
 .netiaiig-container .floating-message-content {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -258,12 +264,13 @@
 }
 
 /* Success message styles */
+.enhanced-ai-lightbox .floating-message.success .floating-message-content,
 .netiaiig-container .floating-message.success .floating-message-content {
   background: rgba(52, 199, 89, 0.95);
   color: white;
   border: 1px solid rgba(52, 199, 89, 0.3);
 }
-
+.enhanced-ai-lightbox .floating-message.success .floating-message-icon,
 .netiaiig-container .floating-message.success .floating-message-icon {
   color: white;
   font-size: 16px;
@@ -271,18 +278,19 @@
 }
 
 /* Error message styles */
+.enhanced-ai-lightbox .floating-message.error .floating-message-content,
 .netiaiig-container .floating-message.error .floating-message-content {
   background: rgba(255, 59, 48, 0.95);
   color: white;
   border: 1px solid rgba(255, 59, 48, 0.3);
 }
-
+.enhanced-ai-lightbox .floating-message.error .floating-message-icon,
 .netiaiig-container .floating-message.error .floating-message-icon {
   color: white;
   font-size: 16px;
   flex-shrink: 0;
 }
-
+.enhanced-ai-lightbox .floating-message-text,
 .netiaiig-container .floating-message-text {
   flex: 1;
   min-width: 0;
