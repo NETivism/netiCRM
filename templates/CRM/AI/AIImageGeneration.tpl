@@ -65,7 +65,16 @@ window.AIImageGeneration = {
     "errorGenerationFailed": "{/literal}{ts}Image generation failed, please try again later{/ts}{literal}",
     "errorDefaultMessage": "{/literal}{ts}An error occurred during image generation, please try again later{/ts}{literal}",
     "editPromptTooltip": "{/literal}{ts}Edit prompt: Describe the image you want to generate{/ts}{literal}",
-    "generateImagesUsingAI": "{/literal}{ts}Generate images using AI{/ts}{literal}"
+    "generateImagesUsingAI": "{/literal}{ts}Generate images using AI{/ts}{literal}",
+    "lightboxImageInfo": "{/literal}{ts}Image Information{/ts}{literal}",
+    "lightboxPrompt": "{/literal}{ts}Prompt{/ts}{literal}",
+    "lightboxStyle": "{/literal}{ts}Style{/ts}{literal}",
+    "lightboxRatio": "{/literal}{ts}Aspect Ratio{/ts}{literal}",
+    "lightboxRegenerate": "{/literal}{ts}Regenerate{/ts}{literal}",
+    "lightboxCopy": "{/literal}{ts}Copy{/ts}{literal}",
+    "lightboxDownload": "{/literal}{ts}Download{/ts}{literal}",
+    "lightboxActionSuccess": "{/literal}{ts}Action completed successfully{/ts}{literal}",
+    "lightboxActionFailed": "{/literal}{ts}Action failed, please try again{/ts}{literal}"
   }
 };
 </script>

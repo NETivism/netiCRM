@@ -643,7 +643,7 @@
           const message = window.AIImageGeneration && window.AIImageGeneration.translation
             ? window.AIImageGeneration.translation.imageProcessError
             : 'Error occurred during image processing';
-          self.showError(message);
+          self.showLightboxMessage(message, 'error');
         }
       };
 
@@ -652,7 +652,7 @@
         const message = window.AIImageGeneration && window.AIImageGeneration.translation
           ? window.AIImageGeneration.translation.imageLoadFailed
           : 'Failed to load image, please try again';
-        self.showError(message);
+        self.showLightboxMessage(message, 'error');
       };
 
       // Load the image
@@ -698,7 +698,7 @@
       const message = window.AIImageGeneration && window.AIImageGeneration.translation
         ? window.AIImageGeneration.translation.downloadStarted
         : 'Image download started';
-      this.showSuccess(message);
+      this.showLightboxMessage(message, 'success');
     },
 
     // Load history image
@@ -1229,6 +1229,13 @@
     setupImageLightbox: function() {
       const self = this;
       
+      // Get translations for lightbox
+      const getTranslation = (key, fallback) => {
+        return window.AIImageGeneration && window.AIImageGeneration.translation
+          ? window.AIImageGeneration.translation[key] || fallback
+          : fallback;
+      };
+      
       // Initialize enhanced Magnific Popup for AI image links
       $(document).magnificPopup({
         delegate: '.ai-image-link',
@@ -1247,34 +1254,34 @@
               <!-- Right info panel (desktop) -->
               <div class="mfp-info-panel desktop-panel">
                 <div class="panel-header">
-                  <h3>圖片資訊</h3>
+                  <h3>${getTranslation('lightboxImageInfo', 'Image Information')}</h3>
                 </div>
                 <div class="panel-content">
                   <div class="meta-item">
-                    <label>提示詞</label>
+                    <label>${getTranslation('lightboxPrompt', 'Prompt')}</label>
                     <div class="prompt-text"></div>
                   </div>
                   <div class="meta-item">
-                    <label>風格</label>
+                    <label>${getTranslation('lightboxStyle', 'Style')}</label>
                     <div class="style-text"></div>
                   </div>
                   <div class="meta-item">
-                    <label>比例</label>
+                    <label>${getTranslation('lightboxRatio', 'Aspect Ratio')}</label>
                     <div class="ratio-text"></div>
                   </div>
                 </div>
                 <div class="panel-actions">
-                  <button class="lightbox-btn regenerate-btn" title="重新生成">
+                  <button class="lightbox-btn regenerate-btn" title="${getTranslation('lightboxRegenerate', 'Regenerate')}">
                     <i class="zmdi zmdi-refresh"></i>
-                    <span>重新生成</span>
+                    <span>${getTranslation('lightboxRegenerate', 'Regenerate')}</span>
                   </button>
-                  <button class="lightbox-btn copy-btn" title="複製">
+                  <button class="lightbox-btn copy-btn" title="${getTranslation('lightboxCopy', 'Copy')}">
                     <i class="zmdi zmdi-collection-plus"></i>
-                    <span>複製</span>
+                    <span>${getTranslation('lightboxCopy', 'Copy')}</span>
                   </button>
-                  <button class="lightbox-btn download-btn" title="下載">
+                  <button class="lightbox-btn download-btn" title="${getTranslation('lightboxDownload', 'Download')}">
                     <i class="zmdi zmdi-download"></i>
-                    <span>下載</span>
+                    <span>${getTranslation('lightboxDownload', 'Download')}</span>
                   </button>
                 </div>
               </div>
@@ -1290,26 +1297,26 @@
               <div class="floating-content" style="display: none;">
                 <div class="floating-meta">
                   <div class="meta-item">
-                    <label>提示詞</label>
+                    <label>${getTranslation('lightboxPrompt', 'Prompt')}</label>
                     <div class="prompt-text"></div>
                   </div>
                   <div class="meta-item">
-                    <label>風格</label>
+                    <label>${getTranslation('lightboxStyle', 'Style')}</label>
                     <div class="style-text"></div>
                   </div>
                   <div class="meta-item">
-                    <label>比例</label>
+                    <label>${getTranslation('lightboxRatio', 'Aspect Ratio')}</label>
                     <div class="ratio-text"></div>
                   </div>
                 </div>
                 <div class="floating-actions">
-                  <button class="lightbox-btn regenerate-btn" title="重新生成">
+                  <button class="lightbox-btn regenerate-btn" title="${getTranslation('lightboxRegenerate', 'Regenerate')}">
                     <i class="zmdi zmdi-refresh"></i>
                   </button>
-                  <button class="lightbox-btn copy-btn" title="複製">
+                  <button class="lightbox-btn copy-btn" title="${getTranslation('lightboxCopy', 'Copy')}">
                     <i class="zmdi zmdi-collection-plus"></i>
                   </button>
-                  <button class="lightbox-btn download-btn" title="下載">
+                  <button class="lightbox-btn download-btn" title="${getTranslation('lightboxDownload', 'Download')}">
                     <i class="zmdi zmdi-download"></i>
                   </button>
                 </div>
@@ -1445,6 +1452,30 @@
       }
     },
 
+    // Show message in lightbox context
+    showLightboxMessage: function(message, type = 'success') {
+      console.log('Lightbox message:', { message, type });
+      
+      // Check if lightbox is currently open
+      const isLightboxOpen = $.magnificPopup.instance && $.magnificPopup.instance.isOpen;
+      
+      if (isLightboxOpen) {
+        // Use floating message system which works well in lightbox context
+        if (type === 'success') {
+          this.floatingMessage.showSuccess(message);
+        } else {
+          this.floatingMessage.showError(message);
+        }
+      } else {
+        // Use regular message system if lightbox is not open
+        if (type === 'success') {
+          this.showSuccess(message);
+        } else {
+          this.showError(message);
+        }
+      }
+    },
+
     // Get lightbox action type from button
     getLightboxActionType: function($button) {
       if ($button.hasClass('regenerate-btn')) {
@@ -1461,7 +1492,10 @@
     copyImageFromLightbox: function() {
       const $currentItem = $.magnificPopup.instance.currItem;
       if (!$currentItem) {
-        this.showError('無法取得圖片資訊');
+        const message = window.AIImageGeneration && window.AIImageGeneration.translation
+          ? window.AIImageGeneration.translation.lightboxActionFailed
+          : 'Action failed, please try again';
+        this.showLightboxMessage(message, 'error');
         return;
       }
 
@@ -1473,7 +1507,10 @@
     downloadImageFromLightbox: function() {
       const $currentItem = $.magnificPopup.instance.currItem;
       if (!$currentItem) {
-        this.showError('無法取得圖片資訊');
+        const message = window.AIImageGeneration && window.AIImageGeneration.translation
+          ? window.AIImageGeneration.translation.lightboxActionFailed
+          : 'Action failed, please try again';
+        this.showLightboxMessage(message, 'error');
         return;
       }
 
@@ -1518,13 +1555,13 @@
               const message = window.AIImageGeneration && window.AIImageGeneration.translation
                 ? window.AIImageGeneration.translation.imageCopied
                 : 'Image copied to clipboard';
-              self.showSuccess(message);
+              self.showLightboxMessage(message, 'success');
             }).catch(function(error) {
               console.error('Failed to copy image to clipboard:', error);
               const message = window.AIImageGeneration && window.AIImageGeneration.translation
                 ? window.AIImageGeneration.translation.copyFailed
                 : 'Failed to copy image, please try again';
-              self.showError(message);
+              self.showLightboxMessage(message, 'error');
             });
           }, 'image/png');
 
@@ -1533,7 +1570,7 @@
           const message = window.AIImageGeneration && window.AIImageGeneration.translation
             ? window.AIImageGeneration.translation.imageProcessError
             : 'Error occurred during image processing';
-          self.showError(message);
+          self.showLightboxMessage(message, 'error');
         }
       };
 
@@ -1542,7 +1579,7 @@
         const message = window.AIImageGeneration && window.AIImageGeneration.translation
           ? window.AIImageGeneration.translation.imageLoadFailed
           : 'Failed to load image, please try again';
-        self.showError(message);
+        self.showLightboxMessage(message, 'error');
       };
 
       img.src = imageUrl;
@@ -1568,7 +1605,7 @@
       const message = window.AIImageGeneration && window.AIImageGeneration.translation
         ? window.AIImageGeneration.translation.downloadStarted
         : 'Image download started';
-      this.showSuccess(message);
+      this.showLightboxMessage(message, 'success');
     },
 
     // Show success message
