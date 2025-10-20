@@ -4,9 +4,11 @@
 
 {* AIImageGeneration CSS *}
 <link rel="stylesheet" href="{$config->resourceBase}packages/AIImageGeneration/AIImageGeneration.css?v{$config->ver}">
+<link rel="stylesheet" href="{$config->resourceBase}packages/AIImageGeneration/AIImageGeneration-History.css?v{$config->ver}">
 
 {* AIImageGeneration JavaScript *}
 {js src=packages/AIImageGeneration/AIImageGeneration.js group=999 weight=998 library=civicrm/civicrm-js-aiimagegeneration}{/js}
+{js src=packages/AIImageGeneration/AIImageGeneration-History.js group=999 weight=999 library=civicrm/civicrm-js-aiimagegeneration}{/js}
 
 {* Added global js variable: AIImageGeneration *}
 {literal}
@@ -74,7 +76,16 @@ window.AIImageGeneration = {
     "lightboxCopy": "{/literal}{ts}Copy{/ts}{literal}",
     "lightboxDownload": "{/literal}{ts}Download{/ts}{literal}",
     "lightboxActionSuccess": "{/literal}{ts}Action completed successfully{/ts}{literal}",
-    "lightboxActionFailed": "{/literal}{ts}Action failed, please try again{/ts}{literal}"
+    "lightboxActionFailed": "{/literal}{ts}Action failed, please try again{/ts}{literal}",
+    "historyLoading": "{/literal}{ts}Loading history...{/ts}{literal}",
+    "historyEmpty": "{/literal}{ts}No image generation history yet{/ts}{literal}",
+    "historyEmptySubtext": "{/literal}{ts}Generated images will appear here{/ts}{literal}",
+    "historyLoadFailed": "{/literal}{ts}Failed to load history, please try again{/ts}{literal}",
+    "historyRefresh": "{/literal}{ts}Refresh History{/ts}{literal}",
+    "historyPrevious": "{/literal}{ts}Previous Page{/ts}{literal}",
+    "historyNext": "{/literal}{ts}Next Page{/ts}{literal}",
+    "historyShowing": "{/literal}{ts}Showing{/ts}{literal}",
+    "historyOf": "{/literal}{ts}of{/ts}{literal}"
   }
 };
 </script>
@@ -226,32 +237,55 @@ window.AIImageGeneration = {
         <button type="button" class="generate-btn">{ts}Generate Image{/ts}</button>
       </div>
 
-      <!--
-      {* History section *}
+      {* History section with real data *}
       <div class="history-section">
-        <label class="control-label">History</label>
+        <div class="history-header">
+          <label class="control-label">{ts}History{/ts}</label>
+          <div class="history-actions">
+            <button type="button" class="history-refresh-btn" title="{ts}Refresh History{/ts}" data-tooltip data-tooltip-placement="s">
+              <i class="zmdi zmdi-refresh"></i>
+            </button>
+          </div>
+        </div>
+        
+        {* Loading state for history *}
+        <div class="history-loading" style="display: none;">
+          <div class="history-loading-spinner"></div>
+          <span class="history-loading-text">{ts}Loading history...{/ts}</span>
+        </div>
+        
+        {* Empty state for history *}
+        <div class="history-empty" style="display: none;">
+          <div class="history-empty-icon">
+            <i class="zmdi zmdi-collection-image-o"></i>
+          </div>
+          <div class="history-empty-text">{ts}No image generation history yet{/ts}</div>
+          <div class="history-empty-subtext">{ts}Generated images will appear here{/ts}</div>
+        </div>
+        
+        {* History grid container *}
         <div class="history-grid">
-          <div class="history-item">
-            <div style="background: linear-gradient(45deg, #667eea, #764ba2); width: 100%; height: 100%;"></div>
+          {* History items will be dynamically loaded here *}
+        </div>
+        
+        {* Pagination controls *}
+        <div class="history-pagination" style="display: none;">
+          <div class="pagination-info">
+            <span class="pagination-text">{ts}Showing{/ts} <span class="pagination-start">1</span>-<span class="pagination-end">10</span> {ts}of{/ts} <span class="pagination-total">0</span></span>
           </div>
-          <div class="history-item">
-            <div style="background: linear-gradient(45deg, #f093fb, #f5576c); width: 100%; height: 100%;"></div>
-          </div>
-          <div class="history-item">
-            <div style="background: linear-gradient(45deg, #4facfe, #00f2fe); width: 100%; height: 100%;"></div>
-          </div>
-          <div class="history-item">
-            <div style="background: linear-gradient(45deg, #43e97b, #38f9d7); width: 100%; height: 100%;"></div>
-          </div>
-          <div class="history-item">
-            <div style="background: linear-gradient(45deg, #fa709a, #fee140); width: 100%; height: 100%;"></div>
-          </div>
-          <div class="history-item">
-            <div style="background: linear-gradient(45deg, #a8edea, #fed6e3); width: 100%; height: 100%;"></div>
+          <div class="pagination-controls">
+            <button type="button" class="pagination-btn pagination-prev" title="{ts}Previous Page{/ts}" disabled>
+              <i class="zmdi zmdi-chevron-left"></i>
+            </button>
+            <span class="pagination-current">1</span>
+            <span class="pagination-separator">/</span>
+            <span class="pagination-total-pages">1</span>
+            <button type="button" class="pagination-btn pagination-next" title="{ts}Next Page{/ts}" disabled>
+              <i class="zmdi zmdi-chevron-right"></i>
+            </button>
           </div>
         </div>
       </div>
-      -->
 
     </div>
   </div>
