@@ -636,7 +636,6 @@ class CRM_AI_Page_AJAX {
           'status' => 0,
           'message' => 'The request is not a valid JSON format.',
         ]);
-        return;
       }
 
       $allowedInput = [
@@ -650,7 +649,6 @@ class CRM_AI_Page_AJAX {
           'status' => 0,
           'message' => 'The request does not match the expected format.',
         ]);
-        return;
       }
 
       // Get current user ID
@@ -663,7 +661,6 @@ class CRM_AI_Page_AJAX {
           'status' => 0,
           'message' => 'User not authenticated.',
         ]);
-        return;
       }
 
       // Input validation with defaults
@@ -671,6 +668,10 @@ class CRM_AI_Page_AJAX {
       $perPage = min(50, max(1, (int)CRM_Utils_Array::value('per_page', $jsondata, 10)));
       $offset = ($page - 1) * $perPage;
 
+      // Database operations with error handling
+      $total = 0;
+      $images = [];
+      
       try {
         // Get total count for pagination
         $countQuery = "
@@ -717,7 +718,6 @@ class CRM_AI_Page_AJAX {
         ];
 
         $dao = CRM_Core_DAO::executeQuery($query, $params);
-        $images = [];
         $baseUrl = rtrim(CIVICRM_UF_BASEURL, '/');
         $publicPath = CRM_Utils_System::cmsDir('public');
 
@@ -736,40 +736,6 @@ class CRM_AI_Page_AJAX {
             'status_id' => (int)$dao->status_id,
           ];
         }
-
-        // Calculate pagination info
-        $totalPages = $total > 0 ? (int)ceil($total / $perPage) : 0;
-
-        if (empty($images)) {
-          self::responseSucess([
-            'status' => 1,
-            'message' => 'No image generation history found.',
-            'data' => [
-              'images' => [],
-              'pagination' => [
-                'total' => $total,
-                'current_page' => $page,
-                'per_page' => $perPage,
-                'total_pages' => $totalPages,
-              ],
-            ],
-          ]);
-        } else {
-          self::responseSucess([
-            'status' => 1,
-            'message' => 'Image history retrieved successfully.',
-            'data' => [
-              'images' => $images,
-              'pagination' => [
-                'total' => $total,
-                'current_page' => $page,
-                'per_page' => $perPage,
-                'total_pages' => $totalPages,
-              ],
-            ],
-          ]);
-        }
-
       } catch (Exception $e) {
         self::responseError([
           'status' => 0,
@@ -777,13 +743,47 @@ class CRM_AI_Page_AJAX {
         ]);
         return;
       }
-    } else {
-      // If we reach here, it means the request method is not POST or content-type is not JSON
-      self::responseError([
-        'status' => 0,
-        'message' => 'Invalid request method or missing data.',
-      ]);
+
+      // Calculate pagination info
+      $totalPages = $total > 0 ? (int)ceil($total / $perPage) : 0;
+
+      // Send response outside of try-catch block
+      if (empty($images)) {
+        self::responseSucess([
+          'status' => 1,
+          'message' => 'No image generation history found.',
+          'data' => [
+            'images' => [],
+            'pagination' => [
+              'total' => $total,
+              'current_page' => $page,
+              'per_page' => $perPage,
+              'total_pages' => $totalPages,
+            ],
+          ],
+        ]);
+      } else {
+        self::responseSucess([
+          'status' => 1,
+          'message' => 'Image history retrieved successfully.',
+          'data' => [
+            'images' => $images,
+            'pagination' => [
+              'total' => $total,
+              'current_page' => $page,
+              'per_page' => $perPage,
+              'total_pages' => $totalPages,
+            ],
+          ],
+        ]);
+      }
     }
+
+    // If we reach here, it means the request method is not POST or content-type is not JSON
+    self::responseError([
+      'status' => 0,
+      'message' => 'Invalid request method or missing data.',
+    ]);
   }
 
   /**
