@@ -37,7 +37,7 @@
     // History state
     state: {
       currentPage: 1,
-      perPage: 20,
+      perPage: 30,
       totalPages: 0,
       totalItems: 0,
       isLoading: false,
