@@ -63,7 +63,16 @@
 	        <td class="crm-acl-entity">{$row.entity}</td>	
 	        <td class="crm-acl-operation" >{$row.operation}</td>	
 	        <td class="crm-acl-object_name">{$row.object_name}</td>	
-	        <td class="crm-acl-object" >{$row.object}</td>	
+	        <td class="crm-acl-object" >
+            {if $row.object_table eq 'civicrm_saved_search'}
+              {if $row.deny}
+                [{ts}Exclude{/ts}] 
+              {else}
+                [{ts}Include{/ts}] 
+              {/if}
+            {/if}
+            {$row.object}
+            </td>	
 	        <td class="crm-acl-name">{$row.name}</td>	
 	        <td class="crm-acl-is_active" id="row_{$aclID}_status">{if $row.is_active eq 1} {ts}Yes{/ts} {else} {ts}No{/ts} {/if}</td>
 	        <td>{$row.action|replace:'xx':$aclID}</td>
