@@ -1332,6 +1332,26 @@
   z-index: 1001;
 }
 
+/* Sample image loading state styles */
+.netiaiig-container .loading-overlay.sample-loading .loading-spinner {
+  width: 32px;
+  height: 32px;
+  border-width: 3px;
+  margin-bottom: 12px;
+}
+
+.netiaiig-container .loading-overlay.sample-loading .loading-message {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 0;
+}
+
+.netiaiig-container .loading-overlay.sample-loading .loading-timer,
+.netiaiig-container .loading-overlay.sample-loading .loading-progress,
+.netiaiig-container .loading-overlay.sample-loading .loading-info {
+  display: none !important;
+}
+
 .netiaiig-container .loading-spinner {
   width: 48px;
   height: 48px;

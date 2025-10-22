@@ -85,7 +85,8 @@ window.AIImageGeneration = {
     "historyPrevious": "{/literal}{ts}Previous Page{/ts}{literal}",
     "historyNext": "{/literal}{ts}Next Page{/ts}{literal}",
     "historyShowing": "{/literal}{ts}Showing{/ts}{literal}",
-    "historyOf": "{/literal}{ts}of{/ts}{literal}"
+    "historyOf": "{/literal}{ts}of{/ts}{literal}",
+    "loadingSampleImage": "{/literal}{ts}Loading sample image...{/ts}{literal}"
   }
 };
 </script>

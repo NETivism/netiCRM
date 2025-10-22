@@ -1913,6 +1913,9 @@
       const locale = this.getUILocale();
 
       console.log('Loading sample image for locale:', locale);
+      
+      // Show loading state
+      this.showSampleImageLoading();
 
       $.ajax({
         url: '/civicrm/ai/images/get-sample',
@@ -1922,6 +1925,9 @@
         timeout: 10000,
 
         success: function(response) {
+          // Hide loading state
+          self.hideSampleImageLoading();
+          
           if (response.status === 1 && response.data) {
             console.log('Sample image loaded successfully');
             self.applySampleToInterface(response.data);
@@ -1931,6 +1937,9 @@
         },
 
         error: function(xhr, status, error) {
+          // Hide loading state on error
+          self.hideSampleImageLoading();
+          
           console.warn('Failed to load sample image:', {
             status: status,
             error: error,
@@ -1970,6 +1979,44 @@
       } catch (error) {
         console.error('Error applying sample data to interface:', error);
       }
+    },
+
+    // Show loading state for sample image
+    showSampleImageLoading: function() {
+      const $container = $(this.config.container);
+      const $imageContainer = $container.find('.image-placeholder');
+      const $loadingOverlay = $imageContainer.find('.loading-overlay');
+      const $loadingMessage = $loadingOverlay.find('.loading-message');
+      const $emptyState = $imageContainer.find('.empty-state-content');
+      
+      // Hide empty state if visible
+      $emptyState.hide();
+      
+      // Set loading message for sample image
+      const loadingText = window.AIImageGeneration && window.AIImageGeneration.translation
+        ? window.AIImageGeneration.translation.loadingSampleImage
+        : 'Loading sample image...';
+      $loadingMessage.text(loadingText);
+      
+      // Show loading overlay with fade in
+      $loadingOverlay.addClass('sample-loading').fadeIn(300);
+      
+      console.log('Sample image loading state shown');
+    },
+
+    // Hide loading state for sample image
+    hideSampleImageLoading: function() {
+      const $container = $(this.config.container);
+      const $imageContainer = $container.find('.image-placeholder');
+      const $loadingOverlay = $imageContainer.find('.loading-overlay');
+      
+      // Hide loading overlay with fade out
+      $loadingOverlay.removeClass('sample-loading').fadeOut(300, function() {
+        // Reset loading message
+        $(this).find('.loading-message').text('');
+      });
+      
+      console.log('Sample image loading state hidden');
     },
 
     // Update sample image display
@@ -2360,6 +2407,9 @@
       
       console.log('Loading sample image with ratio:', ratio);
       
+      // Show loading state
+      this.showSampleImageLoading();
+      
       $.ajax({
         url: '/civicrm/ai/images/get-sample',
         method: 'POST',
@@ -2371,6 +2421,9 @@
         timeout: 10000,
         
         success: function(response) {
+          // Hide loading state
+          self.hideSampleImageLoading();
+          
           if (response.status === 1 && response.data) {
             console.log('Sample image loaded successfully with ratio:', ratio);
             self.applySampleToInterface(response.data);
@@ -2378,6 +2431,9 @@
         },
         
         error: function(xhr, status, error) {
+          // Hide loading state on error
+          self.hideSampleImageLoading();
+          
           console.warn('Failed to load sample image with ratio:', ratio, error);
         }
       });
