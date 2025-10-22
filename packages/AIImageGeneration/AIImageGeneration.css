@@ -324,7 +324,7 @@
 
 .netiaiig-container .prompt-textarea {
   width: 100%;
-  padding: 16px;
+  padding: 24px 16px 16px;
   border: 0;
   border-radius: 12px;
   font-size: 14px;
@@ -1587,11 +1587,11 @@
 /* Sample prompt tooltip */
 .netiaiig-container .sample-prompt-tooltip {
   position: absolute;
-  top: -8px;
-  right: 12px;
-  background: #007aff;
-  color: #ffffff;
-  font-size: 11px;
+  top: -12px;
+  left: 12px;
+  border: 1px solid #007aff;
+  color: #007aff;
+  font-size: 14px;
   font-weight: 500;
   padding: 4px 8px;
   border-radius: 4px;
@@ -1600,6 +1600,7 @@
   transform: translateY(-4px);
   transition: all 0.2s ease;
   pointer-events: none;
+  background: #fff;
 }
 
 /* Dark mode support for tooltip */
