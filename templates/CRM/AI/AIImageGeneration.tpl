@@ -242,19 +242,14 @@ window.AIImageGeneration = {
       <div class="history-section">
         <div class="history-header">
           <label class="control-label">{ts}History{/ts}</label>
-          <div class="history-actions">
-            <button type="button" class="history-refresh-btn" title="{ts}Refresh History{/ts}" data-tooltip data-tooltip-placement="s">
-              <i class="zmdi zmdi-refresh"></i>
-            </button>
-          </div>
         </div>
-        
+
         {* Loading state for history *}
         <div class="history-loading" style="display: none;">
           <div class="history-loading-spinner"></div>
           <span class="history-loading-text">{ts}Loading history...{/ts}</span>
         </div>
-        
+
         {* Empty state for history *}
         <div class="history-empty" style="display: none;">
           <div class="history-empty-icon">
@@ -263,12 +258,12 @@ window.AIImageGeneration = {
           <div class="history-empty-text">{ts}No image generation history yet{/ts}</div>
           <div class="history-empty-subtext">{ts}Generated images will appear here{/ts}</div>
         </div>
-        
+
         {* History grid container *}
         <div class="history-grid">
           {* History items will be dynamically loaded here *}
         </div>
-        
+
         {* Pagination controls *}
         <div class="history-pagination" style="display: none;">
           <div class="pagination-info">
