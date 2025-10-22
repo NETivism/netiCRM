@@ -253,12 +253,17 @@
 
       $checkbox.on('change', function() {
         if ($(this).prop('disabled')) return;
-        
+        // Update the original hidden input value
+        if ($(this).is(':checked')) {
+          $originalUrlInput.val('1');
+        } else {
+          $originalUrlInput.val('');
+        }
         // Make checkboxes mutually exclusive
         const currentId = $(this).attr('id');
         const isApiCheckbox = currentId.includes('url_api-api-checkbox');
         const isRecurCheckbox = currentId.includes('url_recur-api-checkbox');
-        
+
         if ($(this).is(':checked')) {
           if (isApiCheckbox) {
             // Uncheck corresponding url_recur checkbox
