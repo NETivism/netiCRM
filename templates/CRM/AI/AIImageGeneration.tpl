@@ -240,7 +240,7 @@ window.AIImageGeneration = {
       {* History section with real data *}
       <div class="history-section">
         <div class="history-header">
-          <label class="control-label">{ts}History{/ts}</label>
+          <label class="control-label">{ts}Generated Images History{/ts}</label>
         </div>
 
         {* Loading state for history *}
