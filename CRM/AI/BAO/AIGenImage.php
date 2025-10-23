@@ -50,6 +50,20 @@ class CRM_AI_BAO_AIGenImage {
   ];
 
   /**
+   * Style-specific negative prompts for image generation
+   * Each style can have a customized negative prompt to avoid unwanted elements
+   *
+   * @var array
+   */
+  private static $styleNegativePrompts = [
+    'Simple Illustration' => 'photorealistic, realistic shadows, realistic expression, camera photograph, extra limbs, missing limbs, extra fingers, twisted limbs, malformed limbs, bad hand, fused bodies, merged limbs, connected arms, non-english text, asian letters, chinese characters, japanese text, korean text, messy text, unreadable letters, gibberish, nonsensical writing',
+    'Japanese Simple Illustration' => 'photorealistic, realistic shadows, realistic expression, camera photograph, extra limbs, missing limbs, extra fingers, twisted limbs, malformed limbs, bad hand, fused bodies, merged limbs, connected arms, non-english text, asian letters, chinese characters, japanese text, korean text, messy text, unreadable letters, gibberish, nonsensical writing',
+    'Storybook Style' => 'photorealistic, realistic shadows, realistic expression, camera photograph, extra limbs, missing limbs, extra fingers, twisted limbs, malformed limbs, bad hand, fused bodies, merged limbs, connected arms, non-english text, asian letters, chinese characters, japanese text, korean text, messy text, unreadable letters, gibberish, nonsensical writing',
+    'Watercolor Painting' => 'photorealistic, realistic shadows, realistic expression, camera photograph, extra limbs, missing limbs, extra fingers, twisted limbs, malformed limbs, bad hand, fused bodies, merged limbs, connected arms, non-english text, asian letters, chinese characters, japanese text, korean text, messy text, unreadable letters, gibberish, nonsensical writing',
+    'Hand-Drawn Illustration' => 'photorealistic, realistic shadows, realistic expression, camera photograph, extra limbs, missing limbs, extra fingers, twisted limbs, malformed limbs, bad hand, fused bodies, merged limbs, connected arms, non-english text, asian letters, chinese characters, japanese text, korean text, messy text, unreadable letters, gibberish, nonsensical writing, digital art',
+  ];
+
+  /**
    * Style prefixes for enhancing prompts based on selected style
    * Each style contains multiple prefix options for random selection
    *
@@ -249,10 +263,10 @@ class CRM_AI_BAO_AIGenImage {
 
   /**
    * Process and enhance text prompt based on style requirements
-   * Adds random prefix based on original style, then applies style mapping
+   * Adds random prefix based on original style, applies style mapping, and sets style-specific negative prompt
    *
    * @param array $params Original request parameters
-   * @return array Modified parameters with enhanced text and mapped style
+   * @return array Modified parameters with enhanced text, mapped style, and style-specific negative prompt
     */
   protected function processStyleAndText($params) {
     $modifiedParams = $params;
@@ -273,7 +287,15 @@ class CRM_AI_BAO_AIGenImage {
       }
     }
 
-    // Step 2: Apply style mapping if style exists
+    // Step 2: Set style-specific negative prompt if not already provided by user
+    if (!empty($originalStyle) && isset(self::$styleNegativePrompts[$originalStyle])) {
+      // Only set style-specific negative prompt if user hasn't provided one
+      if (empty($params['negative_prompt'])) {
+        $modifiedParams['negative_prompt'] = self::$styleNegativePrompts[$originalStyle];
+      }
+    }
+
+    // Step 3: Apply style mapping if style exists
     if (!empty($originalStyle) && isset(self::$styleMapping[$originalStyle])) {
       $mappedStyle = self::$styleMapping[$originalStyle];
       $modifiedParams['style'] = $mappedStyle;
@@ -305,7 +327,7 @@ class CRM_AI_BAO_AIGenImage {
 
   /**
    * Prepare parameters for image generation service
-   * Combines standard parameters with advanced service-specific parameters
+   * Combines standard parameters with advanced service-specific parameters and style-specific negative prompt
    *
    * @param array $params Original parameters from user
    * @param string $translatedPrompt Processed prompt text
@@ -317,6 +339,11 @@ class CRM_AI_BAO_AIGenImage {
       'prompt' => $translatedPrompt,
       'ratio' => $params['ratio'] ?? '1:1'
     ];
+
+    // Add style-specific negative prompt if available
+    if (!empty($params['negative_prompt'])) {
+      $serviceParams['negative_prompt'] = $params['negative_prompt'];
+    }
 
     // Merge advanced parameters if provided
     // This allows service-specific parameters to be passed through
