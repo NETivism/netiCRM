@@ -84,6 +84,8 @@ class CRM_AI_BAO_AIGenImage {
     'Hand-Drawn Illustration' => [
       'A hand-drawn illustration with a nouveau and minimalistic style, minimalist cartoon character design with simplified facial features, textured paper, handmade pencil and crayon strokes of various thicknesses',
       'A hand-drawn illustration with a nouveau and minimalistic style. minimalist cartoon character design with simplified facial features. The background is a white textured paper. The illustration has elegant, handmade pencil and crayon strokes of various thicknesses.',
+      'A hand-drawn doodle style illustration, minimalist cartoon character design with simplified facial features. The background is a white textured paper. handmade pencil and crayon strokes of various thicknesses.',
+      'A Whimsical hand-drawn doodle style illustration, minimalist cartoon character design with simplified facial features. The background is a white textured paper. handmade pencil and crayon strokes of various thicknesses.',
       'A childlike and naive illustration drawn with thick, waxy oil pastels. The colors are heavily saturated and applied in broad, overlapping strokes, completely covering the canvas. The subject is simple and rendered with a deliberately clumsy, innocent hand. The texture is heavily impasto.',
     ],
   ];

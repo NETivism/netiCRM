@@ -1320,11 +1320,7 @@
           }
         },
         closeOnContentClick: false, // Disable to prevent conflict with info panel
-        mainClass: 'mfp-with-zoom enhanced-ai-lightbox',
-        zoom: {
-          enabled: true,
-          duration: 300
-        },
+        mainClass: 'mfp-neticrm-aigenimg-infobox enhanced-ai-lightbox',
         callbacks: {
           open: function() {
             self.initLightboxMetadata();

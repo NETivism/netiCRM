@@ -521,7 +521,7 @@
   height: 100px;
   border-radius: 50%;
   overflow: hidden;
-  border: 3px solid transparent;
+  border: 3px solid #ddd;
   transition: all 0.2s ease;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
@@ -529,6 +529,10 @@
 .netiaiig-container .style-option.selected .style-preview {
   border-color: #007aff;
   box-shadow: 0 0 20px rgba(0, 122, 255, 0.4);
+}
+
+.netiaiig-container .style-preview.custom-style {
+    background: linear-gradient(to right, #fcfcfc, #eceff4);
 }
 
 .netiaiig-container .style-preview img {
