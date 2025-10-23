@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>, 2013,2015-2025\n"
+"Last-Translator: CC Chu <poliphilonet@gmail.com>, 2020-2025\n"
 "Language-Team: Chinese (Taiwan) (http://app.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4070,12 +4070,12 @@ msgstr "使用資料表單"
 #: CRM/Contribute/Form/ContributionPage/Custom.php
 #: CRM/Event/Form/ManageEvent/Registration.php
 msgid "(top of page)"
-msgstr "(頁面頂部)"
+msgstr "(頁面上方)"
 
 #: CRM/Contribute/Form/ContributionPage/Custom.php
 #: CRM/Event/Form/ManageEvent/Registration.php
 msgid "(bottom of page)"
-msgstr "(頁面底部)"
+msgstr "(頁面下方)"
 
 #: CRM/Contribute/Form/ContributionPage/Custom.php
 #: CRM/Contribute/Page/ContributionPage.php
@@ -5264,20 +5264,20 @@ msgstr "會籍開始日期"
 #: CRM/Member/DAO/MembershipStatus.php CRM/Member/Form/MembershipStatus.php
 #: templates/CRM/Member/Page/MembershipStatus.tpl
 msgid "Start Event"
-msgstr "開始事件"
+msgstr "狀態開始依據"
 
 #: CRM/Member/DAO/MembershipStatus.php CRM/Member/Form/MembershipStatus.php
 msgid "Start Event Adjust Interval"
-msgstr "開始事件調整間隔"
+msgstr "狀態開始依據調整間隔"
 
 #: CRM/Member/DAO/MembershipStatus.php CRM/Member/Form/MembershipStatus.php
 #: templates/CRM/Member/Page/MembershipStatus.tpl
 msgid "End Event"
-msgstr "結束事件"
+msgstr "狀態結束依據"
 
 #: CRM/Member/DAO/MembershipStatus.php CRM/Member/Form/MembershipStatus.php
 msgid "End Event Adjust Interval"
-msgstr "結束事件調整間隔"
+msgstr "狀態結束依據調整間隔"
 
 #: CRM/Member/DAO/MembershipStatus.php CRM/Member/Form/MembershipStatus.php
 msgid "Current Membership?"
@@ -17493,11 +17493,11 @@ msgstr "基本會員編號"
 
 #: CRM/Member/DAO/MembershipStatus.php
 msgid "Start Event Adjust Unit"
-msgstr "開始事件調整單位"
+msgstr "狀態開始依據調整單位"
 
 #: CRM/Member/DAO/MembershipStatus.php
 msgid "End Event Adjust Unit"
-msgstr "結束事件調整單位"
+msgstr "狀態結束依據調整單位"
 
 #: CRM/Member/DAO/MembershipStatus.php
 msgid "Admin Assigned Only?"
@@ -17713,11 +17713,11 @@ msgstr "此會籍狀態名稱已存在。請設定不同的名稱。"
 
 #: CRM/Member/Form/MembershipStatus.php
 msgid "Start Event Adjustment"
-msgstr "開始事件調整"
+msgstr "狀態開始依據調整"
 
 #: CRM/Member/Form/MembershipStatus.php
 msgid "End Event Adjustment"
-msgstr "結束事件調整"
+msgstr "狀態結束依據調整"
 
 #: CRM/Member/Form/MembershipStatus.php
 msgid "Administrator Only?"
@@ -22340,7 +22340,7 @@ msgstr "Stack Trace"
 
 #: templates/CRM/Admin/Form/Setting/Debugging.hlp
 msgid "To display a stack trace listing at the top of a page, add <em>%1</em>"
-msgstr "顯示 Stack Trace 在頁面頂部，新增<em>%1</em>"
+msgstr "顯示 Stack Trace 在頁面上方，新增<em>%1</em>"
 
 #: templates/CRM/Admin/Form/Setting/Debugging.hlp
 msgid ""
@@ -26750,7 +26750,7 @@ msgstr "您也可以直接加入聯絡人到智慧群組，而不管這些聯絡
 msgid ""
 "IMPORTANT: Search Builder requires you to use specific formats for your "
 "search values. Review the %1 before building your first search..."
-msgstr "重要：自訂搜尋需要您為搜尋值使用指定格式。在建立您第一次自搜尋之前請先查閱 %1 ..."
+msgstr "重要：自訂搜尋需要您為搜尋值使用指定格式。在建立您第一次自訂搜尋之前請先查閱 %1 ..."
 
 #: templates/CRM/Contact/Form/Search/Builder.hlp
 msgid ""
@@ -28415,7 +28415,7 @@ msgid ""
 "volunteer availability and skills. Add any number of fields to your "
 "contribution form by selecting CiviCRM Profiles (collections of fields) to "
 "include at the beginning of the page, and/or at the bottom."
-msgstr "您必須從捐款者收集必要資料（例如基本個資）與其他非必要的參考資料（例如加入志工的意願）。我們提供頁面頂部與頁面底部，您可在這兩個位置放入資料表單，以便收集資料。"
+msgstr "您可能希望向捐款人收集一些除了完成捐款所需以外的額外資訊，例如：是否願意擔任志工、具備哪些專長等。\n您可以透過加入 CiviCRM 的「資料表單」（由一組欄位組成）來擴充捐款表單，並選擇將這些資料表單顯示在頁面上方或下方。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Custom.tpl
 msgid ""
@@ -28437,13 +28437,13 @@ msgid ""
 "Include additional fields in this online contribution page by configuring "
 "and selecting a CiviCRM Profile to be included above the billing information"
 " (but after the introductory message, amounts, and honoree section)."
-msgstr "請選擇一個資料表單（頁面頂部）：位置在介紹文字，金額與榮譽捐款人下方，帳單資料上方）。"
+msgstr "請選擇一個資料表單（頁面上方）：位置在介紹文字，金額與榮譽捐款人下方，帳單資料上方）。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Custom.tpl
 msgid ""
 "Include additional fields in this online contribution page by configuring "
 "and selecting a CiviCRM Profile to be included at the bottom of the page."
-msgstr "在此選擇您欲在募款頁面底部嵌入的資料表單。"
+msgstr "在此選擇您欲在募款頁面下方嵌入的資料表單。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Delete.tpl
 msgid ""
@@ -34069,7 +34069,7 @@ msgid ""
 "Optional adjustment period added or subtracted from the Start Event. "
 "EXAMPLE: <strong>Current</strong> status might begin at 'join date' PLUS 3 "
 "months (to distinguish Current from New members)."
-msgstr "可以選擇延長或提早開始事件？舉例來說：<strong>現有會員</strong>狀態可以設定為於原加入日期的3個月後（以區隔新會員和現有會員）。"
+msgstr "可以選擇延長或提早狀態開始依據？舉例來說：<strong>現有會員</strong>狀態可以設定為於原加入日期的3個月後（以區隔新會員和現有會員）。"
 
 #: templates/CRM/Member/Form/MembershipStatus.tpl
 msgid ""
@@ -34081,7 +34081,7 @@ msgstr "此狀態何時結束？舉例來說：<strong>現在</strong>狀態會�
 msgid ""
 "Optional adjustment period added or subtracted from the End Event. EXAMPLE: "
 "<strong>Grace</strong> status might end at 'end date' PLUS 1 month."
-msgstr "可以選擇延長或提早結束事件？舉例來說：<strong>寬限期</strong>狀態可以設定為結束於原截止日期的 1 個月。"
+msgstr "可以選擇延長或提早狀態結束依據？舉例來說：<strong>寬限期</strong>狀態可以設定為結束於原截止日期的 1 個月。"
 
 #: templates/CRM/Member/Form/MembershipStatus.tpl
 msgid ""
@@ -34098,7 +34098,7 @@ msgid ""
 "and End Event settings are ignored for Administrator statuses. EXAMPLE: This"
 " setting can be useful for special case statuses like 'Non-expiring', "
 "'Barred' or 'Expelled', etc."
-msgstr "如果此狀態只讓管理工作人員使用，請勾選此框。若勾選，系統不會自動指派此狀態。當新增或編輯會籍記錄，可勾選「<strong>是否覆蓋掉會員狀態？</strong>」，就可以將此狀態指派到聯絡人的會籍。此狀態的開始及結束事件設定會被忽略。例如：此設定可以被用於特別個案狀態如「非過期」、「禁止」或「開除」等。"
+msgstr "如果此狀態只讓管理工作人員使用，請勾選此框。若勾選，系統不會自動指派此狀態。當新增或編輯會籍記錄，可勾選「<strong>是否覆蓋掉會員狀態？</strong>」，就可以將此狀態指派到聯絡人的會籍。此狀態的開始及結束依據設定會被忽略。例如：此設定可以被用於特別個案狀態如「非過期」、「禁止」或「開除」等。"
 
 #: templates/CRM/Member/Form/MembershipStatus.tpl
 msgid ""
@@ -36437,7 +36437,7 @@ msgstr "匯入捐款資料"
 
 #: msgctxt "menu"
 msgid "Import/Export Mappings"
-msgstr "匯入/匯出對應"
+msgstr "匯入/匯出對應(欄位配對)"
 
 #: msgctxt "menu"
 msgid "Import Memberships"
@@ -40733,7 +40733,7 @@ msgid ""
 "Include additional fields in this online contribution page by configuring "
 "and selecting a CiviCRM Profile to be included at the top of the page "
 "(immediately after the introductory message)."
-msgstr "透過選擇包括在頁頂部的資料表單(在介紹訊息之後)，來包括另外在此線上募款頁的欄位。您可從CiviCRM Profile（欄位收集）去將線上募款頁額外的欄位包含進來，包含在頁面頂部，與/或頁面底部。"
+msgstr "透過選擇包括在頁面頂部的資料表單(在介紹訊息之後)，來包括另外在此線上募款頁的欄位。您可從CiviCRM Profile（欄位收集）去將線上募款頁額外的欄位包含進來，包含在頁面上方，與/或頁面下方。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Settings.tpl
 msgid ""
@@ -40757,7 +40757,7 @@ msgid ""
 "it here. You may include HTML formatting tags. You can also include images, "
 "as long as they are already uploaded to a server - reference them using "
 "complete URLs."
-msgstr "如果您想把內容展示在募款頁面底部，請在此輸入。您可以使用包括 HTML 格式標籤。您亦可以包括圖像，只要它們已被上傳到伺服器 - 您可使用完整的網址來瀏覽它們。"
+msgstr "如果您想把內容展示在募款頁面下方，請在此輸入。您可以使用包括 HTML 格式標籤。您亦可以包括圖像，只要它們已被上傳到伺服器 - 您可使用完整的網址來瀏覽它們。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/ThankYou.tpl
 msgid "Thank-you Message and Receipting"
@@ -48955,7 +48955,7 @@ msgstr "此收據編號已存在於資料庫。"
 msgid ""
 "Enable email tracking will track email opened data of contribution and event"
 " notification to an activity."
-msgstr "啟用電子郵件追蹤後，捐款通知信、活動通知信、電子郵件收據等信件的開信與點擊狀況，會紀錄在聯絡人的「任務」中。"
+msgstr "啟用電子郵件追蹤後，捐款通知信、活動通知信、電子郵件收據等信件的開信狀況，會紀錄在聯絡人的「任務」中。"
 
 msgid "After enable, changes below may affect your current usage:"
 msgstr "啟用後會有以下改變，會與您目前的使用習慣不同："
@@ -48964,7 +48964,7 @@ msgid ""
 "The cc and bcc in notification will no longer in the same mail which means "
 "you won't see the from name and email address in cc / bcc in thank-you "
 "letter."
-msgstr "感謝信的副本、密件副本收件人，不會在信件副本中看到信件原收件人的聯絡人名稱與電子郵件信箱。也就是說副本將與原信件分開寄送，以利正確追蹤原信件的開信與點擊。"
+msgstr "感謝信的副本、密件副本收件人，不會在信件副本中看到信件原收件人的聯絡人名稱與電子郵件信箱。也就是說副本將與原信件分開寄送，以利正確追蹤原信件的開信狀況。"
 
 msgid ""
 "Instead of create an one aggregate activity, email to multiple contacts now "
@@ -50846,3 +50846,384 @@ msgstr "發卡單位需要此欄位以做驗證"
 #: CRM/Admin/Form/FromEmailAddress.php
 msgid "Last validation"
 msgstr "最近一次驗證"
+
+#: CRM/AI/DAO/AIImageGeneration.php
+msgid "Original Prompt"
+msgstr "原始提示詞"
+
+#: CRM/AI/DAO/AIImageGeneration.php
+msgid "Translated Prompt"
+msgstr "翻譯後的提示詞"
+
+#: CRM/AI/DAO/AIImageGeneration.php
+msgid "Image Style"
+msgstr "圖片風格"
+
+#: CRM/AI/DAO/AIImageGeneration.php
+msgid "Image Ratio"
+msgstr "圖片比例"
+
+#: CRM/AI/DAO/AIImageGeneration.php
+msgid "Image Path"
+msgstr "圖片路徑"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Preparing your image..."
+msgstr "正在準備您的圖片..."
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Analyzing and adjusting your prompt to help generate a better image..."
+msgstr "正在分析與調整您的提示詞，以生成更好的圖片..."
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Starting the composition..."
+msgstr "開始構圖..."
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "The image is taking shape..."
+msgstr "圖片正在成形中..."
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Refining the details..."
+msgstr "正在精修細節..."
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Finalizing the image..."
+msgstr "正在完成圖片..."
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "The system is a bit busy. We're speeding things up - please hold on..."
+msgstr "系統有點忙碌。我們正在加速處理 — 請稍候..."
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid ""
+"Your image is being generated and usually takes about 40–45 seconds to "
+"complete. Feel free to do something else — we're working hard to finish your"
+" artwork!"
+msgstr "您的圖片正在生成中，通常需要約 40–45 秒完成。您可以自在的做其他事 — 我們正努力完成您的作品！"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Function temporarily unavailable, please generate an image first"
+msgstr "功能暫時無法使用，請先生成圖片"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Please generate an image first"
+msgstr "請先生成圖片"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Please enter image description"
+msgstr "請輸入圖片描述"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Description text exceeds 1000 character limit"
+msgstr "描述文字已超過 1000 個字元限制"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Generating image..."
+msgstr "Generating image..."
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Image generated successfully!"
+msgstr "圖片生成成功！"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Image generation failed"
+msgstr "圖片生成失敗"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Generate Image"
+msgstr "生成圖片"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "AI Generated Image"
+msgstr "AI 生成圖片"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Submitting request..."
+msgstr "正在提交請求..."
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "No image available to copy"
+msgstr "沒有可以複製的圖片"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Your browser does not support image copying feature"
+msgstr "您的瀏覽器不支援圖片複製功能"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Image processing failed"
+msgstr "圖片處理失敗"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Image copied to clipboard"
+msgstr "圖片已複製到剪貼簿"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Failed to copy image, please try again"
+msgstr "複製圖片失敗，請再試一次"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Error occurred during image processing"
+msgstr "圖片處理過程中發生錯誤"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Failed to load image, please try again"
+msgstr "載入圖片失敗，請再試一次"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "No image available to download"
+msgstr "沒有可以下載的圖片"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Image download started"
+msgstr "圖片下載已開始"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "An error occurred during image generation, please try again later"
+msgstr "圖片生成時發生錯誤，請稍後再試"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Request format error, please refresh the page and try again"
+msgstr "請求格式錯誤，請重新整理頁面後再試"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Request parameter error, please check input content"
+msgstr "請求參數錯誤，請檢查輸入內容"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Description text is too long, please shorten to within 1000 characters"
+msgstr "描述文字過長，請縮短至 1000 個字元以內"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Page permission error, please refresh the page"
+msgstr "頁面權限錯誤，請重新整理頁面"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "System error, please refresh the page and try again"
+msgstr "系統錯誤，請重新整理頁面後再試"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Login expired, please login again"
+msgstr "登入已過期，請重新登入"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Insufficient permissions, please contact administrator"
+msgstr "權限不足，請聯絡管理員"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Service temporarily unavailable, please try again later"
+msgstr "服務暫時無法使用，請稍後再試"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Request timeout, please check network connection"
+msgstr "請求超時，請檢查網路連線"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Usage frequency too high, please try again later"
+msgstr "使用頻率過高，請稍後再試"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Server temporarily error, please try again later"
+msgstr "伺服器暫時錯誤，請稍後再試"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Service temporarily under maintenance, please try again later"
+msgstr "服務暫時維護中，請稍後再試"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Connection timeout, please refresh the page and try again"
+msgstr "連線超時，請重新整理頁面後再試"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Unable to connect to server, please try again later"
+msgstr "無法連線至伺服器，請稍後再試"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Network configuration problem, please check network connection"
+msgstr "網路配置問題，請檢查網路連線"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Image generation failed, please try again later"
+msgstr "圖片生成失敗，請稍後再試"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Edit prompt: Describe the image you want to generate"
+msgstr "編輯提示詞：描述您想要生成的圖片"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Generate images using AI"
+msgstr "使用 AI 生成圖片"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Image Information"
+msgstr "圖片資訊"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Prompt"
+msgstr "提示詞"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Aspect Ratio"
+msgstr "長寬比"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Regenerate"
+msgstr "重新生成"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Action completed successfully"
+msgstr "操作成功完成"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Action failed, please try again"
+msgstr "操作失敗，請再試一次"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Loading history..."
+msgstr "正在載入紀錄..."
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "No image generation history yet"
+msgstr "尚無圖片生成紀錄"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Generated images will appear here"
+msgstr "生成的圖片將會顯示在這裡"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Failed to load history, please try again"
+msgstr "載入紀錄失敗，請再試一次"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Refresh History"
+msgstr "重新整理紀錄"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Previous Page"
+msgstr "上一頁"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Next Page"
+msgstr "下一頁"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Showing"
+msgstr "顯示第"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Loading sample image..."
+msgstr "正在載入範例圖片..."
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "AI Image Generation Area"
+msgstr "AI 圖片生成區"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid ""
+"Image generation area, click the button below to start creating your custom "
+"image"
+msgstr "圖片生成區域，請點擊下方按鈕開始生成您的圖片"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Ready to unleash your creativity?"
+msgstr "準備好釋放您的創造力了嗎？"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Enter your ideas and let AI create images for you"
+msgstr "輸入您的想法，讓 AI 為您創作圖片"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Image Generation Failed"
+msgstr "圖片生成失敗"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Download Image"
+msgstr "下載圖片"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Select Style"
+msgstr "選擇風格"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Simple Illustration"
+msgstr "簡約插畫"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid ""
+"Utilizes clean lines and solid color blocks to create a fresh, modern "
+"graphic style, emphasizing a concise presentation of the subject"
+msgstr "採用簡潔線條與色塊，營造清新、現代感強的圖像風格，強調主題的俐落呈現"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Japanese Simple Illustration"
+msgstr "日式簡約插畫"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid ""
+"Incorporates Japanese aesthetics with gentle lines and subtle, soft colors, "
+"creating a serene, harmonious, and zen-like visual effect"
+msgstr "融入日式美學，線條溫和，色彩淡雅柔和，營造寧靜、和諧、富有禪意的視覺效果"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Picture book illustration"
+msgstr "繪本插畫"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid ""
+"An art style that emphasizes storytelling and emotional expression. It "
+"features diverse colors and lines, capable of presenting unique visual "
+"narratives ranging from playful to mature, and classic to innovative"
+msgstr "強調故事敘事性與情感表達的藝術風格。色彩和線條具多樣性，能呈現從童趣到成熟、從經典到創新的獨特視覺故事"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Watercolor Painting"
+msgstr "水彩畫"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid ""
+"Mimics the blending and bleeding effects of watercolor paints, resulting in "
+"transparent colors and fluid brushstrokes to create fresh, soft, and "
+"artistic visuals"
+msgstr "模擬水彩顏料的渲染和暈染效果，色彩通透，筆觸流動，呈現清新、柔美、充滿藝術感的畫面"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Hand-Drawn Illustration"
+msgstr "手繪插畫"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid ""
+"Simulates the texture of hand-drawn mediums like pencil, crayon, or pen, "
+"preserving stroke details and warmth to create a natural, friendly, and "
+"handcrafted style"
+msgstr "模擬鉛筆、蠟筆或鋼筆等手繪質感，保留筆觸細節與溫度，營造自然、親切、帶有手作感的風格"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Custom Style"
+msgstr "自訂風格"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid ""
+"System won't auto-add style tags, so please explicitly describe your desired"
+" art style in the main prompt field above, such as: Pixel Art, Cyberpunk, 3D"
+" Animation, etc"
+msgstr "選擇了自訂風格，系統將不會自動增加任何預設風格標籤，請在最上方的提示詞欄位中明確描述您想要的藝術風格，例如：像素風格、賽博龐克、3D動畫等等"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Select Aspect Ratio"
+msgstr "選擇長寬比"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Describe the image you want to generate..."
+msgstr "描述您想要生成的圖片..."
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Generated Images History"
+msgstr "生成圖片紀錄"
+
+#: templates/CRM/Contribute/Form/ContributionPage/Settings.tpl
+msgid "AI Image Generator"
+msgstr "AI圖片產生器"
+
+#: templates/CRM/Contribute/Form/ContributionPage/Settings.tpl
+msgid "AI Assistant"
+msgstr "AI助理"
