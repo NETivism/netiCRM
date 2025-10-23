@@ -157,7 +157,7 @@ window.AIImageGeneration = {
               <button type="button" class="floating-btn" title="{ts}Regenerate{/ts}" data-tooltip data-tooltip-placement="s">
                 <i class="zmdi zmdi-refresh"></i>
               </button>
-              <button type="button" class="floating-btn" title="{ts}Copy{/ts}" data-tooltip data-tooltip-placement="s">
+              <button type="button" class="floating-btn" title="{ts}Copy Image{/ts}" data-tooltip data-tooltip-placement="s">
                 <i class="zmdi zmdi-collection-plus"></i>
               </button>
               <button type="button" class="floating-btn" title="{ts}Download Image{/ts}" data-tooltip data-tooltip-placement="s">
