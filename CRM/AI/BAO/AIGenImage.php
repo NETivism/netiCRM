@@ -44,7 +44,7 @@ class CRM_AI_BAO_AIGenImage {
   private static $styleMapping = [
     'Simple Illustration' => 'Simple Illustration',
     'Japanese Simple Illustration' => 'Simple Illustration',
-    'Storybook Style' => 'Children\'s picture book illustration',
+    'Picture book illustration' => 'Children\'s picture book illustration',
     'Watercolor Painting' => 'Watercolor Painting',
     'Hand-Drawn Illustration' => 'Hand-Drawn Illustration',
   ];
@@ -58,9 +58,9 @@ class CRM_AI_BAO_AIGenImage {
   private static $styleNegativePrompts = [
     'Simple Illustration' => 'photorealistic, realistic shadows, realistic expression, camera photograph, extra limbs, missing limbs, extra fingers, twisted limbs, malformed limbs, bad hand, fused bodies, merged limbs, connected arms, non-english text, asian letters, chinese characters, japanese text, korean text, messy text, unreadable letters, gibberish, nonsensical writing',
     'Japanese Simple Illustration' => 'photorealistic, realistic shadows, realistic expression, camera photograph, extra limbs, missing limbs, extra fingers, twisted limbs, malformed limbs, bad hand, fused bodies, merged limbs, connected arms, non-english text, asian letters, chinese characters, japanese text, korean text, messy text, unreadable letters, gibberish, nonsensical writing',
-    'Storybook Style' => 'photorealistic, realistic shadows, realistic expression, camera photograph, extra limbs, missing limbs, extra fingers, twisted limbs, malformed limbs, bad hand, fused bodies, merged limbs, connected arms, non-english text, asian letters, chinese characters, japanese text, korean text, messy text, unreadable letters, gibberish, nonsensical writing',
+    'Picture book illustration' => 'photorealistic, realistic shadows, realistic expression, camera photograph, extra limbs, missing limbs, extra fingers, twisted limbs, malformed limbs, bad hand, fused bodies, merged limbs, connected arms, non-english text, asian letters, chinese characters, japanese text, korean text, messy text, unreadable letters, gibberish, nonsensical writing',
     'Watercolor Painting' => 'photorealistic, realistic shadows, realistic expression, camera photograph, extra limbs, missing limbs, extra fingers, twisted limbs, malformed limbs, bad hand, fused bodies, merged limbs, connected arms, non-english text, asian letters, chinese characters, japanese text, korean text, messy text, unreadable letters, gibberish, nonsensical writing',
-    'Hand-Drawn Illustration' => 'photorealistic, realistic shadows, realistic expression, camera photograph, extra limbs, missing limbs, extra fingers, twisted limbs, malformed limbs, bad hand, fused bodies, merged limbs, connected arms, non-english text, asian letters, chinese characters, japanese text, korean text, messy text, unreadable letters, gibberish, nonsensical writing, digital art',
+    'Hand-Drawn Illustration' => 'photorealistic, realistic shadows, realistic expression, camera photograph, extra limbs, missing limbs, extra fingers, twisted limbs, malformed limbs, bad hand, fused bodies, merged limbs, connected arms, non-english text, asian letters, chinese characters, japanese text, korean text, messy text, unreadable letters, gibberish, nonsensical writing',
   ];
 
   /**
@@ -79,8 +79,10 @@ class CRM_AI_BAO_AIGenImage {
       'Minimalist flat illustration, the character design is a Japanese minimalist cartoon style, with minimal facial features',
       'Minimalist flat illustration, the character design is a Japanese minimalist style, with minimal facial features',
       'Children\'s picture book illustration in a mid-20th century Japanese style, soft pastel colors, clean bold lines, crayon texture, simple geometric composition, paper texture background, and a warm, minimal atmosphere. The character design is minimalist with minimal facial features',
+      'Minimalist Japanese aesthetic, positioned slightly off-center with generous negative space, subtle elegance',
+      'Minimalist Japanese aesthetic, the character design is a Japanese minimalist cartoon style, with minimal facial features, positioned slightly off-center with generous negative space, subtle elegance',
     ],
-    'Storybook Style' => [
+    'Picture book illustration' => [
       'Children\'s picture book illustration in the mid-20th century Polish style, featuring geometric composition, muted primary colors, paper texture, symbolic shapes, and minimalist folk-inspired characters',
       'Modern reinterpretation of Polish picture book illustration, bold flat colors, strong graphic layout, naive art influence, poster-like composition, warm matte tone',
       'Contemporary children\'s illustration with a humanistic Polish aesthetic,subtle textures, muted palette, expressive yet kind faces,showing compassion and community care in realistic scenes',

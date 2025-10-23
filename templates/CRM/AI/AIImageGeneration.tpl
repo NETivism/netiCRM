@@ -176,24 +176,24 @@ window.AIImageGeneration = {
             {* Embedded control buttons *}
             <div class="embedded-controls">
               <div class="netiaiig-dropdown" id="styleDropdown">
-                <button type="button" class="embedded-btn dropdown-toggle" title="{ts}Select Art Style{/ts}" data-tooltip data-tooltip-placement="s">
+                <button type="button" class="embedded-btn dropdown-toggle" title="{ts}Select Style{/ts}" data-tooltip data-tooltip-placement="s">
                   <i class="zmdi zmdi-flower-alt"></i>
                   <span id="styleText">{ts}Simple Illustration{/ts}</span>
                   <i class="zmdi zmdi-chevron-down"></i>
                 </button>
                 <div class="style-dropdown-menu">
                   <div class="style-grid">
-                    <div class="style-option selected" data-style="Simple Illustration">
+                    <div class="style-option selected" data-style="Simple Illustration" title="{ts}提供扁平、簡約、向量風格的插畫{/ts}" data-tooltip data-tooltip-placement="s">
                       <div class="style-preview"><img src="{$config->resourceBase}packages/AIImageGeneration/images/style-presets/thumbs/neticrm-aigenimg-style-preset-thumb-si-01.webp" alt=""></div>
                       <div class="style-label">{ts}Simple Illustration{/ts}</div>
                     </div>
-                    <div class="style-option" data-style="Japanese Simple Illustration">
+                    <div class="style-option" data-style="Japanese Simple Illustration" title="{ts}日式風格的簡約插畫{/ts}" data-tooltip data-tooltip-placement="s">
                       <div class="style-preview"><img src="{$config->resourceBase}packages/AIImageGeneration/images/style-presets/thumbs/neticrm-aigenimg-style-preset-thumb-jsi-01.webp" alt=""></div>
                       <div class="style-label">{ts}Japanese Simple Illustration{/ts}</div>
                     </div>
-                    <div class="style-option" data-style="Storybook Style">
+                    <div class="style-option" data-style="Picture book illustration">
                       <div class="style-preview"><img src="{$config->resourceBase}packages/AIImageGeneration/images/style-presets/thumbs/neticrm-aigenimg-style-preset-thumb-ss-01.webp" alt=""></div>
-                      <div class="style-label">{ts}Storybook Style{/ts}</div>
+                      <div class="style-label">{ts}Picture book illustration{/ts}</div>
                     </div>
                     <div class="style-option" data-style="Watercolor Painting">
                       <div class="style-preview"><img src="{$config->resourceBase}packages/AIImageGeneration/images/style-presets/thumbs/neticrm-aigenimg-style-preset-thumb-wp-01.webp" alt=""></div>
@@ -203,7 +203,7 @@ window.AIImageGeneration = {
                       <div class="style-preview"><img src="{$config->resourceBase}packages/AIImageGeneration/images/style-presets/thumbs/neticrm-aigenimg-style-preset-thumb-hdi-01.webp" alt=""></div>
                       <div class="style-label">{ts}Hand-Drawn Illustration{/ts}</div>
                     </div>
-                    <div class="style-option" data-style="Custom Style">
+                    <div class="style-option" data-style="Custom Style" title="{ts}選擇自訂風格，則系統不會帶入風格，需由您自行在提示詞欄位描述您要的風格{/ts}" data-tooltip data-tooltip-placement="s">
                       <div class="style-preview custom-style"></div>
                       <div class="style-label">{ts}Custom Style{/ts}</div>
                     </div>
