@@ -51227,3 +51227,7 @@ msgstr "AI圖片產生器"
 #: templates/CRM/Contribute/Form/ContributionPage/Settings.tpl
 msgid "AI Assistant"
 msgstr "AI助理"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Copy Image"
+msgstr "複製圖片"

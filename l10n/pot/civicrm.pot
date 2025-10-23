@@ -50571,4 +50571,6 @@ msgstr ""
 msgid "AI Assistant"
 msgstr ""
 
-
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Copy Image"
+msgstr ""
