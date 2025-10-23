@@ -183,27 +183,27 @@ window.AIImageGeneration = {
                 </button>
                 <div class="style-dropdown-menu">
                   <div class="style-grid">
-                    <div class="style-option selected" data-style="Simple Illustration" title="{ts}提供扁平、簡約、向量風格的插畫{/ts}" data-tooltip data-tooltip-placement="s">
+                    <div class="style-option selected" data-style="Simple Illustration" title="{ts}Utilizes clean lines and solid color blocks to create a fresh, modern graphic style, emphasizing a concise presentation of the subject{/ts}" data-tooltip data-tooltip-placement="s">
                       <div class="style-preview"><img src="{$config->resourceBase}packages/AIImageGeneration/images/style-presets/thumbs/neticrm-aigenimg-style-preset-thumb-si-01.webp" alt=""></div>
                       <div class="style-label">{ts}Simple Illustration{/ts}</div>
                     </div>
-                    <div class="style-option" data-style="Japanese Simple Illustration" title="{ts}日式風格的簡約插畫{/ts}" data-tooltip data-tooltip-placement="s">
+                    <div class="style-option" data-style="Japanese Simple Illustration" title="{ts}Incorporates Japanese aesthetics with gentle lines and subtle, soft colors, creating a serene, harmonious, and zen-like visual effect{/ts}" data-tooltip data-tooltip-placement="s">
                       <div class="style-preview"><img src="{$config->resourceBase}packages/AIImageGeneration/images/style-presets/thumbs/neticrm-aigenimg-style-preset-thumb-jsi-01.webp" alt=""></div>
                       <div class="style-label">{ts}Japanese Simple Illustration{/ts}</div>
                     </div>
-                    <div class="style-option" data-style="Picture book illustration">
+                    <div class="style-option" data-style="Picture book illustration" title="{ts}An art style that emphasizes storytelling and emotional expression. It features diverse colors and lines, capable of presenting unique visual narratives ranging from playful to mature, and classic to innovative{/ts}" data-tooltip data-tooltip-placement="s">
                       <div class="style-preview"><img src="{$config->resourceBase}packages/AIImageGeneration/images/style-presets/thumbs/neticrm-aigenimg-style-preset-thumb-ss-01.webp" alt=""></div>
                       <div class="style-label">{ts}Picture book illustration{/ts}</div>
                     </div>
-                    <div class="style-option" data-style="Watercolor Painting">
+                    <div class="style-option" data-style="Watercolor Painting" title="{ts}Mimics the blending and bleeding effects of watercolor paints, resulting in transparent colors and fluid brushstrokes to create fresh, soft, and artistic visuals{/ts}" data-tooltip data-tooltip-placement="s">
                       <div class="style-preview"><img src="{$config->resourceBase}packages/AIImageGeneration/images/style-presets/thumbs/neticrm-aigenimg-style-preset-thumb-wp-01.webp" alt=""></div>
                       <div class="style-label">{ts}Watercolor Painting{/ts}</div>
                     </div>
-                    <div class="style-option" data-style="Hand-Drawn Illustration">
+                    <div class="style-option" data-style="Hand-Drawn Illustration" title="{ts}Simulates the texture of hand-drawn mediums like pencil, crayon, or pen, preserving stroke details and warmth to create a natural, friendly, and handcrafted style{/ts}" data-tooltip data-tooltip-placement="s">
                       <div class="style-preview"><img src="{$config->resourceBase}packages/AIImageGeneration/images/style-presets/thumbs/neticrm-aigenimg-style-preset-thumb-hdi-01.webp" alt=""></div>
                       <div class="style-label">{ts}Hand-Drawn Illustration{/ts}</div>
                     </div>
-                    <div class="style-option" data-style="Custom Style" title="{ts}選擇自訂風格，則系統不會帶入風格，需由您自行在提示詞欄位描述您要的風格{/ts}" data-tooltip data-tooltip-placement="s">
+                    <div class="style-option" data-style="Custom Style" title="{ts}System won't auto-add style tags, so please explicitly describe your desired art style in the main prompt field above, such as: Pixel Art, Cyberpunk, 3D Animation, etc{/ts}" data-tooltip data-tooltip-placement="s">
                       <div class="style-preview custom-style"></div>
                       <div class="style-label">{ts}Custom Style{/ts}</div>
                     </div>
