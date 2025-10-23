@@ -113,8 +113,6 @@ window.AIImageGeneration = {
               <div class="empty-state-subtitle">{ts}Enter your ideas and let AI create images for you{/ts}</div>
             </div>
 
-            <img src="../images/thumb-00.png" alt="" style="display: none;">
-
             {* Loading state overlay *}
             <div class="loading-overlay" style="display: none;">
               <div class="loading-spinner"></div>
@@ -183,25 +181,24 @@ window.AIImageGeneration = {
                 </button>
                 <div class="style-dropdown-menu">
                   <div class="style-grid">
-                    {assign var="rand_img_num" value=rand(1, 7)|string_format:"%02d"}
                     <div class="style-option selected" data-style="Simple Illustration">
-                      <div class="style-preview"><img src="../images/style-preset-simple-illustration-{$rand_img_num}.webp" alt=""></div>
+                      <div class="style-preview"><img src="{$config->resourceBase}packages/AIImageGeneration/images/style-presets/thumbs/neticrm-aigenimg-style-preset-si-01.webp" alt=""></div>
                       <div class="style-label">{ts}Simple Illustration{/ts}</div>
                     </div>
                     <div class="style-option" data-style="Japanese Simple Illustration">
-                      <div class="style-preview"><img src="../images/style-preset-japanese-illustration-{$rand_img_num}.webp" alt=""></div>
+                      <div class="style-preview"><img src="{$config->resourceBase}packages/AIImageGeneration/images/style-presets/thumbs/neticrm-aigenimg-style-preset-jsi-01.webp" alt=""></div>
                       <div class="style-label">{ts}Japanese Simple Illustration{/ts}</div>
                     </div>
                     <div class="style-option" data-style="Storybook Style">
-                      <div class="style-preview"><img src="../images/style-preset-storybook-style-{$rand_img_num}.webp" alt=""></div>
+                      <div class="style-preview"><img src="{$config->resourceBase}packages/AIImageGeneration/images/style-presets/thumbs/neticrm-aigenimg-style-preset-ss-01.webp" alt=""></div>
                       <div class="style-label">{ts}Storybook Style{/ts}</div>
                     </div>
                     <div class="style-option" data-style="Watercolor Painting">
-                      <div class="style-preview"><img src="../images/style-preset-watercolor-painting-{$rand_img_num}.webp" alt=""></div>
+                      <div class="style-preview"><img src="{$config->resourceBase}packages/AIImageGeneration/images/style-presets/thumbs/neticrm-aigenimg-style-preset-wp-01.webp" alt=""></div>
                       <div class="style-label">{ts}Watercolor Painting{/ts}</div>
                     </div>
                     <div class="style-option" data-style="Hand-Drawn Illustration">
-                      <div class="style-preview"><img src="../images/style-preset-hand-drawn-illustration-{$rand_img_num}.webp" alt=""></div>
+                      <div class="style-preview"><img src="{$config->resourceBase}packages/AIImageGeneration/images/style-presets/thumbs/neticrm-aigenimg-style-preset-hdi-01.webp" alt=""></div>
                       <div class="style-label">{ts}Hand-Drawn Illustration{/ts}</div>
                     </div>
                     <div class="style-option" data-style="Custom Style">
