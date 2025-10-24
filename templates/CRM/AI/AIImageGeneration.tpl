@@ -116,7 +116,7 @@ window.AIImageGeneration = {
             {* Sample loading error state *}
             <div class="sample-error-state" style="display: none;" role="alert" aria-live="polite">
               <div class="sample-error-icon" aria-hidden="true">
-                <i class="zmdi zmdi-wifi-off"></i>
+                <i class="zmdi zmdi-alert-triangle"></i>
               </div>
               <div class="sample-error-title">{ts}Unable to load example image{/ts}</div>
               <div class="sample-error-subtitle">{ts}Check your network connection or try again{/ts}</div>
