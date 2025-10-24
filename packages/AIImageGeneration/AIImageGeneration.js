@@ -175,14 +175,15 @@
     // Select style option
     selectStyleOption: function($option) {
       const style = $option.data('style');
+      const styleLabel = $option.find('.style-label').text() || style; // Use translated text or fallback to data-style
       const $container = $option.closest('.netiaiig-dropdown');
 
       // Update selected state
       $option.siblings().removeClass(this.config.classes.selected);
       $option.addClass(this.config.classes.selected);
 
-      // Update button text
-      $container.find(this.config.selectors.styleText).text(style);
+      // Update button text with translated label
+      $container.find(this.config.selectors.styleText).text(styleLabel);
 
       // Close dropdown
       $container.removeClass(this.config.classes.active);
@@ -277,7 +278,9 @@
       this.errorManager.reset();
 
       // Get current settings
-      const style = $(this.config.container).find(this.config.selectors.styleText).text();
+      // Get style from selected option's data-style attribute (original English value for API)
+      const selectedStyleOption = $(this.config.container).find(this.config.selectors.styleOptions + '.selected');
+      const style = selectedStyleOption.length > 0 ? selectedStyleOption.data('style') : 'Simple Illustration';
       const ratio = $(this.config.container).find(this.config.selectors.ratioText).text();
 
       // Prepare request data
@@ -445,7 +448,9 @@
 
           // Get current form data for lightbox metadata using correct context
           const currentPrompt = $(self.config.container).find(self.config.selectors.promptTextarea).val() || '';
-          const currentStyle = $(self.config.container).find(self.config.selectors.styleText).text() || '';
+          // Get original style value from selected option for data attribute (used by regenerate)
+          const selectedStyleOption = $(self.config.container).find(self.config.selectors.styleOptions + '.selected');
+          const currentStyle = selectedStyleOption.length > 0 ? selectedStyleOption.data('style') : 'Simple Illustration';
           const currentRatio = $(self.config.container).find(self.config.selectors.ratioText).text() || '';
 
           // Create anchor tag to wrap the image for lightbox functionality with metadata
@@ -1345,12 +1350,15 @@
 
       // Update desktop panel metadata
       $('.mfp-info-panel .prompt-text').text(prompt);
-      $('.mfp-info-panel .style-text').text(style);
+      // Find translated style text for display
+      const $styleOption = $(this.config.container).find(`${this.config.selectors.styleOptions}[data-style="${style}"]`);
+      const styleDisplayText = $styleOption.length > 0 ? $styleOption.find('.style-label').text() || style : style;
+      $('.mfp-info-panel .style-text').text(styleDisplayText);
       $('.mfp-info-panel .ratio-text').text(ratio);
 
       // Update mobile panel metadata
       $('.mfp-floating-info .prompt-text').text(prompt);
-      $('.mfp-floating-info .style-text').text(style);
+      $('.mfp-floating-info .style-text').text(styleDisplayText);
       $('.mfp-floating-info .ratio-text').text(ratio);
 
       // Show/hide panels based on screen size
@@ -2264,7 +2272,9 @@
       const $targetOption = $styleOptions.filter(`[data-style="${style}"]`);
       if ($targetOption.length > 0) {
         $targetOption.addClass(this.config.classes.selected);
-        $styleText.text(style);
+        // Use translated text from style-label or fallback to data-style
+        const styleLabel = $targetOption.find('.style-label').text() || style;
+        $styleText.text(styleLabel);
       }
     },
 
