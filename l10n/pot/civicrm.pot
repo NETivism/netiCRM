@@ -50638,3 +50638,27 @@ msgstr ""
 #: templates/CRM/AI/AIImageGeneration.tpl
 msgid "Loading example image..."
 msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Close (Esc)"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Previous (Left arrow key)"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Next (Right arrow key)"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "%curr% of %total%"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "The image could not be loaded."
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "The content could not be loaded."
+msgstr ""
