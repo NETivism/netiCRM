@@ -2319,8 +2319,13 @@
         ? window.AIImageGeneration.translation.generateImagesUsingAI
         : 'Generate images using AI';
 
-      // Create AI generate link
-      const $aiLink = $('<a href="#" class="generate-ai-sample-image" data-ratio="' + ratio + '">' + linkText + '</a>');
+      // Get translated tooltip text
+      const tooltipText = window.AIImageGeneration && window.AIImageGeneration.translation && window.AIImageGeneration.translation.generateAILinkTooltip
+        ? window.AIImageGeneration.translation.generateAILinkTooltip
+        : 'Click to open AI image generator, please download and upload the image manually after generation';
+
+      // Create AI generate link with tooltip
+      const $aiLink = $('<a href="#" class="generate-ai-sample-image" data-ratio="' + ratio + '" title="' + tooltipText + '">' + linkText + '</a>');
 
       // Add click event handler
       $aiLink.on('click', function(e) {
@@ -2391,6 +2396,31 @@
 
       // Insert after the upload field
       $uploadField.after($aiLink);
+
+      // Initialize PowerTip for the new link
+      this.initializeLinkTooltip($aiLink);
+    },
+
+    // Initialize PowerTip for dynamically created AI generate link
+    initializeLinkTooltip: function($link) {
+      // Use same tooltip system as existing tooltips
+      var jq = $.fn.powerTip ? $ : jQuery.fn.powerTip ? jQuery : null;
+      
+      if (jq && $link.length > 0) {
+        // Check if already initialized to avoid double initialization
+        if (!$link.hasClass('tooltip-initialized')) {
+          // Initialize PowerTip with default options
+          jq($link).powerTip({
+            placement: 's',  // Show tooltip below the link
+            fadeInTime: 200,
+            fadeOutTime: 100
+          });
+          $link.addClass('tooltip-initialized');
+          console.log('PowerTip initialized for AI generate link');
+        }
+      } else {
+        console.warn('PowerTip not available or invalid link element');
+      }
     },
 
     // Update style selector

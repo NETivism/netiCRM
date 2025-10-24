@@ -93,7 +93,8 @@ window.AIImageGeneration = {
     "confirmDialogReminder": "{/literal}{ts}All images you generate are saved in \"Generation History\" and can be retrieved at any time even if replaced.{/ts}{literal}",
     "confirmReplaceButton": "{/literal}{ts}Confirm Replace{/ts}{literal}",
     "cancelButton": "{/literal}{ts}Cancel{/ts}{literal}",
-    "closeDialog": "{/literal}{ts}Close dialog{/ts}{literal}"
+    "closeDialog": "{/literal}{ts}Close dialog{/ts}{literal}",
+    "generateAILinkTooltip": "{/literal}{ts}Click to open AI image generator, please download and upload the image manually after generation{/ts}{literal}"
   }
 };
 </script>
