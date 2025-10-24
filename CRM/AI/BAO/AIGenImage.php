@@ -156,8 +156,20 @@ class CRM_AI_BAO_AIGenImage {
         if (!empty($translatedPrompt) && is_string($translatedPrompt)) {
           $parsedData = $this->translator->parseJsonResponse($translatedPrompt);
 
-          if ($parsedData !== false && isset($parsedData['data']['prompt'])) {
-            $translatedPrompt = $parsedData['data']['prompt'];
+          if ($parsedData !== false) {
+            // Check for security violations or errors in the response
+            if (isset($parsedData['success']) && $parsedData['success'] === false) {
+              // Handle security violations and other errors
+              $errorCode = $parsedData['error']['code'] ?? 'UNKNOWN_ERROR';
+              $errorMessage = $parsedData['error']['message'] ?? 'Unknown error occurred';
+              
+              throw new Exception("Prompt translation failed - {$errorCode}: {$errorMessage}");
+            }
+            
+            // Extract successful prompt translation
+            if (isset($parsedData['data']['prompt'])) {
+              $translatedPrompt = $parsedData['data']['prompt'];
+            }
           }
         }
       }
