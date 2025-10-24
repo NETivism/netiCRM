@@ -99,21 +99,23 @@ window.AIImageGeneration = {
 };
 
 // Magnific Popup internationalization
-$.extend(true, $.magnificPopup.defaults, {
-  tClose: "{/literal}{ts}Close (Esc){/ts}{literal}",
-  tLoading: "{/literal}{ts}Loading...{/ts}{literal}",
-  gallery: {
-    tPrev: "{/literal}{ts}Previous (Left arrow key){/ts}{literal}",
-    tNext: "{/literal}{ts}Next (Right arrow key){/ts}{literal}",
-    tCounter: "{/literal}{ts}%curr% of %total%{/ts}{literal}"
-  },
-  image: {
-    tError: "{/literal}{ts}The image could not be loaded.{/ts}{literal}"
-  },
-  ajax: {
-    tError: "{/literal}{ts}The content could not be loaded.{/ts}{literal}"
-  }
-});
+(function($) {
+  $.extend(true, $.magnificPopup.defaults, {
+    tClose: "{/literal}{ts}Close (Esc){/ts}{literal}",
+    tLoading: "{/literal}{ts}Loading...{/ts}{literal}",
+    gallery: {
+      tPrev: "{/literal}{ts}Previous (Left arrow key){/ts}{literal}",
+      tNext: "{/literal}{ts}Next (Right arrow key){/ts}{literal}",
+      tCounter: "{/literal}{ts}%curr% of %total%{/ts}{literal}"
+    },
+    image: {
+      tError: "{/literal}{ts}The image could not be loaded.{/ts}{literal}"
+    },
+    ajax: {
+      tError: "{/literal}{ts}The content could not be loaded.{/ts}{literal}"
+    }
+  });
+})(cj);
 </script>
 {/literal}
 
@@ -331,7 +333,7 @@ $.extend(true, $.magnificPopup.defaults, {
     <div class="confirm-modal-header">
       <h3 class="confirm-modal-title">{ts}Load Appropriate Example Image?{/ts}</h3>
     </div>
-    
+
     <div class="confirm-modal-body">
       <div class="confirm-modal-message">
         <p class="confirm-main-text">
@@ -339,7 +341,7 @@ $.extend(true, $.magnificPopup.defaults, {
         </p>
         <p class="confirm-question">{ts}Do you want to replace the current image with the example image?{/ts}</p>
       </div>
-      
+
       <div class="confirm-modal-reminder">
         <div class="reminder-icon">
           <i class="zmdi zmdi-info-outline"></i>
@@ -349,7 +351,7 @@ $.extend(true, $.magnificPopup.defaults, {
         </div>
       </div>
     </div>
-    
+
     <div class="confirm-modal-actions">
       <button type="button" class="btn btn-primary confirm-replace-btn">
         {ts}Confirm Replace{/ts}
