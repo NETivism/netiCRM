@@ -2537,8 +2537,7 @@
       };
 
       // Update ratio placeholder in modal text
-      const ratioText = this.getTranslation('confirmDialogMainText').replace('{ratio}', ratio);
-      $modal.find('.confirm-main-text').html(ratioText);
+      // Only update the span element, don't replace the entire text
       $modal.find('.confirm-ratio-placeholder').text(ratio);
 
       // Open modal using Magnific Popup
