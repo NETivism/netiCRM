@@ -264,6 +264,9 @@
       const $textarea = $(this.config.container).find(this.config.selectors.promptTextarea);
       const prompt = $textarea.val().trim();
 
+      // Clear sample error state when starting new generation
+      this.clearSampleErrorIfNeeded();
+
       // Input validation
       if (!prompt) {
         const message = window.AIImageGeneration && window.AIImageGeneration.translation
@@ -384,6 +387,11 @@
     // Handle generation completion
     onGenerationComplete: function(imageUrl = null, responseData = null) {
       const $btn = $(this.config.container).find(this.config.selectors.generateBtn);
+
+      // Clear sample error state when image generation completes successfully
+      if (imageUrl) {
+        this.clearSampleErrorIfNeeded();
+      }
 
       // Reset button state
       $btn.prop('disabled', false)
@@ -1795,14 +1803,21 @@
       const $container = $(this.config.container);
       const $sampleError = $container.find('.sample-error-state');
       const $aiImageLink = $container.find('.ai-image-link');
+      const $emptyState = $container.find('.empty-state-content');
       
       $sampleError.fadeOut(300);
       
-      // Restore ai-image-link if it exists
-      if ($aiImageLink.length > 0) {
+      // Determine what state to restore based on existing content
+      if ($aiImageLink.length > 0 && $aiImageLink.find('img').attr('src')) {
+        // Restore image state if there's a valid image
         $aiImageLink.show();
-        // Restore floating actions when image is visible
         this.setFloatingActionsState('visible');
+        console.log('Restored to image state');
+      } else {
+        // Restore empty state if no valid image
+        $emptyState.show();
+        this.setFloatingActionsState('hidden');
+        console.log('Restored to empty state');
       }
       
       console.log('Sample loading error state hidden');
@@ -1824,6 +1839,18 @@
       this.setFloatingActionsState('hidden');
 
       console.log('Reset to empty state');
+    },
+
+    // Clear sample error state when user performs other actions
+    clearSampleErrorIfNeeded: function() {
+      const $container = $(this.config.container);
+      const $sampleError = $container.find('.sample-error-state');
+      
+      // If sample error is currently showing, hide it
+      if ($sampleError.is(':visible')) {
+        console.log('Clearing sample error state due to user action');
+        this.hideSampleError();
+      }
     },
 
     // Check if sample image should be loaded and load it
@@ -2046,6 +2073,9 @@
     // Apply sample data to interface
     applySampleToInterface: function(sampleData) {
       try {
+        // Clear any existing sample error state since we got valid data
+        this.clearSampleErrorIfNeeded();
+        
         // Update image if provided
         if (sampleData.image_url || sampleData.image_path) {
           const correctedImageUrl = this.getCorrectedImageUrl(sampleData.image_url, sampleData.image_path);
