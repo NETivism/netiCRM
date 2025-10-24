@@ -230,7 +230,6 @@
 .netiaiig-container .floating-message {
   position: relative;
   display: none;
-  min-width: 200px;
   max-width: 300px;
   margin-bottom: 4px;
   transform: translateY(2px);
@@ -256,7 +255,7 @@
   border-radius: 8px;
   backdrop-filter: blur(12px);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
   line-height: 1.3;
   white-space: nowrap;
@@ -267,13 +266,13 @@
 /* Success message styles */
 .enhanced-ai-lightbox .floating-message.success .floating-message-content,
 .netiaiig-container .floating-message.success .floating-message-content {
-  background: rgba(52, 199, 89, 0.95);
-  color: white;
-  border: 1px solid rgba(52, 199, 89, 0.3);
+  background: rgba(255, 255, 255, 0.95);
+  color: #009688;
+  border: 1px solid #009688;
 }
 .enhanced-ai-lightbox .floating-message.success .floating-message-icon,
 .netiaiig-container .floating-message.success .floating-message-icon {
-  color: white;
+  color: inherit;
   font-size: 16px;
   flex-shrink: 0;
 }
@@ -281,13 +280,13 @@
 /* Error message styles */
 .enhanced-ai-lightbox .floating-message.error .floating-message-content,
 .netiaiig-container .floating-message.error .floating-message-content {
-  background: rgba(255, 59, 48, 0.95);
-  color: white;
-  border: 1px solid rgba(255, 59, 48, 0.3);
+  background: rgba(255, 255, 255, 0.95);
+  color: #ea1000;
+  border: 1px solid #ea1000;
 }
 .enhanced-ai-lightbox .floating-message.error .floating-message-icon,
 .netiaiig-container .floating-message.error .floating-message-icon {
-  color: white;
+  color: inherit;
   font-size: 16px;
   flex-shrink: 0;
 }

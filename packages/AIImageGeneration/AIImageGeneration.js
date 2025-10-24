@@ -948,7 +948,7 @@
               ? window.AIImageGeneration.translation.stage5
               : 'Refining the details...';
           },
-          duration: 9000,
+          duration: 11000,
           progress: 75
         },
         {
@@ -957,7 +957,7 @@
               ? window.AIImageGeneration.translation.stage6
               : 'Finalizing the image...';
           },
-          duration: 8000,
+          duration: 21000,
           progress: 90
         },
         {
@@ -1911,12 +1911,22 @@
       return locale;
     },
 
+    // Get current selected ratio from UI
+    getCurrentRatio: function() {
+      const ratioText = $(this.config.container).find(this.config.selectors.ratioText).text();
+      const defaultRatio = '4:3';
+      
+      // Return current ratio or default if empty
+      return ratioText && ratioText.trim() !== '' ? ratioText.trim() : defaultRatio;
+    },
+
     // Load sample image from API
     loadSampleImage: function() {
       const self = this;
       const locale = this.getUILocale();
+      const ratio = this.getCurrentRatio();
 
-      console.log('Loading sample image for locale:', locale);
+      console.log('Loading sample image for locale:', locale, 'ratio:', ratio);
 
       // Show loading state
       this.showSampleImageLoading();
@@ -1925,7 +1935,10 @@
         url: '/civicrm/ai/images/get-sample',
         method: 'POST',
         contentType: 'application/json',
-        data: JSON.stringify({ locale: locale }),
+        data: JSON.stringify({ 
+          locale: locale,
+          ratio: ratio
+        }),
         timeout: 10000,
 
         success: function(response) {
