@@ -1776,12 +1776,16 @@
       const $container = $(this.config.container);
       const $emptyState = $container.find('.empty-state-content');
       const $sampleError = $container.find('.sample-error-state');
-      const $sampleImage = $container.find('.image-placeholder img');
+      const $aiImageLink = $container.find('.ai-image-link');
 
+      // Always show error when get-sample request fails
       // Hide other states and show error
       $emptyState.hide();
-      $sampleImage.hide();
+      $aiImageLink.hide(); // Hide entire ai-image-link if exists
       $sampleError.fadeIn(300);
+
+      // Hide floating actions when showing error state
+      this.setFloatingActionsState('hidden');
 
       console.log('Sample loading error state shown');
     },
@@ -1790,8 +1794,17 @@
     hideSampleError: function() {
       const $container = $(this.config.container);
       const $sampleError = $container.find('.sample-error-state');
+      const $aiImageLink = $container.find('.ai-image-link');
       
       $sampleError.fadeOut(300);
+      
+      // Restore ai-image-link if it exists
+      if ($aiImageLink.length > 0) {
+        $aiImageLink.show();
+        // Restore floating actions when image is visible
+        this.setFloatingActionsState('visible');
+      }
+      
       console.log('Sample loading error state hidden');
     },
 
@@ -1800,12 +1813,15 @@
       const $container = $(this.config.container);
       const $emptyState = $container.find('.empty-state-content');
       const $sampleError = $container.find('.sample-error-state');
-      const $sampleImage = $container.find('.image-placeholder img');
+      const $aiImageLink = $container.find('.ai-image-link');
 
       // Hide error and image, show empty state
       $sampleError.hide();
-      $sampleImage.hide();
+      $aiImageLink.hide(); // Hide entire ai-image-link, not just img
       $emptyState.fadeIn(300);
+
+      // Hide floating actions when in empty state
+      this.setFloatingActionsState('hidden');
 
       console.log('Reset to empty state');
     },
