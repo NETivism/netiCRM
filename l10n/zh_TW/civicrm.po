@@ -51269,7 +51269,7 @@ msgstr "關閉對話框"
 msgid ""
 "Click to open AI image generator, please download and upload the image "
 "manually after generation"
-msgstr "點擊以開啟 AI 圖片生成器，請在圖片生成後手動下載並上傳圖片"
+msgstr "點擊以開啟 AI 圖片產生器，請在圖片生成後手動下載並上傳圖片"
 
 #: templates/CRM/AI/AIImageGeneration.tpl
 msgid ""
@@ -51306,3 +51306,27 @@ msgstr "圖片長寬比"
 #: templates/CRM/AI/AIImageGeneration.tpl
 msgid "Loading example image..."
 msgstr "正在載入範例圖片..."
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Close (Esc)"
+msgstr "關閉（Esc）"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Previous (Left arrow key)"
+msgstr "上一張（向左鍵）"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Next (Right arrow key)"
+msgstr "下一張（向右鍵）"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "%curr% of %total%"
+msgstr "第 %curr% 個，共 %total% 個"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "The image could not be loaded."
+msgstr "圖片無法載入。"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "The content could not be loaded."
+msgstr "內容無法載入。"
