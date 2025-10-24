@@ -8229,15 +8229,16 @@ html[lang="en"] .new-personal-campaign-link-wrap {
   gap: 8px;
   padding: 12px 16px;
   background: #f8f9fa;
-  border-radius: 6px;
+  border-radius: 0;
   border-left: 4px solid #17a2b8;
 }
 
 .neticrm-mfp-modal .reminder-icon {
   flex-shrink: 0;
   color: #17a2b8;
-  font-size: 16px;
-  margin-top: 2px;
+  font-size: 20px;
+  margin: 0;
+  line-height: 1;
 }
 
 .neticrm-mfp-modal .reminder-text {

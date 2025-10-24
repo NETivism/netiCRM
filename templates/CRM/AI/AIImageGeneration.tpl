@@ -334,11 +334,9 @@ window.AIImageGeneration = {
     
     <div class="confirm-modal-actions">
       <button type="button" class="btn btn-primary confirm-replace-btn">
-        <i class="zmdi zmdi-check"></i>
         {ts}Confirm Replace{/ts}
       </button>
       <button type="button" class="btn btn-secondary popup-modal-dismiss">
-        <i class="zmdi zmdi-close"></i>
         {ts}Cancel{/ts}
       </button>
     </div>
