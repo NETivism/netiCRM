@@ -1915,7 +1915,7 @@
     getCurrentRatio: function() {
       const ratioText = $(this.config.container).find(this.config.selectors.ratioText).text();
       const defaultRatio = '4:3';
-      
+
       // Return current ratio or default if empty
       return ratioText && ratioText.trim() !== '' ? ratioText.trim() : defaultRatio;
     },
@@ -1935,7 +1935,7 @@
         url: '/civicrm/ai/images/get-sample',
         method: 'POST',
         contentType: 'application/json',
-        data: JSON.stringify({ 
+        data: JSON.stringify({
           locale: locale,
           ratio: ratio
         }),
@@ -2437,7 +2437,7 @@
           locale: locale,
           ratio: ratio  // Add ratio parameter
         }),
-        timeout: 10000,
+        timeout: 20000,
 
         success: function(response) {
           // Hide loading state
