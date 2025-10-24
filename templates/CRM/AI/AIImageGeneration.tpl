@@ -70,11 +70,11 @@ window.AIImageGeneration = {
     "generateImagesUsingAI": "{/literal}{ts}Generate images using AI{/ts}{literal}",
     "lightboxImageInfo": "{/literal}{ts}Image Information{/ts}{literal}",
     "lightboxPrompt": "{/literal}{ts}Prompt{/ts}{literal}",
-    "lightboxStyle": "{/literal}{ts}Style{/ts}{literal}",
-    "lightboxRatio": "{/literal}{ts}Aspect Ratio{/ts}{literal}",
-    "lightboxRegenerate": "{/literal}{ts}Regenerate{/ts}{literal}",
-    "lightboxCopy": "{/literal}{ts}Copy{/ts}{literal}",
-    "lightboxDownload": "{/literal}{ts}Download{/ts}{literal}",
+    "lightboxStyle": "{/literal}{ts}Image Style{/ts}{literal}",
+    "lightboxRatio": "{/literal}{ts}Image Aspect Ratio{/ts}{literal}",
+    "lightboxRegenerate": "{/literal}{ts}Regenerate Image{/ts}{literal}",
+    "lightboxCopy": "{/literal}{ts}Copy Image{/ts}{literal}",
+    "lightboxDownload": "{/literal}{ts}Download Image{/ts}{literal}",
     "lightboxActionSuccess": "{/literal}{ts}Action completed successfully{/ts}{literal}",
     "lightboxActionFailed": "{/literal}{ts}Action failed, please try again{/ts}{literal}",
     "historyLoading": "{/literal}{ts}Loading history...{/ts}{literal}",
@@ -154,7 +154,7 @@ window.AIImageGeneration = {
             </div>
 
             <div class="floating-buttons">
-              <button type="button" class="floating-btn" title="{ts}Regenerate{/ts}" data-tooltip data-tooltip-placement="s">
+              <button type="button" class="floating-btn" title="{ts}Regenerate Image{/ts}" data-tooltip data-tooltip-placement="s">
                 <i class="zmdi zmdi-refresh"></i>
               </button>
               <button type="button" class="floating-btn" title="{ts}Copy Image{/ts}" data-tooltip data-tooltip-placement="s">

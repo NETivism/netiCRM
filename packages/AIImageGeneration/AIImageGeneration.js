@@ -1213,14 +1213,14 @@
     // Setup enhanced image lightbox with metadata and actions
     setupImageLightbox: function() {
       const self = this;
-      
+
       // Get translations for lightbox
       const getTranslation = (key, fallback) => {
         return window.AIImageGeneration && window.AIImageGeneration.translation
           ? window.AIImageGeneration.translation[key] || fallback
           : fallback;
       };
-      
+
       // Initialize enhanced Magnific Popup for AI image links
       $(document).magnificPopup({
         delegate: '.ai-image-link',
@@ -1228,14 +1228,14 @@
         image: {
           markup: `<div class="mfp-figure enhanced-lightbox">
             <div class="mfp-close"></div>
-            
+
             <!-- Main content wrapper: Image + Info panel -->
             <div class="mfp-content-wrapper">
               <!-- Image display area -->
               <div class="mfp-img-holder">
                 <div class="mfp-img"></div>
               </div>
-              
+
               <!-- Right info panel (desktop) -->
               <div class="mfp-info-panel desktop-panel">
                 <div class="panel-header">
@@ -1247,11 +1247,11 @@
                     <div class="prompt-text"></div>
                   </div>
                   <div class="meta-item">
-                    <label>${getTranslation('lightboxStyle', 'Style')}</label>
+                    <label>${getTranslation('lightboxStyle', 'Image Style')}</label>
                     <div class="style-text"></div>
                   </div>
                   <div class="meta-item">
-                    <label>${getTranslation('lightboxRatio', 'Aspect Ratio')}</label>
+                    <label>${getTranslation('lightboxRatio', 'Image Aspect Ratio')}</label>
                     <div class="ratio-text"></div>
                   </div>
                 </div>
@@ -1263,23 +1263,23 @@
                       <span class="floating-message-text"></span>
                     </div>
                   </div>
-                  
-                  <button class="lightbox-btn regenerate-btn" title="${getTranslation('lightboxRegenerate', 'Regenerate')}">
+
+                  <button class="lightbox-btn regenerate-btn" title="${getTranslation('lightboxRegenerate', 'Regenerate Image')}">
                     <i class="zmdi zmdi-refresh"></i>
-                    <span>${getTranslation('lightboxRegenerate', 'Regenerate')}</span>
+                    <span>${getTranslation('lightboxRegenerate', 'Regenerate Image')}</span>
                   </button>
-                  <button class="lightbox-btn copy-btn" title="${getTranslation('lightboxCopy', 'Copy')}">
+                  <button class="lightbox-btn copy-btn" title="${getTranslation('lightboxCopy', 'Copy Image')}">
                     <i class="zmdi zmdi-collection-plus"></i>
-                    <span>${getTranslation('lightboxCopy', 'Copy')}</span>
+                    <span>${getTranslation('lightboxCopy', 'Copy Image')}</span>
                   </button>
-                  <button class="lightbox-btn download-btn" title="${getTranslation('lightboxDownload', 'Download')}">
+                  <button class="lightbox-btn download-btn" title="${getTranslation('lightboxDownload', 'Download Image')}">
                     <i class="zmdi zmdi-download"></i>
-                    <span>${getTranslation('lightboxDownload', 'Download')}</span>
+                    <span>${getTranslation('lightboxDownload', 'Download Image')}</span>
                   </button>
                 </div>
               </div>
             </div>
-            
+
             <!-- Floating info card (mobile) -->
             <div class="mfp-floating-info mobile-panel" style="display: none;">
               <div class="floating-toggle">
@@ -1294,28 +1294,28 @@
                     <div class="prompt-text"></div>
                   </div>
                   <div class="meta-item">
-                    <label>${getTranslation('lightboxStyle', 'Style')}</label>
+                    <label>${getTranslation('lightboxStyle', 'Image Style')}</label>
                     <div class="style-text"></div>
                   </div>
                   <div class="meta-item">
-                    <label>${getTranslation('lightboxRatio', 'Aspect Ratio')}</label>
+                    <label>${getTranslation('lightboxRatio', 'Image Aspect Ratio')}</label>
                     <div class="ratio-text"></div>
                   </div>
                 </div>
                 <div class="floating-actions">
-                  <button class="lightbox-btn regenerate-btn" title="${getTranslation('lightboxRegenerate', 'Regenerate')}">
+                  <button class="lightbox-btn regenerate-btn" title="${getTranslation('lightboxRegenerate', 'Regenerate Image')}">
                     <i class="zmdi zmdi-refresh"></i>
                   </button>
-                  <button class="lightbox-btn copy-btn" title="${getTranslation('lightboxCopy', 'Copy')}">
+                  <button class="lightbox-btn copy-btn" title="${getTranslation('lightboxCopy', 'Copy Image')}">
                     <i class="zmdi zmdi-collection-plus"></i>
                   </button>
-                  <button class="lightbox-btn download-btn" title="${getTranslation('lightboxDownload', 'Download')}">
+                  <button class="lightbox-btn download-btn" title="${getTranslation('lightboxDownload', 'Download Image')}">
                     <i class="zmdi zmdi-download"></i>
                   </button>
                 </div>
               </div>
             </div>
-            
+
             <div class="mfp-preloader"></div>
           </div>`,
           titleSrc: function() {
@@ -1370,7 +1370,7 @@
     // Adjust lightbox layout based on screen size
     adjustLightboxLayout: function() {
       const isMobile = window.innerWidth < 768;
-      
+
       if (isMobile) {
         $('.desktop-panel').hide();
         $('.mobile-panel').show();
@@ -1418,17 +1418,17 @@
     unbindLightboxEvents: function() {
       $(document).off('.lightbox');
       $(window).off('resize.lightbox');
-      
+
       // Clear any pending panel messages when closing lightbox
       this.panelMessage.hide();
-      
+
       console.log('Lightbox events unbound');
     },
 
     // Handle lightbox action buttons
     handleLightboxAction: function($button) {
       const action = this.getLightboxActionType($button);
-      
+
       console.log('Lightbox action triggered:', action);
 
       switch(action) {
@@ -1451,10 +1451,10 @@
     // Show message in lightbox context with intelligent routing
     showLightboxMessage: function(message, type = 'success') {
       console.log('Lightbox message:', { message, type });
-      
+
       // Check if lightbox is currently open
       const isLightboxOpen = $.magnificPopup.instance && $.magnificPopup.instance.isOpen;
-      
+
       if (isLightboxOpen) {
         // Use dedicated panel message system for lightbox panel-actions
         if (type === 'success') {
@@ -1722,22 +1722,22 @@
               console.log('🔍 Context source:', self._aiLinkTriggerContext.source);
               console.log('🔍 Context valid:', self._isContextValid());
             }
-            
+
             // Check if there's a trigger context
-            if (self._aiLinkTriggerContext && 
+            if (self._aiLinkTriggerContext &&
                 self._aiLinkTriggerContext.source === 'ai-link' &&
                 self._isContextValid()) {
-              
+
               // Execute context-specific loading
               console.log('✅ Loading sample image with context:', self._aiLinkTriggerContext);
               self._loadSampleImageWithContext();
-              
+
             } else {
               // Execute default loading logic
               console.log('❌ No valid context found - using default loading logic');
               self.checkAndLoadSampleImage();
             }
-            
+
             // Clear trigger context
             self._clearTriggerContext();
           }, 100);
@@ -1817,7 +1817,7 @@
       // User-generated images have 'ai-generated-image' class but NOT 'ai-sample-image' class
       const hasGeneratedClass = $image.hasClass('ai-generated-image');
       const hasSampleClass = $image.hasClass('ai-sample-image');
-      
+
       console.log('🔍 hasUserGeneratedImage: Image classes check', {
         hasGeneratedClass: hasGeneratedClass,
         hasSampleClass: hasSampleClass,
@@ -1828,7 +1828,7 @@
       // It's a user-generated image if it has ai-generated-image but not ai-sample-image
       const isUserGenerated = hasGeneratedClass && !hasSampleClass;
       console.log('🔍 hasUserGeneratedImage result:', isUserGenerated);
-      
+
       return isUserGenerated;
     },
 
@@ -1917,7 +1917,7 @@
       const locale = this.getUILocale();
 
       console.log('Loading sample image for locale:', locale);
-      
+
       // Show loading state
       this.showSampleImageLoading();
 
@@ -1931,7 +1931,7 @@
         success: function(response) {
           // Hide loading state
           self.hideSampleImageLoading();
-          
+
           if (response.status === 1 && response.data) {
             console.log('Sample image loaded successfully');
             self.applySampleToInterface(response.data);
@@ -1943,7 +1943,7 @@
         error: function(xhr, status, error) {
           // Hide loading state on error
           self.hideSampleImageLoading();
-          
+
           console.warn('Failed to load sample image:', {
             status: status,
             error: error,
@@ -1992,19 +1992,19 @@
       const $loadingOverlay = $imageContainer.find('.loading-overlay');
       const $loadingMessage = $loadingOverlay.find('.loading-message');
       const $emptyState = $imageContainer.find('.empty-state-content');
-      
+
       // Hide empty state if visible
       $emptyState.hide();
-      
+
       // Set loading message for sample image
       const loadingText = window.AIImageGeneration && window.AIImageGeneration.translation
         ? window.AIImageGeneration.translation.loadingSampleImage
         : 'Loading sample image...';
       $loadingMessage.text(loadingText);
-      
+
       // Show loading overlay with fade in
       $loadingOverlay.addClass('sample-loading').fadeIn(300);
-      
+
       console.log('Sample image loading state shown');
     },
 
@@ -2013,13 +2013,13 @@
       const $container = $(this.config.container);
       const $imageContainer = $container.find('.image-placeholder');
       const $loadingOverlay = $imageContainer.find('.loading-overlay');
-      
+
       // Hide loading overlay with fade out
       $loadingOverlay.removeClass('sample-loading').fadeOut(300, function() {
         // Reset loading message
         $(this).find('.loading-message').text('');
       });
-      
+
       console.log('Sample image loading state hidden');
     },
 
@@ -2194,17 +2194,17 @@
         e.preventDefault();
         const selectedRatio = $(this).data('ratio');
         console.log('AI generate link clicked with ratio:', selectedRatio);
-        
+
         // Check if nsp-container exists and get its current state
         const $nspContainer = $('.nsp-container');
         if ($nspContainer.length === 0) {
           console.warn('nsp-container not found');
           return;
         }
-        
+
         const isContainerOpen = $nspContainer.hasClass('is-opened');
         console.log('nsp-container current state - is opened:', isContainerOpen);
-        
+
         // Function to switch to AI Image Generation panel
         const switchToAIPanel = function() {
           // Set trigger context before switching panel
@@ -2216,12 +2216,12 @@
             timestamp: Date.now()
           };
           console.log('Set trigger context:', NetiAIImageGeneration._aiLinkTriggerContext);
-          
+
           const $aiTabLink = $('.nme-setting-panels-tabs a[data-target-id="nme-aiimagegeneration"]');
           if ($aiTabLink.length > 0) {
             console.log('Switching to AI Image Generation panel');
             $aiTabLink.trigger('click');
-            
+
             // Update ratio after panel switch
             setTimeout(() => {
               if (window.NetiAIImageGeneration && window.NetiAIImageGeneration.setRatio) {
@@ -2233,12 +2233,12 @@
             console.warn('AI Image Generation tab link not found');
           }
         };
-        
+
         if (!isContainerOpen) {
           // Container is closed - first switch panel, then open container
           console.log('Container is closed - switching panel first, then opening container');
           switchToAIPanel();
-          
+
           // Wait for panel switch to complete, then open container
           setTimeout(() => {
             const $trigger = $('.nsp-trigger');
@@ -2357,11 +2357,11 @@
     // Context validation method
     _isContextValid: function() {
       if (!this._aiLinkTriggerContext) return false;
-      
+
       // Check timestamp to avoid expired context (5 seconds timeout)
       const now = Date.now();
       const timeDiff = now - this._aiLinkTriggerContext.timestamp;
-      
+
       return timeDiff < 5000; // Valid within 5 seconds
     },
 
@@ -2369,14 +2369,14 @@
     _loadSampleImageWithContext: function() {
       const context = this._aiLinkTriggerContext;
       const locale = this.getUILocale();
-      
+
       console.log('Loading sample image with context:', context);
-      
+
       // Use ratio information from context to load sample image
       // Pass both forceLoad and forceLoadSample for compatibility
       this._loadSampleImageWithRatio(
-        locale, 
-        context.ratio, 
+        locale,
+        context.ratio,
         context.forceLoad || false,
         context.forceLoadSample || false
       );
@@ -2391,7 +2391,7 @@
     // Extended loadSampleImage method with ratio support
     _loadSampleImageWithRatio: function(locale, ratio, forceLoad = false, forceLoadSample = false) {
       const self = this;
-      
+
       // Determine loading conditions based on force options
       if (forceLoad) {
         // forceLoad: Can overwrite any image (existing behavior)
@@ -2410,36 +2410,36 @@
           return;
         }
       }
-      
+
       console.log('Loading sample image with ratio:', ratio);
-      
+
       // Show loading state
       this.showSampleImageLoading();
-      
+
       $.ajax({
         url: '/civicrm/ai/images/get-sample',
         method: 'POST',
         contentType: 'application/json',
-        data: JSON.stringify({ 
+        data: JSON.stringify({
           locale: locale,
           ratio: ratio  // Add ratio parameter
         }),
         timeout: 10000,
-        
+
         success: function(response) {
           // Hide loading state
           self.hideSampleImageLoading();
-          
+
           if (response.status === 1 && response.data) {
             console.log('Sample image loaded successfully with ratio:', ratio);
             self.applySampleToInterface(response.data);
           }
         },
-        
+
         error: function(xhr, status, error) {
           // Hide loading state on error
           self.hideSampleImageLoading();
-          
+
           console.warn('Failed to load sample image with ratio:', ratio, error);
         }
       });
@@ -2653,7 +2653,7 @@
       show: function(message, type = 'success') {
         // Find panel message element in lightbox (uses same classes as floating-message)
         const $panelMessage = $('.panel-message');
-        
+
         if ($panelMessage.length === 0) {
           console.warn('Panel message element not found');
           return;
@@ -2692,9 +2692,9 @@
       // Hide panel message
       hide: function() {
         const $panelMessage = $('.panel-message');
-        
+
         this.clearTimer();
-        
+
         // Hide with slideUp animation
         $panelMessage.stop(true, true).slideUp(300);
 
