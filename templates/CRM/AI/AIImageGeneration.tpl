@@ -113,6 +113,20 @@ window.AIImageGeneration = {
               <div class="empty-state-subtitle">{ts}Enter your ideas and let AI create images for you{/ts}</div>
             </div>
 
+            {* Sample loading error state *}
+            <div class="sample-error-state" style="display: none;" role="alert" aria-live="polite">
+              <div class="sample-error-icon" aria-hidden="true">
+                <i class="zmdi zmdi-wifi-off"></i>
+              </div>
+              <div class="sample-error-title">{ts}Unable to load example image{/ts}</div>
+              <div class="sample-error-subtitle">{ts}Check your network connection or try again{/ts}</div>
+              <button type="button" class="sample-retry-btn" aria-label="{ts}Retry loading example image{/ts}">
+                <i class="zmdi zmdi-refresh"></i>
+                {ts}Retry{/ts}
+              </button>
+              <div class="sample-error-fallback">{ts}Or start creating your own image below{/ts}</div>
+            </div>
+
             <img src="../images/thumb-00.png" alt="" style="display: none;">
 
             {* Loading state overlay *}

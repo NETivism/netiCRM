@@ -119,6 +119,13 @@
         self.handleFloatingAction($(this));
       });
 
+      // Sample retry button
+      $(document).on('click', '.sample-retry-btn', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        self.handleSampleRetry();
+      });
+
       // Note: History items now use lightbox directly via AIImageGeneration-History.js
       // No need for custom click handlers as Magnific Popup handles the lightbox functionality
 
@@ -1764,6 +1771,45 @@
       }
     },
 
+    // Show sample loading error state
+    showSampleError: function() {
+      const $container = $(this.config.container);
+      const $emptyState = $container.find('.empty-state-content');
+      const $sampleError = $container.find('.sample-error-state');
+      const $sampleImage = $container.find('.image-placeholder img');
+
+      // Hide other states and show error
+      $emptyState.hide();
+      $sampleImage.hide();
+      $sampleError.fadeIn(300);
+
+      console.log('Sample loading error state shown');
+    },
+
+    // Hide sample loading error state
+    hideSampleError: function() {
+      const $container = $(this.config.container);
+      const $sampleError = $container.find('.sample-error-state');
+      
+      $sampleError.fadeOut(300);
+      console.log('Sample loading error state hidden');
+    },
+
+    // Reset to empty state (hide both error and loading states)
+    resetToEmptyState: function() {
+      const $container = $(this.config.container);
+      const $emptyState = $container.find('.empty-state-content');
+      const $sampleError = $container.find('.sample-error-state');
+      const $sampleImage = $container.find('.image-placeholder img');
+
+      // Hide error and image, show empty state
+      $sampleError.hide();
+      $sampleImage.hide();
+      $emptyState.fadeIn(300);
+
+      console.log('Reset to empty state');
+    },
+
     // Check if sample image should be loaded and load it
     checkAndLoadSampleImage: function() {
       // Only load if no existing image is present
@@ -1911,6 +1957,17 @@
       return locale;
     },
 
+    // Handle sample retry button click
+    handleSampleRetry: function() {
+      console.log('Sample retry button clicked');
+      
+      // Hide error state and show loading
+      this.hideSampleError();
+      
+      // Retry loading sample image
+      this.loadSampleImage();
+    },
+
     // Get current selected ratio from UI
     getCurrentRatio: function() {
       const ratioText = $(this.config.container).find(this.config.selectors.ratioText).text();
@@ -1963,7 +2020,9 @@
             responseText: xhr.responseText,
             httpStatus: xhr.status
           });
-          // Silently fail - don't show error to user for sample loading
+          
+          // Show sample error state instead of silently failing
+          self.showSampleError();
         }
       });
     },
@@ -2454,6 +2513,9 @@
           self.hideSampleImageLoading();
 
           console.warn('Failed to load sample image with ratio:', ratio, error);
+          
+          // Show sample error state instead of silently failing
+          self.showSampleError();
         }
       });
     },
