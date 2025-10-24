@@ -307,22 +307,22 @@ window.AIImageGeneration = {
   </div>
 </div>
 
-{* Confirm Replace Dialog *}
-<div class="netiaiig-confirm-dialog" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="confirm-dialog-title">
-  <div class="dialog-overlay"></div>
-  <div class="dialog-content">
-    <div class="dialog-header">
-      <h3 id="confirm-dialog-title" class="dialog-title">{ts}Load Appropriate Sample Image?{/ts}</h3>
-      <button type="button" class="dialog-close" aria-label="{ts}Close dialog{/ts}">
-        <i class="zmdi zmdi-close"></i>
-      </button>
+{* Confirm Replace Dialog - Magnific Popup Modal *}
+<div id="netiaiig-confirm-replace-modal" class="white-popup mfp-hide">
+  <div class="confirm-modal-content">
+    <div class="confirm-modal-header">
+      <h3 class="confirm-modal-title">{ts}Load Appropriate Sample Image?{/ts}</h3>
     </div>
-    <div class="dialog-body">
-      <div class="dialog-message">
-        <p class="dialog-main-text">{ts}You clicked "Generate images using AI". The system will load a sample image suitable for this field (ratio: <span class="dialog-ratio-placeholder">4:3</span>), but there is an AI image you personally created in the current generation area.{/ts}</p>
-        <p class="dialog-question">{ts}Do you want to replace the current image with the sample image?{/ts}</p>
+    
+    <div class="confirm-modal-body">
+      <div class="confirm-modal-message">
+        <p class="confirm-main-text">
+          {ts}You clicked "Generate images using AI". The system will load a sample image suitable for this field (ratio: <span class="confirm-ratio-placeholder">4:3</span>), but there is an AI image you personally created in the current generation area.{/ts}
+        </p>
+        <p class="confirm-question">{ts}Do you want to replace the current image with the sample image?{/ts}</p>
       </div>
-      <div class="dialog-reminder">
+      
+      <div class="confirm-modal-reminder">
         <div class="reminder-icon">
           <i class="zmdi zmdi-info-outline"></i>
         </div>
@@ -331,12 +331,13 @@ window.AIImageGeneration = {
         </div>
       </div>
     </div>
-    <div class="dialog-actions">
-      <button type="button" class="dialog-btn dialog-btn-primary dialog-confirm" data-action="confirm">
+    
+    <div class="confirm-modal-actions">
+      <button type="button" class="btn btn-primary confirm-replace-btn">
         <i class="zmdi zmdi-check"></i>
         {ts}Confirm Replace{/ts}
       </button>
-      <button type="button" class="dialog-btn dialog-btn-secondary dialog-cancel" data-action="cancel">
+      <button type="button" class="btn btn-secondary popup-modal-dismiss">
         <i class="zmdi zmdi-close"></i>
         {ts}Cancel{/ts}
       </button>

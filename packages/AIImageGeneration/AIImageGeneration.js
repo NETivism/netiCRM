@@ -160,46 +160,18 @@
         self.updatePromptTooltip($(this));
       });
 
-      // Confirm dialog events
-      $(document).on('click', '.netiaiig-confirm-dialog .dialog-confirm', function(e) {
+      // Confirm modal events (Magnific Popup)
+      $(document).on('click', '.confirm-replace-btn', function(e) {
         e.preventDefault();
         e.stopPropagation();
         self.handleConfirmReplace();
       });
 
-      $(document).on('click', '.netiaiig-confirm-dialog .dialog-cancel', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
+      // Magnific Popup handles the popup-modal-dismiss automatically
+      // But we can also listen for it to handle our custom logic
+      $(document).on('click', '.popup-modal-dismiss', function(e) {
+        // Let Magnific Popup handle the closing, but also run our cleanup
         self.handleCancelReplace();
-      });
-
-      $(document).on('click', '.netiaiig-confirm-dialog .dialog-close', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        self.handleDialogClose();
-      });
-
-      // Close dialog when clicking on overlay
-      $(document).on('click', '.netiaiig-confirm-dialog .dialog-overlay', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        self.handleDialogClose();
-      });
-
-      // Prevent dialog close when clicking inside dialog content
-      $(document).on('click', '.netiaiig-confirm-dialog .dialog-content', function(e) {
-        e.stopPropagation();
-      });
-
-      // ESC key to close dialog
-      $(document).on('keydown', function(e) {
-        if (e.key === 'Escape' || e.keyCode === 27) {
-          const $dialog = $('.netiaiig-confirm-dialog');
-          if ($dialog.is(':visible')) {
-            e.preventDefault();
-            self.handleDialogClose();
-          }
-        }
       });
     },
 
@@ -2550,10 +2522,10 @@
 
     // Show replace confirmation dialog
     showReplaceConfirmDialog: function(locale, ratio) {
-      const $dialog = $('.netiaiig-confirm-dialog');
+      const $modal = $('#netiaiig-confirm-replace-modal');
       
-      if ($dialog.length === 0) {
-        console.warn('Confirm dialog element not found');
+      if ($modal.length === 0) {
+        console.warn('Confirm modal element not found');
         return;
       }
 
@@ -2563,39 +2535,45 @@
         ratio: ratio
       };
 
-      // Update ratio placeholder in dialog text
+      // Update ratio placeholder in modal text
       const ratioText = this.getTranslation('confirmDialogMainText').replace('{ratio}', ratio);
-      $dialog.find('.dialog-main-text').html(ratioText);
-      $dialog.find('.dialog-ratio-placeholder').text(ratio);
+      $modal.find('.confirm-main-text').html(ratioText);
+      $modal.find('.confirm-ratio-placeholder').text(ratio);
 
-      // Show dialog with fade in effect
-      $dialog.fadeIn(300);
-      
-      // Focus on cancel button by default to prevent accidental confirmation
-      setTimeout(() => {
-        $dialog.find('.dialog-cancel').focus();
-      }, 350);
-
-      // Prevent body scroll when dialog is open
-      $('body').addClass('dialog-open');
-
-      console.log('Replace confirmation dialog shown with ratio:', ratio);
+      // Open modal using Magnific Popup
+      $.magnificPopup.open({
+        items: {
+          src: '#netiaiig-confirm-replace-modal',
+          type: 'inline'
+        },
+        modal: false,
+        closeOnBgClick: false,
+        showCloseBtn: false,
+        enableEscapeKey: true,
+        callbacks: {
+          open: function() {
+            console.log('Replace confirmation modal opened with ratio:', ratio);
+            // Focus on cancel button by default to prevent accidental confirmation
+            setTimeout(() => {
+              $('.popup-modal-dismiss').focus();
+            }, 100);
+          },
+          close: function() {
+            console.log('Replace confirmation modal closed');
+          }
+        }
+      });
     },
 
     // Hide replace confirmation dialog
     hideReplaceConfirmDialog: function() {
-      const $dialog = $('.netiaiig-confirm-dialog');
-      
-      // Hide dialog with fade out effect
-      $dialog.fadeOut(300);
+      // Close modal using Magnific Popup
+      $.magnificPopup.close();
       
       // Clear dialog context
       this._dialogContext = null;
-      
-      // Restore body scroll
-      $('body').removeClass('dialog-open');
 
-      console.log('Replace confirmation dialog hidden');
+      console.log('Replace confirmation modal closed');
     },
 
     // Get translation text with fallback
@@ -2646,16 +2624,8 @@
     handleCancelReplace: function() {
       console.log('User cancelled replacement');
       
-      // Simply hide dialog, no further action needed
-      this.hideReplaceConfirmDialog();
-    },
-
-    // Handle dialog close action (X button or ESC key)
-    handleDialogClose: function() {
-      console.log('Dialog closed');
-      
-      // Same as cancel action
-      this.handleCancelReplace();
+      // Clear dialog context only, Magnific Popup handles the closing
+      this._dialogContext = null;
     },
 
     // Extended loadSampleImage method with ratio support
