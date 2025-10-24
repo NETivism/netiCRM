@@ -50920,7 +50920,7 @@ msgstr "描述文字已超過 1000 個字元限制"
 
 #: templates/CRM/AI/AIImageGeneration.tpl
 msgid "Generating image..."
-msgstr "Generating image..."
+msgstr "正在生成圖片..."
 
 #: templates/CRM/AI/AIImageGeneration.tpl
 msgid "Image generated successfully!"
@@ -51206,7 +51206,7 @@ msgid ""
 "System won't auto-add style tags, so please explicitly describe your desired"
 " art style in the main prompt field above, such as: Pixel Art, Cyberpunk, 3D"
 " Animation, etc"
-msgstr "選擇了自訂風格，系統將不會自動增加任何預設風格標籤，請在最上方的提示詞欄位中明確描述您想要的藝術風格，例如：像素風格、賽博龐克、3D動畫等等"
+msgstr "選擇自訂風格時，系統將不會自動增加任何預設風格標籤，請在最上方的提示詞欄位中明確描述您想要的藝術風格，例如：像素風格、賽博龐克、3D動畫等等"
 
 #: templates/CRM/AI/AIImageGeneration.tpl
 msgid "Select Aspect Ratio"
@@ -51231,3 +51231,7 @@ msgstr "AI助理"
 #: templates/CRM/AI/AIImageGeneration.tpl
 msgid "Copy Image"
 msgstr "複製圖片"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Regenerate Image"
+msgstr "重新生成圖片"

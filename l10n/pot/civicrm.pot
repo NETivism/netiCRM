@@ -50574,3 +50574,7 @@ msgstr ""
 #: templates/CRM/AI/AIImageGeneration.tpl
 msgid "Copy Image"
 msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Regenerate Image"
+msgstr ""
