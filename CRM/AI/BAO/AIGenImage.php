@@ -44,9 +44,23 @@ class CRM_AI_BAO_AIGenImage {
   private static $styleMapping = [
     'Simple Illustration' => 'Simple Illustration',
     'Japanese Simple Illustration' => 'Simple Illustration',
-    'Storybook Style' => 'Children\'s picture book illustration',
+    'Picture book illustration' => 'Children\'s picture book illustration',
     'Watercolor Painting' => 'Watercolor Painting',
     'Hand-Drawn Illustration' => 'Hand-Drawn Illustration',
+  ];
+
+  /**
+   * Style-specific negative prompts for image generation
+   * Each style can have a customized negative prompt to avoid unwanted elements
+   *
+   * @var array
+   */
+  private static $styleNegativePrompts = [
+    'Simple Illustration' => 'photorealistic, realistic shadows, realistic expression, camera photograph, extra limbs, missing limbs, extra fingers, twisted limbs, malformed limbs, bad hand, fused bodies, merged limbs, connected arms, non-english text, asian letters, chinese characters, japanese text, korean text, messy text, unreadable letters, gibberish, nonsensical writing',
+    'Japanese Simple Illustration' => 'photorealistic, realistic shadows, realistic expression, camera photograph, extra limbs, missing limbs, extra fingers, twisted limbs, malformed limbs, bad hand, fused bodies, merged limbs, connected arms, non-english text, asian letters, chinese characters, japanese text, korean text, messy text, unreadable letters, gibberish, nonsensical writing',
+    'Picture book illustration' => 'photorealistic, realistic shadows, realistic expression, camera photograph, extra limbs, missing limbs, extra fingers, twisted limbs, malformed limbs, bad hand, fused bodies, merged limbs, connected arms, non-english text, asian letters, chinese characters, japanese text, korean text, messy text, unreadable letters, gibberish, nonsensical writing',
+    'Watercolor Painting' => 'photorealistic, realistic shadows, realistic expression, camera photograph, extra limbs, missing limbs, extra fingers, twisted limbs, malformed limbs, bad hand, fused bodies, merged limbs, connected arms, non-english text, asian letters, chinese characters, japanese text, korean text, messy text, unreadable letters, gibberish, nonsensical writing',
+    'Hand-Drawn Illustration' => 'photorealistic, realistic shadows, realistic expression, camera photograph, extra limbs, missing limbs, extra fingers, twisted limbs, malformed limbs, bad hand, fused bodies, merged limbs, connected arms, non-english text, asian letters, chinese characters, japanese text, korean text, messy text, unreadable letters, gibberish, nonsensical writing',
   ];
 
   /**
@@ -65,8 +79,10 @@ class CRM_AI_BAO_AIGenImage {
       'Minimalist flat illustration, the character design is a Japanese minimalist cartoon style, with minimal facial features',
       'Minimalist flat illustration, the character design is a Japanese minimalist style, with minimal facial features',
       'Children\'s picture book illustration in a mid-20th century Japanese style, soft pastel colors, clean bold lines, crayon texture, simple geometric composition, paper texture background, and a warm, minimal atmosphere. The character design is minimalist with minimal facial features',
+      'Minimalist Japanese aesthetic, positioned slightly off-center with generous negative space, subtle elegance',
+      'Minimalist Japanese aesthetic, the character design is a Japanese minimalist cartoon style, with minimal facial features, positioned slightly off-center with generous negative space, subtle elegance',
     ],
-    'Storybook Style' => [
+    'Picture book illustration' => [
       'Children\'s picture book illustration in the mid-20th century Polish style, featuring geometric composition, muted primary colors, paper texture, symbolic shapes, and minimalist folk-inspired characters',
       'Modern reinterpretation of Polish picture book illustration, bold flat colors, strong graphic layout, naive art influence, poster-like composition, warm matte tone',
       'Contemporary children\'s illustration with a humanistic Polish aesthetic,subtle textures, muted palette, expressive yet kind faces,showing compassion and community care in realistic scenes',
@@ -82,9 +98,11 @@ class CRM_AI_BAO_AIGenImage {
       'Modern watercolor interpretation of Polish picture book illustration,combining soft watercolor washes with strong graphic composition,folk-inspired shapes, matte pastel palette, minimal outlines,delicate storytelling mood, vintage children\'s book atmosphere, the character design is a minimalist style, with minimal facial features',
     ],
     'Hand-Drawn Illustration' => [
-      'A hand-drawn illustration with a nouveau and minimalistic style, minimalist cartoon character design with simplified facial features',
-      'A hand-drawn illustration with a nouveau and minimalistic style, minimalist cartoon character design with simplified facial features, textured paper,',
       'A hand-drawn illustration with a nouveau and minimalistic style, minimalist cartoon character design with simplified facial features, textured paper, handmade pencil and crayon strokes of various thicknesses',
+      'A hand-drawn illustration with a nouveau and minimalistic style. minimalist cartoon character design with simplified facial features. The background is a white textured paper. The illustration has elegant, handmade pencil and crayon strokes of various thicknesses.',
+      'A hand-drawn doodle style illustration, minimalist cartoon character design with simplified facial features. The background is a white textured paper. handmade pencil and crayon strokes of various thicknesses.',
+      'A Whimsical hand-drawn doodle style illustration, minimalist cartoon character design with simplified facial features. The background is a white textured paper. handmade pencil and crayon strokes of various thicknesses.',
+      'A childlike and naive illustration drawn with thick, waxy oil pastels. The colors are heavily saturated and applied in broad, overlapping strokes, completely covering the canvas. The subject is simple and rendered with a deliberately clumsy, innocent hand. The texture is heavily impasto.',
     ],
   ];
 
@@ -128,12 +146,12 @@ class CRM_AI_BAO_AIGenImage {
       // Extract translated prompt and AI completion ID if available
       $translatedPrompt = $translationResponse;
       $aiCompletionId = null;
-      
+
       // Handle different response formats from translator
       if (is_array($translationResponse)) {
         $translatedPrompt = $translationResponse['message'] ?? $translationResponse['translated_prompt'] ?? '';
         $aiCompletionId = $translationResponse['id'] ?? $translationResponse['aicompletion_id'] ?? null;
-        
+
         // Parse JSON response if message contains JSON
         if (!empty($translatedPrompt) && is_string($translatedPrompt)) {
           $parsedData = $this->translator->parseJsonResponse($translatedPrompt);
@@ -167,7 +185,7 @@ class CRM_AI_BAO_AIGenImage {
       $advancedParams = $imageData['data']['advanced'] ?? [];
 
       return [
-        'success' => true, 
+        'success' => true,
         'image_path' => $imagePath,
         'translated_prompt' => $translatedPrompt,
         'original_prompt' => $params['text'],
@@ -247,36 +265,44 @@ class CRM_AI_BAO_AIGenImage {
 
   /**
    * Process and enhance text prompt based on style requirements
-   * Adds random prefix based on original style, then applies style mapping
+   * Adds random prefix based on original style, applies style mapping, and sets style-specific negative prompt
    *
    * @param array $params Original request parameters
-   * @return array Modified parameters with enhanced text and mapped style
+   * @return array Modified parameters with enhanced text, mapped style, and style-specific negative prompt
     */
   protected function processStyleAndText($params) {
     $modifiedParams = $params;
     $originalStyle = $params['style'] ?? '';
-    
+
     // Step 1: Add prefix to text based on the original style (before mapping)
     if (!empty($originalStyle) && isset(self::$stylePrefixes[$originalStyle])) {
       $prefixOptions = self::$stylePrefixes[$originalStyle];
-      
+
       if (!empty($prefixOptions)) {
         // Randomly select one prefix from available options
         $randomIndex = array_rand($prefixOptions);
         $selectedPrefix = $prefixOptions[$randomIndex];
-        
+
         // Combine prefix with original text
         $originalText = $params['text'] ?? '';
         $modifiedParams['text'] = $selectedPrefix . ', ' . $originalText;
       }
     }
-    
-    // Step 2: Apply style mapping if style exists
+
+    // Step 2: Set style-specific negative prompt if not already provided by user
+    if (!empty($originalStyle) && isset(self::$styleNegativePrompts[$originalStyle])) {
+      // Only set style-specific negative prompt if user hasn't provided one
+      if (empty($params['negative_prompt'])) {
+        $modifiedParams['negative_prompt'] = self::$styleNegativePrompts[$originalStyle];
+      }
+    }
+
+    // Step 3: Apply style mapping if style exists
     if (!empty($originalStyle) && isset(self::$styleMapping[$originalStyle])) {
       $mappedStyle = self::$styleMapping[$originalStyle];
       $modifiedParams['style'] = $mappedStyle;
     }
-    
+
     return $modifiedParams;
   }
 
@@ -303,7 +329,7 @@ class CRM_AI_BAO_AIGenImage {
 
   /**
    * Prepare parameters for image generation service
-   * Combines standard parameters with advanced service-specific parameters
+   * Combines standard parameters with advanced service-specific parameters and style-specific negative prompt
    *
    * @param array $params Original parameters from user
    * @param string $translatedPrompt Processed prompt text
@@ -315,6 +341,11 @@ class CRM_AI_BAO_AIGenImage {
       'prompt' => $translatedPrompt,
       'ratio' => $params['ratio'] ?? '1:1'
     ];
+
+    // Add style-specific negative prompt if available
+    if (!empty($params['negative_prompt'])) {
+      $serviceParams['negative_prompt'] = $params['negative_prompt'];
+    }
 
     // Merge advanced parameters if provided
     // This allows service-specific parameters to be passed through
@@ -386,7 +417,7 @@ class CRM_AI_BAO_AIGenImage {
         // Convert relative path to absolute path for file existence check
         $publicDir = rtrim(CRM_Utils_System::cmsDir('public'), '/');
         $fullPath = $publicDir . '/' . $imagePath;
-        
+
         if (file_exists($fullPath)) {
           CRM_AI_BAO_AIImageGeneration::updateStatus(
             $this->generationRecordId,
@@ -401,7 +432,7 @@ class CRM_AI_BAO_AIGenImage {
         // Log database update error but don't propagate to main workflow
         // This prevents double JSON response issue
         CRM_Core_Error::debug_log_message("Database update error in updateFinalResult: " . $e->getMessage());
-        
+
         // Try to update error status without throwing exception
         try {
           $this->updateErrorStatus('Database update failed: ' . $e->getMessage());

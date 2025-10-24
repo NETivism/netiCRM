@@ -288,6 +288,20 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
 
     $ct = CRM_Utils_Request::retrieve('ct', 'Boolean', CRM_Core_DAO::$_nullObject, FALSE, '');
 
+    // Refs #44739, Convert dates to standard format
+    if (!empty($dateFrom)) {
+      $processedDateFrom = CRM_Utils_Date::processDate($dateFrom, NULL, FALSE, 'Y-m-d');
+      if (!empty($processedDateFrom)) {
+        $dateFrom = $processedDateFrom;
+      }
+    }
+    if (!empty($dateTo)) {
+      $processedDateTo = CRM_Utils_Date::processDate($dateTo, NULL, FALSE, 'Y-m-d');
+      if (!empty($processedDateTo)) {
+        $dateTo = $processedDateTo;
+      }
+    }
+
     $dateRange = '';
     if (!empty($dateFrom) && !empty($dateTo)) {
       $dateRange = $dateFrom . '_to_' . $dateTo;
@@ -617,6 +631,21 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
     $dateFrom = CRM_Utils_Array::value('receive_date_from', $formValues);
     $dateTo = CRM_Utils_Array::value('receive_date_to', $formValues);
     $ct = CRM_Utils_Array::value('ct', $formValues);
+
+    // Convert dates to standard format
+    if (!empty($dateFrom)) {
+      $processedDateFrom = CRM_Utils_Date::processDate($dateFrom, NULL, FALSE, 'Y-m-d');
+      if (!empty($processedDateFrom)) {
+        $dateFrom = $processedDateFrom;
+      }
+    }
+    if (!empty($dateTo)) {
+      $processedDateTo = CRM_Utils_Date::processDate($dateTo, NULL, FALSE, 'Y-m-d');
+      if (!empty($processedDateTo)) {
+        $dateTo = $processedDateTo;
+      }
+    }
+
     $dateParam = '';
     if (!empty($dateFrom) && !empty($dateTo)) {
       $dateParam = $dateFrom . '_to_' . $dateTo;

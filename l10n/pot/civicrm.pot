@@ -50210,3 +50210,455 @@ msgstr ""
 #: CRM/Admin/Form/FromEmailAddress.php
 msgid "Last validation"
 msgstr ""
+
+#: CRM/AI/DAO/AIImageGeneration.php
+msgid "Original Prompt"
+msgstr ""
+
+#: CRM/AI/DAO/AIImageGeneration.php
+msgid "Translated Prompt"
+msgstr ""
+
+#: CRM/AI/DAO/AIImageGeneration.php
+msgid "Image Style"
+msgstr ""
+
+#: CRM/AI/DAO/AIImageGeneration.php
+msgid "Image Ratio"
+msgstr ""
+
+#: CRM/AI/DAO/AIImageGeneration.php
+msgid "Image Path"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Preparing your image..."
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Analyzing and adjusting your prompt to help generate a better image..."
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Starting the composition..."
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "The image is taking shape..."
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Refining the details..."
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Finalizing the image..."
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "The system is a bit busy. We're speeding things up - please hold on..."
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Your image is being generated and usually takes about 40–45 seconds to complete. Feel free to do something else — we're working hard to finish your artwork!"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Function temporarily unavailable, please generate an image first"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Please generate an image first"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Please enter image description"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Description text exceeds 1000 character limit"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Generating image..."
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Image generated successfully!"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Image generation failed"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Generate Image"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "AI Generated Image"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Submitting request..."
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "No image available to copy"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Your browser does not support image copying feature"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Image processing failed"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Image copied to clipboard"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Failed to copy image, please try again"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Error occurred during image processing"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Failed to load image, please try again"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "No image available to download"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Image download started"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "An error occurred during image generation, please try again later"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Request format error, please refresh the page and try again"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Request parameter error, please check input content"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Description text is too long, please shorten to within 1000 characters"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Page permission error, please refresh the page"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "System error, please refresh the page and try again"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Login expired, please login again"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Insufficient permissions, please contact administrator"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Service temporarily unavailable, please try again later"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Request timeout, please check network connection"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Usage frequency too high, please try again later"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Server temporarily error, please try again later"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Service temporarily under maintenance, please try again later"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Connection timeout, please refresh the page and try again"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Unable to connect to server, please try again later"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Network configuration problem, please check network connection"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Image generation failed, please try again later"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Edit prompt: Describe the image you want to generate"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Generate images using AI"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Image Information"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Prompt"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Aspect Ratio"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Regenerate"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Action completed successfully"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Action failed, please try again"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Loading history..."
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "No image generation history yet"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Generated images will appear here"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Failed to load history, please try again"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Refresh History"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Previous Page"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Next Page"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Showing"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Loading sample image..."
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "AI Image Generation Area"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Image generation area, click the button below to start creating your custom image"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Ready to unleash your creativity?"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Enter your ideas and let AI create images for you"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Image Generation Failed"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Download Image"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Select Style"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Simple Illustration"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Utilizes clean lines and solid color blocks to create a fresh, modern graphic style, emphasizing a concise presentation of the subject"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Japanese Simple Illustration"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Incorporates Japanese aesthetics with gentle lines and subtle, soft colors, creating a serene, harmonious, and zen-like visual effect"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Picture book illustration"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "An art style that emphasizes storytelling and emotional expression. It features diverse colors and lines, capable of presenting unique visual narratives ranging from playful to mature, and classic to innovative"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Watercolor Painting"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Mimics the blending and bleeding effects of watercolor paints, resulting in transparent colors and fluid brushstrokes to create fresh, soft, and artistic visuals"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Hand-Drawn Illustration"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Simulates the texture of hand-drawn mediums like pencil, crayon, or pen, preserving stroke details and warmth to create a natural, friendly, and handcrafted style"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Custom Style"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "System won't auto-add style tags, so please explicitly describe your desired art style in the main prompt field above, such as: Pixel Art, Cyberpunk, 3D Animation, etc"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Select Aspect Ratio"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Describe the image you want to generate..."
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Generated Images History"
+msgstr ""
+
+#: templates/CRM/Contribute/Form/ContributionPage/Settings.tpl
+msgid "AI Image Generator"
+msgstr ""
+
+#: templates/CRM/Contribute/Form/ContributionPage/Settings.tpl
+msgid "AI Assistant"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Copy Image"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Regenerate Image"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Load Appropriate Example Image?"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "You clicked \"Generate images using AI\". The system will load a example image suitable for this field (ratio: {ratio}), but there is an AI image you personally created in the current generation area."
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Do you want to replace the current image with the example image?"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "All images you generate are saved in \"Generation History\" and can be retrieved at any time even if replaced."
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Confirm Replace"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Close dialog"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Click to open AI image generator, please download and upload the image manually after generation"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "You clicked \"Generate images using AI\". The system will load a example image suitable for this field (ratio: <span class=\"confirm-ratio-placeholder\">4:3</span>), but there is an AI image you personally created in the current generation area."
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Unable to load example image"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Check your network connection or try again"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Retry loading example image"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Retry"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Or start creating your own image below"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Image Aspect Ratio"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Loading example image..."
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Close (Esc)"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Previous (Left arrow key)"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Next (Right arrow key)"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "%curr% of %total%"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "The image could not be loaded."
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "The content could not be loaded."
+msgstr ""
