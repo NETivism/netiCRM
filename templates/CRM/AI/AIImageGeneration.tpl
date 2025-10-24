@@ -87,9 +87,9 @@ window.AIImageGeneration = {
     "historyShowing": "{/literal}{ts}Showing{/ts}{literal}",
     "historyOf": "{/literal}{ts}of{/ts}{literal}",
     "loadingSampleImage": "{/literal}{ts}Loading sample image...{/ts}{literal}",
-    "confirmDialogTitle": "{/literal}{ts}Load Appropriate Sample Image?{/ts}{literal}",
-    "confirmDialogMainText": "{/literal}{ts}You clicked \"Generate images using AI\". The system will load a sample image suitable for this field (ratio: {ratio}), but there is an AI image you personally created in the current generation area.{/ts}{literal}",
-    "confirmDialogQuestion": "{/literal}{ts}Do you want to replace the current image with the sample image?{/ts}{literal}",
+    "confirmDialogTitle": "{/literal}{ts}Load Appropriate Example Image?{/ts}{literal}",
+    "confirmDialogMainText": "{/literal}{ts}You clicked \"Generate images using AI\". The system will load a example image suitable for this field (ratio: {ratio}), but there is an AI image you personally created in the current generation area.{/ts}{literal}",
+    "confirmDialogQuestion": "{/literal}{ts}Do you want to replace the current image with the example image?{/ts}{literal}",
     "confirmDialogReminder": "{/literal}{ts}All images you generate are saved in \"Generation History\" and can be retrieved at any time even if replaced.{/ts}{literal}",
     "confirmReplaceButton": "{/literal}{ts}Confirm Replace{/ts}{literal}",
     "cancelButton": "{/literal}{ts}Cancel{/ts}{literal}",
@@ -312,15 +312,15 @@ window.AIImageGeneration = {
 <div id="netiaiig-confirm-replace-modal" class="neticrm-mfp-modal mfp-hide">
   <div class="confirm-modal-content">
     <div class="confirm-modal-header">
-      <h3 class="confirm-modal-title">{ts}Load Appropriate Sample Image?{/ts}</h3>
+      <h3 class="confirm-modal-title">{ts}Load Appropriate Example Image?{/ts}</h3>
     </div>
     
     <div class="confirm-modal-body">
       <div class="confirm-modal-message">
         <p class="confirm-main-text">
-          {ts}You clicked "Generate images using AI". The system will load a sample image suitable for this field (ratio: <span class="confirm-ratio-placeholder">4:3</span>), but there is an AI image you personally created in the current generation area.{/ts}
+          {ts}You clicked "Generate images using AI". The system will load a example image suitable for this field (ratio: <span class="confirm-ratio-placeholder">4:3</span>), but there is an AI image you personally created in the current generation area.{/ts}
         </p>
-        <p class="confirm-question">{ts}Do you want to replace the current image with the sample image?{/ts}</p>
+        <p class="confirm-question">{ts}Do you want to replace the current image with the example image?{/ts}</p>
       </div>
       
       <div class="confirm-modal-reminder">

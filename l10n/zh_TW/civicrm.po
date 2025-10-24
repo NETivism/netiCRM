@@ -51235,3 +51235,70 @@ msgstr "複製圖片"
 #: templates/CRM/AI/AIImageGeneration.tpl
 msgid "Regenerate Image"
 msgstr "重新生成圖片"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Load Appropriate Example Image?"
+msgstr "載入合適的範例圖片？"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid ""
+"You clicked \"Generate images using AI\". The system will load a example "
+"image suitable for this field (ratio: {ratio}), but there is an AI image you"
+" personally created in the current generation area."
+msgstr "您點擊了「使用 AI 產生圖片」。系統將載入適合此欄位的範例圖片（比例：{ratio}），但目前圖片生成區已有您個人建立的 AI 圖片。"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Do you want to replace the current image with the example image?"
+msgstr "您確定要使用範例圖片取代目前的圖片嗎？"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid ""
+"All images you generate are saved in \"Generation History\" and can be "
+"retrieved at any time even if replaced."
+msgstr "所有您產生的圖片都儲存在「生成紀錄」中，即使被取代也可以隨時取回。"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Confirm Replace"
+msgstr "確認取代"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Close dialog"
+msgstr "關閉對話框"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid ""
+"Click to open AI image generator, please download and upload the image "
+"manually after generation"
+msgstr "點擊以開啟 AI 圖片生成器，請在圖片生成後手動下載並上傳圖片"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid ""
+"You clicked \"Generate images using AI\". The system will load a example "
+"image suitable for this field (ratio: <span class=\"confirm-ratio-"
+"placeholder\">4:3</span>), but there is an AI image you personally created "
+"in the current generation area."
+msgstr "您點擊了「使用 AI 產生圖片」。系統將載入適合此欄位的範例圖片（比例：<span class=\"confirm-ratio-placeholder\">4:3</span>），但目前圖片生成區已有您個人建立的 AI 圖片。"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Unable to load example image"
+msgstr "無法載入範例圖片"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Check your network connection or try again"
+msgstr "請檢查您的網路連線或稍後再試"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Retry loading example image"
+msgstr "重試載入範例圖片"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Retry"
+msgstr "重試"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Or start creating your own image below"
+msgstr "或在下方開始建立您自己的圖片"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Image Aspect Ratio"
+msgstr "圖片長寬比"
