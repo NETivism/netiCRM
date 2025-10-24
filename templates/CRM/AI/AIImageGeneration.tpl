@@ -308,7 +308,7 @@ window.AIImageGeneration = {
 </div>
 
 {* Confirm Replace Dialog - Magnific Popup Modal *}
-<div id="netiaiig-confirm-replace-modal" class="white-popup mfp-hide">
+<div id="netiaiig-confirm-replace-modal" class="neticrm-mfp-modal mfp-hide">
   <div class="confirm-modal-content">
     <div class="confirm-modal-header">
       <h3 class="confirm-modal-title">{ts}Load Appropriate Sample Image?{/ts}</h3>

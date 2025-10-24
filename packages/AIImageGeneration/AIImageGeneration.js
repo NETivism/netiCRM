@@ -167,11 +167,14 @@
         self.handleConfirmReplace();
       });
 
-      // Magnific Popup handles the popup-modal-dismiss automatically
-      // But we can also listen for it to handle our custom logic
+      // Handle cancel action when modal closes
+      // Use Magnific Popup's beforeClose callback to run our cleanup
       $(document).on('click', '.popup-modal-dismiss', function(e) {
-        // Let Magnific Popup handle the closing, but also run our cleanup
-        self.handleCancelReplace();
+        // Don't prevent default - let Magnific Popup handle the closing
+        // Set a timeout to run our cleanup after Magnific Popup closes the modal
+        setTimeout(function() {
+          self.handleCancelReplace();
+        }, 10);
       });
     },
 
@@ -2541,6 +2544,7 @@
       $modal.find('.confirm-ratio-placeholder').text(ratio);
 
       // Open modal using Magnific Popup
+      const self = this;
       $.magnificPopup.open({
         items: {
           src: '#netiaiig-confirm-replace-modal',
@@ -2560,6 +2564,8 @@
           },
           close: function() {
             console.log('Replace confirmation modal closed');
+            // Clean up dialog context when modal is closed by any means
+            self._dialogContext = null;
           }
         }
       });
@@ -2624,8 +2630,8 @@
     handleCancelReplace: function() {
       console.log('User cancelled replacement');
       
-      // Clear dialog context only, Magnific Popup handles the closing
-      this._dialogContext = null;
+      // Context cleanup is handled in the close callback
+      // This method is mainly for logging purposes
     },
 
     // Extended loadSampleImage method with ratio support
