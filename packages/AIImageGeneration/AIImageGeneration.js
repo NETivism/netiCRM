@@ -159,6 +159,48 @@
       $(document).on('change', self.config.selectors.promptTextarea, function() {
         self.updatePromptTooltip($(this));
       });
+
+      // Confirm dialog events
+      $(document).on('click', '.netiaiig-confirm-dialog .dialog-confirm', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        self.handleConfirmReplace();
+      });
+
+      $(document).on('click', '.netiaiig-confirm-dialog .dialog-cancel', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        self.handleCancelReplace();
+      });
+
+      $(document).on('click', '.netiaiig-confirm-dialog .dialog-close', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        self.handleDialogClose();
+      });
+
+      // Close dialog when clicking on overlay
+      $(document).on('click', '.netiaiig-confirm-dialog .dialog-overlay', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        self.handleDialogClose();
+      });
+
+      // Prevent dialog close when clicking inside dialog content
+      $(document).on('click', '.netiaiig-confirm-dialog .dialog-content', function(e) {
+        e.stopPropagation();
+      });
+
+      // ESC key to close dialog
+      $(document).on('keydown', function(e) {
+        if (e.key === 'Escape' || e.keyCode === 27) {
+          const $dialog = $('.netiaiig-confirm-dialog');
+          if ($dialog.is(':visible')) {
+            e.preventDefault();
+            self.handleDialogClose();
+          }
+        }
+      });
     },
 
     // Toggle dropdown state
@@ -2506,6 +2548,116 @@
       console.log('Trigger context cleared');
     },
 
+    // Show replace confirmation dialog
+    showReplaceConfirmDialog: function(locale, ratio) {
+      const $dialog = $('.netiaiig-confirm-dialog');
+      
+      if ($dialog.length === 0) {
+        console.warn('Confirm dialog element not found');
+        return;
+      }
+
+      // Store dialog context for later use
+      this._dialogContext = {
+        locale: locale,
+        ratio: ratio
+      };
+
+      // Update ratio placeholder in dialog text
+      const ratioText = this.getTranslation('confirmDialogMainText').replace('{ratio}', ratio);
+      $dialog.find('.dialog-main-text').html(ratioText);
+      $dialog.find('.dialog-ratio-placeholder').text(ratio);
+
+      // Show dialog with fade in effect
+      $dialog.fadeIn(300);
+      
+      // Focus on cancel button by default to prevent accidental confirmation
+      setTimeout(() => {
+        $dialog.find('.dialog-cancel').focus();
+      }, 350);
+
+      // Prevent body scroll when dialog is open
+      $('body').addClass('dialog-open');
+
+      console.log('Replace confirmation dialog shown with ratio:', ratio);
+    },
+
+    // Hide replace confirmation dialog
+    hideReplaceConfirmDialog: function() {
+      const $dialog = $('.netiaiig-confirm-dialog');
+      
+      // Hide dialog with fade out effect
+      $dialog.fadeOut(300);
+      
+      // Clear dialog context
+      this._dialogContext = null;
+      
+      // Restore body scroll
+      $('body').removeClass('dialog-open');
+
+      console.log('Replace confirmation dialog hidden');
+    },
+
+    // Get translation text with fallback
+    getTranslation: function(key) {
+      if (window.AIImageGeneration && 
+          window.AIImageGeneration.translation && 
+          window.AIImageGeneration.translation[key]) {
+        return window.AIImageGeneration.translation[key];
+      }
+      
+      // Fallback translations
+      const fallbacks = {
+        'confirmDialogMainText': 'You clicked "Generate images using AI". The system will load a sample image suitable for this field (ratio: {ratio}), but there is an AI image you personally created in the current generation area.',
+        'confirmDialogQuestion': 'Do you want to replace the current image with the sample image?',
+        'confirmDialogReminder': 'All images you generate are saved in "Generation History" and can be retrieved at any time even if replaced.'
+      };
+      
+      return fallbacks[key] || key;
+    },
+
+    // Handle confirm replace action
+    handleConfirmReplace: function() {
+      console.log('User confirmed replacement');
+      
+      // Get stored dialog context
+      if (!this._dialogContext) {
+        console.warn('No dialog context found for replacement');
+        this.hideReplaceConfirmDialog();
+        return;
+      }
+
+      const context = this._dialogContext;
+      
+      // Hide dialog first
+      this.hideReplaceConfirmDialog();
+      
+      // Proceed with loading sample image
+      console.log('Proceeding with sample image loading:', context);
+      this._loadSampleImageWithRatio(
+        context.locale, 
+        context.ratio, 
+        true, // forceLoad = true to overwrite user image
+        false
+      );
+    },
+
+    // Handle cancel replace action
+    handleCancelReplace: function() {
+      console.log('User cancelled replacement');
+      
+      // Simply hide dialog, no further action needed
+      this.hideReplaceConfirmDialog();
+    },
+
+    // Handle dialog close action (X button or ESC key)
+    handleDialogClose: function() {
+      console.log('Dialog closed');
+      
+      // Same as cancel action
+      this.handleCancelReplace();
+    },
+
     // Extended loadSampleImage method with ratio support
     _loadSampleImageWithRatio: function(locale, ratio, forceLoad = false, forceLoadSample = false) {
       const self = this;
@@ -2517,7 +2669,8 @@
       } else if (forceLoadSample) {
         // forceLoadSample: Can only overwrite sample images, not user-generated images
         if (this.hasUserGeneratedImage()) {
-          console.log('User-generated image found and forceLoadSample cannot overwrite it - skipping');
+          console.log('User-generated image found - showing confirmation dialog');
+          this.showReplaceConfirmDialog(locale, ratio);
           return;
         }
         console.log('Force loading sample image (can overwrite sample images only)');

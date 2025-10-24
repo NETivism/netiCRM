@@ -86,7 +86,14 @@ window.AIImageGeneration = {
     "historyNext": "{/literal}{ts}Next Page{/ts}{literal}",
     "historyShowing": "{/literal}{ts}Showing{/ts}{literal}",
     "historyOf": "{/literal}{ts}of{/ts}{literal}",
-    "loadingSampleImage": "{/literal}{ts}Loading sample image...{/ts}{literal}"
+    "loadingSampleImage": "{/literal}{ts}Loading sample image...{/ts}{literal}",
+    "confirmDialogTitle": "{/literal}{ts}Load Appropriate Sample Image?{/ts}{literal}",
+    "confirmDialogMainText": "{/literal}{ts}You clicked \"Generate images using AI\". The system will load a sample image suitable for this field (ratio: {ratio}), but there is an AI image you personally created in the current generation area.{/ts}{literal}",
+    "confirmDialogQuestion": "{/literal}{ts}Do you want to replace the current image with the sample image?{/ts}{literal}",
+    "confirmDialogReminder": "{/literal}{ts}All images you generate are saved in \"Generation History\" and can be retrieved at any time even if replaced.{/ts}{literal}",
+    "confirmReplaceButton": "{/literal}{ts}Confirm Replace{/ts}{literal}",
+    "cancelButton": "{/literal}{ts}Cancel{/ts}{literal}",
+    "closeDialog": "{/literal}{ts}Close dialog{/ts}{literal}"
   }
 };
 </script>
@@ -296,6 +303,43 @@ window.AIImageGeneration = {
         </div>
       </div>
 
+    </div>
+  </div>
+</div>
+
+{* Confirm Replace Dialog *}
+<div class="netiaiig-confirm-dialog" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="confirm-dialog-title">
+  <div class="dialog-overlay"></div>
+  <div class="dialog-content">
+    <div class="dialog-header">
+      <h3 id="confirm-dialog-title" class="dialog-title">{ts}Load Appropriate Sample Image?{/ts}</h3>
+      <button type="button" class="dialog-close" aria-label="{ts}Close dialog{/ts}">
+        <i class="zmdi zmdi-close"></i>
+      </button>
+    </div>
+    <div class="dialog-body">
+      <div class="dialog-message">
+        <p class="dialog-main-text">{ts}You clicked "Generate images using AI". The system will load a sample image suitable for this field (ratio: <span class="dialog-ratio-placeholder">4:3</span>), but there is an AI image you personally created in the current generation area.{/ts}</p>
+        <p class="dialog-question">{ts}Do you want to replace the current image with the sample image?{/ts}</p>
+      </div>
+      <div class="dialog-reminder">
+        <div class="reminder-icon">
+          <i class="zmdi zmdi-info-outline"></i>
+        </div>
+        <div class="reminder-text">
+          <p>{ts}All images you generate are saved in "Generation History" and can be retrieved at any time even if replaced.{/ts}</p>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-actions">
+      <button type="button" class="dialog-btn dialog-btn-primary dialog-confirm" data-action="confirm">
+        <i class="zmdi zmdi-check"></i>
+        {ts}Confirm Replace{/ts}
+      </button>
+      <button type="button" class="dialog-btn dialog-btn-secondary dialog-cancel" data-action="cancel">
+        <i class="zmdi zmdi-close"></i>
+        {ts}Cancel{/ts}
+      </button>
     </div>
   </div>
 </div>
