@@ -50634,3 +50634,7 @@ msgstr ""
 #: templates/CRM/AI/AIImageGeneration.tpl
 msgid "Image Aspect Ratio"
 msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Loading example image..."
+msgstr ""

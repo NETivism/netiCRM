@@ -51302,3 +51302,7 @@ msgstr "或在下方開始建立您自己的圖片"
 #: templates/CRM/AI/AIImageGeneration.tpl
 msgid "Image Aspect Ratio"
 msgstr "圖片長寬比"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Loading example image..."
+msgstr "正在載入範例圖片..."
