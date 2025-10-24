@@ -359,7 +359,8 @@
               ? window.AIImageGeneration.translation.generateFailed
               : 'Image generation failed';
             self.errorManager.show({
-              message: response.message || defaultMessage
+              message: response.message || defaultMessage,
+              error_code: response.error_code
             });
           }
         },
@@ -377,8 +378,10 @@
             : 'Image generation failed';
 
           // Try to parse JSON response
+          let errorCode = null;
           if (xhr.responseJSON && xhr.responseJSON.message) {
             errorMessage = xhr.responseJSON.message;
+            errorCode = xhr.responseJSON.error_code;
           } else if (status === 'timeout') {
             errorMessage = 'timeout'; // Will be converted to friendly message
           } else {
@@ -388,10 +391,11 @@
               : 'Image generation failed';
           }
 
-          // Use error manager with HTTP status code
+          // Use error manager with HTTP status code and error_code
           self.errorManager.show({
             message: errorMessage,
-            httpStatus: xhr.status
+            httpStatus: xhr.status,
+            error_code: errorCode
           });
 
           console.error('Image generation error:', status, error, xhr.responseText);
@@ -2735,7 +2739,7 @@
         // Hide loading elements
         $loadingElements.hide();
 
-        // Update error message
+        // Update error message (now with error_code support)
         this.updateErrorMessage(errorData);
 
         // Show error state
@@ -2777,8 +2781,18 @@
       // Update error message content
       updateErrorMessage: function(errorData) {
         const $container = $(NetiAIImageGeneration.config.container);
+        
+        // Check if error_code exists, prioritize AI-specific friendly messages
+        if (errorData.error_code) {
+          const aiErrorMessage = this.getAIErrorMessage(errorData.error_code);
+          if (aiErrorMessage) {
+            $container.find('.error-reason').text(aiErrorMessage);
+            return;
+          }
+        }
+        
+        // Fallback to original error handling logic
         const friendlyMessage = this.getFriendlyErrorMessage(errorData.message, errorData.httpStatus);
-
         $container.find('.error-reason').text(friendlyMessage);
       },
 
@@ -2847,6 +2861,27 @@
 
         // 5. Default error message
         return getTranslation('errorDefaultMessage') || 'An error occurred during image generation, please try again later';
+      },
+
+      // Handle AI-specific error codes with friendly messages
+      getAIErrorMessage: function(errorCode) {
+        // Get translation helper function
+        const getTranslation = (key) => {
+          return window.AIImageGeneration && window.AIImageGeneration.translation
+            ? window.AIImageGeneration.translation[key]
+            : null;
+        };
+
+        const aiErrorMappings = {
+          'CONTENT_VIOLATION': getTranslation('errorContentViolation') || 'Your input contains inappropriate content, please modify your description and try again',
+          'PROMPT_INJECTION': getTranslation('errorPromptInjection') || 'Input format issue detected, please check your content and try again',
+          'PROCESSING_ERROR': getTranslation('errorProcessingError') || 'System processing error occurred, please try again later',
+          'API_ERROR': getTranslation('errorAPIError') || 'Image generation service temporarily unavailable, please try again later',
+          'VALIDATION_ERROR': getTranslation('errorValidationError') || 'Input content format is incorrect, please check and try again',
+          'UNKNOWN_ERROR': getTranslation('errorUnknownError') || 'An unknown error occurred, please try again later'
+        };
+        
+        return aiErrorMappings[errorCode] || null;
       }
     },
 
