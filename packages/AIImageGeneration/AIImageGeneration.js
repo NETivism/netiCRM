@@ -167,14 +167,12 @@
         self.handleConfirmReplace();
       });
 
-      // Handle cancel action when modal closes
-      // Use Magnific Popup's beforeClose callback to run our cleanup
+      // Initialize Magnific Popup for modal dismiss functionality
+      // This ensures popup-modal-dismiss works correctly
       $(document).on('click', '.popup-modal-dismiss', function(e) {
-        // Don't prevent default - let Magnific Popup handle the closing
-        // Set a timeout to run our cleanup after Magnific Popup closes the modal
-        setTimeout(function() {
-          self.handleCancelReplace();
-        }, 10);
+        e.preventDefault();
+        $.magnificPopup.close();
+        self.handleCancelReplace();
       });
     },
 

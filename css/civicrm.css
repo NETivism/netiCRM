@@ -8170,3 +8170,156 @@ html[lang="en"] .new-personal-campaign-link-wrap {
   background: #EEEEEE;
   padding: 0px 5px;
 }
+
+/* Magnific Popup Modal - Reusable Modal Styles */
+.neticrm-mfp-modal {
+  position: relative;
+  background: #FFF;
+  padding: 24px;
+  width: auto;
+  max-width: 500px;
+  margin: 20px auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  font-family: var(--font-sans-serif);
+  line-height: 1.6;
+}
+
+.neticrm-mfp-modal .confirm-modal-content {
+  width: 100%;
+}
+
+.neticrm-mfp-modal .confirm-modal-header {
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.neticrm-mfp-modal .confirm-modal-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+  text-align: center;
+}
+
+.neticrm-mfp-modal .confirm-modal-body {
+  margin-bottom: 24px;
+}
+
+.neticrm-mfp-modal .confirm-modal-message {
+  margin-bottom: 16px;
+}
+
+.neticrm-mfp-modal .confirm-main-text,
+.neticrm-mfp-modal .confirm-question {
+  margin: 0 0 12px 0;
+  color: #555;
+  font-size: 14px;
+}
+
+.neticrm-mfp-modal .confirm-question {
+  font-weight: 500;
+  color: #333;
+}
+
+.neticrm-mfp-modal .confirm-modal-reminder {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 12px 16px;
+  background: #f8f9fa;
+  border-radius: 6px;
+  border-left: 4px solid #17a2b8;
+}
+
+.neticrm-mfp-modal .reminder-icon {
+  flex-shrink: 0;
+  color: #17a2b8;
+  font-size: 16px;
+  margin-top: 2px;
+}
+
+.neticrm-mfp-modal .reminder-text {
+  flex: 1;
+}
+
+.neticrm-mfp-modal .reminder-text p {
+  margin: 0;
+  font-size: 13px;
+  color: #666;
+  line-height: 1.5;
+}
+
+.neticrm-mfp-modal .confirm-modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.neticrm-mfp-modal .btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  min-width: 100px;
+  justify-content: center;
+}
+
+.neticrm-mfp-modal .btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.neticrm-mfp-modal .btn:active {
+  transform: translateY(0);
+}
+
+.neticrm-mfp-modal .btn-primary {
+  background: #007bff;
+  color: white;
+}
+
+.neticrm-mfp-modal .btn-primary:hover {
+  background: #0056b3;
+  color: white;
+}
+
+.neticrm-mfp-modal .btn-secondary {
+  background: #6c757d;
+  color: white;
+}
+
+.neticrm-mfp-modal .btn-secondary:hover {
+  background: #545b62;
+  color: white;
+}
+
+.neticrm-mfp-modal .btn i {
+  font-size: 14px;
+}
+
+/* Responsive design for modal */
+@media (max-width: 576px) {
+  .neticrm-mfp-modal {
+    margin: 10px;
+    padding: 20px;
+    max-width: none;
+  }
+  
+  .neticrm-mfp-modal .confirm-modal-actions {
+    flex-direction: column;
+  }
+  
+  .neticrm-mfp-modal .btn {
+    width: 100%;
+  }
+}
