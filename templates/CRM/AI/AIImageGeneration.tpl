@@ -97,6 +97,23 @@ window.AIImageGeneration = {
     "generateAILinkTooltip": "{/literal}{ts}Click to open AI image generator, please download and upload the image manually after generation{/ts}{literal}"
   }
 };
+
+// Magnific Popup internationalization
+$.extend(true, $.magnificPopup.defaults, {
+  tClose: "{/literal}{ts}Close (Esc){/ts}{literal}",
+  tLoading: "{/literal}{ts}Loading...{/ts}{literal}",
+  gallery: {
+    tPrev: "{/literal}{ts}Previous (Left arrow key){/ts}{literal}",
+    tNext: "{/literal}{ts}Next (Right arrow key){/ts}{literal}",
+    tCounter: "{/literal}{ts}%curr% of %total%{/ts}{literal}"
+  },
+  image: {
+    tError: "{/literal}{ts}The image could not be loaded.{/ts}{literal}"
+  },
+  ajax: {
+    tError: "{/literal}{ts}The content could not be loaded.{/ts}{literal}"
+  }
+});
 </script>
 {/literal}
 
