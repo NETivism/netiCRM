@@ -1691,6 +1691,7 @@
       STATES: {
         EMPTY: 'empty',           // Initial empty state
         LOADING: 'loading',       // Image generation in progress
+        SAMPLE_LOADING: 'sample_loading', // Sample image loading in progress
         SUCCESS: 'success',       // Has image (generated or sample)
         ERROR: 'error',           // Generation error
         SAMPLE_ERROR: 'sample_error' // Sample loading error
@@ -1700,15 +1701,42 @@
 
       // Set visual state and apply corresponding UI rules
       setState: function(newState) {
+        // Prevent race conditions with state changes
+        if (this._stateChangeInProgress) {
+          console.warn('State change already in progress, queuing:', newState);
+          this._pendingState = newState;
+          return;
+        }
+        
         if (this.currentState === newState) {
           console.log(`Visual state: ${newState} (no change)`);
           return;
         }
         
+        this._stateChangeInProgress = true;
+        
+        // Optional trace logging for debugging
+        if (console.trace && window.location.search.includes('debug=1')) {
+          console.trace(`Visual state change requested: ${this.currentState} → ${newState}`);
+        }
+        
         console.log(`Visual state: ${this.currentState} → ${newState}`);
         const previousState = this.currentState;
         this.currentState = newState;
-        this.applyStateRules(newState, previousState);
+        
+        try {
+          this.applyStateRules(newState, previousState);
+        } finally {
+          this._stateChangeInProgress = false;
+          
+          // Handle pending state changes
+          if (this._pendingState) {
+            const pending = this._pendingState;
+            this._pendingState = null;
+            // Use setTimeout to avoid recursion issues
+            setTimeout(() => this.setState(pending), 0);
+          }
+        }
       },
 
       // Apply UI rules based on current state
@@ -1725,6 +1753,9 @@
             break;
           case this.STATES.LOADING:
             this.showLoadingState($container);
+            break;
+          case this.STATES.SAMPLE_LOADING:
+            this.showSampleLoadingState($container);
             break;
           case this.STATES.SUCCESS:
             this.showSuccessState($container);
@@ -1780,6 +1811,37 @@
         $loadingElements.show();
         
         console.log('Visual state applied: LOADING');
+      },
+
+      // Show sample loading state components
+      showSampleLoadingState: function($container) {
+        const $imageContainer = $container.find('.image-placeholder');
+        const $loadingOverlay = $imageContainer.find('.loading-overlay');
+        const $loadingInfo = $container.find('.loading-info');
+        
+        // Show loading overlay
+        $loadingOverlay.show();
+        $loadingOverlay.find('.error-state').hide();
+        
+        // Set sample loading specific message
+        const $loadingMessage = $loadingOverlay.find('.loading-message');
+        const loadingText = window.AIImageGeneration && window.AIImageGeneration.translation
+          ? window.AIImageGeneration.translation.loadingSampleImage
+          : 'Loading sample image...';
+        $loadingMessage.text(loadingText);
+        
+        // Hide loading info area (sample loading doesn't need it)
+        $loadingInfo.hide();
+        
+        // Show loading elements (spinner and message only)
+        const $loadingElements = $loadingOverlay.find('.loading-spinner, .loading-message');
+        $loadingElements.show();
+        
+        // Hide progress elements (sample loading doesn't need progress indication)
+        const $progressElements = $loadingOverlay.find('.loading-timer, .loading-progress');
+        $progressElements.hide();
+        
+        console.log('Visual state applied: SAMPLE_LOADING');
       },
 
       // Show success state components (has image)
@@ -2152,21 +2214,18 @@
         timeout: 10000,
 
         success: function(response) {
-          // Hide loading state
-          self.hideSampleImageLoading();
-
           if (response.status === 1 && response.data) {
             console.log('Sample image loaded successfully');
             self.applySampleToInterface(response.data);
+            // applySampleToInterface will set the SUCCESS state
           } else {
             console.warn('Sample image API returned unexpected format:', response);
+            // Set appropriate error state for API format issues
+            self.visualStateManager.setState(self.visualStateManager.STATES.SAMPLE_ERROR);
           }
         },
 
         error: function(xhr, status, error) {
-          // Hide loading state on error
-          self.hideSampleImageLoading();
-
           console.warn('Failed to load sample image:', {
             status: status,
             error: error,
@@ -2174,8 +2233,8 @@
             httpStatus: xhr.status
           });
           
-          // Show sample error state instead of silently failing
-          self.showSampleError();
+          // Directly set sample error state
+          self.visualStateManager.setState(self.visualStateManager.STATES.SAMPLE_ERROR);
         }
       });
     },
@@ -2215,40 +2274,16 @@
 
     // Show loading state for sample image
     showSampleImageLoading: function() {
-      const $container = $(this.config.container);
-      const $imageContainer = $container.find('.image-placeholder');
-      const $loadingOverlay = $imageContainer.find('.loading-overlay');
-      const $loadingMessage = $loadingOverlay.find('.loading-message');
-      const $emptyState = $imageContainer.find('.empty-state-content');
-
-      // Hide empty state if visible
-      $emptyState.hide();
-
-      // Set loading message for sample image
-      const loadingText = window.AIImageGeneration && window.AIImageGeneration.translation
-        ? window.AIImageGeneration.translation.loadingSampleImage
-        : 'Loading sample image...';
-      $loadingMessage.text(loadingText);
-
-      // Show loading overlay with fade in
-      $loadingOverlay.addClass('sample-loading').fadeIn(300);
-
-      console.log('Sample image loading state shown');
+      // Use state manager to set sample loading state
+      this.visualStateManager.setState(this.visualStateManager.STATES.SAMPLE_LOADING);
+      console.log('Sample image loading state set via state manager');
     },
 
-    // Hide loading state for sample image
+    // Hide loading state for sample image (legacy method - state will be managed by AJAX callbacks)
     hideSampleImageLoading: function() {
-      const $container = $(this.config.container);
-      const $imageContainer = $container.find('.image-placeholder');
-      const $loadingOverlay = $imageContainer.find('.loading-overlay');
-
-      // Hide loading overlay with fade out
-      $loadingOverlay.removeClass('sample-loading').fadeOut(300, function() {
-        // Reset loading message
-        $(this).find('.loading-message').text('');
-      });
-
-      console.log('Sample image loading state hidden');
+      // This method is kept for backward compatibility but the actual state
+      // management is now handled by AJAX success/error callbacks directly
+      console.log('hideSampleImageLoading: State will be handled by AJAX callbacks');
     },
 
     // Update sample image display
@@ -2796,23 +2831,22 @@
         timeout: 20000,
 
         success: function(response) {
-          // Hide loading state
-          self.hideSampleImageLoading();
-
           if (response.status === 1 && response.data) {
             console.log('Sample image loaded successfully with ratio:', ratio);
             self.applySampleToInterface(response.data);
+            // applySampleToInterface will set the SUCCESS state
+          } else {
+            console.warn('Sample image API returned unexpected format for ratio:', ratio, response);
+            // Set appropriate error state for API format issues
+            self.visualStateManager.setState(self.visualStateManager.STATES.SAMPLE_ERROR);
           }
         },
 
         error: function(xhr, status, error) {
-          // Hide loading state on error
-          self.hideSampleImageLoading();
-
           console.warn('Failed to load sample image with ratio:', ratio, error);
           
-          // Show sample error state instead of silently failing
-          self.showSampleError();
+          // Directly set sample error state
+          self.visualStateManager.setState(self.visualStateManager.STATES.SAMPLE_ERROR);
         }
       });
     },
