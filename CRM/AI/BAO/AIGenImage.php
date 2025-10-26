@@ -71,10 +71,11 @@ class CRM_AI_BAO_AIGenImage {
    */
   private static $stylePrefixes = [
     'Simple Illustration' => [
+      'Minimalist flat illustration',
       'Minimalist flat illustration, the character design is a minimalist cartoon style, with minimal facial features',
       'Minimalist flat illustration, the character design is a minimalist style, with minimal facial features',
       'Minimalist flat illustration, minimalist cartoon style',
-      'Minimalist flat illustration',
+      'Minimalist flat art',
     ],
     'Japanese Simple Illustration' => [
       'Minimalist flat illustration, Japanese minimalist cartoon style',
@@ -173,10 +174,10 @@ class CRM_AI_BAO_AIGenImage {
               // Handle security violations and other errors
               $errorCode = $parsedData['error']['code'] ?? 'UNKNOWN_ERROR';
               $errorMessage = $parsedData['error']['message'] ?? 'Unknown error occurred';
-              
+
               throw new Exception("Prompt translation failed - {$errorCode}: {$errorMessage}");
             }
-            
+
             // Extract successful prompt translation
             if (isset($parsedData['data']['prompt'])) {
               $translatedPrompt = $parsedData['data']['prompt'];
