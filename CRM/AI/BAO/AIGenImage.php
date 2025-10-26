@@ -161,6 +161,12 @@ class CRM_AI_BAO_AIGenImage {
 
       // Handle different response formats from translator
       if (is_array($translationResponse)) {
+        // Check for direct error in array response first
+        if (isset($translationResponse['success']) && $translationResponse['success'] === false) {
+          $errorMessage = $translationResponse['error'] ?? $translationResponse['message'] ?? 'Unknown translation error';
+          throw new Exception("Prompt translation failed: {$errorMessage}");
+        }
+
         $translatedPrompt = $translationResponse['message'] ?? $translationResponse['translated_prompt'] ?? '';
         $aiCompletionId = $translationResponse['id'] ?? $translationResponse['aicompletion_id'] ?? null;
 
