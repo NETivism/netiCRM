@@ -239,7 +239,7 @@ window.AIImageGeneration = {
                       <div class="style-label">{ts}Japanese Simple Illustration{/ts}</div>
                     </div>
                     <div class="style-option" data-style="Picture book illustration" title="{ts}An art style that emphasizes storytelling and emotional expression. It features diverse colors and lines, capable of presenting unique visual narratives ranging from playful to mature, and classic to innovative{/ts}" data-tooltip data-tooltip-placement="s">
-                      <div class="style-preview"><img src="{$config->resourceBase}packages/AIImageGeneration/images/style-presets/thumbs/neticrm-aigenimg-style-preset-thumb-ss-01.webp" alt=""></div>
+                      <div class="style-preview"><img src="{$config->resourceBase}packages/AIImageGeneration/images/style-presets/thumbs/neticrm-aigenimg-style-preset-thumb-pbi-01.webp" alt=""></div>
                       <div class="style-label">{ts}Picture book illustration{/ts}</div>
                     </div>
                     <div class="style-option" data-style="Watercolor Painting" title="{ts}Mimics the blending and bleeding effects of watercolor paints, resulting in transparent colors and fluid brushstrokes to create fresh, soft, and artistic visuals{/ts}" data-tooltip data-tooltip-placement="s">
